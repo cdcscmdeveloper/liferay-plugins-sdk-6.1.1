@@ -61,13 +61,16 @@ public class TrustGateHelper {
 		}
 		return client;
 	}
-
+	
+	//#30425 - Start
 	public List<String> getChallengeQuestion(String identificationNo,
 			String epNo, String selectedQuest) {
-		log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo
-				+ "||" + selectedQuest);
+		
+		log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo + "||" + selectedQuest);
 		List<String> retVal = new ArrayList<String>();
+		
 		try {
+
 			log.info("Before Get Client=======================");
 			KMCClient client = getClient();
 			log.info("After Get Client======================="+client);
@@ -76,77 +79,90 @@ public class TrustGateHelper {
 			IKMCAPIResponse.GetChallengeQuestionResponse res = reqbuilder
 					.getChallengeQuestions(identificationNo, 10, epNo);
 			log.info("After Get GetChallengeQuestionResponse======================="+res);
-			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			reqDTO.setEpNo(epNo);
+			reqDTO.setIdentificationNo(pmUser.getIdentificationNo());
+			//check digicert date, still valid or not
+			PersonnelResDTO validateDigiCertDate = SmServiceLookup.getPersonnelSO().checkValidateSoftcert(reqDTO);
 			reqDTO.setUserId(pmUser.getUserId());
+			//retrive personnel
 			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
-			log.info("getPersonnelId:: " + resDTO.getSmPersonnel().getPersonnelId());
-			log.info("getSoftcertFlg:: " + resDTO.getSmPersonnel().getSoftcertFlg());
-			log.info("getSmAppl.getSmSupplier.getSupplierId:: " + resDTO.getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
-
-			/*#29228 - Start*/
-			reqDTO.setSmSupplierId(resDTO.getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());//30425
-			if (!SmServiceLookup.getPersonnelSO().isNotExpiredSoftcertBySupplierIdAndUserId(reqDTO)) { //30425
-			/*#29228 - End	*/
-				if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
-						|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
-						|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
-					log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
-					throw new EpException(MessageConst.ERROR_DIGICERT_776063);
-				} else {
-					log.info("getSoftcertFlg|776064 2 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
-					//#29630 - start
-					if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
-						log.info("51; " + MessageConst.ERROR_DIGICERT_776059);
-					} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
-						log.info("50; " + MessageConst.ERROR_DIGICERT_776060);
-					} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
-						log.info("0; " + MessageConst.ERROR_DIGICERT_776061);
+			log.info("getPersonnelId >>>>>>>> " + resDTO.getSmPersonnel().getPersonnelId());
+			log.info("getSoftcertFlg >>>>>>>> " + resDTO.getSmPersonnel().getSoftcertFlg());
+			log.info("getSmAppl.getSmSupplier.getSupplierId >>>>>> " + resDTO.getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
+			
+			if(validateDigiCertDate.isSuccessful()){
+				//akan masuk if ni bila dia expired sahaja
+				if(validateDigiCertDate.isExpired()){
+					if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
+							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
+							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+						log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
+						throw new EpException(MessageConst.ERROR_DIGICERT_776063);
+						//Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
 					} else {
-						log.info("99; " + MessageConst.ERROR_TRUSTGATE_776063);
+						log.info("getSoftcertFlg|776064 2 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
+						if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
+							log.info("51; " + MessageConst.ERROR_DIGICERT_776059);
+							//PIN Number is blocked. Please reset your PIN.
+						} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
+							log.info("50; " + MessageConst.ERROR_DIGICERT_776060);
+							//Wrong PIN Number. PIN will be blocked if you enter the wrong PIN three (3) times.
+						} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
+							log.info("0; " + MessageConst.ERROR_DIGICERT_776061);
+							//Wrong answer for this  challenge response.
+						} else {
+							log.info("99; " + MessageConst.ERROR_TRUSTGATE_776063);
+							//Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
+						}
+						
+						//maybe dekat sini boleh tambah
+						FacesScopes fs = new FacesScopes();
+						if(fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value()) || 
+						   fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) || 
+						   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) ||
+						   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+							throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+							//Supplier Admin does not have a valid soft certificate. Please apply for a soft certificate first.
+						}
+						if(fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()) || 
+						   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || 
+						   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || 
+						   fs.hasRoleUser(RoleCode.FL_USER.value())){
+							throw new EpException(MessageConst.ERROR_DIGICERT_776065);
+							//Supplier User does not have a valid soft certificate. Please apply for a soft certificate first.
+						}
 					}
-					//#29630 - end
-					//#30855 - START
-					FacesScopes fs = new FacesScopes();
-					if(fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value()) || 
-					   fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) || 
-					   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) ||
-					   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
-						throw new EpException(MessageConst.ERROR_DIGICERT_776064);
-					}
-					if(fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()) || 
-					   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || 
-					   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || 
-					   fs.hasRoleUser(RoleCode.FL_USER.value())){
-						throw new EpException(MessageConst.ERROR_DIGICERT_776065);
-					}
-					//#30855 - END
 				}
 			}
+				
+				switch (res.getStatusCode()) {
+				case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+					log.info("#25061 OPERATION_SUCCESSFUL");
+					retVal = getChallQuest(selectedQuest, res.CHALLENGE_RESPONSES);
 
-			switch (res.getStatusCode()) {
-			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				log.info("#25061 OPERATION_SUCCESSFUL");
-				retVal = getChallQuest(selectedQuest, res.CHALLENGE_RESPONSES);
+					if (retVal.size() == 0) {
+						throw new EpException(MessageConst.ERROR_TRUSTGATE_776051);
+						//No challange question is found to proceed for digital signature.
+					}
+					break;
 
-				if (retVal.size() == 0) {
-					throw new EpException(MessageConst.ERROR_TRUSTGATE_776051);
+				default:
+					throw new EpException(MessageConst.ERROR_TRUSTGATE_776062);
+					//The signing operation cannot happen at the moment.  <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					//Any enquiries, please contact the helpdesk at (+603 7985 7777) or email (bantuan@eperolehan.gov.my)
 				}
-				break;
-
-			default:
-				throw new EpException(MessageConst.ERROR_TRUSTGATE_776062);
-			}
-
 		} catch (Exception ex) {
 			log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo
 					+ "||" + selectedQuest + " ERROR MSG:" + ex.getMessage());
 			ex.printStackTrace();
 			throw new EpException(ex.getMessage());
-
 		}
 		return retVal;
 	}
+	//#30425 - End
 
 	private List<String> getChallQuest(String selectedQuest,
 			List<String> questions) {
