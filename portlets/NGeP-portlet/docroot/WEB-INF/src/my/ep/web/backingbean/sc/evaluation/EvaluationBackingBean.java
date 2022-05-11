@@ -2439,84 +2439,29 @@ public void saveComplianceSample() {
 						.getCheckListResultBean().getResultList();
 				for (ScQtCheckList proposalCheckList : proposalChecklistList) {
 
+					//#33110 retated to #21538 button evaluation must be view if all item is auto score  --> START
 					//32426 - start
-					if(proposalCheckList.isScoringReq()){
-						localCheckList
-						.add(checkStausForUploadNoActionCheckLists(
-								proposalCheckList, evalstage.get(0)));
-					} 
-//					if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
-//							.equalsIgnoreCase(proposalCheckList
-//									.getDefinationType().getParameterCode())
-//							&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
-//									.equalsIgnoreCase(proposalCheckList
-//											.getDefinationType()
-//											.getParameterCode())//#25138 - start
-//											&& proposalCheckList.isScoringReq()) {//#25138 - end
-//						localCheckList.add(proposalCheckList);
-//					} else {
-//						if (proposalCheckList.isScoringReq()) {
-//							// localCheckList.add(proposalCheckList);
-//							localCheckList
-//									.add(checkStausForUploadNoActionCheckLists(
-//											proposalCheckList, evalstage.get(0)));
-//						}
-//					}
-					//32426 - end
-					//#25138 - get zones to pass to summary tab directly - start
+//					if(proposalCheckList.isScoringReq()){
+//						localCheckList
+//						.add(checkStausForUploadNoActionCheckLists(
+//								proposalCheckList, evalstage.get(0)));
+//					} 
+				
+					boolean checkallitemautoscore = evaluationSO.checkbuttonAutoScore(reqDTO);
 					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 							.equalsIgnoreCase(proposalCheckList
-									.getDefinationType().getParameterCode())) {
-						if(SourcingConstants.FINANCIAL_DOCTYPE
-							.equalsIgnoreCase(proposalCheckList
-									.getDocCategory())){
-						
-							EvaluationReqDTO specDtls = new EvaluationReqDTO();
-							specDtls.setQtId(this.getManagedBean().getScQt().getQtId());
-							specDtls.setCheckListId(proposalCheckList.getQtChecklistId());
-							if (!this.getManagedBean().getScQt().isZonal()) {
-								specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
-							}
-							EvaluationResDTO specdetails = evaluationSO
-									.retrieveFinSpecDetailsByCheckListId(specDtls);
-							
-							if(specdetails != null){
-								//#25138 - start
-								ScQt scQt = this.getManagedBean().getScQt();
-								
-								if(scQt.isZonal()){
-									//#25138 - scoreofferprice.speczonedtlid null for wip data  - start
-									if(specdetails.getScoreOfferPrices()!=null){
-										this.getManagedBean().setOfferScoreType(specdetails
-												.getScoreOfferPrices().getScoreType().toString());
-										this.getManagedBean().setSpeczonedtlReq(true);
-									}else{
-										for(ScQtScoreOfferPrice scoreOffer : specdetails.getScQtScoreOfferPricesZonal()){
-											//#25138 - start
-											if(scoreOffer.getScoreType()!=null){
-												this.getManagedBean().setOfferScoreType(scoreOffer.getScoreType().toString());
-													
-											}
-											//#25138 - end
-											break;
-										}
-									}
-									//#25138 - scoreofferprice.speczonedtlid null for wip data  - end
-								}else{
-									this.getManagedBean().setOfferScoreType(specdetails
-											.getScoreOfferPrices().getScoreType().toString());
-								}
-								
-								//#25138 - end
-								if (null != specdetails.getZones()
-										&& !specdetails.getZones().isEmpty()) {
-									this.getManagedBean().setSpecZoneDtls(specdetails
-											.getZones());
-								}
-							}
+									.getDefinationType().getParameterCode())
+							&& proposalCheckList.isScoringReq() && checkallitemautoscore) {//#25138 - end
+						localCheckList.add(proposalCheckList);
+					} else {
+						if (proposalCheckList.isScoringReq()) {
+							localCheckList
+									.add(checkStausForUploadNoActionCheckLists(
+											proposalCheckList, evalstage.get(0)));
 						}
 					}
-					//#25138 - get zones to pass to summary tab directly - end
+					//32426 - end
+//#33110 retated to #21538 button evaluation must be view if all item is auto score  --> END
 				}
 
 				/*
