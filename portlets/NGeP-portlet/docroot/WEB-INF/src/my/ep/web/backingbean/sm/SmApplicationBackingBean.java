@@ -10634,7 +10634,10 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getBasicInfo(), getManagedBean()
 					.getSupplierRemarks(), getManagedBean()
 					.getApplnRejectionRemarks(), reqDTO);
-
+			//30766 START
+			List<SmSupplierCategory> catList = getManagedBean().getSmAppl().getSmSupplierCategories();
+			setPOorApprDec(catList);
+			//30766 END
 		} else if (res
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
 			// #30929 - start
@@ -16493,4 +16496,17 @@ public class SmApplicationBackingBean extends
 		return ssmActive;
 	}
 	//#32014 - END
+	//30766 START
+	private List<SmSupplierCategory> setPOorApprDec(List<SmSupplierCategory> catList) {
+		
+		for(SmSupplierCategory smSupplierCategory : catList){
+			if (getManagedBean().isPoUser()) {
+				smSupplierCategory.setPoDecFlg(0);
+			} else if (getManagedBean().isApproverUser()) {
+				smSupplierCategory.setApprvrDecFlg(0);
+			}
+		}
+		return catList;
+	}
+	//30766 END
 }
