@@ -16784,10 +16784,19 @@ public class SmApplicationBackingBean extends
 	}
 	//#12483 - END
 	//#32014 - START
-	public boolean ssmIsActive(){
-		boolean ssmActive = SmCommonUtil.getInstance().ssmActive();
-		log.info("#32014 SSM ACTIVE : "+ ssmActive);
-		return ssmActive;
+	public void reassignSelShareHolderAddress(SmPersonnelAddress address){
+		log.info("========#32014 - inside reassignSelShareHolderAddress=======");
+		log.info("#32014 - isSupplierUser : " + getManagedBean().isSupplierUser());
+		log.info("#32014 - AddressType : " + address.getAddressType());
+		if(getManagedBean().isSupplierUser() && address.getAddressType().equalsIgnoreCase(SupplierManagementConst.RES_ADD)){
+			log.info("#32014 - inside first if");
+			log.info("#32014 - isSameAsPerm : " + address.isSameAsPerm());
+			log.info("#32014 - SSM Application : " + getManagedBean().getSmAppl().isApplValidWithSsm());
+			log.info("#32014 - SSM isActive : " + SmCommonUtil.getInstance().ssmActive());
+			if(!address.isSameAsPerm() && getManagedBean().getSmAppl().isApplValidWithSsm() && SmCommonUtil.getInstance().ssmActive()){
+				SmApplicationUtil.assignSelShareHolderAddress(this.getManagedBean().getSelectedShareHolder(), getManagedBean());
+			}
+		}
 	}
 	//#32014 - END
 	//30766 START
