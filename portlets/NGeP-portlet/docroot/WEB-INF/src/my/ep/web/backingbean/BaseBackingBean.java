@@ -2267,7 +2267,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		StreamedContent graphicText = null;
 		ByteArrayOutputStream os = null;
 		try {
-			BufferedImage bufferedImg = new BufferedImage(120, 35,
+			BufferedImage bufferedImg = new BufferedImage(110, 35,
 					BufferedImage.TYPE_BYTE_BINARY);
 			Graphics2D g2 = bufferedImg.createGraphics();
 
