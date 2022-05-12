@@ -1587,7 +1587,12 @@ u.underline {
 																#else
 																<td bgcolor="#d0eaee" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.qty</td>
 																#end
-																<td bgcolor="#d0eaee" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																		##26130 start 12052022
+																#if($specCombine.qtyBerperingkat == "&nbsp")
+																#else
+																<td bgcolor="#d0eaee" rowspan="$rowSpanSize" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.qtyBerperingkat</td>
+																#end
+																		##26130 end 12052022
 															#else
 																<td bgcolor="#d0eaee" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
 																<td bgcolor="#d0eaee" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
@@ -1676,7 +1681,7 @@ u.underline {
 													<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"><strong>$specCombine.clItem</strong></td>
 												##26130 - zaim end
 													<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.uomName</td>
-													<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.clPriceTypeCode)</td>
+													<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.clPriceTypeCode</td>
 													<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.qty</td>
 													<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.qtyBerperingkat</td>	
 												#if ($specType == "T")
@@ -2781,7 +2786,7 @@ u.underline {
 
 
 ##26130 - start 03032022
-#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
+#if ($scLoa.scLoiLoa.docType == "QT")	
 
 #else
 <div class="break-after"><br/></div>
