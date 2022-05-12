@@ -63,6 +63,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
+import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
@@ -460,6 +461,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private PmParameter certificate;
 	private PmParameter diploma;
 	private PmParameter glpCert;
+	
+	//3460 - Start
+	private SmRemark smRemark;
+	private String sdoRemark;
+	//3460 - End
+	
 	// private PmEduLevel certEduLevel;
 	// private PmEduLevel diplomaEduLevel;
 	private PmParameterDesc glp;
@@ -3290,10 +3297,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	}
 
 	public boolean isShowNewChanges() {
-		String newChanges = EpPropertiesUtils.getInstance().getProperty(
-				"sm.show.new.changes");
-		boolean showNewChanges = Boolean.valueOf(newChanges);
-		return showNewChanges;
+		//#29116 CR 3460: Static Code Analysis Start
+		//String newChanges = EpPropertiesUtils.getInstance().getProperty( "sm.show.new.changes");
+		//boolean showNewChanges = Boolean.valueOf(newChanges);
+		//return showNewChanges;
+		return Boolean.parseBoolean(EpPropertiesUtils.getInstance().getProperty( "sm.show.new.changes"));
+		//#29116 CR 3460: Static Code Analysis End
 	}
 
 	public void setShowNewChanges(boolean showNewChanges) {
@@ -4391,6 +4400,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDivisionBox(boolean divisionBox) {
 		this.divisionBox = divisionBox;
+	}
+	
+	public SmRemark getSmRemark() {
+		return smRemark;
+	}
+
+	public void setSmRemark(SmRemark smRemark) {
+		this.smRemark = smRemark;
+	}
+
+	public String getSdoRemark() {
+		return sdoRemark;
+	}
+
+	public void setSdoRemark(String sdoRemark) {
+		this.sdoRemark = sdoRemark;
 	}
 	
 	//#28807 - Start
