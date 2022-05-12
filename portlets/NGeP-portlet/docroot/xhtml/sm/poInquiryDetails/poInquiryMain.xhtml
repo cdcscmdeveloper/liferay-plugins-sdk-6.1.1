@@ -32,8 +32,8 @@
 					<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						partialSubmit="true" process="@this"
-						action="#{backingBean.assignMissingDocsList(true,'inquiryDialog')}"
-						update=":#{p:component('inquiryDialog')}" />
+						action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
+						update=":#{p:component('sendInqDialog')}" />
 				</div>
 				<ui:include src="poInquiryDetails.xhtml" />
 			</td>
@@ -41,7 +41,7 @@
 	</table>
 	
 	<p:dialog width="1050px" header="#{lbl['lbl.sm.send.enquiry']}"
-		id="inquiryDialog" widgetVar="inquiryDialog" resizable="false"
+		id="sendInqDialog" widgetVar="sendInqDialog" resizable="false"
 		showEffect="fade" hideEffect="fade" modal="true" closable="false">
 					
 		<p:outputPanel layout="block" id="inquiryBlockPanel">
@@ -90,10 +90,10 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.submit.enquiry']}"
 					process="inquiryBlockPanel" update="@([id$=Msg])"
-					oncomplete="inquiryDialog.hide();"
+					oncomplete="sendInqDialog.hide();"
 					action="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" process="@this"
-					oncomplete="inquiryDialog.hide();" action="#{backingBean.cancelInquiry}"/>
+					oncomplete="sendInqDialog.hide();" action="#{backingBean.cancelInquiry}"/>
 			</div>
 			<p:blockUI block="inquiryBlockPanel" widgetVar="inquiryBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
