@@ -10829,6 +10829,12 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					// #18685 - Start.
 					if ("UP".equals(finalizationReport.getDefinationType().getParameterCode()) 
 							&& !finalizationReport.getTitle().contains("Kertas Keputusan")) {
+						// #18685 - #33167 Start.
+						if (null == getManagedBean().getNewBriefingPaperReportList()) {
+							List<ScQtFinalizationReport> newBriefingPaperReportList = new LinkedList<>();
+							getManagedBean().setNewBriefingPaperReportList(newBriefingPaperReportList );
+						}
+						// #18685 -#33167  End.
 						getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
 						iterator.remove();
 					}
