@@ -3776,10 +3776,7 @@ public class CreateQtBackingBean extends
 	public void yesDeleteExistingDemoTechChecklist() {
 		SpecificationResDTO resDTO = null;
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-//		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTSpecSO.class);
-		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTSpecSO.class);
 
 		try {
@@ -3787,12 +3784,7 @@ public class CreateQtBackingBean extends
 			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 			resDTO = specSo.deleteDemoSpecChecklist(reqDTO);
 
-			if (resDTO.isSuccessful()) {
-//				ScQt scQt = getManagedBean().getQt();
-//				scQt.setDemoRequired(false);
-//				specReqDTO.setScQt(scQt);
-//				specSO.saveQTDtl(specReqDTO);
-				
+			if (resDTO.isSuccessful()) {				
 				SpecificationBackingBean specBB = new SpecificationBackingBean();
 				specBB.resetDemoTechSpecListAfterDelete();
 			}

@@ -11826,9 +11826,10 @@ public class SpecificationBackingBean extends
 					scWorkFlowStatus);
 			System.out.println("after prepare...");
 			
-			//#28784
+			//#28784 -update
 			Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
-			if (status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) {
+			if (status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) && this.getManagedBean().getQt().
+					getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)) {
 				this.getManagedBean().setDemoType(true);
 			}
 			

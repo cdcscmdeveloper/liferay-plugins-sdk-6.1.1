@@ -386,8 +386,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			}
 			QuationTenderReqDTO reqQtDTO = new QuationTenderReqDTO();
 			reqQtDTO.setQtId(qtId);
-			reqQtDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);// later
-																									// change
+			reqQtDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
 			QuationTenderResDTO resDTO = getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqQtDTO);
 			this.getManagedBean().setCurrentApproval(resDTO.getQtApproval());
 			IQTDetailSO QtDetailsSO;
@@ -831,10 +830,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					IQTDetailSO.class);
 			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 			ScQt scQt = this.getManagedBean().getQt();
-
-			// if
-			// (!this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION))
-			// {
+		
 			quationTenderReqDTO.setQtId(scQt.getQtId());
 			quationTenderReqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
 			QuationTenderResDTO resDTO = detailSO.retrieveApprovalsByQtIdNType(quationTenderReqDTO);
@@ -849,20 +845,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			qtApproval.setScQtApprovalRemarks(qtRemarks);
 			TabBean tabBean = new TabBean(null, null, qtApproval, retrieveFinalizationCommitteeType());
 			this.getManagedBean().setSelectedApprovalTabBean(tabBean);
-			// } else {
-			// List<ScQtRemark> remarks = null;
-			// if (!scQt.getScQtRemarks().equals(null)) {
-			// if
-			// (StringUtils.isNotEmpty(scQt.getScQtRemarks().get(0).getRemark()))
-			// {
-			// remarks = scQt.getScQtRemarks();
-			// }
-			// }
 
-			// scQt.setScQtRemarks(initializeRemarks(scQt,
-			// this.getManagedBean().getQt().getCurrentWorkFlowStatus(),
-			// scQt.getScQtRemarks(), ScQtRemark.class));
-			// }
 			return "/xhtml/sc/demoInvitation/demoInvitationCancel.xhtml";
 
 		} finally {
@@ -928,9 +911,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 		}
 		this.getManagedBean().setTempDemoSuppList(scQtDemo.getScQtDemoSupplierList());
 		this.getManagedBean().setTempDemoItemList(scQtDemo.getScQtDemoItemList());
-//		for (ScQtDemoItem item : scQtDemo.getScQtDemoItemList()) {
-//			this.getManagedBean().setTempDemoByItemScoreList(item.getScQtDemoByItemScoreList());
-//		}
+
 		scQtDemo.setDemoInvRemark(this.getManagedBean().getDemoRemark());
 		// #28784 - Start
 		scQtDemo.setScQtDemoItemList(getManagedBean().getByItemList());
