@@ -190,6 +190,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
@@ -5891,6 +5892,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			List<HashMap<String, String>> listSpec = new ArrayList<>();
 			int countIndex = 0;
 			int indi = 0;
+			String whiteSpace = "&nbsp";
 			boolean getFirstValue = true;
 			if (question.getTplSpecZoneQties().size()  > 0){
 				
@@ -5904,6 +5906,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
 							map.put("zoneName",zone.getTplSpecZoneDtl().getZoneName());
 							map.put("qty", zone.getQty().toString());
+							if (null != question.getTplSpecTierQties() && question.getTplSpecTierQties().size() > 0 ){
+								String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
+								map.put("qtyBerperingkat", tierValue);
+							}else {
+								String tierValue = "T/B";
+								map.put("qtyBerperingkat", tierValue);
+							}
+							
 							if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service") || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")){
 								map.put("clUomFrequency", question.getClUomFrequency().toString());
 								map.put("clUomPerDay", question.getClUomPerDay().toString());
@@ -5915,14 +5925,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							}
 							getFirstValue = false;
 						}else {
-							map.put("clItem", "&nbsp");
-							map.put("uomName", "&nbsp");
-							map.put("clPriceTypeCode", "&nbsp");
+							map.put("clItem", whiteSpace);
+							map.put("uomName", whiteSpace);
+							map.put("clPriceTypeCode", whiteSpace);
 							map.put("zoneName",zone.getTplSpecZoneDtl().getZoneName());
+							map.put("qtyBerperingkat", whiteSpace);
 							if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service") || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")){
-								map.put("clUomFrequency", "&nbsp");
-								map.put("clUomPerDay", "&nbsp");
-								map.put("clUomPerMonth", "&nbsp");
+								map.put("clUomFrequency", whiteSpace);
+								map.put("clUomPerDay", whiteSpace);
+								map.put("clUomPerMonth", whiteSpace);
 							}
 							map.put("qty", zone.getQty().toString());
 							for (TplSpecAnswer answer: question.getTplSpecAnswers()) {
@@ -5930,7 +5941,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 									map.put("answerNumeric", answer.getAnswerNumeric().toString());
 								}
 							}
-							
 							
 						}
 						
@@ -5967,7 +5977,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								}else {
 									//product
 									map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
-									map.put("qtyBerperingkat", getDefaultValue());
+									String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
+									map.put("qtyBerperingkat", tierValue);
+									
 								}
 								
 								for (String feedback:question.getFeedbackList()){
@@ -6087,6 +6099,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 		//#10542 - end
+		
+		
+		//#26130 start
+		public String retrieveTierQuantity(List<TplSpecTierQty> listTplSpecTierQties){
+			StringBuffer sb = new StringBuffer();
+			if (listTplSpecTierQties.size() > 0){
+				for (TplSpecTierQty qty: listTplSpecTierQties){
+					  sb.append(qty.getFromQty() +" - "+qty.getToQty() +"<br />");
+					  
+				  }
+			}else {
+				sb.append("T/B");
+			}
+			 
+			 return sb.toString();
+		}
+		
+		//#26130 end
 
 
 }
