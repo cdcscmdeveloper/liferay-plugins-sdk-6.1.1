@@ -69,6 +69,10 @@
 						<!-- 26238 -  Disciplonary action - 29156  29778 -END -->		
 					    <!-- bug #28278 -END -->
 					    <!-- bug #32970 -START -->
+					    <!-- 32970 - akmal - multiple Da with pending txn  -->
+					    <h:outputText 
+							value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.status.suspend']}, #{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})"
+							rendered="#{smSupplier.typeDisciplinaryAction eq 'S' and smSupplier.pendingSuspend eq true and smSupplier.suspendRegistrationStats eq true and smSupplier.blacklistStats eq true}" /> 
 					    <h:outputText 
 							value="#{lbl['lbl.sm.status.deleted_suspend']} (#{lbl['lbl.sm.status.suspend']}, #{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})"
 							rendered="#{smSupplier.typeDisciplinaryAction eq 'S' and smSupplier.pendingSuspend ne true and smSupplier.suspendRegistrationStats eq true and smSupplier.blacklistStats eq true}" /> 
