@@ -36,6 +36,7 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPendingPoWeightage;
@@ -49,6 +50,7 @@ import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -83,8 +85,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	}
 
 	private FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
+		//#29116 CR 3460: Static Code Analysis
+		//FacesScopes facesScopes = new FacesScopes();
+		return new FacesScopes();
 	}
 
 	/**
@@ -301,7 +304,20 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			
 			reqDTO.setToken(token);
 			reqDTO.setOutcome(resAction);
-			//reqDTO.setSmRemark(smRmk);
+			
+			//3460 - Start
+			if ((!getManagedBean().getSmRemark().getRemark().equalsIgnoreCase(""))) {
+				SmRemark smRmk = new SmRemark();
+				smRmk.setDocId(this.getManagedBean().getAppId());
+				smRmk.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
+				PmRole pmRole = new PmRole();
+				pmRole.setRoleCode(RoleCode.UPS_SDO.value());
+				smRmk.setPmRole(pmRole);
+				smRmk.setRemark(this.getManagedBean().getSmRemark().getRemark());
+				reqDTO.setSmRemark(smRmk);
+			}
+			//3460 - End 
+			
 			this.getManagedBean().getSmApplInquiry().setSmAppl(this.getManagedBean().getSmAppl());
 			reqDTO.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
 			reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
@@ -332,6 +348,27 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		}
 		return null;
 	}
+	
+	//3460 - Start
+	public void changePlainTxt(String txt) throws Exception {
+		SmRemark smRmk = new SmRemark();
+		txt = txt.trim();
+		byte[] bytes = txt.getBytes(StandardCharsets.US_ASCII);
+		String asciiEncodedString = new String(bytes, StandardCharsets.US_ASCII);
+		int length = asciiEncodedString.length();
+		if (length > 4000) {
+			asciiEncodedString = asciiEncodedString.substring(0, 4000);
+			log.info("THIS IS THE LENGTH OF THE AFTER CUT TEXT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+					+ asciiEncodedString.length());
+			smRmk.setRemark(asciiEncodedString);
+			this.getManagedBean().setSmRemark(smRmk);
+		} else {
+			log.info("THIS IS THE LENGTH OF ACTUAL TEXT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + length);
+			smRmk.setRemark(asciiEncodedString);
+			this.getManagedBean().setSmRemark(smRmk);
+		}
+	}
+	//3460 - End
 
 	public String getAssignedPOName(String docNo) {
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
