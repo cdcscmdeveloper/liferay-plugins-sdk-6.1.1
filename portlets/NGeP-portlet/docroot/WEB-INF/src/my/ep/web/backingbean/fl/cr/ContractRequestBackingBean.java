@@ -4750,20 +4750,22 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//Start-11076-fix performance issues
 //			PmParameter Pricetype = contractItemSO.searchContractItemPriceType(reqDTO);
 			PmParameter Pricetype =resDTO.getPriceType();
-			//End 11076-fix performance issues
-			if(ParameterConst.PRICE_TYPE_STANDARD.equals(Pricetype.getParameterCode())){
-				getManagedBean().setStandardPrice(true);
-				
-			}else if(ParameterConst.PRICE_TYPE_ZONAL_STANDARD.equals(Pricetype.getParameterCode())){
-				getManagedBean().setZonalPrice(true);
-			}else if(ParameterConst.PRICE_TYPE_ZONAL_TIER.equals(Pricetype.getParameterCode()) || ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(Pricetype.getParameterCode())){
-				getManagedBean().setZonalTierPrice(true);
-				getManagedBean().setZonalPrice(false);
-			}
-			if(ParameterConst.PRICE_TYPE_TARIFF.equals(Pricetype.getParameterCode()) || ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(Pricetype.getParameterCode())) {
-				getManagedBean().setTariffPrice(true);
-			}
 			
+			if(Pricetype!=null){
+				if(ParameterConst.PRICE_TYPE_STANDARD.equals(Pricetype.getParameterCode())){
+					getManagedBean().setStandardPrice(true);
+					
+				}else if(ParameterConst.PRICE_TYPE_ZONAL_STANDARD.equals(Pricetype.getParameterCode())){
+					getManagedBean().setZonalPrice(true);
+				}else if(ParameterConst.PRICE_TYPE_ZONAL_TIER.equals(Pricetype.getParameterCode()) || ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(Pricetype.getParameterCode())){
+					getManagedBean().setZonalTierPrice(true);
+					getManagedBean().setZonalPrice(false);
+				}
+				if(ParameterConst.PRICE_TYPE_TARIFF.equals(Pricetype.getParameterCode()) || ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(Pricetype.getParameterCode())) {
+					getManagedBean().setTariffPrice(true);
+				}
+			}
+			//End 11076-fix performance issues
 			return resDTO.getContractItemResultBean();
 		}
 
