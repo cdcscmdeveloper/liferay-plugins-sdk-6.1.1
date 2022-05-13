@@ -2912,84 +2912,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		log.info("Check getFinalListOfSideMenu Size"+getManagedBean().getFinalListOfSideMenu().size());
 		log.info("Check getFinalListOfSideMenu "+getManagedBean().getFinalListOfSideMenu().toString());
 	}
-	
-	//#Enhancement 15851 - shaqimi start
-
-	/**
-	 * The method used to construct 
-	 * the tab menu for contract amendment.
-	 */
-	public void ConstructAmendmentViewTabSideMenu() {
-		AmendTabSideMenus sideMenu = new AmendTabSideMenus();
-		getManagedBean().setFinalListOfSideMenu(new ArrayList<String>());
-		getManagedBean().setConfirmMeeting(false);
-		getManagedBean().setIndexing(new LinkedHashMap<String, Integer>());
-		
-		int indexing = -1;//to start the indexing at 0;
-
-		if (getManagedBean().getAckFA() == null) {
-			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendFulfilment);
-
-			if (ctBackingBean.getManagedBean().getContractVer() != null 
-					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment() != null
-					&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
-							|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
-							|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())) {
-
-				if ((ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing() && (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange() || 
-						   ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())) ||
-						   (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange() && ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing())) {
-					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithZone);
-
-				} if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
-						&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
-					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAgency);
-				} if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange() || 
-						ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) || 
-						ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
-					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithItem);	 
-				}
-			}
-
-			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
-				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuDeduction);
-			}
-			
-			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange() && 
-					ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-					&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
-				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuSchedule);
-			}
-			
-			if (((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() != null 
-					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()) ||
-					ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq())
-					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
-					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
-				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
-			}
-			
-			if ((ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
-					&& ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
-					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
-					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))){
-				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithBond);
-			}
-
-			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareLoa);
-			
-			for(String sidemenu : getManagedBean().getFinalListOfSideMenu()){
-				getManagedBean().getIndexing().put(sidemenu, ++indexing);
-			}
-		}
-	}
-
-	public void setMenuByIndex(int outputValue) {
-		getManagedBean().setSelectedTabIndex(outputValue);
-	}
-	//#Enhancement 15851 - shaqimi end
 
 	/**
 	 * The method used for controlling the tab menu
@@ -3626,8 +3548,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return new contract amount
 	 */
 	public BigDecimal newContractAmt() {
-		return ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().add(
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount());
+		//Bug 33096 - shaqimi start
+		BigDecimal ctAmt = null;
+		if(ctBackingBean.getManagedBean().isViewSCL()){
+			ctAmt = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
+		} else {
+			ctAmt = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().add(
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount());
+		}
+		return ctAmt;
+		//Bug 33096 - shaqimi end
 	}
     
 	/**
@@ -7830,11 +7760,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 					reqDTO.setContractId(contractId);					
 					reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-					if(ctDT.getManagedBean().getLoaContractVerId() !=null ){
+					
+					//Bug 33096 - shaqimi start
+					Long amendmentContractVerId = null;
+					if(!getManagedBean().getSupplementalLoaNo().equals(null)){
+						amendmentContractVerId = contractSO.getAmendmentContractVerId(getManagedBean().getSupplementalLoaNo());
+					}
+					
+					if(ctBackingBean.getManagedBean().isViewSCL() && !amendmentContractVerId.equals(null)){
+						reqDTO.setContractVerId(amendmentContractVerId);
+					} else {
 						reqDTO.setContractVerId(ctDT.getManagedBean().getLoaContractVerId());
-					}else{
-						reqDTO.setContractVerId( contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
-					}										
+					}
+					//Bug 33096 - shaqimi end
 
 					reqDTO.setViewOnly(true);
 					ctBackingBean.getManagedBean().setViewContract(true);
