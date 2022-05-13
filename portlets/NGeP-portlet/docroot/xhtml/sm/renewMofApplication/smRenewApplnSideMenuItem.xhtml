@@ -1357,7 +1357,8 @@
 				tabNo="5" label="#{lbl['lbl.sm.catCodeStepLbl']}" />
 		</p:menuitem>
 		<c:choose>
-			<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+			<!-- #26671 - Site Visit Grouping Enhancement - 28775 -->
+			<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.showFacilityMachine}">
 				<p:menuitem>
 					<ac:smApplMenuItem
 						disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
@@ -1370,7 +1371,8 @@
 				</p:menuitem>
 				
 				<c:choose>
-					<c:when test="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}">
+					<!-- #26671 - Site Visit Grouping Enhancement - 28775 -->
+					<c:when test="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel or backingBean.managedBean.showFacilityMachine}">
 						<p:menuitem>
 							<ac:smApplMenuItem
 								disciplinary="#{backingBean.managedBean.editVO.disciplinary}"

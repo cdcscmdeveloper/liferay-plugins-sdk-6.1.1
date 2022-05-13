@@ -1722,6 +1722,22 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		
+		// 26671 - Site Visit Grouping Enhancement -28775 - START
+		getManagedBean().setShowFacilityMachine(false);
+		if (applicationType.equals("R")) {
+			log.info("------Renew MOF-----");
+			for (SmSupplierCategory parentCat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
+				if (parentCat.isSpecialCategory() == true) {
+					log.info("-----Category is Special-----");
+					// getManagedBean().getSmAppl().setApplCategoryType("S");
+					getManagedBean().setShowFacilityMachine(true);
+					log.info("--ShowFacility--" + getManagedBean().isShowFacilityMachine());
+					break;
+				}
+			}
+		}
+		// 26671 - Site Visit Grouping Enhancement -28775 - END
+		
 		if (fromBpm
 				&& (getManagedBean().isPoUser() || getManagedBean()
 						.isApproverUser())) {
@@ -4537,14 +4553,20 @@ public class SmApplicationBackingBean extends
 		rqDto.setAppTypeCode(getManagedBean().getSmAppl().getApplType());
 		if (!getManagedBean().getSmAppl().getSmSupplierCategories().isEmpty()) {
 			List<Long> catL3Ids = new ArrayList<Long>();
-			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
-					.getSmSupplierCategories()) {
-				if (cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+			//28775 - Site Visit Grouping Enhancement - 28775 - start
+			if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+				for(SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
 					catL3Ids.add(cat.getPmCategoryL3().getCategoryL3Id());
 				}
+			} else {
+				for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
+					if (cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+						catL3Ids.add(cat.getPmCategoryL3().getCategoryL3Id());
+					}
+				}
 			}
-
+			//28775 - Site Visit Grouping Enhancement - 28775 - end
 			// temp fix to reduce the number of supporting documents retrieve
 			// for update & bumi.
 			if (catL3Ids.size() == 0) {
@@ -6811,6 +6833,12 @@ public class SmApplicationBackingBean extends
 	* application.
 	*/
 	public void addOrUpdateWorkshopToSmAppl() {
+		// 29379 - Site Visit Grouping Enhancement -28775 - start
+		if(getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers().size() < SupplierManagementConst.MIN_EMPLOYEE){
+			throw new EpException(
+					SmCommonUtil.getMessage("lbl.sm.insertemployee.instruction",null), null);
+		}
+		// 29379 - Site Visit Grouping Enhancement -28775 - end
 		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
 		SmCommonUtil.getInstance().setUserDetails(smFac);
 		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
@@ -6825,6 +6853,17 @@ public class SmApplicationBackingBean extends
 					"smWorkShopDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse();
+		// 29379 - Site Visit Grouping Enhancement -28775 - start
+		for(SmSvWorker worker : getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers()){
+			worker.setIdentificationType(ParameterHelper.getInstance()
+					.getPmParameterById(worker.getIdentificationTypeId()));
+			if(worker.getIdentificationType().getParameterCode().equals(
+					SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
+				SmCommonUtil.getInstance().verifyWithMyIdentityICOnly(
+					worker.getName(), worker.getIdentificationNo());
+			}
+		}
+		// 29379 - Site Visit Grouping Enhancement -28775 - end
 		saveOrUpdateAppl();
 		getManagedBean().setWorkshopFacilitiesVOList(
 				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
@@ -6851,6 +6890,14 @@ public class SmApplicationBackingBean extends
 	 *            - SmFacility object
 	 */
 	public void assignSelWorkshop(SmFacility facilityBean) {
+		// 29379 - Site Visit Grouping Enhancement -28775 - start
+		if (getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers() == null) {
+			getManagedBean().getSelectedWorkShopFacility().setSmSvWorkers(new ArrayList<SmSvWorker>());
+		}
+		if (getManagedBean().getIdentificationTypes() == null) {
+			getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
+		}
+		// 29379 - Site Visit Grouping Enhancement -28775 - end
 		SmApplicationUtil.assignSupplierCategoryFacility(getManagedBean(),
 				facilityBean);
 		setFacilityAddressSameAs(facilityBean);
@@ -6887,6 +6934,13 @@ public class SmApplicationBackingBean extends
 						.getCountryId()));
 		getManagedBean().setFacilityType(
 				StringUtils.upperCase(SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null)));
+		// 29379 - Site Visit Grouping Enhancement -28775 - start
+		if (getManagedBean().getIdentificationTypes() == null) {
+			getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
+		}
+		getManagedBean().getSelectedWorkShopFacility().setSmSvWorkers(new ArrayList<SmSvWorker>());
+		// 29379 - Site Visit Grouping Enhancement -28775 - end
+
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("workShopDialog.show()");
 	}
@@ -6911,6 +6965,25 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP));
 	}
+
+	// 29379 - Site Visit Grouping Enhancement -28775 START
+	public void addEmployee() {
+		SmSvWorker worker = new SmSvWorker();
+		worker.setIdentificationType(new PmParameter());
+		worker.setSmFacility(getManagedBean().getSelectedWorkShopFacility());
+		getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers().add(worker);
+	}
+
+	public void removeEmployee() {
+		SmSvWorker[] selectedWorkers = getManagedBean().getSelectedWorkers();
+		if(selectedWorkers != null && selectedWorkers.length > 0){
+			for(SmSvWorker worker : selectedWorkers){
+				getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers().remove(worker);
+			}
+		}
+		getManagedBean().setSelectedWorkers(null);
+	}
+	// 29379 - Site Visit Grouping Enhancement -28775 END
 
 	// Workshop end
 	// Store start
@@ -10767,6 +10840,11 @@ public class SmApplicationBackingBean extends
 			} else {
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_ASSIGNMENT);
 			}
+			//28775 - Site Visit Grouping Enhancement - 28775 - start
+			getManagedBean().getSmAppl().setSiteVisitGroup(true);
+			getManagedBean().getSmAppl().setSmSvTasks(getManagedBean().getSvTaskList());
+			//reqDTO.setSvTask(getManagedBean().getSvTask());
+			//28775 - Site Visit Grouping Enhancement - 28775 - end
 			reqDTO.setSvTaskList(getManagedBean().getSvTaskList());
 			actionDesc = SupplierManagementConst.PO_RECOM_SITE_VISIT;
 
@@ -13762,12 +13840,18 @@ public class SmApplicationBackingBean extends
 			List<SmSupplierCategory> activeList = new ArrayList<SmSupplierCategory>();
 			if(getManagedBean().getSmAppl().getSmSupplierCategories()!=null 
 					&& getManagedBean().getSmAppl().getSmSupplierCategories().size()>0 ){
-				for(SmSupplierCategory activeSuppCat: getManagedBean().getSmAppl().getSmSupplierCategories()){
-					if(activeSuppCat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_ACT_STATUS) == 0 ){
-						activeList.add(activeSuppCat);
+				//28775 - Site Visit Grouping Enhancement - 28775 - start
+				if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+					activeList = getManagedBean().getSmAppl().getSmSupplierCategories();
+				} else {
+					for(SmSupplierCategory activeSuppCat: getManagedBean().getSmAppl().getSmSupplierCategories()){
+						if(activeSuppCat.getRecordStatusFlg().compareTo(
+								SupplierManagementConst.PENDING_ACT_STATUS) == 0 ){
+							activeList.add(activeSuppCat);
+						}
 					}
 				}
+				//28775 - Site Visit Grouping Enhancement - 28775 - end
 			}
 			for (PmDocumentRestr tmp : doc.getPmDocumentRestrs()) {
 				if (tmp.getPmCategoryL3() != null) {
@@ -16289,7 +16373,51 @@ public class SmApplicationBackingBean extends
 	}
 	//#12483 - END
 	
-
+	//29380  - Site Visit Grouping Enhancement -28775 - Start
+	
+	public boolean checkOtherDescDockyard(PmCategoryL3 dockyardCatVar, SmSupplierCategory categoryVar){
+		boolean result=false;
+		if(categoryVar == null || categoryVar.getPmCategoryL3() == null){
+			log.info("NUll Here");
+			return result;
+		}
+		if(categoryVar.getRecordStatusFlg().equals(SupplierManagementConst.PENDING_ACT_STATUS) &&
+				dockyardCatVar.getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id()) ){
+			if( dockyardCatVar.getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) && 
+					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) ){
+				result=true;
+			}	
+			if(dockyardCatVar.getFullCatcode().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_L2_L3_220701) &&
+					categoryVar.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_22) &&
+					categoryVar.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L2_07) &&
+					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_01)){
+				result=true;
+			}
+		}
+		return result;
+	}
+	
+	public boolean checkOtherDescMachinery(SmMachineCategory catFac, SmSupplierCategory categoryVar){
+		boolean result=false;
+		if(categoryVar == null || categoryVar.getPmCategoryL3() == null){
+			log.info("NUll Here");
+			return result;
+		}
+		if( catFac.getPmCategoryL3().getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id()) &&
+				(catFac.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) && 
+				categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99)) ||
+				(catFac.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_22) &&
+				catFac.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L2_07) &&
+				catFac.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_01)) && 
+				(categoryVar.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_22) &&
+					categoryVar.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L2_07) &&
+					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_01)) ){
+			result=true;
+		}
+		return result;
+	}
+	//29380  - Site Visit Grouping Enhancement -28775 - End
+	 
 	// 14530 - START
 		private void sendEmailtoSupplier(ReviewApplicationReqDTO reviewAppDTO) {
 			IReviewApplicationSO reviewAppSO = SmServiceLookup.getReviewApplicationSO();

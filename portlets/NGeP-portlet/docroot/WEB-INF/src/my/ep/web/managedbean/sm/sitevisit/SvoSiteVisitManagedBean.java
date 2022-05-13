@@ -6,7 +6,9 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
+import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAttachment;
@@ -134,6 +136,16 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	//#28774 - Start
 	private SmSvAssistantOfficer selectedAssistantOfficer;
 	//#28774 - End
+	//28775 - Site Visit Grouping Enhancement - 28775 - start
+	private List<SmSvTemplate> templates;
+	private String parameterDesc;
+	private boolean licensed;
+	private String activePage;
+	private List<PmMachine> travellingSoftwareList;
+	private SelectItem[] identificationTypes;
+	//28775 - Site Visit Grouping Enhancement - 28775 - end	
+	//29379 - Site Visit Grouping Enhancement - 28775
+	private SmFacility workerFacility;
 	
 
 	public Object getBpmPojo() {
@@ -776,4 +788,64 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setFromReport(boolean fromReport) {
 		this.fromReport = fromReport;
 	}
+	
+	//28775 - Site Visit Grouping Enhancement - 28775 - start
+	public List<SmSvTemplate> getTemplates() {
+		return templates;
+	}
+
+	public void setTemplates(List<SmSvTemplate> templates) {
+		this.templates = templates;
+	}
+
+	public String getParameterDesc() {
+		return parameterDesc;
+	}
+
+	public void setParameterDesc(String parameterDesc) {
+		this.parameterDesc = parameterDesc;
+	}
+
+	public boolean getLicensed() {
+		return licensed;
+	}
+
+	public void setLicensed(boolean isLicensed) {
+		this.licensed = isLicensed;
+	}
+
+	public String getActivePage() {
+		return activePage;
+	}
+
+	public void setActivePage(String activePage) {
+		this.activePage = activePage;
+	}
+
+	public List<PmMachine> getTravellingSoftwareList() {
+		return travellingSoftwareList;
+	}
+
+	public void setTravellingSoftwareList(List<PmMachine> travellingSoftwareList) {
+		this.travellingSoftwareList = travellingSoftwareList;
+	}
+
+	public SelectItem[] getIdentificationTypes() {
+		return identificationTypes;
+	}
+
+	public void setIdentificationTypes(SelectItem[] identificationTypes) {
+		this.identificationTypes = identificationTypes;
+	}
+	//28775 - Site Visit Grouping Enhancement - 28775 - end
+
+	//29379 - Site Visit Grouping Enhancement - 28775 - start
+	public SmFacility getWorkerFacility() {
+		return workerFacility;
+	}
+
+	public void setWorkerFacility(SmFacility workerFacility) {
+		this.workerFacility = workerFacility;
+	}
+	//29379 - Site Visit Grouping Enhancement - 28775 - end
 }
