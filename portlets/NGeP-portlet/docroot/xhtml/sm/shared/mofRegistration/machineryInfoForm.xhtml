@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sm.machine.panHdr']}" toggleable="true" rendered="#{backingBean.managedBean.showMachineryEquipmentPanel}" id="machineMainPanelId">
+	<p:panel header="#{lbl['lbl.sm.machine.panHdr']}" toggleable="true" rendered="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showFacilityMachine}" id="machineMainPanelId">
 		<table style="width: 100%">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -43,7 +43,7 @@
 				id="poMachBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.machineryVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.machineryVerified : false)}" />
 			
-			<p:outputPanel rendered="#{backingBean.managedBean.showMachineryEquipmentPanel}">
+			<p:outputPanel rendered="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showFacilityMachine}">
 				<br />
 				
 				<p:dataTable var="machCatVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -79,17 +79,21 @@
 								<h:outputText value="#{macBean.machineType}" rendered="#{not empty macBean.machineType}"/>
 								<h:outputText value="#{macBean.machine.machineDesc}" rendered="#{empty macBean.machineType}"/>
 							</p:column>
-							
-							<p:column headerText="#{lbl['lbl.sm.category']}">
+							<!-- 29380  - Site Visit Grouping Enhancement -28775 -Start -->
+							<p:column headerText="#{lbl['lbl.sm.category']}" style="width: 80% !important">
 								<ui:repeat var="catFac" value="#{macBean.smMachineCategories}">
 									<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 												#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
 												#{catFac.pmCategoryL3.categoryL3Code}
-											 	(#{catFac.pmCategoryL3.categoryName})" 
-										style="float: left;white-space: normal;" /><br />
+											 	(#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}/#{catFac.pmCategoryL3.pmCategoryL2.categoryName}/#{catFac.pmCategoryL3.categoryName})" 
+										style="float: left;white-space: normal; " /><br />
+									<ui:repeat var="categoryVar" value="#{backingBean.managedBean.smAppl.smSupplierCategories}">
+									<h:outputText value="#{lbl['lbl.sm.catCodes.othDesc']}: #{categoryVar.otherDesc}" rendered="#{backingBean.checkOtherDescMachinery(catFac,categoryVar)}"
+										style="float: left;white-space: normal;" />
+									</ui:repeat><br /><br />
 								</ui:repeat>
 							</p:column>
-			
+							<!-- 29380  - Site Visit Grouping Enhancement -28775 -End -->
 							<p:column headerText="#{lbl['lbl.sm.machine.brand']}">
 								<h:outputText value="#{macBean.brandName}" />
 							</p:column>
@@ -131,7 +135,7 @@
 			
 			<ui:remove>
 				<p:outputPanel
-					rendered="#{!backingBean.managedBean.showMachineryEquipmentPanel}"
+					rendered="#{!backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showFacilityMachine}"
 					layout="block">
 		
 					<table style="width: 100%">
@@ -279,10 +283,11 @@
 					</tr>
 				</p:outputPanel>
 	
+				<!-- 14686  - Site Visit Grouping Enhancement -28775  START -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.machine.brand']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="50"
+					<td><p:inputText maxlength="250"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.machine.brand']}" id="smMachBrand"
 							value="#{backingBean.managedBean.selectedMachine.brandName}"
@@ -295,7 +300,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.machine.function']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="50"
+					<td><p:inputText maxlength="250"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.machine.function']}" id="smMachFnc"
 							value="#{backingBean.managedBean.selectedMachine.machineFunction}"
@@ -306,6 +311,7 @@
 							showSummary="true" showDetail="false" display="icon" />
 					</td>
 				</tr>
+				<!-- 14686  - Site Visit Grouping Enhancement -28775  END-->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.machine.quantity']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
@@ -354,15 +360,17 @@
 							showSummary="true" showDetail="false" display="icon" />
 					</td>
 				</tr>
+				<!-- 14686  - Site Visit Grouping Enhancement -28775  START-->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.machine.guarnName']}" /></td>
-					<td><p:inputText maxlength="50"
+					<td><p:inputText maxlength="250"
 							value="#{backingBean.managedBean.selectedMachine.guarantorName}"
 							size="35" >
 							<p:ajax process="@this" update="@this" partialSubmit="true" event="blur" />
 						</p:inputText>
 					</td>
 				</tr>
+				<!-- 14686  - Site Visit Grouping Enhancement -28775  END-->
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.machine.purchase.year']}" /> <p:outputLabel

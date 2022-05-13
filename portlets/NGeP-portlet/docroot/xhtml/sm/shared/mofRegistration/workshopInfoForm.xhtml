@@ -12,11 +12,24 @@
 			<br />
 			<ui:repeat var="workshopCatVar" value="#{backingBean.managedBean.workshopFacilitiesVOList}" varStatus="workshopCatVarStatus">
 				<table style="width: 100%;">
+					<!-- 29380 - Site Visit Grouping Enhancement -28775 -Start -->
 					<tr>
-						<td style="white-space: nowrap; float: left;">
-						    <p:outputLabel value="#{workshopCatVarStatus.index + 1}. #{workshopCatVar.fullCatcode} (#{workshopCatVar.categoryName})" />
+						<td style="float: left;">
+						    <p:outputLabel value="#{workshopCatVarStatus.index + 1}. #{workshopCatVar.fullCatcode} (#{workshopCatVar.pmCategoryL2.pmCategoryL1.categoryName}/#{workshopCatVar.pmCategoryL2.categoryName}/#{workshopCatVar.categoryName})" 
+						    style="text-align:left;"/>
 						</td>
 					</tr>
+					<ui:repeat var="categoryVar" value="#{backingBean.managedBean.smAppl.smSupplierCategories}" >
+					<tr>
+						<td style="white-space: nowrap; float: left;">
+						    <p:outputLabel style="text-indent: 10px;" value="#{lbl['lbl.sm.catCodes.othDesc']}: #{categoryVar.otherDesc}" 
+						    rendered="#{categoryVar.pmCategoryL3.categoryL3Code eq SupplierManagementConst.CATEGORY_CODE_L3_99 and workshopCatVar.categoryL3Code eq SupplierManagementConst.CATEGORY_CODE_L3_99
+						    and categoryVar.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS
+						    and categoryVar.pmCategoryL3.categoryL3Id eq workshopCatVar.categoryL3Id}"/>
+						</td>
+					</tr>
+					</ui:repeat>
+					<!-- 29380 - Site Visit Grouping Enhancement -28775 -End -->
 				</table>
 				<br />
 				
@@ -106,7 +119,8 @@
 		</p:outputPanel>
 
 	</p:panel>
-	<p:dialog width="700px" height="500px"
+	<!-- 29379  - Site Visit Grouping Enhancement -28775 -->
+	<p:dialog width="1200px" height="450px"
 		header="#{lbl['lbl.sm.workshop.information']}"
 		widgetVar="workShopDialog" resizable="false" showEffect="fade"
 		closable="false" hideEffect="fade" modal="true" id="workShopDialog">
@@ -268,7 +282,10 @@
 				</tr>
 	
 			</table>
-			
+
+			<!-- 29379  - Site Visit Grouping Enhancement -28775 -->
+			<ui:include	src="/xhtml/sm/shared/mofRegistration/employeeInfoForm.xhtml" />
+
 			<br />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
@@ -289,9 +306,16 @@
 	
 	<ac:confirmationPopup id="workshopDeletePopUpId"
 		widget="workshopDeletePopUp"
-		okAction="backingBean.deleteSelectedWorkShops"
-		width="400" height="100"
+		okAction="backingBean.deleteSelectedWorkShops" width="400"
+		height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}"
+		update=":#{p:component('smWorkShopDtPanel')}, @([id$=Msg])" />
+
+	<!-- 29379  - Site Visit Grouping Enhancement -28775  START-->
+	<ac:confirmationPopup id="empDeletePopUpId" widget="empDeletePopUp"
+		okAction="backingBean.removeEmployee()" width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
-		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":#{p:component('smWorkShopDtPanel')}, @([id$=Msg])"/>
+		content="#{lbl['lbl.msg.confirm.delete']}"
+		update=":#{p:component('pnlEmployeeInfo')}" />
+	<!-- 29379  - Site Visit Grouping Enhancement -28775  END-->
 </ui:composition>

@@ -8,37 +8,37 @@
 	<p:tabMenu  styleClass="sidemenu" style="display:table-caption; width:20%;" activeIndex="#{svoSiteVisitBackingBean.managedBean.activeIndex}" id="tabIndex">
 		<p:menuitem value="#{lbl['lbl.sm.svo.sitevisit.info']}" 
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			update="@form" actionListener="#{svoSiteVisitBackingBean.changePageIndex(0,null,true)}" />
+			update="@form" actionListener="#{svoSiteVisitBackingBean.changePageIndex(0,viewFlag)}" />
 			
 		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.b']}" 
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			update="@form" actionListener="#{svoSiteVisitBackingBean.changePageIndex(1,null,true)}" />
+			update="@form" actionListener="#{svoSiteVisitBackingBean.changePageIndex(1,viewFlag)}" />
 		
 		<p:menuitem value="#{lbl['lbl.sm.sitevisit.licenseinsurance']}" update="@form" 
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-				actionListener="#{svoSiteVisitBackingBean.changePageIndex('l',svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate,true)}" 
+				actionListener="#{svoSiteVisitBackingBean.changePageIndex('l',viewFlag)}" 
 				rendered="#{svoSiteVisitBackingBean.managedBean.licensed}"/>
 		
 		<p:menuitem value="#{svoSiteVisitBackingBean.managedBean.parameterDesc}" update="@form" 
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				rendered="#{not empty svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3}" 
-				actionListener="#{svoSiteVisitBackingBean.changePageIndex('c',svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate,true)}" />
+				actionListener="#{svoSiteVisitBackingBean.changePageIndex('c',viewFlag)}" />
 					
 		<p:menuitem value="#{lbl['lbl.sm.sv.templ.bumiputera']}" update="@form" 
 				rendered="#{empty svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3}"
-				actionListener="#{svoSiteVisitBackingBean.changePageIndex('c',svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate,true)}" />
+				actionListener="#{svoSiteVisitBackingBean.changePageIndex('c',viewFlag)}" />
 					
 		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.d']}" update="@form" 
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-				actionListener="#{svoSiteVisitBackingBean.changePageIndex('r',null,true)}" />
+				actionListener="#{svoSiteVisitBackingBean.changePageIndex('r',viewFlag)}" />
 				
 		<p:menuitem value="#{lbl['lbl.sm.officeloc']}"  update="@form" 
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-				actionListener="#{svoSiteVisitBackingBean.changePageIndex('o',null,true)}" />
+				actionListener="#{svoSiteVisitBackingBean.changePageIndex('o',viewFlag)}" />
 				
 		<p:menuitem value="#{lbl['lbl.sm.sitevist.report.submission']}" update="@form" 
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-				actionListener="#{svoSiteVisitBackingBean.changePageIndex('s',svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate,true)}" />
+				actionListener="#{svoSiteVisitBackingBean.changePageIndex('s',viewFlag)}" />
 	</p:tabMenu>
 	
 </ui:composition>

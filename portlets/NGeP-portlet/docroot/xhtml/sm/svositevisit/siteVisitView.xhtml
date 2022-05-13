@@ -33,8 +33,8 @@
 		</p:dataTable>
 
 		<br />
-		<p:dataTable var="cat"
-			value="#{svoSiteVisitBackingBean.managedBean.supplierCategory}"
+		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
+		<p:dataTable var="tmp" value="#{svoSiteVisitBackingBean.managedBean.templates}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<!-- #28175 start -->
 			<c:choose>
@@ -42,20 +42,18 @@
 					test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or 
 					fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')}">
 					<p:column headerText="#{lbl['lbl.sm.category.description']}">
-						#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code} 
-						: 
-						#{cat.categoryL3Name} 
-						<h:outputText value="(#{cat.otherDesc})"
-							rendered="#{cat.pmCategoryL3.categoryL3Code eq SupplierMgmtConst.categoryCatManufacturingCode}"></h:outputText>
+						<h:outputText value="#{tmp.suppCategory.pmCategoryL1.categoryL1Code}#{tmp.suppCategory.pmCategoryL2.categoryL2Code}#{tmp.suppCategory.pmCategoryL3.categoryL3Code}
+				 			- #{tmp.suppCategory.categoryL1Name} / #{tmp.suppCategory.categoryL2Name}"/><br/>
+						<h:outputText value="/ #{tmp.suppCategory.categoryL3Name}"/>
+						<h:outputText value="  (#{tmp.suppCategory.otherDesc})" rendered="#{tmp.suppCategory.otherDesc != null}"/>
 					</p:column>
 				</c:when>
 				<c:otherwise>
 					<p:column headerText="#{lbl['lbl.sm.category.description']}">
-						#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code}
-						:
-						#{cat.pmCategoryL3.categoryName}
-						<h:outputText value="(#{cat.otherDesc})" 
-							rendered="#{cat.pmCategoryL3.categoryL3Code eq SupplierMgmtConst.categoryCatManufacturingCode}"></h:outputText>
+						<h:outputText value="#{tmp.suppCategory.pmCategoryL1.categoryL1Code}#{tmp.suppCategory.pmCategoryL2.categoryL2Code}#{tmp.suppCategory.pmCategoryL3.categoryL3Code}
+				 			- #{tmp.suppCategory.categoryL1Name} / #{tmp.suppCategory.categoryL2Name}"/><br/>
+						<h:outputText value="/ #{tmp.suppCategory.categoryL3Name}"/>
+						<h:outputText value="  (#{tmp.suppCategory.otherDesc})" rendered="#{tmp.suppCategory.otherDesc != null}"/>
 					</p:column>
 				</c:otherwise>
 			</c:choose>
@@ -63,6 +61,27 @@
 		</p:dataTable>
 	</p:panel>
 
+	<p:panel header="#{lbl['lbl.sm.rptpreview.actual.site.visit.date']}">
+		<table class="customTbl">
+			<tr>
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.rptpreview.actual.site.visit.date']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td class="tdContent">
+					<p:calendar showOn="button" id="actualSvDate" required="true"
+						label="#{lbl['lbl.sm.rptpreview.actual.site.visit.date']}"
+						maxdate="#{CommonConstants.CURRENT_DATE}" readonlyInput="true"
+						value="#{svoSiteVisitBackingBean.managedBean.smSvTask.actualVisitDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" 
+						disabled="#{viewFlag}"/>
+				</td>
+				<td class="tdTitle" /><td class="tdContent" />
+			</tr>
+		</table>
+	</p:panel>
+	<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
+	
 	<p:panel header="#{lbl['lbl.sm.sitevist.address']}" toggleable="true">
 		<script>
 			function getAddress(addr1, addr2, addr3, cityName,
