@@ -267,7 +267,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 							#if ($tplspecQuestion.questionType == "I")
 								 #if ($rowCount == 0)		 
 									#foreach ($specDLOA in $specCombine.listCombineDLOA)
-									#set ($itemNameRowSpanSize = $tplspecQuestion.specList.size() + 1)
+									#set ($itemNameRowSpanSize = $specDLOA.specVal.size() + 1)
 										
 											<tr>
 												<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="$itemNameRowSpanSize"><strong>$specDLOA.clItem</strong></td>
@@ -826,10 +826,9 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 											#end
 									#end
 											
-							#if ($rowCount == 0)
-										#set($rowCount = $rowCount + 1)
-										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
-									#end
+							##26130 - start
+							<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"></td>
+							##26130 - end
 							</tr>	
 							
 							<tr>
