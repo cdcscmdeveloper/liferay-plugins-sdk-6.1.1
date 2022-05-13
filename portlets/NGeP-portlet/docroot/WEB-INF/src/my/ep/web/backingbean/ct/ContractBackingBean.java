@@ -4018,6 +4018,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 			abb.getManagedBean().setTrackingDairyView(true);
 			getManagedBean().setViewSCL(true);
+			//Bug 33096 - shaqimi start
+			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
+			//Bug 33096 - shaqimi end
 			if(abb.getManagedBean().getTaskId() != null){
 				abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
 				abb.getManagedBean().setContractIdFromTaskList(new Long(getManagedBean().getContractVer().getCtContract().getContractId()));
@@ -4791,83 +4794,187 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			
 			IContractAmendmentSO caSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
-			
-			Long contractId = agreement.getCtContract().getContractId();
-			Long contractVerId = this.getManagedBean().getContractVer().getContractVerId();
-			String amendmentId = agreement.getCtAmendment().getAmendmentId().toString();
-			
-			String contractNo = agreement.getCtContract().getContractNo();
-			//String slNo = agreement.getCtAmendment().getCtContractVer().getCtContractValue().getLoaNo();
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+
 			Map<String, Map<String, String>> paramMaps = new HashMap<String, Map<String, String>>();
 			Map<String, String> paramMap = new HashMap<String, String>();
 			List<String> reportNames = new ArrayList<String>();
-			String reportName = null;
+			Map<String, Boolean> downloadReports = new HashMap<String, Boolean>();
 			
-			ContractReqDTO reqDTO = new ContractReqDTO();
+			//main contract
+			Long contractId = agreement.getCtContract().getContractId();
+			String contractNo = agreement.getCtContract().getContractNo();
+			Long mainContractVerId = caSO.getParentContractVerIdByDocNo(contractNo);
+			Long fdContractVerId = caSO.getFDContractVerIdByContractId(contractId);
 			
-			reqDTO.setContractId(contractId);
-			reqDTO.setContractVerId(contractVerId);
-			reqDTO.setViewOnly(true);
+			//current amendment
+			Long currContractVerId = agreement.getCtAmendment().getCtContractVer().getContractVerId();
+			Long currAmendmentId = agreement.getCtAmendment().getAmendmentId();
 			
-			ContractResDTO amendmentResDTO = caSO.retrieveContractAmendVerDtls(reqDTO);	
+			//previous amendment
+			Long prvContractVerId = null;
+			Long prvAmendmentId = null;
+			boolean hasPreviousAmendment = false;
 			
-			//main report. must have
-			reportName = ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL;
-			paramMap.put(ReportConst.PARAM_CONTRACT_VER_ID, contractVerId.toString());
-			paramMap.put(ReportConst.PARAM_AMENDMENT_ID, amendmentId);
-			paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-			paramMaps.put(reportName, paramMap);
-			reportNames.add(reportName);
-
-			if (agreement.getCtAmendment().isOtherChange()) {
-				if(getManagedBean().getContractVer().getCtContract().isZonalPricing()){
-					reportName = ReportConst.CT_AMENDMENT_UPDATE_RPT_ZONE;
-					paramMap.put(ReportConst.PARAM_CONTRACT_VER_ID, contractVerId.toString());
-					paramMap.put(ReportConst.PARAM_AMENDMENT_ID, amendmentId);
-					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-					paramMaps.put(reportName, paramMap);
-					reportNames.add(reportName);
-				}
-
-				reportName = ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY;
-				paramMap.put(ReportConst.PARAM_CONTRACT_VER_ID, contractVerId.toString());
-				paramMap.put(ReportConst.PARAM_AMENDMENT_ID, amendmentId);
-				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-				paramMaps.put(reportName, paramMap);
-				reportNames.add(reportName);
-
-				reportName = ReportConst.CT_AMENDMENT_UPDATE_RPT_DEDUCTION;
-				paramMap.put(ReportConst.PARAM_CONTRACT_VER_ID, contractVerId.toString());
-				paramMap.put(ReportConst.PARAM_AMENDMENT_ID, amendmentId);
-				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-				paramMaps.put(reportName, paramMap);
-				reportNames.add(reportName);
-				
-				reportName = ReportConst.CT_AMENDMENT_UPDATE_RPT_SCHEDULE;
-				paramMap.put(ReportConst.PARAM_CONTRACT_VER_ID, contractVerId.toString());
-				paramMap.put(ReportConst.PARAM_AMENDMENT_ID, amendmentId);
-				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-				paramMaps.put(reportName, paramMap);
-				reportNames.add(reportName);
-			} else if (agreement.getCtAmendment().isItemPriceChange() || agreement.getCtAmendment().isQuantityChange()){
-				if(getManagedBean().getContractVer().getCtContract().isZonalPricing()){
-					reportName = ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL;
-					paramMap.put(ReportConst.PARAM_CONTRACT_VER_ID, contractVerId.toString());
-					paramMap.put(ReportConst.PARAM_AMENDMENT_ID, amendmentId);
-					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-					paramMaps.put(reportName, paramMap);
-					reportNames.add(reportName);
-				} else {
-					reportName = ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL;
-					paramMap.put(ReportConst.PARAM_CONTRACT_VER_ID, contractVerId.toString());
-					paramMap.put(ReportConst.PARAM_AMENDMENT_ID, amendmentId);
-					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-					paramMaps.put(reportName, paramMap);
-					reportNames.add(reportName);
+			//checking for previous agreement in list. the last agreementid that is less than currentagreementid is the direct previous agreement
+			for(CtAgreement currAgreement : filterAgreementList()){
+				if(currAgreement.getAgreementId() < agreement.getAgreementId() && currAgreement.getCtAmendment() != null){
+					//set previous amendment data for retrieval
+					prvContractVerId = currAgreement.getCtAmendment().getCtContractVer().getContractVerId();
+					prvAmendmentId = currAgreement.getCtAmendment().getAmendmentId();
 				}
 			}
 			
-			if(reportName!=null) {
+			ContractReqDTO currReqDTO = new ContractReqDTO();
+			ContractReqDTO prvReqDTO = new ContractReqDTO();
+			
+			currReqDTO.setContractId(contractId);
+			currReqDTO.setContractVerId(currContractVerId);
+			currReqDTO.setAmendmentId(currAmendmentId);
+			currReqDTO.setViewOnly(true);
+			
+			if(prvAmendmentId != null && prvContractVerId != null){
+				prvReqDTO.setContractId(contractId);
+				prvReqDTO.setContractVerId(prvContractVerId);
+				prvReqDTO.setAmendmentId(prvAmendmentId);
+				prvReqDTO.setViewOnly(true);
+				
+				hasPreviousAmendment = true;
+			}
+			
+			ContractResDTO currAmendmentResDTO = caSO.retrieveContractAmendVerDtls(currReqDTO);
+			ContractResDTO prvAmendmentResDTO = null;
+			if(prvReqDTO.getContractId() != null && prvReqDTO.getContractVerId() != null && prvReqDTO.getAmendmentId() != null){
+				prvAmendmentResDTO = caSO.retrieveContractAmendVerDtls(prvReqDTO);
+			} else {
+				prvReqDTO.setContractId(contractId);
+				prvReqDTO.setContractVerId(fdContractVerId);
+				prvReqDTO.setViewOnly(true);
+				prvAmendmentResDTO = contractSO.retrieveContractVerDtls(prvReqDTO);
+			}
+			
+			//main report. must have
+			downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL, true);
+			
+			if(currAmendmentResDTO.getCtContractVer().getContractVerId() != null &&
+					prvAmendmentResDTO.getCtContractVer().getContractVerId() != null){
+				if(currAmendmentResDTO.getCtContractVer().getCtAmendment().isQuantityChange() ||
+						currAmendmentResDTO.getCtContractVer().getCtAmendment().isItemPriceChange() ||
+						currAmendmentResDTO.getCtContractVer().getCtAmendment().isOtherChange()){
+					//buat pasal item
+					if(currAmendmentResDTO.getCtContractVer().getCtContractItems().size() ==
+							prvAmendmentResDTO.getCtContractVer().getCtContractItems().size()){
+						for(int index = 0; index < currAmendmentResDTO.getCtContractVer().getCtContractItems().size(); index++){
+							CtContractItem currentItem = currAmendmentResDTO.getCtContractVer().getCtContractItems().get(index);
+							CtContractItem previousItem = prvAmendmentResDTO.getCtContractVer().getCtContractItems().get(index);
+							
+							if(currentItem.getMinimumOrderQty() == previousItem.getMinimumOrderQty()){
+								if(currentItem.getCtItemPrices().size() == previousItem.getCtItemPrices().size()){
+									if(currentItem.getCtItemMaxQties().size() != previousItem.getCtItemMaxQties().size()){
+										if(currAmendmentResDTO.getCtContractVer().getCtContract().isZonalPricing())
+											downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL, true);
+										else
+											downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL, true);
+										
+										break;
+									}
+								} else {
+									if(currAmendmentResDTO.getCtContractVer().getCtContract().isZonalPricing())
+										downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL, true);
+									else
+										downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL, true);
+									
+									break;
+								}
+							} else {
+								if(currAmendmentResDTO.getCtContractVer().getCtContract().isZonalPricing())
+									downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL, true);
+								else
+									downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL, true);
+								
+								break;
+							}
+						}
+					} else {
+						if(currAmendmentResDTO.getCtContractVer().getCtContract().isZonalPricing())
+							downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL, true);
+						else
+							downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL, true);
+					}
+				}
+				
+				if(currAmendmentResDTO.getCtContractVer().getCtAmendment().isOtherChange()){
+					if(currAmendmentResDTO.getCtContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+						if(currAmendmentResDTO.getCtContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
+							//schedule
+							if(currAmendmentResDTO.getCtContractVer().getCtSchedules().size() == 
+									prvAmendmentResDTO.getCtContractVer().getCtSchedules().size()){
+								for(int index = 0; index < currAmendmentResDTO.getCtContractVer().getCtSchedules().size(); index ++){
+									CtSchedule curr = currAmendmentResDTO.getCtContractVer().getCtSchedules().get(index);
+									CtSchedule prv = prvAmendmentResDTO.getCtContractVer().getCtSchedules().get(index);
+									
+									if(curr.getScheduleNo() != prv.getScheduleNo() ||
+											curr.getStartMonth() != prv.getStartMonth() ||
+											curr.getStartYear() != prv.getStartYear() ||
+											curr.getEndMonth() != prv.getEndMonth() ||
+											curr.getEndYear() != prv.getEndYear() ||
+											curr.getScheduleType() != prv.getScheduleType()){
+										downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_SCHEDULE, true);
+										break;
+									}
+								}
+							} else downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_SCHEDULE, true);
+							//schedule
+						}
+						//agency
+						if(currAmendmentResDTO.getCtContractVer().getCtAgencies().size() == 
+								prvAmendmentResDTO.getCtContractVer().getCtAgencies().size()){
+							for(int index = 0; index < currAmendmentResDTO.getCtContractVer().getCtAgencies().size(); index ++){
+								CtAgency curr = currAmendmentResDTO.getCtContractVer().getCtAgencies().get(index);
+								CtAgency prv = prvAmendmentResDTO.getCtContractVer().getCtAgencies().get(index);
+								
+								if(curr.getCeilingAmount() != prv.getCeilingAmount() ||
+										curr.isAp178() != prv.isAp178()){
+									downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY, true);
+								} else if(curr.getCtAgencyAddresses().size() == prv.getCtAgencyAddresses().size()){
+									for(int indice = 0; indice < curr.getCtAgencyAddresses().size(); indice++){
+										CtAgencyAddress currClauses = curr.getCtAgencyAddresses().get(indice);
+										CtAgencyAddress prvClauses = prv.getCtAgencyAddresses().get(indice);
+										
+										if(currClauses.getDeliveryAddress() != prvClauses.getDeliveryAddress()){
+											downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY, true);
+											break;
+										}
+									}
+								}
+								
+								if(downloadReports.containsKey(ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY) 
+										&& downloadReports.get(ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY)) break;
+							}
+						} else downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY, true);
+						//agency
+					}
+				}
+				
+				//download reports
+				for (Map.Entry<String, Boolean> entry : downloadReports.entrySet()) {
+					if(entry.getValue()){
+						paramMap.put(ReportConst.PARAM_CONTRACT_VER_ID, mainContractVerId.toString());
+						paramMap.put(ReportConst.PARAM_AMENDMENT_ID, currAmendmentId.toString());
+						if(hasPreviousAmendment){
+							paramMap.put(ReportConst.PARAM_FD_CONTRACT_VER_ID, "");
+							paramMap.put(ReportConst.PARAM_PRV_AMENDMENT_ID, prvAmendmentId.toString());
+						} else {
+							paramMap.put(ReportConst.PARAM_FD_CONTRACT_VER_ID, fdContractVerId.toString());
+							paramMap.put(ReportConst.PARAM_PRV_AMENDMENT_ID, "");
+						}
+						paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+						paramMaps.put(entry.getKey(), paramMap);
+						reportNames.add(entry.getKey());
+					}
+				}
+				
 				try {
 					generateReportPDF(contractNo, reportNames, paramMaps);
 				} catch (IOException e) {
@@ -4876,7 +4983,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					FacesContext.getCurrentInstance().responseComplete();
 				}
 			} else {
-				throw new EpException("Report is not available for this document.");
+				throw new EpException(MessageConst.ERROR_000001);
 			}
 		}
 		//Enhancement 29418 - shaqimi end
