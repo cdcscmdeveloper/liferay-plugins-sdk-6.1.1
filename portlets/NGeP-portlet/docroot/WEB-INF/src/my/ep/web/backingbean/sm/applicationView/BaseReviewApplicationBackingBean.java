@@ -1022,16 +1022,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						&& my.ep.constant.pm.ParameterConst.CATEGORY_TYPE_MANUFACTURING
 							.equals(cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode())) {
 					for (SmManufacturingDtl manuFacDtl : getManagedBean().getSmAppl().getSmManufacturingDtls()) { // filter manufacture not imposed DA
-						if (manuFacDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
-							if(activeManufacturingDtls.size() > 0){
-								for (SmManufacturingDtl manuFacDtlAct : activeManufacturingDtls) {
-									if (!manuFacDtl.equals(manuFacDtlAct)) {
-										activeManufacturingDtls.add(manuFacDtl);
-									} 
-								}
-							} else {
-								activeManufacturingDtls.add(manuFacDtl);
-							}
+						if(manuFacDtl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) continue;
+						if(activeManufacturingDtls.size() == 0) activeManufacturingDtls.add(manuFacDtl);
+						SmManufacturingDtl manDtl = (SmManufacturingDtl) EntityHelper.getEntityBySinglePropertyFromList(
+								manuFacDtl.getManufacturingDtlId(), activeManufacturingDtls, "manufacturingDtlId");
+						if(manDtl == null){
+							activeManufacturingDtls.add(manuFacDtl);
 						}
 					}
 					// #32809 - end
