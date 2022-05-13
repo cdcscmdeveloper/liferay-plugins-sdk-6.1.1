@@ -89,6 +89,7 @@
 					<c:choose>
 					<!-- #14530 START -->
 						<c:when test="#{!viewSmApplBackingBean.managedBean.supplierUser}">
+							<c:choose>
 							<c:when	test="#{viewSmApplBackingBean.checkPoinquiry()}" >
 							<c:if
 								test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 10}">
@@ -129,6 +130,7 @@
 								<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step12POApproverDecisionRemark.xhtml" />
 							</c:if>
 							</c:otherwise>
+							</c:choose>
 						</c:when>
 						<c:otherwise>
 									<c:choose>
@@ -180,6 +182,7 @@
 					<c:choose>
 						<!-- #14530 START -->
 						<c:when test="#{!viewSmApplBackingBean.managedBean.supplierUser}">
+							<c:choose>
 							<c:when	test="#{viewSmApplBackingBean.checkPoinquiry()}" >
 							<c:if
 								test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 9}">
@@ -220,6 +223,7 @@
 								<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step12POApproverDecisionRemark.xhtml" />
 							</c:if>
 							</c:otherwise>
+							</c:choose>
 						</c:when>
 						<c:otherwise>
 									<c:choose>
@@ -280,6 +284,7 @@
 					<c:choose>
 						<!-- #14530 START -->
 						<c:when test="#{!viewSmApplBackingBean.managedBean.supplierUser}">
+							<c:choose>
 							<c:when	test="#{viewSmApplBackingBean.checkPoinquiry()}" >
 							<c:if
 								test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 9}">
@@ -320,6 +325,7 @@
 								<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step12POApproverDecisionRemark.xhtml" />
 							</c:if>
 							</c:otherwise>
+							</c:choose>
 						</c:when>
 							<c:otherwise>
 									<c:choose>
