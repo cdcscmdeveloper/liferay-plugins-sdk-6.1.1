@@ -140,7 +140,6 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.constant.SPKIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.FacesScopes;
@@ -2906,4 +2905,16 @@ public class PmCommonUtil implements Serializable{
 		return userSO.retrieveUserRoleListByUserIds(reqDTO).getUserRoleList();
 	}
 	//END #27472
+	
+	//#32705 - Start
+	public static String getTypeOfCertIssuer(String idNo,
+			String epNo) {
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setEpNo(epNo);
+		reqDTO.setIdentificationNo(idNo);
+		String certIssuer = SmServiceLookup.getPersonnelSO()
+				.getTypeOfCertIssuer(reqDTO).getCertIssuer();
+		return certIssuer;
+	}
+	//#32705 - End
 }
