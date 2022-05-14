@@ -701,10 +701,11 @@ public class SPDetailBackingBean extends
 			scQtProposal.setSubmitted(true);
 			reqDTO.setScQtProposal(scQtProposal);
 			reqDTO.setDigiSignData(digiSign);
-			///20191023@asyrafhaziq - Prevent Auto Score null - Start
-			checkingForAutoScore(scQtProposal);
-			//20191023@asyrafhaziq - Prevent Auto Score null - End
-
+            ///20191023@asyrafhaziq - Prevent Auto Score null - Start
+			//Bug #33201 start
+			//checkingForAutoScore(scQtProposal);
+			//Bug #33201 end
+			//20191023@asyrafhaziq - Prevent Auto Score null - End	
 			ProposalResDTO resDTO = proposalSO.submitSupplierProposal(reqDTO);
 			if (resDTO.isSuccessful()) {
 				String variable1 = getMessageCommon("lbl.sc.proposal.no");
