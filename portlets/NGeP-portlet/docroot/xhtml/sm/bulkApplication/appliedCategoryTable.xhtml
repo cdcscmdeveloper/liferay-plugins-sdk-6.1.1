@@ -29,14 +29,16 @@
 					style="float: left;white-space: normal;" />
 			</p:column>
 			<p:column style="white-space : normal">
-				<h:outputText
-					value="#{applCat.pmCategoryL1.categoryL1Code} -  #{empty applCat.categoryL1Name ? applCat.pmCategoryL1.categoryName : applCat.categoryL1Name}" />
-				<br />
-				<h:outputText
-					value="#{applCat.pmCategoryL2.categoryL2Code} -  #{empty applCat.categoryL2Name ? applCat.pmCategoryL2.categoryName : applCat.categoryL2Name}" />
-				<br />
-				<h:outputText
-					value="#{applCat.pmCategoryL3.categoryL3Code} -  #{empty applCat.categoryL3Name ? applCat.pmCategoryL3.categoryName : applCat.categoryL3Name}" />
+				<!-- #28175 start -->
+				<h:outputText 
+					value="#{applCat.pmCategoryL1.categoryL1Code} -  #{applCat.pmCategoryL1.categoryName}" />
+				<br /> 
+				<h:outputText 
+					value="#{applCat.pmCategoryL2.categoryL2Code} -  #{applCat.pmCategoryL2.categoryName}" />
+				<br /> 
+				<h:outputText 
+					value="#{applCat.pmCategoryL3.categoryL3Code} -  #{applCat.pmCategoryL3.categoryName}" />
+				<!-- #28175 end -->
 			</p:column>
 			<p:column style="width : 10% !important;white-space : normal">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
@@ -132,14 +134,16 @@
 					style="float: left;white-space: normal;" />
 			</p:column>
 			<p:column style="white-space : normal">
-				<h:outputText
-					value="#{applCat.pmCategoryL1.categoryL1Code} -  #{empty applCat.categoryL1Name ? applCat.pmCategoryL1.categoryName : applCat.categoryL1Name}" />
-				<br />
-				<h:outputText
-					value="#{applCat.pmCategoryL2.categoryL2Code} -  #{empty applCat.categoryL2Name ? applCat.pmCategoryL2.categoryName : applCat.categoryL2Name}" />
-				<br />
-				<h:outputText
-					value="#{applCat.pmCategoryL3.categoryL3Code} -  #{empty applCat.categoryL3Name ? applCat.pmCategoryL3.categoryName : applCat.categoryL3Name}" />
+				<!-- #28175 start -->
+				<h:outputText 
+					value="#{applCat.pmCategoryL1.categoryL1Code} -  #{applCat.pmCategoryL1.categoryName}" />
+				<br /> 
+				<h:outputText 
+					value="#{applCat.pmCategoryL2.categoryL2Code} -  #{applCat.pmCategoryL2.categoryName}" />
+				<br /> 
+				<h:outputText 
+					value="#{applCat.pmCategoryL3.categoryL3Code} -  #{applCat.pmCategoryL3.categoryName}" />
+				<!-- #28175 end -->
 			</p:column>
 			<p:column style="width : 10% !important;white-space : normal">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"

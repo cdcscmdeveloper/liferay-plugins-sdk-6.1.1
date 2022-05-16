@@ -16,6 +16,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -123,7 +124,7 @@ public class ViewSuppProfileManagedBean extends
 	
 	private SmPersonnel smPersonnel;
 	private SmSupplierOwner smSuppOwner;
-	private List<SmSupplierOwner> smSuppOwners = new ArrayList();
+	private List<SmSupplierOwner> smSuppOwners = new ArrayList<SmSupplierOwner>();
 	private SmPersonnelAddress smPersonnelAdd;
 	
 	private Integer userBumiFlg;
@@ -180,6 +181,11 @@ public class ViewSuppProfileManagedBean extends
 	private boolean editDisciplinaryActionCheckBox;
 	//29181: Disciplinary Action - end - 26238
 
+	// #28175 start
+	private String catCode;
+	private List<PmRemarkCategory> historyList;
+	// #28175 end
+	
 	// #26238 start
 	private boolean cancelMofAccount;
 	// #26238 eend
@@ -215,13 +221,13 @@ public class ViewSuppProfileManagedBean extends
 					if (!isSearchCriteriaEmpty()) {
 						return getApplicationHistoryResultBean(reqDTO);
 					} else {
-						return new SearchResultBean();
+						return new SearchResultBean<SmSupplier>();
 					}
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<SmSupplier>();
 				}
 			} catch (Exception ex) {
-				return new SearchResultBean();
+				return new SearchResultBean<SmSupplier>();
 			} finally {
 				reqDTO = null;
 			}
@@ -270,10 +276,10 @@ public class ViewSuppProfileManagedBean extends
 				if(isBasicAccountMaintenance()){
 					return getBasicSupplierResultBean(reqDTO);
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<SmSupplier>();
 				}
 			} catch (Exception ex) {
-				return new SearchResultBean();
+				return new SearchResultBean<SmSupplier>();
 			} finally {
 				reqDTO = null;
 			}
@@ -967,6 +973,23 @@ public class ViewSuppProfileManagedBean extends
 		this.editDisciplinaryActionCheckBox = editDisciplinaryActionCheckBox;
 	}
 	//29181: Disciplinary Action - end - 26238
+	// #28175 start
+	public String getCatCode() {
+		return catCode;
+	}
+	
+	public void setCatCode(String catCode) {
+		this.catCode = catCode;
+	}
+	
+	public List<PmRemarkCategory> getHistoryList() {
+		return historyList;
+	}
+	
+	public void setHistoryList(List<PmRemarkCategory> historyList) {
+		this.historyList = historyList;
+	}
+	// #28175 end
 	
 	// #26238 start
 	public boolean isCancelMofAccount() {

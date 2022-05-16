@@ -10,9 +10,12 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -20,6 +23,7 @@ import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -29,6 +33,7 @@ import my.ep.util.SLAUtils;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
@@ -63,6 +68,8 @@ public class ViewSuppProfileBackingBean extends
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
 		getManagedBean().setViewApplicationHistory(false);
+		// #28175
+		getManagedBean().setHistoryList(new ArrayList<PmRemarkCategory>());
 		logger.info("[preRenderViewSupplierProfile] #31754 getManagedBean().isSupplierUser(): " + getManagedBean().isSupplierUser());
 		if (getManagedBean().isSupplierUser()) {
 			SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
@@ -577,6 +584,35 @@ public class ViewSuppProfileBackingBean extends
 		RequestContext.getCurrentInstance().execute("qualifyDialog.show()");
 	}
 	//#29482 - End
+	
+	// #28175 start
+	public void onClickCatCodesHistory(String catCode, int catCodeLevel, Long catCodeID) {
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
+		if(catCodeLevel == 1){
+			reqDTO.setCategoryL1Id(catCodeID);
+			resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
+		}else if(catCodeLevel == 2){
+			reqDTO.setCategoryL2Id(catCodeID);
+			resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
+		}else if(catCodeLevel == 3){
+			reqDTO.setCategoryL3Id(catCodeID);
+			resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
+		}
+		getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+		getManagedBean().setCatCode(catCode);
+		RequestContext.getCurrentInstance().execute("remarkHisCatCodePopup.show()");
+	}
+	
+	private List<PmRemarkCategory> updateCreatedUserName(List<PmRemarkCategory> remarkList) {
+		for(PmRemarkCategory rc: remarkList){
+			PmUser user = PmCommonUtil.retrieveUserById(rc.getCreatedBy(),true);
+			rc.setCreatedUsername(user.getUserName());
+		}
+		return remarkList;
+	}
+	// #28175 end
 	
 	//31033 start
 	public void onViewActiveDisciplinaryAction(SmSupplier smSupplier) {

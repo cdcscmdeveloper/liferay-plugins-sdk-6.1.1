@@ -15,15 +15,17 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width : 40%;">
 				<p:outputPanel rendered="#{not empty apprCat.pmCategoryL1}">
-					<h:outputText value="#{apprCat.pmCategoryL1.categoryL1Code} -  #{empty apprCat.categoryL1Name ? apprCat.pmCategoryL1.categoryName : apprCat.categoryL1Name}" 
-						style="float: left;white-space: normal;" /><br />
-				</p:outputPanel>
-				<p:outputPanel rendered="#{not empty apprCat.pmCategoryL2}">
-					<h:outputText value="#{apprCat.pmCategoryL2.categoryL2Code} -  #{empty apprCat.categoryL2Name ? apprCat.pmCategoryL2.categoryName : apprCat.categoryL2Name}" 
-						style="float: left;white-space: normal;" /><br />
-				</p:outputPanel>
-				<p:outputPanel rendered="#{not empty apprCat.pmCategoryL3}">
-					<h:outputText value="#{apprCat.pmCategoryL3.categoryL3Code} -  #{empty apprCat.categoryL3Name ? apprCat.pmCategoryL3.categoryName : apprCat.categoryL3Name}" style="float: left;white-space: normal;" />
+					<!-- #28175 start -->
+					<h:outputText value="#{apprCat.pmCategoryL1.categoryL1Code} -  #{apprCat.pmCategoryL1.categoryName}" 
+						style="float: left;white-space: normal;" /><br /> 
+				</p:outputPanel> 
+				<p:outputPanel rendered="#{not empty apprCat.pmCategoryL2}"> 
+					<h:outputText value="#{apprCat.pmCategoryL2.categoryL2Code} -  #{apprCat.pmCategoryL2.categoryName}" 
+						style="float: left;white-space: normal;" /><br /> 
+				</p:outputPanel> 
+				<p:outputPanel rendered="#{not empty apprCat.pmCategoryL3}"> 
+					<h:outputText value="#{apprCat.pmCategoryL3.categoryL3Code} -  #{apprCat.pmCategoryL3.categoryName}" style="float: left;white-space: normal;" />
+					<!-- #28175 end -->
 				</p:outputPanel>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" >
