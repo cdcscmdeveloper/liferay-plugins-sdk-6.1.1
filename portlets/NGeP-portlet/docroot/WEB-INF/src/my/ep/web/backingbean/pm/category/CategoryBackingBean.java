@@ -87,6 +87,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
+//start #29665
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
+import my.ep.persistence.logging.LogKey;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.web.util.pm.helper.ParameterHelper;
+import java.util.Arrays;
+//end #29665
+
 /**
  * Backing Bean for Category
  * 
@@ -134,12 +144,21 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	private Map<String, List<PmParameterDesc>> parameterDescMap = 
 			new HashMap<String, List<PmParameterDesc>>();
 	
+	//Start #29665
+	private boolean remarkDisable = true;
+	private boolean descriptionEditDisable = true;
+	private Integer tabIndexActive; // tab 0,1,2
+	//End #29665
+	
 	
 	/**
 	 * Instantiates a new category backing bean.
 	 */
 	public CategoryBackingBean() {
-
+		//start #29665 load tab index for level 3 category
+		if(this.getManagedBean().getCatLevel()!= null && this.getManagedBean().getCatLevel().equals("3"))
+			updateTabIndex();
+		//end #29665 load tab index for level 3 category
 	}
 	
 	/**
@@ -606,6 +625,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		this.getManagedBean().setCatLevel("3");
 		this.getManagedBean().setNewCategory(true);
 		reloadSelectionPmCategoryL3();
+		this.tabIndexActive=2; //#29665
 		return "/xhtml/pm/category/categoryl3.xhtml";
 	}
 
@@ -826,13 +846,19 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				this.getManagedBean().setOldCategoryL1(oldCategoryL1);
 				this.getManagedBean().setPmCategoryL1(resDTO.getCategoryL1());
 				this.getManagedBean().setNewCategory(false);
+				
+				//start #29665
+				this.getManagedBean().setUpdatedCategoryDesc(resDTO.getCategoryL1().getCategoryName());
+				this.getManagedBean().setRemarkCategory(null);
+				this.getManagedBean().setRemarkHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+				 //end #29665
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			categoryCodeSO = null;
 		}
-		return "/xhtml/pm/category/categoryl1.xhtml";
+		return "/xhtml/pm/category/categoryl1.xhtml?faces-redirect=true"; //#29665 
 	}
 
 	/**
@@ -928,7 +954,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 *            (Long id(mandatory))
 	 * @return string(/xhtml/pm/category/categoryl2.xhtml?faces-redirect=true)
 	 */
-	public String editSubCategory(Long id) {
+	public String editSubCategory(Long id, Integer level, boolean triggerFromBack) {//#29665 add new param
 		ICategoryCodeSO categoryCodeSO;
 		try {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
@@ -951,13 +977,28 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						.cloneBean(resDTO.getCategoryL2());
 				this.getManagedBean().setOldCategoryL2(oldCategoryL2);
 				this.getManagedBean().setNewCategory(false);
+				
+				//start #29665
+				this.getManagedBean().setUpdatedCategoryDesc(resDTO.getCategoryL2().getCategoryName());
+				this.getManagedBean().setRemarkCategory(null);
+				this.getManagedBean().setRemarkHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+				 //end #29665
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			categoryCodeSO = null;
 		}
-		return "/xhtml/pm/category/categoryl2.xhtml";
+		
+		//start #29665 navigation purpose
+		if(!triggerFromBack){
+			if(level == 0) this.getManagedBean().setFromLevel(0);
+			else this.getManagedBean().setFromLevel(1);
+		}
+		this.remarkDisable = true;
+		//end #29665 navigation purpose
+
+		return "/xhtml/pm/category/categoryl2.xhtml?faces-redirect=true";//#29665 
 	}
 
 	/**
@@ -967,11 +1008,17 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 *            Long id(mandatory))
 	 * @return string(/xhtml/pm/category/categoryl3.xhtml?faces-redirect=true)
 	 */
-	public String editSubDivision(Long id) {
+	public String editSubDivision(Long id, Integer level) { //#29665 add new param
 		log.info("***editSubDivision id***" + id);
-
+		
 		loadPmCategoryL3Data(id);
 		//initialCategoryCode();
+		
+		//start #29665 navigation purpose
+		if(level == 0) this.getManagedBean().setFromLevel(0);
+		else this.getManagedBean().setFromLevel(2);
+		this.remarkDisable = true;
+		//end #29665 navigation purpose
 
 		return "/xhtml/pm/category/categoryl3.xhtml?faces-redirect=true";
 	}
@@ -999,8 +1046,22 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			reqDTO.setCategoryL3Id(id);
 			CategoryCodeResDTO resDTO = categoryCodeSO
 					.retrieveCategoryL3DtlById(reqDTO);
+			
 			for(PmMachineCategory cat: resDTO.getCategoryL3().getPmMachineCategory()){
-				cat.getPmMachine().setPmMachineSectionListString(getMachineSection(cat.getPmMachine().getPmMachineSection()));
+				//start #29665
+				//cat.getPmMachine().setPmMachineSectionListString(getMachineSection(cat.getPmMachine().getPmMachineSection()));
+				List<String> siteVisit = new ArrayList<String>();
+				if(cat.getDockYardSiteVisit() != null)
+					siteVisit.add(cat.getDockYardSiteVisit().toString());
+				
+				if(cat.getWorkshopSiteVisit() != null)
+					siteVisit.add(cat.getWorkshopSiteVisit().toString());
+				
+				if(cat.getPrintingSiteVisit() != null)
+					siteVisit.add(cat.getPrintingSiteVisit().toString());
+				
+				cat.setPmMachineCategorySectionList(siteVisit);
+				//end #29665
 			}
 			if (resDTO.isSuccessful()) {
 				log.info("***editSubDivision - Category Name***"
@@ -1015,6 +1076,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 								: false);
 				this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());
 				this.getManagedBean().setNewCategory(false);
+				
+				//start #29665
+				this.getManagedBean().setUpdatedCategoryDesc(resDTO.getCategoryL3().getCategoryName());
+				this.getManagedBean().setRemarkCategory(null);
+				this.getManagedBean().setRemarkHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+				 //end #29665
 
 				reloadSelectionPmCategoryL3();
 				updateSpecialCategory();
@@ -1108,13 +1175,16 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						}
 					}
 				}
+				
+				//start #29665 - comment out unused function, it can cause initialized error
+				//this.getManagedBean().setPmCategoryL2(
+				//		resDTO.getCategoryL3().getPmCategoryL2());
 
-				this.getManagedBean().setPmCategoryL2(
-						resDTO.getCategoryL3().getPmCategoryL2());
-				this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());
+				//this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());
 				this.getManagedBean().setPmCategoryL1(
-						this.getManagedBean().getPmCategoryL2()
+						resDTO.getCategoryL3().getPmCategoryL2()
 								.getPmCategoryL1());
+				//end #29665 - comment out unused function, it can cause initialized error
 
 				PmCategoryL3 oldCategoryL3 = (PmCategoryL3) BeanUtils
 						.cloneBean(resDTO.getCategoryL3());
@@ -1168,6 +1238,24 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 		ICategoryCodeSO categoryCodeSO;
 		String returnUrl = null;
+		
+		//start #29665 add log key
+		Long loginSessionUserId = 1L;
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		if (pmUser == null) {
+			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+		}
+		else{
+			loginSessionUserId = pmUser.getUserId();
+		}
+		new LogKey(loginSessionUserId);
+		//end #29665 add log key
+		
 		try {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 
@@ -1193,12 +1281,33 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				}
 			}
 
+			//start #29665
+			PmRemarkCategory prc = new PmRemarkCategory();
+			if(!this.remarkDisable && !this.getManagedBean().isNewCategory()){
+				prc.setCategoryId(this.getManagedBean().getPmCategoryL1().getCategoryL1Id());
+				prc.setCategoryLevel(1);
+				prc.setCreatedDate(new Timestamp(new Date().getTime()));
+				prc.setCreatedBy(loginSessionUserId);
+				if(!this.descriptionEditDisable 
+						&& this.getManagedBean().getUpdatedCategoryDesc().compareTo(
+								this.getManagedBean().getOldCategoryL1().getCategoryName()) !=0 ){
+					prc.setOldDescription(this.getManagedBean().getOldCategoryL1().getCategoryName());
+					this.getManagedBean().getPmCategoryL1().setCategoryName(this.getManagedBean().getUpdatedCategoryDesc().toUpperCase());
+					this.getManagedBean().getPmCategoryL1().setDescChangeDate(prc.getCreatedDate());
+				}else
+					prc.setOldDescription(null);
+				prc.setRemark(this.getManagedBean().getRemarkCategory());
+				reqDTO.setRemarkCat(prc);
+			}else
+				reqDTO.setRemarkCat(null);
+			//end #29665
+
 			reqDTO.setPmCategoryL1(this.getManagedBean().getPmCategoryL1());
 			reqDTO.setCategoryLevel(this.getManagedBean().getCatLevel());
 			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
 
 			trackingDiaryForCreateAndUpdateOfMainCategory(reqDTO);
-
+			
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveCategory(reqDTO);
 			PmCategoryL1 oldCategoryL1 = (PmCategoryL1) BeanUtils
 					.cloneBean(resDTO.getCategoryL1());
@@ -1225,6 +1334,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 													},
 													MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 				}else{
+					//start #29665
+					this.descriptionEditDisable = true;
+					this.remarkDisable = true;
+					this.getManagedBean().setRemarkCategory(null);
+					this.getManagedBean().setRemarkHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+					//end #29665
+					
 					returnUrl = "/xhtml/pm/category/categoryl1.xhtml";
 					result = resDTO.isSuccessful();
 					// resetCategory();
@@ -1352,6 +1468,24 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 		ICategoryCodeSO categoryCodeSO;
 		String returnUrl = null;
+		
+		//start #29665 add log key
+		Long loginSessionUserId = 1L;
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		if (pmUser == null) {
+			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+		}
+		else{
+			loginSessionUserId = pmUser.getUserId();
+		}
+		new LogKey(loginSessionUserId);
+		//end #29665 add log key
+		
 		try {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 			categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance()
@@ -1378,6 +1512,27 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 				}
 			}
+			
+			//start #29665
+			PmRemarkCategory prc = new PmRemarkCategory();
+			if(!this.remarkDisable && !this.getManagedBean().isNewCategory()){
+				prc.setCategoryId(this.getManagedBean().getPmCategoryL2().getCategoryL2Id());
+				prc.setCategoryLevel(2);
+				prc.setCreatedDate(new Timestamp(new Date().getTime()));
+				prc.setCreatedBy(loginSessionUserId);
+				if(!this.descriptionEditDisable
+						&& this.getManagedBean().getUpdatedCategoryDesc().compareTo(
+								this.getManagedBean().getOldCategoryL2().getCategoryName()) !=0 ){
+					prc.setOldDescription(this.getManagedBean().getOldCategoryL2().getCategoryName());
+					this.getManagedBean().getPmCategoryL2().setCategoryName(this.getManagedBean().getUpdatedCategoryDesc().toUpperCase());
+					this.getManagedBean().getPmCategoryL2().setDescChangeDate(prc.getCreatedDate());
+				}else
+					prc.setOldDescription(null);
+				prc.setRemark(this.getManagedBean().getRemarkCategory());
+				reqDTO.setRemarkCat(prc);
+			}else
+				reqDTO.setRemarkCat(null);
+			//end #29665
 
 			reqDTO.setPmCategoryL2(this.getManagedBean().getPmCategoryL2());
 			reqDTO.setNewCategory(this.getManagedBean().isNewCategory());
@@ -1385,10 +1540,15 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
 
 			trackingDiaryForCreateAndUpdateOfSubCategory(reqDTO);
-
+			
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveSubCategory(reqDTO);
-			preLoadPmCategoryl2(this.getManagedBean().getPmCategoryL2()
-					.getCategoryL2Id());
+			
+			//start @29665 add if to avoid NPE when create new sub categ
+			if(!this.getManagedBean().isNewCategory()){
+				preLoadPmCategoryl2(this.getManagedBean().getPmCategoryL2()
+						.getCategoryL2Id());
+			}
+			//end #29665 add if to avoid NPE when create new sub categ
 			PmCategoryL2 oldCategoryL2 = (PmCategoryL2) BeanUtils
 					.cloneBean(resDTO.getCategoryL2());
 			this.getManagedBean().setOldCategoryL2(oldCategoryL2);
@@ -1433,6 +1593,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 															new FacesScopes()
 																	.getUserLocale())));
 				} else {
+					//start #29665
+					this.descriptionEditDisable = true;
+					this.remarkDisable = true;
+					this.getManagedBean().setRemarkCategory(null);
+					this.getManagedBean().setRemarkHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+					//end #29665
 					returnUrl =  "/xhtml/pm/category/categoryl2.xhtml";
 					result = resDTO.isSuccessful();
 					// resetCategory();
@@ -1550,6 +1716,28 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		ICategoryCodeSO categoryCodeSO;
 		IParameterSO parameterSO;
 		String returnUrl = null;
+		
+		//start #29665 add log key
+		Long loginSessionUserId = 1L;
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		if (pmUser == null) {
+			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+		}
+		else{
+			loginSessionUserId = pmUser.getUserId();
+		}
+		new LogKey(loginSessionUserId);
+		
+		if(!this.getManagedBean().isNewCategory()){
+			this.getManagedBean().setPmCategoryL2(
+					this.getManagedBean().getPmCategoryL3().getPmCategoryL2());
+		}
+		//end #29665 add log key
 
 		// check the duplicate restriction
 		if (!checkCategoryRestrDuplicateCompanyType()) {
@@ -1610,6 +1798,28 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			// Basic category and Category Restr data information
 			getBasicCategoryData();
 			getCategoryRestrData();
+			getMachineCategoryData(); //#29665
+			
+			//start #29665
+			PmRemarkCategory prc = new PmRemarkCategory();
+			if(!this.remarkDisable && !this.getManagedBean().isNewCategory()){
+				prc.setCategoryId(this.getManagedBean().getPmCategoryL3().getCategoryL3Id());
+				prc.setCategoryLevel(3);
+				prc.setCreatedDate(new Timestamp(new Date().getTime()));
+				prc.setCreatedBy(loginSessionUserId);
+				if(!this.descriptionEditDisable
+						&& this.getManagedBean().getUpdatedCategoryDesc().compareTo(
+								this.getManagedBean().getOldCategoryL3().getCategoryName()) !=0 ){
+					prc.setOldDescription(this.getManagedBean().getOldCategoryL3().getCategoryName());
+					this.getManagedBean().getPmCategoryL3().setCategoryName(this.getManagedBean().getUpdatedCategoryDesc().toUpperCase());
+					this.getManagedBean().getPmCategoryL3().setDescChangeDate(prc.getCreatedDate());
+				}else
+					prc.setOldDescription(null);
+				prc.setRemark(this.getManagedBean().getRemarkCategory());
+				reqDTO.setRemarkCat(prc);
+			}else
+				reqDTO.setRemarkCat(null);
+			//end #29665
 
 			reqDTO.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 			reqDTO.setNewCategory(this.getManagedBean().isNewCategory());
@@ -1626,6 +1836,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 			getAllCategoryDetailsForTracking(reqDTO, this.getManagedBean().getPmCategoryL3()
 					.getRecordStatusFlg().longValue());
+			
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveSubDivision(reqDTO);
 
 			PmCategoryL3 oldCategoryL3 = (PmCategoryL3) BeanUtils
@@ -1677,7 +1888,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				} else {
 					loadPmCategoryL3Data(this.getManagedBean().getPmCategoryL3()
 							.getCategoryL3Id());
-					returnUrl =  "/xhtml/pm/category/categoryl3.xhtml";					
+					//start #29665
+					this.descriptionEditDisable = true;
+					this.remarkDisable = true;
+					updateTabIndex();
+					//end #29665
+					returnUrl =  "/xhtml/pm/category/categoryl3.xhtml";
 					result = resDTO.isSuccessful();
 					// resetCategory();
 					FacesContext
@@ -1773,7 +1989,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 		List<PmCategoryRestr> pmCategoryRestrList = this.getManagedBean()
 				.getPmCategoryL3().getPmCategoryRestrs();
-
+		
 		List<PmCategoryRestr> tobeAddedPmCategoryRestr = this.getManagedBean()
 				.getTobeAddedCategoryRestrList();
 
@@ -1798,29 +2014,43 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 	private void getMachineCategoryData() {
 
-		List<PmMachineCategory> pmMachineCategoryList = this.getManagedBean()
-				.getPmCategoryL3().getPmMachineCategory();
-
+		//#29665 remove unused variable
 		List<PmMachineCategory> tobeAddedPmMachineCategory = this
 				.getManagedBean().getTobeAddedPmMachineCategoryList();
 
+		//#29665 start
 		if (CollectionUtils.isNotEmpty(tobeAddedPmMachineCategory)) {
-
-			if (pmMachineCategoryList == null) {
-				pmMachineCategoryList = new ArrayList<PmMachineCategory>();
-				pmMachineCategoryList.addAll(tobeAddedPmMachineCategory);
-				tobeAddedPmMachineCategory.clear();
-			} else {
-				pmMachineCategoryList.addAll(tobeAddedPmMachineCategory);
-				tobeAddedPmMachineCategory.clear();
-			}
+			tobeAddedPmMachineCategory.clear();
+		//#29665 end
 		} else if (CollectionUtils.isEmpty(this.getManagedBean()
 				.getPmMachineCategoryList())
 				&& CollectionUtils.isEmpty(tobeAddedPmMachineCategory)
 				&& this.getManagedBean().isCheckSpecialCategory()) {
 
 			throw new EpException(MessageConst.ERROR_775008 ,new String[]{ResourceBundleUtils.getMessage("lbl.pm.special.equipment",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+		} 
+		
+		//start #29665
+		if(CollectionUtils.isNotEmpty(this.getManagedBean().getPmMachineCategoryList())){
+			for(PmMachineCategory cat: this.getManagedBean().getPmMachineCategoryList()){
+				if(cat.getPmMachineCategorySectionList().contains("818"))
+					cat.setDockYardSiteVisit(ParameterConst.DOCKYARD_TYPEID);
+				else
+					cat.setDockYardSiteVisit(null);
+				
+				if(cat.getPmMachineCategorySectionList().contains("819"))
+					cat.setWorkshopSiteVisit(ParameterConst.WORKSHOP_TYPEID);
+				else
+					cat.setWorkshopSiteVisit(null);
+				
+				if(cat.getPmMachineCategorySectionList().contains("1001"))
+					cat.setPrintingSiteVisit(ParameterConst.PRINTING_TYPEID);
+				else
+					cat.setPrintingSiteVisit(null);
+			}
+			this.getManagedBean().getPmCategoryL3().setPmMachineCategory(this.getManagedBean().getPmMachineCategoryList());
 		}
+		//end #29665
 	}
 
 	/**
@@ -2120,6 +2350,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 		this.getManagedBean().getDeletedPmBasicCategoryList()
 				.add(pmBasicCategory);
+		
+		// start #29665 remove parameterId null in to be added list
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getTobeAddedPmBasicCategoryList())){
+			this.getManagedBean().getTobeAddedPmBasicCategoryList().remove(pmBasicCategory);
+		}
+		//end #29665 remove parameterId null in to be added list
+		
+		if(StringUtils.isBlank(this.getManagedBean().getRemarkCategory()) && !this.getManagedBean().isNewCategory()) this.remarkDisable = false; //#29665
 
 	}
 
@@ -2178,8 +2416,17 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			 * .add(pmMachineCategory); }
 			 */
 		}
+		
+		// start #29665 remove parameterId null in to be added list
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getTobeAddedPmMachineCategoryList())){
+			this.getManagedBean().getTobeAddedPmMachineCategoryList().remove(pmMachineCategory);
+		}
+		//end #29665 remove parameterId null in to be added list
+		
 		this.getManagedBean().getDeletedPmMachineCategoryList()
 				.add(pmMachineCategory);
+		
+		if(StringUtils.isBlank(this.getManagedBean().getRemarkCategory()) && !this.getManagedBean().isNewCategory()) this.remarkDisable = false; //#29665
 
 		// log.info("deletePmMachine this.getManagedBean().getSelectedpmMachineCategory().size() = "+this.getManagedBean().getSelectedpmMachineCategory().size());
 	}
@@ -2509,8 +2756,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						new String[]{ResourceBundleUtils.getMessage("lbl.pm.category.grouping",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 
-		// machine category data information
-		getMachineCategoryData();
+		//#29665 remove load getmachine
 
 		if (this.getManagedBean().getPmCategoryL3().isByCompType()
 				&& (this.getManagedBean().getCategoryRestrList() == null || this
@@ -2771,6 +3017,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 		resetLOV();
 		this.getManagedBean().setBasicCategoryRequired(true);
+		if(StringUtils.isBlank(this.getManagedBean().getRemarkCategory()) && !this.getManagedBean().isNewCategory()) this.remarkDisable = false; //#29665
 	}
 
 	/**
@@ -2898,6 +3145,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			tempPmMachineCategoryList.clear();
 		}
 		resetPmMachineLOV();
+		if(StringUtils.isBlank(this.getManagedBean().getRemarkCategory()) && !this.getManagedBean().isNewCategory()) this.remarkDisable = false; //#29665
 
 	}
 
@@ -3041,7 +3289,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				}
 			}
 		}
-
+		//start #29665
+		else if(StringUtils.isBlank(this.getManagedBean().getRemarkCategory()) 
+				&& !this.getManagedBean().isNewCategory()) 
+			this.remarkDisable = false;
+		updateTabIndex();
+		//end #29665
 	}
 
 	/**
@@ -3113,26 +3366,30 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					if (pmParameter.getParameterId().equals(parameterId)) {
 						String parameterCode = pmParameter.getParameterCode();
 
-						if (parameterCode
-								.equals(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_PRINTING)) {
+						//start #29665
+						if (parameterCode.equals(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_PRINTING)) {
 							if (!this.getManagedBean().isNewCategory()) {
-								this.getManagedBean().setCheckSpecialCategory(
-										true);
+								this.getManagedBean().setCheckSpecialCategory(true);
 							} else {
-								this.getManagedBean().setCheckSpecialCategory(
-										true);
+								this.getManagedBean().setCheckSpecialCategory(true);
 							}
+							this.getManagedBean().setDisableSection(1);
 						}
-						
-						if (parameterCode
-								.equals(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_NORMAL)) {
-							
+						else if (parameterCode.equals(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_NORMAL)) {
 								this.getManagedBean().setFacilityTypeChoosable(false);
-							
-						}else{
-							
-							this.getManagedBean().setFacilityTypeChoosable(true);
 						}
+						else if(parameterCode.equals(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_DOCKYARD)  || 
+								parameterCode.equals(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_WORKSHOP)){
+							this.getManagedBean().setDisableSection(2);
+						}else{
+							this.getManagedBean().setFacilityTypeChoosable(true);
+							
+							this.getManagedBean().setDisableSection(0);
+						}
+						updateTabIndex();
+						if(CollectionUtils.isNotEmpty(this.getManagedBean().getPmMachineCategoryList()))
+							this.getManagedBean().getPmMachineCategoryList().clear();
+						//end #29665
 					}
 				}
 			}
@@ -3217,7 +3474,17 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 */
 	public String backToSearch() {
 		// resetCategory();
-		return "/xhtml/pm/category/search.xhtml?faces-redirect=true";
+		
+		//start #29665 back navigation based on previous screen
+		if(this.getManagedBean().getFromLevel() == 1){
+			this.getManagedBean().setFromLevel(0);
+			return editCategory(this.getManagedBean().getPmCategoryL2().getPmCategoryL1().getCategoryL1Id());
+		}else if (this.getManagedBean().getFromLevel() == 2){
+			this.getManagedBean().setFromLevel(0);
+			return editSubCategory(this.getManagedBean().getPmCategoryL3().getPmCategoryL2().getCategoryL2Id(),2, true);
+		}else
+			return "/xhtml/pm/category/search.xhtml?faces-redirect=true";
+		//end #29665 back navigation based on previous screen
 	}
 
 	/**
@@ -3357,6 +3624,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						.add(restr);
 			}
 			this.getManagedBean().setCategoryRestrRequired(true);
+			if(StringUtils.isBlank(this.getManagedBean().getRemarkCategory()) && !this.getManagedBean().isNewCategory()) this.remarkDisable = false; //#29665
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -3381,6 +3649,15 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		this.getManagedBean().getCategoryRestrList().remove(pmCategoryRestr);
 		this.getManagedBean().getDeletedPmPmCategoryRestrList()
 				.add(pmCategoryRestr);
+		
+		// start #29665 remove parameterId null in to be added list
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getTobeAddedCategoryRestrList())){
+			this.getManagedBean().getTobeAddedCategoryRestrList().remove(pmCategoryRestr);
+		}
+		//end #29665 remove parameterId null in to be added list
+		
+		if(StringUtils.isBlank(this.getManagedBean().getRemarkCategory()) && !this.getManagedBean().isNewCategory()) this.remarkDisable = false; //#29665
+		
 		// this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().remove(pmCategoryRestr);
 		/*
 		 * } else{ System.out.println("************************************");
@@ -3493,6 +3770,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				}
 			}
 		}
+
+		//start #29665
+		else if(StringUtils.isBlank(this.getManagedBean().getRemarkCategory()) 
+				&& !this.getManagedBean().isNewCategory()) 
+			this.remarkDisable = false;
+		updateTabIndex();
+		//end #29665
 	}
 	
 	
@@ -3995,6 +4279,75 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		};
 		Collections.sort(pmCategoryL3s, comparator);
 	}
+	
+	//start #29665
+	public String getUpdateContent(Integer level){
+		if(level==1){
+			return PmCommonUtil.getMessage("lbl.pm.categ.update.main", new String[] {
+					this.getManagedBean().getPmCategoryL1().getCategoryL1Code()
+					});
+		}else if(level == 2){
+			return PmCommonUtil.getMessage("lbl.pm.categ.update.sub", new String[] {
+					this.getManagedBean().getPmCategoryL2().getCategoryL2Code()
+					});
+		}else if(level == 3){
+			return PmCommonUtil.getMessage("lbl.pm.categ.update.division", new String[] {
+					this.getManagedBean().getPmCategoryL3().getCategoryL3Code()
+					});
+		}else{
+			return ""; //suppose not happened here
+		}
+	}
+	
+	public void enableDiscription(){
+		this.descriptionEditDisable = false;
+		this.remarkDisable = false;
+	}
+	
+	public void cancelCategory(Integer level){
+		this.descriptionEditDisable = true;
+		this.remarkDisable = true;
+		this.getManagedBean().setRemarkCategory(null);
+		if(level == 1){
+			editCategory(this.getManagedBean().getPmCategoryL1().getCategoryL1Id());
+		}else if(level == 2){
+			editSubCategory(this.getManagedBean().getPmCategoryL2().getCategoryL2Id(), level, false);
+		}else if(level == 3){
+			editSubDivision(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(), level);
+		}
+	}
+	
+	public void onchangeDiscription(AjaxBehaviorEvent event){
+		if(!this.getManagedBean().isNewCategory() && this.remarkDisable)
+			this.remarkDisable = false;
+	}
+	
+	private List<PmRemarkCategory> updateCreatedUserName(List<PmRemarkCategory> remarkList) {
+		for(PmRemarkCategory rc: remarkList){
+			PmUser user = PmCommonUtil.retrieveUserById(rc.getCreatedBy(),true);
+			rc.setCreatedUsername(user.getUserName());
+		}
+		return remarkList;
+	}
+	
+	public String getParamCategRestr(String parameterCode){
+		return ParameterHelper.getInstance().getParameterDesc(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE, parameterCode);
+	}
+	
+	private void updateTabIndex(){
+		if(this.getManagedBean().getPmCategoryL3().isBasicCategoryReqValue())
+			this.tabIndexActive = 0;
+		else if (this.getManagedBean().getPmCategoryL3().isBasicCategoryReqValue() 
+				&& this.getManagedBean().getPmCategoryL3().isByCompType())
+			this.tabIndexActive = 0;
+		else if (!this.getManagedBean().getPmCategoryL3().isBasicCategoryReqValue() 
+				&& this.getManagedBean().getPmCategoryL3().isByCompType())
+			this.tabIndexActive = 1;
+		else
+			this.tabIndexActive = 2;
+	}
+	
+	//end 29665
 
 	/**
 	 * @return the result
@@ -4104,4 +4457,32 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 		return strList;
 	}
+
+	//start #29665
+	public boolean isRemarkDisable() {
+		return remarkDisable;
+	}
+
+	public void setRemarkDisable(boolean remarkDisable) {
+		this.remarkDisable = remarkDisable;
+	}
+
+	public boolean isDescriptionEditDisable() {
+		return descriptionEditDisable;
+	}
+
+	public void setDescriptionEditDisable(boolean descriptionEditDisable) {
+		this.descriptionEditDisable = descriptionEditDisable;
+	}
+	
+	public Integer getTabIndexActive() {
+		return tabIndexActive;
+	}
+
+	public void setTabIndexActive(Integer tabIndexActive) {
+		this.tabIndexActive = tabIndexActive;
+	}
+
+	//end #29665
+
 }

@@ -8,7 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
 
-		<p:messages id="catSrchMsg" showDetail="true" closable="true" autoUpdate="true"
+		<p:messages id="catSrchMsg" showDetail="true" closable="true" autoUpdate="true" globalOnly="true"
 			severity="error,info" showSummary="false"></p:messages>
 		<ui:remove>
 			<p:blockUI block=":form" widgetVar="blockWidget">
@@ -195,19 +195,21 @@
 						<p:graphicImage title="#{lbl['lbl.pm.add.sub.div']}"
 							value="/css/images/design/add.png" />
 					</p:commandLink>
+					<!-- start #29665 add new param -->
 					<p:commandLink rendered="#{category[0]==2}"
-						action="#{categoryBackingBean.editSubCategory(category[1])}"
+						action="#{categoryBackingBean.editSubCategory(category[1],0,false)}"
 						update="@form">
+					<!-- end #29665 add new param -->
 						<p:graphicImage library="ep/images/design" 
 							title="#{lbl['lbl.pm.edit.sub.category']}"
 							value="/css/images/design/edit.png" />
 					</p:commandLink>
 
-
-
+					<!-- start #29665 add new param -->
 					<p:commandLink rendered="#{category[0]==3}"
-						action="#{categoryBackingBean.editSubDivision(category[1])}"
+						action="#{categoryBackingBean.editSubDivision(category[1],0)}"
 						update="@form">
+					<!-- end #29665 add new param -->
 						<p:graphicImage library="ep/images/design" 
 							title="#{lbl['lbl.pm.edit.sub.div']}"
 							value="/css/images/design/edit.png" />
