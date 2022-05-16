@@ -967,7 +967,6 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 
 	// 29580 - Start (Harun) change dropdown list to selectManyMenu for status
 	public List<String> reportStatusDropdownValuesSelectManyMenu(String reportCode) {
-		log.info("harun reportStatusDropdownValues reportCode=======" + reportCode);
 		List<String> statusValues = new ArrayList<String>();
 		List<String> statusValuesRemove = null;
 		boolean checkRemove = false;
@@ -1016,7 +1015,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		boolean checkAll = false;
 		List<String> statusList = new ArrayList<String>(this.getManagedBean().getScReportSearchBean()
 				.getScStatusManyMenu());
-		List<String> allList = reportStatusDropdownValuesSelectManyMenu(reportCode);
+		List<String> allList = new ArrayList<String>();
 
 		for (String stsvalue : statusList) {
 			if (stsvalue.equalsIgnoreCase(getStatusDesc("lbl.rpt.all"))) {
@@ -1028,7 +1027,9 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 				}
 				for (Iterator<SelectItem> it = items.iterator(); it.hasNext();) {
 					SelectItem si = (SelectItem) it.next();
-					this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().add((String) si.getValue());
+					//this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().add((String) si.getValue());
+					this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().remove((String) si.getValue());
+					si.setDisabled(Boolean.TRUE);
 				}
 				checkAll = true;
 			} else {
@@ -1043,11 +1044,41 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 				}
 				for (Iterator<SelectItem> it = items.iterator(); it.hasNext();) {
 					SelectItem si = (SelectItem) it.next();
-					this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().remove((String) si.getValue());
+					//this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().remove((String) si.getValue());
+					si.setDisabled(Boolean.FALSE);
 				}
 			}
 		}
 
+	}
+	
+	public boolean isDisabled(String item,String reportCode) {
+		List<String> allList = reportStatusDropdownValuesSelectManyMenu(reportCode);
+	
+		if(this.getManagedBean().getScReportSearchBean().getScStatusManyMenu() != null 
+				&& this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().size() > 0){
+			for (String stsvalue : this.getManagedBean().getScReportSearchBean().getScStatusManyMenu()) {
+				if(stsvalue.equalsIgnoreCase(getStatusDesc("lbl.rpt.all"))){
+					for (String strSelectItem : allList) {
+						if(strSelectItem.equalsIgnoreCase(item)){
+							return strSelectItem.equals(item);
+						}
+					}
+				}
+			}
+		}else{
+			return false;
+		}
+		return false;
+	}
+	
+	public List<String> reportStatusDropdownValuesProposalOfferSubmission() {
+		List<String> statusValues = new ArrayList<String>();
+
+		statusValues.add(getStatusDesc("lbl.rpt.pending.proposal.submission"));
+		statusValues.add(getStatusDesc("lbl.rpt.proposal.submitted"));
+	
+		return statusValues;
 	}
 	// 29580 - End (Harun)
 }

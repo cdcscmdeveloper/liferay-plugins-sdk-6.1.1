@@ -12,6 +12,7 @@ package my.ep.web.backingbean.report.qt;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
@@ -138,9 +139,20 @@ QtReportBackingBean<ProposalProductReportManagedBean> implements Serializable{
 			//quotationNumberValidation();
 			params.put(QtReportConst.QUOTATION_TENDER_ID, this.getManagedBean().getQuotationId());
 		}
-		if (StringUtils.isNotEmpty(reportFieldBean.getScStatus())) {
-			params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ, reportFieldBean.getScStatus());
+		
+		// 29580 - Start (Harun) Change option from single status to multiple 
+//		if (StringUtils.isNotEmpty(reportFieldBean.getScStatus())) {
+//			params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ, reportFieldBean.getScStatus());
+//			log.info("harun params.get(QtReportConst.PARAM_PROCURE_STATUS_EQ))====="+params.get(QtReportConst.PARAM_PROCURE_STATUS_EQ));
+//		}
+		if(reportFieldBean.getScStatusManyMenu().size() > 0){
+			int count=0;
+			for (String strManyMenu: reportFieldBean.getScStatusManyMenu()){
+				count++;
+				params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ+count, getConversionParam(strManyMenu));
+			}
 		}
+		// 29580 - End (Harun)
 		if(StringUtils.isNotEmpty(reportFieldBean.getScDeskOfficer())){
 			params.put(QtReportConst.PARAM_DESK_OFFCR_EQ, reportFieldBean.getScDeskOfficer());	
 		}
@@ -149,5 +161,29 @@ QtReportBackingBean<ProposalProductReportManagedBean> implements Serializable{
 		}
 		return params;
 	}
+	
+	// 29580 - Start (Harun) Change option from single status to multiple 
+	public String getConversionParam(String status) {
+		
+		HashMap<String, String> status_map = new HashMap<String, String>();
+		status_map.put(getStatusDesc("lbl.rpt.all"), QtReportConst.STATUS_ALL);
+		status_map.put(getStatusDesc("lbl.rpt.preparation"), QtReportConst.STATUS_PREPARATION);
+		status_map.put(getStatusDesc("lbl.rpt.publishing"), QtReportConst.STATUS_PUBLISHING);
+		status_map.put(getStatusDesc("lbl.rpt.pendingEvaluation"), QtReportConst.STATUS_PENDING_EVALUATION);
+		status_map.put(getStatusDesc("lbl.rpt.pendingSupplierFinalization"), QtReportConst.STATUS_PENDING_SUPPLIER_FINALIZATION);
+		status_map.put(getStatusDesc("lbl.rpt.pendingLOInLOA"), QtReportConst.STATUS_PENDING_LOILOA);
+		status_map.put(getStatusDesc("lbl.rpt.loaCompleted"), QtReportConst.STATUS_LOA_COMPLETED);
+		status_map.put(getStatusDesc("lbl.rpt.drpdown.cancelledLabel"), QtReportConst.STATUS_CANCELLED);
+		
+		return status_map.get(status);
+				
+	}
+	
+	public String getStatusDesc(String label) {
+		return ResourceBundleUtils.getMessage(label,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale());
+	}
+	// 29580 - End (Harun)
 
 }

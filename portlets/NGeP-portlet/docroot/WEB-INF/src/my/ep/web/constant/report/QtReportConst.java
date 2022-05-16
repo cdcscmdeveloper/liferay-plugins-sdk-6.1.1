@@ -62,7 +62,19 @@ public class QtReportConst implements Serializable {
 	public static final String PARAM_SUBMIT_FR_DT = "SUBMITFRDT";
 	public static final String PARAM_SUBMIT_TO_DT = "SUBMITTODT";
 	public static final String PARAM_LOGIN = "LOGIN";
-
+	
+	// 29580 - Start (Harun) Add report status for mutiple option 
+	//Report status
+	public static final String STATUS_ALL = "1";
+	public static final String STATUS_PREPARATION = "2";
+	public static final String STATUS_PUBLISHING = "3";
+	public static final String STATUS_PENDING_EVALUATION = "4";
+	public static final String STATUS_PENDING_SUPPLIER_FINALIZATION = "5";
+	public static final String STATUS_PENDING_LOILOA = "6";
+	public static final String STATUS_LOA_COMPLETED = "7";
+	public static final String STATUS_CANCELLED = "8";
+	// 29580 - End (Harun)
+	
 	/**
 	 * @return the SC_QUOT_TENDER_OR_RPT_VAL
 	 */
