@@ -94,17 +94,17 @@
 					</div>
 				</div>
 			</p:column>
-            <p:column>
+            <p:column style="text-align:center;">
 				<p:selectBooleanCheckbox id="chkHomeOffice"
 					value="#{restrict.homeOffice}" />
 			</p:column>
 			<!-- #29857- Start -->
-			<p:column>
+			<p:column style="text-align:center;">
 				<p:selectBooleanCheckbox id="chkBusinessOffice"
 					value="#{restrict.businessOffice}" />
 			</p:column>
 			<!-- #29857 - End -->
-			<p:column>
+			<p:column style="text-align:center;">
 				<p:commandLink partialSubmit="true" process="@this"
 					oncomplete="appTypeDeletePopUp.show();"
 					update="@([id$=#{appTypeDeleteId}])">
