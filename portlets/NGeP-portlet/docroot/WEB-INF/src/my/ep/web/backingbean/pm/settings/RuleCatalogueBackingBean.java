@@ -1415,8 +1415,10 @@ public class RuleCatalogueBackingBean extends
 							&& ruleTypeValue.getCategoryL3Id()
 									.getCategoryL3Id() == null) {
 						// throw required msg
+						// 29669 start
 						throw new EpException(MessageConst.ERROR_770133,
-								new String[] {});
+								new String[] { ruleTypeDesc.getRuleDesc() });
+						// 29669 end
 
 					} else { // fill CategoryDisplayValue for further validation
 						PmCategoryL3 categoryL3 = ruleTypeValue
@@ -1456,8 +1458,7 @@ public class RuleCatalogueBackingBean extends
 					.getConfigRuleValues().size(); i++) {
 				// add new values to tracking Diary list
 
-				PmConfigRuleValue baseValueToCompare = ruleTypeDesc
-						.getRuleType().getConfigRuleValues().get(i);
+				PmConfigRuleValue baseValueToCompare = ruleTypeDesc.getRuleType().getConfigRuleValues().get(i);
 
 				if (baseValueToCompare.getRecordStatusFlg() == 0) {// if is
 					// inActive
@@ -1465,14 +1466,16 @@ public class RuleCatalogueBackingBean extends
 					// next
 					// record\
 					continue;
-				} else if ((ruleTypeDesc.getRuleType().getRangeType() == 1 || ruleTypeDesc
-						.getRuleType().getRangeType() == 2)
-						&& baseValueToCompare.isError()) {// to value can not be
-															// less than from
-															// value
-					throw new EpException(MessageConst.ERROR_770210,
-							new String[] { ruleTypeDesc.getRuleDesc() });
+				} 
+				// 29669 - start
+				else if ((ruleTypeDesc.getRuleType().getRangeType() == 1 || ruleTypeDesc.getRuleType().getRangeType() == 2)
+						&& (baseValueToCompare.isError() || baseValueToCompare.isErrorToRequired())) {
+							// to value can not be less than from value
+							// or
+							// previous tier's TO value can not be changed to null if already add next tier
+					throw new EpException(MessageConst.ERROR_770210, new String[] { ruleTypeDesc.getRuleDesc() });
 				}
+				// 29669 - end
 
 				for (int j = i + 1; j <= (ruleTypeDesc.getRuleType()
 						.getConfigRuleValues().size() - 1); j++) {
@@ -1482,24 +1485,19 @@ public class RuleCatalogueBackingBean extends
 					if (value.getRecordStatusFlg() == 0) {// if is inActive one
 						// go to next record
 						continue;
-					} else if ((ruleTypeDesc.getRuleType().getRangeType() == 1 || ruleTypeDesc
-							.getRuleType().getRangeType() == 2)
-							&& value.isError()) { // to
-						// value
-						// can
-						// not
-						// be
-						// less
-						// than
-						// from
-						// value
-						throw new EpException(MessageConst.ERROR_770210,
-								new String[] { ruleTypeDesc.getRuleDesc() });
+					} 
+					// 29669 - start
+					else if ((ruleTypeDesc.getRuleType().getRangeType() == 1 || ruleTypeDesc.getRuleType().getRangeType() == 2)
+							&& (value.isError() || value.isErrorToRequired())) { 
+						// to value can not be less than from value
+						// or
+						// previous tier's TO value can not be changed to null if already add next tier
+						throw new EpException(MessageConst.ERROR_770210, new String[] { ruleTypeDesc.getRuleDesc() });
 					}
+					// 29669 - end
 
 					if (!ruleValueValidation(baseValueToCompare, value,
 							ruleTypeDesc.getRuleType())) {
-						// log.info("...............ruleType.getValidationType()="+ruleType.getValidationType());
 
 						// hit error and return
 						switch (ruleTypeDesc.getRuleType().getValidationType()) {
@@ -1521,6 +1519,7 @@ public class RuleCatalogueBackingBean extends
 													.getRuleDesc() });
 								}
 							}
+							break;
 						case '2':
 							if (!ruleTypeDesc.getRuleType().getRuleType().equals("LOPO")) {
 								if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
@@ -1537,19 +1536,20 @@ public class RuleCatalogueBackingBean extends
 													.getRuleDesc() });
 								}
 							}
+							break;
 
 						case '3':
 							if (!ruleTypeDesc.getRuleType().getRuleType().equals("LOPO")) {
 								throw new EpException(MessageConst.ERROR_770154,
 										new String[] { ruleTypeDesc.getRuleDesc() });
 							}
+							break;
+							
+						default:
 
 						}
 
 					}
-
-					// }
-
 				}
 
 			}
@@ -1604,10 +1604,6 @@ public class RuleCatalogueBackingBean extends
 
 			RuleConfigHelper.getInstance().relodeRuleTypeValueMaps();
 
-			// this.getManagedBean().setConfigRuleList(
-			// RuleConfigHelper.getInstance().getRuleTypeList());
-			// this.getManagedBean().setSelectedRuleType(
-			// RuleConfigHelper.getInstance().getRuleTypeList().get(0));
 			List<PmConfigRuleDesc> list = retriveConfigRuleDescFromDB();
 			this.getManagedBean().setConfigRuleDescList(list);
 
@@ -1619,7 +1615,6 @@ public class RuleCatalogueBackingBean extends
 					break;
 				}
 			}
-			// this.getManagedBean().setSelectedRuleType(list.get(0));
 			/* 27827 - START */
 			if (resDTO.isSuccessful() && orgProfResDTO.isSuccessful()) {
 			/* 27827 - END */
@@ -3046,23 +3041,32 @@ public class RuleCatalogueBackingBean extends
 			if (rulevalue.getGroupValueId().equals(
 					configRuleType.getConfigRuleValues().get(index)
 							.getGroupValueId())) {
-				rulevalue.setFromValue(configRuleType.getConfigRuleValues()
-						.get(index).getToValue().add(new BigDecimal(0.01)));
+				// 29669 - start
+				if (configRuleType.getConfigRuleValues().get(index).getToValue() == null) {
+					configRuleType.getConfigRuleValues().get(index).setErrorToRequired(true);
+				} else {
+					rulevalue.setFromValue(configRuleType.getConfigRuleValues()
+							.get(index).getToValue().add(new BigDecimal(0.01)));
+					configRuleType.getConfigRuleValues().get(index).setErrorToRequired(false);
+				}
+				// 29669 - end
 			}
 		}
 
 		PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues()
 				.get(index);
+		// 29669 start
 		if (selectedValue.getFromValue() != null
 				&& selectedValue.getToValue() != null
 				&& selectedValue.getFromValue().compareTo(
-						selectedValue.getToValue()) == 1) {
+						selectedValue.getToValue()) >= 0) {
 			selectedValue.setError(true);
 		} else {
 			selectedValue.setError(false);
 		}
+		// 29669 end
 	}
-
+	
 	/**
 	 * update Group Child Date.
 	 * 
@@ -3158,7 +3162,13 @@ public class RuleCatalogueBackingBean extends
 
 					newRuleValue.setGroupValueId(1);
 				}
-				newRuleValue.setFromValue(new BigDecimal(1));
+				// 29669 - start
+				if (configRuleType.getRuleType().equals(RuleTypeConst.QTPMM)) {
+					newRuleValue.setFromValue(new BigDecimal(0));
+				} else {
+					newRuleValue.setFromValue(new BigDecimal(1));
+				}
+				// 29669 - end
 			}
 			int index = configRuleType.getConfigRuleValues().size();
 			configRuleType.getConfigRuleValues().add(index, newRuleValue);
@@ -4612,22 +4622,13 @@ public class RuleCatalogueBackingBean extends
 				.getSelectedRuleDescType().getRuleType();
 		PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues()
 				.get(index);
-		if (selectedValue.getFromValue() != null
-				&& selectedValue.getToValue() != null
-				&& selectedValue.getFromValue().compareTo(
-						selectedValue.getToValue()) == 1) {
+		// 29669 start
+		if (selectedValue.getFromValue() != null && selectedValue.getToValue() != null && selectedValue.getFromValue().compareTo(selectedValue.getToValue()) >= 0) {
 			selectedValue.setError(true);
 		} else {
 			selectedValue.setError(false);
 		}
-		//
-		// if (selectedValue.getRuleValue() == null
-		// || selectedValue.getFromValue() == null) {
-		// this.getManagedBean().setError2(true);
-		// } else {
-		// this.getManagedBean().setError2(false);
-		// }
-
+		// 29669 end
 	}
 
 	/**
