@@ -26,6 +26,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
@@ -187,6 +188,11 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private Map<Long,Boolean> committeeFormed;
 	private boolean navigateFromMobileView;
 	private ScWorkFlowStatus workflowStatus;
+	
+	// #29732 Start
+	private String hisCatCode;
+	private List<PmRemarkCategory> historyList;
+	// #29732 End
 	
 	// #29624 - start
 	private List<ScLoa> scLoaList = new ArrayList<>();
@@ -1300,6 +1306,23 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	
+	// #29732 Start
+	public String getHisCatCode() {
+		return hisCatCode;
+	} 
+ 
+	public void setHisCatCode(String hisCatCode) {
+		this.hisCatCode = hisCatCode;
+	} 
+ 
+	public List<PmRemarkCategory> getHistoryList() {
+		return historyList;
+	} 
+ 
+	public void setHistoryList(List<PmRemarkCategory> historyList) {
+		this.historyList = historyList;
+	} 
+	// #29732 End
 
 	//#29560 - start
 	/**

@@ -48,6 +48,7 @@ import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -1773,6 +1774,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//29464-start
 	private boolean committeeAppointmentMenuTab = true;
 	//29464-end
+	
+	// #29732 Start
+	private String hisCatCode;
+	private List<PmRemarkCategory> historyList;
+	private String catCodeList;
+	// #29732 End
 	
 	//====#31913 bug related to #25138==== start
 	private BigDecimal totalmaxscore;
@@ -10799,7 +10806,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.newValidityDays = newValidityDays;
 		}
 		//#29425 - end
-		
+
 		public boolean isTechnicalOtherCheckList() {
 			return technicalOtherCheckList;
 		}
@@ -11035,7 +11042,33 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.mainTaskNames = mainTaskNames;
 		}
 		//#25037-end
-		
+
+		// #29732 Start
+		public String getHisCatCode() {
+			return hisCatCode;
+		} 
+	
+		public void setHisCatCode(String hisCatCode) {
+			this.hisCatCode = hisCatCode;
+		} 
+	
+		public List<PmRemarkCategory> getHistoryList() {
+			return historyList;
+		} 
+	
+		public void setHistoryList(List<PmRemarkCategory> historyList) {
+			this.historyList = historyList;
+		} 
+	
+		public String getCatCodeList() {
+			return catCodeList;
+		} 
+	
+		public void setCatCodeList(String catCodeList) {
+			this.catCodeList = catCodeList;
+		} 
+		// #29732 End
+
 		//====#31913 bug related to #25138==== start
 		public BigDecimal getTotalmaxscore() {
 			return totalmaxscore;
