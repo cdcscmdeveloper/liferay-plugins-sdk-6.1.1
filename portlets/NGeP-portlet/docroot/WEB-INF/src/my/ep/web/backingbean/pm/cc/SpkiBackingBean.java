@@ -124,7 +124,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 			} else {
 				logger.info("getChallengeQuestions | getCertIssuer-DG : " + getCertIssuer());
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(
-						getLoginUser().getIdentificationNo());
+						getLoginUser().getIdentificationNo(), getSupplier().getEpNo());
 			}
 			setChallengeQues1(challs.get(0));
 			logger.info("::: #25061 before spki_dlg.show");
@@ -145,7 +145,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
 				log.info(">>>>>>>>>>>>>>> masuk dalam certIssuer gate <<<<<<<<<");
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(
-						identificationNo);
+						identificationNo, getSupplier().getEpNo());
 			}
 			log.info("The properties of challs >>>>>>>>>>" + challs);
 			log.info("challs size >>>>>>>>>>>>>>>>>>>>>>>" + challs.size());
@@ -399,7 +399,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 					getSupplier().getEpNo(), challengeQues1);
 		} else {
 			challs = DigiCertHelper.getInstance().getChallengeQuestion(
-					getLoginUser().getIdentificationNo());
+					getLoginUser().getIdentificationNo(), getSupplier().getEpNo());
 		}
 		setChallengeQues1(challs.get(0));
 	}
@@ -441,6 +441,23 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	private String getCertIssuer(String identificationNo) {
 		return PmCommonUtil.getCertIssuerByIdentificationNoAndEpNo(
 				identificationNo, getSupplier().getEpNo());
+	}
+	
+	public void getChallengeQuestions2(String identificationNo) {
+		//if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+			if (getCertIssuer(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
+				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
+				challs = TrustGateHelper.getInstance().getChallengeQuestion(
+						identificationNo, getSupplier().getEpNo(),
+						challengeQues1);
+			} else {
+				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
+				challs = DigiCertHelper.getInstance().getChallengeQuestion(
+						identificationNo);
+			}
+			setChallengeQues1(challs.get(0));
+			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+		//}
 	}
 	
 	//#30425 - Start
