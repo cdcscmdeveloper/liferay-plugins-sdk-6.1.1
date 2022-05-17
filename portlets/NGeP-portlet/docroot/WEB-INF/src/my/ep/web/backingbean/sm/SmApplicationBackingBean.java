@@ -98,8 +98,11 @@ import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCertBody;
+import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmDocumentRestr;
 import my.ep.persistence.entity.pm.common.PmEduField;
@@ -16921,17 +16924,107 @@ public class SmApplicationBackingBean extends
 	}
 	//#12483 - END
 	//#32014 - START
-	public void reassignSelShareHolderAddress(SmPersonnelAddress address){
+	public void reassignSelShareHolderResAddress(SmPersonnelAddress personnelAddress){
 		log.info("========#32014 - inside reassignSelShareHolderAddress=======");
 		log.info("#32014 - isSupplierUser : " + getManagedBean().isSupplierUser());
-		log.info("#32014 - AddressType : " + address.getAddressType());
-		if(getManagedBean().isSupplierUser() && address.getAddressType().equalsIgnoreCase(SupplierManagementConst.RES_ADD)){
+		log.info("#32014 - AddressType : " + personnelAddress.getAddressType());
+		if(getManagedBean().isSupplierUser() && personnelAddress.getAddressType().equalsIgnoreCase(SupplierManagementConst.RES_ADD)){
 			log.info("#32014 - inside first if");
-			log.info("#32014 - isSameAsPerm : " + address.isSameAsPerm());
+			log.info("#32014 - isSameAsPerm : " + personnelAddress.isSameAsPerm());
 			log.info("#32014 - SSM Application : " + getManagedBean().getSmAppl().isApplValidWithSsm());
 			log.info("#32014 - SSM isActive : " + SmCommonUtil.getInstance().ssmActive());
-			if(!address.isSameAsPerm() && getManagedBean().getSmAppl().isApplValidWithSsm() && SmCommonUtil.getInstance().ssmActive()){
-				SmApplicationUtil.assignSelShareHolderAddress(this.getManagedBean().getSelectedShareHolder(), getManagedBean());
+			if(!personnelAddress.isSameAsPerm() && getManagedBean().getSmAppl().isApplValidWithSsm() && SmCommonUtil.getInstance().ssmActive()){
+				SmPersonnelAddress res = new SmPersonnelAddress();
+				res.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
+				res.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+				res.setSmPersonnel(this.getManagedBean().getSelectedShareHolder());
+				getManagedBean().setShareHolderResdAddr(res);
+				
+				for (SmPersonnelAddress addr : this.getManagedBean().getSelectedShareHolder().getSmPersonnelAddresses()) {
+					if(addr.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
+						SmAddress smAddress = new SmAddress();
+						smAddress.setAddress1(addr.getSmAddress().getAddress1());
+						smAddress.setAddress2(addr.getSmAddress().getAddress2());
+						smAddress.setAddress3(addr.getSmAddress().getAddress3());
+						//START SSM INTEGRATION
+						smAddress.setSsmData(addr.getSmAddress().isSsmData());
+						smAddress.setAddressSsmNull(addr.getSmAddress().isAddressSsmNull());
+						smAddress.setPostcodeSsmNull(addr.getSmAddress().isPostcodeSsmNull());
+						smAddress.setStateSsmNull(addr.getSmAddress().isStateSsmNull());
+						smAddress.setCountrySsmNull(addr.getSmAddress().isCountrySsmNull());
+						
+						if(addr.getSmAddress().getPmCountry() != null){
+							PmCountry country = new PmCountry();
+							country.setCountryId(addr.getSmAddress().getPmCountry()
+									.getCountryId());
+							smAddress.setPmCountry(country);
+							smAddress.setCountryId(country.getCountryId());
+						}else{
+							if(addr.getSmAddress().getPmState() != null){
+								PmCountry country = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+								country.setCountryId(country
+										.getCountryId());
+								smAddress.setPmCountry(country);
+								smAddress.setCountryId(country.getCountryId());
+							}
+						}
+						
+						PmState state = new PmState();
+						state.setStateId(addr.getSmAddress().getPmState().getStateId());
+						smAddress.setPmState(state);
+						smAddress.setStateId(state.getStateId());
+						
+						if(addr.getSmAddress().getPmDivision() != null){
+							PmDivision div = new PmDivision();
+							div.setDivisionId(addr.getSmAddress().getPmDivision().getDivisionId());
+							smAddress.setPmDivision(div);
+							smAddress.setDivisionId(div.getDivisionId());
+						}
+						if(addr.getSmAddress().getPmDistrict() != null){
+							PmDistrict district = new PmDistrict();
+							district.setDistrictId(addr.getSmAddress().getPmDistrict().getDistrictId());
+							smAddress.setPmDistrict(district);
+							smAddress.setDistrictId(district.getDistrictId());
+						}
+						
+						if(addr.getSmAddress().getPmCity() != null){
+							PmCity city = new PmCity();
+							city.setCityId(addr.getSmAddress().getPmCity().getCityId());
+							smAddress.setPmCity(city);
+							smAddress.setCityId(city.getCityId());
+						}
+						
+						smAddress.setPostcode(addr.getSmAddress().getPostcode());
+						addr.setSmAddress(smAddress);
+						
+						if (addr.getAddressType().equalsIgnoreCase(
+								SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
+							getManagedBean().setShareHolderResdAddr(addr);
+							SmApplicationUtil
+									.getInstance()
+									.assignStateDistAndCityForSelVal(
+											getManagedBean(),
+											getManagedBean().getShareHolderResdAddr()
+													.getSmAddress(),
+											SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+							//to check, if district state not equal to pm state set district to null & City
+							if(getManagedBean().getShareHolderResdAddr().getSmAddress().isSsmData()){
+								SmAddress address = getManagedBean().getShareHolderResdAddr().getSmAddress();
+								if(address != null){
+									if(address.getPmState()!= null && address.getPmDistrict() != null){
+										if(address.getPmDistrict().getPmState() != null){
+											if(address.getPmDistrict().getPmState().getStateId() != address.getPmState().getStateId()){
+												address.setPmDistrict(new PmDistrict());
+												address.setPmCity(new PmCity());
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				getManagedBean().setSelectedShareHolder(this.getManagedBean().getSelectedShareHolder());
 			}
 		}
 	}
