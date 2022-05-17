@@ -8,9 +8,7 @@
 	
 	<ui:define name="resourceSection">
 		<script>
-			$('#portlet_MOFApplication_WAR_NGePportlet').find(
-					'.portlet-title-text').html(
-					"#{lbl['lbl.sm.review.application']}");
+			$('#portlet_MOFApplication_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.review.application']}");
 		</script>
 	</ui:define>
 
@@ -48,9 +46,9 @@
 					src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 				<div align="center">
 					<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])"
-						onclick="approvedCancelMofBlockWidget.show();" oncomplete="approveAppCanDialog.hide();approvedCancelMofBlockWidget.hide();"
+						onclick="approvedCancelMofBlockWidget.show();" oncomplete="approvedCancelMofBlockWidget.hide();"
 						partialSubmit="true" process="approvedCancelMofBlockPanel"
-						action="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}" />
+						action="#{backingBean.finalCancelDecisionApproveOrRejectAppln('approveAppCanDialog','APPROVE')}" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 						onclick="approveAppCanDialog.hide();" />
 				</div>
