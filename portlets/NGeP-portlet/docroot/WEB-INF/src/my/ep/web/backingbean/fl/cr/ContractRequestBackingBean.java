@@ -4542,7 +4542,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//Start-11076-fix performance issues
 //			PmParameter Pricetype = contractItemSO.searchContractItemPriceType(reqDTO);
 			PmParameter Pricetype =resDTO.getPriceType();
-			//End 11076-fix performance issues
+			
+			if(Pricetype!=null){
 			if(ParameterConst.PRICE_TYPE_STANDARD.equals(Pricetype.getParameterCode())){
 				getManagedBean().setStandardPrice(true);
 				
@@ -4555,8 +4556,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if(ParameterConst.PRICE_TYPE_TARIFF.equals(Pricetype.getParameterCode()) || ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(Pricetype.getParameterCode())) {
 				getManagedBean().setTariffPrice(true);
 			}
-			//11076
-
+			}
+			//End 11076-fix performance issues
 			return resDTO.getContractItemResultBean();
 		}
 
