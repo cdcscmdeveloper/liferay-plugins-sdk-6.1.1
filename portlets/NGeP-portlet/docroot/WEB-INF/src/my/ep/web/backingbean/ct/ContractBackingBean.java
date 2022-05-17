@@ -3979,6 +3979,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 			abb.getManagedBean().setTrackingDairyView(true);
 			getManagedBean().setViewSCL(true);
+			//Bug 33096 - shaqimi start
+			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
+			//Bug 33096 - shaqimi end
 			if(abb.getManagedBean().getTaskId() != null){
 				abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
 				abb.getManagedBean().setContractIdFromTaskList(new Long(getManagedBean().getContractVer().getCtContract().getContractId()));
@@ -4717,4 +4720,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				loaDetailBackingBean.viewLOA(scLoa.getLoaId());			
 		}
 		//Enhancement 15851 - End
+		
+		
+
+
 }  

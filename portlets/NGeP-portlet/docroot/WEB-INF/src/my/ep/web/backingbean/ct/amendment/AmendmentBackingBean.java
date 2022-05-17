@@ -3589,8 +3589,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return new contract amount
 	 */
 	public BigDecimal newContractAmt() {
-		return ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().add(
+		//Bug 33096 - shaqimi start
+		BigDecimal ctAmt = null;
+		if(ctBackingBean.getManagedBean().isViewSCL()){
+			ctAmt = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
+		} else {
+			ctAmt = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().add(
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount());
+	}
+		return ctAmt;
+		//Bug 33096 - shaqimi end
 	}
     
 	/**
@@ -7698,11 +7706,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 					reqDTO.setContractId(contractId);					
 					reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-					if(ctDT.getManagedBean().getLoaContractVerId() !=null ){
+					
+					//Bug 33096 - shaqimi start
+					Long amendmentContractVerId = null;
+					if(!getManagedBean().getSupplementalLoaNo().equals(null)){
+						amendmentContractVerId = contractSO.getAmendmentContractVerId(getManagedBean().getSupplementalLoaNo());
+					}
+					
+					if(ctBackingBean.getManagedBean().isViewSCL() && !amendmentContractVerId.equals(null)){
+						reqDTO.setContractVerId(amendmentContractVerId);
+					} else {
 						reqDTO.setContractVerId(ctDT.getManagedBean().getLoaContractVerId());
-					}else{
-						reqDTO.setContractVerId( contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
 					}										
+					//Bug 33096 - shaqimi end
 
 					reqDTO.setViewOnly(true);
 					ctBackingBean.getManagedBean().setViewContract(true);
