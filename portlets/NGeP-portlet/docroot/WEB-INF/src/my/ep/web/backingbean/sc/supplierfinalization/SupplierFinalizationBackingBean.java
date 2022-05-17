@@ -5709,7 +5709,10 @@ public class SupplierFinalizationBackingBean extends
 		ScQtFinalization scQtFinalization = this.getManagedBean()
 				.getScQtFinalization();
 		TplSpecZoneDtl selectedZone = this.getManagedBean().getCurrentZone();
-		if (selectedZone != null) {
+
+		// #28250 - Start - Added Null check
+		if (selectedZone != null && null != scQtFinalization && null != scQtFinalization.getScQtRecommendsByZone()) {
+		// #28250 - End
 			this.getManagedBean().setItemList(
 					scQtFinalization.getScQtRecommendsByZone()
 							.get(selectedZone.getSpecZoneId()));
@@ -5882,40 +5885,41 @@ public class SupplierFinalizationBackingBean extends
 		boolean isAward = getManagedBean().isSingleAward();
 		
 		List<ScQtRecommend> items = getManagedBean().getItemList();
-		for (ScQtRecommend item : items) {
-			Long specZoneId = null;
-			if (item.getTplSpecZoneDtl() != null) {
-				specZoneId = item.getTplSpecZoneDtl().getSpecZoneId();
-			} else {
-				specZoneId = DEFAULT_ZONE;
-			}
-			
-			Long itemId = item.getRequestItem().getRequestNoteItemId();
-			item.setSelectedSuppliers(new HashMap<Integer,SmSupplier>());
-			
-			List<QtEvaluationResultDtlBean> cachedSuppliersList = getCachedSuppliersFromMap(specZoneId, itemId);	
-			if (CollectionUtils.isNotEmpty(cachedSuppliersList)) {			
-				for (QtEvaluationResultDtlBean recommendedBean : cachedSuppliersList) {
-					if (recommendedBean != null) {
-						if (isAward && recommendedBean.isAwarded()) {
-							item.getSelectedSuppliers().put(
-									recommendedBean.getScQtProposal().getSupplierNo(),
-									recommendedBean.getScQtProposal().getScQtSupplier().getSmSupplier());
-						} else if (!isAward && recommendedBean.isShortlisted()) {
-							item.getSelectedSuppliers().put(
-									recommendedBean.getScQtProposal().getSupplierNo(),
-									recommendedBean.getScQtProposal().getScQtSupplier().getSmSupplier());
+
+		// #28250 - Start - Added Null check
+		if (CollectionUtils.isNotEmpty(items)) {
+		// #28250 - End
+			for (ScQtRecommend item : items) {
+				Long specZoneId = null;
+				if (item.getTplSpecZoneDtl() != null) {
+					specZoneId = item.getTplSpecZoneDtl().getSpecZoneId();
+				} else {
+					specZoneId = DEFAULT_ZONE;
+				}
+				
+				Long itemId = item.getRequestItem().getRequestNoteItemId();
+				item.setSelectedSuppliers(new HashMap<Integer,SmSupplier>());
+				
+				List<QtEvaluationResultDtlBean> cachedSuppliersList = getCachedSuppliersFromMap(specZoneId, itemId);	
+				if (CollectionUtils.isNotEmpty(cachedSuppliersList)) {
+					for (QtEvaluationResultDtlBean recommendedBean : cachedSuppliersList) {
+						if (recommendedBean != null) {
+							if (isAward && recommendedBean.isAwarded()) {
+								item.getSelectedSuppliers().put(
+										recommendedBean.getScQtProposal().getSupplierNo(),
+										recommendedBean.getScQtProposal().getScQtSupplier().getSmSupplier());
+							} else if (!isAward && recommendedBean.isShortlisted()) {
+								item.getSelectedSuppliers().put(
+										recommendedBean.getScQtProposal().getSupplierNo(),
+										recommendedBean.getScQtProposal().getScQtSupplier().getSmSupplier());
+							}
 						}
 					}
 				}
 			}
+		// #28250 - Start
 		}
-		
-		//#26169 Start comment this line
-		// #25729#142 & #26169 - Start
-		//checkSupplierOfferPriceByItemIsExceedCommitteeAuthority();
-		// #25729#142 & #26169 - End
-		//#26169 - End comment
+		// #28250 - End
 	}
 	
 	private void setSelectionMode(String finalizationMethod) {
@@ -7673,7 +7677,9 @@ public class SupplierFinalizationBackingBean extends
 			throw new EpException(MessageConst.ERROR_760211);
 		}		
 		
-		if (zoneDtl != null) {
+		// #28250 - Start - Added Null check
+		if (zoneDtl != null && null != scQtFinalization && null != scQtFinalization.getScQtRecommendsByZone()) {
+		// 28250 - End
 			specZoneId = zoneDtl.getSpecZoneId();
 			items = scQtFinalization.getScQtRecommendsByZone()
 									.get(specZoneId);
