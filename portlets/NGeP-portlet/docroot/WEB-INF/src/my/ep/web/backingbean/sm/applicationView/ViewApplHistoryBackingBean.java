@@ -1833,8 +1833,20 @@ public class ViewApplHistoryBackingBean extends
 	public Boolean setResubmitButton(SmAppl smAppl){
 		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
 		SmWorkFlowStatusReqDTO smWorkFlowStatusReqDTO = new SmWorkFlowStatusReqDTO();
-		smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
-		
+		//32627 - START
+		//retrieve by latest reject appl id
+		MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+		mofReqDTO.setSupplierId(smAppl.getSmSupplier().getSupplierId());
+		mofReqDTO.setSmAppl(smAppl);
+		SmAppl latestRejectedAppl = SmServiceLookup
+				.getMofRegistrationSO()
+				.retrieveLatestRejectedApplicationBySupplierId(mofReqDTO)
+				.getSmAppl();
+		if(latestRejectedAppl != null &&
+				smAppl.getApplId().equals(latestRejectedAppl.getApplId())){
+			smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
+		}
+		//32627 - END
 		SmWorkFlowStatusResDTO smWorkFlowStatusResDTO = workFlowStatusSO.retrieveCurrentWorkFlowStatusByDocId(smWorkFlowStatusReqDTO);
 		Boolean button = false;
 		if(smWorkFlowStatusResDTO != null 
