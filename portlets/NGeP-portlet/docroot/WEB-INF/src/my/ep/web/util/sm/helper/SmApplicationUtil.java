@@ -2142,23 +2142,7 @@ public class SmApplicationUtil {
 					//31130
 					|| per.getPmRace() == null || per.getTitle() == null) {
 				validPersonnel = false;
-			} //31130-start
-			if (per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses() != null || per.getSmPersonnelAddresses().size() <= 0 ){
-				for (SmPersonnelAddress addressPer : per.getSmPersonnelAddresses()){
-					if (addressPer.getSmAddress() == null
-							|| (addressPer.getSmAddress() != null && addressPer.getSmAddress().getAddress1().isEmpty()
-									|| addressPer.getSmAddress().getPostcode() == null
-									|| addressPer.getSmAddress().getCountryId() == null
-									|| addressPer.getSmAddress().getStateId() == null
-									|| addressPer.getSmAddress().getDistrictId() == null 
-									|| addressPer.getSmAddress().getCityId() == null) 
-									|| addressPer.getSmPersonnel() == null
-									|| addressPer.getSmAddress().getPostcode().isEmpty()
-									|| addressPer.getSmAddress().getDistrictId()== 1
-									|| addressPer.getSmAddress().getCityId() == 1 ) {
-						validPersonnel = false;
-					}
-				}//31130-end
+			} else if (per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
 				validPersonnel = false;
 			}
 			//#30444 --START--25082021--
