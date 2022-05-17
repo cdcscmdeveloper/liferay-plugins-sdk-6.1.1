@@ -1231,6 +1231,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			abb.getManagedBean().setTrackingDairyView(true);
 			ctBB.getManagedBean().setViewSCL(true);
 			abb.getManagedBean().setViewSclFromAgreement(true);
+			//Bug 33096 - shaqimi start
+			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
+			//Bug 33096 - shaqimi end
 			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
 		}
 		//#15851 - end
