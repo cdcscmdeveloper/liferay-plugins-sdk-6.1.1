@@ -66,11 +66,12 @@
 						
 					</div>
 					<ui:param name="template" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3.categoryTypeCode.parameterCode}" />
-						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 0}">
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage == '0'
+									|| svoSiteVisitBackingBean.managedBean.activePage == null}">
 							<ui:include src="/xhtml/sm/svositevisit/siteVisitCommonInfo.xhtml" />
 						</c:if>
 
-						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 1}">
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage == '1'}">
 							<ui:include src="/xhtml/sm/svositevisit/commonFinancialInfo.xhtml" />
 						</c:if>
 

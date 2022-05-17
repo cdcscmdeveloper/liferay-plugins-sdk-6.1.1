@@ -215,9 +215,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param viewMode
 	 */
 	public void retrieveSiteVisitInfo(String viewMode){
-		//29430
-		if(!getManagedBean().isFromReport())
+		//29430, 28775 - Site Visit Grouping Enhancement - 28775 - start
+		if(!getManagedBean().isFromReport()){
 			this.getManagedBean().setActiveIndex(0);
+			this.getManagedBean().setActivePage("0");
+		}
+		//28775 - Site Visit Grouping Enhancement - 28775 - end
 		
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		reqDTO.setSvTaskId(getManagedBean().getSvTaskId());
@@ -343,7 +346,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 			//28775 - Site Visit Grouping Enhancement - 28775 - start
 			if(getManagedBean().getActivePage() == null)
-				getManagedBean().setActivePage("1");
+				getManagedBean().setActivePage("0");
 			prepareSvTaskGroup();
 			if(getManagedBean().getSmSvTask().getSmSvTemplate().getSmAttachments() == null){
 				retrievUploadedSiteVisitReport(getManagedBean().getSmSvTask().getSmSvTemplate());
@@ -468,7 +471,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				changeActiveIndex(4+n, getManagedBean().getSelectedSvTemplate());
 				break;
 			case SubmitPage:
-				changeActiveIndex(5+n, null);
+				changeActiveIndex(5+n, getManagedBean().getSelectedSvTemplate());
 				break;
 		}
 	}
