@@ -526,7 +526,12 @@ public class PmReportsBackingBean extends
            .get("year");
         
         if(month != null || year != null){
-        	changeStringToDate(month, year);
+        	//#29486 - START
+        	Calendar monthlyDate = Calendar.getInstance();
+        	monthlyDate.set(Integer.parseInt(year), Integer.parseInt(month), 1);
+            getManagedBean().setMonthlyDate(monthlyDate.getTime());
+            //#29486 - END
+            changeStringToDate(month, year);
         }
    }
 	
@@ -709,6 +714,9 @@ public class PmReportsBackingBean extends
 		//29991 start
 		getManagedBean().setSelectedSupplier(null);
 		//29991 end
+		//#29486 - START
+		getManagedBean().setMonthlyDate(null);
+		//#29486 - END
 	}
 
 	public void autoSelectOrgType() {

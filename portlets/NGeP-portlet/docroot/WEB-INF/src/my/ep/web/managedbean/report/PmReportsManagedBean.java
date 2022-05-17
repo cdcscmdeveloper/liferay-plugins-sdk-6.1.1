@@ -78,6 +78,8 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	private String smSupplierName;
 	//29991 end
 	
+	private Date monthlyDate;//#29486
+	
 	public PmReportsManagedBean(){}
 
 	/**
@@ -658,6 +660,21 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 		this.selectedSupplier = selectedSupplier;
 	}
 	//#29991 end--
-	
+
+	//#29486 - START
+	/**
+	 * @return the monthlyDate
+	 */
+	public Date getMonthlyDate() {
+		return monthlyDate;
+	}
+
+	/**
+	 * @param monthlyDate the monthlyDate to set
+	 */
+	public void setMonthlyDate(Date monthlyDate) {
+		this.monthlyDate = monthlyDate;
+	}
+	//#29486 - END
 	
 }
