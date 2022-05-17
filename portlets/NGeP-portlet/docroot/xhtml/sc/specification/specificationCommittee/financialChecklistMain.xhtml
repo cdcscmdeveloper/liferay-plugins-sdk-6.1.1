@@ -212,11 +212,12 @@
 				style="width:5%;white-space: normal;text-align: center;">
 				<h:panelGroup id="scoreFinanceView">
 				
-<!-- #30559 Farid add condition definition key 'FA' and 'U'-->				
+<!-- #30559 Farid add condition definition key 'FA' and 'U'-->
+<!-- Bug #32843 - start -->				
 				<c:choose>	
 					<c:when test="#{(stageTwofunctional.pmDocument.docDefinitionKey ne 'UP' and stageTwofunctional.pmDocument.docDefinitionKey ne 'FA' and stageTwofunctional.pmDocument.docDefinitionKey ne 'U')}">
 						<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
+							disabled="#{(specificationBackingBean.managedBean.readOnly) or (stageTwofunctional.definationType.parameterCode eq 'TS' and stageTwofunctional.action.parameterCode eq 'I')}"
 							rendered="#{(stageTwofunctional.pmDocument.docDefinitionKey ne 'UP' and stageTwofunctional.pmDocument.docDefinitionKey ne 'FA' and stageTwofunctional.pmDocument.docDefinitionKey ne 'U')}">
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="financialChecklistSpecificationStatus,actionView"
@@ -224,6 +225,7 @@
 						</p:selectBooleanCheckbox>
 					</c:when>
 					<c:otherwise>
+<!-- Bug #32843 - end -->
 <!-- #30559 Farid add condition definition key 'FA' and 'U'-->	
 
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
