@@ -4568,6 +4568,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
               }
             }
           }
+          //#26130 - start
+           context.put("specCombine", retrieveDLSpec(specMasters));
+         //#26130 - end
         }
 		
 		StringBuffer sb = new StringBuffer();
