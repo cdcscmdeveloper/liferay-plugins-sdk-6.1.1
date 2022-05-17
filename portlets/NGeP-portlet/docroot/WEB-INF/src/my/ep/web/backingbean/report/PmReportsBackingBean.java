@@ -279,7 +279,6 @@ public class PmReportsBackingBean extends
 
 	// Organization list
 	private void constructPm002Map(LinkedHashMap<String, String> map) {
-
 		map.put(PmReportConst.PARAM_PM_ORG_CATEGORY,
 				String.valueOf(getManagedBean().getSearchOrgCategory()));
 
@@ -312,7 +311,7 @@ public class PmReportsBackingBean extends
 		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_KUMPULAN_PTJ ||
 		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_PTJ) {
 			if (getManagedBean().isGovtSeller()){
-				String PG2G = "1";
+				String PG2G = "1"; 
 				map.put(PmReportConst.PARAM_PM_G2G, PG2G);
 			}
 		} 
@@ -527,7 +526,12 @@ public class PmReportsBackingBean extends
            .get("year");
         
         if(month != null || year != null){
-        	changeStringToDate(month, year);
+        	//#29486 - START
+        	Calendar monthlyDate = Calendar.getInstance();
+        	monthlyDate.set(Integer.parseInt(year), Integer.parseInt(month), 1);
+            getManagedBean().setMonthlyDate(monthlyDate.getTime());
+            //#29486 - END
+            changeStringToDate(month, year);
         }
    }
 	
@@ -698,7 +702,7 @@ public class PmReportsBackingBean extends
 		}else if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()) || isInternalAuditorUnderMinistry()){
 			//#28833, #29486 - shafie start
 			if(PmReportConst.PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT.equals(getManagedBean().getReportCode())) {
-			setCurrentActiveOrg();
+				setCurrentActiveOrg();
 			}else {   
 				getManagedBean().setSelectedMinistry(null);
 			}	
@@ -710,6 +714,9 @@ public class PmReportsBackingBean extends
 		//29991 start
 		getManagedBean().setSelectedSupplier(null);
 		//29991 end
+		//#29486 - START
+		getManagedBean().setMonthlyDate(null);
+		//#29486 - END
 	}
 
 	public void autoSelectOrgType() {
@@ -748,6 +755,7 @@ public class PmReportsBackingBean extends
 			searchBean.getSortColumns();
 			items = getDropdownValuesBySearchBean(
 					ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+			
 			
 			if(getManagedBean().getSearchOrgCategory() == PmReportConst.ORG_CAT_CP_MR) {
 				int index = 1;
@@ -1108,7 +1116,7 @@ public class PmReportsBackingBean extends
 			} else {
 				parentOrgProfile = ("epPtj^") + ParameterConst.FLAG_YES;
 			}
-	
+
 			return parentOrgProfile;
 		}
 		//shafie #29486 end
