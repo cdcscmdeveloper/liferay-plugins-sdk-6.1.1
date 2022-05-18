@@ -9,7 +9,6 @@
 	
 	<p:tabMenu activeIndex="#{svoSiteVisitBackingBean.managedBean.activeIndex}" id="tabIndex" update="outPnlSiteVisitReport">
 				<p:menuitem value="#{lbl['lbl.sm.svo.sitevisit.info']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(0,null)}" />
-		<!-- 
 		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.b']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(1,null)}" />	
 		<p:menuitem value="#{svoSiteVisitBackingBean.getParameterDesc(svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3.categoryTypeCode)}" update="outPnlSiteVisitReport,tabIndex" 
 					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(2,svoSiteVisitBackingBean.managedBean.selectedSvTemplate)}" 
@@ -21,20 +20,17 @@
 		<p:menuitem value="#{lbl['lbl.sm.officeloc']}"  update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(4,null)}" />
 		<p:menuitem value="#{lbl['lbl.sm.sitevist.report.submission']}" 
 		update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(svoSiteVisitBackingBean.managedBean.lastIndex,null)}" />
-		-->
 	</p:tabMenu>
 	
 	<p:outputPanel id="outPnlSiteVisitReport">
 		
-		28775 find error
-		<!-- 
 		<ui:param name="template"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3.categoryTypeCode.parameterCode}" />
-		-->
 		<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 0}">
 			<ui:include src="/xhtml/sm/svositevisit/siteVisitCommonInfo.xhtml" />
 		</c:if>
-		<!-- 
+
+		
 		<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 1}">
 			<ui:include src="/xhtml/sm/svositevisit/commonFinancialInfo.xhtml" />
 		</c:if>
@@ -98,6 +94,5 @@
 				<ui:include src="/xhtml/sm/shared/sitevisit/view_uploadedSiteVisitReport.xhtml" />
 				<ui:include src="/xhtml/sm/shared/sitevisit/recommendation.xhtml" />
 		</c:if>
-		-->
 	</p:outputPanel>
 </ui:composition>
