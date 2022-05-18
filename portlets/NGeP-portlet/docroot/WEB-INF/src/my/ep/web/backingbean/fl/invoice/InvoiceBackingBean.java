@@ -1361,17 +1361,19 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		
 		if (this.getManagedBean().getInvoice() != null) {
-			//32967-Start
-			if(this.getManagedBean().getInvoice().getAccountNo()!=null){
-				if(getManagedBean().getAccountNo()==null){
-					getManagedBean().setAccountNo(this.getManagedBean().getInvoice().getAccountNo());
-				}			
-			
-				if(this.getManagedBean().getInvoice().getAccountNo().equalsIgnoreCase(getManagedBean().getAccountNo())){
-					this.getManagedBean().getInvoice().setAccountNo(this.getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId()+"|"+this.getManagedBean().getInvoice().getAccountNo());
+			if(!getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//33238
+				//32967-Start
+				if(this.getManagedBean().getInvoice().getAccountNo()!=null){
+					if(getManagedBean().getAccountNo()==null){
+						getManagedBean().setAccountNo(this.getManagedBean().getInvoice().getAccountNo());
+					}			
+				
+					if(this.getManagedBean().getInvoice().getAccountNo().equalsIgnoreCase(getManagedBean().getAccountNo())){
+						this.getManagedBean().getInvoice().setAccountNo(this.getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId()+"|"+this.getManagedBean().getInvoice().getAccountNo());
+					}
 				}
+				//32967-End
 			}
-			//32967-End
 			if(this.getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchName() != null ){
 				supplierSearchReqDTO.setBranchCode(getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchCode());
 				supplierSearchReqDTO.setSupplierId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
