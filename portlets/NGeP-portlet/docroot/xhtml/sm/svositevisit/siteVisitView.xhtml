@@ -34,9 +34,12 @@
 
 		<br />
 		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
+		<!-- 
 		<p:dataTable var="tmp" value="#{svoSiteVisitBackingBean.managedBean.templates}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+			-->
 			<!-- #28175 start -->
+			<!--
 			<c:choose>
 				<c:when
 					test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or 
@@ -57,8 +60,11 @@
 					</p:column>
 				</c:otherwise>
 			</c:choose>
+			-->
 			<!-- #28175 end -->
+		<!-- 
 		</p:dataTable>
+		-->
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sm.rptpreview.actual.site.visit.date']}">

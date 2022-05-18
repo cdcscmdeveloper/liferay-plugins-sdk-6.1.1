@@ -374,7 +374,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				getManagedBean().getSmSvTask().getSmAppl().setPmStatus(sts.getPmStatus());
 				log.info("28774---appl status 2:"+getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId());
 			}
-			log.info("view_sv_report - retrieveSiteVisitInfo 19");
+			log.info("view_sv_report - retrieveSiteVisitInfo 19 "+getManagedBean().getSmSvTask().getPmCategoryL3().getCategoryTypeCode().getParameterCode());
 			//#28774 - end
 		}
 	}
@@ -2939,6 +2939,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 		}
 		getManagedBean().setTemplates(templates);
+		log.info("view_sv_report - templates sz: "+getManagedBean().getTemplates().size());
 	}
 	
 	private void prepareSvTaskGroup(){
