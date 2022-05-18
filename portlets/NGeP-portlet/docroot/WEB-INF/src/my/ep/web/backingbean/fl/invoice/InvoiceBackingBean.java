@@ -1360,6 +1360,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		}
 		return populateBankAccountList;
 	}
+	}
 	
 	/**
 	 * Bank info action listener.
