@@ -248,6 +248,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 String urlliferay = PortalUtil.getLayoutFriendlyURL(selectedLayout, theme);
 			 if(urlliferay.contains("plan-maintenance")){//09022021@24975 - start
 				 this.getManagedBean().setAudit(false);
+				//#32730 - start
+				 this.getManagedBean().setPreYear(false);
+				//#32730 - end
 		       }else if(urlliferay.contains("procurement-plan-search")){
 				 this.getManagedBean().setAudit(true);
 			 //if procurement-plan-search = audit /web/dashboard/procurement-plan-search 
@@ -364,6 +367,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public String redirectToMaintainPlan(Long id,String action,boolean isTrackingDiary) throws Exception{
 		log.info("redirectToMaintainPlan");
+		//#32730 - start
+		this.getManagedBean().setPreYear(true);
+		//#32730 - end
 		this.resetManagedBean();
 		this.getManagedBean().setBtnValue(action);
 		this.getManagedBean().setTrackingDiary(isTrackingDiary);
@@ -1981,8 +1987,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			SelectItem[] items;
 			Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
 			Integer nextYear = currentYear + 1;
-		
-			if(this.getManagedBean().isAudit()){
+			//#32730 - add isPreYear
+			if(this.getManagedBean().isAudit() || this.getManagedBean().isPreYear()){
 				currentYear = startyear;
 				int diff = nextYear - currentYear + 1;
 				items = new SelectItem[diff+1];
@@ -4387,18 +4393,28 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ppItem.setOriginal(true);
 		//25549@09102020 - end
 		ppItem.setEnableRevise(true);
-
+		
+		//#32730 - Start
+		int currentYear = Calendar.getInstance().get(Calendar.YEAR);				
+		int nextYear = currentYear + 1;
+				
 		if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
 			//current year
 			ppItem.setInvitationDate(new Date());
-		}else{ 
+		}else if(nextYear == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
 			System.out.println("next year ");
 			//next year
-			int nextYear = Calendar.getInstance().get(Calendar.YEAR);
-			Calendar date = new GregorianCalendar((nextYear+1), Calendar.JANUARY, 1);
+			Calendar date = new GregorianCalendar((nextYear), Calendar.JANUARY, 1);
 			
 			ppItem.setInvitationDate(date.getTime());
+		}else{
+			//previous year
+			Long preYear = this.getManagedBean().getSelectedPlan().getPlanYear();
+			Calendar datePreYear = new GregorianCalendar((preYear.intValue()), Calendar.DECEMBER, 31);
+			
+			ppItem.setInvitationDate(datePreYear.getTime());
 		}
+		//#32730 - End
 		this.getManagedBean().getSelectedPlan().addPpProcurementItems(ppItem);
 		
 	}
@@ -4872,6 +4888,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	private void initialSearchPlan(){
 		log.info("initialSearchPlan");
+		//#32730 - start
+		this.getManagedBean().setPreYear(false);
+		//#32730 - end
 		//200911@akmal - Enhancement27624 - Start
 		Long userId = getFacesScopes().getUserSessionBean().getUserId() != null ? getFacesScopes().getUserSessionBean().getUserId() : new LogKey().getUserId();
 		
@@ -5100,29 +5119,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			bean.setSearchValue(planSearchBean.getYear());
 			searchBean.getDataFilterBeans().add(bean);
 			isEmpty = false;
-		}else{
-			//27012021@27624 - Start
-			log.info("+ getYeardefault "  + Calendar.getInstance().get(Calendar.YEAR));
-			
-			Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
-			Integer NextYear = currentYear + 1;
-					
-			SearchFilterBean sfbean1 = new SearchFilterBean();
-			sfbean1.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			sfbean1.setSearchField("planYear");
-			sfbean1.setSearchValue(currentYear);
-			sfbean1.setAndOr(SearchCondition.CONDITION_OR.value());
-			
-			SearchFilterBean sfbean2 = new SearchFilterBean();
-			sfbean2.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			sfbean2.setSearchField("planYear");
-			sfbean2.setSearchValue(NextYear);
-			sfbean2.setAndOr(SearchCondition.CONDITION_OR.value());
-			
-			SearchMultiFilterBean beans = new SearchMultiFilterBean(sfbean1,sfbean2);			
-			searchBean.getDataFilterBeans().add(beans);		
-			isEmpty = false;
-			//27012021@27624 - End
 		}
 		// vot type
 		if(planSearchBean.getVotType()!=null && planSearchBean.getVotType().getParameterId()!=null){
@@ -6409,15 +6405,23 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    				get(index).cloneEntity();*/
 	    		newPpItem.setCloned(true);
 	    		
+	    		//#32730 - Start
+	    		int currentYear = Calendar.getInstance().get(Calendar.YEAR);				
+	    		int nextYear = currentYear + 1;
+	    		
 	    		if (Calendar.getInstance().get(Calendar.YEAR) == 
 		    			this.getManagedBean().getSelectedPlan().getPlanYear()) { 
 	    			newPpItem.setInvitationDate(new Date());
-		    	} else {
-		    		int nextYear = Calendar.getInstance().get(Calendar.YEAR);
-		    		Calendar date = new GregorianCalendar((nextYear+1), Calendar.JANUARY, 1);
+		    	}else if(nextYear == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
+		    		Calendar date = new GregorianCalendar((nextYear), Calendar.JANUARY, 1);
 		    		newPpItem.setInvitationDate(date.getTime());
+			    }else{
+				   // previous year
+				   Long preYear = this.getManagedBean().getSelectedPlan().getPlanYear();
+				   Calendar datePreYear = new GregorianCalendar((preYear.intValue()), Calendar.DECEMBER, 31);
+				   newPpItem.setInvitationDate(datePreYear.getTime());
 		    	}
-	    		
+	    		//#32730 - End
 	    		// Always allow user to clone without key in reason
 	    		/*if (originalPpItem.getPpUpdateReasons().isEmpty()) {
 	    			PpUpdateReason clonedUpdateReason = new PpUpdateReason();
@@ -7988,18 +7992,28 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	                ppItem.setProcurementTitle(PpItemClone.getProcurementTitle());
 	                ppItem.setProcurementDesc(PpItemClone.getProcurementDesc());
 	                ppItem.setEstimatedAmt(PpItemClone.getEstimatedAmt());
-	                // 25549 - start
+	                // 25549, #32730 - start
+	                int currentYear = Calendar.getInstance().get(Calendar.YEAR);				
+	        		int nextYear = currentYear + 1;
+	                
 	                if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
 	        			//current year
 	        			ppItem.setInvitationDate(new Date());
-	        		}else{ 
+	        		}else if(nextYear == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
 	        			System.out.println("next year ");
 	        			//next year
-	        			int nextYear = Calendar.getInstance().get(Calendar.YEAR);
-	        			Calendar date = new GregorianCalendar((nextYear+1), Calendar.JANUARY, 1);
+	        			Calendar date = new GregorianCalendar((nextYear), Calendar.JANUARY, 1);
 	        			
 	        			ppItem.setInvitationDate(date.getTime());
+	        		}else{
+	        			System.out.println("previous year ");
+	        			//previous year
+	        			Long preYear = this.getManagedBean().getSelectedPlan().getPlanYear();
+	        			Calendar datePreYear = new GregorianCalendar((preYear.intValue()), Calendar.DECEMBER, 31);
+
+	        			ppItem.setInvitationDate(datePreYear.getTime());
 	        		}//25549 - end
+	                //#32730 - End
 	                ppItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 	                ppItem.setEditable(true);
 	                //25549@12102020 - start
