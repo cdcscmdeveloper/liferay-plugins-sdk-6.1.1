@@ -70,6 +70,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.general.settings.bpm.PmCompositeValidity;
 import my.ep.persistence.entity.sc.common.ScActor;
@@ -99,6 +100,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.deskofficermaintenance.DeskOfficerMaintenanceManagedBean;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -123,6 +125,11 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	
 	private PagingDataModel<PmUser> userListDataModel = new UserPagingDataModel();
 	
+	//25627 for 31303 code review start
+	private static final String PAGE_DESKOFFICER_MAINTENANCE = "/xhtml/sc/quatationtender/deskOfficerMaintenance/deskOfficerMaintenance.xhtml";
+	private static final String PAGE_DESKOFFICER_MAINTENANCE_APPROVAL = "/xhtml/sc/quatationtender/deskOfficerMaintenance/approval/deskOfficerMaintenanceApproval.xhtml";
+	//25627 for 31303 code review end
+
 	/**
 	 * Initialize default values.
 	 */
@@ -1112,14 +1119,11 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			} 
 			newDeskOfficer = null;
 		}
-		// #25627 - Start.
-		Locale locale = new FacesScopes().getUserLocale();
-		if (ReportConst.ENG_LANGUAGE_CODE.equals(locale.getLanguage())) {
-			return "N/A";			
-		} else {
-			return "T/B";
-		}
-		// #25627 - End.
+		//25627 for 31303 code review start
+		return ResourceBundleUtils.getMessage("lbl.txt.na",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale());
+		//25627 for 31303 code review end
 	}
 	
 	/**
@@ -1240,13 +1244,6 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			
 			ScQtApprovalRequest currentApprovalRequest = null;
 			
-			IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-			ScWorkFlowStatusReqDTO statusReqDTO = new ScWorkFlowStatusReqDTO();
-			statusReqDTO.setDocType(ParameterConst.DOCTYPE_DO_REASSIGN);
-			statusReqDTO.setDocId(qtId);
-			ScWorkFlowStatus currentStatus = workFlowStatusSO.retrieveStatusByTypeAndId(statusReqDTO).getWorkFlowStatus();
-			
 			if(resDTO.getQtApproval() !=null && CollectionUtils.isNotEmpty(resDTO.getQtApproval().getScQtApprovalDtls())){
 				this.getManagedBean().setCurrentApproval(resDTO.getQtApproval());
 				for(ScQtApprovalRequest req: resDTO.getQtApproval().getScQtApprovalDtls()){
@@ -1283,7 +1280,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			this.getManagedBean().getCurrentApproval().setScQt(qt);
 			this.getManagedBean().setOriginalDeskOfficer(this.retrivePmUser(Long.parseLong(currentApprovalRequest.getOriginalValue())));
 			this.getManagedBean().setNewDeskOfficer(this.retrivePmUser(Long.parseLong(currentApprovalRequest.getChangedValue())));
-			page = "/xhtml/sc/quatationtender/deskOfficerMaintenance/approval/deskOfficerMaintenanceApproval.xhtml";
+			page = PAGE_DESKOFFICER_MAINTENANCE_APPROVAL;//25627 for 31303 code review
 			
 		}
 		
@@ -1450,9 +1447,8 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	
 	public void preRenderDeskReassignmentView(){
 		this.reset();
-		String page = "/xhtml/sc/quatationtender/deskOfficerMaintenance/deskOfficerMaintenance.xhtml";
 		FacesContext context = FacesContext.getCurrentInstance();
-		context.getApplication().getNavigationHandler().handleNavigation(context, null, page);
+		context.getApplication().getNavigationHandler().handleNavigation(context, null, PAGE_DESKOFFICER_MAINTENANCE);//25627 for 31303 code review
 	}
 	
 	/**
