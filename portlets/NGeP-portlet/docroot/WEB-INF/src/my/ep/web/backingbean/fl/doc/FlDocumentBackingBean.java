@@ -618,7 +618,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			}			
 			if(invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
 				invBB.getFactoringDtl(); 
-				invBB.getManagedBean().setFactoringAccList(invBB.getFactoringAccountList());//33238
 			}			
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
