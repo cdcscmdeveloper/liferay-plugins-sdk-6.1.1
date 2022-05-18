@@ -157,9 +157,9 @@ public class InvoiceManagedBean extends BaseManagedBean {
     private boolean CtTypeMinistry;
     //24956 end
     
-    //33238 start
+    //30911 start
     private List<SelectItem> factoringAccList;
-    //33238 end
+    //30911 end
 
 	public Map<String, PmFinancialOrg> getFactoringAccountMap() {
 		if(factoringAccountMap==null) {
@@ -1260,7 +1260,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		CtTypeMinistry = ctTypeMinistry;
 	}
 	
-	//33238 start
+	//30911 start
 	public List<SelectItem> getFactoringAccList() {
 		return factoringAccList;
 	}
@@ -1268,7 +1268,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	public void setFactoringAccList(List<SelectItem> factoringAccList) {
 		this.factoringAccList = factoringAccList;
 	}
-	//33238 end
+	//30911 end
 	
 	//32967-start
 	/**
