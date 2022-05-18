@@ -153,6 +153,10 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 
+	//33238 start
+    private List<SelectItem> factoringAccList;
+    //33238 end
+    
 	public Map<String, PmFinancialOrg> getFactoringAccountMap() {
 		if(factoringAccountMap==null) {
 			factoringAccountMap = new HashMap<String, PmFinancialOrg>();
@@ -1243,6 +1247,17 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.smDisciplinaryAction = smDisciplinaryAction;
 	}
 	//26279 - end
+	
+	//33238 start
+	public List<SelectItem> getFactoringAccList() {
+		return factoringAccList;
+	}
+
+	public void setFactoringAccList(List<SelectItem> factoringAccList) {
+		this.factoringAccList = factoringAccList;
+	}
+	//33238 end
+		
 	
 	//32967-start
 		/**
