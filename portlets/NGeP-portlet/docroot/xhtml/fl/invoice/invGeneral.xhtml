@@ -286,7 +286,7 @@
 						style="width:350px;margin-bottom: 5px;"
 						value="#{invoiceBackingBean.managedBean.invoice.accountNo}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-						<f:selectItems value="#{invoiceBackingBean.managedBean.factoringAccList}" />
+						<f:selectItems value="#{invoiceBackingBean.getFactoringAccountList()}" />
 						<p:ajax event="change" update="@this" listener="#{invoiceBackingBean.factoringInfoActionListener()}" />
 					</p:selectOneMenu>
 				</td>
