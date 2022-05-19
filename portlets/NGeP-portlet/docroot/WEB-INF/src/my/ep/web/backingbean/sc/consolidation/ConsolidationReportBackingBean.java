@@ -1011,70 +1011,43 @@ public class ConsolidationReportBackingBean extends
 			qtSuppFinalizationSO = null;
 		}
 	}
-//#21695 Farid Start
+//#21695 Farid Start -(19/5/2022 update whole method)
 	private void retrieveSupplierOfferOrNotOffer() {
 		ScQt scQt = getManagedBean().getScQt();
 		IQTEvaluationSO evaluationSO = null;
 
 		try {
-			
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTEvaluationSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
-			ISearchBean<Object[]> searchBean = new SearchBean<Object[]>(); 
+			ISearchBean<Object[]> searchBean = new SearchBean<Object[]>();
 			reqDTO.setNotOfferSupplierSearchBean(searchBean);
-			boolean isOfferAll = false;	 
-			
-			
-			if (getManagedBean().getScQt()
-					.getEvaluateBy().equalsIgnoreCase(SourcingConstants.EVALUATE_BY__ITEM)){
-				isOfferAll = true;	 
+			boolean isOfferAll = false;
+
+			if (getManagedBean().getScQt().getEvaluateBy()
+					.equalsIgnoreCase(SourcingConstants.EVALUATE_BY__ITEM)) {
+				isOfferAll = true;
 			}
-//#21695 Farid Start 18/8/2020			
-			else if (getManagedBean().getScQt()
-					.getEvaluateBy().equalsIgnoreCase(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM)){
-	
-				 List <Object[]> allSuppliers = evaluationSO.retrieveOfferOrNotOfferSuppliers(reqDTO)
-							.getOfferOrNotOfferSupplierResultBean().getResultList();
-						 
-				 List <Object[]> suppliersNotOffer = evaluationSO.retrieveSummaryNotOfferSuppliers(reqDTO)
-								.getNotOfferSupplierResultBean().getResultList();
-					
-				 log.info("allSuppliers size " +  allSuppliers.size());
-				 log.info("suppliersNotOffer size " +  suppliersNotOffer.size());
-						
-				 if ( allSuppliers.size() == suppliersNotOffer.size() && allSuppliers.size() != 0 && suppliersNotOffer.size() != 0 ){
-						isOfferAll = true;	 
-					}
+			else if (getManagedBean()
+					.getScQt()
+					.getEvaluateBy()
+					.equalsIgnoreCase(
+							SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM)) {
+
+				int check = evaluationSO
+						.retrieveOfferOrNotOfferSuppliers(reqDTO);
+				if (check == 0) {
+					isOfferAll = true;
+				}
 			}
-			
-//#21695 Farid End 18/8/2020
-			 
-//             for (  Object[] paramsObjallSupplier : allSuppliers){
-//	              Long supplierId = ((BigDecimal) paramsObjallSupplier[0]).longValue();
-//	              
-//	              for (  Object[] paramsObjsuppliersNotOffer : suppliersNotOffer){
-//	            	  
-//		              Long notOfferSupplierId = ((BigDecimal) paramsObjsuppliersNotOffer[0]).longValue();
-//		              
-//		              if (supplierId == notOfferSupplierId){
-//		            	  
-//		            	  isAllOffer = false;
-//		            	  
-//		              }
-//				 }
-//	         
-//			 }
-			
-			 getManagedBean().setOfferAll(isOfferAll);
+			getManagedBean().setOfferAll(isOfferAll);
 		} finally {
 			evaluationSO = null;
 		}
 	}
-//#21695 Farid end
+//#21695 Farid end -(19/5/2022 update whole method)
 	
 	private void retrieveSupplierFinalizationDtls() {
 		ScQt scQt = getManagedBean().getScQt();
