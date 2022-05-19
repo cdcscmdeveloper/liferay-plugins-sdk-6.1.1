@@ -761,7 +761,22 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				}
 			}
 		}
-		
+		//#30053 - Start
+		if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			if(pmUser != null){
+				MofAccountReqDTO mofReqDTO = new MofAccountReqDTO();
+				mofReqDTO.setLoginId(pmUser.getLoginId());
+				Integer exisitingBasicMOFFlg = SmServiceLookup.getMofAccountSO().checkExpiredDowngradedToBasic(mofReqDTO).getBasicMOFRenewFlg();
+				log.info("This is the value of the integer" + exisitingBasicMOFFlg);
+				if (exisitingBasicMOFFlg != my.ep.constant.sm.SupplierManagementConst.RECORD_STATUS_DELETED) {
+					if (exisitingBasicMOFFlg == my.ep.constant.sm.SupplierManagementConst.MOF_CAN_RENEW) {
+						mofActionMap.put("RNMOF", RENEW_MOF);
+					}
+				}
+			}	
+		}
+		//#30053 - End
 		log.info("mofActionMap>>>>" + mofActionMap.size());
 		getManagedBean().setUserActionMap(mofActionMap);
 	}
