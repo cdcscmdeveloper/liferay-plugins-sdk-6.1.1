@@ -5070,7 +5070,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			bean.setSearchValue(planSearchBean.getYear());
 			searchBean.getDataFilterBeans().add(bean);
 			isEmpty = false;
-		}else{
+		}
+		//Remove code #32730
+		/*else{
 			//27012021@27624 - Start
 			log.info("+ getYeardefault "  + Calendar.getInstance().get(Calendar.YEAR));
 			
@@ -5093,7 +5095,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			searchBean.getDataFilterBeans().add(beans);		
 			isEmpty = false;
 			//27012021@27624 - End
-		}
+		}*/
 		// vot type
 		if(planSearchBean.getVotType()!=null && planSearchBean.getVotType().getParameterId()!=null){
 			log.info("+ getVotType "  +planSearchBean.getVotType().getParameterId());
