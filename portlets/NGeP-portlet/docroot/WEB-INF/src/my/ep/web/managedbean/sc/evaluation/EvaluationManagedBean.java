@@ -644,6 +644,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	private boolean noProposalSubmitted;//#6906
 	
+	//Bug #33252
+	private boolean isAllItemAutoScore;
+	//Bug #33252
+	
 	//Bug #33178
 	private boolean noSupplierPackageExist;
 	//Bug #33178
@@ -4206,6 +4210,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 	//#6906 - end
 	
+	//Bug #33252 -Start
+	public boolean isAllItemAutoScore() {
+		return isAllItemAutoScore;
+	}
+
+	/**
+	 * @param isSupplierItemExist the isSupplierItemExist to set
+	 */
+	public void setAllItemAutoScore(boolean isAllItemAutoScore) {
+		this.isAllItemAutoScore = isAllItemAutoScore;
+	}
+	// Bug #33252 - End
+
+
 	//Bug #33178 - START
 	public boolean getNoSupplierPackageExist() {
 		return noSupplierPackageExist;
