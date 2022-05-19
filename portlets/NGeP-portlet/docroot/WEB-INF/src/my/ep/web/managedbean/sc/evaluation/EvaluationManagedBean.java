@@ -643,6 +643,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//#10542 - end
 	
 	private boolean noProposalSubmitted;//#6906
+	
+	//Bug #33178
+	private boolean noSupplierPackageExist;
+	//Bug #33178
+	
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -4200,4 +4205,17 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.noProposalSubmitted = noProposalSubmitted;
 	}
 	//#6906 - end
+	
+	//Bug #33178 - START
+	public boolean getNoSupplierPackageExist() {
+		return noSupplierPackageExist;
+	}
+
+	/**
+	 * @param isSupplierItemExist the isSupplierItemExist to set
+	 */
+	public void setNoSupplierPackageExist(boolean noSupplierPackageExist) {
+		this.noSupplierPackageExist = noSupplierPackageExist;
+	}
+	////Bug #33178 -END
 }
