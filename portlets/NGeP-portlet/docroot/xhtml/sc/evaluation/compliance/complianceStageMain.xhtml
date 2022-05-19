@@ -83,7 +83,8 @@
 					styleClass="BtnSpacing" style="float:left;"
 					actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('1','0')}"
 					action="#{evaluationBackingBean.updateSmAppl}" update=":form" /></td>
-			<td><ui:fragment
+			<td>
+			<ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.evaluationStageStatusHide}">
 					<p:commandButton value="#{lbl['lbl.btn.next']}"
 						styleClass="BtnSpacing" style="float:right;"
@@ -107,7 +108,52 @@
 						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('1','4')}"
 						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 						update=":form" />
-				</ui:fragment></td>
+				</ui:fragment>
+				
+				<!--  10542 start -->
+				<c:if
+					test="#{evaluationBackingBean.managedBean.scQt.sampleReq eq 'true'}">
+					<c:if
+						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '0' and not empty evaluationBackingBean.managedBean.complianceTechnicalCheckList}">
+						<ui:fragment>
+							<p:commandButton value="#{lbl['lbl.sc.eva.compliance.download.all.document']}"
+								styleClass="BtnSpacing" style="float:right;" process="@this"
+								partialSubmit="true"
+								action="#{evaluationBackingBean.complianceTechnicalDownload()}" />
+						</ui:fragment>
+					</c:if>
+					<c:if
+						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '2' and not empty evaluationBackingBean.managedBean.compliancefinancialCheckList}">
+						<ui:fragment>
+							<p:commandButton value="#{lbl['lbl.sc.eva.compliance.download.all.document']}"
+								styleClass="BtnSpacing" style="float:right;" process="@this"
+								partialSubmit="true"
+								action="#{evaluationBackingBean.complianceTechnicalDownload()}" />
+						</ui:fragment>
+					</c:if>
+				</c:if> <c:if
+					test="#{evaluationBackingBean.managedBean.scQt.sampleReq eq 'false'}">
+					<c:if
+						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '0' and not empty evaluationBackingBean.managedBean.complianceTechnicalCheckList}">
+						<ui:fragment>
+							<p:commandButton value="#{lbl['lbl.sc.eva.compliance.download.all.document']}"
+								styleClass="BtnSpacing" style="float:right;" process="@this"
+								partialSubmit="true"
+								action="#{evaluationBackingBean.complianceTechnicalDownload()}" />
+						</ui:fragment>
+					</c:if>
+					<c:if
+						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '1' and not empty evaluationBackingBean.managedBean.compliancefinancialCheckList}">
+						<ui:fragment>
+							<p:commandButton value="#{lbl['lbl.sc.eva.compliance.download.all.document']}"
+								styleClass="BtnSpacing" style="float:right;" process="@this"
+								partialSubmit="true"
+								action="#{evaluationBackingBean.complianceTechnicalDownload()}" />
+						</ui:fragment>
+					</c:if>
+				</c:if> <!--  10542 end -->
+				
+				</td>
 		</tr>
 	</table>
 

@@ -188,7 +188,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
-import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
@@ -200,6 +199,7 @@ import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
@@ -5937,6 +5937,102 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		//#26130 - zaim end
 
+		//#10542 - start
+		/**
+		 * To download multiple files with specific path.
+		 * 
+		 * @param zipFileName
+		 * @param scAttachments
+		 * @throws IOException
+		 */
+		protected <ATTACHMENT extends ScAttachment> void downloadAllFilesWithSpecificFolder(
+				String zipFileName, List<EvaluationReqDTO> listScAttachment, String downloadBy, String encryptionKey)
+				throws IOException {
+			PortletResponse portalresponse = (PortletResponse) FacesContext
+					.getCurrentInstance().getExternalContext().getResponse();
+			HttpServletResponse response = PortalUtil
+					.getHttpServletResponse(portalresponse);
+			response.setContentType("application/zip");
+			response.setHeader("Content-Disposition", "attachment; filename="
+					+ zipFileName + ".zip");
+			ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
+					response.getOutputStream()));
+			
+			try {
+				downloadAllFilesAsZipFileWithSpecificFolder(zos,listScAttachment, downloadBy, encryptionKey);
+				
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			} finally {
+				zos.close();
+				response.flushBuffer();
+				FacesContext.getCurrentInstance().responseComplete();
+			}
+		}
+		
+		protected <ATTACHMENT extends ScAttachment> void downloadAllFilesAsZipFileWithSpecificFolder(ZipOutputStream zos,List<EvaluationReqDTO> listScAttachment, String downloadBy,String encryptionKey) throws IOException{
+			for (EvaluationReqDTO scAttachmentReq : listScAttachment) {
+				// Get the file
+				FileInputStream fis = null;
+				BufferedInputStream fif = null;
+				ScAttachment scAttachment = scAttachmentReq.getScAttachment();
+				
+				String supplierNo = "Supplier "+ scAttachmentReq.getSupplierNo();
+				
+				try{
+					if (null != scAttachment
+							&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
+						File file = new File(getActualFilePath(scAttachment));
+						
+						if(downloadBy.equalsIgnoreCase("Supplier")){
+							if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
+								String extension = FilenameUtils.getExtension(scAttachment.getFileName());
+								zos.putNextEntry(new ZipEntry(supplierNo+"/"+scAttachment.getTempFileName() + "." + extension));
+							} else {
+								zos.putNextEntry(new ZipEntry(supplierNo+"/"+scAttachment.getFileName()));
+							}
+						}else if(downloadBy.equalsIgnoreCase("Document")){
+							String checkListTitle = scAttachmentReq.getScQtChecklistName().replaceAll("/","_");
+							
+							if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
+								String extension = FilenameUtils.getExtension(scAttachment.getFileName());
+								zos.putNextEntry(new ZipEntry(checkListTitle+"/"+supplierNo+"/"+scAttachment.getTempFileName() + "." + extension));
+							} else {
+								zos.putNextEntry(new ZipEntry(checkListTitle+"/"+supplierNo+"/"+scAttachment.getFileName()));
+							}
+						}
+						
+						try {
+							fis = new FileInputStream(file);
+						} catch (FileNotFoundException fnfe) {
+							zos.write(("ERROR: Could not find file " + file
+									.getName()).getBytes());
+							continue;
+						}
+						 fif = new BufferedInputStream(fis);
+						
+						// Write the contents of the file
+						BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC(encryptionKey);
+						bc.InitDecryptCipher();
+						bc.CBCDecryptFileZip(fif, zos);
+
+					// zos.write(data);
+					}
+				}
+				finally{
+					if(fis != null){
+						fis.close();
+					}
+					if(fif != null){
+						fif.close();
+					}
+					zos.closeEntry();
+				}
+			}
+		}
+		//#10542 - end
+		
+		
 		//#26130 start
 				public String retrieveTierQuantity(List<TplSpecTierQty> listTplSpecTierQties){
 					StringBuffer sb = new StringBuffer();
