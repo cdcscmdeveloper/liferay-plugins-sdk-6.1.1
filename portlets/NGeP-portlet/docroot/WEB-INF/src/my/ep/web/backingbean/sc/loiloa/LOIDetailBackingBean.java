@@ -2305,6 +2305,7 @@ public class LOIDetailBackingBean extends
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoi(scLoi);
 			reqDTO.setOutcome(outcome);
+			reqDTO.setSourceId(getManagedBean().getSourceId()); // Bug #33120
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
