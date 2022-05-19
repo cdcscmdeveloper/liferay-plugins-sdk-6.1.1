@@ -138,13 +138,20 @@
 					<h:outputText rendered="#{onlineLicenseTable.pmDocument.hardCopyReq}"
 						value="#{lbl['lbl.sm.suppDoc.document.hdrCpyRmrks']}"
 						style="float: left;white-space: normal;" />
-	
-					<p:commandLink ajax="false"
+					<!--#33240-START-->
+					<h:commandLink ajax="false"
 						value="#{onlineLicenseTable.smApplDocFiles[0].fileName}"
 						rendered="#{not empty onlineLicenseTable.smApplDocFiles and !onlineLicenseTable.pmDocument.hardCopyReq}">
 						<p:fileDownload
 							value="#{backingBean.commonDownload(onlineLicenseTable.smApplDocFiles[0].filePath,onlineLicenseTable.smApplDocFiles[0].fileName,onlineLicenseTable.smApplDocFiles[0].fileName)}" />
+					</h:commandLink>
+					<p:spacer width="10" />
+					<p:commandLink 			
+						rendered="#{not empty onlineLicenseTable.smApplDocFiles and !onlineLicenseTable.pmDocument.hardCopyReq}"
+						action="#{backingBean.onDeleteMandatoryLicenseFile(onlineLicenseTable,index)}" update="@form">
+						<p:graphicImage value="/css/images/design/trash.png" />
 					</p:commandLink>
+					<!--#33240-END-->
 				</p:column>
 			</p:dataTable>
 		</ui:repeat>
@@ -169,5 +176,21 @@
 			cancelLabel="#{lbl['lbl.btn.cancel']}" multiple="false"
 			showButtons="false" />
 	</p:dialog>
+	<!--#33240-START-->
+	<p:confirmDialog id="confirmDeleteLicenseCertDialog" closable="true"
+			message="#{lbl['lbl.sm.upload.delete.message']}"
+			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+			severity="alert" widgetVar="confirmDeleteLicenseCertDialog">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					action="#{backingBean.deleteMandatoryLicenseFile}" update="@form"
+					onclick="confirmDeleteLicenseCertDialog.hide();"
+					partialSubmit="true" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" process="@this" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="confirmDeleteLicenseCertDialog.hide();" />
+			</div>
+		</p:confirmDialog>
+	<!--#33240-END-->
 
 </ui:composition>
