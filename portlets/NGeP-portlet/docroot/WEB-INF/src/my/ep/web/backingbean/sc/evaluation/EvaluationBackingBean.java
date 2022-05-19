@@ -2300,6 +2300,35 @@ public void saveComplianceSample() {
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getEvaluationStgTechnicalCheckList())){
 				checklistSorting(this.getManagedBean().getEvaluationStgTechnicalCheckList());
 				}
+		//#33178 related to #21695 Start	
+			if(!this.getManagedBean().getScQt().isZonal() && this.getManagedBean().getScQt().isPartial()){
+				int checkcompare = evaluationSO.checkqualifiedSuppDisableTecPkgTab(reqDTO);
+				if(checkcompare > 0){
+					//supplier not qualified by package
+					//if there is no supplier qualified to evaluate by package --> disable tab package evaluation
+					this.getManagedBean().setNoSupplierPackageExist(true);
+				}
+				else if (checkcompare < 0){
+					//supplier qualified by package
+					//if there is supplier qualified to evaluate by package --> enable tab package evaluation
+					this.getManagedBean().setNoSupplierPackageExist(false);
+				}
+				
+			}else if(this.getManagedBean().getScQt().isZonal() && this.getManagedBean().getScQt().isPartial()){
+				int checkcompare = evaluationSO.checkqualifiedSuppDisableTecPkgTabZone(reqDTO);
+				if(checkcompare > 0){
+					//supplier not qualified by package
+					//if there is no supplier qualified to evaluate by package --> disable tab package evaluation
+					this.getManagedBean().setNoSupplierPackageExist(true);
+				}
+				else if (checkcompare < 0){
+					//supplier qualified by package
+					//if there is supplier qualified to evaluate by package --> enable tab package evaluation
+					this.getManagedBean().setNoSupplierPackageExist(false);
+				}
+				
+			}
+			//#33178 related to #21695 End
 			checkTechnicalSuppliersQualified();
 			this.checkNoSuppliersSubmitted();//6906
 			localCheckList=null;
