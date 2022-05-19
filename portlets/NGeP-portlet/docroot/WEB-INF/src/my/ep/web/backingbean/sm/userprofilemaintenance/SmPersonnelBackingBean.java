@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 //9569 end
+
+//start #12981 - no 2, comment #189
+import java.util.Arrays;
+//start #12981 - no 2, comment #189
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -89,6 +94,7 @@ public class SmPersonnelBackingBean extends
 	 */
 	private static final long serialVersionUID = 8285824019929910081L;
 	private static Logger log = Logger.getLogger(SmPersonnelBackingBean.class);
+	private boolean showInfo = false;  //#30053
 
 	/**
 	 * Instantiate SmPersonnelBackingBean and set MDC user id
@@ -197,6 +203,11 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setUpdateSmPersonnel(adminPersonnel);
 			SmCommonUtil.setRoleName(smSupplier.getSmAppl().getSupplierType(),
 					getManagedBean().getSmPersonnelList());
+			//start - #30053
+			if(smSupplier.getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)){
+				showInfo = true;
+			}
+			//end - #30053
 			if (!isHasSupplierUser) {
 				constructNoSupplierUserToDeactivateMsg(smSupplier);
 			} else {
@@ -2042,6 +2053,21 @@ public class SmPersonnelBackingBean extends
 	 */
 	public void updateUser(SmPersonnel smPersonnel) {
 		try {
+			//start #12981 - no 2, comment #189
+			List<Integer> statusAllowedToRequest = Arrays.asList(
+					SupplierManagementConst.SOFT_CERT_ISSUED,
+					SupplierManagementConst.IS_SOFTCERT_REQ,
+					SupplierManagementConst.SOFT_CERT_PROCESSING,
+					SupplierManagementConst.SOFT_CERT_PENDING_REQ,
+					SupplierManagementConst.SOFT_CERT_REJECTED,
+					SupplierManagementConst.SOFT_CERT_REQ_FAILED,
+					SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL);
+			
+			if (statusAllowedToRequest.contains(smPersonnel.getSoftcertFlg())) {
+				smPersonnel.setAuthorizedFlg(1);
+			}
+			//end #12981 - no 2, comment #189
+			
 			if (smPersonnel.getTitle() != null
 					&& smPersonnel.getTitle().getSalutationId() == null) {
 				smPersonnel.setTitle(null);
@@ -3623,6 +3649,33 @@ public class SmPersonnelBackingBean extends
 						getManagedBean().getSmAppl(), getManagedBean()
 								.getAuthVO()));
 	}
+
+	//start - #30053
+	public boolean isShowInfo() {
+		return showInfo;
+	}
+
+	public void setShowInfo(boolean showInfo) {
+		this.showInfo = showInfo;
+	}
+	//end - #30053
+	// 9569 end
+	
+	//START 30053
+	public boolean disableRadio(SmPersonnel personnel){
+		boolean disableRadio  = false;
+		try{
+			if(personnel.getSmAppl()!= null && SupplierManagementConst.SUPP_TYPE_CONSULTANT.equalsIgnoreCase(personnel.getSmAppl().getSupplierType())){
+				disableRadio = false;
+			}else if(RoleCode.CM_USER.value().equals(personnel.getEpRole()) || (personnel.getSoftcertFlg() != 0 && personnel.getSoftcertFlg()!= 1)){
+				disableRadio = true;
+			}
+		}catch(Exception e){
+			log.info(e.getMessage());
+		}
+		return disableRadio;
+	}
+	//END 30053
 	
 	//9569
 	public static boolean personnelToDeleteRole(SmPersonnel basicSmPersonnel) {

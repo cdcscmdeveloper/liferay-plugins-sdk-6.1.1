@@ -37,23 +37,28 @@
 				value="#{smPersonnelBackingBean.managedBean.smPersonnelList}" selection="#{smPersonnelBackingBean.managedBean.selectedPersonnelToReassign}"
 				var="personnel" rowKey="#{personnel}" rowIndexVar="index" rows="10">
 				<ac:paginator for="smPersonnelDataModelId" />
-				
-				<p:column selectionMode="single" disabledSelection="#{personnel.epRole eq 'CM_USER' or (personnel.softcertFlg ne 0 and personnel.softcertFlg ne 1)}" />
+				<!-- 30053 personnel.epRole eq 'CM_USER' or (personnel.softcertFlg ne 0 and personnel.softcertFlg ne 1)-->
+				<p:column selectionMode="single" disabledSelection="#{smPersonnelBackingBean.disableRadio(personnel)}" />
 
 				<p:column headerText="#{lbl['lbl.sm.userprofile.name']}">
-					<p:outputPanel rendered="#{personnel.epRole eq 'CM_USER'}">
-						&#160;<p:graphicImage id="uidti" value="/css/images/design/tooltips.png"  />
-						<p:tooltip id="uidtt" for="uidti">
-							<p:outputLabel escape="false"
-								value="#{lbl['tt.sm.deactivateadmin.catalogueuser.upgrade']}" />
-						</p:tooltip>&#160;
+					<p:outputPanel rendered="#{smPersonnelBackingBean.showInfo}">
+						<p:outputPanel rendered="#{personnel.epRole eq 'CM_USER'}">
+						&#160;<p:graphicImage id="uidti"
+								value="/css/images/design/tooltips.png" />
+							<p:tooltip id="uidtt" for="uidti">
+								<p:outputLabel escape="false"
+									value="#{lbl['tt.sm.deactivateadmin.catalogueuser.upgrade']}" />
+							</p:tooltip>&#160;
 					</p:outputPanel>
-					<p:outputPanel rendered="#{personnel.epRole ne 'CM_USER' and (personnel.softcertFlg ne 0 and personnel.softcertFlg ne 1)}">
-						&#160;<p:graphicImage id="uid2ti" value="/css/images/design/tooltips.png"  />
-						<p:tooltip id="uid2tt" for="uid2ti">
-							<p:outputLabel escape="false"
-								value="#{lbl['tt.sm.deactivateadmin.sofcertnotissued.upgrade']}" />
-						</p:tooltip>&#160;
+						<p:outputPanel
+							rendered="#{personnel.epRole ne 'CM_USER' and (personnel.softcertFlg ne 0 and personnel.softcertFlg ne 1)}">
+						&#160;<p:graphicImage id="uid2ti"
+								value="/css/images/design/tooltips.png" />
+							<p:tooltip id="uid2tt" for="uid2ti">
+								<p:outputLabel escape="false"
+									value="#{lbl['tt.sm.deactivateadmin.sofcertnotissued.upgrade']}" />
+							</p:tooltip>&#160;
+					</p:outputPanel>
 					</p:outputPanel>
 					<h:outputText value="#{personnel.name}" />
 				</p:column>
