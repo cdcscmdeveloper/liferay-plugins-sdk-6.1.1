@@ -1214,6 +1214,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		getManagedBean().setAggreeDeclareAdmin(false);
 		// #30829 - start
 		checkRoleInCompany();
+		for (SmSupplierOwner supplierOwner : getManagedBean().getSmSuppOwners()) {
+			if (supplierOwner.getIdentificationNo().equals(getManagedBean().getSmPersonnel().getIdentificationNo())) {
+				getManagedBean().setSameAsOwner(true);
+			}
+		}
 		// #30829 - end
 		setAdminSameAsOwner();
 		SmPersonnel smPersonnel = this.getManagedBean().getSmPersonnel();
