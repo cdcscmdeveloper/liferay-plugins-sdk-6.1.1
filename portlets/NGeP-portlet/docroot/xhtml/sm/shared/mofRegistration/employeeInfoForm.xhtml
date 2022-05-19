@@ -106,11 +106,11 @@
 					<h:outputText value="*" styleClass="mandatory" />
 					#{lbl['lbl.sm.employee.specialization']}
 				</f:facet>
-				<p:inputText id="empSpclId" value="#{empInfo.expertise}" size="30"
-					label="#{lbl['lbl.sm.employee.specialization']}" maxlength="2000"
+				<p:inputTextarea id="empSpclId" value="#{empInfo.expertise}"
+					rows="1" cols="30" autoResize="false" maxlength="2000"
 					required="#{backingBean.managedBean.valueReqd}">
 					<p:ajax event="blur" process="@this" update="@this" />
-				</p:inputText>
+				</p:inputTextarea>
 				<p:message id="empSpclIdMsg" for="empSpclId"
 							showSummary="true" showDetail="false" display="icon" />
 			</p:column>
@@ -121,7 +121,7 @@
 					#{lbl['lbl.sm.employee.experience']}
 				</f:facet>
 				<p:inputText id="empExpId" value="#{empInfo.workExpYear}" size="30"
-					label="#{lbl['lbl.sm.employee.experience']}" maxlength="2000"
+					label="#{lbl['lbl.sm.employee.experience']}" maxlength="2"
 					required="#{backingBean.managedBean.valueReqd}">
 					<p:ajax event="blur" process="@this" update="@this" />
 				</p:inputText>
