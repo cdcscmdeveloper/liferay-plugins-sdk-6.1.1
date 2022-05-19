@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
+	<!-- Bug #33178 adding noSupplierPackageExist-->
 
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
@@ -20,10 +20,10 @@
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
 							update="@form" />
 					</c:if>
-					
+					<!-- Bug #33178 adding noSupplierPackageExist-->
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.financial.package']}"  disabled="#{evaluationBackingBean.managedBean.singleSpecQuestion}"
+						<p:menuitem value="#{lbl['lbl.sc.eva.financial.package']}"  disabled="#{evaluationBackingBean.managedBean.singleSpecQuestion or evaluationBackingBean.managedBean.noSupplierPackageExist}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStagePackage}"
 							update="@form" />
 					</c:if>
