@@ -648,6 +648,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean isAllItemAutoScore;
 	//Bug #33252
 	
+	//Bug #33178
+	private boolean noSupplierPackageExist;
+	//Bug #33178
+	
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -4219,5 +4223,17 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 	// Bug #33252 - End
 
-		
+
+	//Bug #33178 - START
+	public boolean getNoSupplierPackageExist() {
+		return noSupplierPackageExist;
+	}
+
+	/**
+	 * @param isSupplierItemExist the isSupplierItemExist to set
+	 */
+	public void setNoSupplierPackageExist(boolean noSupplierPackageExist) {
+		this.noSupplierPackageExist = noSupplierPackageExist;
+	}
+	////Bug #33178 -END
 }
