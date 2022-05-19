@@ -643,6 +643,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//#10542 - end
 	
 	private boolean noProposalSubmitted;//#6906
+	
+	//Bug #33252
+	private boolean isAllItemAutoScore;
+	//Bug #33252
+	
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -4200,6 +4205,19 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.noProposalSubmitted = noProposalSubmitted;
 	}
 	//#6906 - end
-	
-	
+
+	//Bug #33252 -Start
+	public boolean isAllItemAutoScore() {
+		return isAllItemAutoScore;
+	}
+
+	/**
+	 * @param isSupplierItemExist the isSupplierItemExist to set
+	 */
+	public void setAllItemAutoScore(boolean isAllItemAutoScore) {
+		this.isAllItemAutoScore = isAllItemAutoScore;
+	}
+	// Bug #33252 - End
+
+		
 }
