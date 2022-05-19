@@ -21,22 +21,25 @@
 							update="@form" />
 					</c:if>
 					<!-- Technical package tab -->
+					<!-- Bug #33178 adding noSupplierPackageExist-->
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' or evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.technical.package']}" disabled="#{evaluationBackingBean.managedBean.scQt.evaluateBy eq SourcingConstants.EVALUATE_BY__ITEM}"
+						<p:menuitem value="#{lbl['lbl.sc.eva.technical.package']}" disabled="#{evaluationBackingBean.managedBean.scQt.evaluateBy eq SourcingConstants.EVALUATE_BY__ITEM or evaluationBackingBean.managedBean.noSupplierPackageExist}"
 							action="#{evaluationBackingBean.retriveTechnicalEvaluationStagePackage}"
 							update="@form" /><!-- 32453 -->
 					</c:if>
 					<!-- Financial item tab -->
+					<!-- Bug #33178 adding noSupplierPackageExist-->
 					<c:if
 						test="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq) or (evaluationBackingBean.managedBean.committeeType eq 'FEC'))}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.financial.itemized']}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
 							update="@form" />
 					</c:if>
+					<!-- Bug #33178 adding noSupplierPackageExist-->
 					<c:if
 						test="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq) or (evaluationBackingBean.managedBean.committeeType eq 'FEC'))}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.financial.package']}" disabled="#{evaluationBackingBean.managedBean.singleSpecQuestion}"
+						<p:menuitem value="#{lbl['lbl.sc.eva.financial.package']}" disabled="#{evaluationBackingBean.managedBean.singleSpecQuestion or evaluationBackingBean.managedBean.noSupplierPackageExist}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStagePackage}"
 							update="@form" />
 					</c:if>
