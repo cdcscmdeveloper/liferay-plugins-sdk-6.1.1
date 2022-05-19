@@ -7496,15 +7496,19 @@ public class SmApplicationUtil {
 		managedBean.setShowTravelSoftwarePanel(false);
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
+			//26671 - Site Visit Grouping Enhancement -28775 - start
 			if (cat.isSpecialCategory()
 					&& cat.getPmCategoryL3() != null
 					&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 					&& cat.getPmCategoryL3().getCategoryTypeCode()
 							.getParameterId() != null
 					&& cat.getRecordStatusFlg() != null
-					&& cat.getRecordStatusFlg().compareTo(
+					&& (cat.getRecordStatusFlg().compareTo(
 							SupplierManagementConst.PENDING_ACT_STATUS) == 0
+					|| cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
 					&& !isCategoryRejected(cat)) {
+				//26671 - Site Visit Grouping Enhancement -28775 - end
 				String catType = "";
 				if (cat.getPmCategoryL3().getCategoryTypeCode() != null) {
 					catType = cat.getPmCategoryL3().getCategoryTypeCode()
