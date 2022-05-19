@@ -45,11 +45,11 @@
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.sign.board']}" /></td>
 				<!-- 9583 - Site Visit Grouping Enhancement - 28775 -->
-				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="10000" id="txtSignBoardRmk" readonly="#{viewFlag}"
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="4000" id="txtSignBoardRmk" readonly="#{viewFlag}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardRemark}" /></td>
 					
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
-				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="10000" id="txtShareWithRmk" disabled="#{viewFlag}"
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="4000" id="txtShareWithRmk" disabled="#{viewFlag}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.shareWithRemark}" /></td>
 			</tr>
 			
@@ -58,9 +58,9 @@
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.office.arrngmnt']}" /></td>
 				<td><!-- 9583 - Site Visit Grouping Enhancement - 28775 -->
-				<p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="10000" label="#{lbl['lbl.sm.officeloc.office.arrngmnt']}"
+				<p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="4000" label="#{lbl['lbl.sm.officeloc.office.arrngmnt']}"
 				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}" disabled="#{viewFlag}">
-					<f:validateLength maximum="10000" />
+					<f:validateLength maximum="4000" />
 				</p:inputTextarea>
 				</td>
 			</tr>
