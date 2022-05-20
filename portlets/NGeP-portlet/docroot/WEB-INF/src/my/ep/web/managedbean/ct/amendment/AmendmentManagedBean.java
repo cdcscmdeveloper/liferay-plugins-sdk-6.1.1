@@ -190,6 +190,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private Long contractIdFromTaskList = null;
 	private Long contractVerIdFromTaskList = null;
 	//Enhancement 15851 - shaqimi end
+	private String supplementalLoaNo = null;//Bug 33096 - shaqimi
 	
 	public void reassignValue(boolean value) 
 	{
@@ -1632,5 +1633,13 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	public void setTaskIdFromAgreement(String taskIdFromAgreement) {
 		this.taskIdFromAgreement = taskIdFromAgreement;
 	}
+	//Bug 33096 - shaqimi start
+	public String getSupplementalLoaNo() {
+		return supplementalLoaNo;
+	}
+	public void setSupplementalLoaNo(String supplementalLoaNo) {
+		this.supplementalLoaNo = supplementalLoaNo;
+	}
+	//Bug 33096 - shaqimi end
 	//15851 - shaqimi end
 }

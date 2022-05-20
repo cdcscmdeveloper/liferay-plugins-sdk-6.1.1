@@ -3552,6 +3552,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 			abb.getManagedBean().setTrackingDairyView(true);
 			getManagedBean().setViewSCL(true);
+			//Bug 33096 - start
+			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
+			//Bug 33096 - end
 			if(abb.getManagedBean().getTaskId() != null){
 				abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
 				abb.getManagedBean().setContractIdFromTaskList(new Long(getManagedBean().getContractVer().getCtContract().getContractId()));
