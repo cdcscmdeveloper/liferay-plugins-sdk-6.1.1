@@ -928,6 +928,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		try{
 			resDTO = rptRequestSO.generateReportSMInExcel(reqDTO);
 			log.info("REQUEST ID === "+resDTO.getRequestId());
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -1718,10 +1719,11 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
             cell.setCellValue(columnsSummaryList[i]);
             cell.setCellStyle(columnHeaderStyle);//BUG:#29454
         }
-        
-        if(!summaryReportList.isEmpty()){
+        //START - CR:#14203#159
+        if(!summaryList.isEmpty()){
 			log.info("SUMMARY LIST IS NOT NULL !!!");
 			Set<Integer> keyIdSummary = summaryList.keySet();
+			int summaryListSize = summaryList.size();
 			int rowid = sheetSummary.getLastRowNum()+1;
 			for (Integer key : keyIdSummary) {
 				Row row = sheetSummary.createRow(rowid++);
@@ -1731,22 +1733,29 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					Cell cell = row.createCell(cellid++);
 					if(obj instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) obj).doubleValue());
-						if(key == 0)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
+						if(key == 0 && summaryListSize > 1)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
 						else cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,true,false,true));
 					}else if(obj instanceof Integer){
 						cell.setCellValue(((Integer) obj).intValue());
-						if(key == 0)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,true));
+						if(key == 0 && summaryListSize > 1)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,true));
 						else cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,false,true,true));
 					}else{
 						cell.setCellValue((String) obj);
-						if(key == 0)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,true));
+						if(key == 0 && summaryListSize > 1)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,true));
 						else cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,false,false,true));
 					}
 				}
 			}
+			if(summaryListSize == 1){
+				Row noRecordRow = sheetSummary.createRow(sheetSummary.getLastRowNum()+1);
+				Cell cellNoRecord = noRecordRow.createCell(0);
+				cellNoRecord.setCellValue("Rekod tidak dijumpai");
+				cellNoRecord.setCellStyle(titleHeaderStyle(wb,false,false,false,false));
+				sheetSummary.addMergedRegion(new CellRangeAddress(sheetSummary.getLastRowNum(),sheetSummary.getLastRowNum(),0,columnsSummaryList.length-1)); 
+			}
 		}
         
-        if(reportList.isEmpty()){
+        /*if(reportList.isEmpty()){
         	summaryList.put(0, new Object[] {
 					"Keseluruhan",(fpxCount+creditCount),totalPrice,totalGst,totalServiceCharge,totalGstServiceCharge,totalNetAmount
 			});
@@ -1777,8 +1786,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			cellNoRecord.setCellValue("Rekod tidak dijumpai");
 			cellNoRecord.setCellStyle(titleHeaderStyle(wb,false,false,false,false));
 			sheetSummary.addMergedRegion(new CellRangeAddress(sheetSummary.getLastRowNum(),sheetSummary.getLastRowNum(),0,columnsSummaryList.length-1)); 
-        }
-        
+        }*/
+	    //END - CR:#14203#159
         // Resize all columns to fit the content size
         for(int i = 0; i < columnsSummaryList.length; i++) {  
         	if(i==0)sheetSummary.setColumnWidth(i, 17*256);//Column : Kod Penjenisan
