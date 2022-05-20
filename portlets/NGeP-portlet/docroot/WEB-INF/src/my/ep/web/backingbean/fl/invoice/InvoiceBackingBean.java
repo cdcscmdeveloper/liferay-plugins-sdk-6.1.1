@@ -198,11 +198,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
-			//32967-start
-			if(null != getManagedBean().getAccountNo()){
-				getManagedBean().getInvoice().setAccountNo(getManagedBean().getAccountNo());
-			}
-			//32967-end
 			FlInvoice invoice = getManagedBean().getInvoice();
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 			adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
@@ -1277,17 +1272,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		
 		if (this.getManagedBean().getInvoice() != null) {
-			//32967-Start
-			if(this.getManagedBean().getInvoice().getAccountNo()!=null){
-				if(getManagedBean().getAccountNo()==null){
-					getManagedBean().setAccountNo(this.getManagedBean().getInvoice().getAccountNo());
-				}			
-			
-				if(this.getManagedBean().getInvoice().getAccountNo().equalsIgnoreCase(getManagedBean().getAccountNo())){
-					this.getManagedBean().getInvoice().setAccountNo(this.getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId()+"|"+this.getManagedBean().getInvoice().getAccountNo());
-				}
-			}
-			//32967-End
 			if(this.getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchName() != null ){
 				supplierSearchReqDTO.setBranchCode(getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchCode());
 				supplierSearchReqDTO.setSupplierId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
@@ -1297,11 +1281,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						String account = obj.getAccountNo();
 						if (obj.getPmFinancialOrg() != null)
 							account = account + "  " + obj.getPmFinancialOrg().getFinOrgName();
-						//32967-Start
-						populateBankAccountList.add(new SelectItem(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo(), account));
-						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo())) {
-							getManagedBean().getSupplierBankAccountMap().put(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo(), obj);
-						//32967-End
+						populateBankAccountList.add(new SelectItem(obj.getAccountNo(), account));
+						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
+							getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
 						}
 					}
 				}
@@ -1315,11 +1297,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						String account = obj.getAccountNo();
 						if (obj.getPmFinancialOrg() != null)
 							account = account + "  " + obj.getPmFinancialOrg().getFinOrgName();
-						//32967-Start
-						populateBankAccountList.add(new SelectItem(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo(), account));
-						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo())) {
-							getManagedBean().getSupplierBankAccountMap().put(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo(), obj);
-						//32967-End
+						populateBankAccountList.add(new SelectItem(obj.getAccountNo(), account));
+						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
+							getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
 						}
 					}
 				}
@@ -1343,7 +1323,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					getManagedBean().getInvoice().setPaymentBankAddress(convertSmAddressToFlAddress(supplierBank.getSmAddress(),flAddress));
 				}
 				getManagedBean().getInvoice().setPaymentBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
-				getManagedBean().setAccountNo(getManagedBean().getInvoice().getAccountNo().substring(supplierBank.getPmFinancialOrg().getFinancialOrgId().toString().length()+1));//32967
 			}
 		}else{
 			getManagedBean().getInvoice().setPaymentBankAddress(null);
