@@ -46,6 +46,7 @@ import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmDigiCert;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
@@ -330,9 +331,9 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setDeactivatePersonnel(false);
 		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
 		removeEPRole();
-		// #31710 - start
+		// #32515 - start
 		getManagedBean().setSupplierType(getManagedBean().getSmSupplier().getSmAppl().getSupplierType());
-		// #31710 - end
+		// #32515 - end
 		buildRoleList();
 
 		CountryReqDTO reqDTO = new CountryReqDTO();
@@ -487,9 +488,10 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setEditMode(true);
 		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
 		getPersonnelInfoById(personnelId);
-		// #9569 - start
+		// #32515 - start
 		getManagedBean().setSupplierType(getManagedBean().getSmSupplier().getSmAppl().getSupplierType());
-		// #9569 - end
+		getManagedBean().setEpRoleTrans(getManagedBean().getBasicSmPersonnel().getEpRole());
+		// #32515 - end
 		buildRoleList();
 		validateAccountStatus();
 		setDisabledActivateDeactivateRadioButton();
@@ -1970,6 +1972,26 @@ public class SmPersonnelBackingBean extends
 					.getBasicSmPersonnel().getName(), getManagedBean()
 					.getBasicSmPersonnel().getEmail());
 		}
+		//32515 START
+		//Update Role
+		if (getManagedBean().getBasicSmPersonnel() != null && getManagedBean().getBasicSmPersonnel().getEpRole() != null &&
+				getManagedBean().getEpRoleTrans() != null && !getManagedBean().getEpRoleTrans().equals(getManagedBean().getBasicSmPersonnel().getEpRole()) &&
+				getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			
+			String name = getManagedBean().getBasicSmPersonnel().getName();
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setSmSupplierId(getManagedBean().getBasicSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
+			reqDTO.setSmSupplier(getManagedBean().getBasicSmPersonnel().getSmAppl().getSmSupplier());
+			reqDTO.setUserId(getManagedBean().getBasicSmPersonnel().getPmUser().getUserId());
+			SmSoftcertRequest softcertRequest = SmServiceLookup.getPersonnelSO().retrievePersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO).getSoftcertRequest();
+			
+			if (validateSoftcertExpired(softcertRequest)) {
+				throw new EpException(MessageConst.ERROR_770252, new String[] { name });
+			}else if(getManagedBean().getBasicSmPersonnel().getPmUser() != null && PmCommonUtil.isAnyPendingTask(getManagedBean().getBasicSmPersonnel().getPmUser().getLoginId())){
+				throw new EpException(MessageConst.ERROR_770251, new String[] { name });
+			}
+		}
+		//32515 END
 		//Start 13320
 		for (SmPersonnelAddress per : getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses()) {
 			if (!per.getSmAddress().getPmState().getStateId().equals(SupplierManagementConst.SARAWAK_CODE)){
@@ -3686,4 +3708,18 @@ public class SmPersonnelBackingBean extends
 		}
 		return retVal;
 	}
+	
+	//32515 START	
+	public Boolean validateSoftcertExpired(SmSoftcertRequest softcertRequest){
+		Boolean valid = false;
+		if(softcertRequest != null){
+			Date currentDate = new Date();
+			if(currentDate.before(softcertRequest.getPmDigiCert().getValidTo())){
+				valid = true;
+			}
+		}
+		return valid;
+	}
+	//32515 END
+
 }
