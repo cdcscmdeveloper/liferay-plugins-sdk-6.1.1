@@ -6512,16 +6512,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		 PpProcurementItem cloned = items.get(idx);
 		 
 		 if ((cloned.isCloned() && cloned.isBrandNew())) {
-			 
-			 log.info("...Trace log for Bug #31872 START 001....");
-			 
+			 			 
 			 cloned.setAllowAnotherPindaan(false);
 			 cloned.setCloneEnabled(false);
 			 cloned.setReasonForUpdateEnabled(false);
 			 cloned.setStatusEnabled(false);
 			 cloned.setEnableRevise(true);
 			 
-			 log.info("...Trace log for Bug #31872 END 001....");
 		 }
 		 
 		 log.info("cloned= "+cloned.getProcurementTitle()+" ("+cloned.getProcurementItemId()
@@ -6535,9 +6532,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		 // For originals that were previously clones and this time they are used to clone new ones 
 		 if (!original.isOriginal() &&
 			 original.getFromPpItem() != null) {
-			 
-			 log.info("...Trace log for Bug #31872 START 002....");
-			 
+			 			 
 			 original.setBrandNew(false);
 			 original.setOriginal(true);
 			 original.setCloned(false);
@@ -6550,14 +6545,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			//this.getManagedBean().setDisable(false);
 			 original.setEnableRevise(false);
 			 
-			 log.info("...Trace log for Bug #31872 END 002....");
 		 } else {
-			 
-			 log.info("...Trace log for Bug #31872 START 003....");
-			 
+			 			 
 			 original.setEnableRevise(true);
 			 
-			 log.info("...Trace log for Bug #31872 END 003....");
 		 }
 		 
 		 log.info("original= "+original.getProcurementTitle()+" ("+original.getProcurementItemId()
@@ -6566,9 +6557,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 +", allowAnotherPindaan= "+original.isAllowAnotherPindaan());
 		 
 		 if (!(original.isCloned() && original.isBrandNew())) {
-			 
-			 log.info("...Trace log for Bug #31872 START 003...." + original.getRecordStatusFlg());
-			 
+			 			 
 			 if (!original.isRejected() && original.isAllowAnotherPindaan()) {
 				 original.setAllowAnotherPindaan(false);
 			 }
@@ -6581,7 +6570,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 	original.setEnableRevise(false);
 			 }
 			 
-			 log.info("...Trace log for Bug #31872 END 003...." + original.getRecordStatusFlg());
 		 }
 		 
 	}
@@ -8338,23 +8326,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		 
 		   public void disableEnablePpExpItemFields(List<PpExpenditureItem> items, Integer idx) {
-				
-				 log.info("...Trace log for Bug #31887 disableEnablePpExpItemFields....");
-			   
+							   
 			   PpExpenditureItem cloned = items.get(idx);
 			 
 			 if ((cloned.isCloned() && cloned.isBrandNew())) {
-				 
-				 log.info("...Trace log for Bug #31887 START 001....");
-				 
+				 				 
 				 cloned.setCloneEnabled(false);
 				 cloned.setReasonForUpdateEnabled(false);
 				 cloned.setStatusEnabled(false);
 				 cloned.setJustificationEnabled(false);
 				 cloned.setDisableEditAccount(true);
-				 
-				 log.info("...Trace log for Bug #31887 END 001....");
-				 
+				 				 
 			 }
 			 
 			 idx -= 1;
@@ -8365,32 +8347,24 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 
 			 if (!original.isCloned() && !original.isBrandNew()) {	
 				//24975@26102020 - end	 
-				 
-				 log.info("...Trace log for Bug #31887 START 002...." + original.getRecordStatusFlg());
-				 
+				 				 
 				 original.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 				 original.setCloneEnabled(true);
 				 original.setReasonForUpdateEnabled(true);
 				 original.setStatusEnabled(true);
 				 original.setDisableEditAccount(true);
 				 original.setJustificationEnabled(true);
-				 
-				 log.info("...Trace log for Bug #31887 END 002...." + original.getRecordStatusFlg());
-				 
+				 				 
 			//24975@04112020@azza - start
 			 }else if (original.isCloned() && !original.isBrandNew()){
-				 
-				 log.info("...Trace log for Bug #31887 START 003...." + original.getRecordStatusFlg());
-				 
+				 				 
 				 original.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 				 original.setCloneEnabled(true);
 				 original.setReasonForUpdateEnabled(true);
 				 original.setStatusEnabled(true);
 				 original.setDisableEditAccount(true);
 				 original.setJustificationEnabled(true);
-				 
-				 log.info("...Trace log for Bug #31887 END 003...." + original.getRecordStatusFlg());
-				 
+				 				 
 			 }
 		}
 
