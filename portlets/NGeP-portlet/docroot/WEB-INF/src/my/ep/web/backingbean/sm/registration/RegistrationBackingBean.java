@@ -1201,11 +1201,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		getManagedBean().setAggreeDeclareAdmin(false);
 		// #30829 - start
 		checkRoleInCompany();
-		for (SmSupplierOwner supplierOwner : getManagedBean().getSmSuppOwners()) {
-			if (supplierOwner.getIdentificationNo().equals(getManagedBean().getSmPersonnel().getIdentificationNo())) {
-				getManagedBean().setSameAsOwner(true);
-			}
-		}
 		// #30829 - end
 		setAdminSameAsOwner();
 		SmPersonnel smPersonnel = this.getManagedBean().getSmPersonnel();
@@ -3629,6 +3624,21 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * Set admin related information same as owner after ticked check box
 	 */
 	private void setAdminSameAsOwner() {
+		// #30829 - start
+		if (!getManagedBean().isSameAsOwner()) {
+			for (SmSupplierOwner supplierOwner : getManagedBean().getSmSuppOwners()) {
+				if (supplierOwner.getIdentificationNo().equals(getManagedBean().getSmPersonnel().getIdentificationNo())) {
+					getManagedBean().setSameAsOwner(true);
+				}
+			}
+			for (SmPersonnel director : this.getManagedBean().getSmPersonnelDirector()) {
+				if ((getManagedBean().getSmPersonnel().getIdentificationNo().equals(director.getIdentificationNo()))
+						&& director.isDirector()) {
+					getManagedBean().getSmPersonnel().setDirector(true);
+				}
+			}
+		}
+		// #30829 - end		
 		//#16052019 - SSM INTEGRATION CR - if ssm no need to do this
 		if (getManagedBean().isSameAsOwner() && !getManagedBean().isCompanyValidWithSSM()) {
 			if(getManagedBean().getSmSuppOwners().size()>0){
