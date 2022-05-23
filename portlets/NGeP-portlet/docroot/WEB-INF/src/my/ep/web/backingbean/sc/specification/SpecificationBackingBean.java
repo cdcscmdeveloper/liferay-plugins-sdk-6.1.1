@@ -4170,7 +4170,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				//  #31489/#31672 - Start.
 				if (0 == this.getManagedBean().getCriteriaType() && null != this.getManagedBean().getScQtChecklist()
 						&& null != this.getManagedBean().getScQtChecklist().getPmDocument()) {
-					log.info("SpecificationBackingBean.scoreTypeChange(): settinf criteriaType as bank statement");
+//					log.info("SpecificationBackingBean.scoreTypeChange(): settinf criteriaType as bank statement");
 					if (QTConstants.FINANCIAL_BANK_STMT_CODE
 						.equalsIgnoreCase(this.getManagedBean().getScQtChecklist().getPmDocument()
 								.getDocDefinitionKey())) {
@@ -4528,7 +4528,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					setTechnicalSpecEnableDisable();
 				}
 
-				// 30917, 31151 -start
+				// #8979,#30917,#31151 -start
 				List<ScQtCheckList> technicalChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
 				int i = 0;
 				
@@ -4542,7 +4542,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				if (i > 1) {
 					this.getManagedBean().setSpecItemWeightageRequired(Boolean.TRUE);
 				}
-				// 30917, 31151 -End
+				// #8979,#30917,#31151 -End
 
 				return "/xhtml/sc/boSctemplatespec/committeeTechnicalEditAction.xhtml?faces-redirect=true";
 			} // #11104-start
@@ -8170,8 +8170,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							tplSpecZoneDtl.setPanelZone(panelZones);
 							setUserDetails(tplSpecZoneDtl);
 
-							List<PmState> states = SourcingLocationHelper.getStateFromCtPanelZone(panelZones.getPanelZoneDtls());
-							List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromCtPanelZone(panelZones.getPanelZoneDtls());
+							//List<PmState> states = SourcingLocationHelper.getStateFromCtPanelZone(panelZones.getPanelZoneDtls());
+							//List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromCtPanelZone(panelZones.getPanelZoneDtls());
 
 							/*#19637 - basri (remove overlapped data during save)*/
 							/*getManagedBean()
@@ -9191,7 +9191,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 											ownFilterBean), allFilterBean));
 
 					qtTemplateReqDTO.setOrderByBlankTemplate(true);
-					templeteTypes=null;
+					templeteTypes = null;
 
 				} else if (TemplateSpecConst.PROCESS_TYPE_SOURCING
 						.equalsIgnoreCase(getManagedBean()
@@ -9280,8 +9280,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				}
 
 			} finally {
-				qtTemplateSO=null;
-				parameterSo=null;
+				qtTemplateSO = null;
+				parameterSo = null;
 			}
 			return null;
 		}
@@ -9438,7 +9438,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				}
 
 			} finally {
-				addressSO=null;
+				addressSO = null;
 			}
 			return null;
 		}
@@ -14362,18 +14362,16 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		return QTConstants.SPEC_MAINTENANCE;
 	}
 	
-	private void setTechnicalSpecEnableDisable(){
-		if(this.getManagedBean().getSpecMaintenanceScreen().equals(getSpecMaintenance())){
-			if(!this.getManagedBean().isReadOnly()){
-				this.getManagedBean().setSpecNewable(true); //#15391
-			this.getManagedBean().setUpdateSpec(true);
-			}
-			else{
+	private void setTechnicalSpecEnableDisable() {
+		if (this.getManagedBean().getSpecMaintenanceScreen().equals(getSpecMaintenance())) {
+			if (!this.getManagedBean().isReadOnly()) {
+				this.getManagedBean().setSpecNewable(true); // #15391
+				this.getManagedBean().setUpdateSpec(true);
+			} else {
 				this.getManagedBean().setSpecNewable(false);
-				this.getManagedBean().setUpdateSpec(false);	
+				this.getManagedBean().setUpdateSpec(false);
 			}
-			}
-			
+		}
 	}
 	
 	/**
@@ -14624,9 +14622,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
       }
       
 		//#15391 - start
-//		log.info("STATUS ID: "+scQt.getQtStatus().getStatusId());
-//		log.info("THIS STATUS ID: "+this.getManagedBean().getCurrentStatusId());
-//		log.info("QTID: "+scQt.getQtId());
 		if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId()) 
 				|| QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt.getQtStatus().getStatusId())){
 			this.getManagedBean().setGenInfo(true);
@@ -15040,13 +15035,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			boolean isSave){
 		log.info("checkFinancialSpecEstimations");
 		int count=0;
-
-		if (CollectionUtils.isNotEmpty(financialChecklist)) {
-			for (ScQtCheckList checklist : financialChecklist) {
-				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(checklist
-						.getDefinationType().getParameterCode())
-						&& QTStatusConst.TS_COMPLETED.equals(checklist.getPmStatus().getStatusId())
-						&& checklist.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+		if(CollectionUtils.isNotEmpty(financialChecklist)){
+			for(ScQtCheckList checklist:financialChecklist){
+				if(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(checklist.getDefinationType().getParameterCode()) && QTStatusConst.TS_COMPLETED.equals(checklist.getPmStatus().getStatusId()) && checklist.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
 					count++;
 					break;
 				}
@@ -15106,13 +15097,16 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 										.format(panelThreshold) });
 					}
 				} else {
-					if (null == totalSpecEstimatedAmount || (totalSpecEstimatedAmount.compareTo(BigDecimal.ZERO) <= 0)) {
+					BigDecimal prThreshold = getPRThresholdAmount();
+
+					if (null == totalSpecEstimatedAmount || (totalSpecEstimatedAmount.compareTo(prThreshold) <= 0)) {
 						throw new EpException(MessageConst.ERROR_760024,
-								new String[] { SourcingConstants.DF_AMOUNT.format(BigDecimal.ZERO) });
+								new String[] { SourcingConstants.DF_AMOUNT
+										.format(prThreshold) });
 					}
 				}
-				
-				qt.setEstimatedAmount(totalSpecEstimatedAmount);
+				//Bug #29808
+				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP));
 			}
 				
 			// Check Intended Price
