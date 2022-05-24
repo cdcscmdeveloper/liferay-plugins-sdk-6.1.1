@@ -109,6 +109,16 @@
 			</c:if>
 			<!-- ***25692 - end -->
 				
+			<!-- 9019 Start (Harun) WIP transaction Pending QT Submission -->
+			<c:if test="#{!qTDetailBB.getTaskByDocNoModule(qTDetailBB.managedBean.qt.qtNo, QTStatusConst.SC_WFTASK_COMPOSITENAME)}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.update']}" partialSubmit="true" process="@this"
+					action="#{qTDetailBB.updateWIPTransaction()}">
+				</p:commandButton>
+			</div>
+			</c:if>
+			<!--9019 end -->
+				
 			<c:if test="#{!qTDetailBB.managedBean.readOnly}">
 			  	
 			 <!-- danial #25635 - rollback 22/11/2020-->
