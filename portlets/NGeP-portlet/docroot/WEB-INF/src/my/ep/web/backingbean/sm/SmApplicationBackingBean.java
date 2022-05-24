@@ -4330,6 +4330,9 @@ public class SmApplicationBackingBean extends
 	private Boolean validateBeforeSave(String applType, String currentPageType) {
 		log.info("******* Page Type ********" + currentPageType);
 		boolean validSave = true;
+		//#32968 START
+		getManagedBean().setCheckBranch(false);
+		//#32968 END
 		checkIfPastBumiApplication();
 		switch (currentPageType) {
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC:
