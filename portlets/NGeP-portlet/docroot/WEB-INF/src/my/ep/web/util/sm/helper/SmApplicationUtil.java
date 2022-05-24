@@ -2254,17 +2254,27 @@ public class SmApplicationUtil {
 				sbSuppBranch.append("<br/>");
 			}
 		}
-
+		//32968 START
 		if (!validateSmBranch) {
 			validSave = false;
-			StringBuilder errMsg = new StringBuilder();
-			errMsg.append("Please complete the mandatory fields marked (*) in the 'Personnel/Branch Info' section for the following Company Branch:</br> ");
-			errMsg.append(sbSuppBranch);
-			if (currentTab != -1) {
-				setNavigationBackToCurrentPage(currentTab, managedBean);
+			if(!managedBean.isCheckBranch() && (managedBean.isPoUser() || managedBean.isApproverUser())){
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+				}
+				managedBean.setCheckBranch(true);
+				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.branch.not.completed",
+						new String[] { sbSuppBranch.toString() }));
+			}else if(managedBean.isSupplierUser()){
+				StringBuilder errMsg = new StringBuilder();
+				errMsg.append("Please complete the mandatory fields marked (*) in the 'Personnel/Branch Info' section for the following Company Branch:</br> ");
+				errMsg.append(sbSuppBranch);
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+				}
+				throw new EpException(errMsg.toString());
 			}
-			throw new EpException(errMsg.toString());
 		}
+		//32968 END
 		// end #30076
 
 		//16052019 - SSM INTEGRATION CR #27219
