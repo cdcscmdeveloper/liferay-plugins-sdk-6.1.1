@@ -94,7 +94,8 @@
 				<ui:fragment rendered="#{stageTwoTechnical.pmDocument eq null and stageTwoTechnical.qtChecklistId eq null}">
 				<h:panelGroup id="technicalChecklistTitleHeader">
 					<p:inputText required="true" id="techChecklistTitle"
-						label="#{lbl['lbl.sc.spec.checklist.title']}" rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1}"
+						label="#{lbl['lbl.sc.spec.checklist.title']}" rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 || 
+						specificationBackingBean.managedBean.demoSampleTitleEnable}"
 						value="#{stageTwoTechnical.title}" size="35" maxlength="1000">
 						<p:ajax event="change" process="@this,technicalChecklistTitleHeader" partialSubmit="true"
 							update="technicalChecklisttypes"
