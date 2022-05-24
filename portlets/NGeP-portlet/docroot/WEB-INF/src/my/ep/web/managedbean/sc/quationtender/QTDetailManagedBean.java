@@ -1768,6 +1768,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean qtSpecMaintanance;
 	private boolean demoEvalDisabled;
 	private boolean demoSpecialCase;
+	private boolean demoSampleTitleEnable; //#28784
 
 	// #30451-Start.
 	private boolean isBdSfFlow;
@@ -11144,6 +11145,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.readOnlyCommitteeTabBean = readOnlyCommitteeTabBean;
 		}
 		//Bug 32277 - end
+
+		public boolean isDemoSampleTitleEnable() {
+			return demoSampleTitleEnable;
+		}
+
+		public void setDemoSampleTitleEnable(boolean demoSampleTitleEnable) {
+			this.demoSampleTitleEnable = demoSampleTitleEnable;
+		}
 }
 
 // ***25201
