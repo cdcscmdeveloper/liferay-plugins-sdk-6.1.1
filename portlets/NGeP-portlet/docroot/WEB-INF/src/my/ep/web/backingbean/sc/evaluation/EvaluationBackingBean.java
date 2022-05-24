@@ -2488,8 +2488,15 @@ public void saveComplianceSample() {
 							&& checkallitemautoscore) {// #25138 - end
 						proposalCheckList
 								.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
-						this.getManagedBean().setAllItemAutoScore(true);
-						localCheckList.add(proposalCheckList);
+						//33297 & 33282
+						if(this.getManagedBean().isAllItemAutoScore()==false){
+							localCheckList.add(proposalCheckList);
+							}
+						else{
+							this.getManagedBean().setAllItemAutoScore(true);
+							localCheckList.add(proposalCheckList);
+						}
+						
 					} else {
 						if (proposalCheckList.isScoringReq()) {
 							localCheckList
