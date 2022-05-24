@@ -257,10 +257,17 @@ u.underline {
 					kuasa pendaftaran syarikat tuan dengan JKDM. </span>
 				</p>
 				## #25025 & #26770 -end
-				<p>
+				#if($scLoa.scLoiLoa.docType == "PR")
+					<p>
 					<span class="text_family_small">Perenggan 3 di atas adalah terpakai untuk syarikat yang
 					berdaftar dengan JKDM dan Barangan dikenakan Cukai di bawah Akta Cukai Jualan 2018.</span>
 				</p>
+				#else
+				<p>
+					<span class="text_family_small">Perenggan 3 di atas adalah terpakai untuk syarikat yang
+					berdaftar dengan JKDM dan Barangan Dikenakan Cukai di bawah Akta Cukai Jualan 2018.</span>
+				</p>
+				#end
 				
 				## #25025 & #26770 -start
 				<p>
@@ -302,7 +309,11 @@ u.underline {
 								</tr>	
 								<tr class="text_family">
 									<td align="center" style="vertical-align: top;"> (c)</td>
-									<td style="text-align:justify;">Nombor Kod Majikan di bawah Skim PERKESO dan/atau Polisi Pampasan Pekerja, </td>
+									#if($scLoa.scLoiLoa.docType == "PR")
+										<td style="text-align:justify;">Nombor Kod Majikan di bawah Skim PERKESO dan/atau Polisi Pampasan Pekerja, </td>
+									#else
+										<td style="text-align:justify;">Nombor Kod Majikan di bawah Skim PERKESO dan/atau Polisi Pampasan Pekerja; </td>
+									#end
 								</tr>
 								<tr class="text_family">
 									<td align="center" style="vertical-align: top;"> (d)</td>
@@ -626,7 +637,11 @@ u.underline {
 						<table >
 									<tr>
 										<td align="center" style="vertical-align: top;" class="text_family_header">1. </td>
-										<td class="text_header_submenu">Pendaftaran dengan Suruhanjaya Syarikat Malaysia (SSM) Atau Pendaftaran Koperasi Dengan Suruhanjaya Koperasi Malaysia (SKM) (jika berkaitan)</td>
+										#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
+											<td class="text_header_submenu">Pendaftaran Syarikat Dengan Suruhanjaya Syarikat Malaysia (SSM) Atau Pendaftaran Koperasi Dengan Suruhanjaya Koperasi Malaysia (SKM) (jika berkaitan)</td>
+										#else
+											<td class="text_header_submenu">Pendaftaran dengan Suruhanjaya Syarikat Malaysia (SSM) Atau Pendaftaran Koperasi Dengan Suruhanjaya Koperasi Malaysia (SKM) (jika berkaitan)</td>
+										#end
 									</tr>
 						</table>						
 					</td>
@@ -810,7 +825,12 @@ u.underline {
 					#end
 				</tr>
 				<tr>
-					<td colspan="3" style="padding-left: 20px;"><span class="text_family_red"><b><i>Lampiran A2</i></b> adalah untuk menyatakan tempoh atau jadual pembekalan mengikut tawaran syarikat dan disediakan oleh Agensi</span></td>
+					#if($scLoa.scLoiLoa.docType == "PR")
+						<td colspan="3" style="padding-left: 20px;"><span class="text_family_red"><i><b>Lampiran A2</b></i> adalah untuk menyatakan tempoh atau jadual pembekalan mengikut tawaran syarikat dan disediakan oleh Agensi</span></td>
+					#else
+						<td colspan="3" style="padding-left: 20px;"><span class="text_family_red"><i><b>Lampiran A2</b> adalah untuk menyatakan tempoh atau jadual pembekalan mengikut tawaran syarikat dan disediakan oleh Agensi</i></span></td>
+					#end
+					
 				</tr>
 
 				<tr>
@@ -972,7 +992,7 @@ u.underline {
 					    <table>
 					      <tr style="margin-bottom:1px;" align="bottom"> 
 					       #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
-					       <td align="bottom" class="dottedBorderRed"><span class="text_family_small" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen </span></td>
+					       		<td align="bottom" class="dottedBorderRed"><span class="text_family_small" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan</span></td>
 					       #else
 					         	<td align="bottom" class="dottedBorderRed"><span class="text_family_small">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen </span></td>
 					       #end 	
@@ -1272,9 +1292,9 @@ u.underline {
 	#set($whiteSpace = "&nbsp;") 
 	#set($rowCount = 0)	
 #if ($scLoa.scLoiLoa.docType == "NG")
-		<table width="100%" border="1" cellpadding="0" cellspacing="0">
-		<tbody>
 			#foreach( $tplspecMaster in $masters )
+			<table width="100%" border="1" cellpadding="0" cellspacing="0">
+			<tbody>
 				#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
 				#set($specType = $tplspecMaster.specTypeCode.parameterCode)
 				#if ($itemType == "Produk" || $itemType == "Product")
@@ -1471,9 +1491,9 @@ u.underline {
 						
 						#set($rowCount = $rowCount + 1)
 					#end
+				</tbody>
+				</table>
 				#end
-		</tbody>
-		</table>
 		#if ($rowCount > 0)
 			<div class="break-after"><br/></div>
 		#end
@@ -1810,13 +1830,11 @@ u.underline {
 	#end
 #end
 	
-##26130 - start 03032022
-	 #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
-
-	#else
-	<div class="break-after"><br/></div>
+	 ##26130 - start 18052022
+	#if ($scLoa.scLoiLoa.docType != "QT")	
+		<div class="break-after"><br/></div>
 	#end
-	 ##26130 - end 03032022
+	 ##26130 - end 18052022
 	 
 	 #if ($scLoa.scLoiLoa.docType == "PR")
 		 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -1834,9 +1852,9 @@ u.underline {
 	 #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
 		#set($rowCount = 0)
 		#if ($scLoa.scLoiLoa.docType == "NG")
-			<table width="100%" border="1" cellpadding="0" cellspacing="0">
-			<tbody>
 				#foreach( $tplspecMaster in $masters )
+				<table width="100%" border="1" cellpadding="0" cellspacing="0">
+				<tbody>
 					#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
 					#set($specType = $tplspecMaster.specTypeCode.parameterCode)
 					#if ($itemType == "Perkhidmatan" || $itemType == "Service")
@@ -2041,9 +2059,9 @@ u.underline {
 								
 							#set($rowCount = $rowCount + 1)
 						#end
+						</tbody>
+					</table>
 					#end
-				</tbody>
-		</table>
 		<br/>
 		<br/>
 	  #else 
@@ -2785,13 +2803,11 @@ u.underline {
 #end
 
 
-##26130 - start 03032022
-#if ($scLoa.scLoiLoa.docType == "QT")	
-
-#else
-<div class="break-after"><br/></div>
-#end
-##26130 - end 03032022
+##26130 - start 18052022
+#if ($scLoa.scLoiLoa.docType != "QT")	
+	<div class="break-after"><br/></div>
+  #end
+##26130 - end 18052022
 
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 		<tr>
