@@ -8938,14 +8938,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (null == scLoa.getContractEffDate()) {
 			context.put("contractEffDate", "");
 		}else{
-			context.put("contractEffDate", dateSDF.format(scLoa.getContractEffDate()));
+			context.put("contractEffDate",getLocalizeDate(scLoa.getContractEffDate(), myLocale));
 		}
 		
 		if (null == scLoa.getContractExpDate()) {
 			context.put("contractExpDate", "");
 		} else {
-			context.put("contractExpDate",
-					dateSDF.format(scLoa.getContractExpDate()));
+			context.put("contractExpDate",getLocalizeDate(scLoa.getContractExpDate(), myLocale));
 		}
 		
 		//#26770 - end
