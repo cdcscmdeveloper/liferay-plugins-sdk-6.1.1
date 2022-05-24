@@ -798,12 +798,14 @@ public class PmReportsBackingBean extends
 			this.getManagedBean().getSelectedOrgType()
 					.setParameterCode(pmParameter.getParameterCode());
 			//#29991 start--
-			if(pmParameter.getParameterId() == PmReportConst.ORG_TYPE_SUPPLIER){
-				hideOrgCodeName();
-				
-			}else{
-				this.getManagedBean().setSelectedSupplier(null);
-				showOrgCodeName();
+			if(getManagedBean().getReportCode().equals(PmReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)) {
+				if(pmParameter.getParameterId() == PmReportConst.ORG_TYPE_SUPPLIER){
+					hideOrgCodeName();
+					
+				}else{
+					this.getManagedBean().setSelectedSupplier(null);
+					showOrgCodeName();
+				}
 			}
 			//#29991 end--
 		} else {
