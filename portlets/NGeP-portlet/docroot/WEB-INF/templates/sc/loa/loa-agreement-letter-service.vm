@@ -237,7 +237,7 @@ u.underline {
 				## #25025 & #26770 -start
 				<p>
 					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga kontrak adalah termasuk peruntukan Kerajaan sebanyak 0% cukai
-					perkhidmatan memandangkan perkhidmatan ini dikenakan cukai dan syarikat tuan #if ($scLoa.scLoiLoa.docType != "PR") telah #end berdaftar dengan Jabatan Kastam
+					perkhidmatan memandangkan perkhidmatan ini dikenakan cukai dan syarikat tuan berdaftar dengan Jabatan Kastam
 					Diraja Malaysia (JKDM). Pembayaran cukai perkhidmatan ini adalah dikira berdasarkan tuntutan sebenar dan tarikh kuat
 					kuasa pendaftaran syarikat tuan dengan JKDM.</span>
 				</p>
@@ -287,7 +287,13 @@ u.underline {
 								</tr>	
 								<tr class="text_family">
 									<td align="center" style="vertical-align: top;"> (c)</td>
-									<td style="text-align:justify;">Nombor Kod Majikan di bawah Skim PERKESO dan/atau Polisi Pampasan Pekerja, </td>
+									#if($scLoa.scLoiLoa.docType == "PR")
+										<td style="text-align:justify;">Nombor Kod Majikan di bawah Skim PERKESO dan/atau Polisi Pampasan Pekerja, </td>
+									#else
+										<td style="text-align:justify;">Nombor Kod Majikan di bawah Skim PERKESO dan/atau Polisi Pampasan Pekerja; </td>
+									#end
+									
+									
 								</tr>
 								<tr class="text_family">
 									<td align="center" style="vertical-align: top;"> (d)</td>
@@ -469,7 +475,7 @@ u.underline {
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(l)</td>
-								<td>syarikat gagal mematuhi skop perkhidmatan yang ditetapkan dan/atau <i>Service Level Agreement</i>;</td>
+								<td>syarikat #if($scLoa.scLoiLoa.docType != "PR") tuan #end  gagal mematuhi skop perkhidmatan yang ditetapkan dan/atau <i>Service Level Agreement</i>;</td>
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(m)</td>
@@ -617,7 +623,12 @@ u.underline {
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">1. </td>
-									<td class="text_header_submenu">Pendaftaran dengan Suruhanjaya Syarikat Malaysia (SSM) Atau Pendaftaran Koperasi Dengan Suruhanjaya Koperasi Malaysia (SKM) (jika berkaitan)</td>
+									#if($scLoa.scLoiLoa.docType == "PR")
+										<td class="text_header_submenu">Pendaftaran dengan Suruhanjaya Syarikat Malaysia (SSM) Atau Pendaftaran Koperasi Dengan Suruhanjaya Koperasi Malaysia (SKM) (jika berkaitan)</td>
+									#else
+										<td class="text_header_submenu">Pendaftaran Syarikat Dengan Suruhanjaya Syarikat Malaysia (SSM) Atau Pendaftaran Koperasi Dengan Suruhanjaya Koperasi Malaysia (SKM) (jika berkaitan)</td>
+									#end
+									
 								</tr>
 						</table>		
 					</td>
@@ -795,7 +806,13 @@ u.underline {
 					</span></td>
 				</tr>
 				<tr>
-					<td colspan="3" style="padding-left:20px"><span class="text_family_red"><b><i>Lampiran A2</i></b> adalah untuk menyatakan tempoh atau jadual perkhidmatan mengikut tawaran syarikat dan disediakan oleh Agensi</span></td>
+				
+					#if($scLoa.scLoiLoa.docType == "PR")
+						<td colspan="3" style="padding-left:20px"><span class="text_family_red"><i><b>Lampiran A2</b></i> adalah untuk menyatakan tempoh atau jadual perkhidmatan mengikut tawaran syarikat dan disediakan oleh Agensi</span></td>
+					#else
+						<td colspan="3" style="padding-left:20px"><span class="text_family_red"><i><b>Lampiran A2</b> adalah untuk menyatakan tempoh atau jadual perkhidmatan mengikut tawaran syarikat dan disediakan oleh Agensi</i></span></td>
+					#end
+					
 				</tr>
 
 				<tr>
@@ -954,7 +971,7 @@ u.underline {
 					    <table border="0" cellpadding="0" cellspacing="0" width="100%">
 					      <tr style="margin-bottom:1px;" align="bottom"> 
 						       #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
-						       		<td align="bottom" class="dottedBorderRed"><span class="text_family_medium" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen </span></td>
+						       		<td align="bottom" class="dottedBorderRed"><span class="text_family_medium" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan</span></td>
 						       #else
 						         	<td align="bottom" class="dottedBorderRed"><span class="text_family_medium">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen </span></td>
 						       #end 	
