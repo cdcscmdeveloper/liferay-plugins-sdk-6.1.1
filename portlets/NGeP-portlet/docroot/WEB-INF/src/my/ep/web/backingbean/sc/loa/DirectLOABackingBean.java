@@ -8403,7 +8403,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				supplierAddressTable.append("<br />");
 			}
 		}
-		
+		//#26770 - start
+		String headerTitle = "";
+		if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
+			headerTitle = "Tender";
+		} else {
+			headerTitle = "Sebut Harga";
+		}
+		context.put("headerTitle", headerTitle); 
+		//#26770 - end
 		context.put("supplierSignerUser", supplierSignerUser);
 		context.put("supplierSignerIcNo", supplierSignerIcNo);
 		context.put("supplierSignerAddress", supplierAddressTable);
@@ -8717,12 +8725,23 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		context.put("ackDate", ackDate);
 		context.put("insWarrantyReq", scLoa.isInsWarrantyReq());
 
-		String contractEffDate = "";
-		if (scLoa.getContractEffDate() != null) {
-			contractEffDate = DateUtils.getLocalizeDate(scLoa.getContractEffDate(), myLocale);
-		}
-		context.put("contractEffDate", contractEffDate);
 		
+		
+		//#26770 - start
+		
+		if (null == scLoa.getContractEffDate()) {
+			context.put("contractEffDate", "");
+		}else{
+			context.put("contractEffDate",getLocalizeDate(scLoa.getContractEffDate(), myLocale));
+		}
+		
+		if (null == scLoa.getContractExpDate()) {
+			context.put("contractExpDate", "");
+		} else {
+			context.put("contractExpDate",getLocalizeDate(scLoa.getContractExpDate(), myLocale));
+		}
+		
+		//#26770 - end
 		//ontractDuration
 		context.put("contractDuration", scLoa.getContractDuration());
 
