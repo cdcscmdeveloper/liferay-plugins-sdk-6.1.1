@@ -283,4 +283,9 @@ public interface QTConstants {
 	
 	public static final String FINANCIAL_ITEM_SPEC_ANSWER="FISA";//32453
 	
+	//9019 - Start (Harun) WIP transaction Pending QT Submission
+	public static final String SC_WFTASK_COMPOSITENAME = "SourcingQT";
+	//9019 - End (Harun) 
+	
+	
 }
