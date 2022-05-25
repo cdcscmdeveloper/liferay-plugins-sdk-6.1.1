@@ -4320,13 +4320,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 														getManagedBean().getPmParam());
 										} 
 										//bug #30435 - start
+										/* Bug #25077 - Start 
 										else {
 											PmParameter approveParam =  getQTDetailSO().getPmParameterByTypeAndCode(
 													ParameterTypeConst.APPROVAL_DECISION_TYPE,
 													ParameterConst.APPROVAL_DECISION_TYPE_APPROVED);
 											getManagedBean().setPmParam(approveParam);
 											approvalRequest.get(i).setApproverAction(approveParam);
-										}
+										} Bug #25077 - End */ 
 										//bug #30435 - end
 										
 										if (null != getManagedBean().getScQtApprovalReqAttachement()) {
