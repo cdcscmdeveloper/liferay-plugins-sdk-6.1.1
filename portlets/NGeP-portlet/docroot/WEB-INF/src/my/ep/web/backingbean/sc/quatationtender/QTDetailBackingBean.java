@@ -1186,6 +1186,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setGenInfo(true);
 			//#29474 - end
 			
+			//9019 - Start (Harun) WIP Transaction add information message
+			if(!getTaskByDocNoModule(this.getManagedBean().getQt().getQtNo(), QTConstants.SC_WFTASK_COMPOSITENAME)){
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+						MessageUtils.getMessage(MessageConst.INFO_700110 , 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 
+			}
+			//9019 - End (Harun) 
+			
 			boolean isValidFor25037 = this.validateSupportedTask(scQt.getQtNo(), QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
 			this.getManagedBean().setValidFor25037(isValidFor25037);
 			debugLogger("end of editQuationTenderDetails");
