@@ -1289,9 +1289,10 @@ u.underline {
 	#set($whitespace = "&nbsp;")
 	##26130 - end 11032022
 	#if ($scLoa.scLoiLoa.docType == "NG")
-		<table width="100%" border="1" cellpadding="0" cellspacing="0">
-		<tbody>
+		
 			#foreach( $tplspecMaster in $masters )
+			<table width="100%" border="1" cellpadding="0" cellspacing="0">
+			<tbody>
 				#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
 				#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
 				#if ($itemType == "Produk" || $itemType == "Product")
@@ -1487,9 +1488,10 @@ u.underline {
 						
 						#set($rowCount = $rowCount + 1)
 					#end
+					</tbody>
+					</table>
 				#end
-		</tbody>
-		</table>
+		
 		#if ($rowCount > 0)
 			<div class="break-after"><br/></div>
 		#end
@@ -1814,13 +1816,11 @@ u.underline {
 	#end
 #end
 	
-##26130 - start 030320222
- #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
- 
- #else
- <div class="break-after"><br/></div>
- #end
-##26130 - end 03032022	
+	 ##26130 - start 18052022
+		#if ($scLoa.scLoiLoa.docType != "QT")	
+			<div class="break-after"><br/></div>
+		#end
+	 ##26130 - end 18052022
   
   #if ($scLoa.scLoiLoa.docType == "PR")
 	  <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -1841,9 +1841,10 @@ u.underline {
 		#set($whitespace = "&nbsp;")
 		##26130 - end 11032022
 		#if ($scLoa.scLoiLoa.docType == "NG")
-			<table width="100%" border="1" cellpadding="0" cellspacing="0">
-			<tbody>
+
 				#foreach( $tplspecMaster in $masters )
+					<table width="100%" border="1" cellpadding="0" cellspacing="0">
+					<tbody>
 					#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
 					#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
 					#if ($itemType == "Perkhidmatan" || $itemType == "Service")
@@ -2043,9 +2044,10 @@ u.underline {
 								
 							#set($rowCount = $rowCount + 1)
 						#end
+						</tbody>
+						</table>
 					#end
-				</tbody>
-		</table>
+				
 		<br/>
 		<br/>
 	  #else 
@@ -2781,12 +2783,11 @@ u.underline {
 #end
 
 
-##26130 - start 03032022
-  #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
-  #else
-  <div class="break-after"><br/></div>
+##26130 - start 18052022
+#if ($scLoa.scLoiLoa.docType != "QT")	
+	<div class="break-after"><br/></div>
   #end
-##26130 - end 03032022
+##26130 - end 18052022
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 		<tr>
 			<td align="right"> <span class="text_family"> <b><i>Lampiran A5</i></b></span></td>
