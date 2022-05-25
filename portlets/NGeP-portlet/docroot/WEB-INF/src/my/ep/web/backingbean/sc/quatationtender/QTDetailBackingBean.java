@@ -12008,35 +12008,18 @@ public void retrieveDemoQtDetails(Long qtId) {
 	
 	//9019 - Start (Harun) WIP transaction Pending QT Submission
 	public void updateWIPTransaction() {
-		IQTDetailSO detailSO;
+		debugLogger("start updateWIPTransaction");
 		try {
-			//this.getManagedBean().setSaveFlow(true);
-			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTDetailSO.class); //
-			
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-			reqDTO.setQtdetail(this.getManagedBean().getQt());
-			reqDTO.setSaveFlow(false);
-			reqDTO.setStatusId(this.getManagedBean().getQt().getQtStatus().getStatusId());
-			FacesScopes facesScopes = new FacesScopes();
-			reqDTO.setToken(facesScopes
-					.getBPMAuthenticationCtxToken());
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 		    
 		    boolean bpmExistFlag = getTaskByDocNoModule(this.getManagedBean().getQt().getQtNo(), QTConstants.SC_WFTASK_COMPOSITENAME);
 			if (!bpmExistFlag) {
-				QuationTenderResDTO quationTenderResDTO = detailSO.qtWIPTransaction(reqDTO);
-				if(quationTenderResDTO.isSuccessful()){
-					successMessage(MessageConst.INFO_700111, ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
-				}
+			    validateQtDetails();
+			    successMessage(MessageConst.INFO_700111, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
 			}
 			
 		} finally {
-			detailSO = null;
+			debugLogger("end updateWIPTransaction");
 		}
 	}
 		
