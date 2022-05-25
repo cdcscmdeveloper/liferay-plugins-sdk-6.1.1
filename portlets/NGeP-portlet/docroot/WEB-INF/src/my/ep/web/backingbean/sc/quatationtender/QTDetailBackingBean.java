@@ -4286,13 +4286,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 														getManagedBean().getPmParam());
 										} 
 										//bug #30435 - start
+										/* Bug #25077 - Start 
 										else {
 											PmParameter approveParam =  getQTDetailSO().getPmParameterByTypeAndCode(
 													ParameterTypeConst.APPROVAL_DECISION_TYPE,
 													ParameterConst.APPROVAL_DECISION_TYPE_APPROVED);
 											getManagedBean().setPmParam(approveParam);
 											approvalRequest.get(i).setApproverAction(approveParam);
-										}
+										} Bug #25077 - End */ 
 										//bug #30435 - end
 										
 										if (null != getManagedBean().getScQtApprovalReqAttachement()) {
@@ -11951,57 +11952,4 @@ public void retrieveDemoQtDetails(Long qtId) {
 			return false;
 	}
 	//#11299 End Vinod
-	
-	//9019 - Start (Harun) WIP transaction Pending QT Submission
-	public void updateWIPTransaction() {
-		IQTDetailSO detailSO;
-		try {
-			//this.getManagedBean().setSaveFlow(true);
-			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTDetailSO.class); //
-			
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-			reqDTO.setQtdetail(this.getManagedBean().getQt());
-			reqDTO.setSaveFlow(false);
-			reqDTO.setStatusId(this.getManagedBean().getQt().getQtStatus().getStatusId());
-			FacesScopes facesScopes = new FacesScopes();
-			reqDTO.setToken(facesScopes
-					.getBPMAuthenticationCtxToken());
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
-		    
-		    boolean bpmExistFlag = getTaskByDocNoModule(this.getManagedBean().getQt().getQtNo(), QTConstants.SC_WFTASK_COMPOSITENAME);
-			if (!bpmExistFlag) {
-				QuationTenderResDTO quationTenderResDTO = detailSO.qtWIPTransaction(reqDTO);
-				if(quationTenderResDTO.isSuccessful()){
-					successMessage(MessageConst.INFO_700111, ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
-				}
-			}
-			
-		} finally {
-			detailSO = null;
-		}
-	}
-		
-	public boolean getTaskByDocNoModule(String docNo, String module) {
-		IBpmSO bpmSO =(IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		Object tokens = bpmSO.authenticate(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.BPM_PRINCIPAL));
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		boolean bpmExistFlag = false;
-		reqDTO.setDocNumber(docNo);
-		reqDTO.setModule(module);
-		reqDTO.setState(BpmConstants.STATE_ASSIGNED);
-		reqDTO.setCtxToken(tokens);
-		BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNoandModule(reqDTO);
-		if(bpmResDTO.getWorklistVO().getWorklistItem().size() > 0){
-			bpmExistFlag = true;
-		}else{
-			bpmExistFlag = false;
-		}
-		return bpmExistFlag;
-	}
-	//9019 - End (Harun) 
 }
