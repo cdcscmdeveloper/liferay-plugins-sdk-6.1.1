@@ -17068,8 +17068,11 @@ public class SmApplicationBackingBean extends
 					if (doc.getPmDocument().isLicenseReq()
 							&& !doc.getPmDocument().getPmDocumentRestrs()
 									.isEmpty()) {
-						doc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
-						this.getManagedBean().setSmApplDocFile(null);
+						if(doc.getSmApplDocFiles().contains(this.getManagedBean().getSmApplDocFile())){
+							doc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
+							this.getManagedBean().setSmApplDocFile(null);
+							break;
+						}
 					}
 				}
 			}
