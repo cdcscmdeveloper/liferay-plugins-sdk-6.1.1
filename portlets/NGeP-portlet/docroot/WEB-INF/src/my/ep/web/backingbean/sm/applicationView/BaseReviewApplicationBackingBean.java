@@ -4128,13 +4128,21 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 									String catCode = StringUtils.EMPTY;
 									catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
 									catVo.setCategoryCode(catCode);
+									//#33303 - START
+									catVo.setCategoryL1Code(arr[3].toString());
+									catVo.setCategoryL2Code(arr[4].toString());
+									catVo.setCategoryL3Code(arr[5].toString());
+									//#3303 - END
 									if(!catCodeList.contains(catCode)){
 										catVoList.add(catVo);
 										catCodeList.add(catCode);
 									}
 									//28281 (bumi cat code) end
 								}
-							}						
+							}
+							//#33303 - START
+							SmApplicationUtil.sortSupplierCategoryDA(catVoList);
+							//#33303 - END
 							retVal.setCategoryCodeList(catVoList);
 						}
 					}
@@ -4282,9 +4290,16 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 								String catCode = StringUtils.EMPTY;
 								catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
 								catVo.setCategoryCode(catCode);	
+								//#33303 - START
+								catVo.setCategoryL1Code(arr[3].toString());
+								catVo.setCategoryL2Code(arr[4].toString());
+								catVo.setCategoryL3Code(arr[5].toString());
+								//#33303 - END
 								catVoList.add(catVo);
 							}	
-							
+							//#33303 - START
+							SmApplicationUtil.sortSupplierCategoryDA(catVoList);
+							//#33303 - END
 							this.getManagedBean().setCategoryCodeList(catVoList);
 						}
 					}
@@ -4661,6 +4676,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 									String catCode = StringUtils.EMPTY;
 									catCode = arr[3].toString() + arr[4].toString() + arr[5].toString();
 									catVo.setCategoryCode(catCode);
+									//#33303 - START
+									catVo.setCategoryL1Code(arr[3].toString());
+									catVo.setCategoryL2Code(arr[4].toString());
+									catVo.setCategoryL3Code(arr[5].toString());
+									//#33303 - END
 									if (!catCodeList.contains(catCode)) {
 										catVoList.add(catVo);
 										catCodeList.add(catCode);
@@ -4668,6 +4688,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 									// 28281 (bumi cat code) end
 								}
 							}
+							//#33303 - START
+							SmApplicationUtil.sortSupplierCategoryDA(catVoList);
+							//#33303 - END
 							retVal.setCategoryCodeList(catVoList);
 						}
 					}
