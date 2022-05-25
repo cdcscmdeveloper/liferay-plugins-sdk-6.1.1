@@ -17050,13 +17050,11 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Delete file for license certificate information
 	 */
-	public void onDeleteMandatoryLicenseFile(SmApplSupportDoc doc, int index) {
-		this.getManagedBean().setSupportDoc(doc);
+	public void onDeleteMandatoryLicenseFile(SmApplDocFile doc, int index) {
+
+		this.getManagedBean().setSupportDoc(doc.getSmApplSupportDoc());
 		this.getManagedBean().setAttachedFileIndex(index);
-		
-		for (SmApplDocFile doc1: doc.getSmApplDocFiles()) {
-			this.getManagedBean().setSmApplDocFile(doc1);
-		}		
+		this.getManagedBean().setSmApplDocFile(doc);
 		
 		RequestContext.getCurrentInstance().execute(
 				"confirmDeleteLicenseCertDialog.show();");
