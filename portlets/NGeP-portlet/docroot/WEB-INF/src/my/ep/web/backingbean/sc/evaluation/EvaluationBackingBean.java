@@ -2470,8 +2470,11 @@ public void saveComplianceSample() {
 				List<ScQtCheckList> proposalChecklistList = resDTO
 						.getCheckListResultBean().getResultList();
 				//Bug #33252 related to #33110 start
-				boolean checkallitemautoscore = evaluationSO.checkbuttonAutoScore(reqDTO);
 				for (ScQtCheckList proposalCheckList : proposalChecklistList) {
+					//#33252 /27/5/2022 Start Fix
+					boolean checkallitemautoscore = evaluationSO.checkbuttonAutoScore
+							(proposalCheckList.getQtChecklistId(),evalstage.get(0));
+					//#33252 /27/5/2022 End Fix
 					// if all item is auto score --> START
 					// 32426 - start
 					// if(proposalCheckList.isScoringReq()){
@@ -2488,15 +2491,8 @@ public void saveComplianceSample() {
 							&& checkallitemautoscore) {// #25138 - end
 						proposalCheckList
 								.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
-						//33297 & 33282
-						if(this.getManagedBean().isAllItemAutoScore()==false){
-							localCheckList.add(proposalCheckList);
-							}
-						else{
-							this.getManagedBean().setAllItemAutoScore(true);
-							localCheckList.add(proposalCheckList);
-						}
-						
+						this.getManagedBean().setAllItemAutoScore(true);
+						localCheckList.add(proposalCheckList);
 					} else {
 						if (proposalCheckList.isScoringReq()) {
 							localCheckList
@@ -17080,8 +17076,11 @@ private void retriveCommitteeRemarksList(){
 
 				List<ScQtCheckList> proposalChecklistList = resDTO
 						.getCheckListResultBean().getResultList();
-				boolean checkallitemautoscore = evaluationSO.checkbuttonAutoScore(reqDTO);
 				for (ScQtCheckList proposalCheckList : proposalChecklistList) {
+					//#33252 /27/5/2022 Start Fix
+					boolean checkallitemautoscore = evaluationSO.checkbuttonAutoScore
+							(proposalCheckList.getQtChecklistId(),evalstage.get(0));
+					//#33252 /27/5/2022 End Fix
 
 					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 							.equalsIgnoreCase(proposalCheckList
