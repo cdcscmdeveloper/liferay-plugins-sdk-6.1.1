@@ -15837,13 +15837,16 @@ private void retriveCommitteeRemarksList(){
 	 *            (String sampleType)
 	 * @return SelectItem[].
 	 */
-	public SelectItem[] getSampleSubmissionDropDownValues(String sampleType) {
+	public SelectItem[] getSampleSubmissionDropDownValues(String sampleType,ScQtSampleItem sampleItem) {//11104
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> sampleList = new ArrayList<String>();
 		sampleList.add(ParameterConst.SAMPLE_SUBMISSION_STATUS_COMPLIANCE);
 		sampleList.add(ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_COMPLIANCE);
 		sampleList.add(ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_SUBMIT);
+		if(null!=sampleItem && null!=sampleItem.getScRequestItem() && null!=sampleItem.getScRequestItem().getTplSpecQuestion() && null!=sampleItem.getScRequestItem().getTplSpecQuestion().getParentSpecQuestion() && !sampleItem.getScRequestItem().getTplSpecQuestion().getParentSpecQuestion().isSampleReq()){//11104-start
+			sampleList.add(ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_APPLICABLE);
+		}//11104-End		
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
 						SearchOperator.OPERATOR_IN.value(), sampleList));
