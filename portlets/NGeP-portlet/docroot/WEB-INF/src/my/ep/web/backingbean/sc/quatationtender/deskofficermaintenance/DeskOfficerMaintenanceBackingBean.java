@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -37,7 +36,6 @@ import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
-import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -58,7 +56,6 @@ import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
-import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
@@ -74,7 +71,6 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.general.settings.bpm.PmCompositeValidity;
 import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAttachment;
-import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -95,7 +91,6 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.DeskOfficerMaintenanceSearchBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.deskofficermaintenance.DeskOfficerMaintenanceManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -122,6 +117,11 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	
 	private PagingDataModel<PmUser> userListDataModel = new UserPagingDataModel();
 	
+	//25627 for 31303 code review start
+	private static final String PAGE_DESKOFFICER_MAINTENANCE = "/xhtml/sc/quatationtender/deskOfficerMaintenance/deskOfficerMaintenance.xhtml";
+	private static final String PAGE_DESKOFFICER_MAINTENANCE_APPROVAL = "/xhtml/sc/quatationtender/deskOfficerMaintenance/approval/deskOfficerMaintenanceApproval.xhtml";
+	//25627 for 31303 code review end
+
 	/**
 	 * Initialize default values.
 	 */
@@ -1112,21 +1112,21 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	
 	public String getNewDeskOfficer(Long qtID) {
 		PmUser newDeskOfficer = null;
+		
 		if (null != getManagedBean().getQtNoDeskOfficerMap()) {
 			newDeskOfficer = getManagedBean().getQtNoDeskOfficerMap().get(qtID);
+			
 			if (newDeskOfficer != null) {
 				return newDeskOfficer.getUserName();
-			} 
+			}
+
 			newDeskOfficer = null;
 		}
-		// #25627 - Start.
-		Locale locale = new FacesScopes().getUserLocale();
-		if (ReportConst.ENG_LANGUAGE_CODE.equals(locale.getLanguage())) {
-			return "N/A";			
-		} else {
-			return "T/B";
-		}
-		// #25627 - End.
+
+		// 25627 for 31303 code review start
+		return ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale());
+		// 25627 for 31303 code review end
 	}
 	
 	/**
@@ -1155,12 +1155,14 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		this.userListDataModel = userListDataModel;
 	}
 	
-	public void submitReassignmentForApproval(PmDigiSign digisign){
-		QuationTenderResDTO resDTO  = null;
-		try{
+	public void submitReassignmentForApproval(PmDigiSign digisign) {
+		QuationTenderResDTO resDTO = null;
+
+		try {
 			IQTDetailSO detailSO= BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			int successCount = 0;
+			
 			for (Map.Entry<Long, PmUser> entry : this.getManagedBean().getQtNoDeskOfficerMap().entrySet()){
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(entry.getKey());
@@ -1173,21 +1175,24 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				reqDTO.setQtdetail(qt);
 				reqDTO.setDeskOfficer(entry.getValue());
 				resDTO = null;
-				if(!isCommitteeApprover() && isDeskOfficer()){
-					resDTO = detailSO.submitDOReassignment(reqDTO);	
-				}else if(isCommitteeApprover()){
+				
+				if (!isCommitteeApprover() && isDeskOfficer()) {
+					resDTO = detailSO.submitDOReassignment(reqDTO);
+				} else if (isCommitteeApprover()) {
 				
 					IScActorSO scActorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
 					ScActorReqDTO actorReqDTO  = new ScActorReqDTO();
 					actorReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 					actorReqDTO.setDocId(qt.getQtId());
 					actorReqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+					
 					ScActor deskOfficer = scActorSO.retrieveActorByTypeIdAndRoleCode(actorReqDTO).getScActor();
 					PmUser originalDO = this.retrivePmUser(deskOfficer.getUserId());
 					
-					if(digisign != null){
+					if (digisign != null) {
 						reqDTO.setDigiSignData(digisign);
 					}
+					
 					reqDTO.setNewDO(entry.getValue());
 					reqDTO.setOriginalDO(originalDO);
 					reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
@@ -1200,7 +1205,9 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					successCount ++;
 				}
 			}  
+			
 			String msgCode = this.isCommitteeApprover() ? "INFO-760490" : "INFO-760492";
+			
 			if(successCount ==  this.getManagedBean().getQtNoDeskOfficerMap().size()){
 			
 				FacesContext fc = FacesContext.getCurrentInstance();
@@ -1220,7 +1227,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		}
 	}
 	
-	public void preRenderApprovalView(){
+	public void preRenderApprovalView() {
 		Object obj = getBpmTaskDetails(Object.class, null);
 		String taskName = getManagedBean().getTaskName();
 		
@@ -1229,47 +1236,46 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		Long requestId = payload.getRequestId().longValue();
 		Long qtId = payload.getQtId().longValue();
 		
-		if(SCProcessNameConst.APPROVE_DO_REASSIGNMENT.equalsIgnoreCase(taskName)){
+		if (SCProcessNameConst.APPROVE_DO_REASSIGNMENT.equalsIgnoreCase(taskName)) {
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(qtId);
 			reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);//later change
+			
 			QuationTenderResDTO resDTO = getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO);
 			ScQt qt =  getQTDetailSO().retriveQtById(reqDTO).getQtDetail();
 			
 			ScQtApprovalRequest currentApprovalRequest = null;
 			
-			IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-			ScWorkFlowStatusReqDTO statusReqDTO = new ScWorkFlowStatusReqDTO();
-			statusReqDTO.setDocType(ParameterConst.DOCTYPE_DO_REASSIGN);
-			statusReqDTO.setDocId(qtId);
-			ScWorkFlowStatus currentStatus = workFlowStatusSO.retrieveStatusByTypeAndId(statusReqDTO).getWorkFlowStatus();
-			
 			if(resDTO.getQtApproval() !=null && CollectionUtils.isNotEmpty(resDTO.getQtApproval().getScQtApprovalDtls())){
 				this.getManagedBean().setCurrentApproval(resDTO.getQtApproval());
+
 				for(ScQtApprovalRequest req: resDTO.getQtApproval().getScQtApprovalDtls()){
-					if(req.getQtApprovalRequestId().equals(requestId)){
+					if (req.getQtApprovalRequestId().equals(requestId)) {
 						currentApprovalRequest = req;
 						break;
 					}
 				}
 			}
 			
-			if(CollectionUtils.isEmpty(getManagedBean().getCurrentApproval().getScQtApprovalRemarks())){//BYPASS DEFAULT REMARK INIT
-				getManagedBean().getCurrentApproval().setScQtApprovalRemarks(new ArrayList<ScQtApprovalRemark>());
-			}else{
-				for(ScQtApprovalRemark remark: getManagedBean().getCurrentApproval().getScQtApprovalRemarks()){
+			if (CollectionUtils.isEmpty(getManagedBean().getCurrentApproval()
+					.getScQtApprovalRemarks())) {// BYPASS DEFAULT REMARK INIT
+				getManagedBean().getCurrentApproval().setScQtApprovalRemarks(
+						new ArrayList<ScQtApprovalRemark>());
+			} else {
+				for (ScQtApprovalRemark remark : getManagedBean()
+						.getCurrentApproval().getScQtApprovalRemarks()) {
 					remark.setBrandNew(false);
 					remark.setEditable(false);
 				}
-			}		
+			}
+
 			ScQtApprovalRemark remark = new ScQtApprovalRemark();
-			remark.setCreatedBy(getFacesScopes().getUserSessionBean()
-					.getUserId());
+			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setCreatedUser(getFacesScopes().getUserSessionBean());
 			remark.setParent(getManagedBean().getCurrentApproval());
+			
 			getManagedBean().getCurrentApproval().getScQtApprovalRemarks().add(0, remark);
 //			initializeRemarks(getManagedBean().getCurrentApproval(), 
 //					currentStatus, 
@@ -1281,7 +1287,10 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			this.getManagedBean().getCurrentApproval().setScQt(qt);
 			this.getManagedBean().setOriginalDeskOfficer(this.retrivePmUser(Long.parseLong(currentApprovalRequest.getOriginalValue())));
 			this.getManagedBean().setNewDeskOfficer(this.retrivePmUser(Long.parseLong(currentApprovalRequest.getChangedValue())));
-			page = "/xhtml/sc/quatationtender/deskOfficerMaintenance/approval/deskOfficerMaintenanceApproval.xhtml";
+
+			// 25627 for 31303 code review -start-
+			page = PAGE_DESKOFFICER_MAINTENANCE_APPROVAL;
+			// 25627 for 31303 code review -end-
 			
 		}
 		
@@ -1289,12 +1298,12 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		context.getApplication().getNavigationHandler().handleNavigation(context, null, page);
 	}
 	
-	public String requestTypeDescription(Long requestId){
+	public String requestTypeDescription(Long requestId) {
 		return this.getParameterDesc(this.retrieveParameterById(requestId),  new FacesScopes().getUserLocale());
 	}
 	
-	private void submitDOReassignmentApproval(String outcome, PmDigiSign digisign){
-		try{
+	private void submitDOReassignmentApproval(String outcome, PmDigiSign digisign) {
+		try {
 			if(CollectionUtils.isNotEmpty(getManagedBean().getCurrentApproval().getScQtApprovalRemarks())){
 				// 25627 - note 310 start
 				if (!BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
@@ -1325,20 +1334,22 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 				}
 			}
+			
 			this.reset();
-		}catch(EpException e){
+		} catch (EpException e) {
 			handleException(new EpException(MessageConst.ERROR_000001));
-		}finally{
+		} finally {
 		}
 	}
 	
-	public void signGPKI(String outcome){
+	public void signGPKI(String outcome) {
 		this.getManagedBean().setAction(outcome);
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
+
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 			getManagedBean().setAutoUpdate(false);	
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");	
 			//submitDOReassignmentApproval(this.getManagedBean().getAction(), null);// to skip GPKI-INCASE 
-		}else{
+		} else {
 			submitDOReassignmentApproval(this.getManagedBean().getAction(), null);
 		}
 	}
@@ -1356,33 +1367,42 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		}
 	}
 	
-	public String constructConditionForUserSearch(){
+	public String constructConditionForUserSearch() {
 		StringBuilder sb = new StringBuilder();
         sb.append("pmUserOrgs.pmOrgProfile.orgProfileId^");
     	sb.append(this.getManagedBean().getDoMaintenanceSearchBean().getPtjProfile().getOrgProfileId());
 		sb.append("|userId^");
         sb.append(this.getFacesScopes().getUserSessionBean().getUserId());
-        if(this.getManagedBean().getOriginalDeskOfficer()!=null && this.getManagedBean().getOriginalDeskOfficer().getUserId()!=null){
-        	   sb.append(",");
-               sb.append(this.getManagedBean().getOriginalDeskOfficer().getUserId());
-        }
+        
+		if (this.getManagedBean().getOriginalDeskOfficer() != null
+				&& this.getManagedBean().getOriginalDeskOfficer().getUserId() != null) {
+			sb.append(",");
+			sb.append(this.getManagedBean().getOriginalDeskOfficer()
+					.getUserId());
+		}
+        
 		sb.append("^");
 		sb.append(SearchOperator.OPERATOR_NOT_IN.value());
-		if(StringUtils.isNotEmpty(this.getManagedBean().getTaskName())){
+		
+		if (StringUtils.isNotEmpty(this.getManagedBean().getTaskName())) {
 			sb.append("|pmUserOrgs.pmUserRoles.pmRole.roleCode^");
 			sb.append(RoleCode.DESK_OFFICER.value());
 			sb.append("|pmUserOrgs.pmUserRoles.recordStatus^1");
 		}
+		
 		return sb.toString();
 	}
 	
-	public String retrieveUsername(){
-		if(this.getManagedBean().getOriginalDeskOfficer()!=null){
+	public String retrieveUsername() {
+		if (this.getManagedBean().getOriginalDeskOfficer() != null) {
 			return this.getManagedBean().getOriginalDeskOfficer().getUserName();
 		}
+		
 		return null;
 	}
-	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+	
+	public void handleFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
 		if (event.getFile() != null) {
 			ScAttachment scAttachment = null;
 			ScQtApprovalAttachment attachment = new ScQtApprovalAttachment();
@@ -1390,74 +1410,88 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 
 			List<ScQtApprovalAttachment> approvalAttachments = scQtApproval
 					.getScQtApprovalAttachments();
+			
 			if (null == approvalAttachments) {
 				approvalAttachments = new ArrayList<ScQtApprovalAttachment>();
 			}
+			
 			attachment.setScQtApproval(scQtApproval);
 			attachment.setDocNo(scQtApproval.getScQt().getQtNo());
+			
 			approvalAttachments.add(attachment);
+			
 			scQtApproval.setScQtApprovalAttachments(approvalAttachments);
+			
 			scAttachment = attachment;
+			
 			uploadAttachment(event.getFile(), scAttachment);
 		}
 	}
+	
 	private int compositeVersionComparator(String v1, String v2){//return +1 if v1 is latest, -1 if not, 0 if same
 		 int res = 0;
-		 if(StringUtils.isBlank(v1) || StringUtils.isBlank(v2)){
-	            throw new IllegalArgumentException("Version can not be null or empty.");
-		 }
-	     if(!v1.matches("[0-9]+(\\.[0-9]+)*") || !v2.matches("[0-9]+(\\.[0-9]+)*")){
-	            throw new IllegalArgumentException("Version format is not valid.");
-	     }
-	     String[] va1 = v1.split("\\.");
-	     String[] va2 = v2.split("\\.");
-	     List<String> c1 = new ArrayList<String>(Arrays.asList(va1));
-	     List<String> c2 = new ArrayList<String>(Arrays.asList(va2));
+		 
+		if (StringUtils.isBlank(v1) || StringUtils.isBlank(v2)) {
+			throw new IllegalArgumentException(
+					"Version can not be null or empty.");
+		}
+		
+		if (!v1.matches("[0-9]+(\\.[0-9]+)*")
+				|| !v2.matches("[0-9]+(\\.[0-9]+)*")) {
+			throw new IllegalArgumentException("Version format is not valid.");
+		}
+		
+		String[] va1 = v1.split("\\.");
+		String[] va2 = v2.split("\\.");
+		List<String> c1 = new ArrayList<String>(Arrays.asList(va1));
+		List<String> c2 = new ArrayList<String>(Arrays.asList(va2));
 
-	     int len = c1.size()-c2.size();
-	     if(len < 0){
-	    	 for(int i = 0; i<-len;i++){
-	    		 c1.add("0");
-	    	 }
-	     }else if(len>0){
-	    	 for(int i = 0; i<len;i++){
-	    		 c2.add("0");
-	    	 }
-	     }
-	     for(int j=0; j<c1.size();j++){
-	    	int a =  Integer.parseInt(c1.get(j));
-	    	int b =  Integer.parseInt(c2.get(j));
-	    	 if(a>b){
-	    		 res = 1;
-	    		 break;
-	    	 }else if(a<b){
-	    		 res = -1;
-	    		 break;
-	    	 }
-	     }
-	     return res;
+		int len = c1.size() - c2.size();
+		
+		if (len < 0) {
+			for (int i = 0; i < -len; i++) {
+				c1.add("0");
+			}
+		} else if (len > 0) {
+			for (int i = 0; i < len; i++) {
+				c2.add("0");
+			}
+		}
+
+		for (int j = 0; j < c1.size(); j++) {
+			int a = Integer.parseInt(c1.get(j));
+			int b = Integer.parseInt(c2.get(j));
+			
+			if (a > b) {
+				res = 1;
+				break;
+			} else if (a < b) {
+				res = -1;
+				break;
+			}
+		}
+
+		return res;
 	}
 	
-	public void assertMethodIfRequireApproval(){
-		if(isCommitteeApprover()){
-			getManagedBean().setAutoUpdate(false);	
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");	
-			//submitReassignmentForApproval(null);// to skip GPKI-INCASE 
-		}else if(isDeskOfficer()){
+	public void assertMethodIfRequireApproval() {
+		if (isCommitteeApprover()) {
+			getManagedBean().setAutoUpdate(false);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			// submitReassignmentForApproval(null);// to skip GPKI-INCASE
+		} else if (isDeskOfficer()) {
 			submitReassignmentForApproval(null);
 		}
 	}
 	
-	public void preRenderDeskReassignmentView(){
+	public void preRenderDeskReassignmentView() {
 		this.reset();
-		String page = "/xhtml/sc/quatationtender/deskOfficerMaintenance/deskOfficerMaintenance.xhtml";
 		FacesContext context = FacesContext.getCurrentInstance();
-		context.getApplication().getNavigationHandler().handleNavigation(context, null, page);
+		// 25627 for 31303 code review -start-
+		context.getApplication().getNavigationHandler().handleNavigation(context, null, PAGE_DESKOFFICER_MAINTENANCE);
+		// 25627 for 31303 code review -end-
 	}
 	
-	/**
-	 * 
-	 */
 	public void enableDisableAssign() {
 		if (getManagedBean().getSelectedUser() != null) {
 			getManagedBean().setDisableAssign(false);
