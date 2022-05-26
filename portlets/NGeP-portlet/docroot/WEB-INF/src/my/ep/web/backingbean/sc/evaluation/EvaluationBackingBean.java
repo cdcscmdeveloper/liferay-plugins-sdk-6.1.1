@@ -2476,8 +2476,11 @@ public class EvaluationBackingBean extends
 				List<ScQtCheckList> proposalChecklistList = resDTO
 						.getCheckListResultBean().getResultList();
 				//Bug #33252 related to #33110 start
-				boolean checkallitemautoscore = evaluationSO.checkbuttonAutoScore(reqDTO);
 				for (ScQtCheckList proposalCheckList : proposalChecklistList) {
+					//#33252 /27/5/2022 Start Fix
+					boolean checkallitemautoscore = evaluationSO.checkbuttonAutoScore
+							(proposalCheckList.getQtChecklistId(),evalstage.get(0));
+					//#33252 /27/5/2022 End Fix
 					// if all item is auto score --> START
 					//32426 - start
 //						if (proposalCheckList.isScoringReq()) {
@@ -17067,8 +17070,11 @@ private void retriveCommitteeRemarksList(){
 
 				List<ScQtCheckList> proposalChecklistList = resDTO
 						.getCheckListResultBean().getResultList();
-				boolean checkallitemautoscore = evaluationSO.checkbuttonAutoScore(reqDTO);
 				for (ScQtCheckList proposalCheckList : proposalChecklistList) {
+					//#33252 /27/5/2022 Start Fix
+					boolean checkallitemautoscore = evaluationSO.checkbuttonAutoScore
+							(proposalCheckList.getQtChecklistId(),evalstage.get(0));
+					//#33252 /27/5/2022 End Fix
 
 					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 							.equalsIgnoreCase(proposalCheckList
