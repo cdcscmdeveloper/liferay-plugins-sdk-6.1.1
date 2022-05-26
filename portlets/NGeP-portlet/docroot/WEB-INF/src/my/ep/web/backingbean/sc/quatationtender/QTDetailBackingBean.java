@@ -12038,7 +12038,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 		boolean bpmExistFlag = false;
 		reqDTO.setDocNumber(docNo);
 		reqDTO.setModule(module);
-		reqDTO.setState(BpmConstants.STATE_ASSIGNED);
+		//reqDTO.setState(BpmConstants.STATE_ASSIGNED);
 		reqDTO.setCtxToken(tokens);
 		BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNoandModule(reqDTO);
 		if(bpmResDTO.getWorklistVO().getWorklistItem().size() > 0){
