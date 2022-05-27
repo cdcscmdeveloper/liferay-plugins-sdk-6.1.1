@@ -12018,14 +12018,9 @@ public void retrieveDemoQtDetails(Long qtId) {
 	public void updateWIPTransaction() {
 		debugLogger("start updateWIPTransaction");
 		try {
-		    
-		    boolean bpmExistFlag = getTaskByDocNoModule(this.getManagedBean().getQt().getQtNo(), QTConstants.SC_WFTASK_COMPOSITENAME);
-			if (!bpmExistFlag) {
 			    validateQtDetails();
 			    successMessage(MessageConst.INFO_700111, ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
-			}
-			
 		} finally {
 			debugLogger("end updateWIPTransaction");
 		}
