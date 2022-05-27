@@ -220,6 +220,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScRemark> pendingRecItemizedRemark;
 	private List<ScRemark> pendingRecPackageRemark;
 	private List<ScRemark> scRemarks;
+	private List<ScRemark> newSfRemarks;
 	// #18685 - End.
 	
 	/**
@@ -2040,6 +2041,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
      */
     public void setScRemarks(List<ScRemark> scRemarks) {
       this.scRemarks = scRemarks;
+    }
+    
+    /**
+     * @return the newSfRemarks
+     */
+    public List<ScRemark> getNewSfRemarks() {
+      return newSfRemarks;
+    }
+
+    /**
+     * @param newSfRemarks the newSfRemarks to set
+     */
+    public void setNewSfRemarks(List<ScRemark> newSfRemarks) {
+      this.newSfRemarks = newSfRemarks;
     }
     //#18685 - End 
 }
