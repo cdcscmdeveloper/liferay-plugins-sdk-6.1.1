@@ -1756,13 +1756,14 @@ public void saveComplianceSample() {
 					}
 				}
 			}
-		}
 			//Bug #33252 related to #33110 fix button to view if autoscore start - #25138
 			if(this.getManagedBean().isAllItemAutoScore()){
 				checkingautoscorebutton();
 			}
 			//Bug #33252 related to #33110 fix button to view if autoscore start - #25138
 			//#32007 - checking view/evaluate button if not save package score - end
+		}
+			
 		return "/xhtml/sc/evaluation/evaluationMain.xhtml";
 
 	}
