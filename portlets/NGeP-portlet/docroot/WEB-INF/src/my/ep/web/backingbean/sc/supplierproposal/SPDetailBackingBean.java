@@ -108,7 +108,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecSuppAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.AddressType;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
@@ -5592,13 +5591,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			proposalSO = null;
 		}
 	}
-	
-	/* 27368, #17376 - start */
-	public boolean enableQtNoHyperlink() {
-		return userHasRole(new RoleCode[] { RoleCode.DESK_OFFICER, RoleCode.BPK_AUDITOR });
-	}
-	/* 27368, #17376 - end */
-	
+
 	//#25089@hatta - start
 	public void onTabChange(TabChangeEvent event){
 		if(event.getTab().getId().equals("tab1")){
