@@ -82,7 +82,10 @@ public interface QTConstants {
 	public static final String PENDING_RESPONSE_DP_QT = "/xhtml/sc/pendingresponsefordpandqt/prerenderresponsedpqtmain.xhtml";
 	public static final String ONLINE_BIDDING_STATUS_COUNT = "/xhtml/sc/bidding/onlinebiddingstatus/onlinebiddingstatusmain.xhtml";
 	public static final String VIEW_QTDETAILS_GENERAL_INFO = "/xhtml/sc/viewqtdetailsgeneralinfo/viewQtDetailsGeneralInfoMain.xhtml";
-	
+
+	// #33090, #19287 -start-
+	public static final String SUPPLIER_VIEW_QTDETAILS_GENERAL_INFO = "/xhtml/sc/viewqtdetailsgeneralinfo/supplierViewQtDetailsGeneralInfoMain.xhtml";
+	// #33090, #19287 -end-
 	// #19336, #25201, #17376, #19287 -start-
 	public static final String NAV_TO_PROPOSAL_MAIN_PAGE = "/xhtml/sc/supplierproposal/proposalcommon/supplierProposalMain.xhtml";
 	// #19336, #25201, #17376, #19287 -end-
