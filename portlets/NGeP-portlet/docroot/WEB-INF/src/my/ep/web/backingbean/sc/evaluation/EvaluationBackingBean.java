@@ -17021,26 +17021,10 @@ private void retriveCommitteeRemarksList(){
 		public void checkingautoscorebutton() {
 			IQTEvaluationSO evaluationSO = null;
 			EvaluationResDTO resDTO = new EvaluationResDTO();
-			this.getManagedBean().setEvaluatioStageActiveIndex(1);
-			this.getManagedBean().setNonScoringActiveIndex(1);//#25138
-			this.getManagedBean().setTabItemPackageIndex(1);//#25138
+			
 			try {
-				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-						.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-					if (!this.getManagedBean().getScQt().isTechEvaluationReq()) {
-						this.getManagedBean().setEvaluatioStageActiveIndex(1);
-					} else if (this.getManagedBean().getScQt()
-							.isTechEvaluationReq()) {
-						this.getManagedBean().setOneTierFinancialActiveIndex(0);
-
-					}
-				}
-
-				else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-						.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-					this.getManagedBean().setEvaluatioStageActiveIndex(0);
-					this.getManagedBean().setOneTierFinancialActiveIndex(0);
-				}
+				//Bug #33319 remove code set index
+				
 				EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 				evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
