@@ -18,10 +18,12 @@
 						<li>
 							<!-- <h:outputText value="Preparation"
 								rendered="#{evaluationBackingBean.managedBean.tempTab eq 0}" /> -->
+							<ui:remove>25037 note 568 add disabled on comm update</ui:remove>
 							<p:commandLink value="#{lbl['lbl.sc.preparation']}"
 								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'0')}"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tempTab ge 0}"
+								disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
 								styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 0 ? 'currentStep' : ''}" />
 						</li>
 
@@ -30,10 +32,12 @@
 							<li><h:outputText
 									value="#{lbl['lbl.sc.eva.compliance.stg']}"
 									rendered="#{evaluationBackingBean.managedBean.tempTab lt 1}" />
+								<ui:remove>25037 note 568 add disabled on comm update</ui:remove>
 								<p:commandLink value="#{lbl['lbl.sc.eva.compliance.stg']}"
 									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'1')}"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 1}"
+									disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 1 ? 'currentStep' : ''}" /></li>
 
 						</ui:fragment>
@@ -42,10 +46,12 @@
 							<li><h:outputText
 									value="#{lbl['lbl.sc.eva.stage']} "
 									rendered="#{evaluationBackingBean.managedBean.tempTab lt 2}" />
+								<ui:remove>25037 note 568 add disabled on comm update</ui:remove>
 								<p:commandLink value="#{lbl['lbl.sc.eva.stage']}"
 									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'2')}"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 2}"
+									disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 ? 'currentStep' : ''}" /></li>
 						</ui:fragment>
 
@@ -54,11 +60,13 @@
 							<li><h:outputText
 									value="#{lbl['lbl.sc.technical.evaluation']} "
 									rendered="#{evaluationBackingBean.managedBean.tempTab lt 2}" />
+								<ui:remove>25037 note 568 add disabled on comm update</ui:remove>
 								<p:commandLink
 									value="#{lbl['lbl.sc.technical.evaluation']}"
 									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'2')}"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 2}"
+									disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 ? 'currentStep' : ''}" /></li>
 						</ui:fragment>
 
@@ -67,10 +75,12 @@
 							<li><h:outputText
 									value="#{lbl['lbl.sc.present.demo']} "
 									rendered="#{evaluationBackingBean.managedBean.tempTab lt 3}" />
+								<ui:remove>25037 note 568 add disabled on comm update</ui:remove>
 								<p:commandLink value="#{lbl['lbl.sc.present.demo']}"
 									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'3')}"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 3}"
+									disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 ? 'currentStep' : ''}" /></li>
 
 						</ui:fragment>
@@ -81,11 +91,13 @@
 							<li><h:outputText
 									value="#{lbl['lbl.sc.financial.evaluation']}"
 									rendered="#{evaluationBackingBean.managedBean.tempTab lt 3}" />
+								<ui:remove>25037 note 568 add disabled on comm update</ui:remove>
 								<p:commandLink
 									value="#{lbl['lbl.sc.financial.evaluation']}"
 									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'4')}"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 3}"
+									disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 ? 'currentStep' : ''}" /></li>
 
 						</ui:fragment>
@@ -94,10 +106,12 @@
 						<li><h:outputText
 								value="#{lbl['lbl.sc.report']}"
 								rendered="#{evaluationBackingBean.managedBean.tempTab lt 4}" />
+							<ui:remove>25037 note 568 add disabled on comm update</ui:remove>
 							<p:commandLink value="#{lbl['lbl.sc.report']}"
 								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'4')}"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tempTab ge 4}"
+							    disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
 								styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 4 ? 'currentStep' : ''}" /></li>
 
 
@@ -105,10 +119,12 @@
 						<li><h:outputText
 								value="#{lbl['lbl.sc.committee.endorsement.evaluation']}"
 								rendered="#{evaluationBackingBean.managedBean.tempTab lt 5}" />
+							<ui:remove>25037 note 568 add disabled on comm update</ui:remove>
 							<p:commandLink value="#{lbl['lbl.sc.committee.endorsement.evaluation']}"
 								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'5')}"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tempTab ge 5}"
+								disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
 								styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5 ? 'currentStep' : ''}" />
 						</li>
 
