@@ -2549,6 +2549,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					|| Arrays.asList(QTStatusConst.QT_EVAL_FINALIZATION_GROUP).contains(status.getStatusId())){
 				if(CollectionUtils.isNotEmpty(approvalRequests)){
 					this.getManagedBean().setScQtApprovalRequest(approvalRequests.get(0));
+					//25037 #568 - start
+					if(this.getManagedBean().getScQtApproval()!=null){
+						this.getManagedBean().getScQtApproval().setRequestDate(approvalRequests.get(0).getCreatedDate());
+					}
+					//25037 #568 - end
 				}
 				this.getManagedBean().setCommitteeReviseFlow(true);
 			}
@@ -2567,19 +2572,30 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.getServiceObject(IBpmSO.class);
 			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
 			ScQt qt = this.getManagedBean().getQt();
-			bpmReqDTO.setDocNumber(qt.getQtNo());
-			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
-			BpmResponseDTO resDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
-			 for(WorklistItemVO currentVO: resDTO.getWorklistVO().getWorklistItem()){
-				 if(StringUtils.isNotBlank(currentVO.getTaskName())){
-					 if(Arrays.asList(specTaskName).contains(currentVO.getTaskName())){
-						 this.getManagedBean().setSpecUpdateInProgress(true);
-						 FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.popup.checkBeforePublish2", null))); //#15391
-						 inProgress = true;
-						 break;
-					 }
-				 }
-			 }
+			//25037 #568 - start
+			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, qt.getQtId());
+			Long statusId = (wfStatus!=null && wfStatus.getPmStatus()!=null) ? wfStatus.getPmStatus().getStatusId(): 0L;
+			if(statusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)){
+				 this.getManagedBean().setSpecUpdateInProgress(true);
+				 inProgress = true;
+			}else{
+				bpmReqDTO.setDocNumber(qt.getQtNo());
+				bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+				BpmResponseDTO resDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
+				 for(WorklistItemVO currentVO: resDTO.getWorklistVO().getWorklistItem()){
+					 if(StringUtils.isNotBlank(currentVO.getTaskName())){
+						 if(Arrays.asList(specTaskName).contains(currentVO.getTaskName())){
+							 this.getManagedBean().setSpecUpdateInProgress(true);
+							 inProgress = true;
+							 break;
+						 }
+					 } 
+				 } 
+			}
+			if(inProgress){
+				FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.popup.checkBeforePublish2", null))); //#15391
+			}
+			//25037 #568 - end
 		}
 		return inProgress;
 	}
