@@ -2074,6 +2074,7 @@ public class EvaluationMeetingBackingBean extends
 		}else if(action.equalsIgnoreCase("confirm")){
 			this.getManagedBean().setCommitteeModified(true);
     		if(evalBB!=null){
+    			evalBB.getManagedBean().setCommitteModified(true);
     			evalBB.getManagedBean().setRemoveCommitteeList(new ArrayList<ScCommitteeMember>());
     			List<ScQtCommitteeActivity> activityRemoveList = new ArrayList<ScQtCommitteeActivity>();
     			List<ScQtCommitteeActivity> activityList  = evalBB.getManagedBean().getCommitteeMemberList();
