@@ -44,6 +44,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -1141,6 +1142,30 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	private void populateLOADetails(AwardSupplierResDTO resDTO) {
 		ScLoa scLoa = resDTO.getScLoa();
+		
+		// #26247 - #33073 - Start.
+		if (null != getManagedBean().getSourceId()) {
+			retrieveLOILOAList(getManagedBean().getSourceId());
+		}
+		
+		if (null != scLoa && null != scLoa.getScLoiLoa() && null != scLoa.getScLoiLoa().getSmSupplier()){
+			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+			
+			try {
+				qtSuppFinalizationSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTSuppFinalizationSO.class);
+				
+				if (null != qtSuppFinalizationSO) {
+					SmSupplier smSupplier = qtSuppFinalizationSO.retrieveActiveDisciplinaryActionBySupplier(scLoa.getScLoiLoa().getSmSupplier());
+					scLoa.getScLoiLoa().setSmSupplier(smSupplier);
+				}
+			} finally {
+				qtSuppFinalizationSO = null;
+			}
+		}
+		// #26247 - #33073 - End.
+		
 		getManagedBean().setScLoa(scLoa);
 		getManagedBean().setScQt(resDTO.getScQt());
 
