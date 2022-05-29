@@ -868,7 +868,7 @@ public class EvaluationBackingBean extends
 				qtResDTO = evaluationSo.retriveQtDtlsById(qtReqDTO);
 				this.getManagedBean().setScQt(qtResDTO.getScQt());
 			}
-
+			if(!this.getManagedBean().isCommitteModified()){//25037 #568
 			if (null == this.getManagedBean().getScQtMeetings()) {
 				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 
@@ -979,7 +979,8 @@ public class EvaluationBackingBean extends
 				}
 
 			}
-			prepareUpdateCommitteeMember();//25037 #568
+				prepareUpdateCommitteeMember();//25037 #568
+			}
 			this.checkNoSuppliersSubmitted();//6906
 		} finally {
 			meetingSO = null;
@@ -14079,8 +14080,10 @@ private void retriveCommitteeRemarksList(){
 		ScQtCommittee qtCommittee = this.getManagedBean().getScQtCommittee();
 		//25037 #568 - start
 		EvaluationMeetingBackingBean meetingBB = this.getManagedBean().getMeetingBB();
-		meetingBB = new EvaluationMeetingBackingBean();
-		meetingBB.renewSesionObject();
+		if(meetingBB==null){
+			meetingBB = new EvaluationMeetingBackingBean();
+			meetingBB.renewSesionObject();
+		}
 		this.getManagedBean().setMeetingBB(meetingBB);
 		//25037 #568 - end
 		meetingBB.retriveMeetingDetails(scQt.getQtId(), qtCommittee.getScCommittee().getCommitteeType().getParameterCode());
@@ -17124,7 +17127,7 @@ private void retriveCommitteeRemarksList(){
 		}
 	//Bug #33252 related to #33110 fix button to view if autoscore end - #25138
 	//25037 #568 - start
-	public String submitCommitteeUpdate(){
+	public void submitCommitteeUpdate(){
 		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 		FacesScopes facesScopes = new FacesScopes();
@@ -17149,7 +17152,7 @@ private void retriveCommitteeRemarksList(){
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, message));
-		return CommonUIConst.ACKNOWLEDGE_PAGE;
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
 	//25037 #568 - end
 
