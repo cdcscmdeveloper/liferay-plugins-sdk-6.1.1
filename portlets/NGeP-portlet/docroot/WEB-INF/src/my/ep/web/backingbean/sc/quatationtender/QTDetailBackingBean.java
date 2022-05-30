@@ -12020,7 +12020,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 		try {
 			    validateQtDetails();
 			    successMessage(MessageConst.INFO_700111, ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
+						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.TRUE);
 		} finally {
 			debugLogger("end updateWIPTransaction");
 		}
