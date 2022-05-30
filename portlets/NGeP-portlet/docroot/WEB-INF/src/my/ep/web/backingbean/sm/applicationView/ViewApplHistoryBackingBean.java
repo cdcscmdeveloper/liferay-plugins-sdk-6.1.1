@@ -5,11 +5,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -520,6 +524,33 @@ public class ViewApplHistoryBackingBean extends
 				initSiteVisit();
 			}
 		}
+		//START 14530
+		// sort created date descendent
+		Collections.sort(this.getManagedBean().getSmAppl().getSmApplInquiries(),
+				new Comparator<SmApplInquiry>() {
+						public int compare(SmApplInquiry o1, SmApplInquiry o2) {
+							if (o1.getCreatedDate() == null
+									|| o2.getCreatedDate() == null)
+								return 0;
+								return o2.getCreatedDate().compareTo(
+											o1.getCreatedDate());
+								}
+							});
+					
+		if(this.getManagedBean().getSmAppl().getSmApplInquiries() != null){
+			this.getManagedBean().setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
+			for (SmApplInquiry inquiry : this.getManagedBean().getSmAppl()
+					.getSmApplInquiries()) {
+				if (!StringUtils.isBlank(inquiry.getInquirySubject())
+						&& inquiry
+								.getInquirySubject()
+								.equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
+					inquiry.getSmApplSupportDocInquiries().size();
+					this.getManagedBean().getPoSupplierInquiryHistory().add(inquiry);
+				}
+			}
+		}		
+		//END 14530
 		
 		/*
 		 * retrieve status from SM_APPL, not workflow status
@@ -1637,6 +1668,24 @@ public class ViewApplHistoryBackingBean extends
 	}
 	//11641 - END
 	
+	//14530
+	public boolean checkPoinquiry()
+	{
+		for(SmApplInquiry smapplinquiry : this.getManagedBean().getSmAppl().getSmApplInquiries()){
+			if(smapplinquiry.getInquirySubject().equalsIgnoreCase(SupplierManagementConst.INQUIRY_PO_SUPPLIER)){
+				return true;
+			}
+		}
+		return false;
+	}
+	/**
+	 * inquiry row select
+	 */
+	public void POinquiryRowSelect(SmApplInquiry applInquiry) {
+		this.getManagedBean().setPoToSupplierInquiry(applInquiry);
+		RequestContext.getCurrentInstance().update("inquiryDetails");
+	}
+	//14530
 	//#29823 - START
 	public boolean isApplPORejectedAfterApprovelSV(){
 		boolean isRejected = false;

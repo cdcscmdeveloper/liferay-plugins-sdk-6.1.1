@@ -534,6 +534,8 @@ public class SupplierManagementConst {
 	public static final String SM_APPL_PAGE_TYPE_FACTORY = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY;
 	public static final String SM_APPL_PAGE_TYPE_EQUIP = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP;
 	public static final String SM_APPL_PAGE_TYPE_SUPPORTDOCS = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS;
+	//28767 14530
+	public static final String SM_APPL_PAGE_TYPE_ANNUALINFO = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_ANNUALINFO;
 	public static final String SM_APPL_PAGE_TYPE_VIRTUAL_CERT = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT;
 	public static final String SM_APPL_PAGE_TYPE_TRACKING_DIARY = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY;
 	public static final String SM_APPL_PAGE_TYPE_PO_APPR_DEC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_PO_APPR_DEC;
