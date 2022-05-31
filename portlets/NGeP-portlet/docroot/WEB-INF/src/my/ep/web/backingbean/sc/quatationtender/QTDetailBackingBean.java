@@ -1178,6 +1178,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setGenInfo(true);
 			//#29474 - end
 			
+			//9019 - Start (Harun) WIP Transaction add information message
+			if(!getTaskByDocNoModule(this.getManagedBean().getQt().getQtNo(), QTConstants.SC_WFTASK_COMPOSITENAME)){
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+						MessageUtils.getMessage(MessageConst.INFO_700110 , 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 
+			}
+			//9019 - End (Harun) 
+			
 			boolean isValidFor25037 = this.validateSupportedTask(scQt.getQtNo(), QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
 			this.getManagedBean().setValidFor25037(isValidFor25037);
 			debugLogger("end of editQuationTenderDetails");
@@ -7196,7 +7204,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} else {
              //9019 null remark in UI it showing two editable textarea to prevent that only value be pass to below method 
                 List<ScQtRemark> remarks = null;
-				if (CollectionUtils.isNotEmpty(scQt.getScQtRemarks()) && StringUtils.isNotEmpty(scQt.getScQtRemarks().get(0).getRemark())) {
+				if (CollectionUtils.isNotEmpty(scQt.getScQtRemarks())
+						&& StringUtils.isNotEmpty(scQt.getScQtRemarks().get(0).getRemark())) {
 					remarks = scQt.getScQtRemarks();
 				}
 
@@ -11952,4 +11961,35 @@ public void retrieveDemoQtDetails(Long qtId) {
 			return false;
 	}
 	//#11299 End Vinod
+	
+	//9019 - Start (Harun) WIP transaction Pending QT Submission
+	public void updateWIPTransaction() {
+		debugLogger("start updateWIPTransaction");
+		try {
+			    validateQtDetails();
+			    successMessage(MessageConst.INFO_700111, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.TRUE);
+		} finally {
+			debugLogger("end updateWIPTransaction");
+		}
+	}
+		
+	public boolean getTaskByDocNoModule(String docNo, String module) {
+		IBpmSO bpmSO =(IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		Object tokens = bpmSO.authenticate(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.BPM_PRINCIPAL));
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		boolean bpmExistFlag = false;
+		reqDTO.setDocNumber(docNo);
+		reqDTO.setModule(module);
+		//reqDTO.setState(BpmConstants.STATE_ASSIGNED);
+		reqDTO.setCtxToken(tokens);
+		BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNoandModule(reqDTO);
+		if(bpmResDTO.getWorklistVO().getWorklistItem().size() > 0){
+			bpmExistFlag = true;
+		}else{
+			bpmExistFlag = false;
+		}
+		return bpmExistFlag;
+	}
+	//9019 - End (Harun) 
 }
