@@ -47,7 +47,7 @@
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
 					disabled="true" />
 			</td>
-			<ui:remove> Bug #30600 , #31033 - start </ui:remove>	
+			<!-- Bug #30600 , #31033, #33073 Start -->
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.action.headerLbl']}" />
 			</td>
@@ -55,18 +55,17 @@
 			    <c:forEach var="actionDA" items="#{qtLOABackingBean.managedBean.scLoiLoaList}">
 				  <c:if test="#{actionDA.smSupplier.supplierId eq lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier.supplierId}">
 				     <p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-							rendered="#{actionDA.smSupplier.disciplinaryActions}"
-							action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(actionDA.smSupplier)}" 
+							rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier.disciplinaryActions}"
+							action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier)}" 
 							process="@this" partialSubmit="true" update=":form">
 								<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
 					 </p:commandLink><p:spacer width="2"/>
-					 <h:outputText rendered="#{!actionDA.smSupplier.disciplinaryActions}"
+					 <h:outputText rendered="#{!lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier.disciplinaryActions}"
 						 value="#{lbl['lbl.cm.dialog.cofirm.no']}" /><p:spacer width="2"/>
-					 <ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" /> 
 			      </c:if>
 				</c:forEach>
 			</td>
-			<ui:remove> Bug #30600 , #31033 - end </ui:remove>	
+		    <!-- Bug #30600 , #31033, #33073 End -->
 		</tr>
 
 		<tr>
