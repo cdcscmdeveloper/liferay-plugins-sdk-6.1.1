@@ -296,6 +296,19 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 		
 		super.downloadFile(downloadPath.toString());
 	}
+	
+	// 9442 - START
+	public String excludeLevelCodeSupplier(){
+		StringBuilder sb = new StringBuilder();
+		if(getManagedBean().getSmSupplier().getSmSupplierBusinesses() != null){
+			for(SmSupplierBusiness suppBusiness: getManagedBean().getSmSupplier().getSmSupplierBusinesses()){
+				sb.append("|levelCode^" +suppBusiness.getPmBusinessNature().getLevelCode());
+			}
+		}
+		log.info("9442- excludeLevelCodeSupplier():"+sb.toString());
+		return sb.toString();
+	}
+	// 9442 - END
 }
 
 
