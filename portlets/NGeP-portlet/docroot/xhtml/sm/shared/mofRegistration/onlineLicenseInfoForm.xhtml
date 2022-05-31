@@ -140,18 +140,21 @@
 						value="#{lbl['lbl.sm.suppDoc.document.hdrCpyRmrks']}"
 						style="float: left;white-space: normal;" />
 					<!--#33240-START-->
+					<ui:repeat var="applDocs" value="#{onlineLicenseTable.smApplDocFiles}">
 					<h:commandLink ajax="false"
-						value="#{onlineLicenseTable.smApplDocFiles[0].fileName}"
-						rendered="#{not empty onlineLicenseTable.smApplDocFiles and !onlineLicenseTable.pmDocument.hardCopyReq}">
+						value="#{applDocs.fileName}"
+						rendered="#{not empty applDocs and !onlineLicenseTable.pmDocument.hardCopyReq}">
 						<p:fileDownload
-							value="#{backingBean.commonDownload(onlineLicenseTable.smApplDocFiles[0].filePath,onlineLicenseTable.smApplDocFiles[0].fileName,onlineLicenseTable.smApplDocFiles[0].fileName)}" />
+							value="#{backingBean.commonDownload(applDocs.filePath,applDocs.fileName,applDocs.fileName)}" />
 					</h:commandLink>
 					<p:spacer width="10" />
 					<p:commandLink 			
-						rendered="#{fn:length(onlineLicenseTable.smApplDocFiles[0].fileName) > 1}"
-						action="#{backingBean.onDeleteMandatoryLicenseFile(onlineLicenseTable.smApplDocFiles[0],index)}" update="@form">
+						rendered="#{fn:length(applDocs.fileName) > 1}"
+						action="#{backingBean.onDeleteMandatoryLicenseFile(applDocs,index)}" update="@form">
 						<p:graphicImage value="/css/images/design/trash.png" />
 					</p:commandLink>
+					<br/>
+					</ui:repeat>
 					<!--#33240-END-->
 				</p:column>
 			</p:dataTable>
