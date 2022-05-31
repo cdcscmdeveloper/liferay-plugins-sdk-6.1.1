@@ -1993,8 +1993,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		StreamedContent graphicText = null;
 		ByteArrayOutputStream os = null;
 		try {
-			BufferedImage bufferedImg = new BufferedImage(100, 25,
+			//#33136 - start
+			BufferedImage bufferedImg = new BufferedImage(110, 25,
 					BufferedImage.TYPE_BYTE_BINARY);
+			//#33136 - end
 			Graphics2D g2 = bufferedImg.createGraphics();
 
 			String captchaText = RandomStringUtils.randomAlphanumeric(6);
