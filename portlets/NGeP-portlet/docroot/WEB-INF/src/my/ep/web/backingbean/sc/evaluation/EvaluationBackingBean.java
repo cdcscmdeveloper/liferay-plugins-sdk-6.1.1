@@ -7753,6 +7753,11 @@ public void saveComplianceSample() {
 								// this.getManagedBean().setComplianceActiveIndex(2);
 								outputTab = 2;
 								this.getManagedBean().setTabTechnicalIndex(2);
+									//#33187 Start - fix next skip if disable Technical
+									if(this.getManagedBean().getNoSupplierPackageExist()){
+										this.getManagedBean().setEvaluatioStageActiveIndex(2);
+									}
+									//#33187 End - fix next skip if disable Technical
 								}else{
 									retriveSummaryEvaluationStage();
 									outputTab = 2;
@@ -7916,6 +7921,11 @@ public void saveComplianceSample() {
 							}else{
 								retriveFinancialEvaluationStagePackage();//#25138-Ahmaa
 								this.getManagedBean().setTabFinancialIndex(2);
+								//#33187 Start - fix next skip if disable financial
+								if(this.getManagedBean().getNoSupplierPackageExist()){
+									this.getManagedBean().setOneTierFinancialActiveIndex(2);
+								}
+								//#33187 End - fix next skip if disable financial
 							}
 							//#25138 - one item only - end
 							outputTab = 3;
