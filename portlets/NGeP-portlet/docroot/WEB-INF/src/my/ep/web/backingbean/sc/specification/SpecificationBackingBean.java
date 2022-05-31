@@ -19021,9 +19021,6 @@ if(null!=allTechnicalChecklist){
 			this.getManagedBean().setDemoAction(false);
 			List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
 			List<ScQtCheckList> newSt2technicalproposalList = new ArrayList();
-			if (null != this.getManagedBean().getQt()
-					&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this.getManagedBean().getQt()
-							.getEvaluationType()) && this.getManagedBean().getQt().isDemoRequired()) {
 				boolean demoList = false;
 
 				for (ScQtCheckList cl : st2technicalproposalList) {
@@ -19037,6 +19034,9 @@ if(null!=allTechnicalChecklist){
 						}
 					}
 				}
+			if (null != this.getManagedBean().getQt()
+					&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this.getManagedBean().getQt()
+							.getEvaluationType()) && this.getManagedBean().getQt().isDemoRequired()) {					
 
 				if (!demoList) {
 					ScQtCheckList st2technicalproposalList1 = createSpecList("2");
@@ -19070,7 +19070,7 @@ if(null!=allTechnicalChecklist){
 
 				}
 			} else if(ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this.getManagedBean().getQt()
-					.getEvaluationType()) && !this.getManagedBean().getQt().isDemoRequired()){ // #28784				
+					.getEvaluationType()) && !this.getManagedBean().getQt().isDemoRequired() && demoList){ // #28784				
 				
 				for (ScQtCheckList cl : st2technicalproposalList) {
 					if(null != cl.getDefinationType() && null != cl.getDefinationType().getParameterCode()){
@@ -19083,18 +19083,6 @@ if(null!=allTechnicalChecklist){
 				st2technicalproposalList = newSt2technicalproposalList;
 				this.getManagedBean().setScQtCheckSt2techProposal(st2technicalproposalList);
 			}
-			
-			for (ScQtCheckList cl : st2technicalproposalList) {
-				if(null != cl.getDefinationType() && null != cl.getDefinationType().getParameterCode()){
-					if (cl.getDefinationType().getParameterCode()
-							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-						this.getManagedBean().setDemoSampleTitleEnable(true);
-					} else if(cl.getDefinationType().getParameterCode()
-							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE)){
-						this.getManagedBean().setDemoSampleTitleEnable(true);						
-			}
-				}
-			}	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
