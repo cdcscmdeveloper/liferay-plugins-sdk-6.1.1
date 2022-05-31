@@ -123,8 +123,10 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 						getSupplier().getEpNo(), challengeQues1);
 			} else {
 				logger.info("getChallengeQuestions | getCertIssuer-DG : " + getCertIssuer());
+				//#30425 - Start
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(
 						getLoginUser().getIdentificationNo(), getSupplier().getEpNo());
+				//#30425 - End
 			}
 			setChallengeQues1(challs.get(0));
 			logger.info("::: #25061 before spki_dlg.show");
@@ -398,8 +400,10 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 					getLoginUser().getIdentificationNo(),
 					getSupplier().getEpNo(), challengeQues1);
 		} else {
+			//#30425 - Start
 			challs = DigiCertHelper.getInstance().getChallengeQuestion(
 					getLoginUser().getIdentificationNo(), getSupplier().getEpNo());
+			//#30425 - End
 		}
 		setChallengeQues1(challs.get(0));
 	}
