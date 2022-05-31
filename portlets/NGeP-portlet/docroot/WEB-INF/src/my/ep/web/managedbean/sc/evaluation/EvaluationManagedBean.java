@@ -22,7 +22,9 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
@@ -518,7 +520,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean autoUpdate = Boolean.TRUE;
 	
 	//#25037-START
-	private EvaluationMeetingBackingBean meetingBB;
+	private EvaluationMeetingBackingBean meetingBB;//25037 #568
+	private List<ScCommitteeMember> committeeMemberActivity;//25037 #568
+	private List<ScCommitteeMember> removeCommitteeList;//25037 #568
+	private ScQtApprovalRemark scQtApprovalRemark;//25037 #568
 	//#25037-END
 	
 	private boolean hasPreviousMeeting;//#29473
@@ -4236,4 +4241,30 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.noSupplierPackageExist = noSupplierPackageExist;
 	}
 	////Bug #33178 -END
+
+	//25037 #568 - start
+	public ScQtApprovalRemark getScQtApprovalRemark() {
+		return scQtApprovalRemark;
+	}
+
+	public void setScQtApprovalRemark(ScQtApprovalRemark scQtApprovalRemark) {
+		this.scQtApprovalRemark = scQtApprovalRemark;
+	}
+
+	public List<ScCommitteeMember> getRemoveCommitteeList() {
+		return removeCommitteeList;
+	}
+
+	public void setRemoveCommitteeList(List<ScCommitteeMember> removeCommitteeList) {
+		this.removeCommitteeList = removeCommitteeList;
+	}
+
+	public List<ScCommitteeMember> getCommitteeMemberActivity() {
+		return committeeMemberActivity;
+	}
+
+	public void setCommitteeMemberActivity(List<ScCommitteeMember> committeeMemberActivity) {
+		this.committeeMemberActivity = committeeMemberActivity;
+	}
+	//25037 #568 - end
 }

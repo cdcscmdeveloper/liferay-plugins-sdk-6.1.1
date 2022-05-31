@@ -174,6 +174,7 @@ import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.tpl.TemplateSpecBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.evaluation.EvaluationManagedBean;
@@ -871,7 +872,7 @@ public class EvaluationBackingBean extends
 				qtResDTO = evaluationSo.retriveQtDtlsById(qtReqDTO);
 				this.getManagedBean().setScQt(qtResDTO.getScQt());
 			}
-
+			if(!this.getManagedBean().isCommitteModified()){//25037 #568
 			if (null == this.getManagedBean().getScQtMeetings()) {
 				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 
@@ -926,6 +927,7 @@ public class EvaluationBackingBean extends
 		    			resDTO.getQtCommittee().getCommitteeActivities().addAll(addedActivities);
 						Collections.sort(resDTO.getQtCommittee().getCommitteeActivities());
 						this.getManagedBean().setCommitteeMemberList(resDTO.getQtCommittee().getCommitteeActivities());
+						this.getManagedBean().setCommitteeMemberActivity(sccommittee.getScCommitteeMembers());//25037 #568
 					}else {
 						List<ScQtCommitteeActivity> localList = new ArrayList<ScQtCommitteeActivity>();
 						
@@ -953,7 +955,7 @@ public class EvaluationBackingBean extends
 
 						Collections.sort(localList);
 						this.getManagedBean().setCommitteeMemberList(localList);
-
+						this.getManagedBean().setCommitteeMemberActivity(sccommittee.getScCommitteeMembers());//25037 #568
 					}
 
 				}
@@ -980,6 +982,8 @@ public class EvaluationBackingBean extends
 									.getMeetingAttendances());
 				}
 
+			}
+				prepareUpdateCommitteeMember();//25037 #568
 			}
 			this.checkNoSuppliersSubmitted();//6906
 		} finally {
@@ -14059,8 +14063,14 @@ private void retriveCommitteeRemarksList(){
 	public void prepareUpdateCommitteeMember(){
 		ScQt scQt = this.getManagedBean().getScQt();
 		ScQtCommittee qtCommittee = this.getManagedBean().getScQtCommittee();
-		EvaluationMeetingBackingBean meetingBB = new EvaluationMeetingBackingBean();
+		//25037 #568 - start
+		EvaluationMeetingBackingBean meetingBB = this.getManagedBean().getMeetingBB();
+		if(meetingBB==null){
+			meetingBB = new EvaluationMeetingBackingBean();
 		meetingBB.renewSesionObject();
+		}
+		this.getManagedBean().setMeetingBB(meetingBB);
+		//25037 #568 - end
 		meetingBB.retriveMeetingDetails(scQt.getQtId(), qtCommittee.getScCommittee().getCommitteeType().getParameterCode());
 		meetingBB.getManagedBean().setEvalBB(this);
 		meetingBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
@@ -17111,4 +17121,34 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 	//Bug #33252 related to #33110 fix button to view if autoscore end - #25138
+	//25037 #568 - start
+	public void submitCommitteeUpdate(){
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+		FacesScopes facesScopes = new FacesScopes();
+		EvaluationReqDTO reqDTO = evaluationPreparation();
+		reqDTO.setCommType(this.getManagedBean().getCommitteeType());
+		reqDTO.setCommitteeModified(true);
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setTaskName(this.getManagedBean().getTaskName());
+		reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+		reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
+		reqDTO.setPmUser(facesScopes.getUserSessionBean());
+		reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
+		reqDTO.setDeletedCommitteeMembers(this.getManagedBean().getRemoveCommitteeList());
+		reqDTO.setScQtApprovalRemark(this.getManagedBean().getScQtApprovalRemark());
+		evaluationSO.updateCommitteeBpmAction(reqDTO);
+		
+		ScQt qt = getManagedBean().getScQt(); 
+		String committeeType = this.getManagedBean().getCommitteeType();
+		committeeType = StringUtils.isEmpty(committeeType) ? "" : this.getParameterDesc(ParameterConst.COMMITTE_TYPE, committeeType);
+		String procumentMode = this.getParameterDesc(qt.getProcurementMode());
+		String message = MessageUtils.getMessage(MessageConst.INFO_760504, new String[]{committeeType, procumentMode, qt.getQtNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, message));
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+	}
+	//25037 #568 - end
+
 }
