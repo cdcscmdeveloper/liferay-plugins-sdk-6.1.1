@@ -1390,7 +1390,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		} catch (Exception e) {
 			// Cannot open connection, maybe local file
 			docInputStream = new FileInputStream(filePath);
-			
+			log.info("docInputStream==="+docInputStream);
 			log.info("Error found while downloading file "+filePath+" : "+e);
 			log.error(e);
 			e.printStackTrace();
