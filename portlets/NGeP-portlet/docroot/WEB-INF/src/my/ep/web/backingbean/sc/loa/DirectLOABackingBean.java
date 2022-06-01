@@ -10482,7 +10482,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		int itemCount = 0;
 		StringBuffer itemsList = new StringBuffer();
 		
-		if(this.getManagedBean().getScLoa().getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)){
+		if(this.getManagedBean().getScLoa().getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_DIRECT_NEGO)){
 			for(ScLoiLoaItem loiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()){
 				specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
 				specReqDto.setScQt(this.getManagedBean().getScQt());
