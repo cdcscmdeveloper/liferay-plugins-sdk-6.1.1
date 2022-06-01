@@ -10482,25 +10482,27 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		int itemCount = 0;
 		StringBuffer itemsList = new StringBuffer();
 		
-		for(ScLoiLoaItem loiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()){
-			specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
-			specReqDto.setScQt(this.getManagedBean().getScQt());
-			specReqDto.setScLoiLoaItem(loiLoaItem);
-			specReqDto.setSpecSearchForApp(true);
-			TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
+		if(this.getManagedBean().getScLoa().getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)){
+			for(ScLoiLoaItem loiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()){
+				specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
+				specReqDto.setScQt(this.getManagedBean().getScQt());
+				specReqDto.setScLoiLoaItem(loiLoaItem);
+				specReqDto.setSpecSearchForApp(true);
+				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
 			
-			int newSupplierOffer =0;
-			for(TplSpecAnswer tplSpecAnswer: templateSpecResDTO.getSpecAnswerList()){
-				if(StringUtils.isNotBlank(tplSpecAnswer.getNewSupplierOffer())){
-					newSupplierOffer++;
+				int newSupplierOffer =0;
+				for(TplSpecAnswer tplSpecAnswer: templateSpecResDTO.getSpecAnswerList()){
+					if(StringUtils.isNotBlank(tplSpecAnswer.getNewSupplierOffer())){
+						newSupplierOffer++;
+					}
+				}
+				if(!loiLoaItem.isComplete() && (newSupplierOffer>0||StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification()))){
+					itemCount++;
+					itemsList.append(itemCount+". "+loiLoaItem.getScRequestItem().getItemName()+"\n");
 				}
 			}
-			if(!loiLoaItem.isComplete() && (newSupplierOffer>0||StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification()))){
-				itemCount++;
-				itemsList.append(itemCount+". "+loiLoaItem.getScRequestItem().getItemName()+"\n");
-			}
 		}
-		if(itemCount>0 && this.getManagedBean().getScLoa().getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_DIRECT_NEGO)){
+		if(itemCount>0){
 			throw new EpException(MessageConst.ERROR_775176, new String[] {itemsList.toString()});
 		}
 		if (CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
@@ -10552,9 +10554,9 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 	}
 	public void resetAllNewOfferedSpecificationSubmit(){
 		for(TplSpecAnswer answer : this.getManagedBean().getTplSpecAnswerList()){
-			answer.setNewSupplierOffer("");
+			answer.setNewSupplierOffer(null);
 		}
-		this.getManagedBean().setNewSupplierJustification("");
+		this.getManagedBean().setNewSupplierJustification(null);
 		saveSupplierSpecification(false);
 	}
 	/*#29007 End Vinod*/
