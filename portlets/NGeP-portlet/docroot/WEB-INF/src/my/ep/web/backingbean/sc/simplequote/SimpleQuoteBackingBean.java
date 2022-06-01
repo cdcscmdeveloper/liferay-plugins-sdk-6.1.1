@@ -138,6 +138,7 @@ import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
@@ -8363,4 +8364,16 @@ public class SimpleQuoteBackingBean extends
 	    
 	    
 		//#5426 - end
+	    
+	    //29832 start
+		public String excludeLevelCodeSupplier(){
+			StringBuilder sb = new StringBuilder();
+			if (getManagedBean().getScQuote().getBusinessNatureCriterias() != null) {
+				for(ScBusinessNatureQuoteCriteria quoteCriteria: getManagedBean().getScQuote().getBusinessNatureCriterias() ){
+					sb.append("|levelCode^" +quoteCriteria.getPmBusinessNature().getLevelCode());
+				}
+			}
+			return sb.toString();
+		}
+	    //29832 - end
 }
