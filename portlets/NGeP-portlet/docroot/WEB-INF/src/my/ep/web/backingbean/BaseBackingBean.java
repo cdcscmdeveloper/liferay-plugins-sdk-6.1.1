@@ -1368,7 +1368,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	public void commonDownloadUtil(String filePath, String displayFileName) throws IOException{
-		
+		log.info("START TO DOWNLOAD FILE");
 		PortletResponse resp = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
@@ -1417,7 +1417,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				docInputStream.close();	
 			}
 		}
-
+		log.info("END TO DOWNLOAD FILE");
 	}
 	
 	private String getMimeType(String fileName) {
