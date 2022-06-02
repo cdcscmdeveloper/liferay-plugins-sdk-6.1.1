@@ -523,7 +523,8 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		String fileType = FilenameUtils.getExtension(path);
 		
 		String displayName = this.getReportName(rptRequest.getReportCode());
-		
+		System.out.print("attachmentDownload------"+new File(dir).getAbsolutePath());
+		System.out.print("attachmentDownload------"+displayName);
 		logger.info(new File(dir).getAbsolutePath());
 		logger.info(displayName);
 		this.commonDownloadUtil(path, displayName + "." + fileType);
