@@ -13,12 +13,12 @@
 			escape="false" />
 
 		<table style="width: 100%">
-			<!-- 20220530@syazani - Bug #30316 - Maklumat pembekal tidak memaparkan maklumat yang betul - Start -->
 			<tr style="width: 200px;">
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.business.company.type']}" /></td>
+			
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.business.company.type']}" /></td> <!-- 20220530@syazani - Bug #30316 -->
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{supplierProposalDetailBackingBean.managedBean.businessType}" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.business.company.regno']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.business.company.regno']}" /></td> <!-- 20220530@syazani - Bug #30316 -->
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smSupplier.regNo}" /></td>
 			</tr>
@@ -39,11 +39,10 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{qtProposal.mofNo}" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.epno']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.epno']}" /></td> <!-- 20220530@syazani - Bug #30316 -->
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smSupplier.epNo}" /></td>
 			</tr>
-			<!-- 20220530@syazani - Bug #30316 - Maklumat pembekal tidak memaparkan maklumat yang betul - End -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mof.eff.date']}" /></td>
 				<td><p:inputText value="#{supplierProposalDetailBackingBean.getSmMofAccountByMofNo(qtProposal.mofNo).effDate}"
