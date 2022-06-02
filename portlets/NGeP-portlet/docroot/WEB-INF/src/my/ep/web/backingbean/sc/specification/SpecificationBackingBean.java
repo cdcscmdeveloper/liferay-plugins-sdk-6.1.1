@@ -10591,7 +10591,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							RequestContext
 									.getCurrentInstance()
 									.execute(
-											"technicalStandardChecklistDlgsSubmit.show()");
+											"technicalStandardChecklistDlgsSubmit.hide()"); // Bug #33269
 						}
 						boolean financial = validateFinancialStandardCheckListSubmit();
 						if (!financial
