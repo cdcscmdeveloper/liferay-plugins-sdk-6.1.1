@@ -134,6 +134,16 @@ public class MolPayServlet extends HttpServlet {
 			e.printStackTrace(); 
 		}
 		// #32422 END
+		//#33137 - START
+		JSONObject obj2;
+		String molpayTransId = null;
+		try { 
+			obj2 = new JSONObject(extraP1); 
+			molpayTransId = obj2.getString("MOLPay_tranId") != null ? obj2.getString("MOLPay_tranId") : null;
+		} catch (JSONException e) { 
+			e.printStackTrace(); 
+		}
+		//#33137 - END
 		if(nbcb != null){
 			Long ordId = Long.valueOf(orderId);
 			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
@@ -282,7 +292,18 @@ public class MolPayServlet extends HttpServlet {
 					//32422 END
 					log.info("channel---------"+channel);
 					paymentOrder.setChannelName(channel);
+					
+					//#33137 - start
+					if(channel.equalsIgnoreCase("FPX")){
 					smPaymentRes.setTransactionId(tranID);
+						log.info("SET TRANSACTION ID--------------------33137"+tranID);
+					}else{
+						smPaymentRes.setTransactionId(molpayTransId);
+						log.info("SET MOLPAY TRANS ID--------------------33137"+molpayTransId);
+					}
+					smPaymentRes.setMolpayTransactionId(molpayTransId);
+					smPaymentRes.setFpxTranId(tranID);
+					//#33137 - end
 					smPaymentRes.setErrorCode(errorCode);
 					smPaymentRes.setErrorDesc(errorDesc);
 					//32422 START

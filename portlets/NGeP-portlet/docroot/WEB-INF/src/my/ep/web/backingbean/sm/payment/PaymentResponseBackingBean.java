@@ -415,6 +415,17 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		}
 		// #32422 END
 
+		//#33137 - start
+		JSONObject obj2;
+		String molpayTransId = null;
+		try { 
+			obj2 = new JSONObject(extraP1); 
+			molpayTransId = obj2.getString("MOLPay_tranId") != null ? obj2.getString("MOLPay_tranId") : null;
+		} catch (JSONException e) { 
+			e.printStackTrace(); 
+		}
+		//#33137 - end
+
 		Long ordId = null;
 		if(orderId!= null){
 			ordId = Long.valueOf(orderId);
@@ -591,7 +602,17 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				//32422 END
 				log.info("channel--------------------26307"+channel);
 				paymentOrder.setChannelName(channel);
+				//#33137 - start
+				if(channel.equalsIgnoreCase("FPX")){
 				smPaymentRes.setTransactionId(tranID);
+					log.info("SET TRANSACTION ID--------------------33137"+tranID);
+				}else{
+					smPaymentRes.setTransactionId(molpayTransId);
+					log.info("SET MOLPAY TRANS ID--------------------33137"+molpayTransId);
+				}
+				smPaymentRes.setMolpayTransactionId(molpayTransId);
+				smPaymentRes.setFpxTranId(tranID);
+				//#33137 - end
 				smPaymentRes.setErrorCode(errorCode);
 				smPaymentRes.setErrorDesc(errorDesc);
 				//32422 START
