@@ -3550,13 +3550,6 @@ public class QTDetailBackingBean extends
 										// bug #30435, Enhancement #25077 - start
 										if (null != getManagedBean().getPmParam()) {
 											approvalRequest.get(i).setApproverAction(getManagedBean().getPmParam());
-										} else {
-											PmParameter approveParam = getQTDetailSO().getPmParameterByTypeAndCode(
-													ParameterTypeConst.APPROVAL_DECISION_TYPE,
-													ParameterConst.APPROVAL_DECISION_TYPE_APPROVED);
-											getManagedBean().setPmParam(approveParam);
-											
-											approvalRequest.get(i).setApproverAction(approveParam);
 										}
 
 										if (null != getManagedBean().getScQtApprovalReqAttachement()) {
