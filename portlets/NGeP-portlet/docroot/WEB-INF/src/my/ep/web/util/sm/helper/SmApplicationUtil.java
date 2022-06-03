@@ -12906,10 +12906,26 @@ public class SmApplicationUtil {
 	    	//#30444 START--25082021--
 	    	if (bean.getBusinessTypeVal()     
 					.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)
-	    		&& !alreadyHadEquityOwnerAsStaff(bean.getSmAppl(), bean.getSelectedShareHolder().getPersonnelId())){	
+	    		&& !alreadyHadEquityOwnerAsStaff(bean.getSmAppl(), bean.getSelectedShareHolder().getPersonnelId())){
+	    		//#30444 START--03062022--
+	    		if(bean.getSelectedShareHolder().isSemiProf()){
+					bean.getSelectedShareHolder().setProf(false);
+					bean.getSelectedShareHolder().setManagement(false);
+					bean.getSelectedShareHolder().setEquityOwner(false);
+					bean.getSelectedShareHolder().setDisableStaff(true);
+					bean.getSelectedShareHolder().setDisableProf(true);
+					bean.getSelectedShareHolder().setDisableManagement(true);
+					bean.getSelectedShareHolder().setDisableEquityOwner(true);
+	    		}else{
+					bean.getSelectedShareHolder().setDisableProf(false);
+					bean.getSelectedShareHolder().setDisableManagement(false);
+					bean.getSelectedShareHolder().setDisableEquityOwner(false);          
+	    		}
+	    		//#30444 END--03062022--
 	    		if (!bean.getSelectedShareHolder().isEquityOwner()
 						&& (bean.getSelectedShareHolder().isManagement()
-						|| bean.getSelectedShareHolder().isProf())) {
+						|| bean.getSelectedShareHolder().isProf()
+						|| bean.getSelectedShareHolder().isSemiProf())) { //#30444 --03062022--
 	    			bean.getSelectedShareHolder().setClerical(false); //#30444 --17022022--
 					bean.getSelectedShareHolder().setDisableStaff(true);
 	    		}else{
@@ -12928,21 +12944,6 @@ public class SmApplicationUtil {
 		    			bean.getSelectedShareHolder().setDisableSemiProf(false);	
 		    		}
 		    	}
-		    	if(bean.getSelectedShareHolder().isSemiProf()){
-					bean.getSelectedShareHolder().setClerical(false);
-					bean.getSelectedShareHolder().setProf(false);
-					bean.getSelectedShareHolder().setManagement(false);
-					bean.getSelectedShareHolder().setEquityOwner(false);
-					bean.getSelectedShareHolder().setDisableStaff(true);
-					bean.getSelectedShareHolder().setDisableProf(true);
-					bean.getSelectedShareHolder().setDisableManagement(true);
-					bean.getSelectedShareHolder().setDisableEquityOwner(true);
-	    		}else{
-	    			bean.getSelectedShareHolder().setDisableStaff(false);
-					bean.getSelectedShareHolder().setDisableProf(false);
-					bean.getSelectedShareHolder().setDisableManagement(false);
-					bean.getSelectedShareHolder().setDisableEquityOwner(false);          
-	    		}
 	    	} else {
 				 if(bean.getSelectedShareHolder().isSemiProf()) {
 						bean.getSelectedShareHolder().setClerical(false);
