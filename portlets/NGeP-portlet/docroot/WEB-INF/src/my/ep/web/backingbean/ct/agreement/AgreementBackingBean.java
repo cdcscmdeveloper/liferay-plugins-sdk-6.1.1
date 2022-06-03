@@ -1158,10 +1158,23 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			
 			//#30453 start
 			for (PmUser pmUser : list) {
-				items[i++] = new SelectItem(pmUser.getUserId(),new StringBuilder().append( pmUser.getSalutationCode().getSalutationName() ).append( " " ).append(pmUser.getUserName()).toString());
+				items[i++] = new SelectItem(
+						pmUser.getUserId(),
+						pmUser.getSalutationCode()!=null ?
+								new StringBuilder().append(	pmUser.getSalutationCode().getSalutationName() ).append( " " ).append(pmUser.getUserName()).toString() :
+									new StringBuilder().append(pmUser.getUserName()).toString()
+						
+						);
 			}
 			//#30453 end
-		} finally {
+		} 
+		//#30453 start
+		catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+		//#30453 end
+		finally {
 			userSO = null;
 			reqDTO = null;
 			resDTO = null;
