@@ -3386,6 +3386,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("beforeSavePostLister");
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
 		CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
+ 		
+		//32520 - Start
+		if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getScRequestSupplierItem() != null
+				&& requestNoteDtl.getScRequestNote() != null){
+				log.info("Bug 32520 : Method beforeSavePostLister ----> rnNo (" +requestNoteDtl.getScRequestNote().getRequestNoteNo() +") ");
+				log.info("Bug 32520 : " + "rnDtlsId (" + requestNoteDtl.getRequestNoteDtlId() + ") " 
+					     + "reqItemId (" + requestNoteDtl.getRequestItem().getRequestNoteItemId() + ") "
+					     + "reqSuppItemId (" + requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") "
+					     + "----> rnNo (" + requestNoteDtl.getScRequestNote().getRequestNoteNo() + ")");
+		}	
+		//32520 - End
+		
 		if(requestNoteDtl.getvCmSupplierItem() != null && requestNoteDtl.getvCmSupplierItem().getDocId() >0) {
             
 			catReqDTO.setSupplierItemId(requestNoteDtl.getvCmSupplierItem().getDocId());
@@ -3426,6 +3438,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("afterSavePostLister");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 
+		//32520 - Start
+		if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getScRequestSupplierItem() != null
+				&& requestNoteDtl.getScRequestNote() != null){
+			log.info("Bug 32520 : Method afterSavePostLister ----> rnNo (" +requestNoteDtl.getScRequestNote().getRequestNoteNo() +") ");
+			log.info("Bug 32520 : " + "rnDtlsId (" + requestNoteDtl.getRequestNoteDtlId() + ") " 
+			         + "reqItemId (" + requestNoteDtl.getRequestItem().getRequestNoteItemId() + ") "
+			         + "reqSuppItemId (" + requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") "
+			         + "----> rnNo (" + requestNoteDtl.getScRequestNote().getRequestNoteNo() + ")");
+		}	
+		//32520 - End
+		
 		if(requestNoteDtl.getScRequestSupplierItem() != null && requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() != null){
 			ScRequestSupplierItem requestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
 			requestNoteReqDTO.setSupplierItemId(requestSupplierItem.getRequestSupplierItemId());
