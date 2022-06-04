@@ -10998,6 +10998,15 @@ public class SpecificationBackingBean extends
 			boolean sample = false;
 			boolean demo = false;
 			for (ScQtCheckList checkList : techCheckList) {
+			
+				//Bug #33358 start
+				ScQtScoreWeightage weight = checkList.getQtScoreWeightage();
+				if (null != weight && !checkList.isScoringReq()){
+					weight.setWeightage(null);
+					checkList.setQtScoreWeightage(weight);
+				}
+				//Bug #33358 end
+				
 				if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(checkList
 						.getDefinationType().getParameterCode())) {
 					if (null != scQt.getEvaluationType()
@@ -11037,6 +11046,17 @@ public class SpecificationBackingBean extends
 		}
 
 		if (CollectionUtils.isNotEmpty(financialCheckList)) {
+		
+			//Bug #33358 start
+			for (ScQtCheckList checkList : financialCheckList) {
+				ScQtScoreWeightage weight = checkList.getQtScoreWeightage();
+				if (null != weight && !checkList.isScoringReq()){
+					weight.setWeightage(null);
+					checkList.setQtScoreWeightage(weight);
+				}
+			}
+			//Bug #33358 end
+			
 			/*
 			 * for (ScQtCheckList financialcheckList : financialCheckList) { if
 			 * (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
