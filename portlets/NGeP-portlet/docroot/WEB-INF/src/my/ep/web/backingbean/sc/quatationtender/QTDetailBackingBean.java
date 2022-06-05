@@ -11128,6 +11128,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
   		if(scQt.isCloned()){
   			return false;
   		}
+  	    //9019 - Start (Harun) WIP transaction Pending QT Submission
+  		//       File Reference no is empty while Pending QT Submission and update WIP unable to proceed cause by this mandatory
+  		if(this.getManagedBean().isMaintanceFlow()){
+  			return false;
+  		}
+  	    //9019 - End (Harun) 
   		return scQt.isBrandNew() || StringUtils.isEmpty(scQt.getFileNo());
   	}
   //29464-start - added logic at backingbean for future addition
