@@ -511,8 +511,8 @@
 							<c:choose>
 							<!-- #21695 farid -->
 				<!-- #21695 farid 7/04/2020 -->
-				
-								<c:when test="#{!isMaintenanceFlow and !qtStatusChecklistScoring and !qtStatusScheduleDocAndAfter and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION and !isReadOnly}">
+				                <c:when test="#{!isMaintenanceFlow and !qtStatusChecklistScoring and !qtStatusScheduleDocAndAfter and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) and !isReadOnly}"><!-- #9019 Harun disabled old code as while Pending QT Submission partial offer can be edit when view at QT Maintenance -->
+								<!-- c:when test="#{!isMaintenanceFlow and !qtStatusChecklistScoring and !qtStatusScheduleDocAndAfter and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION and !isReadOnly}"-->
 										<p:outputPanel id="partialPop">
 													<p:selectOneRadio  value="#{scQt.partial}" disabled="#{scQt.sampleReq}">
 														<f:selectItems
