@@ -4273,8 +4273,10 @@ public class SmApplicationBackingBean extends
 		//#30508
 		
 		//#32236 - Start
-		SmApplicationUtil.setBusinessAndHadApprovedSpecialCatcode(getManagedBean());
-		SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());
+		if(getManagedBean().isSupplierUser()){
+			SmApplicationUtil.setBusinessAndHadApprovedSpecialCatcode(getManagedBean());
+			SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());	
+		}
 		//#32236 - End
 		
 		//#31130- start
