@@ -1674,14 +1674,14 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		return SmCommonUtil.getMessage("lbl.sm.softcert.revoke.instruction",
 				new String[] { url });
 	}
-	/**
+	/** disabled due to 30425
 	 * Call SPKI Popup dialog
 	 */
-	public void onDisplaySpkiPopup2() {
+	/*public void onDisplaySpkiPopup2() {
 		getManagedBean().getSpkiBackingBean().getChallengeQuestions2(
 				getManagedBean().getLoginUserPersonnelInfo()
 						.getIdentificationNo());
 		RequestContext.getCurrentInstance().execute("spki_dlg.show()");
-	}
+	}*/
 	
 }
