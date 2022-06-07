@@ -4325,7 +4325,16 @@ public class EvaluationBackingBean extends
 							if(this.getManagedBean().getScQt().isPartial()){
 								specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 							
-							}else{
+							}
+							// Missing supplier at financial item its because query received evalstage as T 
+							//at financial item display only supplier is qualifed at package (fix evalstage as TI)
+							//Bug #33281 related to #25138 - START
+							else if(!this.getManagedBean().getScQt().isPartial() 
+									&& reqDTO.getEvalStage().equals(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)){
+								specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+							}
+							//Bug #33281 related to #25138 - END
+							else{
 								specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 							
 							}
