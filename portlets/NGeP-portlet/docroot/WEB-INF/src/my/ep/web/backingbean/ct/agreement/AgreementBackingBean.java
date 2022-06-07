@@ -1162,7 +1162,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 						pmUser.getUserId(),
 						pmUser.getSalutationCode()!=null ?
 								new StringBuilder().append(	pmUser.getSalutationCode().getSalutationName() ).append( " " ).append(pmUser.getUserName()).toString() :
-									new StringBuilder().append(pmUser.getUserName()).toString()
+									pmUser.getUserName()
 						
 						);
 			}
