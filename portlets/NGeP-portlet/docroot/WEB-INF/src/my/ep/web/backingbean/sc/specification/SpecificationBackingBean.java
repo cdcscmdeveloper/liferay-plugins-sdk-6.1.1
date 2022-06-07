@@ -11003,6 +11003,7 @@ public class SpecificationBackingBean extends
 				ScQtScoreWeightage weight = checkList.getQtScoreWeightage();
 				if (null != weight && !checkList.isScoringReq()){
 					weight.setWeightage(null);
+					weight.setScore(new BigDecimal(0));
 					checkList.setQtScoreWeightage(weight);
 				}
 				//Bug #33358 end
@@ -11052,6 +11053,7 @@ public class SpecificationBackingBean extends
 				ScQtScoreWeightage weight = checkList.getQtScoreWeightage();
 				if (null != weight && !checkList.isScoringReq()){
 					weight.setWeightage(null);
+					weight.setScore(new BigDecimal(0));
 					checkList.setQtScoreWeightage(weight);
 				}
 			}
