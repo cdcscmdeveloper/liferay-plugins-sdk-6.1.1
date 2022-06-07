@@ -251,8 +251,9 @@
 									</td>
 									<!-- SSM Redmine 9456 -->
 									<td style="width: 20px"><p:selectBooleanCheckbox
-											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff || (backingBean.managedBean.selectedShareHolder.equityOwner and backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)}"
-											value="#{backingBean.managedBean.selectedShareHolder.clerical}" >
+											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff || (backingBean.managedBean.selectedShareHolder.equityOwner 
+											and backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)}"
+											value="#{backingBean.managedBean.selectedShareHolder.clerical}" > <!--#30444 03062022 -merge this part to PDS-->
 										<!-- #30517 Start -->
 										<p:ajax event="change" update=":#{p:component('shrRolesPanel')},@([id$=shareHolderAddrDialog])"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
