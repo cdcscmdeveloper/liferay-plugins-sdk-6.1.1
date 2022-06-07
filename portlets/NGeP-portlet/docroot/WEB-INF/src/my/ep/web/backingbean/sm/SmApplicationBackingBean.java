@@ -4096,7 +4096,7 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getCurrentPageType());
 			//32617 START
 			if(getManagedBean().getSmSupplier().getSmAppl() != null){
-				SmServiceLookup.getPersonnelSO().updatePersonnelByLastRegAppl(
+				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
 						getManagedBean().getSmSupplier().getSmAppl());
 			}
 			//32617 END
