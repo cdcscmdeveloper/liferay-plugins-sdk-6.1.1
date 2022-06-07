@@ -139,7 +139,7 @@ public class MolPayServlet extends HttpServlet {
 		String molpayTransId = null;
 		try { 
 			obj2 = new JSONObject(extraP1); 
-			molpayTransId = obj2.getString("MOLPay_tranId") != null ? obj2.getString("MOLPay_tranId") : null;
+			molpayTransId = obj2.getString("MOLPay_tranID") != null ? obj2.getString("MOLPay_tranID") : null;
 		} catch (JSONException e) { 
 			e.printStackTrace(); 
 		}
