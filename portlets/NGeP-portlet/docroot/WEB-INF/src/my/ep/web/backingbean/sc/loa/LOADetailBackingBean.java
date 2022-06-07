@@ -1182,7 +1182,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ScLoa scLoa = resDTO.getScLoa();
 		
 		// #26247 - #33073 - Start.
-		if (null != getManagedBean().getSourceId()) {
+		/*if (null != getManagedBean().getSourceId()) { //BUG 33354, TESTING TO PRODUCE BUG IN DEV N SIT (TEMPORARY)
 			retrieveLOILOAList(getManagedBean().getSourceId());
 		}
 		
@@ -1201,7 +1201,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			} finally {
 				qtSuppFinalizationSO = null;
 			}
-		}
+		}*/
 		// #26247 - #33073 - End.
 		
 		getManagedBean().setScLoa(scLoa);
