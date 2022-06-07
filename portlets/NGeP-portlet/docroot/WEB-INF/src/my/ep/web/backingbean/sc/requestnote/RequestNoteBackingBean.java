@@ -1538,9 +1538,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return void
 	 */
 	public void preRenderView() {
-		debugLogger("preRenderView");
+		debugLogger("start preRenderView");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		log.info("Temp1: start performance - getBpmTaskDetails");
 		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
+		log.info("Temp1: end performance - getBpmTaskDetails");
 		Long dpId = null;
 		boolean zoneFlag = Boolean.FALSE;
 		ScRequestNote requestNote = null; 
@@ -1572,6 +1574,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		log.info("Temp2: start performance - getRequestNoteSO().getRequestNote");
 		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
+		log.info("Temp2: end performance - getRequestNoteSO().getRequestNote");
 		if(requestNoteResDTO.getRequestNoteDetail() != null){
 			requestNote = requestNoteResDTO.getRequestNoteDetail();
 		}
@@ -1583,17 +1586,22 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			} else {
 				getManagedBean().setScRNZone(new ScRNZone());	
 			}
-			
+			log.info("Temp3: start performance - retrieveRequestNoteDetails");
 			retrieveRequestNoteDetails(requestNote, getManagedBean().getCurrentStatusId(), zoneFlag);
+			log.info("Temp3: end performance - retrieveRequestNoteDetails");
+			log.info("Temp4: start performance - checkIsSupplierResponse");
 			checkIsSupplierResponse(requestNote.getRequestNoteDtls(), getManagedBean().getCurrentStatusId());
-			
+			log.info("Temp4: end performance - checkIsSupplierResponse");
+
 			//12177,12183 - Start
 			getDocStatus(requestNote);
 			//12177,12183 - End
 		}
 		
 		//Redmine Enhancement #12177
+		log.info("Temp5: start performance - addButton");
 		addButton();
+		log.info("Temp5: end performance - addButton");
 		if(sqExpiredMessageFlag){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 				MessageUtils.getMessage(MessageConst.ERROR_760481, 
@@ -1603,6 +1611,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		// title checker
 		getManagedBean().setTitleChecker(Boolean.FALSE);
 		FacesContext fc = FacesContext.getCurrentInstance();
+		debugLogger("end preRenderView");
 		// page nav. to common request note
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, REQUEST_NOTE_PAGE);
 	}
@@ -3448,6 +3457,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("beforeSavePostLister");
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
 		CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
+ 		
+		//32520 - Start
+		if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getScRequestSupplierItem() != null
+				&& requestNoteDtl.getScRequestNote() != null){
+				log.info("Bug 32520 : Method beforeSavePostLister ----> rnNo (" +requestNoteDtl.getScRequestNote().getRequestNoteNo() +") ");
+				log.info("Bug 32520 : " + "rnDtlsId (" + requestNoteDtl.getRequestNoteDtlId() + ") " 
+					     + "reqItemId (" + requestNoteDtl.getRequestItem().getRequestNoteItemId() + ") "
+					     + "reqSuppItemId (" + requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") "
+					     + "----> rnNo (" + requestNoteDtl.getScRequestNote().getRequestNoteNo() + ")");
+		}	
+		//32520 - End
+		
 		if(requestNoteDtl.getvCmSupplierItem() != null && requestNoteDtl.getvCmSupplierItem().getDocId() >0) {
             
 			catReqDTO.setSupplierItemId(requestNoteDtl.getvCmSupplierItem().getDocId());
@@ -3488,6 +3509,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("afterSavePostLister");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 
+		//32520 - Start
+		if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getScRequestSupplierItem() != null
+				&& requestNoteDtl.getScRequestNote() != null){
+			log.info("Bug 32520 : Method afterSavePostLister ----> rnNo (" +requestNoteDtl.getScRequestNote().getRequestNoteNo() +") ");
+			log.info("Bug 32520 : " + "rnDtlsId (" + requestNoteDtl.getRequestNoteDtlId() + ") " 
+			         + "reqItemId (" + requestNoteDtl.getRequestItem().getRequestNoteItemId() + ") "
+			         + "reqSuppItemId (" + requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") "
+			         + "----> rnNo (" + requestNoteDtl.getScRequestNote().getRequestNoteNo() + ")");
+		}	
+		//32520 - End
+		
 		if(requestNoteDtl.getScRequestSupplierItem() != null && requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() != null){
 			ScRequestSupplierItem requestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
 			requestNoteReqDTO.setSupplierItemId(requestSupplierItem.getRequestSupplierItemId());
