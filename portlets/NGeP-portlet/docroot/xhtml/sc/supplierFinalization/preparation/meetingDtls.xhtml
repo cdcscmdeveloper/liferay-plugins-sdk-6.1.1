@@ -38,24 +38,57 @@
 				</p:selectBooleanCheckbox>
 			</p:column>
 
-			<p:column style="width:18%">
+			<p:column style="width:50%">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.txt.mandatory']}"
 						styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
 				</f:facet>
-				
-				<ac:dateTime id="finalizationconfirmmeetingDate"
-									required="true"
-									label="#{lbl['lbl.sc.meeting.date']}"
-									disabled="#{disableMeeting}" value="#{meetingDtl.meetingDate}"
-									update="@([id$=finalizationconfirmmeetingDate])" rowIndex="#{rowIndex}">
-								</ac:dateTime>
-				<p:message id="mtgDate" for="finalizationconfirmmeetingDate" display="icon"
+				<table> <tr><td>
+					
+					<p:calendar id="calDate"
+			showOn="button" 
+			size="7"
+			required="true"
+			disabled="#{disableMeeting}"
+			readonlyInput="true" 
+			value="#{meetingDtl.metingDate}"
+			label="#{lbl['lbl.sc.meeting.date']}"
+			pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+			<p:ajax event="dateSelect" partialSubmit="true" process="@this" update="@this" listener="#{suppFinalizationBackingBean.DateTimeChange(meetingDtl)}"/>
+			
+		
+		</p:calendar>
+			<p:message id="mtgDate" for="calDate" display="icon"
 					showDetail="false"></p:message>
+			</td><td>	
+					<h:selectOneMenu id="calHour" style="width: 62px;"
+			required="true"
+			disabled="#{disableMeeting}"
+			value="#{meetingDtl.meetDateStr}"
+			label="#{lbl['lbl.sc.meeting.date']} #{lbl['lbl.txt.hour']}">
+			<f:selectItems value="#{dateTimeBackingBean.hoursDropdownValues}" />
+			<p:ajax event="change" partialSubmit="true" process="@this" update="@this" listener="#{suppFinalizationBackingBean.DateTimeChange(meetingDtl)}"/>
+		</h:selectOneMenu>
+				<p:message id="mtgDateHour" for="calHour" display="icon"
+					showDetail="false"></p:message>	
+					</td><td>
+					
+			<h:selectOneMenu id="calMin" style="width: 72px;"
+			required="true"
+			disabled="#{disableMeeting}"
+			value="#{meetingDtl.meetTimeStr}"
+			label="#{lbl['lbl.sc.meeting.date']} #{lbl['lbl.txt.minute']}">
+			<f:selectItems value="#{dateTimeBackingBean.getMinutesDropdownValues(15)}" />
+			<p:ajax event="change" partialSubmit="true" process="@this" update="@this" listener="#{suppFinalizationBackingBean.DateTimeChange(meetingDtl)}"/>
+		</h:selectOneMenu>	
+		<p:message id="mtgDateMinute" for="calMin" display="icon"
+					showDetail="false"></p:message>	
+					</td></tr></table>
+			
 			</p:column>
 
-			<p:column style="width:30%">
+			<p:column style="width:20%">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.txt.mandatory']}"
 						styleClass="mandatory" />
@@ -91,7 +124,7 @@
 				</p:selectOneMenu>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.remark']}" style="width:30%">
+			<p:column headerText="#{lbl['lbl.sc.remark']}" style="width:5%">
 				<p:inputTextarea value="#{meetingDtl.remark}" rows="2" cols="30" maxlength="100"
 				onkeyup="limitTextArea(this,100);" onkeydown="limitTextArea(this,100);"
 				onmouseout="limitTextArea(this,100);"	disabled="#{disableMeeting}">

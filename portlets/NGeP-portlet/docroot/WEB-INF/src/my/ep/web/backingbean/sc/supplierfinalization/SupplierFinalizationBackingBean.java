@@ -13,8 +13,10 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -983,6 +985,12 @@ public class SupplierFinalizationBackingBean extends
 						Long meetingStatusId = scQtMeeting.getMeetingStatus() != null ? scQtMeeting
 								.getMeetingStatus().getStatusId() : null;
 						scQtMeeting.setMeetingStatusStr(meetingStatusId);
+						SimpleDateFormat hourFormat=new SimpleDateFormat(CommonConstants.DEFAULT_HOUR_FORMAT);//32613-start
+						SimpleDateFormat minuteFormat=new SimpleDateFormat(CommonConstants.DEFAULT_MINUTE_FORMAT);
+						SimpleDateFormat Date=new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+						scQtMeeting.setMeetDateStr(hourFormat.format(scQtMeeting.getMeetingDate()));
+						scQtMeeting.setMeetTimeStr(minuteFormat.format(scQtMeeting.getMeetingDate()));
+						scQtMeeting.setMetingDate(scQtMeeting.getMeetingDate());//32613-End
 						if (scQtMeeting.getRecordStatusFlg().equals(
 									DbValueConst.RECORD_STATUS_SUSPENDED)) {
 							this.getManagedBean().setHasPreviousMeeting(true);
@@ -11035,6 +11043,34 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			finalizationMethodEvent(null);
 		}
 		//#29562 - END
+		
+		
+		public void DateTimeChange(ScQtMeeting meeting){//32613-start
+	  		
+	  		List<ScQtMeeting> meetungList=getManagedBean().getMeetingList();
+	  		int index=	meetungList.indexOf(meeting);
+	  	Date MeetingDate=	meeting.getMetingDate();
+	  	String MeetingHour=meeting.getMeetDateStr();
+		String MeetingMinute=meeting.getMeetTimeStr();
+		if(null!=MeetingDate && null!=MeetingHour && null!=MeetingMinute){
+			
+			int hourValue = Integer.parseInt(MeetingHour);
+			int minuteValue = Integer.parseInt(MeetingMinute);
+			
+			Calendar c1 = Calendar.getInstance();
+			c1.setTime((Date)MeetingDate);
+			c1.set(Calendar.HOUR_OF_DAY, hourValue);
+			c1.set(Calendar.MINUTE, minuteValue);
+			
+			//dateValue = c1.getTime();
+			meeting.setMeetingDate(c1.getTime());
+			
+		   meetungList.set(index, meeting);
+		  this. getManagedBean().setMeetingList(meetungList);
+		 
+			
+		}
+	  	}//32613-End	
 		
 }
 // ***19336
