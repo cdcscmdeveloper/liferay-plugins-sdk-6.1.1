@@ -1252,6 +1252,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	}
 	//26279 - end
 
+	//24956 start
 	public boolean isCtTypeMinistry() {
 		return CtTypeMinistry;
 	}
@@ -1259,6 +1260,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	public void setCtTypeMinistry(boolean ctTypeMinistry) {
 		CtTypeMinistry = ctTypeMinistry;
 	}
+	//24956 end
 	
 	//30911 start
 	public List<SelectItem> getFactoringAccList() {
