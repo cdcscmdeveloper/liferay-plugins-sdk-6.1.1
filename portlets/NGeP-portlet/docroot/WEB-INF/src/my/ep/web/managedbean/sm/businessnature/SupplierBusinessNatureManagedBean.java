@@ -24,6 +24,10 @@ public class SupplierBusinessNatureManagedBean extends BaseManagedBean{
 	private Map<Long, SmSupplierBusiness> supplierBusinessMap = new HashMap<Long, SmSupplierBusiness>();
 	//16052019 - SSM INTEGRATION CR 
 	private SsmResDTO ssmResDTO;
+	// 9442 - REOPEN - START
+	private List<String> currentBizNatures;
+	private List<SmSupplierBusiness> deletedSupplierBusiness;
+	// 9442 - REOPEN - END
 
 	public SmSupplierBusiness[] getSelectedBusinessNatureLs() {
 		return selectedBusinessNatureLs;
@@ -65,6 +69,24 @@ public class SupplierBusinessNatureManagedBean extends BaseManagedBean{
 	public void setSsmResDTO(SsmResDTO ssmResDTO) {
 		this.ssmResDTO = ssmResDTO;
 	}
+	
+	// 9442 - REOPEN - START
+	public List<String> getCurrentBizNatures() {
+		return currentBizNatures;
+	}
+
+	public void setCurrentBizNatures(List<String> currentBizNatures) {
+		this.currentBizNatures = currentBizNatures;
+	}
+
+	public List<SmSupplierBusiness> getDeletedSupplierBusiness() {
+		return deletedSupplierBusiness;
+	}
+
+	public void setDeletedSupplierBusiness(List<SmSupplierBusiness> deletedSupplierBusiness) {
+		this.deletedSupplierBusiness = deletedSupplierBusiness;
+	}
+	// 9442 - REOPEN - END
 }
 
 
