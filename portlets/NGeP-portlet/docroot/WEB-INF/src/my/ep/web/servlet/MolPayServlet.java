@@ -123,27 +123,23 @@ public class MolPayServlet extends HttpServlet {
 			e.printStackTrace(); 
 		} 
 		// #26307 end  
+		
 		// #32422 START 
+		//#33137 - START
 		String date1 = null;
+		String molpayTransId = null;
 		String extraP1 = req.getParameter("extraP");
 		JSONObject obj1;
 		try { 
 			obj1 = new JSONObject(extraP1); 
 			date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
-		} catch (JSONException e) { 
-			e.printStackTrace(); 
-		}
-		// #32422 END
-		//#33137 - START
-		JSONObject obj2;
-		String molpayTransId = null;
-		try { 
-			obj2 = new JSONObject(extraP1); 
-			molpayTransId = obj2.getString("MOLPay_tranID") != null ? obj2.getString("MOLPay_tranID") : null;
+			molpayTransId = obj1.getString("MOLPay_tranID") != null ? obj1.getString("MOLPay_tranID") : null;
 		} catch (JSONException e) { 
 			e.printStackTrace(); 
 		}
 		//#33137 - END
+		// #32422 END
+		
 		if(nbcb != null){
 			Long ordId = Long.valueOf(orderId);
 			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
