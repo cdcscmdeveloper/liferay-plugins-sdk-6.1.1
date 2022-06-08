@@ -19822,6 +19822,7 @@ if(null!=allTechnicalChecklist){
 	 */
 	public void addDemoTechnicalCheckList() {
 		try {
+			//this.getManagedBean().setReadOnly(false);
 			this.getManagedBean().setDemoAction(false);
 			List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
 			List<ScQtCheckList> newSt2technicalproposalList = new ArrayList();
@@ -20662,6 +20663,7 @@ if(null!=allTechnicalChecklist){
 		return desc;
 	}
 	
+	//#28784 -  Start
 	public void resetDemoTechSpecListAfterDelete(){
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -20671,6 +20673,7 @@ if(null!=allTechnicalChecklist){
 		SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
 		getManagedBean().setScQtCheckSt2techProposal(resDTO.getTechnicalCheckList());
 	}
+	//#28784 -  End
 	
 	public void actionSearchPresentationDemo() {
 		List<TplSpecQuestion> listNew = new ArrayList<>();
