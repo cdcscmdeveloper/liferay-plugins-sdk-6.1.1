@@ -28,12 +28,7 @@
 			</tr>
 			<ui:remove>//29464-start</ui:remove>
 			<ui:param name="statusId" value="#{specificationBackingBean.managedBean.currentStatusId}"/>
-			<ui:fragment rendered="#{(statusId eq QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING
-				or statusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH
-				or statusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT
-				or statusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF
-				or statusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) 
-				and not empty specificationBackingBean.managedBean.qt.scQt.qtNo}">
+			<ui:fragment rendered="#{specificationBackingBean.evaluateRepublishFromDisplay(statusId) and not empty specificationBackingBean.managedBean.qt.scQt.qtNo}">
 				<tr>
 					<td width="15%"><h:outputLabel
 							value="#{lbl['lbl.sc.qt.republishFrom']}" /></td>
