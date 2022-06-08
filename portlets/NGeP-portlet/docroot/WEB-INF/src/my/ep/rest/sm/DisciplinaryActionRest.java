@@ -164,8 +164,9 @@ public class DisciplinaryActionRest {
 
 					log.info("suspendList. supplier id==============" + suspendList.getSmSupplier().getSupplierId());
 
-					if (suspendList != null && suspendList.getSmSupplier() != null) {
-
+					//33248 - reopen 31/05: Disciplinary Action - 26238 - 
+					if (suspendList != null && suspendList.getSmSupplier() != null  && !suspendList.isBlacklistOwner()  && !suspendList.isCancelRegistration() ) {
+					
 						//26238
 						if(suspendList.getStartDate().compareTo(today) <= 0){
 							// reactive account if DA suspend register is expired
