@@ -1181,11 +1181,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	private void populateLOADetails(AwardSupplierResDTO resDTO) {
 		ScLoa scLoa = resDTO.getScLoa();
 		
-		// #26247 - #33073 - Start.
-		/*if (null != getManagedBean().getSourceId()) { //BUG 33354, TESTING TO PRODUCE BUG IN DEV N SIT (TEMPORARY)
-			retrieveLOILOAList(getManagedBean().getSourceId());
-		}
-		
+		// #26247 - #33073 - #33354 - Start.
 		if (null != scLoa && null != scLoa.getScLoiLoa() && null != scLoa.getScLoiLoa().getSmSupplier()){
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			
@@ -1201,8 +1197,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			} finally {
 				qtSuppFinalizationSO = null;
 			}
-		}*/
-		// #26247 - #33073 - End.
+		}
+		// #26247 - #33073 - #33354 - End.
 		
 		getManagedBean().setScLoa(scLoa);
 		getManagedBean().setScQt(resDTO.getScQt());
