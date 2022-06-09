@@ -7609,10 +7609,6 @@ public void saveComplianceSample() {
 									.getCommitteeType())) {
 							if (currentTab == 2) {
 							  
-															   
-												
-							
-
 							if (this.getManagedBean()
 									.getEvaluatioStageActiveIndex() < 1 ) {
 								if(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM.equals(this.getManagedBean().getScQt().getEvaluateBy())){//32453-start
@@ -7624,6 +7620,11 @@ public void saveComplianceSample() {
 								this.getManagedBean().setTabTechnicalIndex(2);
 								outputTab = 2;
 								
+								//#33187 Start - fix next skip if disable Technical
+								if(this.getManagedBean().getNoSupplierPackageExist()){
+									this.getManagedBean().setEvaluatioStageActiveIndex(2);
+								}
+								//#33187 End - fix next skip if disable Technical
 							}else if( this.getManagedBean()
 									.getPresentationDemoActiveIndex() < 0 ||
 									this.getManagedBean().getTabTechnicalIndex() == 2){
