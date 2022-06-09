@@ -10656,13 +10656,13 @@ public class SmApplicationBackingBean extends
 
 	}
 	
-	//#31386 - START
+	//#31386 - START / #33376 - start
 	public String finalCancelDecisionApproveOrRejectAppln(String dialog,
 			String decision) {
 		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
 		return submitPOorApproverReviewToBPM(decision);
 	}
-	//31386 - END
+	//31386 - END / #33376 - end
 	
 	/**
 	 * Final decision of PO on delete pending appln
