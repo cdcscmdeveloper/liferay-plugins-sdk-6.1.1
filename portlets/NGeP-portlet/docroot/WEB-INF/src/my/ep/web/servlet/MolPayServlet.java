@@ -134,10 +134,11 @@ public class MolPayServlet extends HttpServlet {
 		try { 
 			obj1 = new JSONObject(extraP1); 
 			log.info("extraP1 after:" + extraP1);
-			date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
+//			date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
 			molpayTransId = obj1.getString("MOLPay_tranID") != null ? obj1.getString("MOLPay_tranID") : null;
 			log.info("molpay id"+molpayTransId);
 		} catch (JSONException e) { 
+			log.info("molpay id catch"+molpayTransId);
 			e.printStackTrace(); 
 		}
 		//#33137 - END
