@@ -12,10 +12,11 @@
 	<p:dialog widgetVar="submissionConfirmDlg" id="submissionConfirmDlg" modal="true" height="100" width="500">
    			 #{lbl['lbl.sm.rptpreview.want.proceed/download.qmark']}	
    			<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false"
-					action="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(svTask)}">
-					<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
-				</p:commandButton>
+   			<!-- #32963 - start -->
+			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false" onclick="submissionConfirmDlg.hide()">
+					<p:fileDownload value="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(null)}" />
+			</p:commandButton>
+			<!-- #32963 - end -->
 			<!--28775 - Site Visit Grouping Enhancement - 28775 -->
 			<p:commandButton value="#{lbl['lbl.btn.proceed']}" 
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide();submissionConfirmDlg.hide()"
