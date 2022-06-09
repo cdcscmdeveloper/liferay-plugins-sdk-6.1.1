@@ -205,7 +205,7 @@
 			  	#end
 	  		#end
 	  		#if($managementLs.size() == 0)
-	  			$smVmUtil.getDescByLabel('lbl.ct.not.applicable').toUpperCase()
+	  			NOT APPLICABLE
 	  		#end
 
 	  		<!-- #29781 - end -->
