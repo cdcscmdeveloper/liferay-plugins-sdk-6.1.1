@@ -9727,7 +9727,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void searchSupplierItemByName(){
 		if(this.getItemNameSearchCriteria() != null && this.getItemNameSearchCriteria() != ""){
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			//TplSpecMaster tplSpecMaster = new TplSpecMaster();
+			TplSpecMaster tplSpecMaster = new TplSpecMaster();
 			boolean isProduct = true;//29007
 			boolean isService = true;//29007
 			
@@ -10016,7 +10016,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
 					if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
 						report.setTitle(populateLabelLampiranA3(
-								 new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(DateUtils.getCurrentDate()),
+								 new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_FORMAT).format(DateUtils.getCurrentDate()),
 								 SmCommonUtil.getUserByUserId(getManagedBean().getScLoa().getCreatedBy()).getUserName()));
 						report.setIslampiranA3(true);
 						recordCount++;
@@ -10036,7 +10036,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				getManagedBean().setScLoa(scLoa);
 			}else{
 			ScLoaReport lampiranA3 = getQtAwardSO().createLampiranA3(getManagedBean().getScLoa(),populateLabelLampiranA3(
-									 new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(DateUtils.getCurrentDate()),
+									 new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_FORMAT).format(DateUtils.getCurrentDate()),
 									 SmCommonUtil.getUserByUserId(getManagedBean().getScLoa().getCreatedBy()).getUserName()));
 			lampiranA3.setIslampiranA3(true);
 			lampiranA3.setScLoa(getManagedBean().getScLoa());
@@ -10261,7 +10261,35 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		}
 	}
 	public void verifyConformationForLampiranA3(String bpmAction){
+		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
+		TemplateSpecReqDTO specReqDto=new TemplateSpecReqDTO();
 		int recordCount = 0;
+		int itemCount = 0;
+		StringBuffer itemsList = new StringBuffer();
+		
+		if(this.getManagedBean().getScLoa().getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_DIRECT_NEGO)){
+			for(ScLoiLoaItem loiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()){
+				specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
+				specReqDto.setScQt(this.getManagedBean().getScQt());
+				specReqDto.setScLoiLoaItem(loiLoaItem);
+				specReqDto.setSpecSearchForApp(true);
+				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
+			
+				int newSupplierOffer =0;
+				for(TplSpecAnswer tplSpecAnswer: templateSpecResDTO.getSpecAnswerList()){
+					if(StringUtils.isNotBlank(tplSpecAnswer.getNewSupplierOffer())){
+						newSupplierOffer++;
+					}
+				}
+				if(!loiLoaItem.isComplete() && (newSupplierOffer>0||StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification()))){
+					itemCount++;
+					itemsList.append(itemCount+". "+loiLoaItem.getScRequestItem().getItemName()+"\n");
+				}
+			}
+		}
+		if(itemCount>0){
+			throw new EpException(MessageConst.ERROR_775176, new String[] {itemsList.toString()});
+		}
 		if (CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
 			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
 				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
@@ -10305,6 +10333,16 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				tplSpecAnswer.setRenderNewSpec(false);//29007
 			}
 		}
+	}
+	public void resetAllNewOfferedSpecification(){
+		RequestContext.getCurrentInstance().execute("resetAllConfirmPopUp.show()");
+	}
+	public void resetAllNewOfferedSpecificationSubmit(){
+		for(TplSpecAnswer answer : this.getManagedBean().getTplSpecAnswerList()){
+			answer.setNewSupplierOffer(null);
+		}
+		this.getManagedBean().setNewSupplierJustification(null);
+		saveSupplierSpecification(false);
 	}
 	/*#29007 End Vinod*/
 	/*#31003 STARTS*/
