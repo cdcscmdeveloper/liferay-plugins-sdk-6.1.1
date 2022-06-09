@@ -863,8 +863,8 @@ public class SupplierFinalizationBackingBean extends
 						SimpleDateFormat hourFormat=new SimpleDateFormat(CommonConstants.DEFAULT_HOUR_FORMAT);//32613-start
 						SimpleDateFormat minuteFormat=new SimpleDateFormat(CommonConstants.DEFAULT_MINUTE_FORMAT);
 						SimpleDateFormat Date=new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-						scQtMeeting.setMeetDateStr(hourFormat.format(scQtMeeting.getMeetingDate()));
-						scQtMeeting.setMeetTimeStr(minuteFormat.format(scQtMeeting.getMeetingDate()));
+						scQtMeeting.setMeetDateStr(getDateValues(hourFormat.format(scQtMeeting.getMeetingDate())));//32613-start
+						scQtMeeting.setMeetTimeStr(getDateValues(minuteFormat.format(scQtMeeting.getMeetingDate())));//32613-End
 						scQtMeeting.setMetingDate(scQtMeeting.getMeetingDate());//32613-End
 						if (scQtMeeting.getRecordStatusFlg().equals(
 									DbValueConst.RECORD_STATUS_SUSPENDED)) {
@@ -10888,6 +10888,36 @@ return	remarksNotFound;
 			
 		}
 	  	}//32613-End	
+		
+		private String getDateValues(String hourMinute){//32613-start
+		log.info("======displaydatevalues======="+hourMinute);	
+		String hourMinutes="0";
+		if (hourMinute.equals("00")) {
+			hourMinutes = "0";
+		} else if (hourMinute.equals("01")) {
+			hourMinutes = "1";
+		} else if (hourMinute.equals("02")) {
+			hourMinutes = "2";
+		} else if (hourMinute.equals("03")) {
+			hourMinutes = "3";
+		} else if (hourMinute.equals("04")) {
+			hourMinutes = "4";
+		} else if (hourMinute.equals("05")) {
+			hourMinutes = "5";
+		} else if (hourMinute.equals("06")) {
+			hourMinutes = "6";
+		} else if (hourMinute.equals("07")) {
+			hourMinutes = "7";
+		} else if (hourMinute.equals("08")) {
+			hourMinutes = "8";
+		} else if (hourMinute.equals("09")) {
+			hourMinutes = "9";
+		}else{
+			hourMinutes=hourMinute;	
+		}
+		log.info("====displayhourminuefinal=========="+hourMinutes);
+		return hourMinutes;
+		}//32613-End
 		
 }
 // ***19336
