@@ -35,7 +35,7 @@
 		<ui:include src="approverContactInfo.xhtml" />
 		<ui:include src="approverDecisionPage.xhtml" />
 
-
+		<!-- #33376 - start -->
 		<p:dialog width="800px" height="250px" closable="false"
 			header="#{lbl['lbl.sm.approve.application']}" id="approveAppCanDialog"
 			widgetVar="approveAppCanDialog" resizable="false" showEffect="fade"
@@ -57,6 +57,8 @@
 				</p:blockUI>
 			</p:outputPanel>
 		</p:dialog>
+		<!-- #33376 - end -->
+		
 		<p:dialog width="1000px" height="250px" closable="false"
 			header="#{lbl['lbl.sm.reject.application']}" id="rejectAppCanDialog"
 			widgetVar="rejectAppCanDialog" resizable="false" showEffect="fade"
