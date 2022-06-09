@@ -177,7 +177,7 @@ public class ProfileOfRegCompanyRptBackingBean extends
 	}
 	// #29712, #32564 - end
 	
-	//#32564 - start
+	//#32564, #30824 - start
 	public String constructConditionFieldsBasic(){
 		StringBuilder sb = new StringBuilder("smAppl.supplierType^"+SupplierManagementConst.SUPP_TYPE_BASIC);
 		if (getManagedBean().getZone() != null) {
@@ -192,6 +192,6 @@ public class ProfileOfRegCompanyRptBackingBean extends
 		log.info("32564- constructConditionFieldsBasic():"+sb.toString());
 		return sb.toString();
 	}
-	//#32564 - end
+	//#32564, #30824 - end
 	
 }
