@@ -9487,7 +9487,15 @@ public class SmApplicationBackingBean extends
 		return submitPOorApproverReviewToBPM(decision);
 
 	}
-
+	
+	//#31386 - START / #33376 - start
+	public String finalCancelDecisionApproveOrRejectAppln(String dialog,
+			String decision) {
+		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
+		return submitPOorApproverReviewToBPM(decision);
+	}
+	//31386 - END / #33376 - end
+	
 	/**
 	 * Final decision of PO on delete pending appln
 	 * 
@@ -10216,12 +10224,8 @@ public class SmApplicationBackingBean extends
 			RequestContext.getCurrentInstance().execute("sendInqDialog.hide()");
 		} else {
 			// #26136
-			//#31386 & #33376 - start
-			if (!getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-				RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");
-			}
+			RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");			
 		}
-		//#33376 - end
 		//END 12483
 		return retMsg;
 	}
