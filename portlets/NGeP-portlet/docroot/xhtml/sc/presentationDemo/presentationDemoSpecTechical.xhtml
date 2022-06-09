@@ -377,7 +377,7 @@ label.ui-button>span.ui-button-text {
 					<p:column style="width:130px;"
 						rendered="#{question.selectable and isQuestionTypeItem}">
 						<c:choose>
-							<c:when test="#{!isMaintenanceFlow and !isReadOnly }">
+							<c:when test="#{!isReadOnly}">
 						<p:outputPanel id="demoPop">
 							<p:selectOneRadio value="#{question.itemReqDemo}"
 								rendered="#{isQuestionTypeItem}">
