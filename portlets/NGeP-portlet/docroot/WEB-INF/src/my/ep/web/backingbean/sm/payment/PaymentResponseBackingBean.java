@@ -414,11 +414,19 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			try { 
 				log.info("extraP1 after:" + extraP1);
 				obj1 = new JSONObject(extraP1); 
-//				date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
-				molpayTransId = obj1.getString("MOLPay_tranID") != null ? obj1.getString("MOLPay_tranID") : null;
+				
+				if(obj1.getString("bank_datetime") != null){
+					log.info("----- bank date time before set -----");
+					date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
+				}
+				
+				log.info("molpay id before : "+molpayTransId);
+				if(obj1.getString("MOLPay_tranID") != null){
+					molpayTransId = obj1.getString("MOLPay_tranID") != null ? obj1.getString("MOLPay_tranID") : null;
+					log.info("molpay id after : "+ molpayTransId);	
+				}
 				log.info("molpay id"+molpayTransId);
 			} catch (JSONException e) { 
-				log.info("molpay id catch"+molpayTransId);
 				e.printStackTrace(); 
 			}
 		}
