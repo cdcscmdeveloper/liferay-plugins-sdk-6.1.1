@@ -130,8 +130,10 @@ public class MolPayServlet extends HttpServlet {
 		String molpayTransId = null;
 		String extraP1 = req.getParameter("extraP");
 		JSONObject obj1;
+		log.info("extraP1 before:" + extraP1);
 		try { 
 			obj1 = new JSONObject(extraP1); 
+			log.info("extraP1 after:" + extraP1);
 			date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
 			molpayTransId = obj1.getString("MOLPay_tranID") != null ? obj1.getString("MOLPay_tranID") : null;
 			log.info("molpay id"+molpayTransId);
