@@ -874,7 +874,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * @return the string
 	 */
 	public void submitQTDetailsAction() {
-		
+// #29732 Start - reOpen Fix
+		if (this.getManagedBean().getQt().getQtStatus().getStatusId()
+				.equals((QTStatusConst.QT_PENDING_QT_SUBMISSION))) {
+			checkCatCodeChange(this.getManagedBean().getQtCategoryList(), true);
+		}
+// #29732 End - reOpen Fix
 		debugLogger("start of submitQTDetailsAction");
 		
 		this.getManagedBean().setSaveFlow(false);
@@ -3827,11 +3832,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("updateBpmTask");
 		// #29732 Start
-		if(checkCatCodeChange(this.getManagedBean().getQtCategoryList())){
-			this.getManagedBean().setActiveIndex(1);
-			RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-			RequestContext.getCurrentInstance().execute("catCodeChangeAlert.show()");
-			return;
+// #29732 Start - ReOpen fix
+		if (this.getManagedBean().getQt().getQtStatus().getStatusId()
+				.equals((QTStatusConst.QT_PENDING_QT_SUBMISSION))) {
+			checkCatCodeChange(this.getManagedBean().getQtCategoryList(), true);
+// #29732 End - ReOpen fix
 		}
 		// #29732 End
 
@@ -6767,9 +6772,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					break;
 				}
 			}
-			// #29732 Start
-			boolean tabSupQulCriteria = false;
-			// #29732 End
+			// #29732 - ReOpen fix
 			switch (activeIndex) {
 			case 0:
 				// detailSO.validateateQTDetails(reqDTO);
@@ -6778,9 +6781,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				break;
 			case 1:
 				retrieveSuppQualificationTabDtl();
-				// #29732 Start
-				tabSupQulCriteria = true;
-				// #29732 End
+				// #29732 - ReOpen fix
 				break;
 
 			case 2:
@@ -6902,11 +6903,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			// #25077 - End
 			this.getManagedBean().setActiveIndex(activeIndex);
 			// #29732 Start
-			if (tabSupQulCriteria
-					&& checkCatCodeChange(this.getManagedBean()
-							.getQtCategoryList())) {
-				throw new EpException(MessageConst.WARN_297320,
-						new String[] { this.getManagedBean().getCatCodeList() });
+// #29732 Start - ReOpen fix
+			if (this.getManagedBean().getActiveIndex() == 1) {
+				if (this.getManagedBean().getQt().getQtStatus().getStatusId()
+						.equals((QTStatusConst.QT_PENDING_QT_SUBMISSION))) {
+					checkCatCodeChange(this.getManagedBean()
+							.getQtCategoryList(), false);
+				}
+// #29732 End - ReOpen fix
 			}
 			// #29732 End
 		}
@@ -11959,7 +11963,10 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 	//#29474 - end
 	// #29732 Start
-	public boolean checkCatCodeChange(List<ScQtCategory> qtCatCodeList) {
+// #29732 Start - Reopen fix
+	public void checkCatCodeChange(List<ScQtCategory> qtCatCodeList,
+			boolean popUp) {
+// #29732 End - ReOpen fix
 		boolean alertCatCodeChange = false;
 		String catCodeList = "";
 		if (CollectionUtils.isNotEmpty(qtCatCodeList)) {
@@ -12006,9 +12013,20 @@ public void retrieveDemoQtDetails(Long qtId) {
 									.toString());
 				}
 			}
-			this.getManagedBean().setCatCodeList(catCodeList);
-		}
-		return alertCatCodeChange;
+// #29732 Start - ReOpen fix
+			if (alertCatCodeChange) {
+				if (popUp) {
+					this.getManagedBean().setActiveIndex(0);
+					RequestContext.getCurrentInstance().execute(
+							"blockWidget.hide()");
+					RequestContext.getCurrentInstance().execute(
+							"catCodeChangeAlert.show()");
+				}
+				throw new EpException(MessageConst.WARN_297320,
+						new String[] { catCodeList });
+			}
+		} 
+// #29732 End - ReOpen fix
 	}
 	// #29732 End
 	//#11299 Start Vinod
