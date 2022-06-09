@@ -933,7 +933,24 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		} else {
+		}
+		// 29417 - START
+		else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ){
+			getManagedBean().setButtonProcess(outcome);
+			Date signDate = getManagedBean().getAgreementContractVer().getSignedDate();
+			Date expDate = getManagedBean().getContractVer().getCtContractValue().getExpDate();
+			if(signDate != null && expDate != null && signDate.after(expDate)){
+				
+				RequestContext.getCurrentInstance().execute("dateValidationExp.show()");
+			}
+			else {
+				return this.saveAgreement(outcome);
+			}
+			return null;
+		}
+		// 29417 - END 
+			
+		else {	
 			return this.saveAgreement(outcome);
 		}
 	}
