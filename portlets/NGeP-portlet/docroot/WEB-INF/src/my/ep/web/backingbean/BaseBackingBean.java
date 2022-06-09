@@ -1387,6 +1387,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			URLConnection uc = new URL(filePath).openConnection();
 			docInputStream = new BufferedInputStream(uc.getInputStream());
 			log.info("ZAIM getURL "+uc.getURL().toString());
+			log.info("filePath----"+filePath);
 		} catch (Exception e) {
 			// Cannot open connection, maybe local file
 			docInputStream = new FileInputStream(filePath);
