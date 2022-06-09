@@ -26,7 +26,10 @@ import javax.faces.application.ViewHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIViewRoot;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -119,6 +122,7 @@ import my.ep.persistence.entity.sm.SmSvPrintwork;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.persistence.entity.sm.SmSvWorker;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -138,6 +142,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
 
+import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "svoSiteVisitBackingBean")
 @RequestScoped
 public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManagedBean> {
@@ -265,10 +270,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				smSvTask.getSmSvOffice().setSmSvTask(this.getManagedBean().getSmSvTask());
 			}
 			
-			if(smSvTask.getSmSvAssistantOfficer() == null){
-				smSvTask.setSmSvAssistantOfficer(new SmSvAssistantOfficer());
-				smSvTask.getSmSvAssistantOfficer().setSmSvTask(getManagedBean().getSmSvTask());
+			//#28774 - Start
+			if(smSvTask.getSmSvAssistantOfficers() == null){
+				smSvTask.setSmSvAssistantOfficers(new ArrayList<SmSvAssistantOfficer>());
+				smSvTask.getSmSvAssistantOfficers();
+				for(SmSvAssistantOfficer smSvAssistantOfficer : smSvTask.getSmSvAssistantOfficers()){
+					smSvAssistantOfficer.setSmSvTask(this.getManagedBean().getSmSvTask());
+				}
 			}
+			//#28774 - End
 			
 			for(SmPersonnel contactPerson : smSvTask.getSmAppl().getSmPersonnels()){
 				if(contactPerson.isContactPerson()){
@@ -318,7 +328,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				else{
 					if(suppCatLs.size() > 0){
 						for(SmSupplierCategory sCat : suppCatLs){
-							if(sCat.getPmCategoryL3().getCategoryL3Id() == getManagedBean().getSmSvTask().getPmCategoryL3().getCategoryL3Id()){
+							//28774
+							if(sCat.getPmCategoryL3().getCategoryL3Id().equals(getManagedBean().getSmSvTask().getPmCategoryL3().getCategoryL3Id())){
 								getManagedBean().setSupplierCategory(sCat);
 								break;
 							}
@@ -360,9 +371,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			
 			SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(smSvTask.getSmSvAddress().getSiteType(),
 					smSvTask.getSmSvAddress().getSiteRefId(),smSvTask.getSmSvAddress(), smSvTask.getSmAppl().getApplId());
-			//smSvTask.getSmSvAddress().setAddress(getSmAddressById(smSvTask.getSmSvAddress().getSiteRefId()));
+			//#28774 - start
+			SmWorkflowStatus sts = SmCommonUtil.getCurrentActiveWokFlowStatus(
+					getManagedBean().getSmSvTask().getSmAppl().getApplId());
+			if (sts != null && sts.getPmStatus() != null){
+				getManagedBean().getSmSvTask().getSmAppl().setPmStatus(sts.getPmStatus());
+			}
+			//#28774 - end
 		}
-		
 	}
 	
 	/**
@@ -416,12 +432,16 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}else if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
 				this.prepareFinancialDoc(svTemplate);
 				
-				log.info("-----FIN LS SIZE----" + svTemplate.getFinancialDocLs().size());
-
+				//CR 28774: Static Code Analysis Start
+				/*
 				if (svTemplate.getSmSvTask().getSmAppl().getSmManufacturingDtls().size() > 0) {
 					getManagedBean().setManufacturingDtlLs(svTemplate.getSmSvTask().getSmAppl().getSmManufacturingDtls());
 				}
-				
+				*/
+				if (!svTemplate.getSmSvTask().getSmAppl().getSmManufacturingDtls().isEmpty()) {
+					getManagedBean().setManufacturingDtlLs(svTemplate.getSmSvTask().getSmAppl().getSmManufacturingDtls());
+				}
+				//CR 28774: Static Code Analysis End
 			}else if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
 				
 				if(svTemplate.getSmSvPrintworks() == null){
@@ -501,9 +521,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			List<PmMachineSection> machineSectionMO = retrieveMachineSectionBySectionType(equipmentMO.getParameterId(), svTemplate.getPmParameter().getParameterId());
 			List<PmMachineSection> machineSectionPS = retrieveMachineSectionBySectionType(equipmentPS.getParameterId(), svTemplate.getPmParameter().getParameterId());
 			
-			
-			if(svTemplate.getSmSvEquipments().size() > 0){
-				log.info("svEquipement Size>>>>>" + svTemplate.getSmSvEquipments().size());
+			//CR 28774: Static Code Analysis Start
+//			if(svTemplate.getSmSvEquipments().size() > 0){
+			if(!svTemplate.getSmSvEquipments().isEmpty()){
+			//CR 28774: Static Code Analysis End
 				
 				svTemplate.setEquipmentMain(new ArrayList<SmSvEquipment>());
 				svTemplate.setEquipmentBeating(new ArrayList<SmSvEquipment>());
@@ -739,8 +760,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		this.getManagedBean().setBodLs(new ArrayList<SmPersonnel>());
 		this.getManagedBean().setMgmtLs(new ArrayList<SmPersonnel>());
 		this.getManagedBean().setEquityOwnerLs(new ArrayList<SmPersonnel>());
-		getManagedBean().setStaffLs(new ArrayList<SmPersonnel>());
-
+		this.getManagedBean().setStaffLs(new ArrayList<SmPersonnel>());
+		//#29781 - Start
+		this.getManagedBean().setHigherManagementNames(new ArrayList<String>());
+		this.getManagedBean().setManagementNames(new ArrayList<String>());
+		//#29781 - End
+		
 		for(SmPersonnel personnel : this.getManagedBean().getSmSvTask().getSmAppl().getSmPersonnels()){
 			if(personnel.isDirector()){
 				ttlBOD++;
@@ -1280,17 +1305,50 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("mofRegistrationNo", mofAccountLs.size() > 0 ? mofAccountLs.get(0).getMofNo() : null);
 		context.put("siteVisitNo", getManagedBean().getSiteVisitNo());
 		
+		//#29781 - Start
+		//String accptDate = "";
+		/*
+		StringBuilder SvO = new StringBuilder();
+		if(svTask.getSmSvOfficers() != null && !svTask.getSmSvOfficers().isEmpty()){
+			for(SmSvOfficer smSvOfficer : svTask.getSmSvOfficers()){
+				SvO.append(smSvOfficer.getPmUser().getUserName());
+			}
+		}else{
+			SvO.append(" ");
+		}
+
+		StringBuilder SvOA = new StringBuilder();
+		int SmSvAssistantOfficersCounter = 0;
+		if(svTask.getSmSvAssistantOfficers() != null && !svTask.getSmSvAssistantOfficers().isEmpty()){
+			for(SmSvAssistantOfficer smSvAssistantOfficer : svTask.getSmSvAssistantOfficers()){
+				if(SmSvAssistantOfficersCounter < 1 ){
+					SvOA.append(smSvAssistantOfficer.getName());
+				}
+				SmSvAssistantOfficersCounter++;
+			}
+		}else{
+			SvO.append(" ");
+		}
+		context.put("svOfficers", SvO.toString());
+		context.put("svAOfficer", SvOA.toString());
+		*/
+		List<String> svOfficers = new ArrayList<String>();
+		for(SmSvOfficer officer : svTask.getSmSvOfficers()){
+			svOfficers.add(officer.getPmUser().getUserName());
+		}
+		for(SmSvAssistantOfficer officer : svTask.getSmSvAssistantOfficers()){
+			svOfficers.add(officer.getName());
+		}
+		context.put("svOfficers", svOfficers);
+		//#29781 - End
+	
 		String vmCover = "/sm/sitevisit/sv-main.vm";
 		String fileName = fileInitName + "cover.pdf";
+		//CR 28774: Static Code Analysis Start
+//		String file = generateToPdf(vmCover, context, fileName);
 		
-		String file = generateToPdf(vmCover, context, fileName);
-		/*File tempFile1 = new File(tmpPath +  "cover.pdf");
-		OutputStream os1 = new FileOutputStream(tempFile1);
-
-		DocumentGenerator.getInstance().generatePdfFromVelocity(vmCover, context, os1);*/
-		
-		return file;
-
+		return generateToPdf(vmCover, context, fileName);
+		//CR 28774: Static Code Analysis End
 	}
 	
 	/**
@@ -1345,10 +1403,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 
 		String fileName = fileInitName + "predetails.pdf";
+//		/CR 28774: Static Code Analysis Start
+//		String file = generateToPdf(vmPreDetails, context, fileName);
 		
-		String file = generateToPdf(vmPreDetails, context, fileName);
-		
-		return file;
+		return generateToPdf(vmPreDetails, context, fileName);
+		//CR 28774: Static Code Analysis End
 		
 	}
 	
@@ -1386,9 +1445,24 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}else{
 			sb.append("");
 		}
+		//#28774 - Start - Display names of Site Visit Officers
+		StringBuilder assistantOfficer = new StringBuilder();
+		int aOfficer = 0;
+		if(svTask.getSmSvAssistantOfficers() != null  && !svTask.getSmSvAssistantOfficers().isEmpty()){
+			for(SmSvAssistantOfficer smSvAssistantOfficer : svTask.getSmSvAssistantOfficers()){
+				assistantOfficer.append(++aOfficer + ". ");
+				assistantOfficer.append(smSvAssistantOfficer.getName());
+				assistantOfficer.append("<br/>");
+			}
+		}
+		//#28774 - End
+		
 		context.put("hostUrl", getLogoHeaderPath());
 		context.put("accptDate", accptDate);
 		context.put("svOfficers", sb.toString());
+		//#28774 - Start
+		context.put("svAOfficer", assistantOfficer.toString());
+		//#28774 - End
 		context.put("addrLiines",getAddressLines(addr));
 		context.put("postCode", (addr.getPostcode() != null && addr.getPostcode().length() > 0)? addr.getPostcode() : "");
 		context.put("townDtls", (addr.getPmCity() != null && addr.getPmCity().getCityName() !=null && addr.getPmCity().getCityName().length() > 0)? addr.getPmCity().getCityName() : "");
@@ -1483,9 +1557,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		boolean authorizedCapitalFlag = false;
 
 		// SIR #3108
+		//#29781 - start
+		/*
 		context.put("higherManagementNames", this.getManagedBean().getHigherManagementNames());
 		context.put("managementNames", this.getManagedBean().getManagementNames());	
-		log.info("Business type***************>" + svTask.getSmAppl().getSmSupplier().getBusinessType());
+		*/
+		context.put("managementLs", getManagedBean().getMgmtLs());
+		//#29871 - end
 		
 		String businessType = svTask.getSmAppl().getSmSupplier().getBusinessType();
 		if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP) 
@@ -1498,9 +1576,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("authorizedCapitalFlag", authorizedCapitalFlag);
 		
 		String fileName = fileInitName + "sectionA.pdf";
-		String file = generateToPdf(vmEquity, context, fileName);
-		
-		return file;
+		//CR 28774: Static Code Analysis 
+		return generateToPdf(vmEquity, context, fileName);
 	}
 	
 	/**
@@ -1737,11 +1814,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("templateCode", templateType);
 		context.put("review", review);
 		context.put("svTask", svTask);
-		context.put("categoryCodeLs", getManagedBean().getSupplierCategory());
+		//#28774 - START 
+		context.put("categoryCodeLs", this.getManagedBean().getCategoryApplicable());
+		context.put("smVmUtil", new VmUtil());
+		//#28874 - END
 		
 		String fileName = fileInitName + "sectionC.pdf";
-		String file = generateToPdf(vmSectionC, context, fileName);
-		return file;
+		//CR 28774: Static Code Analysis
+		return generateToPdf(vmSectionC, context, fileName);
 	}
 	
 	/**
@@ -1789,21 +1869,18 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 			
 		}
-/*		else if(templateType.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || templateType.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) || 
-				templateType.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING) || templateType.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
-			SmSupplierCategory suppCat = getManagedBean().getSupplierCategory();
-			
-		}*/
-		context.put("categoryCodeLs", getManagedBean().getSupplierCategory());
+		//#28774 - START
+		context.put("categoryCodeLs", this.getManagedBean().getCategoryApplicable());
+		context.put("smVmUtil", new VmUtil());
+		//#28874 - END
 		context.put("hostUrl", getLogoHeaderPath());
 		context.put("templateType",templateDesc);
 		context.put("templateCode", templateType);
 		context.put("review", review);
 		
 		String fileName = fileInitName + "sectionD.pdf";
-		String file = generateToPdf(vmSectionD, context, fileName);
-		
-		return file;
+		//CR 28774: Static Code Analysis
+		return generateToPdf(vmSectionD, context, fileName);
 	}
 	
 	/**
@@ -1843,9 +1920,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 		
 		String fileName = fileInitName + "sectionE.pdf";
-		String file = generateToPdf(vmSectionD, context, fileName);
-		
-		return file;
+//		/CR 28774: Static Code Analysis
+		return generateToPdf(vmSectionD, context, fileName);
 	}
 	
 	/**
@@ -1909,8 +1985,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		Locale locale = new FacesScopes().getUserLocale();
 		
 		String lblTemplate = "lbl.sm.sitevisit.category.categorycode_"+templateType;
-		String templDesc = ResourceBundleUtils.getMessage(lblTemplate,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
-		return templDesc;
+		//CR 28774: Static Code Analysis
+		return ResourceBundleUtils.getMessage(lblTemplate,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
 	}
 	
 	/**
@@ -2085,11 +2161,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			validateDuplicateWorker(svTemplate.getSmSvWorkers());
 		}
 		
-		//validate assistant officer
-		if(StringUtils.isBlank(svTask.getSmSvAssistantOfficer().getName())){
-			svTask.setSmSvAssistantOfficer(null);
-		}
-		
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
 			if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
@@ -2242,9 +2313,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @return String
 	 */
 	private String getLogoHeaderPath(){
-		String path = SmCommonUtil.getBasePortalUrl();
-		
-		return path;
+		//CR 28774: Static Code Analysis
+		log.info("getServerUrl()--:"+ getServerUrl());
+		return getServerUrl();
+		//return SmCommonUtil.getBasePortalUrl();
 	}
 	
 	/**
@@ -2423,8 +2495,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	
 	public void attachmentDownload(SmAttachment attachment) throws IOException{
 		if(attachment != null){
-			String file = attachment.getFilePath() + "/" + attachment.getFileName();
-			commonDownload(file,attachment.getFileName());
+			//CR 28774: Static Code Analysis
+			commonDownload(attachment.getFilePath() + "/" + attachment.getFileName(), attachment.getFileName());
 		}
 	}
 
@@ -2525,15 +2597,16 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}
 			}
 			
-			if(facilityType == null){
-				if(getManagedBean().getSmSvTask().getSmAppl().getSmAssociateCompanies().size() > 0){
+			//CR 28774: Static Code Analysis
+			if(facilityType == null && !getManagedBean().getSmSvTask().getSmAppl().getSmAssociateCompanies().isEmpty()){
+				//if(getManagedBean().getSmSvTask().getSmAppl().getSmAssociateCompanies().size() > 0){
 					for(SmAssociateCompany associateCompany : getManagedBean().getSmSvTask().getSmAppl().getSmAssociateCompanies()){
 						if(associateCompany.getSmAddress().getAddressId().longValue() == addressId){
 							facilityType = "A";
 							break;
 						}
 					}
-				}
+				//}
 			}
 			
 			if(facilityType != null){
@@ -2569,7 +2642,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public void downloadPOApprovalSiteVisitReport(SmSvTask svTask) throws Exception{
 		getManagedBean().setSvTaskId(svTask.getSvTaskId());
-		retrieveSiteVisitInfo("V");
+		retrieveSiteVisitInfo(""); //28774
 		downloadSiteVisitTemplate(getManagedBean().getSmSvTask(), true);
 	}
 	
@@ -2590,9 +2663,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public void retrievUploadedSiteVisitReport(SmSvTemplate template){
-		if(template != null){
-			//for(SmSvTemplate template : templateLs){
-				if(template.getSmAttachments() == null){
+		//CR 28774: Static Code Analysis Start
+		if(template != null && template.getSmAttachments() == null){
+				//if(template.getSmAttachments() == null){
 						ISmAttachmentSO reqSO = SmServiceLookup.getSmAttachmentSO();
 						SmAttachmentReqDTO reqDTO = new SmAttachmentReqDTO();
 						reqDTO.setDocType(attachmentType);
@@ -2600,9 +2673,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 						SmAttachmentResDTO resDTO = reqSO.retrieveSmAttachmentListByDocIdAndType(reqDTO);
 						
 						template.setSmAttachments(resDTO.getAttachmentLs());
-				}
-			//}
+				//}
 		}
+		//CR 28774: Static Code Analysis End
 	}
 	
 	public void onClickClaimButton(){
@@ -2664,8 +2737,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			
 			List<SmMachineCategory> machineCategoryLs = retrieveMachineDtlByApplIdAndCategoryL3Id(getManagedBean().getSmSvTask().getSmAppl().getApplId(),
 					getManagedBean().getSmSvTask().getPmCategoryL3().getCategoryL3Id());
-			
-			if(machineCategoryLs.size() > 0){
+			//CR 28774: Static Code Analysis
+			if(!machineCategoryLs.isEmpty()){
 				for(SmMachineCategory machineCat : machineCategoryLs){
 					SmSvMachine svMachine = new SmSvMachine();
 					svMachine.setSmMachineDtl(machineCat.getSmMachineDtl());
@@ -2714,13 +2787,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		SmSvTask svTask = getManagedBean().getSmSvTask();
 		svTask.setSmSvDocLicenses(new ArrayList<SmSvDocLicense>());
 		
-		if(documentLs.size() > 0){
+		//CR 28774: Static Code Analysis
+		if(!documentLs.isEmpty()){
 			Set<Long> docSet = new HashSet<Long>();
 			for(PmDocument doc : documentLs){
 				docSet.add(doc.getDocumentId());
 			}
 			
-			if(docSet.size() > 0 && svTask.getSmAppl().getSmApplSupportDocs().size() > 0){
+			//CR 28774: Static Code Analysis
+			if(!docSet.isEmpty() && !svTask.getSmAppl().getSmApplSupportDocs().isEmpty()){
 				for(SmApplSupportDoc suppDoc :getManagedBean().getSmSvTask().getSmAppl().getSmApplSupportDocs()){
 					if(docSet.contains(suppDoc.getPmDocument().getDocumentId())){
 						SmSvDocLicense svDocLicense = new SmSvDocLicense();
@@ -2737,7 +2812,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		Map<String, String> purchaseMethodMap = new HashMap<String,String>();
 		List<PmParameterDesc> purchaseMethodLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.PURCHASING_METHOD, "en");
 		
-		if(purchaseMethodLs.size() > 0){
+		//CR 28774: Static Code Analysis
+		if(!purchaseMethodLs.isEmpty()){
 			for(PmParameterDesc pmDesc : purchaseMethodLs){
 				purchaseMethodMap.put(pmDesc.getPmParameter().getParameterCode(),pmDesc.getCodeName());
 			}
@@ -2796,5 +2872,104 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return ResourceBundleUtils.getMessage("lbl.sm.sv.templ." + tempStatus, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
 	// #29200 CR 14055: Static Code Analysis
+	//#28774 - Start
+	/**
+	 * add Assistant Officer
+	 */
+	public void addSvAsistantOfficer(){
+		if(this.getManagedBean().getSmSvTask().getSmSvAssistantOfficers()==null){
+			this.getManagedBean().getSmSvTask().setSmSvAssistantOfficers(new ArrayList<SmSvAssistantOfficer>());
+		}
+		SmSvAssistantOfficer smSvAssistantOfficer = new SmSvAssistantOfficer();
+		smSvAssistantOfficer.setSmSvTask(this.getManagedBean().getSmSvTask());
+		this.getManagedBean().getSmSvTask().getSmSvAssistantOfficers().add(smSvAssistantOfficer);
+	}
+	
+	/**
+	 * Temporary hold Assistant Officer to delete until yes/no choose
+	 * @param smSvAssistantOfficer
+	 */
+	public void selectSvAssistantOfficer(SmSvAssistantOfficer smSvAssistantOfficer){
+		this.getManagedBean().setSelectedAssistantOfficer(smSvAssistantOfficer);
+		RequestContext.getCurrentInstance().execute("assistingOfficerDeletePopUp.show()");
+	}
+	
+	/**
+	 * remove the selected assistant officer(s)
+	 */
+	public void removeSvAssistantOfficer(){
+		if(this.getManagedBean().getSelectedAssistantOfficer() != null){
+			this.getManagedBean().getSmSvTask().getSmSvAssistantOfficers().remove(this.getManagedBean().getSelectedAssistantOfficer());
+		}
+		this.getManagedBean().setSelectedAssistantOfficer(null);
+	}
+	
+	/**
+	 * Check current user role to disable or enable the Assistant Officer name input
+	 * @return boolean
+	 */
+	public boolean checkUserRole() {
+		FacesScopes fs = new FacesScopes();
+		//#24964, #28774 - start
+		log.info("TR Troubleshoot #24964 === "+getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId());
+		if(getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED 
+			|| getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT)) {
+				log.info("TR Troubleshoot #24964 === 2");
+				return true;
+		}
+		//#24964, #28774 - end
+		if(this.getManagedBean().isViewMode()){
+			log.info("TR Troubleshoot #24964 === 3");
+			if(fs.hasRoleUser(RoleCode.UPS_APPROVER.value()) && 
+					(this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20116 || 
+					 this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20108)){
+				log.info("TR Troubleshoot #24964 === 4");
+				return true;
+			}
+				
+			if(fs.hasRoleUser(RoleCode.UPS_PO.value()) && this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20103){
+				log.info("TR Troubleshoot #24964 === 5");
+				return true;
+			}
+			if(fs.hasRoleUser(RoleCode.UPS_SVO.value()) || 
+					   fs.hasRoleUser(RoleCode.UPS_SDO.value()) || 
+					   fs.hasRoleUser(RoleCode.UPS_PO.value())  || 
+					   fs.hasRoleUser(RoleCode.UPS_APPROVER.value()) ||
+					   fs.hasRoleUser(RoleCode.UPS_SVC.value()) ||
+					   fs.hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
+					   fs.hasRoleUser(RoleCode.UPS_ADMIN.value())){
+						log.info("TR Troubleshoot #24964 === 6");
+						return true;
+			}
+		}
+		log.info("TR Troubleshoot #24964 === 7");
+		return false;
+	}
+	
+	/**
+	 * Check if Assistant Officers is empty and create the first officers
+	 */
+	public void checkEmptyAssistantOfficers(){
+		if(this.getManagedBean().getSmSvTask().getSmSvAssistantOfficers()== null || this.getManagedBean().getSmSvTask().getSmSvAssistantOfficers().isEmpty()){
+			SmSvAssistantOfficer smSvAssistantOfficer = new SmSvAssistantOfficer();
+			smSvAssistantOfficer.setSmSvTask(this.getManagedBean().getSmSvTask());
+			this.getManagedBean().getSmSvTask().getSmSvAssistantOfficers().add(smSvAssistantOfficer);
+		}
+	}
+	//#28774 - End
+	
+	/**
+	 * Gets the server url.
+	 *
+	 * @return the server url
+	 */
+	private String getServerUrl() {
+		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
+		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
+		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
+		String requestURL = httpServletRequest.getRequestURL().toString();
+		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
 
+		return url;
+	}
 }
