@@ -161,8 +161,11 @@
 				bumiPercentage="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.bumiPercentage}"
 				businessTypeCode="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.businessType}"
 				supplierId="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.supplierId}"
-				special="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.supplierType}" />
-			
+				<!-- #33387 - START -->
+				special="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.supplierType}"
+				activeCategoryList="#{supplierDataMaintenanceBackingBean.managedBean.activeCategoryList}" />
+				<!-- #33387 - END -->
+				
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedBtnId" 
 				disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.selectedPendingApprovedCategories or 
 					!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
