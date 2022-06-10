@@ -51,7 +51,8 @@
 				</td>
 			</tr>
 			<ui:remove>//29464-start</ui:remove>
-			<ui:fragment rendered="#{statusId eq QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT}">
+			<ui:fragment rendered="#{ statusId eq QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT
+				and not empty specMaintenanceBB.managedBean.taskName and not empty qTDetailBB.managedBean.qt.scQt}">
 				<tr>
 					<td width="15%"><h:outputLabel
 							value="#{lbl['lbl.sc.qt.republishFrom']}" /></td>
