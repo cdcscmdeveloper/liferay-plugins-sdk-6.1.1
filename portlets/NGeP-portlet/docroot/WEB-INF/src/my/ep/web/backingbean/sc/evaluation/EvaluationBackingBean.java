@@ -7659,11 +7659,6 @@ public class EvaluationBackingBean extends
 									this.getManagedBean().setEvaluatioStageActiveIndex(2);
 								}
 								//#33187 End - fix next skip if disable Technical
-								//#33187 Start - fix next skip if disable Technical
-								if(this.getManagedBean().getNoSupplierPackageExist()){
-									this.getManagedBean().setEvaluatioStageActiveIndex(2);
-								}
-								//#33187 End - fix next skip if disable Technical
 							}else if( this.getManagedBean()
 									.getPresentationDemoActiveIndex() < 0 ||
 									this.getManagedBean().getTabTechnicalIndex() == 2){
