@@ -101,7 +101,7 @@ import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
-import my.ep.helper.Paginator;//25138
+import my.ep.helper.Paginator;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
@@ -2468,6 +2468,36 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setSingleItemCheckList(resDTO
 					.getCheckListResultBean().getResultList());
 			//#25138 - one item only - end
+			
+			//#33178 related to #21695 Start	
+			if(!this.getManagedBean().getScQt().isZonal() && this.getManagedBean().getScQt().isPartial()){
+				int checkcompare = evaluationSO.checkqualifiedSuppDisableTecPkgTab(reqDTO);
+				if(checkcompare > 0){
+					//supplier not qualified by package
+					//if there is no supplier qualified to evaluate by package --> disable tab package evaluation
+					this.getManagedBean().setNoSupplierPackageExist(true);
+				}
+				else if (checkcompare < 0){
+					//supplier qualified by package
+					//if there is supplier qualified to evaluate by package --> enable tab package evaluation
+					this.getManagedBean().setNoSupplierPackageExist(false);
+				}
+				
+			}else if(this.getManagedBean().getScQt().isZonal() && this.getManagedBean().getScQt().isPartial()){
+				int checkcompare = evaluationSO.checkqualifiedSuppDisableTecPkgTabZone(reqDTO);
+				if(checkcompare > 0){
+					//supplier not qualified by package
+					//if there is no supplier qualified to evaluate by package --> disable tab package evaluation
+					this.getManagedBean().setNoSupplierPackageExist(true);
+				}
+				else if (checkcompare < 0){
+					//supplier qualified by package
+					//if there is supplier qualified to evaluate by package --> enable tab package evaluation
+					this.getManagedBean().setNoSupplierPackageExist(false);
+				}
+				
+			}
+			//#33178 related to #21695 End
 			List<ScQtCheckList> localCheckList = new ArrayList<ScQtCheckList>();
 			this.getManagedBean().setCheckQualifiedSuppliers(
 					resDTO.isCheckQualifiedSuppliers());
@@ -7624,6 +7654,16 @@ public class EvaluationBackingBean extends
 								this.getManagedBean().setTabTechnicalIndex(2);
 								outputTab = 2;
 								
+								//#33187 Start - fix next skip if disable Technical
+								if(this.getManagedBean().getNoSupplierPackageExist()){
+									this.getManagedBean().setEvaluatioStageActiveIndex(2);
+								}
+								//#33187 End - fix next skip if disable Technical
+								//#33187 Start - fix next skip if disable Technical
+								if(this.getManagedBean().getNoSupplierPackageExist()){
+									this.getManagedBean().setEvaluatioStageActiveIndex(2);
+								}
+								//#33187 End - fix next skip if disable Technical
 							}else if( this.getManagedBean()
 									.getPresentationDemoActiveIndex() < 0 ||
 									this.getManagedBean().getTabTechnicalIndex() == 2){
