@@ -407,13 +407,22 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String date1 = null;
 		String molpayTransId = null;
 		String extraP1 = httpServletRequest.getParameter("extraP");
+		log.info("extraP1 before:" + extraP1);
 		if(extraP1 != null){
 			JSONObject obj1;
 			try { 
+				log.info("extraP1 after:" + extraP1);
 				obj1 = new JSONObject(extraP1); 
-				date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
-				molpayTransId = obj1.getString("MOLPay_tranID") != null ? obj1.getString("MOLPay_tranID") : null;
-				log.info("molpay id"+molpayTransId);
+				
+				if(obj1.has("bank_datetime")){
+					log.info("----- bank date time before set -----");
+					date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
+				}
+				
+				if(obj1.has("MOLPay_tranID")){
+					molpayTransId = obj1.getString("MOLPay_tranID") != null ? obj1.getString("MOLPay_tranID") : null;
+					log.info("molpay id after : "+ molpayTransId);	
+				}
 			} catch (JSONException e) { 
 				e.printStackTrace(); 
 			}
@@ -542,7 +551,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				}
 				//END THIS LINE OF CODE DO NOT MERGE TO PRODUCTION
 				
-				// #26307 end 
+				// #26307 end
 				//32422 START
 				Timestamp bankDate = new Timestamp(System.currentTimeMillis());
 				Boolean validFormat = false;
@@ -584,7 +593,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					bankDate = null;
 					e.printStackTrace();
 				}
-
+				
 				Timestamp txDate = new Timestamp(System.currentTimeMillis());
 				try {
 					txDate = DateUtils.convertStringToTimestamp(
@@ -598,7 +607,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				paymentOrder.setChannelName(channel);
 				//#33137 - start
 				if(channel.equalsIgnoreCase("FPX")){
-				smPaymentRes.setTransactionId(tranID);
+					smPaymentRes.setTransactionId(tranID);
 					log.info("SET TRANSACTION ID--------------------33137"+tranID);
 				}else{
 					smPaymentRes.setTransactionId(molpayTransId);
@@ -613,7 +622,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				if(bankDate != null){
 					smPaymentRes.setTransactionDate(bankDate);
 				}else{
-				smPaymentRes.setTransactionDate(txDate);
+					smPaymentRes.setTransactionDate(txDate);
 				}
 				smPaymentRes.setBankDateTime(bankDate);
 				//32422 END
@@ -841,7 +850,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			getManagedBean().setPaymentId(null);
 			getManagedBean().setPaymentStatus(false);
 		}
-
+		
 		log.info("Severity >>>>>>>>" + getManagedBean().getMessageSeverity().toString());
 		log.info("Message Id >>>>>>>>" + getManagedBean().getMessageId().toString());
 		log.info("Payment Id >>>>>>>>" + getManagedBean().getPaymentId());

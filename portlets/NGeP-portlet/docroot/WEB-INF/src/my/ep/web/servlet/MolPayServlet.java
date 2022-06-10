@@ -130,12 +130,22 @@ public class MolPayServlet extends HttpServlet {
 		String molpayTransId = null;
 		String extraP1 = req.getParameter("extraP");
 		JSONObject obj1;
+		log.info("extraP1 before:" + extraP1);
 		try { 
 			obj1 = new JSONObject(extraP1); 
+			log.info("extraP1 after:" + extraP1);
+			
+			if(obj1.has("bank_datetime")){
+				log.info("----- bank date time before set -----");
 			date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
+			}
+			
+			if(obj1.has("MOLPay_tranID")){
 			molpayTransId = obj1.getString("MOLPay_tranID") != null ? obj1.getString("MOLPay_tranID") : null;
-			log.info("molpay id"+molpayTransId);
+				log.info("molpay id after : "+ molpayTransId);	
+			}
 		} catch (JSONException e) { 
+			log.info("molpay id catch : "+molpayTransId);
 			e.printStackTrace(); 
 		}
 		//#33137 - END
