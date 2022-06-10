@@ -151,6 +151,7 @@
 			</p:commandButton>
 			</c:if>
 			<!-- #26238 - END -->
+			<!-- #33387 - START -->
 			<ac:lookupCategoryCode okAction="supplierDataMaintenanceBackingBean.addNewCategoryAction"
 				catcodeL1 ="#{supplierDataMaintenanceBackingBean.managedBean.physicalConsulting}"
 				update="@form"
@@ -161,7 +162,6 @@
 				bumiPercentage="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.bumiPercentage}"
 				businessTypeCode="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.businessType}"
 				supplierId="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.supplierId}"
-				<!-- #33387 - START -->
 				special="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.supplierType}"
 				activeCategoryList="#{supplierDataMaintenanceBackingBean.managedBean.activeCategoryList}" />
 				<!-- #33387 - END -->
