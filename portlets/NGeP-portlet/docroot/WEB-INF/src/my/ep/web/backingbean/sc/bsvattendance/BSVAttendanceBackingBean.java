@@ -345,12 +345,14 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setRoleCode(getUserRoleCode());
 			//Bug 31475 - shaqimi start
-			for(BriefingZoneBean bzb : this.getManagedBean().getZoneBean()){
-				if(!bzb.getBriefingList().isEmpty()){
-					zoneBsvList.add(bzb.getTplSpecZoneDtl().getZoneName());
+			if(scQt.isZonal()){
+				for(BriefingZoneBean bzb : this.getManagedBean().getZoneBean()){
+					if(!bzb.getBriefingList().isEmpty()){
+						zoneBsvList.add(bzb.getTplSpecZoneDtl().getZoneName());
+					}
 				}
+				reqDTO.setZoneBsvList(zoneBsvList);
 			}
-			reqDTO.setZoneBsvList(zoneBsvList);
 			//Bug 31475 - shaqimi end
 			resDTO = qTBriefingSO.updateQtSuppliersNStatus(reqDTO);
 			if (resDTO.isSuccessful()) {
