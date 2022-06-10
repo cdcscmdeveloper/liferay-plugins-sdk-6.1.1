@@ -9750,47 +9750,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		saveSupplierSpecification(false);
 	}
 	/*#29007 End Vinod*/
-		
-	public void verifyConformationForLampiranA3(String bpmAction){
-		log.info("verifyConformationForLampiranA3");
-		int recordCount = 0;
-		if (CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
-			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
-				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
-					recordCount++;
-				}
-			}
-		}
-		if(recordCount>0 && this.getManagedBean().getScLoa().getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)){
-			this.getManagedBean().setLoaBpmVerify(bpmAction);
-			RequestContext.getCurrentInstance().execute("verifyConfirmPopUp.show()");
-		}else{
-			this.approveBeforeupdateBpmTaskAction(bpmAction);
-			return;
-		}
-	}
-	public boolean isQTMaintenanceScreen() {
-		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());//29007&31423
-	}
-	public void addNewOfferedSpec(TplSpecAnswer spec){
-		log.info("addNewOfferedSpec");
-		String specDet = spec.getTplSpecQuestion().getClSpecDetail();
-		for(TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()){
-			if(tplSpecAnswer.getTplSpecQuestion().getClSpecDetail().equals(specDet)){
-				tplSpecAnswer.setRenderNewSpec(true);
-			}
-		}
-	}
-	public void refreshNewOfferedSpec(TplSpecAnswer spec){
-		log.info("refreshNewOfferedSpec");
-		String specDet = spec.getTplSpecQuestion().getClSpecDetail();
-		for(TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()){
-			if(tplSpecAnswer.getTplSpecQuestion().getClSpecDetail().equals(specDet)){
-				tplSpecAnswer.setNewSupplierOffer(null);
-				tplSpecAnswer.setRenderNewSpec(false);//29007
-			}
-		}
-	}
+
 	/*#29007 End Vinod*/
 	
 	/*29007 Start
