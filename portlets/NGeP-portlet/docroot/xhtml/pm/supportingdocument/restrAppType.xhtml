@@ -14,11 +14,52 @@
 			value="#{supportDocBackingBean.managedBean.appTypeRestrictions}"
 			var="restrict">
 			<ac:paginator for="dtAppType" />
-			<p:column style="width:35%;">
-				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.pm.application.type']}" />
-				</f:facet>
+			<!-- #29857- Start -->
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column rowspan="2" style="width:35%;">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.pm.application.type']}" />
+						</f:facet>
+					</p:column>
+					<p:column rowspan="2" style="width:40%;">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.pm.suppdoc.section']}" />
+							<ac:iconTooltip value="#{lbl['lbl.pm.suppdoc.section.tooltip']}" />
+						</f:facet>
+					</p:column>
+					<p:column colspan="2" style="text-align:center;">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.pm.facility.type']}" />
+						</f:facet>
+					</p:column>
+					<p:column rowspan="2" style="width:5%;text-align:center;"
+						headerText="#{lbl['lbl.pm.action']}">
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="width:10%;text-align:center;white-space:normal;">
+						<f:facet name="header">
+							<h:outputText
+								value="#{lbl['lbl.sm.facility.facilityType.home.office']}" />
+							<ac:iconTooltip
+								value="#{lbl['lbl.pm.suppdoc.homeoffice.tooltip']}" />
+						</f:facet>
+					</p:column>
+					<p:column style="width:12%;text-align:center;white-space:normal;">
+						<f:facet name="header">
+							<h:outputText
+								value="#{lbl['lbl.sm.facility.facilityType.business.office']}" />
+							<ac:iconTooltip
+								value="#{lbl['lbl.pm.suppdoc.businessoffice.tooltip']}" />
+						</f:facet>
+					</p:column>
+				</p:row>
+			</p:columnGroup>
+
+			<p:column>
 				<h:outputText
 					value="#{supportDocBackingBean.getParameterDesc(restrict.appTypeCode)}"
 					rendered="#{!restrict.brandNew}" />
@@ -34,11 +75,7 @@
 				</p:selectOneMenu>
 				<p:message id="somAppTypeMsg" for="somAppType" display="icon" />
 			</p:column>
-			<p:column style="width:40%;">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.pm.suppdoc.section']}" />
-					<ac:iconTooltip value="#{lbl['lbl.pm.suppdoc.section.tooltip']}" />
-				</f:facet>
+		    <p:column>
 				<div style="display: table; width: 100%;">
 					<div style="display: table-cell; width: 94%;white-space:normal;">
 						<h:outputText value="#{supportDocBackingBean.constructSectionString(restrict)}" />
@@ -57,17 +94,17 @@
 					</div>
 				</div>
 			</p:column>
-			<p:column style="width:10%;text-align:center;white-space:normal;">
-				<f:facet name="header">
-					<h:outputText
-						value="#{lbl['lbl.sm.facility.facilityType.home.office']}" />
-					<ac:iconTooltip value="#{lbl['lbl.pm.suppdoc.homeoffice.tooltip']}" />
-				</f:facet>
+            <p:column style="text-align:center;">
 				<p:selectBooleanCheckbox id="chkHomeOffice"
 					value="#{restrict.homeOffice}" />
 			</p:column>
-			<p:column style="width:5%;text-align:center;"
-				headerText="#{lbl['lbl.pm.action']}">
+			<!-- #29857- Start -->
+			<p:column style="text-align:center;">
+				<p:selectBooleanCheckbox id="chkBusinessOffice"
+					value="#{restrict.businessOffice}" />
+			</p:column>
+			<!-- #29857 - End -->
+			<p:column style="text-align:center;">
 				<p:commandLink partialSubmit="true" process="@this"
 					oncomplete="appTypeDeletePopUp.show();"
 					update="@([id$=#{appTypeDeleteId}])">
@@ -77,6 +114,7 @@
 						value="#{rowIndex}" />
 				</p:commandLink>
 			</p:column>
+			<!-- #29857- End -->
 		</p:dataTable>
 
 		<div class="ppRightBtn">

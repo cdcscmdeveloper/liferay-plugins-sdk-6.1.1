@@ -1788,7 +1788,14 @@ public class SupportDocumentBackingBean extends
 	 */
 	private void validateRestrictions(PmDocument pmDocument) {
 		log.info("validateRestrictions");
-
+		//29857 - Start
+		for(PmDocumentRestr pmDocumentRestr : getManagedBean().getAppTypeRestrictions()){
+			if(!pmDocumentRestr.isHomeOffice() && !pmDocumentRestr.isBusinessOffice()){
+				throw new EpException(MessageConst.ERROR_770233);
+			}
+		}
+		//29857 - End
+		
 		// validate required field
 		validateRestriction(pmDocument, this.getManagedBean()
 				.getAppTypeRestrictions(), RESTR_APP);
