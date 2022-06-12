@@ -1143,11 +1143,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	private void populateLOADetails(AwardSupplierResDTO resDTO) {
 		ScLoa scLoa = resDTO.getScLoa();
 		
-		// #26247 - #33073 - Start.
-		/*if (null != getManagedBean().getSourceId()) { //BUG 33354, TESTING TO PRODUCE BUG IN DEV N SIT (TEMPORARY)
-			retrieveLOILOAList(getManagedBean().getSourceId());
-		}
-		
+		// #26247 - #33073 - #33354 - Start.
 		if (null != scLoa && null != scLoa.getScLoiLoa() && null != scLoa.getScLoiLoa().getSmSupplier()){
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			
@@ -1163,8 +1159,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			} finally {
 				qtSuppFinalizationSO = null;
 			}
-		}*/
-		// #26247 - #33073 - End.
+		}
+		// #26247 - #33073 - #33354 - End.
 		
 		getManagedBean().setScLoa(scLoa);
 		getManagedBean().setScQt(resDTO.getScQt());
@@ -6045,6 +6041,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (resDTO.isSuccessful()) {
 			loaBackingBean.getManagedBean().setQt(resDTO.getScQt());
 			List<ScLoiLoa> loiLoaList = resDTO.getLoiLoas();
+			// #26247 - #33073 - #33354 - Start.
+			if (CollectionUtils.isNotEmpty(loiLoaList) && loiLoaList.size() > 0) {
+				IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+				try {
+					for (ScLoiLoa scLoiLoa: loiLoaList) {
+						qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+										IQTSuppFinalizationSO.class);
+						
+						if (null != qtSuppFinalizationSO) {
+							SmSupplier smSupplier = qtSuppFinalizationSO.retrieveActiveDisciplinaryActionBySupplier(scLoiLoa.getSmSupplier());
+							scLoiLoa.setSmSupplier(smSupplier);
+						}
+					}
+				} finally {
+					qtSuppFinalizationSO = null;
+				}
+			}
+			// #26247 - #33073 - #33354 - End.
 			if (loiLoaList != null && loiLoaList.size() > 0) {
 				loaBackingBean.getManagedBean().setSuppLoiLoaMap(resDTO.getLoiLoaSupplierMap());
 				loaBackingBean.getManagedBean().setScLoiLoaList(loiLoaList);
