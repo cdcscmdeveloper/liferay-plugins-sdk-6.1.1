@@ -723,20 +723,28 @@ public class SmSideMenuIconUtil {
 							// #26528 - end
 						}
 						
-						//#31043
+						//#31043 - start
 						boolean isCategoryRejected = true;
-						int approveCount = 0;
-						if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
-								.getSmSupplierCategories())) {
-							for (SmSupplierCategory cat : bean.getSmAppl()
-									.getSmSupplierCategories()) {
-								if(!SmApplicationUtil.isCategoryRejected(cat)){
-									approveCount++;
+						int rejectCount = 0;
+						SmApplicationUtil.assignActiveAndApprovedCategoryList(bean);
+						if(bean.getActiveCategoryList() != null){
+							for (SmSupplierCategory cat : bean.getActiveCategoryList()) {
+								log.info("category name; "+cat.getPmCategoryL3().getCategoryName());
+								if(bean.isPoUser()){
+									if(cat.getPoDecFlg() == null ||cat.getPoDecFlg() == 0){
+										rejectCount++;
+									}
+								}
+								else if(bean.isApproverUser() ){
+									if(cat.getApprvrDecFlg() == null || cat.getApprvrDecFlg() == 0){
+										rejectCount++;
+									}
 								}
 							}
-							if(approveCount >= 1)
+							if(rejectCount == 0)
 								isCategoryRejected = false;
 						}
+						//#31043 - end
 						
 						
 						if (isAllCatcodeVerified && !isCategoryRejected) {
