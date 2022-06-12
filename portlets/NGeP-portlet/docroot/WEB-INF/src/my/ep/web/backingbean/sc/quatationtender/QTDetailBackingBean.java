@@ -2325,7 +2325,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 		}// 9019 end
-
+		
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		quationTenderReqDTO.setQtdetail(scQt);
 		quationTenderReqDTO.setQtCommittes(scQt.getScQtCommittees());
@@ -6914,6 +6914,26 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			// #29732 End
 		}
+		//9019 - Start (Harun) initializing remark 
+	    //       This code for initialize back whenever qtDetailsTabChange is trigger and change while remarks is 
+		//       able to entered when available 
+		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			
+			ScQt scQt = this.getManagedBean().getQt();
+			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
+
+			for (ScQtRemark qtRemark : qtRemarks) {
+				qtRemark.setEditable(true);
+			}
+			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+
+		} else{
+			ScQt scQt = this.getManagedBean().getQt();
+			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+		}
+		//9019 - End (Harun)
+		
 	}	
 
 	private boolean isQTStatusBtwScheduleDocAndBeforePublished(Long currentStatusId) {
@@ -12067,5 +12087,5 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 		return bpmExistFlag;
 	}
-	//9019 - End (Harun) 
+	//9019 - End (Harun)
 }
