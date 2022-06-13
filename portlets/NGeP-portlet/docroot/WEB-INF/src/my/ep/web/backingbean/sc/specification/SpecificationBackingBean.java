@@ -15099,11 +15099,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				} else {
 					BigDecimal prThreshold = getPRThresholdAmount();
 
-					if (null == totalSpecEstimatedAmount || (totalSpecEstimatedAmount.compareTo(prThreshold) <= 0)) {
+					// 32477, 25138, 32134, 25729 -start-
+					if (null == totalSpecEstimatedAmount) {
 						throw new EpException(MessageConst.ERROR_760024,
-								new String[] { SourcingConstants.DF_AMOUNT
-										.format(prThreshold) });
+								new String[] { SourcingConstants.DF_AMOUNT.format(BigDecimal.ZERO) });
 					}
+					// 32477, 25138, 32134, 25729 -end-
 				}
 				//Bug #29808
 				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP));
