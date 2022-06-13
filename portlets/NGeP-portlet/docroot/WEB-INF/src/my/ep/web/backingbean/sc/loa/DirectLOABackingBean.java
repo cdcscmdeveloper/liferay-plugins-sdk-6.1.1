@@ -11323,7 +11323,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 						// zonal
 						if (question.getQuestionType().equalsIgnoreCase("I")) {
 							listDL.add(retrieveZonalSpec(question, master.getSpecTypeCode().getParameterCode(),itemType));
-							print(listDL);
+							
 						}
 					} else {
 						// non zonal
@@ -11335,11 +11335,14 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					}
 
 				}
+				//#26130 - start
+				specQuestion.setListCombineZonalDLOA(listDL);
+				specQuestion.setListCombineDLOA(listSpecDL);
+				specQuestion.setListCombineSpecVal(listSpecCombine);
+				//#26130 - end
 			}
 			
-			specQuestion.setListCombineZonalDLOA(listDL);
-			specQuestion.setListCombineDLOA(listSpecDL);
-			specQuestion.setListCombineSpecVal(listSpecCombine);
+			
 
 		}
 		return specQuestion;
@@ -11616,15 +11619,6 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			}	
 			
 			//#26130 - end
-			private void print(List<List<HashMap<String, Object>>> listDL) {
-				// TODO Auto-generated method stub
-				
-				for (List<HashMap<String, Object>> l: listDL){
-					for (HashMap<String, Object> m: l){
-						log.info("item name "+ m.get("clItem"));
-					}
-				}
-				
-			}
+		
 
 }
