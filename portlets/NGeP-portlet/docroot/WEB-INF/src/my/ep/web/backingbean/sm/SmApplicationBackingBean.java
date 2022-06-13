@@ -1375,7 +1375,7 @@ public class SmApplicationBackingBean extends
 							.getBasicInfo(), getManagedBean().getSmSupplier(),
 							getManagedBean().getSmAppl()));
 		}
-
+		//Start 29480
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 			getManagedBean().getSmAppl().setApplCategoryType("N");
@@ -1383,6 +1383,7 @@ public class SmApplicationBackingBean extends
 				.getApplCategoryType())) {
 			getManagedBean().getSmAppl().setApplCategoryType("N");
 		}
+		
 		getManagedBean().setCurrentPageType(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
 		if (SmCommonUtil.isCollectionEmpty(smAppl.getSmFacilities())
@@ -3739,8 +3740,18 @@ public class SmApplicationBackingBean extends
 		SmFacility hq = SmApplicationUtil.getHqFacilityByAppl(getManagedBean()
 				.getSmAppl());
 		if (hq != null) {
-			rqDto.setForHomeOffice(hq.getFacilityType().equals("H") ? true
-					: false);
+			//29480 - Start
+			if (hq.getFacilityType().equalsIgnoreCase("H")) {
+				rqDto.setForHomeOffice(true);
+				rqDto.setForBusinessOffice(false);
+				//rqDto.setForHomeOffice(hq.getFacilityType().equals("H") ? true : false);
+			}
+			else if(hq.getFacilityType().equalsIgnoreCase("B")){
+				rqDto.setForBusinessOffice(true);
+				rqDto.setForHomeOffice(false);
+				//rqDto.setForHomeOffice(hq.getFacilityType().equals("B") ? true : false);
+			}
+			//29480 - End
 		}
 		DocumentResDTO rsDTO = null;
 		rsDTO = retrieveSupportingDocumentList(rqDto);
