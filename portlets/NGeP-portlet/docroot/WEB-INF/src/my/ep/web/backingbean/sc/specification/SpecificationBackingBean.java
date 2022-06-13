@@ -15097,8 +15097,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 										.format(panelThreshold) });
 					}
 				} else {
-					BigDecimal prThreshold = getPRThresholdAmount();
-
 					// 32477, 25138, 32134, 25729 -start-
 					if (null == totalSpecEstimatedAmount) {
 						throw new EpException(MessageConst.ERROR_760024,
