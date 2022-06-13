@@ -1864,8 +1864,8 @@ public class SpecificationBackingBean extends
 
 		try {
 			if (null == this.getManagedBean().getScQtCheckSt2techProposal()
-					|| this.getManagedBean().getScQtCheckSt2techProposal()
-							.isEmpty()) {
+					|| this.getManagedBean().getScQtCheckSt2techProposal().isEmpty() || 
+					this.getManagedBean().getQt().isDemoRequired()) {//#28784
 				List<ScQtCheckList> localcheckList = new ArrayList<ScQtCheckList>();
 				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 				specSo = BusinessDelegate.getInstance().getServiceObject(
@@ -20532,7 +20532,8 @@ if(null!=allTechnicalChecklist){
 	public String completeDemoAction() {
 		boolean result = false;
 		boolean checkTS = false;
-		List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
+		retriveTechnicalCheckList(); //#28784
+		List<ScQtCheckList> st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
 
 		for (ScQtCheckList t : st2technicalproposalList) {
 			if (t.getDefinationType().getParameterCode()
