@@ -137,6 +137,7 @@ import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks; //#32643 & #3264
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;//#26284
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBusiness; // #29832
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
@@ -8314,4 +8315,23 @@ public class SimpleQuoteBackingBean extends
 		preRenderView();
 	}
 	// #29800 - end
+
+	// #29832 @zaim added method to pass the value into lovBackingBean
+	public SimpleQuoteManagedBean deleteSuccess(){
+		
+		return getManagedBean();
+	}
+	// #29832 end
+	
+	 //29832 start
+	public String excludeLevelCodeSupplier(){
+		StringBuilder sb = new StringBuilder();
+		if (getManagedBean().getScQuote().getBusinessNatureCriterias() != null) {
+			for(ScBusinessNatureQuoteCriteria quoteCriteria: getManagedBean().getScQuote().getBusinessNatureCriterias() ){
+				sb.append("|levelCode^" +quoteCriteria.getPmBusinessNature().getLevelCode());
+			}
+		}
+		return sb.toString();
+	}
+    //29832 - end
 }
