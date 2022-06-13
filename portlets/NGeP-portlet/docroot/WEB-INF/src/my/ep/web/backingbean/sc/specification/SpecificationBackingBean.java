@@ -16936,14 +16936,14 @@ public class SpecificationBackingBean extends
 										.format(panelThreshold) });
 					}
 				} else {
-					//Bug #32477 related to #25138
+					//Bug #32477 related to #25138 #32134-start
 					//comment code replace new condition
 					//if (null == totalSpecEstimatedAmount || (totalSpecEstimatedAmount.compareTo(BigDecimal.ZERO) <= 0)) {
 					if (null == totalSpecEstimatedAmount) {
 						throw new EpException(MessageConst.ERROR_760024,
 								new String[] { SourcingConstants.DF_AMOUNT.format(BigDecimal.ZERO) });
+					}//32134-End
 					}
-				}
 				//Bug #29808
 				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP));
 			}
