@@ -2055,6 +2055,7 @@ public class SmApplicationUtil {
 			String currentPageType) {
 		boolean validCount = true;
 		managedBean.setPoApproverEquityErr(false);//#31461
+		managedBean.setPoApproverChgBusiness(false); //#30691 - 26112021
 		// change by fahmi, log : 23858 13/03/2019 
 		if (managedBean.getBusinessTypeVal() != null
 				&& (managedBean.getBusinessTypeVal()
@@ -2071,9 +2072,16 @@ public class SmApplicationUtil {
 						setNavigationBackToCurrentPage(currentTab, managedBean);
 					}
 					throw new EpException(MessageConst.ERROR_722507);
-				}else {
-					managedBean.setPoApproverEquityErr(true);
-					managedBean.setMsgEquityErr(MessageConst.ERROR_722507);
+				} else {
+					// #30691 - Start
+					if(managedBean.isSiteVisitAfterApproval() && (managedBean.getSmSupplier().getSmAppl() != managedBean.getSmAppl())){
+						managedBean.setPoApproverChgBusiness(true);
+						managedBean.setMsgChgBusiness(MessageConst.ERROR_770270);
+					} else { 
+					// #30691 - End
+						managedBean.setPoApproverEquityErr(true);
+						managedBean.setMsgEquityErr(MessageConst.ERROR_722507);
+					}
 				}//#31461-end
 			}
 		} else  if (managedBean.getBusinessTypeVal() != null
@@ -2114,8 +2122,15 @@ public class SmApplicationUtil {
 						}
 						throw new EpException(messageKey);
 					} else {
-						managedBean.setPoApproverEquityErr(true);
-						managedBean.setMsgEquityErr(messageKey);
+						// #30691 - Start
+						if(managedBean.isSiteVisitAfterApproval() && (managedBean.getSmSupplier().getSmAppl() != managedBean.getSmAppl())){
+							managedBean.setPoApproverChgBusiness(true);
+							managedBean.setMsgChgBusiness(MessageConst.ERROR_770270);
+						} else { 
+						// #30691 - End
+							managedBean.setPoApproverEquityErr(true);
+							managedBean.setMsgEquityErr(messageKey);
+						}
 					}//#31461-end
 				}
 			}
@@ -2136,8 +2151,15 @@ public class SmApplicationUtil {
 				}
 				throw new EpException(MessageConst.ERROR_722508);
 			} else {
-				managedBean.setPoApproverEquityErr(true);
-				managedBean.setMsgEquityErr(MessageConst.ERROR_722508);
+				// #30691 - Start
+				if(managedBean.isSiteVisitAfterApproval() && (managedBean.getSmSupplier().getSmAppl() != managedBean.getSmAppl())){
+					managedBean.setPoApproverChgBusiness(true);
+					managedBean.setMsgChgBusiness(MessageConst.ERROR_770270);
+				} else { 
+				// #30691 - End
+					managedBean.setPoApproverEquityErr(true);
+					managedBean.setMsgEquityErr(MessageConst.ERROR_722508);
+				}
 			}//#31461-end
 		}
 		return validCount;
