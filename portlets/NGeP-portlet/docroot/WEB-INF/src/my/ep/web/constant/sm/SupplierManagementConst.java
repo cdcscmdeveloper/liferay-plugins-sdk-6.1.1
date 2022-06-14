@@ -451,6 +451,11 @@ public class SupplierManagementConst {
 	public static final String SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
 	// bug #29156 -END
 
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - start 
+	public static final String SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST = "B";
+	public static final String SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG = "C";
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - end 
+
 	public static final String RESUBMIT_APPL_PATH = "resubmit-application?";
 
 	public static final String APPL_PM_STATUS_REJECT = "20109";
@@ -1305,6 +1310,16 @@ public class SupplierManagementConst {
 
 	// #29156 -START
 
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - start 
+	public String getSM_BASIC_DISCIPLINARY_ACTION_BLACKLIST() {
+		return SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST;
+	}
+
+	public String getSM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG() {
+		return SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG;
+	}
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - end 
+	
 	// #12483 - START
 	public long getPM_STATUS_PENDING_REVISE_APPLICATION_LONG_VALUE() {
 		return Long.parseLong(PM_STATUS_PENDING_REVISE_APPLICATION);
