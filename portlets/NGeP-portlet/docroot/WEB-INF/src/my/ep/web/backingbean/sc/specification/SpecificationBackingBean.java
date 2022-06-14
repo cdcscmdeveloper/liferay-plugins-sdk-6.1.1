@@ -936,13 +936,13 @@ public class SpecificationBackingBean extends
 										if (!this.getManagedBean().isReadOnly()) {
 											checktemplateSpecStatus(this.getManagedBean().getQt());
 											checkFinancialSpecStatus(this.getManagedBean().getQt());
-					}
+										}
 										retriveFinancialScoring();
 										
 								throw new EpException(MessageConst.ERROR_760267,
 										new String[] { checkList.getTitle(),
 												checklistScoring });
-				}
+							}
 						}
 						// End #33068
 					}
@@ -1848,8 +1848,8 @@ public class SpecificationBackingBean extends
 
 		try {
 			if (null == this.getManagedBean().getScQtCheckSt2techProposal()
-					|| this.getManagedBean().getScQtCheckSt2techProposal()
-							.isEmpty()) {
+					|| this.getManagedBean().getScQtCheckSt2techProposal().isEmpty() || 
+					this.getManagedBean().getQt().isDemoRequired()) {//#28784
 				List<ScQtCheckList> localcheckList = new ArrayList<ScQtCheckList>();
 				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 				specSo = BusinessDelegate.getInstance().getServiceObject(
@@ -16943,7 +16943,7 @@ public class SpecificationBackingBean extends
 						throw new EpException(MessageConst.ERROR_760024,
 								new String[] { SourcingConstants.DF_AMOUNT.format(BigDecimal.ZERO) });
 					}//32134-End
-					}
+				}
 				//Bug #29808
 				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP));
 			}
@@ -19022,24 +19022,23 @@ if(null!=allTechnicalChecklist){
 			this.getManagedBean().setDemoAction(false);
 			List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
 			List<ScQtCheckList> newSt2technicalproposalList = new ArrayList();
-				boolean demoList = false;
-
-				for (ScQtCheckList cl : st2technicalproposalList) {
-					if(null != cl.getDefinationType() && null != cl.getDefinationType().getParameterCode()){
-						if (cl.getDefinationType().getParameterCode()
-								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-							demoList = true;
-						} else if (cl.getDefinationType().getParameterCode()
-								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
-							this.getManagedBean().setDemoAction(true);
-						}
+			boolean demoList = false;
+			for (ScQtCheckList cl : st2technicalproposalList) {
+				if(null != cl.getDefinationType() && null != cl.getDefinationType().getParameterCode()){
+					if (cl.getDefinationType().getParameterCode()
+							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+						demoList = true;
+					} else if (cl.getDefinationType().getParameterCode()
+							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
+						this.getManagedBean().setDemoAction(true);
 					}
 				}
+			}
 			if (null != this.getManagedBean().getQt()
 					&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this.getManagedBean().getQt()
 							.getEvaluationType()) && this.getManagedBean().getQt().isDemoRequired()) {					
 
-				if (!demoList) {
+				if (!demoList) {					
 					ScQtCheckList st2technicalproposalList1 = createSpecList("2");
 					st2technicalproposalList1.setDefinationType(new PmParameter());
 					st2technicalproposalList1.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
@@ -19718,7 +19717,8 @@ if(null!=allTechnicalChecklist){
 	public String completeDemoAction() {
 		boolean result = false;
 		boolean checkTS = false;
-		List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
+		retriveTechnicalCheckList(); //#28784
+		List<ScQtCheckList> st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
 
 		for (ScQtCheckList t : st2technicalproposalList) {
 			if (t.getDefinationType().getParameterCode()
@@ -19850,6 +19850,7 @@ if(null!=allTechnicalChecklist){
 		return desc;
 	}
 	
+	//#28784 -  Start
 	public void resetDemoTechSpecListAfterDelete(){
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -19859,6 +19860,7 @@ if(null!=allTechnicalChecklist){
 		SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
 		getManagedBean().setScQtCheckSt2techProposal(resDTO.getTechnicalCheckList());
 	}
+	//#28784 -  End
 	
 	public void actionSearchPresentationDemo() {
 		List<TplSpecQuestion> listNew = new ArrayList<>();
