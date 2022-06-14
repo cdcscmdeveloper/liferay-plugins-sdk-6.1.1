@@ -7827,13 +7827,13 @@ public class SmApplicationBackingBean extends
 										smpersonAddress.getSmAddress().getPmState() == null) {
 							defaultCountry = SmCommonUtil
 									.retrieveCountryByCountryCode(ParameterConst.COUNTRY_UNKNOWN_CODE);
-						} else if (smpersonAddress.getSmAddress().getPmCountry() != null
-								&& shareHolderBean.getIdentificationType() != null
-								&& ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(shareHolderBean
-										.getIdentificationType().getParameterCode()) &&
-										smpersonAddress.getSmAddress().getPmState() == null) {
-							defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(smpersonAddress.getSmAddress()
-									.getPmCountry().getCountryCode());
+						} else if (smpersonAddress.getSmAddress().getPmCountry() != null &&
+								  !smpersonAddress.getSmAddress().getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) &&
+								   shareHolderBean.getIdentificationType() != null &&
+								   ParameterConst.IDENTIFICATION_TYPES_PASSPORT
+								   				 .equalsIgnoreCase(shareHolderBean.getIdentificationType().getParameterCode()) &&
+								   smpersonAddress.getSmAddress().getPmState() != null){
+							defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(smpersonAddress.getSmAddress().getPmCountry().getCountryCode());
 						} else {
 							defaultCountry = SmCommonUtil
 									.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
@@ -7861,6 +7861,17 @@ public class SmApplicationBackingBean extends
 					if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES.equals(smpersonAddress.getAddressType())) {
 						SmAddress smAddressRes = getManagedBean().getShareHolderResdAddr().getSmAddress();
 						initializeSmAddressChilds(smpersonAddress.getSmAddress());
+						
+						if(ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(shareHolderBean.getIdentificationType().getParameterCode())){
+							if(smpersonAddress.getSmAddress().getPmCountry() != null){
+								smAddressRes.setPmCountry(smpersonAddress.getSmAddress().getPmCountry());
+								smAddressRes.setCountryId(smpersonAddress.getSmAddress().getPmCountry().getCountryId());
+							}
+							if(smpersonAddress.getSmAddress().getPmState() != null){
+								smAddressRes.setPmState(smpersonAddress.getSmAddress().getPmState());
+								smAddressRes.setStateId(smpersonAddress.getSmAddress().getPmState().getStateId());
+							}
+						}
 						if (smpersonAddress.getSmAddress().getPmDivision() != null) {
 							smAddressRes.setPmDivision(smpersonAddress.getSmAddress().getPmDivision());
 							smAddressRes.setDivisionId(smpersonAddress.getSmAddress().getPmDivision().getDivisionId());
@@ -7876,6 +7887,9 @@ public class SmApplicationBackingBean extends
 						if (smpersonAddress.getSmAddress().getPmCity() != null) {
 							smAddressRes.setPmCity(smpersonAddress.getSmAddress().getPmCity());
 							smAddressRes.setCityId(smpersonAddress.getSmAddress().getPmCity().getCityId());
+						}
+						if (smAddressRes.getPostcode().isEmpty() || smAddressRes.getPostcode() == null || smAddressRes.getPostcode() == ""){
+							smAddressRes.setPostcode(smpersonAddress.getSmAddress().getPostcode());
 						}
 					}
 				}
@@ -16513,6 +16527,7 @@ public class SmApplicationBackingBean extends
 	}
 	//#12483 - END
 	//#32014 - START
+	//reassign the address since the first time assigning the data is not displayed/populate
 	public void reassignSelShareHolderResAddress(SmPersonnelAddress personnelAddress){
 		log.info("========#32014 - inside reassignSelShareHolderAddress=======");
 		log.info("#32014 - isSupplierUser : " + getManagedBean().isSupplierUser());
@@ -16559,7 +16574,13 @@ public class SmApplicationBackingBean extends
 						}
 						
 						PmState state = new PmState();
+						if(personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC) ){
 						state.setStateId(addr.getSmAddress().getPmState().getStateId());
+						}
+						if(personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT)) {
+							state.setStateId(addr.getSmAddress().getPmDistrict().getPmState().getStateId());
+						}
+						
 						smAddress.setPmState(state);
 						smAddress.setStateId(state.getStateId());
 						
