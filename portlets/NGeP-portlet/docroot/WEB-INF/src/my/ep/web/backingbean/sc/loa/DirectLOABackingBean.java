@@ -10440,45 +10440,47 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		//29007 End	
 		
 		//#26130 start 
-		
-		public TplSpecQuestion retrieveDLSpec(List<TplSpecMaster> specMasters) {
-			TplSpecQuestion specQuestion = new TplSpecQuestion();
-			List<List<HashMap<String, Object>>> listDL = new ArrayList<>();
-			for (TplSpecMaster master : specMasters) {
-				List<HashMap<String, Object>> listSpecDL = new ArrayList<>();
-				List<List<String>> listSpecCombine = new ArrayList<>();
-				String itemType = getParameterDescForReport(master.getItemTypeCode());
-				// retrieve master value
-				
-				if (itemType.equalsIgnoreCase("product") || itemType.equalsIgnoreCase("produk")){
-					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
-						if (question.getTplSpecZoneQties().size() > 0) {
-							// zonal
-							if (question.getQuestionType().equalsIgnoreCase("I")) {
-								listDL.add(retrieveZonalSpec(question, master.getSpecTypeCode().getParameterCode(),itemType));
-								print(listDL);
-							}
-						} else {
-							// non zonal
-							if (question.getQuestionType().equalsIgnoreCase("I")) {
-								listSpecDL.add(retrieveNonZonalSpec(question, master.getSpecTypeCode().getParameterCode(),
-										getParameterDescForReport(master.getItemTypeCode())));
+					
+			public TplSpecQuestion retrieveDLSpec(List<TplSpecMaster> specMasters) {
+				TplSpecQuestion specQuestion = new TplSpecQuestion();
+				List<List<HashMap<String, Object>>> listDL = new ArrayList<>();
+				for (TplSpecMaster master : specMasters) {
+					List<HashMap<String, Object>> listSpecDL = new ArrayList<>();
+					List<List<String>> listSpecCombine = new ArrayList<>();
+					String itemType = getParameterDescForReport(master.getItemTypeCode());
+					// retrieve master value
+					
+					if (itemType.equalsIgnoreCase("product") || itemType.equalsIgnoreCase("produk")){
+						for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+							if (question.getTplSpecZoneQties().size() > 0) {
+								// zonal
+								if (question.getQuestionType().equalsIgnoreCase("I")) {
+									listDL.add(retrieveZonalSpec(question, master.getSpecTypeCode().getParameterCode(),itemType));
+									
+								}
+							} else {
+								// non zonal
+								if (question.getQuestionType().equalsIgnoreCase("I")) {
+									listSpecDL.add(retrieveNonZonalSpec(question, master.getSpecTypeCode().getParameterCode(),
+											getParameterDescForReport(master.getItemTypeCode())));
+								}
+
 							}
 
 						}
-
+						//#26130 - start
+						specQuestion.setListCombineZonalDLOA(listDL);
+						specQuestion.setListCombineDLOA(listSpecDL);
+						specQuestion.setListCombineSpecVal(listSpecCombine);
+						//#26130 - end
 					}
+					
+					
+
 				}
-				
-				specQuestion.setListCombineZonalDLOA(listDL);
-				specQuestion.setListCombineDLOA(listSpecDL);
-				specQuestion.setListCombineSpecVal(listSpecCombine);
-
+				return specQuestion;
 			}
-			return specQuestion;
-		}
 				
-
 				public HashMap<String, Object>  retrieveNonZonalSpec(TplSpecQuestion question, String specType, String itemType){
 					HashMap<String, Object> map = new HashMap<>();
 					List<String> listSpec = new ArrayList<>();
@@ -10750,15 +10752,5 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				
 		//#26130 - end
 				
-		private void print(List<List<HashMap<String, Object>>> listDL) {
-			// TODO Auto-generated method stub
-			
-			for (List<HashMap<String, Object>> l: listDL){
-				for (HashMap<String, Object> m: l){
-					log.info("item name "+ m.get("clItem"));
-				}
-			}
-			
-		}	
 		
 }
