@@ -50,6 +50,9 @@ public class PmReportConst implements Serializable {
 	public static final String PARAM_PM_USER_STATUS = "PSTATUS"; 
 	public static final String PARAM_PM_MONTH = "PMTH"; 
 	//shafie - #29486 - end
+	//#29486 - start 
+    public static final String PARAM_PM_PTJ_CODE = "PPTJCD";
+    //#29486 - end
 	
 
 	// PM Report Code
