@@ -192,6 +192,12 @@ public class ContractManagedBean extends BaseManagedBean {
 	
 	private Map<Long, CtAgency> agencyDataDeletion;
 	//End Fix - #31740
+	
+	
+	//#33126 hafiz start
+	private boolean inCtPerformance = false;
+	//#33126 hafiz end
+	
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1549,4 +1555,16 @@ public class ContractManagedBean extends BaseManagedBean {
 	}
 	//Enhancement 15851 - shaqimi end
 	// End Fix - #31740
+
+	// #33126 hafiz start
+
+	public boolean isInCtPerformance() {
+		return inCtPerformance;
+	}
+
+	public void setInCtPerformance(boolean inCtPerformance) {
+		this.inCtPerformance = inCtPerformance;
+	}
+
+	// #33126 hafiz end
 }
