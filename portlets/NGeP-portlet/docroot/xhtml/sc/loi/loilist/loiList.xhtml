@@ -78,7 +78,7 @@
 				</p:column>
 						
 				<p:column headerText="#{lbl['lbl.sc.loiloa.is.loi.required']}" style="width:15%" rendered="#{!isMultipleLoi}">
-					<h:selectOneMenu value="#{loiLoa.loiRequired}" required="true"
+					<h:selectOneMenu value="#{loiLoa.loiRequired}" 
 					    disabled="#{lOIDetailBackingBean.isLoiRequiredDisabled(loiLoa) or readOnly}"
 					    label="#{loiLoa.smSupplier.companyName} : #{lbl['lbl.sc.loiloa.is.loi.required']}" 
 						id="isLoiReq">
