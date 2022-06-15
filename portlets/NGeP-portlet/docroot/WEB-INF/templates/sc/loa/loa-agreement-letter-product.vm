@@ -328,7 +328,11 @@ u.underline {
 				
 				## #25025 & #26770 -start
 				<p>
-					<span class="text_family">5. &#160;&#160;&#160;&#160;&#160;Setelah pesanan/arahan dikeluarkan oleh Kerajaan, syarikat tuan dikehendaki melaksanakan pembekalan barang dalam tempoh yang ditetapkan dan kualiti bekalan tersebut hendaklah memuaskan hati serta memenuhi kehendak Kerajaan. Sekiranya syarikat tuan gagal melaksanakan pembekalan barang dalam tempoh dan/atau kualiti yang ditetapkan, Kerajaan berhak membatalkan pesanan/arahan yang dikeluarkan dan/atau mengenakan <span class="text_family_red">*Denda/ Tolakan / <i>Liquidated & Ascertained Damages</i> (LAD)</span> seperti yang ditetapkan dalam <b><i>Lampiran A</i></b>.  </span>
+					#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
+						<span class="text_family">5. &#160;&#160;&#160;&#160;&#160;Setelah pesanan/arahan dikeluarkan oleh Kerajaan, syarikat tuan dikehendaki melaksanakan pembekalan barang dalam tempoh yang ditetapkan dan kualiti bekalan tersebut hendaklah memuaskan hati serta memenuhi kehendak Kerajaan. Sekiranya syarikat tuan gagal melaksanakan pembekalan barang dalam tempoh dan/atau kualiti yang ditetapkan, Kerajaan berhak membatalkan pesanan/arahan yang dikeluarkan dan/atau mengenakan <span class="text_family_red">*Denda/ Tolakan/ <i>Liquidated & Ascertained Damages</i> (LAD)</span> seperti yang ditetapkan dalam <b><i>Lampiran A</i></b>.  </span>
+					#else
+						<span class="text_family">5. &#160;&#160;&#160;&#160;&#160;Setelah pesanan/arahan dikeluarkan oleh Kerajaan, syarikat tuan dikehendaki melaksanakan pembekalan barang dalam tempoh yang ditetapkan dan kualiti bekalan tersebut hendaklah memuaskan hati serta memenuhi kehendak Kerajaan. Sekiranya syarikat tuan gagal melaksanakan pembekalan barang dalam tempoh dan/atau kualiti yang ditetapkan, Kerajaan berhak membatalkan pesanan/arahan yang dikeluarkan dan/atau mengenakan <span class="text_family_red">*Denda/ Tolakan / <i>Liquidated & Ascertained Damages</i> (LAD)</span> seperti yang ditetapkan dalam <b><i>Lampiran A</i></b>.  </span>
+					#end
 				</p>
 				## #25025 & #26770 -end
 				#if($isSL1M == "true")
@@ -378,12 +382,12 @@ u.underline {
 				#if($isSL1M == "true")
 				<p>
 					<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki
-					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK 1.2</span>
+					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK 1.2.</span>
 				</p>
 				#else
 				<p>
 					<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>di bawah nilai ambang</b> dan syarikat digalakkan
-					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK 1.2</span>
+					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK 1.2.</span>
 				</p>
 				#end
 				
@@ -812,17 +816,11 @@ u.underline {
 					</td>
 				</tr>
 				<tr>
-					#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
-						<td align="left" style="padding-left: 20px;" colspan="3"><span
-							class="text_family_red">* Senarai item, kuantiti, dan/atau tempoh serta jadual
-							pembekalan yang ditetapkan seperti di <b><i>Lampiran A2</i></b>
-						</span></td>
-					#else
-						<td align="left" style="padding-left: 20px;" colspan="3"><span
+					<td align="left" style="padding-left: 20px;" colspan="3"><span
 							class="text_family_red">*Senarai item, kuantiti dan/atau tempoh serta jadual
-							pembekalan yang ditetapkan seperti di <b><i>Lampiran A2</i></b>
-						</span></td>
-					#end
+							pembekalan yang ditetapkan seperti di <b><i>Lampiran A2</i></b></span>
+					</td>
+					
 				</tr>
 				<tr>
 					#if($scLoa.scLoiLoa.docType == "PR")
@@ -911,7 +909,7 @@ u.underline {
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">8. </td>
-									<td class="text_header_submenu">No. Kod Majikan PERKESO/No. Pendaftaran KWSP<span class="text_header_submenu_red">/*Polisi Insurans (jika berkaitan)</span></td>
+									<td class="text_header_submenu">No. Kod Majikan PERKESO/No. Pendaftaran KWSP/<span class="text_header_submenu_red">*Polisi Insurans (jika berkaitan)</span></td>
 								</tr>
 						</table>
 					</td>
