@@ -497,6 +497,10 @@ public class PmReportsBackingBean extends
 		if (getManagedBean().getSelectedPTJ() != null) {
 			map.put(PmReportConst.PARAM_PM_PTJ, 
 					getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName());
+			//#29486 - start
+			map.put(PmReportConst.PARAM_PM_PTJ_CODE, 
+					getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgCode());
+			//#29486 - end
 		}else if(getManagedBean().getSelectedPTJ() == null) {
 			throw new EpException(MessageConst.ERROR_REPORT_780064);}
 		
