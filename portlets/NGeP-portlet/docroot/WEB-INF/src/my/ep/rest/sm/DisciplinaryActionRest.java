@@ -64,7 +64,7 @@ public class DisciplinaryActionRest {
 					}										
 				}
 			}
-
+			
 			//NO 2: find data pending DA, (data with active txn will update DA after complete all txn)
 			SupplierDataMaintenanceResDTO updateDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryAction(); //28798: Disciplinary Action - remove blacklist and cancel registration
 			
@@ -158,7 +158,8 @@ public class DisciplinaryActionRest {
 
 					log.info("suspendList. supplier id==============" + suspendList.getSmSupplier().getSupplierId());
 
-					if (suspendList != null && suspendList.getSmSupplier() != null) {
+					//33248 - reopen 31/05: Disciplinary Action - 26238 - 
+					if (suspendList != null && suspendList.getSmSupplier() != null  && !suspendList.isBlacklistOwner()  && !suspendList.isCancelRegistration() ) {
 
 						//26238
 						if(suspendList.getStartDate().compareTo(today) <= 0){
@@ -200,7 +201,7 @@ public class DisciplinaryActionRest {
 								
 								PmUser user = SmCommonUtil.getUserByUserId(suspendList.getChangedBy());
 								List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
-								
+
 								//26238 start
 								// pending that expired
 								if(suspendList.getEndDate().compareTo(todayWithZeroTime) < 0 ){
@@ -217,7 +218,7 @@ public class DisciplinaryActionRest {
 									if (disciplinaryActionId != null) {
 										SmDisciplinaryAction completedPendingSmDa = SmServiceLookup.getSupplierDataMaintenanceSO()
 												.retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryActionId);
-
+										
 										//26238 - 32558 - 32710 -  rollback code is for imposed suspen when supplier finish pending txn
 										if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend()) {
 											completedPendingSmDa.getSmSupplier();
@@ -228,7 +229,7 @@ public class DisciplinaryActionRest {
 								//26238 end
 							} // 26238 end future date for suspend registration	
 							// 32558: disciplinary action - 26238 end
-						}
+							}
 						//26238
 					}
 				}
