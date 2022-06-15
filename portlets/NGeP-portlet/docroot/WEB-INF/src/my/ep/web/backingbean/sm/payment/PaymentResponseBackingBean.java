@@ -364,6 +364,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 							log.info("pyPymt.getPyPaymentOrder() channel name=="+ pyPymt.getPyPaymentOrder().getChannelName());
 							channel = pyPymt.getPyPaymentOrder().getChannelName();
 							tranID = pyPymt.getPyPaymentOrder().getPyPaymentResponses().get(0).getTransactionId();
+							fpxTranId = pyPymt.getPyPaymentOrder().getPyPaymentResponses().get(0).getFpxTranId();
+							molpayTranId = pyPymt.getPyPaymentOrder().getPyPaymentResponses().get(0).getMolpayTransactionId();
 						}
 						skipChecking = true;
 						status = SupplierManagementConst.MOL_FAIL;
@@ -612,7 +614,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				paymentOrder.setChannelName(channel);
 				//#33137 - start
 				log.info("SET TRANSACTION ID--------------------33137 : "+tranID);
-					smPaymentRes.setTransactionId(tranID);
+				smPaymentRes.setTransactionId(tranID);
 				smPaymentRes.setMolpayTransactionId(molpayTranId);
 				smPaymentRes.setFpxTranId(fpxTranId);
 				//#33137 - end
