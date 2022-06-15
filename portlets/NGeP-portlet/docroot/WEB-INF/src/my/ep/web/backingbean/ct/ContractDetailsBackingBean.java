@@ -57,6 +57,7 @@ import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtBondWaiverDetail;
+import my.ep.persistence.entity.ct.CtConfig;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
@@ -2523,24 +2524,44 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public String gotoUpdatePage(Long contractId, int agStatus) {
 		IContractSO contractSO = null;
+		ctBB.getManagedBean().setInCtPerformance(false);
+		
 		try {
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			reqDTO.setContractId(contractId);	
 			reqDTO.setContractVerId(contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
+			
+			CtConfig ctConfigStatus = contractSO.getCtPerformanceStatus(reqDTO);
+			
 			if (agStatus == 1) {
 				reqDTO.setDocType(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT);
 			} else {
 				reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
 			}
+			
+			if(ctConfigStatus != null) {
+				//log.info("ctConfigStatus not null");
+				
+				ctBB.getManagedBean().setViewContract(true);
+				reqDTO.setViewOnly(true);
+				ctBB.getManagedBean().setViewContract(true);
+				ctBB.getManagedBean().setFromViewPage(true); 
+				ctBB.getManagedBean().setInCtPerformance(true);
+			}
+			
+			else{
+				//log.info("ctConfigStatus null");
+				
+				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+				ctBB.getManagedBean().setViewContract(false);
+			}
 
 			reqDTO.setUpdateAction(true);
 			ctBB.getManagedBean().setNotificationSetting(false);
-			ctBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setUpdateContract(true);
 			ctBB.getManagedBean().setCtAddress(null);
 			setValidateContractField(reqDTO);
-			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			ctBB.chkServiceTaxAlert();
 			getManagedBean().setExternalPageUrl(null);
 			getManagedBean().setSelectedTabIndex(0);	
