@@ -917,6 +917,11 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void deleteMoreRuleValue() {
+		
+		//#30672 - Start
+		RequestContext.getCurrentInstance().reset("form:settingTabId:ruleTypeValueTableID"); // reset form UI validation error
+		//#30672 - End
+		
 		Integer rowIndex = getManagedBean().getDeleteRowIndex();
 		List<PmConfigRuleValue> removeList = new ArrayList<PmConfigRuleValue>();
 		PmConfigRule configRuleType = this.getManagedBean()
