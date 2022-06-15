@@ -6968,6 +6968,9 @@ return	remarksNotFound;
 				.getParameterCode();
 		String finalizationMethod = getManagedBean().getFinalizationMethod();
 		//29707
+		//#33174 disable package if there is no supplier qualified by package #21695 - Start
+		disablePacSF(this.getManagedBean().getScQt().getQtId());
+		//#33174 disable package if there is no supplier qualified by package #21695 - End
 		if ( StringUtils.isBlank(finalizationMethod)){
 			finalizationMethod =  scQtFinalization.getFinalizationMethod().getParameterCode();
 		}
@@ -11102,5 +11105,43 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		return hourMinutes;
 		}//32613-End
 		
+		//#33174 disable package if there is no supplier qualified by package #21695 - Start
+		private void disablePacSF(Long qtId) {
+
+			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+
+			try {
+				qtSuppFinalizationSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTSuppFinalizationSO.class);
+
+				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+				reqDTO.setQtId(qtId);
+				boolean isPacDisable = false;
+
+				if (this.getManagedBean().getScQt().getEvaluateBy()
+						.equalsIgnoreCase(SourcingConstants.EVALUATE_BY__ITEM)) {
+					isPacDisable = true;
+				} else if (this
+						.getManagedBean()
+						.getScQt()
+						.getEvaluateBy()
+						.equalsIgnoreCase(
+								SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM)) {
+
+					int check = qtSuppFinalizationSO
+							.retrieveSuppliersNotQualified(qtId);
+					if (check == 0) {
+						isPacDisable = true;
+						this.getManagedBean().getScQt()
+								.setEvaluateBy(SourcingConstants.EVALUATE_BY__ITEM);
+					}
+				}
+				this.getManagedBean().setOfferAll(isPacDisable);
+			} finally {
+				qtSuppFinalizationSO = null;
+			}
+		}
+			//#33174 disable package if there is no supplier qualified by package #21695 - End
 }
 // ***19336
