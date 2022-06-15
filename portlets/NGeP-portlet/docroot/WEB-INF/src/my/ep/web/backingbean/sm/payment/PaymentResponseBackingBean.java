@@ -297,6 +297,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String channel = httpServletRequest.getParameter("channel") != null ? httpServletRequest.getParameter("channel") : null;
 		String errorCode = httpServletRequest.getParameter("error_code") != null ? httpServletRequest.getParameter("error_code") : null;
 		String errorDesc = httpServletRequest.getParameter("error_desc") != null ? httpServletRequest.getParameter("error_desc") : null;
+		
+		//#Start 33137
+		String fpxTranId = null;
+		String molpayTranId = null;
+		//#End 33137
 		// #26307 start
 		String cardType = null; 
 		String extraP = httpServletRequest.getParameter("extraP");
@@ -607,15 +612,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				log.info("channel--------------------26307"+channel);
 				paymentOrder.setChannelName(channel);
 				//#33137 - start
-				if(channel.equalsIgnoreCase("FPX")){
-					smPaymentRes.setTransactionId(tranID);
-					log.info("SET TRANSACTION ID--------------------33137"+tranID);
-				}else{
-					smPaymentRes.setTransactionId(molpayTransId);
-					log.info("SET MOLPAY TRANS ID--------------------33137"+molpayTransId);
-				}
-				smPaymentRes.setMolpayTransactionId(molpayTransId);
-				smPaymentRes.setFpxTranId(tranID);
+				log.info("SET TRANSACTION ID--------------------33137 : "+tranID);
+				smPaymentRes.setTransactionId(tranID);
+				smPaymentRes.setMolpayTransactionId(molpayTranId);
+				smPaymentRes.setFpxTranId(fpxTranId);
 				//#33137 - end
 				smPaymentRes.setErrorCode(errorCode);
 				smPaymentRes.setErrorDesc(errorDesc);
