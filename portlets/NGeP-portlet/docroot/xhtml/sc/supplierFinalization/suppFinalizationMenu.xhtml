@@ -84,7 +84,7 @@
 								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
 								partialSubmit="true" process="@form" update="@form"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-								rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
+								rendered="#{!suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
 						</h:panelGroup>
 						<h:panelGroup rendered="#{bpmAction == 'REVISEBP'}">
 							<p:commandButton value="#{lbl[buttonLabel]}"

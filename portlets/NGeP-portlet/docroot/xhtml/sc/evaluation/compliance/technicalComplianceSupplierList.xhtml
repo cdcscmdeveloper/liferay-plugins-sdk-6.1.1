@@ -62,7 +62,8 @@
 
 				<p:selectOneMenu
 					disabled="#{(complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or  evaluationBackingBean.managedBean.statusOnly or  evaluationBackingBean.managedBean.complianceReEvaluateRequired 
-					or evaluationBackingBean.managedBean.readOnly) or isRejected}"
+					or evaluationBackingBean.managedBean.readOnly) or isRejected  or (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod ne null
+					and complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"
 					value="#{complianceTechnicalSupplier.compliance}">
 
 					<f:selectItems
@@ -74,7 +75,9 @@
 			<p:column headerText="#{lbl['lbl.sc.remarks']}"
 				style="width:35%;white-space: normal;">
 				<ui:fragment
-					rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
+					rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'
+					and !(complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod ne null
+					or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}">
 					<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						onmouseout="limitTextArea(this,200);"
 						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
@@ -84,6 +87,16 @@
 					</p:inputTextarea>
 					<p:message id="complianceRemarksidEvaluation"
 						for="complianceRemarksid" display="icon"></p:message>
+
+
+				</ui:fragment>
+				<ui:fragment
+					rendered="#{complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}">
+					<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
+						onmouseout="limitTextArea(this,200);"
+						disabled="true"
+						value="#{lbl['lbl.sc.qt.proposal.evaluation.remark']}">
+					</p:inputTextarea>
 
 
 				</ui:fragment>
