@@ -7955,13 +7955,16 @@ public class EvaluationBackingBean extends
 								retriveFinancialEvaluationStagePackage();//#25138
 								retriveOneTierFinancialSupplierSummary();
 							}else{
-								retriveFinancialEvaluationStagePackage();//#25138-Ahmaa
-								this.getManagedBean().setTabFinancialIndex(2);
 								//#33187 Start - fix next skip if disable financial
 								if(this.getManagedBean().getNoSupplierPackageExist()){
 									this.getManagedBean().setOneTierFinancialActiveIndex(2);
 								}
 								//#33187 End - fix next skip if disable financial
+								else{
+									retriveFinancialEvaluationStagePackage();//#25138-Ahmaa
+									this.getManagedBean().setTabFinancialIndex(2);
+								}
+								
 							}
 							//#25138 - one item only - end
 							outputTab = 3;
