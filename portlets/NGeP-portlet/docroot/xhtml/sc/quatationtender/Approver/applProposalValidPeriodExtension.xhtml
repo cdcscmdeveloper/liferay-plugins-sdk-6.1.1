@@ -14,10 +14,16 @@
 		<ui:param name="scQtApproval"
 			value="#{approvalBackingBean.managedBean.scQtApproval}" />
 		<ui:param name="qtExtensionResponseDueDate"
-			value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId)}" />
+			value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId, scQt.responsePeriod)}" />
 		<ui:param name="validityDaysExpiredQt"
 			value="#{suppFinalizationBackingBean.checkProposalValidityDateReach(
 			suppFinalizationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
+			
+		<ac:confirmationPopup id="confirmUpdateValidityExtensionId"
+			widget="confirmUpdateValidityExtension" loadingWidget="blockWidget"
+			title="#{lbl['lbl.sc.qt.supplier.accept.response.period']}"
+			okAction="approvalBackingBean.submitAction()"
+			content="#{lbl['lbl.sc.qt.response.popup']}" />
 
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/icon_loadingLarge.gif" />
@@ -41,9 +47,7 @@
 							oncomplete="blockWidget.hide();" />
 
 						<p:commandButton value="#{lbl['lbl.btn.submit']}"
-							action="#{approvalBackingBean.submitAction}" process="@form"
-							update="@form" onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();" />
+							action="#{approvalBackingBean.validDateFirst}" />
 					</ui:define>
 				</ui:decorate>
 			</h:panelGroup>
