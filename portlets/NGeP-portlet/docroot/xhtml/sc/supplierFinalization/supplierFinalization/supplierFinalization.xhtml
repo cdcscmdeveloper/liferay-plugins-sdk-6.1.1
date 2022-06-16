@@ -67,7 +67,7 @@
 													isSecretaryUser)
 													or suppFinalizationBackingBean.isQTMaintenanceScreen() 
 													or suppFinalizationBackingBean.managedBean.reversed}" />
-							<c:if test="#{validityDaysExpiredQt}">
+							<c:if test="#{validityDaysExpiredQt or suppFinalizationBackingBean.checkMeetingDoneLessThanValidityEndDate(suppFinalizationBackingBean.managedBean.scQt.proposalValidityEndDate)}">
 								<p:selectOneMenu id="decisionType" required="true" label="#{lbl['lbl.sc.sf.meeting.decision']}"
 									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}"
 									disabled="#{disableSelect}"
@@ -85,7 +85,7 @@
 										listener="#{suppFinalizationBackingBean.decisionEvent}" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 					   			</p:selectOneMenu>
 					   		</c:if>
-							<c:if test="#{!validityDaysExpiredQt}">
+							<c:if test="#{!validityDaysExpiredQt and !suppFinalizationBackingBean.checkMeetingDoneLessThanValidityEndDate(suppFinalizationBackingBean.managedBean.scQt.proposalValidityEndDate)}">
 								<p:selectOneMenu id="decisionType" required="true" label="#{lbl['lbl.sc.sf.meeting.decision']}"
 									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}"
 									disabled="#{disableSelect}"

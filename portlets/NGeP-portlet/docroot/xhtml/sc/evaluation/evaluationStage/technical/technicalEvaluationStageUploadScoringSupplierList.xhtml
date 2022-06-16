@@ -75,7 +75,8 @@
 					label="#{lbl['lbl.tpl.spec.content.user.score']}"
 					style="text-align:right;"  maxlength="18" required="true"
 					disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired or
-					evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1' or isRejected}"><ui:remove><!-- 6906 --></ui:remove>
+					evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1' or isRejected or
+					complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}"><ui:remove><!-- 6906 --></ui:remove>
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 						maxIntegerDigits="14" integerOnly="true" />
@@ -93,10 +94,20 @@
 
 			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:35%">
 				<ui:fragment
-					rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
+					rendered="#{complianceTechnicalSupplier.submitted eq 'true'
+					and complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected}">
 					<p:inputTextarea rows="2" cols="55" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" onmouseout="limitTextArea(this,200);"
 						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
 						value="#{complianceTechnicalSupplier.remark}">
+						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+					</p:inputTextarea>
+				</ui:fragment>
+				<ui:fragment
+					rendered="#{complianceTechnicalSupplier.submitted eq 'true'
+					and complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}">
+					<p:inputTextarea rows="2" cols="55" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" onmouseout="limitTextArea(this,200);"
+						disabled="true"
+						value="#{lbl['lbl.sc.qt.proposal.evaluation.remark']}">
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 					</p:inputTextarea>
 				</ui:fragment>
