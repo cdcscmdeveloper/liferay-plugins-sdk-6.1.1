@@ -8072,9 +8072,19 @@ public class EvaluationBackingBean extends
 									this.getManagedBean().setTabFinancialIndex(3);	
 									outputTab = 2;
 								}else{
+									//#33187 Start - fix for 2tier next skip if disable financial
+									if(this.getManagedBean().getNoSupplierPackageExist()){
+										retriveSummaryEvaluationStage();
+										this.getManagedBean().setTabFinancialIndex(3);	
+										outputTab = 2;
+										
+									}
+									//#33187 End - fix next skip if disable financial
+									else{
 									retriveFinancialEvaluationStagePackage();
 									this.getManagedBean().setTabFinancialIndex(2);	
 									outputTab = 2;	
+								}
 								}
 								//#25138 - one item only - end
 							
