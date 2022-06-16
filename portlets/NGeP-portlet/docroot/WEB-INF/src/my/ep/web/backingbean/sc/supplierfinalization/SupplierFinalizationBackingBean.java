@@ -11143,5 +11143,30 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			}
 		}
 			//#33174 disable package if there is no supplier qualified by package #21695 - End
+				
+	// #21692 - start
+	public boolean checkMeetingDoneLessThanValidityEndDate(
+			Date proposalValidityEndDate) {
+		boolean lessThanValidityEndDate = false;
+
+		List<ScQtMeeting> meetingDetailsList = this.getManagedBean()
+				.getMeetingList();
+
+		for (ScQtMeeting meeting : meetingDetailsList) {
+			if (null != meeting.getMeetingStatus()
+					&& null != meeting.getMeetingStatus().getStatusId()
+					&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
+							.getStatusId())
+					&& meeting.getRecordStatusFlg().equals(
+							DbValueConst.RECORD_STATUS_ACTIVE)
+					&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
+				lessThanValidityEndDate = true;
+
+			}
+		}
+
+		return lessThanValidityEndDate;
+	}
+	// #21692 - end
 }
 // ***19336
