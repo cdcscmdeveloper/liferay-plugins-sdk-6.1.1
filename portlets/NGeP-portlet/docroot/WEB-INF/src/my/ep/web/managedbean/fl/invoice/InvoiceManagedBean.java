@@ -64,6 +64,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private String docType;
 	private Map<String, SmSupplierBank> supplierBankAccountMap;
 	private List<PmStatusDesc>decisionList;
+	private String accountNo;//32967
 	
 	// Inv Items
 	private TreeNode chargeLineItemRoot ;
@@ -144,7 +145,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private Map<String, PmFinancialOrg> factoringAccountMap;
 	
 	private boolean reviseInvoice = false;
-	
+
 
 	public Map<String, PmFinancialOrg> getFactoringAccountMap() {
 		if(factoringAccountMap==null) {
@@ -1211,4 +1212,20 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	}
 	
 	//End  #21229
+	
+	//32967-start
+	/**
+	 * @return the accountNo
+	 */
+	public String getAccountNo() {
+		return accountNo;
+	}
+
+	/**
+	 * @param accountNo the accountNo to set
+	 */
+	public void setAccountNo(String accountNo) {
+		this.accountNo = accountNo;
+	}
+	//32967-end
 }
