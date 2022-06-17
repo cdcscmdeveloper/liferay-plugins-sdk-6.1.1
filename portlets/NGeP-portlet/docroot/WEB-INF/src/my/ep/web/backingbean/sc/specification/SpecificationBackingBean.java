@@ -18385,6 +18385,17 @@ if(!actionRender){
 if(actionRender){
 	validateSampleItems(specReqDTO.getScQtCheckList().getScQtDoc().getTplSpecMaster().getTplSpecQuestions());
 }
+List<ScQtCheckList> checklistRemoveList = getToBeRemoveList();//11104-start
+if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
+	for (int i = 0; i < checklistRemoveList.size(); i++) {
+		if (null == checklistRemoveList.get(i).getQtChecklistId()) {
+			checklistRemoveList.remove(i);
+		} else {
+			checklistRemoveList.get(i).setDeleted(true);
+		}
+	}
+	}
+specReqDTO.setTobeRemoveList(checklistRemoveList);//11104-End
 SpecificationResDTO specresDTO=specSO.saveSampleTemplateSpecs(specReqDTO);
 if(specresDTO.isSuccessful()){
 specCommitteeResetData();
@@ -18406,7 +18417,10 @@ for(ScQtCheckList checklist:sampleChecklist){//#11104-start
 		sampleChecklist.set(index,specresDTO.getScQtCheckList());
 		break;
 	}	
-}//#11104-End
+}//#25635-End
+specReqDTO.setTobeRemoveList(null);//11104-start
+getManagedBean().setMarkDeletedTechChecklist(null);
+getManagedBean().setMarkDeletedFinChecklist(null);//11104-End
 saveSpecMaintenanceWorkFlowStatus();
 if(!actionRender){
 successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.qt.sampel.technical.panel.item.search.header"), "", Boolean.FALSE);
