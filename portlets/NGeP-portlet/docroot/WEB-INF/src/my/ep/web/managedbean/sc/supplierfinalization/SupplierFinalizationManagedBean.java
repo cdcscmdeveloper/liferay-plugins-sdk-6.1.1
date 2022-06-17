@@ -201,6 +201,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtCommitteeActivity> onlineBiddingEndorsementList;
 	private List<ScQtCommitteeActivity> onlineBiddingReminderList;
 	
+	//#21695 Farid start
+	private boolean pacDisable;
+	//#21695 End
+	
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		/**
 		 * 
@@ -2461,7 +2465,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 }
 	//29562 - END
 	
-}
+
 
 
 	////#33174 #21695 Farid
