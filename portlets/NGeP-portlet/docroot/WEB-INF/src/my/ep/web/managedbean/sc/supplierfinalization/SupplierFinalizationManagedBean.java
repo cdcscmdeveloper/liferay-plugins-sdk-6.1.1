@@ -2464,13 +2464,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 }
 
 
+	////#33174 #21695 Farid
+	/**
+	 * @return 
+	 */
+	public boolean isPacDisable() {
+		return pacDisable;
+	}
 
-
-
-
-
-
-
-
-
+	/**
+	 * @param for disable if there is no supplier is qualified by package
+	 */
+	public void setOfferAll(boolean pacDisable) {
+		this.pacDisable = pacDisable;
+	}
+	////#33174 #21695 End
+}
 // ***25201
