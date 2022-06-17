@@ -2399,6 +2399,22 @@ public class LOIDetailBackingBean extends
 	 */
 	public String savetLoiListAction() {
 		debugLogger("savetLoiListAction");
+		
+		// #33325 - Start.
+		if (QTStatusConst.SF_PENDING_LOI_PREPARATION.equals(getManagedBean().getCurrentStatusId())) {
+			if (StringUtils.isNotEmpty(getManagedBean().getDocType()) 
+					&& !getManagedBean().getDocType().equals(ParameterConst.RECOMMEND_BY_MULTIPLE_LOI)) {
+				if (CollectionUtils.isNotEmpty(getManagedBean().getRecSupplierList())) {
+					for (ScLoiLoa scLoiLoa: getManagedBean().getRecSupplierList()) {
+						if (null == scLoiLoa.getLoiRequired()) {
+							throw new EpException(MessageConst.ERROR_775177, new String[] { scLoiLoa.getSmSupplier().getCompanyName() });
+						}
+					}
+				}
+			}
+		}
+		// #33325 - End.
+		
 		AwardSupplierResDTO resDTO = new AwardSupplierResDTO();
 		try {
 			ScQtFinalization scQtFinalization = getManagedBean()
