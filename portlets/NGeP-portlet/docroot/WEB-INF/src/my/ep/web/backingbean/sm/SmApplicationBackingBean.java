@@ -2304,7 +2304,8 @@ public class SmApplicationBackingBean extends
 									personnel.setSsmData(true);
 									//#27315
 									//27408 - Remove Pmcountry for ROC 
-									String[] copyEquityOwner = {"name","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","directorSsm","equityOwnerSsm","managementSsm"};
+									//28767 - add birthdate & designation
+									String[] copyEquityOwner = {"name","birthDate","designation","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","directorSsm","equityOwnerSsm","managementSsm"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}
 								validateRole(personnel);
@@ -2531,6 +2532,16 @@ public class SmApplicationBackingBean extends
 				if(personnel.isDirector() || personnel.isManagement()){
 				this.getManagedBean().getPersonnelDirectorManager().add(personnel);	
 				}
+				//28767
+				for (SmPersonnelAddress address : personnel.getSmPersonnelAddresses()){
+					if (address.getAddressType().equals("R")){
+						personnel.setSmPersonnelAdd(address);
+					}
+				}
+				if (personnel.isSsmData()!= true){
+					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
+				}
+				
 				if(personnel.isEquityOwner()){
 					if(shareAmtSsm != null && !(personnel.getShareAmtSsm() == null)){
 						log.info("THIS IS THE VALUE OF THE TOTAL SUM ////////////////////// " + sum);
@@ -15377,7 +15388,8 @@ public class SmApplicationBackingBean extends
 						personnel.setSsmData(true);
 						//#27315
 						//27408 - Remove Pmcountry for ROC
-						String[] copyEquityOwner = {"name","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","directorSsm","equityOwnerSsm","managementSsm"};
+						//28767 - add birthdate & designation
+						String[] copyEquityOwner = {"name","birthDate","designation","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","directorSsm","equityOwnerSsm","managementSsm"};
 						EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 					}
 					validateRole(personnel);
