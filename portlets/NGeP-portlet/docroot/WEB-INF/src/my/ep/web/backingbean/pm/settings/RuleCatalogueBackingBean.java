@@ -1162,7 +1162,7 @@ public class RuleCatalogueBackingBean extends
 
 				PmConfigRuleValue baseValueToCompare = ruleTypeDesc
 						.getRuleType().getConfigRuleValues().get(i);
-
+			
 				if (baseValueToCompare.getRecordStatusFlg() == 0) {// if is
 					// inActive
 					// one go to
@@ -1195,6 +1195,15 @@ public class RuleCatalogueBackingBean extends
 						throw new EpException(MessageConst.ERROR_770241, new String[] { ruleTypeDesc.getRuleDesc() });
 				} 
 				// 29650 - end
+				
+				// 30672 - start
+				if (ruleTypeDesc.getRuleType().getRangeType() != 1
+						|| (ruleTypeDesc.getRuleType().getRangeType() == 1 && baseValueToCompare.isShowFlag())) {
+					if (baseValueToCompare.isErrorExpDate()) {
+						throw new EpException(MessageConst.ERROR_770111, new String[] { ruleTypeDesc.getRuleDesc() });
+					}
+				}
+				// 30672 - end
 
 				for (int j = i + 1; j <= (ruleTypeDesc.getRuleType()
 						.getConfigRuleValues().size() - 1); j++) {
@@ -1214,7 +1223,6 @@ public class RuleCatalogueBackingBean extends
 						throw new EpException(MessageConst.ERROR_770210, new String[] { ruleTypeDesc.getRuleDesc() });
 					}
 					// 29669 - end
-
 					if (!ruleValueValidation(baseValueToCompare, value,
 							ruleTypeDesc.getRuleType())) {
 
@@ -4942,6 +4950,22 @@ public class RuleCatalogueBackingBean extends
 	}
 	// 29650 - end
 	
-	
-	
+	// 30672 - start
+	public void valueCheckExpDateError(int index) {
+
+		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
+		PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues().get(index);
+
+		if (selectedValue.getEffDate() != null || selectedValue.getExpDate() != null)
+			if (configRuleType.getRangeType() != 1
+					|| (configRuleType.getRangeType() == 1 && selectedValue.isShowFlag())) {
+				if (selectedValue.getEffDate().after(selectedValue.getExpDate())) {
+					selectedValue.setErrorExpDate(true);
+					throw new EpException(MessageConst.ERROR_770113);
+				} else {
+					selectedValue.setErrorExpDate(false);
+				}
+			}
+	   }
+	// 30672 - end
 }
