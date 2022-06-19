@@ -2749,7 +2749,8 @@ public class TaskReassignmentBackingBean extends
 			}
 
 			//Redmine Bug #32682 - START
-			if(QTStatusConst.SF_PENDING_LOI_PREPARATION.equals(task.getDocStatus().longValue())) {
+			if(QTStatusConst.SF_PENDING_LOI_PREPARATION.equals(task.getDocStatus().longValue()) || 
+					QTStatusConst.QT_PENDING_LOA.equals(task.getDocStatus().longValue())) {
 				getManagedBean().setCommitteeUpdate(true);
 			}
 			//Redmine Bug #32682 - END
