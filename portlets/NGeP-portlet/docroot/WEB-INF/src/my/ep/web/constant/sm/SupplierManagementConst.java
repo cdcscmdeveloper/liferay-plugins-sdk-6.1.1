@@ -421,6 +421,13 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2 = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2;
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER;
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY;
+	
+	// #30829 - start
+	public static List<String> LIST_OF_BUSINESS_TYPE_FOR_ROLE_IN_COMPANY = Arrays.asList(
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK);
+	// #30829 - end
 
 	public static List<String> LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED = Arrays
 			.asList(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
@@ -918,6 +925,12 @@ public class SupplierManagementConst {
 	public String getSM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2() {
 		return SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2;
 	}
+	
+	// #30829 - start
+	public String getSM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY() {
+		return SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY;
+	}
+	// #30829 - end
 
 	public String getSM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT() {
 		return SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT;
@@ -1260,7 +1273,7 @@ public class SupplierManagementConst {
 	public String getSmSupplierBusinessTypeIndividual() {
 		return SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL;
 	}
-
+	
 	// 25792 - end
 
 	// 28278 -START
