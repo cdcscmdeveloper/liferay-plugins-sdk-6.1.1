@@ -2311,16 +2311,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 		//20190910@asyrafhaziq - 26404 -End
 		// save.
-       
-       //9019 for prevent null insert for remark
-		if (null != scQt.getScQtRemarks() && CollectionUtils.isNotEmpty(scQt.getScQtRemarks())) {
+ 		
+		//20062022 Disable by Harun change method to QTDetailSO.saveQTDetailsForDraft
+		//Purpose of change is due to Remarks is being insert multiple if save and remove frequently		    
+        //9019 for prevent null insert for remark 
+		/*if (null != scQt.getScQtRemarks() && CollectionUtils.isNotEmpty(scQt.getScQtRemarks())) {
 			for (int i = 0; i < scQt.getScQtRemarks().size(); i++) {
 				String userRemark = scQt.getScQtRemarks().get(i).getRemark();
 				if (null == userRemark || "".equals(userRemark)) {
 					scQt.getScQtRemarks().remove(i);
 				}
 			}
-		}// 9019 end
+		}// 9019 end*/
 		
 		//#21692 - start
 		if (null == scQt.getResponsePeriod()) {
