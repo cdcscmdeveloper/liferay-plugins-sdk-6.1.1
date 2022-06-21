@@ -9729,10 +9729,9 @@ public class SmApplicationBackingBean extends
 			}
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_REPLY_INQUIRY_BY_PROCESSING_OFFICER);
 
+			// #14530 - start
 			// add new inquiry by PO
-			if (getManagedBean().getPoToSupplierInquiry() != null
-					&& !StringUtils.isBlank(getManagedBean()
-							.getPoToSupplierInquiry().getInquiryText())) {
+			if (getManagedBean().getPoToSupplierInquiry() != null) {
 				if (getManagedBean().getSmAppl().getSmApplInquiries() == null) {
 					getManagedBean().getSmAppl().setSmApplInquiries(
 							new ArrayList<SmApplInquiry>());
@@ -9746,6 +9745,7 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().getSmApplInquiries()
 						.add(getManagedBean().getPoToSupplierInquiry());
 			}
+			// #14530 - end
 			
 			// #14530 - Start
 						this.getManagedBean().getPoToSupplierInquiry().setApplInquiryId(reqSO.retrieveSeqNextVal("SM_APPL_INQUIRY_SEQ"));
