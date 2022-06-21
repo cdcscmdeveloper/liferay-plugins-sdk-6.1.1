@@ -158,11 +158,13 @@
 								rendered="#{isClone2 and !isCommitteeApprovalReviseTask}" />
 								
 							<ui:remove> #30477 Start </ui:remove>	
-							<p:commandButton value="#{lbl[buttonLabel]}"
-								styleClass="ui-button" onclick="blockWidget.show();"
-								oncomplete="blockWidget.hide();"
-								rendered="#{isClone2 and isCommitteeApprovalReviseTask}"
-								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
+<!-- #29732 Start - reOpen Fix -->
+							<p:commandButton value="#{lbl[buttonLabel]}" 
+								styleClass="ui-button" onclick="blockWidget.show();" 
+								oncomplete="blockWidget.hide();" 
+								rendered="#{isClone2 and isCommitteeApprovalReviseTask}" 
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}" update="@form">
+<!-- #29732 End - reOpen Fix -->
 							</p:commandButton>
 							<ui:remove> #30477 End </ui:remove>
 							
@@ -174,11 +176,14 @@
 							   <f:param name="skipvalidation" value="0" />
 							</p:commandButton>
 						
-							<p:commandButton value="#{lbl[buttonLabel]}"
-								styleClass="ui-button" onclick="blockWidget.show();"
-								oncomplete="blockWidget.hide();"
-								rendered="#{!isClone2 and !qTDetailBB.isCancel(bpmAction)}"
-								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
+<!-- #29732 Start - reOpen Fix -->							
+							<p:commandButton value="#{lbl[buttonLabel]}" 
+								styleClass="ui-button" onclick="blockWidget.show();" 
+								oncomplete="blockWidget.hide();" 
+								rendered="#{!isClone2 and !qTDetailBB.isCancel(bpmAction)}" 
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}" 
+								update="@form">
+<!-- #29732 End - reOpen Fix -->
 							</p:commandButton>
 							<!-- 9019 -end- -->
 						</ui:repeat>
