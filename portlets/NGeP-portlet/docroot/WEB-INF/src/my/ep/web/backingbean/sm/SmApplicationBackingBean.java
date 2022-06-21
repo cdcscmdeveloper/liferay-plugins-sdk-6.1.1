@@ -13016,7 +13016,7 @@ public class SmApplicationBackingBean extends
 							ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
 							getManagedBean().getSmAppl().getApplType(),
 							language).getCodeName());
-			paramMap.put("PSUPPNAME", getManagedBean().getSmSupplier()
+			paramMap.put("PSUPPNAME", getManagedBean().getSmAppl().getSmCompanyBasic()  //33410 
 					.getCompanyName());
 			generateReport(ReportConst.SM_DECLARATION_FORM_REPORT_EN, paramMap);
 		} else {
@@ -13028,7 +13028,7 @@ public class SmApplicationBackingBean extends
 							ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
 							getManagedBean().getSmAppl().getApplType(),
 							language).getCodeName());
-			paramMap.put("PSUPPNAME", getManagedBean().getSmSupplier()
+			paramMap.put("PSUPPNAME", getManagedBean().getSmAppl().getSmCompanyBasic()  //33410
 					.getCompanyName());
 			generateReport(ReportConst.SM_DECLARATION_FORM_REPORT, paramMap);
 		}
