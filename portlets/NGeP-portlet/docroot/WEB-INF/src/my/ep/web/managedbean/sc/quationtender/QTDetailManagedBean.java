@@ -1793,6 +1793,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private List<TabBean> readOnlyCommitteeTabBean;//Bug 32277
 	
+	private Long qtRemarksIdRemove;//#9019 (Harun)
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11144,6 +11146,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.readOnlyCommitteeTabBean = readOnlyCommitteeTabBean;
 		}
 		//Bug 32277 - end
+		
+		//#9019 - Start (Harun)
+		public Long getQtRemarksIdRemove() {
+			return qtRemarksIdRemove;
+		}
+
+		public void setQtRemarksIdRemove(Long qtRemarksIdRemove) {
+			this.qtRemarksIdRemove = qtRemarksIdRemove;
+		}
+		//#9019 - End (Harun)
 }
 
 // ***25201
