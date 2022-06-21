@@ -13,8 +13,10 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -816,6 +818,17 @@ public class SupplierFinalizationBackingBean extends
 						Long meetingStatusId = scQtMeeting.getMeetingStatus() != null ? scQtMeeting
 								.getMeetingStatus().getStatusId() : null;
 						scQtMeeting.setMeetingStatusStr(meetingStatusId);
+						
+						// 32613 -start-
+						SimpleDateFormat hourFormat = new SimpleDateFormat(CommonConstants.DEFAULT_HOUR_FORMAT);
+						SimpleDateFormat minuteFormat = new SimpleDateFormat(CommonConstants.DEFAULT_MINUTE_FORMAT);
+						SimpleDateFormat Date = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+
+						scQtMeeting.setMeetDateStr(getDateValues(hourFormat.format(scQtMeeting.getMeetingDate())));
+						scQtMeeting.setMeetTimeStr(getDateValues(minuteFormat.format(scQtMeeting.getMeetingDate())));
+						scQtMeeting.setMetingDate(scQtMeeting.getMeetingDate());
+						// 32613 -end-
+						
 						if (scQtMeeting.getRecordStatusFlg().equals(
 									DbValueConst.RECORD_STATUS_SUSPENDED)) {
 							this.getManagedBean().setHasPreviousMeeting(true);
@@ -1239,9 +1252,12 @@ public class SupplierFinalizationBackingBean extends
 			
 			// Save Preparation and Supplier finalization tab(s) data 
 			ScQtCommittee scQtCommittee = null;
+			
 			if (activeIndex == 0 && 
 					!getManagedBean().isInitialDecisionFwdToBPK()) {
-				this.getManagedBean().setSubmit(true); //#26189
+				this.getManagedBean().setSubmit(Boolean.FALSE); //32613
+//				this.getManagedBean().setSubmit(true); //#26189
+
 				// #25037 - start
 				reqDTO = validateInfo(activeIndex, skipValidation);
 				scQtCommittee = reqDTO.getScQtCommittee();
@@ -10230,5 +10246,66 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		return reportAttachment;
 	}
 	// #30567 Note-#59, #26247 - End.
+		
+	// 32613-start
+	public void DateTimeChange(ScQtMeeting meeting) {
+
+		List<ScQtMeeting> meetungList = getManagedBean().getMeetingList();
+		int index = meetungList.indexOf(meeting);
+		Date MeetingDate = meeting.getMetingDate();
+		String MeetingHour = meeting.getMeetDateStr();
+		String MeetingMinute = meeting.getMeetTimeStr();
+		
+		if (null != MeetingDate && null != MeetingHour && null != MeetingMinute) {
+
+			int hourValue = Integer.parseInt(MeetingHour);
+			int minuteValue = Integer.parseInt(MeetingMinute);
+
+			Calendar c1 = Calendar.getInstance();
+			c1.setTime((Date) MeetingDate);
+			c1.set(Calendar.HOUR_OF_DAY, hourValue);
+			c1.set(Calendar.MINUTE, minuteValue);
+
+			// dateValue = c1.getTime();
+			meeting.setMeetingDate(c1.getTime());
+
+			meetungList.set(index, meeting);
+			this.getManagedBean().setMeetingList(meetungList);
+
+		}
+	}
+	// 32613-End
+
+	// 32613-start
+	private String getDateValues(String hourMinute) {
+		String hourMinutes = "0";
+		
+		if (hourMinute.equals("00")) {
+			hourMinutes = "0";
+		} else if (hourMinute.equals("01")) {
+			hourMinutes = "1";
+		} else if (hourMinute.equals("02")) {
+			hourMinutes = "2";
+		} else if (hourMinute.equals("03")) {
+			hourMinutes = "3";
+		} else if (hourMinute.equals("04")) {
+			hourMinutes = "4";
+		} else if (hourMinute.equals("05")) {
+			hourMinutes = "5";
+		} else if (hourMinute.equals("06")) {
+			hourMinutes = "6";
+		} else if (hourMinute.equals("07")) {
+			hourMinutes = "7";
+		} else if (hourMinute.equals("08")) {
+			hourMinutes = "8";
+		} else if (hourMinute.equals("09")) {
+			hourMinutes = "9";
+		} else {
+			hourMinutes = hourMinute;
+		}
+		
+		return hourMinutes;
+	}
+	// 32613-End
 					
 }
