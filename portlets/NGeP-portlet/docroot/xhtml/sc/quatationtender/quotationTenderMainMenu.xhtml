@@ -383,5 +383,10 @@
 	<ui:include src="/xhtml/sc/quatationtender/createquotationtender/clone/cloneDetails.xhtml" />	
 	</c:otherwise>
 	</c:choose>
+<!-- #29732 Start - reOpen Fix -->
+	<ac:qtCategoryChangeAlertPopup
+		catCodeList="#{qTDetailBB.managedBean.catCodeList}"
+		widget="catCodeChangeAlert" />
+<!-- #29732 End - reOpen Fix -->
 </ui:composition>
 
