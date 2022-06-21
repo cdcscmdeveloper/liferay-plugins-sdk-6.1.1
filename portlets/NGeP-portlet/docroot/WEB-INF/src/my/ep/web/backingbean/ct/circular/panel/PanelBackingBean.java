@@ -2365,7 +2365,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
 			// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getCircularVer().getCircularNo());
+			sb.append(getManagedBean().getCircularVer().getCircularNo().trim()); //#25685
 			sb.append(ContractConst.SEPRATE_LINE);
 			if(getManagedBean().getCircularVer().getCtCircular().getLatestCircularVer() != null){
 				sb.append(ContractConst.CIRCULAR_UPDATE);
@@ -2388,7 +2388,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			sb.append(outcome);
 			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());
+			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo().trim()); //#25685
 			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
 			getManagedBean().setAction(outcome);
