@@ -142,7 +142,7 @@
 					<f:param name="skipvalidation" value="0" />
 				</p:commandButton>
 				<!-- 9019 -end- -->
-	
+
 				<c:choose>
 					<c:when test="#{qTDetailBB.managedBean.taskId ne null}">
 						<ui:repeat var="bpmAction"
@@ -158,14 +158,16 @@
 								rendered="#{isClone2 and !isCommitteeApprovalReviseTask}" />
 								
 							<ui:remove> #30477 Start </ui:remove>	
-							<p:commandButton value="#{lbl[buttonLabel]}"
-								styleClass="ui-button" onclick="blockWidget.show();"
-								oncomplete="blockWidget.hide();"
-								rendered="#{isClone2 and isCommitteeApprovalReviseTask}"
-								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
+<!-- #29732 Start - reOpen Fix -->
+							<p:commandButton value="#{lbl[buttonLabel]}" 
+								styleClass="ui-button" onclick="blockWidget.show();" 
+								oncomplete="blockWidget.hide();" 
+								rendered="#{isClone2 and isCommitteeApprovalReviseTask}" 
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}" update="@form">
+<!-- #29732 End - reOpen Fix -->
 							</p:commandButton>
 							<ui:remove> #30477 End </ui:remove>
-						
+							
 							<!-- 9019 -start- -->
 							 <p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onclick="cancel1QTDlg.show();"
@@ -174,11 +176,14 @@
 							   <f:param name="skipvalidation" value="0" />
 							</p:commandButton>
 						
-							<p:commandButton value="#{lbl[buttonLabel]}"
-								styleClass="ui-button" onclick="blockWidget.show();"
-								oncomplete="blockWidget.hide();"
-								rendered="#{!isClone2 and !qTDetailBB.isCancel(bpmAction)}"
-								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
+<!-- #29732 Start - reOpen Fix -->							
+							<p:commandButton value="#{lbl[buttonLabel]}" 
+								styleClass="ui-button" onclick="blockWidget.show();" 
+								oncomplete="blockWidget.hide();" 
+								rendered="#{!isClone2 and !qTDetailBB.isCancel(bpmAction)}" 
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}" 
+								update="@form">
+<!-- #29732 End - reOpen Fix -->
 							</p:commandButton>
 							<!-- 9019 -end- -->
 						</ui:repeat>
@@ -212,22 +217,21 @@
 								disabled="#{qTDetailBB.isQTStatusEvaluation(qTDetailBB.managedBean.qt.qtStatus.statusId) and !(qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_RE_FINALIZATION or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_EVALUATION_PROPOSAL) and
 								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}" /><ui:remove>#29472</ui:remove>
 						</c:otherwise>
-				</c:choose> 
-				<!-- 26095@hatta - start -->
-				<c:if test="#{iscloseQTIfValidityPeriodExpiredAndStatusRelated}">
-					<p:commandButton value="#{lbl['lbl.sc.qt.close']}" process="@this" style="float:right;"
-			  	       action="#{qTDetailBB.closeQTDialogPopUp}" disabled="#{isQTClosePermanently}" />	
-			  	</c:if>		
-			  	<!-- 26095@hatta - end -->
+					</c:choose>
+					<!-- 26095@hatta - start -->
+					<c:if test="#{iscloseQTIfValidityPeriodExpiredAndStatusRelated}">
+						<p:commandButton value="#{lbl['lbl.sc.qt.close']}" process="@this" style="float:right;"
+				  	       action="#{qTDetailBB.closeQTDialogPopUp}" disabled="#{isQTClosePermanently}" />
+				  	</c:if>
+				  	<!-- 26095@hatta - end -->
 			  	 	<!--9019 update condition to disable cancel button for QT status was pending  -->
 					<c:if test="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_LOA) and !isQTStatusPendingQtSubmission}">
 					<!-- 9019 -end- -->
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
+						<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 							style="float:right;" action="#{qTDetailBB.checkIsQTAllowCancel}"
 							disabled="#{qTDetailBB.managedBean.qt.brandNew}" />
+					</c:if>
 				</c:if>
-			</c:if>
-					
 			</td>
 		</tr>
 		</table>

@@ -263,6 +263,12 @@ import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.util.PortalUtil;
+//#29732 Start - reOpen Fix
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
+import my.ep.persistence.entity.pm.common.PmCategoryL1;
+//#29732 End - reOpen Fix
 /**
  * The Class SpecificationBackingBean.
  * 
@@ -1302,6 +1308,30 @@ public class SpecificationBackingBean extends
 			break;
 
 		}
+// #29732 Start - reOpen Fix
+		if (activeIndex == 1
+				&& (this.getManagedBean()
+						.getQt()
+						.getQtStatus()
+						.getStatusId()
+						.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) || this
+						.getManagedBean()
+						.getQt()
+						.getQtStatus()
+						.getStatusId()
+						.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
+				|| (this.getManagedBean().getSpecMaintenanceScreen()
+						.equals(QTConstants.SPEC_MAINTENANCE) && this
+						.getManagedBean().getQt().getQtStatus().getStatusId()
+						.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)))) {
+			this.getManagedBean().setActiveIndex(activeIndex);
+			String changedCatCodeList = checkCatCodeChange();
+			if (!changedCatCodeList.isEmpty()) {
+				throw new EpException(MessageConst.WARN_297320,
+						new String[] { changedCatCodeList });
+			}
+		}
+// #29732 End - reOpen Fix
 		if (getManagedBean().getTempIndex() < activeIndex) {
 			getManagedBean().setTempIndex(activeIndex);
 		}
@@ -11816,6 +11846,23 @@ public class SpecificationBackingBean extends
 	 * @return navigate to acknowledgement page.
 	 */
 	public void specCommitteBpmTask(String action) {
+// #29732 Start - reOpen Fix
+		if (this.getManagedBean().getQt().getQtStatus().getStatusId()
+				.equals((QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING))
+				|| this.getManagedBean()
+						.getQt()
+						.getQtStatus()
+						.getStatusId()
+						.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)) {
+			String changedCatCodeList = checkCatCodeChange();
+			if (!changedCatCodeList.isEmpty()) {
+				this.getManagedBean().setCatCodeList(changedCatCodeList);
+				RequestContext.getCurrentInstance().execute(
+						"catCodeChangeAlert.show()");
+				return;
+			}
+		}
+// #29732 End - reOpen Fix
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
@@ -12912,6 +12959,18 @@ public class SpecificationBackingBean extends
 		reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
 				this.getManagedBean().getSpecMaintenanceScreen()));
 		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+// #29732 Start - reOpen Fix
+		List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
+				.getTobeRemoveCategoryCodes();
+		if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
+			for (int i = 0; i < deleteCategoryCodesList.size(); i++) {
+				if (null == deleteCategoryCodesList.get(i).getQtCategoryId()) {
+					deleteCategoryCodesList.remove(i);
+				}
+			}
+		}
+		reqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
+//#29732 End - reOpen Fix
 		SpecificationResDTO resDTO = specSO.saveOrUpdateTemplateSpecs(reqDTO);
 		updatedCheckLists = null;
 		toBeRemoveList = null;
@@ -13588,6 +13647,18 @@ public class SpecificationBackingBean extends
 		 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 		 * IQTSpecSO.class);
 		 */
+// #29732 Start - reOpen Fix
+		List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
+				.getTobeRemoveCategoryCodes();
+		if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
+			for (int i = 0; i < deleteCategoryCodesList.size(); i++) {
+				if (null == deleteCategoryCodesList.get(i).getQtCategoryId()) {
+					deleteCategoryCodesList.remove(i);
+				}
+			}
+		}
+		reqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
+//#29732 End - reOpen Fix
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
 			resDTO = specSO.saveOrUpdateTemplateSpecs(reqDTO);
@@ -16095,6 +16166,18 @@ public class SpecificationBackingBean extends
 	 * @return navigate to acknowledgement page.
 	 */
 	public void submitSpecMaintenanceDtls(String action) {
+// #29732 Start - reOpen Fix
+		if (this.getManagedBean().getQt().getQtStatus().getStatusId()
+				.equals((QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL))) {
+			String changedCatCodeList = checkCatCodeChange();
+			if (!changedCatCodeList.isEmpty()) {
+				this.getManagedBean().setCatCodeList(changedCatCodeList);
+				RequestContext.getCurrentInstance().execute(
+						"catCodeChangeAlert.show()");
+				return;
+			}
+		}
+// #29732 End - reOpen Fix
 		log.debug("start submitSpecMaintenanceDtls" + action);
 		this.getManagedBean().setLocalOutCome(action);
 		log.debug("end submitSpecMaintenanceDtls" + action);
@@ -16171,6 +16254,18 @@ public class SpecificationBackingBean extends
 				}
 			}
 		}
+// #29732 Start - reOpen Fix
+		List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
+				.getTobeRemoveCategoryCodes();
+		if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
+			for (int i = 0; i < deleteCategoryCodesList.size(); i++) {
+				if (null == deleteCategoryCodesList.get(i).getQtCategoryId()) {
+					deleteCategoryCodesList.remove(i);
+				}
+			}
+		}
+		spReqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
+//#29732 End - reOpen Fix
 		spReqDTO.setRemoveDeductions(deductionRemoveList);// #29474 - end
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);//#15391 - end
@@ -19997,4 +20092,60 @@ if(null!=allTechnicalChecklist){
 						QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	//29464 - note 90 - end
+// #29732 Start - reOpen Fix
+	public String checkCatCodeChange() {
+		if (CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())) {
+			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+			qtBackingBean.retrieveSuppQualificationTabDtl();
+		}
+		List<ScQtCategory> qtCatCodeList = this.getManagedBean()
+				.getQtCategoryList();
+		String catCodeList = "";
+		if (CollectionUtils.isNotEmpty(qtCatCodeList)) {
+			for (ScQtCategory catCode : qtCatCodeList) {
+				ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								ICategoryCodeSO.class);
+				PmCategoryL1 catCodeL1 = new PmCategoryL1();
+				CategoryCodeReqDTO reqDTO1 = new CategoryCodeReqDTO();
+				reqDTO1.setCategoryL1Id(catCode.getPmCategoryL1()
+						.getCategoryL1Id());
+				CategoryCodeResDTO resDTO1 = categoryCodeSO
+						.retrieveCategoryL1DtlById(reqDTO1);
+				catCodeL1 = resDTO1.getCategoryL1();
+				PmCategoryL2 catCodeL2 = new PmCategoryL2();
+				CategoryCodeReqDTO reqDTO2 = new CategoryCodeReqDTO();
+				reqDTO2.setCategoryL2Id(catCode.getPmCategoryL2()
+						.getCategoryL2Id());
+				CategoryCodeResDTO resDTO2 = categoryCodeSO
+						.retrieveCategoryL2DtlById(reqDTO2);
+				catCodeL2 = resDTO2.getCategoryL2();
+				PmCategoryL3 catCodeL3 = new PmCategoryL3();
+				CategoryCodeReqDTO reqDTO3 = new CategoryCodeReqDTO();
+				reqDTO3.setCategoryL3Id(catCode.getPmCategoryL3()
+						.getCategoryL3Id());
+				CategoryCodeResDTO resDTO3 = categoryCodeSO
+						.retrieveCategoryL3DtlById(reqDTO3);
+				catCodeL3 = resDTO3.getCategoryL3();
+				if (!catCodeL1.getCategoryName().equals(
+						catCode.getPmCategoryL1Name())
+						|| !catCodeL2.getCategoryName().equals(
+								catCode.getPmCategoryL2Name())
+						|| !catCodeL3.getCategoryName().equals(
+								catCode.getPmCategoryL3Name())) {
+					if (catCodeList != "") {
+						catCodeList = catCodeList.concat(", ");
+					}
+					catCodeList = catCodeList.concat(catCode.getPmCategoryL1()
+							.getCategoryL1Code().toString()
+							+ catCode.getPmCategoryL2().getCategoryL2Code()
+									.toString()
+							+ catCode.getPmCategoryL3().getCategoryL3Code()
+									.toString());
+				}
+			}
+		}
+		return catCodeList;
+	}
+// #29732 End - reOpen Fix
 }
