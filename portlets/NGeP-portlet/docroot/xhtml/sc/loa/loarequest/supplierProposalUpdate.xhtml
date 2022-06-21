@@ -107,14 +107,23 @@
 					var="itemSpec" varStatus="varStatus"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 
-					<tr style="border: 1px solid #2c576e;">
-						<td
-							style="border: 1px solid #e8e8e8; border-collapse: collapse; text-align: left;"><h:outputText
-								value="#{itemSpec}" /></td>
+					<tr style="border: 1px solid #e8e8e8;">
+						<c:choose>
+							<c:when test="#{varStatus.index % 2 != '0'}">
+								<td
+									style="padding-left: 5px;background-color: #e8e8e8; border: 1px solid #e8e8e8; border-collapse: collapse; text-align: left;">
+									<h:outputText value="#{itemSpec}" /></td>
+							</c:when>
+							<c:otherwise>
+								<td
+									style="padding-left: 5px;border: 1px solid #e8e8e8; border-collapse: collapse; text-align: left;">
+									<h:outputText value="#{itemSpec}" /></td>
+							</c:otherwise>
+						</c:choose>
 						<c:if test="#{varStatus.index == '0'}">
 							<td
 								rowspan="#{lOADetailBackingBean.managedBean.scLoiLoaItemSpecsList.size()}"
-								style="border: 1px solid #e8e8e8; border-collapse: collapse; text-align: left;"><h:outputText
+								style="padding-left: 5px;border: 1px solid #e8e8e8; border-collapse: collapse; text-align: left;"><h:outputText
 									id="supplierOffered" rendered="#{!isMultipleSuppOffer}"
 									value="#{empty lOADetailBackingBean.managedBean.selectedSupplierOffer  ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.managedBean.selectedSupplierOffer}"
 									style="display:block;width:100%;">
@@ -127,9 +136,9 @@
 								rowspan="#{lOADetailBackingBean.managedBean.scLoiLoaItemSpecsList.size()}"
 								style="border: 1px solid #e8e8e8; border-collapse: collapse; text-align: right;">
 								<p:inputTextarea id="newSupplierOfferedInput"
-									style="width:calc(100% - 15px);"
+									style="width:calc(100% - 15px); height: 10em; top: 0;"
 									value="#{lOADetailBackingBean.managedBean.newSupplierOffered}"
-									disabled="#{isTrackingDairyView}" maxlength="1000" rows="5"
+									disabled="#{isTrackingDairyView}" maxlength="1000"
 									autoResize="false" onkeyup="limitTextArea(this,1000);"
 									onkeydown="limitTextArea(this,1000);"
 									onmouseout="limitTextArea(this,1000);">
