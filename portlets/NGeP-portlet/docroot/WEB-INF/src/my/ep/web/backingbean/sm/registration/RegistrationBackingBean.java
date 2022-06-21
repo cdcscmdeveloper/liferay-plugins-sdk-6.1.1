@@ -2203,7 +2203,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		FacesContext fc = FacesContext.getCurrentInstance();
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		
+		//27691 START
+		this.getManagedBean().setSmPersonnelOwners(new ArrayList<SmPersonnel>());
+		this.getManagedBean().setSmPersonnelDirector(new ArrayList<SmPersonnel>());
+		//27691 END
 		if(pmUser.getUserId().longValue() != 1 || pmUser == null){
 			
 			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
@@ -3443,6 +3446,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 
 		validateBankInfo(this.getManagedBean().getSmAppl().getSmSupplierBanks());
+		//27691 START
+		if(this.getManagedBean().getSmSupp().getSmSupplierOwners() != null){
+			for(SmSupplierOwner suppOwner : this.getManagedBean().getSmSupp().getSmSupplierOwners()){
+				validateIDFormat(suppOwner.getIdentificationNo(),suppOwner.getIdentificationType().getParameterCode());
+			}
+		}
+		//27691 END
 
 		if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
 			if(this.getManagedBean().getSmAppl().getSmAssociationBodies().size() < 1){
