@@ -43,6 +43,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.TechnicalStaffBean;
@@ -225,6 +226,10 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	// #30609 - Start.
 	private boolean disableUpdateProposal;
 	// #30609 - End.
+	
+	// #21695 - #33391 - Start.
+	private Map<Long, List<TplSpecAnswer>> zoneTplSpecAnsMap;
+	// #21695 - #33391 - End.
 	
 	/**
 	 * Default Consructor
@@ -1983,5 +1988,21 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.disableUpdateProposal = disableUpdateProposal;
 	}
 	// #30609 - End.
+
+	// #21695 - #33391 - Start.
+	/**
+	 * @return the zoneTplSpecAnsMap
+	 */
+	public Map<Long, List<TplSpecAnswer>> getZoneTplSpecAnsMap() {
+		return zoneTplSpecAnsMap;
+	}
+
+	/**
+	 * @param zoneTplSpecAnsMap the zoneTplSpecAnsMap to set
+	 */
+	public void setZoneTplSpecAnsMap(Map<Long, List<TplSpecAnswer>> zoneTplSpecAnsMap) {
+		this.zoneTplSpecAnsMap = zoneTplSpecAnsMap;
+	}
+	// #21695 - #33391 - End.
 	
 }
