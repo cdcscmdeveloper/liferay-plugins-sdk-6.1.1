@@ -16500,7 +16500,11 @@ private void retriveCommitteeRemarksList(){
 						|| specscore.getScQtCheckList().getDefinationType().getParameterCode().equals(SourcingConstants.DOC_DEF_KEY_TEMPLATE_SPECIFICATION)) {
 					//skip demo and technical spec
 				} else {
-					totalNum = totalNum.add(specscore.getTotalScore());
+					//#28784 ignore non scoring data - start
+					if (specscore.getTotalScore() != null) {
+						totalNum = totalNum.add(specscore.getTotalScore());
+					}
+					//#28784 ignore non scoring data - end
 				}
 			}
 			
