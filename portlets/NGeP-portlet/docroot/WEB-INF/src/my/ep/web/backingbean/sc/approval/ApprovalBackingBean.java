@@ -2455,9 +2455,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							
 							FacesContext.getCurrentInstance().addMessage(null,
 									new FacesMessage(FacesMessage.SEVERITY_ERROR,null,
-											MessageUtils.getMessage(MessageConst.ERROR_100022, new String[] {
-													getMessageCommon("lbl.sc.remark")}, MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes().getUserLocale())));
+											getMessage("lbl.sc.qt.supplier.accept.reject.alert",null)));//#21692
 							return;
 						}
 					}
