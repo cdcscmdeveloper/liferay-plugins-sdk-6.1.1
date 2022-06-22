@@ -18,6 +18,7 @@
 	</style>
 	<p:panel header="#{lbl['lbl.sc.qt.req.ptj']}" toggleable="true" id="qtScQtReqPtjId">
 		<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange}" >
+			<ui:remove>#21692 - start</ui:remove>
 			<p:outputLabel styleClass="blue-instruction"
 				value="#{lbl['lbl.sc.qt.supplier.accept.change.instruction']}" />
 			<br/><br/>
@@ -25,6 +26,7 @@
 		<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange}" >
 			<p:outputLabel styleClass="blue-instruction"
 				value="#{lbl['lbl.sc.proposal.validity.extension.instruction']}"/>
+			<ui:remove>#21692 - end</ui:remove>
 			<br/><br/>
 		</c:if>
 		<table style="width: 100%;">
@@ -80,6 +82,7 @@
 						disabled="true" readonly="true" style="width:212px;" /></td>
 			</tr>
 
+			<ui:remove>#21692 - start</ui:remove>
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
 				<td colspan="3"><p:inputTextarea
@@ -93,7 +96,6 @@
 					</td>
 					<td>
 						<p:inputText id="responsePeriod" value="#{scQt.qtValidityPeriod}" style="width:200px;" disabled="true" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.qt.proposal.validity.tooltip']}" />
 					</td>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sc.proposal.validity.until']}" />
@@ -104,6 +106,7 @@
 						</p:inputText>
 					</td>
 				</tr>
+				<ui:remove>#21692 - end</ui:remove>
 			</c:if>
 		</table>
 	</p:panel>
