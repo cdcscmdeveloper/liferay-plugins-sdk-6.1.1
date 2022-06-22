@@ -362,8 +362,13 @@ u.underline {
 				
 				#if($isSL1M == "true")
 				<p>
+					#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
 					<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki
 					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK 1.2.</span>
+					#else
+						<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki
+						untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK 1.2</span>
+					#end
 				</p>
 				#else
 				<p>
@@ -893,7 +898,11 @@ u.underline {
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">8. </td>
-									<td class ="text_header_submenu">No. Kod Majikan PERKESO/No. Pendaftaran KWSP/<span class="text_header_submenu_red">*Polisi Insurans (jika berkaitan)</span></td>
+									#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
+										<td class ="text_header_submenu">No. Kod Majikan PERKESO/No. Pendaftaran KWSP/<span class="text_header_submenu_red">*Polisi Insurans (jika berkaitan)</span></td>
+									#else
+										<td class ="text_header_submenu">No. Kod Majikan PERKESO/No. Pendaftaran KWSP<span class="text_header_submenu_red">/*Polisi Insurans (jika berkaitan)</span></td>
+									#end
 								</tr>
 						</table>
 					</td>
