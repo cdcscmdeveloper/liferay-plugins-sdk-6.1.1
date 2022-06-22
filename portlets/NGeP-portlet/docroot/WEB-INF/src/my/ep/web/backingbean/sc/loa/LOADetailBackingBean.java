@@ -3727,16 +3727,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}	
 				}
 				
-				//#25725 start 								
-				Boolean isNonPeriodic = (scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
-				if((!scLoa.isAgreementReq())&&(isNonPeriodic && !isPK7(scLoa) && over500K(scLoa))){
-					if(scLoa.getScLoaAttachment() == null){
-						RequestContext.getCurrentInstance().execute("approvalLetterAlertDlg.show()");
-						return;
-					}
-				}else{
-					scLoa.setScLoaAttachment(null);
-				}
+				//#25725 start
+				boolean approvalLetter = validateApprovalLetter(scLoa);
+				
+				if(approvalLetter == false){
+					return;
+				}				
 				//#25725 end
 	
 				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -10483,5 +10479,25 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		});
 	}
 	//29007 End
+	
+	//#25725 start
+	
+	private boolean validateApprovalLetter(ScLoa scLoa) {
+		Boolean approvalLetter = true;
+		Boolean isNonPeriodic = (scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
+		Boolean isOneOff = scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+		if((!scLoa.isAgreementReq())&&((isNonPeriodic||isOneOff) && !isPK7(scLoa) && over500K(scLoa))){
+			if(scLoa.getScLoaAttachment() == null){
+				RequestContext.getCurrentInstance().execute("approvalLetterAlertDlg.show()");
+				approvalLetter = false;
+				return approvalLetter;
+			}
+		}else{
+			scLoa.setScLoaAttachment(null);
+		}
+		return approvalLetter;
+	}
+	
+	//#25725 end
 }
 
