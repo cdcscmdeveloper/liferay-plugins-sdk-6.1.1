@@ -105,12 +105,11 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	}
 
 	public String getSpkiEnabledProperty() {
-		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
 		//#30425 - Start
 		log.info(">>>>>>>>>>>> Trying to call EP properties for SPKI <<<<<<<<<<<");
+		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
 		log.info("getSpkiEnabledProperty :" + prop.getProperty("spki.enabled"));
-		System.out.println("getSpkiEnabledProperty :"
-				+ prop.getProperty("spki.enabled"));
+		System.out.println("getSpkiEnabledProperty :" + prop.getProperty("spki.enabled"));
 		log.info(">>>>>>>>>>>> Calling EP Properties for SPKI Done <<<<<<<<<<<<<< ");
 		//#30425 - End
 		return prop.getProperty("spki.enabled").trim();
