@@ -105,9 +105,13 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	}
 
 	public String getSpkiEnabledProperty() {
+		//#30425 - Start
+		log.info(">>>>>>>>>>>> Trying to call EP properties for SPKI <<<<<<<<<<<");
 		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
-		System.out.println("getSpkiEnabledProperty :"
-				+ prop.getProperty("spki.enabled"));
+		log.info("getSpkiEnabledProperty :" + prop.getProperty("spki.enabled"));
+		System.out.println("getSpkiEnabledProperty :" + prop.getProperty("spki.enabled"));
+		log.info(">>>>>>>>>>>> Calling EP Properties for SPKI Done <<<<<<<<<<<<<< ");
+		//#30425 - End
 		return prop.getProperty("spki.enabled").trim();
 	}
 
@@ -123,8 +127,10 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 						getSupplier().getEpNo(), challengeQues1);
 			} else {
 				logger.info("getChallengeQuestions | getCertIssuer-DG : " + getCertIssuer());
+				//#30425 - Start
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(
 						getLoginUser().getIdentificationNo(), getSupplier().getEpNo());
+				//#30425 - End
 			}
 			setChallengeQues1(challs.get(0));
 			logger.info("::: #25061 before spki_dlg.show");
@@ -398,8 +404,10 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 					getLoginUser().getIdentificationNo(),
 					getSupplier().getEpNo(), challengeQues1);
 		} else {
+			//#30425 - Start
 			challs = DigiCertHelper.getInstance().getChallengeQuestion(
 					getLoginUser().getIdentificationNo(), getSupplier().getEpNo());
+			//#30425 - End
 		}
 		setChallengeQues1(challs.get(0));
 	}
@@ -442,24 +450,6 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		return PmCommonUtil.getCertIssuerByIdentificationNoAndEpNo(
 				identificationNo, getSupplier().getEpNo());
 	}
-	
-	// disabled due to 30425
-		/*public void getChallengeQuestions2(String identificationNo) {
-			//if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
-				if (getCertIssuer(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
-					logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
-					challs = TrustGateHelper.getInstance().getChallengeQuestion(
-							identificationNo, getSupplier().getEpNo(),
-							challengeQues1);
-				} else {
-					logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
-					challs = DigiCertHelper.getInstance().getChallengeQuestion(
-							identificationNo);
-				}
-				setChallengeQues1(challs.get(0));
-				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
-			//}
-		}*/
 	
 	//#30425 - Start
 	private String getTypeOfCert(String identificationNo){
