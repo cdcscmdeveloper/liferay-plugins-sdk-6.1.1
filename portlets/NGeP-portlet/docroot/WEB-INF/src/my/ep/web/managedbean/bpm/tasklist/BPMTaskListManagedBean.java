@@ -573,7 +573,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								//CR 28766: Static Code Analysis End
 								//#21692 - start
 								int docStatus = worklistItemVO.getDocStatus().intValue();
-								String noteEPV = ResourceBundleUtils.getMessage("lbl.sc.proposal.validity.period.extension.response.supplier",
+								String noteEPV = ResourceBundleUtils.getMessage("lbl.sc.qt.proposal.extension.tasklist.note",
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale());
 								
 								if (QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE.intValue() == docStatus) {
