@@ -582,11 +582,21 @@ public class TemplateSpecBackingBean extends
 		newQuestion.setQuestionType(questionType);
 
 		if (isQuestionTypeItem) {
+			
 			PmParameter pmParameter = getParameterByTypeAndCode(
 					ParameterTypeConst.FULFILMENT_TYPE,
 					ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-			newQuestion.setClFulfilmentTypeCode(pmParameter);
-
+			
+			//#25726 start - set fulfilment type according to the qt fulfilment
+			if(null != tplSpecMaster.getScQtDoc()){
+				if(null != tplSpecMaster.getScQtDoc().getScQt()){
+					if(null != tplSpecMaster.getScQtDoc().getScQt().getFulfilmentType()){
+						newQuestion.setClFulfilmentTypeCode(tplSpecMaster.getScQtDoc().getScQt().getFulfilmentType());
+					}
+				}
+			}
+			//#25726 end
+			
 			if (ParameterConst.ITEM_TYPE_SERVICE.equals(tplSpecMaster
 					.getItemTypeCode().getParameterCode())) {
 				if (tplSpecMaster.getTplSpecZone() != null) {
