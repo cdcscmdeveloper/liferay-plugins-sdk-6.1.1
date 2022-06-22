@@ -1,0 +1,224 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel id="updCommitteePanel" header="#{lbl['lbl.sc.update.committee.member']}" toggleable="true"  toggleSpeed="500">
+            <p:dataTable id="updCommitteeTable" var="ctUpdCommitteeVar" widgetVar="updCommitteeTableWidget"
+            	rowIndexVar="index" rowKey="#{ctUpdCommitteeVar}"
+                value="#{amendmentBackingBean.managedBean.updatedCommitteeMembers}" filteredValue="#{amendmentBackingBean.getFilteredCommitteeMembers()}">
+                  <p:column  style="width:2%;" rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}">
+			      <f:facet name="header">
+					<p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this"
+							update=":form:updCommitteeTable,:form:committeeDeleteBtn" listener="#{amendmentBackingBean.selectAllCommittees()}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{ctUpdCommitteeVar.selectedCheckBox}" styleClass="myCustomChekBox"
+					disabled="#{ctUpdCommitteeVar.memberRole.parameterCode == ParameterConst.committeeRoleSecretary}">
+					 <p:ajax event="change" update=":form:updCommitteeTable,:form:committeeDeleteBtn" listener="#{ctBackingBean.selectOneCheckboxSelect}"></p:ajax>
+				</p:selectBooleanCheckbox>
+		      </p:column>
+               
+			    <p:column style="width:17%;white-space:normal" 
+			       styleClass="column-align-center"  headerText="#{lbl['lbl.ct.name']}">
+				 <div align="left">
+				    <h:outputText value="#{ctUpdCommitteeVar.memberName}" /></div>
+				</p:column> 
+				 
+				 <p:column style="width:11%;white-space:normal;"
+				    styleClass="column-align-center"  headerText="#{lbl['lbl.ct.identification.no']}">
+				  <div align="left">
+				        <h:outputText value="#{ctUpdCommitteeVar.icPassport}" /></div>
+				 </p:column>  
+				 
+				 <p:column style="width:27%;white-space:normal;"
+				    styleClass="column-align-center"  headerText="#{lbl['lbl.ct.designation']}" >
+				     <div align="left">
+				         <h:outputText value="#{ctUpdCommitteeVar.designation}" /></div>
+				 </p:column> 
+				
+				 <p:column style="width:20%;white-space:normal;" 
+				     styleClass="column-align-center"  headerText="#{lbl['lbl.ct.email']}">
+				      <div align="left">
+				           <h:outputText value="#{ctUpdCommitteeVar.email}" />
+				        </div>
+				 </p:column> 
+			
+				 <p:column style="width:5%;" 
+				     styleClass="column-align-center"  headerText="#{lbl['lbl.ct.grade']}">
+				     <div align="left">
+				    <h:outputText value="#{ctUpdCommitteeVar.grade}" /></div>
+				 </p:column> 
+				
+				 <p:column headerText="#{lbl['lbl.ct.pnp']}"
+				    styleClass="column-align-center"  style="width:5%;">
+				     <h:outputText value="#{ctUpdCommitteeVar.pnp ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"  style="float:left;"/>
+				 </p:column>
+				 
+				 <p:column style="width:13%;" styleClass="column-align-center" >
+				 <f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.ct.role']}" />
+				</f:facet>
+				 <ui:fragment rendered="#{ctUpdCommitteeVar.memberRole.parameterCode == ParameterConst.committeeRoleSecretary}">
+							<h:outputText value="#{lbl['lbl.ct.secretary']}" />
+					 </ui:fragment>
+					<ui:fragment rendered="#{ctUpdCommitteeVar.memberRole.parameterCode != ParameterConst.committeeRoleSecretary}">
+						<p:selectOneMenu id="updRoleSelMenu"
+						    value="#{ctUpdCommitteeVar.memberRole.parameterId}" 
+						     style="width: 110px;margin-bottom: 5px;" required="true" requiredMessage="#{lbl['lbl.ct.role.mandatory']}" label="#{lbl['lbl.ct.role']}" >
+							<f:selectItems value="#{amendmentBackingBean.getRoleTypeDropdown(ctUpdCommitteeVar)}" />
+							<p:ajax event="valueChange" process="@this" partialSubmit="true"  
+							   update=":form:panelHeaderExceptionUpdateCommittee, updCommitteeTable"
+							   listener="#{amendmentBackingBean.validateUpdatedCommitteeListDuplicateChairperson(ctUpdCommitteeVar, ctUpdCommitteeVar.memberRole.parameterId)}"></p:ajax>
+							</p:selectOneMenu>
+						 </ui:fragment>
+				 </p:column>
+				 <p:column style="width: 15%" styleClass="column-align-center" 
+				     rendered="#{(amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeB) 
+				     	and (amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeA)}">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.ct.represent.type']}" />
+				</f:facet>
+				<h:panelGroup id="updCommitteeRepresentPnlGrp">
+					<p:selectOneMenu  id="updRepresentativeTypeSelMenu" required="true" requiredMessage="#{lbl['lbl.ct.represent.type.mandatory']}"
+						value="#{ctUpdCommitteeVar.representativeType.parameterId}"
+						rendered="#{amendmentBackingBean.chkBooleanRepresentType(ctUpdCommitteeVar.memberRole.parameterId, ctUpdCommitteeVar.pnp)}"
+						label="#{lbl['lbl.ct.represent.type']}" style="width: 150px;margin-bottom: 5px;">
+						<f:selectItems
+							value="#{amendmentBackingBean.getRepresentativeDropdown()}" />
+							<p:ajax event="valueChange" process="@this" update="updCommitteeRepresentPnlGrp" partialSubmit="true"
+								listener="#{amendmentBackingBean.onChangeRepType(ctUpdCommitteeVar, ctUpdCommitteeVar.representativeType.parameterId)}"></p:ajax>
+					</p:selectOneMenu>
+				</h:panelGroup>
+
+			</p:column>
+	         </p:dataTable>
+	         <div class="ppRightBtn"> 
+		          <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"  update="committeeModelDialog"
+		             action="#{amendmentBackingBean.getCommitteeMembers()}"/>
+		          <p:commandButton value="#{lbl['lbl.ct.delete']}"  onsuccess="updCommitteeDlgDel.show();" partialSubmit="true" id = "committeeDeleteBtn"
+		             process="@this"  disabled="#{ctBackingBean.managedBean.buttonHideActive}"/>
+		     </div>
+           
+              <p:confirmDialog id="updCommitteeDlgDel" widgetVar="updCommitteeDlgDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                  <div class="ppRightBtn">
+                  <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:updCommitteeTable,:form:committeeDeleteBtn" 
+		              process="@this" partialSubmit="true" 
+		              actionListener="#{amendmentBackingBean.removeCommitteeMembersFromUpdatedList()}" oncomplete="updCommitteeDlgDel.hide();">
+		         <f:setPropertyActionListener
+					target="#{amendmentBackingBean.managedBean.selectAll}" value="#{false}" /></p:commandButton>
+		            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="updCommitteeDlgDel.hide();" type="button" />
+		          </div>
+            </p:confirmDialog>
+        </p:panel>
+      
+         <p:dialog id="committeeModelDialog" header="#{lbl['lbl.ct.new.committee.member']}" widgetVar="dlgCommittee" resizable="false" 
+         	styleClass="pop_up_top" modal="true" width="950" height="550">
+		         
+		           <p:panel id="committeeSearchPanel" header="#{lbl['lbl.btn.search']}" toggleable="true"   toggleSpeed="500">
+		              
+		                <h:panelGrid id="changeCommitteMemberPnlGrid" columns="2" width="100%" columnClasses="columnWidth20">
+		                  
+		                     <p:outputLabel for="memberNameId" value="#{lbl['lbl.ct.name']}" />
+	                         <p:inputText id="memberNameId" value="#{amendmentBackingBean.managedBean.committeeName}"  maxlength="80" style="width:260px;"/>
+                           
+                             <p:outputLabel for="identificationType" value="#{lbl['lbl.ct.identification.type']}" />
+	                         <p:selectOneMenu id="identificationType"  style="width:180px;margin-bottom: 5px;" value="#{amendmentBackingBean.managedBean.identificationType}">
+	                              <f:selectItems value="#{amendmentBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}"/>
+	                           </p:selectOneMenu>
+	                         <p:outputLabel for="identificationNo" value="#{lbl['lbl.ct.identification.no']}" />
+	                         <p:inputText id="identificationNo"  style="width:170px;" value="#{amendmentBackingBean.managedBean.identificationNo}"/>
+                  
+                      </h:panelGrid>  
+                     
+                       <div class="ppRightBtn"> 
+                  	      <p:commandButton value="#{lbl['lbl.btn.search']}"  process="@form" 
+                  	          action="#{amendmentBackingBean.searchExistingCommitteMember}" update=":form:committeeResultTable" />
+		                  <p:commandButton value="#{lbl['lbl.btn.reset']}"   process="@this" partialSubmit="true"
+		                     action="#{amendmentBackingBean.searchExistingCommitteMemberReset}" update=":form:changeCommitteMemberPnlGrid, :form:memberSearchResult"/>
+		               </div> 
+		         </p:panel>
+		         
+		         <p:panel id="memberSearchResult" header="#{lbl['lbl.ct.search.result']}" toggleable="true" toggleSpeed="500">
+		         
+		             <p:dataTable id="committeeResultTable" var="data" value="#{amendmentBackingBean.committeDataModel}"  
+		                   lazy="true"  rowKey="#{data}"  rowIndexVar="index">
+                           <ac:paginator for="committeeResultTable"/>
+	                          <p:column  style="width:2%;">
+				                    <f:facet name="header">
+						                <p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.selectAll}">
+						                   	<p:ajax partialSubmit="true" process="@this"
+								                update=":form:committeeResultTable, :form:committeeOkBtnId" listener="#{amendmentBackingBean.selectAllComitMem}" />
+						                </p:selectBooleanCheckbox>
+					               </f:facet>
+					                <p:selectBooleanCheckbox value="#{data.selectedCheckBox}" styleClass="myCustomChekBox">
+						                      <p:ajax event="change" 
+						                          update=":form:committeeResultTable, :form:committeeOkBtnId" listener="#{amendmentBackingBean.selectAllComitMemCheckBox}"></p:ajax>
+					                 </p:selectBooleanCheckbox>
+			                    </p:column>
+                      
+				            <p:column style="width:20%;white-space:normal;" headerText="#{lbl['lbl.ct.name']}">
+				                 <div align="left">
+				                  <h:outputText value="#{data.userName}" /></div>
+				            </p:column> 
+				      
+				            <p:column style="width:10%;" headerText="#{lbl['lbl.ct.identification.no']}">
+				                 <div align="left">
+				                  <h:outputText value="#{data.identificationNo}" /></div>
+				             </p:column> 
+				            
+				             <p:column style="width:38%;white-space:normal;" headerText="#{lbl['lbl.ct.designation']}">
+				                   <div align="left">
+				                   <h:outputText value="#{data.designation}" /></div>
+				             </p:column> 
+				    
+				             <p:column style="width:20%;white-space:normal;" headerText="#{lbl['lbl.ct.email']}">
+				                 <div align="left">
+				                   <h:outputText value="#{data.email}" /></div>
+				             </p:column> 
+				      
+				             <p:column style="width:6%;white-space:normal;" headerText="#{lbl['lbl.ct.grade']}">
+				                   <div align="left">
+				                   <h:outputText value="#{data.grade}" /></div>
+				             </p:column> 
+				       
+				             <p:column style="width:5%;white-space:normal;" headerText="#{lbl['lbl.ct.pnp']}">
+				                  <h:outputText value="#{data.PMP ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}" style="float:left;"/>
+				             </p:column> 
+	                </p:dataTable>
+	          
+	              <f:facet name="footer">
+			      <h:panelGrid columns="2" style="float:right;height:50px;vertical-align: middle;">
+				      <p:commandButton value="#{lbl['lbl.btn.select']}" process="@this,committeeModelDialog" id="committeeOkBtnId"
+				         disabled="#{ctBackingBean.managedBean.buttonHideActive}"
+				          action="#{amendmentBackingBean.addSelectedCommitteeMembers}"  update="updCommitteeTable,committeeModelDialog" onclick="dlgCommittee.hide();" />
+                       <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgCommittee.hide();" />
+			      </h:panelGrid>
+		        </f:facet>
+		    </p:panel>
+    </p:dialog>
+		<p:confirmDialog id="updLatestCommitteeDlg" widgetVar="updLatestCommitteeDlg" message="#{lbl['lbl.sc.update.based.on.attendance']}" 	
+                           severity="alert"  closable="false" appendToBody="true" header="#{lbl['lbl.sc.dialog.cofirm.header']}">
+                  <div class="ppRightBtn">
+                  <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form" 
+		              process="@this" partialSubmit="true" 
+		              actionListener="#{amendmentBackingBean.updateLatestCommitteeMembers()}" oncomplete="updLatestCommitteeDlg.hide();">
+		         </p:commandButton>
+		            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="updLatestCommitteeDlg.hide();" type="button" />
+		          </div>
+            </p:confirmDialog>
+            <p:confirmDialog id="validateLatestCommitteeDlg" widgetVar="validateLatestCommitteeDlg" message="#{lbl['lbl.sc.update.same.committee.member']}" 	
+                           severity="alert"  closable="false" appendToBody="true" header="#{lbl['lbl.sc.dialog.cofirm.header']}">
+                  <div class="ppRightBtn">
+                  <p:commandButton value="#{lbl['lbl.btn.ok']}" update=":form" process="@this" partialSubmit="true" 
+		              actionListener="#{amendmentBackingBean.backToAmendmentPage()}" oncomplete="validateLatestCommitteeDlg.hide();"/>
+		          </div>
+            </p:confirmDialog>
+</ui:composition>
