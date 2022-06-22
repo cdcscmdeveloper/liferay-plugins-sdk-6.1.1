@@ -136,10 +136,10 @@
 								rowspan="#{lOADetailBackingBean.managedBean.scLoiLoaItemSpecsList.size()}"
 								style="vertical-align: top;border: 1px solid #e8e8e8; border-collapse: collapse; text-align: right;">
 								<p:inputTextarea id="newSupplierOfferedInput"
-									style="width:calc(100% - 15px); height: 10em; top: 0;"
+									style="resize: vertical;width:calc(100% - 15px); height: 10em; top: 0;"
 									value="#{lOADetailBackingBean.managedBean.newSupplierOffered}"
 									disabled="#{isTrackingDairyView}" maxlength="1000"
-									autoResize="false" onkeyup="limitTextArea(this,1000);"
+									onkeyup="limitTextArea(this,1000);"
 									onkeydown="limitTextArea(this,1000);"
 									onmouseout="limitTextArea(this,1000);">
 									<p:ajax event="change" process="@this" update="@this" />
