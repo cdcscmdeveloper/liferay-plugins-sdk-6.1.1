@@ -17,14 +17,14 @@
 	<ui:param name="qtStatusScheduleDocAndAfter"
 		value="#{createQtBB.isQTStatusGreaterThanOrEquals(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 	<ui:param name="qtStatusIsProposalValidPeriodExtApproval" 
-		value="#{qTDetailBB.isQTStatusInProposalValidPeriodExtApprovalAndIsRefinalization(scQt.qtStatus.statusId)}" />
+		value="#{qTDetailBB.isQTStatusInProposalValidPeriodExtApprovalAndIsRefinalization(scQt.qtStatus.statusId)}" /> <ui:remove>#21692</ui:remove>
 	<ui:param name="zoneCoverageReadonly"
 		value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_ZONE_COVERAGE)}" />
 	<ui:param name="isReadOnly" value="#{createQtBB.managedBean.readOnly}" />
 	<ui:param name="amountsShowHide"
 		value="#{qTDetailBB.managedBean.showAndHideAmounts}" />
 	<ui:param name="qtExtensionResponseDueDate"
-		value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId, scQt.responsePeriod)}" />
+		value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId, scQt.responsePeriod)}" /> <ui:remove>#21692</ui:remove>
 	<ui:param name="expectTotalIndPriceBelowThreshold"
 		value="#{createQtBB.expectTotalIndPriceBelowThreshold(scQt,'createQt')}" />
 	<ui:param name="isStatusInQTReviseGroupStatus" 
@@ -850,8 +850,8 @@
 										valueChangeListener="#{createQtBB.proposalValidityChanged}"
 										style="text-align:right; width:200px;"><ui:remove>#29472</ui:remove>
 										<p:ajax event="blur" process="@this" partialSubmit="true"
-											update="@this, @(.amendButton)"
-											listener="#{createQtBB.handleProposalValidityDate}" />
+											update="@form, @(.amendButton)"
+											listener="#{createQtBB.handleProposalValidityDate}" /><ui:remove>#21692</ui:remove>
 									</p:inputMask></td>
 								<td><p:message id="proposalvalidityMsg"
 										for="proposalvalidity" display="icon" /></td>
@@ -861,7 +861,9 @@
 						</table>
 					</td>
 				</tr>
-				<c:if test="#{qtStatusIsProposalValidPeriodExtApproval}">
+				<ui:remove>#21692</ui:remove>
+				<ui:fragment id="responsePeriodId" rendered="#{qtStatusIsProposalValidPeriodExtApproval and (createQtBB.managedBean.isProposalValidityChangeValue()
+					or isReadOnly)}">
 				<c:choose>
 				<c:when test="#{approvalBackingBean.isEPVApprovalRequestAccepted(scQt.qtId)}">
 				<tr>
@@ -935,7 +937,8 @@
 					</tr>
 				</c:otherwise>
 				</c:choose>
-				</c:if>
+				</ui:fragment>
+				<ui:remove>#21692</ui:remove>
 			</c:if>
 			<tr>
 				<td style="width: 100%;"><p:outputLabel
