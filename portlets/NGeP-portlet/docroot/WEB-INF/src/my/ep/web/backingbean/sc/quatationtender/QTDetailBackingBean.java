@@ -9687,7 +9687,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			return false;
 	}
 
-	public Timestamp getExtensionResponseDueDate(Long qtId, int resPeriod) {
+	public Timestamp getExtensionResponseDueDate(Long qtId, int resPeriod) {//#21692
 		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
 		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
@@ -9699,7 +9699,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if(status.isCurrent() 
 					&& (status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_APPROVED)
 					|| status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE))){
-				Timestamp extensionRespDate = getQTDetailSO().getExtensionResponseDueDate(qtId, resPeriod);
+				Timestamp extensionRespDate = getQTDetailSO().getExtensionResponseDueDate(qtId, resPeriod);//#21692
 				return extensionRespDate;
 			}
 		}
