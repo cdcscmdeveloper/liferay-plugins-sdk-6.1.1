@@ -24,6 +24,7 @@
 				<h:outputText value="#{fcRequestDtls.changedValue}" />
 			</p:column>
 		</p:dataTable>
+		<ui:remove>#21692 - start</ui:remove>
 		<table
 			style="width: 100%; font-family: arial, sans-serif; border-collapse: collapse;">
 			<tr>
@@ -75,6 +76,7 @@
 				</tr>
 			</c:if>
 		</table>
+		<ui:remove>#21692 - end</ui:remove>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true"
 		rendered="#{approvalBackingBean.managedBean.qt.qtType eq 'R'}">
