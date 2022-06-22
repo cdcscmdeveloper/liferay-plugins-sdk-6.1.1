@@ -824,10 +824,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param clazz
 	 * @return ScRemark instance
 	 */
+	//25037 note 284 - start
 	protected <PARENT_ENTITY extends BaseEntity, REMARK_CLASS extends ScRemark> List<REMARK_CLASS> initializeRemarks(
 			PARENT_ENTITY parent, ScWorkFlowStatus workFlowStatus,
-			List<REMARK_CLASS> scRemarks, Class<REMARK_CLASS> clazz) {
-
+			List<REMARK_CLASS> scRemarks, Class<REMARK_CLASS> clazz){
+		return initializeRemarks(parent, workFlowStatus, scRemarks, clazz, false);
+	}
+	protected <PARENT_ENTITY extends BaseEntity, REMARK_CLASS extends ScRemark> List<REMARK_CLASS> initializeRemarks(
+			PARENT_ENTITY parent, ScWorkFlowStatus workFlowStatus,
+			List<REMARK_CLASS> scRemarks, Class<REMARK_CLASS> clazz, boolean isSameScreen) {
+	//25037 note 284 - end
 		try {
 			if (scRemarks == null) {
 				scRemarks = new ArrayList<REMARK_CLASS>();
@@ -840,7 +846,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				for (int row = 0; row < scRemarks.size(); row++) {
 					ScRemark scRemark = scRemarks.get(row);
 					if (compareUserName(scRemark.getCreatedUser().getLoginId()) &&
-							!isDiffWithPrevWorkFlowStatus(workFlowStatus, scRemark)) {
+							!isDiffWithPrevWorkFlowStatus(workFlowStatus, scRemark) && !isSameScreen) {//25037 note 284 
 						scRemark.setEditable(true);
 					}
 				}
@@ -850,7 +856,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			if (scRemarks.size() == 0
 					|| !compareUserName(prevRemark.getCreatedUser()
 							.getLoginId())
-					|| isDiffWithPrevWorkFlowStatus(workFlowStatus, prevRemark)) {
+					|| isDiffWithPrevWorkFlowStatus(workFlowStatus, prevRemark)
+					|| isSameScreen) {//25037 note 284 
 
 				REMARK_CLASS remark = clazz.newInstance();
 				remark.setCreatedBy(facesScopes.getUserSessionBean()
