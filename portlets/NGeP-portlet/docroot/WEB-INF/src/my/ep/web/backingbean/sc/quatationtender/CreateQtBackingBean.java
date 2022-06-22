@@ -2715,6 +2715,15 @@ public class CreateQtBackingBean extends
 			if (null != newValue) {
 				qtDtl.validateNewValueForValidityDays((int) newValue);
 			}
+
+			//#21692 - start
+			if (null != newValue && null != valueBean.getOldValue()
+					&& (int) newValue > (int) valueBean.getOldValue()) {
+				this.getManagedBean().setProposalValidityChangeValue(true);
+			} else {
+				this.getManagedBean().setProposalValidityChangeValue(false);
+			}
+			//#21692 - end
 		}
 		//#29425 - end
 		

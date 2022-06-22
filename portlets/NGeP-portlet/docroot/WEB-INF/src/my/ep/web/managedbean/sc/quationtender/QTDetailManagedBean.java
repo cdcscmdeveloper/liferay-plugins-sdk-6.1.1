@@ -1652,6 +1652,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Long subStatusId;
 	private List<String> paramTypes = null;
 	//#25692-End
+	
+	public boolean proposalValidityChangeValue; //#21692
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -11156,6 +11158,24 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.qtRemarksIdRemove = qtRemarksIdRemove;
 		}
 		//#9019 - End (Harun)
+		
+		// #21692 - start
+		/**
+		 * @return the proposalValidityChangeValue
+		 */
+		public boolean isProposalValidityChangeValue() {
+			return proposalValidityChangeValue;
+		}
+
+		/**
+		 * @param proposalValidityChangeValue
+		 *            the proposalValidityChangeValue to set
+		 */
+		public void setProposalValidityChangeValue(
+				boolean proposalValidityChangeValue) {
+			this.proposalValidityChangeValue = proposalValidityChangeValue;
+		}
+		// #21692 - end
 }
 
 // ***25201
