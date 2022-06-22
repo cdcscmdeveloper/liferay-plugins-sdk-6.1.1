@@ -2303,6 +2303,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			for (int i = 0; i < scQt.getScQtRemarks().size(); i++) {
 				String userRemark = scQt.getScQtRemarks().get(i).getRemark();
 				if (null == userRemark || "".equals(userRemark)) {
+					if (null != scQt.getScQtRemarks().get(i).getRemarkId()) {
+						this.getManagedBean().setQtRemarksIdRemove(scQt.getScQtRemarks().get(i).getRemarkId());
+					}
 					scQt.getScQtRemarks().remove(i);
 				}
 			}
@@ -2401,6 +2404,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				.isMaintanceFlow());
 		quationTenderReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		quationTenderReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+		quationTenderReqDTO.setQtRemarksIdRemove(this.getManagedBean().getQtRemarksIdRemove()); //#9019 (Harun)
 		
 		return quationTenderReqDTO;
 	}
