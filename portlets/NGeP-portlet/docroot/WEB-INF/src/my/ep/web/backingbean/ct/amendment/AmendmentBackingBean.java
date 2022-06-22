@@ -4561,6 +4561,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private boolean allowChairpersonRole(CtCommitteeMember committeeMember) {
 		boolean allowChairpersonRole = false;
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		//#26751
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setUserId(committeeMember.getPmUser().getUserId());
@@ -4626,7 +4628,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Bug #26520 - start
 			if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
 					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)){
-				allowChairpersonRole = true;
+				//#26751 - start
+				PmOrgProfile pmOrgProfile = new PmOrgProfile();
+				OrgProfileReqDTO mofReqDTO = new OrgProfileReqDTO();
+				
+				if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)){
+					mofReqDTO.setOrgCode("24010201");//LPPS Sabah
+				} else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					mofReqDTO.setOrgCode("24010301");//LPPS Sarawak
+				}
+
+				OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByCode(mofReqDTO);
+				pmOrgProfile = mofResDTO.getPmOrgProfile();
+				
+				//log.info(":::allowChairpersonRole() user profile id: "+ orgProfileId.longValue() +". committee profile id: "+ pmOrgProfile.getOrgProfileId());
+				// FSB/FSW - open to MOF Procurement Board
+				if(orgProfileId.longValue() == pmOrgProfile.getOrgProfileId().longValue()) {
+					allowChairpersonRole = true;
+				} else {
+					allowChairpersonRole = false;
+				}
+				//#26751 -end
 			}
 			//Bug #26520 - end
 			
