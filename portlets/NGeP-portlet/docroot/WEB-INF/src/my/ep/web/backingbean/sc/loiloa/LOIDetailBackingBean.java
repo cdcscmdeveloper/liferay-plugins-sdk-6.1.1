@@ -2285,7 +2285,7 @@ public class LOIDetailBackingBean extends
 		}
 
 	}
-
+	
 	/**
 	 * save the LOI details. save - save data into database and initiate task
 	 * for LOI details. page navigate to loi details page.
@@ -2437,6 +2437,27 @@ public class LOIDetailBackingBean extends
 				if(null!= scQtFinalization){
 					getManagedBean().setScQt(scQtFinalization.getScQt());
 				}
+				
+				// #33325 - Start.
+				if (CollectionUtils.isNotEmpty(getManagedBean().getRecSupplierList())) {
+					IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+					try {
+						qtSuppFinalizationSO = BusinessDelegate.getInstance()
+								.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+										IQTSuppFinalizationSO.class);
+						for (ScLoiLoa scLoiLoa : getManagedBean().getRecSupplierList()) {
+							SmSupplier supplier = scLoiLoa.getSmSupplier();
+							if (null != supplier) {
+								supplier = qtSuppFinalizationSO.retrieveActiveDisciplinaryActionBySupplier(supplier);
+								scLoiLoa.setSmSupplier(supplier);
+							}
+						}
+					} finally {
+						qtSuppFinalizationSO = null;
+					}
+				}
+				// #33325 - End.
+				
 				successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION, scQtFinalization.getScQt().getQtNo(), Boolean.FALSE);
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler()
