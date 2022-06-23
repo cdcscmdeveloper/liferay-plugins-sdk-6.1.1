@@ -50,6 +50,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO; // Fix - #33491
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -83,6 +84,7 @@ import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.sc.document.QTDocumentReqDTO;
 import my.ep.dto.sc.document.QTDocumentResDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO; // Fix - #33491
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -126,6 +128,7 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory; // Fix - #33491
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -136,6 +139,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.util.shared.PerformanceBondUtil; // Fix - #33491
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
@@ -2693,26 +2697,61 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		// Recalculate the performance bond amount
 		//#24333
 		// Start - Fix - #32663
-//		String proc_type = getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode();
-//
-//		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
-//			
-//				if( proc_type != null ){
-//					if( proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() ) {
-//						//pk7 contract with bond from LOA
-//						calculateNewBondAmount();
-//					  } else if( !proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) ) {
-//						// except pk7 and DP
-//						calculateNewBondAmount();
-//					  }
-//			}
-//		   }
+		String proc_type = getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode();
+		String qt_type = getManagedBean().getContractVer().getCtContract().getLoa().getScLoiLoa().getDocType();
+
+		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
+			if (proc_type != null || qt_type != null) {
+				if (proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+						&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
+					// pk7 contract with bond from LOA
+					calculateNewBondAmount();
+					// Start Fix - #33491
+				} else if ((!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) && qt_type.equalsIgnoreCase(ParameterConst.DOCTYPE_QUOTATION))
+						&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
+					   		if(isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa())){	   
+					   		   getManagedBean().getContractVer().getCtContractAmount().setBondReq(PerformanceBondUtil.isPerformanceBondRequired(getManagedBean().getGstTotalAmount(), null));
+					   		  }else{
+									calculateNewBondAmount(); 
+					   		  }	
+				} else if (!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
+				    	      calculateNewBondAmount();
+				     } 
+			   }
+			}
+			
+		   }
+	    // End Fix - #33491
 		// End - Fix - #32663
-	}
 
 	/**
 	 * The method used to calculate the new performance bond amount.
 	 */
+//	private void calculateNewBondAmount() {
+//		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+//				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+//
+//		ContractReqDTO reqDTO = new ContractReqDTO();
+//		reqDTO.setOverallContractAmt(getManagedBean().getGstTotalAmount());
+//		reqDTO.setContractPeriod(new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()));
+//		reqDTO.setScLoa(getManagedBean().getContractVer().getCtContract().getLoa());
+//
+//		ContractResDTO resDTO = contractSO.retrievePerformanceBondAmt(reqDTO);
+//		//#24333 - Start
+//		if(resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()){
+//			getManagedBean().getCtContractAmount().setBondReq(resDTO.isBondReq());
+//		}else{
+//			getManagedBean().getCtContractAmount().setBondReq(false);
+//		}
+//		
+//		if (resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()) {				 
+//			getManagedBean().getCtContractAmount().setTotalBondAmt(resDTO.getBondAmount());
+//		} else {
+//			getManagedBean().getCtContractAmount().setTotalBondAmt(null);
+//		}
+//		//#24333 - End
+//	}
+	// revert
 	private void calculateNewBondAmount() {
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -2722,20 +2761,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		reqDTO.setContractPeriod(new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()));
 		reqDTO.setScLoa(getManagedBean().getContractVer().getCtContract().getLoa());
 
-		ContractResDTO resDTO = contractSO.retrievePerformanceBondAmt(reqDTO);
-		//#24333 - Start
-		if(resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()){
-			getManagedBean().getCtContractAmount().setBondReq(resDTO.isBondReq());
-		}else{
-			getManagedBean().getCtContractAmount().setBondReq(false);
-		}
-		
-		if (resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()) {				 
+		ContractResDTO resDTO = contractSO.retrievePerformanceBondAmt(reqDTO);			 
+		getManagedBean().getCtContractAmount().setBondReq(resDTO.isBondReq());
+		if (resDTO.isBondReq()) {				 
 			getManagedBean().getCtContractAmount().setTotalBondAmt(resDTO.getBondAmount());
 		} else {
 			getManagedBean().getCtContractAmount().setTotalBondAmt(null);
 		}
-		//#24333 - End
 	}
 
 	/**
@@ -4333,9 +4365,24 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return true, if performance bond is required
 	 *         false, if performance bond is not required
 	 * */
+//	public boolean isPerformanceBond(){
+//		//#24333
+//		if(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+//						&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
+//						&& !getManagedBean().getCtContractAmount().isBondExempted()
+//						&& (!getManagedBean().isCommonView()
+//								|| getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().
+//								equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY))){
+//								
+//			return  true;
+//		}
+//		return false;
+//	}
+	//revert
 	public boolean isPerformanceBond(){
-		//#24333
-		if(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+		if(getManagedBean().getCtContractAmount() != null
+				&&(getManagedBean().getCtContractAmount().isBondReq()
+						|| getManagedBean().getCtContractAmount().getTotalBondAmt() != null)
 						&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
 						&& !getManagedBean().getCtContractAmount().isBondExempted()
 						&& (!getManagedBean().isCommonView()
@@ -4792,4 +4839,40 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				loaDetailBackingBean.viewLOA(scLoa.getLoaId());			
 		}
 		//Enhancement 15851 - End
+		
+		// Start Fix - #33491
+		public boolean isQtCategoryExemptedCheck(ScLoa scLoa) {
+			
+			IQTDetailSO qtDetailSO = (IQTDetailSO) BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			boolean isQtCategoryExempted = false;
+			List<ScQtCategory> qtCategory = null;		
+			if (scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
+				QuationTenderReqDTO qtreqDTO = new QuationTenderReqDTO();
+				qtreqDTO.setQtId(scLoa.getScLoiLoa().getDocId());
+				qtCategory = qtDetailSO.getQtCategoryByQtId(qtreqDTO).getCategories();
+			}
+			if(qtCategory != null && qtCategory.size() > 0) {
+				List<String> excepCategoryCodes = PerformanceBondUtil.getBondExceptionCategory();
+				
+				for(ScQtCategory category : qtCategory) {
+					String categoryCode = null;
+					categoryCode = category.getPmCategoryL1().getCategoryL1Code().
+							concat(category.getPmCategoryL2().getCategoryL2Code()).
+							concat(category.getPmCategoryL3().getCategoryL3Code());
+					if(excepCategoryCodes.contains(categoryCode)) {
+						//.info(" current qt_id contains excepCategoryCodes :::: "+categoryCode);
+						isQtCategoryExempted = true;
+						   break;
+					}else{
+						isQtCategoryExempted = false;
+					}
+				}
+			}	
+			return isQtCategoryExempted;
+
+		}
+		
+		// End Fix - #33491
+	
 }  
