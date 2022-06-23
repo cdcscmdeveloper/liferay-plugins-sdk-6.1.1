@@ -14,7 +14,6 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaCancelAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
@@ -132,7 +131,6 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	/** The approver list. */
 	private List<PmUser> approverList;
 	
-	// TODO - To be removed
 	/** The comittee users. */
 	private List<SelectItem> comitteeUsers;
 	
@@ -297,7 +295,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private boolean buttonHideDedActive = true;
 	private boolean buttonHideSchActive = true;
 
-	private Boolean flowamt=null;
+	private Boolean flowamt = null;
 
 	//#29006 - start
 	private boolean specificationAndSupplierDialogFlag = false;
@@ -307,6 +305,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private boolean updatedLampiranA3DownloadedFlag = false;
 	private String newSupplierOffered;
 	private String newSupplierJustification;
+	private String selectedSupplierOffer = null;
 	private boolean oldNewSuppOfferSameFlag;
 	private boolean updateSupplierLinkFlag = false;
 	private Map<Long, List<TplSpecAnswer>> scLoiLoaItemAnswerMap;
@@ -1814,6 +1813,14 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setMultipleSuppOffer(boolean multipleSuppOffer) {
 		this.multipleSuppOffer = multipleSuppOffer;
 	}
+	
+	public String getSelectedSupplierOffer() {
+		return selectedSupplierOffer;
+	}
+
+	public void setSelectedSupplierOffer(String selectedSupplierOffer) {
+		this.selectedSupplierOffer = selectedSupplierOffer;
+	}
 	//#29006 - end
 
 	public String getSourcePage() {
@@ -2007,7 +2014,3 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	//#32280 - end
 	
 }
-
-
-
-// ***25201
