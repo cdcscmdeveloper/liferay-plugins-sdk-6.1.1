@@ -4585,7 +4585,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
             }
           }
           //#26130 - start
-           context.put("specCombine", retrieveDLSpec(specMasters));
+           context.put("specCombineProduct", retrieveDLSpecProduct(specMasters));
+           context.put("specCombineService", retrieveDLSpecService(specMasters));
          //#26130 - end
         }
 		
@@ -10441,16 +10442,17 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		
 		//#26130 start 
 					
-			public TplSpecQuestion retrieveDLSpec(List<TplSpecMaster> specMasters) {
-				TplSpecQuestion specQuestion = new TplSpecQuestion();
-				List<List<HashMap<String, Object>>> listDL = new ArrayList<>();
-				for (TplSpecMaster master : specMasters) {
-					List<HashMap<String, Object>> listSpecDL = new ArrayList<>();
-					List<List<String>> listSpecCombine = new ArrayList<>();
-					String itemType = getParameterDescForReport(master.getItemTypeCode());
-					// retrieve master value
-					
-					if (itemType.equalsIgnoreCase("product") || itemType.equalsIgnoreCase("produk")){
+		public TplSpecQuestion retrieveDLSpecService(List<TplSpecMaster> specMasters) {
+			TplSpecQuestion specQuestion = new TplSpecQuestion();
+			List<List<HashMap<String, Object>>> listDL = new ArrayList<>();
+			List<HashMap<String, Object>> listSpecDL = new ArrayList<>();
+			for (TplSpecMaster master : specMasters) {
+				
+				
+				String itemType = getParameterDescForReport(master.getItemTypeCode());
+				// retrieve master value
+				
+					if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")){
 						for (TplSpecQuestion question : master.getTplSpecQuestions()) {
 							if (question.getTplSpecZoneQties().size() > 0) {
 								// zonal
@@ -10469,13 +10471,50 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 
 						}
 						//#26130 - start
-						specQuestion.setListCombineZonalDLOA(listDL);
-						specQuestion.setListCombineDLOA(listSpecDL);
-						specQuestion.setListCombineSpecVal(listSpecCombine);
+					specQuestion.setListOfZonalService(listDL);
+					specQuestion.setListOfNonZonalService(listSpecDL);
+					
 						//#26130 - end
 					}
 					
+			}
+		
+		return specQuestion;
+	}
+	
+	public TplSpecQuestion retrieveDLSpecProduct(List<TplSpecMaster> specMasters) {
+		TplSpecQuestion specQuestion = new TplSpecQuestion();
+		List<List<HashMap<String, Object>>> listDL = new ArrayList<>();
+		List<HashMap<String, Object>> listSpecDL = new ArrayList<>();
+		for (TplSpecMaster master : specMasters) {
+			
+			
+			String itemType = getParameterDescForReport(master.getItemTypeCode());
+			// retrieve master value
+			
+				if (itemType.equalsIgnoreCase("Produk") || itemType.equalsIgnoreCase("Product")){
+					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+						if (question.getTplSpecZoneQties().size() > 0) {
+							// zonal
+							if (question.getQuestionType().equalsIgnoreCase("I")) {
+								listDL.add(retrieveZonalSpec(question, master.getSpecTypeCode().getParameterCode(),itemType));
+							}
+						} else {
+							// non zonal
+							if (question.getQuestionType().equalsIgnoreCase("I")) {
+								listSpecDL.add(retrieveNonZonalSpec(question, master.getSpecTypeCode().getParameterCode(),
+										getParameterDescForReport(master.getItemTypeCode())));
+								}
+	
+						}
+	
+					}
+					//#26130 - start
+					specQuestion.setListOfZonalProduct(listDL);
+					specQuestion.setListOfNonZonalProduct(listSpecDL);
 					
+					//#26130 - end
+				}
 
 				}
 				return specQuestion;
@@ -10495,7 +10534,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")){
 						map.put("clPriceTypeCode",getParameterDesc(question.getClPriceTypeCode()));
 					}
-					if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("servis")){
+				if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")){
 						map.put("clUomFrequency", (null != question.getClUomFrequency())? question.getClUomFrequency().toString(): getDefaultValue());
 						map.put("clUomPerDay",	(null != question.getClUomPerDay())? question.getClUomPerDay().toString() : getDefaultValue());
 						map.put("clUomPerMonth", (null != question.getClUomPerMonth())? question.getClUomPerMonth().toString() : getDefaultValue());
@@ -10526,6 +10565,12 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 							map.put("specVal", listSpec);
 						}
 								
+					map.put("specType", specType);
+					map.put("itemType", itemType);
+					int rowspan = question.getSpecList().size() + 1 ;
+					log.info("Calculate "+ String.valueOf(rowspan));
+					map.put("rowSpan", rowspan);
+							
 					return map;
 				}
 				
@@ -10533,12 +10578,12 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			HashMap<String, Object> map = new HashMap<>();
 			int zoneQty = 1;
 			String whiteSpace = "&nbsp;";
-			map.put("specType", specType);
-			map.put("itemType", itemType);
-			map.put("questionType", question.getQuestionType());
+		
+		
 			List<HashMap<String, Object>> listZonalDLSpec = new ArrayList();
 			List<String> listSpec = new ArrayList<>();
 			if (question.getQuestionType().equalsIgnoreCase("I")) {
+			map.put("questionType", question.getQuestionType());
 				if (specType.equalsIgnoreCase("F")) {
 					Boolean getFirstValue = true;
 					for (TplSpecAnswer answer : question.getTplSpecAnswers()) {
@@ -10552,7 +10597,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 							if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
 								map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode()));
 							}
-							if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("servis")) {
+						if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")) {
 								map.put("clUomFrequency", (null != question.getClUomFrequency()) ? question
 										.getClUomFrequency().toString() : getDefaultValue());
 								map.put("clUomPerDay", (null != question.getClUomPerDay()) ? question.getClUomPerDay()
@@ -10580,7 +10625,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 							if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
 								map.put("clPriceTypeCode", whiteSpace);
 							}
-							if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("servis")) {
+						if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")) {
 								map.put("clUomFrequency", whiteSpace);
 								map.put("clUomPerDay", whiteSpace);
 								map.put("clUomPerMonth", whiteSpace);
@@ -10603,7 +10648,11 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 							}
 							zoneQty = zoneQty + 1;
 						}
-
+					map.put("specType", specType);
+					map.put("itemType", itemType);
+					int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
+					log.info("Calculate "+ String.valueOf(rowspan));
+					map.put("rowSpan", rowspan);
 						listZonalDLSpec.add(map);
 					}
 
@@ -10622,7 +10671,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 							if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
 								map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode()));
 							}
-							if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("servis")) {
+						if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")) {
 								map.put("clUomFrequency", (null != question.getClUomFrequency()) ? question
 										.getClUomFrequency().toString() : getDefaultValue());
 								map.put("clUomPerDay", (null != question.getClUomPerDay()) ? question.getClUomPerDay()
@@ -10668,7 +10717,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 							if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
 								map.put("clPriceTypeCode", whiteSpace);
 							}
-							if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("servis")) {
+						if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")) {
 								map.put("clUomFrequency", whiteSpace);
 								map.put("clUomPerDay", whiteSpace);
 								map.put("clUomPerMonth", whiteSpace);
@@ -10705,7 +10754,11 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 							}
 							zoneQty = zoneQty + 1;
 						}
-
+					map.put("specType", specType);
+					map.put("itemType", itemType);
+					int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
+					log.info("Calculate "+ String.valueOf(rowspan));
+					map.put("rowSpan", rowspan);
 						listZonalDLSpec.add(map);
 					}
 				} else {
@@ -10723,7 +10776,11 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 						map.put("specVal", listSpec);
 					}
 					zoneQty = zoneQty + 1;
-
+				map.put("specType", specType);
+				map.put("itemType", itemType);
+				int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
+				log.info("Calculate "+ String.valueOf(rowspan));
+				map.put("rowSpan", rowspan);
 					listZonalDLSpec.add(map);
 				}
 
