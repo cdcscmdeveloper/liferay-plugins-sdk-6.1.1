@@ -34,7 +34,11 @@
 			  			  													
 	<ui:param name="decisionSupplFinalOrFwdHighAuth"
 			  value="#{suppFinalizationBackingBean.managedBean.recommendSupplier or 
-							suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}" />							
+							suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}" />
+	<!-- 25729 -start- -->
+	<ui:param name="expectTotalIndPriceBelowThreshold" 
+			  value="#{suppFinalizationBackingBean.expectTotalIndPriceBelowThreshold(suppFinalizationBackingBean.managedBean.scQt,'SP')}" />
+	<!-- 25729 -end- -->
 			
 	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 	<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/qualifiedSuppliersByEvalStage.xhtml" />
@@ -430,5 +434,27 @@
 			readonly="#{suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
 	</p:outputPanel>
 	<!-- 18685 -end- -->
+		
+	<!-- 25729 -start- -->
+	<p:panel id="justify20kId" header="#{lbl['lbl.sc.sf.justification']}" toggleable="true"
+		rendered="#{expectTotalIndPriceBelowThreshold}">
+		<table style="width: 100%;">
+			<tr>
+				<td style="width: 30%; margin-left: 55px;">
+					<p:outputLabel value="#{lbl['lbl.sc.spec.justification.procurement.value']}" /> 
+				</td>
+				<td style="margin-left: 55px;">
+					<p:inputTextarea id="justify20kTxtId"
+						style="margin-bottom:5px; width: 250px;" maxlength="100" 
+						value="#{suppFinalizationBackingBean.managedBean.scQt.justificationProcValue}" 
+						label="#{lbl['lbl.sc.spec.justification.procurement.value']}" readonly="true" 
+						cols="110" rows="3">
+					</p:inputTextarea>
+					<p:message id="title2Msg" for="justify20kId" display="icon" />							
+				</td>
+			</tr>
+		</table>			
+	</p:panel>
+	<!-- 25729 -end- -->
 	
 </ui:composition>
