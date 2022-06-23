@@ -7729,6 +7729,7 @@ public class SimpleQuoteBackingBean extends
 			
 			// Refactor: #12177 - Start
 			Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+			log.info("Refactor 12177 (SimpleQuoteBackingBean) : getSqTimeValidity - " + sqTimeValidity);
 			// Refactor: #12177 - End
 			
 			if(scQuote != null){

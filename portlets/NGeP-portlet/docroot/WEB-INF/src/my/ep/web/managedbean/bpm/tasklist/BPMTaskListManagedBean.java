@@ -1420,8 +1420,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		Boolean validDate = true;	
 		
 		// Refactor: To make sqTimeValidity to read only once - Start.
-		/*Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
-				.getProperty("sqTimeValidity"));*/
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		logger.info("Refactor 12177 (BPMTaskListManagedBean) : getSqTimeValidity - " + sqTimeValidity);
 		// Refactor: To make sqTimeValidity to read only once - End.
 		
 		if(sqEndDate != null){
@@ -1432,7 +1432,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				cal.clear(); 
 				cal.setTime(closingDate);
 				// Refactor: #12177 - Start
-				cal.add(Calendar.DATE, NgepApplicationBean.getSqTimeValidity()); //add 60days to closing/end date
+				cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
 				// Refactor: #12177 - End
 				setExpirationDate(dateToCalendar(cal.getTime()));
 					
