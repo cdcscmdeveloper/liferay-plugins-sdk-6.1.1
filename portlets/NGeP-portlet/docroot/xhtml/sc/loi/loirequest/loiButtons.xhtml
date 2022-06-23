@@ -8,6 +8,9 @@
 
 	<ui:param name="validityDaysExpiredQt"
 		value="#{lOIDetailBackingBean.checkProposalValidityDateReach(lOIDetailBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
+	<ui:param name="supplierDisagreeEPV"
+		value="#{!lOIDetailBackingBean.isSupplierAgreeExtendEPV(
+		lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.docId, lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.smSupplier.supplierId)}"/><ui:remove>#21692</ui:remove>
 
 	<div class="ppRightBtn">
 		<p:blockUI block=":form" widgetVar="blockWidget">
@@ -48,9 +51,10 @@
 					process="@form" update="@form" />
 
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt}"
+					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and
+					supplierDisagreeEPV}"
 					action="#{lOIDetailBackingBean.submitAction}" process="@form"
-					update="@form" />
+					update="@form" /><ui:remove>#21692</ui:remove>
 
 				<c:choose>
 					<c:when test="#{!empty lOIDetailBackingBean.managedBean.taskId}">
@@ -61,12 +65,12 @@
 							<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
 
 							<p:commandButton value="#{lbl[buttonLabel]}"
-								rendered="#{validityDaysExpiredQt}"
+								rendered="#{validityDaysExpiredQt and supplierDisagreeEPV}"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								styleClass="ui-button"
 								action="#{lOIDetailBackingBean.updateBpmTaskAction(bpmAction)}"
 								partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
-								update="#{isReject ? '@this' : '@form'}" />
+								update="#{isReject ? '@this' : '@form'}" /><ui:remove>#21692</ui:remove>
 						</ui:repeat>
 					</c:when>
 				</c:choose>

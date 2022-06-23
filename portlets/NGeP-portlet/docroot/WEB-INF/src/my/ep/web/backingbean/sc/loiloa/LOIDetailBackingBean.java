@@ -6671,4 +6671,23 @@ public class LOIDetailBackingBean extends
 	}
 	}
 	//29007-End
+	
+	//#21692 - start
+	public boolean isSupplierAgreeExtendEPV(Long qtId, Long supplierId) {
+		boolean agreeEPV = false;
+		
+		IQTDetailSO detailSO;
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
+			agreeEPV = detailSO.isSupplierAgreeEPV(qtId, supplierId);
+			
+		} finally {
+			detailSO = null;
+		}
+		
+		return agreeEPV;
+	}
+	//#21692 - end
 }
