@@ -781,10 +781,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param clazz
 	 * @return ScRemark instance
 	 */
+	//25037 note 284 - start
 	protected <PARENT_ENTITY extends BaseEntity, REMARK_CLASS extends ScRemark> List<REMARK_CLASS> initializeRemarks(
 			PARENT_ENTITY parent, ScWorkFlowStatus workFlowStatus,
 			List<REMARK_CLASS> scRemarks, Class<REMARK_CLASS> clazz) {
-
+		return initializeRemarks(parent, workFlowStatus, scRemarks, clazz, false);
+	}
+	protected <PARENT_ENTITY extends BaseEntity, REMARK_CLASS extends ScRemark> List<REMARK_CLASS> initializeRemarks(
+			PARENT_ENTITY parent, ScWorkFlowStatus workFlowStatus,
+			List<REMARK_CLASS> scRemarks, Class<REMARK_CLASS> clazz, boolean isSameScreen) {
+	//25037 note 284 - end
 		try {
 			if (scRemarks == null) {
 				scRemarks = new ArrayList<REMARK_CLASS>();
@@ -797,7 +803,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				for (int row = 0; row < scRemarks.size(); row++) {
 					ScRemark scRemark = scRemarks.get(row);
 					if (compareUserName(scRemark.getCreatedUser().getLoginId()) &&
-							!isDiffWithPrevWorkFlowStatus(workFlowStatus, scRemark)) {
+							!isDiffWithPrevWorkFlowStatus(workFlowStatus, scRemark) && !isSameScreen) {//25037 note 284 
 						scRemark.setEditable(true);
 					}
 				}
@@ -807,7 +813,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			if (scRemarks.size() == 0
 					|| !compareUserName(prevRemark.getCreatedUser()
 							.getLoginId())
-					|| isDiffWithPrevWorkFlowStatus(workFlowStatus, prevRemark)) {
+					|| isDiffWithPrevWorkFlowStatus(workFlowStatus, prevRemark)
+					|| isSameScreen) {//25037 note 284 
 
 				REMARK_CLASS remark = clazz.newInstance();
 				remark.setCreatedBy(facesScopes.getUserSessionBean()
@@ -5781,8 +5788,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
   		return isSupplierBranchListDeleted;
   	}
     //#27927 - End
-    
-    public boolean isQTCloneStatus(Long currentStatusId){//25635-start
+  	
+  	public boolean isQTCloneStatus(Long currentStatusId){//25635-start
   		List<Long> CheckStatus=new ArrayList<Long>();
   		CheckStatus.add(QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER);
   		CheckStatus.add(QTStatusConst.QT_CANCELED_DUETO_PROPOSALVALIDITY_EXPIRED);
@@ -5873,7 +5880,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								}
 							}
 							
-							
 						}
 						
 					
@@ -5936,7 +5942,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			//#26130 end
 		}
 		//#26130 - zaim end
-
+		
 		//#10542 - start
 		/**
 		 * To download multiple files with specific path.
@@ -6034,20 +6040,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		
 		//#26130 start
-				public String retrieveTierQuantity(List<TplSpecTierQty> listTplSpecTierQties){
-					StringBuffer sb = new StringBuffer();
-					if (listTplSpecTierQties.size() > 0){
-						for (TplSpecTierQty qty: listTplSpecTierQties){
-							  sb.append(qty.getFromQty() +" - "+qty.getToQty() +"<br />");
-							  
-						  }
-					}else {
-						sb.append("T/B");
-					}
-					 
-					 return sb.toString();
-				}
-				
+		public String retrieveTierQuantity(List<TplSpecTierQty> listTplSpecTierQties){
+			StringBuffer sb = new StringBuffer();
+			if (listTplSpecTierQties.size() > 0){
+				for (TplSpecTierQty qty: listTplSpecTierQties){
+					  sb.append(qty.getFromQty() +" - "+qty.getToQty() +"<br />");
+					  
+				  }
+			}else {
+				sb.append("T/B");
+			}
+			 
+			 return sb.toString();
+		}
+		
 		//#26130 end
 
 
