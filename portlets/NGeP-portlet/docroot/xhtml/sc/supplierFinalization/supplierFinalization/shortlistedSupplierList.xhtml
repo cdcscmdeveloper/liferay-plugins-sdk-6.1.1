@@ -22,9 +22,11 @@
 		<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.sf.finalization.supplier.selection.package.instruction']}"
 				escape="false" rendered="#{suppFinalizationBackingBean.managedBean.onlineBidding}" />
-				<c:if test="#{approvalBackingBean.isEPVApprovalRequestAccepted(suppFinalizationBackingBean.managedBean.scQt.qtId)}">
+		<ui:remove>#21692 - start</ui:remove>
+		<c:if test="#{approvalBackingBean.isEPVApprovalRequestAccepted(suppFinalizationBackingBean.managedBean.scQt.qtId)}">
 			<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.qt.pending.finalization.instruction']}" />
 		</c:if>
+		<ui:remove>#21692 - end</ui:remove>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} " escape="false" />
 		<h:outputText styleClass="instruction" value="#{suppFinalizationBackingBean.managedBean.scQt.closingDate}">
 		<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
