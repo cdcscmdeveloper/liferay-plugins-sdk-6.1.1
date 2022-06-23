@@ -9230,10 +9230,12 @@ private void retriveCommitteeRemarksList(){
 			if (null != this.getManagedBean().getNoOfContractsProposalScore()) {
 				ScQtProposalScore contract = this.getManagedBean()
 						.getNoOfContractsProposalScore();
+				//#21692 - start
 				if (null == contract.getUserScore() &&
 						this.getManagedBean().getQtProposalChecklist().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED) {
 					contract.setUserScore(new BigDecimal(0));
 				}
+				//#21692 - end
 				if (null != contract.getUserScore() && null != this.getManagedBean().getUserScores()) {
 						if (contract.getUserScore().intValue() > new Integer(
 								getManagedBean().getUserScores())) {
