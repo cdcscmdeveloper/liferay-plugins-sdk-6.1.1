@@ -83,6 +83,9 @@ public class QtnTenderSearchBean implements Serializable {
 	
 	private ScQt scQt;
 	
+	/** The loa no. */
+	private String loaNo;//#29468 Added by Vinod
+	
 	/**
 	 * flag to indicate if the qtStatus is to filter ScQt by status
 	 * default to true 
@@ -466,6 +469,14 @@ public class QtnTenderSearchBean implements Serializable {
 
 	public void setQtStatusForQt(boolean qtStatusForQt) {
 		this.qtStatusForQt = qtStatusForQt;
+	}
+
+	public String getLoaNo() {
+		return loaNo;
+	}
+
+	public void setLoaNo(String loaNo) {
+		this.loaNo = loaNo;
 	}
 	
 	

@@ -35,9 +35,11 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -328,37 +330,32 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	
 	/** For clone Specification Screen. */
 	private QtnTenderSearchBean qtnTendertemplateSearchBean= new QtnTenderSearchBean();
-	
 	/** The standard template. */
 	private String standardTemplate = ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING;
-
 	/** The search item type id. */
 	private Long searchItemTypeId;
-
+	/** The search item type name. */
+	private String searchItemTypeName;
 	/** The search spec type id. */
 	private Long searchSpecTypeId;
-
 	/** The search procurement id. */
 	private Long searchProcurementId;
-
 	/** The doc searchlist. */
 	private List<ScQtDoc> docSearchlist;
-
 	/** The check list item. */
 	private List<ScQtCheckList> checkListItem;
-
 	/** The zone list. */
 //	private List<SelectItem> zoneList;
-
 	/** The spec name. */
 	private String specName;
-
 	/** The status id. */
 	private Long statusId;
-
+	/** The template spec create. */
+	private IPagingDataModel<TplSpecMaster> templateSpecCreate;
 	/** The is record status. */
 //	private boolean isRecordStatus;
-
+	private TreeNode rootCategoryTree;
+	List<String> selectedCategories;
 	// #29468 
 	
 	// #25726 START
@@ -2060,75 +2057,81 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	public QtnTenderSearchBean getQtnTendertemplateSearchBean() {
 		return qtnTendertemplateSearchBean;
 	}
-
 	public void setQtnTendertemplateSearchBean(QtnTenderSearchBean qtnTendertemplateSearchBean) {
 		this.qtnTendertemplateSearchBean = qtnTendertemplateSearchBean;
 	}
-
 	public String getStandardTemplate() {
 		return standardTemplate;
 	}
-
 	public void setStandardTemplate(String standardTemplate) {
 		this.standardTemplate = standardTemplate;
 	}
-
 	public Long getSearchItemTypeId() {
 		return searchItemTypeId;
 	}
-
 	public void setSearchItemTypeId(Long searchItemTypeId) {
 		this.searchItemTypeId = searchItemTypeId;
 	}
-
+	public String getSearchItemTypeName() {
+		return searchItemTypeName;
+	}
+	public void setSearchItemTypeName(String searchItemTypeName) {
+		this.searchItemTypeName = searchItemTypeName;
+	}
 	public Long getSearchSpecTypeId() {
 		return searchSpecTypeId;
 	}
-
 	public void setSearchSpecTypeId(Long searchSpecTypeId) {
 		this.searchSpecTypeId = searchSpecTypeId;
 	}
-
 	public Long getSearchProcurementId() {
 		return searchProcurementId;
 	}
-
 	public void setSearchProcurementId(Long searchProcurementId) {
 		this.searchProcurementId = searchProcurementId;
 	}
-
 	public List<ScQtDoc> getDocSearchlist() {
 		return docSearchlist;
 	}
-
 	public void setDocSearchlist(List<ScQtDoc> docSearchlist) {
 		this.docSearchlist = docSearchlist;
 	}
-
 	public List<ScQtCheckList> getCheckListItem() {
 		return checkListItem;
 	}
-
 	public void setCheckListItem(List<ScQtCheckList> checkListItem) {
 		this.checkListItem = checkListItem;
 	}
-
 	public String getSpecName() {
 		return specName;
 	}
-
 	public void setSpecName(String specName) {
 		this.specName = specName;
 	}
-
 	public Long getStatusId() {
 		return statusId;
 	}
-
 	public void setStatusId(Long statusId) {
 		this.statusId = statusId;
 	}
-
+	public IPagingDataModel<TplSpecMaster> getTemplateSpecCreate() {
+		return templateSpecCreate;
+	}
+	public void setTemplateSpecCreate(IPagingDataModel<TplSpecMaster> templateSpecCreate) {
+		this.templateSpecCreate = templateSpecCreate;
+	}
+	public TreeNode getRootCategoryTree() {
+		return rootCategoryTree;
+	}
+	public void setRootCategoryTree(TreeNode roots) {
+		this.rootCategoryTree = roots;
+	}
+	public List<String> getSelectedCategories() {
+		return selectedCategories;
+	}
+	public void setSelectedCategories(List<String> selectedCategories) {
+		this.selectedCategories = selectedCategories;
+	}
 	//#29468
 	
 	
