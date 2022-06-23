@@ -1354,5 +1354,63 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.selectedSearchItem = selectedSearchItem;
 	}
 	//#20997 - End
+	
+	//26753 - start
+	/**
+	 * @return the updateCommittee
+	 */
+	public boolean isUpdateCommittee() {
+		return updateCommittee;
+	}
+	/**
+	 * @param updateCommittee the updateCommittee to set
+	 */
+	public void setUpdateCommittee(boolean updateCommittee) {
+		this.updateCommittee = updateCommittee;
+	}
+	/**
+	 * @return the updatedCommitteeMembers
+	 */
+	public List<CtCommitteeMember> getUpdatedCommitteeMembers() {
+		//#29403 start
+		if(updatedCommitteeMembers==null) {
+			updatedCommitteeMembers = new ArrayList<CtCommitteeMember>();
+		}	
+		return updatedCommitteeMembers;
+		//#29403 end
+	}
+	/**
+	 * @param updatedCommitteeMembers the updatedCommitteeMembers to set
+	 */
+	public void setUpdatedCommitteeMembers(
+			List<CtCommitteeMember> updatedCommitteeMembers) {
+		this.updatedCommitteeMembers = updatedCommitteeMembers;
+	}
+	/**
+	 * @return the filteredUpdatedCommitteeMembers
+	 */
+	public List<CtCommitteeMember> getFilteredUpdatedCommitteeMembers() {
+		return filteredUpdatedCommitteeMembers;
+	}
+	/**
+	 * @param filteredUpdatedCommitteeMembers the filteredUpdatedCommitteeMembers to set
+	 */
+	public void setFilteredUpdatedCommitteeMembers(
+			List<CtCommitteeMember> filteredUpdatedCommitteeMembers) {
+		this.filteredUpdatedCommitteeMembers = filteredUpdatedCommitteeMembers;
+	}
+	/**
+	 * @return the hasChanges
+	 */
+	public boolean isHasChanges() {
+		return hasChanges;
+	}
+	/**
+	 * @param hasChanges the hasChanges to set
+	 */
+	public void setHasChanges(boolean hasChanges) {
+		this.hasChanges = hasChanges;
+	}	
+	//26753 - end
 
 }
