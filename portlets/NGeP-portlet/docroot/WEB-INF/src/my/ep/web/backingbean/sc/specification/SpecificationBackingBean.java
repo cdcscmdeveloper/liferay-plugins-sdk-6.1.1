@@ -12893,6 +12893,12 @@ public class SpecificationBackingBean extends
 				}
 				checkFinancialparentSpecQuestion(scQtCheckList);
 			}
+			else if(this.getManagedBean().getSpecMaintenanceScreen()
+					.equalsIgnoreCase(QTConstants.SPEC_MAINTENANCE)) {//32134-start
+				checkFinancialSpecEstimations(this.getManagedBean()
+						.getScQtCheckSt2financeProposalList(), scQtCheckList,
+						getManagedBean().getQt(),true);
+			}//32134-End
 			PmStatus pendingStatus=	getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);//#11140-Start
 			scQtCheckList
 					.setPmStatus(pendingStatus);
@@ -13664,7 +13670,12 @@ public class SpecificationBackingBean extends
 						.getScQtCheckSt2financeProposalList(), scQtCheckList,
 						scQt,false);//20210205@haziq- Bug #30046
 				checkFinancialparentSpecQuestion(scQtCheckList);
-			}
+			}else if(this.getManagedBean().getSpecMaintenanceScreen()
+					.equalsIgnoreCase(QTConstants.SPEC_MAINTENANCE)) {//32134-start
+				checkFinancialSpecEstimations(this.getManagedBean()
+						.getScQtCheckSt2financeProposalList(), scQtCheckList,
+						scQt,false);
+			}//32134-End
 			//1873 - start - note 52
 			String finChecklistTitle = scQtCheckList.getTitle().trim();
 			//1873 note 86 - start
