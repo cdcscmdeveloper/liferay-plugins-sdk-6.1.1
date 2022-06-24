@@ -1107,8 +1107,6 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			if (agreementParty.getOrgProfile() != null && agreementParty.getOrgProfile().getOrgProfileId() != null) { 
 				reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getOrgProfileId());
 			}
-			reqDTO.setApprovalLimit(getContractAmt().add(getGstAmt().add(getStaxAmt())));
-			resDTO = userSO.retrieveUserListByRole(reqDTO);
 			
 			//#26686 - start 
 			BigDecimal approvalLimit;
@@ -1120,6 +1118,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			}					
 			
 			reqDTO.setApprovalLimit(approvalLimit);
+			resDTO = userSO.retrieveUserListByRole(reqDTO);
 			//#26686 - end
 
 			List<PmUser> list = resDTO.getUserList();
