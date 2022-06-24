@@ -4741,12 +4741,20 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			
 			//11076 start
 			int contractedItemList = 0;
-			contractedItemList = contractItemSO.searchContractItem(reqDTO).getContractItemResultBean().getTotalRecord();
-			log.info("========PAGE LISTENER ITEM==========="+contractedItemList);
-			getManagedBean().setValidateItem(contractedItemList);
+			//contractedItemList = contractItemSO.searchContractItem(reqDTO).getContractItemResultBean().getTotalRecord();
+			//log.info("========PAGE LISTENER ITEM==========="+contractedItemList);
+			//getManagedBean().setValidateItem(contractedItemList);
 			//11076 end
 			
 			resDTO = contractItemSO.searchContractItem(reqDTO);
+			//11076 start
+			if(resDTO.getContractItemResultBean() != null) {
+				contractedItemList = resDTO.getContractItemResultBean().getTotalRecord();
+				log.info("========PAGE LISTENER ITEM contractedItemList:==========="+contractedItemList);
+			}
+			getManagedBean().setValidateItem(contractedItemList);
+			//11076 end
+			
 			//Start-11076-fix performance issues
 //			PmParameter Pricetype = contractItemSO.searchContractItemPriceType(reqDTO);
 			PmParameter Pricetype =resDTO.getPriceType();
