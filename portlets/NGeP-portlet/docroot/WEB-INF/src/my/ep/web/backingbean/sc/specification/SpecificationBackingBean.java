@@ -11376,7 +11376,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				          checkFinancialSpecEstimations(this.getManagedBean()
 						.getScQtCheckSt2financeProposalList(),scQtCheckList,getManagedBean().getQt(),true); //20210205@haziq- Bug #30046 
 				}
-				}
+			} 
+			// 32134 note-32, 25729 -start-
+			else if (this.getManagedBean().getSpecMaintenanceScreen().equalsIgnoreCase(QTConstants.SPEC_MAINTENANCE)) {
+				checkFinancialSpecEstimations(this.getManagedBean().getScQtCheckSt2financeProposalList(),
+						scQtCheckList, getManagedBean().getQt(), true);
+			}
+			// 32134 note-32, 25729 -end-
+			
 			scQtCheckList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 			scQtCheckList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 		}
@@ -12049,6 +12056,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				checkFinancialSpecEstimations(this.getManagedBean()
 						.getScQtCheckSt2financeProposalList(),scQtCheckList,scQt,false); //20210205@haziq- Bug #30046
 				}
+			// 32134 note-32, 25729 -start-
+			else if (this.getManagedBean().getSpecMaintenanceScreen().equalsIgnoreCase(QTConstants.SPEC_MAINTENANCE)) {
+				checkFinancialSpecEstimations(this.getManagedBean().getScQtCheckSt2financeProposalList(),
+						scQtCheckList, scQt, false);
+			}
+			// 32134 note-32, 25729 -end-
+
 			scQtCheckList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 			scQtCheckList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 			scQtCheckList.getScQtDoc().getTplSpecMaster()
