@@ -21,7 +21,11 @@
 	<ui:param name="isReadOnly" value="#{createQtBB.managedBean.readOnly}" />
 	<ui:param name="amountsShowHide"
 		value="#{qTDetailBB.managedBean.showAndHideAmounts}" />
-		
+	<!-- 25729 -start- -->
+	<ui:param name="expectTotalIndPriceBelowThreshold"
+		value="#{createQtBB.expectTotalIndPriceBelowThreshold(scQt,'createQt')}" />
+	<!-- 25729 -end- -->
+
 	<ac:lovPopup />
 
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}"
@@ -253,8 +257,10 @@
 											value="#{scQt.tmpExpectedIntendedPrice}" required="true"
 											label="#{lbl['lbl.sc.spec.expected.intended.price']}"
 											disabled="#{isReadOnly}">
+											<!-- 25729 -start- -->
 											<p:ajax event="blur" partialSubmit="true" update="@form"
-												listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice)}">
+												listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice, 'Y')}">
+											<!-- 25729 -end- -->
 											</p:ajax>
 
 											<f:convertNumber
@@ -764,8 +770,61 @@
 						</c:otherwise>
 					</c:choose></td>
 			</tr>
+
+			<!-- 25729 -start- -->
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sc.spec.justification.procurement.value']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<!--#25729 #142 START -->
+				<c:if test="#{expectTotalIndPriceBelowThreshold}">
+
+					<td><c:choose>
+							<c:when
+								test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
+								<p:inputTextarea id="justificationProcValueId_1"
+									style="margin-bottom:5px; width: 250px;" maxlength="100"
+									value="#{scQt.justificationProcValue}" required="true"
+									label="#{lbl['lbl.sc.spec.justification.procurement.value']}"
+									disabled="#{isReadOnly}" cols="110" rows="3"
+									onkeyup="limitTextArea(this,100);"
+									onkeydown="limitTextArea(this,100);"
+									onmouseout="limitTextArea(this,100);">
+									<f:ajax></f:ajax>
+								</p:inputTextarea>
+								<p:message id="title2Msg_1" for="justificationProcValueId_1"
+									display="icon" />
+							</c:when>
+							<c:otherwise>
+								<p:inputTextarea id="justificationProcValueId_2"
+									style="margin-bottom:5px; width: 250px;" maxlength="100"
+									value="#{scQt.justificationProcValue}"
+									label="#{lbl['lbl.sc.spec.justification.procurement.value']}"
+									readonly="true" cols="110" rows="3" disabled="true">
+								</p:inputTextarea>
+								<p:message id="title2Msg_2" for="justificationProcValueId_2"
+									display="icon" />
+							</c:otherwise>
+						</c:choose></td>
+				</c:if>
+				<c:if test="#{!expectTotalIndPriceBelowThreshold}">
+					<td><p:inputTextarea id="justificationProcValueId_2"
+							style="margin-bottom:5px; width: 250px;" maxlength="100"
+							value="#{scQt.justificationProcValue}"
+							label="#{lbl['lbl.sc.spec.justification.procurement.value']}"
+							readonly="true" cols="110" rows="3" disabled="true">
+						</p:inputTextarea></td>
+				</c:if>
+				<!--#25729 #142 END -->
+				<td style="margin-top: -3px">
+					<ac:iconTooltip value="#{lbl['lbl.sc.spec.justification.procurement.value.tooltip']}" />
+				</td>
+			</tr>
+			<!-- 25729 -end- -->
 		</table>
 	</p:panel>
+
 	<ui:include src="viewCircularPanelItemsPopup.xhtml"></ui:include>
 	<h:panelGroup id="generalLocationList">
 		<ui:include
@@ -793,4 +852,24 @@
 				oncomplete="panelApprovalDlgs.hide();" />
 		</div>
 	</p:dialog>
+
+	<!-- #25729 #174 START -->
+	<p:confirmDialog id="proceedBelowQtValueId"
+		widgetVar="proceedBelowQtValueDlgs"
+		header="#{lbl['lbl.sc.confirmation']}"
+		message="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}"
+		resizable="false" closable="false">
+		<div align="right">
+			<p:commandButton id="conf20k" value="#{lbl['lbl.btn.yes']}"
+				action="#{createQtBB.enableJustificationProValue(true)}"
+				oncomplete="proceedBelowQtValueDlgs.hide()" update="@form"
+				process="@this" />
+			<p:commandButton id="decline20k" value="#{lbl['lbl.btn.no']}"
+				action="#{createQtBB.enableJustificationProValue(false)}"
+				oncomplete="proceedBelowQtValueDlgs.hide()" process="@this"
+				update="@form" />
+		</div>
+	</p:confirmDialog>
+	<!-- #25729 #174 END -->
+
 </ui:composition>
