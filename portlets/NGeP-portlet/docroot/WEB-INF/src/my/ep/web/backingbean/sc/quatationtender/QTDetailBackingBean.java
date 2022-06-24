@@ -11260,24 +11260,45 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			
+			boolean inactive = DbValueConst.FLAG_YES;
+			String taskName = this.getManagedBean().getTaskName();
+			
 			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 			PmUserOrg pmUserOrgs = new PmUserOrg();
 			
 			quationTenderReqDTO.setUserId(userId);
 			pmUserOrgs = detailSO.retrievePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
 			
-			PmUserOrg pmUserOrg = PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(userId, pmUserOrgs.getUserOrgId());
-			
-			boolean inactive = DbValueConst.FLAG_YES;;
-			for (PmUserRole roles : pmUserOrg.getPmUserRoles()) {	
-				if(RoleCode.COMMITTEE_APPROVER.value().equals(roles.getPmRole().getRoleCode()) && 
-						roles.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
-					inactive = DbValueConst.FLAG_NO;	
-				}else if(RoleCode.PUBLICATION_APPROVER.value().equals(roles.getPmRole().getRoleCode()) && 
-						roles.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
-				    inactive = DbValueConst.FLAG_NO;	
+			if(pmUserOrgs != null && pmUserOrgs.getUserOrgId() != null){
+				
+				PmUserOrg pmUserOrg = PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(userId, pmUserOrgs.getUserOrgId());
+				
+				for (PmUserRole roles : pmUserOrg.getPmUserRoles()) {	
+					if(RoleCode.COMMITTEE_APPROVER.value().equals(roles.getPmRole().getRoleCode()) && 
+							roles.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) && 
+							SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)){
+						inactive = DbValueConst.FLAG_NO;	
+					}else if(RoleCode.PUBLICATION_APPROVER.value().equals(roles.getPmRole().getRoleCode()) && 
+							roles.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) && 
+							((SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName)) || taskName.equalsIgnoreCase(SCProcessNameConst.GENERIC_APPROVAL_REVISE))){
+					    inactive = DbValueConst.FLAG_NO;
+					}
 				}
+				
+			}else{
+				
+                pmUserOrgs = detailSO.retrieveInactivePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
+				
+				if(pmUserOrgs.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) && 
+						SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)){
+					inactive = DbValueConst.FLAG_NO;
+				}else if(pmUserOrgs.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) && 
+						((SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName)) || taskName.equalsIgnoreCase(SCProcessNameConst.GENERIC_APPROVAL_REVISE))){
+					inactive = DbValueConst.FLAG_NO;
+				}
+				
 			}
+			
 			return inactive;
 			
 		} finally {
