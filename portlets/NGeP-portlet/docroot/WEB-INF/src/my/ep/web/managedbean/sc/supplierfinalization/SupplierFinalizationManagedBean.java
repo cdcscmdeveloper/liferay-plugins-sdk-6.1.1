@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.sc.supplierfinalization;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -223,6 +224,15 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScRemark> newSfRemarks;
 	// #18685 - End.
 	
+	//#25729#142 & #26169 - Start
+	private boolean isSuppOfferPriceExceedCommunityAuthority;
+	private BigDecimal maxAmountCommitteeAuthority;
+	//#25729#142 & #26169 - End 
+	
+	//#26169 #38 - Start
+	private boolean isHasSupplierQualified;
+	//#26169 #38 - End
+
 	/**
 	 * @return the activeIndex
 	 */
@@ -2056,5 +2066,46 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
     public void setNewSfRemarks(List<ScRemark> newSfRemarks) {
       this.newSfRemarks = newSfRemarks;
     }
-    //#18685 - End 
+    //#18685 - End
+
+	//#25729#142 & #26169 - Start
+	/** 
+	 * @return the isSuppOfferPriceExceedCommunityAuthority
+	 */
+	public boolean isSuppOfferPriceExceedCommunityAuthority() {
+		return isSuppOfferPriceExceedCommunityAuthority;
+	}
+
+	/**
+	 * @param isSuppOfferPriceExceedCommunityAuthority 
+	 * 				the isSuppOfferPriceExceedCommunityAuthority to set
+	 */
+	public void setSuppOfferPriceExceedCommunityAuthority(boolean isSuppOfferPriceExceedCommunityAuthority) {
+		this.isSuppOfferPriceExceedCommunityAuthority = isSuppOfferPriceExceedCommunityAuthority;
+	}
+	
+	/**
+	 * @return the maxAmountCommitteeAuthority
+	 */
+	public BigDecimal getMaxAmountCommitteeAuthority() {
+		return maxAmountCommitteeAuthority;
+	}
+
+	/**
+	 * @param maxAmountCommitteeAuthority the maxAmountCommitteeAuthority to set
+	 */
+	public void setMaxAmountCommitteeAuthority(BigDecimal maxAmountCommitteeAuthority) {
+		this.maxAmountCommitteeAuthority = maxAmountCommitteeAuthority;
+	}	
+	//#25729#142 & #26169 - End
+	
+	//#26169 #38 - Start
+	public boolean isHasSupplierQualified() {
+		return isHasSupplierQualified;
+	}
+
+	public void setHasSupplierQualified(boolean isHasSupplierQualified) {
+		this.isHasSupplierQualified = isHasSupplierQualified;
+	}
+	//#26169 #38 - End
 }
