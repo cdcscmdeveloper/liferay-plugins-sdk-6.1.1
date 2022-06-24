@@ -10,10 +10,10 @@
  */
 package my.ep.web.backingbean.sc.quatationtender;
 
-import java.util.Arrays;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -67,7 +67,6 @@ import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
@@ -774,7 +773,9 @@ public class CreateQtBackingBean extends
 	 * @param scQt
 	 *            (ScQt scQt)
 	 */
-	public void setProcurementMode(ScQt scQt, BigDecimal amount) {
+	//Enhancement #25729 -start-
+	public void setProcurementMode(ScQt scQt, BigDecimal amount, String ... enable) {
+	//Enhancement #25729 -end-
 
 		debugLogger("setProcurementMode,@qtNo = " + scQt.getQtNo());
 		IParameterSO parameterSo = null;
@@ -799,13 +800,17 @@ public class CreateQtBackingBean extends
 									.format(panelThreshold) });
 				}
 			} else {
-				BigDecimal prThreshold = getPRThresholdAmount();
-
-				if (null == amount || (amount.compareTo(prThreshold) <= 0)) {
+				//Enhancement #25729 -start-
+				if (null == amount || (amount.compareTo(BigDecimal.ZERO) <= 0)) {
 					throw new EpException(MessageConst.ERROR_760024,
-							new String[] { SourcingConstants.DF_AMOUNT
-									.format(prThreshold) });
+							new String[] { SourcingConstants.DF_AMOUNT.format(BigDecimal.ZERO) });
 				}
+
+				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())
+						|| this.getManagedBean().isCreateQt()) {
+					scQt.setJustificationProcValue(null);
+				}
+				//Enhancement #25729 -end-
 			}
 			
 				// Procurement Mode
@@ -897,10 +902,26 @@ public class CreateQtBackingBean extends
 					getManagedBean().setZoneTrees(null);
 				}
 			}
+
+			// 25729#174 start
+			if ((!isPanel && enable.length > 0) && (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <= 0)) {
+				RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
+			}
+			// 25729#174 end
 		} finally {
 			parameterSo = null;
 		}
 	}
+
+	//Enhancement #25729 - start -
+	public boolean enableJustificationProValue(boolean enable) {
+		if (!enable) {
+			this.getManagedBean().getQt().setTmpExpectedIntendedPrice(null);
+		}
+		
+		return enable;
+	}
+	//Enhancement #25729 - end -
 
 	/**
 	 * Sets the evaluation type.based on Estimated Price set Evaluation Type.
@@ -2472,12 +2493,19 @@ public class CreateQtBackingBean extends
 		
 		ScQt scQt = this.getManagedBean().getQt();
 		// populate procurment mode values if changes as Non panel
-		if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(scQt
-				.getQtStatus().getStatusId())) {
+		if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(scQt.getQtStatus().getStatusId())) {
 			BigDecimal amount = scQt.getTmpExpectedIntendedPrice();
-			if(null != amount){
-				setProcurementMode(scQt, amount);
+			
+			//Start - 25729
+			if (null != amount) {
+				// 25729#174 Change 1 line code 
+				if (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <= 0) {
+					setProcurementMode(scQt, amount, "Y");
+				} else {
+					setProcurementMode(scQt, amount);
+				}
 			}
+			//End - 25729
 		}
 	}
 
