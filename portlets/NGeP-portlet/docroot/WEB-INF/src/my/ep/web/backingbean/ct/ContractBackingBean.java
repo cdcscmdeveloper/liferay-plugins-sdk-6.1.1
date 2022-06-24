@@ -2705,11 +2705,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
 					// pk7 contract with bond from LOA
 					calculateNewBondAmount();
-					// Start Fix - #33491
+					// Start Fix - #33491 
 				} else if (!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-					   		if(isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa()) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){	   
-					   		   getManagedBean().getContractVer().getCtContractAmount().setBondReq(PerformanceBondUtil.isPerformanceBondRequired(getManagedBean().getGstTotalAmount(), null));
+					   		if(isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa()) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
+					   		   //To carry over whatever setting regarding is_bond_req from LOA to set in CT	
+					   		   getManagedBean().getContractVer().getCtContractAmount().setBondReq(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq());
 					   		        if(getManagedBean().getContractVer().getCtContractAmount().isBondReq()){
+					   		        	//recalculate the bond and set into CtcontractAmount 
 					   		        	getManagedBean().getCtContractAmount().setTotalBondAmt(PerformanceBondUtil.calculatePerformanceBondAmt(getManagedBean().getGstTotalAmount(), new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod())));
 					   		        }
 					   		  }else{
