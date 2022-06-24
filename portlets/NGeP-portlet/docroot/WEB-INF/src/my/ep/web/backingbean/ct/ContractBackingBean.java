@@ -2698,25 +2698,24 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		//#24333
 		// Start - Fix - #32663
 		String proc_type = getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode();
-		String qt_type = getManagedBean().getContractVer().getCtContract().getLoa().getScLoiLoa().getDocType();
 
 		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
-			if (proc_type != null || qt_type != null) {
+			if (proc_type != null ) {
 				if (proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
 						&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
 					// pk7 contract with bond from LOA
 					calculateNewBondAmount();
 					// Start Fix - #33491
-				} else if ((!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) && qt_type.equalsIgnoreCase(ParameterConst.DOCTYPE_QUOTATION))
-						&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
-					   		if(isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa())){	   
+				} else if (!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+					   		if(isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa()) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){	   
 					   		   getManagedBean().getContractVer().getCtContractAmount().setBondReq(PerformanceBondUtil.isPerformanceBondRequired(getManagedBean().getGstTotalAmount(), null));
+					   		        if(getManagedBean().getContractVer().getCtContractAmount().isBondReq()){
+					   		        	getManagedBean().getCtContractAmount().setTotalBondAmt(PerformanceBondUtil.calculatePerformanceBondAmt(getManagedBean().getGstTotalAmount(), new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod())));
+					   		        }
 					   		  }else{
 									calculateNewBondAmount(); 
 					   		  }	
-				} else if (!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
-				    	      calculateNewBondAmount();
-				     } 
+				} 
 			   }
 			}
 			
@@ -2751,7 +2750,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		//#24333 - End
 	}
-
 
 	/**
 	 * The method used to set the bond waiver flag value.
