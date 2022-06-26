@@ -8266,12 +8266,18 @@ public class QTDetailBackingBean extends
 				resArr[8] = isAllowQTPublishBtn(scQt);
 				resArr[9] = isAllowQTClosedBtn(scQt);
 			}
-			
+
 			// 29464-start
-			Long qtStatus = scQt.getQtStatus() == null ? 0L : scQt.getQtStatus().getStatusId();
-		
-			resArr[1] = !qtStatus.equals(QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT);
-			// 29464-end
+			// 32806 , 29464 -start-
+			if (isQTMaintenanceScreen()) {
+				// 32806 , 29464 -end-
+				Long qtStatus = scQt.getQtStatus() == null ? 0L : scQt.getQtStatus().getStatusId();
+
+				resArr[1] = !qtStatus.equals(QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT);
+				// 29464-end
+				// 32806 , 29464 -start-
+			}
+			// 32806 , 29464 -end-
 		}
 		
 		return resArr;
