@@ -1237,6 +1237,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			
 		// Refactor: #12177 - Start
 		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();	
+		log.info("Refactor 12177 (DirectPurchaseBackingBean) : getSqTimeValidity - " + sqTimeValidity);
 		// Refactor: #12177 - End
 		
 		if(sqEndDate != null){

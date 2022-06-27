@@ -4889,6 +4889,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		
 		// Refactor: #12177 - Start
 		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		log.info("Refactor 12177 (PurchaseRequestBackingBean) : getSqTimeValidity - " + sqTimeValidity);
 		// Refactor: #12177 - End		
 		
 		if(scQuote != null){
