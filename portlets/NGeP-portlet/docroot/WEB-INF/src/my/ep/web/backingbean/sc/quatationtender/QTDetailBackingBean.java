@@ -11261,7 +11261,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			
 			boolean inactive = DbValueConst.FLAG_YES;
-			String taskName = this.getManagedBean().getTaskName();
+			String taskName = this.getManagedBean().getTaskName(); // #25426
 			
 			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 			PmUserOrg pmUserOrgs = new PmUserOrg();
@@ -11269,7 +11269,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			quationTenderReqDTO.setUserId(userId);
 			pmUserOrgs = detailSO.retrievePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
 			
+			// #25426 - Start
 			if(pmUserOrgs != null && pmUserOrgs.getUserOrgId() != null){
+			// #25426 - End
 				
 				PmUserOrg pmUserOrg = PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(userId, pmUserOrgs.getUserOrgId());
 				
@@ -11285,6 +11287,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 				}
 				
+			// #25426 - Start
 			}else{
 				
                 pmUserOrgs = detailSO.retrieveInactivePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
@@ -11298,6 +11301,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 				
 			}
+			// #25426 - End
 			
 			return inactive;
 			
