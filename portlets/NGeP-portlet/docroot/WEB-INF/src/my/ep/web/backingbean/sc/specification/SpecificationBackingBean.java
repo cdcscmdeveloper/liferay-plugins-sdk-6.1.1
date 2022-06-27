@@ -10829,6 +10829,32 @@ public class SpecificationBackingBean extends
 		
 		checkProcurementModeValue();
 		retriveTechnicalCheckList();//1873 - note 52
+		if(!scQt.isSampleReq()){//11104-start
+		IQTSpecSO specSO = getSpecSO();
+		SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
+		specificationReqDTO.setScQt(scQt);
+		specificationReqDTO
+				.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+		SpecificationResDTO specificationResDTO = specSO
+				.retrieveTechnicalService(specificationReqDTO);
+
+List<ScQtCheckList> checklist=specificationResDTO
+							.getTechnicalCheckList();
+
+if (null != checklist && !checklist.isEmpty()) {
+	boolean isSample=Boolean.FALSE;
+			for (ScQtCheckList specChecklist : checklist) {
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+						.equalsIgnoreCase(specChecklist.getDefinationType()
+								.getParameterCode())) {
+					isSample=Boolean.TRUE;
+					break;
+
+				}	
+			}
+			this.getManagedBean().getQt().setSampleReq(isSample);
+}
+	}//11104-End
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
 		fc.getApplication()
