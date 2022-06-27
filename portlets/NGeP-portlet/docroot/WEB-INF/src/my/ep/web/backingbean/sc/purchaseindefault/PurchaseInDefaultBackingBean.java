@@ -1962,7 +1962,7 @@ public class PurchaseInDefaultBackingBean extends
 				scPID.setReasonType(getManagedBean().getPmReason());
 				scPID.setSourceMethod(getManagedBean().getPurchaseInDefault().getSourceMethod());
 				scPID.setReqQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
-				scPID.setQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
+				scPID.setQuantity(getManagedBean().getPurchaseInDefault().getQuantity()); //#9133 reopen comment 138
 				scPID.setScPurchaseInDefaultAttachment(scPurchaseInDefault.getScPurchaseInDefaultAttachment());//#9133
 
 				reqDTO.setPurchaseInDefaultDtl(scPID);
