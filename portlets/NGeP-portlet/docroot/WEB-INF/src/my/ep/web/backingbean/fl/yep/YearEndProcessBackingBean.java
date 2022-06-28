@@ -58,6 +58,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -779,6 +780,30 @@ public class YearEndProcessBackingBean extends
 		flOrderBB.getManagedBean().setFlOrderId(Long.valueOf(flDocId));
 		//29440 end
 		flOrderBB.getManagedBean().setYep(true);
+		
+		//#32752 start
+		if (buttonVal.equals("CLOSEMANUAL")) {
+			String errorIds = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+					.get("errorId");
+			if (progressStatus.equals("2")) {
+				if (!errorIds.equals("")) {
+					flOrderBB.getManagedBean().setGfmasError(true);
+					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+					String errorId = errorIds;
+					if (errorIds.contains(",")) {
+						errorId = errorIds.split(",")[0];
+					}
+					errReq.setErrorId(new Long(errorId));
+					FulfilmentResDTO errRes = fulfilmentRequestSO.retrieveErrorContent(errReq);
+					flOrderBB.getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
+					flOrderBB.getManagedBean().setGfmasErrorDesc(
+							MessageUtils.getMessage("ERR-" + errRes.getErrorCode(), new String[] {},
+									MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
+					flOrderBB.getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+				}
+			}
+		}
+		//#32752 end
 		return navgPage;
 	}
 	
