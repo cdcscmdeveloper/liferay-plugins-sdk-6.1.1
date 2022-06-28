@@ -2825,9 +2825,12 @@ public class SmApplicationUtil {
 								.equals(supBank.getPmFinancialOrg()
 										.getFinancialOrgId())) {
 					validBank = false;
+					//#12492 start
+					RequestContext.getCurrentInstance().execute("bankDialogDuplicate.hide()");
 					throw new EpException(MessageConst.ERROR_722543,
 							new String[] { bank.getAccountNo(),
-									bank.getPmFinancialOrg().getFinOrgName() });
+							supBank.getPmFinancialOrg().getFinOrgName() });
+					//#12492 end
 				}
 
 			}
