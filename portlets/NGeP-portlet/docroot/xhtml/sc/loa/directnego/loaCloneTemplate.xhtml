@@ -67,7 +67,7 @@
 							<td style="width: 180px;"><p:outputLabel
 									value="#{lbl['lbl.sc.category.code']}"></p:outputLabel></td>
 							<td>
-								<p:tree id="treeCatCode" style="height: 150px;width: 800px;"
+								<p:tree id="treeCatCode" style="height: 150px;width: 400px;"
 								value="#{directLOABackingBean.managedBean.rootCategoryTree}"  
 								var="catgCode"  
 								selectionMode="checkbox">
@@ -94,7 +94,7 @@
 							<td valign="top"><h:outputLabel
 									value="#{lbl['lbl.tpl.spec.title']}"></h:outputLabel></td>
 							<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { loaCloneTemplateSpecSearch.jq.click(); return false; }"
-									style="width:670px; margin-bottom:5px;" maxlength="100"
+									style="width:400px; margin-bottom:5px;" maxlength="100"
 									value="#{directLOABackingBean.managedBean.specName}" /></td>
 						</tr>
 
@@ -103,10 +103,8 @@
 									value="#{lbl['lbl.sc.title']}" /></td>
 							<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { loaCloneTemplateSpecSearch.jq.click(); return false; }"
 									value="#{directLOABackingBean.managedBean.qtnTendertemplateSearchBean.qtTitle}"
-									style="width:670px;" maxlength="100" /></td>
+									style="width:400px;" maxlength="100" /></td>
 						</tr>
-					</table>
-					<table width="100%">
 						<tr>
 							<td><h:outputLabel value="#{lbl['lbl.sc.qtn.no']}"></h:outputLabel></td>
 							<td><p:inputText style="width:210px; margin-bottom:5px;"
