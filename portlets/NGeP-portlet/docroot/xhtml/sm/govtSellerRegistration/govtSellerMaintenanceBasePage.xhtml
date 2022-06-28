@@ -28,10 +28,12 @@
 		<ui:param name="registrationBackingBean" value="#{govtSellerBackingBean}" />
 		
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.save']}" action="#{bb.submitMaintenance}" update="@([id$=Msg])" 
+		<!--#12492-START-->
+			<p:commandButton value="#{lbl['lbl.sm.button.save']}" actionListener="#{bb.CheckBankAccount('fromNext')}" action="#{bb.submitMaintenance}" update="@([id$=Msg])" 
 					onclick="blockWidget.show()" oncomplete="blockWidget.hide()" process="@form">
 				<f:param name="disableValidation" value="true" />
 			</p:commandButton>
+		<!--#12492-END-->
 		</div>
 		
 		<ui:include src="/xhtml/sm/govtSellerRegistration/govtSellerCompanyInfoPage.xhtml" />
