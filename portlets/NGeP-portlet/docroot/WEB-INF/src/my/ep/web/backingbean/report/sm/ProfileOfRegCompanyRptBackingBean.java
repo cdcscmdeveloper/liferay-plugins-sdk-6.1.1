@@ -47,19 +47,19 @@ public class ProfileOfRegCompanyRptBackingBean extends
 				// #29712 & #30824, #32564 - start
 				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getSelectedSupplier().getCompanyName());
 				// #29712 & #30824, #32564 - end
-				// #32564 & #26238 - Start
+				// #32564 & #26238, #30824 - Start
 				params.put(SmReportConst.PARAM_SUPPLIER_ID,
 						String.valueOf(getManagedBean().getSelectedSupplier().getSupplierId()));
-				// #32564 & #26238 - End
+				// #32564 & #26238, #30824 - End
 			} else {
 				params.put(SmReportConst.PARAM_REG_TYPE, SmReportConst.REG_ACC_TYPE_G2G);
 				// #29712 & #30824, #32564 - start
 				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getSelectedOrgProfile().getPmOrgValidity().getOrgName());
 				// #29712 & #30824, #32564 - end
-				// #32564 & #26238 - Start
+				// #32564 & #26238, #30824 - Start
 				params.put(SmReportConst.PARAM_SUPPLIER_ID,
 						String.valueOf(getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId()));
-				// #32564 & #26238 - End
+				// #32564 & #26238, #30824 - End
 			}
 		} else {
 			params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
