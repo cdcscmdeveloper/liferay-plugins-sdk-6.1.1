@@ -13,6 +13,10 @@
 	<ui:param name="validityDaysExpiredQt"
 		value="#{lOADetailBackingBean.checkProposalValidityDateReachByQt(lOADetailBackingBean.managedBean.scQt)}" />
 		
+	<ui:param name="supplierDisagreeEPV"
+		value="#{!lOIDetailBackingBean.isSupplierAgreeExtendEPV(
+		lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docId, lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier.supplierId)}"/><ui:remove>#21692</ui:remove>
+		
 	<h:panelGroup rendered="#{isTrackingDairyView}">
 		<table style="width: 100%">
 			<tr>
@@ -41,10 +45,10 @@
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and isSqStillValid}"
+					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and isSqStillValid and supplierDisagreeEPV}"
 					action="#{lOADetailBackingBean.submitConformationForLampiranA3}" process="@form"
 					update="@form" onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();" />
+					oncomplete="blockWidget.hide();" /><ui:remove>#21692</ui:remove>
 				
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					rendered="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and isPendingSubmissionStatus and !isSqStillValid}"
@@ -126,11 +130,11 @@
 								</p:confirmDialog>
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" onstart="blockWidget.show();"
-									rendered="#{!isPendingVerification and isSqStillValid}"
+									rendered="#{!isPendingVerification and isSqStillValid and supplierDisagreeEPV}"
 									oncomplete="blockWidget.hide();"
 									action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
 									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
-									update="#{isReject ? '@this' : '@form'}" />
+									update="#{isReject ? '@this' : '@form'}" /><ui:remove>#21692</ui:remove>
 							</h:panelGroup>
 							
 							<h:panelGroup id="buttonsPG" rendered="#{(bpmAction != 'CANCEL') and (bpmAction !='REVISE') and (bpmAction !='REJECT')}">
@@ -138,11 +142,11 @@
 								<!-- changes the calling action   -->
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" onstart="blockWidget.show();"
-									rendered="#{!isPendingVerification and isSqStillValid}"
+									rendered="#{!isPendingVerification and isSqStillValid and supplierDisagreeEPV}"
 									oncomplete="blockWidget.hide();"
 									action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
 									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
-									update="#{isReject ? '@this' : '@form'}" />
+									update="#{isReject ? '@this' : '@form'}" /><ui:remove>#21692</ui:remove>
 	
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" onstart="blockWidget.show();"
