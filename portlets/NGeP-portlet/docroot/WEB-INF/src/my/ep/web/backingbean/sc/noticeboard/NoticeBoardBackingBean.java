@@ -154,7 +154,10 @@ import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
-
+// #29732 Start - fix ReOpen
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+//#29732 End - fix ReOpen
 /**
  * Notice Board Backing Bean class displays the status of 
  * 'Publish,Changes,Closed,Awarded' Quotation/Tender's in Notice Board screen.
@@ -3492,5 +3495,12 @@ public class NoticeBoardBackingBean extends
 			return remarkList;
 		}
 		// #29732 End
-	
+	// #29732 Start - fix ReOpen
+	public String toDate(Timestamp changedDate){
+		String pattern = CommonConstants.DEFAULT_12HR_DATETIME_FORMAT;
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		String newChangedDate = simpleDateFormat.format(changedDate.getTime());
+		return newChangedDate;
+	}
+	// #29732 Start - fix ReOpen
 }
