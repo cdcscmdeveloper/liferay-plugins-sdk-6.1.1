@@ -11157,15 +11157,26 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				.getMeetingList();
 
 		for (ScQtMeeting meeting : meetingDetailsList) {
-			if (null != meeting.getMeetingStatus()
-					&& null != meeting.getMeetingStatus().getStatusId()
-					&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
-							.getStatusId())
-					&& meeting.getRecordStatusFlg().equals(
-							DbValueConst.RECORD_STATUS_ACTIVE)
-					&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
-				lessThanValidityEndDate = true;
-
+			if (this.getManagedBean().isSecretaryUser()) {
+				if (null != meeting.getMeetingStatus()
+						&& null != meeting.getMeetingStatus().getStatusId()
+						&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
+								.getStatusId())
+						&& meeting.getRecordStatusFlg().equals(
+								DbValueConst.RECORD_STATUS_ACTIVE)
+						&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
+					lessThanValidityEndDate = true;
+				}
+			} else {
+				if (null != meeting.getMeetingStatus()
+						&& null != meeting.getMeetingStatus().getStatusId()
+						&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
+								.getStatusId())
+						&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
+					lessThanValidityEndDate = true;
+				} else {
+					lessThanValidityEndDate = false;
+				}
 			}
 		}
 
