@@ -96,6 +96,33 @@
 								</p:selectOneMenu> <p:message id="sourcingBoItemType" for="sourcingSpecItemType"
 									display="icon"></p:message></td>
 						</tr>
+						<!-- #29468 Vinod Start -->
+						<tr>
+							<td valign="top"><p:outputLabel
+									value="#{lbl['lbl.sc.category.code']}"></p:outputLabel></td>
+							<td colspan="3">
+								<p:tree id="treeCatCode" style="height: 150px;width:670px"
+								value="#{specificationBackingBean.managedBean.rootCategoryTree}"  
+								var="catgCode"  
+								selectionMode="checkbox">
+								<p:ajax event="select" listener="#{specificationBackingBean.selectCategoryTreeNode}" />
+								<p:ajax event="unselect" listener="#{specificationBackingBean.unSelectCategoryTreeNode}" />
+								<p:treeNode type="catCode">
+									<h:outputText value="#{catgCode}"/>
+								</p:treeNode>
+								<p:treeNode type="catDes1">
+									<h:outputText value="#{catgCode}"/>
+								</p:treeNode>
+								<p:treeNode type="catDes2">
+									<h:outputText value="#{catgCode}"/>
+								</p:treeNode>
+								<p:treeNode type="catDes3">
+									<h:outputText value="#{catgCode}"/>
+								</p:treeNode>
+								</p:tree>
+        					</td>
+						</tr>
+						<!-- #29468 Vinod End -->
 
 						<tr>
 							<td valign="top"><h:outputLabel
