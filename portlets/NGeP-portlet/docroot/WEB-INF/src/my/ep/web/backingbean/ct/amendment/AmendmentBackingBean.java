@@ -901,6 +901,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 			resDTO = contractAmendmentSO.retrieveContractAmendVerDtls(reqDTO);
 			ctBackingBean.getManagedBean().setContractVer(resDTO.getCtContractVer());
+			//26753 - start
+			if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(resDTO.getCtContractVer().getStatus().getStatusId())) {
+				ContractReqDTO ctReqDTO = new ContractReqDTO();		
+				ContractResDTO ctResDTO = null;
+				contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
+				ctReqDTO.setAmendmentId(resDTO.getCtContractVer().getCtAmendment().getAmendmentId());
+				ctResDTO = contractAmendmentSO.retrieveContractCommitteeMemberByAmendmentId(ctReqDTO);
+				getManagedBean().setUpdatedCommitteeMembers(ctResDTO.getCtCommitteeMembers());
+				getManagedBean().setHasChanges(Boolean.FALSE);
+				getManagedBean().setFilteredUpdatedCommitteeMembers(new ArrayList<CtCommitteeMember>());
+				for(CtCommitteeMember newMember: getManagedBean().getUpdatedCommitteeMembers()) {
+					if(newMember.getUpdateType() != null) {
+						getManagedBean().setHasChanges(Boolean.TRUE);		
+						break;
+					}
+				}
+			}
+			//26753 - end
 			
 			//retrieve agreement list
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
@@ -6546,6 +6564,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private IParameterSO getParameterSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
+	
 	//#25890 - End
 	
 	//#30428 - Start
@@ -6585,12 +6604,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			UserReqDTO userReqDTO = null;
 			IUserSO userSO = null;
 			UserReqDTO reqLoadDTO = null;
-	      
-			if(ctAmendment.getAmendmentLoa()!=null) {
+
+	      if(ctAmendment.getAmendmentLoa()!=null) {
 	    	    userReqDTO = new UserReqDTO();
 				userReqDTO.setUserId(ctAmendment.getAmendmentLoa().getContractAdmin().getUserId());
 				userReqDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-				
+
 				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 						ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 					userReqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
@@ -6740,6 +6759,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	//26753 - start
+				
 	//#29403 start
 	public void copyCommitteeMember(){
 		if(getManagedBean().getUpdatedCommitteeMembers()!=null){
@@ -6787,11 +6807,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		backToAmendmentPage();
 		
 	}
+	
 	public void backToAmendmentPage(){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PROCESS_AMEND_PAGE);
 	}
 	//#29403 end
+	
 	/**
 	 * The method used to invoke and initiate the search committee 
 	 * member dialog.
@@ -6864,7 +6886,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		getManagedBean().setHasChanges(Boolean.FALSE); //#29403
 	}   
-	
 	
 	/**
 	 * The method used for validating the duplicate chairperson.
@@ -7147,7 +7168,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if(ContractConst.ADD_NEW_MEMBER.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
 						isUpdateNeeded = true;
 						break;
-					}								
+					}
 				}
 			}
 			if(isUpdateNeeded) {
