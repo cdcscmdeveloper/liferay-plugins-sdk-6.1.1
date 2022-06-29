@@ -4000,4 +4000,21 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
   	//#29466 - END
+  	
+  	//28729
+  	/**
+	 * Validate allowed email type
+	 * 
+	 * @param String
+	 *            email
+	 * @return boolean
+	 */
+	public boolean isAllowedEmail(String email) {
+		boolean allowed = true;
+		if(email.toLowerCase().contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com")){
+			allowed = false;
+		}
+			
+		return allowed;
+	}
 }

@@ -3761,7 +3761,7 @@ public class SmPersonnelBackingBean extends
 	public void onChangeEmail()
 	{
 		String email = this.getManagedBean().getBasicSmPersonnel().getEmail().toLowerCase();
-		if(email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com"))
+		if(!isAllowedEmail(email))
 		{
 			this.getManagedBean().getBasicSmPersonnel().setEmail("");
 			RequestContext.getCurrentInstance().execute(
