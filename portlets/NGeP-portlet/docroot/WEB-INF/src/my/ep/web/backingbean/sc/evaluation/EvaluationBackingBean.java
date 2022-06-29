@@ -1131,8 +1131,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				complianceChangeScQtStatusUpdate();
 			}
 			
+			// #26544, #25638 -start-
 			successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.prepare.evaluation.compliance"), " ",
 					Boolean.FALSE);
+			// #26544, #25638 -end-
 		} finally {
 			evaluationSo = null;
 		}
@@ -1343,8 +1345,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				complianceChangeScQtStatusUpdate();
 			}
 
+			// #26544, #25638 -start-
 			successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.prepare.evaluation.compliance"), " ",
 					Boolean.FALSE);
+			// #26544, #25638 -end-
 		} finally {
 			evaluationSo = null;
 		}
@@ -7679,8 +7683,10 @@ private void retriveCommitteeRemarksList(){
 			retriveMeetingDtls(qtId, committeeType, index);
 			// getStatusDropdownValues("SC", "MS");
 			if (save == true) {
+				// #26544, #25638 -start-
 				successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.prepare.evaluation"), QtNum,
 						Boolean.FALSE);
+				// #26544, #25638 -end-
 			}
 		} finally {
 			evaluationSO=null;
@@ -7931,8 +7937,10 @@ private void retriveCommitteeRemarksList(){
 			}
 			updateSummaryGeneratedStatus();
 
+			// #26544, #25638 -start-
 			successMessage(MessageConst.INFO_700004,
 					getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
+			// #26544, #25638 -end-
 		} finally {
 			evaluationSO=null;
 		}
@@ -8406,7 +8414,9 @@ private void retriveCommitteeRemarksList(){
 	 *            (Mandatory)
 	 * @return the string(ACKNOWLEDGE_PAGE)
 	 */
+	// #26544, #25638 -start-
 	public void submitPrepareEvaluationDetails(String outCome) {
+		// #26544, #25638 -end-
 
 		FacesScopes facesScopes = new FacesScopes();
 
@@ -8454,6 +8464,7 @@ private void retriveCommitteeRemarksList(){
 				if (resDTO.isSuccessful()) {
 					ScQtCommittee qtCommittee = resDTO.getQtCommittee();
 
+					// #26544, #25638 -start-
 					String messageCode = "";
 					
 					if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outCome)) {
@@ -8465,6 +8476,7 @@ private void retriveCommitteeRemarksList(){
 					
 					successMessage(messageCode, getMessageCommon("lbl.sc.prepare.secretary.evaluation"), qtCommittee
 							.getScQt().getQtNo(), Boolean.TRUE);
+					// #26544, #25638 -end-
 				}
 			}
 		}
@@ -8661,14 +8673,18 @@ private void retriveCommitteeRemarksList(){
 	 *            (Mandatory)
 	 * @return the string(ACKNOWLEDGE_PAGE)
 	 */
+	// #26544, #25638 -start-
 	public void gpkiSignAction(PmDigiSign digiSign) {
+		// #26544, #25638 -end-
 		EvaluationResDTO resDTO = updateEvaluationCommitteDtls(
 				this.getManagedBean().getLocalOutCome(), digiSign);
 		if (resDTO.isSuccessful()) {
 			ScQtCommittee qt = resDTO.getQtCommittee();
 			
+			// #26544, #25638 -start-
 			successMessage(MessageConst.INFO_700033, getMessageCommon("lbl.sc.prepare.secretary.evaluation"), qt
 					.getScQt().getQtNo(), Boolean.TRUE);
+			// #26544, #25638 -end-
 		}
 	}
 
@@ -10930,8 +10946,10 @@ private void retriveCommitteeRemarksList(){
 				updateSummaryGeneratedStatus();
 			}
 			
+			// #26544, #25638 -start-
 			successMessage(MessageConst.INFO_700004,
 					getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
+			// #26544, #25638 -end-
 		} finally {
 			evaluationSo=null;
 		}
