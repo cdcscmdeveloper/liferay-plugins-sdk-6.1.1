@@ -790,14 +790,42 @@ public class QTDetailBackingBean extends
 					&& !isPtjAddressTypePresent(qtOrgProfile.getOrgProfileId())) {
 				throw new EpException(MessageConst.ERROR_760450);
 			}
+			
+			// #31610, #27668 -start-
+			ScQt scQt = this.getManagedBean().getQt();
+			
+			/*
+			 * Bug 31610 - To Exclude 9019 to allow 31610 to be merge into SIT
+			 * NOTE: 9019 WHEN COMMIT MAKE SURE CHANGE SUCCESSMESSAGE FROM THIS INTO THE ONE THAT 9019 
+			 */			
+			boolean isFirstSave = scQt.getQtNo() == null && scQt.isBrandNew() ? true : false;
+			// #31610, #27668 -end-
+			
 			validateQtDetails();
+			
+			// #31610, #27668 -start-
+			/*
+			 * BUG 31610 Added WorkflowStatus to cater qt maintenance search result not working
+			 */			
+			if (isFirstSave) {
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
+				reqDTO.setQtdetail(this.getManagedBean().getQt());
+				
+				IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
-			//Enhancement #25729 -start-
-			successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
-					ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
-			//Enhancement #25729 -start-
+				detailSO.updateDraftWorkflowStatus(reqDTO);
 
-			debugLogger("end of saveQtDetailsAction");
+				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.TRUE);
+			} else {
+				// Enhancement #25729 -start-
+				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
+				// Enhancement #25729 -end-
+			}
+			// #31610, #27668 -end-
+
 		} finally {
 
 		}
