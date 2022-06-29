@@ -380,19 +380,28 @@ u.underline {
 				#end
 				
 				#if($isSL1M == "true")
+				##26770 - start
 				<p>
 					#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
 						<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki
-						untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK 1.2.</span>
+						untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK1.2.</span>
 					#else
 						<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki
-						untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK 1.2</span>
+						untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK1.2</span>
 					#end
 				</p>
+				##26770 - end
 				#else
 				<p>
-					<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>di bawah nilai ambang</b> dan syarikat digalakkan
-					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK 1.2.</span>
+				##26770 - start
+				#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
+				<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>di bawah nilai ambang</b> dan syarikat digalakkan
+					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK1.2.</span>
+				#else
+				<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>di bawah nilai ambang</b> dan syarikat digalakkan
+					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK1.2</span>
+				#end
+				##26770 - end	
 				</p>
 				#end
 				
