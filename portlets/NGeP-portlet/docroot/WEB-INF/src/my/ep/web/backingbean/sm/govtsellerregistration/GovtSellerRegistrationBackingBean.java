@@ -1929,7 +1929,7 @@ public class GovtSellerRegistrationBackingBean extends
 	public void onChangeEmail()
 	{
 		String email = this.getManagedBean().getSmPersonnel().getEmail().toLowerCase();
-		if(email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com"))
+		if(!isAllowedEmail(email))
 		{
 			this.getManagedBean().getSmPersonnel().setEmail("");
 			RequestContext.getCurrentInstance().execute(
@@ -1941,7 +1941,7 @@ public class GovtSellerRegistrationBackingBean extends
 	public void onChangeConfirmEmail()
 	{
 		String email = this.getManagedBean().getConfirmEmail().toLowerCase();
-		if(email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com"))
+		if(!isAllowedEmail(email))
 		{
 			this.getManagedBean().setConfirmEmail("");
 			RequestContext.getCurrentInstance().execute(

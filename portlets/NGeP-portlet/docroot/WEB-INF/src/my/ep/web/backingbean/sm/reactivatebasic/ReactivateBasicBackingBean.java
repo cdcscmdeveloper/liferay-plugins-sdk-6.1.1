@@ -232,7 +232,7 @@ public class ReactivateBasicBackingBean extends
 	public void onChangeEmail()
 	{
 		String email = reactivateBasic.getEmail().toLowerCase();
-		if(email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com"))
+		if(!isAllowedEmail(email))
 		{
 			reactivateBasic.setEmail("");
 			RequestContext.getCurrentInstance().execute(

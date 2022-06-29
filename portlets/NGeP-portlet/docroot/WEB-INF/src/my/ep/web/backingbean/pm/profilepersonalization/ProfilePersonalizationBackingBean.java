@@ -1828,7 +1828,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	public void onChangeEmail()
 	{
 		String email = this.getManagedBean().getSelectedUser().getEmail().toLowerCase();
-		if(email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com"))
+		if(!isAllowedEmail(email))
 		{
 			this.getManagedBean().getSelectedUser().setEmail("");
 			RequestContext.getCurrentInstance().execute(
