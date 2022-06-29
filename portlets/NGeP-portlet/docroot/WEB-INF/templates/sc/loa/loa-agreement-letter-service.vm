@@ -361,19 +361,27 @@ u.underline {
 				#end
 				
 				#if($isSL1M == "true")
+				##26770 - start
 				<p>
 					#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
 					<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki
-					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK 1.2.</span>
+					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK1.2.</span>
 					#else
 						<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki
-						untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK 1.2</span>
+						untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK1.2</span>
 					#end
 				</p>
+				##26770 - end
 				#else
 				<p>
-					<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>di bawah nilai ambang</b> dan syarikat digalakkan
-					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK 1.2</span>
+				#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
+				<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>di bawah nilai ambang</b> dan syarikat digalakkan
+					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK1.2.</span>
+				#else
+				<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak <b>di bawah nilai ambang</b> dan syarikat digalakkan
+					untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK1.2</span>
+				#end
+					
 				</p>
 				#end
 				
@@ -1223,14 +1231,15 @@ u.underline {
 		<td align="right" colspan="$colSpan"><span class="text_family"> <b><i>Lampiran
 					A2</i></b></span></td>
 	</tr>
+	##26770 - start
 	<tr>
 		<td colspan="$colSpan"><span class="text_header_submenu">
-				<u style="text-decoration:underline;">*Tempoh
-				dan Jadual Pembekalan Barang/Penyempurnaan Perkhidmatan</u></span> <br />
+				<u style="text-decoration:underline;">* Tempoh
+				dan Jadual Penyempurnaan Perkhidmatan</u></span> <br />
 				<span class="text_header_submenu_red">* Senarai item, kuantiti, 
-				jenis perkhidmatan dan/atau tempoh serta jadual pembekalan yang ditetapkan.</span><br /></td>
+				jenis perkhidmatan dan/atau tempoh serta penyempurnaan perkhidmatan yang ditetapkan.</span><br /></td>
 	</tr>
-	
+	##26770 - end
 	<tr align='left'>
 			<td><span style='font-weight: bold; font-size: 10px; font-family: Times New Roman;'>
 				<table width='100%' border="1">
@@ -1239,8 +1248,10 @@ u.underline {
 							<th>Zone</th> 
 						#end
 						<th>Nama Item</th>
-						<th>Tempoh Bulan</th>
-						<th>Tempoh Penghantaran/Perkhidmatan</th>
+						##26770 - start
+						<th>Kuantiti</th>
+						<th>Jenis Perkhidmatan</th>
+						##26770 - end
 					</tr>
 					#set($String = "formatter") 
 					#foreach( $serviceBean in $jadualHargaItemBean.serviceItemBeans)
@@ -1253,21 +1264,15 @@ u.underline {
 							#end
 							<td class="standard border-bottom left">$serviceBean.item</td>
 							<td class="standard border-bottom left alignRight">
-									#if($serviceBean.clDurationMonth)
-									 $serviceBean.clDurationMonth
+									#if($serviceBean.quantity)
+									 $serviceBean.quantity
 								#else
 									 $serviceScope
 								#end
 							</td>
 							
 							
-								<td class="standard border-bottom left">
-									#if($serviceBean.clDeliveryTerm)
-										$serviceBean.clDeliveryTerm
-									#else	
-									$serviceScope
-									#end	
-								</td>
+								<td class="standard border-bottom left"></td>
 							
 						</tr>
 					#end
