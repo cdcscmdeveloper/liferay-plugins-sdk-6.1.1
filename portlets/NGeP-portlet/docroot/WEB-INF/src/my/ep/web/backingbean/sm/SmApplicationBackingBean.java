@@ -538,12 +538,16 @@ public class SmApplicationBackingBean extends
 								.append(")");
 						reqDTO.setWorkflowStatus(sb.toString());
 
-						if (supplierProfile.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED &&
-								supplierProfile.getSmMofAccounts().get(0).getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+						if ((supplierProfile.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED &&
+								supplierProfile.getSmMofAccounts().get(0).getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED)) {
 							resubmitErrorKey = "lbl.sm.resubmitExpired.mofExpired";
+						}
+						if ((supplierProfile.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE &&
+								supplierProfile.getSmMofAccounts().get(0).getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED)){
+							resubmitErrorKey = "lbl.sm.resubmitExpired.mofExpired";
+						}
 							this.getManagedBean().setValidResubmit(false);
 						}
-					}
 					//#32002-end
 					if (this.getManagedBean().isValidResubmit()
 							&& rejAppl.getCreatedDate().compareTo(
