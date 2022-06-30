@@ -1402,11 +1402,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		try {		
 
 			out = response.getOutputStream();
-			byte[] buffer = new byte[4096];
+			byte[] buffer = new byte[20 * 1024];
 			int bytesRead;
 			while ((bytesRead = docInputStream.read(buffer)) != -1) {
 				out.write(buffer, 0, bytesRead);
-				buffer = new byte[4096];
+				buffer = new byte[20 * 1024];
 			}
 		} catch(Exception e) {
 			log.error(e);
