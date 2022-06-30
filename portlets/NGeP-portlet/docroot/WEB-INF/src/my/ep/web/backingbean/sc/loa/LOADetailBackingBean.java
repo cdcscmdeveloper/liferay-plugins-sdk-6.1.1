@@ -1321,7 +1321,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		//#25725 start
 		// check agreement
-		if(scLoa.getLoaId() == null){
+		//#25726 corrected the condition for checkAgreementMandatory
+		if(scLoa.getLoaId() != null){
 			checkAgreementMandatory();			
 		}else{			
 			ScLoa loa = getManagedBean().getScLoa();
@@ -1623,6 +1624,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					.retrieveParameterByTypeAndCode(reqDTO);
 			scLoaReport.setDefinationType(resDTO.getPmParameter());
 			scLoaReport.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER); //AQ
+			scLoaReport.setIsPK42BondCalc(false);
 		} finally {
 			parameterSO = null;
 		}
@@ -1887,7 +1889,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		//#29006 - end
 		
 		try{
-			downloadFile(scLoaReportAttachmentGenerated);
+			downloadFile(scLoaReportAttachmentGenerated);			
+			//#25726 start							
+			scLoaReport.setIsPK42BondCalc(true);
+			//#25726 end			
 		}
 		catch(IOException ex){
 			if(ex instanceof FileNotFoundException){
@@ -3715,7 +3720,29 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				validateLOADetails(scLoa, outcome);
 				updateContractDetails(scLoa);
 				validateContractDetails(scLoa);
-	
+				
+				//#25726 start
+				if (null != scLoa && CollectionUtils.isNotEmpty(scLoa.getScLoaReports())) {
+			        if(null != scLoa.getScLoiLoa()){
+			        	if(!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) &&
+			        			!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){ 
+			        		for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
+			        			if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+			        				if (report.getScLoaReportAttachment() != null) {
+			        					if(null == report.getIsPK42BondCalc()){
+			        						boolean newBond = validateNewBond(scLoa);
+			        						if (newBond == false){
+			        							return;
+			        						} 
+			        					}
+			        				}	                
+			        			}
+			        		}
+			        	}
+					}
+			     }
+				//#25726 end
+				
 				scLoa.setScLoaWorkFlowStatuses(null);
 				// To avoid insert workflow status when direct submit without save.
 				if (scLoa.isBrandNew()) {
@@ -4113,6 +4140,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void approveBeforeupdateBpmTaskAction(String outcome) {
 		debugLogger("approveBeforeupdateBpmTaskAction");
 		
+		//#25726 start
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
+	         for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
+	             if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+	                 if (report.getScLoaReportAttachment() != null) {
+	                	 if(null == report.getIsPK42BondCalc()){
+	                		boolean newBond = validateNewBond(scLoa);
+	     					if (newBond == false){
+	     						return;
+	     					} 
+	     				}
+	                 }	                
+	            }
+	         }
+	     }
+		//#25726 end
         
 		this.getManagedBean().setAction(outcome);
 		 		
@@ -10507,5 +10551,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	
 	//#25725 end
+	
+	//#25726 start
+	private boolean validateNewBond(ScLoa scLoa) {
+		if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
+	         for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
+	             if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+	                 if (report.getScLoaReportAttachment() != null) {
+	                	 RequestContext.getCurrentInstance().execute("bondChangesAlertDlg.show()");
+	                	 return false;
+	                 }	                
+	            }
+	         }
+	     }
+		return true;
+	}	
+	//#25726 end
 }
 
