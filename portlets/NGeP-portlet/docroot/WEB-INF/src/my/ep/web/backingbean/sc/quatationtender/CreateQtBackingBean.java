@@ -1137,9 +1137,15 @@ public class CreateQtBackingBean extends
 			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
 			//20210615@asyrafahaziq - Bug #30891 - Start
-			 if (!this.getManagedBean().getQt().getContractDuration().equals(null) ) {
+//			if (!this.getManagedBean().getQt().getContractDuration().equals(null) ) {
+//				 ContractPeriodChange();
+//			}
+			//9019 Start - Harun change comparing null done by Haziq 
+			//#32778 - Include because it occurred during test in PDS 
+			if (null != this.getManagedBean().getQt().getContractDuration() ) {
 				 ContractPeriodChange();
-			 }
+			}
+			//9019 End
 			//20210615@asyrafahaziq - Bug #30891 - End
 		} finally {
 
