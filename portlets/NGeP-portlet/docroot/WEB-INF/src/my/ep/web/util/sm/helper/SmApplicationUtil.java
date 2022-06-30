@@ -3651,50 +3651,24 @@ public class SmApplicationUtil {
 			reqDTO.setLangCode(CommonConstants.LANGUAGE_CODE_MALAY);
 			List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 					.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
-			//#29659 - START
 			if (!EntityHelper.isCollectionEmpty(resultList)
 					&& !resultList.isEmpty()) {
-				List<Object[]> resultListNew = new ArrayList<>();
-				for (Object[] arr : resultList) {
-					
-					Object[] object = new Object[arr.length + 1];
-					for(int i=0; i<arr.length;i++){
-						object[i]=arr[i];
-					}
-					String title = SmServiceLookup.getPersonnelSO().getSalutationNameByPersonnelId(Long.parseLong(arr[23] + ""));
-					object[object.length - 1] = title;
-					resultListNew.add(object);
-				}
 				retVal = new SmOverlapCategoryVO();
 				retVal.setOverlapCategoryMalayList(getOverlapCategoryVOList(
-						resultListNew, smAppl.getSupplierType(), smAppl.getOverlapLanguage()));
+						resultList, smAppl.getSupplierType(), smAppl.getOverlapLanguage()));
 			}
-			//#29659 - END
 		}else{
 		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
 		List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 				.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
-		//#29659 - START
 		if (!EntityHelper.isCollectionEmpty(resultList)
 				&& !resultList.isEmpty()) {
-			List<Object[]> resultListNew = new ArrayList<>();
-			for (Object[] arr : resultList) {
-				
-				Object[] object = new Object[arr.length + 1];
-				for(int i=0; i<arr.length;i++){
-					object[i]=arr[i];
-				}
-				String title = SmServiceLookup.getPersonnelSO().getSalutationNameByPersonnelId(Long.parseLong(arr[23] + ""));
-				object[object.length - 1] = title;
-				resultListNew.add(object);
-			}
-			
 			retVal = new SmOverlapCategoryVO();
 			retVal.setOverLappedCategoryExist(true);
 			retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
 					"lbl.sm.category.overlappingMsg", null)
 					+ "<br />"
-					+ getOverlappedCategoryMsg(resultListNew));
+					+ getOverlappedCategoryMsg(resultList));
 			Locale loc = new Locale("ms", "MY");
 			ResourceBundleUtils.getMessage("lbl.sm.category.overlappingMsg",
 					null, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
@@ -3703,9 +3677,9 @@ public class SmApplicationUtil {
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc)
 					+ System.lineSeparator()
 					+ System.lineSeparator()
-					+ getOverlappedCategoryRemarks(resultListNew));
+					+ getOverlappedCategoryRemarks(resultList));
 			retVal.setOverlapCategoryVOList(getOverlapCategoryVOList(
-					resultListNew, smAppl.getSupplierType(), smAppl.getOverlapLanguage())); //ganti dgn overlap lang
+					resultList, smAppl.getSupplierType(), smAppl.getOverlapLanguage())); //ganti dgn overlap lang
 			
 			//13362 - START setApplnOverlapRemarks
 			String companyName = "";
@@ -3714,8 +3688,8 @@ public class SmApplicationUtil {
 			String catCodeCombine = "";
 			int index = 0;
 			
-			if(resultListNew != null){
-				for (Object[] arrI : resultListNew){ //#29659 - END
+			if(resultList != null){
+				for (Object[] arrI : resultList){ 
 					catCode = arrI[0].toString() + arrI[1] + arrI[2];
 					if("".equalsIgnoreCase(companyName)){
 						companyName = arrI[4].toString();
@@ -3974,7 +3948,7 @@ public class SmApplicationUtil {
 							+ ""
 							: applStatus);
 					//#29659 - START 
-					voSubTmp.setTitle(arr[24] + "");
+					voSubTmp.setTitle(arr[23] + "");
 					//#29659 - END
 					voTmp.getOverlapInfoList().add(voSubTmp);
 					isSubAdd = false;

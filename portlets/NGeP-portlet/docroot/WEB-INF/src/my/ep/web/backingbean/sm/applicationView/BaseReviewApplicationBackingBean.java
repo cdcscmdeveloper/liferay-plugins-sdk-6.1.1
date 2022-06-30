@@ -4381,19 +4381,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
 				if (!EntityHelper.isCollectionEmpty(resultList)
 						&& resultList.size() > 0) {
-					//#29659 - START
-					List<Object[]> resultListNew = new ArrayList<>();
-					for (Object[] arr : resultList) {
-						
-						Object[] object = new Object[arr.length + 1];
-						for(int i=0; i<arr.length;i++){
-							object[i]=arr[i];
-						}
-						String title = SmServiceLookup.getPersonnelSO().getSalutationNameByPersonnelId(Long.parseLong(arr[23] + ""));
-						object[object.length - 1] = title;
-						resultListNew.add(object);
-					}
-					
 					retVal = new SmOverlapCategoryVO();
 					retVal.setOverLappedCategoryExist(true);
 					retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
@@ -4406,8 +4393,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc)
 							+ System.lineSeparator() + System.lineSeparator());
 					retVal.setOverlapCategoryVOList(getOverlapCategoryVOList(
-							resultListNew, smAppl.getSupplierType()));
-					//#29659 - END
+							resultList, smAppl.getSupplierType()));
 				}
 				return retVal;
 			}
@@ -4500,7 +4486,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 									+ ""
 									: applStatus);
 							//#29659 - START 
-							voSubTmp.setTitle(arr[24] + "");
+							voSubTmp.setTitle(arr[23] + "");
 							//#29659 - END
 							voTmp.getOverlapInfoList().add(voSubTmp);
 							isSubAdd = false;
