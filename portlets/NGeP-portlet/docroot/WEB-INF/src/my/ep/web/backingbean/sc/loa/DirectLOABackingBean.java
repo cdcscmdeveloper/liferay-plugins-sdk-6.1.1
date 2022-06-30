@@ -416,6 +416,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			//26770-start
 		}
 		downloadFile(scLoaReportAttachmentGenerated);
+		//#25726 - start
+		scLoaReport.setIsPK42BondCalc(true);
+		//#25726 - end
 	}
 	
 	/**
@@ -480,6 +483,27 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			validateContractDetails(scLoa);
 			validateContractAdmin(scLoa);  // #26474 validate contract admin
 			// #25726 START
+			
+			if (null != scLoa && CollectionUtils.isNotEmpty(scLoa.getScLoaReports())) {
+		        if(null != scLoa.getScLoiLoa()){
+		        	if(!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) &&
+		        			!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){ 
+		        		for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
+		        			if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+		        				if (report.getScLoaReportAttachment() != null) {
+		        					if(null == report.getIsPK42BondCalc()){
+		        						boolean newBond = validateNewBond(scLoa);
+		        						if (newBond == false){
+		        							return;
+		        						} 
+		        					}
+		        				}	                
+		        			}
+		        		}
+		        	}
+				}
+		     }
+			
 			validateDuration(scLoa);
 			boolean approvalLetter = validateApprovalLetter(scLoa);
 						
@@ -3844,17 +3868,63 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
     private void checkFulFilmentType(ScLoa scLoa){
 	    log.info("DirectLoacheckFulFilmentTypeContractDuration"+scLoa.getContractDuration());
 		PmParameter fulfilMentType=scLoa.getScLoiLoa().getFulfilmentTypeCode();
+		
+		String docType = null;
+		if(null != scLoa.getScLoiLoa()){
+			if(null != scLoa.getScLoiLoa().getDocType()){
+				docType = scLoa.getScLoiLoa().getDocType();
+			}
+		}
+		
 		if(isFulfillmentTypeOneOffOrAsAndWhen(fulfilMentType)){
 				this.getManagedBean()
 				.getSpecTemplateSpecBean()
 				.getSpecMaster().setDurationMonth(
 					null);
+				//#25726 - start				
+				
+				if(null != this.getManagedBean()
+						.getSpecTemplateSpecBean()
+						.getSpecMaster()){
+					if(null == this.getManagedBean()
+							.getSpecTemplateSpecBean()
+							.getSpecMaster().getFulfilmentType()){
+						this.getManagedBean()
+						.getSpecTemplateSpecBean()
+						.getSpecMaster().setFulfilmentType(fulfilMentType);
+					}
+					if(null == this.getManagedBean()
+							.getSpecTemplateSpecBean()
+							.getSpecMaster().getDocType()){
+						this.getManagedBean()
+						.getSpecTemplateSpecBean()
+						.getSpecMaster().setDocType(docType);
+					}
+				}
 		}else{
 			this.getManagedBean()
 			.getSpecTemplateSpecBean()
 			.getSpecMaster()
 			.setDurationMonth(
 					scLoa.getContractDuration());
+			if(null != this.getManagedBean()
+					.getSpecTemplateSpecBean()
+					.getSpecMaster()){
+				if(null == this.getManagedBean()
+						.getSpecTemplateSpecBean()
+						.getSpecMaster().getFulfilmentType()){
+					this.getManagedBean()
+					.getSpecTemplateSpecBean()
+					.getSpecMaster().setFulfilmentType(fulfilMentType);
+				}
+				if(null == this.getManagedBean()
+						.getSpecTemplateSpecBean()
+						.getSpecMaster().getDocType()){
+					this.getManagedBean()
+					.getSpecTemplateSpecBean()
+					.getSpecMaster().setDocType(docType);
+				}
+			}
 		}
 		  log.info("EndDirectLoacheckFulFilmentTypeContractDuration"+this.getManagedBean()
 					.getSpecTemplateSpecBean()
@@ -9340,9 +9410,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			fullfillmentTypeParamCode = fulfillmentType.getParameterCode();
 		}
 		log.info("isFulfillmentTypeOneOffOrAsAndWhen:"+ fullfillmentTypeParamCode);
-		
+		//#25726 start
 		return ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fullfillmentTypeParamCode)
-				|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fullfillmentTypeParamCode);
+				|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fullfillmentTypeParamCode)
+				|| ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN.equals(fullfillmentTypeParamCode);
 	}
 	
 	/**
@@ -11799,5 +11870,21 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				return defaultValue;
 			}	
 			
-			//#26130 - end		
+			//#26130 - end	
+			
+			//#25726 - start
+			private boolean validateNewBond(ScLoa scLoa) {
+				if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
+			         for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
+			             if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+			                 if (report.getScLoaReportAttachment() != null) {
+			                	 RequestContext.getCurrentInstance().execute("bondChangesAlertDlg.show()");
+			                	 return false;
+			                 }	                
+			            }
+			         }
+			     }
+				return true;
+			}
+			//#25726 - end
 }
