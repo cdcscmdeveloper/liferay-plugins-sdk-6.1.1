@@ -6677,7 +6677,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//9019 - End (Harun)
 		
 		//9019 - Start (Harun) initializing Group Item when panel is selected and left blank while SAVE
-		if (isPanel) {
+		//30062022 by (Harun) Add checking for PanelItemGroupId due to error that effect for enhancement #29891 
+		if (isPanel && null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId()) {
 			this.getManagedBean().getQt().setItemGroup(new CtPanelItemGroup());
 			this.getManagedBean().getQt().getItemGroup().setPanelItemGroupId((long) 0);
 		}
