@@ -6375,6 +6375,9 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 				}
 			}
 			specQties.getTplSpecZoneOffer().setOffer(true);
+			//#33327 retlated to #21695 - START
+			specQties.getTplSpecZoneOffer().setNotApplicable(true);
+			//#33327 retlated to #21695 - END
 		}
 		return false;
 	}
