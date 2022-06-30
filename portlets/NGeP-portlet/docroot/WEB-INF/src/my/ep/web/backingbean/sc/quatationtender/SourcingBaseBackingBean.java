@@ -2037,7 +2037,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return scLoa;
 	}
 	
-	//Enhancement #24259 #24269	
+	//Enhancement #24259 #24269	#25726
 	/**
 	 * Calculate bond amount with SST.
 	 * 
@@ -2049,19 +2049,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		BigDecimal overallCtAmount = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
 		
 		if(isDirectLoa) {
-			boolean setBondReq = true;
-			if (null != scLoa.getQtType() 
-					&& null != scLoa.getQtType().getParameterId() 
-					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
-					&& null != scLoa.getScQt() 
+			boolean setBondReq = true; 			
+			if (null != scLoa.getScQt() 
 					&& null != scLoa.getScQt().getFulfilmentType()
 					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)  
-					&& null != scLoa.getContractType() 
-					&& null != scLoa.getContractType().getParameterId()
-					&& scLoa.getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				setBondReq = false;
-			}
+					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
+					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)
+					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED))) {
+					if((overallCtAmount.compareTo(this.getManagedBean().getLowerLimit()) < 0) || (overallCtAmount.compareTo(this.getManagedBean().getLowerLimit()) == 0))
+						setBondReq = false;					
+				}
 			
 			if (null != scLoa.getQtType() 
 					&& null != scLoa.getQtType().getParameterId() 
@@ -2095,7 +2092,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		return scLoa;
 	}		
-	//end Enhancement #24259 #24269	
+	//end Enhancement #24259 #24269	#25726
 
 	/**
 	 * Get the OverallContractAmount.
