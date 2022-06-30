@@ -88,6 +88,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
+import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
@@ -327,33 +328,9 @@ public class CreateQtBackingBean extends
 			scQt.setPmProcurementCategory(new PmParameter());
 			scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
 			
-			/*ScQtCommittee qtCommitte = new ScQtCommittee();
-			qtCommitte.setScQt(scQt);
-			setUserDetails(qtCommitte);
-			qtCommitte.setCommitteeActivities(null);
-			qtCommitte.setQtCommitteRemarks(null);
-			qtCommitte.setScQtMeetings(null);
-			ScCommittee committee = new ScCommittee();
-			PmStatus committeStatus = new PmStatus();
-			committeStatus.setStatusId(QTStatusConst.CMT_PENDING_SUBMISSION);
-			committee.setCommitteStatus(committeStatus);
-			committee.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
-			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO
-					.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
-			parameterReqDTO
-					.setParameterCode(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
-			ParameterResDTO parameterResDTO = getParameterSO()
-					.retrieveParameterByTypeAndCode(parameterReqDTO);
-			committee.setCommitteeType(parameterResDTO.getPmParameter());
-			qtCommitte.setScCommittee(committee);
-			this.getManagedBean().setScQtCommittee(qtCommitte);
-			this.getManagedBean().setScCommitteeMemberList(
-					qtCommitte.getScCommittee().getScCommitteeMembers());
-			this.getManagedBean().setCommitteMember(new ScCommitteeMember());*/
 			PmStatus status = getPmStatusByStatusId(QTStatusConst.QT_PENDING_QT_SUBMISSION);
 			scQt.setQtStatus(status);            
-			/* scQt.setQtNo(dto.getQtNo()); */
+
 			ScQtStatus qtStatus = new ScQtStatus();
 			qtStatus.setScQt(scQt);
 			qtStatus.setPmStatus(status);
@@ -372,6 +349,11 @@ public class CreateQtBackingBean extends
 			scQt.setContractType(new PmParameter());
 			
 			setUserDetails(scQt);
+            
+			// 9019 initializing QT remark for Quotation/Tender creation -start-
+			scQt.setScQtRemarks(initializeRemarks(scQt, qtStatus, scQt.getScQtRemarks(), ScQtRemark.class));
+			// 9019 end
+			
 			this.getManagedBean().setQt(scQt);
 			Long currentStatus = this.getManagedBean().getQt().getQtStatus()
 					.getStatusId();
@@ -1153,9 +1135,11 @@ public class CreateQtBackingBean extends
 			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
 			//20210615@asyrafahaziq - Bug #30891 - Start
-			 if (!this.getManagedBean().getQt().getContractDuration().equals(null) ) {
+			 //9019 Start - Harun change comparing null done by Haziq 
+			 if (null != this.getManagedBean().getQt().getContractDuration()) {
 				 ContractPeriodChange();
 			 }
+			 //9019 End
 			//20210615@asyrafahaziq - Bug #30891 - End
 		} finally {
 

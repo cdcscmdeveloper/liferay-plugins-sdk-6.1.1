@@ -640,48 +640,19 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ SCProcessNameConst.GENERIC_APPROVAL_REVISE,
 					SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_REVISE);
 			//#25037-END
+
+			// #9019 START
+			temp.put(SCProcessNameConst.START_QUOTATION_TENDER_CREATION + SCProcessNameConst.SUBMIT_QUOTATION_TENDER,
+					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			// temp.put(SCProcessNameConst.START_QUOTATION_TENDER_CREATION+SCProcessNameConst.CANCEL_QT, SourcingConstants.NAV_PAGE_A)
+			// #9019-END
+			
 			this.getManagedBean().setBpmMap(temp);
 		}
 
 		log.info("testing BPM******");
 
 	}
-
-	// public void retrieveWorklistItems(String status, String viewBy, String
-	// assignment) {
-
-	// IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-	// .getServiceObject(IBpmSO.class);
-	//
-	// // String token = bpmSO.authenticate("roslan", "welcome1");
-	// FacesScopes face = new FacesScopes();
-	// String token = face.getBPMAuthenticationCtxToken();
-	//
-	// System.out.println("testing BPM auth******" + token);
-	// BpmRequestDTO reqDTO = new BpmRequestDTO();
-	//
-	// reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
-	// reqDTO.setOffset(calculateFinalOffSet(1));
-	// reqDTO.setState(status);
-	// reqDTO.setViewBy(viewBy);
-	// reqDTO.setAssignment(assignment);
-	// reqDTO.setCtxToken(token);
-	// BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
-	//
-	// System.out.println("testing BPM******"+responseDTO.getWorklistVO().getWorklistItem().size());
-	// System.out.println("testing BPM******"+responseDTO.getWorklistVO().getTotal());
-	//
-	//
-	//
-
-	//
-	// this.getManagedBean().setTaskList(responseDTO.getWorklistVO().getWorklistItem());
-	//
-	//
-	//
-	//
-	// return responseDTO;
-	// }
 
 	public void navigateToDeliveryOrderURL() throws IOException,
 	PortalException, SystemException {
@@ -899,30 +870,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		return this.docTypeSearchBean;
 	}
 
-	public void preRenderTaskListView() {
-
-		log.info("......................preRenderTaskListView");
-		// this.getManagedBean().setViewBy("");
-		// this.getManagedBean().setAssignment("ALL");
-		// this.getManagedBean().setDocType("");
-
-		// HttpServletRequest servletRequest = PortalUtil
-		// .getHttpServletRequest(new FacesScopes().getRequest());
-		// HttpServletRequest originalServletRequest = PortalUtil
-		// .getOriginalServletRequest(servletRequest);
-		// String docTypeId = originalServletRequest.getParameter("docTypeId");
-		//
-		// if (docTypeId != null && !docTypeId.isEmpty()) {
-		// this.getManagedBean().setDocType(docTypeId);
-		// originalServletRequest.getParameterMap().remove("docTypeId");
-		// }
-		//
-		// this.getManagedBean().getTaskListDataModel().reloadData();
-		// // FacesContext fc = FacesContext.getCurrentInstance();
-		// fc.getApplication().getNavigationHandler()
-		// .handleNavigation(fc, null, "taskListTable");
-		// return "/xhtml/bpmtasklist/taskListTable.xhtml";
-	}
+	public void preRenderTaskListView() {	}
 
 	public void preRenderTaskView() {
 		log.info("......................preRenderTaskView");

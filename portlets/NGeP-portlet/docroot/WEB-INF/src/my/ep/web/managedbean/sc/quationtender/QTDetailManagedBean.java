@@ -1690,7 +1690,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	//29464-start
 	private boolean committeeAppointmentMenuTab = true;
-	//29464-end	
+	//29464-end
+
+	private Long qtRemarksIdRemove; //#9019 (Harun)
 	
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -10682,4 +10684,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.committeeAppointmentMenuTab = committeeAppointmentMenuTab;
 	}
 	//29464-end
+	
+	//#9019 - Start (Harun)
+	public Long getQtRemarksIdRemove() {
+		return qtRemarksIdRemove;
+	}
+
+	public void setQtRemarksIdRemove(Long qtRemarksIdRemove) {
+		this.qtRemarksIdRemove = qtRemarksIdRemove;
+	}
+	//#9019 - End (Harun)
 }

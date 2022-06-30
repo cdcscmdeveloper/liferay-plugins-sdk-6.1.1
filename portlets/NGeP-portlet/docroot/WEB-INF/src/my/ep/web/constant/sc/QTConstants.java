@@ -271,4 +271,7 @@ public interface QTConstants {
 	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="scQTPrepareSpec_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT="scSpecificationCommitteeEndorsement_WAR_NGePportlet";
 	
+	// 9019 - Start (Harun) WIP transaction Pending QT Submission
+	public static final String SC_WFTASK_COMPOSITENAME = "SourcingQT";
+	// 9019 - End (Harun)
 }
