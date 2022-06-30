@@ -571,6 +571,16 @@ public class TemplateSpecBackingBean extends
 		boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL
 				.equals(tplSpecMaster.getSpecTypeCode().getParameterCode());
 		TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
+		
+		//#25726 start
+		PmParameter fulfilmentType = null;
+		String docType = null;
+		if(null != tplSpecMaster.getFulfilmentType()){
+			fulfilmentType = tplSpecMaster.getFulfilmentType();
+		}
+		if(null != tplSpecMaster.getDocType()){
+			docType = tplSpecMaster.getDocType();
+		}
 
 		if (questionList == null) {
 			questionList = new ArrayList<TplSpecQuestion>();
@@ -579,13 +589,28 @@ public class TemplateSpecBackingBean extends
 		}
 
 		newQuestion.setTplSpecMaster(tplSpecMaster);
-		newQuestion.setQuestionType(questionType);
-
+		newQuestion.setQuestionType(questionType);	
+		
 		if (isQuestionTypeItem) {
+			
 			PmParameter pmParameter = getParameterByTypeAndCode(
 					ParameterTypeConst.FULFILMENT_TYPE,
 					ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-			newQuestion.setClFulfilmentTypeCode(pmParameter);
+			//#25726 start
+			if(null != docType){
+				if(docType.equals(ParameterConst.DOCTYPE_DIRECT_NEGO)){
+					if(null != fulfilmentType)
+						newQuestion.setClFulfilmentTypeCode(fulfilmentType);				
+				}else if(docType.equals(ParameterConst.DOCTYPE_QUOTATION)){
+					if(null != fulfilmentType)
+						newQuestion.setClFulfilmentTypeCode(fulfilmentType);					
+				}else{					
+					newQuestion.setClFulfilmentTypeCode(pmParameter);
+				}
+			}else{					
+				newQuestion.setClFulfilmentTypeCode(pmParameter);
+			}
+			//#25726 end
 
 			if (ParameterConst.ITEM_TYPE_SERVICE.equals(tplSpecMaster
 					.getItemTypeCode().getParameterCode())) {
