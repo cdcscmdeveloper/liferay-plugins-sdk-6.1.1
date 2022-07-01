@@ -830,6 +830,19 @@ public class PurchaseInDefaultBackingBean extends
 
 			Long stsId = getManagedBean().getPidStatus().getStatusId(); //#28865
 			
+			// start - #9133 (reopen comment 146)
+			List<ScPIDRemark> deleteRemarks = new ArrayList<ScPIDRemark>();
+			for (ScPIDRemark remark : scPurchaseInDefault.getRemarks()) {
+				if (remark.getRemark().equalsIgnoreCase("") && remark.getRemarkId() != null) {
+					deleteRemarks.add(remark);
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(deleteRemarks)) {
+				purchaseInDefaultSO.deleteListOfRemark(deleteRemarks);
+			}
+			// end - #9133		
+			
 			if (!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)
 					&& !BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome) //#9133
 					&& !BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) //#9133
@@ -2178,6 +2191,7 @@ public class PurchaseInDefaultBackingBean extends
 		purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 		PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
+		List <ScPIDRemark> deleteRemarks = new ArrayList<ScPIDRemark> ();// #9133 (reopen comment 146)
 		
 		try {
 			for (ScPIDRemark remark : scPurchaseInDefault.getRemarks()) {
@@ -2202,7 +2216,20 @@ public class PurchaseInDefaultBackingBean extends
 							.getPidStatus().getStatusId()))// #31603
 						break;
 				}
+				// start - #9133 (reopen comment 146)
+				else{
+					if (remark.getRemarkId() != null) {
+						deleteRemarks.add(remark);
+					}
+				}
+				// end - #9133
 			}
+			
+			// start - #9133 (reopen comment 146)
+			if(CollectionUtils.isNotEmpty(deleteRemarks)){
+				purchaseInDefaultSO.deleteListOfRemark(deleteRemarks);
+			}
+			// end - #9133
 
 		} catch (NullPointerException e) {
 			log.info(e.getStackTrace());
