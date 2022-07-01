@@ -481,7 +481,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 	}
 
 	public boolean isSuccess(String reportStatus){
-		logger.info("isSuccess : "+reportStatus);
+		//logger.info("isSuccess : "+reportStatus);
 		if(reportStatus != null && reportStatus.equals("4")){
 			return true;
 		}
