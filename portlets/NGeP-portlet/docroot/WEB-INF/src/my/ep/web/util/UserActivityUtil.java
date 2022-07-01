@@ -60,7 +60,6 @@ public class UserActivityUtil {
 		if (activityLoggingEnabled) {
 			FacesScopes facesScopes = new FacesScopes();
 			String userScreenName = facesScopes.getUserScreenName();
-			logger.info("[logUserActivity] userScreenName: " + userScreenName);
 			
 			if (null != userScreenName && !StringUtils.EMPTY.equals(userScreenName)) {
 				HttpServletRequest httpServletRequest = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext
