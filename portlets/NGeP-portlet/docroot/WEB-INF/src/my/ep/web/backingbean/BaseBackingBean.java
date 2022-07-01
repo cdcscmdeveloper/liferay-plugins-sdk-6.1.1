@@ -1422,7 +1422,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 		}
 		////NEW METHOD
-		URLConnection url = new URL(filePath).openConnection();
+		/*URLConnection url = new URL(filePath).openConnection();
 		ReadableByteChannel  readableByteChannel = Channels.newChannel(url.getURL().openStream());
 		log.info("readableByteChannel----"+readableByteChannel);
 		log.info("url.getURL()----"+url.getURL());
@@ -1431,7 +1431,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		FileChannel fileChannel = fileOutputStream.getChannel();
 		log.info("fileChannel----"+fileChannel);
 		fileOutputStream.getChannel()
-		  .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+		  .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);*/
 		log.info("END TO DOWNLOAD FILE");
 	}
 	
