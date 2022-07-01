@@ -17038,10 +17038,13 @@ if (null != checklist && !checklist.isEmpty()) {
 										if (indicativeUnitPrice == null && !isSave) {
 											throw new EpException(MessageConst.ERROR_760520);
 										}
+										// #33493 - Start.
+										else if ( indicativeUnitPrice != null  && (estimatedCost==null || (estimatedCost != null && estimatedCost.compareTo(BigDecimal.ZERO) == 0))) {
 										//Bug #32477 related to #25138
 										//comment code replace new condition
-										else if ( indicativeUnitPrice != null  && (estimatedCost==null || estimatedCost == null)) {
+										//else if ( indicativeUnitPrice != null  && (estimatedCost==null || estimatedCost == null)) {
 											//else if ( indicativeUnitPrice != null  && (estimatedCost==null || estimatedCost.compareTo(BigDecimal.ZERO) == 0)) {
+										// #33493 - End.
 											throw new EpException(MessageConst.ERROR_760519, 
 													new String[]{ 
 													ResourceBundleUtils.getMessage(
@@ -17051,13 +17054,24 @@ if (null != checklist && !checklist.isEmpty()) {
 											
 										}	
 									}
+									// #33493 - Start.
 									//Bug #32477 related to #25138
 									//add new condition
-									else if(zoneQty.getQty().compareTo(BigDecimal.ZERO) == 0){
+									/*else if(zoneQty.getQty().compareTo(BigDecimal.ZERO) == 0){
 										estimatedCost = BigDecimal.valueOf(0);
 										indicativeUnitPrice = BigDecimal.valueOf(0);
-									}
+									}*/
+									// #33493 - End.
 								}//#25138  - Allow indicativeUnitPrice & estimatedCost null if qty 0 - end
+								// #33493 - Start.
+								if (estimatedCost == null) {
+									estimatedCost = BigDecimal.valueOf(0);
+								}
+								
+								if (indicativeUnitPrice == null) {
+									indicativeUnitPrice = BigDecimal.valueOf(0);
+									}
+								// #33493 - Start.
 							}
 							//20210205@haziq- Bug #30046 - End
 							if (null != estimatedCost) {
