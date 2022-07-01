@@ -1385,7 +1385,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		response.setContentType(getMimeType(displayFileName));
 		response.flushBuffer();
 
-		/*InputStream docInputStream = null;
+		InputStream docInputStream = null;
 		try {
 			URLConnection uc = new URL(filePath).openConnection();
 			docInputStream = new BufferedInputStream(uc.getInputStream());
@@ -1405,7 +1405,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		try {		
 
 			out = response.getOutputStream();
-			byte[] buffer = new byte[8192];
+			byte[] buffer = new byte[1024 * 1024];
 			int bytesRead;
 			while ((bytesRead = docInputStream.read(buffer)) != -1) {
 				out.write(buffer, 0, bytesRead);
@@ -1420,13 +1420,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			if (docInputStream != null) {
 				docInputStream.close();	
 			}
-		}*/
-		log.info("END TO DOWNLOAD FILE");
+		}
 		////NEW METHOD
-		log.info("START NEW STYLE DOWNLOAD FILE");
-		URLConnection url = new URL(filePath).openConnection();
+		/*URLConnection url = new URL(filePath).openConnection();
 		ReadableByteChannel  readableByteChannel = Channels.newChannel(url.getURL().openStream());
-
 		log.info("readableByteChannel----"+readableByteChannel);
 		log.info("url.getURL()----"+url.getURL());
 		FileOutputStream fileOutputStream = new FileOutputStream(filePath);
@@ -1434,31 +1431,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		FileChannel fileChannel = fileOutputStream.getChannel();
 		log.info("fileChannel----"+fileChannel);
 		fileOutputStream.getChannel()
-		  .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-		log.info("END NEW STYLE DOWNLOAD FILE");
-		
-		/*FileInputStream in = new FileInputStream(filePath);
-		//OutputStream out = null;
-		try
-		{
-		    FileInputStream fileInputStream  = new FileInputStream(filePath);
-		    byte[] buf=new byte[8192];
-		    int bytesread = 0, bytesBuffered = 0;
-		    while( (bytesread = fileInputStream.read( buf )) > -1 ) {
-		        out.write( buf, 0, bytesread );
-		        bytesBuffered += bytesread;
-		        if (bytesBuffered > 1024 * 1024) { //flush after 1MB
-		            bytesBuffered = 0;
-		            out.flush();
-		        }
-		    }
-		}
-		finally {
-		    if (out != null) {
-		        out.flush();
-		    }
-		}*/
-		
+		  .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);*/
+		log.info("END TO DOWNLOAD FILE");
 	}
 	
 	private String getMimeType(String fileName) {
