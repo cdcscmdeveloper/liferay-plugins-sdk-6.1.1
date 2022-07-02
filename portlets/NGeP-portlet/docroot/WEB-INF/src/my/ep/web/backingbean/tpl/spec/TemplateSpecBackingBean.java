@@ -608,13 +608,6 @@ public class TemplateSpecBackingBean extends
 					newQuestion.setClFulfilmentTypeCode(pmParameter);
 				}
 			}else{
-				if(null != tplSpecMaster.getScQtDoc()){
-					if(null != tplSpecMaster.getScQtDoc().getScQt()){
-						if(null != tplSpecMaster.getScQtDoc().getScQt().getFulfilmentType()){
-							newQuestion.setClFulfilmentTypeCode(tplSpecMaster.getScQtDoc().getScQt().getFulfilmentType());
-						}
-					}
-				}else
 				newQuestion.setClFulfilmentTypeCode(pmParameter);
 			}
 			//#25726 end
