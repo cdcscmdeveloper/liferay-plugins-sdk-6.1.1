@@ -2360,9 +2360,12 @@ public class SupplierFinalizationBackingBean extends
 		// #28834 - End.
 
 		if (!getManagedBean().isInitialDecisionFwdToBPK()) {
-			if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
-					.equals(getManagedBean().getCurrentStatusId())) {
-				
+			// 25638 - for 25037 note 284 no validation for committee during SF revision - start
+			if (Arrays.asList(
+					new Long[] { QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION,
+							QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION }).contains(
+					this.getManagedBean().getCurrentStatusId())) {
+				// 25638 - for 25037 note 284 no validation for committee during SF revision - end
 				// #28834 - #31934 - starts.
 				validateFinalizationReports(null, false); 
 				// #28834 - #31934 - ends.
