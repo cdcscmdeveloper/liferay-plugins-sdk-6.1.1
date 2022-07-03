@@ -533,8 +533,8 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		System.out.print("attachmentDownload------"+displayName);
 		logger.info(new File(dir).getAbsolutePath());
 		logger.info(displayName);
-		//this.commonDownloadUtil(path, displayName + "." + fileType);
-		this.downloadFilesAsZip(path, displayName + "." + fileType);
+		this.commonDownloadUtil(path, displayName + "." + fileType);
+		//this.downloadFilesAsZip(path, displayName + "." + fileType);
 		
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
