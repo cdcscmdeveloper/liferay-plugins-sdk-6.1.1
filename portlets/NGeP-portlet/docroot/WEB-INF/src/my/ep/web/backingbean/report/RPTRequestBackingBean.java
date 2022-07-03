@@ -534,8 +534,15 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		System.out.print("attachmentDownload------"+displayName);
 		logger.info(new File(dir).getAbsolutePath());
 		logger.info(displayName);
-		//this.commonDownloadUtil(path, displayName + "." + fileType);
-		this.downloadFilesAsZip(path, displayName + "." + fileType);
+		logger.info("User id =="+rptRequest.getCreatedBy());
+		if(rptRequest.getCreatedBy() == 21018 || rptRequest.getCreatedBy() == 435488){
+			logger.info("DOwnload as zip");
+			this.downloadFilesAsZip(path, displayName + "." + fileType);
+		}else{
+			logger.info("Normal download");
+			this.commonDownloadUtil(path, displayName + "." + fileType);
+		}
+		
 		
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
