@@ -2,15 +2,20 @@
 package my.ep.web.backingbean.report;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -43,6 +48,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import java.io.FileNotFoundException;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.report.ReportConst;
@@ -527,7 +533,8 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		System.out.print("attachmentDownload------"+displayName);
 		logger.info(new File(dir).getAbsolutePath());
 		logger.info(displayName);
-		this.commonDownloadUtil(path, displayName + "." + fileType);
+		//this.commonDownloadUtil(path, displayName + "." + fileType);
+		this.downloadFilesAsZip(path, displayName + "." + fileType);
 		
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -564,4 +571,55 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		return documentsNo.toString();
 	}
 	//end
+	
+	/**
+	 * Download files as a zip.
+	 *
+	 * @param zipFileName the zip file name
+	 * @param fileList the list of the files that want to compress
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public void downloadFilesAsZip(String filePath,String zipFileName) throws IOException {
+		PortletResponse portalresponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil
+				.getHttpServletResponse(portalresponse);
+		response.setContentType("Content-type: text/zip");
+		response.setHeader("Content-Disposition", "attachment; filename=" + zipFileName);
+
+		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
+				response.getOutputStream()));
+		try {
+			List<File> fileList = new ArrayList<File>();
+			fileList.add(new File(filePath));
+			for (File file : fileList) {
+				zos.putNextEntry(new ZipEntry(file.getName()));	
+				// Get the file
+				FileInputStream fis = null;
+				try {
+					fis = new FileInputStream(file);
+				} catch (FileNotFoundException fnfe) {
+					zos.write(("ERROR: Could not find file " + file
+							.getName()).getBytes());
+					zos.closeEntry();
+					continue;
+				}
+				BufferedInputStream fif = new BufferedInputStream(fis);
+				// Write the contents of the file
+				int data = 0;
+				while ((data = fif.read()) != -1) {
+					zos.write(data);
+				}
+				fif.close();
+				zos.closeEntry();
+			}
+		} catch (Exception ex) {
+
+		} finally {
+			zos.close();
+			response.flushBuffer();
+
+			FacesContext.getCurrentInstance().responseComplete();
+		}
+	}
 }
