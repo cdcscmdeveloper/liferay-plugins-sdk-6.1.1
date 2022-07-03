@@ -1124,11 +1124,10 @@ public class ApprovalBackingBean extends
 				showDialog = "reviceApprovalDlg.show()";
 			} else if (isApproved) {
 				action = BpmOutcomeConst.BPM_APPROVE;
-//				showDialog = "gpki_dlg.show()";
-//				isGpkiPopup = true;
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication().getNavigationHandler()
-						.handleNavigation(fc, null, gpkiSignAction(null));
+
+				// #25638 -start-
+				gpkiSignAction(null);
+				// #25638 -end-
 			} else if (isRejected) {
 				action = BpmOutcomeConst.BPM_REJECT;
 				showDialog = "rejectApprovalDlg.show()";
@@ -1185,9 +1184,9 @@ public class ApprovalBackingBean extends
 				
 				if(SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName) || 
 						SCProcessNameConst.FC_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)) {
-					FacesContext fc = FacesContext.getCurrentInstance();
-					fc.getApplication().getNavigationHandler()
-							.handleNavigation(fc, null, gpkiSignAction(null));
+					// #25638 -start-
+					gpkiSignAction(null);
+					// #25638 -end-
 				} 
 				//25037-start
 				else if(SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)){
@@ -1219,9 +1218,11 @@ public class ApprovalBackingBean extends
 	 *            (Mandatory)
 	 * @return the string(ACKNOWLEDGE_PAGE)
 	 */
-	public String gpkiSignAction(PmDigiSign digiSign) {
-		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean()
-				.getAction(), digiSign);
+	// #25638 -start-
+	public void gpkiSignAction(PmDigiSign digiSign) {
+		// #25638 -end-
+		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean().getAction(), digiSign);
+
 		if (tenderResDTO.isSuccessful()) {
 			ScQt qt = tenderResDTO.getQtDetail();
 
@@ -1314,18 +1315,13 @@ public class ApprovalBackingBean extends
 			else {
 				log.info("Other Approval executed");
 
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-								getMessgeConstant(this.getManagedBean().getAction()),
-								new String[] {
-										getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
-												ParameterConst.DOCTYPE_QUOTATION), qt.getQtNo() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				// #25638 -start-
+				successMessage(getMessgeConstant(this.getManagedBean().getAction()),
+						getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
+						qt.getQtNo(), Boolean.TRUE);
+				// #25638 -end-
 			}
-			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		}
-		return null;
 	}
 
 	/**
@@ -1702,9 +1698,11 @@ public class ApprovalBackingBean extends
 	 * 
 	 * @return the string
 	 */
-	public String updateReviceBpmTask() {
-		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean()
-				.getAction(), null);
+	// #25638 -start-
+	public void updateReviceBpmTask() {
+		// #25638 -end-
+		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean().getAction(), null);
+
 		if (tenderResDTO.isSuccessful()) {
 			ScQt qt = tenderResDTO.getQtDetail();
 			
@@ -1748,47 +1746,36 @@ public class ApprovalBackingBean extends
 						QTStatusConst.CMT_PENDING_REAPPROVAL_REVISION_APPROVAL}).contains(this.getManagedBean().getCurrentStatusId())) {//25037 #372
 				String committeeType = "";
 				String committeeNames = "";
+			
 				if(CollectionUtils.isNotEmpty(qt.getScQtCommittees())){
 					int count = 0;
+				
 					for(ScQtCommittee c: qt.getScQtCommittees()){
 						count++;
+					
 						String code = c.getScCommittee().getCommitteeType().getParameterCode();
 						committeeType = committeeType.concat(code);
 						committeeNames = committeeNames.concat(this.getParameterDesc(ParameterConst.COMMITTE_TYPE, code));
+				
 						if(count<qt.getScQtCommittees().size()){
 							committeeType = committeeType.concat("/");
 							committeeNames = committeeNames.concat("/");
 						}
 					}
 				}
+				
 				String procurementMode = this.getParameterDesc(qt.getProcurementMode());
 				String qtNo = qt.getQtNo();
+				
 				successMessage(MessageConst.INFO_760510, new String[]{committeeNames, procurementMode, qtNo}, true);
-			}else{
-				FacesContext
-				.getCurrentInstance()
-				.addMessage(
-						null,
-						new FacesMessage(
-								FacesMessage.SEVERITY_INFO,
-								null,
-								MessageUtils
-										.getMessage(
-												getMessgeConstant(this
-														.getManagedBean()
-														.getAction()),
-												new String[] {
-														getParameterDesc(
-																ParameterTypeConst.DOCUMENT_TYPES,
-																ParameterConst.DOCTYPE_QUOTATION),
-														qt.getQtNo() },
-												MessageUtils.BUNDLE_COMMON_MESSAGES,
-												new FacesScopes()
-														.getUserLocale())));
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			} else {
+				// #25638 -start-
+				successMessage(getMessgeConstant(this.getManagedBean().getAction()),
+						getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
+						qt.getQtNo(), Boolean.TRUE);
+				// #25638 -end-
 			}
 		}
-		return null;
 	}
 	
 	/**
@@ -1796,34 +1783,20 @@ public class ApprovalBackingBean extends
 	 * 
 	 * @return the string
 	 */
-	public String updateRejectBpmTask() {
-		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean()
-				.getAction(), null);
+	// #25638 -start-
+	public void updateRejectBpmTask() {
+		// #25638 -end-
+		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean().getAction(), null);
+
 		if (tenderResDTO.isSuccessful()) {
 			ScQt qt = tenderResDTO.getQtDetail();
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													getMessgeConstant(this
-															.getManagedBean()
-															.getAction()),
-													new String[] {
-															getParameterDesc(
-																	ParameterTypeConst.DOCUMENT_TYPES,
-																	ParameterConst.DOCTYPE_QUOTATION),
-															qt.getQtNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
-			return CommonUIConst.ACKNOWLEDGE_PAGE;
+
+			// #25638 -start-
+			successMessage(getMessgeConstant(this.getManagedBean().getAction()),
+					getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
+					qt.getQtNo(), Boolean.TRUE);
+			// #25638 -end-
 		}
-		return null;
 	}
 
 	/**
