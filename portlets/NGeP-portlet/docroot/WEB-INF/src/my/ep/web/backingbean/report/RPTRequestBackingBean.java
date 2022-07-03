@@ -5,15 +5,23 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -24,6 +32,10 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.JFrame;
+import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -35,6 +47,7 @@ import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.factory.EpLogger;
@@ -537,7 +550,9 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		logger.info("User id =="+rptRequest.getCreatedBy());
 		if(rptRequest.getCreatedBy() == 21018 || rptRequest.getCreatedBy() == 435488){
 			logger.info("DOwnload as zip");
-			this.downloadFilesAsZip(path, displayName + "." + fileType);
+			this.commonDownloadUtilTemp(path, displayName + "." + fileType);
+			//this.downloadWithProgress();
+			
 		}else{
 			logger.info("Normal download");
 			this.commonDownloadUtil(path, displayName + "." + fileType);
@@ -630,5 +645,365 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 
 			FacesContext.getCurrentInstance().responseComplete();
 		}
+	}
+	public void downloadWithProgress(){
+		final JProgressBar jProgressBar = new JProgressBar();
+        jProgressBar.setMaximum(100000);
+        JFrame frame = new JFrame();
+        frame.setContentPane(jProgressBar);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setSize(300, 70);
+        frame.setVisible(true);
+
+        Runnable updatethread = new Runnable() {
+            public void run() {
+                try {
+
+                    URL url = new URL("http://downloads.sourceforge.net/project/bitcoin/Bitcoin/blockchain/bitcoin_blockchain_170000.zip");
+                    HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
+                    long completeFileSize = httpConnection.getContentLength();
+
+                    java.io.BufferedInputStream in = new java.io.BufferedInputStream(httpConnection.getInputStream());
+                    java.io.FileOutputStream fos = new java.io.FileOutputStream(
+                            "package.zip");
+                    java.io.BufferedOutputStream bout = new BufferedOutputStream(
+                            fos, 1024);
+                    byte[] data = new byte[1024];
+                    long downloadedFileSize = 0;
+                    int x = 0;
+                    while ((x = in.read(data, 0, 1024)) >= 0) {
+                        downloadedFileSize += x;
+
+                        // calculate progress
+                        final int currentProgress = (int) ((((double)downloadedFileSize) / ((double)completeFileSize)) * 100000d);
+
+                        // update progress bar
+                        SwingUtilities.invokeLater(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                jProgressBar.setValue(currentProgress);
+                            }
+                        });
+
+                        bout.write(data, 0, x);
+                    }
+                    bout.close();
+                    in.close();
+                } catch (FileNotFoundException e) {
+                } catch (IOException e) {
+                }
+            }
+        };
+        new Thread(updatethread).
+
+        start();
+    }
+	public void commonDownloadUtilNio(String filePath, String displayFileName) throws IOException {
+
+		URL urlObj = null;
+		ReadableByteChannel rbcObj = null;
+		FileOutputStream fOutStream  = null;
+		String sampleUrl = "https://www.eperolehan.gov.my/documents/10182/100000002257870/Pendaftaran+Pembekal+updated+v180118.pdf/57987fb9-f6c2-435b-ac44-e348b72737ee";
+		// Checking If The File Exists At The Specified Location Or Not
+		//Path filePathObj = Paths.get(filePath);
+		boolean fileExists = true;
+		PortletResponse resp = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
+
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+		// response.setContentType("application/vnd.ms-excel");
+		// response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Content-Disposition", "attachment; filename=\""+ displayFileName + "\"");
+//		response.setContentType("application/octet-stream");
+		response.setContentType(getMimeType(displayFileName));
+		response.flushBuffer();
+		OutputStream out = null;
+		if(fileExists) {
+			try {
+				java.lang.System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+				java.lang.System.setProperty("http.agent", "Chrome");
+				urlObj = new URL(sampleUrl);
+				rbcObj = Channels.newChannel(urlObj.openStream());
+				fOutStream = new FileOutputStream(filePath);
+
+				fOutStream.getChannel().transferFrom(rbcObj, 0, Long.MAX_VALUE);
+				System.out.println("! File Successfully Downloaded From The Url !");
+				
+			} catch (IOException ioExObj) {
+				System.out.println("Problem Occured While Downloading The File= " + ioExObj.getMessage());				
+			} finally {
+				try {
+					InputStream docInputStream = null;
+					
+					//out = response.getOutputStream();
+					//byte[] buffer = new byte[8192];
+					ByteBuffer buffer = ByteBuffer.allocate(1024);
+					int bytesRead;
+					
+//					while (rbcObj.read(buffer) >= 0 || buffer.position() > 0)
+//					{
+//					  buffer.flip();
+//					  fOutStream.getChannel().write(buffer);
+//					  buffer.compact();
+//					}
+//					
+					FileChannel inChannel =fOutStream.getChannel();
+			        while(inChannel.read(buffer) > 0)
+			        {
+			            buffer.flip();
+			            for (int i = 0; i < buffer.limit(); i++)
+			            {
+			            	fOutStream.getChannel().write(buffer);
+			            }
+			            buffer.clear(); // do something with the data and clear/compact it.
+			        }
+					if(fOutStream != null){
+						fOutStream.close();
+					}
+					if(rbcObj != null) {
+						rbcObj.close();
+					}
+				} catch (IOException ioExObj) {
+					System.out.println("Problem Occured While Closing The Object= " + ioExObj.getMessage());
+				}				
+			}
+		} else {
+			System.out.println("File Not Present! Please Check!");
+		}
+	}
+	
+	public void commonDownloadUtilNew(String filePath, String displayFileName) throws IOException{
+		logger.info("START TO DOWNLOAD FILE");
+		PortletResponse resp = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
+
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+		// response.setContentType("application/vnd.ms-excel");
+		// response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Content-Disposition", "attachment; filename=\""+ displayFileName + "\"");
+//		response.setContentType("application/octet-stream");
+		response.setContentType(getMimeType(displayFileName));
+		response.flushBuffer();
+
+		InputStream docInputStream = null;
+		try {
+			URLConnection uc = new URL(filePath).openConnection();
+			docInputStream = new BufferedInputStream(uc.getInputStream());
+			logger.info("ZAIM getURL "+uc.getURL().toString());
+			logger.info("filePath----"+filePath);
+		} catch (Exception e) {
+			// Cannot open connection, maybe local file
+			docInputStream = new FileInputStream(filePath);
+			logger.info("docInputStream==="+docInputStream);
+			logger.info("Error found while downloading file "+filePath+" : "+e);
+			logger.error(e);
+			e.printStackTrace();
+			
+		}
+
+		OutputStream out = null;
+		Scanner sc = null;
+		try {		
+
+			out = response.getOutputStream();
+			byte[] buffer = new byte[1024 * 1024];
+			long  bytesRead;
+			int n = 0;
+	       /* while (-1 != (n = docInputStream.read(buffer))) {
+	        	out.write(buffer, 0, n);
+				buffer = new byte[1024 * 1024];
+	           
+	        }*/
+	        
+	        sc = new Scanner(docInputStream, "UTF-8");
+	        while (sc.hasNextLine()) {
+	            String line = sc.nextLine();
+	            // System.out.println(line);
+	        }
+	        // note that Scanner suppresses exceptions
+	        if (sc.ioException() != null) {
+	            throw sc.ioException();
+	        }
+		} catch(Exception e) {
+			logger.error(e);
+		} finally {
+			if (out != null) {
+				out.close();
+			}
+			if (docInputStream != null) {
+				docInputStream.close();	
+			}
+		}
+		////NEW METHOD
+		/*URLConnection url = new URL(filePath).openConnection();
+		ReadableByteChannel  readableByteChannel = Channels.newChannel(url.getURL().openStream());
+		log.info("readableByteChannel----"+readableByteChannel);
+		log.info("url.getURL()----"+url.getURL());
+		FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+		log.info("fileOutputStream----"+fileOutputStream);
+		FileChannel fileChannel = fileOutputStream.getChannel();
+		log.info("fileChannel----"+fileChannel);
+		fileOutputStream.getChannel()
+		  .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);*/
+		logger.info("END TO DOWNLOAD FILE");
+	}
+	
+	public void commonDownloadUtilNew2(String filePath, String displayFileName) throws IOException{
+		logger.info("START TO DOWNLOAD FILE");
+		PortletResponse resp = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
+
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+		// response.setContentType("application/vnd.ms-excel");
+		// response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Content-Disposition", "attachment; filename=\""+ displayFileName + "\"");
+//		response.setContentType("application/octet-stream");
+		response.setContentType(getMimeType(displayFileName));
+		response.flushBuffer();
+
+		InputStream docInputStream = null;
+		try {
+			URLConnection uc = new URL(filePath).openConnection();
+			docInputStream = new BufferedInputStream(uc.getInputStream());
+			logger.info("ZAIM getURL "+uc.getURL().toString());
+			logger.info("filePath----"+filePath);
+		} catch (Exception e) {
+			// Cannot open connection, maybe local file
+			docInputStream = new FileInputStream(filePath);
+			logger.info("docInputStream==="+docInputStream);
+			logger.info("Error found while downloading file "+filePath+" : "+e);
+			logger.error(e);
+			e.printStackTrace();
+			
+		}
+
+		OutputStream out = null;
+		Scanner sc = null;
+		try {		
+
+			out = response.getOutputStream();
+			byte[] buffer = new byte[1024 * 1024];
+			long  bytesRead;
+			int n = 0;
+	       /* while (-1 != (n = docInputStream.read(buffer))) {
+	        	out.write(buffer, 0, n);
+				buffer = new byte[1024 * 1024];
+	           
+	        }*/
+	        
+	        sc = new Scanner(docInputStream, "UTF-8");
+	        while (sc.hasNextLine()) {
+	            String line = sc.nextLine();
+	            // System.out.println(line);
+	        }
+	        // note that Scanner suppresses exceptions
+	        if (sc.ioException() != null) {
+	            throw sc.ioException();
+	        }
+		} catch(Exception e) {
+			logger.error(e);
+		} finally {
+			if (out != null) {
+				out.close();
+			}
+			if (docInputStream != null) {
+				docInputStream.close();	
+			}
+		}
+		////NEW METHOD
+		/*URLConnection url = new URL(filePath).openConnection();
+		ReadableByteChannel  readableByteChannel = Channels.newChannel(url.getURL().openStream());
+		log.info("readableByteChannel----"+readableByteChannel);
+		log.info("url.getURL()----"+url.getURL());
+		FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+		log.info("fileOutputStream----"+fileOutputStream);
+		FileChannel fileChannel = fileOutputStream.getChannel();
+		log.info("fileChannel----"+fileChannel);
+		fileOutputStream.getChannel()
+		  .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);*/
+		logger.info("END TO DOWNLOAD FILE");
+	}
+	private String getMimeType(String fileName) {
+		String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
+		
+		String mimeType = (String)CommonConstants.getFileExtMap().get(fileExt);
+		
+		return (mimeType != null) ? mimeType : "octet-stream";
+	}
+	public void commonDownloadUtilTemp(String filePath, String displayFileName) throws IOException{
+		logger.info("START TO DOWNLOAD FILE");
+		long startTime = System.currentTimeMillis();
+		
+		
+		logger.info("retriveSubModuleNameByReportCode - #32926 end");
+		PortletResponse resp = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
+
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+		// response.setContentType("application/vnd.ms-excel");
+		// response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Content-Disposition", "attachment; filename=\""+ displayFileName + "\"");
+//		response.setContentType("application/octet-stream");
+		response.setContentType(getMimeType(displayFileName));
+		response.flushBuffer();
+
+		InputStream docInputStream = null;
+		try {
+			URLConnection uc = new URL(filePath).openConnection();
+			docInputStream = new BufferedInputStream(uc.getInputStream());
+			logger.info("ZAIM getURL "+uc.getURL().toString());
+			logger.info("filePath----"+filePath);
+		} catch (Exception e) {
+			// Cannot open connection, maybe local file
+			docInputStream = new FileInputStream(filePath);
+			logger.info("docInputStream==="+docInputStream);
+			logger.info("Error found while downloading file "+filePath+" : "+e);
+			logger.error(e);
+			e.printStackTrace();
+			
+		}
+
+		OutputStream out = null;
+		try {		
+
+			out = response.getOutputStream();
+			byte[] buffer = new byte[1024 * 1024];
+			int bytesRead;
+			while ((bytesRead = docInputStream.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
+				buffer = new byte[1024 * 1024];
+			}
+		} catch(Exception e) {
+			logger.error(e);
+		} finally {
+			if (out != null) {
+				out.close();
+			}
+			if (docInputStream != null) {
+				docInputStream.close();	
+			}
+		}
+		////NEW METHOD
+		/*URLConnection url = new URL(filePath).openConnection();
+		ReadableByteChannel  readableByteChannel = Channels.newChannel(url.getURL().openStream());
+		log.info("readableByteChannel----"+readableByteChannel);
+		log.info("url.getURL()----"+url.getURL());
+		FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+		log.info("fileOutputStream----"+fileOutputStream);
+		FileChannel fileChannel = fileOutputStream.getChannel();
+		log.info("fileChannel----"+fileChannel);
+		fileOutputStream.getChannel()
+		  .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);*/
+		SLAUtils.getInstance().logSQLPerformanceInfo("PM","QueueGenerateReports","RPTRequestBackingBean.commonDownloadUtilTemp", startTime,"7754");
+		logger.info("END TO DOWNLOAD FILE");
 	}
 }
