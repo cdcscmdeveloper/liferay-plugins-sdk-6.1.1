@@ -581,13 +581,14 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void downloadFilesAsZip(String filePath,String zipFileName) throws IOException {
+		zipFileName = ContractConst.TEMPLATE_AGREEMENT_PERFORMANCE_BOND.replaceAll("\\s+","") + ".zip";
 		PortletResponse portalresponse = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse response = PortalUtil
 				.getHttpServletResponse(portalresponse);
 		response.setContentType("Content-type: text/zip");
 		response.setHeader("Content-Disposition", "attachment; filename=" + zipFileName);
-		zipFileName = ContractConst.TEMPLATE_AGREEMENT_PERFORMANCE_BOND.replaceAll("\\s+","") + ".zip";
+		
 		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
 				response.getOutputStream()));
 		try {
