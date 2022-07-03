@@ -23,9 +23,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1405,11 +1402,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		try {		
 
 			out = response.getOutputStream();
-			byte[] buffer = new byte[1024 * 1024];
+			byte[] buffer = new byte[4096];
 			int bytesRead;
 			while ((bytesRead = docInputStream.read(buffer)) != -1) {
 				out.write(buffer, 0, bytesRead);
-				buffer = new byte[1024 * 1024];
+				buffer = new byte[4096];
 			}
 		} catch(Exception e) {
 			log.error(e);
@@ -1421,17 +1418,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				docInputStream.close();	
 			}
 		}
-		////NEW METHOD
-		/*URLConnection url = new URL(filePath).openConnection();
-		ReadableByteChannel  readableByteChannel = Channels.newChannel(url.getURL().openStream());
-		log.info("readableByteChannel----"+readableByteChannel);
-		log.info("url.getURL()----"+url.getURL());
-		FileOutputStream fileOutputStream = new FileOutputStream(filePath);
-		log.info("fileOutputStream----"+fileOutputStream);
-		FileChannel fileChannel = fileOutputStream.getChannel();
-		log.info("fileChannel----"+fileChannel);
-		fileOutputStream.getChannel()
-		  .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);*/
 		log.info("END TO DOWNLOAD FILE");
 	}
 	
