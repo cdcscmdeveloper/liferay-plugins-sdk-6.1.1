@@ -34,6 +34,7 @@ import my.ep.biz.dto.rpt.PMReportResDTO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
+import my.ep.constant.ct.ContractConst;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.factory.EpLogger;
@@ -533,8 +534,8 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		System.out.print("attachmentDownload------"+displayName);
 		logger.info(new File(dir).getAbsolutePath());
 		logger.info(displayName);
-		this.commonDownloadUtil(path, displayName + "." + fileType);
-		//this.downloadFilesAsZip(path, displayName + "." + fileType);
+		//this.commonDownloadUtil(path, displayName + "." + fileType);
+		this.downloadFilesAsZip(path, displayName + "." + fileType);
 		
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -586,7 +587,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 				.getHttpServletResponse(portalresponse);
 		response.setContentType("Content-type: text/zip");
 		response.setHeader("Content-Disposition", "attachment; filename=" + zipFileName);
-
+		zipFileName = ContractConst.TEMPLATE_AGREEMENT_PERFORMANCE_BOND.replaceAll("\\s+","") + ".zip";
 		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
 				response.getOutputStream()));
 		try {
