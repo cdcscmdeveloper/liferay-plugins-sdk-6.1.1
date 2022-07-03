@@ -13086,6 +13086,24 @@ if (null != checklist && !checklist.isEmpty()) {
 								finSpecMaster.setWeightageReq(tecSpecMaster.isWeightageReq());
 								localCheckList.setPmStatus(scQtCheckList.getPmStatus());
 								updatedCheckLists.add(localCheckList);
+								
+								//1873 - start - note 97
+								if(CollectionUtils.isNotEmpty(finSpecMaster.getTplSpecQuestions())){
+									List<Long> idList = new ArrayList<Long>();
+									if(CollectionUtils.isNotEmpty(tecSpecMaster.getFinSpecQuestionsToDelete())){
+										for(TplSpecQuestion question: tecSpecMaster.getFinSpecQuestionsToDelete()){
+											idList.add(question.getSpecQuestionId());
+										}
+									}
+								    Iterator<TplSpecQuestion> questionIt = finSpecMaster.getTplSpecQuestions().iterator();
+								    while (questionIt.hasNext()) {
+								    	TplSpecQuestion question = (TplSpecQuestion) questionIt.next();
+								    	if(question.getSpecQuestionId()!=null && idList.contains(question.getSpecQuestionId())){
+									    	questionIt.remove();
+								    	}
+								    }
+								}
+								//1873 - end - note 97
 							};
 							index = i;//1873 - note 97
 							//1873 - end - note 52
@@ -13779,8 +13797,25 @@ if (null != checklist && !checklist.isEmpty()) {
 						finSpecMaster.setItemOriginCode(tecSpecMaster.getItemOriginCode());
 						finSpecMaster.setWeightageReq(tecSpecMaster.isWeightageReq());
 						scQtCheckList.setEdited(false);
-						updatedCheckLists.add(scQtCheckList);
-						updatedCheckLists.add(finChecklist);
+						//1873 - start - note 97
+						updatedCheckLists.add(finChecklist); 
+						updatedCheckLists.add(scQtCheckList); 
+						if(CollectionUtils.isNotEmpty(finSpecMaster.getTplSpecQuestions())){
+							List<Long> idList = new ArrayList<Long>();
+							if(CollectionUtils.isNotEmpty(tecSpecMaster.getFinSpecQuestionsToDelete())){
+								for(TplSpecQuestion question: tecSpecMaster.getFinSpecQuestionsToDelete()){
+									idList.add(question.getSpecQuestionId());
+								}
+							}
+						    Iterator<TplSpecQuestion> questionIt = finSpecMaster.getTplSpecQuestions().iterator();
+						    while (questionIt.hasNext()) {
+						    	TplSpecQuestion question = (TplSpecQuestion) questionIt.next();
+						    	if(question.getSpecQuestionId()!=null && idList.contains(question.getSpecQuestionId())){
+							    	questionIt.remove();
+						    	}
+						    }
+						}
+						//1873 - end - note 97
 						break;
 					} 
 					index++;
@@ -13802,12 +13837,12 @@ if (null != checklist && !checklist.isEmpty()) {
 						scQt,false);
 			}//32134-End
 			//1873 - start - note 52
-			String finChecklistTitle = scQtCheckList.getTitle().trim();
+			String finChecklistTitle = scQtCheckList.getTitle().trim().replaceAll("\\s", "");//1873 - note 97
 			//1873 note 86 - start
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())){
 				for(ScQtCheckList checklist: this.getManagedBean().getScQtCheckSt2techProposal()){
 					boolean edited = checklist.isEdited()==null ? false: checklist.isEdited();
-					if(finChecklistTitle.equals(checklist.getTitle().trim()) && edited){
+					if(finChecklistTitle.equals(checklist.getTitle().trim().replaceAll("\\s", "")) && edited){//1873 - note 97
 						checklist.setEdited(false);
 						updatedCheckLists.add(checklist);	
 						break;
