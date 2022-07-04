@@ -1030,6 +1030,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& my.ep.constant.pm.ParameterConst.CATEGORY_TYPE_MANUFACTURING
 							.equals(cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode())) {
+					//nested loop for checking each SmManufacturingDtl for every SmSupplierCategory
 					for (SmManufacturingDtl manuFacDtl : getManagedBean().getSmAppl().getSmManufacturingDtls()) { // filter manufacture not imposed DA
 						if(manuFacDtl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) continue;
 						if(activeManufacturingDtls.size() == 0) activeManufacturingDtls.add(manuFacDtl);
