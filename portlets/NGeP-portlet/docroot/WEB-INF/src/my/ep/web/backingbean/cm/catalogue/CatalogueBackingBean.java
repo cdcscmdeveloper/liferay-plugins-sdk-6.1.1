@@ -4454,14 +4454,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			// 1 year period between start and end date
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate());
-			cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
-
+			//29961 - start Updated by Mohd Nur Naim Bin misiran. set the year range selected follow the parameter rules
+			//cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
+			cal.add(Calendar.YEAR, getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY));
 			if (cal.getTime().compareTo(
 					this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate()) < 0) {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-								MessageConst.ERROR_715012, MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775179, new String[] { "" + getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 				return "editCatalogItem";
 			}
