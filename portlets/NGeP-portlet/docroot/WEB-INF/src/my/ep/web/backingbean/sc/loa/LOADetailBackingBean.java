@@ -1322,7 +1322,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		//#25725 start
 		// check agreement
 		//#25726 corrected the condition for checkAgreementMandatory
-		if(scLoa.getLoaId() != null){
+		if(scLoa.getLoaId() == null){
 			checkAgreementMandatory();			
 		}else{			
 			ScLoa loa = getManagedBean().getScLoa();
@@ -1624,7 +1624,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					.retrieveParameterByTypeAndCode(reqDTO);
 			scLoaReport.setDefinationType(resDTO.getPmParameter());
 			scLoaReport.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER); //AQ
-			scLoaReport.setIsPK42BondCalc(false);
+			//#25726 remove unnecessary code
 		} finally {
 			parameterSO = null;
 		}
