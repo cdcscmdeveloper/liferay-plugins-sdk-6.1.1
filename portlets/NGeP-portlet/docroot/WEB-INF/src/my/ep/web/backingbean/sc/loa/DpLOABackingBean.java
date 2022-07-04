@@ -12,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.bean.application.NgepApplicationBean; //#12177 Refactor
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
@@ -240,8 +241,12 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 	public boolean isSqStillValid(Long currentStatusId){		
 		
 		Boolean validDate = true;	
-		Integer sqTimeValidity = null;
 		ScQuote scQuote = getManagedBean().getScRequestNote().getQuote();
+		
+		// Refactor: #12177 - Start
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		log.info("Refactor 12177 (DpLOABackingBean) : getSqTimeValidity - " + sqTimeValidity);
+		// Refactor: #12177 - End
 		
 		// by default days
 		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(

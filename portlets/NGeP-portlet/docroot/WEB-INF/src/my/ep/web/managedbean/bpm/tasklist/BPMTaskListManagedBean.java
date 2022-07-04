@@ -11,7 +11,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang.StringUtils;
-
+import my.ep.bean.application.NgepApplicationBean; //#12177 Refactor
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
@@ -103,8 +103,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private static Logger logger = Logger.getLogger(BPMTaskListManagedBean.class);
 	
 	// Refactor: To make sqTimeValidity to read only once - Start.
-	private static final Integer SQ_TIME_VALIDITY = Integer.valueOf(EpPropertiesUtils.getInstance()
-			.getProperty("sqTimeValidity"));
+	// Refactor: #12177 - Start
+	/*private static final Integer SQ_TIME_VALIDITY = Integer.valueOf(EpPropertiesUtils.getInstance()
+			.getProperty("sqTimeValidity"));*/
+	// Refactor: #12177 - End
 	// Refactor: To make sqTimeValidity to read only once - End.
 	
 	private List<WorklistItemVO> taskList;
@@ -1307,8 +1309,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		Boolean validDate = true;	
 		
 		// Refactor: To make sqTimeValidity to read only once - Start.
-		/*Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
-				.getProperty("sqTimeValidity"));*/
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		logger.info("Refactor 12177 (BPMTaskListManagedBean) : getSqTimeValidity - " + sqTimeValidity);
 		// Refactor: To make sqTimeValidity to read only once - End.
 		
 		if(sqEndDate != null){
@@ -1318,9 +1320,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				Calendar cal = Calendar.getInstance();
 				cal.clear(); 
 				cal.setTime(closingDate);
-				// Refactor: To make sqTimeValidity to read only once - Start.
-				cal.add(Calendar.DATE, SQ_TIME_VALIDITY); //add 60days to closing/end date
-				// Refactor: To make sqTimeValidity to read only once - Start.
+				// Refactor: #12177 - Start
+				cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
+				// Refactor: #12177 - End
 				setExpirationDate(dateToCalendar(cal.getTime()));
 					
 				if(currentDate.compareTo(cal.getTime()) >= 0){

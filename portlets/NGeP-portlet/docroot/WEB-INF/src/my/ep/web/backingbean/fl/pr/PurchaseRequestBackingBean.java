@@ -37,6 +37,7 @@ import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
 
+import my.ep.bean.application.NgepApplicationBean; // #12177 Refactor
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -4821,9 +4822,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		ScQuote scQuote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote().getQuote();
 		ScRequestNote scRequestNote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote();
 		
-		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
-				.getProperty("sqTimeValidity"));
-				
+		// Refactor: #12177 - Start
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		log.info("Refactor 12177 (PurchaseRequestBackingBean) : getSqTimeValidity - " + sqTimeValidity);
+		// Refactor: #12177 - End		
+		
 		if(scQuote != null){
 			if(getManagedBean().getFulfilmentRequest().getScPurchaseInDefault() == null){
 				Date currentDate = new Date();

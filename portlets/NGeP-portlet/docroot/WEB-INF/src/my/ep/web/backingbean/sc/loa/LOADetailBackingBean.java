@@ -32,7 +32,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletSession; // #29007
-												  
+
+import my.ep.bean.application.NgepApplicationBean; //#12177 Refactoe
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -7684,8 +7685,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	
 		Boolean validDate = true;	
 		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
-		Integer sqTimeValidity = null;
 		ScQuote scQuote = getManagedBean().getScLoa().getScQuote();
+		
+		// Refactor: #12177 - Start
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		log.info("Refactor 12177 (LOADetailBackingBean) : getSqTimeValidity - " + sqTimeValidity);
+		// Refactor: #12177 - End
+		
 
 		// by default days
 		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
