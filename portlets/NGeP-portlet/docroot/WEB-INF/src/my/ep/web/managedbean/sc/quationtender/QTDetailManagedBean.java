@@ -1731,6 +1731,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean technicalOtherCheckList;
 	private boolean technicalTemplateEdited;
 	private boolean fromSubmit;
+	private ScQtCheckList tempScQtChecklist;//1873 - note 97
+	private ScQtCheckList finTempScQtChecklist;//1873 - note 97
 	//#1873 -end
 
 	//#25138-start
@@ -11146,6 +11148,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.readOnlyCommitteeTabBean = readOnlyCommitteeTabBean;
 		}
 		//Bug 32277 - end
+		//1873 - start - note 97
+		public ScQtCheckList getTempScQtChecklist() {
+			return tempScQtChecklist;
+		}
+
+		public void setTempScQtChecklist(ScQtCheckList tempScQtChecklist) {
+			this.tempScQtChecklist = tempScQtChecklist;
+		}
+
+		public ScQtCheckList getFinTempScQtChecklist() {
+			return finTempScQtChecklist;
+		}
+
+		public void setFinTempScQtChecklist(ScQtCheckList finTempScQtChecklist) {
+			this.finTempScQtChecklist = finTempScQtChecklist;
+		}
+		//1873 - end - note 97
 		
 		//#9019 - Start (Harun)
 		public Long getQtRemarksIdRemove() {

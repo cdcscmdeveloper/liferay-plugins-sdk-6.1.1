@@ -79,9 +79,9 @@ label.ui-button>span.ui-button-text {
 						value="#{lbl['lbl.btn.print']}" process="@all" type="button">
 						<p:printer target="committeeTechEdit" />
 					</p:commandButton> 
-					<ui:remove><!-- 1873 note 74 update rendered condition--></ui:remove>
+					<ui:remove><!-- 1873 note 74,97 update rendered condition--></ui:remove>
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-						rendered="#{!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly)}"
+						rendered="#{(!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly)) and not empty specificationBackingBean.managedBean.taskName}"
 						style="float:right;" immediate="true"
 						onclick="createTechnicalDialog.show();"></p:commandButton> 
 					<ui:remove><!-- 1873 note 74 update rendered condition--></ui:remove>
