@@ -791,7 +791,7 @@ public class QTDetailBackingBean extends
 				throw new EpException(MessageConst.ERROR_760450);
 			}
 			
-			// #31610, #27668 -start-
+			// #31610, #9019 -start-
 			ScQt scQt = this.getManagedBean().getQt();
 			
 			/*
@@ -800,11 +800,11 @@ public class QTDetailBackingBean extends
 			 * INCLUDE BACK 9019
 			 * */
 			boolean isFirstSave = scQt.getQtNo() == null && scQt.isBrandNew() ? true : false;
-			// #31610, #27668 -end-
+			// #31610, #9019 -end-
 			
 			validateQtDetails();
 			
-			// #31610, #27668 -start-
+			// #31610, #9019 -start-
 			/*
 			 * BUG 31610 Added WorkflowStatus to cater qt maintenance search result not working
 			 */			
@@ -829,7 +829,7 @@ public class QTDetailBackingBean extends
 				// 9019 -end-			
 				// Enhancement #25729 -end-
 			}
-			// #31610, #27668 -end-
+			// #31610, #9019 -end-
 
 		} finally {
 
