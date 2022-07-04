@@ -232,6 +232,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
@@ -13918,28 +13919,6 @@ if (null != checklist && !checklist.isEmpty()) {
 			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
 				resetDemoSpecStatus();// #28784
 			}
-			//1873 note 86 - start
-			if (resDTO.isSuccessful()
-					&& !buildFinancialTemplate
-					&& SourcingConstants.TECHNICAL_DOCTYPE
-							.equalsIgnoreCase(specType)
-					&& CollectionUtils.isNotEmpty(this.getManagedBean()
-							.getScQtCheckSt2financeProposalList())) {
-				int index = 0;
-				for (ScQtCheckList checklist : this.getManagedBean()
-						.getScQtCheckSt2financeProposalList()) {
-					if (scQtCheckList.getTitle().equals(checklist.getTitle())) {
-						financialChecklistEditAction(index, checklist,
-								SourcingConstants.FINANCIAL_DOCTYPE);
-						completeTemplateSpecDetails(
-								ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE,
-								SourcingConstants.FINANCIAL_DOCTYPE);
-						break;
-					}
-					index++;
-				}
-			}
-			//1873 note 86 - end
 			return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 		}
 		return null;
