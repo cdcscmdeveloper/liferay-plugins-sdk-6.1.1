@@ -138,7 +138,7 @@ public class DigiCertHelper {
 		externalContext.redirect(url);
 	}
 
-	public List<String> getChallengeQuestion(String identificationNo, String epNo) {
+	public List<String> getChallengeQuestion(String identificationNo) {
 		log.info("DIGICERT GET CHALL QUEST:" + identificationNo);
 		List<String> retVal = new ArrayList<String>();
 		try {
@@ -147,103 +147,59 @@ public class DigiCertHelper {
 					.getChallengeQuestions(identificationNo, 1));
 			
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
-			//#30425 - Start
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setEpNo(epNo);
-			reqDTO.setIdentificationNo(pmUser.getIdentificationNo());
-			PersonnelResDTO validateDigiCertDate = SmServiceLookup.getPersonnelSO().checkValidateSoftcert(reqDTO);
-			
 			reqDTO.setUserId(pmUser.getUserId());
 			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
-			
 			log.info("getPersonnelId:: " + resDTO.getSmPersonnel().getPersonnelId());
 			log.info("getSoftcertFlg:: " + resDTO.getSmPersonnel().getSoftcertFlg());
-			log.info("getSmAppl.getSmSupplier.getSupplierId:: " + resDTO.getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
 			
-			// if process checking validation is successful
-			if (validateDigiCertDate.isSuccessful()) {
-				// if return with results, then personnel have record in Pm Digi Cert
-				if (validateDigiCertDate.isHasRecord()) {
-					// akan masuk if ni bila dia expired sahaja
-					if (validateDigiCertDate.isExpired()) {
-						log.info("#25061 getSoftcertFlg:: if log 1");
-						if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
-								|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
-								|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
-							log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
-							throw new EpException(MessageConst.ERROR_DIGICERT_776063);
-							// Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
-						} else {
-							log.info("getSoftcertFlg|776064 2 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
-							//#29630 - start
-							if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
-								log.info("51; " + MessageConst.ERROR_DIGICERT_776059);
-								// PIN Number is blocked. Please reset your PIN.
-							} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
-								log.info("50; " + MessageConst.ERROR_DIGICERT_776060);
-								// Wrong PIN Number. PIN will be blocked if you enter the wrong PIN three (3) times.
-							} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
-								log.info("0; " + MessageConst.ERROR_DIGICERT_776061);
-								// Wrong answer for this  challenge response.
-							} else {
-								log.info("99; " + MessageConst.ERROR_TRUSTGATE_776063);
-								// Your certificate is invalid.
-							}
-							//#29630 - end
-							//#30855 - START
-							FacesScopes fs = new FacesScopes();
-							if(fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value()) || 
-							   fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) || 
-							   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) ||
-							   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
-								throw new EpException(MessageConst.ERROR_DIGICERT_776064);
-								// Supplier Admin does not have a valid soft certificate. Please apply for a soft certificate first.
-							}
-							if(fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()) || 
-							   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || 
-							   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || 
-							   fs.hasRoleUser(RoleCode.FL_USER.value())){
-								throw new EpException(MessageConst.ERROR_DIGICERT_776065);
-								// Supplier User does not have a valid soft certificate. Please apply for a soft certificate first.	
-							}
-							//#30855 - END
-						}
-					}
+			//reqDTO.setSmSupplierId(resDTO.getSmAppl().getSmSupplier().getSupplierId());//30425
+			//if (!SmServiceLookup.getPersonnelSO().isNotExpiredSoftcertBySupplierIdAndUserId(reqDTO)) { //30425
+			//#30855 - START
+			if (!(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED)) {
+			//#30855 - END
+				log.info("#25061 getSoftcertFlg:: if log 1");
+				if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
+						|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
+						|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+					log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
+					throw new EpException(MessageConst.ERROR_DIGICERT_776063);
 				} else {
-					// if return with 0 results, then personnel didn't have record in Pm Digi Cert
-					if (!(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED)) {
-						if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
-								|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
-								|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
-							log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
-							throw new EpException(MessageConst.ERROR_DIGICERT_776063);
-							// Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
-						} else {
-							FacesScopes fs = new FacesScopes();
-							if(fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value()) || 
-							   fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) || 
-							   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) ||
-							   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
-								throw new EpException(MessageConst.ERROR_DIGICERT_776064);
-								// Supplier Admin does not have a valid soft certificate. Please apply for a soft certificate first.
-							}
-							if(fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()) || 
-							   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || 
-							   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || 
-							   fs.hasRoleUser(RoleCode.FL_USER.value())){
-								throw new EpException(MessageConst.ERROR_DIGICERT_776065);
-								// Supplier User does not have a valid soft certificate. Please apply for a soft certificate first.
-							}	
-						}	
+					log.info("getSoftcertFlg|776064 2 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
+					//#29630 - start
+					if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
+						log.info("51; " + MessageConst.ERROR_DIGICERT_776059);
+					} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
+						log.info("50; " + MessageConst.ERROR_DIGICERT_776060);
+					} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
+						log.info("0; " + MessageConst.ERROR_DIGICERT_776061);
+					} else {
+						log.info("99; " + MessageConst.ERROR_TRUSTGATE_776063);
 					}
+					//#29630 - end
+					//#30855 - START
+					FacesScopes fs = new FacesScopes();
+					if(fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value()) || 
+					   fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) || 
+					   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) ||
+					   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+						throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+					}
+					if(fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()) || 
+					   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || 
+					   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || 
+					   fs.hasRoleUser(RoleCode.FL_USER.value())){
+						throw new EpException(MessageConst.ERROR_DIGICERT_776065);
+					}
+					//#30855 - END
 				}
 			}
-			//#30425 - End
-			
+
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
 				log.info("#25061 OPERATION_SUCCESSFUL");
-				retVal = (List<String>) res.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
+				retVal = (List<String>) res
+						.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
 
 				if (retVal.size() == 0) {
 					throw new EpException(MessageConst.ERROR_DIGICERT_776051);
