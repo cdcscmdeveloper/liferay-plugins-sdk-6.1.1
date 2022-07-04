@@ -3939,7 +3939,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT) ){
 				if(checkSettingPopUpBPKApprovalNeeded(qt)){
 					if(!this.getManagedBean().isResetBpkCurrentArea()){
-						checkingOtherApprovalFileAttachmentNeedDeleted(qt.getScQtApprovals(),ParameterConst.APPROVAL_CATEGORY_OTHERS);
 						if(popUpBPKApprovalNeededOnceHaveRequestApproval(qt)){
 					      this.getManagedBean().setShowPopUpBPKApprovalNeeded(true);
 						  RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlgTemp.show()");
@@ -11006,6 +11005,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		      					 }
 	  			                 ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
 	      	                     if(null == approvalReqAttachement){
+	      	                    	  this.getManagedBean().setResetBpkCurrentArea(false);
 	      	                    	  throw new EpException(MessageConst.ERROR_760509);
 	      	                     }
        						   }else{
