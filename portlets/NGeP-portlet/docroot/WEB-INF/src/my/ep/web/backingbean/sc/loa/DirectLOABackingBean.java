@@ -485,23 +485,25 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			// #25726 START
 			
 			if (null != scLoa && CollectionUtils.isNotEmpty(scLoa.getScLoaReports())) {
-		        if(null != scLoa.getScLoiLoa()){
-		        	if(!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) &&
-		        			!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){ 
-		        		for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-		        			if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
-		        				if (report.getScLoaReportAttachment() != null) {
-		        					if(null == report.getIsPK42BondCalc()){
-		        						boolean newBond = validateNewBond(scLoa);
-		        						if (newBond == false){
-		        							return;
-		        						} 
-		        					}
-		        				}	                
-		        			}
-		        		}
-		        	}
-				}
+				if(!scLoa.isBrandNew()){
+					if(null != scLoa.getScLoiLoa()){
+						if(!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) &&
+								!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){ 
+							for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
+								if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+									if (report.getScLoaReportAttachment() != null) {
+										if(null == report.getIsPK42BondCalc()){
+											boolean newBond = validateNewBond(scLoa);
+											if (newBond == false){
+												return;
+											} 
+										}
+									}	                
+								}
+							}
+						}
+					}
+		        }
 		     }
 			
 			validateDuration(scLoa);
