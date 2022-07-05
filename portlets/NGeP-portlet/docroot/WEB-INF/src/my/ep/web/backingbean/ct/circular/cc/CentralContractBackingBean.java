@@ -1099,8 +1099,20 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 */
 	public String backAction() {
 		if(getManagedBean().isChkCancelPage()) {
-			getManagedBean().setChkCancelPage(false);
-			return "/xhtml/ct/circular/panel/cancelCircularBase.xhtml?faces-redirect=true";
+			//#33533 start
+			PanelBackingBean panelBB = new PanelBackingBean();
+
+			panelBB.getManagedBean().setAction(null);
+			panelBB.getManagedBean().setUpdateAction(true);
+			panelBB.getManagedBean().setViewContract(false); //set false view contract because its not for view
+			panelBB.getManagedBean().setTaskIdFromTaskList(getManagedBean().getTaskIdFromTaskList()); //set back the task id from tasklist
+			panelBB.getManagedBean().setTaskId(getManagedBean().getTaskIdFromTaskList());
+			panelBB.getManagedBean().setOutComes(getManagedBean().getOutComesFromTaskList()); //set back the button from the tasklist
+			
+			getManagedBean().setChkCancelPage(false); //set false from cancel page
+			return getManagedBean().getBackToPreviousPage(); //return the previous page (cancel circular page)
+			//return "/xhtml/ct/circular/panel/cancelCircularBase.xhtml?faces-redirect=true";
+			//#33533 end
 		} else if(getManagedBean().isFromCircularNotice()) {
 			return "../portal/circularListing.xhtml?faces-redirect=true";
 		} else if(getManagedBean().isChkCentralCircular()) {
