@@ -20172,6 +20172,18 @@ if(null!=allTechnicalChecklist){
 					st2technicalproposalList1.setDefinationType(specTyperesDTO.getPmParameter());
 
 					st2technicalproposalList.add(st2technicalproposalList1);
+					
+
+					//#28784 idham delete sample in checklist - start 
+					if(CollectionUtils.isNotEmpty(getManagedBean().getMarkDeletedTechChecklist())){
+						for(ScQtCheckList checklist:getManagedBean().getMarkDeletedTechChecklist()){
+							if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist
+									.getDefinationType().getParameterCode())) {
+								st2technicalproposalList.remove(checklist);
+							}
+						}
+					}
+					//#28784 idham delete sample in checklist - end 
 
 					this.getManagedBean().setScQtCheckSt2techProposal(st2technicalproposalList);
 					checklistSorting(getManagedBean().getScQtCheckSt2techProposal());
