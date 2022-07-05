@@ -405,7 +405,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public String backAction() {
 		if(getManagedBean().isChkCancelPage()) {
 			//#33533 start		
-			getManagedBean().setAction(getManagedBean().getAction());				
+			getManagedBean().setAction(null);
 			getManagedBean().setUpdateAction(true);
 			getManagedBean().setViewContract(false); //set false view contract because its not for view
 			getManagedBean().setTaskId(getManagedBean().getTaskIdFromTaskList()); //set back the task id from tasklist
@@ -1766,7 +1766,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			ccBB.getManagedBean().setTaskId(null);
 			 //#33533 end
 			ccBB.getManagedBean().setSelectedTabIndex(0);
-			ccBB.getManagedBean().setAction(action);
+			ccBB.getManagedBean().setAction(action); //set action 'view'
 			ccBB.getManagedBean().setUpdateAction(false);
 			ccBB.getManagedBean().setViewContract(true);
 			ccBB.getManagedBean().setOutComes(new String[]{});
