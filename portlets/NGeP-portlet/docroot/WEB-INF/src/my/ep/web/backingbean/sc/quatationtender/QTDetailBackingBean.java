@@ -3905,8 +3905,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT) ){
 				if(checkSettingPopUpBPKApprovalNeeded(qt)){
 					if(!this.getManagedBean().isResetBpkCurrentArea()){
-						checkingOtherApprovalFileAttachmentNeedDeleted(qt.getScQtApprovals(),ParameterConst.APPROVAL_CATEGORY_OTHERS);
-						if(skipPopUpBPKApprovalNeededOnceApproved(qt.getScQtApprovals(),ParameterConst.APPROVAL_CATEGORY_BPK)){
+						if(popUpBPKApprovalNeededOnceHaveRequestApproval(qt)){
 					      this.getManagedBean().setShowPopUpBPKApprovalNeeded(true);
 						  RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlgTemp.show()");
 						  throw new EpException(" ");
@@ -3950,6 +3949,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				//#11299 Start Vinod updated error message
 				List<ScQtApproverSettings> approverSettings = this.getManagedBean().getPublicationApproval().getApproverSettings();
 				if(CollectionUtils.isEmpty(approverSettings)){
+					this.getManagedBean().setResetBpkCurrentArea(false); //#25077
 					throw new EpException(MessageConst.ERROR_775174);
 				}else{
 					if((currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
@@ -3958,6 +3958,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						
 								for(ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()){
 									if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())){
+										this.getManagedBean().setResetBpkCurrentArea(false); //#25077
 										throw new EpException(MessageConst.ERROR_775174);
 										//throw new EpException(MessageConst.ERROR_775171);
 									}
