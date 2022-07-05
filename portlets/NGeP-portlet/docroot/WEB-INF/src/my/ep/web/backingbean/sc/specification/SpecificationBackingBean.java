@@ -13202,8 +13202,10 @@ if (null != checklist && !checklist.isEmpty()) {
 			// settemplateSpecList(savedCheckLists);
 			//1873 - start - note 52
 			for(ScQtCheckList checklist: savedCheckLists){
-				setTechnicalCheckList(checklist);
 				//1873 - start - note 97
+				if(scQtCheckList.getDocCategory().equals(checklist.getDocCategory())){
+					setTechnicalCheckList(checklist);
+				}
 				if(SourcingConstants.TECHNICAL_DOCTYPE.equals(checklist.getDocCategory())){
 					this.getManagedBean().setTempScQtChecklist((ScQtCheckList)SerializationUtils.clone(checklist));
 				}else{
@@ -13767,7 +13769,6 @@ if (null != checklist && !checklist.isEmpty()) {
 					.getScQtCheckSt2financeProposalList();
 			//1873 - start - note 97
 			if(CollectionUtils.isNotEmpty(finanicalCheckList)){
-				System.out.println("---> this.getManagedBean().getCheckListTitle() " + this.getManagedBean().getCheckListTitle());
 				index = index == null ? 0: index;
 				for(ScQtCheckList finChecklist: finanicalCheckList){
 					if(StringUtils.isNotEmpty(finChecklist.getTitle()) 
@@ -13845,7 +13846,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())){
 				for(ScQtCheckList checklist: this.getManagedBean().getScQtCheckSt2techProposal()){
 					boolean edited = checklist.isEdited()==null ? false: checklist.isEdited();
-					if(finChecklistTitle.equals(checklist.getTitle().trim().replaceAll("\\s", "")) && edited){//1873 - note 97
+					if(finChecklistTitle.equalsIgnoreCase(checklist.getTitle().trim().replaceAll("\\s", "")) && edited){//1873 - note 97
 						checklist.setEdited(false);
 						updatedCheckLists.add(checklist);	
 						break;
