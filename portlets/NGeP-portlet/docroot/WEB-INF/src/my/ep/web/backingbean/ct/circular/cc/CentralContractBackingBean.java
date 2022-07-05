@@ -1102,7 +1102,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			//#33533 start
 			PanelBackingBean panelBB = new PanelBackingBean();
 
-			panelBB.getManagedBean().setAction(getManagedBean().getAction());
+			panelBB.getManagedBean().setAction(null);
 			panelBB.getManagedBean().setUpdateAction(true);
 			panelBB.getManagedBean().setViewContract(false); //set false view contract because its not for view
 			panelBB.getManagedBean().setTaskIdFromTaskList(getManagedBean().getTaskIdFromTaskList()); //set back the task id from tasklist
