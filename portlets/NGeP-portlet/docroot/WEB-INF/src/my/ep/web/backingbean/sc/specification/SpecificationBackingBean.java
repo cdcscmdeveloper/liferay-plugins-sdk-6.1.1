@@ -13203,9 +13203,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			//1873 - start - note 52
 			for(ScQtCheckList checklist: savedCheckLists){
 				//1873 - start - note 97
-				if(scQtCheckList.getDocCategory().equals(checklist.getDocCategory())){
-					setTechnicalCheckList(checklist);
-				}
+				setTechnicalCheckList(checklist);
 				if(SourcingConstants.TECHNICAL_DOCTYPE.equals(checklist.getDocCategory())){
 					this.getManagedBean().setTempScQtChecklist((ScQtCheckList)SerializationUtils.clone(checklist));
 				}else{
