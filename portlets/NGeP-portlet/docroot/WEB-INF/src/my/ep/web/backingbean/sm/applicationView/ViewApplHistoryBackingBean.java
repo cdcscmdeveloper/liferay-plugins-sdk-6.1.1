@@ -1888,14 +1888,17 @@ public class ViewApplHistoryBackingBean extends
 	public Boolean checkStatusMofNoBySupplierId(SmAppl smAppl){
 		
 		SmSupplier supplier = smAppl.getSmSupplier();
-		if (supplier.getSupplierId()!=null && smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_RENEW_MOF)){
-			for (SmMofAccount mofs : supplier.getSmMofAccounts()){
-				if (mofs.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED) 
+		if (supplier.getSupplierId() != null
+				&& smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_RENEW_MOF)) {
+			SmMofAccount resultList = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(
+					supplier.getSupplierId());
+			if (resultList != null) {
+				if (resultList.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)
 						&& supplier.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
 					return false;
-				}if (mofs.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED) 
-						&& supplier.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)
-						){
+				}
+				if (resultList.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)
+						&& supplier.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 					return false;
 				}
 			}

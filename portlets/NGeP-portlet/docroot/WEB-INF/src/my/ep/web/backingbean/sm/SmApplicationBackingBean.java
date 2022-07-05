@@ -536,17 +536,26 @@ public class SmApplicationBackingBean extends
 								.append(",")
 								.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)
 								.append(")");
-						reqDTO.setWorkflowStatus(sb.toString());
-
-						if ((supplierProfile.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED &&
-								supplierProfile.getSmMofAccounts().get(0).getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED)) {
+						reqDTO.setWorkflowStatus(sb.toString());;
+						try {
+						SmMofAccount resultList = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(supplierProfile.getSupplierId());
+							if (reqDTO.getAppType().equals("R")) {
+								if (resultList != null) {
+									if ((supplierProfile.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED && resultList
+											.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED)) {
 							resubmitErrorKey = "lbl.sm.resubmitExpired.mofExpired";
+										this.getManagedBean().setValidResubmit(false);
 						}
-						if ((supplierProfile.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE &&
-								supplierProfile.getSmMofAccounts().get(0).getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED)){
+									if ((supplierProfile.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE && resultList
+											.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED)) {
 							resubmitErrorKey = "lbl.sm.resubmitExpired.mofExpired";
+										this.getManagedBean().setValidResubmit(false);
+									}
+								}
+							}
+						} catch (EpException ex) {
+							log.info(">>>>>>>>>>ERROR RENEW RESUBMIT APPLICATION:"+ ex.getMessage() + "<<<<<<<<<<<");
 						}
-							this.getManagedBean().setValidResubmit(false);
 						}
 					//#32002-end
 					if (this.getManagedBean().isValidResubmit()
