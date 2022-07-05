@@ -115,6 +115,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
