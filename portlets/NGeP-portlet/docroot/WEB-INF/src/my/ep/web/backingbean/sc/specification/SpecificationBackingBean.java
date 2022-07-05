@@ -5352,14 +5352,17 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setCheckListTitle(checkList.getTitle());
 
 				//1873 - start - note 97
-				if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())){
-					for(ScQtCheckList currentChecklist: this.getManagedBean().getScQtCheckSt2techProposal()){
-						currentChecklist.setCurrentlySelected(false);
-					}
-					checkList.setCurrentlySelected(true);
-				}
-				this.getManagedBean().setTempScQtChecklist((ScQtCheckList)SerializationUtils.clone(checkList));
-				this.getManagedBean().setFinTempScQtChecklist(null);
+				this.getManagedBean().setFinTempScQtChecklist(null); 
+				this.getManagedBean().setTempScQtChecklist(null);
+				if(QTConstants.TECHNICAL_DOC_TYPE.equals(checkList.getDocCategory())){
+					if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())){
+						for(ScQtCheckList currentChecklist: this.getManagedBean().getScQtCheckSt2techProposal()){
+							currentChecklist.setCurrentlySelected(false);
+						}
+						checkList.setCurrentlySelected(true);
+					} 
+					this.getManagedBean().setTempScQtChecklist((ScQtCheckList)SerializationUtils.clone(checkList));
+				} 
 				//1873 - end - note 97
 				ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
 						.getInstance().getServiceObject(
@@ -13922,6 +13925,7 @@ if (null != checklist && !checklist.isEmpty()) {
 
 		// Need to redirect particualr page..
 		if (resDTO.isSuccessful()) {
+			this.getManagedBean().setTempScQtChecklist(null);//1873 - note 97
 			ScQt qt = resDTO.getScQt();
 			if (qt != null) {
 				this.getManagedBean().setQt(qt);
