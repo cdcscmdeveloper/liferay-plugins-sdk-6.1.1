@@ -10852,15 +10852,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	       						    	   approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_REDUCE_PUBLISH_PERIOD) ||
 	       						    	   approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_REDUCE_PROPOSAL_VALIDITY_PERIOD)){
 	       						    		   skipPopUp = false;
+			       									}
+			       						    }
+			       						}
+						       						    }
 	       						    	}
 	       						    }  
 	       						}
 	       					}
 	       				}
-				    }
-				}
-			}
-		}
 		return skipPopUp;
 	}
 	
