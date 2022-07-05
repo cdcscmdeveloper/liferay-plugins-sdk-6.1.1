@@ -1047,6 +1047,16 @@ public class SPDetailBackingBean extends
 
 		}
 	}
+	//Bug #33141@Syazani -- Start 01/07/2022
+	public String saveTechnicalSpecificationAction(boolean isCompleted) {
+		//Purpose: to validate if answer coming from right place due some user use multiple tab (it caused cross bean)
+		if (validateSpecificationDocumentType(ParameterConst.SPECIFICATION_TECHNICAL_CODE))
+			return saveTechnicalSpecificationActionNew(isCompleted);
+		else if (validateSpecificationDocumentType(ParameterConst.SPECIFICATION_FINANCIAL_CODE))
+			return saveFinancialSpecificationAction(isCompleted);
+		else
+			return null;
+	}
 
 	/**
 	 * Method to save technical specification details
@@ -1054,7 +1064,8 @@ public class SPDetailBackingBean extends
 	 * @param isCompleted
 	 * @return navigation path
 	 */
-	public String saveTechnicalSpecificationAction(boolean isCompleted) {
+	public String saveTechnicalSpecificationActionNew(boolean isCompleted) {
+		//Bug #33141@Syazani -- End 01/07/2022
 		log.info("saveTechnicalSpecificationAction supplierId::::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
@@ -6420,5 +6431,29 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		}
 	}
 	//#21695 Farid End - fix proposal checking 18/2/2022
+	
+	//Bug #33141@Syazani -- Start 01/07/2022
+	//Purpose: to validate if answer coming from right place due some user use multiple tab (it caused cross bean)
+	private Boolean validateSpecificationDocumentType(String specDocCode) {
+		List<TplSpecAnswer> answers = getManagedBean().getTemplateSpecBean().getSpecAnswerList();
+		if (answers != null && answers.size() > 0 && answers.get(0).getTplSpecQuestion() != null
+				&& answers.get(0).getTplSpecQuestion().getTplSpecMaster() != null
+				&& answers.get(0).getTplSpecQuestion().getTplSpecMaster().getSpecTypeCode() != null) {
+			PmParameter specTypeCode = answers.get(0).getTplSpecQuestion().getTplSpecMaster().getSpecTypeCode();
+			String strParameterType = specTypeCode.getParameterType() != null ? specTypeCode
+					.getParameterType() : "";
+			String strParameterCode = specTypeCode.getParameterCode() != null ? specTypeCode
+					.getParameterCode() : "";
+
+			if (strParameterType.equalsIgnoreCase(ParameterConst.SPECIFICATION_TYPE)
+					&& strParameterCode.equalsIgnoreCase(specDocCode)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return true;
+	}
+	//Bug #33141@Syazani -- End 01/07/2022
 	
 }
