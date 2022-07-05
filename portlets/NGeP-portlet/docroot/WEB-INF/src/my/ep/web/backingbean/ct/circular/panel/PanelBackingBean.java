@@ -1089,7 +1089,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 
 		if (userRole == null) {
-			return RoleCode.BPK_PQ_APPROVER.value();
+			throw new EpException(MessageConst.ERROR_750040);
 		} else {
 			return userRole;
 		}
