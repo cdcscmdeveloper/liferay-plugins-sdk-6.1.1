@@ -3903,6 +3903,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //		}
 		//#30879,#31065 for Max QTY & price -End
 		newItemPrice(getManagedBean().getSelectedItem());
+		getManagedBean().getSelectedChangeItemPrice().put(ctItemPrice.getItemPriceId(),ctItemPrice); //Fix - #33256
+
 	}
 
 	/**
@@ -3921,6 +3923,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //		}
 		//#30879,#31065 for Max QTY & price -End
 		newItemPrice(getManagedBean().getSelectedServiceItem());
+		getManagedBean().getSelectedChangeItemPrice().put(ctItemPrice.getItemPriceId(),ctItemPrice); //Fix - #33256
+
 	}
 
 	/**
@@ -4051,6 +4055,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //		}
 		//#30879,#31065 for Max QTY & price -Start
 		newItemMaxQty(getManagedBean().getSelectedItem());
+		getManagedBean().getSelectedChangeItemQuantity().put(ctItemMaxQty.getItemMaxQtyId(),ctItemMaxQty); //Fix - #33256
 		System.out.println("Process item removed ::::::::::::::: !!"+getManagedBean().getSelectedItem().getCtItemMaxQties().remove(getManagedBean().getCtItemMaxQty()));
 	
 
