@@ -3542,7 +3542,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			// #26130 - End
 			
 			context.put("isZonal", scLoa.getScLoiLoa().isZonal());
-			context.put("serviceScope", dafaltValue);
+			//#26130 - start 04072022
+			context.put("serviceScope", getDefaultValue());
+			//#26130 - end 04072022
 			context.put("masters", masters);
 			context.put("bean", this);
 		} finally {
@@ -3596,11 +3598,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								if (null != tplSpecAnswer.getAnswerNumeric()) {
 									feedback = String.valueOf(tplSpecAnswer.getAnswerNumeric());
 								} else if (null != tplSpecAnswer.getAnswerCompliance()) {
+									//#26130 - start 04072022
 									if (tplSpecAnswer.getAnswerCompliance()) {
-										feedback = "Yes";
+										feedback = "Ya";
 									} else {
-										feedback = "No";
+										feedback = "Tidak";
 									}
+									//#26130 - end 04072022
 								} else if (StringUtils.isNotEmpty(tplSpecAnswer.getAnswerText())) {
 									feedback = String.valueOf(tplSpecAnswer.getAnswerText());
 								} 
@@ -5811,18 +5815,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
  
   	}//11104-End
 	
-	//#26130 - zaim start 
+	//#26130 - start 04072022
 	private String getDefaultValue(){
-			String defaultValue = "";
-			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-				defaultValue = "N/A";
-			}else {
-				defaultValue = "T/B";
-			}
-			
+			String defaultValue = "T/B";
 			return defaultValue;
 			
 		}
+		//#26130 - end 04072022
 		//#26130 start		
 		private List<HashMap<String, String>>getCOmbineZonalSPec(TplSpecQuestion question, TplSpecMaster master){
 
@@ -5887,11 +5886,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							map.put("feedback",question.getFeedbackList().get(i));
 							break;
 						}
+						//26130 - start 04072022
 						for (int i = indi; i <question.getTplSpecZoneQties().size(); i++){
+							if (!question.getAnswerRemarkList().get(i).equalsIgnoreCase("&nbsp;") && !question.getAnswerRemarkList().get(i).equalsIgnoreCase(getDefaultValue())){
 							map.put("answerRemark",question.getAnswerRemarkList().get(i));
 							break;
+							}else {
+								map.put("answerRemark",question.getAnswerRemarkList().get(i));
+							}
 						}
-						
+						//#26130 - end 04072022
 						indi++;
 					}
 					listSpec.add(map);

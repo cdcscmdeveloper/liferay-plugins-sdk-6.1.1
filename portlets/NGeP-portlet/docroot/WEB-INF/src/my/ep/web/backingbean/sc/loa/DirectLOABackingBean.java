@@ -10796,16 +10796,12 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 	   			  }
 					 return sb.toString();
 				}
-				
+			//#26130 - start 04072022
 				public String getDefaultValue(){
-					String defaultValue;
-					if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-						defaultValue = "N/A";
-					}else {
-						defaultValue = "T/B";
-					}
+				String defaultValue = "T/B";
 					return defaultValue;
 				}	
+			//#26130 - end 04072022
 				
 		//#26130 - end
 				
