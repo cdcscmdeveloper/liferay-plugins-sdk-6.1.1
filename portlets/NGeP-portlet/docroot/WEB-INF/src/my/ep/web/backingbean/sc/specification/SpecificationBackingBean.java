@@ -13078,6 +13078,7 @@ if (null != checklist && !checklist.isEmpty()) {
 								localCheckList.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);//1873 note 86
 							}else{
 								//1873 - start - note 97
+								setTemplateSpecMaster(localCheckList);
 								this.getManagedBean().getFinTempScQtChecklist().setCurrentlySelected(true);
 								scQtCheckList.setEdited(false);
 								//1873 - end - note 97
@@ -13218,6 +13219,37 @@ if (null != checklist && !checklist.isEmpty()) {
 		}
 	}
 
+	//1873 - start - note 97
+	private void setTemplateSpecMaster(ScQtCheckList checklist){
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+						ITemplateSpecSO.class);
+		TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+		reqDTO.setSpecMaster(checklist.getScQtDoc().getTplSpecMaster());
+		reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+		TemplateSpecResDTO resDTO = templateSpecSO.getTemplateMaster(reqDTO);
+		checklist.getScQtDoc().setTplSpecMaster(resDTO.getSpecMaster());
+		checklist.getScQtDoc().getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
+		if (this.getManagedBean().getQt().isZonal()) {
+			ScQtSupplierCriteria supplierCriteria = this.getManagedBean().getQt().getScQtSupplierCriteria();
+			if (null != supplierCriteria && null != supplierCriteria.getQtZoneCriterias()) {
+				retriveSpecdetails(this.getManagedBean().getQt().getQtId());
+				List<TplSpecZoneDtl> businessOwnerZone = convertTreeNodesToZoneCriteria(this.getManagedBean().getZoneGeneralTrees(), null);
+				if (businessOwnerZone != null 
+						&& !businessOwnerZone.isEmpty()
+						&& QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checklist.getDefinationType().getParameterCode())) {
+					for (TplSpecZoneDtl tplSpecZoneDtl : businessOwnerZone) {
+						supplierCriteria.getQtZoneCriterias().setModified(true);
+						tplSpecZoneDtl.setTplSpecZone(supplierCriteria.getQtZoneCriterias());
+
+					}
+					checklist.getScQtDoc().getTplSpecMaster().setTplSpecZone(supplierCriteria.getQtZoneCriterias());
+					checklist.getScQtDoc().getTplSpecMaster().getTplSpecZone().setTplSpecZoneDtls(businessOwnerZone);
+				}
+			}
+		}
+	}
+	//1873 - end - note 97
 	private void specCommitteeResetData() {
 		this.getManagedBean().setTechnicalScoring(null);
 		this.getManagedBean().setProgressivePaymentList(null);
@@ -13791,6 +13823,7 @@ if (null != checklist && !checklist.isEmpty()) {
 							&& finChecklist.getTitle().trim().replaceAll("\\s", "").equalsIgnoreCase(this.getManagedBean().getCheckListTitle().trim().replaceAll("\\s", ""))
 							&& QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(finChecklist.getDefinationType().getParameterCode())){
 						finChecklist.setCurrentlySelected(true);
+						setTemplateSpecMaster(finChecklist);//1873 - note 97
 						this.getManagedBean().setFinTempScQtChecklist((ScQtCheckList)SerializationUtils.clone(finChecklist));
 						TplSpecMaster finSpecMaster = finChecklist.getScQtDoc().getTplSpecMaster();
 						TplSpecMaster tecSpecMaster = scQtCheckList.getScQtDoc().getTplSpecMaster();
