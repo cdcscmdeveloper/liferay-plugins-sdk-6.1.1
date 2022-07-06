@@ -139,11 +139,6 @@
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<ui:param name="bpAction" value="SUBMIT" />
-							<p:commandButton value="#{lbl[buttonLabel]}"
-								styleClass="ui-button"
-								onclick="blockWidget.show();"
-								oncomplete="blockWidget.hide();"
-								action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
 							<ui:remove> #30477 Start </ui:remove>	
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onclick="blockWidget.show();"
