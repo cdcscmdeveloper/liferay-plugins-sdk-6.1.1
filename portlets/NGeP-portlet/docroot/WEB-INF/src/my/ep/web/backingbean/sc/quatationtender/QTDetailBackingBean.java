@@ -10964,6 +10964,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		      					 }
 	  			                 ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
 	      	                     if(null == approvalReqAttachement){
+	      	                    	  this.getManagedBean().setResetBpkCurrentArea(false);
 	      	                    	  throw new EpException(MessageConst.ERROR_760509);
 	      	                     }
        						   }else{
