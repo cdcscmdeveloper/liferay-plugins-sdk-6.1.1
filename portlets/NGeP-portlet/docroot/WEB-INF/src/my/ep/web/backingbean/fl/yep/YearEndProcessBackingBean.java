@@ -785,7 +785,7 @@ public class YearEndProcessBackingBean extends
 		if (buttonVal.equals("CLOSEMANUAL")) {
 			String errorIds = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
 					.get("errorId");
-			if (progressStatus.equals("2")) {
+			if (progressStatus.equals("4")) {
 				if (!errorIds.equals("")) {
 					flOrderBB.getManagedBean().setGfmasError(true);
 					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
