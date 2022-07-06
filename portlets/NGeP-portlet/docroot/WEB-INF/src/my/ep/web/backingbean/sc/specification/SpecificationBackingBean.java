@@ -20164,6 +20164,7 @@ if(null!=allTechnicalChecklist){
 	public void addDemoTechnicalCheckList() {
 		try {
 			//this.getManagedBean().setReadOnly(false);
+			retriveTechnicalCheckList(); //#28784
 			this.getManagedBean().setDemoAction(false);
 			List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
 			List<ScQtCheckList> newSt2technicalproposalList = new ArrayList();
@@ -20259,7 +20260,8 @@ if(null!=allTechnicalChecklist){
 
 		for (ScQtCheckList l : st2technicalproposalList) {
 			if (l.getQtChecklistId() == null) {
-				throw new EpException(MessageConst.ERROR_760528);
+				//throw new EpException(MessageConst.ERROR_760528);
+				saveSpecificationCommitteeDtls(); //#28784 - Remove notification save
 			}
 		}
 		for (ScQtCheckList cl : st2technicalproposalList) {
