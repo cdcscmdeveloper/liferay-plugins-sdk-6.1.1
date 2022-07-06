@@ -283,6 +283,9 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 					}
 					content=content.replaceAll(TemplateDocConst.PARAM_BREAK_LINE, TemplateDocConst.PARAM_SPACE);
 					content=content.replaceAll(TemplateDocConst.PARAM_PREFIX_POSTFIX, TemplateDocConst.PARAM_SPACE);
+					//START: #33346 - issue that related to STX Character, replace with space.
+					content=content.replaceAll(TemplateDocConst.PARAM_STX_CHAR,  TemplateDocConst.PARAM_SPACE);
+					//END: #33346
 					}
 				log.info("after replacing editContent content"+content);
 				getManagedBean().setSelectedSectionText(content);
@@ -302,6 +305,9 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 		try {
 			String sectionTitle = getManagedBean().getSelectedSectionTitle();
 			String sectionText = getManagedBean().getSelectedSectionText();
+			//START: #33346 - issue that related to STX Character, replace with space.
+			sectionText = sectionText.replaceAll(TemplateDocConst.PARAM_STX_CHAR, TemplateDocConst.PARAM_SPACE);
+			//END: #33346
 			String sectionName = getManagedBean().getSelectedSectionName();
 			String sectionNumber = getManagedBean().getSelectedSection().getSectionNumber();
 			TplDocSection selectedSection = getManagedBean().getSelectedSection();
