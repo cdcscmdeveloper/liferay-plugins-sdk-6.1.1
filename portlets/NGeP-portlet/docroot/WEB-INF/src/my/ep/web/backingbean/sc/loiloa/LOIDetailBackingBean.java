@@ -142,6 +142,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBiddingBackingBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.pm.PmConstants;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loiloa.LOIDetailManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -2714,6 +2715,24 @@ public class LOIDetailBackingBean extends
 			}
 		} finally {
 			// iqtAwardSO = null;
+		}
+	}
+	
+	/**
+	 * BUG 33353 : To Update ScQtRecommendDtl (Reject Scenario, to prevent bugs on Multipla LOI (Recommendation) Stage)
+	 * @param List<ScQtRecommendDtl>
+	 * @return null
+	 */
+	private void updateRejectQtRecommendDtl(List<ScLoiLoaItem> scLoiLoaItemList){
+		try{
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			for(ScLoiLoaItem loiLoaItem : scLoiLoaItemList){
+				reqDTO.setScQtRecommendDtl(loiLoaItem.getScQtRecommendDtl());
+				getQtAwardSO().saveSupplierRejectQTRecommendDtl(reqDTO);	
+			}
+			
+		}catch(Exception e){
+			
 		}
 	}
 
@@ -6532,10 +6551,16 @@ public class LOIDetailBackingBean extends
 		RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 	}
 	
+	/**
+	 * BUG 33353 
+	 */
 	public void confirmSupplierReject() {
 		this.getManagedBean().setAction(BpmOutcomeConst.BPM_REJECT);
 		log.info(":::confirmSupplierReject() to "+ BpmOutcomeConst.BPM_REJECT +" LOI.");
 		updateBPMTask(BpmOutcomeConst.BPM_REJECT, null);
+		/* BUG 33353 START*/
+		updateRejectQtRecommendDtl(getManagedBean().getScLoi().getScLoiLoaItems());
+		/* BUG 33353 END*/
 	}
 	//end Enhancement #21573
 
