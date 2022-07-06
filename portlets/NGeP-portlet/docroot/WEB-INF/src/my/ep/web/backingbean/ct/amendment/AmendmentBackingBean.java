@@ -3791,7 +3791,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
 						addDupObj.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
 					} else {
-						addDupObj.setExpDate(ctItemPrice.getExpDate());
+						//addDupObj.setExpDate(ctItemPrice.getExpDate());
+						addDupObj.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate()); //Fix - #33256
 					}
 					if (ctItemPrice.getCtContractZone() != null) {
 						addDupObj.setCtContractZone(ctItemPrice.getCtContractZone());
@@ -3854,7 +3855,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
 						addDupObj.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
 					} else {
-						addDupObj.setExpDate(ctItemPrice.getExpDate());
+						//addDupObj.setExpDate(ctItemPrice.getExpDate());
+						addDupObj.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate()); //Fix - #33256
+
 					}
 					if (ctItemPrice.getCtContractZone() != null) {
 						addDupObj.setCtContractZone(ctItemPrice.getCtContractZone());
@@ -4000,7 +4003,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
 						addDupObj.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
 					} else {
-						addDupObj.setExpDate(ctItemMaxQty.getExpDate());
+						//addDupObj.setExpDate(ctItemMaxQty.getExpDate());
+						addDupObj.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate()); // Fix -#33256
+
 					}
 					if (ctItemMaxQty.getCtContractZone() != null) {
 						addDupObj.setCtContractZone(ctItemMaxQty.getCtContractZone());
