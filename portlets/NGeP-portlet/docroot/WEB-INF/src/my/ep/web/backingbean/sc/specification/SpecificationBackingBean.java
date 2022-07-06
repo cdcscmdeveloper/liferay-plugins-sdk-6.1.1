@@ -4228,17 +4228,20 @@ public class SpecificationBackingBean extends
 	 * @param docType
 	 *            the doc type
 	 */
+	private QTDetailBackingBean qtDetailBB = null;
 	public void retriveSpecdetails(Long qtId) {
-
-		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-		qtBackingBean.retrieveQuationTenderDetails(qtId);
+		if(qtDetailBB==null){
+			qtDetailBB = new QTDetailBackingBean();
+		}
+		qtDetailBB.retrieveQuationTenderDetails(qtId);
 	}
 	
 	//#28784 - start
 	public void retriveDemoSpecdetails(Long qtId) {
-
-		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-		qtBackingBean.retrieveDemoQtDetails(qtId);
+		if(qtDetailBB==null){
+			qtDetailBB = new QTDetailBackingBean();
+		}
+		qtDetailBB.retrieveDemoQtDetails(qtId);
 	}
 	//#28784 - end
 
@@ -10787,6 +10790,7 @@ public class SpecificationBackingBean extends
 				SCQuotationTenderDataType.class, null);
 		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
+		qtDetailBB = null;
 
 		if (SCProcessNameConst.SPECIFICATION_APPROVAL.equalsIgnoreCase(this
 				.getManagedBean().getTaskName())) {
