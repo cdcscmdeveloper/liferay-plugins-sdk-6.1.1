@@ -1629,7 +1629,12 @@ Should be product and service item display if exist
 																#else
 																<td bgcolor="#d0eaee" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.qty</td>
 																#end
-																<td bgcolor="#d0eaee" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																	##26130 start 01072022
+																#if($specCombine.qtyBerperingkat == "&nbsp")
+																#else
+																<td bgcolor="#d0eaee" rowspan="$rowSpanSize" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.qtyBerperingkat</td>
+																#end
+																		##26130 end 01072022
 															#else
 																<td bgcolor="#d0eaee" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
 																<td bgcolor="#d0eaee" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
@@ -1638,25 +1643,26 @@ Should be product and service item display if exist
 														
 														#end
 														
-														#if ($specCombine.feedback == "&nbsp;" ) 
-															<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$whitespace</td>
-														#else
-															<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
-														#end
-														
-														#if ($specCombine.answerRemark == "&nbsp;" || $specCombine.answerRemark == " " ) 
-																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$serviceScope</td>
-														#else
-															#if ($specCombine.answerRemark)
-																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.answerRemark</td>
-															#else 
-																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center; padding-left: 5px; font-size:12px;">$serviceScope</td>
-															#end
-														#end
-														
 														#if ($rowCount == 0)
-															#set($rowCount = $rowCount + 1)
+															#if ($specCombine.feedback == "&nbsp;" ) 
+																<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$whitespace</td>
+															#else
+																<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
+															#end
+														
+															#if ($specCombine.answerRemark == "&nbsp;" || $specCombine.answerRemark == " " ) 
+																	<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+															#else
+																#if ($specCombine.answerRemark)
+																	<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.answerRemark</td>
+																#else 
+																	<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center; padding-left: 5px; font-size:12px;">$serviceScope</td>
+																#end
+															#end
+														
 															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$whitespace</td>
+															
+															#set($rowCount = $rowCount + 1)
 														#end
 														
 													</tr>
@@ -1882,7 +1888,7 @@ Should be product and service item display if exist
 									<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">Bil. Unit <br/>Ukuran Sebulan</th>
 									
 									#if ($isZonal)
-										<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Zon test</th>
+										<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Zon</th>
 									#end
 									
 									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Kuantiti</th>
@@ -2202,25 +2208,26 @@ Should be product and service item display if exist
 														
 														#end
 														
-														#if ($specCombine.feedback == "&nbsp;" || $specCombine.feedback == " " ) 
-															<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$whitespace</td>
-														#else
-															<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
-														#end
-														
-														#if ($specCombine.answerRemark == "&nbsp;" || $specCombine.answerRemark == " ") 
-																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$whitespace</td>
-														#else
-															#if ($specCombine.answerRemark)
-																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.answerRemark</td>
-															#else 
-																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$serviceScope</td>
-															#end
-														#end
-														
 														#if ($rowCount == 0)
-															#set($rowCount = $rowCount + 1)
+															#if ($specCombine.feedback == "&nbsp;" || $specCombine.feedback == " " ) 
+																<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$whitespace</td>
+															#else
+																<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
+															#end
+															
+															
+															#if ($specCombine.answerRemark == "&nbsp;" || $specCombine.answerRemark == " ") 
+																<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+															#else
+																#if ($specCombine.answerRemark)
+																	<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.answerRemark</td>
+																#else 
+																	<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+																#end
+															#end
+															
 															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$whitespace</td>
+															#set($rowCount = $rowCount + 1)
 														#end
 														
 													</tr>
