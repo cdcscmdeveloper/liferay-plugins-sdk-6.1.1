@@ -999,8 +999,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				IQTDemoSO.class);
 		DemoReqDTO reqDto = new DemoReqDTO();
 		action = BpmOutcomeConst.BPM_SUBMIT;
+		validateDemoInvitationFields(action);//#28784 - move position
 		DemoResDTO resDTO = saveDemoInvitation();
-		validateDemoInvitationFields(action);
 		if (resDTO.isSuccessful()) {
 			reqDto.setScQt(this.getManagedBean().getQt());
 			resDTO = qtDemoSO.retrieveScQtDemoByQtNo(reqDto);
@@ -1026,6 +1026,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					if (sup.getScQtDemoSchedule().getDemoLocation() == ""
 							|| sup.getScQtDemoSchedule().getDemoStartDate() == null
 							|| sup.getScQtDemoSchedule().getDemoEndDate() == null) {
+						action = null;//#28784 - Reset action
 						throw new EpException(MessageConst.ERROR_760531);
 					}
 				}
@@ -1036,7 +1037,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 						if (score.getScQtDemoSchedule().getDemoLocation() == ""
 								|| score.getScQtDemoSchedule().getDemoStartDate() == null
 								|| score.getScQtDemoSchedule().getDemoEndDate() == null) {
-							throw new EpException(MessageConst.ERROR_760531);
+							action = null;//#28784 - Reset action
+							throw new EpException(MessageConst.ERROR_760541);
 						}
 					}
 				}

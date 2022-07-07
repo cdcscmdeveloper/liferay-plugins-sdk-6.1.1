@@ -19,10 +19,10 @@
 			selectionMode="single" rowIndexVar="index" rowKey="#{summaryItem}">
 
 			<ac:paginator for="evaluationSummaryItem" />
-
-			<p:ajax event="rowSelect" process="@this" partialSubmit="true"
+				<p:ajax event="rowSelect" process="@this" partialSubmit="true"
 				update="@form"
 				listener="#{evaluationBackingBean.recommendationSummaryItemSelect}"></p:ajax>
+
 	<!-- #21695 Farid Start -->				
 					<p:column 
 						style="pointer-events:none !important"
@@ -38,21 +38,36 @@
 					<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%;white-space: normal;"
 							rendered="#{summaryItem.selectable}">
 						<h:outputText value="#{summaryItem.tplSpecQuestion.clItem}"></h:outputText>
-
 					</p:column>
 	<!-- #21695 Farid End -->				
+				
 		</p:dataTable>
 	</p:panel>
+
 
 	<h:panelGroup id="summaryItemQualified">
 
 		<p:panel toggleable="true">
-			<f:facet name="header">
-				<h:outputText value="#{qualifiedSupplierListHeader}" />
-				<ac:iconTooltip id="summIteQualify"
-					value="#{qualifiedSupplierListTooltip}" />
-			</f:facet>
-
+			<!-- #28784 start -->
+			<c:choose>
+				<c:when
+					test="#{evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.demo.fc.summary.qualified']}" />
+						<ac:iconTooltip id="summDemoIteQualify"
+							value="#{qualifiedSupplierListTooltip}" />
+					</f:facet>
+				</c:when>
+				<c:otherwise>
+					<f:facet name="header">
+						<h:outputText value="#{qualifiedSupplierListHeader}" />
+						<ac:iconTooltip id="summIteQualify"
+							value="#{qualifiedSupplierListTooltip}" />
+					</f:facet>
+				</c:otherwise>
+			</c:choose>
+			<!-- #28784 End -->
+			
 			<p:dataTable var="summaryqualSup"
 			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				id="evaluationSummaryItemQualifiedSuppliers" rows="10"
@@ -122,11 +137,25 @@
 
 	<h:panelGroup id="summaryItemDisQualified">
 		<p:panel toggleable="true">
-			<f:facet name="header">
-				<h:outputText value="#{disQualifiedSupplierListHeader}" />
-				<ac:iconTooltip id="summIteDisQualify"
-					value="#{disQualifiedSupplierListTooltip}" />
-			</f:facet>
+		<!-- #28784 Start -->
+			<c:choose>
+				<c:when
+					test="#{evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.demo.fc.summary.not.qualified']}" />
+						<ac:iconTooltip id="summDemoIteDisQualify"
+							value="#{disQualifiedSupplierListTooltip}" />
+					</f:facet>
+				</c:when>
+				<c:otherwise>
+					<f:facet name="header">
+						<h:outputText value="#{disQualifiedSupplierListHeader}" />
+						<ac:iconTooltip id="summIteDisQualify"
+							value="#{disQualifiedSupplierListTooltip}" />
+					</f:facet>
+				</c:otherwise>
+			</c:choose>
+		<!-- #28784 End -->
 
 			<p:dataTable var="disQualifiedSupplier"
 			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -170,7 +199,7 @@
 
 
 	</h:panelGroup>
-	
+	 
 <!-- #21695 Start Farid -->	<!-- #21695 UPDATED CHANGES FOR FINANCIAL SUMMARY
 <c:if test ="#{evaluationBackingBean.managedBean.scQt.partial ne null and evaluationBackingBean.managedBean.scQt.partial ne 'false'}">		
 	<h:panelGroup id="summaryItemNotOfferSuplier">
