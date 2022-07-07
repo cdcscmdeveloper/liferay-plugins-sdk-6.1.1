@@ -5775,7 +5775,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		title = title.replaceAll("<", "&#60;");
 		title = title.replaceAll(">", "&#62;");
 		title = title.replaceAll("\r\n", "<br />");
-		context.put("title", title);
+		context.put("title", title + "<br />");
 
 		String userName = "&#60;Nama Pembekal&#62;";
 		String icNo = "&#60;No. Kad Pengenalan&#62;";
