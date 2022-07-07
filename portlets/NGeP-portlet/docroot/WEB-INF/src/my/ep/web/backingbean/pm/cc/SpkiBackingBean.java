@@ -139,6 +139,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 						// Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
 					}
 				} else {
+					//#30855 & 30425 - Start (combine)
 					FacesScopes fs = new FacesScopes();
 					if (fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
 							|| fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
@@ -154,6 +155,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 						throw new EpException(MessageConst.ERROR_DIGICERT_776065);
 						// Supplier User does not have a valid soft certificate. Please apply for a soft certificate first.
 					}
+					//#30855 & 30425 - End (combine)
 				}
 			}
 			// end checking for validation
