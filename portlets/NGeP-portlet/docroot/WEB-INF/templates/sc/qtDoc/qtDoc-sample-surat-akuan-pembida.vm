@@ -14,6 +14,26 @@
 			display: block; text-align: center;
 			position: running(footer);
 		}
+		## #32739 & #32738 - start
+		.tab {
+            display: inline-block;
+    		margin-left: 40px;
+        }
+        
+        .tab1 {
+            display: inline-block;
+    		margin-left: 11px;
+        }
+        
+        .tab2 {
+            display: inline-block;
+    		margin-left: 3px;
+        }
+        
+        .tab3 {
+            display: inline-block;
+    		margin-left: 9px;
+        }
 		
 	</style>
 </head>
@@ -31,7 +51,7 @@
     <tr>
         <td align="center">
             <span style='font-weight:bold;font-size:12pt;font-family: Arial;'> $title </span>
-            <br/> <br/>
+            <br/>
         </td>
     </tr>
     <tr>
@@ -63,7 +83,7 @@
 			</ul>
 			
 			<p align="justify">4. Sekiranya terdapat mana-mana orang cuba memperolehi atau meminta apa-apa suapan daripada saya atau mana-mana orang yang berkaitan dengan syarikat ini sebagai dorongan untuk dipilih dalam perolehan seperti di atas, maka saya berjanji akan dengan segera melaporkan perbuatan tersebut kepada pejabat Suruhanjaya Pencegahan Rasuah Malaysia (SPRM) atau balai polis yang berhampiran. Saya sedar bahawa kegagalan saya berbuat demikian adalah merupakan suatu kesalahan di bawah seksyen 25 (1) Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] dan boleh dihukum di bawah seksyen 25 (2) akta yang sama, apabila disabitkan boleh didenda tidak melebihi RM100,000 atau penjara selama tempoh tidak melebihi sepuluh tahun atau kedua-duanya.</p>
-			
+			<br/>
 			<p align="justify">5. Saya sesungguhnya faham bahawa syarikat melakukan kesalahan jika seseorang yang bersekutu dengan syarikat*** memberikan, menjanjikan atau menawarkan suapan untuk memperoleh atau mengekalkan perniagaan atau faedah dalam menjalankan perniagaan di bawah Seksyen 17A, Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>], apabila disabitkan kesalahan boleh didenda tidak kurang daripada sepuluh kali ganda jumlah atau nilai suapan, atau RM1 juta, atau dipenjarakan selama tempoh tidak melebihi dua puluh tahun atau kedua-duanya.</p>
 		</td>
 	</tr>
@@ -75,10 +95,10 @@
 	<tr>
 		<td class="standard">
 			<br />
-			Tandatangan&#32;: ..........................<br/>
-	    	Nama&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32: ..........................<br/>
-	    	No. KP&#32;&#32;&#32;&#32;&#32;&#32;: ..........................<br/>
-	    	Tarikh&#32;&#32;&#32;&#32;&#32;&#32;: ..........................<br/>
+			Tandatangan<span class="tab"></span>: .......................................<br/>
+	    	Nama<span class="tab"></span><span class="tab"></span><span class="tab1"></span>: .......................................<br/>
+	    	No. KP<span class="tab"></span><span class="tab"></span><span class="tab2"></span>: .......................................<br/>
+	    	Tarikh<span class="tab"></span><span class="tab"></span><span class="tab3"></span>: .......................................<br/>
 			<br /><br />
 		</td>
 	</tr>
@@ -94,6 +114,7 @@
 					   <ol type="i"> (iii) Surat Akuan ini hendaklah dikemukakan bersama surat perwakilan kuasa.</ol>
 					   <ol type="i"> (iv) Takrifan perusahaan di bawah Akta 712 merangkumi syarikat yang terlibat dengan perolehan Kerajaan.</ol>
 		</td>
+		## #32739 & #32738
 	</tr>
 	</table>
 </body>

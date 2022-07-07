@@ -5756,13 +5756,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
 		VelocityContext context = new VelocityContext();
 		String procurementMode = "";
-		if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scLoa
-				.getProcurementMode().getParameterCode())) {
-			procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
-		} else {
-			procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
-		}
-		String title = procurementMode != null ? procurementMode + " " +  scQt.getQtTitle().toUpperCase() : scQt.getQtTitle().toUpperCase();
+		//#32738 & #32739 - start
+//		if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scLoa
+//				.getProcurementMode().getParameterCode())) {
+//			procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
+//		} else {
+//			procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
+//		}
+		String title = scQt.getQtTitle().toUpperCase();
+		//#32738 & #32739 - end
 		if (title == null) {
 			title = "";
 		}
