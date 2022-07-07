@@ -17,11 +17,14 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -33,6 +36,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SpkiVO;
 
 import org.apache.commons.lang.StringUtils;
@@ -117,40 +121,45 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public void getChallengeQuestions() {
 		// #30425 - Start
-		// start checking for validation
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-		reqDTO.setEpNo(getSupplier().getEpNo());
-		reqDTO.setIdentificationNo(pmUser.getIdentificationNo());
-		PersonnelResDTO validateDigiCertDate = SmServiceLookup.getPersonnelSO().checkValidateSoftcert(reqDTO);
-		reqDTO.setUserId(pmUser.getUserId());
-		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
+		// >>>>>>>> THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR SIT AND DEV ONLY <<<<<<<<<
+		if (getSpkiEnabledProperty().equalsIgnoreCase("true")){
+			// start checking for validation
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setEpNo(getSupplier().getEpNo());
+			reqDTO.setIdentificationNo(pmUser.getIdentificationNo());
+			PersonnelResDTO validateDigiCertDate = SmServiceLookup.getPersonnelSO().checkValidateSoftcert(reqDTO);
+			reqDTO.setUserId(pmUser.getUserId());
+			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
 
-		if (validateDigiCertDate.isSuccessful()) {
-			if (validateDigiCertDate.isHasRecord()) {
-				if (validateDigiCertDate.isExpired()) {
-					throw new EpException(MessageConst.ERROR_DIGICERT_776063);
-					// Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
-				}
-			} else {
-				FacesScopes fs = new FacesScopes();
-				if (fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
-						|| fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
-						|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-						|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-					throw new EpException(MessageConst.ERROR_DIGICERT_776064);
-					// Supplier Admin does not have a valid soft certificate. Please apply for a soft certificate first.
-				}
-				if (fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())
-						|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-						|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
-						|| fs.hasRoleUser(RoleCode.FL_USER.value())) {
-					throw new EpException(MessageConst.ERROR_DIGICERT_776065);
-					// Supplier User does not have a valid soft certificate. Please apply for a soft certificate first.
+			if (validateDigiCertDate.isSuccessful()) {
+				if (validateDigiCertDate.isHasRecord()) {
+					if (validateDigiCertDate.isExpired()) {
+						throw new EpException(MessageConst.ERROR_DIGICERT_776063);
+						// Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
+					}
+				} else {
+					//#30855 & 30425 - Start (combine)
+					FacesScopes fs = new FacesScopes();
+					if (fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
+							|| fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
+							|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+							|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+						throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+						// Supplier Admin does not have a valid soft certificate. Please apply for a soft certificate first.
+					}
+					if (fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())
+							|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+							|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+							|| fs.hasRoleUser(RoleCode.FL_USER.value())) {
+						throw new EpException(MessageConst.ERROR_DIGICERT_776065);
+						// Supplier User does not have a valid soft certificate. Please apply for a soft certificate first.
+					}
+					//#30855 & 30425 - End (combine)
 				}
 			}
+			// end checking for validation
 		}
-		// end checking for validation
 		// #30425 - End
 		logger.info("::: #25061 getChallengeQuestions :::" + getSpkiEnabledProperty());
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
@@ -173,7 +182,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	}
 	
 	public void getChallengeQuestions(String identificationNo) {
-	//#30425 - Start
+		//#30425 - Start
 		// >>>>>>>> THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR SIT AND DEV ONLY <<<<<<<<<
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")){
 			//start checking for validation
