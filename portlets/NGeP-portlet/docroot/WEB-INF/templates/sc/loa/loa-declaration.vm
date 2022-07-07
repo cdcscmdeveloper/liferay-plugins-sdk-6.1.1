@@ -50,9 +50,25 @@
 			text-decoration:none;
 			color:#333333;
 		}
-		
+		## #32739 & #32738 - start
 		.tab {
-            tab-size:2;
+            display: inline-block;
+    		margin-left: 40px;
+        }
+        
+        .tab1 {
+            display: inline-block;
+    		margin-left: 36px;
+        }
+        
+        .tab2 {
+            display: inline-block;
+    		margin-left: 28px;
+        }
+        
+        .tab3 {
+            display: inline-block;
+    		margin-left: 33px;
         }
 	
 	</style>
@@ -110,6 +126,9 @@
 		<br/><br/>
 		<br/><br/>
 		<br/><br/>
+		<br/><br/>
+		<br/><br/>
+		<br/><br/>
 		
 		<p class="standard">
 			5. Saya sesungguhnya faham bahawa syarikat melakukan kesalahan jika seseorang yang bersekutu dengan syarikat*** memberikan, menjanjikan atau menawarkan suapan untuk memperoleh atau mengekalkan perniagaan atau faedah dalam menjalankan perniagaan di bawah seksyen 17A Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>], apabila disabitkan kesalahan boleh didenda tidak kurang daripada sepuluh kali ganda jumlah atau nilai suapan, atau RM1 juta, atau dipenjarakan selama tempoh tidak melebihi dua puluh tahun atau kedua-duanya.
@@ -120,10 +139,10 @@
 	
 		Yang Benar, <br/><br/>
 	    
-	    Tandatangan<span class:"tab"></span>: ..........................<br/>
-	    Nama<span class:"tab"></span><span class:"tab"></span><span class:"tab"></span>: ..........................<br/>
-	    No. KP<span class:"tab"></span><span class:"tab"></span>: ..........................<br/>
-	    Tarikh<span class:"tab"></span><span class:"tab"></span>: ..........................<br/>
+	    Tandatangan<span class="tab"></span>: .......................................<br/>
+	    Nama<span class="tab"></span><span class="tab1"></span>: .......................................<br/>
+	    No. KP<span class="tab"></span><span class="tab2"></span>: .......................................<br/>
+	    Tarikh<span class="tab"></span><span class="tab3"></span>: .......................................<br/>
 	    <br/><br/>
 	    ## #25002-start
 	    Cap Syarikat : <br/><br/><br/>
@@ -135,7 +154,8 @@
 			<li>ii. ***seseorang yang bersekutu dengan syarikat merujuk kepada seksyen 17A (6) Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>], iaitu seseorang itu bersekutu dengan organisasi komersial jika dia seorang pengarah, pekongsi atau pekerja organisasi komersial itu atau dia ialah orang yang melaksanakan perkhidmatan untuk atau bagi pihak organisasi komersial itu.</li>
 			<li>iii. Surat Akuan ini hendaklah dikemukakan bersama surat perwakilan kuasa.</li>
 			<li>iv. Takrifan perusahaan di bawah Akta 712 merangkumi syarikat yang terlibat dengan perolehan Kerajaan.</li>
-		</ul> 		
+		</ul> 	
+		## #32739 & #32738 - end	
 	</div>
 	<section class="footer">
 		<p class="standard">
