@@ -1509,11 +1509,19 @@ public void saveComplianceSample() {
 			 * this.getManagedBean().setComplianceTechnicalProposalCheckList(
 			 * resDTO.getSaveComplianceList());
 			 */
-			this.getManagedBean().setComplianceTechnicalProposalCheckListDM(
-					new ComplianceSupplierPagingDataModel(
-							"complianceTechnicalSupplier", resDTO
-									.getCheckList().getQtChecklistId(), null,
-							null, null));
+			// Bug #33541@Syazani -- Start 07/07/2022
+			// Purpose: only renew constructor if coming from Technical and not
+			// applicable for Financial due to pagination issue. Financial will only reload data
+			if (null != this.getManagedBean().getCheckListType()
+					&& this.getManagedBean().getCheckListType().equalsIgnoreCase("T")) {
+				this.getManagedBean().setComplianceTechnicalProposalCheckListDM(
+						new ComplianceSupplierPagingDataModel(
+								"complianceTechnicalSupplier", resDTO
+										.getCheckList().getQtChecklistId(), null,
+								null, null));
+			}
+			// Bug #33541@Syazani -- End 07/07/2022
+			
 			if (null != this.getManagedBean().getCheckListType()
 					&& this.getManagedBean().getCheckListType().equalsIgnoreCase("F")) {
 				retrieveComplianceUploadedProposalChecklist(this.getManagedBean().getQtProposalChecklist(), false);
@@ -1805,6 +1813,7 @@ public void saveComplianceSample() {
 	public String complianceFinancialBackaction() {
 		this.getManagedBean().setTechindex(-1);
 		if(this.getManagedBean().getNonScoringActiveIndex() != 1){
+			this.getManagedBean().getComplianceTechnicalProposalCheckListDM().reloadDataWithoutReset(); // Bug #33541@Syazani 07/07/2022
 			return "/xhtml/sc/evaluation/compliance/financialComplianceEditSuppliers.xhtml";
 		}
 		else {
