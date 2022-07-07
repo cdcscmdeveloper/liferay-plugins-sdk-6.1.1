@@ -2950,8 +2950,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 		}
-		String title = procurementMode != "" ? procurementMode + "<br/>" + 
-				scLoiLoa.getTitle().toUpperCase() : scLoiLoa.getTitle().toUpperCase();
+		String title = procurementMode != "" ? procurementMode + "\r\n" + 
+				scLoiLoa.getTitle().toUpperCase() : scLoiLoa.getTitle().toUpperCase();//#32739 & #32738
 				if (title == null) {
 					title = "";
 				}
