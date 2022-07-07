@@ -610,7 +610,7 @@ u.underline {
 			</td>
 			<td align="left" width="30%">
 				.......................................................<br/>
-				<span class="text_family">Nama Penuh Saksi</span><br/>
+				<span class="text_family">Nama Penuh</span><br/>
 				<span class="text_family">No. Kad Pengenalan</span><br/>
 				<span class="text_family">Alamat</span><br/>
 				<span class="text_family">Tarikh</span><br/>
@@ -833,18 +833,15 @@ u.underline {
 					<td align="left" style="padding-left: 20px;" colspan="3"><span
 							class="text_family_red">*Senarai item, kuantiti dan/atau tempoh serta jadual
 							pembekalan yang ditetapkan seperti di <b><i>Lampiran A2</i></b></span>
+							<br/>
+							#if($scLoa.scLoiLoa.docType == "PR")
+								<span class="text_family_red"><i><b>Lampiran A2</b></i> adalah untuk menyatakan tempoh atau jadual pembekalan mengikut tawaran syarikat dan disediakan oleh Agensi</span>
+							#else
+								<span class="text_family_red"><i><b>Lampiran A2</b> adalah untuk menyatakan tempoh atau jadual pembekalan mengikut tawaran syarikat dan disediakan oleh Agensi</i></span>
+							#end
 					</td>
 					
 				</tr>
-				<tr>
-					#if($scLoa.scLoiLoa.docType == "PR")
-						<td colspan="3" style="padding-left: 20px;"><span class="text_family_red"><i><b>Lampiran A2</b></i> adalah untuk menyatakan tempoh atau jadual pembekalan mengikut tawaran syarikat dan disediakan oleh Agensi</span></td>
-					#else
-						<td colspan="3" style="padding-left: 20px;"><span class="text_family_red"><i><b>Lampiran A2</b> adalah untuk menyatakan tempoh atau jadual pembekalan mengikut tawaran syarikat dan disediakan oleh Agensi</i></span></td>
-					#end
-					
-				</tr>
-
 				<tr>
 					<td colspan="3"> 
 						
@@ -1008,7 +1005,9 @@ u.underline {
 					    <table>
 					      <tr style="margin-bottom:1px;" align="bottom"> 
 					       #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
-					       		<td align="bottom" class="dottedBorderRed"><span class="text_family_small" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan</span></td>
+					       	##26770 - start
+					       		<td align="bottom" class="dottedBorderRed"><span class="text_family_small" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara #if ($isSL1M == "true")<i>upfront</i>#{else}upfront#end kepada syarikat dalam dokumen pelawaan</span></td>
+					       ##26770 - end
 					       #else
 					         	<td align="bottom" class="dottedBorderRed"><span class="text_family_small">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen </span></td>
 					       #end 	

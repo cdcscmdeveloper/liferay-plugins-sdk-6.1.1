@@ -276,7 +276,7 @@ u.underline {
 									<td align="center" style="vertical-align: top;">*(a)</td>
 									##25025 - start
 									<td style="text-align:justify;">suatu bon pelaksanaan yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia</td>
-									<span class="text_family_red">$bondAmtText (RM $bondAmt);</span><br/>
+									<span class="text_family_red">$bondAmtText (RM) $bondAmt;</span><br/>
 									##25025 - end
 									<span class="text_family_small">Bon Pelaksanaan hanya dikenakan kepada perolehan yang bernilai RM200,000 dan ke atas sahaja.</span>
 									</td>
@@ -307,7 +307,7 @@ u.underline {
 				<p><span class="text_family">seperti yang ditetapkan dalam <b><i>Lampiran A</i></b> tidak melebihi <span class="text_family_red"> *14/30 </span> hari dari tarikh pengakuan penerimaan Surat ini oleh syarikat tuan. Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam tempoh masa yang ditetapkan, boleh mengakibatkan Surat ini terbatal dan Kerajaan tidaklah dengan apa-apa cara jua bertanggungan terhadap syarikat tuan <b>melainkan jika</b> penepian bertulis diberikan oleh orang yang diberi kuasa, bagi perkhidmatan yang perlu dibuat dengan segera atau serta-merta apabila kelewatan itu akan memudarat dan menjejaskan perkhidmatan dan kepentingan awam. </span></p>
 				## #25025 & #26770 -start
 				<p>
-					<span class="text_family">5.&#160;&#160;&#160;&#160;&#160;Setelah pesanan/arahan dikeluarkan oleh Kerajaan, syarikat tuan dikehendaki melaksanakan perkhidmatan dalam tempoh yang ditetapkan dan kualiti perkhidmatan tersebut hendaklah memuaskan hati serta memenuhi kehendak Kerajaan. Sekiranya syarikat tuan gagal melaksanakan perkhidmatan dalam tempoh dan/atau kualiti yang ditetapkan, Kerajaan berhak membatalkan pesanan/arahan yang dikeluarkan dan/atau mengenakan <span class="text_family_red">*Denda/ Tolakan/ <i>Liquidated & Ascertained Damages</i> (LAD)</span> seperti yang ditetapkan dalam <b><i>Lampiran A</i></b>.  </span>
+					<span class="text_family">5.&#160;&#160;&#160;&#160;&#160;Setelah pesanan/arahan dikeluarkan oleh Kerajaan, syarikat tuan dikehendaki melaksanakan perkhidmatan dalam tempoh yang ditetapkan dan kualiti perkhidmatan tersebut hendaklah memuaskan hati serta memenuhi kehendak Kerajaan. Sekiranya syarikat tuan gagal melaksanakan perkhidmatan dalam tempoh dan/atau kualiti yang ditetapkan, Kerajaan berhak membatalkan pesanan/arahan yang dikeluarkan dan/atau mengenakan <span class="text_family_red">*Denda/ #if($scLoa.scLoiLoa.docType == "PR")Tolakan/ #{else} #end<i>Liquidated & Ascertained Damages</i> (LAD)</span> seperti yang ditetapkan dalam <b><i>Lampiran A</i></b>.  </span>
 				</p>
 				## #25025 & #26770 -end
 				#if($isSL1M == "true")
@@ -465,7 +465,7 @@ u.underline {
 							<tr>
 								<td align="center" style="vertical-align: top;">(g)</td>
 								#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
-									<td>syarikat tuan gagal <span class="text_family_red"> *menyempurnakan perkhidmatan/membekalkan barang </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>; </td>
+									<td>syarikat tuan gagal <span class="text_family_red"> * menyempurnakan perkhidmatan/ membekalkan barang </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>; </td>
 								#else
 									<td>syarikat tuan gagal <span class="text_family_red"> *menyempurnakan perkhidmatan/membekalkan barang </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>; </td>
 								#end
@@ -591,7 +591,7 @@ u.underline {
 			</td>
 			<td align="left" width="30%">
 				.......................................................<br/>
-				<span class="text_family">Nama Penuh Saksi</span><br/>
+				<span class="text_family">Nama Penuh</span><br/>
 				<span class="text_family">No. Kad Pengenalan</span><br/>
 				<span class="text_family">Alamat</span><br/>
 				<span class="text_family">Tarikh</span><br/>
@@ -815,19 +815,15 @@ u.underline {
 					<td align="left" style="padding-left: 20px;" colspan="3"><span
 						class="text_family_red">*Senarai item, kuantiti, jenis
 							perkhidmatan dan/atau tempoh serta jadual penyempurnaan perkhidmatan yang
-							ditetapkan seperti di <b><i>Lampiran A2</i></b>
-					</span></td>
+							ditetapkan seperti di <b><i>Lampiran A2</i></b></span>
+							<br/>
+							#if($scLoa.scLoiLoa.docType == "PR")
+								<span class="text_family_red"><i><b>Lampiran A2</b></i> adalah untuk menyatakan tempoh atau jadual perkhidmatan mengikut tawaran syarikat dan disediakan oleh Agensi</span>
+							#else
+								<span class="text_family_red"><i><b>Lampiran A2</b> adalah untuk menyatakan tempoh atau jadual perkhidmatan mengikut tawaran syarikat dan disediakan oleh Agensi</i></span>
+							#end
+					</td>
 				</tr>
-				<tr>
-				
-					#if($scLoa.scLoiLoa.docType == "PR")
-						<td colspan="3" style="padding-left:20px"><span class="text_family_red"><i><b>Lampiran A2</b></i> adalah untuk menyatakan tempoh atau jadual perkhidmatan mengikut tawaran syarikat dan disediakan oleh Agensi</span></td>
-					#else
-						<td colspan="3" style="padding-left:20px"><span class="text_family_red"><i><b>Lampiran A2</b> adalah untuk menyatakan tempoh atau jadual perkhidmatan mengikut tawaran syarikat dan disediakan oleh Agensi</i></span></td>
-					#end
-					
-				</tr>
-
 				<tr>
 					<td colspan="3">
 						<table>
@@ -850,7 +846,7 @@ u.underline {
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_sub_header_red">7. </td>
-									<td class="text_header_submenu_red">*Bon Pelaksanaan</td>
+									<td><span class="text_sub_header_red">*</span><span class="text_header_submenu_red">Bon Pelaksanaan </span></td>
 								</tr>
 						</table>				
 						</td>
@@ -988,7 +984,7 @@ u.underline {
 					    <table border="0" cellpadding="0" cellspacing="0" width="100%">
 					      <tr style="margin-bottom:1px;" align="bottom"> 
 						       #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
-						       		<td align="bottom" class="dottedBorderRed"><span class="text_family_medium" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan</span></td>
+						       		<td align="bottom" class="dottedBorderRed"><span class="text_family_medium" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara upfront kepada syarikat dalam dokumen pelawaan</span></td>
 						       #else
 						         	<td align="bottom" class="dottedBorderRed"><span class="text_family_medium">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen </span></td>
 						       #end 	
