@@ -4228,20 +4228,17 @@ public class SpecificationBackingBean extends
 	 * @param docType
 	 *            the doc type
 	 */
-	private QTDetailBackingBean qtDetailBB = null;
 	public void retriveSpecdetails(Long qtId) {
-		if(qtDetailBB==null){
-			qtDetailBB = new QTDetailBackingBean();
-		}
-		qtDetailBB.retrieveQuationTenderDetails(qtId);
+
+		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+		qtBackingBean.retrieveQuationTenderDetails(qtId);
 	}
 	
 	//#28784 - start
 	public void retriveDemoSpecdetails(Long qtId) {
-		if(qtDetailBB==null){
-			qtDetailBB = new QTDetailBackingBean();
-		}
-		qtDetailBB.retrieveDemoQtDetails(qtId);
+
+		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+		qtBackingBean.retrieveDemoQtDetails(qtId);
 	}
 	//#28784 - end
 
@@ -10790,7 +10787,6 @@ public class SpecificationBackingBean extends
 				SCQuotationTenderDataType.class, null);
 		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
-		qtDetailBB = null;
 
 		if (SCProcessNameConst.SPECIFICATION_APPROVAL.equalsIgnoreCase(this
 				.getManagedBean().getTaskName())) {
@@ -13206,6 +13202,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			specCommitteeResetData();
 			// settemplateSpecList(savedCheckLists);
 			//1873 - start - note 52
+			if(this.getManagedBean().getQt().isZonal()) this.getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());//1873 - note 97
 			for(ScQtCheckList checklist: savedCheckLists){
 				//1873 - start - note 97
 				setTechnicalCheckList(checklist);
@@ -13461,8 +13458,9 @@ if (null != checklist && !checklist.isEmpty()) {
 				}
 				newTplSpecIndex = lastTplSpecIndex;
 			}
-
+			if(this.getManagedBean().getQt().isZonal()) this.getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());//1873 - note 97
 			for (ScQtCheckList checkList : savedCheckLists) {
+				this.setTemplateSpecMaster(checkList);//1873 - note 97
 
 				if (SourcingConstants.TECHNICAL_DOCTYPE
 						.equalsIgnoreCase(checkList.getDocCategory())) {
