@@ -2520,7 +2520,14 @@ public class PurchaseInDefaultBackingBean extends
 					getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.PID_COMPLETED));
 				}
 				//end - 9133
-				
+				//start - 9133 - fixing on comment 166
+				if(getManagedBean().isTrackingDairyView()){
+					for(ScPIDRemark scPIDRemark : purchaseInDefault.getRemarks()){
+						scPIDRemark.setBrandNew(false);
+						scPIDRemark.setEditable(false);
+					}
+				}
+				//end - 9133
 				// disable all for pid view
 				getManagedBean().setPidBtnFlag(Boolean.FALSE);
 
