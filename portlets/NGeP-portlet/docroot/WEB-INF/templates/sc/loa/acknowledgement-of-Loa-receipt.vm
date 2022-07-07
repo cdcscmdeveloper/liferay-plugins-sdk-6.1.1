@@ -99,7 +99,7 @@ p {text-align: justify;}
 				</p></td>
 		</tr>
 
-	 <tr>
+	 <tr class="text_family">
 				<tr>
 					<td colspan="3" style="width:49%" ><br />__________________________________</td>
 					<td style="width: 1%"> </td>
@@ -110,7 +110,9 @@ p {text-align: justify;}
 					<td valign="top" style="width:1%" >:</td>
 					<td valign="top" style="white-space: normal;width:30%">$supplierSignerUser</td>
 					<td valign="top" style="width: 1%"> </td>
-					<td valign="top" style ="width:19%">Nama Penuh Saksi</td>
+					##26770 - start
+					<td valign="top" style ="width:19%">Nama Penuh</td>
+					##26770 - end	
 					<td valign="top" style="width:1%">:</td>
 					<td valign="top" style="white-space: normal; width:30%">$supplierWitnessUser</td>
 				</tr>
@@ -143,7 +145,7 @@ p {text-align: justify;}
 				</tr>
 		
 	</tr>
-	<tr>
+	<tr class="text_family">
 			## #25025 - start
 			<td colspan="3"><br />
 			
