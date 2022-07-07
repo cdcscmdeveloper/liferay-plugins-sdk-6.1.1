@@ -91,12 +91,13 @@
 	
 				</p:column>
 	
-				<p:column style="width : 10%;">
+				<p:column style="width : 10%;overflow: hidden !important;">
 					<ui:repeat var="applDocsFile" value="#{onlineLicenseTable.smApplDocFiles}">
 										<ui:remove>
 											<p:commandLink value="#{applDocsFile.fileName}" rendered="#{not empty onlineLicenseTable.smApplDocFiles}"  ajax="false"
 							            		action="#{backingBean.downloadSuppDoc(applDocsFile.fileName,applDocsFile.filePath)}">
-							           			<p:fileDownload value="#{backingBean.file}" />
+							           			<p:fileDownload value="#{backingBean.file}" 
+							           			style="float: left;white-space: normal;"/>
 							        		</p:commandLink>
 							        	</ui:remove>
 							        	<h:panelGroup rendered="#{not empty onlineLicenseTable.smApplDocFiles}">
