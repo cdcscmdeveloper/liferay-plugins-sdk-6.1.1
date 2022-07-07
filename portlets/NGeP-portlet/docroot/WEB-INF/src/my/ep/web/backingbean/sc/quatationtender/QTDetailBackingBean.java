@@ -5779,7 +5779,8 @@ public class QTDetailBackingBean extends
 		
 		//9019 - Start (Harun) initializing Group Item when panel is selected and left blank while SAVE
 		//30062022 by (Harun) Add checking for PanelItemGroupId due to error that effect for enhancement #29891 
-		if (isPanel && null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId()) {
+		//07072022 by (Harun) Change checking for ItemGroup due to error when save Qt with Panel Item
+		if (isPanel && null == this.getManagedBean().getQt().getItemGroup()) {	
 			this.getManagedBean().getQt().setItemGroup(new CtPanelItemGroup());
 			this.getManagedBean().getQt().getItemGroup().setPanelItemGroupId((long) 0);
 		}
