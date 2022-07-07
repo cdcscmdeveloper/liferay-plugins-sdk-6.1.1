@@ -50,6 +50,10 @@
 			text-decoration:none;
 			color:#333333;
 		}
+		
+		.tab {
+            tab-size:2;
+        }
 	
 	</style>
 </head>
@@ -116,10 +120,10 @@
 	
 		Yang Benar, <br/><br/>
 	    
-	    Tandatangan  : ..........................<br/>
-	    Nama         : ..........................<br/>
-	    No. KP       : ..........................<br/>
-	    Tarikh       : ..........................<br/>
+	    Tandatangan<span class:"tab"></span>: ..........................<br/>
+	    Nama<span class:"tab"></span><span class:"tab"></span><span class:"tab"></span>: ..........................<br/>
+	    No. KP<span class:"tab"></span><span class:"tab"></span>: ..........................<br/>
+	    Tarikh<span class:"tab"></span><span class:"tab"></span>: ..........................<br/>
 	    <br/><br/>
 	    ## #25002-start
 	    Cap Syarikat : <br/><br/><br/>
@@ -127,8 +131,8 @@
 	    Catatan:   
 
 		<ul class="standard" style="list-style-type:none;">
-			<li>i. **termasuk kesalahan ditetapkan dalam Jadual (Perenggan 3 (a), takrif “kesalahan ditetapkan”) Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] yang boleh dihukum di bawah Kanun Keseksaan <i>[Akta 574]</i>.</li>
-			<li>ii. seseorang yang bersekutu dengan syarikat merujuk kepada seksyen 17A (6) Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>], iaitu seseorang itu bersekutu dengan organisasi komersial jika dia seorang pengarah, pekongsi atau pekerja organisasi komersial itu atau dia ialah orang yang melaksanakan perkhidmatan untuk atau bagi pihak organisasi komersial itu.</li>
+			<li>i. **termasuk kesalahan ditetapkan dalam Jadual (Perenggan 3 (a), takrif "kesalahan ditetapkan") Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] yang boleh dihukum di bawah Kanun Keseksaan <i>[Akta 574]</i>.</li>
+			<li>ii. ***seseorang yang bersekutu dengan syarikat merujuk kepada seksyen 17A (6) Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>], iaitu seseorang itu bersekutu dengan organisasi komersial jika dia seorang pengarah, pekongsi atau pekerja organisasi komersial itu atau dia ialah orang yang melaksanakan perkhidmatan untuk atau bagi pihak organisasi komersial itu.</li>
 			<li>iii. Surat Akuan ini hendaklah dikemukakan bersama surat perwakilan kuasa.</li>
 			<li>iv. Takrifan perusahaan di bawah Akta 712 merangkumi syarikat yang terlibat dengan perolehan Kerajaan.</li>
 		</ul> 		
