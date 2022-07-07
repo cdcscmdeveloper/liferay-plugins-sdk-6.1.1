@@ -19333,6 +19333,8 @@ if(null!=allTechnicalChecklist){
 	 */
 	public void addDemoTechnicalCheckList() {
 		try {
+			//this.getManagedBean().setReadOnly(false);
+			retriveTechnicalCheckList(); //#28784
 			this.getManagedBean().setDemoAction(false);
 			List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
 			List<ScQtCheckList> newSt2technicalproposalList = new ArrayList();
@@ -19378,6 +19380,18 @@ if(null!=allTechnicalChecklist){
 
 					st2technicalproposalList.add(st2technicalproposalList1);
 
+
+					//#28784 idham delete sample in checklist - start 
+					if(CollectionUtils.isNotEmpty(getManagedBean().getMarkDeletedTechChecklist())){
+						for(ScQtCheckList checklist:getManagedBean().getMarkDeletedTechChecklist()){
+							if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist
+									.getDefinationType().getParameterCode())) {
+								st2technicalproposalList.remove(checklist);
+							}
+						}
+					}
+					//#28784 idham delete sample in checklist - end 
+
 					this.getManagedBean().setScQtCheckSt2techProposal(st2technicalproposalList);
 					checklistSorting(getManagedBean().getScQtCheckSt2techProposal());
 					this.getManagedBean().setTechStandaraChecklist(false);
@@ -19416,7 +19430,8 @@ if(null!=allTechnicalChecklist){
 
 		for (ScQtCheckList l : st2technicalproposalList) {
 			if (l.getQtChecklistId() == null) {
-				throw new EpException(MessageConst.ERROR_760528);
+				//throw new EpException(MessageConst.ERROR_760528);
+				saveSpecificationCommitteeDtls(); //#28784 - Remove notification save
 			}
 		}
 		for (ScQtCheckList cl : st2technicalproposalList) {
