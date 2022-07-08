@@ -857,7 +857,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					getManagedBean().getCtLetterOfAcceptance().clear();
 				}
 			}
-
+			
 			ctBackingBean.getManagedBean().setViewSCL(false);	
 			getManagedBean().setViewSclFromAgreement(false);
 			return this.getManagedBean().getBackToPreviousPage();					
@@ -3263,10 +3263,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				} 
 				if (outputValue.equalsIgnoreCase("PB")) { //#24333
 					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()
-							&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
-						getManagedBean().setSelectedTabIndex(6);
+							&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+							&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
+									ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+						getManagedBean().setSelectedTabIndex(7);
 					} else {
-						getManagedBean().setSelectedTabIndex(5);
+						getManagedBean().setSelectedTabIndex(6);
 					}
 				}
 				if (outputValue.equalsIgnoreCase(ContractConst.SCHEDULE_DETAIL) 
@@ -3275,11 +3277,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					//24333 - Start
 					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()
 							&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {  
-						getManagedBean().setSelectedTabIndex(7);
-					} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()
-							&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
 						getManagedBean().setSelectedTabIndex(6);
-					}else{
+					} else{
 						getManagedBean().setSelectedTabIndex(5);
 					}
 					//24333 - End
@@ -7853,7 +7852,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						if(resDTO.getScLoa().getScQuote() != null){
 							ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().setScQuote(resDTO.getScLoa().getScQuote());
 						}						
-										
+									
 					FacesContext fc = FacesContext.getCurrentInstance();
 					fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, PROCESS_AMEND_PAGE);
