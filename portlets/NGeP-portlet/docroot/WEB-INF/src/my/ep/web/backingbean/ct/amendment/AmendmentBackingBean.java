@@ -3329,11 +3329,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						&& outputValue.equalsIgnoreCase("DCN")) {
 					//#29549 end
 					getManagedBean().setConfirmMeeting(true);
-					if (getManagedBean().isPbConfirmMeeting()) {
+					//#24333 -Start
+					if (getManagedBean().isPbConfirmMeeting() && ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+							&& ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+						getManagedBean().setSelectedTabIndex(index + 2);
+					} else if (!getManagedBean().isPbConfirmMeeting()&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+							&& ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
 						getManagedBean().setSelectedTabIndex(index + 2);
 					} else {
 						getManagedBean().setSelectedTabIndex(index + 1);
 					}
+					//#24333 -End
 				}
 				if (isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE")) {
 					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) //#24333
