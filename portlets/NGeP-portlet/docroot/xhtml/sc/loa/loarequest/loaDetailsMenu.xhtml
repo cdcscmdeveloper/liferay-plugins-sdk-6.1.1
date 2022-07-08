@@ -29,6 +29,10 @@
 	</c:if>
 	
 	<!-- #25725 end -->	
+	
+	<!-- #25726 start -->
+	<ui:param name="StatusLOASubmission" value="#{lOADetailBackingBean.managedBean.currentStatusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"></ui:param>
+	<!-- #25726 end -->
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -724,7 +728,30 @@
 										</td>
 			 	 					</tr>
 			 	 				</table>			 	 				
-			 	 			</h:panelGroup>		 							
+			 	 			</h:panelGroup>	
+			 	 			<h:panelGroup rendered="#{!StatusLOASubmission and lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
+			 	 				<table>
+									<tr>
+										<td width="300">
+											<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}" escape="false"/> 
+											<p:outputLabel value="*" styleClass="mandatory" rendered="#{!StatusLOASubmission}"/>
+										</td>
+										<td>
+											<p:outputPanel id="uploadedPage2">																			
+												<p:commandLink
+												title="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
+												value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
+												action="#{lOADetailBackingBean.fileDownload}"
+												styleClass="blue_font"
+												rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.filePath != null}"/>												
+			 	 							</p:outputPanel> 
+			 	 						</td>
+			 	 						<td style="margin-top: -3px">
+											<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
+										</td>
+			 	 					</tr>
+			 	 				</table>		
+			 	 			</h:panelGroup>	 							
 						</p:outputPanel>		 	 								
 					</td>
 					<td>
