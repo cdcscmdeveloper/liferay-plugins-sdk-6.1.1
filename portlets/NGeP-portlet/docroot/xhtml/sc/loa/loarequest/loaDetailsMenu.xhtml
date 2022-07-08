@@ -31,7 +31,7 @@
 	<!-- #25725 end -->	
 	
 	<!-- #25726 start -->
-	<ui:param name="StatusLOASubmission" value="#{lOADetailBackingBean.managedBean.currentStatusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"></ui:param>
+	<ui:param name="StatusLOASubmission" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"></ui:param>
 	<!-- #25726 end -->
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
