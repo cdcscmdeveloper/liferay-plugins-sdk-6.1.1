@@ -4792,6 +4792,96 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		//#25002 - end
 		
+		//Enhancement 29418 - shaqimi start
+		
+		private FacesScopes getFacesScopes() {
+			FacesScopes facesScopes = new FacesScopes();
+			return facesScopes;
+		}
+		
+		/**
+		 * Generate report.
+		 *
+		 * @param dpObj the dp obj
+		 */
+		public void generateReportPDF(CtAgreement agreement){
+			log.info("generateReportPDF");
+			
+			IContractAmendmentSO caSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+			
+			Map<String, Boolean> downloadReports = new HashMap<String, Boolean>();
+			Map<String, Map<String, String>> paramMaps = new HashMap<String, Map<String, String>>();
+			Map<String, String> paramMap = new HashMap<String, String>();
+			Map<String, Integer> reports = new HashMap<String, Integer>();
+			List<String> reportNames = new ArrayList<String>();
+			
+			Long contractId = agreement.getCtContract().getContractId();
+			String contractNo = agreement.getCtContract().getContractNo();
+			
+			Long prvContractVerId = caSO.getFDContractVerIdByContractId(contractId);
+			Long currContractVerId = agreement.getCtAmendment().getCtContractVer().getContractVerId();
+			
+			//checking for previous agreement in list. the last agreementid that is less than currentagreementid is the direct previous agreement
+			for(CtAgreement currAgreement : filterAgreementList()){
+				if(currAgreement.getAgreementId() < agreement.getAgreementId() && currAgreement.getCtAmendment() != null){
+					//set previous amendment data for retrieval
+					prvContractVerId = currAgreement.getCtAmendment().getCtContractVer().getContractVerId();
+				}
+			}
+		
+			reports = caSO.callAmendmentReportSP(currContractVerId, prvContractVerId);
+			
+			for(Map.Entry<String, Integer> entry : reports.entrySet()){
+				if(entry.getValue() != null){
+					if(entry.getValue() > 0){
+						switch(entry.getKey()){
+						case "P_AMENDMENT_DETAIL":
+							downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL, true);
+							break;
+						case "P_ZONE":
+							downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ZONE, true);
+							break;
+						case "P_AGENCY":
+							downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY, true);
+							break;
+						case "P_ITEM_ZONAL":
+							downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL, true);
+							break;
+						case "P_ITEM_NON_ZONAL":
+							downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL, true);
+							break;
+						case "P_DEDUCTION":
+							downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_DEDUCTION, true);
+							break;
+						case "P_SCHEDULE":
+							downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_SCHEDULE, true);
+							break;
+						}
+					}
+				}
+			}
+			
+			//download reports
+			for (Map.Entry<String, Boolean> entry : downloadReports.entrySet()) {
+				if(entry.getValue()){
+					paramMap.put(ReportConst.PARAM_PREV_VER_ID, prvContractVerId.toString());
+					paramMap.put(ReportConst.PARAM_CURRENT_VER_ID, currContractVerId.toString());
+					paramMaps.put(entry.getKey(), paramMap);
+					reportNames.add(entry.getKey());
+				}
+			}
+			
+			try {
+				generateReportPDF(contractNo, reportNames, paramMaps);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				FacesContext.getCurrentInstance().responseComplete();
+			}
+		}
+		//Enhancement 29418 - shaqimi end
+		
 		//Enhancement 15851 - Start
 		/**
 		 * The method used to navigate to Original contract details screen
