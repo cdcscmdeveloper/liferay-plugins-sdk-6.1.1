@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -702,6 +703,10 @@ public class YearEndProcessBackingBean extends
 					ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+			//#32752 start
+			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			//#32752 end
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_ORDER);
 			reqDTO.setFlOrderId(Long.valueOf(flDocId));
 			FulfilmentResDTO coResDTO = fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);
@@ -785,7 +790,7 @@ public class YearEndProcessBackingBean extends
 		if (buttonVal.equals("CLOSEMANUAL")) {
 			String errorIds = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
 					.get("errorId");
-			if (progressStatus.equals("4")) {
+			if(Arrays.asList("2","4").contains(progressStatus)) {
 				if (!errorIds.equals("")) {
 					flOrderBB.getManagedBean().setGfmasError(true);
 					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
