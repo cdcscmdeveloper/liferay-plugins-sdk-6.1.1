@@ -3767,7 +3767,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().setSubStatusId(sts.getStatusId());
 			}
 			//#11299 vinod End
-			assertSpecificationUpdateInProgress(false);			
+			//assertSpecificationUpdateInProgress(false);//25037 #568 - to tally with 15391			
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MAINTANANCE_PAGE);
 			
@@ -10445,6 +10445,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.getServiceObject(IBpmSO.class);
 			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
 			ScQt qt = this.getManagedBean().getQt();
+			//25037 #568 - start
+			IScWorkFlowStatusSO wfStatusSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocType(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT);
+			reqDTO.setDocId(qt.getQtId());
+			ScWorkFlowStatus wfStatus = wfStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+			Long statusId = (wfStatus!=null && wfStatus.getPmStatus()!=null) ? wfStatus.getPmStatus().getStatusId(): 0L;
+			if(statusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)){
+				 this.getManagedBean().setSpecUpdateInProgress(true);
+				 inProgress = true;
+			}else{
 			bpmReqDTO.setDocNumber(qt.getQtNo());
 			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
 			BpmResponseDTO resDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
@@ -10452,15 +10465,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				 if(StringUtils.isNotBlank(currentVO.getTaskName())){
 					 if(Arrays.asList(specTaskName).contains(currentVO.getTaskName())){
 						 this.getManagedBean().setSpecUpdateInProgress(true);
-						 FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.popup.checkBeforePublish", null)));
 						 inProgress = true;
 						 break;
 					 }
 				 }
 			 }
 		}
-
-		if(!inProgress && showPopup){
+		} 
+		if(inProgress){
+			FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.popup.checkBeforePublish2", null))); //#15391
+		}else if(!inProgress && showPopup){
+			//25037 #568 - end
 			RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
 		}
 		
