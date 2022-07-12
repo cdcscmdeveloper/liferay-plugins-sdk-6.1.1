@@ -5779,7 +5779,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		context.put("title", title + "<br />");
 		context.put("countTitle", countTitle);//#32738 & #32739 spacing
 
-		String userName = "&#60;Nama Pembekal&#62;";
+		String userName = "&#60;Nama Wakil Syarikat&#62;";
 		String icNo = "&#60;No. Kad Pengenalan&#62;";
 		if (pmUser != null) {
 			userName = pmUser.getUserName();
