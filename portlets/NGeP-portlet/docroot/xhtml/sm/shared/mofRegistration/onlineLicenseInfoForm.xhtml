@@ -141,12 +141,13 @@
 						style="float: left;white-space: normal;" />
 					<!--#33240-START--> 
 					<ui:repeat var="applDocs" value="#{onlineLicenseTable.smApplDocFiles}">
-					<h:commandLink ajax="false"
-						value="#{applDocs.fileName}"
+					<h:commandLink id="file" ajax="false"
+						value="#{backingBean.getShortFileName(applDocs.fileName)}"
 						rendered="#{not empty applDocs and !onlineLicenseTable.pmDocument.hardCopyReq}">
 						<p:fileDownload
 							value="#{backingBean.commonDownload(applDocs.filePath,applDocs.fileName,applDocs.fileName)}" />
 					</h:commandLink>
+					<p:tooltip for="file" value="#{applDocs.fileName}" position="top"/>
 					<p:spacer width="10" />
 					<p:commandLink 			
 						rendered="#{fn:length(applDocs.fileName) > 1}"
@@ -174,10 +175,10 @@
 			invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
 			fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
 			update="onlineLicenseOutPanelId"
-			oncomplete="uploadLicenseDialog.hide();"
 			uploadLabel="#{lbl['lbl.btn.upload']}"
 			label="#{lbl['lbl.btn.choose']}"
-			cancelLabel="#{lbl['lbl.btn.cancel']}" multiple="false"
+			cancelLabel="#{lbl['lbl.btn.cancel']}" 
+			multiple="true"
 			showButtons="false" />
 	</p:dialog>
 	<!--#33240-START-->
