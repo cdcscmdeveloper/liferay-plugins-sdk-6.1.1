@@ -2170,8 +2170,11 @@ public class SupplierFinalizationBackingBean extends
 						if (null != committeeActivity
 								&& null != committeeActivity.getScCommitteeMember()
 								&& null != committeeActivity.getScCommitteeMember().getMemberRole()
-								&& "S".equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole()
-										.getParameterCode())) {
+								&& 
+								 // #25638 - 31322(Note-#17) -Start.
+								 ParameterConst.COMMITTEE_ROLE_SECRETARY.equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())
+								 // #25638 - 31322(Note-#17) -End.
+								) {
 							secretaryUser = committeeActivity.getScCommitteeMember().getPmUser();
 							reqDTO.setPmUser(secretaryUser);
 							
