@@ -2962,6 +2962,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 				//#13245 don't escape
 				//title=title.replaceAll("&", "&#38;");
+				int countTitle = title.length();//#32738 & #32739 spacing
 				title = title.replaceAll("<", "&#60;");
 				title = title.replaceAll(">", "&#62;");
 				title = title.replaceAll("\r\n", "<br />");
@@ -2974,6 +2975,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					context.put("title", title);
 				}
 				////#32739 & #32738 - end
+				context.put("countTitle", countTitle);//#32738 & #32739 spacing
 
 				String userName = "&#60;Nama Pembekal&#62;";
 				String icNo = "&#60;No. Kad Pengenalan&#62;";
