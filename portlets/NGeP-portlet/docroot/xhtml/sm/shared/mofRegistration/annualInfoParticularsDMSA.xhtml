@@ -271,14 +271,21 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.share']}" />
 				</f:facet>
-				<h:outputText value="#{Members1.shareAmtSsm}">
-				</h:outputText>
+				<!-- 28767 - start -->
+				<ac:labelAmount value="#{Members1.shareAmtSsm}" styleClass="outputLabel-view"/>
+				<!-- 28767 - end -->
 			</p:column>
 			
 	   <p:columnGroup type="footer">
             <p:row>
                 <p:column colspan="5" style="text-align:left" footerText="#{lbl['lbl.sm.shareNum']}" />
-                <p:column style="text-align:left" footerText="#{backingBean.managedBean.totalShare}" />
+                <!-- 28776 - start -->
+                <p:column style="text-align:left">
+           			<f:facet name="footer">
+               			<ac:labelAmount value="#{backingBean.managedBean.totalShare}" styleClass="outputLabel-view"/>
+            		</f:facet>
+       			</p:column>
+       			<!-- 28767 - end -->
             </p:row>
         </p:columnGroup>
 
