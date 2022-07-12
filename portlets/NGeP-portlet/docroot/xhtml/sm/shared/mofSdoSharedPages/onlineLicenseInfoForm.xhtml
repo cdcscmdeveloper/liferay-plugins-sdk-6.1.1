@@ -90,7 +90,7 @@
 					</table>
 	
 				</p:column>
-	
+				<!--#33240-START-->
 				<p:column style="width : 10%;overflow: hidden !important;">
 					<ui:repeat var="applDocsFile" value="#{onlineLicenseTable.smApplDocFiles}">
 						<p:outputLabel rendered="#{onlineLicenseTable.pmDocument.hardCopyReq}"
@@ -107,19 +107,10 @@
 						</h:panelGroup>
 						<br />
 					</ui:repeat>
-					<!--  <p:outputLabel rendered="#{onlineLicenseTable.pmDocument.hardCopyReq}"
-						value="#{lbl['lbl.sm.suppDoc.document.hdrCpySent']}"
-						style="float: left;white-space: normal;" />
-					<p:commandButton value="#{lbl['lbl.cm.download']}"
-						rendered="#{!onlineLicenseTable.pmDocument.hardCopyReq and not empty onlineLicenseTable.smApplDocFiles[0].fileName and onlineLicenseTable.smApplDocFiles[0].fileName ne ' '}"
-						action="#{backingBean.downloadSelectedSuppDoc(onlineLicenseTable.smApplDocFiles[0].fileName,onlineLicenseTable.smApplDocFiles[0].filePath)}"
-						update=":form" ajax="false">
-						<p:fileDownload value="#{backingBean.file}" />
-					</p:commandButton>-->
 					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{!onlineLicenseTable.pmDocument.hardCopyReq and 
 						(empty onlineLicenseTable.smApplDocFiles[0].fileName or onlineLicenseTable.smApplDocFiles[0].fileName eq ' ')}"/>
 				</p:column>
-	
+				<!--#33240-END-->
 				<p:column style="width : 20%;">
 					<p:selectOneRadio value="#{onlineLicenseTable.verifiedFlg}"
 						id="onlineLicenseSuppDocVerify"
