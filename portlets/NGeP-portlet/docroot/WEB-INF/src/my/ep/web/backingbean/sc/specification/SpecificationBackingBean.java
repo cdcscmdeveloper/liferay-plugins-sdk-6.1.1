@@ -17203,6 +17203,13 @@ if (null != checklist && !checklist.isEmpty()) {
 			ScQt qt, boolean isSave){ //Bug #30046
 		log.info("checkFinancialSpecEstimations");
 		int count = 0;
+		
+		//Bug_33142 - Start
+		Set<Long> duplicateSpecQuestionEstimationCheck = new HashSet<Long>();
+		Set<Long> duplicateSpecZoneEstimationCheck = new HashSet<Long>();
+		boolean specQuestionDuplicate = false;
+		//Bug_33142 - End
+		
 		if (CollectionUtils.isNotEmpty(financialChecklist)) {
 			for (ScQtCheckList checklist : financialChecklist) {
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
@@ -17307,6 +17314,20 @@ if (null != checklist && !checklist.isEmpty()) {
 							//20201217@haziq- Bug #29806 - End
 							/*}*/
 							// #25138 - Bug #32194 - End.
+							
+							//Bug_33142 - Start
+							if(tplSpecEstimation.getTplSpecQuestion() != null && tplSpecEstimation.getTplSpecZoneDtl()!= null){
+								if(!duplicateSpecQuestionEstimationCheck.add(tplSpecEstimation.getTplSpecQuestion().getSpecQuestionId())){
+									specQuestionDuplicate = true;
+								}
+								if(!duplicateSpecZoneEstimationCheck.add(tplSpecEstimation.getTplSpecZoneDtl().getSpecZoneId())){
+									if(specQuestionDuplicate){
+										log.info("Duplicate Spec Estimation ::SpecQuestionID: " + tplSpecEstimation.getTplSpecQuestion().getSpecQuestionId() + 
+												"SpecZoneDtlID:" + tplSpecEstimation.getTplSpecZoneDtl().getSpecZoneId());
+									}
+								}
+							}
+							//Bug_33142 - End
 						}
 					} else {
 						throw new EpException(MessageConst.ERROR_760520);
