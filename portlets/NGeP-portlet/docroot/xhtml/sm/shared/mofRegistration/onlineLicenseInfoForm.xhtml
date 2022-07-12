@@ -141,7 +141,7 @@
 						style="float: left;white-space: normal;" />
 					<!--#33240-START-->
 					<ui:repeat var="applDocs" value="#{onlineLicenseTable.smApplDocFiles}">
-					<h:commandLink ajax="false"
+					<h:commandLink id="file" ajax="false"
 						value="#{backingBean.getShortFileName(applDocs.fileName)}"
 						rendered="#{not empty applDocs and !onlineLicenseTable.pmDocument.hardCopyReq}">
 						<p:fileDownload
