@@ -93,17 +93,19 @@
 	
 				<p:column style="width : 10%;overflow: hidden !important;">
 					<ui:repeat var="applDocsFile" value="#{onlineLicenseTable.smApplDocFiles}">
-										<ui:remove>
-											<p:commandLink value="#{applDocsFile.fileName}" rendered="#{not empty onlineLicenseTable.smApplDocFiles}"  ajax="false"
+						<p:outputLabel rendered="#{onlineLicenseTable.pmDocument.hardCopyReq}"
+						value="#{lbl['lbl.sm.suppDoc.document.hdrCpySent']}"
+						style="float: left;white-space: normal;" />
+						<ui:remove>
+						<p:commandLink value="#{applDocsFile.fileName}" rendered="#{not empty onlineLicenseTable.smApplDocFiles}"  ajax="false"
 							            		action="#{backingBean.downloadSuppDoc(applDocsFile.fileName,applDocsFile.filePath)}">
-							           			<p:fileDownload value="#{backingBean.file}" 
-							           			style="float: left;white-space: normal;"/>
-							        		</p:commandLink>
-							        	</ui:remove>
-							        	<h:panelGroup rendered="#{not empty onlineLicenseTable.smApplDocFiles}">
-							        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{backingBean.getShortFileName(applDocsFile.fileName)}</a>
-							        	</h:panelGroup>
-										<br />
+						<p:fileDownload value="#{backingBean.file}"/>
+						</p:commandLink>
+						</ui:remove>
+						<h:panelGroup rendered="#{not empty onlineLicenseTable.smApplDocFiles}">
+							<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{applDocsFile.fileName}</a>
+						</h:panelGroup>
+						<br />
 					</ui:repeat>
 					<!--  <p:outputLabel rendered="#{onlineLicenseTable.pmDocument.hardCopyReq}"
 						value="#{lbl['lbl.sm.suppDoc.document.hdrCpySent']}"
