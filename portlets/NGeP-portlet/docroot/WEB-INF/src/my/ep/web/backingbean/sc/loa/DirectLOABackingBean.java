@@ -5589,12 +5589,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		//replace all special characters
 		//title = title.replaceAll("\\W", ""); 
 		//title=title.replaceAll("&", "&#38;");
+		int countTitle = title.length();//#32738 & #32739 spacing
 		title = title.replaceAll("<", "&#60;");
 		title = title.replaceAll(">", "&#62;");
 		title = title.replaceAll("\r\n", "<br />");
 		context.put("title", title + "<br />");
+		context.put("countTitle", countTitle);//#32738 & #32739 spacing
 
-		String userName = "&#60;Nama Pembekal&#62;";
+		String userName = "&#60;Nama Wakil Syarikat&#62;";
 		String icNo = "&#60;No. Kad Pengenalan&#62;";
 		if (pmUser != null) {
 			userName = pmUser.getUserName();
