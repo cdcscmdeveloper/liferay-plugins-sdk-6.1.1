@@ -695,7 +695,7 @@
 					<td colspan="3">
 						<p:outputPanel id="uploadApprovalLetterPg"> 
 							<!-- #25726 START -->													
-							<h:panelGroup  rendered="#{((lOADetailBackingBean.managedBean.agreementReqChange and !lOADetailBackingBean.managedBean.scLoa.agreementReq and lOADetailBackingBean.managedBean.above500K and isNonPeriodic and !isPK7  and !isDocTypeQuotation) || (((isNonPeriodic || isOneOff) and !isPK7)  and isDocTypeQuotation and lOADetailBackingBean.managedBean.agreementReqChange and !lOADetailBackingBean.managedBean.scLoa.agreementReq))}" 
+							<h:panelGroup  rendered="#{StatusLOASubmission and ((lOADetailBackingBean.managedBean.agreementReqChange and !lOADetailBackingBean.managedBean.scLoa.agreementReq and lOADetailBackingBean.managedBean.above500K and isNonPeriodic and !isPK7  and !isDocTypeQuotation) || (((isNonPeriodic || isOneOff) and !isPK7)  and isDocTypeQuotation and lOADetailBackingBean.managedBean.agreementReqChange and !lOADetailBackingBean.managedBean.scLoa.agreementReq))}" 
 							required="true">
 							<!-- #25726 END -->
 								<table>
