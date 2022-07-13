@@ -698,24 +698,17 @@ public class ConsolidationReportBackingBean extends
 			}
 			// #18685 - End
 
-			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
-					.saveConsolidationReport(reqDTO);
+			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.saveConsolidationReport(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				renewSessionAndRetrieve(getManagedBean().getActiveIndex());
 
 				String qtNo = getManagedBean().getScQt().getQtNo().toString();
-				String desc = getParameterDesc(
-						ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_QUOTATION);
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(
-										MessageConst.INFO_700004, new String[] {
-												desc, qtNo },
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
+
+				// #25638 -start-
+				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_QUOTATION, qtNo, Boolean.FALSE);
+				// #25638 -end-
 			}
 		} finally {
 			qtSuppFinalizationSO = null;
