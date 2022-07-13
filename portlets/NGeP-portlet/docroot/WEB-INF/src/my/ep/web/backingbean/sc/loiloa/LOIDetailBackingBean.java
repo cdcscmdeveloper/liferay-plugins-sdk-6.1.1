@@ -679,6 +679,10 @@ public class LOIDetailBackingBean extends
 			// QT Proposal validity expired
 			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
 			
+			// #25638 - Start
+			displayReviseInstrn(getManagedBean().getFcActivityList());
+			// #25638 - End
+			
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MULTI_LOI_PAGE);
 		} catch (Exception e) {
@@ -2696,6 +2700,39 @@ public class LOIDetailBackingBean extends
 	 */
 	public void updateMultiLoiBpmTaskAction(String outcome) {
 		debugLogger("updateMultiLoiBpmTaskAction");
+		
+		//25638 - Start
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+		    boolean remarksNotFound = true; 
+		    
+	        if (!CollectionUtils.isEmpty(getManagedBean().getScQtCommittee().getQtCommitteRemarks())) {
+	            
+	        	for (ScQtCommitteRemarks scQtRemark : getManagedBean().getScQtCommittee().getQtCommitteRemarks()) {
+	        		if (null != scQtRemark.getCreatedUser() && null != scQtRemark.getCreatedUser().getUserId()) {
+	        			if (scQtRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
+	                   
+	        				if (StringUtils.isEmpty(scQtRemark.getRemark()) ) {
+	        					remarksNotFound = true;
+	        					
+	        					break;
+	        				} else {
+	        					remarksNotFound = false;
+	        				}
+	        			}
+	                }
+	            }
+	        }
+	        
+	        if (remarksNotFound) {
+	            throw new EpException(MessageConst.ERR_775152);
+	        }
+	        
+			RequestContext.getCurrentInstance().execute("reviseLoiDlgs.show()");
+			
+			return;
+		}
+		//25638 - End
+				
 		this.getManagedBean().setAction(outcome);
 		String committeeType = getManagedBean().getCommitteeType();
 		CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
@@ -2762,6 +2799,10 @@ public class LOIDetailBackingBean extends
 			reqDTO.setPayLoad(evaluationDataType);
 			reqDTO.setDigiSignData(digiSign);
 			
+			// #25638 - Start. Remove so that PmUser can get current user data
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			// #25638 - End.
+			
 			reqDTO.setStatusId(getManagedBean().getCurrentStatusId());
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveMultipleLOIDtl(
 					reqDTO);
@@ -2769,10 +2810,19 @@ public class LOIDetailBackingBean extends
 			if (resDTO.isSuccessful()) {
 				super.renewSesionObject();
 
-				successMessage(MessageConst.INFO_700033,
-						ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
-						ParameterConst.RECOMMEND_BY_MULTIPLE_LOI, scQtFinalization
-								.getScQt().getQtNo(), Boolean.TRUE);
+				// #25638 - Start.
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					successMessage(MessageConst.INFO_776042, getMessageCommon("lbl.sc.quotation.tender"), scQtFinalization
+                        .getScQt().getQtNo(), Boolean.TRUE);
+				} else {
+					// #25638 - End.
+					successMessage(MessageConst.INFO_700033,
+							ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
+							ParameterConst.RECOMMEND_BY_MULTIPLE_LOI, scQtFinalization
+							.getScQt().getQtNo(), Boolean.TRUE);
+					// #25638 - Start.
+				}
+				// #25638 - End.
 			}
 
 		} finally {
@@ -6142,5 +6192,43 @@ public class LOIDetailBackingBean extends
 		return this.getManagedBean().isReadOnly();
 	}
 	// #17376 #19287 #19336 #25201 - end
+	
+	// #25638 - Start.
+	/**
+	 *  To Revise.
+	 */
+	public void reviseAction() {
+        reviseSignOff();
+        
+		updateMultiLoiBpmTask(BpmOutcomeConst.BPM_REVISE, null);
+	}
+	// #25638 - End
+	
+	// #25638 - Start.
+	private void reviseSignOff() {
+		if (StringUtils.isNotBlank(getManagedBean().getCommitteeType())) {
+		  
+			for (ScQtCommitteeActivity scQtCommitteeActivity : getManagedBean().getFcActivityList()) {
+				scQtCommitteeActivity.setMultiLoiSignedOff(false);
+			}
+		}
+	}
+	// #25638 - End
+	
+	// #25638 - Start.
+	/**
+	 * @return
+	 */
+	public boolean isPendingNegotiationStatus() {
+	  Long statusId  = getManagedBean().getCurrentStatusId();
+      
+	  if (null != statusId && (QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION.equals(statusId.longValue()) 
+          || QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION.equals(statusId.longValue()))) {
+		  return true;
+	  } else {
+		  return false;
+	  }
+	}
+	// #25638 - End
 	
 }
