@@ -1530,6 +1530,12 @@ public class TemplateSpecBackingBean extends
 		}
 
 		templateSpecBean.setSelectAll(false);
+		//Bug #33561@Syazani -- Start 12/07/2022
+		if (ParameterConst.ANSWER_TYPE_TEXT.equalsIgnoreCase(tplSpecQuestion.getAnswerTypeCode().getParameterCode())
+				&& tplSpecQuestion.getTplSpecMaster().isScoringReq()) {
+			resetScoreTypeDtl(tplSpecQuestion);
+		}
+		//Bug #33561@Syazani -- End 12/07/2022
 	}
 
 	private void addComplianceScoringAction(TplSpecQuestion tplSpecQuestion) {
