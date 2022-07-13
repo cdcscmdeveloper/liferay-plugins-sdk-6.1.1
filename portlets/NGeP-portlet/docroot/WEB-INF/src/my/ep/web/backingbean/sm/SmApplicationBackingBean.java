@@ -15947,7 +15947,7 @@ public class SmApplicationBackingBean extends
 			this.getManagedBean().setCompanyValidWithSSM(false);
 		}
 		
-		//33569 - start
+		//#33569, #28767 - start
 		if(ssmResDTO.getSmApplIndebtedness() != null){
 			ssmResDTO.getSmApplIndebtedness().setSmAppl(this.getManagedBean().getSmAppl());
 			this.getManagedBean().getSmAppl().setSmApplIndebtedness(ssmResDTO.getSmApplIndebtedness());
@@ -15975,7 +15975,7 @@ public class SmApplicationBackingBean extends
 				this.getManagedBean().getSmAppl().getSmApplAuditors().add(auditors);
 			}
 		}
-		//33569 - end
+		//#33569, #28767 - end
 	
 		if(!this.getManagedBean().isCompanyValidWithSSM()){
 //					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
