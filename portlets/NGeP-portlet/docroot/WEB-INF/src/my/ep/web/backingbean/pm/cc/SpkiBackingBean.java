@@ -123,42 +123,9 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		// #30425 - Start
 		// >>>>>>>> THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR SIT AND DEV ONLY <<<<<<<<<
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")){
-			// start checking for validation
-			PmUser pmUser = new FacesScopes().getUserSessionBean();
-			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setEpNo(getSupplier().getEpNo());
-			reqDTO.setIdentificationNo(pmUser.getIdentificationNo());
-			PersonnelResDTO validateDigiCertDate = SmServiceLookup.getPersonnelSO().checkValidateSoftcert(reqDTO);
-			reqDTO.setUserId(pmUser.getUserId());
-			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
-
-			if (validateDigiCertDate.isSuccessful()) {
-				if (validateDigiCertDate.isHasRecord()) {
-					if (validateDigiCertDate.isExpired()) {
-						throw new EpException(MessageConst.ERROR_DIGICERT_776063);
-						// Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
-					}
-				} else {
-					//#30855 & 30425 - Start (combine)
-					FacesScopes fs = new FacesScopes();
-					if (fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
-							|| fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
-							|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-							|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-						throw new EpException(MessageConst.ERROR_DIGICERT_776064);
-						// Supplier Admin does not have a valid soft certificate. Please apply for a soft certificate first.
-					}
-					if (fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())
-							|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-							|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
-							|| fs.hasRoleUser(RoleCode.FL_USER.value())) {
-						throw new EpException(MessageConst.ERROR_DIGICERT_776065);
-						// Supplier User does not have a valid soft certificate. Please apply for a soft certificate first.
-					}
-					//#30855 & 30425 - End (combine)
-				}
-			}
-			// end checking for validation
+			//start checking for validation
+			validateInternalSPKI(getSupplier().getEpNo());
+			//end checking for validation
 		}
 		// #30425 - End
 		logger.info("::: #25061 getChallengeQuestions :::" + getSpkiEnabledProperty());
@@ -185,41 +152,8 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		//#30425 - Start
 		// >>>>>>>> THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR SIT AND DEV ONLY <<<<<<<<<
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")){
-			//start checking for validation
-			PmUser pmUser = new FacesScopes().getUserSessionBean();
-			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setEpNo(getSupplier().getEpNo());
-			reqDTO.setIdentificationNo(pmUser.getIdentificationNo());
-			PersonnelResDTO validateDigiCertDate = SmServiceLookup.getPersonnelSO().checkValidateSoftcert(reqDTO);
-			reqDTO.setUserId(pmUser.getUserId());
-			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
-			
-			if(validateDigiCertDate.isSuccessful()){
-				if(validateDigiCertDate.isHasRecord()){
-					if(validateDigiCertDate.isExpired()){
-						throw new EpException(MessageConst.ERROR_DIGICERT_776063);
-						// Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
-					}
-				}else {
-					//#30855 & 30425 - Start (combine)
-					FacesScopes fs = new FacesScopes();
-					if(fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value()) || 
-					   fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) || 
-					   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) ||
-					   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
-						throw new EpException(MessageConst.ERROR_DIGICERT_776064);
-						// Supplier Admin does not have a valid soft certificate. Please apply for a soft certificate first.
-					}
-					if(fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()) || 
-					   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || 
-					   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || 
-					   fs.hasRoleUser(RoleCode.FL_USER.value())){
-						throw new EpException(MessageConst.ERROR_DIGICERT_776065);
-						// Supplier User does not have a valid soft certificate. Please apply for a soft certificate first.	
-					}
-					//#30855 & 30425 - End (combine)
-				}
-			}
+			//start checking for validation (for checking cert expiration)
+			validateInternalSPKI(getSupplier().getEpNo());
 			//end checking for validation
 		}
 		//#30425 - End
@@ -536,6 +470,80 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		return PmCommonUtil.getTypeOfCertIssuer(
 				identificationNo, getSupplier().getEpNo());
 	}
+	
+	private void validateInternalSPKI(String epNo){
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		reqDTO.setEpNo(epNo);
+		reqDTO.setIdentificationNo(pmUser.getIdentificationNo());
+		// check digicert date, still valid or not
+		PersonnelResDTO validateDigiCertDate = SmServiceLookup.getPersonnelSO().checkValidateSoftcert(reqDTO);
+		reqDTO.setUserId(pmUser.getUserId());
+		// retrive personnel
+		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
+		log.info("getPersonnelId >>>>>>>> " + resDTO.getSmPersonnel().getPersonnelId());
+		log.info("getSoftcertFlg >>>>>>>> " + resDTO.getSmPersonnel().getSoftcertFlg());
+		log.info("getSmAppl.getSmSupplier.getSupplierId >>>>>> " + resDTO.getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
+		
+		// if process checking validation is successful
+		if (validateDigiCertDate.isSuccessful()) {
+			// if return with results, then personnel have record in Pm Digi Cert
+			if(validateDigiCertDate.isHasRecord()){
+				// akan masuk if ni bila dia expired sahaja
+				if (validateDigiCertDate.isExpired()) {
+					if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
+							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
+							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+						log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
+						throw new EpException(MessageConst.ERROR_DIGICERT_776063);
+						// Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
+					} else {
+						FacesScopes fs = new FacesScopes();
+						if (fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
+								|| fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
+								|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+								|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+							throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+							// Supplier Admin does not have a valid soft certificate. Please apply for a soft certificate first.
+						}
+						if (fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())
+								|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+								|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+								|| fs.hasRoleUser(RoleCode.FL_USER.value())) {
+							throw new EpException(MessageConst.ERROR_DIGICERT_776065);
+							// Supplier User does not have a valid soft certificate. Please apply for a soft certificate first.
+						}
+					}
+				}
+			} else {
+				// if return with 0 results, then personnel didn't have record in Pm Digi Cert
+				if (!(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED)) {
+					if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
+							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
+							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+						log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
+						throw new EpException(MessageConst.ERROR_DIGICERT_776063);
+						// Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
+					} else {
+						FacesScopes fs = new FacesScopes();
+						if (fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
+								|| fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
+								|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+								|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+							throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+							// Supplier Admin does not have a valid soft certificate. Please apply for a soft certificate first.
+						}
+						if (fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())
+								|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+								|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+								|| fs.hasRoleUser(RoleCode.FL_USER.value())) {
+							throw new EpException(MessageConst.ERROR_DIGICERT_776065);
+							// Supplier User does not have a valid soft certificate. Please apply for a soft certificate first.
+						}
+					}
+				}
+			}
+		}
+	}
 	//#30425 - End
-
 }
