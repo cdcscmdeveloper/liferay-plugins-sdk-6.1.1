@@ -24,6 +24,7 @@
 	(directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)}"></ui:param>
 	<ui:param name="isPK7" value="#{(directLOABackingBean.managedBean.scLoa.qtType.parameterCode eq ParameterConst.quotationTenderTypeItemInPk7)}"></ui:param>	
 	<ui:param name="above500K" value="#{(directLOABackingBean.managedBean.above500K)}"/>
+	<ui:param name="StatusLOASubmission" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"></ui:param>
 	<!-- #25726 END -->
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
 		toggleable="true">
@@ -1025,7 +1026,7 @@
 				<td colspan="3">
 					<p:outputPanel id="uploadApprovalLetterPg"> 
 						<!-- #25726 START -->													
-						<h:panelGroup  rendered="#{((((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and !directLOABackingBean.managedBean.readOnly)||(((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.agreementReqChange and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and directLOABackingBean.managedBean.readOnly))}" 
+						<h:panelGroup  rendered="#{StatusLOASubmission and ((((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and !directLOABackingBean.managedBean.readOnly)||(((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.agreementReqChange and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and directLOABackingBean.managedBean.readOnly))}" 
 						required="true">
 						<!-- #25726 END -->
 							<table>
@@ -1058,7 +1059,31 @@
 									</td>
 			 	 				</tr>
 			 	 			</table>			 	 				
-			 	 		</h:panelGroup>		 							
+			 	 		</h:panelGroup>
+			 	 		<h:panelGroup  rendered="#{!StatusLOASubmission and directLOABackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
+							<table>
+								<tr>
+									<td width="300">
+										<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}" escape="false"/> 										
+									</td>
+									<td>
+										<p:outputPanel id="uploadedPage2">						
+																			
+											<p:commandLink
+											title="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
+											value="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
+											action="#{directLOABackingBean.fileDownload}"
+											styleClass="blue_font"
+											rendered="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment.filePath != null}"/>											
+			 	 						</p:outputPanel> 
+			 	 					</td>
+			 	 					<td style="margin-top: -3px">
+										<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
+									</td>
+			 	 				</tr>
+			 	 			</table>			 	 				
+			 	 		</h:panelGroup>
+			 	 		<!-- #25726 END -->
 					</p:outputPanel>		 	 								
 				</td>
 				<td>
