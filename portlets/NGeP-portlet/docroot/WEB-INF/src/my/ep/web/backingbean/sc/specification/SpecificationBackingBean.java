@@ -14998,10 +14998,17 @@ if (null != checklist && !checklist.isEmpty()) {
 				if (null == technicalItemScore.getPassingScore()) {
 
 					this.getManagedBean().setActiveIndex(4);
-					throw new EpException(MessageConst.ERROR_760258);
+					//#33593 related to #21695 Start FARID
+					throw new EpException(MessageConst.ERROR_760259);
+					//#33593 related to #21695 Start FARID
 
 				}
-
+				//#33593 related to #21695 Start FARID
+				else if(this.getManagedBean().getTechnicalItemScoreSetting().getPassingScore().compareTo(new BigDecimal(50)) < 0){
+					this.getManagedBean().setActiveIndex(4);
+					throw new EpException(MessageConst.ERROR_775155);
+				}
+				//#33593 related to #21695 End FARID
 			}
 			// #21695 END FARID
 		} finally {
