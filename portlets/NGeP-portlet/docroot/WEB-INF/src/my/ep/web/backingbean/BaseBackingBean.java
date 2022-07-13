@@ -3466,6 +3466,25 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			while(!personnel.getSmPersonnelAddresses().isEmpty() 
 					&& !personnel.getSmPersonnelAddresses().get(0).getSmAddress().isSsmData())
 				personnel.getSmPersonnelAddresses().remove(0);
+			if(!personnel.getSmPersonnelAddresses().isEmpty()){
+				SmAddress addr = personnel.getSmPersonnelAddresses().get(0).getSmAddress();
+				if(addr.isAddressSsmNull()){
+					addr.setAddress1(null);
+					addr.setAddress2(null);
+					addr.setAddress3(null);
+				}
+				if(addr.isCountrySsmNull())
+					addr.setPmCountry(null);
+				if(addr.isStateSsmNull()){
+					addr.setPmState(null);
+					addr.setPmDistrict(null);
+					addr.setPmDivision(null);
+					addr.setPmCity(null);
+				}
+				if(addr.isPostcodeSsmNull())
+					addr.setPostcode(null);
+				personnel.getSmPersonnelAddresses().get(0).setSmAddress(addr);
+			}
 			if(personnel.isNationalitySsmNull())
 				personnel.setPmCountry(null);
 			
@@ -3496,10 +3515,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			getManagedBean().getSmEquityCompaniesSsm().add(company);
 		}
 
-		//SmCommonUtil.redirectToExternalUrl(SupplierManagementConst.VIEW_SSM_INFOMATION);
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,
-				SupplierManagementConst.VIEW_SSM_INFOMATION);
+		SmCommonUtil.redirectToExternalUrl(SupplierManagementConst.VIEW_SSM_INFOMATION);
 	}
 	
 	public boolean renderViewSSMInfo(){
