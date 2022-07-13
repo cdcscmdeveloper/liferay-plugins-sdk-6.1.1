@@ -130,7 +130,10 @@ public abstract class BaseManagedBean implements Serializable {
 	private List<SmPersonnel> personnelsOwnerSsm = new ArrayList<SmPersonnel>();
 	private SmAddress smAddress;
 	//27346-end
-	
+
+	// #25638 - Start		
+	private boolean displayReviseInstrn;
+	// #25638 - End
 	
 	//27346-start 
 	// 27346
@@ -850,4 +853,20 @@ public abstract class BaseManagedBean implements Serializable {
 		this.docNo = docNo;
 	}
 	// Enhancement #18685 - end
+	
+	// #25638 - Start
+	/**
+	 * @return the displayReviseInstrn
+	 */
+	public boolean isDisplayReviseInstrn() {
+		return displayReviseInstrn;
+	}
+
+	/**
+	 * @param displayReviseInstrn the displayReviseInstrn to set
+	 */
+	public void setDisplayReviseInstrn(boolean displayReviseInstrn) {
+		this.displayReviseInstrn = displayReviseInstrn;
+	}
+	// #25638 - End
 }
