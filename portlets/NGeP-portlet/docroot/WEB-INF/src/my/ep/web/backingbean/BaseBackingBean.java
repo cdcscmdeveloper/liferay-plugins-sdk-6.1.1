@@ -3448,6 +3448,67 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		
 	}
 	
+	//#31269 - start
+	public void redirectToViewSSMInfo(SmAppl smAppl){
+		getManagedBean().setSmAppl(smAppl);
+		getManagedBean().setSmSupplier(smAppl.getSmSupplier());
+		getManagedBean().setBusinessTypeParamCode(
+			smAppl.getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) 
+			? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE	: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT);
+		clearPersonnelList();
+		for(SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
+			if(!personnel.isSsmData()) continue;
+			
+			if(personnel.isRaceSsmNull())
+				personnel.setPmRace(null);
+			if(personnel.isBirthDateSsmNull())
+				personnel.setBirthDate(null);
+			while(!personnel.getSmPersonnelAddresses().isEmpty() 
+					&& !personnel.getSmPersonnelAddresses().get(0).getSmAddress().isSsmData())
+				personnel.getSmPersonnelAddresses().remove(0);
+			if(personnel.isNationalitySsmNull())
+				personnel.setPmCountry(null);
+			
+			if(personnel.isEquityOwnerSsm())
+				getManagedBean().getPersonnelsOwner().add(personnel);
+			
+			if(personnel.isDirectorSsm())
+				getManagedBean().getPersonnelsDirector().add(personnel);
+			
+			getManagedBean().getPersonnelsSsm().add(personnel);
+		}
+		
+		getManagedBean().getSmSupplierBranchSsm().clear();
+		for(SmSupplierBranch branch : getManagedBean().getSmAppl().getSmSupplierBranches()){
+			if(!branch.isSsmData()) continue;
+			getManagedBean().getSmSupplierBranchSsm().add(branch);
+		}
+		
+		getManagedBean().getSmSupplierBranchSsm().clear();
+		for(SmSupplierBusiness business : getManagedBean().getSmAppl().getSmSupplier().getSmSupplierBusinesses()){
+			if(!business.isSsmData()) continue;
+			getManagedBean().getSmSupplierBusinessSsm().add(business);
+		}
+		
+		getManagedBean().getSmEquityCompaniesSsm().clear();
+		for(SmEquityCompany company : getManagedBean().getSmAppl().getSmEquityCompanies()){
+			if(!company.isSsmData()) continue;
+			getManagedBean().getSmEquityCompaniesSsm().add(company);
+		}
+
+		//SmCommonUtil.redirectToExternalUrl(SupplierManagementConst.VIEW_SSM_INFOMATION);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,
+				SupplierManagementConst.VIEW_SSM_INFOMATION);
+	}
+	
+	public boolean renderViewSSMInfo(){
+		return getManagedBean().getSmAppl().isApplValidWithSsm()
+			&& businessTypeTovalidateWithSSM(null, 
+				getManagedBean().getSmAppl().getSmSupplier().getBusinessType());
+	}
+	//#31269 - end
+	
 	public void clearPersonnelList() {
 		this.getManagedBean().getPersonnelsOwnerSsm().clear();
 		this.getManagedBean().getSmPersonnelDirectorSsm().clear();

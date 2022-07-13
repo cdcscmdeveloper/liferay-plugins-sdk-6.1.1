@@ -36,7 +36,17 @@
 							value="#{lbl['lbl.sm.resubmit']}" />&#160;&#160;
 				</p:outputPanel>
 				<!-- END 29823 -->
-					</p:outputPanel> <p:commandLink onstart="blockWidget.show()"
+					</p:outputPanel> 
+				<!-- 31269 - start -->
+				<p:commandLink value="#{lbl['lbl.sm.view.ssm.infomation']}"
+					rendered="#{!viewSmApplBackingBean.managedBean.supplierUser
+							and viewSmApplBackingBean.managedBean.viewApplicationHistory
+							and viewSmApplBackingBean.renderViewSSMInfo()}"
+					action="#{backingBean.redirectToViewSSMInfo(viewSmApplBackingBean.managedBean.smAppl)}"
+					process="@this" partialSubmit="true" update=":form"
+					onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />&#160;&#160;
+				<!-- 31269 - end -->
+				<p:commandLink onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					rendered="#{viewSmApplBackingBean.managedBean.smSupplier.smAppl.supplierType eq 'J' 
 						or viewSmApplBackingBean.managedBean.smSupplier.smAppl.supplierType eq 'K'}"
