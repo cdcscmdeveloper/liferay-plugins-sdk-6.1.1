@@ -512,6 +512,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if(approvalLetter == false){
 				return;
 			}
+			
+			
+			if(scLoa.getScLoaAttachment()!= null){				
+				if(null != scLoa.getScQt().getQtNo())
+				scLoa.getScLoaAttachment().setDocNo(scLoa.getScQt().getQtNo());
+			}				
+					
 			// #25726 END
 			
 			log.info("submitAction loop executed");
