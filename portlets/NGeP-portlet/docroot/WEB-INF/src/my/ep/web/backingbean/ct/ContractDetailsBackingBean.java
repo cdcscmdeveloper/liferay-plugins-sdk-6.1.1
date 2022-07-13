@@ -1258,7 +1258,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			} else {
 				double ceilingAmt = 0.0;
 				DecimalFormat df = new DecimalFormat("#.00");
-				String contractNO = ctBB.getManagedBean().getContractVer().getCtContract().getContractNo();
+//				String contractNO = ctBB.getManagedBean().getContractVer().getCtContract().getContractNo();
 				for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
 					ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
 				}
@@ -1647,7 +1647,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 		}
 		//LOG : 13847, by Fahmi 22032019
-		validationPerformanceBond(action);
+		//if ct_config - true
+		
+		if (! ctBB.getManagedBean().isInCtPerformance()) //ctBB.getManagedBean().setInCtPerformance(true);
+			validationPerformanceBond(action);
 		
 		// Validation for Approver
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
@@ -3897,7 +3900,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	// End Fix - #30856
 	
-	// Start haiza
+	// Start #32906 haiza
 	public String saveToSchedulerToInitiate() throws Exception {
 		log.debug("start saveToSchedulerToInitiate");
 		IContractSO contractSO = null;
@@ -3976,6 +3979,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	
 	return null;	
 	}
-	// end haiza
+	// # 32906 haiza
 	
 }
