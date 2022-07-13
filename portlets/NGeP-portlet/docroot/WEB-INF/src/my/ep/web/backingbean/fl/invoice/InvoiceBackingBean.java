@@ -858,13 +858,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		}
 		//30911 - end
 		
-		//31546-Start
-		if(resDTO.getDuplicateInvList().size()>0){
-			reqDTO.setDuplicateInvList(resDTO.getDuplicateInvList());
-			invoiceSO.cancelDuplicateInvoice(reqDTO);
-		}
-		//31546-End
-		
 		//check is normal invoice or tax invoice
 		reqDTO.setInvoice(getManagedBean().getInvoice());
 		resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
