@@ -1057,7 +1057,7 @@ public class LOIDetailBackingBean extends
 					this.getManagedBean().getMultiLOIZoneDetails())) {
 			List<TplSpecZoneDtl> zoneDtls 
 						= this.getManagedBean().getMultiLOIZoneDetails();
-
+			
 			// sorting by spec zone id for tab zone order view
 			// #32479 - Start
 			Collections.sort(zoneDtls, new Comparator<TplSpecZoneDtl>() {
@@ -2599,6 +2599,24 @@ public class LOIDetailBackingBean extends
 			}
 		} finally {
 			// iqtAwardSO = null;
+		}
+	}
+	
+	/**
+	 * BUG 33353 : To Update ScQtRecommendDtl (Reject Scenario, to prevent bugs on Multipla LOI (Recommendation) Stage)
+	 * @param List<ScQtRecommendDtl>
+	 * @return null
+	 */
+	private void updateRejectQtRecommendDtl(List<ScLoiLoaItem> scLoiLoaItemList){
+		try{
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			for(ScLoiLoaItem loiLoaItem : scLoiLoaItemList){
+				reqDTO.setScQtRecommendDtl(loiLoaItem.getScQtRecommendDtl());
+				getQtAwardSO().saveSupplierRejectQTRecommendDtl(reqDTO);	
+			}
+			
+		}catch(Exception e){
+			
 		}
 	}
 
@@ -6406,10 +6424,16 @@ public class LOIDetailBackingBean extends
 		RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 	}
 	
+	/**
+	 * BUG 33353 
+	 */
 	public void confirmSupplierReject() {
 		this.getManagedBean().setAction(BpmOutcomeConst.BPM_REJECT);
 		log.info(":::confirmSupplierReject() to "+ BpmOutcomeConst.BPM_REJECT +" LOI.");
 		updateBPMTask(BpmOutcomeConst.BPM_REJECT, null);
+		/* BUG 33353 START*/
+		updateRejectQtRecommendDtl(getManagedBean().getScLoi().getScLoiLoaItems());
+		/* BUG 33353 END*/
 	}
 	//end Enhancement #21573
 
