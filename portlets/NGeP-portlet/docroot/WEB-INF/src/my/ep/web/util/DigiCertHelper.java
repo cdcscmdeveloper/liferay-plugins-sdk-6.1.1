@@ -146,7 +146,7 @@ public class DigiCertHelper {
 			IKMCAPIResponse res = client.requestService(KMCRequestBuilder
 					.getChallengeQuestions(identificationNo, 1));
 			
-					//#29630 - start
+					//#30425 - remove all validation to spkibackingBean
 					if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
 						log.info("51; " + MessageConst.ERROR_DIGICERT_776059);
 					} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
@@ -156,7 +156,7 @@ public class DigiCertHelper {
 					} else {
 						log.info("99; " + MessageConst.ERROR_TRUSTGATE_776063);
 					}
-					//#29630 - end
+					//#30425 - end
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
