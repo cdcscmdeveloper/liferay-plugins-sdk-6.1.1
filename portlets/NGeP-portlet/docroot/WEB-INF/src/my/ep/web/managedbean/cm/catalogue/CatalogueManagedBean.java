@@ -19,10 +19,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -51,6 +49,9 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.Paginator;
 import my.ep.persistence.entity.cm.catalog.CmFavoriteSupplier;
+//#30457 - start
+import my.ep.persistence.entity.cm.catalog.CmImage;
+//#30457 - end
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
@@ -66,13 +67,11 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
-import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
@@ -88,7 +87,6 @@ import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.PricingVO;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -572,6 +570,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private int itemSelectedIndex;
 	private boolean viewOnlyBasicPopup;
 	private boolean yesEnable=false; //#30457
+	//#30457 - end
+	
+	//#30457 - start
+	private List<CmImage> deleteImage;
 	//#30457 - end
 
 	private class ExpiredSearchPagingDataModel extends
@@ -4508,4 +4510,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	}
 	//#569 - end
 	
+	// #30457 - start
+	public List<CmImage> getDeleteImage() {
+		if (deleteImage == null) {
+			deleteImage = new ArrayList<CmImage>();
+		}
+		return deleteImage;
+	}
+
+	public void setDeleteImage(List<CmImage> deleteImage) {
+		this.deleteImage = deleteImage;
+	}
+	// #30457 - end
 }
