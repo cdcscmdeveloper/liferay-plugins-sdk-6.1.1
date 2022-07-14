@@ -17314,6 +17314,23 @@ if (null != checklist && !checklist.isEmpty()) {
 								}
 								// #33493 - Start.
 							}
+							
+							// #33572 - Start.
+							if (null != this.getManagedBean().getQt() && !this.getManagedBean().getQt().isZonal()) {
+								if (indicativeUnitPrice == null && !isSave) {
+									throw new EpException(MessageConst.ERROR_760520);
+								}
+								else if ( indicativeUnitPrice != null  && estimatedCost.compareTo(BigDecimal.ZERO) == 0){		
+									throw new EpException(MessageConst.ERROR_760519, 
+											new String[]{ 
+											ResourceBundleUtils.getMessage(
+													"lbl.tpl.spec.content.Indicative.unit.price", 
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes().getUserLocale()) });
+								}
+							}
+							// #33572 - End.
+							
 							//20210205@haziq- Bug #30046 - End
 							if (null != estimatedCost) {
 								totalSpecEstimatedAmount = totalSpecEstimatedAmount
