@@ -862,7 +862,7 @@ public class SupplierFinalizationBackingBean extends
 						scQtMeeting.setMeetingStatusStr(meetingStatusId);
 						SimpleDateFormat hourFormat=new SimpleDateFormat(CommonConstants.DEFAULT_HOUR_FORMAT);//32613-start
 						SimpleDateFormat minuteFormat=new SimpleDateFormat(CommonConstants.DEFAULT_MINUTE_FORMAT);
-						SimpleDateFormat Date=new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+						//SimpleDateFormat Date=new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 						scQtMeeting.setMeetDateStr(getDateValues(hourFormat.format(scQtMeeting.getMeetingDate())));//32613-start
 						scQtMeeting.setMeetTimeStr(getDateValues(minuteFormat.format(scQtMeeting.getMeetingDate())));//32613-End
 						scQtMeeting.setMetingDate(scQtMeeting.getMeetingDate());//32613-End
@@ -1270,6 +1270,7 @@ public class SupplierFinalizationBackingBean extends
 		if (getManagedBean().getCurrentZone() != null && evaluationStageId==2) { //#26440
 			 selectedZoneId = getManagedBean().getCurrentZone().getSpecZoneId();
 		 }
+		this.getManagedBean().setCheckCategoryCodeQt(this.getManagedBean().getScQt());//#29466
 		getManagedBean().setQualifiedSuppliersByEvalStage(
 				new QualifiedSuppliersPagingDataModel(
 						"evaluationQualifiedSuppliers", qtId,

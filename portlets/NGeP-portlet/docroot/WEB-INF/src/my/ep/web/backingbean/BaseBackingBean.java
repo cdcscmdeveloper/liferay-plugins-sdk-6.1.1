@@ -60,6 +60,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -71,6 +72,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -79,6 +81,7 @@ import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -102,6 +105,8 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pp.procurementplan.PpAddress;
 import my.ep.persistence.entity.sc.common.ScAddress;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmEquityCompany;
@@ -1373,8 +1378,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			docInputStream = new FileInputStream(filePath);
 			
 			log.info("Error found while downloading file "+filePath+" : "+e);
-			//log.error(e);
-//			e.printStackTrace();
+			log.error(e);
+			e.printStackTrace();
 			
 		}
 
@@ -3282,122 +3287,121 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//25792 - end
 	
 	//27346 - start 
-	//FIXME : 16052019 - SSM INTEGRATION CR - start
-		public void redirectToViewSSMInfo(String regNo,String businesstype) {
-			log.info("redirectToViewSSMInfo---------------------------------------------------Start");
-			clearPersonnelList();
-			if (this.getManagedBean().getSmAppl() != null && !this.getManagedBean().getSmAppl().getApplType()
-					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-					&& !this.getManagedBean().getSmAppl().getApplType()
-							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
-					&& !this.getManagedBean().getSmAppl().getApplType()
-							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-				checkEquityOwnerUpdateAllowance(getManagedBean());
-			}
-			
-				SsmReqDTO ssmReqDTO = new SsmReqDTO();
-				ssmReqDTO.setRegNo(regNo);
-				ssmReqDTO.setBusinessType(businesstype);
-				/*if(this.getManagedBean().getSmAppl() != null && SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
-					ssmReqDTO.setBasicAcc(true);
-				}else{
-					ssmReqDTO.setBasicAcc(false);
-				}*/
-				ssmReqDTO.setFromViewSSMInfo(true);
-				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
-				this.getManagedBean().setCompanyValidWithSSM(false);
-				this.getManagedBean().setValidateWithSSM(true);
-				if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
-					this.getManagedBean().setCompanyValidWithSSM(true);
-					this.getManagedBean().setSmSupplierSsm(new SmSupplier());
-					/*this.getManagedBean().setBusinessTypeParamCode(getManagedBean().getSmAppl().getSupplierType()
-							.equals("J") ? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT
-							: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);*/
-					this.getManagedBean().getSmSupplierSsm().setCompanyName(ssmResDTO.getSmCompanyBasic().getCompanyName());
-					this.getManagedBean().getSmSupplierSsm().setRegNo(regNo);
-					this.getManagedBean().getSmSupplierSsm().setBusinessType(businesstype);
-					this.getManagedBean().setSmCompanyBasicSsm(ssmResDTO.getSmCompanyBasic());
-					this.getManagedBean().setSmAddress(ssmResDTO.getSmAddress());
-					this.getManagedBean().setShowDetailSSM(true);
-					// set owner n director n personnel
-					for(SmPersonnel personnel:ssmResDTO.getSmPersonnelAll()){
-						personnel = setDesignationSSM(personnel);
-						if(personnel.isEquityOwner()){
-							this.getManagedBean().getPersonnelsOwnerSsm().add(personnel);
-						}
-						if(personnel.isDirector()){
-							this.getManagedBean().getSmPersonnelDirectorSsm().add(personnel);
-						}	
-						if(personnel.isManagement() || personnel.isDirector()){
-							this.getManagedBean().getPersonnelsSsm().add(personnel);
-						}
-					}
-					// set business nature
-					if(ssmResDTO.getSmSupplierBusinessList() != null){
-						this.getManagedBean().setSmSupplierBusinessSsm(new ArrayList<SmSupplierBusiness>());
-						for(SmSupplierBusiness business:ssmResDTO.getSmSupplierBusinessList()){
-							if(business.isSsmData())
-								this.getManagedBean().getSmSupplierBusinessSsm().add(business);
-						}
-					}
-					//Set Branch
-					if(ssmResDTO.getSmSupplierBranches() != null){
-						this.getManagedBean().setSmSupplierBranchSsm(new ArrayList<SmSupplierBranch>());
-						for(SmSupplierBranch branch:ssmResDTO.getSmSupplierBranches()){
-							if(branch.isSsmData())
-								this.getManagedBean().getSmSupplierBranchSsm().add(branch);
-						}
-					}
-					//set equity company
-					if(ssmResDTO.getSmEquityCompanys() != null){
-						this.getManagedBean().setSmEquityCompaniesSsm(new ArrayList<SmEquityCompany>());
-						for(SmEquityCompany company:ssmResDTO.getSmEquityCompanys()){
-							if(company.isSsmData())
-								this.getManagedBean().getSmEquityCompaniesSsm().add(company);
-						}
-					}
+	public void redirectToViewSSMInfo(String regNo,String businesstype) {
+		log.info("redirectToViewSSMInfo---------------------------------------------------Start");
+		clearPersonnelList();
+		if (this.getManagedBean().getSmAppl() != null && !this.getManagedBean().getSmAppl().getApplType()
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				&& !this.getManagedBean().getSmAppl().getApplType()
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
+				&& !this.getManagedBean().getSmAppl().getApplType()
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+			checkEquityOwnerUpdateAllowance(getManagedBean());
+		}
+		
+		SsmReqDTO ssmReqDTO = new SsmReqDTO();
+		ssmReqDTO.setRegNo(regNo);
+		ssmReqDTO.setBusinessType(businesstype);
+		/*if(this.getManagedBean().getSmAppl() != null && SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
+			ssmReqDTO.setBasicAcc(true);
+		}else{
+			ssmReqDTO.setBasicAcc(false);
+		}*/
+		ssmReqDTO.setFromViewSSMInfo(true);
+		SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+		this.getManagedBean().setCompanyValidWithSSM(false);
+		this.getManagedBean().setValidateWithSSM(true);
+		if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
+			this.getManagedBean().setCompanyValidWithSSM(true);
+			this.getManagedBean().setSmSupplierSsm(new SmSupplier());
+			/*this.getManagedBean().setBusinessTypeParamCode(getManagedBean().getSmAppl().getSupplierType()
+					.equals("J") ? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT
+					: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);*/
+			this.getManagedBean().getSmSupplierSsm().setCompanyName(ssmResDTO.getSmCompanyBasic().getCompanyName());
+			this.getManagedBean().getSmSupplierSsm().setRegNo(regNo);
+			this.getManagedBean().getSmSupplierSsm().setBusinessType(businesstype);
+			this.getManagedBean().setSmCompanyBasicSsm(ssmResDTO.getSmCompanyBasic());
+			this.getManagedBean().setSmAddress(ssmResDTO.getSmAddress());
+			this.getManagedBean().setShowDetailSSM(true);
+			// set owner n director n personnel
+			for(SmPersonnel personnel:ssmResDTO.getSmPersonnelAll()){
+				personnel = setDesignationSSM(personnel);
+				if(personnel.isEquityOwner()){
+					this.getManagedBean().getPersonnelsOwnerSsm().add(personnel);
 				}
-			
-			/*if(showOld){
-				for(SmPersonnel personnel:getManagedBean().getSmAppl().getSmPersonnels()){
-					if(personnel.isSsmData()){
-						if(personnel.isEquityOwner()){
-							this.getManagedBean().getPersonnelsOwner().add(personnel);
-						}
-						if(personnel.isDirector()){
-							this.getManagedBean().getSmPersonnelDirector().add(personnel);
-						}
-						this.getManagedBean().getPersonnelsSsm().add(personnel);
-					}				
-				}			
-			}*/
-			/*MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-			reqDTO.setApplNo(getManagedBean().getSmAppl().getApplNo());
-			MofRegistrationResDTO resDTO =  SmServiceLookup.getMofRegistrationSO().retrieveSmApplSSM(reqDTO);
-			if(resDTO.getSmAppl().getSmSupplierBranches() != null){
-				this.getManagedBean().getSmSupplierBranches().clear();
-				for(SmSupplierBranch branch:resDTO.getSmAppl().getSmSupplierBranches()){
-					if(branch.isSsmData())
-						this.getManagedBean().getSmSupplierBranches().add(branch);
+				if(personnel.isDirector()){
+					this.getManagedBean().getSmPersonnelDirectorSsm().add(personnel);
+				}	
+				if(personnel.isManagement() || personnel.isDirector()){
+					this.getManagedBean().getPersonnelsSsm().add(personnel);
 				}
 			}
-			if(resDTO.getSmAppl().getSmSupplier().getSmSupplierBusinesses() != null){
-				this.getManagedBean().getSmSupplierBusinessSsm().clear();
-				for(SmSupplierBusiness business:resDTO.getSmAppl().getSmSupplier().getSmSupplierBusinesses()){
+			// set business nature
+			if(ssmResDTO.getSmSupplierBusinessList() != null){
+				this.getManagedBean().setSmSupplierBusinessSsm(new ArrayList<SmSupplierBusiness>());
+				for(SmSupplierBusiness business:ssmResDTO.getSmSupplierBusinessList()){
 					if(business.isSsmData())
 						this.getManagedBean().getSmSupplierBusinessSsm().add(business);
 				}
 			}
-			if(resDTO.getSmAppl().getSmEquityCompanies() != null){
-				this.getManagedBean().getSmEquityCompany().clear();
-				for(SmEquityCompany company:resDTO.getSmAppl().getSmEquityCompanies()){
-					if(company.isSsmData())
-						this.getManagedBean().getSmEquityCompany().add(company);
+			//Set Branch
+			if(ssmResDTO.getSmSupplierBranches() != null){
+				this.getManagedBean().setSmSupplierBranchSsm(new ArrayList<SmSupplierBranch>());
+				for(SmSupplierBranch branch:ssmResDTO.getSmSupplierBranches()){
+					if(branch.isSsmData())
+						this.getManagedBean().getSmSupplierBranchSsm().add(branch);
 				}
-			}*/
-			//#27165 
-				RequestContext.getCurrentInstance().execute("viewssminfoWidgetVar.show()");
+			}
+			//set equity company
+			if(ssmResDTO.getSmEquityCompanys() != null){
+				this.getManagedBean().setSmEquityCompaniesSsm(new ArrayList<SmEquityCompany>());
+				for(SmEquityCompany company:ssmResDTO.getSmEquityCompanys()){
+					if(company.isSsmData())
+						this.getManagedBean().getSmEquityCompaniesSsm().add(company);
+				}
+			}
+		}
 		
+		/*if(showOld){
+			for(SmPersonnel personnel:getManagedBean().getSmAppl().getSmPersonnels()){
+				if(personnel.isSsmData()){
+					if(personnel.isEquityOwner()){
+						this.getManagedBean().getPersonnelsOwner().add(personnel);
+					}
+					if(personnel.isDirector()){
+						this.getManagedBean().getSmPersonnelDirector().add(personnel);
+					}
+					this.getManagedBean().getPersonnelsSsm().add(personnel);
+				}				
+			}			
+		}*/
+		/*MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setApplNo(getManagedBean().getSmAppl().getApplNo());
+		MofRegistrationResDTO resDTO =  SmServiceLookup.getMofRegistrationSO().retrieveSmApplSSM(reqDTO);
+		if(resDTO.getSmAppl().getSmSupplierBranches() != null){
+			this.getManagedBean().getSmSupplierBranches().clear();
+			for(SmSupplierBranch branch:resDTO.getSmAppl().getSmSupplierBranches()){
+				if(branch.isSsmData())
+					this.getManagedBean().getSmSupplierBranches().add(branch);
+			}
+		}
+		if(resDTO.getSmAppl().getSmSupplier().getSmSupplierBusinesses() != null){
+			this.getManagedBean().getSmSupplierBusinessSsm().clear();
+			for(SmSupplierBusiness business:resDTO.getSmAppl().getSmSupplier().getSmSupplierBusinesses()){
+				if(business.isSsmData())
+					this.getManagedBean().getSmSupplierBusinessSsm().add(business);
+			}
+		}
+		if(resDTO.getSmAppl().getSmEquityCompanies() != null){
+			this.getManagedBean().getSmEquityCompany().clear();
+			for(SmEquityCompany company:resDTO.getSmAppl().getSmEquityCompanies()){
+				if(company.isSsmData())
+					this.getManagedBean().getSmEquityCompany().add(company);
+			}
+		}*/
+		//#27165 
+		RequestContext.getCurrentInstance().execute("viewssminfoWidgetVar.show()");
+	
 	}
 	
 	public void clearPersonnelList() {
@@ -3781,4 +3785,32 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 	//12492 - END
+	
+	//#29466 - START
+	public boolean checkManufacturerCategoryCodes(ScQt scQt){
+		boolean manufacturer=false;	
+	  	if(null!=scQt&& !scQt.isPanel()){
+	  		List<ScQtCategory> qtCategories = null;
+	  		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			qtCategories = getQtDetailSO().getQtCategoryByQtId(reqDTO).getCategories();	
+			if(null!=qtCategories && CollectionUtils.isNotEmpty(qtCategories)){
+		  		for (ScQtCategory category : qtCategories) {
+					if(SourcingConstants.MANUFACTURER_CATEGORY_CODE.equals(category.getPmCategoryL3().getCategoryL3Code())){
+				  		manufacturer=true;
+						break;
+					}
+				}
+			}
+	  	} else{
+	  		manufacturer=false;	
+	  	}
+	  	return manufacturer;
+	}
+
+  	private IQTDetailSO getQtDetailSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+	}
+  	//#29466 - END
 }

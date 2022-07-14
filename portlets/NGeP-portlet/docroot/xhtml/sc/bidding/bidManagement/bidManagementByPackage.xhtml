@@ -6,6 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<!-- #29466 - START -->
+	<ui:param name="manufacturercategoryCode" value="#{biddingBB.checkManufacturerCategoryCodes(biddingBB.managedBean.scQt)}"></ui:param>
+	<!-- #29466 - END -->
 	<p:panel header="#{lbl['lbl.sc.item.details']}"
 		id="itemDetailsByPackage" toggleable="true">
 
@@ -86,6 +89,14 @@
 					update="@([id$=itemPricePop])" />
 
 			</p:column>
+			<!-- #29466 - START -->
+			<p:column headerText="#{lbl['lbl.sc.total.score']}">
+				<h:outputText value="#{item.scBidSupplier.totalScore}" style="float : right">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
+												CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+				</h:outputText>
+			</p:column>
+			<!-- #29466 - END -->
 			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}">
 				<h:outputText
 					value="#{(item.scBidSupplier.bumi)? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
@@ -125,13 +136,15 @@
 				</h:outputText>
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.pref.margin']}">
+			<!-- #29466 - START -->
+			<p:column headerText="#{lbl[manufacturercategoryCode ?'lbl.sc.pref.margin.manufacturer' : 'lbl.sc.pref.margin']}">
 				<h:outputText style="float : right" value="#{item.prefMargin}"
 					rendered="#{item.scBidSupplier.bumi}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 				</h:outputText>
 			</p:column>
+			<!-- #29466 - END -->
 			<p:column headerText="#{lbl['lbl.sc.total.cost.saving']}">
 				<h:outputText style="float : right"
 					value="#{biddingBB.managedBean.scheduledBid.packageEstimateCost - item.bidPriceTotal}">
