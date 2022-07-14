@@ -1932,8 +1932,7 @@ public class SpecificationBackingBean extends
 
 		try {
 			if (null == this.getManagedBean().getScQtCheckSt2techProposal()
-					|| this.getManagedBean().getScQtCheckSt2techProposal().isEmpty() || 
-					this.getManagedBean().getQt().isDemoRequired()) {//#28784
+					|| this.getManagedBean().getScQtCheckSt2techProposal().isEmpty()) {
 				List<ScQtCheckList> localcheckList = new ArrayList<ScQtCheckList>();
 				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 				specSo = BusinessDelegate.getInstance().getServiceObject(
@@ -20212,7 +20211,7 @@ if(null!=allTechnicalChecklist){
 	public void addDemoTechnicalCheckList() {
 		try {
 			//this.getManagedBean().setReadOnly(false);
-			retriveTechnicalCheckList(); //#28784
+			//retriveTechnicalCheckList(); //#28784
 			this.getManagedBean().setDemoAction(false);
 			List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
 			List<ScQtCheckList> newSt2technicalproposalList = new ArrayList();
@@ -20527,15 +20526,33 @@ if(null!=allTechnicalChecklist){
 		SLAUtils.getInstance().logSQLPerformanceInfo("QT","DEMO INVITATION (SAVE)","SpecificationBackingBean.saveOrUpdateDemoTemplateSpecs", startTime,"#29305");
 	    
 		if (resDTO.isSuccessful()) {
-			retriveTechnicalCheckList();
 			SpecificationResDTO resDTO1 = new SpecificationResDTO();
 			List<ScQtCheckList> updatedCheckListsDemo = new ArrayList<ScQtCheckList>();
 			List<ScQtCheckList> updatedCheckListsOtherDemo = new ArrayList<ScQtCheckList>();
 			SpecificationReqDTO reqDTO1 = new SpecificationReqDTO();
-
+			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+			
+			//#28784 set back saved values to session
 			List<ScQtCheckList> savedCheckLists = resDTO.getSavedCheckLists();
-			List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
-			setTechnicalCheckList(savedCheckLists.get(0));
+			List<ScQtCheckList> newSavedCheckLists = resDTO.getSavedCheckLists();
+			
+			specReqDTO.setScQt(this.getManagedBean().getQt());
+			specReqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+			resDTO = specSO.retrieveCheckLists(specReqDTO);
+			List<ScQtCheckList> updatedNewCheckLists = resDTO.getTechnicalCheckList();
+			
+			for(ScQtCheckList sc: updatedNewCheckLists){
+				if(sc.getQtChecklistId().equals(savedCheckLists.get(0).getQtChecklistId())){
+					this.getManagedBean().setScQtChecklist(sc);//#28784 reset checklist
+					newSavedCheckLists.remove(savedCheckLists.get(0));
+					newSavedCheckLists.add(sc);
+					setTechnicalCheckList(newSavedCheckLists.get(0));
+				}
+			}
+			
+			
+			List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();			
+		
 			for(ScQtCheckList t: st2technicalproposalList){
 				if(t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)){
 					t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
@@ -20934,7 +20951,7 @@ if(null!=allTechnicalChecklist){
 	public String completeDemoAction() {
 		boolean result = false;
 		boolean checkTS = false;
-		retriveTechnicalCheckList(); //#28784
+		//retriveTechnicalCheckList(); //#28784
 		List<ScQtCheckList> st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
 
 		for (ScQtCheckList t : st2technicalproposalList) {
