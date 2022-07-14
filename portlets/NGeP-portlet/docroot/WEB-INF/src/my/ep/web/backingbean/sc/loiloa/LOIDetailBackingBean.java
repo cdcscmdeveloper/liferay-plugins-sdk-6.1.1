@@ -2723,14 +2723,11 @@ public class LOIDetailBackingBean extends
 	 * @param List<ScQtRecommendDtl>
 	 * @return null
 	 */
-	private void updateRejectQtRecommendDtl(List<ScLoiLoaItem> scLoiLoaItemList){
+	private void updateRejectQtRecommendDtl(ScLoiLoa scLoiLoa){
 		try{
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			for(ScLoiLoaItem loiLoaItem : scLoiLoaItemList){
-				reqDTO.setScQtRecommendDtl(loiLoaItem.getScQtRecommendDtl());
-				getQtAwardSO().saveSupplierRejectQTRecommendDtl(reqDTO);	
-			}
-			
+			reqDTO.setScLoiLoa(scLoiLoa);
+			getQtAwardSO().saveSupplierRejectQTRecommendDtl(reqDTO);
 		}catch(Exception e){
 			
 		}
@@ -6559,7 +6556,7 @@ public class LOIDetailBackingBean extends
 		log.info(":::confirmSupplierReject() to "+ BpmOutcomeConst.BPM_REJECT +" LOI.");
 		updateBPMTask(BpmOutcomeConst.BPM_REJECT, null);
 		/* BUG 33353 START*/
-		updateRejectQtRecommendDtl(getManagedBean().getScLoi().getScLoiLoaItems());
+		updateRejectQtRecommendDtl(getManagedBean().getScLoi().getScLoiLoa());
 		/* BUG 33353 END*/
 	}
 	//end Enhancement #21573
