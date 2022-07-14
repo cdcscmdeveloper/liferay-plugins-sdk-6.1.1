@@ -817,13 +817,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		}
 		//28221 - end
 		
-		//31546-Start
-		if(resDTO.getDuplicateInvList().size()>0){
-			reqDTO.setDuplicateInvList(resDTO.getDuplicateInvList());
-			invoiceSO.cancelDuplicateInvoice(reqDTO);
-		}
-		//31546-End
-		
 		//check is normal invoice or tax invoice
 		reqDTO.setInvoice(getManagedBean().getInvoice());
 		resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
@@ -1317,17 +1310,17 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		
 		if (this.getManagedBean().getInvoice() != null) {
 			if(!getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//33238
-			//32967-Start
-			if(this.getManagedBean().getInvoice().getAccountNo()!=null){
-				if(getManagedBean().getAccountNo()==null){
-					getManagedBean().setAccountNo(this.getManagedBean().getInvoice().getAccountNo());
-				}			
-			
-				if(this.getManagedBean().getInvoice().getAccountNo().equalsIgnoreCase(getManagedBean().getAccountNo())){
-					this.getManagedBean().getInvoice().setAccountNo(this.getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId()+"|"+this.getManagedBean().getInvoice().getAccountNo());
+				//32967-Start
+				if(this.getManagedBean().getInvoice().getAccountNo()!=null){
+					if(getManagedBean().getAccountNo()==null){
+						getManagedBean().setAccountNo(this.getManagedBean().getInvoice().getAccountNo());
+					}			
+				
+					if(this.getManagedBean().getInvoice().getAccountNo().equalsIgnoreCase(getManagedBean().getAccountNo())){
+						this.getManagedBean().getInvoice().setAccountNo(this.getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId()+"|"+this.getManagedBean().getInvoice().getAccountNo());
+					}
 				}
-			}
-			//32967-End
+				//32967-End
 			}
 			if(this.getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchName() != null ){
 				supplierSearchReqDTO.setBranchCode(getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchCode());
@@ -1369,7 +1362,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		return populateBankAccountList;
 	}
 	
-	
 	/**
 	 * Bank info action listener.
 	 */
@@ -1386,8 +1378,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 				getManagedBean().getInvoice().setPaymentBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
 				if(!getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//33238
-				getManagedBean().setAccountNo(getManagedBean().getInvoice().getAccountNo().substring(supplierBank.getPmFinancialOrg().getFinancialOrgId().toString().length()+1));//32967
-			}
+					getManagedBean().setAccountNo(getManagedBean().getInvoice().getAccountNo().substring(supplierBank.getPmFinancialOrg().getFinancialOrgId().toString().length()+1));//32967
+				}
 			}
 		}else{
 			getManagedBean().getInvoice().setPaymentBankAddress(null);
@@ -1677,13 +1669,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			resDTO = invoiceSO.updateInvoiceWithAP59(reqDTO);
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_745019;
-					
+				
 				if(getManagedBean().getStatusId().equals(FulfilmentStatusConst.AP59_PAYMENT_VIA_AP59)){
 					messageId = MessageConst.INFO_745007;
 				}
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
-				} 
+				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, 
 						null,
@@ -1698,7 +1690,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					getManagedBean().setInvoice(resDTO.getInvoice());
 					flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 					if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
-						getFactoringDtl(); 
+						getFactoringDtl();
 					}
 				}
 			}
@@ -1779,7 +1771,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 			}
 		}
-
+		
 		if(getManagedBean().getInvoice().isBrandNew()) { // validate to avoid duplicate invoice record for one order/request
 			reqDTO.setFlRequestId(getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId());
 			if(invoiceSO.retrieveInvoiceByFlRequestId(reqDTO).getInvoice()!=null) {

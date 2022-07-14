@@ -20,7 +20,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
@@ -32,7 +31,6 @@ import my.ep.biz.service.pm.common.criteria.ICriteriaSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.designatedarea.IDesignatedAreaSO;
 import my.ep.biz.service.pm.general.settings.gstitem.IGstItemSO;
-import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
@@ -46,8 +44,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
-import my.ep.dto.ct.ContractReqDTO;
-import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -61,8 +57,6 @@ import my.ep.dto.pm.general.settings.designatedarea.DesignatedAreaReqDTO;
 import my.ep.dto.pm.general.settings.designatedarea.DesignatedAreaResDTO;
 import my.ep.dto.pm.general.settings.gstitem.GstItemReqDTO;
 import my.ep.dto.pm.general.settings.gstitem.GstItemResDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -116,7 +110,7 @@ import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
 
-/**  
+/**
  * Backing Bean for Create Received Note .
  *
  * @author Giribabu
@@ -189,6 +183,14 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FlFulfilmentNote fulfilmentNote = getManagedBean().getFulfilmentNote();
 			receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
+			//31546-Start
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
+				if(fulfilmentNote !=null && fulfilmentNote.getFulfilmentNoteNo()!=null){
+					log.info("######## SLA SubmitAction START Action::" + action +"|| FRN Doc No.:" +fulfilmentNote.getFulfilmentNoteNo());					
+				}
+				
+			}
+			//31546-End
 			
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			reqDTO.setFulfilmentNote(fulfilmentNote);
