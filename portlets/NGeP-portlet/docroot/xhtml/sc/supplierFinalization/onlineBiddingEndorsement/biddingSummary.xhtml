@@ -67,4 +67,13 @@
 		</table>	
 	</p:outputPanel>	
 
+	<!-- 25638 start -->
+	<p:panel header="#{lbl['lbl.sc.remarks']}" toggleable="true">
+		<ac:scRemarkAndAttachment
+		remarkList="#{suppFinalBiddingBackingBean.managedBean.getFinalizationRemarks()}"
+		showAttachment="false"
+		header=""/>
+	</p:panel>
+	<!-- 25638 end -->
+	
 </ui:composition>
