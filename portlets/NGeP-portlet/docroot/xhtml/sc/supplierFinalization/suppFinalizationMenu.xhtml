@@ -134,6 +134,29 @@
 		<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
 		<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
 		
+		<!-- 25638 start -->
+		<p:dialog id="reviseSuppFinalizationDlgs" widgetVar="reviseSuppFinalizationDlgs"
+			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+			resizable="false" width="400" height="75" closable="false">
+			<table>
+				<tr>
+					<td align="center">
+						<h:graphicImage value="/css/images/design/exclamation.png" /> 
+						<p:outputLabel value="#{lbl['lbl.sc.dialog.confirm.to.revise']}" />
+					</td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="reviseSuppFinalizationDlgs.hide();"
+					action="#{suppFinalizationBackingBean.submitSuppFinalization(true)}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="reviseSuppFinalizationDlgs.hide();" type="button" />
+			</div>
+		</p:dialog>
+		<!-- 25638 end -->		
+		
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
 			resizable="false" width="325" height="100" closable="false"
@@ -148,9 +171,11 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
+				<!-- 25638 start -->
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
-					action="#{suppFinalizationBackingBean.submitSuppFinalization}"
+					action="#{suppFinalizationBackingBean.submitSuppFinalization('')}"
 					oncomplete="submissionPopup.hide();" update="@form">
+				<!-- 25638 end -->			
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"

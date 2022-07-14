@@ -42,8 +42,13 @@
 			
 	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 	<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/qualifiedSuppliersByEvalStage.xhtml" />
-	 <ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierPreferencemargin.xhtml" />
+	<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierPreferencemargin.xhtml" />
 	
+	<!-- 25638 -start- -->
+	<h:outputText styleClass="instruction" escape="false" rendered="#{suppFinalizationBackingBean.managedBean.displayReviseInstrn}"
+			value="#{lbl['lbl.sc.sf.meeting.decision.instrn']}" />
+	<!-- 25638 -end- -->
+			
 	<p:panel header="#{lbl['lbl.sc.sf.committee.decision']}" toggleable="true">
        <h:outputText styleClass="instruction" escape="false"
 			value="#{lbl['lbl.sc.sf.committee.decision.instructions']}" />
