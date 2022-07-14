@@ -3130,7 +3130,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			if(!this.getManagedBean().isDupplicatedInd()){
 				this.getManagedBean().setDupplicatedInd(true);
 			}
-			FacesContext.getCurrentInstance().addMessage("growlMssg",
+			//#30457- change growlMssg to null
+			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 							MessageConst.ERROR_715064, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));				
@@ -3507,6 +3508,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			
+			// #30457- start
+			CatalogueResDTO resDTO = new CatalogueResDTO();			
+			// #30457- end
 
 			statusReqDTO.setStatusId(CmConst.DRAFT);
 
@@ -3519,8 +3524,38 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(),
 							actionDesc, statusResDTO.getPmStatus() != null ? statusResDTO.getPmStatus()
 									: new PmStatus()));
+			// #30457- start
+			resDTO = catalogueSO.updateSupplierItem(reqDTO);
+			
+			log.info("successfull " + resDTO.isSuccessful() + this.getManagedBean().getDeleteImage());
+			
+			// #30457- start
+			if (resDTO.isSuccessful() && CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage())) {
 
-			catalogueSO.updateSupplierItem(reqDTO);
+				for (CmImage image : this.getManagedBean().getDeleteImage()) {
+
+					StringBuilder deleteImgDir = new StringBuilder();
+					deleteImgDir
+							.append(EpPropertiesUtils.getInstance().getProperty(
+									EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM/")
+							.append(this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo())
+							.append("/").append(image.getImageDesc());
+					log.info("deleteImgDir***" + deleteImgDir);
+
+					try {
+						boolean result = Files.deleteIfExists(Paths.get(deleteImgDir.toString()));
+						if (result) {
+							log.info("File is deleted!");
+						} else {
+							log.info("Sorry, unable to delete the file.");
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				this.getManagedBean().getDeleteImage().clear();
+			}
+			// #30457- end
 
 			this.getManagedBean().setRefreshDraftSuppItemFlag(false);
 			FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -5270,6 +5305,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			
+			// #30457- start
+			CatalogueResDTO resDTO = new CatalogueResDTO();
+			// #30457- end
+
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 
 			if (this.getManagedBean().getSelectedMaintainItem().isReviewRequired()) {
@@ -5284,7 +5324,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										: new PmStatus()));
 			} else {
 				statusReqDTO.setStatusId(CmConst.DIRECT_PUBLISHED);
-				;
+				
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 				String actionDesc = "Item " + this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()
 						+ " telah diiklankan oleh " + (pmUser.getUserName() != null ? pmUser.getUserName() : "SYS");
@@ -5294,7 +5334,35 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										: new PmStatus()));
 			}
 
-			catalogueSO.updateSupplierItem(reqDTO);
+			// #30457- start
+			resDTO = catalogueSO.updateSupplierItem(reqDTO);
+						
+			if (resDTO.isSuccessful() && CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage())) {
+
+				for (CmImage image : this.getManagedBean().getDeleteImage()) {
+
+					StringBuilder deleteImgDir = new StringBuilder();
+					deleteImgDir
+							.append(EpPropertiesUtils.getInstance().getProperty(
+									EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM/")
+							.append(this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo())
+							.append("/").append(image.getImageDesc());
+					log.info("deleteImgDir***" + deleteImgDir);
+
+					try {
+						boolean result = Files.deleteIfExists(Paths.get(deleteImgDir.toString()));
+						if (result) {
+							log.info("File is deleted!");
+						} else {
+							log.info("Sorry, unable to delete the file.");
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				this.getManagedBean().getDeleteImage().clear();
+			}
+			// #30457- end
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 
@@ -5439,6 +5507,70 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					
 				}
 				//#30457-end
+				
+				// #30457- start
+				else if ((this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc() != null || this
+						.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc().trim().length() > 0)
+						&& (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages() != null || this
+								.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages().size() > 0)
+						&& this.getManagedBean().getSelectedMaintainItem().getItemStatus()
+								.equals(CmConst.ITEM_STATUS_DRAFT)) {
+					catalog.setReviewRequired(true);
+					if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).isBrandNew()) {
+						catalog.setCmImages(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages());
+						catalog.setBrandNew(false);
+					}
+				}
+
+				if (!this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc()
+						.equalsIgnoreCase(catalog.getItemDesc())) {
+					catalog.setItemDesc(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc());
+				} else {
+					catalog.setItemDesc(catalog.getItemDesc());
+				}
+				
+				if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCompareDesc() != null
+						&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCompareDesc().trim().length() > 0
+						&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc() != null
+						&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc().trim().length() > 0) {
+					if (!(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCompareDesc()
+							.equalsIgnoreCase(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc()))) {
+						this.getManagedBean().getCloneCmSupplierItemLs().get(i).setReviewRequired(true);
+
+					}
+				} else {
+					if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc() != null
+							&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc().trim().length() > 0) {
+						log.info("*************set true***************");
+						this.getManagedBean().getCloneCmSupplierItemLs().get(i).setReviewRequired(true);
+
+					} else {
+						// //// reset review required = false
+						log.info("*************set false***************");
+						this.getManagedBean().getCloneCmSupplierItemLs().get(i).setReviewRequired(false);
+					}
+				}
+
+				// //if review required = false, continue check on image
+				log.info("2nd check review"
+						+ this.getManagedBean().getCloneCmSupplierItemLs().get(i).isReviewRequired());
+				if (!this.getManagedBean().getCloneCmSupplierItemLs().get(i).isReviewRequired()) {
+
+					if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages() != null
+							&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages().size() > 0) {
+						for (CmImage image : this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages()) {
+							if (!image.isImageReviewed()) {
+								this.getManagedBean().getCloneCmSupplierItemLs().get(i).setReviewRequired(true);
+								image.setImageReviewed(true);
+								break;
+							}
+						}
+					} else {
+						this.getManagedBean().getCloneCmSupplierItemLs().get(i).setReviewRequired(false);
+
+					}
+				}
+				// #30457- end
 				
 				catalog.getCmStandardPricing().setPrice(
 						this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmStandardPricing().getPrice());
@@ -5810,6 +5942,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									statusResDTO.getPmStatus() != null ? statusResDTO.getPmStatus() : new PmStatus()));
 
 					catalog.setItemStatus("P");
+					
+					//#30457 - start
+					this.getManagedBean().setItemStatus("P");
+					//#30457 - end
 				} else {
 
 					log.info("tracking diary for catalog Items to Publish:submitToReviewItems");
@@ -5826,6 +5962,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									statusResDTO.getPmStatus() != null ? statusResDTO.getPmStatus() : new PmStatus()));
 
 					catalog.setItemStatus("U");
+					
+					//#30457 - start
+					this.getManagedBean().setItemStatus("U");
+					//#30457 - end
 				}
 
 				// status active
@@ -5867,6 +6007,34 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			log.debug("resDTO.isSuccessful():" + resDTO.isSuccessful());
 
 			if (resDTO.isSuccessful()) {
+				
+				// #30457- start
+				if (CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage())) {
+
+					for (CmImage image : this.getManagedBean().getDeleteImage()) {
+
+						StringBuilder deleteImgDir = new StringBuilder();
+						deleteImgDir
+								.append(EpPropertiesUtils.getInstance().getProperty(
+										EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM/")
+								.append(this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo())
+								.append("/").append(image.getImageDesc());
+						log.info("deleteImgDir***" + deleteImgDir);
+
+						try {
+							boolean result = Files.deleteIfExists(Paths.get(deleteImgDir.toString()));
+							if (result) {
+								log.info("File is deleted!");
+							} else {
+								log.info("Sorry, unable to delete the file.");
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					this.getManagedBean().getDeleteImage().clear();
+				}
+				// #30457- end
 
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
@@ -5880,6 +6048,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				List<CmSupplierItem> suppLs = new ArrayList<CmSupplierItem>();
 				this.getManagedBean().setCloneCmSupplierItemLs(suppLs);
 				FacesContext facesContext = FacesContext.getCurrentInstance();
+				
+				//#30457 - start
+			if (this.getManagedBean().getItemStatus().equals("P")) {
+					facesContext.addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.ERROR_715059, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			   } else {	
 				facesContext.addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "", MessageUtils.getMessage(
@@ -5888,6 +6065,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
 			}
+		}
+        //#30457			
 
 			// } catch (Exception e) {
 			//
@@ -9559,51 +9738,39 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * @param index
 	 *            (int index(mandatory))
 	 */
+	// #30457, #14118 - start
 	public void deleteImage(int index) {
+		CmImage img = this.getManagedBean().getSelectedMaintainItem().getCmImages().get(index);
 
-		this.getManagedBean().getSelectedMaintainItem().getCmImages()
-		.remove(index);
+		if (!img.isBrandNew()) {
+			this.getManagedBean().getDeleteImage().add(img);
+		}// for db data purpose
+
+		this.getManagedBean().getSelectedMaintainItem().getCmImages().remove(index);
 
 	}
+	// #30457, #14118 - end
 
-	// 14118 - Start
+	// #30457, #14118 - start
 	public void deleteCmImages() {
 		log.info("deleteCmImages" + this.getManagedBean().getSelectedImage().getCmImages().size());
-		//#30457 - start
-		List<CmImage> tobeDeleted =new ArrayList<CmImage>();
+
 		for (int i = 0; i < this.getManagedBean().getSelectedImage().getCmImages().size(); i++) {
 			CmImage image = (CmImage) this.getManagedBean().getSelectedImage().getCmImages().get(i);
-			
-			if(!image.isBrandNew())
-				tobeDeleted.add(image); //for db data purpose
-			
-			//#30457 - start
-			StringBuilder deleteImgDir = new StringBuilder();
-			deleteImgDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM/")
-					.append(this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo()).append("/")
-					.append(image.getImageDesc());
-			log.info("deleteImgDir***" + deleteImgDir);
-			
-			try {
-	            boolean result = Files.deleteIfExists(Paths.get(deleteImgDir.toString()));
-	            if (result) {
-	            	log.info("File is deleted!");
-	            } else {
-	            	log.info("Sorry, unable to delete the file.");
-	            }
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-			
+
+			if (!image.isBrandNew()) {
+				this.getManagedBean().getDeleteImage().add(image); // for db
+																	// data
+																	// purpose
+			}
+
 			this.getManagedBean().getSelectedMaintainItem().getCmImages().remove(image);
+
 		}
-		ICatalogueSO catalogueSO = null;
-		catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
-		catalogueSO.deleteImageSelection(tobeDeleted);
-		//#30457 - delete
 
 		this.getManagedBean().setDisableDeleteBtn(true);
 	}
+	// #30457, #14118 - end
 	
 	public void rowSelectImage() {
 		if (this.getManagedBean().getSelectedImage().getCmImages().size() > 0) {
@@ -11074,21 +11241,77 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					resDTO.getSupplierItem().setPmUom(item.getPmUom());
 					resDTO.getSupplierItem().setChangedDate(resDTO.getSupplierItem().getChangedDate());
 					
-					//#30457-start
-					if(item.getItemDesc()!=null && !item.getItemDesc().equals(resDTO.getSupplierItem().getItemDesc())){
+				//#30457- start
+				if (item.getItemDesc()!=null ){
+					if(!item.getItemDesc().equals(resDTO.getSupplierItem().getItemDesc())){
 						resDTO.getSupplierItem().setItemDesc(item.getItemDesc());
+					}else {
+						item.setCompareDesc(resDTO.getSupplierItem().getItemDesc());
 					}
-					if(CollectionUtils.isNotEmpty(item.getCmImages())){
+				}
+				//#30457- end
+				
+					// #30457- start
+					if (!this.getManagedBean().isSavedFirst()){
+						this.getManagedBean().setSavedFirst(true);
+					}
+					
+					log.info("getCompareDesc:" + item.getCompareDesc());
+					log.info("getItemDesc:" + item.getItemDesc());
+					log.info("begining isReviewRequired:" + item.isReviewRequired());
+					if (item.getCompareDesc() != null && item.getCompareDesc().trim().length() > 0
+							&& item.getItemDesc() != null && item.getItemDesc().trim().length() > 0) {
+						if (!(item.getCompareDesc().equalsIgnoreCase(item.getItemDesc()))) {
+							item.setReviewRequired(true);
+
+						}
+					} else {
+						if (item.getItemDesc() != null && item.getItemDesc().trim().length() > 0) {
+							log.info("*************set false***************");
+							item.setReviewRequired(true);
+
+						} else {
+							// //// reset review required = false
+							log.info("*************set false***************");
+							item.setReviewRequired(false);
+						}
+					}
+
+					// //if review required = false, continue check on image
+					log.info("2nd check review" + item.isReviewRequired());
+					if (!item.isReviewRequired()) {
+
+						if (item.getCmImages() != null && item.getCmImages().size() > 0) {
+							for (CmImage image : item.getCmImages()) {
+								if (image.isBrandNew()) {
+									image.setModified(true);
+									item.setReviewRequired(true);
+
+									break;
+								}
+							}
+						} else {
+							item.setReviewRequired(false);
+
+						}
+					}
+					// #30457- end
+					
+					//#30457- start
+     				if(CollectionUtils.isNotEmpty(item.getCmImages())){
+     					resDTO.getSupplierItem().getCmImages().clear();
 						boolean newImageExist = false;
 						for(CmImage ci: item.getCmImages()){
 							if(ci.isBrandNew()){
 								resDTO.getSupplierItem().getCmImages().add(ci);
 								ci.setBrandNew(false);
+							}else{
+								resDTO.getSupplierItem().getCmImages().add(ci);
 							}
 						}
 					}
-					//#30457-end
-					
+     				//#30457- end
+     				
 					listToSave.add(resDTO.getSupplierItem());
 
 				} finally {
@@ -11104,6 +11327,35 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				reqDTO.setSaveSupplierItems(listToSave);
 				try {
 					resDTO = catalogueSO.updateSupplierItem(reqDTO);
+				    
+					// #30457- start
+					if (resDTO.isSuccessful() && CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage())) {
+
+						for (CmImage image : this.getManagedBean().getDeleteImage()) {
+
+							StringBuilder deleteImgDir = new StringBuilder();
+							deleteImgDir
+									.append(EpPropertiesUtils.getInstance().getProperty(
+											EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM/")
+									.append(this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo())
+									.append("/").append(image.getImageDesc());
+							log.info("deleteImgDir***" + deleteImgDir);
+
+							try {
+								boolean result = Files.deleteIfExists(Paths.get(deleteImgDir.toString()));
+								if (result) {
+									log.info("File is deleted!");
+								} else {
+									log.info("Sorry, unable to delete the file.");
+								}
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+						this.getManagedBean().getDeleteImage().clear();
+					}
+					// #30457- end
+					
 					FacesContext facesContext = FacesContext.getCurrentInstance();
 					facesContext.addMessage(
 							null,
@@ -11148,20 +11400,73 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					resDTO.getSupplierItem().setPmUom(item.getPmUom());
 					resDTO.getSupplierItem().setChangedDate(resDTO.getSupplierItem().getChangedDate());
 					
-					//#30457-start
-					if(item.getItemDesc()!=null && !item.getItemDesc().equals(resDTO.getSupplierItem().getItemDesc())){
+				//#30457- start
+				if (item.getItemDesc()!=null){
+					if(!item.getItemDesc().equals(resDTO.getSupplierItem().getItemDesc())){
 						resDTO.getSupplierItem().setItemDesc(item.getItemDesc());
+					} else {
+						item.setItemDesc(resDTO.getSupplierItem().getItemDesc());
 					}
-					if(CollectionUtils.isNotEmpty(item.getCmImages())){
+				}
+				//#30457- end
+					
+					// #30457- start
+					if (!this.getManagedBean().isSavedFirst()){
+						this.getManagedBean().setSavedFirst(true);
+					}
+					
+					if (item.getCompareDesc() != null && item.getCompareDesc().trim().length() > 0
+							&& item.getItemDesc() != null && item.getItemDesc().trim().length() > 0) {
+						if (!(item.getCompareDesc().equalsIgnoreCase(item.getItemDesc()))) {
+							item.setReviewRequired(true);
+
+						}
+					} else {
+						if (item.getItemDesc() != null && item.getItemDesc().trim().length() > 0) {
+							log.info("*************set false***************");
+							item.setReviewRequired(true);
+
+						} else {
+							// //// reset review required = false
+							log.info("*************set false***************");
+							item.setReviewRequired(false);
+						}
+					}
+
+					// //if review required = false, continue check on image
+					log.info("2nd check review" + item.isReviewRequired());
+					if (!item.isReviewRequired()) {
+
+						if (item.getCmImages() != null && item.getCmImages().size() > 0) {
+							for (CmImage image : item.getCmImages()) {
+								if (image.isBrandNew()) {
+									image.setModified(true);
+									item.setReviewRequired(true);
+
+									break;
+								}
+							}
+						} else {
+							item.setReviewRequired(false);
+
+						}
+					}
+					// #30457- end
+				
+				//#30457 - start
+				if(CollectionUtils.isNotEmpty(item.getCmImages())){
 						boolean newImageExist = false;
+						resDTO.getSupplierItem().getCmImages().clear();
 						for(CmImage ci: item.getCmImages()){
 							if(ci.isBrandNew()){
 								resDTO.getSupplierItem().getCmImages().add(ci);
 								ci.setBrandNew(false);
+							}else{
+								resDTO.getSupplierItem().getCmImages().add(ci);
 							}
 						}
 					}
-					//#30457-endO
+					//#30457-end
 					listToSave.add(resDTO.getSupplierItem());
 
 				} finally {
@@ -11177,6 +11482,35 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				reqDTO.setSaveSupplierItems(listToSave);
 				try {
 					resDTO = catalogueSO.updateSupplierItem(reqDTO);
+					
+					// #30457- start
+					if (resDTO.isSuccessful() && CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage())) {
+
+						for (CmImage image : this.getManagedBean().getDeleteImage()) {
+
+							StringBuilder deleteImgDir = new StringBuilder();
+							deleteImgDir
+									.append(EpPropertiesUtils.getInstance().getProperty(
+											EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM/")
+									.append(this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo())
+									.append("/").append(image.getImageDesc());
+							log.info("deleteImgDir***" + deleteImgDir);
+
+							try {
+								boolean result = Files.deleteIfExists(Paths.get(deleteImgDir.toString()));
+								if (result) {
+									log.info("File is deleted!");
+								} else {
+									log.info("Sorry, unable to delete the file.");
+								}
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+						this.getManagedBean().getDeleteImage().clear();
+					}
+					// #30457- end
+					
 					FacesContext facesContext = FacesContext.getCurrentInstance();
 					facesContext.addMessage(
 							null,
@@ -11832,44 +12166,25 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 	
 	public void closeImagePopup(){ //only affecting draft tab and draft_supp_temp only
-			this.getManagedBean().getDraftSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()).setCmImages(
-					this.getManagedBean().getSelectedMaintainItem().getCmImages());
-		
-		this.getManagedBean().getDraftSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()).setItemDesc(
-				this.getManagedBean().getSelectedMaintainItem().getItemDesc());
-	}
+		this.getManagedBean().getDraftSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()).setCmImages(
+				this.getManagedBean().getSelectedMaintainItem().getCmImages());
 	
-	public void deleteImageFromPopup(int imageIndex){
+	this.getManagedBean().getDraftSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()).setItemDesc(
+			this.getManagedBean().getSelectedMaintainItem().getItemDesc());
+       }
+	
+	// #30457, #14188 - start
+	public void deleteImageFromPopup(int imageIndex) {
 		log.info("imageIndex:" + imageIndex);
-		List<CmImage> tobeDeleted =new ArrayList<CmImage>();
 		CmImage img = this.getManagedBean().getSelectedMaintainItem().getCmImages().get(imageIndex);
-		tobeDeleted.add(img);
-		
-		StringBuilder deleteImgDir = new StringBuilder();
-		deleteImgDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM/")
-				.append(this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo()).append("/")
-				.append(img.getImageDesc());
-		log.info("deleteImgDir***" + deleteImgDir);
-		
-		try {
-            boolean result = Files.deleteIfExists(Paths.get(deleteImgDir.toString()));
-            if (result) {
-            	log.info("File is deleted!");
-            } else {
-            	log.info("Sorry, unable to delete the file.");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-		
-		if(!img.isBrandNew()) {
-			ICatalogueSO catalogueSO = null;
-			catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
-			catalogueSO.deleteImageSelection(tobeDeleted);
-		}
+
+		if (!img.isBrandNew()) {
+			this.getManagedBean().getDeleteImage().add(img);
+		}// for db data purpose
+
 		this.getManagedBean().getSelectedMaintainItem().getCmImages().remove(imageIndex);
 	}
-
+	// #30457, #14188 - end
 	
 	public void validateBeforePopup(){
 		if (this.getManagedBean().getCloneCmSupplierItemLs().size() < 1) {
