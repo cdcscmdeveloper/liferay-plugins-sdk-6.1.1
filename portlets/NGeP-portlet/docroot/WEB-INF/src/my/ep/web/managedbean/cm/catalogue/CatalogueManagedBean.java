@@ -574,6 +574,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	//#30457 - start
 	private List<CmImage> deleteImage;
+	private String itemStatus;
 	//#30457 - end
 
 	private class ExpiredSearchPagingDataModel extends
@@ -4520,6 +4521,14 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setDeleteImage(List<CmImage> deleteImage) {
 		this.deleteImage = deleteImage;
+	}
+
+	public String getItemStatus() {
+		return itemStatus;
+	}
+
+	public void setItemStatus(String itemStatus) {
+		this.itemStatus = itemStatus;
 	}
 	// #30457 - end
 }
