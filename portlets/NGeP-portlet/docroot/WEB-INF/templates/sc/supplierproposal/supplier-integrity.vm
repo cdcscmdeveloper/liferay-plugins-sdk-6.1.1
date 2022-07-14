@@ -71,6 +71,31 @@
             display: inline-block;
     		margin-left: 1px;
         }
+        
+        .tab6 {
+            display: inline-block;
+    		margin-left: 10px;
+        }
+        
+        .tab7 {
+            display: inline-block;
+    		margin-left: 22px;
+        }
+        
+        .tab8 {
+            display: inline-block;
+    		margin-left: 41px;
+        }
+        
+        .tab9 {
+            display: inline-block;
+    		margin-left: 17px;
+        }
+        
+        .tab10 {
+            display: inline-block;
+    		margin-left: 18px;
+        }
 	
 	</style>
 </head>
@@ -95,7 +120,8 @@
 			Saya, <span class="underline"><b>$salutation $userName</b></span> No. Kad Pengenalan <span class="underline"><b>$icNo</b></span> yang mewakili <span class="underline"><b>$supplierName</b></span> nombor Pendaftaran <span class="underline">$mofNo</span> dengan ini mengisytiharkan bahawa saya atau mana-mana orang yang mewakili syarikat ini:
 		</p>
 			<ul class="standard" style="list-style-type:none;">
-			  <li style="margin-top: 3px;">i.	tidak akan menawarkan, menjanjikan atau memberikan apa-apa suapan kepada mana-mana orang dalam mana-mana Kementerian/Agensi atau mana-mana orang lain, sebagai suapan untuk dipilih dalam mana-mana perolehan; dan</li>
+			  <li style="margin-top: 3px;">i.	tidak akan menawarkan, menjanjikan atau memberikan apa-apa suapan kepada mana-mana orang dalam mana-mana Kementerian/Agensi atau</li>
+			  <li><span class="tab6"/>mana-mana orang lain, sebagai suapan untuk dipilih dalam mana-mana perolehan; dan</li>
 			  <li style="margin-top: 3px;">ii.	tidak akan melakukan atau terlibat dengan tipuan bida dalam mana-mana perolehan.</li>
 			</ul>
 		<p class="standard">
@@ -114,8 +140,12 @@
 			3. Saya sesungguhnya faham bahawa tindakan berikut akan diambil:
 		</p>		
 			<ul class="standard" style="list-style-type:none;">
-			  <li style="margin-top: 3px;">3.1	Didakwa bagi kesalahan** di bawah Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] dan Kanun Keseksaan [<i>Akta 574</i>] serta boleh dihukum di bawah undang-undang masing-masing untuk kegagalan saya atau mana-mana orang yang mewakili syarikat ini untuk mematuhi perkara (i); atau</li><br/>
-			  <li style="margin-top: 3px;">3.2	tindakan boleh dikenakan ke atas syarikat di bawah Akta Persaingan 2010 [<i>Akta 712</i>] atas kegagalan saya atau mana-mana orang yang mewakili syarikat ini untuk mematuhi perkara (ii). Sekiranya syarikat didapati melanggar peruntukan seksyen 4(2)(d) Akta 712, syarikat boleh didenda tidak melebihi sepuluh peratus (10%) daripada pusing ganti (<i>turn over</i>) seluruh dunia sepanjang tempoh suatu pelanggaran itu berlaku.</li>
+			  <li style="margin-top: 3px;">3.1	Didakwa bagi kesalahan** di bawah Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] dan Kanun Keseksaan [<i>Akta 574</i>] serta</li>
+			  <li><span class="tab7"/>boleh dihukum di bawah undang-undang masing-masing untuk kegagalan saya atau mana-mana orang yang mewakili syarikat ini untuk mematuhi</li>
+			  <li><span class="tab7"/>perkara (i); atau</li><br/>
+			  <li style="margin-top: 3px;">3.2	tindakan boleh dikenakan ke atas syarikat di bawah Akta Persaingan 2010 [<i>Akta 712</i>] atas kegagalan saya atau mana-mana orang yang mewakili</li>
+			  <li><span class="tab7"/>syarikat ini untuk mematuhi perkara (ii). Sekiranya syarikat didapati melanggar peruntukan seksyen 4(2)(d) Akta 712, syarikat boleh didenda tidak</li>
+			  <li><span class="tab7"/>melebihi sepuluh peratus (10%) daripada pusing ganti (<i>turn over</i>) seluruh dunia sepanjang tempoh suatu pelanggaran itu berlaku.</li>
 			</ul>
 		
 		<p class="standard">
@@ -129,23 +159,24 @@
 
 	<div class="standard" style="margin-top: 5em;">
 	
-		Yang Benar, <br/><br/>
+		Yang benar, <br/><br/>
 	    
 	    Tandatangan<span class="tab"></span>: .......................................<br/>
 	    Nama<span class="tab"></span><span class="tab"></span>: .......................................<br/>
 	    No. KP<span class="tab"></span><span class="tab"></span><span class="tab2"></span>: .......................................<br/>
 	    Tarikh<span class="tab"></span><span class="tab"></span><span class="tab3"></span>: .......................................<br/>
-	    <br/><br/>
-	    
-	    Cap Syarikat : <br/><br/><br/>
+	    Cap Syarikat<span class="tab8"/>: .......................................<br/><br/><br/>
 	    
 	    Catatan:   
 
 		<ul class="standard" style="list-style-type:none;">
-			<li>i. **termasuk kesalahan ditetapkan dalam Jadual (Perenggan 3 (a), takrif "kesalahan ditetapkan") Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] yang boleh dihukum di bawah Kanun Keseksaan <i>[Akta 574]</i>.</li>
-			<li>ii. ***seseorang yang bersekutu dengan syarikat merujuk kepada seksyen 17A (6) Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>], iaitu seseorang itu bersekutu dengan organisasi komersial jika dia seorang pengarah, pekongsi atau pekerja organisasi komersial itu atau dia ialah orang yang melaksanakan perkhidmatan untuk atau bagi pihak organisasi komersial itu.</li>
-			<li>iii. Surat Akuan ini hendaklah dikemukakan bersama surat perwakilan kuasa.</li>
-			<li>iv. Takrifan perusahaan di bawah Akta 712 merangkumi syarikat yang terlibat dengan perolehan Kerajaan.</li>
+			<li>(i) **termasuk kesalahan ditetapkan dalam Jadual (Perenggan 3 (a), takrif "kesalahan ditetapkan") Akta Suruhanjaya Pencegahan Rasuah Malaysia</li>
+			<li><span class="tab9"/>2009 [<i>Akta 694</i>] yang boleh dihukum di bawah Kanun Keseksaan <i>[Akta 574]</i>.</li>
+			<li>(ii) ***seseorang yang bersekutu dengan syarikat merujuk kepada seksyen 17A (6) Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>],</li>
+			<li><span class="tab10"/>iaitu seseorang itu bersekutu dengan organisasi komersial jika dia seorang pengarah, pekongsi atau pekerja organisasi komersial itu atau dia ialah</li>
+			<li><span class="tab10"/>orang yang melaksanakan perkhidmatan untuk atau bagi pihak organisasi komersial itu.</li>
+			<li>(iii) Surat Akuan ini hendaklah dikemukakan bersama surat perwakilan kuasa.</li>
+			<li>(iv) Takrifan perusahaan di bawah Akta 712 merangkumi syarikat yang terlibat dengan perolehan Kerajaan.</li><br/><br/>
 		</ul> 			
 	    ## #32739 & #32738 - end
 	</div>
