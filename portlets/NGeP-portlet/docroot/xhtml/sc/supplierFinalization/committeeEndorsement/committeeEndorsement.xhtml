@@ -40,8 +40,10 @@
 				<!-- 19287 -start- -->
 				<h:outputText value="#{lbl['lbl.sc.pending']}" 
 							  rendered="#{!endorseStatus or isSupplierFinalization}" />
-				<h:outputText value="#{lbl['lbl.sc.endorse']}" 
+				<!-- 25638 start -->
+				<h:outputText value="#{lbl['lbl.btn.complete']}" 
 							  rendered="#{endorseStatus and !isSupplierFinalization}" />
+				<!-- 25638 end -->
 				<!-- 19287 -end- -->
 			</p:column>
 		</p:dataTable>
