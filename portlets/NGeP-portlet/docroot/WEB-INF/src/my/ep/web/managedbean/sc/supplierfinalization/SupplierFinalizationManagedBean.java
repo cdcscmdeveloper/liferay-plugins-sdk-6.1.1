@@ -309,8 +309,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private String finalizationMethodBefore;
 	//29562 - END
 	
-	private ScQt checkCategoryCodeQt;//#29466
-	
 	/**
 	 * @return the activeIndex
 	 */
@@ -2456,7 +2454,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setMofCntralCtc(boolean isMofCntralCtc) {
 		this.isMofCntralCtc = isMofCntralCtc;
 	}
-
+	
 	//29562 - START
 	public String getFinalizationMethodBefore() {
 		return finalizationMethodBefore;
@@ -2464,25 +2462,12 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 
 	public String setFinalizationMethodBefore(String finalizationMethodBefore) {
 		return this.finalizationMethodBefore = finalizationMethodBefore;
-	}
+}
 	//29562 - END
 	
-	//#29466 - START
-	/**
-	 * @return the checkCategoryCodeQt
-	 */
-	public ScQt getCheckCategoryCodeQt() {
-		return checkCategoryCodeQt;
-	}
 
-	/**
-	 * @param checkCategoryCodeQt the checkCategoryCodeQt to set
-	 */
-	public void setCheckCategoryCodeQt(ScQt checkCategoryCodeQt) {
-		this.checkCategoryCodeQt = checkCategoryCodeQt;
-	}
-	//#29466 - END
-	
+
+
 	////#33174 #21695 Farid
 	/**
 	 * @return 
