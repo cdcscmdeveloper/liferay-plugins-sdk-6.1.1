@@ -117,6 +117,18 @@
 				<p:graphicImage id="uploadImage" value="/css/images/design/document.png" 
 				title="#{lbl['lbl.cm.suptemp.upload.image.tooltip']}" /> 
 			</p:commandLink>
+			<!-- #569- start -->
+			<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
+				    	and fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0
+				    	or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
+				    	and catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc==null)}"
+				    value="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected
+						and fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 
+				    	or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
+				    	and catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc==null) ? '/css/images/design/ico-termination.png' : ''}"
+					update="@form" />
+			<!-- #569- end -->
 		</p:column>
 		<!-- #30457 end -->
 		
