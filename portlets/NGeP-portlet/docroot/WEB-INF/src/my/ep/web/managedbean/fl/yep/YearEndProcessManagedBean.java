@@ -7,11 +7,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import org.apache.log4j.Logger;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.service.fl.IFulfilmentDocumentSO;
 import my.ep.biz.service.fl.IFulfilmentYepSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.fl.FlYepReqDTO;
@@ -24,6 +21,8 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
 
 @ManagedBean(name = "yepMB")
 @SessionScoped
@@ -72,6 +71,9 @@ public class YearEndProcessManagedBean extends BaseManagedBean {
 	private PmOrgProfile ptj;
 	private PmOrgProfile ministry;
 	private PmOrgProfile ptjGroup;
+
+	//#32752
+	private String errorId;
 
 	/**
 	 * Gets the check doc type.
@@ -821,6 +823,14 @@ public class YearEndProcessManagedBean extends BaseManagedBean {
 			
 			return null;
 		}
+	}
+
+	public String getErrorId() {
+		return errorId;
+	}
+
+	public void setErrorId(String errorId) {
+		this.errorId = errorId;
 	}
 
 
