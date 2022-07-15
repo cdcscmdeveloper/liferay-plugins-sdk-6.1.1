@@ -926,7 +926,8 @@
 													<p:selectOneMenu id="agreementReqPk7Per" required="true"
 														style="margin-bottom:5px;width:246px;"
 														value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
-														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
+														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+														disabled="#{!StatusLOASubmission}">
 														<f:selectItems
 															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
 														<!-- #25726 START -->
@@ -939,7 +940,7 @@
 													<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
 														value="#{directLOABackingBean.managedBean.scLoa.agreementReq}"
 														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-														disabled="#{directLOABackingBean.disabledButton()}">
+														disabled="#{directLOABackingBean.disabledButton() || !StatusLOASubmission}">
 														<f:selectItems
 															value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 															<!-- #25726 START -->
@@ -966,7 +967,8 @@
 															<p:selectOneMenu id="agreementReqPk7" required="true"
 																style="margin-bottom:5px;width:246px;"
 																value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
-																label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
+																label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+																disabled="#{!StatusLOASubmission}">
 																<f:selectItems
 																	value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
 																<!-- #25726 START -->
@@ -996,7 +998,7 @@
 														style="margin-bottom:5px;width:246px;"
 														value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
 														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-														disabled="#{directLOABackingBean.managedBean.disableFields}">
+														disabled="#{directLOABackingBean.managedBean.disableFields || !StatusLOASubmission}">
 														<f:selectItems
 															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
 															<!-- #25726 START -->
