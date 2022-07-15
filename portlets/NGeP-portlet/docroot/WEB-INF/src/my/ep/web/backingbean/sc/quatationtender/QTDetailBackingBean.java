@@ -437,6 +437,15 @@ public class QTDetailBackingBean extends
 				|| null == qtnTenderSearchBean.getPtjProfile()) {
 			getDefaultPtjAndMinistryValues();
 		}
+
+		// 9019 - Start (Harun) rendering Group Item that left blank but panel is selected 
+		//       14072022 Add checking ItemGroup due to null when simulate at UAT  
+		if (null != this.getManagedBean().getQt()) {
+			if (this.getManagedBean().getQt().isPanel() && null == this.getManagedBean().getQt().getItemGroup()) {
+				this.getManagedBean().getQt().setItemGroup(new CtPanelItemGroup());
+			}
+		}
+		// 9019 - End (Harun)
 	}
 	
 	/**
