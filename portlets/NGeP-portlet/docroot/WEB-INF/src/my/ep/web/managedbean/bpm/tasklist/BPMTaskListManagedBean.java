@@ -495,6 +495,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
 						} else if (getSort_by().equalsIgnoreCase(BpmConstants.SORT_BY_RECEIVEDDATE)){
 							reqDTO.setSortBy(BpmConstants.SORT_BY_RECEIVEDDATE);
+						} else if (getSort_by().equalsIgnoreCase(BpmConstants.SORT_BY_DOCSTATUS)){
+							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
 						}					
 					}
 				} else {
@@ -511,6 +513,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
 						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_RECEIVEDDATE)){
 							reqDTO.setSortBy(BpmConstants.SORT_BY_RECEIVEDDATE);
+						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_DOCSTATUS)){
+							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
 						}
 					}
 				}				 			
@@ -691,6 +695,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_CREATEDATE);
 						} else if (getSort_byGroup().equalsIgnoreCase(BpmConstants.SORT_BY_STATUS)) {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
+						} else if (getSort_byGroup().equalsIgnoreCase(BpmConstants.SORT_BY_DOCSTATUS)){
+							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
 						} else {
 							//reqDTO.setSortBy(getSort_by());
 						}					
@@ -706,6 +712,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_CREATEDATE)) {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_CREATEDATE);
 						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_STATUS)) {
+							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
+						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_DOCSTATUS)){
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
 						} else {
 							//reqDTO.setSortBy(getSort_by());
