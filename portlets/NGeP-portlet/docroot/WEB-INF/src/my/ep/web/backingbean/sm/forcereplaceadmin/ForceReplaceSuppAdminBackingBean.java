@@ -403,6 +403,38 @@ public class ForceReplaceSuppAdminBackingBean extends
 		
 		List<SmSupplier> supplierLs = resDTO.getSmSuppliers();
 		
+		//#33153 - Start
+		// Sorting First By SupplierType
+		List<SmSupplier> removeSupp = new ArrayList<SmSupplier>();
+		boolean isContractor = false;
+		if (getManagedBean().getReactivateBasic().getSuppType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+			isContractor = true;
+		} else {
+			isContractor = false;
+		}
+
+		if (supplierLs.size() > 1) {
+			for (SmSupplier supplier : supplierLs) {
+				if (supplier.getSmAppl().getSupplierType() != null) {
+					if (isContractor) {
+						if (!supplier.getSmAppl().getSupplierType()
+								.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+							removeSupp.add(supplier);
+						}
+					} else if (!isContractor) {
+						if (!supplier.getSmAppl().getSupplierType()
+								.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+							removeSupp.add(supplier);
+						}
+					}
+				}
+			}
+			supplierLs.removeAll(removeSupp);
+		}
+		//then start for throwing exception based from list that has been remove by supplier type
+		//#33153 - End
+		
 		if(supplierLs.size() > 1){
 			
 			StringBuilder suppleirList = new StringBuilder();
