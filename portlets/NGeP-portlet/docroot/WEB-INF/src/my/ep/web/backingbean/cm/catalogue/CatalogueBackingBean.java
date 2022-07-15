@@ -5493,6 +5493,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				CmSupplierItem catalog = resDTO.getSupplierItem();
 
 				log.info("catalog.getPmUom().getUomName():" + catalog.getPmUom().getUomName());
+				
+				//#30457- start
+				if (CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage()) && i == 0) {
+ 					List<CmImage> tobeDeleted = new ArrayList<CmImage>();
+ 					for (CmImage image : catalog.getCmImages()){
+ 						for (CmImage imgDel : this.getManagedBean().getDeleteImage()) {
+ 							if(image.getImageId() == imgDel.getImageId() 
+ 									|| image.getImageName().equalsIgnoreCase(imgDel.getImageName())){
+ 								tobeDeleted.add(image);
+ 							}
+ 						}
+ 					}
+ 					catalog.getCmImages().removeAll(tobeDeleted);
+ 				}
+				//#30457- end
 
 				//#30457-start
 				if((StringUtils.isBlank(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc())
@@ -5515,18 +5530,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages().size() > 0)
 						&& this.getManagedBean().getSelectedMaintainItem().getItemStatus()
 								.equals(CmConst.ITEM_STATUS_DRAFT)) {
-					catalog.setReviewRequired(true);
+					
 					if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).isBrandNew()) {
-						catalog.setCmImages(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages());
+						catalog.getCmImages().addAll(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages());
 						catalog.setBrandNew(false);
 					}
-				}
-
-				if (!this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc()
-						.equalsIgnoreCase(catalog.getItemDesc())) {
-					catalog.setItemDesc(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc());
-				} else {
-					catalog.setItemDesc(catalog.getItemDesc());
+					
+					if (!this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc()
+							.equalsIgnoreCase(catalog.getItemDesc())) {
+						catalog.setItemDesc(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc());
+					} else {
+						this.getManagedBean().getCloneCmSupplierItemLs().get(i).setCompareDesc(catalog.getItemDesc());
+					}
 				}
 				
 				if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCompareDesc() != null
@@ -5535,19 +5550,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc().trim().length() > 0) {
 					if (!(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCompareDesc()
 							.equalsIgnoreCase(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc()))) {
-						this.getManagedBean().getCloneCmSupplierItemLs().get(i).setReviewRequired(true);
+						catalog.setReviewRequired(true);
 
 					}
 				} else {
 					if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc() != null
 							&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc().trim().length() > 0) {
 						log.info("*************set true***************");
-						this.getManagedBean().getCloneCmSupplierItemLs().get(i).setReviewRequired(true);
+						catalog.setReviewRequired(true);
 
 					} else {
 						// //// reset review required = false
 						log.info("*************set false***************");
-						this.getManagedBean().getCloneCmSupplierItemLs().get(i).setReviewRequired(false);
+						catalog.setReviewRequired(false);
 					}
 				}
 
@@ -5560,13 +5575,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages().size() > 0) {
 						for (CmImage image : this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages()) {
 							if (!image.isImageReviewed()) {
-								this.getManagedBean().getCloneCmSupplierItemLs().get(i).setReviewRequired(true);
+								catalog.setReviewRequired(true);
 								image.setImageReviewed(true);
 								break;
 							}
 						}
 					} else {
-						this.getManagedBean().getCloneCmSupplierItemLs().get(i).setReviewRequired(false);
+						catalog.setReviewRequired(false);
 
 					}
 				}
@@ -11243,7 +11258,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					
 				//#30457- start
 				if (item.getItemDesc()!=null ){
-					if(!item.getItemDesc().equals(resDTO.getSupplierItem().getItemDesc())){
+					if(!item.getItemDesc().equals(item.getItemDesc())){
 						resDTO.getSupplierItem().setItemDesc(item.getItemDesc());
 					}else {
 						item.setCompareDesc(resDTO.getSupplierItem().getItemDesc());
@@ -11256,24 +11271,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						this.getManagedBean().setSavedFirst(true);
 					}
 					
-					log.info("getCompareDesc:" + item.getCompareDesc());
-					log.info("getItemDesc:" + item.getItemDesc());
-					log.info("begining isReviewRequired:" + item.isReviewRequired());
 					if (item.getCompareDesc() != null && item.getCompareDesc().trim().length() > 0
 							&& item.getItemDesc() != null && item.getItemDesc().trim().length() > 0) {
 						if (!(item.getCompareDesc().equalsIgnoreCase(item.getItemDesc()))) {
-							item.setReviewRequired(true);
+							resDTO.getSupplierItem().setReviewRequired(true);
 
 						}
 					} else {
 						if (item.getItemDesc() != null && item.getItemDesc().trim().length() > 0) {
 							log.info("*************set false***************");
-							item.setReviewRequired(true);
+							resDTO.getSupplierItem().setReviewRequired(true);
 
 						} else {
 							// //// reset review required = false
 							log.info("*************set false***************");
-							item.setReviewRequired(false);
+							resDTO.getSupplierItem().setReviewRequired(false);
 						}
 					}
 
@@ -11285,28 +11297,38 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							for (CmImage image : item.getCmImages()) {
 								if (image.isBrandNew()) {
 									image.setModified(true);
-									item.setReviewRequired(true);
+									resDTO.getSupplierItem().setReviewRequired(true);
 
 									break;
 								}
 							}
 						} else {
-							item.setReviewRequired(false);
+							resDTO.getSupplierItem().setReviewRequired(false);
 
 						}
 					}
 					// #30457- end
 					
 					//#30457- start
+					if (CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage())) {
+     					List<CmImage> tobeDeleted = new ArrayList<CmImage>();
+     					for (CmImage image : resDTO.getSupplierItem().getCmImages()){
+     						for (CmImage imgDel : this.getManagedBean().getDeleteImage()) {
+     							if(image.getImageId() == imgDel.getImageId() 
+     									|| image.getImageName().equalsIgnoreCase(imgDel.getImageName())){
+     								tobeDeleted.add(image);
+     							}
+     						}
+     					}
+     					resDTO.getSupplierItem().getCmImages().removeAll(tobeDeleted);
+     				}
+					
      				if(CollectionUtils.isNotEmpty(item.getCmImages())){
-     					resDTO.getSupplierItem().getCmImages().clear();
 						boolean newImageExist = false;
 						for(CmImage ci: item.getCmImages()){
 							if(ci.isBrandNew()){
 								resDTO.getSupplierItem().getCmImages().add(ci);
 								ci.setBrandNew(false);
-							}else{
-								resDTO.getSupplierItem().getCmImages().add(ci);
 							}
 						}
 					}
@@ -11418,18 +11440,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					if (item.getCompareDesc() != null && item.getCompareDesc().trim().length() > 0
 							&& item.getItemDesc() != null && item.getItemDesc().trim().length() > 0) {
 						if (!(item.getCompareDesc().equalsIgnoreCase(item.getItemDesc()))) {
-							item.setReviewRequired(true);
+							resDTO.getSupplierItem().setReviewRequired(true);
 
 						}
 					} else {
 						if (item.getItemDesc() != null && item.getItemDesc().trim().length() > 0) {
 							log.info("*************set false***************");
-							item.setReviewRequired(true);
+							resDTO.getSupplierItem().setReviewRequired(true);
 
 						} else {
 							// //// reset review required = false
 							log.info("*************set false***************");
-							item.setReviewRequired(false);
+							resDTO.getSupplierItem().setReviewRequired(false);
 						}
 					}
 
@@ -11441,28 +11463,37 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							for (CmImage image : item.getCmImages()) {
 								if (image.isBrandNew()) {
 									image.setModified(true);
-									item.setReviewRequired(true);
+									resDTO.getSupplierItem().setReviewRequired(true);
 
 									break;
 								}
 							}
 						} else {
-							item.setReviewRequired(false);
-
+							resDTO.getSupplierItem().setReviewRequired(false);
 						}
 					}
 					// #30457- end
 				
 				//#30457 - start
+					if (CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage())) {
+     					List<CmImage> tobeDeleted = new ArrayList<CmImage>();
+     					for (CmImage image : resDTO.getSupplierItem().getCmImages()){
+     						for (CmImage imgDel : this.getManagedBean().getDeleteImage()) {
+     							if(image.getImageId() == imgDel.getImageId() 
+     									|| image.getImageName().equalsIgnoreCase(imgDel.getImageName())){
+     								tobeDeleted.add(image);
+     							}
+     						}
+     					}
+     					resDTO.getSupplierItem().getCmImages().removeAll(tobeDeleted);
+     				}	
+					
 				if(CollectionUtils.isNotEmpty(item.getCmImages())){
 						boolean newImageExist = false;
-						resDTO.getSupplierItem().getCmImages().clear();
 						for(CmImage ci: item.getCmImages()){
 							if(ci.isBrandNew()){
 								resDTO.getSupplierItem().getCmImages().add(ci);
 								ci.setBrandNew(false);
-							}else{
-								resDTO.getSupplierItem().getCmImages().add(ci);
 							}
 						}
 					}
