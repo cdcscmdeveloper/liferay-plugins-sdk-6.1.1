@@ -11256,15 +11256,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					resDTO.getSupplierItem().setPmUom(item.getPmUom());
 					resDTO.getSupplierItem().setChangedDate(resDTO.getSupplierItem().getChangedDate());
 					
-				//#30457- start
-				if (item.getItemDesc()!=null ){
-					if(!item.getItemDesc().equals(item.getItemDesc())){
+					// #30457- start
+					if (item.getItemDesc() != null
+							&& !item.getItemDesc().equals(resDTO.getSupplierItem().getItemDesc())) {
 						resDTO.getSupplierItem().setItemDesc(item.getItemDesc());
-					}else {
+					} else {
 						item.setCompareDesc(resDTO.getSupplierItem().getItemDesc());
 					}
-				}
-				//#30457- end
+					// #30457- end
 				
 					// #30457- start
 					if (!this.getManagedBean().isSavedFirst()){
@@ -11422,15 +11421,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					resDTO.getSupplierItem().setPmUom(item.getPmUom());
 					resDTO.getSupplierItem().setChangedDate(resDTO.getSupplierItem().getChangedDate());
 					
-				//#30457- start
-				if (item.getItemDesc()!=null){
-					if(!item.getItemDesc().equals(resDTO.getSupplierItem().getItemDesc())){
+					// #30457- start
+					if (item.getItemDesc() != null
+							&& !item.getItemDesc().equals(resDTO.getSupplierItem().getItemDesc())) {
 						resDTO.getSupplierItem().setItemDesc(item.getItemDesc());
 					} else {
-						item.setItemDesc(resDTO.getSupplierItem().getItemDesc());
+						item.setCompareDesc(resDTO.getSupplierItem().getItemDesc());
 					}
-				}
-				//#30457- end
+					// #30457- end
 					
 					// #30457- start
 					if (!this.getManagedBean().isSavedFirst()){
