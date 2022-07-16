@@ -186,18 +186,18 @@
 					title="#{lbl['lbl.cm.suptemp.upload.image.tooltip']}" /> 
 				</p:commandLink>
 				<!-- #30457 end -->
-				<!-- 569 Start - 14/07/2022 --> 
+				<!-- 569 Start - 17/07/2022 --> 
 				<p:graphicImage
-				    rendered="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
-				    	and fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0
+				    rendered="#{(catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
+				    	and fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) eq '0')
 				    	or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
 				    	and catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc==null)}"
-				    value="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected
-						and fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 
+				    value="#{(catalogueBackingBean.managedBean.publish and selectedSuppCat.selected
+						and fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) eq '0') 
 				    	or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
 				    	and catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc==null) ? '/css/images/design/ico-termination.png' : ''}"
 					update="@form" />
-				<!-- 569 End - 14/07/2022 --> 
+				<!-- 569 End - 17/07/2022 --> 
 			</p:column>
 			<!-- START SSM INTEGRATION #27089 -->
 			<p:column width="2%">
