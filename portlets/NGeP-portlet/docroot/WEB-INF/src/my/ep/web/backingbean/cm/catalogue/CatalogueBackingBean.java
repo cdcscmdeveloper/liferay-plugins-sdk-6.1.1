@@ -5865,79 +5865,88 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 				
 				// #30457- start
-				if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc() != null &&
-						!this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc()
-						.equalsIgnoreCase(catalog.getItemDesc())) {
-					catalog.setItemDesc(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc());
-				} else {
-					this.getManagedBean().getCloneCmSupplierItemLs().get(i).setCompareDesc(catalog.getItemDesc());
-				}
-			
-			if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCompareDesc() != null
-					&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCompareDesc().trim().length() > 0
-					&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc() != null
-					&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc().trim().length() > 0) {
-				if (!(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCompareDesc()
-						.equalsIgnoreCase(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc()))) {
-					catalog.setReviewRequired(true);
+				if (notSupplierTemp) {
+					if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc() != null
+							&& !this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc()
+									.equalsIgnoreCase(catalog.getItemDesc())) {
+						catalog.setItemDesc(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc());
+					} else {
+						this.getManagedBean().getCloneCmSupplierItemLs().get(i).setCompareDesc(catalog.getItemDesc());
+					}
 
-				}
-			} else {
-				if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc() != null
-						&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc().trim().length() > 0) {
-					log.info("*************set true***************");
-					catalog.setReviewRequired(true);
-
-				} else {
-					// //// reset review required = false
-					log.info("*************set false***************");
-					catalog.setReviewRequired(false);
-				}
-			}
-
-			// //if review required = false, continue check on image
-			log.info("2nd check review"
-					+ this.getManagedBean().getCloneCmSupplierItemLs().get(i).isReviewRequired());
-			if (!catalog.isReviewRequired()) {
-				if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages() != null
-						&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages().size() > 0) {
-					for (CmImage image : this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages()) {
-						if (!image.isImageReviewed()) {
+					if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCompareDesc() != null
+							&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCompareDesc().trim().length() > 0
+							&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc() != null
+							&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc().trim().length() > 0) {
+						if (!(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCompareDesc()
+								.equalsIgnoreCase(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc()))) {
 							catalog.setReviewRequired(true);
-							catalog.getCmImages().get(i).setImageReviewed(true);
-							break;
+
+						}
+					} else {
+						if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc() != null
+								&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc().trim()
+										.length() > 0) {
+							log.info("*************set true***************");
+							catalog.setReviewRequired(true);
+
+						} else {
+							// //// reset review required = false
+							log.info("*************set false***************");
+							catalog.setReviewRequired(false);
+						}
+					}
+
+					// //if review required = false, continue check on image
+					log.info("2nd check review"
+							+ this.getManagedBean().getCloneCmSupplierItemLs().get(i).isReviewRequired());
+					if (!catalog.isReviewRequired()) {
+						if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages() != null
+								&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages().size() > 0) {
+							for (CmImage image : this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages()) {
+								if (!image.isImageReviewed()) {
+									catalog.setReviewRequired(true);
+									catalog.getCmImages().get(i).setImageReviewed(true);
+									break;
+								}
+							}
+						} else {
+							catalog.setReviewRequired(false);
+
 						}
 					}
 				} else {
-					catalog.setReviewRequired(false);
 
+					if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc() != null
+							&& !this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc()
+									.equalsIgnoreCase(catalog.getItemDesc())) {
+						catalog.setItemDesc(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc());
+					}
 				}
-			}
-			
-			if (CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage()) && i == 0) {				
+
+				if (CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage()) && i == 0) {
 					List<CmImage> tobeDeleted = new ArrayList<CmImage>();
-					for (CmImage image : catalog.getCmImages()){
+					for (CmImage image : catalog.getCmImages()) {
 						for (CmImage imgDel : this.getManagedBean().getDeleteImage()) {
-							if(image.getImageId() == imgDel.getImageId() 
-									|| image.getImageName().equalsIgnoreCase(imgDel.getImageName())){
+							if (image.getImageId() == imgDel.getImageId()
+									|| image.getImageName().equalsIgnoreCase(imgDel.getImageName())) {
 								tobeDeleted.add(image);
 							}
 						}
 					}
 					catalog.getCmImages().removeAll(tobeDeleted);
 				}
-			
-			if(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages() != null
-					&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages().size() > 0){
-				for(CmImage ci: this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages()){
-					if(ci.isBrandNew()){
-						catalog.getCmImages().add(ci);
-						ci.setBrandNew(false);
+
+				if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages() != null
+						&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages().size() > 0) {
+					for (CmImage ci : this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages()) {
+						if (ci.isBrandNew()) {
+							catalog.getCmImages().add(ci);
+							ci.setBrandNew(false);
+						}
 					}
 				}
-			}
-			
-			// #30457- end
+				// #30457- end
 
 				StatusReqDTO statusReqDTO = new StatusReqDTO();
 
@@ -11425,53 +11434,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					if (item.getItemDesc() != null
 							&& !item.getItemDesc().equals(resDTO.getSupplierItem().getItemDesc())) {
 						resDTO.getSupplierItem().setItemDesc(item.getItemDesc());
-					} else {
-						item.setCompareDesc(resDTO.getSupplierItem().getItemDesc());
 					}
 					// #30457- end
-					
-					// #30457- start
-					if (!this.getManagedBean().isSavedFirst()){
-						this.getManagedBean().setSavedFirst(true);
-					}
-					
-					if (item.getCompareDesc() != null && item.getCompareDesc().trim().length() > 0
-							&& item.getItemDesc() != null && item.getItemDesc().trim().length() > 0) {
-						if (!(item.getCompareDesc().equalsIgnoreCase(item.getItemDesc()))) {
-							resDTO.getSupplierItem().setReviewRequired(true);
 
-						}
-					} else {
-						if (item.getItemDesc() != null && item.getItemDesc().trim().length() > 0) {
-							log.info("*************set false***************");
-							resDTO.getSupplierItem().setReviewRequired(true);
-
-						} else {
-							// //// reset review required = false
-							log.info("*************set false***************");
-							resDTO.getSupplierItem().setReviewRequired(false);
-						}
-					}
-
-					// //if review required = false, continue check on image
-					log.info("2nd check review" + item.isReviewRequired());
-					if (!resDTO.getSupplierItem().isReviewRequired()) {
-
-						if (item.getCmImages() != null && item.getCmImages().size() > 0) {
-							for (CmImage image : item.getCmImages()) {
-								if (image.isBrandNew()) {
-									image.setModified(true);
-									resDTO.getSupplierItem().setReviewRequired(true);
-
-									break;
-								}
-							}
-						} else {
-							resDTO.getSupplierItem().setReviewRequired(false);
-						}
-					}
-					// #30457- end
-				
 				//#30457 - start
 					if (CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage())) {
      					List<CmImage> tobeDeleted = new ArrayList<CmImage>();
