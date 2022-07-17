@@ -2061,4 +2061,13 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	}	
 	//#32280 - end
 	
+	//#25725 - start
+	public String getProcurementType() {
+		return procurementType;
+	}
+
+	public void setProcurementType(String procurementType) {
+		this.procurementType = procurementType;
+	}
+	//#25725 - end
 }

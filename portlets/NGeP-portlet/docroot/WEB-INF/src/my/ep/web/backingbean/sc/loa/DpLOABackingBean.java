@@ -135,6 +135,10 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 			List<String> fulfilmentTypes = new ArrayList<String>();
 			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
+			//#25725 start
+			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN);
+			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED);
+			//#25725 end
 			reqDTO.setFulfillmentTypes(fulfilmentTypes);
 			reqDTO.setAssignedTo(userId);
 
@@ -329,7 +333,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 						retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
 						str2.append(retVal.getEndDate()).append(".");
 						getManagedBean().setDisciplinaryActionEndDate(str2.toString());
-								
+						
 						//#32643,32642 - Start (follow from SM bug 28198))
 						List<DisciplinaryActionVO> remList = new ArrayList<DisciplinaryActionVO>();
 						

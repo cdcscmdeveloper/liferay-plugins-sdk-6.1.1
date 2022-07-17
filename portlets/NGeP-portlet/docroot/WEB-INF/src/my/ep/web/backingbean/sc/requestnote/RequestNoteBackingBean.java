@@ -1203,7 +1203,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						// Check total procurement amount per ptj per item per year
 						FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
 						if (requestNoteDtl.getRequestItem().getCmItem() != null) {
-							Long itemId = requestNoteDtl.getRequestItem().getCmItem().getItemId();
 							String extensionCode = requestNoteDtl.getRequestItem().getCmItem().getExtensionCode();
 							debugLogger("RequestNoteBackingBean >> validateRequestNote : RequestNoteDtl ID = "
 									+ requestNoteDtl.getRequestNoteDtlId());
@@ -3377,7 +3376,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void afterSavePostListener(ScRequestNoteDtl requestNoteDtl) {
 		debugLogger("afterSavePostLister");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-
+		
 		//32520 - Start
 		if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getScRequestSupplierItem() != null
 				&& requestNoteDtl.getScRequestNote() != null){
@@ -4851,9 +4850,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					if (uomPerMonth != null) {
 						zonalSubTotalAmount = zonalSubTotalAmount.multiply(uomPerMonth);
 					}
-
+					
+					//#25725 add fullfilment type non periodic to the condition.
 					// add fix for 24348 calculation for RN
-					if (!fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
+					if (!fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) && 
+							!fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)) {
 						if (itemDurationMonth != null) {
 							zonalSubTotalAmount = zonalSubTotalAmount.multiply(itemDurationMonth);
 						} else {
@@ -5124,7 +5125,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}	 
 		
 		// Refactor: #12177 - Start
-		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();	
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
 		log.info("Refactor 12177 (RequestNoteBackingBean) : getSqTimeValidity - " + sqTimeValidity);
 		// Refactor: #12177 - End
 		
