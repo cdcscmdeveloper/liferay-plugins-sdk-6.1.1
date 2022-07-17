@@ -47,6 +47,7 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -117,6 +118,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
@@ -3262,7 +3264,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onSelectProductItem() {
 		try{
-			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
+			//ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
 			log.info("Selected Item ***"+getManagedBean().getSelectedItem());
 			log.info("Show Item ****"+getManagedBean().getShowItem());
 			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
@@ -3300,7 +3302,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onSelectServiceItem() {
 		try{
-			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
+			//ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
 			log.info("Selected Item onSelectServiceItem ***"+getManagedBean().getServiceselectedItem());
 			log.info("Show Item  onSelectServiceItem ****"+getManagedBean().getShowItem());
 			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
@@ -4704,24 +4706,42 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 	//#30428 - End
-				
-		//Enhancement 15851 - Start
-		/**
-		 * The method used to navigate to Original contract details screen
-		 * for view purpose.
-		 * 
-		 * @return the navigate URL 
-		 */
-		public void goToOriginalLoaView(ScLoa scLoa) {
-				LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
-				FacesContext fc = FacesContext.getCurrentInstance();
-				loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
-				loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
-				loaDetailBackingBean.viewLOA(scLoa.getLoaId());			
+	
+	//#25002 - start
+
+	public List<ScAttachment> getApprovalLetter(){
+		List<ScAttachment> listAttachments = new ArrayList<>();
+		IQTAwardSO awardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+		Long loaid = getManagedBean().getContractVer().getCtContract().getLoa().getLoaId();
+		listAttachments = awardSO.retrieveScAttachmentByDocID(loaid,ParameterConst.EP_DOC_LOA);
+		return listAttachments;
+	}
+
+	public void downloadScAttachmentFile(ScAttachment scAttachment){
+		LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+		try {
+			loaDetailBackingBean.downloadFile(scAttachment);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		//Enhancement 15851 - End
-		
-		
-
-
-}  
+	}
+	
+	//#25002 - end
+	
+	//Enhancement 15851 - Start
+	/**
+	 * The method used to navigate to Original contract details screen
+	 * for view purpose.
+	 * 
+	 * @return the navigate URL 
+	 */
+	public void goToOriginalLoaView(ScLoa scLoa) {
+			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
+			loaDetailBackingBean.viewLOA(scLoa.getLoaId());			
+	}
+	//Enhancement 15851 - End
+}
