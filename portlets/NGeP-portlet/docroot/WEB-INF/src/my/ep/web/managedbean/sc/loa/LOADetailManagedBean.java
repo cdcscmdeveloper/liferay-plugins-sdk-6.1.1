@@ -315,6 +315,15 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private boolean multipleSuppOffer = Boolean.FALSE;
 	//#29006 - end
 	
+	//#25725 start
+	private boolean disabledButton = true;
+	public BigDecimal limit = new BigDecimal(500000);
+	public boolean above500K = true;
+	public boolean AgreementReqChange = false;
+	public String docStatus;
+	public String procurementType;
+	//#25725 end
+	
 	//#19336
 		private boolean isValidatewitness=false;
 		
@@ -1910,6 +1919,45 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.uploadA3Templet = uploadA3Templet;
 	}
 	/*#29007 End Vinod*/
+
+	//#25725 start
+	public boolean isDisabledButton() {
+		return disabledButton;
+	}
+	public void setDisabledButton(boolean disabledButton) {
+		this.disabledButton = disabledButton;
+	}
+	public BigDecimal getLimit() {
+		return limit;
+	}
+	public void setLimit(BigDecimal limit) {
+		this.limit = limit;
+	}
+	public boolean isAbove500K() {
+		return above500K;
+	}
+	public void setAbove500K(boolean above500k) {
+		above500K = above500k;
+	}	
+
+	public boolean isAgreementReqChange() {
+		return AgreementReqChange;
+	}
+
+	public void setAgreementReqChange(boolean agreementReqChange) {
+		AgreementReqChange = agreementReqChange;
+	}
+
+	public String getDocStatus() {
+		return docStatus;
+	}
+
+	public void setDocStatus(String docStatus) {
+		this.docStatus = docStatus;
+	}
+	
+	//#25725 end
+
 	//#27797 - start
 	public ScLoiLoaItem getHighestZoneScLoiLoaItem() {
 		return highestZoneScLoiLoaItem;
