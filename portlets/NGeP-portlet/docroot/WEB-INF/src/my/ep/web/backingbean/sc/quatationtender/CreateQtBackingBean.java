@@ -1158,7 +1158,7 @@ public class CreateQtBackingBean extends
 					break;
 				}
 			}
-
+			// #25726 START
 			if (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(this
 					.getManagedBean().getFulfilmentType())) {
 				this.getManagedBean()
@@ -1166,16 +1166,18 @@ public class CreateQtBackingBean extends
 						.setScheduleType(
 								ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
-			} else if (ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
-					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) {
+			} else if ((ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) || (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN
+							.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()))) {
 				this.getManagedBean()
 						.getQt()
 						.setScheduleType(
 								ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 				this.getManagedBean().setTotalProgressivePayment(0);
 
-			} else if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
-					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) {
+			} else if ((ParameterConst.FULFILMENT_TYPE_SCHEDULED
+					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) || (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED
+							.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())))) {
 				this.getManagedBean()
 						.getQt()
 						.setScheduleType(
@@ -1184,6 +1186,7 @@ public class CreateQtBackingBean extends
 				this.getManagedBean().setTotalProgressivePayment(0);
 
 			}
+			// #25726 END
 			this.getManagedBean().getQt().setScQtSchedules(null);
 			this.getManagedBean().getQt().setScQtProgressivePayments(null);
 			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
@@ -3776,10 +3779,7 @@ public class CreateQtBackingBean extends
 	public void yesDeleteExistingDemoTechChecklist() {
 		SpecificationResDTO resDTO = null;
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-//		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTSpecSO.class);
-		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTSpecSO.class);
 
 		try {
@@ -3788,11 +3788,6 @@ public class CreateQtBackingBean extends
 			resDTO = specSo.deleteDemoSpecChecklist(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-//				ScQt scQt = getManagedBean().getQt();
-//				scQt.setDemoRequired(false);
-//				specReqDTO.setScQt(scQt);
-//				specSO.saveQTDtl(specReqDTO);
-				
 				SpecificationBackingBean specBB = new SpecificationBackingBean();
 				specBB.resetDemoTechSpecListAfterDelete();
 			}

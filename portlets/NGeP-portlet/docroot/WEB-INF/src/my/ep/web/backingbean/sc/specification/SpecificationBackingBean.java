@@ -10934,13 +10934,18 @@ if (null != checklist && !checklist.isEmpty()) {
 			this.getManagedBean().setPanelZone(true);
 		}
 		/*end*/
+		// #25726 Add Non Periodic As And When
 		if (null != this.getManagedBean().getFulfilmentType()
 				&& !"".equalsIgnoreCase(this.getManagedBean()
 						.getFulfilmentType())
-				&& this.getManagedBean()
+				&& (this.getManagedBean()
 						.getFulfilmentType()
 						.equalsIgnoreCase(
-								ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
+								ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) 
+								|| (this.getManagedBean()
+										.getFulfilmentType()
+										.equalsIgnoreCase(
+												ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)))) {
 			scQt.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 		}
 		if (null != this.getManagedBean().getFulfilmentType()
@@ -10956,10 +10961,14 @@ if (null != checklist && !checklist.isEmpty()) {
 		if (null != this.getManagedBean().getFulfilmentType()
 				&& !"".equalsIgnoreCase(this.getManagedBean()
 						.getFulfilmentType())
-				&& this.getManagedBean()
+				&& (this.getManagedBean()
 						.getFulfilmentType()
 						.equalsIgnoreCase(
-								ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+								ParameterConst.FULFILMENT_TYPE_SCHEDULED)) 
+								|| this.getManagedBean()
+								.getFulfilmentType()
+								.equalsIgnoreCase(
+										ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) {
 			if (null == scQt.getScheduleType()) {
 				scQt.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 			}
@@ -18384,6 +18393,9 @@ if (null != checklist && !checklist.isEmpty()) {
 		Boolean isItemTypeService = false;
 		Boolean isFulfilmentTypeScheduled = false;	
 		Boolean isZonal = false;
+		// #25726 START
+		Boolean isFulfilmentTypeNonPeriodicScheduled = false;	
+		// #25726 END
 		
 		if (templateSpecBean.getSpecMaster().getTplSpecZone() != null) {
 			isZonal = true;
@@ -18393,10 +18405,14 @@ if (null != checklist && !checklist.isEmpty()) {
 		} 
 
 		// #25039#67#92 - start
+		// #25726 START
 		if (this.getManagedBean().getFulfilmentType().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 			isFulfilmentTypeScheduled = true;
 		}
-
+		if(this.getManagedBean().getFulfilmentType().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)){
+			isFulfilmentTypeNonPeriodicScheduled = true;
+		}
+		//#25726 END
 		if(getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
 			isItemTypeService = true;
 		}
@@ -18490,7 +18506,8 @@ if (null != checklist && !checklist.isEmpty()) {
 									isItemTypeService,
 									isFulfilmentTypeScheduled, 
 									specZoneId, 
-									questionId); 
+									questionId,
+									isFulfilmentTypeNonPeriodicScheduled); 
 						}//#25039 end 21-3-2020
 					}
 				}
@@ -18498,7 +18515,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		}	
 	}
 	// #25039#67#76 - end
-
+	
 	/*11104_start
 	 * sample checklist cretaed during sample radio button select.
 	 */

@@ -776,15 +776,20 @@ public class TemplateSpecHelper {
 						specQuestion = resDTO.getSpecQuestionList().get(0);
 					}
 				}
-				if (!specQuestion.getClFulfilmentTypeCode().getParameterCode()
-						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
-					if (itemDurationMonth != null) {
-						totalPrice = totalPrice.multiply(itemDurationMonth);
-					} else {
-						BigDecimal durationMonth = specQuestion.getTplSpecMaster().getDurationMonth();
+				//#25726 - Remove one-off from the condition
+				if(null != specQuestion.getClFulfilmentTypeCode()){
+					if (!specQuestion.getClFulfilmentTypeCode().getParameterCode()
+						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) && 
+						!specQuestion.getClFulfilmentTypeCode().getParameterCode()
+						.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)) {
+						if (itemDurationMonth != null) {
+							totalPrice = totalPrice.multiply(itemDurationMonth);
+						} else {
+							BigDecimal durationMonth = specQuestion.getTplSpecMaster().getDurationMonth();
 
-						if (durationMonth != null) {
-							totalPrice = totalPrice.multiply(durationMonth);
+							if (durationMonth != null) {
+								totalPrice = totalPrice.multiply(durationMonth);
+							}
 						}
 					}
 				}

@@ -29,6 +29,10 @@
 	</c:if>
 	
 	<!-- #25725 end -->	
+	
+	<!-- #25726 start -->
+	<ui:param name="StatusLOASubmission" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"></ui:param>
+	<!-- #25726 end -->
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -323,7 +327,14 @@
 				<p:inputText 
 					value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode)}"
 					disabled="true" size="35"/>
-				<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.tooltip']}" />							
+				<!-- #25726 START -->
+				<c:if test="#{isDocTypeQuotation}">
+					<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+				</c:if>
+				<c:if test="#{!isDocTypeQuotation}">
+					<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.tooltip']}" />
+				</c:if>
+				<!-- #25726 END -->								
 			</td>
 		</tr>
 		<!-- #25725 end -->
@@ -652,8 +663,15 @@
 							<!--#25725 end-->	
 							</td>
 							<td style="margin-top: -3px">
-								<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.agree.tooltip']}" />
-							</td>
+								<!-- #25726 START -->
+								<c:if test="#{isDocTypeQuotation}">
+									<ac:iconTooltip value="#{lbl['lbl.sc.required.agreement.qt.tooltip']}" />
+								</c:if>
+								<c:if test="#{!isDocTypeQuotation}">
+									<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.agree.tooltip']}" />
+								</c:if>
+								<!-- #25726 END -->
+							</td>							
 						</tr>
 					</table>
 				</td>
@@ -674,8 +692,10 @@
 				<tr>				
 					<td colspan="3">
 						<p:outputPanel id="uploadApprovalLetterPg"> 
-							<h:panelGroup  rendered="#{((lOADetailBackingBean.managedBean.agreementReqChange) and (!lOADetailBackingBean.managedBean.scLoa.agreementReq) and (isNonPeriodic and !isPK7) and (lOADetailBackingBean.managedBean.above500K))}" 
+							<!-- #25726 START -->													
+							<h:panelGroup  rendered="#{StatusLOASubmission and ((lOADetailBackingBean.managedBean.agreementReqChange and !lOADetailBackingBean.managedBean.scLoa.agreementReq and lOADetailBackingBean.managedBean.above500K and isNonPeriodic and !isPK7  and !isDocTypeQuotation) || (((isNonPeriodic || isOneOff) and !isPK7)  and isDocTypeQuotation and lOADetailBackingBean.managedBean.agreementReqChange and !lOADetailBackingBean.managedBean.scLoa.agreementReq))}" 
 							required="true">
+							<!-- #25726 END -->
 								<table>
 									<tr>
 										<td width="300">

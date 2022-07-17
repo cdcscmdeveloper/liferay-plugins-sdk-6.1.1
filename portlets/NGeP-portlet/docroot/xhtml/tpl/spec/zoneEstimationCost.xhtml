@@ -15,6 +15,10 @@
 	<ui:param name="isFulfilmentTypeScheduled" 
 		value="#{specificationBackingBean.managedBean.fulfilmentType == ParameterConst.fulfilmentTypeScheduled}" />
 	<ui:param name="isItemTypeService" value="#{templateSpecBean.specMaster.itemTypeCode.parameterCode == ParameterConst.itemTypeService}" />
+	<!-- #25726 START -->	
+	<ui:param name="isFulfilmentTypeNonPeriodicScheduled" 
+		value="#{specificationBackingBean.managedBean.fulfilmentType == ParameterConst.fulfilmentTypeNonPeriodicScheduled}" />
+	<!-- #25726 END -->
 		
 <table>
 <tr>
@@ -105,6 +109,7 @@
 				<f:validator validatorId="quantityDoubleRangeValidator" />
 				<!-- #25039#152 end -->
 				<!-- #25039#152 ajax update add  zoneEstCost -->
+				<!-- #25726 Add non periodic schedule to the parameter -->
 				<p:ajax 
 					update="@all, zoneEstCostMsg, @(.calcEstAmount), zoneEstCost1, zoneEstCost"
 					partialSubmit="true"
@@ -121,7 +126,8 @@
 						isItemTypeService,
 						isFulfilmentTypeScheduled, 
 						templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].tplSpecZoneDtl.specZoneId,
-						tplSpecEstimation.tplSpecQuestion.specQuestionId)}"></p:ajax>
+						tplSpecEstimation.tplSpecQuestion.specQuestionId,
+						isFulfilmentTypeNonPeriodicScheduled)}"></p:ajax>
 			</p:inputText>
 			
 			<p:message id="zoneEstCostMsg" for="zoneEstCost" display="icon" />
