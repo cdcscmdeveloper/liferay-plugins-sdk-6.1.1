@@ -55,7 +55,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.forcereplaceadmin.ForceReplaceSuppAdminManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -289,8 +288,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 //				&& resDto.isTerminateSupplier() == false
 				) {
 			// End 28765 comment changes 12981
-			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
-					.inactiveSupplierRole(getOldAdminReqDTO());
+			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
 		} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
 				(getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
 				getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){
@@ -318,8 +316,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		//START 12981
 		//#28765 - Start - inactiveSupplierRole to apply for both bypass/normal replace supplier admin
 //		if(getManagedBean().getBypassFlag1()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) {
-			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
-					.inactiveSupplierRole(getOldAdminReqDTO());
+			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
 //		}
 		//#28765 - End
 		redirectToSuccessPage(resDto);
@@ -402,6 +399,38 @@ public class ForceReplaceSuppAdminBackingBean extends
 		RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO().retrieveSupplierByRegNoAndStatusLs(reqDTO);
 		
 		List<SmSupplier> supplierLs = resDTO.getSmSuppliers();
+		
+		//#33153 - Start
+		// Sorting First By SupplierType
+		List<SmSupplier> removeSupp = new ArrayList<SmSupplier>();
+		boolean isContractor = false;
+		if (getManagedBean().getReactivateBasic().getSuppType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+			isContractor = true;
+		} else {
+			isContractor = false;
+		}
+
+		if (supplierLs.size() > 1) {
+			for (SmSupplier supplier : supplierLs) {
+				if (supplier.getSmAppl().getSupplierType() != null) {
+					if (isContractor) {
+						if (!supplier.getSmAppl().getSupplierType()
+								.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+							removeSupp.add(supplier);
+						}
+					} else if (!isContractor) {
+						if (!supplier.getSmAppl().getSupplierType()
+								.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+							removeSupp.add(supplier);
+						}
+					}
+				}
+			}
+			supplierLs.removeAll(removeSupp);
+		}
+		//then start for throwing exception based from list that has been remove by supplier type
+		//#33153 - End
 		
 		if(supplierLs.size() > 1){
 			
