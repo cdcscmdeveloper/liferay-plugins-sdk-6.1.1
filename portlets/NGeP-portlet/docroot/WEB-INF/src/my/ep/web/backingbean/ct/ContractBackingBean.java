@@ -20,7 +20,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import my.ep.factory.EpLogger;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -56,6 +58,7 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -87,6 +90,7 @@ import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.sc.document.QTDocumentReqDTO;
 import my.ep.dto.sc.document.QTDocumentResDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -127,6 +131,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -137,6 +142,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
@@ -2373,7 +2379,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						calculateNewBondAmount();
 					  }
 			}
+		// Start Fix - #33491 
+		} else if (!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+	   		if(isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa()) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
+	   		   //To carry over whatever setting regarding is_bond_req from LOA to set in CT	
+	   		   getManagedBean().getContractVer().getCtContractAmount().setBondReq(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq());
+	   		        if(getManagedBean().getContractVer().getCtContractAmount().isBondReq()){
+	   		        	//recalculate the bond and set into CtcontractAmount 
+	   		        	getManagedBean().getCtContractAmount().setTotalBondAmt(PerformanceBondUtil.calculatePerformanceBondAmt(getManagedBean().getGstTotalAmount(), new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod())));
+	   		        }
+	   		  }else{
+					calculateNewBondAmount(); 
+	   		  }
 		}
+		// End Fix - #33491
 		// End - Fix - #32663
 	}
 
@@ -4177,20 +4196,54 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 	//#30428 - End
-				
-		//Enhancement 15851 - Start
-		/**
-		 * The method used to navigate to Original contract details screen
-		 * for view purpose.
-		 * 
-		 * @return the navigate URL 
-		 */
-		public void goToOriginalLoaView(ScLoa scLoa) {
-				LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
-				FacesContext fc = FacesContext.getCurrentInstance();
-				loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
-				loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
-				loaDetailBackingBean.viewLOA(scLoa.getLoaId());			
+	
+	
+	// Start Fix - #33491
+	public boolean isQtCategoryExemptedCheck(ScLoa scLoa) {
+		
+		IQTDetailSO qtDetailSO = (IQTDetailSO) BusinessDelegate.getInstance().getServiceObject(
+		ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		boolean isQtCategoryExempted = false;
+		List<ScQtCategory> qtCategory = null;		
+		if (scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
+			QuationTenderReqDTO qtreqDTO = new QuationTenderReqDTO();
+			qtreqDTO.setQtId(scLoa.getScLoiLoa().getDocId());
+			qtCategory = qtDetailSO.getQtCategoryByQtId(qtreqDTO).getCategories();
 		}
-		//Enhancement 15851 - End
+		if(qtCategory != null && qtCategory.size() > 0) {
+			List<String> excepCategoryCodes = PerformanceBondUtil.getBondExceptionCategory();
+			
+			for(ScQtCategory category : qtCategory) {
+				String categoryCode = null;
+				categoryCode = category.getPmCategoryL1().getCategoryL1Code().
+						concat(category.getPmCategoryL2().getCategoryL2Code()).
+						concat(category.getPmCategoryL3().getCategoryL3Code());
+				if(excepCategoryCodes.contains(categoryCode)) {
+					isQtCategoryExempted = true;
+					   break;
+				}else{
+					isQtCategoryExempted = false;
+				}
+			}
+		}	
+		return isQtCategoryExempted;
+
+	}	
+	// End Fix - #33491
+			
+	//Enhancement 15851 - Start
+	/**
+	 * The method used to navigate to Original contract details screen
+	 * for view purpose.
+	 * 
+	 * @return the navigate URL 
+	 */
+	public void goToOriginalLoaView(ScLoa scLoa) {
+			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
+			loaDetailBackingBean.viewLOA(scLoa.getLoaId());			
+	}
+	//Enhancement 15851 - End
 }  
