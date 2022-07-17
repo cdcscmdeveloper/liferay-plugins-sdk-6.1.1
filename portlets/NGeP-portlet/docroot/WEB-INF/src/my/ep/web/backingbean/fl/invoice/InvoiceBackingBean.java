@@ -817,6 +817,14 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		}
 		//28221 - end
 		
+		//24956 - start
+		if (getManagedBean().getInvoice().getFlRequest().getCtContract() != null
+				&& getManagedBean().getInvoice().getFlRequest().getCtContract().getContractType().
+				getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			getManagedBean().setCtTypeMinistry(true);
+		}
+		//24956 - end
+		
 		//check is normal invoice or tax invoice
 		reqDTO.setInvoice(getManagedBean().getInvoice());
 		resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
@@ -1663,13 +1671,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			if(resDTO.getApproverGroupUserList().isEmpty()){
 				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,reqDTO.getUserLocale())});
 			}
-			FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getInvoice().getFlRequest().getDocType(), getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+			FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getInvoice().getFlRequest().getDocType(),getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
 			listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),actor.getUser(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
 			reqDTO.setApproverUserList(listOfApprover);
 			resDTO = invoiceSO.updateInvoiceWithAP59(reqDTO);
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_745019;
-				
+                
 				if(getManagedBean().getStatusId().equals(FulfilmentStatusConst.AP59_PAYMENT_VIA_AP59)){
 					messageId = MessageConst.INFO_745007;
 				}

@@ -152,7 +152,11 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private List<DisciplinaryActionVO> disciplineVOs;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
-
+	
+	//24956 start
+    private boolean CtTypeMinistry;
+    //24956 end
+    
 	//33238 start
     private List<SelectItem> factoringAccList;
     //33238 end
@@ -1247,6 +1251,16 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.smDisciplinaryAction = smDisciplinaryAction;
 	}
 	//26279 - end
+
+	//24956 start
+	public boolean isCtTypeMinistry() {
+		return CtTypeMinistry;
+	}
+
+	public void setCtTypeMinistry(boolean ctTypeMinistry) {
+		CtTypeMinistry = ctTypeMinistry;
+	}
+	//24956 end
 	
 	//33238 start
 	public List<SelectItem> getFactoringAccList() {
@@ -1260,18 +1274,18 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		
 	
 	//32967-start
-		/**
-		 * @return the accountNo
-		 */
-		public String getAccountNo() {
-			return accountNo;
-		}
+	/**
+	 * @return the accountNo
+	 */
+	public String getAccountNo() {
+		return accountNo;
+	}
 
-		/**
-		 * @param accountNo the accountNo to set
-		 */
-		public void setAccountNo(String accountNo) {
-			this.accountNo = accountNo;
-		}
-		//32967-end
+	/**
+	 * @param accountNo the accountNo to set
+	 */
+	public void setAccountNo(String accountNo) {
+		this.accountNo = accountNo;
+	}
+	//32967-end
 }
