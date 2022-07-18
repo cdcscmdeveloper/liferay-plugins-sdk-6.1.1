@@ -1506,14 +1506,20 @@ public class RuleCatalogueBackingBean extends
 				} 
 				// 29650 - end
 
-				// 30672 - start
+				// 30672 - start 19/07/2022
 				if (ruleTypeDesc.getRuleType().getRangeType() != 1
 						|| (ruleTypeDesc.getRuleType().getRangeType() == 1 && baseValueToCompare.isShowFlag())) {
 					if (baseValueToCompare.isErrorExpDate()) {
-						throw new EpException(MessageConst.ERROR_770111, new String[] { ruleTypeDesc.getRuleDesc() });
+						if (!this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()
+								.equals(ruleTypeDesc.getRuleType().getRuleType())) {
+							throw new EpException(MessageConst.ERROR_770111,
+									new String[] { ruleTypeDesc.getRuleDesc() });
+						} else {
+							throw new EpException(MessageConst.ERROR_770113);
+						}
 					}
 				}
-				// 30672 - end
+				// 30672 - end 19/07/2022
 
 				for (int j = i + 1; j <= (ruleTypeDesc.getRuleType()
 						.getConfigRuleValues().size() - 1); j++) {
@@ -5582,6 +5588,11 @@ public class RuleCatalogueBackingBean extends
 				if (selectedValue.getEffDate().after(selectedValue.getExpDate())) {
 					selectedValue.setErrorExpDate(true);
 					throw new EpException(MessageConst.ERROR_770113);
+					//#30672 - start 19/07/2022
+				} else if (selectedValue.getEffDate().equals(selectedValue.getExpDate())) {
+					selectedValue.setErrorExpDate(true);
+					throw new EpException(MessageConst.ERROR_770113);
+					//#30672 - end 19/07/2022
 				} else {
 					selectedValue.setErrorExpDate(false);
 				}
