@@ -3474,9 +3474,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					addr.setAddress3(null);
 				}
 				if(addr.isCountrySsmNull())
-					addr.setPmCountry(null);
+					addr.setPmCountry(SmCommonUtil.retrieveCountryByCountryCode(
+							SupplierManagementConst.COUNTRY_UNKNOWN_CODE));
 				if(addr.isStateSsmNull()){
-					addr.setPmState(null);
+					addr.setPmState(SmCommonUtil.getInstance().getStateById(1L));
 					addr.setPmDistrict(null);
 					addr.setPmDivision(null);
 					addr.setPmCity(null);
@@ -3486,7 +3487,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				personnel.getSmPersonnelAddresses().get(0).setSmAddress(addr);
 			}
 			if(personnel.isNationalitySsmNull())
-				personnel.setPmCountry(null);
+				personnel.setPmCountry(SmCommonUtil.retrieveCountryByCountryCode(
+						SupplierManagementConst.COUNTRY_UNKNOWN_CODE));
 			
 			if(personnel.isEquityOwnerSsm())
 				getManagedBean().getPersonnelsOwner().add(personnel);
