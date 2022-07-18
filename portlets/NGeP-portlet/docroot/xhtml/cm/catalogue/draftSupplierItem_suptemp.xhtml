@@ -21,7 +21,7 @@
 	
 		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}"
 			disabled="#{fn:length(catalogueBackingBean.managedBean.cloneCmSupplierItemLs)&lt;1}"
-			action="#{catalogueBackingBean.validateBeforePopup}"></p:commandButton> <!-- #30457 - trigger popup -->
+			action="#{catalogueBackingBean.validateBeforePopup}" update="@form"></p:commandButton> <!-- #30457 - trigger popup/ add update form 17/7/22-->
 	</div>
 
 	<ac:lovPopup />
@@ -117,6 +117,18 @@
 				<p:graphicImage id="uploadImage" value="/css/images/design/document.png" 
 				title="#{lbl['lbl.cm.suptemp.upload.image.tooltip']}" /> 
 			</p:commandLink>
+			<!-- #569- start 17/7/22 -->
+			<p:graphicImage
+				    rendered="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
+				    	and fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) eq '0'
+				    	or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
+				    	and empty catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc)}"
+				    value="#{catalogueBackingBean.managedBean.publish and selectedSuppCat.selected
+						and fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) eq '0' 
+				    	or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
+				    	and empty catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc) ? '/css/images/design/ico-termination.png' : ''}"
+					update="@form" />
+			<!-- #569- end 17/7/22-->
 		</p:column>
 		<!-- #30457 end -->
 		

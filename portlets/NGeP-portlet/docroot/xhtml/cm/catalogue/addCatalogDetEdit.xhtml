@@ -9,9 +9,13 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+
+
 	<!-- <p:remoteCommand name="updateCoinSlider" update="imageUploadID2" ></p:remoteCommand> -->
 
 	<h:outputScript library="jquery/slides" name="jquery.slides.js" />
+
+
 
 	<script>
 		function clearInvalidFileMsg() {
@@ -25,9 +29,9 @@
 
 	<p:messages id="catalogDetMsgId" showDetail="true" autoUpdate="true"
 		closable="true" showSummary="false"></p:messages>
-	<!-- #30457-start -->
-	<p:growl id="growlMssg" showDetail="true" showSummary="false"/>
-	<!-- #30457-end -->
+	<!-- #30457-start (remove growl message code) --> 
+	<!-- <p:growl id="growlMssg" showDetail="true" showSummary="false"/> -->
+	<!-- #30457-end (remove growl message code) -->
 
 	<p:blockUI block="form" widgetVar="blockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -59,6 +63,8 @@
 					action="#{catalogueBackingBean.saveCatalogItem}" update="@form"></p:commandButton>
 
 			</h:panelGroup>
+
+
 
 			<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin}">
 
@@ -144,6 +150,8 @@
 				});
 			});
 		</script>
+
+
 								<div id="slides" style="width: 250px;">
 									<ui:repeat var="cmImage"
 										value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
@@ -237,12 +245,12 @@
 
 
 				<tr style="height: 30px;">
-					<!-- #30457 - start -->
+					<!-- #30457 - start 14/7/2022 -->
 					<td>
-						<h:outputText value="* " styleClass="mandatory" />
-						<h:outputText styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.basic.item.spec']}" />
+						<h:outputLabel value="* " styleClass="mandatory" />
+						<h:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.basic.item.spec']}" />
 					</td>
-					<!-- #30457 - end -->
+					<!-- #30457 - end 14/7/2022 -->
 					<td colspan="3"><p:inputTextarea maxlength="2000"
 							style="width:80% !important;height:100px;overflow:scroll;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"

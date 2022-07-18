@@ -49,6 +49,9 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.Paginator;
 import my.ep.persistence.entity.cm.catalog.CmFavoriteSupplier;
+//#30457 - start
+import my.ep.persistence.entity.cm.catalog.CmImage;
+//#30457 - end
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
@@ -572,6 +575,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private int itemSelectedIndex;
 	private boolean viewOnlyBasicPopup;
 	private boolean yesEnable=false; //#30457
+	//#30457 - end
+
+	//#30457 - start
+	private List<CmImage> deleteImage;
+	private String itemStatus;
 	//#30457 - end
 
 	private class ExpiredSearchPagingDataModel extends
@@ -4507,4 +4515,25 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.publish = publish;
 	}
 	//#569 - end
+	
+	// #30457 - start
+	public List<CmImage> getDeleteImage() {
+		if (deleteImage == null) {
+			deleteImage = new ArrayList<CmImage>();
+		}
+		return deleteImage;
+	}
+
+	public void setDeleteImage(List<CmImage> deleteImage) {
+		this.deleteImage = deleteImage;
+	}
+
+	public String getItemStatus() {
+		return itemStatus;
+	}
+
+	public void setItemStatus(String itemStatus) {
+		this.itemStatus = itemStatus;
+	}
+	// #30457 - end
 }
