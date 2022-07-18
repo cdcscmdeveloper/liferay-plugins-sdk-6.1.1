@@ -29,11 +29,11 @@
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
 					<c:if
-						test="#{backingBean.managedBean.smAppl.smSupplier.businessType == 'K'}">
+						test="#{backingBean.managedBean.smAppl.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN}">
 						<h:outputText value="#{lbl['lbl.sm.directorname']}" />
 					</c:if>
 					<c:if
-						test="#{backingBean.managedBean.smAppl.smSupplier.businessType != 'K'}">
+						test="#{backingBean.managedBean.smAppl.smSupplier.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN}">
 						<h:outputText value="#{lbl['lbl.sm.ownername']}" />
 					</c:if>
 				</f:facet>
@@ -113,7 +113,7 @@
 			
 			<p:column styleClass="column-align-center" rendered="#{backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD or backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD}"> <!-- #31403 -->
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt']}" />
+					<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt.roc']}" />
 					</f:facet>
 				<h:outputText value="#{varOwner.shareAmtSsm}"><!-- #31403 -->
 					<f:convertNumber groupingUsed="true" maxFractionDigits="2" minFractionDigits="2" />
@@ -223,7 +223,7 @@
 
 				<p:column styleClass="column-align-center">
 					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt']}" />
+						<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt.roc']}" />
 					</f:facet>
 					<h:outputText value="#{varDirector.shareAmtSsm}"> <!-- #31403 -->
 						<f:convertNumber groupingUsed="true" maxFractionDigits="2"
