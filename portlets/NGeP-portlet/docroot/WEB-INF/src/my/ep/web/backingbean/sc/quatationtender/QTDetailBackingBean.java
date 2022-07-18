@@ -3232,11 +3232,7 @@ public class QTDetailBackingBean extends
 					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
 				if (checkSettingPopUpBPKApprovalNeeded(qt)) {
 					if (!this.getManagedBean().isResetBpkCurrentArea()) {
-						checkingOtherApprovalFileAttachmentNeedDeleted(qt.getScQtApprovals(),
-								ParameterConst.APPROVAL_CATEGORY_OTHERS);
-						
-						if (skipPopUpBPKApprovalNeededOnceApproved(qt.getScQtApprovals(),
-								ParameterConst.APPROVAL_CATEGORY_BPK)) {
+						if (popUpBPKApprovalNeededOnceHaveRequestApproval(qt)) {
 							this.getManagedBean().setShowPopUpBPKApprovalNeeded(true);
 							
 							RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlgTemp.show()");
@@ -3273,6 +3269,8 @@ public class QTDetailBackingBean extends
 						.equals(QTStatusConst.QT_REVISION_PUBLICATION)) && outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
 					for (ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()) {
 						if (isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())) {
+							this.getManagedBean().setResetBpkCurrentArea(false); //#25077
+
 							throw new EpException(MessageConst.ERROR_775172);
 						}
 					}
@@ -5925,12 +5923,7 @@ public class QTDetailBackingBean extends
 				break;
 			case 3:
 				// detailSO.validateApprovalDetails(reqDTO);
-				
-				// #11104 - Start
-				if (!getManagedBean().isApproverTabLoaded()) {
-					retrieveApprovalTabDtl();
-				}
-				// #11104 - End
+				retrieveApprovalTabDtl();
 				break;
 
 			case 4:
@@ -9331,48 +9324,85 @@ public class QTDetailBackingBean extends
 	}
 	// #25077 - End
 	
-	// #25077 - Start
-	private boolean skipPopUpBPKApprovalNeededOnceApproved(List<ScQtApproval> approval, String approvalCategory) {
-		boolean skipPopUp = true;
-		
-		if (CollectionUtils.isNotEmpty(approval)) {
-			for (int i = 0; i < approval.size(); i++) {
-				if (approvalCategory.equalsIgnoreCase(approval.get(i).getApprovalCategory().getParameterCode())) {
-					List<ScQtApprovalRequest> approvalRequest = approval.get(i).getScQtApprovalDtls();
-					List<ScQtApprovalRequest> approvalRequestHistory = approval.get(i).getHistoryApprovalRequests();
-					
-					if (CollectionUtils.isNotEmpty(approvalRequest)) {
-						skipPopUp = true;
-					} else {
-						if (CollectionUtils.isNotEmpty(approvalRequestHistory)) {
-							for (int j = 0; j < approvalRequestHistory.size(); j++) {
-								PmParameter approvalAction = approvalRequestHistory.get(j).getApproverAction();
-								PmParameter approvalType = approvalRequestHistory.get(j).getApprovalType();
+	// #25077 - Start	
+	private boolean popUpBPKApprovalNeededOnceHaveRequestApproval(ScQt scQt) {
+		IQTDetailSO detailSO;
+
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class);
+
+			boolean bpkRequestFlag = false;
+			Long statusId = scQt.getQtStatus().getStatusId();
+			
+			if (this.getManagedBean().isMaintanceFlow() == false) {
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setQtdetail(scQt);
+				
+				QuationTenderResDTO resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
+
+				if (null != resDTO && null != resDTO.getApproval()) {
+					List<ScQtApproval> listOfApprovals = resDTO.getApproval();
+						
+						if (listOfApprovals != null) {
+							for (ScQtApproval bpkApproval : listOfApprovals) {
+								String approvalCategoryCode = bpkApproval.getApprovalCategory().getParameterCode();
 								
-								if (null != approvalAction && null != approvalType) {
-									if (approvalAction.getParameterCode().equals(
-											ParameterConst.APPROVAL_DECISION_TYPE_APPROVED)) {
-										if (approvalType.getParameterCode().equals(
-												ParameterConst.APPROVAL_REQUEST_OPEN_TO_BUMI)
-												|| approvalType.getParameterCode().equals(
-														ParameterConst.APPROVAL_REQUEST_BUMI_TO_OPEN)
-												|| approvalType.getParameterCode().equals(
-														ParameterConst.APPROVAL_REQUEST_REDUCE_PUBLISH_PERIOD)
-												|| approvalType
-														.getParameterCode()
-														.equals(ParameterConst.APPROVAL_REQUEST_REDUCE_PROPOSAL_VALIDITY_PERIOD)) {
-											skipPopUp = false;
+							if (!bpkApproval.isDeleted()) {
+								if (ParameterConst.APPROVAL_CATEGORY_BPK.equals(approvalCategoryCode)) {
+
+									if (null != statusId
+											&& (statusId.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || statusId
+													.equals(QTStatusConst.QT_REVISION_PUBLICATION))) {
+										List<ScQtApprovalRequest> bpkRequests = bpkApproval.getScQtApprovalDtls();
+										
+										if (CollectionUtils.isNotEmpty(bpkRequests)) {
+											for (ScQtApprovalRequest bpkRequest : bpkRequests) {
+												PmParameter approvalType = bpkRequest.getApprovalType();
+
+												if (null != approvalType) {
+													bpkRequestFlag = true;
+												}
+											}// end looping bpk request approval
+										}
+									}
+
+									if (null != statusId && statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION)) {
+										List<ScQtApprovalRequest> bpkRequestHistorys = bpkApproval	.getHistoryApprovalRequests();
+
+										if (CollectionUtils.isNotEmpty(bpkRequestHistorys)) {
+											for (ScQtApprovalRequest bpkRequestHistory : bpkRequestHistorys) {
+												PmParameter approvalAction = bpkRequestHistory.getApproverAction();
+
+												if (null != approvalAction	&& approvalAction.getParameterCode().equals(
+																ParameterConst.APPROVAL_DECISION_TYPE_APPROVED)) {
+													List<ScQtApprovalRequest> bpkRequests = bpkApproval.getScQtApprovalDtls();
+						       							
+						       							if (CollectionUtils.isNotEmpty(bpkRequests)) {
+						       								for (ScQtApprovalRequest bpkRequest : bpkRequests) {
+						       									PmParameter approvalType = bpkRequest.getApprovalType();
+
+															if (null != approvalType) {
+																bpkRequestFlag = true;
+															}
+														}// end looping bpk request approval
+													}
+												}
+											}// end looping history bpk approval
 										}
 									}
 								}
 							}
-						}
+						} // end looping bpk approval
 					}
 				}
 			}
+			
+			return bpkRequestFlag;
+			
+		} finally {
+			detailSO = null;
 		}
-
-		return skipPopUp;
 	}
 	// #25077 - End	
 	
