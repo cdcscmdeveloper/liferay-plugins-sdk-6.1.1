@@ -4962,6 +4962,11 @@ public class RuleCatalogueBackingBean extends
 				if (selectedValue.getEffDate().after(selectedValue.getExpDate())) {
 					selectedValue.setErrorExpDate(true);
 					throw new EpException(MessageConst.ERROR_770113);
+					//#30672 - start 18/07/2022
+				} else if (selectedValue.getEffDate().equals(selectedValue.getExpDate())) {
+					selectedValue.setErrorExpDate(true);
+					throw new EpException(MessageConst.ERROR_770113);
+					//#30672 - end 18/07/2022
 				} else {
 					selectedValue.setErrorExpDate(false);
 				}
