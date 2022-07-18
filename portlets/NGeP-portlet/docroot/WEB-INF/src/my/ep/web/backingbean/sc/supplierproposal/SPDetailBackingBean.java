@@ -4458,6 +4458,12 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	 * @return
 	 */
 	private void hideZeroQtySpecAns(Map<Long, TemplateSpecBean> zoneTplSpecBeanMap) {
+		// #33567 - Start.
+		if (getManagedBean().getZoneTplSpecAnsMap() != null) {
+			getManagedBean().getZoneTplSpecAnsMap().clear();
+		}
+		// #33567 - End.
+		
 		for (Map.Entry<Long, TemplateSpecBean> entry : zoneTplSpecBeanMap.entrySet()) {
 			
 			List<TplSpecAnswer> specAnswerList = entry.getValue().getSpecAnswerList();
