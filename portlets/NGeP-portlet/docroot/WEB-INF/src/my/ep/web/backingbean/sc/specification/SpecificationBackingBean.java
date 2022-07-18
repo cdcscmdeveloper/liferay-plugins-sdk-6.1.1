@@ -2587,6 +2587,13 @@ public class SpecificationBackingBean extends
 					List<ScQtScoreOfferPrice> offerPrice = specChecklist.get(0)
 							.getQtScoreWeightage().getScQtScoreOfferPrices();	
 					
+					if(this.getManagedBean().getQt().isZonal() && CollectionUtils.isEmpty(offerPrice) &&  CollectionUtils.isNotEmpty(this.getManagedBean()
+								.getOfferPricePackageList())){//33587-start
+						offerPrice=	this.getManagedBean()
+						.getOfferPricePackageList();
+						tmpCheckList.getQtScoreWeightage().setScQtScoreOfferPrices(offerPrice);
+					}//33587-End
+					
 					this.getManagedBean().setOfferScoreType(scoreTypeN);
 					
 					specSo = BusinessDelegate.getInstance().getServiceObject(
@@ -13189,6 +13196,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			List<ScQtCheckList> savedCheckLists = resDTO.getSavedCheckLists();
 			this.getManagedBean().setFinancialScoring(null);
 			this.getManagedBean().setOfferPricePackage(null);
+			this.getManagedBean().setOfferPricePackageList(null);//33587
 			if (reqDTO.isZonesQt()
 					|| (this.getManagedBean().getQt().isZonal() && SourcingConstants.FINANCIAL_DOCTYPE
 							.equalsIgnoreCase(specType))
@@ -13990,6 +13998,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			this.getManagedBean().setFinancialScoring(null);
 			this.getManagedBean().setOfferPricePackage(null);
 			this.getManagedBean().setPanelSpecExistedOrNot(false);
+			this.getManagedBean().setOfferPricePackageList(null);//33587
 			specCommitteeResetData();
 			if (reqDTO.isZonesQt()
 					|| (this.getManagedBean().getQt().isZonal() && SourcingConstants.FINANCIAL_DOCTYPE
