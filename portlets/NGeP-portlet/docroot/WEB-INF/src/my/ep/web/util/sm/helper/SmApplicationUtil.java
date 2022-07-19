@@ -2206,6 +2206,8 @@ public class SmApplicationUtil {
 		StringBuilder sbSuppBranch = new StringBuilder();
 		sbSuppBranch.append("<br/>");
 		int x = 0;
+		//32968 START
+		String notAvail = "N/A";
 		for (SmSupplierBranch suppBranch : appl.getSmSupplierBranches()) {
 			if (suppBranch.getBranchName().isEmpty()
 					|| suppBranch.getSmAddress() == null
@@ -2214,7 +2216,9 @@ public class SmApplicationUtil {
 							|| suppBranch.getSmAddress().getCountryId() == null
 							|| suppBranch.getSmAddress().getStateId() == null
 							|| suppBranch.getSmAddress().getDistrictId() == null || suppBranch.getSmAddress()
-							.getCityId() == null) || suppBranch.getSmPersonnel() == null) {
+							.getCityId() == null) || suppBranch.getSmPersonnel() == null
+							|| suppBranch.getSmAddress().getPmDistrict().getDistrictName().contains(notAvail)
+							|| suppBranch.getSmAddress().getPmCity().getCityName().contains(notAvail)) { //32968 END) 
 				validateSmBranch = false;
 				sbSuppBranch.append(++x + ". ");
 				sbSuppBranch.append(suppBranch.getBranchName());
@@ -2232,13 +2236,15 @@ public class SmApplicationUtil {
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.branch.not.completed",
 						new String[] { sbSuppBranch.toString() }));
 			}else if(managedBean.isSupplierUser()){
-			StringBuilder errMsg = new StringBuilder();
-			errMsg.append("Please complete the mandatory fields marked (*) in the 'Personnel/Branch Info' section for the following Company Branch:</br> ");
-			errMsg.append(sbSuppBranch);
+				//StringBuilder errMsg = new StringBuilder();
+				//errMsg.append("Please complete the mandatory fields marked (*) in the 'Personnel/Branch Info' section for the following Company Branch:</br> ");
+				//errMsg.append(sbSuppBranch);
 			if (currentTab != -1) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 			}
-			throw new EpException(errMsg.toString());
+				//throw new EpException(errMsg.toString());
+				throw new EpException(SmCommonUtil.getMessage("lbl.sm.supplier.branch.not.completed",
+						new String[] { sbSuppBranch.toString() }));
 		}
 		}
 		//32968 END
