@@ -723,31 +723,8 @@ public class SmSideMenuIconUtil {
 							// #26528 - end
 						}
 						
-						//#31043 - start
-						boolean isCategoryRejected = true;
-						int rejectCount = 0;
-						SmApplicationUtil.assignActiveAndApprovedCategoryList(bean);
-						if(bean.getActiveCategoryList() != null){
-							for (SmSupplierCategory cat : bean.getActiveCategoryList()) {
-								log.info("category name; "+cat.getPmCategoryL3().getCategoryName());
-								if(bean.isPoUser()){
-									if(cat.getPoDecFlg() == null ||cat.getPoDecFlg() == 0){
-										rejectCount++;
-									}
-								}
-								else if(bean.isApproverUser() ){
-									if(cat.getApprvrDecFlg() == null || cat.getApprvrDecFlg() == 0){
-										rejectCount++;
-									}
-								}
-							}
-							if(rejectCount == 0)
-								isCategoryRejected = false;
-						}
-						//#31043 - end
 						
-						
-						if (isAllCatcodeVerified && !isCategoryRejected) {
+						if (isAllCatcodeVerified) {
 							retVal = ICON_TICK;
 							//#31043
 							bean.setCategoryCodeVerified(true);
@@ -865,6 +842,7 @@ public class SmSideMenuIconUtil {
 				}
 				//24964 & 31043 - end
 
+			//#31043 - start
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)){
 				if(bean.isApproverUser())
@@ -874,6 +852,7 @@ public class SmSideMenuIconUtil {
 					retVal = ICON_TICK;
 				
 			}
+			//#31043 - end
 		}
 		return retVal;
 	}
