@@ -3398,6 +3398,7 @@ public class QTDetailBackingBean extends
 				qtResDTO = (QuationTenderResDTO) detailSO
 						.updateBPMAction(qtReqDTO);
 			}
+
 			if ((null != committeResDto && committeResDto.isSuccessful())
 					|| (null != qtResDTO && qtResDTO.isSuccessful())) {
 
@@ -9475,7 +9476,9 @@ public class QTDetailBackingBean extends
 									ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
 									
 									if (null == approvalReqAttachement) {
-										throw new EpException(MessageConst.ERROR_760509);
+		      	                    	this.getManagedBean().setResetBpkCurrentArea(false);
+										
+		      	                    	throw new EpException(MessageConst.ERROR_760509);
 									}
 								} else {
 									if (null != approvalRequestHistory.get(j).getApprovalRequestAttachement()) {
