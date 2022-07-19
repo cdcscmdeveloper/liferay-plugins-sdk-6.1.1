@@ -84,7 +84,6 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmStatusRole;
-import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -2734,6 +2733,13 @@ public class TaskReassignmentBackingBean extends
 				isSearched = true;
 			}
 
+			//Redmine Bug #32682 - START
+			if(QTStatusConst.SF_PENDING_LOI_PREPARATION.equals(task.getDocStatus().longValue()) || 
+					QTStatusConst.QT_PENDING_LOA.equals(task.getDocStatus().longValue())) {
+				getManagedBean().setCommitteeUpdate(true);
+			}
+			//Redmine Bug #32682 - END
+			
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ:
 			//4 - Include User under Ministry, Kumpulan PTJ & PTJ
