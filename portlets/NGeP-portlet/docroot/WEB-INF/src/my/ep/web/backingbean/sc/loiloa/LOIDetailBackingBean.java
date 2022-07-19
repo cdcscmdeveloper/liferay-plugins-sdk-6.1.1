@@ -6428,9 +6428,6 @@ public class LOIDetailBackingBean extends
 		this.getManagedBean().setAction(BpmOutcomeConst.BPM_REJECT);
 		log.info(":::confirmSupplierReject() to "+ BpmOutcomeConst.BPM_REJECT +" LOI.");
 		updateBPMTask(BpmOutcomeConst.BPM_REJECT, null);
-		/* BUG 33353 START*/
-		updateRejectQtRecommendDtl(getManagedBean().getScLoi().getScLoiLoa());
-		/* BUG 33353 END*/
 	}
 	//end Enhancement #21573
 
