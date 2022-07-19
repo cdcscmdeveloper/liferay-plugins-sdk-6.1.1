@@ -8992,6 +8992,7 @@ private void retriveCommitteeRemarksList(){
 			int tempIndx = getManagedBean().getTempTab();
 			boolean checkQualifiedSuppliers = this.getManagedBean()
 					.isCheckQualifiedSuppliers();
+			boolean noProposalSubmitted = this.getManagedBean().isNoProposalSubmitted();//6906 note 93
 			ScAttachment attachemnt = this.getManagedBean().getScAttachment();
 			String reportFileName = this.getManagedBean()
 					.getReportDownloadFileName();
@@ -9049,6 +9050,7 @@ private void retriveCommitteeRemarksList(){
 			this.getManagedBean().setPayLoad(evaluationDataType);
 			this.getManagedBean().setCurrentTime(currentTime);
 			this.getManagedBean().setStatusOnly(evaluationStatus);
+			this.getManagedBean().setNoProposalSubmitted(noProposalSubmitted);//6906 note 93
 			/* ***#25638#99 - start */
 			if(userHasRole(new RoleCode[]{RoleCode.SC_SECRETARY, RoleCode.EC_SECRETARY, RoleCode.TEC_SECRETARY, RoleCode.OC_SECRETARY})
 					&& (QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL.equals(this
