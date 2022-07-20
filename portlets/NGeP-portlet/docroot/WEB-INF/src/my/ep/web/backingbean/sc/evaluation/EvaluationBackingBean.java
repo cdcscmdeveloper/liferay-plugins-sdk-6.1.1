@@ -7751,7 +7751,7 @@ public class EvaluationBackingBean extends
 							&& this.getManagedBean().getScQt().isDemoRequired()) {
 						if (null == this.getManagedBean().getScQt()
 								.getDemoNotificationCheck()) {
-							EvaluationReqDTO demoReqDTO = new EvaluationReqDTO();
+							/*EvaluationReqDTO demoReqDTO = new EvaluationReqDTO();
 							demoReqDTO.setScQt(this.getManagedBean().getScQt());
 							demoReqDTO
 									.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
@@ -7761,7 +7761,7 @@ public class EvaluationBackingBean extends
 							demoReqDTO.setSenderId(curLogedInUser.getUserId());
 							EvaluationResDTO demoResDTO = evaluationSo
 									.sendDemoNotificationsForSuppliers(demoReqDTO);
-							if (demoResDTO.isSuccessful()) {
+							if (demoResDTO.isSuccessful()) {*///#28784 disable notification
 								this.getManagedBean().getScQt()
 										.setDemoNotificationCheck(1);
 								EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -7770,9 +7770,9 @@ public class EvaluationBackingBean extends
 										.saveReportDtls(reqDTO);
 								this.getManagedBean().setScQt(
 										evalResDTO.getScQt());
+//							}//#28784 disable notification
 							}
 						}
-					}
 					/*if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType())
