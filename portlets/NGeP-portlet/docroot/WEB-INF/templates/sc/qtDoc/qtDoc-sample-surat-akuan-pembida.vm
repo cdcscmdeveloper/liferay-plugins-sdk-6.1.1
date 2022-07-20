@@ -34,7 +34,7 @@
             display: inline-block;
     		margin-left: 9px;
         }
-		
+        
         .tab6 {
             display: inline-block;
     		margin-left: 12px;
@@ -57,17 +57,17 @@
         
         .tab10 {
             display: inline-block;
-    		margin-left: 23px;
-        }
-        
-        .tab11 {
-        	display: inline-block;
-        	margin-left: 27px;
+    		margin-left: 18px;
         }
         
         .tab12 {
             display: inline-block;
-    		margin-left: 28px;
+    		margin-left: 44px;
+        }
+        
+        .tab13 {
+            display: inline-block;
+    		margin-left: 13px;
         }
 		
 		.underline {
@@ -101,7 +101,7 @@
     </tr>
 	<tr>
 		<td class="standard">
-			<p align="justify">Saya, <span class="underline">(Nama Wakil Syarikat)</span> No. Kad Pengenalan <span class="underline">(No. Kad Pengenalan)</span> yang mewakili <span class="underline">(Nama Syarikat)</span> nombor Pendaftaran <span class="underline">(MOF/PKK/CIDB/ROS/ROC/ROB)</span> dengan ini mengisytiharkan bahawa saya atau mana-mana orang yang mewakili syarikat ini:</p>
+			<p align="justify">Saya, ............................................................................................ No. Kad Pengenalan .......................................... yang mewakili ........................................................................ nombor Pendaftaran .................................................................... dengan ini mengisytiharkan bahawa saya atau mana-mana orang yang mewakili syarikat ini:</p>
 			
 			<ul class="standard" style="list-style-type:none;">
 			  <li style="margin-top: 3px;">i.	tidak akan menawarkan, menjanjikan atau memberikan apa-apa suapan kepada</li>
@@ -112,12 +112,12 @@
 			
 			<p align="justify">Bersama ini dilampirkan Surat Perwakilan Kuasa bagi saya mewakili syarikat seperti tercatat di atas untuk membuat pengisytiharan ini.</p>
 			
-			<p align="justify">2. Sekiranya saya, atau mana-mana individu yang mewakili syarikat ini didapati terlibat dalam pakatan tipuan bida dengan syarikat lain berkenaan perolehan di atas atau menawarkan, menjanjikan atau memberikan apa-apa suapan kepada mana-mana orang dalam <span class="underline">(Nama Kementerian/Agensi)</span>  atau mana-mana orang lain sebagai dorongan untuk dipilih dalam perolehan di atas, maka saya sebagai wakil syarikat bersetuju tindakan-tindakan berikut boleh diambil:</p>
+			<p align="justify">2. Sekiranya saya, atau mana-mana individu yang mewakili syarikat ini didapati terlibat dalam pakatan tipuan bida dengan syarikat lain berkenaan perolehan di atas atau menawarkan, menjanjikan atau memberikan apa-apa suapan kepada mana-mana orang dalam ...................................................................................................... atau mana-mana orang lain sebagai dorongan untuk dipilih dalam perolehan seperti di atas, maka saya sebagai wakil syarikat bersetuju tindakan-tindakan berikut boleh diambil:</p>
 			
 			<ul class="standard" style="list-style-type:none;">
 				<li>2.1 Hilang kelayakan untuk dinilai dan dilantik bagi perolehan di atas; dan</li><br/>
 				<li>2.2 Lain-lain tindakan undang-undang/tatatertib mengikut undang-undang/peraturan</li>
-				<li><span class="tab11"/>perolehan Kerajaan yang berkuat-kuasa.</li>
+				<li><span class="tab7"/>perolehan Kerajaan yang berkuat-kuasa.</li>
 			</ul>
 			
 			<p align="justify">3. Saya sesungguhnya faham bahawa tindakan berikut akan diambil:</p>
@@ -158,20 +158,23 @@
 	<tr>
 		<td class="standard">
 		Catatan:   
-
-		<ul class="standard" style="list-style-type:none;">
-			<li>(i) **termasuk kesalahan ditetapkan dalam Jadual (Perenggan 3 (a), takrif "kesalahan</li>
-			<li><span class="tab9"/>ditetapkan") Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] yang</li>
-			<li><span class="tab9"/>boleh dihukum di bawah Kanun Keseksaan <i>[Akta 574]</i>.</li>
-			<li>(ii) ***seseorang yang bersekutu dengan syarikat merujuk kepada seksyen 17A (6) Akta</li>
-			<li><span class="tab10"/>Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>], iaitu seseorang itu</li>
-			<li><span class="tab10"/>bersekutu dengan organisasi komersial jika dia seorang pengarah, pekongsi atau</li>
-			<li><span class="tab10"/>pekerja organisasi komersial itu atau dia ialah orang yang melaksanakan perkhidmatan</li>
-			<li><span class="tab10"/>untuk atau bagi pihak organisasi komersial itu.</li>
-			<li>(iii) Surat Akuan ini hendaklah dikemukakan bersama surat perwakilan kuasa.</li>
-			<li>(iv) Takrifan perusahaan di bawah Akta 712 merangkumi syarikat yang terlibat dengan</li>
-			<li><span class="tab12"/>perolehan Kerajaan.</li>
-		</ul> 
+		
+		<p align="justify">
+		(i) <span class="tab9">**termasuk</span> kesalahan ditetapkan dalam Jadual (Perenggan 3 (a), takrif "kesalahan
+		<span class="tab8">ditetapkan")</span> Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] yang boleh
+		<span class="tab8">dihukum</span> di bawah Kanun Keseksaan <i>[Akta 574]</i>.</p>
+		<p align="justify">
+		(ii) <span class="tab10">***seseorang</span> yang bersekutu dengan syarikat merujuk kepada seksyen 17A (6) Akta
+		<span class="tab8">Suruhanjaya</span> Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>], iaitu seseorang itu
+		<span class="tab8">bersekutu</span> dengan organisasi komersial jika dia seorang pengarah, pekongsi atau pekerja
+		<span class="tab8">organisasi</span> komersial itu atau dia ialah orang yang melaksanakan perkhidmatan untuk atau
+		<span class="tab8">bagi pihak</span> organisasi komersial itu.</p>
+		<p align="justify">
+		(iii) <span class="tab10">Surat</span> Akuan ini hendaklah dikemukakan bersama surat perwakilan kuasa.</p>
+		<p align="justify">
+		(iv) <span class="tab13">Takrifan</span> perusahaan di bawah Akta 712 merangkumi syarikat yang terlibat dengan
+		<span class="tab12">perolehan</span> Kerajaan.</p>
+		
 		</td>
 		## #32739 & #32738
 	</tr>
