@@ -7752,7 +7752,7 @@ public void saveComplianceSample() {
 							&& this.getManagedBean().getScQt().isDemoRequired()) {
 						if (null == this.getManagedBean().getScQt()
 								.getDemoNotificationCheck()) {
-							EvaluationReqDTO demoReqDTO = new EvaluationReqDTO();
+							/*EvaluationReqDTO demoReqDTO = new EvaluationReqDTO();
 							demoReqDTO.setScQt(this.getManagedBean().getScQt());
 							demoReqDTO
 									.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
@@ -7762,7 +7762,7 @@ public void saveComplianceSample() {
 							demoReqDTO.setSenderId(curLogedInUser.getUserId());
 							EvaluationResDTO demoResDTO = evaluationSo
 									.sendDemoNotificationsForSuppliers(demoReqDTO);
-							if (demoResDTO.isSuccessful()) {
+							if (demoResDTO.isSuccessful()) {*///#28784 disable notification
 								this.getManagedBean().getScQt()
 										.setDemoNotificationCheck(1);
 								EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -7771,7 +7771,7 @@ public void saveComplianceSample() {
 										.saveReportDtls(reqDTO);
 								this.getManagedBean().setScQt(
 										evalResDTO.getScQt());
-							}
+//							}//#28784 disable notification
 						}
 					}
 					/*if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
