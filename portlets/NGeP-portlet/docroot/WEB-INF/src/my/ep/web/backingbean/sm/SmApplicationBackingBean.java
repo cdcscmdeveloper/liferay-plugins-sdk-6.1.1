@@ -1127,7 +1127,8 @@ public class SmApplicationBackingBean extends
 				//30713 - Start
 				subStartTime = System.currentTimeMillis();
 				//Add checking check expired for KN
-				SmWorkflowStatus currWorkflowStatus = isLatestActiveWorkFlow(currSupp.getSupplierId());
+				//SmWorkflowStatus currWorkflowStatus = isLatestActiveWorkFlow(currSupp.getSupplierId());
+				isLatestActiveWorkFlow(currSupp.getSupplierId());
 				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 						"SmApplicationBackingBean.proceedToApplication", "isLatestActiveWorkFlow-7", 
 						subStartTime); //20211005@fadhli - #31754
@@ -1681,7 +1682,7 @@ public class SmApplicationBackingBean extends
 						.getPmRegStatus().getPmStatus() != null) {
 			
 			subStartTime = System.currentTimeMillis();
-			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+			//SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "getCurrentSupplier-24", 
 					subStartTime); //20211005@fadhli - #31754
@@ -2107,7 +2108,7 @@ public class SmApplicationBackingBean extends
 							}
 							
 							if(ssmResDTO.getSmPersonnelSecretaries() != null){
-								this.getManagedBean().getSmAppl().setSmPersonnelSecretaries(new ArrayList());
+								this.getManagedBean().getSmAppl().setSmPersonnelSecretaries(new ArrayList<SmPersonnelSecretaries>());
 								for(SmPersonnelSecretaries personnelSecretaries: ssmResDTO.getSmPersonnelSecretaries()){
 									personnelSecretaries.setSmAppl(this.getManagedBean().getSmAppl());
 									this.getManagedBean().getSmAppl().getSmPersonnelSecretaries().add(personnelSecretaries);
@@ -2122,7 +2123,7 @@ public class SmApplicationBackingBean extends
 							}
 							
 							if(ssmResDTO.getSmApplAuditors()!= null){
-								this.getManagedBean().getSmAppl().setSmApplAuditors(new ArrayList());
+								this.getManagedBean().getSmAppl().setSmApplAuditors(new ArrayList<SmApplAuditors>());
 								for(SmApplAuditors auditors: ssmResDTO.getSmApplAuditors()){
 									auditors.setSmAppl(this.getManagedBean().getSmAppl());
 									this.getManagedBean().getSmAppl().getSmApplAuditors().add(auditors);
@@ -2216,7 +2217,7 @@ public class SmApplicationBackingBean extends
 						//START #27239
 						//POPUP USER NOT SSM OWNER #26734 //ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & RegistrationBackingBean.viewOnlineAccount & SmApplicationBackingBean.proceedToApplication
 						subStartTime = System.currentTimeMillis();
-						FacesScopes facesScope = new FacesScopes();
+						//FacesScopes facesScope = new FacesScopes();
 						SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 								"SmApplicationBackingBean.proceedToApplication", "facesScope-34C", 
 								subStartTime); //20211005@fadhli - #31754
@@ -9111,6 +9112,12 @@ public class SmApplicationBackingBean extends
 		validateNoChangesBeenMadeToApplication();
 
 		// try {
+		//#28776 - start
+		if(getManagedBean().getSmAppl().getPmStatus() != null 
+				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION){
+			getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+		}
+		//#28776 - end
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
@@ -11134,7 +11141,7 @@ public class SmApplicationBackingBean extends
 			RequestContext.getCurrentInstance().execute("sendInqDialog.hide()");
 		} else {
 			// #26136
-			RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");			
+			RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");
 		}
 		//END 12483
 		return retMsg;
@@ -13424,6 +13431,12 @@ public class SmApplicationBackingBean extends
 	 * list
 	 */
 	private void initNonMandatoryAndMandatoryDocs() {
+		//#28776 - start
+		if(getManagedBean().getSmAppl().getPmStatus() != null
+				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION){
+			getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+		}
+		//#28776 - end
 		if (getManagedBean().getSmAppl() != null
 				&& !EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
 						.getSmApplSupportDocs())) {
