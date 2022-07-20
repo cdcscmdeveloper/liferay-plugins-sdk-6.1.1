@@ -148,17 +148,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			//33615-Start
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
-				if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())){
-					reqDTO.setUserRole(RoleCode.FL_APPROVER.value());
-				}else{
-					reqDTO.setUserRole(getUserRole());
-				}
-			}else{
-				reqDTO.setUserRole(getUserRole());
-			}
-			//33615-End
+			reqDTO.setUserRole(getUserRole());
 			reqDTO.setApproverUserList(getManagedBean().getApproverList());
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
