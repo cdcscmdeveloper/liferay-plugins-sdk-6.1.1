@@ -5690,6 +5690,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					if(this.getManagedBean().getQt().isDemoRequired()){
 						this.getManagedBean().setDemoAction(true);
 						this.getManagedBean().setDemoType(true);
+						checkDemoPresentationByStatus();
 					}
 				}
 			} finally {
