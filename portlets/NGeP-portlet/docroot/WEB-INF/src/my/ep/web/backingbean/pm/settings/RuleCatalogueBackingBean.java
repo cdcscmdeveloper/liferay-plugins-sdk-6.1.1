@@ -1227,14 +1227,10 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void deleteMoreRuleValue() {
-		log.info(".................deleteMoreRuleValue...................");
-
-		// PmConfigRuleValue ruleValue =
-		// this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(rowIndex);
-
-		// int indexOfSelectedRuleType =
-		// this.getManagedBean().getConfigRuleList().indexOf(this.getManagedBean().getSelectedRuleType());
-		// this.getManagedBean().getConfigRuleList().remove(indexOfSelectedRuleType);
+		//#30672 - Start
+		RequestContext.getCurrentInstance().reset("form:settingTabId:ruleTypeValueTableID"); // reset form UI validation error
+		//#30672 - End
+		
 		Integer rowIndex = getManagedBean().getDeleteRowIndex();
 		List<PmConfigRuleValue> removeList = new ArrayList<PmConfigRuleValue>();
 		PmConfigRule configRuleType = this.getManagedBean()
@@ -1510,6 +1506,21 @@ public class RuleCatalogueBackingBean extends
 					throw new EpException(MessageConst.ERROR_770210,
 							new String[] { ruleTypeDesc.getRuleDesc() });
 				}
+				
+				// 30672 - start 19/07/2022
+				if (ruleTypeDesc.getRuleType().getRangeType() != 1
+						|| (ruleTypeDesc.getRuleType().getRangeType() == 1 && baseValueToCompare.isShowFlag())) {
+					if (baseValueToCompare.isErrorExpDate()) {
+						if (!this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()
+								.equals(ruleTypeDesc.getRuleType().getRuleType())) {
+							throw new EpException(MessageConst.ERROR_770111,
+									new String[] { ruleTypeDesc.getRuleDesc() });
+						} else {
+							throw new EpException(MessageConst.ERROR_770113);
+						}
+					}
+				}
+				// 30672 - end 19/07/2022
 
 				for (int j = i + 1; j <= (ruleTypeDesc.getRuleType()
 						.getConfigRuleValues().size() - 1); j++) {
@@ -5467,4 +5478,27 @@ public class RuleCatalogueBackingBean extends
 	}
 	/* 27827 - END */
 	
+	// 30672 - start
+	public void valueCheckExpDateError(int index) {
+
+		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
+		PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues().get(index);
+
+		if (selectedValue.getEffDate() != null || selectedValue.getExpDate() != null)
+			if (configRuleType.getRangeType() != 1
+					|| (configRuleType.getRangeType() == 1 && selectedValue.isShowFlag())) {
+				if (selectedValue.getEffDate().after(selectedValue.getExpDate())) {
+					selectedValue.setErrorExpDate(true);
+					throw new EpException(MessageConst.ERROR_770113);
+					//#30672 - start 19/07/2022
+				} else if (selectedValue.getEffDate().equals(selectedValue.getExpDate())) {
+					selectedValue.setErrorExpDate(true);
+					throw new EpException(MessageConst.ERROR_770113);
+					//#30672 - end 19/07/2022
+				} else {
+					selectedValue.setErrorExpDate(false);
+				}
+			}
+	}
+	// 30672 - end
 }
