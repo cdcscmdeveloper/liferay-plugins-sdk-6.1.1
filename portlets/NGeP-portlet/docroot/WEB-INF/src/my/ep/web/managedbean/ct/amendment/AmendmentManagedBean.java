@@ -175,6 +175,11 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		prodcollapse=value;
 		
 	}
+	// Start Fix - #33256
+	private Map<Long, CtItemMaxQty> selectedChangeItemQuantity;
+	
+	private Map<Long, CtItemPrice> selectedChangeItemPrice;
+	// End Fix - #33256
 	
 private class ServiceListingPagingDataModel extends PagingDataModel<CtContractItem> {
 		
@@ -1413,4 +1418,27 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	}	
 	//26753 - end
 
+	// Start Fix - #33256
+	public Map<Long, CtItemMaxQty> getSelectedChangeItemQuantity() {
+		if (selectedChangeItemQuantity == null){
+			selectedChangeItemQuantity = new HashMap<Long, CtItemMaxQty>();
+		}
+		return selectedChangeItemQuantity;
+	}
+	
+	public void setSelectedChangeItemQuantity(Map<Long, CtItemMaxQty> selectedChangeItemQuantity) {
+		this.selectedChangeItemQuantity = selectedChangeItemQuantity;
+	}
+	
+	public Map<Long, CtItemPrice> getSelectedChangeItemPrice() {
+		if (selectedChangeItemPrice == null){
+			selectedChangeItemPrice = new HashMap<Long, CtItemPrice>();
+		}
+		return selectedChangeItemPrice;
+	}
+	
+	public void setSelectedChangeItemPrice(Map<Long, CtItemPrice> selectedChangeItemPrice) {
+		this.selectedChangeItemPrice = selectedChangeItemPrice;
+	}
+	// End Fix - #33256
 }
