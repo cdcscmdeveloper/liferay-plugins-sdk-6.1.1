@@ -325,7 +325,13 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				getManagedBean().setOriginalAccountNo(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
 				getPopulateBankAccountList();
 			}
-
+			//Start Fix - #33399
+			if (getManagedBean().getContractVer().getCtContractValue().getBankName() != null) {
+				getManagedBean().setOriginalBankName(getManagedBean().getContractVer().getCtContractValue().getBankName());
+				getPopulateBankAccountList();
+			}
+			//End Fix - #33399
+            
 			if(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() != null && getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() != null )
 				getManagedBean().setCurentAccNoBankName(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() +ContractConst.SPACE_SLASH+ getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() );
 
@@ -544,12 +550,23 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 */
 	private void validateChangeBankRequest(String action){
 		getManagedBean().setAutoUpdate(true);
+
+//		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+//		if (getManagedBean().getOriginalAccountNo() != null && getManagedBean().getOriginalAccountNo().equalsIgnoreCase(
+//				getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())) {
+//			throw new EpException(MessageConst.ERROR_750000);
+//		}
+//	}
+		// Start Fix - #33399
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			if (getManagedBean().getOriginalAccountNo() != null && getManagedBean().getOriginalAccountNo().equalsIgnoreCase(
-					getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())) {
+			if ((getManagedBean().getOriginalAccountNo() != null && getManagedBean().getOriginalAccountNo().equalsIgnoreCase(
+					getManagedBean().getContractVer().getCtContractValue().getBankAccountNo()))
+					&& (getManagedBean().getOriginalBankName() != null && getManagedBean().getOriginalBankName().equalsIgnoreCase(getManagedBean().getContractVer().getCtContractValue().getBankName()))) {
 				throw new EpException(MessageConst.ERROR_750000);
 			}
 		}
+		// End Fix - #33399
+
 		// Validation for valid contract admin for next task assignment
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isSupplierRole()) {
 			getContractAdminlist();
