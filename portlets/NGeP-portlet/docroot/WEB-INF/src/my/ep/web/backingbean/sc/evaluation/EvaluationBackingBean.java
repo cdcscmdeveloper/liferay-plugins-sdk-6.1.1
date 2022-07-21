@@ -2747,13 +2747,9 @@ public class EvaluationBackingBean extends
 					reqDTO.setSettingType(getSettingType(QTConstants.PRESENTATION_DEMO_EVALUATION));
 					resDTO = evaluationSo.retrievePassingScoreByQT(reqDTO);
 				} else {
-					// Bug #32037 related to 21695 & 25138 start 11/11/2021
-					if(this.getManagedBean().getScQt().isPartial()){
-						summaryReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-					}else{	
+					// Bug #33584 related to 21695 & 25138 start 21/07/2022
 						summaryReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
-					}
-					// Bug #32037 end 11/11/2021
+					// Bug #33584 end 21/07/2022
 
 					EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 					reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
@@ -3068,13 +3064,9 @@ public class EvaluationBackingBean extends
 				summaryReqDTO
 						.setQtId(this.getManagedBean().getScQt().getQtId());
 
-				// Bug #32037 related to 21695 & 25138 start 11/11/2021
-				if(this.getManagedBean().getScQt().isPartial()){
-					summaryReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-				}else{	
+				// Bug #33584 related to 21695 & 25138 start 21/07/2022
 					summaryReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
-				}
-				// Bug #32037 end 11/11/2021
+				// Bug #33584 end 21/07/2022
 
 				List<String> resultStg2 = new ArrayList<String>();
 				resultStg2.add(QTConstants.RECOMMENDATION_BY_PACKAGE);
