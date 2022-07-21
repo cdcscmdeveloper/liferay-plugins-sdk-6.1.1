@@ -331,24 +331,31 @@ label.ui-button>span.ui-button-text {
 
 					<p:column style="width:100px;white-space:normal"
 						rendered="#{question.selectable and isQuestionTypeItem}">
-						<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
-							<h:outputText value="#{question.clQuantity}" />
-						</h:panelGroup>
-
 						<ui:remove>#28784</ui:remove>
-						<p:commandButton id="zoneQtyBtn" icon="ui-icon-pencil"
-							style="background-color:transparent !important; border:0px none;"
-							action="#{templateSpecBackingBean.zoneQtyPopupAction(specificationBackingBean.managedBean.templateSpecBean)}"
-							partialSubmit="true" process="@this"
-							update="@([id$=zoneQtyPopup])"
-							title="#{lbl['lbl.tpl.qty.instruction.tooltip']}">
-							<f:setPropertyActionListener
-								target="#{specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion}"
-								value="#{question}" />
-							<f:setPropertyActionListener
-								target="#{specificationBackingBean.managedBean.templateSpecBean.specComponentId}"
-								value="#{templateSpecId}" />
-						</p:commandButton>
+						<c:choose>
+							<c:when
+								test="#{!empty specificationBackingBean.managedBean.templateSpecBean.specMaster.tplSpecZone and 
+								specificationBackingBean.managedBean.templateSpecBean.specMaster.qtyByZone}">								
+								<p:commandButton id="zoneQtyBtn" icon="ui-icon-pencil"
+									style="background-color:transparent !important; border:0px none;"
+									action="#{templateSpecBackingBean.displayDemozoneQtyPopupAction(specificationBackingBean.managedBean.templateSpecBean)}"
+									partialSubmit="true" process="@this"
+									update="@([id$=zoneQtyPopup])"
+									title="#{lbl['lbl.tpl.qty.instruction.tooltip']}">
+									<f:setPropertyActionListener
+										target="#{specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion}"
+										value="#{question}" />
+									<f:setPropertyActionListener
+										target="#{specificationBackingBean.managedBean.templateSpecBean.specComponentId}"
+										value="#{templateSpecId}" />
+								</p:commandButton>
+							</c:when>
+							<c:otherwise>
+								<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
+									<h:outputText value="#{question.clQuantity}" />
+								</h:panelGroup>
+							</c:otherwise>
+						</c:choose>
 
 						<p:dialog id="zoneQtyPopup"
 							header="#{lbl['lbl.tpl.spec.content.zone.quantity.title']}"
