@@ -15380,7 +15380,13 @@ private void retriveCommitteeRemarksList(){
 	 */
 	public boolean displayReviseInstrn() {
 				   
-		if (null != getManagedBean().getCurrentStatusId()) {
+		if (	// #25638 - #31322 - Start.
+				null != this.getManagedBean().getOutComes()
+				&& this.getManagedBean().getOutComes().length > 0
+				&& ArrayUtils.contains(this.getManagedBean().getOutComes(), BpmOutcomeConst.BPM_REVISE)
+				&&
+				// #25638 - #31322 - End.		
+				null != getManagedBean().getCurrentStatusId()) {
 			long currentStatus = getManagedBean().getCurrentStatusId().longValue();
 			if ((currentStatus == QTStatusConst.EC_PENDING_ENDORSEMENT.longValue())
 					|| (currentStatus == QTStatusConst.TEC_PENDING_ENDORSEMENT.longValue())
