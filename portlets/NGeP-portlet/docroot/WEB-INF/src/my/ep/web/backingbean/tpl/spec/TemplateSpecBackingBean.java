@@ -1417,7 +1417,14 @@ public class TemplateSpecBackingBean extends
 		templateSpecBean.setOriSpecQuestion(oriSpecQuestion);
 		this.getManagedBean().setTemplateSpecBean(templateSpecBean);
 		// #21695 - Farid
+		
+		//#28784
+		if (templateSpecBean.getSpecMaster() != null && templateSpecBean.getSpecMaster().getScQtDoc() != null && 
+				templateSpecBean.getSpecMaster().getScQtDoc().getScQt() != null && templateSpecBean.getSpecMaster().getScQtDoc().getScQt().isDemoRequired()) {
+			RequestContext.getCurrentInstance().execute("zoneQtyPopup.show()");
+		} else {
 		RequestContext.getCurrentInstance().execute(templateSpecBean.getSpecComponentId() + "zoneQtyPopup.show()");
+		}		
 				
 	
 	}
