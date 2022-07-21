@@ -83,12 +83,12 @@
         
         .tab6 {
             display: inline-block;
-    		margin-left: 10px;
+    		margin-left: 27px;
         }
         
         .tab7 {
             display: inline-block;
-    		margin-left: 22px;
+    		margin-left: 32px;
         }
         
         .tab8 {
@@ -109,6 +109,11 @@
         .tab12 {
             display: inline-block;
     		margin-left: 15px;
+        }
+        
+        .tab13 {
+            display: inline-block;
+    		margin-left: 10px;
         }
 	
 	</style>
@@ -134,26 +139,26 @@
 			Saya, ............................................................................................ No. Kad Pengenalan .......................................... yang mewakili .................................................................... nombor Pendaftaran ............................................................ dengan ini mengisytiharkan bahawa saya atau mana-mana orang yang mewakili syarikat ini:
 		</p>
 			<ul class="standard" style="list-style-type:none;">
-			  <li style="margin-top: 3px;">i.	tidak akan menawarkan, menjanjikan atau memberikan apa-apa suapan kepada mana-mana orang dalam</li>
+			  <li style="margin-top: 3px;">i.	<span class="tab9"/>tidak akan menawarkan, menjanjikan atau memberikan apa-apa suapan kepada mana-mana orang dalam</li>
 			  <li><span class="tab6"/>mana-mana Kementerian/Agensi atau mana-mana orang lain, sebagai suapan untuk dipilih dalam</li>
 			  <li><span class="tab6"/>mana-mana perolehan; dan</li>
-			  <li style="margin-top: 3px;">ii.	tidak akan melakukan atau terlibat dengan tipuan bida dalam mana-mana perolehan.</li>
+			  <li style="margin-top: 3px;">ii.	<span class="tab12"/>tidak akan melakukan atau terlibat dengan tipuan bida dalam mana-mana perolehan.</li>
 			</ul>
 		<p class="standard">
 			Bersama ini dilampirkan Surat Perwakilan Kuasa bagi saya mewakili syarikat seperti tercatat di atas untuk membuat pengisytiharan ini.
 		</p>
 		<p class="standard">
-			2. Sekiranya saya, atau mana-mana individu yang mewakili syarikat ini didapati terlibat dalam membuat pakatan harga dengan syarikat lain atau apa-apa pakatan sepanjang proses perolehan atau menawarkan, menjanjikan atau memberikan apa-apa suapan kepada mana-mana orang dalam ................................................................................ atau mana-mana orang lain sebagai dorongan untuk dipilih dalam perolehan seperti di atas, maka saya sebagai wakil syarikat bersetuju tindakan-tindakan berikut boleh diambil:
+			2. <span class="tab9">Sekiranya</span> saya, atau mana-mana individu yang mewakili syarikat ini didapati terlibat dalam membuat pakatan harga dengan syarikat lain atau apa-apa pakatan sepanjang proses perolehan atau menawarkan, menjanjikan atau memberikan apa-apa suapan kepada mana-mana orang dalam ................................................................................ atau mana-mana orang lain sebagai dorongan untuk dipilih dalam perolehan seperti di atas, maka saya sebagai wakil syarikat bersetuju tindakan-tindakan berikut boleh diambil:
 		</p>
 			<ul class="standard" style="list-style-type:none;">
-			  <li style="margin-top: 3px;">2.1 Penarikan balik tawaran kontrak bagi perolehan di atas; atau</li>
-			  <li style="margin-top: 3px;">2.2  Penamatan kontrak bagi perolehan di atas; dan</li>
-			  <li style="margin-top: 3px;">2.3 Lain-lain tindakan undang-undang/tatatertib mengikut undang-undang/peraturan perolehan Kerajaan yang</li>
+			  <li style="margin-top: 3px;">2.1 <span class="tab13"/>Penarikan balik tawaran kontrak bagi perolehan di atas; atau</li>
+			  <li style="margin-top: 3px;">2.2 <span class="tab13"/>Penamatan kontrak bagi perolehan di atas; dan</li>
+			  <li style="margin-top: 3px;">2.3 <span class="tab13"/>Lain-lain tindakan undang-undang/tatatertib mengikut undang-undang/peraturan perolehan Kerajaan yang</li>
 			  <li><span class="tab7"/>berkuat kuasa.</li>
 			</ul>
 		
 		<p class="standard">
-			3. Saya sesungguhnya faham bahawa tindakan berikut akan diambil:
+			3. <span class="tab9">Saya</span> sesungguhnya faham bahawa tindakan berikut akan diambil:
 		</p>
 		
 		#if ($countTitle > 467)
@@ -166,21 +171,22 @@
 		<br/><br/>
 				
 			<ul class="standard" style="list-style-type:none;">
-			  <li style="margin-top: 3px;">3.1	Didakwa bagi kesalahan** di bawah Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] dan</li>
-			  <li><span class="tab7"/>Kanun Keseksaan [<i>Akta 574</i>] serta boleh dihukum di bawah undang-undang masing-masing untuk</li>
+			  <li style="margin-top: 3px;">3.1	<span class="tab13"/>Didakwa bagi kesalahan** di bawah Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>]</li>
+			  <li><span class="tab7"/>dan Kanun Keseksaan [<i>Akta 574</i>] serta boleh dihukum di bawah undang-undang masing-masing untuk</li>
 			  <li><span class="tab7"/>kegagalan saya atau mana-mana orang yang mewakili syarikat ini untuk mematuhi perkara (i); atau</li><br/>
-			  <li style="margin-top: 3px;">3.2	tindakan boleh dikenakan ke atas syarikat di bawah Akta Persaingan 2010 [<i>Akta 712</i>] atas kegagalan saya</li>
-			  <li><span class="tab7"/>atau mana-mana orang yang mewakili syarikat ini untuk mematuhi perkara (ii). Sekiranya syarikat didapati</li>
-			  <li><span class="tab7"/>melanggar peruntukan seksyen 4(2)(d) Akta 712, syarikat boleh didenda tidak melebihi sepuluh peratus</li>
-			  <li><span class="tab7"/>(10%) daripada pusing ganti (<i>turn over</i>) seluruh dunia sepanjang tempoh suatu pelanggaran itu berlaku.</li>
+			  <li style="margin-top: 3px;">3.2	<span class="tab13"/>tindakan boleh dikenakan ke atas syarikat di bawah Akta Persaingan 2010 [<i>Akta 712</i>] atas kegagalan</li>
+			  <li><span class="tab7"/>saya atau mana-mana orang yang mewakili syarikat ini untuk mematuhi perkara (ii). Sekiranya syarikat</li>
+			  <li><span class="tab7"/>didapati melanggar peruntukan seksyen 4(2)(d) Akta 712, syarikat boleh didenda tidak melebihi sepuluh</li>
+			  <li><span class="tab7"/>peratus (10%) daripada pusing ganti (<i>turn over</i>) seluruh dunia sepanjang tempoh suatu pelanggaran itu</li>
+			  <li><span class="tab7"/>berlaku.</li>
 			</ul>
 		
 		<p class="standard">
-			4. Sekiranya terdapat mana-mana orang cuba memperolehi atau meminta apa-apa suapan daripada saya atau mana-mana orang yang berkaitan dengan syarikat ini sebagai dorongan untuk dipilih dalam perolehan seperti di atas, maka saya berjanji akan dengan segera melaporkan perbuatan tersebut kepada pejabat Suruhanjaya Pencegahan Rasuah Malaysia (SPRM) atau balai polis yang berhampiran. Saya sedar bahawa kegagalan saya berbuat demikian adalah merupakan suatu kesalahan di bawah seksyen 25 (1) Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] dan boleh dihukum di bawah seksyen 25 (2) akta yang sama, apabila disabitkan boleh didenda tidak melebihi RM100,000 atau penjara selama tempoh tidak melebihi sepuluh tahun atau kedua-duanya.
+			4. <span class="tab9">Sekiranya</span> terdapat mana-mana orang cuba memperolehi atau meminta apa-apa suapan daripada saya atau mana-mana orang yang berkaitan dengan syarikat ini sebagai dorongan untuk dipilih dalam perolehan seperti di atas, maka saya berjanji akan dengan segera melaporkan perbuatan tersebut kepada pejabat Suruhanjaya Pencegahan Rasuah Malaysia (SPRM) atau balai polis yang berhampiran. Saya sedar bahawa kegagalan saya berbuat demikian adalah merupakan suatu kesalahan di bawah seksyen 25 (1) Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] dan boleh dihukum di bawah seksyen 25 (2) akta yang sama, apabila disabitkan boleh didenda tidak melebihi RM100,000 atau penjara selama tempoh tidak melebihi sepuluh tahun atau kedua-duanya.
 		</p>
 		
 		<p class="standard">
-			5. Saya sesungguhnya faham bahawa syarikat melakukan kesalahan jika seseorang yang bersekutu dengan syarikat*** memberikan, menjanjikan atau menawarkan suapan untuk memperoleh atau mengekalkan perniagaan atau faedah dalam menjalankan perniagaan di bawah seksyen 17A Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>], apabila disabitkan kesalahan boleh didenda tidak kurang daripada sepuluh kali ganda jumlah atau nilai suapan, atau RM1 juta, atau dipenjarakan selama tempoh tidak melebihi dua puluh tahun atau kedua-duanya.
+			5. <span class="tab9">Saya</span> sesungguhnya faham bahawa syarikat melakukan kesalahan jika seseorang yang bersekutu dengan syarikat*** memberikan, menjanjikan atau menawarkan suapan untuk memperoleh atau mengekalkan perniagaan atau faedah dalam menjalankan perniagaan di bawah seksyen 17A Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>], apabila disabitkan kesalahan boleh didenda tidak kurang daripada sepuluh kali ganda jumlah atau nilai suapan, atau RM1 juta, atau dipenjarakan selama tempoh tidak melebihi dua puluh tahun atau kedua-duanya.
 		</p>
 		
 		#end
@@ -188,8 +194,8 @@
 		#if ($countTitle > 260 && $countTitle <= 467)
 				
 			<ul class="standard" style="list-style-type:none;">
-			  <li style="margin-top: 3px;">3.1	Didakwa bagi kesalahan** di bawah Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] dan</li>
-			  <li><span class="tab7"/>Kanun Keseksaan [<i>Akta 574</i>] serta boleh dihukum di bawah undang-undang masing-masing untuk</li>
+			  <li style="margin-top: 3px;">3.1	<span class="tab13"/>Didakwa bagi kesalahan** di bawah Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>]</li>
+			  <li><span class="tab7"/>dan Kanun Keseksaan [<i>Akta 574</i>] serta boleh dihukum di bawah undang-undang masing-masing untuk</li>
 			  <li><span class="tab7"/>kegagalan saya atau mana-mana orang yang mewakili syarikat ini untuk mematuhi perkara (i); atau</li><br/>
 			  
 			
@@ -201,18 +207,19 @@
 		<br/><br/>
 		<br/>
 		
-			  <li style="margin-top: 3px;">3.2	tindakan boleh dikenakan ke atas syarikat di bawah Akta Persaingan 2010 [<i>Akta 712</i>] atas kegagalan saya</li>
-			  <li><span class="tab7"/>atau mana-mana orang yang mewakili syarikat ini untuk mematuhi perkara (ii). Sekiranya syarikat didapati</li>
-			  <li><span class="tab7"/>melanggar peruntukan seksyen 4(2)(d) Akta 712, syarikat boleh didenda tidak melebihi sepuluh peratus</li>
-			  <li><span class="tab7"/>(10%) daripada pusing ganti (<i>turn over</i>) seluruh dunia sepanjang tempoh suatu pelanggaran itu berlaku.</li>
+			  <li style="margin-top: 3px;">3.2	<span class="tab13"/>tindakan boleh dikenakan ke atas syarikat di bawah Akta Persaingan 2010 [<i>Akta 712</i>] atas kegagalan</li>
+			  <li><span class="tab7"/>saya atau mana-mana orang yang mewakili syarikat ini untuk mematuhi perkara (ii). Sekiranya syarikat</li>
+			  <li><span class="tab7"/>didapati melanggar peruntukan seksyen 4(2)(d) Akta 712, syarikat boleh didenda tidak melebihi sepuluh</li>
+			  <li><span class="tab7"/>peratus (10%) daripada pusing ganti (<i>turn over</i>) seluruh dunia sepanjang tempoh suatu pelanggaran itu</li>
+			  <li><span class="tab7"/>berlaku.</li>
 			</ul>
 		
 		<p class="standard">
-			4. Sekiranya terdapat mana-mana orang cuba memperolehi atau meminta apa-apa suapan daripada saya atau mana-mana orang yang berkaitan dengan syarikat ini sebagai dorongan untuk dipilih dalam perolehan seperti di atas, maka saya berjanji akan dengan segera melaporkan perbuatan tersebut kepada pejabat Suruhanjaya Pencegahan Rasuah Malaysia (SPRM) atau balai polis yang berhampiran. Saya sedar bahawa kegagalan saya berbuat demikian adalah merupakan suatu kesalahan di bawah seksyen 25 (1) Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] dan boleh dihukum di bawah seksyen 25 (2) akta yang sama, apabila disabitkan boleh didenda tidak melebihi RM100,000 atau penjara selama tempoh tidak melebihi sepuluh tahun atau kedua-duanya.
+			4. <span class="tab9">Sekiranya</span> terdapat mana-mana orang cuba memperolehi atau meminta apa-apa suapan daripada saya atau mana-mana orang yang berkaitan dengan syarikat ini sebagai dorongan untuk dipilih dalam perolehan seperti di atas, maka saya berjanji akan dengan segera melaporkan perbuatan tersebut kepada pejabat Suruhanjaya Pencegahan Rasuah Malaysia (SPRM) atau balai polis yang berhampiran. Saya sedar bahawa kegagalan saya berbuat demikian adalah merupakan suatu kesalahan di bawah seksyen 25 (1) Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] dan boleh dihukum di bawah seksyen 25 (2) akta yang sama, apabila disabitkan boleh didenda tidak melebihi RM100,000 atau penjara selama tempoh tidak melebihi sepuluh tahun atau kedua-duanya.
 		</p>
 		
 		<p class="standard">
-			5. Saya sesungguhnya faham bahawa syarikat melakukan kesalahan jika seseorang yang bersekutu dengan syarikat*** memberikan, menjanjikan atau menawarkan suapan untuk memperoleh atau mengekalkan perniagaan atau faedah dalam menjalankan perniagaan di bawah seksyen 17A Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>], apabila disabitkan kesalahan boleh didenda tidak kurang daripada sepuluh kali ganda jumlah atau nilai suapan, atau RM1 juta, atau dipenjarakan selama tempoh tidak melebihi dua puluh tahun atau kedua-duanya.
+			5. <span class="tab9">Saya</span> sesungguhnya faham bahawa syarikat melakukan kesalahan jika seseorang yang bersekutu dengan syarikat*** memberikan, menjanjikan atau menawarkan suapan untuk memperoleh atau mengekalkan perniagaan atau faedah dalam menjalankan perniagaan di bawah seksyen 17A Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>], apabila disabitkan kesalahan boleh didenda tidak kurang daripada sepuluh kali ganda jumlah atau nilai suapan, atau RM1 juta, atau dipenjarakan selama tempoh tidak melebihi dua puluh tahun atau kedua-duanya.
 		</p>
 		
 		#end
@@ -220,13 +227,14 @@
 		#if ($countTitle < 170)
 				
 			<ul class="standard" style="list-style-type:none;">
-			  <li style="margin-top: 3px;">3.1	Didakwa bagi kesalahan** di bawah Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] dan</li>
-			  <li><span class="tab7"/>Kanun Keseksaan [<i>Akta 574</i>] serta boleh dihukum di bawah undang-undang masing-masing untuk</li>
+			  <li style="margin-top: 3px;">3.1	<span class="tab13"/>Didakwa bagi kesalahan** di bawah Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>]</li>
+			  <li><span class="tab7"/>dan Kanun Keseksaan [<i>Akta 574</i>] serta boleh dihukum di bawah undang-undang masing-masing untuk</li>
 			  <li><span class="tab7"/>kegagalan saya atau mana-mana orang yang mewakili syarikat ini untuk mematuhi perkara (i); atau</li><br/>
-			  <li style="margin-top: 3px;">3.2	tindakan boleh dikenakan ke atas syarikat di bawah Akta Persaingan 2010 [<i>Akta 712</i>] atas kegagalan saya</li>
-			  <li><span class="tab7"/>atau mana-mana orang yang mewakili syarikat ini untuk mematuhi perkara (ii). Sekiranya syarikat didapati</li>
-			  <li><span class="tab7"/>melanggar peruntukan seksyen 4(2)(d) Akta 712, syarikat boleh didenda tidak melebihi sepuluh peratus</li>
-			  <li><span class="tab7"/>(10%) daripada pusing ganti (<i>turn over</i>) seluruh dunia sepanjang tempoh suatu pelanggaran itu berlaku.</li>
+			  <li style="margin-top: 3px;">3.2	<span class="tab13"/>tindakan boleh dikenakan ke atas syarikat di bawah Akta Persaingan 2010 [<i>Akta 712</i>] atas kegagalan</li>
+			  <li><span class="tab7"/>saya atau mana-mana orang yang mewakili syarikat ini untuk mematuhi perkara (ii). Sekiranya syarikat</li>
+			  <li><span class="tab7"/>didapati melanggar peruntukan seksyen 4(2)(d) Akta 712, syarikat boleh didenda tidak melebihi sepuluh</li>
+			  <li><span class="tab7"/>peratus (10%) daripada pusing ganti (<i>turn over</i>) seluruh dunia sepanjang tempoh suatu pelanggaran itu</li>
+			  <li><span class="tab7"/>berlaku.</li>
 			</ul>
 			
 		<br/><br/>
@@ -239,11 +247,11 @@
 		<br/>
 		
 		<p class="standard">
-			4. Sekiranya terdapat mana-mana orang cuba memperolehi atau meminta apa-apa suapan daripada saya atau mana-mana orang yang berkaitan dengan syarikat ini sebagai dorongan untuk dipilih dalam perolehan seperti di atas, maka saya berjanji akan dengan segera melaporkan perbuatan tersebut kepada pejabat Suruhanjaya Pencegahan Rasuah Malaysia (SPRM) atau balai polis yang berhampiran. Saya sedar bahawa kegagalan saya berbuat demikian adalah merupakan suatu kesalahan di bawah seksyen 25 (1) Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] dan boleh dihukum di bawah seksyen 25 (2) akta yang sama, apabila disabitkan boleh didenda tidak melebihi RM100,000 atau penjara selama tempoh tidak melebihi sepuluh tahun atau kedua-duanya.
+			4. <span class="tab9">Sekiranya</span> terdapat mana-mana orang cuba memperolehi atau meminta apa-apa suapan daripada saya atau mana-mana orang yang berkaitan dengan syarikat ini sebagai dorongan untuk dipilih dalam perolehan seperti di atas, maka saya berjanji akan dengan segera melaporkan perbuatan tersebut kepada pejabat Suruhanjaya Pencegahan Rasuah Malaysia (SPRM) atau balai polis yang berhampiran. Saya sedar bahawa kegagalan saya berbuat demikian adalah merupakan suatu kesalahan di bawah seksyen 25 (1) Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] dan boleh dihukum di bawah seksyen 25 (2) akta yang sama, apabila disabitkan boleh didenda tidak melebihi RM100,000 atau penjara selama tempoh tidak melebihi sepuluh tahun atau kedua-duanya.
 		</p>
 		
 		<p class="standard">
-			5. Saya sesungguhnya faham bahawa syarikat melakukan kesalahan jika seseorang yang bersekutu dengan syarikat*** memberikan, menjanjikan atau menawarkan suapan untuk memperoleh atau mengekalkan perniagaan atau faedah dalam menjalankan perniagaan di bawah seksyen 17A Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>], apabila disabitkan kesalahan boleh didenda tidak kurang daripada sepuluh kali ganda jumlah atau nilai suapan, atau RM1 juta, atau dipenjarakan selama tempoh tidak melebihi dua puluh tahun atau kedua-duanya.
+			5. <span class="tab9">Saya</span> sesungguhnya faham bahawa syarikat melakukan kesalahan jika seseorang yang bersekutu dengan syarikat*** memberikan, menjanjikan atau menawarkan suapan untuk memperoleh atau mengekalkan perniagaan atau faedah dalam menjalankan perniagaan di bawah seksyen 17A Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>], apabila disabitkan kesalahan boleh didenda tidak kurang daripada sepuluh kali ganda jumlah atau nilai suapan, atau RM1 juta, atau dipenjarakan selama tempoh tidak melebihi dua puluh tahun atau kedua-duanya.
 		</p>
 		
 		#end
@@ -251,13 +259,14 @@
 		#if ($countTitle >=170 && $countTitle <= 260)
 				
 			<ul class="standard" style="list-style-type:none;">
-			  <li style="margin-top: 3px;">3.1	Didakwa bagi kesalahan** di bawah Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] dan</li>
-			  <li><span class="tab7"/>Kanun Keseksaan [<i>Akta 574</i>] serta boleh dihukum di bawah undang-undang masing-masing untuk</li>
+			  <li style="margin-top: 3px;">3.1	<span class="tab13"/>Didakwa bagi kesalahan** di bawah Akta Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>]</li>
+			  <li><span class="tab7"/>dan Kanun Keseksaan [<i>Akta 574</i>] serta boleh dihukum di bawah undang-undang masing-masing untuk</li>
 			  <li><span class="tab7"/>kegagalan saya atau mana-mana orang yang mewakili syarikat ini untuk mematuhi perkara (i); atau</li><br/>
-			  <li style="margin-top: 3px;">3.2	tindakan boleh dikenakan ke atas syarikat di bawah Akta Persaingan 2010 [<i>Akta 712</i>] atas kegagalan saya</li>
-			  <li><span class="tab7"/>atau mana-mana orang yang mewakili syarikat ini untuk mematuhi perkara (ii). Sekiranya syarikat didapati</li>
-			  <li><span class="tab7"/>melanggar peruntukan seksyen 4(2)(d) Akta 712, syarikat boleh didenda tidak melebihi sepuluh peratus</li>
-			  <li><span class="tab7"/>(10%) daripada pusing ganti (<i>turn over</i>) seluruh dunia sepanjang tempoh suatu pelanggaran itu berlaku.</li>
+			  <li style="margin-top: 3px;">3.2	<span class="tab13"/>tindakan boleh dikenakan ke atas syarikat di bawah Akta Persaingan 2010 [<i>Akta 712</i>] atas kegagalan</li>
+			  <li><span class="tab7"/>saya atau mana-mana orang yang mewakili syarikat ini untuk mematuhi perkara (ii). Sekiranya syarikat</li>
+			  <li><span class="tab7"/>didapati melanggar peruntukan seksyen 4(2)(d) Akta 712, syarikat boleh didenda tidak melebihi sepuluh</li>
+			  <li><span class="tab7"/>peratus (10%) daripada pusing ganti (<i>turn over</i>) seluruh dunia sepanjang tempoh suatu pelanggaran itu</li>
+			  <li><span class="tab7"/>berlaku.</li>
 			</ul>
 			
 		<br/><br/>
