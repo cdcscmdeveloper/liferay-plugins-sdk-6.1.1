@@ -2485,6 +2485,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		getManagedBean().setLoaContractVerId(ctBB.getManagedBean().getContractVer().getContractVerId());
 		reqDTO.setCtContractVer( ctBB.getManagedBean().getContractVer());
 		getManagedBean().setWarningPercentage(contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage());
+		ctBB.getManagedBean().setInCtPerformance(false);
 		return CONTRACT_PAGE;
 	}
 
@@ -2548,7 +2549,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				
 				ctBB.getManagedBean().setViewContract(true);
 				reqDTO.setViewOnly(true);
-				ctBB.getManagedBean().setViewContract(true);
 				ctBB.getManagedBean().setFromViewPage(true); 
 				ctBB.getManagedBean().setInCtPerformance(true);
 			}
