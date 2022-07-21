@@ -12697,10 +12697,15 @@ private void retriveCommitteeRemarksList(){
 	}
 	//#25037-END	
  
-	// #25638 - Start
-	
+	// #25638 - Start	
 	public boolean displayReviseInstrn() {
-		if (null != getManagedBean().getCurrentStatusId()) {
+		if (	// #25638 - #31322 - Start.
+				null != this.getManagedBean().getOutComes()
+				&& this.getManagedBean().getOutComes().length > 0
+				&& ArrayUtils.contains(this.getManagedBean().getOutComes(), BpmOutcomeConst.BPM_REVISE)
+				&&
+				// #25638 - #31322 - End.
+				null != getManagedBean().getCurrentStatusId()) {
 			long currentStatus = getManagedBean().getCurrentStatusId().longValue();
 		
 			if ((currentStatus == QTStatusConst.EC_PENDING_ENDORSEMENT.longValue())
@@ -12717,6 +12722,7 @@ private void retriveCommitteeRemarksList(){
 				return true;
 			}
 		}
+		
 		return false;
 	}
 	// #25638 - End
