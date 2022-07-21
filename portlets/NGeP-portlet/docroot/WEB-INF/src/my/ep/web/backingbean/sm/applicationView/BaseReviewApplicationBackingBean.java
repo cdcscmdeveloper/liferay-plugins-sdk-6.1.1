@@ -1017,20 +1017,17 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& my.ep.constant.pm.ParameterConst.CATEGORY_TYPE_MANUFACTURING
 							.equals(cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode())) {
+					//#33467 - start, #32809 - nested loop for checking each SmManufacturingDtl for every SmSupplierCategory
 					for (SmManufacturingDtl manuFacDtl : getManagedBean().getSmAppl().getSmManufacturingDtls()) { // filter manufacture not imposed DA
-						if (manuFacDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
-							if(activeManufacturingDtls.size() > 0){
-								for (SmManufacturingDtl manuFacDtlAct : activeManufacturingDtls) {
-									if (!manuFacDtl.equals(manuFacDtlAct)) {
+						if(manuFacDtl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) continue;
+						if(activeManufacturingDtls.size() == 0) activeManufacturingDtls.add(manuFacDtl);
+						SmManufacturingDtl manDtl = (SmManufacturingDtl) EntityHelper.getEntityBySinglePropertyFromList(
+								manuFacDtl.getManufacturingDtlId(), activeManufacturingDtls, "manufacturingDtlId");
+						if(manDtl == null){
 										activeManufacturingDtls.add(manuFacDtl);
 									} 
 								}
-							} else {
-								activeManufacturingDtls.add(manuFacDtl);
-							}
-						}
-					}
-					// #32809 - end
+					//#33467, #32809 - end
 				}
 			}
 			getManagedBean().getSmAppl().setSmManufacturingDtls(
