@@ -20284,8 +20284,7 @@ if(null!=allTechnicalChecklist){
 		List<TplSpecQuestion> listNew = new ArrayList<>();
 		List<TplSpecQuestion> list = this.getManagedBean().getDemoOriSpecQuestionTemplateList();
 		if (StringUtils.isNotBlank(this.getManagedBean().getItemName())) {
-			if (CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecBean().getSpecMaster()
-					.getTplSpecQuestions())) {
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions())) {
 				String itemName = this.getManagedBean().getItemName().toLowerCase();
 				for (TplSpecQuestion obj : list) {
 					if (StringUtils.isNotBlank(obj.getClItem())) {
@@ -20303,17 +20302,23 @@ if(null!=allTechnicalChecklist){
 				}
 			}
 			this.getManagedBean().getTemplateSpecBean().getSpecMaster().setTplSpecQuestions(listNew);
+		} else {//#28784
+			list = this.getManagedBean().getDemoOriSpecQuestionTemplateList();
+			for (TplSpecQuestion obj : list) {
+				obj.setSelectable(true);
+			}
+			this.getManagedBean().getTemplateSpecBean().getSpecMaster().setTplSpecQuestions(list);
 		}
 	}
 
   	public void resetSearchPresentationDemo(){
-  		if(CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions())){
+//  		if(CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions())){//#28784
   			List<TplSpecQuestion> list = this.getManagedBean().getDemoOriSpecQuestionTemplateList();
   			for(TplSpecQuestion obj : list){
   				obj.setSelectable(true);
   			}
   			this.getManagedBean().getTemplateSpecBean().getSpecMaster().setTplSpecQuestions(list);
-  		}
+//  		}
   		this.getManagedBean().setItemName(null);
   		
   	}
