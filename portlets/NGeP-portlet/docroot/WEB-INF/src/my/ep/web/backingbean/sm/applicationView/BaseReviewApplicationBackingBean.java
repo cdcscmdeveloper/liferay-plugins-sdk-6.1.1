@@ -589,6 +589,40 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (statusDesc != null) {
 			getManagedBean().setCurrRegStatus(statusDesc.getStatusName());
 		}
+		
+		//28767
+		this.getManagedBean().getPersonnelDirectorManager().clear();
+		this.getManagedBean().getPersonnelMembers().clear();
+		BigDecimal sum = new BigDecimal(0);
+		for(SmPersonnel personnel:this.getManagedBean().getSmAppl().getSmPersonnels()){
+			BigDecimal shareAmtSsm = personnel.getShareAmtSsm();
+				if(personnel.getDesignation() != null){
+					String designation = populateDesignationSSM(personnel.getDesignation());
+					personnel.setDesignation(designation);
+				}
+				if(personnel.isDirector() || personnel.isManagement()){
+				this.getManagedBean().getPersonnelDirectorManager().add(personnel);	
+				}
+				//28767
+				for (SmPersonnelAddress address : personnel.getSmPersonnelAddresses()){
+					if (address.getAddressType().equals("R")){
+						personnel.setSmPersonnelAdd(address);
+					}	
+				}
+				if (personnel.isSsmData()!= true){
+					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
+				}
+				if(personnel.isEquityOwner()){
+					if(shareAmtSsm != null && !(personnel.getShareAmtSsm() == null)){
+						sum =  sum.add(shareAmtSsm);
+						getManagedBean().setTotalShare(sum);
+						
+					}
+					this.getManagedBean().getPersonnelMembers().add(personnel);
+				}
+		
+		}
+		
 		getManagedBean().setReviewApplicationExist(true);
 	}
 

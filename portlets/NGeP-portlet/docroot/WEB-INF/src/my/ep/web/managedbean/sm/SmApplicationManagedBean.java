@@ -603,6 +603,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String searchRecommendRejectReason;
 	//#15629 - END
 	
+	// 31043 START
+	private boolean showFacilityMachine;
+	// 31043 END
+	
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
 	
@@ -4563,7 +4567,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedInquiryResponse(SmApplInquiry selectedInquiryResponse) {
 		this.selectedInquiryResponse = selectedInquiryResponse;
 	}
+	
+	public boolean isShowFacilityMachine() {
+		return showFacilityMachine;
+	}
 
+	public void setShowFacilityMachine(boolean showFacilityMachine) {
+		this.showFacilityMachine = showFacilityMachine;
+	}
+	
 	public boolean isEmptyMandatoryDocHistory() {
 		return emptyMandatoryDocHistory;
 	}

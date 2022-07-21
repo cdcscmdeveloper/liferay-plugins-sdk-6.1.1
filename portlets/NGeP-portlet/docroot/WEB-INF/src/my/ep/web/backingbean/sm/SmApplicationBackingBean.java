@@ -107,6 +107,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplAuditors;
 import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplInquiryDocFile;
@@ -134,6 +135,7 @@ import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmPersonnelSecretaries;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
@@ -1771,7 +1773,7 @@ public class SmApplicationBackingBean extends
 							String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
 							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 						}else{
-							// 28466 - add paid up capital
+							// 28466 - add paid up capital, 28767 add registerAdressSSM
 							// #30660 start 
 							if (businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType()) && getManagedBean().isDisAllowOwnerEdit()) {
 								String[] copyProp = { "companyName", "robExpiryDate", "annualRevenue", "businessDesc", "revenueSsmNull", "robExpirySsmNull",
@@ -1784,7 +1786,37 @@ public class SmApplicationBackingBean extends
 										"paidUpCapital", "registerAdressSSM" };
 								EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(), this.getManagedBean().getSmAppl().getSmCompanyBasic(), copyProp);
 							} 
-							// #30660 end
+							// #30660 end 
+							//START 28767	- ni set untuk save ke dalam DB		- perlu buat dalam ni sebab data tu firsttime je dr SSM			
+							if(ssmResDTO.getSmApplIndebtedness() != null){
+								ssmResDTO.getSmApplIndebtedness().setSmAppl(this.getManagedBean().getSmAppl());
+								this.getManagedBean().getSmAppl().setSmApplIndebtedness(ssmResDTO.getSmApplIndebtedness());
+							}
+							
+							if(ssmResDTO.getSmPersonnelSecretaries() != null){
+								this.getManagedBean().getSmAppl().setSmPersonnelSecretaries(new ArrayList());
+								for(SmPersonnelSecretaries personnelSecretaries: ssmResDTO.getSmPersonnelSecretaries()){
+									personnelSecretaries.setSmAppl(this.getManagedBean().getSmAppl());
+									this.getManagedBean().getSmAppl().getSmPersonnelSecretaries().add(personnelSecretaries);
+								}
+							}
+							
+							for(SmPersonnelSecretaries personnelSec : this.getManagedBean().getSmAppl().getSmPersonnelSecretaries()){
+								if(personnelSec.getSecDesignation() != null){
+									String designation = populateDesignationSSM(personnelSec.getSecDesignation());
+									personnelSec.setSecDesignation(designation);
+								}
+							}
+							
+							if(ssmResDTO.getSmApplAuditors()!= null){
+								this.getManagedBean().getSmAppl().setSmApplAuditors(new ArrayList());
+								for(SmApplAuditors auditors: ssmResDTO.getSmApplAuditors()){
+									auditors.setSmAppl(this.getManagedBean().getSmAppl());
+									this.getManagedBean().getSmAppl().getSmApplAuditors().add(auditors);
+								}
+							}
+							//END 28767 - end set untuk save dalam DB
+							
 						}
 						//#27165
 						if(dontGetSsmData){	
@@ -1893,8 +1925,9 @@ public class SmApplicationBackingBean extends
 								}else{
 									personnel.setSsmData(true);
 									//#27315
-									//27408 - Remove Pmcountry for ROC
-									String[] copyEquityOwner = {"name","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","directorSsm","equityOwnerSsm","managementSsm"};
+									//27408 - Remove Pmcountry for ROC 
+									//28767 - add birthdate & designation
+									String[] copyEquityOwner = {"name","birthDate","designation","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","directorSsm","equityOwnerSsm","managementSsm"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}
 								validateRole(personnel);
@@ -2106,7 +2139,42 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		//16052019 - SSM INTEGRATION CR - Fahmi END
-		
+		//START 28767
+		BigDecimal sum = new BigDecimal(0);
+		this.getManagedBean().getPersonnelDirectorManager().clear();
+		this.getManagedBean().getPersonnelMembers().clear();
+		for(SmPersonnel personnel:this.getManagedBean().getSmAppl().getSmPersonnels()){
+			BigDecimal shareAmtSsm = personnel.getShareAmtSsm();
+				if(personnel.getDesignation() != null){
+					String designation = populateDesignationSSM(personnel.getDesignation());
+					personnel.setDesignation(designation);
+				}
+				if(personnel.isDirector() || personnel.isManagement()){
+				this.getManagedBean().getPersonnelDirectorManager().add(personnel);	
+				}
+				//28767
+				for (SmPersonnelAddress address : personnel.getSmPersonnelAddresses()){
+					if (address.getAddressType().equals("R")){
+						personnel.setSmPersonnelAdd(address);
+					}
+				}
+				if (personnel.isSsmData()!= true){
+					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
+				}
+				
+				if(personnel.isEquityOwner()){
+					if(shareAmtSsm != null && !(personnel.getShareAmtSsm() == null)){
+						log.info("THIS IS THE VALUE OF THE TOTAL SUM ////////////////////// " + sum);
+						log.info("THIS IS THE VALUE OF THE TOTAL SHARE ////////////////////// " + shareAmtSsm);
+						sum =  sum.add(shareAmtSsm);
+						getManagedBean().setTotalShare(sum);
+						log.info("THIS IS THE VALUE OF THE TOTAL SUM ////////////////////// " + sum);
+						
+					}
+					this.getManagedBean().getPersonnelMembers().add(personnel);
+				}
+		}
+	//END 28767
 		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
 		if (fromBpm) {
 		
@@ -2564,6 +2632,14 @@ public class SmApplicationBackingBean extends
 					}
 					SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
 							ruleHelper);
+					//28767
+					log.info(" **** Initialize list for ANNUAL INFO Page **********");
+					getManagedBean().getSmAppl().getSmApplIndebtedness();
+					getManagedBean().getSmAppl().getSmPersonnelSecretaries();
+					if(getManagedBean().getSmAppl().getSmApplAuditors()!=null){
+						getManagedBean().getSmAppl().getSmApplAuditors().size();
+					}
+					
 					//#27356
 					SmApplicationUtil.validateCoordinate(getManagedBean());
 			}
@@ -14327,7 +14403,8 @@ public class SmApplicationBackingBean extends
 							personnel.setSsmData(true);
 							//#27315
 							//27408 - Remove Pmcountry for ROC
-							String[] copyEquityOwner = {"name","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","directorSsm","equityOwnerSsm","managementSsm"};
+						//28767 - add birthdate & designation
+						String[] copyEquityOwner = {"name","birthDate","designation","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","directorSsm","equityOwnerSsm","managementSsm"};
 							EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 						}
 						validateRole(personnel);
@@ -14513,8 +14590,35 @@ public class SmApplicationBackingBean extends
 				this.getManagedBean().setCompanyValidWithSSM(false);
 			}
 			
-			
+		//#33569, #28767 - start
+		if(ssmResDTO.getSmApplIndebtedness() != null){
+			ssmResDTO.getSmApplIndebtedness().setSmAppl(this.getManagedBean().getSmAppl());
+			this.getManagedBean().getSmAppl().setSmApplIndebtedness(ssmResDTO.getSmApplIndebtedness());
+		}
 		
+		if(ssmResDTO.getSmPersonnelSecretaries() != null){
+			this.getManagedBean().getSmAppl().setSmPersonnelSecretaries(new ArrayList());
+			for(SmPersonnelSecretaries personnelSecretaries: ssmResDTO.getSmPersonnelSecretaries()){
+				personnelSecretaries.setSmAppl(this.getManagedBean().getSmAppl());
+				this.getManagedBean().getSmAppl().getSmPersonnelSecretaries().add(personnelSecretaries);
+			}
+		}
+		
+		for(SmPersonnelSecretaries personnelSec : this.getManagedBean().getSmAppl().getSmPersonnelSecretaries()){
+			if(personnelSec.getSecDesignation() != null){
+				String designation = populateDesignationSSM(personnelSec.getSecDesignation());
+				personnelSec.setSecDesignation(designation);
+			}
+		}
+		
+		if(ssmResDTO.getSmApplAuditors()!= null){
+			this.getManagedBean().getSmAppl().setSmApplAuditors(new ArrayList());
+			for(SmApplAuditors auditors: ssmResDTO.getSmApplAuditors()){
+				auditors.setSmAppl(this.getManagedBean().getSmAppl());
+				this.getManagedBean().getSmAppl().getSmApplAuditors().add(auditors);
+			}
+		}
+		//#33569, #28767 - end
 			if(!this.getManagedBean().isCompanyValidWithSSM()){
 //						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
 				throw new EpException(MessageConst.ERROR_721070);
