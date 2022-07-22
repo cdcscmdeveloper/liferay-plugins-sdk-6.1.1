@@ -195,13 +195,15 @@
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.table.uom']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td>
-						
+						<!-- #30457 - Start -->
 						<p:autoComplete panelStyleClass="uomAuto" id="uomDetId" scrollHeight="250" size="40" var="pmUom" converter="PmUomConverter"
 							itemLabel="#{catalogueBackingBean.retriveUomCodeDesc(pmUom)}"
 							itemValue="#{pmUom}" 
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom}"
+							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 							completeMethod="#{catalogueBackingBean.autoCompleteUom}"
 							maxResults="50" dropdown="false" forceSelection="true" />
+							<!-- #30457 - End -->
 						<!-- #569 Start -->
 						<p:graphicImage
 				     		rendered="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomId==null}"
