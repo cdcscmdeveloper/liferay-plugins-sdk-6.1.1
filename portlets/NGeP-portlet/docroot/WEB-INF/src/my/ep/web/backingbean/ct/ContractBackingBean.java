@@ -4867,6 +4867,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				if(entry.getValue()){
 					paramMap.put(ReportConst.PARAM_PREV_VER_ID, prvContractVerId.toString());
 					paramMap.put(ReportConst.PARAM_CURRENT_VER_ID, currContractVerId.toString());
+					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
 					paramMaps.put(entry.getKey(), paramMap);
 					reportNames.add(entry.getKey());
 				}
