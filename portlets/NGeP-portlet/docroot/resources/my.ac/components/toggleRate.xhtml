@@ -48,8 +48,8 @@
 			<div class="ui-single-rating-star">
 				<ui:remove>#32334  for 29021 start</ui:remove>
 				<p:rating disabled="#{disabled}" converter="javax.faces.Integer" styleClass="#{value>0 ? 'toggleRateShow' : 'toggleRateHide'} ep-toggle-rate" id="rating" value="#{value}" stars="1" cancel="true">
-					<p:ajax event="rate" update="#{update}"/>
-					<p:ajax event="cancel" update="#{update}"/>
+					<p:ajax event="rate" update="@form"/>
+					<p:ajax event="cancel" update="@form"/>
 				</p:rating>
 				<ui:remove>#32334  for 29021 end</ui:remove>
 				<p:tooltip for="rating" value="#{tooltip}" position="top"/>
