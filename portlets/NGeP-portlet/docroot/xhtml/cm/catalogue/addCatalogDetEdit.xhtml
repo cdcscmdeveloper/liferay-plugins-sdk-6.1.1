@@ -327,18 +327,33 @@
 
 						<p:tabView id="normalId"
 							activeIndex="#{catalogueBackingBean.managedBean.normalPricingIndex}">
+                            <!-- #30457 - Start-->
+							<c:choose>
+								<c:when
+									test="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}">
+									
+									<p:tab title="#{lbl['lbl.cm.standard']}">
+										<ui:include src="view/pricingTab.xhtml" />
+									</p:tab>
+									<p:tab title="#{lbl['lbl.cm.promotion']}"
+										rendered="#{!unspscCodeBackingBean.supplierTemp}">
+										<ui:include src="view/promotionTab.xhtml" />
+									</p:tab>
+								</c:when>
+								<c:otherwise>
 
-							<p:tab title="#{lbl['lbl.cm.standard']}">
-								<ui:include src="pricingTab.xhtml" />
-							</p:tab>
-							<p:tab title="#{lbl['lbl.cm.promotion']}"
-								rendered="#{!unspscCodeBackingBean.supplierTemp}">
-								<ui:include src="promotionTab.xhtml" />
-							</p:tab>
+									<p:tab title="#{lbl['lbl.cm.standard']}">
+										<ui:include src="pricingTab.xhtml" />
+									</p:tab>
+									<p:tab title="#{lbl['lbl.cm.promotion']}"
+										rendered="#{!unspscCodeBackingBean.supplierTemp}">
+										<ui:include src="promotionTab.xhtml" />
+									</p:tab>
 
+								</c:otherwise>
+							</c:choose>
+	                      <!-- #30457 - End-->
 						</p:tabView>
-
-
 
 					</p:tab>
 
@@ -349,19 +364,31 @@
 							activeIndex="#{catalogueBackingBean.managedBean.tierPricingIndex}">
 							<p:ajax event="tabChange"
 								update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
+                             <!-- #30457 - Start-->
+							<c:choose>
+								<c:when
+									test="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}">
+									
+									<p:tab title="#{lbl['lbl.cm.standard']}">
+										<ui:include src="view/pricingTierTab.xhtml" />
+									</p:tab>
+									<p:tab title="#{lbl['lbl.cm.promotion']}">
+										<ui:include src="view/pricingPromotionTierTab.xhtml" />
+									</p:tab>
+								</c:when>
+								<c:otherwise>
 
+									<p:tab title="#{lbl['lbl.cm.standard']}">
+										<ui:include src="pricingTierTab.xhtml" />
+									</p:tab>
+									<p:tab title="#{lbl['lbl.cm.promotion']}">
+										<ui:include src="pricingPromotionTierTab.xhtml" />
+									</p:tab>
 
-							<p:tab title="#{lbl['lbl.cm.standard']}">
-								<ui:include src="pricingTierTab.xhtml" />
-							</p:tab>
-							<p:tab title="#{lbl['lbl.cm.promotion']}">
-								<ui:include src="pricingPromotionTierTab.xhtml" />
-							</p:tab>
-
+								</c:otherwise>
+							</c:choose>
+                          <!-- #30457 - End -->
 						</p:tabView>
-
-
-
 					</p:tab>
 
 
@@ -370,15 +397,30 @@
 
 						<p:tabView id="zonalId"
 							activeIndex="#{catalogueBackingBean.managedBean.zonalPricingIndex}">
+                            <!-- #30457 - Start-->
+							<c:choose>
+								<c:when
+									test="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}">
+									
+									<p:tab title="#{lbl['lbl.cm.standard']}">
+										<ui:include src="view/zonalStandardPricingTab.xhtml"></ui:include>
+									</p:tab>
+									<p:tab title="#{lbl['lbl.cm.promotion']}">
+										<ui:include src="view/zonalPromotionPricingTab.xhtml"></ui:include>
+									</p:tab>
+								</c:when>
+								<c:otherwise>
 
-							<p:tab title="#{lbl['lbl.cm.standard']}">
-								<ui:include src="zonalStandardPricingTab.xhtml"></ui:include>
+									<p:tab title="#{lbl['lbl.cm.standard']}">
+										<ui:include src="zonalStandardPricingTab.xhtml"></ui:include>
+									</p:tab>
+									<p:tab title="#{lbl['lbl.cm.promotion']}">
+										<ui:include src="zonalPromotionPricingTab.xhtml"></ui:include>
+									</p:tab>
 
-							</p:tab>
-							<p:tab title="#{lbl['lbl.cm.promotion']}">
-								<ui:include src="zonalPromotionPricingTab.xhtml"></ui:include>
-
-							</p:tab>
+								</c:otherwise>
+							</c:choose>
+                          <!-- #30457 - End-->
 
 						</p:tabView>
 
@@ -393,15 +435,30 @@
 							activeIndex="#{catalogueBackingBean.managedBean.zonalTierPricingIndex}">
 							<p:ajax event="tabChange"
 								update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />
-							<p:tab title="#{lbl['lbl.cm.standard']}">
-								<ui:include src="zonalTierPricingTab.xhtml"></ui:include>
+                            <!-- #30457 - Start -->
+							<c:choose>
+								<c:when
+									test="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}">
+									
+									<p:tab title="#{lbl['lbl.cm.standard']}">
+										<ui:include src="view/zonalTierPricingTab.xhtml"></ui:include>
+									</p:tab>
+									<p:tab title="#{lbl['lbl.cm.promotion']}">
+										<ui:include src="view/zonalPromotionTierPricingTab.xhtml"></ui:include>
+									</p:tab>
+								</c:when>
+								<c:otherwise>
 
-							</p:tab>
-							<p:tab title="#{lbl['lbl.cm.promotion']}">
-								<ui:include src="zonalPromotionTierPricingTab.xhtml"></ui:include>
+									<p:tab title="#{lbl['lbl.cm.standard']}">
+										<ui:include src="zonalTierPricingTab.xhtml"></ui:include>
+									</p:tab>
+									<p:tab title="#{lbl['lbl.cm.promotion']}">
+										<ui:include src="zonalPromotionTierPricingTab.xhtml"></ui:include>
+									</p:tab>
 
-							</p:tab>
-
+								</c:otherwise>
+							</c:choose>
+                          <!-- #30457 - End-->
 						</p:tabView>
 
 
