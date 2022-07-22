@@ -12227,11 +12227,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
             //#30457 - Start
 			// price
 			if (catalog.getCmStandardPricing().getPrice()!= null
-					&& catalog.getCmStandardPricing().getPrice().floatValue() < value.floatValue()) {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-								MessageConst.ERROR_715017,new String[] {value.toString()}, MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+				&& catalog.getCmStandardPricing().getPrice().floatValue() < value.floatValue()) {
+				 throw new EpException(MessageConst.ERROR_715017, new String[] {value.toString()});
 			}
             //#30457 - End
 			// end date before start date
@@ -12261,17 +12258,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			//#29961 - Start
 			cal.add(Calendar.YEAR, getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY));
 			if (cal.getTime().compareTo(catalog.getCmStandardPricing().getEndDate()) < 0) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-								MessageConst.ERROR_775179, new String[] { "" + getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY) },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+				throw new EpException(MessageConst.ERROR_775179, new String[] { ""
+						+ getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY) });
 			} //#29961 - End
 		}
 		RequestContext.getCurrentInstance().execute("updateDeclareDialog.show()");
 	}
-	
+
 	public void enableBtn(boolean tick){
 		this.getManagedBean().setYesEnable(tick);
 	}
