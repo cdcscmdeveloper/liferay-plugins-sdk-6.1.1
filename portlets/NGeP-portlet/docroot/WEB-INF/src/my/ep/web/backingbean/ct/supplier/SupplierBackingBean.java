@@ -320,18 +320,15 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 			getManagedBean().setContractVer(resDTO.getCtContractVer());
 			getManagedBean().setCurentAccNoBankName(null);
-
-			if (getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
-				getManagedBean().setOriginalAccountNo(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
-				getPopulateBankAccountList();
-			}
+			
 			//Start Fix - #33399
-			if (getManagedBean().getContractVer().getCtContractValue().getBankName() != null) {
+			if(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null && getManagedBean().getContractVer().getCtContractValue().getBankName() != null){
+				getManagedBean().setOriginalAccountNo(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
 				getManagedBean().setOriginalBankName(getManagedBean().getContractVer().getCtContractValue().getBankName());
 				getPopulateBankAccountList();
 			}
 			//End Fix - #33399
-            
+			
 			if(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() != null && getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() != null )
 				getManagedBean().setCurentAccNoBankName(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() +ContractConst.SPACE_SLASH+ getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() );
 
