@@ -601,8 +601,7 @@
 					</c:when>
 					<c:when test="#{backingBean.managedBean.approverUser}">
 						<p:menuitem>
-							<ac:smApplMenuItem
-								backingBean = "#{backingBean}"
+							<ac:smApplMenuItem backingBean="#{backingBean}"
 								suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
 								poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
 								appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
