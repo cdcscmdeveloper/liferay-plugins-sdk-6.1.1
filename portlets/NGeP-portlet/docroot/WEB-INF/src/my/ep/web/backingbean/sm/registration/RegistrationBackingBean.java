@@ -1326,13 +1326,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						break;
 					}
 				}
-				if(!exist){
-					personnel.setRecordStatusFlg(9);
-				}else{
-				//Delete owner in SmSupplierOwner not in SSM
-					for(SmSupplierOwner suppOwner : getManagedBean().getSmSuppOwners()){
-						if(personnel.getIdentificationNo().equals(suppOwner.getIdentificationNo())){
-							ownerNewList.add(suppOwner);
+				if(personnel.isSsmData()){
+					if(!exist){
+						personnel.setRecordStatusFlg(9);
+					}else{
+					//Delete owner in SmSupplierOwner not in SSM
+						for(SmSupplierOwner suppOwner : getManagedBean().getSmSuppOwners()){
+							if(personnel.getIdentificationNo().equals(suppOwner.getIdentificationNo())){
+								ownerNewList.add(suppOwner);
+							}
 						}
 					}
 				}
