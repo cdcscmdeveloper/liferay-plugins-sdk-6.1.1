@@ -14398,12 +14398,23 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 * @return navigate to acknowledgement page.
 	 */
 	public void submitSpecMaintenanceDtls(String action) {
-		log.debug("start submitSpecMaintenanceDtls" + action);
 		this.getManagedBean().setLocalOutCome(action);
-		log.debug("end submitSpecMaintenanceDtls"+action);
-		SpecificationResDTO resDTO=
-				updateSpecCommitteMaintenaceDtls(action,null);
+
+		//25037 - start - note 510
+		assertSpecCommitteeMaintenanceInProgress(this.getManagedBean().getQt());
+		
+		if (this.getManagedBean().getInactiveSCMemberStr().length() > 0) {
+			this.qtChecklistTabChange(10);
+			
+			RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
+			
+			return;
+		}
+		//25037 - end - note 510
+
+		SpecificationResDTO resDTO = updateSpecCommitteMaintenaceDtls(action, null);
 		resDTO.setSuccessful(Boolean.TRUE);
+		
 		if (resDTO.isSuccessful()) {
 			ScQt qt = resDTO.getScQt();
 			
@@ -14417,7 +14428,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		log.debug("start updateSpecCommitteMaintenaceDtls"+action);
 		SpecificationResDTO resDTO=new SpecificationResDTO();
 		ScQt scQt=this.getManagedBean().getQt();
-		assertSpecCommitteeMaintenanceInProgress(scQt);//#25037
+
 		loadPrepareSpecCommitteeMaintenanceDetails(scQt.getQtId());
 		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
 		
@@ -16012,32 +16023,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 	}
 	// #11104-End
-	
-	//#25037-start
-	private void assertSpecCommitteeMaintenanceInProgress(ScQt qt){
-		//specification maintenance cannot be concurrent to spec committee maintenance
-		CommitteReqDTO reqDTO = new CommitteReqDTO();
-		ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-		reqDTO.setQtId(qt.getQtId());
-		reqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
-		ScQtCommittee qtCommittee = committeSO.retrieveCommitteByQtIdNCommType(reqDTO).getScQtCommittee();
-		if(qtCommittee!=null){
-			ScCommittee scCommittee = qtCommittee.getScCommittee();
-			if(scCommittee!=null){
-				Long statusId = scCommittee.getCommitteStatus().getStatusId();
-				statusId = statusId==null ? 0L: statusId;
-				if (!Arrays
-						.asList(new Long[] {
-								QTStatusConst.CMT_COMPLETED,
-								QTStatusConst.CMT_PENDING_SUBMISSION})
-						.contains(statusId)) {
-					throw new EpException(getMessage("lbl.sc.popup.cannotSubmitWaitingCMT", null));
-				}
-			}
-		}
-	}
-	//#25037-end
 	
 	//29464 - note 90 - start
 	public boolean evaluateRepublishFromDisplay(Long status) {

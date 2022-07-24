@@ -59,6 +59,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 /**
  * The Class SpecificationBackingBean.
@@ -423,15 +424,33 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 
 /* ***25692#95 - end */
 
+	/**
+	 * The method  used to get the specificationMaintenance edit details.
+	 * @param ScQt scQt.
+	 * @param Boolean true/false.
+	 */
+	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable) {
+		// 25037 - start - note 510
+		editSpecificationMaintenance(scQt, isEditable, false);
+		// 25037 - end - note 510
+	}
 
-/**
- * The method  used to get the specificationMaintenance edit details.
- * @param ScQt scQt.
- * @param Boolean true/false.
- */
-public void editSpecificationMaintenance(ScQt scQt,boolean isEditable){
-	editSpecificationMaintenance(scQt, isEditable, true,false, null);
-}
+	// 25037 - start - note 510
+	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable, boolean popup) {
+		editSpecificationMaintenance(scQt, isEditable, true, false, null);
+		
+		if (popup) {
+			this.assertSpecCommitteeMaintenanceInProgress(scQt, false);
+			
+			if (this.getManagedBean().getInactiveSCMemberStr().length() > 0) {
+				SpecificationBackingBean specBB = new SpecificationBackingBean();
+				specBB.qtChecklistTabChange(10);
+				
+				RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
+			}
+		}
+	}
+	// 25037 - end - note 510
 
 /**
  * The method  used to get the specificationMaintenance edit details.
