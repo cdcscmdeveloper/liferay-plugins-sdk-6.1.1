@@ -17,18 +17,18 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.bean.sc.QtCommitteeMemberBean; // #23037
-import my.ep.helper.Paginator; // #23037
+import my.ep.biz.bean.sc.QtCommitteeMemberBean;
+import my.ep.helper.Paginator;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
-import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory; // #23037
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtApproval; // #23037
-import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark; // #23037
+import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
-import my.ep.web.backingbean.sc.evaluation.EvaluationBackingBean; // #23037
+import my.ep.web.backingbean.sc.evaluation.EvaluationBackingBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -157,7 +157,7 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private EvaluationBackingBean  evalBB;
 	private boolean  committeeUpdateEnabled;
 	private List<QtCommitteeMemberBean> prevCommitteeMembers;
-
+	private ScQtApprovalRemark tempScQtApprovalRemark;	//25037 #note-568
 	//#25037-END
 	
 	private boolean hasPreviousMeeting; //#29473, #31675
@@ -914,6 +914,16 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	public void setPrevCommitteeMembers(List<QtCommitteeMemberBean> prevCommitteeMembers) {
 		this.prevCommitteeMembers = prevCommitteeMembers;
 	}
+
+	//25037 #note-568 - start
+	public ScQtApprovalRemark getTempScQtApprovalRemark() {
+		return tempScQtApprovalRemark;
+	}
+	
+	public void setTempScQtApprovalRemark(ScQtApprovalRemark tempScQtApprovalRemark) {
+		this.tempScQtApprovalRemark = tempScQtApprovalRemark;
+	}
+	//25037 #note-568 - end
 	// #25037 - end
 
 	// #29473, #31675_start

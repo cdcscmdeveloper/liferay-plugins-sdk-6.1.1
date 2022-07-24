@@ -21,7 +21,9 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
@@ -52,7 +54,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
-import my.ep.web.backingbean.sc.evaluation.EvaluationMeetingBackingBean; //#25037
+import my.ep.web.backingbean.sc.evaluation.EvaluationMeetingBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.TechnicalStaffBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -507,8 +509,12 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int tabTechnicalIndex; // #25138 for #11104 
 	
 	private int tabFinancialIndex; // #25138 for #11104 
+
 	//#25037-START
-	private EvaluationMeetingBackingBean meetingBB;
+	private EvaluationMeetingBackingBean meetingBB;//25037 #568
+	private List<ScCommitteeMember> committeeMemberActivity;//25037 #568
+	private List<ScCommitteeMember> removeCommitteeList;//25037 #568
+	private ScQtApprovalRemark scQtApprovalRemark;//25037 #568
 	//#25037-END
 
 	private boolean itemSampleReq; //#11104
@@ -3410,7 +3416,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.isFP_Compliance = isFP_Compliance;
 	}
 	//Enhancement #26339 -end-
-	//#25037
+
+	// #25037 -start-
 	public EvaluationMeetingBackingBean getMeetingBB() {
 		return meetingBB;
 	}
@@ -3418,7 +3425,33 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setMeetingBB(EvaluationMeetingBackingBean meetingBB) {
 		this.meetingBB = meetingBB;
 	}
-	//#25037-end
+
+	//25037 #568 - start
+	public ScQtApprovalRemark getScQtApprovalRemark() {
+		return scQtApprovalRemark;
+	}
+
+	public void setScQtApprovalRemark(ScQtApprovalRemark scQtApprovalRemark) {
+		this.scQtApprovalRemark = scQtApprovalRemark;
+	}
+
+	public List<ScCommitteeMember> getRemoveCommitteeList() {
+		return removeCommitteeList;
+	}
+
+	public void setRemoveCommitteeList(List<ScCommitteeMember> removeCommitteeList) {
+		this.removeCommitteeList = removeCommitteeList;
+	}
+
+	public List<ScCommitteeMember> getCommitteeMemberActivity() {
+		return committeeMemberActivity;
+	}
+
+	public void setCommitteeMemberActivity(List<ScCommitteeMember> committeeMemberActivity) {
+		this.committeeMemberActivity = committeeMemberActivity;
+	}
+	// 25037 #568 - end
+	// #25037 -end-
 
 	// #25138 for #11104 - start
 	public int getTabTechnicalIndex() {

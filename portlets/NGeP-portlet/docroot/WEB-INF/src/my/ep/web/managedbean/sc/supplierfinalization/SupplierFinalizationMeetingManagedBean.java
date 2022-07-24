@@ -10,18 +10,19 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.bean.sc.QtCommitteeMemberBean; //#25037
-import my.ep.helper.Paginator; //#25037
+import my.ep.biz.bean.sc.QtCommitteeMemberBean;
+import my.ep.helper.Paginator;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
-import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory; //#25037
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
-import my.ep.persistence.entity.sc.quationtender.ScQtMeetingMember; // #25037
-import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean; // #25037
-import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBiddingBackingBean; // #25037
+import my.ep.persistence.entity.sc.quationtender.ScQtMeetingMember;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBiddingBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
@@ -90,6 +91,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private SupplierFinalizationBackingBean finalBB; 
 	private SupplierFinalizationBiddingBackingBean finalBiddingBB; 
 	private List<QtCommitteeMemberBean> prevCommitteeMembers;
+	private List<ScQtApprovalRemark> cmtAppointmentApprovalRemarks;	//25037 note 284
 	//#25037-END
 	
 	public SupplierFinalizationMeetingManagedBean() {
@@ -634,10 +636,17 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	public void setFinalBiddingBB(SupplierFinalizationBiddingBackingBean finalBiddingBB) {
 		this.finalBiddingBB = finalBiddingBB;
 	}
+	
+	//25037 note 284 - start
+	public List<ScQtApprovalRemark> getCmtAppointmentApprovalRemarks() {
+		return cmtAppointmentApprovalRemarks;
+	}
+	 
+	public void setCmtAppointmentApprovalRemarks(
+			List<ScQtApprovalRemark> cmtAppointmentApprovalRemarks) {
+		this.cmtAppointmentApprovalRemarks = cmtAppointmentApprovalRemarks;
+	}
+	//25037 note 284 - end
 	//#25037-end
-
-	
-	
-	
 
 }

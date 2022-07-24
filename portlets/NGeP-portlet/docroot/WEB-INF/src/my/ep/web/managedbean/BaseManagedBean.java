@@ -55,7 +55,6 @@ public abstract class BaseManagedBean implements Serializable {
 	private String processName;
 	private Boolean groupTask;
 	private boolean isReadOnly;
-	private String currentTaskDocType;//#25037
 	/*
 	 * commonly used as a flag to user's permission to download documents/attachment
 	 */
@@ -147,8 +146,12 @@ public abstract class BaseManagedBean implements Serializable {
 	// #25638 - End	
 	
 	//#25037-start
-	private boolean validFor25037;//FLAG TO IDENTIFY SUPPORTED ACTION FOR WIP DATA. PLEASE REFER 25037 PMCOMPOSITEVALIDITY
+	private String currentTaskDocType;
+	private boolean validFor25037;// FLAG TO IDENTIFY SUPPORTED ACTION FOR WIP
+									// DATA. PLEASE REFER 25037
+									// PMCOMPOSITEVALIDITY
 	private boolean committeModified;
+	private String inactiveSCMemberStr; //25037 - note 510
 	//#25037-end
 	
 	//27346-start 
@@ -854,16 +857,6 @@ public abstract class BaseManagedBean implements Serializable {
 		this.dontGetSsmData = dontGetSsmData;
 	}
 
-	// #25037 - start
-	public String getCurrentTaskDocType() {
-		return currentTaskDocType;
-	}
-
-	public void setCurrentTaskDocType(String currentTaskDocType) {
-		this.currentTaskDocType = currentTaskDocType;
-	}
-	// #25037 - end
-
 	public boolean isShowPopup() {
 		return showPopup;
 	}
@@ -879,9 +872,7 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setResubmitAppl(boolean resubmitAppl) {
 		this.resubmitAppl = resubmitAppl;
 	}
-	
-	
-	
+
 	//27382
 	public boolean isErrorInvalidSelfRequest() {
 		return errorInvalidSelfRequest;
@@ -954,6 +945,14 @@ public abstract class BaseManagedBean implements Serializable {
 	// #25638 - End
 
 	// #25037 - start
+	public String getCurrentTaskDocType() {
+		return currentTaskDocType;
+	}
+
+	public void setCurrentTaskDocType(String currentTaskDocType) {
+		this.currentTaskDocType = currentTaskDocType;
+	}
+
 	public boolean isValidFor25037() {
 		return validFor25037;
 	}
@@ -969,6 +968,16 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setCommitteModified(boolean committeModified) {
 		this.committeModified = committeModified;
 	}
+	
+	//25037 - start - note 510
+	public String getInactiveSCMemberStr() {
+		return inactiveSCMemberStr;
+	}
+
+	public void setInactiveSCMemberStr(String inactiveSCMemberStr) {
+		this.inactiveSCMemberStr = inactiveSCMemberStr;
+	}
+	//25037 - end - note 510
 	// #25037 - end
 	// 28767
 	public List<SmPersonnel> getPersonnelDirectorManager() {
