@@ -2384,8 +2384,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							// 27691 - End
 						}
 					}
+				}else{//27691 START - to view director if smsupplierowner empty
+					if(this.getManagedBean().getSmSupp().getSmAppl().isApplValidWithSsm() &&
+							(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD) ||
+							this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD))){
+						for(SmPersonnel personnel: this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels()){
+							if(personnel.isDirectorSsm()){
+								this.getManagedBean().getSmPersonnelDirector().add(personnel);
+							}
+						}
+					}
 				}
-				
+				//27691 END
 				if(resDTO.getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 					SmPersonnel personnel = getManagedBean().getSmAppl().getSmPersonnels().get(0);
 					getManagedBean().setSmPersonnel(personnel);
