@@ -89,7 +89,7 @@
 	
 	<ui:remove> #19287 - start </ui:remove>
 	<ac:scRemarkAndAttachment
-		remarkList="#{suppFinalizationBackingBean.omitLatestRemarkForDisplay(suppFinalizationBackingBean.managedBean.committeeRemarkList)}"
+		remarkList="#{suppFinalizationBackingBean.managedBean.committeeRemarkList}"
 		readonly="#{suppFinalizationBackingBean.managedBean.readOnly}"
 		showAttachment="false" />
 	<ui:remove> #19287 - end </ui:remove>

@@ -69,12 +69,17 @@
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					value="#{activity.attended}" />
 			</p:column>
-
-
 		</p:dataTable>
+		
+		<!-- 25037 -start- -->
+		<ui:param name="meetingBB" value="#{evaluationBackingBean.managedBean.meetingBB}"></ui:param>
+		<!-- 25037 -end- -->
+
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}" rendered="#{evaluationMeetingBackingBean.managedBean.validFor25037}"
-				styleClass="BtnSpacing" action="#{evaluationMeetingBackingBean.navigateToUpdateMember('update')}"/>
+			<!-- 25037 -start- -->
+			<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}" rendered="#{meetingBB.managedBean.validFor25037}"
+				styleClass="BtnSpacing" action="#{meetingBB.navigateToUpdateMember('update')}"/>
+			<!-- 25037 -end- -->
 		</div>
 		<ac:confirmationPopup id="navigateConfirmationId"
 			widget="navigateConfirmationPopup" height="100%"
