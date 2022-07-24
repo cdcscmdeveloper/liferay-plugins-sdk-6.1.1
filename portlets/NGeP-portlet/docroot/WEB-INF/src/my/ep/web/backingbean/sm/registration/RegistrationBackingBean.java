@@ -3125,8 +3125,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							&& !businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(), this.getManagedBean().getSmSupp().getBusinessType()));
 		}		
 	}
-	
+	//27691 START
 	public void addSupplierOwner() {
+		String businessType = this.getManagedBean().getSmSupp().getBusinessType();
 		if (this.getManagedBean().getSmSuppOwners() == null) {
 			this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>());
 		}
@@ -3140,9 +3141,31 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smSupplierOwner.setIdentificationType(identificationType);
 		smSupplierOwner.setIdentificationTypeId(identificationType.getParameterId());
 		smSupplierOwner.setShowTextField(true);
+		//to auto tick checkbox if other than LLP business type
+		if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP
+				.equalsIgnoreCase(businessType)){
+			smSupplierOwner.setOwnerIsEquity(false);
+			smSupplierOwner.setOwnerIsDirector(false);
+		}else if (SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG
+				.equalsIgnoreCase(businessType)
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG
+						.equalsIgnoreCase(businessType)
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY.equalsIgnoreCase(businessType)
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH
+						.equalsIgnoreCase(businessType)
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK
+						.equalsIgnoreCase(businessType)
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH
+						.equalsIgnoreCase(businessType)
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK
+						.equalsIgnoreCase(businessType)){
+			smSupplierOwner.setOwnerIsEquity(true);
+		}else {
+			smSupplierOwner.setOwnerIsDirector(true);
+		}
 		this.getManagedBean().getSmSuppOwners().add(smSupplierOwner);
 	}
-	
+	//27691 END
 	public void removeSupplierOwner() {
 		if (this.getManagedBean().getSelectedSuppOwners() != null && this.getManagedBean().getSelectedSuppOwners().length > 0) {
 			for (SmSupplierOwner smSupplierOwner : this.getManagedBean().getSelectedSuppOwners()) {
