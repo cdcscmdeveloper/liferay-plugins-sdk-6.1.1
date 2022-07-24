@@ -1298,17 +1298,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		reqDTO.setDisabledCompanyNameInMaintenance(getManagedBean().isDisabledCompanyNameInMaintenance()); //#30964
 		//27691 START
 		// added business type validation for SSM
-		SsmReqDTO ssmReqDTO = new SsmReqDTO();
-		ssmReqDTO.setRegNo(this.getManagedBean().getSmSupp().getRegNo());
-		ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupp().getBusinessType());
-		ssmReqDTO.setBasicAcc(false);
-		if(SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
-			ssmReqDTO.setBasicAcc(true);
-		}
-		SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
 		if(SmCommonUtil.getInstance().ssmActive() 
 				&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(), this.getManagedBean().getSmSupp().getBusinessType())){
-			
+			SsmReqDTO ssmReqDTO = new SsmReqDTO();
+			ssmReqDTO.setRegNo(this.getManagedBean().getSmSupp().getRegNo());
+			ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupp().getBusinessType());
+			ssmReqDTO.setBasicAcc(false);
+			if(SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
+				ssmReqDTO.setBasicAcc(true);
+			}
+			SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
 			//#28888 : checking empty list
 			if(CollectionUtils.isNotEmpty(getManagedBean().getSmSupp().getSmSupplierOwners())){
 				SmSupplierOwner smSupplierOwners = getManagedBean().getSmSupp().getSmSupplierOwners().get(0);			
