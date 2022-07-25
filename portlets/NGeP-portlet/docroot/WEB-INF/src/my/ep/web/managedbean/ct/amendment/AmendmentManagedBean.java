@@ -218,8 +218,13 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		prodcollapse=value;
 		
 	}
+	// Start Fix - #33256
+	private Map<Long, CtItemMaxQty> selectedChangeItemQuantity;
 	
-private class ServiceListingPagingDataModel extends PagingDataModel<CtContractItem> {
+	private Map<Long, CtItemPrice> selectedChangeItemPrice;
+	// End Fix - #33256
+	
+	private class ServiceListingPagingDataModel extends PagingDataModel<CtContractItem> {
 		
 		private static final long serialVersionUID = 1L;
 		
@@ -1373,6 +1378,30 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		ServiceListingPagingDataModel = serviceListingPagingDataModel;
 	}
 	
+	public boolean isItemProductNotExist() {
+		return itemProductNotExist;
+	}
+	public void setItemProductNotExist(boolean itemProductNotExist) {
+		this.itemProductNotExist = itemProductNotExist;
+	}
+	public boolean isItemServiceNotExist() {
+		return itemServiceNotExist;
+	}
+	public void setItemServiceNotExist(boolean itemServiceNotExist) {
+		this.itemServiceNotExist = itemServiceNotExist;
+	}
+	
+	//#20997 - Start
+	// For Searching Autocomplete type UOM
+	public PmUom getSelectedSearchItem() {
+		if (selectedSearchItem == null)
+			selectedSearchItem = new PmUom();
+		return selectedSearchItem;
+	}
+	public void setSelectedSearchItem(PmUom selectedSearchItem) {
+		this.selectedSearchItem = selectedSearchItem;
+	}
+	//#20997 - End
 	
 	//Enhancement #26186 start
 	public boolean isDisciplinaryAction() {
@@ -1482,7 +1511,7 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	 */
 	public boolean isUpdateCommittee() {
 		return updateCommittee;
-	}	
+	}
 	/**
 	 * @param updateCommittee the updateCommittee to set
 	 */
@@ -1533,30 +1562,31 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.hasChanges = hasChanges;
 	}	
 	//26753 - end
-	public boolean isItemProductNotExist() {
-		return itemProductNotExist;
-	}
-	public void setItemProductNotExist(boolean itemProductNotExist) {
-		this.itemProductNotExist = itemProductNotExist;
-	}
-	public boolean isItemServiceNotExist() {
-		return itemServiceNotExist;
-	}
-	public void setItemServiceNotExist(boolean itemServiceNotExist) {
-		this.itemServiceNotExist = itemServiceNotExist;
+	
+	// Start Fix - #33256
+	public Map<Long, CtItemMaxQty> getSelectedChangeItemQuantity() {
+		if (selectedChangeItemQuantity == null){
+			selectedChangeItemQuantity = new HashMap<Long, CtItemMaxQty>();
+		}
+		return selectedChangeItemQuantity;
 	}
 	
-	//#20997 - Start
-	// For Searching Autocomplete type UOM
-	public PmUom getSelectedSearchItem() {
-		if (selectedSearchItem == null)
-			selectedSearchItem = new PmUom();
-		return selectedSearchItem;
+	public void setSelectedChangeItemQuantity(Map<Long, CtItemMaxQty> selectedChangeItemQuantity) {
+		this.selectedChangeItemQuantity = selectedChangeItemQuantity;
 	}
-	public void setSelectedSearchItem(PmUom selectedSearchItem) {
-		this.selectedSearchItem = selectedSearchItem;
+	
+	public Map<Long, CtItemPrice> getSelectedChangeItemPrice() {
+		if (selectedChangeItemPrice == null){
+			selectedChangeItemPrice = new HashMap<Long, CtItemPrice>();
+		}
+		return selectedChangeItemPrice;
 	}
-	//#20997 - End
+	
+	public void setSelectedChangeItemPrice(Map<Long, CtItemPrice> selectedChangeItemPrice) {
+		this.selectedChangeItemPrice = selectedChangeItemPrice;
+	}
+	// End Fix - #33256
+	
 	public boolean isViewOnly() {
 		return viewOnly;
 	}
