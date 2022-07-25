@@ -300,12 +300,6 @@ import org.primefaces.util.Constants;
 //#21695 Farid
 //#21695 Farid
 //#29732 Start
-import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
-import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
-import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
-import my.ep.persistence.entity.pm.common.PmCategoryL1;
-import my.ep.persistence.entity.pm.common.PmCategoryL2;
-import my.ep.persistence.entity.pm.common.PmCategoryL3;
 //#29732 End
 
 
@@ -491,7 +485,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (this.getManagedBean().getQt().isPanel() && null == this.getManagedBean().getQt().getItemGroup()) {
 				this.getManagedBean().getQt().setItemGroup(new CtPanelItemGroup());
 			}
-	}
+		}
 		//9019 - End (Harun)
 	}
 	
@@ -3838,8 +3832,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
 				RequestContext.getCurrentInstance().execute(
 						"catCodeChangeAlert.show()");
-			return;
-		}
+				return;
+			}
 // #29732 End - reOpen Fix
 		}
 		// #29732 End
@@ -6808,7 +6802,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				break;
 			case 3:
 				// detailSO.validateApprovalDetails(reqDTO);
-				   retrieveApprovalTabDtl();
+				retrieveApprovalTabDtl();
 				break;
 
 			case 4:
@@ -6923,7 +6917,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							.equals(QTStatusConst.QT_REVISION_PUBLICATION))) {
 				String changedCatCodeList = checkCatCodeChange();
 				if (!changedCatCodeList.isEmpty()) {
-				throw new EpException(MessageConst.WARN_297320,
+					throw new EpException(MessageConst.WARN_297320,
 							new String[] { changedCatCodeList });
 				}
 // #29732 End - reOpen Fix
@@ -10467,19 +10461,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				 this.getManagedBean().setSpecUpdateInProgress(true);
 				 inProgress = true;
 			}else{
-			bpmReqDTO.setDocNumber(qt.getQtNo());
-			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
-			BpmResponseDTO resDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
-			 for(WorklistItemVO currentVO: resDTO.getWorklistVO().getWorklistItem()){
-				 if(StringUtils.isNotBlank(currentVO.getTaskName())){
-					 if(Arrays.asList(specTaskName).contains(currentVO.getTaskName())){
-						 this.getManagedBean().setSpecUpdateInProgress(true);
-						 inProgress = true;
-						 break;
-					 }
-				 }
-			 }
-		}
+				bpmReqDTO.setDocNumber(qt.getQtNo());
+				bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+				BpmResponseDTO resDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
+				 for(WorklistItemVO currentVO: resDTO.getWorklistVO().getWorklistItem()){
+					 if(StringUtils.isNotBlank(currentVO.getTaskName())){
+						 if(Arrays.asList(specTaskName).contains(currentVO.getTaskName())){
+							 this.getManagedBean().setSpecUpdateInProgress(true);
+							 inProgress = true;
+							 break;
+						 }
+					 } 
+				 } 
+			}
 		} 
 		if(inProgress){
 			FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.popup.checkBeforePublish2", null))); //#15391
@@ -10906,20 +10900,21 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						       									}
 						       								}// end looping bpk request approval 
 						       						    }
-			       									}
+						       						}
 						       					}// end looping history bpk approval
-			       						    }
-			       						}
-						       						    }
-	       						    	}
+						       				}
+										}
+										
+									}
+								}
 							} // end looping bpk approval
-	       						    }  
-	       						}
-	       					}
+						}
+		    		}
+			    }
 			    return bpkRequestFlag;
 		} finally {
 			detailSO = null;
-	       				}
+		}
 	}
 	
 	public void resetBpkCurrentArea(boolean actionFlow){
@@ -12140,6 +12135,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 		
 	public boolean getTaskByDocNoModule(String docNo, String module) {
+		ScQt scQt = this.getManagedBean().getQt();//9019
 		IBpmSO bpmSO =(IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 		Object tokens = bpmSO.authenticate(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.BPM_PRINCIPAL));
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
@@ -12152,9 +12148,25 @@ public void retrieveDemoQtDetails(Long qtId) {
 		if(bpmResDTO.getWorklistVO().getWorklistItem().size() > 0){
 			bpmExistFlag = true;
 		}else{
-			bpmExistFlag = false;
+			//9019 - Start
+			//25072022 by (Harun) Add workflow checking for disable update button those previous QT 
+			//                    that CANCEL without BPM
+			IScWorkFlowStatusSO workFlowStatusSO;
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			
+			ScWorkFlowStatusReqDTO scWorkFlowreqDTO = new ScWorkFlowStatusReqDTO();
+			scWorkFlowreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			scWorkFlowreqDTO.setDocId(scQt.getQtId());
+			ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWorkFlowreqDTO).getWorkFlowStatus();
+			if(currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_CANCELLED)){
+				bpmExistFlag = true;
+			}else{
+				bpmExistFlag = false;
+			}
+			//9019 - End
 		}
 		return bpmExistFlag;
 	}
-	//9019 - End (Harun) 
+	//9019 - End (Harun)
 }
