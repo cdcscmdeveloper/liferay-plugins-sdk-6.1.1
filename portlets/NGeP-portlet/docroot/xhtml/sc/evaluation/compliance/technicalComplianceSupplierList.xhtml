@@ -61,7 +61,7 @@
 				style="width:15%">
 				<p:selectOneMenu
 					disabled="#{(complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or  evaluationBackingBean.managedBean.statusOnly or  evaluationBackingBean.managedBean.complianceReEvaluateRequired 
-					or evaluationBackingBean.managedBean.readOnly) or isRejected}"
+					or isRejected}"
 					value="#{complianceTechnicalSupplier.compliance}">
 
 					<f:selectItems
