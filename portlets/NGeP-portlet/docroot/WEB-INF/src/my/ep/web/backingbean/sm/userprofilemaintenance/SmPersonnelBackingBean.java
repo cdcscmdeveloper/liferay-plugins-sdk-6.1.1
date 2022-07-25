@@ -1460,6 +1460,7 @@ public class SmPersonnelBackingBean extends
 			//9569 - End
 			getManagedBean().setPermAddDistrictList(null);
 			getManagedBean().setPermAddCityList(null);
+			//#33592
 			getManagedBean().setDivisionBox(false);
 		}
 		//#13320 - added division
