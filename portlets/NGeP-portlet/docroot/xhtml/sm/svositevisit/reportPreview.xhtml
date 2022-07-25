@@ -53,7 +53,7 @@
 			</p:column>
 			
 			<!--28775 - Site Visit Grouping Enhancement - 28775 -->
-			<p:column headerText="#{lbl['lbl.sm.sitevist.report.uploadedfile']}">
+			<p:column>
 				<table>
 					<ui:repeat var="attch" value="#{svTask.smSvTemplate.smAttachments}">
 					<p:outputPanel rendered="#{attch.recordStatusFlg == svoSiteVisitBackingBean.getRecordStatusActive()}">
