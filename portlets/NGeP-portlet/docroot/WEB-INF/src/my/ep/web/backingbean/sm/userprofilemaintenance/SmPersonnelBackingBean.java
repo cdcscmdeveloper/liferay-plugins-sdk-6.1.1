@@ -1236,6 +1236,8 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setMailAddDivisionList(null);
 			//9569 - End
 			getManagedBean().setMailAddCityList(null);
+			//#33592
+			getManagedBean().setMailDivisionBox(false);
 		}
 		
 		//#13320 - added division - start
@@ -1245,15 +1247,18 @@ public class SmPersonnelBackingBean extends
 				setPmState(state);
 			getManagedBean().setMailAddCityList(null);
 			getManagedBean().setMailAddDivisionList(null);
-			
-			if(state.getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){				
-				List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(state.getStateId());
-				this.getManagedBean().setMailAddDivisionList(divisionLs);
-				getManagedBean().setMailAddDistrictList(null);
-			
-			} else {
-				getManagedBean().setMailAddDistrictList(
-						SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
+			//#33592 start
+			getManagedBean().setMailDivisionBox(false);
+			if (state != null) {
+				if (state.getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)) {
+					List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(state.getStateId());
+					this.getManagedBean().setMailAddDivisionList(divisionLs);
+					this.getManagedBean().setMailAddDistrictList(SmCommonUtil.getDistrictListByID(getManagedBean().getDivisionId()));
+					getManagedBean().setMailDivisionBox(true);
+				} else {
+					this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().setPmDistrict(new PmDistrict());
+					getManagedBean().setMailAddDistrictList(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
+				}//#33592- end
 			}
 		}
 				
@@ -1455,6 +1460,7 @@ public class SmPersonnelBackingBean extends
 			//9569 - End
 			getManagedBean().setPermAddDistrictList(null);
 			getManagedBean().setPermAddCityList(null);
+			getManagedBean().setDivisionBox(false);
 		}
 		//#13320 - added division
 		if(!stateId.isEmpty() || stateId.equalsIgnoreCase("null")) {
@@ -1463,18 +1469,19 @@ public class SmPersonnelBackingBean extends
 				setPmState(state);
 			getManagedBean().setPermAddDivisionList(null);
 			getManagedBean().setPermAddCityList(null);
-			//getManagedBean().setDivisionBox(!state.getAdoptDivision());
-			
-			if(state.getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
-				List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(state.getStateId());
-				this.getManagedBean().setPermAddDivisionList(divisionLs);
-				getManagedBean().setPermAddDistrictList(null);
-			
-			} else {
-				getManagedBean().setPermAddDistrictList(
-						SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
-				getManagedBean().getBasicSmPersonnelPermanentAddress()
-					.getSmAddress().setDivisionId(null);
+			//#33592 -start
+			getManagedBean().setDivisionBox(false);
+			if (state != null) {
+				if (state.getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)) {
+					List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(state.getStateId());
+					this.getManagedBean().setPermAddDivisionList(divisionLs);
+					this.getManagedBean().setPermAddDistrictList(
+							SmCommonUtil.getDistrictListByID(this.getManagedBean().getDivisionId())); 
+					getManagedBean().setDivisionBox(true);
+				}else {
+					this.getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().setPmDistrict(new PmDistrict());
+					getManagedBean().setPermAddDistrictList(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
+				}//#33592-end
 			}
 		}
 		
