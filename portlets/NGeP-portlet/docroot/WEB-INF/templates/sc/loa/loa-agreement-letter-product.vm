@@ -1457,7 +1457,12 @@ u {
 																#else
 																<td bgcolor="#d0eaee" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.qty</td>
 																#end
-																<td bgcolor="#d0eaee" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																		##26130 start 12052022
+																#if($specCombine.qtyBerperingkat == "&nbsp")
+																#else
+																<td bgcolor="#d0eaee" rowspan="$rowSpanSize" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.qtyBerperingkat</td>
+																#end
+																		##26130 end 12052022
 															#else
 																<td bgcolor="#d0eaee" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
 																<td bgcolor="#d0eaee" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
@@ -1466,25 +1471,26 @@ u {
 														
 														#end
 														
-														#if ($specCombine.feedback == "&nbsp;" ) 
-															<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$whiteSpace</td>
-														#else
-															<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
-														#end
-														
-														#if ($specCombine.answerRemark == "&nbsp;" || $specCombine.answerRemark == " ") 
-																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$serviceScope</td>
-														#else
-															#if ($specCombine.answerRemark)
-																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.answerRemark</td>
-															#else 
-																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$serviceScope</td>
-															#end
-														#end
-														
 														#if ($rowCount == 0)
-															#set($rowCount = $rowCount + 1)
+															#if ($specCombine.feedback == "&nbsp;" ) 
+																<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$whiteSpace</td>
+															#else
+																<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
+															#end
+															
+															#if ($specCombine.answerRemark == "&nbsp;" || $specCombine.answerRemark == " ") 
+																	<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+															#else
+																#if ($specCombine.answerRemark)
+																	<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.answerRemark</td>
+																#else 
+																	<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+																#end
+															#end
+														
+														
 															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$whiteSpace</td>
+															#set($rowCount = $rowCount + 1)
 														#end
 														
 													</tr>
@@ -1546,7 +1552,7 @@ u {
 													<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"><strong>$specCombine.clItem</strong></td>
 												##26130 - zaim end
 													<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.uomName</td>
-													<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.clPriceTypeCode)</td>
+													<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.clPriceTypeCode</td>
 													<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.qty</td>
 													<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.qtyBerperingkat</td>	
 												#if ($specType == "T")
@@ -2039,26 +2045,26 @@ u {
 															#end
 														
 														#end
-														
-														#if ($specCombine.feedback == "&nbsp;" || $specCombine.feedback == " ") 
-															<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$whitespace</td>
-														#else
-															<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
-														#end
-														##26130 - start 03032022
-														#if ($specCombine.answerRemark == "&nbsp;" || $specCombine.answerRemark == " ") 
-																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$serviceScope</td>
-														#else
-															#if ($specCombine.answerRemark)
-																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.answerRemark</td>
-															#else 
-																<td bgcolor="#d0eaee"  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$serviceScope</td>
-															#end
-														#end
-														##26130 - end 03032022
 														#if ($rowCount == 0)
-															#set($rowCount = $rowCount + 1)
+															#if ($specCombine.feedback == "&nbsp;" || $specCombine.feedback == " ") 
+																<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$whitespace</td>
+															#else
+																<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
+															#end
+															##26130 - start 03032022
+															#if ($specCombine.answerRemark == "&nbsp;" || $specCombine.answerRemark == " ") 
+																	<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+															#else
+																#if ($specCombine.answerRemark)
+																	<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.answerRemark</td>
+																#else 
+																	<td bgcolor="#d0eaee" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+																#end
+															#end
+															##26130 - end 03032022
+														
 															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$whitespace</td>
+															#set($rowCount = $rowCount + 1)
 														#end
 														
 													</tr>
@@ -2642,7 +2648,7 @@ u {
 
 
 ##26130 - start 03032022
-#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
+#if ($scLoa.scLoiLoa.docType == "QT")
 
 #else
 <div class="break-after"><br/></div>
