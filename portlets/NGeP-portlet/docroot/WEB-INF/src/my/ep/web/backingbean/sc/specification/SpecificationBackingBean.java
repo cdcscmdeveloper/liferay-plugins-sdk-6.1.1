@@ -17228,11 +17228,11 @@ if (null != checklist && !checklist.isEmpty()) {
 		log.info("checkFinancialSpecEstimations");
 		int count = 0;
 		
-		//Bug_33142 - Start
+		/*//Bug_33142 - Start
 		Set<Long> duplicateSpecQuestionEstimationCheck = new HashSet<Long>();
 		Set<Long> duplicateSpecZoneEstimationCheck = new HashSet<Long>();
 		boolean specQuestionDuplicate = false;
-		//Bug_33142 - End
+		//Bug_33142 - End */
 		
 		if (CollectionUtils.isNotEmpty(financialChecklist)) {
 			for (ScQtCheckList checklist : financialChecklist) {
@@ -17356,7 +17356,7 @@ if (null != checklist && !checklist.isEmpty()) {
 							/*}*/
 							// #25138 - Bug #32194 - End.
 							
-							//Bug_33142 - Start
+							/*//Bug_33142 - Start
 							if(tplSpecEstimation.getTplSpecQuestion() != null && tplSpecEstimation.getTplSpecZoneDtl()!= null){
 								if(!duplicateSpecQuestionEstimationCheck.add(tplSpecEstimation.getTplSpecQuestion().getSpecQuestionId())){
 									specQuestionDuplicate = true;
@@ -17368,7 +17368,7 @@ if (null != checklist && !checklist.isEmpty()) {
 									}
 								}
 							}
-							//Bug_33142 - End
+							//Bug_33142 - End */
 						}
 					} else {
 						throw new EpException(MessageConst.ERROR_760520);
