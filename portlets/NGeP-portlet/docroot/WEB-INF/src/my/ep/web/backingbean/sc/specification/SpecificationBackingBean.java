@@ -11,6 +11,8 @@
 package my.ep.web.backingbean.sc.specification;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +30,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;//#25138
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -59,6 +61,7 @@ import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
@@ -101,6 +104,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -144,6 +149,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -19405,7 +19411,7 @@ if(null!=allTechnicalChecklist){
 	public void addDemoTechnicalCheckList() {
 		try {
 			//this.getManagedBean().setReadOnly(false);
-			//retriveTechnicalCheckList(); //#28784
+			isAllTSDemoChecklistCompleted();//#28784
 			this.getManagedBean().setDemoAction(false);
 			List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
 			List<ScQtCheckList> newSt2technicalproposalList = new ArrayList();
@@ -20112,6 +20118,29 @@ if(null!=allTechnicalChecklist){
 		return result;
 	}
 	
+	//#28784 - check Demo checklist to display edit button base on all spec list completed
+	public boolean isAllTSDemoChecklistCompleted() {
+		boolean result = false;
+		List<ScQtCheckList> list = getManagedBean().getScQtCheckSt2techProposal();
+		if(CollectionUtils.isNotEmpty(list)){
+			for(ScQtCheckList obj: list){
+				if(null != obj.getDefinationType().getParameterCode() &&
+						obj.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)){
+					if(QTStatusConst.TS_COMPLETED
+							.equals(obj.getPmStatus().getStatusId())){
+						result = true;
+						
+					} else if(QTStatusConst.TS_PENDING_SUBMISSION
+							.equals(obj.getPmStatus().getStatusId())){
+						result = false;
+						break;
+					}
+				}
+			}
+		}
+		return result;
+	}
+	
 	public String demoBackAction() {
 		// this.getManagedBean().setScQtCheckSt2techProposal(null);
 		// retriveTechnicalCheckList();
@@ -20280,11 +20309,10 @@ if(null!=allTechnicalChecklist){
 	}
 	//#28784 -  End
 	
-	public void actionSearchPresentationDemo() {
+	public void actionSearchPresentationDemo() {//#28784
 		List<TplSpecQuestion> listNew = new ArrayList<>();
 		List<TplSpecQuestion> list = this.getManagedBean().getDemoOriSpecQuestionTemplateList();
 		if (StringUtils.isNotBlank(this.getManagedBean().getItemName())) {
-			if (CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions())) {
 				String itemName = this.getManagedBean().getItemName().toLowerCase();
 				for (TplSpecQuestion obj : list) {
 					if (StringUtils.isNotBlank(obj.getClItem())) {
@@ -20296,29 +20324,21 @@ if(null!=allTechnicalChecklist){
 						}
 					}
 				}
+			this.getManagedBean().getTemplateSpecBean().getSpecMaster().setTplSpecQuestions(listNew);
 			} else {
 				for (TplSpecQuestion obj : list) {
 					obj.setSelectable(true);
 				}
-			}
-			this.getManagedBean().getTemplateSpecBean().getSpecMaster().setTplSpecQuestions(listNew);
-		} else {//#28784
-			list = this.getManagedBean().getDemoOriSpecQuestionTemplateList();
-			for (TplSpecQuestion obj : list) {
-				obj.setSelectable(true);
-			}
 			this.getManagedBean().getTemplateSpecBean().getSpecMaster().setTplSpecQuestions(list);
 		}
 	}
 
-  	public void resetSearchPresentationDemo(){
-//  		if(CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions())){//#28784
+	public void resetSearchPresentationDemo() {//#28784
   			List<TplSpecQuestion> list = this.getManagedBean().getDemoOriSpecQuestionTemplateList();
   			for(TplSpecQuestion obj : list){
   				obj.setSelectable(true);
   			}
   			this.getManagedBean().getTemplateSpecBean().getSpecMaster().setTplSpecQuestions(list);
-//  		}
   		this.getManagedBean().setItemName(null);
   		
   	}
