@@ -182,6 +182,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
@@ -4925,7 +4926,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			
 			context.put("isZonal", scLoa.getScLoiLoa().isZonal());
-			context.put("serviceScope", dafaltValue);
+			context.put("serviceScope", getDefaultValue());
 			context.put("masters", masters);
 			context.put("bean", this);
 		} finally {
@@ -5030,9 +5031,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 									feedback = String.valueOf(tplSpecAnswer.getAnswerNumeric());
 								} else if (null != tplSpecAnswer.getAnswerCompliance()) {
 									if (tplSpecAnswer.getAnswerCompliance()) {
-										feedback = "Yes";
+										feedback = "Ya";
 									} else {
-										feedback = "No";
+										feedback = "Tidak";
 									}
 								} else if (StringUtils.isNotEmpty(tplSpecAnswer.getAnswerText())) {
 									feedback = String.valueOf(tplSpecAnswer.getAnswerText());
@@ -5165,16 +5166,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	// #26130 - End 
 
-	// #26130 - zaim start 
+	// #26130 - zaim start
 	private String getDefaultValue() {
-		String defaultValue = "";
+		String defaultValue = "T/B";
 		
-		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-			defaultValue = "N/A";
-		} else {
-			defaultValue = "T/B";
-		}
-
 		return defaultValue;
 	}
 	// #26130 - zaim -end-
@@ -5185,6 +5180,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		List<HashMap<String, String>> listSpec = new ArrayList<>();
 		int countIndex = 0;
 		int indi = 0;
+		String whiteSpace = "&nbsp";
 		boolean getFirstValue = true;
 		
 		if (question.getTplSpecZoneQties().size() > 0) {
@@ -5201,6 +5197,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						map.put("zoneName", zone.getTplSpecZoneDtl().getZoneName());
 						map.put("qty", zone.getQty().toString());
 
+						if (null != question.getTplSpecTierQties() && question.getTplSpecTierQties().size() > 0) {
+							String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
+							
+							map.put("qtyBerperingkat", tierValue);
+						} else {
+							String tierValue = "T/B";
+							
+							map.put("qtyBerperingkat", tierValue);
+						}
+
 						if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
 								|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")) {
 							map.put("clUomFrequency", question.getClUomFrequency().toString());
@@ -5214,36 +5220,41 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							}
 						getFirstValue = false;
 					} else {
-						map.put("clItem", "&nbsp");
-						map.put("uomName", "&nbsp");
-						map.put("clPriceTypeCode", "&nbsp");
-						map.put("zoneName", zone.getTplSpecZoneDtl().getZoneName());
+						map.put("clItem", whiteSpace);
+						map.put("uomName", whiteSpace);
+						map.put("clPriceTypeCode", whiteSpace);
+						map.put("zoneName",zone.getTplSpecZoneDtl().getZoneName());
+						map.put("qtyBerperingkat", whiteSpace);
 
 						if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
 								|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")) {
-							map.put("clUomFrequency", "&nbsp");
-							map.put("clUomPerDay", "&nbsp");
-							map.put("clUomPerMonth", "&nbsp");
+							map.put("clUomFrequency", whiteSpace);
+							map.put("clUomPerDay", whiteSpace);
+							map.put("clUomPerMonth", whiteSpace);
 						}
-						
+
 						map.put("qty", zone.getQty().toString());
-								
+
 						for (TplSpecAnswer answer : question.getTplSpecAnswers()) {
 							if (answer.getAnswerNumeric() != null) {
 								map.put("answerNumeric", answer.getAnswerNumeric().toString());
 							}
 						}
+					}
 
-					}							
-						
 					for (int i = indi; i < question.getTplSpecZoneQties().size(); i++) {
 						map.put("feedback", question.getFeedbackList().get(i));
 						break;
 					}
 					
 					for (int i = indi; i < question.getTplSpecZoneQties().size(); i++) {
-						map.put("answerRemark", question.getAnswerRemarkList().get(i));
-						break;
+						if (!question.getAnswerRemarkList().get(i).equalsIgnoreCase("&nbsp;")
+								&& !question.getAnswerRemarkList().get(i).equalsIgnoreCase(getDefaultValue())) {
+							map.put("answerRemark", question.getAnswerRemarkList().get(i));
+							break;
+						} else {
+							map.put("answerRemark", question.getAnswerRemarkList().get(i));
+						}
 					}
 
 					indi++;
@@ -5270,7 +5281,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						} else {
 							// product
 							map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
-							map.put("qtyBerperingkat", getDefaultValue());
+
+							String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
+
+							map.put("qtyBerperingkat", tierValue);
 						}
 
 						for (String feedback : question.getFeedbackList()) {
@@ -5292,7 +5306,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return listSpec;
 	}
 	// #26130 - zaim end
-		
+
+	// #26130 start
+	public String retrieveTierQuantity(List<TplSpecTierQty> listTplSpecTierQties) {
+		StringBuffer sb = new StringBuffer();
+	
+		if (listTplSpecTierQties.size() > 0) {
+			for (TplSpecTierQty qty : listTplSpecTierQties) {
+				sb.append(qty.getFromQty() + " - " + qty.getToQty() + "<br />");
+			}
+		} else {
+			sb.append("T/B");
+		}
+
+		return sb.toString();
+	}
+	// #26130 end
+
     //Enhancement #25729 Allow create QT below threshold RM20k - start -
     //#25729 #142 start - checking total indicative price <= 20k
     /**
