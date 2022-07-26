@@ -282,6 +282,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					return (s1.getSvAssistantOfficerId().compareTo(s2.getSvAssistantOfficerId()));
 				}
 			});
+			Collections.sort(smSvTask.getSmSvTemplate().getSmSvInterviewees(), new Comparator<SmSvInterviewee>() {
+				@Override
+				public int compare(final SmSvInterviewee s1, final SmSvInterviewee s2) {
+					return Long.compare(s1.getSvIntervieweeId(), s2.getSvIntervieweeId());
+				}
+			});
 			//#24964 - end
 			
 			for(SmPersonnel contactPerson : smSvTask.getSmAppl().getSmPersonnels()){
