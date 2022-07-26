@@ -3280,9 +3280,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
 								ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 					//24333 - Start
-					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()
-							&& (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
-									&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted())) {  
+					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()){  
 						getManagedBean().setSelectedTabIndex(6);
 					} else{
 						getManagedBean().setSelectedTabIndex(5);
