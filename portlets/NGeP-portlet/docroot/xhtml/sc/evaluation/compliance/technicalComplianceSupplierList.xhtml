@@ -60,7 +60,7 @@
 			<p:column headerText="#{lbl['lbl.sc.compliance.status']}"
 				style="width:15%">
 				<p:selectOneMenu
-					disabled="#{(complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or  evaluationBackingBean.managedBean.statusOnly or  evaluationBackingBean.managedBean.complianceReEvaluateRequired 
+					disabled="#{(complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or  evaluationBackingBean.managedBean.statusOnly or  evaluationBackingBean.managedBean.complianceReEvaluateRequired) 
 					or isRejected}"
 					value="#{complianceTechnicalSupplier.compliance}">
 
