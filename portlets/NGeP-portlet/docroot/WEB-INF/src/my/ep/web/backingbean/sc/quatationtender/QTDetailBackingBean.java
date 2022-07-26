@@ -12139,8 +12139,9 @@ public void retrieveDemoQtDetails(Long qtId) {
 			debugLogger("end updateWIPTransaction");
 		}
 	}
-		
+
 	public boolean getTaskByDocNoModule(String docNo, String module) {
+		ScQt scQt = this.getManagedBean().getQt();//9019
 		IBpmSO bpmSO =(IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 		Object tokens = bpmSO.authenticate(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.BPM_PRINCIPAL));
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
@@ -12153,8 +12154,26 @@ public void retrieveDemoQtDetails(Long qtId) {
 		if(bpmResDTO.getWorklistVO().getWorklistItem().size() > 0){
 			bpmExistFlag = true;
 		}else{
-				bpmExistFlag = false;
+			//9019 - Start
+			//26072022 by (Harun) Add workflow checking for disable update button those previous QT 
+			//                    that CANCEL without BPM
+			IScWorkFlowStatusSO workFlowStatusSO;
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			
+			ScWorkFlowStatusReqDTO scWorkFlowreqDTO = new ScWorkFlowStatusReqDTO();
+			scWorkFlowreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			scWorkFlowreqDTO.setDocId(scQt.getQtId());
+			ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWorkFlowreqDTO).getWorkFlowStatus();
+			if(null != currentWorkFlowStatus){//9019 Add null checking that cause stopper #33672 unable to create QT
+				if(currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_CANCELLED)){
+					bpmExistFlag = true;
+				}else{
+					bpmExistFlag = false;
+				}
 			}
+			//9019 - End
+		}
 		return bpmExistFlag;
 	}
 	//9019 - End (Harun)
