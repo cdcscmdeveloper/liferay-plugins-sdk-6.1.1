@@ -9977,6 +9977,7 @@ public class QTDetailBackingBean extends
 
 	// #9019 -start-
 	public boolean getTaskByDocNoModule(String docNo, String module) {
+		ScQt scQt = this.getManagedBean().getQt();
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 		Object tokens = bpmSO
 				.authenticate(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.BPM_PRINCIPAL));
@@ -9993,7 +9994,27 @@ public class QTDetailBackingBean extends
 		if (bpmResDTO.getWorklistVO().getWorklistItem().size() > 0) {
 			bpmExistFlag = true;
 		} else {
-			bpmExistFlag = false;
+			//26072022 by (Harun) Add workflow checking for disable update button those previous QT 
+			//                    that CANCEL without BPM
+			IScWorkFlowStatusSO workFlowStatusSO;
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IScWorkFlowStatusSO.class);
+
+			ScWorkFlowStatusReqDTO scWorkFlowreqDTO = new ScWorkFlowStatusReqDTO();
+			scWorkFlowreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			scWorkFlowreqDTO.setDocId(scQt.getQtId());
+
+			ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWorkFlowreqDTO)
+					.getWorkFlowStatus();
+
+			//9019 Add null checking that cause stopper #33672 unable to create QT
+			if (null != currentWorkFlowStatus) {
+				if (currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_CANCELLED)) {
+					bpmExistFlag = true;
+				} else {
+					bpmExistFlag = false;
+				}
+			}
 		}
 		
 		return bpmExistFlag;
