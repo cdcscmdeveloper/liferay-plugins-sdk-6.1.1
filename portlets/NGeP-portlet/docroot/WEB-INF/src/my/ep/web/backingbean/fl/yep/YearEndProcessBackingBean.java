@@ -578,15 +578,19 @@ public class YearEndProcessBackingBean extends
 		return false;
 	}
 	
-	public boolean isCarryForward(Long statusId){
+	public boolean isCarryForward(Long statusId, String isCarryFoward){
 		
-		if(statusId.equals(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)
-				||statusId.equals(FulfilmentStatusConst.PO_PENDING_FULFILMENT)
-				||statusId.equals(FulfilmentStatusConst.CO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)
-				||statusId.equals(FulfilmentStatusConst.CO_PENDING_FULFILMENT)){				
-				return true;
-			}
-		return false;
+		if(isCarryFoward.equalsIgnoreCase("true")){
+			return false;
+		}else{
+			if(statusId.equals(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)
+					||statusId.equals(FulfilmentStatusConst.PO_PENDING_FULFILMENT)
+					||statusId.equals(FulfilmentStatusConst.CO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)
+					||statusId.equals(FulfilmentStatusConst.CO_PENDING_FULFILMENT)){				
+					return true;
+				}
+			return false;
+		}
 	}
 	
 	public String navigateToPage() throws ParseException {
