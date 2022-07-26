@@ -1461,8 +1461,10 @@ public class RuleCatalogueBackingBean extends
 							&& ruleTypeValue.getCategoryL3Id()
 									.getCategoryL3Id() == null) {
 						// throw required msg
+						// 29669,30672 start
 						throw new EpException(MessageConst.ERROR_770133,
-								new String[] {});
+								new String[] { ruleTypeDesc.getRuleDesc() });
+						// 29669,30672 end
 
 					} else { // fill CategoryDisplayValue for further validation
 						PmCategoryL3 categoryL3 = ruleTypeValue
