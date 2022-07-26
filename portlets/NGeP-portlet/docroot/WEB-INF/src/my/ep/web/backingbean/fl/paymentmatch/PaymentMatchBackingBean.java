@@ -1917,7 +1917,16 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				if(flDeliveryOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
 					invBB.getManagedBean().getDelOrderList().add(flDeliveryOrder);
 				}
-			}		
+			}
+			
+			//24956 start
+			if (invBB.getManagedBean().getInvoice().getFlRequest().getCtContract() != null 
+					&& invBB.getManagedBean().getInvoice().getFlRequest().getCtContract().getContractType().
+					getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				invBB.getManagedBean().setCtTypeMinistry(true);
+			}
+			//24956 end
+			
 			return NAV_INVOICE;
 		}if(docType.equalsIgnoreCase(ParameterConst.CONTRACT)){
 			ContractDetailsBackingBean ctDetBB = new ContractDetailsBackingBean();
