@@ -673,9 +673,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						}
 						//32851 - end
 						
-						
+
 						//26238: Disciplinary Action -32851 - start remove second checking for imposed DA since checking already run based on table sm_person_blacklist
-								
+						
 //						IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
 //						PersonnelReqDTO personneleqDTO = new PersonnelReqDTO();
 //						
@@ -715,10 +715,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 //							}
 //						}
 						//26238: Disciplinary Action -32851 - start remove second checking for imposed DA since checking already run based on table sm_person_blacklist
-									
-								}
-							}
-						}
+						
+					}
+				}
+			}
 			//27537 : Disciplinary Action - end
 			
 			if(SmCommonUtil.isSupplierOwnerIndividualAcc(suppOwner.getIdentificationType().getParameterCode(),suppOwner.getIdentificationNo(),
@@ -1320,7 +1320,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						for(SmSupplierOwner suppOwner : getManagedBean().getSmSuppOwners()){
 							if(personnel.getIdentificationNo().equals(suppOwner.getIdentificationNo())){
 								ownerNewList.add(suppOwner);
-		}
+							}
 						}
 					}
 				}
@@ -3789,13 +3789,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	private void setDisableCompanyNameBusinessTypeInMaintenance() {
 		getManagedBean().setDisabledCompanyNameInMaintenance(false);
-		if (SmApplicationUtil.hasActiveTransactions(this.getManagedBean()
-				.getSmSupp()) || SmApplicationUtil.hasOtherActiveTransactions(this.getManagedBean()
-				.getSmSupp())) {
-			getManagedBean().setDisabledCompanyNameInMaintenance(true);
-			//disabled for #10998
-		}
-		
+		//32870 START - remove checking for active transaction with other modules
+//		if (SmApplicationUtil.hasActiveTransactions(this.getManagedBean()
+//				.getSmSupp()) || SmApplicationUtil.hasOtherActiveTransactions(this.getManagedBean()
+//				.getSmSupp())) {
+//			getManagedBean().setDisabledCompanyNameInMaintenance(true);
+//			//disabled for #10998
+//		}
+		//32870 END
 		if (SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_ALLOWED_TO_EDIT_COMPANY_NAME
 				.contains(getManagedBean().getSmSupp().getBusinessType())) {
 			getManagedBean().setDisabledCompanyNameInMaintenance(true);
