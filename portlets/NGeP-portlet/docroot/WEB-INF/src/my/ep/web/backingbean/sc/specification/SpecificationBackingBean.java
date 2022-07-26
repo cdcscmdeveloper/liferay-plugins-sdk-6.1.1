@@ -21136,30 +21136,23 @@ if(null!=allTechnicalChecklist){
 	}
 	//#28784 -  End
 	
-	public void actionSearchPresentationDemo() {
+	public void actionSearchPresentationDemo() {//#28784
 		List<TplSpecQuestion> listNew = new ArrayList<>();
 		List<TplSpecQuestion> list = this.getManagedBean().getDemoOriSpecQuestionTemplateList();
 		if (StringUtils.isNotBlank(this.getManagedBean().getItemName())) {
-			if (CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions())) {
-				String itemName = this.getManagedBean().getItemName().toLowerCase();
-				for (TplSpecQuestion obj : list) {
-					if (StringUtils.isNotBlank(obj.getClItem())) {
-						if (obj.getClItem().toLowerCase().contains(itemName)) {
-							obj.setSelectable(true);
-							listNew.add(obj);
-						} else {
-							obj.setSelectable(false);
-						}
+			String itemName = this.getManagedBean().getItemName().toLowerCase();
+			for (TplSpecQuestion obj : list) {
+				if (StringUtils.isNotBlank(obj.getClItem())) {
+					if (obj.getClItem().toLowerCase().contains(itemName)) {
+						obj.setSelectable(true);
+						listNew.add(obj);
+					} else {
+						obj.setSelectable(false);
 					}
-				}
-			} else {
-				for (TplSpecQuestion obj : list) {
-					obj.setSelectable(true);
 				}
 			}
 			this.getManagedBean().getTemplateSpecBean().getSpecMaster().setTplSpecQuestions(listNew);
-		} else {//#28784
-			list = this.getManagedBean().getDemoOriSpecQuestionTemplateList();
+		} else {
 			for (TplSpecQuestion obj : list) {
 				obj.setSelectable(true);
 			}
@@ -21167,17 +21160,15 @@ if(null!=allTechnicalChecklist){
 		}
 	}
 
-  	public void resetSearchPresentationDemo(){
-//  		if(CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions())){//#28784
-  			List<TplSpecQuestion> list = this.getManagedBean().getDemoOriSpecQuestionTemplateList();
-  			for(TplSpecQuestion obj : list){
-  				obj.setSelectable(true);
-  			}
-  			this.getManagedBean().getTemplateSpecBean().getSpecMaster().setTplSpecQuestions(list);
-//  		}
-  		this.getManagedBean().setItemName(null);
-  		
-  	}
+	public void resetSearchPresentationDemo() {//#28784
+		List<TplSpecQuestion> list = this.getManagedBean().getDemoOriSpecQuestionTemplateList();
+		for (TplSpecQuestion obj : list) {
+			obj.setSelectable(true);
+		}
+		this.getManagedBean().getTemplateSpecBean().getSpecMaster().setTplSpecQuestions(list);
+		this.getManagedBean().setItemName(null);
+
+	}
 	
 	
 	
