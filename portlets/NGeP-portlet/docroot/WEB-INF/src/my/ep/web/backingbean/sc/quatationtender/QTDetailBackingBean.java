@@ -300,6 +300,12 @@ import org.primefaces.util.Constants;
 //#21695 Farid
 //#21695 Farid
 //#29732 Start
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
+import my.ep.persistence.entity.pm.common.PmCategoryL1;
+import my.ep.persistence.entity.pm.common.PmCategoryL2;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 //#29732 End
 
 
@@ -12135,7 +12141,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 		
 	public boolean getTaskByDocNoModule(String docNo, String module) {
-		ScQt scQt = this.getManagedBean().getQt();//9019
 		IBpmSO bpmSO =(IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 		Object tokens = bpmSO.authenticate(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.BPM_PRINCIPAL));
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
@@ -12148,24 +12153,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 		if(bpmResDTO.getWorklistVO().getWorklistItem().size() > 0){
 			bpmExistFlag = true;
 		}else{
-			//9019 - Start
-			//25072022 by (Harun) Add workflow checking for disable update button those previous QT 
-			//                    that CANCEL without BPM
-			IScWorkFlowStatusSO workFlowStatusSO;
-			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-			
-			ScWorkFlowStatusReqDTO scWorkFlowreqDTO = new ScWorkFlowStatusReqDTO();
-			scWorkFlowreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-			scWorkFlowreqDTO.setDocId(scQt.getQtId());
-			ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWorkFlowreqDTO).getWorkFlowStatus();
-			if(currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_CANCELLED)){
-				bpmExistFlag = true;
-			}else{
 				bpmExistFlag = false;
 			}
-			//9019 - End
-		}
 		return bpmExistFlag;
 	}
 	//9019 - End (Harun)
