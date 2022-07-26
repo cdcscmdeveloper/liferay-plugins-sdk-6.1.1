@@ -425,13 +425,12 @@
 					                    
 				
 						<!-- #28375- Beginning Logan -->
-						<!-- #33659 start -->					
+					
 						<p:menuitem value="#{lbl['lbl.fl.yep.carryForward']}"  
 							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							        	rendered="#{yearEndProcessBackingBean.isCarryForward(flYep.statusId,flYep.carryForward) and flYep.phase eq '3'}"
+							        	rendered="#{yearEndProcessBackingBean.isCarryForward(flYep.statusId) and flYep.phase eq '3'}"
 							        	icon="ui-icon-amendment"
 							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'taskId', value:'#{flYep.yepTaskId}'}, {name:'orderN', value:'#{flYep.orderNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.carryForward}'} , {name:'phase', value:'#{flYep.phase}'} , {name:'statusDesc', value:'#{flYep.statusId}'}, {name:'progressStatus', value:'#{flYep.progressStatus}'}, {name:'carryForward', value:'#{flYep.carryForward}'}])"/>
-						<!-- #33659 end -->	
 					
 					<!-- #28375- Ending Logan-->
 					<!-- #28374	Vinod Start -->
