@@ -8173,13 +8173,7 @@ public class SmApplicationBackingBean extends
 							defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_UNKNOWN_CODE);
 						}
 						
-						
-						
-						
-						
-						if(!getManagedBean().getShareHolderResdAddr().getSmAddress().getPmCountry().getCountryCode().equals(SupplierManagementConst.COUNTRY_UNKNOWN_CODE)){
-							defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(getManagedBean().getShareHolderResdAddr().getSmAddress().getPmCountry().getCountryCode());
-						}
+
 						smpersonAddress.getSmAddress().setPmCountry(defaultCountry);
 						if (smpersonAddress.getSmAddress().getPmCountry() != null) {
 							smpersonAddress.getSmAddress().setCountryId(
@@ -8204,7 +8198,7 @@ public class SmApplicationBackingBean extends
 						SmAddress smAddressRes = getManagedBean().getShareHolderResdAddr().getSmAddress();
 						initializeSmAddressChilds(smpersonAddress.getSmAddress());
 						
-						if(smpersonAddress.getSmAddress().getPmCountry() != null){
+						if(smAddressRes.getPmCountry().getCountryCode().equals(SupplierManagementConst.COUNTRY_UNKNOWN_CODE)){
 							smAddressRes.setPmCountry(smpersonAddress.getSmAddress().getPmCountry());
 							smAddressRes.setCountryId(smpersonAddress.getSmAddress().getPmCountry().getCountryId());
 						}
