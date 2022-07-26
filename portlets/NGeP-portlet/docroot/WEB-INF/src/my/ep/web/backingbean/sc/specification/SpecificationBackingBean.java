@@ -2665,7 +2665,11 @@ public class SpecificationBackingBean extends
 								scQtScoreOfferPrices = tmpCheckList.getQtScoreWeightage()
 										.getScQtScoreOfferPrices();
 							}
-							
+							//Bug #33642 related to #25138 START
+							if(CollectionUtils.isNotEmpty(this.getManagedBean().getOfferPricePackageList())){
+								scQtScoreOfferPrices = this.getManagedBean().getOfferPricePackageList();
+							}
+							//Bug #33642 to #25138 END
 					        for(ScQtScoreOfferPrice offerScore : scQtScoreOfferPrices){
 					        //====#31913 bug related to #25138==== end
 								if (ParameterConst.RECOMMEND_TYPE_PACKAGE
@@ -16587,6 +16591,10 @@ if (null != checklist && !checklist.isEmpty()) {
 		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());
 		//#25138 - end
 		spReqDTO.setSingleItem(this.getManagedBean().isSingleItem());//32453
+		//Bug #33642 related to #25138 START
+		spReqDTO.setZonesQt(this.getManagedBean().getQt().isZonal());
+		spReqDTO.setScoreOfferPriceList(this.getManagedBean().getOfferPricePackageList());
+		//Bug #33642 related to #25138 END
 		IQTSpecSO specSO = getSpecSO();
 		try {
 			resDTO = specSO.updateSpecMaintananceDetails(spReqDTO);
