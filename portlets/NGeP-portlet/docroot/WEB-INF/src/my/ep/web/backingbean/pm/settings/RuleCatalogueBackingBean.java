@@ -1105,10 +1105,10 @@ public class RuleCatalogueBackingBean extends
 							&& ruleTypeValue.getCategoryL3Id()
 									.getCategoryL3Id() == null) {
 						// throw required msg
-						// 29669 start
+						// 29669,30672 start
 						throw new EpException(MessageConst.ERROR_770133,
 								new String[] { ruleTypeDesc.getRuleDesc() });
-						// 29669 end
+						// 29669,30672 end
 
 					} else { // fill CategoryDisplayValue for further validation
 						PmCategoryL3 categoryL3 = ruleTypeValue
@@ -1132,7 +1132,7 @@ public class RuleCatalogueBackingBean extends
 			}
 			// check validation
 			
-			// 29669,29641 start 
+			// 29669,29641,30672 start 
 			if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode().matches("A|N|M|P") 
 					&& ruleTypeDesc.getRuleType().getRangeType() != 2) {
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType().getConfigRuleValues()) {
@@ -1142,7 +1142,7 @@ public class RuleCatalogueBackingBean extends
 					}
 				}
 			}
-			// 29669,29641 end
+			// 29669,29641,30672 end
 			// 29650 start
 			if (ruleTypeDesc.getRuleType().getRangeType() == 3) {
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType().getConfigRuleValues()) {
