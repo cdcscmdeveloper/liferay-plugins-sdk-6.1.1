@@ -3805,13 +3805,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	private void setDisableCompanyNameBusinessTypeInMaintenance() {
 		getManagedBean().setDisabledCompanyNameInMaintenance(false);
-		if (SmApplicationUtil.hasActiveTransactions(this.getManagedBean()
-				.getSmSupp()) || SmApplicationUtil.hasOtherActiveTransactions(this.getManagedBean()
-				.getSmSupp())) {
-			getManagedBean().setDisabledCompanyNameInMaintenance(true);
-			//disabled for #10998
-		}
-		
+		//32870 START - remove checking for active transaction with other modules
+//		if (SmApplicationUtil.hasActiveTransactions(this.getManagedBean()
+//				.getSmSupp()) || SmApplicationUtil.hasOtherActiveTransactions(this.getManagedBean()
+//				.getSmSupp())) {
+//			getManagedBean().setDisabledCompanyNameInMaintenance(true);
+//			//disabled for #10998
+//		}
+		//32870 END
 		if (SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_ALLOWED_TO_EDIT_COMPANY_NAME
 				.contains(getManagedBean().getSmSupp().getBusinessType())) {
 			getManagedBean().setDisabledCompanyNameInMaintenance(true);
