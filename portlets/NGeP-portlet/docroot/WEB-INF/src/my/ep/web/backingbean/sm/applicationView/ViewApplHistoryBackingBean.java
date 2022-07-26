@@ -1926,4 +1926,14 @@ public class ViewApplHistoryBackingBean extends
 		}
 		return true;
 	}//#32002 - end
+	
+	/**
+	 * Reminder before to resubmit page
+	 */
+	//#31270 - START
+	public void reminderToResubmit() {
+		RequestContext.getCurrentInstance().execute("reminderConfirmDialog.show()");
+	}
+	//#31270 - END
+
 }
