@@ -68,12 +68,14 @@
 						</h:panelGroup> <h:panelGroup
 							rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 1 }">
 							<div style="width: 250px; text-align: center;">
+							<!-- #30457 - Start [remove styleClass] -->
 								<ui:repeat var="cmImage"
 									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-									<p:graphicImage styleClass="catImageStyle"
+									<p:graphicImage
 										style="height:200px;"
 										value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" />
 								</ui:repeat>
+							<!-- #30457 - End -->
 							</div>
 						</h:panelGroup> 
 						
@@ -103,11 +105,13 @@
 						
 
 							<div id="slides" style="width: 250px;">
+							<!-- #30457 - Start -->
 								<ui:repeat var="cmImage"
 									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-									<p:graphicImage styleClass="catImageStyle"
+									<p:graphicImage
 										value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" />
 								</ui:repeat>
+							<!-- #30457 - End -->	
 							</div>
 						</h:panelGroup></td>
 					<td><p:outputLabel styleClass="outputLabel-view-label"
@@ -174,12 +178,12 @@
 
 
 				<tr style="height: 30px;">
-					<!-- #30457 - start 21/07/2022 -->
+					<!-- #30457 - start 27/07/2022 -->
 					<td>
 						<p:outputLabel styleClass="outputLabel-view-label" 
 						value="#{lbl['lbl.cm.basic.item.spec']}" />
 					</td>
-					<!-- #30457 - end 21/07/2022 -->
+					<!-- #30457 - end 27/07/2022 -->
 					<td colspan="3"><p:outputLabel styleClass="outputLabel-view"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}" /></td>
 
