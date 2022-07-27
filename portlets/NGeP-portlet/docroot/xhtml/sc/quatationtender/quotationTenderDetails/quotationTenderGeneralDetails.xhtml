@@ -32,7 +32,7 @@
 	<ui:param name="isMaintenanceFlow"  
 		value="#{qTDetailBB.managedBean.maintanceFlow}" />	
 	<ui:param name="isDemoDisabled"  
-		value="#{qTDetailBB.managedBean.demoDisabled}" />	
+		value="#{specMaintenanceBB.managedBean.demoDisabled}" />
 	<ui:param name="isDemoReqDisabled"  
 		value="#{qTDetailBB.managedBean.qt.demoRequired}" />
 	<ui:param name="isDemoEvalDisabled"  
@@ -433,7 +433,8 @@
 					<td>
 						<table>
 							<tr>
-								<td><c:choose>
+								<td>							
+								<c:choose>
 										<c:when	test="#{(!scQt.panel and !isReadOnly) and (!isDemoDisabled and !isMaintenanceFlow and !isDemoSpecialCase)}">
 											<p:outputPanel id="demoPop">
 												<ui:remove>#11299 Vinod added disableFieldsforCommitteeRevision</ui:remove>
