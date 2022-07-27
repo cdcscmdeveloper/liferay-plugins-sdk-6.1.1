@@ -2484,7 +2484,7 @@ public class SmApplicationBackingBean extends
 						}
 
 						if (personnelsRole != null && personnelsRole.size() <= 0) {
-							for (SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()) {
+							for (SmPersonnel personnel : this.getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels()) {
 								if (personnel.isEquityOwner() || personnel.isDirector()) {
 									SmPersonnel personnelSSM = (SmPersonnel) EntityHelper
 											.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
