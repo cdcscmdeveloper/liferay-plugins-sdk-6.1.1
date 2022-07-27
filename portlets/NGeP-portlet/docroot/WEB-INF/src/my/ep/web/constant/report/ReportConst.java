@@ -969,8 +969,14 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_REPORT_OUTPUT_FORMAT = "desformat";
 	//Enhancement 29418 - shaqimi
 	public static final String PARAM_CONTRACT_VER_ID = "PCONTRECTVERID";
-	//Enhancement 29418 - shaqimi
+	public static final String PARAM_FD_CONTRACT_VER_ID = "PFDCONTRECTVERID";
+	public static final String PARAM_AMENDMENT_ID = "PCONTAMENDID";
+	public static final String PARAM_PRV_AMENDMENT_ID = "PPRVCONTAMENDID";
 	
+
+	public static final String PARAM_PREV_VER_ID = "P_PREV_VER_ID";
+	public static final String PARAM_CURRENT_VER_ID = "P_CURRENT_VER_ID";
+	//Enhancement 29418 - shaqimi
 
 	// Report parameter key for s1 market research report
 	public static final String PARAM_BIZ_REG_NO = "PBIZREGNO";
