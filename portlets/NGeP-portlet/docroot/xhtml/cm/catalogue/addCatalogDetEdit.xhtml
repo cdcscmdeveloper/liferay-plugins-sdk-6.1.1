@@ -153,12 +153,13 @@
 
 
 								<div id="slides" style="width: 250px;">
+							   <!-- #30457 - Start [remove styleClass] -->
 									<ui:repeat var="cmImage"
 										value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-										<p:graphicImage styleClass="catImageStyle"
+										<p:graphicImage
 											value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" />
-
 									</ui:repeat>
+								<!-- #30457 - End -->
 								</div>
 
 
