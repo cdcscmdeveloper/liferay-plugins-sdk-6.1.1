@@ -11096,7 +11096,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				// localChecklist.addAll(finSpecs);
 				for (ScQtCheckList financialSpecs : finSpecs) {
 					for (ScQtCheckList financialList : financialCheckList) {
-						if (financialList.getTitle().equalsIgnoreCase(
+						if (financialList.getTitle().equals(	// Bug #33249@Syazani 27/07/2022
 								financialSpecs.getTitle())
 								&& ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 										.equalsIgnoreCase(financialSpecs
@@ -13024,7 +13024,7 @@ if (null != checklist && !checklist.isEmpty()) {
 								.getTitle()
 								.trim()
 								.replaceAll("\\s", "")
-								.equalsIgnoreCase(
+								.equals(	// Bug #33249@Syazani 27/07/2022
 										scQtCheckList.getTitle().trim()
 												.replaceAll("\\s", ""))) {
 							throw new EpException(MessageConst.ERROR_760207,
@@ -13049,7 +13049,7 @@ if (null != checklist && !checklist.isEmpty()) {
 										.getTitle()
 										.trim()
 										.replaceAll("\\s", "")
-										.equalsIgnoreCase(
+										.equals(	// Bug #33249@Syazani 27/07/2022
 												scQtCheckList.getTitle().trim()
 														.replaceAll("\\s", ""))) {
 							throw new EpException(MessageConst.ERROR_760207,
@@ -13488,7 +13488,7 @@ if (null != checklist && !checklist.isEmpty()) {
 								ScQtCheckList qtCheckList = technicalCheckLists
 										.get(i);
 
-								if (qtCheckList.getTitle().equalsIgnoreCase(
+								if (qtCheckList.getTitle().equals(	// Bug #33249@Syazani 27/07/2022
 										checkList.getTitle())) {
 									techSpec = true;
 									technicalCheckLists.remove(i);
@@ -13551,7 +13551,7 @@ if (null != checklist && !checklist.isEmpty()) {
 							for (int i = 0; i < finanicialCheckLists.size(); i++) {
 								ScQtCheckList qtCheckList = finanicialCheckLists
 										.get(i);
-								if (qtCheckList.getTitle().equalsIgnoreCase(
+								if (qtCheckList.getTitle().equals(	// Bug #33249@Syazani 27/07/2022
 										checkList.getTitle())) {
 									finspec = true;
 									finanicialCheckLists.remove(i);
@@ -13665,7 +13665,7 @@ if (null != checklist && !checklist.isEmpty()) {
 								.getTitle()
 								.trim()
 								.replaceAll("\\s", "")
-								.equalsIgnoreCase(
+								.equals(	// Bug #33249@Syazani 27/07/2022
 										scQtCheckList.getTitle().trim()
 												.replaceAll("\\s", ""))) {
 							throw new EpException(MessageConst.ERROR_760207,
@@ -13690,7 +13690,7 @@ if (null != checklist && !checklist.isEmpty()) {
 										.getTitle()
 										.trim()
 										.replaceAll("\\s", "")
-										.equalsIgnoreCase(
+										.equals(	// Bug #33249@Syazani 27/07/2022
 												scQtCheckList.getTitle().trim()
 														.replaceAll("\\s", ""))) {
 							throw new EpException(MessageConst.ERROR_760207,
@@ -13891,7 +13891,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())){
 				for(ScQtCheckList checklist: this.getManagedBean().getScQtCheckSt2techProposal()){
 					boolean edited = checklist.isEdited()==null ? false: checklist.isEdited();
-					if(finChecklistTitle.equalsIgnoreCase(checklist.getTitle().trim().replaceAll("\\s", "")) && edited){//1873 - note 97
+					if(finChecklistTitle.equals(checklist.getTitle().trim().replaceAll("\\s", "")) && edited){//1873 - note 97	// Bug #33249@Syazani 27/07/2022
 						checklist.setEdited(false);
 						updatedCheckLists.add(checklist);	
 						break;
