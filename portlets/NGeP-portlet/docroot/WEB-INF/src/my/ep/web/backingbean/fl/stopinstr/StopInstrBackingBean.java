@@ -164,6 +164,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 					for(PmUserOrg userOrg : userResDTO.getUserOrgList()) {
 						if(userOrg.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE && 
 							userOrg.getPmOrgProfile().getOrgProfileId().longValue()==flStopInstr.getFlRequest().getSmSupplier().getSupplierId().longValue()) {
+							reqDTO.setUserRole(getUserSupplierRole());//33615
 							reqDTO.setApprover(false);
 							break;
 						}
