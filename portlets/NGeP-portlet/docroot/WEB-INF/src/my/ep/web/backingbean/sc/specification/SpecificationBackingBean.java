@@ -16711,8 +16711,14 @@ if (null != checklist && !checklist.isEmpty()) {
 						.retrieveWorkFlowStatus(reqDTO);
 				if (CollectionUtils.isNotEmpty(workFlowResDTo
 						.getWorkFlowStatusList())) {
-					this.getManagedBean().setSpecMaintenanceWorkFlowStatus(
-							workFlowResDTo.getWorkFlowStatusList().get(0));
+					//1873 note 125 start
+					ScWorkFlowStatus specStatus = workFlowResDTo.getWorkFlowStatusList().get(0);
+					Long specStatusId = specStatus!=null ? specStatus.getPmStatus().getStatusId(): null;
+					this.getManagedBean().setSpecMaintenanceWorkFlowStatus(specStatus);
+					if(specStatusId!=null){
+						this.getManagedBean().setCurrentStatusId(specStatusId);
+					}
+					//1873 note 125 end
 				}
 			}
 
