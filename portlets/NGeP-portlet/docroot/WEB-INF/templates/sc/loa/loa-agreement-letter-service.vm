@@ -1562,7 +1562,7 @@ u {
 													<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"><strong>$specCombine.clItem</strong></td>
 												##26130 - zaim end
 													<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.uomName</td>
-													<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.clPriceTypeCode)</td>
+													<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.clPriceTypeCode</td>
 													<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.qty</td>
 													<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.qtyBerperingkat</td>	
 												#if ($specType == "T")
