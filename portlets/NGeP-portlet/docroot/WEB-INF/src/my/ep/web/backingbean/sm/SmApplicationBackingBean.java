@@ -7849,18 +7849,11 @@ public class SmApplicationBackingBean extends
 								&& ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(shareHolderBean
 										.getIdentificationType().getParameterCode()) &&
 										smpersonAddress.getSmAddress().getPmState() == null) {
-							defaultCountry = SmCommonUtil
-									.retrieveCountryByCountryCode(ParameterConst.COUNTRY_UNKNOWN_CODE);
-						} else if (smpersonAddress.getSmAddress().getPmCountry() != null &&
-								  !smpersonAddress.getSmAddress().getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) &&
-								   shareHolderBean.getIdentificationType() != null &&
-								   ParameterConst.IDENTIFICATION_TYPES_PASSPORT
-								   				 .equalsIgnoreCase(shareHolderBean.getIdentificationType().getParameterCode()) &&
-								   smpersonAddress.getSmAddress().getPmState() != null){
-							defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(smpersonAddress.getSmAddress().getPmCountry().getCountryCode());
+							defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(ParameterConst.COUNTRY_UNKNOWN_CODE);
+						} else if(smpersonAddress.getSmAddress().getPmCountry() != null && smpersonAddress.getSmAddress().getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ){
+							defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 						} else {
-							defaultCountry = SmCommonUtil
-									.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+							defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_UNKNOWN_CODE);
 						}
 						smpersonAddress.getSmAddress().setPmCountry(defaultCountry);
 						if (smpersonAddress.getSmAddress().getPmCountry() != null) {
@@ -7886,16 +7879,16 @@ public class SmApplicationBackingBean extends
 						SmAddress smAddressRes = getManagedBean().getShareHolderResdAddr().getSmAddress();
 						initializeSmAddressChilds(smpersonAddress.getSmAddress());
 						
-						if(ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(shareHolderBean.getIdentificationType().getParameterCode())){
-							if(smpersonAddress.getSmAddress().getPmCountry() != null){
+						if(smAddressRes.getPmCountry().getCountryCode().equals(SupplierManagementConst.COUNTRY_UNKNOWN_CODE) && smpersonAddress.getSmAddress().getPostcode()!=null){
 								smAddressRes.setPmCountry(smpersonAddress.getSmAddress().getPmCountry());
 								smAddressRes.setCountryId(smpersonAddress.getSmAddress().getPmCountry().getCountryId());
 							}
+						onChangeCountry(smAddressRes, SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
 							if(smpersonAddress.getSmAddress().getPmState() != null){
 								smAddressRes.setPmState(smpersonAddress.getSmAddress().getPmState());
 								smAddressRes.setStateId(smpersonAddress.getSmAddress().getPmState().getStateId());
 							}
-						}
+						onChangeState(smAddressRes, SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
 						if (smpersonAddress.getSmAddress().getPmDivision() != null) {
 							smAddressRes.setPmDivision(smpersonAddress.getSmAddress().getPmDivision());
 							smAddressRes.setDivisionId(smpersonAddress.getSmAddress().getPmDivision().getDivisionId());
@@ -16623,16 +16616,11 @@ public class SmApplicationBackingBean extends
 						smAddress.setCountrySsmNull(addr.getSmAddress().isCountrySsmNull());
 						
 						if(addr.getSmAddress().getPmCountry() != null){
-							PmCountry country = new PmCountry();
-							country.setCountryId(addr.getSmAddress().getPmCountry()
-									.getCountryId());
-							smAddress.setPmCountry(country);
-							smAddress.setCountryId(country.getCountryId());
+							smAddress.setPmCountry(addr.getSmAddress().getPmCountry());
+							smAddress.setCountryId(addr.getSmAddress().getPmCountry().getCountryId());
 						}else{
 							if(addr.getSmAddress().getPmState() != null){
 								PmCountry country = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-								country.setCountryId(country
-										.getCountryId());
 								smAddress.setPmCountry(country);
 								smAddress.setCountryId(country.getCountryId());
 							}
@@ -16643,7 +16631,12 @@ public class SmApplicationBackingBean extends
 							state.setStateId(addr.getSmAddress().getPmState().getStateId());
 						}
 						if(personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT)) {
+							if(smAddress.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
+								state.setStateId(addr.getSmAddress().getPmState().getStateId());
+							}
+							else{
 							state.setStateId(addr.getSmAddress().getPmDistrict().getPmState().getStateId());
+						}
 						}
 						
 						smAddress.setPmState(state);
