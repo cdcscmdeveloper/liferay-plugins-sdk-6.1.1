@@ -85,7 +85,7 @@
 							attachment="#{scQtEvaluationReport.scQtFinalizationReportAttachment}"
 							readonly="#{consolidationReportBackingBean.managedBean.readOnly}"
 							deleteFileUploadListener="consolidationReportBackingBean.deleteReportsUploadFile"
-							rowIndex="#{index}">
+							rowIndex="#{rowIndex}">
 							<f:setPropertyActionListener for="actionEvent"
 								value="#{scQtEvaluationReport}"
 								target="#{consolidationReportBackingBean.managedBean.selectedBriefingReport}" />
