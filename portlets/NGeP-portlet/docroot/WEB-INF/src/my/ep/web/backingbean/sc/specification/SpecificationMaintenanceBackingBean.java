@@ -13,6 +13,7 @@ package my.ep.web.backingbean.sc.specification;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -492,12 +493,13 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
  /* boolean isStatusPublish=  isQTStatusPublished(scQt
 			.getQtStatus().getStatusId());*/
      log.debug("status Publish");
+     	//1873 note 125 start
+		ScWorkFlowStatus workFlowStatus = retrieveStatusByTypeAndId(
+				ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,scQt.getQtId());
+		this.getManagedBean().setSpecMaintenanceWorkFlowStatus(workFlowStatus);
+		//1873 note 125 end
 		if (specCommitteeSecreatry) {
 			if (isEditable) {
-				
-				ScWorkFlowStatus workFlowStatus = retrieveStatusByTypeAndId(
-						ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,scQt.getQtId());
-				this.getManagedBean().setSpecMaintenanceWorkFlowStatus(workFlowStatus);
 				if (null == workFlowStatus
 						|| QTStatusConst.SE_PENDING_SUBMISSION
 								.equals(workFlowStatus.getPmStatus().getStatusId())
@@ -706,13 +708,21 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 	}
 }
 
-public boolean renderIcon(Long currentStatusId) {
-
-	boolean isRenderIcon = false;
-	if (currentStatusId != null) {
-		isRenderIcon = checkStatus(currentStatusId);
-	}
-	return isRenderIcon;
+//1873 note 125 start
+public boolean renderIcon(ScQt qt) {
+	Long qtStatusId = qt.getQtStatus()!=null ? qt.getQtStatus().getStatusId(): 0L;
+	Long specMaintenanceStatusId = qt.getSpecMaintenanceStatus()!=null ? qt.getSpecMaintenanceStatus().getStatusId(): 0L;
+	boolean isRenderIcon = false; 
+	if (qtStatusId != null) {
+		isRenderIcon = checkStatus(qtStatusId);
+	} 
+	
+	return isRenderIcon 
+			&& !Arrays.asList(new Long[] {
+					QTStatusConst.SE_PENDING_ENDORSMENT, 
+					QTStatusConst.SE_PENDING_SIGNOFF, 
+					QTStatusConst.SE_PENDING_REVISION}).contains(specMaintenanceStatusId);
+	//1873 note 125 end
 }
 
 private boolean checkStatus(Long statusId){
