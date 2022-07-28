@@ -9705,13 +9705,16 @@ public class SpecificationBackingBean extends
 			financialCheckList = new ArrayList<ScQtCheckList>();
 		}
 		for (int i = 0; i < financialCheckList.size(); i++) {
-			if (checkList.getTitle().equalsIgnoreCase(
+			// Bug #33249@Syazani 28/07/2022 -- Start
+			if (checkList.getTitle().equals(
 					financialCheckList.get(i).getTitle())) {
-				ScQtCheckList localCheckList = financialCheckList.get(i);
+//				ScQtCheckList localCheckList = financialCheckList.get(i);
 				// technicalCheckList.setDeleted(true);
 				// toBeRemoveCheckLists.add(technicalCheckList);
-				financialCheckList.remove(localCheckList);
-				financialCheckList.add(checkList);
+//				financialCheckList.remove(localCheckList);
+//				financialCheckList.add(checkList);
+				financialCheckList.set(i, checkList);
+				// Bug #33249@Syazani 28/07/2022 -- End
 				//#25138 - set score weightage for dettype 217 - start
 				financialCheckList.get(i).getQtScoreWeightage().setScore(checkList
 						.getQtScoreWeightage().getScore());
