@@ -1650,6 +1650,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 *            (int index(mandatory))
 	 * @return String(addCatalogItem)
 	 */
+	@SuppressWarnings("deprecation")
 	public String navigateToApprovalItemDet(int i) {
 
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
@@ -1761,6 +1762,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 *            int index(mandatory)
 	 * @return String(editCatalogItem)
 	 */
+	@SuppressWarnings("deprecation")
 	public String navigateToRejectedItemDet(int i) {
 
 		int index = i % this.getManagedBean().getRejectedTabPageSize();
@@ -5805,16 +5807,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					// 1 year period between start and end date
 					Calendar cal = Calendar.getInstance();
 					cal.setTime(catalog.getCmStandardPricing().getStartDate());
-					cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
-	
+					//#29961 - Start 27/7/2022
+					cal.add(Calendar.YEAR, minYearVal);
 					if (cal.getTime().compareTo(catalog.getCmStandardPricing().getEndDate()) < 0) {
 						FacesContext.getCurrentInstance().addMessage(
 								null,
 								new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-										MessageConst.ERROR_715012, MessageUtils.BUNDLE_COMMON_MESSAGES,
+										MessageConst.ERROR_775179, new String[] { "" + minYearVal},
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 						return naviToMaintenancePage(false);
-					}
+					} //#29961 - End 27/7/2022
 				}//#30457-end
 
 				// same item with existed one cannot overlap the date
@@ -12172,6 +12175,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		//#30457 - Start
 		Double minPriceVal =  getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM);
 		//#30457 - End
+		//#29961 - Start
+		Integer minYearVal = getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY);
+		//#29961 - End
 		
 		if (this.getManagedBean().getCloneCmSupplierItemLs().size() < 1) {
 			throw new EpException(MessageConst.ERROR_715013);
@@ -12232,15 +12238,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			// 1 year period between start and end date
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(catalog.getCmStandardPricing().getStartDate());
-			cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
-
+			//#29961 - Start
+			cal.add(Calendar.YEAR, minYearVal);
 			if (cal.getTime().compareTo(catalog.getCmStandardPricing().getEndDate()) < 0) {
-				throw new EpException(MessageConst.ERROR_715012);
-			}
+				throw new EpException(MessageConst.ERROR_775179, new String[] { ""
+						+ minYearVal});
+			} //#29961 - End
 		}
 		RequestContext.getCurrentInstance().execute("updateDeclareDialog.show()");
 	}
-	
+
 	public void enableBtn(boolean tick){
 		this.getManagedBean().setYesEnable(tick);
 	}
