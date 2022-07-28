@@ -9657,13 +9657,16 @@ public class SpecificationBackingBean extends
 			technicalCheckList = new ArrayList<ScQtCheckList>();
 		}
 		for (int i = 0; i < technicalCheckList.size(); i++) {
-			if (checkList.getTitle().equalsIgnoreCase(
+			// Bug #33249@Syazani 28/07/2022 -- Start
+			if (checkList.getTitle().equals(
 					technicalCheckList.get(i).getTitle())) {
-				ScQtCheckList localCheckList = technicalCheckList.get(i);
+//				ScQtCheckList localCheckList = technicalCheckList.get(i);
 				// technicalCheckList.setDeleted(true);
 				// toBeRemoveCheckLists.add(technicalCheckList);
-				technicalCheckList.remove(localCheckList);
-				technicalCheckList.add(checkList);
+//				technicalCheckList.remove(localCheckList);
+//				technicalCheckList.add(checkList);
+				technicalCheckList.set(i, checkList);
+				// Bug #33249@Syazani 28/07/2022 -- End
 				break;
 			}
 		}
