@@ -710,8 +710,8 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 
 //1873 note 125 start
 public boolean renderIcon(ScQt qt) {
-	Long qtStatusId = qt.getQtStatus()!=null ? qt.getQtStatus().getStatusId(): 0L;
-	Long specMaintenanceStatusId = qt.getSpecMaintenanceStatus()!=null ? qt.getSpecMaintenanceStatus().getStatusId(): 0L;
+	Long qtStatusId = (qt!=null && qt.getQtStatus()!=null) ? qt.getQtStatus().getStatusId(): 0L;
+	Long specMaintenanceStatusId = (qt!=null && qt.getSpecMaintenanceStatus()!=null) ? qt.getSpecMaintenanceStatus().getStatusId(): 0L;
 	boolean isRenderIcon = false; 
 	if (qtStatusId != null) {
 		isRenderIcon = checkStatus(qtStatusId);
