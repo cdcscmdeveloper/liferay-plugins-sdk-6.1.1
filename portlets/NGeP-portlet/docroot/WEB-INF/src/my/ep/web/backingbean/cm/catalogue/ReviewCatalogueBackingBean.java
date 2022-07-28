@@ -16,48 +16,36 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import my.ep.web.util.cm.helper.CmApplicationUtil;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
-
 
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
-import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.cm.CmConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.dto.sm.gst.SupplierGstReqDTO;
-import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.exception.EpException;
+import my.ep.persistence.entity.cm.catalog.CmImage;
 import my.ep.persistence.entity.cm.catalog.CmItemRejectReason;
-import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -65,9 +53,16 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.cm.catalogue.ReviewCatalogueManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
-import my.ep.exception.EpException;
+
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 
 
 /**
@@ -85,8 +80,7 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** The status filter bean. */
-	private SearchFilterBean statusFilterBean = new SearchFilterBean(
-			SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean statusFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 
 	/** The log. */
 	private static Logger log = Logger.getLogger(ReviewCatalogueBackingBean.class);
@@ -110,8 +104,7 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 	 * Refresh catalogue list.
 	 */
 	public void refreshCatalogueList() {
-		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
 		System.out.println("******************refreshCatalogueList ********************");
 
@@ -124,6 +117,7 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 	 * 
 	 * @return string(addCatalogItem)
 	 */
+	@SuppressWarnings("deprecation")
 	public String navigateToCatalogDet() {
 
 		System.out.println("************navigateToCatalogDet*************");
@@ -227,6 +221,18 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 		// [SIR#24977] Khirul modified on 2019-05-06 - End
 
 		bb.getManagedBean().getSelectedMaintainItem().setReviewRequired(false);
+		
+		//#30457 - Start
+		if (bb.getManagedBean().getSelectedMaintainItem().getCmImages() != null
+				&& bb.getManagedBean().getSelectedMaintainItem().getCmImages().size() > 0) {
+			for (int j = 0; j < bb.getManagedBean().getSelectedMaintainItem().getCmImages().size(); j++) {
+				CmImage image = bb.getManagedBean().getSelectedMaintainItem().getCmImages().get(j);
+				if (!image.isImageReviewed()) {
+					bb.getManagedBean().getSelectedMaintainItem().getCmImages().get(j).setImageReviewed(true);
+				}
+			}
+		}
+		//#30457 - End
 
 		reqDTO.getSaveSupplierItems().add(
 				bb.getManagedBean().getSelectedMaintainItem());		
@@ -259,7 +265,6 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 			log.info("Invoking updateSupplierItem...");
 			catalogueSO.updateSupplierItem(reqDTO);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			System.out.println("error:"+e.getMessage());
 			System.out.println("error e:"+e);
 			//e.printStackTrace();
@@ -365,7 +370,6 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 			catalogueSO.updateSupplierItem(reqDTO);
 			bb.getManagedBean().setRejectReason(null);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally{
 			catalogueSO = null;
@@ -428,6 +432,7 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	public String navigateToCatalogDetfromDashboard() {
 
 		System.out.println("************navigateToCatalogDet*************");
