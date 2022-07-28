@@ -10,10 +10,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 		
 	<!-- #14118 Allow multiple image deletion in delete image screen - Start -->
-	<!-- #14118, #30457 get rowKey using supplierItemId [27/07/2022] -->
+	<!-- #14118, #30457 change rowKey to cmImage Back -->
 	<p:dataTable id="deleteImageId" var="cmImage" rowIndexVar="rowIndex" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}"
-		selection="#{catalogueBackingBean.managedBean.selectedImage.cmImages}" rowSelectMode="checkbox" rowKey="#{cmImage.cmSupplierItem.supplierItemId}" >
+		selection="#{catalogueBackingBean.managedBean.selectedImage.cmImages}" rowSelectMode="checkbox" rowKey="#{cmImage}" >
 
 		<p:ajax event="rowSelectCheckbox" listener="#{catalogueBackingBean.rowSelectImage}" update=":form:btnDelete"/>
         <p:ajax event="rowUnselectCheckbox" listener="#{catalogueBackingBean.rowSelectImage}" update=":form:btnDelete"/>
