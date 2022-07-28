@@ -42,8 +42,9 @@
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
 			<p:growl for="growlMssg" showDetail="true"/>
-			<p:outputPanel id="imageAndBasicIdPopup" layout="block">			
-				<p:panel id="imageUploadId" header="#{lbl['lbl.pm.profiles.userdetails.upload.image']}" toggleable="true">
+			<p:outputPanel id="imageAndBasicIdPopup" layout="block">
+			<!-- #30457 change label -->			
+				<p:panel id="imageUploadId" header="#{lbl['lbl.cm.image.delpopup.upload.image']}" toggleable="true">
 					<table class="noBorder" width="100%">
 						<tr class="noBorder">
 							<td class="noBorder" width="80%">
