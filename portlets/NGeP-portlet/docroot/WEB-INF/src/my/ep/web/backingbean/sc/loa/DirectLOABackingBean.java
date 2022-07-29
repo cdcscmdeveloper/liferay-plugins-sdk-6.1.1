@@ -4974,28 +4974,36 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
 		VelocityContext context = new VelocityContext();
-		String procurementMode = null;
-		if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scLoa
-				.getProcurementMode().getParameterCode())) {
-			procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
-		} else {
-			procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
-		}
-		String title = procurementMode != null ? procurementMode + " " + 
-				scQt.getQtTitle().toUpperCase() : scQt.getQtTitle().toUpperCase();
+		//#32738 & #32739 - start
+		String procurementMode = "";
+
+//		if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scLoa
+//				.getProcurementMode().getParameterCode())) {
+//			procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
+//		} else {
+//			procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
+//		}
+		
+		String title = scQt.getQtTitle().toUpperCase();
+		//#32738 & #32739 - end
+
 		if (title == null) {
 			title = "";
 		}
 		title = title.trim();
-		//replace all special characters
-		//title = title.replaceAll("\\W", ""); 
-		//title=title.replaceAll("&", "&#38;");
+
+		int countTitle = title.length(); //#32738 & #32739 spacing
+
 		title = title.replaceAll("<", "&#60;");
 		title = title.replaceAll(">", "&#62;");
 		title = title.replaceAll("\r\n", "<br />");
-		context.put("title", title);
 
-		String userName = "&#60;Nama Pembekal&#62;";
+		// #32738, #32739 -start-
+		context.put("title", title + "<br />");
+		context.put("countTitle", countTitle);
+
+		String userName = "&#60;Nama Wakil Syarikat&#62;";
+		// #32738 & #32739 spacing -end-
 		String icNo = "&#60;No. Kad Pengenalan&#62;";
 		if (pmUser != null) {
 			userName = pmUser.getUserName();
