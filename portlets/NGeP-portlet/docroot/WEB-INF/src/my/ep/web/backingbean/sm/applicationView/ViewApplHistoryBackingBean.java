@@ -1362,7 +1362,13 @@ public class ViewApplHistoryBackingBean extends
 					button = false;
 				}else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED)){
 					button = false;
-				}
+				}//#32002 - start
+				else if((smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION)
+						|| smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION))
+						 && checkStatusMofNoBySupplierId(smAppl)== false){
+					button = false;
+				}//#32002 - end
+				
 			}
 		}
 		return button;
@@ -1439,6 +1445,28 @@ public class ViewApplHistoryBackingBean extends
 		return null;
 	}
 	//11641 - END
+	
+	//#32002 - start
+	public Boolean checkStatusMofNoBySupplierId(SmAppl smAppl){
+		
+		SmSupplier supplier = smAppl.getSmSupplier();
+		if (supplier.getSupplierId() != null
+				&& smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_RENEW_MOF)) {
+			SmMofAccount resultList = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(
+					supplier.getSupplierId());
+			if (resultList != null) {
+				if (resultList.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)
+						&& supplier.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
+					return false;
+				}
+				if (resultList.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)
+						&& supplier.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}//#32002 - end
 	
 	
 }
