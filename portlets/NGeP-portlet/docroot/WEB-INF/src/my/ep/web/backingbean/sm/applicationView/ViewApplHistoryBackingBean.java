@@ -66,6 +66,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
