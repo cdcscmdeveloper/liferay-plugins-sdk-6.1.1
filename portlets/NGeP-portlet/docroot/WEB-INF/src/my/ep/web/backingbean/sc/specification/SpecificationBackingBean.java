@@ -13860,7 +13860,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())){
 				for(ScQtCheckList checklist: this.getManagedBean().getScQtCheckSt2techProposal()){
 					boolean edited = checklist.isEdited()==null ? false: checklist.isEdited();
-					if(finChecklistTitle.equalsIgnoreCase(checklist.getTitle().trim().replaceAll("\\s", "")) && edited){//1873 - note 97
+					if(finChecklistTitle.equals(checklist.getTitle().trim().replaceAll("\\s", "")) && edited){//1873 - note 97	// Bug #33249@Syazani 27/07/2022
 						checklist.setEdited(false);
 						updatedCheckLists.add(checklist);	
 						break;
@@ -16628,8 +16628,14 @@ if (null != checklist && !checklist.isEmpty()) {
 						.retrieveWorkFlowStatus(reqDTO);
 				if (CollectionUtils.isNotEmpty(workFlowResDTo
 						.getWorkFlowStatusList())) {
-					this.getManagedBean().setSpecMaintenanceWorkFlowStatus(
-							workFlowResDTo.getWorkFlowStatusList().get(0));
+					//1873 note 125 start
+					ScWorkFlowStatus specStatus = workFlowResDTo.getWorkFlowStatusList().get(0);
+					Long specStatusId = specStatus!=null ? specStatus.getPmStatus().getStatusId(): null;
+					this.getManagedBean().setSpecMaintenanceWorkFlowStatus(specStatus);
+					if(specStatusId!=null){
+						this.getManagedBean().setCurrentStatusId(specStatusId);
+					}
+					//1873 note 125 end
 				}
 			}
 
