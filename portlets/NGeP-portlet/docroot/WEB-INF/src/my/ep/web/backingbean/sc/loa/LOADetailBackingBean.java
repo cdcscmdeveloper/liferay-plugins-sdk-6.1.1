@@ -2273,17 +2273,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 				if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt
 						.getProcurementMode().getParameterCode())) {
-					procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
+					procurementMode = "";//#32739 & #32738
 				} else {
-					procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
+					procurementMode = "";//#32739 & #32738
 				}
 				if(scQt.getQtNo() != null){
 					qtNo = scQt.getQtNo();
 				}
 			}
 		}
-		String title = procurementMode != "" ? procurementMode + " " + 
-				scLoiLoa.getTitle().toUpperCase() : scLoiLoa.getTitle().toUpperCase();
+		String title = procurementMode != "" ? procurementMode + "\r\n" + 
+				scLoiLoa.getTitle().toUpperCase() : scLoiLoa.getTitle().toUpperCase();//#32739 & #32738
 				if (title == null) {
 					title = "";
 				}
@@ -2294,12 +2294,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 				//#13245 don't escape
 				//title=title.replaceAll("&", "&#38;");
+				int countTitle = title.length();//#32738 & #32739 spacing
 				title = title.replaceAll("<", "&#60;");
 				title = title.replaceAll(">", "&#62;");
 				title = title.replaceAll("\r\n", "<br />");
+				//#32739 & #32738 - start
+				if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
+						.getDocType())) {
+					context.put("title", title + "<br />");
+				} else if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
+						.getDocType())) {
 				context.put("title", title);
+				}
+				////#32739 & #32738 - end
+				context.put("countTitle", countTitle);//#32738 & #32739 spacing
 
-				String userName = "&#60;Nama Pembekal&#62;";
+				String userName = "&#60;Nama Wakil Syarikat&#62;";//#32738 & #32739
 				String icNo = "&#60;No. Kad Pengenalan&#62;";
 				if (pmUser != null) {
 					userName = pmUser.getUserName();
