@@ -5734,6 +5734,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt().getQtStatus()
 				.getStatusId() : null;
 		boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
+		String taskName = this.getManagedBean().getTaskName()==null ? "": this.getManagedBean().getTaskName();//#28784
 		if (demoRequired) {
 			this.getManagedBean().getQt().setDemoRequired(true);
 		} else {
@@ -5779,7 +5780,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					&& ((status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
 							|| status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) || status
 								.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)))
-					&& this.getManagedBean().isMaintanceFlow() && demoRequired) {
+					&& this.getManagedBean().isMaintanceFlow() && demoRequired && !taskName.equalsIgnoreCase(SCProcessNameConst.ENDORSE_SCORING) &&
+					!taskName.equalsIgnoreCase(SCProcessNameConst.SIGNOFF_SCORING)) {//#28784
 				this.getManagedBean().setDemoEvalDisabled(false);
 				this.getManagedBean().setDemoSpecialCase(true);
 				this.getManagedBean().setDemoDisabled(true);
