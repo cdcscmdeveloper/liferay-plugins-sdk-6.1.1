@@ -383,7 +383,9 @@
 				</p:column> 
 				<p:column headerText="#{lbl['lbl.fl.yep.category']}" style="white-space:normal;" >
 					<!-- #28373 added by vinod start -->
-					<h:outputText value="#{(flYep.isAp58 eq 1) ? 'Ap58a' : ''}" rendered="#{flYep.isAp58 eq 1}"/>
+					<!-- #33688 update wording ap58 start -->
+					<h:outputText value="#{(flYep.isAp58 eq 1) ? 'AP58(a) ' : ''}" rendered="#{flYep.isAp58 eq 1}"/>
+					<!-- #33688 update wording ap58 end -->
 					<h:outputText value="#{lbl['lbl.fl.yep.carryFow']}" rendered="#{flYep.carryForward}"/>
 					<!-- #28373 added by vinod End -->
 				</p:column> 
