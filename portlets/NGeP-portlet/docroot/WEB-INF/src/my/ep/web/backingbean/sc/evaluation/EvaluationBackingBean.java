@@ -2496,6 +2496,9 @@ public void saveComplianceSample() {
 					//supplier qualified by package
 					//if there is supplier qualified to evaluate by package --> enable tab package evaluation
 					this.getManagedBean().setNoSupplierPackageExist(false);
+					// #21695
+					// no need checking if there is supplier pass by package, but not pass by item. its consider have supplier
+					resDTO.setCheckQualifiedSuppliers(false);
 				}
 				
 			}else if(this.getManagedBean().getScQt().isZonal() && this.getManagedBean().getScQt().isPartial()){
@@ -2509,6 +2512,9 @@ public void saveComplianceSample() {
 					//supplier qualified by package
 					//if there is supplier qualified to evaluate by package --> enable tab package evaluation
 					this.getManagedBean().setNoSupplierPackageExist(false);
+					// #21695
+					// no need checking if there is supplier pass by package, but not pass by item. its consider have supplier
+					resDTO.setCheckQualifiedSuppliers(false);
 				}
 				
 			}
