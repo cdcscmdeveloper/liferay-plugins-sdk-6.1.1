@@ -275,7 +275,8 @@
 		<!-- #14118 - Start -->
 		<p:dialog id="imageDialog" widgetVar="imageDialog" modal="true"
 			width="700px" resizable="false" styleClass="pop_up_top"
-			onShow="uploadImageListener(importDevicesWidget)">
+			onShow="uploadImageListener(importDevicesWidget)"
+			onHide="importDevicesWidget.buttonBar.find('input[type=file]').get(0).disabled=false;">
 			
 			<!-- #30457 - fix view start-->
 			<table class="noBorder" width="700px">
@@ -533,14 +534,14 @@
 						<h:outputText value="#{lbl['lbl.cm.error.error6']}"></h:outputText>
 					</p:column>
 				</p:row>
-				<!-- #26691 - remove error no 7 -->
+				<!-- #29961 - remove error no 7 -->
 				<!-- <p:row rendered="#{catalogueBackingBean.managedBean.error7}">
 
 					<p:column style="border:none !important;">
 						<h:outputText value="#{lbl['lbl.cm.error.error7']}"></h:outputText>
 					</p:column>
 				</p:row> -->
-				<!-- #26691 - remove error no 7 -->
+				<!-- #29961 - remove error no 7 -->
 				<p:row rendered="#{catalogueBackingBean.managedBean.error8}">
 
 					<p:column style="border:none !important;">
