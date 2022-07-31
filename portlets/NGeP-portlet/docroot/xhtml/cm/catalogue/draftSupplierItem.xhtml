@@ -139,12 +139,15 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.cm.price']}" />
 				</f:facet>
+				<!-- #30457 - Start -->
 				<p:inputText id="stdPrice" value="#{selectedSuppCat.cmStandardPricing.price}"
 					maxlength="18" label="#{lbl['lbl.cm.price']}" size="10"
 					style="text-align:right">	
-					<f:converter converterId="bigDecimalConverter" />
+					<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					<p:ajax event="blur" update="stdPrice" />
 				</p:inputText>
+				<!-- #30457 - End -->
 				<!-- #569-start -->
 				<p:graphicImage
 					rendered="#{selectedSuppCat.selected and selectedSuppCat.cmStandardPricing.price==null
@@ -186,18 +189,11 @@
 					title="#{lbl['lbl.cm.suptemp.upload.image.tooltip']}" /> 
 				</p:commandLink>
 				<!-- #30457 end -->
-				<!-- 569 Start - 17/07/2022 --> 
+				<!-- 569 Start - 29/07/2022 --> 
 				<p:graphicImage
-				    rendered="#{(catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
-				    	and fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) eq '0')
-				    	or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
-				    	and catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc==null)}"
-				    value="#{(catalogueBackingBean.managedBean.publish and selectedSuppCat.selected
-						and fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) eq '0') 
-				    	or (catalogueBackingBean.managedBean.publish and selectedSuppCat.selected 
-				    	and catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc==null) ? '/css/images/design/ico-termination.png' : ''}"
-					update="@form" />
-				<!-- 569 End - 17/07/2022 --> 
+				    rendered="#{selectedSuppCat.selected and selectedSuppCat.indicator}"
+				    value="#{selectedSuppCat.indicator ? '/css/images/design/ico-termination.png' : ''}" update="@form" />
+				<!-- 569 End - 29/07/2022 --> 
 			</p:column>
 			<!-- START SSM INTEGRATION #27089 -->
 			<p:column width="2%">
