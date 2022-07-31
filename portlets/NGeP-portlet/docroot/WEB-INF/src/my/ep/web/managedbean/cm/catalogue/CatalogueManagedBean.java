@@ -572,10 +572,12 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private boolean yesEnable=false; //#30457
 	//#30457 - end
 	
-	//#30457 - start
+	//#30457 - start 1/08/2022
 	private List<CmImage> deleteImage;
 	private String itemStatus;
-	//#30457 - end
+	private boolean catDPScreen = false;
+	private boolean addPromotion = false;
+	//#30457 - end 1/08/2022
 
 	private class ExpiredSearchPagingDataModel extends
 			PagingDataModel<CmSupplierItem> {
@@ -1513,7 +1515,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 								}
 							} else {
 								log.info("[#26282] - Disciplinary action does not imposed on supplier");
-							}														
+							}
 						}
 					}
 				//[#26282] - end	
@@ -3336,7 +3338,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * Gets the pricing tab index.
 	 * 
 	 * @return the pricing tab index
 	 */
@@ -4531,4 +4532,22 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.itemStatus = itemStatus;
 	}
 	// #30457 - end
+
+	// #30457 - Start
+	public boolean isCatDPScreen() {
+		return catDPScreen;
+	}
+
+	public void setCatDPScreen(boolean catDPScreen) {
+		this.catDPScreen = catDPScreen;
+	}
+	
+	public boolean isAddPromotion() {
+		return addPromotion;
+	}
+
+	public void setAddPromotion(boolean addPromotion) {
+		this.addPromotion = addPromotion;
+	}
+	// #30457 - End
 }
