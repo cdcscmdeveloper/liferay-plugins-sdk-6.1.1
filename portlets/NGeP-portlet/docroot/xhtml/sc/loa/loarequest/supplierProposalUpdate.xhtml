@@ -92,14 +92,14 @@
 							</p:outputLabel></font></th>
 					<th
 						style="width: 40%; border: 1px solid #e8e8e8; border-collapse: collapse;"><font
-						color="white"><p:outputLabel id="newSupplierOffer"
+						color="white"><p:outputLabel value="*" styleClass="mandatory" /><p:outputLabel id="newSupplierOffer"
 								value="#{lbl['lbl.sc.new.supplier.offer']}"
 								style="font-size: 12px;font-weight: bold;font-family:Arial;display: block; width:100%; text-align:center;color: white !important;">
 								<ac:iconTooltip
 									value="#{lbl['lbl.sc.new.supplier.offer.specification.tooltip']}" />
 								<p:message id="newSupplierOfferMsg" for="newSupplierOffer"
 									display="icon" />
-							</p:outputLabel></font><p:outputLabel value="* " styleClass="mandatory" /></th>
+							</p:outputLabel></font></th>
 				</tr>
 
 				<c:forEach id="itemSpecDescTable"
