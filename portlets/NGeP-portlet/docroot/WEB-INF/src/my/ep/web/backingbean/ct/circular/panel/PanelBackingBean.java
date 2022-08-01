@@ -404,17 +404,24 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 */
 	public String backAction() {
 		if(getManagedBean().isChkCancelPage()) {
-			//#33533 start		
+			//#33533 /#25685 start		
 			getManagedBean().setAction(null);
 			getManagedBean().setUpdateAction(true);
 			getManagedBean().setViewContract(false); //set false view contract because its not for view
 			getManagedBean().setTaskId(getManagedBean().getTaskIdFromTaskList()); //set back the task id from tasklist
-			getManagedBean().setOutComes(getManagedBean().getOutComesFromTaskList()); //set back the button from the tasklist
-			
+			getManagedBean().setOutComes(getManagedBean().getOutComesFromTaskList()); //set back the button from the tasklist	
 			getManagedBean().setChkCancelPage(false); //set false from cancel page
+			
+			if(getManagedBean().getTaskIdFromTaskList()==null){
+				initializeRemarks();
+				ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+				ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract()); 
+				ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+			}
+			
 			return getManagedBean().getBackToPreviousPage(); //return the previous page (cancel circular page)
 			//return "cancelCircularBase.xhtml?faces-redirect=true";
-			//#33533 end
+			//#33533 /#25685 end
 		} else if(getManagedBean().isFromCircularNotice()) {
 			return "../portal/circularListing.xhtml?faces-redirect=true";
 		} else if(getManagedBean().isDifferentModule()){
