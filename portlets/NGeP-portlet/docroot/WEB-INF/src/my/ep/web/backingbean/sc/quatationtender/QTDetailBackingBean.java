@@ -4348,11 +4348,25 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										} Bug #25077 - End */ 
 										//bug #30435 - end
 										
+										//#25077 - Start
+										if(this.getManagedBean().isFlagFileAttahmentDeleted()){
+										//#25077 - End
+											
 										if (null != getManagedBean().getScQtApprovalReqAttachement()) {
 											approvalRequest.get(i)
 												.setApprovalRequestAttachement(
 														getManagedBean().getScQtApprovalReqAttachement());
 										}
+										
+									    //#25077 - Start
+											else{
+												approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachement());
+											}
+										}else{
+											if(null != getManagedBean().getScQtApprovalReqAttachement()){
+									    		approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachement());
+									    	}
+										}//#25077 - End
 										
 										if (null != getManagedBean().getScQtAppRequestRemark()) {
 											approvalRemark
@@ -4363,6 +4377,21 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										}
 										//bug #30435 - end
 									} else {
+										
+										//#25077 - Start
+										if(this.getManagedBean().isFlagFileAttahmentDeleted()){
+											if (null == getManagedBean().getScQtApprovalReqAttachement()) {
+												approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachement());
+											}else{
+												approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachement());
+											}
+									    }else{
+									    	if(null != getManagedBean().getScQtApprovalReqAttachement()){
+									    		approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachement());
+									    	}
+									    }
+										//#25077 - End
+										
 										if (null == approvalRequest.get(i)
 												.getAppRequestRemark()) {
 											ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
