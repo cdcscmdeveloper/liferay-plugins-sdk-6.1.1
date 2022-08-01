@@ -77,19 +77,32 @@
 				<tr bgcolor="#2c576e"
 					style="border: 1px solid #e8e8e8; border-collapse: collapse;">
 					<th
-						style="width: 30%; border: 1px solid #e8e8e8; border-collapse: collapse;"><font
-						color="white"><p:outputLabel
-								value="#{lbl['lbl.sc.specification']}"
-								style="font-size: 12px;font-weight: bold;font-family:Arial;display: block; width:100%; text-align:center;color: white !important;"></p:outputLabel></font></th>
+						style="width: 30%; border: 1px solid #e8e8e8; border-collapse: collapse;">
+						<table style="width: 100%;">
+							<tr>
+								<td>
+									<div>
+										<p style="font-size: 12px; font-weight: bold; font-family: Arial; color: white; text-align: center;">#{lbl['lbl.sc.specification']}</p>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</th>
 					<th
-						style="width: 30%; border: 1px solid #e8e8e8; border-collapse: collapse;"><font
-						color="white"><p:outputLabel id="supplierOffer"
-								value="#{lbl['lbl.sc.supplier.offer']}"
-								style="font-size: 12px;font-weight: bold;font-family:Arial;display: block; width:100%; text-align:center;color: white !important;">
-								<ac:iconTooltip value="#{lbl['lbl.sc.supplier.offer.tooltip']}" />
-								<p:message id="supplierOfferMsg" for="supplierOffer"
-									display="icon" />
-							</p:outputLabel></font></th>
+						style="width: 30%; border: 1px solid #e8e8e8; border-collapse: collapse;">
+						<table	style="width: 100%;">
+							<tr>
+								<td>
+									<div>
+										<p id="supplierOffer"
+											style="font-size: 12px; font-weight: bold; font-family: Arial; color: white; text-align: center;">
+											#{lbl['lbl.sc.supplier.offer']}<ac:iconTooltip 
+											value="#{lbl['lbl.sc.supplier.offer.tooltip']}" /></p>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</th>
 					<th
 						style="width: 40%; border: 1px solid #e8e8e8; border-collapse: collapse;">
 						<table style="width: 100%;">
