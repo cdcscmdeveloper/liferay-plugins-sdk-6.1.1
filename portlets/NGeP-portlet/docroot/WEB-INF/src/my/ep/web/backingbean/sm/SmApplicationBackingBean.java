@@ -503,8 +503,37 @@ public class SmApplicationBackingBean extends
 							resubmitErrorKey = "lbl.sm.approvedApplicationPendingFinalPay";
 							this.getManagedBean().setValidResubmit(false);
 						}
+					}					
+					//#32002-start
+					if (this.getManagedBean().isValidResubmit()) {
+						sb = new StringBuilder();
+						sb.append("(")
+								.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)
+								.append(",")
+								.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)
+								.append(")");
+						reqDTO.setWorkflowStatus(sb.toString());;
+						try {
+						SmMofAccount resultList = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(supplierProfile.getSupplierId());
+							if (reqDTO.getAppType().equals("R")) {
+								if (resultList != null) {
+									if ((supplierProfile.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED && resultList
+											.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED)) {
+										resubmitErrorKey = "lbl.sm.resubmitExpired.mofExpired";
+										this.getManagedBean().setValidResubmit(false);
+									}
+									if ((supplierProfile.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE && resultList
+											.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED)) {
+										resubmitErrorKey = "lbl.sm.resubmitExpired.mofExpired";
+										this.getManagedBean().setValidResubmit(false);
+									}
+								}
+							}
+						} catch (EpException ex) {
+							log.info(">>>>>>>>>>ERROR RENEW RESUBMIT APPLICATION:"+ ex.getMessage() + "<<<<<<<<<<<");
+						}
 					}
-
+					//#32002-end					
 					if (this.getManagedBean().isValidResubmit()
 							&& rejAppl.getCreatedDate().compareTo(
 									supplierProfile.getSmAppl()
@@ -1091,6 +1120,7 @@ public class SmApplicationBackingBean extends
 					}
 				}							
 				//26238 - end
+				
 				String currSuppType = currSupp.getSmAppl().getSupplierType();
 
 				if(StringUtils.isBlank(currSuppType) || currSuppType.equals("B")){
