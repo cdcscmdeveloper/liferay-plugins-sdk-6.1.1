@@ -445,7 +445,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				if(null==getManagedBean().getFulfilmentOrder().getPmFinancialOrgId()){
 					throw new EpException(MessageConst.ERROR_745062);
 				}
-			}			
+			}	
 		}
 		if(getManagedBean().isRemoveFactoring() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)){
 			IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -1118,18 +1118,29 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
 					String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 					String docType = getManagedBean().getFulfilmentOrder().getDocType();
-					if(docType.equalsIgnoreCase("PO"))
+					//#33659 start
+					/*if(docType.equalsIgnoreCase("PO"))
 						messagePrefix="Purchase Order";
 					else
-						messagePrefix="Contract Order";
+						messagePrefix="Contract Order";*/
 					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)) {
-						messageId = MessageConst.INFO_745022;
+						if(docType.equalsIgnoreCase("PO")){
+							messageId = MessageConst.INFO_745022;
+						}else{
+							messageId = MessageConst.INFO_745028;
+						}
 					}
+					/*FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+							FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));*/
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 							FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(messageId, 
-									new String[]{messagePrefix/*+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)*/+messageSuffix, docNo}, 
+									new String[]{docNo}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					//#33659 end
 				} else {
 					throw new EpException(MessageConst.ERROR_700020);
 				}
