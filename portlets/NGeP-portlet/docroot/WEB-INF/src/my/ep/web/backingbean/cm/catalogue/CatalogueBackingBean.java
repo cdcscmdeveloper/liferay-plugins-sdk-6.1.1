@@ -4396,7 +4396,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
-							MessageConst.ERROR_715042, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							MessageConst.ERROR_715048, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 					this.getManagedBean().setPricingTabIndex(3);
 					this.getManagedBean().setTierPricingIndex(1);
@@ -4414,9 +4414,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				
 				for(int i =0; i<= this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().size()-1;i++){
 					int size = this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().size()-1;
-                    //#569 - add condition control error showstopper 27/7/2022
-					if (this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(size).getPrice().doubleValue() == 0 && 
-							this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(i).getPrice().doubleValue() == 0) {
+                    //#569 - add condition control error showstopper 30/7/2022
+					if (this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(size).getPrice().doubleValue() >= 0 && 
+							this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(i).getPrice().doubleValue() >= 0) {
 						if(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(size).getPrice().doubleValue()<=this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(i).getPrice().doubleValue()){
 							FacesContext.getCurrentInstance().addMessage(
 									null,
@@ -4429,7 +4429,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						}
 					}
 				}
-				//569 - End
+				//569 - End 01/08/2022
 			}
 			
 			// ----------mandatory checking
@@ -5492,6 +5492,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				CmSupplierItem catalog = resDTO.getSupplierItem();
 
 				log.info("catalog.getPmUom().getUomName():" + catalog.getPmUom().getUomName());
+
+				// #569 - Start
+				for (int j = 0; j < this.getManagedBean().getCloneCmSupplierItemLs().size(); j++) {
+					if (StringUtils.isBlank(this.getManagedBean().getCloneCmSupplierItemLs().get(j).getItemDesc()) || CollectionUtils
+							.isEmpty(this.getManagedBean().getCloneCmSupplierItemLs().get(j).getCmImages())
+							&& this.getManagedBean().getCloneCmSupplierItemLs().get(j).getItemStatus()
+									.equals(CmConst.ITEM_STATUS_DRAFT)) {
+						this.getManagedBean().getCloneCmSupplierItemLs().get(j).setIndicator(true);
+					} else {
+						this.getManagedBean().getCloneCmSupplierItemLs().get(j).setIndicator(false);
+					}
+				}
+				// #569 - End
 
 				//#30457 - start
 				if((StringUtils.isBlank(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc())
@@ -12220,6 +12233,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			throw new EpException(MessageConst.ERROR_715013);
 		}
 		for (int i = 0; i < this.getManagedBean().getCloneCmSupplierItemLs().size(); i++) {
+			
+			// #569 - Start
+			for (int j = 0; j < this.getManagedBean().getCloneCmSupplierItemLs().size(); j++) {
+				if (StringUtils.isBlank(this.getManagedBean().getCloneCmSupplierItemLs().get(j).getItemDesc()) 
+						|| CollectionUtils.isEmpty(this.getManagedBean().getCloneCmSupplierItemLs().get(j).getCmImages())) {
+					this.getManagedBean().getCloneCmSupplierItemLs().get(j).setIndicator(true);
+				} else {
+					this.getManagedBean().getCloneCmSupplierItemLs().get(j).setIndicator(false);
+				}
+			}
+			// #569 - End
+			
 			if(StringUtils.isBlank(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc())
 					|| CollectionUtils.isEmpty(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages())){
 				throw new EpException(MessageConst.ERROR_715050);
