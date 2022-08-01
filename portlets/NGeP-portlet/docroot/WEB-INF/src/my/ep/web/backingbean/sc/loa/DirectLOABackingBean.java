@@ -375,7 +375,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if(scLoaReportAttachmentGenerated != null) {
 			String prefixName = scLoaReport.getTitle().replaceAll(
 					SourcingConstants.REG_EXP_WHITE_SPACE, "");
-			scLoaReportAttachmentGenerated.setTempFileName(prefixName);
+
+			//#26770-start
+				scLoaReportAttachmentGenerated.setTempFileName(setValueLowercase(prefixName, 18));
+			//26770-start
 		}
 		downloadFile(scLoaReportAttachmentGenerated);
 	}
@@ -4194,7 +4197,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			} 
 			String prefixName = scLoaReport.getTitle().replaceAll(
 					SourcingConstants.REG_EXP_WHITE_SPACE, "");
-			scLoaReportAttachmentGenerated.setTempFileName(prefixName);
+			//#26770-start
+				scLoaReportAttachmentGenerated.setTempFileName(setValueLowercase(prefixName, 18));
+			//26770-start
 			scAttachments.add(scLoaReportAttachmentGenerated);
 		}
 
@@ -4922,6 +4927,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			this.getManagedBean().setAction(outcome);
 			 		
 			if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+        			// #26770 - Start.
+        			validateReportAttachment();
+        			// #26770 - End.
 					RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
 			} 
 			else {
@@ -4929,6 +4937,24 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 		//20190405@asyrafhaziq - CR25062 - End
+		
+		// #26770 - Start.
+		 /**
+	     * 
+	     */
+	    private void validateReportAttachment() {
+	      if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
+	          for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
+	              if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+	                  if (report.getScLoaReportAttachment() == null) {
+	                    throw new EpException(MessageConst.ERROR_775159);
+	                  }
+	                 break;
+	             }
+	          }
+	       }
+	    }
+	    // #26770 - End.
 	/**
 	 * Update bpm task action. update bpm - save data into database and BPM
 	 * process will route to the next respective user. Authenticating gpki
@@ -5989,8 +6015,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		SmSupplier smSupplier = scLoiLoa.getSmSupplier();
 		Long supplierId = smSupplier.getSupplierId();
-		context.put("mofNo", scLoiLoa.getMofNo());
-		
+		// #25025 - Start.
+		if (StringUtils.isNotEmpty(scLoiLoa.getMofNo())) {
+			context.put("mofNo", scLoiLoa.getMofNo());
+		} else {
+			context.put("mofNo", "");
+		}
+		// #25025 - End.
 		SmMofAccount mofAccount = getMofAccountBySupplierId(supplierId);
 		
 		String mofValidityDuration = MALAY_NA;
@@ -8084,6 +8115,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		//log.info("SupplierAddressTable" + supplierAddressTable);
 		
+		//#26770 - start
+		String headerTitle = "";
+		if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
+			headerTitle = "Tender";
+		} else {
+			headerTitle = "Sebut Harga";
+		}
+		context.put("headerTitle", headerTitle); 
+		//#26770 - end
 		context.put("supplierSignerUser", supplierSignerUser);
 		context.put("supplierSignerIcNo", supplierSignerIcNo);
 		context.put("supplierSignerAddress", supplierAddressTable);
@@ -8131,6 +8171,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				context.put("mofNo", smSupplier.getRegNo());
 			}
 		}
+		//#25025 - start
+		String headerTitle = "";
+		if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
+			headerTitle = "Tender";
+		} else {
+			headerTitle = "Sebut Harga";
+		}
+		context.put("headerTitle", headerTitle); 
+		//#25025 - end
 		
 		FileOutputStream fos = null;
 		
@@ -8376,12 +8425,24 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		context.put("ackDate", ackDate);
 		context.put("insWarrantyReq", scLoa.isInsWarrantyReq());
 
-		String contractEffDate = "";
-		if (scLoa.getContractEffDate() != null) {
-			contractEffDate = DateUtils.getLocalizeDate(scLoa.getContractEffDate(), myLocale);
-		}
-		context.put("contractEffDate", contractEffDate);
 		
+		
+		//#26770 - start
+		
+		if (null == scLoa.getContractEffDate()) {
+			context.put("contractEffDate", "");
+		}else{
+			context.put("contractEffDate",getLocalizeDate(scLoa.getContractEffDate(), myLocale));
+		}
+			  
+		
+		if (null == scLoa.getContractExpDate()) {
+			context.put("contractExpDate", "");
+		} else {
+			context.put("contractExpDate",getLocalizeDate(scLoa.getContractExpDate(), myLocale));
+		}
+		
+		//#26770 - end
 		//ontractDuration
 		context.put("contractDuration", scLoa.getContractDuration());
 
@@ -8432,6 +8493,33 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		String qtNo = (StringUtils.isEmpty(scQt.getQtNo()))? "______________" : scQt.getQtNo();
 		context.put("qtNo", qtNo);
 		
+		// #25025 - Start.
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
+				.getDocType())) {
+			if (null != scLoa.getScQuote() && StringUtils.isNotEmpty(scLoa.getScQuote().getQuoteNo())) {
+				qtNo = scLoa.getScQuote().getQuoteNo();
+			}
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setScLoa(scLoa);
+			String rnNo = getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO);
+			if (qtNo.contains("SQ") && StringUtils.isNotEmpty(rnNo)) {
+				qtNo = qtNo + " / " + rnNo;
+			} else {
+				qtNo = rnNo;
+			}
+			context.put("docType", "Pembelian Terus"); 
+		} else if(scQt != null && (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())
+				|| ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType()))) {
+			// #26770 - Start. 
+			if ("Q".equals(getManagedBean().getScLoa().getProcurementMode().getParameterCode())) {
+				context.put("docType", "Sebut Harga"); 
+			} else if ("T".equals(getManagedBean().getScLoa().getProcurementMode().getParameterCode())){
+				context.put("docType", "Tender"); 
+			}
+			// #26770 - End. 
+		} 
+		// #25025 - End.
+				
 		// JadualHarga
 		formJadualHarga(context, scLoa);
 		
@@ -10570,6 +10658,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 	//29007 End
 	
+	//#26770 - start
+	//Change SuratSetujuterima(TermasukLampiranA) capital T to small t.
+		public String setValueLowercase(String text, int index){
+			 
+			if (text.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "").equalsIgnoreCase("SuratSetujuterima(TermasukLampiranA)")){
+				char[] arr = text.toCharArray();
+				arr[index] = Character.toLowerCase(arr[index]);
+				String newPrefixName = new String(arr);
+				return newPrefixName;
+			}
+			return text;	
+		}
+	//26770 - end
 	/* #31033, #26247 STARTS */
 	public boolean isHiddenDownloadButtonDAHistory() {
 		boolean hidden = false;

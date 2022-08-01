@@ -376,18 +376,24 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		rpr.setSz(size);
 		run.setRPr(rpr);
 
+		// #26770 - Start.
 		Text t1 = factory.createText();
-		t1.setValue("Tandatangan & Cop (Kerajaan)  : …………………………………");
+		//#25025 -start
+		t1.setValue("Tandatangan & Cap (Kerajaan)  : _____________");
 		Br br = factory.createBr(); // this Br element is used break the current and go for next line
 		Text t2 = factory.createText();
-		t2.setValue("\r\n Tandatangan & Cop (Syarikat ) : …………………………………");
+		t2.setValue("\r\n Tandatangan & Cap (Syarikat ) : _____________");
 		Text t3 = factory.createText();
 
-		t3.setValue("\r\n  Pihak Kerajaan : pegawai yang diberi kuasa oleh Kerajaan di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani Surat ini");
+		t3.setValue("\r\n  Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak");
+		// 25025 - End.
 		Text t4 = factory.createText();
-		t4.setValue("\r\n  Pihak Syarikat  : pegawai yang diberi kuasa dengan sewajarnya oleh syarikat untuk menandatangani Surat ini");
+		t4.setValue("\r\n  Pihak Syarikat  : Penama pada sijil pendaftaran untuk menandatangani Surat ini.");
 		run.getContent().add(t1);
 		run.getContent().add(br);
+		run.getContent().add(br);
+		run.getContent().add(br);
+		// #26770 - End.
 		run.getContent().add(t2);
 		run.getContent().add(br);
 

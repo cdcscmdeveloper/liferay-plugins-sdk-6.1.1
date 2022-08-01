@@ -1696,7 +1696,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			String prefixName = scLoaReport.getTitle().contains(lampiranA3SubStr) ? scLoaReport.getTitle().replaceAll(
 					"/", "-") : scLoaReport.getTitle().replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "");
 			// #29006 - end
-			scLoaReportAttachmentGenerated.setTempFileName(prefixName);
+			//#25025 - start		
+			scLoaReportAttachmentGenerated.setTempFileName(setValueLowercase(prefixName,18));
+			//#25025 - end
 		}
 		
 		//#29006 - start
@@ -1979,7 +1981,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				String prefixName = scLoaReport.getTitle().contains(lampiranA3SubStr) ? scLoaReport.getTitle().replaceAll("/", "-")
 						: scLoaReport.getTitle().replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "");
 				// #29006 - end, #29007 Vinod changed setting title for lampiranA3
-				scLoaReportAttachmentGenerated.setTempFileName(prefixName);
+				//#25025-start
+				scLoaReportAttachmentGenerated.setTempFileName(setValueLowercase(prefixName,18));
+				//#25025 - end
 				scAttachments.add(scLoaReportAttachmentGenerated);
 			}
 			
@@ -2198,7 +2202,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		String headerTitle = "";
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
-			headerTitle = "Pembelian Terus (Bermasa)";
+			//#25025 - start
+			headerTitle = "Pembelian Terus";
+			//#25025 - end
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
 			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
@@ -2267,12 +2273,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put("ackDate", ackDate);
 		context.put("insWarrantyReq", scLoa.isInsWarrantyReq());
 
-		String contractEffDate = "";
-		if (scLoa.getContractEffDate() != null) {
-			contractEffDate = DateUtils.getLocalizeDate(scLoa.getContractEffDate(), myLocale);
+		
+		
+		//#25025 & #26770 - start
+		if (null == scLoa.getContractEffDate()) {
+			context.put("contractEffDate", "");
+		}else{
+			context.put("contractEffDate", getLocalizeDate(scLoa.getContractEffDate(), myLocale));
 		}
-		context.put("contractEffDate", contractEffDate);
+												  
 
+		if (null == scLoa.getContractExpDate()) {
+			context.put("contractExpDate", "");
+		} else {
+			
+			context.put("contractExpDate",getLocalizeDate(scLoa.getContractExpDate(), myLocale));
+												 
+		}
+		//#25025 & #26770 - end
 		//ontractDuration
 		context.put("contractDuration", scLoa.getContractDuration());
 
@@ -2326,7 +2344,34 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		String qtNo = MALAY_NA;
 		if(scQt != null) {
 			qtNo = scQt.getQtNo();
-		}
+		} 
+		
+		// #25025 - Start.
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
+				.getDocType())) {
+			if (null != scLoa.getScQuote() && StringUtils.isNotEmpty(scLoa.getScQuote().getQuoteNo())) {
+				qtNo = scLoa.getScQuote().getQuoteNo();
+			}
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setScLoa(scLoa);
+			String rnNo = getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO);
+			if (qtNo.contains("SQ") && StringUtils.isNotEmpty(rnNo)) {
+				qtNo = qtNo + " / " + rnNo;
+			} else {
+				qtNo = rnNo;
+			}
+			context.put("docType", "Pembelian Terus"); 
+		} else if(scQt != null && (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())
+				|| ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType()))) {
+			// #26770 - Start.
+			if (isQuotationOrTender(scQt)) {
+				context.put("docType", "Sebut Harga"); 
+			} else {
+				context.put("docType", "Tender"); 
+			}
+			// #26770 - End.
+		} 
+		// #25025 - End.
 		// qtno
 		context.put("qtNo", qtNo);
 
@@ -2576,6 +2621,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		//log.info("SupplierAddressTable" + supplierAddressTable);
 
+		// #25025 - start
+		String headerTitle = "";
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
+			headerTitle = "Pembelian Terus";
+		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())) {
+			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
+				headerTitle = "Tender";
+			} else {
+				headerTitle = "Sebut Harga";
+			}
+
+		}
+		context.put("headerTitle", headerTitle);
+		// #25025 - end
 		context.put("supplierSignerUser", supplierSignerUser);
 		context.put("supplierSignerIcNo", supplierSignerIcNo);
 		context.put("supplierSignerAddress", supplierAddressTable);
@@ -2782,6 +2841,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		context.put("loaNo", loaNo);
 
+		// #25025 - start
+		String headerTitle = "";
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
+			// #25025 - start
+			headerTitle = "Pembelian Terus";
+			// #25025 - end
+		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())) {
+			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
+				headerTitle = "Tender";
+			} else {
+				headerTitle = "Sebut Harga";
+			}
+
+		}
+		context.put("headerTitle", headerTitle);
+		// #25025 - end
 		if(scLoiLoa.getSmSupplier() != null){
 			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
 			if(smSupplier.getSmMofAccount() != null && smSupplier.getSmMofAccounts().size()>0){
@@ -3810,6 +3885,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		this.getManagedBean().setAction(outcome);
 		 		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+        		// #26770 - Start.
+        		validateReportAttachment();
+        		// #26770 - End.
 				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
 		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
 			//22111 - START
@@ -3833,6 +3911,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	//20190405@asyrafhaziq - CR25062 - End
 	
+	// #26770 - Start.
+    /**
+    * 
+    */
+   private void validateReportAttachment() {
+     if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
+         for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
+             if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+                 if (report.getScLoaReportAttachment() == null) {
+                   throw new EpException(MessageConst.ERROR_775159);
+                 }
+                break;
+            }
+         }
+      }
+   }
+   // #26770 - End.
+   
 	// #22211 - Start
 	public void updateReviseBPMTaskActionWithoutQt(String outcome) {
 		debugLogger("updateReviseBPMTaskActionWithoutQt");
@@ -9466,5 +9562,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}	
 	//#32280 - end
+	//#25025 - start
+	public String setValueLowercase(String text, int index){
+		//Change SuratSetujuterima(TermasukLampiranA) capital T to small t.
+		if (text.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "").equalsIgnoreCase("SuratSetujuterima(TermasukLampiranA)")){
+			char[] arr = text.toCharArray();
+			arr[index] = Character.toLowerCase(arr[index]);
+			String newPrefixName = new String(arr);
+			return newPrefixName;
+		}
+		return text;	
+	}
+	//#25025 - end
+
 }
-  
