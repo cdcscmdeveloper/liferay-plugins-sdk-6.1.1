@@ -1794,7 +1794,7 @@ public class SmApplicationBackingBean extends
 							}
 							
 							if(ssmResDTO.getSmPersonnelSecretaries() != null){
-								this.getManagedBean().getSmAppl().setSmPersonnelSecretaries(new ArrayList());
+								this.getManagedBean().getSmAppl().setSmPersonnelSecretaries(new ArrayList<SmPersonnelSecretaries>());
 								for(SmPersonnelSecretaries personnelSecretaries: ssmResDTO.getSmPersonnelSecretaries()){
 									personnelSecretaries.setSmAppl(this.getManagedBean().getSmAppl());
 									this.getManagedBean().getSmAppl().getSmPersonnelSecretaries().add(personnelSecretaries);
@@ -1809,7 +1809,7 @@ public class SmApplicationBackingBean extends
 							}
 							
 							if(ssmResDTO.getSmApplAuditors()!= null){
-								this.getManagedBean().getSmAppl().setSmApplAuditors(new ArrayList());
+								this.getManagedBean().getSmAppl().setSmApplAuditors(new ArrayList<SmApplAuditors>());
 								for(SmApplAuditors auditors: ssmResDTO.getSmApplAuditors()){
 									auditors.setSmAppl(this.getManagedBean().getSmAppl());
 									this.getManagedBean().getSmAppl().getSmApplAuditors().add(auditors);
@@ -2243,13 +2243,17 @@ public class SmApplicationBackingBean extends
 				if (ssmBranch.getBranchName().equals(branch.getBranchName()) && !branch.isCopy()) {
 					branch.setCopy(true);
 					branch.setSmAddress(SmCommonUtil.cloneAddress(ssmBranch.getSmAddress()));
-					branch.setSsmData(true); //#31627
+					// #32725 - start
+					branch.setBranchName(ssmBranch.getBranchName().trim());
+					branch.setSsmData(true);
+					// #32725 - end
 					isExist = true;
 					break;
 				}
 			}
 			if (!isExist) {
 				ssmBranch.setCopy(true);
+				ssmBranch.setRevNo(SupplierManagementConst.DEFAULT_REV_NO); // #32725
 				getManagedBean().getSmAppl().getSmSupplierBranches().add(ssmBranch);
 			}
 		}
@@ -14597,7 +14601,7 @@ public class SmApplicationBackingBean extends
 		}
 		
 		if(ssmResDTO.getSmPersonnelSecretaries() != null){
-			this.getManagedBean().getSmAppl().setSmPersonnelSecretaries(new ArrayList());
+			this.getManagedBean().getSmAppl().setSmPersonnelSecretaries(new ArrayList<SmPersonnelSecretaries>());
 			for(SmPersonnelSecretaries personnelSecretaries: ssmResDTO.getSmPersonnelSecretaries()){
 				personnelSecretaries.setSmAppl(this.getManagedBean().getSmAppl());
 				this.getManagedBean().getSmAppl().getSmPersonnelSecretaries().add(personnelSecretaries);
@@ -14612,7 +14616,7 @@ public class SmApplicationBackingBean extends
 		}
 		
 		if(ssmResDTO.getSmApplAuditors()!= null){
-			this.getManagedBean().getSmAppl().setSmApplAuditors(new ArrayList());
+			this.getManagedBean().getSmAppl().setSmApplAuditors(new ArrayList<SmApplAuditors>());
 			for(SmApplAuditors auditors: ssmResDTO.getSmApplAuditors()){
 				auditors.setSmAppl(this.getManagedBean().getSmAppl());
 				this.getManagedBean().getSmAppl().getSmApplAuditors().add(auditors);
@@ -14790,25 +14794,25 @@ public class SmApplicationBackingBean extends
 		HashSet<String> hsetAccountNo = new HashSet<String>();
 		HashSet<Long> hsetAccountName = new HashSet<Long>();
 
-		boolean bankInfo = false;
+		//boolean bankInfo = false;
 		
 		if(getManagedBean().isShowDifferenceBankInfoAction()){	
-		if(fromPage.equalsIgnoreCase("fromBankInfo")){
-			if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0) {
-				for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
-					if (bankName.getPmFinancialOrg().getFinancialOrgId() != null) {
-						hsetAccountName.add(bankName.getPmFinancialOrg().getFinancialOrgId());
-						hsetAccountNo.add(bankName.getAccountNo());
+			if(fromPage.equalsIgnoreCase("fromBankInfo")){
+				if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0) {
+					for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
+						if (bankName.getPmFinancialOrg().getFinancialOrgId() != null) {
+							hsetAccountName.add(bankName.getPmFinancialOrg().getFinancialOrgId());
+							hsetAccountNo.add(bankName.getAccountNo());
+						}
 					}
 				}
+	
+				if (hsetAccountName.add(getManagedBean().getSelectedBank().getPmFinancialOrg().getFinancialOrgId()) == false) {
+					if (hsetAccountNo.add(getManagedBean().getSelectedBank().getAccountNo()) == false) {
+						RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
+					}
+				}	
 			}
-
-			if (hsetAccountName.add(getManagedBean().getSelectedBank().getPmFinancialOrg().getFinancialOrgId()) == false) {
-				if (hsetAccountNo.add(getManagedBean().getSelectedBank().getAccountNo()) == false) {
-					RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
-				}
-			}	
-		}
 		}else{
 			for (SmSupplierBank supBank : getManagedBean().getSmAppl().getSmSupplierBanks()){
 				if(getManagedBean().getSelectedBank().getSupplierBankId() != null && 
@@ -14816,7 +14820,7 @@ public class SmApplicationBackingBean extends
 					log.debug("**** Same Bank object edit with exisiting id ******");
 				}else{
 					if(getManagedBean().getSelectedBank().getAccountNo().equalsIgnoreCase(supBank.getAccountNo())){
-						bankInfo = true;
+						//bankInfo = true;
 						RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
 					}
 				}
@@ -14834,6 +14838,7 @@ public class SmApplicationBackingBean extends
 		return false;
 	}
 	//#12483 - END
+	
 	//30713 - Start
 	private SmWorkflowStatus rejectedApplExist(Long supplierId){
 		SmWorkflowStatus wf = null;
@@ -14855,6 +14860,7 @@ public class SmApplicationBackingBean extends
 		
 		return wf;
 	}
+	
 	private SmWorkflowStatus isLatestActiveWorkFlow(Long supplierId){
 		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
 		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
@@ -14888,6 +14894,7 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().update("resOutPanelId");
 
 	}
+	
 	public int getMandatoryCounter() {
 		return mandatoryCounter++;
 	}
