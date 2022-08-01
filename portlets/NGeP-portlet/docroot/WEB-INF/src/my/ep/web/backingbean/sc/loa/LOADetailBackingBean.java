@@ -491,32 +491,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return QTConstants.LOA_PAGE;
 	}
 	
-	/**
-	 * Get the supplier loa details.
-	 * 
-	 * @param sourceId 
-	 * 		the source id (qt id / rn id
-	 * @param loaId 
-	 * 		the loa id
-	 * @param previousPageUrl
-	 * 		the previous page url.
-	 * @param isReadonly
-	 * 		the readonly flag
-	 * 
-	 * @return the supplier loa page
-	 */
-	public String retrieveSupplierLOADtl(Long sourceId, Long loaId, String previousPageUrl, boolean isReadonly) {
-		// #26226 - Start
-		Map<MapKeyEnum, Object> otherArgs = null;
-		if (null != getManagedBean().getCurrentStatusId() 
-				&& getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.longValue()) {
-			otherArgs = new HashMap<>();
-			otherArgs.put(MapKeyEnum.enableDownloadAllDocuments, Boolean.TRUE);
-		}
-		return retrieveSupplierLOADtlPriv(sourceId, loaId, previousPageUrl, isReadonly, otherArgs);
-		// #26226 - End
-	}
-
+	// #25201 -start-
 	/**
 	 * Get the supplier loa details.
 	 * 
@@ -534,13 +509,47 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @return the supplier loa page
 	 */
 	public String retrieveSupplierLOADtl(Long sourceId, Long loaId, String previousPageUrl, boolean isReadonly, boolean enableDownloadAllDocuments) {
- 		Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
+		Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
 		otherArgs.put(MapKeyEnum.enableDownloadAllDocuments, Boolean.valueOf(enableDownloadAllDocuments));
+
 		return retrieveSupplierLOADtlPriv(sourceId, loaId, previousPageUrl, isReadonly, otherArgs);
+	}
+	// #25201 -end-
+
+
+	/**
+	 * Get the supplier loa details.
+	 * 
+	 * @param sourceId 
+	 * 		the source id (qt id / rn id
+	 * @param loaId 
+	 * 		the loa id
+	 * @param previousPageUrl
+	 * 		the previous page url.
+	 * @param isReadonly
+	 * 		the readonly flag
+	 * 
+	 * @return the supplier loa page
+	 */
+	public String retrieveSupplierLOADtl(Long sourceId, Long loaId, String previousPageUrl, boolean isReadonly) {
+		// #26226, #33089 - Start
+		Map<MapKeyEnum, Object> otherArgs = null;
+		if (null != getManagedBean().getCurrentStatusId()
+				&& getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+						.longValue()) {
+			otherArgs = new HashMap<>();
+			otherArgs.put(MapKeyEnum.enableDownloadAllDocuments, Boolean.TRUE);
+		}
+		
+		// #19336, #25201, #17376, #19287 -start-
+		return retrieveSupplierLOADtlPriv(sourceId, loaId, previousPageUrl, isReadonly, otherArgs);
+		// #19336, #25201, #17376, #19287 -end-
+		// #26226, #33089 - End
 	}
 
 
 	
+	// #19336, #25201, #17376, #19287 -start-
 	/**
 	 * Get the supplier loa details.
 	 * 
@@ -559,18 +568,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @return the supplier loa page
 	 */
 	private String retrieveSupplierLOADtlPriv(Long sourceId, Long loaId, String previousPageUrl, boolean isReadonly, Map<MapKeyEnum, Object> otherArgs) {
-		debugLogger("retrieveSupplierLOADtl");
 		try {
 			//to avoid otherArgs is null checking next time
-			if(otherArgs == null){
+			if (otherArgs == null) {
 				otherArgs = new HashMap<MapKeyEnum, Object>();
 			}
+
 			getManagedBean().setSourceId(sourceId);
 			getManagedBean().setBackToPreviousPage(previousPageUrl);
 			getManagedBean().setReadOnly(isReadonly);
-			if(otherArgs.containsKey(MapKeyEnum.enableDownloadAllDocuments) && otherArgs.get(MapKeyEnum.enableDownloadAllDocuments) instanceof Boolean){
+			
+			if (otherArgs.containsKey(MapKeyEnum.enableDownloadAllDocuments) && otherArgs.get(MapKeyEnum.enableDownloadAllDocuments) instanceof Boolean) {
 				Object o = otherArgs.get(MapKeyEnum.enableDownloadAllDocuments);
-				if(o instanceof Boolean){	getManagedBean().setEnableDownloadAllDocuments((Boolean)o);	}
+				
+				if (o instanceof Boolean) {
+					getManagedBean().setEnableDownloadAllDocuments((Boolean) o);
+				}
 			}
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -748,6 +761,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		return null;
 	}
+	// #19336, #25201, #17376, #19287 -end-
 
 	/**
 	 * Pre render page navigation to loa page based on task id
@@ -964,7 +978,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		//#29007 End Vinod
 		
-		getManagedBean().setValidatewitness(Boolean.TRUE); //#19336
+		// #19336 -start-
+		getManagedBean().setValidatewitness(Boolean.TRUE);
+		// #19336 -end-
 		if (StringUtils.isNotBlank(redirectUrl)) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -1233,12 +1249,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().setBondAmountWord(
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
 		}
-		
-		
+
+		// #19336, #25201, #17376, #19287 -start-
 		//awarded supplier and proposal
-		if(resDTO.getSupplierProposal()!= null){
+		if (resDTO.getSupplierProposal() != null) {
 			getManagedBean().setScQtProposal(resDTO.getSupplierProposal());
 		}
+		// #19336, #25201, #17376, #19287 -end-
 
 		// clauses title
 		getClausesTitle(null);
@@ -1650,7 +1667,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				generateUpdatedLampiranA3FromVelocity((ScAttachment) scLoaReport.getScLoaReportAttachment(),
 						getManagedBean().getScLoa(), this.getManagedBean().getScQt());
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -1660,9 +1676,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if(scLoaReport.getTitle().equalsIgnoreCase(QTConstants.REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT) &&
 				getManagedBean().getScLoa().getPmStatus().getStatusId().
 				equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
-			if(this.getManagedBean().isValidatewitness()){ //#19336
-			validateLoaWitnessAndAckBy();
-			} //#19336
+			if (this.getManagedBean().isValidatewitness()) { // #19336
+				validateLoaWitnessAndAckBy();
+			} // #19336
 		}
 		
 		if (Arrays.asList(QTStatusConst.LOA_PENDING_VERIFICATION).contains(this.getManagedBean().getScLoa().getPmStatus().getStatusId()) && scLoaReport.getTitle().contains(lampiranA3SubStr) && ParameterConst.DOCTYPE_QUOTATION.equals(this.getManagedBean().getScLoa().getScLoiLoa().getDocType())){//29007-start
@@ -1701,18 +1717,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		//#29006 - end
 		
-		try{
+		// #19336, #25201, #17376, #19287 -start-
+		try {
 			downloadFile(scLoaReportAttachmentGenerated);
-		}
-		catch(IOException ex){
+		} catch(IOException ex) {
 			if(ex instanceof FileNotFoundException){
-				handleException(new EpException(MessageConst.ERROR_760411, new String[]{scLoaReport.getTitle()}));
+				handleException(new EpException(MessageConst.ERROR_760411,
+						new String[] { scLoaReport.getTitle() }));
 			}
 			
-		}
-		catch(EpException ex){
+		} catch(EpException ex){
 			handleException(ex);
 		}
+		// #19336, #25201, #17376, #19287 -end-
 	}
 
 	/**
@@ -1724,8 +1741,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	private ScLoaReportAttachment generateDocumentAttachment(
 			ScLoaReport scLoaReport) {
 		ScLoa scLoa = getManagedBean().getScLoa();	
-		//ScQt scQt = getManagedBean().getScQt();
-		
 		String definitionType = scLoaReport.getDefinationType()
 				.getParameterCode();
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
@@ -1925,9 +1940,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		for (ScLoaReport scLoaReport : scLoaReports) {
 			if(scLoaReport.getTitle().equalsIgnoreCase(QTConstants.REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT) &&
 					scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
-				if(this.getManagedBean().isValidatewitness()){ //#19336
-				validateLoaWitnessAndAckBy();
-				} //#19336
+				if (this.getManagedBean().isValidatewitness()) { // #19336
+					validateLoaWitnessAndAckBy();
+				} // #19336
 			}
 			// #29006 - start
 			if (scLoaReport.getTitle().contains(lampiranA3SubStr) && !ParameterConst.DOCTYPE_QUOTATION.equals(this.getManagedBean().getScLoa().getScLoiLoa().getDocType())) {// #29007 & #30963
@@ -2679,17 +2694,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 				if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt
 						.getProcurementMode().getParameterCode())) {
-					procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
+					procurementMode = "";//#32739 & #32738
 				} else {
-					procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
+					procurementMode = "";//#32739 & #32738
 				}
 				if(scQt.getQtNo() != null){
 					qtNo = scQt.getQtNo();
 				}
 			}
 		}
-		String title = procurementMode != "" ? procurementMode + " " + 
-				scLoiLoa.getTitle().toUpperCase() : scLoiLoa.getTitle().toUpperCase();
+		String title = procurementMode != "" ? procurementMode + "\r\n" + 
+				scLoiLoa.getTitle().toUpperCase() : scLoiLoa.getTitle().toUpperCase();//#32739 & #32738
 				if (title == null) {
 					title = "";
 				}
@@ -2700,12 +2715,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 				//#13245 don't escape
 				//title=title.replaceAll("&", "&#38;");
+				int countTitle = title.length();//#32738 & #32739 spacing
 				title = title.replaceAll("<", "&#60;");
 				title = title.replaceAll(">", "&#62;");
 				title = title.replaceAll("\r\n", "<br />");
+				//#32739 & #32738 - start
+				if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
+						.getDocType())) {
+					context.put("title", title + "<br />");
+				} else if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
+						.getDocType())) {
 				context.put("title", title);
+				}
+				////#32739 & #32738 - end
+				context.put("countTitle", countTitle);//#32738 & #32739 spacing
 
-				String userName = "&#60;Nama Pembekal&#62;";
+				String userName = "&#60;Nama Wakil Syarikat&#62;";//#32738 & #32739
 				String icNo = "&#60;No. Kad Pengenalan&#62;";
 				if (pmUser != null) {
 					userName = pmUser.getUserName();
@@ -3883,7 +3908,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		Boolean isZonalWithPaOrPs = false;
 		Boolean isZonal = getManagedBean().getScLoa().getScLoiLoa().isZonal();
-		String fulfilmentType = getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
+		//String fulfilmentType = getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
 		String docType = getManagedBean().getScLoa().getScLoiLoa().getDocType();
 		
 		/*if (fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
@@ -6977,7 +7002,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			File newName = new File(aFilePath.toString());
 			//log.info("New Path : " + aFilePath.toString());
 			//log.info("Before rename to new path");
-			boolean isFileRenamed = oldName.renameTo(newName);
+			//boolean isFileRenamed = oldName.renameTo(newName);
 			//log.info("After rename to new path");
 			/*
 			if(isFileRenamed) 
@@ -7554,80 +7579,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return roleCode;
 	}
 	
-	
-	public Boolean canShowSupplierProposal(){
-		
+	// 25201 -start-
+	public Boolean canShowSupplierProposal() {
 		// ***25201#82 - start
-		// allow as in ***25201#35
 		return true;
 		// ***25201#82 - end
-		/*IUserSO userSO = null;
-		try{
-			userSO = BusinessDelegate.getInstance()
-					.getServiceObject(IUserSO.class);
-			
-			
-			
-			*//**
-			 * 	1. find qt pm_org_profile
-			 *  2. find user pm_org_profile
-			 *  3. give permission to user within same organization with the role accesibility  
-			 *  (cancel)4. by state group (sabah, sarawak, peninsular) within same PTJ
-			 *//*
-			
-			//1			
-			ScQt scQt = getManagedBean().getScQt();
-			PmOrgProfile qtOrgProfile =  scQt.getPmOrgProfile();
-						
-			//2 & 3
-			Long userId = getFacesScopes().getUserSessionBean().getUserId();
-			debugLogger(getFacesScopes().getUserRoleList());
-			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setUserId(userId);
-			reqDTO.setOrgProfileId(qtOrgProfile.getOrgProfileId());
-			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
-			RoleCode[] roleCodes = {
-					RoleCode.DESK_OFFICER,
-					RoleCode.FPB_SECRETARY,
-					RoleCode.QCA_SECRETARY,
-					RoleCode.QCB_SECRETARY,
-					RoleCode.PBA_SECRETARY,
-					RoleCode.PBB_SECRETARY};
-			List<String> roleCodesList = new ArrayList<String>();
-			for(RoleCode s: roleCodes){
-				roleCodesList.add(s.value());
-			}
-			reqDTO.setRoleCodes(roleCodesList);
-			reqDTO.setForceGetAllUserOrgList(false);
-			UserResDTO resDTO = userSO.checkAndGetUserInOrgProfile(reqDTO);
-			reqDTO.setForceGetAllUserOrgList(true);
-			UserResDTO allUserOrgResDTO = userSO.checkAndGetUserInOrgProfile(reqDTO);
-			reqDTO.setForceGetAllUserOrgList(false);
-			
-			boolean ret = false;
-			if(resDTO!=null && resDTO.isSuccessful()){
-				debugLogger("checkUserInOrgProfile Successful");
-				if(!CollectionUtils.isEmpty(resDTO.getUserOrgList())){
-					ret = true;
-				}
-			}
-			// ***25201#82 - start
-			if(roleCodes!=null && roleCodes.length > 0){
-				if(userHasRole(roleCodes)){
-					ret = true;
-				}
-			}
-			// ***25201#82 - end
-			
-			return ret;
-			
-		}
-		finally{
-			userSO = null;
-		}*/
 	}
+	// 25201 -end-
 	
-	// ***25201#35
+	// ***25201#35 -start-
 	public Boolean canShowSupplierProposalByLOAStatus(){
 		/*
 		i) Pending Letter of Acceptance Preparation 
@@ -7668,9 +7628,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 		}
+		
 		return false;
 	}
-	
+	// ***25201#35 -end-
 	/*
 	private FacesScopes getFacesScopes(){
 		FacesScopes fs = new FacesScopes();
@@ -7916,6 +7877,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}//#25022-end
 
+	// 25201#73 -start-
 	/**
 	 * only if qt no prefix is 'QT'
 	 * @return
@@ -7929,28 +7891,25 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		return false;
 	}
-	
+	// 25201#73 -end-	
 	
 	/* 19336#99 - start */
-	public String getManagedBeanLoaContractAgencyOrgName(){
-		try{
+	public String getManagedBeanLoaContractAgencyOrgName() {
+		try {
 			return getManagedBean().getScLoa().getContractAgency().getOrgName();
-		}
-		catch(Exception ex){
+		} catch (Exception ex) {
 			return "";
 		}
 	}
 	
-	public String getManagedBeanSelectedPtjOrgName(){
-		try{
+	public String getManagedBeanSelectedPtjOrgName() {
+		try {
 			return getManagedBean().getSelectedPtj().getOrgName();
-		}
-		catch(Exception ex){
+		} catch (Exception ex) {
 			return "";
 		}
 	}
-	/* 19336#99 - end */			   
-			 
+	/* 19336#99 - end */
 	
 	//#29006 - start
 	public void onClickSpecsAndSupplierOfferLink(ScLoiLoaItem scLoiLoaItem) {
@@ -8030,7 +7989,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			selectedScLoiLoaItem = scLoiLoaItem;
 			getManagedBean().setSelectedItemId(scLoiLoaItem.getLoiLoaItemId());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -9276,9 +9234,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMsg.toString());//29007
 				}
 				
-			/*29007-start	if(scLoiLoaItem.getLoaSpecJustification() != null){
+				/*29007-start	
+				if(scLoiLoaItem.getLoaSpecJustification() != null){
 					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMsg.toString());
-				}29007-End*/
+				}
+				29007-End*/
 				
 				specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
 				specReqDto.setScQt(this.getManagedBean().getScQt());
