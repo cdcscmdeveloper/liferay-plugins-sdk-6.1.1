@@ -8708,7 +8708,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().setError3(false);
 		}
 
-		// check for 1 year period
+		// # 29961 - Start Remove error7
+		/*// check for 1 year period
 		if (standardPricing.getStartDate() != null && standardPricing.getEndDate() != null) {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(standardPricing.getStartDate());
@@ -8725,7 +8726,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				this.getManagedBean().setError7(false);
 			}
 		} else
-			this.getManagedBean().setError7(false);
+			this.getManagedBean().setError7(false);*/
+		// # 29961 - End Remove error7
 	}
 
 	/**
