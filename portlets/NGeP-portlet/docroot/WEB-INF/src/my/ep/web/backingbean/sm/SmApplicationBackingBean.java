@@ -2482,9 +2482,17 @@ public class SmApplicationBackingBean extends
 						if(this.getManagedBean().isDowngradeRole()==null || !this.getManagedBean().isDowngradeRole()){
 							personnelsRole.clear();
 						}
+						
+						List<SmPersonnel> ownerListTmp = new ArrayList<SmPersonnel>();
+						if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
+								|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+							ownerListTmp = this.getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels();
+						} else {
+							ownerListTmp = this.getManagedBean().getSmAppl().getSmPersonnels();
+						}
 
 						if (personnelsRole != null && personnelsRole.size() <= 0) {
-							for (SmPersonnel personnel : this.getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels()) {
+							for (SmPersonnel personnel : ownerListTmp) {
 								if (personnel.isEquityOwner() || personnel.isDirector()) {
 									SmPersonnel personnelSSM = (SmPersonnel) EntityHelper
 											.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
