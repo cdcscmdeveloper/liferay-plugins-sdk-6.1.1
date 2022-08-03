@@ -514,6 +514,25 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 							// Supplier User does not have a valid soft certificate. Please apply for a soft certificate first.
 						}
 					}
+				} else {
+					//if it is not expired, but it is revoked, it will going into this block
+					if(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REVOKED){
+						FacesScopes fs = new FacesScopes();
+						if (fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
+								|| fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
+								|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+								|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+							throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+							// Supplier Admin does not have a valid soft certificate. Please apply for a soft certificate first.
+						}
+						if (fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())
+								|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+								|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+								|| fs.hasRoleUser(RoleCode.FL_USER.value())) {
+							throw new EpException(MessageConst.ERROR_DIGICERT_776065);
+							// Supplier User does not have a valid soft certificate. Please apply for a soft certificate first.
+						}
+					}
 				}
 			} else {
 				// if return with 0 results, then personnel didn't have record in Pm Digi Cert
