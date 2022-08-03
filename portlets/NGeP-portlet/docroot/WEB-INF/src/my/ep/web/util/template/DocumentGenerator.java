@@ -66,6 +66,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.liferay.portal.util.PortalUtil;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.BaseFont; //#25025 & #26770 
 
 import my.ep.factory.EpLogger;
 
@@ -201,6 +202,11 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 				fontPath = getPortalBaseURL + "/NGeP-portlet/resources/fonts/Arial.ttf";
 
 				render.getFontResolver().addFont(fontPath, true);
+				//#25025 & #26770 - start
+				render.getFontResolver().addFont(getPortalBaseURL+"/NGeP-portlet/resources/fonts/Ariali.ttf",BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);  
+				render.getFontResolver().addFont(getPortalBaseURL+"/NGeP-portlet/resources/fonts/Arialbd.ttf",BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+				render.getFontResolver().addFont(getPortalBaseURL+"/NGeP-portlet/resources/fonts/Arialbi.ttf",BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+		        //#25025 & #26770 - end
 				// #26130 - end
 
 				render.setDocumentFromString(html);
