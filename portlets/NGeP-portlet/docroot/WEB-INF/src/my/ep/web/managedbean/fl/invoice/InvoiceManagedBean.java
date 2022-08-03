@@ -161,6 +161,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
     private List<SelectItem> factoringAccList;
     //30911 end
 
+    private boolean isSupplementContractComplete = true; //28719
+
 	public Map<String, PmFinancialOrg> getFactoringAccountMap() {
 		if(factoringAccountMap==null) {
 			factoringAccountMap = new HashMap<String, PmFinancialOrg>();
@@ -1287,4 +1289,13 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.accountNo = accountNo;
 	}
 	//32967-end
+	//28719-start
+	public boolean isSupplementContractComplete() {
+		return isSupplementContractComplete;
+	}
+
+	public void setSupplementContractComplete(boolean isSupplementContractComplete) {
+		this.isSupplementContractComplete = isSupplementContractComplete;
+	}
+	//28719-end	
 }
