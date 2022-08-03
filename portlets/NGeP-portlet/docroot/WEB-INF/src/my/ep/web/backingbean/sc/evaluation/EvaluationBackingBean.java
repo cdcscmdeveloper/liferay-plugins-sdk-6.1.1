@@ -1500,9 +1500,12 @@ public void saveComplianceSample() {
 			}
 
 			if (qtCheckLists != null) {
-				updateCheckListIntoQtCheckLists(qtCheckLists,
-						qtCheckLists.indexOf(getManagedBean()
-								.getScQtChecklist()), resDTO.getCheckList());
+				// Bug #33249@Syazani 03/08/2022 -- Start
+//				updateCheckListIntoQtCheckLists(qtCheckLists,
+//						qtCheckLists.indexOf(getManagedBean()
+//								.getScQtChecklist()), resDTO.getCheckList());
+				updateCheckListIntoQtCheckLists(qtCheckLists, getManagedBean().getScQtChecklist(), resDTO.getCheckList());
+				// Bug #33249@Syazani 03/08/2022 -- End
 			}
 
 			/*
@@ -1547,7 +1550,8 @@ public void saveComplianceSample() {
 		}
 	}
 
-	private void updateCheckListIntoQtCheckLists(
+	// Bug #33249@Syazani 03/08/2022 -- Start
+	/*private void updateCheckListIntoQtCheckLists(
 			List<ScQtCheckList> qtCheckLists, int toBeUpdateChecklistIndex,
 			ScQtCheckList toBeUpdateCheckList) {
 		this.getManagedBean().setScQtChecklist(toBeUpdateCheckList);
@@ -1567,7 +1571,29 @@ public void saveComplianceSample() {
 				qtCheckLists.add(toBeUpdateChecklistIndex, toBeUpdateCheckList);
 			}
 		}
+	}*/
+	
+	/**
+	 * Replaced current method above due to replace object from list is not
+	 * effective if got more than two(2) list that contains same title with
+	 * different mechanism
+	 *
+	 */
+	private void updateCheckListIntoQtCheckLists(List<ScQtCheckList> qtCheckLists, ScQtCheckList oldCurrChecklist, ScQtCheckList toBeUpdateCheckList) {
+		if (oldCurrChecklist != null && qtCheckLists != null && qtCheckLists.size() > 0) {
+			for (int i = 0; i < qtCheckLists.size(); i++) {
+				ScQtCheckList tempChecklist = qtCheckLists.get(i);
+				Long tempChckLstId = tempChecklist.getQtChecklistId();
+				Long oldChckLstId = oldCurrChecklist.getQtChecklistId();
+				if (tempChckLstId.equals(oldChckLstId)) {
+					qtCheckLists.set(i, toBeUpdateCheckList);
+					break;
+				}
+			}
+		}
+		this.getManagedBean().setScQtChecklist(toBeUpdateCheckList);
 	}
+	// Bug #33249@Syazani 03/08/2022 -- End
 
 	/**
 	 * Save presentation demo dtls.user click on save button in presentation demo tab.
@@ -9319,9 +9345,12 @@ private void retriveCommitteeRemarksList(){
 					.getQtProposalChecklist());
 
 			if (qtCheckLists != null) {
-				updateCheckListIntoQtCheckLists(qtCheckLists,
-						qtCheckLists.indexOf(getManagedBean()
-								.getScQtChecklist()), resDto.getCheckList());
+				// Bug #33249@Syazani 03/08/2022 -- Start
+//				updateCheckListIntoQtCheckLists(qtCheckLists,
+//						qtCheckLists.indexOf(getManagedBean()
+//								.getScQtChecklist()), resDto.getCheckList());
+				updateCheckListIntoQtCheckLists(qtCheckLists, getManagedBean().getScQtChecklist(), resDto.getCheckList());
+				// Bug #33249@Syazani 03/08/2022 -- End
 			}
 			if (SourcingConstants.TECHNICAL_DOCTYPE.equals(qtProposalChecklist
 					.getScQtCheckList().getDocCategory())) {
@@ -9789,9 +9818,12 @@ private void retriveCommitteeRemarksList(){
 			}
 
 			if (qtCheckLists != null) {
-				updateCheckListIntoQtCheckLists(qtCheckLists,
-						qtCheckLists.indexOf(getManagedBean()
-								.getScQtChecklist()), evalResDTO.getCheckList());
+				// Bug #33249@Syazani 03/08/2022 -- Start
+//				updateCheckListIntoQtCheckLists(qtCheckLists,
+//						qtCheckLists.indexOf(getManagedBean()
+//								.getScQtChecklist()), evalResDTO.getCheckList());
+				updateCheckListIntoQtCheckLists(qtCheckLists, getManagedBean().getScQtChecklist(), evalResDTO.getCheckList());
+				// Bug #33249@Syazani 03/08/2022 -- End
 			}
 
 			successMessage(MessageConst.INFO_700004,
@@ -12314,17 +12346,21 @@ private void retriveCommitteeRemarksList(){
 							&& !technicalChecklsit.isEmpty()) {
 						for (int i = 0; i < technicalChecklsit.size(); i++) {
 							ScQtCheckList checkList = technicalChecklsit.get(i);
-							if (checkList.getTitle()
-									.equalsIgnoreCase(
-											technicalUploadNoActionCheckList
-													.getTitle())) {
-								int index = technicalChecklsit.indexOf(this
-										.getManagedBean().getScQtChecklist());
-								// technicalChecklsit.remove(checkList);
-								technicalChecklsit.set(index,
-										technicalUploadNoActionCheckList);
+							// Bug #33249@Syazani 03/08/2022 -- Start
+							if (checkList.getQtChecklistId().equals(technicalUploadNoActionCheckList.getQtChecklistId())) {
+								technicalChecklsit.set(i, technicalUploadNoActionCheckList);
 							}
-
+//							if (checkList.getTitle()
+//									.equalsIgnoreCase(
+//											technicalUploadNoActionCheckList
+//													.getTitle())) {
+//								int index = technicalChecklsit.indexOf(this
+//										.getManagedBean().getScQtChecklist());
+//								// technicalChecklsit.remove(checkList);
+//								technicalChecklsit.set(index,
+//										technicalUploadNoActionCheckList);
+//							}
+							// Bug #33249@Syazani 03/08/2022 -- End
 						}
 					}
 					this.getManagedBean()
@@ -12411,17 +12447,21 @@ private void retriveCommitteeRemarksList(){
 							&& !technicalChecklsit.isEmpty()) {
 						for (int i = 0; i < technicalChecklsit.size(); i++) {
 							ScQtCheckList checkList = technicalChecklsit.get(i);
-							if (checkList.getTitle()
-									.equalsIgnoreCase(
-											financialUploadNoActionCheckList
-													.getTitle())) {
-								// technicalChecklsit.remove(checkList);
-								int index = technicalChecklsit.indexOf(this
-										.getManagedBean().getScQtChecklist());
-								technicalChecklsit.set(index,
-										financialUploadNoActionCheckList);
+							// Bug #33249@Syazani 03/08/2022 -- Start
+							if (checkList.getQtChecklistId().equals(financialUploadNoActionCheckList.getQtChecklistId())) {
+								technicalChecklsit.set(i, financialUploadNoActionCheckList);
 							}
-
+//							if (checkList.getTitle()
+//									.equalsIgnoreCase(
+//											financialUploadNoActionCheckList
+//													.getTitle())) {
+//								// technicalChecklsit.remove(checkList);
+//								int index = technicalChecklsit.indexOf(this
+//										.getManagedBean().getScQtChecklist());
+//								technicalChecklsit.set(index,
+//										financialUploadNoActionCheckList);
+//							}
+							// Bug #33249@Syazani 03/08/2022 -- End
 						}
 					}
 					this.getManagedBean()
