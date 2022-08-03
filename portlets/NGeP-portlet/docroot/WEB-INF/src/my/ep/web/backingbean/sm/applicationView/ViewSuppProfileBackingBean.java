@@ -539,6 +539,13 @@ public class ViewSuppProfileBackingBean extends
 	}
 	//28281 - end
 	
+	//#29482 - Start
+	public void assignSelAcadQualify(SmPersonnel smPersonnel) {
+		this.getManagedBean().setSmPersonnel(smPersonnel);
+		RequestContext.getCurrentInstance().execute("qualifyDialog.show()");
+	}
+	//#29482 - End
+	
 	//31033 start
 	public void onViewActiveDisciplinaryAction(SmSupplier smSupplier) {
 
