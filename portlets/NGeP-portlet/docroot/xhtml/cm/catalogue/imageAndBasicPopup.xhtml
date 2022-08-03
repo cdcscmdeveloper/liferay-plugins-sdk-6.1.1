@@ -55,13 +55,15 @@
 									<p:column width="85%" style="text-align: center;">
 										<f:facet name="header">
 											<h:outputText value="* " styleClass="mandatory" />
-											<!-- #30475 -->
+											<!-- #30457 -->
 											<h:outputText value="#{lbl['lbl.cm.image.delpopup']}" />
 										</f:facet>
-										
-										<p:graphicImage styleClass="catImageStyle"
-											value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{item.imageName}" />
-										
+										<!-- #30457 - Start -->
+										<div style="height:200px; width:200px; text-align:center; margin:0 auto;">
+										<p:graphicImage style="max-height:100%;max-width:100%;"
+											value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{item.imageName}" /></div>
+										<!-- #30457 - End -->
+											
 									</p:column>
 									<p:column width="15%" headerText="#{lbl['lbl.cm.action']}" style="text-align: center;">
 										<p:commandLink process="@this"
