@@ -478,6 +478,18 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 										"fulfilment_type",
 										SearchOperator.OPERATOR_EQUALS.value(), 
 										searchTypesDD));
+					}else if(searchTypesDD.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"fulfilment_type",
+										SearchOperator.OPERATOR_EQUALS.value(), 
+										searchTypesDD));
+					}else if(searchTypesDD.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"fulfilment_type",
+										SearchOperator.OPERATOR_EQUALS.value(), 
+										searchTypesDD));	
 					}
 				}
 				
@@ -521,7 +533,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 				FulfilmentResDTO resfDTO;
 				if(resDTO.isSuccessful()) {
 					for(VCtActiveContract vCtActiveContract : resDTO.getActiveContractResultBean().getResultList()) {
-						if(vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+						if(vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+								|| vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) {
 							/*13984 Schedule/ Phase info List BEGINNING*/
 							contractReqDTO.setContractId(vCtActiveContract.getContractId());
 							contractReqDTO.setOrgProfileId(orgProfileId);//28469
