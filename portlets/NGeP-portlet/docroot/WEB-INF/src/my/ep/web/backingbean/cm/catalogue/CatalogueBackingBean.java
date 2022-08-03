@@ -4189,9 +4189,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					this.getManagedBean().setZonalPricingIndex(1);
 					return "editCatalogItem";
 				}
-				
-				for (int i =1; i<=this.getManagedBean().getSelectedMaintainItem().getzStdPrices().size()-1;i++){
-					if(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().get(0).getPrice().doubleValue()>=this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(i).getPrice().doubleValue()){
+				//#569 - Start
+				for (int i =0; i<=this.getManagedBean().getSelectedMaintainItem().getzStdPrices().size();i++){
+					for (int j =0; i<=this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().size();j++){
+					if(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().get(j).getPrice().doubleValue()>=
+							this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(i).getPrice().doubleValue()){
 						FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
@@ -4204,6 +4206,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 				//569 - End
 			}
+		} // 569 - End
 			// Zonal Tier Pricing
 			for (CmZonalTierPricing promotion : this.getManagedBean().getSelectedMaintainItem()
 					.getCmZonalTierPricings()) {
