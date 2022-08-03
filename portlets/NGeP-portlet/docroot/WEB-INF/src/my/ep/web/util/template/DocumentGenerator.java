@@ -3,7 +3,6 @@
  */
 package my.ep.web.util.template;
 
-import java.awt.Font;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,10 +10,7 @@ import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.List;
 
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.portlet.PortletRequest;
-import javax.servlet.http.HttpServletRequest;
 
 import my.ep.factory.EpLogger;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -62,10 +58,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
-import org.jsoup.select.Elements;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import com.liferay.portal.util.PortalUtil;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;
 
@@ -216,12 +210,14 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 				String  getPortalBaseURL = SmCommonUtil.getBasePortalUrl();
 				fontPath = getPortalBaseURL+"/NGeP-portlet/resources/fonts/Arial.ttf";
 				
-						log.info("font path: "+fontPath);
+				log.info("font path: "+fontPath);
 				render.getFontResolver().addFont(fontPath, true);
+				//#25025 & #26770 - start
 				render.getFontResolver().addFont(getPortalBaseURL+"/NGeP-portlet/resources/fonts/Ariali.ttf",BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);  
 				render.getFontResolver().addFont(getPortalBaseURL+"/NGeP-portlet/resources/fonts/Arialbd.ttf",BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 				render.getFontResolver().addFont(getPortalBaseURL+"/NGeP-portlet/resources/fonts/Arialbi.ttf",BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-		        //#26130 - end
+		        //#25025 & #26770 - end
+				//#26130 - end
 				render.setDocumentFromString(html);
 				render.layout();
 				log.info("Velocity Issue : Create PDF");
@@ -304,7 +300,6 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	         wordMLPackage.save(new java.io.File(filePath));
 		}
 		finally{
-			// TODO not sure about the WordprocessingML_Package API 
 			wordMLPackage = null;
 		}
 		
@@ -410,7 +405,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		Text t4 = factory.createText();
 		t4.setValue("\r\n  Pihak Syarikat  : Penama pada sijil pendaftaran untuk menandatangani Surat ini.");
 		run.getContent().add(t1);
-		run.getContent().add(br);
+//		run.getContent().add(br);
 		run.getContent().add(br);
 		run.getContent().add(br);
 		// #26770 - End.
@@ -596,10 +591,10 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	
 	public static void main(String[] args) throws FileNotFoundException, DocumentException {
 		String html = "<div> <div> <<CONTRACT_PERIOD>> ini dan apa-apa kontrak yang timbul daripadanya hendaklah diertikan mengikut dan dikawal oleh undang-undang Malaysia, dan pembekal bersetuju tertakluk hanya kepada bidang kuasa Mahkamah Malaysia sahaja dalam apa-apa pertikaian atau perselisihan jua pun yang mungkin timbul mengenai &lt;&gt; ini atau apa-apa kontrak yang timbul daripadanya. </div> <div> <br /> </div> </div>";
-		String tempHtml = null;
-		Elements elements = null;
+		//String tempHtml = null;
+		//Elements elements = null;
 		Document doc = null;
-		ITextRenderer render = new ITextRenderer();
+		//ITextRenderer render = new ITextRenderer();
 		boolean valid = Jsoup.isValid(html, Whitelist.relaxed().addAttributes("h3", "style"));
 		System.out.println("Is Valid: "+ valid);
 		/*html = html.replaceAll("&amp;nbsp;", " ");
@@ -662,15 +657,17 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	//#25025 - end
 	
 	//#26130 - start
-		private String getServerUrl() {
-			ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
-			PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
-			HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
-			String requestURL = httpServletRequest.getRequestURL().toString();
-			String url = requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length()) +  httpServletRequest.getContextPath() + "/";
-			return url;
-		}
-		//#26130-end
+	/*
+	private String getServerUrl() {
+		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
+		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
+		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
+		String requestURL = httpServletRequest.getRequestURL().toString();
+		String url = requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length()) +  httpServletRequest.getContextPath() + "/";
+		return url;
+	}
+	*/
+	//#26130-end
 }
 
 
