@@ -2233,7 +2233,7 @@ public class SmApplicationBackingBean extends
 
 						List<SmPersonnel> ownerListTmp = new ArrayList<SmPersonnel>();
 						if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
-								|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+								|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
 							ownerListTmp = this.getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels();
 						} else {
 							ownerListTmp = this.getManagedBean().getSmAppl().getSmPersonnels();
@@ -7888,14 +7888,14 @@ public class SmApplicationBackingBean extends
 						initializeSmAddressChilds(smpersonAddress.getSmAddress());
 						
 						if(smAddressRes.getPmCountry().getCountryCode().equals(SupplierManagementConst.COUNTRY_UNKNOWN_CODE) && smpersonAddress.getSmAddress().getPostcode()!=null){
-								smAddressRes.setPmCountry(smpersonAddress.getSmAddress().getPmCountry());
-								smAddressRes.setCountryId(smpersonAddress.getSmAddress().getPmCountry().getCountryId());
-							}
+							smAddressRes.setPmCountry(smpersonAddress.getSmAddress().getPmCountry());
+							smAddressRes.setCountryId(smpersonAddress.getSmAddress().getPmCountry().getCountryId());
+						}
 						onChangeCountry(smAddressRes, SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
-							if(smpersonAddress.getSmAddress().getPmState() != null){
-								smAddressRes.setPmState(smpersonAddress.getSmAddress().getPmState());
-								smAddressRes.setStateId(smpersonAddress.getSmAddress().getPmState().getStateId());
-							}
+						if(smpersonAddress.getSmAddress().getPmState() != null){
+							smAddressRes.setPmState(smpersonAddress.getSmAddress().getPmState());
+							smAddressRes.setStateId(smpersonAddress.getSmAddress().getPmState().getStateId());
+						}
 						onChangeState(smAddressRes, SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
 						if (smpersonAddress.getSmAddress().getPmDivision() != null) {
 							smAddressRes.setPmDivision(smpersonAddress.getSmAddress().getPmDivision());
@@ -16643,8 +16643,8 @@ public class SmApplicationBackingBean extends
 								state.setStateId(addr.getSmAddress().getPmState().getStateId());
 							}
 							else{
-							state.setStateId(addr.getSmAddress().getPmDistrict().getPmState().getStateId());
-						}
+								state.setStateId(addr.getSmAddress().getPmDistrict().getPmState().getStateId());
+							}
 						}
 						
 						smAddress.setPmState(state);
