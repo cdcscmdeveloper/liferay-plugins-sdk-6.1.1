@@ -156,7 +156,7 @@
 
 								<div id="slides" style="width: 250px;">
 							   <!-- #30457 - Start [remove styleClass] 04/08/2022 -->
-									<ui:repeat var="cmImage"
+									<ui:repeat var="cmImage" sortBy="#{cmImage.imageName}"
 										value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
 										<p:graphicImage style="max-height:100%;max-width:100%;"
 											value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" />
