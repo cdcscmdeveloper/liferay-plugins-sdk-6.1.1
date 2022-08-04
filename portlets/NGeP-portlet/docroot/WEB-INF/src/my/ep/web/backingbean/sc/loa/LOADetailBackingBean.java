@@ -8836,11 +8836,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void onSaveSupplierOffer(String outcome) {
 		if (StringUtils.isBlank(getManagedBean().getNewSupplierOffered())
 				&& StringUtils.isBlank(getManagedBean().getNewSupplierJustification())) {
+			// start - #29006 (fixing on comment 570)
+			StringBuffer mandatoryItems = new StringBuffer();
+			String justificationMandatory =	ResourceBundleUtils.getMessage("lbl.sc.new.supplier.offered.justification.mandatory",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+			String supplierOfferMandatory=	ResourceBundleUtils.getMessage("lbl.sc.new.supplier.offer.mandatory",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+
+			mandatoryItems.append(justificationMandatory+"\n"+supplierOfferMandatory);
+			
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-							"lbl.sc.new.supplier.offered.and.justification.mandatory",
+							mandatoryItems.toString(),
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			// end - #29006 (fixing on comment 570)
 			return;
 		}
 		if (StringUtils.isBlank(getManagedBean().getNewSupplierOffered())) {
@@ -9101,13 +9113,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void createLampiranA3(ScLoiLoaItem scLoiLoaItem) {
 		removeUnwantedLampiranA3Report(2);
 		FacesScopes facesScopes = new FacesScopes();
+		// start - #29006 (fixing on comment 570)
 		ScLoaReport lampiranA3 = getQtAwardSO().createLampiranA3(
 				getManagedBean().getScLoa(),
 				populateLabelLampiranA3(
 						" "
-								+ new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_FORMAT).format(DateUtils // #29006 - reendorsed (comment 528)
-										.getCurrentDate()) + " ",
+								+ new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(DateUtils
+										.getCurrentDate())
+								+ ",  "
+								+ new SimpleDateFormat(CommonConstants.DEFAULT_TIME_FORMAT).format(DateUtils
+										.getCurrentDate()) + ",",
 						SmCommonUtil.getUserByUserId(facesScopes.getUserSessionBean().getUserId()).getUserName()));
+		// end - #29006 (fixing on comment 570)
 		try {
 			StringBuilder filename = new StringBuilder();
 			filename.append(lampiranA3.getTitle());
