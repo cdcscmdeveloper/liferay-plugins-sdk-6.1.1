@@ -731,7 +731,8 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		this.getManagedBean().setQuotationId(null);
 		ScReportFieldsSearchBean reportFileSearchBean = this.getManagedBean().getScReportSearchBean();
 		String reportCode = this.getManagedBean().getReportCode();
-		if (QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode) && reportFileSearchBean != null) {
+		if ((QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode) 
+				|| QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL.equals(reportCode)) && reportFileSearchBean != null) {//#21692
 			reportFileSearchBean.setScPtj(null);
 			reportFileSearchBean.setScPtjName(null);
 			if (!isDeskOfficer()) {
@@ -749,7 +750,8 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		String ptjCode = "";
 		boolean deskOfficerRoles = retriveUserRoles();
 		String reportCode = this.getManagedBean().getReportCode();
-		if (deskOfficerRoles && QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode)) {
+		if (deskOfficerRoles && (QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode)
+				|| QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL.equals(reportCode))) {//#21692
 			if (scQt != null && scQt.getQtId() != null) {
 				Date date = retriveDatesforOrgProfile(scQt.getPublishDate(), scQt.getCreatedDate());
 
