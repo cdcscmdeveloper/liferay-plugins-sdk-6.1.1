@@ -2233,7 +2233,7 @@ public class SmApplicationBackingBean extends
 
 						List<SmPersonnel> ownerListTmp = new ArrayList<SmPersonnel>();
 						if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
-								|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+								|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 							ownerListTmp = this.getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels();
 						} else {
 							ownerListTmp = this.getManagedBean().getSmAppl().getSmPersonnels();
