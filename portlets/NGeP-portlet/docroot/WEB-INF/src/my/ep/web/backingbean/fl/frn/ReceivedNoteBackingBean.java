@@ -578,7 +578,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);
 				
 				//28719-start
-				if(resDTOInvoice.isSuppContract() && !resDTOInvoice.isCrComplete()) {
+				if(resDTOInvoice.isSupplementContractComplete() && !resDTOInvoice.isCrComplete()) {
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.INFO_745090, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 					
