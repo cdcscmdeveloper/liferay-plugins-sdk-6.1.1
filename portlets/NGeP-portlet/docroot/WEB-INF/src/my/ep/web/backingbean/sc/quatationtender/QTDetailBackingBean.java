@@ -10186,6 +10186,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							if(resDTOLOA.isCloseQT() == true){
 							  isCloseQT = true; 
 							}
+			        		// Bug #33601 - Start
+			        		/*
 							QuationTenderResDTO resDTOLOI = detailSO.closeQTstatusForLOI(quationTenderReqDTO);
 							if(resDTOLOI.isCloseQT() == true){
 							  isCloseQT = true; 
@@ -10194,6 +10196,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							if(resDTOSF.isCloseQT() == true){
 								 isCloseQT = true; 
 							}
+							*/
+							//Bug #33601 - End 
 						}
 				}	
 			   return isCloseQT;	
