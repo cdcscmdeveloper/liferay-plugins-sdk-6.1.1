@@ -9630,14 +9630,22 @@ public class SpecificationBackingBean extends
 		if (null == technicalCheckList) {
 			technicalCheckList = new ArrayList<ScQtCheckList>();
 		}
+		
+		// Bug #33249@Syazani 28/07/2022 -- Start
+		String curCheckList = checkList.getTitle() + "_"
+				+ (checkList.getDefinationType() != null ? checkList.getDefinationType().getParameterId() : "");
 		for (int i = 0; i < technicalCheckList.size(); i++) {
-			if (checkList.getTitle().equalsIgnoreCase(
-					technicalCheckList.get(i).getTitle())) {
 				ScQtCheckList localCheckList = technicalCheckList.get(i);
+			String loopCheckList = localCheckList.getTitle() + "_"
+					+ (localCheckList.getDefinationType() != null ? localCheckList.getDefinationType().getParameterId() : "");
+			if (curCheckList.equals(loopCheckList)) {
+				// ScQtCheckList localCheckList = technicalCheckList.get(i);
 				// technicalCheckList.setDeleted(true);
 				// toBeRemoveCheckLists.add(technicalCheckList);
-				technicalCheckList.remove(localCheckList);
-				technicalCheckList.add(checkList);
+				// technicalCheckList.remove(localCheckList);
+				// technicalCheckList.add(checkList);
+				technicalCheckList.set(i, checkList);
+				// Bug #33249@Syazani 28/07/2022 -- End
 				break;
 			}
 		}
@@ -9678,14 +9686,20 @@ public class SpecificationBackingBean extends
 		if (null == financialCheckList) {
 			financialCheckList = new ArrayList<ScQtCheckList>();
 		}
+		
+		// Bug #33249@Syazani 28/07/2022 -- Start
+		String curCheckList = checkList.getTitle() + "_" + (checkList.getDefinationType() != null ? checkList.getDefinationType().getParameterId() : "");
 		for (int i = 0; i < financialCheckList.size(); i++) {
-			if (checkList.getTitle().equalsIgnoreCase(
-					financialCheckList.get(i).getTitle())) {
 				ScQtCheckList localCheckList = financialCheckList.get(i);
+			String loopCheckList = localCheckList.getTitle() + "_" + (localCheckList.getDefinationType() != null ? localCheckList.getDefinationType().getParameterId() : "");
+			if (curCheckList.equals(loopCheckList)) {
+				// ScQtCheckList localCheckList = financialCheckList.get(i);
 				// technicalCheckList.setDeleted(true);
 				// toBeRemoveCheckLists.add(technicalCheckList);
-				financialCheckList.remove(localCheckList);
-				financialCheckList.add(checkList);
+				// financialCheckList.remove(localCheckList);
+				// financialCheckList.add(checkList);
+				financialCheckList.set(i, checkList);
+				// Bug #33249@Syazani 28/07/2022 -- End
 				//#25138 - set score weightage for dettype 217 - start
 				financialCheckList.get(i).getQtScoreWeightage().setScore(checkList
 						.getQtScoreWeightage().getScore());
@@ -11063,13 +11077,16 @@ if (null != checklist && !checklist.isEmpty()) {
 
 				// localChecklist.addAll(finSpecs);
 				for (ScQtCheckList financialSpecs : finSpecs) {
+					// Bug #33249@Syazani 27/07/2022 -- Start
+					String titleSpec = financialSpecs.getTitle() + "_"
+							+ (financialSpecs.getDefinationType() != null ? financialSpecs.getDefinationType().getParameterId() : "");
 					for (ScQtCheckList financialList : financialCheckList) {
-						if (financialList.getTitle().equalsIgnoreCase(
-								financialSpecs.getTitle())
-								&& ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
-										.equalsIgnoreCase(financialSpecs
-												.getDefinationType()
+						String titleList = financialList.getTitle() + "_"
+								+ (financialList.getDefinationType() != null ? financialList.getDefinationType().getParameterId() : "");
+						if (titleList.equals(titleSpec)
+								&& ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(financialSpecs.getDefinationType()
 												.getParameterCode())) {
+							// Bug #33249@Syazani 27/07/2022 -- End
 							if (null != financialSpecs.getQtScoreWeightage()
 									&& financialSpecs.getQtScoreWeightage().getScore() != null //#25138
 									&& financialSpecs.getQtScoreWeightage()
@@ -12979,6 +12996,10 @@ if (null != checklist && !checklist.isEmpty()) {
 				if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
 					Integer localChecckListseq = SourcingConstants.CHECKLIST_SEQ_TEMPLATE_SPEC;
 					int technicalSpecCount = 0;
+					// Bug #33249@Syazani 27/07/2022 -- Start
+					String scQtTitleSpec = scQtCheckList.getTitle() + "_"
+							+ (scQtCheckList.getDefinationType() != null ? scQtCheckList.getDefinationType().getParameterId() : "");
+					// Bug #33249@Syazani 27/07/2022 -- End
 					for (ScQtCheckList techlist : technicalCheckList) {
 						if (QTConstants.TEMPLETE_SPEC_CODE
 								.equalsIgnoreCase(techlist.getDefinationType()
@@ -12989,13 +13010,12 @@ if (null != checklist && !checklist.isEmpty()) {
 									.getChecklistSeq() : localChecckListseq;
 
 						}
-						if (techlist
-								.getTitle()
-								.trim()
-								.replaceAll("\\s", "")
-								.equalsIgnoreCase(
-										scQtCheckList.getTitle().trim()
-												.replaceAll("\\s", ""))) {
+						
+						// Bug #33249@Syazani 27/07/2022 -- Start
+						String techTitleList = techlist.getTitle() + "_"
+								+ (techlist.getDefinationType() != null ? techlist.getDefinationType().getParameterId() : "");
+						if (techTitleList.trim().replaceAll("\\s", "").equals(scQtTitleSpec.trim().replaceAll("\\s", ""))) {
+							// Bug #33249@Syazani 27/07/2022 -- End
 							throw new EpException(MessageConst.ERROR_760207,
 									new String[] { scQtCheckList.getTitle() });
 						}
@@ -13008,19 +13028,16 @@ if (null != checklist && !checklist.isEmpty()) {
 				}
 				if (null != finanicalAllCheckList
 						&& !finanicalAllCheckList.isEmpty()) {
+					// Bug #33249@Syazani 27/07/2022 -- Start
+					String scQtCheckListTitle = scQtCheckList.getTitle() + "_"
+							+ (scQtCheckList.getDefinationType() != null ? scQtCheckList.getDefinationType().getParameterId() : "");
 					for (ScQtCheckList financiallist : finanicalAllCheckList) {
+						String financialTitleList = financiallist.getTitle() + "_"
+								+ (financiallist.getDefinationType() != null ? financiallist.getDefinationType().getParameterId() : "");
 						if (null != financiallist.getDefinationType()
-								&& !QTConstants.TEMPLETE_SPEC_CODE
-										.equalsIgnoreCase(financiallist
-												.getDefinationType()
-												.getParameterCode())
-								&& financiallist
-										.getTitle()
-										.trim()
-										.replaceAll("\\s", "")
-										.equalsIgnoreCase(
-												scQtCheckList.getTitle().trim()
-														.replaceAll("\\s", ""))) {
+								&& !QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(financiallist.getDefinationType().getParameterCode())
+								&& financialTitleList.trim().replaceAll("\\s", "").equals(scQtCheckListTitle.trim().replaceAll("\\s", ""))) {
+							// Bug #33249@Syazani 27/07/2022 -- End
 							throw new EpException(MessageConst.ERROR_760207,
 									new String[] { scQtCheckList.getTitle() });
 						}
@@ -13452,13 +13469,17 @@ if (null != checklist && !checklist.isEmpty()) {
 						if (null != technicalCheckLists
 								&& !technicalCheckLists.isEmpty()) {
 							boolean techSpec = false;
-
+							// Bug #33249@Syazani 27/07/2022 -- Start
+							String checkListTitle = checkList.getTitle() + "_"
+									+ (checkList.getDefinationType() != null ? checkList.getDefinationType().getParameterId() : "");
 							for (int i = 0; i < technicalCheckLists.size(); i++) {
 								ScQtCheckList qtCheckList = technicalCheckLists
 										.get(i);
 
-								if (qtCheckList.getTitle().equalsIgnoreCase(
-										checkList.getTitle())) {
+								String qtCheckListTitle = qtCheckList.getTitle() + "_"
+										+ (qtCheckList.getDefinationType() != null ? qtCheckList.getDefinationType().getParameterId() : "");
+								if (qtCheckListTitle.equals(checkListTitle)) {
+									// Bug #33249@Syazani 27/07/2022 -- End
 									techSpec = true;
 									technicalCheckLists.remove(i);
 									technicalCheckLists.add(i, checkList);
@@ -13516,12 +13537,16 @@ if (null != checklist && !checklist.isEmpty()) {
 						if (null != finanicialCheckLists
 								&& !finanicialCheckLists.isEmpty()) {
 							boolean finspec = false;
-
+							// Bug #33249@Syazani 27/07/2022 -- Start
+							String checkListTitle = checkList.getTitle() + "_"
+									+ (checkList.getDefinationType() != null ? checkList.getDefinationType().getParameterId() : "");
 							for (int i = 0; i < finanicialCheckLists.size(); i++) {
 								ScQtCheckList qtCheckList = finanicialCheckLists
 										.get(i);
-								if (qtCheckList.getTitle().equalsIgnoreCase(
-										checkList.getTitle())) {
+								String qtCheckListTitle = qtCheckList.getTitle() + "_"
+										+ (qtCheckList.getDefinationType() != null ? qtCheckList.getDefinationType().getParameterId() : "");
+								if (qtCheckListTitle.equals(checkListTitle)) {
+									// Bug #33249@Syazani 27/07/2022 -- End
 									finspec = true;
 									finanicialCheckLists.remove(i);
 									finanicialCheckLists.add(i, checkList);
@@ -13620,6 +13645,11 @@ if (null != checklist && !checklist.isEmpty()) {
 				if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
 					Integer localChecckListseq = SourcingConstants.CHECKLIST_SEQ_TEMPLATE_SPEC;
 					int technicalSpecCount = 0;
+					// Bug #33249@Syazani 27/07/2022 -- Start
+					String scQtCheckListTitle = scQtCheckList.getTitle() + "_"
+							+ (scQtCheckList.getDefinationType() != null ? scQtCheckList.getDefinationType().getParameterId() : "");
+					// Bug #33249@Syazani 27/07/2022 -- End
+					
 					for (ScQtCheckList techlist : technicalCheckList) {
 						if (QTConstants.TEMPLETE_SPEC_CODE
 								.equalsIgnoreCase(techlist.getDefinationType()
@@ -13630,13 +13660,12 @@ if (null != checklist && !checklist.isEmpty()) {
 									.getChecklistSeq() : localChecckListseq;
 
 						}
-						if (techlist
-								.getTitle()
-								.trim()
-								.replaceAll("\\s", "")
-								.equalsIgnoreCase(
-										scQtCheckList.getTitle().trim()
-												.replaceAll("\\s", ""))) {
+						
+						// Bug #33249@Syazani 27/07/2022 -- Start
+						String techlistTitle = techlist.getTitle() + "_"
+								+ (techlist.getDefinationType() != null ? techlist.getDefinationType().getParameterId() : "");
+						if (techlistTitle.trim().replaceAll("\\s", "").equals(scQtCheckListTitle.trim().replaceAll("\\s", ""))) {
+							// Bug #33249@Syazani 27/07/2022 -- End
 							throw new EpException(MessageConst.ERROR_760207,
 									new String[] { scQtCheckList.getTitle() });
 						}
@@ -13649,19 +13678,16 @@ if (null != checklist && !checklist.isEmpty()) {
 				}
 				if (null != finanicalAllCheckList
 						&& !finanicalAllCheckList.isEmpty()) {
+					// Bug #33249@Syazani 27/07/2022 -- Start
+					String scQtCheckListTitle = scQtCheckList.getTitle() + "_"
+							+ (scQtCheckList.getDefinationType() != null ? scQtCheckList.getDefinationType().getParameterId() : "");
 					for (ScQtCheckList financiallist : finanicalAllCheckList) {
+						String financiallistTitle = financiallist.getTitle() + "_"
+								+ (financiallist.getDefinationType() != null ? financiallist.getDefinationType().getParameterId() : "");
 						if (null != financiallist.getDefinationType()
-								&& !QTConstants.TEMPLETE_SPEC_CODE
-										.equalsIgnoreCase(financiallist
-												.getDefinationType()
-												.getParameterCode())
-								&& financiallist
-										.getTitle()
-										.trim()
-										.replaceAll("\\s", "")
-										.equalsIgnoreCase(
-												scQtCheckList.getTitle().trim()
-														.replaceAll("\\s", ""))) {
+								&& !QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(financiallist.getDefinationType().getParameterCode())
+								&& financiallistTitle.trim().replaceAll("\\s", "").equals(scQtCheckListTitle.trim().replaceAll("\\s", ""))) {
+							// Bug #33249@Syazani 27/07/2022 -- End
 							throw new EpException(MessageConst.ERROR_760207,
 									new String[] { scQtCheckList.getTitle() });
 						}
@@ -13854,13 +13880,18 @@ if (null != checklist && !checklist.isEmpty()) {
 						.getScQtCheckSt2financeProposalList(), scQtCheckList,
 						scQt,false);
 			}//32134-End
+			// Bug #33249@Syazani 27/07/2022 -- Start
 			//1873 - start - note 52
-			String finChecklistTitle = scQtCheckList.getTitle().trim().replaceAll("\\s", "");//1873 - note 97
+			String finChecklistTitle = (scQtCheckList.getTitle() + "_" + (scQtCheckList.getDefinationType() != null ? scQtCheckList
+					.getDefinationType().getParameterId() : "")).trim().replaceAll("\\s", "");// 1873 - note 97
 			//1873 note 86 - start
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())){
 				for(ScQtCheckList checklist: this.getManagedBean().getScQtCheckSt2techProposal()){
 					boolean edited = checklist.isEdited()==null ? false: checklist.isEdited();
-					if(finChecklistTitle.equals(checklist.getTitle().trim().replaceAll("\\s", "")) && edited){//1873 - note 97	// Bug #33249@Syazani 27/07/2022
+					String checklistTitle = (checklist.getTitle() + "_" + (checklist.getDefinationType() != null ? checklist.getDefinationType()
+							.getParameterId() : "")).trim().replaceAll("\\s", "");
+					if (finChecklistTitle.equals(checklistTitle) && edited) {// 1873 - note 97
+						// Bug #33249@Syazani 27/07/2022 -- End
 						checklist.setEdited(false);
 						updatedCheckLists.add(checklist);	
 						break;
