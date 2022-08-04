@@ -27,6 +27,14 @@
 .columnDateToClass {
 	width: 1%;
 }
+
+#decisionTypeId{
+	scrollbar-width: none;
+}
+
+#decisionTypeId::-webkit-scrollbar {
+  	display: none;
+}
 </style>
 		<h:outputText styleClass="instruction"
 			style="float:left;margin-left:20px;"
@@ -149,6 +157,7 @@
 				</td>
 				<td>
 				<p:selectOneMenu
+					id="decisionTypeId"
 					value="#{cc.attrs.bBean.managedBean.decisionType}"
 					label="#{lbl['lbl.sc.qt.report.epv.status']}"
 					style="width: 178px;margin-bottom: 5px;">
