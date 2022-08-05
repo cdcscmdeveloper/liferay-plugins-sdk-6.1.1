@@ -101,8 +101,8 @@
 			<ac:paginator for="draftSupplierItemID"></ac:paginator>
 			
 			
-	
-			<p:column style="text-align: left;width:2%;">
+	        <!-- #30457 - change width -->
+			<p:column style="text-align: left;width:1%;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selectAllCheckBoxId"
 						value="#{catalogueBackingBean.managedBean.supplierItemcheckBoxAll}">
@@ -134,7 +134,8 @@
 				<h:outputText value="#{selectedSuppCat.cmItem.itemName}" />
 	
 			</p:column>
-			<p:column width="2%">
+			<!-- #30457 - change width -->
+			<p:column width="4%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.cm.price']}" />
@@ -157,7 +158,8 @@
 					update="@form" />	
 				<!-- #569-End -->
 			</p:column>
-			<p:column width="5%">
+			<!-- #30457 - change width -->
+			<p:column width="4%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.cm.uom']}" />
@@ -189,14 +191,15 @@
 					title="#{lbl['lbl.cm.suptemp.upload.image.tooltip']}" /> 
 				</p:commandLink>
 				<!-- #30457 end -->
-				<!-- 569 Start - 29/07/2022 --> 
+				<!-- 569 Start - 03/08/2022 --> 
 				<p:graphicImage
 				    rendered="#{selectedSuppCat.selected and selectedSuppCat.indicator}"
-				    value="#{selectedSuppCat.indicator ? '/css/images/design/ico-termination.png' : ''}" update="@form" />
-				<!-- 569 End - 29/07/2022 --> 
+				    value="#{selectedSuppCat.selected and selectedSuppCat.indicator ? '/css/images/design/ico-termination.png' : ''}" update="@form" />
+				<!-- 569 End - 03/07/2022 --> 
 			</p:column>
 			<!-- START SSM INTEGRATION #27089 -->
-			<p:column width="2%">
+			<!-- #30457 - change width -->
+			<p:column width="4%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.cm.start.date']}" />
