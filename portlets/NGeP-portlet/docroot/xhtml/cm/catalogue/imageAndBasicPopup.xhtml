@@ -48,8 +48,9 @@
 					<table class="noBorder" width="100%">
 						<tr class="noBorder">
 							<td class="noBorder" width="80%">
+							  <!-- #30457 remove sortBy --> 
 								<p:dataTable value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}" 
-								var="item" sortBy="#{item.imageName}" id="imageTable" rowIndexVar="rowIndex" rowKey="#{item.supplierItemId}"
+								var="item" id="imageTable" rowIndexVar="rowIndex" rowKey="#{item.supplierItemId}"
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 									<!-- disable button when list have 1 image, find value for image based on item-->
 									<p:column width="85%" style="text-align: center;">
