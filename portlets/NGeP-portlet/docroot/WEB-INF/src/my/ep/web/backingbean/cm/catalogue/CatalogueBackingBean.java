@@ -1424,6 +1424,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					}
 				}
 			}
+			
+			// #30457 - Start
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(), new Comparator<CmImage>() {
+				@Override
+				public int compare(CmImage o1, CmImage o2) {
+					return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName() + o2.getCreatedDate());
+				}
+			});
+		}
+		// #30457 - End
 
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(true);
 
@@ -1582,6 +1593,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				&& !this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().isEmpty()) {
 			groupPricesByTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings(), "P");
 		}
+		
+		// #30457 - Start
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(), new Comparator<CmImage>() {
+				@Override
+				public int compare(CmImage o1, CmImage o2) {
+					return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName() + o2.getCreatedDate());
+				}
+			});
+		}
+		// #30457 - End
 
 		updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 		// return "addCatalogItem";
@@ -1644,6 +1666,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				&& !this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().isEmpty()) {
 			groupPricesByTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings(), "P");
 		}
+		
+		// #30457 - Start
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(), new Comparator<CmImage>() {
+				@Override
+				public int compare(CmImage o1, CmImage o2) {
+					return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName() + o2.getCreatedDate());
+				}
+			});
+		}
+		// #30457 - End
 
 		updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 		// return "addCatalogItem";
@@ -1712,6 +1745,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				log.info("userResDTO.getPmUser().getUserName():" + userResDTO.getPmUser().getUserName());
 				remark.setCreatedUser(userResDTO.getPmUser().getUserName());
 			}
+			
+			// #30457 - Start
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+				Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(),
+						new Comparator<CmImage>() {
+							@Override
+							public int compare(CmImage o1, CmImage o2) {
+								return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName()
+										+ o2.getCreatedDate());
+							}
+						});
+			}
+			// #30457 - End
+			
 			this.getManagedBean().setTabActiveIndex(1);
 			this.getManagedBean().setDisplayCatalogue(true);
 			// updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
@@ -1750,6 +1797,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
 
 		retriveSupplierGstInfomation(resDTO.getSupplierItem().getSmSupplier());
+		
+		
+		// #30457 - Start
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(), new Comparator<CmImage>() {
+				@Override
+				public int compare(CmImage o1, CmImage o2) {
+					return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName() + o2.getCreatedDate());
+				}
+			});
+		}
+		// #30457 - End
 
 		this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
 		this.getManagedBean().getSelectedMaintainItem().setCompareDesc(resDTO.getSupplierItem().getItemDesc());
@@ -1825,6 +1884,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				log.info("userResDTO.getPmUser().getUserName():" + userResDTO.getPmUser().getUserName());
 				remark.setCreatedUser(userResDTO.getPmUser().getUserName());
 			}
+			
+			// #30457 - Start
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+				Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(),
+						new Comparator<CmImage>() {
+							@Override
+							public int compare(CmImage o1, CmImage o2) {
+								return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName()
+										+ o2.getCreatedDate());
+							}
+						});
+			}
+			// #30457 - End
 
 			this.getManagedBean().setTabActiveIndex(3);
 			this.getManagedBean().setDisplayCatalogue(true);
@@ -12198,7 +12270,24 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().setItemSelectedIndex(i % this.getManagedBean().getPublishTabPageSize());
 			this.getManagedBean().setSelectedMaintainItem(
 					this.getManagedBean().getPublishSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()));
+		// #30457 - Start
+		}else if(this.getManagedBean().getTabActiveIndex() == 5){
+			this.getManagedBean().setItemSelectedIndex(i % this.getManagedBean().getExpiredTabPageSize());
+			this.getManagedBean().setSelectedMaintainItem(
+					this.getManagedBean().getExpiredSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()));
 		}
+		
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(), new Comparator<CmImage>() {
+				@Override
+				public int compare(CmImage o1, CmImage o2) {
+					// TODO Auto-generated method stub
+
+					return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName() + o2.getCreatedDate());
+				}
+			});
+		}
+		// #30457 - End
 	}
 	
 	public void closeImagePopup(){ //only affecting draft tab and draft_supp_temp only
