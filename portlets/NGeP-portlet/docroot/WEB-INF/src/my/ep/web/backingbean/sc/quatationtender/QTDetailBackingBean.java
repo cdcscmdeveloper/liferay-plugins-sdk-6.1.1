@@ -3628,32 +3628,42 @@ public class QTDetailBackingBean extends
 								.equals(approvalCategoryCode)) {
 							List<ScQtApprovalRequest> approvalRequest = qtApproval
 									.getScQtApprovalDtls();
-							if (null != approvalRequest
-									&& !approvalRequest.isEmpty()) {
+							
+							if (null != approvalRequest && !approvalRequest.isEmpty()) {
 								for (int i = 0; i < approvalRequest.size(); i++) {
-									PmParameter parameter = approvalRequest
-											.get(i).getApproverAction();
+									PmParameter parameter = approvalRequest.get(i).getApproverAction();
+									
 									if (null == parameter) {
-										approvalRequest.get(i)
-												.setApproverAction(
-														new PmParameter());
+										approvalRequest.get(i).setApproverAction(new PmParameter());
+										
 										ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
-										approvalRemark
-												.setApprovalRequest(approvalRequest
-														.get(i));
-										approvalRequest.get(i)
-												.setAppRequestRemark(
-														approvalRemark);
+										approvalRemark.setApprovalRequest(approvalRequest.get(i));
+										
+										approvalRequest.get(i).setAppRequestRemark(approvalRemark);
 
 										// bug #30435, Enhancement #25077 - start
 										if (null != getManagedBean().getPmParam()) {
 											approvalRequest.get(i).setApproverAction(getManagedBean().getPmParam());
 										}
 
-										if (null != getManagedBean().getScQtApprovalReqAttachement()) {
-											approvalRequest.get(i).setApprovalRequestAttachement(
-													getManagedBean().getScQtApprovalReqAttachement());
-										}
+										// #25077 - Start
+										if (this.getManagedBean().isFlagFileAttahmentDeleted()) {
+											// #25077 - End
+											if (null != getManagedBean().getScQtApprovalReqAttachement()) {
+												approvalRequest.get(i).setApprovalRequestAttachement(
+														getManagedBean().getScQtApprovalReqAttachement());
+											}
+											// #25077 - Start
+											else {
+												approvalRequest.get(i).setApprovalRequestAttachement(
+														getManagedBean().getScQtApprovalReqAttachement());
+											}
+										} else {
+											if (null != getManagedBean().getScQtApprovalReqAttachement()) {
+												approvalRequest.get(i).setApprovalRequestAttachement(
+														getManagedBean().getScQtApprovalReqAttachement());
+											}
+										}// #25077 - End
 
 										if (null != getManagedBean().getScQtAppRequestRemark()) {
 											approvalRemark.setApprovalRequest(approvalRequest.get(i));
@@ -3662,15 +3672,27 @@ public class QTDetailBackingBean extends
 										}
 										// bug #30435, Enhancement #25077 - end
 									} else {
-										if (null == approvalRequest.get(i)
-												.getAppRequestRemark()) {
+										// #25077 - Start
+										if (this.getManagedBean().isFlagFileAttahmentDeleted()) {
+											if (null == getManagedBean().getScQtApprovalReqAttachement()) {
+												approvalRequest.get(i).setApprovalRequestAttachement(
+														getManagedBean().getScQtApprovalReqAttachement());
+											} else {
+												approvalRequest.get(i).setApprovalRequestAttachement(
+														getManagedBean().getScQtApprovalReqAttachement());
+											}
+										} else {
+											if (null != getManagedBean().getScQtApprovalReqAttachement()) {
+												approvalRequest.get(i).setApprovalRequestAttachement(
+														getManagedBean().getScQtApprovalReqAttachement());
+											}
+										}
+										// #25077 - End
+
+										if (null == approvalRequest.get(i).getAppRequestRemark()) {
 											ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
-											approvalRemark
-													.setApprovalRequest(approvalRequest
-															.get(i));
-											approvalRequest.get(i)
-													.setAppRequestRemark(
-															approvalRemark);
+											approvalRemark.setApprovalRequest(approvalRequest.get(i));
+											approvalRequest.get(i).setAppRequestRemark(approvalRemark);
 										}
 									}
 								}
