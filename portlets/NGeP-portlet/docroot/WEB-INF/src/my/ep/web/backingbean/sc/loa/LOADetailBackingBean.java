@@ -3902,6 +3902,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 								MessageConst.ERROR_775178, new String[] {updatedItems.toString()}, MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
+				return resDTO;
 				// #29006 - end - (fixing on comment 570)
 			}
 			// #29006 - end - reendorsed (comment 528)
