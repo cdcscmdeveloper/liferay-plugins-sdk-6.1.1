@@ -705,7 +705,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			reqDTO.getSupplierItem().add(supplierItem);
 
 		}
-		CatalogueResDTO resDTO = catalogueSO.saveSupplierItem(reqDTO);
+		//CatalogueResDTO resDTO = catalogueSO.saveSupplierItem(reqDTO);
+		catalogueSO.saveSupplierItem(reqDTO);
 
 		// /////////////////End Bpm process/////////////////////////
 		FacesScopes face = new FacesScopes();
@@ -909,14 +910,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 
 		}
-		CatalogueResDTO resDTO = catalogueSO.saveSupplierItem(reqDTO);
+		//CatalogueResDTO resDTO = catalogueSO.saveSupplierItem(reqDTO);
+		catalogueSO.saveSupplierItem(reqDTO);
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 
 		// /////////////////End Bpm process/////////////////////////
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
 		codeReqDTO = new CodificationReqDTO();
-		CodificationResDTO codeResDTO = null;
+		//CodificationResDTO codeResDTO = null;
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
@@ -932,7 +934,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		codeReqDTO.setToken(token);
 		codeReqDTO.setPojo(obj);
 
-		codeResDTO = codificationSO.updateExtensionRequest(codeReqDTO);
+		//codeResDTO = codificationSO.updateExtensionRequest(codeReqDTO);
+		codificationSO.updateExtensionRequest(codeReqDTO);
 		
 		// #30878@08052021 - start
 		log.info("DA CMCD 2 " + action);
@@ -940,11 +943,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
 					ICodificationSO.class);
 			CodificationReqDTO reqCodeDTO1 = new CodificationReqDTO();
-			CodificationResDTO codeResDTO1 = null;
+			//CodificationResDTO codeResDTO1 = null;
 			UnspscCodeBackingBean cd = new UnspscCodeBackingBean();
 			log.info("DA CMCD 2 IN");
 			reqCodeDTO1.setDocId(cd.getManagedBean().getRequestCode().getRequestId());
-			codeResDTO1 = unspscSO.updateIsCompletedTaskWorkflowStatus(reqCodeDTO1);
+			//codeResDTO1 = unspscSO.updateIsCompletedTaskWorkflowStatus(reqCodeDTO1);
+			unspscSO.updateIsCompletedTaskWorkflowStatus(reqCodeDTO1);
 		}
 		// #30878@08052021 - end
 
@@ -978,7 +982,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm",
 				ISupplierSearchSO.class);
 
-		SmSupplier smSupplier = null;
+		//SmSupplier smSupplier = null;
 
 		try {
 			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
@@ -994,7 +998,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 
 			log.info("getSmSupplier: " + smResDTO.getResultBean().getResultList().get(0));
-			smSupplier = smResDTO.getResultBean().getResultList().get(0);
+			//smSupplier = smResDTO.getResultBean().getResultList().get(0);
 
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
@@ -1884,7 +1888,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				} else {
 					CmItem cmItem = new CmItem();
 					cmItem.setExtensionCode(ctPanelItem.getScRequestItem().getTempUnspscCode());
-					// TODO temp unspc code should have value.
 					if (cmItem.getExtensionCode() == null) {
 						cmItem.setExtensionCode("000");
 					}
@@ -1929,7 +1932,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				} else {
 					CmItem cmItem = new CmItem();
 					cmItem.setExtensionCode(ctContractItem.getScRequestItem().getTempUnspscCode());
-					// TODO temp unspc code should have value.
 					if (cmItem.getExtensionCode() == null) {
 						cmItem.setExtensionCode("000");
 					}
@@ -2463,7 +2465,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		FacesContext context = FacesContext.getCurrentInstance();
 
-		Map map2 = context.getExternalContext().getRequestParameterMap();
+		Map<?, ?> map2 = context.getExternalContext().getRequestParameterMap();
 		String newCodes = (String) map2.get("name1");
 
 		log.debug("***event.getTreeNode()*****:" + newCodes);
@@ -2477,6 +2479,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * @throws Exception
 	 *             the exception
 	 */
+	@SuppressWarnings("deprecation")
 	public void uploadExcel(FileUploadEvent event) throws Exception {
 		try {
 			log.debug("uploadExcel");
@@ -2484,7 +2487,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			log.debug("item.getFileName()" + item.getFileName());
 
-			SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
+			//SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
 
 			FileInputStream file = (FileInputStream) item.getInputstream();
 
@@ -2506,13 +2509,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			Date startDate = null;
 			Date endDate = null;
 			String additionalItemDesc = null;
-			Double frequency;
+			//Double frequency;
 			String uom = null;
 			String modelNo = null;
 			String skuNo = null;
 			String manfPartNo = null;
 			Double minOrder;
-			Double maxOrder;
+			//Double maxOrder;
 			Double leadTime;
 			// Map map = new HashMap();
 
@@ -2775,7 +2778,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
 			reqDTO.setSaveSupplierItems(uploadedSupplierItems);
-			CatalogueResDTO resDTO = catalogueSO.updateSupplierItem(reqDTO);
+			//CatalogueResDTO resDTO = catalogueSO.updateSupplierItem(reqDTO);
+			catalogueSO.updateSupplierItem(reqDTO);
 
 			/*
 			 * for(CmSupplierItem cmSupplierItem : cmSupplierItems){
@@ -2824,6 +2828,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				this.getManagedBean().setTabActiveIndex(0);
 
 			}
+			workbook.close();
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -2839,6 +2844,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * @throws Exception
 	 *             the exception
 	 */
+	@SuppressWarnings("rawtypes")
 	public StreamedContent getFile() throws Exception {
 
 		log.info("***catalogue maintainance download write***");
@@ -2876,13 +2882,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		int no = 1;
 
-		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
-				ICodificationSO.class);
-		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",
-				ICatalogueSO.class);
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
+		//ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
 		CodificationReqDTO reqDTO;
-		CatalogueReqDTO catalogueReqDTO;
+		//CatalogueReqDTO catalogueReqDTO;
 
 		for (int i = 0; i < this.getManagedBean().getCloneCmSupplierItemLs().size(); i++) {
 			List dataLs = new Vector();
@@ -4178,9 +4182,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					this.getManagedBean().setZonalPricingIndex(1);
 					return "editCatalogItem";
 				}
-				
-				for (int i =1; i<=this.getManagedBean().getSelectedMaintainItem().getzStdPrices().size()-1;i++){
-					if(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().get(0).getPrice().doubleValue()>=this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(i).getPrice().doubleValue()){
+				//#569 - Start
+				for (int i =0; i<=this.getManagedBean().getSelectedMaintainItem().getzStdPrices().size();i++){
+					for (int j =0; i<=this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().size();j++){
+					if(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().get(j).getPrice().doubleValue()>=
+							this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(i).getPrice().doubleValue()){
 						FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
@@ -4193,6 +4199,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 				//569 - End
 			}
+		} // 569 - End
 			// Zonal Tier Pricing
 			for (CmZonalTierPricing promotion : this.getManagedBean().getSelectedMaintainItem()
 					.getCmZonalTierPricings()) {
@@ -5492,7 +5499,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				CmSupplierItem catalog = resDTO.getSupplierItem();
 
 				log.info("catalog.getPmUom().getUomName():" + catalog.getPmUom().getUomName());
-
+				
 				// #569 - Start
 				for (int j = 0; j < this.getManagedBean().getCloneCmSupplierItemLs().size(); j++) {
 					if (StringUtils.isBlank(this.getManagedBean().getCloneCmSupplierItemLs().get(j).getItemDesc()) || CollectionUtils
@@ -8707,7 +8714,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} else {
 			this.getManagedBean().setError3(false);
 		}
-
+        
 		// # 29961 - Start Remove error7
 		/*// check for 1 year period
 		if (standardPricing.getStartDate() != null && standardPricing.getEndDate() != null) {
@@ -10273,7 +10280,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 		// 200921@akmal - Enhancement27627 - End
 	}
-
+    
 	// #30457 - Start
 	// 20200520@akmal - Enhancement27627 - Start
 	public boolean isPromotionPriceExist(CmSupplierItem cmSupplierItem) {
@@ -10286,19 +10293,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		log.info(cmSupplierItem.getCmPromotionPricing().getEndDate());
 		if (!this.getManagedBean().isAddPromotion()) {
 			if (!this.getManagedBean().isCatDPScreen()) {
-		if (cmSupplierItem.getCmPromotionPricing().getStartDate() != null
-				|| cmSupplierItem.getCmPromotionPricing().getEndDate() != null
+				if (cmSupplierItem.getCmPromotionPricing().getStartDate() != null
+						|| cmSupplierItem.getCmPromotionPricing().getEndDate() != null
 						|| cmSupplierItem.getCmPromotionPricing().getPrice() != null) {
 					this.getManagedBean().setPromoPriceExist(true);
-		// 201002@akmal - Bug29265 - Start
-		// #29177 - CR 27627: Static Code Analysis
+					// 201002@akmal - Bug29265 - Start
+					// #29177 - CR 27627: Static Code Analysis
 					// changed else-if-else statement to single-returned else
 					// statement
-		// else if(this.getManagedBean().isPromoPriceExist())
-		// return true;
-		// 201002@akmal - Bug29265 - End
-		// else
-		// return false;
+					// else if(this.getManagedBean().isPromoPriceExist())
+					// return true;
+					// 201002@akmal - Bug29265 - End
+					// else
+					// return false;
 				} else {
 					this.getManagedBean().setPromoPriceExist(false);
 					// end #29177
@@ -10318,12 +10325,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 			}
 		}
-			return this.getManagedBean().isPromoPriceExist();
+		return this.getManagedBean().isPromoPriceExist();
 	}
-
 	// 20200520@akmal - Enhancement27627 - End
 	// #30457 - End
-
+	
 	/**
 	 * This method is used to navigate the pending task page.
 	 * 
@@ -12224,7 +12230,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		//#569 - end
 		
 		//#30457 - Start 29/07/2022
-		Double minPriceVal =  getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM);
+		Double minPriceVal = getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM);
 		DecimalFormat df = new DecimalFormat("0.00#");
 		//#30457 - End 29/07/2022
 		//#29961 - Start
