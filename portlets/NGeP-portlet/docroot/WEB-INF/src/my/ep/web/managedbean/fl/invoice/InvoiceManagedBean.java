@@ -157,10 +157,12 @@ public class InvoiceManagedBean extends BaseManagedBean {
     private boolean CtTypeMinistry;
     //24956 end
     
-	//33238 start
+    //30911 start
     private List<SelectItem> factoringAccList;
-    //33238 end
-    
+    //30911 end
+
+    private boolean isSupplementContractComplete = true; //28719
+
 	public Map<String, PmFinancialOrg> getFactoringAccountMap() {
 		if(factoringAccountMap==null) {
 			factoringAccountMap = new HashMap<String, PmFinancialOrg>();
@@ -1262,7 +1264,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	}
 	//24956 end
 	
-	//33238 start
+	//30911 start
 	public List<SelectItem> getFactoringAccList() {
 		return factoringAccList;
 	}
@@ -1270,8 +1272,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	public void setFactoringAccList(List<SelectItem> factoringAccList) {
 		this.factoringAccList = factoringAccList;
 	}
-	//33238 end
-		
+	//30911 end
 	
 	//32967-start
 	/**
@@ -1288,4 +1289,13 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.accountNo = accountNo;
 	}
 	//32967-end
+	//28719-start
+	public boolean isSupplementContractComplete() {
+		return isSupplementContractComplete;
+	}
+
+	public void setSupplementContractComplete(boolean isSupplementContractComplete) {
+		this.isSupplementContractComplete = isSupplementContractComplete;
+	}
+	//28719-end	
 }

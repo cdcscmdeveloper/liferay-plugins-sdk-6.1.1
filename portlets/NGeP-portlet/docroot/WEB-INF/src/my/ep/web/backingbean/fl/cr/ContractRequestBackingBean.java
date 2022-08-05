@@ -1173,7 +1173,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 			}
 			
-
 			for (CtContractItem contractedItem : contractedItemList) {
 				itemExisted = false;
 				for (FlFulfilmentItemAddr itemAddr : getManagedBean().getItemAddrList()) {
@@ -1344,7 +1343,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				ContractReqDTO contractReqDTO = new ContractReqDTO();
 				contractReqDTO.setContractId(resDTO.getFlFulfilmentRequest().getCtContract().getContractId());
-			
+				
 				resDTO.getFlFulfilmentRequest().setCtContract(contractSO.retrieveContract(contractReqDTO).getContract());
 				ContractResDTO ctResDTO = contractSO.retrieveContractByLoaId(contractReqDTO);
 				
@@ -7138,7 +7137,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			resDTO=fulfilmentRequestSO.validateAP59(reqDTO);
 			
 			//28719-start
-			if(resDTO.isSuppContract() && !resDTO.isCrComplete()) {
+			if(!resDTO.isSupplementContractComplete() && !resDTO.isCrComplete()) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_745090, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 				

@@ -201,11 +201,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
 			if(!getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//33238
-			//32967-start
-			if(null != getManagedBean().getAccountNo()){
-				getManagedBean().getInvoice().setAccountNo(getManagedBean().getAccountNo());
-			}
-			//32967-end
+				//32967-start
+				if(null != getManagedBean().getAccountNo()){
+					getManagedBean().getInvoice().setAccountNo(getManagedBean().getAccountNo());
+				}
+				//32967-end
 			}
 			FlInvoice invoice = getManagedBean().getInvoice();
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
@@ -405,8 +405,15 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && resDTO.getInvoice()!=null && resDTO.getInvoice().getAp59Status()!=null && 
 						resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
 					isPendingAP59Decision = true;
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_745001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					//28719-Start
+					if(!getManagedBean().isSupplementContractComplete()){
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.INFO_745027, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					}else{
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.INFO_745001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					}
+					//28719-End
 				}
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && reqDTO.isCan()) {
 					if(resDTO.getInvoice().getAp59Status()==null || 
@@ -1815,6 +1822,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			reqDTO.setInvoice(getManagedBean().getInvoice());
 			FulfilmentReqDTO reqDTO2 = invoiceSO.validationCheck(reqDTO);
 			getManagedBean().setInvoice(reqDTO2.getInvoice());
+			getManagedBean().setSupplementContractComplete(reqDTO2.isSupplementContractComplete());//28719
 			
 			if(hasGovtSellerRole()){
 				setTextBeforeSign(outcome);
