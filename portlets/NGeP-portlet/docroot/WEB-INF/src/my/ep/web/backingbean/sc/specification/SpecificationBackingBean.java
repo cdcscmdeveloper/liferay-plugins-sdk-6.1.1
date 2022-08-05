@@ -9758,6 +9758,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			boolean sample = false;
 			boolean demo = false;
 			for (ScQtCheckList checkList : techCheckList) {
+				//Bug #33358 start
+				ScQtScoreWeightage weight = checkList.getQtScoreWeightage();
+				if (null != weight && !checkList.isScoringReq()){
+					weight.setWeightage(new BigDecimal(0));
+					checkList.setQtScoreWeightage(weight);
+				}
+				//Bug #33358 end
+				
 				if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(checkList
 						.getDefinationType().getParameterCode())) {
 					if(null!=scQt.getEvaluationType() && ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(scQt.getEvaluationType())){
@@ -9797,6 +9805,17 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 
 		if (CollectionUtils.isNotEmpty(financialCheckList)) {
+			
+			//Bug #33358 start
+			for (ScQtCheckList checkList : financialCheckList) {
+				ScQtScoreWeightage weight = checkList.getQtScoreWeightage();
+				if (null != weight && !checkList.isScoringReq()){
+					weight.setWeightage(new BigDecimal(0));
+					checkList.setQtScoreWeightage(weight);
+				}
+			}
+			//Bug #33358 end
+			
 			/*
 			 * for (ScQtCheckList financialcheckList : financialCheckList) { if
 			 * (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
