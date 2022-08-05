@@ -179,7 +179,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Date minContractDate;
 	private Date maxContractDate;
 	
-	private String tempLogin; //TODO: temp and to be removed
+	private String tempLogin; 
 	private String espkbCommitmentNo;
 	private String ptjCodeName;
 	//start added for #24353
@@ -458,6 +458,20 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 										"fulfilment_type",
 										SearchOperator.OPERATOR_EQUALS.value(), 
 										searchTypesDD));
+					//start 24956
+					}else if(searchTypesDD.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"fulfilment_type",
+										SearchOperator.OPERATOR_EQUALS.value(), 
+										searchTypesDD));
+					}else if(searchTypesDD.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"fulfilment_type",
+										SearchOperator.OPERATOR_EQUALS.value(), 
+										searchTypesDD));	
+				//end 24956	
 					}
 				}
 				
@@ -501,7 +515,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 				FulfilmentResDTO resfDTO;
 				if(resDTO.isSuccessful()) {
 					for(VCtActiveContract vCtActiveContract : resDTO.getActiveContractResultBean().getResultList()) {
-						if(vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+						if(vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+								|| vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) { //24956
 							/*13984 Schedule/ Phase info List BEGINNING*/
 							contractReqDTO.setContractId(vCtActiveContract.getContractId());
 							contractReqDTO.setOrgProfileId(orgProfileId);//28469
