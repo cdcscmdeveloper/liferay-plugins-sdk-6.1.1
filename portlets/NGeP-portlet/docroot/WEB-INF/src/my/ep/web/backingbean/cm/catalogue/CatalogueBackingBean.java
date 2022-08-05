@@ -1432,15 +1432,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 			
 			// #30457 - Start
-		if (CollectionUtils.isEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
 			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(), new Comparator<CmImage>() {
 				@Override
 				public int compare(CmImage o1, CmImage o2) {
-					// TODO Auto-generated method stub
-
 					return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName() + o2.getCreatedDate());
 				}
-
 			});
 		}
 		// #30457 - End
@@ -1604,15 +1601,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 		
 		// #30457 - Start
-		if (CollectionUtils.isEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
 			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(), new Comparator<CmImage>() {
 				@Override
 				public int compare(CmImage o1, CmImage o2) {
-					// TODO Auto-generated method stub
-
 					return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName() + o2.getCreatedDate());
 				}
-
 			});
 		}
 		// #30457 - End
@@ -1680,15 +1674,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 		
 		// #30457 - Start
-		if (CollectionUtils.isEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
 			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(), new Comparator<CmImage>() {
 				@Override
 				public int compare(CmImage o1, CmImage o2) {
-					// TODO Auto-generated method stub
-
 					return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName() + o2.getCreatedDate());
 				}
-
 			});
 		}
 		// #30457 - End
@@ -1761,17 +1752,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 			
 			// #30457 - Start
-			if (CollectionUtils.isEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
 				Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(),
 						new Comparator<CmImage>() {
 							@Override
 							public int compare(CmImage o1, CmImage o2) {
-								// TODO Auto-generated method stub
-
 								return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName()
 										+ o2.getCreatedDate());
 							}
-
 						});
 			}
 			// #30457 - End
@@ -1817,15 +1805,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 		
 		// #30457 - Start
-		if (CollectionUtils.isEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
 			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(), new Comparator<CmImage>() {
 				@Override
 				public int compare(CmImage o1, CmImage o2) {
-					// TODO Auto-generated method stub
-
 					return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName() + o2.getCreatedDate());
 				}
-
 			});
 		}
 		// #30457 - End
@@ -1905,17 +1890,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 			
 			// #30457 - Start
-			if (CollectionUtils.isEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
 				Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(),
 						new Comparator<CmImage>() {
 							@Override
 							public int compare(CmImage o1, CmImage o2) {
-								// TODO Auto-generated method stub
-
 								return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName()
 										+ o2.getCreatedDate());
 							}
-
 						});
 			}
 			// #30457 - End
@@ -12297,10 +12279,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().setItemSelectedIndex(i % this.getManagedBean().getPublishTabPageSize());
 			this.getManagedBean().setSelectedMaintainItem(
 					this.getManagedBean().getPublishSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()));
+		// #30457 - Start
+		}else if(this.getManagedBean().getTabActiveIndex() == 5){
+			this.getManagedBean().setItemSelectedIndex(i % this.getManagedBean().getExpiredTabPageSize());
+			this.getManagedBean().setSelectedMaintainItem(
+					this.getManagedBean().getExpiredSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()));
 		}
 		
-		// #30457 - Start
-		if (CollectionUtils.isEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
 			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(), new Comparator<CmImage>() {
 				@Override
 				public int compare(CmImage o1, CmImage o2) {
