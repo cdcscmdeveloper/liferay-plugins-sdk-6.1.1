@@ -3843,7 +3843,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 */
 	public void resetSearchForm() {
 	
-		if(isDeskOfficer()){
+		if(isDeskOfficer() || !(isPbbSecretary() && !(isDeskOfficer() || isAuditor() || isMofSupplier())) ){
 		   this.getManagedBean().getQtnTenderSearchBean().setDocType(ParameterConst.DOCTYPE_QUOTATION);
 		}else{
 		   this.getManagedBean().getQtnTenderSearchBean().setDocType(null);
