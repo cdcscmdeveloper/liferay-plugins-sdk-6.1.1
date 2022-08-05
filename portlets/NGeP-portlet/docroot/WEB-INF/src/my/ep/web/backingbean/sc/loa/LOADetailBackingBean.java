@@ -2544,14 +2544,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// #26130 - End
 		
 		// #29006 - start
-		if((ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType()))
-				&& (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode()) ||
-						ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode()))){
-			
-			constructPRSupplierSpecificationAndRemarks(context, scLoa);
-			log.info(".....CR Enhancement 26226 generateAgreementLetterDocFromVelocity method.....");
-		}
-		
 		 ArrayList list = new ArrayList();
 		 Map map = new HashMap();
 		
@@ -3819,18 +3811,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus().getStatusId()
 				.longValue())
 				&& CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
+			// #29006 - start - reendorsed (comment 528)
 			boolean lampiranA3Exists = false;
 			Timestamp lampiranA3Time = null;
 			Timestamp justificationTime = null;
 			int count = 0;
 			StringBuffer updatedItems = new StringBuffer();			
+			// #29006 - end - reendorsed (comment 528)
 			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
 				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
 					lampiranA3Exists = true;
-					lampiranA3Time = report.getChangedDate();
+					lampiranA3Time = report.getChangedDate(); // #29006 - reendorsed (comment 528)
 					break;
 				}
 			}			
+			// #29006 - start - reendorsed (comment 528)
 			for (ScLoiLoaItem each : getManagedBean().getScLoa().getScLoiLoaItems()) {
 				if (each.getLoaSpecJustification() != null) {
 					justificationTime = each.getChangedDate();
@@ -3848,8 +3843,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 			
 			if(count > 0){
-				throw new EpException(MessageConst.ERROR_775178, new String[] {updatedItems.toString()});
+				// #29006 - start - (fixing on comment 570)
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.ERROR_775178, new String[] {updatedItems.toString()}, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+				return resDTO;
+				// #29006 - end - (fixing on comment 570)
 			}
+			// #29006 - end - reendorsed (comment 528)
 			if (lampiranA3Exists && getManagedBean().isNewSupplierUpdatedFlag()
 					&& !getManagedBean().isUpdatedLampiranA3DownloadedFlag()) {
 				FacesContext.getCurrentInstance().addMessage(
@@ -7863,7 +7866,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			procurementMode = getMessage("lbl.rpt.sc.tender", null);
 		}
 		
-		if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {			
+				
 			this.getManagedBean().setAutoUpdate(false);		
 			
 			//#29006 - start
@@ -9045,13 +9048,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void createLampiranA3(ScLoiLoaItem scLoiLoaItem) {
 		removeUnwantedLampiranA3Report(2);
 		FacesScopes facesScopes = new FacesScopes();
+		// start - #29006 (fixing on comment 570)
 		ScLoaReport lampiranA3 = getQtAwardSO().createLampiranA3(
 				getManagedBean().getScLoa(),
 				populateLabelLampiranA3(
 						" "
-								+ new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_FORMAT).format(DateUtils
-										.getCurrentDate()) + " ",
+								+ new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(DateUtils
+										.getCurrentDate())
+								+ ",  "
+								+ new SimpleDateFormat(CommonConstants.DEFAULT_TIME_FORMAT).format(DateUtils
+										.getCurrentDate()) + ",",
 						SmCommonUtil.getUserByUserId(facesScopes.getUserSessionBean().getUserId()).getUserName()));
+		// end - #29006 (fixing on comment 570)
 		try {
 			StringBuilder filename = new StringBuilder();
 			filename.append(lampiranA3.getTitle());
