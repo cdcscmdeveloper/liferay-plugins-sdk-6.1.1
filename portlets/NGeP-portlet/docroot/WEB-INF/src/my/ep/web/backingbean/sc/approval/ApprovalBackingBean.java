@@ -327,6 +327,7 @@ public class ApprovalBackingBean extends
 
 			// 25077 -start-
 			getManagedBean().setScQtApprovalReqAttachement(null);
+			this.getManagedBean().setFlagFileAttahmentDeleted(true);
 			// 25077 -end-
 		}
 		logger.debug("deleteOthersApprovalFile - END");
