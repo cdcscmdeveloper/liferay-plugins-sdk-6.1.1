@@ -779,10 +779,17 @@ public class ViewApplHistoryBackingBean extends
 		SmRemaksResDTO remaksResDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(remarksReqDTO);
 
 		if (remaksResDTO.getRemarksList().size() > 0) {
+			SmWorkflowStatus currWorkflowStatus = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean()
+					.getSmAppl().getApplId()); //#32424 --050822--
 			log.info("getRemarksList().size():: " + remaksResDTO.getRemarksList().size());
 			for (SmRemark poRemark : remaksResDTO.getRemarksList()) {
 				// #32424 - start
-				if (!StringUtils.isEmpty(poRemark.getRoleCode()) && poRemark.getRoleCode().equals(RoleCode.UPS_PO.value())) {
+				if ((!StringUtils.isEmpty(poRemark.getRoleCode()) && poRemark.getRoleCode().equals(RoleCode.UPS_PO.value()))
+						//#32424 --050822-- start
+						|| (poRemark.getCreatedBy().equals(currWorkflowStatus.getCreatedBy())
+								&& getManagedBean().getSmAppl().getPmStatus().getStatusId() != SupplierManagementConst.PM_STATUS_REGISTERED && currWorkflowStatus
+								.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTERED)) {
+				//#32424 --050822-- end
 					System.out.println("getDocId:: " + poRemark.getDocId() + " || getRoleCode:: "
 							+ poRemark.getRoleCode() + " || getCreatedDate:: " + poRemark.getCreatedDate()
 							+ " || getRemark:: " + poRemark.getRemark());
@@ -798,7 +805,8 @@ public class ViewApplHistoryBackingBean extends
 					break;
 				} else if (StringUtils.isEmpty(poRemark.getRoleCode())) {
 					// #32424 - start
-					SmWorkflowStatus currWorkflowStatus = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean().getSmAppl().getApplId());					
+					//#32424 --050822--comment below line   
+					//SmWorkflowStatus currWorkflowStatus = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean().getSmAppl().getApplId());					
 					SimpleDateFormat sdf = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 					String poCreatedDate = sdf.format(poRemark.getCreatedDate());
 					String wFlowCreatedDate = sdf.format(currWorkflowStatus.getCreatedDate());
