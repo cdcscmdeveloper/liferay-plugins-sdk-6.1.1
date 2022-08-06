@@ -821,6 +821,13 @@ public class PurchaseInDefaultBackingBean extends
 			PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
 			ScPurchaseInDefault scPurchaseInDefault = getManagedBean()
 					.getPurchaseInDefault();
+			//#9133 - start - note 212
+			if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)
+					|| BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)
+					|| BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome))
+				validateRemark();
+			//#9133 - end - note 212
+			
 			// remarks
 			//#9133 - comment out
 			/*scPurchaseInDefault.setRemarks(initializeRemarks(
