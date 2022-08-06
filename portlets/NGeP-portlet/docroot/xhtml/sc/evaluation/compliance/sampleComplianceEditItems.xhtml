@@ -107,7 +107,7 @@
 						value="#{sampleItem. submissionStatus.parameterId}">
 						<ui:remove> #11104 - start </ui:remove>
 						<f:selectItems
-							value="#{evaluationBackingBean.getSampleSubmissionDropDownValues(ParameterTypeConst.sampleSubmissionStatus)}"></f:selectItems>
+							value="#{evaluationBackingBean.getSampleSubmissionDropDownValues(ParameterTypeConst.sampleSubmissionStatus,sampleItem)}"></f:selectItems>
 						<ui:remove> #11104 - end </ui:remove>
 
 						<p:ajax event="change" process="@this" partialSubmit="true"
