@@ -448,7 +448,8 @@
 												</p:selectOneRadio>
 											</p:outputPanel>
 										</c:when>
-										<c:when	test="#{isDemoDisabled}">
+										<ui:remove>#28784</ui:remove>
+										<c:when	test="#{isDemoDisabled and !isReadOnly or isDemoDisabled and isMaintenanceFlow}">
 											<p:outputPanel id="demoPop">
 												<ui:remove>11299 Vinod added disableFieldsforCommitteeRevision</ui:remove>
 												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial or  qTDetailBB.disableFieldsforCommitteeRevision()}">
