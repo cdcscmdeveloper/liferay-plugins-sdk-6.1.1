@@ -3270,16 +3270,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()
 							&& (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
 									&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted())
-							&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
-									ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+							&& (ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
+									ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+									|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED))) { //#25002
 						getManagedBean().setSelectedTabIndex(7);
 					} else {
 						getManagedBean().setSelectedTabIndex(6);
 					}
 				}
 				if (outputValue.equalsIgnoreCase(ContractConst.SCHEDULE_DETAIL) 
-						&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
-								ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+						&& (ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
+								ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+								|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED))) { //#25002
 					//24333 - Start
 					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()){  
 						getManagedBean().setSelectedTabIndex(6);
@@ -3290,13 +3292,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				} 
 				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
 					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
-							ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
+							ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+							|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)){ //#25002
 						index = 6;
 					} else {
 						index = 5;
 					}
 				} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
-						ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+						ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+						|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) { //#25002
 					index = 5;
 				} else {
 					index = 4;
