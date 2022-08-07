@@ -636,6 +636,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 						specReqDTO.setSpecMaster(t.getScQtDoc() != null ? t.getScQtDoc().getTplSpecMaster() : null);
 						specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 						specReqDTO.setDemoSpecView(true);
+						specReqDTO.setQuestionType(TemplateSpecConst.QUESTION_TYPE_ITEM);//#28784
 						TemplateSpecResDTO templateresDTO = templateSpecSO.getTemplateMaster(specReqDTO);
 						specQuestionList.addAll(templateresDTO.getSpecMaster().getTplSpecQuestions());
 					}
