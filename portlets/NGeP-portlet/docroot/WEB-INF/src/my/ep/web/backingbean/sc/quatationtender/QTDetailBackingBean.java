@@ -300,12 +300,6 @@ import org.primefaces.util.Constants;
 //#21695 Farid
 //#21695 Farid
 //#29732 Start
-import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
-import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
-import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
-import my.ep.persistence.entity.pm.common.PmCategoryL1;
-import my.ep.persistence.entity.pm.common.PmCategoryL2;
-import my.ep.persistence.entity.pm.common.PmCategoryL3;
 //#29732 End
 
 
@@ -10149,6 +10143,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							if(resDTOLOA.isCloseQT() == true){
 							  isCloseQT = true; 
 							}
+			        		// Bug #33601 - Start
+			        		/*
 							QuationTenderResDTO resDTOLOI = detailSO.closeQTstatusForLOI(quationTenderReqDTO);
 							if(resDTOLOI.isCloseQT() == true){
 							  isCloseQT = true; 
@@ -10157,6 +10153,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							if(resDTOSF.isCloseQT() == true){
 								 isCloseQT = true; 
 							}
+							*/
+							//Bug #33601 - End 
 						}
 				}	
 			   return isCloseQT;	
