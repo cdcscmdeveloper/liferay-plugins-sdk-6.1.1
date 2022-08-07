@@ -19489,11 +19489,10 @@ if(null!=allTechnicalChecklist){
 
 					setUserDetails(st2technicalproposalList1);
 					st2technicalproposalList1.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-					st2technicalproposalList1
-							.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+					st2technicalproposalList1.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 
-					IParameterSO parameterSo = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+					IParameterSO parameterSo = BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 					ParameterReqDTO specType = new ParameterReqDTO();
 					specType.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
 					specType.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO);
@@ -19506,8 +19505,7 @@ if(null!=allTechnicalChecklist){
 					//#28784 idham delete sample in checklist - start 
 					if(CollectionUtils.isNotEmpty(getManagedBean().getMarkDeletedTechChecklist())){
 						for(ScQtCheckList checklist:getManagedBean().getMarkDeletedTechChecklist()){
-							if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist
-									.getDefinationType().getParameterCode())) {
+							if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist.getDefinationType().getParameterCode())) {
 								st2technicalproposalList.remove(checklist);
 							}
 						}
@@ -19519,13 +19517,23 @@ if(null!=allTechnicalChecklist){
 					this.getManagedBean().setTechStandaraChecklist(false);
 
 				}
-			} else if(ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this.getManagedBean().getQt()
-					.getEvaluationType()) && !this.getManagedBean().getQt().isDemoRequired() && demoList){ // #28784				
-				
+			} else if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this.getManagedBean().getQt().getEvaluationType())
+					&& !this.getManagedBean().getQt().isDemoRequired() && demoList) { // #28784
+
+				for (ScQtCheckList cl : st2technicalproposalList) {
+					if (null != cl.getDefinationType() && null != cl.getDefinationType().getParameterCode()) {
+						if (!cl.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+							newSt2technicalproposalList.add(cl);
+						}
+					}
+				}
+				st2technicalproposalList = newSt2technicalproposalList;
+				this.getManagedBean().setScQtCheckSt2techProposal(st2technicalproposalList);
+				//#28784
+			} else if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this.getManagedBean().getQt().getEvaluationType()) && demoList) {//#28784
 				for (ScQtCheckList cl : st2technicalproposalList) {
 					if(null != cl.getDefinationType() && null != cl.getDefinationType().getParameterCode()){
-						if (!cl.getDefinationType().getParameterCode()
-								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+						if (!cl.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
 							newSt2technicalproposalList.add(cl);
 						} 
 					}
@@ -19614,6 +19622,7 @@ if(null!=allTechnicalChecklist){
 		this.getManagedBean().setToBeRemoveList(new ArrayList<ScQtCheckListScore>());
 		this.getManagedBean().setScQtCheckListScore(null);
 		this.getManagedBean().setScQtContractScore(null);
+		this.getManagedBean().setItemName(null);//#28784
 		try {
 
 			List<TplSpecQuestion> newSpecItemList = new ArrayList<>();
@@ -19795,10 +19804,9 @@ if(null!=allTechnicalChecklist){
 				}
 			}
 			
+			//List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();	//#28784		
 			
-			List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
-		
-			for(ScQtCheckList t: st2technicalproposalList){
+			for(ScQtCheckList t: updatedNewCheckLists){//#28784
 				if(t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)){
 					t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 					t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
@@ -19807,7 +19815,7 @@ if(null!=allTechnicalChecklist){
 					updatedCheckListsOtherDemo.add(t);
 				}
 			}
-			
+			getManagedBean().setScQtCheckSt2techProposal(updatedNewCheckLists); //#28784
 			repopulateDemoQuestionList(savedCheckLists);			
 			reqDTO1.setCheckLists(updatedCheckListsDemo);
 			reqDTO1.setTobeRemoveList(updatedCheckListsOtherDemo);
@@ -20351,6 +20359,18 @@ if(null!=allTechnicalChecklist){
 		reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 		SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
 		getManagedBean().setScQtCheckSt2techProposal(resDTO.getTechnicalCheckList());
+		
+		//#28784
+		List<Integer> settinglist = new ArrayList<Integer>();
+		settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_DEMO);		
+		reqDTO.setSettingTypes(settinglist);		
+		SpecificationResDTO resDTOnew = specSo.retrieveScoreSettingDtls(reqDTO);
+		if(resDTOnew.getScoreSettingResultBean() != null){
+			for (ScQtScoreSetting demoScoreSetting : resDTOnew.getScoreSettingResultBean().getResultList()) {
+				getManagedBean().setDemoScoreSetting(demoScoreSetting);
+	}
+		}	
+		
 	}
 	//#28784 -  End
 	
@@ -20527,4 +20547,22 @@ if(null!=allTechnicalChecklist){
 		return catCodeList;
 	}
 // #29732 End - reOpen Fix
+	
+	//#28784 - Get Demo Score Setting
+	public List<ScQtScoreSetting> getDemoScoreSetting(SpecificationReqDTO reqDTO){	
+		List<ScQtScoreSetting> demoScoreList = new ArrayList<ScQtScoreSetting>();
+		List<Integer> settinglist = new ArrayList<Integer>();
+		settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_DEMO);		
+		reqDTO.setSettingTypes(settinglist);
+		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		SpecificationResDTO resDTO = specSo.retrieveScoreSettingDtls(reqDTO);
+		if(resDTO.getScoreSettingResultBean() != null){
+			for (ScQtScoreSetting demoScoreSetting : resDTO.getScoreSettingResultBean().getResultList()) {
+				demoScoreList.add(demoScoreSetting);
+			}
+			
+		}
+		return reqDTO.setDemoScoreToBeRemoveList(demoScoreList);
+	}
 }
