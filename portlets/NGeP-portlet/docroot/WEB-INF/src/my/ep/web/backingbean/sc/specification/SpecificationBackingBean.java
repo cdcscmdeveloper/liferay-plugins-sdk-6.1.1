@@ -211,7 +211,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -9829,6 +9828,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			boolean sample = false;
 			boolean demo = false;
 			for (ScQtCheckList checkList : techCheckList) {
+				//Bug #33358 start
+				ScQtScoreWeightage weight = checkList.getQtScoreWeightage();
+				if (null != weight && !checkList.isScoringReq()){
+					weight.setWeightage(new BigDecimal(0));
+					checkList.setQtScoreWeightage(weight);
+				}
+				//Bug #33358 end
+				
 				if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(checkList
 						.getDefinationType().getParameterCode())) {
 					if(null!=scQt.getEvaluationType() && ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(scQt.getEvaluationType())){
@@ -9854,6 +9861,17 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 
 		if (CollectionUtils.isNotEmpty(financialCheckList)) {
+			
+			//Bug #33358 start
+			for (ScQtCheckList checkList : financialCheckList) {
+				ScQtScoreWeightage weight = checkList.getQtScoreWeightage();
+				if (null != weight && !checkList.isScoringReq()){
+					weight.setWeightage(new BigDecimal(0));
+					checkList.setQtScoreWeightage(weight);
+				}
+			}
+			//Bug #33358 end
+			
 			localChecklist.addAll(financialCheckList);
 			scQt.setScQtChecklists(localChecklist);
 		}
