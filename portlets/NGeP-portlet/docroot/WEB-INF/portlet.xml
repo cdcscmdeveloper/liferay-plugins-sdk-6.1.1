@@ -1008,7 +1008,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/quatationtender/quatationtendersearch.xhtml</value>
+			<value>/xhtml/sc/quatationtender/prerenderQtSearch.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -9539,7 +9539,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/quatationtender/quatationtendersearch.xhtml</value>
+			<value>/xhtml/sc/quatationtender/prerenderQtSearch.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -9572,7 +9572,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/quatationtender/quatationtendersearch.xhtml</value>
+			<value>/xhtml/sc/quatationtender/prerenderQtSearch.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
