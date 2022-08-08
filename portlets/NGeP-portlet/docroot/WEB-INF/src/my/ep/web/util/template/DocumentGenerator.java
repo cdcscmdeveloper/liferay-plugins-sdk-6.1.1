@@ -201,10 +201,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 				/*html = html.replaceAll("&amp;lt", "&#60");
 				html = html.replaceAll("&amp;gt", "&#62");*/					
 			//#25142 - end
-				//#33346 - START
-				//To replace issue on STX character [2- Decimal value of STX character]
-				html = html.replaceAll("\2", " ");
-				//#33346 - END
+				
 				//#26130 - start
 				String fontPath ="";
 				String  getPortalBaseURL = SmCommonUtil.getBasePortalUrl();
