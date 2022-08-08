@@ -84,7 +84,7 @@
 					maxlength="12" size="30" style="width: 80% !important;"
 					validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
 					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					<p:ajax process="@this" partialSubmit="true" update=":#{p:component('workShopBlockPanel')}" />
+					<p:ajax process="@this" partialSubmit="true" update=":#{p:component('workShopDialogMsg')}" />
 				</p:inputText><p:message id="empIcIdMsg" for="empIcId"
 								showSummary="true" showDetail="false" display="icon" />	
 				<p:inputText id="empPassId" value="#{empInfo.identificationNo}"
