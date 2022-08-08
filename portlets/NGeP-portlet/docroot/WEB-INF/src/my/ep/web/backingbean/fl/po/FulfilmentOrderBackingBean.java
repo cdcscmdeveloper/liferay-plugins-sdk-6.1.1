@@ -1090,7 +1090,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 			IFulfilmentYepSO fulfilmentYepSO = (IFulfilmentYepSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentYepSO.class);
-			String messagePrefix = "";
+			//String messagePrefix = "";
 			String messageSuffix = "";
 			FlYepReqDTO yepReqDTO = new FlYepReqDTO();
 			FlYepResDTO yepResDTO =null;
@@ -1115,7 +1115,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				
 				if(yepResDTO.isSuccessful()) {
 					String messageId = MessageConst.INFO_700005;
-					String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
+					//String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
 					String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 					String docType = getManagedBean().getFulfilmentOrder().getDocType();
 					//#33659 start
@@ -1195,6 +1195,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						yepReqDTO.setCarryFoward(true);
 						yepReqDTO.setProgressStatus((long) 4);
 						yepReqDTO.setUserRole(getUserRole());
+						//#32752 start
+						yepReqDTO.setPmuser(getFacesScopes().getUserSessionBean());
+						//#32752 end
 						yepResDTO=fulfilmentYepSO.updateCarryForwardFlYepTaskList(yepReqDTO);
 						log.info("Update task list carry forward as true");
 					}
@@ -1243,12 +1246,15 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					yepReqDTO.setCarryFoward(true);
 					yepReqDTO.setProgressStatus((long) 4);
 					yepReqDTO.setUserRole(getUserRole());
+					//#32752 start
+					yepReqDTO.setPmuser(getFacesScopes().getUserSessionBean());
+					//#32752 end
 					yepResDTO=fulfilmentYepSO.updateCarryForwardFlYepTaskList(yepReqDTO);
 					log.info("Progress status set to 4");
 					
 					if(resDTO.isSuccessful()) {
 						String messageId = MessageConst.INFO_700033;
-						String documentType = getManagedBean().getFulfilmentOrder().getDocType();
+						//String documentType = getManagedBean().getFulfilmentOrder().getDocType();
 						String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 						
 						String docType = getManagedBean().getFulfilmentOrder().getDocType();
@@ -2022,7 +2028,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		    try {
 				externalContext.redirect(url);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		  return url;
@@ -2054,7 +2059,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		try {
 			externalContext.redirect(url);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return url;
@@ -2104,7 +2108,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		try {
 			externalContext.redirect(url);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return url;
@@ -2323,7 +2326,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			
 			if(resDTO != null && resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_745024;//#29389 logan Changed INFO_700005 to INFO_745024
-				String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
+				//String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
 				String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 				//#29389 logan Start
 				String docType = getManagedBean().getFulfilmentOrder().getDocType();
