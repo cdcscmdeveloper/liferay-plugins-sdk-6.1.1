@@ -4007,7 +4007,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scLoa.setContractAgency(this.getManagedBean().getSelectedPtj());
 		}
 		//#26475 - end
-		reqDTO.setScLoa(scLoa);
+		// #29006 - start - avoid error 100048
+		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)) {
+			AwardSupplierReqDTO suppReqDTO = new AwardSupplierReqDTO();
+			suppReqDTO.setLoaId(scLoa.getLoaId());
+			AwardSupplierResDTO suppResTO = getQtAwardSO()
+					.retrieveLOADtlByLoaId(suppReqDTO);
+			reqDTO.setScLoa(suppResTO.getScLoa());
+		}
+		
+		else
+			reqDTO.setScLoa(scLoa);
+		// #29006 - end - avoid error 100048
 		reqDTO.setSourceId(getManagedBean().getSourceId());
 		reqDTO.setPayLoad(getManagedBean().getPayLoad());
 		reqDTO.setOutcome(outcome);
