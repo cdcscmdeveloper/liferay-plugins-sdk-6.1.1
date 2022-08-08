@@ -1229,23 +1229,24 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					
 					if(resDTO.isSuccessful()) {
 						String messageId = MessageConst.INFO_700033;
-						String documentType = getManagedBean().getFulfilmentOrder().getDocType();
+						//String documentType = getManagedBean().getFulfilmentOrder().getDocType();
 						String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 						
 						String docType = getManagedBean().getFulfilmentOrder().getDocType();
-						if(docType.equalsIgnoreCase("PO"))
-							messagePrefix="Purchase Order";
-						else
-							messagePrefix="Contract Order";
-						
+						//#33725 start
 						if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_PROCEED)) {
-							messageId = MessageConst.INFO_745023;
+							if(docType.equalsIgnoreCase(FulfilmentConst.DOC_TYPE_PO)){
+								messageId = MessageConst.INFO_745023;
+							}else{
+								messageId = MessageConst.INFO_745123;
+							}
 						}
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(messageId, 
-										new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
+										new String[]{docNo}, 
 										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+						//#33725 end
 					} else {
 						throw new EpException(MessageConst.ERROR_700020);
 					}
