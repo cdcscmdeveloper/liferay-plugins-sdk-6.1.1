@@ -1742,11 +1742,10 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	//Start Fix - #33399
 	public String[] splittedAccNoAndBankname(){
 		String bankDetails = getManagedBean().getFullBankInfo();
-		String frontslash = "/";
 		String[] bankDetailsSplitted= null;	
 		if(bankDetails != null){
-			if(bankDetails.length() > 30 || bankDetails.contains(frontslash)){
-				bankDetailsSplitted = bankDetails.split(frontslash);
+			if(bankDetails.length() > 30 || bankDetails.contains(ContractConst.SPACE_SLASH)){
+				bankDetailsSplitted = bankDetails.split(ContractConst.SPACE_SLASH);
 			}	
 		}
 		return bankDetailsSplitted;
