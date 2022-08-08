@@ -1516,31 +1516,27 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						revertToOldValues(qt, approvalRequests);
 					} else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 						//#21692 - start
-						Long currentStatus = qt.getQtStatus().getStatusId();
-						
-						if (QTStatusConst.QT_RE_FINALIZATION.equals(currentStatus)) {
-							QuationTenderReqDTO qtReqDTO1 = new QuationTenderReqDTO();
-							qtReqDTO1.setQtdetail(qt);
-							QuationTenderResDTO qtResDTO1 = detailSO.updateDataTypeSupplierList(qtReqDTO1);
-							String[] supplierIdsArray = qtResDTO1.getDataTypeSupplierList();
-							dataType.getSupplierList().clear();
+						ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtId());
+						wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
+						if(wfStatus.getPmStatus()!=null) {
+							Long currentStatus = wfStatus.getPmStatus().getStatusId();
+							if (QTStatusConst.QT_RE_FINALIZATION.equals(currentStatus)) {
+								QuationTenderReqDTO qtReqDTO1 = new QuationTenderReqDTO();
+								qtReqDTO1.setQtdetail(qt);
+								QuationTenderResDTO qtResDTO1 = detailSO.updateDataTypeSupplierList(qtReqDTO1);
+								String[] supplierIdsArray = qtResDTO1.getDataTypeSupplierList();
+								dataType.getSupplierList().clear();
 
-							dataType.getSupplierList().addAll(
-									Arrays.asList(supplierIdsArray));
-							
-							isFinalApproval = dataType != null && CollectionUtils.isEmpty(dataType.getSupplierList());
-							
-							approvalTypes = approveApprovalRequests(qt, 
-									approvalRequests, 
-									isFinalApproval);
-						} else {
-							isFinalApproval = dataType != null && CollectionUtils.isEmpty(dataType.getSupplierList());
-							
-							approvalTypes = approveApprovalRequests(qt, 
-									approvalRequests, 
-									isFinalApproval);
+								dataType.getSupplierList().addAll(
+										Arrays.asList(supplierIdsArray));
+							}
 						}
 						//#21692 - end
+						isFinalApproval = dataType != null && CollectionUtils.isEmpty(dataType.getSupplierList());
+						
+						approvalTypes = approveApprovalRequests(qt, 
+								approvalRequests, 
+								isFinalApproval);
 					}
 				} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
 						.equalsIgnoreCase(approvalCategoryCode)) {
