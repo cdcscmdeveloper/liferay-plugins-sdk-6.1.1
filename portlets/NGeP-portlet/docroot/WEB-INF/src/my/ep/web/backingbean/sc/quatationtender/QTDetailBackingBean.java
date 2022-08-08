@@ -3778,6 +3778,76 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 	
+	//#9019 - Start
+		/**
+		 * Navigate to page quotation tender search page for QT Maintenance & Audit.
+		 */
+		public void prerenderQtSearch() {
+			try {
+				
+				FacesContext fc = FacesContext.getCurrentInstance();
+				
+				resetSearchForm();
+				
+				resetSearchResult(); 
+					
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.QT_SEARCHING_PAGE);
+				
+			} catch (Exception e) {
+				handleException(e);
+			}
+		}
+		
+		/**
+		 * Reset data for search form
+		 */
+		public void resetSearchForm() {
+		
+			if(isDeskOfficer() || !(isPbbSecretary() && !(isDeskOfficer() || isAuditor() || isMofSupplier())) ){
+			   this.getManagedBean().getQtnTenderSearchBean().setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			}else{
+			   this.getManagedBean().getQtnTenderSearchBean().setDocType(null);
+			}	
+			
+			this.getManagedBean().getQtnTenderSearchBean().setDocNo(null);
+			this.getManagedBean().getQtnTenderSearchBean().setQtTitle(null);
+			this.getManagedBean().getQtnTenderSearchBean().setQtNo(null);
+			this.getManagedBean().getQtnTenderSearchBean().setProcurementMode(null);
+			this.getManagedBean().getQtnTenderSearchBean().setFromCreatedDate(null);
+			this.getManagedBean().getQtnTenderSearchBean().setToCreatedDate(null);
+			this.getManagedBean().getQtnTenderSearchBean().setFromPublishDate(null);
+			this.getManagedBean().getQtnTenderSearchBean().setToPublishDate(null);
+			this.getManagedBean().getQtnTenderSearchBean().setFromClosingDate(null);
+			this.getManagedBean().getQtnTenderSearchBean().setToClosingDate(null);
+			this.getManagedBean().getQtnTenderSearchBean().setQtStatus(null);
+		}
+		
+		/**
+		 * Reset data for display Data Model result
+		 */
+		public void resetSearchResult(){
+			    
+		    // reset for ScQt
+		    IPagingDataModel<ScQt> searchQTDataModel = getManagedBean().getSearchQTDataModel();
+			searchQTDataModel = new QTPagingDataModel("searchQTs", getManagedBean().getQtnTenderSearchBean());
+			getManagedBean().setSearchQTDataModel(searchQTDataModel);
+			getManagedBean().getSearchQTDataModel().resetData();
+			
+			// reset for ScLoiForQt
+			IPagingDataModel<ScLoiForQt> searchLoiDataModel = getManagedBean().getSearchLoiForQtDataModel();
+		    searchLoiDataModel = new LOIPagingDataModel("searchQTLoaLois", getManagedBean().getQtnTenderSearchBean());
+		    getManagedBean().setSearchLoiForQtDataModel(searchLoiDataModel);
+		    getManagedBean().getSearchLoiForQtDataModel().resetData();
+			
+			// reset for ScLoaForQt
+			IPagingDataModel<ScLoaForQt> searchLoaDataModel = getManagedBean().getSearchLoaForQtDataModel();          			
+			searchLoaDataModel = new LOAPagingDataModel("searchQTLoaLois", getManagedBean().getQtnTenderSearchBean());
+			getManagedBean().setSearchLoaForQtDataModel(searchLoaDataModel);
+			getManagedBean().getSearchLoaForQtDataModel().resetData();
+			    
+		}
+		//#9019 - End
+	
 	private void initializeRemarksForCommitteeApproval() {
 		ScQt scQt = this.getManagedBean().getQt();
 		List<ScQtApproval> approvals = scQt.getScQtApprovals();
