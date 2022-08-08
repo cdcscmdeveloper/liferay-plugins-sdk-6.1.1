@@ -8,6 +8,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/icon_loadingLarge.gif" />
+		</p:blockUI>
 		<p:messages id="suppProposalUpdateMsg" showDetail="true"
 			autoUpdate="true" closable="true" showSummary="false"
 			escape = "false"
@@ -28,12 +31,15 @@
 									value="#{lbl['lbl.btn.reset.all']}"
 									action="#{lOADetailBackingBean.onResetAll}"
 									disabled="#{isTrackingDairyView}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									title="#{lbl['lbl.sc.supplier.proposal.reset.all.button.tooltip']}">
 								</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.save']}"
 									disabled="#{isTrackingDairyView}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									action="#{lOADetailBackingBean.onSaveSupplierOffer('SAVE')}">
 								</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.complete']}"
 									disabled="#{isTrackingDairyView}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									action="#{lOADetailBackingBean.onClickSupplierProposalUpdateCompleteButton()}">
 								</p:commandButton></td>
 						</tr>
