@@ -327,7 +327,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				getManagedBean().setOriginalBankName(getManagedBean().getContractVer().getCtContractValue().getBankName());
 				getPopulateBankAccountList();
 			}
-			//End Fix - #33399
+			
 			
 			if(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() != null && getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() != null )
 				getManagedBean().setCurentAccNoBankName(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() +ContractConst.SPACE_SLASH+ getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() );
@@ -336,12 +336,15 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 
 			if (getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
-				String account = getManagedBean().getContractVer().getCtContractValue().getBankAccountNo();
-				if (getManagedBean().getContractVer().getCtContractValue().getBankName() != null) {
-					account = account + ContractConst.SPACE_SLASH + getManagedBean().getContractVer().getCtContractValue().getBankName();
-				}
+				String account = getManagedBean().getContractVer().getCtContractValue().getBankAccountNo();		
+					if (getManagedBean().getContractVer().getCtContractValue().getBankName() != null) {
+						account = account + ContractConst.SPACE_SLASH + getManagedBean().getContractVer().getCtContractValue().getBankName();
+					}
+			
 				getManagedBean().setAccountNoAndName(account);
-			}	    
+				getManagedBean().setFullBankInfo(account);
+			}
+			//End Fix - #33399
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT, getManagedBean().getCtContract().getContractNo()));
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
@@ -547,13 +550,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 */
 	private void validateChangeBankRequest(String action){
 		getManagedBean().setAutoUpdate(true);
-
-//		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-//		if (getManagedBean().getOriginalAccountNo() != null && getManagedBean().getOriginalAccountNo().equalsIgnoreCase(
-//				getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())) {
-//			throw new EpException(MessageConst.ERROR_750000);
-//		}
-//	}
 		// Start Fix - #33399
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 			if ((getManagedBean().getOriginalAccountNo() != null && getManagedBean().getOriginalAccountNo().equalsIgnoreCase(
@@ -932,18 +928,21 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				if (getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode() == null || resDTO.getSmSupplierBankList().isEmpty()) {
 					resDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(reqDTO);
 				}
-
 				items = new SelectItem[resDTO.getSmSupplierBankList().size()];
+				//Start Fix - #33399
 				for (SmSupplierBank smSupplierBank : resDTO.getSmSupplierBankList()) {
 					String account = smSupplierBank.getAccountNo();
 					if (smSupplierBank.getPmFinancialOrg() != null 
 							&& smSupplierBank.getPmFinancialOrg().getFinOrgName() != null) {
-						account = account + ContractConst.SPACE_SLASH + smSupplierBank.getPmFinancialOrg().getFinOrgName();
+						account =account + ContractConst.SPACE_SLASH + smSupplierBank.getPmFinancialOrg().getFinOrgName();
 					}
-					items[i++] = new SelectItem(smSupplierBank.getAccountNo(), account);
+						items[i++] = new SelectItem(account,account);
 					if (!getManagedBean().getSupplierBankAccountMap().containsKey(smSupplierBank.getAccountNo())) {
-						getManagedBean().getSupplierBankAccountMap().put(smSupplierBank.getAccountNo(), smSupplierBank);
+						getManagedBean().getSupplierBankAccountMap().put(smSupplierBank.getAccountNo(),smSupplierBank);
 					}
+					if (!getManagedBean().getSupplierBankName().containsKey(smSupplierBank.getPmFinancialOrg().getFinOrgName())) {
+						getManagedBean().getSupplierBankName().put(smSupplierBank.getPmFinancialOrg().getFinOrgName(),smSupplierBank);
+					}	
 					// Default the bank account no if only 1 bank account is available
 
 					if (resDTO.getSmSupplierBankList().size() == 1) {
@@ -951,6 +950,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 						changeAccountActionListener();
 					}
 				}
+				//End Fix - #33399
 				getManagedBean().setPopulateBankAccountList(items);	
 			}
 		}  finally {
@@ -1065,7 +1065,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}
 		
 	}
-
+    //Start Fix - #33399
 	/**
 	 * The method used to retrieve and display the bank and account information
 	 * with the selected bank for change bank request.
@@ -1075,13 +1075,21 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
 		getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
 
-		SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
-		if (supplierBank != null) {
-			getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
-			getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getBankBranch());
-			getManagedBean().getContractVer().getCtContractValue().setBankAddress(CtAddressUtil.convertSmAddressToCtAddress(supplierBank.getSmAddress()));
+		splittedAccNoAndBankname();
+		String[] splittedBankDetails = splittedAccNoAndBankname();
+		
+		SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(splittedBankDetails[0]);
+        SmSupplierBank supplierBankname = getManagedBean().getSupplierBankName().get(splittedBankDetails[1]);
+		
+		if (supplierBank != null && supplierBankname != null) {
+            if(supplierBank.getAccountNo().equals(splittedBankDetails[0]) && supplierBankname.getPmFinancialOrg().getFinOrgName().equals(splittedBankDetails[1])){
+			getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBankname.getPmFinancialOrg().getFinOrgName());
+			getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBankname.getBankBranch());
+			getManagedBean().getContractVer().getCtContractValue().setBankAddress(CtAddressUtil.convertSmAddressToCtAddress(supplierBankname.getSmAddress()));
+            }
 		}
-	}	
+	}
+	//End Fix - #33399
 
 	/**
 	 * The method used to retrieve the factoring company name.
@@ -1730,4 +1738,19 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		return true;
 	}
 	//#30910 end
+	
+	//Start Fix - #33399
+	public String[] splittedAccNoAndBankname(){
+		String bankDetails = getManagedBean().getFullBankInfo();
+		String frontslash = "/";
+		String[] bankDetailsSplitted= null;	
+		if(bankDetails != null){
+			if(bankDetails.length() > 30 || bankDetails.contains(frontslash)){
+				bankDetailsSplitted = bankDetails.split(frontslash);
+			}	
+		}
+		return bankDetailsSplitted;
+	}
+	//End Fix - #33399
+
 }
