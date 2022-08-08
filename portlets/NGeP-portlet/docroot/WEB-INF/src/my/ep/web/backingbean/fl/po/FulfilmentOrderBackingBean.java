@@ -1176,6 +1176,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						yepReqDTO.setCarryFoward(true);
 						yepReqDTO.setProgressStatus((long) 4);
 						yepReqDTO.setUserRole(getUserRole());
+						//#33729 start
+						yepReqDTO.setPmuser(getFacesScopes().getUserSessionBean());
+						//#33729 end
 						yepResDTO=fulfilmentYepSO.updateCarryForwardFlYepTaskList(yepReqDTO);
 						log.info("Update task list carry forward as true");
 					}
@@ -1224,12 +1227,15 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					yepReqDTO.setCarryFoward(true);
 					yepReqDTO.setProgressStatus((long) 4);
 					yepReqDTO.setUserRole(getUserRole());
+					//#33729 start
+					yepReqDTO.setPmuser(getFacesScopes().getUserSessionBean());
+					//#33729 end
 					yepResDTO=fulfilmentYepSO.updateCarryForwardFlYepTaskList(yepReqDTO);
 					log.info("Progress status set to 4");
 					
 					if(resDTO.isSuccessful()) {
 						String messageId = MessageConst.INFO_700033;
-						//String documentType = getManagedBean().getFulfilmentOrder().getDocType();
+						String documentType = getManagedBean().getFulfilmentOrder().getDocType();
 						String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 						
 						String docType = getManagedBean().getFulfilmentOrder().getDocType();
