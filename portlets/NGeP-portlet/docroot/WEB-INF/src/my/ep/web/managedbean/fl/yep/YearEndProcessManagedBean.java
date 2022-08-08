@@ -73,6 +73,9 @@ public class YearEndProcessManagedBean extends BaseManagedBean {
 	private PmOrgProfile ministry;
 	private PmOrgProfile ptjGroup;
 
+	//#32752
+	private String errorId;
+
 	/**
 	 * Gets the check doc type.
 	 * 
@@ -821,6 +824,15 @@ public class YearEndProcessManagedBean extends BaseManagedBean {
 			
 			return null;
 		}
+	}
+
+	//32752
+	public String getErrorId() {
+		return errorId;
+	}
+
+	public void setErrorId(String errorId) {
+		this.errorId = errorId;
 	}
 
 

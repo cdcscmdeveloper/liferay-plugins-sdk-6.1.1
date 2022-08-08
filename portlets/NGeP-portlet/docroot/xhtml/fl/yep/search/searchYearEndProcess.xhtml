@@ -408,12 +408,13 @@
 							        	rendered="#{flYep.isAp58 == null and flYep.phase == 5}"
 							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'NONAP58'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
 					                <!-- 29440 end -->
-									<!-- #29041 start added flYep.phase in rendered by Vinod -->		
+									<!-- #29041 start added flYep.phase in rendered by Vinod -->
+									<!-- #32752 update gotodetail param for close pay(add progressStatus n errorid)-->	
 									<p:menuitem value="#{lbl['lbl.fl.yep.closeManPay']}"  
 							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							        	rendered="#{yearEndProcessBackingBean.getAllowClose(flYep.statusId) and !(flYep.phase eq '3')}"
 							        	icon="ui-icon-fl-cancel"
-							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmCloseManual}'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmCloseManual}'}, {name:'statusDesc', value:'#{flYep.statusId}'}, {name:'progressStatus', value:'#{flYep.progressStatus}'}, {name:'errorId', value:'#{flYep.errorId}'}])"/>
 							        	<!-- #29041 End Vinod-->
 							        	<!-- start 28377 -->
 							        	<p:menuitem value="#{lbl['lbl.fl.ap58']}"  
