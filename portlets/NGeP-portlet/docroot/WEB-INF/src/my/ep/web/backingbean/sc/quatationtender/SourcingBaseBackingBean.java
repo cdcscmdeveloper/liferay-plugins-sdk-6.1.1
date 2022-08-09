@@ -571,7 +571,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			downloadAllFilesAsZipFile(zos,scAttachments);
 			
 		} catch (Exception ex) {
-
+			ex.printStackTrace();
 		} finally {
 			zos.close();
 			response.flushBuffer();
@@ -2595,7 +2595,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	protected void updatePublishClosingDate(ScQt scQt) {
 		Date clsDate = null;
-		if (null != scQt.getProposalStartDate()) {
+		if (null != scQt.getProposalStartDate() && null!=scQt.getPublishPeriod()) {//25635&33724
 			clsDate = DateUtils.addDays(scQt.getProposalStartDate(),
 					scQt.getPublishPeriod());
 		} 
@@ -2625,8 +2625,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		if (null != clsDate) {
 			clsDate = DateUtils.setDefaultDateTime(clsDate);
+			if(null!=scQt.getQtValidityPeriod()){//25635&33724-proposal validity days null
 			proposalValidityEndDate = DateUtils.addDays(clsDate,
 					scQt.getQtValidityPeriod());
+			}//25635&33724-proposal validity days null
 		}
 		scQt.setProposalValidityEndDate(proposalValidityEndDate);
 	}
