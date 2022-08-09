@@ -11913,7 +11913,9 @@ if (null != checklist && !checklist.isEmpty()) {
 								.getFulfilmentType())
 						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
 								.equalsIgnoreCase(this.getManagedBean()
-										.getFulfilmentType())) {
+										.getFulfilmentType()) || ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED
+										.equalsIgnoreCase(this.getManagedBean()
+												.getFulfilmentType())) {//25635&33723&25725
 					specReqDTO.setScQt(fulfilMentdtls);
 					specSO.validateSCFulfillmentSchedules(specReqDTO);
 					resDTO = specSO.saveQTDtl(specReqDTO);
