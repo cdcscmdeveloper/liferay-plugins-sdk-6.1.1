@@ -604,8 +604,6 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		setUserDetails(supplierCriteria);
 		if(copyScqt.isZonal()){
 			
-			
-			
 			ScQtZoneCriteria qtZoneCriterias =new ScQtZoneCriteria();
 			qtZoneCriterias.setBrandNew(true);
 			qtZoneCriterias.setScQtSupplierCriteria(supplierCriteria);
@@ -801,8 +799,14 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		debugLogger("confirmAddToClone");
 		log.info("confirmAddToClone");
 		//this.totalClone=1;
-		RequestContext.getCurrentInstance().execute("confirmationClone.show()");
-		this.getManagedBean().setCloned(false);
+		//#9019 - Start (Harun)
+		//        01082022 Reopen Add validation clone for more than 10 QT #note-254 
+		if(this.totalClone<=10){
+			RequestContext.getCurrentInstance().execute("confirmationClone.show()");
+			this.getManagedBean().setCloned(false);
+		}
+		//#9019 - End (Harun)
+		
 	}
 	//#9019 - End
 }
