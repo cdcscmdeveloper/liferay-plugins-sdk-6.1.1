@@ -104,6 +104,7 @@
 				</f:facet>
 				<p:inputTextarea id="empSpclId" value="#{empInfo.expertise}"
 					rows="1" cols="30" autoResize="false" maxlength="2000"
+					label="#{lbl['lbl.sm.employee.specialization']}"
 					required="#{empty param['disabledValidation'] and backingBean.managedBean.valueReqd}"
 					style="width: 75% !important;">
 				</p:inputTextarea><p:message id="empSpclIdMsg" for="empSpclId"
