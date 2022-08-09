@@ -3550,6 +3550,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					Long statusId = null;
 					PmUser pmUserNull = null;//#26475 & #26474
 					
+					boolean isNewLoa = false; //Bug #33188
+					
 					boolean validateWitness=this.getManagedBean().isValidatewitness(); //#19336
 					//#29007 Start Vinod
 					boolean specificationAndSupplierDialogFlagQT=this.getManagedBean().isSpecificationAndSupplierDialogFlagQT();
@@ -3598,6 +3600,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						updateContractDetails(scLoa);
 					}
 		
+					//Bug #33188 start
+					if (scLoa.isBrandNew()) {
+						isNewLoa = true;
+					}
+					//Bug #33188 end
+		
 					AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 					reqDTO.setPayLoad(getManagedBean().getPayLoad());
 					reqDTO.setScLoa(scLoa);
@@ -3636,8 +3644,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							}
 						}
 						//#29007 End Vinod
+						
+						//Bug #33188 start
+						if (isNewLoa){
+							renewSesionObject();
+							successMessage(MessageConst.INFO_7000044, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
+									scLoa.getLoaNo(), Boolean.TRUE);
+						}else{
 						successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
 								scLoa.getLoaNo(), Boolean.FALSE);
+					}
+						//Bug #33188 end
 					}
 				 }
 
