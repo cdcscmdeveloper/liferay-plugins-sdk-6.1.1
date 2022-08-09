@@ -608,8 +608,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showDifferenceRejection;
 	// #30974 - END
 
-	// 29379 - Site Visit Grouping Enhancement -28775
+	// 29379 - Site Visit Grouping Enhancement -28775 - start
 	private SmSvWorker[] selectedWorkers;
+	private List<SmSvWorker> deletedWorkers;
+	// 29379 - Site Visit Grouping Enhancement -28775 - end
 	
 	// #28778 - Start
 	private boolean specialCategoryRechecked;
@@ -4391,6 +4393,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSelectedWorkers(SmSvWorker[] selectedWorkers) {
 		this.selectedWorkers = selectedWorkers;
+	}
+
+	public List<SmSvWorker> getDeletedWorkers() {
+		return deletedWorkers;
+	}
+
+	public void setDeletedWorkers(List<SmSvWorker> deletedWorkers) {
+		this.deletedWorkers = deletedWorkers;
 	}
 	// 29379 - Site Visit Grouping Enhancement -28775 END
 

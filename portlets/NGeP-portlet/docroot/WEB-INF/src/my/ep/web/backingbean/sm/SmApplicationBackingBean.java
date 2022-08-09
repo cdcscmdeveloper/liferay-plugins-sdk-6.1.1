@@ -6902,6 +6902,7 @@ public class SmApplicationBackingBean extends
 		}
 		assignValReqdToFalse();
 		// 29379 - Site Visit Grouping Enhancement -28775 - start
+		ArrayList<SmSvWorker> workers = new ArrayList<SmSvWorker>();
 		for(SmSvWorker worker : getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers()){
 			worker.setIdentificationType(ParameterHelper.getInstance()
 					.getPmParameterById(worker.getIdentificationTypeId()));
@@ -6909,6 +6910,24 @@ public class SmApplicationBackingBean extends
 					SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
 				SmCommonUtil.getInstance().verifyWithMyIdentityICOnly(
 					worker.getName(), worker.getIdentificationNo());
+			}
+			SmSvWorker work = (SmSvWorker) EntityHelper.getEntityBySinglePropertyFromList(
+				worker.getIdentificationNo(), getManagedBean().getDeletedWorkers(), "identificationNo");
+			if(work != null) workers.add(worker);
+		}
+		for(SmSvWorker worker : workers){
+			SmSvWorker work1 = (SmSvWorker) EntityHelper.getEntityBySinglePropertyFromList(
+					worker.getIdentificationNo(), getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers(), "identificationNo");
+			getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers().remove(work1);
+			SmSvWorker work2 = (SmSvWorker) EntityHelper.getEntityBySinglePropertyFromList(
+					worker.getIdentificationNo(), getManagedBean().getDeletedWorkers(), "identificationNo");
+			if(work1 != null && work2 != null){
+				work2.setName(work1.getName());//add null chk
+				work2.setIdentificationType(work1.getIdentificationType());
+				work2.setIdentificationTypeId(work1.getIdentificationTypeId());
+				work2.setExpertise(work1.getExpertise());
+				work2.setWorkExpYear(work1.getWorkExpYear());
+				getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers().add(work2);
 			}
 		}
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
@@ -6939,6 +6958,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignSelWorkshop(SmFacility facilityBean) {
 		// 29379 - Site Visit Grouping Enhancement -28775 - start
+		getManagedBean().setDeletedWorkers(new ArrayList<SmSvWorker>());
 		if (getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers() == null) {
 			getManagedBean().getSelectedWorkShopFacility().setSmSvWorkers(new ArrayList<SmSvWorker>());
 		}
@@ -7027,6 +7047,12 @@ public class SmApplicationBackingBean extends
 		if(selectedWorkers != null && selectedWorkers.length > 0){
 			for(SmSvWorker worker : selectedWorkers){
 				getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers().remove(worker);
+				if(worker.getSvWorkerId() != null){
+					SmSvWorker worker2 = (SmSvWorker) EntityHelper.getEntityBySinglePropertyFromList(
+							worker.getIdentificationNo(), getManagedBean().getDeletedWorkers(), "identificationNo");
+					if(worker2 == null)
+						getManagedBean().getDeletedWorkers().add(worker);
+				}
 			}
 		}
 		getManagedBean().setSelectedWorkers(null);
