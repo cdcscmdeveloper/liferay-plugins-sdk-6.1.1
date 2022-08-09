@@ -7015,6 +7015,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void preRenderCatalogue() {
 		log.debug("In preRenderCatalogue");
 
+		//#30457 - Add refresh or renew session object
+		renewSesionObject();
+
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",
 				ICatalogueSO.class);
 
