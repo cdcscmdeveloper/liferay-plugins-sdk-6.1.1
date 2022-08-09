@@ -2328,10 +2328,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				// #27691 - End
 					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
 					// start #29956
+					//27691 START
 					if (businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(), this
 							.getManagedBean().getSmSupp().getBusinessType())) {
-						this.getManagedBean().getSmSuppOwners().clear(); // #29956
+						this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>());
 					}
+					//27691 END
 					// end #29956
 					// for view owner
 					if(this.getManagedBean().getSmSupp().getSmAppl().isApplValidWithSsm()){
@@ -2627,21 +2629,28 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						}
 						
 						//SET SMSUPPLIEROWNER
-						if(ssmResDTO.getSmSupplierOwners() != null) {
+						//27691 START - TO HANDLE ISSUE OWNER ID NULL
+						if(ssmResDTO.getSmSupplierOwners() != null && this.getManagedBean().getSmSupp().getSmSupplierOwners() != null) {
 							if(this.getManagedBean().getSmSuppOwners() == null){
-								this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>());
+								this.getManagedBean().setSmSuppOwners(new ArrayList());
 							}
 							for(SmSupplierOwner suppOwner : ssmResDTO.getSmSupplierOwners()){
 								SmSupplierOwner suppOwnerOld = (SmSupplierOwner)EntityHelper.getEntityBySinglePropertyFromList(suppOwner.getIdentificationNo(), this.getManagedBean().getSmSuppOwners(), "identificationNo");
+								for(SmSupplierOwner smSuppOwner : this.getManagedBean().getSmSupp().getSmSupplierOwners()){
+									if(suppOwner.getIdentificationNo().equals(smSuppOwner.getIdentificationNo())){
 								if(suppOwnerOld == null) {
 									suppOwner.setSmSupplier(this.getManagedBean().getSmSupp());
-									this.getManagedBean().getSmSuppOwners().add(suppOwner);
+											smSuppOwner.setTempCountryId(suppOwner.getTempCountryId());
+											this.getManagedBean().getSmSuppOwners().add(smSuppOwner);
 								}else{
 									String[] copyOwner = {"tempCountryId","nationalityNull","nationality"};
 									EntityHelper.copyEntityPropertiesOnly(suppOwner,suppOwnerOld,copyOwner);
 								}
 							}
 						}
+							}
+						}
+						//27691 END
 						//START 27477
 						//SET SM SUPPOWNER
 						if(this.getManagedBean().getSmSuppOwners() != null){
