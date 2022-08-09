@@ -1075,18 +1075,22 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
 		getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
 
-		splittedAccNoAndBankname();
 		String[] splittedBankDetails = splittedAccNoAndBankname();
-		
-		SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(splittedBankDetails[0]);
-        SmSupplierBank supplierBankname = getManagedBean().getSupplierBankName().get(splittedBankDetails[1]);
-		
-		if (supplierBank != null && supplierBankname != null) {
-            if(supplierBank.getAccountNo().equals(splittedBankDetails[0]) && supplierBankname.getPmFinancialOrg().getFinOrgName().equals(splittedBankDetails[1])){
-			getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBankname.getPmFinancialOrg().getFinOrgName());
-			getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBankname.getBankBranch());
-			getManagedBean().getContractVer().getCtContractValue().setBankAddress(CtAddressUtil.convertSmAddressToCtAddress(supplierBankname.getSmAddress()));
-            }
+		if ((splittedBankDetails[0] != null && !splittedBankDetails[0].isEmpty())
+				&& (splittedBankDetails[1] != null && !splittedBankDetails[1].isEmpty())) {
+			SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(splittedBankDetails[0]);
+			SmSupplierBank supplierBankname = getManagedBean().getSupplierBankName().get(splittedBankDetails[1]);
+
+			if (supplierBank != null && supplierBankname != null) {
+				if ((supplierBank.getAccountNo() != null && supplierBank.getAccountNo().equals(splittedBankDetails[0]))
+						&& (supplierBankname.getPmFinancialOrg().getFinOrgName() != null && supplierBankname.getPmFinancialOrg().getFinOrgName().equals(splittedBankDetails[1]))) {
+					getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBankname.getPmFinancialOrg().getFinOrgName());
+					getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBankname.getBankBranch());
+					getManagedBean().getContractVer().getCtContractValue()
+							.setBankAddress(CtAddressUtil.convertSmAddressToCtAddress(supplierBankname.getSmAddress()));
+				}
+			}
+
 		}
 	}
 	//End Fix - #33399
