@@ -693,6 +693,7 @@ public class PurchaseInDefaultBackingBean extends
 		
 			}
 			//#9133 - end - else
+			
 			if (resDTO.isSuccessful()) {
 				ScPurchaseInDefault purchaseInDefault = resDTO
 						.getPurchaseInDefaultDtl();
@@ -809,6 +810,13 @@ public class PurchaseInDefaultBackingBean extends
 			PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
 			ScPurchaseInDefault scPurchaseInDefault = getManagedBean()
 					.getPurchaseInDefault();
+			//#9133 - start - note 212
+			if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)
+					|| BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)
+					|| BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome))
+				validateRemark();
+			//#9133 - end - note 212
+			
 			// remarks
 			//#9133 - comment out
 			/*scPurchaseInDefault.setRemarks(initializeRemarks(
@@ -2499,7 +2507,7 @@ public class PurchaseInDefaultBackingBean extends
 					Long statusId = purchaseInDefault.getCurrentStatus().getPmStatus().getStatusId();
 
 					if (statusId.equals(DPStatusConstants.PID_EXPIRED)) {
-				getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.PID_COMPLETED));
+						getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.PID_COMPLETED));
 					} else {
 						getCurrentStatus(getPmStatusByStatusId(statusId));
 					}
