@@ -64,6 +64,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.exception.EpException;
@@ -3802,8 +3803,8 @@ public class CreateQtBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO reqQtDto = new QuationTenderReqDTO();
 			reqQtDto.setQtdetail(this.getManagedBean().getQt());
-			qtDetailSO.saveQTDtl(reqQtDto);
-			
+			QuationTenderResDTO resQtDTO = qtDetailSO.saveQTDtl(reqQtDto); //#28784
+			this.getManagedBean().setQt(resQtDTO.getQtDetail());
 			reqDTO.setScQt(this.getManagedBean().getQt());
 			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 			specificationBackingBean.getDemoScoreSetting(reqDTO);
