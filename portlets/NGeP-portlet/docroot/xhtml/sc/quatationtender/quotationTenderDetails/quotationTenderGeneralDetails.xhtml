@@ -1106,9 +1106,13 @@
 								</tr>
 								<tr>
 									<td></td>
-									<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
+									<td>
+									    <!-- 9019 Reopen #note-254-start -->
+									    <p:inputTextarea cols="40" value="#{remarkVar.remark}"
 												label="#{lbl['lbl.sc.qt.remark']}" id="scRemarkId"
-												required="true and !scQt.cloned" validatorMessage="Remark required" readonly="${scQt.qtStatus.statusId == QTStatusConst.QT_CANCELLED}"/>
+												required="true and !scQt.cloned" validatorMessage="Remark required" 
+												readonly="${qTDetailBB.managedBean.maintanceFlow}"/>
+										<!-- 9019 Reopen #note-254-end -->			
 										<p:message id="scRemarkMsgId" for="scRemarkId" display="icon" /></td>
 								</tr>
 							</table>
