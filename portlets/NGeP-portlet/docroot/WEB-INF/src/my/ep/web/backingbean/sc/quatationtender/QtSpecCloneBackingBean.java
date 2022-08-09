@@ -70,6 +70,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
+import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
+import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
@@ -951,6 +953,7 @@ public class QtSpecCloneBackingBean extends
 		this.getManagedBean().setRecommendationPackageScore(null);
 		this.getManagedBean().setRecommendationScore(null);
 		//25635-End
+		this.getManagedBean().setRemoveDeductions(null);//25635&33733
 		specificationBackingBean.retriveTechnicalCheckList();
 		specificationBackingBean.retriveFinancialCheckList();
 		retrieveTechnicalChecklist(tenderResDTO.getQtDetail());
@@ -960,6 +963,7 @@ public class QtSpecCloneBackingBean extends
 		retrieveOverallScoreSettings(tenderResDTO.getQtDetail());
 		retrieveDeliveryAddress(tenderResDTO.getQtDetail());
 		retriveFulfilmentDtls(tenderResDTO.getQtDetail());
+		retrieveDeductionPaymentTabDtl(tenderResDTO.getQtDetail());//25635&33733
 		//#31293 bug Farid after clone set back to index 0
 		this.getManagedBean().setActiveIndex(0);
 		//#31293 End
@@ -2819,4 +2823,77 @@ public class QtSpecCloneBackingBean extends
 		this.getManagedBean().setSelectedCloneTender(null);
 	}
 	//25635-End
+	
+	public void retrieveDeductionPaymentTabDtl(ScQt copyScqt) {//25635&33733-start
+		
+		
+		debugLogger("retrieveDeductionPaymentTabDtl");
+	//	if (this.getManagedBean().getScQtDeductionList() == null || this.getManagedBean().getScQtDeductionList().isEmpty()) {
+		IQTDetailSO detailSO=null;
+			try {
+				 detailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setQtId(copyScqt.getQtId());
+				QuationTenderResDTO resDTO = detailSO
+						.retriveQTDeductionPaymentDetails(reqDTO);
+				List<ScQtDeduction> copyList = resDTO
+						.getDeductionResultBean().getResultList();
+				
+				List<ScQtDeduction> deductionList = new ArrayList<ScQtDeduction>();
+				
+				for(ScQtDeduction ded:copyList){
+					ScQtDeduction obj=new ScQtDeduction();
+					obj.setBrandNew(true);
+					obj.setDeductionAmount(ded.getDeductionAmount());
+					obj.setDeductionDesc(ded.getDeductionDesc());
+					obj.setDeductionType(ded.getDeductionType());
+					//obj.setScLoa(ded.getScLoa());
+					//obj.setScLoi(ded.getScLoi());
+					obj.setScQt(this.getManagedBean().getQt());
+					List<ScQtDeductionClause> clauses=new ArrayList<ScQtDeductionClause>();
+					for(ScQtDeductionClause cloneClause:ded.getScQtDeductionClauses()){
+						ScQtDeductionClause newClause= new ScQtDeductionClause();
+						newClause.setBrandNew(true);
+						setUserDetails(newClause);
+						newClause.setScQtDeduction(obj);
+						newClause.setClauseDesc(cloneClause.getClauseDesc());
+						newClause.setClauseDescRendered(newClause.getClauseDescRendered());
+						clauses.add(newClause);
+					}
+					obj.setScQtDeductionClauses(clauses);
+					
+					setUserDetails(obj);
+					deductionList.add(obj);
+				}
+				
+				
+				reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+				resDTO = detailSO
+						.retriveQTDeductionPaymentDetails(reqDTO);
+				List<ScQtDeduction> toDelete =resDTO
+				.getDeductionResultBean().getResultList();
+				if(toDelete!=null && !toDelete.isEmpty()){
+					for(ScQtDeduction del:toDelete){
+						del.setDeleted(true);
+					}
+					this.getManagedBean().setRemoveDeductions(toDelete);
+				}
+				
+				this.getManagedBean().setScQtDeductionList(deductionList);
+				this.getManagedBean().getQt().setScQtDeductions(deductionList);
+				getManagedBean().setSelectedScQtDeduction(null);
+				/*
+				 * if (null != deductionList && !deductionList.isEmpty()) {
+				 * this.
+				 * getManagedBean().setSelectedScQtDeduction(deductionList.get
+				 * (0)); this.getManagedBean().getSelectedScQtDeduction().
+				 * setScQtDeductionClauses
+				 * (deductionList.get(0).getScQtDeductionClauses()); }
+				 */
+			} finally {
+				detailSO = null;
+			}
+		//}
+	}//25635&33733-start
 }
