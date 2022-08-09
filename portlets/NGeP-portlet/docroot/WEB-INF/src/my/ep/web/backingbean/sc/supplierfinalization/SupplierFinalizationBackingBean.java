@@ -10833,7 +10833,11 @@ return	remarksNotFound;
 				}
 			}
 			
-			if (this.getManagedBean().getShortlistedSuppliersByRecommendType().getList() != null){
+			if (	//#29562 - START.
+					null != this.getManagedBean().getShortlistedSuppliersByRecommendType()
+					&& 
+					//#29562 - END.
+					this.getManagedBean().getShortlistedSuppliersByRecommendType().getList() != null){
 				//reset selected suppliers in supplier list table
 				for(int j = 0; j < this.getManagedBean().getShortlistedSuppliersByRecommendType().getList().size();){
 					if (this.getManagedBean().getShortlistedSuppliersByRecommendType().getList().get(j).isShortListed()){
