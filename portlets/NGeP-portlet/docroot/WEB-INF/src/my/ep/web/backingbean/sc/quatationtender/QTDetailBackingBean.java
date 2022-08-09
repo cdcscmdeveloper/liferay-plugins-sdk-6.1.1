@@ -6542,12 +6542,33 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		//9019 - End (Harun) 
 		
+		//9019 - Start (Harun) initializing remark when error for mandatory field
+		//       08082022 Reopen handling code for checking empty remarks 
+		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			List<ScQtRemark> qtRemarks = initializeRemarks(getManagedBean().getQt(), this.getManagedBean().getQt()
+					.getCurrentWorkFlowStatus(), getManagedBean().getQt().getScQtRemarks(), ScQtRemark.class);
+
+			for (ScQtRemark qtRemark : qtRemarks) {
+				qtRemark.setEditable(true);
+			}
+			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+			this.getManagedBean().setScQtRemarksEmpty(true);//checking for empty remarks 
+
+		}
+		//9019 - End (Harun)
+		
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
 		switch (changedIndexNumber) {
 		case 0:
 			detailSO.validateQTDetails(reqDTO);
 			
 			//9019 - start using new method
+			//9019 - Start (Harun) Reopen reset to null as remarks that initialize empty will cause error while save
+			//       due to save empty object
+			if (this.getManagedBean().isScQtRemarksEmpty()) {
+				this.getManagedBean().getQt().setScQtRemarks(null);
+			} 
+			//9019 - End (Harun)
 			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
 			//9019 - end
 			renewQTSesionObject();
@@ -6829,6 +6850,26 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		String taskName = this.getManagedBean().getTaskName();
 		taskName = taskName==null ? "":taskName;
 		//29464-end
+		
+		//9019 - Start (Harun) initializing remark 
+	    //       This code for initialize back whenever qtDetailsTabChange is trigger and change while remarks is 
+		//       able to entered when available.Reposition code 09082022 cause by reopen
+		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			
+			ScQt scQt = this.getManagedBean().getQt();
+			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
+
+			for (ScQtRemark qtRemark : qtRemarks) {
+				qtRemark.setEditable(true);
+			}
+			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+
+		} else{
+			ScQt scQt = this.getManagedBean().getQt();
+			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+		}
+		//9019 - End (Harun)
 
 		if (priviousIndex != activeIndex) {
 			if (!isReadOnly) {
@@ -7068,26 +7109,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			// #29732 End
 		}
-		//9019 - Start (Harun) initializing remark 
-	    //       This code for initialize back whenever qtDetailsTabChange is trigger and change while remarks is 
-		//       able to entered when available 
-		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-			
-			ScQt scQt = this.getManagedBean().getQt();
-			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
-					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
-
-			for (ScQtRemark qtRemark : qtRemarks) {
-				qtRemark.setEditable(true);
-			}
-			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-
-		} else{
-			ScQt scQt = this.getManagedBean().getQt();
-			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
-		}
-		//9019 - End (Harun)
-		
 	}	
 
 	private boolean isQTStatusBtwScheduleDocAndBeforePublished(Long currentStatusId) {
@@ -11297,7 +11318,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().getQt().setItemGroup(null);
 				this.getManagedBean().getQt().setCircularVer(null);
 			}
-			//9019 - End (Harun) 
+			//9019 - End (Harun)
+			
+			//9019 - Start (Harun) 03082022 Reopen Duplicate remarks when cancel #note-255
+			if(null != this.getManagedBean().getQtRemarksIdRemove()){
+				quationTenderReqDTO.setQtRemarksIdRemove(this.getManagedBean().getQtRemarksIdRemove());
+			}
+			//9019 - End (Harun)
 
 			finalizeRemarks(qt.getScQtRemarks());
 			qt.setScQtStatus(null);
