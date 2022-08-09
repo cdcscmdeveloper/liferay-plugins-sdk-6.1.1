@@ -6922,7 +6922,7 @@ public class SmApplicationBackingBean extends
 			SmSvWorker work2 = (SmSvWorker) EntityHelper.getEntityBySinglePropertyFromList(
 					worker.getIdentificationNo(), getManagedBean().getDeletedWorkers(), "identificationNo");
 			if(work1 != null && work2 != null){
-				work2.setName(work1.getName());//add null chk
+				work2.setName(work1.getName());
 				work2.setIdentificationType(work1.getIdentificationType());
 				work2.setIdentificationTypeId(work1.getIdentificationTypeId());
 				work2.setExpertise(work1.getExpertise());
