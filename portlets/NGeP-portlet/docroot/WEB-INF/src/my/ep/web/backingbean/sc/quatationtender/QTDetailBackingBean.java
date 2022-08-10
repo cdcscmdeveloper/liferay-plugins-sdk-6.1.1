@@ -5851,7 +5851,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (null != status && 
 					((status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || 
 						status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) || status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL) || 
-						status.equals(QTStatusConst.QT_PENDING_DOCUMENT_REVISION) || status.equals(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION))) && 						
+						status.equals(QTStatusConst.QT_PENDING_DOCUMENT_REVISION) || status.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION))) && 						
 						this.getManagedBean().isMaintanceFlow() && demoRequired && !taskName.equalsIgnoreCase(SCProcessNameConst.ENDORSE_SCORING) &&
 						!taskName.equalsIgnoreCase(SCProcessNameConst.SIGNOFF_SCORING) && role.equals(RoleCode.SC_SECRETARY.value())) {//#28784
 				this.getManagedBean().setDemoEvalDisabled(false);
@@ -5886,8 +5886,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				&& !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) && role.equals(RoleCode.SC_SECRETARY.value())) {
 			this.getManagedBean().setDemoDisabled(true);
 			this.getManagedBean().setDemoEvalDisabled(true);
-		} else if (this.getManagedBean().isMaintanceFlow() && status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)
-				&& !demoRequired && !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) && role.equals(RoleCode.SC_SECRETARY.value())) {
+		} else if (this.getManagedBean().isMaintanceFlow() && !demoRequired && !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) && 
+				role.equals(RoleCode.SC_SECRETARY.value())) {
 			this.getManagedBean().setDemoDisabled(true);
 			this.getManagedBean().setDemoEvalDisabled(true);
 		}
