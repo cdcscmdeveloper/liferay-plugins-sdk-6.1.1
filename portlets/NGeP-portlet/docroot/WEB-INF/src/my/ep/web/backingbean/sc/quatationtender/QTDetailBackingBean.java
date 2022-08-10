@@ -6543,17 +6543,20 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//9019 - End (Harun) 
 		
 		//9019 - Start (Harun) initializing remark when error for mandatory field
-		//       08082022 Reopen handling code for checking empty remarks 
-		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-			List<ScQtRemark> qtRemarks = initializeRemarks(getManagedBean().getQt(), this.getManagedBean().getQt()
-					.getCurrentWorkFlowStatus(), getManagedBean().getQt().getScQtRemarks(), ScQtRemark.class);
+		//       08082022 Reopen handling code for checking empty remarks
+		//       10082022 Add checking to prevent Approver tab loaded 
+		if (!this.getManagedBean().isApproverTabLoaded()){
+			if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+				List<ScQtRemark> qtRemarks = initializeRemarks(getManagedBean().getQt(), this.getManagedBean().getQt()
+						.getCurrentWorkFlowStatus(), getManagedBean().getQt().getScQtRemarks(), ScQtRemark.class);
 
-			for (ScQtRemark qtRemark : qtRemarks) {
-				qtRemark.setEditable(true);
+				for (ScQtRemark qtRemark : qtRemarks) {
+					qtRemark.setEditable(true);
+				}
+				this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+				this.getManagedBean().setScQtRemarksEmpty(true);//checking for empty remarks 
+
 			}
-			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-			this.getManagedBean().setScQtRemarksEmpty(true);//checking for empty remarks 
-
 		}
 		//9019 - End (Harun)
 		
