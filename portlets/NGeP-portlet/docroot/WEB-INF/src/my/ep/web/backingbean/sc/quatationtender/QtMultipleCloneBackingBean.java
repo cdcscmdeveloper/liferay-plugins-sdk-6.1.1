@@ -113,10 +113,10 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 	
 	public void clonePopupAction(ScQt scQt){
 		debugLogger("clonePopupAction");
-		this.totalClone=1;
+		this.totalClone=1; 
 		selectedScqt=scQt;
 		RequestContext.getCurrentInstance().execute("kklik.show()");
-		this.getManagedBean().setCloned(false);
+		this.getManagedBean().setCloned(false); 
 	}
 	
 	public void addToClone(){
@@ -799,8 +799,14 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		debugLogger("confirmAddToClone");
 		log.info("confirmAddToClone");
 		//this.totalClone=1;
-		RequestContext.getCurrentInstance().execute("confirmationClone.show()");
-		this.getManagedBean().setCloned(false);
+		//#9019 - Start (Harun)
+		//        01082022 Reopen Add validation clone for more than 10 QT #note-254 
+		if(this.totalClone<=10){
+			RequestContext.getCurrentInstance().execute("confirmationClone.show()");
+			this.getManagedBean().setCloned(false);
+		}
+		//#9019 - End (Harun)
+		
 	}
 	//#9019 - End
 }

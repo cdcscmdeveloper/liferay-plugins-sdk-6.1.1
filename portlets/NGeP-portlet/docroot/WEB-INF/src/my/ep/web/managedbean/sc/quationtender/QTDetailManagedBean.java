@@ -1793,6 +1793,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private Long qtRemarksIdRemove;//#9019 (Harun)
 	
+	/** The qt remark missing issues. */
+	private boolean scQtRemarksEmpty = false; //#9019 08082022 (Harun)
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11173,6 +11176,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 		public void setQtRemarksIdRemove(Long qtRemarksIdRemove) {
 			this.qtRemarksIdRemove = qtRemarksIdRemove;
+		}
+		//#9019 - End (Harun)
+		
+		//#9019 - Start (Harun) 08082022 Missing remarks issue
+		public boolean isScQtRemarksEmpty() {
+			return scQtRemarksEmpty;
+		}
+
+		public void setScQtRemarksEmpty(boolean scQtRemarksEmpty) {
+			this.scQtRemarksEmpty = scQtRemarksEmpty;
 		}
 		//#9019 - End (Harun)
 }
