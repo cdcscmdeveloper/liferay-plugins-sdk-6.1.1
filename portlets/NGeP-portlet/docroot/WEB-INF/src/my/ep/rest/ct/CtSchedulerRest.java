@@ -23,7 +23,7 @@ public class CtSchedulerRest {
         ICtSchedulerSO tmpSO = (ICtSchedulerSO) BusinessDelegate.getInstance().getServiceObject(
                 ModuleCodeConst.CONTRACT_MANAGEMENT, ICtSchedulerSO.class);
         try {
-            tmpSO.runCtStoredProcedureProcess();
+            tmpSO.runCtCloneContractVersion();
             return Response.status(200).entity("success calling callCtStoredProcedureService!!").build();
         } catch (Exception ex) {
             log.info("callCtStoredProcedureService -  Exception>>>> " + ex.getMessage() );
@@ -41,7 +41,7 @@ public class CtSchedulerRest {
         ICtSchedulerSO tmpSO = (ICtSchedulerSO) BusinessDelegate.getInstance().getServiceObject(
                 ModuleCodeConst.CONTRACT_MANAGEMENT, ICtSchedulerSO.class);
         try {
-            tmpSO.runCtBPMProcess();
+            tmpSO.runCtCreateCloningTaskJob();
             return Response.status(200).entity("success calling callBpmSchedulerService!!").build();
         } catch (Exception ex) {
             log.info("callBpmSchedulerService -  Exception>>>> " + ex.getMessage() );
