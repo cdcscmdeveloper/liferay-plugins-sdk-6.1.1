@@ -196,11 +196,14 @@
 							rendered="#{!isClone1 and !isClone2}" 
 							oncomplete="blockWidget.hide();" disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
 							
+						<!--#9019 01082022 Reopen change onclick and add oncomplete #note-253-->
 						<p:commandButton value="#{lbl['lbl.btn.submit']}"
-							onclick="submitConfirmPopUp.show();"
+							onclick="blockWidget.show();"
 							update="@([id$=#{submitConfirmId}])" 
 							rendered="#{isClone1}" 
+							oncomplete="blockWidget.hide();submitConfirmPopUp.show();" 
 							disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
+						<!--9019 end -->	
 						</c:when>
 						<c:otherwise>
 							<ui:remove>#29472 - start</ui:remove>
@@ -272,11 +275,7 @@
 				    onclick="submitConfirmPopUp.hide(); blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					 partialSubmit="true" process="@form" update="@form" 
-					action="#{qTDetailBB.submitQTDetailsAction}">
-					<!-- 9019 -start- -->
-					<f:param name="skipvalidation" value="0" />
-				</p:commandButton>	
-				<!-- 9019 -end- -->
+					action="#{qTDetailBB.submitQTDetailsAction}"/>
 				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					onclick="submitConfirmPopUp.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
