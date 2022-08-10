@@ -12863,6 +12863,9 @@ if (null != checklist && !checklist.isEmpty()) {
 				this.getManagedBean().setQt(resDTO.getScQt());
 				retriveTechnicalCheckList();
 				addDemoTechnicalCheckList();//#28784
+				if (this.getManagedBean().getQt().isDemoRequired()) {
+					resetDemoSpecStatus();// #28784
+				}
 				this.getManagedBean().setCheckListTitle("");
 				this.getManagedBean().setIndex(-1);
 				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";

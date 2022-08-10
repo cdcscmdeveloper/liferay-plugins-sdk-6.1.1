@@ -3793,12 +3793,12 @@ public class CreateQtBackingBean extends
 				IQTSpecSO.class);
 
 		try {
-			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderReqDTO reqQtDto = new QuationTenderReqDTO();
-			reqQtDto.setQtdetail(this.getManagedBean().getQt());
-			QuationTenderResDTO resQtDTO = qtDetailSO.saveQTDtl(reqQtDto); //#28784
-			this.getManagedBean().setQt(resQtDTO.getQtDetail());
+//			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+//					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+//			QuationTenderReqDTO reqQtDto = new QuationTenderReqDTO();
+//			reqQtDto.setQtdetail(this.getManagedBean().getQt());
+//			QuationTenderResDTO resQtDTO = qtDetailSO.saveQTDtl(reqQtDto); //#28784
+//			this.getManagedBean().setQt(resQtDTO.getQtDetail());
 			reqDTO.setScQt(this.getManagedBean().getQt());
 			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 			specificationBackingBean.getDemoScoreSetting(reqDTO);
