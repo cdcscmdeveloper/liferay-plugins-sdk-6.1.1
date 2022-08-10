@@ -1,0 +1,28 @@
+@page{
+
+    @bottom-left {                 
+        content: element(footer); 
+		padding-bottom: 30px!important;
+        vertical-align: top;
+    }
+
+    size: A4 portrait;
+
+}
+div.footer {
+    display: block;
+    position: running(footer);
+}
+
+div.content {
+    display: block;
+    text-align: justify;
+}
+
+#pagenumber:before {
+    content: counter(page);
+}
+
+#pagecount:before {
+    content: counter(pages);
+}

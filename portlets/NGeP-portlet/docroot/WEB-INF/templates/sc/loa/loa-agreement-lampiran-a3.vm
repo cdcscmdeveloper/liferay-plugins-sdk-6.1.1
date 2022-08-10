@@ -7,47 +7,7 @@
 	size: A4 portrait;
 }
 ##26130 - start
-@page{
-
-    @bottom-left {                 
-        content: element(footer);  
-        vertical-align: top;
-        padding-top: 10px;
-/*      border: solid red;    */
-    }
-
-    @top-right {
-        content: element(header); 
-        vertical-align: bottom;
-        padding-bottom: 10px;
-/*          border: solid green;   */
-    }
-
-    size: A4 portrait;
-    margin-top:2cm; 
-    margin-left:1cm; 
-    margin-right:1cm; 
-    margin-bottom:4.5cm; 
-}
-div.footer {
-    margin-top: 0.5cm;
-    display: block;
-    position: running(footer);
-}
-
-div.content {
-/*  border: solid purple;  */
-    display: block;
-    text-align: justify;
-}
-
-#pagenumber:before {
-    content: counter(page);
-}
-
-#pagecount:before {
-    content: counter(pages);
-}
+#include("/templates/sc/loa/footerStyle.vm")
 ##26130- end
 p {
 	text-align: justify;
@@ -207,33 +167,10 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 <br/><br/>
 ##26130 - start
 ##<div class="break-after"><br/></div>
-<div class="footer" >
-	<table border="0" cellpadding="0" cellspacing="0" width="100%">
-	  <tr>
-			<td align="right"> <span id="pagenumber" style="font-family: Arial;font-size: 14.5px;font-weight: normal;font-style: normal;line-height: 20px;color: #333333;"></span> daripada <span id="pagecount"></span></td>
-	  </tr>
-		<tr>
-		##26130 -start
-			<td>
-				<span class="standard">
-							Tandatangan & Cap (Kerajaan) : .......................
-							<br/><br/>
-							Tandatangan & Cap (Syarikat) : .......................<br/>
-				</span>
-				<div style="color:red; font-family: Arial; font-size:13px;">
-								<span>
-								Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak<br/>
-								Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini
-								</span>
-				</div>	
-			</td>
-		##26130 - end
-		</tr>
-	</table>
- </div>
+#include("/templates/sc/loa/sstFooter.vm")
 ##26130 - end
 ##26130 - start
-<div class="content">
+#include("/templates/sc/loa/footerContentStart.vm")
 ##26130 - end
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	  <tr>
@@ -1328,7 +1265,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 		</tr>
 	</table>
 	##26130 - start
-	</div>
+	#include("/templates/sc/loa/footerContentEnd.vm")
 	##26130 - end
 	#if ($serviceItemPageNo)
 		
