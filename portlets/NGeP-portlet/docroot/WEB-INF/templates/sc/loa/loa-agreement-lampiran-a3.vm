@@ -7,12 +7,46 @@
 	size: A4 portrait;
 }
 ##26130 - start
-@page { 
-	@top-right 
-	{ 
-		content:""counter(page)" daripada "counter(pages);
-		padding-top: 950px !important;	
-	}
+@page{
+
+    @bottom-left {                 
+        content: element(footer);  
+        vertical-align: top;
+        padding-top: 10px;
+/*      border: solid red;    */
+    }
+
+    @top-right {
+        content: element(header); 
+        vertical-align: bottom;
+        padding-bottom: 10px;
+/*          border: solid green;   */
+    }
+
+    size: A4 portrait;
+    margin-top:2cm; 
+    margin-left:1cm; 
+    margin-right:1cm; 
+    margin-bottom:4.5cm; 
+}
+div.footer {
+    margin-top: 0.5cm;
+    display: block;
+    position: running(footer);
+}
+
+div.content {
+/*  border: solid purple;  */
+    display: block;
+    text-align: justify;
+}
+
+#pagenumber:before {
+    content: counter(page);
+}
+
+#pagecount:before {
+    content: counter(pages);
 }
 ##26130- end
 p {
@@ -142,12 +176,6 @@ u {
   font-size: 18px;
 }
 ##26130 - start
-.footer {
-   position: fixed;
-   left: 0;
-   bottom: 0;
-   text-align: left;
-}
 		
 .standard{
 	font-family:Arial;
@@ -179,6 +207,33 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 <br/><br/>
 ##26130 - start
 ##<div class="break-after"><br/></div>
+<div class="footer" >
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	  <tr>
+			<td align="right"> <span id="pagenumber" style="font-family: Arial;font-size: 14.5px;font-weight: normal;font-style: normal;line-height: 20px;color: #333333;"></span> daripada <span id="pagecount"></span></td>
+	  </tr>
+		<tr>
+		##26130 -start
+			<td>
+				<span class="standard">
+							Tandatangan & Cap (Kerajaan) : .......................
+							<br/><br/>
+							Tandatangan & Cap (Syarikat) : .......................<br/>
+				</span>
+				<div style="color:red; font-family: Arial; font-size:13px;">
+								<span>
+								Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak<br/>
+								Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini
+								</span>
+				</div>	
+			</td>
+		##26130 - end
+		</tr>
+	</table>
+ </div>
+##26130 - end
+##26130 - start
+<div class="content">
 ##26130 - end
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	  <tr>
@@ -674,24 +729,6 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 			#if ($rowCount > 0)
 				##<div style="margin-top: 200px; font-family:calibri; font-size:13px; float:right">$pageNo</div>
 				
-				##26130 - start
-				<section class="footer">
-					##26130 - start - replace with css counter
-							##<span style="float:right">$pageNo</span>
-					##26130 - end 		
-							<span class="standard">
-							Tandatangan & Cap (Kerajaan) : .......................
-							<br/><br/>
-							Tandatangan & Cap (Syarikat) : .......................<br/>
-							</span>
-							<div style="color:red; font-family: Arial; font-size:13px;">
-								<span>
-								Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak<br/>
-								Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini
-								</span>
-							</div>	
-				</section>
-				##26130 - end
 				<div style="page-break-after:always;"><br/></div>
 			#end
 			<br/>
@@ -729,24 +766,6 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 					#if ($rowCount > 0)
 						##<div style="margin-top: 200px; font-family: Arial; font-size:13px; float:right">$pageNo</div>
 						
-						##26130 - start
-						<section class="footer">
-						##26130 - start - replace with css counter
-							##<span style="float:right">$pageNo</span>
-						##26130 - end 	
-							<span class="standard">
-							Tandatangan & Cap (Kerajaan) : .......................
-							<br/><br/>
-							Tandatangan & Cap (Syarikat) : .......................<br/>
-							</span>
-							<div style="color:red; font-family: Arial; font-size:13px;">
-								<span>
-								Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak<br/>
-								Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini
-								</span>
-							</div>	
-						</section>
-						##26130 - end
 						<div style="page-break-after:always;"><br/></div>
 					#end
 			</span></td>
@@ -1308,30 +1327,14 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 			<td align="center"><span class="text_family_header">KADAR DENDA/TOLAKAN</span> <br /> <br /></td>
 		</tr>
 	</table>
-	
+	##26130 - start
+	</div>
+	##26130 - end
 	#if ($serviceItemPageNo)
 		
 		
 		##<div style="margin-top: 200px; font-family: Arial; font-size:13px; float:right">$serviceItemPageNo</div>
 		
-		##26130 - start
-		<section class="footer">
-		##26130 - start - replace with css counter
-			##<span style="float:right">$serviceItemPageNo</span>
-		##26130 - end	
-			<span class="standard">
-			Tandatangan & Cap (Kerajaan) : .......................
-			<br/><br/>
-			Tandatangan & Cap (Syarikat) : .......................<br/>
-			</span>
-			<div style="color:red; font-family: Arial; font-size:13px;">
-				<span>
-				Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak<br/>
-				Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini
-				</span>
-			</div>	
-		</section>
-		##26130 - end
 	#end
 </body>
 </html>
