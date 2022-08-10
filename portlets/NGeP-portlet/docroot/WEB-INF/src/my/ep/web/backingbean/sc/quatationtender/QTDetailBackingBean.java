@@ -5851,9 +5851,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (null != status && 
 					((status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || 
 						status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) || status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL) || 
-						status.equals(QTStatusConst.QT_PENDING_DOCUMENT_REVISION) || status.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION))) && 						
-						this.getManagedBean().isMaintanceFlow() && demoRequired && !taskName.equalsIgnoreCase(SCProcessNameConst.ENDORSE_SCORING) &&
-						!taskName.equalsIgnoreCase(SCProcessNameConst.SIGNOFF_SCORING) && role.equals(RoleCode.SC_SECRETARY.value())) {//#28784
+						status.equals(QTStatusConst.QT_PENDING_DOCUMENT_REVISION) || status.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION) ||
+						status.equals(QTStatusConst.QT_REVISION_PUBLICATION))) && getManagedBean().isMaintanceFlow() && demoRequired && 
+						!taskName.equalsIgnoreCase(SCProcessNameConst.ENDORSE_SCORING) && !taskName.equalsIgnoreCase(SCProcessNameConst.SIGNOFF_SCORING) && 
+						role.equals(RoleCode.SC_SECRETARY.value())) {//#28784
 				this.getManagedBean().setDemoEvalDisabled(false);
 				this.getManagedBean().setDemoSpecialCase(true);
 				this.getManagedBean().setDemoDisabled(true);
