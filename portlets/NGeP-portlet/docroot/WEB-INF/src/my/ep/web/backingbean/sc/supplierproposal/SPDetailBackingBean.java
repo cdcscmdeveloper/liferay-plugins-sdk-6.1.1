@@ -542,7 +542,8 @@ public class SPDetailBackingBean extends
 	public void retrieveIntegrityDetails() throws Exception {
 		debugLogger("retrieveIntegrityDetails supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		this.getManagedBean().setPrepareActiveIndex(4);
-		generateDeclarationFromVelocity(getManagedBean().getQt());
+		//Bug #33726
+		generateDeclarationFromVelocity(getManagedBean().getQt(), getManagedBean().getQtProposal());
 	}
 
 	/**
@@ -4728,7 +4729,8 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	 * @throws Exception
 	 *             the exception
 	 */
-	private String generateDeclarationFromVelocity(ScQt scQt) throws Exception {
+	//Bug #33726
+	private String generateDeclarationFromVelocity(ScQt scQt, ScQtProposal proposal) throws Exception {
 		debugLogger("generateDeclarationFromVelocity");
 		if (getManagedBean().getSmSupplier() == null
 				|| getManagedBean().getSmSupplier().getCompanyName() == null) {
@@ -4738,6 +4740,12 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
 		SmSupplier smSupplier = getManagedBean().getSmSupplier();
+		//Bug #33726 start
+		PmStatus qtStatus = scQt.getQtStatus();
+		if (!QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus.getStatusId()) && null != proposal.getProposalSubmitBy()){
+			pmUser = retrieveUserDtlById(proposal.getProposalSubmitBy()); 
+		}
+		//Bug #33726 end
 		VelocityContext context = new VelocityContext();
 		Date date = retriveDatesforOrgProfile(scQt.getPublishDate(),
 				scQt.getCreatedDate());
