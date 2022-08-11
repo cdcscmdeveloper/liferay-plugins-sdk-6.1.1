@@ -16,7 +16,7 @@
 	<h:outputScript library="jquery/slides" name="jquery.slides.js" />
 
 
-
+     <!-- #14118 - Start -->
 	<script>
 		function clearInvalidFileMsg() {
 
@@ -24,7 +24,27 @@
 					.remove();
 
 		}
+		
+		function onChangeDisableUploadBtn(upload_widget) {
+			if(upload_widget.buttonBar.find('input[type=file]').get(0).type == 'file') {		
+				upload_widget.buttonBar.find('.start').get(0).disabled=true;
+				upload_widget.buttonBar.find('.start').get(0).title = '#{lbl['lbl.cm.tooltip.btn.upload']}';			
+				$("button.start").toggleClass('disabled');
+				upload_widget.buttonBar.find('input[type=file]').change(function() {
+					var sizes = "#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages.size()}";
+					if (sizes >= 5) {
+						upload_widget.buttonBar.find('.start').get(0).disabled=true;
+						$(".start .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-icon-only").css("pointer-events","none");
+						$(".start .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-icon-only").toggleClass('disabled');
+					} else {
+						upload_widget.buttonBar.find('.start').get(0).disabled=false;
+						$(".start").removeClass('disabled');
+					}
+				});
+			}
+		}
 	</script>
+   <!-- #14118 - End -->
 
 
 	<p:messages id="catalogDetMsgId" showDetail="true" autoUpdate="true"
@@ -274,11 +294,11 @@
 		</p:panel>
 
 
-		<!-- #14118 - Start -->
+		<!-- #14118 - Start 11/08/2022 -->
 		<p:dialog id="imageDialog" widgetVar="imageDialog" modal="true"
 			width="700px" resizable="false" styleClass="pop_up_top"
-			onShow="uploadImageListener(importDevicesWidget)">
-		<!-- 30457 - remove onHide -->
+			onShow="onChangeDisableUploadBtn(importDevicesWidget)">
+		<!-- #14118 - End 11/08/2022  -->
 			
 			<!-- #30457 - fix view start-->
 			<table class="noBorder" width="700px">
