@@ -6545,20 +6545,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		//9019 - Start (Harun) initializing remark when error for mandatory field
 		//       08082022 Reopen handling code for checking empty remarks
-		//       10082022 Add checking to prevent Approver tab loaded 
-		if (!this.getManagedBean().isApproverTabLoaded()){
+		if (activeIndex == 0 || activeIndex == 1 || activeIndex == 2 || activeIndex == 3){
 			if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
 				List<ScQtRemark> qtRemarks = initializeRemarks(getManagedBean().getQt(), this.getManagedBean().getQt()
 						.getCurrentWorkFlowStatus(), getManagedBean().getQt().getScQtRemarks(), ScQtRemark.class);
-
+	
 				for (ScQtRemark qtRemark : qtRemarks) {
 					qtRemark.setEditable(true);
 				}
 				this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-				this.getManagedBean().setScQtRemarksEmpty(true);//checking for empty remarks 
-
+				this.getManagedBean().setScQtRemarksEmpty(true);//checking for empty remarks
 			}
-		}
+		}	
 		//9019 - End (Harun)
 		
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
@@ -6585,6 +6583,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		case 1:
 			detailSO.validateSupplierQualificationDtls(reqDTO);
 			//9019 - start using new method
+			//9019 - Start (Harun) 11082022 Reopen reset to null as remarks that initialize empty will cause error 
+			//       while save due to save empty object
+			if (this.getManagedBean().isScQtRemarksEmpty()) {
+				this.getManagedBean().getQt().setScQtRemarks(null);
+			} 
+			//9019 - End (Harun)
 			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
 			//9019 - end
 			renewQTSesionObject();
@@ -6607,6 +6611,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			committeSO.validateAppointCommitteDtls(committeReqDTO);
 			
 			//9019 - start using new method
+			//9019 - Start (Harun) 11082022 Reopen reset to null as remarks that initialize empty will cause error 
+			//       while save due to save empty object
+			if (this.getManagedBean().isScQtRemarksEmpty()) {
+				this.getManagedBean().getQt().setScQtRemarks(null);
+			} 
+			//9019 - End (Harun)
 			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
 			//9019 - end
 
@@ -6633,6 +6643,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			detailSO.validateApprovalDetails(reqDTO);
 			
 			//9019 - start using new method
+			//9019 - Start (Harun) 11082022 Reopen reset to null as remarks that initialize empty will cause error 
+			//       while save due to save empty object
+			if (this.getManagedBean().isScQtRemarksEmpty()) {
+				this.getManagedBean().getQt().setScQtRemarks(null);
+			} 
+			//9019 - End (Harun)
 			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
 			//9019 - end
 			
