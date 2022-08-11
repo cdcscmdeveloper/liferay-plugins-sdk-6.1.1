@@ -404,15 +404,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 */
 	public String backAction() {
 		if(getManagedBean().isChkCancelPage()) {
-			//#33533 /#25685 start		
+			//#33533 /#33752 start		
 			getManagedBean().setAction(null);
-			getManagedBean().setUpdateAction(true);
 			getManagedBean().setViewContract(false); //set false view contract because its not for view
 			getManagedBean().setTaskId(getManagedBean().getTaskIdFromTaskList()); //set back the task id from tasklist
 			getManagedBean().setOutComes(getManagedBean().getOutComesFromTaskList()); //set back the button from the tasklist	
 			getManagedBean().setChkCancelPage(false); //set false from cancel page
 			
 			if(getManagedBean().getTaskIdFromTaskList()==null){
+				getManagedBean().setUpdateAction(true);
 				initializeRemarks();
 				ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 				ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract()); 
@@ -421,7 +421,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			return getManagedBean().getBackToPreviousPage(); //return the previous page (cancel circular page)
 			//return "cancelCircularBase.xhtml?faces-redirect=true";
-			//#33533 /#25685 end
+			//#33533 /#33752 end
 		} else if(getManagedBean().isFromCircularNotice()) {
 			return "../portal/circularListing.xhtml?faces-redirect=true";
 		} else if(getManagedBean().isDifferentModule()){
@@ -662,6 +662,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					messageId = MessageConst.INFO_700009;
 				} 
+				//#33752 start
+				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					messageId = MessageConst.INFO_700025;
+				}
+				//#33752 end
 				log.debug("Record saved successfully");
 				if(StringUtils.isNotBlank(nextRole)){
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
@@ -702,6 +707,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 			 //#cr 28713 - start
 			if(getManagedBean().getCircularVer().getCircularAttachments().size() < 1 ){
+				getManagedBean().setSelectedTabIndex(0); //#33752
 				throw new EpException(MessageConst.ERROR_100022, 
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.letter", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
