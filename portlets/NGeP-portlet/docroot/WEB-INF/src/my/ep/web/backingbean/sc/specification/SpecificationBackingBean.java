@@ -20405,6 +20405,7 @@ if(null!=allTechnicalChecklist){
 				st2technicalproposalList1.setChangedBy(cl.getChangedBy());
 				st2technicalproposalList1.setChangedDate(cl.getChangedDate());
 				st2technicalproposalList1.setPmDemoStatus(cl.getPmDemoStatus());
+				st2technicalproposalList1.setSampleStatus(cl.getSampleStatus());//#28784 cater for sample status id null during demo save
 				ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 				TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
@@ -20630,9 +20631,12 @@ if(null!=allTechnicalChecklist){
 					t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 					updatedCheckListsDemo.add(t);
 				//#28784 sample become completed after demo save - start
-				} else if (t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE)
-						&& t.getPmEvalStatus().getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
-					t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+				} else if (t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE)) {
+					if (t.getPmStatus().getStatusId().equals(QTStatusConst.TS_COMPLETED)) {
+						t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+					} else {
+						t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));						
+					}
 				//#28784 sample become completed after demo save - end
 				}else if(t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)){
 					updatedCheckListsOtherDemo.add(t);
