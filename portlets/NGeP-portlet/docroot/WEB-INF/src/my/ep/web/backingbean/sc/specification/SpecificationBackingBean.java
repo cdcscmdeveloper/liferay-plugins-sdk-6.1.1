@@ -20629,6 +20629,11 @@ if(null!=allTechnicalChecklist){
 					t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 					t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 					updatedCheckListsDemo.add(t);
+				//#28784 sample become completed after demo save - start
+				} else if (t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE)
+						&& t.getPmEvalStatus().getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
+					t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+				//#28784 sample become completed after demo save - end
 				}else if(t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)){
 					updatedCheckListsOtherDemo.add(t);
 				}
