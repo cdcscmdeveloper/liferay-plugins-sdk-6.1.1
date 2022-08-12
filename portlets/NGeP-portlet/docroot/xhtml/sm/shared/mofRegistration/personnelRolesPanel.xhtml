@@ -40,7 +40,7 @@
 										backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT}">
 										<td style="width: 20px"><p:selectBooleanCheckbox
 												value="#{backingBean.managedBean.selectedShareHolder.director}"
-												disabled="#{backingBean.managedBean.selectedShareHolder.directorSsm}" || 
+												disabled="#{backingBean.managedBean.selectedShareHolder.directorSsm" || 
 												backingBean.managedBean.selectedShareHolder.disableEquityOwner}" > <!--#30444-->
 												<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog])"
 													process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
