@@ -1108,6 +1108,7 @@ public class PurchaseInDefaultBackingBean extends
 	public void beforeApproverAction(String outcome) {
 		log.info("enter method beforeApproverAction"); //#9133
 		log.info("the outcome: "+outcome); //#9133
+		log.info("retrieve message update :"+getManagedBean().isAutoUpdate()); //#9133 - note 232
 		debugLogger("approverAction");
 		
 		if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
@@ -3005,6 +3006,7 @@ public class PurchaseInDefaultBackingBean extends
 	}
 	
 	public void beforeCancelPid() {
+		log.info("retrieve message update :"+getManagedBean().isAutoUpdate()); //#9133 - note 232
 		RequestContext.getCurrentInstance().execute("cancelDlg.show()");
 	}
 	
