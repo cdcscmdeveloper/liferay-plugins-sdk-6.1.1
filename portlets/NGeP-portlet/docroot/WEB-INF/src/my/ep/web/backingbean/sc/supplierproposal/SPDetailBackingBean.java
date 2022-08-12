@@ -4493,12 +4493,18 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 
 		if (smSupplier != null) {
 			context.put("supplierName", smSupplier.getCompanyName());
-			if (smSupplier.getSmMofAccounts().get(0).getMofNo() != null
+			//Start - #33402
+			/*if (smSupplier.getSmMofAccounts().get(0).getMofNo() != null
 					&& !smSupplier.getSmMofAccounts().get(0).getMofNo()
 							.isEmpty()) {
 				context.put("mofNo", smSupplier.getSmMofAccounts().get(0)
 						.getMofNo());
-			} else if (smSupplier.getRegNo() != null) {
+			}*/ 
+			if(getManagedBean().getQtProposal().getMofNo() != null){
+				context.put("mofNo", getManagedBean().getQtProposal().getMofNo());
+			}
+			//End - #33402
+			else if (smSupplier.getRegNo() != null) {
 				context.put("mofNo", smSupplier.getRegNo());
 			} else {
 				context.put("mofNo", smSupplier.getEpNo());
