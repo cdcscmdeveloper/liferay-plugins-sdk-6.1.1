@@ -21468,4 +21468,18 @@ if(null!=allTechnicalChecklist){
 		}
 		return reqDTO.setDemoScoreToBeRemoveList(demoScoreList);
 	}
+	
+	//#28784 bug note-#424 - start
+	public boolean isEvalTier1Or2() {
+		boolean evalTier2 = false;
+		
+		if (null != getManagedBean().getQt().getEvaluationType()
+				&& ParameterConst.EVALUATION_TYPES_TWO_TIER
+				.equalsIgnoreCase(getManagedBean().getQt().getEvaluationType())) {
+			evalTier2 = true;
+		}
+		
+		return evalTier2;
+	}
+	//#28784 bug note-#424 - end
 }
