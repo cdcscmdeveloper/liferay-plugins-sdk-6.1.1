@@ -135,7 +135,7 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_TRANSACTION_TO_DATE = "PTODATE";
 	public static final String FL_RPT_AG_OFFICE = "POFFICECODE";
 	public static final String FL_RPT_PSF_ONE_OFF = "PSFONEOFF";
-	public static final String FL_RPT_PSF_PERIOD = "PSFPERIOD ";
+	public static final String FL_RPT_PSF_PERIOD = "PSFPERIOD";
 	//29554 end
 	
 	
