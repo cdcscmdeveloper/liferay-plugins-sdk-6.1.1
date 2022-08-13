@@ -19596,6 +19596,7 @@ if(null!=allTechnicalChecklist){
 				st2technicalproposalList1.setChangedBy(cl.getChangedBy());
 				st2technicalproposalList1.setChangedDate(cl.getChangedDate());
 				st2technicalproposalList1.setPmDemoStatus(cl.getPmDemoStatus());
+				st2technicalproposalList1.setSampleStatus(cl.getSampleStatus());//#28784 cater for sample status id null during demo save
 				ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 				TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
@@ -19813,6 +19814,15 @@ if(null!=allTechnicalChecklist){
 				}
 			}
 			
+			//#28784 sample become completed after demo save - start
+			ScQtCheckList checklist = null;
+
+			for (ScQtCheckList checkList : getManagedBean().getScQtCheckSt2techProposal()) {
+				if (checkList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE)) {
+					checklist = checkList;
+				}
+			}
+			
 			//List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();	//#28784		
 			
 			for(ScQtCheckList t: updatedNewCheckLists){//#28784
@@ -19820,6 +19830,13 @@ if(null!=allTechnicalChecklist){
 					t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 					t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 					updatedCheckListsDemo.add(t);
+				} else if (t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE)) {
+					if (checklist.getPmStatus().getStatusId().equals(QTStatusConst.TS_COMPLETED)) {
+						t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+					} else {
+						t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));						
+					}
+				//#28784 sample become completed after demo save - end
 				}else if(t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)){
 					updatedCheckListsOtherDemo.add(t);
 				}
@@ -20574,4 +20591,18 @@ if(null!=allTechnicalChecklist){
 		}
 		return reqDTO.setDemoScoreToBeRemoveList(demoScoreList);
 	}
+	
+	//#28784 bug note-#424 - start
+	public boolean isEvalTier1Or2() {
+		boolean evalTier2 = false;
+		
+		if (null != getManagedBean().getQt().getEvaluationType()
+				&& ParameterConst.EVALUATION_TYPES_TWO_TIER
+				.equalsIgnoreCase(getManagedBean().getQt().getEvaluationType())) {
+			evalTier2 = true;
+		}
+		
+		return evalTier2;
+	}
+	//#28784 bug note-#424 - end
 }
