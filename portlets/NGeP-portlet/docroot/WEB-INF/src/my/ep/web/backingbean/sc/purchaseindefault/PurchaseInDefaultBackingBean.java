@@ -2005,11 +2005,9 @@ public class PurchaseInDefaultBackingBean extends
 				// #9133 - start					
 					
 				if (resDTO.isSuccessful()) {
-					getManagedBean().setAutoUpdate(Boolean.FALSE); //#9133 - note 232
 					successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, scPurchaseInDefault.getPurchaseInDefaultNo(),
 							Boolean.FALSE);
-					getManagedBean().setAutoUpdate(Boolean.TRUE); //#9133 - note 232
 				}
 			}
 		} catch (NullPointerException e) {
