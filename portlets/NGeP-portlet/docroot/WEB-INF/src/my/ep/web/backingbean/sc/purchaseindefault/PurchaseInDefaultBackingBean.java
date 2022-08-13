@@ -1108,7 +1108,6 @@ public class PurchaseInDefaultBackingBean extends
 	public void beforeApproverAction(String outcome) {
 		log.info("enter method beforeApproverAction"); //#9133
 		log.info("the outcome: "+outcome); //#9133
-		log.info("retrieve message update :"+getManagedBean().isAutoUpdate()); //#9133 - note 232
 		debugLogger("approverAction");
 		
 		if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
@@ -2006,9 +2005,11 @@ public class PurchaseInDefaultBackingBean extends
 				// #9133 - start					
 					
 				if (resDTO.isSuccessful()) {
+					getManagedBean().setAutoUpdate(Boolean.FALSE); //#9133 - note 232
 					successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, scPurchaseInDefault.getPurchaseInDefaultNo(),
 							Boolean.FALSE);
+					getManagedBean().setAutoUpdate(Boolean.TRUE); //#9133 - note 232
 				}
 			}
 		} catch (NullPointerException e) {
@@ -3006,7 +3007,6 @@ public class PurchaseInDefaultBackingBean extends
 	}
 	
 	public void beforeCancelPid() {
-		log.info("retrieve message update :"+getManagedBean().isAutoUpdate()); //#9133 - note 232
 		RequestContext.getCurrentInstance().execute("cancelDlg.show()");
 	}
 	
