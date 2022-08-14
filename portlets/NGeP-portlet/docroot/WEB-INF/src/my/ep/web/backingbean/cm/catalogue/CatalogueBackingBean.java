@@ -4254,9 +4254,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					this.getManagedBean().setZonalPricingIndex(1);
 					return "editCatalogItem";
 				}
-				//#569 - Start
-				for (int i =0; i<=this.getManagedBean().getSelectedMaintainItem().getzStdPrices().size();i++){
-					for (int j =0; i<=this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().size();j++){
+				//#569 - Start 13/08/2022
+				if (this.getManagedBean().getSelectedMaintainItem().getzStdPrices() != null && 
+						this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings() != null){
+				for (int i =0; i < this.getManagedBean().getSelectedMaintainItem().getzStdPrices().size();i++){
+					for (int j =0; j < this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().size();j++){
 					if(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().get(j).getPrice().doubleValue()>=
 							this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(i).getPrice().doubleValue()){
 						FacesContext.getCurrentInstance().addMessage(
@@ -4269,8 +4271,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						return "editCatalogItem";	
 					}
 				}
-				//569 - End
 			}
+			// #569 - End 13/08/2022
+		  }
 		} // 569 - End
 			// Zonal Tier Pricing
 			for (CmZonalTierPricing promotion : this.getManagedBean().getSelectedMaintainItem()
