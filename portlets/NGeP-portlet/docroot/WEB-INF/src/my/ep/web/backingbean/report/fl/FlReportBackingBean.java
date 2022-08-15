@@ -1108,7 +1108,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	        	Row noRecordRow = sheetReportList.createRow(sheetReportList.getLastRowNum()+1);
 				Cell cellNoRecord = noRecordRow.createCell(0);
 				cellNoRecord.setCellValue("Rekod tidak dijumpai");
-				cellNoRecord.setCellStyle(titleHeaderStyle(wb,true,false,false,false,true,true));
+				cellNoRecord.setCellStyle(titleHeaderStyle(wb,false,false,false,false,true,false));
 				sheetReportList.addMergedRegion(new CellRangeAddress(sheetReportList.getLastRowNum(),sheetReportList.getLastRowNum(),1,columnHeaderList.size()));
 				boxedRegion(cellNoRecord,new CellRangeAddress(sheetReportList.getLastRowNum(),sheetReportList.getLastRowNum(),1,columnHeaderList.size()),sheetReportList);				
 	     }
@@ -1251,7 +1251,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	        	Row noRecordRow = sheetReportSummary.createRow(sheetReportSummary.getLastRowNum()+1);
 				Cell cellNoRecord = noRecordRow.createCell(0);
 				cellNoRecord.setCellValue("Rekod tidak dijumpai");
-				cellNoRecord.setCellStyle(titleHeaderStyle(wb,true,false,false,false,true,true));
+				cellNoRecord.setCellStyle(titleHeaderStyle(wb,false,false,false,false,true,false));
 				sheetReportSummary.addMergedRegion(new CellRangeAddress(sheetReportSummary.getLastRowNum(),sheetReportSummary.getLastRowNum(),1,columnsSummaryList.size()));
 				boxedRegion(cellNoRecord,new CellRangeAddress(sheetReportSummary.getLastRowNum(),sheetReportSummary.getLastRowNum(),1,columnsSummaryList.size()),sheetReportSummary);				
 	     }
@@ -1535,13 +1535,15 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			Cell cellSummaryTotalAll = row.createCell(15);
 			cellSummaryTotalAll.setCellValue((totalAll).doubleValue());
 			cellSummaryTotalAll.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
-					false));
-			
-	        
-	        
-	        
-	        
-	        
+					false));   
+		}
+		if(reportList.isEmpty()){
+        	Row noRecordRow = sheetReportList.createRow(sheetReportList.getLastRowNum()+1);
+			Cell cellNoRecord = noRecordRow.createCell(0);
+			cellNoRecord.setCellValue("Rekod tidak dijumpai");
+			cellNoRecord.setCellStyle(titleHeaderStyle(wb,false,false,false,false,true,false));
+			sheetReportList.addMergedRegion(new CellRangeAddress(sheetReportList.getLastRowNum(),sheetReportList.getLastRowNum(),1,columnHeaderList.size()));
+			boxedRegion(cellNoRecord,new CellRangeAddress(sheetReportList.getLastRowNum(),sheetReportList.getLastRowNum(),1,columnHeaderList.size()),sheetReportList);				
 		}
 		try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
