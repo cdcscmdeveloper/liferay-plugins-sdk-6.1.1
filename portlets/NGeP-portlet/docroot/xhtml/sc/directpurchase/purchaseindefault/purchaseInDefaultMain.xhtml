@@ -11,7 +11,7 @@
 		<c:if test="#{purchaseInDefaultBackingBean.managedBean.titleChecker}">
 			<ac:title value="#{lbl['lbl.sc.purchase.in.default']}" />
 		</c:if>
-		<p:messages showDetail="true"
+		<p:messages showDetail="true" id="messages"
 			autoUpdate="#{purchaseInDefaultBackingBean.managedBean.autoUpdate}"
 			closable="true" severity="error, info" showSummary="false" />
 
@@ -87,7 +87,7 @@
 						<!-- #9133 - start -->	
 						<p:commandButton
 							immediate="true" value="#{lbl['lbl.btn.cancel']}"
-							update="@form" style="float:right;" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="@form,@([id$=messages])" style="float:right;" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag and !isPidGenerated}"
 							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> 	
 						<!-- #9133 - end -->
@@ -150,7 +150,7 @@
 
 							<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
 							    onstart="#{isReject ? '' : 'blockWidget.show();'}" oncomplete="#{isReject ? '' : 'blockWidget.hide();'}" 
-								styleClass="ui-button" update="#{isReject ? '@form' : ''}"
+								styleClass="ui-button" update="#{isReject ? '@form' : ''},@([id$=messages])"
 								partialSubmit="true"
 								actionListener="#{purchaseInDefaultBackingBean.beforeApproverAction(bpmAction)}" />
 
