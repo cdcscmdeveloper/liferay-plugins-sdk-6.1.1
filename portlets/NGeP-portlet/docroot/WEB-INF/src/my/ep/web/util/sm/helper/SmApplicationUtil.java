@@ -1795,9 +1795,14 @@ public class SmApplicationUtil {
 		int semiProfCount = 0;
 		//16052019 - SSM INTEGRATION CR
 		int i = 0;
+		int j = 0; //#30444
 		StringBuilder sb = new StringBuilder();
 		sb.append("<br/>");
+		StringBuilder sbd = new StringBuilder(); //#30444 --31072021--
+		sbd.append("<br/>"); //#30444 --31072021--
 		boolean validPersonnel = true;
+		boolean validPersonnels = true; //#30444
+		boolean displayError = false; //#30444 --31072021--
 		boolean showerror = false;
 		for (SmPersonnel per : appl.getSmPersonnels()) {
 			//16052019 - SSM INTEGRATION CR - To check address complete or not
@@ -1807,6 +1812,7 @@ public class SmApplicationUtil {
 				}
 			}*/
 			validPersonnel = true;
+			validPersonnels = true; //#30444 --31072021--
 			//#28693
 			if ((per.isBumi() == null && per.getBumiFlg() == null && per.getBumiFlgTrans() == null)
 					// #30718 - start
@@ -1817,6 +1823,16 @@ public class SmApplicationUtil {
 			} else if (per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
 				validPersonnel = false;
 			}
+			//#30444 --START--25082021--
+			if ((per.isClerical() && per.isManagement() 
+					&& !managedBean.getBusinessTypeVal().equalsIgnoreCase(
+							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT))
+							|| (per.isClerical() && per.isManagement() && !per.isEquityOwner()
+									&& managedBean.getBusinessTypeVal().equalsIgnoreCase(
+											SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT))){
+				validPersonnels = false;
+			}
+			//#30444 --END--25082021--
 			if(!validPersonnel){
 				sb.append(++i + ". ");
 				sb.append(per.getName());
@@ -1853,7 +1869,32 @@ public class SmApplicationUtil {
 					semiProfCount = semiProfCount + 1;
 				}
 			}
+			//#30444 --START--31072021--
+			if(!validPersonnels){
+				sbd.append(++j + ". ");
+				sbd.append(per.getName());
+				sbd.append("<br/>");
+				displayError = true;				
+			}
+			//#30444 --END--31072021--
 		}
+		//#30444 --START	
+		if (displayError && managedBean.isSupplierUser()) {	 //#30444 --31072021--	
+			if (currentTab != -1) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+			}
+			if (appl.getSupplierType().equalsIgnoreCase(
+					SupplierManagementConst.STYPE_CONTRACTOR)){
+				throw new EpException(MessageConst.ERROR_722687, new String[]
+						{sbd.toString() });
+			}
+			if (appl.getSupplierType().equalsIgnoreCase(
+					SupplierManagementConst.STYPE_CONSULTANT)){
+			throw new EpException(MessageConst.ERROR_722688, new String[]
+					{sbd.toString() });
+			}
+		}
+		//#30444 --END
 		
 		// start #30076
 		boolean validateSmBranch = true;
@@ -3576,7 +3617,7 @@ public class SmApplicationUtil {
 		}
 		return sb.length() > 0 ? StringUtils.removeEnd(sb.toString(), ",")
 				: StringUtils.EMPTY;
-	}		
+	}
 
 	/**
 	 * Validate supporting docs decision by PO.
@@ -12192,86 +12233,126 @@ public class SmApplicationUtil {
 	/**
 	 * Manage personnel roles for the selected SmPersonnel in the application.
 	 */
+	//#30444 START--09052022--replace the whole method in pds with this method
 	public static void managePersonnelRoles(SmApplicationManagedBean bean,
 			String updateAddressDetails) {
 		if (bean.getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-			if (bean.getSmSupplier().getBusinessType()  //#29666 - change by removing the the '!' sign
-					.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
-					// BUG #28173 & #28315 -START
-					&& alreadyHadEquityOwnerAsStaff(bean.getSmAppl(), bean.getSelectedShareHolder().getPersonnelId())  //#29666
-					// BUG #28173 & #28315 -END
-					&& (bean.getSelectedShareHolder().isEquityOwner()
-							|| bean.getSelectedShareHolder().isDirector()
-							|| bean.getSelectedShareHolder()
-									.isHigherManagement() || bean
-							.getSelectedShareHolder().isManagement())) {				
-				bean.getSelectedShareHolder().setClerical(false);
-				bean.getSelectedShareHolder().setDisableStaff(true);
-		  //#29666 - START		
-			} else if (bean.getSmSupplier().getBusinessType()    
-						.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
-						&& alreadyHadEquityOwnerAsStaff(bean.getSmAppl(), bean.getSelectedShareHolder().getPersonnelId())
-		  //#29666 - END
-						/* #28256 - Start (Missing role at personnel/capital/equity section)*/
-						// BUG #28173 & #28315 -START
-						&& (bean.getSelectedShareHolder().isDirector()
-							|| bean.getSelectedShareHolder().isHigherManagement()
-					    // BUG #28173 & #28315 -END
-							 //#29666 - START
-							|| bean.getSelectedShareHolder().isEquityOwner()
-							|| bean.getSelectedShareHolder().isManagement())) {
-				             //#29666 - END
-					  bean.getSelectedShareHolder().setClerical(false);
-					  bean.getSelectedShareHolder().setDisableStaff(true);
-					  	/*#28356 - End*/
-		//#29666 - START 
-			} else if (bean.getSmSupplier().getBusinessType()     
-					.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)
-					&& alreadyHadEquityOwnerAsStaff(bean.getSmAppl(), bean.getSelectedShareHolder().getPersonnelId())
-					&& (bean.getSelectedShareHolder().isDirector()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)
+				&& !bean.isDisAllowOwnerEdit()) {
+			//#30444 START--25082021--	
+			if(bean.getBusinessTypeVal()
+					.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)
+					&& !alreadyHadEquityOwnerAsStaff(bean.getSmAppl(), bean.getSelectedShareHolder().getPersonnelId())){
+				if(bean.getSelectedShareHolder().isManagement()
+						&& !bean.getSelectedShareHolder().isEquityOwner()) {
+					bean.getSelectedShareHolder().setClerical(false);
+					bean.getSelectedShareHolder().setDisableStaff(true);
+				} else {
+					bean.getSelectedShareHolder().setDisableStaff(false);
+				}
+				if(bean.getSelectedShareHolder().isEquityOwner()){
+					bean.getSelectedShareHolder().setDisableStaff(false);
+					bean.getSelectedShareHolder().setDisableManagement(false);
+				}
+			} else {
+				if (bean.getSelectedShareHolder().isDirector()
 						|| bean.getSelectedShareHolder().isHigherManagement()
 						|| bean.getSelectedShareHolder().isEquityOwner()
-						|| bean.getSelectedShareHolder().isManagement())) {
-				  bean.getSelectedShareHolder().setClerical(false);
-				  bean.getSelectedShareHolder().setDisableStaff(true);
-		//#29666 - END 
-			} else {
-					bean.getSelectedShareHolder().setDisableStaff(false);
+						|| bean.getSelectedShareHolder().isManagement()){
+					bean.getSelectedShareHolder().setClerical(false);
+					bean.getSelectedShareHolder().setDisableStaff(true);
+				}else {
+					bean.getSelectedShareHolder().setDisableStaff(false);					
+				}
 			}
-			
+			//#30444 END--25082021--
 	    } else if (bean.getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
-			if (bean.getSelectedShareHolder().isEquityOwner()
-					|| bean.getSelectedShareHolder().isDirector()
-					|| bean.getSelectedShareHolder().isHigherManagement()
-					|| bean.getSelectedShareHolder().isProf()
-					|| bean.getSelectedShareHolder().isSemiProf()) {
-				bean.getSelectedShareHolder().setClerical(false);
-				bean.getSelectedShareHolder().setDisableStaff(true);
-			} else if (bean.getSelectedShareHolder().isManagement()
-					&& (bean.getSelectedShareHolder().isEquityOwner() || bean
-							.getSelectedShareHolder().isDirector())) {
-				bean.getSelectedShareHolder().setClerical(false);
-				bean.getSelectedShareHolder().setDisableStaff(true);
-			} else {
-				bean.getSelectedShareHolder().setDisableStaff(false);
-			}
-
-			if (bean.getSelectedShareHolder().isEquityOwner()
-					|| bean.getSelectedShareHolder().isDirector()
-					|| bean.getSelectedShareHolder().isHigherManagement()
-					|| bean.getSelectedShareHolder().isProf()
-					|| bean.getSelectedShareHolder().isManagement()) {
-				bean.getSelectedShareHolder().setSemiProf(false);
-				bean.getSelectedShareHolder().setDisableSemiProf(true);
-			} else {
-				bean.getSelectedShareHolder().setDisableSemiProf(false);
-			}
-			
-			populateMandatoryEpfNo(bean);
-		}
-
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
+				&& !bean.isDisAllowOwnerEdit()) {
+	    	//#30444 START--25082021--
+	    	if (bean.getBusinessTypeVal()     
+					.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)
+	    		&& !alreadyHadEquityOwnerAsStaff(bean.getSmAppl(), bean.getSelectedShareHolder().getPersonnelId())){
+	    		//#30444 START--03062022--
+	    		if(bean.getSelectedShareHolder().isSemiProf()){
+					bean.getSelectedShareHolder().setProf(false);
+					bean.getSelectedShareHolder().setManagement(false);
+					bean.getSelectedShareHolder().setEquityOwner(false);
+					bean.getSelectedShareHolder().setDisableStaff(true);
+					bean.getSelectedShareHolder().setDisableProf(true);
+					bean.getSelectedShareHolder().setDisableManagement(true);
+					bean.getSelectedShareHolder().setDisableEquityOwner(true);
+	    		}else{
+					bean.getSelectedShareHolder().setDisableProf(false);
+					bean.getSelectedShareHolder().setDisableManagement(false);
+					bean.getSelectedShareHolder().setDisableEquityOwner(false);          
+	    		}
+	    		//#30444 END--03062022--
+	    		if (!bean.getSelectedShareHolder().isEquityOwner()
+						&& (bean.getSelectedShareHolder().isManagement()
+						|| bean.getSelectedShareHolder().isProf()
+						|| bean.getSelectedShareHolder().isSemiProf())) { //#30444 --03062022--
+	    			bean.getSelectedShareHolder().setClerical(false); //#30444 --17022022--
+					bean.getSelectedShareHolder().setDisableStaff(true);
+	    		}else{
+		    		bean.getSelectedShareHolder().setDisableStaff(false);
+		    	}
+	    		if (bean.getSelectedShareHolder().isEquityOwner()
+						||bean.getSelectedShareHolder().isProf()
+						||bean.getSelectedShareHolder().isManagement()){
+					bean.getSelectedShareHolder().setSemiProf(false);
+					bean.getSelectedShareHolder().setDisableSemiProf(true);
+		    	}else{
+		    		if(bean.getSelectedShareHolder().isClerical()){
+		    			bean.getSelectedShareHolder().setSemiProf(false);
+		    			bean.getSelectedShareHolder().setDisableSemiProf(true);
+		    		}else{
+		    			bean.getSelectedShareHolder().setDisableSemiProf(false);	
+		    		}
+		    	}
+	    	} else {
+				 if(bean.getSelectedShareHolder().isSemiProf()) {
+						bean.getSelectedShareHolder().setClerical(false);
+						bean.getSelectedShareHolder().setProf(false);
+						bean.getSelectedShareHolder().setManagement(false);
+						bean.getSelectedShareHolder().setEquityOwner(false);
+						bean.getSelectedShareHolder().setHigherManagement(false); //#30444 --27032022--
+						bean.getSelectedShareHolder().setDirector(false);  //#30444 --27032022--
+						bean.getSelectedShareHolder().setDisableProf(true);
+						bean.getSelectedShareHolder().setDisableManagement(true);
+						bean.getSelectedShareHolder().setDisableEquityOwner(true);
+						bean.getSelectedShareHolder().setDisableStaff(true);				
+				   }else{
+					   bean.getSelectedShareHolder().setDisableProf(false);
+					   bean.getSelectedShareHolder().setDisableManagement(false);
+					   bean.getSelectedShareHolder().setDisableEquityOwner(false);
+					   bean.getSelectedShareHolder().setDisableStaff(false);
+				   }
+				 if(bean.getSelectedShareHolder().isEquityOwner()
+							|| bean.getSelectedShareHolder().isManagement()
+							|| bean.getSelectedShareHolder().isDirector()
+							|| bean.getSelectedShareHolder().isProf()
+							|| bean.getSelectedShareHolder().isSemiProf()
+							|| bean.getSelectedShareHolder().isHigherManagement()){
+		    			bean.getSelectedShareHolder().setClerical(false);
+		    			bean.getSelectedShareHolder().setDisableStaff(true);
+		    		} else{
+		    			bean.getSelectedShareHolder().setDisableStaff(false);
+					}
+				 if (bean.getSelectedShareHolder().isEquityOwner()
+							|| bean.getSelectedShareHolder().isManagement()
+							|| bean.getSelectedShareHolder().isDirector()
+							|| bean.getSelectedShareHolder().isProf()
+							|| bean.getSelectedShareHolder().isClerical()
+							|| bean.getSelectedShareHolder().isHigherManagement()){
+		    			bean.getSelectedShareHolder().setSemiProf(false);
+		    			bean.getSelectedShareHolder().setDisableSemiProf(true);
+		    		} else{
+		    			bean.getSelectedShareHolder().setDisableSemiProf(false);
+					}
+	    	}
+	    }
+		//#30444 END--25082021--
 		if (bean.getSelectedShareHolder().getPersonnelId() != null
 				&& updateAddressDetails.equalsIgnoreCase("Y")) {
 			if (bean.getSelectedShareHolder().isEquityOwner()
@@ -12286,7 +12367,7 @@ public class SmApplicationUtil {
 			}
 		}
 	}
-
+	//#30444 END--09052022--
 	private static boolean alreadyHadEquityOwnerAsStaff(SmAppl appl, Long personelId) { //#29666 - add variable Long 
 		boolean retVal = false;
 		for (SmPersonnel per : appl.getSmPersonnels()) {
