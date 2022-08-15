@@ -183,9 +183,9 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 
 		CatalogueBackingBean.retriveSupplierGstInfomation(catResDTO.getSupplierItem().getSmSupplier());
 		
-		//#33806 - Start
+		//#30457,#33806 - Start
 		bb.getGroupedRejectReasons();
-	    //#33806 - End
+	    //#30457,#33806 - End
 
 
 		//return "editCatalogItem";
