@@ -1249,6 +1249,12 @@ public class TemplateSpecBackingBean extends
 		}
 
 		templateSpecBean.setSelectAll(false);
+		//Bug #33619@Syazani -- Start 20/07/2022, #28784 check null value
+		if (tplSpecQuestion.getAnswerTypeCode() != null && ParameterConst.ANSWER_TYPE_TEXT.equalsIgnoreCase(
+				tplSpecQuestion.getAnswerTypeCode().getParameterCode()) && tplSpecQuestion.getTplSpecMaster().isScoringReq()) {
+			resetScoreTypeDtl(tplSpecQuestion);
+		}
+		//Bug #33619@Syazani -- End 20/07/2022
 	}
 
 	private void addComplianceScoringAction(TplSpecQuestion tplSpecQuestion) {
@@ -1950,7 +1956,6 @@ public class TemplateSpecBackingBean extends
 				}
 
 				if (templateSpecHelper.isPriceTypeTariff(priceType)) {
-					// TODO - calculate tariff price.
 
 				} else if (templateSpecHelper.isPriceTypeTier(priceType)
 						&& (tierSpecQuestionId == null || tierSpecQuestionId
@@ -2949,7 +2954,7 @@ public class TemplateSpecBackingBean extends
 
 	// #31134 Farid end 25/6/2021
 	public boolean checkPriceTierEnableColumn(TemplateSpecBean templateSpecBean) {
-		int count = 0;
+		//int count = 0;
 		
 		for (TplSpecAnswer retrieveAns : templateSpecBean.getSpecAnswerList()) {
 			if (retrieveAns != null && retrieveAns.getTplSpecTierQty() != null) {
