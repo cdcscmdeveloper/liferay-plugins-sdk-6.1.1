@@ -253,12 +253,23 @@ public class SPDetailBackingBean extends
 		IQTProposalSO proposalSO;
 		try {
 			reqDTO.setUserId(userId);
-			if(!byProposalId)	{reqDTO.setQtId(qtOrProposalId);}
-			else				{reqDTO.setQtProposalId(qtOrProposalId);}			
+			
+			// #25201 -start-
+			if (!byProposalId) {
+				reqDTO.setQtId(qtOrProposalId);
+			} else {
+				reqDTO.setQtProposalId(qtOrProposalId);
+			}	
+			// #25201 -end-
+
 			proposalSO = getProposalSO();
 			ProposalResDTO resDTO = null; 
-			if(!byProposalId)	{ resDTO = proposalSO.retrieveProposalDtlBySupplierId(reqDTO);}
-			else				{ resDTO = proposalSO.retrieveProposalDetail(reqDTO);}
+			if (!byProposalId) {
+				resDTO = proposalSO.retrieveProposalDtlBySupplierId(reqDTO);
+			} else {
+				resDTO = proposalSO.retrieveProposalDetail(reqDTO);
+			}
+			// #25201 -end-
 
 			ScQt scQt = resDTO.getScQt();
 			
@@ -296,7 +307,6 @@ public class SPDetailBackingBean extends
 									+ resDTO.getFinancialCheckLists().size());
 						}
 			if(resDTO.getTechnicalCheckLists().size()==0 || resDTO.getFinancialCheckLists().size()==0){
-				//log.info("BackingBeanResDTO"+resDTO.getTechnicalCheckLists());
 				reqDTO = new ProposalReqDTO();
 				reqDTO.setTechnicalCount(resDTO.getTechnicalCheckLists().size());
 				reqDTO.setFinancialCount(resDTO.getFinancialCheckLists().size());
@@ -4344,8 +4354,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		if(!byProposalId){
 			retrieveProposalChecklistDtls(qtOrProposalId, new FacesScopes()
 				.getUserSessionBean().getUserId(), isReadonly);
-		}
-		else{
+		} else {
 			retrieveProposalChecklistDtls(qtOrProposalId, new FacesScopes()
 			.getUserSessionBean().getUserId(), isReadonly, true);
 		}
@@ -4472,12 +4481,18 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 
 		if (smSupplier != null) {
 			context.put("supplierName", smSupplier.getCompanyName());
-			if (smSupplier.getSmMofAccounts().get(0).getMofNo() != null
+			//Start - #33402
+			/*if (smSupplier.getSmMofAccounts().get(0).getMofNo() != null
 					&& !smSupplier.getSmMofAccounts().get(0).getMofNo()
 							.isEmpty()) {
 				context.put("mofNo", smSupplier.getSmMofAccounts().get(0)
 						.getMofNo());
-			} else if (smSupplier.getRegNo() != null) {
+			}*/ 
+			if(getManagedBean().getQtProposal().getMofNo() != null){
+				context.put("mofNo", getManagedBean().getQtProposal().getMofNo());
+			}
+			//End - #33402
+			else if (smSupplier.getRegNo() != null) {
 				context.put("mofNo", smSupplier.getRegNo());
 			} else {
 				context.put("mofNo", smSupplier.getEpNo());
