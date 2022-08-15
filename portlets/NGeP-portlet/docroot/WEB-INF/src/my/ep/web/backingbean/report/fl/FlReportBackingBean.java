@@ -1104,6 +1104,14 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		    
 		    boxedRegion(cellSummaryAmtPayableSupplier,cellZoneSummaryAmt,sheetReportList);
 		}
+		 if(reportList.isEmpty()){
+	        	Row noRecordRow = sheetReportList.createRow(sheetReportList.getLastRowNum()+1);
+				Cell cellNoRecord = noRecordRow.createCell(0);
+				cellNoRecord.setCellValue("Rekod tidak dijumpai");
+				cellNoRecord.setCellStyle(titleHeaderStyle(wb,true,false,false,false,true,true));
+				sheetReportList.addMergedRegion(new CellRangeAddress(sheetReportList.getLastRowNum(),sheetReportList.getLastRowNum(),1,columnHeaderList.size()));
+				boxedRegion(cellNoRecord,new CellRangeAddress(sheetReportList.getLastRowNum(),sheetReportList.getLastRowNum(),1,columnHeaderList.size()),sheetReportList);				
+	     }
 		
 		//create sheet summary report
 		Sheet sheetReportSummary = wb.createSheet(sheetName[1]);
@@ -1238,6 +1246,15 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	        
 
 		}
+		
+		 if(summaryReportList.isEmpty()){
+	        	Row noRecordRow = sheetReportSummary.createRow(sheetReportSummary.getLastRowNum()+1);
+				Cell cellNoRecord = noRecordRow.createCell(0);
+				cellNoRecord.setCellValue("Rekod tidak dijumpai");
+				cellNoRecord.setCellStyle(titleHeaderStyle(wb,true,false,false,false,true,true));
+				sheetReportSummary.addMergedRegion(new CellRangeAddress(sheetReportSummary.getLastRowNum(),sheetReportSummary.getLastRowNum(),1,columnsSummaryList.size()));
+				boxedRegion(cellNoRecord,new CellRangeAddress(sheetReportSummary.getLastRowNum(),sheetReportSummary.getLastRowNum(),1,columnsSummaryList.size()),sheetReportSummary);				
+	     }
 		
 		try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
