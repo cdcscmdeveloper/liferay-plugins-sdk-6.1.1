@@ -24,6 +24,7 @@ import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgResDTO;
@@ -39,6 +40,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjReorg;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
@@ -1238,10 +1240,10 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		}
 		
 		try{
-	    	//String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
-	    	//String fullPath = path+"/"+requestId+".xlsx";
-	    	String fullPath = "D://reports//dev//"+requestId+".xlsx";
-	    	log.info("FULL PATH (CREATE FILE) == "+fullPath);
+	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
+	    	String fullPath = path+"/"+requestId+".xlsx";
+	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
+	    	//log.info("FULL PATH (CREATE FILE) == "+fullPath);
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
 	        out.close();
@@ -1525,10 +1527,10 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	        
 		}
 		try{
-	    	//String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
-	    	//String fullPath = path+"/"+requestId+".xlsx";
-	    	String fullPath = "D://reports//dev//"+requestId+".xlsx";
-	    	log.info("FULL PATH (CREATE FILE) == "+fullPath);
+	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
+	    	String fullPath = path+"/"+requestId+".xlsx";
+	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
+	    	//log.info("FULL PATH (CREATE FILE) == "+fullPath);
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
 	        out.close();
