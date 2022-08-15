@@ -786,7 +786,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		reqDTO.setTempAccess(this.getManagedBean().isTempAccess());
 		reqDTO.setParametersMap(params);
 		reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-		
+				
 		RPTRequestResDTO resDTO = new RPTRequestResDTO();
 		try{
 			log.info("29554: start generateFLExcelReport SO");
@@ -800,8 +800,6 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			try {
 				log.info("29554: start getServiceFeeBasedOnAccountingReport");
 				getServiceFeeBasedOnAccountingReport(params,resDTO.getRequestId());
-				getPopUpMsg(String.valueOf(resDTO.getRequestId()));
-				RequestContext.getCurrentInstance().execute("rptConfirmationDlg.show()");
 			}catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -811,13 +809,14 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			try{
 				log.info("29554: start getAccumulatedServiceFee");
 				getAccumulatedServiceFee(params, resDTO.getRequestId());
-				getPopUpMsg(String.valueOf(resDTO.getRequestId()));
-				RequestContext.getCurrentInstance().execute("rptConfirmationDlg.show()");
 			}catch(Exception e){
 				e.printStackTrace();
 			}
 			break;
 		}
+		
+		getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId().toString() : "");
+		RequestContext.getCurrentInstance().execute("confirmationId.show()");
 	}
 	public void getServiceFeeBasedOnAccountingReport(LinkedHashMap<String, String> params, BigDecimal requestId) throws Exception{
 		log.info("29554: start getServiceFeeBasedOnAccountingReport");
