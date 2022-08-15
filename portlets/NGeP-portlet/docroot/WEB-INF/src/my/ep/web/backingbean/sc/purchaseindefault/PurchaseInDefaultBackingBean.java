@@ -718,6 +718,7 @@ public class PurchaseInDefaultBackingBean extends
 									purchaseInDefault.getPurchaseInDefaultNo(), Boolean.TRUE);
 						}				
 						else{
+							getManagedBean().setAutoUpdate(false); //#9133 - note 232
 							successMessage(MessageConst.INFO_700004,
 									ParameterTypeConst.DOCUMENT_TYPES,
 									ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
@@ -742,6 +743,7 @@ public class PurchaseInDefaultBackingBean extends
 									purchaseInDefault.getPurchaseInDefaultNo(), Boolean.TRUE);
 						}				
 						else{
+							getManagedBean().setAutoUpdate(false); //#9133 - note 232
 							successMessage(MessageConst.INFO_700004,
 									ParameterTypeConst.DOCUMENT_TYPES,
 									ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
@@ -1921,6 +1923,7 @@ public class PurchaseInDefaultBackingBean extends
 				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.savePurchaseInDefault(reqDTO);
 
 				if (resDTO.isSuccessful()) {
+					getManagedBean().setAutoUpdate(false); //#9133 - note 232
 					successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, scPurchaseInDefault.getPurchaseInDefaultNo(),
 							Boolean.FALSE);
@@ -2002,6 +2005,7 @@ public class PurchaseInDefaultBackingBean extends
 				// #9133 - start					
 					
 				if (resDTO.isSuccessful()) {
+					getManagedBean().setAutoUpdate(false);	//#9133 - note 232				
 					successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, scPurchaseInDefault.getPurchaseInDefaultNo(),
 							Boolean.FALSE);
