@@ -1106,7 +1106,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		}
 		 if(reportList.isEmpty()){
 	        	Row noRecordRow = sheetReportList.createRow(sheetReportList.getLastRowNum()+1);
-				Cell cellNoRecord = noRecordRow.createCell(0);
+				Cell cellNoRecord = noRecordRow.createCell(1);
 				cellNoRecord.setCellValue("Rekod tidak dijumpai");
 				cellNoRecord.setCellStyle(titleHeaderStyle(wb,false,false,false,false,true,false));
 				sheetReportList.addMergedRegion(new CellRangeAddress(sheetReportList.getLastRowNum(),sheetReportList.getLastRowNum(),1,columnHeaderList.size()));
@@ -1249,7 +1249,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		
 		 if(summaryReportList.isEmpty()){
 	        	Row noRecordRow = sheetReportSummary.createRow(sheetReportSummary.getLastRowNum()+1);
-				Cell cellNoRecord = noRecordRow.createCell(0);
+				Cell cellNoRecord = noRecordRow.createCell(1);
 				cellNoRecord.setCellValue("Rekod tidak dijumpai");
 				cellNoRecord.setCellStyle(titleHeaderStyle(wb,false,false,false,false,true,false));
 				sheetReportSummary.addMergedRegion(new CellRangeAddress(sheetReportSummary.getLastRowNum(),sheetReportSummary.getLastRowNum(),1,columnsSummaryList.size()));
@@ -1539,7 +1539,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		}
 		if(reportList.isEmpty()){
         	Row noRecordRow = sheetReportList.createRow(sheetReportList.getLastRowNum()+1);
-			Cell cellNoRecord = noRecordRow.createCell(0);
+			Cell cellNoRecord = noRecordRow.createCell(1);
 			cellNoRecord.setCellValue("Rekod tidak dijumpai");
 			cellNoRecord.setCellStyle(titleHeaderStyle(wb,false,false,false,false,true,false));
 			sheetReportList.addMergedRegion(new CellRangeAddress(sheetReportList.getLastRowNum(),sheetReportList.getLastRowNum(),1,columnHeaderList.size()));
