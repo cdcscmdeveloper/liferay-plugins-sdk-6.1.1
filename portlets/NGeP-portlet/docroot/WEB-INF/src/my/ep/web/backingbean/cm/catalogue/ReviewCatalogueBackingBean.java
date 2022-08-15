@@ -182,6 +182,10 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 
 
 		CatalogueBackingBean.retriveSupplierGstInfomation(catResDTO.getSupplierItem().getSmSupplier());
+		
+		//#33806 - Start
+		bb.getGroupedRejectReasons();
+	    //#33806 - End
 
 
 		//return "editCatalogItem";
@@ -656,8 +660,4 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 				.getExternalContext();
 		externalContext.redirect(commonUrl + "/catalogue-maintenance-file");
 	}
-
-
-
-
 }
