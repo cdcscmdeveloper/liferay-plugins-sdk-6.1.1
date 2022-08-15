@@ -2041,6 +2041,7 @@ public class SmApplicationUtil {
 		boolean validPersonnels = true;
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
+		managedBean.setPoApproverAcedemicErr(false);//#31130
 		SmAppl appl = managedBean.getSmAppl();
 		for (SmPersonnel per : appl.getSmPersonnels()) {
 			if (per.getSmStaffAcademics() == null
@@ -2056,6 +2057,9 @@ public class SmApplicationUtil {
 			setNavigationBackToCurrentPage(currentTab, managedBean);
 			throw new EpException(MessageConst.ERROR_722599,
 					new String[] { sb.toString() });
+		}else if (!validPersonnels && (managedBean.isApproverUser()|| managedBean.isPoUser())){
+			managedBean.setPoApproverAcedemicErr(true);
+			managedBean.setMsgPersonnelErr(sb.toString());
 		}
 
 		return validSave;
@@ -2092,6 +2096,7 @@ public class SmApplicationUtil {
 		boolean validPersonnels = true; //#30444
 		boolean displayError = false; //#30444 --31072021--
 		boolean showerror = false;
+		managedBean.setPoApproverPersonnelErr(false);
 		for (SmPersonnel per : appl.getSmPersonnels()) {
 			//16052019 - SSM INTEGRATION CR - To check address complete or not
 			/*if(managedBean.isSsmIntegrationActive() && managedBean.isCompanyValidWithSSM()){
@@ -2259,6 +2264,11 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_721082,
 					new String[] { sb.toString() });
 		}
+		//#31130-start
+		if (showerror && (managedBean.isApproverUser() || managedBean.isPoUser())){
+			managedBean.setPoApproverPersonnelErr(true);
+			managedBean.setMsgPersonnelErr(sb.toString());
+		}//#31130-end
 		if (appl.getSupplierType().equalsIgnoreCase(
 				SupplierManagementConst.STYPE_CONSULTANT)) {
 			StringBuilder errMsg = new StringBuilder();
