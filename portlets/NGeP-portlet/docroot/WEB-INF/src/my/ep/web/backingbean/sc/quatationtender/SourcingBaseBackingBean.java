@@ -36,9 +36,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.zip.Deflater;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -191,7 +188,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
-import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
@@ -289,32 +285,43 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		String fileName = file.getFileName();
 		byte[] fileBytes = file.getContents();
 		FileOutputStream fos = null;
-		ByteArrayInputStream fis = null;
-		OutputStream gzipOS = null;
+		// #25378 revert from HEAD -start-
+//		ByteArrayInputStream fis = null;
+//		OutputStream gzipOS = null;
+		// #25378 revert from HEAD -end-
+
 		try{
 			if (fileBytes != null) {
-				fis= new ByteArrayInputStream(fileBytes);
+//				fis= new ByteArrayInputStream(fileBytes); // #25378 revert from HEAD
 				attachment.setFileName(fileName);
 				attachment.setFileDesc("File uploded");
 				populateAttachmentDetails(attachment);
-				attachment.setFilePath(attachment.getFilePath()+".gz");
+				
+//				attachment.setFilePath(attachment.getFilePath()+".gz"); // #25378 revert from HEAD
+				
 				fos = new FileOutputStream(getActualFilePath(attachment));
 			
-				//fos.write(fileBytes);
+				fos.write(fileBytes);
+
+				// #25378 revert from HEAD -start-
 				//#25378 - danial
-				gzipOS =new GZIPOutputStream(fos){{def.setLevel(Deflater.BEST_COMPRESSION);}};
-	            byte[] buffer = new byte[1024];
-	            int len;
-	            while((len=fis.read(buffer)) != -1){
-	                gzipOS.write(buffer, 0, len);
-	            }
+//				gzipOS =new GZIPOutputStream(fos){{def.setLevel(Deflater.BEST_COMPRESSION);}};
+//	            byte[] buffer = new byte[1024];
+//	            int len;
+//	            while((len=fis.read(buffer)) != -1){
+//	                gzipOS.write(buffer, 0, len);
+//	            }
+	         // #25378 revert from HEAD -end-
 			}
 		}
 		finally{
-			if(fos != null && gzipOS!=null){
-				gzipOS.close();
+			if(fos != null){
+				// #25378 revert from HEAD -start-
+//			if(fos != null && gzipOS!=null){
+//				gzipOS.close();
+				// #25378 revert from HEAD -end-
 				fos.close();
-				fis.close();
+//				fis.close(); // #25378 revert from HEAD
 			}
 		}
 	}
@@ -505,13 +512,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				// Cannot open connection, maybe local file
 				input = new FileInputStream(filePath);
 			}
-			boolean zipped=false;
+			downloadFileByInputStream(input, fileName);
 			
-			//#25378 - danial
-			if(filePath.endsWith(".gz")){
-				zipped=true;
-			}
-			downloadFileByInputStream(input, fileName,zipped);
+			// #25378 revert from HEAD -start-
+//			boolean zipped=false;
+//			
+//			//#25378 - danial
+//			if(filePath.endsWith(".gz")){
+//				zipped=true;
+//			}
+//			downloadFileByInputStream(input, fileName,zipped);
+			// #25378 revert from HEAD -end-
 		}
          //input has been closed in the called method bcoz here in catch they alternative 
 		// use to upload back to database
@@ -526,16 +537,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param fileName
 	 * @throws IOException
 	 */
-	protected void downloadFileByInputStream(InputStream input, String fileName,boolean zipped)
+	protected void downloadFileByInputStream(InputStream input, String fileName)
 			throws IOException {
+	// #25378 revert from HEAD -start-
+//	protected void downloadFileByInputStream(InputStream input, String fileName,boolean zipped)
+//			throws IOException {
+	// #25378 revert from HEAD -end-
 		log.info("Inside downloadFile(..)");
 		PortletResponse portletResponse = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse response = com.liferay.portal.util.PortalUtil
 				.getHttpServletResponse(portletResponse);
 		OutputStream out = null;
+		// #25378 revert from HEAD -start-
 		//#25378 - danial
-		GZIPInputStream gis =null;
+//		GZIPInputStream gis =null;
+		// #25378 revert from HEAD -end-
 		
 		try{
 			response.setHeader("Pragma", "no-cache");
@@ -556,29 +573,37 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			
 			byte[] buffer = new byte[4096];
 			int bytesRead;
-			
-			//#25378 - danial
-			if(zipped){
-				gis= new GZIPInputStream(input);
-				while ((bytesRead = gis.read(buffer)) != -1) {
-					out.write(buffer, 0, bytesRead);
-					buffer = new byte[4096];
-				}
-			}else{
-				while ((bytesRead = input.read(buffer)) != -1) {
-					out.write(buffer, 0, bytesRead);
-					buffer = new byte[4096];
-				}
+			while ((bytesRead = input.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
+				buffer = new byte[4096];
 			}
-			
+
+			// #25378 revert from HEAD -start-
+			//#25378 - danial
+//			if(zipped){
+//				gis= new GZIPInputStream(input);
+//				while ((bytesRead = gis.read(buffer)) != -1) {
+//					out.write(buffer, 0, bytesRead);
+//					buffer = new byte[4096];
+//				}
+//			}else{
+//				while ((bytesRead = input.read(buffer)) != -1) {
+//					out.write(buffer, 0, bytesRead);
+//					buffer = new byte[4096];
+//				}
+//			}
+			// #25378 revert from HEAD -end-
 			
 			out.flush();
 			FacesContext.getCurrentInstance().responseComplete();
 		}
 		finally{
-			if(gis!=null){
-				gis.close();
-			}
+			// #25378 revert from HEAD -start-
+//			if(gis!=null){
+//				gis.close();
+//			}
+			// #25378 revert from HEAD -end-
+
 			if(input!= null){
 				input.close();
 			}
