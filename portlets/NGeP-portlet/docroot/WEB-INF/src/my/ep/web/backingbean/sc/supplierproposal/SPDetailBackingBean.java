@@ -6444,9 +6444,10 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	// 20220127@syazani - Enhancement #3657 - specific error message - End
 	
 	//#21695 Farid Start - fix proposal checking 18/2/2022
+	//Bug #32952 checking supplier has branch at zone that agency request
 	public void disableDefaultSelected() {
 		for(TplSpecAnswer retrieveAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-			if(retrieveAns != null && this.getManagedBean().getZones().size() == 1){
+			if(retrieveAns != null && this.getManagedBean().getZones().size() > 0){
 				for(TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()){
 					if(specZonedtl != null){
 						for(TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()){
@@ -6459,7 +6460,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 						}
 					}
 				}
-			}
+			} 
 		}
 	}
 	//#21695 Farid End - fix proposal checking 18/2/2022
