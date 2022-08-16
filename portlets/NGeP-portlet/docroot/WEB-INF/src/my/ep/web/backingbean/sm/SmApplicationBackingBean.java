@@ -714,6 +714,8 @@ public class SmApplicationBackingBean extends
 							.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_SDO_INQUIRY)
 							.append(",")
 							.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PO_INQUIRY)
+							.append(",")
+							.append(SupplierManagementConst.PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT)
 							//#32627 END
 							.append(")");
 					reqDTO.setWorkflowStatus(sb.toString());
@@ -16946,6 +16948,7 @@ public class SmApplicationBackingBean extends
 		//32627 START
 		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_SDO_INQUIRY);
 		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_PO_INQUIRY);
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT);
 		//32627 END
 		reqDTO.setSupplierId(supplierId);
 		
