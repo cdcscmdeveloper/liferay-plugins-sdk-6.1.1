@@ -13952,339 +13952,334 @@ public class SmApplicationBackingBean extends
 	}
 	
 	//#27232 - START SSM CHANGES FOR RESUBMIT
-		public void ssmIntegrationResubmit(){
-			//#27165
-			boolean dontGetSsmData = this.getManagedBean().isDisAllowOwnerEdit();
-			SsmReqDTO ssmReqDTO = new SsmReqDTO();
-			ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
-			ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
-			if(SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
-				ssmReqDTO.setBasicAcc(true);
+	public void ssmIntegrationResubmit(){
+		//#27165
+		boolean dontGetSsmData = this.getManagedBean().isDisAllowOwnerEdit();
+		SsmReqDTO ssmReqDTO = new SsmReqDTO();
+		ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
+		ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
+		if(SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
+			ssmReqDTO.setBasicAcc(true);
+		}else{
+			ssmReqDTO.setBasicAcc(false);
+		}
+		//#27165
+		this.getManagedBean().setCompanyValidWithSSM(false);
+		this.getManagedBean().setValidateWithSSM(true);
+		SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+		if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
+			this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
+			if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
+			//27382 - start
+			if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("L")){
+				throw new EpException(MessageConst.ERROR_721097,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+			}//27382 - Terminated 
+			if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("T")){
+				throw new EpException(MessageConst.ERROR_721098,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+			}//27382 - Dissolved Conversion to LLP
+			if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("B")){
+				if(businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType())){
+					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.b", null) });
+				}
+				if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
+					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.dissolved", null) });
+				}
+			}else{ 
+				throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});}
+			}
+			//27382 - end
+			this.getManagedBean().setCompanyValidWithSSM(true);
+			//SET COMPANY NAME
+			//if rob no need to copy capital.
+			//long tempAnnualRevenue = this.getManagedBean().getSmAppl().getSmCompanyBasic().getAnnualRevenue();
+			if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
+				String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
+				EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 			}else{
-				ssmReqDTO.setBasicAcc(false);
+				// 28466 - add paid up capital & #30660 start - fix reopen
+				if (getManagedBean().isDisAllowOwnerEdit()) {
+					String[] copyProp = { "companyName", "robExpiryDate", "annualRevenue",  "businessDesc", "revenueSsmNull", "robExpirySsmNull",
+							"authorizedCapitalSsmNull", "companySsmStatus", "annualRevenueSSM",	"paidUpCapitalSSM" };
+					EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(), this.getManagedBean()
+							.getSmAppl().getSmCompanyBasic(), copyProp);
+				} else {
+					String[] copyProp = { "companyName", "robExpiryDate", "authorizedCapital", "nonBumiEquity",	"annualRevenue", "bumiEquity",
+							"localCompanyEquity", "foreignCompanyEquity", "foreignerEquity", "govtEquity", "govtUnitrustEquity", "businessDesc",
+							"revenueSsmNull", "robExpirySsmNull", "authorizedCapitalSsmNull", "companySsmStatus", "annualRevenueSSM", "paidUpCapitalSSM",
+							"paidUpCapital" };
+					EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(), this.getManagedBean()
+							.getSmAppl().getSmCompanyBasic(), copyProp);
+				}
+				//#30660 end							
 			}
 			//#27165
-			this.getManagedBean().setCompanyValidWithSSM(false);
-			this.getManagedBean().setValidateWithSSM(true);
-			SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
-			if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
-				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
-				if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
-				//27382 - start
-				if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("L")){
-					throw new EpException(MessageConst.ERROR_721097,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
-				}//27382 - Terminated 
-				if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("T")){
-					throw new EpException(MessageConst.ERROR_721098,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
-				}//27382 - Dissolved Conversion to LLP
-				if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("B")){
-					if(businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType())){
-						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.b", null) });
-					}
-					if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
-						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.dissolved", null) });
-					}
-					}else{ 
-				throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});}
-				}
-			//27382 - end
-				this.getManagedBean().setCompanyValidWithSSM(true);
-				//SET COMPANY NAME
-				//if rob no need to copy capital.
-				//long tempAnnualRevenue = this.getManagedBean().getSmAppl().getSmCompanyBasic().getAnnualRevenue();
-				if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
-					String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
-					EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
-				}else{
-					// 28466 - add paid up capital & #30660 start - fix reopen
-					if (getManagedBean().isDisAllowOwnerEdit()) {
-						String[] copyProp = { "companyName", "robExpiryDate", "annualRevenue",  "businessDesc", "revenueSsmNull", "robExpirySsmNull",
-								"authorizedCapitalSsmNull", "companySsmStatus", "annualRevenueSSM",	"paidUpCapitalSSM" };
-						EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(), this.getManagedBean()
-								.getSmAppl().getSmCompanyBasic(), copyProp);
-					} else {
-						String[] copyProp = { "companyName", "robExpiryDate", "authorizedCapital", "nonBumiEquity",	"annualRevenue", "bumiEquity",
-								"localCompanyEquity", "foreignCompanyEquity", "foreignerEquity", "govtEquity", "govtUnitrustEquity", "businessDesc",
-								"revenueSsmNull", "robExpirySsmNull", "authorizedCapitalSsmNull", "companySsmStatus", "annualRevenueSSM", "paidUpCapitalSSM",
-								"paidUpCapital" };
-						EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(), this.getManagedBean()
-								.getSmAppl().getSmCompanyBasic(), copyProp);
-					}
-					//#30660 end							
-				}
-				//#27165
-				if(dontGetSsmData){	
-					String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
-					EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);														
-				}
-				/*if((ssmResDTO.getSmCompanyBasic().getAnnualRevenue() == null || ssmResDTO.getSmCompanyBasic().getAnnualRevenue()==0) && tempAnnualRevenue > 0){
-					this.getManagedBean().getSmAppl().getSmCompanyBasic().setAnnualRevenue(tempAnnualRevenue);
-				}*/
-				//SET ADDRESS
-				//27495
-				String[] copyPropAddress = {"address1","address2","address3","addressSsmNull","postcodeSsmNull","stateSsmNull","countrySsmNull","ssmData","postcode","stateId"};
+			if(dontGetSsmData){	
+				String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
+				EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);														
+			}
+			/*if((ssmResDTO.getSmCompanyBasic().getAnnualRevenue() == null || ssmResDTO.getSmCompanyBasic().getAnnualRevenue()==0) && tempAnnualRevenue > 0){
+				this.getManagedBean().getSmAppl().getSmCompanyBasic().setAnnualRevenue(tempAnnualRevenue);
+			}*/
+			//SET ADDRESS
+			//27495
+			String[] copyPropAddress = {"address1","address2","address3","addressSsmNull","postcodeSsmNull","stateSsmNull","countrySsmNull","ssmData","postcode","stateId"};
 
-				EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmAddress(),this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress(),copyPropAddress);
-				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode(ssmResDTO.getSmAddress().getPostcode());
-				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmState(ssmResDTO.getSmAddress().getPmState());
-				//END #27256
-				this.getManagedBean().getSmAppl().setApplValidWithSsm(true);
-				//set establish date
-				this.getManagedBean().getSmAppl().getSmCompanyBasic().setEstablishDate(ssmResDTO.getSmCompanyBasic().getEstablishDate());
+			EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmAddress(),this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress(),copyPropAddress);
+			this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode(ssmResDTO.getSmAddress().getPostcode());
+			this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmState(ssmResDTO.getSmAddress().getPmState());
+			//END #27256
+			this.getManagedBean().getSmAppl().setApplValidWithSsm(true);
+			//set establish date
+			this.getManagedBean().getSmAppl().getSmCompanyBasic().setEstablishDate(ssmResDTO.getSmCompanyBasic().getEstablishDate());
+			
+			//POPUP USER NOT SSM OWNER #26734 START
+			//FacesScopes facesScope = new FacesScopes();
+			//PmUser userSession = facesScope.getUserSessionBean();
+			/*if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+				boolean checkWithSSM = true;
+				SmPersonnel personnelOld = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
+						userSession.getIdentificationNo(), this.getManagedBean().getSmAppl()
+								.getSmPersonnels(), "identificationNo");
+				if (personnelOld.isEquityOwner()) {
+					checkWithSSM = true;
+				} else {
+					checkWithSSM = false;
+				}
 				
-				//POPUP USER NOT SSM OWNER #26734 START
-				//FacesScopes facesScope = new FacesScopes();
-				//PmUser userSession = facesScope.getUserSessionBean();
-				/*if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-					boolean checkWithSSM = true;
-					SmPersonnel personnelOld = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
-							userSession.getIdentificationNo(), this.getManagedBean().getSmAppl()
-									.getSmPersonnels(), "identificationNo");
-					if (personnelOld.isEquityOwner()) {
-						checkWithSSM = true;
-					} else {
-						checkWithSSM = false;
+				if(userSession != null && checkWithSSM){
+					SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+					if(personnelSSM == null) {	
+						getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
+						getManagedBean().setSmPersonnelSsm(personnelOld);
+						RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+						return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);
 					}
-					
-					if(userSession != null && checkWithSSM){
-						SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
-						if(personnelSSM == null) {	
-							getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
-							getManagedBean().setSmPersonnelSsm(personnelOld);
-							RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-							return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);
+				}
+			}*/
+			// #26734 END
+			
+			//CHECK EQUITY OWNER EXIST IN SSM TO DISABLE CHECKBOX
+			int i = 0;
+			for(SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
+				//#27165
+				if(dontGetSsmData){
+					break;
+				}
+				validateRole(personnel);
+				SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelAll(),"identificationNo");
+				if(personnelSSM != null){								
+					//if rob no need to copy shareamt.
+					if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
+						personnel.setSsmData(true);
+						personnel.setShareAmtSsmNull(true);
+						//SSM CHANGE 11012020
+						//#27315
+						String[] copyEquityOwner = {"name","birthDate","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm","pmRace"};
+						EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
+					}else{
+						personnel.setSsmData(true);
+						//#27315
+						//27408 - Remove Pmcountry for ROC
+						String[] copyEquityOwner = {"name","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","directorSsm","equityOwnerSsm","managementSsm"};
+						EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
+					}
+					validateRole(personnel);
+					//personnel.setSmPersonnelAddresses(personnelSSM.getSmPersonnelAddresses());
+					//personnel.setSmAppl(this.getManagedBean().getSmAppl());
+					///check ssm address exist or not
+					if(personnelSSM.getSmPersonnelAddresses()!= null && personnelSSM.getSmPersonnelAddresses().size() > 0){
+						//check ssm address exist type = R
+						SmPersonnelAddress personnelAddressSSM = (SmPersonnelAddress)EntityHelper.getEntityBySinglePropertyFromList(my.ep.constant.sm.SupplierManagementConst.ADDRESS_TYPE_RESIDENTIAL,personnelSSM.getSmPersonnelAddresses(),"addressType");
+						if(personnelAddressSSM != null){
+							if(personnel.getSmPersonnelAddresses()!= null && personnel.getSmPersonnelAddresses().size() > 0){
+								for(SmPersonnelAddress personnelAddress : personnel.getSmPersonnelAddresses()){
+									if(my.ep.constant.sm.SupplierManagementConst.ADDRESS_TYPE_RESIDENTIAL.equalsIgnoreCase(personnelAddress.getAddressType())){
+										personnelAddress.setSmPersonnel(personnel);
+										EntityHelper.copyEntityPropertiesOnly(personnelAddressSSM.getSmAddress(),personnelAddress.getSmAddress(),copyPropAddress);
+										break;
+									}
+								}
+							}
 						}
+						
 					}
-				}*/
-				// #26734 END
+				}else{
+					//27239
+					setDeletePersonnel(personnel);
+				}
+				this.getManagedBean().getSmAppl().getSmPersonnels().set(i, personnel);
+				i++;
+			}
+			//SET EQUITY COMPANY
+			//if(this.getManagedBean().getSmAppl().getSmEquityCompanies()!=null){
+			// #30660
+			if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && ssmResDTO.getSmEquityCompanys()!=null && !dontGetSsmData){
+				this.getManagedBean().setSmEquityCompanyTemp(ssmResDTO.getSmEquityCompanys());
+				if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
+					this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
+				}
+				//delete all old company share #27145
+				Iterator<SmEquityCompany> iterequityCompany = this.getManagedBean().getSmAppl().getSmEquityCompanies().iterator();
+				while(iterequityCompany.hasNext()){
+					iterequityCompany.next();
+					iterequityCompany.remove();
+				}
 				
-				//CHECK EQUITY OWNER EXIST IN SSM TO DISABLE CHECKBOX
-				int i = 0;
-				for(SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
+				//TO Set equity compny from ssm only #27145
+				for(SmEquityCompany equityCompany : ssmResDTO.getSmEquityCompanys()){
+						equityCompany.setSmAppl(this.getManagedBean().getSmAppl());
+						this.getManagedBean().getSmAppl().getSmEquityCompanies().add(equityCompany);
+				}		
+			}
+			//SET SMPERSONNEL
+			if(ssmResDTO.getSmPersonnelAll()!=null){
+				if(this.getManagedBean().getSmAppl().getSmPersonnels()==null){
+					this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList());
+				}
+				for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
 					//#27165
 					if(dontGetSsmData){
 						break;
 					}
-					validateRole(personnel);
-					SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelAll(),"identificationNo");
-					if(personnelSSM != null){								
-						//if rob no need to copy shareamt.
-						if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
-							personnel.setSsmData(true);
-							personnel.setShareAmtSsmNull(true);
-							//SSM CHANGE 11012020
-							//#27315
-							String[] copyEquityOwner = {"name","birthDate","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm","pmRace"};
-							EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
-						}else{
-							personnel.setSsmData(true);
-							//#27315
-							//27408 - Remove Pmcountry for ROC
-							String[] copyEquityOwner = {"name","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","directorSsm","equityOwnerSsm","managementSsm"};
-							EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
+					SmPersonnel oldPersonnel = (SmPersonnel)EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo");
+					
+					if(oldPersonnel == null){
+						personnel.setBrandNew(true);
+						personnel.setSmAppl(this.getManagedBean().getSmAppl());
+						personnel.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);	
+						if(personnel.getSmPersonnelAdd()!= null){
+							personnel.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
+							personnel.getSmPersonnelAdd().setSmPersonnel(personnel);
+							personnel.getSmPersonnelAddresses().add(personnel.getSmPersonnelAdd());
 						}
-						validateRole(personnel);
-						//personnel.setSmPersonnelAddresses(personnelSSM.getSmPersonnelAddresses());
-						//personnel.setSmAppl(this.getManagedBean().getSmAppl());
-						///check ssm address exist or not
-						if(personnelSSM.getSmPersonnelAddresses()!= null && personnelSSM.getSmPersonnelAddresses().size() > 0){
-							//check ssm address exist type = R
-							SmPersonnelAddress personnelAddressSSM = (SmPersonnelAddress)EntityHelper.getEntityBySinglePropertyFromList(my.ep.constant.sm.SupplierManagementConst.ADDRESS_TYPE_RESIDENTIAL,personnelSSM.getSmPersonnelAddresses(),"addressType");
-							if(personnelAddressSSM != null){
-								if(personnel.getSmPersonnelAddresses()!= null && personnel.getSmPersonnelAddresses().size() > 0){
-									for(SmPersonnelAddress personnelAddress : personnel.getSmPersonnelAddresses()){
-										if(my.ep.constant.sm.SupplierManagementConst.ADDRESS_TYPE_RESIDENTIAL.equalsIgnoreCase(personnelAddress.getAddressType())){
-											personnelAddress.setSmPersonnel(personnel);
-											EntityHelper.copyEntityPropertiesOnly(personnelAddressSSM.getSmAddress(),personnelAddress.getSmAddress(),copyPropAddress);
-											break;
-										}
-									}
-								}
-							}
-							
+						if(personnel.getPmCountry() == null || personnel.getPmCountry().getCountryId() == null){
+							//#27408
+							if(personnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(personnel.getIdentificationType().getParameterCode())){
+								PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(ParameterConst.COUNTRY_UNKNOWN_CODE);
+								personnel.setPmCountry(defaultCountry);
+							}else{
+								PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+								personnel.setPmCountry(defaultCountry);
+							}	
 						}
-					}else{
-						//27239
-						setDeletePersonnel(personnel);
-					}
-					this.getManagedBean().getSmAppl().getSmPersonnels().set(i, personnel);
-					i++;
-				}
-				//SET EQUITY COMPANY
-				//if(this.getManagedBean().getSmAppl().getSmEquityCompanies()!=null){
-				// #30660
-				if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && ssmResDTO.getSmEquityCompanys()!=null && !dontGetSsmData){
-					this.getManagedBean().setSmEquityCompanyTemp(ssmResDTO.getSmEquityCompanys());
-					if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
-						this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
-					}
-					//delete all old company share #27145
-					Iterator<SmEquityCompany> iterequityCompany = this.getManagedBean().getSmAppl().getSmEquityCompanies().iterator();
-					while(iterequityCompany.hasNext()){
-						iterequityCompany.next();
-						iterequityCompany.remove();
-					}
-					
-					//TO Set equity compny from ssm only #27145
-					for(SmEquityCompany equityCompany : ssmResDTO.getSmEquityCompanys()){
-							equityCompany.setSmAppl(this.getManagedBean().getSmAppl());
-							this.getManagedBean().getSmAppl().getSmEquityCompanies().add(equityCompany);
-					}
-					
-					
-					
-				}
-				//SET SMPERSONNEL
-				if(ssmResDTO.getSmPersonnelAll()!=null){
-					if(this.getManagedBean().getSmAppl().getSmPersonnels()==null){
-						this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList());
-					}
-					for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
-						//#27165
-						if(dontGetSsmData){
-							break;
-						}
-						SmPersonnel oldPersonnel = (SmPersonnel)EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo");
 						
-						if(oldPersonnel == null){
-							personnel.setBrandNew(true);
-							personnel.setSmAppl(this.getManagedBean().getSmAppl());
-							personnel.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);	
-							if(personnel.getSmPersonnelAdd()!= null){
-								personnel.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
-								personnel.getSmPersonnelAdd().setSmPersonnel(personnel);
-								personnel.getSmPersonnelAddresses().add(personnel.getSmPersonnelAdd());
-							}
-							if(personnel.getPmCountry() == null || personnel.getPmCountry().getCountryId() == null){
-								//#27408
-								if(personnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(personnel.getIdentificationType().getParameterCode())){
-									PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(ParameterConst.COUNTRY_UNKNOWN_CODE);
-									personnel.setPmCountry(defaultCountry);
-								}else{
-									PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-									personnel.setPmCountry(defaultCountry);
-								}	
-							}
-							
-							this.getManagedBean().getSmAppl().getSmPersonnels().add(personnel);
-						}else{
-							validateRole(oldPersonnel);
-							if(personnel.getPmCountry() == null || personnel.getPmCountry().getCountryId() == null){
-								//#27408
-								if(personnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(personnel.getIdentificationType().getParameterCode())){
-									PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(ParameterConst.COUNTRY_UNKNOWN_CODE);
-									personnel.setPmCountry(defaultCountry);
-								}else{
-									PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-									personnel.setPmCountry(defaultCountry);
-								}	
-							}
+						this.getManagedBean().getSmAppl().getSmPersonnels().add(personnel);
+					}else{
+						validateRole(oldPersonnel);
+						if(personnel.getPmCountry() == null || personnel.getPmCountry().getCountryId() == null){
+							//#27408
+							if(personnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(personnel.getIdentificationType().getParameterCode())){
+								PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(ParameterConst.COUNTRY_UNKNOWN_CODE);
+								personnel.setPmCountry(defaultCountry);
+							}else{
+								PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+								personnel.setPmCountry(defaultCountry);
+							}	
 						}
 					}
 				}
-				//SET EQUITY BRANCH
-				if(ssmResDTO.getSmSupplierBranches() != null){
-					if(this.getManagedBean().getSmAppl().getSmSupplierBranches()==null){
-						this.getManagedBean().getSmAppl().setSmSupplierBranches(new ArrayList());
-					}
-					
-					for (SmSupplierBranch branchSSM : ssmResDTO.getSmSupplierBranches()) {
-						copyBranchFromSSM(branchSSM);
-					}
+			}
+			//SET EQUITY BRANCH
+			if(ssmResDTO.getSmSupplierBranches() != null){
+				if(this.getManagedBean().getSmAppl().getSmSupplierBranches()==null){
+					this.getManagedBean().getSmAppl().setSmSupplierBranches(new ArrayList());
 				}
-				//SET BUSIESS NATURE
-				/*
-				boolean existInOld=false;
-				//compare old data with ssm, if ssm has new data, add data into list
-				if(getManagedBean().getSmAppl().getSmSupplier().getSmSupplierBusinesses().size() > 0){
-					for(SmSupplierBusiness smSupplierBusiness:ssmResDTO.getSmSupplierBusinessList()){
-						if(smSupplierBusiness.getPmBusinessNature()!=null){
-							for(SmSupplierBusiness smSuppBussOld:getManagedBean().getSmAppl().getSmSupplier().getSmSupplierBusinesses()){
-								if(smSupplierBusiness.getPmBusinessNature().getLevelCode().equalsIgnoreCase(smSuppBussOld.getPmBusinessNature().getLevelCode())){
-									existInOld=true;
-								}
+				
+				for (SmSupplierBranch branchSSM : ssmResDTO.getSmSupplierBranches()) {
+					copyBranchFromSSM(branchSSM);
+				}
+			}
+			//SET BUSIESS NATURE
+			/*
+			boolean existInOld=false;
+			//compare old data with ssm, if ssm has new data, add data into list
+			if(getManagedBean().getSmAppl().getSmSupplier().getSmSupplierBusinesses().size() > 0){
+				for(SmSupplierBusiness smSupplierBusiness:ssmResDTO.getSmSupplierBusinessList()){
+					if(smSupplierBusiness.getPmBusinessNature()!=null){
+						for(SmSupplierBusiness smSuppBussOld:getManagedBean().getSmAppl().getSmSupplier().getSmSupplierBusinesses()){
+							if(smSupplierBusiness.getPmBusinessNature().getLevelCode().equalsIgnoreCase(smSuppBussOld.getPmBusinessNature().getLevelCode())){
+								existInOld=true;
 							}
 						}
-						if(!existInOld){
-							smSupplierBusiness.setSmSupplier(getManagedBean().getSmSupplier());
-							getManagedBean().getSmAppl().getSmSupplier().getSmSupplierBusinesses().add(smSupplierBusiness);
-						}
 					}
-				//if old data not exits,set all data from ssm into list
-				}else if(ssmResDTO.getSmSupplierBusinessList().size() > 0){
-					getManagedBean().getSmAppl().getSmSupplier().setSmSupplierBusinesses(ssmResDTO.getSmSupplierBusinessList());
-					for(SmSupplierBusiness business :getManagedBean().getSmAppl().getSmSupplier().getSmSupplierBusinesses()){
-						getManagedBean().getSmAppl().getSmSupplier().setSmAppl(getManagedBean().getSmAppl());
-						business.setSmSupplier(getManagedBean().getSmAppl().getSmSupplier());
+					if(!existInOld){
+						smSupplierBusiness.setSmSupplier(getManagedBean().getSmSupplier());
+						getManagedBean().getSmAppl().getSmSupplier().getSmSupplierBusinesses().add(smSupplierBusiness);
 					}
-				}*/
-				// maybe here to put method to check with ssm
-				//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
+				}
+			//if old data not exits,set all data from ssm into list
+			}else if(ssmResDTO.getSmSupplierBusinessList().size() > 0){
+				getManagedBean().getSmAppl().getSmSupplier().setSmSupplierBusinesses(ssmResDTO.getSmSupplierBusinessList());
+				for(SmSupplierBusiness business :getManagedBean().getSmAppl().getSmSupplier().getSmSupplierBusinesses()){
+					getManagedBean().getSmAppl().getSmSupplier().setSmAppl(getManagedBean().getSmAppl());
+					business.setSmSupplier(getManagedBean().getSmAppl().getSmSupplier());
+				}
+			}*/
+			// maybe here to put method to check with ssm
+			//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
 			// 28466 - to maintain paid up capital from SSM
-				if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
-					reCalculateCapitalPersonnel();
-				}
-				//Remove equity/director personnel not exist in ssm
-				if(this.getManagedBean().getSmAppl().getSmPersonnels()!= null){
-					Iterator<SmPersonnel> iterPersonnel = this.getManagedBean().getSmAppl().getSmPersonnels().iterator();
-					while(iterPersonnel.hasNext()){
-						SmPersonnel personnel = iterPersonnel.next();
-						//START SSM CHANGES #27201 - SET DESIGNATION
-						personnel = setDesignationSSM(personnel);
-						//END SSM CHANGES #27201 - SET DESIGNATION
-						if(personnel.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_DELETED){
-							if (this.getManagedBean().getSmAppl().getSmSupplierBanks() != null && !this.getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty()) {
-								
-								for (SmSupplierBank smSupplierBank : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
-									if (smSupplierBank.getSmChequeSignatories() != null && !smSupplierBank.getSmChequeSignatories().isEmpty()) {
-										Iterator<SmChequeSignatory> itersmChequeSignatory = smSupplierBank.getSmChequeSignatories().iterator();
-										while (itersmChequeSignatory.hasNext()) {
-											SmChequeSignatory smChequeSignatory = itersmChequeSignatory.next();
-											if (smChequeSignatory.getSmPersonnel() != null && smChequeSignatory.getSmPersonnel().getPersonnelId() != null && smChequeSignatory.getSmPersonnel().getPersonnelId().compareTo(personnel.getPersonnelId()) == 0 ) {
-												itersmChequeSignatory.remove();
-											}
+			if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
+				reCalculateCapitalPersonnel();
+			}
+			//Remove equity/director personnel not exist in ssm
+			if(this.getManagedBean().getSmAppl().getSmPersonnels()!= null){
+				Iterator<SmPersonnel> iterPersonnel = this.getManagedBean().getSmAppl().getSmPersonnels().iterator();
+				while(iterPersonnel.hasNext()){
+					SmPersonnel personnel = iterPersonnel.next();
+					//START SSM CHANGES #27201 - SET DESIGNATION
+					personnel = setDesignationSSM(personnel);
+					//END SSM CHANGES #27201 - SET DESIGNATION
+					if(personnel.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_DELETED){
+						if (this.getManagedBean().getSmAppl().getSmSupplierBanks() != null && !this.getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty()) {
+							
+							for (SmSupplierBank smSupplierBank : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
+								if (smSupplierBank.getSmChequeSignatories() != null && !smSupplierBank.getSmChequeSignatories().isEmpty()) {
+									Iterator<SmChequeSignatory> itersmChequeSignatory = smSupplierBank.getSmChequeSignatories().iterator();
+									while (itersmChequeSignatory.hasNext()) {
+										SmChequeSignatory smChequeSignatory = itersmChequeSignatory.next();
+										if (smChequeSignatory.getSmPersonnel() != null && smChequeSignatory.getSmPersonnel().getPersonnelId() != null && smChequeSignatory.getSmPersonnel().getPersonnelId().compareTo(personnel.getPersonnelId()) == 0 ) {
+											itersmChequeSignatory.remove();
 										}
 									}
 								}
 							}
-							
-							if (this.getManagedBean().getSmAppl().getSmSupplierBranches() != null && !this.getManagedBean().getSmAppl().getSmSupplierBranches().isEmpty()) {
-								Iterator<SmSupplierBranch> itersmSupplierBranch = this.getManagedBean().getSmAppl().getSmSupplierBranches().iterator();
-								while (itersmSupplierBranch.hasNext()) {
-									SmSupplierBranch smSupplierBranch = itersmSupplierBranch.next();
-									if (smSupplierBranch.getSmPersonnel() != null && smSupplierBranch.getSmPersonnel().getPersonnelId().compareTo(personnel.getPersonnelId()) == 0) {
-											smSupplierBranch.setSmPersonnel(null);
-									}
+						}
+						
+						if (this.getManagedBean().getSmAppl().getSmSupplierBranches() != null && !this.getManagedBean().getSmAppl().getSmSupplierBranches().isEmpty()) {
+							Iterator<SmSupplierBranch> itersmSupplierBranch = this.getManagedBean().getSmAppl().getSmSupplierBranches().iterator();
+							while (itersmSupplierBranch.hasNext()) {
+								SmSupplierBranch smSupplierBranch = itersmSupplierBranch.next();
+								if (smSupplierBranch.getSmPersonnel() != null && smSupplierBranch.getSmPersonnel().getPersonnelId().compareTo(personnel.getPersonnelId()) == 0) {
+										smSupplierBranch.setSmPersonnel(null);
 								}
 							}
-							
-							iterPersonnel.remove();
 						}
+						
+						iterPersonnel.remove();
 					}
 				}
-			}else{
-				this.getManagedBean().setCompanyValidWithSSM(false);
 			}
-			
-			
-		
-			if(!this.getManagedBean().isCompanyValidWithSSM()){
+		}else{
+			this.getManagedBean().setCompanyValidWithSSM(false);
+		}		
+	
+		if(!this.getManagedBean().isCompanyValidWithSSM()){
 //						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
-				throw new EpException(MessageConst.ERROR_721070);
-			}else{
-				IMofRegistrationSO mofRegistrationSO = null;
-				//save smappl
-				mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-						.getInstance().getServiceObject("sm",
-								IMofRegistrationSO.class);
-				MofRegistrationReqDTO mofReqDto = new MofRegistrationReqDTO();
-				mofReqDto.setSmAppl(this.getManagedBean().getSmAppl());
-				MofRegistrationResDTO mofRespDto = mofRegistrationSO.updateSmAppl(mofReqDto);
-				this.getManagedBean().setSmAppl(mofRespDto.getSmAppl());
-				
-			}
-		
+			throw new EpException(MessageConst.ERROR_721070);
+		}else{
+			IMofRegistrationSO mofRegistrationSO = null;
+			//save smappl
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
+			MofRegistrationReqDTO mofReqDto = new MofRegistrationReqDTO();
+			mofReqDto.setSmAppl(this.getManagedBean().getSmAppl());
+			MofRegistrationResDTO mofRespDto = mofRegistrationSO.updateSmAppl(mofReqDto);
+			this.getManagedBean().setSmAppl(mofRespDto.getSmAppl());
+			
 		}
+	
+	}
 		
 	//#27232 - END SSM CHANGES FOR RESUBMIT
 	
@@ -14300,8 +14295,7 @@ public class SmApplicationBackingBean extends
 	}
 	//END : #27239 
 	
-	//13320-Start
-	
+	//13320-Start	
 	public void onChangeDistrictByDivision(SmAddress addr, String panelName) {
 		SmApplicationUtil.getInstance().populateDistrictsByUsingDivision(addr,
 				panelName, getManagedBean());
@@ -14312,120 +14306,121 @@ public class SmApplicationBackingBean extends
 	//13320-End	
 	
 	// BUG #28173 & #28315 -START
-		public void managePersonnelStaff() {
-			if (getManagedBean().getSmAppl().getSupplierType()
-					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-				//#30444 START--25082021--
-				if(getManagedBean().getBusinessTypeVal()
-							.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)
-							&& !alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder().getPersonnelId())){
-					if(getManagedBean().getSelectedShareHolder().isClerical()
-							&& !getManagedBean().getSelectedShareHolder().isEquityOwner()) {
-						getManagedBean().getSelectedShareHolder().setManagement(false);
-						getManagedBean().getSelectedShareHolder().setDisableManagement(true);
-					}else{
-						getManagedBean().getSelectedShareHolder().setDisableManagement(false);
-					}
-				} else {
-					if (getManagedBean().getSelectedShareHolder().isClerical()) {
-						getManagedBean().getSelectedShareHolder().setManagement(false);
-						getManagedBean().getSelectedShareHolder().setEquityOwner(false);
-						getManagedBean().getSelectedShareHolder().setHigherManagement(false);
-						getManagedBean().getSelectedShareHolder().setDirector(false);
-						getManagedBean().getSelectedShareHolder().setDisableManagement(true);
-						getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
-					} else {
-						getManagedBean().getSelectedShareHolder().setDisableManagement(false);
-						getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);
-					}
-				}
-				//#30444 END--25082021--
-		   } else if (getManagedBean().getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
-			   //#30444 START--25082021--
-			   if (getManagedBean().getBusinessTypeVal()     
+	public void managePersonnelStaff() {
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+			//#30444 START--25082021--
+			if(getManagedBean().getBusinessTypeVal()
 						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)
-						&& !alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl(), 
-					    				getManagedBean().getSelectedShareHolder().getPersonnelId())) {   		
-						if (getManagedBean().getSelectedShareHolder().isClerical()
-									&& !getManagedBean().getSelectedShareHolder().isEquityOwner()) {
-							getManagedBean().getSelectedShareHolder().setProf(false);
-							getManagedBean().getSelectedShareHolder().setManagement(false);
-							getManagedBean().getSelectedShareHolder().setDisableProf(true);
-							getManagedBean().getSelectedShareHolder().setDisableManagement(true);
-						} else {
-							//#30444 START--27032022--
-							if(getManagedBean().getSelectedShareHolder().isSemiProf()){
-								getManagedBean().getSelectedShareHolder().setDisableProf(true);
-								getManagedBean().getSelectedShareHolder().setDisableManagement(true);	
-							}else{
-								getManagedBean().getSelectedShareHolder().setDisableProf(false);
-								getManagedBean().getSelectedShareHolder().setDisableManagement(false);
-							}
-							//#30444 END--27032022--
-						}
-						if (getManagedBean().getSelectedShareHolder().isClerical()){
-							getManagedBean().getSelectedShareHolder().setSemiProf(false);
-							getManagedBean().getSelectedShareHolder().setDisableSemiProf(true);
-			    		}else{
-			    			if(getManagedBean().getSelectedShareHolder().isEquityOwner()
-			    					||getManagedBean().getSelectedShareHolder().isProf()
-			    					||getManagedBean().getSelectedShareHolder().isManagement()){
-			    				getManagedBean().getSelectedShareHolder().setDisableSemiProf(true);
-			    			} else {
-			    			getManagedBean().getSelectedShareHolder().setDisableSemiProf(false);
-			    			}
-			    		}
-			    		
-			   } else {
-				   if (getManagedBean().getSelectedShareHolder().isClerical()) {
+						&& !alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder().getPersonnelId())){
+				if(getManagedBean().getSelectedShareHolder().isClerical()
+						&& !getManagedBean().getSelectedShareHolder().isEquityOwner()) {
+					getManagedBean().getSelectedShareHolder().setManagement(false);
+					getManagedBean().getSelectedShareHolder().setDisableManagement(true);
+				}else{
+					getManagedBean().getSelectedShareHolder().setDisableManagement(false);
+				}
+			} else {
+				if (getManagedBean().getSelectedShareHolder().isClerical()) {
+					getManagedBean().getSelectedShareHolder().setManagement(false);
+					getManagedBean().getSelectedShareHolder().setEquityOwner(false);
+					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
+					getManagedBean().getSelectedShareHolder().setDirector(false);
+					getManagedBean().getSelectedShareHolder().setDisableManagement(true);
+					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
+				} else {
+					getManagedBean().getSelectedShareHolder().setDisableManagement(false);
+					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);
+				}
+			}
+			//#30444 END--25082021--
+	   } else if (getManagedBean().getSmAppl().getSupplierType()
+			.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+		   //#30444 START--25082021--
+		   if (getManagedBean().getBusinessTypeVal()     
+					.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)
+					&& !alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl(), 
+				    				getManagedBean().getSelectedShareHolder().getPersonnelId())) {   		
+					if (getManagedBean().getSelectedShareHolder().isClerical()
+								&& !getManagedBean().getSelectedShareHolder().isEquityOwner()) {
 						getManagedBean().getSelectedShareHolder().setProf(false);
 						getManagedBean().getSelectedShareHolder().setManagement(false);
-						getManagedBean().getSelectedShareHolder().setEquityOwner(false);
-						getManagedBean().getSelectedShareHolder().setSemiProf(false);
-						getManagedBean().getSelectedShareHolder().setHigherManagement(false); //#30444 --27032022--
 						getManagedBean().getSelectedShareHolder().setDisableProf(true);
 						getManagedBean().getSelectedShareHolder().setDisableManagement(true);
-						getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
-						getManagedBean().getSelectedShareHolder().setDisableSemiProf(true);
-				   }else{
-					 //#30444 START--27032022--
-					   if(getManagedBean().getSelectedShareHolder().isEquityOwner()
-							   ||getManagedBean().getSelectedShareHolder().isDirector()
-							   ||getManagedBean().getSelectedShareHolder().isManagement()
-							   ||getManagedBean().getSelectedShareHolder().isHigherManagement()
-							   ||getManagedBean().getSelectedShareHolder().isProf()){
-						   getManagedBean().getSelectedShareHolder().setSemiProf(false);
-						   getManagedBean().getSelectedShareHolder().setDisableSemiProf(true);				   
-					   }else if(getManagedBean().getSelectedShareHolder().isSemiProf()){
-						    getManagedBean().getSelectedShareHolder().setDisableProf(true);
-							getManagedBean().getSelectedShareHolder().setDisableManagement(true);
-							getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);	
-					   }else{
-						    getManagedBean().getSelectedShareHolder().setDisableProf(false);
+					} else {
+						//#30444 START--27032022--
+						if(getManagedBean().getSelectedShareHolder().isSemiProf()){
+							getManagedBean().getSelectedShareHolder().setDisableProf(true);
+							getManagedBean().getSelectedShareHolder().setDisableManagement(true);	
+						}else{
+							getManagedBean().getSelectedShareHolder().setDisableProf(false);
 							getManagedBean().getSelectedShareHolder().setDisableManagement(false);
-							getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);	
-							getManagedBean().getSelectedShareHolder().setDisableSemiProf(false);	   
-					   }
-				   //#30444 END--27032022--
+						}
+						//#30444 END--27032022--
+					}
+					if (getManagedBean().getSelectedShareHolder().isClerical()){
+						getManagedBean().getSelectedShareHolder().setSemiProf(false);
+						getManagedBean().getSelectedShareHolder().setDisableSemiProf(true);
+		    		}else{
+		    			if(getManagedBean().getSelectedShareHolder().isEquityOwner()
+		    					||getManagedBean().getSelectedShareHolder().isProf()
+		    					||getManagedBean().getSelectedShareHolder().isManagement()){
+		    				getManagedBean().getSelectedShareHolder().setDisableSemiProf(true);
+		    			} else {
+		    			getManagedBean().getSelectedShareHolder().setDisableSemiProf(false);
+		    			}
+		    		}
+		    		
+		   } else {
+			   if (getManagedBean().getSelectedShareHolder().isClerical()) {
+					getManagedBean().getSelectedShareHolder().setProf(false);
+					getManagedBean().getSelectedShareHolder().setManagement(false);
+					getManagedBean().getSelectedShareHolder().setEquityOwner(false);
+					getManagedBean().getSelectedShareHolder().setSemiProf(false);
+					getManagedBean().getSelectedShareHolder().setHigherManagement(false); //#30444 --27032022--
+					getManagedBean().getSelectedShareHolder().setDisableProf(true);
+					getManagedBean().getSelectedShareHolder().setDisableManagement(true);
+					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
+					getManagedBean().getSelectedShareHolder().setDisableSemiProf(true);
+			   }else{
+				 //#30444 START--27032022--
+				   if(getManagedBean().getSelectedShareHolder().isEquityOwner()
+						   ||getManagedBean().getSelectedShareHolder().isDirector()
+						   ||getManagedBean().getSelectedShareHolder().isManagement()
+						   ||getManagedBean().getSelectedShareHolder().isHigherManagement()
+						   ||getManagedBean().getSelectedShareHolder().isProf()){
+					   getManagedBean().getSelectedShareHolder().setSemiProf(false);
+					   getManagedBean().getSelectedShareHolder().setDisableSemiProf(true);				   
+				   }else if(getManagedBean().getSelectedShareHolder().isSemiProf()){
+					    getManagedBean().getSelectedShareHolder().setDisableProf(true);
+						getManagedBean().getSelectedShareHolder().setDisableManagement(true);
+						getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);	
+				   }else{
+					    getManagedBean().getSelectedShareHolder().setDisableProf(false);
+						getManagedBean().getSelectedShareHolder().setDisableManagement(false);
+						getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);	
+						getManagedBean().getSelectedShareHolder().setDisableSemiProf(false);	   
 				   }
+			   //#30444 END--27032022--
 			   }
 		   }
+	   }
 	}
+		
 	//#30444 END--25082021--
     private static boolean alreadyHadEquityOwnerAsStaff(SmAppl appl, Long personnelId) { //#29666- add Long variable
 		boolean retVal = false;
 		for (SmPersonnel per : appl.getSmPersonnels()) {
 			if (!per.getPersonnelId().equals(personnelId)){  //#29666- add condition
-			if (per.isEquityOwner() && per.isClerical()) {
-				retVal = true;
-				break;
+				if (per.isEquityOwner() && per.isClerical()) {
+					retVal = true;
+					break;
+				}
 			}
 		}
-	}
 		return retVal;
 	}
-// BUG #28173 & #28315 -END
+    // BUG #28173 & #28315 -END
 
 	//12492 - START
 	public void CheckBankAccountInfoForm(String fromPage) {
@@ -14436,22 +14431,22 @@ public class SmApplicationBackingBean extends
 		boolean bankInfo = false;
 		
 		if(getManagedBean().isShowDifferenceBankInfoAction()){	
-		if(fromPage.equalsIgnoreCase("fromBankInfo")){
-			if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0) {
-				for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
-					if (bankName.getPmFinancialOrg().getFinancialOrgId() != null) {
-						hsetAccountName.add(bankName.getPmFinancialOrg().getFinancialOrgId());
-						hsetAccountNo.add(bankName.getAccountNo());
+			if(fromPage.equalsIgnoreCase("fromBankInfo")){
+				if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0) {
+					for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
+						if (bankName.getPmFinancialOrg().getFinancialOrgId() != null) {
+							hsetAccountName.add(bankName.getPmFinancialOrg().getFinancialOrgId());
+							hsetAccountNo.add(bankName.getAccountNo());
+						}
 					}
 				}
-			}
 
-			if (hsetAccountName.add(getManagedBean().getSelectedBank().getPmFinancialOrg().getFinancialOrgId()) == false) {
-				if (hsetAccountNo.add(getManagedBean().getSelectedBank().getAccountNo()) == false) {
-					RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
-				}
-			}	
-		}
+				if (hsetAccountName.add(getManagedBean().getSelectedBank().getPmFinancialOrg().getFinancialOrgId()) == false) {
+					if (hsetAccountNo.add(getManagedBean().getSelectedBank().getAccountNo()) == false) {
+						RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
+					}
+				}	
+			}
 		}else{
 			for (SmSupplierBank supBank : getManagedBean().getSmAppl().getSmSupplierBanks()){
 				if(getManagedBean().getSelectedBank().getSupplierBankId() != null && 
@@ -14467,6 +14462,7 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	//12492 - END
+	
 	//#11641 - START
 	public void inquiryRowSelect(){
 		//#11641 - START
@@ -14484,6 +14480,7 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().update("resOutPanelId");
 
 	}
+	
 	public int getMandatoryCounter() {
 		return mandatoryCounter++;
 	}
