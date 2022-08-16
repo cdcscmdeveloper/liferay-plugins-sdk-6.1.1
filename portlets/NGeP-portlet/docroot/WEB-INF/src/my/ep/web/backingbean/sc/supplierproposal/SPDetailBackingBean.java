@@ -6449,16 +6449,23 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		for(TplSpecAnswer retrieveAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
 			if(retrieveAns != null && this.getManagedBean().getZones().size() > 0){
 				for(TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()){
-					if(specZonedtl != null){
+					if(specZonedtl != null ){
 						for(TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()){
 							if(specZoneQty!= null && specZoneQty.getTplSpecQuestion().getSpecQuestionId().equals(retrieveAns.getTplSpecQuestion().getSpecQuestionId())
-									&& specZoneQty.getQty().equals(new BigDecimal(0)) 
+									&& !specZoneQty.getQty().equals(new BigDecimal(0)) 
 									&& specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId())){
-									retrieveAns.setOffer(false);
-									retrieveAns.setDisableRow(true);								
+									retrieveAns.setOffer(true);
+									retrieveAns.setDisableRow(false);
+									 
+									break;
+							}else{
+								retrieveAns.setOffer(false);
+								specZoneQty.getTplSpecZoneOffer().setOffer(false);
+								retrieveAns.setDisableRow(true);
 							}
 						}
 					}
+					break;
 				}
 			} 
 		}
