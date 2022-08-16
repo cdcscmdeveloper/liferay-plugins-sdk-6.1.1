@@ -39,7 +39,7 @@
 			height="100"
 			okAction="#{purchaseInDefaultBackingBean.approverAction(reject)}"
 			title="#{lbl['lbl.reject.details']}"
-			content="#{lbl['lbl.reject.dialog.confirm.message']}" update="@this" />
+			content="#{lbl['lbl.reject.dialog.confirm.message']}" update="@this,@([id$=messages])" />
 		<!-- 20190417@asyrafhaziq_12095 - End -->
 
 		<ac:gpkiPopup
@@ -122,7 +122,7 @@
 						<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 							action="#{purchaseInDefaultBackingBean.beforeCancelPid()}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							update="@form"
+							update="@form,@([id$=messages])"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag and isPidGenerated}" />
 					</td>
 				</tr>
@@ -179,7 +179,7 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					actionListener="#{purchaseInDefaultBackingBean.updateBPMTasks('CANCEL')}"
-					oncomplete="cancelDlg.hide();" partialSubmit="true" process="@this"
+					oncomplete="cancelDlg.hide();" partialSubmit="true" process="@this,@([id$=messages])"
 					immediate="true" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					oncomplete="cancelDlg.hide();" />
