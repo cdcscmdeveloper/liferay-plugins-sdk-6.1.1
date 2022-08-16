@@ -1113,6 +1113,7 @@ public class PurchaseInDefaultBackingBean extends
 		debugLogger("approverAction");
 		
 		if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
+				getManagedBean().setAutoUpdate(true);//#9133
 				RequestContext.getCurrentInstance().execute("rejectPID.show()");
 		} else {
 			approverAction(outcome);
@@ -3009,6 +3010,7 @@ public class PurchaseInDefaultBackingBean extends
 	}
 	
 	public void beforeCancelPid() {
+		getManagedBean().setAutoUpdate(true);//#9133
 		RequestContext.getCurrentInstance().execute("cancelDlg.show()");
 	}
 	
