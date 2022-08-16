@@ -1776,6 +1776,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean qtSpecMaintanance;
 	private boolean demoEvalDisabled;
 	private boolean demoSpecialCase;
+	private Long demoSampleChecklistStatusId;
 
 	// #30451-Start.
 	private boolean isBdSfFlow;
@@ -11229,6 +11230,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.scQtRemarksEmpty = scQtRemarksEmpty;
 		}
 		//#9019 - End (Harun)
+		
+		//#28784 - start
+		/**
+		 * @return the demoSampleChecklist
+		 */
+		public Long getDemoSampleChecklistStatusId() {
+			return demoSampleChecklistStatusId;
+		}
+
+		/**
+		 * @param demoSampleChecklist the demoSampleChecklist to set
+		 */
+		public void setDemoSampleChecklistStatusId(Long demoSampleChecklistStatusId) {
+			this.demoSampleChecklistStatusId = demoSampleChecklistStatusId;
+		}
+		//#28784 - end
 }
 
 // ***25201
