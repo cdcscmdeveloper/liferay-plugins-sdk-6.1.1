@@ -19511,7 +19511,7 @@ String message=	ResourceBundleUtils.getMessage("lbl.sc.qt.spec.sample.quantity.e
 			ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 			new FacesScopes().getUserLocale());
 	if(null!=itemName){
- return message.concat(itemName).concat("   " );	
+ return message.concat("                       ").concat(itemName).concat("                  ");//11104	
 }
 return null;
 }
