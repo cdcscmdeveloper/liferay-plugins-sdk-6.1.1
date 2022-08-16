@@ -6447,27 +6447,24 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	//Bug #32952 checking supplier has branch at zone that agency request
 	public void disableDefaultSelected() {
 		for(TplSpecAnswer retrieveAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
+			retrieveAns.setDisableRow(true);
+			retrieveAns.setOffer(false);
 			if(retrieveAns != null && this.getManagedBean().getZones().size() > 0){
-				for(TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()){
-					if(specZonedtl != null ){
-						for(TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()){
-							if(specZoneQty!= null && specZoneQty.getTplSpecQuestion().getSpecQuestionId().equals(retrieveAns.getTplSpecQuestion().getSpecQuestionId())
-									&& !specZoneQty.getQty().equals(new BigDecimal(0)) 
-									&& specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId())){
-									retrieveAns.setOffer(true);
-									retrieveAns.setDisableRow(false);
-									 
-									break;
-							}else{
-								retrieveAns.setOffer(false);
-								specZoneQty.getTplSpecZoneOffer().setOffer(false);
-								retrieveAns.setDisableRow(true);
-							}
+				for(TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()){
+					for(TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()){
+						if(specZoneQty!= null && specZoneQty.getTplSpecQuestion().getSpecQuestionId().equals(retrieveAns.getTplSpecQuestion().getSpecQuestionId())
+								&& !specZoneQty.getQty().equals(new BigDecimal(0)) 
+								&& specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId())){
+								retrieveAns.setOffer(true);
+								retrieveAns.setDisableRow(false);
+								break;
 						}
 					}
-					break;
+						if(!retrieveAns.isDisableRow()){
+							break;
+						}
 				}
-			} 
+			}  
 		}
 	}
 	//#21695 Farid End - fix proposal checking 18/2/2022
