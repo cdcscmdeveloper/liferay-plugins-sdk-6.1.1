@@ -3023,6 +3023,7 @@ public class PurchaseInDefaultBackingBean extends
 			}
 		}
 		if (newRemark) {
+			getManagedBean().setAutoUpdate(false);//#9133
 			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
 					"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
 		}
