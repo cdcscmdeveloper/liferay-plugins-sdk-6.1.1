@@ -74,7 +74,7 @@
 						<p:commandButton value="#{lbl['lbl.btn.save']}"
 							action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault(draft)}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							update="@form" process="@form" partialSubmit="true"
+							update="@form" process="@form,@([id$=messages])" partialSubmit="true"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" /> 
 						<!-- #9133 - end --> 
 						<!-- #28865 change submitPurchaseInDefault() to dialogMsgCheck()-->	
@@ -138,7 +138,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
 							action="#{purchaseInDefaultBackingBean.updatePID()}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							update="@form" process="@form" partialSubmit="true"
+							update="@form,@([id$=messages])" process="@form" partialSubmit="true"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" />
 					<!-- #9133 - end -->
 					<ui:repeat var="bpmAction"
