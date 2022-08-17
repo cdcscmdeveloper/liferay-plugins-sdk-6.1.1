@@ -15127,7 +15127,7 @@ private void retriveCommitteeRemarksList(){
 			if (null != proposalId) {	
 				retrieveTotalSpecScoreBySupplier(proposalId, checkListType);
 				//#25138 - total package max score by supplier - start
-				retriveTemplatePackageSpecScoring(this.getManagedBean().getNewchecklist());
+				retriveTemplatePackageSpecScoring(this.getManagedBean().getNewchecklist(),proposalId);//33812
 				//#25138 - total package max score by supplier - end
 			}
 			
@@ -15684,7 +15684,7 @@ private void retriveCommitteeRemarksList(){
 	//#25138 - end
 	
 	//#25138 - total package max score by supplier - start
-	private void retriveTemplatePackageSpecScoring(List<ScQtCheckList> checklist) {
+	private void retriveTemplatePackageSpecScoring(List<ScQtCheckList> checklist,Long proposalId) {//33812
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
 						ITemplateSpecSO.class);
@@ -15719,6 +15719,17 @@ private void retriveCommitteeRemarksList(){
 			}
 			
 		}
+		if(this.getManagedBean().getScQt().isPartial() && this.getManagedBean().getScQt().isZonal()){//33812-start
+			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			EvaluationReqDTO reqDTo=new EvaluationReqDTO();
+			reqDTo.setQtproposalId(proposalId);
+			reqDTo.setQtId(this.getManagedBean().getScQt().getQtId());
+			EvaluationResDTO resDTO=evaluationSO.retriveNotApplicableSupplierScore(reqDTo);
+		  int notApplicableScore=resDTO.getNotApplicableScore().intValue();
+			sumMaxScore=sumMaxScore-notApplicableScore;
+			
+		}//33812-End
 		this.getManagedBean().setTotalMaxScore(Integer.toString(sumMaxScore));
 
 	}
