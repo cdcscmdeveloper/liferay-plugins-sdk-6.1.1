@@ -1234,11 +1234,6 @@ public class SPDetailBackingBean extends
 				}
 				// #21695 - #33391 - End.
 
-				if (getManagedBean().getSelectedZone() != null) {
-					getManagedBean().getZoneTplSpecBeanMap().put(
-							getManagedBean().getSelectedZone().getSpecZoneId(),
-							getManagedBean().getTemplateSpecBean());
-				}
 				List<TemplateSpecBean> templateSpecBeans = new ArrayList<TemplateSpecBean>();
 				List<TplSpecAnswer> tobeDeletedAnswers = new ArrayList<TplSpecAnswer>();
 				List<TplSpecSuppAnswer> tobeDeletedSuppAnswers = new ArrayList<TplSpecSuppAnswer>();
@@ -6422,22 +6417,36 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	//#21695 Farid Start - fix proposal checking 18/2/2022
 	//Bug #32952 checking supplier has branch at zone that agency request
 	public void disableDefaultSelected() {
-		for(TplSpecAnswer retrieveAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
+		for (TplSpecAnswer retrieveAns : this.getManagedBean()
+				.getTemplateSpecBean().getSpecAnswerList()) {
+			if (retrieveAns != null
+					&& this.getManagedBean().getZones().size() > 0) {
+				for (TplSpecZoneDtl specZonedtl : this.getManagedBean()
+						.getZones()) {
+					if (specZonedtl != null) {
+						for (TplSpecZoneQty specZoneQty : retrieveAns
+								.getTplSpecQuestion().getTplSpecZoneQties()) {
+							if (this.getManagedBean().getZones().size() != retrieveAns
+									.getTplSpecQuestion().getTplSpecZoneQties()
+									.size()) {
+								if (specZoneQty != null
+										&& specZoneQty
+												.getTplSpecQuestion()
+												.getSpecQuestionId()
+												.equals(retrieveAns
+														.getTplSpecQuestion()
+														.getSpecQuestionId())
+										&& specZoneQty.getQty().equals(
+												new BigDecimal(0))
+										&& specZonedtl.getSpecZoneId().equals(
+												specZoneQty.getTplSpecZoneDtl()
+														.getSpecZoneId())) {
+									retrieveAns.setOffer(false);
 			retrieveAns.setDisableRow(true);
-			retrieveAns.setOffer(false);
-			if(retrieveAns != null && this.getManagedBean().getZones().size() > 0){
-				for(TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()){
-					for(TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()){
-						if(specZoneQty!= null && specZoneQty.getTplSpecQuestion().getSpecQuestionId().equals(retrieveAns.getTplSpecQuestion().getSpecQuestionId())
-								&& !specZoneQty.getQty().equals(new BigDecimal(0)) 
-								&& specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId())){
-								retrieveAns.setOffer(true);
-								retrieveAns.setDisableRow(false);
-								break;
 						}
 					}
-						if(!retrieveAns.isDisableRow()){
-							break;
+
+						}
 						}
 				}
 			}  
