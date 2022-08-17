@@ -88,12 +88,12 @@
 		</span>
     </div>
     <div class="standard" align="right">
-    	<b>Lampiran 7</b>
+    	<b>Lampiran 6</b>
     </div>
 	
 	<p style="text-align:center;margin-bottom: 2em">
 		<span class="titleText">
-			SURAT AKUAN PEMBIDA BERJAYA<br/>$title $qtNo
+			SURAT AKUAN PEMBIDA<br/>$title<br/>$qtNo
 		</span>
 	</p>
 	
@@ -129,9 +129,9 @@
 					</p>
 					
 					<p>
-						<span class="standard">2. <span style="margin-left: 20px;">Sekiranya</span> saya, atau mana-mana individu yang mewakili syarikat ini didapati terlibat dalam membuat pakatan harga 
-						dengan syarikat lain atau apa-apa pakatan sepanjang proses perolehan atau menawarkan, menjanjikan atau memberikan apa-apa suapan kepada mana-mana 
-						orang dalam <span class="underline"><b>$agency</b></span> atau mana-mana orang lain sebagai dorongan untuk dipilih 
+						<span class="standard">2. <span style="margin-left: 20px;">Sekiranya</span> saya, atau mana-mana individu yang mewakili syarikat ini didapati terlibat 
+						dalam pakatan tipuan bida dengan syarikat lain berkenaan perolehan di atas atau menawarkan, menjanjikan atau memberikan apa-apa suapan kepada 
+						mana-mana orang dalam <span class="underline"><b>$agency</b></span> atau mana-mana orang lain sebagai dorongan untuk dipilih 
 						dalam perolehan seperti di atas, maka saya sebagai wakil syarikat bersetuju tindakan-tindakan berikut boleh diambil:
 						</span>
 					</p>
@@ -140,15 +140,10 @@
 							<tr class="standard">
 								<td style="vertical-align: top;">2.1</td>
 								<td><span class="text_indent_point"/></td>
-								<td style="text-align:justify;">Penarikan balik tawaran kontrak bagi perolehan di atas; atau</td>
+								<td style="text-align:justify;">Hilang kelayakan untuk dinilai dan dilantik bagi perolehan di atas; dan</td>
 							</tr>
 							<tr class="standard">
 								<td style="vertical-align: top;">2.2</td>
-								<td><span class="text_indent_point"/></td>
-								<td style="text-align:justify;">Penamatan kontrak bagi perolehan di atas; dan</td>
-							</tr>
-							<tr class="standard">
-								<td style="vertical-align: top;">2.3</td>
 								<td><span class="text_indent_point"/></td>
 								<td style="text-align:justify;">Lain-lain tindakan undang-undang/tatatertib mengikut undang-undang/peraturan perolehan Kerajaan yang
 								berkuat kuasa.</td>
@@ -176,7 +171,7 @@
 								<td style="vertical-align: top;">3.2</td>
 								<td><span class="text_indent_point"/></td>
 								<td style="text-align:justify;">tindakan boleh dikenakan ke atas syarikat di bawah Akta Persaingan 2010 [<i>Akta 712</i>] atas kegagalan 
-								saya atau mana-mana orang yang mewakili syarikat ini untuk mematuhi perkara (ii). Sekiranya syarikat 
+								saya atau mana-mana orang yang mewakili syarikat ini untuk mematuhi perkara (ii) dalam Surat Akuan ini. Sekiranya syarikat 
 								didapati melanggar peruntukan seksyen 4(2)(d) Akta 712, syarikat boleh didenda tidak melebihi sepuluh 
 								peratus (10%) daripada pusing ganti (<i>turn over</i>) seluruh dunia sepanjang tempoh suatu pelanggaran itu 
 								berlaku.</td>
@@ -250,17 +245,18 @@
 								<td style="vertical-align: top;">(i)</td>
 								<td><span class="text_indent_point"/></td>
 								<td style="text-align:justify;">**termasuk kesalahan ditetapkan dalam Jadual (Perenggan 3 (a), takrif "kesalahan ditetapkan") Akta 
-								Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] yang boleh dihukum di bawah Kanun Keseksaan <i>[Akta 574]</i>.</td>
+								Suruhanjaya Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>] yang boleh dihukum di bawah Kanun
+								Keseksaan <i>[Akta 574]</i>.</td>
 							</tr>
 							<tr></tr>
 							<tr></tr>
 							<tr class="standard">
 								<td style="vertical-align: top;">(ii)</td>
 								<td><span class="text_indent_point"/></td>
-								<td style="text-align:justify;">***seseorang yang bersekutu dengan syarikat merujuk kepada seksyen 17A (6) Akta Suruhanjaya Pencegahan
-								Rasuah Malaysia 2009 [<i>Akta 694</i>], iaitu seseorang itu bersekutu dengan organisasi komersial jika dia seorang
-								pengarah, pekongsi atau pekerja organisasi komersial itu atau dia ialah orang yang melaksanakan perkhidmatan
-								untuk atau bagi pihak organisasi komersial itu.</td>
+								<td style="text-align:justify;">***seseorang yang bersekutu dengan syarikat merujuk kepada seksyen 17A (6) Akta Suruhanjaya 
+								Pencegahan Rasuah Malaysia 2009 [<i>Akta 694</i>], iaitu seseorang itu bersekutu dengan organisasi 
+								komersial jika dia seorang pengarah, pekongsi atau pekerja organisasi komersial itu atau dia ialah orang 
+								yang melaksanakan perkhidmatan untuk atau bagi pihak organisasi komersial itu.</td>
 							</tr>
 							<tr></tr>
 							<tr></tr>
@@ -274,8 +270,7 @@
 							<tr class="standard">
 								<td style="vertical-align: top;">(iv)</td>
 								<td><span class="text_indent_point"/></td>
-								<td style="text-align:justify;">Takrifan perusahaan di bawah Akta 712 merangkumi syarikat yang terlibat dengan
-								perolehan Kerajaan.</td>
+								<td style="text-align:justify;">Takrifan perusahaan di bawah Akta 712 merangkumi syarikat yang terlibat dengan perolehan Kerajaan.</td>
 							</tr>
 							<tr>
 							<td> </td>
@@ -285,19 +280,6 @@
 				</td>
 			</tr>
 		</table>
-    </div>
-
-    <div class="footer" >
-        <p class="standard">
-		## #25002-start
-		Tandatangan & Cap (Kerajaan) : .......................<br/><br/>
-		Tandatangan & Cap (Syarikat) : .......................<br/>
-		## #25002 - end
-		</p>
-		<span class="redText">
-		Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak<br/>
-		Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini
-		</span>
     </div>
     ## #32648 - end
 </body>
