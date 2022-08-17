@@ -12956,10 +12956,11 @@ if (null != checklist && !checklist.isEmpty()) {
 			qtStatus = detailSO.retrieveActiveStatusByDoctype(this.getManagedBean().getQt().getQtId(), ParameterConst.DOCTYPE_QUOTATION);
 			if (qtStatus != null)
 				this.getManagedBean().getQt().setQtStatus(qtStatus);
-				if (!(this.getManagedBean().getQt().getQtStatus().getStatusId().equals(ParameterConst.STATUSID_PENDING_SPECIFICATION_PREPARATION) || this
-						.getManagedBean().getQt().getQtStatus().getStatusId().equals(ParameterConst.STATUSID_PENDING_SPECIFICATION_PREPARATION_REVISION))) {
-					throw new EpException(MessageConst.ERROR_100048);
-				}
+			if (!(Arrays.asList(new Long[] { ParameterConst.STATUSID_PENDING_SPECIFICATION_PREPARATION,
+					ParameterConst.STATUSID_PENDING_SPECIFICATION_PREPARATION_REVISION, ParameterConst.STATUSID_PENDING_DOCUMENT_PREPARATION })
+					.contains(this.getManagedBean().getQt().getQtStatus().getStatusId()))) {
+				throw new EpException(MessageConst.ERROR_100048);
+			}
 			// Bug #33661@Syazani 16/08/2022 -- End
 			
 			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
