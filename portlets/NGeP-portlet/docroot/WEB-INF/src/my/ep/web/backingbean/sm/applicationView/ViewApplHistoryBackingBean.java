@@ -1943,7 +1943,9 @@ public class ViewApplHistoryBackingBean extends
 		
 		SmSupplier supplier = smAppl.getSmSupplier();
 		if (supplier.getSupplierId() != null
-				&& smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_RENEW_MOF)) {
+				&& (smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_RENEW_MOF)
+				|| smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_UPDATE_MOF) //32627 START
+				|| smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_ADD_CATEGORY))) { //32627 END
 			SmMofAccount resultList = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(
 					supplier.getSupplierId());
 			if (resultList != null) {
