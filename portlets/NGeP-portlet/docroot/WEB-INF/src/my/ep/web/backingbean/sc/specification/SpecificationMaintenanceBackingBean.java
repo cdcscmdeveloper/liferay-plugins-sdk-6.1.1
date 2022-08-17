@@ -591,7 +591,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 			}
 		}
 		//#33795 - start
-		if (isQuotationTenderMaint()) {
+		if (isQuotationTenderMaint() || !isSpecCommitteeSecretary()) {
 			this.getManagedBean().setChecklist(false);
 		}
 		//#33795 - end
