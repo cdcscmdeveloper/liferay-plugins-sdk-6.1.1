@@ -590,6 +590,11 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 				this.getManagedBean().setChecklist(false);
 			}
 		}
+		//#33795 - start
+		if (specBB.getSpecMaintenance().equalsIgnoreCase(this.getManagedBean().getSpecMaintenanceScreen())) {
+			this.getManagedBean().setChecklist(false);
+		}
+		//#33795 - end
 		//#15391 - end		
 		
 		//29464-start
