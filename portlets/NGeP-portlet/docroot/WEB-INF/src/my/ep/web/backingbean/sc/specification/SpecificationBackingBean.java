@@ -19611,6 +19611,13 @@ if(null!=allTechnicalChecklist){
 				}
 				tempList.add(st2technicalproposalList1);
 			}
+			//#28784 sample become completed after demo save - end
+			if (cl.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE)) {
+				log.info("adsasdwqewqewqe: " + cl.getPmStatus().getStatusId() + cl.getTitle());
+				this.getManagedBean().setDemoSampleChecklistStatusId(cl.getPmStatus().getStatusId());
+				log.info("adsasdwqewqewqe2: " + this.getManagedBean().getDemoSampleChecklistStatusId());
+			}
+			//#28784 sample become completed after demo save - end
 		}
 		this.getManagedBean().setDemoSpecTemplateList(tempList);
 		return "/xhtml/sc/specification/specificationCommittee/demoSpecificationTechnicalList.xhtml?faces-redirect=true";
@@ -19814,15 +19821,6 @@ if(null!=allTechnicalChecklist){
 				}
 			}
 			
-			//#28784 sample become completed after demo save - start
-			ScQtCheckList checklist = null;
-
-			for (ScQtCheckList checkList : getManagedBean().getScQtCheckSt2techProposal()) {
-				if (checkList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE)) {
-					checklist = checkList;
-				}
-			}
-			
 			//List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();	//#28784		
 			
 			for(ScQtCheckList t: updatedNewCheckLists){//#28784
@@ -19831,11 +19829,16 @@ if(null!=allTechnicalChecklist){
 					t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 					updatedCheckListsDemo.add(t);
 				} else if (t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE)) {
-					if (checklist.getPmStatus().getStatusId().equals(QTStatusConst.TS_COMPLETED)) {
+					//#28784 sample become completed after demo save - end
+					if (null != this.getManagedBean().getDemoSampleChecklistStatusId()) {
+						log.info("adsmnlkqwemlwqe: " + this.getManagedBean().getDemoSampleChecklistStatusId());
+						if (this.getManagedBean().getDemoSampleChecklistStatusId().equals(QTStatusConst.TS_COMPLETED)) {
 						t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 					} else {
 						t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));						
 					}
+					}
+					log.info("null brooooooooooooooooooooooo");
 				//#28784 sample become completed after demo save - end
 				}else if(t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)){
 					updatedCheckListsOtherDemo.add(t);

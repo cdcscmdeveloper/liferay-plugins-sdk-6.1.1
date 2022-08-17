@@ -3739,7 +3739,8 @@ public class CreateQtBackingBean extends
 				}
 			} 
 
-			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) {
+			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && ((status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || 
+					status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)))) {
 				this.getManagedBean().setDemoType(true);
 			} else {
 				this.getManagedBean().setDemoType(false);
