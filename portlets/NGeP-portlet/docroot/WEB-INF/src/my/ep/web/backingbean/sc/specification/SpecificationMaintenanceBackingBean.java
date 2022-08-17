@@ -591,7 +591,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 			}
 		}
 		//#33795 - start
-		if (specBB.getSpecMaintenance().equalsIgnoreCase(this.getManagedBean().getSpecMaintenanceScreen())) {
+		if (isQuotationTenderMaint()) {
 			this.getManagedBean().setChecklist(false);
 		}
 		//#33795 - end
@@ -744,6 +744,12 @@ public boolean isSpecCommittee() {
 	return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 }	
 //#15391 - end
+
+	//#33795 - start
+	public boolean isQuotationTenderMaint() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	//#33795 - end
 
 	// 29464-start
 	public void redirectToSpecificationMaintenance(ScQt scQt,
