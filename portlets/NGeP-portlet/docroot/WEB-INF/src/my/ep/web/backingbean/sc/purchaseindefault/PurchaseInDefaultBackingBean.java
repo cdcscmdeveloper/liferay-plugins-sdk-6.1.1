@@ -710,6 +710,7 @@ public class PurchaseInDefaultBackingBean extends
 									purchaseInDefault.getPurchaseInDefaultNo(), Boolean.TRUE);
 						}				
 						else{
+							getManagedBean().setAutoUpdate(false); //#9133 - note 232
 							successMessage(MessageConst.INFO_700004,
 									ParameterTypeConst.DOCUMENT_TYPES,
 									ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
@@ -734,6 +735,7 @@ public class PurchaseInDefaultBackingBean extends
 									purchaseInDefault.getPurchaseInDefaultNo(), Boolean.TRUE);
 						}				
 						else{
+							getManagedBean().setAutoUpdate(false); //#9133 - note 232
 							successMessage(MessageConst.INFO_700004,
 									ParameterTypeConst.DOCUMENT_TYPES,
 									ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
@@ -1097,6 +1099,7 @@ public class PurchaseInDefaultBackingBean extends
 		debugLogger("approverAction");
 		
 		if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
+				getManagedBean().setAutoUpdate(true);//#9133
 				RequestContext.getCurrentInstance().execute("rejectPID.show()");
 		} else {
 			approverAction(outcome);
@@ -1910,6 +1913,7 @@ public class PurchaseInDefaultBackingBean extends
 				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.savePurchaseInDefault(reqDTO);
 
 				if (resDTO.isSuccessful()) {
+					getManagedBean().setAutoUpdate(false); //#9133 - note 232
 					successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, scPurchaseInDefault.getPurchaseInDefaultNo(),
 							Boolean.FALSE);
@@ -1991,6 +1995,7 @@ public class PurchaseInDefaultBackingBean extends
 				// #9133 - start					
 					
 				if (resDTO.isSuccessful()) {
+					getManagedBean().setAutoUpdate(false);	//#9133 - note 232				
 					successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, scPurchaseInDefault.getPurchaseInDefaultNo(),
 							Boolean.FALSE);
@@ -2991,6 +2996,7 @@ public class PurchaseInDefaultBackingBean extends
 	}
 	
 	public void beforeCancelPid() {
+		getManagedBean().setAutoUpdate(true);//#9133
 		RequestContext.getCurrentInstance().execute("cancelDlg.show()");
 	}
 	
@@ -3005,6 +3011,7 @@ public class PurchaseInDefaultBackingBean extends
 			}
 		}
 		if (newRemark) {
+			getManagedBean().setAutoUpdate(false);//#9133
 			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
 					"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
 		}
