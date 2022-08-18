@@ -261,7 +261,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION ||
 									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS ||
 									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_SDO_INQUIRY ||
-									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_PO_INQUIRY)){
+									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_PO_INQUIRY ||
+									wfStat.getStatusId() == SupplierManagementConst.PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT)){
 								//32627 END	
 									log.info("*******Resubmit********");
 									//path = RESUBMIT_APPLICATION + wfStatus.getDocId();
