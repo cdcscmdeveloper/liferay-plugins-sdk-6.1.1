@@ -5705,8 +5705,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					 * END
 					 */
 					if (tenderResDTO.getQtDetail() != null) {
-						scQt = tenderResDTO.getQtDetail();
+						boolean demoRequired = false;//#28784	
+						if(scQt != null){
+							demoRequired = scQt.isDemoRequired();
+						}
+						scQt = tenderResDTO.getQtDetail();						
 						getManagedBean().setQt(scQt);
+						if(demoRequired){//#28784
+							getManagedBean().getQt().setDemoRequired(demoRequired);
+						}
 						this.getManagedBean().setPanel(scQt.isPanel());
 						Long currentStatus = this.getManagedBean().getQt()
 								.getQtStatus().getStatusId();
@@ -5868,7 +5875,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			
 			if(null != status && (status.equals(QTStatusConst.QT_REVISION_PUBLICATION) || status.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)) && 
-					role.equals(RoleCode.RN_APPROVER.value())){
+					(role.equals(RoleCode.RN_APPROVER.value()) || role.equals(RoleCode.DESK_OFFICER.value()))){
 				this.getManagedBean().setDemoSpecialCase(true);
 			}
 
