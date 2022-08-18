@@ -411,33 +411,37 @@ public class ForceReplaceSuppAdminBackingBean extends
 		
 		//#33153 - Start
 		// Sorting First By SupplierType
-		List<SmSupplier> removeSupp = new ArrayList<SmSupplier>();
-		boolean isContractor = false;
-		if (getManagedBean().getReactivateBasic().getSuppType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-			isContractor = true;
-		} else {
-			isContractor = false;
-		}
-
-		if (supplierLs.size() > 1) {
-			for (SmSupplier supplier : supplierLs) {
-				if (supplier.getSmAppl().getSupplierType() != null) {
-					if (isContractor) {
-						if (!supplier.getSmAppl().getSupplierType()
-								.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-							removeSupp.add(supplier);
-						}
-					} else if (!isContractor) {
-						if (!supplier.getSmAppl().getSupplierType()
-								.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
-							removeSupp.add(supplier);
+		//// #33129 - START : checking only for MOF account 
+		if(getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){ 
+			List<SmSupplier> removeSupp = new ArrayList<SmSupplier>();
+			boolean isContractor = false;
+			if (getManagedBean().getReactivateBasic().getSuppType()
+					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+				isContractor = true;
+			} else {
+				isContractor = false;
+			}
+	
+			if (supplierLs.size() > 1) {
+				for (SmSupplier supplier : supplierLs) {
+					if (supplier.getSmAppl().getSupplierType() != null) {
+						if (isContractor) {
+							if (!supplier.getSmAppl().getSupplierType()
+									.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+								removeSupp.add(supplier);
+							}
+						} else if (!isContractor) {
+							if (!supplier.getSmAppl().getSupplierType()
+									.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+								removeSupp.add(supplier);
+							}
 						}
 					}
 				}
+				supplierLs.removeAll(removeSupp);
 			}
-			supplierLs.removeAll(removeSupp);
-		}
+		}  
+		//#33129 - END
 		//then start for throwing exception based from list that has been remove by supplier type
 		//#33153 - End
 		
