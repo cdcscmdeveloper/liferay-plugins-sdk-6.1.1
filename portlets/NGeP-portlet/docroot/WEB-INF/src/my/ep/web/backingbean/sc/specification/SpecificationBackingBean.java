@@ -15702,7 +15702,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		
 		if (null != itemName) {
-			return message.concat(itemName).concat("   ");
+			return message.concat("                       ").concat(itemName).concat("                  ");
 		}
 		
 		return null;
