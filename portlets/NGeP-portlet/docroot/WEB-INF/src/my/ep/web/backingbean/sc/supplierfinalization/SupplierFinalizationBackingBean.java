@@ -9640,7 +9640,13 @@ return	remarksNotFound;
 			if(method.equalsIgnoreCase("L")){
 				return act.isMultiLoiSignedOff();
 			}else if(method.equalsIgnoreCase("B")){
+				//33764 - start
+				if(getManagedBean().getQtRefinalized()){
+					return act.isSignedOff();
+				}else {
 				return act.isBiddingSignedOff();
+				}
+				//33764 - end
 			}else{
 				return act.isSignedOff();
 			}
