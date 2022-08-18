@@ -5664,8 +5664,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					 * END
 					 */
 					if (tenderResDTO.getQtDetail() != null) {
+						boolean demoRequired = false;//#28784	
+						if(scQt != null){
+							demoRequired = scQt.isDemoRequired();
+						}
 						scQt = tenderResDTO.getQtDetail();
 						getManagedBean().setQt(scQt);
+						if(demoRequired){//#28784
+							getManagedBean().getQt().setDemoRequired(demoRequired);
+						}
 						this.getManagedBean().setPanel(scQt.isPanel());
 						Long currentStatus = this.getManagedBean().getQt()
 								.getQtStatus().getStatusId();
