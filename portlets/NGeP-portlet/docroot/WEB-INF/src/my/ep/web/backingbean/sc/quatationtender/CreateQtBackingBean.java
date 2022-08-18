@@ -3744,14 +3744,16 @@ public class CreateQtBackingBean extends
 					}
 				}
 			} 
-
-			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && ((status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || 
-					status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)))) {
+			
+			//#28784
+			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 				this.getManagedBean().setDemoType(true);
 			} else {
 				this.getManagedBean().setDemoType(false);
 				this.getManagedBean().getQt().setDemoRequired(false);
 			}
+			QTDetailBackingBean detailBB = new QTDetailBackingBean();
+			detailBB.checkDemoPresentationByStatus();
 		}
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 	}
