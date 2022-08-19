@@ -3807,7 +3807,14 @@ public class SmApplicationUtil {
 					catList.add(cat);
 				} else if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
-					apprvList.add(cat);
+					//29823 - start
+					if(managedBean.getCurrentStatus() != null && (managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval") ||
+							managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan")	)){
+						catList.add(cat);
+					}else{
+						apprvList.add(cat);
+					}
+					//29823 - end
 
 				}
 			}
@@ -5271,16 +5278,18 @@ public class SmApplicationUtil {
 		}
 
 	}
-
+	//#29823 - START
 	/**
 	 * Gets the last approved appliction for supplier.
 	 * 
 	 * @param managedBean
 	 *            - SmApplicationManagedBean object
+	 * @param res
+	 * 			  - the PO or Approver response
 	 * @return SmAppl object
 	 */
 	public static SmAppl getLastApprovedApplictionForSupplier(
-			SmApplicationManagedBean managedBean) {
+			SmApplicationManagedBean managedBean, String res) {
 		ISmApplRevisionSO revisionSO = null;
 		SmAppl appl = null;
 		try {
@@ -5297,6 +5306,15 @@ public class SmApplicationUtil {
 					appl = resDTO.getSmAppl();
 				}				
 			}
+			
+			if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT) && 
+				managedBean.getBpmTaskName().equalsIgnoreCase(SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE) &&
+				managedBean.getSmAppl().getSmSupplier() != null){
+					reqDto.setSupplierId(managedBean.getSmAppl().getSmSupplier().getSupplierId());
+					reqDto.setSmAppl(managedBean.getSmAppl());
+					appl = revisionSO.retrieveLatestPreviousApproveAppl(reqDto).getSmAppl();
+			}
+			//#29823 - END
 			//START 24964 && #28534
 			if(appl == null && managedBean.getSmAppl().getSmSupplier() != null){
 				reqDto.setSupplierId(managedBean.getSmAppl().getSmSupplier().getSupplierId());
