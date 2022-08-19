@@ -4475,9 +4475,12 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			
 			ScQt scQt = getManagedBean().getQt();
 			if (null != scQt.getQtStatus() && null != scQt.getQtStatus().getStatusId()
+					// #33831 - Start.
 					&& (scQt.getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION 
 					|| QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) 
-					|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()))) {
+					|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()))
+					// #33831 - End.
+					) {
 				Iterator<TplSpecAnswer> iterator = specAnswerList.iterator();
 				List<TplSpecAnswer> hiddenAnsList = null;
 				while (iterator.hasNext()) {
