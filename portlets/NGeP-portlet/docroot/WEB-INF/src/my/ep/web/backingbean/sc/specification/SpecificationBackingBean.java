@@ -21433,16 +21433,8 @@ if(null!=allTechnicalChecklist){
 			if(pmCategoryL1s.size()!=0){
 				TreeNode rootNode = new DefaultTreeNode("root", null);
 				for (PmCategoryL1 pmCategoryL1 : pmCategoryL1s) {
-					CategoryCodeReqDTO reqDTO1 = new CategoryCodeReqDTO();
-					reqDTO1.setCategoryL1Id(pmCategoryL1.getCategoryL1Id());
-					List<PmCategoryL2> pmCategoryL2s = categoryCodeSO.retrieveCategoryL2ListByL1Id(reqDTO1).getCategoryL2List();
-				
-					for (PmCategoryL2 pmCategoryL2 : pmCategoryL2s) {
-						CategoryCodeReqDTO reqDTO2 = new CategoryCodeReqDTO();
-						reqDTO2.setCategoryL2Id(pmCategoryL2.getCategoryL2Id());
-						List<PmCategoryL3> pmCategoryL3s = categoryCodeSO.retrieveCategoryL3ListByL2Id(reqDTO2).getCategoryL3List();
-						
-						for (PmCategoryL3 pmCategoryL3 : pmCategoryL3s) {
+					for (PmCategoryL2 pmCategoryL2 : pmCategoryL1.getPmCategoryL2s()) {
+						for (PmCategoryL3 pmCategoryL3 : pmCategoryL2.getPmCategoryL3s()) {
 							TreeNode catCode = new DefaultTreeNode("catCode",pmCategoryL1.getCategoryL1Code()+
 																			 pmCategoryL2.getCategoryL2Code()+
 																			 pmCategoryL3.getCategoryL3Code(), rootNode);
