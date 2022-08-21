@@ -216,6 +216,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 				//32967-end
 			}
+			log.info("LOG for 33574:: is Factored submitAction="+ getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored());
 			FlInvoice invoice = getManagedBean().getInvoice();
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 			adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
@@ -366,6 +367,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				resDTO = invoiceSO.invoiceModification(reqDTO);
 			}else{
 				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+				log.info("LOG for 33574:: is Factored submitAction :before saveInvoice ="+reqDTO.getInvoice().getFlFulfilmentOrder().isFactored());
 				resDTO = invoiceSO.saveInvoice(reqDTO);
 			}
 			if(resDTO.isSuccessful()) {
