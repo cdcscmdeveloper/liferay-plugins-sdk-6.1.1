@@ -1692,7 +1692,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean committeeAppointmentMenuTab = true;
 	//29464-end
 
-	private Long qtRemarksIdRemove; //#9019 (Harun)
+	// #9019 (Harun) -start-
+	private Long qtRemarksIdRemove;
+
+	/** The qt remark missing issues. */
+	private boolean scQtRemarksEmpty = false;
+	// #9019 08082022 (Harun) -end-
 	
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -10685,7 +10690,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//29464-end
 	
-	//#9019 - Start (Harun)
+	// #9019 - Start (Harun)
 	public Long getQtRemarksIdRemove() {
 		return qtRemarksIdRemove;
 	}
@@ -10693,5 +10698,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setQtRemarksIdRemove(Long qtRemarksIdRemove) {
 		this.qtRemarksIdRemove = qtRemarksIdRemove;
 	}
-	//#9019 - End (Harun)
+
+	public boolean isScQtRemarksEmpty() {
+		return scQtRemarksEmpty;
+	}
+
+	public void setScQtRemarksEmpty(boolean scQtRemarksEmpty) {
+		this.scQtRemarksEmpty = scQtRemarksEmpty;
+	}
+	// #9019 - End (Harun)
 }
