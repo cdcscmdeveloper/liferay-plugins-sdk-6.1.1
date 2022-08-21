@@ -5785,7 +5785,20 @@ return	remarksNotFound;
 		
 		items = getDropdownCodeValuesBySearchBean(
 				ParameterTypeConst.FINALIZATION_DECISION_TYPE, searchBean);
-		
+		//6906 -start- default selection to first value if previous selection is no longer available
+		String desicion = null;
+		if(items!=null && items.length>0){
+			for(SelectItem item: items){
+				if(scQtFinalization.getDecision()!=null && scQtFinalization.getDecision().getParameterCode().equals(item.getValue())){
+					desicion = item.getValue().toString();
+				}
+			}
+			if(desicion==null && scQtFinalization.getDecision()!=null){
+				scQtFinalization.setDecision(this.getParameterByTypeAndCode(ParameterTypeConst.FINALIZATION_DECISION_TYPE, items[1].getValue().toString()));
+				this.decisionEvent(null);
+			}
+		}
+		//6906 - end
 		return items;		
 	}
 	
