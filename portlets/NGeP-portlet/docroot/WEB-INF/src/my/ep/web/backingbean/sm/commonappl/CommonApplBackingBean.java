@@ -517,16 +517,13 @@ public class CommonApplBackingBean extends
 				String currentStatus = bpmBean.applicationStatus(resDTO
 						.getDocStatus());
 				smApplBB.getManagedBean().setCurrentStatus(currentStatus);
+				//#32304 - start
 				if (resDTO.getTaskName().equalsIgnoreCase(
 						SMProcessNameConst.REVIEW_APPL)
 						|| resDTO.getTaskName().equalsIgnoreCase(
 								SMProcessNameConst.REVIEW_APPL_SPLCAT)
 						|| resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.VERIFY_APPL)
-						|| resDTO
-								.getTaskName()
-								.equalsIgnoreCase(
-										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
+								SMProcessNameConst.VERIFY_APPL)) {
 					smApplBB.getManagedBean().setPoUser(true);
 					// #29664 - start
 					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
@@ -534,7 +531,10 @@ public class CommonApplBackingBean extends
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(false);
 				} else if (resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_APPL_ESCALATED)) {
+						SMProcessNameConst.REVIEW_APPL_ESCALATED)
+						|| resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
+					//#32304 - end
 					smApplBB.getManagedBean().setPoUser(false);
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(true);
