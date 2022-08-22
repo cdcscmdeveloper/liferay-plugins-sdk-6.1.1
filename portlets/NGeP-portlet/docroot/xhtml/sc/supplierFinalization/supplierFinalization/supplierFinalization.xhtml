@@ -399,7 +399,8 @@
 	<p:outputPanel id="itemSupplierPanel">
 		<table style="border: 0px;width:100%;">
 			<tr>
-				<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.zonal and
+				<ui:remove><!-- 6906 note80 change for cif to rendered --></ui:remove>
+				<ui:fragment rendered="#{suppFinalizationBackingBean.managedBean.scQt.zonal and
 				 			  decisionSupplFinalOrFwdHighAuth}">
 				 			  	
 					<td width="20%" class="sidemenutd" valign="top">
@@ -412,7 +413,7 @@
 							<!-- Menu items are dynamically populated from backing bean -->
 						</p:tabMenu>						
 					</td>
-				</c:if>
+				</ui:fragment>
 				
 			<ui:param name="isBidding"
 				value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.finalizationMethod.parameterCode eq 'B' and 
