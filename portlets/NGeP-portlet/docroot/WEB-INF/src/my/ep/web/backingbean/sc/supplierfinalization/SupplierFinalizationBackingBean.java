@@ -5044,12 +5044,12 @@ return	remarksNotFound;
 				if (scQtRecommend.getRecommendDtls() != null) {
 					Long evaZoneId = evalResDtl.getTplSpecZoneDtl() != null ? 
 							evalResDtl.getTplSpecZoneDtl().getSpecZoneId() : 0L;
-
+							
+							
 					for (ScQtRecommendDtl recommendDtl 
 									: scQtRecommend.getRecommendDtls()) {
 						Long recommendDtlId = recommendDtl.getRecommendDtlId();
 						Long supplierId = recommendDtl.getSupplier().getSupplierId();
-
 						if (recommendDtlId != null
 								&& supplierId != null
 								&& supplierId.compareTo(evalResDtl
@@ -5065,6 +5065,11 @@ return	remarksNotFound;
 						}
 					}
 				}
+				//#33793 - start
+				if (isQTRefinalized()){
+					getManagedBean().setHaveSupplierRejection(true);
+				}
+				//#33793 - end
 				evalResDtl.setAmountInWords(convertNumberToWord(
 						evalResDtl.getProposalAmount().getProposalAmt()));
 			}
