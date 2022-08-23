@@ -12956,9 +12956,10 @@ if (null != checklist && !checklist.isEmpty()) {
 			qtStatus = detailSO.retrieveActiveStatusByDoctype(this.getManagedBean().getQt().getQtId(), ParameterConst.DOCTYPE_QUOTATION);
 			if (qtStatus != null)
 				this.getManagedBean().getQt().setQtStatus(qtStatus);
-			if (!(Arrays.asList(new Long[] { ParameterConst.STATUSID_PENDING_SPECIFICATION_PREPARATION,
-					ParameterConst.STATUSID_PENDING_SPECIFICATION_PREPARATION_REVISION, ParameterConst.STATUSID_PENDING_DOCUMENT_PREPARATION })
-					.contains(this.getManagedBean().getQt().getQtStatus().getStatusId()))) {
+			if (!(Arrays.asList(new Long[] { QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+					QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
+					QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL }).contains(this.getManagedBean().getQt().getQtStatus()
+					.getStatusId()))) {
 				throw new EpException(MessageConst.ERROR_100048);
 			}
 			// Bug #33661@Syazani 16/08/2022 -- End
