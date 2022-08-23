@@ -640,6 +640,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			 //#cr 28713 - start
 			 if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
 					 && (getManagedBean().getCircularVer().getCircularAttachments().size() < 1 ) ){
+				 getManagedBean().setSelectedTabIndex(0); //#33752
 				 throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.letter", 
 						 ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			 } //#cr 28713 - end
@@ -1100,20 +1101,28 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 */
 	public String backAction() {
 		if(getManagedBean().isChkCancelPage()) {
-			//#33533 start
+			//#33533 /#33752 start
 			PanelBackingBean panelBB = new PanelBackingBean();
 
 			panelBB.getManagedBean().setAction(null);
-			panelBB.getManagedBean().setUpdateAction(true);
 			panelBB.getManagedBean().setViewContract(false); //set false view contract because its not for view
 			panelBB.getManagedBean().setTaskIdFromTaskList(getManagedBean().getTaskIdFromTaskList()); //set back the task id from tasklist
 			panelBB.getManagedBean().setTaskId(getManagedBean().getTaskIdFromTaskList());
 			panelBB.getManagedBean().setOutComes(getManagedBean().getOutComesFromTaskList()); //set back the button from the tasklist
-			
 			getManagedBean().setChkCancelPage(false); //set false from cancel page
+			
+			if(getManagedBean().getTaskIdFromTaskList()==null){
+				panelBB.getManagedBean().setUpdateAction(true);
+				panelBB.getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
+				initializeRemarks();
+				ctBB = new ContractBackingBean(panelBB.getManagedBean().getFileDirectory());
+				ctBB.getManagedBean().setViewContract(panelBB.getManagedBean().isViewContract()); 
+				ctBB.initializeRemarkAndAttachement(null, panelBB.getManagedBean().getRemarkList(), panelBB.getManagedBean().getAttachmentList());
+			}
+			
 			return getManagedBean().getBackToPreviousPage(); //return the previous page (cancel circular page)
 			//return "/xhtml/ct/circular/panel/cancelCircularBase.xhtml?faces-redirect=true";
-			//#33533 end
+			//#33533 /#33752 end
 		} else if(getManagedBean().isFromCircularNotice()) {
 			return "../portal/circularListing.xhtml?faces-redirect=true";
 		} else if(getManagedBean().isChkCentralCircular()) {
@@ -1275,7 +1284,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getCircularVer().getCircularNo());
+			sb.append(getManagedBean().getCircularVer().getCircularNo().trim()); //#33752 
 			sb.append(ContractConst.SEPRATE_LINE);
 			if(getManagedBean().getCircularVer().getCtCircular().getLatestCircularVer() != null){
 				sb.append(ContractConst.CIRCULAR_UPDATE);
@@ -1298,7 +1307,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			}
 			sb.append(outcome);
 			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
+			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo().trim()); //#33752
 			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
 			getManagedBean().setAction(outcome);
