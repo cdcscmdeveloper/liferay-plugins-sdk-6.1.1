@@ -163,4 +163,12 @@
 		</p:panel>
 	</h:panelGroup>
 </c:if>
+
+	<ui:remove>#28748 - add remarks for demo - start</ui:remove>
+	<ac:scRemarkAndAttachment
+		remarkList="#{evaluationBackingBean.managedBean.scQt.scQtDemoTechnicalCommitteeRemarks}"
+		showAttachment="false" 
+		rendered="#{evaluationBackingBean.beforeDemo}"/>
+		
+	<ui:remove>#28748 - add remarks for demo - end</ui:remove>
 </ui:composition>
