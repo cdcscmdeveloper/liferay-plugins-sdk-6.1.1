@@ -130,6 +130,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoByItemScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplierAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtDemoTechnicalCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReportAttachment;
@@ -2384,6 +2385,20 @@ public void saveComplianceSample() {
 
 		}
 		// return "/xhtml/sc/evaluation/evaluationMain.xhtml";
+		
+		//#28784 add remarks - start
+		if (this.getManagedBean().getScQt().isDemoRequired()
+				&& (QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION.equals(this
+						.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL.equals(this
+								.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_ENDORSEMENT.equals(this
+										.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_SIGN_OFF.equals(this
+												.getManagedBean().getCurrentStatusId()))) {
+			retrieveDemoRemarks();
+		}
+		//#28784 add remarks - end
 
 	}
 
@@ -6629,6 +6644,7 @@ public void saveComplianceSample() {
 		} finally {
 
 		}
+		retrieveReportTabDtl();//#28784
 	}
 
 	/**
@@ -8096,6 +8112,9 @@ public void saveComplianceSample() {
 						}
 					}
 					if (currentTab != 3) {
+						if (this.getManagedBean().getScQt().isDemoRequired()) {
+							afterDemoInv(false);//#28784							
+						}
 						checkMeetingDetailsAndStatus(this.getManagedBean()
 								.getScQtMeetings());
 					}
@@ -9891,7 +9910,7 @@ private void retriveCommitteeRemarksList(){
 				if (this.getManagedBean().getScQt().isDemoRequired()
 						&& (SCProcessNameConst.SIGNOFF_TEC_EVALUATION
 								.equalsIgnoreCase(this.getManagedBean().getTaskName()))) {
-					//no need remark before demo invitation
+					validateDemoRemarks();//#28784 add remarks
 				} else {
 					validateRemarks();
 				}//#28784 - end
@@ -9914,7 +9933,7 @@ private void retriveCommitteeRemarksList(){
 				if (this.getManagedBean().getScQt().isDemoRequired()
 						&& (SCProcessNameConst.ENDORSE_TEC_EVALUATION
 								.equalsIgnoreCase(this.getManagedBean().getTaskName()))) {
-					//no need remark before demo invitation
+					validateDemoRemarks();//#28784 add remarks
 				} else {
 					validateRemarks();
 				}//#28784 - end
@@ -10103,6 +10122,22 @@ private void retriveCommitteeRemarksList(){
 		}
 		reqDtO.setCommitteeMemberEndorsmentList(committeActivities);
 		ScQt scQt = this.getManagedBean().getScQt();
+		//#28784 add demo remarks - start
+		if (this.getManagedBean().getScQt().isDemoRequired()
+				&& (QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION.equals(this
+						.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL.equals(this
+								.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_ENDORSEMENT.equals(this
+										.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_SIGN_OFF.equals(this
+												.getManagedBean().getCurrentStatusId()))) {
+			EvaluationReqDTO demoReqDTO=saveDemoTECCommitteeRemarks();
+			if (null != demoReqDTO) {
+				reqDtO.setScQt(demoReqDTO.getScQt());
+			}
+		}
+		//#28784 add demo remarks - end
 		EvaluationReqDTO endorsmentRemarks=committeeRemarksSave();
 		if(null!=endorsmentRemarks.getScQt()){
 			if(BpmOutcomeConst.BPM_SIGNOFF.equalsIgnoreCase(action)){
@@ -17380,5 +17415,135 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 	//bug #33582 - check proposal score for Modal Berbayar - end
+	
+	//#28784 add remarks - start
+	private void retrieveDemoRemarks() {
+		IQTDetailSO qtDetailSO;
+		QuationTenderResDTO resDto;
+		try {
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			qtReqDTO.setDocType("TDR");
+			
+			resDto = qtDetailSO.retriveQtRemarks(qtReqDTO);
+			ScQt scQt = this.getManagedBean().getScQt();
+			ScQtCommittee qtCommittee = this.getManagedBean().getScQtCommittee();
+			ScWorkFlowStatus currentWorkFlowStatus = qtCommittee.getCurrentStatus();
+			
+			if (resDto.getRemarks() == null) {
+
+				if (null == this.getManagedBean()
+						.getDemoTechnicalCommitteeRemark()) {
+					this.getManagedBean().setDemoTechnicalCommitteeRemark(
+							new ArrayList<ScQtDemoTechnicalCommitteeRemark>());
+					initializeRemarks(scQt,
+							currentWorkFlowStatus, 
+							this.getManagedBean().getDemoTechnicalCommitteeRemark(),
+							ScQtDemoTechnicalCommitteeRemark.class);
+
+				}
+				scQt.setScQtDemoTechnicalCommitteeRemarks(
+								this.getManagedBean()
+										.getDemoTechnicalCommitteeRemark());
+			}
+
+			else {
+
+				List<ScQtDemoTechnicalCommitteeRemark> remarkList = new ArrayList<ScQtDemoTechnicalCommitteeRemark>();
+				for (ScRemark remark : resDto.getRemarks()) {
+					ScQtDemoTechnicalCommitteeRemark qtRemark = (ScQtDemoTechnicalCommitteeRemark) remark;
+					remarkList.add(qtRemark);
+
+				}
+				if (null == this.getManagedBean()
+						.getDemoTechnicalCommitteeRemark()
+						|| this.getManagedBean()
+								.getDemoTechnicalCommitteeRemark().isEmpty()) {
+					this.getManagedBean().setDemoTechnicalCommitteeRemark(
+							remarkList);
+					initializeRemarks(scQt,
+							currentWorkFlowStatus, 
+							this.getManagedBean().getDemoTechnicalCommitteeRemark(),
+							ScQtDemoTechnicalCommitteeRemark.class);
+				}
+				scQt.setScQtDemoTechnicalCommitteeRemarks(
+								this.getManagedBean()
+										.getDemoTechnicalCommitteeRemark());
+			}
+		}
+		finally {
+			qtDetailSO=null;
+			resDto=null;
+		}
+	}
+	
+	private EvaluationReqDTO saveDemoTECCommitteeRemarks() {
+		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+		try {
+			List<ScQtDemoTechnicalCommitteeRemark> remarks = this
+					.getManagedBean().getScQt()
+					.getScQtDemoTechnicalCommitteeRemarks();
+			if (null != remarks) {
+				for (int i = 0; i < remarks.size(); i++) {
+					String userRemark = remarks.get(i).getRemark();
+					log.info("remarkssss " + userRemark);
+					if (null == userRemark || "".equals(userRemark)) {
+						remarks.remove(i);
+					}
+				}
+			}
+			if (null != remarks && !remarks.isEmpty()) {
+				reqDTO.setScQt(this.getManagedBean().getScQt());
+			}
+		} finally {
+			
+		}
+		
+		return reqDTO;
+	}
+	
+	public boolean isBeforeDemo() {
+		boolean beforeDemo = false;
+		
+		if (this.getManagedBean().getScQt().isDemoRequired()
+				&& (QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION.equals(this
+						.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL.equals(this
+								.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_ENDORSEMENT.equals(this
+										.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_SIGN_OFF.equals(this
+												.getManagedBean().getCurrentStatusId()))) {
+			beforeDemo = true;
+		}
+		return beforeDemo;
+	}
+	
+	private void validateDemoRemarks() {
+		if (this.getManagedBean().getScQt().isDemoRequired()
+				&& (QTStatusConst.TEC_PENDING_ENDORSEMENT.equals(this
+										.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_SIGN_OFF.equals(this
+												.getManagedBean().getCurrentStatusId()))) {
+			List<ScQtDemoTechnicalCommitteeRemark> demoTecRemarks = this.getManagedBean().getDemoTechnicalCommitteeRemark();
+			
+			if (null != demoTecRemarks) {
+				for (int i = 0; i < demoTecRemarks.size(); i++) {
+					String userRemark = demoTecRemarks.get(i).getRemark();
+					
+					if (null == userRemark || "".equals(userRemark)) {
+						throw new EpException(MessageConst.ERROR_100022,
+								new String[] { ResourceBundleUtils.getMessage(
+											    "lbl.sc.remarks",
+											    ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											    new FacesScopes().getUserLocale()) });
+					}
+				}
+			}
+		}
+	}
+	//#28784 add remarks - end
 
 }

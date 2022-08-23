@@ -33,6 +33,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemo;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoByItemScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplier;
+import my.ep.persistence.entity.sc.quationtender.ScQtDemoTechnicalCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
@@ -608,6 +609,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private ScQtDemoSupplier scQtDemoSupplier;
 	private String demoScore;
 	private BigDecimal otherScore;
+	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
 	//#28784 - end
 
 	/** The total technical package max score. */
@@ -4267,4 +4269,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.committeeMemberActivity = committeeMemberActivity;
 	}
 	//25037 #568 - end
+	
+	//#28784 add remarks - start
+	/**
+	 * @return the demoTechnicalCommitteeRemark
+	 */
+	public List<ScQtDemoTechnicalCommitteeRemark> getDemoTechnicalCommitteeRemark() {
+		return demoTechnicalCommitteeRemark;
+	}
+
+	/**
+	 * @param demoTechnicalCommitteeRemark the demoTechnicalCommitteeRemark to set
+	 */
+	public void setDemoTechnicalCommitteeRemark(
+			List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark) {
+		this.demoTechnicalCommitteeRemark = demoTechnicalCommitteeRemark;
+	}
+	//#28784 add remarks - end
 }
