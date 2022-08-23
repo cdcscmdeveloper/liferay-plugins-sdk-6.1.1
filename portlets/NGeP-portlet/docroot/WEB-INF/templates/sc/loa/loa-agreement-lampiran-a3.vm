@@ -7,13 +7,7 @@
 	size: A4 portrait;
 }
 
-@page { 
-	@top-right 
-	{ 
-		content:""counter(page)" daripada "counter(pages);
-		padding-top: 950px !important;	
-	}
-}
+#include("/templates/sc/loa/footerStyle.vm")
 
 p {
 	text-align: justify;
@@ -141,13 +135,6 @@ u {
   left: 16px;
   font-size: 18px;
 }
-
-.footer {
-   position: fixed;
-   left: 0;
-   bottom: 0;
-   text-align: left;
-}
 		
 .standard{
 	font-family:Arial;
@@ -177,6 +164,9 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 </div>
 
 <br/><br/>
+
+#include("/templates/sc/loa/sstFooter.vm")
+#include("/templates/sc/loa/footerContentStart.vm")
 
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	  <tr>
@@ -666,21 +656,6 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 					#end
 			
 			#if ($rowCount > 0)
-				
-				<section class="footer">
-							<span class="standard">
-							Tandatangan & Cap (Kerajaan) : .......................
-							<br/><br/>
-							Tandatangan & Cap (Syarikat) : .......................<br/>
-							</span>
-							<div style="color:red; font-family: Arial; font-size:13px;">
-								<span>
-								Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak<br/>
-								Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini
-								</span>
-							</div>	
-				</section>
-
 				<div style="page-break-after:always;"><br/></div>
 			#end
 			<br/>
@@ -716,20 +691,6 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 						#end
 					</table>
 					#if ($rowCount > 0)
-
-						<section class="footer">
-							<span class="standard">
-							Tandatangan & Cap (Kerajaan) : .......................
-							<br/><br/>
-							Tandatangan & Cap (Syarikat) : .......................<br/>
-							</span>
-							<div style="color:red; font-family: Arial; font-size:13px;">
-								<span>
-								Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak<br/>
-								Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini
-								</span>
-							</div>	
-						</section>
 						<div style="page-break-after:always;"><br/></div>
 					#end
 			</span></td>
@@ -1287,21 +1248,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 		</tr>
 	</table>
 	
-	#if ($serviceItemPageNo)
-		
-		<section class="footer">
-			<span class="standard">
-			Tandatangan & Cap (Kerajaan) : .......................
-			<br/><br/>
-			Tandatangan & Cap (Syarikat) : .......................<br/>
-			</span>
-			<div style="color:red; font-family: Arial; font-size:13px;">
-				<span>
-				Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak<br/>
-				Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini
-				</span>
-			</div>	
-		</section>
-	#end
+	#include("/templates/sc/loa/footerContentEnd.vm")
+
 </body>
 </html>
