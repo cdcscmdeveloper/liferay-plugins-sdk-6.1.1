@@ -58,15 +58,29 @@
 								        <h:outputText value="* " styleClass="mandatory" />
 										<h:outputText value="#{lbl['lbl.sc.document']}" />
 								  </f:facet>
-						          <ac:scSingleFileUploadButton id="historyOtheruploadId"
-										popupWidgetVar="otherHistoryApprUploadDlg"
+								  
+						          <ac:scSingleFileUploadButton id="historyOtheruploadIdICT"
+										popupWidgetVar="otherHistoryApprUploadDlgICT"
 										attachment="#{historyOthersDtls.approvalRequestAttachement}"
-										deleteFileUploadListener="approvalBackingBean.deleteHistoryOthersApprovalFile"
+										rendered="#{historyOthersDtls.approvalType.parameterCode eq ParameterConst.approvalRequestIctProjects}"
+										deleteFileUploadListener="approvalBackingBean.deleteHistoryOthersApprovalFileICT"
 										rowIndex="#{indexHistory}">
 										<f:setPropertyActionListener for="actionEvent"
 											value="#{historyOthersDtls}"
 											target="#{approvalBackingBean.managedBean.historyApprovalRequests}" />
 							      </ac:scSingleFileUploadButton>
+							      
+							      <ac:scSingleFileUploadButton id="historyOtheruploadIdMITI"
+										popupWidgetVar="otherHistoryApprUploadDlgMITI"
+										attachment="#{historyOthersDtls.approvalRequestAttachement}"
+										rendered="#{historyOthersDtls.approvalType.parameterCode eq ParameterConst.approvalRequestImportedGoods}"
+										deleteFileUploadListener="approvalBackingBean.deleteHistoryOthersApprovalFileMITI"
+										rowIndex="#{indexHistory}">
+										<f:setPropertyActionListener for="actionEvent"
+											value="#{historyOthersDtls}"
+											target="#{approvalBackingBean.managedBean.historyApprovalRequests}" />
+							      </ac:scSingleFileUploadButton>
+							      
 					          </p:column> 
 					    </c:otherwise>
 				    </c:choose>

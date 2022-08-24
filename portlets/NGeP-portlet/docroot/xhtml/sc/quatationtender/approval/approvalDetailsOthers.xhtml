@@ -78,16 +78,31 @@
 			                    <ac:iconTooltip value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
 			                   </c:if> 
 							</f:facet>
-								<ac:scSingleFileUploadButton id="otheruploadId"
-									popupWidgetVar="otherApprUploadDlg"
+							
+								   <ac:scSingleFileUploadButton id="otheruploadIdICT"
+									popupWidgetVar="otherApprUploadDlgICT"
 									attachment="#{otherrequestdetails.approvalRequestAttachement}"
+									rendered="#{otherrequestdetails.approvalType.parameterCode eq ParameterConst.approvalRequestIctProjects}"
 									readonly="#{createQtBB.managedBean.readOnly}"
-									deleteFileUploadListener="approvalBackingBean.deleteOthersApprovalFile"
+									deleteFileUploadListener="approvalBackingBean.deleteOthersApprovalFileICT"
 									rowIndex="#{index}">
 									<f:setPropertyActionListener for="actionEvent"
 										value="#{otherrequestdetails}"
 										target="#{approvalBackingBean.managedBean.scQtApprovalDtls}" />
-								</ac:scSingleFileUploadButton>
+								   </ac:scSingleFileUploadButton>
+							  
+							      <ac:scSingleFileUploadButton id="otheruploadIdMITI"
+									popupWidgetVar="otherApprUploadDlgMITI"
+									attachment="#{otherrequestdetails.approvalRequestAttachement}"
+									rendered="#{otherrequestdetails.approvalType.parameterCode eq ParameterConst.approvalRequestImportedGoods}"
+									readonly="#{createQtBB.managedBean.readOnly}"
+									deleteFileUploadListener="approvalBackingBean.deleteOthersApprovalFileMITI"
+									rowIndex="#{index}">
+									<f:setPropertyActionListener for="actionEvent"
+										value="#{otherrequestdetails}"
+										target="#{approvalBackingBean.managedBean.scQtApprovalDtls}" />
+								   </ac:scSingleFileUploadButton>
+								   
 					    </p:column>	
 				    </c:otherwise>
 				</c:choose>
