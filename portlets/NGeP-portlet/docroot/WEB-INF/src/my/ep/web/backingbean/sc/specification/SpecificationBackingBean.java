@@ -18925,7 +18925,13 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 if(null!=allTechnicalChecklist){
 	boolean specChecklist=false;
 	boolean sampleChecklist=false;
+	int i=0;//11104
 	for(ScQtCheckList checkList:allTechnicalChecklist){
+		if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checkList
+				.getDefinationType().getParameterCode())) {//11104-start
+			i++;
+			
+		}//11104-End
 		if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checkList
 				.getDefinationType().getParameterCode()) && ((QTStatusConst.TS_PENDING_SUBMISSION.equals(checkList.getPmStatus().getStatusId()) || null!=checkList.getSampleStatus() && QTStatusConst.TS_PENDING_SUBMISSION.equals(checkList.getSampleStatus().getStatusId()) ) || (QTStatusConst.TS_COMPLETED.equals(checkList.getPmStatus().getStatusId()) && null!=checkList.getSampleStatus() && QTStatusConst.TS_PENDING_SUBMISSION.equals(checkList.getSampleStatus().getStatusId())))&& !specChecklist) {
 			specChecklist=true;
@@ -18933,7 +18939,7 @@ if(null!=allTechnicalChecklist){
 		}
 		else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checkList
 				.getDefinationType().getParameterCode())) {
-			if(specChecklist){
+			if(specChecklist || i==0){//11104
 			checkList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 			}
 			sampleChecklist=true;
