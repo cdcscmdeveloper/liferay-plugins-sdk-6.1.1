@@ -827,7 +827,7 @@ public class SpecificationBackingBean extends
 		if (null == technicalCheckList || technicalCheckList.isEmpty()) {
 			retriveTechnicalCheckList();
 		}
-
+		boolean demoChecklistAvail = false;//#28784
 		if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
 			for (ScQtCheckList checkList : technicalCheckList) {
 				if (ParameterTypeConst.DOCUMENT_DEFINITION_PTJ_UPLOAD
@@ -848,10 +848,20 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().setActiveIndex(2);
 						throw new EpException(MessageConst.ERROR_760513, new String[]{checkList.getTitle()});
 				}
-				
-			}
-
+				//#28784 - Start				
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
+						demoChecklistAvail = true;
+						if (checkList.getPmStatus().getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
+							throw new EpException(MessageConst.ERROR_760152);
+						}
+					}					
+				}			
 		}
+		
+		if (this.getManagedBean().getQt().isDemoRequired() && ParameterConst.EVALUATION_TYPES_TWO_TIER
+				.equalsIgnoreCase(this.getManagedBean().getQt().getEvaluationType()) && !demoChecklistAvail) {
+			throw new EpException(MessageConst.ERROR_760152);
+		}//#28784 - End
 		
 		List<ScQtCheckList> financialCheckList = this.getManagedBean()
 				.getScQtCheckSt2financeProposalList();
