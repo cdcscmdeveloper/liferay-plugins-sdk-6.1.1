@@ -247,7 +247,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			reqDTO.setServerName(fs.getRequest().getServerName());
 			reqDTO.setServerPort(fs.getRequest().getServerPort());
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
-			reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+			reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE); //#33129
 			reqDTO.setActionType(my.ep.constant.sm.SupplierManagementConst.FORCE_REPLACE_ADMIN);
 			reqDTO.setTaskList(getTaskList());
 			//#28765 - Start
