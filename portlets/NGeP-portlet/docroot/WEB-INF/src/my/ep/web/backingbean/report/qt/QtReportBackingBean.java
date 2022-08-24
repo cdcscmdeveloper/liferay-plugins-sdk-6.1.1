@@ -28,6 +28,7 @@ import my.ep.biz.dto.rpt.ReportTempInfoReqDTO;
 import my.ep.biz.dto.rpt.ReportTempInfoResDTO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.rpt.IPMReportSO;
+import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.biz.service.rpt.IReportTempInfoSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -36,6 +37,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -192,12 +194,42 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		try {
 
 			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
+	
+			//R5 #14076 start		
+			RPTRequestDtlReqDTO restDtlDTO = new RPTRequestDtlReqDTO();
+			restDtlDTO.getRptRequestDtl().setRequestId(resDTO.getRequestId());
+
+			if (params.get(QtReportConst.QUOTATION_TENDER_ID) != null) {
+				if (getManagedBean().getQuotationNumber() != null) {
+					restDtlDTO.getRptRequestDtl().setDocumentNo01(getManagedBean().getQuotationNumber());
+				}
+			}
+
+			if (restDtlDTO.getRptRequestDtl().getDocumentNo01() != null) {
+				addRptRequestDetail(restDtlDTO);
+			}
+			//R5 #14076 end
+			
 			getPopUpMsg(String.valueOf(resDTO.getRequestId()));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+	//R5 #14076 start
+	public void addRptRequestDetail(RPTRequestDtlReqDTO restDtlDTO) {
+
+		IRPTRequestDtlSO rptRequestDtlSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ReportConst.RPT_MODULE_SER_OBJ, IRPTRequestDtlSO.class);
+
+		if (restDtlDTO.getRptRequestDtl().getCreatedBy() == null) {
+			restDtlDTO.getRptRequestDtl().setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+		}
+
+		rptRequestDtlSO.saveRPTRequestDtlDTO(restDtlDTO);
+	}
+	//R5 #14076 -end-
 	
 	//Bug #28440 start
 	public String getUserRoleLogin(){
