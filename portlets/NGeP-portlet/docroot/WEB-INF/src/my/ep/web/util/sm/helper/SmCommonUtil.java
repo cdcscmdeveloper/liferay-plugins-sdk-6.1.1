@@ -3600,7 +3600,6 @@ public class SmCommonUtil {
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setAppl(latestAppl);
 		//#32510 - start
-		latestAppl.setApplId(null);
 		latestAppl.setApplNo("");
 		//#32510 - end
 		return SmServiceLookup.getPersonnelSO().getSoftcertDocNo(reqDTO)
