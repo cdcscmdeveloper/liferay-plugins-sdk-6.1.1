@@ -12956,9 +12956,9 @@ if (null != checklist && !checklist.isEmpty()) {
 			qtStatus = detailSO.retrieveActiveStatusByDoctype(this.getManagedBean().getQt().getQtId(), ParameterConst.DOCTYPE_QUOTATION);
 			if (qtStatus != null)
 				this.getManagedBean().getQt().setQtStatus(qtStatus);
-			if (!(Arrays
+			if (Arrays
 					.asList(new Long[] { QTStatusConst.SE_PENDING_ENDORSMENT, QTStatusConst.SE_PENDING_SIGNOFF, QTStatusConst.SE_PENDING_REVISION })
-					.contains(this.getManagedBean().getQt().getQtStatus().getStatusId()))) {
+					.contains(this.getManagedBean().getQt().getQtStatus().getStatusId())) {
 				throw new EpException(MessageConst.ERROR_100048);
 			}
 			// Bug #33661@Syazani 16/08/2022 -- End
