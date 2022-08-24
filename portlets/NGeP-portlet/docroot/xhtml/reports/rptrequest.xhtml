@@ -109,7 +109,7 @@
 									<p:column headerText="#{lbl['lbl.txt.docStatus']}" style="text-align:center;">
 										<h:outputText value="#{rptRequestBackingBean.getTrimmedStatusCode(rptRequest.statusCode)}" style="text-align:center;"/>
 									</p:column>
-									
+									<!-- Start 33741,7754 -->
 									<p:column headerText="#{lbl['lbl.txt.action']}" style="text-align:center;">
 										
 										<p:commandLink rendered="#{rptRequestBackingBean.isSuccess(rptRequest.statusCode)}" action="#{rptRequestBackingBean.attachmentDownload(rptRequest)}" ajax="false"
@@ -125,7 +125,7 @@
 										
 										
 									</p:column>
-									
+									<!--  End 33741,7754 -->
 									<p:ajax event="rowSelectCheckbox" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" update=":form:rptRequestTable, :form:deleteBtn"/>
 									<p:ajax event="rowUnselectCheckbox" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" update=":form:rptRequestTable, :form:deleteBtn"/>
 									<p:ajax event="rowUnselect" listener="#{rptRequestBackingBean.rowSelectUnselectCheckbox}" update=":form:rptRequestTable, :form:deleteBtn"/>
