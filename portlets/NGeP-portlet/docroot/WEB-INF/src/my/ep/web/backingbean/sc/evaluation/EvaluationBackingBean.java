@@ -8111,6 +8111,13 @@ public void saveComplianceSample() {
 						else if(currentTab == 3) {
 							if (this.getManagedBean()
 									.getPresentationDemoActiveIndex() < 1) {
+								//#28784 related to 10542 - start
+								if (this.getManagedBean().getScQt() != null
+										&& this.getManagedBean().getScQt().getCurrentActiveTab() != null
+										&& this.getManagedBean().getScQt().getCurrentActiveTab().intValue() == 4) {
+									retrivePresentationDemo();
+								}
+								//#28784 related to 10542 - end
 								demoAttachmentChecking();
 								retrivePresentationDemoSummary();
 								checkDemoStatusForQtCheckList();
