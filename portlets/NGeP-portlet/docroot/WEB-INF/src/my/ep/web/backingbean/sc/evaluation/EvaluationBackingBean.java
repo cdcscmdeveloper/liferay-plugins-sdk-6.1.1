@@ -13412,9 +13412,9 @@ private void retriveCommitteeRemarksList(){
 				}
 				if(removesupplier.size()>0){//32453
 					resDTO.getComplianceResultBean().getResultList().removeAll(removesupplier);	
-					//Bug #32740 related to #21695
-					resDTO.getComplianceResultBean().setTotalRecord(resDTO.getComplianceResultBean().getResultList().size());
-					//Bug #32740 related to #21695
+					//Bug #33851 REMOVE below related to #21695
+					//resDTO.getComplianceResultBean().setTotalRecord(resDTO.getComplianceResultBean().getResultList().size());
+					//Bug #33851 REMOVE related to #21695
 				}//32453
 				return resDTO.getComplianceResultBean();
 				
@@ -13494,9 +13494,9 @@ private void retriveCommitteeRemarksList(){
 					}
 					if(removesupplier.size()>0){//32453
 						resDTO.getComplianceResultBean().getResultList().removeAll(removesupplier);
-						//Bug #32740 related to #21695
-						resDTO.getComplianceResultBean().setTotalRecord(resDTO.getComplianceResultBean().getResultList().size());
-						//Bug #32740 related to #21695
+						//Bug #33851 REMOVE Below related to #21695
+						//resDTO.getComplianceResultBean().setTotalRecord(resDTO.getComplianceResultBean().getResultList().size());
+						//Bug #33851 REMOVE related to #21695
 					}//32453
 				}
 				return resDTO.getComplianceResultBean();
