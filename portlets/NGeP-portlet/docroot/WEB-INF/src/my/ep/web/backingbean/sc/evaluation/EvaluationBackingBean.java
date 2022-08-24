@@ -2387,15 +2387,7 @@ public void saveComplianceSample() {
 		// return "/xhtml/sc/evaluation/evaluationMain.xhtml";
 		
 		//#28784 add remarks - start
-		if (this.getManagedBean().getScQt().isDemoRequired()
-				&& (QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION.equals(this
-						.getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL.equals(this
-								.getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.TEC_PENDING_ENDORSEMENT.equals(this
-										.getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.TEC_PENDING_SIGN_OFF.equals(this
-												.getManagedBean().getCurrentStatusId()))) {
+		if (this.getManagedBean().getScQt().isDemoRequired()) {
 			retrieveDemoRemarks();
 		}
 		//#28784 add remarks - end
@@ -8539,6 +8531,12 @@ public void saveComplianceSample() {
 		} finally {
 			evaluationSO = null;
 		}
+		
+		//#28784 add remarks - start
+		if (this.getManagedBean().getScQt().isDemoRequired()) {
+			retrieveDemoRemarks();
+		}
+		//#28784 add remarks - end
 
 	}
 
@@ -8585,6 +8583,11 @@ public void saveComplianceSample() {
 
 			retriveCommitteeRemarksList();
 
+			//#28784 add remarks - start
+			if (this.getManagedBean().getScQt().isDemoRequired()) {
+				retrieveDemoRemarks();
+			}
+			//#28784 add remarks - end
 			
 			
 			
@@ -10123,15 +10126,7 @@ private void retriveCommitteeRemarksList(){
 		reqDtO.setCommitteeMemberEndorsmentList(committeActivities);
 		ScQt scQt = this.getManagedBean().getScQt();
 		//#28784 add demo remarks - start
-		if (this.getManagedBean().getScQt().isDemoRequired()
-				&& (QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION.equals(this
-						.getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL.equals(this
-								.getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.TEC_PENDING_ENDORSEMENT.equals(this
-										.getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.TEC_PENDING_SIGN_OFF.equals(this
-												.getManagedBean().getCurrentStatusId()))) {
+		if (this.getManagedBean().getScQt().isDemoRequired()) {
 			EvaluationReqDTO demoReqDTO=saveDemoTECCommitteeRemarks();
 			if (null != demoReqDTO) {
 				reqDtO.setScQt(demoReqDTO.getScQt());
@@ -17507,15 +17502,7 @@ private void retriveCommitteeRemarksList(){
 	public boolean isBeforeDemo() {
 		boolean beforeDemo = false;
 		
-		if (this.getManagedBean().getScQt().isDemoRequired()
-				&& (QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION.equals(this
-						.getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL.equals(this
-								.getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.TEC_PENDING_ENDORSEMENT.equals(this
-										.getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.TEC_PENDING_SIGN_OFF.equals(this
-												.getManagedBean().getCurrentStatusId()))) {
+		if (this.getManagedBean().getScQt().isDemoRequired()) {
 			beforeDemo = true;
 		}
 		return beforeDemo;
