@@ -44,6 +44,17 @@ public class ApplApprovedRptBackingBean extends SmReportBackingBean<ApplApproved
 			params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
 		}
 		
+		//#32521 - START
+		if (!StringUtils.isBlank(getManagedBean().getApplType())) {
+			params.put(SmReportConst.PARAM_APPL_TYPE, getManagedBean()
+					.getApplType());
+		}
+		
+		if(getManagedBean().getSelectedUser() != null){
+			params.put(SmReportConst.PARAM_USER_NAME, getManagedBean().getSelectedUser().getUserName());
+		}
+		//#32521 - END
+		
 		generateSmReport(params);
 	}
 	
@@ -52,5 +63,9 @@ public class ApplApprovedRptBackingBean extends SmReportBackingBean<ApplApproved
 		getManagedBean().setMofNo(null);
 		getManagedBean().setSelectedOrgProfile(null);
 		getManagedBean().setZone(null);
+		//#32521 - START
+		getManagedBean().setSelectedUser(null);
+		getManagedBean().setApplType(null);
+		//#32521 - END
 	}
 }
