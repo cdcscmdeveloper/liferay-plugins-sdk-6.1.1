@@ -76,6 +76,10 @@ public class SmReportConst implements Serializable {
 	//15174 - start
 	public static final String PARAM_PERSONNEL_NAME = "PPERSONNELNAME";
 	//15174 - end
+	
+	//#32521 - START
+	public static final String PARAM_DA_STATUS = "PDASTATUS";
+	//#32521 - END
 
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
