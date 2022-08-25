@@ -8237,19 +8237,28 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * @param event
 	 */
 	public void justificationChange(AjaxBehaviorEvent event) {
-		//log.info("justificationChange");
-		String reasonCode = (String) event.getComponent().getAttributes()
-				.get("value");
+		String reasonCode = (String) event.getComponent().getAttributes().get("value");
+
 		this.getManagedBean().setRenderjustificationTextbox(false);
-		PmReason reason = getReasonByCategoryAndCode(
-				ReasonCategory.SUPPLIER_SELECTION_JUSTIFICATION.value(), reasonCode);
-		this.getManagedBean().getScQtFinalization().setJustification(reason);
-		this.getManagedBean().setJustification(reason);
-		if (JUSTIFICATION_OTHERS.equalsIgnoreCase(reason.getReasonCode())) {
-			this.getManagedBean().setRenderjustificationTextbox(true);
+
+		PmReason reason = getReasonByCategoryAndCode(ReasonCategory.SUPPLIER_SELECTION_JUSTIFICATION.value(),
+				reasonCode);
+
+		// #28834 note-391 -start-
+		if (reason == null) {
+			this.getManagedBean().getScQtFinalization().setJustification(new PmReason());
+			this.getManagedBean().setJustification(new PmReason());
 		} else {
-			this.getManagedBean().getScQtFinalization().setJustificationText(null);
+			this.getManagedBean().getScQtFinalization().setJustification(reason);
+			this.getManagedBean().setJustification(reason);
+
+			if (JUSTIFICATION_OTHERS.equalsIgnoreCase(reason.getReasonCode())) {
+				this.getManagedBean().setRenderjustificationTextbox(true);
+			} else {
+				this.getManagedBean().getScQtFinalization().setJustificationText(null);
+			}
 		}
+		// #28834 note-391 -end-
 
 	}
 	
