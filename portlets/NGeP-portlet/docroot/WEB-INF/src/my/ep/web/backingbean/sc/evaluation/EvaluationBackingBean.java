@@ -7751,12 +7751,12 @@ public void saveComplianceSample() {
 										.equalsIgnoreCase(taskName) || SCProcessNameConst.ENDORSE_DEMO_TEC_EVALUATION
 										.equalsIgnoreCase(taskName)
 										|| SCProcessNameConst.SIGNOFF_DEMO_TEC_EVALUATION
-										.equalsIgnoreCase(taskName)) {
-									this.getManagedBean().setReadOnly(true);
-								} else if (SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION
 										.equalsIgnoreCase(taskName)
 										|| SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION
-												.equalsIgnoreCase(taskName)) {
+										.equalsIgnoreCase(taskName)) {//#28784 if update tec readonly = true
+									this.getManagedBean().setReadOnly(true);
+								} else if (SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION
+										.equalsIgnoreCase(taskName)) {
 									this.getManagedBean().setReadOnly(false);
 								}
 								retrivePresentationDemo();
@@ -7775,12 +7775,12 @@ public void saveComplianceSample() {
 										.equalsIgnoreCase(taskName) || SCProcessNameConst.ENDORSE_DEMO_TEC_EVALUATION
 										.equalsIgnoreCase(taskName)
 										|| SCProcessNameConst.SIGNOFF_DEMO_TEC_EVALUATION
-										.equalsIgnoreCase(taskName)) {
-									this.getManagedBean().setReadOnly(true);
-								} else if (SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION
 										.equalsIgnoreCase(taskName)
 										|| SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION
-												.equalsIgnoreCase(taskName)) {
+										.equalsIgnoreCase(taskName)) {//#28784 if update tec readonly = true
+									this.getManagedBean().setReadOnly(true);
+								} else if (SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION
+										.equalsIgnoreCase(taskName)) {
 									this.getManagedBean().setReadOnly(false);
 								}
 								retrivePresentationDemo();
@@ -8101,12 +8101,12 @@ public void saveComplianceSample() {
 										.equalsIgnoreCase(taskName) || SCProcessNameConst.ENDORSE_DEMO_TEC_EVALUATION
 										.equalsIgnoreCase(taskName)
 										|| SCProcessNameConst.SIGNOFF_DEMO_TEC_EVALUATION
+										.equalsIgnoreCase(taskName)
+										|| SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION//#28784 if update tec readonly = true
 										.equalsIgnoreCase(taskName)) {
 									this.getManagedBean().setReadOnly(true);
 								} else if (SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION
-										.equalsIgnoreCase(taskName)
-										|| SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION
-												.equalsIgnoreCase(taskName)) {
+										.equalsIgnoreCase(taskName)) {
 									this.getManagedBean().setReadOnly(false);
 								}
 								retrivePresentationDemo();
@@ -8562,6 +8562,7 @@ public void saveComplianceSample() {
 		}
 		
 		//#28784 add remarks - start
+		String taskName = this.getManagedBean().getTaskName();//#28784 use taskname instead of status id
 		if (this.getManagedBean().getScQt().isDemoRequired()
 				&& (QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION.equals(this
 						.getManagedBean().getCurrentStatusId())
@@ -8580,13 +8581,11 @@ public void saveComplianceSample() {
 						|| QTStatusConst.TEC_PENDING_SIGN_OFF_DEMO.equals(this
 										.getManagedBean().getCurrentStatusId()))) {
 			retrieveDemoRemarks();
-			if ((QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO_REVISION.equals(this
-					.getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO.equals(this
-								.getManagedBean().getCurrentStatusId()))
+			if ((SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION
+					.equalsIgnoreCase(taskName))
 						&& (this.getManagedBean().getTabActiveIndex() == 5
 								|| this.getManagedBean().getTabActiveIndex() == 0
-								|| this.getManagedBean().getTabActiveIndex() == 2)) {
+								|| this.getManagedBean().getTabActiveIndex() == 2)) {//#28784 use taskname instead of status id
 				this.getManagedBean().setReadOnly(false);
 			}
 		}
