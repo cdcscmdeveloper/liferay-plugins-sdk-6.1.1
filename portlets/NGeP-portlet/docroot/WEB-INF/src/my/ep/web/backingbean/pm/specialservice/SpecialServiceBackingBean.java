@@ -226,7 +226,9 @@ public class SpecialServiceBackingBean extends BaseBackingBean<SpecialServiceMan
 
 	public String goToMaintaincePage(PmParameterDesc pmSpecialService) {
 		debugLogger("goToMaintaincePage");
-
+		//#29644 start- Remove cache after save value. add by naim misiran
+		this.getManagedBean().setRemark(null);
+		//#29644 End
 		this.getManagedBean().setPmSpecialService(pmSpecialService);
 		PmParameterDesc oldPmSpecialService = null;
 		try {
@@ -254,14 +256,25 @@ public class SpecialServiceBackingBean extends BaseBackingBean<SpecialServiceMan
 
 	private void validationMessage(PmParameterDesc pmSpecialService) {
 		debugLogger("validationMessage");
+		//#29644 start- Update validate message. add by naim misiran
 		if (StringUtils.isBlank(pmSpecialService.getCodeName())) {
-			throw new EpException(MessageConst.ERROR_770242,
-					new String[] { PmCommonUtil.getResourceBundleLabels("lbl.pm.ss.name") });
+			throw new EpException(MessageConst.ERROR_770243,
+			new String[] { PmCommonUtil.getResourceBundleLabels("lbl.pm.ss.name") });
 		}
-
+		
+		//#29644 end
 		if (DbValueConst.RECORD_STATUS_ACTIVE == pmSpecialService.getRecordStatusFlg()) {
 			validateSpecialNameService(pmSpecialService);
 		}
+		
+		//#29644 start- Update validate message. add by naim misiran
+		if (!pmSpecialService.isBrandNew()) {
+			if (StringUtils.isBlank(this.getManagedBean().getRemark())) {
+			throw new EpException(MessageConst.ERROR_770243,
+			new String[] { PmCommonUtil.getResourceBundleLabels("lbl.pm.ss.remark") });
+			} 
+		}
+		//#29644 end
 	}
 	
 	private void validationMessageRemark(PmRemarkSpecialService pmRemarkSS){
