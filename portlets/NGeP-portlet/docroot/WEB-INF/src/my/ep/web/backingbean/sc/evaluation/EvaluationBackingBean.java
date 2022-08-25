@@ -4633,8 +4633,14 @@ public void saveComplianceSample() {
 						}
 					} else {
 						if (this.getManagedBean().getScQt().isDemoRequired()) {
-							zoneReqDto
-									.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
+							// #28784 - FEC zonal by item eval = TI, package = P
+							if (this.getManagedBean().getTabItemPackageIndex() == 1) {
+								zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+							} else if (this.getManagedBean().getTabItemPackageIndex() == 2) {
+								zoneReqDto.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
+							}
+							// zoneReqDto
+							// .setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
 						} else {
 							// #32391 - Start.
 							if (this.getManagedBean().getScQt().isTechEvaluationReq()) {

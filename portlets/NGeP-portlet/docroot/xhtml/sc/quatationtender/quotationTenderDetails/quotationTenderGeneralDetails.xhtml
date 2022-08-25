@@ -435,7 +435,7 @@
 							<tr>							
 								<td>																					
 								<c:choose>
-										<c:when	test="#{(!scQt.panel and !isReadOnly) and (!isDemoDisabled and !isMaintenanceFlow and !isDemoSpecialCase)}">
+										<c:when	test="#{!isReadOnly and (!isDemoDisabled and !isMaintenanceFlow and !isDemoSpecialCase)}">
 											<p:outputPanel id="demoPop">
 												<ui:remove>#11299 Vinod added disableFieldsforCommitteeRevision</ui:remove>
 												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial or  qTDetailBB.disableFieldsforCommitteeRevision()}">
@@ -448,7 +448,6 @@
 												</p:selectOneRadio>
 											</p:outputPanel>
 										</c:when>
-										<ui:remove>#28784</ui:remove>
 										<c:when	test="#{isDemoDisabled and !isReadOnly or isDemoDisabled and isMaintenanceFlow}">
 											<p:outputPanel id="demoPop">
 												<ui:remove>11299 Vinod added disableFieldsforCommitteeRevision</ui:remove>

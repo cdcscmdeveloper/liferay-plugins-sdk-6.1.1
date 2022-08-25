@@ -597,7 +597,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 						demoItem = new ScQtDemoItem();
 						demoItem.setScQtDemo(qtDemo);
 						demoItem.setTplSpecQuestion(s);
-						demoItem.setItemName(s.getClSpecDetail());
+						demoItem.setItemName(s.getClItem());
 						demoItemList.add(demoItem);
 					}
 
