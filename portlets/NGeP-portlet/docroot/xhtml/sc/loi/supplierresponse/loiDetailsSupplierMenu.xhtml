@@ -166,6 +166,15 @@
 			
 		</table>
 	</p:panel>
-	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
+
+	<!-- 11134 -start- -->
+	<p:outputPanel id="remarksPanel" rendered="#{isSupplierAckStatus}">
+		<ac:scRemarkAndAttachment
+			remarkList="#{lOIDetailBackingBean.managedBean.scLoi.scLoiRemarks}"
+			showAttachment="false" readonly="false" />
+	</p:outputPanel>
+	<!-- 11134 -end- -->
+
+<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 	
 </ui:composition>
