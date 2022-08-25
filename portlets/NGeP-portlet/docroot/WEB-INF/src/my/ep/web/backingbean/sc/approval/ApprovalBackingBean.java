@@ -283,6 +283,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}*/
 			ScQtApprovalReqAttachement approvalReqAttachement = scQtApprovalDtls
 					.getApprovalRequestAttachement();
+			PmParameter approvalType = scQtApprovalDtls.getApprovalType(); //#25077
 			if (null == approvalReqAttachement) {
 				approvalReqAttachement = new ScQtApprovalReqAttachement();
 				approvalReqAttachement.setApprovalRequest(scQtApprovalDtls);
@@ -297,7 +298,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//scAttachment = approvalReqAttachement;
 			uploadAttachment(event.getFile(), approvalReqAttachement);
 			scQtApprovalDtls.setApprovalRequestAttachement(approvalReqAttachement);
-			getManagedBean().setScQtApprovalReqAttachement(approvalReqAttachement);//bug #30435
+			// #25077 - Start
+			if(approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS)){
+				this.getManagedBean().setScQtApprovalReqAttachementICT(approvalReqAttachement);
+				this.getManagedBean().setFlagFileAttahmentDeletedICT(false); 
+			}
+			if(approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)){
+				this.getManagedBean().setScQtApprovalReqAttachementMITI(approvalReqAttachement);
+				this.getManagedBean().setFlagFileAttahmentDeletedMITI(false); 
+			}
+			// #25077 - End
 		}
 		logger.debug("handleOtherFileUpload - END");
 	}
@@ -313,17 +323,41 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 
 	/**
-	 * Delete Attachment for other approvals.
+	 * Delete Attachment for other approvals ICT.
 	 */
-	public void deleteOthersApprovalFile(BaseEntity delEntity) {
+	public void deleteOthersApprovalFileICT(BaseEntity delEntity) {//#25077
 		logger.debug("deleteOthersApprovalFile - START");
 		List<ScQtApprovalRequest> list = this.getManagedBean()
 				.getSelectedApprovalTabBean().getScQtApproval()
 				.getScQtApprovalDtls();
 		for (int i = 0; i < list.size(); i++) {
+			// #25077 - Start
+			if(list.get(i).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS)){
+				list.get(i).setApprovalRequestAttachement(null);
+				this.getManagedBean().setScQtApprovalReqAttachementICT(null);
+				this.getManagedBean().setFlagFileAttahmentDeletedICT(true); 
+			}
+			// #25077 - End
+		}
+		logger.debug("deleteOthersApprovalFile - END");
+	}
+	
+	/**
+	 * Delete Attachment for other approvals MITI.
+	 */
+	public void deleteOthersApprovalFileMITI(BaseEntity delEntity) {//#25077
+		logger.debug("deleteOthersApprovalFile - START");
+		List<ScQtApprovalRequest> list = this.getManagedBean()
+				.getSelectedApprovalTabBean().getScQtApproval()
+				.getScQtApprovalDtls();
+		for (int i = 0; i < list.size(); i++) {
+			// #25077 - Start
+			if(list.get(i).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)){
 			list.get(i).setApprovalRequestAttachement(null);
-			getManagedBean().setScQtApprovalReqAttachement(null);// 25077
-			this.getManagedBean().setFlagFileAttahmentDeleted(true); //#25077
+				this.getManagedBean().setScQtApprovalReqAttachementMITI(null);
+				this.getManagedBean().setFlagFileAttahmentDeletedMITI(true); 
+			}
+			// #25077 - End
 		}
 		logger.debug("deleteOthersApprovalFile - END");
 	}
@@ -2822,6 +2856,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				throws FileNotFoundException, IOException {
 			if (event.getFile() != null) {
 				ScQtApprovalRequest scQtApprovalHistoryDtls = this.getManagedBean().getHistoryApprovalRequests();
+				PmParameter approvalType = scQtApprovalHistoryDtls.getApprovalType();
 				ScQtApprovalReqAttachement approvalReqAttachement = scQtApprovalHistoryDtls.getApprovalRequestAttachement();
 				if (null == approvalReqAttachement) {
 					approvalReqAttachement = new ScQtApprovalReqAttachement();
@@ -2830,21 +2865,46 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				approvalReqAttachement.setDocNo(scQtApprovalHistoryDtls.getScQtApproval().getScQt().getQtNo());
 				uploadAttachment(event.getFile(), approvalReqAttachement);
 				scQtApprovalHistoryDtls.setApprovalRequestAttachement(approvalReqAttachement);
-				this.getManagedBean().setScQtApprovalReqAttachementHistory(approvalReqAttachement);
+				if(approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS)){
+					this.getManagedBean().setScQtApprovalReqAttachementHistoryICT(approvalReqAttachement);
+					this.getManagedBean().setFlagFileAttahmentDeletedICT(false); 
+				}
+				if(approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)){
+					this.getManagedBean().setScQtApprovalReqAttachementHistoryMITI(approvalReqAttachement);
+					this.getManagedBean().setFlagFileAttahmentDeletedMITI(false); 
+				}
 			}
 		}
 		
 		/**
-		 * Delete attachment for history others approval.
+		 * Delete attachment for history others approval ICT.
 		 */
-		public void deleteHistoryOthersApprovalFile(BaseEntity delEntity) {
+		public void deleteHistoryOthersApprovalFileICT(BaseEntity delEntity) {
 			List<ScQtApprovalRequest> list = this.getManagedBean()
 					.getSelectedApprovalTabBean().getScQtApproval()
 					.getHistoryApprovalRequests();
 			for (int i = 0; i < list.size(); i++) {
+				if(list.get(i).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS)){
+					list.get(i).setApprovalRequestAttachement(null);
+					this.getManagedBean().setScQtApprovalReqAttachementHistoryICT(null);
+					this.getManagedBean().setFlagFileAttahmentDeletedICT(true);
+				}
+			}
+		}
+		
+		/**
+		 * Delete attachment for history others approval MITI.
+		 */
+		public void deleteHistoryOthersApprovalFileMITI(BaseEntity delEntity) {
+			List<ScQtApprovalRequest> list = this.getManagedBean()
+					.getSelectedApprovalTabBean().getScQtApproval()
+					.getHistoryApprovalRequests();
+			for (int i = 0; i < list.size(); i++) {
+				if(list.get(i).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)){
 				list.get(i).setApprovalRequestAttachement(null);
-				this.getManagedBean().setScQtApprovalReqAttachementHistory(null);
-				this.getManagedBean().setFlagFileAttahmentDeleted(true);
+					this.getManagedBean().setScQtApprovalReqAttachementHistoryMITI(null);
+					this.getManagedBean().setFlagFileAttahmentDeletedMITI(true); 
+				}
 			}
 		}
 		
