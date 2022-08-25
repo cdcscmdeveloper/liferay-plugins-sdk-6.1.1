@@ -12913,6 +12913,15 @@ if (null != checklist && !checklist.isEmpty()) {
 		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTSpecSO.class);
+		// Bug #33661@Syazani 16/08/2022 -- Start
+		IQTDetailSO detailSO = null;
+		PmStatus qtStatus = null;
+		
+		try {
+			// Bug #33661@Syazani 16/08/2022 -- End
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
 		ScQtCheckList scQtCheckList = this.getManagedBean().getScQtChecklist();
 		scQtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster()
 				.getSpecName());
@@ -12920,6 +12929,19 @@ if (null != checklist && !checklist.isEmpty()) {
 				.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		Integer index = null;//1873 - note 97
+			
+			// Bug #33661@Syazani 16/08/2022 -- Start
+			// Purpose: verify status is in Pending Specification Preparation to prevent user from altering the data by using multiple tab/windows
+			qtStatus = detailSO.retrieveActiveStatusByDoctype(this.getManagedBean().getQt().getQtId(), ParameterConst.DOCTYPE_QUOTATION);
+			if (qtStatus != null)
+				this.getManagedBean().getQt().setQtStatus(qtStatus);
+			if (Arrays
+					.asList(new Long[] { QTStatusConst.SE_PENDING_ENDORSMENT, QTStatusConst.SE_PENDING_SIGNOFF, QTStatusConst.SE_PENDING_REVISION })
+					.contains(this.getManagedBean().getQt().getQtStatus().getStatusId())) {
+				throw new EpException(MessageConst.ERROR_100048);
+			}
+			// Bug #33661@Syazani 16/08/2022 -- End
+			
 		if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
 			ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean()
 					.getQt().getScQtSupplierCriteria();
@@ -13235,6 +13257,11 @@ if (null != checklist && !checklist.isEmpty()) {
 			addDemoTechnicalCheckList();//#28784
 			successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.template.spec"), "", Boolean.FALSE);
 		}
+			// Bug #33661@Syazani 16/08/2022 -- Start
+		} finally {
+			detailSO = null;
+		}
+		// Bug #33661@Syazani 16/08/2022 -- End
 	}
 
 	//1873 - start - note 97
