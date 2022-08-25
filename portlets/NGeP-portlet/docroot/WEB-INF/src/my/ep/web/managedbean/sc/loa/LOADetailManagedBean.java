@@ -15,6 +15,7 @@ import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaCancelAttachment;
+import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
@@ -296,6 +297,10 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	// #19336 -start-
 	private boolean isValidatewitness = false;
 	// #19336 -end-
+	
+	//#11134 -start-
+	private List<ScLoaRemark> supplierRemarks;
+	//#11134 -end-	
 
     /**
      * Gets the spki backing bean.
@@ -1671,4 +1676,14 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setScLoaCancelAttachments(List<ScLoaCancelAttachment> scLoaCancelAttachments) {
 		this.scLoaCancelAttachments = scLoaCancelAttachments;
 	}
+
+	//#11134 -start-
+	public List<ScLoaRemark> getSupplierRemarks() {
+		return supplierRemarks;
+	}
+
+	public void setSupplierRemarks(List<ScLoaRemark> supplierRemarks) {
+		this.supplierRemarks = supplierRemarks;
+	}
+	//#11134 -end-
 }
