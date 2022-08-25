@@ -711,6 +711,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return user;
 	}
 
+	//Bug #33726 start
+	public PmUser retrieveUserDtlById(Long userId) {
+		PmUser user = null;
+		try {
+			UserReqDTO reqDTo = new UserReqDTO();
+			reqDTo.setUserId(userId);
+			UserResDTO resDTO = getUserSOGlobal().retrieveUserDtlById(reqDTo);
+			if (resDTO.isSuccessful() == true) {
+				user = resDTO.getPmUser();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return user;
+	}
+	//Bug #33726 end
+
 	protected IUserSO getUserSOGlobal() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 	}
