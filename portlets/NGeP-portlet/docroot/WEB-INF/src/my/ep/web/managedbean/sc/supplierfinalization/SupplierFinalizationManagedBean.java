@@ -232,6 +232,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//#26169 #38 - Start
 	private boolean isHasSupplierQualified;
 	//#26169 #38 - End
+	
+	// #11134 - Start
+	private boolean haveSupplierRejection;
+	// #11134 - End
 
 	/**
 	 * @return the activeIndex
@@ -2108,4 +2112,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.isHasSupplierQualified = isHasSupplierQualified;
 	}
 	//#26169 #38 - End
+
+	// #11134 -start-
+	public boolean isHaveSupplierRejection() {
+		return haveSupplierRejection;
+	}
+	
+	public void setHaveSupplierRejection(boolean haveSupplierRejection) {
+		this.haveSupplierRejection = haveSupplierRejection;
+	}
+	// #11134 -end-
 }

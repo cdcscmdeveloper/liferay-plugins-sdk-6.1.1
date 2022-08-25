@@ -3,11 +3,14 @@
  */
 package my.ep.web.managedbean.sc.common;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -31,6 +34,10 @@ public class SupplierDetailManagedBean extends BaseManagedBean {
 	private SmSupplier smSupplier;
 	private SmGstSupplier smGstSupplier;
 	private boolean hasQtProposal;
+	//#11134 -start-
+	private boolean hasBod;
+	private List<SmPersonnel> boardofDirectors;
+	//#11134 -end-
 	
 	public SupplierDetailManagedBean() {
 	}
@@ -139,5 +146,41 @@ public class SupplierDetailManagedBean extends BaseManagedBean {
 	public void setHasQtProposal(boolean hasQtProposal) {
 		this.hasQtProposal = hasQtProposal;
 	}
+
+	//#11134 -start-
+	/**
+	 * 
+	 * @return hasBod - for rendering BOD
+	 */
+	public boolean isHasBod() {
+		return hasBod;
+	}
+
+	/**
+	 * 
+	 * @param hasBod
+	 * 			-for rendering BOD
+	 */
+	public void setHasBod(boolean hasBod) {
+		this.hasBod = hasBod;
+	}
+
+	/**
+	 * 
+	 * @return board of directors data
+	 */
+	public List<SmPersonnel> getBoardofDirectors() {
+		return boardofDirectors;
+	}
+
+	/**
+	 * 
+	 * @param boardofDirectors
+	 * 			-board of directors data
+	 */
+	public void setBoardofDirectors(List<SmPersonnel> boardofDirectors) {
+		this.boardofDirectors = boardofDirectors;
+	}
+	//#11134 -end-
 
 }
