@@ -12949,9 +12949,9 @@ if (null != checklist && !checklist.isEmpty()) {
 		PmStatus qtStatus = null;
 		
 		try {
-			// Bug #33661@Syazani 16/08/2022 -- End
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			// Bug #33661@Syazani 16/08/2022 -- End
 			
 			ScQtCheckList scQtCheckList = this.getManagedBean().getScQtChecklist();
 			scQtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster()
