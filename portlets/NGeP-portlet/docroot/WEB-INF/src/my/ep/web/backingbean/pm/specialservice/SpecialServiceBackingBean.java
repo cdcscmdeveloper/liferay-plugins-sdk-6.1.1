@@ -317,7 +317,7 @@ public class SpecialServiceBackingBean extends BaseBackingBean<SpecialServiceMan
 					PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO,
 							MessageConst.INFO_790100, new String[] { resDTO.getSpecialService().getCodeName() });
 				} else {
-					returnUrl = NAV_TO_MAIN;
+					returnUrl = NAV_TO_MAINTAIN; //#29644 
 					PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO,
 							MessageConst.INFO_790101, new String[] { resDTO.getSpecialService().getCodeName() });
 				}
