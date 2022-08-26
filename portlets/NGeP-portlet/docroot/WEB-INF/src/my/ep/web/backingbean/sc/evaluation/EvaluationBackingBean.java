@@ -1877,11 +1877,11 @@ public void saveComplianceSample() {
 	public String financialSpecBackaction() {
 		this.getManagedBean().setTechindex(-1);
 		if (this.getManagedBean().getScQt().isZonal()) {//#25138 -Ahmaa
-			this.getManagedBean().getFinSpecSupplierListDM().reloadData();
+			//this.getManagedBean().getFinSpecSupplierListDM().reloadData();//33843
 			
 			return "/xhtml/sc/evaluation/evaluationStage/financial/financialSpecWithZone.xhtml";
 		} else {
-			this.getManagedBean().getFinSpecSupplierListDM().reloadData();//#25138 -Ahmaa
+			//this.getManagedBean().getFinSpecSupplierListDM().reloadData();//#25138 -Ahmaa//33843
 			
 			return "/xhtml/sc/evaluation/evaluationStage/financial/financialSpecWithOutzone.xhtml";
 		}
