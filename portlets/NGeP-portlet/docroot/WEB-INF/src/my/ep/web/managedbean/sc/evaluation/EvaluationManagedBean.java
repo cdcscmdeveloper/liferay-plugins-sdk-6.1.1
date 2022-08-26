@@ -608,6 +608,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private ScQtDemoSupplier scQtDemoSupplier;
 	private String demoScore;
 	private BigDecimal otherScore;
+	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
 	//#28784 - end
 
 	/** The total technical package max score. */
@@ -4267,4 +4268,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.committeeMemberActivity = committeeMemberActivity;
 	}
 	//25037 #568 - end
+	
+	//#28784 add remarks - start
+	/**
+	 * @return the demoTechnicalCommitteeRemark
+	 */
+	public List<ScQtDemoTechnicalCommitteeRemark> getDemoTechnicalCommitteeRemark() {
+		return demoTechnicalCommitteeRemark;
+	}
+
+	/**
+	 * @param demoTechnicalCommitteeRemark the demoTechnicalCommitteeRemark to set
+	 */
+	public void setDemoTechnicalCommitteeRemark(
+			List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark) {
+		this.demoTechnicalCommitteeRemark = demoTechnicalCommitteeRemark;
+	}
+	//#28784 add remarks - end
 }
