@@ -639,6 +639,7 @@ public class SmSideMenuIconUtil {
 						//Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
 						//to check, if data not exist no need to auto check
 						if(bean.isPoUser() && isAllCatcodeVerified &&(bean.getActiveCategoryList()==null || bean.getActiveCategoryList().size()<=0) ){
+							//#31043 start
 							// #26528 - start
 							// Checkbox 'Registered Category' section not ticked for Renewal MOF application
 							if (bean.getApprovedCategoryList()!=null) {
@@ -648,6 +649,7 @@ public class SmSideMenuIconUtil {
 								isAllCatcodeVerified = false;
 							}
 							// #26528 - end
+							//#31043 end
 						}
 						
 						
