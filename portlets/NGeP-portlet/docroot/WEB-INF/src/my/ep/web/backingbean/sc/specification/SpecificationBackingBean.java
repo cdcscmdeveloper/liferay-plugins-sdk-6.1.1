@@ -20429,9 +20429,17 @@ if(null!=allTechnicalChecklist){
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTSpecSO.class);
+		List<ScQtCheckList> existingTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
 		reqDTO.setScQt(this.getManagedBean().getQt());
 		reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 		SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
+		for(ScQtCheckList e: existingTechChecklist){
+			for(ScQtCheckList f: resDTO.getTechnicalCheckList()){
+				if(e.getQtChecklistId().equals(f.getQtChecklistId())){
+					f.getQtScoreWeightage().setWeightage(e.getQtScoreWeightage().getWeightage());
+				}
+			}
+		}
 		getManagedBean().setScQtCheckSt2techProposal(resDTO.getTechnicalCheckList());
 		
 		//#28784
