@@ -7,6 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
     <ui:param name="isOtherApprovalDtlsEditable" value="#{!qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" /> 
+    <!-- #25077 Start -->
+    <ui:param name="isMandatoryStatusAndDocument" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}" />  
+	<!-- #25077 End -->
 	
 	<p:panel>
 		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.approval.oth.instruction']}" escape="false" />
@@ -25,20 +28,30 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
+				    <!-- #25077 Start -->
+				    <c:if test="#{isMandatoryStatusAndDocument}"> 
+				    <!-- #25077 End -->
+				        <h:outputText value="* " styleClass="mandatory" />
+				    <!-- #25077 Start -->
+				    </c:if>  
+				    <!-- #25077 End -->
 					<h:outputText value="#{lbl['lbl.sc.status']}" />
 				</f:facet>
 				<p:selectOneMenu id="decisiontypeid"
 					value="#{otherrequestdetails.approverAction.parameterId}"
 					style="width: 178px;margin-bottom: 5px;" disabled="#{createQtBB.managedBean.readOnly}">
+					<!-- #25077 Start -->
 				    <c:choose>
 					    <c:when test="#{qTDetailBB.isQTStatusLessThan(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}">	
+					<!-- #25077 End -->
 					         <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+					<!-- #25077 Start -->
 					    </c:when>
 					    <c:otherwise>
 					         <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" noSelectionOption="true" itemDisabled="true"/>
 					    </c:otherwise>
 			        </c:choose>
+			        <!-- #25077 End -->
 					<f:selectItems var="app"
 						value="#{approvalBackingBean.getStatusDropdownValues()}"
 						itemLabel="#{app.codeName}"
@@ -64,9 +77,11 @@
 				    <c:otherwise> 
 		                <p:column>
 					        <f:facet name="header">
-						        <h:outputText value="* " styleClass="mandatory" />
+						        <c:if test="#{isMandatoryStatusAndDocument}">
+						              <h:outputText value="* " styleClass="mandatory" />
+						        </c:if>
 								<h:outputText value="#{lbl['lbl.sc.document']}" />
-			                    <ac:iconTooltip value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
 							</f:facet>
 							
 								   <ac:scSingleFileUploadButton id="otheruploadIdICT"
