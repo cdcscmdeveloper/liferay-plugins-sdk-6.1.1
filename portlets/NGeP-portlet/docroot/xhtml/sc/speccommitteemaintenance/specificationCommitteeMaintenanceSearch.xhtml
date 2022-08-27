@@ -99,19 +99,23 @@
 									partialSubmit="true" process="@this" />
 							</div>
 						</p:dialog>
+						
+						<!-- 1873 note 125 -start- -->						
 						<p:commandLink id="editSMIcon"
 							action="#{specMaintenanceBB.editSpecificationMaintenance(scQt, true, true)}"
 							style="margin-right:20px;" partialSubmit="true" update="@form"
-							rendered="#{specMaintenanceBB.renderIcon(statusId)}">
+							rendered="#{specMaintenanceBB.renderIcon(scQt)}">
+						<!-- 1873 note 125 -end- -->
 						<ui:remove><!-- 25037 - end - note 510--></ui:remove>
 							<h:graphicImage
 								value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
 								styleClass="tasklist_title1"
 								title="#{lbl['lbl.sc.qt.search.edit.tooltip']}" />
 						</p:commandLink>
-
+						<!-- 1873 note 125 -start- -->
 						<p:commandLink id="viewSMIcon" style="margin-right:20px;" action="#{specMaintenanceBB.editSpecificationMaintenance(scQt,false)}"
-							partialSubmit="true" process="@this" rendered="#{!specMaintenanceBB.renderIcon(statusId)}">
+							partialSubmit="true" process="@this" rendered="#{!specMaintenanceBB.renderIcon(scQt)}">
+						<!-- 1873 note 125 -end- -->
 							<p:graphicImage
 								value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
 								styleClass="tasklist_title1"
