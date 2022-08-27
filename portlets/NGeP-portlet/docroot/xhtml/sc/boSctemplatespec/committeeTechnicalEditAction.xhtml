@@ -28,12 +28,14 @@
 						value="#{lbl['lbl.btn.print']}" process="@all" type="button">
 						<p:printer target="committeeTechEdit" />
 					</p:commandButton>
-					<!-- 30917, 31151 -start- -->
+					<!-- 30917, 31151 -start- --><!-- #33837 - start- -->
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
+						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or (specificationBackingBean.isQTStatusChecklistScoringRevision()))
+											or (specMaintenanceBB.specCommitteeSecretaryAndSpecCommMaintPortlet and specificationBackingBean.managedBean.isChecklist())}"
 						style="float:right;" immediate="true"
 						onclick="createTechnicalDialog.show();">
-					</p:commandButton> 
+					</p:commandButton>
+					<!-- #33837 - end- -->
 					<p:commandButton
 						value="#{lbl['lbl.btn.complete']}"
 						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) 

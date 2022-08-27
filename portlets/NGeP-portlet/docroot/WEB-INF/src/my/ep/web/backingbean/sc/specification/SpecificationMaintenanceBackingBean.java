@@ -577,9 +577,6 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		/*** 25692#95 - end ***/
 		
 		//#15391 - start
-//		log.info("STATUS ID: "+scQt.getQtStatus().getStatusId());
-//		log.info("THIS STATUS ID: "+this.getManagedBean().getCurrentStatusId());
-//		log.info("QTID: "+scQt.getQtId());
 		if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId()) 
 				|| QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt.getQtStatus().getStatusId())){
 			this.getManagedBean().setGenInfo(true);
@@ -591,10 +588,15 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 			}
 		}
 		
-		if((QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId())) 
+		if ((QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId()))
 				|| (QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt.getQtStatus().getStatusId()))
 				|| (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
-				|| (QTStatusConst.QT_PENDING_PUBLICATION_REVISION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))){
+				|| (QTStatusConst.QT_PENDING_PUBLICATION_REVISION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
+				// #33837 - add bpk and reschedule -start-
+				|| (QTStatusConst.QT_PENDING_BPK_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
+				|| (QTStatusConst.QT_PENDING_SCHEDULE_REVISION.equals(scQt.getQtStatus().getStatusId()))
+				// #33837 - add bpk and reschedule -end-
+		) {
 			this.getManagedBean().setChecklist(true);
 			
 			if(QTStatusConst.SE_PENDING_ENDORSMENT.equals(this.getManagedBean().getCurrentStatusId())
@@ -686,6 +688,20 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}	
 	//#15391 - end
+
+	// 33837 - start
+	public boolean isSpecCommitteeSecretaryAndSpecCommMaintPortlet() {
+		boolean isSpec = false;
+		FacesScopes facesScopes = new FacesScopes();
+
+		if (facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value())
+				&& QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())) {
+			isSpec = true;
+		}
+		
+		return isSpec;
+	}
+	// 33837 - end
 
 	// 29464-start
 	public void redirectToSpecificationMaintenance(ScQt scQt, boolean isEditable, String previouPageId, boolean redirect) {
