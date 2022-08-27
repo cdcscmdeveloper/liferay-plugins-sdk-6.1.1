@@ -13,6 +13,7 @@ package my.ep.web.backingbean.sc.specification;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -480,13 +481,12 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		renewSesionObject();
 	}
 	/* ***25692#95 - end */
-	log.debug("start editSpecificationMaintenance");
 	this.getManagedBean().setQtnTenderSearchBean(qtTnderBean);
 	this.getManagedBean().setSearchQTDataModel(qtdataModel);
 	this.getManagedBean().setMaintanceFlow(true);
 	 FacesContext fc = FacesContext.getCurrentInstance();
      boolean specCommitteeSecreatry=isSpecCommitteeSecretary();
-     //specCommitteeSecreatry=true;
+
     this.getManagedBean().setAssignedState(Boolean.FALSE);
     /* ***25692#95 - start */
     this.getManagedBean().setPreviousPage(StringUtils.isEmpty(previousPageId)?null:previousPageId);
@@ -496,15 +496,14 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
     this.getManagedBean().setChecklist(false);
     //#15391 -end-
    
- /* boolean isStatusPublish=  isQTStatusPublished(scQt
-			.getQtStatus().getStatusId());*/
-     log.debug("status Publish");
+		// 1873 note 125 start
+		ScWorkFlowStatus workFlowStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,
+				scQt.getQtId());
+		this.getManagedBean().setSpecMaintenanceWorkFlowStatus(workFlowStatus);
+
+		// 1873 note 125 end
 		if (specCommitteeSecreatry) {
 			if (isEditable) {
-				
-				ScWorkFlowStatus workFlowStatus = retrieveStatusByTypeAndId(
-						ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,scQt.getQtId());
-				this.getManagedBean().setSpecMaintenanceWorkFlowStatus(workFlowStatus);
 				if (null == workFlowStatus
 						|| QTStatusConst.SE_PENDING_SUBMISSION
 								.equals(workFlowStatus.getPmStatus().getStatusId())
@@ -561,7 +560,7 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		ScWorkFlowStatus specMainworkflow = this.getManagedBean().getSpecMaintenanceWorkFlowStatus();
 		if (null != specMainworkflow) {
 			Long currentSpecStatusId = specMainworkflow.getPmStatus().getStatusId();
-			log.debug("Workflow status not null == "+ currentSpecStatusId);
+
 			if(QTStatusConst.SE_COMPLETED.equals(currentSpecStatusId)){
 				currentSpecStatusId = scQt_.getQtStatus().getStatusId();
 			} 
@@ -616,8 +615,6 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		// 29464-end
 		
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, renderPage); // 29464
-
-		log.debug("end editSpecificationMaintenance");
 	}
 
 	/**
@@ -663,13 +660,22 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		}
 	}
 
-	public boolean renderIcon(Long currentStatusId) {
-
+	// 1873 note 125 start
+	public boolean renderIcon(ScQt qt) {
+		Long qtStatusId = (qt != null && qt.getQtStatus() != null) ? qt.getQtStatus().getStatusId() : 0L;
+		Long specMaintenanceStatusId = (qt != null && qt.getSpecMaintenanceStatus() != null) ? qt
+				.getSpecMaintenanceStatus().getStatusId() : 0L;
 		boolean isRenderIcon = false;
-		if (currentStatusId != null) {
-			isRenderIcon = checkStatus(currentStatusId);
+
+		if (qtStatusId != null) {
+			isRenderIcon = checkStatus(qtStatusId);
 		}
-		return isRenderIcon;
+
+		return isRenderIcon
+				&& !Arrays.asList(
+						new Long[] { QTStatusConst.SE_PENDING_ENDORSMENT, QTStatusConst.SE_PENDING_SIGNOFF,
+								QTStatusConst.SE_PENDING_REVISION }).contains(specMaintenanceStatusId);
+		// 1873 note 125 end
 	}
 
 	private boolean checkStatus(Long statusId) {
