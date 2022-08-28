@@ -17517,8 +17517,9 @@ private void retriveCommitteeRemarksList(){
 					for (ScQtDemoTechnicalCommitteeRemark scRemark : scQt.getScQtDemoTechnicalCommitteeRemarks()) {
 						scRemark.setEditable(false);
 						scRemark.setBrandNew(false);
-						if (scQt.getScQtDemoTechnicalCommitteeRemarks().size() == 1
-								&& scRemark.getRemark().equalsIgnoreCase("")) {
+						if (scRemark.getRemark() != null
+								&& scQt.getScQtDemoTechnicalCommitteeRemarks().size() == 1
+								&& scRemark.getRemark().equalsIgnoreCase("")) {//#28784 bug for null remark
 							scQt.setScQtDemoTechnicalCommitteeRemarks(null);
 						}
 						if (scRemark.getRemark() == null) {
