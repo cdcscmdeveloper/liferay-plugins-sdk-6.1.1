@@ -10716,7 +10716,31 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	// #9019 - End (Harun)
 	
-	// 1873 - start - note 97
+	// 1873 - start
+	public boolean isTechnicalOtherCheckList() {
+		return technicalOtherCheckList;
+	}
+
+	public void setTechnicalOtherCheckList(boolean technicalOtherCheckList) {
+		this.technicalOtherCheckList = technicalOtherCheckList;
+	}
+
+	public boolean isTechnicalTemplateEdited() {
+		return technicalTemplateEdited;
+	}
+
+	public void setTechnicalTemplateEdited(boolean technicalTemplateEdited) {
+		this.technicalTemplateEdited = technicalTemplateEdited;
+	}
+
+	public boolean isFromSubmit() {
+		return fromSubmit;
+	}
+
+	public void setFromSubmit(boolean fromSubmit) {
+		this.fromSubmit = fromSubmit;
+	}
+
 	public ScQtCheckList getTempScQtChecklist() {
 		return tempScQtChecklist;
 	}
@@ -10732,5 +10756,5 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setFinTempScQtChecklist(ScQtCheckList finTempScQtChecklist) {
 		this.finTempScQtChecklist = finTempScQtChecklist;
 	}
-	// 1873 - end - note 97
+	// 1873 - end
 }
