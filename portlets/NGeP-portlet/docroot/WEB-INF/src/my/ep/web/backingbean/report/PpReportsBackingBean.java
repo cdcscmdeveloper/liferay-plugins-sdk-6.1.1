@@ -2037,12 +2037,12 @@ public class PpReportsBackingBean extends
 		Integer total1 = 0;
 		Integer total2 = 0;
 		Integer total3 = 0;
-		
+		//#29484 - Start
 		//start kementerian tab
 		ArrayList<String> columnHeaderListMinistry = new ArrayList<String>(Arrays.asList(
 				"BIL.","KEMENTERIAN","BILANGAN PTJ eP ENABLE",
-				"BILANGAN PERANCANGAN PEROLEHAN DILULUSKAN","BILANGAN PERANCANGAN PERBELANJAAN DILULUSKAN"
-		));
+				"BILANGAN PTJ PERANCANGAN PEROLEHAN DILULUSKAN","BILANGAN PTJ PERANCANGAN PERBELANJAAN DILULUSKAN"
+		)); //#29484 - End
 		Sheet sheetItemList = createSheetBase(wb, createHelper, "Senarai Kementerian", titleReport, 
 				columnHeaderListMinistry, columnHeaderListMinistry.size(),true,tahun);
         
