@@ -17381,7 +17381,9 @@ if (null != checklist && !checklist.isEmpty()) {
 											throw new EpException(MessageConst.ERROR_760520);
 										}
 										// #33493 - Start.
-										else if ( indicativeUnitPrice != null  && (estimatedCost==null || (estimatedCost != null && estimatedCost.compareTo(BigDecimal.ZERO) == 0))) {
+										// #25138 - Bug #32194 - Start.
+										else if (indicativeUnitPrice.compareTo(BigDecimal.ZERO) == 0) {
+										// #25138 - Bug #32194 - End.
 										//Bug #32477 related to #25138
 										//comment code replace new condition
 										//else if ( indicativeUnitPrice != null  && (estimatedCost==null || estimatedCost == null)) {
