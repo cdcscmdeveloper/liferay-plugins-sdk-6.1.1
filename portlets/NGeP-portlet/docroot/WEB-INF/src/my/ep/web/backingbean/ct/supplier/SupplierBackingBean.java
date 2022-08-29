@@ -1076,8 +1076,9 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
 
 		String[] splittedBankDetails = splittedAccNoAndBankname();
-		if ((splittedBankDetails[0] != null && !splittedBankDetails[0].isEmpty())
-				&& (splittedBankDetails[1] != null && !splittedBankDetails[1].isEmpty())) {
+		//Start Fix - #33856
+		if (splittedBankDetails != null && ((splittedBankDetails[0] != null && !splittedBankDetails[0].isEmpty())
+				&& (splittedBankDetails[1] != null && !splittedBankDetails[1].isEmpty()))) {
 			SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(splittedBankDetails[0]);
 			SmSupplierBank supplierBankname = getManagedBean().getSupplierBankName().get(splittedBankDetails[1]);
 
@@ -1088,10 +1089,12 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 					getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBankname.getBankBranch());
 					getManagedBean().getContractVer().getCtContractValue()
 							.setBankAddress(CtAddressUtil.convertSmAddressToCtAddress(supplierBankname.getSmAddress()));
+					getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(supplierBankname.getAccountNo());				
 				}
 			}
 
 		}
+	    // End Fix - #33856
 	}
 	//End Fix - #33399
 
