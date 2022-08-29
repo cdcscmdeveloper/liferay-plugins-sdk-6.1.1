@@ -841,6 +841,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @return String
 	 */
 	public String submitRegistration() {
+		
+		//#33850 START
+		if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)){
+			this.getManagedBean().setSameAsOwner(true);
+		}
+		//#33850 END
+		
 		setAdminSameAsOwner();
 		SmSupplier smSupp = this.getManagedBean().getSmSupp();
 		SmAppl smAppl = this.getManagedBean().getSmAppl();
