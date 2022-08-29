@@ -46,20 +46,21 @@
 					update="@form" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
 				<ui:remove> #29007 - end</ui:remove>
-				
+				<ui:remove>START - #33639 (by include another checking by LOA Doc Type during render the cancel button)</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-					rendered="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and isPendingSubmissionStatus and !isSqStillValid}"
+					rendered="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and isPendingSubmissionStatus and !isSqStillValid and isDocTypePurchaseRequest}"
 					action="#{lOADetailBackingBean.cancelPrepareLoaAction}" process="@form"
 					update="@form" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
-	
+	            		<ui:remove>END - #33639</ui:remove>
 				<!-- Enhancement #22211 START -->
+				<ui:remove>START - #33639</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}" id="cancelLoaBtn"
-					rendered="#{isLoaGenerated and isPendingSubmissionStatus and isSqStillValid}"
+					rendered="#{isLoaGenerated and isPendingSubmissionStatus and isSqStillValid and isDocTypePurchaseRequest}"
 					action="#{lOACancelDetailBackingBean.cancelationLOA(lOADetailBackingBean.managedBean.scLoa.loaId)}"
 					process="@form" update="@form" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
-
+				<ui:remove>END - #33639</ui:remove>
 				<p:tooltip for="cancelLoaBtn">
 					<h:outputText
 						value="#{lbl['lbl.sc.loa.cancel.btn.tooltip.loaprepare']}"
@@ -209,4 +210,3 @@
 	</p:dialog>
 	<ui:remove> #29007 End Vinod </ui:remove>
 </ui:composition>
-	
