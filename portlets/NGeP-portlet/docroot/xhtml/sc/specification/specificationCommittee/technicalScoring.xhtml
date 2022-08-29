@@ -259,7 +259,7 @@
 						value="#{specificationBackingBean.managedBean.technicalItemScoreSetting.passingScore}">
 						<p:ajax event="change" process="@this" partialSubmit="true" 
 							listener="#{specificationBackingBean.checkTechnicalItemPassingScore(specificationBackingBean.managedBean.technicalItemScoreSetting)}"/>
-					<ui:remove><!-- #33863 remove ac validate number -->	
+					<ui:remove><!-- #33863 remove ac validate number --></ui:remove>
 					<ui:remove><!--  	<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="3" integerOnly="true" /> 
