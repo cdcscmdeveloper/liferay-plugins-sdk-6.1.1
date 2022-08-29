@@ -16279,9 +16279,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		if (null != allTechnicalChecklist) {
 			boolean specChecklist = false;
 			boolean sampleChecklist = false;
-			
+			int i = 0;
+
 			for (ScQtCheckList checkList : allTechnicalChecklist) {
-				
+				if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
+					i++;
+
+				}
+
 				if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())
 						&& ((QTStatusConst.TS_PENDING_SUBMISSION.equals(checkList.getPmStatus().getStatusId()) || null != checkList
 								.getSampleStatus()
@@ -16293,8 +16298,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 				} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checkList
 						.getDefinationType().getParameterCode())) {
-					
-					if (specChecklist) {
+					if (specChecklist || i == 0) {
 						checkList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 					}
 					
