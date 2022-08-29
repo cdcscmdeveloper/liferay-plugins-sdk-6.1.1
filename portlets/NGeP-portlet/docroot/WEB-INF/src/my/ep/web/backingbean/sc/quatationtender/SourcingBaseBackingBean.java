@@ -296,16 +296,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// Redmine 25396: remove duplication option view by adding new drop down field
-		/** 
-		 * get faces scopes
-		 * 
-		 * @return FacesScopes
-		 */
-		private FacesScopes getFacesScopes() {
-			FacesScopes facesScopes = new FacesScopes();
-			return facesScopes;
-		}
-		// end of 25396
+	/** 
+	* get faces scopes
+	* 
+	* @return FacesScopes
+	*/
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	// end of 25396
 		
 	/**
 	 * To populate details into ScAttachment instance.
@@ -750,6 +750,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return user;
 	}
 
+	//Bug #33726 start
+	public PmUser retrieveUserDtlById(Long userId) {
+		PmUser user = null;
+		try {
+			UserReqDTO reqDTo = new UserReqDTO();
+			reqDTo.setUserId(userId);
+			UserResDTO resDTO = getUserSOGlobal().retrieveUserDtlById(reqDTo);
+			if (resDTO.isSuccessful() == true) {
+				user = resDTO.getPmUser();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return user;
+	}
+	//Bug #33726 end
+
 	protected IUserSO getUserSOGlobal() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 	}
@@ -765,7 +783,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected IQTDetailSO getQTDetailSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
-	
+
 	/**
 	 * To initialize remarks.
 	 * 
@@ -794,7 +812,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 
 			REMARK_CLASS prevRemark = null;
-			
 			if (scRemarks.size() > 0) {
 				prevRemark = scRemarks.get(0);
 				
@@ -2001,6 +2018,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if(isDirectLoa) {
 			//#24540 - start -
 			boolean setBondReq = true;
+			
 			if (null != scLoa.getQtType() 
 					&& null != scLoa.getQtType().getParameterId() 
 					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
@@ -3004,10 +3022,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				reqDTO.setUserId(userId);
-				reqDTO.setOrgType(OrganizationType.DIVISION.value());
-				OrgProfileResDTO resDTO = orgProfileSO
-						.retrieveOrgProfileListByOrgType(reqDTO);
+				reqDTO.setOrgType(OrganizationType.OTHERS.value());
+				
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 				List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
+				
 				if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
 					pmOrgProfile = pmOrgProfiles.get(0);
 				}
@@ -3016,6 +3035,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				orgProfileSO = null;
 			}
 		}
+		
 		return pmOrgProfile;
 	}
 	//20210716@asyrafhaziq - 30421 -end	
@@ -3948,51 +3968,107 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	
 	// Redmine 25396: remove duplication option view by adding new drop down field
-		/**
-		 * Checks if is supplier role.
-		 *
-		 * @return true, if is supplier role
-		 */
-		public boolean hasSupplierRole(){
-			if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-				return Boolean.TRUE;
-			} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
-				return Boolean.TRUE;
-			} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
-				return Boolean.TRUE;
-			} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
-				return Boolean.TRUE;
-			} else if(getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())) {
-				return Boolean.TRUE;
-			} else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
-				return Boolean.TRUE;
-			} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
-				return Boolean.TRUE;
-			} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
-				return Boolean.TRUE;
+	/**
+	 * Checks if is supplier role.
+	 *
+	 * @return true, if is supplier role
+	 */
+	public boolean hasSupplierRole(){
+		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+	
+	//29194 - Start
+	/**
+	 * To get userRole Code
+	 * 
+	 * @return String roleCode
+	 */
+	public String getUserRoleCodeSQ() {
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
+		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
+		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
+		List<String> roleCodes = new ArrayList<String>();
+		roleCodes.add(RoleCode.GOVT_SELLER.value());
+		roleCodes.add(RoleCode.G2G_SUPPLIER_USER.value());
+		roleCodes.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
+		roleCodes.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
+		roleCodes.add(RoleCode.MOF_SUPPLIER_USER.value());
+		roleCodes.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		roleCodes.add(RoleCode.BASIC_SUPPLIER_USER.value());
+		roleCodes.add(RoleCode.REQUISITIONER.value());
+		roleCodes.add(RoleCode.RN_APPROVER.value());
+		roleCodes.add(RoleCode.CT_APPROVER.value());
+		roleCodes.add(RoleCode.BPK_APPROVER.value());
+		roleCodes.add(RoleCode.DESK_OFFICER.value());
+		roleCodes.add(RoleCode.SC_SECRETARY.value());
+		roleCodes.add(RoleCode.SC_MEMBER.value());
+		roleCodes.add(RoleCode.SC_CHAIRPERSON.value());
+
+		String roleCode = null;
+
+		List<String> pmRoleCodes = new ArrayList<String>();
+
+		if (null != roleDesc) {
+			for (PmRoleDesc pmRoleDesc : roleDesc) {
+				pmRoleCodes.add(pmRoleDesc.getPmRole().getRoleCode());
 			}
-			return Boolean.FALSE;
+			
+			if (pmRoleCodes.contains(RoleCode.REQUISITIONER.value())) {
+				roleCode = RoleCode.REQUISITIONER.value();
+			}else{
+				for (String role : roleCodes) {
+					if (pmRoleCodes.contains(role)) {
+						roleCode = role;
+						break;
+					}
+				}
+			}		
 		}
-		
-		/**
-		 * Check is it login user is Government User
-		 * 
-		 * @return true, if user is Government User
-		 */
-		protected boolean hasGovernmentUserRole() {
-			if (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()))
-				return true;
-			else if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()))
-				return true;
-			else if (getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value()))
-				return true;
-			else if (getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value()))
-				return true;		
-			else if (getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value()))
-				return true;		
-			else
-				return false;		
+		return roleCode;
+	}
+	//29194 - End
+	
+	/**
+	 * Check is it login user is Government User
+	 * 
+	 * @return true, if user is Government User
+	 */
+	protected boolean hasGovernmentUserRole() {
+		if (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())) {
+			return true;
+		} else if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+			return true;
+		} else if (getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())) {
+			return true;
+		} else if (getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())) {
+			return true;
+		} else if (getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())) {
+			return true;
+		} else {
+			return false;
 		}
+	}
 	// end of 25396
 
 	// ----------------------------------- group of #18685 - start ----------------------------------------
@@ -4014,6 +4090,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		try {
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			reqDTO.setQtId(scqt.getQtId());
 			reqDTO.setCommType(EvaluationReport.getName(committeeType));
@@ -4053,8 +4130,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						//createReportForSF(scqt); 
 					}
 				}
-				getManagedBean().setScQtEvaluationReportList(
-						resDTO.getReports());
+				
+				getManagedBean().setScQtEvaluationReportList(resDTO.getReports());
 			}
 				
 		
@@ -4066,29 +4143,28 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 					.equalsIgnoreCase(committeeType)) {
 				ScAttachment attachment = scqt.getScOpenCommitteeReportAttachment();
+				
 				this.getManagedBean().setReportDownloadFileName(
 						"NGeP-QT-Opening-Committee-Report");
-
 				this.getManagedBean().setScAttachment(attachment);
 
 			} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(committeeType)) {
 				ScAttachment attachment = scqt.getScTechnicalEvaluationReportAttachment();
+				
 				this.getManagedBean().setReportDownloadFileName(
 						"NGeP-QT-TechnicalEvaluation-Committee-Report");
-
 				this.getManagedBean().setScAttachment(attachment);
 
 			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(committeeType)) {
 				ScAttachment attachment = scqt.getScFinancialEvaluationReportAttachment();
+
 				this.getManagedBean().setReportDownloadFileName(
 						"NGeP-QT-FinancialEvaluation-Committee-Report");
-
 				this.getManagedBean().setScAttachment(attachment);
 
 			}
-			log.debug("end retrieveReportTabDtl");
 		} finally {
 			evaluationSO = null;
 		}
@@ -4103,7 +4179,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param scqt
 	 */
 	private void createReportForSF(PmDocument document, ScQtFinalization scQtFinalization, Long qtId) {
-		log.debug("Entered " + this.getClass().getName() +".createReportForSF");
 		DocumentReqDTO docReqDTO = new DocumentReqDTO();
 		docReqDTO.setDocName(document.getDocName());
 		docReqDTO.setDocumentId(qtId);
@@ -4178,17 +4253,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				.getNewBriefingPaperReportList();
 		List<ScAttachment> attachments = new ArrayList<ScAttachment>();
 
-		for(ScQtFinalizationReport scQtFinalizationReport:scQtFinalizationReports){
-			if(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD.equalsIgnoreCase(scQtFinalizationReport.getDefinationType().getParameterCode())){
-				if(null!=scQtFinalizationReport.getScQtFinalizationReportAttachment()){
+		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReports) {
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+					.equalsIgnoreCase(scQtFinalizationReport
+							.getDefinationType().getParameterCode())) {
+				if(null!=scQtFinalizationReport.getScQtFinalizationReportAttachment()) {
 					attachments.add(scQtFinalizationReport.getScQtFinalizationReportAttachment());	
 				}
 			}
 			
 		}
+		
 		attachments.add(generateDocumentAttachment(scqt, ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER));
-		downloadAllFiles(this.getManagedBean().getReportDownloadFileName(),
-				attachments);
+		
+		downloadAllFiles(this.getManagedBean().getReportDownloadFileName(), attachments);
 	}
 	// #18685-End.
 	
@@ -4200,8 +4278,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @throws Exception
 	 */
 	private ScAttachment generateDocumentAttachment(ScQt scqt, String committeeType) throws Exception {
-		log.debug(this.getClass().getName() + ".generateDocumentAttachment()");
-		
 		ScAttachment reportAttachment = new ScQtFinalizationReportAttachment();
 		ScQt scQt = scqt;
 		
@@ -4224,9 +4300,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		fileName.append(".pdf");
 		reportAttachment.setFileName(fileName.toString());
 		reportAttachment.setDocNo(scQt.getQtNo());
-		generateEvaluationPdf(
-				(ScAttachment) reportAttachment,
-				scqt, committeeType);
+		
+		generateEvaluationPdf((ScAttachment) reportAttachment, scqt, committeeType);
 		
 		return reportAttachment;
 	}
@@ -4240,12 +4315,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	private void generateEvaluationPdf(ScAttachment attachment, ScQt qt, String committeeType)
 			throws Exception {
-		log.debug(this.getClass().getName() + ".generateEvaluationPdf()");
 		populateAttachmentDetails(attachment);
 		
 		FacesScopes facesScopes = new FacesScopes();
 		long qtId = qt.getQtId();
 		String reportName = StringUtils.EMPTY;
+		
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 				.equals(committeeType)) {
 			reportName = ReportConst.SC_EC_RPT_JSP;
@@ -4262,10 +4337,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		String estimatedAmountStr = null;
 		IQTDetailSO qtDetailSO = null;
+		
 		try {
 			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			BigDecimal estimatedAmount = qtDetailSO.getdecryptedEstAmount(qtId);
+			
 			if (null != estimatedAmount) { 
 				estimatedAmountStr = estimatedAmount.toPlainString();
 			}
@@ -4296,20 +4373,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 *               (BaseEntity delEntity).
 	 */
 	public void deleteReportsUploadFile(BaseEntity delEntity) {
-		log.debug("deleteUploadFile");
-		
-		try{
-		log.debug("deleteReportsUploadFile");
-		ScQtFinalizationReport selectedEvaluationReport = getManagedBean()
-				.getSelectedBriefingReport();
-		selectedEvaluationReport.setScQtFinalizationReportAttachment(null);
-		 getManagedBean()
-			.setSelectedBriefingReport(selectedEvaluationReport);
-		}finally{
-		
-		}
+		try {
+			ScQtFinalizationReport selectedEvaluationReport = getManagedBean()
+					.getSelectedBriefingReport();
+			selectedEvaluationReport.setScQtFinalizationReportAttachment(null);
+			getManagedBean().setSelectedBriefingReport(selectedEvaluationReport);
+		} finally {
 
+		}
 	}
+
 	// #18685-End.
 	
 	// #18685-Start.	
@@ -4364,6 +4437,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public void validateEvaluationReports(String taskType){
 		List<ScQtFinalizationReport> scQtFinalizationReportList = this.getManagedBean().getNewBriefingPaperReportList();
+		
 		if (null != scQtFinalizationReportList && scQtFinalizationReportList.size() > 0) {
 			String reportNames = "";
 
@@ -4436,13 +4510,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		                IQTSuppFinalizationSO.class);
 		    SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 		    ScQtFinalization scQtFinalization = this.getManagedBean().getNewBriefingPaperReportList().get(0).getScQtFinalization();
+		   
 		    if (scQtFinalization == null) {
 		      scQtFinalization = new ScQtFinalization();
 		    }
+		    
 		    reqDTO.setScQtFinalization(scQtFinalization);
 		    reqDTO.setQtReportIdList(qtReportIds);
 		    reqDTO.setDocumentCategory(this.getManagedBean().getNewBriefingPaperReportList().get(0).getDocCategory());
+		    
 		    SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveFinalizationReport(reqDTO);
+		    
 		    if (null != resDTO && null != resDTO.getScQtFinalizationReports()
 		    		&& resDTO.getScQtFinalizationReports().size() > 0) {
 		    repLoop:	for (ScQtFinalizationReport repScQtFinalizationReport : resDTO.getScQtFinalizationReports()) {
@@ -4569,7 +4647,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			
 			DocumentResDTO documentResDTO = documentSO.retrieveDocuementsByDocDefKeys(documentReqDTO);
 			
-			if(documentResDTO.isSuccessful()){
+			if (documentResDTO.isSuccessful()) {
 				if (scQtFinalization == null) {
 					scQtFinalization = new ScQtFinalization();
 				}
@@ -4693,6 +4771,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 						if (null == getManagedBean().getConsolidationBriefingPaperReportList()) {
 							List<ScQtFinalizationReport> consolidationBriefingPaperReportList = new ArrayList<>();
+							
 							getManagedBean().setConsolidationBriefingPaperReportList(
 									consolidationBriefingPaperReportList);
 						}
@@ -4746,9 +4825,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				getManagedBean().getNewBriefingPaperReportList().addAll(tempList);
 			}
 
-			log.info("checkKertasTaklimatReports count" + count);
+//			log.info("checkKertasTaklimatReports count" + count);
 			if (count == 1) {
-				log.info("enter count1" + count);
+//				log.info("enter count1" + count);
 				for (ScQtFinalizationReport finalizationReport : finalizationReports) {
 					
 					if (null != finalizationReport.getPmDocument()
@@ -4759,14 +4838,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 				}
 			} else if (count > 1) {
-				log.info("enter countGreaterThan1" + count);
+//				log.info("enter countGreaterThan1" + count);
 				String SPACE = " ";
 				String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE)
 						+ SPACE
 						+ "("
 						+ (count - 1) + ")";
-				log.info("reportTitle" + reportTitle);
+//				log.info("reportTitle" + reportTitle);
 				
 				for (ScQtFinalizationReport finalizationReport : finalizationReports) {
 					if (null != finalizationReport.getPmDocument()
@@ -4798,13 +4877,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			ScQtFinalization scQtFinalization = finalizationReport.getScQtFinalization();
+			
 			if (scQtFinalization == null) {
 				scQtFinalization = new ScQtFinalization();
 			}
 			
 			reqDTO.setScQtFinalization(scQtFinalization);
+			
 			List<Long> qtReportIds = new ArrayList<Long>();
 			qtReportIds.add(finalizationReport.getQtReportId());
+			
 			reqDTO.setQtReportIdList(qtReportIds);
 			reqDTO.setDocumentCategory(finalizationReport.getDocCategory());
 
@@ -4814,6 +4896,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					&& resDTO.getScQtFinalizationReports().size() > 0) {
 				ScQtFinalizationReport scQtFinalizationReport = resDTO.getScQtFinalizationReports().get(0);
 				int index = 0;
+				
 				for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
 					if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())) {
 						getManagedBean().getNewBriefingPaperReportList().get(index)
@@ -4821,6 +4904,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						reportFound = true;
 						break;
 					}
+					
 					index++;
 				}
 			}
@@ -5344,12 +5428,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
 
 			if (ruleResDTO.isSuccessful()) {
-				if (ruleResDTO.getRuleValueList() != null && ruleResDTO.getRuleValueList().size() > 0) {
+				if(ruleResDTO.getRuleValueList()!=null && ruleResDTO.getRuleValueList().size()>0) {
 					indPriceThreshold = new BigDecimal(ruleResDTO.getRuleValueList().get(0).getRuleValue());
 				} else {
-					throw new EpException(MessageConst.ERROR_770222,
-							new String[] { getRuleTypeDesc(ruleReqDTO.getRuleType()) });
-				}
+					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+				}	
 			}
 
 		} finally {
@@ -5359,19 +5442,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return indPriceThreshold;
 	}
 	
-    //QT threshold RM20k - 50k
+	// 25729 QT threshold RM20k - 50k -start-
 	public boolean expectTotalIndPriceBetweenThreshold(ScQt scQt) {
 		BigDecimal tmpExpectedIntendedPrice = scQt.getTmpExpectedIntendedPrice();
-
+			
 		if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
-			log.info(":::expectTotalIndPriceBetweenThreshold() scQt.isPanel(): " + scQt.isPanel() + " :::");
-			log.info(":::expectTotalIndPriceBetweenThreshold() tmpExpectedIntendedPrice: " + tmpExpectedIntendedPrice
-					+ " :::");
-			log.info(":::expectTotalIndPriceBetweenThreshold() tmpExpectedIntendedPrice.doubleValue: "
-					+ tmpExpectedIntendedPrice.doubleValue() + " :::");
+			log.info(":::expectTotalIndPriceBetweenThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
+			log.info(":::expectTotalIndPriceBetweenThreshold() tmpExpectedIntendedPrice: "+ tmpExpectedIntendedPrice +" :::");
+			log.info(":::expectTotalIndPriceBetweenThreshold() tmpExpectedIntendedPrice.doubleValue: "+ tmpExpectedIntendedPrice.doubleValue() +" :::");
 
-			if (SourcingConstants.QT_BELOW_20K <= tmpExpectedIntendedPrice.doubleValue()
-					&& SourcingConstants.QT_BELOW_50K >= tmpExpectedIntendedPrice.doubleValue()) {
+			if (SourcingConstants.QT_BELOW_20K <= tmpExpectedIntendedPrice.doubleValue() &&
+					SourcingConstants.QT_BELOW_50K >= tmpExpectedIntendedPrice.doubleValue()) {
 
 				return Boolean.TRUE;
 			}
@@ -5379,8 +5460,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return Boolean.FALSE;
 	}
+	// 25729 QT threshold RM20k - 50k -end-
 
-    // #25729 #142 Start - Allow create QT below threshold RM20k
+	// #25729 #142 Start - Allow create QT below threshold RM20k
 	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt, String ScreenType) {
 		BigDecimal actualIntendedPrice = new BigDecimal(0);
 
@@ -5391,10 +5473,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 
 		if (!scQt.isPanel() && actualIntendedPrice != null) {
-			log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): " + scQt.isPanel() + " :::");
-			log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: " + actualIntendedPrice + " :::");
+			log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
+			log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: "+ actualIntendedPrice +" :::");
 
-			// #25729 #174
+			// #25729 #174			 
 			if ((actualIntendedPrice.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <= 0)) {
 				return Boolean.TRUE;
 			}
@@ -5402,8 +5484,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return Boolean.FALSE;
 	}
-	//#25729 #142 end
-	//Enhancement #25729 Allow create QT below threshold RM20k - end - 
+	// #25729 #142 end
+	// Enhancement #25729 Allow create QT below threshold RM20k - end -
 	
 	// #25638 - Start
 	public void displayReviseInstrn(List<ScQtCommitteeActivity> committeeList) {
@@ -5438,61 +5520,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	// #25638 - End
-	
-	//29194 - Start
-	/**
-	 * To get userRole Code
-	 * 
-	 * @return String roleCode
-	 */
-	public String getUserRoleCodeSQ() {
-		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
-		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
-		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
-		List<String> roleCodes = new ArrayList<String>();
-		roleCodes.add(RoleCode.GOVT_SELLER.value());
-		roleCodes.add(RoleCode.G2G_SUPPLIER_USER.value());
-		roleCodes.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
-		roleCodes.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
-		roleCodes.add(RoleCode.MOF_SUPPLIER_USER.value());
-		roleCodes.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
-		roleCodes.add(RoleCode.BASIC_SUPPLIER_USER.value());
-		roleCodes.add(RoleCode.REQUISITIONER.value());
-		roleCodes.add(RoleCode.RN_APPROVER.value());
-		roleCodes.add(RoleCode.CT_APPROVER.value());
-		roleCodes.add(RoleCode.BPK_APPROVER.value());
-		roleCodes.add(RoleCode.DESK_OFFICER.value());
-		roleCodes.add(RoleCode.SC_SECRETARY.value());
-		roleCodes.add(RoleCode.SC_MEMBER.value());
-		roleCodes.add(RoleCode.SC_CHAIRPERSON.value());
-
-		String roleCode = null;
-
-		List<String> pmRoleCodes = new ArrayList<String>();
-
-		if (null != roleDesc) {
-			for (PmRoleDesc pmRoleDesc : roleDesc) {
-				pmRoleCodes.add(pmRoleDesc.getPmRole().getRoleCode());
-			}
-			
-			if (pmRoleCodes.contains(RoleCode.REQUISITIONER.value())) {
-				roleCode = RoleCode.REQUISITIONER.value();
-			}else{
-				for (String role : roleCodes) {
-					if (pmRoleCodes.contains(role)) {
-						roleCode = role;
-						break;
-					}
-				}
-			}		
-		}
-		return roleCode;
-	}
-	//29194 - End
 	
 	//25037 - Start
 	public boolean validateSupportedTask(String docNo, Long validityId) {
@@ -5837,9 +5864,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 			}
 		}
+		
 		return supplierRemarks;
 	}
+    // #11134 - End
 
+    // #11134 - Start
 	protected List<Long> getUserSupplierListByUserIds(List<Long> userIds) {
 		List<Long> result = new ArrayList<>();
 		IUserSO userSO = null;
