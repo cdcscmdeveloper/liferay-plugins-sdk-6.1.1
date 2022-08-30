@@ -646,4 +646,12 @@ public class SmServiceLookup {
 						IUpgradeRoleSO.class);
 	}
 	//END LOG 12491
+	
+	//#30457-start
+	public static ICatalogueSO getCatalogueSO() {
+		return (ICatalogueSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
+						ICatalogueSO.class);
+	}
+	//#30457-end
 }
