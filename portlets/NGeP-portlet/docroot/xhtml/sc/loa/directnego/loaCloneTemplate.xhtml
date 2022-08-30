@@ -129,8 +129,7 @@
 						</tr>
 						
 						<tr>
-							<td><h:outputLabel
-									value="#{lbl['lbl.sc.created.date.from']}" /></td>
+							<td><h:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>
 							<td><p:calendar onkeypress="if (event.keyCode == 13) { loaCloneTemplateSpecSearch.jq.click(); return false; }"
 									value="#{directLOABackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}"
 									id="crdateFrom" showOn="button" readonlyInput="true"
@@ -152,11 +151,17 @@
 
 						<tr>
 							<td><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
-							<td><p:selectOneMenu
+							<td><p:selectOneMenu rendered="#{directLOABackingBean.managedBean.standardTemplate eq ParameterConst.tplDocProcessTypeSourcing}"
 									value="#{directLOABackingBean.managedBean.qtnTendertemplateSearchBean.qtStatus}"
 									style="width: 210px;margin-bottom: 5px;">
 									<f:selectItems
 										value="#{directLOABackingBean.getStatusDropdownValues('SC', 'QT')}" />
+								</p:selectOneMenu>
+								<p:selectOneMenu rendered="#{directLOABackingBean.managedBean.standardTemplate ne ParameterConst.tplDocProcessTypeSourcing}"
+									value="#{directLOABackingBean.managedBean.qtnTendertemplateSearchBean.qtStatus}"
+									style="width: 210px;margin-bottom: 5px;">
+									<f:selectItems
+										value="#{directLOABackingBean.getStatusDropdownValues('SC', 'LA')}" />
 								</p:selectOneMenu></td>
 						</tr>
 
