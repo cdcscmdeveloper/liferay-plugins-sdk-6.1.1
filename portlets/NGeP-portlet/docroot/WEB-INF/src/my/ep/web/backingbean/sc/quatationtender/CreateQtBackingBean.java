@@ -545,34 +545,246 @@ public class CreateQtBackingBean extends
 					updateTechnicalAndFinacialSpecStatusZoneLocationChange(zoneCriteria);
 				}
 			}
+	// #32929 - start
+			this.getManagedBean().setZoneRdbButtonChecked(true);
 		} else {
-			this.getManagedBean().setZoneGeneralTrees(null);
-			//supplierCriteria.setQtZoneCriterias(null);
-			if (null == supplierCriteria.getLocationLevel()) {
-				supplierCriteria.setLocationLevel(new PmParameter());
+			if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(scQt
+					.getQtStatus().getStatusId()) && !this.getManagedBean().isZoneRdbButtonChecked()
+					&& !this.getManagedBean().getPanel()) {
+				RequestContext.getCurrentInstance().execute(
+						"scQtZoneChangeDlgs.show()");
+			}else{
+				this.getManagedBean().setZoneGeneralTrees(null);
+				//supplierCriteria.setQtZoneCriterias(null);
+				if (null == supplierCriteria.getLocationLevel()) {
+					supplierCriteria.setLocationLevel(new PmParameter());
+				}
+	
+				this.getManagedBean().setZoneGeneralTrees(null);
+				this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
+				if (null != supplierCriteria
+						&& supplierCriteria.isBrandNew() == false
+						&& scQt.isPanel() == false) {
+					if (null != this.getManagedBean().getLoginRoleType()
+							&& !"".equals(this.getManagedBean().getLoginRoleType())
+							&& "SC".equalsIgnoreCase(this.getManagedBean()
+									.getLoginRoleType())) {
+						updateTechnicalAndFinacialSpecStatusZoneLocationChange(null);
+						 this.getManagedBean()
+							.setDeliveryLocRemoveList(null);
+						 this.getManagedBean().setDeliveryLocBean(
+									null);
+						deleteDeliveryAdreesZoneDetails(scQt);
+					}
+				}
 			}
+	
+			scQt.setScQtSupplierCriteria(supplierCriteria);
+		}
+	}
+	// #32929 - end
+	
+	// #32929 - start
+	/**
+	 * Popup zonal No confirmation.
+	 */
+	public void zoneNoConfirmation() {
+		
+		Boolean panel = this.getManagedBean().getPanel();
+		ScQt scQt = this.getManagedBean().getQt();
+		if (!panel) {
+			scQt.setZonal(true);
+		}
 
-			this.getManagedBean().setZoneGeneralTrees(null);
-			this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
-			if (null != supplierCriteria
-					&& supplierCriteria.isBrandNew() == false
-					&& scQt.isPanel() == false) {
-				if (null != this.getManagedBean().getLoginRoleType()
-						&& !"".equals(this.getManagedBean().getLoginRoleType())
-						&& "SC".equalsIgnoreCase(this.getManagedBean()
-								.getLoginRoleType())) {
-					updateTechnicalAndFinacialSpecStatusZoneLocationChange(null);
-					 this.getManagedBean()
-						.setDeliveryLocRemoveList(null);
-					 this.getManagedBean().setDeliveryLocBean(
-								null);
-					deleteDeliveryAdreesZoneDetails(scQt);
+	}
+	
+	/**
+	 * Popup zonal Yes confirmation.
+	 */
+	public void zoneYesConfirmation() {
+		
+		boolean flag = true;
+		List<TreeNode> list = getManagedBean().getZoneGeneralTrees();
+		if (null != list) {
+			for (TreeNode node : list) {
+				for (TreeNode childNode : node.getChildren()) {
+					if (childNode.getChildCount() > 0) {
+						for (TreeNode node2 : childNode.getChildren()) {
+							node2.setSelected(flag);
+						}
+					}
+					childNode.setSelected(flag);
 				}
 			}
 		}
-
+		
+		deleteZoneTreeNode();
+		
+		
+		ScQt scQt = this.getManagedBean().getQt();
+		ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
+		
+		this.getManagedBean().setZoneGeneralTrees(null);
+		if (null == supplierCriteria.getLocationLevel()) {
+			supplierCriteria.setLocationLevel(new PmParameter());
+		}
+		
+		this.getManagedBean().setZoneGeneralTrees(null);
+		this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
 		scQt.setScQtSupplierCriteria(supplierCriteria);
+
 	}
+	
+	/**
+	 * Delete tree node.Event handle delete NonPanel Zones from General
+	 * information.
+	 */
+	public void deleteZoneTreeNode() {
+		
+		getManagedBean().setSelectedFlag(true);
+		List<TreeNode> rootTrees = this.getManagedBean().getZoneGeneralTrees();
+
+		deleteZonesTreeNodes(rootTrees);
+		TplSpecZoneDtl zoneDtl = null;
+		// zone details
+		if (!rootTrees.isEmpty()) {
+			
+			ScQtZoneCriteria zonCriteria = getManagedBean().getQt()
+					.getScQtSupplierCriteria().getQtZoneCriterias();
+			zonCriteria.setTplSpecZoneDtls(
+							convertTreeNodesToZoneCriteria(rootTrees, zoneDtl));
+			// setting into zones bean to validate zones while adding 
+			if (CollectionUtils.isNotEmpty(zonCriteria.getTplSpecZoneDtls())) {
+				List<ZonesBean> zonBeansList = new ArrayList<ZonesBean>();
+				for (TplSpecZoneDtl tplSpecZoneDtl : zonCriteria
+						.getTplSpecZoneDtls()) {
+					ZonesBean bean = new ZonesBean();
+					bean.setTplSpecZoneDtl(tplSpecZoneDtl);
+					zonBeansList.add(bean);
+				}
+				this.getManagedBean().setBeans(zonBeansList);
+			}
+		}
+		
+		ScQt scQt = getManagedBean().getQt();
+		if (scQt.isZonal() &&  scQt.isPanel() ){
+			List<TplSpecZoneDtl> specZoneDtls = null;
+			
+			if (!rootTrees.isEmpty()){
+				specZoneDtls = convertTreeNodesToZoneCriteria(rootTrees, zoneDtl);
+			}
+			else{
+				specZoneDtls = new  ArrayList<TplSpecZoneDtl>();
+			}
+			 retrieveZoneGeneralTreesPanel(scQt, specZoneDtls);
+			}
+		
+		ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean().getQt()
+				.getScQtSupplierCriteria();
+		if (null != zoneSupplierCriteria
+				&& zoneSupplierCriteria.isBrandNew() == false&& null!=zoneSupplierCriteria.getQtZoneCriterias() && zoneSupplierCriteria.getQtZoneCriterias().isBrandNew()==false) {
+			if (null != this.getManagedBean().getLoginRoleType()
+					&& !"".equals(this.getManagedBean().getLoginRoleType())
+					&& "SC".equalsIgnoreCase(this.getManagedBean()
+							.getLoginRoleType())) {
+			updateZoneChangeSpecStatus();
+			 this.getManagedBean()
+				.setDeliveryLocRemoveList(null);
+			 this.getManagedBean().setDeliveryLocBean(
+						null);
+			deleteDeliveryAdreesZoneDetails(this.getManagedBean().getQt());
+			}
+		
+		}
+		this.getManagedBean().setIndex(-1);
+
+	}
+	
+	/**
+	 * Update spec checklist when QT Zonal change to Non Zonal
+	 */
+	private void updateZoneChangeSpecStatus() {
+		try {
+			
+			List<ScQtCheckList> technicalSpecCheckList = this.getManagedBean()
+					.getScQtCheckSt2techProposal();
+			if (null == technicalSpecCheckList
+					|| technicalSpecCheckList.isEmpty()) {
+				SpecificationBackingBean specBackingBean=new SpecificationBackingBean();
+				specBackingBean.retriveTechnicalCheckList();
+				technicalSpecCheckList = this.getManagedBean()
+						.getScQtCheckSt2techProposal();
+			}
+			List<ScQtCheckList> financialSpecCheckList = this.getManagedBean()
+					.getScQtCheckSt2financeProposalList();
+			if (null == financialSpecCheckList
+					|| financialSpecCheckList.isEmpty()) {
+				SpecificationBackingBean specBackingBean=new SpecificationBackingBean();
+				specBackingBean.retriveFinancialCheckList();
+				financialSpecCheckList = this.getManagedBean()
+						.getScQtCheckSt2financeProposalList();
+			}
+			boolean financialSpecZonesEstimatedpriceUpdate = Boolean.FALSE;
+			if (null != financialSpecCheckList
+					&& !financialSpecCheckList.isEmpty()) {
+				
+				this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
+				for (ScQtCheckList financialchecklist : financialSpecCheckList) {
+					if (QTConstants.TEMPLETE_SPEC_CODE
+							.equalsIgnoreCase(financialchecklist.getDefinationType()
+									.getParameterCode())) {
+						if (null != financialchecklist.getPmStatus()
+								&& (QTStatusConst.TS_PENDING_SUBMISSION
+										.equals(financialchecklist.getPmStatus().getStatusId()) ||
+									QTStatusConst.TS_COMPLETED
+										.equals(financialchecklist.getPmStatus().getStatusId()))) {
+							financialSpecZonesEstimatedpriceUpdate = Boolean.TRUE;
+							this.getManagedBean().setZonesWarnMessageUpdate(
+									Boolean.TRUE);
+							this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
+							//set financial checklist status to 9
+							financialchecklist.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+	
+						}
+					}
+					
+				}
+			}
+			if (null != technicalSpecCheckList
+					&& !technicalSpecCheckList.isEmpty()) {
+				PmStatus status = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+				this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
+				for (ScQtCheckList technicalchecklist : technicalSpecCheckList) {
+					if (QTConstants.TEMPLETE_SPEC_CODE
+							.equalsIgnoreCase(technicalchecklist.getDefinationType()
+									.getParameterCode())) {
+						if (null != technicalchecklist.getPmStatus()
+								&& QTStatusConst.TS_COMPLETED
+										.equals(technicalchecklist.getPmStatus()
+												.getStatusId())) {
+							financialSpecZonesEstimatedpriceUpdate = Boolean.TRUE;
+							this.getManagedBean().setZonesWarnMessageUpdate(
+									Boolean.TRUE);
+							this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
+							technicalchecklist.setPmStatus(status);
+
+						}
+					
+				}
+				}
+			}
+				if (financialSpecZonesEstimatedpriceUpdate == true) {
+					ZonesUpdateWarningMessage(this.getManagedBean()
+							.isZonesWarnMessageUpdate());
+
+				}
+			
+		} finally {
+
+		}
+
+	}
+	// #32929 - end
 	
 	private void updateTechnicalAndFinacialSpecStatusZoneLocationChange(
 			ScQtZoneCriteria zoneCriteria) {
