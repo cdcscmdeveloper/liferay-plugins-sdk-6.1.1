@@ -708,12 +708,14 @@ public class QtSpecCloneBackingBean extends
 							for(int i=0;i<specQuestion.getTplSpecZoneQties().size();i++){
 								specQuestion.getTplSpecZoneQties().get(i).setTplSpecZoneDtl(this.getManagedBean().getTemplateSpecZoneDtls().get(i));
 							}
-						}
+						}else{//33893-start
 						if(null!=specQuestion.getTplSpecZoneQties()&&CollectionUtils.isNotEmpty(specQuestion.getTplSpecZoneQties())){//25635&31545-start
 							for(TplSpecZoneQty zoneQty:specQuestion.getTplSpecZoneQties()){
 								zoneQty.setTplSpecZoneOffer(null);
 							}
 						}//25635&31545-start
+						specQuestion.setTplSpecZoneQties(new ArrayList<TplSpecZoneQty>());//33893	
+						}//33893-End
 						}
 						}
 					}//21695&25635-End
