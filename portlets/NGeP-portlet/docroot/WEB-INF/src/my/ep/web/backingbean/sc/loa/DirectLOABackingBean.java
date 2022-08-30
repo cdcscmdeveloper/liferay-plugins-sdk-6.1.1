@@ -297,6 +297,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
 			}
 			parseLOADetails(scLoa, outcome, reqDTO);
+			// #29468 Start Vinod
+			if(scLoa.getScQt().getPmProcurementCategory().getParameterId()==null){
+				throw new EpException(MessageConst.ERROR_775181);
+			}
+			// #29468 End Vinod
 			//20200325@asyrafhaziq _ Bug #27740 - Start
 			validateLoaAmount(scLoa);
 			//20200325@asyrafhaziq _ Bug #27740 - End
@@ -8505,12 +8510,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		try {
 			Long parameterId = scLoa.getScQt().getPmProcurementCategory().getParameterId();
 			
-			parameterSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterId(parameterId);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-			scLoa.getScQt().setPmProcurementCategory(resDTO.getPmParameter());
+			if(parameterId!=null){
+				parameterSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterId(parameterId);
+				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+				scLoa.getScQt().setPmProcurementCategory(resDTO.getPmParameter());
+			}
 			
 		} finally {
 			parameterSO = null;
@@ -11486,6 +11493,19 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		}  
 			
 		public void searchTemplateSpecAction() {
+			Date fromCreatedDate = getManagedBean().getQtnTendertemplateSearchBean().getFromCreatedDate();
+			Date toCreatedDate = getManagedBean().getQtnTendertemplateSearchBean().getToCreatedDate();
+			if (null == fromCreatedDate && toCreatedDate != null) {
+				throw new EpException(MessageConst.ERROR_775184);
+			}
+			if (null != fromCreatedDate && toCreatedDate != null) {
+				if (fromCreatedDate.after(toCreatedDate)) {
+					throw new EpException(MessageConst.ERROR_775182);
+				}
+				if (toCreatedDate.before(fromCreatedDate)) {
+					throw new EpException(MessageConst.ERROR_775183);
+				}
+			}
 			IPagingDataModel<TplSpecMaster> pagingData = getManagedBean().getTemplateSpecCreate();
 			if(null == pagingData){
 				pagingData = new CreateTemplateSpecPagingDataModel();

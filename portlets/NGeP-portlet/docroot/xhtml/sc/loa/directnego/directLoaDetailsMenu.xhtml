@@ -407,15 +407,15 @@
 						 <p:message
 						id="fileExtNoMsg" for="fileExtNo" display="icon" />
 				</td>
+				<!-- 29468 Start Vinod -->
 				<td width="160px">
 					<p:outputLabel	value="#{lbl['lbl.sc.procurement.category']}" /> 
 					<p:outputLabel	value="*" styleClass="mandatory" />
 				</td>
 				<td><c:choose>
 							<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
-							<p:selectOneMenu id="procBoCategory" required="true"
+							<p:selectOneMenu id="procBoCategory" 
 								style="margin-bottom:5px;width:206px;"
-								label="#{lbl['lbl.sc.procurement.category']}"
 								value="#{directLOABackingBean.managedBean.scLoa.scQt.pmProcurementCategory.parameterId}">
 								<f:selectItems
 									value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
@@ -431,7 +431,8 @@
 								value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.scLoa.scQt.pmProcurementCategory)}"
 								size="35" disabled="true" />
 						</c:otherwise>
-					</c:choose></td>
+				</c:choose></td>
+				<!-- 29468 End Vinod -->
 			</tr>
 			
 			<tr>
