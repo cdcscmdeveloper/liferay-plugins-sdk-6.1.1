@@ -475,7 +475,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				}
 				
 				if(getDocStatus()>0){
-					reqDTO.setStatus(getDocStatus());
+					//33849 - Start - Need to set to PA_PENDING_PAYMENT_MATCH because status in SOA for POCO Pending Payment Match is 46000
+					if(getDocStatus()== FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH || getDocStatus()== FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH){
+						reqDTO.setStatus(FulfilmentStatusConst.PA_PENDING_PAYMENT_MATCH.intValue());
+					}else{
+						reqDTO.setStatus(getDocStatus());
+					}
+					//33849 - End
 				}
 				
 				//Start - Task list sorting n search criteria date from and date to by Najmi 
@@ -683,7 +689,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				}*/
 				
 				if(getDocStatusGroup()>0){
-					reqDTO.setStatus(getDocStatusGroup());
+					//33849 - Start - Need to set to PA_PENDING_PAYMENT_MATCH because status in SOA for POCO Pending Payment Match is 46000
+					if(getDocStatusGroup()== FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH || getDocStatusGroup()== FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH){
+						reqDTO.setStatus(FulfilmentStatusConst.PA_PENDING_PAYMENT_MATCH.intValue());
+					}else{
+						reqDTO.setStatus(getDocStatusGroup());
+					}
+					//33849 - End
 				}
 				
 				reqDTO.setViewBy(getViewByGroup());
