@@ -66,6 +66,9 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+// 29961, #30457 - start
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+//29961, #30457 - end
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -78,6 +81,9 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.cm.CmConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+//29961, #30457 - start
+import my.ep.constant.pm.RuleTypeConst;
+//29961, #30457 - end
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
@@ -102,6 +108,10 @@ import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
+//29961, #30457 - start
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+//29961, #30457 - end
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -5114,7 +5124,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * @throws Exception
 	 *             the exception
 	 */
-	public String submitToReviewItems() throws Exception {
+	public String submitToReviewItems(boolean notSupplierTemp) throws Exception { //#30457 - add parameter to skip validation for supplier temp
 		log.debug("submitToReviewItems");
 
 		log.info("this.getManagedBean().getCloneCmSupplierItemLs(): " + this.getManagedBean().getCloneCmSupplierItemLs().size());
