@@ -7816,14 +7816,14 @@ public class EvaluationBackingBean extends
 							EvaluationResDTO demoResDTO = evaluationSo
 									.sendDemoNotificationsForSuppliers(demoReqDTO);
 							if (demoResDTO.isSuccessful()) {*///#28784 disable notification
-								this.getManagedBean().getScQt()
-										.setDemoNotificationCheck(1);
-								EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-								reqDTO.setScQt(this.getManagedBean().getScQt());
-								evalResDTO = evaluationSo
-										.saveReportDtls(reqDTO);
-								this.getManagedBean().setScQt(
-										evalResDTO.getScQt());
+//								this.getManagedBean().getScQt()
+//										.setDemoNotificationCheck(1);
+//								EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+//								reqDTO.setScQt(this.getManagedBean().getScQt());
+//								evalResDTO = evaluationSo
+//										.saveReportDtls(reqDTO);
+//								this.getManagedBean().setScQt(
+//										evalResDTO.getScQt());
 //							}//#28784 disable notification
 							}
 						}
