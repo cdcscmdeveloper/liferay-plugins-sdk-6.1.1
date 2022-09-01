@@ -1232,9 +1232,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 			items = new SelectItem[parameterDescs.size()];
 			int i = 0;
+			String codeName = "";//33849
 			for (PmParameterDesc parameterDesc : parameterDescs) {
+				//33849-Start
+				if(parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase("CO")){
+					codeName = ResourceBundleUtils.getMessage(
+							"lbl.rpt.drpdown.contractOrderlbl", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterCode(), codeName);
+				}else{
 				items[i++] = new SelectItem(parameterDesc.getPmParameter()
 						.getParameterCode(), parameterDesc.getCodeName());
+			}
+				//33849-End
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1390,11 +1401,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		try {		
 
 			out = response.getOutputStream();
-			byte[] buffer = new byte[4096];
+			byte[] buffer = new byte[40 * 1024];
 			int bytesRead;
 			while ((bytesRead = docInputStream.read(buffer)) != -1) {
 				out.write(buffer, 0, bytesRead);
-				buffer = new byte[4096];
+				buffer = new byte[40 * 1024];
 			}
 		} catch(Exception e) {
 			log.error(e);
