@@ -485,10 +485,10 @@ public class QtSpecCloneBackingBean extends
 							localcheckList.add(copy);
 						//}//32120
 					} else {
-						if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
-								.equalsIgnoreCase(checklist.getDefinationType().getParameterCode())) {//21695&25635-start
+						//33858if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+								//.equalsIgnoreCase(checklist.getDefinationType().getParameterCode())) {//21695&25635-start
 						localcheckList.add(copy);
-						}//21695&25635-End
+						//33858}//21695&25635-End
 					}
 				}
 			}
@@ -688,6 +688,11 @@ public class QtSpecCloneBackingBean extends
 			specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 			TemplateSpecResDTO resDTO = templateSpecSO
 					.getTemplateMaster(specReqDTO);
+			if(this.getManagedBean().getQt().isSampleReq()){//33858-start
+				resDTO.getSpecMaster().setSampleReq(Boolean.FALSE);
+			}else{
+				resDTO.getSpecMaster().setSampleReq(Boolean.TRUE);
+			}//33858-End
 			TplSpecMaster copy = TemplateSpecHelper.getInstance()
 					.cloneTplSpecMaster(resDTO.getSpecMaster(), true,
 							getManagedBean().getQt().isTechEvaluationReq(),
