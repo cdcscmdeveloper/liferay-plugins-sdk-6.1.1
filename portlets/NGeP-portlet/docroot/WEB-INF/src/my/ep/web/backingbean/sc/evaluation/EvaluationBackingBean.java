@@ -2387,28 +2387,6 @@ public void saveComplianceSample() {
 
 		}
 		// return "/xhtml/sc/evaluation/evaluationMain.xhtml";
-		
-		//#28784 add remarks - start
-		if (this.getManagedBean().getScQt().isDemoRequired()
-				&& (QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION.equals(this
-						.getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL.equals(this
-								.getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.TEC_PENDING_ENDORSEMENT.equals(this
-										.getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.TEC_PENDING_SIGN_OFF.equals(this
-										.getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO_REVISION.equals(this
-										.getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO.equals(this
-										.getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.TEC_PENDING_ENDORSEMENT_DEMO.equals(this
-										.getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.TEC_PENDING_SIGN_OFF_DEMO.equals(this
-										.getManagedBean().getCurrentStatusId()))) {
-			retrieveDemoRemarks();
-		}
-		//#28784 add remarks - end
 
 	}
 
@@ -2976,7 +2954,28 @@ public void saveComplianceSample() {
 		} finally {
 			evaluationSo = null;
 		}
-
+		
+		//#28784 add remarks - start
+		if (this.getManagedBean().getScQt().isDemoRequired()
+				&& (QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION.equals(this
+						.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL.equals(this
+								.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_ENDORSEMENT.equals(this
+										.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_SIGN_OFF.equals(this
+										.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO_REVISION.equals(this
+										.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO.equals(this
+										.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_ENDORSEMENT_DEMO.equals(this
+										.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_SIGN_OFF_DEMO.equals(this
+										.getManagedBean().getCurrentStatusId()))) {
+			retrieveDemoRemarks();
+		}
+		//#28784 add remarks - end
 	}
 	
 	// 28784 - start
