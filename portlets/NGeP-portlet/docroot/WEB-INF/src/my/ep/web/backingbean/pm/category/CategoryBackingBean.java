@@ -1240,26 +1240,20 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		String returnUrl = null;
 		
 		//start #29665 add log key
-		LogKey loginSessionUserId; //Update code #31849
+		Long loginSessionUserId = 1L;
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
 		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
-		//Start Update code #31849
 		if (pmUser == null) {
-			PmUser tmp = new FacesScopes().getUserSessionBean();
-			if (tmp != null && tmp.getUserId() != null) {
-				loginSessionUserId = new LogKey(tmp.getUserId());
-			} else {
-				loginSessionUserId = new LogKey(1L);
-			}
+			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
 		}
 		else{
-			loginSessionUserId = new LogKey(pmUser.getUserId());
+			loginSessionUserId = pmUser.getUserId();
 		}
-		//End Update code #31849
+		new LogKey(loginSessionUserId);
 		//end #29665 add log key
 		
 		try {
@@ -1293,7 +1287,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				prc.setCategoryId(this.getManagedBean().getPmCategoryL1().getCategoryL1Id());
 				prc.setCategoryLevel(1);
 				prc.setCreatedDate(new Timestamp(new Date().getTime()));
-				prc.setCreatedBy(Long.parseLong(loginSessionUserId.toString())); // Update code #31849
+				prc.setCreatedBy(loginSessionUserId);
 				if(!this.descriptionEditDisable 
 						&& this.getManagedBean().getUpdatedCategoryDesc().compareTo(
 								this.getManagedBean().getOldCategoryL1().getCategoryName()) !=0 ){
@@ -1476,26 +1470,20 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		String returnUrl = null;
 		
 		//start #29665 add log key
-		LogKey loginSessionUserId;
+		Long loginSessionUserId = 1L;
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
 		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
-		//Start Update code #31849
 		if (pmUser == null) {
-			PmUser tmp = new FacesScopes().getUserSessionBean();
-			if (tmp != null && tmp.getUserId() != null) {
-				loginSessionUserId = new LogKey(tmp.getUserId());
-			} else {
-				loginSessionUserId = new LogKey(1L);
-			}
+			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
 		}
 		else{
-			loginSessionUserId = new LogKey(pmUser.getUserId());
+			loginSessionUserId = pmUser.getUserId();
 		}
-		//End Update code #31849
+		new LogKey(loginSessionUserId);
 		//end #29665 add log key
 		
 		try {
@@ -1531,7 +1519,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				prc.setCategoryId(this.getManagedBean().getPmCategoryL2().getCategoryL2Id());
 				prc.setCategoryLevel(2);
 				prc.setCreatedDate(new Timestamp(new Date().getTime()));
-				prc.setCreatedBy(Long.parseLong(loginSessionUserId.toString())); // Update code #31849
+				prc.setCreatedBy(loginSessionUserId);
 				if(!this.descriptionEditDisable
 						&& this.getManagedBean().getUpdatedCategoryDesc().compareTo(
 								this.getManagedBean().getOldCategoryL2().getCategoryName()) !=0 ){
@@ -1730,26 +1718,20 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		String returnUrl = null;
 		
 		//start #29665 add log key
-		LogKey loginSessionUserId; //Update code #31849
+		Long loginSessionUserId = 1L;
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
 		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
-		//Start Update code #31849
 		if (pmUser == null) {
-			PmUser tmp = new FacesScopes().getUserSessionBean();
-			if (tmp != null && tmp.getUserId() != null) {
-					loginSessionUserId = new LogKey(tmp.getUserId());
-			} else {
-					loginSessionUserId = new LogKey(1L);
-				}
-			}
-			else{
-				loginSessionUserId = new LogKey(pmUser.getUserId());
-				}
-		//End Update code #31849
+			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+		}
+		else{
+			loginSessionUserId = pmUser.getUserId();
+		}
+		new LogKey(loginSessionUserId);
 		
 		if(!this.getManagedBean().isNewCategory()){
 			this.getManagedBean().setPmCategoryL2(
@@ -1824,7 +1806,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				prc.setCategoryId(this.getManagedBean().getPmCategoryL3().getCategoryL3Id());
 				prc.setCategoryLevel(3);
 				prc.setCreatedDate(new Timestamp(new Date().getTime()));
-				prc.setCreatedBy(Long.parseLong(loginSessionUserId.toString())); // Update code #31849
+				prc.setCreatedBy(loginSessionUserId);
 				if(!this.descriptionEditDisable
 						&& this.getManagedBean().getUpdatedCategoryDesc().compareTo(
 								this.getManagedBean().getOldCategoryL3().getCategoryName()) !=0 ){
