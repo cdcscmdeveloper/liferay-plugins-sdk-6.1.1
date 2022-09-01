@@ -2739,6 +2739,15 @@ public class QtSpecCloneBackingBean extends
 		searchFilterBean.add(bean);
 		
 	}//28784&25635-End
+if (null != this.getManagedBean().getQt()){//33870&25635-start
+		
+		SearchFilterBean bean = new SearchFilterBean();
+		bean.setSearchField("sampleReq");
+		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		bean.setSearchValue(this.getManagedBean().getQt().isSampleReq());
+		searchFilterBean.add(bean);
+		
+	}//33870&25635-End
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 		}
