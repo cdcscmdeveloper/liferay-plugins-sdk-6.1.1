@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.DecimalFormat;
@@ -2239,30 +2240,40 @@ public class SPDetailBackingBean extends
 					// #28398 BUG - 26339 CR - End
 				}else{
 					//start Bug #28887
-					if (null != assetProposalChecklist) {					
-						if (assetProposalChecklist.isSubmitted()){
-							if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null 
-									|| (scQtPRPAssetLiability.getCurrentAssets() != null)
-									|| (scQtPRPAssetLiability.getCurrentLiabilities() != null) 
-								    || (scQtPRPAssetLiability.getTotalCashInHand() != null)
-									|| (scQtPRPAssetLiability.getTotalAccountReceivable() != null)
-									|| (scQtPRPAssetLiability.getAcidRatio() != null )
-								    || (scQtPRPAssetLiability.getCurrentRatio() != null)) 
-							{
-								assetProposalChecklist.setSubmitted(false);
-								assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-								
-							} else {
-								assetProposalChecklist.setSubmitted(false);
-								assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-								
-							}
-						}else{
-							assetProposalChecklist.setSubmitted(false);
-							assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-							
-						}
-					}//end Bug #28887
+					//33678 - start 
+					if (null != assetProposalChecklist && scQtPRPAssetLiability!=null) {					
+						String[] arr = new String[]{
+								"getCurrentAssets",
+								"getCurrentLiabilities",
+								"getTotalCashInHand", 
+								"getTotalAccountReceivable",
+								"getAcidRatio",
+								"getCurrentRatio"};
+						boolean attachmentRequired = false;
+						for(String method: arr){
+							Class<?>[] paramType = null;
+							Method m = scQtPRPAssetLiability.getClass().getMethod(method, paramType);
+							BigDecimal value = (BigDecimal)m.invoke(scQtPRPAssetLiability);
+							if(value!=null &&  value.compareTo(BigDecimal.ZERO)>0){
+								attachmentRequired = true;
+								break;
+							} 
+						} 
+						if (attachmentRequired){
+							if(assetProposalChecklist.getScQtProposalChecklistAttachment()!=null){
+								assetProposalChecklist.setSubmitted(true);
+								assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+							}else{
+								assetProposalChecklist.setSubmitted(false); 
+								assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE); 
+							} 
+						} else{
+							assetProposalChecklist.setSubmitted(true);
+							assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+						} 
+					}
+					//33678 - end 
+					//end Bug #28887
 				}
 			}      	// #26339 Venkat End
 			// #26339 - End
