@@ -5797,17 +5797,16 @@ public class QTDetailBackingBean extends
 			break;
 		}
 		
-		if (activeIndex != 0) {
-			ScQt scQt = getManagedBean().getQt();
+		ScQt scQt = getManagedBean().getQt();
 			
-			if (scQt.isZonal() && 
-					scQt.getScQtSupplierCriteria() != null &&
-					scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
-				// Populate zone detail into tree node
-				populateZoneDetailIntoTreeNode(scQt, 
-						scQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls());	
-			}
+		if (scQt.isZonal() && 
+				scQt.getScQtSupplierCriteria() != null &&
+				scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
+			// Populate zone detail into tree node
+			populateZoneDetailIntoTreeNode(scQt, 
+					scQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls());	
 		}
+
 		if(null!=this.getManagedBean().getCtContract()){
 			this.getManagedBean().getCtContract().setContractNo(this.getManagedBean().getQt().getExistingContractNo());
 		}
@@ -5853,8 +5852,6 @@ public class QTDetailBackingBean extends
 	
 		// - Start (Harun) initializing remark for cancel or subsequent save start
 		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-			ScQt scQt = this.getManagedBean().getQt(); //32880 - comment if bug in UAT
-			
 			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
 					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
 
@@ -5865,8 +5862,6 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
 
 		} else {
-			ScQt scQt = this.getManagedBean().getQt(); //32880 - comment if bug in UAT
-			
 			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
 		}
 		// - End (Harun)
