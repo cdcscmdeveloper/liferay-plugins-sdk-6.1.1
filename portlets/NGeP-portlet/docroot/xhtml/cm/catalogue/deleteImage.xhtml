@@ -11,8 +11,7 @@
 
 	<!-- #14118, #30457 change rowKey to cmImage Back -->
 	<p:dataTable id="deleteImageId" var="cmImage" rowIndexVar="rowIndex" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-		value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}"
-		selection="#{catalogueBackingBean.managedBean.selectedImage.cmImages}" rowSelectMode="checkbox" rowKey="#{cmImage}" >
+		value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}" >
 
 		<ac:paginator for="deleteImageId"></ac:paginator>
 

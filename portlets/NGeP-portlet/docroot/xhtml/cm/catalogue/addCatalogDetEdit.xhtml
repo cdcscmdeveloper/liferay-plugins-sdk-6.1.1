@@ -559,10 +559,6 @@
 		<p:dialog id="deleteImage"
 			header="#{lbl['lbl.btn.delete']} #{lbl['lbl.cm.image']}"
 			widgetVar="deleteImage" modal="true" width="500" height="500">
-			 <!-- #30457 - Start -->
-		     <p:ajax event="close" process="@form" update=":form"
-		         listener="#{catalogueBackingBean.cancelDeleteImage()}"/>
-             <!-- #30457 - End -->
 
 			<ui:include src="deleteImage.xhtml"></ui:include>
 
