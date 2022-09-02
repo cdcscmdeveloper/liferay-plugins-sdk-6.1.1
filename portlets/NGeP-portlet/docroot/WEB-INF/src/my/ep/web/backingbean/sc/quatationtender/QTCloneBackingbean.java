@@ -530,6 +530,13 @@ public class QTCloneBackingbean extends
 		samplebean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 		samplebean.setSearchValue(this.getManagedBean().getQt().isSampleReq());
 		searchFilterBean.add(samplebean);
+		
+		SearchFilterBean demobean = new SearchFilterBean();//33905
+		demobean.setSearchField("demoRequired");
+		demobean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		demobean.setSearchValue(this.getManagedBean().getQt().isDemoRequired());
+		searchFilterBean.add(demobean);//33905
+		
 	}//33904
 						
 			// Adding search filterbeans to searchbean.
