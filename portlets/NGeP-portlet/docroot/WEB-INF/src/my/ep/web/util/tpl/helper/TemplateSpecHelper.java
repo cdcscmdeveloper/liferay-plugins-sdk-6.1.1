@@ -181,10 +181,12 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setTplSpecAnswers(null);
 								newSpecQuestion.setTplSpecEstimations(null);
 								newSpecQuestion.setTplSpecScorings(null);
+								if(newSpecMaster.isSampleReq()){//33858-start
 								newSpecQuestion.setSampleQuantity(null);//11104-start
 								newSpecQuestion.setSampleScoreTypeCode(null);
 								newSpecQuestion.setSampleScore(null);
 								newSpecQuestion.setSampleReq(Boolean.FALSE);//11104-End
+								}//33858-End
 								//#28784 Reset clone value for demo
 								if(demoSpecClone){
 									newSpecQuestion.setItemReqDemo(false);
