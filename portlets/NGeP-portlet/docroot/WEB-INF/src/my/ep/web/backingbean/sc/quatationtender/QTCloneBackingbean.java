@@ -523,6 +523,14 @@ public class QTCloneBackingbean extends
 				searchFilterBean.add(bean);
 				
 			}//21695&25635-End
+	Long statusId=this.getManagedBean().getQt().getQtStatus().getStatusId();//33904
+	if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId)){//33904
+		SearchFilterBean samplebean = new SearchFilterBean();
+		samplebean.setSearchField("sampleReq");
+		samplebean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		samplebean.setSearchValue(this.getManagedBean().getQt().isSampleReq());
+		searchFilterBean.add(samplebean);
+	}//33904
 						
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
