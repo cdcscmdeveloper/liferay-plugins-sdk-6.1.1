@@ -3262,27 +3262,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		try {
 			//#24333 - Start
 			if(isContractExtendOrIsBond()){
-				if(getManagedBean().isExtendContract() == true && getManagedBean().getCtContractAmount().getCtPerformanceBondsNew() != null){
-
-						Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().iterator();
-						while (performanceBond.hasNext()) {
-							CtPerformanceBond  bond = performanceBond.next();
-							if (bond.isSelectedCheckBox()) {
-								performanceBond.remove();
-						}
-					}
-				}else{
-					if (getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal() != null) {
-						Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().iterator();
-						while (performanceBond.hasNext()) {
-							CtPerformanceBond  bond = performanceBond.next();
-							if (bond.isSelectedCheckBox()) {
-								performanceBond.remove();
-							}
+				if (getManagedBean().getCtContractAmount().getCtPerformanceBondsNew() != null) {
+					Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().iterator();
+					while (performanceBond.hasNext()) {
+						CtPerformanceBond  bond = performanceBond.next();
+						if (bond.isSelectedCheckBox()) {
+							performanceBond.remove();
 						}
 					}
 				}
-
 			}else{
 				if (getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal() != null) {
 					Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().iterator();
@@ -3848,21 +3836,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */    
 	public void deleteBondAttachement(){
 		//#24333
-		if(isContractExtendOrIsBond()){	
-			if(getManagedBean().isExtendContract() == true){
-				CtPerformanceBond ctBondAttch =  getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().get(getManagedBean().getIndex());
-				getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().remove(getManagedBean().getIndex());
-				ctBondAttch.setFileName(null);
-				ctBondAttch.setFilePath(null);
-				getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(getManagedBean().getIndex(), ctBondAttch);
-			}else{
-				CtPerformanceBond ctBondAttch =  getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().get(getManagedBean().getIndex());
-				getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().remove(getManagedBean().getIndex());
-				ctBondAttch.setFileName(null);
-				ctBondAttch.setFilePath(null);
-				getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().add(getManagedBean().getIndex(), ctBondAttch);
-			}
-
+		if(isContractExtendOrIsBond()){			
+			CtPerformanceBond ctBondAttch =  getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().get(getManagedBean().getIndex());
+			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().remove(getManagedBean().getIndex());
+			ctBondAttch.setFileName(null);
+			ctBondAttch.setFilePath(null);
+			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(getManagedBean().getIndex(), ctBondAttch);
 		}else{
 			CtPerformanceBond ctBondAttch =  getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().get(getManagedBean().getIndex());
 			getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().remove(getManagedBean().getIndex());
@@ -4620,6 +4599,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				|| getManagedBean().isViewContract() == true
 				)&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
 			isContractExtendOrIsBond = true;
+			getManagedBean().setDisableOriginalBond(true);
 			if(currentPeriod != null && extendPeriod != null) {
 				if(!extendPeriod.equals(currentPeriod) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
 					isContractExtendOrIsBond = true;
