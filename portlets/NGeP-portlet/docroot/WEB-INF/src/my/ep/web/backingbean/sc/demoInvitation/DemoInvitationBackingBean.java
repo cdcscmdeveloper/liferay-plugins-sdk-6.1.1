@@ -33,6 +33,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTFieldConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -75,11 +76,13 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.quatationtender.CreateQtBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
@@ -91,6 +94,8 @@ import my.ep.web.managedbean.sc.demoInvitation.DemoInvitationManageBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sc.helper.LocationSingleton;
+import my.ep.web.util.sc.helper.QTFieldMapper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -98,6 +103,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.TreeNode;
 
 /**
  * The Class DemoInvitationBackingBean. #28784
@@ -432,6 +438,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 									&& scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
 								List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias()
 										.getTplSpecZoneDtls();
+								populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
 
 								if (CollectionUtils.isNotEmpty(specZoneDtls)) {
 									List<ZonesBean> zoneBeanLst = new ArrayList<ZonesBean>();
@@ -487,6 +494,97 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			}
 
 		}
+	}
+	
+	private void populateZoneDetailIntoTreeNode(ScQt scQt, List<TplSpecZoneDtl> specZoneDtls) {
+		List<TreeNode> zoneGeneralTrees = getManagedBean().getZoneGeneralTrees();
+		
+		this.getManagedBean().setCtzones(Boolean.TRUE);
+		this.getManagedBean().setTemplateSpecZoneDtls(specZoneDtls);
+		if (zoneGeneralTrees == null) {
+			zoneGeneralTrees = new ArrayList<TreeNode>();
+			getManagedBean().setZoneGeneralTrees(zoneGeneralTrees);
+		} else {
+			zoneGeneralTrees.clear();	
+		}
+		
+		boolean zoneCoverageReadonly = enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_ZONE_COVERAGE);
+		List<TreeNode> zoneSuppQualTrees = null;
+		if (zoneCoverageReadonly) {
+			zoneSuppQualTrees = getManagedBean().getZoneSuppQualTrees();
+			if (zoneSuppQualTrees == null) {
+				zoneSuppQualTrees = new ArrayList<TreeNode>();
+				getManagedBean().setZoneSuppQualTrees(zoneSuppQualTrees);
+			} else {
+				zoneSuppQualTrees.clear();	
+			}	
+		} else {
+			getManagedBean().setZoneSuppQualTrees(null);
+		}	
+		if (scQt.isZonal() &&  scQt.isPanel() ){
+		  new CreateQtBackingBean().retrieveZoneGeneralTreesPanel(scQt, specZoneDtls);
+		}
+		
+		if (CollectionUtils.isNotEmpty(specZoneDtls)) {
+			for (TplSpecZoneDtl zone : specZoneDtls) {
+				if (CollectionUtils.isNotEmpty(zone.getTplSpecZoneLocs())) {
+					List<TplSpecZoneLoc> specZoneLocs = new ArrayList<TplSpecZoneLoc>();
+					
+					for (TplSpecZoneLoc specLoc : zone.getTplSpecZoneLocs()) {
+						if (specLoc.isZonalLocation()) {
+							specZoneLocs.add(specLoc);
+						}
+					}
+					
+					if (scQt.isZonal() &&  scQt.isPanel() )
+					{
+						zoneGeneralTrees.add(
+								LocationSingleton.getInstance().constuctTreeNodeWithDisableChild(
+										zone, specZoneLocs));
+						
+						if (zoneSuppQualTrees != null) {
+							zoneSuppQualTrees.add(
+									LocationSingleton.getInstance().constuctTreeNodeWithDisableChild(
+											zone, zone.getTplSpecZoneLocs()));}
+				
+					}else{
+						zoneGeneralTrees.add(
+								LocationSingleton.getInstance().constuctTreeNode(
+										zone, specZoneLocs));
+						
+						if (zoneSuppQualTrees != null) {
+							zoneSuppQualTrees.add(
+									LocationSingleton.getInstance().constuctTreeNode(
+											zone, zone.getTplSpecZoneLocs()));	
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public boolean enableFieldByStatusNFiledName(String fieldName) {
+		Long statusId = this.getManagedBean().getCurrentStatusId();
+
+		return enableFieldByStatusNFiledName(fieldName, statusId, 
+				getManagedBean().isMaintanceFlow(), 
+				!getManagedBean().isReadOnly());
+
+	}
+	
+	private boolean enableFieldByStatusNFiledName(String fieldName,
+			Long statusId, boolean isMaintance, boolean isEditable) {
+
+		List<String> values = QTFieldMapper.getEnableFieldsByStatus(statusId,
+				isMaintance, isEditable);
+		if (CollectionUtils.isNotEmpty(values)) {
+			if (values.contains(fieldName)) {
+				return false;
+			}
+
+		}
+		return true;
+
 	}
 
 	public void onchangeInvBy(String item) {
