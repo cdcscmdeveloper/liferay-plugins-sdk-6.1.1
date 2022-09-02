@@ -30,9 +30,9 @@
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:82px; white-space:normal; text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
 		</p:column>
 	<!-- #33859 - start -->
-		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:82px; white-space:pre-line; #{isSpecTypeFinancial ? 'text-align:right;' : ''}" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : remarklbl]}">
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:82px; white-space:pre-line !important; #{isSpecTypeFinancial ? 'text-align:right;' : ''}" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : remarklbl]}">
 		</p:column>
-	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:100px; white-space:pre-line;" headerText="#{lbl['lbl.tpl.spec.content.supplier.note']}">
+	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:100px; white-space:pre-line !important;" headerText="#{lbl['lbl.tpl.spec.content.supplier.note']}">
 	</p:column>
 	<!-- #33859 - end -->
 	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:60px; text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}" 
