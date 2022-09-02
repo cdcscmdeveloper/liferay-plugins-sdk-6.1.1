@@ -1709,7 +1709,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public void validationPerformanceBond(String action){
 		if (ctBB.getManagedBean().getCtContractAmount().isBondReq()// && !ctBB.getManagedBean().isDirectPurchase() - REMOVE THIS CZ DP ALSO CAN HUGE AMOUNT
 				&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()
-				&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ||  action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) ||  action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
+				&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ||  action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) ||  action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {//33824 remove duplicate reject
 			
 			if(ctBB.getManagedBean().getCtContractAmount().isBondWaived()){
 				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null) {
