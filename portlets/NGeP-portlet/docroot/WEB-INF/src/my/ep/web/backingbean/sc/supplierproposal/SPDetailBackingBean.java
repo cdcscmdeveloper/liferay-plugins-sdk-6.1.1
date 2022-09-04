@@ -2155,7 +2155,6 @@ public class SPDetailBackingBean extends
 	 * @param isCompleted
 	 * @return navigation path
 	 */
-	@SuppressWarnings("unused")
 	public String saveAssetLiabilityAction(boolean isCompleted) {
 		debugLogger("saveAssetLiabilityAction supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
@@ -4770,6 +4769,15 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			context.put("title", title);
 			context.put("qtNo", scQt.getQtNo());
 		}
+
+		//#32648 - start
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date currentDate = new Date();
+		
+		if (null != currentDate) {
+			context.put("currentDate", formatter.format(currentDate));
+		}
+		//#32648 - start
 
 		if (pmUser != null) {
 			context.put("userName", pmUser.getUserName());
