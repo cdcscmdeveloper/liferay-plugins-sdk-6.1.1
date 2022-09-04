@@ -2368,6 +2368,28 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									}
 								}
 								// end #29956
+								//27691 START - readd owner if not exist in supplier owner table
+								if(personnel.isSsmData()){
+									Boolean existSuppOwner = false;
+									for(SmSupplierOwner smSuppOwner : resDTO.getSmSupp().getSmSupplierOwners()){
+										if(personnel.getIdentificationNo().equalsIgnoreCase(smSuppOwner.getIdentificationNo())){
+											existSuppOwner = true;
+										}
+									}
+									if(!existSuppOwner){
+										SmSupplierOwner suppOwner = new SmSupplierOwner();
+										
+										suppOwner.setSmSupplier(this.getManagedBean().getSmSupp());
+										suppOwner.setOwnerName(personnel.getName());
+										suppOwner.setNationality(personnel.getPmCountry());
+										suppOwner.setIdentificationType(personnel.getIdentificationType());
+										suppOwner.setIdentificationTypeId(personnel.getIdentificationTypeId());
+										suppOwner.setIdentificationNo(personnel.getIdentificationNo());
+										this.getManagedBean().getSmSuppOwners().add(suppOwner);
+										resDTO.getSmSupp().getSmSupplierOwners().add(suppOwner);
+									}
+								}
+								//27691 END
 								this.getManagedBean().getSmPersonnelOwners().add(personnel);
 							}
 							// 27691 - Start
