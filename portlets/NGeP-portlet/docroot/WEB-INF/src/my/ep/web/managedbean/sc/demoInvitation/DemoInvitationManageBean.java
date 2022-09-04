@@ -22,6 +22,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDemoByItemScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoContact;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoItem;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -134,6 +135,12 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 	private List<ScQtDemoItem> tempDemoItemList;
 	
 	private List<ScQtDemoSupplier> tempDemoSuppList;
+
+	private boolean ctzones = Boolean.FALSE;
+	
+	private List<TplSpecZoneDtl> templateSpecZoneDtls;
+	
+	private List<TreeNode> zoneSuppQualTrees = null;
 
 	public int getTabActiveIndex() {
 		return tabActiveIndex;
@@ -493,6 +500,30 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 
 	public void setTempDemoItemList(List<ScQtDemoItem> tempDemoItemList) {
 		this.tempDemoItemList = tempDemoItemList;
+	}
+
+	public boolean isCtzones() {
+		return ctzones;
+	}
+
+	public void setCtzones(boolean ctzones) {
+		this.ctzones = ctzones;
+	}
+
+	public List<TplSpecZoneDtl> getTemplateSpecZoneDtls() {
+		return templateSpecZoneDtls;
+	}
+
+	public void setTemplateSpecZoneDtls(List<TplSpecZoneDtl> templateSpecZoneDtls) {
+		this.templateSpecZoneDtls = templateSpecZoneDtls;
+	}
+
+	public List<TreeNode> getZoneSuppQualTrees() {
+		return zoneSuppQualTrees;
+	}
+
+	public void setZoneSuppQualTrees(List<TreeNode> zoneSuppQualTrees) {
+		this.zoneSuppQualTrees = zoneSuppQualTrees;
 	}
 
 	
