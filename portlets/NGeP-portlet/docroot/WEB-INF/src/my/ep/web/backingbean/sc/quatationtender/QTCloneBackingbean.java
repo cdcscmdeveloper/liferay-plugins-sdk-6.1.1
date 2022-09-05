@@ -153,11 +153,6 @@ public class QTCloneBackingbean extends
 	 * test only
 	 */
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger
 			.getLogger(QTCloneBackingbean.class);
@@ -528,6 +523,21 @@ public class QTCloneBackingbean extends
 				searchFilterBean.add(bean);
 				
 			}//21695&25635-End
+	Long statusId=this.getManagedBean().getQt().getQtStatus().getStatusId();//33904
+	if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId)){//33904
+		SearchFilterBean samplebean = new SearchFilterBean();
+		samplebean.setSearchField("sampleReq");
+		samplebean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		samplebean.setSearchValue(this.getManagedBean().getQt().isSampleReq());
+		searchFilterBean.add(samplebean);
+		
+		SearchFilterBean demobean = new SearchFilterBean();//33905
+		demobean.setSearchField("demoRequired");
+		demobean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		demobean.setSearchValue(this.getManagedBean().getQt().isDemoRequired());
+		searchFilterBean.add(demobean);//33905
+		
+	}//33904
 						
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
