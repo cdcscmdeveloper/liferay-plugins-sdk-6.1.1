@@ -81,6 +81,9 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private Map<String, SmSupplierBank> supplierBankName;
 	private String fullBankInfo;
 	//End Fix - #33399
+	// Start Fix - #33856
+	private Long applID;
+	// End Fix - #33856
 
 	@ManagedProperty(value="#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -667,4 +670,17 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.fullBankInfo = fullBankInfo;
 	}
 	//End Fix - #33399
+    // Start Fix - #33856
+	public Long getApplID() {
+		return applID;
+	}
+
+	public void setApplID(Long applID) {
+		this.applID = applID;
+	}
+	// End Fix - #33856
+
+
+
+
 }
