@@ -14653,7 +14653,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		assertSpecCommitteeMaintenanceInProgress(this.getManagedBean().getQt());
 		
 		if (this.getManagedBean().getInactiveSCMemberStr().length() > 0) {
-			this.qtChecklistTabChange(10);
+			// temporary while awaiting #29474 close in SIT -start-
+			// remove when #29474 ready for UAT
+			this.qtChecklistTabChange(9);
+			// temporary while awaiting #29474 close in SIT -end-
+			
+			// use this when #29474 ready for UAT -start-
+			//			this.qtChecklistTabChange(10);
+			// use this when #29474 ready for UAT -end-
 			
 			RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
 			
