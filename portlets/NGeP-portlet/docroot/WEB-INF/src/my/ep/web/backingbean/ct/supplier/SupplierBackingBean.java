@@ -487,12 +487,19 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		ContractReqDTO reqDTO = null;
 		ContractResDTO resDTO = null;
 		try {
+			String[] bankDetails = splittedAccNoAndBankname(); //Start Fix - #33856
 			validateChangeBankRequest(action);
 			reqDTO = new ContractReqDTO();
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
+			// Start Fix - #33856
 			reqDTO.setUserRole(getUserRole());
+			if(getManagedBean().getFullBankInfo() != null){
+				getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(bankDetails[0]);
+				getManagedBean().getContractVer().getCtContractValue().setBankName(bankDetails[1]);
+			}
+			// End Fix - #33856
 
 			if (isSupplierRole()) {
 				getContractAdminlist(); 
@@ -1110,7 +1117,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 					getManagedBean().getContractVer().getCtContractValue().setBankBranch(resDTO.getBankBranch());
 					getManagedBean().getContractVer().getCtContractValue()
 						.setBankAddress(CtAddressUtil.convertSmAddressToCtAddress(resDTO.getBankAddressId()));	
-					getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(supplierBankname.getAccountNo());
 				  }
 			    }
 		}
