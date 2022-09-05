@@ -3198,7 +3198,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		cal.add(Calendar.YEAR, 1); 
 		newBond.setExpDate(cal.getTime());
 		//#24333 - Start
-		if(isContractExtendOrIsBond() && getManagedBean().isExtendContract()){
+		if(isContractExtendOrIsBond()){
 			newBond.setBondNew(true);
 			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(newBond);
 			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
