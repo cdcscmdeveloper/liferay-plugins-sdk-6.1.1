@@ -3507,24 +3507,39 @@ public class TemplateSpecBackingBean extends
 		return getOfferDetails(null);
 	}
 	
+
+	//Bug #33947 All method 5/9/2022 - related to #21695
 	public List<SelectItem> getOfferDetails(TplSpecAnswer answer) {
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		String notOfferStr = "lbl.sc.checklist.partial.notoffer";
+		boolean flag = false;
 		if(answer!=null && this.getManagedBean().getScQt().isZonal() && answer.isDisableRow()){
+			flag = true;
 			notOfferStr="lbl.sc.not.applicable";
 		}
 		try {
-			selectItems.add(new SelectItem(true, ResourceBundleUtils.getMessage(
-					"lbl.sc.checklist.partial.offer",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale())));
-			selectItems.add(new SelectItem(false, ResourceBundleUtils.getMessage(
-					notOfferStr,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale())));
+			if(flag){
+				selectItems.add(new SelectItem(false, ResourceBundleUtils.getMessage(
+						notOfferStr,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
 
-			this.getManagedBean().setOffer(selectItems);
-			selectItems = null;
+				this.getManagedBean().setOffer(selectItems);
+				selectItems = null;
+			}else{
+				selectItems.add(new SelectItem(true, ResourceBundleUtils.getMessage(
+						"lbl.sc.checklist.partial.offer",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+				selectItems.add(new SelectItem(false, ResourceBundleUtils.getMessage(
+						notOfferStr,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+
+				this.getManagedBean().setOffer(selectItems);
+				selectItems = null;
+			}
+			
 			
 		} finally {
 
@@ -3532,8 +3547,9 @@ public class TemplateSpecBackingBean extends
 		return this.getManagedBean().getOffer();
 		
 	}
-//Bug #32952 related to #21695 End (farid) 14/4/2022
-/** #21695 FARID END */	
+	//Bug #33947 All method 5/9/2022 - related to #21695
+	//Bug #32952 related to #21695 End (farid) 14/4/2022
+	/** #21695 FARID END */	
 	
 	/**
 	 * Calculate the total amount and amount per year for all spec answer for each item.
