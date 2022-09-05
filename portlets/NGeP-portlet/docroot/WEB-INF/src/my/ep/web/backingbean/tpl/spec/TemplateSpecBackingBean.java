@@ -3409,81 +3409,119 @@ public class TemplateSpecBackingBean extends
 	 *            (Long itemType)
 	 */
 	//#32390 related to #21695 Farid - Start 13/1/2022 All method
+	//#33942 All method 5/9/2022
 	public void offerTypeChange(boolean offerType,Long parentQuestionId, int rowindex) {
 		List<TplSpecAnswer> returnSpec = new ArrayList<>();
-		TemplateSpecBean templateSpecBean = new TemplateSpecBean();
-		Long Auto = 323L;
-		Long User = 324L;
-		boolean flagnonZonal = false;
-		if(this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()!=null && this.getManagedBean().getTemplateSpecBean().getSpecAnswerList().size()>0){
-			for(TplSpecAnswer tplSpecAnswer: this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-				if(tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion()!=null){
-					
+		boolean zone = this.getManagedBean().getScQt().isZonal();
+		if (this.getManagedBean().getTemplateSpecBean().getSpecAnswerList() != null
+				&& this.getManagedBean().getTemplateSpecBean()
+						.getSpecAnswerList().size() > 0) {
+			for (TplSpecAnswer tplSpecAnswer : this.getManagedBean()
+					.getTemplateSpecBean().getSpecAnswerList()) {
+				if (tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion() != null) {
+
 					/*
 					 * IF CHILD
 					 */
-					if(tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId().equals(parentQuestionId)){
+					if (tplSpecAnswer.getTplSpecQuestion()
+							.getParentSpecQuestion().getSpecQuestionId()
+							.equals(parentQuestionId)) {
 						tplSpecAnswer.setOffer(offerType);
-						// Bug #32015 Farid start 5/11/2021	
-						if(!this.getManagedBean().getScQt().isZonal()){
-							flagnonZonal = true;
-						}
-						for(TplSpecAnswer specAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-							
-							if (specAns != null && specAns.getTplSpecQuestion().getParentSpecQuestion()!=null){
-								if(specAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId().equals(tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId())){
-									if(offerType && !flagnonZonal || !offerType && flagnonZonal){
+						// Bug #32015 Farid start 5/11/2021
+
+						for (TplSpecAnswer specAns : this.getManagedBean()
+								.getTemplateSpecBean().getSpecAnswerList()) {
+
+							if (specAns != null
+									&& specAns.getTplSpecQuestion()
+											.getParentSpecQuestion() != null) {
+								if (specAns
+										.getTplSpecQuestion()
+										.getParentSpecQuestion()
+										.getSpecQuestionId()
+										.equals(tplSpecAnswer
+												.getTplSpecQuestion()
+												.getParentSpecQuestion()
+												.getSpecQuestionId())) {
+									if (offerType && zone || !offerType
+											&& !zone) {
 										specAns.setAnswerText("");
 										specAns.setAnswerNumeric(null);
 										specAns.setAnswerRemark(null);
 										specAns.setAnswerCompliance(null);
-									// Bug #32015 Farid start 5/11/2021
-										if(specAns.getTplSpecQuestion().getScoreTypeCode() != null &&
-												specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
+										// Bug #32015 Farid start 5/11/2021
+										if (specAns.getTplSpecQuestion()
+												.getScoreTypeCode() != null
+												&& specAns.getTplSpecQuestion()
+														.getScoreTypeCode()
+														.getParameterCode()
+														.equalsIgnoreCase("U")) {
 											// Bug #32390 Farid start 25/1/2021
 											specAns.setUserScore(null);
-										}else if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
-												specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
-											specAns.setAutoScore(new BigDecimal(0));
+										} else if (specAns.getTplSpecQuestion()
+												.getScoreTypeCode() != null
+												&& specAns.getTplSpecQuestion()
+														.getScoreTypeCode()
+														.getParameterCode()
+														.equalsIgnoreCase("A")) {
+											specAns.setAutoScore(new BigDecimal(
+													0));
 										}
-										
-									}
-									else{
-										if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
-												specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
+
+									} else {
+										if (specAns.getTplSpecQuestion()
+												.getScoreTypeCode() != null
+												&& specAns.getTplSpecQuestion()
+														.getScoreTypeCode()
+														.getParameterCode()
+														.equalsIgnoreCase("U")) {
 											specAns.setUserScore(null);
-										}else if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
-												specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
+										} else if (specAns.getTplSpecQuestion()
+												.getScoreTypeCode() != null
+												&& specAns.getTplSpecQuestion()
+														.getScoreTypeCode()
+														.getParameterCode()
+														.equalsIgnoreCase("A")) {
 											specAns.setUserScore(null);
 										}
-										
+
 									}
 									// Bug #32015 Farid end 5/11/2021
 								}
 							}
 						}
 					}
-					
 					// Bug #32015 Farid end 5/11/2021
-					
-				}else{
-					if(tplSpecAnswer.getTplSpecQuestion().getSpecQuestionId().equals(parentQuestionId)){
+
+				} else {
+					if (tplSpecAnswer.getTplSpecQuestion().getSpecQuestionId()
+							.equals(parentQuestionId)) {
+						System.out.println("---> test" + zone);
 						/*
 						 * IF PARENT ITSELF
 						 */
+						if (zone) {
+							for (TplSpecZoneQty resetOfferZone : tplSpecAnswer
+									.getTplSpecQuestion().getTplSpecZoneQties()) {
+								resetOfferZone.getTplSpecZoneOffer().setOffer(
+										false);
+							}
+						}
+
 						tplSpecAnswer.setOffer(offerType);
 					}
 				}
-				
+
 				returnSpec.add(tplSpecAnswer);
 			}
 		}
-		
-		this.getManagedBean().getTemplateSpecBean().setSpecAnswerList(returnSpec);
+
+		this.getManagedBean().getTemplateSpecBean()
+				.setSpecAnswerList(returnSpec);
 
 	}
+	//#33942 related to #21695 Farid - End
 	//#32390 related to #21695 Farid - End
-			
 /**	#21695 FARID END */		
 
 	/**	#21695 FARID START */
