@@ -3149,7 +3149,12 @@ public class QTDetailBackingBean extends
 	 *            the outcome
 	 * @return the string
 	 */
-	public String updateBpmTask(String outcome){ // #Enhancement 9 CRs
+	public String updateBpmTask(String outcome){
+
+		// temporary while awaiting #25635 close in SIT -start-
+		// remove when #25635 ready for UAT
+		assertSpecificationUpdateInProgress(false); 
+		// temporary while awaiting #25635 close in SIT -end-
 		
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("updateBpmTask");
@@ -9185,10 +9190,17 @@ public class QTDetailBackingBean extends
 		}
 		
 		if (inProgress) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.popup.checkBeforePublish2",
-							null))); // #15391
+			// temporary while awaiting #25635 close in SIT -start-
+			// remove when #25635 ready for UAT
+			throw new EpException(getMessage("lbl.sc.popup.checkBeforePublish2", null));
+			// temporary while awaiting #25635 close in SIT -end-
+			
+			// use this when #25635 ready for UAT -start-
+//			FacesContext.getCurrentInstance().addMessage(
+//					null,
+//					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.popup.checkBeforePublish2",
+//							null))); // #15391
+			// use this when #25635 ready for UAT -end-
 		} else if (!inProgress && showPopup) {
 			// 25037 #568 - end
 			RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
