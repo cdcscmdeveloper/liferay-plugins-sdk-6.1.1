@@ -6418,34 +6418,39 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		
 
 
-//#21695 Farid start 2/4/2021	
+	// Bug #33947 5/9/2022 start
 	public boolean evaluateZonelistSupp(TplSpecZoneQty specQties) {
-		if(specQties!=null){
-			//remove log
-			//#21695 Farid Start - fix proposal checking 18/2/2022
+		if (specQties != null) {
+
+			// remove log
+			// #21695 Farid Start - fix proposal checking 18/2/2022
+			System.out.println("---> 1dasdassdasa "
+					+ this.getManagedBean().getZones().size());
+			System.out.println("---> 2 "
+					+ specQties.getTplSpecZoneOffer().getTplSpecQuestion()
+							.getTplSpecZoneQties().size());
 			if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
-				for (TplSpecZoneDtl specZones : this.getManagedBean().getZones()) {
+				for (TplSpecZoneDtl specZones : this.getManagedBean()
+						.getZones()) {
 					if (specQties.getTplSpecZoneDtl() != null) {
 						if (specZones.getSpecZoneId().equals(
 								specQties.getTplSpecZoneDtl().getSpecZoneId())) {
-								for(TplSpecZoneQty specQtyZoneOffer : specQties.getTplSpecZoneOffer().getTplSpecQuestion().getTplSpecZoneQties()){
-									if(specQties.getSpecZoneQtyId().equals(specQtyZoneOffer.getSpecZoneQtyId())){
-										specQtyZoneOffer.setOffer(false);
-									}
-								}
 							return true;
 						}
+
 					}
 				}
+				specQties.getTplSpecZoneOffer().setOffer(true);
+				specQties.getTplSpecZoneOffer().setNotApplicable(true);
 			}
-			specQties.getTplSpecZoneOffer().setOffer(true);
-			//#33327 retlated to #21695 - START
-			specQties.getTplSpecZoneOffer().setNotApplicable(true);
-			//#33327 retlated to #21695 - END
+
 		}
+
 		return false;
 	}
-//#21695 Farid end 2/4/2021
+
+	// Bug #33947 5/9/2022 end
+	// #21695 Farid end 2/4/2021
 	
 	// 20220127@syazani - Enhancement #3657 - specific error message - Start
 	private boolean duplicateErrorZoneCheck(String str, List<String> errorLst) {
@@ -6460,46 +6465,43 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	}
 	// 20220127@syazani - Enhancement #3657 - specific error message - End
 	
-	// #21695 Farid Start - fix proposal checking 18/2/2022
-	// Bug #32952 checking supplier has branch at zone that agency request
-	public void disableDefaultSelected() {
-		for (TplSpecAnswer retrieveAns : this.getManagedBean()
-				.getTemplateSpecBean().getSpecAnswerList()) {
-			if (retrieveAns != null
-					&& this.getManagedBean().getZones().size() > 0) {
-				for (TplSpecZoneDtl specZonedtl : this.getManagedBean()
-						.getZones()) {
-					if (specZonedtl != null) {
-						for (TplSpecZoneQty specZoneQty : retrieveAns
-								.getTplSpecQuestion().getTplSpecZoneQties()) {
-							if (this.getManagedBean().getZones().size() != retrieveAns
-									.getTplSpecQuestion().getTplSpecZoneQties()
-									.size()) {
-								if (specZoneQty != null
-										&& specZoneQty
-												.getTplSpecQuestion()
-												.getSpecQuestionId()
-												.equals(retrieveAns
-														.getTplSpecQuestion()
-														.getSpecQuestionId())
-										&& specZoneQty.getQty().equals(
-												new BigDecimal(0))
-										&& specZonedtl.getSpecZoneId().equals(
-												specZoneQty.getTplSpecZoneDtl()
-														.getSpecZoneId())) {
-									retrieveAns.setOffer(false);
+	//#21695 Farid Start - fix proposal checking 18/2/2022
+		//Bug #32952 checking supplier has branch at zone that agency request
+		//Bug #33947 5/9/2022 start
+		public void disableDefaultSelected() {
+			for (TplSpecAnswer retrieveAns : this.getManagedBean()
+					.getTemplateSpecBean().getSpecAnswerList()) {
+				if (retrieveAns != null
+						&& this.getManagedBean().getZones().size() > 0) {
+					for (TplSpecZoneDtl specZonedtl : this.getManagedBean()
+							.getZones()) {
+						
+						if (specZonedtl != null) {
+							for (TplSpecZoneQty specZoneQty : retrieveAns
+									.getTplSpecQuestion().getTplSpecZoneQties()) {
+								if (this.getManagedBean().getZones().size() != retrieveAns
+										.getTplSpecQuestion().getTplSpecZoneQties()
+										.size()) {
 									retrieveAns.setDisableRow(true);
-								}
+									if (specZoneQty != null
+											&& specZoneQty.getQty().compareTo(BigDecimal.ZERO)>0
+											&& specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId())) {
+										retrieveAns.setOffer(true);
+										if(retrieveAns.isDisableRow())retrieveAns.setDisableRow(false);
 							}
-
+						}else{
+							retrieveAns.setDisableRow(false); 
 						}
+
+							}
+							}
 					}
-				}
+				}  
 			}
 		}
-	}
+		//Bug #33947 5/9/2022 End
+		//#21695 Farid End - fix proposal checking 18/2/2022
 
-	// #21695 Farid End - fix proposal checking 18/2/2022
 	
 	//Bug #33141@Syazani -- Start 01/07/2022
 	//Purpose: to validate if answer coming from right place due some user use multiple tab (it caused cross bean)
