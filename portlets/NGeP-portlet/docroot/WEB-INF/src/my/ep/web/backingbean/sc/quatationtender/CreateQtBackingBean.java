@@ -579,9 +579,9 @@ public class CreateQtBackingBean extends
 					}
 				}
 			}
-	
-			scQt.setScQtSupplierCriteria(supplierCriteria);
 		}
+		
+		scQt.setScQtSupplierCriteria(supplierCriteria);
 	}
 	// #32929 - end
 	
