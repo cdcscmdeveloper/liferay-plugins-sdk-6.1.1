@@ -17,7 +17,7 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td width="18%">
-				<h:outputLabel value="#{lbl['lbl.sc.account.no']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.account.no.bank.name']}" /> <!-- 20220609@syazani - Bug #33674 -->
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isSupplierAckStatus}" />
 			</td>
 			<td>
@@ -32,7 +32,7 @@
 						<f:selectItems
 							value="#{lOADetailBackingBean.managedBean.bankList}"
 							var="smSupplierBank" 
-							itemValue="#{smSupplierBank.accountNo}" itemLabel="#{smSupplierBank.accountNo}" />
+							itemValue="#{smSupplierBank.accountNo}" itemLabel="#{smSupplierBank.accountNo} / #{smSupplierBank.pmFinancialOrg.finOrgName}" /> <!-- 20220609@syazani - Bug #33674 -->
 						<p:ajax event="change"
 							listener="#{lOADetailBackingBean.handleBankDetailsChanged}"
 							partialSubmit="true" process="@this" update="bankName, bankBranch, bankAddress" />
@@ -43,7 +43,7 @@
 				</c:if>
 			</td>
 		</tr>
-		<tr>
+		<tr style="display: none;"> <!-- 20220609@syazani - Bug #33674 -->
 			<td>
 				<h:outputLabel value="#{lbl['lbl.sc.bank.name']}" />
 			</td>
