@@ -279,6 +279,20 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}
 			}
 			//#28774 - End
+			//#24964 - start
+			Collections.sort(smSvTask.getSmSvAssistantOfficers(), new Comparator<SmSvAssistantOfficer>() {
+				@Override
+				public int compare(final SmSvAssistantOfficer s1, final SmSvAssistantOfficer s2) {
+					return (s1.getSvAssistantOfficerId().compareTo(s2.getSvAssistantOfficerId()));
+				}
+			});
+			Collections.sort(smSvTask.getSmSvTemplate().getSmSvInterviewees(), new Comparator<SmSvInterviewee>() {
+				@Override
+				public int compare(final SmSvInterviewee s1, final SmSvInterviewee s2) {
+					return Long.compare(s1.getSvIntervieweeId(), s2.getSvIntervieweeId());
+				}
+			});
+			//#24964 - end
 			
 			for(SmPersonnel contactPerson : smSvTask.getSmAppl().getSmPersonnels()){
 				if(contactPerson.isContactPerson()){
@@ -769,7 +783,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		for(SmPersonnel personnel : this.getManagedBean().getSmSvTask().getSmAppl().getSmPersonnels()){
 			if(personnel.isDirector()){
 				ttlBOD++;
-				if(personnel.isBumi()){
+				if(personnel.isBumi() != null && personnel.isBumi()){ //#32961
 					dirBumi++;
 				}else{
 					if(!personnel.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)){
@@ -784,7 +798,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 			if(personnel.isHigherManagement() || personnel.isManagement()){
 				ttlMgmt++;
-				if(personnel.isBumi()){
+				if(personnel.isBumi() != null && personnel.isBumi()){ //#32961
 					mgmtBumi++;
 				}else{ 
 					if(personnel.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)){
@@ -809,7 +823,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			if(personnel.isClerical()){
 				ttlWorker++;
 
-				if(personnel.isBumi()){
+				if(personnel.isBumi() != null && personnel.isBumi()){  //#32961
 					wrkBumi++;
 				}else {
 					if(personnel.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)){
@@ -2641,6 +2655,19 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @throws Exception
 	 */
 	public void downloadPOApprovalSiteVisitReport(SmSvTask svTask) throws Exception{
+		//#32963 - start
+		if(svTask == null)
+			svTask = getManagedBean().getSmSvTask();
+		try{
+			SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
+			reqDTO.setSmSvTask(svTask);
+			reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+			((ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class))
+					.saveOrSubmitSiteVisitReport(reqDTO);
+		}catch(Exception ex){
+			throw new EpException(ex.getMessage());
+		}	
+		//#32963 - end
 		getManagedBean().setSvTaskId(svTask.getSvTaskId());
 		retrieveSiteVisitInfo(""); //28774
 		downloadSiteVisitTemplate(getManagedBean().getSmSvTask(), true);
