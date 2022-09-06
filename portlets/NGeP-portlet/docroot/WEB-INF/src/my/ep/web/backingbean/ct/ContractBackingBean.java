@@ -2662,22 +2662,35 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		}
 		// Recalculate the performance bond amount
+		//#24333
 		// Start - Fix - #32663
-		String proc_type = getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode();
-
-		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
-				if(proc_type != null){
-					if(proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
-						//pk7 contract with bond from LOA
-						calculateNewBondAmount();
-					  } else if(!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-						// except pk7 and DP
-						calculateNewBondAmount();
-					  }
-			}
-		}
+//		String proc_type = getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode();
+//
+//		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
+//			if (proc_type != null ) {
+//				if (proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+//						&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
+//					// pk7 contract with bond from LOA
+//					calculateNewBondAmount();
+//					// Start Fix - #33491 
+//				} else if (!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+//					   		if(isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa()) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
+//					   		   //To carry over whatever setting regarding is_bond_req from LOA to set in CT	
+//					   		   getManagedBean().getContractVer().getCtContractAmount().setBondReq(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq());
+//					   		        if(getManagedBean().getContractVer().getCtContractAmount().isBondReq()){
+//					   		        	//recalculate the bond and set into CtcontractAmount 
+//					   		        	getManagedBean().getCtContractAmount().setTotalBondAmt(PerformanceBondUtil.calculatePerformanceBondAmt(getManagedBean().getGstTotalAmount(), new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod())));
+//					   		        }
+//					   		  }else{
+//									calculateNewBondAmount(); 
+//					   		  }	
+//				} 
+//			   }
+//			}
+			
+		   }
+	    // End Fix - #33491
 		// End - Fix - #32663
-	}
 
 	/**
 	 * The method used to calculate the new performance bond amount.
@@ -3151,14 +3164,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		cal.add(Calendar.YEAR, 1); 
 		newBond.setExpDate(cal.getTime());
 		//#24333 - Start
-		if(isContractExtendOrIsBond() && getManagedBean().isExtendContract()){
+		if(isContractExtendOrIsBond()){
 			newBond.setBondNew(true);
 			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(newBond);
-			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
+//			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
 		}else{
 			newBond.setBondNew(false);
 			getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().add(newBond);
-			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
+//			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
 		}
 		//#24333 - End
 	}		    
@@ -4545,6 +4558,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				|| getManagedBean().isViewContract() == true
 				)&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
 			isContractExtendOrIsBond = true;
+			getManagedBean().setDisableOriginalBond(true);
 			if(currentPeriod != null && extendPeriod != null) {
 				if(!extendPeriod.equals(currentPeriod) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
 					isContractExtendOrIsBond = true;
