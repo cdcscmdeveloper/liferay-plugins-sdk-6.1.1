@@ -1579,7 +1579,8 @@ public class SmApplicationUtil {
 			// paid up capital must less than paid-up capital of category
 			// code
 			if (category.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)
-					|| category.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) {
+					|| category.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)
+					|| category.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 				if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital()
 						.compareTo(category.getPmCategoryL3().getPaidUpCapital()) < 0) {
 					if (index == 1) {
