@@ -17,7 +17,7 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td width="18%">
-				<h:outputLabel value="#{lbl['lbl.sc.account.no.bank.name']}" /> <!-- 20220609@syazani - Bug #33674 -->
+				<h:outputLabel value="#{isSupplierAckStatus ? lbl['lbl.sc.account.no.bank.name'] : lbl['lbl.sc.account.no']}" /> <!-- 20220609@syazani - Bug #33674 -->
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isSupplierAckStatus}" />
 			</td>
 			<td>
@@ -43,7 +43,7 @@
 				</c:if>
 			</td>
 		</tr>
-		<tr style="display: none;"> <!-- 20220609@syazani - Bug #33674 -->
+		<tr style="display: #{isSupplierAckStatus ? 'none' : ''};"> <!-- 20220609@syazani - Bug #33674 -->
 			<td>
 				<h:outputLabel value="#{lbl['lbl.sc.bank.name']}" />
 			</td>
