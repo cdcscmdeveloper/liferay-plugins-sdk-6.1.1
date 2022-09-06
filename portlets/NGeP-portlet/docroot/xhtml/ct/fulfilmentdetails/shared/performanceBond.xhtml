@@ -304,7 +304,7 @@
 			</p:column>
 					
 			<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.txt.attachment']}" style="width:15%;">			
-				<h:panelGroup id="uploadBondPg" columns="2">
+				<h:panelGroup id="uploadBondSpl" columns="2">
 					<p:commandButton oncomplete="uploadBondSplDlg.show();return false;" update=":form:uploadBondSplDlg"
 					   	process="@this" partialSubmit="true" actionListener="#{ctBackingBean.PerformanceBondValue(varBondsupplemental)}"
 						rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting and varBondsupplemental.fileName == null
@@ -319,7 +319,7 @@
 					<p:commandLink rendered="#{varBondsupplemental.fileName != null and (!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
 						or !ctBackingBean.managedBean.ctContractAmount.bondReq)}" style="float:left;" 
 					  	action="#{ctBackingBean.setIndexProperty(index)}"
-					   	process="@this" partialSubmit="true"  onsuccess="deleteBondAttachmentDlg.show();">
+					   	process="@this" partialSubmit="true"  onsuccess="deleteBondAttachmentSplDlg.show();">
 			   			<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	</p:commandLink>
 				</h:panelGroup>
