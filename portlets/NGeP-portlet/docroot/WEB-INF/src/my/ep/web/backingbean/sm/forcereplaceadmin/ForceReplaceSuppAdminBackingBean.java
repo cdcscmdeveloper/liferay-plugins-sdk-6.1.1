@@ -220,6 +220,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 	}
 	//#28765 - Start
 	public void checkingBeforeDeclare() {
+		//# 33563
+		validateRole();
+		
 		RequestContext.getCurrentInstance().execute("declareDeletePopUp.show()");
 	}
 	//#28765 - End
@@ -1763,6 +1766,7 @@ public class ForceReplaceSuppAdminBackingBean extends
     	resetRoleEnableDisable();
     	
     	SmPersonnel currentPersonnel = this.getManagedBean().getNewAdmin();
+    	SmPersonnel passPersonnel = this.getManagedBean().getOldAdmin();
     	String supplierType = this.getManagedBean().getSmSupplier().getSmAppl().getSupplierType();
     	String businessType = this.getManagedBean().getSmSupplier().getBusinessType();
     	
@@ -1774,7 +1778,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG:
 	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH:
 	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK:
-	    			setEnableDisableRoleOneEquityOneStaff(currentPersonnel);
+	    			setEnableDisableRoleOneEquityOneStaff(currentPersonnel,passPersonnel);
 	    			break;
 	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG:
 	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD:
@@ -1803,7 +1807,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH:
 	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK:
 	    			//only 1 equity owner can apply role staff
-	    			setEnableDisableRoleOneEquityOneStaff(currentPersonnel);
+	    			setEnableDisableRoleOneEquityOneStaff(currentPersonnel,passPersonnel);
 	    			
 	    			break;
 	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG:
@@ -1897,7 +1901,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
     }
     
-    public void setEnableDisableRoleOneEquityOneStaff(SmPersonnel currentPersonnel){
+    public void setEnableDisableRoleOneEquityOneStaff(SmPersonnel currentPersonnel, SmPersonnel passPersonnel){
     	/*
     	 * RULES
     	 * 1. Only 1 of Equity Owner can apply role Staff
@@ -1907,7 +1911,8 @@ public class ForceReplaceSuppAdminBackingBean extends
     	
     	int count = 0;
 		for(SmPersonnel smPersonnel : this.getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels()){
-			if(currentPersonnel.getIdentificationNo() == smPersonnel.getIdentificationNo()){
+			if(currentPersonnel.getIdentificationNo() == smPersonnel.getIdentificationNo() 
+					|| passPersonnel.getIdentificationNo() == smPersonnel.getIdentificationNo()){
 				continue;
 			} else {
 				if(smPersonnel.isEquityOwner() && smPersonnel.isClerical()){
@@ -2005,6 +2010,20 @@ public class ForceReplaceSuppAdminBackingBean extends
 			this.getManagedBean().getNewAdmin().setProf(false);
 			this.getManagedBean().getNewAdmin().setClerical(false);
 		} 
+    }
+    
+    public void validateRole(){
+    	if(this.getManagedBean().getNewAdmin() != null){
+    		if(!this.getManagedBean().getNewAdmin().isEquityOwner()
+    				&& !this.getManagedBean().getNewAdmin().isDirector()
+    				&& !this.getManagedBean().getNewAdmin().isHigherManagement()
+    				&& !this.getManagedBean().getNewAdmin().isManagement()
+    				&& !this.getManagedBean().getNewAdmin().isProf()
+    				&& !this.getManagedBean().getNewAdmin().isSemiProf()
+    				&& !this.getManagedBean().getNewAdmin().isClerical()){
+    			throw new EpException(MessageConst.ERROR_722535);
+    		}
+    	}
     }
     // END -> #33563
 }
