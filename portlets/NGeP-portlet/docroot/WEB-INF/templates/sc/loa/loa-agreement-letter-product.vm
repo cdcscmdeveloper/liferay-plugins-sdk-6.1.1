@@ -2439,10 +2439,17 @@ u.underline {
 							  #end
 					#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
 						#set($specType = $tplspecMaster.specTypeCode.parameterCode)
+						#set($isSameItem = 'false')
+						
+						#foreach( $scLoiLoaItem in $scLoa.scLoiLoaItems )
+							#if($scLoiLoaItem.scRequestItem.tplSpecQuestion.specQuestionId == $tplspecQuestion.specQuestionId)
+								#set($isSameItem = 'true') 
+							#end										
+						#end
 						
 						#if ($isZonal)
 						
-							#if ($tplspecQuestion.questionType == "I")
+							#if ($tplspecQuestion.questionType == "I"  && $isSameItem == 'true')
 							 
 							<tr>							 
 								
@@ -2660,7 +2667,7 @@ u.underline {
 									
 							
 						#else
-							#if ($tplspecQuestion.questionType == "I")
+							#if ($tplspecQuestion.questionType == "I"  && $isSameItem == 'true')
 						 
 								<tr>
 								
