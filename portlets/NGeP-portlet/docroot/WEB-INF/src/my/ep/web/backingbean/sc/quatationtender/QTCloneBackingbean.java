@@ -1498,7 +1498,7 @@ public class QTCloneBackingbean extends
 			
 			if (delcontactpersonList != null || !delcontactpersonList.isEmpty()) {//33921
 				List<ScQtContactPerson> listDel=new ArrayList<ScQtContactPerson>();
-				for(ScQtContactPerson p:qt.getScQtContactPersons()){
+				for(ScQtContactPerson p:delcontactpersonList){//33921
 					p.setDeleted(true);
 					listDel.add(p);
 				}
