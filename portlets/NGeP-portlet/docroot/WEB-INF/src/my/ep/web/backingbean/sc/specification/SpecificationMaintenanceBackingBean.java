@@ -445,8 +445,16 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 			
 			if (this.getManagedBean().getInactiveSCMemberStr().length() > 0) {
 				SpecificationBackingBean specBB = new SpecificationBackingBean();
-				specBB.qtChecklistTabChange(10);
 				
+				// temporary while awaiting #29474 close in SIT -start-
+				// remove when #29474 ready for UAT
+				specBB.qtChecklistTabChange(9);
+				// temporary while awaiting #29474 close in SIT -end-
+				
+				// use this when #29474 ready for UAT -start-
+//				specBB.qtChecklistTabChange(10);
+				// use this when #29474 ready for UAT -end-
+
 				RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
 			}
 		}
