@@ -65,6 +65,9 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
+// #29487 - View bank details by factoring user_endorsed - Start
+import my.ep.type.pm.RoleCode;
+// #29487 - View bank details by factoring user_endorsed - End
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
