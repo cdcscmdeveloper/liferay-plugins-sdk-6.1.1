@@ -6587,6 +6587,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 */
 	public void preRenderCatalogue() {
 		log.debug("In preRenderCatalogue");
+		
+		//#30457 - Add refresh or renew session object
+		renewSesionObject();
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
@@ -10185,24 +10188,56 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 		//200921@akmal - Enhancement27627 - End
 	}
-	
-	//20200520@akmal - Enhancement27627 - Start
-	public boolean isPromotionPriceExist(CmSupplierItem cmSupplierItem){
+    
+	// #30457 - Start
+	// 20200520@akmal - Enhancement27627 - Start
+	public boolean isPromotionPriceExist(CmSupplierItem cmSupplierItem) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+		Date CurrentDate = new Date();
+
 		log.info("isPromotionPriceExist");
 		log.info(cmSupplierItem.getCmPromotionPricing().getPrice());
 		log.info(cmSupplierItem.getCmPromotionPricing().getStartDate());
 		log.info(cmSupplierItem.getCmPromotionPricing().getEndDate());
-		if(cmSupplierItem.getCmPromotionPricing().getStartDate()!=null || cmSupplierItem.getCmPromotionPricing().getEndDate()!=null || cmSupplierItem.getCmPromotionPricing().getPrice() !=null )
-			return true;
-		//201002@akmal - Bug29265 - Start
-		else if(this.getManagedBean().isPromoPriceExist())
-			return true;
-		//201002@akmal - Bug29265 - End
-		else
-			return false;
+		if (!this.getManagedBean().isAddPromotion()) {
+			if (!this.getManagedBean().isCatDPScreen()) {
+				if (cmSupplierItem.getCmPromotionPricing().getStartDate() != null
+						|| cmSupplierItem.getCmPromotionPricing().getEndDate() != null
+						|| cmSupplierItem.getCmPromotionPricing().getPrice() != null) {
+					this.getManagedBean().setPromoPriceExist(true);
+					// 201002@akmal - Bug29265 - Start
+					// #29177 - CR 27627: Static Code Analysis
+					// changed else-if-else statement to single-returned else
+					// statement
+					// else if(this.getManagedBean().isPromoPriceExist())
+					// return true;
+					// 201002@akmal - Bug29265 - End
+					// else
+					// return false;
+				} else {
+					this.getManagedBean().setPromoPriceExist(false);
+					// end #29177
+				}
+			} else {
+				if (cmSupplierItem.getCmPromotionPricing().getStartDate() != null
+						|| cmSupplierItem.getCmPromotionPricing().getEndDate() != null
+						|| cmSupplierItem.getCmPromotionPricing().getPrice() != null) {
+					if (dateFormat.format(cmSupplierItem.getCmPromotionPricing().getStartDate()).compareTo(
+							dateFormat.format(CurrentDate)) <= 0
+							&& dateFormat.format(cmSupplierItem.getCmPromotionPricing().getEndDate()).compareTo(
+									dateFormat.format(CurrentDate)) >= 0) {
+						this.getManagedBean().setPromoPriceExist(true);
+					} else {
+						this.getManagedBean().setPromoPriceExist(false);
+					}
+				}
+			}
+		}
+		return this.getManagedBean().isPromoPriceExist();
 	}
-	//20200520@akmal - Enhancement27627 - End
-
+	// 20200520@akmal - Enhancement27627 - End
+	// #30457 - End
+	
 	/**
 	 * This method is used to navigate the pending task page.
 	 * 
