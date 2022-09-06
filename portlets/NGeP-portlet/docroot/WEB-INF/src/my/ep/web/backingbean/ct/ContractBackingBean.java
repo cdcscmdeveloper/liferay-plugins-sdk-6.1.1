@@ -3201,11 +3201,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if(isContractExtendOrIsBond()){
 			newBond.setBondNew(true);
 			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(newBond);
-			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
+//			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
 		}else{
 			newBond.setBondNew(false);
 			getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().add(newBond);
-			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
+//			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
 		}
 		//#24333 - End
 	}		    
