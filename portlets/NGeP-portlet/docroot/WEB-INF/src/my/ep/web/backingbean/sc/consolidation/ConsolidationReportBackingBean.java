@@ -2524,7 +2524,7 @@ public class ConsolidationReportBackingBean extends
 //-------------> HERE #31556 & #31555 related to #21695 Farid START
 					 if(specZoneDtl != null){
 						for(TplSpecZoneQty finditemOfferZone : item.getRequestItem().getTplSpecQuestion().getTplSpecZoneQties()){
-							if(finditemOfferZone != null && !finditemOfferZone.getTplSpecZoneOffer().isOffer()
+							if(finditemOfferZone != null && finditemOfferZone.getTplSpecZoneOffer() != null && !finditemOfferZone.getTplSpecZoneOffer().isOffer()
 									&& item.getOrderQty() != null && item.getOrderQty().compareTo(BigDecimal.ZERO) > 0){
 								log.info("validate zonal offer");
 								validateRankingPO(qualifiedSupplierBeans, true, item,
