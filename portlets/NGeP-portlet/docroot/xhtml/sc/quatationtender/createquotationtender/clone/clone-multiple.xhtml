@@ -62,28 +62,31 @@
 					
 				</p:dialog>
 				
-			<!--#9019 Start - 01082022 Reopen Add loading #note-254-->
-			<h:panelGroup id="displayloadingconfirm">
-				  <p:blockUI block="clonesearchpnconfirmMesg" widgetVar="blockWidgetCloneConfirm">
-					<p:graphicImage value="/css/images/ajax-loader.gif" />
-				</p:blockUI>
-			<!--#9019 Start - add new confirm message dialog for Clone-->	
-			<p:confirmDialog id="clonesearchpnconfirmMesg" message="#{lbl['lbl.sc.qt.dialog.cofirm.clone.msg']}"
+			
+		<!--#33914 Start - QT Maintenance pop up message related #9019 and overwrite reopen #note-254-->
+		<p:outputPanel layout="block" id="confirmBlockPanel">
+			<p:confirmDialog message="#{lbl['lbl.sc.qt.dialog.cofirm.clone.msg']}"
 				header="#{lbl['lbl.cm.dialog.cofirm.header']}"
 				widgetVar="confirmationClone">
-				<p:commandButton id="conf"
-					value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-					actionListener="#{qtMultipleCloneBackingBean.addToClone()}"
-					update="@form" onstart="blockWidgetCloneConfirm.show()" 
-					oncomplete="blockWidgetCloneConfirm.hide();confirmationClone.hide()"/>
-					<!--#9019 01082022 Reopen Add loading confirmDialogId,onstart,oncomplete #note-254-->
-				<p:commandButton id="decline"
-					value="#{lbl['lbl.cm.dialog.cofirm.no']}"
-					onclick="confirmationClone.hide()" />
-				<h:inputHidden id="rowIndex"></h:inputHidden>
+				<h:panelGroup id="displayloadingconfirm">
+					<p:blockUI block="confirmBlockPanel" widgetVar="blockWidgetCloneConfirm">
+						<p:graphicImage value="/css/images/ajax-loader.gif" />
+					</p:blockUI>
+				
+					<p:commandButton id="conf"
+						value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+						actionListener="#{qtMultipleCloneBackingBean.addToClone()}"
+						update="@form" onstart="blockWidgetCloneConfirm.show()" 
+						oncomplete="blockWidgetCloneConfirm.hide();confirmationClone.hide()"/>
+						<!--#9019 01082022 Reopen Add loading confirmDialogId,onstart,oncomplete #note-254-->
+					<p:commandButton id="decline"
+						value="#{lbl['lbl.cm.dialog.cofirm.no']}"
+						onclick="confirmationClone.hide()" />
+					<h:inputHidden id="rowIndex"></h:inputHidden>
+				 </h:panelGroup>	
 			</p:confirmDialog>
-			<!--#9019 End - add new confirm message dialog for Clone-->
-			</h:panelGroup>
-			<!--#9019 End - 01082022 Reopen Add loading #note-254-->
+		</p:outputPanel>
+		<!--#33914 End - QT Maintenance pop up message related #9019 and overwrite reopen #note-254-->
+	
 						
 </ui:composition>
