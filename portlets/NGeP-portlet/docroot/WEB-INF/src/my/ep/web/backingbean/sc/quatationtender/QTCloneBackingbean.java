@@ -1474,10 +1474,22 @@ public class QTCloneBackingbean extends
 					.getResultList();
 			
 			//this.getManagedBean().setToBeRemovalContactPersonList(contactPersonList);
+			QuationTenderReqDTO reqDTOS = new QuationTenderReqDTO();//33921
+			// reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			reqDTOS.setQtdetail(this.getManagedBean().getQt());
+			QuationTenderResDTO resDTO1 = detailSO
+					.retriveQTScheduleDetails(reqDTOS);
+			List<ScQtContactPerson> delcontactpersonList=new ArrayList<ScQtContactPerson>();
+			if(CollectionUtils.isNotEmpty(resDTO1.getContactPersons().getResultList())){
+				delcontactpersonList.addAll(resDTO1.getContactPersons().getResultList());
+			}
+			if(CollectionUtils.isNotEmpty(resDTO1.getDeskOfficers().getResultList())){
+				delcontactpersonList.addAll(resDTO1.getDeskOfficers().getResultList());
+			}//33921
 			
-			if (qt.getScQtContactPersons() != null || !qt.getScQtContactPersons().isEmpty()) {
+			if (delcontactpersonList != null || !delcontactpersonList.isEmpty()) {//33921
 				List<ScQtContactPerson> listDel=new ArrayList<ScQtContactPerson>();
-				for(ScQtContactPerson p:qt.getScQtContactPersons()){
+				for(ScQtContactPerson p:delcontactpersonList){//33921
 					p.setDeleted(true);
 					listDel.add(p);
 				}
