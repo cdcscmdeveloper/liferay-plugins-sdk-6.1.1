@@ -129,7 +129,7 @@
 								           </p:selectOneRadio>	
 								           <!-- #29521 - start -->
 												<td>
-													<p:graphicImage id="openForIc" rendered="#{qTDetailBB.managedBean.isOpenForChange and qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_REVISION_PUBLICATION}" value="/css/images/design/icon_alert.png" />
+													<p:graphicImage id="openForIc" rendered="#{qTDetailBB.managedBean.isOpenForChange and (qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_REVISION_PUBLICATION)}" value="/css/images/design/icon_alert.png" />
 													<p:tooltip for="openForIc">
 														<p:outputLabel escape="false" value="#{qTDetailBB.managedBean.scQtHistory.openFor eq 'A' ? lbl['lbl.txt.all']:lbl['lbl.sc.notice.board.requirement.bumiputera']}"  />
 													</p:tooltip>
@@ -143,7 +143,14 @@
 											 <f:selectItems value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
 												<p:ajax event="change" process="@this" partialSubmit="true" update="@form" listener="#{createQtBB.openForChange}"></p:ajax>				
 										    </p:selectOneRadio>	
-										     
+										       <!-- #29521 - start -->
+												<td>
+													<p:graphicImage id="openForIc" rendered="#{qTDetailBB.managedBean.isOpenForChange and (qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_REVISION_PUBLICATION)}" value="/css/images/design/icon_alert.png" />
+													<p:tooltip for="openForIc">
+														<p:outputLabel escape="false" value="#{qTDetailBB.managedBean.scQtHistory.openFor eq 'A' ? lbl['lbl.txt.all']:lbl['lbl.sc.notice.board.requirement.bumiputera']}"  />
+													</p:tooltip>
+												</td>
+										<!-- #29521 - end -->
 									  </c:otherwise> 
 								 </c:choose>    	    
 							  </td>
