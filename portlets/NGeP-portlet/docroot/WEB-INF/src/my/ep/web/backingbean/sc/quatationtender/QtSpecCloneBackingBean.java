@@ -712,6 +712,7 @@ public class QtSpecCloneBackingBean extends
 						if(null!=specQuestion.getTplSpecZoneQties()&&CollectionUtils.isNotEmpty(specQuestion.getTplSpecZoneQties())&& null!=this.getManagedBean().getTemplateSpecZoneDtls()&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())&&specQuestion.getTplSpecZoneQties().size()==this.getManagedBean().getTemplateSpecZoneDtls().size()){
 							for(int i=0;i<specQuestion.getTplSpecZoneQties().size();i++){
 								specQuestion.getTplSpecZoneQties().get(i).setTplSpecZoneDtl(this.getManagedBean().getTemplateSpecZoneDtls().get(i));
+								specQuestion.getTplSpecZoneQties().get(i).setTplSpecZoneOffer(null);//33950
 							}
 						}else{//33893-start
 						if(null!=specQuestion.getTplSpecZoneQties()&&CollectionUtils.isNotEmpty(specQuestion.getTplSpecZoneQties())){//25635&31545-start
