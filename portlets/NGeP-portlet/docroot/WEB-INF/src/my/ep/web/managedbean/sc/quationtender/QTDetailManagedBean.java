@@ -78,6 +78,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
 import my.ep.persistence.entity.sc.quationtender.ScQtBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategoryHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
@@ -91,6 +92,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
+import my.ep.persistence.entity.sc.quationtender.ScQtHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
@@ -1813,6 +1815,34 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #32929 - start
 	private boolean zoneRdbButtonChecked = Boolean.FALSE;
 	// #32929 - end
+	
+	// #29521 - start
+	private Boolean isZonalChange;
+	private Boolean isOpenForChange;
+	private Boolean isProcTypeCatChange;
+	private Boolean isPmProcurementCategoryChange;
+	private Boolean isEvaluationTypeChange;
+	private Boolean isExistingContractChange;
+	private Boolean isFulfilmentTypeChange;
+	private Boolean isContractCompletionPeriodChange;
+	private Boolean isScEditGeneral;
+	private Boolean isScEditSupplierQualificationCriteria;
+	private Boolean isCategoryCodeChange;
+	private ScQtHistory scQtHistory;
+	private String componentName;
+	private List<ScQtCategory> qtCategoryHistoryList;
+	private ScQtCategoryHistory categoryHistory;
+	private List<Boolean> catBoolean;
+	private List<Long> listCatHistory;
+	private List<String> listZonalHistory;
+	private Boolean isZonalHistoryExist;
+	private Boolean fromFinancialChecklist;
+	private ScQt backupScQt;
+	private List<ScQtCategory> backupCategoryCode;
+	private List<TplSpecZoneDtl> backupZoneList;
+	private List<Long> listCategory;
+				
+	// #29521 - end
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11296,6 +11326,368 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.zoneRdbButtonChecked = zoneRdbButtonChecked;
 		}
 		// #32929 - end
+		
+	// #29521 - start
+	/**
+	 * @return the isZonalChange
+	 */
+	public Boolean getIsZonalChange() {
+		return isZonalChange;
+	}
+
+	/**
+	 * @param isZonalChange
+	 *            the isZonalChange to set
+	 */
+	public void setIsZonalChange(Boolean isZonalChange) {
+		this.isZonalChange = isZonalChange;
+	}
+
+	/**
+	 * @return the isOpenForChange
+	 */
+	public Boolean getIsOpenForChange() {
+		return isOpenForChange;
+	}
+
+	/**
+	 * @param isOpenForChange
+	 *            the isOpenForChange to set
+	 */
+	public void setIsOpenForChange(Boolean isOpenForChange) {
+		this.isOpenForChange = isOpenForChange;
+	}
+
+	/**
+	 * @return the isProcTypeCatChange
+	 */
+	public Boolean getIsProcTypeCatChange() {
+		return isProcTypeCatChange;
+	}
+
+	/**
+	 * @param isProcTypeCatChange
+	 *            the isProcTypeCatChange to set
+	 */
+	public void setIsProcTypeCatChange(Boolean isProcTypeCatChange) {
+		this.isProcTypeCatChange = isProcTypeCatChange;
+	}
+
+	/**
+	 * @return the isPmProcurementCategoryChange
+	 */
+	public Boolean getIsPmProcurementCategoryChange() {
+		return isPmProcurementCategoryChange;
+	}
+
+	/**
+	 * @param isPmProcurementCategoryChange
+	 *            the isPmProcurementCategoryChange to set
+	 */
+	public void setIsPmProcurementCategoryChange(Boolean isPmProcurementCategoryChange) {
+		this.isPmProcurementCategoryChange = isPmProcurementCategoryChange;
+	}
+
+	/**
+	 * @return the isEvaluationTypeChange
+	 */
+	public Boolean getIsEvaluationTypeChange() {
+		return isEvaluationTypeChange;
+	}
+
+	/**
+	 * @param isEvaluationTypeChange
+	 *            the isEvaluationTypeChange to set
+	 */
+	public void setIsEvaluationTypeChange(Boolean isEvaluationTypeChange) {
+		this.isEvaluationTypeChange = isEvaluationTypeChange;
+	}
+
+	/**
+	 * @return the isExistingContractChange
+	 */
+	public Boolean getIsExistingContractChange() {
+		return isExistingContractChange;
+	}
+
+	/**
+	 * @param isExistingContractChange
+	 *            the isExistingContractChange to set
+	 */
+	public void setIsExistingContractChange(Boolean isExistingContractChange) {
+		this.isExistingContractChange = isExistingContractChange;
+	}
+
+	/**
+	 * @return the isFulfilmentTypeChange
+	 */
+	public Boolean getIsFulfilmentTypeChange() {
+		return isFulfilmentTypeChange;
+	}
+
+	/**
+	 * @param isFulfilmentTypeChange
+	 *            the isFulfilmentTypeChange to set
+	 */
+	public void setIsFulfilmentTypeChange(Boolean isFulfilmentTypeChange) {
+		this.isFulfilmentTypeChange = isFulfilmentTypeChange;
+	}
+
+	/**
+	 * @return the isContractCompletionPeriodChange
+	 */
+	public Boolean getIsContractCompletionPeriodChange() {
+		return isContractCompletionPeriodChange;
+	}
+
+	/**
+	 * @param isContractCompletionPeriodChange
+	 *            the isContractCompletionPeriodChange to set
+	 */
+	public void setIsContractCompletionPeriodChange(Boolean isContractCompletionPeriodChange) {
+		this.isContractCompletionPeriodChange = isContractCompletionPeriodChange;
+	}
+
+	/**
+	 * @return the isScEditGeneral
+	 */
+	public Boolean getIsScEditGeneral() {
+		return isScEditGeneral;
+	}
+
+	/**
+	 * @param isScEditGeneral
+	 *            the isScEditGeneral to set
+	 */
+	public void setIsScEditGeneral(Boolean isScEditGeneral) {
+		this.isScEditGeneral = isScEditGeneral;
+	}
+
+	/**
+	 * @return the isScEditSupplierQualificationCriteria
+	 */
+	public Boolean getIsScEditSupplierQualificationCriteria() {
+		return isScEditSupplierQualificationCriteria;
+	}
+
+	/**
+	 * @param isScEditSupplierQualificationCriteria
+	 *            the isScEditSupplierQualificationCriteria to set
+	 */
+	public void setIsScEditSupplierQualificationCriteria(Boolean isScEditSupplierQualificationCriteria) {
+		this.isScEditSupplierQualificationCriteria = isScEditSupplierQualificationCriteria;
+	}
+
+	/**
+	 * @return the isCategoryCodeChange
+	 */
+	public Boolean getIsCategoryCodeChange() {
+		return isCategoryCodeChange;
+	}
+
+	/**
+	 * @param isCategoryCodeChange
+	 *            the isCategoryCodeChange to set
+	 */
+	public void setIsCategoryCodeChange(Boolean isCategoryCodeChange) {
+		this.isCategoryCodeChange = isCategoryCodeChange;
+	}
+
+	/**
+	 * @return the scQtHistory
+	 */
+	public ScQtHistory getScQtHistory() {
+		return scQtHistory;
+	}
+
+	/**
+	 * @param scQtHistory
+	 *            the scQtHistory to set
+	 */
+	public void setScQtHistory(ScQtHistory scQtHistory) {
+		this.scQtHistory = scQtHistory;
+	}
+
+	/**
+	 * @return the componentName
+	 */
+	public String getComponentName() {
+		return componentName;
+	}
+
+	/**
+	 * @param componentName
+	 *            the componentName to set
+	 */
+	public void setComponentName(String componentName) {
+		this.componentName = componentName;
+	}
+
+	/**
+	 * @return the qtCategoryHistoryList
+	 */
+	public List<ScQtCategory> getQtCategoryHistoryList() {
+		return qtCategoryHistoryList;
+	}
+
+	/**
+	 * @param qtCategoryHistoryList
+	 *            the qtCategoryHistoryList to set
+	 */
+	public void setQtCategoryHistoryList(List<ScQtCategory> qtCategoryHistoryList) {
+		this.qtCategoryHistoryList = qtCategoryHistoryList;
+	}
+
+	/**
+	 * @return the categoryHistory
+	 */
+	public ScQtCategoryHistory getCategoryHistory() {
+		return categoryHistory;
+	}
+
+	/**
+	 * @param categoryHistory
+	 *            the categoryHistory to set
+	 */
+	public void setCategoryHistory(ScQtCategoryHistory categoryHistory) {
+		this.categoryHistory = categoryHistory;
+	}
+
+	/**
+	 * @return the catBoolean
+	 */
+	public List<Boolean> getCatBoolean() {
+		return catBoolean;
+	}
+
+	/**
+	 * @param catBoolean
+	 *            the catBoolean to set
+	 */
+	public void setCatBoolean(List<Boolean> catBoolean) {
+		this.catBoolean = catBoolean;
+	}
+
+	/**
+	 * @return the listCatHistory
+	 */
+	public List<Long> getListCatHistory() {
+		return listCatHistory;
+	}
+
+	/**
+	 * @param listCatHistory
+	 *            the listCatHistory to set
+	 */
+	public void setListCatHistory(List<Long> listCatHistory) {
+		this.listCatHistory = listCatHistory;
+	}
+
+	/**
+	 * @return the listZonalHistory
+	 */
+	public List<String> getListZonalHistory() {
+		return listZonalHistory;
+	}
+
+	/**
+	 * @param listZonalHistory
+	 *            the listZonalHistory to set
+	 */
+	public void setListZonalHistory(List<String> listZonalHistory) {
+		this.listZonalHistory = listZonalHistory;
+	}
+
+	/**
+	 * @return the isZonalHistoryExist
+	 */
+	public Boolean getIsZonalHistoryExist() {
+		return isZonalHistoryExist;
+	}
+
+	/**
+	 * @param isZonalHistoryExist
+	 *            the isZonalHistoryExist to set
+	 */
+	public void setZonalHistoryExist(Boolean isZonalHistoryExist) {
+		this.isZonalHistoryExist = isZonalHistoryExist;
+	}
+
+	/**
+	 * @return the fromFinancialChecklist
+	 */
+	public Boolean getFromFinancialChecklist() {
+		return fromFinancialChecklist;
+	}
+
+	/**
+	 * @param fromFinancialChecklist
+	 *            the fromFinancialChecklist to set
+	 */
+	public void setFromFinancialChecklist(Boolean fromFinancialChecklist) {
+		this.fromFinancialChecklist = fromFinancialChecklist;
+	}
+
+	/**
+	 * @return the backupScQt
+	 */
+	public ScQt getBackupScQt() {
+		return backupScQt;
+	}
+
+	/**
+	 * @param backupScQt
+	 *            the backupScQt to set
+	 */
+	public void setBackupScQt(ScQt backupScQt) {
+		this.backupScQt = backupScQt;
+	}
+
+	/**
+	 * @return the backupCategoryCode
+	 */
+	public List<ScQtCategory> getBackupCategoryCode() {
+		return backupCategoryCode;
+	}
+
+	/**
+	 * @param backupCategoryCode
+	 *            the backupCategoryCode to set
+	 */
+	public void setBackupCategoryCode(List<ScQtCategory> backupCategoryCode) {
+		this.backupCategoryCode = backupCategoryCode;
+	}
+
+	/**
+	 * @return the backupZoneList
+	 */
+	public List<TplSpecZoneDtl> getBackupZoneList() {
+		return backupZoneList;
+	}
+
+	/**
+	 * @param backupZoneList
+	 *            the backupZoneList to set
+	 */
+	public void setBackupZoneList(List<TplSpecZoneDtl> backupZoneList) {
+		this.backupZoneList = backupZoneList;
+	}
+
+	/**
+	 * @return the listCategory
+	 */
+	public List<Long> getListCategory() {
+		return listCategory;
+	}
+
+	/**
+	 * @param listCategory
+	 *            the listCategory to set
+	 */
+	public void setListCategory(List<Long> listCategory) {
+		this.listCategory = listCategory;
+	}
+	// #29521 - end
 }
 
 // ***25201
