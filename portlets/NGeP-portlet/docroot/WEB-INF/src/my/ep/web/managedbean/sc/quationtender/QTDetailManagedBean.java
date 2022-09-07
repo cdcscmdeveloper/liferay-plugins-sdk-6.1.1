@@ -1658,14 +1658,17 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean showPopUpBPKApprovalNeeded = false;
 	private boolean resetBpkCurrentArea=false;
 	private String previousApprovalTabName;
-	private ScQtApprovalReqAttachement scQtApprovalReqAttachementHistory;
-	private boolean flagFileAttahmentDeleted = false;
+	private ScQtApprovalReqAttachement scQtApprovalReqAttachementICT;
+	private ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI;
+	private ScQtApprovalReqAttachement scQtApprovalReqAttachementHistoryICT;
+	private ScQtApprovalReqAttachement scQtApprovalReqAttachementHistoryMITI;
+	private boolean flagFileAttahmentDeletedICT = false;
+	private boolean flagFileAttahmentDeletedMITI = false;
 	private boolean firstPagePA = false;
 	// #25077 - End
 
 	// bug #30435, Enhancement #25077 -start-
 	private PmParameter pmParam;
-	private ScQtApprovalReqAttachement scQtApprovalReqAttachement;
 	private String scQtAppRequestRemark;
 	private boolean approverTabLoaded = false;
 	// bug #30435, Enhancement #25077 -end-
@@ -10550,27 +10553,37 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		return previousApprovalTabName;
 	}
 	
-	/**
-	 * @param previousApprovalTabName the previousApprovalTabName to set
-	 */
-	public void setPreviousApprovalTabName(String previousApprovalTabName) {
-		this.previousApprovalTabName = previousApprovalTabName;
-	}
-	
-	public ScQtApprovalReqAttachement getScQtApprovalReqAttachementHistory() {
-		return scQtApprovalReqAttachementHistory;
+	public ScQtApprovalReqAttachement getScQtApprovalReqAttachementHistoryICT() {
+		return scQtApprovalReqAttachementHistoryICT;
 	}
 
-	public void setScQtApprovalReqAttachementHistory(ScQtApprovalReqAttachement scQtApprovalReqAttachementHistory) {
-		this.scQtApprovalReqAttachementHistory = scQtApprovalReqAttachementHistory;
+	public void setScQtApprovalReqAttachementHistoryICT(ScQtApprovalReqAttachement scQtApprovalReqAttachementHistoryICT) {
+		this.scQtApprovalReqAttachementHistoryICT = scQtApprovalReqAttachementHistoryICT;
 	}
 
-	public boolean isFlagFileAttahmentDeleted() {
-		return flagFileAttahmentDeleted;
+	public ScQtApprovalReqAttachement getScQtApprovalReqAttachementHistoryMITI() {
+		return scQtApprovalReqAttachementHistoryMITI;
 	}
 
-	public void setFlagFileAttahmentDeleted(boolean flagFileAttahmentDeleted) {
-		this.flagFileAttahmentDeleted = flagFileAttahmentDeleted;
+	public void setScQtApprovalReqAttachementHistoryMITI(
+			ScQtApprovalReqAttachement scQtApprovalReqAttachementHistoryMITI) {
+		this.scQtApprovalReqAttachementHistoryMITI = scQtApprovalReqAttachementHistoryMITI;
+	}
+
+	public boolean isFlagFileAttahmentDeletedICT() {
+		return flagFileAttahmentDeletedICT;
+	}
+
+	public void setFlagFileAttahmentDeletedICT(boolean flagFileAttahmentDeletedICT) {
+		this.flagFileAttahmentDeletedICT = flagFileAttahmentDeletedICT;
+	}
+
+	public boolean isFlagFileAttahmentDeletedMITI() {
+		return flagFileAttahmentDeletedMITI;
+	}
+
+	public void setFlagFileAttahmentDeletedMITI(boolean flagFileAttahmentDeletedMITI) {
+		this.flagFileAttahmentDeletedMITI = flagFileAttahmentDeletedMITI;
 	}
 	
 	public boolean isFirstPagePA() {
@@ -10579,6 +10592,33 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setFirstPagePA(boolean firstPagePA) {
 		this.firstPagePA = firstPagePA;
+	}
+	/**
+	 * @return the scQtApprovalReqAttachementICT
+	 */
+	public ScQtApprovalReqAttachement getScQtApprovalReqAttachementICT() {
+		return scQtApprovalReqAttachementICT;
+	}
+
+	/**
+	 * @param scQtApprovalReqAttachementICT the scQtApprovalReqAttachementICT to set
+	 */
+	public void setScQtApprovalReqAttachementICT(ScQtApprovalReqAttachement scQtApprovalReqAttachementICT) {
+		this.scQtApprovalReqAttachementICT = scQtApprovalReqAttachementICT;
+	}
+	
+	/**
+	 * @return the scQtApprovalReqAttachementMITI
+	 */
+	public ScQtApprovalReqAttachement getScQtApprovalReqAttachementMITI() {
+		return scQtApprovalReqAttachementMITI;
+	}
+
+	/**
+	 * @param scQtApprovalReqAttachementMITI the scQtApprovalReqAttachementMITI to set
+	 */
+	public void setScQtApprovalReqAttachementMITI(ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI) {
+		this.scQtApprovalReqAttachementMITI = scQtApprovalReqAttachementMITI;
 	}
 	// #25077 - End
 
@@ -10596,21 +10636,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setPmParam(PmParameter pmParam) {
 		this.pmParam = pmParam;
-	}
-
-	/**
-	 * @return the scQtApprovalReqAttachement
-	 */
-	public ScQtApprovalReqAttachement getScQtApprovalReqAttachement() {
-		return scQtApprovalReqAttachement;
-	}
-
-	/**
-	 * @param scQtApprovalReqAttachement
-	 *            the scQtApprovalReqAttachement to set
-	 */
-	public void setScQtApprovalReqAttachement(ScQtApprovalReqAttachement scQtApprovalReqAttachement) {
-		this.scQtApprovalReqAttachement = scQtApprovalReqAttachement;
 	}
 
 	/**
