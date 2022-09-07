@@ -6448,12 +6448,14 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 							.getZones()) {
 						
 						if (specZonedtl != null) {
+							//adjust position flag here
+							retrieveAns.setDisableRow(true);
 							for (TplSpecZoneQty specZoneQty : retrieveAns
 									.getTplSpecQuestion().getTplSpecZoneQties()) {
 								if (this.getManagedBean().getZones().size() != retrieveAns
 										.getTplSpecQuestion().getTplSpecZoneQties()
 										.size()) {
-									retrieveAns.setDisableRow(true);
+									
 									if (specZoneQty != null
 											&& specZoneQty.getQty().compareTo(BigDecimal.ZERO)>0
 											&& specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId())) {
