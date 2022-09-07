@@ -213,6 +213,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategoryHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
@@ -236,6 +237,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtlHistory;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -360,6 +362,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	//29464-end
 	
 	public static final String TEMP_MB_KEY = "___823452381_76";
+	
+	//#29521 - start
+			public static Long tempProcurementTypeCategory = 0L;
+			public static String tempOpenFor = "";
+			public static String tempEvalType = "";
+			//#29521 - end
 	
 	public String getMenuItemDetails() {
 		return menuItemDetails;
@@ -3803,6 +3811,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().setSubStatusId(sts.getStatusId());
 			}
 			//#25692-End
+			//#29521-start
+			retrieveScQtHist();
+			validateIsSupplierQualificationCriteriaChange();
+			validateIsZonalAdded();
+			//#29521-end
 			//#11299 vinod start
 			if (SCProcessNameConst.REVISE_COMMITTEE.equals(this.getManagedBean().getTaskName())) {
 				PmStatus sts = getQTDetailSO().retrieveActiveStatusByDoctype(this.getManagedBean().getQt().getQtId(), ParameterConst.DOCTYPE_COMMITTE_APROVAL);
@@ -5766,6 +5779,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						getManagedBean().getCtContract().setContractNo(
 								this.getManagedBean().getQt()
 										.getExistingContractNo());
+						//29521 - start
+						String ctNameandNo = "";
+						ctNameandNo = QtDetailsSO.getContractNameByContractNo(this.getManagedBean().getQt().getExistingContractNo());
+						this.getManagedBean().getCtContract().setCtNameandNo(ctNameandNo);
+						//29521 - end
 						// this.getManagedBean().setContractType(scQt.getContractType());
 						if (this.getManagedBean().getQt().isZonal()) {							
 							if (null != this.getManagedBean().getQt()
@@ -12493,4 +12511,204 @@ public void retrieveDemoQtDetails(Long qtId) {
 		return bpmExistFlag;
 	}
 	//9019 - End (Harun)
+	// #29521 - start
+	
+	
+			public void retrieveScQtHist(){
+				
+				//start - general information tab
+				IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+				
+				SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
+				specificationReqDTO.setQtId(getManagedBean().getQt().getQtId());
+				SpecificationResDTO specificationResDTO = specSO.getSpecHistoryByQtID(specificationReqDTO);
+				if (specificationResDTO.getScQtHistory() != null){
+					this.getManagedBean().setScQtHistory(specificationResDTO.getScQtHistory());
+					
+					//open for
+					if (!getManagedBean().getQt().isPanel()){
+						if (!getManagedBean().getScQtHistory().getOpenFor().equalsIgnoreCase(getManagedBean().getQt().getOpenFor())){
+							tempOpenFor = getManagedBean().getQt().getOpenFor();
+							getManagedBean().setIsOpenForChange(true);
+							getManagedBean().setIsScEditGeneral(true);
+							getManagedBean().setIsScEditSupplierQualificationCriteria(true);
+						}
+					}
+					
+					//zone
+					if (getManagedBean().getScQtHistory().isZonal() != getManagedBean().getQt().isZonal()){
+						getManagedBean().setIsZonalChange(true);
+						getManagedBean().setIsScEditGeneral(true);
+					}
+					//procurement type category
+					if (getManagedBean().getScQtHistory().getProcurementTypeCatId().getParameterId() != getManagedBean().getQt().getProcurementTypeCatId().getParameterId()){
+						tempProcurementTypeCategory = getManagedBean().getQt().getProcurementTypeCatId().getParameterId();
+						getManagedBean().setIsProcTypeCatChange(true);
+						getManagedBean().setIsScEditGeneral(true);
+					}
+					//procurement category
+					if (getManagedBean().getScQtHistory().getPmProcurementCategory().getParameterId() != getManagedBean().getQt().getPmProcurementCategory().getParameterId()){
+						getManagedBean().setIsPmProcurementCategoryChange(true);
+						getManagedBean().setIsScEditGeneral(true);
+					}
+					//evaluation type
+					if (!getManagedBean().getScQtHistory().getEvaluationType().equals(getManagedBean().getQt().getEvaluationType()) || getManagedBean().getQt().getEvaluationType().isEmpty()){
+						tempEvalType = getManagedBean().getQt().getEvaluationType();
+						getManagedBean().setIsEvaluationTypeChange(true);
+						getManagedBean().setIsScEditGeneral(true);
+					}
+					//existing contract null validation
+					if (getManagedBean().getScQtHistory().getExistingContractNo() == null && getManagedBean().getQt().getExistingContractNo() == null){
+						getManagedBean().getScQtHistory().setExistingContractNo("");
+						getManagedBean().getQt().setExistingContractNo("");
+						
+					}else if (getManagedBean().getScQtHistory().getExistingContractNo() == null){
+						getManagedBean().getScQtHistory().setExistingContractNo("");
+					}else if (getManagedBean().getQt().getExistingContractNo() == null){
+						getManagedBean().getQt().setExistingContractNo("");
+					}
+					//existing contract
+					if (!getManagedBean().getScQtHistory().getExistingContractNo().trim().equalsIgnoreCase(getManagedBean().getQt().getExistingContractNo().trim())){
+						getManagedBean().setIsExistingContractChange(true);
+						getManagedBean().setIsScEditGeneral(true);
+					}
+					//fulfilment type
+					if (getManagedBean().getScQtHistory().getFulfilmentType().getParameterId() != getManagedBean().getQt().getFulfilmentType().getParameterId()){
+						getManagedBean().setIsFulfilmentTypeChange(true);
+						getManagedBean().setIsScEditGeneral(true);
+					}
+					//contract duration
+					if (getManagedBean().getScQtHistory().getContractDuration() != getManagedBean().getQt().getContractDuration()){
+						getManagedBean().setIsContractCompletionPeriodChange(true);
+						getManagedBean().setIsScEditGeneral(true);
+					}
+				}else {
+					getManagedBean().setIsOpenForChange(false);
+					getManagedBean().setIsZonalChange(false);
+					getManagedBean().setIsProcTypeCatChange(false);
+					getManagedBean().setIsPmProcurementCategoryChange(false);
+					getManagedBean().setIsEvaluationTypeChange(false);
+					getManagedBean().setIsExistingContractChange(false);
+					getManagedBean().setIsFulfilmentTypeChange(false);
+					getManagedBean().setIsContractCompletionPeriodChange(false);
+					getManagedBean().setIsScEditGeneral(false);
+				}
+				// end - general information tab
+			}
+		
+		
+			public void buttonNo(){
+				
+				switch (getManagedBean().getComponentName()) {
+			case "qtmaintainprocTypeBoCategory":
+		 			if (tempProcurementTypeCategory != getManagedBean().getQt().getProcurementTypeCatId().getParameterId()){
+		 				getManagedBean().getQt().getProcurementTypeCatId().setParameterId(tempProcurementTypeCategory);
+			 			RequestContext.getCurrentInstance().update("qtmaintainprocTypeBoCategory");
+		 			}
+				break;
+			case "openFor":
+				if (!tempOpenFor.equalsIgnoreCase(getManagedBean().getScQtHistory().getOpenFor())){
+					getManagedBean().getQt().setOpenFor(tempOpenFor);
+					RequestContext.getCurrentInstance().update("openFor");
+				}
+				break;
+			case "evalType":
+				if (!tempEvalType.equals(getManagedBean().getScQtHistory().getEvaluationType())){
+					getManagedBean().getQt().setEvaluationType(tempEvalType);
+					RequestContext.getCurrentInstance().update("evalType");
+				}
+				break;
+
+			}	
+			}
+			
+			public void IdentifyID(AjaxBehaviorEvent event){
+				getManagedBean().setComponentName(event.getComponent().getId());
+				if (null != getManagedBean().getScQtHistory()){
+					RequestContext.getCurrentInstance().execute("doEditdlg.show()");
+				}
+				
+			}
+			
+			public void validateIsSupplierQualificationCriteriaChange(){			
+				
+				//retrieve from scqtcategorycode
+				List<ScQtCategoryHistory> listScQTCategoriesHistory = getQtSpecSO().retrieveScQtCategoryCodeHistoryByQtID(getManagedBean().getQt().getQtId());
+				List<ScQtCategory> listScQtCategories = getQtSpecSO().retrieveScQtCategorytByQtID(getManagedBean().getQt().getQtId());
+				List<Long> scqtcathistid = new ArrayList<>();
+				List<Long> scqtcategoryId = new ArrayList<>();
+				List<String> listCatCodeHistory = new ArrayList<>();
+				List<String> listCatCode = new ArrayList<>();
+				
+				if (null != listScQTCategoriesHistory && listScQTCategoriesHistory.size() > 0){
+					for(ScQtCategoryHistory catHis : listScQTCategoriesHistory){
+						scqtcathistid.add(catHis.getPmCategoryL3().getCategoryL3Id());
+						String catcode = catHis.getPmCategoryL1().getCategoryL1Code()+catHis.getPmCategoryL2().getCategoryL2Code()+catHis.getPmCategoryL3().getCategoryL3Code();
+						listCatCodeHistory.add(catcode);
+					}
+					
+				}
+				
+				if (null !=listScQtCategories && listScQtCategories.size() > 0 ){
+					for (ScQtCategory cat:listScQtCategories){
+						String catcode = cat.getPmCategoryL1().getCategoryL1Code()+cat.getPmCategoryL2().getCategoryL2Code()+cat.getPmCategoryL3().getCategoryL3Code();
+						listCatCode.add(catcode);
+						scqtcategoryId.add(cat.getPmCategoryL3().getCategoryL3Id());
+					}
+				}
+				getManagedBean().setListCatHistory(scqtcathistid);
+				getManagedBean().setListCategory(scqtcategoryId);
+				
+				if (null != listScQtCategories && null != listScQTCategoriesHistory){
+					if (listScQtCategories.size() == listScQTCategoriesHistory.size()) {
+						
+						if (listCatCodeHistory.containsAll(listCatCode)){
+							getManagedBean().setIsScEditSupplierQualificationCriteria(false);
+						}else {
+							getManagedBean().setIsScEditSupplierQualificationCriteria(true);
+						}
+		
+					} else {
+						getManagedBean().setIsScEditSupplierQualificationCriteria(true);
+					}
+				}
+					
+				
+				
+			}
+			
+			public void validateIsZonalAdded(){
+				SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
+				List<String> listZoneHistory = new ArrayList<>();
+				
+				if (getManagedBean().getZoneGeneralTrees().size() > 0){
+					for (TreeNode node: getManagedBean().getZoneGeneralTrees()){
+						for (TreeNode n: node.getChildren()){
+							TplSpecZoneDtl zone = (TplSpecZoneDtl)n.getData();
+							specificationReqDTO.setSpecZoneId(zone.getTplSpecZone().getSpecZoneId());
+						}
+					}
+				}
+				
+				if (null != specificationReqDTO.getSpecZoneId()){
+					SpecificationResDTO resDTO = getQtSpecSO().getTplSpecZoneDtlHistoryBySpecZoneId(specificationReqDTO);
+					if (resDTO.getSpecZoneDtlsHistory().size() > 0){
+						getManagedBean().setZonalHistoryExist(true);
+						for (TplSpecZoneDtlHistory zone: resDTO.getSpecZoneDtlsHistory()){
+							listZoneHistory.add(zone.getZoneName());
+						}
+					}else{
+						getManagedBean().setZonalHistoryExist(false);
+					}
+					
+					getManagedBean().setListZonalHistory(listZoneHistory);
+				}
+				
+				
+				
+				
+				
+			}
+		// #29521 - end
 }
