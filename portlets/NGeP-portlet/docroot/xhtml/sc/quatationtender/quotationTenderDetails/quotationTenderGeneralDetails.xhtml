@@ -413,6 +413,14 @@
 											<p:ajax event="change" process="@this" partialSubmit="true"
 												update="@form" listener="#{createQtBB.openForChange}"></p:ajax>
 										</p:selectOneRadio></td>
+										<!-- #29521 - start -->
+										<td>
+											<p:graphicImage id="openForIc" rendered="#{qTDetailBB.managedBean.isOpenForChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}" value="/css/images/design/icon_alert.png" />
+											<p:tooltip for="openForIc">
+												<p:outputLabel escape="false" value="#{qTDetailBB.managedBean.scQtHistory.openFor eq 'A' ? lbl['lbl.txt.all']:lbl['lbl.sc.notice.board.requirement.bumiputera']}"  />
+											</p:tooltip>
+										</td>
+										<!-- #29521 - end -->
 									<td><p:message id="openMsg" for="openFor" display="icon" /></td>
 								</tr>
 							</table>
@@ -421,6 +429,13 @@
 							<p:inputText id="openForTxt"
 								value="#{createQtBB.getParameterDesc(ParameterTypeConst.scOpenFor, scQt.openFor)}"
 								style="width:200px;" disabled="true" />
+								<!-- #29521 - start -->
+								<p:spacer width="10" height="5"/>
+								<p:graphicImage id="openForIc" rendered="#{qTDetailBB.managedBean.isOpenForChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}" value="/css/images/design/icon_alert.png" />
+											<p:tooltip for="openForIc">
+												<p:outputLabel escape="false" value="#{qTDetailBB.managedBean.scQtHistory.openFor eq 'A' ? lbl['lbl.txt.all']:lbl['lbl.sc.notice.board.requirement.bumiputera']}"  />
+											</p:tooltip>
+								<!-- #29521 - end -->
 						</c:otherwise>
 					</c:choose></td>		
 			</tr>
@@ -500,6 +515,15 @@
 								</c:choose></td>
 							<td style="margin-top: -3px"><ac:iconTooltip
 								value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
+								<!-- #29521 - start -->
+										<td>
+										<p:spacer width="10" height="5"/>
+											<p:graphicImage id="zonal" rendered="#{qTDetailBB.managedBean.isZonalChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION) and !scQt.panel}" value="/css/images/design/icon_alert.png" />
+											<p:tooltip for="zonal">
+												<p:outputLabel escape="false" value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(qTDetailBB.managedBean.scQtHistory.zonal))}"  />
+											</p:tooltip>
+										</td>
+								<!-- #29521 - end -->
 <!-- START #21695 farid -->
 								</tr>
 					</table>
@@ -576,10 +600,22 @@
 								label="#{lbl['lbl.sc.procurment.type.category']}"
 								value="#{scQt.procurementTypeCatId.parameterId}"
 								style="width: 205px;margin-bottom: 5px;">
+								<!-- #29521 - start -->
+								<c:if test="#{scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION}">
+									<p:ajax event="change" listener="#{qTDetailBB.IdentifyID}" ></p:ajax>
+								</c:if>
+								<!-- #29521 - end -->
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
 								<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 							</p:selectOneMenu>
+								<!-- #29521 - start -->
+							<p:spacer width="10" height="5"/>
+								<p:graphicImage id="procTypeCat" rendered="#{qTDetailBB.managedBean.isProcTypeCatChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}" value="/css/images/design/icon_alert.png" />
+								<p:tooltip for="procTypeCat">
+									<p:outputLabel escape="false" value="#{createQtBB.getParameterDesc(qTDetailBB.managedBean.scQtHistory.procurementTypeCatId)}"  />
+								</p:tooltip>	
+							<!-- #29521 - end -->
 							<p:message id="procuremntypeCategoryquotationTender"
 								for="qtmaintainprocTypeBoCategory" display="icon" />
 						</c:when>
@@ -611,6 +647,13 @@
 							<p:inputText id="procCatTxt"
 								value="#{createQtBB.getParameterDesc(scQt.pmProcurementCategory)}"
 								style="width:200px;" disabled="true" />
+							<!-- #29521 - start -->
+							<p:spacer width="10" height="5"/>
+									<p:graphicImage id="procCategoryIC" rendered="#{qTDetailBB.managedBean.isPmProcurementCategoryChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}" value="/css/images/design/icon_alert.png" />
+									<p:tooltip for="procCategoryIC">
+										<p:outputLabel escape="false" value="#{createQtBB.getParameterDesc(qTDetailBB.managedBean.scQtHistory.pmProcurementCategory)}"  />
+									</p:tooltip>
+							<!-- #29521 - end -->	
 						</c:otherwise>
 					</c:choose></td>
 
@@ -640,6 +683,15 @@
 									<td><p:message id="evalMsg" for="evalType" display="icon" /></td>
 									<td style="margin-top: -3px"><ac:iconTooltip
 											value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
+										<!-- #29521 - start -->
+										<td>
+										<p:spacer width="10" height="5"/>
+											<p:graphicImage id="evalTypeIC" rendered="#{qTDetailBB.managedBean.isEvaluationTypeChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}" value="/css/images/design/icon_alert.png" />
+											<p:tooltip for="evalTypeIC">
+												<p:outputLabel escape="false" value="#{qTDetailBB.managedBean.scQtHistory.evaluationType == 1 ? lbl['lbl.sc.tier.one']: lbl['lbl.sc.tier.two']}"  />
+											</p:tooltip>
+										</td>
+									<!-- #29521 - end -->	
 								</tr>
 							</table>
 						</c:when>
@@ -659,6 +711,15 @@
 									<td><p:message id="evalMsg" for="evalType" display="icon" /></td>
 									<td style="margin-top: -3px"><ac:iconTooltip
 											value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
+									<!-- #29521 - start -->
+										<td>
+										<p:spacer width="10" height="5"/>
+											<p:graphicImage id="evalTypeIC" rendered="#{qTDetailBB.managedBean.isEvaluationTypeChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}" value="/css/images/design/icon_alert.png" />
+											<p:tooltip for="evalTypeIC">
+												<p:outputLabel escape="false" value="#{qTDetailBB.managedBean.scQtHistory.evaluationType == 1 ? lbl['lbl.sc.tier.one']: lbl['lbl.sc.tier.two']}"  />
+											</p:tooltip>
+										</td>
+									<!-- #29521 - end -->	
 								</tr>
 							</table>
 						</c:when>
@@ -666,6 +727,16 @@
 							<p:inputText id="evalTypeTxt"
 								value="#{createQtBB.getParameterDesc(ParameterTypeConst.scEvaluationType, scQt.evaluationType)}"
 								style="width:195px;" disabled="true" />
+								<!-- #29521 - start -->
+									<p:spacer width="10" height="5" /> <p:graphicImage
+									id="evalTypeIC"
+									rendered="#{qTDetailBB.managedBean.isEvaluationTypeChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}"
+									value="/css/images/design/icon_alert.png" /> <p:tooltip
+									for="evalTypeIC">
+									<p:outputLabel escape="false"
+										value="#{qTDetailBB.managedBean.scQtHistory.evaluationType == 1 ? lbl['lbl.sc.tier.one']: lbl['lbl.sc.tier.two']}" />
+								</p:tooltip>
+							<!-- #29521 - end -->
 						</c:otherwise>
 					</c:choose></td>
 			</tr>
@@ -705,19 +776,40 @@
 				<td><c:choose>
 						<c:when
 							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EXISTING_CONTRACT) and !isReadOnly}">
-							<ac:lov id="contractLovId" lovId="CT_CONTRACT"
+							<!-- #29521 - start -->
+							<ac:lovExistingContract id="contractLovId" lovId="CT_CONTRACT"
 								headerText="#{lbl['lbl.sc.qt.existing.contract.no.search']}"
 								autoUpdateValue="createQtBB.managedBean.autoUpdate"
 								update=":form:qtdetailsid"
 								saveObject="createQtBB.managedBean.ctContract"
-								value="#{createQtBB.managedBean.ctContract.contractNo}" 
-								size="25"
+								value="#{createQtBB.managedBean.ctContract.ctNameandNo}" escape="true" 
+								rows="10"
+								cols="25"
 								conditionField="#{createQtBB.constuctConditionFields()}" />
+								<p:spacer width="10" height="0"/>
+								<p:graphicImage id="existContractIC" rendered="#{qTDetailBB.managedBean.isExistingContractChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}" value="/css/images/design/icon_alert.png" />
+								<p:tooltip for="existContractIC">
+									<p:outputLabel escape="false" value="#{qTDetailBB.managedBean.scQtHistory.existingContractNo}"  />
+								</p:tooltip>
+							<!-- #29521 end -->	
 						</c:when>
 						<c:otherwise>
-							<p:inputText id="extContractTxt"
-								value="#{scQt.existingContractNo}" style="width:200px;"
-								disabled="true" />
+							<!-- #29521 - start -->
+			
+								<p:inputTextarea id="extContractTxt"
+									value="#{qTDetailBB.managedBean.ctContract.ctNameandNo}"
+									style="width:200px;" disabled="true" rows="10" cols="25" /> 
+									<p:spacer width="10" height="0"/>
+									<p:graphicImage
+										id="existContractIC"
+										rendered="#{qTDetailBB.managedBean.isExistingContractChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}"
+										value="/css/images/design/icon_alert.png" /> 
+									<p:tooltip
+										for="existContractIC">
+										<p:outputLabel escape="false"
+											value="#{qTDetailBB.managedBean.scQtHistory.existingContractNo}" />
+									</p:tooltip>
+							<!-- #29521 - end -->
 						</c:otherwise>
 					</c:choose></td>
 			</tr>
@@ -768,6 +860,13 @@
 					<!-- #25726 start -->
 					<td style="margin-top: -3px">
 						<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+							<!-- #29521 - start -->
+							<p:spacer width="10" height="5"/>
+								<p:graphicImage id="fulfilIdIC" rendered="#{qTDetailBB.managedBean.isFulfilmentTypeChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}" value="/css/images/design/icon_alert.png" />
+								<p:tooltip for="fulfilIdIC">
+									<p:outputLabel escape="false" value="#{createQtBB.getParameterDesc(qTDetailBB.managedBean.scQtHistory.fulfilmentType)}"  />
+								</p:tooltip>	
+							<!-- #29521 - end -->
 					</td>
 					</tr></table></td>
 					<!-- #25726 end -->
@@ -807,6 +906,14 @@
 								<p:ajax event="change" process="@this" partialSubmit="true"
 									update="@this" listener="#{createQtBB.ContractPeriodChange()}" />
 							</p:inputText>
+							
+							<!-- #29521 - start -->
+							<p:spacer width="10" height="5"/>
+								<p:graphicImage id="contractBoIC" rendered="#{qTDetailBB.managedBean.isContractCompletionPeriodChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}" value="/css/images/design/icon_alert.png" />
+								<p:tooltip for="contractBoIC">
+									<p:outputLabel escape="false" value="#{qTDetailBB.managedBean.scQtHistory.contractDuration}"  />
+								</p:tooltip>	
+							<!-- #29521 - end -->
 						</c:otherwise>
 					</c:choose> 
 				</td>
@@ -1262,5 +1369,30 @@
 		</div>
 	</p:dialog>
 <!-- 32929 -end- -->
+
+<!-- #29521 - start -->
+
+<p:dialog id="doEditdlg" widgetVar="doEditdlg"
+		resizable="false" width="300" height="90" closable="false">
+		<table>
+			<tr>
+				<td> 
+					<p:outputLabel value="#{lbl['lbl.sc.do.edit.warning']}" />
+				</td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+				partialSubmit="true" update="@form" onclick=""
+				oncomplete="doEditdlg.hide()"/>
+			<p:commandButton value="#{lbl['lbl.btn.no']}" process="@this"
+				partialSubmit="true" update="@form"
+				actionListener="#{qTDetailBB.buttonNo()}" 
+				oncomplete="doEditdlg.hide()" />
+		</div>
+	</p:dialog>
+
+<!-- #29521 - end -->
  	
 </ui:composition>

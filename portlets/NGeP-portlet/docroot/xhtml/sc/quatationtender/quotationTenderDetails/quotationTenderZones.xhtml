@@ -76,6 +76,11 @@
 
 							<p:treeNode type="zone">
 								<h:outputText value="#{location.zoneName}" />
+								<p:graphicImage id="zoneNameIC" style="margin-bottom:-3px; margin-left:2px;" 
+								value="/css/images/design/icon_alert.png" rendered="#{scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT and (not empty qTDetailBB.managedBean.listZonalHistory and not qTDetailBB.managedBean.listZonalHistory.contains(location.zoneName)) }"/>
+								<p:tooltip for="zoneNameIC">
+									<p:outputLabel escape="false" value="#{lbl['lbl.category.code.change']}"  />
+								</p:tooltip>
 							</p:treeNode>
 
 							<p:treeNode type="state">

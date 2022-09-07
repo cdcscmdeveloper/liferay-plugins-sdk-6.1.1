@@ -29,6 +29,19 @@
 
 			<p:column headerText="#{lbl['lbl.sc.category.code']}">
 				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
+			
+			<!-- ##29521 - start -->
+					<!-- <p:graphicImage id="catCodeIC" rendered="#{!qTDetailBB.managedBean.catBoolean.get(index)}"  value="/css/images/design/icon_alert.png" /> -->
+						<p:graphicImage id="catCodeIC" rendered="#{((qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_REVISION_PUBLICATION) and not empty qTDetailBB.managedBean.listCatHistory) and (qTDetailBB.managedBean.listCategory.contains(cateGory.pmCategoryL3.categoryL3Id) and not qTDetailBB.managedBean.listCatHistory.contains(cateGory.pmCategoryL3.categoryL3Id))}"  value="/css/images/design/icon_alert.png" />
+							<p:tooltip for="catCodeIC">
+								<p:outputLabel escape="false" value="#{lbl['lbl.category.code.change']}"  />
+							</p:tooltip>
+							
+			<!-- #29521 - end -->				
+				
+			
+				
+			
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.main.category']}"
@@ -114,12 +127,23 @@
 												 <f:selectItems value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
 												 <p:ajax event="change" process="@this" partialSubmit="true" update="@form" listener="#{createQtBB.openForChange}"></p:ajax>				
 								           </p:selectOneRadio>	
+								           <!-- #29521 - start -->
+												<td>
+													<p:graphicImage id="openForIc" rendered="#{qTDetailBB.managedBean.isOpenForChange and qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_REVISION_PUBLICATION}" value="/css/images/design/icon_alert.png" />
+													<p:tooltip for="openForIc">
+														<p:outputLabel escape="false" value="#{qTDetailBB.managedBean.scQtHistory.openFor eq 'A' ? lbl['lbl.txt.all']:lbl['lbl.sc.notice.board.requirement.bumiputera']}"  />
+													</p:tooltip>
+												</td>
+										<!-- #29521 - end -->
 							           </c:when>
 							           <c:otherwise>  
-										    <p:selectOneRadio required="true" label="#{lbl['lbl.sc.open.for']}" value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.openFor}" disabled="#{qTDetailBB.managedBean.readOnly}">
+							           <!-- #29521 - start --> 
+										    <p:selectOneRadio id="openFor" required="true" label="#{lbl['lbl.sc.open.for']}" value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.openFor}" disabled="#{qTDetailBB.managedBean.readOnly}">
+										<!-- #29521 - end -->	 
 											 <f:selectItems value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
 												<p:ajax event="change" process="@this" partialSubmit="true" update="@form" listener="#{createQtBB.openForChange}"></p:ajax>				
 										    </p:selectOneRadio>	
+										     
 									  </c:otherwise> 
 								 </c:choose>    	    
 							  </td>
@@ -505,4 +529,29 @@
 				</c:if></td> 
 		</tr>
 	</table>
+	
+		<!-- #29521 - start -->
+
+<p:dialog id="doEditdlg" widgetVar="doEditdlg"
+		resizable="false" width="300" height="90" closable="false">
+		<table>
+			<tr>
+				<td> 
+					<p:outputLabel value="#{lbl['lbl.sc.do.edit.warning']}" />
+				</td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+				partialSubmit="true" update="@form" onclick=""
+				oncomplete="doEditdlg.hide()"/>
+			<p:commandButton value="#{lbl['lbl.btn.no']}" process="@this"
+				partialSubmit="true" update="@form"
+				actionListener="#{qTDetailBB.buttonNo()}" 
+				oncomplete="doEditdlg.hide()" />
+		</div>
+	</p:dialog>
+
+<!-- #29521 - end -->
 </ui:composition>
