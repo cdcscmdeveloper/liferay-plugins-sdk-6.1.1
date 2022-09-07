@@ -6453,6 +6453,8 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 				.getTemplateSpecBean().getSpecAnswerList()) {
 			if (retrieveAns != null
 					&& this.getManagedBean().getZones().size() > 0) {
+				// adjust position flag here
+				retrieveAns.setDisableRow(true);
 				for (TplSpecZoneDtl specZonedtl : this.getManagedBean()
 						.getZones()) {
 					if (specZonedtl != null) {
@@ -6461,12 +6463,16 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 							if (this.getManagedBean().getZones().size() != retrieveAns
 									.getTplSpecQuestion().getTplSpecZoneQties()
 									.size()) {
-									retrieveAns.setDisableRow(true);
+
 								if (specZoneQty != null
-											&& specZoneQty.getQty().compareTo(BigDecimal.ZERO)>0
-											&& specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId())) {
+										&& specZoneQty.getQty().compareTo(
+												BigDecimal.ZERO) > 0
+										&& specZonedtl.getSpecZoneId().equals(
+												specZoneQty.getTplSpecZoneDtl()
+														.getSpecZoneId())) {
 										retrieveAns.setOffer(true);
-										if(retrieveAns.isDisableRow())retrieveAns.setDisableRow(false);
+									if (retrieveAns.isDisableRow())
+										retrieveAns.setDisableRow(false);
 						}
 						}else{
 							retrieveAns.setDisableRow(false); 
@@ -6476,8 +6482,11 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 						}
 				}
 			}  
+			if (retrieveAns.isDisableRow()) {
+				retrieveAns.setOffer(false);
 		}
 	}
+}
 		//Bug #33947 5/9/2022 End
 	//#21695 Farid End - fix proposal checking 18/2/2022
 }
