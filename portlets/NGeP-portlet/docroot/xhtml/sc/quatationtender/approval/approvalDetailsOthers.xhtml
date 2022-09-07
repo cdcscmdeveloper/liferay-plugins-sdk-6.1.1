@@ -8,17 +8,13 @@
 
 	<ui:param name="isOtherApprovalDtlsEditable" value="#{!qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" />
 	<!-- #25077 Start -->
-	<ui:param name="isOthersApprovalForInstruction" value="#{qTDetailBB.isOthersApprovalForInstruction()}" />
-	<ui:param name="isOthersApprovalMandatoryForAttachment" value="#{qTDetailBB.isOthersApprovalMandatoryForAttachment()}" />
+    <ui:param name="isMandatoryStatusAndDocument" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}" />
 	<!-- #25077 End -->
 	
 	<p:panel>
 		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.approval.oth.instruction']}" escape="false" />
 		<!-- #25077 Start -->
-		<c:if test="#{isOthersApprovalForInstruction}">
-	    	<br />
-	    	<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.instruction']}" escape="false" />
-	    </c:if> 
+	    <br /><h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.instruction']}" escape="false" />
 	    <!-- #25077 End -->
 		<p:dataTable id="otherreqdtlsid"
 			value="#{othersApprovalDtlsList.scQtApprovalDtls}"
@@ -32,7 +28,13 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
+				    <!-- #25077 Start -->
+				    <c:if test="#{isMandatoryStatusAndDocument}"> 
+				    <!-- #25077 End -->
+				        <h:outputText value="* " styleClass="mandatory" />
+				    <!-- #25077 Start -->
+				    </c:if>  
+				    <!-- #25077 End -->
 					<h:outputText value="#{lbl['lbl.sc.status']}" />
 				</f:facet>
 				
@@ -77,22 +79,32 @@
 				<c:otherwise>
 					<p:column>
 						<f:facet name="header">
-							<c:if
-								test="#{not empty othersApprovalDtlsList.scQtApprovalDtls and isOthersApprovalMandatoryForAttachment}">
+							<c:if test="#{isMandatoryStatusAndDocument}">
 								<h:outputText value="* " styleClass="mandatory" />
 							</c:if>
 							<h:outputText value="#{lbl['lbl.sc.document']}" />
-							<c:if
-								test="#{(not empty othersApprovalDtlsList.scQtApprovalDtls and isOthersApprovalMandatoryForAttachment) or (qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION)}">
-								<ac:iconTooltip
-									value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
-							</c:if>
+							<ac:iconTooltip
+								value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
 						</f:facet>
-						<ac:scSingleFileUploadButton id="otheruploadId"
-							popupWidgetVar="otherApprUploadDlg"
+
+						<ac:scSingleFileUploadButton id="otheruploadIdICT"
+							popupWidgetVar="otherApprUploadDlgICT"
 							attachment="#{otherrequestdetails.approvalRequestAttachement}"
+							rendered="#{otherrequestdetails.approvalType.parameterCode eq ParameterConst.approvalRequestIctProjects}"
 							readonly="#{createQtBB.managedBean.readOnly}"
-							deleteFileUploadListener="approvalBackingBean.deleteOthersApprovalFile"
+							deleteFileUploadListener="approvalBackingBean.deleteOthersApprovalFileICT"
+							rowIndex="#{index}">
+							<f:setPropertyActionListener for="actionEvent"
+								value="#{otherrequestdetails}"
+								target="#{approvalBackingBean.managedBean.scQtApprovalDtls}" />
+						</ac:scSingleFileUploadButton>
+
+						<ac:scSingleFileUploadButton id="otheruploadIdMITI"
+							popupWidgetVar="otherApprUploadDlgMITI"
+							attachment="#{otherrequestdetails.approvalRequestAttachement}"
+							rendered="#{otherrequestdetails.approvalType.parameterCode eq ParameterConst.approvalRequestImportedGoods}"
+							readonly="#{createQtBB.managedBean.readOnly}"
+							deleteFileUploadListener="approvalBackingBean.deleteOthersApprovalFileMITI"
 							rowIndex="#{index}">
 							<f:setPropertyActionListener for="actionEvent"
 								value="#{otherrequestdetails}"
