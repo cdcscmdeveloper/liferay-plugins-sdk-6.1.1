@@ -1900,13 +1900,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	private void setFlSupplierDtl(FlFulfilmentRequest flRequest) {
 		if(flRequest.getFlSupplierDtl() == null){
 			FlSupplierDtl supplierDtl = new FlSupplierDtl();
-			IContractSupplierSO ctSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
-			supplierDtl.setMofNo(ctSupplierSO.retrieveSuppMOFNoByContractId(flRequest.getCtContract().getContractId()));//33917
+			//33917-Start
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			supplierDtl.setMofNo(contractSO.retrieveSuppMOFNoByContractId(flRequest.getCtContract().getContractId()));
 			
-//			CtContractValue ctSupplierDtl = flRequest.getCtContract().getLatestContractVer().getCtContractValue();//33917
+			// CtContractValue ctSupplierDtl = flRequest.getCtContract().getLatestContractVer().getCtContractValue();
+			supplierDtl.setSupplierName(contractSO.retrieveSuppNameByContractId(flRequest.getCtContract().getContractId()));
+			//33917-End
 			convertCtAddressToFlAddress(flRequest,supplierDtl);
 			supplierDtl.setFlFulfilmentRequest(flRequest);
-			supplierDtl.setSupplierName(ctSupplierSO.retrieveSuppNameByContractId(flRequest.getCtContract().getContractId()));//33917
 			flRequest.setFlSupplierDtl(supplierDtl);
 		}
 	}
