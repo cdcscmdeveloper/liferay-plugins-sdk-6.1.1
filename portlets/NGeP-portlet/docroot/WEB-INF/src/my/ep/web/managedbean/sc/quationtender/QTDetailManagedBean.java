@@ -10553,6 +10553,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		return previousApprovalTabName;
 	}
 	
+	/**
+	 * @param previousApprovalTabName the previousApprovalTabName to set
+	 */
+	public void setPreviousApprovalTabName(String previousApprovalTabName) {
+		this.previousApprovalTabName = previousApprovalTabName;
+	}
+	
 	public ScQtApprovalReqAttachement getScQtApprovalReqAttachementHistoryICT() {
 		return scQtApprovalReqAttachementHistoryICT;
 	}
