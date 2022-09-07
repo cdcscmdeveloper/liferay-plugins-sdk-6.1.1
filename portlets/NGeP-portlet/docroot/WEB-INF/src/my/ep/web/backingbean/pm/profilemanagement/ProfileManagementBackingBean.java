@@ -443,23 +443,42 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * retrieve and set the current active org
 	 */
 	private void setCurrentActiveOrg() {
-		logger.info("setCurrentActiveOrg");
+		logger.info(" start setCurrentActiveOrg");
 		boolean isFactoring = false;
-		if (getFacesScopes().getUserSessionBean().getUserId() == null) {
+		//START #31849 add log key
+		Long loginSessionUserId = 1L;
+		IUserSO userSODB = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+		PmUser pmUser = userSODB.retrieveUserByLoginId(userReqDTO).getPmUser();
+		if (pmUser == null) {
+			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+		}
+		else{
+			loginSessionUserId = pmUser.getUserId();
+		}
+		new LogKey(loginSessionUserId);
+		
+		if (loginSessionUserId == null) {
 			throw new EpException(MessageConst.ERROR_770149);
 		}
 		if (getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value())) {
 			isFactoring = true;
 		}
 		List<PmUserOrg> userOrgList = PmCommonUtil
-				.retrieveActiveOrgWithoutRole(getFacesScopes().getUserSessionBean().getUserId(), isFactoring);
-
+				.retrieveActiveOrgWithoutRole(loginSessionUserId, isFactoring);
+		//END #31849 add log key
+		
 		if (userOrgList == null || userOrgList.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_770105);
 		}
 
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
+		
+		logger.info(" End setCurrentActiveOrg");
 	}
 
 	/**
@@ -2074,10 +2093,26 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 				String loginId = this.getManagedBean().getSelectedUser().getLoginId();
 				UploadedFile item = event.getFile();
+				//START #31849 add log key
+				Long loginSessionUserId = 1L;
+				IUserSO userSODB = (IUserSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IUserSO.class);
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+				PmUser pmUser = userSODB.retrieveUserByLoginId(userReqDTO).getPmUser();
+				if (pmUser == null) {
+					loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+				}
+				else{
+					loginSessionUserId = pmUser.getUserId();
+				}
+				new LogKey(loginSessionUserId);
+				//END #31849 add log key
 				PmUserAttachment attachment = new PmUserAttachment();
 				attachment.setFileName(item.getFileName());
 				attachment.setFilePath(PmCommonUtil.getUploadPath(loginId, item.getFileName()));
-				attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				attachment.setCreatedBy(loginSessionUserId);//#31849 add log key
 				attachment.setCreatedUser(getFacesScopes().getUserSessionBean());
 				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
