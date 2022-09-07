@@ -209,7 +209,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
 						onclick="blockWidgetClone.show()" oncomplete="blockWidgetClone.hide()"
 						disabled="#{empty qtSpecCloneBackingBean.managedBean.selectedCloneTender}"
-						styleClass="BtnSpacing" id="cloneCommitteeTreeBtnOnId3" update="@form" process="@all"
+						styleClass="BtnSpacing" id="cloneCommitteeTreeBtnOnId3" update="@all" process="@this"
 						action="#{qtSpecCloneBackingBean.addToClone()}">
 					 <f:param name="skipvalidation" value="1" />
 					</p:commandButton>
