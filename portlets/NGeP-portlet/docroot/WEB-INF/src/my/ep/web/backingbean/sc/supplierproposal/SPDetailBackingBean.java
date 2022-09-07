@@ -6439,17 +6439,18 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	//#21695 Farid Start - fix proposal checking 18/2/2022
 		//Bug #32952 checking supplier has branch at zone that agency request
 		//Bug #33947 5/9/2022 start
-	public void disableDefaultSelected() {
+	public void disableDefaultSelected() {		
 		for (TplSpecAnswer retrieveAns : this.getManagedBean()
 				.getTemplateSpecBean().getSpecAnswerList()) {
 			if (retrieveAns != null
 					&& this.getManagedBean().getZones().size() > 0) {
+				// adjust position flag here
+				retrieveAns.setDisableRow(true);
 				for (TplSpecZoneDtl specZonedtl : this.getManagedBean()
 						.getZones()) {
 
 					if (specZonedtl != null) {
-						// adjust position flag here
-						retrieveAns.setDisableRow(true);
+
 						for (TplSpecZoneQty specZoneQty : retrieveAns
 								.getTplSpecQuestion().getTplSpecZoneQties()) {
 							if (this.getManagedBean().getZones().size() != retrieveAns
@@ -6474,8 +6475,11 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 					}
 				}
 			}
+			if (retrieveAns.isDisableRow()) {
+				retrieveAns.setOffer(false);
+			}
 		}
-	}
+}
 		//Bug #33947 5/9/2022 End
 		//#21695 Farid End - fix proposal checking 18/2/2022
 
