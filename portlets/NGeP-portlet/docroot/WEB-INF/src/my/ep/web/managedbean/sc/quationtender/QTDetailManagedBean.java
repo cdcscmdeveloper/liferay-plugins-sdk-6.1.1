@@ -1800,6 +1800,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The qt remark missing issues. */
 	private boolean scQtRemarksEmpty = false; //#9019 08082022 (Harun)
 	
+	// #32929 - start
+	private boolean zoneRdbButtonChecked = Boolean.FALSE;
+	// #32929 - end
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11241,6 +11245,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.demoSampleChecklistStatusId = demoSampleChecklistStatusId;
 		}
 		//#28784 - end
+		
+		// #32929 - start
+		public boolean isZoneRdbButtonChecked() {
+			return zoneRdbButtonChecked;
+		}
+
+		public void setZoneRdbButtonChecked(boolean zoneRdbButtonChecked) {
+			this.zoneRdbButtonChecked = zoneRdbButtonChecked;
+		}
+		// #32929 - end
 }
 
 // ***25201

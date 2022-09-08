@@ -1198,4 +1198,28 @@
 	</p:confirmDialog> 
 <!-- #28784 End -->
  	
+<!-- 32929 -start- -->
+	<p:dialog id="scQtZoneChangeDlgs" widgetVar="scQtZoneChangeDlgs"
+		header="#{lbl['lbl.sc.dialog.confirm.header.nonZonal']}" modal="true"
+		resizable="false" width="700" height="140" closable="false">
+		<table>
+			<tr>
+				<td align="center"><h:graphicImage
+						value="/css/images/design/exclamation.png" /> <p:outputLabel style="text-align: left"
+						value="#{lbl['lbl.sc.dialog.confirm.nonZonal']}" escape="false"/></td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+				partialSubmit="true" update="@form" 
+				action="#{createQtBB.zoneYesConfirmation}" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}" process="@this"
+				partialSubmit="true" update="@form"
+				actionListener="#{createQtBB.zoneNoConfirmation}"
+				oncomplete="scQtZoneChangeDlgs.hide();" />
+		</div>
+	</p:dialog>
+<!-- 32929 -end- -->
+ 	
 </ui:composition>
