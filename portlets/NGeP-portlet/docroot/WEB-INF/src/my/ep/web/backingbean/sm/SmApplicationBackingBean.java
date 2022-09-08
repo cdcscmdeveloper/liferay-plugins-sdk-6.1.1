@@ -94,6 +94,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -10850,9 +10851,23 @@ public class SmApplicationBackingBean extends
 		
 		//#12483 - START
 		if(res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REVISE)){
-			PmUser po = PpCommonUtil.retrieveUserByLoginIdOrUserId(null, 
-							SmServiceLookup.getUserSO().retrieveLastPoOrApprover(this.getManagedBean().getSmAppl().getApplNo(), SupplierManagementConst.PO_HQ));
-			if(po.getRecordStatusFlg() == 1){
+			//#12483 - reopen - START
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(SmServiceLookup.getUserSO().retrieveLastPoOrApprover(this.getManagedBean().getSmAppl().getApplNo(), SupplierManagementConst.PO_HQ));
+			PmUser po = SmServiceLookup.getUserSO().retrieveUserByUserId(userReqDTO).getPmUser();
+
+			boolean pmOrgStats = false;
+			if (po.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE && !EntityHelper.isCollectionEmpty(po.getPmUserOrgs())) {
+				for (PmUserOrg userOrg : po.getPmUserOrgs()) {
+					if (userOrg.getPmUser().getUserId() == po.getUserId() && userOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						pmOrgStats = true;
+						break;
+					}
+				}
+			}
+				
+			if(po.getRecordStatusFlg() == 1 && pmOrgStats){
+				//#12483 - reopen - END
 				reqDTO.setPoLoginId(po.getLoginId());
 			}else{
 				IZoneSO zoneReqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
@@ -10864,7 +10879,7 @@ public class SmApplicationBackingBean extends
 																			  getManagedBean().getSmAppl().getApplCategoryType(), 
 																			  zoneReqSO.retrieveZoneByStateId(zoneReqDTO).getPmZone().getZoneCode());
 				reqDTO.setPoLoginId(po.getLoginId());
-			}	
+			}
 		}else{
 			reqDTO.setPoLoginId(pmUser.getLoginId());
 		}
