@@ -170,6 +170,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String channel = httpServletRequest.getParameter("channel") != null ? httpServletRequest.getParameter("channel") : null;
 		String errorCode = httpServletRequest.getParameter("error_code") != null ? httpServletRequest.getParameter("error_code") : null;
 		String errorDesc = httpServletRequest.getParameter("error_desc") != null ? httpServletRequest.getParameter("error_desc") : null;
+		
+		//#Start 33137
+		String fpxTranId = null;
+		String molpayTranId = null;
+		//#End 33137
 		String extraP = httpServletRequest.getParameter("extraP");
 
 
@@ -188,17 +193,31 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("extraP:" + extraP);
 		
 		// #32422 START 
+		//#33137 - start
 		String date1 = null;
+		String molpayTransId = null;
 		String extraP1 = httpServletRequest.getParameter("extraP");
+		log.info("extraP1 before:" + extraP1);
 		if(extraP1 != null){
 			JSONObject obj1;
 			try { 
+				log.info("extraP1 after:" + extraP1);
 				obj1 = new JSONObject(extraP1); 
-				date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
+				
+				if(obj1.has("bank_datetime")){
+					log.info("----- bank date time before set -----");
+					date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
+				}
+				
+				if(obj1.has("MOLPay_tranID")){
+					molpayTransId = obj1.getString("MOLPay_tranID") != null ? obj1.getString("MOLPay_tranID") : null;
+					log.info("molpay id after : "+ molpayTransId);	
+				}
 			} catch (JSONException e) { 
 				e.printStackTrace(); 
 			}
 		}
+		//#33137 - end
 		// #32422 END
 
 		Long ordId = Long.valueOf(orderId);
@@ -333,7 +352,12 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				}
 				//32422 END
 				paymentOrder.setChannelName(channel);
+				//#33137 - start
+				log.info("SET TRANSACTION ID--------------------33137 : "+tranID);
 				smPaymentRes.setTransactionId(tranID);
+				smPaymentRes.setMolpayTransactionId(molpayTranId);
+				smPaymentRes.setFpxTranId(fpxTranId);
+				//#33137 - end
 				smPaymentRes.setErrorCode(errorCode);
 				smPaymentRes.setErrorDesc(errorDesc);
 				//32422 START
