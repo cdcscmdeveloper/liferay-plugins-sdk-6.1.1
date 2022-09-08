@@ -23,21 +23,23 @@
 				<td width="82%">
 					<c:choose>
 						<c:when test="#{isSupplierAckStatus and !directLOABackingBean.managedBean.readOnly}">
+						<!-- 20220908@syazani - Bug #33674 - Start -->
 							<p:selectOneMenu id="accountNoId"
-								value="#{directLOABackingBean.managedBean.scLoa.bankAccNo}"
+								value="#{directLOABackingBean.managedBean.supplierBankId}"
 								style="width:277px;margin-bottom: 5px;"
 								required="false" label="#{lbl['lbl.sc.account.no']}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{directLOABackingBean.managedBean.bankList}"
 									var="smSupplierBank"
-									itemValue="#{smSupplierBank.accountNo}"
-									itemLabel="#{smSupplierBank.accountNo} / #{smSupplierBank.pmFinancialOrg.finOrgName}" /> <!-- 20220908@syazani - Bug #33674 -->
+									itemValue="#{smSupplierBank.supplierBankId}"
+									itemLabel="#{smSupplierBank.accountNo} / #{smSupplierBank.pmFinancialOrg.finOrgName}" />
 								<p:ajax event="change"
 									listener="#{directLOABackingBean.handleBankDetailsChanged}"
 									partialSubmit="true" process="@this"
 									update="bankName, bankBranch, bankAddress" />
 							</p:selectOneMenu>
+							<!-- 20220908@syazani - Bug #33674 - End -->
 							<p:message id="accountNoIdMsg" for="accountNoId" display="icon" />
 						</c:when>
 						<c:otherwise>
