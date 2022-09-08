@@ -445,31 +445,16 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	private void setCurrentActiveOrg() {
 		logger.info(" start setCurrentActiveOrg");
 		boolean isFactoring = false;
-		//START #31849 add log key
-		Long loginSessionUserId = 1L;
-		IUserSO userSODB = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
-		UserReqDTO userReqDTO = new UserReqDTO();
-		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
-		PmUser pmUser = userSODB.retrieveUserByLoginId(userReqDTO).getPmUser();
-		if (pmUser == null) {
-			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
-		}
-		else{
-			loginSessionUserId = pmUser.getUserId();
-		}
-		new LogKey(loginSessionUserId);
-		
-		if (loginSessionUserId == null) {
+		//START #31849 revert code
+		if (getFacesScopes().getUserSessionBean().getUserId() == null) {
 			throw new EpException(MessageConst.ERROR_770149);
 		}
 		if (getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value())) {
 			isFactoring = true;
 		}
 		List<PmUserOrg> userOrgList = PmCommonUtil
-				.retrieveActiveOrgWithoutRole(loginSessionUserId, isFactoring);
-		//END #31849 add log key
+				.retrieveActiveOrgWithoutRole(getFacesScopes().getUserSessionBean().getUserId(), isFactoring);
+		//END #31849 revert code
 		
 		if (userOrgList == null || userOrgList.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_770105);
