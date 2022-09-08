@@ -22,9 +22,10 @@
 			</td>
 			<td>
 				<c:if test="#{isSupplierAckStatus}">
+				<!-- 20220908@syazani - Bug #33674 - Start -->
 					<p:selectOneMenu id="accountNoId"
 					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-						value="#{lOADetailBackingBean.managedBean.scLoa.bankAccNo}"
+						value="#{lOADetailBackingBean.managedBean.supplierBankId}" 
 						style="width: 277px;margin-bottom: 5px;"
 						required="false"
 						label="#{lbl['lbl.sc.account.no']}">
@@ -32,11 +33,14 @@
 						<f:selectItems
 							value="#{lOADetailBackingBean.managedBean.bankList}"
 							var="smSupplierBank" 
-							itemValue="#{smSupplierBank.accountNo}" itemLabel="#{smSupplierBank.accountNo} / #{smSupplierBank.pmFinancialOrg.finOrgName}" /> <!-- 20220906@syazani - Bug #33674 -->
+							itemValue="#{smSupplierBank.supplierBankId}" itemLabel="#{smSupplierBank.accountNo} / #{smSupplierBank.pmFinancialOrg.finOrgName}" />
 						<p:ajax event="change"
 							listener="#{lOADetailBackingBean.handleBankDetailsChanged}"
 							partialSubmit="true" process="@this" update="bankName, bankBranch, bankAddress" />
-					</p:selectOneMenu> <p:message id="accountNoIdMsg" for="accountNoId" display="icon" />
+					</p:selectOneMenu> 
+					<!-- 20220908@syazani - Bug #33674 - End -->
+					<p:message id="accountNoIdMsg" for="accountNoId" display="icon" />
+					
 				</c:if>
 				<c:if test="#{!isSupplierAckStatus}">
 					<p:inputText value="#{lOADetailBackingBean.managedBean.scLoa.bankAccNo}" disabled="true" size="40" />
