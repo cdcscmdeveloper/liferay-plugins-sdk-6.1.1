@@ -5464,7 +5464,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 					// zoneItem.setAjax(true);
 					zoneItem.setTransient(true);
 					zoneItem.setPartialSubmit(true);
-					zoneItem.setProcess("@this");
+					zoneItem.setProcess("@form"); //20220907@syazani - Enhancement #3657 - specific error message
 					zoneItem.setUpdate("@this");
 					zoneItem.setOnstart("blockWidget.show();");
 					zoneItem.setOncomplete("zoneTabChange([ {name : 'selectedZoneTabIndex', value : "
