@@ -10095,7 +10095,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				String errorMessage=	ResourceBundleUtils.getMessage("lbl.sc.justification",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale());	
-				throw new EpException(MessageConst.ERROR_100022,
+				throw new EpException(MessageConst.ERROR_760540,
 						new String[] {errorMessage });
 				
 			}
