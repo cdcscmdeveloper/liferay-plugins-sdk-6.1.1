@@ -4410,7 +4410,13 @@ public class EvaluationBackingBean extends
 						}
 					} else {
 						if (this.getManagedBean().getScQt().isDemoRequired()) {
+							// #28784 - FEC set eval type for package and Item
+							if(this.getManagedBean().getTabItemPackageIndex() == 1){
+								specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+							} else {
 							specDtls.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
+							}
+							//specDtls.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
 						} else {
 							//#32007 - set evalstage 'TI' for partial 'T' for non partial - start 
 							if(this.getManagedBean().getScQt().isPartial()){
@@ -16491,6 +16497,11 @@ private void retriveCommitteeRemarksList(){
 					EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
 					EvaluationResDTO amountResDto = new EvaluationResDTO();
 					amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
+					
+					if (getManagedBean().getScQt().isDemoRequired()) {
+						// #28784 - FEC by item eval = TI, package = P			
+						amountReqDto.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);			
+					}
 					amountResDto= evaluationSO.retrieveProposals(amountReqDto); 
 					List<ScQtProposalAmount> checklistamount = new ArrayList<ScQtProposalAmount>();
 					for(ScQtProposal amtbyproposal : amountResDto.getProposalList()){
