@@ -4047,13 +4047,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
 					if(!approval.getApprovalCategory().getParameterCode().equals(ParameterConst.DOCTYPE_BPK_APPROVAL)){
 						List<ScQtApproverSettings> approverSettings = approval.getApproverSettings();
-						
-						//#25426 - Start
-						Long[] orgIds={qt.getOwnerOrgProfile().getOrgProfileId(),qt.getPmOrgProfile().getOrgProfileId()};
-						DualListModel<ScQtApproverSettings> budgetApprovalUsers=ApproverSettings.getDetails(RoleCode.COMMITTEE_APPROVER,orgIds,approval);
-						//#25426 - End
-						
-						if(CollectionUtils.isEmpty(approverSettings) && (budgetApprovalUsers.getTarget().isEmpty() == true)){//25426
+						if(CollectionUtils.isEmpty(approverSettings) && this.getManagedBean().isFirstViewPageCAUsers()){//25426
 							throw new EpException(MessageConst.ERROR_775174);
 						}
 					}
@@ -7198,6 +7192,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					this.getManagedBean().setFirstPagePA(false);
 			}
 			// #25077 - End
+			//#25426 - Start
+			if(activeIndex != 3){
+				ScQt qt = this.getManagedBean().getQt();
+				Long[] orgIds={qt.getOwnerOrgProfile().getOrgProfileId(),qt.getPmOrgProfile().getOrgProfileId()};
+				DualListModel<ScQtApproverSettings> budgetApprovalUsers=ApproverSettings.getDetails(RoleCode.COMMITTEE_APPROVER,orgIds,this.getManagedBean().getScQtApproval());
+			    this.getManagedBean().setFirstViewPageCAUsers(budgetApprovalUsers.getTarget().isEmpty());
+			}
+			//#25426 - End
 			this.getManagedBean().setActiveIndex(activeIndex);
 			// #29732 Start
 // #29732 Start - reOpen Fix
