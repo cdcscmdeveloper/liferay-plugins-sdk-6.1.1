@@ -1728,6 +1728,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean flagFileAttahmentDeletedMITI=false;
 	private boolean firstPagePA=false;
 	//#25077 - End
+	
+	//#25426 - Start
+	private boolean firstViewPageCAUsers = false; 
+	//#25426 - End
 
 	//#11104-start
 		private ScQtCheckList sampleCheckList;
@@ -11688,6 +11692,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.listCategory = listCategory;
 	}
 	// #29521 - end
+
+	//#25426 - Start
+	public boolean isFirstViewPageCAUsers() {
+		return firstViewPageCAUsers;
+	}
+
+	public void setFirstViewPageCAUsers(boolean firstViewPageCAUsers) {
+		this.firstViewPageCAUsers = firstViewPageCAUsers;
+	}
+	//#25426 - End
 }
 
 // ***25201
