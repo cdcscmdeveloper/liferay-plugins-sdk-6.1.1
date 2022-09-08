@@ -6469,7 +6469,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 										&& specZonedtl.getSpecZoneId().equals(
 												specZoneQty.getTplSpecZoneDtl()
 														.getSpecZoneId())) {
-									retrieveAns.setOffer(true);
+									//remove here
 									if (retrieveAns.isDisableRow())
 										retrieveAns.setDisableRow(false);
 								}
