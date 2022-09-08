@@ -4047,7 +4047,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
 					if(!approval.getApprovalCategory().getParameterCode().equals(ParameterConst.DOCTYPE_BPK_APPROVAL)){
 						List<ScQtApproverSettings> approverSettings = approval.getApproverSettings();
-						if(CollectionUtils.isEmpty(approverSettings)){
+						
+						//#25426 - Start
+						Long[] orgIds={qt.getOwnerOrgProfile().getOrgProfileId(),qt.getPmOrgProfile().getOrgProfileId()};
+						DualListModel<ScQtApproverSettings> budgetApprovalUsers=ApproverSettings.getDetails(RoleCode.COMMITTEE_APPROVER,orgIds,approval);
+						//#25426 - End
+						
+						if(CollectionUtils.isEmpty(approverSettings) && (budgetApprovalUsers.getTarget().isEmpty() == true)){//25426
 							throw new EpException(MessageConst.ERROR_775174);
 						}
 					}
