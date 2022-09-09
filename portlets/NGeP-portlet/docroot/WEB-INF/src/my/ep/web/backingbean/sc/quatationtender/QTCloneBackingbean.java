@@ -1570,14 +1570,22 @@ public class QTCloneBackingbean extends
 			if(qt.isSampleReq()){
 				if (!qt.isZonal()){
 					ScQtSampleSubmission srcSub=resDTO.getSampleSubmissionResultBean().get(0);
+					ScQtSampleSubmission existing=resDTO1.getSampleSubmissionResultBean().get(0);//33946
+					if(null!=existing){
+						setUserDetails(existing);
+						existing.setScAddress(populateScAddress(srcSub.getScAddress()));
+						this.getManagedBean().setScQtSampleSubmission(existing);
+					}
+					else{//33946
 					if(null!=srcSub){
 						ScQtSampleSubmission sbs=new ScQtSampleSubmission();
 						sbs.setBrandNew(true);
 						setUserDetails(sbs);
 						sbs.setScQt(qt);
-						sbs.setScAddress(srcSub.getScAddress());
+						sbs.setScAddress(populateScAddress(srcSub.getScAddress()));//33946
 						this.getManagedBean().setScQtSampleSubmission(sbs);
 					}
+					}//33946
 					
 					if (null != this.getManagedBean()
 							.getScQtSampleSubmission()) {//25635-start
@@ -4444,6 +4452,8 @@ public class QTCloneBackingbean extends
 		scAddress.setContactPhoneCountry(address.getPhoneCountry());
 		scAddress.setContactFaxNo(address.getFaxNo());
 		scAddress.setContactPhoneNo(address.getPhoneNo());
+		scAddress.setContactMobileNo(address.getContactMobileNo());//33946
+		scAddress.setContactPerson(address.getContactPerson());//33946
         setUserDetails(scAddress);
 		return scAddress;
 	}
