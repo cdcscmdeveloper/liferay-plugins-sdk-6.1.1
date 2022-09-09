@@ -10859,7 +10859,7 @@ public class SmApplicationBackingBean extends
 			boolean pmOrgStats = false;
 			if (po.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE && !EntityHelper.isCollectionEmpty(po.getPmUserOrgs())) {
 				for (PmUserOrg userOrg : po.getPmUserOrgs()) {
-					if (userOrg.getPmUser().getUserId() == po.getUserId() && userOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					if (userOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 						pmOrgStats = true;
 						break;
 					}
