@@ -12550,13 +12550,13 @@ public void retrieveDemoQtDetails(Long qtId) {
 						getManagedBean().setIsScEditGeneral(true);
 					}
 					//procurement type category
-					if (getManagedBean().getScQtHistory().getProcurementTypeCatId().getParameterId() != getManagedBean().getQt().getProcurementTypeCatId().getParameterId()){
+					if (!getManagedBean().getScQtHistory().getProcurementTypeCatId().getParameterId().equals(getManagedBean().getQt().getProcurementTypeCatId().getParameterId())){
 						tempProcurementTypeCategory = getManagedBean().getQt().getProcurementTypeCatId().getParameterId();
 						getManagedBean().setIsProcTypeCatChange(true);
 						getManagedBean().setIsScEditGeneral(true);
 					}
 					//procurement category
-					if (getManagedBean().getScQtHistory().getPmProcurementCategory().getParameterId() != getManagedBean().getQt().getPmProcurementCategory().getParameterId()){
+					if (!getManagedBean().getScQtHistory().getPmProcurementCategory().getParameterId().equals(getManagedBean().getQt().getPmProcurementCategory().getParameterId())){
 						getManagedBean().setIsPmProcurementCategoryChange(true);
 						getManagedBean().setIsScEditGeneral(true);
 					}
@@ -12582,7 +12582,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 						getManagedBean().setIsScEditGeneral(true);
 					}
 					//fulfilment type
-					if (getManagedBean().getScQtHistory().getFulfilmentType().getParameterId() != getManagedBean().getQt().getFulfilmentType().getParameterId()){
+					if (!getManagedBean().getScQtHistory().getFulfilmentType().getParameterId().equals(getManagedBean().getQt().getFulfilmentType().getParameterId())){
 						getManagedBean().setIsFulfilmentTypeChange(true);
 						getManagedBean().setIsScEditGeneral(true);
 					}
