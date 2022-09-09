@@ -12603,9 +12603,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 					getManagedBean().setIsScEditGeneral(false);
 				}
 				
-				log.info("#29521 ->> getManagedBean().setIsFulfilmentTypeChange:: "+getManagedBean().getIsFulfilmentTypeChange()+" ::"+getManagedBean().getScQtHistory().getFulfilmentType().getParameterId()+" :: "+getManagedBean().getQt().getFulfilmentType().getParameterId()) ;
-				log.info("#29521 ->> getManagedBean().setIsPmProcurementCategoryChange:: "+getManagedBean().getIsPmProcurementCategoryChange()+" :: "+getManagedBean().getScQtHistory().getPmProcurementCategory().getParameterId()+" :: "+ getManagedBean().getQt().getPmProcurementCategory().getParameterId());
-				log.info("#29521 ->> getManagedBean().setIsProcTypeCatChange:: "+getManagedBean().getIsProcTypeCatChange()+ " :: "+getManagedBean().getScQtHistory().getProcurementTypeCatId().getParameterId()+" :: "+ getManagedBean().getQt().getProcurementTypeCatId().getParameterId());
 				// end - general information tab
 			}
 		
