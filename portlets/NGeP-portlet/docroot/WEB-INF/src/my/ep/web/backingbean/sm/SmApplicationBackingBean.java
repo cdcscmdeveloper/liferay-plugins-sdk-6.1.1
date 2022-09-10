@@ -1892,38 +1892,38 @@ public class SmApplicationBackingBean extends
 						//START 28454
 						//if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
 							
-							//START NEW CHANGES POPUP OWNER UPDATE ROLE							
-							List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
-							if(personnelsRole != null && personnelsRole.size() <=0){
-								for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
-									if (personnel.isEquityOwner() || personnel.isDirector()) {
-										if(personnel.getEpRole() != null){
-											SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
-											SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
-											if(personnelDirectorSSM == null && personnelSSM == null){
-												personnelsRole.add(personnel);
-											}
+						//START NEW CHANGES POPUP OWNER UPDATE ROLE							
+						List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
+						if(personnelsRole != null && personnelsRole.size() <=0){
+							for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
+								if (personnel.isEquityOwner() || personnel.isDirector()) {
+									if(personnel.getEpRole() != null){
+										SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+										SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
+										if(personnelDirectorSSM == null && personnelSSM == null){
+											personnelsRole.add(personnel);
 										}
 									}
 								}
-								
-								if(personnelsRole != null && personnelsRole.size() > 0) {
-									this.getManagedBean().setDontGetSsmData(dontGetSsmData);
-									getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
-									RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-									return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);								
-								}
-							}else{
-								//set latest role to personnel
-								for(SmPersonnel personnel :  personnelsRole){
-									SmPersonnel personnelActive = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo");
-									if(personnelActive != null){
-										//copy latest data to supplier admin
-										String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management","downgradeRoleSsm"};
-										EntityHelper.copyEntityPropertiesOnly(personnel,personnelActive,copyEquityOwner);
-									}
+							}
+							
+							if(personnelsRole != null && personnelsRole.size() > 0) {
+								this.getManagedBean().setDontGetSsmData(dontGetSsmData);
+								getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
+								RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+								return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);								
+							}
+						}else{
+							//set latest role to personnel
+							for(SmPersonnel personnel :  personnelsRole){
+								SmPersonnel personnelActive = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo");
+								if(personnelActive != null){
+									//copy latest data to supplier admin
+									String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management","downgradeRoleSsm"};
+									EntityHelper.copyEntityPropertiesOnly(personnel,personnelActive,copyEquityOwner);
 								}
 							}
+						}
 							
 						//}
 						//END 28454
@@ -3313,7 +3313,7 @@ public class SmApplicationBackingBean extends
 								{sbd.toString() });
 						}	
 					}
-				//#30444 --END--  --31072021	
+				//#30444 --END--  --31072021
 					//#31461-Start
 					SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 							SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
@@ -15069,6 +15069,40 @@ public class SmApplicationBackingBean extends
 		return nonMandatoryCounter++;
 	}
 	//#11641 - END
+	
+	//#33240 - start
+	/**
+	 * Delete file for license certificate information
+	 */
+	public void onDeleteMandatoryLicenseFile(SmApplDocFile doc, int index) {
+
+		this.getManagedBean().setSupportDoc(doc.getSmApplSupportDoc());
+		this.getManagedBean().setAttachedFileIndex(index);
+		this.getManagedBean().setSmApplDocFile(doc);
+		
+		RequestContext.getCurrentInstance().execute(
+				"confirmDeleteLicenseCertDialog.show();");
+	}
+	
+	public void deleteMandatoryLicenseFile() {
+		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
+				.getSmApplSupportDocs()) {
+			if (doc.getPmDocument() != null) {
+				if (doc.getPmDocument().isMandatory()) {
+					if (doc.getPmDocument().isLicenseReq()
+							&& !doc.getPmDocument().getPmDocumentRestrs()
+									.isEmpty()) {
+						if(doc.getSmApplDocFiles().contains(this.getManagedBean().getSmApplDocFile())){
+							doc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
+							this.getManagedBean().setSmApplDocFile(null);
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	//#33240 - end
 	
 	//#12483 - START
 	public boolean renderRevisedReason(){
