@@ -124,23 +124,39 @@ public class MolPayServlet extends HttpServlet {
 		} 
 		// #26307 end  
 		// #32422 START 
+		//#33137 - START
 		String date1 = null;
+		String molpayTransId = null;
 		String extraP1 = req.getParameter("extraP");
 		JSONObject obj1;
+		log.info("extraP1 before:" + extraP1);
 		try { 
 			obj1 = new JSONObject(extraP1); 
-			date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
+			log.info("extraP1 after:" + extraP1);
+			
+			if(obj1.has("bank_datetime")){
+				log.info("----- bank date time before set -----");
+				date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
+			}
+			
+			if(obj1.has("MOLPay_tranID")){
+				molpayTransId = obj1.getString("MOLPay_tranID") != null ? obj1.getString("MOLPay_tranID") : null;
+				log.info("molpay id after : "+ molpayTransId);	
+			}
 		} catch (JSONException e) { 
+			log.info("molpay id catch : "+molpayTransId);
 			e.printStackTrace(); 
 		}
+		//#33137 - END
 		// #32422 END
+		
 		if(nbcb != null){
 			Long ordId = Long.valueOf(orderId);
 			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 			PaymentReqDTO reqDTO = new PaymentReqDTO();
 			reqDTO.setPaymentId(ordId);
 			PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO);
-														
+			
 			String vKey = SmCommonUtil.getInstance().getPaymentGatewayVKeyByBillType(resDTO.getPyPayment().getPyBill().getBillType());
 			// To verify the data integrity sending by MOLPay
 			String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
@@ -282,7 +298,18 @@ public class MolPayServlet extends HttpServlet {
 					//32422 END
 					log.info("channel---------"+channel);
 					paymentOrder.setChannelName(channel);
-					smPaymentRes.setTransactionId(tranID);
+					
+					//#33137 - start
+					if(channel.equalsIgnoreCase("FPX")){
+						smPaymentRes.setTransactionId(tranID);
+						log.info("SET TRANSACTION ID--------------------33137"+tranID);
+					}else{
+						smPaymentRes.setTransactionId(molpayTransId);
+						log.info("SET MOLPAY TRANS ID--------------------33137"+molpayTransId);
+					}
+					smPaymentRes.setMolpayTransactionId(molpayTransId);
+					smPaymentRes.setFpxTranId(tranID);
+					//#33137 - end
 					smPaymentRes.setErrorCode(errorCode);
 					smPaymentRes.setErrorDesc(errorDesc);
 					//32422 START
@@ -306,8 +333,6 @@ public class MolPayServlet extends HttpServlet {
 						PmStatus pmStat= SmServiceLookup.getStatusSO().retrieveStatusByStatusId(statusReqDTO).getPmStatus();
 						smPayment.setPmStatus(pmStat);
 					}
-					
-					
 
 					
 					//pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
