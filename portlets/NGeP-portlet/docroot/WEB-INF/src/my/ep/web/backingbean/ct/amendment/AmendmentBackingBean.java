@@ -5013,7 +5013,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				CommitteReqDTO commReqDO = new CommitteReqDTO();
 				commReqDO.setDocId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
 				commReqDO.setDocType(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode());
-				commReqDO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+				//commReqDO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()); //Bug #33857
 								
 				if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
 						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
@@ -6710,68 +6710,68 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	// End Fix - #29368 / #30856
 	
 	// #30879 - Start
-		/**
-		 * The method used to reset item price on amendment 
-		 * when user changed Price on the amendment.
-		 */
-		public void resetItemPrice() {
-			
-			for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {
-				log.info("Check Size Price :"+item.getCtItemPrices().size());
-				if(item.getCtItemPrices().size() >= 2){
-					for(CtItemPrice itemPrice : item.getCtItemPrices()){
-						if(itemPrice.isChkIndexOfRow()){
-							itemPrice.setChkIndexOfRow(false);
-							itemPrice.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-						}
-						if(itemPrice.isChangePrice()){
-							getManagedBean().setCtItemPrices(itemPrice);
-						}
+	/**
+	 * The method used to reset item price on amendment 
+	 * when user changed Price on the amendment.
+	 */
+	public void resetItemPrice() {
+		
+		for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {
+			log.info("Check Size Price :"+item.getCtItemPrices().size());
+			if(item.getCtItemPrices().size() >= 2){
+				for(CtItemPrice itemPrice : item.getCtItemPrices()){
+					if(itemPrice.isChkIndexOfRow()){
+						itemPrice.setChkIndexOfRow(false);
+						itemPrice.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 					}
-					item.getCtItemPrices().remove(getManagedBean().getCtItemPrices());
-					newItemPrice(item);
+					if(itemPrice.isChangePrice()){
+						getManagedBean().setCtItemPrices(itemPrice);
+					}
 				}
+				item.getCtItemPrices().remove(getManagedBean().getCtItemPrices());
+				newItemPrice(item);
 			}
 		}
-		// #30879 - End
+	}
+	// #30879 - End
 				
-		// #30879 - Start
-		/**
-		 * The method used to reset item quantity on amendment 
-		 * when user changed Max Quantity or Ceiling Quantity on the amendment.
-		 */
-		public void resetItemQty() {
+	// #30879 - Start
+	/**
+	 * The method used to reset item quantity on amendment 
+	 * when user changed Max Quantity or Ceiling Quantity on the amendment.
+	 */
+	public void resetItemQty() {
+				
+		for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {						
+			if(item.getCtItemMaxQties().size() >= 2){
+				for(CtItemMaxQty itemMaxQty : item.getCtItemMaxQties()){
+					if(itemMaxQty.isChkIndexOfRow()){
+						itemMaxQty.setChkIndexOfRow(false);
+						itemMaxQty.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+					}
+					if(itemMaxQty.isChangeQuantity()){
+						getManagedBean().setCtItemMaxQty(itemMaxQty);
+					}
+				}
+				item.getCtItemMaxQties().remove(getManagedBean().getCtItemMaxQty());
+				newItemMaxQty(item);
+			}
 					
-			for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {						
-				if(item.getCtItemMaxQties().size() >= 2){
-					for(CtItemMaxQty itemMaxQty : item.getCtItemMaxQties()){
-						if(itemMaxQty.isChkIndexOfRow()){
-							itemMaxQty.setChkIndexOfRow(false);
-							itemMaxQty.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-						}
-						if(itemMaxQty.isChangeQuantity()){
-							getManagedBean().setCtItemMaxQty(itemMaxQty);
-						}
+			if(item.getCtItemCeilingQties().size() >= 2){
+				for(CtItemCeilingQty itemCeilingQty : item.getCtItemCeilingQties()){
+					if(itemCeilingQty.isChkIndexOfRow()){
+						itemCeilingQty.setChkIndexOfRow(false);
+						itemCeilingQty.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 					}
-					item.getCtItemMaxQties().remove(getManagedBean().getCtItemMaxQty());
-					newItemMaxQty(item);
-				}
-						
-						if(item.getCtItemCeilingQties().size() >= 2){
-							for(CtItemCeilingQty itemCeilingQty : item.getCtItemCeilingQties()){
-								if(itemCeilingQty.isChkIndexOfRow()){
-									itemCeilingQty.setChkIndexOfRow(false);
-									itemCeilingQty.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-								}
-								if(itemCeilingQty.isChangeCeilQuantity()){
-									getManagedBean().setCtItemCeilingQtys(itemCeilingQty);
-								}
-							}
-							item.getCtItemMaxQties().remove(getManagedBean().getCtItemMaxQty());
-						}
+					if(itemCeilingQty.isChangeCeilQuantity()){
+						getManagedBean().setCtItemCeilingQtys(itemCeilingQty);
 					}
 				}
-				// #30879 - End
+				item.getCtItemMaxQties().remove(getManagedBean().getCtItemMaxQty());
+			}
+		}
+	}
+	// #30879 - End
 		
 	/**
 	 * The method used to retrieve the contract administrator list.
