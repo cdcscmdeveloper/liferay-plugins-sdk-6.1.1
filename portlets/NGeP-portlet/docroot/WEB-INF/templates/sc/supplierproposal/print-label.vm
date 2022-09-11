@@ -18,7 +18,7 @@
 <body>
 
 
-
+	#set($rowCount = 0)
  	#foreach( $sampleItem in $sampleItems )
  	
 	<table cellpadding="0" cellspacing="10" width="100%" style="border: 3px solid black">
@@ -53,6 +53,10 @@
           <br/>
           
 	</table>
+	#set($rowCount = $rowCount + 1)
+	#if($rowCount < $sampleItems.size())
+		<div style="page-break-after:always;"><br/></div>
+	#end
 	#end
 	
  </body>
