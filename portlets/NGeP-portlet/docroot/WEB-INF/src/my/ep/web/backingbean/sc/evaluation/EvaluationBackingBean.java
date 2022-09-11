@@ -1134,9 +1134,10 @@ public class EvaluationBackingBean extends
 					this.getManagedBean().getScQt());
 			detailBackingBean.getManagedBean().setReadOnly(true);
 			//#28786 bug - start
+			//#28786 fix under 28784 change hardcoded to constant - start
 			if (proposalCheckList.getScQtCheckList().getTitle()
-					.equals("Pengesahan dari Institusi Kewangan untuk tiga bulan Penyata Bank")) {
-				retrieveAllFinancialChecklist("Penyata bank untuk tiga bulan");
+					.equals(SourcingConstants.PENGESAHAN_TIGA_BULAN)) {
+				retrieveAllFinancialChecklist(SourcingConstants.PENYATA_TIGA_BULAN);
 				log.info("This is Pengesahan dari Institusi Kewangan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
 				retrieveComplianceUploadedProposalChecklist(proposalCheckList, true);
 				log.info("This is Pengesahan dari Institusi Kewangan proposal checklist ID========>>>> " + this.getManagedBean().getComplianceQtProposalChecklist().getQtProposalChecklistId());
@@ -1144,8 +1145,8 @@ public class EvaluationBackingBean extends
 						.retrieveBankStmtDtls(this.getManagedBean().getComplianceQtProposalChecklist());
 			}
 			if (proposalCheckList.getScQtCheckList().getTitle()
-					.equals("Kunci Kira-Kira Tahunan (Nota - Untuk syarikat ROC, ini mestilah salinan yang telah diaudit)")) {
-				retrieveAllFinancialChecklist("Aset dan Liabiliti (Dari Kunci Kira-kira)");
+					.equals(SourcingConstants.KUNCI_KIRA_KIRA_TAHUNAN)) {
+				retrieveAllFinancialChecklist(SourcingConstants.ASSET_DAN_LIABILITI);
 				log.info("This is Kunci Kira-Kira Tahunan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
 				retrieveComplianceUploadedProposalChecklist(proposalCheckList, true);
 				log.info("This is Kunci Kira-Kira Tahunan proposal checklist ID========>>>> " + this.getManagedBean().getComplianceQtProposalChecklist().getQtProposalChecklistId());
@@ -1153,14 +1154,15 @@ public class EvaluationBackingBean extends
 						.retrieveAssetLiabilityDtls(this.getManagedBean().getComplianceQtProposalChecklist());
 			}
 			if (proposalCheckList.getScQtCheckList().getTitle()
-					.equals("Pengesahan dari Institusi Kewangan ke atas jumlah yang telah dibayar")) {
-				retrieveAllFinancialChecklist("Kemudahan Kredit (Overdraf, Pinjaman Bank)");
+					.equals(SourcingConstants.PENGESAHAN_DARI_INSITUSI)) {
+				retrieveAllFinancialChecklist(SourcingConstants.KEMUDAHAN_KREDIT);
 				log.info("This is Institusi Kewangan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
 				retrieveComplianceUploadedProposalChecklist(proposalCheckList, true);
 				log.info("This is Institusi Kewangan proposal checklist ID========>>>> " + this.getManagedBean().getComplianceQtProposalChecklist().getQtProposalChecklistId());
 				proposalPage = detailBackingBean
 						.retrieveCreditFacilitiesDtls(this.getManagedBean().getComplianceQtProposalChecklist());
 			}
+			//#28786 fix under 28784 change hardcoded to constant - end
 			//#28786 bug - end
 			this.getManagedBean().setProposalPage(proposalPage);
 //			
@@ -1779,6 +1781,10 @@ public class EvaluationBackingBean extends
 			EvaluationResDTO amountResDto = new EvaluationResDTO();
 			amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
 			amountResDto= evaluationSO.retrieveProposals(amountReqDto); 
+			if (getManagedBean().getScQt().isDemoRequired()) {
+				// #28784 - FEC by item eval = TI, package = P			
+				amountReqDto.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);			
+			}
 			for(ScQtProposal amtbyproposal : amountResDto.getProposalList()){
 				amountReqDto.setScQt(this.getManagedBean().getScQt());
 				amountReqDto.setProposalId(amtbyproposal.getQtProposalId());
@@ -2974,6 +2980,27 @@ public class EvaluationBackingBean extends
 			evaluationSo = null;
 		}
 
+		//#28784 add remarks - start
+		if (this.getManagedBean().getScQt().isDemoRequired()
+				&& (QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION.equals(this
+						.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL.equals(this
+								.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_ENDORSEMENT.equals(this
+										.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_SIGN_OFF.equals(this
+										.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO_REVISION.equals(this
+										.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO.equals(this
+										.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_ENDORSEMENT_DEMO.equals(this
+										.getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.TEC_PENDING_SIGN_OFF_DEMO.equals(this
+										.getManagedBean().getCurrentStatusId()))) {
+			retrieveDemoRemarks();
+	}
+		//#28784 add remarks - end
 	}
 	
 	// 28784 - start
