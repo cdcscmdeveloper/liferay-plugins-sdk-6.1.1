@@ -1987,7 +1987,12 @@ if (CollectionUtils.isNotEmpty(
 				ScCommitteeMemberHistory history = histories.get(0);
 				
 				if (histories.size() == 1) {
-					this.retriveMeetingDetails(this.getManagedBean().getScQt().getQtId());
+					// 33908 for 25037- start
+					Long qtId = this.getManagedBean().getScQt().getQtId();
+
+					this.retriveQTDetails(qtId);
+					this.retriveMeetingDetails(qtId);
+					// 33908 for 25037- end
 				}
 				
 				@SuppressWarnings("unchecked")
