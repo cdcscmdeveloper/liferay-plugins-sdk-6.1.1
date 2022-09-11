@@ -1080,33 +1080,43 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		getManagedBean().getContractVer().getCtContractValue().setBankName(null);
 		getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
 		getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
+		try {
+			String[] splittedBankDetails = splittedAccNoAndBankname();
 
-		String[] splittedBankDetails = splittedAccNoAndBankname();
-	
-		if (splittedBankDetails != null && ((splittedBankDetails[0] != null && !splittedBankDetails[0].isEmpty())
-				&& (splittedBankDetails[1] != null && !splittedBankDetails[1].isEmpty()))) {
-			SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(splittedBankDetails[0]);
-			SmSupplierBank supplierBankname = getManagedBean().getSupplierBankName().get(splittedBankDetails[1]);
-						
-			changeBankAccSO = (IChangeBankAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IChangeBankAccSO.class);
-			reqDTO = new ContractReqDTO();
-			reqDTO.setBankAccNo(splittedBankDetails[0]);
-			reqDTO.setBankName(splittedBankDetails[1]);
-			if(getManagedBean().getApplID() != null){
-			reqDTO.setApplID(getManagedBean().getApplID());
+			if (splittedBankDetails != null
+					&& ((splittedBankDetails[0] != null && !splittedBankDetails[0].isEmpty()) && (splittedBankDetails[1] != null && !splittedBankDetails[1]
+							.isEmpty()))) {
+				SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(splittedBankDetails[0]);
+				SmSupplierBank supplierBankname = getManagedBean().getSupplierBankName().get(splittedBankDetails[1]);
+
+				changeBankAccSO = (IChangeBankAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+						IChangeBankAccSO.class);
+				reqDTO = new ContractReqDTO();
+				reqDTO.setBankAccNo(splittedBankDetails[0]);
+				reqDTO.setBankName(splittedBankDetails[1]);
+				if (getManagedBean().getApplID() != null) {
+					reqDTO.setApplID(getManagedBean().getApplID());
+				}
+
+				resDTO = changeBankAccSO.getBankDetails(reqDTO);
+
+				if (supplierBank != null && supplierBankname != null) {
+					if ((supplierBank.getAccountNo() != null && supplierBank.getAccountNo().equals(splittedBankDetails[0]))
+							&& (supplierBankname.getPmFinancialOrg().getFinOrgName() != null && supplierBankname.getPmFinancialOrg().getFinOrgName()
+									.equals(splittedBankDetails[1]))) {
+						getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBankname.getPmFinancialOrg().getFinOrgName());
+						getManagedBean().getContractVer().getCtContractValue().setBankBranch(resDTO.getBankBranch());
+						getManagedBean().getContractVer().getCtContractValue()
+								.setBankAddress(CtAddressUtil.convertSmAddressToCtAddress(resDTO.getBankAddressId()));
+					}
+				}
 			}
-		 
-		    resDTO = changeBankAccSO.getBankDetails(reqDTO);
+		} catch (Exception e) {
+			e.printStackTrace();
 
-			if (supplierBank != null && supplierBankname != null ) {
-				if ((supplierBank.getAccountNo() != null && supplierBank.getAccountNo().equals(splittedBankDetails[0]))
-						&& (supplierBankname.getPmFinancialOrg().getFinOrgName() != null && supplierBankname.getPmFinancialOrg().getFinOrgName().equals(splittedBankDetails[1]))) {
-					getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBankname.getPmFinancialOrg().getFinOrgName());
-					getManagedBean().getContractVer().getCtContractValue().setBankBranch(resDTO.getBankBranch());
-					getManagedBean().getContractVer().getCtContractValue()
-						.setBankAddress(CtAddressUtil.convertSmAddressToCtAddress(resDTO.getBankAddressId()));	
-				  }
-			    }
+		}finally{
+			changeBankAccSO = null;
+            resDTO = null;			
 		}
 	}
 	//End Fix - #33399,#33856
