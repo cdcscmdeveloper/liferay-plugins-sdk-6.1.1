@@ -1721,18 +1721,21 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private void checkNonContractedInvalidSearch(String catType) {
 		if (catType.equals("XC")) {
+			searchDataModel.resetData(); //#33848
 			throw new EpException(MessageConst.ERROR_716021);
 		}
 	}
 	
 	private void checkPanelInvalidSearch(String catType) {
 		if (catType.equals("PC")) {
+			searchDataModel.resetData(); //#33848
 			throw new EpException(MessageConst.ERROR_716022);
 		}
 	}
 	
 	private void checkMCInvalidSearch(String catType) {
 		if (catType.equals("MC")) {
+			searchDataModel.resetData(); //#33848
 			throw new EpException(MessageConst.ERROR_716023);
 		}
 	}
