@@ -1216,7 +1216,7 @@ public class SPDetailBackingBean extends
 			List<TplSpecAnswer> answers = null;
 
 			if (getManagedBean().getQt().isZonal()) {
-				// #21695 - #33391 - Start.
+				// #21695 - #33391 - #33949 - Start.
 				if (getManagedBean().getSelectedZone() != null) {
 					getManagedBean().getZoneTplSpecBeanMap().put(
 							getManagedBean().getSelectedZone().getSpecZoneId(),
@@ -1225,7 +1225,9 @@ public class SPDetailBackingBean extends
 				
 
 				if (null != getManagedBean().getQt().getQtStatus() && null != getManagedBean().getQt().getQtStatus().getStatusId()
-						&& getManagedBean().getQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION) {
+						&& (getManagedBean().getQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION 
+								|| QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) 
+								|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()))) {
 					if (null != getManagedBean().getZoneTplSpecBeanMap() && getManagedBean().getZoneTplSpecBeanMap().size() > 0
 							&& null != getManagedBean().getZoneTplSpecAnsMap() && getManagedBean().getZoneTplSpecAnsMap().size() > 0) {
 						for (Entry<Long, List<TplSpecAnswer>> entry : getManagedBean().getZoneTplSpecAnsMap().entrySet()) {
@@ -1234,7 +1236,7 @@ public class SPDetailBackingBean extends
 						getManagedBean().getZoneTplSpecAnsMap().clear();
 					}
 				}
-				// #21695 - #33391 - End.
+				// #21695 - #33391 - #33949 - End.
 
 				List<TemplateSpecBean> templateSpecBeans = new ArrayList<TemplateSpecBean>();
 				List<TplSpecAnswer> tobeDeletedAnswers = new ArrayList<TplSpecAnswer>();
@@ -1248,8 +1250,7 @@ public class SPDetailBackingBean extends
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
-							for (TplSpecAnswer specAnswer : templateSpecBean
-									.getSpecAnswerList()) {
+							for (TplSpecAnswer specAnswer : templateSpecBean.getSpecAnswerList()) {
 //#21695 farid IN MONITORING START	
 								
 								if(null==	specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() || null==specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){ //#28785-Start
@@ -1446,6 +1447,9 @@ public class SPDetailBackingBean extends
 		}
 		finally {
 			proposalSO = null;
+			// #21695 - #33391 - #33949 - Start.
+			hideZeroQtySpecAns(getManagedBean().getZoneTplSpecBeanMap());
+			// #21695 - #33391 - #33949 - End.
 		}
 		return proposalResDTO;
 	}
@@ -4455,7 +4459,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		//REMOVE Bug #31542 
 	}
 
-	// #21695 - #33391 - Start.
+	// #21695 - #33391 - #33949 - Start.
 	/**
 	 * @param templateSpecbean
 	 * @return
@@ -4467,18 +4471,19 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		}
 		// #33567 - End.
 		
-		for (Map.Entry<Long, TemplateSpecBean> entry : zoneTplSpecBeanMap.entrySet()) {
-			
-			List<TplSpecAnswer> specAnswerList = entry.getValue().getSpecAnswerList();
-		
 		ScQt scQt = getManagedBean().getQt();
 		if (null != scQt.getQtStatus() && null != scQt.getQtStatus().getStatusId()
 					// #33831 - Start.
 					&& (scQt.getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION 
 					|| QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) 
-					|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()))
+				|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				&& null != getManagedBean().getZoneTplSpecBeanMap() && getManagedBean().getZoneTplSpecBeanMap().size() > 0)
 					// #33831 - End.
 					) {
+				for (Map.Entry<Long, TemplateSpecBean> entry : zoneTplSpecBeanMap.entrySet()) {
+				
+					List<TplSpecAnswer> specAnswerList = entry.getValue().getSpecAnswerList();
+				
 			Iterator<TplSpecAnswer> iterator = specAnswerList.iterator();
 			List<TplSpecAnswer> hiddenAnsList = null;
 			while (iterator.hasNext()) {
@@ -4501,7 +4506,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			}
 		}
 	}
-	// #21695 - #33391 - Start.
+	// #21695 - #33391 - #33949 - End.
 
 	/**
 	 * Method to calculate maximum proposals allowed
