@@ -82,7 +82,7 @@
 		<ui:include src="committeeEndorsmentReminderpopup.xhtml" /> -->
 	</p:panel>
 	
-	<c:if test="#{specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_MSC_APPROVAL or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.SE_PENDING_ENDORSMENT or !specificationBackingBean.managedBean.readOnly}">
+	<c:if test="#{specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_MSC_APPROVAL or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.SE_PENDING_ENDORSMENT or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.SE_PENDING_SIGNOFF or !specificationBackingBean.managedBean.readOnly}"><ui:remove>33819 add QTStatusConst.SE_PENDING_SIGNOFF</ui:remove>
 		<ac:scRemarkAndAttachment
 			remarkList="#{specificationBackingBean.managedBean.specificationRemarks}"
 			showAttachment="false"
