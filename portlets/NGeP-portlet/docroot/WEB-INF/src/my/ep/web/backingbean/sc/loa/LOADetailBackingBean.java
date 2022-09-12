@@ -9878,7 +9878,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					String errorMessage=	ResourceBundleUtils.getMessage("lbl.sc.justification",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale());	
-					throw new EpException(MessageConst.ERROR_760540,
+					throw new EpException(MessageConst.ERROR_775185,
 							new String[] {errorMessage });
 					
 				}
