@@ -557,7 +557,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	//201002@akmal - Bug29265 - Start
 	private boolean isPromoPriceExist = false;
 	//201002@akmal - Bug29265 - End
-	
+
 	//#569 - start
 	private boolean publish = false;
 	//#569 - end
@@ -565,13 +565,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	//SSM integration
 	/** The current date. */
 	private Date minDate = new Date();
-
+	
 	//#30457 - start
 	private int itemSelectedIndex;
 	private boolean viewOnlyBasicPopup;
 	private boolean yesEnable=false; //#30457
 	//#30457 - end
-
+	
 	//#30457 - start 1/08/2022
 	private List<CmImage> deleteImage;
 	private String itemStatus;
@@ -1515,7 +1515,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 								}
 							} else {
 								log.info("[#26282] - Disciplinary action does not imposed on supplier");
-							}														
+							}
 						}
 					}
 				//[#26282] - end	
@@ -1721,18 +1721,21 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private void checkNonContractedInvalidSearch(String catType) {
 		if (catType.equals("XC")) {
+			searchDataModel.resetData(); //#33848
 			throw new EpException(MessageConst.ERROR_716021);
 		}
 	}
 	
 	private void checkPanelInvalidSearch(String catType) {
 		if (catType.equals("PC")) {
+			searchDataModel.resetData(); //#33848
 			throw new EpException(MessageConst.ERROR_716022);
 		}
 	}
 	
 	private void checkMCInvalidSearch(String catType) {
 		if (catType.equals("MC")) {
+			searchDataModel.resetData(); //#33848
 			throw new EpException(MessageConst.ERROR_716023);
 		}
 	}
