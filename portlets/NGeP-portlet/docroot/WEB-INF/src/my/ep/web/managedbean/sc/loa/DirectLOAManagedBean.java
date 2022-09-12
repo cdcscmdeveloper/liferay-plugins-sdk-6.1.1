@@ -325,6 +325,10 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	public boolean above500K = true;
 	// #25726 END
 	
+	// Bug #33674@Syazani - Start
+	private Long supplierBankId = null;
+	// Bug #33674@Syazani - End
+	
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -2005,5 +2009,15 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 	
 	// #25726 END
+	
+	// Bug #33674@Syazani - Start
+	public Long getSupplierBankId() {
+		return supplierBankId;
+	}
+
+	public void setSupplierBankId(Long supplierBankId) {
+		this.supplierBankId = supplierBankId;
+	}
+	// Bug #33674@Syazani - End
 	
 }

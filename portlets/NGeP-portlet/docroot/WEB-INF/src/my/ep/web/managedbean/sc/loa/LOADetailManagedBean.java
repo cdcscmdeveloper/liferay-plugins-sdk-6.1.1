@@ -358,6 +358,11 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	//#32280 - start
 	private Long reqItemAssignButtonSession = 0L;
 	//#32280 - end	
+	
+	//Bug #33674@Syazani - Start
+	private Long supplierBankId = null;
+	//Bug #33674@Syazani - End
+	
     /**
      * Gets the spki backing bean.
      *
@@ -2070,4 +2075,18 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.procurementType = procurementType;
 	}
 	//#25725 - end
+
+	//Bug #33674@Syazani - Start
+	public Long getSupplierBankId() {
+		return supplierBankId;
+	}
+
+	public void setSupplierBankId(Long supplierBankId) {
+		this.supplierBankId = supplierBankId;
 }
+	//Bug #33674@Syazani - End
+}
+
+
+
+// ***25201
