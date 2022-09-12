@@ -134,11 +134,15 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		if (getFacesScopes().getUserSessionBean().getUserId() == null) {
 			throw new EpException(MessageConst.ERROR_770149);
 		}
+		//Enhancement 32675 - shaqimi start
 		if (!getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
 				&& !getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				&& !getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
 				&& !getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-				&& !getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+				&& !getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+				&& !getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())
+				&& !getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value())) {
+		//Enhancement 32675 - shaqimi start
 			List<PmUserOrg> userOrgList = PmCommonUtil
 					.retrieveActiveOrgWithoutRole(getFacesScopes()
 							.getUserSessionBean().getUserId(), false);
