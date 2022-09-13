@@ -5933,14 +5933,29 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().setDemoDisabled(true);
 			}
 
+			//#28784 note #507 - start
 			if (null != status
 					&& ((status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) || status
 							.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL))) && this.getManagedBean().isMaintanceFlow() && !demoRequired
+					&& role != null && role.equals(RoleCode.SC_SECRETARY.value()) && (!workflowStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT) && !workflowStatusId.equals(QTStatusConst.SE_PENDING_SIGNOFF)
+							&& 	!workflowStatusId.equals(QTStatusConst.SE_PENDING_REVISION))) {
+				this.getManagedBean().setDemoEvalDisabled(true);
+				this.getManagedBean().setDemoSpecialCase(false);
+				this.getManagedBean().setDemoDisabled(true);
+			}
+			
+			if (null != status
+					&& ((status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) || status
+				.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL) || status.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)))
+							&& workflowStatusId.equals(QTStatusConst.SE_PENDING_REVISION)
+							&& this.getManagedBean().isMaintanceFlow()
+							&& !isSpecCommittee()
 					&& role != null && role.equals(RoleCode.SC_SECRETARY.value())) {
 				this.getManagedBean().setDemoEvalDisabled(true);
 				this.getManagedBean().setDemoSpecialCase(false);
 				this.getManagedBean().setDemoDisabled(true);
 			}
+			//#28784 note #507 - end
 
 			if (null != status && (status.equals(QTStatusConst.QT_REVISION_PUBLICATION) || status.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION))
 					&& role != null && (role.equals(RoleCode.RN_APPROVER.value()) || role.equals(RoleCode.DESK_OFFICER.value()))) {
@@ -12720,4 +12735,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 				
 			}
 		// #29521 - end
+			
+	//#28784 note #507 - start
+	public boolean isSpecCommittee() {
+		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	//#28784 note #507 - end
 }
