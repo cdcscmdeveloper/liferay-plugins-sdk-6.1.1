@@ -82,6 +82,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.SLAUtils;
@@ -929,6 +930,112 @@ public class QtSpecCloneBackingBean extends
 	}
 
 	public void addToClone() throws FileNotFoundException {
+		
+		ScQt scQt=this.getManagedBean().getQt();//33918
+		ScQtSupplierCriteria qtSupplierCriteria = scQt
+				.getScQtSupplierCriteria();
+		if (!scQt.isPanel() && null != qtSupplierCriteria && scQt.isZonal()) {
+			if (scQt.isZonal()
+					&& scQt.getQtType().equals(
+							ParameterConst.QUOTATION_TENDER_TYPE_OPEN)) {
+				List<TreeNode> zoneTrees = this.getManagedBean()
+						.getZoneSuppQualTrees();
+				if (zoneTrees == null) {
+					zoneTrees = this.getManagedBean().getZoneGeneralTrees();
+				}
+				List<TplSpecZoneDtl> businessOwnerZone = convertTreeNodesToZoneCriteria(
+						zoneTrees, null);
+
+				if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
+					// TODO Code needs to be remove
+					setUserDetails(qtSupplierCriteria.getQtZoneCriterias());
+					List<TplSpecZoneDtl> zoneLocal = new ArrayList<TplSpecZoneDtl>();
+					for (TplSpecZoneDtl tplSpecZoneDtl : businessOwnerZone) {
+						qtSupplierCriteria.getQtZoneCriterias().setModified(
+								true);
+						tplSpecZoneDtl.setTplSpecZone(qtSupplierCriteria
+								.getQtZoneCriterias());
+						zoneLocal.add(tplSpecZoneDtl);
+					}
+					qtSupplierCriteria.getQtZoneCriterias()
+							.setScQtSupplierCriteria(qtSupplierCriteria);
+					qtSupplierCriteria.getQtZoneCriterias().setTplSpecZoneDtls(
+							zoneLocal);
+					
+				} else {
+					if (null != scQt.getScQtSupplierCriteria()
+							.getQtZoneCriterias()) {
+						qtSupplierCriteria.getQtZoneCriterias()
+								.setTplSpecZoneDtls(null);
+
+					}
+				}
+				qtSupplierCriteria.setScQt(scQt);
+				// TODO Need to remove below code...
+				setUserDetails(qtSupplierCriteria);
+				scQt.setScQtSupplierCriteria(qtSupplierCriteria);
+			}
+			/*
+			 * if (QTConstants.OPEN_TYPE.equals(scQt.getQtType()) &&
+			 * !scQt.getScQtSupplierCriteria().isAllState()) {
+			 * List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>)
+			 * convertTreeNodesToLocationCriteria(
+			 * this.getManagedBean().getZoneTrees(), qtSupplierCriteria); if
+			 * (locCriteria != null && !locCriteria.isEmpty()) {
+			 * scQt.getScQtSupplierCriteria().setScQtLocCriteria( locCriteria);
+			 * } else { scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
+			 * } }
+			 */
+
+			/*
+			 * if (QTConstants.OPEN_TYPE.equals(scQt.getQtType()) &&
+			 * ParameterConst.PROCUREMENT_MODE_TENDER.equals(scQt
+			 * .getProcurementMode().getParameterCode()) &&
+			 * this.getManagedBean().getQt().getScQtSupplierCriteria()
+			 * .isAllState()) { if (null != qtSupplierCriteria) {
+			 * 
+			 * qtSupplierCriteria.setLocationLevel(null);
+			 * qtSupplierCriteria.setScQtLocCriteria(null); } }
+			 */
+
+			qtSupplierCriteria.setScQt(scQt);
+			// TODO Need to remove below code...
+			setUserDetails(qtSupplierCriteria);
+			scQt.setScQtSupplierCriteria(qtSupplierCriteria);
+
+			/*
+			 * if (QTConstants.OPEN_TYPE.equalsIgnoreCase(scQt.getQtType())) {
+			 * List<ScQtCategory> openList = this.getManagedBean()
+			 * .getSuppCriteriaopenList(); if (null != openList &&
+			 * !openList.isEmpty()) { scQt.setScQtCategorys(openList); } } else
+			 * if (QTConstants.RESTRICTED_TYPE.equalsIgnoreCase(scQt
+			 * .getQtType())) { scQt.setZonal(false);
+			 * scQt.setZoneLocationLevel(null); if (null !=
+			 * scQt.getScQtSupplierCriteria()) {
+			 * scQt.getScQtSupplierCriteria().setAllState(false);
+			 * scQt.getScQtSupplierCriteria().setLocationLevel(null);
+			 * scQt.getScQtSupplierCriteria().setScQtLocCriteria(null); if (null
+			 * != scQt.getScQtSupplierCriteria() .getQtZoneCriterias()) {
+			 * qtSupplierCriteria.getQtZoneCriterias()
+			 * .setTplSpecZoneDtls(null);
+			 * qtSupplierCriteria.setQtZoneCriterias(null); }
+			 * 
+			 * }
+			 * 
+			 * List<ScQtCategory> openList = this.getManagedBean()
+			 * .getSuppCriteriaopenList(); if (null != openList &&
+			 * !openList.isEmpty()) { scQt.setScQtCategorys(openList); }
+			 * 
+			 * }
+			 */
+			SpecificationReqDTO specReqDTO=new SpecificationReqDTO();
+			specReqDTO.setScQt(scQt);
+			IQTSpecSO specSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSpecSO.class);
+			specSO.validateSpecCommitteGeneralInfo(specReqDTO);
+		}//33918
+		
 		ScQt selected = this.getManagedBean().getSelectedCloneTender();
 		IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
