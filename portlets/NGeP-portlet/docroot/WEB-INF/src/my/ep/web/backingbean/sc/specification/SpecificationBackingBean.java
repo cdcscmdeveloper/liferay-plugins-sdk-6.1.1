@@ -20489,9 +20489,10 @@ if(null!=allTechnicalChecklist){
 				//throw new EpException(MessageConst.ERROR_760528);
 				saveSpecificationCommitteeDtls(); //#28784 - Remove notification save
 				if (this.getManagedBean().isMaintanceFlow()) {
-					log.info("asdasdqwewqewqewq");
+//					log.info("asdasdqwewqewqewq");
 					checkSpecMaintenanceOrNo();
 				}
+				retriveTechnicalCheckList();
 			}
 		}
 		for (ScQtCheckList cl : st2technicalproposalList) {
