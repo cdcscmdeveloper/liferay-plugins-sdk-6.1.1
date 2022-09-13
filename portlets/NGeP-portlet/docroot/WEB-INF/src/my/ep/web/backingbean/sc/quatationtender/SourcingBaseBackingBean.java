@@ -255,7 +255,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		extends BaseBackingBean<T> {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L; 
 	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
 			  SourcingConstants.MALAYSIA_COUNTRY_CODE);
 
