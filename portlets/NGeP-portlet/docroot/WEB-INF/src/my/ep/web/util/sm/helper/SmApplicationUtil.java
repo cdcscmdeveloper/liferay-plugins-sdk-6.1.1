@@ -1698,7 +1698,9 @@ public class SmApplicationUtil {
 		validateOverlapSuppDoc(validSave, managedBean, currentTab);
 		validateSpecialAndNormalCategory(validSave, managedBean, currentTab);//#30508
 		//#32236 - start
-		validateSpecialAndNormalCategoryCapital(managedBean);
+		if(managedBean.isSupplierUser()){
+			validateSpecialAndNormalCategoryCapital(managedBean);	
+		}
 		//#32236 - end
 		if (!managedBean.isSiteVisitAfterApproval()) {
 			//#11765
