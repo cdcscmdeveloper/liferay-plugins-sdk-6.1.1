@@ -330,7 +330,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void renewSesionObjectByApplicationType(String applicationType) {
 		renewSesionObject();
-		log.info("*** renewSesionObjectByApplicationType *** "
+		log.info("*** renewSesionObjectByApplicationType **** "
 				+ applicationType);
 		String errMsg = StringUtils.EMPTY;
 		if (applicationType.equals("DPA")) {
