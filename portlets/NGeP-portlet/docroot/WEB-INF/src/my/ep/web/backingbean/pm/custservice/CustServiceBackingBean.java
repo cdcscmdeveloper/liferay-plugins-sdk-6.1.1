@@ -542,7 +542,6 @@ public class CustServiceBackingBean extends
 
 			loadUserOrgType(user, userOrg);
 			List<PmUserOrg> userOrgList = new ArrayList<PmUserOrg>();
-			//Long loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
 			//START #31849 add log key
 			Long loginSessionUserId = 1L;
 			IUserSO userSODB = (IUserSO) BusinessDelegate.getInstance()
@@ -558,7 +557,6 @@ public class CustServiceBackingBean extends
 				loginSessionUserId = pmUser.getUserId();
 			}
 			new LogKey(loginSessionUserId);
-			//log.info("userid to be save : " + loginSessionUserId);
 			//END #31849 add log key
 			userOrg.setChangedBy(loginSessionUserId);
 			userOrgList.add(userOrg);
