@@ -20488,6 +20488,10 @@ if(null!=allTechnicalChecklist){
 			if (l.getQtChecklistId() == null) {
 				//throw new EpException(MessageConst.ERROR_760528);
 				saveSpecificationCommitteeDtls(); //#28784 - Remove notification save
+				if (this.getManagedBean().isMaintanceFlow()) {
+					log.info("asdasdqwewqewqewq");
+					checkSpecMaintenanceOrNo();
+				}
 			}
 		}
 		for (ScQtCheckList cl : st2technicalproposalList) {
@@ -21610,6 +21614,7 @@ if(null!=allTechnicalChecklist){
 		return evalTier2;
 	}
 	//#28784 bug note-#424 - end
+
 	//29521 - start
 	
 	public ScQt retrieveScqtdetails(){
@@ -21762,4 +21767,61 @@ if(null!=allTechnicalChecklist){
 	}
 	
 	//#29521 - end
+	
+	// #28784
+	private void checkSpecMaintenanceOrNo() {
+		ScQt scQt = this.getManagedBean().getQt();
+		log.info("STATUS ID: " + scQt.getQtStatus().getStatusId());
+		log.info("THIS STATUS ID: "
+				+ this.getManagedBean().getCurrentStatusId());
+		log.info("QTID: " + scQt.getQtId());
+		if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt
+				.getQtStatus().getStatusId())
+				|| QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt
+						.getQtStatus().getStatusId())) {
+			this.getManagedBean().setGenInfo(true);
+			if (QTStatusConst.SE_PENDING_ENDORSMENT.equals(this
+					.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.SE_PENDING_SIGNOFF.equals(this
+							.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.SE_PENDING_REVISION.equals(this
+							.getManagedBean().getCurrentStatusId())) {// 15391
+				this.getManagedBean().setGenInfo(false);
+			}
+		}
+		log.info("asdsadwereeee " + scQt.getQtStatus().getStatusId());
+		if ((QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt
+				.getQtStatus().getStatusId()))
+				|| (QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt
+						.getQtStatus().getStatusId()))
+				|| (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(scQt
+						.getQtStatus().getStatusId()))
+				|| (QTStatusConst.QT_PENDING_PUBLICATION_REVISION_APPROVAL
+						.equals(scQt.getQtStatus().getStatusId()))
+				|| (QTStatusConst.QT_PENDING_BPK_APPROVAL.equals(scQt
+						.getQtStatus().getStatusId()))
+				|| (QTStatusConst.QT_PENDING_SCHEDULE_REVISION.equals(scQt
+						.getQtStatus().getStatusId()))) {// #33837 - add bpk and
+															// reschedule
+			this.getManagedBean().setChecklist(true);
+			if (QTStatusConst.SE_PENDING_ENDORSMENT.equals(this
+					.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.SE_PENDING_SIGNOFF.equals(this
+							.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.SE_PENDING_REVISION.equals(this
+							.getManagedBean().getCurrentStatusId())) {// 15391
+				this.getManagedBean().setChecklist(false);
+			}
+		}
+		// #33795 - start
+		if (!isSpecCommittee()) {
+			this.getManagedBean().setChecklist(false);
+		}
+	}
+
+	public boolean isSpecCommittee() {
+		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	// #28784
 }
