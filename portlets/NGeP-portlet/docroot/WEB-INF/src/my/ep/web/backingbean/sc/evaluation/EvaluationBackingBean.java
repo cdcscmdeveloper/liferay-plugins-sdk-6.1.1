@@ -1781,11 +1781,11 @@ public void saveComplianceSample() {
 			EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
 			EvaluationResDTO amountResDto = new EvaluationResDTO();
 			amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
-			amountResDto= evaluationSO.retrieveProposals(amountReqDto);
 			if (getManagedBean().getScQt().isDemoRequired()) {
 				// #28784 - FEC by item eval = TI, package = P			
 				amountReqDto.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);			
 			}
+			amountResDto= evaluationSO.retrieveProposals(amountReqDto);			
 			for(ScQtProposal amtbyproposal : amountResDto.getProposalList()){
 				amountReqDto.setScQt(this.getManagedBean().getScQt());
 				amountReqDto.setProposalId(amtbyproposal.getQtProposalId());
