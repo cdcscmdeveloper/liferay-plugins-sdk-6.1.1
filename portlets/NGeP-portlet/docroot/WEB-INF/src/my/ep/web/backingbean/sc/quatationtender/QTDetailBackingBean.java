@@ -4973,7 +4973,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							if(r.getRequestType().getParameterCode().equalsIgnoreCase(ParameterConst.DOCTYPE_DOA_ASSIGNMENT)){
 								requestContent = r;
 								break;
-							} 
+							}  
 						}
 					}else{
 						scQt.setRequestContents(new ArrayList<ScQtRequestContent>());
