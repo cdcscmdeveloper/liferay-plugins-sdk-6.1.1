@@ -247,7 +247,7 @@ public class SmApplicationBackingBean extends
 
 	public static Logger log = Logger.getLogger(SmApplicationBackingBean.class);
 
-	private int currentTab;
+	private int currentTab; 
 	private int outputTab;
 	private String buttonType = "";
 	private StreamedContent file;
