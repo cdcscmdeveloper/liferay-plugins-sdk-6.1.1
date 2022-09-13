@@ -4974,7 +4974,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								requestContent = r;
 								break;
 							}  
-						}
+						} 
 					}else{
 						scQt.setRequestContents(new ArrayList<ScQtRequestContent>());
 					}
