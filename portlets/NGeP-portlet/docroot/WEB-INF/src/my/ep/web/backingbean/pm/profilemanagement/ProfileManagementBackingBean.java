@@ -443,9 +443,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * retrieve and set the current active org
 	 */
 	private void setCurrentActiveOrg() {
-		logger.info(" start setCurrentActiveOrg");
+		logger.info("setCurrentActiveOrg");
 		boolean isFactoring = false;
-		//START #31849 revert code
 		if (getFacesScopes().getUserSessionBean().getUserId() == null) {
 			throw new EpException(MessageConst.ERROR_770149);
 		}
@@ -454,16 +453,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 		List<PmUserOrg> userOrgList = PmCommonUtil
 				.retrieveActiveOrgWithoutRole(getFacesScopes().getUserSessionBean().getUserId(), isFactoring);
-		//END #31849 revert code
-		
+
 		if (userOrgList == null || userOrgList.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_770105);
 		}
 
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
-		
-		logger.info(" End setCurrentActiveOrg");
 	}
 
 	/**
