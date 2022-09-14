@@ -643,6 +643,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			// Supplier Bank Account
 			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
 			
+			retrieveValBankAccNoDropdown(); //Bug #33674@Syazani -- 14/09/2022
+			
 			// overall ct amount or loa amt
 //			BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
 			BigDecimal overallCtAmout = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
@@ -11911,4 +11913,20 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				return true;
 			}
 			//#25726 - end
+			
+	// Bug #33674@Syazani -- Start 14/09/2022
+	private void retrieveValBankAccNoDropdown() {
+		List<SmSupplierBank> lstSupplierBank = getManagedBean().getBankList();
+		ScLoa tmpScLoa = getManagedBean().getScLoa();
+		if (tmpScLoa != null && lstSupplierBank != null && lstSupplierBank.size() > 0 && tmpScLoa.getBankAccNo() != null) {
+			for (SmSupplierBank ssb : lstSupplierBank) {
+				if (ssb.getAccountNo().equalsIgnoreCase(tmpScLoa.getBankAccNo())
+						&& ssb.getPmFinancialOrg().getFinOrgName().equalsIgnoreCase(tmpScLoa.getBankName())) {
+					getManagedBean().setSupplierBankId(ssb.getSupplierBankId());
+					break;
+				}
+			}
+		}
+	}
+	// Bug #33674@Syazani -- End 14/09/2022
 }
