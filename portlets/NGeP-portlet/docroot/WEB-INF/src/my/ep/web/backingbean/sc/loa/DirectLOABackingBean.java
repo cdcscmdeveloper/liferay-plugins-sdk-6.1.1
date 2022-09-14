@@ -11253,12 +11253,46 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				question.setTplSpecAnswers(specAnswers);
 				questionsListNew.add(question);
 			}
-			specMaster.setTplSpecQuestions(questionsListNew);
-			if(this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster()!=null
-				|| this.getManagedBean().getProdTemplateSpecBean().getSpecMaster()!=null){
-				specMaster.setBrandNew(false);
+			List<String> oldItems = new ArrayList<String> ();
+			TplSpecMaster specMasterOld= new TplSpecMaster();
+			List<TplSpecQuestion> questionsListOld = new ArrayList<TplSpecQuestion>(); 
+			if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)
+					&& this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster()!=null) {
+				specMasterOld =this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster();
+				questionsListOld = specMasterOld.getTplSpecQuestions();
+				for(TplSpecQuestion newquestion : questionsListNew){
+					if(newquestion.getClItem()!=null && oldItems.contains(newquestion.getClItem())){
+						throw new EpException(
+								MessageConst.ERROR_760340,
+								new String[] { newquestion.getClItem() });
+					}
+					newquestion.setTplSpecMaster(specMasterOld);
+				}
+				questionsListOld.addAll(questionsListNew);
+				specMaster.setTplSpecQuestions(questionsListOld);
+				templateSpecBean.setSpecMaster(specMasterOld);
+			} else if (itemType.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING) 
+					&& this.getManagedBean().getProdTemplateSpecBean().getSpecMaster()!=null) {
+				specMasterOld  =this.getManagedBean().getProdTemplateSpecBean().getSpecMaster();
+				questionsListOld = specMasterOld.getTplSpecQuestions();
+				for(TplSpecQuestion oldquestion : questionsListOld){
+					oldItems.add(oldquestion.getClItem());
+				}
+				for(TplSpecQuestion newquestion : questionsListNew){
+					if(newquestion.getClItem()!=null && oldItems.contains(newquestion.getClItem())){
+						throw new EpException(
+								MessageConst.ERROR_760340,
+								new String[] { newquestion.getClItem() });
+					}
+					newquestion.setTplSpecMaster(specMasterOld);
+				}
+				questionsListOld.addAll(questionsListNew);
+				specMaster.setTplSpecQuestions(questionsListOld);
+				templateSpecBean.setSpecMaster(specMasterOld);
+			}else{
+				specMaster.setTplSpecQuestions(questionsListNew);
+				templateSpecBean.setSpecMaster(specMaster);
 			}
-			templateSpecBean.setSpecMaster(specMaster);
 			
 			if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
 				getManagedBean().setSpecTemplateSpecBean(templateSpecBean);
