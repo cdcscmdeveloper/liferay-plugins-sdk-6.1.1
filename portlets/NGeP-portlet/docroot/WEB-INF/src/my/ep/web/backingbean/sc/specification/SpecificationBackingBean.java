@@ -10927,7 +10927,9 @@ public class SpecificationBackingBean extends
 			}
 			
 		}
-		
+		// 29521 - start
+		retrieveCurrentZonalDetail();
+		// 29521 - end
 		checkProcurementModeValue();
 		retriveTechnicalCheckList();//1873 - note 52
 		if(!scQt.isSampleReq()){//11104-start
@@ -11674,7 +11676,6 @@ if (null != checklist && !checklist.isEmpty()) {
 			specReqDTO.setListNewCategoryCode(getManagedBean().getQtCategoryList());
 			FacesScopes fs = new FacesScopes();
 			specReqDTO.setPmUser(fs.getUserSessionBean());
-			retrieveCurrentZonalDetail();
 			validateZonalChanges();
 			// 29521 - end
 
@@ -21685,35 +21686,30 @@ if(null!=allTechnicalChecklist){
 		}
 		
 		//start insert and update into tplSpecZoneDtlHistory
-		if (isNewZonalAdded){
-			
-			//check existing in TplSpecZoneDtlHistory
-			if (null != listZone && listZone.size()>0){
+		// check existing in TplSpecZoneDtlHistory
+		// listZone == null = non zonal
+		if (null != listZone && listZone.size() > 0) {
+			if (null != specificationReqDTO.getSpecZoneId()) {
 				SpecificationResDTO resDTO = getQtSpecSO().getTplSpecZoneDtlHistoryBySpecZoneId(specificationReqDTO);
-				SpecificationResDTO rdto = new SpecificationResDTO();
-				if (resDTO.isSuccessful()){
-					 rdto = getQtSpecSO().updateTplSpecZoneDtlIsLatest(specificationReqDTO);
-					
-				}
-				
-				
-				for (TplSpecZoneDtl specZoneDtls: listZone){
-					specificationReqDTO.setSpecZoneDtls(specZoneDtls);
-					//if exist
-					
-					if (resDTO.isSuccessful()){
-						//perform update is latest
-						//insert new data 
-						
-						if (rdto.isSuccessful()){
-							doInsertTplSpecZoneDtl(specificationReqDTO);
+				if (!resDTO.isSuccessful()) {
+					if (isNewZonalAdded) {
+						// data do not present in tpl spec zone dtl history
+						for (TplSpecZoneDtl specZoneDtls : listZone) {
+							specificationReqDTO.setSpecZoneDtls(specZoneDtls);
+							// if exist
+
+							if (!resDTO.isSuccessful()) {
+								// perform update is latest
+								// insert new data
+								doInsertTplSpecZoneDtl(specificationReqDTO);
+							}
+							/*
+							 * else{
+							 * doInsertTplSpecZoneDtl(specificationReqDTO); }
+							 */
 						}
-						
-					}else{
-						doInsertTplSpecZoneDtl(specificationReqDTO);
 					}
 				}
-				
 			}
 			
 		}//else no changes nothing change
@@ -21721,7 +21717,7 @@ if(null!=allTechnicalChecklist){
 	}
 	
 	public void doInsertTplSpecZoneDtl(SpecificationReqDTO specificationReqDTO){
-		SpecificationResDTO rdto = getQtSpecSO().saveTplSpecZoneDtlHistory(specificationReqDTO);
+		getQtSpecSO().saveTplSpecZoneDtlHistory(specificationReqDTO);
 	}
 	
 	
@@ -21758,7 +21754,7 @@ if(null!=allTechnicalChecklist){
 				}
 				
 				//retrieve from db
-				if (specZoneId != 0F && !specZoneId.equals(null)){
+				if (!specZoneId.equals(0L) && !specZoneId.equals(null)){
 					
 						specificationReqDTO.setSpecZoneId(specZoneId);
 						if (null != specificationReqDTO.getSpecZoneId()){
