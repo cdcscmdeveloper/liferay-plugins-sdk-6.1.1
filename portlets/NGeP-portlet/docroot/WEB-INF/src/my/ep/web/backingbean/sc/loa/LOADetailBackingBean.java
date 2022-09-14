@@ -61,6 +61,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
+import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -2956,6 +2957,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				context.put("agency", ptjName);
 				context.put("qtNo", qtNo);
 
+				//#32648 populate lampiran 7 if LOA at supplier - start 
+				int isLoa = 0;
+				if ((this.getManagedBean().getCurrentStatusId() != null
+						&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_SUBMISSION)
+							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_APPROVAL)
+							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_REVISION)
+							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)
+							|| this.getManagedBean().getCurrentStatusId().equals(DPStatusConstants.SQ_EXPIRED)))
+						|| isDpAuditOrQtAuditOrQtMaint()) {
+					isLoa = 2;
+				} else {
+					isLoa = 1;
+				}
+
+				context.put("isSupplierLoa", isLoa);
+				//#32648 populate lampiran 7 if LOA at supplier - end
 				String loaNo = "&#60;LOA No.&#62;";
 				if(scLoa.getLoaNo() != null){
 					loaNo = scLoa.getLoaNo();
@@ -10736,5 +10753,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	//Bug #33674@Syazani -- End 14/09/2022
+	
+	// #32648 populate lampiran 7 if LOA at supplier - start
+	public boolean isDpAuditOrQtAuditOrQtMaint() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+					|| SourcingConstants.PORTLET_NAME_DP_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	// #32648 populate lampiran 7 if LOA at supplier - end
 }
 

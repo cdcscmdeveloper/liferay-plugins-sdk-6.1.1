@@ -5756,6 +5756,22 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		context.put("qtNo", qtNo);
 
+		//#32648 populate lampiran 7 if LOA at supplier - start 
+		int isLoa = 0;
+		if ((this.getManagedBean().getCurrentStatusId() != null
+				&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_SUBMISSION)
+					|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_APPROVAL)
+					|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_REVISION)
+					|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)))
+				|| isDpAuditOrQtAuditOrQtMaint()) {
+			isLoa = 2;
+		} else {
+			isLoa = 1;
+		}
+
+		context.put("isSupplierLoa", isLoa);
+		//#32648 populate lampiran 7 if LOA at supplier - end
+
 		String loaNo = "&#60;LOA No.&#62;";
 		if(scLoa.getLoaNo() != null){
 			loaNo = scLoa.getLoaNo();
@@ -11351,4 +11367,15 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		}
 	}
 	// Bug #33674@Syazani -- End 14/09/2022
+	
+	// #32648 populate lampiran 7 if LOA at supplier - start
+	public boolean isDpAuditOrQtAuditOrQtMaint() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| SourcingConstants.PORTLET_NAME_DP_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	// #32648 populate lampiran 7 if LOA at supplier - end
 }
