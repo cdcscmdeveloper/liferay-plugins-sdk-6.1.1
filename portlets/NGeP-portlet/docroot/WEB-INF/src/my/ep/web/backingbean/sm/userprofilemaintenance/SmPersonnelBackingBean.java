@@ -2039,23 +2039,28 @@ public class SmPersonnelBackingBean extends
 			
 			String name = getManagedBean().getBasicSmPersonnel().getName();
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setSmSupplierId(getManagedBean().getBasicSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
-			reqDTO.setSmSupplier(getManagedBean().getBasicSmPersonnel().getSmAppl().getSmSupplier());
-			reqDTO.setUserId(getManagedBean().getBasicSmPersonnel().getPmUser().getUserId());
+			reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());//#33592-start
+			reqDTO.setSmSupplier(getManagedBean().getSmSupplier());
+			FacesScopes facesScopes = new FacesScopes();
+			PmUser usr = facesScopes.getUserSessionBean();
+			getPersonnelByPmUser(usr);
+			reqDTO.setUserId(usr.getUserId());//#33592-end
 			SmSoftcertRequest softcertRequest = SmServiceLookup.getPersonnelSO().retrievePersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO).getSoftcertRequest();
-			
-			if (validateSoftcertExpired(softcertRequest)) {
-				throw new EpException(MessageConst.ERROR_770252, new String[] { name });
-			}else if(getManagedBean().getBasicSmPersonnel().getPmUser() != null && PmCommonUtil.isAnyPendingTask(getManagedBean().getBasicSmPersonnel().getPmUser().getLoginId())){
-				throw new EpException(MessageConst.ERROR_770251, new String[] { name });
+			if (softcertRequest.getPmDigiCert() != null){//#33592-start
+				if (validateSoftcertExpired(softcertRequest)) {
+					throw new EpException(MessageConst.ERROR_770252, new String[] { name });
+				}else if(getManagedBean().getBasicSmPersonnel().getPmUser() != null && PmCommonUtil.isAnyPendingTask(getManagedBean().getBasicSmPersonnel().getPmUser().getLoginId())){
+					throw new EpException(MessageConst.ERROR_770251, new String[] { name });
+				}//#33592- end
 			}
 		}
 		//32515 END
 		//Start 13320
 		for (SmPersonnelAddress per : getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses()) {
-			if (!per.getSmAddress().getPmState().getStateId().equals(SupplierManagementConst.SARAWAK_CODE)){
+			//#33592-start
+			if (!per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
 				per.getSmAddress().setPmDivision(null);
-			}
+			}//#33592-end
 		}
 		//End 13320
 		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
