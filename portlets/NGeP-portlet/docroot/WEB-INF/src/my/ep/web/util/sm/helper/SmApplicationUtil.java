@@ -1562,7 +1562,8 @@ public class SmApplicationUtil {
 				// paid up capital must less than paid-up capital of category
 				// code
 			if (category.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)
-					|| category.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) {
+					|| category.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)
+					|| category.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 				if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital()
 						.compareTo(category.getPmCategoryL3().getPaidUpCapital()) < 0) {
 					if(index == 1){
@@ -1680,7 +1681,9 @@ public class SmApplicationUtil {
 		validateOverlapSuppDoc(validSave, managedBean, currentTab);
 		validateSpecialAndNormalCategory(validSave, managedBean, currentTab);//#30508
 		//#32236 - start
+		if(managedBean.isSupplierUser()){
 		validateSpecialAndNormalCategoryCapital(managedBean);
+		}
 		//#32236 - end
 		if (!managedBean.isSiteVisitAfterApproval()) {
 			//#11765
