@@ -762,10 +762,38 @@ public class SmSideMenuIconUtil {
 					licenseMandatoryDocVerified = true;
 				}
 				
+				//#31043 start
+					int countDocs = 0;
+					int countVerifiedDocs = 0;
+					if (!EntityHelper.isCollectionEmpty(bean.getMandatoryDocs())) {
+						for (SmApplSupportDoc doc : bean.getMandatoryDocs()) {
+							countDocs++;
+							if(bean.isPoUser()){
+								if(doc.getVerifiedFlg() != null){
+									if(doc.getVerifiedFlg() == 1)
+										countVerifiedDocs++;
+								}
+							}
+							else if(bean.isApproverUser()){
+								if(doc.getApproverVerifiedFlg() != null){
+									if(doc.getApproverVerifiedFlg() == 1)
+										countVerifiedDocs++;
+									}
+							}
+						}
+						log.info("No of docs: "+countDocs);
+						log.info("No of docs verified "+countVerifiedDocs);
+						if(countDocs != 0 && countVerifiedDocs != 0)
+							if(countVerifiedDocs == countDocs)
+								mandatoryDocVerified = true;
+							else
+								mandatoryDocVerified = false;
+					}
+				//#31043 end
+				
 				if(mandatoryDocVerified && nonMandatoryDocVerified && licenseMandatoryDocVerified){
 					//#31043
 					bean.setDocumentVerified(true);
-					if(bean.isUpdateSuppDoc())
 						retVal = ICON_TICK;
 				}
 				else{
@@ -773,8 +801,6 @@ public class SmSideMenuIconUtil {
 						retVal = ICON_UNTICK;
 					}
 					bean.setDocumentVerified(false);
-					if(bean.isUpdateSuppDoc())
-						bean.setUpdateSuppDoc(false);
 				}
 				//24964 & 31043 - end
 
