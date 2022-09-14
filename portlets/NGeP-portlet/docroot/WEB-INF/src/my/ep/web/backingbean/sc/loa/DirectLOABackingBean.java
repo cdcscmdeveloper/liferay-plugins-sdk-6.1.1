@@ -11236,6 +11236,10 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				questionsListNew.add(question);
 			}
 			specMaster.setTplSpecQuestions(questionsListNew);
+			if(this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster()!=null
+				|| this.getManagedBean().getProdTemplateSpecBean().getSpecMaster()!=null){
+				specMaster.setBrandNew(false);
+			}
 			templateSpecBean.setSpecMaster(specMaster);
 			
 			if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
