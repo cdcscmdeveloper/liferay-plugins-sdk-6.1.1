@@ -3085,8 +3085,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 									|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)
 									|| currentStatusId.equals(QTStatusConst.QT_PENDING_MSC_APPROVAL)
 									|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
-									|| currentStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT) || !this
-									.getManagedBean().isReadOnly())) {
+									|| currentStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT)
+									//33819 - start
+									|| currentStatusId.equals(QTStatusConst.SE_PENDING_SIGNOFF)
+									//33819 - end
+									|| !this.getManagedBean().isReadOnly())) {
 						initializeRemarks(this.getManagedBean().getQt(), this
 								.getManagedBean().getQt()
 								.getCurrentWorkFlowStatus(), this
@@ -3117,8 +3120,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 									|| currentStatusId.equals(QTStatusConst.QT_PENDING_MSC_APPROVAL)
 									|| (currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) && !this
 											.getManagedBean().isReadOnly())
-									|| currentStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT) || !this
-									.getManagedBean().isReadOnly())) {
+									|| currentStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT)
+									//33819 - start
+									|| currentStatusId.equals(QTStatusConst.SE_PENDING_SIGNOFF) 									
+									//33819 - end
+									|| !this.getManagedBean().isReadOnly())) {
 						initializeRemarks(this.getManagedBean().getQt(), this
 								.getManagedBean().getQt()
 								.getCurrentWorkFlowStatus(), this
