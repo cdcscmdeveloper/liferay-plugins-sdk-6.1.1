@@ -11248,7 +11248,8 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			}
 			List<String> oldItems = new ArrayList<String> ();
 			TplSpecMaster specMasterOld= new TplSpecMaster();
-			List<TplSpecQuestion> questionsListOld = new ArrayList<TplSpecQuestion>(); 
+			List<TplSpecQuestion> questionsListOld = new ArrayList<TplSpecQuestion>();
+			int questionOrder = 0;
 			if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)
 					&& this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster()!=null) {
 				specMasterOld =this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster();
@@ -11262,7 +11263,10 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					newquestion.setTplSpecMaster(specMasterOld);
 				}
 				questionsListOld.addAll(questionsListNew);
-				specMaster.setTplSpecQuestions(questionsListOld);
+				for(TplSpecQuestion oldquestion : questionsListOld){
+					oldquestion.setQuestionOrder(++questionOrder);
+				}
+				specMasterOld.setTplSpecQuestions(questionsListOld);
 				templateSpecBean.setSpecMaster(specMasterOld);
 			} else if (itemType.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING) 
 					&& this.getManagedBean().getProdTemplateSpecBean().getSpecMaster()!=null) {
@@ -11280,7 +11284,10 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					newquestion.setTplSpecMaster(specMasterOld);
 				}
 				questionsListOld.addAll(questionsListNew);
-				specMaster.setTplSpecQuestions(questionsListOld);
+				for(TplSpecQuestion oldquestion : questionsListOld){
+					oldquestion.setQuestionOrder(++questionOrder);
+				}
+				specMasterOld.setTplSpecQuestions(questionsListOld);
 				templateSpecBean.setSpecMaster(specMasterOld);
 			}else{
 				specMaster.setTplSpecQuestions(questionsListNew);
