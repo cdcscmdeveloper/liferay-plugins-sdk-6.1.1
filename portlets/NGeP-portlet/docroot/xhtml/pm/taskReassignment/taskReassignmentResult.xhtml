@@ -128,12 +128,12 @@
 		toggleable="true">
 		<div class="clear"></div>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.grouptasklist.instruction']}"/>
-		<!-- #29822 - START -->
+		<!-- #7465, #29822 - START -->
 		<br/>
 		<h:outputText style="color: red;font-weight: bold;" 
-		rendered="#{taskReassignmentBackingBean.managedBean.showRemoveProcessMessageGroup}" 
-		value="#{lbl['lbl.sm.ta.remove.reassignment']}"/>
-		<!-- #29822 - END -->
+			rendered="#{taskReassignmentBackingBean.managedBean.showRemoveProcessMessageGroup}" 
+			value="#{lbl['lbl.sm.ta.remove.reassignment']}"/>
+		<!-- #7465, #29822 - END -->
 		<h:panelGroup id="groupTaskListID">
 			<p:dataTable value="#{taskReassignmentBackingBean.groupTaskListDataModel}" var="groupTasks" widgetVar="dtGroupTaskTableWidget"
 				lazy="true" rowIndexVar="groupRowIndex" rowKey="#{groupTasks}" rows="10" id="dtGroupTaskAssignResult"
@@ -197,8 +197,7 @@
 			</p:dataTable>
 			<p:outputPanel id="deleteGroupTasks">
 				<div class="ppRightBtn">
-				
-				<!-- 7465, 29822 -->
+					<!-- 7465, 29822 -->
 					<p:commandButton 
 					    value="#{lbl['lbl.btn.remove.all']}" 
 						process="@this"
@@ -206,7 +205,7 @@
 						update="@([id$=#{allGroupTasksDeleteId}])"	
 						oncomplete="allGroupTasksDeletePopUp.show();"
 						disabled="#{not taskReassignmentBackingBean.managedBean.enableRemoveAllGroupTasksButton}"/>	
-				<!-- 7465, 29822 -->
+					<!-- 7465, 29822 -->
 				
 					<p:commandButton 
 					    value="#{lbl['lbl.btn.remove']}" 
@@ -225,12 +224,12 @@
 		toggleable="true">
 		<div class="clear"></div>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.otherstasklist.instruction']}"/>
-		<!-- #29822 - START -->
+		<!-- #7465, #29822 - START -->
 		<br/>
 		<h:outputText style="color: red;font-weight: bold;" 
-		rendered="#{taskReassignmentBackingBean.managedBean.showRemoveProcessMessageOther}" 
-		value="#{lbl['lbl.sm.ta.remove.reassignment']}"/>
-		<!-- #29822 - END -->
+			rendered="#{taskReassignmentBackingBean.managedBean.showRemoveProcessMessageOther}" 
+			value="#{lbl['lbl.sm.ta.remove.reassignment']}"/>
+		<!-- #7465, #29822 - END -->
 		<h:panelGroup id="othersTaskListID">
 			<p:dataTable value="#{taskReassignmentBackingBean.othersTaskListDataModel}"
 				lazy="true" rowIndexVar="otherRowIndex" rowKey="#{otherTasks}" rows="10" id="dtOthersTaskAssignResult"
@@ -291,8 +290,7 @@
 			</p:dataTable>
 			<p:outputPanel id="deleteOthersTasks">
 				<div class="ppRightBtn">
-				
-				<!-- 7465, 29822 -->
+					<!-- 7465, 29822 -->
 					<p:commandButton 
 					    value="#{lbl['lbl.btn.remove.all']}" 
 						process="@this"
@@ -300,7 +298,7 @@
 						oncomplete="allOtherTasksDeletePopUp.show();" 
 						update="@([id$=#{allOtherTasksDeleteId}])"
 						disabled="#{not taskReassignmentBackingBean.managedBean.enableRemoveAllOthersTasksButton}"/>
-				<!-- 7465, 29822 -->
+					<!-- 7465, 29822 -->
 						
 					<p:commandButton 
 					    value="#{lbl['lbl.btn.remove']}" 
@@ -317,7 +315,7 @@
 	</p:panel>
 	
 
-	<!-- 7465 start -->	
+	<!-- 7465, 29822 start -->	
 	<ac:confirmationPopupMultiple id="taskDeleteId"
 			widget="taskDeletePopUp"
 			okAction="taskReassignmentBackingBean.removeReassignTask()"
@@ -342,7 +340,6 @@
 			content="#{lbl['lbl.msg.confirm.delete']}" 
 			update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,@([id$=deleteGroupTasks])" />
 
-	<!-- 7465, 29822 -->	
 	<ac:confirmationPopupMultiple id="allGroupTasksDeleteId"
 			widget="allGroupTasksDeletePopUp"
 			okAction="taskReassignmentBackingBean.removeReassignAllGroupTasks()"
@@ -351,9 +348,7 @@
 			content="#{lbl['lbl.msg.confirm.deleteallgrouptask']}" 
 			update=":form:dtGroupTaskAssignResult,:form:deleteGroupTasks,
 			:form:dtOthersTaskAssignResult,:form:pGroupTaskAssignResult,@([id$=deleteGroupTasks])" />
-	<!-- 7465 -->
-			
-	<!-- 7465, 29822 -->
+
 	<ac:confirmationPopupMultiple id="allOtherTasksDeleteId"
 			widget="allOtherTasksDeletePopUp"
 			okAction="taskReassignmentBackingBean.removeReassignAllOthersTasks()"
@@ -362,8 +357,7 @@
 			content="#{lbl['lbl.msg.confirm.deleteallothertask']}" 
 			update=":form:dtGroupTaskAssignResult,:form:deleteOthersTasks,:form:dtOthersTaskAssignResult,
 			:form:pOthersTaskAssignResult,@([id$=deleteOthersTasks])" />
-	<!-- 7465, 29822  -->
-	<!-- 7465 end -->	
+	<!-- 7465, 29822 end -->
 	
 	<!-- Task Selection Popup -->
 	<ui:include src="/xhtml/pm/taskReassignment/taskReassignPopup.xhtml" />
