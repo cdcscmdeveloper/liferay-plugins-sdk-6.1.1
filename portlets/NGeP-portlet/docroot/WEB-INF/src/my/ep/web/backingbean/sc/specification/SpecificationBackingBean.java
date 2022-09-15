@@ -19191,7 +19191,8 @@ if(null!=allTechnicalChecklist){
 						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM) && !changesFlag.get("itemUpdated")){
 							changesFlag.put("itemUpdated", !currentQuestionStr.equalsIgnoreCase(localQuestionStr));
 							//1873 - start - note 52
-							if(changesFlag.get("itemUpdated") && !checklist.isEdited()){//1873 note 149
+							boolean isEdited = checklist.isEdited()==null ? false: checklist.isEdited();//1873 note 149
+							if(changesFlag.get("itemUpdated") && !isEdited){//1873 note 149
 								checklist.setEdited(true && isOriginallyCompleted);
 							}
 							//1873 - end - note 52
