@@ -3010,16 +3010,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 				//#32648 populate lampiran 7 if LOA at supplier - start 
 				int isLoa = 0;
-				if ((this.getManagedBean().getCurrentStatusId() != null
-						&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_SUBMISSION)
-							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_APPROVAL)
-							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_REVISION)
-							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)
-							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_LOA)
-							|| this.getManagedBean().getCurrentStatusId().equals(DPStatusConstants.SQ_EXPIRED)))
-						|| isDpAuditOrQtAuditOrQtMaint()) {
-					isLoa = 2;
-				} else {
+				if (null != pmUser) {
 					isLoa = 1;
 				}
 
