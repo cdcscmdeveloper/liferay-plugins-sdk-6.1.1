@@ -245,12 +245,12 @@ public class TaskReassignmentBackingBean extends
 		this.getManagedBean().setShowParentMsg(true);	// [#25018]
 		this.getManagedBean().setShowChildMsg(false);	// [#25018]
 		
-		//29822 - start
+		//7465, 29822 - start
 		this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
 		this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
 		this.getManagedBean().setShowRemoveProcessMessageGroup(false);
 		this.getManagedBean().setShowRemoveProcessMessageOther(false);
-		//29822 - end
+		//7465, 29822 - end
 	}
 	
 	/**
@@ -836,11 +836,9 @@ public class TaskReassignmentBackingBean extends
 			resetReassigneeList(); //If the Reset button is not clicked when performing the next search
 			resetCheckAllTasks();
 			searchTaskAssign();
-			
-			//29822 - start
+			//7465, 29822 - start
 			checkPendingTaskRemove();
-			//29822 - end
-			
+			//7465, 29822 - end
 			log.info("[#22117] - isBpkAdminUser: " + this.getManagedBean().isBpkAdminUser());
 		} else {
 			/*if (!verifiedDocNumber(this.getManagedBean().
@@ -3379,7 +3377,7 @@ public class TaskReassignmentBackingBean extends
 		}
 	}
 	
-	// #29822 - start
+	//#7465, #29822 - start
 	public void removeReassignAllGroupTasks() {
 		String loginId = null;
 		
@@ -3552,7 +3550,7 @@ public class TaskReassignmentBackingBean extends
 
 		}
 	}
-	//#29822 - end
+	//#7465, #29822 - end
 
 	public void removeReassignOthersTasks() {
 		
@@ -4062,7 +4060,7 @@ public class TaskReassignmentBackingBean extends
 		return isBpkAdmin;			
 	}
 	
-	//29822 - start
+	//7465, 29822 - start
 	public void checkPendingTaskRemove() {
 		PmUser pmUser = this.getManagedBean().getTaskAssignmentSearchBean().getUser();
 		ISupplierDataMaintenanceSO iSupplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
@@ -4113,5 +4111,5 @@ public class TaskReassignmentBackingBean extends
 		
 		return loginSessionUserId;
 	}
-	//29822 - end
+	//7465, 29822 - end
 }
