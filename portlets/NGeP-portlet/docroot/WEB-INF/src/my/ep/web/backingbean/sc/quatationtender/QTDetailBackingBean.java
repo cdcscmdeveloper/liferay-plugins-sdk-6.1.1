@@ -5936,7 +5936,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#28784 note #507 - start
 			if (null != status
 					&& ((status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) || status
-							.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL))) && this.getManagedBean().isMaintanceFlow() && !demoRequired
+							.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL) || status.equals(QTStatusConst.QT_REVISION_PUBLICATION) || status.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION))) && this.getManagedBean().isMaintanceFlow() && !demoRequired
 					&& role != null && role.equals(RoleCode.SC_SECRETARY.value()) && (!workflowStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT) && !workflowStatusId.equals(QTStatusConst.SE_PENDING_SIGNOFF)
 							&& 	!workflowStatusId.equals(QTStatusConst.SE_PENDING_REVISION))) {
 				this.getManagedBean().setDemoEvalDisabled(true);
@@ -5946,7 +5946,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			if (null != status
 					&& ((status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) || status
-				.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL) || status.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)))
+				.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL) || status.equals(QTStatusConst.QT_REVISION_PUBLICATION) || status.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)))
 							&& workflowStatusId.equals(QTStatusConst.SE_PENDING_REVISION)
 							&& this.getManagedBean().isMaintanceFlow()
 							&& !isSpecCommittee()
