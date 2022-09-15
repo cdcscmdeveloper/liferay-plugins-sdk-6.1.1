@@ -1121,7 +1121,8 @@ public class SpecificationBackingBean extends
 			String[] allowedTaskName = new String[]{
 				SCProcessNameConst.FINALISE_SCORING,
 				SCProcessNameConst.UPDATE_SCORING,
-				SCProcessNameConst.VIEW_SCORING
+				SCProcessNameConst.VIEW_SCORING,
+				SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING //1873 note 149
 			};
 			if (Arrays.asList(allowedTaskName).contains(taskName)
 					|| (StringUtils.isEmpty(taskName) && !this.getManagedBean().isReadOnly())) {
@@ -1304,7 +1305,7 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 4:
-			if (!this.getManagedBean().isReadOnly()) {
+			if (!this.getManagedBean().isReadOnly() && this.getManagedBean().isTechnicalOtherCheckList()) {//1873 note 149
 				checktemplateSpecStatus(this.getManagedBean().getQt());
 				checkFinancialSpecStatus(this.getManagedBean().getQt());
 			}
@@ -1312,7 +1313,7 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 5:
-			if (!this.getManagedBean().isReadOnly()) {
+			if (!this.getManagedBean().isReadOnly() && this.getManagedBean().isTechnicalOtherCheckList()) {//1873 note 149
 				checktemplateSpecStatus(this.getManagedBean().getQt());
 				checkFinancialSpecStatus(this.getManagedBean().getQt());
 			}
@@ -1321,7 +1322,7 @@ public class SpecificationBackingBean extends
 
 		case 6:
 			retriveRecommendationDetails();
-			if (!this.getManagedBean().isReadOnly()) {
+			if (!this.getManagedBean().isReadOnly() && this.getManagedBean().isTechnicalOtherCheckList()) {//1873 note 149
 				checktemplateSpecStatus(this.getManagedBean().getQt());
 				checkFinancialSpecStatus(this.getManagedBean().getQt());
 			}
@@ -1479,7 +1480,7 @@ public class SpecificationBackingBean extends
 	 * @param type
 	 *            (String type)
 	 */
-	private void retriveSupplierQualificationCriteria(String type) {
+	public void retriveSupplierQualificationCriteria(String type) {//1873 note 149
 
 		log.debug("retriveBusinessOwnerQualificationCriteri - START");
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
@@ -19190,7 +19191,7 @@ if(null!=allTechnicalChecklist){
 						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM) && !changesFlag.get("itemUpdated")){
 							changesFlag.put("itemUpdated", !currentQuestionStr.equalsIgnoreCase(localQuestionStr));
 							//1873 - start - note 52
-							if(changesFlag.get("itemUpdated")){
+							if(changesFlag.get("itemUpdated") && !checklist.isEdited()){//1873 note 149
 								checklist.setEdited(true && isOriginallyCompleted);
 							}
 							//1873 - end - note 52
@@ -19223,7 +19224,17 @@ if(null!=allTechnicalChecklist){
 		}else{
 			//32204 - start
 			boolean check = validateTechnicalStandardCheckList();
-			if(check) this.getManagedBean().setActiveIndex(nextIndex);	
+			//1873 note 149-start
+			if(check) {
+				this.getManagedBean().setActiveIndex(this.getManagedBean().getCheckListYesIndex());
+				if(this.getManagedBean().getActiveIndex() == 4 
+						|| this.getManagedBean().getActiveIndex() == 5
+						|| this.getManagedBean().getActiveIndex() == 6){
+					checktemplateSpecStatus(this.getManagedBean().getQt());
+					checkFinancialSpecStatus(this.getManagedBean().getQt());
+				}
+			};	
+			//1873 note 149 end	
 			//32204 - end
 		}
 	}
@@ -20588,14 +20599,14 @@ if(null!=allTechnicalChecklist){
 	// #29474 - end
 	
 	//1873 - start - note 74
-	public boolean isMemberChairpersonSpecPreparationTask(){
-		String taskName = this.getManagedBean().getTaskName();
-		if(StringUtils.isEmpty(taskName)) return false;
-		return Arrays.asList(
-				new String[] { SCProcessNameConst.UPDATE_SCORING,
-						SCProcessNameConst.VIEW_SCORING }).contains(taskName);
-	}
-	//1873 - end - note 74
+		public boolean isMemberChairpersonSpecPreparationTask(){
+			String taskName = this.getManagedBean().getTaskName();
+			if(StringUtils.isEmpty(taskName)) return false;
+			return Arrays.asList(
+					new String[] { SCProcessNameConst.UPDATE_SCORING,
+							SCProcessNameConst.VIEW_SCORING }).contains(taskName);
+		}
+		//1873 - end - note 74
 	
 	//29464 - note 90 - start
 	public boolean evaluateRepublishFromDisplay(Long status){
