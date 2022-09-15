@@ -3015,6 +3015,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_APPROVAL)
 							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_REVISION)
 							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)
+							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_LOA)
 							|| this.getManagedBean().getCurrentStatusId().equals(DPStatusConstants.SQ_EXPIRED)))
 						|| isDpAuditOrQtAuditOrQtMaint()) {
 					isLoa = 2;
@@ -10819,6 +10820,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				|| QTConstants.PORTLET_NAME_QT_SEARCH
 						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
 					|| SourcingConstants.PORTLET_NAME_DP_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+						|| SourcingConstants.PORTLET_NAME_DP_LOA_LIST
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+						|| QTConstants.PORTLET_NAME_QT_LIST
 						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	// #32648 populate lampiran 7 if LOA at supplier - end
