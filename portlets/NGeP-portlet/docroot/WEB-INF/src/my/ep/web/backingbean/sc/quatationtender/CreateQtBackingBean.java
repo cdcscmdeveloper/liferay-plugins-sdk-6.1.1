@@ -4028,6 +4028,12 @@ public class CreateQtBackingBean extends
 				IQTSpecSO.class);
 
 		try {
+			IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSpecSO.class);
+			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+			specReqDTO.setScQt(this.getManagedBean().getQt());		
+			resDTO = specSO.saveQTDtl(specReqDTO);
+			this.getManagedBean().setQt(resDTO.getScQt());
 			reqDTO.setScQt(this.getManagedBean().getQt());
 			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 			specificationBackingBean.getDemoScoreSetting(reqDTO);

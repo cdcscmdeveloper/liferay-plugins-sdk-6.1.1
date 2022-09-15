@@ -4086,6 +4086,10 @@ public void saveComplianceSample() {
 					    EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
 					    EvaluationResDTO amountResDto = new EvaluationResDTO();
 					    amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
+					    if (getManagedBean().getScQt().isDemoRequired()) {
+							// #28784 - FEC by item eval = TI, package = P			
+							amountReqDto.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);			
+						}
 					    amountResDto = evaluationSO.retrieveProposals(amountReqDto);
 					    List<ScQtProposalAmount> listProposalAmountByQualifiedProposal = new ArrayList<ScQtProposalAmount>();
 					    List<ScQtProposalAmount> listProposalAmountByZone = new ArrayList<ScQtProposalAmount>();
@@ -15001,6 +15005,10 @@ private void retriveCommitteeRemarksList(){
 						EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
 						EvaluationResDTO amountResDto = new EvaluationResDTO();
 						amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
+						if (getManagedBean().getScQt().isDemoRequired()) {
+							// #28784 - FEC by item eval = TI, package = P			
+							amountReqDto.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);			
+						}
 						amountResDto= evaluationSO.retrieveProposals(amountReqDto); 
 						for(ScQtProposal amtbyproposal : amountResDto.getProposalList()){
 							amountReqDto.setScQt(this.getManagedBean().getScQt());//#31525
@@ -15887,6 +15895,10 @@ private void retriveCommitteeRemarksList(){
 						EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
 						EvaluationResDTO amountResDto = new EvaluationResDTO();
 						amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
+						if (getManagedBean().getScQt().isDemoRequired()) {
+							// #28784 - FEC by item eval = TI, package = P			
+							amountReqDto.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);			
+						}
 						amountResDto= evaluationSO.retrieveProposals(amountReqDto); 
 						for(ScQtProposal amtbyproposal : amountResDto.getProposalList()){
 							amountReqDto.setScQt(this.getManagedBean().getScQt());//#31525
