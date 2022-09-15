@@ -288,5 +288,7 @@ public interface QTConstants {
 	public static final String SC_WFTASK_COMPOSITENAME = "SourcingQT";
 	//9019 - End (Harun) 
 	
+	public static final String PORTLET_NAME_DL_CREATE = "scCreateManualSourcing_WAR_NGePportlet";//#32648
+	public static final String PORTLET_NAME_QT_LIST = "scQtLoaList_WAR_NGePportlet";//#32648
 	
 }
