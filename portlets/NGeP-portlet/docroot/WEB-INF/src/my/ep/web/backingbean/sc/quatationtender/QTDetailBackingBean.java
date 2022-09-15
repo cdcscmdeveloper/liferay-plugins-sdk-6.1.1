@@ -12647,12 +12647,31 @@ public void retrieveDemoQtDetails(Long qtId) {
 			}	
 			}
 			
-			public void IdentifyID(AjaxBehaviorEvent event){
-				getManagedBean().setComponentName(event.getComponent().getId());
-				if (null != getManagedBean().getScQtHistory()){
-					RequestContext.getCurrentInstance().execute("doEditdlg.show()");
+			public void IdentifyID(AjaxBehaviorEvent event) {
+				
+				if (null == getManagedBean().getIsProcTypeCatChange()){
+					getManagedBean().setIsProcTypeCatChange(false);
+				}else if (null == getManagedBean().getIsOpenForChange()){
+					getManagedBean().setIsOpenForChange(false);
+				}else if (null == getManagedBean().getIsEvaluationTypeChange()){
+					getManagedBean().setIsEvaluationTypeChange(false);
 				}
 				
+				getManagedBean().setComponentName(event.getComponent().getId());
+				if (null != getManagedBean().getScQtHistory()) {
+					if (event.getComponent().getId().equalsIgnoreCase("qtmaintainprocTypeBoCategory")
+							&& getManagedBean().getIsProcTypeCatChange()) {
+						RequestContext.getCurrentInstance().execute("doEditdlg.show()");
+					} else if (event.getComponent().getId().equalsIgnoreCase("openFor")
+							&& getManagedBean().getIsOpenForChange()) {
+						RequestContext.getCurrentInstance().execute("doEditdlg.show()");
+					} else if (event.getComponent().getId().equalsIgnoreCase("evalType")
+							&& getManagedBean().getIsEvaluationTypeChange()) {
+						RequestContext.getCurrentInstance().execute("doEditdlg.show()");
+					}
+		
+				}
+		
 			}
 			
 			public void validateIsSupplierQualificationCriteriaChange(){			
