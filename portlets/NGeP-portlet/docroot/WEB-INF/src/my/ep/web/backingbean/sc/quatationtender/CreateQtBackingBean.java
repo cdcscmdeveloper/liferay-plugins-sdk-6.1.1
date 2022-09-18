@@ -773,10 +773,10 @@ public class CreateQtBackingBean extends
 							this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
 							technicalchecklist.setPmStatus(status);
 
-			}
+						}
 					
 				}
-			}
+				}
 			}
 				if (financialSpecZonesEstimatedpriceUpdate == true) {
 					ZonesUpdateWarningMessage(this.getManagedBean()
@@ -786,7 +786,7 @@ public class CreateQtBackingBean extends
 			
 		} finally {
 
-			}
+		}
 
 	}
 	// #32929 - end
@@ -3925,7 +3925,7 @@ public class CreateQtBackingBean extends
 	 * @param event
 	 *
 	 */
-	public void renderDemoRadioButton(AjaxBehaviorEvent event){
+	public void renderDemoRadioButton(AjaxBehaviorEvent event) {
 		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
 		RequestContext.getCurrentInstance().execute("blockWidget.show()");
 		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
@@ -3952,7 +3952,7 @@ public class CreateQtBackingBean extends
 					}
 				}
 			} 
-
+			
 			//#28784
 			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 				this.getManagedBean().setDemoType(true);
@@ -4010,12 +4010,12 @@ public class CreateQtBackingBean extends
 				IQTSpecSO.class);
 
 		try {
-//			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-//					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-//			QuationTenderReqDTO reqQtDto = new QuationTenderReqDTO();
-//			reqQtDto.setQtdetail(this.getManagedBean().getQt());
-//			QuationTenderResDTO resQtDTO = qtDetailSO.saveQTDtl(reqQtDto); //#28784
-//			this.getManagedBean().setQt(resQtDTO.getQtDetail());
+			IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSpecSO.class);
+			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+			specReqDTO.setScQt(this.getManagedBean().getQt());		
+			resDTO = specSO.saveQTDtl(specReqDTO);
+			this.getManagedBean().setQt(resDTO.getScQt());
 			reqDTO.setScQt(this.getManagedBean().getQt());
 			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 			specificationBackingBean.getDemoScoreSetting(reqDTO);
