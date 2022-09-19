@@ -40,24 +40,6 @@
 				value="#{lbl['lbl.sm.sme.note.applicable']}" />
 			<br />
 			<table style="width: 100%; table-layout: fixed">
-				<!-- #29617 ReOpen note #82 - Start -->
-				<style>
-					.tooltip {
-						display: inline-block;
-					}
-					
-					.tooltip .tooltiptext {
-						display: inline-block;
-						visibility: hidden;
-						position: absolute;
-						z-index: 10;
-					}
-					
-					.tooltip:hover .tooltiptext {
-						visibility: visible;
-					}
-				</style>
-				<!-- #29617 ReOpen note #82 - End -->
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.sm.sme.company.name']}" /></td>
@@ -95,15 +77,13 @@
 								itemValue=""></f:selectItem>
 							<f:selectItems
 								value="#{smUpdateSmeInfoBackingBean.managedBean.statusTypeList}" />
-						<!-- #29617 ReOpen note #82 - Start -->
-						</p:selectOneMenu>
-						<div class="tooltip">
-							<p:graphicImage value="/css/images/design/tooltips.png" /> 
-							<span class="tooltiptext"><p:media
-									value="#{smUpdateSmeInfoBackingBean.getMedia('smeDefinition')}"
-									player="pdf" /></span>
-						</div></td>
-					<!-- #29617 ReOpen note #82 - End -->
+						</p:selectOneMenu> <p:commandLink
+							action="#{smUpdateSmeInfoBackingBean.onClickTooltips('smeDefinitionWidget')}"
+							update="smeDefinitionWidget" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()" process="@this">
+							<p:graphicImage value="/css/images/design/tooltips.png" />
+						</p:commandLink> <p:message id="statusTypeMsg" for="statusType" display="icon"
+							showDetail="false" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label"
@@ -131,18 +111,16 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label"
 									value="#{lbl['lbl.sm.sme.ref.no']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
-							<!-- #29617 ReOpen note #82 - Start -->
-							<td><p:inputText id="smeRefNo" 
-									label="#{lbl['lbl.sm.sme.ref.no']}" 
-									value="#{smUpdateSmeInfoBackingBean.managedBean.smeSupplier.smeRefNo}" 
-									required="true" />
-								<div class="tooltip">
-									<p:graphicImage value="/css/images/design/tooltips.png" /> 
-									<span class="tooltiptext"><p:media
-											value="#{smUpdateSmeInfoBackingBean.getMedia('smeCert')}"
-											player="pdf" /></span>
-								</div></td>
-							<!-- #29617 ReOpen note #82 - End -->
+							<td><p:inputText id="smeRefNo"
+									label="#{lbl['lbl.sm.sme.ref.no']}"
+									value="#{smUpdateSmeInfoBackingBean.managedBean.smeSupplier.smeRefNo}"
+									required="true" /> <p:commandLink
+									action="#{smUpdateSmeInfoBackingBean.onClickTooltips('smeCertWidget')}"
+									update="smeCertWidget" onstart="blockWidget.show()"
+									oncomplete="blockWidget.hide()" process="@this">
+									<p:graphicImage value="/css/images/design/tooltips.png" />
+								</p:commandLink> <p:message id="smeRefNoMsg" for="smeRefNo" display="icon"
+									showDetail="false" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label"
@@ -294,6 +272,35 @@
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sm.sme.upload.suppDoc.note.3']}" />
 		</p:dialog>
-		<!-- #29617 ReOpen note #82 - Remove -->
+		<p:dialog id="smeDefinitionWidget" widgetVar="smeDefinitionWidget"
+			modal="true" dynamic="true" resizable="false" width="900px"
+			height="700px" styleClass="pop_up_top"
+			header="#{lbl['lbl.sm.sme.definition']}">
+			<p:media
+				value="#{smUpdateSmeInfoBackingBean.getMedia('smeDefinition')}"
+				width="100%" height="700px" player="pdf" />
+			<p:panelGrid styleClass="noBorders tr,noBorders td">
+				<p:row>
+					<p:column width="100%" style="text-align:right">
+						<p:commandButton value="#{lbl['lbl.sm.sme.action.close']}"
+							onclick="#{cc.attrs.dialogWidget}.hide()" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:dialog>
+		<p:dialog id="smeCertWidget" widgetVar="smeCertWidget" modal="true"
+			dynamic="true" resizable="false" width="900px" height="700px"
+			styleClass="pop_up_top" header="#{lbl['lbl.sm.sme.regCert']}">
+			<p:media value="#{smUpdateSmeInfoBackingBean.getMedia('smeCert')}"
+				width="100%" height="700px" player="pdf" />
+			<p:panelGrid styleClass="noBorders tr,noBorders td">
+				<p:row>
+					<p:column width="100%" style="text-align:right">
+						<p:commandButton value="#{lbl['lbl.sm.sme.action.close']}"
+							onclick="#{cc.attrs.dialogWidget}.hide()" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:dialog>
 	</ui:define>
 </ui:composition>
