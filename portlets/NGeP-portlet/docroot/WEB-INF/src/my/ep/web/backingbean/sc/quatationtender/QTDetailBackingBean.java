@@ -290,6 +290,10 @@ public class QTDetailBackingBean extends
 	private static final String menuItemPublicationApproverAssignment = "MenuItemPublicationApproverAssignment";
 	// #25692 -end-
 	
+	//29464-start
+	private static final String menuItemSpecificationCommitteeAssignment = "MenuItemSpecificationCommitteeAssignment";
+	//29464-end
+
 	// #25692 -start-
 	public String getMenuItemDetails() {
 		return menuItemDetails;
@@ -350,6 +354,12 @@ public class QTDetailBackingBean extends
 	}
 	// #25692 -end-
 	
+	// 29464-start
+	public String getMenuItemSpecificationCommitteeAssignment() {
+		return menuItemSpecificationCommitteeAssignment;
+	}
+	// 29464-end
+
 	// 25201#52 -start-
 	private RoleCode[] deskOfficerRoleCodes = {
 			RoleCode.DESK_OFFICER, 
@@ -2763,6 +2773,9 @@ public class QTDetailBackingBean extends
 				
 				boolean isCommitteeAppointmentRemark = !SCProcessNameConst.ASSIGN_FC_SECRETARY.equalsIgnoreCase(taskName);
 				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+
+				this.getManagedBean().setActiveIndex(2); //29464
+
 				if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE.equalsIgnoreCase(taskName)
 						|| SCProcessNameConst.ASSIGN_TEC_COMMITTEE.equalsIgnoreCase(taskName)
 						|| SCProcessNameConst.ASSIGN_FEC_COMMITTEE.equalsIgnoreCase(taskName)
@@ -2831,6 +2844,11 @@ public class QTDetailBackingBean extends
 					
 				} else if (SCProcessNameConst.ASSIGN_SCORING_COMMITTEE
 						.equalsIgnoreCase(taskName)) {
+					// 29464-start
+					this.getManagedBean().setActiveIndex(5);
+					this.getManagedBean().setCommitteeAppointmentMenuTab(true);
+					// 29464-end
+
 					retrieveCommitteeAppointmentTabDtl(FORM_SC, REFORM_SC);
 					
 				} else {
@@ -2844,7 +2862,6 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().setReadOnly(false);
 				this.getManagedBean().setCommitteeAppointment(true);
 				this.getManagedBean().setCommitteeAppointmentRemark(isCommitteeAppointmentRemark);
-				this.getManagedBean().setActiveIndex(2);
 				this.getManagedBean().setCurrentStatusId(currentStatusId);
 			} else {
 				// qtId = quotationTenderDataType.getQtId().longValue();
@@ -5226,6 +5243,11 @@ public class QTDetailBackingBean extends
 		boolean isReadOnly = getManagedBean().isReadOnly();
 		boolean isMaintancePendingChklistStatus = isMaintancePendingChklistStatus();
 		
+		// 29464-start
+		String taskName = this.getManagedBean().getTaskName();
+		taskName = taskName == null ? "" : taskName;
+		// 29464-end
+		
 		if (priviousIndex != activeIndex) {
 			if (!isReadOnly) {
 				switch (priviousIndex) {
@@ -5303,6 +5325,11 @@ public class QTDetailBackingBean extends
 				break;
 
 			case 2:
+				// 29464-start
+				if (taskName.equalsIgnoreCase(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)) {
+					this.getManagedBean().setCommitteeAppointmentMenuTab(false);
+				}
+				// 29464-end
 				// detailSO.validateSupplierQualificationDtls(reqDTO);
 				retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
 				break;
@@ -5322,11 +5349,19 @@ public class QTDetailBackingBean extends
 				}
 				break;
 			case 5:
-				if(isMaintancePendingChklistStatus){
-					retrieveDocumentTabDtl();
-				} else{
-					retrieveScheduleTabDtl();
+				// 29464-start
+				if (taskName.equalsIgnoreCase(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)) {
+					this.getManagedBean().setCommitteeAppointmentMenuTab(true);
+					
+					retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
+				} else {
+					if (isMaintancePendingChklistStatus) {
+						retrieveDocumentTabDtl();
+					} else {
+						retrieveScheduleTabDtl();
+					}
 				}
+				// 29464-end
 				
 				break;
 			case 6:
@@ -8101,7 +8136,11 @@ public class QTDetailBackingBean extends
 	 * @param menuItem
 	 * @return
 	 */
-	public boolean displayMenuItem(String menuItem){
+	public boolean displayMenuItem(String menuItem) {
+		// 29464 -start-
+		String taskName = this.getManagedBean().getTaskName() == null ? "" : this.getManagedBean().getTaskName();
+		// 29464 -end-
+
 		Set<String> menuSet = new HashSet<String>();
 		menuSet.addAll(
 			Arrays.asList(
@@ -8134,7 +8173,13 @@ public class QTDetailBackingBean extends
 		} else if(getUserTaskIsPublicationApproval() && isApprovalScreen()) {
 			menuSet.remove(getMenuItemPublicationApproverAssignment());
 			menuSet.add(getMenuItemPublicationApproval());
-		} else;
+		}
+		// 29464-start
+		else if (taskName.equals(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)) {
+			menuSet.add(getMenuItemSpecificationCommitteeAssignment());
+		}
+		;
+		// 29464-end
 		
 		return menuSet.contains(menuItem);		
 	}
@@ -8186,6 +8231,18 @@ public class QTDetailBackingBean extends
 				resArr[8] = isAllowQTPublishBtn(scQt);
 				resArr[9] = isAllowQTClosedBtn(scQt);
 			}
+
+			// 29464-start
+			// 32806 , 29464 -start-
+			if (isQTMaintenanceScreen()) {
+				// 32806 , 29464 -end-
+				Long qtStatus = scQt.getQtStatus() == null ? 0L : scQt.getQtStatus().getStatusId();
+
+				resArr[1] = !qtStatus.equals(QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT);
+				// 29464-end
+				// 32806 , 29464 -start-
+			}
+			// 32806 , 29464 -end-
 		}
 		
 		return resArr;		
@@ -8396,5 +8453,19 @@ public class QTDetailBackingBean extends
      	return (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName));
     }
     // #13344 - End
+
+	// 29464-start - added logic at backingbean for future addition
+	public boolean evaluateCommitteeAppointmentPage() {
+		boolean flag = false;
+		String taskName = this.getManagedBean().getTaskName() == null ? "" : this.getManagedBean().getTaskName();
+		
+		if (this.getManagedBean().isCommitteeAppointment()
+				&& !taskName.equalsIgnoreCase(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)) {
+			flag = true;
+		}
+		
+		return flag;
+	}
+	// 29464-end
 	
 }

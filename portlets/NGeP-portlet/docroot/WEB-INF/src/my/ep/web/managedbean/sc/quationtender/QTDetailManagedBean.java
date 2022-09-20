@@ -411,8 +411,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The supplier search bean. */
 	private SupplierSearchBean supplierSearchBean;
 
-	
-
 	/** The selected category list. */
 	private List<ScQtCategory> selectedCategoryList;
 
@@ -569,8 +567,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The briefing zone bean. */
 	private List<BriefingZoneBean> briefingZoneBean = new ArrayList<BriefingZoneBean>();
 
-	
-
 	/** The sc qt supplier. */
 	private ScQtSupplier scQtSupplier;
 
@@ -716,8 +712,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The closing date. */
 	private Date closingDate;
-
-	
 
 	/** The pm document list. */
 	private List<PmDocument> pmDocumentList;
@@ -865,15 +859,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private Object[] scTdObj;
 
-	
 	private boolean createQt;
 
 	private String statecode;
-	
 
-	
-	
-	
 	private List<ScQtApproval> toBeApprovalRemoveList;
 	
 	/** The sc qt remarks. */
@@ -911,8 +900,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The evaluation type. */
 	private String evaluationType;
-
-	
 
 	/** The stage two tech compliance list. */
 	private List<PmDocument> stageTwoTechComplianceList;
@@ -971,8 +958,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The total progressive payment. */
 	private Integer totalProgressivePayment=0;
 
-	
-
 	/** The item name. */
 	private String itemName;
 
@@ -1004,8 +989,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<CtPanelSupplier> ctZoneSupplierList;
 
 	// supplier Qualification Criteria List and variables
-
-	
 
 	/** The supp criteriaopen select list. */
 	private List<ScQtCategory> suppCriteriaopenSelectList;
@@ -1114,7 +1097,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The fin points. */
 	private int finPoints;
 
-	
 	/** The year list. */
 	private List<SelectItem> yearList;
 
@@ -1261,8 +1243,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The delivery zones. */
 	private List<TplSpecZoneDtl> deliveryZones;
 
-	
-
 	/** The address zone bean. */
 	private List<BriefingZoneBean> addressZoneBean;
 
@@ -1277,8 +1257,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The active index. */
 	private int activeIndex;
-
-	
 
 	/** The ct panel zones. */
 	private List<CtPanelZone> ctPanelZones;
@@ -1430,8 +1408,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The local out come. */
 	private String localOutCome;
-
-	
 
 	/** The specification remarks. */
 	private List<ScQtSpecificationRemark> specificationRemarks;
@@ -1618,6 +1594,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #30451, #17376-Start.
 	private boolean isBdSfFlow;
 	// #30451, #17376-End.
+	
+	//29464-start
+	private boolean committeeAppointmentMenuTab = true;
+	//29464-end
 	
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -10091,5 +10071,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isBdSfFlow = isBdSfFlow;
 	}
 	// #30451, #17376-End.
+
+	//29464-start
+	public boolean isCommitteeAppointmentMenuTab() {
+		return committeeAppointmentMenuTab;
+	}
+
+	public void setCommitteeAppointmentMenuTab(boolean committeeAppointmentMenuTab) {
+		this.committeeAppointmentMenuTab = committeeAppointmentMenuTab;
+	}
+	//29464-end
 
 }
