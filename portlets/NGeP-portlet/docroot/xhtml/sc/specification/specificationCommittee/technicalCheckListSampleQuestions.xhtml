@@ -13,6 +13,12 @@
 <h:outputText styleClass="instruction"  
 			value="#{lbl['lbl.sc.qt.spec.sample.instruction']}"
 			escape="false" />
+<!-- #29187 Start Vinod -->
+<br/>
+<h:outputText styleClass="instruction"  
+			value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.sample.instruction']}"
+			escape="false" />
+<!-- #29187 End Vinod -->
 <p:spacer height="10"></p:spacer>
 			<table>
 					<tr>
@@ -83,6 +89,7 @@
 			    	<p:column colspan="2" headerText="#{lbl['lbl.sc.qt.sampel']}" style="width:15%; text-align:center;" />
 			
 				<p:column rowspan="2" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}" style="width:10%; text-align:center;" />
+				<p:column rowspan="2" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification']}" style="width:10%; text-align:center;" /> <!-- #29187 Added Vinod -->
 			</p:row>
 			 	<p:row>
 		             
@@ -186,6 +193,17 @@
 			</h:panelGroup>
 			
 			</p:column>
+			
+			<!-- #29187 Start Vinod -->
+			<p:column>
+				<h:panelGroup>
+				<h:selectOneMenu id="manSpec" value="#{technicalSampleQuestion.mandatorySpec}" disabled="true">
+					<f:selectItems value="#{specificationBackingBean.getMandatorySpecDropdownValues()}" />
+				</h:selectOneMenu>
+				<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.tooltip']}" />
+				</h:panelGroup>
+			</p:column>
+			<!-- #29187 End Vinod -->
 			
 			</p:dataTable>
 			<p:spacer height="10"></p:spacer>
