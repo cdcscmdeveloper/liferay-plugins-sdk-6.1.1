@@ -1083,4 +1083,46 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		return statusValues;
 	}
 	// 29580 - End (Harun)
+	
+	// #21692 - start
+	/**
+	 * Generate approval status list.
+	 * 
+	 * @param language
+	 *            the language
+	 * @return the list
+	 */
+	public List<SelectItem> generateApprovalStatusList() {
+		List<SelectItem> statusList = new ArrayList<SelectItem>();
+		if ((strLanguage != null) && (strLanguage.equalsIgnoreCase("en"))) {
+
+			SelectItem selectItem = new SelectItem();
+			selectItem
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_ENG_CODE);
+			selectItem.setValue(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_ID);
+			statusList.add(selectItem);
+			SelectItem selectItem1 = new SelectItem();
+			selectItem1
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ENG_CODE);
+			selectItem1.setValue(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ID);
+			statusList.add(selectItem1);
+
+		} else if ((strLanguage != null)
+				&& (strLanguage.equalsIgnoreCase("ms"))) {
+
+			SelectItem selectItem = new SelectItem();
+			selectItem
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_MY_CODE);
+			selectItem.setValue(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_ID);
+			statusList.add(selectItem);
+			SelectItem selectItem1 = new SelectItem();
+			selectItem1
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REJECT_MY_CODE);
+			selectItem1.setValue(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ID);
+			statusList.add(selectItem1);
+
+		}
+		return statusList;
+	}
+	// #21692 - end
 }
