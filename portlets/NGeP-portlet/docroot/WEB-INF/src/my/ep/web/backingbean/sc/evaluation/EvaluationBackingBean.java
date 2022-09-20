@@ -5716,6 +5716,17 @@ public void saveComplianceSample() {
 						}
 						
 						//#32089
+						/*#29187 Start Vinod*/
+						if (null != this.getManagedBean().getScQt()
+								&& this.getManagedBean().getScQt().isZonal()
+								&& this.getManagedBean().getTplSpecZoneDtl()==null
+								&& null!=this.getManagedBean().getScQt().getQtStatus() 
+								&& null!=this.getManagedBean().getScQt().getQtStatus().getStatusId() 
+								&& this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_EVALUATION_PROPOSAL
+								&& !"T".equalsIgnoreCase(getManagedBean().getCheckListType())) {
+							this.getManagedBean().setTplSpecZoneDtl(specAnswers.getTplSpecSuppAnswer().getTplSpecZoneDtl());
+						}
+						/*#29187 End Vinod*/
 					}
 					//#32089
 					if (FlagAuto) {
@@ -9402,6 +9413,15 @@ private void retriveCommitteeRemarksList(){
 								new FacesScopes().getUserLocale()),
 								item.getScRequestItem().getItemName() });
 				}
+				/*#29187 Start Vinod*/
+				if(item.getCompliance()!=null  
+					&& item.getCompliance().equals(Boolean.FALSE) 
+					&& (item.getRemark().equals(null)
+						|| item.getRemark().equals("")
+						|| item.getRemark().equals(" "))){
+						throw new EpException(MessageConst.ERROR_775179);
+				}
+				/*#29187 End Vinod*/
 			}
 			reqDtO.setSampleComplianceList(sampleItemlist);
 			}//#11104-End
@@ -9826,7 +9846,16 @@ private void retriveCommitteeRemarksList(){
 
 					tplSpecAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
 							getManagedBean().getSelectedZone());
-
+					//#29187 Start Vinod
+					if("T".equalsIgnoreCase(getManagedBean().getCheckListType())
+						&& tplSpecAnswer.getCompliance()!=null  
+						&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE) 
+						&& (tplSpecAnswer.getUserRemark().equals(null)
+							|| tplSpecAnswer.getUserRemark().equals("")
+							|| tplSpecAnswer.getUserRemark().equals(" "))){
+						throw new EpException(MessageConst.ERROR_775179);
+					}
+					//#29187 End Vinod
 				}
 			}
 			evalReqDTO.setProposalChecklist(this.getManagedBean()
@@ -17676,5 +17705,125 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 	//#28784 add remarks - end
+	//#29187 Start Vinod
+	public boolean checkUOMandQuantityRender(){
+		boolean render = true;
+		
+		if(null!=this.getManagedBean().getScQt() 
+			&& null!=this.getManagedBean().getScQt().getQtStatus() 
+			&& null!=this.getManagedBean().getScQt().getQtStatus().getStatusId() 
+			&& this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_EVALUATION_PROPOSAL
+			&& "T".equalsIgnoreCase(getManagedBean().getCheckListType())){
+			render=false;
+		}
+		return render;
+	}
+	public boolean displayMandatorySpecAndComplianceColumn(TemplateSpecBean templateSpecBean){
+		boolean manSpec = false;
+		if(null!=this.getManagedBean().getScQt() 
+			&& null!=this.getManagedBean().getScQt().getQtStatus() 
+			&& null!=this.getManagedBean().getScQt().getQtStatus().getStatusId() 
+			&& this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_EVALUATION_PROPOSAL){
+			for(TplSpecAnswer tplSpecAnswer : templateSpecBean.getSpecAnswerList()){
+				if(tplSpecAnswer.getTplSpecQuestion().getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
+					&& tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()){
+					manSpec=true;
+					break;
+				}
+			}
+		}
+		return manSpec;
+	}
+	public void checkTechnicalSpecCompliance(){
+		boolean isCompliance = false;
+		try {
+			for(TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
+				if(answer.getCompliance()!=null 
+					&& answer.getCompliance().equals(Boolean.FALSE)){
+					isCompliance=true;
+					break;
+				}
+			}
+			
+			if(isCompliance) RequestContext.getCurrentInstance().execute("complianceConfirmPopUp.show()");
+			else this.saveTempleateSpecDtls();
+			
+		} finally {
+
+		}
+	}
+	public boolean renderZoneForFinancial(){
+		boolean renderZone = true;
+			if(null!=this.getManagedBean().getScQt() 
+				&& null!=this.getManagedBean().getScQt().getQtStatus() 
+				&& null!=this.getManagedBean().getScQt().getQtStatus().getStatusId() 
+				&& this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_EVALUATION_PROPOSAL
+				&& !"T".equalsIgnoreCase(getManagedBean().getCheckListType())){
+				renderZone=false;
+			}
+		return renderZone;
+	}
+	public List<SelectItem> getComplianceDropdownValues() {
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+
+		try {
+			selectItems.add(new SelectItem(null, ResourceBundleUtils
+					   .getMessage("lbl.txt.select",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(true, ResourceBundleUtils
+					   .getMessage("lbl.txt.yes",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(false, ResourceBundleUtils
+					   .getMessage("lbl.txt.no",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+		} finally {
+
+		}
+		return selectItems;
+	}
+	public void checkSampleCompliance(){
+		boolean isCompliance = false;
+		try {
+			for(ScQtSampleItem sampleItem : this.getManagedBean().getSampleItemList()){
+				if(sampleItem.getCompliance()!=null 
+					&& sampleItem.getCompliance().equals(Boolean.FALSE)){
+					isCompliance=true;
+					break;
+				}
+			}
+			
+			if(isCompliance) RequestContext.getCurrentInstance().execute("complianceSampleConfirmPopUp.show()");
+			else this.saveProposalScoreDtls();
+			
+		} finally {
+
+		}
+	}
+	public boolean renderDisqialified(){
+		boolean renderDisqialifiedColumn = false;
+		List<ScQtEvaluationResultDtl> disQualDtls= this.getManagedBean().getDisqualifiedSuppliersDM().getList();
+		if(disQualDtls!=null && disQualDtls.size()!=0){
+			for(ScQtEvaluationResultDtl disQualDtl : disQualDtls){
+				if(null !=disQualDtl.isCompliance() && !disQualDtl.isCompliance()){
+					renderDisqialifiedColumn=true;
+					break;
+				}
+			}
+		}
+		return renderDisqialifiedColumn;
+	}
+	
+	public boolean isDisqialifiedByCompliance(ScQtEvaluationResultDtl evalResultDtl){
+		log.info("isDisqialifiedByCompliance");
+		boolean renderDisqialifiedColumn = false;
+			if(!evalResultDtl.isCompliance()){
+				renderDisqialifiedColumn=true;
+			}
+		return renderDisqialifiedColumn;
+	}
+	//#29187 End Vinod
 
 }

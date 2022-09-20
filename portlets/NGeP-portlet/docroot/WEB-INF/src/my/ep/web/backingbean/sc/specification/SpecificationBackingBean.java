@@ -19689,12 +19689,14 @@ public void sampleRequiredChange(TplSpecQuestion specQuestion){
 	ParameterResDTO scoreTyperesDTO = parameterSo
 			.retrieveParameterByTypeAndCode(scoreType);
 	specQuestion.setSampleScoreTypeCode(scoreTyperesDTO.getPmParameter());
+	specQuestion.setMandatorySpec(true);//#29187 Added Vinod
 	}else{
 		log.info("elsesampleRequiredChange==="+specQuestion.isSampleReq());
 		specQuestion.setSampleQuantity(null);
 		specQuestion.setSampleScoreTypeCode(null);
 		specQuestion.setSampleScore(null);
 		scoringPopUpAction(null);
+		specQuestion.setMandatorySpec(false);//#29187 Added Vinod
 	}
 	
 	
@@ -21876,4 +21878,25 @@ if(null!=allTechnicalChecklist){
 				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	// #28784
+	/*#29187 Start Vinod*/
+	public List<SelectItem> getMandatorySpecDropdownValues() {
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+
+		try {
+
+				selectItems.add(new SelectItem(false, ResourceBundleUtils
+						   .getMessage("lbl.txt.select",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+				selectItems.add(new SelectItem(true, ResourceBundleUtils
+						   .getMessage("lbl.txt.yes",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+
+		} finally {
+
+		}
+		return selectItems;
+	}
+	/*#29187 End Vinod*/
 }
