@@ -158,11 +158,13 @@
 				<td>
 				<p:selectOneMenu
 					id="decisionTypeId"
-					value="#{cc.attrs.bBean.managedBean.decisionType}"
+					value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scStatus}"
 					label="#{lbl['lbl.sc.qt.report.epv.status']}"
 					style="width: 178px;margin-bottom: 5px;">
-					<f:selectItems
-						value="#{cc.attrs.bBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest1)}" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+							itemValue="#{null}"></f:selectItem>
+					<f:selectItems value="#{cc.attrs.bBean.generateApprovalStatusList()}" var="item" itemLabel="${item.label}" itemValue="#{item.value}"></f:selectItems>
+					<p:ajax event="change" process="@this" partialSubmit="true" />
 				</p:selectOneMenu></td>
 			</TR>
 		</TABLE>
