@@ -822,6 +822,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		this.getManagedBean().setAscending(false);
 		this.getManagedBean().setSort_byGroup("CREATEDATE");
 		this.getManagedBean().setAscendingGroup(false);
+		this.getManagedBean().setFromSearchBttn(true);
 		//29810 - end
 		//this.getManagedBean().setAssignment("ALL");
 
@@ -1258,7 +1259,6 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			this.getManagedBean().setViewByGroup("");
 			this.getManagedBean().setSort_byGroup("CREATEDATE");
 			this.getManagedBean().setAscendingGroup(false);
-			preRenderTaskView();
 		}
 	}
 	//29810 - end
