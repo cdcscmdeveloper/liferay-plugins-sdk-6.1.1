@@ -44,7 +44,6 @@
 		
 		.underline {
 			text-decoration: underline;
-			text-align: center;
 		}
 		
 		.redText{
