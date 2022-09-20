@@ -735,6 +735,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 				|| QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL.equals(reportCode)) && reportFileSearchBean != null) {//#21692
 			reportFileSearchBean.setScPtj(null);
 			reportFileSearchBean.setScPtjName(null);
+			reportFileSearchBean.setScStatus(null);//#21692 reset status
 			if (!isDeskOfficer()) {
 				reportFileSearchBean.setScDeskOfficer(null);
 				reportFileSearchBean.setPtjProfile(null);
