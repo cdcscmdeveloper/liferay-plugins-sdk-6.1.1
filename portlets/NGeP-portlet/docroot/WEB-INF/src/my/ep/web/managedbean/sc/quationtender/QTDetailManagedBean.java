@@ -1649,6 +1649,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Long subStatusId;
 	private List<String> paramTypes = null;
 	//#25692-End
+	
+	// #29468 Vinod Start
+	private TreeNode rootCategoryTree;
+	List<String> selectedCategories;
+	// #29468 Vinod End
+	
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -11270,6 +11276,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		}
 		//#25426 - End
 		
+		//#29468 Vinod Start
+		public TreeNode getRootCategoryTree() {
+			return rootCategoryTree;
+		}
+
+		public void setRootCategoryTree(TreeNode rootCategoryTree) {
+			this.rootCategoryTree = rootCategoryTree;
+		}
+
+		public List<String> getSelectedCategories() {
+			return selectedCategories;
+		}
+
+		public void setSelectedCategories(List<String> selectedCategories) {
+			this.selectedCategories = selectedCategories;
+		}
+		//#29468 Vinod End
 }
 
 // ***25201

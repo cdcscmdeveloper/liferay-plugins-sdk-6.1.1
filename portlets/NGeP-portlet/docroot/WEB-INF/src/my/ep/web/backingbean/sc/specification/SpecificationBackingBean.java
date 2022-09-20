@@ -3936,7 +3936,7 @@ public class SpecificationBackingBean extends
 					getManagedBean().getQt().getPmProcurementCategory()
 							.getParameterId());
 		}
-
+		getCategoryCodesForClone();//#29468 Added by Vinod
 	}
 
 	/**
@@ -10323,6 +10323,12 @@ public class SpecificationBackingBean extends
 				.setToClosingDate(null);
 		this.getManagedBean().getQtnTendertemplateSearchBean()
 				.setQtStatus(null);
+		//#29468 Start Vinod
+		List<TreeNode> childTreeList = this.getManagedBean().getRootCategoryTree().getChildren();
+		for(TreeNode childTree : childTreeList){
+			childTree.setSelected(false);
+	}
+		//#29468 End Vinod
 	}
 
 	/**
@@ -14923,6 +14929,7 @@ if (null != checklist && !checklist.isEmpty()) {
 	private void populateQTSearchCriteria(
 			QtnTenderSearchBean templateQtnTenderSearchBean,
 			ISearchBean<TplSpecMaster> qtSearchBean) {
+		ICategoryCodeSO categoryCodeSO = null;//#29468 Added Vinod
 
 		if (templateQtnTenderSearchBean != null) {
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
@@ -15017,6 +15024,47 @@ if (null != checklist && !checklist.isEmpty()) {
 						new SearchFilterBean("scQtDoc.scQt.scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
+			//#29468 Vinod Start
+			if(getManagedBean().getSelectedCategories()!=null){
+				List<Long> l1Ids = new ArrayList<Long>();
+				List<Long> l2Ids = new ArrayList<Long>();
+				List<Long> l3Ids = new ArrayList<Long>();
+				categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
+				List<PmCategoryL1> pmCategoryL1s = categoryCodeSO.retrieveCategoryL1List().getCategoryL1List();
+					
+				for (PmCategoryL1 pmCategoryL1 : pmCategoryL1s) {
+					CategoryCodeReqDTO reqDTO1 = new CategoryCodeReqDTO();
+					reqDTO1.setCategoryL1Id(pmCategoryL1.getCategoryL1Id());
+					List<PmCategoryL2> pmCategoryL2s = categoryCodeSO.retrieveCategoryL2ListByL1Id(reqDTO1).getCategoryL2List();
+					for (PmCategoryL2 pmCategoryL2 : pmCategoryL2s) {
+						CategoryCodeReqDTO reqDTO2 = new CategoryCodeReqDTO();
+						reqDTO2.setCategoryL2Id(pmCategoryL2.getCategoryL2Id());
+						List<PmCategoryL3> pmCategoryL3s = categoryCodeSO.retrieveCategoryL3ListByL2Id(reqDTO2).getCategoryL3List();
+						for (PmCategoryL3 pmCategoryL3 : pmCategoryL3s) {
+							String catCode = pmCategoryL1.getCategoryL1Code()+pmCategoryL2.getCategoryL2Code()+pmCategoryL3.getCategoryL3Code();
+							if(getManagedBean().getSelectedCategories().contains(catCode)){
+								l1Ids.add(pmCategoryL1.getCategoryL1Id());
+								l2Ids.add(pmCategoryL2.getCategoryL2Id());
+								l3Ids.add(pmCategoryL3.getCategoryL3Id());
+							}
+						}
+					}
+				}
+				if(l1Ids.size()!=0 && l2Ids.size()!=0 && l3Ids.size()!=0){
+					qtSearchBean.getDataFilterBeans().add(
+							new SearchMultiFilterBean(
+								new SearchMultiFilterBean(
+									new SearchFilterBean("scQtDoc.scQt.scQtCategorys.pmCategoryL1",
+											SearchOperator.OPERATOR_IN.value(), l1Ids),
+									new SearchFilterBean(
+											"scQtDoc.scQt.scQtCategorys.pmCategoryL2",
+											SearchOperator.OPERATOR_IN.value(), l2Ids)),
+									new SearchFilterBean("scQtDoc.scQt.scQtCategorys.pmCategoryL3",
+											SearchOperator.OPERATOR_IN.value(), l3Ids, 
+											SearchCondition.CONDITION_AND.value())));
+				}
+		}
+		//#29468 Vinod End
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 		}
@@ -20709,6 +20757,73 @@ if(null!=allTechnicalChecklist){
 		return catCodeList;
 	}
 // #29732 End - reOpen Fix
+	/*#29468 Start Vinod*/
+	private void getCategoryCodesForClone(){
+		ICategoryCodeSO categoryCodeSO = null;
+	
+		try {
+			categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
+			List<PmCategoryL1> pmCategoryL1s = categoryCodeSO.retrieveCategoryL1List().getCategoryL1List();
+				
+			if(pmCategoryL1s.size()!=0){
+				TreeNode rootNode = new DefaultTreeNode("root", null);
+				for (PmCategoryL1 pmCategoryL1 : pmCategoryL1s) {
+					for (PmCategoryL2 pmCategoryL2 : pmCategoryL1.getPmCategoryL2s()) {
+						for (PmCategoryL3 pmCategoryL3 : pmCategoryL2.getPmCategoryL3s()) {
+							TreeNode catCode = new DefaultTreeNode("catCode",pmCategoryL1.getCategoryL1Code()+
+																			 pmCategoryL2.getCategoryL2Code()+
+																			 pmCategoryL3.getCategoryL3Code(), rootNode);
+							TreeNode catDes1 = new DefaultTreeNode("catDes1",pmCategoryL1.getCategoryL1Code()+" - "+pmCategoryL1.getCategoryName(), catCode);
+							catDes1.setSelectable(false);
+							TreeNode catDes2 = new DefaultTreeNode("catDes2",pmCategoryL2.getCategoryL2Code()+" - "+pmCategoryL2.getCategoryName(), catCode);
+							catDes2.setSelectable(false);
+							TreeNode catDes3 = new DefaultTreeNode("catDes3",pmCategoryL3.getCategoryL3Code()+" - "+pmCategoryL3.getCategoryName(), catCode);
+							catDes3.setSelectable(false);
+						}
+					}
+				}
+				this.getManagedBean().setRootCategoryTree(rootNode);
+			}
+		} finally {
+			categoryCodeSO = null;
+		}
+	}
+		
+	public void selectCategoryTreeNode(NodeSelectEvent event) {
+		TreeNode selectedTreeNode = event.getTreeNode();
+		selectedTreeNode.setSelected(true);
+		List<String> selectedCatCodes = new ArrayList<String>();
+		String code=(String) selectedTreeNode.getData();
+		if(getManagedBean().getSelectedCategories()!=null
+			&& !getManagedBean().getSelectedCategories().isEmpty())  
+				selectedCatCodes.addAll(getManagedBean().getSelectedCategories());
+			
+		if(selectedCatCodes!=null 
+			&& !selectedCatCodes.isEmpty()){
+			if(!selectedCatCodes.contains(code)) selectedCatCodes.add(code);
+		}else{
+			selectedCatCodes.add(code);
+		}
+		getManagedBean().setSelectedCategories(selectedCatCodes);
+	}
+
+	public void unSelectCategoryTreeNode(NodeUnselectEvent event) {
+		TreeNode selectedTreeNode = event.getTreeNode();
+		selectedTreeNode.setSelected(false);
+		List<String> selectedCatCodes = new ArrayList<String>();
+		String code=(String) selectedTreeNode.getData();
+			
+		if(getManagedBean().getSelectedCategories()!=null
+			&& !getManagedBean().getSelectedCategories().isEmpty())  
+				selectedCatCodes.addAll(getManagedBean().getSelectedCategories());
+			
+		if(selectedCatCodes!=null 
+			&& !selectedCatCodes.isEmpty()){
+			selectedCatCodes.remove(code);
+		}
+		getManagedBean().setSelectedCategories(selectedCatCodes);
+	}
+	/*#29468 End Vinod*/
 	
 	//#28784 - Get Demo Score Setting
 	public List<ScQtScoreSetting> getDemoScoreSetting(SpecificationReqDTO reqDTO){	
