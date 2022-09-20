@@ -197,6 +197,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -15528,4 +15529,22 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	}
 	// #25039#67#76 - end
 	
+	//29464 - note 90 - start
+	public boolean evaluateRepublishFromDisplay(Long status) {
+		status = status == null ? 0L : status;
+		
+		List<Long> statusList = Arrays.asList(new Long[] {
+			QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+			QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH,
+			QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT,
+			QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF,
+			QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION
+		});
+		
+		return (statusList.contains(status) && 
+				StringUtils.isNotEmpty(this.getManagedBean().getTaskName())) || 
+						QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	//29464 - note 90 - end
+
 }
