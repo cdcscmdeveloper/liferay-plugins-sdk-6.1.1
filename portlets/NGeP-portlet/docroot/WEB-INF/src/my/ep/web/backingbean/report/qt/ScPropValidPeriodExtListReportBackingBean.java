@@ -66,7 +66,9 @@ public class ScPropValidPeriodExtListReportBackingBean extends QtReportBackingBe
 			params.put(QtReportConst.PARAM_DECISION_TYPE, reportFieldBean.getScStatus());
 		}
 		
-		if (StringUtils.isNotEmpty(reportFieldBean.getScPtj())) {
+		if (null != reportFieldBean.getPtjProfile()) {
+			params.put(QtReportConst.PARAM_PROCURE_PTJ_EQ, reportFieldBean.getPtjProfile().getOrgProfileId().toString());
+		} else if (StringUtils.isNotEmpty(reportFieldBean.getScPtj())) {
 			params.put(QtReportConst.PARAM_PROCURE_PTJ_EQ, reportFieldBean.getScPtj());
 		}
 
