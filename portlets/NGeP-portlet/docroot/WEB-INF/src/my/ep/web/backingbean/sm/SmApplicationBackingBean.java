@@ -10882,6 +10882,9 @@ public class SmApplicationBackingBean extends
 																			  getManagedBean().getSmAppl().getApplCategoryType(), 
 																			  zoneReqSO.retrieveZoneByStateId(zoneReqDTO).getPmZone().getZoneCode());
 				reqDTO.setPoLoginId(po.getLoginId());
+				//#12483 - START
+				reqDTO.setUserId(po.getUserId());
+				//#12483 - END
 			}
 		}else{
 			reqDTO.setPoLoginId(pmUser.getLoginId());
