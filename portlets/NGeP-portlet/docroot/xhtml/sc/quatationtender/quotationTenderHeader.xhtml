@@ -6,6 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<div align="left" class="header-info header-spacing">
+		<!-- 29464 -start- -->
+		<ui:param name="statusId" value="#{qTDetailBB.retirveStatusId()}" />
+		<!-- 29464 -end- -->
 		<table width="100%">
 			<tr>
 				<td width="15%"><h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>
@@ -44,11 +47,27 @@
 				<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 				<td class="header-info-text">
 				<!-- 25692 -start- -->
-				<ui:param name="statusId" value="#{qTDetailBB.retirveStatusId()}" />
 				#{qTDetailBB.getStatusDescById(statusId)}
 				<!-- 25692 -end- -->
 				</td>
 			</tr>
+			<!-- 29464 -start- -->
+			<ui:fragment rendered="#{ statusId eq QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT
+				and not empty specMaintenanceBB.managedBean.taskName and not empty qTDetailBB.managedBean.qt.scQt}">
+				<tr>
+					<td width="15%"><h:outputLabel
+							value="#{lbl['lbl.sc.qt.republishFrom']}" /></td>
+					<td class="header-info-text"><p:commandLink
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							process="@this" partialSubmit="true" id="republishFromHyperlink"
+							style="margin-right:20px;"
+							action="#{specMaintenanceBB.redirectToSpecificationMaintenance(qTDetailBB.managedBean.qt.scQt, false,'/xhtml/sc/quatationtender/quatationtendercreation.xhtml', true)}">
+							<h:outputText value="#{qTDetailBB.managedBean.qt.scQt.qtNo}"
+								escape="false" />
+						</p:commandLink></td>
+				</tr>
+			</ui:fragment>
+			<!-- 29464 -end- -->
 		</table>
 	</div>
 </ui:composition>
