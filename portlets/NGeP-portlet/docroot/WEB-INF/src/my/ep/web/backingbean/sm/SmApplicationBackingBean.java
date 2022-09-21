@@ -10521,6 +10521,9 @@ public class SmApplicationBackingBean extends
 			if(po.getRecordStatusFlg() == 1 && pmOrgStats){
 				//#12483 - reopen - END
 				reqDTO.setPoLoginId(po.getLoginId());
+				//#12483 - START
+				reqDTO.setUserId(po.getUserId());
+				//#12483 - END
 			}else{
 				IZoneSO zoneReqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 				ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
@@ -10531,6 +10534,9 @@ public class SmApplicationBackingBean extends
 																			  getManagedBean().getSmAppl().getApplCategoryType(), 
 																			  zoneReqSO.retrieveZoneByStateId(zoneReqDTO).getPmZone().getZoneCode());
 				reqDTO.setPoLoginId(po.getLoginId());
+				//#12483 - START
+				reqDTO.setUserId(po.getUserId());
+				//#12483 - END
 			}	
 		}else{
 			reqDTO.setPoLoginId(pmUser.getLoginId());
@@ -11122,6 +11128,12 @@ public class SmApplicationBackingBean extends
 				reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
 				reqDTO.setPoRole(getManagedBean().isPoUser());
 				reqDTO.setApproverRole(getManagedBean().isApproverUser());
+
+				//#12483 - START
+				if(reqDTO.getUserId() != null){
+					reqDTO.getSmAppl().setPoUserId(reqDTO.getUserId());
+				}
+				//#12483 - END
 
 				FacesScopes fs = new FacesScopes();
 				reqDTO.setServerName(fs.getRequest().getServerName());
