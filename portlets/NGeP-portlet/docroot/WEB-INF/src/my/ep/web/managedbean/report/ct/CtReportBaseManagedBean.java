@@ -36,10 +36,7 @@ public abstract class CtReportBaseManagedBean extends ReportBaseManagedBean {
 	//#30918 -start
 	private Long fulfilmentType;
 	private boolean supplierVisible;
-	//#30918 - end	
-	//Enhancement 32675 - shaqimi start
-	private boolean factoringUser = false;
-	//Enhancement 32675 - shaqimi end
+	//#30918 - end
 	
 	/**
 	 * @return the disableMinistryField
@@ -244,13 +241,5 @@ public abstract class CtReportBaseManagedBean extends ReportBaseManagedBean {
 	public void setSupplierVisible(boolean isSupplierVisible) {
 		this.supplierVisible = isSupplierVisible;
 	}
-	//Enhancement 32675 - shaqimi start
-	public boolean isFactoringUser() {
-		return factoringUser;
-	}
-
-	public void setFactoringUser(boolean factoringUser) {
-		this.factoringUser = factoringUser;
-	}
-	//Enhancement 32675 - shaqimi end
+	
 }
