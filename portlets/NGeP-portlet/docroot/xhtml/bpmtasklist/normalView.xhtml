@@ -68,7 +68,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.bpm.created.date']}" itemValue="CREATEDATE"></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.bpm.description']}" itemValue="TITLE"></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.bpm.status']}" itemValue="DOCSTATUS"></f:selectItem>
-						<f:selectItem itemLabel="#{lbl['lbl.bpm.received.date']}" itemValue="RECEIVEDDATE"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.received.date']}" itemValue="RECEIVEDDATE" rendered="#{bpmTasklistBackingBean.managedBean.roleType eq 'PO'}"></f:selectItem>
 						<!-- <f:selectItem itemLabel="Document Receive Date" itemValue="CREATEDATE"></f:selectItem> -->
 					</p:selectOneMenu>
 				</td>
