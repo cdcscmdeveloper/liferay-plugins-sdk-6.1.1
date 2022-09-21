@@ -13002,6 +13002,13 @@ if (null != checklist && !checklist.isEmpty()) {
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			Integer index = null;//1873 - note 97
+			//#29187 Start Vinod
+			for(TplSpecQuestion question : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()){
+				if(question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)){
+					question.setMandatorySpec(false);
+				}
+			}
+			//#29187 End Vinod
 			
 			// Bug #33661@Syazani 16/08/2022 -- Start
 			// Purpose: verify status is in Pending Specification Preparation to prevent user from altering the data by using multiple tab/windows
@@ -13750,6 +13757,13 @@ if (null != checklist && !checklist.isEmpty()) {
 		boolean buildFinancialTemplate = false; //1873 note 86
 		ScQtCheckList scQtCheckList = this.getManagedBean().getScQtChecklist();
 		List<ScQtCheckList> updatedCheckLists = new ArrayList<ScQtCheckList>();
+		//#29187 Start Vinod
+		for(TplSpecQuestion question : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()){
+			if(question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)){
+				question.setMandatorySpec(false);
+			}
+		}
+		//#29187 End Vinod
 
 		Integer index = null;//1873 - note 97
 		if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
@@ -13846,6 +13860,18 @@ if (null != checklist && !checklist.isEmpty()) {
 					.cloneTplSpecMaster(
 							scQtCheckList.getScQtDoc().getTplSpecMaster(),
 							false, true, true, false);//#28784
+			//#29187 Start Vinod
+			for(TplSpecQuestion questionSample : specMaster.getTplSpecQuestions()){
+				for(TplSpecQuestion questionActual : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()){
+					if(questionSample.getTplSpecMaster().getSpecMasterId().equals(questionActual.getTplSpecMaster().getSpecMasterId())
+						&& !questionActual.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)
+						&& questionActual.isMandatorySpec()){
+						questionSample.setMandatorySpec(true);
+					}
+				}
+				
+			}
+			//#29187 Start Vinod
 			specMaster
 					.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
 
@@ -21910,6 +21936,17 @@ if(null!=allTechnicalChecklist){
 
 		}
 		return selectItems;
+	}
+	public boolean renderManSpec(List<TplSpecQuestion> tplSpecQuestions){
+		boolean render = false;
+		for(TplSpecQuestion question : tplSpecQuestions){
+			if(question.isMandatorySpec()){
+				render=true;
+				break;
+			}
+		}
+		
+		return render;
 	}
 	/*#29187 End Vinod*/
 }
