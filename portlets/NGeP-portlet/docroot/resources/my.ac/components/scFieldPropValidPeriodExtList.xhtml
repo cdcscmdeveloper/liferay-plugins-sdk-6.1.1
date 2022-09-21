@@ -136,6 +136,8 @@
 				<TD class="columnGenClass"><p:outputLabel
 						value="#{lbl['lbl.rpt.proposal.validity.extension.request.date']}" style="width:232px;" /></TD>
 				<TD class="columnDateFromClass"><p:calendar showOn="button"
+						mindate="#{cc.attrs.bBean.handleMinDateForEPV()}"
+						maxdate="#{cc.attrs.bBean.handleMaxDateForEPV()}"
 						value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scPublishFromDate}"
 						navigator="true" display="inline" readonlyInput="true" size="9"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -145,6 +147,8 @@
 				<TD class="columnDateToClass"><p:outputLabel
 						value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:25px;" /></TD>
 				<TD><p:calendar showOn="button" navigator="true"
+						mindate="#{cc.attrs.bBean.handleMinDateForEPV()}"
+						maxdate="#{cc.attrs.bBean.handleMaxDateForEPV()}"
 						value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scPublishToDate}"
 						display="inline" readonlyInput="true" size="9"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
