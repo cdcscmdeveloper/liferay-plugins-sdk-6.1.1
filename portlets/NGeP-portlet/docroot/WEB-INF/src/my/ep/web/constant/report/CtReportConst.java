@@ -48,6 +48,7 @@ public class CtReportConst implements Serializable {
 	public static final String PARAM_KEY_CIRCULAR_FROM_DATE = "PCIRCEFFFROMDATE";
 	public static final String PARAM_KEY_CIRCULAR_TO_DATE = "PCIRCEFFTODATE";
 	public static final String PARAM_KEY_ITEM_NAME = "PITEMNAME";
+	public static final String PARAM_KEY_USER_ROLE = "PUSERROLE";//Enhancement 32675
 	
 	//#30918 -start
 	public static final String PARAM_KEY_FULFILMENT_TYPE = "PFULFILMENTTYPE";
