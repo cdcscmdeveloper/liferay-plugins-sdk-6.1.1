@@ -140,7 +140,7 @@
 		<!--#29810-START-->
 		<ac:paginator for="taskListMyTaskId"></ac:paginator>
 		<p:ajax event="sort" listener="#{bpmTasklistBackingBean.orderByMyTaskList}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"></p:ajax>
-		<p:column width="5%;" sortBy="#{tasks.docNumber}" >
+		<p:column width="5%;" >
 			<f:facet name="header">	
 				#{lbl['lbl.bpm.doc.no']}				
 			</f:facet>
@@ -154,13 +154,13 @@
 			<!-- end updated for #24968 -->
 		</p:column>
 		
-		<p:column width="20%;" style="white-space:normal;" sortBy="#{tasks.docType}">
+		<p:column width="20%;" style="white-space:normal;">
 			<f:facet name="header">
 				#{lbl['lbl.bpm.doc.type']}
 			</f:facet>
 			#{bpmTasklistBackingBean.getParameterDesc(ParameterTypeConst.documentTypes,tasks.docType)}				
 		</p:column>
-		<p:column style="white-space:normal;" sortBy="#{tasks.title}">
+		<p:column style="white-space:normal;">
 			<f:facet name="header">
 				#{lbl['lbl.bpm.description']}
 			</f:facet>
@@ -175,19 +175,23 @@
 				<f:param name="docNo" value="#{tasks.docNumber}" />
 			</p:commandLink>
 		</p:column>
-		<p:column width="10%" sortBy="#{tasks.createDate}">
-			<f:facet name="header">
+		<p:column width="10%">
+			<f:facet name="header" >
 					#{lbl['lbl.bpm.created.date']}
-				</f:facet>
+			<p:graphicImage id="createdDateId" value="/css/images/design/tooltips.png" />
+			<p:tooltip for="createdDateId" value="#{lbl['lbl.bpm.created.date.tooltip']}" position="top"/>
+			</f:facet>
 			<h:outputText value="#{tasks.createDate.time}">
 				<f:convertDateTime
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 			</h:outputText>
 		</p:column>
-		<p:column rendered="#{bpmTasklistBackingBean.managedBean.roleType eq 'PO'}" width="10%" sortBy="#{tasks.receivedDate}">
+		<p:column rendered="#{bpmTasklistBackingBean.managedBean.roleType eq 'PO'}" width="10%">
 			<f:facet name="header">
 					#{lbl['lbl.bpm.documentReceivedDate']}
-				</f:facet>
+			<p:graphicImage id="receivedDateId" value="/css/images/design/tooltips.png" />
+			<p:tooltip for="receivedDateId" value="#{lbl['lbl.bpm.received.date.tooltip']}" position="top"/>				
+			</f:facet>
 			<h:outputText value="#{tasks.receivedDate.time}">
 				<f:convertDateTime
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
@@ -212,7 +216,7 @@
 			<!-- #12483 - END -->
 		</p:column>
 		<!--#29810-START-->
-		<p:column width="18%;" style="white-space:normal;" sortBy="#{tasks.docStatus}">
+		<p:column width="18%;" style="white-space:normal;">
 			<f:facet name="header">
 				#{lbl['lbl.bpm.status']}
 			</f:facet>				

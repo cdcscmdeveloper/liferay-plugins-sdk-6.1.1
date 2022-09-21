@@ -806,6 +806,13 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		this.getManagedBean().setSelectedStatusDescAdvance(new PmStatusDesc());
 		this.getManagedBean().setDocStatusGroup(0);
 		this.getManagedBean().setDocTypeGroup("");		
+		//29810 - start
+		this.getManagedBean().setSort_by("CREATEDATE");
+		this.getManagedBean().setAscending(false);
+		this.getManagedBean().setSort_byGroup("CREATEDATE");
+		this.getManagedBean().setAscendingGroup(false);
+		this.getManagedBean().setFromSearchBttn(true);
+		//29810 - end
 		//this.getManagedBean().setAssignment("ALL");
 
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
@@ -1210,12 +1217,29 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	} 
 	
 	public void resetDate(String type){
+		this.getManagedBean().setSelectedStatusDesc(new PmStatusDesc());
+		this.getManagedBean().setSelectedStatusDescAdvance(new PmStatusDesc());	
 		if(type.equalsIgnoreCase("normal")){
 			this.getManagedBean().setMyTaskCreatedDateFrom(null);
 			this.getManagedBean().setMyTaskCreatedDateTo(null);	
+			this.getManagedBean().setDocStatusList(null);
+			this.getManagedBean().setDocStatus(0);
+			this.getManagedBean().setViewBy("");
+			this.getManagedBean().setDocNo("");
+			this.getManagedBean().setTaskDesc("");
+			this.getManagedBean().setSort_by("CREATEDATE");
+			this.getManagedBean().setAscending(false);
 		}else if(type.equalsIgnoreCase("advance")){
 			this.getManagedBean().setGroupTaskCreatedDateFrom(null);
 			this.getManagedBean().setGroupTaskCreatedDateTo(null);
+			this.getManagedBean().setDocStatusListGroup(null);
+			this.getManagedBean().setDocStatusGroup(0);
+			this.getManagedBean().setDocTypeGroup("");
+			this.getManagedBean().setDocNoGroup("");
+			this.getManagedBean().setTaskDescGroup("");
+			this.getManagedBean().setViewByGroup("");
+			this.getManagedBean().setSort_byGroup("CREATEDATE");
+			this.getManagedBean().setAscendingGroup(false);
 		}
 	}
 	//29810 - end
