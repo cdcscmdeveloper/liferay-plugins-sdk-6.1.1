@@ -970,6 +970,11 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_REMARK = "PREMARK";
 	public static final String PARAM_RECOM = "PRECOM";
 	public static final String PARAM_REPORT_OUTPUT_FORMAT = "desformat";
+	//Bug #33714 - start
+	public static final String PARAM_REPORT_BUFFERS = "buffers"; 
+	public static final int BUFFER_SIZE = 1024; 
+	//Bug #33714 - end
+
 	//Enhancement 29418 - shaqimi
 	public static final String PARAM_CONTRACT_VER_ID = "PCONTRECTVERID";
 	public static final String PARAM_FD_CONTRACT_VER_ID = "PFDCONTRECTVERID";
