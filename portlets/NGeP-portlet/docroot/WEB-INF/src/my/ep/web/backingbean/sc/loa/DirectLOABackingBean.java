@@ -8589,17 +8589,31 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			scLoa.setQtType(resDTO.getPmParameter());
 			
 			// #25726 START
-
-			Boolean isNonPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode()
-					.getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED))
-					|| (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
-							.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
-			Boolean isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa()
-					.getQtType().getParameterType())
-					&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(this.getManagedBean().getScLoa()
-							.getQtType().getParameterCode());
-			Boolean isOneOff = this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode()
-					.getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+			Boolean isNonPeriodic = false;
+			Boolean isOneOff = false;
+			Boolean isPK7 = false;
+			
+			if(null != this.getManagedBean().getScLoa()){
+				if(null != this.getManagedBean().getScLoa().getScLoiLoa()){
+					if(null != this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode()){
+						isNonPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode()
+								.getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED))
+								|| (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
+										.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
+						isOneOff = this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode()
+								.getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+					}
+				}
+			}
+			
+			if(null != this.getManagedBean().getScLoa()){
+				if(null != this.getManagedBean().getScLoa().getQtType()){
+					isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa()
+							.getQtType().getParameterType())
+							&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(this.getManagedBean().getScLoa()
+									.getQtType().getParameterCode());
+				}
+			}			
 
 			// To check the contract amount
 			if (over500K(scLoa)) {
