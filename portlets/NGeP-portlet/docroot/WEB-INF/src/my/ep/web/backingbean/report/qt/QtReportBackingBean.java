@@ -13,6 +13,7 @@ package my.ep.web.backingbean.report.qt;
 
 import java.math.BigDecimal;
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1124,6 +1125,25 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 
 		}
 		return statusList;
+	}
+	
+	/*
+	 * set to be early 2022
+	 */
+	public Date handleMinDateForEPV() throws ParseException {
+		
+		String date = "Sat Jan 01 00:00:00 SGT 2022";
+		Date earlyDate = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy").parse(date);
+		
+		return earlyDate;
+	}
+	
+	/*
+	 * set to be today
+	 */
+	public Date handleMaxDateForEPV() throws ParseException {
+		
+		return new Date();
 	}
 	// #21692 - end
 }
