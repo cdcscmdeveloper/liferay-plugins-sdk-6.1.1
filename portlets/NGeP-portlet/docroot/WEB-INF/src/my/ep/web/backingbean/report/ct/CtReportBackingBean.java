@@ -463,52 +463,57 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	public void generateReportFactoring(LinkedHashMap<String, String> params) {
 		log.debug("generateReport");
 		
-		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-						IRPTRequestSO.class);
-		params.put(ReportConst.PARAM_KEY_REPORT, getManagedBean()
-				.getReportName());
-		params.put(ReportConst.PARAM_REPORT_ID, getManagedBean()
-				.getReportCode());
-		params.put(ReportConst.PARAM_USER_ID, getFacesScopes()
-				.getUserSessionBean().getUserId().toString());
+		if(this.getManagedBean().getFromDate().before(this.getManagedBean().getToDate())){
+			IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IRPTRequestSO.class);
+			params.put(ReportConst.PARAM_KEY_REPORT, getManagedBean()
+					.getReportName());
+			params.put(ReportConst.PARAM_REPORT_ID, getManagedBean()
+					.getReportCode());
+			params.put(ReportConst.PARAM_USER_ID, getFacesScopes()
+					.getUserSessionBean().getUserId().toString());
 
-		RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
-		reqDTO.setDefaultOutputType(this.getManagedBean()
-				.getDefaultOutputType());
-		reqDTO.setTempAccess(this.getManagedBean().isTempAccess());
-		reqDTO.setParametersMap(params);
-		
-		try {
-			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
+			RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
+			reqDTO.setDefaultOutputType(this.getManagedBean()
+					.getDefaultOutputType());
+			reqDTO.setTempAccess(this.getManagedBean().isTempAccess());
+			reqDTO.setParametersMap(params);
 			
-			//R5 #14076 start
-			RPTRequestDtlReqDTO restDtlDTO = new RPTRequestDtlReqDTO();
-			restDtlDTO.getRptRequestDtl().setRequestId(resDTO.getRequestId());
-			
-			if(params.get(CtReportConst.PARAM_KEY_CONTRACT_NO) != null){
-				restDtlDTO.getRptRequestDtl().setDocumentNo01(params.get(CtReportConst.PARAM_KEY_CONTRACT_NO));
-			}
-			if(params.get(CtReportConst.PARAM_KEY_PHYSICAL_CONTRACT_NO) != null){
-				restDtlDTO.getRptRequestDtl().setDocumentNo02(params.get(CtReportConst.PARAM_KEY_PHYSICAL_CONTRACT_NO));
-			}
-			if(params.get(CtReportConst.PARAM_KEY_CIRCULAR_NO) != null){
-				restDtlDTO.getRptRequestDtl().setDocumentNo03(params.get(CtReportConst.PARAM_KEY_CIRCULAR_NO));
-			}
+			try {
+				RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
 				
-			if(restDtlDTO.getRptRequestDtl().getDocumentNo01() != null || restDtlDTO.getRptRequestDtl().getDocumentNo02() != null || restDtlDTO.getRptRequestDtl().getDocumentNo03() != null ){
-				addRptRequestDetail(restDtlDTO);	
+				//R5 #14076 start
+				RPTRequestDtlReqDTO restDtlDTO = new RPTRequestDtlReqDTO();
+				restDtlDTO.getRptRequestDtl().setRequestId(resDTO.getRequestId());
+				
+				if(params.get(CtReportConst.PARAM_KEY_CONTRACT_NO) != null){
+					restDtlDTO.getRptRequestDtl().setDocumentNo01(params.get(CtReportConst.PARAM_KEY_CONTRACT_NO));
+				}
+				if(params.get(CtReportConst.PARAM_KEY_PHYSICAL_CONTRACT_NO) != null){
+					restDtlDTO.getRptRequestDtl().setDocumentNo02(params.get(CtReportConst.PARAM_KEY_PHYSICAL_CONTRACT_NO));
+				}
+				if(params.get(CtReportConst.PARAM_KEY_CIRCULAR_NO) != null){
+					restDtlDTO.getRptRequestDtl().setDocumentNo03(params.get(CtReportConst.PARAM_KEY_CIRCULAR_NO));
+				}
+					
+				if(restDtlDTO.getRptRequestDtl().getDocumentNo01() != null || restDtlDTO.getRptRequestDtl().getDocumentNo02() != null || restDtlDTO.getRptRequestDtl().getDocumentNo03() != null ){
+					addRptRequestDetail(restDtlDTO);	
+				}
+				//R5 #14076 end
+				
+				getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId().toString() : "");
+				RequestContext.getCurrentInstance().execute(
+						"rptConfirmationDlg.show()");
+				
+				log.debug("Report URL: "+resDTO.getReportUrl());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			//R5 #14076 end
-			
-			getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId().toString() : "");
-			RequestContext.getCurrentInstance().execute(
-					"rptConfirmationDlg.show()");
-			
-			log.debug("Report URL: "+resDTO.getReportUrl());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} else {
+			FacesContext.getCurrentInstance().validationFailed();
+			throw new EpException(MessageConst.ERROR_775186);
 		}
 	}
 	//#32675 - shaqimi end
