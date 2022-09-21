@@ -25,6 +25,17 @@
 			<!-- 25692 -end- -->
 		</td>
 		</tr>
+		<!-- 29464 -start- -->
+		<c:if
+			test="#{qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.approvalScreen and not empty qTDetailBB.managedBean.qt.childQt}">
+			<tr>
+				<td style="vertical-align: bottom;" align="right"><h:outputText
+						style="float:right;" styleClass="mandatory"
+						value="#{lbl['lbl.sc.qt.republishTo']} #{qTDetailBB.managedBean.qt.childQt.qtNo}" />
+				</td>
+			</tr>
+		</c:if>
+		<!-- 29464 -end- -->
 		<tr>
 		<td align="right">
 			<!-- 25201 -start- -->
