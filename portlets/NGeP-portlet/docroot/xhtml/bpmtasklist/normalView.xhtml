@@ -60,6 +60,19 @@
 			<tr>
 				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.sort.by']} :" /></td>
 				<td width="40%">
+					<c:if test="#{bpmTasklistBackingBean.managedBean.roleType ne 'PO'}">
+					<p:selectOneMenu id="taskListSortBy" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.sort_by}">
+						<f:selectItem itemLabel="" itemValue=""></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.doc.no']}" itemValue="DOCNUMBER"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.doc.type']}" itemValue="DOCTYPE"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.created.date']}" itemValue="CREATEDATE"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.description']}" itemValue="TITLE"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.status']}" itemValue="DOCSTATUS"></f:selectItem>
+						<!-- <f:selectItem itemLabel="Document Receive Date" itemValue="CREATEDATE"></f:selectItem> -->
+					</p:selectOneMenu>
+					</c:if>
+					<c:if test="#{bpmTasklistBackingBean.managedBean.roleType eq 'PO'}">
 					<p:selectOneMenu id="taskListSortBy" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.sort_by}">
 						<f:selectItem itemLabel="" itemValue=""></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
@@ -71,6 +84,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.bpm.received.date']}" itemValue="RECEIVEDDATE"></f:selectItem>
 						<!-- <f:selectItem itemLabel="Document Receive Date" itemValue="CREATEDATE"></f:selectItem> -->
 					</p:selectOneMenu>
+					</c:if>
 				</td>
 				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.order.by']} :"  /></td>
 				<td width="40%">
