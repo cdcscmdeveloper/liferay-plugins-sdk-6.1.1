@@ -251,9 +251,11 @@
 				</ui:param>
 				<ui:remove> #32110 related to #21695 Farid End 30/11/2021</ui:remove>
 				<ui:remove> #32110 related to #21695 Farid Start 30/11/2021</ui:remove>
+				<!-- #33859 - start -->
 				<p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row"
 					value="#{filterList}" 	emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					scrollable1="true" scrollWidth1="#{scrollWidth}">
+					scrollable1="true" scrollWidth1="#{scrollWidth}" style="word-break: break-all">
+				<!-- #33859 - end -->
 					
 					<ui:param name="prevSpecQuestion" value="#{row > 0 ? templateSpecBean.specAnswerList[row-1].tplSpecQuestion : null}" />
 					<ui:param name="question" value="#{tplSpecAnswer.tplSpecQuestion}" />
