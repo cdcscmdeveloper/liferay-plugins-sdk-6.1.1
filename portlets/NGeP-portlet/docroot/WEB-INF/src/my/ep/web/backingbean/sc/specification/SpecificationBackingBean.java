@@ -1371,28 +1371,7 @@ public class SpecificationBackingBean extends
 
 		}
 // #29732 Start - reOpen Fix
-		if (activeIndex == 1
-				&& (this.getManagedBean()
-						.getQt()
-						.getQtStatus()
-						.getStatusId()
-						.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) || this
-						.getManagedBean()
-						.getQt()
-						.getQtStatus()
-						.getStatusId()
-						.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
-				|| (this.getManagedBean().getSpecMaintenanceScreen()
-						.equals(QTConstants.SPEC_MAINTENANCE) && this
-						.getManagedBean().getQt().getQtStatus().getStatusId()
-						.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)))) {
-			this.getManagedBean().setActiveIndex(activeIndex);
-			String changedCatCodeList = checkCatCodeChange();
-			if (!changedCatCodeList.isEmpty()) {
-				throw new EpException(MessageConst.WARN_297320,
-						new String[] { changedCatCodeList });
-			}
-		}
+		if (activeIndex == 1 && this.getManagedBean().isTechnicalOtherCheckList()) checkCategoryCodeChanged(); //1873 note 164
 // #29732 End - reOpen Fix
 		if (getManagedBean().getTempIndex() < activeIndex) {
 			getManagedBean().setTempIndex(activeIndex);
@@ -1939,8 +1918,10 @@ public class SpecificationBackingBean extends
 		}
 
 		try {
-			if (null == this.getManagedBean().getScQtCheckSt2techProposal()
-					|| this.getManagedBean().getScQtCheckSt2techProposal().isEmpty()) {
+			 //1873 note 164 - start
+			if (CollectionUtils.isEmpty(this.getManagedBean().getScQtCheckSt2techProposal()) 
+					&& CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())) {
+			 //1873 note 164 - end
 				List<ScQtCheckList> localcheckList = new ArrayList<ScQtCheckList>();
 				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 				specSo = BusinessDelegate.getInstance().getServiceObject(
@@ -15497,6 +15478,11 @@ if (null != checklist && !checklist.isEmpty()) {
 			checktemplateSpecStatus(this.getManagedBean().getQt());
 			checkFinancialSpecStatus(this.getManagedBean().getQt());
 		}
+		//1873 note 164 - start
+		else if(this.getManagedBean().getActiveIndex() == 1){
+			checkCategoryCodeChanged();
+		}
+		//1873 note 164 - end
 		this.getManagedBean().setActiveIndex(
 				this.getManagedBean().getCheckListYesIndex());
 	}
@@ -19312,6 +19298,11 @@ if(null!=allTechnicalChecklist){
 					checktemplateSpecStatus(this.getManagedBean().getQt());
 					checkFinancialSpecStatus(this.getManagedBean().getQt());
 				}
+				//1873 note 164 - start
+				else if(this.getManagedBean().getActiveIndex() == 1){
+					checkCategoryCodeChanged();
+				}
+				//1873 note 164 - end
 			};	
 			//1873 note 149 end
 			//32204 - end
@@ -19319,6 +19310,28 @@ if(null!=allTechnicalChecklist){
 	}
 	//1873 - end - note 52
 
+	//1873 note 164 - start
+	private void checkCategoryCodeChanged(){
+		PmStatus status = this.getManagedBean().getQt().getQtStatus();
+		Long statusId = status==null? 0L: status.getStatusId();
+		if (Arrays.asList(new Long[] {
+						QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION })
+				.contains(statusId)
+				|| (this.getManagedBean()
+						.getSpecMaintenanceScreen()
+						.equals(QTConstants.SPEC_MAINTENANCE) && QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
+						.equals(statusId))) {
+			String changedCatCodeList = checkCatCodeChange();
+			if (!changedCatCodeList.isEmpty()) {
+				this.getManagedBean().setActiveIndex(this.getManagedBean().getCheckListYesIndex());
+				throw new EpException(MessageConst.WARN_297320,
+						new String[] { changedCatCodeList });
+			}
+		}
+	}
+	//1873 note 164 - end
+	
 	//#25138 Reendorsed - start
 	/**
 	 * create menu model for financial spec zones .
@@ -20681,14 +20694,14 @@ if(null!=allTechnicalChecklist){
 	// #29474 - end
 	
 	//1873 - start - note 74
-	public boolean isMemberChairpersonSpecPreparationTask(){
-		String taskName = this.getManagedBean().getTaskName();
-		if(StringUtils.isEmpty(taskName)) return false;
-		return Arrays.asList(
-				new String[] { SCProcessNameConst.UPDATE_SCORING,
-						SCProcessNameConst.VIEW_SCORING }).contains(taskName);
-	}
-	//1873 - end - note 74
+		public boolean isMemberChairpersonSpecPreparationTask(){
+			String taskName = this.getManagedBean().getTaskName();
+			if(StringUtils.isEmpty(taskName)) return false;
+			return Arrays.asList(
+					new String[] { SCProcessNameConst.UPDATE_SCORING,
+							SCProcessNameConst.VIEW_SCORING }).contains(taskName);
+		}
+		//1873 - end - note 74
 	
 	//29464 - note 90 - start
 	public boolean evaluateRepublishFromDisplay(Long status){
