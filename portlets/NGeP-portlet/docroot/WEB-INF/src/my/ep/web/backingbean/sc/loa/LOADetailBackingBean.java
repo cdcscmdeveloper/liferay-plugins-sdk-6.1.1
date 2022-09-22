@@ -2932,6 +2932,29 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 							.equals(statusId)) {
 						validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
+						// #29006 - start  - Bug #33903 start					
+						if (CollectionUtils.isNotEmpty(scLoa.getScLoaRemarks())) {
+							ScLoaRemark removeRemark = new ScLoaRemark();
+							for (ScLoaRemark scLoaRemark : scLoa.getScLoaRemarks()) {
+								// If scLoaRemark.getRemark() is null or empty
+								// String
+								if (StringUtils.isEmpty(scLoaRemark.getRemark())) {
+									// Set SPACE String for each in
+									// scLoa.getScLoaRemarks() so that
+									// system will not encounter
+									// "cannot insert null into" error
+									// for ScLoaRemark.remark property
+									// Set space when remark Id is not null only
+									if (null == scLoaRemark.getRemarkId()){
+										removeRemark = scLoaRemark;
+									}else{
+										scLoaRemark.setRemark(" ");
+									}
+								}
+							}
+							scLoa.getScLoaRemarks().remove(removeRemark);
+						}
+						// #29006 - end  - Bug #33903 end
 					}
 					parseLOADetails(scLoa, outcome);
 					validateLOADetails(scLoa, outcome);
