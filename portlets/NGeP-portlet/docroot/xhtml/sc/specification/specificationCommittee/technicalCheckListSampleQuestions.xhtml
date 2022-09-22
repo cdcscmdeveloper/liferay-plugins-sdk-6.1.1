@@ -60,7 +60,7 @@
 					
 				</table>
          <p:spacer height="10"></p:spacer>
-         <ui:param name="isRenderZone" value="#{specificationBackingBean.renderManSpec(specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.tplSpecQuestions)}" />
+         <ui:param name="isManSpec" value="#{specificationBackingBean.renderManSpec(specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.tplSpecQuestions)}" /><!-- #29187 Added Vinod -->
          	<p:dataTable var="technicalSampleQuestion"
 			id="technicalSampleTemplateQuestionsTableId" rows="50"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -90,7 +90,7 @@
 			    	<p:column colspan="2" headerText="#{lbl['lbl.sc.qt.sampel']}" style="width:15%; text-align:center;" />
 			
 				<p:column rowspan="2" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}" style="width:10%; text-align:center;" />
-				<p:column rowspan="2" rendered="#{isRenderZone}" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification']}" style="width:10%; text-align:center;" /> <!-- #29187 Added Vinod -->
+				<p:column rowspan="2" rendered="#{isManSpec}" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification']}" style="width:10%; text-align:center;" /> <!-- #29187 Added Vinod -->
 			</p:row>
 			 	<p:row>
 		             
@@ -196,12 +196,12 @@
 			</p:column>
 			
 			<!-- #29187 Start Vinod -->
-			<p:column rendered="#{isRenderZone}">
+			<p:column rendered="#{isManSpec}">
 				<h:panelGroup>
-				<h:selectOneMenu id="manSpec" rendered="#{technicalSampleQuestion.mandatorySpec}" value="#{technicalSampleQuestion.mandatorySpec}" disabled="true">
+				<h:selectOneMenu id="manSpec" rendered="#{technicalSampleQuestion.mandatorySpecForSample}" value="#{technicalSampleQuestion.mandatorySpecForSample}" disabled="true">
 					<f:selectItems value="#{specificationBackingBean.getMandatorySpecDropdownValues()}" />
 				</h:selectOneMenu>
-				<ac:iconTooltip rendered="#{technicalSampleQuestion.mandatorySpec}" value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.tooltip']}" />
+				<ac:iconTooltip rendered="#{technicalSampleQuestion.mandatorySpecForSample}" value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.tooltip']}" />
 				</h:panelGroup>
 			</p:column>
 			<!-- #29187 End Vinod -->
