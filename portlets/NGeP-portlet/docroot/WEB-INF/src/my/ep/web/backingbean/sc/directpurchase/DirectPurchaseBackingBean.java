@@ -19,6 +19,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 
+import my.ep.bean.application.NgepApplicationBean;
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -649,9 +650,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			reset(false); //#25396
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)){
 			PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
+			pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE); //9133 - reopen 166
 			pidBackingBean.viewPurchaseInDefault(docId);
 			pidBackingBean.getManagedBean().setDpObj(dpObj);
-			pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
+			//pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE); //9133 - reopen 166
 
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_SIMPLE_QUOTE)){
 			SimpleQuoteBackingBean sqBackingBean = new SimpleQuoteBackingBean();
@@ -1214,9 +1216,11 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		
 		Boolean validDate = true;	
 			
-		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
-				.getProperty("sqTimeValidity"));	
-			
+		// Refactor: #12177 - Start
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();	
+		log.info("Refactor 12177 (DirectPurchaseBackingBean) : getSqTimeValidity - " + sqTimeValidity);
+		// Refactor: #12177 - End
+		
 		if(sqEndDate != null){
 				Date currentDate = new Date();
 				Date closingDate = sqEndDate;
