@@ -61,29 +61,45 @@
 					</h:panelGroup>
 					
 				</p:dialog>
-				
-			
-		<!--#33914 Start - QT Maintenance pop up message related #9019 and overwrite reopen #note-254-->
+	  	
+		
+	    <!--#33914 Start - QT Maintenance pop up message related #9019 and overwrite reopen #note-254-->
 		<p:outputPanel layout="block" id="confirmBlockPanel">
 			<p:confirmDialog message="#{lbl['lbl.sc.qt.dialog.cofirm.clone.msg']}"
-				header="#{lbl['lbl.cm.dialog.cofirm.header']}"
+				header="#{lbl['lbl.cm.dialog.cofirm.header']}" width="700" height="40"
 				widgetVar="confirmationClone">
+				
 				<h:panelGroup id="displayloadingconfirm">
-					<p:blockUI block="confirmBlockPanel" widgetVar="blockWidgetCloneConfirm">
+					<p:blockUI block="hideforloading" widgetVar="blockWidgetCloneConfirm">
 						<p:graphicImage value="/css/images/ajax-loader.gif" />
 					</p:blockUI>
+				</h:panelGroup>	
 				
-					<p:commandButton id="conf"
-						value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-						actionListener="#{qtMultipleCloneBackingBean.addToClone()}"
-						update="@form" onstart="blockWidgetCloneConfirm.show()" 
-						oncomplete="blockWidgetCloneConfirm.hide();confirmationClone.hide()"/>
-						<!--#9019 01082022 Reopen Add loading confirmDialogId,onstart,oncomplete #note-254-->
-					<p:commandButton id="decline"
-						value="#{lbl['lbl.cm.dialog.cofirm.no']}"
-						onclick="confirmationClone.hide()" />
-					<h:inputHidden id="rowIndex"></h:inputHidden>
-				 </h:panelGroup>	
+				<p:panelGrid id="pgCmdbutton" style="width: 100%;border-style: hidden;">
+				    <p:row>
+				        <p:column style="width: 30%;height: 95px;text-align: left;border-style: none;">
+				        </p:column>
+				        <p:column style="width: 40%;height: 95px;text-align: center;border-style: none;">
+				        <p:commandButton id="hideforloading"
+							value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+							style="background-color: #FFFFFF !important;color: #FFFFFF !important;border-style: none;"/>
+				        </p:column>
+				        <p:column style="width: 30%;height: 95px;text-align: right;border-style: none;">
+				   			<p:commandButton id="conf"
+								value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+								actionListener="#{qtMultipleCloneBackingBean.addToClone()}"
+								update="@form" onstart="blockWidgetCloneConfirm.show()" 
+								style="top: 30% !important;"
+								oncomplete="blockWidgetCloneConfirm.hide();confirmationClone.hide()"/>
+								<!--#9019 01082022 Reopen Add loading confirmDialogId,onstart,oncomplete #note-254-->
+							<p:commandButton id="decline"
+								value="#{lbl['lbl.cm.dialog.cofirm.no']}"
+								onclick="confirmationClone.hide()" 
+								style="top: 30% !important;"/>
+							<h:inputHidden id="rowIndex"></h:inputHidden>
+				        </p:column>
+				    </p:row>
+				</p:panelGrid>
 			</p:confirmDialog>
 		</p:outputPanel>
 		<!--#33914 End - QT Maintenance pop up message related #9019 and overwrite reopen #note-254-->
