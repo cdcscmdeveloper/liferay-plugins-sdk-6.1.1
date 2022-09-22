@@ -149,6 +149,9 @@
             <portlet id="BusinessOwner"></portlet>
             <portlet id="ReviewPurchaseInquiry"></portlet>
 		    <portlet id="ReviewPurchaseInDefault"></portlet>
+			<!-- 28865 start- -->
+		    <portlet id="ResponsePurchaseInDefault"></portlet>
+			<!-- 28865 end- -->
 		    <portlet id="ReviewSimpleQuote"></portlet>
 		    <portlet id="ReviewSupplierView"></portlet>
 		    <portlet id="scRequestNoteSearch" />
