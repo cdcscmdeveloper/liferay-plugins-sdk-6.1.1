@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import org.apache.commons.lang.StringUtils; //#28865
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -74,8 +73,8 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
-import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRemark; //#31603
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus; //#31603
 import my.ep.persistence.entity.sc.directpurchase.ScPIDApprovalUser;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
@@ -99,6 +98,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils; //#28865
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
@@ -1767,7 +1767,7 @@ public class PurchaseInDefaultBackingBean extends
 	/**
 	 * Pre render page navigation to purchase in default
 	 */
-	public void preRenderResponseView(){ 
+	public void preRenderResponseView(){
 		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
 		
 		// Purchase In Default
@@ -1851,6 +1851,7 @@ public class PurchaseInDefaultBackingBean extends
 			for (ScPIDRemark remark : remarks) {
 				if(remark.getCreatedBy().equals(facesScopes.getUserSessionBean().getUserId()))
 				{
+					remark.setEditable(true); //#28865 - minor fixing 22/09/2022
 					supScPIDRemarks.add(remark);
 				}
 				if(!StringUtils.isEmpty(remark.getRemark())){
@@ -2210,6 +2211,7 @@ public class PurchaseInDefaultBackingBean extends
 		purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 		PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
+		List <ScPIDRemark> deleteRemarks = new ArrayList<ScPIDRemark> (); //#28865 - minor fixing 22/09/2022
 		try {
 			for (ScPIDRemark remark : getManagedBean().getSuppRemarks()) {
 				if (remark.getRemark() != null && !remark.getRemark().equalsIgnoreCase("")) {
@@ -2228,7 +2230,17 @@ public class PurchaseInDefaultBackingBean extends
 					purchaseInDefaultSO.updateRemark(reqDTO);
 					break;
 				}
+				//#28865 - minor fixing 22/09/2022-start
+				else{
+					if (remark.getRemarkId() != null && getManagedBean().getSuppRemarkId() != null) {
+						deleteRemarks.add(remark);
+					}
+				}//#28865 - minor fixing 22/09/2022-end
 			}
+			//#28865 - minor fixing 22/09/2022 -start
+			if(CollectionUtils.isNotEmpty(deleteRemarks)){
+				purchaseInDefaultSO.deleteListOfRemark(deleteRemarks);
+			}//#28865 - minor fixing 22/09/2022 -end
 
 		} catch (NullPointerException e) {
 			log.info(e.getStackTrace());
