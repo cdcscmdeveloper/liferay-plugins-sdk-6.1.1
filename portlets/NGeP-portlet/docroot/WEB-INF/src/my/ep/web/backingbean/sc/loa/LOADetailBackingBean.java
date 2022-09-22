@@ -28,6 +28,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.bean.application.NgepApplicationBean; //#12177 Refactoe
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -7310,8 +7311,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
 		ScQuote scQuote = getManagedBean().getScLoa().getScQuote();
 
-		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
-				.getProperty("sqTimeValidity"));
+		// Refactor: #12177 - Start
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		log.info("Refactor 12177 (LOADetailBackingBean) : getSqTimeValidity - " + sqTimeValidity);
+		// Refactor: #12177 - End
 		
 		if(scQuote != null){
 			
