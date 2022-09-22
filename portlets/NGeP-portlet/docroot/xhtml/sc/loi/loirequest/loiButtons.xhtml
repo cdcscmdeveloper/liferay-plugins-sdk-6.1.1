@@ -55,6 +55,12 @@
 					supplierDisagreeEPV}"
 					action="#{lOIDetailBackingBean.submitAction}" process="@form"
 					update="@form" /><ui:remove>#21692</ui:remove>
+					
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					action="#{lOIDetailBackingBean.updateBpmTaskAction('REJECT')}"
+					rendered="true"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+					process="@form" update="@form" />
 
 				<c:choose>
 					<c:when test="#{!empty lOIDetailBackingBean.managedBean.taskId}">
