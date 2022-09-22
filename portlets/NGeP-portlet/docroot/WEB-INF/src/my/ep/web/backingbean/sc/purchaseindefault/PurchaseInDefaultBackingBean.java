@@ -1854,6 +1854,7 @@ public class PurchaseInDefaultBackingBean extends
 			for (ScPIDRemark remark : remarks) {
 				if(remark.getCreatedBy().equals(facesScopes.getUserSessionBean().getUserId()))
 				{
+					remark.setEditable(true); //#28865 - minor fixing 22/09/2022
 					supScPIDRemarks.add(remark);
 				}
 				if(!StringUtils.isEmpty(remark.getRemark())){
@@ -2213,6 +2214,7 @@ public class PurchaseInDefaultBackingBean extends
 		purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 		PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
+		List <ScPIDRemark> deleteRemarks = new ArrayList<ScPIDRemark> (); //#28865 - minor fixing 22/09/2022
 		try {
 			for (ScPIDRemark remark : getManagedBean().getSuppRemarks()) {
 				if (remark.getRemark() != null && !remark.getRemark().equalsIgnoreCase("")) {
@@ -2231,7 +2233,17 @@ public class PurchaseInDefaultBackingBean extends
 					purchaseInDefaultSO.updateRemark(reqDTO);
 					break;
 				}
+				//#28865 - minor fixing 22/09/2022-start
+				else{
+					if (remark.getRemarkId() != null && getManagedBean().getSuppRemarkId() != null) {
+						deleteRemarks.add(remark);
+					}
+				}//#28865 - minor fixing 22/09/2022-end
 			}
+			//#28865 - minor fixing 22/09/2022 -start
+			if(CollectionUtils.isNotEmpty(deleteRemarks)){
+				purchaseInDefaultSO.deleteListOfRemark(deleteRemarks);
+			}//#28865 - minor fixing 22/09/2022 -end
 
 		} catch (NullPointerException e) {
 			log.info(e.getStackTrace());
