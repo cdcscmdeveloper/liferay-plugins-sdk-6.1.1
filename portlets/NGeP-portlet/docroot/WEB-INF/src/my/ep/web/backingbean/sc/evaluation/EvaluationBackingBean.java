@@ -2472,13 +2472,18 @@ public void saveComplianceSample() {
 				} else if (this.getManagedBean().getScQt()
 						.isTechEvaluationReq()) {
 					//#25138 - 040621 - start
+					//Bug #34017 - Start
+					//* suspected below condition for else is for WIP*/
 					if(this.getManagedBean().getScQt().isPartial()){
+						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM); 
+					}else if(!this.getManagedBean().getScQt().isPartial()){
 						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM); 
 					}
 					else{
 						evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 					}
 					//#25138 - 040621 - end
+					// Bug #34017 - END
 				}
 			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
@@ -2517,40 +2522,61 @@ public void saveComplianceSample() {
 					.getCheckListResultBean().getResultList());
 			//#25138 - one item only - end
 			
+			//34017 related to #25138 - start 
 			//#33178 related to #21695 Start	
-			if(!this.getManagedBean().getScQt().isZonal() && this.getManagedBean().getScQt().isPartial()){
-				int checkcompare = evaluationSO.checkqualifiedSuppDisableTecPkgTab(reqDTO);
-				if(checkcompare > 0){
-					//supplier not qualified by package
-					//if there is no supplier qualified to evaluate by package --> disable tab package evaluation
-					this.getManagedBean().setNoSupplierPackageExist(true);
+			if(this.getManagedBean().getScQt().isPartial()){
+				if(!this.getManagedBean().getScQt().isZonal()){
+					int checkcompare = evaluationSO.checkqualifiedSuppDisableTecPkgTab(reqDTO);
+					if(checkcompare > 0){
+						//supplier not qualified by package
+						//if there is no supplier qualified to evaluate by package --> disable tab package evaluation
+						this.getManagedBean().setNoSupplierPackageExist(true);
+					}
+					else if (checkcompare < 0){
+						//supplier qualified by package
+						//if there is supplier qualified to evaluate by package --> enable tab package evaluation
+						this.getManagedBean().setNoSupplierPackageExist(false);
+						// #21695
+						// no need checking if there is supplier pass by package, but not pass by item. its consider have supplier
+						resDTO.setCheckQualifiedSuppliers(false);
+					}
+					
+				}else{
+					int checkcompare = evaluationSO.checkqualifiedSuppDisableTecPkgTabZone(reqDTO);
+					if(checkcompare > 0){
+						//supplier not qualified by package
+						//if there is no supplier qualified to evaluate by package --> disable tab package evaluation
+						this.getManagedBean().setNoSupplierPackageExist(true);
+					}
+					else if (checkcompare < 0){
+						//supplier qualified by package
+						//if there is supplier qualified to evaluate by package --> enable tab package evaluation
+						this.getManagedBean().setNoSupplierPackageExist(false);
+						// #21695
+						// no need checking if there is supplier pass by package, but not pass by item. its consider have supplier
+						resDTO.setCheckQualifiedSuppliers(false);
+					}
+					
 				}
-				else if (checkcompare < 0){
-					//supplier qualified by package
-					//if there is supplier qualified to evaluate by package --> enable tab package evaluation
-					this.getManagedBean().setNoSupplierPackageExist(false);
-					// #21695
-					// no need checking if there is supplier pass by package, but not pass by item. its consider have supplier
-					resDTO.setCheckQualifiedSuppliers(false);
-				}
-				
-			}else if(this.getManagedBean().getScQt().isZonal() && this.getManagedBean().getScQt().isPartial()){
-				int checkcompare = evaluationSO.checkqualifiedSuppDisableTecPkgTabZone(reqDTO);
-				if(checkcompare > 0){
-					//supplier not qualified by package
-					//if there is no supplier qualified to evaluate by package --> disable tab package evaluation
-					this.getManagedBean().setNoSupplierPackageExist(true);
-				}
-				else if (checkcompare < 0){
-					//supplier qualified by package
-					//if there is supplier qualified to evaluate by package --> enable tab package evaluation
-					this.getManagedBean().setNoSupplierPackageExist(false);
-					// #21695
-					// no need checking if there is supplier pass by package, but not pass by item. its consider have supplier
-					resDTO.setCheckQualifiedSuppliers(false);
-				}
-				
+			}else{
+				// this is for non partial zonal and non zonal
+					int checkcompare = evaluationSO.checkqualifiedSuppPackageNonPartial(reqDTO);
+					if(checkcompare > 0){
+						//supplier not qualified by package
+						//if there is no supplier qualified to evaluate by package --> disable tab package evaluation
+						this.getManagedBean().setNoSupplierPackageExist(true);
+					}
+					else if (checkcompare < 0){
+						//supplier qualified by package
+						//if there is supplier qualified to evaluate by package --> enable tab package evaluation
+						this.getManagedBean().setNoSupplierPackageExist(false);
+						// #21695
+						// no need checking if there is supplier pass by package, but not pass by item. its consider have supplier
+						resDTO.setCheckQualifiedSuppliers(false);
+					}
+
 			}
+			//34017 related to #25138 - End 
 			//#33178 related to #21695 End
 			List<ScQtCheckList> localCheckList = new ArrayList<ScQtCheckList>();
 			this.getManagedBean().setCheckQualifiedSuppliers(
@@ -17370,13 +17396,19 @@ private void retriveCommitteeRemarksList(){
 					} else if (this.getManagedBean().getScQt()
 							.isTechEvaluationReq()) {
 						//#25138 - 040621 - start
+						//Bug #34017 - Start
+						//* suspected below condition for else is for WIP*/
 						if(this.getManagedBean().getScQt().isPartial()){
+							evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM); 
+						}else if(!this.getManagedBean().getScQt().isPartial()){
 							evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM); 
 						}
 						else{
 							evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 						}
 						//#25138 - 040621 - end
+						
+						// Bug #34017 - END
 					}
 				} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
