@@ -15,10 +15,11 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
+				<!-- #9133 fixed at disabled below -->
 				<td colspan="3"><p:inputText size="106" id="ctitle"
 						required="true" maxlength="100"
 						label="#{lbl['lbl.sc.direct.purchase.title']}"
-						disabled="#{!isPendingSubmissionStatus}"
+						disabled="#{(!isPendingSubmissionStatus and !isPidPendingRevision) or purchaseInDefaultBackingBean.managedBean.trackingDairyView}"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.title}"
 						style="margin-bottom: 5px;width: 905px;">
 						 <p:ajax event="keyup" />
@@ -207,10 +208,11 @@
 				<td style="width: 200px;"><p:outputLabel
 						value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
+				<!-- #9133 fixed at disabled below -->
 				<td colspan="3"><p:inputText size="106" id="ptitle"
 						required="true" maxlength="100"
 						label="#{lbl['lbl.sc.direct.purchase.title']}"
-						disabled="#{!isPendingSubmissionStatus}"
+						disabled="#{(!isPendingSubmissionStatus and !isPidPendingRevision) or purchaseInDefaultBackingBean.managedBean.trackingDairyView}"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.title}"
 						style="margin-bottom: 5px; width: 860px;">
 						<p:ajax event="keyup" />
@@ -374,7 +376,7 @@
 				value="#{lbl['lbl.sc.purchase.in.default.req.details']}" />
 		</f:facet>
 
-		<h:outputText styleClass="instruction" rendered="#{isPendingSubmissionStatus}"
+		<h:outputText styleClass="instruction" rendered="#{isPendingSubmissionStatus or isPidPendingRevision}"
 			value="#{lbl['lbl.sc.pid.reason.instruction']}">
 		</h:outputText>
 		<h:panelGroup>
@@ -398,10 +400,12 @@
 							value="*" styleClass="mandatory" /></td>
 					<td colspan="3">
 					
-					<TABLE><TR> <TD> <h:panelGroup rendered="#{purchaseInDefaultBackingBean.managedBean.isContractTypeAsMinistry()}">
+					<TABLE><TR> 
+							<!-- #9133 fixed at disabled below -->
+							<TD> <h:panelGroup rendered="#{purchaseInDefaultBackingBean.managedBean.isContractTypeAsMinistry()}">
 							<ac:lov id="ctJustLovId" lovId="CT_PID_REASON"
 								label="#{lbl['lbl.sc.purchase.in.default.just']}"
-								disabled="#{!isPendingSubmissionStatus}"
+								disabled="#{(!isPendingSubmissionStatus and !isPidPendingRevision) or purchaseInDefaultBackingBean.managedBean.trackingDairyView}"
 								postUpdateListener="purchaseInDefaultBackingBean.justificationTypeEvent(purchaseInDefaultBackingBean.managedBean.ctReason.pmReason, purchaseInDefaultBackingBean.managedBean.ctReason.reasonDesc)"
 								headerText="#{lbl['lbl.sc.purchase.in.default.just']}"
 								selectionMode="single"
@@ -412,10 +416,11 @@
 								update="@form" required="true" />
 						</h:panelGroup> 
 						
+						<!-- #9133 fixed at disabled below -->
 						<h:panelGroup rendered="#{!purchaseInDefaultBackingBean.managedBean.isContractTypeAsMinistry()}">
 							<ac:lov id="panelJustLovId" lovId="CT_CIRCULAR_PID_REASON"
 								label="#{lbl['lbl.sc.purchase.in.default.just']}"
-								disabled="#{!isPendingSubmissionStatus}"
+								disabled="#{(!isPendingSubmissionStatus and !isPidPendingRevision) or purchaseInDefaultBackingBean.managedBean.trackingDairyView}"
 								postUpdateListener="purchaseInDefaultBackingBean.justificationTypeEvent(purchaseInDefaultBackingBean.managedBean.panelReason.pmReason, purchaseInDefaultBackingBean.managedBean.panelReason.reasonDesc)"
 								headerText="#{lbl['lbl.sc.purchase.in.default.just']}"
 								selectionMode="single"
@@ -455,9 +460,10 @@
 					<td>
 						<table>
 							<tr>
+								<!-- #9133 fixed at disabled below -->
 								<td><p:selectOneMenu id="methodId"
 										label="#{lbl['lbl.sc.request.note.header.method']}"
-										disabled="#{!isPendingSubmissionStatus}" required="true"
+										disabled="#{(!isPendingSubmissionStatus and !isPidPendingRevision) or purchaseInDefaultBackingBean.managedBean.trackingDairyView}" required="true"
 										value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.sourceMethod}"
 										style="margin-bottom: 5px;width:340px;">
 										<f:selectItems
@@ -480,13 +486,15 @@
 					<td style="width: 200px;"><p:outputLabel
 							value="#{lbl['lbl.sc.purchase.in.default.order.qty']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="ordqty" maxlength="14"
+					<td>
+						<!-- #9133 fixed at disabled below -->
+						<p:inputText id="ordqty" maxlength="14"
 							required="#{purchaseInDefaultBackingBean.managedBean.visibleOrderQty}"
 							validatorMessage="* Order Qty: must be a decimal number between 0.0 and 9999999999.999"
 							label="#{lbl['lbl.sc.purchase.in.default.order.qty']}"
 							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.quantity}"
 							style="text-align:right;" size="51"
-							disabled="#{!isPendingSubmissionStatus}">
+							disabled="#{(!isPendingSubmissionStatus and !isPidPendingRevision) or purchaseInDefaultBackingBean.managedBean.trackingDairyView}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputText> <p:message id="ordqtyMsg" for="ordqty" display="icon" /></td>
 				</tr>
@@ -495,11 +503,13 @@
 
 		<table style="width: 100%">
 			<tr>
+			<!-- #31603 - start - added rendered -->
 				<td
 					style="vertical-align: top; padding-right: 1px; text-align: right;width: 200px;">
 					<h:outputLabel value="#{lbl['lbl.sc.remark']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" />
+						value="*" styleClass="mandatory" rendered="#{purchaseInDefaultBackingBean.managedBean.pidStatus.statusId eq DPStatusConstants.pidPendingSubmission}" />
 				</td>
+				<!-- #31603 - end -->
 				<td class="TableFieldRight"><ac:scRemarkAndAttachment header=""
 						remarkList="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.remarks}"
 						showRemarkLabel="false" showAttachment="false"
@@ -514,15 +524,17 @@
 					<p:outputLabel value="#{lbl['lbl.txt.attachment']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" />
 				</td>
+				<!-- #9133 fixed at readonly below -->
 				<td class="TableFieldRight"><ac:scSingleFileUploadButton
 						id="pidUploadBtn" popupWidgetVar="pidUploadDlg"
 						attachment="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.scPurchaseInDefaultAttachment}"
-						readonly="#{!isPendingSubmissionStatus}" /> 
+						readonly="#{(!isPendingSubmissionStatus and !isPidPendingRevision) or purchaseInDefaultBackingBean.managedBean.trackingDairyView}" 
+						deleteFileUploadListener="purchaseInDefaultBackingBean.deleteUploadFile"/> 
 					 <ac:scSingleFileUploadPopup
 						widgetVar="pidUploadDlg"
 						fileUploadListener="purchaseInDefaultBackingBean.handleFileUpload"
 						update="@([id$=pidUploadBtn])"
-						readonly="#{!isPendingSubmissionStatus}" 
+						readonly="#{(!isPendingSubmissionStatus and !isPidPendingRevision) or purchaseInDefaultBackingBean.managedBean.trackingDairyView}" 
 						autoUpdateValue="#{purchaseInDefaultBackingBean.managedBean.autoUpdate}"/></td>
 			</tr>
 		</table>
@@ -539,9 +551,10 @@
 				<td style="width: 200px"><h:outputLabel
 						value="#{lbl['lbl.sc.ptj.approver.group']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
+				<!-- #9133 fixed at disabled below -->
 				<td><p:selectOneMenu id="appGroupId"
 						style="width:340px; margin-bottom:5px;"
-						disabled="#{!isPendingSubmissionStatus}" required="true"
+						disabled="#{(!isPendingSubmissionStatus and !isPidPendingRevision) or purchaseInDefaultBackingBean.managedBean.trackingDairyView}" required="true"
 						label="#{lbl['lbl.sc.ptj.approver.group']}"
 						value="#{purchaseInDefaultBackingBean.managedBean.userGroupId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -554,9 +567,10 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.approverName']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
+				<!-- #9133 fixed at disabled below -->
 				<td><p:selectOneMenu id="approverDropdown" required="true"
 						label="#{lbl['lbl.sc.approverName']}"
-						disabled="#{!isPendingSubmissionStatus}"
+						disabled="#{(!isPendingSubmissionStatus and !isPidPendingRevision) or purchaseInDefaultBackingBean.managedBean.trackingDairyView}"
 						value="#{purchaseInDefaultBackingBean.managedBean.selectedApproverId}"
 						style="width:340px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
