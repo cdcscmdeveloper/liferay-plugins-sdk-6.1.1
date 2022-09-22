@@ -695,7 +695,7 @@
 								</tr>
 							</table>
 						</c:when>
-						<c:when	test="#{isDemoEvalDisabled and !isReadOnly}"><ui:remove><!-- 29464 note 42 --></ui:remove>
+						<c:when	test="#{isDemoEvalDisabled}"><ui:remove><!-- 29464 note 42 --></ui:remove>
 							<table>
 								<tr>
 									<td><p:selectOneRadio id="evalType"
