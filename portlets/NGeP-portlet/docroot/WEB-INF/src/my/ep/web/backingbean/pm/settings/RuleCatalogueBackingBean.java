@@ -21,6 +21,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.bean.application.NgepApplicationBean; //#12177 Refactor
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -43,6 +44,7 @@ import my.ep.constant.cm.CmConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
@@ -1227,6 +1229,15 @@ public class RuleCatalogueBackingBean extends
 		List<PmConfigRuleValue> removeList = new ArrayList<PmConfigRuleValue>();
 		PmConfigRule configRuleType = this.getManagedBean()
 				.getSelectedRuleDescType().getRuleType();
+		
+		//#12177 - Start
+		if(configRuleType != null){
+			if(configRuleType.getRuleType().equals(RuleTypeConst.SIMPLE_QUOTE_VALIDITY_PERIOD)){
+				NgepApplicationBean.resetSqTimeValidity();
+			}
+		}
+		//#12177 - End
+		
 		PmConfigRuleValue selectedValueToDel = configRuleType
 				.getConfigRuleValues().get(rowIndex.intValue());
 
@@ -3115,6 +3126,14 @@ public class RuleCatalogueBackingBean extends
 			// log.info("*2****addNewRuleTypeValue*****");
 			// newRuleValue.setCategoryL3Id(this.getManagedBean().getCategoryL3());
 			// }
+			
+			//#12177 - Start
+			if(configRuleType != null){
+				if(configRuleType.getRuleType().equals(RuleTypeConst.SIMPLE_QUOTE_VALIDITY_PERIOD)){
+					NgepApplicationBean.resetSqTimeValidity();
+				}
+			}
+			//#12177 - End
 
 			if (configRuleType.getRangeType() == 1) {
 

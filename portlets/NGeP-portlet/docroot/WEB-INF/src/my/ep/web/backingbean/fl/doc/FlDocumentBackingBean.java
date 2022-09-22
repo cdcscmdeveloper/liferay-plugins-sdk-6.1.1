@@ -20,6 +20,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.bean.application.NgepApplicationBean; // #12177
+
 import org.apache.log4j.Logger;
 // TODO: Auto-generated Javadoc
 
@@ -1462,9 +1464,11 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		
 		Boolean validDate = true;	
 
-		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
-				.getProperty("sqTimeValidity"));
-
+		// Refactor: #12177 - Start
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		log.info("Refactor 12177 (FlDocumentBackingBean) : getSqTimeValidity - " + sqTimeValidity);
+		// Refactor: #12177 - End
+		
 		if(endDate != null){
 			
 			Date currentDate = new Date();

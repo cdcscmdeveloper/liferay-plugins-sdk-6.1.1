@@ -29,6 +29,7 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.bean.application.NgepApplicationBean; //#12177 Refactor
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
@@ -7728,10 +7729,12 @@ public class SimpleQuoteBackingBean extends
 		Boolean validDate = true;	
 		Long currentStatusId = null;
 		ScQuote scQuote = getManagedBean().getScQuote();
-		
-		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
-				.getProperty("sqTimeValidity"));
-		
+
+		// Refactor: #12177 - Start
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		log.info("Refactor 12177 (SimpleQuoteBackingBean) : getSqTimeValidity - " + sqTimeValidity);
+		// Refactor: #12177 - End
+
 		if(scQuote != null){
 			if(scQuote.getCurrentStatus() != null){
 				currentStatusId = scQuote.getCurrentStatus().getPmStatus().getStatusId();
