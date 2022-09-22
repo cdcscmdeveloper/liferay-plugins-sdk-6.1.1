@@ -2055,7 +2055,6 @@ public class SmPersonnelBackingBean extends
 			if (!per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
 				per.getSmAddress().setPmDivision(null);
 			}//#33592-end
-			}
 		}
 		//End 13320
 		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
