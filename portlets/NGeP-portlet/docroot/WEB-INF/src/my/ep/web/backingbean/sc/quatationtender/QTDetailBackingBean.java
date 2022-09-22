@@ -7778,17 +7778,21 @@ public class QTDetailBackingBean extends
         			isCloseQT = true; 
         		}
         							
-        		QuationTenderResDTO resDTOLOI = detailSO.closeQTstatusForLOI(quationTenderReqDTO);
-        							
-        		if(resDTOLOI.isCloseQT() == true) {
-        			isCloseQT = true; 
-        		}
-        							
-        		QuationTenderResDTO resDTOSF = detailSO.closeQTstatusForSF(quationTenderReqDTO);
-        						
-        		if(resDTOSF.isCloseQT() == true) {
-        			isCloseQT = true; 
-        		}
+        		// Bug #33601 - Start
+	       		 /*
+	       		QuationTenderResDTO resDTOLOI = detailSO.closeQTstatusForLOI(quationTenderReqDTO);
+	       							
+	       		if(resDTOLOI.isCloseQT() == true) {
+	       			isCloseQT = true; 
+	       		}
+	       							
+	       		QuationTenderResDTO resDTOSF = detailSO.closeQTstatusForSF(quationTenderReqDTO);
+	       						
+	       		if(resDTOSF.isCloseQT() == true) {
+	       			isCloseQT = true; 
+	       		}
+	       		*/
+	       		//Bug #33601 - End 
 			}
 		}	
 		
