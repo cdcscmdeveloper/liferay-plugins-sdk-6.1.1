@@ -33,7 +33,7 @@
 							value="#{lbl['lbl.btn.add']}" process="@this"
 							styleClass="BtnSpacing"
 							rendered="#{isCommitteeInfoEditable and isCommitteeAppointmentMenuTab}"
-							actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName, qTDetailBB.managedBean.taskName)}"
+							actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
 							oncomplete="newspecificationcommittee.show();"
 							update="@(.scAddMember)" />
 
