@@ -13860,18 +13860,6 @@ if (null != checklist && !checklist.isEmpty()) {
 					.cloneTplSpecMaster(
 							scQtCheckList.getScQtDoc().getTplSpecMaster(),
 							false, true, true, false);//#28784
-			//#29187 Start Vinod
-			for(TplSpecQuestion questionSample : specMaster.getTplSpecQuestions()){
-				for(TplSpecQuestion questionActual : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()){
-					if(questionSample.getTplSpecMaster().getSpecMasterId().equals(questionActual.getTplSpecMaster().getSpecMasterId())
-						&& !questionActual.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)
-						&& questionActual.isMandatorySpec()){
-						questionSample.setMandatorySpec(true);
-					}
-				}
-				
-			}
-			//#29187 Start Vinod
 			specMaster
 					.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
 
@@ -19603,6 +19591,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		this.getManagedBean().setSampleCheckList(templateChecklist);
 		retriveSampleSpecmaster(templateChecklist,null);
 		scoringPopUpAction(null);
+		retriveSampleSpecmasterForMandatorySpecChecking(templateChecklist);//#29187 Added Vinod
 		return "/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleItemView.xhtml?faces-redirect=true";		
 	}
 	/**** 11104-start
@@ -21940,13 +21929,36 @@ if(null!=allTechnicalChecklist){
 	public boolean renderManSpec(List<TplSpecQuestion> tplSpecQuestions){
 		boolean render = false;
 		for(TplSpecQuestion question : tplSpecQuestions){
-			if(question.isMandatorySpec()){
+			if(question.isMandatorySpecForSample()){
 				render=true;
 				break;
 			}
 		}
 		
 		return render;
+	}
+	public void retriveSampleSpecmasterForMandatorySpecChecking(ScQtCheckList templateChecklist){
+		this.getManagedBean().setSampleCheckList(templateChecklist);
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+						ITemplateSpecSO.class);
+		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+		specReqDTO.setSpecMaster(templateChecklist.getScQtDoc().getTplSpecMaster());
+		specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+		TemplateSpecResDTO tmpresDTO = templateSpecSO.getTemplateMaster(specReqDTO);
+		if(null != tmpresDTO.getSpecMaster()
+		   && null!=tmpresDTO.getSpecMaster().getTplSpecQuestions()){
+			for(TplSpecQuestion question : tmpresDTO.getSpecMaster().getTplSpecQuestions()){
+				if(!question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)
+					&& question.isMandatorySpec()){
+					for(TplSpecQuestion questionDisplay : this.getManagedBean().getSampleCheckList().getScQtDoc().getTplSpecMaster().getTplSpecQuestions()){
+						if(question.getParentSpecQuestion().getSpecQuestionId()==questionDisplay.getSpecQuestionId()){
+							questionDisplay.setMandatorySpecForSample(true);
+						}
+					}
+				}
+			}
+		}
 	}
 	/*#29187 End Vinod*/
 }
