@@ -748,7 +748,8 @@ public class SpecificationBackingBean extends
 							.getParameterCode())){
 				if (checkList.getPmStatus().getStatusId()
 						.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
-					count++;
+					this.getManagedBean().setActiveIndex(2);
+					throw new EpException(MessageConst.ERROR_760542);
 				}
 				
 			}
@@ -853,7 +854,7 @@ public class SpecificationBackingBean extends
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
 						demoChecklistAvail = true;
 						if (checkList.getPmStatus().getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
-							throw new EpException(MessageConst.ERROR_760152);
+							throw new EpException(MessageConst.ERROR_760542);
 						}
 					}					
 				}			
@@ -861,7 +862,7 @@ public class SpecificationBackingBean extends
 		
 		if (this.getManagedBean().getQt().isDemoRequired() && ParameterConst.EVALUATION_TYPES_TWO_TIER
 				.equalsIgnoreCase(this.getManagedBean().getQt().getEvaluationType()) && !demoChecklistAvail && technicalCheckList != null) {
-			throw new EpException(MessageConst.ERROR_760152);
+			throw new EpException(MessageConst.ERROR_760542);
 		}//#28784 - End
 		
 		List<ScQtCheckList> financialCheckList = this.getManagedBean()
@@ -20552,7 +20553,8 @@ if(null!=allTechnicalChecklist){
 		List<ScQtCheckList> tempList = new ArrayList<ScQtCheckList>();
 
 		for (ScQtCheckList l : st2technicalproposalList) {
-			if (l.getQtChecklistId() == null) {
+			if (l.getQtChecklistId() == null && l.getDefinationType().getParameterCode()
+					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
 				//throw new EpException(MessageConst.ERROR_760528);
 				saveSpecificationCommitteeDtls(); //#28784 - Remove notification save
 				if (this.getManagedBean().isMaintanceFlow()) {
@@ -21392,7 +21394,7 @@ if(null!=allTechnicalChecklist){
 		SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
 		for(ScQtCheckList e: existingTechChecklist){
 			for(ScQtCheckList f: resDTO.getTechnicalCheckList()){
-				if(e.getQtChecklistId().equals(f.getQtChecklistId())){
+				if(e.getQtChecklistId().equals(f.getQtChecklistId()) && e.getQtScoreWeightage() != null){
 					f.getQtScoreWeightage().setWeightage(e.getQtScoreWeightage().getWeightage());
 				}
 			}

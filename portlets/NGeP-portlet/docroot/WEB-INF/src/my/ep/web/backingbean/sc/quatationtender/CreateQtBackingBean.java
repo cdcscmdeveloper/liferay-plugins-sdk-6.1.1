@@ -3972,8 +3972,8 @@ public class CreateQtBackingBean extends
 				this.getManagedBean().setDemoType(false);
 				this.getManagedBean().getQt().setDemoRequired(false);
 			}
-			QTDetailBackingBean detailBB = new QTDetailBackingBean();
-			detailBB.checkDemoPresentationByStatus();
+//			QTDetailBackingBean detailBB = new QTDetailBackingBean();
+//			detailBB.checkDemoPresentationByStatus();
 		}
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		//#29521 - start
