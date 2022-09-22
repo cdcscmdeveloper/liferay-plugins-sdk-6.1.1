@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.bean.application.NgepApplicationBean; //#12177 Refactor
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
@@ -22,6 +23,7 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO; //#9133
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
@@ -62,6 +64,8 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault; //#9133
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -83,8 +87,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private static Logger logger = Logger.getLogger(BPMTaskListManagedBean.class);
 	
 	// Refactor: To make sqTimeValidity to read only once - Start.
-	private static final Integer SQ_TIME_VALIDITY = Integer.valueOf(EpPropertiesUtils.getInstance()
-			.getProperty("sqTimeValidity"));
+	// Refactor: #12177 - Start
+	/*private static final Integer SQ_TIME_VALIDITY = Integer.valueOf(EpPropertiesUtils.getInstance()
+			.getProperty("sqTimeValidity"));*/
+	// Refactor: #12177 - End
 	// Refactor: To make sqTimeValidity to read only once - End.
 	
 	private List<WorklistItemVO> taskList;
@@ -406,7 +412,16 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private IPrInquirySO getPrInquirySO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
 	}
-
+	
+	//#9133 - start
+	private ScPurchaseInDefault retrivePurchaseInDefaultByPdNo(String pdNo) {
+		return getPurchaseInDefaultSO().retrivePurchaseInDefaultByPdNo(pdNo);
+	}
+	
+	private IPurchaseInDefaultSO getPurchaseInDefaultSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+	}
+	//#9133 - end
 	private int calculateFinalOffSet(int currentPage) {
 		//CR 28766: Static Code Analysis Start
 		//int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
@@ -616,8 +631,17 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 										worklistItemVO.setTitle(scPrInquiry.getTitle());
 									}
 								}
-							// s1 module
-							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
+								// #9133 - start
+								if (worklistItemVO.getDocType().equals(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)) {
+									ScPurchaseInDefault scPurchaseInDefault = retrivePurchaseInDefaultByPdNo(worklistItemVO
+											.getDocNumber());
+									if (scPurchaseInDefault != null) {
+										worklistItemVO.setTitle(scPurchaseInDefault.getTitle());
+									}
+								}
+								// #9133 - end
+								// s1 module
+								if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 							}
 							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
@@ -1268,8 +1292,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		Boolean validDate = true;	
 		
 		// Refactor: To make sqTimeValidity to read only once - Start.
-		/*Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
-				.getProperty("sqTimeValidity"));*/
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		logger.info("Refactor 12177 (BPMTaskListManagedBean) : getSqTimeValidity - " + sqTimeValidity);
 		// Refactor: To make sqTimeValidity to read only once - End.
 		
 		if(sqEndDate != null){
@@ -1279,9 +1303,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				Calendar cal = Calendar.getInstance();
 				cal.clear(); 
 				cal.setTime(closingDate);
-				// Refactor: To make sqTimeValidity to read only once - Start.
-				cal.add(Calendar.DATE, SQ_TIME_VALIDITY); //add 60days to closing/end date
-				// Refactor: To make sqTimeValidity to read only once - Start.
+				// Refactor: #12177 - Start
+				cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
+				// Refactor: #12177 - End
 				setExpirationDate(dateToCalendar(cal.getTime()));
 					
 				if(currentDate.compareTo(cal.getTime()) >= 0){
@@ -1635,6 +1659,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			   }
 	       }
 	       // 12177 - End
+	       //#9133 - start
+	       else if (worklistItemVO.getDocType().equals(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)) {
+				ScPurchaseInDefault scPurchaseInDefault = retrivePurchaseInDefaultByPdNo(worklistItemVO.getDocNumber());
+				if (scPurchaseInDefault != null) {
+					worklistItemVO.setTitle(scPurchaseInDefault.getTitle());
+				}
+	       }
+	       //#9133 - end
 	   	} else {
 	   		logger.info("DOCTYPE AND DOCSTATUSID NULL not meet condition = " + worklistItemVO.getTaskId() 
 	   				+ "| worklistItemVO.getDocType() = " + worklistItemVO.getDocType()
