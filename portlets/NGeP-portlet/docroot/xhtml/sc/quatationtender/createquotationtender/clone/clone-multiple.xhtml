@@ -66,7 +66,7 @@
 	    <!--#33914 Start - QT Maintenance pop up message related #9019 and overwrite reopen #note-254-->
 		<p:outputPanel layout="block" id="confirmBlockPanel">
 			<p:confirmDialog message="#{lbl['lbl.sc.qt.dialog.cofirm.clone.msg']}"
-				header="#{lbl['lbl.cm.dialog.cofirm.header']}" width="700" height="40"
+				header="#{lbl['lbl.cm.dialog.cofirm.header']}" 
 				widgetVar="confirmationClone">
 				
 				<h:panelGroup id="displayloadingconfirm">
@@ -77,14 +77,14 @@
 				
 				<p:panelGrid id="pgCmdbutton" style="width: 100%;border-style: hidden;">
 				    <p:row>
-				        <p:column style="width: 30%;height: 95px;text-align: left;border-style: none;">
+				        <p:column style="width: 30%;height: 95px;text-align: left;border-style: hidden;">
 				        </p:column>
-				        <p:column style="width: 40%;height: 95px;text-align: center;border-style: none;">
+				        <p:column style="width: 40%;height: 95px;text-align: center;border-style: hidden;">
 				        <p:commandButton id="hideforloading"
 							value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 							style="background-color: #FFFFFF !important;color: #FFFFFF !important;border-style: none;"/>
 				        </p:column>
-				        <p:column style="width: 30%;height: 95px;text-align: right;border-style: none;">
+				        <p:column style="width: 30%;height: 95px;text-align: right;border-style: hidden;">
 				   			<p:commandButton id="conf"
 								value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 								actionListener="#{qtMultipleCloneBackingBean.addToClone()}"
