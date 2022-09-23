@@ -16585,11 +16585,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					checktemplateSpecStatus(this.getManagedBean().getQt());
 					checkFinancialSpecStatus(this.getManagedBean().getQt());
 				}
-				// 1873 note 164 - start
-				else if (this.getManagedBean().getActiveIndex() == 1) {
-					checkCategoryCodeChanged();
-				}
-				// 1873 note 164 - end
 			}
 			// 1873 note 149 end
 			// 32204 - end
