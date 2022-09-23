@@ -1059,10 +1059,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		String[] rowHeaderItems = {"Kod PTJ","Nama PTJ","Kaedah Bayaran","Nama Pembekal","Jenis Bayaran"};
 		//Update Func By Include label RM inside column Caj Perkhidmatan & GST Caj Perkhidmatan
 		// #26307 start - change column header
-		// ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh Transaksi",
-		// 		"Tarikh Resit", "No Resit", "Nama Pembekal", "No Permohonan", "No Rujukan", "Jenis Terimaan-Kod",
-		// 		"Jenis Terimaan-Perihal", "Jenis Kad", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
-		// 		"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status"));
+		/*ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList(
+				"Bil", "Tarikh Transaksi", "Tarikh Resit", "No Resit","Nama Pembekal","No Permohonan","No Rujukan","Jenis Terimaan-Kod", "Jenis Terimaan-Perihal",
+				"Harga (RM)","GST (RM)","Caj Perkhidmatan (RM)","GST Caj Perkhidmatan (RM)","Amaun Bersih (RM)","Jumlah Keseluruhan (RM)","Status"
+		));*/
 		// #26307 end
 		String[] columnsRingkasan = {reportType,"Bil","Harga (RM)","GST (RM)","Caj Perkhidmatan (RM)","GST Caj Perkhidmatan (RM)","Amaun Bersih (RM)"};
 		
@@ -1100,25 +1100,26 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						cardType = "Kad Debit"; 
 					} 
 					if ("Credit".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_METHOD))) {
-						reportListMap.put(
-								m,
-								new Object[] { (Date) row[16], (Date) row[1],
+						reportListMap.put(m,new Object[] { 
+							(Date) row[16], 
+							(Date) row[1],
 										row[2].toString(),
 										row[3].toString(),
 										row[4] != null ? String.valueOf(row[4]) : "",
 										row[14] != null ? row[14].toString() : "",// BUG:#29454
 										row[5].toString(), row[6].toString().toUpperCase(), cardType, amount,
-										gstAmount, serviceCharge, gstServiceChargeAmt, netPrice, netPrice,
-										row[13].toString() });
+							gstAmount, serviceCharge, gstServiceChargeAmt, netPrice, netPrice,row[13].toString() 
+						});
 					} else {
-						reportListMap.put(
-								m,
-								new Object[] { (Date) row[16], (Date) row[1], row[2].toString(),
+						reportListMap.put(m,new Object[] { 
+							(Date) row[16], (Date) row[1], 
+							row[2].toString(),
 										row[3].toString(),
 										row[4] != null ? String.valueOf(row[4]) : "",
 										row[14] != null ? row[14].toString() : "",// BUG:#29454
 										row[5].toString(), row[6].toString().toUpperCase(), amount, gstAmount,
-										serviceCharge, gstServiceChargeAmt, netPrice, netPrice, row[13].toString() });
+							serviceCharge, gstServiceChargeAmt, netPrice, netPrice, row[13].toString() 
+						});
 					}
 					// #26307 end
 				}
@@ -1509,9 +1510,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		String[] rowHeaderItems = {"Kod PTJ","Nama PTJ","Kod Penjenisan","Kaedah Bayaran"};
 		//Update Func By Include label RM inside column Caj Perkhidmatan & GST Caj Perkhidmatan
 		// #26307 start - change column header
-		// String[] columnsList = { "Bil", "Tarikh", "No Resit", "No Permohonan", "Jenis Terimaan-Kod",
-		// 		"Jenis Terimaan-Perihal", "Jenis Kad", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
-		// 		"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status" };
+		/*String[] columnsList = {
+				"Bil","Tarikh","No Resit","No Permohonan","Jenis Terimaan-Kod","Jenis Terimaan-Perihal",
+				"Harga (RM)","GST (RM)","Caj Perkhidmatan (RM)","GST Caj Perkhidmatan (RM)","Amaun Bersih (RM)","Jumlah Keseluruhan (RM)","Status"
+		};*/
 		// #26307 end
 		
 		String[] columnsSummaryList = {
@@ -1552,20 +1554,20 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					} 
 					if("FPX".equalsIgnoreCase(row[1].toString())){ 
 						fpxList.put(fpxCount, new Object[] { 
-								// #14203 - uppercase perihal 
 								(Date) row[3],row[2].toString(), 
-								row[5] != null ? row[5].toString() : "",//CR:#14203#145 , BUG:#29454 
-								row[11].toString(),row[12].toString().toUpperCase(), 
+								row[5] != null ? row[5].toString() : "",//#29454
+								row[11].toString(),
+								row[12].toString().toUpperCase(),//#14203 - uppercase perihal
 								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString() 
 						}); 
 						fpxCount++; 
 					}else{ 
 						creditList.put(creditCount, new Object[] { 
-								// #14203 - uppercase perihal 
-								(Date) row[3], 
-								row[2].toString(), 
-								(row[5] != null) ? row[5].toString() : "",//CR:#14203#145 , BUG:#29454 
-								row[11].toString(),row[12].toString().toUpperCase(),cardType, 
+								(Date) row[3],row[2].toString(),
+								(row[5] != null) ? row[5].toString() : "",//#29454
+								row[11].toString(),
+								row[12].toString().toUpperCase(),//#14203 - uppercase perihal
+								cardType, //#26307
 								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString() 
 						}); 
 						creditCount++; 
@@ -1981,10 +1983,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		String[] rowHeaderItems = {"Kod PTJ","Nama PTJ","Kaedah Bayaran","Nama Pembekal","Jenis Bayaran"};	
 		//Update Func By Include label RM inside column Caj Perkhidmatan & GST Caj Perkhidmatan
 		// #26307 start - change column header
-		// ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh Transaksi",
-		// 		"Tarikh Resit", "No Resit", "Nama Pembekal", "No Permohonan", "No Rujukan", "Jenis Terimaan-Kod",
-		// 		"Jenis Terimaan-Perihal", "Jenis Kad", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
-		// 		"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status"));
+		/*ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh Transaksi",
+		 		"Tarikh Resit", "No Resit", "Nama Pembekal", "No Permohonan", "No Rujukan", "Jenis Terimaan-Kod",
+				"Jenis Terimaan-Perihal", "Jenis Kad", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
+		 		"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status"));*/
 		// #26307 end
 		
 		if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))reportType = "Tarikh Resit";
@@ -2132,7 +2134,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 									row[12].toString(),//Jenis Terimaan-Kod
 									//#14203 - uppercase perihal
 									row[13].toString().toUpperCase(),//Jenis Terimaan-Perihal
-									// #26307 start - add card type
+							// 26307 - add card type
 									cardType,// Jenis Kad
 									priceAmt ,//Harga
 									gstAmt,//GST
@@ -2690,15 +2692,32 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				for(int m=0; m<reportList.size(); m++){
 					Object[] row = (Object[]) reportList.get(m);
 					// #26307 start - change wording
-					if(row[1].toString().equalsIgnoreCase("Kad Kredit")){ 
+					/*if(row[1].toString().equalsIgnoreCase("Kad Kredit")){ 
 						row[1] = "Kad Kredit/Kad Debit"; 
+					}*/ 
+					//#26307- Re-endorsed
+					String cardType = "";
+					if(row[10] == null){
+						cardType = row[1].toString();
+					}else{
+						BigDecimal cardTypeCode = row[10] != null ? (BigDecimal) row[10] : BigDecimal.ZERO;
+						if (cardTypeCode.compareTo(BigDecimal.valueOf(5125L)) == 0) {
+							cardType = "Kad Kredit"; 
+						} else if (cardTypeCode.compareTo(BigDecimal.valueOf(5126L)) == 0) {
+							cardType = "Kad Debit"; 
 					} 
+					}
+					//#26307- Rendorsed
 					// #26307 end
 					fullList.put(m, new Object[] {
-						(Date) row[3],row[2].toString(),
-						row[5].toString() != null ? row[5].toString() : "" ,//#29454 - to cater nullpointer 
-						//#14203 - uppercase perihal
-						row[4].toString(),row[1].toString(),row[7].toString(),row[8].toString().toUpperCase(),
+						(Date) row[3],row[2].toString(),row[5].toString(),
+						row[4].toString(),
+						//#26307 - Start Re-endorsed
+						//row[1].toString(),
+						cardType,
+						//#26307 - End Re-endorsed
+						row[7].toString(),
+						row[8].toString().toUpperCase(),//#14203 - uppercase perihal
 						(BigDecimal) row[9] != null ? (BigDecimal) row[9] : BigDecimal.ZERO
 					});
 				}
