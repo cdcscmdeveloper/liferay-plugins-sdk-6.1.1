@@ -217,10 +217,11 @@
 		</p:dialog>
 		<ui:remove><!-- 25037 - end - note 510--></ui:remove>
 
-		<!-- //1873 - note 52-->
+		<!-- //1873 - note 52,149 -start- -->
 		<p:dialog id="alertFinancialTemplateIncompleteId" widgetVar="alertFinancialTemplateIncompletePopup"
-			header="#{lbl['lbl.sc.confirmation']}"
+			header="#{lbl['lbl.sc.confirmation']}" modal="true"
 			resizable="false" width="400" closable="false">
+		<!-- //1873 - note 149 -end- -->			
 			<table>
 				<tr>
 					<td align="center"><h:graphicImage
@@ -236,7 +237,7 @@
 					update="@form"/>
 			</div>
 		</p:dialog>
-		<!-- //1873 - note 52-->
+		<!-- //1873 - note 52 -end- -->
 	</h:panelGroup>
 
 </ui:composition>
