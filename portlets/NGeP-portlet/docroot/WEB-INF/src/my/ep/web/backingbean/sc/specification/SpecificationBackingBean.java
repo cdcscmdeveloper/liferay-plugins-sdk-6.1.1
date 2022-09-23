@@ -11,8 +11,6 @@
 package my.ep.web.backingbean.sc.specification;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -276,10 +274,6 @@ import org.primefaces.model.TreeNode;
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.util.PortalUtil;
 //#29732 Start - reOpen Fix
-import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
-import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
-import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
-import my.ep.persistence.entity.pm.common.PmCategoryL1;
 //#29732 End - reOpen Fix
 /**
  * The Class SpecificationBackingBean.
@@ -740,7 +734,8 @@ public class SpecificationBackingBean extends
 							.getParameterCode())){
 				if (checkList.getPmStatus().getStatusId()
 						.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
-					count++;
+					this.getManagedBean().setActiveIndex(2);
+					throw new EpException(MessageConst.ERROR_760542);
 				}
 				
 			}
@@ -845,7 +840,7 @@ public class SpecificationBackingBean extends
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
 						demoChecklistAvail = true;
 						if (checkList.getPmStatus().getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
-							throw new EpException(MessageConst.ERROR_760152);
+							throw new EpException(MessageConst.ERROR_760542);
 						}
 					}					
 				}			
@@ -853,7 +848,7 @@ public class SpecificationBackingBean extends
 		
 		if (this.getManagedBean().getQt().isDemoRequired() && ParameterConst.EVALUATION_TYPES_TWO_TIER
 				.equalsIgnoreCase(this.getManagedBean().getQt().getEvaluationType()) && !demoChecklistAvail && technicalCheckList != null) {
-			throw new EpException(MessageConst.ERROR_760152);
+			throw new EpException(MessageConst.ERROR_760542);
 		}//#28784 - End
 		
 		List<ScQtCheckList> financialCheckList = this.getManagedBean()
@@ -10312,7 +10307,7 @@ public class SpecificationBackingBean extends
 		List<TreeNode> childTreeList = this.getManagedBean().getRootCategoryTree().getChildren();
 		for(TreeNode childTree : childTreeList){
 			childTree.setSelected(false);
-	}
+		}
 		//#29468 End Vinod
 	}
 
@@ -14221,8 +14216,8 @@ if (null != checklist && !checklist.isEmpty()) {
 		return toBeRemovedList;
 	}
 
-	private void removeDuplicateFinancialSpec(String flowType,
-			List<ScQtCheckList> toBeRemoveCheckLists) {
+	/*
+	private void removeDuplicateFinancialSpec(String flowType, List<ScQtCheckList> toBeRemoveCheckLists) {
 		IQTSpecSO specSo = null;
 		try {
 			specSo = BusinessDelegate.getInstance().getServiceObject(
@@ -14244,6 +14239,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			specSo = null;
 		}
 	}
+	*/
 
 	/**
 	 * Creates the template spec.user clicks on create or clone buttons in
@@ -18936,7 +18932,7 @@ IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
 SpecificationReqDTO specReqDTO=new SpecificationReqDTO();
 specReqDTO.setScQtCheckList( this.getManagedBean().getSampleCheckList());
 List<ScQtCheckList> technicalChecklist=this.getManagedBean().getScQtCheckSt2techProposal();
-List<ScQtCheckList> sampleChecklist=this.getManagedBean().getSampleSpecCheckList();//#11104
+List<ScQtCheckList> sampleChecklist=this.getManagedBean().getSampleSpecCheckList();//#25635
 for(ScQtCheckList checklist:technicalChecklist){
 	if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist
 			.getDefinationType().getParameterCode())) {
@@ -19750,7 +19746,8 @@ if(null!=allTechnicalChecklist){
 		List<ScQtCheckList> tempList = new ArrayList<ScQtCheckList>();
 
 		for (ScQtCheckList l : st2technicalproposalList) {
-			if (l.getQtChecklistId() == null) {
+			if (l.getQtChecklistId() == null && l.getDefinationType().getParameterCode()
+					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
 				//throw new EpException(MessageConst.ERROR_760528);
 				saveSpecificationCommitteeDtls(); //#28784 - Remove notification save
 				if (this.getManagedBean().isMaintanceFlow()) {
@@ -20580,7 +20577,7 @@ if(null!=allTechnicalChecklist){
 		SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
 		for(ScQtCheckList e: existingTechChecklist){
 			for(ScQtCheckList f: resDTO.getTechnicalCheckList()){
-				if(e.getQtChecklistId().equals(f.getQtChecklistId())){
+				if(e.getQtChecklistId().equals(f.getQtChecklistId()) && e.getQtScoreWeightage() != null){
 					f.getQtScoreWeightage().setWeightage(e.getQtScoreWeightage().getWeightage());
 				}
 			}
@@ -20694,14 +20691,14 @@ if(null!=allTechnicalChecklist){
 	// #29474 - end
 	
 	//1873 - start - note 74
-		public boolean isMemberChairpersonSpecPreparationTask(){
-			String taskName = this.getManagedBean().getTaskName();
-			if(StringUtils.isEmpty(taskName)) return false;
-			return Arrays.asList(
-					new String[] { SCProcessNameConst.UPDATE_SCORING,
-							SCProcessNameConst.VIEW_SCORING }).contains(taskName);
-		}
-		//1873 - end - note 74
+	public boolean isMemberChairpersonSpecPreparationTask(){
+		String taskName = this.getManagedBean().getTaskName();
+		if(StringUtils.isEmpty(taskName)) return false;
+		return Arrays.asList(
+				new String[] { SCProcessNameConst.UPDATE_SCORING,
+						SCProcessNameConst.VIEW_SCORING }).contains(taskName);
+	}
+	//1873 - end - note 74
 	
 	//29464 - note 90 - start
 	public boolean evaluateRepublishFromDisplay(Long status){
@@ -20777,7 +20774,7 @@ if(null!=allTechnicalChecklist){
 	/*#29468 Start Vinod*/
 	private void getCategoryCodesForClone(){
 		ICategoryCodeSO categoryCodeSO = null;
-	
+			
 		try {
 			categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 			List<PmCategoryL1> pmCategoryL1s = categoryCodeSO.retrieveCategoryL1List().getCategoryL1List();
