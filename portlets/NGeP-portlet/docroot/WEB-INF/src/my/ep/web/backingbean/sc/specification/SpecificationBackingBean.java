@@ -935,8 +935,10 @@ public class SpecificationBackingBean extends
 			// 1873 - start- note 52
 			String taskName = this.getManagedBean().getTaskName();
 			String[] allowedTaskName = new String[] { SCProcessNameConst.FINALISE_SCORING,
-					SCProcessNameConst.UPDATE_SCORING, SCProcessNameConst.VIEW_SCORING };
-			
+					SCProcessNameConst.UPDATE_SCORING, SCProcessNameConst.VIEW_SCORING,
+					SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING //1873 note 149
+				};
+
 			if (Arrays.asList(allowedTaskName).contains(taskName)
 					|| (StringUtils.isEmpty(taskName) && !this.getManagedBean().isReadOnly())) {
 				if (isTechnicalTemplatesEdited() && !this.getManagedBean().isFromSubmit()) {
@@ -1103,7 +1105,11 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 4:
-			if (!this.getManagedBean().isReadOnly()) {
+			if (!this.getManagedBean().isReadOnly()
+			// 1873 note 149 -start-
+					&& this.getManagedBean().isTechnicalOtherCheckList()
+			// 1873 note 149 -end-
+			) {
 				checktemplateSpecStatus(this.getManagedBean().getQt());
 				checkFinancialSpecStatus(this.getManagedBean().getQt());
 			}
@@ -1111,7 +1117,11 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 5:
-			if (!this.getManagedBean().isReadOnly()) {
+			if (!this.getManagedBean().isReadOnly()
+			// 1873 note 149 -start-
+					&& this.getManagedBean().isTechnicalOtherCheckList()
+			// 1873 note 149 -end-
+			) {
 				checktemplateSpecStatus(this.getManagedBean().getQt());
 				checkFinancialSpecStatus(this.getManagedBean().getQt());
 			}
@@ -1120,7 +1130,12 @@ public class SpecificationBackingBean extends
 
 		case 6:
 			retriveRecommendationDetails();
-			if (!this.getManagedBean().isReadOnly()) {
+
+			if (!this.getManagedBean().isReadOnly()
+			// 1873 note 149 -start-
+					&& this.getManagedBean().isTechnicalOtherCheckList()
+			// 1873 note 149 -end-
+			) {
 				checktemplateSpecStatus(this.getManagedBean().getQt());
 				checkFinancialSpecStatus(this.getManagedBean().getQt());
 			}
@@ -1234,9 +1249,9 @@ public class SpecificationBackingBean extends
 	 * @param type
 	 *            (String type)
 	 */
-	private void retriveSupplierQualificationCriteria(String type) {
-		
-		log.debug("retriveBusinessOwnerQualificationCriteri - START");
+	// 1873 note 149 -start-
+	public void retriveSupplierQualificationCriteria(String type) {
+		// 1873 note 149 -end-
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 		qtBackingBean.retrieveSuppQualificationTabDtl();
 	}
@@ -1665,9 +1680,10 @@ public class SpecificationBackingBean extends
 		}
 
 		try {
-			if (null == this.getManagedBean().getScQtCheckSt2techProposal()
-					|| this.getManagedBean().getScQtCheckSt2techProposal()
-							.isEmpty()) {
+			 //1873 note 164 - start
+			if (CollectionUtils.isEmpty(this.getManagedBean().getScQtCheckSt2techProposal()) 
+					&& CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())) {
+			 //1873 note 164 - end
 				List<ScQtCheckList> localcheckList = new ArrayList<ScQtCheckList>();
 				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 				specSo = BusinessDelegate.getInstance().getServiceObject(
@@ -16511,7 +16527,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						if (type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM) && !changesFlag.get("itemUpdated")) {
 							changesFlag.put("itemUpdated", !currentQuestionStr.equalsIgnoreCase(localQuestionStr));
 
-							if (changesFlag.get("itemUpdated")) {
+							boolean isEdited = checklist.isEdited() == null ? false : checklist.isEdited();
+
+							if (changesFlag.get("itemUpdated") && !isEdited) {
 								checklist.setEdited(true && isOriginallyCompleted);
 							}
 						}
@@ -16558,8 +16576,22 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			// 32204 - start
 			boolean check = validateTechnicalStandardCheckList();
 
-			if (check)
-				this.getManagedBean().setActiveIndex(nextIndex);
+			// 1873 note 149-start
+			if (check) {
+				this.getManagedBean().setActiveIndex(this.getManagedBean().getCheckListYesIndex());
+				
+				if (this.getManagedBean().getActiveIndex() == 4 || this.getManagedBean().getActiveIndex() == 5
+						|| this.getManagedBean().getActiveIndex() == 6) {
+					checktemplateSpecStatus(this.getManagedBean().getQt());
+					checkFinancialSpecStatus(this.getManagedBean().getQt());
+				}
+				// 1873 note 164 - start
+				else if (this.getManagedBean().getActiveIndex() == 1) {
+					checkCategoryCodeChanged();
+				}
+				// 1873 note 164 - end
+			}
+			// 1873 note 149 end
 			// 32204 - end
 		}
 	}
