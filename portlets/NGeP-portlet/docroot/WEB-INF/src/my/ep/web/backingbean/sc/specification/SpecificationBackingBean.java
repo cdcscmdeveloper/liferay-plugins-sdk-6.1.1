@@ -21934,6 +21934,7 @@ if(null!=allTechnicalChecklist){
 	
 	/*#29187 Start Vinod*/
 	public boolean renderManSpec(List<TplSpecQuestion> tplSpecQuestions) {
+		log.info("***renderManSpec **** Start : "+tplSpecQuestions);
 		boolean render = false;
 
 		for (TplSpecQuestion question : tplSpecQuestions) {
@@ -21943,12 +21944,14 @@ if(null!=allTechnicalChecklist){
 			}
 		}
 
+		log.info("***renderManSpec **** End ");
 		return render;
 	}
 	/*#29187 End Vinod*/
 	
 	/*#29187 Start Vinod*/
 	public void retriveSampleSpecmasterForMandatorySpecChecking(ScQtCheckList templateChecklist){
+		log.info("***retriveSampleSpecmasterForMandatorySpecChecking **** Start : "+templateChecklist);
 		this.getManagedBean().setSampleCheckList(templateChecklist);
 		
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
@@ -21979,6 +21982,7 @@ if(null!=allTechnicalChecklist){
 				}
 			}
 		}
+		log.info("***retriveSampleSpecmasterForMandatorySpecChecking ****End ");
 	}
 	/*#29187 End Vinod*/
 }
