@@ -504,9 +504,97 @@ label.ui-button>span.ui-button-text {
 						</p:outputPanel>
 							</c:when>
 							<c:otherwise>
-								<p:inputText id="demoPopTxt"
-									value="#{specificationBackingBean.getYesNoStatusDescByBoolean(question.itemReqDemo)}"
-									style="width:195px;" disabled="true" />
+								<p:outputPanel id="demoPop">
+									<p:selectOneRadio value="#{question.itemReqDemo}"
+										rendered="#{isQuestionTypeItem}" disabled="true">
+										<f:selectItems
+											value="#{templateSpecBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+										<p:ajax event="change" partialSubmit="true" update="@form"></p:ajax>
+									</p:selectOneRadio>
+									<ui:fragment
+										rendered="#{question.selectable and question.itemReqDemo}">
+										<h:panelGroup id="scoringBtnPG">
+											<p:commandButton id="scoringBtn"
+												icon="#{empty question.demoScore ? 'ui-icon-pencil' : 'ui-icon-evaluate'}"
+												style="background-color:transparent !important; border:0px none;"
+												styleClass="scoringBtn"
+												action="#{templateSpecBackingBean.scoringPopupAction(specificationBackingBean.managedBean.templateSpecBean)}"
+												oncomplete="scoringSetPopup.show();" partialSubmit="true"
+												process="@this" update="@all"
+												rendered="#{isQuestionTypeItem and empty question.answerTypeCode.parameterId and isScoringReq}">
+												<f:setPropertyActionListener
+													target="#{specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion}"
+													value="#{question}" />
+											</p:commandButton>
+										</h:panelGroup>
+									</ui:fragment>
+
+									<p:dialog id="scoringSetPopup"
+										header="#{lbl['lbl.tpl.spec.content.scoring.settings.title']}"
+										widgetVar="scoringSetPopup" modal="true" width="800"
+										height="auto" rendered="#{isScoringReq}" closable="false"
+										position="top" dynamic="true">
+
+										<c:if
+											test="#{!empty specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion}">
+											<h:panelGroup id="scoreSettPnl">
+												<p:messages id="scorePopupMsg" showDetail="true"
+													autoUpdate="true" closable="true" showSummary="false"
+													severity="error, info" />
+
+												<ui:param name="isQuestionTypeItem"
+													value="#{specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion.questionType == TplSpecConst.questionTypeItem}" />
+
+												<table border="0" cellspacing="0" cellpadding="0"
+													width="100%">
+													<ui:param name="itemSpecInfo"
+														value="#{isQuestionTypeItem ? specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion.clItem : specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion.clSpecDetail}"></ui:param>
+													<tr>
+														<td id="labelId1"><p:outputLabel
+																value="#{lbl[isQuestionTypeItem ? 'lbl.tpl.spec.content.item' : 'lbl.tpl.spec.content.specification']}" /></td>
+														<td id="labelId2" colspan="3"><h:inputTextarea
+																id="itemSpec" style="width:calc(100% - 50px);"
+																value="#{itemSpecInfo}" disabled="true"
+																autoResize="false"
+																rows="#{templateSpecBackingBean.getNumOfRows(itemSpecInfo)}" />
+														</td>
+													</tr>
+													<tr>
+														<td id="scoreId1"><h:panelGroup id="maxScoreLPG">
+																<p:outputLabel
+																	value="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}" />
+																<p:outputLabel value="*" styleClass="mandatory"
+																	rendered="#{editable and specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterCode == ParameterConst.scoreTypeUser}" />
+															</h:panelGroup></td>
+														<td id="scoreId1"><h:panelGroup id="maxScorePG">
+																<p:inputText id="maxScore" style="text-align:right;"
+																	value="#{specificationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion.demoScore}"
+																	required="true" size="15" maxlength="3"
+																	onkeypress="if (event.keyCode == 46) { return false; }"
+																	disabled="true"
+																	label="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}">
+																	<ac:validateNumber
+																		pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+																		maxIntegerDigits="3" integerOnly="true" />
+																</p:inputText>
+																<p:message id="maxScoreMsg" for="maxScore"
+																	display="icon" />
+															</h:panelGroup></td>
+													</tr>
+												</table>
+											</h:panelGroup>
+
+											<div class="ppRightBtn">
+												<p:commandButton value="#{lbl['lbl.btn.ok']}"
+													partialSubmit="true" process="@this" update="@this"
+													oncomplete="scoringSetPopup.hide()" rendered="#{editable}" />
+											</div>
+										</c:if>
+									</p:dialog>
+								</p:outputPanel>
+								<!-- 								<p:inputText id="demoPopTxt" -->
+								<!-- 									value="#{specificationBackingBean.getYesNoStatusDescByBoolean(question.itemReqDemo)}" -->
+								<!-- 									style="width:195px;" disabled="true" /> -->
 
 							</c:otherwise>
 						</c:choose>
