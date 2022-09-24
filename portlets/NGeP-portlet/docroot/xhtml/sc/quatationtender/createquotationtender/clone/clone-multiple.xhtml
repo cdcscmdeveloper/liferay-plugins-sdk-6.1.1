@@ -75,18 +75,18 @@
 			widgetVar="confirmationClone">
 			
 			<h:panelGroup id="displayloadingconfirm">
-				<p:panelGrid id="pgCmdbutton">
-				    <p:row>
-				        <p:column style="width: 30%;height: 95px;text-align: left;border-style: hidden;">
+				<p:panelGrid id="pgCmdbutton" style="border-style: hidden;">
+				    <p:row style="border-style: hidden;">
+				        <p:column style="text-align: left;border-style: hidden;">
 				        </p:column>
-				        <p:column style="width: 40%;height: 95px;text-align: center;border-style: hidden;">
+				        <p:column style="text-align: center;border-style: hidden;">
 				        <p:commandButton id="hideforloading"
 							value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 							style="background-color: #FFFFFF !important;color: #FFFFFF !important;border-style: none;"/>
 				        </p:column>
-				        <p:column style="width: 30%;height: 95px;text-align: right;border-style: hidden;">
+				        <p:column style="text-align: right;border-style: hidden;">
 				   			<p:commandButton id="conf"
-								value="#{lbl['lbl.btn.declare']}"
+								value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 								actionListener="#{qtMultipleCloneBackingBean.addToClone()}"
 								update="@form" onstart="blockWidgetCloneConfirm.show()" 
 								style="top: 30% !important;"
