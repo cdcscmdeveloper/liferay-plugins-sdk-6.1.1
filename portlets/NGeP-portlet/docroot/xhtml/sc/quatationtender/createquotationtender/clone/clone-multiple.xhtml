@@ -71,7 +71,7 @@
 		</p:blockUI>
 	    
 		<p:confirmDialog message="#{lbl['lbl.sc.qt.dialog.cofirm.clone.msg']}"
-			header="#{lbl['lbl.cm.dialog.cofirm.header']}" 
+			header="#{lbl['lbl.cm.dialog.cofirm.header']}"  height="100"
 			widgetVar="confirmationClone">
 			
 			<h:panelGroup id="displayloadingconfirm">
@@ -80,24 +80,26 @@
 						actionListener="#{qtMultipleCloneBackingBean.addToClone()}"
 						update="@form" onstart="blockWidgetCloneConfirm.show()" 
 						oncomplete="blockWidgetCloneConfirm.hide();confirmationClone.hide()"
-						style="background-color: #FFFFFF !important;color: #FFFFFF !important;border-style: none;"/>
+						style="background-color: #FFFFFF !important;color: #FFFFFF !important;border-style: none;text-align: left"/>
 						<!--#9019 01082022 Reopen Add loading confirmDialogId,onstart,oncomplete #note-254-->
 					<p:commandButton id="declinehide"
-						value="#{lbl['lbl.btn.declare']}"
+						value="#{lbl['lbl.cm.dialog.cofirm.no']}"
 						onclick="confirmationClone.hide()" 
-						style="background-color: #FFFFFF !important;color: #FFFFFF !important;border-style: none;"/>
+						style="background-color: #FFFFFF !important;color: #FFFFFF !important;border-style: none;text-align: left"/>
 					<h:inputHidden id="rowIndexhide"></h:inputHidden>
 			</h:panelGroup>	
 			
 			<h:panelGroup id="displayloadingconfirmbutton">
 		   			<p:commandButton id="conf"
+						style="text-align: right"
 						value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 						actionListener="#{qtMultipleCloneBackingBean.addToClone()}"
 						update="@form" onstart="blockWidgetCloneConfirm.show()" 
 						oncomplete="blockWidgetCloneConfirm.hide();confirmationClone.hide()"/>
 						<!--#9019 01082022 Reopen Add loading confirmDialogId,onstart,oncomplete #note-254-->
 					<p:commandButton id="decline"
-						value="#{lbl['lbl.btn.declare']}"
+					    style="text-align: right"
+						value="#{lbl['lbl.cm.dialog.cofirm.no']}"
 						onclick="confirmationClone.hide()" />
 					<h:inputHidden id="rowIndex"></h:inputHidden>
 			</h:panelGroup>	
