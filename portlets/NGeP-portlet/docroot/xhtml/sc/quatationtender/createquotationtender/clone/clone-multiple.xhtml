@@ -77,22 +77,24 @@
 			<h:panelGroup id="displayloadingconfirm" style="text-align: left">
 	   			<p:commandButton id="confhide"
 					value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-					style="background-color: #FFFFFF !important;color: #FFFFFF !important;border-style: none;width:60px;height:60px;"/>
+					style="background-color: #FFFFFF !important;color: #FFFFFF !important;border-style: none;width:120px;height:120px;"/>
 				<p:commandButton id="declinehide"
 					value="#{lbl['lbl.cm.dialog.cofirm.no']}"
-					style="background-color: #FFFFFF !important;color: #FFFFFF !important;border-style: none;width:60px;height:60px;"/>
+					style="background-color: #FFFFFF !important;color: #FFFFFF !important;border-style: none;width:120px;height:120px;"/>
 				<h:inputHidden id="rowIndexhide"></h:inputHidden>
 			</h:panelGroup>	
 			
 			<h:panelGroup id="displayloadingconfirmbutton" style="text-align: right">
 	   			<p:commandButton id="conf"
 					value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+					style="text-align: right"
 					actionListener="#{qtMultipleCloneBackingBean.addToClone()}"
 					update="@form" onstart="blockWidgetCloneConfirm.show()" 
 					oncomplete="blockWidgetCloneConfirm.hide();confirmationClone.hide()"/>
 					<!--#9019 01082022 Reopen Add loading confirmDialogId,onstart,oncomplete #note-254-->
 				<p:commandButton id="decline"
 					value="#{lbl['lbl.cm.dialog.cofirm.no']}"
+					style="text-align: right"
 					onclick="confirmationClone.hide()" />
 				<h:inputHidden id="rowIndex"></h:inputHidden>
 			</h:panelGroup>	
