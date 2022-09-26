@@ -111,7 +111,10 @@
 
 			</p:columnGroup>
 			<p:column style="white-space: normal;">
-				<h:outputText value="#{technicalSampleQuestion.clItem}"></h:outputText>
+					<h:outputText
+				value="#{specificationBackingBean.replaceWithBR(technicalSampleQuestion.clItem)}"
+				escape="false"
+				style="white-space: normal;word-wrap: break-word;" />
 			</p:column>
 
 			<p:column style="white-space: normal;">

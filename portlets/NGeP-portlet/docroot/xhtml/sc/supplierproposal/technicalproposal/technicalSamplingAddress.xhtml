@@ -142,7 +142,10 @@
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			styleClass="sampleitemdtl" rowKey="#{sampleitemdtl}">
 			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space: normal;width:55%;">
-				<h:outputText value="#{sampleitemdtl.scRequestItem.itemName}" />
+				<h:outputText
+				value="#{supplierProposalDetailBackingBean.replaceWithBR(sampleitemdtl.scRequestItem.itemName)}"
+				escape="false"
+				style="white-space: normal;word-wrap: break-word;" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.local.goods']}" style="width:15%;">
 			<h:outputText value="#{lbl['lbl.sc.qt.sample.type.of.goods.local']}" rendered="#{sampleitemdtl.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.LOCAL_GOODS}"></h:outputText>
