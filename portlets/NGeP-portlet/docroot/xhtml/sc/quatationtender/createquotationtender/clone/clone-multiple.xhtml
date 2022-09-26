@@ -71,10 +71,10 @@
 		</p:blockUI>
 	    
 		<p:confirmDialog message="#{lbl['lbl.sc.qt.dialog.cofirm.clone.msg']}"
-			header="#{lbl['lbl.cm.dialog.cofirm.header']}"  height="100"
+			header="#{lbl['lbl.cm.dialog.cofirm.header']}" 
 			widgetVar="confirmationClone">
 			
-			<h:panelGroup id="displayloadingconfirm" style="text-align: left;height: 200px">
+			<h:panelGroup id="displayloadingconfirm" style="text-align: left;">
 	   			<p:commandButton id="declinehide"
 					value="#{lbl['lbl.cm.dialog.cofirm.no']}"
 					style="background-color: #FFFFFF !important;color: #FFFFFF !important;border-style: none;"/>
@@ -109,8 +109,6 @@
 				<h:inputHidden id="rowIndex"></h:inputHidden>
 			</h:panelGroup>	
 		</p:confirmDialog>
-		
-		<!--#33914 End - QT Maintenance pop up message related #9019 and overwrite reopen #note-254-->
-	
+		<!--#33914 End - QT Maintenance pop up message related #9019 and overwrite reopen #note-254-->	
 						
 </ui:composition>
