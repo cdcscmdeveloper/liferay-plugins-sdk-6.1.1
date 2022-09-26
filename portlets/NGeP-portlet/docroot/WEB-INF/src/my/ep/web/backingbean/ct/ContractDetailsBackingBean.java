@@ -2097,7 +2097,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		/*Set value true if contract is schedule*/
 		if(ctBB.getManagedBean().getContractVer().getCtContract().getFulfillmentType().
-				getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
+				getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) || ctBB.getManagedBean().getContractVer().getCtContract().getFulfillmentType().
+				getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)){
 			typeSchedule = true;
 		}
 		
@@ -2591,15 +2592,32 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			reqDTO.setContractId(contractId);
 			reqDTO.setContractVerId(contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
+			
+			CtConfig ctConfigStatus = contractSO.getCtPerformanceStatus(reqDTO);
 				
 			reqDTO.setUpdateAction(true);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_NOTIFICATION_SETTING); 
-			ctBB.getManagedBean().setViewContract(false);
+			
+			if(ctConfigStatus != null) {
+				//log.info("ctConfigStatus not null");
+				
+				ctBB.getManagedBean().setViewContract(true);
+				reqDTO.setViewOnly(true);
+				ctBB.getManagedBean().setFromViewPage(true); 
+				ctBB.getManagedBean().setInCtPerformance(true);
+			}
+			
+			else{
+				//log.info("ctConfigStatus null");
+				
+				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+				ctBB.getManagedBean().setViewContract(false);
+			}
+			
 			ctBB.getManagedBean().setUpdateContract(true);
 			ctBB.getManagedBean().setNotificationSetting(true);
 			ctBB.getManagedBean().setCtAddress(null);
 			setValidateContractField(reqDTO);
-			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			ctBB.chkServiceTaxAlert();
 			getManagedBean().setExternalPageUrl(null);
 			getManagedBean().setSelectedTabIndex(0);	
@@ -3960,7 +3978,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(messageId,
 							new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ctBB.getManagedBean().getContractVer().getDocType()), 
-							ctBB.getManagedBean().getContractVer().getCtContract().getContractNo(),"5"}, 
+							ctBB.getManagedBean().getContractVer().getCtContract().getContractNo(),CommonConstants.performanceSchedulerTiming}, 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
