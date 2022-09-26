@@ -28,8 +28,10 @@
 						listener="#{evaluationBackingBean.retriveSpecificationsByItem}"></p:ajax>
 					<p:column headerText="#{lbl['lbl.sc.item.name']}"
 						style="width:15%;white-space: normal;">
-						<h:outputText
-							value="#{sampleItem.scRequestItem.tplSpecQuestion.clItem}"></h:outputText>
+					<h:outputText
+				value="#{evaluationBackingBean.replaceWithBR(sampleItem.scRequestItem.tplSpecQuestion.clItem)}"
+				escape="false"
+				style="white-space: normal;word-wrap: break-word;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.spec.local.goods']}"
