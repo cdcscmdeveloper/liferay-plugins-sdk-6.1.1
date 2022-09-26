@@ -266,8 +266,7 @@
 						<p:selectBooleanCheckbox id="reEvaluateReqForComp"
 							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCompReq}"
 							disabled="#{!(isBPKTaskAndClaimed or 
-											isSecretaryUser) or suppFinalizationBackingBean.isQTMaintenanceScreen()
-											or suppFinalizationBackingBean.disableReevaluationOptions('C')}"><!-- 6906 note 117 -->
+											isSecretaryUser) or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
 							<p:ajax process="@this" update="@([id$=reEvaluatePanel])" 
 									listener="#{suppFinalizationBackingBean.reEvaluateByOptionEvent('1', 
 													suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCompReq)}"/>
@@ -284,8 +283,7 @@
 							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq}"
 							disabled="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCompReq or 
 										 	!(isBPKTaskAndClaimed or 
-													isSecretaryUser) or suppFinalizationBackingBean.isQTMaintenanceScreen()
-													or suppFinalizationBackingBean.disableReevaluationOptions('T')}" ><!-- 6906 note 117 -->
+													isSecretaryUser) or suppFinalizationBackingBean.isQTMaintenanceScreen()}" >
 							<p:ajax process="@this" update="@([id$=reEvaluatePanel])" 
 									listener="#{suppFinalizationBackingBean.reEvaluateByOptionEvent('2', 
 													suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq)}"/>
@@ -302,8 +300,7 @@
 							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateFinReq}"
 							disabled="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq or 
 											!(isBPKTaskAndClaimed or 
-												isSecretaryUser) or suppFinalizationBackingBean.isQTMaintenanceScreen()
-												or suppFinalizationBackingBean.disableReevaluationOptions('F')}"><!-- 6906 note 117 -->
+												isSecretaryUser) or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
 							<p:ajax process="@this" update="@([id$=reEvaluatePanel])" 
 									listener="#{suppFinalizationBackingBean.reEvaluateByOptionEvent('3', 
 													suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateFinReq)}"/>
