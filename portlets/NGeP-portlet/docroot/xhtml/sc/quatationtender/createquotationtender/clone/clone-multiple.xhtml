@@ -74,13 +74,10 @@
 			header="#{lbl['lbl.cm.dialog.cofirm.header']}"  height="100"
 			widgetVar="confirmationClone">
 			
-			<h:panelGroup id="displayloadingconfirm" style="text-align: left">
-	   			<p:commandButton id="confhide"
-					value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-					style="background-color: #FFFFFF !important;color: #FFFFFF !important;border-style: none;width:120px;height:170px;"/>
-				<p:commandButton id="declinehide"
+			<h:panelGroup id="displayloadingconfirm" style="text-align: left;height: 200px">
+	   			<p:commandButton id="declinehide"
 					value="#{lbl['lbl.cm.dialog.cofirm.no']}"
-					style="background-color: #FFFFFF !important;color: #FFFFFF !important;border-style: none;width:120px;height:170px;"/>
+					style="background-color: #FFFFFF !important;color: #FFFFFF !important;border-style: none;"/>
 				<h:inputHidden id="rowIndexhide"></h:inputHidden>
 			</h:panelGroup>	
 			
@@ -95,6 +92,9 @@
 			</h:panelGroup>	
 			
 			<h:panelGroup id="displayloadingconfirmbutton" style="text-align: right">
+	   			<p:commandButton id="confhide"
+					value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+					style="background-color: #FFFFFF !important;color: #FFFFFF !important;border-style: none;"/>
 	   			<p:commandButton id="conf"
 					value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 					style="text-align: right"
@@ -103,7 +103,7 @@
 					oncomplete="blockWidgetCloneConfirm.hide();confirmationClone.hide()"/>
 					<!--#9019 01082022 Reopen Add loading confirmDialogId,onstart,oncomplete #note-254-->
 				<p:commandButton id="decline"
-					value="#{lbl['lbl.cm.dialog.cofirm.no']}"
+					value="#{lbl['lbl.btn.cancel']}"
 					style="text-align: right"
 					onclick="confirmationClone.hide()" />
 				<h:inputHidden id="rowIndex"></h:inputHidden>
