@@ -8767,347 +8767,395 @@ public class QTDetailBackingBean extends
 	/* ***25692#95 - end */
 
 	// 26095@hatta - start
-			/**
-			 * will be called in close QT only..
-			 * @return the string go to page
-			 */
-			public String closeQtDetails() { 
-				debugLogger("closeQtDetails");
+	/**
+	 * will be called in close QT only..
+	 * @return the string go to page
+	 */
+	public String closeQtDetails() { 
+		debugLogger("closeQtDetails");
 				
-				IQTDetailSO detailSO;
-				try {
-					detailSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-					QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-					ScQt scQt = this.getManagedBean().getQt();
+		IQTDetailSO detailSO;
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+			ScQt scQt = this.getManagedBean().getQt();
 					
-						quationTenderReqDTO.setQtId(scQt.getQtId());
-						QuationTenderResDTO resDTO = detailSO.retrieveCloseQTByQtIdNType(quationTenderReqDTO);
-						this.getManagedBean().setQt(resDTO.getQtDetail());
-						ScQt QtDetail = resDTO.getQtDetail();
+				quationTenderReqDTO.setQtId(scQt.getQtId());
+				QuationTenderResDTO resDTO = detailSO.retrieveCloseQTByQtIdNType(quationTenderReqDTO);
+				this.getManagedBean().setQt(resDTO.getQtDetail());
+				ScQt QtDetail = resDTO.getQtDetail();
 						
-					    List<ScCloseQTRemark> qtRemarks =  initializeRemarks(
-					    		                           QtDetail, 
-								                           this.getManagedBean().getQt().getCurrentWorkFlowStatus(),
-								                           QtDetail.getScCloseQTRemark(),
-								                           ScCloseQTRemark.class);
+			    List<ScCloseQTRemark> qtRemarks =  initializeRemarks(
+			    		                           QtDetail, 
+						                           this.getManagedBean().getQt().getCurrentWorkFlowStatus(),
+						                           QtDetail.getScCloseQTRemark(),
+						                           ScCloseQTRemark.class);
 			
-						for(ScCloseQTRemark qtRemark : qtRemarks) {
-							qtRemark.setEditable(false);
-						}
-						
-						this.getManagedBean().getQt().setScCloseQTRemark(qtRemarks);
-
-					return "/xhtml/sc/quatationtender/closeQuotationTender.xhtml";
-
-				
-					
-				} finally {
-					detailSO=null;
+				for(ScCloseQTRemark qtRemark : qtRemarks) {
+					qtRemark.setEditable(false);
 				}
-			}
-				
-		   /**
-			 * Check in the validity period expired and status related. 
-			 * @return the true or false.
-			 */
-			public boolean closeQTIfValidityPeriodExpiredAndStatusRelated(){
-				boolean isCloseQT = false;
-				ScQt scQt = this.getManagedBean().getQt();
-				Long statusId = scQt.getQtStatus().getStatusId();
-				boolean isBiddingCloseQT = false; 
 						
-				if (scQt.getProposalValidityEndDate() != null && this.getManagedBean().getCurrentDate() != null 
-						 && this.getManagedBean().getCurrentDate().after(scQt.getProposalValidityEndDate())
-						 && this.getManagedBean().isMaintanceFlow() == true ) {
-					
-						if(statusId.equals(QTStatusConst.QT_CLOSE_PERMANENTLY)){
-							  isCloseQT = true; 
-						}
-						if(statusId.equals(QTStatusConst.QT_SUPPLIER_FINALIZATION) || statusId.equals(QTStatusConst.QT_RE_FINALIZATION)){
-							IQTDetailSO detailSO = BusinessDelegate.getInstance()
-						    .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-						    QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-							quationTenderReqDTO.setQtdetail(scQt);
-							QuationTenderResDTO resDTOBID = detailSO.retriveScheduleDetailStatus(quationTenderReqDTO);
-							if(null!=resDTOBID && null!=resDTOBID.getBidSchedule()){
-								isBiddingCloseQT = checkIsBiddingActiveForStatusCloseQT(scQt);
-								if(isBiddingCloseQT){
-									isCloseQT = true; 
-								}else{
-									isCloseQT = false;
-								}
-							}
-							quationTenderReqDTO.setQtId(scQt.getQtId());
-							QuationTenderResDTO resDTOSF = detailSO.closeQTstatusForSF(quationTenderReqDTO);
-							if(resDTOSF.isCloseQT() == true){
-								isCloseQT = true; 
-							}
-							QuationTenderResDTO resDTOCMT = detailSO.closeQTstatusForCMT(quationTenderReqDTO);
-							if(resDTOCMT.isCloseQT() == true){
-								isCloseQT = true; 
-							}
-						}
-						if(statusId.equals(QTStatusConst.QT_PENDING_LOI)){
-						    IQTDetailSO detailSO = BusinessDelegate.getInstance()
-						    .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-						    QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-							quationTenderReqDTO.setQtId(scQt.getQtId());
-							QuationTenderResDTO resDTOLOI = detailSO.closeQTstatusForLOI(quationTenderReqDTO);
-							if(resDTOLOI.isCloseQT() == true){
-							     isCloseQT = true; 
-							}
-							QuationTenderResDTO resDTOSF = detailSO.closeQTstatusForSF(quationTenderReqDTO);
-							if(resDTOSF.isCloseQT() == true){
-								 isCloseQT = true; 
-							}
-						}
-                       if(statusId.equals(QTStatusConst.QT_PENDING_LOA)){
-                       	IQTDetailSO detailSO = BusinessDelegate.getInstance()
-						    .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-						    QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-							quationTenderReqDTO.setQtId(scQt.getQtId());
-							QuationTenderResDTO resDTOLOA = detailSO.closeQTstatusForLOA(quationTenderReqDTO);
-							if(resDTOLOA.isCloseQT() == true){
-							  isCloseQT = true; 
-							}
-							QuationTenderResDTO resDTOLOI = detailSO.closeQTstatusForLOI(quationTenderReqDTO);
-							if(resDTOLOI.isCloseQT() == true){
-							  isCloseQT = true; 
-							}
-							
-							QuationTenderResDTO resDTOSF = detailSO.closeQTstatusForSF(quationTenderReqDTO);
-							
-							if (resDTOSF.isCloseQT() == true) {
-								 isCloseQT = true; 
-							}
-						}
-				}	
-			   return isCloseQT;	
-			}
-			
-			/**
-			 * check for available status in active bidding for close QT 
-			 * @return the true or false.
-			 */
-			private boolean checkIsBiddingActiveForStatusCloseQT(ScQt scQt) {
-				IBiddingSO biddingSO;
-				try {
-					boolean isBiddingActive = false;
-					biddingSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
-					
-					BiddingReqDTO reqDTO = new BiddingReqDTO();	
-					List<Long> statusIds = new ArrayList<Long>();
-					statusIds.add(BidStatusConst.BID_PENDING_BIDDING);     // (C)63350
-					statusIds.add(BidStatusConst.BID_RESCHEDULE_BIDDING);  // (C)63355
-					
-					ISearchBean<ScBidSchedule> bidSchSearchBean = new SearchBean<ScBidSchedule>();
-					bidSchSearchBean.getDataFilterBeans().add(new SearchFilterBean(
-							"scBid.docType", SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.DOCTYPE_QUOTATION));
-					bidSchSearchBean.getDataFilterBeans().add(new SearchFilterBean(
-							"scBid.docId", SearchOperator.OPERATOR_EQUALS.value(), scQt.getQtId()));
-					bidSchSearchBean.getDataFilterBeans().add(new SearchFilterBean(
-							"pmStatus.statusId", SearchOperator.OPERATOR_IN.value(), statusIds));
-					reqDTO.setBidSchSearchBean(bidSchSearchBean);
+				this.getManagedBean().getQt().setScCloseQTRemark(qtRemarks);
 
-					BiddingResDTO resDTO = biddingSO.searchBiddingScheduleList(reqDTO);
-					List<ScBidSchedule> list = resDTO.getBidSchResultBean().getResultList();
-					if(list.size() > 0 ) {
-						isBiddingActive = true;
+			return "/xhtml/sc/quatationtender/closeQuotationTender.xhtml";
+
+				
+					
+		} finally {
+			detailSO=null;
+		}
+	}
+				
+	/**
+	 * Check in the validity period expired and status related. 
+	 * @return the true or false.
+	 */
+	public boolean closeQTIfValidityPeriodExpiredAndStatusRelated() {
+		boolean isCloseQT = false;
+		ScQt scQt = this.getManagedBean().getQt();
+		Long statusId = scQt.getQtStatus().getStatusId();
+		boolean isBiddingCloseQT = false; 
+						
+		if (scQt.getProposalValidityEndDate() != null && this.getManagedBean().getCurrentDate() != null 
+				&& this.getManagedBean().getCurrentDate().after(scQt.getProposalValidityEndDate())
+				&& this.getManagedBean().isMaintanceFlow() == true ) {
+					
+			if(statusId.equals(QTStatusConst.QT_CLOSE_PERMANENTLY)) {
+				isCloseQT = true; 
+			}
+	
+			if(statusId.equals(QTStatusConst.QT_SUPPLIER_FINALIZATION) || statusId.equals(QTStatusConst.QT_RE_FINALIZATION)) {
+				IQTDetailSO detailSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				
+				QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+				quationTenderReqDTO.setQtdetail(scQt);
+				
+				QuationTenderResDTO resDTOBID = detailSO.retriveScheduleDetailStatus(quationTenderReqDTO);
+				
+				if(null!=resDTOBID && null!=resDTOBID.getBidSchedule()) {
+					isBiddingCloseQT = checkIsBiddingActiveForStatusCloseQT(scQt);
+					
+					if(isBiddingCloseQT) {
+						isCloseQT = true; 
+					} else {
+						isCloseQT = false;
 					}
-					return isBiddingActive;
-				} finally {
-					biddingSO = null;
+				}
+	
+				quationTenderReqDTO.setQtId(scQt.getQtId());
+				
+				QuationTenderResDTO resDTOSF = detailSO.closeQTstatusForSF(quationTenderReqDTO);
+				
+				if(resDTOSF.isCloseQT() == true) {
+					isCloseQT = true; 
+				}
+							
+				QuationTenderResDTO resDTOCMT = detailSO.closeQTstatusForCMT(quationTenderReqDTO);
+				
+				if(resDTOCMT.isCloseQT() == true) {
+					isCloseQT = true; 
 				}
 			}
+						
+			if(statusId.equals(QTStatusConst.QT_PENDING_LOI)) {
+				IQTDetailSO detailSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+						    
+				QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+				quationTenderReqDTO.setQtId(scQt.getQtId());
+				
+				QuationTenderResDTO resDTOLOI = detailSO.closeQTstatusForLOI(quationTenderReqDTO);
+				
+				if(resDTOLOI.isCloseQT() == true) {
+					isCloseQT = true; 
+				}
+				
+				QuationTenderResDTO resDTOSF = detailSO.closeQTstatusForSF(quationTenderReqDTO);
+				
+				if(resDTOSF.isCloseQT() == true) {
+					isCloseQT = true; 
+				}
+			}
+            
+			if(statusId.equals(QTStatusConst.QT_PENDING_LOA)) {
+				IQTDetailSO detailSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+        						    
+				QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+        		quationTenderReqDTO.setQtId(scQt.getQtId());
+        						
+        		QuationTenderResDTO resDTOLOA = detailSO.closeQTstatusForLOA(quationTenderReqDTO);
+        							
+        		if(resDTOLOA.isCloseQT() == true) {
+        			isCloseQT = true; 
+        		}
+        							
+        		// Bug #33601 - Start
+	       		 /*
+	       		QuationTenderResDTO resDTOLOI = detailSO.closeQTstatusForLOI(quationTenderReqDTO);
+	       							
+	       		if(resDTOLOI.isCloseQT() == true) {
+	       			isCloseQT = true; 
+	       		}
+	       							
+	       		QuationTenderResDTO resDTOSF = detailSO.closeQTstatusForSF(quationTenderReqDTO);
+	       						
+	       		if(resDTOSF.isCloseQT() == true) {
+	       			isCloseQT = true; 
+	       		}
+	       		*/
+	       		//Bug #33601 - End 
+			}
+		}	
+		
+		return isCloseQT;	
+	}
 			
-			/**
-			 * check Close QT Dialog Pop Up
-			 * @return true 
-			 */
-			public void closeQTDialogPopUp() {
-			   RequestContext.getCurrentInstance().execute("closeQTDlg.show()");
-			}	
+	/**
+	 * check for available status in active bidding for close QT 
+	 * @return the true or false.
+	 */
+	private boolean checkIsBiddingActiveForStatusCloseQT(ScQt scQt) {
+		IBiddingSO biddingSO;
+		
+		try {
+			boolean isBiddingActive = false;
+			biddingSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+					
+			BiddingReqDTO reqDTO = new BiddingReqDTO();	
+					
+			List<Long> statusIds = new ArrayList<Long>();
+			statusIds.add(BidStatusConst.BID_PENDING_BIDDING);     // (C)63350
+			statusIds.add(BidStatusConst.BID_RESCHEDULE_BIDDING);  // (C)63355
+					
+			ISearchBean<ScBidSchedule> bidSchSearchBean = new SearchBean<ScBidSchedule>();
+			bidSchSearchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"scBid.docType", SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.DOCTYPE_QUOTATION));
+			bidSchSearchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"scBid.docId", SearchOperator.OPERATOR_EQUALS.value(), scQt.getQtId()));
+			bidSchSearchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"pmStatus.statusId", SearchOperator.OPERATOR_IN.value(), statusIds));
+					
+			reqDTO.setBidSchSearchBean(bidSchSearchBean);
 
-			/**
-			 * Upload attachment for Close QT 
-			 */
-			public void handleCloseQTFileUpload(FileUploadEvent event)
-					throws FileNotFoundException, IOException {
-				if(event.getFile() != null){
-						ScAttachment scAttachment = null;
-						ScCloseQTAttachment attachment = new ScCloseQTAttachment();
-						ScQt scQt = this.getManagedBean().getQt();
+			BiddingResDTO resDTO = biddingSO.searchBiddingScheduleList(reqDTO);
+			List<ScBidSchedule> list = resDTO.getBidSchResultBean().getResultList();
+			
+			if(list.size() > 0 ) {
+				isBiddingActive = true;
+			}
+			
+			return isBiddingActive;
+		} finally {
+			biddingSO = null;
+		}
+	}
+			
+	/**
+	 * check Close QT Dialog Pop Up
+	 * @return true 
+	 */
+	public void closeQTDialogPopUp() {
+		RequestContext.getCurrentInstance().execute("closeQTDlg.show()");
+	}	
+
+	/**
+	 * Upload attachment for Close QT 
+	 */
+	public void handleCloseQTFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+		if(event.getFile() != null) {
+			ScAttachment scAttachment = null;
+			ScCloseQTAttachment attachment = new ScCloseQTAttachment();
+			ScQt scQt = this.getManagedBean().getQt();
+			
+			List<ScCloseQTAttachment> attachments = scQt.getScCloseQTAttachment();
+			attachment.setScQt(scQt);
+			attachment.setDocNo(scQt.getQtNo());
 						
-						List<ScCloseQTAttachment> attachments = scQt.getScCloseQTAttachment();
-						attachment.setScQt(scQt);
-						attachment.setDocNo(scQt.getQtNo());
-						
-						 if(attachments == null){
-						   attachments = new ArrayList<>();
-					     }
+			if(attachments == null) {
+				attachments = new ArrayList<>();
+			}
 						 			
-						if(attachments.isEmpty()){
-							attachments.add(attachment);
- 							scQt.setScCloseQTAttachment(attachments);
- 							scAttachment = attachment;
- 							uploadAttachment(event.getFile(), scAttachment);
-					        this.getManagedBean().setQt(scQt); 
-						}else{
-							if(attachment != null){
-								handleException(new EpException(MessageConst.ERROR_100063));
-							}
-                        }		
+			if(attachments.isEmpty()) {
+				attachments.add(attachment);
+				
+				scQt.setScCloseQTAttachment(attachments);
+ 				
+				scAttachment = attachment;
+				
+				uploadAttachment(event.getFile(), scAttachment);
+			
+				this.getManagedBean().setQt(scQt); 
+			} else {
+				if(attachment != null) {
+					handleException(new EpException(MessageConst.ERROR_100063));
 				}
-			}
+			}		
+		}
+	}
 			
-			/**
-			 * Delete attachment for Close QT by index
-			 * @param index  file index to delete
-			 */
-			public void deleteCloseQTAttachmentAction(int index){
-				this.getManagedBean().getQt().getScCloseQTAttachment().remove(index);
-			}
+	/**
+	 * Delete attachment for Close QT by index
+	 * @param index  file index to delete
+	 */
+	public void deleteCloseQTAttachmentAction(int index) {
+		this.getManagedBean().getQt().getScCloseQTAttachment().remove(index);
+	}
 			
-			/**
-			 * The method used to set the file index of attachment list.
-			 * @param index  file index of attachment list
-			 */
-			public void setAttachFileIndex(int index) {
-				this.getManagedBean().setAttachFileIndex(index);
-			}
+	/**
+	 * The method used to set the file index of attachment list.
+	 * @param index  file index of attachment list
+	 */
+	public void setAttachFileIndex(int index) {
+		this.getManagedBean().setAttachFileIndex(index);
+	}
 
+	/**
+	 * Submit close QT details is succesful.
+	 */
+	public void submitCloseQTDetail() { 
+		IQTDetailSO detailSO;
+		
+		try {
+			this.getManagedBean().setSaveFlow(false);
 			
-			/**
-			 * Submit close QT details is succesful.
-			 */
-			public void submitCloseQTDetail() { 
-				IQTDetailSO detailSO;
-				try {
-					this.getManagedBean().setSaveFlow(false);
-					detailSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class); 
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class); 
 					
-						QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-						ScQt qt = this.getManagedBean().getQt();
+			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+			
+			ScQt qt = this.getManagedBean().getQt();
 						
-						validationCloseQT(qt.getScCloseQTRemark(),qt.getScCloseQTAttachment());
+			validationCloseQT(qt.getScCloseQTRemark(),qt.getScCloseQTAttachment());
 						
-						if (isQTStatusPublished(qt.getQtStatus().getStatusId())) {
-							quationTenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-							finalizeRemarks(qt.getScCloseQTRemark());
-							qt.setScQtStatus(null);
-							qt.setScQtCommittees(null);
-							qt.setScQtApprovals(null);
-							qt.setScQtBriefings(null);
-							quationTenderReqDTO.setQtdetail(qt);
-						    quationTenderReqDTO.setQtClose(true);
-						}else{
-							quationTenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-							finalizeRemarks(qt.getScCloseQTRemark());
-							qt.setScQtStatus(null);
-							qt.setScQtCommittees(null);
-							qt.setScQtApprovals(null);
-							qt.setScQtBriefings(null);
-							quationTenderReqDTO.setQtdetail(qt);
-						    quationTenderReqDTO.setQtClose(true);
-						}
+			if (isQTStatusPublished(qt.getQtStatus().getStatusId())) {
+				quationTenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+				
+				finalizeRemarks(qt.getScCloseQTRemark());
+				
+				qt.setScQtStatus(null);
+				qt.setScQtCommittees(null);
+				qt.setScQtApprovals(null);
+				qt.setScQtBriefings(null);
+				
+				quationTenderReqDTO.setQtdetail(qt);
+				quationTenderReqDTO.setQtClose(true);
+			} else {
+				quationTenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+				
+				finalizeRemarks(qt.getScCloseQTRemark());
+				
+				qt.setScQtStatus(null);
+				qt.setScQtCommittees(null);
+				qt.setScQtApprovals(null);
+				qt.setScQtBriefings(null);
+				
+				quationTenderReqDTO.setQtdetail(qt);
+				quationTenderReqDTO.setQtClose(true);
+			}
 						
-						QuationTenderResDTO quationTenderResDTO = detailSO.closeQT(quationTenderReqDTO);
+			QuationTenderResDTO quationTenderResDTO = detailSO.closeQT(quationTenderReqDTO);
 						
-						if (quationTenderResDTO.isSuccessful()) {
-							successMessage(MessageConst.INFO_700036, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION,
-									qt.getQtNo(), Boolean.TRUE);
-						}
+			if (quationTenderResDTO.isSuccessful()) {
+				successMessage(MessageConst.INFO_700036, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION,
+						qt.getQtNo(), Boolean.TRUE);
+			}
 				        
-				} finally {
-					detailSO = null;
-				}
-			}
+		} finally {
+			detailSO = null;
+		}
+	}
 			
-			/**
-			 * Validation for close QT detail.
-			 * @return the list remark and list attachment
-			 */
-			private void validationCloseQT(List<ScCloseQTRemark> remark,List<ScCloseQTAttachment> attachment) {
-				if (null != remark) {
-					for (int i = 0; i < remark.size(); i++) {
-						String userRemark = remark.get(i).getRemark();
-						if (null == userRemark || "".equals(userRemark)) {
-							throw new EpException(MessageConst.ERROR_100022,new String[] { 
-								ResourceBundleUtils.getMessage("lbl.sc.sf.justification", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()) });
-						}
-					}
+	/**
+	 * Validation for close QT detail.
+	 * @return the list remark and list attachment
+	 */
+	private void validationCloseQT(List<ScCloseQTRemark> remark,List<ScCloseQTAttachment> attachment) {
+		if (null != remark) {
+			for (int i = 0; i < remark.size(); i++) {
+				String userRemark = remark.get(i).getRemark();
+				
+				if (null == userRemark || "".equals(userRemark)) {
+					throw new EpException(MessageConst.ERROR_100022,new String[] { 
+							ResourceBundleUtils.getMessage("lbl.sc.sf.justification", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()) });
 				}
-			    if(CollectionUtils.isEmpty(attachment)){
-		    			throw new EpException(MessageConst.ERROR_100022,new String[] { 
-						        ResourceBundleUtils.getMessage("lbl.sc.supporting.document", 
-								    ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()) });
-			    }
 			}
+		}
 			
-			public List<ScCloseQTRemark> findCloseQTRemarksByReqDTO(QuationTenderReqDTO reqDTO) {
-				IQTDetailSO qtDetailSO;
-				try {
-					qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);	
-					return qtDetailSO.findScCloseQTRemarks(reqDTO).getScCloseQTRemark();
-				} finally {
-					qtDetailSO = null;
-				}
-			}
+		if(CollectionUtils.isEmpty(attachment)) {
+		    		throw new EpException(MessageConst.ERROR_100022,new String[] { 
+						    ResourceBundleUtils.getMessage("lbl.sc.supporting.document", 
+						    ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()) });
+		}
+	}
 			
-            public String getUsername(){
-            	String userName = null;
-				QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-				List<ScCloseQTRemark> remarks = new ArrayList<>();
+	public List<ScCloseQTRemark> findCloseQTRemarksByReqDTO(QuationTenderReqDTO reqDTO) {
+		IQTDetailSO qtDetailSO;
+		
+		try {
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);	
+					
+			return qtDetailSO.findScCloseQTRemarks(reqDTO).getScCloseQTRemark();
+		} finally {
+			qtDetailSO = null;
+		}
+	}
+			
+	public String getUsername() {
+		String userName = null;
+		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+		List<ScCloseQTRemark> remarks = new ArrayList<>();
 				
-				ScQt qt = this.getManagedBean().getQt();
-				quationTenderReqDTO.setQtId(qt.getQtId());
-				quationTenderReqDTO.setDocType(ParameterConst.DOCTYPE_QT_CLOSE);
+		ScQt qt = this.getManagedBean().getQt();
+		
+		quationTenderReqDTO.setQtId(qt.getQtId());
+		quationTenderReqDTO.setDocType(ParameterConst.DOCTYPE_QT_CLOSE);
+			
+		remarks = findCloseQTRemarksByReqDTO(quationTenderReqDTO);
 				
-				remarks = findCloseQTRemarksByReqDTO(quationTenderReqDTO);
+		for(ScRemark remark:remarks) {
+			userName = remark.getCreatedUser().getUserName();
+		}
 				
-				for(ScRemark remark:remarks){
-					userName = remark.getCreatedUser().getUserName();
-				}
-				
-			    return userName;   
-			}
+		return userName;   
+	}
             
-            public String getUserLoginId(){
-            	String userLoginId = null;
-				QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-				List<ScCloseQTRemark> remarks = new ArrayList<>();
+	public String getUserLoginId() {
+		String userLoginId = null;
+		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+		List<ScCloseQTRemark> remarks = new ArrayList<>();
 				
-				ScQt qt = this.getManagedBean().getQt();
-				quationTenderReqDTO.setQtId(qt.getQtId());
-				quationTenderReqDTO.setDocType(ParameterConst.DOCTYPE_QT_CLOSE);
+		ScQt qt = this.getManagedBean().getQt();
+		
+		quationTenderReqDTO.setQtId(qt.getQtId());
+		quationTenderReqDTO.setDocType(ParameterConst.DOCTYPE_QT_CLOSE);
 				
-				remarks = findCloseQTRemarksByReqDTO(quationTenderReqDTO);
+		remarks = findCloseQTRemarksByReqDTO(quationTenderReqDTO);
 				
-				for(ScRemark remark:remarks){
-					userLoginId = remark.getCreatedUser().getLoginId();
-				}
-			    return userLoginId;   
-			}
-			// 26095@hatta - end
+		for(ScRemark remark:remarks) {
+			userLoginId = remark.getCreatedUser().getLoginId();
+		}
+		
+		return userLoginId;   
+	}
+	// 26095@hatta - end
             
             
-  //Start 19287      
-    public void resetSearchDataResults(){
-    	if(isQTSearchScreen()){
-    		IPagingDataModel<ScQt> searchQTDataModel = getManagedBean()
-    				.getSearchQTDataModel();
+	// Start 19287
+	public void resetSearchDataResults() {
+		if (isQTSearchScreen()) {
+			IPagingDataModel<ScQt> searchQTDataModel = getManagedBean().getSearchQTDataModel();
+			searchQTDataModel = new QTPagingDataModel("searchQTs", getManagedBean().getQtnTenderSearchBean());
     		
-    			searchQTDataModel = new QTPagingDataModel("searchQTs", getManagedBean()
-    					.getQtnTenderSearchBean());
     			getManagedBean().setSearchQTDataModel(searchQTDataModel);
     			getManagedBean().getSearchQTDataModel().resetData();
-    			IPagingDataModel<ScLoaForQt> searchLoaDataModel = getManagedBean()
-    					.getSearchLoaForQtDataModel();          			
+			
+    			IPagingDataModel<ScLoaForQt> searchLoaDataModel = getManagedBean().getSearchLoaForQtDataModel();          			
     				searchLoaDataModel = new LOAPagingDataModel("searchQTLoaLois", getManagedBean()
     						.getQtnTenderSearchBean());
     				getManagedBean().setSearchLoaForQtDataModel(searchLoaDataModel);
@@ -9119,9 +9167,10 @@ public class QTDetailBackingBean extends
     					getManagedBean().setSearchLoiForQtDataModel(searchLoiDataModel);
     					getManagedBean().getSearchLoiForQtDataModel().resetData();
     		
-    	}
-    }
-    //End 19287 
+		}
+	}
+	// End 19287
+	
    //#25692-start         
     public Long retirveStatusId() {
     	if(((null!=this.getManagedBean().getTaskName()&&SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(this.getManagedBean().getTaskName()))|| (getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()) || (getUserTaskIsBPKApproval() && isApprovalScreen())  || (getUserTaskIsCommitteeAppointmentApproval() && isApprovalScreen()))){
@@ -9131,7 +9180,6 @@ public class QTDetailBackingBean extends
     		log.debug("=====returnelse====");
     		return this.getManagedBean().getCurrentStatusId();	
     	}
-    	
     }
     //#25692-End  
     
@@ -9829,6 +9877,7 @@ public class QTDetailBackingBean extends
   		}
 		return false;
   	}
+  	
   	private boolean isCommitteeModified(List<ScCommitteeMember> currentList, List<QtCommitteeMemberBean> previousList){
 		if(CollectionUtils.isEmpty(previousList)){
 			previousList = new ArrayList<QtCommitteeMemberBean>();
