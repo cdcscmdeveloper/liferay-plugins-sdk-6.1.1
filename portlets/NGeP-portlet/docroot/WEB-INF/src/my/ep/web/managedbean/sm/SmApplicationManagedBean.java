@@ -624,9 +624,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//#12492 - start
 	private boolean showDifferenceBankInfoAction;
 	//#12492 - end
+	//32968 START
+	private boolean checkBranch;
+	//32968 END
 	
-	private class RejectReasonPagingDataModel extends
-			PagingDataModel<PmReasonDesc> {
+	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
 		 */
@@ -4620,4 +4622,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.showDifferenceBankInfoAction = showDifferenceBankInfoAction;
 	}
 	//#12492 - end
+	
+	//#32968 START
+	public boolean isCheckBranch() {
+		return checkBranch;
+	}
+
+	public void setCheckBranch(boolean checkBranch) {
+		this.checkBranch = checkBranch;
+	}
+	//#32968 END
 }

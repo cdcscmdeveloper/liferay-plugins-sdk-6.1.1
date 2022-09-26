@@ -1901,6 +1901,8 @@ public class SmApplicationUtil {
 		StringBuilder sbSuppBranch = new StringBuilder();
 		sbSuppBranch.append("<br/>");
 		int x = 0;
+		//32968 START
+		String notAvail = "N/A";
 		for (SmSupplierBranch suppBranch : appl.getSmSupplierBranches()) {
 			if (suppBranch.getBranchName().isEmpty()
 					|| suppBranch.getSmAddress() == null
@@ -1909,24 +1911,38 @@ public class SmApplicationUtil {
 							|| suppBranch.getSmAddress().getCountryId() == null
 							|| suppBranch.getSmAddress().getStateId() == null
 							|| suppBranch.getSmAddress().getDistrictId() == null || suppBranch.getSmAddress()
-							.getCityId() == null) || suppBranch.getSmPersonnel() == null) {
+							.getCityId() == null) || suppBranch.getSmPersonnel() == null
+							|| suppBranch.getSmAddress().getPmDistrict().getDistrictName().contains(notAvail)
+							|| suppBranch.getSmAddress().getPmCity().getCityName().contains(notAvail)) { //32968 END) 
 				validateSmBranch = false;
 				sbSuppBranch.append(++x + ". ");
 				sbSuppBranch.append(suppBranch.getBranchName());
 				sbSuppBranch.append("<br/>");
 			}
 		}
-
+		//32968 START
 		if (!validateSmBranch) {
 			validSave = false;
-			StringBuilder errMsg = new StringBuilder();
-			errMsg.append("Please complete the mandatory fields marked (*) in the 'Personnel/Branch Info' section for the following Company Branch:</br> ");
-			errMsg.append(sbSuppBranch);
-			if (currentTab != -1) {
-				setNavigationBackToCurrentPage(currentTab, managedBean);
+			if(!managedBean.isCheckBranch() && (managedBean.isPoUser() || managedBean.isApproverUser())){
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+				}
+				managedBean.setCheckBranch(true);
+				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.branch.not.completed",
+						new String[] { sbSuppBranch.toString() }));
+			}else if(managedBean.isSupplierUser()){
+				//StringBuilder errMsg = new StringBuilder();
+				//errMsg.append("Please complete the mandatory fields marked (*) in the 'Personnel/Branch Info' section for the following Company Branch:</br> ");
+				//errMsg.append(sbSuppBranch);
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+				}
+				//throw new EpException(errMsg.toString());
+				throw new EpException(SmCommonUtil.getMessage("lbl.sm.supplier.branch.not.completed",
+						new String[] { sbSuppBranch.toString() }));
 			}
-			throw new EpException(errMsg.toString());
 		}
+		//32968 END
 		// end #30076
 
 		//16052019 - SSM INTEGRATION CR #27219
@@ -11135,11 +11151,6 @@ public class SmApplicationUtil {
 
 	public static void approveApplCategories(boolean isApprover, boolean isPo,
 			SmAppl smAppl) {
-		// #30929 - start
-		log.info("<<< smAppl.getApplId() value : " + smAppl.getApplId() + " >>>");
-		log.info("<<< isApprover value ::::::::: " + isApprover + " >>>");
-		log.info("<<< isPo value ::::::::::::::: " + isPo + " >>>");
-		// #30929 - end
 		for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.PENDING_ACT_STATUS) == 0
@@ -11151,12 +11162,6 @@ public class SmApplicationUtil {
 								.getApprvrDecFlg().compareTo(new Integer(1)) == 0)) {
 					cat.setApprovedDate(new Date());
 					cat.setRecordStatusFlg(SupplierManagementConst.APPROVED_RECORD_STATUS);
-					// #30929 start
-					log.info("<<< Updating SmSupplierCategory.ApprovedDate >>>");
-					log.info("<<< SmSupplierCategory.ApprovedDate value : " + cat.getApprovedDate() + " >>>");
-					log.info("<<< Updating SmSupplierCategory.RecordStatus >>>");
-					log.info("<<< SmSupplierCategory.RecordStatus value : " + cat.getRecordStatusFlg() + " >>>");
-					// #30929 end
 					setSupplierCategoryEffectiveDate(cat, smAppl.getApplType());
 				} else {
 					cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
