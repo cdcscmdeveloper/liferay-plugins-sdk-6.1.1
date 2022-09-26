@@ -813,6 +813,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @return String
 	 */
 	public String submitRegistration() {
+		
+		//#33850 START
+		if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)){
+			this.getManagedBean().setSameAsOwner(true);
+		}
+		//#33850 END
+		
 		setAdminSameAsOwner();
 		SmSupplier smSupp = this.getManagedBean().getSmSupp();
 		SmAppl smAppl = this.getManagedBean().getSmAppl();
@@ -1950,12 +1957,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						getManagedBean().getSmBusinessAdd().setPmDivision(new PmDivision());
 					} else {
 						//start - #30483
-						ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
-								.getServiceObject("sm", ISupplierSearchSO.class);
-						SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(this.getManagedBean().getSmBusinessAdd().getAddressId());
-						List<SelectItem> districtLs = SmCommonUtil.getDistrictListByID(smAddress.getPmDivision().getDivisionId());			
-						//end - #30483
-						this.getManagedBean().setBusinessDistrictLs(districtLs);
+						if (this.getManagedBean().getSmBusinessAdd().getAddressId() != null) {//#30964-start
+							ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
+									.getServiceObject("sm", ISupplierSearchSO.class);
+							SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(this.getManagedBean()
+									.getSmBusinessAdd().getAddressId());
+							List<SelectItem> districtLs = SmCommonUtil.getDistrictListByID(smAddress.getPmDivision()
+									.getDivisionId());
+							// end - #30483
+							this.getManagedBean().setBusinessDistrictLs(districtLs);
+						}//#30964-end
 					}
 															
 					List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
