@@ -8,6 +8,7 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.net.ssl.SSLContext;
 
@@ -48,7 +49,8 @@ import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
 @ManagedBean(name = "myGpkiBackingBean")
-@SessionScoped
+//@SessionScoped
+@ViewScoped
 public class MyGpkiBackingBean  implements Serializable {
 
 	/**
