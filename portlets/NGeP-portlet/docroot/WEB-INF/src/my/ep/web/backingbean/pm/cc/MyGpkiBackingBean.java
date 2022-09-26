@@ -223,6 +223,7 @@ public class MyGpkiBackingBean  implements Serializable {
 	
 	public void showDialog(){
 		RequestContext.getCurrentInstance().execute("qrDialog.show()");
+		log.info("MyGPKI - Enter showDialog");
 	}
 	
 	public void hideDialog(){
