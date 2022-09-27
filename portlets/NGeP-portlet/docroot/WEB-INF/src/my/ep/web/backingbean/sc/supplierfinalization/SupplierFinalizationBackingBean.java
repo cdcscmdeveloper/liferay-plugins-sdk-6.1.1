@@ -1443,6 +1443,7 @@ public class SupplierFinalizationBackingBean extends
 		log.info("..In saveSupplierFinalization()..");
 
 		this.getManagedBean().setSubmit(false);
+		this.getManagedBean().setAction(null);//6906 note 117
 
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		int activeIndex = this.getManagedBean().getActiveIndex();
@@ -1458,13 +1459,24 @@ public class SupplierFinalizationBackingBean extends
 			finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 			
-			//6906 note 117 - start - move validation from html to backingbean
-			if(scQtFinalization.getDecision()==null || scQtFinalization.getDecision().getParameterCode()==null){
-				throw new EpException(MessageConst.ERROR_100022,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.sf.meeting.decision", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}
-			//6906 note 117 - end
+			//6906 - note 117 - start
+			String desicion = scQtFinalization.getDecision() ==null ? null: scQtFinalization.getDecision().getParameterCode();
+			List<String> decisionList = new ArrayList<String>();
+			if(this.getManagedBean().getDecisionDropdown() != null && this.getManagedBean().getDecisionDropdown().length>0){
+				for(SelectItem item: this.getManagedBean().getDecisionDropdown()){
+					if(item.getValue()!=null) decisionList.add(item.getValue().toString());
+				}
+			} 
+			if (CollectionUtils.isEmpty(decisionList) || StringUtils.isEmpty(desicion) || !decisionList.contains(desicion)) {
+				if(this.getManagedBean().getActiveIndex() == this.getManagedBean().getFinalizationTabIndex()){
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] { ResourceBundleUtils.getMessage("lbl.sc.sf.meeting.decision", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}else{
+					scQtFinalization.getDecision().setParameterCode(ParameterConst.DECISION_RECOMMEND_SUPPLIER);
+				}
+			} 
+			//6906 - note 117 - end
 			SuppFinalizationReqDTO reqDTO = null;
 			ScQtCommittee scQtCommittee = null;
 			
@@ -2404,10 +2416,17 @@ public class SupplierFinalizationBackingBean extends
 		finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
 		scQtFinalization.setScQtFinalizationReports(finalizationReports);
 		//6906 note 117 - start
-		if(scQtFinalization.getDecision()==null || scQtFinalization.getDecision().getParameterCode()==null){
-			throw new EpException(MessageConst.ERROR_100022,
-					new String[] { ResourceBundleUtils.getMessage("lbl.sc.sf.meeting.decision", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		String desicion = scQtFinalization.getDecision() ==null ? null: scQtFinalization.getDecision().getParameterCode();
+		List<String> decisionList = new ArrayList<String>();
+		if(this.getManagedBean().getDecisionDropdown() != null && this.getManagedBean().getDecisionDropdown().length>0){
+			for(SelectItem item: this.getManagedBean().getDecisionDropdown()){
+				if(item.getValue()!=null) decisionList.add(item.getValue().toString());
+			}
+		}
+		if (CollectionUtils.isEmpty(decisionList) || StringUtils.isEmpty(desicion) || !decisionList.contains(desicion)) {
+			throw new EpException(MessageConst.ERROR_100022, 
+					new String[] { ResourceBundleUtils.getMessage("lbl.sc.sf.meeting.decision", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
 		}
 		//6906 note 117 - end
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
@@ -3561,6 +3580,7 @@ return	remarksNotFound;
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 									.saveSupplierFinalization(reqDTO);
 			reloadData(resDTO);				
+			this.evaluateDecisionList();//6906 note 117
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -11280,12 +11300,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					break;
 				}
 			}
-		}
-		PmParameter desicion = this.getManagedBean().getScQtFinalization().getDecision();
-		if (this.getManagedBean().isSupplierFinalizationReadOnly()
-				&& ParameterConst.DECISION_RECOMMEND_SUPPLIER.equals(desicion
-						.getParameterCode())) {
-			desicion.setParameterCode(null);
 		}
 	}
 	public boolean disableReevaluationOptions(String stage){
