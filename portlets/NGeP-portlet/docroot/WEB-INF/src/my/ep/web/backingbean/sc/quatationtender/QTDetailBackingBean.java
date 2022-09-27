@@ -12575,11 +12575,15 @@ public void retrieveDemoQtDetails(Long qtId) {
 					
 					//open for
 					if (!getManagedBean().getQt().isPanel()){
-						if (!getManagedBean().getScQtHistory().getOpenFor().equalsIgnoreCase(getManagedBean().getQt().getOpenFor())){
-							tempOpenFor = getManagedBean().getQt().getOpenFor();
-							getManagedBean().setIsOpenForChange(true);
-							getManagedBean().setIsScEditGeneral(true);
-							getManagedBean().setIsScEditSupplierQualificationCriteria(true);
+						if (null != getManagedBean().getScQtHistory()){
+							if (null != getManagedBean().getScQtHistory().getOpenFor()){
+								if (!getManagedBean().getScQtHistory().getOpenFor().equalsIgnoreCase(getManagedBean().getQt().getOpenFor())){
+									tempOpenFor = getManagedBean().getQt().getOpenFor();
+									getManagedBean().setIsOpenForChange(true);
+									getManagedBean().setIsScEditGeneral(true);
+									getManagedBean().setIsScEditSupplierQualificationCriteria(true);
+								}
+							}
 						}
 					}
 					
