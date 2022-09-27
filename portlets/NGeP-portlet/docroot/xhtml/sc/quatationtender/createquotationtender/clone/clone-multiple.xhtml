@@ -65,13 +65,16 @@
 	  
 	  	
 	   <!--#33914 Start - QT Maintenance pop up message related #9019 and overwrite reopen #note-254-->	
-	 	<p:blockUI block="confirmationCloneDialogMsg" widgetVar="blockWidgetCloneConfirm">
+	 	<p:blockUI block="confhide" widgetVar="blockWidgetCloneConfirm">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
 	
-		<p:confirmDialog id="confirmationCloneDialogMsg" message="#{lbl['lbl.sc.qt.dialog.cofirm.clone.msg']}"
+		<p:confirmDialog message="#{lbl['lbl.sc.qt.dialog.cofirm.clone.msg']}"
 			header="#{lbl['lbl.cm.dialog.cofirm.header']}"
 			widgetVar="confirmationClone">
+			<p:commandButton id="confhide"
+					value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+					style="background-color: #FFFFFF !important;color: #FFFFFF !important;border-style: none;width:250px;height:400px;"/>
 			<p:commandButton id="conf"
 				value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 				actionListener="#{qtMultipleCloneBackingBean.addToClone()}"
