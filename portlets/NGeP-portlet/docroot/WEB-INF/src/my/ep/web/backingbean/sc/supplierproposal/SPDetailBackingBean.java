@@ -5443,7 +5443,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		title = title.replaceAll(">", "&#62;");
 		title = title.replaceAll("\r\n", "<br />");
 		context.put("QTTitle", title);
-
+		context.put("bean", this);//11104
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.SUPPLIER_PROPOSAL_PRINT_LABEL, context,
 				new FileOutputStream(getActualFilePath(attachment)));

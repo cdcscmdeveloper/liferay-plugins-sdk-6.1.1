@@ -85,6 +85,7 @@ import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateDocConst;
+import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
@@ -6122,6 +6123,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		
 		//#26130 end
+		public String replaceWithBR(String specDetails) {//11104_start
 
+			return specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+					TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}//11104_end
 
 }
