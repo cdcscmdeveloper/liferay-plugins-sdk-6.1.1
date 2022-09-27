@@ -157,6 +157,10 @@ public class SmReportConst implements Serializable {
 	// #29617
 	public static final String SM_SME_SUPPLIER_RPT_VAL = "SM_096";
 
+	//#32521 - START
+	public static final String SM_APPLICATION_PROCESSED_RPT_VAL = "SM_097";
+	//#32521 - END
+
 	// Screen fields constants
 	public static final String SM_ZONE_SEMENANJUNG = "Semenanjung";
 	public static final String SM_ZONE_SABAH = "Sabah";
@@ -683,5 +687,10 @@ public class SmReportConst implements Serializable {
 		return SM_SME_SUPPLIER_RPT_VAL;
 	}
 	// #29617 end
-
+	
+	//#32521 - START
+	public String getSmApplicationProcessedRptVal() {
+		return SM_APPLICATION_PROCESSED_RPT_VAL;
+	}
+	//#32521 - END
 }
