@@ -30,8 +30,7 @@
 			columnClasses="columnWidth20"
 			rendered="#{suppFinalizationBackingBean.managedBean.scQt.zonal and 
 							!suppFinalizationBackingBean.managedBean.itemize and 
-								(suppFinalizationBackingBean.managedBean.recommendSupplier or
-						 			suppFinalizationBackingBean.managedBean.forwardToHigherAuthority)}">
+								decisionSupplFinalOrFwdHighAuth}"><!-- 6906 note 117 -->
 			
 			<h:column>
 				<h:outputLabel value="#{lbl['lbl.sc.cancelled']}" />
@@ -44,7 +43,7 @@
 							<p:selectOneMenu id="cancelItems" label="#{lbl['lbl.sc.cancelled']}" required="true"
 								value="#{suppFinalizationBackingBean.managedBean.itemCancelled}"
 								disabled="#{!(isSecretaryUser or 
-												isBPKTaskAndClaimed)}">
+												isBPKTaskAndClaimed) or supplierFinalizationReadOnly}"><!-- 6906 note 117 -->
 								<f:selectItems value="#{suppFinalizationBackingBean.getItemCancellationDropDown()}" />
 								<p:ajax event="change" process="@this" update="@([id$=cancelItems],[id$=supplierListTblPanel])" 
 										listener="#{suppFinalizationBackingBean.zonalPackageItemsCancellationEvent}" />
