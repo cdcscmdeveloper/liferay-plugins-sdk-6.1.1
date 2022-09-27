@@ -21,12 +21,16 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.applicationNo']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
+			<!-- #7754 - Start  -->
 			<td class="tdContent">
 				<p:inputText maxlength="16"
 					value="#{siteVisitStatusRptBB.managedBean.applNo}"
+					label="#{lbl['lbl.rpt.applicationNo']}"
+					required="true"
 					style="width:290px;">
 				</p:inputText>
 			</td>
+			<!-- #7754 - End  -->
 		</tr>
 		
 		<tr>

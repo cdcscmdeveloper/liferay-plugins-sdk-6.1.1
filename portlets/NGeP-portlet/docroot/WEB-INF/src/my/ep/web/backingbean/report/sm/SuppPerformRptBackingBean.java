@@ -107,6 +107,10 @@ public class SuppPerformRptBackingBean extends
 				CommonConstants.DEFAULT_DATE_FORMAT_WITH_MONTH_NAME_NEW, getManagedBean()
 				.getDateTo()));
 		
+		//#7754 - Start
+		params.put(SmReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());
+		//#7754 - End
+
 		for (Map.Entry<String, String> entry : params.entrySet()) {
 			log.info("Key : " + entry.getKey() + " Value : " + entry.getValue());
 		}
