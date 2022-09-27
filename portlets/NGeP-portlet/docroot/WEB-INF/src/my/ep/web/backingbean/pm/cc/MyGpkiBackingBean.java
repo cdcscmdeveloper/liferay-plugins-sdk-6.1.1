@@ -224,9 +224,13 @@ public class MyGpkiBackingBean  implements Serializable {
 	}
 	
 	public void showDialog(){
-		setQrCodeText(activate());
 		RequestContext.getCurrentInstance().execute("qrDialog.show()");
 	}
+	
+	public void loadQRCode(){
+		setQrCodeText(activate());
+	}
+	
 	
 	public void hideDialog(){
 		RequestContext.getCurrentInstance().execute("qrDialog.hide()");

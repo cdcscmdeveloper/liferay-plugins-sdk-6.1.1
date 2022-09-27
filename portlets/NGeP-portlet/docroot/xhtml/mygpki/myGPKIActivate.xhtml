@@ -54,12 +54,9 @@ textarea {
 .ui-dialog-footer {
 	text-align: right !important;
 }
+
 </style>
-<script>
-function loadQrImage() {
-	document.getElementById('imgUrl').value = images[Math.round((images.length - 1) * Math.random())]
-	}
-</script>
+
 		<p:blockUI block="myGPKIActivate" widgetVar="gpkiBlockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
@@ -75,9 +72,9 @@ function loadQrImage() {
 							<!-- 								value="/css/images/design/ico-play.png" title="Activate OTP" /></td> -->
 							<td><p:commandLink
 									value="Activate OTP" 
-									action="#{myGpkiBackingBean.showDialog}"
+									action="#{myGpkiBackingBean.loadQRCode}"
 									onstart="gpkiBlockWidget.show()"
-									oncomplete="gpkiBlockWidget.hide()"></p:commandLink></td>
+									oncomplete="updateQRImage();gpkiBlockWidget.hide();qrDialog.show()"></p:commandLink></td>
 
 						</tr>
 
@@ -105,8 +102,7 @@ function loadQrImage() {
 		</p:panel>
 
 		<p:remoteCommand name="updateQRImage" update="qrPanel" />
-		<p:dialog header="Activate OTP" widgetVar="qrDialog" modal="true"
-			onShow="updateQRImage()">
+		<p:dialog header="Activate OTP" widgetVar="qrDialog" modal="true">
 
 			<b>STEP 1: Click below to download Nexus Smart ID</b>
 			<br></br>
@@ -138,10 +134,12 @@ function loadQrImage() {
 			<p:outputPanel id="qrPanel">
 				<table>
 					<tr>
-						<td><p:graphicImage
+						<td style="height: 300px;width: 300px;">
+						<p:graphicImage
 								value="data:image/jpg;base64,#{myGpkiBackingBean.qrCodeText}"
 								alt="Image failed to load"
-								style="max-width: 300px; max-height: 300px;" /></td>
+								style="max-width: 300px; max-height: 300px;" />
+						</td>
 					</tr>
 				</table>
 			</p:outputPanel>
