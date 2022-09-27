@@ -2424,6 +2424,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 		}
 		if (CollectionUtils.isEmpty(decisionList) || StringUtils.isEmpty(desicion) || !decisionList.contains(desicion)) {
+			navigateToSupplierFinalizationTab();
 			throw new EpException(MessageConst.ERROR_100022, 
 					new String[] { ResourceBundleUtils.getMessage("lbl.sc.sf.meeting.decision", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()) });
