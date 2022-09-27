@@ -8053,7 +8053,13 @@ public void saveComplianceSample() {
 							if (null == this.getManagedBean().getScQt()
 							        .getFecEvaluationCheck()) {
 
-							    generateFinancialEvaluationresults();
+								//32373 prevention start
+							    boolean isSuccess = generateFinancialEvaluationresults();						
+								if(!isSuccess){
+									throw new EpException(MessageConst.ERROR_760530);
+								}
+//							    generateFinancialEvaluationresults();
+								//32373 prevention end
 							    this.getManagedBean().getScQt()
 							            .setFecEvaluationCheck(2);
 							    EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -8100,6 +8106,9 @@ public void saveComplianceSample() {
 
 						}else if(this.getManagedBean()
 								.getOneTierFinancialActiveIndex() == 1){
+							//32373 recalculate after done financial package -Start
+							generatePrefMargin();
+							//32373 recalculate after done financial package -end
 							financialCheckListStatusCheck();//#25138
 							retriveOneTierFinancialSupplierSummary();
 							this.getManagedBean().setTabFinancialIndex(3);
@@ -8239,6 +8248,10 @@ public void saveComplianceSample() {
 							
 						}else if (this.getManagedBean()
 								.getEvaluatioStageActiveIndex() == 1){
+							//32373 recalculate after done financial package -Start
+							//2 tier
+							generatePrefMargin();
+							//32373 recalculate after done financial package -end
 							retriveSummaryEvaluationStage();
 //							retriveOneTierFinancialSupplierSummary();
 							this.getManagedBean().setTabFinancialIndex(3);	
@@ -15041,7 +15054,10 @@ private void retriveCommitteeRemarksList(){
 				}
 				//#25138 - set boolean for wip data - end
 				//#25138, #21695 - end
-				evaluationSO.generateEvaluationSheet(evalReqDTO);
+				//32373 - Remove below, generate only depends on fec check -Start
+				//REMOVE HERE FOR AWHILE
+				//evaluationSO.generateEvaluationSheet(evalReqDTO);
+				//32373 - Remove below, generate only depends on fec check -end
 			
 			}
 			//#25138 - filter auto score condition - End
@@ -17857,5 +17873,34 @@ private void retriveCommitteeRemarksList(){
 		return renderDisqialifiedColumn;
 	}
 	//#29187 End Vinod
+	//32373 - saperate for recalculate pref margin after done financial package -Start
+		private boolean generatePrefMargin() { 
+			IQTEvaluationSO evaluationSO = null;
+			boolean isSuccess = false; 
+			try {
+				EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+				evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+				reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+				//#25138, #21695 - start 
+				List<String> evalstage = new ArrayList<String>();
+				evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+				evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+				reqDTO.setResultStages(evalstage);
+				reqDTO.setPartial(this.getManagedBean().getScQt().isPartial());
+				
+				evaluationSO.generateEvaluationPrefmargin(reqDTO);
+				
+				isSuccess = true; 
+			}catch(Exception e){
+					log.info("Error while decrypt data redmine:31751::qtId:"+this.getManagedBean().getScQt().getQtId() +"::committeeType:"+this.getManagedBean().getCommitteeType());
+						
+			} finally {
+				evaluationSO = null;
+			}
+			return  isSuccess; //Bug #31751
+		}
+		//32373 - saperate for recalculate pref margin after done financial package - End
 
 }
