@@ -21951,7 +21951,7 @@ if(null!=allTechnicalChecklist){
 	
 	/*#29187 Start Vinod*/
 	public void retriveSampleSpecmasterForMandatorySpecChecking(ScQtCheckList templateChecklist){
-		log.info("***retriveSampleSpecmasterForMandatorySpecChecking **** Start : "+templateChecklist);
+		log.info("**retriveSampleSpecmasterForMandatorySpecChecking *** Start : "+templateChecklist);
 		this.getManagedBean().setSampleCheckList(templateChecklist);
 		
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
@@ -21966,23 +21966,29 @@ if(null!=allTechnicalChecklist){
 		
 		if (null != tmpresDTO.getSpecMaster()
 				&& null != tmpresDTO.getSpecMaster().getTplSpecQuestions()) {
+			log.info("SpecMasterId is: " + tmpresDTO.getSpecMaster().getSpecMasterId());
 			for (TplSpecQuestion question : tmpresDTO.getSpecMaster()
 					.getTplSpecQuestions()) {
+				log.info("SpecQuestionId is: " + question.getSpecQuestionId());
+				log.info("QuestionType is: " + question.getQuestionType());
 				if (!question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)
 						&& question.isMandatorySpec()) {
 					for (TplSpecQuestion questionDisplay : this
 							.getManagedBean().getSampleCheckList().getScQtDoc()
 							.getTplSpecMaster().getTplSpecQuestions()) {
+						log.info("ParentSpecQuestionId is: " + question.getParentSpecQuestion().getSpecQuestionId());
+						log.info("DisplaySpecQuestionId is: " + questionDisplay.getSpecQuestionId());
 						if (question.getParentSpecQuestion()
 								.getSpecQuestionId() == questionDisplay
 								.getSpecQuestionId()) {
 							questionDisplay.setMandatorySpecForSample(true);
+							log.info("MandatorySpecForSample is true for DisplaySpecQuestionId is: " + questionDisplay.getSpecQuestionId());
 						}
 					}
 				}
 			}
 		}
-		log.info("***retriveSampleSpecmasterForMandatorySpecChecking ****End ");
+		log.info("**retriveSampleSpecmasterForMandatorySpecChecking ***End ");
 	}
 	/*#29187 End Vinod*/
 }
