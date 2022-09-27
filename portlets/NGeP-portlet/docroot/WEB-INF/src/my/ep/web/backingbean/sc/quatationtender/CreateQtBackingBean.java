@@ -560,7 +560,7 @@ public class CreateQtBackingBean extends
 				if (null == supplierCriteria.getLocationLevel()) {
 					supplierCriteria.setLocationLevel(new PmParameter());
 				}
-	
+				this.getManagedBean().setTemplateSpecZoneDtls(new ArrayList<TplSpecZoneDtl>());//33918
 				this.getManagedBean().setZoneGeneralTrees(null);
 				this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
 				if (null != supplierCriteria

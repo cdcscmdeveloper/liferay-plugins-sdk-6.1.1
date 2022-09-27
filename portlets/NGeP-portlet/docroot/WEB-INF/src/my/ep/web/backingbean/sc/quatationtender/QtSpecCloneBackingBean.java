@@ -961,7 +961,9 @@ public class QtSpecCloneBackingBean extends
 							.setScQtSupplierCriteria(qtSupplierCriteria);
 					qtSupplierCriteria.getQtZoneCriterias().setTplSpecZoneDtls(
 							zoneLocal);
-					
+					//if(CollectionUtils.isEmpty(this.getManagedBean().getTemplateSpecZoneDtls())){//33918
+						this.getManagedBean().setTemplateSpecZoneDtls(zoneLocal);
+					//}//33918
 				} else {
 					if (null != scQt.getScQtSupplierCriteria()
 							.getQtZoneCriterias()) {
