@@ -49,10 +49,11 @@ public class ApplApprovedRptBackingBean extends SmReportBackingBean<ApplApproved
 			params.put(SmReportConst.PARAM_APPL_TYPE, getManagedBean()
 					.getApplType());
 		}
-		
+		//#32521 - reopen - START
 		if(getManagedBean().getSelectedUser() != null){
-			params.put(SmReportConst.PARAM_USER_NAME, getManagedBean().getSelectedUser().getUserName());
+			params.put(SmReportConst.PARAM_USER_ID2, String.valueOf(getManagedBean().getSelectedUser().getUserId()));
 		}
+		//#32521 - reopen - END
 		//#32521 - END
 		
 		generateSmReport(params);

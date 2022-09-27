@@ -79,6 +79,7 @@ public class SmReportConst implements Serializable {
 	
 	//#32521 - START
 	public static final String PARAM_DA_STATUS = "PDASTATUS";
+	public static final String PARAM_USER_ID2 = "PUSER2"; //param indicator for second user_id in same report.
 	//#32521 - END
 
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";

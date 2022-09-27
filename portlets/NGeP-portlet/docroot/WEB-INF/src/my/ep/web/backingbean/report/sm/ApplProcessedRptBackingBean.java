@@ -52,9 +52,11 @@ public class ApplProcessedRptBackingBean extends SmReportBackingBean<ApplProcess
 					.getApplType());
 		}
 		
+		//#32521 - reopen - START
 		if(getManagedBean().getSelectedUser() != null){
-			params.put(SmReportConst.PARAM_USER_NAME, getManagedBean().getSelectedUser().getUserName());
+			params.put(SmReportConst.PARAM_USER_ID2, String.valueOf(getManagedBean().getSelectedUser().getUserId()));
 		}
+		//#32521 - reopen - END
 		
 		generateSmReport(params);
 	}
