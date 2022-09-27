@@ -59,12 +59,14 @@ public class MyGpkiBackingBean  implements Serializable {
 	private String signedText;
 	private PmDigiSign pmDigiSign = new PmDigiSign();
 	private Exception nonSigningException;
+	private String qrCodeText;
 
 	public MyGpkiBackingBean() {
 
 	}
 
 
+	
 	public String getGpkiEnabledProperty() {
 		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
 		System.out.println("getGpkiEnabledProperty :" + prop.getProperty("gpki.enabled"));
@@ -222,8 +224,8 @@ public class MyGpkiBackingBean  implements Serializable {
 	}
 	
 	public void showDialog(){
+		setQrCodeText(activate());
 		RequestContext.getCurrentInstance().execute("qrDialog.show()");
-		log.info("MyGPKI - Enter showDialog");
 	}
 	
 	public void hideDialog(){
@@ -496,7 +498,13 @@ public class MyGpkiBackingBean  implements Serializable {
 	}
 
 	public String getQrCodeText() {
-		return activate();
+		return qrCodeText;
 	}
+
+	public void setQrCodeText(String qrCodeText) {
+		this.qrCodeText = qrCodeText;
+	}
+
+
 
 }
