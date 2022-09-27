@@ -205,12 +205,15 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean pacDisable;
 	//#21695 End
 	
-	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
+	//6906 note 117 - start
+	private SelectItem[] decisionDropdown;
+	private boolean supplierFinalizationReadOnly = true;
+	private boolean disabledSelection;
+	private boolean noProposalSubmitted;
+	private List<String> disqualifiedStages;
+	//6906 note 117 - end
 
+	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
 			add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
 			add(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT);
@@ -2498,5 +2501,46 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.pacDisable = pacDisable;
 	}
 	////#33174 #21695 End
+	//6906 note 117 - start
+	public SelectItem[] getDecisionDropdown() {
+		return decisionDropdown;
+	}
+
+	public void setDecisionDropdown(SelectItem[] decisionDropdown) {
+		this.decisionDropdown = decisionDropdown;
+	}
+
+	public boolean isSupplierFinalizationReadOnly() {
+		return supplierFinalizationReadOnly;
+	}
+
+	public void setSupplierFinalizationReadOnly(boolean supplierFinalizationReadOnly) {
+		this.supplierFinalizationReadOnly = supplierFinalizationReadOnly;
+	}
+
+	public boolean isDisabledSelection() {
+		return disabledSelection;
+	}
+
+	public void setDisabledSelection(boolean disabledSelection) {
+		this.disabledSelection = disabledSelection;
+	}
+
+	public boolean isNoProposalSubmitted() {
+		return noProposalSubmitted;
+	}
+
+	public void setNoProposalSubmitted(boolean noProposalSubmitted) {
+		this.noProposalSubmitted = noProposalSubmitted;
+	}
+
+	public List<String> getDisqualifiedStages() {
+		return disqualifiedStages;
+	}
+
+	public void setDisqualifiedStages(List<String> disqualifiedStages) {
+		this.disqualifiedStages = disqualifiedStages;
+	}
+	//6906 note 117 - end
 }
 // ***25201
