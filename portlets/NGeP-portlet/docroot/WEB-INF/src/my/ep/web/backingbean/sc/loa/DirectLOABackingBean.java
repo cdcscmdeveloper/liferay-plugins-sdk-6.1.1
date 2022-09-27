@@ -11570,6 +11570,9 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		public void searchTemplateSpecAction() {
 			Date fromCreatedDate = getManagedBean().getQtnTendertemplateSearchBean().getFromCreatedDate();
 			Date toCreatedDate = getManagedBean().getQtnTendertemplateSearchBean().getToCreatedDate();
+			if (null != fromCreatedDate && toCreatedDate == null) {
+				throw new EpException(MessageConst.ERROR_775187);
+			}
 			if (null == fromCreatedDate && toCreatedDate != null) {
 				throw new EpException(MessageConst.ERROR_775184);
 			}
