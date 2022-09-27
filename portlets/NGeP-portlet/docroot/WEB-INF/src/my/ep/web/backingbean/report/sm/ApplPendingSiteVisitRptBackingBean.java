@@ -41,7 +41,7 @@ public class ApplPendingSiteVisitRptBackingBean extends SmReportBackingBean<Appl
 	}
 
 	public void resetSearch() {
-		//#7754 - Start
+		//#7754 - Start 
 		getManagedBean().setZone(null);
 		//#7754 - End
 		setDefaultDateFromAndDateTo();
