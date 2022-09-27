@@ -386,7 +386,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="3">
+				<td>
 				     <p:inputText disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						required="true" id="fileNoId"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.fileNo}"
@@ -437,7 +437,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
 				</td>
 				<td colspan="3"><p:inputText style="text-align: right;"
-						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly or isPendingApprovalStatus or isPendingRevApprovalStatus}"
 						value="#{directLOABackingBean.managedBean.scLoa.estimatedPrice}"
 						size="35">
 						<p:ajax event="blur" process="@this" update="@this"></p:ajax>
@@ -454,7 +454,7 @@
 				<td colspan="3"><p:inputText style="text-align: right;" required="true" id="loaAmtId"
 						value="#{directLOABackingBean.managedBean.scLoa.loaAmt}" size="35"
 						label="#{lbl['lbl.sc.loiloa.loa.off.price']}"
-						disabled="#{isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly or isPendingVerification}">
+						disabled="#{isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly or isPendingVerification or isPendingApprovalStatus or isPendingRevApprovalStatus}">
 						<p:ajax event="blur"
 							listener="#{directLOABackingBean.setOverallCtAmount(directLOABackingBean.managedBean.scLoa.loaAmt)}"
 							update="@form"></p:ajax>
