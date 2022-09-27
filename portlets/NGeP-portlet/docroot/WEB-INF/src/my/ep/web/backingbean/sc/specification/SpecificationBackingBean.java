@@ -21979,8 +21979,8 @@ if(null!=allTechnicalChecklist){
 						log.info("ParentSpecQuestionId is: " + question.getParentSpecQuestion().getSpecQuestionId());
 						log.info("DisplaySpecQuestionId is: " + questionDisplay.getSpecQuestionId());
 						if (question.getParentSpecQuestion()
-								.getSpecQuestionId() == questionDisplay
-								.getSpecQuestionId()) {
+								.getSpecQuestionId().longValue() == questionDisplay
+								.getSpecQuestionId().longValue()) {
 							questionDisplay.setMandatorySpecForSample(true);
 							log.info("MandatorySpecForSample is true for DisplaySpecQuestionId is: " + questionDisplay.getSpecQuestionId());
 						}
