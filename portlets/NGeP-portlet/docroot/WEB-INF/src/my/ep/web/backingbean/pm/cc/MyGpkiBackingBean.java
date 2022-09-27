@@ -8,7 +8,6 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.net.ssl.SSLContext;
 
@@ -49,8 +48,7 @@ import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
 @ManagedBean(name = "myGpkiBackingBean")
-//@SessionScoped
-@ViewScoped
+@SessionScoped
 public class MyGpkiBackingBean  implements Serializable {
 
 	/**
@@ -232,8 +230,8 @@ public class MyGpkiBackingBean  implements Serializable {
 		RequestContext.getCurrentInstance().execute("qrDialog.hide()");
 	}
 
-	public String deactivate() {
-		String returnFlag = "false";
+	public void deactivate() {
+//		String returnFlag = "false";
 
 		FacesScopes facesScope = new FacesScopes();
 		Long userId = facesScope.getUserSessionBean().getUserId();
@@ -271,13 +269,13 @@ public class MyGpkiBackingBean  implements Serializable {
 
 			if (output.equalsIgnoreCase("OPERATION_SUCCESSFULL")) {
 				log.info("================================= MyGPKI Deactivated");
-				returnFlag = "true";
+//				returnFlag = "true";
 				FacesContext.getCurrentInstance().addMessage(
 						"MyGPKI",
 						new FacesMessage(FacesMessage.SEVERITY_INFO,"","Deactivate process successful"));
 
 			} else {
-				returnFlag = "false";
+//				returnFlag = "false";
 				String errorDesc = "";
 				if (output.equalsIgnoreCase("OPERATION_FAILED")) {
 					errorDesc = " - Operation failed";
@@ -299,7 +297,7 @@ public class MyGpkiBackingBean  implements Serializable {
 
 		}
 
-		return returnFlag;
+//		return returnFlag;
 
 	}
 

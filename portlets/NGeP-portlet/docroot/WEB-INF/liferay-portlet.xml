@@ -3545,6 +3545,8 @@
 		<css-class-wrapper>demoInvitation-portlet</css-class-wrapper>
 	</portlet>
 	
+	
+	<!-- #33986 -->
 	<portlet>
 		<portlet-name>myGPKIPOC</portlet-name>
 		<icon>/icon.png</icon>
