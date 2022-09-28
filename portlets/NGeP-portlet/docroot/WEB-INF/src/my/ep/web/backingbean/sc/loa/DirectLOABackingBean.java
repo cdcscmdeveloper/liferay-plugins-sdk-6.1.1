@@ -11407,7 +11407,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 							new SearchFilterBean("scQtDoc.scQt.scQtStatus.current",
 										SearchOperator.OPERATOR_EQUALS.value(), true));
 				}
-				if(isQT && getManagedBean().getSelectedCategories()!=null){
+				if(getManagedBean().getSelectedCategories()!=null){
 					List<Long> l1Ids = new ArrayList<Long>();
 					List<Long> l2Ids = new ArrayList<Long>();
 					List<Long> l3Ids = new ArrayList<Long>();
