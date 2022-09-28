@@ -101,25 +101,26 @@
 				lazy="true" rowIndexVar="groupRowIndex" rowKey="#{groupTasks.taskId}" rows="10" id="dtGroupTaskAssignResult"
 				style="width:100%;" var="groupTasks" widgetVar="dtGroupTaskTableWidget">
 				<ac:paginator for="dtGroupTaskAssignResult"></ac:paginator>
-				<!-- #29822 - START -->
+				<!-- #29822 - START -reendorse -->
 				<p:ajax event="rowSelect" update="@([id$=dtGroupTaskAssignResult])"/>
 				<p:column style="width:2%;">
 					<f:facet name="header">
 	                    <p:selectBooleanCheckbox value="#{supplierTaskReassignmentBackingBean.managedBean.checkAllGroupTasks}"
-	                    	disabled="#{not supplierTaskReassignmentBackingBean.managedBean.checkAllGroupTasksEnabled}">
+	                    	disabled="#{groupTasks.isSwimlane() or not supplierTaskReassignmentBackingBean.managedBean.checkAllGroupTasksEnabled}">
 		                    <p:ajax partialSubmit="true"
 		                    		process="@this" update="@form, @([id$=dtGroupTaskAssignResult])"
 		                    		listener="#{supplierTaskReassignmentBackingBean.checkAllGroupTasks}"/>
                  		</p:selectBooleanCheckbox>
 	                 </f:facet>
-                     <p:selectBooleanCheckbox value="#{groupTasks.taskSelect}"> 
+                     <p:selectBooleanCheckbox value="#{groupTasks.taskSelect}"
+                     disabled="#{not supplierTaskReassignmentBackingBean.managedBean.checkAllGroupTasksEnabled}"> 
 	               		<p:ajax event="change"
 	               				update="@form, @([id$=dtGroupTaskAssignResult])"
 	               				listener="#{supplierTaskReassignmentBackingBean.checkGroupTask}">
 	              		</p:ajax>
    	                  </p:selectBooleanCheckbox>
 				</p:column>	
-				<!-- #29822 - END -->
+				<!-- #29822 - END  -->
 				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
 					<h:outputText value="#{groupTasks.createDate.time}">
 						<f:convertDateTime
@@ -137,11 +138,13 @@
 				  #{supplierTaskReassignmentBackingBean.applicationStatus(groupTasks.docStatus)}	
 				             
 	        </p:column>
+				<!-- #29822 - START -reendorse -->
 				<p:column headerText="#{lbl['lbl.pm.action']}"
 					style="width:10%;text-align:center;">
 					 <p:commandLink
 					 	id="cLDeleteGroupTask"
-					 	disabled="#{groupTasks.isSwimlane()}"
+					 	disabled="#{groupTasks.isSwimlane()
+					 	or not taskReassignmentBackingBean.managedBean.enableRemoveAllGroupTasksButton}"
 					 	partialSubmit="true"
 						process="@this"
 						oncomplete="taskDeletePopUp.show();"
@@ -153,6 +156,7 @@
 							value="#{ProfileManagementConst.reassignWorklistTypeGroup}" />
 				</p:commandLink>
 				</p:column>
+				<!-- #29822 - end -reendorse -->
 			</p:dataTable>
 			<!-- #29822 - START -->
 			<p:outputPanel id="deleteGroupTasks">
@@ -230,11 +234,13 @@
 			<p:column headerText="#{lbl['lbl.pm.ta.status']}" style="width:34%;white-space:normal;">  
 				  #{supplierTaskReassignmentBackingBean.applicationStatus(otherTasks.docStatus)}	
 	        </p:column>
+				<!-- #29822 - START -reendorse -->
 				<p:column headerText="#{lbl['lbl.pm.action']}"
 					style="width:10%;text-align:center;">
 					 <p:commandLink
 					 	id="cLDeleteOtherTask"
-					 	disabled="#{otherTasks.isSwimlane()}"
+					 	disabled="#{otherTasks.isSwimlane()
+					 	or not supplierTaskReassignmentBackingBean.managedBean.checkAllOthersTasksEnabled}"
 					 	partialSubmit="true"
 						process="@this"
 						oncomplete="taskDeletePopUp.show();"
@@ -246,6 +252,7 @@
 							value="#{ProfileManagementConst.reassignWorklistTypeOthers}" />
 				</p:commandLink>
 				</p:column>
+				<!-- #29822 - end -reendorse -->
 			</p:dataTable>
 			<!-- #29822 - START -->
 			<p:outputPanel id="deleteOthersTasks">
