@@ -112,6 +112,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * This method will initialize the button and approver list.
 	 * This method include additional checking for viewing factoring.
 	 */
+	
 	public SupplierBackingBean(){
 		/* Initialization of button */
 		if (getManagedBean().getOutComes() == null) {

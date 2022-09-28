@@ -3027,7 +3027,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if(!ctBB.getManagedBean().isViewContract()){
 			if (remarks.size() == 0 || !ctWorkflowStatusMatch) {
 				CtRemark remark = new CtRemark();
-				remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				remark.setChangedBy(remark.getCreatedBy());
 				remark.setChangedDate(remark.getCreatedDate());

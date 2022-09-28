@@ -359,7 +359,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		CtAttachment attachment = new CtAttachment();
 		attachment.setFileName(item.getFileName());
 		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
@@ -2261,7 +2261,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			CtAttachment attachment = new CtAttachment();
 			attachment.setFileName(item.getFileName());
 			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-			attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			attachment.setCreatedUser(facesScopes.getUserSessionBean());
 			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			attachment.setSectionId(ContractConst.ATTACHMENT_AGENCY_CONTRACT_SHARING);
@@ -2278,7 +2278,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			attachment.setFileName(item.getFileName());
 			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-			attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			attachment.setCreatedUser(facesScopes.getUserSessionBean());
 			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			//LOG : 13847, by Fahmi 22032019
@@ -2293,7 +2293,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				if(getManagedBean().getCtAttachmentTemp().getFileName() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentTemp().getFileName())){
 					getManagedBean().getCtAttachmentTemp().setFileName(item.getFileName());
 					getManagedBean().getCtAttachmentTemp().setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-					getManagedBean().getCtAttachmentTemp().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+					getManagedBean().getCtAttachmentTemp().setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 					getManagedBean().getCtAttachmentTemp().setCreatedUser(facesScopes.getUserSessionBean());
 					getManagedBean().getCtAttachmentTemp().setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				}
@@ -2309,7 +2309,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			ctAttachmentHistory.setModified(true);
 			ctAttachmentHistory.setFileName(item.getFileName());
 			ctAttachmentHistory.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-			ctAttachmentHistory.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			ctAttachmentHistory.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			ctAttachmentHistory.setCreatedUser(facesScopes.getUserSessionBean());
 			ctAttachmentHistory.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			
@@ -2472,11 +2472,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCtAttachment(new CtAttachment());
 			}
 			
-			getManagedBean().getCtAttachmentLatest().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			getManagedBean().getCtAttachmentLatest().setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			getManagedBean().getCtAttachmentLatest().setCreatedUser(facesScopes.getUserSessionBean());
 			getManagedBean().getCtAttachmentLatest().setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			
-			getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			
 			getManagedBean().getWaiverDetail().add(SerializationUtils.clone(getManagedBean().getCtAttachmentLatest()));
