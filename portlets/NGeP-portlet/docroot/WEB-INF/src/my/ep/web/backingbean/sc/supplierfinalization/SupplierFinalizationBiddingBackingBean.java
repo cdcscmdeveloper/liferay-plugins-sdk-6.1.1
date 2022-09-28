@@ -1679,8 +1679,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 							IQTSuppFinalizationSO.class);
 
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId()
-					.toString());
+			reqDTO.setUserId(getUserIdSessionFromLoginId().toString()); //#31849 add log key
 			reqDTO.setCommitteMembers(getManagedBean()
 					.getCommitteeEndorsementList());
 			reqDTO.setSubject(getManagedBean().getSubject());
