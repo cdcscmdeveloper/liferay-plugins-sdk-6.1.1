@@ -416,7 +416,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 							resultBean.setTotalRecord(responseDTO.getWorklistVO().getTotal());
 							resultBean.setResultList(responseDTO.getWorklistVO().getWorklistItem());
 							
-							//#29822 - START
+							//#29822 - START - reendorse
 							if(!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && responseDTO.getWorklistVO().getWorklistItem().size() > 0){
 								getManagedBean().setAllUserTasks(new ArrayList <WorklistItemVO>());
 								getManagedBean().setCheckAllGroupTasksEnabled(true);
@@ -425,8 +425,10 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 								}
 							}else{
 								getManagedBean().setCheckAllGroupTasksEnabled(false);
+								getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+								
 							}
-							//29822 - END
+							//29822 - END 
 						}
 					}
 				}
@@ -535,7 +537,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 							resultBean.setResultList(responseDTO
 									.getWorklistVO().getWorklistItem());
 							
-							//#29822 - START
+							//#29822 - START - reendorse
 							if(!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && responseDTO.getWorklistVO().getWorklistItem().size() > 0){
 								getManagedBean().setAllOthersTasks(new ArrayList <WorklistItemVO>());
 								getManagedBean().setCheckAllOthersTasksEnabled(true);
@@ -543,9 +545,10 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 									getManagedBean().getAllOthersTasks().add(worklist);
 								}
 							}else{
-								getManagedBean().setCheckAllOthersTasksEnabled(false);
+								getManagedBean().setCheckAllOthersTasksEnabled(false); 
+								getManagedBean().setEnableRemoveAllOthersTasksButton(false);
 							}
-							//#29822 - END
+							//#29822 - END 
 						}
 					}
 				}
@@ -1799,17 +1802,19 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 
 		}
 		
-		
+		//#29822 - START - reendorse
 		if (resDTO != null && resDTO.isSuccessful()) {
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
 			FacesMessage.SEVERITY_INFO, MessageConst.INFO_780071, null);
-			
+
 			this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+			this.getManagedBean().setCheckAllGroupTasksEnabled(false);
 			this.getManagedBean().setShowRemoveProcessMessageGroup(true);
 			
 			log.info("==============dialog is completed closed==============");
 
 		}
+		//#29822 - end - reendorse
 	}
 	
 	//#29822 - end
@@ -1960,17 +1965,18 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		} finally {
 
 		}
-
+		//#29822 - START - reendorse
 		if (resDTO != null && resDTO.isSuccessful()) {
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO,
 					MessageConst.INFO_780071, null);
-			
+
 			this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+			this.getManagedBean().setCheckAllOthersTasksEnabled(false); 
 			this.getManagedBean().setShowRemoveProcessMessageOther(true);
 
 			log.info("==============dialog is completed closed==============");
 
-		}
+		}//#29822 - end - reendorse
 	}
 	
 	//#29822 - end
