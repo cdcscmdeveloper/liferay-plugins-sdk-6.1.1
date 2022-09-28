@@ -846,8 +846,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setDisableFields(false);
 			
 			return ctDT.gotoAmendPage(contractId);
-		} else if(ctBackingBean.getManagedBean().isAmendFromTaskList() && ctBackingBean.getManagedBean().isViewSCL()){//tasklist
-			
+		}
+		//Bug 34030 - shaqimi start
+		else if(ctBackingBean.getManagedBean().isNotificationSetting() && ctBackingBean.getManagedBean().isViewSCL()){//notification setting
+			if(ctBackingBean.getManagedBean().isAmendFromTaskList()){
+				ctBackingBean.getManagedBean().setViewContract(false);
+				this.getManagedBean().setViewOnly(false);
+				ctBackingBean.getManagedBean().setHasAmendmentLoaNo(false);
+				ctBackingBean.getManagedBean().setBackFromSCL(true);
+				ctBackingBean.getManagedBean().setViewSCL(false);	
+
+				ctBackingBean.getManagedBean().setTaskNameFromTaskList(getManagedBean().getTaskNameFromTaskList());
+				ctBackingBean.getManagedBean().setDocTypeFromTaskList(getManagedBean().getDocTypeFromTaskList());
+				ctBackingBean.getManagedBean().setContractIdFromTaskList(getManagedBean().getContractIdFromTaskList());
+				ctBackingBean.getManagedBean().setContractVerIdFromTaskList(getManagedBean().getContractVerIdFromTaskList());
+				
+				return this.getManagedBean().getBackToPreviousPage();	
+			}
+			return ctDT.gotoNotificationSetting(contractId);
+		} // Bug 34030 - shaqimi end
+		else if(ctBackingBean.getManagedBean().isAmendFromTaskList() && ctBackingBean.getManagedBean().isViewSCL()){//tasklist	
 			if(!getManagedBean().isViewSclFromAgreement()){
 				ctBackingBean.getManagedBean().setViewContract(false);
 				this.getManagedBean().setViewOnly(false);
