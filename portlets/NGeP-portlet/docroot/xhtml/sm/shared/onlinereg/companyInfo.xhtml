@@ -518,11 +518,14 @@
 			
 		</table>
 	</p:panel>
-		<ui:include src="/xhtml/sm/shared/onlinereg/ownerInfo.xhtml" />
+	<!-- 27691 start -->
+		<c:if test="#{registrationBackingBean.managedBean.companyValidWithSSM or registrationBackingBean.managedBean.smSuppOwners.size() >0}">	
+			<ui:include src="/xhtml/sm/shared/onlinereg/ownerInfo.xhtml" />
+		</c:if>
 		<c:if test="#{registrationBackingBean.managedBean.smPersonnelDirector != null and registrationBackingBean.managedBean.smPersonnelDirector.size() >0}">	
 			<ui:include src="/xhtml/sm/shared/onlinereg/directorInfo.xhtml" />
 		</c:if>
-	
+	<!-- 27691 end -->
 	<ui:include src="/xhtml/sm/shared/onlinereg/gstInfo.xhtml" />
 	
 	<ui:include src="/xhtml/sm/shared/onlinereg/businessNature.xhtml" />
