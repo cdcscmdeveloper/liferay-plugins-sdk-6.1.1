@@ -2287,42 +2287,32 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setSmAppl(this.getManagedBean().getSmSupp().getSmAppl());
 				this.getManagedBean().setSmSuppOwner(new SmSupplierOwner());
 				getManagedBean().setApplType(getManagedBean().getSmAppl().getApplType());
-				//27691 start
-				if(!resDTO.getSmSupp().getSmAppl().isApplValidWithSsm()){
-					//to show director info in basic maintenance for LLP
-					if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP)){
-						for(SmPersonnel personnel : this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels()){
-							Boolean ownerExist = false;
-							for(SmSupplierOwner suppOwner : this.getManagedBean().getSmSupp().getSmSupplierOwners()){
-								if(suppOwner!=null && personnel.getIdentificationNo().equals(suppOwner.getIdentificationNo())){
-									ownerExist = true;
-									break;
-								}
-							}
-							if(!ownerExist && (personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE ||
-									personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) &&
-									personnel.getPmCountry().getCountryCode().equalsIgnoreCase("MY") &&
-									personnel.isDirector()){
-								SmSupplierOwner suppOwnerDirector = new SmSupplierOwner();
-								PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
-								suppOwnerDirector.setSmSupplier(this.getManagedBean().getSmSupp());
-								suppOwnerDirector.setOwnerName(personnel.getName());
-								suppOwnerDirector.setNationality(personnel.getPmCountry());
-								suppOwnerDirector.setIdentificationType(identificationType);
-								suppOwnerDirector.setIdentificationTypeId(identificationType.getParameterId());
-								suppOwnerDirector.setIdentificationNo(personnel.getIdentificationNo());
-								this.getManagedBean().getSmSuppOwners().add(suppOwnerDirector);
-								resDTO.getSmSupp().getSmSupplierOwners().add(suppOwnerDirector);
+				
+				//27691 start - to show director info in basic maintenance for LLP
+				if(!resDTO.getSmSupp().getSmAppl().isApplValidWithSsm() && 
+						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP)){
+					for(SmPersonnel personnel : this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels()){
+						Boolean ownerExist = false;
+						for(SmSupplierOwner suppOwner : this.getManagedBean().getSmSupp().getSmSupplierOwners()){
+							if(suppOwner!=null && personnel.getIdentificationNo().equals(suppOwner.getIdentificationNo())){
+								ownerExist = true;
+								break;
 							}
 						}
-						
-					}
-					//Business Type - ROS, Cooperative, Society, Organization
-					if(getBusinessTypeROS(this.getManagedBean().getSmSupp())){
-						for(SmPersonnel personnel : this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels()){
-							if(personnel.isDirector()){
-								this.getManagedBean().getSmPersonnelDirector().add(personnel);
-							}
+						if(!ownerExist && (personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE ||
+								personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) &&
+								personnel.getPmCountry().getCountryCode().equalsIgnoreCase("MY") &&
+								personnel.isDirector()){
+							SmSupplierOwner suppOwnerDirector = new SmSupplierOwner();
+							PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
+							suppOwnerDirector.setSmSupplier(this.getManagedBean().getSmSupp());
+							suppOwnerDirector.setOwnerName(personnel.getName());
+							suppOwnerDirector.setNationality(personnel.getPmCountry());
+							suppOwnerDirector.setIdentificationType(identificationType);
+							suppOwnerDirector.setIdentificationTypeId(identificationType.getParameterId());
+							suppOwnerDirector.setIdentificationNo(personnel.getIdentificationNo());
+							this.getManagedBean().getSmSuppOwners().add(suppOwnerDirector);
+							resDTO.getSmSupp().getSmSupplierOwners().add(suppOwnerDirector);
 						}
 					}
 					
@@ -5067,17 +5057,4 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	// #30829 - end
-	//27691 start
-	private Boolean getBusinessTypeROS(SmSupplier smSupp){
-		Boolean result = false;
-		if(smSupp.getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN)
-				|| smSupp.getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI)
-				|| smSupp.getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN)
-				|| smSupp.getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2)
-				|| smSupp.getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2)){
-			result = true;
-		}
-		return result;
-	}
-	//27691 end
 }
