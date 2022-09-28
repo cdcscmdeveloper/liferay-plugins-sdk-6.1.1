@@ -3167,11 +3167,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if(isContractExtendOrIsBond()){
 			newBond.setBondNew(true);
 			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(newBond);
-//			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
+			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
 		}else{
 			newBond.setBondNew(false);
 			getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().add(newBond);
-//			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
+			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
 		}
 		//#24333 - End
 	}		    
@@ -4543,6 +4543,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		String currentPeriod = null;
 		String extendPeriod = null;
 		boolean isContractExtendOrIsBond = false;
+		getManagedBean().setExtendContract(false);
+		getManagedBean().setDisableOriginalBond(false);
 		
 		if(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration() != null) {
 			currentPeriod = BigDecimal.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration().longValue()).toString();
@@ -4550,8 +4552,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if(getManagedBean().getContractVer().getCtContractValue().getContractPeriod() > 0) {
 			extendPeriod = Integer.toString(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()); 
 		}		
-		getManagedBean().setExtendContract(false);
-		getManagedBean().setDisableOriginalBond(false);
 
 		if((getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
