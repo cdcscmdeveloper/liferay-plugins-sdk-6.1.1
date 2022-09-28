@@ -3998,11 +3998,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			//Bug 33096 - shaqimi start
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
 			//Bug 33096 - shaqimi end
-			if(abb.getManagedBean().getTaskId() != null){
+			//Bug 34030 - shaqimi start
+			if(getManagedBean().isNotificationSetting()){
+				abb.getManagedBean().setTaskNameFromTaskList(getManagedBean().getTaskNameFromTaskList());
+				abb.getManagedBean().setDocTypeFromTaskList(getManagedBean().getDocTypeFromTaskList());
+				abb.getManagedBean().setContractIdFromTaskList(getManagedBean().getContractIdFromTaskList());
+				abb.getManagedBean().setContractVerIdFromTaskList(getManagedBean().getContractVerIdFromTaskList());
+			}else if(abb.getManagedBean().getTaskId() != null){
 				abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
 				abb.getManagedBean().setContractIdFromTaskList(new Long(getManagedBean().getContractVer().getCtContract().getContractId()));
 				abb.getManagedBean().setContractVerIdFromTaskList(getManagedBean().getContractVer().getContractVerId());
 			}
+			//Bug 34030 - shaqimi end
 			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
 		}
 		//Enhancement 15851 - shaqimi end

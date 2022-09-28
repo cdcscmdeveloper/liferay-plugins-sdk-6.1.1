@@ -173,6 +173,12 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean amendFromTaskList = false;//15851
 	private boolean viewSCL = false;//15851
 
+	private boolean backFromSCL = false;//34030
+	private String docTypeFromTaskList = null;//34030
+	private Long contractIdFromTaskList = null;//34030
+	private Long contractVerIdFromTaskList = null;//34030
+	private String taskNameFromTaskList = null;//34030
+
 	//#28854 - start
 	private List<String> itemSpecification;
 	private String newOfferSpec;
@@ -1549,4 +1555,46 @@ public class ContractManagedBean extends BaseManagedBean {
 	}
 	//Enhancement 15851 - shaqimi end
 	// End Fix - #31740
+
+	//Bug 34030 - shaqimi start
+	public boolean isBackFromSCL() {
+		return backFromSCL;
+	}
+
+	public void setBackFromSCL(boolean backFromSCL) {
+		this.backFromSCL = backFromSCL;
+	}
+
+	public String getDocTypeFromTaskList() {
+		return docTypeFromTaskList;
+	}
+
+	public void setDocTypeFromTaskList(String docTypeFromTaskList) {
+		this.docTypeFromTaskList = docTypeFromTaskList;
+	}
+
+	public String getTaskNameFromTaskList() {
+		return taskNameFromTaskList;
+	}
+
+	public void setTaskNameFromTaskList(String taskNameFromTaskList) {
+		this.taskNameFromTaskList = taskNameFromTaskList;
+	}
+
+	public Long getContractIdFromTaskList() {
+		return contractIdFromTaskList;
+	}
+
+	public void setContractIdFromTaskList(Long contractIdFromTaskList) {
+		this.contractIdFromTaskList = contractIdFromTaskList;
+	}
+
+	public Long getContractVerIdFromTaskList() {
+		return contractVerIdFromTaskList;
+	}
+
+	public void setContractVerIdFromTaskList(Long contractVerIdFromTaskList) {
+		this.contractVerIdFromTaskList = contractVerIdFromTaskList;
+	}
+	//Bug 34030 - shaqimi end
 }

@@ -310,6 +310,18 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			// End Fix - #30856
 					
+			//Bug 34030 - shaqimi start
+			if (ctBB.getManagedBean().isBackFromSCL() && ctBB.getManagedBean().isNotificationSetting()){
+				ContractReqDTO reqDTO = new ContractReqDTO();
+				
+				reqDTO.setTaskName(ctBB.getManagedBean().getTaskNameFromTaskList());
+				reqDTO.setDocType(ctBB.getManagedBean().getDocTypeFromTaskList());
+				reqDTO.setContractId(ctBB.getManagedBean().getContractIdFromTaskList());
+				reqDTO.setContractVerId(ctBB.getManagedBean().getContractVerIdFromTaskList());
+				
+				setValidateContractField(reqDTO);
+			}
+			//Bug 34030 - shaqimi end
 			return;
 		}
 
@@ -346,6 +358,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setContractVerId(new Long(dataType.getDocId()));
 			reqDTO.setDocType(dataType.getDocType());
 		}
+		
+		//Bug 34030 - shaqimi start
+		ctBB.getManagedBean().setTaskNameFromTaskList(reqDTO.getTaskName());
+		ctBB.getManagedBean().setDocTypeFromTaskList(reqDTO.getDocType());
+		ctBB.getManagedBean().setContractIdFromTaskList(reqDTO.getContractId());
+		ctBB.getManagedBean().setContractVerIdFromTaskList(reqDTO.getContractVerId());
+		//Bug 34030 - shaqimi end
 		
 		/*#26083 start - basri*/
 		if(reqDTO.getDocType().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)){
