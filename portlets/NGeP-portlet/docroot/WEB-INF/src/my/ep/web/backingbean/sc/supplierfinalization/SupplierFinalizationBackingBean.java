@@ -11044,6 +11044,41 @@ public class SupplierFinalizationBackingBean extends
 	}
 	//#33174 disable package if there is no supplier qualified by package #21695 - End
 
+	// #21692 - start
+	public boolean checkMeetingDoneLessThanValidityEndDate(
+			Date proposalValidityEndDate) {
+		boolean lessThanValidityEndDate = false;
+
+		List<ScQtMeeting> meetingDetailsList = this.getManagedBean()
+				.getMeetingList();
+
+		for (ScQtMeeting meeting : meetingDetailsList) {
+			if (this.getManagedBean().isSecretaryUser()) {
+				if (null != meeting.getMeetingStatus()
+						&& null != meeting.getMeetingStatus().getStatusId()
+						&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
+								.getStatusId())
+						&& meeting.getRecordStatusFlg().equals(
+								DbValueConst.RECORD_STATUS_ACTIVE)
+						&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
+					lessThanValidityEndDate = true;
+				}
+			} else {
+				if (null != meeting.getMeetingStatus()
+						&& null != meeting.getMeetingStatus().getStatusId()
+						&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
+								.getStatusId())
+						&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
+					lessThanValidityEndDate = true;
+				} else {
+					lessThanValidityEndDate = false;
+				}
+			}
+		}
+
+		return lessThanValidityEndDate;
+	}
+	// #21692 - end
 	//6906 note 117 - start
 	private void evaluateDecisionList(){
 		ScQt scQt = this.getManagedBean().getScQt();
@@ -11065,12 +11100,12 @@ public class SupplierFinalizationBackingBean extends
 				|| this.getManagedBean().isReversed();
 		this.getManagedBean().setDisabledSelection(disabledSelection);
 		boolean proposalValid = this.checkProposalValidityDateReach(scQt.getProposalValidityEndDate());
-		boolean meetingDoneBeforeproposalValidityExpired = this.checkMeetingDoneLessThanValidityEndDate(scQt.getProposalValidityEndDate());
+		//boolean meetingDoneBeforeproposalValidityExpired = this.checkMeetingDoneLessThanValidityEndDate(scQt.getProposalValidityEndDate());
 		if(disabledSelection){
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDownAll());
-		}else if(proposalValid || meetingDoneBeforeproposalValidityExpired){			
+		}else if(proposalValid){			
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDown());
-		}else if(!proposalValid && !meetingDoneBeforeproposalValidityExpired){
+		}else if(!proposalValid){
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDownExpiredProposal());
 		}
 		if(this.getManagedBean().getDecisionDropdown() != null && this.getManagedBean().getDecisionDropdown().length>0){
