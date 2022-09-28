@@ -2621,7 +2621,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		List remarklist = resDTO.getRemarkList();
 
 		FlRemark remark = new FlRemark();
-		remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		remark.setChangedBy(remark.getCreatedBy());
 		remark.setChangedDate(remark.getCreatedDate());
