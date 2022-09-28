@@ -915,8 +915,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					&& !ctBB.getManagedBean().isDirectPurchase()
 					&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
 				for (CtContractAmount contractAmt : ctContractVer.getCtContractAmounts()){
-					if (contractAmt.getContractAmountId() != null && ctBB.getManagedBean().getCtContractAmount() != null
-							&& contractAmt.getContractAmountId().intValue() == ctBB.getManagedBean().getCtContractAmount().getContractAmountId().intValue()){
+				if ((contractAmt.getContractAmountId() != null && ctBB.getManagedBean().getCtContractAmount() != null
+						&& contractAmt.getContractAmountId().intValue() == ctBB.getManagedBean().getCtContractAmount().getContractAmountId().intValue())
+						|| contractAmt.isBrandNew()){ //#34012,#24333
 						contractAmt.setTotalBondAmt(ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt());
 						//#24333 - Start	
 					if(ctBB.isContractExtendOrIsBond()){
