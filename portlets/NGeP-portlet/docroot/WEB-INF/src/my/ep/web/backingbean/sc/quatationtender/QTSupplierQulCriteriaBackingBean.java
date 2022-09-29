@@ -1334,12 +1334,14 @@ public class QTSupplierQulCriteriaBackingBean extends
 					if (zoneTree.isSelected()) {
 						rootTrees.remove(row--);
 					} else {
-						deleteChildTreeNodes(zoneTree.getChildren());
-						if (zoneTree.getChildren().size() == 0) {
-							//20191127@asyrafhaziq - Bug #26289 - Start
-							 rootTrees.remove(row--);
-						    //20191127@asyrafhaziq - Bug #26289 - End
-						}
+						if(!zoneTree.isLeaf()){//START- #33638
+							deleteChildTreeNodes(zoneTree.getChildren());
+							if (zoneTree.getChildren().size() == 0) {
+								//20191127@asyrafhaziq - Bug #26289 - Start
+								 rootTrees.remove(row--);
+							    //20191127@asyrafhaziq - Bug #26289 - End
+							}
+						}//END - //#33638
 					}
 				}
 			}
