@@ -776,6 +776,14 @@ public class CreateQtBackingBean extends
 						}
 					
 				}
+					//#28784 - Start
+					if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(technicalchecklist.getDefinationType().getParameterCode())) {
+						if (null != technicalchecklist.getPmStatus()
+								&& QTStatusConst.TS_COMPLETED.equals(technicalchecklist.getPmStatus().getStatusId())) {
+							technicalchecklist.setPmStatus(status);
+
+						}
+					}//#28784 - End
 				}
 			}
 				if (financialSpecZonesEstimatedpriceUpdate == true) {
@@ -3045,7 +3053,16 @@ public class CreateQtBackingBean extends
 						}
 					
 				}
+					//#28784 - Start
+					if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(technicalchecklist.getDefinationType().getParameterCode())) {
+						if (null != technicalchecklist.getPmStatus()
+								&& QTStatusConst.TS_COMPLETED.equals(technicalchecklist.getPmStatus().getStatusId())) {							
+							technicalchecklist.setPmStatus(status);
+
 				}
+
+					}//#28784 - End
+			}
 			}
 				if (financialSpecZonesEstimatedpriceUpdate == true) {
 					ZonesUpdateWarningMessage(this.getManagedBean()
@@ -4000,6 +4017,9 @@ public class CreateQtBackingBean extends
 		} else {
 			RequestContext.getCurrentInstance().execute("demoDialogConfirm.hide()");
 		}
+		
+		QTDetailBackingBean detailBB = new QTDetailBackingBean();
+		detailBB.checkDemoPresentationByStatus();
 	}
 
 	public void yesDeleteExistingDemoTechChecklist() {
