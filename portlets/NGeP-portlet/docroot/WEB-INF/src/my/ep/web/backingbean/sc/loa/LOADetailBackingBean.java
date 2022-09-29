@@ -2465,7 +2465,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			context.put("contractEffDate", "");
 		}else{
 			context.put("contractEffDate", new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(scLoa.getContractEffDate()));
-			log.info("zaim eff date qt "+new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(scLoa.getContractEffDate()));
 		}
 		
 		if (null == scLoa.getContractExpDate()) {
@@ -2473,7 +2472,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		} else {
 			
 			context.put("contractExpDate",new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(scLoa.getContractExpDate()));
-			log.info("zaim exp date qt"+new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(scLoa.getContractExpDate()));
 		}
 		//#25025 & #26770 - end
 		//ontractDuration
