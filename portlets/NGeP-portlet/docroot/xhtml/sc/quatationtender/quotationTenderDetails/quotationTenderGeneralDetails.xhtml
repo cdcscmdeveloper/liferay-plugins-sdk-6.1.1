@@ -31,19 +31,20 @@
 		value="#{createQtBB.isStatusInQTReviseGroupStatus(scQt.qtStatus.statusId)}" />
 	<ui:param name="isMaintenanceFlow"  
 		value="#{qTDetailBB.managedBean.maintanceFlow}" />	
-	<ui:param name="isDemoDisabled"  
-		value="#{specMaintenanceBB.managedBean.demoDisabled}" />
-	<ui:param name="isDemoReqDisabled"  
-		value="#{qTDetailBB.managedBean.qt.demoRequired}" />
-	<ui:param name="isDemoEvalDisabled"  
-		value="#{qTDetailBB.managedBean.demoEvalDisabled}" />	
-	<ui:param name="isDemoSpecialCase"  
-		value="#{qTDetailBB.managedBean.demoSpecialCase}" />			
-	<ac:lovPopup />
 	<!-- START #28784 -->
+	<ui:param name="isDemoDisabled"  
+		value="#{qTDetailBB.managedBean.demoDisabled ? qTDetailBB.managedBean.demoDisabled : specMaintenanceBB.managedBean.demoDisabled}" />
+	<ui:param name="isDemoReqDisabled"  
+		value="#{qTDetailBB.managedBean.qt.demoRequired ? qTDetailBB.managedBean.qt.demoRequired  : specMaintenanceBB.managedBean.qt.demoRequired}" />
+	<ui:param name="isDemoEvalDisabled"  
+		value="#{qTDetailBB.managedBean.demoEvalDisabled ? qTDetailBB.managedBean.demoEvalDisabled : specMaintenanceBB.managedBean.demoEvalDisabled}" />	
+	<ui:param name="isDemoSpecialCase"  
+		value="#{qTDetailBB.managedBean.demoSpecialCase ? qTDetailBB.managedBean.demoSpecialCase : specMaintenanceBB.managedBean.demoSpecialCase}" />			
+	<ac:lovPopup /><!-- END #28784 -->
+	
 	<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-	</p:blockUI><!-- END #28784 -->
+	</p:blockUI>
 
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}" toggleable="true">
 		<h:outputText styleClass="instruction"
