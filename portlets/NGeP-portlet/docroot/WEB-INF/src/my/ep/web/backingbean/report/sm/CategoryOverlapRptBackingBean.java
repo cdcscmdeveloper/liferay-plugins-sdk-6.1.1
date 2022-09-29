@@ -32,10 +32,6 @@ public class CategoryOverlapRptBackingBean extends
 			params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
 					.getSupplierType());
 		}
-		
-		//#7754 - Start
-		params.put(SmReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());
-		//#7754 - End
 
 		addCategoryParam(params);
 
