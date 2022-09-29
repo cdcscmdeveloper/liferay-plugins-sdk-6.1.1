@@ -1387,7 +1387,10 @@ public class TaskReassignmentBackingBean extends
 									getManagedBean().getAllGroupTasks().add(worklist);
 								}
 							} else {
+								//29822 - START - reendorse
 								getManagedBean().setCheckAllGroupTasksEnabled(false);
+								getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+								//29822 - end - reendorse
 							}
 						}
 					}
@@ -1564,7 +1567,10 @@ public class TaskReassignmentBackingBean extends
 									getManagedBean().getAllOthersTasks().add(worklist);
 								}
 							} else {
-								getManagedBean().setCheckAllOthersTasksEnabled(false);
+								//29822 - START - reendorse
+								getManagedBean().setCheckAllOthersTasksEnabled(false); 
+								getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+//								/29822 - end - reendorse
 							}
 						}
 					}
@@ -3458,9 +3464,11 @@ public class TaskReassignmentBackingBean extends
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
 			FacesMessage.SEVERITY_INFO, MessageConst.INFO_780071, null);
 			
+			//#29822 - START - reendorse
 			this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+			this.getManagedBean().setCheckAllGroupTasksEnabled(false);
 			this.getManagedBean().setShowRemoveProcessMessageGroup(true);
-			
+			//#29822 - end - reendorse
 			log.info("==============dialog is completed closed==============");
 
 		}
@@ -3543,8 +3551,11 @@ public class TaskReassignmentBackingBean extends
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO,
 					MessageConst.INFO_780071, null);
 			
+			//29822 - START - reendorse
 			this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+			this.getManagedBean().setCheckAllOthersTasksEnabled(false); 
 			this.getManagedBean().setShowRemoveProcessMessageOther(true);
+			//29822 - end - reendorse
 
 			log.info("==============dialog is completed closed==============");
 
