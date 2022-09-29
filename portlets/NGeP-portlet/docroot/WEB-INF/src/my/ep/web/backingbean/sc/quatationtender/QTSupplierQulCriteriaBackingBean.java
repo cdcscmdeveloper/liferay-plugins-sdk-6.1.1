@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import my.ep.helper.EntityHelper;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -64,8 +63,8 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -1334,12 +1333,14 @@ public class QTSupplierQulCriteriaBackingBean extends
 					if (zoneTree.isSelected()) {
 						rootTrees.remove(row--);
 					} else {
-						deleteChildTreeNodes(zoneTree.getChildren());
-						if (zoneTree.getChildren().size() == 0) {
-							//20191127@asyrafhaziq - Bug #26289 - Start
-							 rootTrees.remove(row--);
-						    //20191127@asyrafhaziq - Bug #26289 - End
-						}
+						if(!zoneTree.isLeaf()){//START- #33638
+							deleteChildTreeNodes(zoneTree.getChildren());
+							if (zoneTree.getChildren().size() == 0) {
+								//20191127@asyrafhaziq - Bug #26289 - Start
+								 rootTrees.remove(row--);
+							    //20191127@asyrafhaziq - Bug #26289 - End
+							}
+						}//END - //#33638
 					}
 				}
 			}
