@@ -11224,9 +11224,13 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			List<TplSpecQuestion> questionsListOld = new ArrayList<TplSpecQuestion>();
 			int questionOrder = 0;
 			if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)
-					&& this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster()!=null) {
+					&& this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster()!=null
+					&& this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster().getTplSpecQuestions()!=null) {
 				specMasterOld =this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster();
 				questionsListOld = specMasterOld.getTplSpecQuestions();
+				for(TplSpecQuestion oldquestion : questionsListOld){
+					oldItems.add(oldquestion.getClItem());
+				}
 				for(TplSpecQuestion newquestion : questionsListNew){
 					if(newquestion.getClItem()!=null && oldItems.contains(newquestion.getClItem())){
 						throw new EpException(
@@ -11242,7 +11246,8 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				specMasterOld.setTplSpecQuestions(questionsListOld);
 				templateSpecBean.setSpecMaster(specMasterOld);
 			} else if (itemType.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING) 
-					&& this.getManagedBean().getProdTemplateSpecBean().getSpecMaster()!=null) {
+					&& this.getManagedBean().getProdTemplateSpecBean().getSpecMaster()!=null
+					&& this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster().getTplSpecQuestions()!=null) {
 				specMasterOld  =this.getManagedBean().getProdTemplateSpecBean().getSpecMaster();
 				questionsListOld = specMasterOld.getTplSpecQuestions();
 				for(TplSpecQuestion oldquestion : questionsListOld){
@@ -11361,7 +11366,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 							new SearchFilterBean("scQtDoc.scQt.scQtStatus.current",
 										SearchOperator.OPERATOR_EQUALS.value(), true));
 				}
-				if(isQT && getManagedBean().getSelectedCategories()!=null){
+				if(getManagedBean().getSelectedCategories()!=null){
 					List<Long> l1Ids = new ArrayList<Long>();
 					List<Long> l2Ids = new ArrayList<Long>();
 					List<Long> l3Ids = new ArrayList<Long>();
