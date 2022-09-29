@@ -5812,6 +5812,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 	
+	/*
+	 * Set evaluation Type and demo required radio button to show or disabled, 
+	 * #28784
+	 */
 	public void checkDemoPresentationByStatus() {	
 		ScQt scQt = this.getManagedBean().getQt();
 		Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt().getQtStatus().getStatusId() : null;
@@ -5927,8 +5931,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setDemoEvalDisabled(true);
 			this.getManagedBean().setDemoType(true);
 			this.getManagedBean().setDemoAction(true);
-		} else if(scQt.getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER) && !demoRequired && status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) &&
-				role != null && role.equals(RoleCode.SC_SECRETARY.value())){
+		} else if(scQt.getEvaluationType() != null && scQt.getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER) && 
+				!demoRequired && status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) && role != null && role.equals(RoleCode.SC_SECRETARY.value())){
 			this.getManagedBean().setDemoDisabled(true);
 			this.getManagedBean().setDemoEvalDisabled(true);
 			this.getManagedBean().setDemoType(false);
