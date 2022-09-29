@@ -152,13 +152,17 @@
 									listener="#{taskReassignmentBackingBean.checkAllGroupTasks}" />
                  		</p:selectBooleanCheckbox>
 	                 </f:facet>
+	                 
+				<!-- #29822 - START -reendorse -->
                      <p:selectBooleanCheckbox value="#{groupTasks.taskSelect}"> 
 	               		<p:ajax event="change" 
 	               				update="@form,:form:dtGroupTaskAssignResult" 
 	               				listener="#{taskReassignmentBackingBean.checkGroupTask}"
-	               				disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser}">
+	               				disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser
+	               				or not taskReassignmentBackingBean.managedBean.checkAllGroupTasksEnabled}">
 	              		</p:ajax>
    	                  </p:selectBooleanCheckbox>
+				<!-- #29822 - end -reendorse -->
 				</p:column>		
 				
 				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
@@ -180,9 +184,12 @@
 	        </p:column>
 				<p:column headerText="#{lbl['lbl.pm.action']}"
 					style="width:10%;text-align:center;">
+					
+				<!-- #29822 - START -reendorse -->
 					 <p:commandLink
 					 	id="cLDeleteGroupTask"
-					 	disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or groupTasks.isSwimlane()}"
+					 	disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or groupTasks.isSwimlane()
+					 	or not taskReassignmentBackingBean.managedBean.enableRemoveAllGroupTasksButton}"
 					 	partialSubmit="true"
 						process="@this"
 						oncomplete="taskDeletePopUp.show();"
@@ -193,6 +200,8 @@
 						<f:setPropertyActionListener target="#{taskReassignmentBackingBean.managedBean.taskType}" 
 							value="#{ProfileManagementConst.reassignWorklistTypeGroup}" />
 				</p:commandLink>
+				<!-- #29822 - end -reendorse -->
+				
 				</p:column>
 			</p:dataTable>
 			<p:outputPanel id="deleteGroupTasks">
@@ -247,13 +256,18 @@
 									listener="#{taskReassignmentBackingBean.checkAllOthersTasks}" />
                  		</p:selectBooleanCheckbox>
 	                 </f:facet>
+	                 
+				<!-- #29822 - START -reendorse -->
                      <p:selectBooleanCheckbox value="#{otherTasks.taskSelect}"> 
 	               		<p:ajax event="change" 
 	               				update="@form,:form:pOthersTaskAssignResult" 
 	               				listener="#{taskReassignmentBackingBean.checkOthersTask}"
-	               				disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser}">
+	               				disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser
+	               				or not taskReassignmentBackingBean.managedBean.checkAllOthersTasksEnabled}}">
 	              		</p:ajax>
    	                  </p:selectBooleanCheckbox>
+				<!-- #29822 - end -reendorse -->
+				
 				</p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
 					<h:outputText value="#{otherTasks.createDate.time}">
@@ -273,9 +287,12 @@
 	        </p:column>
 				<p:column headerText="#{lbl['lbl.pm.action']}"
 					style="width:10%;text-align:center;">
+					
+				<!-- #29822 - START -reendorse -->
 					 <p:commandLink
 					 	id="cLDeleteOtherTask"
-					 	disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or otherTasks.isSwimlane()}"
+					 	disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or otherTasks.isSwimlane()
+					 	or not taskReassignmentBackingBean.managedBean.enableRemoveAllOthersTasksButton}"
 					 	partialSubmit="true"
 						process="@this"
 						oncomplete="taskDeletePopUp.show();"
@@ -286,6 +303,8 @@
 						<f:setPropertyActionListener target="#{taskReassignmentBackingBean.managedBean.taskType}" 
 							value="#{ProfileManagementConst.reassignWorklistTypeOthers}" />
 				</p:commandLink>
+				<!-- #29822 - end -reendorse -->
+				
 				</p:column>
 			</p:dataTable>
 			<p:outputPanel id="deleteOthersTasks">
