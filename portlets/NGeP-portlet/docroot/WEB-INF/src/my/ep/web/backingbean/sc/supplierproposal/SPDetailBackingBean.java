@@ -4572,7 +4572,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			}//#28792-End
 			
 			//#29729 - Start
-			if(displaySupplierBranchListDeleted()){
+			if(checkValidationSupplierBranchDeleted()){
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_760522, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
@@ -6255,57 +6255,21 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 //#28785-End
 
 		//29729 - start	
-		public boolean displaySupplierBranchListDeleted(){
-			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-			IQTDetailSO QtDetailsSO = (IQTDetailSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		public boolean checkValidationSupplierBranchDeleted(){
+			IQTProposalSO sproposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			
-			boolean isSupplierBranchListDeleted = false;
+			boolean isSupplierBranchDeleted = false;
 			Long supplierId = this.getManagedBean().getSupplierId();
 			ScQt scQt = this.getManagedBean().getQt();
-		    ScQtSupplierCriteria qtSupplierCriteria = scQt.getScQtSupplierCriteria();
-		    
-		     if(qtSupplierCriteria.isAllState()){
-		    	    SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
-		    	    suppSearchReqDTO.setSupplierId(supplierId);
-		    		SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retrieveSmSupplierBranchDeletedBySupplier(suppSearchReqDTO);
-		    		for (SmSupplierBranch supplierBranch : suppSearchResDTO.getSmSupplierBranchList()) {
-						if(supplierBranch.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
-							isSupplierBranchListDeleted = true;
-							this.getManagedBean().setSupplierBranchListDeleted(isSupplierBranchListDeleted);
+			if(supplierId != null && scQt != null){
+				if(sproposalSO.isCheckPrepareProposalCurrentSupplierBranchDeleted(supplierId, scQt)){
+					isSupplierBranchDeleted = true;
+					this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
 						}
 		    		}
-		    	
-		     }else{
-		    	 
-		    	    SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
-		    		suppSearchReqDTO.setSupplierId(supplierId);
-		    		SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retrieveSmSupplierBranchDeletedBySupplier(suppSearchReqDTO);
-		    		for (SmSupplierBranch supplierBranch : suppSearchResDTO.getSmSupplierBranchList()) {
-		    			
-						QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-			    		tenderReqDTO.setQtdetail(scQt);
-			    		QuationTenderResDTO tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
-			    		if(tenderResDTO != null && tenderResDTO.getLocationDetails()!= null){
-			    			for(TplSpecLoc location : tenderResDTO.getLocationDetails()){
-								if(supplierBranch.getSmAddress().getPmState().getStateId() != null && 
-			    						   location.getPmState().getStateId() != null){
-			    					if(supplierBranch.getSmAddress().getPmState().getStateCode().equals(
-			    							location.getPmState().getStateCode())){
-			    						if(supplierBranch.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
-				    						isSupplierBranchListDeleted = true;
-				    						this.getManagedBean().setSupplierBranchListDeleted(isSupplierBranchListDeleted);
-			    						}
-			    					}	
-			    				}
-			    			}
+		    return isSupplierBranchDeleted;
 			    		}	
-		    		}
-		     }	
-		     
-		    return isSupplierBranchListDeleted;
-		}
 		//29729 - end
 
 		//Bug #30073 Start
