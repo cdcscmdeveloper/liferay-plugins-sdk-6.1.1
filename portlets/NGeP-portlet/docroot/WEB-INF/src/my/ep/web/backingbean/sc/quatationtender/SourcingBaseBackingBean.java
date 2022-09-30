@@ -83,6 +83,7 @@ import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateDocConst;
+import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
@@ -5883,7 +5884,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return CheckStatus.contains(currentStatusId);
 	}
 	//11104-End
-	
+
+	// 11104_start
+	public String replaceWithBR(String specDetails) {
+		return specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+	}
+	// 11104_end
+
     // #11134 - Start
 	protected <A extends ScRemark> List<A> filterSupplierRemarks(List<A> scRemarksIn, boolean includedBrandNew) {
 		List<A> supplierRemarks = new ArrayList<>();
@@ -5948,6 +5955,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return result;
 	}
-    // #11134 - end	
+    // #11134 - end
 	
 }

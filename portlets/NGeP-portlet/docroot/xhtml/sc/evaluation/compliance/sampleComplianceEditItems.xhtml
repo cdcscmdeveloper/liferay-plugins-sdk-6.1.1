@@ -74,11 +74,13 @@
 
 
 				<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%;white-space: normal;">
-
-					<h:outputText value="#{sampleItem.scRequestItem.itemName}"></h:outputText>
-
-
+					<!-- 11104 -start- -->
+					<h:outputText
+						value="#{evaluationBackingBean.replaceWithBR(sampleItem.scRequestItem.itemName)}"
+						escape="false" style="white-space: normal;word-wrap: break-word;" />
+					<!-- 11104 -end- -->
 				</p:column>
+				
 				<ui:remove> #11104 - start </ui:remove>
 				<p:column headerText="#{lbl['lbl.sc.spec.local.goods']}" style="width:10%;">
 					<h:outputText
@@ -93,8 +95,6 @@
 					#{evaluationBackingBean.managedBean.scQtSampleLbl.lableNo} - #{sampleItem.subLableNo}
 				<ui:remove> #11104 - end </ui:remove>
 				</p:column>
-
-
 
 				<p:column style="width:20%">
 					<f:facet name="header">

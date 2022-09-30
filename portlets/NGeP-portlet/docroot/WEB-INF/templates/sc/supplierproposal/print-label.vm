@@ -46,7 +46,7 @@
         	</tr>
         	<tr style="width : 100%" border="1">
 				<td style="width : 40%"><h3>ITEM NAME</h3></td>
-				<td style="width : 60%"><h3>$sampleItem.scRequestItem.itemName</h3></td>
+				<td style="width : 60%"><h3>$bean.replaceWithBR($sampleItem.scRequestItem.itemName)</h3></td>
         	</tr>
 			<tr style="width : 100%" border="1">
 				<td style="width : 40%"><h3>LABEL NO</h3></td>

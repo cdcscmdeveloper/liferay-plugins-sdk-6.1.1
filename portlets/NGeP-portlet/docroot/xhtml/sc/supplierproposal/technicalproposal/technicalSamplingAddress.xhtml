@@ -142,7 +142,9 @@
 			styleClass="sampleitemdtl" rowKey="#{sampleitemdtl}">
 			<ui:remove> #11104 - start </ui:remove>			
 			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space: normal;width:55%;">
-				<h:outputText value="#{sampleitemdtl.scRequestItem.itemName}" />
+				<h:outputText
+					value="#{supplierProposalDetailBackingBean.replaceWithBR(sampleitemdtl.scRequestItem.itemName)}"
+					escape="false" style="white-space: normal;word-wrap: break-word;" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.local.goods']}"
 				style="width:15%;">
