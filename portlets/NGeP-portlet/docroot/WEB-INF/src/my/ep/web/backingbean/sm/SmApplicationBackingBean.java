@@ -15712,6 +15712,15 @@ public class SmApplicationBackingBean extends
 			personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 		}else{//Start 28651
 			personnel.setSsmData(false);
+			
+			// START : #29956
+			for(SmPersonnelAddress smPersonnelAddress : personnel.getSmPersonnelAddresses()){
+				if(smPersonnelAddress.getSmAddress() != null){
+					smPersonnelAddress.getSmAddress().setSsmData(false);
+				}
+				
+			}
+			// END : #29956
 		}
 		//end 28651
 	}
