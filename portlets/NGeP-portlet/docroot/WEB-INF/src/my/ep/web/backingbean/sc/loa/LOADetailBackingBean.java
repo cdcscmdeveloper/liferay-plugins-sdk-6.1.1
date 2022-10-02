@@ -3918,10 +3918,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}			
 			// #29006 - start - reendorsed (comment 528)
-			for (ScLoiLoaItem each : getManagedBean().getScLoa().getScLoiLoaItems()) {
+			//#29006 - start - note 607
+			/*for (ScLoiLoaItem each : getManagedBean().getScLoa().getScLoiLoaItems()) {
 				if (each.getLoaSpecJustification() != null) {
 					justificationTime = each.getChangedDate();
-
 					if (lampiranA3Time == null) {
 						count++;
 						updatedItems.append(count + ". " + each.getScRequestItem().getItemName()+"\n");
@@ -3933,7 +3933,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						}
 					}
 				}
+			}*/			
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setLoaId(getManagedBean().getScLoa().getLoaId());
+			AwardSupplierResDTO awardResDTO = getQtAwardSO().retrieveLOADtlByLoaId(reqDTO);
+			for (ScLoiLoaItem each : awardResDTO.getScLoa().getScLoiLoaItems()) {				
+				if (StringUtils.isNotBlank(each.getLoaSpecJustification()) &&each.getLoaSpecJustification() != null && each.isComplete() == false) {
+					count++;
+					updatedItems.append(count + ". " + each.getScRequestItem().getItemName() + "\n");
+				}	
 			}
+			//#29006 - end - note 607
 			
 			if(count > 0){
 				// #29006 - start - (fixing on comment 570)
@@ -8813,7 +8823,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					try {
 						// Save and update new supplier offer into related ScLoiLoaItem in DB
 						getQtAwardSO().updateAndSaveNewSupplierJustification(null,
-								each.getLoiLoaItemId());
+								each.getLoiLoaItemId(), false); //#29006 - note 607
 						log.info("-- SAVE JUSTIFICATION --");
 						for(ScLoiLoaItem scLoiLoaItem : getManagedBean().getNameZoneScLoiLoaItemList()){
 							log.info("-- RELOAD JUSTIFICATION FOR ZONAL --");
@@ -8892,6 +8902,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	// #29006 - end - reendorsed (comment 528)
 	public void onSaveSupplierOffer(String outcome) {
+		//#29006 - start - note 607
+		Boolean isComplete = false;
+		if (outcome.equalsIgnoreCase("COMPLETE")) {
+			isComplete = true;
+		}
+		//#29006 - end - note 607
 		if (StringUtils.isBlank(getManagedBean().getNewSupplierOffered())
 				&& StringUtils.isBlank(getManagedBean().getNewSupplierJustification()) && outcome.equalsIgnoreCase("COMPLETE")) { // #29006 (allow complete outcome only-fixing on comment 570)		
 			
@@ -8979,7 +8995,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					try {
 						// Save and update new supplier offer into related ScLoiLoaItem in DB
 						getQtAwardSO().updateAndSaveNewSupplierJustification(getManagedBean().getNewSupplierJustification(),
-								each.getLoiLoaItemId());
+								each.getLoiLoaItemId(),isComplete); //#29006 - note 607
 						log.info("-- SAVE JUSTIFICATION --");
 						for(ScLoiLoaItem scLoiLoaItem : getManagedBean().getNameZoneScLoiLoaItemList()){
 							log.info("-- RELOAD JUSTIFICATION FOR ZONAL --");
@@ -9026,7 +9042,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						removeUnwantedLampiranA3Report(2);
 					}
 					if (outcome.equalsIgnoreCase("COMPLETE")) {
-						each.setComplete(true);
+						//each.setComplete(true); //#29006 - note 607
 						getManagedBean().setNewSupplierUpdatedFlag(true);
 						getManagedBean().setUpdatedLampiranA3DownloadedFlag(false);
 					}
@@ -9131,7 +9147,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							// ScLoiLoaItem in DB
 							if (StringUtils.isNotEmpty(getManagedBean().getNewSupplierJustification()))
 								getQtAwardSO().updateAndSaveNewSupplierJustification(
-										getManagedBean().getNewSupplierJustification(), each.getLoiLoaItemId());
+										getManagedBean().getNewSupplierJustification(), each.getLoiLoaItemId(),isComplete); //#29006 - note 607
 							log.info("-- SAVE JUSTIFICATION --");
 							for (ScLoiLoaItem scLoiLoaItem : getManagedBean().getNameZoneScLoiLoaItemList()) {
 								log.info("-- RELOAD JUSTIFICATION FOR ZONAL --");
@@ -9481,6 +9497,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 		}
+		//#29006 - start -  note 607
+		for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItemCloneList) {
+			List<ScLoiLoaItem> items = getQtAwardSO().getLoiLoaItemByLoaIdAndReqItemId(
+					scLoiLoaItem.getScLoa().getLoaId(), scLoiLoaItem.getScRequestItem().getRequestNoteItemId());
+			
+			if(items.size() > 0)
+				scLoiLoaItem.setComplete(items.get(0).isComplete());
+			else
+				scLoiLoaItem.setComplete(false);
+		}
+		//#29006 - end -  note 607
 		context.put("itemsList", scLoiLoaItemCloneList);
 		
 		if (scQt != null
