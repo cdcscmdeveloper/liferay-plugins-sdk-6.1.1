@@ -1675,6 +1675,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel;
 	
+	/** The clone search qt data model. */
+	private IPagingDataModel<ScQt> mainCloneSearchQTDataModel;//34053
+	
 	// ***25692
 	/*
 	 * approval. some part is readOnly, some part is updatable 
@@ -11293,6 +11296,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.selectedCategories = selectedCategories;
 		}
 		//#29468 Vinod End
+		
+		
+		/**
+		 * 34053-Start
+		 * @return the mainCloneSearchQTDataModel
+		 */
+		public IPagingDataModel<ScQt> getMainCloneSearchQTDataModel() {
+			return mainCloneSearchQTDataModel;
+		}
+
+		/**
+		 * @param mainCloneSearchQTDataModel the mainCloneSearchQTDataModel to set
+		 */
+		public void setMainCloneSearchQTDataModel(
+				IPagingDataModel<ScQt> mainCloneSearchQTDataModel) {
+			this.mainCloneSearchQTDataModel = mainCloneSearchQTDataModel;
+		}//34053-End
 }
 
 // ***25201
