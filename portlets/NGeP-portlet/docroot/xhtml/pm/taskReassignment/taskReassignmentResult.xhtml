@@ -124,16 +124,16 @@
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
 	
-		<p:panel id="pGroupTaskAssignResult" header="#{lbl['lbl.pm.ta.group.task']}"
+	<p:panel id="pGroupTaskAssignResult" header="#{lbl['lbl.pm.ta.group.task']}"
 		toggleable="true">
 		<div class="clear"></div>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.grouptasklist.instruction']}"/>
-		<!-- #29822 - START -->
+		<!-- #7465, #29822 - START -->
 		<br/>
 		<h:outputText style="color: red;font-weight: bold;" 
-		rendered="#{taskReassignmentBackingBean.managedBean.showRemoveProcessMessageGroup}" 
-		value="#{lbl['lbl.sm.ta.remove.reassignment']}"/>
-		<!-- #29822 - END -->
+			rendered="#{taskReassignmentBackingBean.managedBean.showRemoveProcessMessageGroup}" 
+			value="#{lbl['lbl.sm.ta.remove.reassignment']}"/>
+		<!-- #7465, #29822 - END -->
 		<h:panelGroup id="groupTaskListID">
 			<p:dataTable value="#{taskReassignmentBackingBean.groupTaskListDataModel}" var="groupTasks" widgetVar="dtGroupTaskTableWidget"
 				lazy="true" rowIndexVar="groupRowIndex" rowKey="#{groupTasks}" rows="10" id="dtGroupTaskAssignResult"
@@ -141,24 +141,26 @@
 				selectionMode="single">
 				<ac:paginator for="dtGroupTaskAssignResult"></ac:paginator>
 				<p:ajax event="rowSelect" update="@([id$=dtGroupTaskAssignResult])" />	
-				
 				<p:column style="width:2%;">
+				<!-- #7465 - START -reendorse -->
 					<f:facet name="header">
-	                    <p:selectBooleanCheckbox value="#{taskReassignmentBackingBean.managedBean.checkAllGroupTasks}"
-	                    	disabled="#{not taskReassignmentBackingBean.managedBean.checkAllGroupTasksEnabled}">
+	                    <p:selectBooleanCheckbox value="#{groupTasks.isSwimlane() or taskReassignmentBackingBean.managedBean.checkAllGroupTasks}"
+	                    	disabled="#{groupTasks.isSwimlane() or not taskReassignmentBackingBean.managedBean.checkAllGroupTasksEnabled}">
 		                    <p:ajax partialSubmit="true" 
 		                    		process="@this" 
-									update="@form,@([id$=dtGroupTaskAssignResult])" 
+									update="@form, @([id$=dtGroupTaskAssignResult])"
 									listener="#{taskReassignmentBackingBean.checkAllGroupTasks}" />
                  		</p:selectBooleanCheckbox>
 	                 </f:facet>
-                     <p:selectBooleanCheckbox value="#{groupTasks.taskSelect}"> 
+	                 
+                     <p:selectBooleanCheckbox value="#{groupTasks.taskSelect}"
+                     disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or not taskReassignmentBackingBean.managedBean.checkAllGroupTasksEnabled}"> 
 	               		<p:ajax event="change" 
-	               				update="@form,:form:dtGroupTaskAssignResult" 
-	               				listener="#{taskReassignmentBackingBean.checkGroupTask}"
-	               				disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser}">
+	               				update="@form, @([id$=dtGroupTaskAssignResult])"
+	               				listener="#{taskReassignmentBackingBean.checkGroupTask}">
 	              		</p:ajax>
    	                  </p:selectBooleanCheckbox>
+				<!-- #7465 - end -reendorse -->
 				</p:column>		
 				
 				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
@@ -170,19 +172,21 @@
 				<p:column headerText="#{lbl['lbl.pm.ta.document.type']}"
 					width="13%;">  
 	            #{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, groupTasks.docType)}
-	        </p:column>
+	        	</p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.document.no']}" width="30%;">  
 	            #{groupTasks.docNumber}
-	        </p:column>
+	        	</p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.status']}" style="width:34%;white-space:normal;">  
-				  #{taskReassignmentBackingBean.applicationStatus(groupTasks.docStatus)}	
-				             
-	        </p:column>
+				  #{taskReassignmentBackingBean.applicationStatus(groupTasks.docStatus)}	          
+	        	</p:column>
 				<p:column headerText="#{lbl['lbl.pm.action']}"
 					style="width:10%;text-align:center;">
+					
+				<!-- #7465 - START -reendorse -->
 					 <p:commandLink
 					 	id="cLDeleteGroupTask"
-					 	disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or groupTasks.isSwimlane()}"
+					 	disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or groupTasks.isSwimlane()
+					 	or not taskReassignmentBackingBean.managedBean.enableRemoveAllGroupTasksButton}"
 					 	partialSubmit="true"
 						process="@this"
 						oncomplete="taskDeletePopUp.show();"
@@ -193,12 +197,13 @@
 						<f:setPropertyActionListener target="#{taskReassignmentBackingBean.managedBean.taskType}" 
 							value="#{ProfileManagementConst.reassignWorklistTypeGroup}" />
 				</p:commandLink>
+				<!-- #7465 - end -reendorse -->
+				
 				</p:column>
 			</p:dataTable>
 			<p:outputPanel id="deleteGroupTasks">
 				<div class="ppRightBtn">
-				
-				<!-- 7465, 29822 -->
+					<!-- 7465, 29822 -->
 					<p:commandButton 
 					    value="#{lbl['lbl.btn.remove.all']}" 
 						process="@this"
@@ -206,7 +211,7 @@
 						update="@([id$=#{allGroupTasksDeleteId}])"	
 						oncomplete="allGroupTasksDeletePopUp.show();"
 						disabled="#{not taskReassignmentBackingBean.managedBean.enableRemoveAllGroupTasksButton}"/>	
-				<!-- 7465, 29822 -->
+					<!-- 7465, 29822 -->
 				
 					<p:commandButton 
 					    value="#{lbl['lbl.btn.remove']}" 
@@ -225,12 +230,12 @@
 		toggleable="true">
 		<div class="clear"></div>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.otherstasklist.instruction']}"/>
-		<!-- #29822 - START -->
+		<!-- #7465, #29822 - START -->
 		<br/>
 		<h:outputText style="color: red;font-weight: bold;" 
-		rendered="#{taskReassignmentBackingBean.managedBean.showRemoveProcessMessageOther}" 
-		value="#{lbl['lbl.sm.ta.remove.reassignment']}"/>
-		<!-- #29822 - END -->
+			rendered="#{taskReassignmentBackingBean.managedBean.showRemoveProcessMessageOther}" 
+			value="#{lbl['lbl.sm.ta.remove.reassignment']}"/>
+		<!-- #7465, #29822 - END -->
 		<h:panelGroup id="othersTaskListID">
 			<p:dataTable value="#{taskReassignmentBackingBean.othersTaskListDataModel}"
 				lazy="true" rowIndexVar="otherRowIndex" rowKey="#{otherTasks}" rows="10" id="dtOthersTaskAssignResult"
@@ -244,17 +249,20 @@
 	                    	disabled="#{not taskReassignmentBackingBean.managedBean.checkAllOthersTasksEnabled}">
 		                    <p:ajax partialSubmit="true" 
 		                    		process="@this" 
-									update="@form,@([id$=pOthersTaskAssignResult])" 
+									update="@form, @([pOthersTaskAssignResult])"  
 									listener="#{taskReassignmentBackingBean.checkAllOthersTasks}" />
                  		</p:selectBooleanCheckbox>
 	                 </f:facet>
-                     <p:selectBooleanCheckbox value="#{otherTasks.taskSelect}"> 
+	                 
+				<!-- #7465 - START -reendorse -->
+                     <p:selectBooleanCheckbox value="#{otherTasks.taskSelect}" 
+                     disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser
+	               				or not taskReassignmentBackingBean.managedBean.checkAllOthersTasksEnabled}"> 
 	               		<p:ajax event="change" 
-	               				update="@form,:form:pOthersTaskAssignResult" 
-	               				listener="#{taskReassignmentBackingBean.checkOthersTask}"
-	               				disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser}">
-	              		</p:ajax>
+	               				update="@form, @([pOthersTaskAssignResult])"   
+	               				listener="#{taskReassignmentBackingBean.checkOthersTask}"/>
    	                  </p:selectBooleanCheckbox>
+				<!-- #7465 - end -reendorse -->
 				</p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
 					<h:outputText value="#{otherTasks.createDate.time}">
@@ -265,18 +273,21 @@
 				<p:column headerText="#{lbl['lbl.pm.ta.document.type']}"
 					width="13%;">  
 	            #{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, otherTasks.docType)}
-	        </p:column>
+	        	</p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.document.no']}" width="30%;">  
 	            #{otherTasks.docNumber}
-	        </p:column>
-			<p:column headerText="#{lbl['lbl.pm.ta.status']}" style="width:34%;white-space:normal;">  
+	        	</p:column>
+				<p:column headerText="#{lbl['lbl.pm.ta.status']}" style="width:34%;white-space:normal;">  
 				  #{taskReassignmentBackingBean.applicationStatus(otherTasks.docStatus)}	
-	        </p:column>
+	        	</p:column>
 				<p:column headerText="#{lbl['lbl.pm.action']}"
 					style="width:10%;text-align:center;">
+					
+				<!-- #7465 - START -reendorse -->
 					 <p:commandLink
 					 	id="cLDeleteOtherTask"
-					 	disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or otherTasks.isSwimlane()}"
+					 	disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or otherTasks.isSwimlane()
+					 	or not taskReassignmentBackingBean.managedBean.enableRemoveAllOthersTasksButton}"
 					 	partialSubmit="true"
 						process="@this"
 						oncomplete="taskDeletePopUp.show();"
@@ -287,12 +298,13 @@
 						<f:setPropertyActionListener target="#{taskReassignmentBackingBean.managedBean.taskType}" 
 							value="#{ProfileManagementConst.reassignWorklistTypeOthers}" />
 				</p:commandLink>
+				<!-- #7465 - end -reendorse -->
+				
 				</p:column>
 			</p:dataTable>
 			<p:outputPanel id="deleteOthersTasks">
 				<div class="ppRightBtn">
-				
-				<!-- 7465, 29822 -->
+					<!-- 7465, 29822 -->
 					<p:commandButton 
 					    value="#{lbl['lbl.btn.remove.all']}" 
 						process="@this"
@@ -300,7 +312,7 @@
 						oncomplete="allOtherTasksDeletePopUp.show();" 
 						update="@([id$=#{allOtherTasksDeleteId}])"
 						disabled="#{not taskReassignmentBackingBean.managedBean.enableRemoveAllOthersTasksButton}"/>
-				<!-- 7465, 29822 -->
+					<!-- 7465, 29822 -->
 						
 					<p:commandButton 
 					    value="#{lbl['lbl.btn.remove']}" 
@@ -317,7 +329,7 @@
 	</p:panel>
 	
 
-	<!-- 7465 start -->	
+	<!-- 7465, 29822 start -->	
 	<ac:confirmationPopupMultiple id="taskDeleteId"
 			widget="taskDeletePopUp"
 			okAction="taskReassignmentBackingBean.removeReassignTask()"
@@ -342,7 +354,6 @@
 			content="#{lbl['lbl.msg.confirm.delete']}" 
 			update=":form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,@([id$=deleteGroupTasks])" />
 
-	<!-- 7465, 29822 -->	
 	<ac:confirmationPopupMultiple id="allGroupTasksDeleteId"
 			widget="allGroupTasksDeletePopUp"
 			okAction="taskReassignmentBackingBean.removeReassignAllGroupTasks()"
@@ -351,9 +362,7 @@
 			content="#{lbl['lbl.msg.confirm.deleteallgrouptask']}" 
 			update=":form:dtGroupTaskAssignResult,:form:deleteGroupTasks,
 			:form:dtOthersTaskAssignResult,:form:pGroupTaskAssignResult,@([id$=deleteGroupTasks])" />
-	<!-- 7465 -->
-			
-	<!-- 7465, 29822 -->
+
 	<ac:confirmationPopupMultiple id="allOtherTasksDeleteId"
 			widget="allOtherTasksDeletePopUp"
 			okAction="taskReassignmentBackingBean.removeReassignAllOthersTasks()"
@@ -362,8 +371,7 @@
 			content="#{lbl['lbl.msg.confirm.deleteallothertask']}" 
 			update=":form:dtGroupTaskAssignResult,:form:deleteOthersTasks,:form:dtOthersTaskAssignResult,
 			:form:pOthersTaskAssignResult,@([id$=deleteOthersTasks])" />
-	<!-- 7465, 29822  -->
-	<!-- 7465 end -->	
+	<!-- 7465, 29822 end -->
 	
 	<!-- Task Selection Popup -->
 	<ui:include src="/xhtml/pm/taskReassignment/taskReassignPopup.xhtml" />
