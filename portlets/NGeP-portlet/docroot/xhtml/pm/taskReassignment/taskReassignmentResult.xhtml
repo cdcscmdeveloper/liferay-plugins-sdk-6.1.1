@@ -124,7 +124,7 @@
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
 	
-		<p:panel id="pGroupTaskAssignResult" header="#{lbl['lbl.pm.ta.group.task']}"
+	<p:panel id="pGroupTaskAssignResult" header="#{lbl['lbl.pm.ta.group.task']}"
 		toggleable="true">
 		<div class="clear"></div>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.grouptasklist.instruction']}"/>
@@ -141,28 +141,26 @@
 				selectionMode="single">
 				<ac:paginator for="dtGroupTaskAssignResult"></ac:paginator>
 				<p:ajax event="rowSelect" update="@([id$=dtGroupTaskAssignResult])" />	
-				
 				<p:column style="width:2%;">
+				<!-- #7465 - START -reendorse -->
 					<f:facet name="header">
-	                    <p:selectBooleanCheckbox value="#{taskReassignmentBackingBean.managedBean.checkAllGroupTasks}"
-	                    	disabled="#{not taskReassignmentBackingBean.managedBean.checkAllGroupTasksEnabled}">
+	                    <p:selectBooleanCheckbox value="#{groupTasks.isSwimlane() or taskReassignmentBackingBean.managedBean.checkAllGroupTasks}"
+	                    	disabled="#{groupTasks.isSwimlane() or not taskReassignmentBackingBean.managedBean.checkAllGroupTasksEnabled}">
 		                    <p:ajax partialSubmit="true" 
 		                    		process="@this" 
-									update="@form,@([id$=dtGroupTaskAssignResult])" 
+									update="@form, @([id$=dtGroupTaskAssignResult])"
 									listener="#{taskReassignmentBackingBean.checkAllGroupTasks}" />
                  		</p:selectBooleanCheckbox>
 	                 </f:facet>
 	                 
-				<!-- #29822 - START -reendorse -->
-                     <p:selectBooleanCheckbox value="#{groupTasks.taskSelect}"> 
+                     <p:selectBooleanCheckbox value="#{groupTasks.taskSelect}"
+                     disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or not taskReassignmentBackingBean.managedBean.checkAllGroupTasksEnabled}"> 
 	               		<p:ajax event="change" 
-	               				update="@form,:form:dtGroupTaskAssignResult" 
-	               				listener="#{taskReassignmentBackingBean.checkGroupTask}"
-	               				disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser
-	               				or not taskReassignmentBackingBean.managedBean.checkAllGroupTasksEnabled}">
+	               				update="@form, @([id$=dtGroupTaskAssignResult])"
+	               				listener="#{taskReassignmentBackingBean.checkGroupTask}">
 	              		</p:ajax>
    	                  </p:selectBooleanCheckbox>
-				<!-- #29822 - end -reendorse -->
+				<!-- #7465 - end -reendorse -->
 				</p:column>		
 				
 				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
@@ -174,18 +172,17 @@
 				<p:column headerText="#{lbl['lbl.pm.ta.document.type']}"
 					width="13%;">  
 	            #{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, groupTasks.docType)}
-	        </p:column>
+	        	</p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.document.no']}" width="30%;">  
 	            #{groupTasks.docNumber}
-	        </p:column>
+	        	</p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.status']}" style="width:34%;white-space:normal;">  
-				  #{taskReassignmentBackingBean.applicationStatus(groupTasks.docStatus)}	
-				             
-	        </p:column>
+				  #{taskReassignmentBackingBean.applicationStatus(groupTasks.docStatus)}	          
+	        	</p:column>
 				<p:column headerText="#{lbl['lbl.pm.action']}"
 					style="width:10%;text-align:center;">
 					
-				<!-- #29822 - START -reendorse -->
+				<!-- #7465 - START -reendorse -->
 					 <p:commandLink
 					 	id="cLDeleteGroupTask"
 					 	disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or groupTasks.isSwimlane()
@@ -200,7 +197,7 @@
 						<f:setPropertyActionListener target="#{taskReassignmentBackingBean.managedBean.taskType}" 
 							value="#{ProfileManagementConst.reassignWorklistTypeGroup}" />
 				</p:commandLink>
-				<!-- #29822 - end -reendorse -->
+				<!-- #7465 - end -reendorse -->
 				
 				</p:column>
 			</p:dataTable>
@@ -252,22 +249,20 @@
 	                    	disabled="#{not taskReassignmentBackingBean.managedBean.checkAllOthersTasksEnabled}">
 		                    <p:ajax partialSubmit="true" 
 		                    		process="@this" 
-									update="@form,@([id$=pOthersTaskAssignResult])" 
+									update="@form, @([pOthersTaskAssignResult])"  
 									listener="#{taskReassignmentBackingBean.checkAllOthersTasks}" />
                  		</p:selectBooleanCheckbox>
 	                 </f:facet>
 	                 
-				<!-- #29822 - START -reendorse -->
-                     <p:selectBooleanCheckbox value="#{otherTasks.taskSelect}"> 
+				<!-- #7465 - START -reendorse -->
+                     <p:selectBooleanCheckbox value="#{otherTasks.taskSelect}" 
+                     disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser
+	               				or not taskReassignmentBackingBean.managedBean.checkAllOthersTasksEnabled}"> 
 	               		<p:ajax event="change" 
-	               				update="@form,:form:pOthersTaskAssignResult" 
-	               				listener="#{taskReassignmentBackingBean.checkOthersTask}"
-	               				disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser
-	               				or not taskReassignmentBackingBean.managedBean.checkAllOthersTasksEnabled}}">
-	              		</p:ajax>
+	               				update="@form, @([pOthersTaskAssignResult])"   
+	               				listener="#{taskReassignmentBackingBean.checkOthersTask}"/>
    	                  </p:selectBooleanCheckbox>
-				<!-- #29822 - end -reendorse -->
-				
+				<!-- #7465 - end -reendorse -->
 				</p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
 					<h:outputText value="#{otherTasks.createDate.time}">
@@ -278,17 +273,17 @@
 				<p:column headerText="#{lbl['lbl.pm.ta.document.type']}"
 					width="13%;">  
 	            #{taskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, otherTasks.docType)}
-	        </p:column>
+	        	</p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.document.no']}" width="30%;">  
 	            #{otherTasks.docNumber}
-	        </p:column>
-			<p:column headerText="#{lbl['lbl.pm.ta.status']}" style="width:34%;white-space:normal;">  
+	        	</p:column>
+				<p:column headerText="#{lbl['lbl.pm.ta.status']}" style="width:34%;white-space:normal;">  
 				  #{taskReassignmentBackingBean.applicationStatus(otherTasks.docStatus)}	
-	        </p:column>
+	        	</p:column>
 				<p:column headerText="#{lbl['lbl.pm.action']}"
 					style="width:10%;text-align:center;">
 					
-				<!-- #29822 - START -reendorse -->
+				<!-- #7465 - START -reendorse -->
 					 <p:commandLink
 					 	id="cLDeleteOtherTask"
 					 	disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or otherTasks.isSwimlane()
@@ -303,7 +298,7 @@
 						<f:setPropertyActionListener target="#{taskReassignmentBackingBean.managedBean.taskType}" 
 							value="#{ProfileManagementConst.reassignWorklistTypeOthers}" />
 				</p:commandLink>
-				<!-- #29822 - end -reendorse -->
+				<!-- #7465 - end -reendorse -->
 				
 				</p:column>
 			</p:dataTable>
