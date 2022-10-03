@@ -49,6 +49,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplierBank; // Fix - #33674
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.circular.CircularBackingBean;
@@ -204,6 +205,12 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String supplementalLoaNo = null;//Bug 33096 - shaqimi
 	private String docTypeFromTaskList = null;//Bug 34030 - shaqimi
 	private String taskNameFromTaskList = null;//Bug 34030 - shaqimi
+	//Start Fix - #33674
+	private String bankInfoDetails;
+	private Map<String, SmSupplierBank> supplierBankAccNo;
+	private Map<String, SmSupplierBank> supplierBankName;
+	private Long applID;
+	//End Fix - #33674
 	
 	public void reassignValue(boolean value) 
 	{
@@ -1729,4 +1736,36 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.selectedChangeItemPrice = selectedChangeItemPrice;
 	}
 	// End Fix - #33256
+	//Start Fix - #33674
+	public String getBankInfoDetails() {
+		return bankInfoDetails;
+	}
+	public void setBankInfoDetails(String bankInfoDetails) {
+		this.bankInfoDetails = bankInfoDetails;
+	}
+	public Map<String, SmSupplierBank> getSupplierBankAccNo() {
+		if (supplierBankAccNo == null){
+			supplierBankAccNo = new HashMap<String, SmSupplierBank>();
+			}
+		return supplierBankAccNo;
+	}
+	public void setSupplierBankAccNo(Map<String, SmSupplierBank> supplierBankAccNo) {
+		this.supplierBankAccNo = supplierBankAccNo;
+	}
+	public Map<String, SmSupplierBank> getSupplierBankName() {
+		if (supplierBankName == null){
+			supplierBankName = new HashMap<String, SmSupplierBank>();
+			}
+		return supplierBankName;
+	}
+	public void setSupplierBankName(Map<String, SmSupplierBank> supplierBankName) {
+		this.supplierBankName = supplierBankName;
+	}
+	public Long getApplID() {
+		return applID;
+	}
+	public void setApplID(Long applID) {
+		this.applID = applID;
+	}
+	//End Fix - #33674
 }
