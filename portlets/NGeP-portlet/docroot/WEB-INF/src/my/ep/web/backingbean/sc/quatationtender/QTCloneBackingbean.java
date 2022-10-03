@@ -573,14 +573,15 @@ public class QTCloneBackingbean extends
 		this.getManagedBean().setSelectedCloneTender(null);//25635
 
 		IPagingDataModel<ScQt> cloneSearchQTDataModel = getManagedBean()
-				.getCloneSearchQTDataModel();
+				.getMainCloneSearchQTDataModel();//34053
+		
 
 		if (null == cloneSearchQTDataModel) {
-			getManagedBean().setCloneSearchQTDataModel(
+			getManagedBean().setMainCloneSearchQTDataModel(
 					new QTPagingDataModel("clonesearchCommitteid2",
-							getManagedBean().getCloneQtnTenderSearchBean()));
+							getManagedBean().getCloneQtnTenderSearchBean()));//34053
 		}
-		getManagedBean().getCloneSearchQTDataModel().resetData();
+		getManagedBean().getMainCloneSearchQTDataModel().resetData();//34053
 
 		getManagedBean().getCloneQtnTenderSearchBean().setQtTitle(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setQtNo(null);
@@ -4339,7 +4340,7 @@ public class QTCloneBackingbean extends
 		getManagedBean().setCloneCommitteeSelectQt(null);
 		this.getManagedBean().setSelectedCloneTender(null);//25635
 
-		getManagedBean().getCloneSearchQTDataModel().reloadData();
+		getManagedBean().getMainCloneSearchQTDataModel().reloadData();//34053
 	}
 	
 	/**
