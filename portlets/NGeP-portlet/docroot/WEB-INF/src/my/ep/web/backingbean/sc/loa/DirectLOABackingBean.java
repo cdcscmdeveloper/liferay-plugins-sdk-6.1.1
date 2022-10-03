@@ -11225,17 +11225,24 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			int questionOrder = 0;
 			if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)
 					&& this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster()!=null
-					&& this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster().getTplSpecQuestions()!=null) {
+					&& this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size()!=0) {
 				specMasterOld =this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster();
 				questionsListOld = specMasterOld.getTplSpecQuestions();
 				for(TplSpecQuestion oldquestion : questionsListOld){
+					if(TemplateSpecConst.QUESTION_TYPE_ITEM.equals(oldquestion.getQuestionType())){
 					oldItems.add(oldquestion.getClItem());
 				}
+				}
 				for(TplSpecQuestion newquestion : questionsListNew){
-					if(newquestion.getClItem()!=null && oldItems.contains(newquestion.getClItem())){
-						throw new EpException(
-								MessageConst.ERROR_760340,
+					if(newquestion.getClItem()!=null 
+						&& TemplateSpecConst.QUESTION_TYPE_ITEM.equals(newquestion.getQuestionType())){
+						for(String item : oldItems){
+							if(newquestion.getClItem().trim().replaceAll("\\s", "")
+								.equalsIgnoreCase(item.trim().replaceAll("\\s", ""))){
+									throw new EpException(MessageConst.ERROR_760340,
 								new String[] { newquestion.getClItem() });
+					}
+						}
 					}
 					newquestion.setTplSpecMaster(specMasterOld);
 				}
@@ -11247,17 +11254,24 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				templateSpecBean.setSpecMaster(specMasterOld);
 			} else if (itemType.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING) 
 					&& this.getManagedBean().getProdTemplateSpecBean().getSpecMaster()!=null
-					&& this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster().getTplSpecQuestions()!=null) {
+					&& this.getManagedBean().getProdTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size()!=0) {
 				specMasterOld  =this.getManagedBean().getProdTemplateSpecBean().getSpecMaster();
 				questionsListOld = specMasterOld.getTplSpecQuestions();
 				for(TplSpecQuestion oldquestion : questionsListOld){
+					if(TemplateSpecConst.QUESTION_TYPE_ITEM.equals(oldquestion.getQuestionType())){
 					oldItems.add(oldquestion.getClItem());
 				}
+				}
 				for(TplSpecQuestion newquestion : questionsListNew){
-					if(newquestion.getClItem()!=null && oldItems.contains(newquestion.getClItem())){
-						throw new EpException(
-								MessageConst.ERROR_760340,
+					if(newquestion.getClItem()!=null 
+						&& TemplateSpecConst.QUESTION_TYPE_ITEM.equals(newquestion.getQuestionType())){
+						for(String item : oldItems){
+							if(newquestion.getClItem().trim().replaceAll("\\s", "")
+								.equalsIgnoreCase(item.trim().replaceAll("\\s", ""))){
+									throw new EpException(MessageConst.ERROR_760340,
 								new String[] { newquestion.getClItem() });
+					}
+						}
 					}
 					newquestion.setTplSpecMaster(specMasterOld);
 				}
