@@ -198,6 +198,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	
 	private Map<Long, CtAgency> agencyDataDeletion;
 	//End Fix - #31740
+	
+	private String bankInfoDetails; // Fix - #33674
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1597,4 +1599,15 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.contractVerIdFromTaskList = contractVerIdFromTaskList;
 	}
 	//Bug 34030 - shaqimi end
+
+	// Start Fix - #33674
+	public String getBankInfoDetails() {
+		return bankInfoDetails;
+	}
+
+	public void setBankInfoDetails(String bankInfoDetails) {
+		this.bankInfoDetails = bankInfoDetails;
+	}
+	// End Fix - #33674
+
 }
