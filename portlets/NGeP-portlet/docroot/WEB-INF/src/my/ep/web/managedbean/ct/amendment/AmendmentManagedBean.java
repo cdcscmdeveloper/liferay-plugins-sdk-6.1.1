@@ -206,7 +206,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String docTypeFromTaskList = null;//Bug 34030 - shaqimi
 	private String taskNameFromTaskList = null;//Bug 34030 - shaqimi
 	//Start Fix - #33674
-	private String bankInfoDetails;
 	private Map<String, SmSupplierBank> supplierBankAccNo;
 	private Map<String, SmSupplierBank> supplierBankName;
 	private Long applID;
@@ -1737,12 +1736,6 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	}
 	// End Fix - #33256
 	//Start Fix - #33674
-	public String getBankInfoDetails() {
-		return bankInfoDetails;
-	}
-	public void setBankInfoDetails(String bankInfoDetails) {
-		this.bankInfoDetails = bankInfoDetails;
-	}
 	public Map<String, SmSupplierBank> getSupplierBankAccNo() {
 		if (supplierBankAccNo == null){
 			supplierBankAccNo = new HashMap<String, SmSupplierBank>();
@@ -1768,4 +1761,5 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.applID = applID;
 	}
 	//End Fix - #33674
+
 }
