@@ -239,19 +239,20 @@
 			value="#{lbl['lbl.sm.ta.remove.reassignment']}"/>
 		<!-- #7465, #29822 - END -->
 		<h:panelGroup id="othersTaskListID">
-			<p:dataTable value="#{taskReassignmentBackingBean.othersTaskListDataModel}"
+			<p:dataTable value="#{taskReassignmentBackingBean.othersTaskListDataModel}" var="otherTasks" widgetVar="dtOthersTaskListTableWidget"
 				lazy="true" rowIndexVar="otherRowIndex" rowKey="#{otherTasks}" rows="10" id="dtOthersTaskAssignResult"
-				style="width:100%;" var="otherTasks" widgetVar="dtOthersTaskListTableWidget"
+				style="width:100%;" 
 				selectionMode="single">
 				<ac:paginator for="dtOthersTaskAssignResult"></ac:paginator>
-				<p:ajax event="rowSelect" update="@([id$=pOthersTaskAssignResult])" />
+				<p:ajax event="rowSelect" update="@([id$=dtOthersTaskAssignResult])" />
+				
 				<p:column style="width:2%;">
 					<f:facet name="header">
 	                    <p:selectBooleanCheckbox value="#{taskReassignmentBackingBean.managedBean.checkAllOthersTasks}"
 	                    	disabled="#{not taskReassignmentBackingBean.managedBean.checkAllOthersTasksEnabled}">
 		                    <p:ajax partialSubmit="true" 
 		                    		process="@this" 
-									update="@form,@([id$=pOthersTaskAssignResult])" 
+									update="@form, @([dtOthersTaskAssignResult])"
 									listener="#{taskReassignmentBackingBean.checkAllOthersTasks}" />
                  		</p:selectBooleanCheckbox>
 	                 </f:facet>
@@ -260,12 +261,11 @@
                      <p:selectBooleanCheckbox value="#{otherTasks.taskSelect}"
                                 disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or not taskReassignmentBackingBean.managedBean.checkAllOthersTasksEnabled}"> 
 	               		<p:ajax event="change" 
-	               				update="@form,:form:pOthersTaskAssignResult" 
+	               				update="@form,:form:dtOthersTaskAssignResult" 
 	               				listener="#{taskReassignmentBackingBean.checkOthersTask}">
 	              		</p:ajax>
    	                  </p:selectBooleanCheckbox>
 				<!-- #7465 - end -reendorse -->
-				
 				</p:column>
 				<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="13%;">
 					<h:outputText value="#{otherTasks.createDate.time}">
