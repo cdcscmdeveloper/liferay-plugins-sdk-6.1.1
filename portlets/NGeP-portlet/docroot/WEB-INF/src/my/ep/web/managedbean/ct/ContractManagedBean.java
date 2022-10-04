@@ -199,10 +199,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	
 	private Map<Long, CtAgency> agencyDataDeletion;
 	//End Fix - #31740
-	
-	private String bankInfoDetails; // Fix - #33674
-	
 	//Start Fix - #33674
+	private String bankInfoDetails;
 	private Map<String, SmSupplierBank> supplierBankAccNo;
 	private Map<String, SmSupplierBank> supplierBankName;
 	private Long applID;
@@ -1615,33 +1613,36 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setBankInfoDetails(String bankInfoDetails) {
 		this.bankInfoDetails = bankInfoDetails;
 	}
-	// End Fix - #33674
-	
-	//Start Fix - #33674
-		public Map<String, SmSupplierBank> getSupplierBankAccNo() {
-			if (supplierBankAccNo == null){
-				supplierBankAccNo = new HashMap<String, SmSupplierBank>();
-				}
-			return supplierBankAccNo;
+
+	public Map<String, SmSupplierBank> getSupplierBankAccNo() {
+		if (supplierBankAccNo == null) {
+			supplierBankAccNo = new HashMap<String, SmSupplierBank>();
 		}
-		public void setSupplierBankAccNo(Map<String, SmSupplierBank> supplierBankAccNo) {
-			this.supplierBankAccNo = supplierBankAccNo;
+		return supplierBankAccNo;
+	}
+
+	public void setSupplierBankAccNo(Map<String, SmSupplierBank> supplierBankAccNo) {
+		this.supplierBankAccNo = supplierBankAccNo;
+	}
+
+	public Map<String, SmSupplierBank> getSupplierBankName() {
+		if (supplierBankName == null) {
+			supplierBankName = new HashMap<String, SmSupplierBank>();
 		}
-		public Map<String, SmSupplierBank> getSupplierBankName() {
-			if (supplierBankName == null){
-				supplierBankName = new HashMap<String, SmSupplierBank>();
-				}
-			return supplierBankName;
-		}
-		public void setSupplierBankName(Map<String, SmSupplierBank> supplierBankName) {
-			this.supplierBankName = supplierBankName;
-		}
-		public Long getApplID() {
-			return applID;
-		}
-		public void setApplID(Long applID) {
-			this.applID = applID;
-		}
-		//End Fix - #33674
+		return supplierBankName;
+	}
+
+	public void setSupplierBankName(Map<String, SmSupplierBank> supplierBankName) {
+		this.supplierBankName = supplierBankName;
+	}
+
+	public Long getApplID() {
+		return applID;
+	}
+
+	public void setApplID(Long applID) {
+		this.applID = applID;
+	}
+    //End Fix - #33674
 
 }
