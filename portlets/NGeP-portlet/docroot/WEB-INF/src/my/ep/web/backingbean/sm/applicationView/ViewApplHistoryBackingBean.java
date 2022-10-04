@@ -807,12 +807,11 @@ public class ViewApplHistoryBackingBean extends
 			log.info("getRemarksList().size():: " + remaksResDTO.getRemarksList().size());
 			for (SmRemark poRemark : remaksResDTO.getRemarksList()) {
 				// #32424 - start
-				if ((!StringUtils.isEmpty(poRemark.getRoleCode()) && poRemark.getRoleCode().equals(RoleCode.UPS_PO.value()))
-						//#32424 --050822-- start
-						|| (poRemark.getCreatedBy().equals(currWorkflowStatus.getCreatedBy())
+				if (!StringUtils.isEmpty(poRemark.getRoleCode()) && poRemark.getRoleCode().equals(RoleCode.UPS_PO.value()))
+					//#32424 --comment code-- 
+						/*|| (poRemark.getCreatedBy().equals(currWorkflowStatus.getCreatedBy())
 								&& getManagedBean().getSmAppl().getPmStatus().getStatusId() != SupplierManagementConst.PM_STATUS_REGISTERED && currWorkflowStatus
-								.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTERED)) {
-				//#32424 --050822-- end
+								.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTERED)*/ {				
 					System.out.println("getDocId:: " + poRemark.getDocId() + " || getRoleCode:: "
 							+ poRemark.getRoleCode() + " || getCreatedDate:: " + poRemark.getCreatedDate()
 							+ " || getRemark:: " + poRemark.getRemark());
