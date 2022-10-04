@@ -4868,12 +4868,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 									.getCtContractValue()
 									.setBankAddress(
 											CtAddressUtil.convertSmAddressToCtAddress(resDTO.getBankAddressId()));
-						}
-					} else {
-						this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankName(null);
-						this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
-						this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
-					}
+						} 
+					} 
 				}
 			}
 
@@ -5320,8 +5316,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (populateBankAccountList == null) {
 			if (this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()!= null
 					&& this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
-				populateBankAccountList = new ArrayList<SelectItem>();
-				
+				populateBankAccountList = new ArrayList<SelectItem>();				
 				for (SmSupplierBank obj : ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()) {
 					String account = obj.getAccountNo();
 					if (obj.getPmFinancialOrg() != null) {
@@ -5333,16 +5328,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 					if(!ctBackingBean.getManagedBean().getSupplierBankName().containsKey(obj.getPmFinancialOrg().getFinOrgName())){
 						ctBackingBean.getManagedBean().getSupplierBankName().put(obj.getPmFinancialOrg().getFinOrgName(), obj);
-					}					
+					}			
 				}    
-				
 				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() == 1) {
 					ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(
 							ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().get(0).getAccountNo());
 					changeAccountActionListener();
 				}
-				
-			
 				ctBackingBean.getManagedBean().setApplID(ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getApplId());
 			}
 		}
@@ -7983,12 +7975,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (bankDetails != null) {
 			if (bankDetails.length() > 30 || bankDetails.contains(ContractConst.SPACE_SLASH)) {
 				bankDetailsSplitted = bankDetails.split(ContractConst.SPACE_SLASH);
-
 				ctBackingBean.getManagedBean().getContractVer().getCtContractValue()
 						.setBankAccountNo(bankDetailsSplitted[0]);
 				ctBackingBean.getManagedBean().getContractVer().getCtContractValue()
 						.setBankName(bankDetailsSplitted[1]);
-
 			}
 		}
 		return bankDetailsSplitted;
@@ -8001,7 +7991,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				account = account + ContractConst.SPACE_SLASH
 						+ ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankName();
 			}
-
 			ctBackingBean.getManagedBean().setBankInfoDetails(account);
 		}
 	}
