@@ -3670,7 +3670,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					if (answerRemarkList == null) {
 						answerRemarkList = new ArrayList<>();
 					}
-					answerRemarkList.add(tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark());
+					//32648 - start
+					tplSpecQuestion.setTplSpecAnswers(null);
+					if (null != tplSpecQuestion.getTplSpecAnswers() && tplSpecQuestion.getTplSpecAnswers().size() > 0){
+						answerRemarkList.add(tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark());
+					}
+					//32648 - end
 					// #26130 - End
 					addSpecList = true;
 					continue;
@@ -6005,6 +6010,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			int indi = 0;
 			String whiteSpace = "&nbsp";
 			boolean getFirstValue = true;
+			//26130 - start
+			if (null != master.getTplSpecZone()){
+			//26130 - end	
 			if (question.getTplSpecZoneQties().size()  > 0){
 				
 				for (TplSpecZoneQty zone: question.getTplSpecZoneQties()){
@@ -6074,7 +6082,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					}
 					listSpec.add(map);
 				}
-			}else {
+			}
+			//26130 - start
+			}
+			//26130 - end
+			else {
 				//non-zonal
 				
 				
