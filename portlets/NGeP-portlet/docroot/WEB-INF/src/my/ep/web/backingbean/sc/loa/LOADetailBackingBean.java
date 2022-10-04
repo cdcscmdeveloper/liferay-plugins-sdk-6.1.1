@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.sql.Timestamp; // #25025
 import java.text.DateFormat; // #29007
 import java.text.DecimalFormat;
 import java.text.Format;
