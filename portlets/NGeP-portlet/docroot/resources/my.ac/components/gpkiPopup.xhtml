@@ -211,7 +211,7 @@
 				</p:commandButton>	
 				
 				<!--20220909@Nasim - #33986 MyGPKI POC START-->
-				<p:commandButton id="signButtonId2" value="Signing OTP"  onstart="gpkiBlockWidget.show();" oncomplete="gpkiBlockWidget.hide();" action="#{myGpkiBackingBean.nexusSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate, pin.value)}">
+				<p:commandButton id="signButtonId2" value="Signing OTP"  onstart="gpkiBlockWidget.show();" oncomplete="gpkiBlockWidget.hide();" rendered="#{gpkiBackingBean.getGpkiEnabledProperty() eq false}" action="#{gpkiBackingBean.nexusSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate, pin.value)}">
 					<f:param name="textBeforeSign" value="#{cc.attrs.textBeforeSign}" />
 				</p:commandButton>	
 				<!--20220909@Nasim - #33986 MyGPKI POC END-->
