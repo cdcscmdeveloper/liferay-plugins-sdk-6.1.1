@@ -31,6 +31,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -200,6 +201,12 @@ public class ContractManagedBean extends BaseManagedBean {
 	//End Fix - #31740
 	
 	private String bankInfoDetails; // Fix - #33674
+	
+	//Start Fix - #33674
+	private Map<String, SmSupplierBank> supplierBankAccNo;
+	private Map<String, SmSupplierBank> supplierBankName;
+	private Long applID;
+	//End Fix - #33674
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1609,5 +1616,32 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.bankInfoDetails = bankInfoDetails;
 	}
 	// End Fix - #33674
+	
+	//Start Fix - #33674
+		public Map<String, SmSupplierBank> getSupplierBankAccNo() {
+			if (supplierBankAccNo == null){
+				supplierBankAccNo = new HashMap<String, SmSupplierBank>();
+				}
+			return supplierBankAccNo;
+		}
+		public void setSupplierBankAccNo(Map<String, SmSupplierBank> supplierBankAccNo) {
+			this.supplierBankAccNo = supplierBankAccNo;
+		}
+		public Map<String, SmSupplierBank> getSupplierBankName() {
+			if (supplierBankName == null){
+				supplierBankName = new HashMap<String, SmSupplierBank>();
+				}
+			return supplierBankName;
+		}
+		public void setSupplierBankName(Map<String, SmSupplierBank> supplierBankName) {
+			this.supplierBankName = supplierBankName;
+		}
+		public Long getApplID() {
+			return applID;
+		}
+		public void setApplID(Long applID) {
+			this.applID = applID;
+		}
+		//End Fix - #33674
 
 }
