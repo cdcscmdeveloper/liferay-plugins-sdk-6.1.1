@@ -1042,7 +1042,13 @@ public class QTCloneBackingbean extends
 								qtDocReportAttachment.setScQtDocReport(qtDocReport);
 								setUserDetails(qtDocReportAttachment);
 								qtDocReportAttachment.setChangedDate(null);
-								
+								qtDocReportAttachment.setDocNo(qtDocReport.getScQt().getQtNo());//33954
+								try {
+									uploadAttachment(qtDocReportAttachment,docReport.getScQtDocReportAttachment());
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}//33954
 								qtDocReport.setScQtDocReportAttachment(qtDocReportAttachment);
 							}
 						} catch (IllegalAccessException | InstantiationException
@@ -1056,6 +1062,7 @@ public class QTCloneBackingbean extends
 					if(null!=docReport.getPmDocument()){
 						docDefinitionKey=docReport.getPmDocument().getDocDefinitionKey();
 					}		
+					boolean templateDoc=Boolean.FALSE;//33954
 					if(null!=docDefinitionKey && SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
 							.equals(docDefinitionKey)){
 						IQTTemplateSO qtTemplateSO = null;
@@ -1064,23 +1071,30 @@ public class QTCloneBackingbean extends
 									ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
 							QTTemplateDocReqDTO reqDTO = new QTTemplateDocReqDTO();
 							if (docReport.getTplDocMaster() != null) {
+								templateDoc=Boolean.TRUE;//33954
 								if(null!=templetDoc){
+								log.info("=======removeDocumentCodesexecuted======");//33954
+								int index=reportList.indexOf(templetDoc);
 								reportList.remove(templetDoc);
 								templetDoc=retriveRulesAndRegulationReport(templetDoc);
 								TplDocMaster master=	retrieveTplDocMasterById(docReport.getTplDocMaster().getDocMasterId());
 								master=cloneDocMasterDocSectionDetails(master, templetDoc); //replace tplDocmaster
 								templetDoc.setTplDocMaster(master);
 									reqDTO.setScQtDocReport(templetDoc);
-									
+									templetDoc.setCloned(Boolean.TRUE);
+									reportList.add(index,templetDoc);//33954
 								}else{
+									log.info("=======UnremoveDocumentCodesexecuted======");//33954
 									TplDocMaster master=	retrieveTplDocMasterById(docReport.getTplDocMaster().getDocMasterId());
 									master=cloneDocMasterDocSectionDetails(master, qtDocReport);
 									qtDocReport.setTplDocMaster(master);
 										reqDTO.setScQtDocReport(qtDocReport);
+									qtDocReport.setCloned(Boolean.TRUE);
+									reportList.add(qtDocReport);//33954
 									
 								}
-								QTTemplateDocResDTO resDTO = qtTemplateSO.saveQtReports(reqDTO);
-								qtDocReport=resDTO.getScQtDocReport();	
+								//QTTemplateDocResDTO resDTO = qtTemplateSO.saveQtReports(reqDTO);//33954
+								//qtDocReport=resDTO.getScQtDocReport();//33954	
 							}else{
 								//if(null!=templetDoc){
 								//	reportList.remove(templetDoc);
@@ -1095,7 +1109,7 @@ public class QTCloneBackingbean extends
 						}
 					}
 					
-					if(toClone){
+					if(toClone && !templateDoc){//33954
 						reportList.add(qtDocReport);
 					}
 					
