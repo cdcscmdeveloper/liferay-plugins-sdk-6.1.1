@@ -239,6 +239,7 @@
 			value="#{lbl['lbl.sm.ta.remove.reassignment']}"/>
 		<!-- #7465, #29822 - END -->
 		<h:panelGroup id="othersTaskListID">
+		<!-- #7465 - START -reendorse -->
 			<p:dataTable value="#{taskReassignmentBackingBean.othersTaskListDataModel}" var="otherTasks" widgetVar="dtOthersTaskListTableWidget"
 				lazy="true" rowIndexVar="otherRowIndex" rowKey="#{otherTasks}" rows="10" id="dtOthersTaskAssignResult"
 				style="width:100%;" 
@@ -257,7 +258,6 @@
                  		</p:selectBooleanCheckbox>
 	                 </f:facet>
 	                 
-				<!-- #7465 - START -reendorse -->
                      <p:selectBooleanCheckbox value="#{otherTasks.taskSelect}"
                                 disabled="#{taskReassignmentBackingBean.managedBean.bpkAdminUser or not taskReassignmentBackingBean.managedBean.checkAllOthersTasksEnabled}"> 
 	               		<p:ajax event="change" 
