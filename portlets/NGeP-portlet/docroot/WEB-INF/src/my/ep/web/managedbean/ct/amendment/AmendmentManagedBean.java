@@ -205,11 +205,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String supplementalLoaNo = null;//Bug 33096 - shaqimi
 	private String docTypeFromTaskList = null;//Bug 34030 - shaqimi
 	private String taskNameFromTaskList = null;//Bug 34030 - shaqimi
-	//Start Fix - #33674
-	private Map<String, SmSupplierBank> supplierBankAccNo;
-	private Map<String, SmSupplierBank> supplierBankName;
-	private Long applID;
-	//End Fix - #33674
 	
 	public void reassignValue(boolean value) 
 	{
@@ -1735,31 +1730,4 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.selectedChangeItemPrice = selectedChangeItemPrice;
 	}
 	// End Fix - #33256
-	//Start Fix - #33674
-	public Map<String, SmSupplierBank> getSupplierBankAccNo() {
-		if (supplierBankAccNo == null){
-			supplierBankAccNo = new HashMap<String, SmSupplierBank>();
-			}
-		return supplierBankAccNo;
-	}
-	public void setSupplierBankAccNo(Map<String, SmSupplierBank> supplierBankAccNo) {
-		this.supplierBankAccNo = supplierBankAccNo;
-	}
-	public Map<String, SmSupplierBank> getSupplierBankName() {
-		if (supplierBankName == null){
-			supplierBankName = new HashMap<String, SmSupplierBank>();
-			}
-		return supplierBankName;
-	}
-	public void setSupplierBankName(Map<String, SmSupplierBank> supplierBankName) {
-		this.supplierBankName = supplierBankName;
-	}
-	public Long getApplID() {
-		return applID;
-	}
-	public void setApplID(Long applID) {
-		this.applID = applID;
-	}
-	//End Fix - #33674
-
 }
