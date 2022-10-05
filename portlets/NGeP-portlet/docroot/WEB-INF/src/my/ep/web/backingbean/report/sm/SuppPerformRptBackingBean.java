@@ -42,6 +42,10 @@ public class SuppPerformRptBackingBean extends
 	}
 
 	public void generateReport() {
+		// #31893 - start
+		Long supplierId = null;
+		boolean isSprMv = false;
+		// #31893 - end
 		
 		if (getManagedBean().getSelectedOrgProfile() == null && getManagedBean().getMofNo().isEmpty() && getManagedBean().getEpNo().isEmpty() ) {
 				throw new EpException(MessageConst.ERROR_REPORT_780044);		
@@ -64,6 +68,7 @@ public class SuppPerformRptBackingBean extends
 						.getSelectedOrgProfile().getSmSupplier().getCompanyName());
 				supplierSearchReqDTO.setCompanyName(getManagedBean()
 						.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+				// #33741 - start
 				// #31893 - start
 				/*
 				if (supplierSearchReqDTO.getCompanyName().equalsIgnoreCase(SmReportConst.SM_SUPPLIER_PERFORMANCE_COMP_1)
@@ -71,14 +76,19 @@ public class SuppPerformRptBackingBean extends
 						|| supplierSearchReqDTO.getCompanyName().equalsIgnoreCase(SmReportConst.SM_SUPPLIER_PERFORMANCE_COMP_2)) {
 					getManagedBean().setReportCode(SmReportConst.SM_SUPPLIER_PERFORMANCE_V_RPT_VAL);
 				}
-				*/
+				
 				params.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(getManagedBean()
 						.getSelectedOrgProfile().getSmSupplier().getSupplierId()));
 				
 				if (getManagedBean().getSelectedOrgProfile().getSmSupplier().isSprMv()) {
 					getManagedBean().setReportCode(SmReportConst.SM_SUPPLIER_PERFORMANCE_V_RPT_VAL);
 				}
+				*/
 				// #31893 - end
+				
+				supplierId = getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId();
+				isSprMv = getManagedBean().getSelectedOrgProfile().getSmSupplier().isSprMv();
+				// #33741 - end
 			}
 		}else{
 			if(getManagedBean().getMofNo() != null){
@@ -90,8 +100,19 @@ public class SuppPerformRptBackingBean extends
 			SupplierSearchResDTO suResDTO = ValidateSupplier(supplierSearchReqDTO);
 			supplierSearchReqDTO.setCompanyName(suResDTO.getSmSupplier().getCompanyName());
 			params.put(SmReportConst.PARAM_COMPANY_NAME, suResDTO.getSmSupplier().getCompanyName());
+			
+			// #33741 - start
+			supplierId = suResDTO.getSmSupplier().getSupplierId();
+			isSprMv = suResDTO.getSmSupplier().isSprMv();
+			// #33741 - end
 		}
+		// #33741 - start		
+		params.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(supplierId));
 		
+		if (isSprMv) {
+			getManagedBean().setReportCode(SmReportConst.SM_SUPPLIER_PERFORMANCE_V_RPT_VAL);
+		}
+		// #33741 - end		
 		params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
 		
 		
