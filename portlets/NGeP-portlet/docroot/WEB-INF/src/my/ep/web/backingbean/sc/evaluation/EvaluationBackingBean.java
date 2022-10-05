@@ -2584,14 +2584,20 @@ public class EvaluationBackingBean extends
 					&& null != resDTO.getCheckListResultBean().getResultList()
 					&& !resDTO.getCheckListResultBean().getResultList()
 							.isEmpty()) {
-
-				List<ScQtCheckList> proposalChecklistList = resDTO
+				//bug 33851 rename to tele with entity - start
+				List<ScQtCheckList> checklistList = resDTO
 						.getCheckListResultBean().getResultList();
 				//Bug #33252 related to #33110 start
-				for (ScQtCheckList proposalCheckList : proposalChecklistList) {
+				for (ScQtCheckList checkList : checklistList) {
+					// Update eval status proposal checklist for no supplier that cant respond because of quantity 0 at zone
+					// bug 33851 - start 
+					 evaluationSO.proposalchecklistsuppqty
+							(checkList.getQtChecklistId());
+					// bug 33851 - end 
+					
 					//#33252 /27/5/2022 Start Fix
 					boolean checkallitemautoscore = evaluationSO.checkbuttonAutoScore
-							(proposalCheckList.getQtChecklistId(),evalstage.get(0));
+							(checkList.getQtChecklistId(),evalstage.get(0));
 					//#33252 /27/5/2022 End Fix
 					// if all item is auto score --> START
 					//32426 - start
@@ -2603,24 +2609,25 @@ public class EvaluationBackingBean extends
 					//
 				
 					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
-							.equalsIgnoreCase(proposalCheckList
+							.equalsIgnoreCase(checkList
 									.getDefinationType().getParameterCode())
-							&& proposalCheckList.isScoringReq()
+							&& checkList.isScoringReq()
 							&& checkallitemautoscore) {// #25138 - end
-						proposalCheckList
+						checkList
 								.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 						this.getManagedBean().setAllItemAutoScore(true);
-						localCheckList.add(proposalCheckList);
+						localCheckList.add(checkList);
 					} else {
-						if (proposalCheckList.isScoringReq()) {
+						if (checkList.isScoringReq()) {
 							localCheckList
 									.add(checkStausForUploadNoActionCheckLists(
-											proposalCheckList, evalstage.get(0)));
+											checkList, evalstage.get(0)));
 						}
 					}
 					//32426 - end
 //#33110 && Bug #33252 retated to #21538 button evaluation must be view if all item is auto score  --> END
 				}
+				//bug 33851 rename to tele with entity - end
 
 				/*
 				 * this.getManagedBean().setEvaluationStgfinancialCheckList(
