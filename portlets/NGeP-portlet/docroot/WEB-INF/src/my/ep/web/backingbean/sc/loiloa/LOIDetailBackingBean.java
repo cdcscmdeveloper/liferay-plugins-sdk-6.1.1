@@ -4074,7 +4074,8 @@ public class LOIDetailBackingBean extends
 			}
 		}
 
-		if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
+		if (!BpmOutcomeConst.BPM_EPV_CANCEL.equals(outcome) &&
+				QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {//#21692
 			// validate zone tier and tier pricing
 			for (ScLoiLoaItem  scLoiLoaItem : scLoi.getScLoiLoaItems()) {
 				if(null != scLoiLoaItem.getTplSpecTierQty()){
@@ -6456,13 +6457,6 @@ public class LOIDetailBackingBean extends
 						QTStatusConst.LOI_PENDING_APPROVAL.equals(statusId)){
 					return Boolean.TRUE;
 				}
-				//#21692 - start
-				if (QTStatusConst.LOI_CANCELLED_NOT_AGREE_EPV.equals(statusId) &&
-						!isSupplierAgreeExtendEPV(scLoi.getScLoiLoa().getDocId(),
-								scLoi.getScLoiLoa().getSmSupplier().getSupplierId())) {
-					return Boolean.FALSE;
-				}
-				//#21692 - end
 			}
 		}
 		
