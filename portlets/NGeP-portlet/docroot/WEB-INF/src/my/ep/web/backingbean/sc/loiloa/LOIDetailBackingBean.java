@@ -2858,6 +2858,12 @@ public class LOIDetailBackingBean extends
 						.equals(statusId)) {
 					messageCode = MessageConst.INFO_700001;
 				}
+				//#21692 - start
+				if (BpmOutcomeConst.BPM_EPV_CANCEL
+						.equalsIgnoreCase(outcome)) {
+					messageCode = MessageConst.INFO_700031;
+				}
+				//#21692 - end
 				
 				if (QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(statusId)) {
@@ -6450,6 +6456,13 @@ public class LOIDetailBackingBean extends
 						QTStatusConst.LOI_PENDING_APPROVAL.equals(statusId)){
 					return Boolean.TRUE;
 				}
+				//#21692 - start
+				if (QTStatusConst.LOI_CANCELLED_NOT_AGREE_EPV.equals(statusId) &&
+						!isSupplierAgreeExtendEPV(scLoi.getScLoiLoa().getDocId(),
+								scLoi.getScLoiLoa().getSmSupplier().getSupplierId())) {
+					return Boolean.FALSE;
+				}
+				//#21692 - end
 			}
 		}
 		
@@ -6717,6 +6730,48 @@ public class LOIDetailBackingBean extends
 		}
 		
 		return agreeEPV;
+	}
+	
+	public boolean isSupplierEPVStatusRejected() {
+		boolean supplierStatus = false;
+		
+		IQTDetailSO detailSO;
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
+			List<Long> suppList = new ArrayList<>();
+			for (ScLoiLoa scLo : getManagedBean().getRecSupplierList()) {
+				suppList.add(scLo.getSmSupplier().getSupplierId());
+			}
+			if (null != getManagedBean().getRecSupplierList()
+					&& !getManagedBean().getRecSupplierList().isEmpty()
+					&& !suppList.isEmpty()) {
+				supplierStatus = detailSO.checkSupplierEPVStatus(getManagedBean().getScQt().getQtId(), suppList);
+			}
+			
+		} finally {
+			detailSO = null;
+		}
+		
+		boolean isValidFor21692 = this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(), QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
+		
+		supplierStatus = (supplierStatus && isLoiListPortlet() && !this.getManagedBean().getScLoi().isBrandNew() && (
+				null != this.getManagedBean().getScLoi().getScWorkFlowStatus() &&
+				(this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_SUBMISSION) || 
+				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_APPROVAL) || 
+				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_REVISION) || 
+				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_NEGOTIATION) || 
+				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_REVISION_APPROVAL)))
+				&& isValidFor21692
+				) ? true : false;
+		
+		return supplierStatus;
+	}
+	
+	public boolean isLoiListPortlet() {
+		return QTConstants.PORTLET_NAME_QT_LOI_LIST
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	//#21692 - end
 }
