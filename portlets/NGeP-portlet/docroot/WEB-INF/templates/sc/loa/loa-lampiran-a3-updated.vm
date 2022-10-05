@@ -3,6 +3,8 @@
 	<style>
 @page {
 	size: A4 portrait;
+	margin-left: 20px;
+	margin-right: 20px;
 }
 
 @page { @bottom-center { content:"Page "counter(page)" / "counter(pages);	
