@@ -64,7 +64,6 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.exception.EpException;
@@ -98,7 +97,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
-import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
@@ -898,12 +896,13 @@ public class CreateQtBackingBean extends
 		List<String> qtTypes = new ArrayList<String>();
 		
 		qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+		/* #29521 - remove restricted tender
+		qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
 		if (null != scQt &&null != scQt.getProcurementMode()
 				&& ParameterConst.PROCUREMENT_MODE_TENDER.equals(scQt
 						.getProcurementMode().getParameterCode())) {
 			qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
-		}
-		
+		}*/
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
 						SearchOperator.OPERATOR_IN.value(), qtTypes));
@@ -1289,6 +1288,12 @@ public class CreateQtBackingBean extends
 		String type = (String) event.getComponent().getAttributes()
 				.get("value");
 		this.getManagedBean().getQt().setOpenFor(type);
+		//#29521 - start
+		if (getManagedBean().getQt().getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
+			QTDetailBackingBean qtDetailBackingBean = new QTDetailBackingBean();
+			qtDetailBackingBean.IdentifyID(event);
+		}
+		//29521 - end		
 	}
 /** #21695 FARID START */	
 	/**
@@ -3059,10 +3064,10 @@ public class CreateQtBackingBean extends
 								&& QTStatusConst.TS_COMPLETED.equals(technicalchecklist.getPmStatus().getStatusId())) {							
 							technicalchecklist.setPmStatus(status);
 
-				}
+						}
 
 					}//#28784 - End
-			}
+				}
 			}
 				if (financialSpecZonesEstimatedpriceUpdate == true) {
 					ZonesUpdateWarningMessage(this.getManagedBean()
@@ -3981,6 +3986,12 @@ public class CreateQtBackingBean extends
 //			detailBB.checkDemoPresentationByStatus();
 		}
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+		//#29521 - start
+		 if (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
+				QTDetailBackingBean qtDetailBackingBean = new QTDetailBackingBean();
+				qtDetailBackingBean.IdentifyID(event);
+		}
+		 //#29521 - end
 	}
 
 	// #21695 Farid START 3/7/2021
@@ -4055,6 +4066,20 @@ public class CreateQtBackingBean extends
 		this.getManagedBean().setDemoType(true);
 		this.getManagedBean().getQt().setDemoRequired(true);
 	}
+	
+	//#29521 - start
+	
+	public void validateIsZonalAdded(){
+		SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
+		if (null != getManagedBean().getTplSpecZoneDtl()){
+			if (null != getManagedBean().getTplSpecZoneDtl().getTplSpecZone()){
+				specificationReqDTO.setSpecZoneId(getManagedBean().getTplSpecZoneDtl().getTplSpecZone().getSpecZoneId());
+			}
+			
+		}
+		
+	}
+	//#29521 - end
 }
 
 
