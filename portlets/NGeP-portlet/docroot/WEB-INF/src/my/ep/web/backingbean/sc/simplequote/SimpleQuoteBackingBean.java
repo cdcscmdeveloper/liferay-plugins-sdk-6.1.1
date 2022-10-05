@@ -8322,13 +8322,25 @@ public class SimpleQuoteBackingBean extends
 	// #29800 - end
 
 	// #29832 @zaim added method to pass the value into lovBackingBean
+	
+	/**
+	 * @return SimpleQuoteManagedBean that contain SimpleQuoteManagedBean object.
+	 *
+	 */
+	
 	public SimpleQuoteManagedBean deleteSuccess(){
 		
 		return getManagedBean();
 	}
 	// #29832 end
 	
-	 //29832 start
+    //29832 start
+	/**
+	 * @return list of PmBusinessNature level code 
+	 * that need to exclude.
+	 * The selected Business Nature will be exclude 
+	 * from Business Nature popup view.
+	 */
 	public String excludeLevelCodeSupplier(){
 		StringBuilder sb = new StringBuilder();
 		if (getManagedBean().getScQuote().getBusinessNatureCriterias() != null) {
