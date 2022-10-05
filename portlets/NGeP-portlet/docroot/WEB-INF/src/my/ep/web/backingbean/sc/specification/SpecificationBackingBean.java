@@ -20008,6 +20008,17 @@ if(null!=allTechnicalChecklist){
 				}
 			}			
 			
+			//#28784 - Start
+			List<ScQtCheckList> st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
+			if (updatedNewCheckLists.size() <= st2technicalproposalList.size()) {
+				for (ScQtCheckList st : st2technicalproposalList) {
+					if (!updatedNewCheckLists.contains(st)) {
+						updatedNewCheckLists.add(st);
+					}
+				}
+				checklistSorting(updatedNewCheckLists);
+			}//#28784 - End
+			
 			//List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();	//#28784		
 		
 			for(ScQtCheckList t: updatedNewCheckLists){//#28784

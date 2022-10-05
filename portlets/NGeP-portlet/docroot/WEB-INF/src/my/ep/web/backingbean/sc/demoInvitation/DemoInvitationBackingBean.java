@@ -914,6 +914,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 
 				checkList.getScQtDoc().getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc().getTplSpecMaster());
+				this.getManagedBean().setTemplateSpecBean(templateSpecBean);
 
 			}
 		} catch (Exception e) {
