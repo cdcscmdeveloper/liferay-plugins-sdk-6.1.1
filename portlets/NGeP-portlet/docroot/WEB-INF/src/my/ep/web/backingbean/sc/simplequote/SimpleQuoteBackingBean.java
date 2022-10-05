@@ -8219,6 +8219,13 @@ public class SimpleQuoteBackingBean extends
 		// #29800 - end
 		
 		// #29832 @zaim added method to pass the value into lovBackingBean
+		
+		/**
+		 * @return SimpleQuoteManagedBean that contain SimpleQuoteManagedBean object.
+		 *
+		 */
+		
+		
 		public SimpleQuoteManagedBean deleteSuccess(){
 			
 			return getManagedBean();
