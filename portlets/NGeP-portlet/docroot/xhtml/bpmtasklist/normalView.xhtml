@@ -42,6 +42,35 @@
 				<td width="10%"></td>
 				<td width="40%"></td>
 			</tr>
+			<!--#29810-START-->
+			<tr>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.createdDateFrom']} :" /></td>
+				<td width="40%">
+					<p:calendar showOn="button" navigator="true"
+						display="inline" required="false" readonlyInput="false"
+						label="#{lbl['lbl.cm.doc.createdDate']}" id="myTaskCreatedDateFrom"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
+						value="#{bpmTasklistBackingBean.managedBean.myTaskCreatedDateFrom}"
+						<p:ajax event="dateSelect" listener="#{bpmTasklistBackingBean.compareDate('normal', 'fromDate')}"/>
+						<p:ajax event="change" listener="#{bpmTasklistBackingBean.compareDate('normal', 'fromDate')}"/>
+					</p:calendar>
+				</td>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.createdDateTo']} :" /></td>
+				<td width="40%">
+					<p:calendar showOn="button" navigator="true"
+						display="inline" required="false" readonlyInput="false"
+						label="#{lbl['lbl.cm.doc.createdDate']}" id="myTaskCreatedDateTo"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
+						value="#{bpmTasklistBackingBean.managedBean.myTaskCreatedDateTo}"
+						update="searchButtonId">
+						<p:ajax event="dateSelect" listener="#{bpmTasklistBackingBean.compareDate('normal', 'toDate')}"/>
+						<p:ajax event="change" listener="#{bpmTasklistBackingBean.compareDate('normal', 'toDate')}"/>
+					</p:calendar>
+				</td>
+			</tr>
+			<!--#29810-END-->
 			<!-- <tr>
 				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.created.date']} : " /></td>
 				<td width="40%">
@@ -75,14 +104,9 @@
 					<c:if test="#{bpmTasklistBackingBean.managedBean.roleType eq 'PO'}">
 					<p:selectOneMenu id="taskListSortBy" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.sort_by}">
 						<f:selectItem itemLabel="" itemValue=""></f:selectItem>
-						<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.bpm.doc.no']}" itemValue="DOCNUMBER"></f:selectItem>
-						<f:selectItem itemLabel="#{lbl['lbl.bpm.doc.type']}" itemValue="DOCTYPE"></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.bpm.created.date']}" itemValue="CREATEDATE"></f:selectItem>
-						<f:selectItem itemLabel="#{lbl['lbl.bpm.description']}" itemValue="TITLE"></f:selectItem>
-						<f:selectItem itemLabel="#{lbl['lbl.bpm.status']}" itemValue="DOCSTATUS"></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.bpm.received.date']}" itemValue="RECEIVEDDATE"></f:selectItem>
-						<!-- <f:selectItem itemLabel="Document Receive Date" itemValue="CREATEDATE"></f:selectItem> -->
 					</p:selectOneMenu>
 					</c:if>
 				</td>
@@ -93,32 +117,6 @@
 						<f:selectItem itemLabel="#{lbl['lbl.bpm.ascending']}" itemValue="true"></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.bpm.descending']}" itemValue="false"></f:selectItem>
 					</p:selectOneMenu>
-				</td>
-			</tr>
-			<tr>
-				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.createdDateFrom']} :" /></td>
-				<td width="40%">
-					<p:calendar showOn="button" navigator="true"
-						display="inline" required="false" readonlyInput="false"
-						label="#{lbl['lbl.cm.doc.createdDate']}" id="myTaskCreatedDateFrom"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
-						value="#{bpmTasklistBackingBean.managedBean.myTaskCreatedDateFrom}">
-						<p:ajax event="dateSelect" listener="#{bpmTasklistBackingBean.compareDate('normal')}"/>
-						<p:ajax event="change" listener="#{bpmTasklistBackingBean.compareDate('normal')}"/>
-					</p:calendar>
-				</td>
-				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.createdDateTo']} :" /></td>
-				<td width="40%">
-					<p:calendar showOn="button" navigator="true"
-						display="inline" required="false" readonlyInput="false"
-						label="#{lbl['lbl.cm.doc.createdDate']}" id="myTaskCreatedDateTo"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
-						value="#{bpmTasklistBackingBean.managedBean.myTaskCreatedDateTo}">
-						<p:ajax event="dateSelect" listener="#{bpmTasklistBackingBean.compareDate('normal')}"/>
-						<p:ajax event="change" listener="#{bpmTasklistBackingBean.compareDate('normal')}"/>
-					</p:calendar>
 				</td>
 			</tr>
 			<!--#29810-END-->

@@ -50,6 +50,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -747,6 +748,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					"lbl.bpm.createdDateFrom", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()) });
 		}
+		compareDate("advance", "fromDate");
 		//29810 - end
 		this.getManagedBean().setFromSearchBttn(true);
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
@@ -766,6 +768,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					"lbl.bpm.createdDateFrom", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()) });
 		}
+		compareDate("normal", "fromDate");
 		//29810 - end
 		this.getManagedBean().setFromSearchBttn(true);
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
@@ -823,6 +826,10 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		this.getManagedBean().setSort_byGroup("CREATEDATE");
 		this.getManagedBean().setAscendingGroup(false);
 		this.getManagedBean().setFromSearchBttn(true);
+		this.getManagedBean().setMyTaskCreatedDateFrom(null);
+		this.getManagedBean().setMyTaskCreatedDateTo(null);	
+		this.getManagedBean().setGroupTaskCreatedDateFrom(null);
+		this.getManagedBean().setGroupTaskCreatedDateTo(null);
 		//29810 - end
 		//this.getManagedBean().setAssignment("ALL");
 
@@ -1204,31 +1211,45 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	// 25627 -End.
 	
 	//29810 - start
-	public void compareDate(String type){
+	public void compareDate(String taskType, String dateType){
 		
-		if(type.equalsIgnoreCase("normal")){
+		if(taskType.equalsIgnoreCase("normal")){			
 			if (this.getManagedBean().getMyTaskCreatedDateFrom() != null
 					&& this.getManagedBean().getMyTaskCreatedDateTo() != null) {
 				if (this.getManagedBean().getMyTaskCreatedDateFrom().after(this.getManagedBean().getMyTaskCreatedDateTo())) {
-						RequestContext.getCurrentInstance().execute("dateFromDialog.show()");
+						if(dateType.equalsIgnoreCase("fromDate")){
+							throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.date.to",
+									null));
+						}else if(dateType.equalsIgnoreCase("toDate")){
+							throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.date.from",
+									null));
+						}						
 				} else {
 					Long date = DateUtils.getDaysDifference(this.getManagedBean().getMyTaskCreatedDateFrom(), this
 							.getManagedBean().getMyTaskCreatedDateTo());
 					if (date > 31) {
-						RequestContext.getCurrentInstance().execute("validateDateDialog.show()");
+						throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.maximumDate",
+								null));
 					}
 				}
 			}
-		}else if(type.equalsIgnoreCase("advance")){
+		}else if(taskType.equalsIgnoreCase("advance")){
 			if (this.getManagedBean().getGroupTaskCreatedDateFrom() != null
 					&& this.getManagedBean().getGroupTaskCreatedDateTo() != null) {
 				if (this.getManagedBean().getGroupTaskCreatedDateFrom().after(this.getManagedBean().getGroupTaskCreatedDateTo())) {
-						RequestContext.getCurrentInstance().execute("dateFromDialogAdvance.show()");
+					if(dateType.equalsIgnoreCase("fromDate")){
+						throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.date.to",
+								null));
+					}else if(dateType.equalsIgnoreCase("toDate")){
+						throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.date.from",
+								null));
+					}	
 				} else {
 					Long date = DateUtils.getDaysDifference(this.getManagedBean().getGroupTaskCreatedDateFrom(), this
 							.getManagedBean().getGroupTaskCreatedDateTo());
 					if (date > 31) {
-						RequestContext.getCurrentInstance().execute("validateDateDialogAdvance.show()");
+						throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.maximumDate",
+								null));
 					}
 				}
 			}
