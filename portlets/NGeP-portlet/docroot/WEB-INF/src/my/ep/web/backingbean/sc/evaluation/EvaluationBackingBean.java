@@ -16628,9 +16628,20 @@ private void retriveCommitteeRemarksList(){
 				if (null == totalScore) {
 					totalScore = BigDecimal.valueOf(0);
 				}
+				log.info("test test");
+				//#28784 add weightage to calculation - start
+				if (null != specscore.getScQtCheckList().getQtScoreWeightage() &&
+						(null != specscore.getScQtCheckList().getQtScoreWeightage().getWeightage() &&
+							!specscore.getScQtCheckList().getQtScoreWeightage().getWeightage().equals(BigDecimal.valueOf(0)))) {
+					BigDecimal maxScore = specscore.getScQtCheckList().getQtScoreWeightage().getScore();
+					BigDecimal weightage = specscore.getScQtCheckList().getQtScoreWeightage().getWeightage();
+					
+					totalScore = weightage.multiply(totalScore.divide(maxScore)).stripTrailingZeros();
+				}
+				//#28784 add weightage to calculation - end
 				divNum = divNum.add(totalScore);
 			}
-			totalTechScore = String.valueOf(divNum);
+			totalTechScore = String.valueOf(divNum.toPlainString());
 			
 		} finally {
 			evaluationSO = null;
@@ -16667,7 +16678,17 @@ private void retriveCommitteeRemarksList(){
 			//calculate demo total score
 			for(ScQtProposalChecklist specscore : resDTO.getSpecScoreBySupplier()){
 				divNum = specscore.getTotalScore();
-				totalDemoScore = String.valueOf(divNum);
+				//#28784 add weightage to calculation - start
+				if (null != specscore.getScQtCheckList().getQtScoreWeightage() &&
+						(null != specscore.getScQtCheckList().getQtScoreWeightage().getWeightage() &&
+							!specscore.getScQtCheckList().getQtScoreWeightage().getWeightage().equals(BigDecimal.valueOf(0)))) {
+					BigDecimal maxScore = specscore.getScQtCheckList().getQtScoreWeightage().getScore();
+					BigDecimal weightage = specscore.getScQtCheckList().getQtScoreWeightage().getWeightage();
+					
+					divNum = weightage.multiply(divNum.divide(maxScore)).stripTrailingZeros();
+				}
+				//#28784 add weightage to calculation - end
+				totalDemoScore = String.valueOf(divNum.toPlainString());
 			}
 			
 		} finally {
