@@ -5,6 +5,7 @@ package my.ep.web.bean.sc.common;
 
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class ItemBean.
  * 
@@ -124,15 +125,27 @@ public class ItemBean {
 		this.specs = specs;
 	}
 	//26226 Start
+	/**
+	 * @return the value of clDurationMonth in String.
+	 * */
 	public String getClDurationMonth() {
 		return clDurationMonth;
 	}
+	/**
+	 * @param clDurationMonth set the clDurationMonth in String data type.
+	 * */
 	public void setClDurationMonth(String clDurationMonth) {
 		this.clDurationMonth = clDurationMonth;
 	}
+	/**
+	 * @return the value of clDeliveryTerm in String.
+	 * */
 	public String getClDeliveryTerm() {
 		return clDeliveryTerm;
 	}
+	/**
+	 * @param clDeliveryTerm set the clDeliveryTerm in String data type.
+	 * */
 	public void setClDeliveryTerm(String clDeliveryTerm) {
 		this.clDeliveryTerm = clDeliveryTerm;
 	}
