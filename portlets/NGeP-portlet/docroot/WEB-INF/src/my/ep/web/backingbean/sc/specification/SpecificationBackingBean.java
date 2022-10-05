@@ -197,7 +197,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
-import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
@@ -268,7 +267,6 @@ import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.MenuModel;
-import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
@@ -10883,7 +10881,9 @@ public class SpecificationBackingBean extends
 			}
 			
 		}
-		
+		// 29521 - start
+		retrieveCurrentZonalDetail();
+		// 29521 - end
 		checkProcurementModeValue();
 		retriveTechnicalCheckList();//1873 - note 52
 		if(!scQt.isSampleReq()){//11104-start
@@ -11624,6 +11624,15 @@ if (null != checklist && !checklist.isEmpty()) {
 			String specScreenMaintenance = this.getManagedBean()
 					.getSpecMaintenanceScreen();
 			boolean specMaintenance = this.getManagedBean().isSpecMaintenance();
+			
+			// 29521 - start
+			specReqDTO.setBackupScQt(retrieveScqtdetails());
+			specReqDTO.setListBackupCategoryCode(retrieveCurrentScQtCategoryCode());
+			specReqDTO.setListNewCategoryCode(getManagedBean().getQtCategoryList());
+			FacesScopes fs = new FacesScopes();
+			specReqDTO.setPmUser(fs.getUserSessionBean());
+			validateZonalChanges();
+			// 29521 - end
 
 			switch (activeIndex) {
 			case 0:
@@ -14022,7 +14031,26 @@ if (null != checklist && !checklist.isEmpty()) {
 			}
 		}
 		reqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
-//#29732 End - reOpen Fix
+		//#29732 End - reOpen Fix
+		
+		// 29521 - start
+		if (null == reqDTO.getBackupScQt()) {
+			reqDTO.setBackupScQt(retrieveScqtdetails());
+		}
+		if (null == reqDTO.getListBackupCategoryCode()) {
+			reqDTO.setListBackupCategoryCode(retrieveCurrentScQtCategoryCode());
+		}
+		if (null == reqDTO.getListNewCategoryCode()) {
+			reqDTO.setListNewCategoryCode(getManagedBean().getQtCategoryList());
+		}
+		if (null == reqDTO.getPmUser()) {
+			FacesScopes fs = new FacesScopes();
+			reqDTO.setPmUser(fs.getUserSessionBean());
+		}
+
+		validateZonalChanges();
+		// 29521 - end
+				
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
 			resDTO = specSO.saveOrUpdateTemplateSpecs(reqDTO);
@@ -20641,11 +20669,7 @@ if(null!=allTechnicalChecklist){
 		this.getManagedBean().getTemplateSpecBean().getSpecMaster().setTplSpecQuestions(list);
 		this.getManagedBean().setItemName(null);
 
-	}
-	
-	
-	
-	
+	}	
 	//#28784 - End
 	
 	// #29474 - start
@@ -20726,7 +20750,8 @@ if(null!=allTechnicalChecklist){
 						QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	//29464 - note 90 - end
-// #29732 Start - reOpen Fix
+	
+	// #29732 Start - reOpen Fix
 	public String checkCatCodeChange() {
 		if (CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())) {
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
@@ -20781,7 +20806,8 @@ if(null!=allTechnicalChecklist){
 		}
 		return catCodeList;
 	}
-// #29732 End - reOpen Fix
+	// #29732 End - reOpen Fix
+	
 	/*#29468 Start Vinod*/
 	private void getCategoryCodesForClone(){
 		ICategoryCodeSO categoryCodeSO = null;
@@ -20881,6 +20907,152 @@ if(null!=allTechnicalChecklist){
 		return evalTier2;
 	}
 	//#28784 bug note-#424 - end
+	//29521 - start
+	
+	public ScQt retrieveScqtdetails(){
+		ScQt scQt = this.getManagedBean().getQt();
+		
+		IQTSpecSO specSO = getSpecSO();
+		SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
+		specificationReqDTO.setScQt(scQt);
+		SpecificationResDTO specificationResDTO = specSO.retrieveCurrentScQT(specificationReqDTO);
+		
+		return specificationResDTO.getScQt();
+	}
+	
+	public boolean validateZonalChanges(){
+		boolean isNewZonalAdded = Boolean.FALSE;
+		SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
+		
+		List<TplSpecZoneDtl> listZone = new ArrayList<>();
+		List<String> listZoneName = new ArrayList<>();
+		List<String> listCurrentZoneName = new ArrayList<>();
+		List<TreeNode> listZonalTree = new ArrayList<>();
+		Long specZoneId = 0L;
+		
+		
+		//retrieve latest Zone from managedBean
+		if (null != getManagedBean().getZoneGeneralTrees() && getManagedBean().getZoneGeneralTrees().size() > 0){
+			listZonalTree = getManagedBean().getZoneGeneralTrees();
+			TplSpecZoneDtl dtl = new TplSpecZoneDtl();
+			for (TreeNode node : listZonalTree){
+				for (TreeNode no: node.getChildren()){
+					dtl = (TplSpecZoneDtl)no.getData();
+					if (null != dtl.getTplSpecZone()){
+						specZoneId = dtl.getTplSpecZone().getSpecZoneId();
+					}
+					
+					listCurrentZoneName.add(dtl.getZoneName());
+				}
+				
+			}
+			specificationReqDTO.setSpecZoneId(specZoneId);
+		}
+		
+		//retrieve from db
+		listZone = getManagedBean().getBackupZoneList();
+		//compare from db with managedBean for changes
+		
+		if (null != listZone){
+			if (listZone.size() == listCurrentZoneName.size()){
+				//check zone name
+				for (TplSpecZoneDtl zone: listZone){
+					
+					listZoneName.add(zone.getZoneName());
+				}
+				
+				
+				if (listZoneName.containsAll(listCurrentZoneName)){
+					isNewZonalAdded = false;
+				}else {
+					isNewZonalAdded = true;
+				}
+			}else {
+				isNewZonalAdded = true;
+			}
+		}
+		
+		//start insert and update into tplSpecZoneDtlHistory
+		// check existing in TplSpecZoneDtlHistory
+		// listZone == null = non zonal
+		if (null != listZone && listZone.size() > 0) {
+			if (null != specificationReqDTO.getSpecZoneId()) {
+				SpecificationResDTO resDTO = getQtSpecSO().getTplSpecZoneDtlHistoryBySpecZoneId(specificationReqDTO);
+				if (!resDTO.isSuccessful()) {
+					if (isNewZonalAdded) {
+						// data do not present in tpl spec zone dtl history
+						for (TplSpecZoneDtl specZoneDtls : listZone) {
+							specificationReqDTO.setSpecZoneDtls(specZoneDtls);
+							// if exist
+							if (!resDTO.isSuccessful()) {
+								// perform update is latest
+								// insert new data
+								doInsertTplSpecZoneDtl(specificationReqDTO);
+							}
+							/*
+							 * else{
+							 * doInsertTplSpecZoneDtl(specificationReqDTO); }
+							 */
+						}
+					}
+				}
+			}
+			
+		}//else no changes nothing change
+		return isNewZonalAdded;
+	}
+	
+	public void doInsertTplSpecZoneDtl(SpecificationReqDTO specificationReqDTO){
+		getQtSpecSO().saveTplSpecZoneDtlHistory(specificationReqDTO);
+	}
+	
+	
+	
+	public List<ScQtCategory> retrieveCurrentScQtCategoryCode(){
+		List<ScQtCategory> listCategoryDB = new ArrayList();
+		IQTSpecSO specSO = getSpecSO();
+		listCategoryDB = specSO.retrieveScQtCategorytByQtID(getManagedBean().getQt().getQtId());
+		
+		return listCategoryDB;
+	}
+	
+	public void retrieveCurrentZonalDetail(){
+		Long specZoneId = 0L;
+		IQTSpecSO specSO = getSpecSO();
+		List<String> listCurrentZoneName = new ArrayList<>();
+		SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
+		SpecificationResDTO specificationResDTO = new SpecificationResDTO();
+		
+		//retrieve latest Zone from managedBean
+				if (null != getManagedBean().getZoneGeneralTrees() && getManagedBean().getZoneGeneralTrees().size() > 0){
+					TplSpecZoneDtl dtl = new TplSpecZoneDtl();
+					for (TreeNode node : getManagedBean().getZoneGeneralTrees()){
+						for (TreeNode no: node.getChildren()){
+							dtl = (TplSpecZoneDtl)no.getData();
+							if (null != dtl.getTplSpecZone()){
+								specZoneId = dtl.getTplSpecZone().getSpecZoneId();
+							}
+							
+							listCurrentZoneName.add(dtl.getZoneName());
+						}
+						
+					}
+				}
+				
+				//retrieve from db
+				if (!specZoneId.equals(0L) && !specZoneId.equals(null)){
+					
+						specificationReqDTO.setSpecZoneId(specZoneId);
+						if (null != specificationReqDTO.getSpecZoneId()){
+							specificationResDTO = specSO.retrieveCurrentZonalDtl(specificationReqDTO);
+							if (null != specificationResDTO.getSpecZoneDtls()){
+								getManagedBean().setBackupZoneList(specificationResDTO.getSpecZoneDtls());
+							}
+						}
+				}
+	}
+	
+	//#29521 - end
 	
 	// #28784
 	private void checkSpecMaintenanceOrNo(boolean specMaint) {
