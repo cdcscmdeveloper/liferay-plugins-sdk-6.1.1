@@ -2059,6 +2059,13 @@ public class ConsolidationReportBackingBean extends
 				 * Development 32311: SLA LOG START
 				 */
 				long startTime = System.currentTimeMillis();
+				/*
+				 * BUG 32373 #83
+				 */
+				reqDTO.setEvaluationStage(evaluationStage); //32373 #83
+				/*
+				 * BUG 32373 #83
+				 */
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 						.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
 				SLAUtils.getInstance().logSQLPerformanceInfo("QT","32311(B)","QTSuppFinalizationSO.retrieveQualifiedSuppliersInfoByEvalStage", startTime,"#32311");
