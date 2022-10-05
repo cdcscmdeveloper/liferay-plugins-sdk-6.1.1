@@ -68,6 +68,7 @@ import my.ep.web.bean.report.ScReportFieldsSearchBean;
 import my.ep.web.constant.report.QtReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.qt.QtReportManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -1127,12 +1128,14 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	}
 	
 	/*
-	 * set to be early 2022
+	 * set to be a year before today
 	 */
-	public Date handleMinDateForEPV() throws ParseException {
+	public Date handleMinDateForEPV() {
 		
-		String date = "Sat Jan 01 00:00:00 SGT 2022";
-		Date earlyDate = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy").parse(date);
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -1); // to get previous year
+		Date earlyDate = cal.getTime();
+		earlyDate = DateUtils.addDays(earlyDate, 1); // to get a day after
 		
 		return earlyDate;
 	}
@@ -1140,7 +1143,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	/*
 	 * set to be today
 	 */
-	public Date handleMaxDateForEPV() throws ParseException {
+	public Date handleMaxDateForEPV() {
 		
 		return new Date();
 	}
