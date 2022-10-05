@@ -1307,7 +1307,11 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 2:
-			retriveTechnicalCheckList();
+			//1873 note 182 start
+			if(CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())){
+				retriveTechnicalCheckList();
+			}
+			//1873 note 182 end
 			addDemoTechnicalCheckList(); //#28784
 			break;
 		case 3:
@@ -1926,8 +1930,7 @@ public class SpecificationBackingBean extends
 
 		try {
 			 //1873 note 164 - start
-			if (CollectionUtils.isEmpty(this.getManagedBean().getScQtCheckSt2techProposal()) 
-					&& CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())) {
+			if (CollectionUtils.isEmpty(this.getManagedBean().getScQtCheckSt2techProposal())) {
 			 //1873 note 164 - end
 				List<ScQtCheckList> localcheckList = new ArrayList<ScQtCheckList>();
 				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -12896,7 +12899,20 @@ if (null != checklist && !checklist.isEmpty()) {
 					}
 				}
 			}
-
+			//1873 note 182 start
+			if(toBeRemoveCheckLists!=null && toBeRemoveCheckLists.size()>1){
+				ScQtCheckList finChecklist = toBeRemoveCheckLists.get(1);
+				if(finChecklist.getQtChecklistId()!=null && CollectionUtils.isNotEmpty(financialCheckLIsts)){
+					for(ScQtCheckList checklist: financialCheckLIsts){
+						Long qtChecklistId = checklist.getQtChecklistId()==null ? 0L: checklist.getQtChecklistId();
+						if(qtChecklistId.equals(finChecklist.getQtChecklistId())){
+							financialCheckLIsts.remove(checklist);
+							break;
+						}
+					}
+				}
+			}
+			//1873 note 182 end
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 			specReqDTO.setScQt(this.getManagedBean().getQt());
 			specReqDTO.setCheckLists(toBeRemoveCheckLists);
@@ -12924,11 +12940,9 @@ if (null != checklist && !checklist.isEmpty()) {
 						}
 					}
 				}
-				this.getManagedBean().setScQtCheckSt2techProposal(null);
 				this.getManagedBean().setFinancialScoring(null);
 				this.getManagedBean().setOfferPricePackage(null);
 				this.getManagedBean().setQt(resDTO.getScQt());
-				retriveTechnicalCheckList();
 				if(this.getManagedBean().getQt().isSampleReq() && CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())){//11104-start
 					for(ScQtCheckList checklist:this.getManagedBean().getScQtCheckSt2techProposal()){
 						if (checklist.getDefinationType().getParameterCode()
