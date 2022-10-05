@@ -2589,10 +2589,16 @@ public void saveComplianceSample() {
 				List<ScQtCheckList> proposalChecklistList = resDTO
 						.getCheckListResultBean().getResultList();
 				//Bug #33252 related to #33110 start
-				for (ScQtCheckList proposalCheckList : proposalChecklistList) {
+				for (ScQtCheckList checkList : checklistList) {
+					// Update eval status proposal checklist for no supplier that cant respond because of quantity 0 at zone
+					// bug 33851 - start 
+					 evaluationSO.proposalchecklistsuppqty
+							(checkList.getQtChecklistId());
+					// bug 33851 - end 
+					
 					//#33252 /27/5/2022 Start Fix
 					boolean checkallitemautoscore = evaluationSO.checkbuttonAutoScore
-							(proposalCheckList.getQtChecklistId(),evalstage.get(0));
+							(checkList.getQtChecklistId(),evalstage.get(0));
 					//#33252 /27/5/2022 End Fix
 					// if all item is auto score --> START
 					// 32426 - start
