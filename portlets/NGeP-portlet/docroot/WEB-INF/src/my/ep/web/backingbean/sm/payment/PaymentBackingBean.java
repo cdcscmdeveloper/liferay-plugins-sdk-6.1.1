@@ -1012,7 +1012,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			return EpPropertiesUtils.getInstance().getProperty("molpay.url");//  + merchantId + EpPropertiesUtils.getInstance().getProperty("molpay.url.exts");	//temp add ext	for testing purpose.. do not merge to prd
 		}else{
 			// #26307 - payment gateway change 
-			return EpPropertiesUtils.getInstance().getProperty("molpay.gov.url") + merchantId + EpPropertiesUtils.getInstance().getProperty("molpay.url.ext");
+			return EpPropertiesUtils.getInstance().getProperty("molpay.gov.url") + merchantId + EpPropertiesUtils.getInstance().getProperty("molpay.gov.url.ext");
 		}		
 		
 	}
