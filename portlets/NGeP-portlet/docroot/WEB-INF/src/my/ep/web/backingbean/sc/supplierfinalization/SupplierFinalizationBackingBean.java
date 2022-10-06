@@ -4016,6 +4016,13 @@ public class SupplierFinalizationBackingBean extends
 						}
 					}
 				}
+
+				// #33793 - start
+				if (isQTRefinalized()) {
+					getManagedBean().setHaveSupplierRejection(true);
+				}
+				// #33793 - end
+
 				evalResDtl.setAmountInWords(convertNumberToWord(
 						evalResDtl.getProposalAmount().getProposalAmt()));
 			}
