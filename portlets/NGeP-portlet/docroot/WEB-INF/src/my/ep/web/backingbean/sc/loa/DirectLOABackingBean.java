@@ -11263,8 +11263,28 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					questionsListNew.addAll(specMaster.getTplSpecQuestions());
 				}
 			}
-			List<TplSpecQuestion> questionsListCreate= TemplateSpecHelper.getInstance().cloneTplSpecQuestions(
-					specMaster, resDTO.getSpecMaster().getTplSpecQuestions());
+			List<TplSpecQuestion> questionsListCreate= TemplateSpecHelper.getInstance().
+																cloneTplSpecQuestions(
+																		specMaster, 
+																		resDTO.getSpecMaster().getTplSpecQuestions());
+			if(questionsListNew!=null
+				&& questionsListNew.size()!=0
+				&& questionsListCreate!=null
+				&& questionsListCreate.size()!=0){
+				for(TplSpecQuestion oldQuestion : questionsListNew){
+					for(TplSpecQuestion newQuestion : questionsListCreate){
+						if(TemplateSpecConst.QUESTION_TYPE_ITEM.equals(newQuestion.getQuestionType())
+							&& TemplateSpecConst.QUESTION_TYPE_ITEM.equals(oldQuestion.getQuestionType())
+							&& newQuestion.getClItem()!=null && newQuestion.getClItem()!="" 
+							&& oldQuestion.getClItem()!=null && oldQuestion.getClItem()!=""
+							&& newQuestion.getClItem().trim().replaceAll("\\s", "").equalsIgnoreCase(
+							   oldQuestion.getClItem().trim().replaceAll("\\s", ""))){
+									throw new EpException(MessageConst.ERROR_760340,
+										  new String[] { oldQuestion.getClItem() });
+						}
+					}
+				}
+			}
 			
 			specMaster.setProcessType(tplSpecMaster.getProcessType());
 			if (getManagedBean().getScLoa().getScQt().isZonal()) {
