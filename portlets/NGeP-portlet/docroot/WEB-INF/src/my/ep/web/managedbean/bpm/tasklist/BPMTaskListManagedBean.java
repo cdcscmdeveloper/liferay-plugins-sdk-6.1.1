@@ -692,7 +692,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				
 				//Start - Task list sorting n search criteria date from and date to by Najmi 
 				//29810 - START
-				log.info("getSort_by() = "+getSort_byGroup());
+				//log.info("getSort_by() = "+getSort_byGroup());
 				
 				if (isFromSearchBttn()) {
 					if (getSort_byGroup() != null && !getSort_byGroup().equals("")) {
@@ -744,7 +744,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					getGroupTaskCreatedDateTo().setMinutes(59);
 				}
 				
-				log.info("date from = "+getGroupTaskCreatedDateFrom() + " date to = "+getGroupTaskCreatedDateTo());
+				//log.info("date from = "+getGroupTaskCreatedDateFrom() + " date to = "+getGroupTaskCreatedDateTo());
 				
 				
 				
