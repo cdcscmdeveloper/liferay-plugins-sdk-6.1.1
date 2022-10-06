@@ -11308,6 +11308,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					specAnswers.add(specAnswer);
 				}
 				question.setTplSpecAnswers(specAnswers);
+				question.setTplSpecZoneQties(new ArrayList<TplSpecZoneQty>());
 				questionsListNew.add(question);
 			}
 			int questionOrder = 0;
