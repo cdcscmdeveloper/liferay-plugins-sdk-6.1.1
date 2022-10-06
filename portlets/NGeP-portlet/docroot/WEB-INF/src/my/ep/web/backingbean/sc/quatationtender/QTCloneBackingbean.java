@@ -590,7 +590,7 @@ public class QTCloneBackingbean extends
 		getManagedBean().getCloneQtnTenderSearchBean().setToCreatedDate(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
 		getManagedBean().setCloneTenderList(null);
-		getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());
+		//getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());//34053
 		RequestContext.getCurrentInstance().execute("screen3.show()");
 		getManagedBean().setAutoUpdate(false);
 		 getManagedBean().setSelectSearchcommitteeNode(new TreeNode[0]);
