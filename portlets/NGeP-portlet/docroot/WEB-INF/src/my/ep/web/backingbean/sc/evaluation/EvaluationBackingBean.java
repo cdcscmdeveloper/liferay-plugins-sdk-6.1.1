@@ -15065,7 +15065,10 @@ private void retriveCommitteeRemarksList(){
 				//REMOVE HERE FOR AWHILE
 				//evaluationSO.generateEvaluationSheet(evalReqDTO);
 				//32373 - Remove below, generate only depends on fec check -end
-			
+
+				// #33507 - Start.
+				evaluationSO.updateProposalPackageScore(evalReqDTO);
+				// #33507 - End.
 			}
 			//#25138 - filter auto score condition - End
 			
