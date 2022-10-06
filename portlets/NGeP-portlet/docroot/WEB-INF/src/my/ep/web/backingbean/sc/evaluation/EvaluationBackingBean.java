@@ -9465,7 +9465,7 @@ private void retriveCommitteeRemarksList(){
 					&& (item.getRemark().equals(null)
 						|| item.getRemark().equals("")
 						|| item.getRemark().equals(" "))){
-						throw new EpException(MessageConst.ERROR_775179);
+						throw new EpException(MessageConst.ERROR_775180);
 				}
 				/*#29187 End Vinod*/
 			}
@@ -9899,7 +9899,7 @@ private void retriveCommitteeRemarksList(){
 						&& (tplSpecAnswer.getUserRemark().equals(null)
 							|| tplSpecAnswer.getUserRemark().equals("")
 							|| tplSpecAnswer.getUserRemark().equals(" "))){
-						throw new EpException(MessageConst.ERROR_775179);
+						throw new EpException(MessageConst.ERROR_775180);
 					}
 					//#29187 End Vinod
 				}
