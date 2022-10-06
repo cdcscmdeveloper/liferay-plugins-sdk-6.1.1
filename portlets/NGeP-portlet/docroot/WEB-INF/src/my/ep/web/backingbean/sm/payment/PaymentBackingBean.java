@@ -369,7 +369,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			
 			String billType = getBillName(pyBill.getBillType(), getManagedBean().getSmAppl().getSmSupplier().getCompanyName(), pyBill.getBillNo());
 			//26307
-			this.billType = billType;
+			this.billType = pyBill.getBillType();
 			this.getManagedBean().setBillName(billType != null ? billType : getManagedBean().getSmAppl().getSmSupplier().getCompanyName());
 			this.getManagedBean().setBillDesc(getManagedBean().getNewPyBillDtlLs().get(0).getItemDesc());
 			// this.getManagedBean().
