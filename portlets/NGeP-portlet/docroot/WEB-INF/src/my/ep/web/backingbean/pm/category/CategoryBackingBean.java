@@ -1256,6 +1256,15 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		new LogKey(loginSessionUserId);
 		//end #29665 add log key
 		
+		//29665 - Start
+		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
+			throw new EpException(MessageConst.ERROR_775188, new String[]{ResourceBundleUtils.getMessage(
+					"lbl.pm.main.category", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())});
+		   }
+		//29665 - End
+		
 		try {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 
@@ -1485,6 +1494,15 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 		new LogKey(loginSessionUserId);
 		//end #29665 add log key
+		
+		//29665 - Start
+		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
+			throw new EpException(MessageConst.ERROR_775188, new String[]{ResourceBundleUtils.getMessage(
+					"lbl.pm.sub.category", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())});
+		   }
+		//29665 - End
 		
 		try {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
@@ -1743,6 +1761,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		if (!checkCategoryRestrDuplicateCompanyType()) {
 			throw new EpException(MessageConst.ERROR_775006);
 		}
+
+		// 29665 - Start
+		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
+			throw new EpException(MessageConst.ERROR_775188,
+					new String[] { ResourceBundleUtils.getMessage("lbl.pm.sub.div",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+		}
+		// 29665 - End
 
 		// validation for fields
 		validatePmCategoryL3();
