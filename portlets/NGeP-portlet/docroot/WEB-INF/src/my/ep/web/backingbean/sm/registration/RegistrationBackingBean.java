@@ -1304,6 +1304,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		reqDTO.setSmSupp(getManagedBean().getSmSupp()); //#30964
 		reqDTO.setDisabledCompanyNameInMaintenance(getManagedBean().isDisabledCompanyNameInMaintenance()); //#30964
 		//27691 START
+		//retrieve latest smsupplierowner
+		IRegistrationSO reqSO1 = (IRegistrationSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IRegistrationSO.class);
+		List<SmSupplierOwner> suppOwnerList = reqSO1.retrieveCurrentSmSupplierOwnerList(reqDTO);
+		
 		// added business type validation for SSM
 		if(SmCommonUtil.getInstance().ssmActive() 
 				&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(), this.getManagedBean().getSmSupp().getBusinessType())){
@@ -1316,13 +1321,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 			SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
 			//#28888 : checking empty list
-			if(CollectionUtils.isNotEmpty(getManagedBean().getSmSupp().getSmSupplierOwners())){
-				SmSupplierOwner smSupplierOwners = getManagedBean().getSmSupp().getSmSupplierOwners().get(0);			
+			/*if(CollectionUtils.isNotEmpty(getManagedBean().getSmSupp().getSmSupplierOwners())){
+				SmSupplierOwner smSupplierOwners = getManagedBean().getSmSupp().getSmSupplierOwners().get(0);
 				getManagedBean().getSmSupp().getSmSupplierOwners().clear();
 				getManagedBean().getSmSupp().getSmSupplierOwners().add(smSupplierOwners);
 			}//end #28888
-			
-			List<SmSupplierOwner> ownerNewList = new ArrayList<SmSupplierOwner>();
+*/			getManagedBean().getSmSupp().setSmSupplierOwners(suppOwnerList);
 			for(SmPersonnel personnel : reqDTO.getSmSupp().getSmAppl().getSmPersonnels()){
 				Boolean exist = false;
 				//Set record 9 for owner not in SSM
@@ -1332,22 +1336,38 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						break;
 					}
 				}
-				if(personnel.isSsmData()){
+				if(personnel.isSsmData() && personnel.getIdentificationType() != null				//start - #30064
+						&& personnel.getIdentificationType().getParameterCode()		
+						.equals(ParameterConst.IDENTIFICATION_TYPES_IC)){
+					//for personnel not exist in ssm
 					if(!exist){
 						personnel.setRecordStatusFlg(9);
-					}else{
-					//Delete owner in SmSupplierOwner not in SSM
-						for(SmSupplierOwner suppOwner : getManagedBean().getSmSuppOwners()){
+					}
+					//readding&check owner or director if not exist in sm supplier owner, if exist maintain the data
+					boolean isExistedInOwner = false;
+					if(getManagedBean().getSmSupp().getSmSupplierOwners().size() != 0){
+						for(SmSupplierOwner suppOwner : getManagedBean().getSmSupp().getSmSupplierOwners()){
 							if(personnel.getIdentificationNo().equals(suppOwner.getIdentificationNo())){
-								ownerNewList.add(suppOwner);
+								isExistedInOwner = true;
 							}
+						}
+					}
+					if(!isExistedInOwner){
+						if((personnel.isEquityOwner() || personnel.isDirector()) && personnel.getRecordStatusFlg()!=9){
+							SmSupplierOwner suppOwnerNewList = new SmSupplierOwner();
+							suppOwnerNewList.setSmSupplier(this.getManagedBean().getSmSupp());
+							suppOwnerNewList.setOwnerName(personnel.getName());
+							suppOwnerNewList.setNationality(personnel.getPmCountry());
+							suppOwnerNewList.setIdentificationType(personnel.getIdentificationType());
+							suppOwnerNewList.setIdentificationTypeId(personnel.getIdentificationTypeId());
+							suppOwnerNewList.setIdentificationNo(personnel.getIdentificationNo());
+							reqDTO.getSmSupp().getSmSupplierOwners().add(suppOwnerNewList);
 						}
 					}
 				}
 			}
-		reqDTO.getSmSupp().setSmSupplierOwners(ownerNewList);
-		//27691 END
 		}
+		//27691 END
 		
 		reqDTO.setGstList(getCleanGst());
 		
@@ -2288,34 +2308,34 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setSmSuppOwner(new SmSupplierOwner());
 				getManagedBean().setApplType(getManagedBean().getSmAppl().getApplType());
 				
-				//27691 start - to show director info in basic maintenance for LLP
-				if(!resDTO.getSmSupp().getSmAppl().isApplValidWithSsm() && 
-						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP)){
-					for(SmPersonnel personnel : this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels()){
-						Boolean ownerExist = false;
-						for(SmSupplierOwner suppOwner : this.getManagedBean().getSmSupp().getSmSupplierOwners()){
-							if(suppOwner!=null && personnel.getIdentificationNo().equals(suppOwner.getIdentificationNo())){
-								ownerExist = true;
-								break;
+				//27691 start - to show owner & director info for NON SSM Company
+				if(!resDTO.getSmSupp().getSmAppl().isApplValidWithSsm()){
+					if(businessTypeForNonSSM(this.getManagedBean().getSmSupp().getBusinessType())){
+						for(SmPersonnel personnel : this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels()){
+							Boolean ownerExist = false;
+							for(SmSupplierOwner suppOwner : this.getManagedBean().getSmSupp().getSmSupplierOwners()){
+								if(suppOwner!=null && personnel.getIdentificationNo().equals(suppOwner.getIdentificationNo())){
+									ownerExist = true;
+									break;
+								}
+							}
+							if(!ownerExist && (personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE ||
+									personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) &&
+									personnel.getPmCountry().getCountryCode().equalsIgnoreCase("MY") &&
+									(personnel.isEquityOwner() || personnel.isDirector())){
+								SmSupplierOwner suppOwnerDirector = new SmSupplierOwner();
+								PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
+								suppOwnerDirector.setSmSupplier(this.getManagedBean().getSmSupp());
+								suppOwnerDirector.setOwnerName(personnel.getName());
+								suppOwnerDirector.setNationality(personnel.getPmCountry());
+								suppOwnerDirector.setIdentificationType(identificationType);
+								suppOwnerDirector.setIdentificationTypeId(identificationType.getParameterId());
+								suppOwnerDirector.setIdentificationNo(personnel.getIdentificationNo());
+								this.getManagedBean().getSmSuppOwners().add(suppOwnerDirector);
+								resDTO.getSmSupp().getSmSupplierOwners().add(suppOwnerDirector);
 							}
 						}
-						if(!ownerExist && (personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE ||
-								personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) &&
-								personnel.getPmCountry().getCountryCode().equalsIgnoreCase("MY") &&
-								personnel.isDirector()){
-							SmSupplierOwner suppOwnerDirector = new SmSupplierOwner();
-							PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
-							suppOwnerDirector.setSmSupplier(this.getManagedBean().getSmSupp());
-							suppOwnerDirector.setOwnerName(personnel.getName());
-							suppOwnerDirector.setNationality(personnel.getPmCountry());
-							suppOwnerDirector.setIdentificationType(identificationType);
-							suppOwnerDirector.setIdentificationTypeId(identificationType.getParameterId());
-							suppOwnerDirector.setIdentificationNo(personnel.getIdentificationNo());
-							this.getManagedBean().getSmSuppOwners().add(suppOwnerDirector);
-							resDTO.getSmSupp().getSmSupplierOwners().add(suppOwnerDirector);
-						}
 					}
-					
 				}
 				//27691 END
 				//26238 - retrieve active DA. To display at basic account supplier screen
@@ -5040,4 +5060,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	// #30829 - end
+	//27691 START
+	public Boolean businessTypeForNonSSM(String bussType){
+		Boolean retVal = false; 
+		List<String> bussTypeWithEO = SupplierManagementConst.BUSINESS_TYPE_NON_SSM;
+		for(String bussTypeEO : bussTypeWithEO){
+			if(bussType.equals(bussTypeEO)){
+				retVal = true;
+			}
+		}
+		return retVal;
+	}
+	//27691 END
 }
