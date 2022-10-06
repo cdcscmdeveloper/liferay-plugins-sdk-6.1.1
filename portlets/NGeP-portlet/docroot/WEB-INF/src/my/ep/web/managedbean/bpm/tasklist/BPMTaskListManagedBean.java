@@ -692,7 +692,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				
 				//Start - Task list sorting n search criteria date from and date to by Najmi 
 				//29810 - START
-				logger.info("getSort_by() = "+getSort_byGroup());
+				log.info("getSort_by() = "+getSort_byGroup());
 				
 				if (isFromSearchBttn()) {
 					if (getSort_byGroup() != null && !getSort_byGroup().equals("")) {
@@ -709,6 +709,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
 						} else if (getSort_byGroup().equalsIgnoreCase(BpmConstants.SORT_BY_DOCSTATUS)){
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
+						} else if (getSort_byGroup().equalsIgnoreCase(BpmConstants.SORT_BY_RECEIVEDDATE)){
+							reqDTO.setSortBy(BpmConstants.SORT_BY_RECEIVEDDATE);
 						} else {
 							//reqDTO.setSortBy(getSort_by());
 						}					
@@ -727,6 +729,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
 						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_DOCSTATUS)){
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
+						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_RECEIVEDDATE)){
+							reqDTO.setSortBy(BpmConstants.SORT_BY_RECEIVEDDATE);
 						} else {
 							//reqDTO.setSortBy(getSort_by());
 						}
@@ -740,7 +744,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					getGroupTaskCreatedDateTo().setMinutes(59);
 				}
 				
-				logger.info("date from = "+getGroupTaskCreatedDateFrom() + " date to = "+getGroupTaskCreatedDateTo());
+				log.info("date from = "+getGroupTaskCreatedDateFrom() + " date to = "+getGroupTaskCreatedDateTo());
 				
 				
 				
