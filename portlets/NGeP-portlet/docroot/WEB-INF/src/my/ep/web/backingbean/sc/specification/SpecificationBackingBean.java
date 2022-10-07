@@ -13001,14 +13001,15 @@ if (null != checklist && !checklist.isEmpty()) {
 		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTSpecSO.class);
-		// Bug #33661@Syazani 16/08/2022 -- Start
+		// Bug #33661@Syazani 07/10/2022 -- Start
 		IQTDetailSO detailSO = null;
 		PmStatus qtStatus = null;
+		Long statusId = 0L;
 		
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			// Bug #33661@Syazani 16/08/2022 -- End
+			// Bug #33661@Syazani 07/10/2022 -- End
 			
 			ScQtCheckList scQtCheckList = this.getManagedBean().getScQtChecklist();
 			scQtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster()
@@ -13026,17 +13027,26 @@ if (null != checklist && !checklist.isEmpty()) {
 			}
 			// #29187 End Vinod
 			
-			// Bug #33661@Syazani 16/08/2022 -- Start
+			// Bug #33661@Syazani 07/10/2022 -- Start
 			// Purpose: verify status is in Pending Specification Preparation to prevent user from altering the data by using multiple tab/windows
-			qtStatus = detailSO.retrieveActiveStatusByDoctype(this.getManagedBean().getQt().getQtId(), ParameterConst.DOCTYPE_QUOTATION);
-			if (qtStatus != null)
-				this.getManagedBean().getQt().setQtStatus(qtStatus);
-			if (Arrays
-					.asList(new Long[] { QTStatusConst.SE_PENDING_ENDORSMENT, QTStatusConst.SE_PENDING_SIGNOFF, QTStatusConst.SE_PENDING_REVISION })
-					.contains(this.getManagedBean().getQt().getQtStatus().getStatusId())) {
+			if (this.getManagedBean().isFromSpecEndorse()) {
+				retrieveStatusByTypeAndId(this.getManagedBean().getQt());
+				if (null != this.getManagedBean().getSpecMaintenanceWorkFlowStatus()) {
+					statusId = this.getManagedBean().getCurrentStatusId();
+				}
+			} else {
+				qtStatus = detailSO.retrieveActiveStatusByDoctype(this.getManagedBean().getQt().getQtId(), ParameterConst.DOCTYPE_QUOTATION);
+				if (qtStatus != null)
+					statusId = qtStatus.getStatusId();
+			}
+			
+			if (Arrays.asList(
+					new Long[] { QTStatusConst.SE_PENDING_ENDORSMENT, QTStatusConst.SE_PENDING_SIGNOFF,
+							QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT, QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF }).contains(
+					statusId)) {
 				throw new EpException(MessageConst.ERROR_100048);
 			}
-			// Bug #33661@Syazani 16/08/2022 -- End
+			// Bug #33661@Syazani 07/10/2022 -- End
 			
 			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
 				ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean()
@@ -16961,16 +16971,11 @@ if (null != checklist && !checklist.isEmpty()) {
 			}
 		}
 		this.getManagedBean().setSpecMaintenanceScreen(getSpecMaintenance());
-		retrieveStatusByTypeAndId(
-				ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, scQt.getQtId());
-		if (null != this.getManagedBean().getSpecMaintenanceWorkFlowStatus()) {
-			log.debug("spec maintenance status id==="
-					+ this.getManagedBean().getSpecMaintenanceWorkFlowStatus()
-							.getPmStatus().getStatusId());
-			this.getManagedBean().setCurrentStatusId(
-					this.getManagedBean().getSpecMaintenanceWorkFlowStatus()
-							.getPmStatus().getStatusId());
-		}
+		// Bug #33661@Syazani 06/10/2022 -- Start
+		this.getManagedBean().setFromSpecEndorse(true);
+		retrieveStatusByTypeAndId(scQt);
+		// Bug #33661@Syazani 06/10/2022 -- End
+		
 		//#15391 - start
 		log.info("STATUS ID: "+scQt.getQtStatus().getStatusId());
 		log.info("THIS STATUS ID: "+this.getManagedBean().getCurrentStatusId());
@@ -21998,4 +22003,14 @@ if(null!=allTechnicalChecklist){
 		}
 	}
 	/*#29187 End Vinod*/
+	
+	// Bug #33661@Syazani 06/10/2022 -- Start
+	private void retrieveStatusByTypeAndId(ScQt scQt) {
+		retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, scQt.getQtId());
+		if (null != this.getManagedBean().getSpecMaintenanceWorkFlowStatus()) {
+			log.debug("spec maintenance status id===" + this.getManagedBean().getSpecMaintenanceWorkFlowStatus().getPmStatus().getStatusId());
+			this.getManagedBean().setCurrentStatusId(this.getManagedBean().getSpecMaintenanceWorkFlowStatus().getPmStatus().getStatusId());
+		}
+	}
+	// Bug #33661@Syazani 06/10/2022 -- End
 }

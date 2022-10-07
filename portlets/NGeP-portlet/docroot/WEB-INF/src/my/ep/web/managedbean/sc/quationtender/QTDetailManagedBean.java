@@ -1659,6 +1659,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private TreeNode rootCategoryTree;
 	List<String> selectedCategories;
 	// #29468 Vinod End
+	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
 	public boolean proposalValidityChangeValue; //#21692
 	/**
@@ -11721,7 +11722,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			IPagingDataModel<ScQt> mainCloneSearchQTDataModel) {
 		this.mainCloneSearchQTDataModel = mainCloneSearchQTDataModel;
 	}//34053-End
-	
+
+	// Bug #33661@Syazani 07/10/2022 -- Start
+	public boolean isFromSpecEndorse() {
+		return isFromSpecEndorse;
+	}
+
+	public void setFromSpecEndorse(boolean isFromSpecEndorse) {
+		this.isFromSpecEndorse = isFromSpecEndorse;
+	}
+	// Bug #33661@Syazani 07/10/2022 -- End
 	
 }
 
