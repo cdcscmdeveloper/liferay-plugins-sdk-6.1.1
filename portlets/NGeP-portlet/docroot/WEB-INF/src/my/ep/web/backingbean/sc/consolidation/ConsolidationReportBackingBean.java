@@ -1604,6 +1604,7 @@ public class ConsolidationReportBackingBean extends
 		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
 				.getUserSessionBean().getUserId() + "");
 		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
+		paramMap.put(ReportConst.PARAM_REPORT_BUFFERS, String.valueOf(ReportConst.BUFFER_SIZE)); //Bug #33714
 		StringBuilder ulasan = new StringBuilder();
 		List<ScQtRecommendationUlasanRemarks> ulasanRemarks = this
 				.getManagedBean().getFinalizationUlasanremarks();
