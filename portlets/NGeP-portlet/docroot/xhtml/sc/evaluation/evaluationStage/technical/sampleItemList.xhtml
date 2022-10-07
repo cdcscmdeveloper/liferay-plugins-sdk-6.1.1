@@ -10,6 +10,9 @@
 
 
 	<h:panelGroup>
+	<!-- #29187 Start Vinod -->
+	<ui:param name="isManSpecAndCompliance" value="#{evaluationBackingBean.displayMandatorySpecAndComplianceColumnSample()}" /> 
+	<!-- #29187 End Vinod -->
 		<h:panelGroup id="sampleItemList">
 			<p:panel header="#{lbl['lbl.sc.item.list']}"
 				id="evaluationStageTechnicalSampleItemsListForDatatable"
@@ -45,8 +48,8 @@
 					</p:column>
 					<!-- #29187 Start Vinod -->
 					<p:column headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification']}"
-						style="width:10%;white-space: normal;">
-						<h:outputText value="#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.mandatorySpec ? lbl['lbl.txt.yes']:''}"/>
+						style="width:10%;white-space: normal;" rendered="#{isManSpecAndCompliance}">
+						<h:outputText value="#{sampleItem.scRequestItem.tplSpecQuestion.mandatorySpecForSample ? lbl['lbl.txt.yes']:''}"/>
 					</p:column>
 					<!-- #29187 End Vinod -->
 					<p:column style="width:15%">
@@ -80,13 +83,13 @@
 
 					</p:column>
 					<!-- #29187 Start Vinod -->
-					<p:column style="width:10%;white-space: normal;">
+					<p:column style="width:10%;white-space: normal;" rendered="#{isManSpecAndCompliance}">
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.compliance']}"/>
 							<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.compliance.sample.tooltip']}" />
 						</f:facet>
 						<h:selectOneMenu id="itemCompliance" 
-										 rendered="#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.mandatorySpec}"
+										 rendered="#{sampleItem.scRequestItem.tplSpecQuestion.mandatorySpecForSample}"
 										 disabled="#{evaluationBackingBean.managedBean.readOnly 
 										 			or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
 													or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}"
@@ -95,7 +98,7 @@
 						</h:selectOneMenu>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.tpl.spec.content.comment']}"
-						style="width:15%;white-space: normal;">
+						style="width:15%;white-space: normal;" rendered="#{isManSpecAndCompliance}">
 						<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly 
 													or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
 													or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}" 

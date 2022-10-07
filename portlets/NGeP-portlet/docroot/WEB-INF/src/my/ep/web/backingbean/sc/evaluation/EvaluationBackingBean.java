@@ -5021,6 +5021,7 @@ public void saveComplianceSample() {
 						.getQtProposalChecklist()
 						.setProposalScore(
 								this.getManagedBean().getTechGovProposalScore());
+				this.retriveSampleSpecmasterForMandatorySpecChecking(this.getManagedBean().getSampleItemList());//#29187 Added Vinod
 				return "/xhtml/sc/evaluation/evaluationStage/technical/techSampleEvaluation.xhtml";
 			} else {
 				String docDefinationKey = proposalCheckList.getScQtCheckList()
@@ -17902,6 +17903,40 @@ private void retriveCommitteeRemarksList(){
 				renderDisqialifiedColumn=true;
 			}
 		return renderDisqialifiedColumn;
+	}
+	public boolean displayMandatorySpecAndComplianceColumnSample(){
+		boolean render = false;
+		List<ScQtSampleItem> sampleList = this.getManagedBean().getSampleItemList();
+		for(ScQtSampleItem sample : sampleList){
+			if(sample.getScRequestItem()!=null
+				&& sample.getScRequestItem().getTplSpecQuestion()!=null
+				&& sample.getScRequestItem().getTplSpecQuestion().isMandatorySpecForSample()){
+				render = true;
+				break;
+			}
+		}
+		return render;
+	}
+	public void retriveSampleSpecmasterForMandatorySpecChecking(List<ScQtSampleItem> templateChecklist){
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+						ITemplateSpecSO.class);
+		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+		
+		for(ScQtSampleItem item : templateChecklist){
+			specReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			specReqDTO.setItemName(item.getScRequestItem().getTplSpecQuestion().getClItem());
+			TemplateSpecResDTO resDTO = templateSpecSO
+					.retrieveTechSpecByItemNames(specReqDTO);
+			
+			if (null != resDTO && null != resDTO.getSpecQuestionList()) {
+				for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
+					if (question.isMandatorySpec()) {
+						item.getScRequestItem().getTplSpecQuestion().setMandatorySpecForSample(true);
+					}
+				}
+			}
+		}
 	}
 	//#29187 End Vinod
 	//32373 - saperate for recalculate pref margin after done financial package -Start
