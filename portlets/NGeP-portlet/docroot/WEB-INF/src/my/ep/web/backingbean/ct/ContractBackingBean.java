@@ -4025,6 +4025,29 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		//Enhancement 15851 - shaqimi start
 		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
 		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
+		
+		//Bug 34030 - shaqimi start
+		String docType = getManagedBean().getContractVer().getDocType();
+		Long statusId = getManagedBean().getContractVer().getStatus().getStatusId();
+		String taskNameFromTaskList = "";
+		Long contractIdFromTaskList = null;
+		Long contractVerIdFromTaskList = null;
+		String docTypeFromTaskList = "";
+		
+		if(this.getManagedBean().getTaskNameFromTaskList() != null && !this.getManagedBean().getTaskNameFromTaskList().isEmpty()){
+			taskNameFromTaskList = this.getManagedBean().getTaskNameFromTaskList();
+		}
+		if(this.getManagedBean().getContractIdFromTaskList() != null && !this.getManagedBean().getContractIdFromTaskList().equals(null)){
+			contractIdFromTaskList = this.getManagedBean().getContractIdFromTaskList();
+		}
+		if(this.getManagedBean().getContractVerIdFromTaskList() != null && !this.getManagedBean().getContractVerIdFromTaskList().equals(null)){
+			contractVerIdFromTaskList = this.getManagedBean().getContractVerIdFromTaskList();
+		}
+		if(this.getManagedBean().getDocTypeFromTaskList() != null && !this.getManagedBean().getDocTypeFromTaskList().isEmpty()){
+			docTypeFromTaskList = this.getManagedBean().getDocTypeFromTaskList();
+		}
+		//Bug 34030 - shaqimi end
+		
 		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
 			AmendmentBackingBean abb = new AmendmentBackingBean();
 			getManagedBean().setAmendFromTaskList(true);
@@ -4037,15 +4060,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
 			//Bug 33096 - shaqimi end
 			//Bug 34030 - shaqimi start
-			if(getManagedBean().isNotificationSetting()){
-				abb.getManagedBean().setTaskNameFromTaskList(getManagedBean().getTaskNameFromTaskList());
-				abb.getManagedBean().setDocTypeFromTaskList(getManagedBean().getDocTypeFromTaskList());
-				abb.getManagedBean().setContractIdFromTaskList(getManagedBean().getContractIdFromTaskList());
-				abb.getManagedBean().setContractVerIdFromTaskList(getManagedBean().getContractVerIdFromTaskList());
+			if(docType.equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING) 
+					|| docType.equals(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+					|| docType.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE)){
+				abb.getManagedBean().setStatusIdFromTaskList(statusId);
+				abb.getManagedBean().setTaskNameFromTaskList(taskNameFromTaskList);
+				abb.getManagedBean().setContractIdFromTaskList(contractIdFromTaskList);
+				abb.getManagedBean().setContractVerIdFromTaskList(contractVerIdFromTaskList);
+				
+				if((docTypeFromTaskList != null && !docTypeFromTaskList.isEmpty())){
+					abb.getManagedBean().setDocTypeFromTaskList(docTypeFromTaskList);
+				} else {
+					abb.getManagedBean().setDocTypeFromTaskList(docType);
+				}
 			}else if(abb.getManagedBean().getTaskId() != null){
 				abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
-				abb.getManagedBean().setContractIdFromTaskList(new Long(getManagedBean().getContractVer().getCtContract().getContractId()));
-				abb.getManagedBean().setContractVerIdFromTaskList(getManagedBean().getContractVer().getContractVerId());
+				abb.getManagedBean().setContractIdFromTaskList(new Long(this.getManagedBean().getContractVer().getCtContract().getContractId()));
+				abb.getManagedBean().setContractVerIdFromTaskList(this.getManagedBean().getContractVer().getContractVerId());
 			}
 			//Bug 34030 - shaqimi end
 			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());

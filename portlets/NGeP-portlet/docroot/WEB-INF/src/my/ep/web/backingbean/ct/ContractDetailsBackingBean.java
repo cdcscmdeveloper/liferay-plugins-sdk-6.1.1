@@ -312,7 +312,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			// End Fix - #30856
 			
 			//Bug 34030 - shaqimi start
-			if (ctBB.getManagedBean().isBackFromSCL() && ctBB.getManagedBean().isNotificationSetting()){
+			if ((ctBB.getManagedBean().isBackFromSCL() && ctBB.getManagedBean().getDocTypeFromTaskList() != null)
+					&& (ctBB.getManagedBean().getDocTypeFromTaskList().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)
+							|| ctBB.getManagedBean().getDocTypeFromTaskList().equals(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+							|| ctBB.getManagedBean().getDocTypeFromTaskList().equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE))){
 				ContractReqDTO reqDTO = new ContractReqDTO();
 				
 				reqDTO.setTaskName(ctBB.getManagedBean().getTaskNameFromTaskList());
@@ -2853,6 +2856,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		ctBB.getManagedBean().setSelectedItem(null);
 		ctBB.getManagedBean().setServiceselectedItem(null);
+		
+		//Bug 34030 - shaqimi start
+		ctBB.getManagedBean().setAmendFromTaskList(false);
+		ctBB.getManagedBean().setAmendFromViewPage(false);
+		ctBB.getManagedBean().setViewSCL(false);
+		ctBB.getManagedBean().setHasAmendmentLoaNo(false);
+		ctBB.getManagedBean().setViewContract(false);
+		ctBB.getManagedBean().setBackFromSCL(false);
+		//Bug 34030 - shaqimi end
 		
 		contractBB.getManagedBean().getContractListingPagingDataModel().resetData();
 		contractBB.getManagedBean().getServiceListingPagingDataModel().resetData();
