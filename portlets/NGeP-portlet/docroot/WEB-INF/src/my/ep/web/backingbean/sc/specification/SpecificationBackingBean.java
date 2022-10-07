@@ -19613,7 +19613,6 @@ if (null != checklist && !checklist.isEmpty()) {
 		this.getManagedBean().setSampleCheckList(templateChecklist);
 		retriveSampleSpecmaster(templateChecklist,null);
 		scoringPopUpAction(null);
-		retriveSampleSpecmasterForMandatorySpecChecking(templateChecklist);//#29187 Added Vinod
 		return "/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleItemView.xhtml?faces-redirect=true";		
 	}
 	/**** 11104-start
@@ -21969,38 +21968,6 @@ if(null!=allTechnicalChecklist){
 		}
 
 		return render;
-	}
-	public void retriveSampleSpecmasterForMandatorySpecChecking(ScQtCheckList templateChecklist){
-		this.getManagedBean().setSampleCheckList(templateChecklist);
-		
-		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-						ITemplateSpecSO.class);
-		
-		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-		specReqDTO.setSpecMaster(templateChecklist.getScQtDoc().getTplSpecMaster());
-		specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-		
-		TemplateSpecResDTO tmpresDTO = templateSpecSO.getTemplateMaster(specReqDTO);
-		
-		if (null != tmpresDTO.getSpecMaster()
-				&& null != tmpresDTO.getSpecMaster().getTplSpecQuestions()) {
-			for (TplSpecQuestion question : tmpresDTO.getSpecMaster()
-					.getTplSpecQuestions()) {
-				if (!question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)
-						&& question.isMandatorySpec()) {
-					for (TplSpecQuestion questionDisplay : this
-							.getManagedBean().getSampleCheckList().getScQtDoc()
-							.getTplSpecMaster().getTplSpecQuestions()) {
-						if (question.getParentSpecQuestion()
-								.getSpecQuestionId().longValue() == questionDisplay
-								.getSpecQuestionId().longValue()) {
-							questionDisplay.setMandatorySpecForSample(true);
-						}
-					}
-				}
-			}
-		}
 	}
 	/*#29187 End Vinod*/
 	
