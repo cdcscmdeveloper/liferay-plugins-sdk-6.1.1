@@ -3182,6 +3182,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							&& (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
 									&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted())){
 						getManagedBean().setSelectedTabIndex(6);
+						}else if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+								&& (!ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+								&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted())){
+							getManagedBean().setSelectedTabIndex(5);
 						}else if((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
 								|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())
 								&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
