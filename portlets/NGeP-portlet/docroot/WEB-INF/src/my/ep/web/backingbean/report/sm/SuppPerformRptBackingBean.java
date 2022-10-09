@@ -36,6 +36,9 @@ public class SuppPerformRptBackingBean extends
 	private static final Logger log = EpLogger.getLogger(SuppPerformRptBackingBean.class);
 
 	public SuppPerformRptBackingBean() {
+		// #33741 - start
+		resetSearch();
+		// #33741 - end
 		//getManagedBean().setYearList(getYearList());
 		setDefaultDateFromAndDateTo();
 		onChangeRegType();
@@ -58,6 +61,14 @@ public class SuppPerformRptBackingBean extends
 		} else if(getManagedBean().getDateFrom() == null && getManagedBean().getDateTo() != null) {
 			throw new EpException(MessageConst.ERROR_REPORT_780054);
 		}
+		// #33741 - start
+		// reset selectedOrgProfile if user select supplierId = 2
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId() == 2) {
+			getManagedBean().setSelectedOrgProfile(null);
+		}
+		// #33741 - end
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
