@@ -14994,7 +14994,9 @@ private void retriveCommitteeRemarksList(){
 					.getManagedBean().getOfferScoreType())){
 				//#25138, #21695 - start
 				EvaluationReqDTO evalReqDTO = new EvaluationReqDTO();
-				evalReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+				// #33507 - Start.
+				evalReqDTO.setScQt(this.getManagedBean().getScQt());
+				// #33507 - End.
 				evalReqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
 				List<String> evalStage = new ArrayList<String>();
 				evalStage.add(QTConstants.TECHNICAL_EVALUATION);
@@ -15014,6 +15016,9 @@ private void retriveCommitteeRemarksList(){
 				//evaluationSO.generateEvaluationSheet(evalReqDTO);
 				//32373 - Remove below, generate only depends on fec check -end
 			
+				// #33507 - Start.
+				evaluationSO.updateProposalPackageScore(evalReqDTO);
+				// #33507 - End.
 			}
 			//#25138 - filter auto score condition - End
 			
