@@ -2027,7 +2027,7 @@ public class SmPersonnelBackingBean extends
 		}
 		//32515 START
 		//Update Role
-		if (getManagedBean().getBasicSmPersonnel() != null && getManagedBean().getBasicSmPersonnel().getEpRole() != null &&
+		if (getManagedBean().getBasicSmPersonnel() != null && getManagedBean().getBasicSmPersonnel().getPersonnelId() != null && getManagedBean().getBasicSmPersonnel().getEpRole() != null &&
 				getManagedBean().getEpRoleTrans() != null && !getManagedBean().getEpRoleTrans().equals(getManagedBean().getBasicSmPersonnel().getEpRole()) &&
 				getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_ACTIVE) {
 			
