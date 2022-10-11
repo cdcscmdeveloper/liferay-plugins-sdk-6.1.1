@@ -2257,8 +2257,8 @@ public class TemplateSpecBackingBean extends
 					// TODO - calculate tariff price.
 
 				} else if (templateSpecHelper.isPriceTypeTier(priceType)
-						&& (tierSpecQuestionId == null || tierSpecQuestionId
-								.compareTo(specQuestion.getSpecQuestionId()) != 0)) {
+						&& (tierSpecQuestionId == null || (specQuestion.getSpecQuestionId() !=null && tierSpecQuestionId
+								.compareTo(specQuestion.getSpecQuestionId()) != 0))) {//#29468 Added null checking Vinod
 					// Always used the 1st tier quantity unit price to calculate
 					// total amount.
 					if (tplSpecAnswer.getRatePerUom() != null && quantity != null) {
