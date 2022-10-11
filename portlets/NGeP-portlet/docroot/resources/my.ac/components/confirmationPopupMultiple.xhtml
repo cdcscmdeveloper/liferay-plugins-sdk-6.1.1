@@ -62,9 +62,6 @@
 			<!-- need to change all because when used multiple <ac:confirmationPopup , only one loading gif will popup (the last ac:) -->
 			<!-- because of same name of widget -->
 			
-			<p:ajax event="close" listener="#{cofirmationPopUpBackingBean.logConfirmationPopUpOnClose()}" 
-			oncomplete="console.log('dialog is completed');" />
-			
 			<p:blockUI block="#{cc.attrs.id}Popup" widgetVar="#{cc.attrs.id}confirmPopupBlockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
@@ -86,21 +83,21 @@
 							partialSubmit="true" 
 							onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
-							oncomplete="#{cc.attrs.loadingWidget}.hide();" update="#{cc.attrs.update}" />
+							oncomplete="console.log('dialog is completed'); #{cc.attrs.loadingWidget}.hide();" update="#{cc.attrs.update}" />
 					</c:when>
 				    <c:when test="#{empty cc.attrs.resetInput}">
 				       <p:commandButton id="yesWithResetId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" 
 							onstart="#{cc.attrs.id}confirmPopupBlockWidget.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
-							oncomplete="#{cc.attrs.id}confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" />
+							oncomplete="console.log('dialog is completed'); #{cc.attrs.id}confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" />
 				    </c:when>
 				    <c:otherwise>
 				        <p:commandButton id="yesWithoutResetId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" 
 							onstart="#{cc.attrs.id}confirmPopupBlockWidget.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
-							oncomplete="#{cc.attrs.id}confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" >
+							oncomplete="console.log('dialog is completed'); #{cc.attrs.id}confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" >
 							<p:resetInput target="#{cc.attrs.resetInput}" />
 						</p:commandButton>
 				    </c:otherwise>

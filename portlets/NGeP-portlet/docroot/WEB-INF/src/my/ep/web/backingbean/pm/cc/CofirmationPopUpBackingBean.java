@@ -62,10 +62,4 @@ public class CofirmationPopUpBackingBean extends
 
 		}
 	}
-	
-	//#7465 - start
-	public void logConfirmationPopUpOnClose(){
-		log.info("==============dialog is completed closed==============");
-	}
-	//#7465 - end
 }
