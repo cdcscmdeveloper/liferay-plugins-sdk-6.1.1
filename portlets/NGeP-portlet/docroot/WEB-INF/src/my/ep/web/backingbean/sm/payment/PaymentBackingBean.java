@@ -73,6 +73,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	public static Logger log = Logger.getLogger(PaymentBackingBean.class);
 	private String paymentGatewayUrl;
 	private String merchantId;
+	//26307
+	private String billType;
 	private String vCode;
 	private final String paymentGatewayOnOff = EpPropertiesUtils.getInstance().getProperty("paymentgateway.molpay.onoff");
 
@@ -109,10 +111,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	}
 	
 	
-	
+	//26307
 	public String getPaymentGatewayUrl() {
-		paymentGatewayUrl = getPaymentGateUrlByMerchantId(merchantId);
-		
+		paymentGatewayUrl = getPaymentGateUrlByMerchantId(merchantId,billType);
+		log.info("Bill Type ="+billType+"paymentGatewayUrl-----------"+paymentGatewayUrl);
 		return paymentGatewayUrl;
 	}
 
@@ -229,6 +231,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		PendingPaymentResDTO resDTO = reqSO.checkAlreadyDonePayement(reqDTO);
 				
 		if(resDTO.isFoundCompletePayment()){
+			log.info("<<<< Failure Payment - Bill ID >>>> "+reqDTO.getBillId());
 			throw new EpException(MessageConst.ERROR_721055);
 		}
 			PyBill pyBill = this.getManagedBean().getPyBill();
@@ -363,6 +366,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			this.getManagedBean().setBillEmail(pmUser.getEmail());
 			
 			String billType = getBillName(pyBill.getBillType(), getManagedBean().getSmAppl().getSmSupplier().getCompanyName(), pyBill.getBillNo());
+			//26307
+			this.billType = pyBill.getBillType();
 			this.getManagedBean().setBillName(billType != null ? billType : getManagedBean().getSmAppl().getSmSupplier().getCompanyName());
 			this.getManagedBean().setBillDesc(getManagedBean().getNewPyBillDtlLs().get(0).getItemDesc());
 			// this.getManagedBean().
@@ -654,7 +659,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			
 			PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 		
-			showPaymentResponse(status, ordId, null,null);
+			showPaymentResponse(status, ordId, null, pyBill.getBillType());
 			this.renewSesionObject();
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -960,9 +965,15 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		
 		return pType;
 	}
-	
-	private String getPaymentGateUrlByMerchantId(String merchantId){
-		return EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + "/";
+	//26307
+	private String getPaymentGateUrlByMerchantId(String merchantId,String billType){
+		if (billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+			return EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + "/";// + EpPropertiesUtils.getInstance().getProperty("molpay.cdc.url.exts");	//temp add ext	for testing purpose.. do not merge to prd
+		}else{
+			// #26307 - payment gateway change 
+			return EpPropertiesUtils.getInstance().getProperty("molpay.gov.url") + merchantId + EpPropertiesUtils.getInstance().getProperty("molpay.gov.url.ext");
+		}		
+		
 	}
 
 	public String getCancelUrl() {
