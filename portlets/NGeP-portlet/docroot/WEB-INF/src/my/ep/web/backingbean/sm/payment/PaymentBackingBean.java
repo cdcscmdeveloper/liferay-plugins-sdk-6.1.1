@@ -114,7 +114,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	//26307
 	public String getPaymentGatewayUrl() {
 		paymentGatewayUrl = getPaymentGateUrlByMerchantId(merchantId,billType);
-		log.info("paymentGatewayUrl>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+paymentGatewayUrl);
+		log.info("Bill Type ="+billType+"paymentGatewayUrl-----------"+paymentGatewayUrl);
 		return paymentGatewayUrl;
 	}
 
@@ -367,7 +367,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			
 			String billType = getBillName(pyBill.getBillType(), getManagedBean().getSmAppl().getSmSupplier().getCompanyName(), pyBill.getBillNo());
 			//26307
-			this.billType = billType;
+			this.billType = pyBill.getBillType();
 			this.getManagedBean().setBillName(billType != null ? billType : getManagedBean().getSmAppl().getSmSupplier().getCompanyName());
 			this.getManagedBean().setBillDesc(getManagedBean().getNewPyBillDtlLs().get(0).getItemDesc());
 			// this.getManagedBean().
@@ -968,10 +968,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	//26307
 	private String getPaymentGateUrlByMerchantId(String merchantId,String billType){
 		if (billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
-			return EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + EpPropertiesUtils.getInstance().getProperty("molpay.url.exts");	//temp add ext	for testing purpose.. do not merge to prd
+			return EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + "/";// + EpPropertiesUtils.getInstance().getProperty("molpay.cdc.url.exts");	//temp add ext	for testing purpose.. do not merge to prd
 		}else{
 			// #26307 - payment gateway change 
-			return EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + EpPropertiesUtils.getInstance().getProperty("molpay.url.ext");
+			return EpPropertiesUtils.getInstance().getProperty("molpay.gov.url") + merchantId + EpPropertiesUtils.getInstance().getProperty("molpay.gov.url.ext");
 		}		
 		
 	}
