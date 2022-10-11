@@ -158,6 +158,13 @@ u.underline {
 .dottedBorderRed{
 	border-bottom: red 2px dotted;
 }
+.underline{
+text-decoration:underline;
+}
+.underlineRed{
+text-decoration:underline;
+color:red;
+}
 ## #25025-end
 </style>
 </head>
@@ -208,9 +215,9 @@ u.underline {
 				<p>
 					<span class="text_family">Dengan ini dimaklumkan bahawa
 						Kerajaan telah bersetuju menerima tawaran $subTitle syarikat tuan
-						dengan harga sebanyak Ringgit Malaysia $overallCtAmtWording (RM
-						$overallCtAmt) yang merupakan harga kontrak bagi tempoh
-						kontrak selama $contractDuration bulan tertakluk kepada dokumen $subTitle
+						dengan harga sebanyak Ringgit Malaysia <span class="underline">$overallCtAmtWording</span> (RM
+						<span class="underline">$overallCtAmt</span>) yang merupakan harga kontrak bagi tempoh
+						kontrak selama <span class="underline">$contractDuration bulan</span> tertakluk kepada dokumen $subTitle
 						yang menjadi sebahagian daripada perolehan ini dan Surat
 						Setuju Terima ini berserta dengan <b><i>Lampiran A</i></b> kepada Surat Setuju Terima 
 						iaitu maklumat terperinci kontrak (selepas ini disebut sebagai "Surat ini").
@@ -236,7 +243,7 @@ u.underline {
 				## #25025 & #26770 -end
 				## #25025 & #26770 -start
 				<p>
-					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga kontrak adalah termasuk peruntukan Kerajaan sebanyak 0% cukai
+					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga kontrak adalah termasuk peruntukan Kerajaan sebanyak <span class="underlineRed">0%</span> cukai
 					perkhidmatan memandangkan perkhidmatan ini dikenakan cukai dan syarikat tuan berdaftar dengan Jabatan Kastam
 					Diraja Malaysia (JKDM). Pembayaran cukai perkhidmatan ini adalah dikira berdasarkan tuntutan sebenar dan tarikh kuat
 					kuasa pendaftaran syarikat tuan dengan JKDM.</span>
@@ -249,7 +256,7 @@ u.underline {
 				</p>
 				## #25025 & #26770 -start
 				<p>
-					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga kontrak adalah tidak termasuk peruntukan Kerajaan sebanyak 0% cukai
+					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga kontrak adalah tidak termasuk peruntukan Kerajaan sebanyak <span class="underlineRed">0%</span> cukai
 					perkhidmatan memandangkan syarikat tuan tidak berdaftar dengan Jabatan Kastam Diraja Malaysia (JKDM). Sekiranya syarikat
 					tuan telah berdaftar dengan JKDM, tuan adalah dikehendaki untuk memaklumkan nombor pendaftaran dan tarikh kuat kuasanya
 					kepada Kerajaan untuk pelarasan harga kontrak dalam tempoh tujuh (7) hari dari tarikh surat kelulusan JKDM. Pembayaran
@@ -276,7 +283,7 @@ u.underline {
 									<td align="center" style="vertical-align: top;">*(a)</td>
 									##25025 - start
 									<td style="text-align:justify;">suatu bon pelaksanaan yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia</td>
-									<span class="text_family_red">$bondAmtText (RM) $bondAmt;</span><br/>
+									<span class="text_family_red"><span class="underlineRed">$bondAmtText</span> (RM) <span class="underlineRed">$bondAmt</span>;</span><br/>
 									##25025 - end
 									<span class="text_family_small">Bon Pelaksanaan hanya dikenakan kepada perolehan yang bernilai RM200,000 dan ke atas sahaja.</span>
 									</td>
@@ -656,7 +663,7 @@ u.underline {
 					<td align="left" class="submenu_padding"><span
 						class="text_family">1.2 Tempoh Sah Laku </span></td>
 					<td>:</td>
-					<td>______________</td>
+					<td>$ssmExpired</td>
 				</tr>
 
 				<tr>
@@ -950,7 +957,7 @@ u.underline {
 						<table>
 							<tr style="margin-bottom:1px;" align="bottom">
 								<td><span class="text_family_red">RM </span></td>
-								<td align="bottom" class="dottedBorderRed"><span class="text_family_medium">Nilai dalam angka</span></td>
+								<td align="bottom"><span class="text_family_red">...............................................</span></td>
 							</tr>
 						</table>
 					<td>
@@ -1000,7 +1007,7 @@ u.underline {
 						<table>
 							<tr style="margin-bottom:1px;" align="bottom">
 								<td><span class="text_family_red">RM </span></td>
-								<td align="bottom" class="dottedBorderRed"><span class="text_family_medium">Nilai dalam angka</span></td>
+								<td align="bottom"><span class="text_family_red">...............................................</span></td>
 							</tr>
 						</table>
 					</td>
