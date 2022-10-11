@@ -46,10 +46,9 @@
 			<tr>
 				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.createdDateFrom']} :" /></td>
 				<td width="40%">
-					<p:calendar showOn="button" navigator="true"
-						display="inline" required="false" readonlyInput="false"
+					<p:calendar showOn="button" navigator="true" display="inline" required="false" readonlyInput="false"
 						label="#{lbl['lbl.cm.doc.createdDate']}" id="myTaskCreatedDateFrom"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="21"
 						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
 						value="#{bpmTasklistBackingBean.managedBean.myTaskCreatedDateFrom}">
 						<p:ajax event="dateSelect" listener="#{bpmTasklistBackingBean.compareDate('normal', 'fromDate')}"/>
@@ -61,7 +60,7 @@
 					<p:calendar showOn="button" navigator="true"
 						display="inline" required="false" readonlyInput="false"
 						label="#{lbl['lbl.cm.doc.createdDate']}" id="myTaskCreatedDateTo"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="21"
 						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
 						value="#{bpmTasklistBackingBean.managedBean.myTaskCreatedDateTo}">
 						<p:ajax event="dateSelect" listener="#{bpmTasklistBackingBean.compareDate('normal', 'toDate')}"/>
