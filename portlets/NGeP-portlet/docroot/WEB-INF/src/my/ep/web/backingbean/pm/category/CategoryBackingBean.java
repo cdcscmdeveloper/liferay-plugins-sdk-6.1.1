@@ -1256,14 +1256,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		new LogKey(loginSessionUserId);
 		//end #29665 add log key
 		
-		//29665 - Start
+		/*//29665 - Start - remove this code
 		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
 			throw new EpException(MessageConst.ERROR_775188, new String[]{ResourceBundleUtils.getMessage(
 					"lbl.pm.main.category", 
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale())});
 		   }
-		//29665 - End
+		//29665 - End */
 		
 		try {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
@@ -1495,14 +1495,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		new LogKey(loginSessionUserId);
 		//end #29665 add log key
 		
-		//29665 - Start
+		/*//29665 - Start - remove this code
 		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
 			throw new EpException(MessageConst.ERROR_775188, new String[]{ResourceBundleUtils.getMessage(
 					"lbl.pm.sub.category", 
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale())});
 		   }
-		//29665 - End
+		//29665 - End*/
 		
 		try {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
@@ -1762,13 +1762,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			throw new EpException(MessageConst.ERROR_775006);
 		}
 
-		// 29665 - Start
+		/*// 29665 - Start - remove this code
 		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
 			throw new EpException(MessageConst.ERROR_775188,
 					new String[] { ResourceBundleUtils.getMessage("lbl.pm.sub.div",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
 		}
-		// 29665 - End
+		// 29665 - End */
 
 		// validation for fields
 		validatePmCategoryL3();
@@ -4510,5 +4510,31 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	}
 
 	//end #29665
+	
+	//#29665 - Start
+	public void checkRemarkCategory() {
+		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
+			throw new EpException(MessageConst.ERROR_775188,
+					new String[] { ResourceBundleUtils.getMessage("lbl.pm.main.category",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+		}
+	}
+
+	public void checkRemarkSubCategory() {
+		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
+			throw new EpException(MessageConst.ERROR_775188,
+					new String[] { ResourceBundleUtils.getMessage("lbl.pm.sub.category",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+
+		}
+	}
+
+	public void checkRemarkSubDivCategory() {
+		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
+			throw new EpException(MessageConst.ERROR_775188, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.pm.sub.div", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+		}
+	}
+	//#29665 - End
 
 }

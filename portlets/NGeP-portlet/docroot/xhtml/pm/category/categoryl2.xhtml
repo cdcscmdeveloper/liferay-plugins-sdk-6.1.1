@@ -149,14 +149,18 @@
 						<p:outputLabel value="#{lbl['lbl.pm.remarks']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
+					<!-- Start #29665 - Start -->
 					<td>
 						<p:inputTextarea id="remarkFieldId" cols="50" style="width:auto;" maxlength="1000" 
 						value="#{categoryBackingBean.managedBean.remarkCategory}" autoResize="false"
 						disabled="#{categoryBackingBean.remarkDisable}" required="#{!categoryBackingBean.remarkDisable}"
 						requiredMessage="#{lbl['lbl.pm.categ.remark.sub.required']}"
-						validatorMessage="#{lbl['lbl.pm.categ.remark.sub.required']}"/>
+						validatorMessage="#{lbl['lbl.pm.categ.remark.sub.required']}">
+						<p:ajax event="change" listener="#{categoryBackingBean.checkRemarkSubCategory()}" />
+						</p:inputTextarea>
 						<ac:iconTooltip value="#{lbl['lbl.pm.categ.remark.main.tooltips']}"/>
 					</td>
+					<!-- Start #29665 - End -->
 				</tr>
 				</c:if>
 				<!-- End #29665: Add Remark Field -->
