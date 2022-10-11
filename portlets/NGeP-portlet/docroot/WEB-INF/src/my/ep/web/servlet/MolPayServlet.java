@@ -19,9 +19,14 @@ import org.apache.log4j.Logger;
 import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.service.sm.payment.IPaymentSO;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
 import my.ep.dto.sm.payment.PaymentResDTO;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.py.PyPayment;
 import my.ep.persistence.entity.py.PyPaymentOrder;
@@ -33,9 +38,14 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;
+
+import com.liferay.portal.util.PortalUtil;
+//#26307 start
+//#26307 start
 
 /**
  * Servlet implementation class MolPayServlet
@@ -63,9 +73,18 @@ public class MolPayServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		System.out.println("************Payment PostBack Start********");
-		System.out.println("******Servlet Testing doPost*********");
-
+		// #26307 start
+		log.info("************Payment PostBack Start********");
+		log.info("******Servlet Testing doPost*********");
+		// #26307 end
+		//26307
+		log.info("******START Clear Cache*********");
+		res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+		res.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+		res.setDateHeader("Expires", 0); // Proxies.
+		
+		log.info("******END Clear Cache*********");
+		//26307
 		String nbcb = req.getParameter("nbcb") != null ? req.getParameter("nbcb") : null;
 		String amount = req.getParameter("amount");
 		String orderId = req.getParameter("orderid");
@@ -82,7 +101,8 @@ public class MolPayServlet extends HttpServlet {
 		log.info("set session--");
 		req.getSession().setAttribute("orderidS", orderId);
 		log.info("getsession servlet: -"+req.getSession().getAttribute("orderidS"));
-		
+		// #26307 start
+		String cardType = null;
 		String extraP = req.getParameter("extraP");
 		
 		log.info("nbcb:" + nbcb);
@@ -100,6 +120,14 @@ public class MolPayServlet extends HttpServlet {
 		log.info("channel:" + channel);
 		log.info("extraP:" + extraP);
 		
+		JSONObject obj; 
+		try { 
+			obj = new JSONObject(extraP); 
+			cardType = obj.getString("cctype") != null ? obj.getString("cctype") : null; 
+		} catch (JSONException e) { 
+			e.printStackTrace(); 
+		} 
+		// #26307 end  
 		// #32422 START 
 		//#33137 - START
 		String date1 = null;
@@ -148,7 +176,7 @@ public class MolPayServlet extends HttpServlet {
 				boolean validPayment = false;
 
 				if (resDTO.getPyPayment() != null) {
-					System.out.println("MolPayServlet| getPaymentId >>>>" + resDTO.getPyPayment().getPaymentId());
+					log.info("MolPayServlet| getPaymentId >>>>" + resDTO.getPyPayment().getPaymentId());
 					PyPayment smPayment = resDTO.getPyPayment();
 					PyPaymentResponse smPaymentRes = new PyPaymentResponse();
 					PyPaymentOrder paymentOrder = smPayment.getPyPaymentOrder();
@@ -165,14 +193,14 @@ public class MolPayServlet extends HttpServlet {
 									statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
 									validPayment = true;
 								}else{
-									System.out.println("Payment Status ID -" + smPayment.getPmStatus().getStatusId());
+									log.info("Payment Status ID -" + smPayment.getPmStatus().getStatusId());
 								}
 							}else{
-								System.out.println("smPayment.getPmStatus() is NULL");
+								log.info("smPayment.getPmStatus() is NULL");
 							}
 						}else{
-							System.out.println("ord id or payment amount unmatch");
-							System.out.println("ord id - " + ordId);
+							log.info("ord id or payment amount unmatch");
+							log.info("ord id - " + ordId);
 							log.info("paymentAmount id - " + paymentAmount);
 						}
 					}else if(status.equals(SupplierManagementConst.MOL_FAIL)){
@@ -192,7 +220,41 @@ public class MolPayServlet extends HttpServlet {
 					//32422 END
 					// #26307 start
 					PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
+					log.info("Card type=============="+cardType);
+					if (cardType != null) {
+						if (cardType.equalsIgnoreCase("Credit")) {
+							cardType = "CC";
+						} else if (cardType.equalsIgnoreCase("Debit")) {
+							cardType = "DC";
+						} 
+						log.info("cardType===="+cardType);
+						ParameterReqDTO reqPmDTO = new ParameterReqDTO();
+						if (cardType.equals(ParameterConst.CARD_TYPES_CREDIT)) {	
+							log.info("cardType====enter CC"+cardType);
+							reqPmDTO.setParameterType(ParameterTypeConst.CARD_TYPES);
+							reqPmDTO.setParameterCode(ParameterConst.CARD_TYPES_CREDIT);
+							ParameterResDTO resPmDTO = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqPmDTO);
+							log.info("cardType====enter CC result "+resPmDTO.getPmParameter());
+							PmParameter cards = resPmDTO.getPmParameter();
+							pymtReqDTO.setCardType(cards);
+							pymtReqDTO.setCardTypeS(cardType);
+							smPayment.setCardType(cards);	
+							channel="credit";
+						} else if (cardType.equals(ParameterConst.CARD_TYPES_DEBIT)) {		
+							log.info("cardType====enter DC"+cardType);
+							reqPmDTO.setParameterType(ParameterTypeConst.CARD_TYPES);
+							reqPmDTO.setParameterCode(ParameterConst.CARD_TYPES_DEBIT);
+							ParameterResDTO resPmDTO = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqPmDTO);
+							log.info("cardType====enter DC result "+resPmDTO.getPmParameter());
+							PmParameter cards = resPmDTO.getPmParameter();
+							pymtReqDTO.setCardType(cards);
+							pymtReqDTO.setCardTypeS(cardType);
+							smPayment.setCardType(cards);	
+							channel="debit";
+						} 
+					}
 					
+					// #26307 end
 					//32422 START
 					Timestamp bankDate = new Timestamp(System.currentTimeMillis());
 					Boolean validFormat = false;
@@ -286,22 +348,22 @@ public class MolPayServlet extends HttpServlet {
 					pymtReqDTO.setPortalBaseUrl(portalUrl);
 					pymtReqDTO.setLanguage("en");
 
-					System.out.println(">>>>Before paymentBackendUpdate Upper<<<");
+					log.info(">>>>Before paymentBackendUpdate Upper<<<");
 					String paymentType = StringUtils.EMPTY;
 					if(smPayment.getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE)){
 						paymentType = SupplierManagementConst.MOF_PAYMENT;
-						System.out.println(">>>>paymentType<<<"+paymentType);
+						log.info(">>>>paymentType<<<"+paymentType);
 					}else if(smPayment.getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
 						paymentType = SupplierManagementConst.PROCESSING_PAYMENT;
-						System.out.println(">>>>paymentType<<<"+paymentType);
+						log.info(">>>>paymentType<<<"+paymentType);
 					}else if(smPayment.getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
 						paymentType = SupplierManagementConst.SOFTCERT_PAYMENT;
-						System.out.println(">>>>paymentType<<<"+paymentType);
+						log.info(">>>>paymentType<<<"+paymentType);
 					}
 					pymtReqDTO.setPaymentType(paymentType);
 					pymtReqDTO.setMethodName("doPost-MolPayServlet");
 					PaymentResDTO pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
-					System.out.println(">>>>Before paymentBackendUpdate<<<");
+					log.info(">>>>Before paymentBackendUpdate<<<");
 					if(pymtResDTO.isSuccessful()){
 						if(nbcb.equals("1")){
 							//to auto generate mof cert
@@ -324,17 +386,17 @@ public class MolPayServlet extends HttpServlet {
 							}
 							
 						}else if(nbcb.equals("2")){
-							System.out.println("Curl IPN - nbcb " + nbcb);
+							log.info("Curl IPN - nbcb " + nbcb);
 							try {
 								SmCommonUtil.paymentCurlIPN(req, true, merchantId, molIpnUrl);
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
-								System.out.println("paymentCurlIPN error>>>>>>>>>" + e.getMessage());
+								log.info("paymentCurlIPN error>>>>>>>>>" + e.getMessage());
 							}
 						}
 					}
 				}else{
-					System.out.println("No SmPayment Object is found");
+					log.info("No SmPayment Object is found");
 				}
 
 				//			}else{
