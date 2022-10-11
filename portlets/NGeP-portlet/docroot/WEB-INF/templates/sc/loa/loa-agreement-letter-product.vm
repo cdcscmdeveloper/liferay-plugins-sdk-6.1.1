@@ -156,11 +156,24 @@ u.underline {
 }
 ## #25025-end
 .underline{
-text-decoration:underline;
+	font-family: Arial;
+	font-size: 14.5px;
+	font-weight: normal;
+	font-style: normal;
+	line-height: 20px;
+	text-decoration: none;
+	color: #333333;
+	text-decoration:underline;
 }
 .underlineRed{
-text-decoration:underline;
-color:red;
+	font-family: Arial;
+	font-size: 14.5px;
+	font-weight: normal;
+	font-style: normal;
+	line-height: 20px;
+	text-decoration: none;
+	text-decoration:underline;
+	color:red;
 }
 </style>
 </head>
