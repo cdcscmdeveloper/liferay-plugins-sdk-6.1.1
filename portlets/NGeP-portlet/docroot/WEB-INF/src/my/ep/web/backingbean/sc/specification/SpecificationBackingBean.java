@@ -30,8 +30,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -12899,26 +12901,52 @@ if (null != checklist && !checklist.isEmpty()) {
 					}
 				}
 			}
-			//1873 note 182 start
-			if(toBeRemoveCheckLists!=null && toBeRemoveCheckLists.size()>1){
-				ScQtCheckList finChecklist = toBeRemoveCheckLists.get(1);
-				if(finChecklist.getQtChecklistId()!=null && CollectionUtils.isNotEmpty(financialCheckLIsts)){
-					for(ScQtCheckList checklist: financialCheckLIsts){
-						Long qtChecklistId = checklist.getQtChecklistId()==null ? 0L: checklist.getQtChecklistId();
-						if(qtChecklistId.equals(finChecklist.getQtChecklistId())){
-							financialCheckLIsts.remove(checklist);
-							break;
-						}
-					}
-				}
-			}
-			//1873 note 182 end
+
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 			specReqDTO.setScQt(this.getManagedBean().getQt());
 			specReqDTO.setCheckLists(toBeRemoveCheckLists);
 			SpecificationResDTO resDTO = specSo.deleteChecklists(specReqDTO);
 
 			if (resDTO.isSuccessful()) {
+				//1873 note 182 start
+				ISearchResultBean<ScQtCheckList> checklistResultBean = specSo.retrieveTemplateSpecChecklist(specReqDTO).getSpecResultBean();
+				Map<Long, ScQtCheckList> tecChecklistMap = new LinkedHashMap<Long, ScQtCheckList>();
+				Map<Long, ScQtCheckList> finChecklistMap = new LinkedHashMap<Long, ScQtCheckList>();
+				if(CollectionUtils.isNotEmpty(checklistResultBean.getResultList())){
+					for(ScQtCheckList checklist: checklistResultBean.getResultList()){
+						if(SourcingConstants.TECHNICAL_DOCTYPE.equals(checklist.getDocCategory())){
+							tecChecklistMap.put(checklist.getQtChecklistId(), checklist);
+						}else if(SourcingConstants.FINANCIAL_DOCTYPE.equals(checklist.getDocCategory())){
+							finChecklistMap.put(checklist.getQtChecklistId(), checklist);
+						}
+					}
+				}
+				if(CollectionUtils.isNotEmpty(technicalCheckLIsts)){
+					ListIterator<ScQtCheckList> tecChecklistIter = technicalCheckLIsts.listIterator();
+					while(tecChecklistIter.hasNext()) {
+						ScQtCheckList checklist = tecChecklistIter.next();
+						if(finChecklistMap.get(checklist.getQtChecklistId())!=null){
+							tecChecklistIter.set(tecChecklistMap.get(checklist.getQtChecklistId()));
+						}
+					}
+				}
+
+				if(CollectionUtils.isNotEmpty(financialCheckLIsts)){
+					ListIterator<ScQtCheckList> finChecklistIter = financialCheckLIsts.listIterator();
+					while(finChecklistIter.hasNext()) {
+						ScQtCheckList checklist = finChecklistIter.next();
+						if(finChecklistMap.get(checklist.getQtChecklistId())!=null){
+							finChecklistIter.set(finChecklistMap.get(checklist.getQtChecklistId()));
+						}else if(toBeRemoveCheckLists!=null && toBeRemoveCheckLists.size()>1){
+							ScQtCheckList finChecklist = toBeRemoveCheckLists.get(1);
+							Long qtChecklistId = checklist.getQtChecklistId()==null ? 0L: checklist.getQtChecklistId();
+							if(qtChecklistId.equals(finChecklist.getQtChecklistId())){
+								finChecklistIter.remove();
+							}
+						}
+					}
+				}
+				//1873 note 182 start
 				String title=" ";//11104-start
 				if(this.getManagedBean().getQt().isSampleReq() && CollectionUtils.isNotEmpty(technicalCheckLIsts)){
 					for(ScQtCheckList checklist:technicalCheckLIsts){
