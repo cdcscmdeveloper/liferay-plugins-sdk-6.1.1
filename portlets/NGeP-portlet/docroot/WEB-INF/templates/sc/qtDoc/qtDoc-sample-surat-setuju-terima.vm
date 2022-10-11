@@ -106,8 +106,16 @@
 			color: #333333;
 		}
 		.underline{
+			font-family: Arial;
+			font-size: 14.5px;
+			font-weight: normal;
+			font-style: normal;
+			line-height: 20px;
+			text-decoration: none;
+			color: #333333;
 			text-decoration:underline;
 		}
+
 		##26770 - end
 	</style>
 </head>
