@@ -35,7 +35,9 @@
 			     <c:if test="#{not empty approvalDtlsList.historyApprovalRequests}">
 	                <c:choose>
 					    <c:when test="#{qTDetailBB.managedBean.maintanceFlow}">	
-				              <p:column headerText="#{lbl['lbl.sc.document']}">
+				              <!-- #34014 -start- -->
+				              <p:column headerText="#{lbl['lbl.sc.document']}" style="text-align: center;white-space: normal;width: 50%;">
+				              <!-- #34014 -end- -->
 				                  <c:if test="#{qTDetailBB.isApprovalScreen() and qTDetailBB.userTaskIsCommitteeAppointmentApproval}">
 										<ui:include src="downloadOthersFile.xhtml" />
 				                  </c:if>
@@ -54,7 +56,9 @@
 							  </p:column>  
 				        </c:when>
 				        <c:otherwise>
-		                       <p:column>
+				              <!-- #34014 -start- -->
+		                       <p:column style="text-align: center;white-space: normal;width: 50%;">
+				              <!-- #34014 -end- -->
 							      <f:facet name="header">
 							            <c:if test="#{isMandatoryDocument}">
 							               <h:outputText value="* " styleClass="mandatory" />
