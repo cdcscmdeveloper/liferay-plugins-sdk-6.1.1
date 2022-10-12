@@ -1348,6 +1348,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					if(getManagedBean().getSmSupp().getSmSupplierOwners().size() != 0){
 						for(SmSupplierOwner suppOwner : getManagedBean().getSmSupp().getSmSupplierOwners()){
 							if(personnel.getIdentificationNo().equals(suppOwner.getIdentificationNo())){
+								suppOwner.setOwnerIsEquity(personnel.isEquityOwner());
+								suppOwner.setOwnerIsDirector(personnel.isDirector());
 								isExistedInOwner = true;
 							}
 						}
@@ -1361,11 +1363,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							suppOwnerNewList.setIdentificationType(personnel.getIdentificationType());
 							suppOwnerNewList.setIdentificationTypeId(personnel.getIdentificationTypeId());
 							suppOwnerNewList.setIdentificationNo(personnel.getIdentificationNo());
-							reqDTO.getSmSupp().getSmSupplierOwners().add(suppOwnerNewList);
+							suppOwnerNewList.setOwnerIsEquity(personnel.isEquityOwner());
+							suppOwnerNewList.setOwnerIsDirector(personnel.isDirector());
+							getManagedBean().getSmSupp().getSmSupplierOwners().add(suppOwnerNewList);
+							
 						}
 					}
 				}
 			}
+			reqDTO.getSmSupp().setSmSupplierOwners(getManagedBean().getSmSupp().getSmSupplierOwners());
 		}
 		//27691 END
 		
@@ -2432,17 +2438,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							// 27691 - End
 						}
 					}
-				}else{//27691 START - to view owner&director if smsupplierowner empty
+				}else{//27691 START - to view owner&director & save if smsupplierowner empty
 					if(this.getManagedBean().getSmSupp().getSmAppl().isApplValidWithSsm()){
+						this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>());
 						for(SmPersonnel personnel: this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels()){
-							if((personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE ||
+							if(personnel.isSsmData() && (personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE ||
 									personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)
 									&& personnel.getIdentificationType() != null && personnel.getIdentificationType().getParameterCode()		
 											.equals(ParameterConst.IDENTIFICATION_TYPES_IC)){
 								if(personnel.isDirector()){
 									this.getManagedBean().getSmPersonnelDirector().add(personnel);
 								}
-								if(personnel.isEquityOwner()){
+								if(personnel.isEquityOwner() || personnel.isDirector()){
 									SmSupplierOwner suppOwner = new SmSupplierOwner();
 									suppOwner.setSmSupplier(this.getManagedBean().getSmSupp());
 									suppOwner.setOwnerName(personnel.getName());
