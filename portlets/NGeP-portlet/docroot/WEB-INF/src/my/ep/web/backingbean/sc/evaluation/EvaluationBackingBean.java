@@ -16648,7 +16648,7 @@ private void retriveCommitteeRemarksList(){
 					BigDecimal maxScore = specscore.getScQtCheckList().getQtScoreWeightage().getScore();
 					BigDecimal weightage = specscore.getScQtCheckList().getQtScoreWeightage().getWeightage();
 					
-					totalScore = weightage.multiply(totalScore.divide(maxScore)).stripTrailingZeros();
+					totalScore = weightage.multiply(totalScore).divide(maxScore, 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros();//#28784 no package bug
 				}
 				//#28784 add weightage to calculation - end
 				divNum = divNum.add(totalScore);
@@ -16697,7 +16697,7 @@ private void retriveCommitteeRemarksList(){
 					BigDecimal maxScore = specscore.getScQtCheckList().getQtScoreWeightage().getScore();
 					BigDecimal weightage = specscore.getScQtCheckList().getQtScoreWeightage().getWeightage();
 					
-					divNum = weightage.multiply(divNum.divide(maxScore)).stripTrailingZeros();
+					divNum = weightage.multiply(divNum).divide(maxScore, 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros();//#28784 no package bug
 				}
 				//#28784 add weightage to calculation - end
 				totalDemoScore = String.valueOf(divNum.toPlainString());
