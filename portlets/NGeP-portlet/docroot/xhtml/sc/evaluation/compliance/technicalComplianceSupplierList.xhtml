@@ -59,10 +59,12 @@
 
 			<p:column headerText="#{lbl['lbl.sc.compliance.status']}"
 				style="width:15%">
-				<p:selectOneMenu
+				<ui:remove><!-- 6906 - add disabled isRejected, add style --></ui:remove>
+				<p:selectOneMenu style="max-width: 225px !important; width:100% !important" 
 					disabled="#{(complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or  evaluationBackingBean.managedBean.statusOnly or  evaluationBackingBean.managedBean.complianceReEvaluateRequired) 
-					or isRejected}"
-					value="#{complianceTechnicalSupplier.compliance}">
+					or isRejected  or (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod ne null
+					and complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"
+					value="#{complianceTechnicalSupplier.compliance}"><ui:remove>#21692</ui:remove>
 
 					<f:selectItems
 						value="#{evaluationBackingBean.statusDropdownCodeValues(ParameterTypeConst.complianceStatus,complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"></f:selectItems>
