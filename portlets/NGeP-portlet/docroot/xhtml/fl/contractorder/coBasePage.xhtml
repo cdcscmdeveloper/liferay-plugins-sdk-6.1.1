@@ -70,7 +70,7 @@
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 						action="#{flOrderBB.backToPervious}"
-						rendered="#{flOrderBB.managedBean.taskId==null || flOrderBB.managedBean.taskId!=null}" /></td>
+						rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
 				<td colspan="4" style="text-align: right">
 				<c:if test='#{flOrderBB.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>
 				<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
@@ -129,10 +129,10 @@
 						disabled="#{flOrderBB.managedBean.iscarryForward eq 'true'}" >
 						<f:param name="actionName" value="#{BpmOutcomeConstant.carryForward}" />
 					</p:commandButton>
-					
-						<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" immediate="true"  
-					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"
-					disabled="#{flOrderBB.managedBean.progressStatus eq 4}"/>
+					<!-- 29387 start -->
+					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" immediate="true"  
+					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"/>
+					<!-- 29387 end -->
 			</c:if>
 					
 					
