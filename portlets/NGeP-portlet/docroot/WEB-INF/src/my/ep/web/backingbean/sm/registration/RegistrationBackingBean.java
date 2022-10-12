@@ -2438,7 +2438,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							// 27691 - End
 						}
 					}
-				}else{//27691 START - to view owner&director & save if smsupplierowner empty
+				}else{//27691 START - to view owner&director if smsupplierowner empty
 					if(this.getManagedBean().getSmSupp().getSmAppl().isApplValidWithSsm()){
 						this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>());
 						for(SmPersonnel personnel: this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels()){
@@ -2449,7 +2449,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								if(personnel.isDirector()){
 									this.getManagedBean().getSmPersonnelDirector().add(personnel);
 								}
-								if(personnel.isEquityOwner() || personnel.isDirector()){
+								if(personnel.isEquityOwner()){
 									SmSupplierOwner suppOwner = new SmSupplierOwner();
 									suppOwner.setSmSupplier(this.getManagedBean().getSmSupp());
 									suppOwner.setOwnerName(personnel.getName());
