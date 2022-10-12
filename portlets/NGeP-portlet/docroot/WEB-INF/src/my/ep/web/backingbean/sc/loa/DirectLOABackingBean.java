@@ -9088,7 +9088,25 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			gstRegFlag = "true";
 		}
 		context.put("gstRegFlag", gstRegFlag);
+		//26770 - start
+		if(supplier.getRegNo() != null && !supplier.getRegNo().equalsIgnoreCase("")){
+			context.put("regNo", supplier.getRegNo());
+		}else{
+			context.put("regNo","______________"); 
+		}
 		
+		
+		if (null != supplier.getSmAppl()){
+			if (null != supplier.getSmAppl().getSmCompanyBasic()){
+				if (null != supplier.getSmAppl().getSmCompanyBasic().getRobExpiryDate()){
+					context.put("ssmExpired",new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(supplier.getSmAppl().getSmCompanyBasic().getRobExpiryDate()));
+				}else{
+					context.put("ssmExpired","______________"); 
+				}
+				
+			}
+		}
+		//26770-end
 //		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
 		setSstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
 		setMofInfoForAgreementLetter(context, scLoa, myLocale);
