@@ -13072,7 +13072,7 @@ if (null != checklist && !checklist.isEmpty()) {
 					new Long[] { QTStatusConst.SE_PENDING_ENDORSMENT, QTStatusConst.SE_PENDING_SIGNOFF,
 							QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT, QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF }).contains(
 					statusId)) {
-				throw new EpException(MessageConst.ERROR_100048);
+				throw new EpException(MessageConst.ERROR_775188, new String[] { this.getManagedBean().getQt().getQtNo() });
 			}
 			// Bug #33661@Syazani 07/10/2022 -- End
 			
