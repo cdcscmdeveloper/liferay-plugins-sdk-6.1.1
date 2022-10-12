@@ -539,8 +539,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				//#16190 start
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					messageId = MessageConst.INFO_700112;
-					//*comment the next role because the message has been hardcoded.
-					//nextRole = RoleCode.BPK_PQ_APPROVER.value();
+					nextRole = RoleCode.BPK_PQ_APPROVER.value();
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700113;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
