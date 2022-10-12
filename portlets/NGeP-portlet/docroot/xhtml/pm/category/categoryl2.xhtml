@@ -154,9 +154,9 @@
 						<p:inputTextarea id="remarkFieldId" cols="50" style="width:auto;" maxlength="1000" 
 						value="#{categoryBackingBean.managedBean.remarkCategory}" autoResize="false"
 						disabled="#{categoryBackingBean.remarkDisable}" required="#{!categoryBackingBean.remarkDisable}"
+						validator="#{categoryBackingBean.validateRequiredField}"
 						requiredMessage="#{lbl['lbl.pm.categ.remark.sub.required']}"
 						validatorMessage="#{lbl['lbl.pm.categ.remark.sub.required']}">
-						<p:ajax event="change" listener="#{categoryBackingBean.checkRemarkSubCategory()}" />
 						</p:inputTextarea>
 						<ac:iconTooltip value="#{lbl['lbl.pm.categ.remark.main.tooltips']}"/>
 					</td>
