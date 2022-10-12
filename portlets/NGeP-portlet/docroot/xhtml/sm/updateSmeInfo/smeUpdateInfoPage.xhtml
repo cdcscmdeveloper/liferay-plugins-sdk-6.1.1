@@ -203,15 +203,16 @@
 							</p:commandLink>
 							<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}"
 								rendered="#{empty doc.fileName}" />
-							<p:commandLink id="deleteAttId"
-								style="white-space: normal !important;" partialSubmit="true"
-								rendered="#{not empty doc.fileName}" process="@this"
-								action="#{smUpdateSmeInfoBackingBean.onDeleteAttachment(doc)}"
-								update="@form" onstart="blockWidget.show()"
-								oncomplete="blockWidget.hide()">&#160;<p:graphicImage
-									value="/css/images/design/icon_trash.png"
-									title="#{lbl['lbl.sm.sme.action.delete.attachment']}" />
-							</p:commandLink>
+							<!-- #29617 ReOpen note #97 - Start -->
+							<p:commandLink id="deleteAttId" 
+								style="white-space: normal !important;" partialSubmit="true" 
+								rendered="#{not empty doc.fileName}" process="@this" 
+								action="#{smUpdateSmeInfoBackingBean.onDeleteAttachment(doc)}" 
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()">&#160;<p:graphicImage
+									value="/css/images/design/icon_trash.png" 
+									title="#{lbl['lbl.sm.sme.action.delete.attachment']}" /> 
+							</p:commandLink> 
+							<!-- #29617 ReOpen note #97 - End -->
 						</p:column>
 					</p:dataTable>
 				</p:outputPanel>
@@ -244,11 +245,14 @@
 			header="#{lbl['lbl.sm.sme.upload.delete.confirm.header']}"
 			severity="alert" widgetVar="confirmUploadDeleteDialog">
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sm.sme.txt.yes']}"
-					onclick="confirmUploadDeleteDialog.hide();"
-					action="#{smUpdateSmeInfoBackingBean.deleteAttachment}"
-					update="@form" partialSubmit="true" onstart="blockWidget.show()"
-					oncomplete="blockWidget.hide()" process="@this" />
+				<!-- #29617 ReOpen note #97 - End -->
+				<p:commandButton value="#{lbl['lbl.sm.sme.txt.yes']}" 
+					onclick="confirmUploadDeleteDialog.hide();" 
+					action="#{smUpdateSmeInfoBackingBean.deleteAttachment}" 
+					update="smeSuppDocDtId" partialSubmit="true"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					process="@this" />
+				<!-- #29617 ReOpen note #97 - End -->
 				<p:commandButton value="#{lbl['lbl.sm.sme.txt.no']}"
 					onclick="confirmUploadDeleteDialog.hide();" />
 			</div>
