@@ -11237,6 +11237,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 							&& oldQuestion.getClItem()!=null && oldQuestion.getClItem()!=""
 							&& newQuestion.getClItem().trim().replaceAll("\\s", "").equalsIgnoreCase(
 							   oldQuestion.getClItem().trim().replaceAll("\\s", ""))){
+									specMaster.setTplSpecQuestions(questionsListNew);
 									throw new EpException(MessageConst.ERROR_760340,
 										  new String[] { oldQuestion.getClItem() });
 						}
