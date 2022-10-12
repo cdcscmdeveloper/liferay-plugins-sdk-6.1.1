@@ -1180,6 +1180,15 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				&& !StringUtils.isBlank(appl.getApplType()) && appl
 				.getApplType().equals(SupplierManagementConst.ACC_BASIC)) ? true
 				: false;
+		// #31462 - start
+		// check role for downgrade MOF
+		if (!basic
+				&& (getManagedBean().getLoginUserPersonnelInfo().getEpRole()
+						.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || getManagedBean().getLoginUserPersonnelInfo()
+						.getEpRole().equals(RoleCode.BASIC_SUPPLIER_USER.value()))) {
+			basic = true;
+		}
+		// #31462 - end
 		String businessType = (appl != null && appl.getSmSupplier() != null) ? appl
 				.getSmSupplier().getBusinessType() : StringUtils.EMPTY;
 		List<PmDocument> softcertSuppDocList = new ArrayList<PmDocument>();
@@ -1201,9 +1210,13 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					reqDTO.setCompanyTypeCode(businessType);
 					reqDTO.setOwner(softcertUploadSuppDocVO.getPersonnel()
 							.isEquityOwner());
-					reqDTO.setFirstUser(softcertUploadSuppDocVO.getPersonnel()
-							.getEpRole().equals(RoleCode.SUPPLIER_TEMP.value()) ? true
-							: false);
+					// #31462 - start
+					reqDTO.setFirstUser((softcertUploadSuppDocVO.getPersonnel().getEpRole()
+							.equals(RoleCode.SUPPLIER_TEMP.value())
+							|| softcertUploadSuppDocVO.getPersonnel().getEpRole()
+									.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || softcertUploadSuppDocVO
+							.getPersonnel().getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value())) ? true : false);
+					// #31462 - end
 					reqDTO.setForeigner(softcertUploadSuppDocVO
 							.getPersonnel()
 							.getPmCountry()
