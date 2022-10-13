@@ -283,7 +283,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setHeaderName(SmCommonUtil.getMessage("lbl.sm.directorinfo", null));
 		//#27691 - Start
 		//Display both director and owner
-		}else if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())){
+		}else if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
+				|| (!this.getManagedBean().getSmSupp().getSmAppl().isApplValidWithSsm() 
+				&& (SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())))){
 			this.getManagedBean().setHeaderName(SmCommonUtil.getMessage("lbl.sm.llp.ownerinfo", null));
 			this.getManagedBean().setShowDirectorInOwner(true);
 		//#27691 - End
@@ -2372,7 +2375,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
 					// start #29956
 					//27691 START
-					if (businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(), this
+					if (SmCommonUtil.getInstance().ssmActive()
+							&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(), this
 							.getManagedBean().getSmSupp().getBusinessType())) {
 						this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>());
 					}
@@ -3199,7 +3203,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		} else {
 			return !this.getManagedBean().isShowOwnerPersonnel() && 
 					(!this.getManagedBean().isViewMode()
-							&& !businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(), this.getManagedBean().getSmSupp().getBusinessType()));
+							&& !this.getManagedBean().getSmSupp().getSmAppl().isApplValidWithSsm()); 
 		}		
 	}
 	//27691 START
@@ -3218,9 +3222,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smSupplierOwner.setIdentificationType(identificationType);
 		smSupplierOwner.setIdentificationTypeId(identificationType.getParameterId());
 		smSupplierOwner.setShowTextField(true);
-		//to auto tick checkbox if other than LLP business type
-		if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP
-				.equalsIgnoreCase(businessType)){
+		//to auto tick checkbox if other than LLP&ROC business type
+		if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP.equalsIgnoreCase(businessType)
+				|| (!this.getManagedBean().getSmSupp().getSmAppl().isApplValidWithSsm() 
+					&& (SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD.equalsIgnoreCase(businessType)
+				    || SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD.equalsIgnoreCase(businessType)))){
 			smSupplierOwner.setOwnerIsEquity(false);
 			smSupplierOwner.setOwnerIsDirector(false);
 		}else if (SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG
