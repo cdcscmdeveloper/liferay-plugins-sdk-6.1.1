@@ -28,6 +28,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.sm.SmSupplierBank; //Fix - #33674
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -154,7 +155,12 @@ public class ContractManagedBean extends BaseManagedBean {
 	
 	private Map<Long, CtAgency> agencyDataDeletion;
 	//End Fix - #31740
-	
+	//Start Fix - #33674
+	private String bankInfoDetails;
+	private Map<String, SmSupplierBank> supplierBankAccNo;
+	private Map<String, SmSupplierBank> supplierBankName;
+	private Long applID;
+	//End Fix - #33674
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1299,4 +1305,45 @@ public class ContractManagedBean extends BaseManagedBean {
 			this.agencyDataDeletion = agencyDataDeletion;
 		}
 		// End Fix - #31740
+		
+		// Start Fix - #33674
+		public String getBankInfoDetails() {
+			return bankInfoDetails;
+		}
+
+		public void setBankInfoDetails(String bankInfoDetails) {
+			this.bankInfoDetails = bankInfoDetails;
+		}
+
+		public Map<String, SmSupplierBank> getSupplierBankAccNo() {
+			if (supplierBankAccNo == null) {
+				supplierBankAccNo = new HashMap<String, SmSupplierBank>();
+			}
+			return supplierBankAccNo;
+		}
+
+		public void setSupplierBankAccNo(Map<String, SmSupplierBank> supplierBankAccNo) {
+			this.supplierBankAccNo = supplierBankAccNo;
+		}
+
+		public Map<String, SmSupplierBank> getSupplierBankName() {
+			if (supplierBankName == null) {
+				supplierBankName = new HashMap<String, SmSupplierBank>();
+			}
+			return supplierBankName;
+		}
+
+		public void setSupplierBankName(Map<String, SmSupplierBank> supplierBankName) {
+			this.supplierBankName = supplierBankName;
+		}
+
+		public Long getApplID() {
+			return applID;
+		}
+
+		public void setApplID(Long applID) {
+			this.applID = applID;
+		}
+	    //End Fix - #33674
+
 }
