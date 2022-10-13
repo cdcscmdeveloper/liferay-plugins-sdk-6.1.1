@@ -17,26 +17,29 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="18%"><h:outputLabel
-						value="#{lbl['lbl.sc.account.no']}" /> <p:outputLabel value="*"
+						value="#{isSupplierAckStatus ? lbl['lbl.sc.account.no.bank.name'] : lbl['lbl.sc.account.no']}" /> <!-- 20220908@syazani - Bug #33674 -->
+						<p:outputLabel value="*" 
 						styleClass="mandatory" rendered="#{isSupplierAckStatus}" /></td>
 				<td width="82%">
 					<c:choose>
 						<c:when test="#{isSupplierAckStatus and !directLOABackingBean.managedBean.readOnly}">
+						<!-- 20220908@syazani - Bug #33674 - Start -->
 							<p:selectOneMenu id="accountNoId"
-								value="#{directLOABackingBean.managedBean.scLoa.bankAccNo}"
+								value="#{directLOABackingBean.managedBean.supplierBankId}"
 								style="width:277px;margin-bottom: 5px;"
 								required="false" label="#{lbl['lbl.sc.account.no']}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{directLOABackingBean.managedBean.bankList}"
 									var="smSupplierBank"
-									itemValue="#{smSupplierBank.accountNo}"
-									itemLabel="#{smSupplierBank.accountNo}" />
+									itemValue="#{smSupplierBank.supplierBankId}"
+									itemLabel="#{smSupplierBank.accountNo} / #{smSupplierBank.pmFinancialOrg.finOrgName}" />
 								<p:ajax event="change"
 									listener="#{directLOABackingBean.handleBankDetailsChanged}"
 									partialSubmit="true" process="@this"
 									update="bankName, bankBranch, bankAddress" />
 							</p:selectOneMenu>
+							<!-- 20220908@syazani - Bug #33674 - End -->
 							<p:message id="accountNoIdMsg" for="accountNoId" display="icon" />
 						</c:when>
 						<c:otherwise>
@@ -47,7 +50,7 @@
 					</c:choose>
 				</td>
 			</tr>
-			<tr>
+			<tr style="display: #{isSupplierAckStatus ? 'none' : ''};"> <!-- 20220908@syazani - Bug #33674 -->
 				<td><h:outputLabel value="#{lbl['lbl.sc.bank.name']}" /></td>
 				<td><p:inputText id="bankName"
 						value="#{directLOABackingBean.managedBean.scLoa.bankName}"
