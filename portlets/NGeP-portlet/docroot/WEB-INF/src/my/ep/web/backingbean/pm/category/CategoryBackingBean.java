@@ -27,10 +27,12 @@ import java.util.Set;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
@@ -39,6 +41,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -47,15 +50,15 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBasicCategory;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -66,6 +69,9 @@ import my.ep.persistence.entity.pm.common.PmMachineCategory;
 import my.ep.persistence.entity.pm.common.PmMachineSection;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+//start #29665
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -78,6 +84,7 @@ import my.ep.web.managedbean.pm.category.CategoryManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -86,15 +93,6 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-
-//start #29665
-import my.ep.persistence.entity.pm.common.PmRemarkCategory;
-import my.ep.persistence.logging.LogKey;
-import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.web.util.pm.helper.ParameterHelper;
-import java.util.Arrays;
 //end #29665
 
 /**
@@ -1256,14 +1254,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		new LogKey(loginSessionUserId);
 		//end #29665 add log key
 		
-		//29665 - Start
+		/*//29665 - Start - remove this code
 		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
 			throw new EpException(MessageConst.ERROR_775188, new String[]{ResourceBundleUtils.getMessage(
 					"lbl.pm.main.category", 
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale())});
 		   }
-		//29665 - End
+		//29665 - End */
 		
 		try {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
@@ -1495,14 +1493,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		new LogKey(loginSessionUserId);
 		//end #29665 add log key
 		
-		//29665 - Start
+		/*//29665 - Start - remove this code
 		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
 			throw new EpException(MessageConst.ERROR_775188, new String[]{ResourceBundleUtils.getMessage(
 					"lbl.pm.sub.category", 
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale())});
 		   }
-		//29665 - End
+		//29665 - End*/
 		
 		try {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
@@ -1762,13 +1760,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			throw new EpException(MessageConst.ERROR_775006);
 		}
 
-		// 29665 - Start
+		/*// 29665 - Start - remove this code
 		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
 			throw new EpException(MessageConst.ERROR_775188,
 					new String[] { ResourceBundleUtils.getMessage("lbl.pm.sub.div",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
 		}
-		// 29665 - End
+		// 29665 - End */
 
 		// validation for fields
 		validatePmCategoryL3();
@@ -4511,4 +4509,20 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 	//end #29665
 
+	//#29665 - Start
+	public void validateRequiredField(FacesContext facesContext, UIComponent uiComponent, Object value) {
+
+		String remarkValue = value.toString();
+		
+		String labelNameVal = (String) uiComponent.getAttributes().get(
+				"labelName");
+
+		if (StringUtils.isBlank(remarkValue)) {			
+			throw new ValidatorException(new FacesMessage(
+					FacesMessage.SEVERITY_ERROR, "Required field error",
+					PmCommonUtil.getMessage("lbl.pm.categ.remark.required",
+							new String[] { labelNameVal })));
+		}
+	}
+	//#29665 - End
 }
