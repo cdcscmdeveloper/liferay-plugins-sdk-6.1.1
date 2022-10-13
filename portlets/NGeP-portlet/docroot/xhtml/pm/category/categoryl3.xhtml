@@ -406,11 +406,11 @@
 						<p:inputTextarea id="remarkFieldId" cols="50" maxlength="1000" value="#{categoryBackingBean.managedBean.remarkCategory}"
 						disabled="#{categoryBackingBean.remarkDisable}" required="#{!categoryBackingBean.remarkDisable}"
 						validator="#{categoryBackingBean.validateRequiredField}"
-						requiredMessage="#{lbl['lbl.pm.categ.remark.div.required']}" autoResize="false"
-						validatorMessage="#{lbl['lbl.pm.categ.remark.div.required']}">
+						requiredMessage="#{lbl['lbl.pm.categ.remark.div.required']}" autoResize="false">
 						<p:ajax event="change" update="@(.catLevelClass :not(.ui-inputfield,.ui-selectonemenu)) 
 						tabCatId:tabpanel1,tabCatId:tabpanel2" 
 						process="@this"/>
+						<f:attribute name="labelName" value="#{lbl['lbl.pm.sub.div']}" />
 						</p:inputTextarea>
 						<ac:iconTooltip value="#{lbl['lbl.pm.categ.remark.main.tooltips']}"/>
 					</td>
