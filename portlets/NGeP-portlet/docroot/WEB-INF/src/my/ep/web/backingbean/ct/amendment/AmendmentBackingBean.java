@@ -43,6 +43,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
+import my.ep.biz.service.ct.bank.IChangeBankAccSO; // Fix - #33674
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -681,6 +682,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				this.getManagedBean().setSignUpdateDecision(false);
 			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
 				this.getManagedBean().setAckFA(ContractConst.SUPPLIER_ACK_LOA);
+				setBankDetails(); // Fix - #33674
 				changeAccountActionListener();
 
 			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME) 
@@ -1190,6 +1192,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		IContractAmendmentSO contractAmendmentSO = null;
 		ContractReqDTO reqDTO = null;
 		try {
+			splittedAccNoAndBankname(); //Fix - #33674
 			/*Validation for login user's org profile before initiate contract task*/
 			if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)
 					&& ctBackingBean.getManagedBean().getContractVer().getStatus() != null
@@ -4084,30 +4087,64 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 
+//  Start Fix - #33674 
 	/**
 	 * The method used to set the bank and account information
 	 * when user select a bank from the selection list.
 	 */
 	public void changeAccountActionListener() {
-		if (this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
-			for (SmSupplierBank supplierBank : this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()) {
-				if (supplierBank.getAccountNo().equalsIgnoreCase(
-						this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())) {
-					this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
-					this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getBankBranch());
-					if (supplierBank.getSmAddress() != null) {
-						this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankAddress(CtAddressUtil.convertSmAddressToCtAddress(supplierBank.getSmAddress()));
-					} else {
-						this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
+		IChangeBankAccSO changeBankAccSO = null;
+		ContractReqDTO reqDTO = null;
+		ContractResDTO resDTO = null;
+		try {
+			String[] splittedBankDetails = splittedAccNoAndBankname();
+			if (splittedBankDetails != null
+					&& ((splittedBankDetails[0] != null && !splittedBankDetails[0].isEmpty()) && (splittedBankDetails[1] != null && !splittedBankDetails[1]
+							.isEmpty()))) {
+				String bankAccNo = splittedBankDetails[0];
+				String bankname = splittedBankDetails[1];
+				SmSupplierBank supplierBank = ctBackingBean.getManagedBean().getSupplierBankAccNo().get(bankAccNo);
+				SmSupplierBank supplierBankname = ctBackingBean.getManagedBean().getSupplierBankName().get(bankname);
+
+				changeBankAccSO = (IChangeBankAccSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.CONTRACT_MANAGEMENT, IChangeBankAccSO.class);
+				reqDTO = new ContractReqDTO();
+				reqDTO.setBankAccNo(bankAccNo);
+				reqDTO.setBankName(bankname);
+				if (ctBackingBean.getManagedBean().getApplID() != null) {
+					reqDTO.setApplID(ctBackingBean.getManagedBean().getApplID());
+				}
+				resDTO = changeBankAccSO.getBankDetails(reqDTO);
+				if (resDTO.isSuccessful()) {
+					if (supplierBank != null && supplierBankname != null) {
+						if ((supplierBank.getAccountNo() != null && supplierBank.getAccountNo().equals(
+								resDTO.getBankAccNO()))
+								&& (supplierBankname.getPmFinancialOrg().getFinOrgName() != null && supplierBankname
+										.getPmFinancialOrg().getFinOrgName().equals(resDTO.getBankName()))) {
+							ctBackingBean.getManagedBean().getContractVer().getCtContractValue()
+									.setBankName(resDTO.getBankName());
+							ctBackingBean.getManagedBean().getContractVer().getCtContractValue()
+									.setBankBranch(resDTO.getBankBranch());
+							ctBackingBean
+									.getManagedBean()
+									.getContractVer()
+									.getCtContractValue()
+									.setBankAddress(
+											CtAddressUtil.convertSmAddressToCtAddress(resDTO.getBankAddressId()));
+						} 
 					}
 				}
 			}
-		} else {
-			this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankName(null);  
-			this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
-			this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			changeBankAccSO = null;
+			resDTO = null;
 		}
 	}
+//  End Fix - #33674 
 
 	/**
 	 * The method used for validating the duplicate chairperson.
@@ -4525,6 +4562,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		
 	}
 
+//  Start Fix - #33674 
 	/**
 	 * The method used for generating a list of available bank and account
 	 * for supplier as selection.
@@ -4536,23 +4574,31 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()!= null
 					&& this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
 				populateBankAccountList = new ArrayList<SelectItem>();
+				for (SmSupplierBank obj : ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()) {
+					String account = obj.getAccountNo();
+					if (obj.getPmFinancialOrg() != null) {
+						account = account + ContractConst.SPACE_SLASH + obj.getPmFinancialOrg().getFinOrgName();
+					}
+					populateBankAccountList.add(new SelectItem(account,account));
+					if(!ctBackingBean.getManagedBean().getSupplierBankAccNo().containsKey(obj.getAccountNo())){
+						ctBackingBean.getManagedBean().getSupplierBankAccNo().put(obj.getAccountNo(), obj);
+					}
+					if(!ctBackingBean.getManagedBean().getSupplierBankName().containsKey(obj.getPmFinancialOrg().getFinOrgName())){
+						ctBackingBean.getManagedBean().getSupplierBankName().put(obj.getPmFinancialOrg().getFinOrgName(), obj);
+					}			
+				}    
 				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() == 1) {
 					ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(
 							ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().get(0).getAccountNo());
 					changeAccountActionListener();
 				}
-				for (SmSupplierBank obj : ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()) {
-					String account = obj.getAccountNo();
-					if (obj.getPmFinancialOrg() != null) {
-						account = account + " / " + obj.getPmFinancialOrg().getFinOrgName();
+				ctBackingBean.getManagedBean().setApplID(ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getApplId());
 					}
-					populateBankAccountList.add(new SelectItem(obj.getAccountNo(),account));
 				}     
-			}
-		}
 		return populateBankAccountList;
 	}
-
+//End Fix - #33674 
+	
 	/**
 	 * The method used for generating a list of available display type
 	 * of product or service item as selection.
@@ -6602,5 +6648,33 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	// End Fix - #33256
+	
+	// Start Fix - #33674
+	public String[] splittedAccNoAndBankname() {
+		String bankDetails = ctBackingBean.getManagedBean().getBankInfoDetails();
+		String[] bankDetailsSplitted = null;
+		if (bankDetails != null) {
+			if (bankDetails.length() > 30 || bankDetails.contains(ContractConst.SPACE_SLASH)) {
+				bankDetailsSplitted = bankDetails.split(ContractConst.SPACE_SLASH);
+				ctBackingBean.getManagedBean().getContractVer().getCtContractValue()
+						.setBankAccountNo(bankDetailsSplitted[0]);
+				ctBackingBean.getManagedBean().getContractVer().getCtContractValue()
+						.setBankName(bankDetailsSplitted[1]);
+					}
+				}
+		return bankDetailsSplitted;
+				}
+				
+	public void setBankDetails() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
+			String account = ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo();
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankName() != null) {
+				account = account + ContractConst.SPACE_SLASH
+						+ ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankName();
+				}
+			ctBackingBean.getManagedBean().setBankInfoDetails(account);
+				}
+				}
+	// End Fix - #33674
 
 }
