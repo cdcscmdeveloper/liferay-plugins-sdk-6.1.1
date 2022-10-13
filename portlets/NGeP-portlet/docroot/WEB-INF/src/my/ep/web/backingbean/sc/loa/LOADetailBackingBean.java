@@ -466,6 +466,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					scLoa.getScLoaRemarks(), ScLoaRemark.class));
 			// #11134 - end
 			
+			retrieveValBankAccNoDropdown(); //Bug #33674@Syazani -- 14/09/2022
+			
 			//Enhancement #24259 #24269
 //			isGSTRegActive();
 //			isSSTRegActive();
@@ -2739,12 +2741,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		debugLogger("handleBankDetailsChanged");
 
 		ScLoa scLoa = this.getManagedBean().getScLoa();
+		//Bug #33674@Syazani -- Start 08/09/2022
+		Long supplierBankId = this.getManagedBean().getSupplierBankId();
 
-		if (scLoa.getBankAccNo() != null) {
+		// if (scLoa.getBankAccNo() != null) {
+		if (supplierBankId != null) {
 			List<SmSupplierBank> bankList = this.getManagedBean().getBankList();
 
 			for (SmSupplierBank supplierBank : bankList) {
-				if (supplierBank.getAccountNo().equals(scLoa.getBankAccNo())) {
+				// if (supplierBank.getAccountNo().equals(scLoa.getBankAccNo())) {
+				if (supplierBank.getSupplierBankId().equals(supplierBankId)) {
+					// Bug #33674@Syazani -- End 08/09/2022
 					log.info("found supplier bank");
 
 					scLoa.setBankAccNo(supplierBank.getAccountNo());
@@ -2919,6 +2926,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 					String outcome = BpmOutcomeConst.BPM_SAVE;
 					ScLoa scLoa = this.getManagedBean().getScLoa();
+					
+					boolean isNewLoa = false; //Bug #33188
 				// #19336 -start-
 				boolean validateWitness = this.getManagedBean().isValidatewitness();
 				// #19336 -end-
@@ -2963,6 +2972,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					if (!supplier) {
 						updateContractDetails(scLoa);
 					}
+					 //Bug #33188 start
+					if (scLoa.isBrandNew()) {
+						isNewLoa = true;
+					}
+					//Bug #33188 end
 		
 					AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 					reqDTO.setPayLoad(getManagedBean().getPayLoad());
@@ -2993,9 +3007,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					// #19336 -start-
 					this.getManagedBean().setValidatewitness(validateWitness);
 					// #19336 -end-
-						
-						successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
-								scLoa.getLoaNo(), Boolean.FALSE);
+							
+						 //Bug #33188 start
+						if (isNewLoa){
+							renewSesionObject();
+							successMessage(MessageConst.INFO_7000044, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
+									scLoa.getLoaNo(), Boolean.TRUE);
+						}else{
+							successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
+									scLoa.getLoaNo(), Boolean.FALSE);
+						}
+						 //Bug #33188 end
 					}
 				 }
 
@@ -7338,4 +7360,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}			
 		return validDate;	
 	}
+	
+	
+	//Bug #33674@Syazani -- Start 14/09/2022
+	private void retrieveValBankAccNoDropdown() {
+		List<SmSupplierBank> lstSupplierBank = getManagedBean().getBankList();
+		ScLoa tmpScLoa = getManagedBean().getScLoa();
+		if (tmpScLoa != null && lstSupplierBank != null && lstSupplierBank.size() > 0 && tmpScLoa.getBankAccNo() != null) {
+			for (SmSupplierBank ssb : lstSupplierBank) {
+				if (ssb.getAccountNo().equalsIgnoreCase(tmpScLoa.getBankAccNo())
+						&& ssb.getPmFinancialOrg().getFinOrgName().equalsIgnoreCase(tmpScLoa.getBankName())) {
+					getManagedBean().setSupplierBankId(ssb.getSupplierBankId());
+					break;
+				}
+			}
+		}
+	}
+	//Bug #33674@Syazani -- End 14/09/2022
 }
