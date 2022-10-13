@@ -1599,6 +1599,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean committeeAppointmentMenuTab = true;
 	//29464-end
 	
+	// #32929 - start
+	private boolean zoneRdbButtonChecked = Boolean.FALSE;
+	// #32929 - end
+	
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -10081,5 +10085,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.committeeAppointmentMenuTab = committeeAppointmentMenuTab;
 	}
 	//29464-end
+
+	public boolean isZoneRdbButtonChecked() {
+		return zoneRdbButtonChecked;
+	}
+
+	public void setZoneRdbButtonChecked(boolean zoneRdbButtonChecked) {
+		this.zoneRdbButtonChecked = zoneRdbButtonChecked;
+	}
 
 }
