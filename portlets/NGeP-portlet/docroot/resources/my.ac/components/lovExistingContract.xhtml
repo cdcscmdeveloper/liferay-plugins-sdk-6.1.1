@@ -34,6 +34,9 @@
 	<cc:attribute name="displayResultWhenFirstLoad" default="true" />
 	<cc:attribute name="displayResultWhenReset" default="true" />
 	<cc:actionSource name="actionEvent" targets="#{cc.attrs.id}#{cc.attrs.selectionMode eq 'multiple' ? 'lovBtn' : (cc.attrs.uiMode eq 'button' ? 'lovSingleBtn' : 'lovLink')}" />
+	<cc:attribute name="autoResize" default="false"/>
+	<cc:attribute name="maxlength"/>
+
 </cc:interface>
 
 <cc:implementation>
@@ -49,7 +52,9 @@
 				disabled="#{cc.attrs.disabled}"
 				required="#{cc.attrs.required}"
 				label="#{cc.attrs.label}"
-				rows="#{cc.attrs.rows}" cols="#{cc.attrs.cols}">
+				rows="#{cc.attrs.rows}" cols="#{cc.attrs.cols}"
+				autoResize="#{cc.attrs.autoResize}"
+				maxlength="#{cc.attrs.maxlength}">
 				
 				<!-- <f:valueChangeListener type="my.ep.web.backingbean.components.lov.PopulateObjectListener" /> -->
 				
@@ -57,7 +62,6 @@
 				<f:attribute name="lovId" 			value="#{cc.attrs.lovId}" />
 				<f:attribute name="saveObject" 		value="#{cc.attrs.saveObject}" />
 				<f:attribute name="lovBB" 			value="#{lovBackingBean}" />
-				
 			</p:inputTextarea>
 	</h:panelGroup>
 	
