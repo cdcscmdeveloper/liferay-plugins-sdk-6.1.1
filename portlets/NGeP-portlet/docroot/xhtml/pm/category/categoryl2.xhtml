@@ -155,8 +155,8 @@
 						value="#{categoryBackingBean.managedBean.remarkCategory}" autoResize="false"
 						disabled="#{categoryBackingBean.remarkDisable}" required="#{!categoryBackingBean.remarkDisable}"
 						validator="#{categoryBackingBean.validateRequiredField}"
-						requiredMessage="#{lbl['lbl.pm.categ.remark.sub.required']}"
-						validatorMessage="#{lbl['lbl.pm.categ.remark.sub.required']}">
+						requiredMessage="#{lbl['lbl.pm.categ.remark.sub.required']}">
+						<f:attribute name="labelName" value="#{lbl['lbl.pm.sub.category']}" />
 						</p:inputTextarea>
 						<ac:iconTooltip value="#{lbl['lbl.pm.categ.remark.main.tooltips']}"/>
 					</td>

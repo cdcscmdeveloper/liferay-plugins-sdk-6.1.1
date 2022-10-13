@@ -27,7 +27,6 @@ import java.util.Set;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
@@ -93,6 +92,8 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import javax.faces.component.UIComponent;
+import javax.faces.validator.ValidatorException;
 //end #29665
 
 /**
@@ -4512,10 +4513,16 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	//#29665 - Start
 	public void validateRequiredField(FacesContext facesContext, UIComponent uiComponent, Object value) {
 
-		String s = value.toString();
+		String remarkValue = value.toString();
+		
+		String labelNameVal = (String) uiComponent.getAttributes().get(
+				"labelName");
 
-		if (StringUtils.isBlank(s)) {
-			throw new EpException("Remark is mandatory.");
+		if (StringUtils.isBlank(remarkValue)) {			
+			throw new ValidatorException(new FacesMessage(
+					FacesMessage.SEVERITY_ERROR, "Required field error",
+					PmCommonUtil.getMessage("lbl.pm.categ.remark.required",
+							new String[] { labelNameVal })));
 		}
 	}
 	//#29665 - End
