@@ -301,6 +301,11 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	//#11134 -start-
 	private List<ScLoaRemark> supplierRemarks;
 	//#11134 -end-	
+	
+	
+	//Bug #33674@Syazani - Start
+	private Long supplierBankId = null;
+	//Bug #33674@Syazani - End	
 
     /**
      * Gets the spki backing bean.
@@ -1686,4 +1691,12 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.supplierRemarks = supplierRemarks;
 	}
 	//#11134 -end-
+
+	public Long getSupplierBankId() {
+		return supplierBankId;
+	}
+
+	public void setSupplierBankId(Long supplierBankId) {
+		this.supplierBankId = supplierBankId;
+	}
 }
