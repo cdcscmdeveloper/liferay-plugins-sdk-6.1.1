@@ -246,6 +246,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 
 			if (qualifiedSupp.isEmpty()) {
 				this.getManagedBean().setQualifiedSupplier(false);
+				this.getManagedBean().setShowCancelButton(true);
 				RequestContext context = RequestContext.getCurrentInstance();
 				context.execute("democancel.show();");
 
@@ -1242,6 +1243,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 	public void demoCancel() {
 		retrieveQuotationTenderDetails(this.getManagedBean().getQt().getQtId(), this.getManagedBean()
 				.getCommitteeType());
+		this.getManagedBean().setShowCancelButton(false);
 		this.getManagedBean().setActiveIndex(0);
 	}
 
