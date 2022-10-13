@@ -683,7 +683,11 @@ public class SpecificationBackingBean extends
 			isTemplateSpecStatus(techCheckList, scqt);
 
 		} else {
-			retriveTechnicalCheckList();
+			//1873 note 195 start
+			if(CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())){
+				retriveTechnicalCheckList();
+			}
+			//1873 note 195 end
 			techCheckList = this.getManagedBean().getScQtCheckSt2techProposal();
 
 			if (null == techCheckList || techCheckList.isEmpty()) {
@@ -1317,7 +1321,11 @@ public class SpecificationBackingBean extends
 			addDemoTechnicalCheckList(); //#28784
 			break;
 		case 3:
-			retriveTechnicalCheckList();//1873 note 86
+			//1873 note 195 start
+			if(CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())){
+				retriveTechnicalCheckList();//1873 note 86
+			}
+			//1873 note 195 end
 			retriveFinancialCheckList();
 			// checktemplateSpecStatus(this.getManagedBean().getQt());
 			break;
