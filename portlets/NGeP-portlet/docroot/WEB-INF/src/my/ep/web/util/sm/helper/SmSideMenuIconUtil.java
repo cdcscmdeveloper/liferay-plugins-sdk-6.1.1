@@ -669,6 +669,11 @@ public class SmSideMenuIconUtil {
 							//#31043
 							bean.setCategoryCodeVerified(false);
 						}
+						
+						//31043 git test
+						if(retVal.equals(ICON_TICK)){
+							log.info("Success");
+						}
 					}
 				}
 			} else if (sectionType
