@@ -3249,7 +3249,7 @@ public class QTDetailBackingBean extends
 			}
 			// #25077 End
 
-			//#30477 Start Vinod
+			// #30477, #25426 Start
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				for (ScQtCommittee committee : this.getManagedBean().getQt().getScQtCommittees()) {
 					if ((committee.getScCommittee().getCommitteStatus().getStatusId()
@@ -3257,7 +3257,8 @@ public class QTDetailBackingBean extends
 							.equals(QTStatusConst.QT_RE_EVALUATION)) && outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
 						for (ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()) {
 							for (ScQtApproverSettings approverSetting : approval.getApproverSettings()) {
-								if (isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())) {
+								if (isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(),
+										RoleCode.COMMITTEE_APPROVER.value())) {
 									throw new EpException(MessageConst.ERROR_775171);
 								}
 							}
@@ -3270,7 +3271,8 @@ public class QTDetailBackingBean extends
 				if ((currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION) || currentStatus
 						.equals(QTStatusConst.QT_REVISION_PUBLICATION)) && outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
 					for (ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()) {
-						if (isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())) {
+						if (isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(),
+								RoleCode.PUBLICATION_APPROVER.value())) {
 							this.getManagedBean().setResetBpkCurrentArea(false); //#25077
 
 							throw new EpException(MessageConst.ERROR_775172);
@@ -3278,7 +3280,7 @@ public class QTDetailBackingBean extends
 					}
 				}
 			}
-			//#30477 End Vinod
+			// #30477, #25426 End
 
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
 					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION)
@@ -10044,43 +10046,83 @@ public class QTDetailBackingBean extends
 	}
 	// 29464-end
 	  	
-    //#30477 - Start
-  	public boolean isInactiveCommiteeApproverRole(Long userId) {
+	// #30477, #25426 - Start
+	public boolean isInactiveCommiteeApproverRole(Long userId, String approverRole) {
 		IQTDetailSO detailSO = null;
 		
 		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			
+			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class);
+
+			boolean inactive = DbValueConst.FLAG_NO;
+
 			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 			PmUserOrg pmUserOrgs = new PmUserOrg();
-			
-			quationTenderReqDTO.setUserId(userId);
-			pmUserOrgs = detailSO.retrievePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
-			
-			PmUserOrg pmUserOrg = PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(userId, pmUserOrgs.getUserOrgId());
-			
-			boolean inactive = DbValueConst.FLAG_YES;
 
-			for (PmUserRole roles : pmUserOrg.getPmUserRoles()) {	
-				if (RoleCode.COMMITTEE_APPROVER.value().equals(roles.getPmRole().getRoleCode())
-						&& roles.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-					inactive = DbValueConst.FLAG_NO;
-				} else if (RoleCode.PUBLICATION_APPROVER.value().equals(roles.getPmRole().getRoleCode())
-						&& roles.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-					inactive = DbValueConst.FLAG_NO;	
+			quationTenderReqDTO.setUserId(userId);
+			
+			pmUserOrgs = detailSO.retrievePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
+
+			if (pmUserOrgs != null && pmUserOrgs.getUserOrgId() != null) {
+
+				PmUserOrg pmUserOrg = PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(userId, pmUserOrgs.getUserOrgId());
+
+				if (approverRole.equals(RoleCode.COMMITTEE_APPROVER.value())) {
+					for (PmUserRole rolesCA : pmUserOrg.getPmUserRoles()) {
+						String roleCodeCA = rolesCA.getPmRole().getRoleCode();
+						int statusFlagCA = rolesCA.getRecordStatusFlg();
+						
+						if (roleCodeCA.equals(RoleCode.COMMITTEE_APPROVER.value())
+								&& (statusFlagCA == DbValueConst.RECORD_STATUS_SUSPENDED)) {
+							inactive = DbValueConst.FLAG_YES;
+						}
+					}
+				}
+				
+				if (approverRole.equals(RoleCode.PUBLICATION_APPROVER.value())) {
+					for (PmUserRole rolesPA : pmUserOrg.getPmUserRoles()) {
+						String roleCodePA = rolesPA.getPmRole().getRoleCode();
+						
+						int statusFlagPA = rolesPA.getRecordStatusFlg();
+						
+						if (roleCodePA.equals(RoleCode.PUBLICATION_APPROVER.value())
+								&& (statusFlagPA == DbValueConst.RECORD_STATUS_SUSPENDED)) {
+							inactive = DbValueConst.FLAG_YES;
+						}
+					}
+				}
+
+			} else {
+
+				pmUserOrgs = detailSO.retrieveInactivePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
+
+				if (null != pmUserOrgs && null != pmUserOrgs.getRecordStatusFlg()) {
+					int statusFlag = pmUserOrgs.getRecordStatusFlg();
+					
+					if (approverRole.equals(RoleCode.COMMITTEE_APPROVER.value())
+							&& (statusFlag == DbValueConst.RECORD_STATUS_SUSPENDED)) {
+						inactive = DbValueConst.FLAG_YES;
+					}
+					if (approverRole.equals(RoleCode.PUBLICATION_APPROVER.value())
+							&& (statusFlag == DbValueConst.RECORD_STATUS_SUSPENDED)) {
+						inactive = DbValueConst.FLAG_YES;
+					}
 				}
 			}
+
 			return inactive;
-			
+
 		} finally {
 			detailSO = null;
 		}
 	}
+	// #30477, #25426 -end-
   	
-    public boolean isCommitteeApprovalReviseTask(String taskName) {
-     	return (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName));
-    }
-    //#30477 - End
+	// #30477, #25426 -start-
+	public boolean isCommitteeApprovalReviseTask(String taskName) {
+		return (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName));
+	}
+	// #30477, #25426 - End
 
   	/**11104-start
 	 * Retrieve pm state by id.
