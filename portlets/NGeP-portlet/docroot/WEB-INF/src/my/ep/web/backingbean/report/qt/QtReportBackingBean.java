@@ -237,7 +237,8 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		
 		IRPTRequestDtlSO rptRequestDtlSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestDtlSO.class);
 		if(restDtlDTO.getRptRequestDtl().getCreatedBy() == null){
-			restDtlDTO.getRptRequestDtl().setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+			restDtlDTO.getRptRequestDtl().setCreatedBy(getFacesScopes()
+				.getUserSessionBean().getUserId());
 		}
 		rptRequestDtlSO.saveRPTRequestDtlDTO(restDtlDTO);
 	}

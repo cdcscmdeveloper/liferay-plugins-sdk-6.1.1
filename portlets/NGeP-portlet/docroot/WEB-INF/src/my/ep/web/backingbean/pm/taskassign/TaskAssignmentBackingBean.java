@@ -931,7 +931,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			reqDTO.setDocType(task.getDocType());
 			reqDTO.setDocStatus(task.getDocStatus());
 			reqDTO.setRoleCode(PmCommonUtil.getUserRoleValue());
-			reqDTO.setActionedByUser(getUserIdSessionFromLoginId()); //#31849 add log key
+			reqDTO.setActionedByUser(getFacesScopes().getUserSessionBean().getUserId());
 			reqDTO.setFromUser(getManagedBean().getTaskAssignmentSearchBean().getUser());
 			
 			taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate.getInstance()

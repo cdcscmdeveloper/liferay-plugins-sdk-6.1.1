@@ -2074,10 +2074,26 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 				String loginId = this.getManagedBean().getSelectedUser().getLoginId();
 				UploadedFile item = event.getFile();
+				//START #31849 add log key
+				Long loginSessionUserId = 1L;
+				IUserSO userSODB = (IUserSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IUserSO.class);
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+				PmUser pmUser = userSODB.retrieveUserByLoginId(userReqDTO).getPmUser();
+				if (pmUser == null) {
+					loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+				}
+				else{
+					loginSessionUserId = pmUser.getUserId();
+				}
+				new LogKey(loginSessionUserId);
+				//END #31849 add log key
 				PmUserAttachment attachment = new PmUserAttachment();
 				attachment.setFileName(item.getFileName());
 				attachment.setFilePath(PmCommonUtil.getUploadPath(loginId, item.getFileName()));
-				attachment.setCreatedBy(getUserIdSessionFromLoginId());//#31849 add log key
+				attachment.setCreatedBy(loginSessionUserId);//#31849 add log key
 				attachment.setCreatedUser(getFacesScopes().getUserSessionBean());
 				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
