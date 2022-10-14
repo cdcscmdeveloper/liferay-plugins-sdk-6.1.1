@@ -3305,7 +3305,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	
 	
 	
-	//test git commit
+	//test git commit/ ayam kicap
 	
 	
 }
