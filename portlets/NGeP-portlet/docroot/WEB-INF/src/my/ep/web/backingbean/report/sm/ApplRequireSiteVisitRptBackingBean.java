@@ -23,7 +23,7 @@ public class ApplRequireSiteVisitRptBackingBean extends SmReportBackingBean<Appl
 		onChangeZone();
 		setDefaultDateFromAndDateTo();
 	}
-	
+	///TESTING GIT AMIN
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
