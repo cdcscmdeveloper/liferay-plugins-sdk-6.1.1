@@ -533,7 +533,7 @@ public class MofRegistrationBackingBean extends
 	 * 
 	 */
 	
-	//Testing git saufirasid 14102022
+	//Testing gitlab saufirasid 14102022
 		public String dateFormat(Date date){
 			SimpleDateFormat DateFor = new SimpleDateFormat("MM/dd/yyyy");
 			String stringDate = DateFor.format(date);
