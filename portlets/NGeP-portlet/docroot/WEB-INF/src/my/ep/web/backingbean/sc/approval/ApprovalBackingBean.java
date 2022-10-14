@@ -47,6 +47,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -102,6 +103,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode; // #31919 & 21692
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -115,6 +117,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -1176,6 +1179,10 @@ public class ApprovalBackingBean extends
 					committeReqDTO.setSpecApprovalReq(true);
 					committeSO.validateAppointCommitteDtls(committeReqDTO);
 				}
+
+				// #25426 -start-
+				approveCancelQTwithDOASenariosExists(this.getManagedBean().getQt(), taskName, action);
+				// #25426 -end-
 				
 				if(SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName) || 
 						SCProcessNameConst.FC_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)) {
@@ -2998,7 +3005,7 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 	}
 	// #29762, #25692 -end-
 
-	//#30477 - Start
+	//#30477, #25426 - Start
 	public boolean isInactivePublicationApproverRole() {
 		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
@@ -3019,14 +3026,60 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 			for (ScQtApproverSettings approverSetting : approverSettings) {
 				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 
-				if (qtBackingBean.isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())) {
+				if (qtBackingBean.isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(),
+						RoleCode.PUBLICATION_APPROVER.value())) {
 					inactive = true;
-	  		    }
-	        }
+				}
+			}
 		}
-		
+
 		return inactive;
 	}
-	//#30477 -end-
+	//#30477, #25426 -end-
+	
+	// #25426 - Start
+	private void approveCancelQTwithDOASenariosExists(ScQt scQt, String taskName, String action) {
+		if (SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName)
+				&& BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
+			String docNo = null;
+			docNo = scQt.getQtNo();
+
+			if (docNo != null) {
+
+				BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+
+				bpmReqDTO.setDocNumber(docNo);
+				bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+
+				BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
+
+				if (bpmResDTO.getWorklistVO() != null
+						&& CollectionUtils.isNotEmpty(bpmResDTO.getWorklistVO().getWorklistItem())) {
+					for (WorklistItemVO currentVO : bpmResDTO.getWorklistVO().getWorklistItem()) {
+						String docType = currentVO.getDocType();
+
+						if (StringUtils.isNotBlank(docType) && docType.equals(ParameterConst.DOCTYPE_DOA_ASSIGNMENT)) {
+
+							String taskId = currentVO.getTaskId();
+
+							if (StringUtils.isNotBlank(taskId)) {
+
+								Object token = bpmSO.authenticate(EpPropertiesUtils.getInstance().getProperty(
+										EpPropertiesConst.BPM_PRINCIPAL));
+
+								bpmReqDTO = new BpmRequestDTO();
+								bpmReqDTO.setTaskId(taskId);
+								bpmReqDTO.setCtxToken(token);
+
+								bpmSO.withdrawTask(bpmReqDTO);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	// #25426 - End
 	
 }
