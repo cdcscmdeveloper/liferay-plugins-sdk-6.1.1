@@ -83,7 +83,8 @@
 							popupWidgetVar="evaluationManualReportUploadWidget"
 							attachment="#{scQtEvaluationReport.scQtEvaluationReportAttachment}"
 							readonly="#{evaluationBackingBean.managedBean.readOnly}"
-							deleteFileUploadListener="evaluationBackingBean.deleteReportsUploadFile">
+							deleteFileUploadListener="evaluationBackingBean.deleteReportsUploadFile">  <!-- 14102022@syazani - Bug #34083 - Start -->
+							<!-- 14102022@syazani - Bug #34083 - End -->
 							<f:setPropertyActionListener for="actionEvent"
 								value="#{scQtEvaluationReport}"
 								target="#{evaluationBackingBean.managedBean.selectedReport}" />
