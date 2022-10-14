@@ -225,6 +225,7 @@ public class SupplierManagementConst {
 	public static final String SPECIAL_SERVICE_CODE = "ISS";
 	public static final String PROF_SERVICE_CODE = "IPS";
 	public static final String NEW_IC = "I";
+	public static final String IDENTIFICATION_TYPE_PASSPORT = "P"; //#32014
 	public static final int PENDING_ACT_STATUS = 8;
 	public static final int APPROVED_RECORD_STATUS = 1;
 	public static final int DELETED_RECORD_STATUS = 9;
@@ -1258,5 +1259,9 @@ public class SupplierManagementConst {
 
 	public String getROLE_CODE_SM_5() {
 		return ROLE_CODE_SM_5;
+	}
+
+	public String getIDENTIFICATION_TYPE_PASSPORT() {
+		return IDENTIFICATION_TYPE_PASSPORT;
 	}
 }
