@@ -3,7 +3,9 @@
  */
 package my.ep.web.backingbean.sm;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -539,6 +541,26 @@ public class MofRegistrationBackingBean extends
 	 * Sample Connect To SOs - End
 	 * 
 	 */
+	
+	//Testing gitlab saufirasid 14102022
+		public String dateFormat(Date date){
+			SimpleDateFormat DateFor = new SimpleDateFormat("MM/dd/yyyy");
+			String stringDate = DateFor.format(date);
+			System.out.println("Date Format with MM/dd/yyyy : "+stringDate);
+			DateFor = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+			stringDate = DateFor.format(date);
+			System.out.println("Date Format with dd-M-yyyy hh:mm:ss : "+stringDate);
+			DateFor = new SimpleDateFormat("dd MMMM yyyy");
+			stringDate = DateFor.format(date);
+			System.out.println("Date Format with dd MMMM yyyy : "+stringDate);
+			DateFor = new SimpleDateFormat("dd MMMM yyyy zzzz");
+			stringDate = DateFor.format(date);
+			System.out.println("Date Format with dd MMMM yyyy zzzz : "+stringDate);
+			DateFor = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+			stringDate = DateFor.format(date);
+			System.out.println("Date Format with E, dd MMM yyyy HH:mm:ss z :"+stringDate);
+			return stringDate;
+		}
 	
 	//#34095 - START
 	public int addOfTwo(int integer_one, int integer_two){
