@@ -32,10 +32,10 @@
 
 
 
-
+						<ui:remove><!-- //1873 - note 149 remove ChecklistTabChange(1) n populate using method directly--></ui:remove>
 						<p:menuitem value="#{lbl['lbl.sc.spec.finance.check.list']}"
 						    action="#{specificationBackingBean.qtChecklistTabChange(3)}"
-							actionListener="#{specificationBackingBean.qtChecklistTabChange(1)}"
+							actionListener="#{specificationBackingBean.retriveSupplierQualificationCriteria('SC')}"
 							update="@form" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
@@ -175,8 +175,9 @@
 
 	<ui:include
 		src="/xhtml/sc/specification/specificationCommittee/upload.xhtml" />
+	<ui:remove><!-- //1873 - note 149 add modal true--></ui:remove>
 	<p:dialog id="technicalStandardDlgs"
-		widgetVar="technicalStandardChecklistDlgs"
+		widgetVar="technicalStandardChecklistDlgs" modal="true"
 		header="#{lbl['lbl.sc.spec.tech.check.list']}" resizable="false"
 		width="400" height="75" closable="false">
 		<table>

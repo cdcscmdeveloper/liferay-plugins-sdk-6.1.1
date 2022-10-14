@@ -443,9 +443,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * retrieve and set the current active org
 	 */
 	private void setCurrentActiveOrg() {
-		logger.info(" start setCurrentActiveOrg");
+		logger.info("setCurrentActiveOrg");
 		boolean isFactoring = false;
-		//START #31849 revert code
 		if (getFacesScopes().getUserSessionBean().getUserId() == null) {
 			throw new EpException(MessageConst.ERROR_770149);
 		}
@@ -454,16 +453,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 		List<PmUserOrg> userOrgList = PmCommonUtil
 				.retrieveActiveOrgWithoutRole(getFacesScopes().getUserSessionBean().getUserId(), isFactoring);
-		//END #31849 revert code
-		
+
 		if (userOrgList == null || userOrgList.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_770105);
 		}
 
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
-		
-		logger.info(" End setCurrentActiveOrg");
 	}
 
 	/**
@@ -2078,26 +2074,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 				String loginId = this.getManagedBean().getSelectedUser().getLoginId();
 				UploadedFile item = event.getFile();
-				//START #31849 add log key
-				Long loginSessionUserId = 1L;
-				IUserSO userSODB = (IUserSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IUserSO.class);
-				UserReqDTO userReqDTO = new UserReqDTO();
-				userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
-				PmUser pmUser = userSODB.retrieveUserByLoginId(userReqDTO).getPmUser();
-				if (pmUser == null) {
-					loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
-				}
-				else{
-					loginSessionUserId = pmUser.getUserId();
-				}
-				new LogKey(loginSessionUserId);
-				//END #31849 add log key
 				PmUserAttachment attachment = new PmUserAttachment();
 				attachment.setFileName(item.getFileName());
 				attachment.setFilePath(PmCommonUtil.getUploadPath(loginId, item.getFileName()));
-				attachment.setCreatedBy(loginSessionUserId);//#31849 add log key
+				attachment.setCreatedBy(getUserIdSessionFromLoginId());//#31849 add log key
 				attachment.setCreatedUser(getFacesScopes().getUserSessionBean());
 				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
@@ -2407,10 +2387,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				roleReqDTO.setBpk(getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() != null
 						? getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() : false);
 				roleReqDTO.setAssignRole(true);
-				// roleReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-				logger.info("..getFacesScopes().getUserSessionBean().getUserId()="
-						+ getFacesScopes().getUserSessionBean().getUserId());
-
 				roleReqDTO.setSearchRoleBean(searchBeanData);
 				roleReqDTO.setRoleName(getManagedBean().getSearchRoleName());
 				roleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,

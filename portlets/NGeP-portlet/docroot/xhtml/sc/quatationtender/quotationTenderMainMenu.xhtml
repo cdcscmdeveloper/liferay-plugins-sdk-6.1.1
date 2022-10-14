@@ -44,7 +44,7 @@
 	<!-- 26095@hatta - end -->
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+			<td width="22%" valign="top" class="sidemenutd"><p:tabMenu
 					styleClass="sidemenu"
 					activeIndex="#{qTDetailBB.managedBean.activeIndex}"	>
 										
@@ -234,7 +234,7 @@
 					<p:tooltip for="qtGenInfoIc" value="#{lbl['lbl.sc.edit.by.sc']}"  rendered="#{qTDetailBB.managedBean.isScEditGeneral and (statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}"/>	
 					<p:tooltip for="qtQulificationCriteriaIC" value="#{lbl['lbl.sc.edit.by.sc']}" rendered="#{qTDetailBB.managedBean.isScEditSupplierQualificationCriteria and (statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}"/>
 				<!-- #29521 - end -->				
-			<td width="80%" valign="top">
+			<td width="78%" valign="top">
 			<h:panelGroup id="menuQTContent">
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '0'}">
 						<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderGeneralDetails.xhtml" />

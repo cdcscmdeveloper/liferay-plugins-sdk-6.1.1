@@ -112,6 +112,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * This method will initialize the button and approver list.
 	 * This method include additional checking for viewing factoring.
 	 */
+	
 	public SupplierBackingBean(){
 		/* Initialization of button */
 		if (getManagedBean().getOutComes() == null) {
@@ -802,7 +803,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 */
 	public String preSubmitChangeBankRequest(PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null && isSupplierRole() && !hasGovtSellerRole()) {
-			pmDigiSign.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
+			pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			pmDigiSign.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			pmDigiSign.setOriginalData(prepareSupplierOriginalText());
 			pmDigiSign.setSpkiSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(prepareSupplierOriginalText()));
@@ -873,7 +874,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 */
 	public String preSubmitFactoringRequest(PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null && isSupplierRole() && !hasGovtSellerRole()) {
-			pmDigiSign.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
+			pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			pmDigiSign.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			pmDigiSign.setOriginalData(prepareSupplierOriginalText());
 			pmDigiSign.setSpkiSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(prepareSupplierOriginalText()));
@@ -1267,7 +1268,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		CtAttachment attachment = new CtAttachment();
 		attachment.setFileName(item.getFileName());
 		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		

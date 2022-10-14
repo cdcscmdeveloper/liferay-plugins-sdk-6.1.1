@@ -271,8 +271,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-
-
+		
 		if (taskId == null) {
 			if (getManagedBean().getWarningPercentage() != null) {
 				FacesContext.getCurrentInstance().addMessage(null,
@@ -311,6 +310,22 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				// End - Fix #29368
 				}
 			// End Fix - #30856
+			
+			//Bug 34030 - shaqimi start
+			if ((ctBB.getManagedBean().isBackFromSCL() && ctBB.getManagedBean().getDocTypeFromTaskList() != null)
+					&& (ctBB.getManagedBean().getDocTypeFromTaskList().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)
+							|| ctBB.getManagedBean().getDocTypeFromTaskList().equals(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+							|| ctBB.getManagedBean().getDocTypeFromTaskList().equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE))){
+				ContractReqDTO reqDTO = new ContractReqDTO();
+				
+				reqDTO.setTaskName(ctBB.getManagedBean().getTaskNameFromTaskList());
+				reqDTO.setDocType(ctBB.getManagedBean().getDocTypeFromTaskList());
+				reqDTO.setContractId(ctBB.getManagedBean().getContractIdFromTaskList());
+				reqDTO.setContractVerId(ctBB.getManagedBean().getContractVerIdFromTaskList());
+				
+				setValidateContractField(reqDTO);
+			}
+			//Bug 34030 - shaqimi end
 			return;
 		}
 
@@ -347,6 +362,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setContractVerId(new Long(dataType.getDocId()));
 			reqDTO.setDocType(dataType.getDocType());
 		}
+		
+		//Bug 34030 - shaqimi start
+		ctBB.getManagedBean().setTaskNameFromTaskList(reqDTO.getTaskName());
+		ctBB.getManagedBean().setDocTypeFromTaskList(reqDTO.getDocType());
+		ctBB.getManagedBean().setContractIdFromTaskList(reqDTO.getContractId());
+		ctBB.getManagedBean().setContractVerIdFromTaskList(reqDTO.getContractVerId());
+		//Bug 34030 - shaqimi end
 		
 		/*#26083 start - basri*/
 		if(reqDTO.getDocType().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)){
@@ -920,8 +942,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				&& !ctBB.getManagedBean().isDirectPurchase()
 				&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
 			for (CtContractAmount contractAmt : ctContractVer.getCtContractAmounts()){
-				if (contractAmt.getContractAmountId() != null && ctBB.getManagedBean().getCtContractAmount() != null
-						&& contractAmt.getContractAmountId().intValue() == ctBB.getManagedBean().getCtContractAmount().getContractAmountId().intValue()){
+				if ((contractAmt.getContractAmountId() != null && ctBB.getManagedBean().getCtContractAmount() != null
+						&& contractAmt.getContractAmountId().intValue() == ctBB.getManagedBean().getCtContractAmount().getContractAmountId().intValue())
+						|| contractAmt.isBrandNew()){ //#34012,#24333
 					contractAmt.setTotalBondAmt(ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt());
 					//#24333 - Start	
 					if(ctBB.isContractExtendOrIsBond()){
@@ -2834,6 +2857,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ctBB.getManagedBean().setSelectedItem(null);
 		ctBB.getManagedBean().setServiceselectedItem(null);
 		
+		//Bug 34030 - shaqimi start
+		ctBB.getManagedBean().setAmendFromTaskList(false);
+		ctBB.getManagedBean().setAmendFromViewPage(false);
+		ctBB.getManagedBean().setViewSCL(false);
+		ctBB.getManagedBean().setHasAmendmentLoaNo(false);
+		ctBB.getManagedBean().setViewContract(false);
+		ctBB.getManagedBean().setBackFromSCL(false);
+		//Bug 34030 - shaqimi end
+		
 		contractBB.getManagedBean().getContractListingPagingDataModel().resetData();
 		contractBB.getManagedBean().getServiceListingPagingDataModel().resetData();
 		contractBB.getManagedBean().setResetval(true);
@@ -3007,7 +3039,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if(!ctBB.getManagedBean().isViewContract()){
 			if (remarks.size() == 0 || !ctWorkflowStatusMatch) {
 				CtRemark remark = new CtRemark();
-				remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				remark.setChangedBy(remark.getCreatedBy());
 				remark.setChangedDate(remark.getCreatedDate());

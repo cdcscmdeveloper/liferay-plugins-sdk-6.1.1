@@ -52,8 +52,6 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmBasicCategory;
@@ -94,7 +92,8 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import java.util.Arrays;
+import javax.faces.component.UIComponent;
+import javax.faces.validator.ValidatorException;
 //end #29665
 
 /**
@@ -1256,6 +1255,15 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		new LogKey(loginSessionUserId);
 		//end #29665 add log key
 		
+		/*//29665 - Start - remove this code
+		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
+			throw new EpException(MessageConst.ERROR_775188, new String[]{ResourceBundleUtils.getMessage(
+					"lbl.pm.main.category", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())});
+		   }
+		//29665 - End */
+		
 		try {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 
@@ -1485,6 +1493,15 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 		new LogKey(loginSessionUserId);
 		//end #29665 add log key
+		
+		/*//29665 - Start - remove this code
+		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
+			throw new EpException(MessageConst.ERROR_775188, new String[]{ResourceBundleUtils.getMessage(
+					"lbl.pm.sub.category", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())});
+		   }
+		//29665 - End*/
 		
 		try {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
@@ -1743,6 +1760,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		if (!checkCategoryRestrDuplicateCompanyType()) {
 			throw new EpException(MessageConst.ERROR_775006);
 		}
+
+		/*// 29665 - Start - remove this code
+		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
+			throw new EpException(MessageConst.ERROR_775188,
+					new String[] { ResourceBundleUtils.getMessage("lbl.pm.sub.div",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+		}
+		// 29665 - End */
 
 		// validation for fields
 		validatePmCategoryL3();
@@ -4484,5 +4509,21 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	}
 
 	//end #29665
+	
+	//#29665 - Start
+	public void validateRequiredField(FacesContext facesContext, UIComponent uiComponent, Object value) {
 
+		String remarkValue = value.toString();
+		
+		String labelNameVal = (String) uiComponent.getAttributes().get(
+				"labelName");
+
+		if (StringUtils.isBlank(remarkValue)) {			
+			throw new ValidatorException(new FacesMessage(
+					FacesMessage.SEVERITY_ERROR, "Required field error",
+					PmCommonUtil.getMessage("lbl.pm.categ.remark.required",
+							new String[] { labelNameVal })));
+		}
+	}
+	//#29665 - End
 }

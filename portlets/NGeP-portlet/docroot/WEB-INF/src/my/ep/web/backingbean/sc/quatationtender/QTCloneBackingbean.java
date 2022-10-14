@@ -573,14 +573,15 @@ public class QTCloneBackingbean extends
 		this.getManagedBean().setSelectedCloneTender(null);//25635
 
 		IPagingDataModel<ScQt> cloneSearchQTDataModel = getManagedBean()
-				.getCloneSearchQTDataModel();
+				.getMainCloneSearchQTDataModel();//34053
+		
 
 		if (null == cloneSearchQTDataModel) {
-			getManagedBean().setCloneSearchQTDataModel(
+			getManagedBean().setMainCloneSearchQTDataModel(
 					new QTPagingDataModel("clonesearchCommitteid2",
-							getManagedBean().getCloneQtnTenderSearchBean()));
+							getManagedBean().getCloneQtnTenderSearchBean()));//34053
 		}
-		getManagedBean().getCloneSearchQTDataModel().resetData();
+		getManagedBean().getMainCloneSearchQTDataModel().resetData();//34053
 
 		getManagedBean().getCloneQtnTenderSearchBean().setQtTitle(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setQtNo(null);
@@ -589,7 +590,7 @@ public class QTCloneBackingbean extends
 		getManagedBean().getCloneQtnTenderSearchBean().setToCreatedDate(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
 		getManagedBean().setCloneTenderList(null);
-		getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());
+		//getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());//34053
 		RequestContext.getCurrentInstance().execute("screen3.show()");
 		getManagedBean().setAutoUpdate(false);
 		 getManagedBean().setSelectSearchcommitteeNode(new TreeNode[0]);
@@ -902,6 +903,7 @@ public class QTCloneBackingbean extends
 		}
 		RequestContext.getCurrentInstance().execute("screen3.hide()");
 	}
+
 	
 	public List<ScQtDocReport> retrieveAllDocumentsByQt(ScQt scQt) {
 		List<ScQtDocReport> list=null;
@@ -1041,7 +1043,13 @@ public class QTCloneBackingbean extends
 								qtDocReportAttachment.setScQtDocReport(qtDocReport);
 								setUserDetails(qtDocReportAttachment);
 								qtDocReportAttachment.setChangedDate(null);
-								
+								qtDocReportAttachment.setDocNo(qtDocReport.getScQt().getQtNo());//33954
+								try {
+									uploadAttachment(qtDocReportAttachment,docReport.getScQtDocReportAttachment());
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}//33954
 								qtDocReport.setScQtDocReportAttachment(qtDocReportAttachment);
 							}
 						} catch (IllegalAccessException | InstantiationException
@@ -1054,7 +1062,8 @@ public class QTCloneBackingbean extends
 					String docDefinitionKey=null;
 					if(null!=docReport.getPmDocument()){
 						docDefinitionKey=docReport.getPmDocument().getDocDefinitionKey();
-					}		
+					}
+					boolean templateDoc=Boolean.FALSE;//33954
 					if(null!=docDefinitionKey && SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
 							.equals(docDefinitionKey)){
 						IQTTemplateSO qtTemplateSO = null;
@@ -1063,23 +1072,30 @@ public class QTCloneBackingbean extends
 									ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
 							QTTemplateDocReqDTO reqDTO = new QTTemplateDocReqDTO();
 							if (docReport.getTplDocMaster() != null) {
+								templateDoc=Boolean.TRUE;//33954
 								if(null!=templetDoc){
+								log.info("=======removeDocumentCodesexecuted======");//33954
+								int index=reportList.indexOf(templetDoc);
 								reportList.remove(templetDoc);
 								templetDoc=retriveRulesAndRegulationReport(templetDoc);
 								TplDocMaster master=	retrieveTplDocMasterById(docReport.getTplDocMaster().getDocMasterId());
 								master=cloneDocMasterDocSectionDetails(master, templetDoc); //replace tplDocmaster
 								templetDoc.setTplDocMaster(master);
 									reqDTO.setScQtDocReport(templetDoc);
-									
+									templetDoc.setCloned(Boolean.TRUE);
+									reportList.add(index,templetDoc);//33954
 								}else{
+									log.info("=======UnremoveDocumentCodesexecuted======");//33954
 									TplDocMaster master=	retrieveTplDocMasterById(docReport.getTplDocMaster().getDocMasterId());
 									master=cloneDocMasterDocSectionDetails(master, qtDocReport);
 									qtDocReport.setTplDocMaster(master);
-										reqDTO.setScQtDocReport(qtDocReport);
+									reqDTO.setScQtDocReport(qtDocReport);
+									qtDocReport.setCloned(Boolean.TRUE);
+									reportList.add(qtDocReport);//33954
 									
 								}
-								QTTemplateDocResDTO resDTO = qtTemplateSO.saveQtReports(reqDTO);
-								qtDocReport=resDTO.getScQtDocReport();	
+								//QTTemplateDocResDTO resDTO = qtTemplateSO.saveQtReports(reqDTO);//33954
+								//qtDocReport=resDTO.getScQtDocReport();//33954	
 							}else{
 								//if(null!=templetDoc){
 								//	reportList.remove(templetDoc);
@@ -1094,7 +1110,7 @@ public class QTCloneBackingbean extends
 						}
 					}
 					
-					if(toClone){
+					if(toClone && !templateDoc){//33954
 						reportList.add(qtDocReport);
 					}
 					
@@ -4339,7 +4355,7 @@ public class QTCloneBackingbean extends
 		getManagedBean().setCloneCommitteeSelectQt(null);
 		this.getManagedBean().setSelectedCloneTender(null);//25635
 
-		getManagedBean().getCloneSearchQTDataModel().reloadData();
+		getManagedBean().getMainCloneSearchQTDataModel().reloadData();//34053
 	}
 	
 	/**
@@ -4356,7 +4372,7 @@ public class QTCloneBackingbean extends
 		this.getManagedBean().getCloneQtnTenderSearchBean()
 				.setToCreatedDate(null);
 		this.getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
-		this.getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());
+		//this.getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());//34053
 		this.getManagedBean().getCloneQtnTenderSearchBean()
 				.setFromPublishDate(null);
 		this.getManagedBean().getCloneQtnTenderSearchBean()
@@ -4863,4 +4879,7 @@ public class QTCloneBackingbean extends
 		}
 		return startMonth;
 	}//33916
+	
+	
+	
 }

@@ -359,7 +359,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		CtAttachment attachment = new CtAttachment();
 		attachment.setFileName(item.getFileName());
 		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
@@ -2261,7 +2261,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			CtAttachment attachment = new CtAttachment();
 			attachment.setFileName(item.getFileName());
 			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-			attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			attachment.setCreatedUser(facesScopes.getUserSessionBean());
 			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			attachment.setSectionId(ContractConst.ATTACHMENT_AGENCY_CONTRACT_SHARING);
@@ -2278,7 +2278,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			attachment.setFileName(item.getFileName());
 			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-			attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			attachment.setCreatedUser(facesScopes.getUserSessionBean());
 			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			//LOG : 13847, by Fahmi 22032019
@@ -2293,7 +2293,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				if(getManagedBean().getCtAttachmentTemp().getFileName() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentTemp().getFileName())){
 					getManagedBean().getCtAttachmentTemp().setFileName(item.getFileName());
 					getManagedBean().getCtAttachmentTemp().setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-					getManagedBean().getCtAttachmentTemp().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+					getManagedBean().getCtAttachmentTemp().setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 					getManagedBean().getCtAttachmentTemp().setCreatedUser(facesScopes.getUserSessionBean());
 					getManagedBean().getCtAttachmentTemp().setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				}
@@ -2309,7 +2309,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			ctAttachmentHistory.setModified(true);
 			ctAttachmentHistory.setFileName(item.getFileName());
 			ctAttachmentHistory.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-			ctAttachmentHistory.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			ctAttachmentHistory.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			ctAttachmentHistory.setCreatedUser(facesScopes.getUserSessionBean());
 			ctAttachmentHistory.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			
@@ -2472,11 +2472,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCtAttachment(new CtAttachment());
 			}
 			
-			getManagedBean().getCtAttachmentLatest().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			getManagedBean().getCtAttachmentLatest().setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			getManagedBean().getCtAttachmentLatest().setCreatedUser(facesScopes.getUserSessionBean());
 			getManagedBean().getCtAttachmentLatest().setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			
-			getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			
 			getManagedBean().getWaiverDetail().add(SerializationUtils.clone(getManagedBean().getCtAttachmentLatest()));
@@ -3201,11 +3201,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if(isContractExtendOrIsBond()){
 			newBond.setBondNew(true);
 			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(newBond);
-//			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
+			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
 		}else{
 			newBond.setBondNew(false);
 			getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().add(newBond);
-//			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
+			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
 		}
 		//#24333 - End
 	}		    
@@ -4025,6 +4025,29 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		//Enhancement 15851 - shaqimi start
 		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
 		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
+		
+		//Bug 34030 - shaqimi start
+		String docType = getManagedBean().getContractVer().getDocType();
+		Long statusId = getManagedBean().getContractVer().getStatus().getStatusId();
+		String taskNameFromTaskList = "";
+		Long contractIdFromTaskList = null;
+		Long contractVerIdFromTaskList = null;
+		String docTypeFromTaskList = "";
+		
+		if(this.getManagedBean().getTaskNameFromTaskList() != null && !this.getManagedBean().getTaskNameFromTaskList().isEmpty()){
+			taskNameFromTaskList = this.getManagedBean().getTaskNameFromTaskList();
+		}
+		if(this.getManagedBean().getContractIdFromTaskList() != null && !this.getManagedBean().getContractIdFromTaskList().equals(null)){
+			contractIdFromTaskList = this.getManagedBean().getContractIdFromTaskList();
+		}
+		if(this.getManagedBean().getContractVerIdFromTaskList() != null && !this.getManagedBean().getContractVerIdFromTaskList().equals(null)){
+			contractVerIdFromTaskList = this.getManagedBean().getContractVerIdFromTaskList();
+		}
+		if(this.getManagedBean().getDocTypeFromTaskList() != null && !this.getManagedBean().getDocTypeFromTaskList().isEmpty()){
+			docTypeFromTaskList = this.getManagedBean().getDocTypeFromTaskList();
+		}
+		//Bug 34030 - shaqimi end
+		
 		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
 			AmendmentBackingBean abb = new AmendmentBackingBean();
 			getManagedBean().setAmendFromTaskList(true);
@@ -4036,11 +4059,26 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			//Bug 33096 - shaqimi start
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
 			//Bug 33096 - shaqimi end
-			if(abb.getManagedBean().getTaskId() != null){
+			//Bug 34030 - shaqimi start
+			if(docType.equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING) 
+					|| docType.equals(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+					|| docType.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE)){
+				abb.getManagedBean().setStatusIdFromTaskList(statusId);
+				abb.getManagedBean().setTaskNameFromTaskList(taskNameFromTaskList);
+				abb.getManagedBean().setContractIdFromTaskList(contractIdFromTaskList);
+				abb.getManagedBean().setContractVerIdFromTaskList(contractVerIdFromTaskList);
+				
+				if((docTypeFromTaskList != null && !docTypeFromTaskList.isEmpty())){
+					abb.getManagedBean().setDocTypeFromTaskList(docTypeFromTaskList);
+				} else {
+					abb.getManagedBean().setDocTypeFromTaskList(docType);
+				}
+			}else if(abb.getManagedBean().getTaskId() != null){
 				abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
-				abb.getManagedBean().setContractIdFromTaskList(new Long(getManagedBean().getContractVer().getCtContract().getContractId()));
-				abb.getManagedBean().setContractVerIdFromTaskList(getManagedBean().getContractVer().getContractVerId());
+				abb.getManagedBean().setContractIdFromTaskList(new Long(this.getManagedBean().getContractVer().getCtContract().getContractId()));
+				abb.getManagedBean().setContractVerIdFromTaskList(this.getManagedBean().getContractVer().getContractVerId());
 			}
+			//Bug 34030 - shaqimi end
 			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
 		}
 		//Enhancement 15851 - shaqimi end
@@ -4584,6 +4622,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		String currentPeriod = null;
 		String extendPeriod = null;
 		boolean isContractExtendOrIsBond = false;
+		getManagedBean().setExtendContract(false);
+		getManagedBean().setDisableOriginalBond(false);
 		
 		if(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration() != null) {
 			currentPeriod = BigDecimal.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration().longValue()).toString();
@@ -4591,8 +4631,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if(getManagedBean().getContractVer().getCtContractValue().getContractPeriod() > 0) {
 			extendPeriod = Integer.toString(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()); 
 		}		
-		getManagedBean().setExtendContract(false);
-		getManagedBean().setDisableOriginalBond(false);
 
 		if((getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)

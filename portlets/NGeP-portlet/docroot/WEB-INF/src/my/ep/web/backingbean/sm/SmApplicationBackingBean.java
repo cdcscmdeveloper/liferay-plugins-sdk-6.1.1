@@ -3712,13 +3712,11 @@ public class SmApplicationBackingBean extends
 	 */
 	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
 			Long docId, String docNumber, String textBeforeSign) {
-		FacesScopes facesScope = new FacesScopes();
-		Long userId = facesScope.getUserSessionBean().getUserId();
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		pmDigiSign.setDocId(new BigDecimal(docId));
 		pmDigiSign.setDocNo(docNumber);
 		pmDigiSign.setDocType(docType);
-		pmDigiSign.setCreatedBy(userId);
+		pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 		pmDigiSign.setCreatedDate(date);
 		pmDigiSign.setOriginalData(textBeforeSign);
 	}
@@ -9440,7 +9438,7 @@ public class SmApplicationBackingBean extends
 		log.info("supplier declare submit bpmTask for applNo:"
 				+ getManagedBean().getSmAppl().getApplNo() + " taskId:"
 				+ getManagedBean().getTaskId());
-		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+		reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 		resDTO = regSo.initiateSmApplicationTask(reqDTO);
 		regSo = null;
 		retriveLatestApplAfterUpdate("", "");
@@ -10801,7 +10799,7 @@ public class SmApplicationBackingBean extends
 		reqDTO.setSmAppl(getManagedBean().getSmAppl());
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 		reqDTO.setBpmPojo(getManagedBean().getPayLoad());
-		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+		reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 		reqSO.approveOrRejectPendingApplicationCancellation(reqDTO);
 
 		res = res.equals("REJECT") ? SmCommonUtil.getMessage(
@@ -10871,6 +10869,9 @@ public class SmApplicationBackingBean extends
 			if(po.getRecordStatusFlg() == 1 && pmOrgStats){
 				//#12483 - reopen - END
 				reqDTO.setPoLoginId(po.getLoginId());
+				//#12483 - START
+				reqDTO.setUserId(po.getUserId());
+				//#12483 - END
 			}else{
 				IZoneSO zoneReqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 				ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
@@ -10881,6 +10882,9 @@ public class SmApplicationBackingBean extends
 																			  getManagedBean().getSmAppl().getApplCategoryType(), 
 																			  zoneReqSO.retrieveZoneByStateId(zoneReqDTO).getPmZone().getZoneCode());
 				reqDTO.setPoLoginId(po.getLoginId());
+				//#12483 - START
+				reqDTO.setUserId(po.getUserId());
+				//#12483 - END
 			}
 		}else{
 			reqDTO.setPoLoginId(pmUser.getLoginId());
@@ -11476,6 +11480,12 @@ public class SmApplicationBackingBean extends
 				reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
 				reqDTO.setPoRole(getManagedBean().isPoUser());
 				reqDTO.setApproverRole(getManagedBean().isApproverUser());
+				
+				//#12483 - START
+				if(reqDTO.getUserId() != null){
+					reqDTO.getSmAppl().setPoUserId(reqDTO.getUserId());
+				}
+				//#12483 - END
 
 				FacesScopes fs = new FacesScopes();
 				reqDTO.setServerName(fs.getRequest().getServerName());
@@ -16082,6 +16092,15 @@ public class SmApplicationBackingBean extends
 			personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 		}else{//Start 28651
 			personnel.setSsmData(false);
+			
+			// START : #29956
+			for(SmPersonnelAddress smPersonnelAddress : personnel.getSmPersonnelAddresses()){
+				if(smPersonnelAddress.getSmAddress() != null){
+					smPersonnelAddress.getSmAddress().setSsmData(false);
+				}
+				
+			}
+			// END : #29956
 		}
 		//end 28651
 	}

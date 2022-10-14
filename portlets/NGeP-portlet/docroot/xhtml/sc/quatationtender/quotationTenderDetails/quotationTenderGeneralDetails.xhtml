@@ -31,19 +31,20 @@
 		value="#{createQtBB.isStatusInQTReviseGroupStatus(scQt.qtStatus.statusId)}" />
 	<ui:param name="isMaintenanceFlow"  
 		value="#{qTDetailBB.managedBean.maintanceFlow}" />	
-	<ui:param name="isDemoDisabled"  
-		value="#{specMaintenanceBB.managedBean.demoDisabled}" />
-	<ui:param name="isDemoReqDisabled"  
-		value="#{qTDetailBB.managedBean.qt.demoRequired}" />
-	<ui:param name="isDemoEvalDisabled"  
-		value="#{qTDetailBB.managedBean.demoEvalDisabled}" />	
-	<ui:param name="isDemoSpecialCase"  
-		value="#{qTDetailBB.managedBean.demoSpecialCase}" />			
-	<ac:lovPopup />
 	<!-- START #28784 -->
+	<ui:param name="isDemoDisabled"  
+		value="#{qTDetailBB.managedBean.demoDisabled ? qTDetailBB.managedBean.demoDisabled : specMaintenanceBB.managedBean.demoDisabled}" />
+	<ui:param name="isDemoReqDisabled"  
+		value="#{qTDetailBB.managedBean.qt.demoRequired ? qTDetailBB.managedBean.qt.demoRequired  : specMaintenanceBB.managedBean.qt.demoRequired}" />
+	<ui:param name="isDemoEvalDisabled"  
+		value="#{qTDetailBB.managedBean.demoEvalDisabled ? qTDetailBB.managedBean.demoEvalDisabled : specMaintenanceBB.managedBean.demoEvalDisabled}" />	
+	<ui:param name="isDemoSpecialCase"  
+		value="#{qTDetailBB.managedBean.demoSpecialCase ? qTDetailBB.managedBean.demoSpecialCase : specMaintenanceBB.managedBean.demoSpecialCase}" />			
+	<ac:lovPopup /><!-- END #28784 -->
+	
 	<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-	</p:blockUI><!-- END #28784 -->
+	</p:blockUI>
 
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}" toggleable="true">
 		<h:outputText styleClass="instruction"
@@ -695,7 +696,7 @@
 								</tr>
 							</table>
 						</c:when>
-						<c:when	test="#{isDemoEvalDisabled and !isReadOnly}"><ui:remove><!-- 29464 note 42 --></ui:remove>
+						<c:when	test="#{isDemoEvalDisabled}"><ui:remove><!-- 29464 note 42 --></ui:remove>
 							<table>
 								<tr>
 									<td><p:selectOneRadio id="evalType"
@@ -783,9 +784,11 @@
 								update=":form:qtdetailsid"
 								saveObject="createQtBB.managedBean.ctContract"
 								value="#{createQtBB.managedBean.ctContract.ctNameandNo}" escape="true" 
+								conditionField="#{createQtBB.constuctConditionFields()}" 
+								autoResize="false"
 								rows="10"
 								cols="25"
-								conditionField="#{createQtBB.constuctConditionFields()}" />
+								maxlength="1018"/>
 								<p:spacer width="10" height="0"/>
 								<p:graphicImage id="existContractIC" rendered="#{qTDetailBB.managedBean.isExistingContractChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}" value="/css/images/design/icon_alert.png" />
 								<p:tooltip for="existContractIC">
@@ -798,7 +801,9 @@
 			
 								<p:inputTextarea id="extContractTxt"
 									value="#{qTDetailBB.managedBean.ctContract.ctNameandNo}"
-									style="width:200px;" disabled="true" rows="10" cols="25" /> 
+									style="width:200px;" disabled="true" rows="10" cols="25" 
+									autoResize="false"
+									maxlength="1018"/> 
 									<p:spacer width="10" height="0"/>
 									<p:graphicImage
 										id="existContractIC"
@@ -1373,11 +1378,11 @@
 <!-- #29521 - start -->
 
 <p:dialog id="doEditdlg" widgetVar="doEditdlg"
-		resizable="false" width="300" height="90" closable="false">
+		resizable="false" width="330" height="140" closable="false">
 		<table>
 			<tr>
 				<td> 
-					<p:outputLabel value="#{lbl['lbl.sc.do.edit.warning']}" />
+					<p:outputLabel style="text-align:left" value="#{lbl['lbl.sc.do.edit.warning']}" />
 				</td>
 			</tr>
 		</table>

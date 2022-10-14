@@ -25,6 +25,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.TreeNode;
@@ -141,6 +142,10 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 	private List<TplSpecZoneDtl> templateSpecZoneDtls;
 	
 	private List<TreeNode> zoneSuppQualTrees = null;
+	
+	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+	
+	private boolean showCancelButton = false;
 
 	public int getTabActiveIndex() {
 		return tabActiveIndex;
@@ -527,9 +532,21 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 	}
 
 	
-	
+	public TemplateSpecBean getTemplateSpecBean() {
+		return templateSpecBean;
+	}
 
-	
+	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
+		this.templateSpecBean = templateSpecBean;
+	}
+
+	public boolean isShowCancelButton() {
+		return showCancelButton;
+	}
+
+	public void setShowCancelButton(boolean showCancelButton) {
+		this.showCancelButton = showCancelButton;
+	}
 	
 	
 	

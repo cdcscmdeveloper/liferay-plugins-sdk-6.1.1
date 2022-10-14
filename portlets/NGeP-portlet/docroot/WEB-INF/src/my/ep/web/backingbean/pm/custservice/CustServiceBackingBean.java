@@ -49,7 +49,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -542,31 +541,13 @@ public class CustServiceBackingBean extends
 
 			loadUserOrgType(user, userOrg);
 			List<PmUserOrg> userOrgList = new ArrayList<PmUserOrg>();
-			//Long loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
-			//START #31849 add log key
-			Long loginSessionUserId = 1L;
-			IUserSO userSODB = (IUserSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IUserSO.class);
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
-			PmUser pmUser = userSODB.retrieveUserByLoginId(userReqDTO).getPmUser();
-			if (pmUser == null) {
-				loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
-			}
-			else{
-				loginSessionUserId = pmUser.getUserId();
-			}
-			new LogKey(loginSessionUserId);
-			//log.info("userid to be save : " + loginSessionUserId);
-			//END #31849 add log key
-			userOrg.setChangedBy(loginSessionUserId);
+			userOrg.setChangedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			userOrgList.add(userOrg);
 			user.setPmUserOrgs(userOrgList);
 			reqDTO.setNewRoleList(new ArrayList<PmUserRole>());
 			reqDTO.setRemoveRoleList(new ArrayList<PmUserRole>());
 			loadUserRoles(user, reqDTO);
-			user.setChangedBy(loginSessionUserId);
+			user.setChangedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			checkChangesAndFillTrackingDiary(user, userOrg, reqDTO);	
 			
 			//Having other active user org?

@@ -85,12 +85,12 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private boolean bpkAdminUser;
 	//[#22117 - stop]
 	
-	// #29822 - start
+	// #7465, #29822 - start
 	private boolean enableRemoveAllGroupTasksButton;
 	private boolean enableRemoveAllOthersTasksButton;
 	private boolean showRemoveProcessMessageGroup;
 	private boolean showRemoveProcessMessageOther;
-	// #29822 - end
+	// #7465, #29822 - end
 	
 	public TaskReassignmentManagedBean(){}
 
@@ -647,7 +647,7 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 		this.bpkAdminUser = bpkAdminUser;
 	}
 
-	// #29822 - start
+	// #7465, #29822 - start
 	public boolean isEnableRemoveAllGroupTasksButton() {
 		return enableRemoveAllGroupTasksButton;
 	}
@@ -679,6 +679,5 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	public void setShowRemoveProcessMessageOther(boolean showRemoveProcessMessageOther) {
 		this.showRemoveProcessMessageOther = showRemoveProcessMessageOther;
 	}
-
-	// #29822 - end
+	// #7465, #29822 - end
 }

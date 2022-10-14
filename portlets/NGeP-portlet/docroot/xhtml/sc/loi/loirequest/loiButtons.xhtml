@@ -51,10 +51,14 @@
 					process="@form" update="@form" />
 
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and
-					supplierDisagreeEPV}"
+					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt}"
 					action="#{lOIDetailBackingBean.submitAction}" process="@form"
 					update="@form" /><ui:remove>#21692</ui:remove>
+					
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					oncomplete="cancelPopup.show();"
+					rendered="#{lOIDetailBackingBean.isSupplierEPVStatusRejected()}"
+					process="@form" update="@form" /><ui:remove>#21692</ui:remove>
 
 				<c:choose>
 					<c:when test="#{!empty lOIDetailBackingBean.managedBean.taskId}">
@@ -65,7 +69,7 @@
 							<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
 
 							<p:commandButton value="#{lbl[buttonLabel]}"
-								rendered="#{validityDaysExpiredQt and supplierDisagreeEPV}"
+								rendered="#{validityDaysExpiredQt}"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								styleClass="ui-button"
 								action="#{lOIDetailBackingBean.updateBpmTaskAction(bpmAction)}"
@@ -74,6 +78,28 @@
 						</ui:repeat>
 					</c:when>
 				</c:choose>
+			<ui:remove>#21692 - start</ui:remove>
+			<p:dialog id="submissionPopupId" widgetVar="cancelPopup"
+			header="#{lbl['lbl.sc.cancel.confirm']}"
+			resizable="false" width="325" height="100" closable="false"
+			modal="true">
+
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.qt.pending.qt.loi.cancel']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true" onclick="blockWidget.show();"
+					action="#{lOIDetailBackingBean.updateBpmTaskAction('EPVCANCEL')}"
+					oncomplete="cancelPopup.hide();"  update="@form">
+				</p:commandButton>
+
+			</div>
+			</p:dialog>
+			<ui:remove>#21692 - end</ui:remove>
 			</ui:define>
 		</ui:decorate>
 	</div>

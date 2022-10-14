@@ -1659,6 +1659,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private TreeNode rootCategoryTree;
 	List<String> selectedCategories;
 	// #29468 Vinod End
+	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
 	public boolean proposalValidityChangeValue; //#21692
 	/**
@@ -1680,6 +1681,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScLoaBasic> searchLoaDataModel;
 	
 	private IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel;
+	
+	/** The clone search qt data model. */
+	private IPagingDataModel<ScQt> mainCloneSearchQTDataModel;//34053
 	
 	// ***25692
 	/*
@@ -11702,6 +11706,33 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.firstViewPageCAUsers = firstViewPageCAUsers;
 	}
 	//#25426 - End
+
+	/**
+	 * 34053-Start
+	 * @return the mainCloneSearchQTDataModel
+	 */
+	public IPagingDataModel<ScQt> getMainCloneSearchQTDataModel() {
+		return mainCloneSearchQTDataModel;
+	}
+
+	/**
+	 * @param mainCloneSearchQTDataModel the mainCloneSearchQTDataModel to set
+	 */
+	public void setMainCloneSearchQTDataModel(
+			IPagingDataModel<ScQt> mainCloneSearchQTDataModel) {
+		this.mainCloneSearchQTDataModel = mainCloneSearchQTDataModel;
+	}//34053-End
+
+	// Bug #33661@Syazani 07/10/2022 -- Start
+	public boolean isFromSpecEndorse() {
+		return isFromSpecEndorse;
+	}
+
+	public void setFromSpecEndorse(boolean isFromSpecEndorse) {
+		this.isFromSpecEndorse = isFromSpecEndorse;
+	}
+	// Bug #33661@Syazani 07/10/2022 -- End
+	
 }
 
 // ***25201

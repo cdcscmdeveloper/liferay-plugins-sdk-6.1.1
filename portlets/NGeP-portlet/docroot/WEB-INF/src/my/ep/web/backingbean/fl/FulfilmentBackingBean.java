@@ -100,7 +100,7 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 	    FlAttachment attachment = new FlAttachment();
 		attachment.setFileName(item.getFileName());
 		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		attachment.setCreatedUsername(facesScopes.getUserSessionBean().getUserName());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		attachment.setChangedBy(attachment.getCreatedBy());
@@ -191,7 +191,7 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 		if (remarkList.size() == 0
 				|| !compareUserName(remarkList.get(0).getUserId())) {
 			FlRemark remark = new FlRemark();
-			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
@@ -230,7 +230,7 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 		
 		if (remarkList.size() == 0 || !flWorkflowStatusMatch) {
 			FlRemark remark = new FlRemark();
-			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
@@ -260,7 +260,7 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 			FacesScopes facesScopes = new FacesScopes();
 			
 			FlRemark flRemark = new FlRemark();
-			flRemark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			flRemark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			flRemark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			flRemark.setChangedBy(flRemark.getCreatedBy());
 			flRemark.setChangedDate(flRemark.getCreatedDate());
@@ -312,7 +312,7 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 		
 		if (remarkList.size() == 0 || !flWorkflowStatusMatch) {
 			FlRemark remark = new FlRemark();
-			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());

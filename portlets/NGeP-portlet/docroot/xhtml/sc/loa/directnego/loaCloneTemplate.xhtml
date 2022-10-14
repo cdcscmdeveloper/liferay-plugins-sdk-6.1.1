@@ -9,7 +9,7 @@
 
 	<p:dialog widgetVar="cloneLoaSpec" modal="true" width="950"
 		height="600" position="top"
-		header="#{lbl['lbl.sc.spec.clone.specification']}">
+		header="#{lbl['lbl.sc.dl.spec.clone.specification']}">
 		<p:messages id="specLoaCloneTemplate" showDetail="true"
 			autoUpdate="true" closable="true" showSummary="false"
 			severity="error, info" />
@@ -20,7 +20,7 @@
 			<table>
 				<tr>
 					<td style="width: 180px;"><p:outputLabel
-							value="#{lbl['lbl.sc.standard.template']}" /> <p:outputLabel
+							value="#{lbl['lbl.sc.dl.standard.template']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneRadio 
 							required="#{directLOABackingBean.managedBean.required}"
@@ -62,7 +62,6 @@
 									value="#{directLOABackingBean.managedBean.searchItemTypeName}" /></td>
 						</tr>
 
-						<c:if test="#{directLOABackingBean.managedBean.standardTemplate eq ParameterConst.tplDocProcessTypeSourcing}">
 						<tr>
 							<td style="width: 180px;"><p:outputLabel
 									value="#{lbl['lbl.sc.category.code']}"></p:outputLabel></td>
@@ -88,8 +87,8 @@
 								</p:tree>
         					</td>
 						</tr>
-						</c:if>
 
+						<c:if test="#{directLOABackingBean.managedBean.standardTemplate eq ParameterConst.tplDocProcessTypeSourcing}">
 						<tr>
 							<td valign="top"><h:outputLabel
 									value="#{lbl['lbl.tpl.spec.title']}"></h:outputLabel></td>
@@ -97,6 +96,7 @@
 									style="width:670px; margin-bottom:5px;" maxlength="100"
 									value="#{directLOABackingBean.managedBean.specName}" /></td>
 						</tr>
+						</c:if>
 
 						<tr>
 							<td valign="top"><p:outputLabel
@@ -142,7 +142,6 @@
 									value="#{directLOABackingBean.managedBean.qtnTendertemplateSearchBean.toCreatedDate}"
 									mindate="#{directLOABackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}"
 									readonlyInput="true"
-									required="#{directLOABackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate ne null or !directLOABackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate eq ''}"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 									<f:attribute name="startDate"
 										value="#{directLOABackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}" />

@@ -724,6 +724,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
 						} else if (getSort_byGroup().equalsIgnoreCase(BpmConstants.SORT_BY_DOCSTATUS)){
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
+						} else if (getSort_byGroup().equalsIgnoreCase(BpmConstants.SORT_BY_RECEIVEDDATE)){
+							reqDTO.setSortBy(BpmConstants.SORT_BY_RECEIVEDDATE);
 						} else {
 							//reqDTO.setSortBy(getSort_by());
 						}					
@@ -742,7 +744,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
 						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_DOCSTATUS)){
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
-						} else {
+						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_RECEIVEDDATE)){
+							reqDTO.setSortBy(BpmConstants.SORT_BY_RECEIVEDDATE);
+						} else{
 							//reqDTO.setSortBy(getSort_by());
 						}
 					}

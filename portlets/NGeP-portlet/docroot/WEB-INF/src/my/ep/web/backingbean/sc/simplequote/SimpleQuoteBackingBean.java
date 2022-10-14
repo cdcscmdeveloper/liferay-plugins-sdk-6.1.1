@@ -765,7 +765,7 @@ public class SimpleQuoteBackingBean extends
 		// WorkFlow Status should be set In the save
 		updateWorkFlowAndRemarks(scQuote);
 		
-		scQuote.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
+		scQuote.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		
 		// zone location level by default - district
@@ -6203,7 +6203,7 @@ public class SimpleQuoteBackingBean extends
 		// WorkFlow Status should be set In the save
 		updateWorkFlowAndRemarks(scQuote);
 
-		scQuote.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
+		scQuote.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		// zone location level by default - district
 		if (getManagedBean().getLocationLevel() == null) {
@@ -8251,6 +8251,13 @@ public class SimpleQuoteBackingBean extends
 		// #29800 - end
 		
 		// #29832 @zaim added method to pass the value into lovBackingBean
+		
+		/**
+		 * @return SimpleQuoteManagedBean that contain SimpleQuoteManagedBean object.
+		 *
+		 */
+		
+		
 		public SimpleQuoteManagedBean deleteSuccess(){
 			
 			return getManagedBean();
@@ -8366,7 +8373,14 @@ public class SimpleQuoteBackingBean extends
 	    
 		//#5426 - end
 	    
+	    
 	    //29832 start
+		/**
+		 * @return list of PmBusinessNature level code 
+		 * that need to exclude.
+		 * The selected Business Nature will be exclude 
+		 * from Business Nature popup view.
+		 */
 		public String excludeLevelCodeSupplier(){
 			StringBuilder sb = new StringBuilder();
 			if (getManagedBean().getScQuote().getBusinessNatureCriterias() != null) {

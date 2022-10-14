@@ -539,8 +539,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				//#16190 start
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					messageId = MessageConst.INFO_700112;
-					//*comment the next role because the message has been hardcoded.
-					//nextRole = RoleCode.BPK_PQ_APPROVER.value();
+					nextRole = RoleCode.BPK_PQ_APPROVER.value();
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700113;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
@@ -1019,7 +1018,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		if(!getManagedBean().isViewContract()){
 			if(remarks.isEmpty() || !ctWorkflowStatusMatch) {
 				CtRemark remark = new CtRemark();
-				remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				remark.setChangedBy(remark.getCreatedBy());
 				remark.setChangedDate(remark.getCreatedDate());
@@ -1851,7 +1850,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				
 				attachment.setFileName(item.getFileName());
 				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-				attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+				attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 				attachment.setCreatedUser(facesScopes.getUserSessionBean());
 				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				getManagedBean().getCircularVer().getItemAttachments().add(attachment);
@@ -1859,7 +1858,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				
 				attachment.setFileName(item.getFileName());
 				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-				attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+				attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 				attachment.setCreatedUser(facesScopes.getUserSessionBean());
 				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				getManagedBean().getCircularVer().getCircularAttachments().add(attachment);

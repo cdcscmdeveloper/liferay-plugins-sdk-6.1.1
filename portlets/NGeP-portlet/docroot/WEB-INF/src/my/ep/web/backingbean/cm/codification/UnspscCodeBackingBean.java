@@ -3434,7 +3434,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		CmRemark newRemark = new CmRemark();
 		newRemark.setBrandNew(true);
 		newRemark.setEditable(true);
-		newRemark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+		newRemark.setCreatedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 		newRemark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		newRemark.setChangedBy(newRemark.getCreatedBy());
 		newRemark.setChangedDate(newRemark.getCreatedDate());
