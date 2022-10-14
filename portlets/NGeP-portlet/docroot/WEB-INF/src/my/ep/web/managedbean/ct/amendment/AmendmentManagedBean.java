@@ -193,6 +193,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String supplementalLoaNo = null;//Bug 33096 - shaqimi
 	private String docTypeFromTaskList = null;//Bug 34030 - shaqimi
 	private String taskNameFromTaskList = null;//Bug 34030 - shaqimi
+	private Long statusIdFromTaskList;//Bug 34030 - shaqimi
 	
 	public void reassignValue(boolean value) 
 	{
@@ -1679,6 +1680,14 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 
 	public void setTaskNameFromTaskList(String taskNameFromTaskList) {
 		this.taskNameFromTaskList = taskNameFromTaskList;
+	}
+
+	public Long getStatusIdFromTaskList() {
+		return statusIdFromTaskList;
+	}
+
+	public void setStatusIdFromTaskList(Long statusIdFromTaskList) {
+		this.statusIdFromTaskList = statusIdFromTaskList;
 	}
 	//Bug 34030 - shaqimi end
 
