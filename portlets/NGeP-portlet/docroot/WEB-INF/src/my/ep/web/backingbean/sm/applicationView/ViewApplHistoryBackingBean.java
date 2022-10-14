@@ -807,15 +807,16 @@ public class ViewApplHistoryBackingBean extends
 			log.info("getRemarksList().size():: " + remaksResDTO.getRemarksList().size());
 			for (SmRemark poRemark : remaksResDTO.getRemarksList()) {
 				// #32424 - start
-				if (!StringUtils.isEmpty(poRemark.getRoleCode()) && poRemark.getRoleCode().equals(RoleCode.UPS_PO.value()))
-					//#32424 --comment code-- 
-						/*|| (poRemark.getCreatedBy().equals(currWorkflowStatus.getCreatedBy())
+				if ((!StringUtils.isEmpty(poRemark.getRoleCode()) && poRemark.getRoleCode().equals(RoleCode.UPS_PO.value()))
+					//#32424 - start --uncomment code-- 14102022
+						|| (poRemark.getCreatedBy().equals(currWorkflowStatus.getCreatedBy())
 								&& getManagedBean().getSmAppl().getPmStatus().getStatusId() != SupplierManagementConst.PM_STATUS_REGISTERED && currWorkflowStatus
-								.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTERED)*/ {				
+								.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTERED)) {
+					// #32424 - end 14102022
 					System.out.println("getDocId:: " + poRemark.getDocId() + " || getRoleCode:: "
 							+ poRemark.getRoleCode() + " || getCreatedDate:: " + poRemark.getCreatedDate()
 							+ " || getRemark:: " + poRemark.getRemark());
-				// #32424 - end
+				// #32424 - end 
 					getManagedBean().setPoRemarkAfterSiteVisit(poRemark.getRemark());
 					getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getCreatedDate());
 

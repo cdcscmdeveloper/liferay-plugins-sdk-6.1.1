@@ -1942,7 +1942,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			PpRemark remark = new PpRemark();
 			remark.setEditable(true);
 			remark.setRemarkType(ProcurementPlanConst.REMARK_TYPE_REMARK);
-			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
@@ -3232,10 +3232,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		
 		if(newReason && this.getManagedBean().isModeReviewEditable()){
-			log.info("new reason added");			
+			log.info("new reason added");
 			PpRejectReason reason = new PpRejectReason();
 			reason.setEditable(true);
-			reason.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+			reason.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			reason.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			reason.setChangedBy(reason.getCreatedBy());
 			reason.setChangedDate(reason.getCreatedDate());
@@ -3302,7 +3302,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		PpExpenditureItem epItem = new PpExpenditureItem();
 		//24975@22012021 - start
 		epItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		epItem.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+		epItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 		log.info("setCreatedDate " + new Timestamp(System.currentTimeMillis()) + " setCreatedBy " + getFacesScopes().getUserSessionBean().getUserId());
 		//24975@22012021 - end
 		epItem.setPmGlAccount(new PmGlAccount());
@@ -4117,7 +4117,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			PpRemark remark = new PpRemark();
 			remark.setEditable(true);
 			remark.setRemarkType(ProcurementPlanConst.REMARK_TYPE_REMARK);
-			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
@@ -4232,7 +4232,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			PpRemark remark = new PpRemark();
 			remark.setEditable(true);
 			remark.setRemarkType(ProcurementPlanConst.REMARK_TYPE_JUSTIFICATION);
-			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
@@ -4378,11 +4378,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 
 		validatePpItem(); // disabled this if no validation required at this stage
-
+		
 		PpProcurementItem ppItem = new PpProcurementItem();
 		//24975@22012021 - start
 		ppItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		ppItem.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+		ppItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 		log.info("setCreatedDate " + new Timestamp(System.currentTimeMillis()) + " setCreatedBy " + getFacesScopes().getUserSessionBean().getUserId());
 		//24975@22012021 - end
 		ppItem.setProcurementCat(new PmParameter());
@@ -4753,7 +4753,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			PpRemark remark = new PpRemark();
 			remark.setEditable(true);
 			remark.setRemarkType(ProcurementPlanConst.REMARK_TYPE_REMARK);
-			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
@@ -6460,7 +6460,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    			}
 	    			
 	    		}*/
-	    		newPpItem.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+	    		
+	    		newPpItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 	    		newPpItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	    		newPpItem.setChangedDate(new Timestamp(new Date().getTime()));
 	    		 //24975@06112020@azza - Start
@@ -6677,7 +6678,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			log.info("new reason added");
 			PpUpdateReason reason = new PpUpdateReason();
 			reason.setEditable(true);
-			reason.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+			reason.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			reason.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			reason.setChangedBy(reason.getCreatedBy());
 			reason.setChangedDate(reason.getCreatedDate());
@@ -8298,9 +8299,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		    	if (ppPlan.getPpExpenditureItems() != null && 
 		    			!ppPlan.getPpExpenditureItems().isEmpty()) {
 		    		
-		    		PpExpenditureItem clonedPpExpItem =  PpExpenditureItemList.get(index);		
+		    		PpExpenditureItem clonedPpExpItem =  PpExpenditureItemList.get(index);
+		    				
 		    	    newPpExItem.setCloned(true);
-		    		newPpExItem.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+		    		newPpExItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 		    		newPpExItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		    		newPpExItem.setChangedDate(new Timestamp(new Date().getTime()));
 		    		newPpExItem.setPmGlAccount(clonedPpExpItem.getPmGlAccount());
