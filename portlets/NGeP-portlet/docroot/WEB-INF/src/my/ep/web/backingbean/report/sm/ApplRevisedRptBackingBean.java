@@ -59,7 +59,8 @@ public class ApplRevisedRptBackingBean extends SmReportBackingBean<ApplRevisedRp
 		PmUser user = fs.getUserSessionBean();
 		List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
 		String ePRole = StringUtils.EMPTY;
-		if (!EntityHelper.isCollectionEmpty(userRoles)) {
+		//#0011 - START - redmine testing
+		if (!EntityHelper.isCollectionEmpty(userRoles) && userRoles.contains(RoleCode.UPS_APPROVER)) {
 			for (PmUserRole userRole : userRoles) {
 				if (userRole.getPmRole().getRoleCode().equals(RoleCode.UPS_APPROVER.value())) {
 					ePRole = userRole.getPmRole().getRoleCode();
@@ -67,6 +68,7 @@ public class ApplRevisedRptBackingBean extends SmReportBackingBean<ApplRevisedRp
 				}
 			}
 		}
+		//#0011 - END - redmine testing
 		log.info("User Role >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + ePRole);
 		return ePRole;
 	}

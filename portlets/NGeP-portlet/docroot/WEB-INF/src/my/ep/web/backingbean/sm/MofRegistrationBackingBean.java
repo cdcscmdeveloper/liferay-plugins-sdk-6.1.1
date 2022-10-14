@@ -515,6 +515,15 @@ public class MofRegistrationBackingBean extends
 
 	public void submitCancellationRequest() {
 		IMofRegistrationSO mofRegistrationSO = null;
+		
+		//#34095
+		boolean testing_for_git = true;
+		
+		if(testing_for_git){
+			//"this changes made for testing git repository..);
+		}
+		//#34095
+		
 		try {
 			mofRegistrationSO = BusinessDelegate.getInstance()
 					.getServiceObject(IMofRegistrationSO.class);
@@ -552,5 +561,13 @@ public class MofRegistrationBackingBean extends
 			System.out.println("Date Format with E, dd MMM yyyy HH:mm:ss z :"+stringDate);
 			return stringDate;
 		}
+	
+	//#34095 - START
+	public int addOfTwo(int integer_one, int integer_two){
+		return integer_one + integer_two;
+	}
+	//#34095 - END
+	
+	
 
 }
