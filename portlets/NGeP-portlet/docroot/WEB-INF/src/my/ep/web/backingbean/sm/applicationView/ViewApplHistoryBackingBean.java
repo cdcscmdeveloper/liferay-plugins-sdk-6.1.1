@@ -1985,5 +1985,10 @@ public class ViewApplHistoryBackingBean extends
 		}
 	}
 	//#31270 - END
+	
+	//#33628
+	public void testGit(){
+		log.info("Testing Git 1");
+	}
 
 }
