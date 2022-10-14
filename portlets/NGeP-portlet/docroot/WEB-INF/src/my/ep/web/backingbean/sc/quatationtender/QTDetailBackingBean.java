@@ -845,7 +845,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			boolean isFirstSave = scQt.getQtNo() == null && scQt.isBrandNew() ? true : false;
 			
 			validateQtDetails();
-			
+			//#29521-start
+			retrieveScQtHist();
+			validateIsSupplierQualificationCriteriaChange();
+			validateIsZonalAdded();
+			//#29521-end
 			//#28784
 			checkDemoPresentationByStatus();
 			
@@ -6848,6 +6852,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//32880 - Bug - end
 		if(null!=this.getManagedBean().getCtContract()){
 			this.getManagedBean().getCtContract().setContractNo(this.getManagedBean().getQt().getExistingContractNo());
+			String ctNameandNo = detailSO.getContractNameByContractNo(this.getManagedBean().getQt().getExistingContractNo());
+			this.getManagedBean().getCtContract().setCtNameandNo(ctNameandNo);
 		}
 		this.getManagedBean().setActiveIndex(activeIndex);
 		this.getManagedBean().setTaskId(taskId);
