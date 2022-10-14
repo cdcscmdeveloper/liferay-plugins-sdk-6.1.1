@@ -580,6 +580,8 @@ public class SmApplicationBackingBean extends
 		}
 				
 		//END - Generate Report In EXCEL
+		
+		//try commit 14102022
 	
 		//START: Download 
 		PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
