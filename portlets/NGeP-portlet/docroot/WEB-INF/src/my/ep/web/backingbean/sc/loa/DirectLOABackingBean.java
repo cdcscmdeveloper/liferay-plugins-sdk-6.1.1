@@ -468,6 +468,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 			parseLOADetails(scLoa, outcome, reqDTO);
 
+			// #29468 Start Vinod
+			if(!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(scLoa.getPmStatus().getStatusId())
+				&& scLoa.getScQt().getPmProcurementCategory().getParameterId()==null){
+					throw new EpException(MessageConst.ERROR_775181);
+			}
+			// #29468 End Vinod
 			validateSupplierDetails(scLoa);
 			//20200325@asyrafhaziq _ Bug #27740 - Start
 			validateLoaAmount(scLoa);
