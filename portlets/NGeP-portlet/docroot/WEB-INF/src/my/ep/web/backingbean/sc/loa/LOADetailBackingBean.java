@@ -8940,7 +8940,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}if (justificationIsChanged) {
 			createLampiranA3(null);
-			onBackToZoneItemDetailsTab();
+			//onBackToZoneItemDetailsTab(); #29006 - note 633
 		}
 		//#29006 - end - note 619
 	}
@@ -9276,7 +9276,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}if (justificationIsChanged) {
 				createLampiranA3(null);
-				onBackToZoneItemDetailsTab();
+				//onBackToZoneItemDetailsTab(); #29006 - note 633
 			}
 			//#29006 - end - note 619
 		}
