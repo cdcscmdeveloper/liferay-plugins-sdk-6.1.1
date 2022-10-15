@@ -30,22 +30,23 @@
 
 			<c:if test="#{isItemTypeService}">
 				<p:column rowspan="#{specificationRequired ? 2 : 1}"
-					style="width:70px;text-align:right;"
-					headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
-
+					style="width:70px;white-space:normal;text-align:right;">
+					<f:facet name="header" style="white-space:normal;">
+						<h:outputText value="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}"/>
+					</f:facet>
 				</p:column>
 				<p:column rowspan="#{specificationRequired ? 2 : 1}"
-					style="width:60px;text-align:right;"
+					style="width:60px;white-space:normal;text-align:right;"
 					headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
 
 				</p:column>
 				<p:column rowspan="#{specificationRequired ? 2 : 1}"
-					style="width:60px;text-align:right;"
+					style="width:60px;white-space:normal;text-align:right;"
 					headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
 
 				</p:column>
 				<p:column rowspan="#{specificationRequired ? 2 : 1}"
-					style="width:2%;text-align:right;"
+					style="width:2%;white-space:normal;text-align:right;"
 					headerText="#{lbl['lbl.tpl.spec.content.duration.month']}"
 					rendered="#{isDurationByItem}">
 
