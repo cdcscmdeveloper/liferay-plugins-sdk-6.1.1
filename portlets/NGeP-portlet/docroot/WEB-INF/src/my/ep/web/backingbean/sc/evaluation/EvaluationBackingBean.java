@@ -2487,7 +2487,12 @@ public class EvaluationBackingBean extends
 			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 				if (this.getManagedBean().getScQt().isDemoRequired()) {
+					// #28784 - FEC by item eval = TI, package = P	
+					if(this.getManagedBean().getTabItemPackageIndex() == 1){
+						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+					} else {
 					evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
+					}
 				} else {
 					//#25138 - 040621 - start
 					if(this.getManagedBean().getScQt().isPartial()){
@@ -13443,9 +13448,14 @@ private void retriveCommitteeRemarksList(){
 				}
 				if(removesupplier.size()>0){//32453
 					resDTO.getComplianceResultBean().getResultList().removeAll(removesupplier);	
-					//Bug #33851 REMOVE below related to #21695
-					//resDTO.getComplianceResultBean().setTotalRecord(resDTO.getComplianceResultBean().getResultList().size());
+					//#28784, #34091 - related - Start
+					if(getManagedBean().getScQt().isDemoRequired()){
+						if(resDTO.getComplianceResultBean().getResultList().size() == 0){
+							//Bug #33851 REMOVE Below related to #21695
+							resDTO.getComplianceResultBean().setTotalRecord(resDTO.getComplianceResultBean().getResultList().size());
+						}
 					//Bug #33851 REMOVE related to #21695
+					}//#28784, #34091 - related - End
 				}//32453
 				return resDTO.getComplianceResultBean();
 				
@@ -14801,7 +14811,12 @@ private void retriveCommitteeRemarksList(){
 			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 				if (this.getManagedBean().getScQt().isDemoRequired()) {
+					// #28784 - FEC by item eval = TI, package = P	
+					if(this.getManagedBean().getTabActiveIndex() == 0){
+						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+					} else {
 					evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
+					}					
 				} else {
 					evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 				}
