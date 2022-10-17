@@ -372,8 +372,9 @@ public class gpkiBackingBean implements Serializable {
 					enableAutoUpdateMtdExpr.invoke( FacesContext.getCurrentInstance().getELContext(), new Object[] {});
 				}
 				log.info("MyGPKI - Signing OTP  :  success");
+				this.setNonSigningException(null);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
-										
+								
 			} else {
 				String errorDesc = "";
 				if (statusCode.equalsIgnoreCase("805")) {
@@ -400,7 +401,7 @@ public class gpkiBackingBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(
 					"gpki",
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", nonSigningException.getMessage()));
-//			RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
+			RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
 		}
 
 		RequestContext.getCurrentInstance().execute("gpkiBlockWidget.hide()");
