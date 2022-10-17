@@ -11416,11 +11416,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				}
 				// 11104-End
 				
-				this.getManagedBean().setScQtCheckSt2techProposal(null);
 				this.getManagedBean().setFinancialScoring(null);
 				this.getManagedBean().setOfferPricePackage(null);
 				this.getManagedBean().setQt(resDTO.getScQt());
-				retriveTechnicalCheckList();
 				
 				// 11104-start
 				if (this.getManagedBean().getQt().isSampleReq()
