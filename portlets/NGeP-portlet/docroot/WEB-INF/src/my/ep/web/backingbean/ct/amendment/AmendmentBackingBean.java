@@ -4593,8 +4593,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					changeAccountActionListener();
 				}
 				ctBackingBean.getManagedBean().setApplID(ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getApplId());
-					}
-				}     
+			}
+		}     
 		return populateBankAccountList;
 	}
 //End Fix - #33674 
