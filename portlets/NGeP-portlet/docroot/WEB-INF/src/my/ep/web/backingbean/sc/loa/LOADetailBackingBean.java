@@ -2917,109 +2917,105 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		try {
 			Long contractType = getManagedBean().getScLoa().getContractType().getParameterId();
-			
-			if(this.getManagedBean().getFlowamt()==null && contractType == ParameterConst.CONTRACT_TYPE_CENTRAL_CODE)
-			{
-				throw new EpException(MessageConst.ERROR_760485);
-				
-			}else{
 
-					String outcome = BpmOutcomeConst.BPM_SAVE;
-					ScLoa scLoa = this.getManagedBean().getScLoa();
-					
-					boolean isNewLoa = false; //Bug #33188
+			if (this.getManagedBean().getFlowamt() == null && contractType == ParameterConst.CONTRACT_TYPE_CENTRAL_CODE) {
+				throw new EpException(MessageConst.ERROR_760485);
+
+			} else {
+
+				String outcome = BpmOutcomeConst.BPM_SAVE;
+				ScLoa scLoa = this.getManagedBean().getScLoa();
+
+				boolean isNewLoa = false; // Bug #33188
+
 				// #19336 -start-
 				boolean validateWitness = this.getManagedBean().isValidatewitness();
 				// #19336 -end-
-					
-					if((scLoa!=null) && (this.getManagedBean().getFlowamt()!=null))
-					{
-						scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
-					}
-					ScLoaWitness loaSupplierWitness = this.getManagedBean().getLoaSupplierWitness();
-					Long statusId = scLoa.getPmStatus().getStatusId().longValue();
-		
-					if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-							.equals(statusId)) {
-						validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
-						// #29006 - start  - Bug #33903 start					
-						if (CollectionUtils.isNotEmpty(scLoa.getScLoaRemarks())) {
-							ScLoaRemark removeRemark = new ScLoaRemark();
-							for (ScLoaRemark scLoaRemark : scLoa.getScLoaRemarks()) {
-								// If scLoaRemark.getRemark() is null or empty
-								// String
-								if (StringUtils.isEmpty(scLoaRemark.getRemark())) {
-									// Set SPACE String for each in
-									// scLoa.getScLoaRemarks() so that
-									// system will not encounter
-									// "cannot insert null into" error
-									// for ScLoaRemark.remark property
-									// Set space when remark Id is not null only
-									if (null == scLoaRemark.getRemarkId()){
-										removeRemark = scLoaRemark;
-									}else{
-										scLoaRemark.setRemark(" ");
-									}
+
+				if ((scLoa != null) && (this.getManagedBean().getFlowamt() != null)) {
+					scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
+				}
+				ScLoaWitness loaSupplierWitness = this.getManagedBean().getLoaSupplierWitness();
+				Long statusId = scLoa.getPmStatus().getStatusId().longValue();
+
+				if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
+					validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
+					// #29006 - start - Bug #33903 start
+					if (CollectionUtils.isNotEmpty(scLoa.getScLoaRemarks())) {
+						ScLoaRemark removeRemark = new ScLoaRemark();
+						for (ScLoaRemark scLoaRemark : scLoa.getScLoaRemarks()) {
+							// If scLoaRemark.getRemark() is null or empty
+							// String
+							if (StringUtils.isEmpty(scLoaRemark.getRemark())) {
+								// Set SPACE String for each in
+								// scLoa.getScLoaRemarks() so that
+								// system will not encounter
+								// "cannot insert null into" error
+								// for ScLoaRemark.remark property
+								// Set space when remark Id is not null only
+								if (null == scLoaRemark.getRemarkId()) {
+									removeRemark = scLoaRemark;
+								} else {
+									scLoaRemark.setRemark(" ");
 								}
 							}
-							scLoa.getScLoaRemarks().remove(removeRemark);
 						}
-						// #29006 - end  - Bug #33903 end
+						scLoa.getScLoaRemarks().remove(removeRemark);
 					}
-					parseLOADetails(scLoa, outcome);
-					validateLOADetails(scLoa, outcome);
-					validateContractDetails(scLoa);
-					if (!supplier) {
-						updateContractDetails(scLoa);
+					// #29006 - end - Bug #33903 end
+				}
+				parseLOADetails(scLoa, outcome);
+				validateLOADetails(scLoa, outcome);
+				validateContractDetails(scLoa);
+				if (!supplier) {
+					updateContractDetails(scLoa);
+				}
+				// Bug #33188 start
+				if (scLoa.isBrandNew()) {
+					isNewLoa = true;
+				}
+				// Bug #33188 end
+
+				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+				reqDTO.setPayLoad(getManagedBean().getPayLoad());
+				reqDTO.setScLoa(scLoa);
+				reqDTO.setOutcome(outcome);
+				reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
+				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+				reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+				reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
+				reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
+				AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
+
+				if (resDTO.isSuccessful()) {
+					scLoa = resDTO.getScLoa();
+					if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
+						// rename temporary Loa No folder name in docRepo
+						RenameTempLoaNoRepoDirByLoaNo(scLoa);
 					}
-					 //Bug #33188 start
-					if (scLoa.isBrandNew()) {
-						isNewLoa = true;
+
+					if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
+						retrieveSupplierLOADtl(getManagedBean().getSourceId(), scLoa.getLoaId(), null, false);
+					} else {
+						editLOAAction(scLoa);
 					}
-					//Bug #33188 end
-		
-					AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-					reqDTO.setPayLoad(getManagedBean().getPayLoad());
-					reqDTO.setScLoa(scLoa);
-					reqDTO.setOutcome(outcome);
-					reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
-					reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-					reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-					reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
-					reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
-					AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
-		
-					if (resDTO.isSuccessful()) {
-						scLoa = resDTO.getScLoa();
-						if (QTStatusConst.LOA_PENDING_SUBMISSION
-								.equals(statusId)) {
-							// rename temporary Loa No folder name in docRepo
-							RenameTempLoaNoRepoDirByLoaNo(scLoa);
-						}
-		
-						if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-								.equals(statusId)) {
-							retrieveSupplierLOADtl(getManagedBean().getSourceId(), scLoa.getLoaId(), null, false);
-						} else {
-							editLOAAction(scLoa);
-						}
-						
+
 					// #19336 -start-
 					this.getManagedBean().setValidatewitness(validateWitness);
 					// #19336 -end-
-							
-						 //Bug #33188 start
-						if (isNewLoa){
-							renewSesionObject();
-							successMessage(MessageConst.INFO_7000044, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
-									scLoa.getLoaNo(), Boolean.TRUE);
-						}else{
-							successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
-									scLoa.getLoaNo(), Boolean.FALSE);
-						}
-						 //Bug #33188 end
+
+					// Bug #33188 start
+					if (isNewLoa) {
+						renewSesionObject();
+						successMessage(MessageConst.INFO_7000044, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, scLoa.getLoaNo(),
+								Boolean.TRUE);
+					} else {
+						successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, scLoa.getLoaNo(),
+								Boolean.FALSE);
 					}
-				 }
+					// Bug #33188 end
+				}
+			}
 
 		} finally {
 			//qtAwardSO = null;
