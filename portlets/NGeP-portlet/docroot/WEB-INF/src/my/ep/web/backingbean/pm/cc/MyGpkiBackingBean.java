@@ -126,6 +126,7 @@ public class MyGpkiBackingBean  implements Serializable {
 
 		final String ic = resDTO.getPmUser().getIdentificationNo();
 
+		this.setNonSigningException(null);
 		try {
 
 			HttpHost target = new HttpHost(myGPKIBaseUrl, 443, "https");
@@ -152,18 +153,21 @@ public class MyGpkiBackingBean  implements Serializable {
 			if (output.equalsIgnoreCase("OPERATION_SUCCESSFULL")) {
 				log.info("================================= MyGPKI Deactivated");
 				FacesContext.getCurrentInstance().addMessage(
-						"MyGPKI",
+						"mygpkiActivateNotify",
 						new FacesMessage(FacesMessage.SEVERITY_INFO,"","Deactivate process successful"));
 
 			} else {
 				FacesContext.getCurrentInstance().addMessage(
-						"MyGPKI",
+						"mygpkiActivateNotify",
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Deactivate process failed - "
 								+ output));
 			}
 
 		} catch (Exception e) {
 			log.info("MyGPKI : Deactiavate process failed - Exception : "+e.toString());
+			FacesContext.getCurrentInstance().addMessage(
+					"mygpkiActivateNotify",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Deactivate process failed - " + e.toString()));
 
 		}
 	}
@@ -220,7 +224,7 @@ public class MyGpkiBackingBean  implements Serializable {
 			}
 
 			FacesContext.getCurrentInstance().addMessage(
-					"MyGPKI",
+					"mygpkiActivateNotify",
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Activate process failed. Error : " + output));
 
 		} catch (Exception e) {
@@ -275,7 +279,7 @@ public class MyGpkiBackingBean  implements Serializable {
 			if (output.equalsIgnoreCase("OPERATION_SUCCESSFULL") || output.equalsIgnoreCase("OTP_VALID") ) {
 				log.info("================================= MyGPKI OTP Verified");
 				FacesContext.getCurrentInstance().addMessage(
-						"MyGPKI",
+						"mygpkiActivateNotify",
 						new FacesMessage(FacesMessage.SEVERITY_INFO,"","OTP Verified"));
 
 			} else {
@@ -294,7 +298,7 @@ public class MyGpkiBackingBean  implements Serializable {
 					errorDesc = "";
 				}
 				FacesContext.getCurrentInstance().addMessage(
-						"MyGPKI",
+						"mygpkiActivateNotify",
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Verify OTP process failed. Error : "
 								+ output));
 			}
@@ -302,7 +306,7 @@ public class MyGpkiBackingBean  implements Serializable {
 		} catch (Exception e) {
 			log.info("MyGPKI : Verify OTP process failed - Exception : "+e.toString());
 			FacesContext.getCurrentInstance().addMessage(
-					"MyGPKI",
+					"mygpkiActivateNotify",
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Verify OTP process failed. Error : "
 							+ e.toString()));
 		}
@@ -344,7 +348,7 @@ public class MyGpkiBackingBean  implements Serializable {
 			errorMsg = statusMsg;
 		}
 
-		FacesContext.getCurrentInstance().addMessage("gpki",
+		FacesContext.getCurrentInstance().addMessage("mygpkiActivateNotify",
 				new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errorMsg));
 	}
 

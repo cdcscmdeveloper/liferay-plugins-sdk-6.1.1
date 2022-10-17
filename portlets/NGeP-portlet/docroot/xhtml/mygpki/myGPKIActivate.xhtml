@@ -8,20 +8,19 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
 
-			
+
+
 	<ui:define name="contentSection">
-<!-- 	<cc:interface> -->
-<!-- 		<cc:attribute name="deactivateOTP" /> -->
-<!-- 	</cc:interface> -->
-<!-- 		<cc:implementation> -->
-		<p:remoteCommand name="deactivateOTP" action="#{myGpkiBackingBean.deactivate}" />
+		<!-- 	<cc:interface> -->
+		<!-- 		<cc:attribute name="deactivateOTP" /> -->
+		<!-- 	</cc:interface> -->
+		<!-- 		<cc:implementation> -->
+		<p:remoteCommand name="deactivateOTP"
+			action="#{myGpkiBackingBean.deactivate}" />
 
 
 		<style>
-		
-		
 textarea {
 	width: 205px;
 	font-family: Arial, Helvetica, sans-serif;
@@ -54,51 +53,43 @@ textarea {
 .ui-dialog-footer {
 	text-align: right !important;
 }
-
 </style>
 
 		<p:blockUI block="myGPKIActivate" widgetVar="gpkiBlockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-		<p:messages id="mygpkiActivateMessages" for="MyGPKI" showDetail="true"
+		<p:messages id="mygpkiActivateMessages" for="mygpkiActivateNotify" showDetail="true"
 			autoUpdate="true" closable="true" />
-
-		<p:panel id="myGPKIActivate">
 			
-				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-					<tbody>
-						<tr>
-							<!-- 						<td width="20" valign="top" class="myProfile-text"><p:graphicImage -->
-							<!-- 								value="/css/images/design/ico-play.png" title="Activate OTP" /></td> -->
-							<td><p:commandLink
-									value="Activate OTP" 
-									action="#{myGpkiBackingBean.loadQRCode}"
-									onstart="gpkiBlockWidget.show()"
-									oncomplete="updateQRImage();gpkiBlockWidget.hide();qrDialog.show()"></p:commandLink></td>
+		<p:panel id="myGPKIActivate">
 
-						</tr>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tbody>
+					<tr>
+						<td><p:commandLink value="Activate OTP"
+								action="#{myGpkiBackingBean.loadQRCode}"
+								onstart="gpkiBlockWidget.show()"
+								oncomplete="updateQRImage();gpkiBlockWidget.hide();qrDialog.show()"></p:commandLink></td>
 
-						<tr>
-							<!-- 						<td width="20" valign="top" class="myProfile-text"> -->
-							<!-- 						<p:graphicImage value="/css/images/design/ico-termination.png" title="Deactivate OTP" /> -->
-							<!-- 								</td> -->
-							<td><p:commandLink
-									value="Deactivate OTP"
-									action="#{myGpkiBackingBean.deactivate}"
-									onstart="gpkiBlockWidget.show()"
-									oncomplete="gpkiBlockWidget.hide()"></p:commandLink></td>
-						</tr>
+					</tr>
 
-<!-- 						<tr> -->
-<!-- 							<td colspan="2" valign="top" class="myProfile-text"><p:password -->
-<!-- 									binding="#{pin}" id="password" /> <p:commandButton -->
-<!-- 									value="Verify OTP" -->
-<!-- 									action="#{myGpkiBackingBean.verifyOTP(pin.value)}" -->
-<!-- 									onstart="gpkiBlockWidget.show()" -->
-<!-- 									oncomplete="gpkiBlockWidget.hide()"></p:commandButton></td> -->
-<!-- 						</tr> -->
-					</tbody>
-				</table>
+					<tr>
+						<td><p:commandLink value="Deactivate OTP"
+								action="#{myGpkiBackingBean.deactivate}"
+								onstart="gpkiBlockWidget.show()"
+								oncomplete="gpkiBlockWidget.hide()"></p:commandLink></td>
+					</tr>
+
+					<!-- 						<tr> -->
+					<!-- 							<td colspan="2" valign="top" class="myProfile-text"><p:password -->
+					<!-- 									binding="#{pin}" id="password" /> <p:commandButton -->
+					<!-- 									value="Verify OTP" -->
+					<!-- 									action="#{myGpkiBackingBean.verifyOTP(pin.value)}" -->
+					<!-- 									onstart="gpkiBlockWidget.show()" -->
+					<!-- 									oncomplete="gpkiBlockWidget.hide()"></p:commandButton></td> -->
+					<!-- 						</tr> -->
+				</tbody>
+			</table>
 		</p:panel>
 
 		<p:remoteCommand name="updateQRImage" update="qrPanel" />
@@ -134,12 +125,10 @@ textarea {
 			<p:outputPanel id="qrPanel">
 				<table>
 					<tr>
-						<td style="height: 300px;width: 300px;">
-						<p:graphicImage
+						<td style="height: 300px; width: 300px;"><p:graphicImage
 								value="data:image/jpg;base64,#{myGpkiBackingBean.qrCodeText}"
 								alt="Image failed to load"
-								style="max-width: 300px; max-height: 300px;" />
-						</td>
+								style="max-width: 300px; max-height: 300px;" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -151,7 +140,6 @@ textarea {
 				</h:form>
 			</f:facet>
 		</p:dialog>
-<!-- 		</cc:implementation> -->
 	</ui:define>
 
 </ui:composition>

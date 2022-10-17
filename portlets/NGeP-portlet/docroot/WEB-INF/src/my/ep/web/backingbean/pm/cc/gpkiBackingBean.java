@@ -110,7 +110,7 @@ public class gpkiBackingBean implements Serializable {
 		String subjectDN = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap().get("subjectDN");
 		FacesScopes facesScope = new FacesScopes();
-		Long userId = facesScope.getUserSessionBean().getUserId();
+		Long userId = facesScope.getUserSessionBean().getUserId(); 
 		log.info("gpkiBackingBean.gpkiSignAction(): userId is: " + userId);
 		// Long userId = (Long) MDC.get(LogKey.USER_ID);
 		Timestamp date = new Timestamp(System.currentTimeMillis());
