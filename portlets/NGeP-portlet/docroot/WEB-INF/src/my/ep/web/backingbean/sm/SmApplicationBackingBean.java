@@ -3906,6 +3906,10 @@ public class SmApplicationBackingBean extends
 				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
 						getManagedBean().getSmSupplier().getSmAppl());
 			}
+			if(getManagedBean().getSmAppl() != null){
+				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
+						getManagedBean().getSmAppl());
+			}
 			//32617 END
 
 			// init GST information
