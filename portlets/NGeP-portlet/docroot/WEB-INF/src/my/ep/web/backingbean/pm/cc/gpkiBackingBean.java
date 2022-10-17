@@ -315,7 +315,11 @@ public class gpkiBackingBean implements Serializable {
 
 		try {
 			if (pin == null || pin.isEmpty() || pin == "") {
-				throw new Exception("OTP number is empty");	
+				FacesContext.getCurrentInstance().addMessage(
+						"gpki",
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "OTP number is empty"));
+				
+				return null;
 			}
 			this.setNonSigningException(null);
 
@@ -359,17 +363,13 @@ public class gpkiBackingBean implements Serializable {
 				pmDigiSign.setGpkiSignedData(signedData);
 				log.info("================================= Nexus Smart Id Verified");
 
-//				 Disabled at the moment to retain data status
-				 returnObj = postSignActionMtdExpr.invoke(FacesContext.getCurrentInstance().getELContext(),
-				 new Object[] { pmDigiSign });
-				
-				 if (enableAutoUpdateMtdExpr != null) {
-				 enableAutoUpdateMtdExpr.invoke(FacesContext.getCurrentInstance().getELContext(),
-				 new Object[] {});
-				 }
-
+				returnObj = postSignActionMtdExpr.invoke( FacesContext.getCurrentInstance().getELContext(), new Object[] { pmDigiSign });
+				if (enableAutoUpdateMtdExpr != null) {
+					enableAutoUpdateMtdExpr.invoke( FacesContext.getCurrentInstance().getELContext(), new Object[] {});
+				}
+				log.info("MyGPKI - Signing OTP  :  success");
 				RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
-
+										
 			} else {
 				String errorDesc = "";
 				if (statusCode.equalsIgnoreCase("805")) {
@@ -380,27 +380,27 @@ public class gpkiBackingBean implements Serializable {
 					errorDesc = " - Operation failed";
 				}
 				FacesContext.getCurrentInstance().addMessage(
-						"MyGPKI",
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, " ", "OTP verification failed. Error : "
+						"gpki",
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "OTP verification failed. Error : "
 								+ statusCode + errorDesc));
 			}
 
 		} catch (Exception e) {
-			// log.info("W/O TOken : enableAutoUpdateMtdExpr Error setRunGPKIEnableAutoUpdate--");
-			// RequestContext.getCurrentInstance().execute("setRunGPKIEnableAutoUpdate(true);");
+			RequestContext.getCurrentInstance().execute("setRunGPKIEnableAutoUpdate(true);");	
 			if (enableAutoUpdateMtdExpr != null) {
-				enableAutoUpdateMtdExpr.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[] {});
+				enableAutoUpdateMtdExpr.invoke(
+						FacesContext.getCurrentInstance().getELContext(),
+						new Object[] {});
 			}
 			nonSigningException = e;
 			FacesContext.getCurrentInstance().addMessage(
-					"MyGPKI",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, " ", nonSigningException.getMessage()));
-			//RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
+					"gpki",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", nonSigningException.getMessage()));
+//			RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
 		}
 
 		RequestContext.getCurrentInstance().execute("gpkiBlockWidget.hide()");
-		log.info("gpkiNexusSmartIdBackingBean.gpkiSignAction(): duration in milli seconds is: "
-				+ (System.currentTimeMillis() - startTime));
+		log.info("gpkiBackingBean.gpkiSignAction(): duration in milli seconds is: " + (System.currentTimeMillis() - startTime));
 		if (returnObj != null) {
 			return returnObj.toString();
 		} else {
@@ -427,5 +427,6 @@ public class gpkiBackingBean implements Serializable {
 		return httpclient;
 	}
 	
+//	20221005 @Nasim - #33986 MyGPKI POC END
 
 }
