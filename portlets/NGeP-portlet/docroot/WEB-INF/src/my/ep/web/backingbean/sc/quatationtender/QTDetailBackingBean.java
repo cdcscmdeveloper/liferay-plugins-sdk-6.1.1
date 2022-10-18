@@ -1106,6 +1106,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}	
 			this.getManagedBean().getCtContract()
 					.setContractNo(selectedScQt.getExistingContractNo());
+			//#29521 - start
+			String ctNameandNo = detailSO.getContractNameByContractNo(selectedScQt.getExistingContractNo());
+			this.getManagedBean().getCtContract().setCtNameandNo(ctNameandNo);
+			//#29521 - end
 			this.getManagedBean().setPtjSpecialApproval(
 					selectedScQt.getPtjSpecialApproval());
 			this.getManagedBean().setPanel(selectedScQt.isPanel());
@@ -6847,8 +6851,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//32880 - Bug - end
 		if(null!=this.getManagedBean().getCtContract()){
 			this.getManagedBean().getCtContract().setContractNo(this.getManagedBean().getQt().getExistingContractNo());
+			//#29521 - start
 			String ctNameandNo = detailSO.getContractNameByContractNo(this.getManagedBean().getQt().getExistingContractNo());
 			this.getManagedBean().getCtContract().setCtNameandNo(ctNameandNo);
+			//#29521 - end
 		}
 		this.getManagedBean().setActiveIndex(activeIndex);
 		this.getManagedBean().setTaskId(taskId);
@@ -11723,6 +11729,10 @@ public void retrieveDemoQtDetails(Long qtId) {
 						getManagedBean().getCtContract().setContractNo(
 								this.getManagedBean().getQt()
 										.getExistingContractNo());
+						//#29521 - start
+						String ctNameandNo = QtDetailsSO.getContractNameByContractNo(this.getManagedBean().getQt().getExistingContractNo());
+						this.getManagedBean().getCtContract().setCtNameandNo(ctNameandNo);
+						//#29521 - end
 						if (this.getManagedBean().getQt().isZonal()) {							
 							if (null != this.getManagedBean().getQt()
 									.getZoneLocationLevel()) {
@@ -12424,8 +12434,9 @@ public void retrieveDemoQtDetails(Long qtId) {
 		return bpmExistFlag;
 	}
 	//9019 - End (Harun)
+	// #29521 - start
 	
-	// #29521 - start	
+	
 	public void retrieveScQtHist(){
 		
 		//start - general information tab
