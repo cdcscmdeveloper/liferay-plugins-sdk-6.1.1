@@ -10,7 +10,7 @@
 		value="#{prevSpecQuestion != null ? prevSpecQuestion.specQuestionId == question.specQuestionId : false}" />
 		<ui:param name="isRenderUOMandQuantity" value="#{evaluationBackingBean.checkUOMandQuantityRender()}" /> <!-- #29187 Added Vinod -->
  <!-- #32952 remove here -->
-	<p:column style="width: 25%;white-space: normal;">
+	<p:column style="width: 25%;white-space: normal;word-break:normal;"><!-- #29006 word-break:normal -->
 		<!-- #29187 Start Vinod -->
 		<p:commandLink value="#{fn:replace(question.clItem,',',',  ')}"
 					   rendered="#{!isRepeated and !isRenderUOMandQuantity}" process="@this" partialSubmit="true"
