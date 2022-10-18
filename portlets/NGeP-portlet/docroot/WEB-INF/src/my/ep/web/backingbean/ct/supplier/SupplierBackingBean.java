@@ -1738,12 +1738,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 
 			if(getManagedBean().getFactoring().getBankAccountNo()!=null){
 				financialAccountNo = getManagedBean().getFactoring().getBankAccountNo().trim();
-				reqDTO.setAccountNo(getManagedBean().getFactoring().getBankAccountNo().trim());
 			}else{
 				String[] accBankList = getManagedBean().getAccBankName().split("/");
 				financialAccountNo = accBankList[0].trim();
-				reqDTO.setAccountNo(accBankList[0].trim());
 			}
+			reqDTO.setAccountNo(financialAccountNo);
 			
 			resDTO = financialOrgSO.retriveFinAccByFinOrgIdAccNo(reqDTO);
 			if (resDTO.getPmFinancialAcc()!=null 
@@ -1751,10 +1750,9 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				statusFactoringFinAcc = true;
 			}
 		
-		} finally {
-			financialOrgSO = null;
-			reqDTO = null;
-			resDTO = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 
 		if (!statusFactoringCompany || !statusFactoringFinAcc){
