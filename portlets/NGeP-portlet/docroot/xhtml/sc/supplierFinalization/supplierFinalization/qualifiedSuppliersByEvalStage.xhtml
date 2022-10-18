@@ -10,9 +10,12 @@
 	<ui:param name="manufacturercategoryCode" value="#{suppFinalizationBackingBean.checkManufacturerCategoryCodes(suppFinalizationBackingBean.managedBean.checkCategoryCodeQt)}"></ui:param>
 	<!-- #29466 - END -->
 	<!-- Qualified Supplier Details By Evaluation Stage dialog -->
+	<!-- //#21695 pagination set default page, total record is not the same with each zone farid -
+	adding onhide setpage to 0 -->
 	<p:dialog id="qualSuppDetailsPopupId" widgetVar="qualSuppDetailsPopup"
 		position="center" header="#{lbl[suppFinalizationBackingBean.managedBean.evaluationHeader]}" 
-		modal="true" dynamic="true" styleClass="pop_up_top" width="950" resizable="false">
+		modal="true" dynamic="true" styleClass="pop_up_top" width="950" resizable="false"
+		onHide="qualifiedSupplierDtls.getPaginator().setPage(0);">
 
 		<ui:param name="isTechnicalEvalStage" value="#{suppFinalizationBackingBean.managedBean.evaluationStageId == 1}" />
 		<ui:param name="isFinancialEvalStageByPkg" value="#{suppFinalizationBackingBean.managedBean.evaluationStageId == 2 and 
