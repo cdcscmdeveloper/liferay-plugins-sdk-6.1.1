@@ -23,7 +23,6 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
 import org.apache.axis.encoding.Base64;
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
@@ -244,27 +243,21 @@ public class gpkiBackingBean implements Serializable {
 	}
 
 	public void showError() {
-		String statusCode = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap()
-				.get("statusCode");
-		String statusMsg = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap().get("statusMsg");
-		String extMsg = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap()
-				.get("extMsg");
-		
-		System.out.println("statusMsg:"+statusMsg);
-		System.out.println("extMsg:"+extMsg);
-		
+		String statusCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusCode");
+		String statusMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusMsg");
+		String extMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("extMsg");
+
+		System.out.println("statusMsg:" + statusMsg);
+		System.out.println("extMsg:" + extMsg);
+
 		String errorMsg = "";
-		if(extMsg!=null && extMsg.trim().length()>0){
+		if (extMsg != null && extMsg.trim().length() > 0) {
 			errorMsg = extMsg;
-		}else{
+		} else {
 			errorMsg = statusMsg;
 		}
-		
-		FacesContext.getCurrentInstance().addMessage("gpki",
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errorMsg));
+
+		FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errorMsg));
 	}
 
 	public void onDialogCloseAction() throws Exception {
