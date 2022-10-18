@@ -338,10 +338,12 @@ public class ViewApplHistoryBackingBean extends
 				if(rejectedStatus.contains(currAppl.getPmStatus().getStatusId().toString())){
 					List<SmAppl> applList = this.getManagedBean().getSmSupplier().getSmAppls();
 					for(SmAppl appl : applList){
-						if(currAppl.getCreatedDate().before(appl.getCreatedDate()) &&
-								currAppl.getApplType().equals(appl.getApplType()) && 
-								appl.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED)){
-							resubmit = false;
+						if(appl.getPmStatus() != null){ //32627
+							if(currAppl.getCreatedDate().before(appl.getCreatedDate()) &&
+									currAppl.getApplType().equals(appl.getApplType()) && 
+									appl.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED)){
+								resubmit = false;
+							}
 						}
 					}
 				}
