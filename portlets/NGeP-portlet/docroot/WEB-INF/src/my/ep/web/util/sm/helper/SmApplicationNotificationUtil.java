@@ -450,14 +450,6 @@ public class SmApplicationNotificationUtil {
 		}
 		Locale usrLocale = getLocaleByLang(preferredLang);
 		
-		log.info("preferredLang>>>>>>>>>>" + preferredLang);
-		log.info("User Locale>>>>>>>>>>" + usrLocale.getLanguage());
-		
-
-		String applType = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol1"
-				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
-		String applNo = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol2"
-				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
 		String companyName = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol3"
 				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
 		String regNo = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol4"
@@ -465,8 +457,6 @@ public class SmApplicationNotificationUtil {
 		String epNo = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol5"
 				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
 		String approveDate = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol6"
-				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
-		String addNewCatCodes = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol7"
 				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
