@@ -1112,7 +1112,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().getCtContract()
 					.setContractNo(selectedScQt.getExistingContractNo());
 			//#29521 - start
-			String ctNameandNo = detailSO.getContractNameByContractNo(this.getManagedBean().getQt().getExistingContractNo());
+			String ctNameandNo = detailSO.getContractNameByContractNo(selectedScQt.getExistingContractNo());
 			this.getManagedBean().getCtContract().setCtNameandNo(ctNameandNo);
 			//#29521 - end
 			this.getManagedBean().setPtjSpecialApproval(
