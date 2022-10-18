@@ -1398,11 +1398,26 @@ public class SupplierFinalizationBackingBean extends
 						 evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
 						 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.presentation.demo.stage";
 					 } else {
-						 evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
-						 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+						//#21695 tec by itemize result pop up farid - start
+						 if (getManagedBean().isItemize()) {
+							 evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
+							 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+							 if (getManagedBean().isItemRowSelect() && 
+									 getManagedBean().getSelectedItem() != null) {
+								selectedItemId = getManagedBean().getSelectedItem()
+											.getRequestItem().getRequestNoteItemId();
+							 } else {
+								 getManagedBean().setQualifiedSuppliersByEvalStage(null);
+								 log.debug("None of the item(s) has been row selected");
+								 return;
+							 }
+						 }else{
+							 evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
+							 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+						 }
 					 }
 					 break;
-					 
+					//#21695 tec by itemize result pop up farid - end
 			case 2 : if (getManagedBean().isItemize()) {
 						 evaluationStage = SourcingConstants.EVAL_STAGE_FINANCIAL_ITM;
 						 
@@ -1422,7 +1437,9 @@ public class SupplierFinalizationBackingBean extends
 			 		 break;
 		}
 		getManagedBean().setEvaluationHeader(evaluationHeader);
-		if (getManagedBean().getCurrentZone() != null && evaluationStageId==2) { //#26440
+		//#21695 tec by itemize result pop up farid - start
+		if (getManagedBean().getCurrentZone() != null) { //#26440
+		//#21695 tec by itemize result pop up farid - end
 			 selectedZoneId = getManagedBean().getCurrentZone().getSpecZoneId();
 		 }
 		this.getManagedBean().setCheckCategoryCodeQt(this.getManagedBean().getScQt());//#29466
@@ -8552,7 +8569,10 @@ return	remarksNotFound;
 				
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 				reqDTO.setQtId(qtId);
-				if (null != selectedZoneId && (SourcingConstants.EVAL_STAGE_FINANCIAL_ITM.equalsIgnoreCase(evaluationStage) || SourcingConstants.EVAL_STAGE_FINANCIAL_PKG.equalsIgnoreCase(evaluationStage))) {
+				//#21695 tec by itemize result pop up farid - start
+				if (null != selectedZoneId && (SourcingConstants.EVAL_STAGE_FINANCIAL_ITM.equalsIgnoreCase(evaluationStage) || SourcingConstants.EVAL_STAGE_FINANCIAL_PKG.equalsIgnoreCase(evaluationStage)
+						|| SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM.equalsIgnoreCase(evaluationStage))) {
+				//#21695 tec by itemize result pop up farid - start
 					reqDTO.setSpecZoneId(selectedZoneId);
 				}
 				reqDTO.setRequestItemId(selectedItemId);

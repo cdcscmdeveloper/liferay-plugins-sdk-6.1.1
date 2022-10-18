@@ -2192,7 +2192,9 @@ public class ConsolidationReportBackingBean extends
 		} else if (this.getManagedBean().getActiveIndex() == ITEMIZED_TYPE_TAB_INDEX) {
 			log.info("ITEMIZED_TYPE_TAB_INDEX"
 					+ this.getManagedBean().getActiveIndex());
-			if (evaluationStageId == 2) {
+			//#21695 tec by itemize result pop up farid - start
+			if (evaluationStageId == 2 || evaluationStageId == 1) {
+			//#21695 tec by itemize result pop up farid - end
 				supplierFinalizationBB.getManagedBean()
 						.setItemize(Boolean.TRUE);
 				if (null != this.getManagedBean().getSelectedItem()) {
@@ -2208,9 +2210,13 @@ public class ConsolidationReportBackingBean extends
 			log.info("setItemize"
 					+ supplierFinalizationBB.getManagedBean().isItemize());
 		}
+		
+		
 		TplSpecZoneDtl specZoneDtl = this.getManagedBean().getSelectedZone();
 		log.info("specZoneDtl" + specZoneDtl);
-		if(evaluationStageId==2){ //#26440 Start
+		//#21695 tec by itemize result pop up farid - start
+		if(evaluationStageId==2 || evaluationStageId == 1){ //#26440 Start
+		//#21695 tec by itemize result pop up farid - end
 		supplierFinalizationBB.getManagedBean().setCurrentZone(specZoneDtl);
 		} //#26440 End
 		supplierFinalizationBB.getManagedBean().setCheckCategoryCodeQt(this.getManagedBean().getScQt());//#29466
