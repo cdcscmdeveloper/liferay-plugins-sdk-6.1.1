@@ -7350,29 +7350,94 @@ public class SmApplicationBackingBean extends
 			SmPersonnel personnelSSM = (SmPersonnel) EntityHelper
 					.getEntityBySinglePropertyFromList(shareHolderBean.getIdentificationNo(),
 							ssmResDTO.getSmPersonnelAll(), "identificationNo");
-			if(personnelSSM!=null && personnelSSM.getSmPersonnelAddresses() != null // #32014
-					&& !personnelSSM.getSmPersonnelAddresses().isEmpty()){
-				for(SmPersonnelAddress smpersonAddress : personnelSSM.getSmPersonnelAddresses()){
-					if((smpersonAddress.getSmAddress()!=null && smpersonAddress.getSmAddress().getPmDistrict()==null)||
-							(smpersonAddress.getSmAddress()!=null && smpersonAddress.getSmAddress().getPmCity()==null)
-							||smpersonAddress.getSmAddress()==null){
-						if(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE.equals(smpersonAddress.getAddressType())){
-							getManagedBean().getShareHolderOffAddr().setSmAddress(smpersonAddress.getSmAddress());
-							initializeSmAddressChilds(getManagedBean().getShareHolderOffAddr().getSmAddress());
-						}else if(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES.equals(smpersonAddress.getAddressType())){
-							getManagedBean().getShareHolderResdAddr().setSmAddress(smpersonAddress.getSmAddress());
-							initializeSmAddressChilds(getManagedBean().getShareHolderResdAddr().getSmAddress());
-						}else if(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL.equals(smpersonAddress.getAddressType())){
-							getManagedBean().getShareHolderMailAddr().setSmAddress(smpersonAddress.getSmAddress());
-							initializeSmAddressChilds(getManagedBean().getShareHolderMailAddr().getSmAddress());
-						}else if(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM.equals(smpersonAddress.getAddressType())){
-							getManagedBean().getShareHolderPermAddr().setSmAddress(smpersonAddress.getSmAddress());
-							initializeSmAddressChilds(getManagedBean().getShareHolderPermAddr().getSmAddress());
+			// start - #32014
+			if (personnelSSM!=null && personnelSSM.getIdentificationType() != null && this.getManagedBean().getSelectedShareHolder()!=null) {
+				log.debug(" #32014 - personnelSSM.getIdentificationType() - " + personnelSSM.getIdentificationType());
+				log.debug(" #32014 - personnelSSM.getIdentificationTypeId() - " + personnelSSM.getIdentificationTypeId());
+				this.getManagedBean().getSelectedShareHolder()
+						.setIdentificationType(personnelSSM.getIdentificationType());
+				this.getManagedBean().getSelectedShareHolder()
+						.setIdentificationTypeId(personnelSSM.getIdentificationTypeId());
+			}
+			if (personnelSSM != null && personnelSSM.getSmPersonnelAddresses() != null // #32014
+					&& personnelSSM.getSmPersonnelAddresses().size() > 0) {
+				for (SmPersonnelAddress smpersonAddress : personnelSSM.getSmPersonnelAddresses()) {
+					if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES.equals(smpersonAddress.getAddressType())
+							&& (getManagedBean().getShareHolderResdAddr().getSmAddress() == null || getManagedBean()
+									.getShareHolderResdAddr().getSmAddress().getAddressId() == null)) {
+						initializeSmAddressChilds(smpersonAddress.getSmAddress());
+						PmCountry defaultCountry = new PmCountry();
+						if ((smpersonAddress.getSmAddress().getPmCountry() == null || smpersonAddress.getSmAddress()
+								.getPmCountry().getCountryCode().equals(ParameterConst.COUNTRY_UNKNOWN_CODE))
+								&& shareHolderBean.getIdentificationType() != null
+								&& ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(shareHolderBean
+										.getIdentificationType().getParameterCode()) &&
+										smpersonAddress.getSmAddress().getPmState() == null) {
+							defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(ParameterConst.COUNTRY_UNKNOWN_CODE);
+						} else if(smpersonAddress.getSmAddress().getPmCountry() != null && smpersonAddress.getSmAddress().getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ){
+							defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+						} else{
+							defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_UNKNOWN_CODE);
+						}
+						
+
+						smpersonAddress.getSmAddress().setPmCountry(defaultCountry);
+						if (smpersonAddress.getSmAddress().getPmCountry() != null) {
+							smpersonAddress.getSmAddress().setCountryId(
+									smpersonAddress.getSmAddress().getPmCountry().getCountryId());
+						}
+						onChangeCountry(smpersonAddress.getSmAddress(),
+								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+						if (smpersonAddress.getSmAddress().getPmState() != null) {
+							smpersonAddress.getSmAddress().setStateId(
+									smpersonAddress.getSmAddress().getPmState().getStateId());
+						}
+						onChangeState(smpersonAddress.getSmAddress(),
+								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+						getManagedBean().getShareHolderResdAddr().setSmAddress(smpersonAddress.getSmAddress());
+					}
+				}
+			}
+			if (shareHolderBean.getSmPersonnelAddresses() != null
+					&& shareHolderBean.getSmPersonnelAddresses().size() > 0) {
+				for (SmPersonnelAddress smpersonAddress : shareHolderBean.getSmPersonnelAddresses()) {
+					if (SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES.equals(smpersonAddress.getAddressType())) {
+						SmAddress smAddressRes = getManagedBean().getShareHolderResdAddr().getSmAddress();
+						initializeSmAddressChilds(smpersonAddress.getSmAddress());
+						
+						if(smAddressRes.getPmCountry().getCountryCode().equals(SupplierManagementConst.COUNTRY_UNKNOWN_CODE) && smpersonAddress.getSmAddress().getPostcode()!=null){
+							smAddressRes.setPmCountry(smpersonAddress.getSmAddress().getPmCountry());
+							smAddressRes.setCountryId(smpersonAddress.getSmAddress().getPmCountry().getCountryId());
+						}
+						onChangeCountry(smAddressRes, SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+						if(smpersonAddress.getSmAddress().getPmState() != null){
+							smAddressRes.setPmState(smpersonAddress.getSmAddress().getPmState());
+							smAddressRes.setStateId(smpersonAddress.getSmAddress().getPmState().getStateId());
+						}
+						onChangeState(smAddressRes, SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+						if (smpersonAddress.getSmAddress().getPmDivision() != null) {
+							smAddressRes.setPmDivision(smpersonAddress.getSmAddress().getPmDivision());
+							smAddressRes.setDivisionId(smpersonAddress.getSmAddress().getPmDivision().getDivisionId());
+						}
+						if (smpersonAddress.getSmAddress().getPmDistrict() != null) {
+							onChangeDistrictByDivision(smAddressRes, SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+							smAddressRes.setPmDistrict(smpersonAddress.getSmAddress().getPmDistrict());
+							smAddressRes.setDistrictId(smpersonAddress.getSmAddress().getPmDistrict().getDistrictId());
+						}
+							
+						onChangeDistrict(smAddressRes, SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+						if (smpersonAddress.getSmAddress().getPmCity() != null) {
+							smAddressRes.setPmCity(smpersonAddress.getSmAddress().getPmCity());
+							smAddressRes.setCityId(smpersonAddress.getSmAddress().getPmCity().getCityId());
+						}
+						if (smAddressRes.getPostcode().isEmpty() || smAddressRes.getPostcode() == null || smAddressRes.getPostcode() == ""){
+							smAddressRes.setPostcode(smpersonAddress.getSmAddress().getPostcode());
 						}
 					}
 				}
 			}
 		}
+		// end - #32014
 		//end #31479
 		
 		//START 27821
@@ -15130,6 +15195,121 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	//#33240 - end
+	
+	//#32014 - START
+	//reassign the address since the first time assigning the data is not displayed/populate
+	public void reassignSelShareHolderResAddress(SmPersonnelAddress personnelAddress){
+		log.info("========#32014 - inside reassignSelShareHolderAddress=======");
+		log.info("#32014 - isSupplierUser : " + getManagedBean().isSupplierUser());
+		log.info("#32014 - AddressType : " + personnelAddress.getAddressType());
+		if(getManagedBean().isSupplierUser() && personnelAddress.getAddressType().equalsIgnoreCase(SupplierManagementConst.RES_ADD)){
+			log.info("#32014 - inside first if");
+			log.info("#32014 - isSameAsPerm : " + personnelAddress.isSameAsPerm());
+			log.info("#32014 - SSM Application : " + getManagedBean().getSmAppl().isApplValidWithSsm());
+			log.info("#32014 - SSM isActive : " + SmCommonUtil.getInstance().ssmActive());
+			if(!personnelAddress.isSameAsPerm() && getManagedBean().getSmAppl().isApplValidWithSsm() && SmCommonUtil.getInstance().ssmActive()){
+				SmPersonnelAddress res = new SmPersonnelAddress();
+				res.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
+				res.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+				res.setSmPersonnel(this.getManagedBean().getSelectedShareHolder());
+				getManagedBean().setShareHolderResdAddr(res);
+				
+				for (SmPersonnelAddress addr : this.getManagedBean().getSelectedShareHolder().getSmPersonnelAddresses()) {
+					if(addr.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
+						SmAddress smAddress = new SmAddress();
+						smAddress.setAddress1(addr.getSmAddress().getAddress1());
+						smAddress.setAddress2(addr.getSmAddress().getAddress2());
+						smAddress.setAddress3(addr.getSmAddress().getAddress3());
+						//START SSM INTEGRATION
+						smAddress.setSsmData(addr.getSmAddress().isSsmData());
+						smAddress.setAddressSsmNull(addr.getSmAddress().isAddressSsmNull());
+						smAddress.setPostcodeSsmNull(addr.getSmAddress().isPostcodeSsmNull());
+						smAddress.setStateSsmNull(addr.getSmAddress().isStateSsmNull());
+						smAddress.setCountrySsmNull(addr.getSmAddress().isCountrySsmNull());
+						
+						if(addr.getSmAddress().getPmCountry() != null){
+							smAddress.setPmCountry(addr.getSmAddress().getPmCountry());
+							smAddress.setCountryId(addr.getSmAddress().getPmCountry().getCountryId());
+						}else{
+							if(addr.getSmAddress().getPmState() != null){
+								PmCountry country = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+								smAddress.setPmCountry(country);
+								smAddress.setCountryId(country.getCountryId());
+							}
+						}
+						
+						PmState state = new PmState();
+						if(personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC) ){
+							state.setStateId(addr.getSmAddress().getPmState().getStateId());
+						}
+						if(personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT)) {
+							if(smAddress.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
+								state.setStateId(addr.getSmAddress().getPmState().getStateId());
+							}
+							else{
+								state.setStateId(addr.getSmAddress().getPmDistrict().getPmState().getStateId());
+							}
+						}
+						
+						smAddress.setPmState(state);
+						smAddress.setStateId(state.getStateId());
+						
+						if(addr.getSmAddress().getPmDivision() != null){
+							PmDivision div = new PmDivision();
+							div.setDivisionId(addr.getSmAddress().getPmDivision().getDivisionId());
+							smAddress.setPmDivision(div);
+							smAddress.setDivisionId(div.getDivisionId());
+						}
+						if(addr.getSmAddress().getPmDistrict() != null){
+							PmDistrict district = new PmDistrict();
+							district.setDistrictId(addr.getSmAddress().getPmDistrict().getDistrictId());
+							smAddress.setPmDistrict(district);
+							smAddress.setDistrictId(district.getDistrictId());
+						}
+						
+						if(addr.getSmAddress().getPmCity() != null){
+							PmCity city = new PmCity();
+							city.setCityId(addr.getSmAddress().getPmCity().getCityId());
+							smAddress.setPmCity(city);
+							smAddress.setCityId(city.getCityId());
+						}
+						
+						smAddress.setPostcode(addr.getSmAddress().getPostcode());
+						addr.setSmAddress(smAddress);
+						
+						if (addr.getAddressType().equalsIgnoreCase(
+								SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
+							getManagedBean().setShareHolderResdAddr(addr);
+							SmApplicationUtil
+									.getInstance()
+									.assignStateDistAndCityForSelVal(
+											getManagedBean(),
+											getManagedBean().getShareHolderResdAddr()
+													.getSmAddress(),
+											SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+							//to check, if district state not equal to pm state set district to null & City
+							if(getManagedBean().getShareHolderResdAddr().getSmAddress().isSsmData()){
+								SmAddress address = getManagedBean().getShareHolderResdAddr().getSmAddress();
+								if(address != null){
+									if(address.getPmState()!= null && address.getPmDistrict() != null){
+										if(address.getPmDistrict().getPmState() != null){
+											if(address.getPmDistrict().getPmState().getStateId() != address.getPmState().getStateId()){
+												address.setPmDistrict(new PmDistrict());
+												address.setPmCity(new PmCity());
+											}
+											
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				getManagedBean().setSelectedShareHolder(this.getManagedBean().getSelectedShareHolder());
+			}
+		}
+	}
+	//#32014 - END
 	
 	//#12483 - START
 	public boolean renderRevisedReason(){

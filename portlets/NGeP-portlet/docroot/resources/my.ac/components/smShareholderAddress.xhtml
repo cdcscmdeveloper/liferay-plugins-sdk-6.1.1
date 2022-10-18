@@ -137,6 +137,11 @@
 				</tr>
 
 				<tr>
+					<!-- #32014 - START -->
+						<p:outputPanel rendered="#{cc.attrs.addrObj.smPersonnel.identificationType.parameterCode == SupplierManagementConst.IDENTIFICATION_TYPE_PASSPORT}">
+							#{cc.attrs.bBean.reassignSelShareHolderResAddress(cc.attrs.addrObj)}
+						</p:outputPanel>
+					  <!-- #32014 - END -->
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu
@@ -196,6 +201,11 @@
 				</tr>
 
 				<tr>
+					<!-- #32014 - START -->
+						<p:outputPanel rendered="#{cc.attrs.addrObj.smPersonnel.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
+							#{cc.attrs.bBean.reassignSelShareHolderResAddress(cc.attrs.addrObj)}
+						</p:outputPanel>
+					 <!-- #32014 - END -->
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu
