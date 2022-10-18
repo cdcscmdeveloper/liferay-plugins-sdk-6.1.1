@@ -4371,7 +4371,7 @@ public class QTCloneBackingbean extends
 		this.getManagedBean().getCloneQtnTenderSearchBean()
 				.setToCreatedDate(null);
 		this.getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
-		this.getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());
+		//this.getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());//34053
 		this.getManagedBean().getCloneQtnTenderSearchBean()
 				.setFromPublishDate(null);
 		this.getManagedBean().getCloneQtnTenderSearchBean()
