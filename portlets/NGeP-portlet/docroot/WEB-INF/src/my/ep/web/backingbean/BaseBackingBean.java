@@ -4204,7 +4204,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return allowed;
 	}
 	
-	//#31849 start
+	//#31849, #34090 start
 	/**
 	 * Method to return current session userId from user screenName(loginId)
 	 * @return userId
@@ -4227,5 +4227,5 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		new LogKey(userIdSession);
 		return userIdSession;
 	}
-	//#31849 end
+	//#31849, #34090 end
 }
