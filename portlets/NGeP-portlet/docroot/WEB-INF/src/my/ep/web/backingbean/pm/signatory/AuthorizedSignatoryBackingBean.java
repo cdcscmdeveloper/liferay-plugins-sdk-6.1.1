@@ -366,7 +366,8 @@ public class AuthorizedSignatoryBackingBean extends
 						+ pmcertSignatory.getSinnatoryName());
 				messageId = MessageConst.TD_80900;
 				msgParam = new String[] {this.getManagedBean().getCertSignatories().get(0).getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
-
+				reqDTO.setCreatedBy(getUserIdSessionFromLoginId()); //#34090
+				reqDTO.setChangedBy(getUserIdSessionFromLoginId()); //#34090
 			} else {
 				//TODO: check previous value 
 				if (pmcertSignatory.isModified()
@@ -374,19 +375,20 @@ public class AuthorizedSignatoryBackingBean extends
 					log.info("Tracking diary for virtual certificate: de-activating status :saveRuleCatalog");
 					messageId = MessageConst.TD_80902;
 					msgParam = new String[] {pmcertSignatory.getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
-
-					
+					reqDTO.setChangedBy(getUserIdSessionFromLoginId()); //#34090					
 				}else if (pmcertSignatory.isModified()
 						&& pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 					log.info("Tracking diary for virtual certificate: re-activating status :saveRuleCatalog");
 					messageId = MessageConst.TD_80903;
 					msgParam = new String[] {pmcertSignatory.getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
+					reqDTO.setChangedBy(getUserIdSessionFromLoginId()); //#34090
 				}
 				Date originalExpDate = this.getManagedBean().getIdToCertSignMapForChangedRecs().get(pmcertSignatory.getCertSignatoryId());
 				if(originalExpDate != null && pmcertSignatory.getExpDate() != originalExpDate){
 					log.info("Tracking diary for virtual certificate: updating Expire Date :saveRuleCatalog");
 					messageId = MessageConst.TD_80901;
 					msgParam = new String[] {pmcertSignatory.getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
+					reqDTO.setChangedBy(getUserIdSessionFromLoginId()); //#34090
 				}
 			}
 			if (messageId != null & msgParam != null) {
