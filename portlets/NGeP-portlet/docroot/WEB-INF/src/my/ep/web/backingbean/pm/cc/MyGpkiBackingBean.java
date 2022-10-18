@@ -93,130 +93,6 @@ public class MyGpkiBackingBean  implements Serializable {
 	
 	String myGPKIBaseUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.MYGPKI_BASE_URL);
 	String myGPKIEpIssuerCode = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.MYGPKI_EP_ISSUER_CODE);
-
-	@SuppressWarnings("unused")
-	public String nexusSignAction(ContextualCompositeMethodExpression postSignActionMtdExpr,
-			ContextualCompositeMethodExpression enableAutoUpdateMtdExpr, String pin) {
-		long startTime = System.currentTimeMillis();
-		log.info("gpkiNexusSmartIdBackingBean.nexusSignAction(): startTime in milli seconds is: " + startTime);
-		log.info("ContextualCompositeMethodExpression");
-
-		String textBeforeSign = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-				.get("textBeforeSign");
-		String signedText = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-				.get("signedText");
-		String serialNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-				.get("serialNo");
-		String subjectDN = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-				.get("subjectDN");
-		FacesScopes facesScope = new FacesScopes();
-		Long userId = facesScope.getUserSessionBean().getUserId();
-		log.info("gpkiNexusSmartIdBackingBean.gpkiSignAction(): userId is: " + userId);
-		Timestamp date = new Timestamp(System.currentTimeMillis());
-		System.out.println("getUserSessionBean().getUserId();=====================================: "
-				+ facesScope.getUserSessionBean().getUserId());
-		IUserSO userSO = (IUserSO) EpEjbBusinessDelegate.getInstance().getServiceObject(IUserSO.class);
-		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setUserId(userId);
-		userSO.retrieveUserByUserId(reqDTO);
-		UserResDTO resDTO = new UserResDTO();
-		resDTO = userSO.retrieveUserByUserId(reqDTO);
-		Object returnObj = null;
-		log.info("textBeforeSign:" + textBeforeSign);
-
-
-		try {
-			if (pin == null || pin.isEmpty() || pin == "") {
-				throw new Exception("OTP number is empty");
-			}
-			this.setNonSigningException(null);
-
-			String contentType = "application/x-www-form-urlencoded";
-			String ic = resDTO.getPmUser().getIdentificationNo();
-
-			HttpHost target = new HttpHost(myGPKIBaseUrl, 443, "https");
-			HttpPost post = new HttpPost("/ServerSigning/sign_otp?");
-			CloseableHttpClient httpclient = getHttpClient();
-			String dataBase64 = Base64.encode(textBeforeSign.getBytes());
-			log.info("textBeforeSign in Base64 : " + dataBase64);
-			
-
-			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("ic", ic));
-			params.add(new BasicNameValuePair("otp_issuer_code", myGPKIEpIssuerCode));
-			params.add(new BasicNameValuePair("otp", pin));
-			params.add(new BasicNameValuePair("data", dataBase64));
-
-			post.setEntity(new UrlEncodedFormEntity(params, "utf-8"));
-
-			CloseableHttpResponse response = httpclient.execute(target, post);
-
-			HttpEntity entity = response.getEntity();
-			String output = EntityUtils.toString(entity);
-			EntityUtils.consume(entity);
-
-			response.close();
-			
-			log.info("MyGPKI User IC : " + ic);
-			log.info("MyGPKI Output : " + output);
-
-			JSONObject json = (JSONObject) JSONSerializer.toJSON(output);
-			String statusCode = json.getString("statusCode");
-
-			if (statusCode.equalsIgnoreCase("901")) {
-				String signedData = json.getString("signature");
-				pmDigiSign.setCreatedBy(userId);
-				pmDigiSign.setCreatedDate(date);
-				pmDigiSign.setOriginalData(textBeforeSign);
-				pmDigiSign.setGpkiSignedData(signedData);
-				log.info("================================= Nexus Smart Id Verified");
-
-//				 Disabled at the moment to retain data status
-				 returnObj = postSignActionMtdExpr.invoke(FacesContext.getCurrentInstance().getELContext(),
-				 new Object[] { pmDigiSign });
-				
-				 if (enableAutoUpdateMtdExpr != null) {
-				 enableAutoUpdateMtdExpr.invoke(FacesContext.getCurrentInstance().getELContext(),
-				 new Object[] {});
-				 }
-
-				RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
-
-			} else {
-				String errorDesc = "";
-				if (statusCode.equalsIgnoreCase("805")) {
-					errorDesc = " - Wrong pin entered";
-				} else if (statusCode.equalsIgnoreCase("902")) {
-					errorDesc = " - Parameter incomplete";
-				} else if (statusCode.equalsIgnoreCase("800")) {
-					errorDesc = " - Operation failed";
-				}
-				FacesContext.getCurrentInstance().addMessage(
-						"MyGPKI",
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, " ", "OTP verification failed. Error : "
-								+ statusCode + errorDesc));
-			}
-
-		} catch (Exception e) {
-			// log.info("W/O TOken : enableAutoUpdateMtdExpr Error setRunGPKIEnableAutoUpdate--");
-			// RequestContext.getCurrentInstance().execute("setRunGPKIEnableAutoUpdate(true);");
-			if (enableAutoUpdateMtdExpr != null) {
-				enableAutoUpdateMtdExpr.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[] {});
-			}
-			nonSigningException = e;
-			RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
-		}
-
-		RequestContext.getCurrentInstance().execute("gpkiBlockWidget.hide()");
-		log.info("gpkiNexusSmartIdBackingBean.gpkiSignAction(): duration in milli seconds is: "
-				+ (System.currentTimeMillis() - startTime));
-		if (returnObj != null) {
-			return returnObj.toString();
-		} else {
-			return null;
-		}
-
-	}
 	
 	public void preRender() {	
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -250,6 +126,7 @@ public class MyGpkiBackingBean  implements Serializable {
 
 		final String ic = resDTO.getPmUser().getIdentificationNo();
 
+		this.setNonSigningException(null);
 		try {
 
 			HttpHost target = new HttpHost(myGPKIBaseUrl, 443, "https");
@@ -275,36 +152,24 @@ public class MyGpkiBackingBean  implements Serializable {
 
 			if (output.equalsIgnoreCase("OPERATION_SUCCESSFULL")) {
 				log.info("================================= MyGPKI Deactivated");
-//				returnFlag = "true";
 				FacesContext.getCurrentInstance().addMessage(
-						"MyGPKI",
+						"mygpkiActivateNotify",
 						new FacesMessage(FacesMessage.SEVERITY_INFO,"","Deactivate process successful"));
 
 			} else {
-//				returnFlag = "false";
-				String errorDesc = "";
-				if (output.equalsIgnoreCase("OPERATION_FAILED")) {
-					errorDesc = " - Operation failed";
-				} else if (output.equalsIgnoreCase("OTP_USER_NOT_EXIST")) {
-					errorDesc = " - OTP user not exist";
-				} else if (output.equalsIgnoreCase("OTP_ISSUER_CODE_NOT_EXIST")) {
-					errorDesc = " - OTP issuer not exist";
-				} else if (output.equalsIgnoreCase("PARAMETER_INCOMPLETE ")) {
-					errorDesc = " - Parameter incomplete";
-				}
 				FacesContext.getCurrentInstance().addMessage(
-						"MyGPKI",
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Deactivate process failed. Error : "
+						"mygpkiActivateNotify",
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Deactivate process failed - "
 								+ output));
 			}
 
 		} catch (Exception e) {
 			log.info("MyGPKI : Deactiavate process failed - Exception : "+e.toString());
+			FacesContext.getCurrentInstance().addMessage(
+					"mygpkiActivateNotify",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Deactivate process failed - " + e.toString()));
 
 		}
-
-//		return returnFlag;
-
 	}
 
 	public String activate() {
@@ -359,8 +224,8 @@ public class MyGpkiBackingBean  implements Serializable {
 			}
 
 			FacesContext.getCurrentInstance().addMessage(
-					"MyGPKI",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, " ", "Activate process failed. Error : " + output));
+					"mygpkiActivateNotify",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Activate process failed. Error : " + output));
 
 		} catch (Exception e) {
 			log.info("MyGPKI : Activate process failed - Exception : "+e.toString());
@@ -414,7 +279,7 @@ public class MyGpkiBackingBean  implements Serializable {
 			if (output.equalsIgnoreCase("OPERATION_SUCCESSFULL") || output.equalsIgnoreCase("OTP_VALID") ) {
 				log.info("================================= MyGPKI OTP Verified");
 				FacesContext.getCurrentInstance().addMessage(
-						"MyGPKI",
+						"mygpkiActivateNotify",
 						new FacesMessage(FacesMessage.SEVERITY_INFO,"","OTP Verified"));
 
 			} else {
@@ -433,7 +298,7 @@ public class MyGpkiBackingBean  implements Serializable {
 					errorDesc = "";
 				}
 				FacesContext.getCurrentInstance().addMessage(
-						"MyGPKI",
+						"mygpkiActivateNotify",
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Verify OTP process failed. Error : "
 								+ output));
 			}
@@ -441,7 +306,7 @@ public class MyGpkiBackingBean  implements Serializable {
 		} catch (Exception e) {
 			log.info("MyGPKI : Verify OTP process failed - Exception : "+e.toString());
 			FacesContext.getCurrentInstance().addMessage(
-					"MyGPKI",
+					"mygpkiActivateNotify",
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Verify OTP process failed. Error : "
 							+ e.toString()));
 		}
@@ -466,7 +331,7 @@ public class MyGpkiBackingBean  implements Serializable {
 		return httpclient;
 	}
 
-	public void sshowError() {
+	public void showError() {
 		String statusCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
 				.get("statusCode");
 		String statusMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
@@ -483,7 +348,7 @@ public class MyGpkiBackingBean  implements Serializable {
 			errorMsg = statusMsg;
 		}
 
-		FacesContext.getCurrentInstance().addMessage("gpki",
+		FacesContext.getCurrentInstance().addMessage("mygpkiActivateNotify",
 				new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errorMsg));
 	}
 

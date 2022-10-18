@@ -850,7 +850,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			boolean isFirstSave = scQt.getQtNo() == null && scQt.isBrandNew() ? true : false;
 			
 			validateQtDetails();
-			
+			//#29521-start
+			retrieveScQtHist();
+			validateIsSupplierQualificationCriteriaChange();
+			validateIsZonalAdded();
+			//#29521-end
 			//#28784
 			checkDemoPresentationByStatus();
 			
@@ -6892,6 +6896,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//32880 - Bug - end
 		if(null!=this.getManagedBean().getCtContract()){
 			this.getManagedBean().getCtContract().setContractNo(this.getManagedBean().getQt().getExistingContractNo());
+			String ctNameandNo = detailSO.getContractNameByContractNo(this.getManagedBean().getQt().getExistingContractNo());
+			this.getManagedBean().getCtContract().setCtNameandNo(ctNameandNo);
 		}
 		this.getManagedBean().setActiveIndex(activeIndex);
 		this.getManagedBean().setTaskId(taskId);
@@ -12717,7 +12723,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 						String catcode = catHis.getPmCategoryL1().getCategoryL1Code()+catHis.getPmCategoryL2().getCategoryL2Code()+catHis.getPmCategoryL3().getCategoryL3Code();
 						listCatCodeHistory.add(catcode);
 					}
-					
 				}
 				
 				if (null !=listScQtCategories && listScQtCategories.size() > 0 ){
@@ -12732,13 +12737,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 				
 				if (null != listScQtCategories && null != listScQTCategoriesHistory){
 					if (listScQtCategories.size() == listScQTCategoriesHistory.size()) {
-						
 						if (listCatCodeHistory.containsAll(listCatCode)){
 							getManagedBean().setIsScEditSupplierQualificationCriteria(false);
 						}else {
 							getManagedBean().setIsScEditSupplierQualificationCriteria(true);
 						}
-		
 					} else {
 						getManagedBean().setIsScEditSupplierQualificationCriteria(true);
 					}
@@ -12771,14 +12774,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 					}else{
 						getManagedBean().setZonalHistoryExist(false);
 					}
-					
 					getManagedBean().setListZonalHistory(listZoneHistory);
 				}
-				
-				
-				
-				
-				
 			}
 		// #29521 - end
 			
