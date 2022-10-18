@@ -125,7 +125,7 @@ public class gpkiBackingBean implements Serializable {
 		log.info("serialNo====================================: " + serialNo);
 		log.info("subjectDN====================================: "+ subjectDN);
 		log.info("getIdentificationNo=====================================: "
-				+ resDTO.getPmUser().getLoginId());
+				+ resDTO.getPmUser().getIdentificationNo());
 		log.info("ContextualCompositeMethodExpression  2");
 		log.info("postSignActionMtdExpr=====================================: "
 				+ postSignActionMtdExpr);
@@ -137,8 +137,9 @@ public class gpkiBackingBean implements Serializable {
 		
 		try {
 			this.setNonSigningException(null);
+			log.info("getGpkiEnabledProperty()====================================: " + getGpkiEnabledProperty());
 			if (getGpkiEnabledProperty().equalsIgnoreCase("true")) {
-				
+				log.info("getGpkiEnabledProperty()====================================:Enter ON ");
 				String[] split = subjectDN.split(",");
 				String icNo = "";
 				String snicNo = "";
@@ -242,27 +243,21 @@ public class gpkiBackingBean implements Serializable {
 	}
 
 	public void showError() {
-		String statusCode = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap()
-				.get("statusCode");
-		String statusMsg = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap().get("statusMsg");
-		String extMsg = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap()
-				.get("extMsg");
-		
-		System.out.println("statusMsg:"+statusMsg);
-		System.out.println("extMsg:"+extMsg);
-		
+		String statusCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusCode");
+		String statusMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusMsg");
+		String extMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("extMsg");
+
+		System.out.println("statusMsg:" + statusMsg);
+		System.out.println("extMsg:" + extMsg);
+
 		String errorMsg = "";
-		if(extMsg!=null && extMsg.trim().length()>0){
+		if (extMsg != null && extMsg.trim().length() > 0) {
 			errorMsg = extMsg;
-		}else{
+		} else {
 			errorMsg = statusMsg;
 		}
-		
-		FacesContext.getCurrentInstance().addMessage("gpki",
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errorMsg));
+
+		FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errorMsg));
 	}
 
 	public void onDialogCloseAction() throws Exception {
@@ -279,7 +274,7 @@ public class gpkiBackingBean implements Serializable {
 		this.nonSigningException = nonSigningException;
 	}
 	
-
+	//20221005 @Nasim - #33986 MyGPKI POC START
 	String myGPKIBaseUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.MYGPKI_BASE_URL);
 	String myGPKIEpIssuerCode = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.MYGPKI_EP_ISSUER_CODE);
 	@SuppressWarnings("unused")
@@ -368,6 +363,7 @@ public class gpkiBackingBean implements Serializable {
 					enableAutoUpdateMtdExpr.invoke( FacesContext.getCurrentInstance().getELContext(), new Object[] {});
 				}
 				log.info("MyGPKI - Signing OTP  :  success");
+				this.setNonSigningException(null);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
 										
 			} else {
@@ -396,7 +392,7 @@ public class gpkiBackingBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(
 					"gpki",
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", nonSigningException.getMessage()));
-//			RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
+			RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
 		}
 
 		RequestContext.getCurrentInstance().execute("gpkiBlockWidget.hide()");
@@ -427,6 +423,6 @@ public class gpkiBackingBean implements Serializable {
 		return httpclient;
 	}
 	
-//	20221005 @Nasim - #33986 MyGPKI POC END
+	//20221005 @Nasim - #33986 MyGPKI POC END
 
 }
