@@ -20644,6 +20644,7 @@ if(null!=allTechnicalChecklist){
 				st2technicalproposalList1.setCreatedBy(cl.getCreatedBy());
 				st2technicalproposalList1.setCreatedDate(cl.getCreatedDate());
 				st2technicalproposalList1.setChangedBy(cl.getChangedBy());
+				st2technicalproposalList1.setPmEvalStatus(cl.getPmEvalStatus());//#28784 bug #34101 buttont turn evaluate at evaluation
 				st2technicalproposalList1.setChangedDate(cl.getChangedDate());
 				st2technicalproposalList1.setPmDemoStatus(cl.getPmDemoStatus());
 				st2technicalproposalList1.setSampleStatus(cl.getSampleStatus());//#28784 cater for sample status id null during demo save
@@ -20822,7 +20823,13 @@ if(null!=allTechnicalChecklist){
 		PmStatus pendingStatus = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 		PmStatus completeStatus = getPmStatusByStatusId(QTStatusConst.TS_COMPLETED);
 		scQtCheckList.setPmDemoStatus(completeStatus);
-		scQtCheckList.setPmEvalStatus(pendingStatus);
+		//#28784 bug #34101 button turn evaluate at evaluation - Start
+		if (null != scQtCheckList.getPmEvalStatus() && scQtCheckList.getPmEvalStatus().getStatusId().equals(QTStatusConst.TS_COMPLETED)) {
+			scQtCheckList.setPmEvalStatus(completeStatus);
+		} else {
+			scQtCheckList.setPmEvalStatus(pendingStatus);
+		}
+		//#28784 bug #34101 button turn evaluate at evaluation - End
 
 		for (TplSpecQuestion q : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
 			if (!q.isItemReqDemo()) {
