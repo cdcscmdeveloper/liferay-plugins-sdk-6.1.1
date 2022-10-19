@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.sql.Timestamp; // #25025
 import java.text.DateFormat; // #29007
 import java.text.DecimalFormat;
 import java.text.Format;
@@ -99,8 +98,8 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -182,6 +181,7 @@ import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
+// #25025
 
 // Auto-generated Javadoc
 /**
@@ -982,6 +982,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// #19336 -start-
 		getManagedBean().setValidatewitness(Boolean.TRUE);
 		// #19336 -end-
+
 		if (StringUtils.isNotBlank(redirectUrl)) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -1228,6 +1229,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		// #11134 - start
 		List<ScLoaRemark> supplierRemarks = filterSupplierRemarks(scLoa.getScLoaRemarks(), false);
+		
 		getManagedBean().setSupplierRemarks(supplierRemarks);
 		// #11134 - end
 		
@@ -3401,6 +3403,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				Long statusId = null;
 				PmUser pmUserNull = null;//#26475 & #26474
 				
+				boolean isNewLoa = false; // Bug #33188
+				
 				//#29007 Start Vinod
 				boolean specificationAndSupplierDialogFlagQT=this.getManagedBean().isSpecificationAndSupplierDialogFlagQT();
 				boolean supPropSpecUpdate=this.getManagedBean().isSupPropSpecUpdate();
@@ -3452,7 +3456,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				if (!supplier) {
 					updateContractDetails(scLoa);
 				}
-		
+				// Bug #33188 start
+				if (scLoa.isBrandNew()) {
+					isNewLoa = true;
+				}
+				// Bug #33188 end
+
 				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 				reqDTO.setPayLoad(getManagedBean().getPayLoad());
 				reqDTO.setScLoa(scLoa);
@@ -3491,8 +3500,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						}
 					}
 					//#29007 End Vinod
-					successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
-							scLoa.getLoaNo(), Boolean.FALSE);
+					
+					// Bug #33188 start
+					if (isNewLoa) {
+						renewSesionObject();
+						successMessage(MessageConst.INFO_7000044, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, scLoa.getLoaNo(),
+								Boolean.TRUE);
+					} else {
+						successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, scLoa.getLoaNo(),
+								Boolean.FALSE);
+					}
+					// Bug #33188 end
 				}
 			 }
 		} finally {
@@ -9317,7 +9335,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if(scLoa.getScLoiLoaItems().size() != 0){
 			scLoiLoaItemsList = new ArrayList<ScLoiLoaItem>();
 			if(scLoa.getScLoiLoaItems().size()> 1){//29007-start
-			checkItemSorting(scLoa.getScLoiLoaItems());
+				checkItemSorting(scLoa.getScLoiLoaItems());
 			}//29007-End
 			for(ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()){
 				FacesScopes facesScopes = new FacesScopes();
@@ -9365,7 +9383,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						
 					}
 					if(!newOfferedSpecification){//29007-start
-					scLoiLoaItem.setLoaSpecJustificationForVelocity(null);	
+						scLoiLoaItem.setLoaSpecJustificationForVelocity(null);	
 					}//29007-End
 				}//29007-End
 				scLoiLoaItem.setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
@@ -9399,6 +9417,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 	}
+	
 	public void submitConformationForLampiranA3(){
 		log.info("submitConformationForLampiranA3");
 		int recordCount = 0;
@@ -9416,6 +9435,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			return;
 		}
 	}
+	
 	public void verifyConformationForLampiranA3(String bpmAction){
 		log.info("verifyConformationForLampiranA3");
 		int recordCount = 0;
@@ -9434,9 +9454,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			return;
 		}
 	}
+	
 	public boolean isQTMaintenanceScreen() {
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());//29007&31423
 	}
+	
 	public void addNewOfferedSpec(TplSpecAnswer spec){
 		log.info("addNewOfferedSpec");
 		String specDet = spec.getTplSpecQuestion().getClSpecDetail();
@@ -9567,6 +9589,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}	
 	//#32280 - end
+	
 	//#25025 - start
 	public String setValueLowercase(String text, int index){
 		//Change SuratSetujuterima(TermasukLampiranA) capital T to small t.
