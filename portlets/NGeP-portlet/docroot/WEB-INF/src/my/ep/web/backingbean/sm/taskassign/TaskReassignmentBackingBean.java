@@ -1905,6 +1905,10 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	}
 	
 	//#29822 - start
+	/**
+	 * To remove all other task
+	 * 
+	 */	
 	public void removeReassignAllOthersTasks() {
 		
 		String loginId = null;
@@ -1980,7 +1984,10 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	}
 	
 	//#29822 - end
-	
+	/**
+	 * To remove other task
+	 * 
+	 */	
 	public void removeReassignOthersTasks() {
 	
 		log.info("removeReassignOthersTasks");
@@ -2047,12 +2054,18 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
 		}
 	}
-	
+	/**
+	 * To Show confirmation dialog
+	 * 
+	 */	
 	public void showDialog(String dialog){
 		log.info("Displaying " + dialog);
 		RequestContext.getCurrentInstance().execute(dialog+".show()");	
 	}
-	
+	/**
+	 * To Check all group task
+	 * 
+	 */	
 	public void checkAllGroupTasks() {
 		log.info("Total number of GROUP tasks= " + this.getManagedBean().getAllGroupTasks().size());
 		
@@ -2098,12 +2111,12 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
     	} else {
     		this.getManagedBean().setEnableDeleteGroupTasksButton(false);
     	}
-		log.info("getSelectedGroupTasks= " + this.getManagedBean().getSelectedGroupTasks().size());
-		log.info("enableDeleteGroupTasksButton= " + this.getManagedBean().isEnableDeleteGroupTasksButton());
 	}
-	
+	/**
+	 * To check all other task
+	 * 
+	 */	
 	public void checkAllOthersTasks() {
-		log.info("Total number of OTHERS tasks= " + this.getManagedBean().getAllOthersTasks().size());
 		
 		if (this.getManagedBean().getSelectedOthersTasks() != null && 
 				this.getManagedBean().getSelectedOthersTasks().size() > 0) {
@@ -2121,8 +2134,6 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
     		}
 		}
     	this.getManagedBean().setEnableDeleteOthersTasksButton(this.getManagedBean().isCheckAllOthersTasks());
-    	log.info("getSelectedOthersTasks= " + this.getManagedBean().getSelectedOthersTasks().size());
-    	log.info("enableDeleteOthersTasksButton= " + this.getManagedBean().isEnableDeleteOthersTasksButton());
 	}
 	
 	public void checkOthersTask(AjaxBehaviorEvent event) {
@@ -2147,12 +2158,14 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
     	} else {
     		this.getManagedBean().setEnableDeleteOthersTasksButton(false);
     	}
-		log.info("getSelectedOthersTasks= " + this.getManagedBean().getSelectedOthersTasks().size());
-		log.info("enableDeleteOthersTasksButton= " + this.getManagedBean().isEnableDeleteOthersTasksButton());
 	}
 	//#29822 - END
 	
 	//#29822 - start
+	/**
+	 * To check pending remove task active or not
+	 * 
+	 */	
 	public void checkPendingTaskRemove() {
 		PmUser pmUser = this.getManagedBean().getTaskAssignmentSearchBean().getUser().getPmUser();
 		ISupplierDataMaintenanceSO iSupplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2182,7 +2195,10 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			this.getManagedBean().setShowRemoveProcessMessageOther(false);
 		}
 	}
-	
+	/**
+	 * To get user id
+	 * 
+	 */	
 	public Long getUserByLoginId(){
 		Long loginSessionUserId = 1L;
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
