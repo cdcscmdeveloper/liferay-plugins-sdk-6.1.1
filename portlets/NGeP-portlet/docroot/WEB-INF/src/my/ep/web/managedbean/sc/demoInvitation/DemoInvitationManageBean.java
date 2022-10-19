@@ -145,7 +145,9 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 	
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 	
-	private boolean showCancelButton = false;
+	private boolean showCancelButton = true;
+	
+	private boolean disableSaveAndSubmitButton = true;
 
 	public int getTabActiveIndex() {
 		return tabActiveIndex;
@@ -546,6 +548,14 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 
 	public void setShowCancelButton(boolean showCancelButton) {
 		this.showCancelButton = showCancelButton;
+	}
+
+	public boolean isDisableSaveAndSubmitButton() {
+		return disableSaveAndSubmitButton;
+	}
+
+	public void setDisableSaveAndSubmitButton(boolean disableSaveAndSubmitButton) {
+		this.disableSaveAndSubmitButton = disableSaveAndSubmitButton;
 	}
 	
 	
