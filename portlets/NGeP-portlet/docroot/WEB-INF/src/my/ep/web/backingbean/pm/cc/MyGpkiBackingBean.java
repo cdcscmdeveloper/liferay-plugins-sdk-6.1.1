@@ -154,7 +154,7 @@ public class MyGpkiBackingBean  implements Serializable {
 				log.info("================================= MyGPKI Deactivated");
 				FacesContext.getCurrentInstance().addMessage(
 						"mygpkiActivateNotify",
-						new FacesMessage(FacesMessage.SEVERITY_INFO,"","Deactivate process successful"));
+						new FacesMessage(FacesMessage.SEVERITY_INFO,"","Your OTP profile has been deactivated. Please use the new QR image for activation"));
 
 			} else {
 				FacesContext.getCurrentInstance().addMessage(

@@ -281,35 +281,50 @@ public class gpkiBackingBean implements Serializable {
 	public String nexusSignAction(ContextualCompositeMethodExpression postSignActionMtdExpr,
 			ContextualCompositeMethodExpression enableAutoUpdateMtdExpr, String pin) {
 		long startTime = System.currentTimeMillis();
-		log.info("gpkiNexusSmartIdBackingBean.nexusSignAction(): startTime in milli seconds is: " + startTime);
+		log.info("gpkiBackingBean.gpkiSignAction(): startTime in milli seconds is: " + startTime);
 		log.info("ContextualCompositeMethodExpression");
-
-		String textBeforeSign = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+		
+		String textBeforeSign = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap()
 				.get("textBeforeSign");
-		String signedText = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+		log.info("Nexus Smart ID : enter function--"+textBeforeSign);
+		String signedText = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap()
 				.get("signedText");
-		String serialNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-				.get("serialNo");
-		String subjectDN = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-				.get("subjectDN");
+		String serialNo = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap().get("serialNo");
+		String subjectDN = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap().get("subjectDN");
 		FacesScopes facesScope = new FacesScopes();
-		Long userId = facesScope.getUserSessionBean().getUserId();
-		log.info("gpkiNexusSmartIdBackingBean.gpkiSignAction(): userId is: " + userId);
+		Long userId = facesScope.getUserSessionBean().getUserId(); 
+		log.info("gpkiBackingBean.nexusSignAction(): userId is: " + userId);
+		// Long userId = (Long) MDC.get(LogKey.USER_ID);
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		System.out.println("getUserSessionBean().getUserId();=====================================: "
 				+ facesScope.getUserSessionBean().getUserId());
-		IUserSO userSO = (IUserSO) EpEjbBusinessDelegate.getInstance().getServiceObject(IUserSO.class);
+		IUserSO userSO = (IUserSO) EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(userId);
 		userSO.retrieveUserByUserId(reqDTO);
 		UserResDTO resDTO = new UserResDTO();
 		resDTO = userSO.retrieveUserByUserId(reqDTO);
+		log.info("serialNo====================================: " + serialNo);
+		log.info("subjectDN====================================: "+ subjectDN);
+		log.info("getIdentificationNo=====================================: "
+				+ resDTO.getPmUser().getIdentificationNo());
+		log.info("ContextualCompositeMethodExpression  2");
+		log.info("postSignActionMtdExpr=====================================: "
+				+ postSignActionMtdExpr);
+		log.info("enableAutoUpdateMtdExpr=====================================: "
+				+ enableAutoUpdateMtdExpr);
 		Object returnObj = null;
-		log.info("textBeforeSign:" + textBeforeSign);
+		log.info("textBeforeSign:"+textBeforeSign);
+		log.info("signedText:"+signedText);
 
 
 		try {
-			
+			this.setNonSigningException(null);
 			if (pin == null || pin.isEmpty() || pin == "") {
 				FacesContext.getCurrentInstance().addMessage(
 						"gpki",
@@ -317,9 +332,7 @@ public class gpkiBackingBean implements Serializable {
 				
 				return null;
 			}
-			
-			this.setNonSigningException(null);
-			
+					
 			String contentType = "application/x-www-form-urlencoded";
 			String ic = resDTO.getPmUser().getIdentificationNo();
 
