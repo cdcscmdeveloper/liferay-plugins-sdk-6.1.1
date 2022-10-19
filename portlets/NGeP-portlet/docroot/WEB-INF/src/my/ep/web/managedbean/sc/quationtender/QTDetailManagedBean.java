@@ -49,6 +49,7 @@ import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc; // Bug #34065@Syazani 19/10/2022
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
@@ -1662,6 +1663,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
 	public boolean proposalValidityChangeValue; //#21692
+	
+	private List<PmParameterDesc> paramDescDFTCache = null; // Bug #34065@Syazani 19/10/2022
+	
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -11732,7 +11736,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isFromSpecEndorse = isFromSpecEndorse;
 	}
 	// Bug #33661@Syazani 07/10/2022 -- End
-	
+
+	// Bug #34065@Syazani 19/10/2022 -- Start
+	public List<PmParameterDesc> getParamDescDFTCache() {
+		return paramDescDFTCache;
+	}
+
+	public void setParamDescDFTCache(List<PmParameterDesc> paramDescDFTCache) {
+		this.paramDescDFTCache = paramDescDFTCache;
+	}
+	// Bug #34065@Syazani 19/10/2022 -- End
 }
 
 // ***25201
