@@ -837,6 +837,7 @@ public class SpecificationBackingBean extends
 		}
 		boolean demoChecklistAvail = false;//#28784
 		if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
+			List<PmParameterDesc> localParamDesc = retrieveParameterDescDFT(); // Bug #34065@Syazani 19/10/2022
 			for (ScQtCheckList checkList : technicalCheckList) {
 				if (ParameterTypeConst.DOCUMENT_DEFINITION_PTJ_UPLOAD
 						.equalsIgnoreCase(checkList.getDefinationType()
@@ -862,7 +863,19 @@ public class SpecificationBackingBean extends
 						if (checkList.getPmStatus().getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
 							throw new EpException(MessageConst.ERROR_760542);
 						}
-					}					
+					}
+				
+				// Bug #34065@Syazani 19/10/2022 -- Start
+				for (PmParameterDesc paramDesc : localParamDesc) {
+					if (paramDesc.getPmParameter().getParameterId().equals(checkList.getDefinationType().getParameterId())) {
+						if (!paramDesc.getPmParameter().getParameterCode().equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
+							throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+									"lbl.sc.spec.supplier.action", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+						}
+						break;
+					}
+				}
+				// Bug #34065@Syazani 19/10/2022 -- End
 				}			
 		}
 		
@@ -4411,7 +4424,7 @@ public class SpecificationBackingBean extends
 		IParameterSO parameterSo = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IParameterSO.class);
-		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+		List<PmParameterDesc> localParamDesc = retrieveParameterDescDFT(); // Bug #34065@Syazani 19/10/2022
 		String parameterCode = null;
 		for (PmParameterDesc paramDesc : localParamDesc) {
 
@@ -22023,4 +22036,13 @@ if(null!=allTechnicalChecklist){
 		}
 	}
 	// Bug #33661@Syazani 06/10/2022 -- End
+	
+	// Bug #34065@Syazani 19/10/2022 -- Start
+	private List<PmParameterDesc> retrieveParameterDescDFT() {
+		if (this.getManagedBean().getParamDescDFTCache() == null) {
+			this.getManagedBean().setParamDescDFTCache(retrieveParameterDescByType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE));
+		} 
+		return this.getManagedBean().getParamDescDFTCache();
+	}
+	// Bug #34065@Syazani 19/10/2022 -- End
 }
