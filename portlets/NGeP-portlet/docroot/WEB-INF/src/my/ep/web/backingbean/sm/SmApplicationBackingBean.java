@@ -11084,18 +11084,14 @@ public class SmApplicationBackingBean extends
 			String loginId="";
 			String langCode="";
 			for(SmPersonnel personnel:getManagedBean().getSmAppl().getSmPersonnels()){
-				log.info("personnel.getEpRole()>>>"+personnel.getEpRole()+"-------"+RoleCode.MOF_SUPPLIER_ADMIN.toString());
 				//29782
 				if(personnel.getPmUser() != null //#32435 
 						&& personnel.getEpRole() != null && (personnel.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.toString()) || personnel.getEpRole().equalsIgnoreCase(RoleCode.SUPPLIER_TEMP.value()))){
 					loginId = personnel.getPmUser().getLoginId();
 					langCode = personnel.getPmUser().getPreferredLanguage();
-					log.info("loginId109082>>>>>>>>>>" + loginId);
-					log.info("Language>>>>>>>>>>" + personnel.getPmUser().getPreferredLanguage());
 					continue;
 				}
 			}
-			log.info("langCode>>>>>>>>>>" + langCode);
 			reqDTO.setLangCode(langCode);
 			reqDTO.setSuppLoginId(loginId);
 			
@@ -11149,18 +11145,14 @@ public class SmApplicationBackingBean extends
 			String loginId="";
 			String langCode="";
 			for(SmPersonnel personnel:getManagedBean().getSmAppl().getSmPersonnels()){
-				log.info("personnel.getEpRole()>>>"+personnel.getEpRole()+"-------"+RoleCode.MOF_SUPPLIER_ADMIN.toString());
 				//29782
 				if(personnel.getPmUser() != null //#32435
 						&& personnel.getEpRole() != null && (personnel.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.toString()) || personnel.getEpRole().equalsIgnoreCase(RoleCode.SUPPLIER_TEMP.value()))){
 					loginId = personnel.getPmUser().getLoginId();
 					langCode = personnel.getPmUser().getPreferredLanguage();
-					log.info("loginId109082>>>>>>>>>>" + loginId);
-					log.info("Language>>>>>>>>>>" + personnel.getPmUser().getPreferredLanguage());
 					continue;
 				}
 			}
-			log.info("langCode>>>>>>>>>>" + langCode);
 			reqDTO.setLangCode(langCode);
 			reqDTO.setSuppLoginId(loginId);
 			
