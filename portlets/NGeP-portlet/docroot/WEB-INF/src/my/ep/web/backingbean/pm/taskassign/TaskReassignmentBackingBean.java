@@ -3384,6 +3384,10 @@ public class TaskReassignmentBackingBean extends
 	}
 	
 	//#7465, #29822 - start
+	/**
+	 * To remove all group task
+	 * 
+	 */	
 	public void removeReassignAllGroupTasks() {
 		String loginId = null;
 		
@@ -3473,7 +3477,10 @@ public class TaskReassignmentBackingBean extends
 
 		}
 	}
-	
+	/**
+	 * To remove all others task
+	 * 
+	 */	
 	public void removeReassignAllOthersTasks() {
 		String loginId = null;
 
@@ -4072,6 +4079,10 @@ public class TaskReassignmentBackingBean extends
 	}
 	
 	//7465, 29822 - start
+	/**
+	 * To check task in progress remove or not
+	 * 
+	 */	
 	public void checkPendingTaskRemove() {
 		PmUser pmUser = this.getManagedBean().getTaskAssignmentSearchBean().getUser();
 		ISupplierDataMaintenanceSO iSupplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
@@ -4101,7 +4112,10 @@ public class TaskReassignmentBackingBean extends
 			this.getManagedBean().setShowRemoveProcessMessageOther(false);
 		}
 	}
-	
+	/**
+	 * To get user id
+	 * 
+	 */	
 	public Long getUserByLoginId(){
 		Long loginSessionUserId = 1L;
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
