@@ -4427,12 +4427,9 @@ public class SpecificationBackingBean extends
 		List<PmParameterDesc> localParamDesc = retrieveParameterDescDFT(); // Bug #34065@Syazani 19/10/2022
 		String parameterCode = null;
 		for (PmParameterDesc paramDesc : localParamDesc) {
-
-			if (paramDesc
-					.getPmParameter()
-					.getParameterId()
-					.equals(Long.valueOf(list.getDefinationType()
-							.getParameterId()))) {
+			// Bug #34065@Syazani 19/10/2022 -- Start
+			if (paramDesc.getParameterDescId().equals(Long.valueOf(list.getDefinationType().getParameterId()))) {
+				// Bug #34065@Syazani 19/10/2022 -- End
 				parameterCode = paramDesc.getPmParameter().getParameterCode();
 				list.setDefinationType(paramDesc.getPmParameter());
 				break;
