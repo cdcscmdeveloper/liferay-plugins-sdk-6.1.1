@@ -246,7 +246,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 
 			if (qualifiedSupp.isEmpty()) {
 				this.getManagedBean().setQualifiedSupplier(false);
-				this.getManagedBean().setShowCancelButton(true);
+//				this.getManagedBean().setShowCancelButton(true);
 				RequestContext context = RequestContext.getCurrentInstance();
 				context.execute("democancel.show();");
 
@@ -254,6 +254,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				IQTDemoSO qtDemoSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDemoSO.class);
 				DemoReqDTO reqDto = new DemoReqDTO();
+				this.getManagedBean().setDisableSaveAndSubmitButton(false);
 				reqDto.setScQt(this.getManagedBean().getQt());
 				DemoResDTO resDto = qtDemoSO.retrieveScQtDemoByQtNo(reqDto);
 
