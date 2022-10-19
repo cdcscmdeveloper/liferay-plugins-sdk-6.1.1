@@ -1598,35 +1598,52 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean buttonHideDedActive = true;
 	private boolean buttonHideSchActive = true;
 	
-	private boolean isApprovalScreen = false;
-	
     // 26095@hatta - start
 	private Date currentDate = new Date(); 
 	private int attachFileIndex; 
 	private String fileDirectory;
 	// 26095@hatta*** - end
-	
-	//#25692-start
+
+	// #25692-start
+	private boolean isApprovalScreen = false;
 	private Long subStatusId;
 	private List<String> paramTypes = null;
-	//#25692-End
+	// #25692-End
 
 	private ScQtApprovalRequest scQtApprovalDtls;
 
-	private IPagingDataModel<ScLoi> searchLoiDataModel;
-	
-	private IPagingDataModel<ScLoiForQt> searchLoiForQtDataModel;
-	
-	private IPagingDataModel<ScLoaBasic> searchLoaDataModel;
-	
+	// #19336, #25201, #17376, #19287 -start-
+	private IPagingDataModel<ScLoi> searchLoiDataModel;	
+	private IPagingDataModel<ScLoiForQt> searchLoiForQtDataModel;	
+	private IPagingDataModel<ScLoaBasic> searchLoaDataModel;	
 	private IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel;
+	// #19336, #25201, #17376, #19287 -end-
 	
-	// ***25692
+	// ***25692 -start-
 	/*
 	 * approval. some part is readOnly, some part is updatable 
 	 */
 	private boolean approvalEditableSection;
+	// ***25692 -end-
 
+	// #15391 - start
+	private boolean isChecklist;
+	private boolean isGenInfo;
+	private boolean specUpdateInProgress;
+	// #15391 - end
+	
+	// #30451, #17376-Start.
+	private boolean isBdSfFlow;
+	// #30451, #17376-End.
+	
+	//29464-start
+	private boolean committeeAppointmentMenuTab = true;
+	//29464-end
+	
+	// #32929 - start
+	private boolean zoneRdbButtonChecked = Boolean.FALSE;
+	// #32929 - end
+	
 	//#25037-START
 	private boolean showHistory;
 	private Paginator committeeHistories;
@@ -1636,7 +1653,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean committeeReviseFlow;
 	private List<QtCommitteeMemberBean>memberHistoryList;
 	private ScQtApprovalRequest scQtApprovalRequest;
-	private boolean specUpdateInProgress;
 	private ScQtApprovalRequest doaaRequest;
 	private boolean doaRequestEditable;
 	private List<ScQtContactPerson> newDoaList;
@@ -1681,19 +1697,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> sampleSpecCheckList;
 	private List<BriefingZoneBean> sampleAddressBean;
 	//#11104-End
-	
-	// #15391 - start
-	private boolean isChecklist;
-	private boolean isGenInfo;
-	// #15391 - end
-	
-	// #30451-Start.
-	private boolean isBdSfFlow;
-	// #30451-End.
-	
-	//29464-start
-	private boolean committeeAppointmentMenuTab = true;
-	//29464-end
 
 	// #9019 (Harun) -start-
 	private Long qtRemarksIdRemove;
@@ -9992,6 +9995,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.bsvDBStateId = bsvDBStateId;
 	}
 
+	// #19336, #25201, #17376, #19287 -start-
 	public IPagingDataModel<ScLoi> getSearchLoiDataModel() {
 		return searchLoiDataModel;
 	}
@@ -10019,11 +10023,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public IPagingDataModel<ScLoaForQt> getSearchLoaForQtDataModel() {
 		return searchLoaForQtDataModel;
 	}
-
+	
 	public void setSearchLoaForQtDataModel(IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel) {
 		this.searchLoaForQtDataModel = searchLoaForQtDataModel; 
 	}
-
+	// #19336, #25201, #17376, #19287 -end-
+	
 	/*basri 19637*/
 	public boolean isPanelZone() {
 		return isPanelZone;
@@ -10064,23 +10069,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setButtonHideSchActive(boolean buttonHideSchActive) {
 		this.buttonHideSchActive = buttonHideSchActive;
 	}
-	// #25692 - start
-	public boolean isApprovalScreen() {
-		return isApprovalScreen;
-	}
-	
-	public void setApprovalScreen(boolean isApprovalScreen) {
-		this.isApprovalScreen = isApprovalScreen;
-	}
-	// #25692 - end
-	
-	public boolean isApprovalEditableSection() {
-		return approvalEditableSection;
-	}
-
-	public void setApprovalEditableSection(boolean approvalEditableSection) {
-		this.approvalEditableSection = approvalEditableSection;
-	}
 	
 	//20200210@asyrafhaziq_Bug #27381&#26694  - Start
 	public List<TreeNode> getZoneGeneralTreesPanel() {
@@ -10092,148 +10080,224 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//20200210@asyrafhaziq_Bug #27381&#26694  - End
 	
+	// 26095@hatta - start
+	public Date getCurrentDate() {
+		return currentDate;
+	}
+
+	public void setCurrentDate(Date currentDate) {
+		this.currentDate = currentDate;
+	}
+
+	public int getAttachFileIndex() {
+		return attachFileIndex;
+	}
+
+	public void setAttachFileIndex(int attachFileIndex) {
+		this.attachFileIndex = attachFileIndex;
+	}
+
+	public String getFileDirectory() {
+		return fileDirectory;
+	}
+
+	public void setFileDirectory(String fileDirectory) {
+		this.fileDirectory = fileDirectory;
+	}
+	// 26095@hatta - end
+	
+	// #25692 start
+	public boolean isApprovalEditableSection() {
+		return approvalEditableSection;
+	}
+
+	public void setApprovalEditableSection(boolean approvalEditableSection) {
+		this.approvalEditableSection = approvalEditableSection;
+	}
+
+	public boolean isApprovalScreen() {
+		return isApprovalScreen;
+	}
+
+	public void setApprovalScreen(boolean isApprovalScreen) {
+		this.isApprovalScreen = isApprovalScreen;
+	}
+
+	/**
+	 * @return the subStatusId
+	 */
+	public Long getSubStatusId() {
+		return subStatusId;
+	}
+
+	/**
+	 * @param subStatusId
+	 *            the subStatusId to set
+	 */
+	public void setSubStatusId(Long subStatusId) {
+		this.subStatusId = subStatusId;
+	}
+
+	/**
+	 * @return the paramTypes
+	 */
+	public List<String> getParamTypes() {
+		return paramTypes;
+	}
+
+	/**
+	 * @param paramTypes
+	 *            the paramTypes to set
+	 */
+	public void setParamTypes(List<String> paramTypes) {
+		this.paramTypes = paramTypes;
+	}
+	// #25692 End
+
+	// #15391 -start-
+	public boolean isChecklist() {
+		return isChecklist;
+	}
+
+	public void setChecklist(boolean isChecklist) {
+		this.isChecklist = isChecklist;
+	}
+
+	public boolean isGenInfo() {
+		return isGenInfo;
+	}
+
+	public void setGenInfo(boolean isGenInfo) {
+		this.isGenInfo = isGenInfo;
+	}
+
+	public boolean isSpecUpdateInProgress() {
+		return specUpdateInProgress;
+	}
+
+	public void setSpecUpdateInProgress(boolean specUpdateInProgress) {
+		this.specUpdateInProgress = specUpdateInProgress;
+	}
+	// #15391 -end-
+
+	// #30451, #17376-Start.
+	/**
+	 * @return the isBdSfFlow
+	 */
+	public boolean isBdSfFlow() {
+		return isBdSfFlow;
+	}
+
+	/**
+	 * @param isBdSfFlow the isBdSfFlow to set
+	 */
+	public void setBdSfFlow(boolean isBdSfFlow) {
+		this.isBdSfFlow = isBdSfFlow;
+	}
+	// #30451, #17376-End.
+
+	//29464-start
+	public boolean isCommitteeAppointmentMenuTab() {
+		return committeeAppointmentMenuTab;
+	}
+
+	public void setCommitteeAppointmentMenuTab(boolean committeeAppointmentMenuTab) {
+		this.committeeAppointmentMenuTab = committeeAppointmentMenuTab;
+	}
+	//29464-end
+
+	public boolean isZoneRdbButtonChecked() {
+		return zoneRdbButtonChecked;
+	}
+
+	public void setZoneRdbButtonChecked(boolean zoneRdbButtonChecked) {
+		this.zoneRdbButtonChecked = zoneRdbButtonChecked;
+	}
+	
 	public ScLoiForQt getScLoiForQt() {
 		return scLoiForQt;
 	}
-
+	
 	public void setScLoiForQt(ScLoiForQt scLoiForQt) {
 		this.scLoiForQt = scLoiForQt;
 	}
-
+	
 	public ScLoaForQt getScLoaForQt() {
 		return scLoaForQt;
 	}
-
+	
 	public void setScLoaForQt(ScLoaForQt scLoaForQt) {
 		this.scLoaForQt = scLoaForQt;
 	}
-
+	
 	public boolean isMeeting() {
 		return isMeeting;
 	}
-
+	
 	public void setMeeting(boolean isMeeting) {
 		this.isMeeting = isMeeting;
 	}
-
+	
 	public ScQtReverse getScQtReverse() {
 		return scQtReverse;
 	}
-
+	
 	public void setCloned(boolean isCloned) {
 		this.isCloned = isCloned;
-	}	
-	
-	// 26095@hatta - start
-		public Date getCurrentDate() {
-			return currentDate;
-		}
-
-		public void setCurrentDate(Date currentDate) {
-			this.currentDate = currentDate;
-		}
-
-		public int getAttachFileIndex() {
-			return attachFileIndex;
-		}
-
-		public void setAttachFileIndex(int attachFileIndex) {
-			this.attachFileIndex = attachFileIndex;
-		}
-
-		public String getFileDirectory() {
-			return fileDirectory;
-		}
-
-		public void setFileDirectory(String fileDirectory) {
-			this.fileDirectory = fileDirectory;
-		}
-		// 26095@hatta - end
-		//#25692 start
-
-		/**
-		 * @return the subStatusId
-		 */
-		public Long getSubStatusId() {
-			return subStatusId;
-		}
-
-		/**
-		 * @param subStatusId the subStatusId to set
-		 */
-		public void setSubStatusId(Long subStatusId) {
-			this.subStatusId = subStatusId;
-		}
-
-		/**
-		 * @return the paramTypes
-		 */
-		public List<String> getParamTypes() {
-			return paramTypes;
-		}
-
-		/**
-		 * @param paramTypes the paramTypes to set
-		 */
-		public void setParamTypes(List<String> paramTypes) {
-			this.paramTypes = paramTypes;
-		}
-		
-		
-		//#25692 End
+	}
 	
 	public boolean isEditable() {
 		return isEditable;
 	}
-
+	
 	public void setEditable(boolean isEditable) {
 		this.isEditable = isEditable;
 	}
-
+	
 	public List<ScLoiReverseRemark> getScLoiReverseRemarks() {
 		return scLoiReverseRemarks;
 	}
-
+	
 	public void setScLoiReverseRemarks(List<ScLoiReverseRemark> scLoiReverseRemarks) {
 		this.scLoiReverseRemarks = scLoiReverseRemarks;
 	}
-
+	
 	public List<ScLoaReverseRemark> getScLoaReverseRemarks() {
 		return scLoaReverseRemarks;
 	}
-
+	
 	public void setScLoaReverseRemarks(List<ScLoaReverseRemark> scLoaReverseRemarks) {
 		this.scLoaReverseRemarks = scLoaReverseRemarks;
 	}
-
+	
 	/**
 	 * @return the isViewFinalization
 	 */
 	public boolean isViewFinalization() {
 		return isViewFinalization;
 	}
-
+	
 	/**
 	 * @param isViewFinalization the isViewFinalization to set
 	 */
 	public void setViewFinalization(boolean isViewFinalization) {
 		this.isViewFinalization = isViewFinalization;
 	}
-
+	
 	/**
 	 * @return the scLoi
 	 */
 	public ScLoi getScLoi() {
 		return scLoi;
 	}
-
+	
 	/**
 	 * @param scLoi the scLoi to set
 	 */
 	public void setScLoi(ScLoi scLoi) {
 		this.scLoi = scLoi;
 	}
-
+	
 	/**
 	 * @return the scLoa
 	 */
@@ -10325,14 +10389,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 		public void setScQtApprovalRequest(ScQtApprovalRequest scQtApprovalRequest) {
 			this.scQtApprovalRequest = scQtApprovalRequest;
-		}
-
-		public boolean isSpecUpdateInProgress() {
-			return specUpdateInProgress;
-		}
-
-		public void setSpecUpdateInProgress(boolean specUpdateInProgress) {
-			this.specUpdateInProgress = specUpdateInProgress;
 		}
 
 		public ScQtApprovalRequest getDoaaRequest() {
@@ -10675,40 +10731,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.approverTabLoaded = approverTabLoaded;
 	}
 	// bug #30435, Enhancement #25077 - end
-
-	// #15391 -start-
-	public boolean isChecklist() {
-		return isChecklist;
-	}
-
-	public void setChecklist(boolean isChecklist) {
-		this.isChecklist = isChecklist;
-	}
-
-	public boolean isGenInfo() {
-		return isGenInfo;
-	}
-
-	public void setGenInfo(boolean isGenInfo) {
-		this.isGenInfo = isGenInfo;
-	}
-	// #15391 -end-
-
-	// #30451-Start.
-	/**
-	 * @return the isBdSfFlow
-	 */
-	public boolean isBdSfFlow() {
-		return isBdSfFlow;
-	}
-
-	/**
-	 * @param isBdSfFlow the isBdSfFlow to set
-	 */
-	public void setBdSfFlow(boolean isBdSfFlow) {
-		this.isBdSfFlow = isBdSfFlow;
-	}
-	// #30451-End.
 		
 	//#25037-start
 	public List<String> getMainTaskNames() {
@@ -10719,16 +10741,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.mainTaskNames = mainTaskNames;
 	}
 	//#25037-end
-
-	//29464-start
-	public boolean isCommitteeAppointmentMenuTab() {
-		return committeeAppointmentMenuTab;
-	}
-
-	public void setCommitteeAppointmentMenuTab(boolean committeeAppointmentMenuTab) {
-		this.committeeAppointmentMenuTab = committeeAppointmentMenuTab;
-	}
-	//29464-end
 	
 	// #9019 - Start (Harun)
 	public Long getQtRemarksIdRemove() {
