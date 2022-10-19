@@ -340,6 +340,7 @@ public class AuthorizedSignatoryBackingBean extends
 	 */	
 	public void saveCertSignatoryDetials() throws Exception {
 		debugLogger("saveCertSignatoryDetials");
+		log.info("Start saveCertSignatoryDetials");
 		getManagedBean().setValidationError(false);
 		validation();
 		
@@ -409,6 +410,8 @@ public class AuthorizedSignatoryBackingBean extends
 		     MessageUtils.getMessage(MessageConst.INFO_770146, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
 		}
+		log.info(" saveCertSignatoryDetials changed user : " + getUserIdSessionFromLoginId());
+		log.info("End saveCertSignatoryDetials");
 	}
 	/**
 	 * Track Signatory status
