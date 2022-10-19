@@ -8499,32 +8499,12 @@ public class SmApplicationBackingBean extends
 	 *            - the personel type to define equity or not
 	 */
 	public void assignNewShareHolder() {
-		/*log.info("fatintestadd" + this.getManagedBean().getSmAppl().getSmPersonnels().size());
-		
-		for (SmPersonnel smPersonnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
-			
-			if (smPersonnel.isEquityOwner()== true && 
-					smPersonnel.isManagement()== true &&
-					smPersonnel.isClerical() == true){
-				
-				log.info("equityowner+management+clerical" + smPersonnel.getName());
-				this.getManagedBean().getSelectedShareHolder()
-				.setDisableStaff(true);
-			}
-			
-			if (smPersonnel.isClerical()== true &&
-					(smPersonnel.isEquityOwner()== false ||
-					smPersonnel.isManagement()== false)){
-
-				log.info("staff" + smPersonnel.getName());
-				this.getManagedBean().getSelectedShareHolder()
-				.setDisableStaff(false);
-			}
-		}*/
 		if (getManagedBean().getIdentificationTypes() == null) {
 			getManagedBean()
 					.setIdentificationTypes(getPmIdTypeDropdownValues());
 		}
+		//#34138
+		getManagedBean().setCountryLs(SmApplicationUtil.retrievePmCountryList());
 		//#29315
 		getManagedBean().setFlagMandatoryEpfNo(false);
 		getManagedBean().setPopupAction("N");
