@@ -265,7 +265,7 @@ public class SmCommonUtil {
 	}
 
 	/**
-	 * Md5. replaced by SHA-256
+	 * Md5.
 	 * 
 	 * @param str
 	 *            the str
@@ -275,7 +275,7 @@ public class SmCommonUtil {
 
 		MessageDigest md = null;
 		try {
-			md = MessageDigest.getInstance("SHA-256");
+			md = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException ex) {
 			log.info(ex.getMessage());
 			// return;
@@ -5514,10 +5514,10 @@ public class SmCommonUtil {
 		if (billType
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
 			vKey = EpPropertiesUtils.getInstance().getProperty(
-					"payment.cdc.vkey");
+					"molpay.cdc.vkey");
 		} else {
 			vKey = EpPropertiesUtils.getInstance().getProperty(
-					"payment.gov.vkey");
+					"molpay.gov.vkey");
 		}
 		return vKey;
 	}
@@ -5528,10 +5528,10 @@ public class SmCommonUtil {
 		if (billType
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
 			vCode = EpPropertiesUtils.getInstance().getProperty(
-					"payment.cdc.merchantid");
+					"molpay.cdc.merchantid");
 		} else {
 			vCode = EpPropertiesUtils.getInstance().getProperty(
-					"payment.gov.merchantid");
+					"molpay.gov.merchantid");
 		}
 
 		return vCode;
