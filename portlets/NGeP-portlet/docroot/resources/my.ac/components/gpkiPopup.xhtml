@@ -181,10 +181,10 @@
 	<p:dialog header="#{lbl['lbl.cc.gpki.title']}" widgetVar="gpki_dlg"
 		resizable="false" modal="true">
 		
-		<p:ajax event="close" listener="#{gpkiBackingBean.onDialogCloseAction()}" 
-			onstart="gpkiBlockWidget.show();return isRunGPKIEnableAutoUpdate()" 
-			oncomplete="setRunGPKIEnableAutoUpdate(true);gpkiBlockWidget.hide();" 
-			disabled="#{empty cc.getValueExpression('enableAutoUpdate')}" />
+<!-- 		<p:ajax event="close" listener="#{gpkiBackingBean.onDialogCloseAction()}"  -->
+<!-- 			onstart="gpkiBlockWidget.show();return isRunGPKIEnableAutoUpdate()"  -->
+<!-- 			oncomplete="setRunGPKIEnableAutoUpdate(true);gpkiBlockWidget.hide();"  -->
+<!-- 			disabled="#{empty cc.getValueExpression('enableAutoUpdate')}" /> -->
 				
 		<p:blockUI block="gpkiPopup" widgetVar="gpkiBlockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
