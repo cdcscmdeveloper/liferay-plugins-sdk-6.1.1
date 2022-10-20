@@ -47,46 +47,6 @@
 	</p:blockUI>
 
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}" toggleable="true">
-<!-- #28784 Start -->
-	<p:confirmDialog id="demoDialogConfirm" widgetVar="demoDialogConfirm"
- 		header="#{lbl['lbl.sc.confirmation']}"
-		message="#{lbl['lbl.demo.validate.tech.spec']}"
-		resizable="false" closable="false">
-		<div align="right">
-			<p:commandButton id="demoYes" 
-				value="#{lbl['lbl.btn.yes']}" 
-				action="#{createQtBB.yesDeleteExistingDemoTechChecklist}"
-				oncomplete="demoDialogConfirm.hide()"
-				update="@form"
-				process="@this"/>
-			<p:commandButton id="demoNo" 
-				value="#{lbl['lbl.btn.no']}" 	
-				action="#{createQtBB.noDeleteExistingDemoTechChecklist}"			
-				oncomplete="demoDialogConfirm.hide()"
-				process="@this"
-				update="@form"/>
-		</div>
-	</p:confirmDialog> 
-	<p:confirmDialog id="demoEvalDialogConfirm" widgetVar="demoEvalDialogConfirm"
- 		header="#{lbl['lbl.sc.confirmation']}"
-		message="#{lbl['lbl.demo.validate.eval.tech.spec']}"
-		resizable="false" closable="false">
-		<div align="right">
-			<p:commandButton id="demoEvalYes" 
-				value="#{lbl['lbl.btn.yes']}" 
-				action="#{createQtBB.yesDeleteExistingDemoTechChecklist}"
-				oncomplete="demoEvalDialogConfirm.hide()"
-				update="@form"
-				process="@this"/>
-			<p:commandButton id="demoEvalNo" 
-				value="#{lbl['lbl.btn.no']}" 	
-				action="#{createQtBB.noDeleteExistingDemoTechChecklist}"			
-				oncomplete="demoEvalDialogConfirm.hide()"
-				update="@form"
-				process="@this"/>
-		</div>
-	</p:confirmDialog> 
-<!-- #28784 End -->
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.qt.instruction']}" escape="false" />    <!--Enhancement #25659 rendered="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}" -->
 		<br/>
@@ -1353,15 +1313,52 @@
 <!-- #25729 #174 END -->
 
 <!-- #28784 Start -->
-<!-- <ac:confirmationPopup id="demoDialogConfirm"  -->
-<!-- 				widget="demoDialogConfirm" -->
-<!-- 				okAction="#{createQtBB.yesDeleteExistingDemoTechChecklist}"  -->
-<!-- 				cancelAction="#{createQtBB.noDeleteExistingDemoTechChecklist}" -->
-<!-- 				width="33%" -->
-<!-- 				height="100" title="#{lbl['lbl.sc.confirmation']}" -->
-<!-- 				content="#{lbl['lbl.demo.validate.tech.spec']}" update="@form" /> -->
+<ac:confirmationPopup id="demoDialogConfirm" 
+				widget="demoDialogConfirm"
+				okAction="#{createQtBB.yesDeleteExistingDemoTechChecklist}" 				
+				width="33%"
+				height="100" title="#{lbl['lbl.sc.confirmation']}"
+				content="#{lbl['lbl.demo.validate.tech.spec']}" update="@form" />
 				
-
+<!-- <p:confirmDialog id="demoDialogConfirm" widgetVar="demoDialogConfirm" -->
+<!--  		header="#{lbl['lbl.sc.confirmation']}" -->
+<!-- 		message="#{lbl['lbl.demo.validate.tech.spec']}" -->
+<!-- 		resizable="false" closable="false"> -->
+<!-- 		<div align="right"> -->
+<!-- 			<p:commandButton id="demoYes"  -->
+<!-- 				value="#{lbl['lbl.btn.yes']}"  -->
+<!-- 				action="#{createQtBB.yesDeleteExistingDemoTechChecklist}" -->
+<!-- 				oncomplete="demoDialogConfirm.hide()" -->
+<!-- 				update="@form" -->
+<!-- 				process="@this"/> -->
+<!-- 			<p:commandButton id="demoNo"  -->
+<!-- 				value="#{lbl['lbl.btn.no']}" 	 -->
+<!-- 				action="#{createQtBB.noDeleteExistingDemoTechChecklist}"			 -->
+<!-- 				oncomplete="demoDialogConfirm.hide()" -->
+<!-- 				process="@this" -->
+<!-- 				update="@form"/> -->
+<!-- 		</div> -->
+<!-- 	</p:confirmDialog>  -->
+	<p:confirmDialog id="demoEvalDialogConfirm" widgetVar="demoEvalDialogConfirm"
+ 		header="#{lbl['lbl.sc.confirmation']}"
+		message="#{lbl['lbl.demo.validate.eval.tech.spec']}"
+		resizable="false" closable="false">
+		<div align="right">
+			<p:commandButton id="demoEvalYes" 
+				value="#{lbl['lbl.btn.yes']}" 
+				action="#{createQtBB.yesDeleteExistingDemoTechChecklist}"
+				oncomplete="demoEvalDialogConfirm.hide()"
+				update="@form"
+				process="@this"/>
+			<p:commandButton id="demoEvalNo" 
+				value="#{lbl['lbl.btn.no']}" 	
+				action="#{createQtBB.noDeleteExistingDemoTechChecklist}"			
+				oncomplete="demoEvalDialogConfirm.hide()"
+				update="@form"
+				process="@this"/>
+		</div>
+	</p:confirmDialog> 
+<!-- #28784 End -->
 
 <!-- 32929 -start- -->
 	<p:dialog id="scQtZoneChangeDlgs" widgetVar="scQtZoneChangeDlgs"
