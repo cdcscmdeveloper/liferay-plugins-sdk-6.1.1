@@ -610,6 +610,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scLoa.setScLoaRemarks(initializeRemarks(scLoa, scLoa.getCurrentStatus(), scLoa.getScLoaRemarks(),
 					ScLoaRemark.class));
 			// #11134 - end
+			retrieveValBankAccNoDropdown(); //Bug #33674@Syazani -- 14/09/2022
 			
 			//Enhancement #24259 #24269
 //			isGSTRegActive();
@@ -3230,13 +3231,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		debugLogger("handleBankDetailsChanged");
 
 		ScLoa scLoa = this.getManagedBean().getScLoa();
+		//Bug #33674@Syazani -- Start 08/09/2022
+		Long supplierBankId = this.getManagedBean().getSupplierBankId();
 
-		if (scLoa.getBankAccNo() != null) {
+		// if (scLoa.getBankAccNo() != null) {
+		if (supplierBankId != null) {
 			List<SmSupplierBank> bankList = this.getManagedBean().getBankList();
 
 			for (SmSupplierBank supplierBank : bankList) {
-				if (supplierBank.getAccountNo().equals(scLoa.getBankAccNo())) {
-					//log.info("found supplier bank");
+				// if (supplierBank.getAccountNo().equals(scLoa.getBankAccNo())) {
+				if (supplierBank.getSupplierBankId().equals(supplierBankId)) {
+					// Bug #33674@Syazani -- End 08/09/2022
+					log.info("found supplier bank");
 
 					scLoa.setBankAccNo(supplierBank.getAccountNo());
 					scLoa.setBankName(supplierBank.getPmFinancialOrg()
@@ -7759,63 +7765,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return false;
 	}
 	// ***25201#35 -end-
+	
 	/*
 	private FacesScopes getFacesScopes(){
 		FacesScopes fs = new FacesScopes();
 		return fs;
 	}
 	*/
-
-	/**
-	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
-	 */
-	public boolean isSqStillValid(){		
-	
-		Boolean validDate = true;	
-		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
-		ScQuote scQuote = getManagedBean().getScLoa().getScQuote();
-		
-		// Refactor: #12177 - Start
-		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
-		log.info("Refactor 12177 (LOADetailBackingBean) : getSqTimeValidity - " + sqTimeValidity);
-		// Refactor: #12177 - End
-		
-
-		// by default days
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
-		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
-		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
-		if (ruleValueList != null && ruleValueList.size() > 0) {
-			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
-		} else {
-			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-		}
-
-		if(scQuote != null){
-			
-			Date currentDate = new Date();
-			Date closingDate = scQuote.getEndDate();
-			
-			Calendar cal = Calendar.getInstance();
-			cal.clear(); 
-			cal.setTime(closingDate);
-			cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
-			
-			if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
-			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
-			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
-			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
-				if(currentDate.compareTo(cal.getTime()) >= 0){
-					validDate = false;
-					sqExpiredMessageFlag = true;
-				}
-			}	
-		}			
-		return validDate;	
-	}
 	
 	//#22211 - show LOA Cancellation Approver Detail
 	public boolean isLOACancelByApprover(){
@@ -8002,7 +7958,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
 		}
-	}//#25022-end
+	}
+	//#25022-end
 
 	// 25201#73 -start-
 	/**
@@ -8037,6 +7994,74 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	/* 19336#99 - end */
+	
+	/**
+	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
+	 */
+	public boolean isSqStillValid(){		
+		
+		Boolean validDate = true;	
+		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
+		ScQuote scQuote = getManagedBean().getScLoa().getScQuote();
+		
+		// Refactor: #12177 - Start
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		log.info("Refactor 12177 (LOADetailBackingBean) : getSqTimeValidity - " + sqTimeValidity);
+		// Refactor: #12177 - End
+		
+
+		// by default days
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
+		} else {
+			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+		}
+
+		if(scQuote != null){
+			
+			Date currentDate = new Date();
+			Date closingDate = scQuote.getEndDate();
+			
+			Calendar cal = Calendar.getInstance();
+			cal.clear(); 
+			cal.setTime(closingDate);
+			cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
+			
+			if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
+			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
+			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
+			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
+				if(currentDate.compareTo(cal.getTime()) >= 0){
+					validDate = false;
+					sqExpiredMessageFlag = true;
+				}
+			}	
+		}			
+		return validDate;	
+	}
+	
+	
+	//Bug #33674@Syazani -- Start 14/09/2022
+	private void retrieveValBankAccNoDropdown() {
+		List<SmSupplierBank> lstSupplierBank = getManagedBean().getBankList();
+		ScLoa tmpScLoa = getManagedBean().getScLoa();
+		if (tmpScLoa != null && lstSupplierBank != null && lstSupplierBank.size() > 0 && tmpScLoa.getBankAccNo() != null) {
+			for (SmSupplierBank ssb : lstSupplierBank) {
+				if (ssb.getAccountNo().equalsIgnoreCase(tmpScLoa.getBankAccNo())
+						&& ssb.getPmFinancialOrg().getFinOrgName().equalsIgnoreCase(tmpScLoa.getBankName())) {
+					getManagedBean().setSupplierBankId(ssb.getSupplierBankId());
+					break;
+				}
+			}
+		}
+	}
+	//Bug #33674@Syazani -- End 14/09/2022
 	
 	//#29006 - start
 	public void onClickSpecsAndSupplierOfferLink(ScLoiLoaItem scLoiLoaItem) {

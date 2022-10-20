@@ -299,10 +299,19 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private boolean ButtonHideActive = true;
 	private boolean buttonHideDedActive = true;
 	private boolean buttonHideSchActive = true;
-	
-	//#17376
-	private boolean isValidatewitness=false;
 
+	//#24540 - start -
+	private SelectItem[] pk7Reasons;
+	//#24540 - end -
+	
+	// #17376 -start-
+	private boolean isValidatewitness=false;
+	// #17376 -end-
+	
+	// Bug #33674@Syazani - Start
+	private Long supplierBankId = null;
+	// Bug #33674@Syazani - End	
+	
 	/*#29007 Start Vinod*/
 	private boolean iconForDL = false;
 	private boolean searchItemForDL = false;
@@ -317,11 +326,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private ScLoiLoaItem scLoiLoaItem;
 	private List<TplSpecAnswer> tplSpecAnswerList;
 	/*#29007 End Vinod*/
-	
-
-	//#24540 - start -
-	private SelectItem[] pk7Reasons;
-	//#24540 - end -
 
 	/**
 	 * Gets the spki backing bean.
@@ -1906,6 +1910,15 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.pk7Reasons = pk7Reasons;
 	}
 	//#24540 - end -
+	
+	public Long getSupplierBankId() {
+		return supplierBankId;
+	}
+
+	public void setSupplierBankId(Long supplierBankId) {
+		this.supplierBankId = supplierBankId;
+	}
+	
 	/*#29007 Start Vinod*/
 	public boolean isSupPropSpecDisable() {
 		return supPropSpecDisable;

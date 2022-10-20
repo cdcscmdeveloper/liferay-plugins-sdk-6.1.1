@@ -296,6 +296,18 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private boolean buttonHideSchActive = true;
 
 	private Boolean flowamt = null;
+	
+	// #19336 -start-
+	private boolean isValidatewitness = false;
+	// #19336 -end-
+	
+	//#11134 -start-
+	private List<ScLoaRemark> supplierRemarks;
+	//#11134 -end-		
+	
+	//Bug #33674@Syazani - Start
+	private Long supplierBankId = null;
+	//Bug #33674@Syazani - End
 
 	//#29006 - start
 	private boolean specificationAndSupplierDialogFlag = false;
@@ -315,13 +327,6 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	//#29006 - end
 	
 	private boolean enablePBForDP;
-
-	//#19336
-	private boolean isValidatewitness=false;
-	
-	//#11134 -start-
-	private List<ScLoaRemark> supplierRemarks;
-	//#11134 -end-
 
 	/*#29007 Start Vinod*/
 	private boolean supPropSpecDisable = false;
@@ -1690,6 +1695,22 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setFlowamt(Boolean flowamt) {
 		this.flowamt = flowamt;
 	}
+
+	// #19336 - start
+	/**
+	 * @return the isValidatewitness
+	 */
+	public boolean isValidatewitness() {
+		return isValidatewitness;
+	}
+
+	/**
+	 * @param isValidatewitness the isValidatewitness to set
+	 */
+	public void setValidatewitness(boolean isValidatewitness) {
+		this.isValidatewitness = isValidatewitness;
+	}
+	// #19336 - end
 	
 	public List<PmUser> getLoacancelapproverList() {
 		return loacancelapproverList;
@@ -1707,22 +1728,48 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.loacancelapproverUser = loacancelapproverUser;
 	}
 
-	// #19336 - start
-	/**
-	 * @return the isValidatewitness
-	 */
-	public boolean isValidatewitness() {
-		return isValidatewitness;
+	public String getSourcePage() {
+		return sourcePage;
 	}
 
-	/**
-	 * @param isValidatewitness the isValidatewitness to set
-	 */
-	public void setValidatewitness(boolean isValidatewitness) {
-		this.isValidatewitness = isValidatewitness;
+	public void setSourcePage(String sourcePage) {
+		this.sourcePage = sourcePage;
 	}
-	// #19336 - end
 
+	public boolean isDpMaintenanceSource() {
+		return dpMaintenanceSource;
+	}
+
+	public void setDpMaintenanceSource(boolean dpMaintenanceSource) {
+		this.dpMaintenanceSource = dpMaintenanceSource;
+	}
+
+	public List<ScLoaCancelAttachment> getScLoaCancelAttachments() {
+		return scLoaCancelAttachments;
+	}
+
+	public void setScLoaCancelAttachments(List<ScLoaCancelAttachment> scLoaCancelAttachments) {
+		this.scLoaCancelAttachments = scLoaCancelAttachments;
+	}
+
+	//#11134 -start-
+	public List<ScLoaRemark> getSupplierRemarks() {
+		return supplierRemarks;
+	}
+
+	public void setSupplierRemarks(List<ScLoaRemark> supplierRemarks) {
+		this.supplierRemarks = supplierRemarks;
+	}
+	//#11134 -end-
+
+	public Long getSupplierBankId() {
+		return supplierBankId;
+	}
+
+	public void setSupplierBankId(Long supplierBankId) {
+		this.supplierBankId = supplierBankId;
+	}
+	
 	//#29006 - start
 	public boolean isSpecificationAndSupplierDialogFlag() {
 		return specificationAndSupplierDialogFlag;
@@ -1835,41 +1882,6 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.multipleSuppOffer = multipleSuppOffer;
 	}
 	//#29006 - end
-
-
-	public String getSourcePage() {
-		return sourcePage;
-	}
-
-	public void setSourcePage(String sourcePage) {
-		this.sourcePage = sourcePage;
-	}
-
-	public boolean isDpMaintenanceSource() {
-		return dpMaintenanceSource;
-	}
-
-	public void setDpMaintenanceSource(boolean dpMaintenanceSource) {
-		this.dpMaintenanceSource = dpMaintenanceSource;
-	}
-
-	public List<ScLoaCancelAttachment> getScLoaCancelAttachments() {
-		return scLoaCancelAttachments;
-	}
-
-	public void setScLoaCancelAttachments(List<ScLoaCancelAttachment> scLoaCancelAttachments) {
-		this.scLoaCancelAttachments = scLoaCancelAttachments;
-	}
-
-	//#11134 -start-
-	public List<ScLoaRemark> getSupplierRemarks() {
-		return supplierRemarks;
-	}
-
-	public void setSupplierRemarks(List<ScLoaRemark> supplierRemarks) {
-		this.supplierRemarks = supplierRemarks;
-	}
-	//#11134 -end-
 	
 	/*#29007 Start Vinod*/
 	public List<TplSpecAnswer> getTplSpecAnswerList() {
