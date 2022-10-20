@@ -1836,6 +1836,7 @@ public class SmApplicationUtil {
 			}
 			//31043 end
 			
+			//31043 start
 			if (!SmCommonUtil.isCollectionEmpty(managedBean
 					.getActiveCategoryList())) {
 				for (SmSupplierCategory cat : managedBean
@@ -2035,6 +2036,7 @@ public class SmApplicationUtil {
 					}
 				}
 			}
+			//#31043 end
 		}
 		return validSave;
 	}
