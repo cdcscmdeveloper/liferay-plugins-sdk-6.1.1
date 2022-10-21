@@ -869,6 +869,7 @@ public class SpecificationBackingBean extends
 				for (PmParameterDesc paramDesc : localParamDesc) {
 					if (paramDesc.getPmParameter().getParameterId().equals(checkList.getDefinationType().getParameterId())) {
 						if (!paramDesc.getPmParameter().getParameterCode().equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
+							financialCheckListTypeChange(technicalCheckList.indexOf(checkList),technicalCheckList);
 							throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
 									"lbl.sc.spec.supplier.action", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
 						}
