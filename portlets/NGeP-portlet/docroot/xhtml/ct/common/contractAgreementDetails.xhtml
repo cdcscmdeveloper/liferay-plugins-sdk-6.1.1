@@ -37,9 +37,11 @@
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
-				<p:outputPanel style="display:flex; justify-content:center;" rendered="#{agreement.status.docType == ParameterConst.doctypeSupplementalAgreement and agreement.status.statusId != CtStatusConst.saComplete}">
+				<!-- Enhancement 29418 - shaqimi start 11102022 -->
+				<p:outputPanel rendered="#{agreement.status.docType == ParameterConst.doctypeSupplementalAgreement and agreement.status.statusId != CtStatusConst.saComplete}">
 					<h:outputText value="#{lbl['lbl.ct.view.value.na']}"/>
 				</p:outputPanel>
+				<!-- Enhancement 29418 - shaqimi end 11102022 -->
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -118,9 +120,11 @@
 						<br />
 				</ui:repeat>
 				</p:outputPanel>
-				<p:outputPanel style="display:flex; justify-content:center;" rendered="#{agreement.status.docType == ParameterConst.doctypeSupplementalAgreement and agreement.status.statusId != CtStatusConst.saComplete}">
+				<!-- Enhancement 29418 - shaqimi start 11102022 -->
+				<p:outputPanel rendered="#{agreement.status.docType == ParameterConst.doctypeSupplementalAgreement and agreement.status.statusId != CtStatusConst.saComplete}">
 					<h:outputText value="#{lbl['lbl.ct.view.value.na']}"/>
 				</p:outputPanel>
+				<!-- Enhancement 29418 - shaqimi end 11102022 -->
 			</p:column>
 			<p:column style="text-align: center;">
 				<f:facet name="header">
@@ -128,12 +132,16 @@
 					<ac:iconTooltip
 						value="#{lbl['lbl.ct.tooltip.view.amendment.details']}" />
 				</f:facet>
+				<!-- Enhancement 29418 - shaqimi end 11102022 -->
 				<p:commandButton
-					rendered="#{agreement.status.statusId == CtStatusConst.saComplete}" ajax="false"
+					rendered="#{agreement.status.statusId == CtStatusConst.saComplete or agreement.status.statusId == CtStatusConst.saPendingCreation
+						or agreement.status.statusId == CtStatusConst.saPendingApproval or agreement.status.statusId == CtStatusConst.saPendingRevision 
+						or agreement.status.statusId == CtStatusConst.saPendingRevisionApproval}" ajax="false"
 					value="#{lbl['lbl.btn.download']}">
 					<p:fileDownload
 						value="#{ctBackingBean.generateReportPDF(agreement)}" />
 				</p:commandButton>
+				<!-- Enhancement 29418 - shaqimi end 11102022 -->
 			</p:column>
 			<!-- Enhancement 29418- shaqimi end -->
 		</p:dataTable>
