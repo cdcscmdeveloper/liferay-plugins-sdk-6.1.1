@@ -123,11 +123,11 @@
 			  	
 			 <!-- danial #25635 - rollback 22/11/2020-->
 			 <p:commandButton value="#{lbl['lbl.btn.clone']}" style="float:right;" id="cloneButton" rendered="#{isClone1}"
-											process="@this" partialSubmit="true" update="pnlid2"
+											process="@this" partialSubmit="true" update="pnlid2" disabled="#{qTDetailBB.isCloneBtnDisable()}"
 											action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
 											title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />
 				<p:commandButton value="#{lbl['lbl.sc.clone.qt.documents']}" style="float:right;" id="cloneButton2" rendered="#{isClone2 and !isCommitteeApprovalReviseTask}"
-											process="@this" partialSubmit="true" update="pnlid2"
+											process="@this" partialSubmit="true" update="pnlid2" disabled="#{qTDetailBB.isCloneBtnDisable()}"
 											action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
 											title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />	
 				

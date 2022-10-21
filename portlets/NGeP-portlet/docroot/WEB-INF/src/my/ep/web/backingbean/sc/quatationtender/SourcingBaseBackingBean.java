@@ -6249,5 +6249,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
 					TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
 		}//11104_end
+		
+		
+		/**25635
+		 * is clone button disable
+		 * 
+		 * 
+		 * 
+		 * @return
+		 */
+		public boolean isCloneBtnDisable() {
+			log.info("========cloneButtonDisableStart=======");
+				String isClonehBtn = EpPropertiesUtils.getInstance()
+						.getProperty(EpPropertiesConst.SC_CLONE_BUTTON_DISABLEQT);
+				log.info("========cloneButtonDisableEnd======="+isClonehBtn);
+				if (StringUtils.isNotBlank(isClonehBtn)) {
+					return Boolean.valueOf(isClonehBtn);
+				}
+				log.info("========cloneButtonDisableEnd=======");	
+			
+			return false;
+		}//25635
 
 }
