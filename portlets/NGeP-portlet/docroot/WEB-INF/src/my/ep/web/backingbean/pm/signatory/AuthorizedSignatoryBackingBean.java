@@ -340,6 +340,7 @@ public class AuthorizedSignatoryBackingBean extends
 	 */	
 	public void saveCertSignatoryDetials() throws Exception {
 		debugLogger("saveCertSignatoryDetials");
+		log.info(" START saveCertSignatoryDetials");
 		getManagedBean().setValidationError(false);
 		validation();
 		
@@ -368,6 +369,8 @@ public class AuthorizedSignatoryBackingBean extends
 				msgParam = new String[] {this.getManagedBean().getCertSignatories().get(0).getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 				pmcertSignatory.setCreatedBy(getUserIdSessionFromLoginId()); //#34090
 				pmcertSignatory.setChangedBy(getUserIdSessionFromLoginId()); //#34090
+				log.info(" saveCertSignatoryDetials changedBy user 1 " + getUserIdSessionFromLoginId());
+				log.info(" saveCertSignatoryDetials changedBy user 1 getChangedBy " + pmcertSignatory.getChangedBy());
 			} else {
 				//TODO: check previous value 
 				if (pmcertSignatory.isModified()
@@ -375,13 +378,17 @@ public class AuthorizedSignatoryBackingBean extends
 					log.info("Tracking diary for virtual certificate: de-activating status :saveRuleCatalog");
 					messageId = MessageConst.TD_80902;
 					msgParam = new String[] {pmcertSignatory.getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
-					pmcertSignatory.setChangedBy(getUserIdSessionFromLoginId()); //#34090					
+					pmcertSignatory.setChangedBy(getUserIdSessionFromLoginId()); //#34090
+					log.info(" saveCertSignatoryDetials changedBy user 2 " + getUserIdSessionFromLoginId());
+					log.info(" saveCertSignatoryDetials changedBy user 2 getChangedBy " + pmcertSignatory.getChangedBy());
 				}else if (pmcertSignatory.isModified()
 						&& pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 					log.info("Tracking diary for virtual certificate: re-activating status :saveRuleCatalog");
 					messageId = MessageConst.TD_80903;
 					msgParam = new String[] {pmcertSignatory.getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 					pmcertSignatory.setChangedBy(getUserIdSessionFromLoginId()); //#34090
+					log.info(" saveCertSignatoryDetials changedBy user 3 " + getUserIdSessionFromLoginId());
+					log.info(" saveCertSignatoryDetials changedBy user 3 getChangedBy " + pmcertSignatory.getChangedBy());
 				}
 				Date originalExpDate = this.getManagedBean().getIdToCertSignMapForChangedRecs().get(pmcertSignatory.getCertSignatoryId());
 				if(originalExpDate != null && pmcertSignatory.getExpDate() != originalExpDate){
@@ -389,6 +396,8 @@ public class AuthorizedSignatoryBackingBean extends
 					messageId = MessageConst.TD_80901;
 					msgParam = new String[] {pmcertSignatory.getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 					pmcertSignatory.setChangedBy(getUserIdSessionFromLoginId()); //#34090
+					log.info(" saveCertSignatoryDetials changedBy user 4 " + getUserIdSessionFromLoginId());
+					log.info(" saveCertSignatoryDetials changedBy user 4 getChangedBy " + pmcertSignatory.getChangedBy());
 				}
 			}
 			if (messageId != null & msgParam != null) {
@@ -409,6 +418,8 @@ public class AuthorizedSignatoryBackingBean extends
 		     MessageUtils.getMessage(MessageConst.INFO_770146, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
 		}
+		log.info(" saveCertSignatoryDetials changedBychangedCreatedBy user " + getUserIdSessionFromLoginId());
+		log.info(" START saveCertSignatoryDetials");
 	}
 	/**
 	 * Track Signatory status
