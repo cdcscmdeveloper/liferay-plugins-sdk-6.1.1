@@ -69,8 +69,12 @@
 			<ui:param name="isUpdateSpecByAnswers" value="#{templateSpecBean.updateSpecByAnswers}" />
 			<ui:param name="isDurationYear" value="#{templateSpecBean.specMaster.durationMonth ge 12}"/>
 			<ui:param name="isSqSpec" value="#{templateSpecBean.specMaster.specCreatedBySQ}"/>
-			
-			<c:if test="#{isItemTypeService and !isDurationByItem and !isContentTypeQuestion and !isContentTypeQuestionAndAnswer and isSpecTypeFinancial and durationMonth ne null}">
+		<!-- 25138 -start- -->
+		<ui:param name="isPackageItemSpec"
+			value="#{templateSpecBean.evaluatioStageActiveIndex == 1}" />
+		<!-- 25138 -end- -->
+
+		<c:if test="#{isItemTypeService and !isDurationByItem and !isContentTypeQuestion and !isContentTypeQuestionAndAnswer and isSpecTypeFinancial and durationMonth ne null}">
 				<table style="width:100%">
 				<tr>
 					<td width="16%" class="TableFieldLeft">
@@ -238,11 +242,24 @@
 			
 					
 			<c:if test="#{isContentTypeAnswer or isContentTypeScore or (isContentTypeUpdateSpec and isUpdateSpecByAnswers)}">
-				<!-- #33859 - start -->
-				<p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row"
-					value="#{templateSpecBean.specAnswerList}" 	emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					scrollable1="true" scrollWidth1="#{scrollWidth}"  style="word-break: break-all">
-				<!-- #33859 - end -->	
+			<!-- #29021 -start- -->
+			<h:outputText
+				rendered="#{isContentTypeScore and isSpecTypeTechnical}"
+				styleClass="instruction"
+				value="#{lbl['lbl.sc.tec.rating.instruction']}" escape="false" />
+			<!-- #29021 -end- -->
+			<!-- #32110, #21695 -start- -->
+			<ui:param name="filterList"
+				value="#{!isSqSpec and isZonal and !templateSpecBackingBean.filterAllitemQtyZero(templateSpecBean.specAnswerList) and isSpecTypeFinancial and isContentTypeAnswer ? null : templateSpecBean.specAnswerList}">
+			</ui:param>
+			<!-- #32110, #21695 -end- -->
+			<!-- #33859 - start --><!-- #32110, #21695 -start- -->
+			<p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row"
+				value="#{templateSpecBean.specAnswerList}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				scrollable1="true" scrollWidth1="#{scrollWidth}"
+				style="word-break: break-all">
+				<!-- #32110, #21695 -end- --><!-- #33859 - end -->
 					
 					<ui:param name="prevSpecQuestion" value="#{row > 0 ? templateSpecBean.specAnswerList[row-1].tplSpecQuestion : null}" />
 					<ui:param name="question" value="#{tplSpecAnswer.tplSpecQuestion}" />
@@ -274,22 +291,8 @@
 						<ui:decorate template="specColumnQuestionView.xhtml" />
 					</c:if>
 				</p:dataTable>
-				
-				<c:if test="#{isContentTypeScore and isSpecTypeFinancial}">
-					<p:spacer height="10" />
-					<table style="width:100%">
-					<tr>
-						<td class="TableFieldLeft" width="8%">
-							<p:outputLabel value="#{lbl['lbl.sc.total.score']}" />
-						</td>
-						<td class="TableFieldRight" width="92%">
-							<p:inputText style="text-align:right;" styleClass="calcScore" size="8" 
-								value="#{templateSpecBackingBean.calcTotalScore(templateSpecBean)}"
-								disabled="true" />
-						</td>
-					</tr>
-					</table>
-				</c:if>
+			
+				<!--  #21695, #25138 REMOVE TOTAL SCORE -->
 				
 				<c:if test="#{isContentTypeUpdateSpec}">
 					<ui:include src="tierQtyPopup.xhtml" />
