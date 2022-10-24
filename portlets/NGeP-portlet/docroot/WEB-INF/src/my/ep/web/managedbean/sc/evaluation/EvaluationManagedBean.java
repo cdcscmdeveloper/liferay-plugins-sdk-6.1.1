@@ -256,6 +256,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	/** The evaluation summary dis qual suppliers. */
 	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersDM;
 
+	/** The evaluation summary not offer suppliers. */
+	private IPagingDataModel<Object[]> notOfferSupplierDM;
+	
 	/** The summary item list. */
 	private List<ScRequestItem> summaryItemList;
 
@@ -3041,6 +3044,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setFinancialSummaryView(String financialSummaryView) {
 		this.financialSummaryView = financialSummaryView;
 	}
+	
+	/**
+	 * @return the technicalSummaryView
+	 */
+	public String getTechnicalSummaryView() {
+		return technicalSummaryView;
+	}
+
+	/**
+	 * @param technicalSummaryView
+	 *            the technicalSummaryView to set
+	 */
+	public void setTechnicalSummaryView(String technicalSummaryView) {
+		this.technicalSummaryView = technicalSummaryView;
+	}
 
 	/**
 	 * @return the roleCode
@@ -3798,6 +3816,15 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	public void setFinPackageScore(Boolean finPackageScore) {
 		this.finPackageScore = finPackageScore;
+	}
+	
+	public IPagingDataModel<Object[]> getNotOfferSupplierDM() {
+		return notOfferSupplierDM;
+	}
+
+	public void setNotOfferSupplierDM(
+			IPagingDataModel<Object[]> notOfferSupplierDM) {
+		this.notOfferSupplierDM = notOfferSupplierDM;
 	}
 
 	public Boolean getCheckTecSpecNotOffer() {

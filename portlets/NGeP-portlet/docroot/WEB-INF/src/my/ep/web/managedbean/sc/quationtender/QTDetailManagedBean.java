@@ -10161,13 +10161,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// ahmaa-#25138 -start
 	/**
 	 * @return the scQtScoreOfferPrice
-	 * 
-	 *         public ScQtScoreOfferPrice getScQtScoreOfferPrice() { return
-	 *         scQtScoreOfferPrice; }
-	 * 
-	 *         /**
-	 * @param scQtScoreOfferPrice
-	 *            the scQtScoreOfferPrice to set
+	 */
+	public ScQtScoreOfferPrice getScQtScoreOfferPrice() {
+		return scQtScoreOfferPrice;
+	}
+
+	/**
+	 * @param scQtScoreOfferPrice the scQtScoreOfferPrice to set
 	 */
 	public void setScQtScoreOfferPrice(ScQtScoreOfferPrice scQtScoreOfferPrice) {
 		this.scQtScoreOfferPrice = scQtScoreOfferPrice;
