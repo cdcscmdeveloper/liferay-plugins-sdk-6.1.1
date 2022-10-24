@@ -1117,6 +1117,49 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		String type = (String) event.getComponent().getAttributes().get("value");
 		this.getManagedBean().getQt().setOpenFor(type);
 	}
+	
+	/** #21695 FARID START */
+	/**
+	 * Partial offer change.change partialy offer(offer/not offer) radion button
+	 * in owner.
+	 * 
+	 * @param event
+	 *            (String partialChange)
+	 */
+	public void partialChange(AjaxBehaviorEvent event) {
+		Boolean type = (Boolean) event.getComponent().getAttributes().get("value");
+	
+		this.getManagedBean().getQt().setPartial(type);
+		
+		if (type == false) {
+			RequestContext.getCurrentInstance().execute("confirmDialogWidgetVar.hide()");
+		} else {
+			RequestContext.getCurrentInstance().execute("confirmDialogWidgetVar.show()");
+		}
+	}
+	/** #21695 FARID END */
+	
+	/** #21695 FARID START */
+	public void partialChangePopUpNo() {
+		if (this.getManagedBean().getQt().isPartial() == false) {
+			this.getManagedBean().getQt().setPartial(true);
+		} else if (this.getManagedBean().getQt().isPartial() != false) {
+			this.getManagedBean().getQt().setPartial(false);
+		}
+	}
+	/** #21695 FARID END */
+	
+	/** #21695 FARID START */
+	public void partialChangePopUpYes() {
+		if (this.getManagedBean().getQt().isPartial() != true) {
+			this.getManagedBean().getQt().setPartial(false);
+		} else if (this.getManagedBean().getQt().isPartial() == true) {
+			this.getManagedBean().getQt().setPartial(true);
+		}
+		
+		this.getManagedBean().getQt().setSampleReq(Boolean.FALSE); // #11104
+	}
+	/** #21695 FARID END */	
 
 	/**
 	 * Procurement change.change Procurement Category Dropdown in Business
@@ -3360,4 +3403,11 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return screen;
 	}
 	// #11104-end
+
+	// #21695 Farid START 3/7/2021
+	public boolean hasroleSCSecretary() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
+	}
+	// #21695 Farid END 3/7/2021
 }
