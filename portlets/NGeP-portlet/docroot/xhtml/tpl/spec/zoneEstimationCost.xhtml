@@ -16,7 +16,17 @@
 		value="#{specificationBackingBean.managedBean.fulfilmentType == ParameterConst.fulfilmentTypeScheduled}" />
 	<ui:param name="isItemTypeService" value="#{templateSpecBean.specMaster.itemTypeCode.parameterCode == ParameterConst.itemTypeService}" />
 
-	<p:dataTable id="zoneEstimationTbl" widgetVar="tierQtyWidget"
+	<!-- #21695 farid add instruction START -->
+	<table>
+		<tr>
+			<td><h:outputText style="float: left;" styleClass="instruction"
+					escape="false" value="#{lbl['lbl.tpl.qty.estimation.instruction']}" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+		<!-- #21695 END -->
+		<p:dataTable id="zoneEstimationTbl" widgetVar="tierQtyWidget"
 		var="tplSpecEstimation"
 		rowIndexVar="rowIndex"
 		value="#{templateSpecBean.selectedSpecQuestion.tplSpecEstimations}"
@@ -128,4 +138,10 @@
 
 		</p:column>
 	</p:dataTable>
+	<!-- 21695 -start- -->
+			</td>
+		</tr>
+	</table>
+	<!-- 21695 -end- -->
+	
 </ui:composition>
