@@ -13,42 +13,241 @@
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 		</h:outputText>
 	</p:column>
+
+	<!-- #25138 #21695 - start -->
+	<p:column style="width:50px; white-space:normal; text-align:right;"
+		rendered="#{isScoringReq}">
+		<h:panelGroup rendered="#{isScoring and !isRepeated}">
+			<h:outputText
+				rendered="#{isSpecTypeFinancial and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity eq 0}"
+				style="width:calc(100% - 15px);"
+				value="#{isSpecTypeFinancial and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity eq 0 ? lbl['lbl.sc.no.available'] : tplSpecAnswer.userRemark}"
+				rows="1" maxlength="500" onkeyup="limitTextArea(this,500);"
+				onkeydown="limitTextArea(this,500);"
+				onmouseout="limitTextArea(this,500);">
+			</h:outputText>
+
+			<h:outputText value="#{tplSpecAnswer.autoScore}"
+				rendered="#{isSpecTypeFinancial and isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or 
+			isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}">
+				<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+			</h:outputText>
+
+			<h:outputText value="#{tplSpecAnswer.autoScore}"
+				rendered="#{isSpecTypeTechnical and isZonal and !tplSpecAnswer.notOfferAll or 
+			isSpecTypeTechnical and !isZonal and !tplSpecAnswer.notOfferAll}">
+				<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+			</h:outputText>
+
+			<h:outputText value="0"
+				rendered="#{isSpecTypeTechnical and isZonal and tplSpecAnswer.notOfferAll or 
+			isSpecTypeTechnical and !isZonal and tplSpecAnswer.notOfferAll}">
+				<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+			</h:outputText>
+
+			<h:outputText value="/"
+				rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq 'S' or tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}"></h:outputText>
+
+			<h:outputText
+				value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
+				rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or isSpecTypeTechnical and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S'}">
+				<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+			</h:outputText>
+			<c:if
+				test="#{isZonal and isSpecTypeFinancial and evaluationBackingBean.managedBean.speczonedtlReq}">
+				<h:outputText
+					value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
+					rendered="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</c:if>
+			<c:if
+				test="#{isZonal and isSpecTypeFinancial and !evaluationBackingBean.managedBean.speczonedtlReq}">
+				<h:outputText
+					value="#{tplSpecAnswer.tplSpecZoneQty.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
+					rendered="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</c:if>
+			<c:if test="#{!isZonal and isSpecTypeFinancial}">
+				<h:outputText
+					value="#{tplSpecAnswer.tplSpecQuestion.maxScore* (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
+					rendered="#{tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</c:if>
+			<ui:remove>
+				<!-- #32334,#29021 -start-->
+			</ui:remove>
+			<ac:toggleRate show="#{isSpecTypeTechnical}"
+				disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.notOfferAll}"
+				value="#{tplSpecAnswer.rating}"
+				tooltip="#{lbl['lbl.sc.tec.rating.tooltip']}" />
+			<ui:remove>
+				<!-- #32334,#29021-end -->
+			</ui:remove>
+
+		</h:panelGroup>
+	</p:column>
+	<!-- #25138 #21695 - end -->
+
 	<ui:remove>
 		Bug #28312
 		ADDED : disabled="#{evaluationBackingBean.managedBean.readOnly}
 	</ui:remove>
-	<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
-		<h:panelGroup rendered="#{isScoring and !isRepeated}">
-			<h:outputText value="#{tplSpecAnswer.autoScore}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-			</h:outputText>
-			 / 
-			<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-			</h:outputText>
-		</h:panelGroup>
-	</p:column>
-	<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
-		
+	<!-- #25138, #21695 -start- -->
+	<p:column style="width:50px; white-space:normal; text-align:right;"
+		rendered="#{isScoringReq}">
+		<c:when
+			test="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0 and tplSpecAnswer.tplSpecQuestion.questionType ne 'S'
+		or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity eq 0 and tplSpecAnswer.tplSpecQuestion.questionType ne 'S'}">
+
+			<h:panelGroup
+				rendered="#{!empty question.scoreTypeCode and !isScoring and !isRepeated}">
+				<h:outputText
+					disabled="#{tplSpecAnswer.ratePerUom eq 0 or evaluationBackingBean.managedBean.readOnly}"
+					rendered="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0}"
+					style="width:calc(100% - 15px);"
+					value="#{isSpecTypeFinancial and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity eq 0 ? lbl['lbl.sc.no.available'] : tplSpecAnswer.userRemark}"
+					rows="1" maxlength="500" onkeyup="limitTextArea(this,500);"
+					onkeydown="limitTextArea(this,500);"
+					onmouseout="limitTextArea(this,500);">
+				</h:outputText>
+			</h:panelGroup>
+		</c:when>
+		<c:otherwise>
+		<!-- #25138, #21695 -end- -->
 		<h:panelGroup rendered="#{!empty question.scoreTypeCode and !isScoring and !isRepeated}">
-			<p:inputText id="userScore" style="min-width:0px !important;width:30px; text-align:right;"
-				value="#{tplSpecAnswer.userScore}"
-				required="false" maxlength="14"
-				label="#{lbl['lbl.tpl.spec.content.user.score']}"
-				disabled="#{evaluationBackingBean.managedBean.readOnly}">
+				<!-- #25138, #21695 -start- -->
+				<p:inputText id="userScore"
+					style="min-width:0px !important;width:30px; text-align:right;"
+					value="#{tplSpecAnswer.userScore}" required="false" maxlength="14"
+					label="#{lbl['lbl.tpl.spec.content.user.score']}"
+					rendered="#{isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or tplSpecAnswer.tplSpecQuestion.questionType eq 'S'}"
+					disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll}">
+					<!-- #25138, #21695 -end- -->			
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" integerOnly="true" />
 				<f:attribute name="min" value="0" />
 				<f:attribute name="max" value="#{(tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString()}" />
 				<p:ajax partialSubmit="true" process="@this" update="@this, userScoreMsg, @(.calcScore)" />
-			</p:inputText>
-			 / 
-			<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}">
+				</p:inputText>
+			
+				<!-- #25138, #21695 -start- -->
+				<h:outputText value="/"
+					rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq 'S' or tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}"></h:outputText>
+				<h:outputText
+					value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
+					rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or isSpecTypeTechnical and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S'}">
+					<!-- #25138, #21695 -end- -->
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-			</h:outputText>
+				</h:outputText>
+
+				<!-- #25138 - start -->
+				<c:if
+					test="#{isZonal and isSpecTypeFinancial and evaluationBackingBean.managedBean.speczonedtlReq}">
+					<h:outputText
+						value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
+						rendered="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					</h:outputText>
+				</c:if>
+				<c:if
+					test="#{isZonal and isSpecTypeFinancial and !evaluationBackingBean.managedBean.speczonedtlReq}">
+					<h:outputText
+						value="#{tplSpecAnswer.tplSpecZoneQty.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
+						rendered="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					</h:outputText>
+				</c:if>
+				<!-- #25138 - end -->
+
+				<c:if test="#{!isZonal and isSpecTypeFinancial}">
+				<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore* (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
+								rendered="#{tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</c:if>
 			<p:message id="userScoreMsg" for="userScore" display="icon" />
-		</h:panelGroup>
+				<ui:remove><!--#29021-start--></ui:remove>
+				<ac:toggleRate show="#{isSpecTypeTechnical}"
+					disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll}"
+					value="#{tplSpecAnswer.rating}"
+					tooltip="#{lbl['lbl.sc.tec.rating.tooltip']}" update="questionTbl" />
+				<ui:remove><!--#29021-end--></ui:remove>
+			</h:panelGroup>
+		<!-- #25138, #21695 -start- -->
+		</c:otherwise>
+		<!-- #25138, #21695 -end- -->
 	</p:column>
+
+	<!-- #31537 related #21695 Farid START 28/8/2021 -->
 	<p:column style="width:130px;">
-		<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly}" style="width:calc(100% - 15px);" value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
+		<p:inputTextarea
+			disabled="#{tplSpecAnswer.ratePerUom eq 0 or evaluationBackingBean.managedBean.readOnly}"
+			rendered="#{isSpecTypeFinancial and isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0}"
+			style="width:calc(100% - 15px);"
+			value="#{isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0 ? lbl['lbl.sc.spec.score.po'] : tplSpecAnswer.userRemark}"
+			rows="1" maxlength="500" onkeyup="limitTextArea(this,500);"
+			onkeydown="limitTextArea(this,500);"
+			onmouseout="limitTextArea(this,500);">
+			<p:ajax event="change" process="@this" partialSubmit="true"
+				update="@this" />
+		</p:inputTextarea>
+
+		<p:inputTextarea
+			disabled="#{evaluationBackingBean.managedBean.readOnly}"
+			rendered="#{isZonal and isSpecTypeFinancial and tplSpecAnswer.ratePerUom ne 0 or !isZonal and isSpecTypeFinancial and tplSpecAnswer.ratePerUom ne 0}"
+			style="width:calc(100% - 15px);" value="#{tplSpecAnswer.userRemark}"
+			rows="1" maxlength="500" onkeyup="limitTextArea(this,500);"
+			onkeydown="limitTextArea(this,500);"
+			onmouseout="limitTextArea(this,500);">
+			<p:ajax event="change" process="@this" partialSubmit="true"
+				update="@this" />
+		</p:inputTextarea>
+
+		<p:inputTextarea
+			disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.notOfferAll}"
+			rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and tplSpecAnswer.notOfferAll and !tplSpecAnswer.notApplicable}"
+			style="width:calc(100% - 15px);"
+			value="#{lbl['lbl.sc.spec.score.po']}" rows="1" maxlength="500"
+			onkeyup="limitTextArea(this,500);"
+			onkeydown="limitTextArea(this,500);"
+			onmouseout="limitTextArea(this,500);">
+			<p:ajax event="change" process="@this" partialSubmit="true"
+				update="@this" />
+		</p:inputTextarea>
+
+		<p:inputTextarea
+			disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.notOfferAll}"
+			rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and tplSpecAnswer.notApplicable and tplSpecAnswer.notOfferAll}"
+			style="width:calc(100% - 15px);"
+			value="#{lbl['lbl.sc.not.applicable']}" rows="1" maxlength="500"
+			onkeyup="limitTextArea(this,500);"
+			onkeydown="limitTextArea(this,500);"
+			onmouseout="limitTextArea(this,500);">
+			<p:ajax event="change" process="@this" partialSubmit="true"
+				update="@this" />
+		</p:inputTextarea>
+
+		<p:inputTextarea
+			disabled="#{evaluationBackingBean.managedBean.readOnly}"
+			rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and !tplSpecAnswer.notOfferAll}"
+			style="width:calc(100% - 15px);" value="#{tplSpecAnswer.userRemark}"
+			rows="1" maxlength="500" onkeyup="limitTextArea(this,500);"
+			onkeydown="limitTextArea(this,500);"
+			onmouseout="limitTextArea(this,500);">
+			<p:ajax event="change" process="@this" partialSubmit="true"
+				update="@this" />
+		</p:inputTextarea>
 	</p:column>
+	<!--#31537 related to #21695 Farid end 28/8/2021-->
 </ui:composition>
