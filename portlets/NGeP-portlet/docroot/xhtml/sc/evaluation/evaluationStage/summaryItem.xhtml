@@ -23,14 +23,26 @@
 			<p:ajax event="rowSelect" process="@this" partialSubmit="true"
 				update="@form"
 				listener="#{evaluationBackingBean.recommendationSummaryItemSelect}"></p:ajax>
-			<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%;white-space: normal;">
+	<!-- #21695 Farid Start -->				
+					<p:column 
+						style="pointer-events:none !important"
+						rendered="#{!summaryItem.selectable}">
+						<f:facet name="header" >
+							<h:outputText value="#{lbl['lbl.sc.item']}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{summaryItem.tplSpecQuestion.clItem}" 
+								styleClass="ui-state-disabled">
+						</h:outputText>
+					</p:column>
+				
+					<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%;white-space: normal;"
+							rendered="#{summaryItem.selectable}">
+						<h:outputText value="#{summaryItem.tplSpecQuestion.clItem}"></h:outputText>
 
-				<h:outputText value="#{summaryItem.tplSpecQuestion.clItem}"></h:outputText>
-
-			</p:column>
+					</p:column>
+	<!-- #21695 Farid End -->				
 		</p:dataTable>
 	</p:panel>
-
 
 	<h:panelGroup id="summaryItemQualified">
 
@@ -149,4 +161,20 @@
 
 
 	</h:panelGroup>
+	
+<!-- #21695 Start Farid -->	<!-- #21695 UPDATED CHANGES FOR FINANCIAL SUMMARY
+<c:if test ="#{evaluationBackingBean.managedBean.scQt.partial ne null and evaluationBackingBean.managedBean.scQt.partial ne 'false'}">		
+	<h:panelGroup id="summaryItemNotOfferSuplier">
+		<p:panel toggleable="true">
+			<f:facet name="header">
+			<h:outputText
+				value="#{lbl['lbl.sc.eva.not.offer.supplier.list.fec.evaluation.item.stage']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.eva.not.offer.supplier.list.fec.evaluation.item.stage.tooltip']}" />
+		   </f:facet>		
+				<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>  
+		</p:panel>
+	</h:panelGroup>
+</c:if> #21695 UPDATED CHANGES FOR FINANCIAL SUMMARY	-->
+<!-- #21695 End Farid -->		
 </ui:composition>
