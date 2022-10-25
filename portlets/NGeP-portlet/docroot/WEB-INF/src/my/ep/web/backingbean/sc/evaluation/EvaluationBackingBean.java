@@ -17039,6 +17039,7 @@ private void retriveCommitteeRemarksList(){
 			demoReqDTO.setScQt(this.getManagedBean().getScQt());
 			demoReqDTO.setSupplierNo(supplierNo);
 			resDto = qtDemoSO.retriveDemoSupplierByDemoIdAndSupplierNo(demoReqDTO);
+			qtDemoSO.retrieveReEvalByItemListBySupplierId(demoReqDTO);//#28784 reeval bug - final
 			demoSupplierId = resDto.getDemoNo();
 			this.getManagedBean().setDemoSupplierNo(resDto.getDemoSupplierNo());
 			this.getManagedBean().setScQtDemo(resDto.getScQtDemo());
