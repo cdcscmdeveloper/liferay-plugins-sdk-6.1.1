@@ -1700,25 +1700,4 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.statusIdFromTaskList = statusIdFromTaskList;
 	}
 	//Bug 34030 - shaqimi end
-
-	// Start Fix - #33256
-	public Map<Long, CtItemMaxQty> getSelectedChangeItemQuantity() {
-		if (selectedChangeItemQuantity == null){
-			selectedChangeItemQuantity = new HashMap<Long, CtItemMaxQty>();
-			}
-		return selectedChangeItemQuantity;
-	}
-	public void setSelectedChangeItemQuantity(Map<Long, CtItemMaxQty> selectedChangeItemQuantity) {
-		this.selectedChangeItemQuantity = selectedChangeItemQuantity;
-	}
-	public Map<Long, CtItemPrice> getSelectedChangeItemPrice() {
-		if (selectedChangeItemPrice == null){
-			selectedChangeItemPrice = new HashMap<Long, CtItemPrice>();
-			}
-		return selectedChangeItemPrice;
-	}
-	public void setSelectedChangeItemPrice(Map<Long, CtItemPrice> selectedChangeItemPrice) {
-		this.selectedChangeItemPrice = selectedChangeItemPrice;
-	}
-	// End Fix - #33256
 }
