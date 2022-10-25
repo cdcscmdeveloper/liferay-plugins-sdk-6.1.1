@@ -191,6 +191,9 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private Long contractVerIdFromTaskList = null;
 	//Enhancement 15851 - shaqimi end
 	private String supplementalLoaNo = null;//Bug 33096 - shaqimi
+	private String docTypeFromTaskList = null;//Bug 34030 - shaqimi
+	private String taskNameFromTaskList = null;//Bug 34030 - shaqimi
+	private Long statusIdFromTaskList;//Bug 34030 - shaqimi
 	
 	public void reassignValue(boolean value) 
 	{
@@ -1672,4 +1675,50 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	}
 	//Bug 33096 - shaqimi end
 	//15851 - shaqimi end
+	//Bug 34030 - shaqimi start
+	public String getDocTypeFromTaskList() {
+		return docTypeFromTaskList;
+	}
+	
+	public void setDocTypeFromTaskList(String docTypeFromTaskList) {
+		this.docTypeFromTaskList = docTypeFromTaskList;
+	}
+
+	public String getTaskNameFromTaskList() {
+		return taskNameFromTaskList;
+	}
+
+	public void setTaskNameFromTaskList(String taskNameFromTaskList) {
+		this.taskNameFromTaskList = taskNameFromTaskList;
+	}
+
+	public Long getStatusIdFromTaskList() {
+		return statusIdFromTaskList;
+	}
+
+	public void setStatusIdFromTaskList(Long statusIdFromTaskList) {
+		this.statusIdFromTaskList = statusIdFromTaskList;
+	}
+	//Bug 34030 - shaqimi end
+
+	// Start Fix - #33256
+	public Map<Long, CtItemMaxQty> getSelectedChangeItemQuantity() {
+		if (selectedChangeItemQuantity == null){
+			selectedChangeItemQuantity = new HashMap<Long, CtItemMaxQty>();
+			}
+		return selectedChangeItemQuantity;
+	}
+	public void setSelectedChangeItemQuantity(Map<Long, CtItemMaxQty> selectedChangeItemQuantity) {
+		this.selectedChangeItemQuantity = selectedChangeItemQuantity;
+	}
+	public Map<Long, CtItemPrice> getSelectedChangeItemPrice() {
+		if (selectedChangeItemPrice == null){
+			selectedChangeItemPrice = new HashMap<Long, CtItemPrice>();
+			}
+		return selectedChangeItemPrice;
+	}
+	public void setSelectedChangeItemPrice(Map<Long, CtItemPrice> selectedChangeItemPrice) {
+		this.selectedChangeItemPrice = selectedChangeItemPrice;
+	}
+	// End Fix - #33256
 }
