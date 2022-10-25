@@ -2583,11 +2583,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			
 			//to filter out professional body
 			for(SelectItem item : items){
-				if(item.getValue() != null){
-					if(!item.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY)){
+				//#29114, CR 27382: Static Code Analysis Start 
+				//#27601 - start
+				//if(item.getValue() != null){
+					if(item.getValue() != null && !item.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY) 
+							&& !item.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2) ){
 						basicBusinessLs.add(item);
 					}
-				}
+				//}
+				//#29114, CR 27382: Static Code Analysis End
+				//#27601 - end
 			}
 			
 			items =  basicBusinessLs.toArray(new SelectItem[basicBusinessLs.size()]);
@@ -2595,7 +2600,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			String supplierType = this.getManagedBean().getSmAppl().getSupplierType();
 			if(supplierType != null){
 				if(supplierType.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
-					items = getDropdownCodeValues(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONTRACTOR);
+					//#27601 - START
+					items = getDropdownCodeValuesContractorCooperative(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONTRACTOR);
+					//#27601 - END
 				}else if(supplierType.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
 					items = getDropdownCodeValues(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT);
 				}
