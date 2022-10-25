@@ -1459,7 +1459,11 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 						
 						if (!supplierList.isEmpty()) {
 							for (Long supp : qualifiedSupp) {
-								supplierList.contains(supp);
+								if (supplierList.contains(supp)) {
+									//no changes
+								} else {
+									demoInvalid = true;
+								}
 							}
 						}
 					}
