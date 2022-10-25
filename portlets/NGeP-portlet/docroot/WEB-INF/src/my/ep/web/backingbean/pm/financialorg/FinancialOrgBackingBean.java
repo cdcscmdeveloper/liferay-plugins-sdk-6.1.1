@@ -1,4 +1,7 @@
 package my.ep.web.backingbean.pm.financialorg;
+//#29487 - View bank details by factoring user_endorsed - Start
+import java.io.IOException;
+//#29487 - View bank details by factoring user_endorsed - End
 //20201210@Jacky - Enhancement#28836 - Start
 import java.math.BigDecimal;
 //20201210@Jacky - Enhancement#28836 - End
@@ -62,6 +65,9 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
+// #29487 - View bank details by factoring user_endorsed - Start
+import my.ep.type.pm.RoleCode;
+// #29487 - View bank details by factoring user_endorsed - End
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -135,6 +141,54 @@ public class FinancialOrgBackingBean extends
 			new LogKey(1L); 
 		}
 	}
+	
+	// #29487 - View bank details by factoring user_endorsed - Start				
+	public void preRenderFinOrgView() throws Exception {
+		this.getManagedBean().setFacCompanyInformation(true);
+		isRoleFactoringUser();	
+		IFinancialOrgSO finanOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
+		List<Object[]> resultBean  = finanOrgSO.findFactoringOrgId(getFacesScopesGen().getUserSessionBean().getLoginId());			
+		for (int i = 0; i < resultBean.size(); i++) {
+			Object[] objects = (Object[]) resultBean.get(i);				
+			this.getManagedBean().setFinancialId(Long.parseLong(String.valueOf(objects[3])));
+		}					
+		resetBeans();
+		retrieveServiceTypeMap();
+		maintainFinancialOrg(this.getManagedBean().getFinancialId());
+	}
+	
+	public void backToProfileInformationPortal(){
+		renewSesionObject();
+		FacesContext context = FacesContext.getCurrentInstance();
+		javax.faces.context.ExternalContext externalContext = context.getExternalContext();
+		try{
+			externalContext.redirect("profile-information");
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Login user has factoring user role
+	 * @return boolean
+	 */
+	public boolean isRoleFactoringUser(){
+		boolean isFacUser = false;
+		if(getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value()) && this.getManagedBean().getFacCompanyInformation() == true){
+			isFacUser = true;
+		}		
+		return isFacUser;		
+	}
+
+	/**
+	 * get faces scopes
+	 * @return FacesScopes
+	 */
+	private FacesScopes getFacesScopes(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	// #29487 - View bank details by factoring user_endorsed - End
 	
 	/* ------------------ PORLET - START ------------------  */
 	/**
