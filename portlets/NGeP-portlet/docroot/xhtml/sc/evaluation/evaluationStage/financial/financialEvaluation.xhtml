@@ -127,9 +127,7 @@
 					rendered="#{(complianceFinancial.definationType.parameterCode ne 'UP' and complianceFinancial.definationType.parameterCode ne 'NA') and complianceFinancial.scoringReq eq 'false' and  (null ne complianceFinancial.pmEvalStatus and complianceFinancial.pmEvalStatus.statusId eq '60451')}"
 					action="#{evaluationBackingBean.evaluatefinancialEvaluation(complianceFinancial,index,'EF')}"
 					process="@this" partialSubmit="true" />
-
-			
-
+			</p:column>
 		</p:dataTable>
 	</p:panel><!-- #25138-Ahmaa-End -->
 	</h:panelGroup>
