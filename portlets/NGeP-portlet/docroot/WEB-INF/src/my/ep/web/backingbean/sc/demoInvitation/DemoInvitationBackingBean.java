@@ -1441,7 +1441,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 		try {
 			qualifiedSupp = evaluationSO.retrieveQualifiedSupplierListBasedOnStage(this.getManagedBean().getQt().getQtId(),
 					SourcingConstants.EVAL_STAGE_TECHNICAL, true);
-			
+			List<Long> supplierList = new ArrayList<>();
 			if (!qualifiedSupp.isEmpty()) {
 				if (null != demoSupplier && !demoSupplier.isEmpty()) {
 					//compare demo supplier list and qualified supplier
@@ -1449,10 +1449,17 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 						demoInvalid = true;
 					} else {
 						for (ScQtDemoSupplier supplier : demoSupplier) {
-							if (qualifiedSupp.contains(supplier.getSupplierId())) {
+							if (qualifiedSupp.contains(supplier.getSupplierId().getSupplierId())) {
 								//no changes
 							} else {
 								demoInvalid = true;
+							}
+							supplierList.add(supplier.getSupplierId().getSupplierId());
+						}
+						
+						if (!supplierList.isEmpty()) {
+							for (Long supp : qualifiedSupp) {
+								supplierList.contains(supp);
 							}
 						}
 					}
