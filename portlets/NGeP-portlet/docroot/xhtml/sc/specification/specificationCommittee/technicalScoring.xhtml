@@ -10,8 +10,6 @@
 	<p:panel header="#{lbl['lbl.sc.spec.tech.score.setting']}"
 		toggleable="true">
 
-
-
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.weightage']}" />
@@ -19,10 +17,14 @@
 						rendered="#{!specificationBackingBean.managedBean.readOnly}">
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</ui:fragment></td>
-				<td><p:selectOneRadio required="true"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
+				<td>
+					<!-- #21695 FARID START DISABLE SCQT PARTIAL-->
+					<p:selectOneRadio required="true"
+						disabled="#{specificationBackingBean.managedBean.readOnly or 
+								specificationBackingBean.managedBean.qt.partial ne null and specificationBackingBean.managedBean.qt.partial}"
 						label="#{lbl['lbl.sc.spec.weightage']}" id="techWeightage"
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
+						<!-- 21695 -end- -->
 						<f:selectItems
 							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
@@ -34,15 +36,23 @@
 
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.spec.max.score.instruction']}" escape="false" />
-
+		<!-- 21695 -start- -->
+	</p:panel>
+	
+	<p:panel id="passingScoreForTechnicalAndDemoSpecCommittee"
+		toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.by.package']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.passing.score.technical.tooltip']}" />
+		</f:facet>
+		<!-- 21695 -end- -->
+						
 		<p:dataTable id="technicalWeigtage" var="tech"
 			value="#{specificationBackingBean.managedBean.technicalScoring}"
 			rowKey="#{tech}" editable="true" style="width:100%"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowIndexVar="index">
-			<!-- <ac:paginator for="technicalWeigtage" /> -->
-			<!-- <p:column selectionMode="multiple" style="text-align:center;" /> -->
-
 			<p:column
 				headerText="#{lbl['lbl.sc.spec.technical.financial.scoring.title']}"
 				style="width:50%;white-space: normal;">
@@ -78,8 +88,10 @@
 				<p:message id="techScoreId" for="techScoreWeight" display="icon"></p:message>
 			</p:column>
 
+			<!-- 21695 -start- -->
 			<p:column style="width:20%;text-align:right;"
-				rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false'}">
+				rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false' and !specificationBackingBean.managedBean.qt.partial and specificationBackingBean.managedBean.qt.partial ne null}">
+				<!-- 21695 -end- -->
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.spec.weight.weight']}" />
 					<ac:iconTooltip id="technicalScoringWeightageScore#{index}SC"
@@ -102,8 +114,6 @@
 
 		<p:spacer height="15"></p:spacer>
 
-
-
 		<h:panelGroup id="addpoints">
 			<table>
 				<tr>
@@ -115,8 +125,10 @@
 							value="#{specificationBackingBean.managedBean.techPoints}" /> <ac:iconTooltip
 							value="#{lbl['lbl.sc.spec.total.points.tooltip']}" /></td>
 				</tr>
+				<!-- 21695 -start- -->
 				<ui:fragment
-					rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false'}">
+					rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false' and !specificationBackingBean.managedBean.qt.partial and specificationBackingBean.managedBean.qt.partial ne null}">
+					<!-- 21695 -end- -->
 
 					<tr>
 						<td><p:outputLabel
@@ -160,8 +172,6 @@
 				</tr>
 			</ui:fragment>
 
-
-
 			<tr>
 				<td style="width: 200px;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.technical']}" /> <p:outputLabel
@@ -176,11 +186,80 @@
 				</td>
 			</tr>
 		</table>
+		<!-- 21695 -start- -->
+	</p:panel>
 
+	<p:panel id="technicalScoringItemPanel"
+		header="#{lbl['lbl.sc.by.item']}" toggleable="true">
+		<p:panelGrid style="margin-top:5px;width:100%;">
+			<f:facet name="header">
+				<p:row>
+					<p:column colspan="1">
+						#{lbl['lbl.sc.spec.items.scoringTech']}
+						<ac:iconTooltip value="#{lbl['lbl.sc.spec.item.tooltip']}" />
+					</p:column>
+					<p:column colspan="1">
+						#{lbl['lbl.sc.spec.others']}
+						<ac:iconTooltip value="#{lbl['lbl.sc.spec.others.tec.tooltip']}" />
+					</p:column>
+					<p:column colspan="1">#{lbl['lbl.sc.spec.score']}</p:column>
+				</p:row>
+			</f:facet>
 
+			<p:row>
 
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:inputText style="text-align:right" maxlength="3"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						value="#{specificationBackingBean.managedBean.technicalItemScoreSetting.overallTechnical}">
+						<f:attribute name="min" value="0"></f:attribute>
+						<p:ajax event="blur" update="technicalScoringItemScore"
+							process="@this,technicalScoringItemPanel" partialSubmit="true"
+							listener="#{specificationBackingBean.calculateTechnicalItemScore(specificationBackingBean.managedBean.technicalItemScoreSetting)}"></p:ajax>
 
+					</p:inputText>
+				</p:column>
 
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:inputText style="text-align:right" maxlength="3"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						value="#{specificationBackingBean.managedBean.technicalItemScoreSetting.overallOtherTechnical}">
+
+						<f:attribute name="min" value="0"></f:attribute>
+						<p:ajax event="blur" update="technicalScoringItemScore"
+							process="@this,technicalScoringItemPanel" partialSubmit="true"
+							listener="#{specificationBackingBean.calculateTechnicalItemScore(specificationBackingBean.managedBean.technicalItemScoreSetting)}"></p:ajax>
+
+					</p:inputText>
+				</p:column>
+				<p:column colspan="1" style="text-align:right">
+					<h:outputText id="technicalScoringItemScore"
+						value="#{specificationBackingBean.managedBean.technicalItemScore}" />
+				</p:column>
+			</p:row>
+
+		</p:panelGrid>
+
+		<p:spacer height="15"></p:spacer>
+		<table>
+			<tr>
+				<td style="width: 260px;"><p:outputLabel
+						value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText style="text-align:right" maxlength="3"
+						label="#{lbl['lbl.sc.passing.score']}"
+						id="numberFromTechnicalItemScore"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						value="#{specificationBackingBean.managedBean.technicalItemScoreSetting.passingScore}">
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							listener="#{specificationBackingBean.checkTechnicalItemPassingScore(specificationBackingBean.managedBean.technicalItemScoreSetting)}" />
+					</p:inputText>
+					<p:message id="numberFromTechnicalMsg"
+						for="numberFromTechnicalItemScore" display="icon" />
+					<p:spacer width="5"></p:spacer></td>
+			</tr>
+		</table>
+		<!-- #21695 END FARID -->
 	</p:panel>
 
 	<p:panel id="sctechnicalScoringUserScoringSchemaIds"
