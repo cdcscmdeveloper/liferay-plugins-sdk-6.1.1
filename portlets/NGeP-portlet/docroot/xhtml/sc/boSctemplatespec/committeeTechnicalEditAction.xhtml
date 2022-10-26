@@ -125,13 +125,11 @@
 							<table>
 								<tr>
 									<td>
-										<!-- 1873 note 74 -start- -->
+										<!-- 1873 note 74 -start- --><!-- 21695 -start- -->
 										<p:selectOneRadio
-											disabled="#{!(!specificationBackingBean.managedBean.readOnly or 
-												(specificationBackingBean.isMemberChairpersonSpecPreparationTask() 
-												and specificationBackingBean.managedBean.readOnly))}"
+											disabled="#{specificationBackingBean.managedBean.specItemWeightageRequired or specificationBackingBean.managedBean.qt.partial or !(!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly))}"
 											value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.weightageReq}">
-											<!-- 1873 note 74 -end- -->
+											<!-- 21695 -end- --><!-- 1873 note 74 -end- -->
 											<f:selectItems
 												value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.itemWeightage)}" />
 
