@@ -6245,4 +6245,69 @@ public class SmCommonUtil {
 			return userLoginId.getUserId();
 		}
 		//END 30974
+		
+		//START 34136
+		/**
+		 * SHA-256.
+		 * 
+		 * @param str
+		 *            the str
+		 * @return the string
+		 */
+		public static String sha256(String str) {
+
+			MessageDigest md = null;
+			try {
+				md = MessageDigest.getInstance("SHA-256");
+			} catch (NoSuchAlgorithmException ex) {
+				log.info(ex.getMessage());
+				// return;
+			}
+			md.update(str.getBytes());
+			byte[] md5Dig = md.digest();
+
+			return new String(Hex.encodeHex(md5Dig));
+		}
+		/**
+		 * Get New CDC Payment Gateway VKey Value by Bill Type
+		 * 
+		 * @param str
+		 *            the str
+		 * @return the string
+		 */
+		public String getCDCPaymentGatewayVKeyByBillType(String billType) {
+			String vKey = null;
+
+			if (billType
+					.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+				vKey = EpPropertiesUtils.getInstance().getProperty(
+						"payment.cdc.vkey");
+			} else {
+				vKey = EpPropertiesUtils.getInstance().getProperty(
+						"payment.gov.vkey");
+			}
+			return vKey;
+		}
+		/**
+		 * Get New CDC Payment Gateway merchant id by Bill Type
+		 * 
+		 * @param str
+		 *            the str
+		 * @return the string
+		 */
+		public String getCDCPaymentGatewayMerchantIdByBillType(String billType) {
+			String vCode = null;
+
+			if (billType
+					.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+				vCode = EpPropertiesUtils.getInstance().getProperty(
+						"payment.cdc.merchantid");
+			} else {
+				vCode = EpPropertiesUtils.getInstance().getProperty(
+						"payment.gov.merchantid");
+			}
+
+			return vCode;
+		}
+		//END 34136
 }
