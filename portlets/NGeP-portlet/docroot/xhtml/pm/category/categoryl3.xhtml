@@ -11,13 +11,7 @@
 
 	<ui:define name="contentSection">
 		
-		<!--start #29665 -->
-		<style type="text/css">
-		    .textLeft label{
-				float: left;
-			}
-		</style>
-		<!--end #29665 -->
+		<!-- #29665 - remove style -->
 
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" severity="error,info" showSummary="false"></p:messages>
@@ -683,8 +677,8 @@
 					#{lbl['lbl.pm.machine.sitevisitsection']}
 					<ac:iconTooltip value="#{lbl['lbl.pm.machine.sitevisitsection.tooltip']}"/>	
 				</f:facet>
-								<!-- start #29665 new checkbox -->
-								<p:selectManyCheckbox layout="pageDirection" styleClass="textLeft"
+								<!-- start #29665 new checkbox change styleClass -->
+								<p:selectManyCheckbox layout="pageDirection" styleClass="float-left"
 									value="#{pmMachineCategory.pmMachineCategorySectionList}"
 									>
 									<f:selectItem 
