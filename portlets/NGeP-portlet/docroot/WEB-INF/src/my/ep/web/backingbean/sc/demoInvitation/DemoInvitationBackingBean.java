@@ -165,7 +165,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			String committeeType = ((SCEvaluationDataType) evaluationDataType).getCommitteeType();
 			Long qtId = evaluationDataType.getQtId().longValue();
 			retrieveQuotationTenderDetails(new Long(qtId), committeeType);
-			retrieveDemoDetailsData();
+			//retrieveDemoDetailsData();
 
 			this.getManagedBean().setReadOnly(false);
 			this.getManagedBean().setActiveIndex(0);
@@ -247,7 +247,6 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 
 			if (qualifiedSupp.isEmpty()) {
 				this.getManagedBean().setQualifiedSupplier(false);
-//				this.getManagedBean().setShowCancelButton(true);
 				RequestContext context = RequestContext.getCurrentInstance();
 				context.execute("democancel.show();");
 
