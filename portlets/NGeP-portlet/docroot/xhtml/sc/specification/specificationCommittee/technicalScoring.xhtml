@@ -146,15 +146,7 @@
 			</table>
 
 		</h:panelGroup>
-	</p:panel>
-	<p:panel id="passingScoreForTechnicalAndDemoSpecCommittee"
-		toggleable="true">
-		<f:facet name="header">
-			<h:outputText value="#{lbl['lbl.sc.passing.score']}" />
-			<ac:iconTooltip
-				value="#{lbl['lbl.sc.passing.score.technical.tooltip']}" />
-		</f:facet>
-
+		
 		<table>
 			<ui:fragment
 				rendered="#{specificationBackingBean.managedBean.qt.demoRequired eq 'true'}">
