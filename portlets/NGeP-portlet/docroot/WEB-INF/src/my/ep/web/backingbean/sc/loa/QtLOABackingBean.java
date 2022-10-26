@@ -544,29 +544,33 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 		boolean supplierStatus = false;
 		
 		IQTDetailSO detailSO;
-		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		
+		if (null != getManagedBean().getScLoiLoaList()) {
 			
-			List<Long> suppList = new ArrayList<>();
-			for (ScLoiLoa scLo : getManagedBean().getScLoiLoaList()) {
-				suppList.add(scLo.getSmSupplier().getSupplierId());
-			}
-			if (null != getManagedBean().getScLoiLoaList()
-					&& !getManagedBean().getScLoiLoaList().isEmpty()
-					&& !suppList.isEmpty()) {
-				supplierStatus = detailSO.checkSupplierEPVStatus(getManagedBean().getQt().getQtId(), suppList);
+			try {
+				detailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				
+				List<Long> suppList = new ArrayList<>();
+				for (ScLoiLoa scLo : getManagedBean().getScLoiLoaList()) {
+					suppList.add(scLo.getSmSupplier().getSupplierId());
+				}
+				if (null != getManagedBean().getScLoiLoaList()
+						&& !getManagedBean().getScLoiLoaList().isEmpty()
+						&& !suppList.isEmpty()) {
+					supplierStatus = detailSO.checkSupplierEPVStatus(getManagedBean().getQt().getQtId(), suppList);
+				}
+				
+			} finally {
+				detailSO = null;
 			}
 			
-		} finally {
-			detailSO = null;
+			boolean isValidFor21692 = this.validateSupportedTask(this.getManagedBean().getQt().getQtNo(), QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
+			
+			supplierStatus = (supplierStatus && isLoaListPortlet()
+					&& isValidFor21692
+					) ? true : false;
 		}
-		
-		boolean isValidFor21692 = this.validateSupportedTask(this.getManagedBean().getQt().getQtNo(), QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
-		
-		supplierStatus = (supplierStatus && isLoaListPortlet()
-				&& isValidFor21692
-				) ? true : false;
 		
 		return supplierStatus;
 	}
