@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<f:facet name="header">
+		<p:row>
+			<p:column style="width:20%;white-space: normal;font-family: Arial;font-weight: bold !important;">#{lbl['lbl.sc.zone.name']}</p:column>
+			<p:column style="width:20%;white-space: normal;font-family: Arial;font-weight: bold !important;">#{lbl['lbl.tpl.spec.content.scoring.scoring.from.variance']}</p:column>
+			<p:column style="width:20%;white-space: normal;font-family: Arial;font-weight: bold !important;">#{lbl['lbl.tpl.spec.content.scoring.scoring.to.variance']}</p:column>
+			<p:column style="width:20%;text-align: center;font-family: Arial;font-weight: bold !important;">#{lbl['lbl.tpl.spec.content.scoring.scoring.below.score']}</p:column>
+			<p:column style="width:20%;text-align: center;font-family: Arial;font-weight: bold !important;">#{lbl['lbl.tpl.spec.content.scoring.scoring.within.score']}</p:column>
+			<p:column style="width:20%;text-align: center;font-family: Arial;font-weight: bold !important;">#{lbl['lbl.tpl.spec.content.scoring.scoring.above.score']}</p:column>		
+		</p:row>
+	</f:facet>
+	
+	<ui:param name="offerList" value="#{specificationBackingBean.managedBean.offerPricePackageList}"/> 
+	
+	<c:forEach var="reasonGroup" items="#{offerList}" varStatus="st">
+		<p:row rendered="#{st.index lt offerList.size()}">
+			<p:column style="width:20%;white-space: normal;">
+				<h:outputText value="#{reasonGroup.tplSpecZoneDtl.zoneName}"></h:outputText>
+			</p:column>
+			<p:column style="width:20%;white-space: normal;" rowspan="#{offerList.size()}" rendered="#{st.index==0}">
+				<p:inputText style="text-align:right;" maxlength="14" size="15"
+					disabled="#{specificationBackingBean.managedBean.readOnly}"
+					value="#{reasonGroup.fromVariance}">
+					<p:ajax event="blur" process="@all" partialSubmit="true" 
+						listener="#{specificationBackingBean.specOfferpricePackageFromVarieanceList(reasonGroup, offerList)}" />
+				</p:inputText>
+			</p:column>
+			<p:column style="width:20%;white-space: normal;" rowspan="#{offerList.size()}" rendered="#{st.index==0}">
+				<p:inputText style="text-align:right;" maxlength="14" size="15"
+					disabled="#{specificationBackingBean.managedBean.readOnly}"
+					value="#{reasonGroup.toVariance}">
+					<p:ajax event="blur" process="@all" partialSubmit="true" 
+						listener="#{specificationBackingBean.specOfferpricePackageToVarieanceList(reasonGroup, offerList)}" />
+				</p:inputText>
+			</p:column>
+			<p:column style="width:20%;text-align: center;">		
+				<p:inputText style="text-align:right;" maxlength="14" size="15"
+					disabled="#{specificationBackingBean.managedBean.readOnly}"
+					value="#{reasonGroup.belowScore}">
+					<p:ajax event="blur" process="@all" partialSubmit="true" 
+						listener="#{specificationBackingBean.specOfferpricePackageBelowScore(reasonGroup)}" />
+				</p:inputText>
+				
+			</p:column>
+			<p:column style="width:20%;white-space: normal;">
+				<h:outputText value="#{reasonGroup.tplSpecZoneDtl.totalMaxScore}"></h:outputText>
+			</p:column>
+			<p:column style="width:20%;white-space: normal;">
+				<p:inputText style="text-align:right;" maxlength="14" size="15"
+					disabled="#{specificationBackingBean.managedBean.readOnly}"
+					value="#{reasonGroup.aboveScore}">
+					<p:ajax event="blur" process="@all" partialSubmit="true" 
+						listener="#{specificationBackingBean.specOfferpricePackageAboveScore(reasonGroup)}" />
+				</p:inputText>
+			</p:column>
+		</p:row>
+	</c:forEach>
+	
+</ui:composition>
