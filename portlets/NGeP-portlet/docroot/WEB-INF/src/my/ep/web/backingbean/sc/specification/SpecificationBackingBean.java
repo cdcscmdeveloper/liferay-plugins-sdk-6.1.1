@@ -836,8 +836,8 @@ public class SpecificationBackingBean extends
 			technicalCheckList = this.getManagedBean().getScQtCheckSt2techProposal();//#28784
 		}
 		boolean demoChecklistAvail = false;//#28784
+		List<PmParameterDesc> localParamDesc = retrieveParameterDescDFT(); // Bug #34065@Syazani 19/10/2022
 		if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
-			List<PmParameterDesc> localParamDesc = retrieveParameterDescDFT(); // Bug #34065@Syazani 19/10/2022
 			for (ScQtCheckList checkList : technicalCheckList) {
 				if (ParameterTypeConst.DOCUMENT_DEFINITION_PTJ_UPLOAD
 						.equalsIgnoreCase(checkList.getDefinationType()
@@ -867,7 +867,7 @@ public class SpecificationBackingBean extends
 				
 				// Bug #34065@Syazani 19/10/2022 -- Start
 				for (PmParameterDesc paramDesc : localParamDesc) {
-					if (paramDesc.getPmParameter().getParameterId().equals(checkList.getDefinationType().getParameterId())) {
+					if (paramDesc.getParameterDescId().equals(checkList.getDefinationType().getParameterId())) {
 						if (!paramDesc.getPmParameter().getParameterCode().equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
 							financialCheckListTypeChange(technicalCheckList.indexOf(checkList),technicalCheckList);
 							throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
@@ -926,6 +926,17 @@ public class SpecificationBackingBean extends
 						total = total +1;
 						totalGroupId.remove(groupId);
 						totalGroupId.put(groupId, total);
+					}
+				}
+				
+				for (PmParameterDesc paramDesc : localParamDesc) {
+					if (paramDesc.getParameterDescId().equals(checkList.getDefinationType().getParameterId())) {
+						if (!paramDesc.getPmParameter().getParameterCode().equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
+							financialCheckListTypeChange(financialCheckList.indexOf(checkList),financialCheckList);
+							throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+									"lbl.sc.spec.supplier.action", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+						}
+						break;
 					}
 				}
 			}
@@ -4436,7 +4447,7 @@ public class SpecificationBackingBean extends
 				break;
 			}
 		}
-
+		
 		try {
 			this.getManagedBean().setFinancialChecklistAction(null);
 			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
