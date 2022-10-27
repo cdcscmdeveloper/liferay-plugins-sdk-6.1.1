@@ -867,7 +867,7 @@ public class SpecificationBackingBean extends
 				
 				// Bug #34065@Syazani 19/10/2022 -- Start
 				for (PmParameterDesc paramDesc : localParamDesc) {
-					if (paramDesc.getParameterDescId().equals(checkList.getDefinationType().getParameterId())) {
+					if (paramDesc.getPmParameter().getParameterId().equals(checkList.getDefinationType().getParameterId())) {
 						if (!paramDesc.getPmParameter().getParameterCode().equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
 							financialCheckListTypeChange(technicalCheckList.indexOf(checkList),technicalCheckList);
 							throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
@@ -930,7 +930,7 @@ public class SpecificationBackingBean extends
 				}
 				
 				for (PmParameterDesc paramDesc : localParamDesc) {
-					if (paramDesc.getParameterDescId().equals(checkList.getDefinationType().getParameterId())) {
+					if (paramDesc.getPmParameter().getParameterId().equals(checkList.getDefinationType().getParameterId())) {
 						if (!paramDesc.getPmParameter().getParameterCode().equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
 							financialCheckListTypeChange(financialCheckList.indexOf(checkList),financialCheckList);
 							throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
@@ -4440,14 +4440,14 @@ public class SpecificationBackingBean extends
 		String parameterCode = null;
 		for (PmParameterDesc paramDesc : localParamDesc) {
 			// Bug #34065@Syazani 19/10/2022 -- Start
-			if (paramDesc.getParameterDescId().equals(Long.valueOf(list.getDefinationType().getParameterId()))) {
+			if (paramDesc.getPmParameter().getParameterId().equals(Long.valueOf(list.getDefinationType().getParameterId()))) {
 				// Bug #34065@Syazani 19/10/2022 -- End
 				parameterCode = paramDesc.getPmParameter().getParameterCode();
 				log.info("ParameterID: "+paramDesc.getPmParameter().getParameterId());
 				log.info("ParameterDescId: "+paramDesc.getParameterDescId());
 				log.info("ParameterCodeSource: "+paramDesc.getPmParameter().getParameterCode());
 				log.info("ParameterCodeObj: "+list.getDefinationType().getParameterCode());
-				list.setDefinationType(paramDesc.getPmParameter());
+				list.setDefinationType((PmParameter) paramDesc.getPmParameter().cloneEntity());
 				break;
 			}
 		}
