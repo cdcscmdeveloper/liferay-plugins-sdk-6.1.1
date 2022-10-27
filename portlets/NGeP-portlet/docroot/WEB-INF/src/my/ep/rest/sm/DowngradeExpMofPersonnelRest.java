@@ -31,7 +31,8 @@ public class DowngradeExpMofPersonnelRest {
 			downgradeMOFToBasic();
 			changeExpiredMofPersonnelToDeleted();
 			//33628 START
-			updateSupplierForMOFExpiredAndDeleted();
+			updateForMOFExpiredAndActiveSupplier();
+			updateForMOFDeletedAndSuspendSupplier();
 			//33628 END
 			return Response.status(200).entity("success calling downgradeExpMofPersonnel!!").build();
 		} catch (Exception ex) {
@@ -94,34 +95,42 @@ public class DowngradeExpMofPersonnelRest {
 		log.info("**********changeExpiredMofPersonnelToDeleted - END************");
 	}
 	//33628 START
-	private void updateSupplierForMOFExpiredAndDeleted() {
+	private void updateForMOFExpiredAndActiveSupplier() {
 		ISmSchedulerSO reqSO = SmServiceLookup.getSmSchedulerSO();
-		SmSchedulerResDTO resDTO1 = reqSO.retrieveMOFExpiredAndActiveSupp();
-		SmSchedulerResDTO resDTO2 = reqSO.retrieveMOFDeletedAndSuspendSupp();
-		List<SmSupplier> suppLs1 = resDTO1.getSmSupplierList();
-		List<SmSupplier> suppLs2 = resDTO2.getSmSupplierList();
+		SmSchedulerResDTO resDTO = reqSO.retrieveMOFExpiredAndActiveSupp();
+		List<SmSupplier> suppLs = resDTO.getSmSupplierList();
 		log.info("**********updateSupplierForMOFExpired - Start************");
-		for(SmSupplier smSupp : suppLs1){
-			SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
-			schedulerReqDTO.setSmSupplier(smSupp);
-			if(schedulerReqDTO.getSmSupplier() != null){
-				try {
-					reqSO.updateSupplierForMOFExpiredNotLogin1Y(schedulerReqDTO);
-				} catch (Exception ex) {
-					log.info("updateSupplierForMOFExpired -  Exception>>>>" + ex.getMessage());
+		if(suppLs.size() > 0){
+			for(SmSupplier smSupp : suppLs){
+				SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
+				schedulerReqDTO.setSmSupplier(smSupp);
+				if(schedulerReqDTO.getSmSupplier() != null){
+					try {
+						reqSO.updateSupplierForMOFExpiredNotLogin1Y(schedulerReqDTO);
+					} catch (Exception ex) {
+						log.info("updateSupplierForMOFExpired -  Exception>>>>" + ex.getMessage());
+					}
 				}
 			}
 		}
 		log.info("**********updateSupplierForMOFExpired - END************");
+	}
+		
+	private void updateForMOFDeletedAndSuspendSupplier() {
+		ISmSchedulerSO reqSO = SmServiceLookup.getSmSchedulerSO();
+		SmSchedulerResDTO resDTO = reqSO.retrieveMOFDeletedAndSuspendSupp();
+		List<SmSupplier> suppLs = resDTO.getSmSupplierList();
 		log.info("**********updateSupplierForMOFDeleted - Start************");
-		for(SmSupplier smSupp2 : suppLs2){
-			SmSchedulerReqDTO schedulerReqDTO1 = new SmSchedulerReqDTO();
-			schedulerReqDTO1.setSmSupplier(smSupp2);
-			if(schedulerReqDTO1.getSmSupplier() != null){
-				try {
-					reqSO.updateSupplierForMOFDeletedNotLogin2Y(schedulerReqDTO1);
-				} catch (Exception ex) {
-					log.info("updateSupplierForMOFDeleted -  Exception>>>>" + ex.getMessage());
+		if(suppLs.size() > 0){
+			for(SmSupplier smSupp : suppLs){
+				SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
+				schedulerReqDTO.setSmSupplier(smSupp);
+				if(schedulerReqDTO.getSmSupplier() != null){
+					try {
+						reqSO.updateSupplierForMOFDeletedNotLogin2Y(schedulerReqDTO);
+					} catch (Exception ex) {
+						log.info("updateSupplierForMOFDeleted -  Exception>>>>" + ex.getMessage());
+					}
 				}
 			}
 		}
