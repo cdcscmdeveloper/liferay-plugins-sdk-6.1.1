@@ -15,6 +15,7 @@ import my.ep.dto.sm.scheduler.SmSchedulerResDTO;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 @Path("/sm")
@@ -29,7 +30,9 @@ public class DowngradeExpMofPersonnelRest {
 		try {
 			downgradeMOFToBasic();
 			changeExpiredMofPersonnelToDeleted();
-
+			//33628 START
+			updateSupplierForMOFExpiredAndDeleted();
+			//33628 END
 			return Response.status(200).entity("success calling downgradeExpMofPersonnel!!").build();
 		} catch (Exception ex) {
 			return Response.status(406).entity(ex.getMessage()).build();
@@ -90,4 +93,40 @@ public class DowngradeExpMofPersonnelRest {
 		}
 		log.info("**********changeExpiredMofPersonnelToDeleted - END************");
 	}
+	//33628 START
+	private void updateSupplierForMOFExpiredAndDeleted() {
+		ISmSchedulerSO reqSO = SmServiceLookup.getSmSchedulerSO();
+		SmSchedulerResDTO resDTO1 = reqSO.retrieveMOFExpiredAndActiveSupp();
+		SmSchedulerResDTO resDTO2 = reqSO.retrieveMOFDeletedAndSuspendSupp();
+		List<SmSupplier> suppLs1 = resDTO1.getSmSupplierList();
+		List<SmSupplier> suppLs2 = resDTO2.getSmSupplierList();
+		log.info("**********updateSupplierForMOFExpired - Start************");
+		for(SmSupplier smSupp : suppLs1){
+			SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
+			schedulerReqDTO.setSmSupplier(smSupp);
+			if(schedulerReqDTO.getSmSupplier() != null){
+				try {
+					reqSO.updateSupplierForMOFExpiredNotLogin1Y(schedulerReqDTO);
+				} catch (Exception ex) {
+					log.info("updateSupplierForMOFExpired -  Exception>>>>" + ex.getMessage());
+				}
+			}
+		}
+		log.info("**********updateSupplierForMOFExpired - END************");
+		log.info("**********updateSupplierForMOFDeleted - Start************");
+		for(SmSupplier smSupp2 : suppLs2){
+			SmSchedulerReqDTO schedulerReqDTO1 = new SmSchedulerReqDTO();
+			schedulerReqDTO1.setSmSupplier(smSupp2);
+			if(schedulerReqDTO1.getSmSupplier() != null){
+				try {
+					reqSO.updateSupplierForMOFDeletedNotLogin2Y(schedulerReqDTO1);
+				} catch (Exception ex) {
+					log.info("updateSupplierForMOFDeleted -  Exception>>>>" + ex.getMessage());
+				}
+			}
+		}
+		log.info("**********updateSupplierForMOFDeleted - END************");
+	}
+	//33628 END
+	
 }
