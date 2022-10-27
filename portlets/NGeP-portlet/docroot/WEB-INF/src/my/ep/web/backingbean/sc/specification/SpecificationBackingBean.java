@@ -11924,7 +11924,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		spReqDTO.setRoleCode(getUserRoleCode());
 		spReqDTO.setPrepareSpecStatus(this.getManagedBean().getCurrentStatusId());
 		spReqDTO.setUserLocale(facesScopes.getUserLocale());
-		
+		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType()); //25138
 		// #25638 - Start.
 		spReqDTO.setSpecMaintenance(getManagedBean().isSpecMaintenance());
 		// #25638 - End.
@@ -15667,6 +15667,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		// #25638 - Start.
 		spReqDTO.setSpecMaintenance(getManagedBean().isSpecMaintenance());
 		// #25638 - End.
+		//#25138 - start
+		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());
+		//#25138 - end
+		spReqDTO.setSingleItem(this.getManagedBean().isSingleItem());//32453
+		//Bug #33642 related to #25138 START
+		spReqDTO.setZonesQt(this.getManagedBean().getQt().isZonal());
+		spReqDTO.setScoreOfferPriceList(this.getManagedBean().getOfferPricePackageList());
+		//Bug #33642 related to #25138 END
 		
 		IQTSpecSO specSO = getSpecSO();
 		try {
@@ -16081,6 +16089,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		spReqDTO.setPrepareSpecStatus(this.getManagedBean()
 				.getCurrentStatusId());
 		spReqDTO.setUserLocale(facesScopes.getUserLocale());
+		//#25138 start
+		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());
+		spReqDTO.setSingleItem(this.getManagedBean().isSingleItem());//32453
+		//#25138 end
+		
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)){
 			//Bug #26214
 			spReqDTO.setAllowZeroVariance(true);
