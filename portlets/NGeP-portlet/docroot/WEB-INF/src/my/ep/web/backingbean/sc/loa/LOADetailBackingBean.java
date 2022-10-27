@@ -529,6 +529,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		// #27797 - end
+		removeUnwantedLampiranA3Report(1); //#29006 - 27102022
 					
 		return QTConstants.LOA_PAGE;
 	}
