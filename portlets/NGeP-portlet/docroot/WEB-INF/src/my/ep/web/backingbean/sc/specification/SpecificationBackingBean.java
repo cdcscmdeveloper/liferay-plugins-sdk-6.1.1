@@ -4443,11 +4443,15 @@ public class SpecificationBackingBean extends
 			if (paramDesc.getParameterDescId().equals(Long.valueOf(list.getDefinationType().getParameterId()))) {
 				// Bug #34065@Syazani 19/10/2022 -- End
 				parameterCode = paramDesc.getPmParameter().getParameterCode();
+				System.out.println("ParameterID: "+paramDesc.getPmParameter().getParameterId());
+				System.out.println("ParameterDescId: "+paramDesc.getParameterDescId());
+				System.out.println("ParameterCodeSource: "+paramDesc.getPmParameter().getParameterCode());
+				System.out.println("ParameterCodeObj: "+list.getDefinationType().getParameterCode());
 				list.setDefinationType(paramDesc.getPmParameter());
 				break;
 			}
 		}
-		
+
 		try {
 			this.getManagedBean().setFinancialChecklistAction(null);
 			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
@@ -4493,7 +4497,7 @@ public class SpecificationBackingBean extends
 		} finally {
 			parameterSo = null;
 		}
-
+		
 	}
 
 	/**
