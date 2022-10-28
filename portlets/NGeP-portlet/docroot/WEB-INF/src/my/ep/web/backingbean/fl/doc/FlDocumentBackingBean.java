@@ -253,6 +253,12 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setFlApprover(facesScopes.getUserSessionBean().getLoginId());
 		}
+		//29550-start
+		if(isFactoringUser()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setFactoringUser(facesScopes.getUserSessionBean().getLoginId());
+		}
+		//29550-end
 		
 		List<SelectItem> selectedItemList = new ArrayList<SelectItem>();
 		try {
@@ -970,6 +976,18 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	}
 	
 	/**
+	 * Checks if is factoring user.
+	 *
+	 * @return true, if is factoring user.
+	 */
+	//29550-start
+	public boolean isFactoringUser() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.FACTORING_USER.value());
+	}
+	//29550-end
+	
+	/**
 	 * calculate order quantity sum based on ordered quantity
 	 *
 	 * @param flRequest the fl request
@@ -1118,7 +1136,12 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 */
 	private void defaultPtjAndMinistryValues() {
 		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
-			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole())) {
+			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole()) ||
+			//29550-start
+			//getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())
+			hasFactoringUserRole()
+			//29550-end
+			) {
 		} else {
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
@@ -1353,6 +1376,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		List<String> typeList = new ArrayList<String>();
 		typeList.add(ParameterConst.ORG_TYPE_PTJ);
 		typeList.add(ParameterConst.ORG_TYPE_SUPPLIER);
+		//29550-start
+		typeList.add(ParameterConst.ORG_TYPE_FACTORING);
+		//29550-end
 
 		SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",
@@ -1374,7 +1400,13 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		} else {
 			if(hasSupplierRole()) {
 				getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_SUPPLIER);
-			} else {
+			}
+			//29550-start
+			else if(hasFactoringUserRole()){
+				getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_FACTORING);
+			}
+			//29550-end
+			else {
 				getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
 			}
 			return false;
