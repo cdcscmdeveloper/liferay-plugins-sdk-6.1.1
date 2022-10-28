@@ -2735,7 +2735,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			qtNo = scLoa.getScQuote().getQuoteNo();
 			procurementMode = SourcingConstants.PROCUREMENT_MODE_SIMPLE_QUOTE;
-			//log.info("=====if dp generateDeclarationFromVelocity");
 			ptjName=retrievePTJByOrgProfileId(pmOrgProfile.getOrgProfileId(),scLoa.getScQuote().getCreatedDate());
 			if(null==ptjName || "".equals(ptjName)){
 				ptjName= pmOrgProfile.getOrgName();
@@ -2744,12 +2743,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				.getDocType())) {
 			if (scQt != null) {
 				if(null!=scLoa.getPmStatus() && null!=scLoa.getPmStatus().getStatusId()){
-					//log.info("=====if qt generateDeclarationFromVelocity");
-					//log.info("publish date qt "+scQt.getPublishDate());
-					//log.info("current date qt "+scQt.getCreatedDate());
 					ptjName=retrievePTJByOrgProfileId(pmOrgProfile.getOrgProfileId(),isQTStatusPublished(scLoa.getPmStatus().getStatusId())?scQt.getPublishDate() : scQt.getCreatedDate());
 				}else{
-					//log.info("=====else generateOfferedAndQTDtlsPdf");
 					ptjName=pmOrgProfile.getOrgName();
 				}
 				if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt

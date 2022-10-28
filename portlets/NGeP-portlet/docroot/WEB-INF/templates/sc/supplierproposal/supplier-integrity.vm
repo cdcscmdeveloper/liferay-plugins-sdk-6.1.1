@@ -1,6 +1,7 @@
 <html>
 <head>
 	<style>
+	
 		@page { size: A4 portrait;}
 		@page { @top-left { content: element(header) }}
 		@page { @bottom-left { content: element(footer) }}
@@ -70,6 +71,7 @@
 			SURAT AKUAN PEMBIDA BERJAYA<br/>$title $qtNo
 		</span>
 	</p>
+	
 	<div style="text-align:justify;">
 		<p class="standard">
 			Saya, <span class="underline"><b>$userName</b></span> nombor K.P. <span class="underline"><b>$icNo</b></span> yang mewakili <span class="underline"><b>$supplierName</b></span> nombor Pendaftaran <span class="underline">$mofNo</span> dengan ini mengisytiharkan bahawa saya atau mana-mana individu yang mewakili syarikat ini tidak akan menawar atau memberi rasuah kepada mana-mana individu dalam <span class="underline"><b>$agency</b></span> atau mana-mana individu lain, sebagai ganjaran untuk dipilih dalam *sebut harga/tender seperti di atas. Bersama-sama ini dilampirkan Surat Perwakilan Kuasa bagi saya mewakili syarikat seperti tercatat di atas untuk membuat pengisytiharan ini.

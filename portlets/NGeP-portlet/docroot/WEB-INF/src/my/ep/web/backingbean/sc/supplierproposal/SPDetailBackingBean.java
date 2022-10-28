@@ -32,7 +32,6 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.sc.EncryptDataBean;
-import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.bean.sc.EncryptDataBean.EncryptColumnName;
 import my.ep.biz.bean.sc.EncryptDataBean.EncryptTableName;
 import my.ep.biz.bean.sc.SupplierQualificationBean;
@@ -122,7 +121,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecSuppAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;		
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -4738,7 +4737,6 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	 */
 	//Bug #33726
 	private String generateDeclarationFromVelocity(ScQt scQt, ScQtProposal proposal) throws Exception {
-		debugLogger("generateDeclarationFromVelocity");
 		if (getManagedBean().getSmSupplier() == null
 				|| getManagedBean().getSmSupplier().getCompanyName() == null) {
 			retrievePaidUpCapitalNdDeclarationDtls();
@@ -4756,10 +4754,10 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		VelocityContext context = new VelocityContext();
 		Date date = retriveDatesforOrgProfile(scQt.getPublishDate(),
 				scQt.getCreatedDate());
-		debugLogger("date" + date);
+
 		String ptjName = retrievePTJByOrgProfileId(
 				pmOrgProfile.getOrgProfileId(), date);
-		debugLogger("ptjName" + ptjName);
+
 		if (scQt != null) {
 			String title = scQt.getQtTitle();
 			if (title == null) {
