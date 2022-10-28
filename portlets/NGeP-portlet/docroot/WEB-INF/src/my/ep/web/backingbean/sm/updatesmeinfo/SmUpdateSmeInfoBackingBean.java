@@ -240,9 +240,8 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 			Iterator<SmSmeSupplierDoc> iter = sme.getSmSmeSupplierDocs().iterator();
 			while (iter.hasNext()) {
 				SmSmeSupplierDoc doc = iter.next();
-				if (StringUtils.isBlank(doc.getFileName()) || StringUtils.isBlank(doc.getFilePath())) {
-					iter.remove();
-				}
+				// #29617 ReOpen note 109
+				iter.remove();
 			}
 		}
 	}
@@ -252,6 +251,11 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 			getManagedBean().getSmeSupplier().setSmeCorpRegistered(true);
 		} else if (getManagedBean().getSmeCorpRegisteredTrans().equalsIgnoreCase("0")) {
 			getManagedBean().getSmeSupplier().setSmeCorpRegistered(false);
+			// #29617 ReOpen note 109 - Start 
+			getManagedBean().getSmeSupplier().setSmeRefNo(null);
+			getManagedBean().getSmeSupplier().setSmeValidStartDate(null);
+			getManagedBean().getSmeSupplier().setSmeValidEndDate(null);
+			// #29617 ReOpen note 109 - Start 
 			removeNotUploadedSuppDoc(getManagedBean().getSmeSupplier());
 		}
 		SupplierSmeReqDTO reqDTO = new SupplierSmeReqDTO();

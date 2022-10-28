@@ -69,7 +69,8 @@
 						style="float:left;white-space: nowrap;" >
 						<f:convertDateTime pattern="dd/MM/yyyy" /> 
 					</h:outputText> 
-					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}" rendered="#{empty sme.smeValidStartDate}" />
+					<!-- #29617 ReOpen note 109 -->
+					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}"	rendered="#{empty sme.smeValidStartDate}" style="float:left;white-space: nowrap;" />
 				</p:column> 
 				<p:column headerText="#{lbl['lbl.sm.sme.valid.end']}" style="text-align:center;white-space: normal;" >
 					<h:outputText value="#{sme.smeValidEndDate}" rendered="#{not empty sme.smeValidEndDate}"

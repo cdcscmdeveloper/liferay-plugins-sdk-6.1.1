@@ -198,8 +198,8 @@
 							style="width : 20% !important;">
 							<p:commandLink ajax="false" value="#{doc.fileName}"
 								rendered="#{not empty doc.fileName}">
-								<p:fileDownload
-									value="#{smUpdateSmeInfoBackingBean.commonDownload(table.filePath,table.fileName,table.fileName)}" />
+								<!-- #29617 ReOpen note 109 -->
+								<p:fileDownload value="#{smUpdateSmeInfoBackingBean.commonDownload(doc.filePath,doc.fileName,doc.fileName)}" />
 							</p:commandLink>
 							<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}"
 								rendered="#{empty doc.fileName}" />
