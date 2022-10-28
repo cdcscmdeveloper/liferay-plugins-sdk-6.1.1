@@ -29,17 +29,18 @@
 						action="#{categoryBackingBean.backToSearch}" style="float:left;" />
 				</td>
 				
-				<td>
 				<!-- Start #29665 remove save button, replace by update and save, change update button behaviour -->
+				<!-- #29665 - Start -->
+				<td style="display: #{!categoryBackingBean.managedBean.newCategory ? 'block' : 'none'}">
 					<p:commandButton value="#{lbl['lbl.btn.update']}"
 						oncomplete="if(args &amp;&amp; !args.validationFailed) updateCategDialog.show();"
-						rendered="#{!categoryBackingBean.managedBean.newCategory}"
-						style="float:right;width: auto;" /> 
+						style="float:right;width: auto;" /></td>
+				<td style="display: #{categoryBackingBean.managedBean.newCategory ? 'block' : 'none'}"> 
 					<p:commandButton partialSubmit="true" 
 						value="#{lbl['lbl.btn.save']}"
 						action="#{categoryBackingBean.saveSubCategory}"
-						rendered="#{categoryBackingBean.managedBean.newCategory}"
 						update="@([id$=Msg])" style="float:right;width: auto;" /></td> 
+				<!-- #29665 - End -->
 				<!-- End #29665 remove save button, replace by update and save, change update button behaviour -->
 								
 			</tr>
