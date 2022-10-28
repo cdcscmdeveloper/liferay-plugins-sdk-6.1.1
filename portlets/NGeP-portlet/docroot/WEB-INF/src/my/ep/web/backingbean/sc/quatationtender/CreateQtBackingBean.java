@@ -1039,11 +1039,15 @@ public class CreateQtBackingBean extends
 									.format(panelThreshold) });
 				}
 			} else {
-				if (null == amount || (amount.compareTo(BigDecimal.ZERO) <= 0)) {
-					throw new EpException(MessageConst.ERROR_760024,
-							new String[] { SourcingConstants.DF_AMOUNT.format(BigDecimal.ZERO) });
+				//Start Reopen 9019 #note-289 remove the alert message while save
+				if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())){
+					if (null == amount || (amount.compareTo(BigDecimal.ZERO) <= 0)) {
+						throw new EpException(MessageConst.ERROR_760024,
+								new String[] { SourcingConstants.DF_AMOUNT.format(BigDecimal.ZERO) });
+					}
 				}
-
+				//End Reopen 9019 #note-289 remove the alert message while save
+	
 				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())
 						|| this.getManagedBean().isCreateQt()) {
 					scQt.setJustificationProcValue(null);
@@ -1138,11 +1142,17 @@ public class CreateQtBackingBean extends
 					getManagedBean().setZoneTrees(null);
 				}
 			}
-			// 25729#174 start
-			if ((!isPanel && enable.length > 0) && (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <=0)) {
-				RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
+			
+			//Start Reopen 9019 #note-289 remove the alert message while save
+			if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())){
+				// 25729#174 start
+				if ((!isPanel && enable.length > 0) && (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <=0)) {
+					RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
+				}
+				// 25729#174 end
 			}
-			// 25729#174 end
+			//End Reopen 9019 #note-289 remove the alert message while save
+			
 		} finally {
 			parameterSo = null;
 		}
@@ -1376,15 +1386,19 @@ public class CreateQtBackingBean extends
 					.get("value");
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.FULFILMENT_TYPE);
 			for (PmParameterDesc paramDesc : localParamDesc) {
-				if (paramDesc.getPmParameter().getParameterId()
-						.equals(Long.valueOf(type))) {
-
-					this.getManagedBean().setFulfilmentType(
-							paramDesc.getPmParameter().getParameterCode());
-					this.getManagedBean().getQt()
-							.setFulfilmentType(paramDesc.getPmParameter());
-					break;
+				//Start Reopen 9019 #note-289 remove the alert message while save
+				if(null != type){
+					if (paramDesc.getPmParameter().getParameterId()
+							.equals(Long.valueOf(type))) {   
+                
+						this.getManagedBean().setFulfilmentType(
+								paramDesc.getPmParameter().getParameterCode());
+						this.getManagedBean().getQt()
+								.setFulfilmentType(paramDesc.getPmParameter());
+						break;
+					}
 				}
+				//End Reopen 9019 #note-289 remove the alert message while save
 			}
 			// #25726 START
 			if (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(this
@@ -2545,23 +2559,28 @@ public class CreateQtBackingBean extends
 		try {
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterId(parameterId);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-			this.getManagedBean().getQt()
-					.setContractType(resDTO.getPmParameter());
-			if(null!=this.getManagedBean().getQt()
-					.getContractType() && ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(this.getManagedBean().getQt()
-					.getContractType().getParameterCode())){
-				ParameterReqDTO fulfilMentAsandWhen = new ParameterReqDTO();
-				fulfilMentAsandWhen
-						.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
-				fulfilMentAsandWhen.setParameterCode(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
-				ParameterResDTO fulfilMentAsandWhenresDTO = parameterSO
-						.retrieveParameterByTypeAndCode(fulfilMentAsandWhen);
-				this.getManagedBean().getQt().setFulfilmentType(fulfilMentAsandWhenresDTO.getPmParameter());
+			
+			//Start Reopen 9019 #note-289 remove the alert message while save
+			if(null != parameterId){
+				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterId(parameterId);
+				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+				this.getManagedBean().getQt()
+						.setContractType(resDTO.getPmParameter());
+				if(null!=this.getManagedBean().getQt()
+						.getContractType() && ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(this.getManagedBean().getQt()
+						.getContractType().getParameterCode())){
+					ParameterReqDTO fulfilMentAsandWhen = new ParameterReqDTO();
+					fulfilMentAsandWhen
+							.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
+					fulfilMentAsandWhen.setParameterCode(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
+					ParameterResDTO fulfilMentAsandWhenresDTO = parameterSO
+							.retrieveParameterByTypeAndCode(fulfilMentAsandWhen);
+					this.getManagedBean().getQt().setFulfilmentType(fulfilMentAsandWhenresDTO.getPmParameter());
+				}
 			}
-
+			//End Reopen 9019 #note-289 remove the alert message while save
+	
 		} finally {
 			parameterSO = null;
 		}
