@@ -492,6 +492,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		// #27797 - end
+		removeUnwantedLampiranA3Report(1); //#29006 - note 650
 					
 		return QTConstants.LOA_PAGE;
 	}
@@ -858,7 +859,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			
 			// #29006 - start
 			//#31869 - start (comment out removeUnwantedLampiranA3Report)
-			//removeUnwantedLampiranA3Report(1);
+			removeUnwantedLampiranA3Report(1); //#29006 - note 650
 			//#31869 - end
 			getManagedBean().setDownloadedLoaReportsTitleList(new ArrayList<String>());
 			// #29006 - end
@@ -3667,6 +3668,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							}
 						}
 						//#29007 End Vinod
+						removeUnwantedLampiranA3Report(1); //#29006 - note 650
 						
 						//Bug #33188 start
 						if (isNewLoa){
