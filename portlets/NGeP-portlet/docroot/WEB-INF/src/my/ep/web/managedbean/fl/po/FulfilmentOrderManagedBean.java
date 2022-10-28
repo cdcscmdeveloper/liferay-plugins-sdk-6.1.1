@@ -194,6 +194,11 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	//30911 - start
 	private PmFinancialOrg factoringOrg;
 	//30911 - end
+	
+	//29550 - start
+	private boolean factoringUser = false;
+	//29550 - end
+	
     /**
 	 * @return the pendingDoDataModel
 	 */
@@ -1589,5 +1594,16 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 		this.factoringOrg = factoringOrg;
 	}
 	//30911 - end
+
+	//29550 - start
+	public boolean isFactoringUser() {
+		return factoringUser;
+	}
+
+	public void setFactoringUser(boolean factoringUser) {
+		this.factoringUser = factoringUser;
+	}
+	//29550 - end
+	
 
 }
