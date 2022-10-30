@@ -6676,8 +6676,9 @@ public void saveComplianceSample() {
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
 			resDTO = evaluationSo.retrievePresentationDemoCheckList(reqDTO);
-
+			//#25138 add condition CheckListResultBean not null
 			if (null != resDTO
+					&& null != resDTO.getCheckListResultBean()
 					&& null != resDTO.getCheckListResultBean().getResultList()
 					&& !resDTO.getCheckListResultBean().getResultList()
 							.isEmpty()) {
