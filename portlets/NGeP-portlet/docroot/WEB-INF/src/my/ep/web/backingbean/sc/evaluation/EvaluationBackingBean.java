@@ -2317,6 +2317,11 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				}
 
 			}
+			
+			// bug #33582, #21695, #25138 - start
+			checkModalBerbayarProposalScore(this.getManagedBean().getScQt().getQtId(), evalstage);
+			// bug #33582, #21695, #25138 - end
+			
 			reqDTO.setResultStages(evalstage);
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
@@ -6195,9 +6200,11 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			resDTO = evaluationSo.retrievePresentationDemoCheckList(reqDTO);
 
 			if (null != resDTO
+					// #25138 -start-
+					&& null != resDTO.getCheckListResultBean()
+					// #25138 -end-
 					&& null != resDTO.getCheckListResultBean().getResultList()
-					&& !resDTO.getCheckListResultBean().getResultList()
-							.isEmpty()) {
+					&& !resDTO.getCheckListResultBean().getResultList().isEmpty()) {
 				this.getManagedBean().setScQtChecklist(
 						resDTO.getCheckListResultBean().getResultList().get(0));
 				this.getManagedBean().setUserScores(
@@ -7573,6 +7580,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							outputTab = 3;
 
 						} else if (this.getManagedBean().getOneTierFinancialActiveIndex() == 1) {
+							// 32373 recalculate after done financial package -Start
+							generatePrefMargin();
+							// 32373 recalculate after done financial package -end
+
 							financialCheckListStatusCheck(); 
 							// #25138, #21695 -end-
 							
@@ -7691,10 +7702,15 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 										outputTab = 2;
 									}
 								}
-								//#25138 - one item only - end							
+								//#25138 - one item only - end
 							}							
 						} else if (this.getManagedBean().getEvaluatioStageActiveIndex() == 1) {
+							// 32373 recalculate after done financial package -Start
+							// 2 tier
+							generatePrefMargin();
+							// 32373 recalculate after done financial package -end							
 							// #25138, #21695 -end-
+
 							retriveSummaryEvaluationStage();
 
 							this.getManagedBean().setTabFinancialIndex(3);	// #25138, #21695
@@ -15928,5 +15944,39 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 	// bug #33582, #25138, #21695 - end
+
+	// 32373, #25138, #21695 -Start
+	private boolean generatePrefMargin() {
+		IQTEvaluationSO evaluationSO = null;
+		boolean isSuccess = false;
+
+		try {
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTEvaluationSO.class);
+
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+
+			List<String> evalstage = new ArrayList<String>();
+			evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+			evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+
+			reqDTO.setResultStages(evalstage);
+			reqDTO.setPartial(this.getManagedBean().getScQt().isPartial());
+
+			evaluationSO.generateEvaluationPrefmargin(reqDTO);
+
+			isSuccess = true;
+		} catch (Exception e) {
+			log.info("Error while decrypt data redmine:31751::qtId:" + this.getManagedBean().getScQt().getQtId()
+					+ "::committeeType:" + this.getManagedBean().getCommitteeType());
+
+		} finally {
+			evaluationSO = null;
+		}
+		return isSuccess;
+	}
+	// 32373, #25138, #21695 - End
 
 }
