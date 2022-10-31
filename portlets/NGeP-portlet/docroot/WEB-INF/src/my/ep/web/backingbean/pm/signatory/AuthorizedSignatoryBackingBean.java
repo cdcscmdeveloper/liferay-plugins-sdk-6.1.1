@@ -434,8 +434,10 @@ public class AuthorizedSignatoryBackingBean extends
 		log.info("certSignatoryStatusChange");
 
 		if (!signatory.isModified()) {
+			log.info("masuk edit status");
 			signatory.setModified(true);
 			signatory.setChangedBy(getUserIdSessionFromLoginId());
+			log.info("who do it : " + signatory.getChangedBy());
 		} else {
 			signatory.setModified(false);
 		}
