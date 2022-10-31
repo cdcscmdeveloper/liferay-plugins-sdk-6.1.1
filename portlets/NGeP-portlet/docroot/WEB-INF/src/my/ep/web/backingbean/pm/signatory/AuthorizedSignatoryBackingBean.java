@@ -379,7 +379,7 @@ public class AuthorizedSignatoryBackingBean extends
 					messageId = MessageConst.TD_80902;
 					msgParam = new String[] {pmcertSignatory.getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 					pmcertSignatory.setChangedBy(getUserIdSessionFromLoginId()); //#34090
-					log.info(" saveCertSignatoryDetials changedBy user 2 " + getUserIdSessionFromLoginId());
+					log.info(getUserIdSessionFromLoginId()+ " -saveCertSignatoryDetials changedBy user 2 " + getUserIdSessionFromLoginId());
 					log.info(" saveCertSignatoryDetials changedBy user 2 getChangedBy " + pmcertSignatory.getChangedBy());
 					log.info(" saveCertSignatoryDetials changedBy user 2 reqDTO getChangedBy " + reqDTO.getChangedBy());
 				}else if (pmcertSignatory.isModified()
@@ -410,6 +410,7 @@ public class AuthorizedSignatoryBackingBean extends
 								getActionDesc(messageId, msgParam),pmcertSignatory.getRecordStatusFlg().longValue()));
 			}			
 		}
+		log.info("b4 save to changeBy value : " + certSignatories.get(0).getChangedBy());
 		reqDTO.setCertSignatorys(certSignatories);
 		SignatoryResDTO resDTO = iSignatorySO.saveCertSignatoryDtls(reqDTO);
 		if (resDTO.isSuccessful()) {
