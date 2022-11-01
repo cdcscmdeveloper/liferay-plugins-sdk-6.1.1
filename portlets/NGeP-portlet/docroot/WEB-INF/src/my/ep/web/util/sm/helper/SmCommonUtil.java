@@ -130,6 +130,7 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
@@ -6453,4 +6454,78 @@ public class SmCommonUtil {
 			return vCode;
 		}
 		//END 34136
+	
+	//#32304 - start
+	/**
+	 * Retrieve a list of Bumi applications cancelled by system (status: 20210)
+	 * for SVC, SVO, PO & approver
+	 * @param isSVC
+	 * @return
+	 */
+	public static List<SmAppl> getCancelledBumiApplList(boolean isSVC){
+		List<SmAppl> list;
+		if(isSVC){
+			list = SmServiceLookup.getMofRegistrationSO().
+					retrieveAutoCancelledBumiAppl(null, false, false).getApplList();
+		} else {
+			FacesScopes fc = new FacesScopes();
+			list = SmServiceLookup.getMofRegistrationSO().retrieveAutoCancelledBumiAppl(
+					fc.getUserSessionBean().getUserId(), fc.hasRoleUser(RoleCode.UPS_SDO.value()), 
+					fc.hasRoleUser(RoleCode.UPS_APPROVER.value()) || fc.hasRoleUser(RoleCode.UPS_PO.value()))
+					.getApplList();
+		}
+		if(list.isEmpty()) return null;
+		
+		StatusReqDTO statReqDTO = new StatusReqDTO();
+		statReqDTO.setStatusId(SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_BUSSTYPE);
+		statReqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+		PmStatusDesc statDesc = SmServiceLookup.getStatusSO()
+				.retrieveStatusDescById(statReqDTO).getPmStatusDesc();
+		if(statDesc == null) return list;
+		
+		SmWorkFlowStatusReqDTO wfDTO = new SmWorkFlowStatusReqDTO();
+		for(SmAppl smAppl : list){
+			smAppl.setWorkflowStatusDesc(statDesc.getStatusName());
+			wfDTO.setApplId(smAppl.getApplId());
+			SmWorkflowStatus wf = SmServiceLookup.getSmWorkFlowStatusSO()
+				.retrieveCurrentWorkFlowStatusByDocId(wfDTO).getWorkflowStatus();
+			if(wf != null)	//set cancelled date
+				smAppl.setChangedDate(wf.getCreatedDate());
+		}
+		return list;
+	}
+	
+	/**
+	 * Download report of a list of Bumi applications cancelled by system (status: 20210)
+	 */
+	public static void downloadCancelledBumiAppl(){
+		//report
+		log.info("32304 dload btn test");
+	}
+	
+	/**
+	 * Cancel Bumi application if supplier has other active application
+	 * @param smAppl bumi Appl
+	 * @return true if bumi Appl is cancelled
+	 */
+	public static boolean checkCancelBumiApplFromNewAppl(SmAppl smAppl){
+		if(smAppl == null || smAppl.isActiveAppl() || 
+				!smAppl.getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI)) 
+			return false;
+		
+		SmAppl activeAppl = SmServiceLookup.getReviewApplicationSO()
+				.retrieveActiveSmApplBySupp(smAppl.getSmSupplier().getSupplierId()).getSmAppl();
+		if(activeAppl == null) return false;
+		if(!activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+			&& !activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+			&& !activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE))
+			return false;
+		
+		//cancel bumi if sv after approval && supplier create new KR/KU/KA
+		ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
+		reqDTO.setPendingKBAppl(smAppl);
+		reqDTO.setSmAppl(activeAppl);
+		return SmServiceLookup.getReviewApplicationSO().cancelBumiApplicationFromOtherAppl(reqDTO);
+	}
+	//#32304 - end
 }

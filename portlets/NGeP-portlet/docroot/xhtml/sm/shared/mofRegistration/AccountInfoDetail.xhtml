@@ -56,7 +56,8 @@
 							value="#{backingBean.managedBean.smSupplier.businessType}"
 							style="width:310px">
 							<f:selectItems value="#{backingBean.managedBean.businessTypeLs}" />
-							<p:ajax event="change" process="@this" update="@this" partialSubmit="true" listener="#{backingBean.onChangeBussType}"/>
+							<!-- 32304 -->
+							<p:ajax event="change" process="@this" update="@this,:#{p:component('changeBussTypeConfirmDialog')}" partialSubmit="true" listener="#{backingBean.onChangeBussType}"/>
 						</p:selectOneMenu> <p:message id="smBusTypeIdMsg" for="smBusTypeId"
 							showSummary="true" showDetail="false" display="icon" /></td>
 					

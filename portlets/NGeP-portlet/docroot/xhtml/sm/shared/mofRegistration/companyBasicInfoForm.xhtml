@@ -578,11 +578,18 @@
 				</p:outputPanel>
 			</table>
 		</p:outputPanel>
-		
+		<!-- #32304 - start -->
 		<p:confirmDialog id="changeBussTypeConfirmDialog" closable="true"
-			message="#{lbl['lbl.sm.confirm.buss.type.changed.msg']}"
 			header="#{lbl['lbl.sm.confirm.buss.type.changed.header']}" severity="alert"
 			widgetVar="changeBussTypeConfirmDialog">
+			<f:facet name="message">
+				<h:outputText value="#{lbl['lbl.sm.confirm.buss.type.changed.msg']}" /><br/>
+				<h:outputText value="#{lbl['lbl.sm.confirm.buss.type.changed.msg2']}"
+					style="word-break:break-word"
+					rendered="#{backingBean.managedBean.pendingBumiAppl != null
+							and backingBean.managedBean.pendingBumiAppl.applNo != null}" />
+			</f:facet>
+			<!-- #32304 - end -->
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="changeBussTypeConfirmDialog.hide();" />
 			</div>

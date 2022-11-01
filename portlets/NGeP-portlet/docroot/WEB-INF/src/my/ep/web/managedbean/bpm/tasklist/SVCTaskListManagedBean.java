@@ -43,6 +43,7 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 	private List<Long> stateLs;
 	private List<SelectItem> applTypeList;
 	private String applType;
+	private List<SmAppl> cancelledBumiApplLs;		//#32304
 	
 	private IPagingDataModel<SmAppl> searchDataModel = new SearchPagingDataModel();
 
@@ -263,11 +264,15 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 	public void setApplType(String applType) {
 		this.applType = applType;
 	}
-	
-	
-	
-	
-	
-	
+
+
+	public List<SmAppl> getCancelledBumiApplLs() {
+		return cancelledBumiApplLs;
+	}
+
+
+	public void setCancelledBumiApplLs(List<SmAppl> cancelledBumiApplLs) {
+		this.cancelledBumiApplLs = cancelledBumiApplLs;
+	}
 	
 }

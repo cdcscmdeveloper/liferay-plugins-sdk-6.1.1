@@ -66,6 +66,7 @@ import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault; //#9133
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -144,6 +145,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private Date groupTaskCreatedDateFrom;
 	private Date  groupTaskCreatedDateTo;
 	private String roleType;
+	
+	//#32304
+	private List<SmAppl> cancelledBumiApplLs;
 
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
@@ -1983,5 +1987,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return taskIdPair;
 	}
 	/*#31422-basri 190821*/
-	
+
+	//#32304 - start
+	public List<SmAppl> getCancelledBumiApplLs() {
+		return cancelledBumiApplLs;
+	}
+
+	public void setCancelledBumiApplLs(List<SmAppl> cancelledBumiApplLs) {
+		this.cancelledBumiApplLs = cancelledBumiApplLs;
+	}
+	//#32304 - end
 }
