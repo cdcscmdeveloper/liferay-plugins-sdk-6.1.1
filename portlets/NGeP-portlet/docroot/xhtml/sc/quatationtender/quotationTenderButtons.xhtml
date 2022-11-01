@@ -275,7 +275,11 @@
 				    onclick="submitConfirmPopUp.hide(); blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					 partialSubmit="true" process="@form" update="@form" 
-					action="#{qTDetailBB.submitQTDetailsAction}"/>
+					action="#{qTDetailBB.submitQTDetailsAction}">
+					<!-- start 9019 - Reopen #note-289-->
+				    <f:param name="skipsubmitvalidation" value="0" />
+			    </p:commandButton>    
+				    <!-- end 9019 - Reopen #note-289-->
 				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					onclick="submitConfirmPopUp.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
