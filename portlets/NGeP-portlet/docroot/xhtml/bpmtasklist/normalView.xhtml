@@ -8,6 +8,13 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:outputStylesheet library="ep/css" name="blinktext.css" />
+	<!--#29810-START-->
+	<style>
+		div.ui-selectonemenu-items-wrapper {
+			width: 200px;
+		}
+	</style>
+	<!--#29810-END-->
 	
 	<p:panel header="#{lbl['lbl.bpm.my.task']}" collapsed="true" toggleable="true" id="normalViewPanelId">
 
@@ -107,7 +114,6 @@
 				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.order.by']} :"  /></td>
 				<td width="40%">
 					<p:selectOneMenu id="taskListOrderBy" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.ascending}">
-						<f:selectItem itemLabel="" itemValue=""></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.bpm.ascending']}" itemValue="true"></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.bpm.descending']}" itemValue="false"></f:selectItem>
 					</p:selectOneMenu>
