@@ -4348,7 +4348,7 @@ public class SpecificationBackingBean extends
 		IParameterSO parameterSo = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IParameterSO.class);
-		List<PmParameterDesc> localParamDesc = retrieveParameterDescDFT();
+		List<PmParameterDesc> localParamDesc = retrieveParameterDescDFT(); // Bug #34065@Syazani 01/11/2022
 		String parameterCode = null;
 		for (PmParameterDesc paramDesc : localParamDesc) {
 
@@ -4358,7 +4358,7 @@ public class SpecificationBackingBean extends
 					.equals(Long.valueOf(list.getDefinationType()
 							.getParameterId()))) {
 				parameterCode = paramDesc.getPmParameter().getParameterCode();
-				list.setDefinationType((PmParameter) paramDesc.getPmParameter().cloneEntity());
+				list.setDefinationType((PmParameter) paramDesc.getPmParameter().cloneEntity()); // Bug #34065@Syazani 01/11/2022
 				break;
 			}
 		}
@@ -4460,16 +4460,12 @@ public class SpecificationBackingBean extends
 		IParameterSO parameterSo = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IParameterSO.class);
-		List<PmParameterDesc> localParamDesc = retrieveParameterDescDFT(); // Bug #34065@Syazani 19/10/2022
+		List<PmParameterDesc> localParamDesc = retrieveParameterDescDFT(); // Bug #34065@Syazani 01/11/2022
 		String parameterCode = null;
 		for (PmParameterDesc paramDesc : localParamDesc) {
 			if (paramDesc.getPmParameter().getParameterId().equals(Long.valueOf(list.getDefinationType().getParameterId()))) {
 				parameterCode = paramDesc.getPmParameter().getParameterCode();
-				log.info("ParameterID: "+paramDesc.getPmParameter().getParameterId());
-				log.info("ParameterDescId: "+paramDesc.getParameterDescId());
-				log.info("ParameterCodeSource: "+paramDesc.getPmParameter().getParameterCode());
-				log.info("ParameterCodeObj: "+list.getDefinationType().getParameterCode());
-				list.setDefinationType((PmParameter) paramDesc.getPmParameter().cloneEntity()); // Bug #34065@Syazani 19/10/2022
+				list.setDefinationType((PmParameter) paramDesc.getPmParameter().cloneEntity()); // Bug #34065@Syazani 01/11/2022
 				break;
 			}
 		}
