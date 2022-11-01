@@ -45,7 +45,6 @@ import com.lowagie.text.pdf.PdfWriter;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 //#30504 start
-import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 //#30504 end
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
@@ -69,6 +68,7 @@ import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
 import my.ep.dto.sm.siteVisit.SiteVisitResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
@@ -2097,16 +2097,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				SmServiceLookup.getMofRegistrationSO().updateSmAppl(mofReqDTO);
 			}
 		}
-
-		//Add/ Remove SmSvMachine
-		/*
-		if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || 
-				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) ||
-				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING) || 
-				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
-		}
-		*/
-
 		//validate duplicate Workers
 		if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)){
 			validateDuplicateWorker(svTemplate.getSmSvWorkers());
@@ -2115,64 +2105,18 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
 			if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
-				// #30504 start
-				String currPoLoginId = ((SMMOFRegDataType) getManagedBean().getBpmPojo()).getPoUsers();
-				PmUser currPo = PmCommonUtil.retrieveUserByLoginId(currPoLoginId);
-				log.info("---Curent PO: "+currPo.getUserName());
-
-				if (currPo.getPmUserOrgs().get(0).getRecordStatusFlg() == 0) {
-					IZoneSO zoneReqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
-					ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
-					zoneReqDTO.setStateId(svTask.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0)
-							.getSmAddress().getPmState().getStateId());
-					PmUser newPo = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(
-							svTask.getSmAppl().getSupplierType(), svTask.getSmAppl().getApplType(),
-							svTask.getSmAppl().getApplCategoryType(),
-							zoneReqSO.retrieveZoneByStateId(zoneReqDTO).getPmZone().getZoneCode());  
-					//#30504 Re-open start
-					currPo = newPo;
-					SMMOFRegDataType smObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
-					smObj.setPoUsers(newPo.getLoginId());
-					this.getManagedBean().setBpmPojo(smObj);
-
-				}
-				log.info("---Curent PO Latest: "+currPo.getUserName());
+				//#32304 - start
+				String[] user = getPoApproverLogin();
+				((SMMOFRegDataType) getManagedBean().getBpmPojo()).setPoUsers(user[0]);
+				reqDTO.setPoName(user[1]);
 				
-				//#33955 - START
-				for (PmUserRole PmUserRole : currPo.getPmUserOrgs().get(0).getPmUserRoles()) {
-					if (PmUserRole.getPmRole().getRoleCode().equals(SupplierManagementConst.PO_HQ)
-							&& PmUserRole.getRecordStatusFlg() == 0) {
-						IZoneSO zoneReqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
-						ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
-						zoneReqDTO.setStateId(svTask.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0)
-								.getSmAddress().getPmState().getStateId());
-						PmUser newPo = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(
-								svTask.getSmAppl().getSupplierType(), svTask.getSmAppl().getApplType(),
-								svTask.getSmAppl().getApplCategoryType(),
-								zoneReqSO.retrieveZoneByStateId(zoneReqDTO).getPmZone().getZoneCode());
-						// #30504 Re-open start
-						currPo = newPo;
-						SMMOFRegDataType smObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
-						smObj.setPoUsers(newPo.getLoginId());
-						this.getManagedBean().setBpmPojo(smObj);
-
-					}
-				}
-				
-				log.info("---Curent PO Latest: "+currPo.getUserName());
-				//#33955 - END
-				
-				// #30504 end
 				Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 				reqDTO.setAppId(this.getManagedBean().getAppId());
 				reqDTO.setToken(token);
 				reqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 				reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
-				reqDTO.setPoName(currPo.getUserName());
-				//#30504 Re-open end
+				//#30504 Re-open end, #32304 - end
 			}
 			//28775 - Site Visit Grouping Enhancement - 28775 - start
 			if(svTask.getPmCategoryL3() != null){
@@ -2191,20 +2135,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 				if(action.equalsIgnoreCase(SupplierManagementConst.BPM_SUBMIT)){
 					//Start 25294  - Site Visit Grouping Enhancement -28775
-					String poName = "<<Processing Officer Name>>";
-					if(getManagedBean().getBpmPojo() != null){
-						String poLoginId = ((SMMOFRegDataType)getManagedBean().getBpmPojo()).getPoUsers();
-
-						if(StringUtils.isNotBlank(poLoginId)){
-							PmUser poUser = PmCommonUtil.retrieveUserByLoginId(poLoginId);
-
-							if(poUser != null){
-							//	context.put("poName", poUser.getUserName());
-								poName = poUser.getUserName();
-								log.info("----PoName: "+poUser.getUserName());
-							}
-						}
-					}
+					String poName = reqDTO.getPoName();			//#32304
 					//Start pass second parameter to INFO_721210 #25294  - Site Visit Grouping Enhancement -28775
 					fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721210,
 							new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(),poName},
@@ -2216,7 +2147,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}else if (!action.equals(changePage)){
 					fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 							MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(), ""}, 
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
 				}			
 				getManagedBean().setFromReport(true);
 				retrieveSiteVisitInfo("");
@@ -3295,4 +3226,93 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return idTypeMap;
 	}
 	//29379 - Site Visit Grouping Enhancement - 28775 - end
+	
+	//#32304 - start
+	/**
+	 * Retrieve login details of an active PO (site visit before approval)
+	 * or active approver(s) (site visit after approval)
+	 * @return string arr[2]: arr[0] = login id, arr[1] = username
+	 */
+	private String[] getPoApproverLogin(){
+		String[] user = {"", ""};
+		SmAppl appl = getManagedBean().getSmSvTask().getSmAppl();
+		SmWorkFlowStatusReqDTO swDTO = new SmWorkFlowStatusReqDTO();
+		swDTO.setApplId(appl.getApplId());
+		SmWorkflowStatus wf = SmServiceLookup.getSmWorkFlowStatusSO()
+				.retrieveSvcWorkflowStatusDuringSiteVisitByDocId(swDTO).getWorkflowStatus();
+		boolean isAfterApproval = wf != null && wf.getPmStatus().getStatusId().equals(
+					SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED);
+		
+		user[0] = ((SMMOFRegDataType) getManagedBean().getBpmPojo()).getPoUsers();
+		PmUser poApprover = PmCommonUtil.retrieveUserByLoginId(user[0]);
+		if(isAfterApproval){
+			poApprover = PmCommonUtil.retrieveUserById(wf.getCreatedBy(),true);
+			if(poApprover != null) user[0] = poApprover.getLoginId();
+		}
+		if(poApprover != null) user[1] = poApprover.getUserName();
+		//#33955 - START
+		boolean isInactive = false;
+		for (PmUserRole pmUserRole : poApprover.getPmUserOrgs().get(0).getPmUserRoles()) {
+			if(pmUserRole.getRecordStatusFlg() != 0) continue;
+			String role = pmUserRole.getPmRole().getRoleCode();
+			if ((role.equals(SupplierManagementConst.PO_HQ) && !isAfterApproval)
+				|| (role.equals(SupplierManagementConst.APPROVER_HQ) && isAfterApproval)) {
+				isInactive = true;
+				break;
+			}
+		}
+		//#33955 - END
+		
+		isInactive = isAfterApproval = true;
+		
+		if(poApprover != null && !isInactive)
+			return user;
+		
+		ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
+		zoneReqDTO.setStateId(appl.getSmCompanyBasic().getSmCompanyAddresses().get(0)
+				.getSmAddress().getPmState().getStateId());
+		String zone = SmServiceLookup.getZoneSO().retrieveZoneByStateId(zoneReqDTO)
+				.getPmZone().getZoneCode();
+		if(isAfterApproval){
+			user[0] = SmCommonUtil.retrieveLoginIdsByZoneAndRole(zone, SupplierManagementConst.APPROVER_HQ, 
+					appl.getSupplierType(), appl.getApplType(), appl.getApplCategoryType());
+			int i = 0;
+			user[1] = "<table>";
+			for(String s : user[0].split(",")){
+				poApprover = PmCommonUtil.retrieveUserByLoginId(s);
+				if(poApprover != null){
+					user[1] += "<tr><td>" + ++i + ")</td><td>" + poApprover.getUserName() + "</td></tr>";
+				}
+			}
+			user[1] += "</table>";
+		} else {
+			poApprover = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(
+					appl.getSupplierType(), appl.getApplType(), appl.getApplCategoryType(), zone);
+			if(poApprover != null) {
+				user[0] = poApprover.getLoginId();
+				user[1] = poApprover.getUserName();
+			}
+		}
+		return user;
+	}
+	
+	/**
+	 * Cancel Bumi application if supplier has other active application
+	 */
+	public void checkCancelBumiApplFromNewAppl(){
+		if(SmCommonUtil.checkCancelBumiApplFromNewAppl(getManagedBean().getSmSvTask().getSmAppl())){
+			RequestContext.getCurrentInstance().execute("smBumiCancelAlert.show()");
+		} else {
+			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show()");
+		}
+	}
+	
+	/**
+	 * Redirect to task list
+	 */
+	public void redirectToTaskList(){
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "taskListView");
+	}
+	//#32304 - end
 }

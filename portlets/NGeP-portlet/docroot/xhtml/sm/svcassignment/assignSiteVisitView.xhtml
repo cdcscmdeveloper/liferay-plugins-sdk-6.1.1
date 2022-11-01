@@ -173,6 +173,17 @@
 			<p:separator id="customSeparator" />
 
 		</p:panel>
-
+		
+		<!-- #32304 - start -->
+		<p:confirmDialog widgetVar="smBumiCancelAlert" id="smBumiCancelAlert" closable="false"
+			header="#{lbl['lbl.sm.bumi.cancel.other.appl.alert.header']}"
+			message="#{lbl['lbl.sm.bumi.cancel.other.appl.alert']}" severity="alert" >
+			<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.ok']}"
+				action="#{svcSiteAssignBackingBean.redirectToSvcTaskList}" 
+				onclick="smBumiCancelAlert.hide();blockWidget.show();" oncomplete="blockWidget.hide()"/>
+			</div>
+		</p:confirmDialog>
+		<!-- #32304 - end -->
 	</ui:define>
 </ui:composition>

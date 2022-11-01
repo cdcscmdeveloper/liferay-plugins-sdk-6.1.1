@@ -52,6 +52,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.compat.portal.util.PortalUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -1423,6 +1424,10 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			getManagedBean().setRoleType("PO");
 		}
 		//29810 - start
+		//#32304 - start
+		getManagedBean().setCancelledBumiApplLs(SmCommonUtil.getCancelledBumiApplList(false));
+		RequestContext.getCurrentInstance().update("cancelledBumiList");
+		//#32304 - end
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "taskListView");
@@ -1851,5 +1856,11 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		}
 	}
 	//29810 - end
+	
+	//#32304 - start
+	public void downloadCancelledBumiAppl(){
+		SmCommonUtil.downloadCancelledBumiAppl();
+	}
+	//#32304 - end
 }
 

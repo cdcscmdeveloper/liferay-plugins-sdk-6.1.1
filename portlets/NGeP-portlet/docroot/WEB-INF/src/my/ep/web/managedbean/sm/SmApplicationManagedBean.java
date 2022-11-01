@@ -657,6 +657,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//32968 START
 	private boolean checkBranch;
 	//32968 END
+	//#32304
+	private SmAppl pendingBumiAppl;
 	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4609,4 +4611,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setPoApproverAcedemicErr(boolean poApproverAcedemicErr) {
 		this.poApproverAcedemicErr = poApproverAcedemicErr;
 	}//31130-end
+
+	//#32304 - start
+	public SmAppl getPendingBumiAppl() {
+		return pendingBumiAppl;
+	}
+
+	public void setPendingBumiAppl(SmAppl pendingBumiAppl) {
+		this.pendingBumiAppl = pendingBumiAppl;
+	}
+	//#32304 - end
 }

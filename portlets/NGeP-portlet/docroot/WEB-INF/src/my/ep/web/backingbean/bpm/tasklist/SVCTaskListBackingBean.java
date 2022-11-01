@@ -40,6 +40,7 @@ import my.ep.web.managedbean.bpm.tasklist.SVCTaskListManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmSvcTaskVO;
 
@@ -337,7 +338,8 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 			}
 			
 		}
-		
+		//#32304
+		getManagedBean().setCancelledBumiApplLs(SmCommonUtil.getCancelledBumiApplList(true));
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication()
 				.getNavigationHandler()
@@ -363,4 +365,10 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 		
 		return zstateLs;
 	}
+	
+	//#32304 - start
+	public void downloadCancelledBumiAppl(){
+		SmCommonUtil.downloadCancelledBumiAppl();
+	}
+	//#32304 - end
 }

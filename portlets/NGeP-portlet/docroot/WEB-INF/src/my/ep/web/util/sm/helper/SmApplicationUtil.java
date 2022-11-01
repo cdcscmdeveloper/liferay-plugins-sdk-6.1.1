@@ -4890,7 +4890,15 @@ public class SmApplicationUtil {
 								&& smSupplier.isBumi()) {
 							result = true;
 							throw new EpException(MessageConst.ERROR_722504);
+						//#32304 - start
+						} else if (applicationType
+								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+								&& SmServiceLookup.getMofRegistrationSO().retrievePendingBumiAppl(
+										smSupplier.getSupplierId()).getSmAppl() != null){
+							result = true;
+							throw new EpException(MessageConst.ERROR_722697);
 						}
+						//#32304 - end
 					}else if(account.getRecordStatusFlg().compareTo(
 								DbValueConst.RECORD_STATUS_DELETED) == 0){
 						inactiveMofAcc++;

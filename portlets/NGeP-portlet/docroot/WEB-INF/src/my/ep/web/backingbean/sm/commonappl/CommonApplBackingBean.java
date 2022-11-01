@@ -169,67 +169,8 @@ public class CommonApplBackingBean extends
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
 				SMProcessNameConst.MAKE_PAYMENT) || resDTO.getTaskName().equalsIgnoreCase(
 						SMProcessNameConst.MAKE_PAYMENT.replaceAll("\\s", ""))) {
-			// System.out.println("Process Name: " + resDTO.getProcessName());
-			// /*
-			// * SMMOFRegDataType smMofObj = (SMMOFRegDataType)
-			// resDTO.getPojo();
-			// * SvoSiteVisitBackingBean svoBB = new SvoSiteVisitBackingBean();
-			// * svoBB.getManagedBean().setAppId(smMofObj.getDocumentId());
-			// * svoBB.getManagedBean().setBpmAction(resDTO.getAction());
-			// * svoBB.getManagedBean().setTaskId(taskId);
-			// */
-			//
-			// int documentId = 0;
-			// if (resDTO.getProcessName()
-			// .equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN))
-			// {
-			// SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO
-			// .getPojo();
-			// documentId = smObj.getDocumentId();
-			//
-			// } else if (resDTO.getProcessName().equalsIgnoreCase(
-			// SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
-			// SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
-			// documentId = smObj.getDocumentId();
-			// }
-			//
-			// MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
-			// mofResDto = retriveApplicationById(documentId);
-			// SmAppl appl = mofResDto.getSmAppl();
-			// this.getManagedBean().setApplType(appl.getApplType());
-			// this.getManagedBean().setPersonnelList(appl.getSmPersonnels());
-			// this.getManagedBean().getPersonnelList().add(new SmPersonnel());
-			// this.getManagedBean().setSelectPersonnelList(
-			// this.getManagedBean().getPersonnelList());
-			// this.getManagedBean().setpListSize(
-			// this.getManagedBean().getPersonnelList().size() - 1);
-			// updateAmount();
-			// FacesContext fc = FacesContext.getCurrentInstance();
-			// fc.getApplication()
-			// .getNavigationHandler()
-			// .handleNavigation(fc, null,
-			// "/xhtml/sm/shared/paymentProcess/finalPayment.xhtml");
-			// // FacesContext fc = FacesContext.getCurrentInstance();
-			// //
-			// fc.getApplication().getNavigationHandler().handleNavigation(fc,
-			// // null, "/xhtml/sm/svositevisit/siteVisitView");
-
 			Object bpmObj = new Object();
 			PaymentBackingBean paymentBB = new PaymentBackingBean();
-
-			/*
-			 * if (resDTO.getProcessName().equalsIgnoreCase(
-			 * SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) { bpmObj
-			 * = (SMMOFRegDataType) resDTO.getPojo();
-			 * paymentBB.getManagedBean().setAppId( (long) ((SMMOFRegDataType)
-			 * bpmObj).getDocumentId());
-			 * 
-			 * } else if (resDTO.getProcessName().equalsIgnoreCase(
-			 * SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) { bpmObj =
-			 * (SMMOFRegDataType) resDTO.getPojo();
-			 * paymentBB.getManagedBean().setAppId( (long) ((SMMOFRegDataType)
-			 * bpmObj).getDocumentId()); }
-			 */
 			bpmObj = resDTO.getPojo();
 			log.info("Doc No>>>>>" + resDTO.getDocNumber());
 			paymentBB.getManagedBean().setDocNo(resDTO.getDocNumber());
@@ -569,9 +510,10 @@ public class CommonApplBackingBean extends
 				} else if (resDTO.getTaskName().equalsIgnoreCase(
 						SMProcessNameConst.REVIEW_APPL_ESCALATED) || resDTO.getTaskName().equalsIgnoreCase(
 								SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))
-						|| resDTO.getTaskName().equalsIgnoreCase(
+						|| (resDTO.getTaskName().equalsIgnoreCase(
 								SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) || resDTO.getTaskName().equalsIgnoreCase(
-										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", ""))) {
+										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", ""))
+										&& (new FacesScopes()).hasRoleUser(RoleCode.UPS_APPROVER.value()))) {
 					//#32304 - end
 					smApplBB.getManagedBean().setPoUser(false);
 					smApplBB.getManagedBean().setSupplierUser(false);
