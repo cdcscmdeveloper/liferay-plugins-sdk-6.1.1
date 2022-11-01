@@ -207,6 +207,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
@@ -3575,9 +3576,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			reqDTO.setScLoa(scLoa);
 			// #21695 - End.
 			SpecificationResDTO resDto = specSO.retrieveSpecDetails(reqDTO);
-			String dafaltValue = "T/B";
-			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-				dafaltValue = "N/A";
+			String dafaltValue = SSTConstant.TB;
+			if (CommonConstants.DEFAULT_LANGUAGE_CODE.equals(new FacesScopes().getUserLocale().getLanguage())) {
+				dafaltValue = SSTConstant.NA;
 			}
 			List<ScQtCheckList> scQtCheckLists = resDto.getSpecResultBean().getResultList();
 			
@@ -3639,12 +3640,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			
 			// #26130 - End
 			
-			context.put("isZonal", scLoa.getScLoiLoa().isZonal());
+			context.put(SSTConstant.isZonal, scLoa.getScLoiLoa().isZonal());
 			//#26130 - start 04072022
-			context.put("serviceScope", getDefaultValue());
+			context.put(SSTConstant.serviceScope, SSTConstant.TB);
 			//#26130 - end 04072022
-			context.put("masters", masters);
-			context.put("bean", this);
+			context.put(SSTConstant.masters, masters);
+			context.put(SSTConstant.bean, this);
 		} finally {
 			specSO = null;
 		}
@@ -3671,7 +3672,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						answerRemarkList = new ArrayList<>();
 					}
 					//32648 - start
-					if (null != tplSpecQuestion.getTplSpecAnswers() && tplSpecQuestion.getTplSpecAnswers().size() > 0){
+					if (null != tplSpecQuestion.getTplSpecAnswers() && !tplSpecQuestion.getTplSpecAnswers().isEmpty()){
 						answerRemarkList.add(tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark());
 					}
 					//32648 - end
@@ -3680,7 +3681,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					continue;
 				}
 				if (addSpecList) {
-					if (tplSpecQuestion.getQuestionType().equals("S")) {
+					if (tplSpecQuestion.getQuestionType().equals(SSTConstant.specification)) {
 						if (specList == null) {
 							specList = new ArrayList<>();
 						}
@@ -3702,9 +3703,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								} else if (null != tplSpecAnswer.getAnswerCompliance()) {
 									//#26130 - start 04072022
 									if (tplSpecAnswer.getAnswerCompliance()) {
-										feedback = "Ya";
+										feedback = SSTConstant.Ya;
 									} else {
-										feedback = "Tidak";
+										feedback = SSTConstant.Tidak;
 									}
 									//#26130 - end 04072022
 								} else if (StringUtils.isNotEmpty(tplSpecAnswer.getAnswerText())) {
@@ -3736,23 +3737,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					if (CollectionUtils.isNotEmpty(feedbackList)) {
 						feedbackList.add(0, "&nbsp;");
 					}
-					// #26130 - Start
-					/*if (CollectionUtils.isNotEmpty(answerRemarkList)) {
-						answerRemarkList.add(0, "&nbsp;");
-					}*/
-					// #26130 - End
 				}
 			}
 			// #26130 - End
 			question.setFeedbackList(feedbackList);
 			question.setAnswerRemarkList(answerRemarkList);
 			
-//#26130 - zaim start
+			//#26130 - zaim start
 			
-			List<HashMap<String, String>> listCombine = null;
+			List<Map<String, String>> listCombine = null;
 		
 		if (listCombine == null){
-			listCombine = new ArrayList<HashMap<String, String>>();
+			listCombine = new ArrayList<>();
 		}
 		
 		if (specList != null){
@@ -3766,82 +3762,67 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			
 			for(String tempSpecVal: specList){
-				HashMap<String, String> map = new HashMap<String, String>();
-				map.put("specVal", tempSpecVal);
+				HashMap<String, String> map = new HashMap<>();
+				map.put(SSTConstant.specValue, tempSpecVal);
 				
 					for(String tempFeedback: feedbackList){
 						if (tempSpecZoneQty > 0){
 							if (tempFeedbackIndex >= tempSpecZoneQty){
 								if (indexFeedbackStore == 0){
-									map.put("feedback", tempFeedback);
+									map.put(SSTConstant.Feedback, tempFeedback);
 									indexFeedbackStore = tempFeedbackIndex;
 									break;
 								}else if (tempFeedbackIndex > indexFeedbackStore){
-									map.put("feedback", tempFeedback);
+									map.put(SSTConstant.Feedback, tempFeedback);
 									indexFeedbackStore = tempFeedbackIndex;
 									break;
 								}
-								
 							}
 							tempFeedbackIndex++;
 						}else {
 							if (tempFeedbackIndex > 0 && tempFeedbackIndex > indexFeedbackStore){
-								map.put("feedback", tempFeedback);
+								map.put(SSTConstant.Feedback, tempFeedback);
 								indexFeedbackStore = tempFeedbackIndex;
 								break;
 							}
 							tempFeedbackIndex++;
-							
 						}
-						
-						
 					}
 					
 					for (String tempRemark: answerRemarkList){
-						
 						if (tempRemark == null){
-							tempRemark = getDefaultValue();
+							tempRemark = SSTConstant.TB;
 						}else{
 							if (tempSpecZoneQty > 0){
 								if (tempRemarkIndex >= tempSpecZoneQty){
 									if (indexRemarkStore == 0){
-										map.put("remark", tempRemark);
+										map.put(SSTConstant.Remark, tempRemark);
 										indexRemarkStore = tempRemarkIndex;
 										break;
 									}else if (tempRemarkIndex > indexRemarkStore){
-										map.put("remark", tempRemark);
+										map.put(SSTConstant.Remark, tempRemark);
 										indexRemarkStore = tempRemarkIndex;
 										break;
 									}
-									
 								}
 								tempRemarkIndex++;
 							}else {
 								if (indexRemarkStore >= 0 && tempRemarkIndex > indexRemarkStore){
-									map.put("remark", tempRemark);
+									map.put(SSTConstant.Remark, tempRemark);
 									indexRemarkStore = tempRemarkIndex;
 									break;
 								}
 								tempRemarkIndex++;
 							}
 						}
-						
-						
-						
 					}
 					tempFeedbackIndex = 0;
 					tempRemarkIndex = 0;
 				listCombine.add(map);	
-				
 			}
 			question.setListCombineSpec(listCombine);
-			
 		}
-		
-		
-			
-			//#26130 - zaim end
-
+		//#26130 - zaim end
 		}
 	}
 	// #26130 - End
@@ -4304,17 +4285,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param specMasters 
 	 */
 	public void constructSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa, List<TplSpecMaster> specMasters) {
-		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
-		String dafaltValue = "T/B";
-		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-			dafaltValue = "N/A";
+		List<TplSpecMaster> masters = new ArrayList<>();
+		String dafaltValue =SSTConstant.TB;
+		if (CommonConstants.DEFAULT_LANGUAGE_CODE.equals(new FacesScopes().getUserLocale().getLanguage())) {
+			dafaltValue = SSTConstant.NA;
 		}
 		
 		if (CollectionUtils.isNotEmpty(specMasters)) {
-			
 			for (TplSpecMaster master : specMasters) {
 				if (CollectionUtils.isNotEmpty(master.getTplSpecQuestions())) {
-					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<>();
 					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
 						// #26130 - Start.
 						constructSpecData(scLoa, master, question);
@@ -4327,10 +4307,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 			}
 		}
-		context.put("isZonal", scLoa.getScLoiLoa().isZonal());
-		context.put("serviceScope", dafaltValue);
-		context.put("masters", masters);
-		context.put("bean", this);
+		context.put(SSTConstant.isZonal, scLoa.getScLoiLoa().isZonal());
+		context.put(SSTConstant.serviceScope, dafaltValue);
+		context.put(SSTConstant.masters, masters);
+		context.put(SSTConstant.bean, this);
 	}
 	
 	/**
@@ -5993,143 +5973,121 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
   		return CheckStatus.contains(currentStatusId);
  
   	}//11104-End
-	
-	//#26130 - start 04072022
-		private String getDefaultValue(){
-			String defaultValue = "T/B";
-			return defaultValue;
-		}
-		//#26130 - end 04072022
 		//#26130 start		
-		private List<HashMap<String, String>>getCOmbineZonalSPec(TplSpecQuestion question, TplSpecMaster master){
-
-			
-			List<HashMap<String, String>> listSpec = new ArrayList<>();
-			int countIndex = 0;
-			int indi = 0;
-			String whiteSpace = "&nbsp";
-			boolean getFirstValue = true;
-			//26130 - start
-			if (null != master.getTplSpecZone()){
-			//26130 - end	
-			if (question.getTplSpecZoneQties().size()  > 0){
-				
-				for (TplSpecZoneQty zone: question.getTplSpecZoneQties()){
-					
-					HashMap<String, String> map = new HashMap<>();
+	/**
+	 * @param question
+	 * @param master
+	 * @return
+	 */
+	private List<Map<String, String>>getCOmbineZonalSPec(TplSpecQuestion question, TplSpecMaster master){
+		List<Map<String, String>> listSpec = new ArrayList<>();
+		int countIndex = 0;
+		int indi = 0;
+		boolean getFirstValue = true;
+		//26130 - start
+		if (null != master.getTplSpecZone()){
+		//26130 - end	
+		if (question.getTplSpecZoneQties().size()  > 0){
+			for (TplSpecZoneQty zone: question.getTplSpecZoneQties()){
+				HashMap<String, String> map = new HashMap<>();
+				if (countIndex == 0){
+					if (getFirstValue){
+						map.put(SSTConstant.clItem, question.getClItem());
+						map.put(SSTConstant.uomName, question.getClUom().getUomName());
+						map.put(SSTConstant.clPriceTypeCode, getParameterDescForReport(question.getClPriceTypeCode()));
+						map.put(SSTConstant.zoneName,zone.getTplSpecZoneDtl().getZoneName());
+						map.put(SSTConstant.quantity, zone.getQty().toString());
+						if (null != question.getTplSpecTierQties() && question.getTplSpecTierQties().size() > 0 ){
+							String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
+							map.put(SSTConstant.qtyBerperingkat, tierValue);
+						}else {
+							map.put(SSTConstant.qtyBerperingkat, SSTConstant.TB);
+						}
+						if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase(SSTConstant.service) || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase(SSTConstant.perkhidmatan)){
+							map.put(SSTConstant.clUomFrequency, question.getClUomFrequency().toString());
+							map.put(SSTConstant.clUomPerDay, question.getClUomPerDay().toString());
+							map.put(SSTConstant.clUomPerMonth, question.getClUomPerMonth().toString());
+						}
+						for (TplSpecAnswer answer: question.getTplSpecAnswers())
+						if (answer.getAnswerNumeric() != null){
+							map.put(SSTConstant.answerNumeric, answer.getAnswerNumeric().toString());
+						}
+						getFirstValue = false;
+					}else {
+						map.put(SSTConstant.clItem, SSTConstant.nbsp);
+						map.put(SSTConstant.uomName, SSTConstant.nbsp);
+						map.put(SSTConstant.clPriceTypeCode, SSTConstant.nbsp);
+						map.put(SSTConstant.zoneName,zone.getTplSpecZoneDtl().getZoneName());
+						map.put(SSTConstant.qtyBerperingkat, SSTConstant.nbsp);
+						if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase(SSTConstant.service) || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase(SSTConstant.perkhidmatan)){
+							map.put(SSTConstant.clUomFrequency, SSTConstant.nbsp);
+							map.put(SSTConstant.clUomPerDay, SSTConstant.nbsp);
+							map.put(SSTConstant.clUomPerMonth, SSTConstant.nbsp);
+						}
+						map.put(SSTConstant.quantity, zone.getQty().toString());
+						for (TplSpecAnswer answer: question.getTplSpecAnswers()) {
+							if (answer.getAnswerNumeric() != null){
+								map.put(SSTConstant.answerNumeric, answer.getAnswerNumeric().toString());
+							}
+						}
+					}
+					for (int i = indi; i <question.getTplSpecZoneQties().size(); i++){
+						map.put(SSTConstant.Feedback,question.getFeedbackList().get(i));
+						break;
+					}
+					//26130 - start 04072022
+					for (int i = indi; i <question.getTplSpecZoneQties().size(); i++){
+						if (!question.getAnswerRemarkList().get(i).equalsIgnoreCase(SSTConstant.whiteSpace) && !question.getAnswerRemarkList().get(i).equalsIgnoreCase(SSTConstant.TB)){
+							map.put(SSTConstant.answerRemark,question.getAnswerRemarkList().get(i));
+							break;
+						}else {
+							map.put(SSTConstant.answerRemark,question.getAnswerRemarkList().get(i));
+						}
+					}
+					//#26130 - end 04072022
+					indi++;
+				}
+				listSpec.add(map);
+			}
+		}
+		//26130 - start
+		}
+		//26130 - end
+		else {
+			//non-zonal
+				HashMap<String, String> map = new HashMap<>();
+				if (question.getQuestionType().equalsIgnoreCase(SSTConstant.item)){
 					if (countIndex == 0){
 						if (getFirstValue){
-							map.put("clItem", question.getClItem());
-							map.put("uomName", question.getClUom().getUomName());
-							map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
-							map.put("zoneName",zone.getTplSpecZoneDtl().getZoneName());
-							map.put("qty", zone.getQty().toString());
-							if (null != question.getTplSpecTierQties() && question.getTplSpecTierQties().size() > 0 ){
+							map.put(SSTConstant.clItem, question.getClItem());
+							map.put(SSTConstant.uomName, question.getClUom().getUomName());
+							map.put(SSTConstant.quantity, question.getClQuantity().toString());
+							if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase(SSTConstant.service) || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase(SSTConstant.perkhidmatan)){
+								map.put(SSTConstant.clUomFrequency, question.getClUomFrequency().toString());
+								map.put(SSTConstant.clUomPerDay, question.getClUomPerDay().toString());
+								map.put(SSTConstant.clUomPerMonth, question.getClUomPerMonth().toString());
+							}else {
+								//product
+								map.put(SSTConstant.clPriceTypeCode, getParameterDescForReport(question.getClPriceTypeCode()));
 								String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
-								map.put("qtyBerperingkat", tierValue);
-							}else {
-								String tierValue = "T/B";
-								map.put("qtyBerperingkat", tierValue);
+								map.put(SSTConstant.qtyBerperingkat, tierValue);
 							}
-							
-							if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service") || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")){
-								map.put("clUomFrequency", question.getClUomFrequency().toString());
-								map.put("clUomPerDay", question.getClUomPerDay().toString());
-								map.put("clUomPerMonth", question.getClUomPerMonth().toString());
-							}
-							for (TplSpecAnswer answer: question.getTplSpecAnswers())
-							if (answer.getAnswerNumeric() != null){
-								map.put("answerNumeric", answer.getAnswerNumeric().toString());
-							}
-							getFirstValue = false;
-						}else {
-							map.put("clItem", whiteSpace);
-							map.put("uomName", whiteSpace);
-							map.put("clPriceTypeCode", whiteSpace);
-							map.put("zoneName",zone.getTplSpecZoneDtl().getZoneName());
-							map.put("qtyBerperingkat", whiteSpace);
-							if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service") || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")){
-								map.put("clUomFrequency", whiteSpace);
-								map.put("clUomPerDay", whiteSpace);
-								map.put("clUomPerMonth", whiteSpace);
-							}
-							map.put("qty", zone.getQty().toString());
-							for (TplSpecAnswer answer: question.getTplSpecAnswers()) {
-								if (answer.getAnswerNumeric() != null){
-									map.put("answerNumeric", answer.getAnswerNumeric().toString());
-								}
-							}
-							
-						}
-						
-					
-						for (int i = indi; i <question.getTplSpecZoneQties().size(); i++){
-							map.put("feedback",question.getFeedbackList().get(i));
-							break;
-						}
-						//26130 - start 04072022
-						for (int i = indi; i <question.getTplSpecZoneQties().size(); i++){
-							if (!question.getAnswerRemarkList().get(i).equalsIgnoreCase("&nbsp;") && !question.getAnswerRemarkList().get(i).equalsIgnoreCase(getDefaultValue())){
-								map.put("answerRemark",question.getAnswerRemarkList().get(i));
+							for (String feedback:question.getFeedbackList()){
+								map.put(SSTConstant.Feedback, feedback);
 								break;
-							}else {
-								map.put("answerRemark",question.getAnswerRemarkList().get(i));
+							}
+							for(String remark:question.getAnswerRemarkList()){
+								map.put(SSTConstant.Remark, remark);
+								break;
 							}
 						}
-						//#26130 - end 04072022
-						indi++;
+						listSpec.add(map);
 					}
-					listSpec.add(map);
 				}
-			}
-			//26130 - start
-			}
-			//26130 - end
-			else {
-				//non-zonal
-				
-				
-					HashMap<String, String> map = new HashMap<>();
-					if (question.getQuestionType().equalsIgnoreCase("I")){
-						if (countIndex == 0){
-							if (getFirstValue){
-								map.put("clItem", question.getClItem());
-								map.put("uomName", question.getClUom().getUomName());
-								map.put("qty", question.getClQuantity().toString());
-
-								if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service") || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")){
-									map.put("clUomFrequency", question.getClUomFrequency().toString());
-									map.put("clUomPerDay", question.getClUomPerDay().toString());
-									map.put("clUomPerMonth", question.getClUomPerMonth().toString());
-								}else {
-									//product
-									map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
-									String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
-									map.put("qtyBerperingkat", tierValue);
-									
-								}
-								
-								for (String feedback:question.getFeedbackList()){
-									map.put("feedback", feedback);
-									break;
-								}
-								
-								for(String remark:question.getAnswerRemarkList()){
-									map.put("remark", remark);
-									break;
-								}
-							}
-							
-							listSpec.add(map);
-						}
-					}
-					
-				
-				
-			}
-			return listSpec;
-			//#26130 end
 		}
+		return listSpec;
+		//#26130 end
+	}
 		//#26130 - zaim end
 		
 		//#10542 - start
@@ -6229,46 +6187,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		
 		//#26130 start
-		public String retrieveTierQuantity(List<TplSpecTierQty> listTplSpecTierQties){
-			StringBuffer sb = new StringBuffer();
-			if (listTplSpecTierQties.size() > 0){
-				for (TplSpecTierQty qty: listTplSpecTierQties){
-					  sb.append(qty.getFromQty() +" - "+qty.getToQty() +"<br />");
-					  
-				  }
-			}else {
-				sb.append("T/B");
+		public String retrieveTierQuantity(List<TplSpecTierQty> listTplSpecTierQties) {
+			StringBuilder sb = new StringBuilder();
+			if (listTplSpecTierQties.size() > 0) {
+				for (TplSpecTierQty qty : listTplSpecTierQties) {
+					sb.append(qty.getFromQty() + " - " + qty.getToQty() + "<br />");
+				}
+			} else {
+				sb.append(SSTConstant.TB);
 			}
-			 
-			 return sb.toString();
+			return sb.toString();
 		}
-		
 		//#26130 end
 		public String replaceWithBR(String specDetails) {//11104_start
 			
 			return specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
 					TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
 		}//11104_end
-		
-		
-		/**25635
-		 * is clone button disable
-		 * 
-		 * 
-		 * 
-		 * @return
-		 */
-		public boolean isCloneBtnDisable() {
-			log.info("========cloneButtonDisableStart=======");
-				String isClonehBtn = EpPropertiesUtils.getInstance()
-						.getProperty(EpPropertiesConst.SC_CLONE_BUTTON_DISABLEQT);
-				log.info("========cloneButtonDisableEnd======="+isClonehBtn);
-				if (StringUtils.isNotBlank(isClonehBtn)) {
-					return Boolean.valueOf(isClonehBtn);
-				}
-				log.info("========cloneButtonDisableEnd=======");	
-			
-			return false;
-		}//25635
 
 }
