@@ -3727,15 +3727,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				if (CollectionUtils.isNotEmpty(question.getTplSpecZoneQties())) {
 					for (int i=0; i < question.getTplSpecZoneQties().size(); i++) {
 						if (CollectionUtils.isNotEmpty(feedbackList)) {
-							feedbackList.add(i, "&nbsp;");
+							feedbackList.add(i, SSTConstant.whiteSpace);
 						}
 						if (CollectionUtils.isNotEmpty(answerRemarkList) && answerRemarkList.size() != (question.getTplSpecZoneQties().size() + specList.size())) {
-							answerRemarkList.add(i, "&nbsp;");
+							answerRemarkList.add(i, SSTConstant.whiteSpace);
 						}
 					}
 				} else {
 					if (CollectionUtils.isNotEmpty(feedbackList)) {
-						feedbackList.add(0, "&nbsp;");
+						feedbackList.add(0, SSTConstant.whiteSpace);
 					}
 				}
 			}
