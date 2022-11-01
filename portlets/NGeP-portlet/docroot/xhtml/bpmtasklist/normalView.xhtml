@@ -160,6 +160,11 @@
 			<p:outputPanel rendered="#{tasks.docStatus eq SupplierManagementConst.PM_STATUS_PO_REVIEW}">
 				<h:outputText value="#{bpmTasklistBackingBean.poKpiByCompanyState(tasks.docId, tasks.docStatus)}" escape="false"/>
 			</p:outputPanel>
+			<!-- #12483 - START -->
+			<p:outputPanel rendered="#{tasks.docStatus eq SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION_LONG_VALUE}">
+				<h:outputText value="#{bpmTasklistBackingBean.poKpiByCompanyState(tasks.docId, tasks.docStatus)}" escape="false"/>
+			</p:outputPanel>
+			<!-- #12483 - END -->
 		</p:column>
 		<p:column width="18%;" style="white-space:normal;">
 			<f:facet name="header">

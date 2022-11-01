@@ -246,6 +246,12 @@
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smDiscActExecSummaryRptVal}">
 					<ui:include src="/xhtml/reports/new/sm/SM_083_disc_act_exec_summary.xhtml"></ui:include>
 				</c:if>
+				
+				<!-- #12483 - Start -->
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smApplRevisedRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_095_appl_revised_rpt.xhtml"></ui:include>
+				</c:if>
+				<!-- #12483 - End -->
 			</p:panel>
 		</p:outputPanel>
 	</ui:define>
