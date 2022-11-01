@@ -41,7 +41,8 @@
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.applicationStatus']}" /></td>
 			<td class="tdContent">
-				<ac:smReportApplStatus bBean="#{applProcessedRptBB}" statusMany="true"/>
+			<!-- 32521 - START -->
+				<ac:smReportApplStatus bBean="#{applProcessedRptBB}" statusApplication="true"/>
 			</td>
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.applicationType']}" />
@@ -49,11 +50,12 @@
 			<td class="tdContent">
 				<p:selectOneMenu value="#{applProcessedRptBB.managedBean.applType}" style="width:300px;">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue=""></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.NewApplicationforMOF']}" itemValue="N" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.RenewMOFAccount']}" itemValue="R" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.ApplicationforaddCategoryCode']}" itemValue="A" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.ApplicationforBumiputeraStatus']}" itemValue="B" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.ApplicationforupdateMOFprofile']}" itemValue="U" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.applType.newAccRegMOF']}" itemValue="N"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.applType.renewAccMOF']}" itemValue="R"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.applType.updateAccMOF']}" itemValue="U"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.addCatCode']}" itemValue="A"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.bumiStatus']}" itemValue="B"></f:selectItem>
+					<!-- 32521 - END -->
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 				

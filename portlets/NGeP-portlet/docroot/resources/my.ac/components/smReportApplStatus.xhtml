@@ -22,7 +22,7 @@
 		<c:choose>
 			<c:when test="#{cc.attrs.statusApplication}">
 				<p:selectOneMenu value="#{cc.attrs.bBean.managedBean.applStatus}" style="width:300px;">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.pleaseSelect']}" itemValue="#{null}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingApplicationVerification']}" itemValue="PAV" />
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingApplicationApproval']}" itemValue="PAA" />
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingSiteVisitAssignmentBefore']}" itemValue="PSVAB" />
