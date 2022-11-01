@@ -353,14 +353,31 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	 */
 	@Override
 	public void resetSearch() {
-		log.debug("resetSearch: ctReportBB");		
+		log.debug("resetSearch: ctReportBB");
+		
+		//#29416 Nordin start
+		if (!getManagedBean().isDisableMinistryField()) 
+		{
+			getManagedBean().setSelectedMinistry(null);
+			getManagedBean().setDisableMinistryField(false);
+			getManagedBean().setDisableOrgField(false);
+			getManagedBean().setSelectedKumpulanPTJ(null);
+			getManagedBean().setSelectedPTJ(null);
+		}
+		
+		//#29416 Nordin end
+		
 		getManagedBean().setPopUpMsg(null);
 		getManagedBean().setReportUrl(null);
-		getManagedBean().setDisableMinistryField(false);
-		getManagedBean().setDisableOrgField(false);
-		getManagedBean().setSelectedMinistry(null);
-		getManagedBean().setSelectedKumpulanPTJ(null);
-		getManagedBean().setSelectedPTJ(null);
+		
+		//#29416 Nordin start
+		//getManagedBean().setDisableMinistryField(false);
+		//getManagedBean().setDisableOrgField(false);
+		//getManagedBean().setSelectedMinistry(null);
+		//getManagedBean().setSelectedKumpulanPTJ(null);
+		//getManagedBean().setSelectedPTJ(null);
+		//#29416 Nordin end
+		
 		getManagedBean().setContractNo(null);
 		getManagedBean().setContractPhysicalNo(null);
 		getManagedBean().setLoaNo(null);
