@@ -1124,19 +1124,44 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					
 					if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
 						getManagedBean().setItemProductExist(true);
-						//Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-						//Start Fix - #33256
-						sortItemPrice(item.getCtItemPrices());
-						sortItemMaxQty(item.getCtItemMaxQties());
-						//End Fix - #33256
-				
-						//Bug #29323
-//						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+						// Collections.sort(item.getCtItemPrices(), new
+						// CtItemPrice());
+						// Start Fix - #33256
+						// sortItemPrice(item.getCtItemPrices());
+						// sortItemMaxQty(item.getCtItemMaxQties());
+						// End Fix - #33256
+
+						// Bug #29323
+						// Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+						//Start Fix - #34110
+						if (item.getCtItemPrices() != null
+								&& item.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
+							   sortItemPriceForZonalTier(item.getCtItemPrices());
+						}else if(item.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)){
+							   sortItemPriceForTier(item.getCtItemPrices());
+						} else {
+							   sortItemPrice(item.getCtItemPrices());
+						}
+						
+
+						if (item.getCtItemMaxQties() != null) {
+							sortItemMaxQty(item.getCtItemMaxQties());
+						}
+						//End Fix - #34110
 						ctBackingBean.getManagedBean().getCtItemList().add(item);
 					} else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 						getManagedBean().setItemServiceExist(true);
 						//Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-						sortItemPrice(item.getCtItemPrices()); //Fix - #33256
+						//Start Fix - #34110
+						if (item.getCtItemPrices() != null
+								&& item.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
+							   sortItemPriceForZonalTier(item.getCtItemPrices());
+						}else if(item.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)){
+							   sortItemPriceForTier(item.getCtItemPrices());
+						} else {
+							   sortItemPrice(item.getCtItemPrices());
+						}
+						//End Fix - #34110
 						ctBackingBean.getManagedBean().getCtItemServiceList().add(item);
 					}					
 				}
@@ -3901,8 +3926,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//Bug #29323 - Remove Code
 //		for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices()){
 //			log.info("totalsize itemprices "+itemPrice.getItemPriceId());
-//		}		
-        sortItemPrice(ctItemPriceList);//Fix - #33256
+//		}
+		//Start Fix - #34110
+		if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
+			   sortItemPriceForZonalTier(ctItemPriceList);
+		}else if(getManagedBean().getSelectedItem().getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)){
+			   sortItemPriceForTier(ctItemPriceList);
+		} else {
+			   sortItemPrice(ctItemPriceList);
+		}
+		//End Fix - #34110
 		newItemPrice(getManagedBean().getSelectedItem());
 		ctItemPriceList.clear();
 
@@ -3961,7 +3994,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		this.getManagedBean().getSelectedServiceItem().getCtItemPrices().clear();
 		this.getManagedBean().getSelectedServiceItem().getCtItemPrices().addAll(ctItemPriceList);
-		sortItemPrice(ctItemPriceList); //Fix - #33256
+		// Start Fix - #34110
+		if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
+			sortItemPriceForZonalTier(ctItemPriceList);
+		} else if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)) {
+			sortItemPriceForTier(ctItemPriceList);
+		} else {
+			sortItemPrice(ctItemPriceList);
+		}
+		// End Fix - #34110
 		newItemPrice(getManagedBean().getSelectedServiceItem());
 		ctItemPriceList.clear();
 
@@ -8004,7 +8045,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						});
 					}
 				}	
-				//End Fix - #33256
+	// End Fix - #33256
+	
 	// Start Fix - #33674
 	public String[] splittedAccNoAndBankname() {
 		String bankDetails = ctBackingBean.getManagedBean().getBankInfoDetails();
@@ -8032,5 +8074,61 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	// End Fix - #33674
+	// Start Fix - #34110
+	public void sortItemPriceForTier(List<CtItemPrice> list){
+		Collections.sort(list, new Comparator<CtItemPrice>() {
+			public int compare(CtItemPrice o1, CtItemPrice o2) {
 
+					BigDecimal z1 = o1.getFromQty();
+					BigDecimal z2 = o2.getFromQty();
+					int fromQtyComp = z1.compareTo(z2);
+					if (fromQtyComp != 0) {
+						return fromQtyComp;
+					}				
+		
+					BigDecimal y1 = o1.getToQty();
+					BigDecimal y2 = o2.getToQty();
+					int toQtyComp = y1.compareTo(y2);
+					if (toQtyComp != 0) {
+						return toQtyComp;
+					}
+
+				Date d1 = o1.getExpDate();
+				Date d2 = o2.getExpDate();
+				return d1.compareTo(d2);
+			}
+		});
+	}
+	
+	public void sortItemPriceForZonalTier(List<CtItemPrice> list){
+		Collections.sort(list, new Comparator<CtItemPrice>() {
+			public int compare(CtItemPrice o1, CtItemPrice o2) {
+					String x1 = o1.getCtContractZone().getZoneName();
+					String x2 = o2.getCtContractZone().getZoneName();
+					int zoneComp = x1.compareTo(x2);
+					if (zoneComp != 0) {
+						return zoneComp;
+					}
+				
+					BigDecimal z1 = o1.getFromQty();
+					BigDecimal z2 = o2.getFromQty();
+					int fromQtyComp = z1.compareTo(z2);
+					if (fromQtyComp != 0) {
+						return fromQtyComp;
+					}				
+		
+					BigDecimal y1 = o1.getToQty();
+					BigDecimal y2 = o2.getToQty();
+					int toQtyComp = y1.compareTo(y2);
+					if (toQtyComp != 0) {
+						return toQtyComp;
+					}
+
+				Date d1 = o1.getExpDate();
+				Date d2 = o2.getExpDate();
+				return d1.compareTo(d2);
+			}
+		});
+	}
+	// End Fix - #34110
 	}
