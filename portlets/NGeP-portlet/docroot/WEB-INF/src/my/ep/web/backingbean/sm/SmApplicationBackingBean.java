@@ -7672,6 +7672,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean()
 					.setIdentificationTypes(getPmIdTypeDropdownValues());
 		}
+		//#34138
+		getManagedBean().setCountryLs(SmApplicationUtil.retrievePmCountryList());
 		//#29315
 		getManagedBean().setFlagMandatoryEpfNo(false);
 		getManagedBean().setPopupAction("N");
