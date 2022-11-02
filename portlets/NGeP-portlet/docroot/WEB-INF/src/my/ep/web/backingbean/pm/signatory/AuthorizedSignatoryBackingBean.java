@@ -371,7 +371,6 @@ public class AuthorizedSignatoryBackingBean extends
 				pmcertSignatory.setChangedBy(getUserIdSessionFromLoginId()); //#34090
 				log.info(" saveCertSignatoryDetials changedBy user 1 " + getUserIdSessionFromLoginId());
 				log.info(" saveCertSignatoryDetials changedBy user 1 getChangedBy " + pmcertSignatory.getChangedBy());
-				log.info(" saveCertSignatoryDetials changedBy user 1 reqDTO getChangedBy " + reqDTO.getChangedBy());
 			} else {
 				if (pmcertSignatory.isModified()
 						&& pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
@@ -381,7 +380,6 @@ public class AuthorizedSignatoryBackingBean extends
 					//pmcertSignatory.setChangedBy(getUserIdSessionFromLoginId()); //#34090
 					//log.info(getUserIdSessionFromLoginId()+ " -saveCertSignatoryDetials changedBy user 2 " + getUserIdSessionFromLoginId());
 					//log.info(" saveCertSignatoryDetials changedBy user 2 getChangedBy " + pmcertSignatory.getChangedBy());
-					//log.info(" saveCertSignatoryDetials changedBy user 2 reqDTO getChangedBy " + reqDTO.getChangedBy());
 				}else if (pmcertSignatory.isModified()
 						&& pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 					log.info("Tracking diary for virtual certificate: re-activating status :saveRuleCatalog");
@@ -390,7 +388,6 @@ public class AuthorizedSignatoryBackingBean extends
 					//pmcertSignatory.setChangedBy(getUserIdSessionFromLoginId()); //#34090
 					//log.info(" saveCertSignatoryDetials changedBy user 3 " + getUserIdSessionFromLoginId());
 					//log.info(" saveCertSignatoryDetials changedBy user 3 getChangedBy " + pmcertSignatory.getChangedBy());
-					//log.info(" saveCertSignatoryDetials changedBy user 3 reqDTO getChangedBy " + reqDTO.getChangedBy());
 				}
 				Date originalExpDate = this.getManagedBean().getIdToCertSignMapForChangedRecs().get(pmcertSignatory.getCertSignatoryId());
 				if(originalExpDate != null && pmcertSignatory.getExpDate() != originalExpDate){
@@ -400,7 +397,6 @@ public class AuthorizedSignatoryBackingBean extends
 					//pmcertSignatory.setChangedBy(getUserIdSessionFromLoginId()); //#34090
 					//log.info(" saveCertSignatoryDetials changedBy user 4 " + getUserIdSessionFromLoginId());
 					//log.info(" saveCertSignatoryDetials changedBy user 4 getChangedBy " + pmcertSignatory.getChangedBy());
-					//log.info(" saveCertSignatoryDetials changedBy user 4 reqDTO getChangedBy " + reqDTO.getChangedBy());
 				}
 			}
 			if (messageId != null & msgParam != null) {
