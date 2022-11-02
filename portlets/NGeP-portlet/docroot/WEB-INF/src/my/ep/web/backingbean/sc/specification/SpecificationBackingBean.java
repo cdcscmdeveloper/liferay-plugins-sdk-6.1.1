@@ -22076,7 +22076,7 @@ if(null!=allTechnicalChecklist){
 	
 	// Bug #34065@Syazani 01/11/2022 -- Start
 	private List<PmParameterDesc> retrieveParameterDescDFT() {
-		if (this.getManagedBean().getParamDescDFTCache() == null) {
+		if (this.getManagedBean().getParamDescDFTCache() == null || (this.getManagedBean().getParamDescDFTCache() != null && this.getManagedBean().getParamDescDFTCache().size() == 0)) {
 			this.getManagedBean().setParamDescDFTCache(retrieveParameterDescByType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE));
 		} 
 		return this.getManagedBean().getParamDescDFTCache();
