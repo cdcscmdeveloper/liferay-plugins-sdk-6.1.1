@@ -11500,7 +11500,7 @@ public class SmApplicationUtil {
 												.getCategoryTypeCode()
 												.getParameterCode()) 
 						//#30766 - START
-						&& ((cat.getApprvrDecFlg()!=null && cat.getApprvrDecFlg() == 1) || (cat.getPoDecFlg()!=null && cat.getPoDecFlg()==1))) { 
+						&& ( ((cat.getApprvrDecFlg()!=null && cat.getApprvrDecFlg() == 1) || (cat.getPoDecFlg()!=null && cat.getPoDecFlg()==1)) ||  (cat.getPoDecFlg()==null && cat.getApprvrDecFlg()==null))) { 
 						//#30766 - END
 
 					machineCategoryVO = (SmMachineCategoryVO) EntityHelper
