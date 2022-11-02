@@ -836,6 +836,7 @@ public class SpecificationBackingBean extends
 			technicalCheckList = this.getManagedBean().getScQtCheckSt2techProposal();//#28784
 		}
 		boolean demoChecklistAvail = false;//#28784
+		boolean throwErorrMechaMistmatch = false; // Bug #34065@Syazani 01/11/2022
 		List<PmParameterDesc> localParamDesc = retrieveParameterDescDFT(); // Bug #34065@Syazani 01/11/2022
 		if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
 			for (ScQtCheckList checkList : technicalCheckList) {
@@ -872,9 +873,7 @@ public class SpecificationBackingBean extends
 							if (checkList.getPmDocument() == null) {
 								if (paramDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
 									technicalCheckListTypeChange(technicalCheckList.indexOf(checkList), technicalCheckList);
-									throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-											"lbl.sc.spec.supplier.action", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-											new FacesScopes().getUserLocale()) });
+									throwErorrMechaMistmatch = true;
 								} else if (paramDesc.getPmParameter().getParameterCode()
 										.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION)) {
 									technicalCheckListTypeChange(technicalCheckList.indexOf(checkList), technicalCheckList);
@@ -947,9 +946,7 @@ public class SpecificationBackingBean extends
 							if (checkList.getPmDocument() == null) {
 								if (paramDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
 									financialCheckListTypeChange(financialCheckList.indexOf(checkList), financialCheckList);
-									throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-											"lbl.sc.spec.supplier.action", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-											new FacesScopes().getUserLocale()) });
+									throwErorrMechaMistmatch = true;
 								} else if (paramDesc.getPmParameter().getParameterCode()
 										.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION)) {
 									financialCheckListTypeChange(financialCheckList.indexOf(checkList), financialCheckList);
@@ -964,6 +961,14 @@ public class SpecificationBackingBean extends
 				}
 				// Bug #34065@Syazani 01/11/2022 -- End
 			}
+			
+			// Bug #34065@Syazani 01/11/2022 -- Start
+			if (throwErorrMechaMistmatch) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.sc.spec.supplier.action", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+			}
+			// Bug #34065@Syazani 01/11/2022 -- End
 			
 			for (Map.Entry<Integer, Integer> entry : totalGroupId.entrySet()) {
 				boolean isInsertPair = false ;	
@@ -4511,7 +4516,7 @@ public class SpecificationBackingBean extends
 			}
 			checkList.set(index, list);
 			this.getManagedBean().setScQtCheckSt2financeProposalList(checkList);
-			searchBean = null;
+			searchBean = null;		
 		} finally {
 			parameterSo = null;
 		}
