@@ -109,7 +109,6 @@
 							test="#{bpmTasklistBackingBean.managedBean.roleType ne 'PO'}">
 							<p:selectOneMenu id="taskListSortByGroup" style="width: 200px;"
 								value="#{bpmTasklistBackingBean.managedBean.sort_byGroup}">
-								<f:selectItem itemLabel="" itemValue=""></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.bpm.doc.no']}"
 									itemValue="DOCNUMBER"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.bpm.created.date']}"
@@ -120,7 +119,6 @@
 							test="#{bpmTasklistBackingBean.managedBean.roleType eq 'PO'}">
 							<p:selectOneMenu id="taskListSortByGroup" style="width: 200px;"
 								value="#{bpmTasklistBackingBean.managedBean.sort_byGroup}">
-								<f:selectItem itemLabel="" itemValue=""></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.bpm.doc.no']}"
 									itemValue="DOCNUMBER"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.bpm.created.date']}"
