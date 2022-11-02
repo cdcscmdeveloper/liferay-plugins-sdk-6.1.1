@@ -176,10 +176,13 @@ public class CalendarBackingBean extends
 			validateCalendar(holiday);
 			String id = getManagedBean().getEvent().getId();
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
+			log.info("method: addOrUpdateEvent, value:id = "+ id);
 			if (id == null) {
+				log.info("method: addOrUpdateEvent, value:addHoliday");
 				reqDTO.setHoliday(holiday);
 				resDTO = calendarSO.addHoliday(reqDTO);
 			} else {
+				log.info("method: addOrUpdateEvent, value: updateHoliday");
 				 String exTitle = this.getManagedBean().getEventToExTitleValueMap().get(id);
 				 if(exTitle != null && !exTitle.isEmpty()){
 					 holiday.setHolidayExName(exTitle);
