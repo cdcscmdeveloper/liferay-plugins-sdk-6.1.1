@@ -366,8 +366,8 @@ public class AuthorizedSignatoryBackingBean extends
 						+ pmcertSignatory.getSinnatoryName());
 				messageId = MessageConst.TD_80900;
 				msgParam = new String[] {this.getManagedBean().getCertSignatories().get(0).getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
-				//pmcertSignatory.setCreatedBy(getUserIdSessionFromLoginId()); //#34090
-				//pmcertSignatory.setChangedBy(getUserIdSessionFromLoginId()); //#34090
+				pmcertSignatory.setCreatedBy(getUserIdSessionFromLoginId()); //#34090
+				pmcertSignatory.setChangedBy(getUserIdSessionFromLoginId()); //#34090
 			} else {
 				if (pmcertSignatory.isModified()
 						&& pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
