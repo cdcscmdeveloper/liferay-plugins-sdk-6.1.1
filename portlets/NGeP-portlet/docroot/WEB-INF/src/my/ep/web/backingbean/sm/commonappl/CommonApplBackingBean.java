@@ -510,9 +510,9 @@ public class CommonApplBackingBean extends
 				} else if (resDTO.getTaskName().equalsIgnoreCase(
 						SMProcessNameConst.REVIEW_APPL_ESCALATED) || resDTO.getTaskName().equalsIgnoreCase(
 								SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))
-						|| (resDTO.getTaskName().equalsIgnoreCase(
+						|| ((resDTO.getTaskName().equalsIgnoreCase(
 								SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) || resDTO.getTaskName().equalsIgnoreCase(
-										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", ""))
+										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", "")))
 										&& (new FacesScopes()).hasRoleUser(RoleCode.UPS_APPROVER.value()))) {
 					//#32304 - end
 					smApplBB.getManagedBean().setPoUser(false);
