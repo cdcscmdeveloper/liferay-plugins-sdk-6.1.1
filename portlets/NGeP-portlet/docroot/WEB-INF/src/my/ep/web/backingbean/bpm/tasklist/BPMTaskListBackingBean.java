@@ -1842,6 +1842,17 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			this.getManagedBean().setTaskDesc("");
 			this.getManagedBean().setSort_by("CREATEDATE");
 			this.getManagedBean().setAscending(false);
+			
+			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+			String docTypeId = originalServletRequest.getParameter("docTypeId");
+			
+			if (docTypeId != null && !docTypeId.isEmpty()) {
+				this.getManagedBean().setDocType(docTypeId);
+				originalServletRequest.getParameterMap().remove("docTypeId");
+			} else {
+				this.getManagedBean().setDocType("");
+			}
 		}else if(type.equalsIgnoreCase("advance")){
 			this.getManagedBean().setGroupTaskCreatedDateFrom(null);
 			this.getManagedBean().setGroupTaskCreatedDateTo(null);
