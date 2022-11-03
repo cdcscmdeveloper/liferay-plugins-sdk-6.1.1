@@ -3262,9 +3262,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 		}
 		//#33955 - END
-		
-		isInactive = isAfterApproval = true;
-		
 		if(poApprover != null && !isInactive)
 			return user;
 		
