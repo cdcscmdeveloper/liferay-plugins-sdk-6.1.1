@@ -904,46 +904,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 		}
 // #29732 End - reOpen Fix
-	
-		//Start Reopen 9019 #note-289 remove the alert message while save and initializing remark when empty
-		//Remark will invisible when validateQTDetails while throw EpException 
-		boolean emptyRemarksExist = false;
-		if (null != this.getManagedBean().getQt().getScQtRemarks()
-				&& CollectionUtils.isNotEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-			for (int i = 0; i < this.getManagedBean().getQt().getScQtRemarks().size(); i++) {
-				String userRemark = this.getManagedBean().getQt().getScQtRemarks().get(i).getRemark();
-				if (null == userRemark || "".equals(userRemark)) {
-					if (null != this.getManagedBean().getQt().getScQtRemarks().get(i).getRemarkId()) {
-						this.getManagedBean().setQtRemarksIdRemove(
-								this.getManagedBean().getQt().getScQtRemarks().get(i).getRemarkId());
-					}
-					emptyRemarksExist = true;
-					this.getManagedBean().setScQtRemarksEmpty(true);
-					// this.getManagedBean().getQt().getScQtRemarks().remove(i);
-
-				} else {
-					emptyRemarksExist = false;
-				}
-			}
-
-			if (emptyRemarksExist) {
-				ScQt scQt = this.getManagedBean().getQt();
-				List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
-						.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
-
-				for (ScQtRemark qtRemark : qtRemarks) {
-					qtRemark.setEditable(true);
-				}
-				this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-
-			} else {
-				ScQt scQt = this.getManagedBean().getQt();
-				this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
-			}
-
-		}
-		//End Reopen 9019 #note-289 remove the alert message while save and initializing remark when empty 
-		
 		this.getManagedBean().setSaveFlow(false);
 		IQTDetailSO detailSO;
 		try {
@@ -976,9 +936,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 			quationTenderReqDTO.setUserLocale(facesScopes.getUserLocale());
 			quationTenderReqDTO.getQtdetail().setOtherApproval(true);
-			quationTenderReqDTO.getQtdetail().setOtherApproval(true);
 			quationTenderReqDTO.setDeskOfficer(facesScopes.getUserSessionBean());
-			quationTenderReqDTO.setScQtRemarksEmpty(this.getManagedBean().isScQtRemarksEmpty());//Reopen 9019 #note-289
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.submitQT(quationTenderReqDTO);
 			if (quationTenderResDTO.isSuccessful()) {

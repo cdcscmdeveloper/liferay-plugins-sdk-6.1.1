@@ -1041,14 +1041,10 @@ public class CreateQtBackingBean extends
 									.format(panelThreshold) });
 				}
 			} else {
-				//Start Reopen 9019 #note-289 remove the alert message while save
-				if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())){
 				if (null == amount || (amount.compareTo(BigDecimal.ZERO) <= 0)) {
 					throw new EpException(MessageConst.ERROR_760024,
 							new String[] { SourcingConstants.DF_AMOUNT.format(BigDecimal.ZERO) });
 				}
-				}
-				//End Reopen 9019 #note-289 remove the alert message while save
 
 				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())
 						|| this.getManagedBean().isCreateQt()) {
@@ -1144,17 +1140,11 @@ public class CreateQtBackingBean extends
 					getManagedBean().setZoneTrees(null);
 				}
 			}
-			
-			//Start Reopen 9019 #note-289 remove the alert message while save
-			if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())){
 			// 25729#174 start
 			if ((!isPanel && enable.length > 0) && (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <=0)) {
 				RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
 			}
 			// 25729#174 end
-			}
-			//End Reopen 9019 #note-289 remove the alert message while save
-			
 		} finally {
 			parameterSo = null;
 		}
@@ -1388,8 +1378,6 @@ public class CreateQtBackingBean extends
 					.get("value");
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.FULFILMENT_TYPE);
 			for (PmParameterDesc paramDesc : localParamDesc) {
-				//Start Reopen 9019 #note-289 remove the alert message while save
-				if(null != type){
 				if (paramDesc.getPmParameter().getParameterId()
 						.equals(Long.valueOf(type))) {
 
@@ -1399,8 +1387,6 @@ public class CreateQtBackingBean extends
 							.setFulfilmentType(paramDesc.getPmParameter());
 					break;
 				}
-			}
-				//End Reopen 9019 #note-289 remove the alert message while save
 			}
 			// #25726 START
 			if (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(this
@@ -2561,9 +2547,6 @@ public class CreateQtBackingBean extends
 		try {
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			
-			//Start Reopen 9019 #note-289 remove the alert message while save
-			if(null != parameterId){
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
@@ -2580,8 +2563,6 @@ public class CreateQtBackingBean extends
 						.retrieveParameterByTypeAndCode(fulfilMentAsandWhen);
 				this.getManagedBean().getQt().setFulfilmentType(fulfilMentAsandWhenresDTO.getPmParameter());
 			}
-			}
-			//End Reopen 9019 #note-289 remove the alert message while save
 
 		} finally {
 			parameterSO = null;
