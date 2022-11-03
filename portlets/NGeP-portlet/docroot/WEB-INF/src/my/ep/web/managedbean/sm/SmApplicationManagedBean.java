@@ -20,7 +20,6 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -45,7 +44,6 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplInquiry;
-import my.ep.persistence.entity.sm.SmApplRevise;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
@@ -587,14 +585,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmApplDocFile smApplDocFile;
 	//#28807 - END
 	
-	//#12483 - START
-	private SmApplRevise smApplRevise;
-	private String reviseReason;
-	private boolean reviseMandatory;
-	private PmUser reviseApprover;
-	// #12483 - END
-
-	// #15629 - START
+	//#15629 - START
 	private List<PmReasonDesc> selectedRecommendReasonDescs;
 	private List<PmReasonDesc> recommendReasonDescList;
 	private List<PmReasonDesc> recommendReasonDescInitList;
@@ -4448,42 +4439,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.smApplDocFile = smApplDocFile;
 	}
 	//#28807 - End
-
-	//#12483 - START
-	public SmApplRevise getSmApplRevise() {
-		return smApplRevise;
-	}
-
-	public void setSmApplRevise(SmApplRevise smApplRevise) {
-		this.smApplRevise = smApplRevise;
-	}
-
-	public String getReviseReason() {
-		return reviseReason;
-	}
-
-	public void setReviseReason(String reviseReason) {
-		this.reviseReason = reviseReason;
-	}
-
-	public boolean isReviseMandatory() {
-		return reviseMandatory;
-	}
-
-	public void setReviseMandatory(boolean reviseMandatory) {
-		this.reviseMandatory = reviseMandatory;
-	}
 	
-	public void setReviseApprover(PmUser reviseApprover) {
-		this.reviseApprover = reviseApprover;
-	}
-	
-	public PmUser getReviseApprover() {
-		return reviseApprover;
-	}
-	// #12483 - END
-
-	// #15629 - START
+	//#15629 - START
 	public List<PmReasonDesc> getSelectedRecommendReasonDescs() {
 		return selectedRecommendReasonDescs;
 	}

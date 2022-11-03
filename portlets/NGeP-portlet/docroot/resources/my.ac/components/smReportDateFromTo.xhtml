@@ -14,7 +14,6 @@
 		<cc:attribute name="dateRange" default = "0" />
 		<cc:attribute name="mandatoryDateTo" default="false" />
 		<cc:attribute name="noMaxdate" default="false" />
-		<cc:attribute name="oneYearBeforeOnly" default="false" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -68,7 +67,6 @@
 					<c:if test="#{cc.attrs.mandatoryDateTo}">
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</c:if>
-					</td>
 					<td><p:calendar label="#{lbl['lbl.rpt.todate']}"
 						id="calDtTo" showOn="button" navigator="true" disabled="#{empty cc.attrs.bBean.managedBean.dateFrom}"
 						display="inline" readonlyInput="true" size="9" mindate="#{cc.attrs.bBean.managedBean.dateFrom}"
@@ -78,9 +76,9 @@
 						<p:message id="calDtToMsg" for="calDtTo" display="icon" showDetail="false" />
 					</td>
 				</tr>
-				</table>				
+				</table>
 			</c:when>
-				
+			
 			<c:when test="#{cc.attrs.limitYearRange}">
 				<table style="width: 100%;">
 				<tr>

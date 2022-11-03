@@ -34,7 +34,6 @@ import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -229,10 +228,8 @@ public class CommonApplBackingBean extends
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							"/xhtml/sm/payment/paymentSummary.xhtml");
-			//#12483 - START
-		} else if (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_PO_INQUIRY) || 
-				   resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_PO_INQUIRY_REVISE)) {
-			//#12483 - END
+		} else if (resDTO.getTaskName().equalsIgnoreCase(
+				SMProcessNameConst.RESPOND_PO_INQUIRY)) {
 			log.info("** Respond to PO Inquiry *********"
 					+ resDTO.getProcessName());
 			if (resDTO.getProcessName().equalsIgnoreCase(
@@ -254,10 +251,8 @@ public class CommonApplBackingBean extends
 				smApplBB.getManagedBean().setTaskId(taskId);
 				smApplBB.getManagedBean().setClaimTask(isClaim);
 				setNavigationForSmDecision("RS", smApplBB);
-				//#12483 - START
-			} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION) ||
-					resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT)) {
-				//#12483 - END
+			} else if (resDTO.getProcessName().equalsIgnoreCase(
+					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 				// TODO Remove this code and get the applicationType From DB
 				log.info(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
@@ -546,29 +541,7 @@ public class CommonApplBackingBean extends
 								.equalsIgnoreCase(
 										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 					log.info("*** This is po or approver action after site visit *** ");
-					//#12483 - START
-					if(!appl.getSmApplRevises().isEmpty()){
-						if(!appl.getSmSvTasks().isEmpty()){
-							boolean hasSvTaskNotVisit = false;
-							for(SmSvTask smSvTask : appl.getSmSvTasks()){
-								if(!hasSvTaskNotVisit){
-									if(smSvTask.getActualVisitDate() == null){
-										hasSvTaskNotVisit = true;
-									}
-								}
-							}
-							if(hasSvTaskNotVisit){
-								smApplBB.getManagedBean().setReviewSiteVisit(false);
-							} else {
-								smApplBB.getManagedBean().setReviewSiteVisit(true);
-							}
-						} else {
-							smApplBB.getManagedBean().setReviewSiteVisit(false);
-						}
-					} else {
-						smApplBB.getManagedBean().setReviewSiteVisit(true);
-					}
-					//#12483 - END
+					smApplBB.getManagedBean().setReviewSiteVisit(true);
 				} else if (!resDTO.getTaskName().equalsIgnoreCase(
 						SMProcessNameConst.REVIEW_APPL_ESCALATED)) {
 					log.info("*** This is po or approver for normal review without site visit *** ");
