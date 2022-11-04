@@ -135,19 +135,13 @@
 				<td><h:outputLabel value="#{lbl['lbl.fl.acknowledgeOfficer']}" rendered="#{receivedNoteBackingBean.isReceivingOfficer()}"
 						style="text-align: top" /><p:outputLabel rendered="#{receivedNoteBackingBean.isReceivingOfficer()}" 
 						value="*" styleClass="mandatory" /></td>
-				<!-- 13291 --><td colspan="3"><p:selectOneMenu style="width:350px; margin-bottom:5px;" rendered="#{receivedNoteBackingBean.isReceivingOfficer()}"
+				<td><p:selectOneMenu style="width:350px; margin-bottom:5px;" rendered="#{receivedNoteBackingBean.isReceivingOfficer()}"
 						disabled="#{receivedNoteBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}" label="#{lbl['lbl.fl.acknowledgeOfficer']}"
 						value="#{receivedNoteBackingBean.managedBean.userLoginId}">
 						<f:selectItems
 							value="#{receivedNoteBackingBean.getAcknowledgeOfficerDropdown()}" />
 							<p:ajax process="@this" event="change" listener="#{receivedNoteBackingBean.setSelectedAckOfficer}"></p:ajax>
-					</p:selectOneMenu>
-					<!-- 13291 start -->
-					<c:if test="#{receivedNoteBackingBean.isReceivingOfficer()}">
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.acknowledge.officer']}"/>
-					</c:if>
-					<!-- 13291 end -->
-					</td>
+					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.fl.receiving.officer.name']}" rendered="#{receivedNoteBackingBean.isFlFulfilmentApprover()}"
