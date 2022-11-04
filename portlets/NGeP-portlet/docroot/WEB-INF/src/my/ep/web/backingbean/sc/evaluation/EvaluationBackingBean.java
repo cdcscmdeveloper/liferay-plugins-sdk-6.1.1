@@ -1782,7 +1782,12 @@ public class EvaluationBackingBean extends
 			amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
 			if (getManagedBean().getScQt().isDemoRequired()) {
 				// #28784 - FEC by item eval = TI, package = P			
+				if(this.getManagedBean().getTabItemPackageIndex() == 1){
+					amountReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+				} else {
 				amountReqDto.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);			
+			}
+				//amountReqDto.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);					
 			}
 			amountResDto= evaluationSO.retrieveProposals(amountReqDto);			
 			for(ScQtProposal amtbyproposal : amountResDto.getProposalList()){
@@ -2594,12 +2599,13 @@ public class EvaluationBackingBean extends
 						.getCheckListResultBean().getResultList();
 				//Bug #33252 related to #33110 start
 				for (ScQtCheckList checkList : checklistList) {
+					if(!this.getManagedBean().getScQt().isDemoRequired()){//#28784
 					// Update eval status proposal checklist for no supplier that cant respond because of quantity 0 at zone
 					// bug 33851 - start 
 					 evaluationSO.proposalchecklistsuppqty
 							(checkList.getQtChecklistId());
 					// bug 33851 - end 
-					
+					}
 					//#33252 /27/5/2022 Start Fix
 					boolean checkallitemautoscore = evaluationSO.checkbuttonAutoScore
 							(checkList.getQtChecklistId(),evalstage.get(0));
@@ -9861,6 +9867,7 @@ private void retriveCommitteeRemarksList(){
 					.getQtProposalChecklist());
 			evalReqDTO.setAnswersList(answers);
 			evalReqDTO.setChecklistType(getManagedBean().getCheckListType());
+			evalReqDTO.setScQt(this.getManagedBean().getScQt());//#28784
 			List<ScQtCheckList> qtCheckLists = null;
 			if ("T".equalsIgnoreCase(getManagedBean().getCheckListType())) {
 				evalReqDTO
