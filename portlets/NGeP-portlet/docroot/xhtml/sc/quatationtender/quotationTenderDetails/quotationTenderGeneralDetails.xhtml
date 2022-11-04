@@ -684,8 +684,12 @@
 												update="@form"></p:ajax><!-- END #26784 -->
 										</p:selectOneRadio></td>
 									<td><p:message id="evalMsg" for="evalType" display="icon" /></td>
-									<td style="margin-top: -3px"><ac:iconTooltip
-											value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
+									<td style="margin-top: -3px">
+									<p:graphicImage id="evalMsgP" value="/css/images/design/tooltips.png" />
+										<p:tooltip for="evalMsgP">
+											<p:outputLabel escape="false" value="#{lbl['lbl.sc.evaluation.type.tooltip']}"  />
+										</p:tooltip>
+									</td>
 										<!-- #29521 - start -->
 										<td>
 										<p:spacer width="10" height="5"/>
@@ -712,8 +716,12 @@
 												update="@form"></p:ajax><!-- END #26784 -->
 										</p:selectOneRadio></td>
 									<td><p:message id="evalMsg" for="evalType" display="icon" /></td>
-									<td style="margin-top: -3px"><ac:iconTooltip
-											value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
+									<td style="margin-top: -3px">
+										<p:graphicImage id="evalMsgT" value="/css/images/design/tooltips.png" />
+										<p:tooltip for="evalMsgT">
+											<p:outputLabel escape="false" value="#{lbl['lbl.sc.evaluation.type.tooltip']}"  />
+										</p:tooltip>
+	</td>
 									<!-- #29521 - start -->
 										<td>
 										<p:spacer width="10" height="5"/>
