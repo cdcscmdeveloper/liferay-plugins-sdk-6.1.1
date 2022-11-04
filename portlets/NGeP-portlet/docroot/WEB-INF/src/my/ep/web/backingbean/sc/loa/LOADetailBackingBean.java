@@ -8864,6 +8864,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	// #29006 - end - reendorsed (comment 528)
 	public void onSaveSupplierOffer(String outcome) {
+		//#29006 - start - note 662
+		AwardSupplierReqDTO requestDTO = new AwardSupplierReqDTO();
+		requestDTO.setLoaId(getManagedBean().getScLoa().getLoaId());
+		AwardSupplierResDTO responseDTO = getQtAwardSO().retrieveLOADtlByLoaId(requestDTO);
+		if (CollectionUtils.isNotEmpty(responseDTO.getScLoa().getScLoiLoaItems())) {
+			 getManagedBean().getScLoa().setScLoiLoaItems(responseDTO.getScLoa().getScLoiLoaItems());
+			for (ScLoiLoaItem item : getManagedBean().getScLoa().getScLoiLoaItems()) {
+				RequestItemReqDTO reqRequestItemDTO = new RequestItemReqDTO();
+				reqRequestItemDTO.setRequestItemId(item.getScRequestItem().getRequestNoteItemId());
+				ScRequestItem freshRequestItem = getRequestItemSO().retrieveItemByRequestItemId(reqRequestItemDTO)
+						.getRequestItem();
+				if (freshRequestItem != null) {
+					item.setScRequestItem(freshRequestItem);
+				}
+			}
+		}
+		//#29006 - end - note 662
 		//#29006 - start - note 607
 		Boolean isComplete = false;
 		if (outcome.equalsIgnoreCase("COMPLETE")) {
