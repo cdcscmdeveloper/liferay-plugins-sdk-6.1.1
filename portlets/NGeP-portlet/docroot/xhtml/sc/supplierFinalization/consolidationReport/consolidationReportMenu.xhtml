@@ -77,13 +77,13 @@
 				style="width:150px;">
 			</p:menuitem>
 			<ui:remove> #18685 - end </ui:remove>
-			<!-- #21695 added disable Start-->
+			<ui:remove> #21695 added disable Start</ui:remove>
 			<p:menuitem value="#{lbl['lbl.sc.consolidation.report.packagewise']}"
 				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(1)}"
 				process="@form" update="@form" partialSubmit="true"
 				style="width:150px;" disabled="#{isNoAllOffer}">
-				<!-- #21695 added disable End-->
 			</p:menuitem>
+			<ui:remove> #21695 added disable End </ui:remove>
 			<p:menuitem value="#{lbl['lbl.sc.consolidation.report.itemized']}"
 				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(2)}"
 				process="@form" update="@form" partialSubmit="true"
