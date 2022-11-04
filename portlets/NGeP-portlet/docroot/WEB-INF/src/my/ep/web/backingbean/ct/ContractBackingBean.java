@@ -3677,7 +3677,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if (!getManagedBean().getContractVer().getCtContractZones().isEmpty()) {
 			for (CtContractZone ctContractZone : getManagedBean().getContractVer().getCtContractZones()) {
 				if(ctContractZone.getZoneName().equalsIgnoreCase(locationDTO.getZone())) {
-					ctContractZone.setDeliveryTerm(locationDTO.getDeliveryTerm());
+					ctContractZone.setDeliveryTerm(locationDTO.getDeliveryTerm()); //#34191
 					getManagedBean().getUpdateZoneMap().put(locationDTO.getZone(), ctContractZone);
 					break;
 				}
