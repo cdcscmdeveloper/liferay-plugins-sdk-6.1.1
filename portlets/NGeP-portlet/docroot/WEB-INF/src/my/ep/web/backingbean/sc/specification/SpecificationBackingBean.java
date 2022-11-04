@@ -20049,6 +20049,23 @@ if(null!=allTechnicalChecklist){
 		scQtCheckList.setPmEvalStatus(pendingStatus);
 		}
 		//#28784 bug #34101 button turn evaluate at evaluation - End
+		
+		List<ScQtCheckList> st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
+
+		for (ScQtCheckList t : st2technicalproposalList) {  
+			if (t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
+				if (t.getScQtDoc().getTplSpecMaster().getTplSpecQuestions() != null) {
+					List<TplSpecQuestion> list = t.getScQtDoc().getTplSpecMaster().getTplSpecQuestions();
+					if (null != list && list.size() > 0) {
+						for (TplSpecQuestion obj : list) {
+							if (BooleanUtils.isTrue(obj.isItemReqDemo()) && obj.getDemoScore() == null) {
+								throw new EpException(MessageConst.ERROR_760529);
+							}
+						}
+					}
+				}
+			}
+		}
 
 		for (TplSpecQuestion q : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
 			if (!q.isItemReqDemo()) {
@@ -20098,7 +20115,7 @@ if(null!=allTechnicalChecklist){
 			}			
 			
 			//#28784 - Start
-			List<ScQtCheckList> st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
+			st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
 			if (updatedNewCheckLists.size() <= st2technicalproposalList.size()) {
 				for (ScQtCheckList st : st2technicalproposalList) {
 					if (!updatedNewCheckLists.contains(st)) {
@@ -20106,7 +20123,7 @@ if(null!=allTechnicalChecklist){
 					}
 				}
 				checklistSorting(updatedNewCheckLists);
-			}//#28784 - End
+			}//#28784 - End	
 			
 			//List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();	//#28784		
 		
