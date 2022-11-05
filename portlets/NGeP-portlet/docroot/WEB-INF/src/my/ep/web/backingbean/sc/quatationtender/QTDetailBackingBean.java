@@ -918,10 +918,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			for (int i = 0; i < this.getManagedBean().getQt().getScQtRemarks().size(); i++) {
 				String userRemark = this.getManagedBean().getQt().getScQtRemarks().get(i).getRemark();
 				if (null == userRemark || "".equals(userRemark)) {
-					if (null != this.getManagedBean().getQt().getScQtRemarks().get(i).getRemarkId()) {
-						this.getManagedBean().setQtRemarksIdRemove(
-								this.getManagedBean().getQt().getScQtRemarks().get(i).getRemarkId());
-					}
 					emptyRemarksExist = true;
 					this.getManagedBean().setScQtRemarksEmpty(true);
 					// this.getManagedBean().getQt().getScQtRemarks().remove(i);
@@ -4065,6 +4061,49 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 		String taskName = this.getManagedBean().getTaskName();
 
+		//Start Reopen 9019 #note-317 remove the alert message while save and initializing remark when empty
+		//Remark will invisible when validateQTDetails while throw EpException 
+		boolean emptyRemarksExist = false;
+		if (null != this.getManagedBean().getQt().getScQtRemarks()
+				&& CollectionUtils.isNotEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			for (int i = 0; i < this.getManagedBean().getQt().getScQtRemarks().size(); i++) {
+				String userRemark = this.getManagedBean().getQt().getScQtRemarks().get(i).getRemark();
+				if (null == userRemark || "".equals(userRemark)) {
+					emptyRemarksExist = true;
+				} else {
+					emptyRemarksExist = false;
+				}
+			}
+
+			if (emptyRemarksExist) {
+				List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+						.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
+
+				for (ScQtRemark qtRemark : qtRemarks) {
+					qtRemark.setEditable(true);
+				}
+				this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+
+			} else {
+				this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+			}
+
+		}else{
+			if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+				List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+						.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
+
+				for (ScQtRemark qtRemark : qtRemarks) {
+					qtRemark.setEditable(true);
+				}
+				this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+
+			} else{
+				this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+			}
+		}
+		//End Reopen 9019 #note-317 remove the alert message while save and initializing remark when empty 
+		
 		qtReqDTO.setOutcome(outcome);
 		IQTDetailSO detailSO;
 		ICommitteSO committeSO;
