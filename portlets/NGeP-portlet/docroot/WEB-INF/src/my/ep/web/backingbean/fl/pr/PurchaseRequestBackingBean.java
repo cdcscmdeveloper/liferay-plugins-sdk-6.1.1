@@ -315,6 +315,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			//Bug #20701 Problem to generate DO - to monitor
 			log.info(":::fulfillmentRequestAction() "+ action +". Doc no.: "+ flFulfilmentRequest.getDocNo() +". Deliv adrs size: "+ flFulfilmentRequest.getFlDeliveryAddresses().size());
 			//end Bug #20701
+			
+			//29728 - start
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+				if(flFulfilmentRequest.getFlSupplierDtl().getBranchCode()==null && getManagedBean().getBranchCode()!=null){
+					flFulfilmentRequest.getFlSupplierDtl().setBranchCode(getManagedBean().getBranchCode());
+				}
+			}
+			//29728 - end
+			
 			//13291 - start			
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				PmOrgProfile pmOrgProfile = null;
@@ -1615,6 +1624,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 						&& isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode(), 
 								getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
 					getManagedBean().setBranchNeedToBeChanged(true);
+					
+					getManagedBean().setBranchCode(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode());
 				}
 				//29728 - end
 			}
@@ -2903,6 +2914,16 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			supplierBranches.add(new SelectItem(supplierBranch.getBranchCode(),supplierBranch.getBranchName()));
 		}
 		getManagedBean().setSupplierBranchesList(supplierBranches);
+		
+		//29728 -Start
+		if((getManagedBean().getSupplierBranchesList().isEmpty() || getManagedBean().getSupplierBranchesList()==null)
+				&& getManagedBean().getFulfilmentRequest().getFlSupplierDtl()!=null){			
+			if(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null) {
+				isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode(),getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+			}
+			resetSupplierInfo();
+		}
+		//29728 - End	
 	}
 	
 	/**
@@ -2929,17 +2950,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				updateSupplierBranchAddress(supplierBranch,supplierDtl);
 			}//29728 - end		
 		} else { // reset to HQ info
-			IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
-			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-			reqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
-			MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveSupplierProfile(reqDTO);
-			SmSupplier supplier = resDTO.getSmSupplier();
-			
-			FlSupplierDtl supplierDtl = getManagedBean().getFulfilmentRequest().getFlSupplierDtl();
-			supplierDtl.setSupplierName(supplier.getCompanyName());		
-			supplierDtl.setBranchCode(null);
-			supplierDtl.setBranchName(null);
-			updateSupplierHqAddress(supplierDtl,supplier);
+			resetSupplierInfo(); //29728
 		}
 		getSupplierGst(getManagedBean().getFulfilmentRequest(), false);
 		//29728 - start
@@ -5608,4 +5619,20 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			
 		}
 		//#21416 end
+		
+		//29728  - start
+		private void resetSupplierInfo(){
+			IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+			MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveSupplierProfile(reqDTO);
+			SmSupplier supplier = resDTO.getSmSupplier();
+			
+			FlSupplierDtl supplierDtl = getManagedBean().getFulfilmentRequest().getFlSupplierDtl();
+			supplierDtl.setSupplierName(supplier.getCompanyName());		
+			supplierDtl.setBranchCode(null);
+			supplierDtl.setBranchName(null);
+			updateSupplierHqAddress(supplierDtl,supplier);
+		}
+		//29728 -end
 }
