@@ -19,7 +19,6 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
-import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
@@ -35,10 +34,8 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskListManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -59,6 +56,11 @@ import com.liferay.portal.theme.ThemeDisplay;
 public class BPMTaskListBackingBean extends
 BaseBackingBean<BPMTaskListManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = Logger.getLogger(BPMTaskListBackingBean.class);
 	
 	private String language = new FacesScopes().getUserLocale().getLanguage();
@@ -68,8 +70,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 	public BPMTaskListBackingBean() {
 
 		if(this.getManagedBean().getBpmMap()==null){
-			this.getManagedBean().setBpmMap(new HashMap());
-			Map temp = new HashMap();
+			this.getManagedBean().setBpmMap(new HashMap<String, String>());
+			Map<String, String> temp = new HashMap<String, String>();
 
 			temp.put("UNSPSC Code Request", "review-unspsc-code");
 			temp.put("Extension Code Request", "review-extension");
@@ -679,8 +681,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 	public void navigateToURL() throws PortalException, SystemException {
 		log.info("......................navigateToURL");
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
+		//IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
 		String process = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("process");
@@ -690,14 +691,13 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		//26238 -  Disciplinary Action - 28111
 		String docNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docNo");
 
-		String claim = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("isClaim");
+		String claim = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("isClaim");
 
 		log.info("****claim****"+claim);
 
-		FacesScopes face = new FacesScopes();
-		Object token = face.getBPMAuthenticationCtxToken();
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		//FacesScopes face = new FacesScopes();
+		//Object token = face.getBPMAuthenticationCtxToken();
+		//BpmRequestDTO reqDTO = new BpmRequestDTO();
 
 		try {
 			log.info("taskId:" + taskId);
@@ -958,14 +958,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		log.info("**********claimTask");
 		
 		/*21387 - basri*/
-		String taskId = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("taskId");
+		//String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
 		
-		String docNumber = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("docNumber");
+		String docNumber = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docNumber");
 		
-		String docType = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("docType");
+		String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
 	
 		
 		if(docType.equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || docType.equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){

@@ -7,8 +7,6 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.apache.commons.lang.StringUtils;
-
 import my.ep.constants.CommonConstants;
 import my.ep.factory.EpLogger;
 import my.ep.type.pm.RoleCode;

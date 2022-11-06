@@ -6,7 +6,6 @@ package my.ep.web.backingbean.sc.bidding;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;

@@ -117,6 +117,11 @@ import org.primefaces.event.SelectEvent;
 public class CommitteBackingBean extends
 		SourcingBaseBackingBean<CommitteManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The Constant NAV_TO_COMMITTEE_MAINTENANACE. */
 	private static final String NAV_TO_COMMITTEE_MAINTENANACE = "/xhtml/sc/committe/committeeMaintanancePage.xhtml";
 	

@@ -52,8 +52,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = 4774616656344235966L;
-	private static Logger log = Logger
-			.getLogger(SelfRequestSupplierAdminBackingBean.class);
+	private static Logger log = Logger.getLogger(SelfRequestSupplierAdminBackingBean.class);
 
 	private static final String COMPANY_VALIDATION_PAGE = "1";
 	private static final String SUPP_ADMIN_PERSONNEL_PAGE = "2";
