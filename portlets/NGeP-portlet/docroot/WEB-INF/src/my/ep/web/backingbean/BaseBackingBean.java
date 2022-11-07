@@ -3912,4 +3912,29 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
   	//#29466 - END
+  	
+  //#31849, #34090 start
+  	/**
+  	 * Method to return current session userId from user screenName(loginId)
+  	 * @return userId
+  	 */
+  	public Long getUserIdSessionFromLoginId(){
+  		FacesScopes facesScopes = new FacesScopes();
+  		Long userIdSession = 1L;
+  		
+  		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+  		UserReqDTO userReqDTO = new UserReqDTO();
+  		userReqDTO.setLoginId(facesScopes.getUserScreenName());
+  		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+  		
+  		if (pmUser == null) {
+  			userIdSession = facesScopes.getUserSessionBean().getUserId();
+  		} else {
+  			userIdSession = pmUser.getUserId();
+  		}
+  		
+  		new LogKey(userIdSession);
+  		return userIdSession;
+  	}
+  	//#31849, #34090 end
 }
