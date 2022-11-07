@@ -10010,7 +10010,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			return false;
 	}
 
-	public Timestamp getExtensionResponseDueDate(Long qtId) {
+	/*public Timestamp getExtensionResponseDueDate(Long qtId) {
 		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
 		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
@@ -10027,7 +10027,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 		}
 		return null;
-	}
+	}*/
 	
 	public String getProcurementMode(ScQt qt){
 		String method = null;

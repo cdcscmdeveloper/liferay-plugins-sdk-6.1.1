@@ -3860,7 +3860,7 @@ public class CreateQtBackingBean extends
 	   }
 		//20200210@asyrafhaziq_Bug #27381&#26694  - End
 
-	public boolean isQTStatusInProposalValidPeriodExtApproval(Long currentStatusId) {
+	/*public boolean isQTStatusInProposalValidPeriodExtApproval(Long currentStatusId) {
 		List<Long> validPeriodExts = Arrays.asList(QTStatusConst.QT_PENDING_PUBLICATION,
 				QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_PROPOSAL_PREPARATION,
 				QTStatusConst.QT_EVALUATION_PROPOSAL, QTStatusConst.QT_SUPPLIER_FINALIZATION,
@@ -3873,7 +3873,7 @@ public class CreateQtBackingBean extends
 		}
 
 		return Boolean.FALSE;
-	}
+	}*/
 	
 	/*:::Enhancement #25638 #29 - start:::*/
 	public boolean isStatusInQTReviseGroupStatus(Long currentStatusId) {
