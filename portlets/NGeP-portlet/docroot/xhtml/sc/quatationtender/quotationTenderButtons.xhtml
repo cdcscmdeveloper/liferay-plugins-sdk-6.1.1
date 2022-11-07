@@ -183,6 +183,9 @@
 								rendered="#{!isClone2 and !qTDetailBB.isCancel(bpmAction)}" 
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}" 
 								update="@form">
+							<!-- start 9019 - Reopen #note-317-->
+				    		<f:param name="skipsubmitvalidation" value="0" />
+			       			<!-- end 9019 - Reopen #note-317-->		
 <!-- #29732 End - reOpen Fix -->
 							</p:commandButton>
 							<!-- 9019 -end- -->
@@ -275,7 +278,11 @@
 				    onclick="submitConfirmPopUp.hide(); blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					 partialSubmit="true" process="@form" update="@form" 
-					action="#{qTDetailBB.submitQTDetailsAction}"/>
+					action="#{qTDetailBB.submitQTDetailsAction}">
+					<!-- start 9019 - Reopen #note-289-->
+				    <f:param name="skipsubmitvalidation" value="0" />
+			    </p:commandButton>    
+				    <!-- end 9019 - Reopen #note-289-->
 				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					onclick="submitConfirmPopUp.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
