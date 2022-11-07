@@ -25,19 +25,13 @@
 				<ui:param name="readOnlyTask" value="#{approvalBackingBean.managedBean.readOnly}" />
 				<ui:decorate template="/WEB-INF/facelets/templates/claim_template.xhtml">
 					<ui:define name="outComeSection">
-						<ui:repeat var="bpmAction" value="#{approvalBackingBean.managedBean.outComes}">
-							<p:commandButton value="#{lbl['lbl.btn.agree']}" update="@form"
-								styleClass="ui-button" onstart="blockWidget.show();"
-								action="#{approvalBackingBean.supplierAcceptance(bpmAction)}" rendered="#{bpmAction eq 'ACCEPT'}"/>
-
-							<p:commandButton value="#{lbl['lbl.btn.disagree']}" update="@form"
-								styleClass="ui-button" onstart="blockWidget.show();"
-								action="#{approvalBackingBean.supplierAcceptance(bpmAction)}" rendered="#{bpmAction eq 'REJECT'}"/>
-
-							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<ui:repeat var="bpmAction"
+							value="#{approvalBackingBean.managedBean.outComes}">
+							<ui:param name="buttonLabel"
+								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								styleClass="ui-button" onstart="blockWidget.show();"
-								action="#{approvalBackingBean.supplierAcceptance(bpmAction)}" rendered="#{!((bpmAction eq 'ACCEPT') or (bpmAction eq 'REJECT'))}"/>
+								action="#{approvalBackingBean.supplierAcceptance(bpmAction)}" />
 						</ui:repeat>
 						<ac:spkiPopup id="spkiPopup"
 												password="#{approvalBackingBean.managedBean.spkiBackingBean.password}"
