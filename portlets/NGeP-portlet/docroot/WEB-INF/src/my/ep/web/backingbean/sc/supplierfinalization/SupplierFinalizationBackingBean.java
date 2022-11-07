@@ -4269,6 +4269,7 @@ public class SupplierFinalizationBackingBean extends
 		log.info("generateSupplierFinalizationPdf");
 		populateAttachmentDetails(attachment);
 		
+		FacesScopes facesScopes = new FacesScopes();
 		long qtId = qt.getQtId();
 		String reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
 		
@@ -4282,15 +4283,16 @@ public class SupplierFinalizationBackingBean extends
 			qtDetailSO = null;
 		}		
 		
-		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
-		PmUser createdUser = isFromWebService ? retrivePmUser(new Long(1)): new FacesScopes().getUserSessionBean();
+//		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
+//		PmUser createdUser = isFromWebService ? retrivePmUser(new Long(1)): new FacesScopes().getUserSessionBean();
 
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
-		paramMap.put(ReportConst.PARAM_KEY_USER_ID, createdUser.getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
 		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
 		StringBuilder ulasan=new StringBuilder();
-		try {
+//		try {
 			List<ScQtRecommendationUlasanRemarks> ulasanRemarks=this.getManagedBean().getScQtFinalization().getScQtRecommendationUlasanRemarks();
 			if (CollectionUtils.isNotEmpty(ulasanRemarks)) {
 				for(ScQtRecommendationUlasanRemarks remark:ulasanRemarks){
@@ -4299,9 +4301,9 @@ public class SupplierFinalizationBackingBean extends
 					}
 				}
 			}
-		} catch (Exception e) {
-			log.info("Error: " + e.getMessage());
-		}
+//		} catch (Exception e) {
+//			log.info("Error: " + e.getMessage());
+//		}
 		/*StringBuilder pengesyoran=new StringBuilder();
 		List<ScQtRecommendationPengesyoranRemarks> pengerysonRemarks=this.getManagedBean().getScQtFinalization().getScQtRecommendationPengesyoranRemarks();
 		if (CollectionUtils.isNotEmpty(pengerysonRemarks)) {
@@ -5813,19 +5815,19 @@ public class SupplierFinalizationBackingBean extends
 		return items;		
 	}
 	
-	public SelectItem[] getDecisionDropDownExpiredProposal() {
-		log.info("getDecisionDropDownExpiredProposal");
-
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), Arrays.asList(
-						ParameterConst.DECISION_CANCEL, ParameterConst.DECISION_RE_PUBLISH)));
-
-		SelectItem[] items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.FINALIZATION_DECISION_TYPE,
-				searchBean);
-
-		return items;
-	}
+//	public SelectItem[] getDecisionDropDownExpiredProposal() {
+//		log.info("getDecisionDropDownExpiredProposal");
+//
+//		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+//		searchBean.getDataFilterBeans().add(
+//				new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), Arrays.asList(
+//						ParameterConst.DECISION_CANCEL, ParameterConst.DECISION_RE_PUBLISH)));
+//
+//		SelectItem[] items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.FINALIZATION_DECISION_TYPE,
+//				searchBean);
+//
+//		return items;
+//	}
 	
 	
 	public SelectItem[] getDecisionDropDownAll(){
@@ -11123,11 +11125,11 @@ public class SupplierFinalizationBackingBean extends
 		//boolean meetingDoneBeforeproposalValidityExpired = this.checkMeetingDoneLessThanValidityEndDate(scQt.getProposalValidityEndDate());
 		if(disabledSelection){
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDownAll());
-		}else if(proposalValid){			
+		}else /*if(proposalValid)*/{			
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDown());
-		}else if(!proposalValid){
+		}/*else if(!proposalValid){
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDownExpiredProposal());
-		}
+		}*/
 		if(this.getManagedBean().getDecisionDropdown() != null && this.getManagedBean().getDecisionDropdown().length>0){
 			for(SelectItem item: this.getManagedBean().getDecisionDropdown()){
 				if(item.getValue()!=null && ParameterConst.DECISION_RECOMMEND_SUPPLIER.equals(item.getValue())){

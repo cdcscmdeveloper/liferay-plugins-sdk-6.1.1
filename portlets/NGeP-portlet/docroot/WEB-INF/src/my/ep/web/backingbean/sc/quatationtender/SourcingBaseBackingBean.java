@@ -326,9 +326,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected void populateAttachmentDetails(ScAttachment attachment)
 			throws FileNotFoundException, IOException {
 		Timestamp date = new Timestamp(System.currentTimeMillis());
-		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
-		PmUser createdUser = isFromWebService ? retrivePmUser(new Long(1)): new FacesScopes().getUserSessionBean();
-
+//		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
+//		PmUser createdUser = isFromWebService ? retrivePmUser(new Long(1)): new FacesScopes().getUserSessionBean();
+		PmUser createdUser = new FacesScopes().getUserSessionBean();
+		
 		attachment.setCreatedBy(createdUser.getUserId());
 		attachment.setCreatedDate(date);
 		attachment.setChangedBy(createdUser.getUserId());
