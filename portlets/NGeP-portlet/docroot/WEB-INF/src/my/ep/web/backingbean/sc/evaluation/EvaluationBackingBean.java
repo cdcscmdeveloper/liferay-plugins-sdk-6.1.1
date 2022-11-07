@@ -9920,9 +9920,7 @@ private void retriveCommitteeRemarksList(){
 			}
 			else if (ParameterConst.SPECIFICATION_TYPE_FINANCIAL
 					.equalsIgnoreCase(getManagedBean().getCheckListType())) {
-				//#25138 reload after save score, to get latest result - start
-				this.getManagedBean().getFinSpecSupplierListDM().reloadData();
-				// #25138 -end
+
 				List<ScQtProposalChecklist> financialSpes = this
 						.getManagedBean().getFinSpecSupplierListDM().getList();
 				int finindex = financialSpes.indexOf(this.getManagedBean()
