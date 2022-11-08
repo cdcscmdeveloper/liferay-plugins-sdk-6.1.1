@@ -1134,18 +1134,29 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						// Bug #29323
 						// Collections.sort(item.getCtItemPrices(), new CtItemPrice());
 						//Start Fix - #34110
-						if (item.getCtItemPrices() != null
-								&& item.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
-							   sortItemPriceForZonalTier(item.getCtItemPrices());
-						}else if(item.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)){
-							   sortItemPriceForTier(item.getCtItemPrices());
-						} else {
-							   sortItemPrice(item.getCtItemPrices());
+						if (item.getCtItemPrices() != null) {
+							if (item.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
+								sortItemPriceForZonalTier(item.getCtItemPrices());
+							} else if (item.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)) {
+								sortItemPriceForTier(item.getCtItemPrices());
+							} else {
+								if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+									sortItemPriceForZonal(item.getCtItemPrices());
+								} else {
+									sortItemPrice(item.getCtItemPrices());
+								}
+								
+							}
 						}
 						
 
 						if (item.getCtItemMaxQties() != null) {
-							sortItemMaxQty(item.getCtItemMaxQties());
+							if(ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
+								sortItemMaxQtyForZonal(item.getCtItemMaxQties());
+							}else{
+								sortItemMaxQty(item.getCtItemMaxQties());
+							}
+							
 						}
 						//End Fix - #34110
 						ctBackingBean.getManagedBean().getCtItemList().add(item);
@@ -1159,7 +1170,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						}else if(item.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)){
 							   sortItemPriceForTier(item.getCtItemPrices());
 						} else {
-							   sortItemPrice(item.getCtItemPrices());
+							if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+								sortItemPriceForZonal(item.getCtItemPrices());
+							} else {
+								sortItemPrice(item.getCtItemPrices());
+							}
 						}
 						//End Fix - #34110
 						ctBackingBean.getManagedBean().getCtItemServiceList().add(item);
@@ -8039,7 +8054,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if(list!=null){
 						Collections.sort(list, new Comparator<CtItemPrice>() {	
 							public int compare(CtItemPrice l1, CtItemPrice l2) {
-								log.info(" Test Test Test compare "+l1.getExpDate().compareTo(l2.getExpDate()));
 								return l1.getExpDate().compareTo(l2.getExpDate());
 							}
 						});
@@ -8124,6 +8138,41 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						return toQtyComp;
 					}
 
+				Date d1 = o1.getExpDate();
+				Date d2 = o2.getExpDate();
+				return d1.compareTo(d2);
+			}
+		});
+	}
+	
+	public void sortItemMaxQtyForZonal (List<CtItemMaxQty> list){
+		if(list!=null){
+			Collections.sort(list, new Comparator<CtItemMaxQty>() {	
+				public int compare(CtItemMaxQty o1, CtItemMaxQty o2) {
+					String x1 = o1.getCtContractZone().getZoneName();
+					String x2 = o2.getCtContractZone().getZoneName();
+					int zoneComp = x1.compareTo(x2);
+					if (zoneComp != 0) {
+						return zoneComp;
+					}
+					Date d1 = o1.getExpDate();
+					Date d2 = o2.getExpDate();
+					return d1.compareTo(d2);
+				}	
+			});
+		}
+	}
+	
+	public void sortItemPriceForZonal(List<CtItemPrice> list){
+		Collections.sort(list, new Comparator<CtItemPrice>() {
+			public int compare(CtItemPrice o1, CtItemPrice o2) {
+
+				String x1 = o1.getCtContractZone().getZoneName();
+				String x2 = o2.getCtContractZone().getZoneName();
+				int zoneComp = x1.compareTo(x2);
+				if (zoneComp != 0) {
+					return zoneComp;
+				}
 				Date d1 = o1.getExpDate();
 				Date d2 = o2.getExpDate();
 				return d1.compareTo(d2);
