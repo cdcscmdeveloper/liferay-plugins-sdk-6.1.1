@@ -4440,6 +4440,10 @@ public class SpecificationBackingBean extends
 			}
 			checkList.set(index, list);
 			this.getManagedBean().setScQtCheckSt2techProposal(checkList);
+			// Bug #34065@Syazani 01/11/2022 -- Start
+			selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2techProposal(), index, false);
+			selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2financeProposalList(), null, false);
+			// Bug #34065@Syazani 01/11/2022 -- End
 			searchBean = null;
 			
 		} finally {
@@ -4516,6 +4520,10 @@ public class SpecificationBackingBean extends
 			}
 			checkList.set(index, list);
 			this.getManagedBean().setScQtCheckSt2financeProposalList(checkList);
+			// Bug #34065@Syazani 01/11/2022 -- Start
+			selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2financeProposalList(), index, false);
+			selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2techProposal(), null, false);
+			// Bug #34065@Syazani 01/11/2022 -- End
 			searchBean = null;		
 		} finally {
 			parameterSo = null;
@@ -4735,8 +4743,8 @@ public class SpecificationBackingBean extends
 
 		this.getManagedBean().getScQtCheckSt2techProposal().set(index, list);
 		// Bug #34065@Syazani 01/11/2022 -- Start
-		selectOneItemActionBugRepair(this.getManagedBean().getScQtCheckSt2techProposal(), index);
-		selectOneItemActionBugRepair(this.getManagedBean().getScQtCheckSt2financeProposalList(), null);
+		selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2techProposal(), index, true);
+		selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2financeProposalList(), null, true);
 		// Bug #34065@Syazani 01/11/2022 -- End
 
 	}
@@ -4782,8 +4790,8 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().getScQtCheckSt2financeProposalList()
 				.set(index, list);
 		// Bug #34065@Syazani 01/11/2022 -- Start
-		selectOneItemActionBugRepair(this.getManagedBean().getScQtCheckSt2financeProposalList(), index);
-		selectOneItemActionBugRepair(this.getManagedBean().getScQtCheckSt2techProposal(), null);
+		selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2financeProposalList(), index, true);
+		selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2techProposal(), null, true);
 		// Bug #34065@Syazani 01/11/2022 -- End
 	}
 
@@ -22214,19 +22222,27 @@ if(null!=allTechnicalChecklist){
 		return resDTO.getPmParameter();
 	}
 	
-	private void selectOneItemActionBugRepair(List<ScQtCheckList> chcLst, Integer currentIndex) {
+	private void selectOneItemActionAndDefinationBugRepair(List<ScQtCheckList> chcLst, Integer currentIndex, boolean isAction) {
 		int i = 0;
+		PmParameter parameterTemp = null;
+		String pCode = null;
+		String pType = null;
 		for (ScQtCheckList scl : chcLst) {
 			if (currentIndex == null || (currentIndex != null && i != currentIndex)) {
-				PmParameter actionTemp = scl.getAction();
-				String pCode = actionTemp.getParameterCode();
-				String pType = actionTemp.getParameterType();
-				actionTemp = retriveParammeterByTypeAndCode(pType, pCode);
-				scl.setAction(actionTemp);
+				parameterTemp = isAction ? scl.getAction() : scl.getDefinationType();
+				pCode = parameterTemp.getParameterCode();
+				pType = parameterTemp.getParameterType();
+				parameterTemp = retriveParammeterByTypeAndCode(pType, pCode);
+				if (isAction)
+					scl.setAction(parameterTemp);
+				else
+					scl.setDefinationType(parameterTemp);
 			}
+			parameterTemp = null;
+			pCode = null;
+			pType = null;
 			i++;
 		}
-
 	}
 	// Bug #34065@Syazani 01/11/2022 -- End
 }
