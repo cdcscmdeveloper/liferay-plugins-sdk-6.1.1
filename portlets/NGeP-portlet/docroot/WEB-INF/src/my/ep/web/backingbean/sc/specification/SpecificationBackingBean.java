@@ -837,7 +837,7 @@ public class SpecificationBackingBean extends
 		}
 		boolean demoChecklistAvail = false;//#28784
 		boolean throwErorrMechaMistmatch = false; // Bug #34065@Syazani 01/11/2022
-		List<PmParameterDesc> localParamDesc = retrieveParameterDescDFT(); // Bug #34065@Syazani 01/11/2022
+		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
 		if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
 			for (ScQtCheckList checkList : technicalCheckList) {
 				if (ParameterTypeConst.DOCUMENT_DEFINITION_PTJ_UPLOAD
@@ -4353,7 +4353,7 @@ public class SpecificationBackingBean extends
 		IParameterSO parameterSo = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IParameterSO.class);
-		List<PmParameterDesc> localParamDesc = retrieveParameterDescDFT(); // Bug #34065@Syazani 01/11/2022
+		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
 		String parameterCode = null;
 		for (PmParameterDesc paramDesc : localParamDesc) {
 
@@ -4465,7 +4465,7 @@ public class SpecificationBackingBean extends
 		IParameterSO parameterSo = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IParameterSO.class);
-		List<PmParameterDesc> localParamDesc = retrieveParameterDescDFT(); // Bug #34065@Syazani 01/11/2022
+		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
 		String parameterCode = null;
 		for (PmParameterDesc paramDesc : localParamDesc) {
 			if (paramDesc.getPmParameter().getParameterId().equals(Long.valueOf(list.getDefinationType().getParameterId()))) {
@@ -4734,6 +4734,10 @@ public class SpecificationBackingBean extends
 		}
 
 		this.getManagedBean().getScQtCheckSt2techProposal().set(index, list);
+		// Bug #34065@Syazani 01/11/2022 -- Start
+		selectOneItemActionBugRepair(this.getManagedBean().getScQtCheckSt2techProposal(), index);
+		selectOneItemActionBugRepair(this.getManagedBean().getScQtCheckSt2financeProposalList(), null);
+		// Bug #34065@Syazani 01/11/2022 -- End
 
 	}
 
@@ -4777,7 +4781,10 @@ public class SpecificationBackingBean extends
 
 		this.getManagedBean().getScQtCheckSt2financeProposalList()
 				.set(index, list);
-
+		// Bug #34065@Syazani 01/11/2022 -- Start
+		selectOneItemActionBugRepair(this.getManagedBean().getScQtCheckSt2financeProposalList(), index);
+		selectOneItemActionBugRepair(this.getManagedBean().getScQtCheckSt2techProposal(), null);
+		// Bug #34065@Syazani 01/11/2022 -- End
 	}
 
 	/**
@@ -22092,13 +22099,6 @@ if(null!=allTechnicalChecklist){
 	// Bug #33661@Syazani 06/10/2022 -- End
 	
 	// Bug #34065@Syazani 01/11/2022 -- Start
-	private List<PmParameterDesc> retrieveParameterDescDFT() {
-		if (this.getManagedBean().getParamDescDFTCache() == null || (this.getManagedBean().getParamDescDFTCache() != null && this.getManagedBean().getParamDescDFTCache().size() == 0)) {
-			this.getManagedBean().setParamDescDFTCache(retrieveParameterDescByType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE));
-		} 
-		return this.getManagedBean().getParamDescDFTCache();
-	}
-	
 	private void setDefTypeAndActionValues(ScQtCheckList qtCheckList) {
 		if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV.equalsIgnoreCase(qtCheckList.getPmDocument().getDocDefinitionKey())) {
 			qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
@@ -22212,6 +22212,21 @@ if(null!=allTechnicalChecklist){
 		}
 
 		return resDTO.getPmParameter();
+	}
+	
+	private void selectOneItemActionBugRepair(List<ScQtCheckList> chcLst, Integer currentIndex) {
+		int i = 0;
+		for (ScQtCheckList scl : chcLst) {
+			if (currentIndex == null || (currentIndex != null && i != currentIndex)) {
+				PmParameter actionTemp = scl.getAction();
+				String pCode = actionTemp.getParameterCode();
+				String pType = actionTemp.getParameterType();
+				actionTemp = retriveParammeterByTypeAndCode(pType, pCode);
+				scl.setAction(actionTemp);
+			}
+			i++;
+		}
+
 	}
 	// Bug #34065@Syazani 01/11/2022 -- End
 }
