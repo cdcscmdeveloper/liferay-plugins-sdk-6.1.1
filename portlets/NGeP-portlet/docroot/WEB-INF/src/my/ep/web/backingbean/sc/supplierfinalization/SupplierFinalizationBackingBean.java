@@ -8575,9 +8575,16 @@ return	remarksNotFound;
 				//#21695 tec by itemize result pop up farid - start
 					reqDTO.setSpecZoneId(selectedZoneId);
 				}
-				reqDTO.setRequestItemId(selectedItemId);
-				reqDTO.setEvaluationStage(evaluationStage);
+				/*
+				 * BUG 34212 - FIX SORT ITEMIZE & PACKAGE IN SUPPLIER FINALIZATION START
+				 */
+				reqDTO.setRequestItemId(selectedItemId); //PUT THIS CODE INTO SIT
+				reqDTO.setEvaluationStage(evaluationStage); //PUT THIS CODE INTO SIT
+				/*
+				 * BUG 34212 - FIX SORT ITEMIZE & PACKAGE IN SUPPLIER FINALIZATION START
+				 */
 				reqDTO.setSearchBean(searchBean);
+				
 				/*
 				 * Development 32311: SLA LOG START
 				 */
