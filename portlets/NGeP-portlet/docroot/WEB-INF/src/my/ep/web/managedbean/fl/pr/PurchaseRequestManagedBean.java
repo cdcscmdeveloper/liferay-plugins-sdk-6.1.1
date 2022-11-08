@@ -309,6 +309,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	//29728 - start
 	private boolean isBranchNeedToBeChanged;
+	private Long branchCode;
 	//29728 - end
 
 /**
@@ -3399,6 +3400,19 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setBranchNeedToBeChanged(boolean isBranchNeedToBeChanged) {
 		this.isBranchNeedToBeChanged = isBranchNeedToBeChanged;
 	}
-	//29728 - end
+	/**
+	 * @return the branchCode
+	 */
+	public Long getBranchCode() {
+		return branchCode;
+	}
 
+	/**
+	 * @param branchCode the branchCode to set
+	 */
+	public void setBranchCode(Long branchCode) {
+		this.branchCode = branchCode;
+	}
+	//29728 - end
+	
 }
