@@ -77,7 +77,7 @@ public class OrgProfileSearchBackingBean extends
 	public void initPtjPopupDefaultMinistry(Long orgProfileId) {
 		initPtjPopup();
 		
-		//#26475 - add Approver value
+		// #26475 - add Approver value
 		//#26474 - add Publication Approver & all FC Secretaries value	
 		if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.APPROVER.value())	
