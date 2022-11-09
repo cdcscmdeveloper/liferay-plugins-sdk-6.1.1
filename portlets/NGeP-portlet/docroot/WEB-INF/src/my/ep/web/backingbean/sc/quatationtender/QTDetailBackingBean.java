@@ -855,8 +855,40 @@ public class QTDetailBackingBean extends
 	//Enhancement #25729 -start-
 	public void submitQTDetailsAction() {
 	//Enhancement #25729 -end-	
+		// Start Reopen 9019 #note-289
+		boolean emptyRemarksExist = false;
 
-		debugLogger("start of submitQTDetailsAction");
+		if (null != this.getManagedBean().getQt().getScQtRemarks()
+				&& CollectionUtils.isNotEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			for (int i = 0; i < this.getManagedBean().getQt().getScQtRemarks().size(); i++) {
+				String userRemark = this.getManagedBean().getQt().getScQtRemarks().get(i).getRemark();
+			
+				if (null == userRemark || "".equals(userRemark)) {
+					emptyRemarksExist = true;
+					
+					this.getManagedBean().setScQtRemarksEmpty(true);
+				} else {
+					emptyRemarksExist = false;
+				}
+			}
+
+			if (emptyRemarksExist) {
+				ScQt scQt = this.getManagedBean().getQt();
+				List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+						.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
+
+				for (ScQtRemark qtRemark : qtRemarks) {
+					qtRemark.setEditable(true);
+				}
+				
+				this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+			} else {
+				ScQt scQt = this.getManagedBean().getQt();
+				
+				this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+			}
+		}
+		// End Reopen 9019 #note-289
 		
 		this.getManagedBean().setSaveFlow(false);
 		IQTDetailSO detailSO;
@@ -891,6 +923,10 @@ public class QTDetailBackingBean extends
 			quationTenderReqDTO.setUserLocale(facesScopes.getUserLocale());
 			quationTenderReqDTO.getQtdetail().setOtherApproval(true);
 			quationTenderReqDTO.setDeskOfficer(facesScopes.getUserSessionBean());
+			// 9019 #note-289 -start-
+			quationTenderReqDTO.setScQtRemarksEmpty(this.getManagedBean().isScQtRemarksEmpty());
+			// 9019 #note-289 -end-
+
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.submitQT(quationTenderReqDTO);
 			if (quationTenderResDTO.isSuccessful()) {
@@ -3211,6 +3247,49 @@ public class QTDetailBackingBean extends
 		Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 		String taskName = this.getManagedBean().getTaskName();
 
+		// Start Reopen 9019 #note-317
+		boolean emptyRemarksExist = false;
+
+		if (null != this.getManagedBean().getQt().getScQtRemarks()
+				&& CollectionUtils.isNotEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			for (int i = 0; i < this.getManagedBean().getQt().getScQtRemarks().size(); i++) {
+				String userRemark = this.getManagedBean().getQt().getScQtRemarks().get(i).getRemark();
+			
+				if (null == userRemark || "".equals(userRemark)) {
+					emptyRemarksExist = true;
+				} else {
+					emptyRemarksExist = false;
+				}
+			}
+
+			if (emptyRemarksExist) {
+				List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+						.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
+
+				for (ScQtRemark qtRemark : qtRemarks) {
+					qtRemark.setEditable(true);
+				}
+				
+				this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+			} else {
+				this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+			}
+		} else {
+			if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+				List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+						.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
+
+				for (ScQtRemark qtRemark : qtRemarks) {
+					qtRemark.setEditable(true);
+				}
+				
+				this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+			} else {
+				this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+			}
+		}
+		// End Reopen 9019 #note-317
+		
 		qtReqDTO.setOutcome(outcome);
 		IQTDetailSO detailSO;
 		ICommitteSO committeSO;
