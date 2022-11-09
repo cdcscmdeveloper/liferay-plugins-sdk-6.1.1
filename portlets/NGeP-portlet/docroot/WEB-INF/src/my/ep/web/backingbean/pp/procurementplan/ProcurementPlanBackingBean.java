@@ -694,6 +694,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 									ppItem.setBrandNew(false);
 									//#34156 - Start
 									ppItem.setNewLabcatMethodType(true);
+									
+									if (ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())) {
+										if (ppItem.getProcurementType().getParameterId()
+												.equals(ProcurementPlanConst.LIMITED_TENDER)
+												|| ppItem.getProcurementType().getParameterId()
+														.equals(ProcurementPlanConst.SELECTIVE_TENDER)) {
+											ppItem.setNewLabcatMethodType(false);
+										}
+									}
 									//#34156 - End
 								} else { 
 									ppItem.setCloneEnabled(false);
@@ -702,6 +711,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 									ppItem.setBrandNew(false);
 									//#34156 - Start
 									ppItem.setNewLabcatMethodType(true);
+									
+									if (ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())) {
+										if (ppItem.getProcurementType().getParameterId()
+												.equals(ProcurementPlanConst.LIMITED_TENDER)
+												|| ppItem.getProcurementType().getParameterId()
+														.equals(ProcurementPlanConst.SELECTIVE_TENDER)) {
+											ppItem.setNewLabcatMethodType(false);
+										}
+									}
 									//#34156 - End
 									//#27624@322021 - start
 									if (!ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())){
@@ -797,6 +815,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					&& ppit.getProcurementType().getParameterId().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
 					|| ppit.getProcurementType().getParameterId().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)){
 				ppit.setNewLabcatMethodType(true);
+			}
+        	
+        	if (ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())) {
+				if (ppit.getProcurementType().getParameterId()
+						.equals(ProcurementPlanConst.LIMITED_TENDER)
+						|| ppit.getProcurementType().getParameterId()
+								.equals(ProcurementPlanConst.SELECTIVE_TENDER)) {
+					ppit.setNewLabcatMethodType(false);
+				}
 			}
         	//#34156 - End
         }
