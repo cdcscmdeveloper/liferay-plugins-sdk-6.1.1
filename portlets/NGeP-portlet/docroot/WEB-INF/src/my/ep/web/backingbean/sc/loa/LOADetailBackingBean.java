@@ -384,11 +384,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		populateLOADetails(resDTO);
 		getManagedBean().setEditFlag(Boolean.TRUE);
-		//#26475 - start
-		if (getManagedBean().getSelectedPtj() == null){
+		// #26475 - start
+		if (getManagedBean().getSelectedPtj() == null) {
 			getManagedBean().setSelectedPtj(scLoa.getContractAgency());
 		}
-		//#26475 - end
+		// #26475 - end
 		
 		//Enhancement #12177
 		if(!getManagedBean().isTrackingDairyView()){
@@ -4040,11 +4040,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		validateLOADetails(scLoa, outcome);
 
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-		//#26475 - start
-		if (this.getManagedBean().getSelectedPtj() != null){
+		// #26475 - start
+		if (this.getManagedBean().getSelectedPtj() != null) {
 			scLoa.setContractAgency(this.getManagedBean().getSelectedPtj());
 		}
-		//#26475 - end
+		// #26475 - end
 		// #29006 - start - avoid error 100048
 		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)) {
 			AwardSupplierReqDTO suppReqDTO = new AwardSupplierReqDTO();
@@ -7952,24 +7952,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 *          the scLoa
 	 */	
 	private void validateContractDetails(ScLoa scLoa) {
-//		Locale locale = new FacesScopes().getUserLocale();
-//
-//		if (StringUtils.isBlank(
-//				scLoa.getContractAdmin().getUserName())) {
-//			throw new EpException(MessageConst.ERROR_760400,
-//					new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.cont.admin", 
-//				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-//		}	
-		
-		//#26475 - start
+		// #26475 - start
 		List<PmUser> pmUserList = getUsersByAgency();
 		PmUser pmUserNull = null;
-		if(CollectionUtils.isEmpty(pmUserList)){
+		if (CollectionUtils.isEmpty(pmUserList)) {
 			throw new EpException(MessageConst.ERROR_760512);
-		}else{
+		} else {
 			scLoa.setContractAdmin(pmUserNull);
 		}
-		//#26475 - end
+		// #26475 - end
 		
 		//Bug #30837
 		BigDecimal contractDuration = scLoa.getContractDuration();
