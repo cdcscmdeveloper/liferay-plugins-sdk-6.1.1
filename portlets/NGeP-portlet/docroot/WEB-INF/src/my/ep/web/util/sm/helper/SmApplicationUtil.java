@@ -14946,4 +14946,29 @@ public class SmApplicationUtil {
 		
 	}
 	//#33303 - END
+	
+	//#31043 - START
+	public static void checkCategoryRemark(SmApplicationManagedBean bean){
+		if(bean.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+			if (!SmCommonUtil.isCollectionEmpty(bean
+					.getActiveCategoryList())) {
+				for (SmSupplierCategory cat : bean
+						.getActiveCategoryList()) {
+					log.info("");
+					if(StringUtils.isBlank(cat.getApproverRemarks())){
+						throw new EpException(SmCommonUtil.getMessage(
+							"lbl.sm.required.msg",
+							new String[] { SmCommonUtil.getMessage(
+									"lbl.sm.catCodes.rejRemarks",
+									null)
+									+ " "
+									+ cat.getPmCategoryL1().getCategoryL1Code()
+									+ cat.getPmCategoryL2().getCategoryL2Code()
+									+ cat.getPmCategoryL3().getCategoryL3Code() }));
+					}
+				}
+			}
+		}
+	}
+	//#31043 - END
 }

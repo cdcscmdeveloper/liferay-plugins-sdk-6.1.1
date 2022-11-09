@@ -10742,6 +10742,12 @@ public class SmApplicationBackingBean extends
 		}
 		//#12483 - STOP
 		
+		//#31043 - start
+		if (decision.equalsIgnoreCase("APPROVE")){
+			SmApplicationUtil.checkCategoryRemark(getManagedBean());
+		}
+		//#31043 - end
+		
 		log.info("<<<<Appl type>>>>");
 		log.info(getManagedBean().getSmAppl().getApplType());
 		//24964 - end
