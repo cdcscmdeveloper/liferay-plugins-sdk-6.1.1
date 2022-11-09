@@ -12701,11 +12701,15 @@ public void retrieveDemoQtDetails(Long qtId) {
 						getManagedBean().setIsScEditGeneral(true);
 					}
 					//evaluation type
-					if (!getManagedBean().getScQtHistory().getEvaluationType().equals(getManagedBean().getQt().getEvaluationType()) || getManagedBean().getQt().getEvaluationType().isEmpty()){
-						tempEvalType = getManagedBean().getQt().getEvaluationType();
-						getManagedBean().setIsEvaluationTypeChange(true);
-						getManagedBean().setIsScEditGeneral(true);
+					if(getManagedBean().getScQtHistory().getEvaluationType() == null && getManagedBean().getQt().getEvaluationType() != null){
+					}else {
+						if (!getManagedBean().getScQtHistory().getEvaluationType().equals(getManagedBean().getQt().getEvaluationType()) || getManagedBean().getQt().getEvaluationType().isEmpty()){
+							tempEvalType = getManagedBean().getQt().getEvaluationType();
+							getManagedBean().setIsEvaluationTypeChange(true);
+							getManagedBean().setIsScEditGeneral(true);
+						}
 					}
+					
 					//existing contract null validation
 					if (getManagedBean().getScQtHistory().getExistingContractNo() == null && getManagedBean().getQt().getExistingContractNo() == null){
 						getManagedBean().getScQtHistory().setExistingContractNo("");
@@ -12727,7 +12731,9 @@ public void retrieveDemoQtDetails(Long qtId) {
 						getManagedBean().setIsScEditGeneral(true);
 					}
 					//contract duration
-					if (getManagedBean().getScQtHistory().getContractDuration() != getManagedBean().getQt().getContractDuration()){
+					if (getManagedBean().getScQtHistory().getContractDuration() == null && getManagedBean().getQt().getContractDuration()!= null){
+					}
+					else if(getManagedBean().getScQtHistory().getContractDuration() != getManagedBean().getQt().getContractDuration()){
 						getManagedBean().setIsContractCompletionPeriodChange(true);
 						getManagedBean().setIsScEditGeneral(true);
 					}
