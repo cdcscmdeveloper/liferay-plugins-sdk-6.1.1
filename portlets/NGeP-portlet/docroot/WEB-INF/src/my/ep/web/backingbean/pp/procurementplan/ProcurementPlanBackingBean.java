@@ -793,6 +793,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
         	//#34156 - Start
         	if (ppit.isOriginal() && ppit.getFromPpItem() == null && ppit.isSelectable()) {
 				ppit.setNewLabcatMethodType(true);
+			} else if (ppit.isOriginal() && ppit.getFromPpItem() == null 
+					&& ppit.getProcurementType().getParameterId().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
+					|| ppit.getProcurementType().getParameterId().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)){
+				ppit.setNewLabcatMethodType(true);
 			}
         	//#34156 - End
         }
