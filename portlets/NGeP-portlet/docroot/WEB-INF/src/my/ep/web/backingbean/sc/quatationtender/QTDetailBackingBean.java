@@ -978,7 +978,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 			quationTenderReqDTO.setUserLocale(facesScopes.getUserLocale());
 			quationTenderReqDTO.getQtdetail().setOtherApproval(true);
-			quationTenderReqDTO.getQtdetail().setOtherApproval(true);
 			quationTenderReqDTO.setDeskOfficer(facesScopes.getUserSessionBean());
 			quationTenderReqDTO.setScQtRemarksEmpty(this.getManagedBean().isScQtRemarksEmpty());//Reopen 9019 #note-289
 			QuationTenderResDTO quationTenderResDTO = detailSO
