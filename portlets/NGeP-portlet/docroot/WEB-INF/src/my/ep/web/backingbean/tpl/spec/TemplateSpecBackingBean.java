@@ -400,6 +400,19 @@ public class TemplateSpecBackingBean extends
 			templateSpecSO = null;
 		}
 	}
+	
+	/**
+	 * Development #34216 - lOADING BAR DURING PREPARE PROPOSAL START
+	 * @param templateSpecBean
+	 * @return
+	 */
+	public Long delayProposal(TemplateSpecBean templateSpecBean){
+		long milisec = (long)(0.03*1000);
+		return milisec * templateSpecBean.getSpecAnswerList().size();
+	}
+	/*
+	 * Development #34216 END
+	 */
 
 	/**
 	 * Delete template specification question by template specification bean.
