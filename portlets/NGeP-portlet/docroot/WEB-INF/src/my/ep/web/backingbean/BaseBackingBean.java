@@ -3512,39 +3512,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	
 	public SmPersonnel validateSsmPersonnel(SmPersonnel personnel){
 		if(personnel == null || !personnel.isSsmData()) return personnel;
-		if(personnel.isRaceSsmNull())
-			personnel.setPmRace(null);
-		if(personnel.isBirthDateSsmNull())
-			personnel.setBirthDate(null);
 		if(personnel.getSmPersonnelAddresses() != null){
-			while(!personnel.getSmPersonnelAddresses().isEmpty() 
-					&& !personnel.getSmPersonnelAddresses().get(0).getSmAddress().isSsmData())
-				personnel.getSmPersonnelAddresses().remove(0);
-			if(!personnel.getSmPersonnelAddresses().isEmpty()){
-				SmAddress addr = personnel.getSmPersonnelAddresses().get(0).getSmAddress();
-				if(addr.isAddressSsmNull()){
-					addr.setAddress1(null);
-					addr.setAddress2(null);
-					addr.setAddress3(null);
+			for(int i=0; i < personnel.getSmPersonnelAddresses().size(); i++){
+				if(personnel.getSmPersonnelAddresses().get(i).getSmAddress().isSsmData()){
+					Collections.swap(personnel.getSmPersonnelAddresses(), 0, i);
+					break;
 				}
-				if(addr.isCountrySsmNull())
-					addr.setPmCountry(SmCommonUtil.retrieveCountryByCountryCode(
-							SupplierManagementConst.COUNTRY_UNKNOWN_CODE));
-				if(addr.isStateSsmNull()){
-					addr.setPmState(SmCommonUtil.getInstance().getStateById(1L));
-					addr.setPmDistrict(null);
-					addr.setPmDivision(null);
-					addr.setPmCity(null);
-				}
-				if(addr.isPostcodeSsmNull())
-					addr.setPostcode(null);
-				personnel.getSmPersonnelAddresses().get(0).setSmAddress(addr);
 			}
 		}
-		
-		if(personnel.isNationalitySsmNull())
-			personnel.setPmCountry(SmCommonUtil.retrieveCountryByCountryCode(
-					SupplierManagementConst.COUNTRY_UNKNOWN_CODE));
 		return personnel;
 	}
 	//#31269 - end
