@@ -694,6 +694,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 									ppItem.setBrandNew(false);
 									//#34156 10/11/2022- Start
 									ppItem.setNewLabcatMethodType(true);
+									
+									if (!ppItem.isEditable()){
+											if (ppItem.getProcurementType().getParameterCode()
+													.equals(ProcurementPlanConst.LIMITED_TENDER)
+											|| ppItem.getProcurementType().getParameterCode()
+													.equals(ProcurementPlanConst.SELECTIVE_TENDER)) {
+										ppItem.setNewLabcatMethodType(false);
+										}
+									}
 																		
 									if (ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())) {
 										if (ppItem.getProcurementType().getParameterCode()
@@ -749,10 +758,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								ppItem.setCloneEnabled(true);
 								ppItem.setDisableForPindaan(true);
 								ppItem.setReasonForUpdateEnabled(true);
-								
+
 								//#34156 10/11/2022- Start
-								if (ppItem.isOriginal() && ppItem.getFromPpItem() == null 
-										&& ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
+								if (ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
 										|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)
 										|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.REQUEST_FOR_PROPOSAL)){
 									ppItem.setNewLabcatMethodType(true);
@@ -763,10 +771,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								// The rest should retain the existing field logics
 								ppItem.setDisableForPindaan(false);
 								ppItem.setReasonForUpdateEnabled(true);
-								
+   
 								//#34156 10/11/2022- Start
-								if (ppItem.isOriginal() && ppItem.getFromPpItem() == null 
-										&& ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
+								if (ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
 										|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)
 										|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.REQUEST_FOR_PROPOSAL)){
 									ppItem.setNewLabcatMethodType(true);
