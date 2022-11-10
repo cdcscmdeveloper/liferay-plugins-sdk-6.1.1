@@ -925,7 +925,9 @@ u.underline {
 					<td align="left" class="submenu_padding"><span
 						class="text_family_red">7.2 Formula Bon Pelaksanaan </span></td>
 					<td class="text_family_red">:</td>
-					<td class="text_family_red">LOA Amount/duration (in year) = x. here x is being checked against the rate either 2.5% or 5%, if X >=RM 500,000, the rate being used is 5%</td>
+					## #34168 - start
+					<td class="text_family_red">Formula</td>
+					## #34168 - end
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
