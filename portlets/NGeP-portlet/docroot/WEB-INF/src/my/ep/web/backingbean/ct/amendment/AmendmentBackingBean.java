@@ -3948,7 +3948,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}else if(getManagedBean().getSelectedItem().getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)){
 			   sortItemPriceForTier(ctItemPriceList);
 		} else {
-			   sortItemPrice(ctItemPriceList);
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+				sortItemPriceForZonal(ctItemPriceList);
+			} else {
+				sortItemPrice(ctItemPriceList);
+			}
 		}
 		//End Fix - #34110
 		newItemPrice(getManagedBean().getSelectedItem());
@@ -4015,7 +4019,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		} else if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)) {
 			sortItemPriceForTier(ctItemPriceList);
 		} else {
-			sortItemPrice(ctItemPriceList);
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+				sortItemPriceForZonal(ctItemPriceList);
+			} else {
+				sortItemPrice(ctItemPriceList);
+			}
 		}
 		// End Fix - #34110
 		newItemPrice(getManagedBean().getSelectedServiceItem());
@@ -4169,7 +4177,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		getManagedBean().getSelectedItem().getCtItemMaxQties().clear();
 		getManagedBean().getSelectedItem().getCtItemMaxQties().addAll(ctItemMaxQtyList);
-		sortItemMaxQty(ctItemMaxQtyList);//Fix - #33256
+		//Start Fix - #34110
+		if(ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
+			sortItemMaxQtyForZonal(ctItemMaxQtyList);
+		}else{
+			sortItemMaxQty(ctItemMaxQtyList);
+		}
+		//End Fix - #34110
 		newItemMaxQty(getManagedBean().getSelectedItem());
 		ctItemMaxQtyList.clear();
 
