@@ -6789,6 +6789,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			regNo = smSupplier.getRegNo();
 		}
 		context.put("regNo", regNo);
+		
+		// #26770 - start
+		if (null != smSupplier.getSmAppl()) {
+			if (null != smSupplier.getSmAppl().getSmCompanyBasic()) {
+				if (null != smSupplier.getSmAppl().getSmCompanyBasic().getRobExpiryDate()) {
+					context.put(
+							"ssmExpired",
+							new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(smSupplier.getSmAppl()
+									.getSmCompanyBasic().getRobExpiryDate()));
+				} else {
+					context.put("ssmExpired", "______________");
+				}
+
+			}
+		}
+		// #26770 - end
 	}
 
 
