@@ -305,7 +305,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setBackAllow(false);
 		generatePageModeForProcess(this.getManagedBean().getTaskName());
 
-
 		// Procurement Plan
 		PPPlanDataType planObj = (PPPlanDataType) obj;
 		//27624 - start
@@ -623,8 +622,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setEpTotalPlanH(null);
 		this.getManagedBean().setEpTotalNonEpAllocH(null);
 
-		
-		//this.getManagedBean().setDisable(false);
 	}
 	
 	private void resetPpProcurementItems(List<PpProcurementItem> ppItems) {
@@ -677,35 +674,39 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 									ppItem.setDisableForPindaan(false);
 									ppItem.setReasonForUpdateEnabled(true);
 									ppItem.setBrandNew(false);
-									//#34156 - Start
+									//#34156 10/11/2022- Start
 									ppItem.setNewLabcatMethodType(true);
 									
+									if (!ppItem.isEditable()){
+											if (ppItem.getProcurementType().getParameterCode()
+													.equals(ProcurementPlanConst.LIMITED_TENDER)
+											|| ppItem.getProcurementType().getParameterCode()
+													.equals(ProcurementPlanConst.SELECTIVE_TENDER)) {
+										ppItem.setNewLabcatMethodType(false);
+										}
+									}
+																		
 									if (ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())) {
-										if (ppItem.getProcurementType().getParameterId()
+										if (ppItem.getProcurementType().getParameterCode()
 												.equals(ProcurementPlanConst.LIMITED_TENDER)
-												|| ppItem.getProcurementType().getParameterId()
+												|| ppItem.getProcurementType().getParameterCode()
 														.equals(ProcurementPlanConst.SELECTIVE_TENDER)) {
 											ppItem.setNewLabcatMethodType(false);
 										}
 									}
-									//#34156 - End
+									//#34156 10/11/2022- End
 								} else { 
 									ppItem.setCloneEnabled(false);
 									ppItem.setDisableForPindaan(false);
 									ppItem.setReasonForUpdateEnabled(true);
-									ppItem.setBrandNew(false);
-									//#34156 - Start
-									ppItem.setNewLabcatMethodType(true);
-									
-									if (ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())) {
-										if (ppItem.getProcurementType().getParameterId()
-												.equals(ProcurementPlanConst.LIMITED_TENDER)
-												|| ppItem.getProcurementType().getParameterId()
-														.equals(ProcurementPlanConst.SELECTIVE_TENDER)) {
-											ppItem.setNewLabcatMethodType(false);
-										}
+									ppItem.setBrandNew(false);									
+									//#34156 10/11/2022- Start
+									if (ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
+											|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)
+											|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.REQUEST_FOR_PROPOSAL)){
+										ppItem.setNewLabcatMethodType(true);
 									}
-									//#34156 - End
+									//#34156 10/11/2022- End
 									//#27624@322021 - start
 									if (!ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())){
 									this.getManagedBean().setModeEditable(true);
@@ -739,18 +740,27 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								ppItem.setCloneEnabled(true);
 								ppItem.setDisableForPindaan(true);
 								ppItem.setReasonForUpdateEnabled(true);
+
+								//#34156 10/11/2022- Start
+								if (ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
+										|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)
+										|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.REQUEST_FOR_PROPOSAL)){
+									ppItem.setNewLabcatMethodType(true);
+								}
+								//#34156 10/11/2022- End
+								
 							} else {
 								// The rest should retain the existing field logics
 								ppItem.setDisableForPindaan(false);
 								ppItem.setReasonForUpdateEnabled(true);
-								
-								//#34156 - Start
-								if (ppItem.isOriginal() && ppItem.getFromPpItem() == null 
-										&& ppItem.getProcurementType().getParameterId().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
-										|| ppItem.getProcurementType().getParameterId().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)){
+   
+								//#34156 10/11/2022- Start
+								if (ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
+										|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)
+										|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.REQUEST_FOR_PROPOSAL)){
 									ppItem.setNewLabcatMethodType(true);
-							}
-								//#34156 - End
+								}
+								//#34156 10/11/2022- End
 							}
 						}
 					}
@@ -792,25 +802,26 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
         for (PpProcurementItem ppit : tempOriginalPpItemList) {
         	log.info("tempOriginalPpItemList.title= "+
         			ppit.getProcurementTitle());
-        	
-        	//#34156 - Start
+
+        	//#34156 10/11/2022- Start
         	if (ppit.isOriginal() && ppit.getFromPpItem() == null && ppit.isSelectable()) {
 				ppit.setNewLabcatMethodType(true);
 			} else if (ppit.isOriginal() && ppit.getFromPpItem() == null 
-					&& ppit.getProcurementType().getParameterId().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
-					|| ppit.getProcurementType().getParameterId().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)){
+					&& ppit.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
+					|| ppit.getProcurementType().getParameterCode().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)
+					|| ppit.getProcurementType().getParameterCode().equals(ProcurementPlanConst.REQUEST_FOR_PROPOSAL)){
 				ppit.setNewLabcatMethodType(true);
-        }
-        
+			}
+        	
         	if (ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())) {
-				if (ppit.getProcurementType().getParameterId()
+				if (ppit.getProcurementType().getParameterCode()
 						.equals(ProcurementPlanConst.LIMITED_TENDER)
-						|| ppit.getProcurementType().getParameterId()
+						|| ppit.getProcurementType().getParameterCode()
 								.equals(ProcurementPlanConst.SELECTIVE_TENDER)) {
 					ppit.setNewLabcatMethodType(false);
 				}
 			}
-        	//#34156 - End
+        	//#34156 10/11/2022- End
         }
         
         if (!ppItemMap.isEmpty() && ppItemMap.size() > 0) {
@@ -5960,16 +5971,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		if(filteredlist.isEmpty()){ 
 			log.info("filteredlist.isEmpty size - "+filteredlist.size());
-			//#34156 - Start
+			//#34156 10/11/2022- Start
 			for(PmParameterDesc paramdesc : arrlist){
 				log.info("arrlist - "+paramdesc.getPmParameter().getParameterId());
-				if((!paramdesc.getPmParameter().getParameterId().equals(ProcurementPlanConst.SELECTIVE_TENDERING)) 
-						&& (!paramdesc.getPmParameter().getParameterId().equals(ProcurementPlanConst.DIRECT_NEGOTIATION))){
+				if((!paramdesc.getPmParameter().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)) 
+						&& (!paramdesc.getPmParameter().getParameterCode().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)) 
+						&& (!paramdesc.getPmParameter().getParameterCode().equals(ProcurementPlanConst.REQUEST_FOR_PROPOSAL))){
 					filteredlist.add(paramdesc);
 				}
 			}
 		}
-		//#34156 - End
+		//#34156 10/11/2022- End
 		log.info("retrievePplanProcurementMethod - End");
 		return filteredlist;
 	}
@@ -6515,22 +6527,24 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		newPpItem.setChangedDate(new Timestamp(new Date().getTime()));
 	    		 //24975@06112020@azza - Start
 	    		newPpItem.setProcurementCat(originalPpItem.getProcurementCat());
-			// #34156 - Start
-			if (originalPpItem.getProcurementType().getParameterId().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
-					|| originalPpItem.getProcurementType().getParameterId()
+	    		//#34156 10/11/2022- Start
+			if (originalPpItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
+					|| originalPpItem.getProcurementType().getParameterCode()
 							.equals(ProcurementPlanConst.DIRECT_NEGOTIATION)
-					|| originalPpItem.getProcurementType().getParameterId()
+					|| originalPpItem.getProcurementType().getParameterCode()
+							.equals(ProcurementPlanConst.REQUEST_FOR_PROPOSAL)
+					|| originalPpItem.getProcurementType().getParameterCode()
 							.equals(ProcurementPlanConst.DIRECT_PURCHASE)
-					|| originalPpItem.getProcurementType().getParameterId().equals(ProcurementPlanConst.QUOTATION)
-					|| originalPpItem.getProcurementType().getParameterId().equals(ProcurementPlanConst.TENDER)
-					|| originalPpItem.getProcurementType().getParameterId()
+					|| originalPpItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.QUOTATION)
+					|| originalPpItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.TENDER)
+					|| originalPpItem.getProcurementType().getParameterCode()
 							.equals(ProcurementPlanConst.DIRECT_APPOINTMENT)) {
-		    	newPpItem.setProcurementType(originalPpItem.getProcurementType());		    	
+				newPpItem.setProcurementType(originalPpItem.getProcurementType());
 			} else {
 				newPpItem.setProcurementType(new PmParameter());
 			}
-			// #34156 - End
-	    		 //24975@06112020@azza - End
+			//#34156 10/11/2022- End
+	    	    //24975@06112020@azza - End
 		    	newPpItem.setProcurementTitle(originalPpItem.getProcurementTitle());
 		    	newPpItem.setProcurementDesc(originalPpItem.getProcurementDesc());
 		    	newPpItem.setEstimatedAmt(originalPpItem.getEstimatedAmt());
@@ -8078,18 +8092,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 				
 	                ppItem.setProcurementCat(PpItemClone.getProcurementCat());
-	                 //#34156 - Start
-	                if (PpItemClone.getProcurementType().getParameterId().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
-	    					|| PpItemClone.getProcurementType().getParameterId().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)
-	    					|| PpItemClone.getProcurementType().getParameterId().equals(ProcurementPlanConst.DIRECT_PURCHASE)
-	    					|| PpItemClone.getProcurementType().getParameterId().equals(ProcurementPlanConst.QUOTATION)
-	    					|| PpItemClone.getProcurementType().getParameterId().equals(ProcurementPlanConst.TENDER)
-	    					|| PpItemClone.getProcurementType().getParameterId().equals(ProcurementPlanConst.DIRECT_APPOINTMENT)) {
-	                ppItem.setProcurementType(PpItemClone.getProcurementType());
+	                //#34156 10/11/2022- Start
+	                if (PpItemClone.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
+	    					|| PpItemClone.getProcurementType().getParameterCode().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)
+	    					|| PpItemClone.getProcurementType().getParameterCode().equals(ProcurementPlanConst.REQUEST_FOR_PROPOSAL)
+	    					|| PpItemClone.getProcurementType().getParameterCode().equals(ProcurementPlanConst.DIRECT_PURCHASE)
+	    					|| PpItemClone.getProcurementType().getParameterCode().equals(ProcurementPlanConst.QUOTATION)
+	    					|| PpItemClone.getProcurementType().getParameterCode().equals(ProcurementPlanConst.TENDER)
+	    					|| PpItemClone.getProcurementType().getParameterCode().equals(ProcurementPlanConst.DIRECT_APPOINTMENT)) {
+		                ppItem.setProcurementType(PpItemClone.getProcurementType());
 	    			} else {
 	    				ppItem.setProcurementType(new PmParameter());
 	    			}
-	              //#34156 - End
+	              //#34156 10/11/2022- End
 	                ppItem.setProcurementTitle(PpItemClone.getProcurementTitle());
 	                ppItem.setProcurementDesc(PpItemClone.getProcurementDesc());
 	                ppItem.setEstimatedAmt(PpItemClone.getEstimatedAmt());
@@ -8124,7 +8139,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	                //#34156 - Start
 	                ppItem.setNewLabcatMethodType(true);
 	                //#34156 - End
-	              
 	                
 	                
 	               System.out.println("size list " + j );
