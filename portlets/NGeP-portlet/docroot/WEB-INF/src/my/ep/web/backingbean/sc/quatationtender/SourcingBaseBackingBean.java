@@ -3563,7 +3563,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param scLoa
 	 */
 	public void constructSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa) {
-		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
+		List<TplSpecMaster> masters = new ArrayList<>();
 		IQTSpecSO specSO;
 		try {
 			specSO = BusinessDelegate.getInstance().getServiceObject(
@@ -3592,7 +3592,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			
 			if (CollectionUtils.isNotEmpty(scQtCheckLists)) {
 				for (ScQtCheckList scQtCheckList : scQtCheckLists) {
-					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<>();
 					TplSpecMaster master = null;
 					master = scQtCheckList.getScQtDoc().getTplSpecMaster();
 					// 26130 - Start.
@@ -5989,7 +5989,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		//26130 - end	
 		if (question.getTplSpecZoneQties().size()  > 0){
 			for (TplSpecZoneQty zone: question.getTplSpecZoneQties()){
-				HashMap<String, String> map = new HashMap<>();
+				Map<String, String> map = new HashMap<>();
 				if (countIndex == 0){
 					if (getFirstValue){
 						map.put(SSTConstant.clItem, question.getClItem());
