@@ -1071,6 +1071,14 @@ public class QtSpecCloneBackingBean extends
 		this.getManagedBean().setRecommendationScore(null);
 		//25635-End
 		this.getManagedBean().setRemoveDeductions(null);//25635&33733
+		this.getManagedBean().setTechnicalItemScoreSetting(null);//25635&34176-start
+		this.getManagedBean().setTechnicalScoreSetting(null);
+		this.getManagedBean().setDemoScoreSetting(null);
+		this.getManagedBean().setTechnicalItemScoreSetting(null);
+		this.getManagedBean().setFinancialScoreSetting(null);
+		this.getManagedBean().setFinacialItemScoreSetting(null);
+		this.getManagedBean().setRecommendationPackageScore(null);
+		this.getManagedBean().setRecommendationScore(null);//25635&34176-start
 		specificationBackingBean.retriveTechnicalCheckList();
 		specificationBackingBean.retriveFinancialCheckList();
 		retrieveTechnicalChecklist(tenderResDTO.getQtDetail());
@@ -1084,6 +1092,20 @@ public class QtSpecCloneBackingBean extends
 		//#31293 bug Farid after clone set back to index 0
 		this.getManagedBean().setActiveIndex(0);
 		//#31293 End
+		Long status = tenderResDTO.getQtDetail().getQtStatus().getStatusId();//25635&34176-start
+		if(QTStatusConst.QT_ARCHIVED.equals(status) || QTStatusConst.QT_ARCHIVED==status){
+			log.info("========ArchiveStatusCodesExecuted======");
+			this.getManagedBean().getQt().setScQtScoreSettings(null);
+		
+	}else if(QTStatusConst.QT_CANCELLED.equals(status) || QTStatusConst.QT_CANCELLED==status){
+		log.info("========CancelCodesStatusCodesExecuted======");
+		this.getManagedBean().getQt().setScQtScoreSettings(null);
+				
+		
+	}
+		this.getManagedBean().getQt().setEstimateAmt(null);
+		this.getManagedBean().getQt().setEstimatedAmount(null);
+		//25635&34176-End
 		specificationBackingBean.saveSpecificationCommitteeDtls();
 
 		
