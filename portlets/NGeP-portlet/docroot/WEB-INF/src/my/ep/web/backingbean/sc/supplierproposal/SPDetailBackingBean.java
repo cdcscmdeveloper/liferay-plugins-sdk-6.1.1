@@ -561,17 +561,17 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				//Bug #34152@Syazani 09/11/2022 -- Start
 				for (SmPersonnel smContactperson : getManagedBean().getSmAppl().getSmPersonnels()) {
 					if (smContactperson.getPmUser() != null && smContactperson.getPmUser().getUserId() != null
-							&& smContactperson.getPmUser().getUserId().equals(userid) && smContactperson.isContactPerson()) {
+							&& smContactperson.getPmUser().getUserId().equals(userid) && smContactperson.isContactPerson()
+							&& smContactperson.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
 						this.getManagedBean().setContactPerson(smContactperson);
 						currUserIsContact = true;
 						break;
 					}
 				}
-				
+
 				if (!currUserIsContact) {
-					for (SmPersonnel smContactperson : getManagedBean().getSmAppl()
-							.getSmPersonnels()) {
-						if (smContactperson.isContactPerson()) {
+					for (SmPersonnel smContactperson : getManagedBean().getSmAppl().getSmPersonnels()) {
+						if (smContactperson.isContactPerson() && smContactperson.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
 							this.getManagedBean().setContactPerson(smContactperson);
 							break;
 						}
