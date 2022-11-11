@@ -11701,35 +11701,26 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		List<List<Map<String, Object>>> listDL = new ArrayList<>();
 		List<Map<String, Object>> listSpecDL = new ArrayList<>();
 		for (TplSpecMaster master : specMasters) {
-			
-			
+
 			String itemType = getParameterDescForReport(master.getItemTypeCode());
 			// retrieve master value
-			
-				if (itemType.equalsIgnoreCase(SSTConstant.produk) || itemType.equalsIgnoreCase(SSTConstant.product)){
-					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
-						if (!question.getTplSpecZoneQties().isEmpty()) {
-							// zonal
-							if (question.getQuestionType().equalsIgnoreCase(SSTConstant.item)) {
-								listDL.add(retrieveZonalSpec(question, master.getSpecTypeCode().getParameterCode(),itemType));
-							}
-						} else {
-							// non zonal
-							if (question.getQuestionType().equalsIgnoreCase(SSTConstant.item)) {
-								listSpecDL.add(retrieveNonZonalSpec(question, master.getSpecTypeCode().getParameterCode(),
-										getParameterDescForReport(master.getItemTypeCode())));
-								}
-						}
+			if (itemType.equalsIgnoreCase(SSTConstant.produk) || itemType.equalsIgnoreCase(SSTConstant.product)) {
+				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+					if (!question.getTplSpecZoneQties().isEmpty() && question.getQuestionType().equalsIgnoreCase(SSTConstant.item)) {
+						// zonal
+						listDL.add(retrieveZonalSpec(question, master.getSpecTypeCode().getParameterCode(), itemType));
+					} else if (question.getTplSpecZoneQties().isEmpty() && question.getQuestionType().equalsIgnoreCase(SSTConstant.item)) {
+						// non zonal
+						listSpecDL.add(retrieveNonZonalSpec(question, master.getSpecTypeCode().getParameterCode(), getParameterDescForReport(master
+								.getItemTypeCode())));
 					}
-					//#26130 - start
-					specQuestion.setListOfZonalProduct(listDL);
-					specQuestion.setListOfNonZonalProduct(listSpecDL);
-					
-					//#26130 - end
 				}
-				
+				// #26130 - start
+				specQuestion.setListOfZonalProduct(listDL);
+				specQuestion.setListOfNonZonalProduct(listSpecDL);
+				// #26130 - end
 			}
-		
+		}
 		return specQuestion;
 	}
 	
@@ -11740,8 +11731,8 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 	 * @return
 	 */
 	public Map<String, Object> retrieveNonZonalSpec(TplSpecQuestion question, String specType, String itemType) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		List<String> listSpec = new ArrayList<String>();
+		Map<String, Object> map = new HashMap<>();
+		List<String> listSpec = new ArrayList<>();
 		Boolean getFirstValue = true;
 
 		map.put(SSTConstant.clItem, question.getClItem());
@@ -11783,9 +11774,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		map.put(SSTConstant.specType, specType);
 		map.put(SSTConstant.itemType, itemType);
 		int rowspan = question.getSpecList().size() + 1;
-		log.info("Calculate " + String.valueOf(rowspan));
 		map.put(SSTConstant.rowSpan, rowspan);
-
 		return map;
 	}
 			
@@ -11796,7 +11785,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 	 * @return
 	 */
 	public List<Map<String, Object>> retrieveZonalSpec(TplSpecQuestion question, String specType, String itemType) {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		int zoneQty = 1;
 		
 		List<Map<String, Object>> listZonalDLSpec = new ArrayList();
