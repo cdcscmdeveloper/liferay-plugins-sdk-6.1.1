@@ -14955,7 +14955,62 @@ public class SmApplicationUtil {
 				for (SmSupplierCategory cat : bean
 						.getActiveCategoryList()) {
 					log.info("");
-					if(StringUtils.isBlank(cat.getApproverRemarks())){
+					if(cat.getApprvrDecFlg() == 0 && cat.getApproverRemarks() == null){
+						throw new EpException(SmCommonUtil.getMessage(
+							"lbl.sm.required.msg",
+							new String[] { SmCommonUtil.getMessage(
+									"lbl.sm.catCodes.rejRemarks",
+									null)
+									+ " "
+									+ cat.getPmCategoryL1().getCategoryL1Code()
+									+ cat.getPmCategoryL2().getCategoryL2Code()
+									+ cat.getPmCategoryL3().getCategoryL3Code() }));
+					}
+				}
+			}
+		}else if(bean.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
+			if (!SmCommonUtil.isCollectionEmpty(bean
+					.getActiveCategoryList())) {
+				for (SmSupplierCategory cat : bean
+						.getActiveCategoryList()) {
+					log.info("");
+					if(cat.getApprvrDecFlg() == 0 && cat.getApproverRemarks() == null){
+						throw new EpException(SmCommonUtil.getMessage(
+							"lbl.sm.required.msg",
+							new String[] { SmCommonUtil.getMessage(
+									"lbl.sm.catCodes.rejRemarks",
+									null)
+									+ " "
+									+ cat.getPmCategoryL1().getCategoryL1Code()
+									+ cat.getPmCategoryL2().getCategoryL2Code()
+									+ cat.getPmCategoryL3().getCategoryL3Code() }));
+					}
+				}
+			}
+		}else if(bean.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			if (!SmCommonUtil.isCollectionEmpty(bean
+					.getActiveCategoryList())) {
+				for (SmSupplierCategory cat : bean
+						.getActiveCategoryList()) {
+					log.info("");
+					if(cat.getApprvrDecFlg() == 0 && cat.getApproverRemarks() == null){
+						throw new EpException(SmCommonUtil.getMessage(
+							"lbl.sm.required.msg",
+							new String[] { SmCommonUtil.getMessage(
+									"lbl.sm.catCodes.rejRemarks",
+									null)
+									+ " "
+									+ cat.getPmCategoryL1().getCategoryL1Code()
+									+ cat.getPmCategoryL2().getCategoryL2Code()
+									+ cat.getPmCategoryL3().getCategoryL3Code() }));
+					}
+				}
+			}else if (!SmCommonUtil.isCollectionEmpty(bean
+					.getApprovedCategoryList())) {
+				for (SmSupplierCategory cat : bean
+						.getApprovedCategoryList()) {
+					log.info("");
+					if(cat.getApprvrDecFlg() == 0 && cat.getApproverRemarks() == null){
 						throw new EpException(SmCommonUtil.getMessage(
 							"lbl.sm.required.msg",
 							new String[] { SmCommonUtil.getMessage(
