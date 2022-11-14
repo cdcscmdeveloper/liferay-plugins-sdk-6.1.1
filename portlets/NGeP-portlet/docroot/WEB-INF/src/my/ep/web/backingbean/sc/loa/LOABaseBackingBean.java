@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sc.loa;
 
+import java.util.ArrayList; //#26475
 import java.util.List;
 import java.util.Locale;
 
@@ -66,6 +67,11 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 	}
 	
 	//#26475 - start
+	/**
+	 * The method used to retrieve users by agency.
+	 * 
+	 * @return pmUsers the users list
+	 */
 	public List<PmUser> getUsersByAgency() {
 		ISearchBean<PmUser> searchBean = contractAdminSearchBean();
 		
