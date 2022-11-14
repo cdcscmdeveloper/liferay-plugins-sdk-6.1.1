@@ -772,6 +772,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		List<PpProcurementItem> tempClonedPpItemList = new ArrayList<PpProcurementItem>();
 				
         for (PpProcurementItem ppItem : ppItems) {
+        	
+        	//#34156 13/11/2022- Start
+			if (ppItem.isSelectable() && !ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())) {
+				if (ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.LIMITED_TENDER)
+						|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDER)) {
+					ppItem.setProcurementType(new PmParameter());
+				}
+			}
+			//#34156 13/11/2022- End
+			
 			if (!this.getManagedBean().isPlanDetailSearch() && ppItem.getFromPpItem() != null) {//01022021@27624 - start
 				tempClonedPpItemList.add(ppItem);
 			} else if (this.getManagedBean().isPlanDetailSearch() && ppItem.getFromPpItem() != null
