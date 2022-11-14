@@ -326,7 +326,7 @@ u.underline {
 								<tr class="text_family_red">
 									<td align="center" style="vertical-align: top;">*(a)</td>
 									<td style="text-align:justify;">suatu bon pelaksanaan yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia</td>
-									<span class="text_family_red">$bondAmtText (RM $bondAmt);</span><br/>
+									<span class="text_family_red"><span class="underlineRed">$bondAmtText</span> (RM <span class="underlineRed">$bondAmt</span>);</span><br/>
 									<span class="text_family_small">Bon Pelaksanaan hanya dikenakan kepada perolehan yang bernilai RM200,000 dan ke atas sahaja.</span>
 									
 								</tr>
