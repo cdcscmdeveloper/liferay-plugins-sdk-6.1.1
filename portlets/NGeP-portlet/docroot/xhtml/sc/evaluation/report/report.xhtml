@@ -84,7 +84,7 @@
 							attachment="#{scQtEvaluationReport.scQtEvaluationReportAttachment}"
 							readonly="#{evaluationBackingBean.managedBean.readOnly}"
 							deleteFileUploadListener="evaluationBackingBean.deleteReportsUploadFile"
-							rowIndex="#{index}">
+							rowIndex="#{rowIndex}"> <!-- 14102022@syazani - Bug #34083 -->
 							<f:setPropertyActionListener for="actionEvent"
 								value="#{scQtEvaluationReport}"
 								target="#{evaluationBackingBean.managedBean.selectedReport}" />
