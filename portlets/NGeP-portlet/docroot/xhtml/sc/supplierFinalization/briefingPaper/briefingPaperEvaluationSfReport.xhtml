@@ -80,18 +80,17 @@
 				</ui:fragment>
 				<ui:fragment
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UP'}">
-					<!-- 28834 -start- -->
-					<ac:scSingleFileUploadButton id="evaluationReportUploadBtn"
-						readonly="#{suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_SIGN_OFF}"
-						popupWidgetVar="evaluationManualReportUploadWidget"
-						attachment="#{scQtEvaluationReport.scQtFinalizationReportAttachment}"
-						deleteFileUploadListener="suppFinalizationBackingBean.deleteReportsUploadFile"
-						rowIndex="#{rowIndex}">
+						<!-- 28834 -start- -->
+						<ac:scSingleFileUploadButton id="evaluationReportUploadBtn" readonly="#{suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_SIGN_OFF}"
+							popupWidgetVar="evaluationManualReportUploadWidget"
+							attachment="#{scQtEvaluationReport.scQtFinalizationReportAttachment}"
+							deleteFileUploadListener="suppFinalizationBackingBean.deleteReportsUploadFile"
+							rowIndex="#{rowIndex}"> <!-- Bug #34083 -->
+							<f:setPropertyActionListener for="actionEvent"
+								value="#{scQtEvaluationReport}"
+								target="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport}" />
+						</ac:scSingleFileUploadButton>
 						<!-- 28834 -end- -->
-						<f:setPropertyActionListener for="actionEvent"
-							value="#{scQtEvaluationReport}"
-							target="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport}" />
-					</ac:scSingleFileUploadButton>
 				</ui:fragment>
 			</p:column>
 		</p:dataTable>
