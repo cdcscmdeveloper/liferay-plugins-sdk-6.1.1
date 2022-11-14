@@ -74,13 +74,13 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 	 */
 	public List<PmUser> getUsersByAgency() {
 		ISearchBean<PmUser> searchBean = contractAdminSearchBean();
-		List<PmUser> pmUsers = new ArrayList<PmUser>();
-		try {
-			ISearchResultBean<PmUser> resultBean = getUserSOGlobal().retrieveMinistryUserList(searchBean);
-			pmUsers = resultBean.getResultList();
-		} finally {
-			pmUsers = null;
-		}
+		
+		ISearchResultBean<PmUser> resultBean = getUserSOGlobal().retrieveMinistryUserList(searchBean);
+		List<PmUser> pmUsers = resultBean.getResultList();
+		log.info("Number of Users = " + pmUsers.size());
+
+//		SelectItem[] items = getDropdownUsers(pmUsers);
+		
 		return pmUsers;
 	}
 	// #26475 - end
