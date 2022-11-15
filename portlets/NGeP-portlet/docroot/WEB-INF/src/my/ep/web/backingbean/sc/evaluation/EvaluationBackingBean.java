@@ -8595,7 +8595,7 @@ public void saveComplianceSample() {
 					} else {
 						for (ScQtEvaluationReport evalReport : resDTO.getReports()) {
 							if(!evalReport.getTitle().equalsIgnoreCase("Ulasan pembentangan demonstrasi")
-									|| !evalReport.getTitle().equalsIgnoreCase("Ulasan pembentangan/demonstrasi")) {//#28784 bug
+									&& !evalReport.getTitle().equalsIgnoreCase("Ulasan pembentangan/demonstrasi")) {//#28784 bug
 								evaluationReports.add(evalReport);
 							}
 						}
