@@ -434,7 +434,7 @@
 							<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center"
 								rendered="#{!ctBackingBean.managedBean.disableAmendDetails and 
 					           		amendmentBackingBean.managedBean.selectedItem.recordStatusFlg == 1 and !ctBackingBean.managedBean.viewSCL}"
-							    	style="width:10%; white-space:normal;">  <!-- Fix - #29418 #34110 -->
+							    	style="width:10%; white-space:normal;">  <!-- Fix - #15851 #34110 --> 
 								<p:commandLink update=":form:itemId" process="@form" 
 									disabled="#{itemMaxQtyVar.chkIndexOfRow 
 									  or (ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and !ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"
