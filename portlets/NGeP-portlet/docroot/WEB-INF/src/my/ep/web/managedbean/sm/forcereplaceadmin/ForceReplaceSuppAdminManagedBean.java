@@ -70,6 +70,7 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private boolean disableNationality;
 	
 	//33563 - START
+	private boolean displayRolePanel = false;
 	private boolean displayRoleEquity = false;
 	private boolean displayRoleDirector = false;
 	private boolean displayRoleHighManagement = false;
@@ -495,4 +496,12 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 		this.disabledRoleClericalStaff = disabledRoleClericalStaff;
 	}
 	//END -> #33563
+
+	public boolean isDisplayRolePanel() {
+		return displayRolePanel;
+	}
+
+	public void setDisplayRolePanel(boolean displayRolePanel) {
+		this.displayRolePanel = displayRolePanel;
+	}
 }
