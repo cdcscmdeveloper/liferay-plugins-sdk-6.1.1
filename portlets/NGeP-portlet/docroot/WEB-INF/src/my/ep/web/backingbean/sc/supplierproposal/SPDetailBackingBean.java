@@ -548,22 +548,38 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 	public void retrieveGeneralInfo() {
 		debugLogger("retrieveGeneralInfo supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		this.getManagedBean().setPrepareActiveIndex(5);
-
+		//Bug #34152@Syazani 09/11/2022 -- Start 
+		Long userid = new FacesScopes().getUserSessionBean().getUserId();
+		boolean currUserIsContact = false;
+		//Bug #34152@Syazani 09/11/2022 -- End
 		if (getManagedBean().getSmAppl() == null
 				|| getManagedBean().getSmCompanyBasic() == null) {
 			retrievePaidUpCapitalNdDeclarationDtls();
 			if (getManagedBean().getSmAppl().getSmPersonnels() != null
 					&& !getManagedBean().getSmAppl().getSmPersonnels()
 							.isEmpty()) {
-				for (SmPersonnel smContactperson : getManagedBean().getSmAppl()
-						.getSmPersonnels()) {
-					if (smContactperson.isContactPerson()) {
+				//Bug #34152@Syazani 09/11/2022 -- Start
+				for (SmPersonnel smContactperson : getManagedBean().getSmAppl().getSmPersonnels()) {
+					if (smContactperson.getPmUser() != null && smContactperson.getPmUser().getUserId() != null
+							&& smContactperson.getPmUser().getUserId().equals(userid) && smContactperson.isContactPerson()
+							&& smContactperson.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						this.getManagedBean().setContactPerson(smContactperson);
+						currUserIsContact = true;
+						break;
+					}
+				}
+
+				if (!currUserIsContact) {
+					for (SmPersonnel smContactperson : getManagedBean().getSmAppl().getSmPersonnels()) {
+						if (smContactperson.isContactPerson() && smContactperson.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
 						this.getManagedBean().setContactPerson(smContactperson);
 						break;
 					}
 				}
 			}
+				//Bug #34152@Syazani 09/11/2022 -- End
 		}
+	}
 	}
 
 	/**
