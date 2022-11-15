@@ -28,6 +28,8 @@
 	<ui:param name="isMaintenanceFlow"  
 		value="#{qTDetailBB.managedBean.maintanceFlow}" />	
 	<!-- START #28784 -->
+	<ui:param name="isDemoType"  
+		value="#{qTDetailBB.managedBean.demoType ? qTDetailBB.managedBean.demoType : specMaintenanceBB.managedBean.demoType}" />
 	<ui:param name="isDemoDisabled"  
 		value="#{qTDetailBB.managedBean.demoDisabled ? qTDetailBB.managedBean.demoDisabled : specMaintenanceBB.managedBean.demoDisabled}" />
 	<ui:param name="isDemoReqDisabled"  
@@ -448,7 +450,7 @@
 			</tr>
 
 			<!-- START #28784 -->
-			<ui:fragment rendered="#{qTDetailBB.managedBean.demoType or (specMaintenanceBB.managedBean.demoType and specificationBackingBean.evalTier1Or2) }">
+			<ui:fragment rendered="#{isDemoType and specificationBackingBean.evalTier1Or2}">
 				<tr>
 					<td colspan="2"></td>
 					<td><p:outputLabel value="#{lbl['lbl.sc.demo']}" /></td>
