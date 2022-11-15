@@ -19896,7 +19896,7 @@ if(null!=allTechnicalChecklist){
 			if (l.getQtChecklistId() == null && l.getDefinationType().getParameterCode()
 					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
 				//throw new EpException(MessageConst.ERROR_760528);
-				saveSpecificationCommitteeDtls(); //#28784 - Remove notification save
+				//saveSpecificationCommitteeDtls(); //#28784 - Remove notification save
 				if (this.getManagedBean().isMaintanceFlow()) {
 					if (isSpecCommittee()) {
 						checkSpecMaintenanceOrNo(true);
@@ -19904,7 +19904,7 @@ if(null!=allTechnicalChecklist){
 						checkSpecMaintenanceOrNo(false);
 					}
 				}
-				retriveTechnicalCheckList();
+				//retriveTechnicalCheckList();
 			}
 		}
 		for (ScQtCheckList cl : st2technicalproposalList) {
@@ -20137,7 +20137,7 @@ if(null!=allTechnicalChecklist){
 				q.setDemoScore(null);
 			}
 		}		
-
+		validatePrepareQtChecklist();
 		List<ScQtCheckList> updatedCheckLists = new ArrayList<ScQtCheckList>();
 		updatedCheckLists.add(scQtCheckList);
 
