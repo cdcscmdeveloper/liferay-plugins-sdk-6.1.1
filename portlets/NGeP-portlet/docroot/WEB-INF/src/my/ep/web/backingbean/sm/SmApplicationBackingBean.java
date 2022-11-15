@@ -10743,7 +10743,7 @@ public class SmApplicationBackingBean extends
 		//#12483 - STOP
 		
 		//#31043 - start
-		if (decision.equalsIgnoreCase("APPROVE")){
+		if (decision.equalsIgnoreCase("APPROVE") || decision.equalsIgnoreCase("REJECT")){
 			SmApplicationUtil.checkCategoryRemark(getManagedBean());
 		}
 		//#31043 - end
