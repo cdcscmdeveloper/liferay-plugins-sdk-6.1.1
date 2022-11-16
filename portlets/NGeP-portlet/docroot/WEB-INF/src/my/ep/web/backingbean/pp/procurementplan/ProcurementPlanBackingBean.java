@@ -7070,11 +7070,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		//set procurement item type		
 		log.info("[#25550] Procurement item type is: " + ProcurementPlanConst.PROCUREMENT_ITEM_TYPE_TD);
-		bean = new SearchFilterBean();
-		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-		bean.setSearchField("procurementType.parameterCode");
-		bean.setSearchValue(ProcurementPlanConst.PROCUREMENT_ITEM_TYPE_TD);	// TD - Tender
-		searchBean.getDataFilterBeans().add(bean);
+		//34233 - Start
+		List<String> procurementTypeList = new ArrayList<String>();
+		procurementTypeList.add(ProcurementPlanConst.PROCUREMENT_ITEM_TYPE_TD); // TD - Tender
+		procurementTypeList.add(ProcurementPlanConst.SELECTIVE_TENDERING); 	// STR - Selective Tendering
+		procurementTypeList.add(ProcurementPlanConst.REQUEST_FOR_PROPOSAL); // RP - Tender Terbuka Request For Proposal
+		searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementType.parameterCode",SearchOperator.OPERATOR_IN.value(), procurementTypeList));
+		//34233 - End
 			
 		//set procurement item title or description
 		if(StringUtils.isNotBlank(planSearchBean.getTitleOrDesc())){
