@@ -3632,7 +3632,7 @@ public class SmApplicationUtil {
 		List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 				.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
 		if (!EntityHelper.isCollectionEmpty(resultList)
-				&& resultList.size() > 0) {
+				&& !resultList.isEmpty()) {
 			retVal = new SmOverlapCategoryVO();
 			retVal.setOverLappedCategoryExist(true);
 			retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
@@ -4164,7 +4164,7 @@ public class SmApplicationUtil {
 						//#32810 Alert message not display for cancel bumi - end 
 						//#32298 DA cancel manufacture alert warning - end - <26238>
 //					}
-					}
+				}
 				//30865, 30921  - Ends
 			}
 			if (managedBean.getActiveCategoryList() != null
@@ -4701,7 +4701,7 @@ public class SmApplicationUtil {
 						if (!applicationType
 								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 							Date today = new Date();
-							if (!(today.compareTo(account.getExpDate()) < 0) || (diffDays >= 0 && diffDays < 90)) { // #32628
+							if (!(today.compareTo(account.getExpDate()) < 0)) {
 								result = true;
 								throw new EpException(MessageConst.ERROR_722564);
 							}
