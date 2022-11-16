@@ -21,7 +21,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
@@ -35,7 +34,6 @@ import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
@@ -56,8 +54,6 @@ import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
@@ -83,7 +79,6 @@ import my.ep.persistence.entity.fl.order.FlStopInstrItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
-import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -552,44 +547,6 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 					approver = getFacesScopes().getUserSessionBean();
 				}
 				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), approver, getManagedBean().getStopInstr().getFlRequest().getPmUserGroup().getUserGroupId());
-				//13291 - start
-				List<Long> orgProfileIdList = new ArrayList<>();
-				if(!getManagedBean().getStopInstr().getFlRequest().getCreatedOrgProfile().getOrgProfileId().equals(getManagedBean().getStopInstr().getFlRequest().getPreparedOrgProfile().getOrgProfileId())) {
-					orgProfileIdList.add(getManagedBean().getStopInstr().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
-				}						
-				orgProfileIdList.add(getManagedBean().getStopInstr().getFlRequest().getCreatedOrgProfile().getOrgProfileId());
-				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();		
-				orgProfileReqDTO.setOrgProfileId(getManagedBean().getStopInstr().getFlRequest().getCreatedOrgProfile().getOrgProfileId());
-				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IOrgProfileSO.class);
-				OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveAuthorizedProfileGroupByMainProfileId(orgProfileReqDTO);
-				List<PmProfileGroup> pmProfileGroups = orgProfileResDTO.getProfileGroups();
-				if(!CollectionUtils.isEmpty(pmProfileGroups)) {
-					for(PmProfileGroup pmProfileGroup: pmProfileGroups) {
-						if(!orgProfileIdList.contains(pmProfileGroup.getAuthorizedOrgProfile().getOrgProfileId())) {
-							orgProfileIdList.add(pmProfileGroup.getAuthorizedOrgProfile().getOrgProfileId());
-						}
-					}
-				}
-				
-				List<Long> excludeUserIds = new ArrayList<>();
-				for(PmUser pmUser: approverUserList) {
-					excludeUserIds.add(pmUser.getUserId());
-				}
-				userGroupReqDTO = new UserGroupReqDTO();
-				userGroupReqDTO.setOrgProfileIdList(orgProfileIdList);
-				userGroupReqDTO.setApprovalLimit(sumItemAmt);
-				userGroupReqDTO.setExcludeUserIds(excludeUserIds);
-				userGroupResDTO = userGroupSO.retrieveUserGroupUserListByOrgProfiles(userGroupReqDTO);
-				List<PmUser> otherApproverUserList = userGroupResDTO.getPmUserList();
-				if(!CollectionUtils.isEmpty(otherApproverUserList)) {
-					for(PmUser pmUser: otherApproverUserList) {
-						if(!approverUserList.get(approverUserList.size() - 1).getUserId().equals(pmUser.getUserId())) {//filter for duplicate user even having different group id
-							approverUserList.add(pmUser);
-						}
-					}
-				}
-				//13291 - end
 				getManagedBean().getApproverList().addAll(approverUserList);
 			}
 		}

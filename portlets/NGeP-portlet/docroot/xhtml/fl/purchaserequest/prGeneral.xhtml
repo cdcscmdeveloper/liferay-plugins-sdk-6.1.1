@@ -49,11 +49,6 @@
 	<!-- 29728 - end -->
 	<p:panel header="#{lbl['lbl.fl.agency.details']}" toggleable="true" id="flDetails">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
-		<!-- 13291 - start -->
-		<c:if test="#{purchaseRequestBackingBean.isFlFulfilmentApprover()}">
-			<br /><h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.agency.details']}"/><br /><br />
-		</c:if>
-		<!-- 13291 - end -->
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
@@ -85,14 +80,16 @@
 				<td style="width: 560px;">
 					<p:inputTextarea id="preparedOrgProfileId" rows="2" cols="63" readonly="true" autoResize="false" style="resize:none;" 
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgCode} #{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}" />					
-					<p:commandLink oncomplete="dlgPreparePtj.show();"
-						action="#{purchaseRequestBackingBean.resetPreparedForPtjDetails}"
-						update="dlgPreparePtj"
-						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or purchaseRequestBackingBean.isFlFulfilmentApprover()}"
-						style="padding-left:10px">
-						<p:graphicImage value="/css/images/design/search.png" />
-					</p:commandLink>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}" />
+					<ac:lov id="preparedPtj" uiMode="link" 
+						lovId="PM_ORG_PROFILE_FL" headerText="#{lbl['lbl.fl.prepared.for.ptj']}"
+						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or purchaseRequestBackingBean.isFlFulfilmentApprover() or purchaseRequestBackingBean.isRequisitioner()}"
+						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgProfile,:form:controlOff,:form:ptjGroup,:form:agOffice" readonly="true"
+						postUpdateListener="purchaseRequestBackingBean.getAgAccount"
+						conditionField="#{purchaseRequestBackingBean.getPreparedPTJCondition()}"
+						tooltip="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}">
+					</ac:lov>
 				</td>				
 			</tr>
 			<tr>
@@ -405,76 +402,4 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:dialog id="dlgPreparePtj"  header="#{lbl['lbl.fl.add.prepared.ptj']}" widgetVar="dlgPreparePtj" 
-			styleClass="pop_up_top" modal="true" width="700" resizable="false" position="top">
-			<p:messages id="preparePtjMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
-		   <h:panelGroup  id="preparePtj">
-		   	 <p:panel id="preparePtjSearchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
-              <h:panelGrid columns="3">
-                 <p:selectOneMenu for="prepareMinistry"  style="width:150px" disabled="true" >
-            	    <f:selectItem itemLabel="#{lbl['lbl.fl.ministry']}" itemValue=""/>
-                 </p:selectOneMenu>
-                 <p:spacer height="1"/>
-                 <p:selectOneMenu id="prepareMinistry" style="width:300px"
-                      value="#{purchaseRequestBackingBean.managedBean.ministryProfileId}" disabled="true">
-            	   <f:selectItems value="#{purchaseRequestBackingBean.getPreparedForPTJMinistryDropdown()}"/>
-            	   <p:ajax event="change" update=":form:prepareJabatan" />
-                 </p:selectOneMenu>
-                 <p:selectOneMenu for="prepareJabatan"  style="width:150px" disabled="true" >
-            	    <f:selectItem itemLabel="#{lbl['lbl.fl.jabatan']}" itemValue=""/>
-                 </p:selectOneMenu>
-                 <p:spacer height="1"/>
-                 <p:selectOneMenu id="prepareJabatan" style="width:300px"
-                      value="#{purchaseRequestBackingBean.managedBean.jabatanProfileId}" >
-            	   <f:selectItems value="#{purchaseRequestBackingBean.getPreparedForPTJJabatanDropdown()}"/>
-            	    <p:ajax event="change" update=":form:prepareJabatan"/>
-                 </p:selectOneMenu>
-                 <p:selectOneMenu for="preparePtjCodeName" 
-                    value="#{purchaseRequestBackingBean.managedBean.ptjCodeName}"  style="width:150px;">
-                       <f:selectItem itemLabel="#{lbl['lbl.fl.ptj.code']}" itemValue="#{CtConst.ptjCode}"/>
-            	      <f:selectItem itemLabel="#{lbl['lbl.fl.ptj.name']}" itemValue="#{CtConst.ptjName}"/>
-            	      <p:ajax process="@this"/>
-                 </p:selectOneMenu>
-				 <p:spacer height="1"/>
-                 <p:inputText id="preparePtjCodeValue"  style="width:300px;" 
-                     value="#{purchaseRequestBackingBean.managedBean.ptjCodeNameSearchValues}" >
-                     <p:ajax process="@this"/></p:inputText>
-			  </h:panelGrid>
-			  </p:panel>
-			  	<div class="ppRightBtn">
-       		         
-       		         <p:commandButton id="preparePtjSearchId" value="#{lbl['lbl.btn.search']}" update=":form:tablePreparePtj"  
-       		            action="#{purchaseRequestBackingBean.searchPreparedForPtjDetails}" process="@this" /> 
-			         <p:commandButton id="resetBtn1" value="#{lbl['lbl.btn.reset']}" process="@this"
-			            action="#{purchaseRequestBackingBean.resetPreparedForPtjDetails}" update=":form:preparePtj"   />
-		       </div>
-			  <p:panel id="prepareResultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
-				<p:dataTable id="tablePreparePtj" var="pmVar"
-					value="#{purchaseRequestBackingBean.managedBean.preparedForPtjDataModel}"
-					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					rowIndexVar="rowIndex"
-					selection="#{purchaseRequestBackingBean.selectedPreparedForPTJOrg}"
-					rowKey="#{pmVar}" lazy="true" rows="10">
-					 <p:ajax event="rowSelectRadio" update=":form:preparePtjSelectBtn" ></p:ajax>
-					<ac:paginator for="tablePreparePtj" />
-					<p:column selectionMode="single" style="width:18px;">
-						<f:facet name="header">
-						</f:facet>
-					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.ptj.code']}">
-                       	#{pmVar.orgCode}
-					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.ptj.name']}">
-                      	#{pmVar.orgName}
-					</p:column>
-				</p:dataTable>
-			</p:panel>           
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@this" update=":form:preparedOrgProfileId,:form:issuedOrgProfile,:form:controlOff,:form:ptjGroup,:form:agOffice"  id="preparePtjSelectBtn"
-					disabled="#{fn:length(purchaseRequestBackingBean.managedBean.preparedForPtjDataModel.list) == 0 }"
-				    action="#{purchaseRequestBackingBean.addPreparedForPtjDetails()}" onclick="dlgPreparePtj.hide();"/>
-				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgPreparePtj.hide();" />
-           </div>
-           </h:panelGroup>
-	</p:dialog>
 </ui:composition>

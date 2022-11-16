@@ -242,14 +242,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				if(getManagedBean().isLastFRNTaxInv() && getManagedBean().isIssuanceCogstrCheck()){
 					reqDTO.setCoGstr(true);
 				}
-			} //13291 - start
-			else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || 
-					(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && FulfilmentStatusConst.FN_PENDING_CANCEL_SUBMISSION.equals(getManagedBean().getFulfilmentNote().getStatus().getStatusId()))){
-				if(getManagedBean().getApproverList() == null || getManagedBean().getApproverList().isEmpty()){
-					getAcknowledgeOfficer();
-				}
 			}
-			//13291 - end
 			
 			reqDTO.setApproverUserList(getManagedBean().getApproverList());
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || 
@@ -1351,21 +1344,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		
 		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
-		//13291 - start
-		reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-		UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
-		Long roOrgProfileId = null;
-		for(PmUserOrg pmUserOrg: resDTO.getPmUser().getPmUserOrgs()) {
-			if (pmUserOrg.getRecordStatusFlg() == 1) {
-				roOrgProfileId = pmUserOrg.getPmOrgProfile().getOrgProfileId();
-				break;
-			}
-		}
-		reqDTO.setOrgProfileId(roOrgProfileId);
-		reqDTO.setOrgType(resDTO.getPmUser().getOrgTypeCode().getParameterCode());
-		//13291 - end
+		reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
 		reqDTO.setRoleCode(RoleCode.ACKNOWLEDGE_OFFICER.value());
-		resDTO = userSO.retrieveUserListByRole(reqDTO);//13291
+		UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
 		getManagedBean().setPmUserList(resDTO.getUserList());
 		items = new SelectItem[resDTO.getUserList().size() + 1];
 		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
@@ -1741,29 +1722,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	private void getAcknowledgeOfficer(){
 		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
-		//13291 - start
-		IFulfilmentSO iFulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentSO.class);
-		FlActor actor = iFulfilmentSO.retrieveFlActors(FulfilmentConst.DOC_TYPE_FN, getManagedBean().getFulfilmentNote().getFulfilmentNoteId(), RoleCode.RECEIVING_OFFICER.value());
-		if(actor != null){
-			reqDTO.setUserId(actor.getUser().getUserId());
-		} else {
-			if(getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())) {
-				reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-			}			
-		}		
-		UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
-		Long roOrgProfileId = null;
-		for(PmUserOrg pmUserOrg: resDTO.getPmUser().getPmUserOrgs()) {
-			if (pmUserOrg.getRecordStatusFlg() == 1) {
-				roOrgProfileId = pmUserOrg.getPmOrgProfile().getOrgProfileId();
-				break;
-			}
-		}
-		reqDTO.setOrgProfileId(roOrgProfileId);
-		reqDTO.setOrgType(resDTO.getPmUser().getOrgTypeCode().getParameterCode());
-		//13291 - end
+		reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
 		reqDTO.setRoleCode(RoleCode.ACKNOWLEDGE_OFFICER.value());
-		resDTO = userSO.retrieveUserListByRole(reqDTO);//13291
+		UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
 		getManagedBean().setPmUserList(resDTO.getUserList());
 		
 		List<PmUser> orderApproverList = new ArrayList<PmUser>();
