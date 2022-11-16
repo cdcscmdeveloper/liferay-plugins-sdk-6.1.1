@@ -498,40 +498,19 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 						throw new EpException(MessageConst.ERROR_DIGICERT_776063);
 						// Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
 					} else {
-						FacesScopes fs = new FacesScopes();
-						if (fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
-								|| fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
-								|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-								|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-							throw new EpException(MessageConst.ERROR_DIGICERT_776064);
-							// Supplier Admin does not have a valid soft certificate. Please apply for a soft certificate first.
-						}
-						if (fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())
-								|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-								|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
-								|| fs.hasRoleUser(RoleCode.FL_USER.value())) {
-							throw new EpException(MessageConst.ERROR_DIGICERT_776065);
-							// Supplier User does not have a valid soft certificate. Please apply for a soft certificate first.
-						}
+						StringBuilder sb = new StringBuilder();
+						sb.append(roleDesc());
+						throw new EpException(MessageConst.ERROR_DIGICERT_776066, new String[] {sb.toString()});
+						// <Role Name> does not have a valid soft certificate. Please apply for a soft certificate first.
+						
 					}
 				} else {
 					//if it is not expired, but it is revoked, it will going into this block
 					if(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REVOKED){
-						FacesScopes fs = new FacesScopes();
-						if (fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
-								|| fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
-								|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-								|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-							throw new EpException(MessageConst.ERROR_DIGICERT_776064);
-							// Supplier Admin does not have a valid soft certificate. Please apply for a soft certificate first.
-						}
-						if (fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())
-								|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-								|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
-								|| fs.hasRoleUser(RoleCode.FL_USER.value())) {
-							throw new EpException(MessageConst.ERROR_DIGICERT_776065);
-							// Supplier User does not have a valid soft certificate. Please apply for a soft certificate first.
-						}
+						StringBuilder sb = new StringBuilder();
+						sb.append(roleDesc());
+						throw new EpException(MessageConst.ERROR_DIGICERT_776066, new String[] {sb.toString()});
+						// <Role Name> does not have a valid soft certificate. Please apply for a soft certificate first.
 					}
 				}
 			} else {
@@ -544,25 +523,39 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 						throw new EpException(MessageConst.ERROR_DIGICERT_776063);
 						// Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
 					} else {
-						FacesScopes fs = new FacesScopes();
-						if (fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
-								|| fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
-								|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-								|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-							throw new EpException(MessageConst.ERROR_DIGICERT_776064);
-							// Supplier Admin does not have a valid soft certificate. Please apply for a soft certificate first.
-						}
-						if (fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())
-								|| fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-								|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
-								|| fs.hasRoleUser(RoleCode.FL_USER.value())) {
-							throw new EpException(MessageConst.ERROR_DIGICERT_776065);
-							// Supplier User does not have a valid soft certificate. Please apply for a soft certificate first.
-						}
+						StringBuilder sb = new StringBuilder();
+						sb.append(roleDesc());
+						throw new EpException(MessageConst.ERROR_DIGICERT_776066, new String[] {sb.toString()});
+						// <Role Name> does not have a valid soft certificate. Please apply for a soft certificate first.
 					}
 				}
 			}
 		}
+	}
+	
+	public String roleDesc(){
+		String roleCode = null;
+		FacesScopes fs = new FacesScopes();
+		if (fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())){
+			roleCode = RoleCode.G2G_SUPPLIER_ADMIN.value();
+		}else if (fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())){
+			roleCode = RoleCode.BASIC_SUPPLIER_ADMIN.value();
+		}else if (fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+			roleCode = RoleCode.MOF_SUPPLIER_ADMIN.value();
+		}else if (fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())){
+			roleCode = RoleCode.G2G_SUPPLIER_USER.value();
+		}else if (fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())){
+			roleCode = RoleCode.BASIC_SUPPLIER_USER.value();
+		}else if (fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())){
+			roleCode = RoleCode.MOF_SUPPLIER_USER.value();
+		}else if (fs.hasRoleUser(RoleCode.FL_USER.value())){
+			roleCode = RoleCode.FL_USER.value();
+		}else if (fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
+			roleCode = RoleCode.SUPPLIER_TEMP.value();
+		}
+		log.info("The Role Code that will be display >>>>> " + roleCode);
+		String languageCode = new FacesScopes().getUserLocale().getLanguage();
+		return PmCommonUtil.getRoleDescByRoleCodeAndLanguage(roleCode, languageCode);
 	}
 	//#30425 - End
 }
