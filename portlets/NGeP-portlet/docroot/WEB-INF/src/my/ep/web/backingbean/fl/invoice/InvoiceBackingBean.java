@@ -36,9 +36,7 @@ import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -63,12 +61,8 @@ import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
-import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
@@ -103,12 +97,10 @@ import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
-import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -139,7 +131,6 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.InvoiceChargeLineVO;
 import my.ep.web.vo.TaxInvoiceVO;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -284,12 +275,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 				FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getInvoice().getFlRequest().getDocType(), getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
 				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),actor.getUser(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
-				//13291 - start
-				if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && reqDTO.isDan()) {
-					log.info("Is DAN");
-					getOtherApproverList(listOfApprover, sumItemAmt);
-				}
-				//13291 - end
 			}
 			reqDTO.setApproverUserList(listOfApprover);
 			reqDTO.setOutcome(action);
@@ -339,11 +324,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					approver = getFacesScopes().getUserSessionBean();
 				}
 				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),approver,getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
-				//13291 - start
-				if(BpmOutcomeConst.BPM_UPDATE.equalsIgnoreCase(action) || BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action)) {
-					getOtherApproverList(listOfApprover, sumItemAmt);
-				}						
-				//13291 - end
 				reqDTO.setApproverUserList(listOfApprover);
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					if(reqDTO.isDan()){
@@ -2666,48 +2646,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				"disciplinaryActionHistoryDlg.show();");
 	}
 	//26279 - end
-	//13291 - start
-	private List<PmUser> getOtherApproverList(List<PmUser> approverList, BigDecimal sumItemAmt) {
-		List<Long> orgProfileIdList = new ArrayList<>();
-		if(!getManagedBean().getInvoice().getFlRequest().getCreatedOrgProfile().getOrgProfileId().equals(getManagedBean().getInvoice().getFlRequest().getPreparedOrgProfile().getOrgProfileId())) {
-			orgProfileIdList.add(getManagedBean().getInvoice().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
-		}						
-		orgProfileIdList.add(getManagedBean().getInvoice().getFlRequest().getCreatedOrgProfile().getOrgProfileId());
-		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();		
-		orgProfileReqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getCreatedOrgProfile().getOrgProfileId());
-		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IOrgProfileSO.class);
-		OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveAuthorizedProfileGroupByMainProfileId(orgProfileReqDTO);
-		List<PmProfileGroup> pmProfileGroups = orgProfileResDTO.getProfileGroups();
-		if(!CollectionUtils.isEmpty(pmProfileGroups)) {
-			for(PmProfileGroup pmProfileGroup: pmProfileGroups) {
-				if(!orgProfileIdList.contains(pmProfileGroup.getAuthorizedOrgProfile().getOrgProfileId())) {
-					orgProfileIdList.add(pmProfileGroup.getAuthorizedOrgProfile().getOrgProfileId());
-				}
-			}
-		}
-		
-		List<Long> excludeUserIds = new ArrayList<>();
-		for(PmUser pmUser: approverList) {
-			excludeUserIds.add(pmUser.getUserId());
-		}
-		UserGroupReqDTO userGroupReqDTO = new UserGroupReqDTO();
-		userGroupReqDTO.setOrgProfileIdList(orgProfileIdList);
-		userGroupReqDTO.setApprovalLimit(sumItemAmt);
-		userGroupReqDTO.setExcludeUserIds(excludeUserIds);
-		IUserGroupSO userGroupSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
-		UserGroupResDTO userGroupResDTO = userGroupSO.retrieveUserGroupUserListByOrgProfiles(userGroupReqDTO);
-		List<PmUser> otherApproverUserList = userGroupResDTO.getPmUserList();
-		if(!CollectionUtils.isEmpty(otherApproverUserList)) {
-			for(PmUser pmUser: otherApproverUserList) {
-				if(!approverList.get(approverList.size() - 1).getUserId().equals(pmUser.getUserId())) {//filter for duplicate user even having different group id
-					approverList.add(pmUser);
-				}
-			}
-		}
-		return approverList;
-	}
-	//13291 - end
 	//#21416 start
 	public String filterItemName(String itemName) {
 		if(this.getManagedBean().getInvoice() != null){

@@ -21,7 +21,6 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -32,18 +31,14 @@ import com.liferay.portal.util.PortalUtil;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
-import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
-import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -56,22 +51,14 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
-import my.ep.dto.ct.ContractReqDTO;
-import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
-import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
-import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
@@ -86,7 +73,6 @@ import my.ep.persistence.entity.fl.order.FlTempDoItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -334,44 +320,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					approver = getFacesScopes().getUserSessionBean();
 				}
 				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), approver, getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
-				//13291 - start
-				List<Long> orgProfileIdList = new ArrayList<>();
-				if(!getManagedBean().getFulfilmentRequest().getCreatedOrgProfile().getOrgProfileId().equals(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId())) {
-					orgProfileIdList.add(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
-				}						
-				orgProfileIdList.add(getManagedBean().getFulfilmentRequest().getCreatedOrgProfile().getOrgProfileId());
-				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();		
-				orgProfileReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getCreatedOrgProfile().getOrgProfileId());
-				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IOrgProfileSO.class);
-				OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveAuthorizedProfileGroupByMainProfileId(orgProfileReqDTO);
-				List<PmProfileGroup> pmProfileGroups = orgProfileResDTO.getProfileGroups();
-				if(!CollectionUtils.isEmpty(pmProfileGroups)) {
-					for(PmProfileGroup pmProfileGroup: pmProfileGroups) {
-						if(!orgProfileIdList.contains(pmProfileGroup.getAuthorizedOrgProfile().getOrgProfileId())) {
-							orgProfileIdList.add(pmProfileGroup.getAuthorizedOrgProfile().getOrgProfileId());
-						}
-					}
-				}
-				
-				List<Long> excludeUserIds = new ArrayList<>();
-				for(PmUser pmUser: approverUserList) {
-					excludeUserIds.add(pmUser.getUserId());
-				}
-
-				userGroupReqDTO.setOrgProfileIdList(orgProfileIdList);
-				userGroupReqDTO.setApprovalLimit(sumItemAmt);
-				userGroupReqDTO.setExcludeUserIds(excludeUserIds);
-				userGroupResDTO = userGroupSO.retrieveUserGroupUserListByOrgProfiles(userGroupReqDTO);
-				List<PmUser> otherApproverUserList = userGroupResDTO.getPmUserList();
-				if(!CollectionUtils.isEmpty(otherApproverUserList)) {
-					for(PmUser pmUser: otherApproverUserList) {
-						if(!approverUserList.get(approverUserList.size() - 1).getUserId().equals(pmUser.getUserId())) {//filter for duplicate user even having different group id
-							approverUserList.add(pmUser);
-						}
-					}
-				}						
-				//13291 - end
 				reqDTO.setApproverUserList(approverUserList);
 				
 				resDTO = deliveryOrderSO.deliveryOrderModification(reqDTO);
