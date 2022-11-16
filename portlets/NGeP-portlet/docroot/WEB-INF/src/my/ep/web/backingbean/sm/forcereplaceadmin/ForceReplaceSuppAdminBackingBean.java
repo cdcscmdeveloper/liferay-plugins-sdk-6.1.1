@@ -1771,10 +1771,11 @@ public class ForceReplaceSuppAdminBackingBean extends
     	String supplierType = this.getManagedBean().getSmSupplier().getSmAppl().getSupplierType();
     	String businessType = this.getManagedBean().getSmSupplier().getBusinessType();
     	
-    	if(currentPersonnel != null){
+//    	if(currentPersonnel != null){
     		switch(supplierType){
         	case SupplierManagementConst.SUPP_TYPE_BASIC:
         	case SupplierManagementConst.SUPP_TYPE_CONTRACTOR:
+	    		this.getManagedBean().setDisplayRolePanel(true);
 	    		switch(businessType){
 	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG:
 	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH:
@@ -1800,10 +1801,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 	    				resetRoleEnableDisable();
 	    				break;
 	    		}
-	    		this.getManagedBean().setDisplayRolePanel(true);
 	    		break;
 	    		
         	case SupplierManagementConst.SUPP_TYPE_CONSULTANT:
+	    		this.getManagedBean().setDisplayRolePanel(true);
         		switch(businessType){
         		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG:
 	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH:
@@ -1830,19 +1831,18 @@ public class ForceReplaceSuppAdminBackingBean extends
 	    				resetRoleEnableDisable();
 	    				break;
         		}
-        		this.getManagedBean().setDisplayRolePanel(true);
         		break;
         		
 	    		default:
 	    			//all enable
+		    		this.getManagedBean().setDisplayRolePanel(false);
 	    			resetRoleEnableDisable();
-	    			this.getManagedBean().setDisplayRolePanel(false);
 	    			break;
     		}
-    	} else {
-    		//all enable
-    		resetRoleEnableDisable();
-    	}
+//    	} else {
+//    		//all enable
+//    		resetRoleEnableDisable();
+//    	}
     }
     
     public void resetRoleEnableDisable(){
@@ -1856,52 +1856,55 @@ public class ForceReplaceSuppAdminBackingBean extends
     }
     
     public void setEnableDisableRoleStafOnly(SmPersonnel currentPersonnel){
+    	resetRoleEnableDisable();
     	/*
     	 * RULES
     	 * 1. Role Management & Staff cannot be apply in one profile 
     	 */
-    	if(currentPersonnel.isDirector() || currentPersonnel.isEquityOwner() || currentPersonnel.isHigherManagement() || currentPersonnel.isManagement() || currentPersonnel.isProf()){
-			this.getManagedBean().setDisabledRoleDirector(false);
-			this.getManagedBean().setDisabledRoleEquity(false);
-			this.getManagedBean().setDisabledRoleHighManagement(false);
-			this.getManagedBean().setDisabledRoleManagement(false);
-			this.getManagedBean().setDisabledRoleProfessional(false);
-			this.getManagedBean().setDisabledRoleSemiPro(true);
-			this.getManagedBean().setDisabledRoleClericalStaff(true);
+		if (currentPersonnel != null) {
+			if (currentPersonnel.isDirector() || currentPersonnel.isEquityOwner()
+					|| currentPersonnel.isHigherManagement() || currentPersonnel.isManagement()
+					|| currentPersonnel.isProf()) {
+				this.getManagedBean().setDisabledRoleDirector(false);
+				this.getManagedBean().setDisabledRoleEquity(false);
+				this.getManagedBean().setDisabledRoleHighManagement(false);
+				this.getManagedBean().setDisabledRoleManagement(false);
+				this.getManagedBean().setDisabledRoleProfessional(false);
+				this.getManagedBean().setDisabledRoleSemiPro(true);
+				this.getManagedBean().setDisabledRoleClericalStaff(true);
 
-			this.getManagedBean().getNewAdmin().setSemiProf(false);
-			this.getManagedBean().getNewAdmin().setClerical(false);
-		} else if(currentPersonnel.isSemiProf()){
-			this.getManagedBean().setDisabledRoleDirector(true);
-			this.getManagedBean().setDisabledRoleEquity(true);
-			this.getManagedBean().setDisabledRoleHighManagement(true);
-			this.getManagedBean().setDisabledRoleManagement(true);
-			this.getManagedBean().setDisabledRoleProfessional(true);
-			this.getManagedBean().setDisabledRoleSemiPro(false);
-			this.getManagedBean().setDisabledRoleClericalStaff(true);
-			
-			this.getManagedBean().getNewAdmin().setDirector(false);
-			this.getManagedBean().getNewAdmin().setEquityOwner(false);
-			this.getManagedBean().getNewAdmin().setHigherManagement(false);
-			this.getManagedBean().getNewAdmin().setManagement(false);
-			this.getManagedBean().getNewAdmin().setProf(false);
-			this.getManagedBean().getNewAdmin().setClerical(false);
-		} else if(currentPersonnel.isClerical()){
-			this.getManagedBean().setDisabledRoleDirector(true);
-			this.getManagedBean().setDisabledRoleEquity(true);
-			this.getManagedBean().setDisabledRoleHighManagement(true);
-			this.getManagedBean().setDisabledRoleManagement(true);
-			this.getManagedBean().setDisabledRoleProfessional(false);
-			this.getManagedBean().setDisabledRoleSemiPro(true);
-			this.getManagedBean().setDisabledRoleClericalStaff(false);
+				this.getManagedBean().getNewAdmin().setSemiProf(false);
+				this.getManagedBean().getNewAdmin().setClerical(false);
+			} else if (currentPersonnel.isSemiProf()) {
+				this.getManagedBean().setDisabledRoleDirector(true);
+				this.getManagedBean().setDisabledRoleEquity(true);
+				this.getManagedBean().setDisabledRoleHighManagement(true);
+				this.getManagedBean().setDisabledRoleManagement(true);
+				this.getManagedBean().setDisabledRoleProfessional(true);
+				this.getManagedBean().setDisabledRoleSemiPro(false);
+				this.getManagedBean().setDisabledRoleClericalStaff(true);
 
-			this.getManagedBean().getNewAdmin().setDirector(false);
-			this.getManagedBean().getNewAdmin().setEquityOwner(false);
-			this.getManagedBean().getNewAdmin().setHigherManagement(false);
-			this.getManagedBean().getNewAdmin().setManagement(false);
-			this.getManagedBean().getNewAdmin().setSemiProf(false);
-		} else {
-			resetRoleEnableDisable();
+				this.getManagedBean().getNewAdmin().setDirector(false);
+				this.getManagedBean().getNewAdmin().setEquityOwner(false);
+				this.getManagedBean().getNewAdmin().setHigherManagement(false);
+				this.getManagedBean().getNewAdmin().setManagement(false);
+				this.getManagedBean().getNewAdmin().setProf(false);
+				this.getManagedBean().getNewAdmin().setClerical(false);
+			} else if (currentPersonnel.isClerical()) {
+				this.getManagedBean().setDisabledRoleDirector(true);
+				this.getManagedBean().setDisabledRoleEquity(true);
+				this.getManagedBean().setDisabledRoleHighManagement(true);
+				this.getManagedBean().setDisabledRoleManagement(true);
+				this.getManagedBean().setDisabledRoleProfessional(false);
+				this.getManagedBean().setDisabledRoleSemiPro(true);
+				this.getManagedBean().setDisabledRoleClericalStaff(false);
+
+				this.getManagedBean().getNewAdmin().setDirector(false);
+				this.getManagedBean().getNewAdmin().setEquityOwner(false);
+				this.getManagedBean().getNewAdmin().setHigherManagement(false);
+				this.getManagedBean().getNewAdmin().setManagement(false);
+				this.getManagedBean().getNewAdmin().setSemiProf(false);
+			}
 		}
     }
     
@@ -1912,108 +1915,110 @@ public class ForceReplaceSuppAdminBackingBean extends
     	 * 2. All Equity can apply role Management
     	 * 3. Role Management & Staff cannot be apply in one profile without Equity Owner 
     	 */
-    	
-    	int count = 0;
-		for(SmPersonnel smPersonnel : this.getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels()){
-			if(currentPersonnel.getIdentificationNo() == smPersonnel.getIdentificationNo() 
-					|| passPersonnel.getIdentificationNo() == smPersonnel.getIdentificationNo()){
-				continue;
-			} else {
-				if(smPersonnel.isEquityOwner() && smPersonnel.isClerical()){
-					count++;
+    	resetRoleEnableDisable();
+		if (currentPersonnel != null) {
+			int count = 0;
+			for (SmPersonnel smPersonnel : this.getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels()) {
+				if (currentPersonnel.getIdentificationNo() == smPersonnel.getIdentificationNo()
+						|| passPersonnel.getIdentificationNo() == smPersonnel.getIdentificationNo()) {
+					continue;
+				} else {
+					if (smPersonnel.isEquityOwner() && smPersonnel.isClerical()) {
+						count++;
+					}
 				}
 			}
-		}
-		
-		if(currentPersonnel.isEquityOwner()){
-			if(count > 0){
+
+			if (currentPersonnel.isEquityOwner()) {
+				if (count > 0) {
+					this.getManagedBean().setDisabledRoleDirector(false);
+					this.getManagedBean().setDisabledRoleEquity(false);
+					this.getManagedBean().setDisabledRoleHighManagement(false);
+					this.getManagedBean().setDisabledRoleManagement(false);
+					this.getManagedBean().setDisabledRoleProfessional(false);
+					this.getManagedBean().setDisabledRoleSemiPro(true);
+					this.getManagedBean().setDisabledRoleClericalStaff(true);
+
+					this.getManagedBean().getNewAdmin().setSemiProf(false);
+					this.getManagedBean().getNewAdmin().setClerical(false);
+				} else {
+					this.getManagedBean().setDisabledRoleDirector(false);
+					this.getManagedBean().setDisabledRoleEquity(false);
+					this.getManagedBean().setDisabledRoleHighManagement(false);
+					this.getManagedBean().setDisabledRoleManagement(false);
+					this.getManagedBean().setDisabledRoleProfessional(false);
+					this.getManagedBean().setDisabledRoleSemiPro(true);
+					this.getManagedBean().setDisabledRoleClericalStaff(false);
+
+					this.getManagedBean().getNewAdmin().setSemiProf(false);
+				}
+			} else if (currentPersonnel.isHigherManagement() || currentPersonnel.isManagement()) {
 				this.getManagedBean().setDisabledRoleDirector(false);
-		    	this.getManagedBean().setDisabledRoleEquity(false);
-		    	this.getManagedBean().setDisabledRoleHighManagement(false);
-		    	this.getManagedBean().setDisabledRoleManagement(false);
-		    	this.getManagedBean().setDisabledRoleProfessional(false);
+				this.getManagedBean().setDisabledRoleEquity(false);
+				this.getManagedBean().setDisabledRoleHighManagement(false);
+				this.getManagedBean().setDisabledRoleManagement(false);
+				this.getManagedBean().setDisabledRoleProfessional(false);
 				this.getManagedBean().setDisabledRoleSemiPro(true);
 				this.getManagedBean().setDisabledRoleClericalStaff(true);
-				
-				this.getManagedBean().getNewAdmin().setSemiProf(false);
-				this.getManagedBean().getNewAdmin().setClerical(false);
-			} else {
-				this.getManagedBean().setDisabledRoleDirector(false);
-		    	this.getManagedBean().setDisabledRoleEquity(false);
-		    	this.getManagedBean().setDisabledRoleHighManagement(false);
-		    	this.getManagedBean().setDisabledRoleManagement(false);
-		    	this.getManagedBean().setDisabledRoleProfessional(false);
-				this.getManagedBean().setDisabledRoleSemiPro(true);
-		    	this.getManagedBean().setDisabledRoleClericalStaff(false);
 
 				this.getManagedBean().getNewAdmin().setSemiProf(false);
-			}
-		} else if(currentPersonnel.isHigherManagement() || currentPersonnel.isManagement()){
-			this.getManagedBean().setDisabledRoleDirector(false);
-	    	this.getManagedBean().setDisabledRoleEquity(false);
-	    	this.getManagedBean().setDisabledRoleHighManagement(false);
-	    	this.getManagedBean().setDisabledRoleManagement(false);
-	    	this.getManagedBean().setDisabledRoleProfessional(false);
-			this.getManagedBean().setDisabledRoleSemiPro(true);
-			this.getManagedBean().setDisabledRoleClericalStaff(true);
-	    	
-			this.getManagedBean().getNewAdmin().setSemiProf(false);
-			this.getManagedBean().getNewAdmin().setClerical(false);
-		} else if(currentPersonnel.isClerical()){
-			if(count > 0){
+				this.getManagedBean().getNewAdmin().setClerical(false);
+			} else if (currentPersonnel.isClerical()) {
+				if (count > 0) {
+					this.getManagedBean().setDisabledRoleDirector(false);
+					this.getManagedBean().setDisabledRoleEquity(true);
+					this.getManagedBean().setDisabledRoleHighManagement(true);
+					this.getManagedBean().setDisabledRoleManagement(true);
+					this.getManagedBean().setDisabledRoleProfessional(false);
+					this.getManagedBean().setDisabledRoleSemiPro(true);
+					this.getManagedBean().setDisabledRoleClericalStaff(false);
+
+					this.getManagedBean().getNewAdmin().setEquityOwner(false);
+					this.getManagedBean().getNewAdmin().setSemiProf(false);
+					this.getManagedBean().getNewAdmin().setHigherManagement(false);
+					this.getManagedBean().getNewAdmin().setManagement(false);
+				} else {
+					this.getManagedBean().setDisabledRoleDirector(false);
+					this.getManagedBean().setDisabledRoleEquity(false);
+					this.getManagedBean().setDisabledRoleHighManagement(true);
+					this.getManagedBean().setDisabledRoleManagement(true);
+					this.getManagedBean().setDisabledRoleProfessional(false);
+					this.getManagedBean().setDisabledRoleSemiPro(true);
+					this.getManagedBean().setDisabledRoleClericalStaff(false);
+
+					this.getManagedBean().getNewAdmin().setSemiProf(false);
+					this.getManagedBean().getNewAdmin().setHigherManagement(false);
+					this.getManagedBean().getNewAdmin().setManagement(false);
+				}
+
+			} else if (currentPersonnel.isProf()) {
 				this.getManagedBean().setDisabledRoleDirector(false);
-		    	this.getManagedBean().setDisabledRoleEquity(true);
+				this.getManagedBean().setDisabledRoleEquity(false);
+				this.getManagedBean().setDisabledRoleHighManagement(false);
+				this.getManagedBean().setDisabledRoleManagement(false);
+				this.getManagedBean().setDisabledRoleProfessional(false);
+				this.getManagedBean().setDisabledRoleSemiPro(true);
+				this.getManagedBean().setDisabledRoleClericalStaff(false);
+
+				this.getManagedBean().getNewAdmin().setSemiProf(false);
+
+			} else if (currentPersonnel.isSemiProf()) {
+				this.getManagedBean().setDisabledRoleDirector(true);
+				this.getManagedBean().setDisabledRoleEquity(true);
 				this.getManagedBean().setDisabledRoleHighManagement(true);
 				this.getManagedBean().setDisabledRoleManagement(true);
-		    	this.getManagedBean().setDisabledRoleProfessional(false);
-				this.getManagedBean().setDisabledRoleSemiPro(true);
-		    	this.getManagedBean().setDisabledRoleClericalStaff(false);
-				
-		    	this.getManagedBean().getNewAdmin().setEquityOwner(false);
-				this.getManagedBean().getNewAdmin().setSemiProf(false);
+				this.getManagedBean().setDisabledRoleProfessional(true);
+				this.getManagedBean().setDisabledRoleSemiPro(false);
+				this.getManagedBean().setDisabledRoleClericalStaff(true);
+
+				this.getManagedBean().getNewAdmin().setDirector(false);
+				this.getManagedBean().getNewAdmin().setEquityOwner(false);
 				this.getManagedBean().getNewAdmin().setHigherManagement(false);
 				this.getManagedBean().getNewAdmin().setManagement(false);
-			} else {
-				this.getManagedBean().setDisabledRoleDirector(false);
-		    	this.getManagedBean().setDisabledRoleEquity(false);
-				this.getManagedBean().setDisabledRoleHighManagement(true);
-				this.getManagedBean().setDisabledRoleManagement(true);
-		    	this.getManagedBean().setDisabledRoleProfessional(false);
-				this.getManagedBean().setDisabledRoleSemiPro(true);
-		    	this.getManagedBean().setDisabledRoleClericalStaff(false);
-				
-				this.getManagedBean().getNewAdmin().setSemiProf(false);
-				this.getManagedBean().getNewAdmin().setHigherManagement(false);
-				this.getManagedBean().getNewAdmin().setManagement(false);
+				this.getManagedBean().getNewAdmin().setProf(false);
+				this.getManagedBean().getNewAdmin().setClerical(false);
 			}
-			
-		} else if(currentPersonnel.isProf()) {
-			this.getManagedBean().setDisabledRoleDirector(false);
-	    	this.getManagedBean().setDisabledRoleEquity(false);
-	    	this.getManagedBean().setDisabledRoleHighManagement(false);
-	    	this.getManagedBean().setDisabledRoleManagement(false);
-	    	this.getManagedBean().setDisabledRoleProfessional(false);
-			this.getManagedBean().setDisabledRoleSemiPro(true);
-	    	this.getManagedBean().setDisabledRoleClericalStaff(false);
-			
-			this.getManagedBean().getNewAdmin().setSemiProf(false);
-			
-		} else if(currentPersonnel.isSemiProf()){
-			this.getManagedBean().setDisabledRoleDirector(true);
-			this.getManagedBean().setDisabledRoleEquity(true);
-			this.getManagedBean().setDisabledRoleHighManagement(true);
-			this.getManagedBean().setDisabledRoleManagement(true);
-			this.getManagedBean().setDisabledRoleProfessional(true);
-			this.getManagedBean().setDisabledRoleSemiPro(false);
-			this.getManagedBean().setDisabledRoleClericalStaff(true);
-			
-			this.getManagedBean().getNewAdmin().setDirector(false);
-			this.getManagedBean().getNewAdmin().setEquityOwner(false);
-			this.getManagedBean().getNewAdmin().setHigherManagement(false);
-			this.getManagedBean().getNewAdmin().setManagement(false);
-			this.getManagedBean().getNewAdmin().setProf(false);
-			this.getManagedBean().getNewAdmin().setClerical(false);
-		} 
+		}
     }
     
     public void validateRole(){
