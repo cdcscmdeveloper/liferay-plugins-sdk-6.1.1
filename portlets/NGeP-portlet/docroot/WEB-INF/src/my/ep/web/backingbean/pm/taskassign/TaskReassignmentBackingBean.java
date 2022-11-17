@@ -1383,6 +1383,7 @@ public class TaskReassignmentBackingBean extends
 							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
 									responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
 								getManagedBean().setCheckAllGroupTasksEnabled(true);
+								getManagedBean().setEnableRemoveAllGroupTasksButton(true); //#7465 reendorse
 								for (WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()) {
 									getManagedBean().getAllGroupTasks().add(worklist);
 								}
@@ -1563,6 +1564,7 @@ public class TaskReassignmentBackingBean extends
 							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
 									responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
 								getManagedBean().setCheckAllOthersTasksEnabled(true);
+								getManagedBean().setEnableRemoveAllOthersTasksButton(true); //#7465 reendorse
 								for (WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()) {
 									getManagedBean().getAllOthersTasks().add(worklist);
 								}
