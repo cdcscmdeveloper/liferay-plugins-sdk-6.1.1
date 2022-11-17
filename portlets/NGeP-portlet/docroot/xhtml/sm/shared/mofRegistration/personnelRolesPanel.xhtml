@@ -17,10 +17,10 @@
 							<tr>
 								<c:if test="#{backingBean.managedBean.validEquityLimit or (backingBean.managedBean.selectedShareHolder.equityOwner and backingBean.managedBean.selectedShareHolder.ssmData)}">
 									<!-- SSM INTEGRATION -->
-									<!-- bug #28173 & #28315-->
+									<!-- bug #28173 & #28315, #34237-->
 									<td style="width: 20px"><p:selectBooleanCheckbox 
 									        disabled="#{(backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY) 
-									        or (backingBean.managedBean.selectedShareHolder.ssmData and backingBean.managedBean.selectedShareHolder.equityOwnerSsm) 
+									        or (backingBean.managedBean.selectedShareHolder.ssmData) 
 									        or (backingBean.managedBean.smAppl.applValidWithSsm 
 									        	and (backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG or backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG))
 									        	or (backingBean.managedBean.selectedShareHolder.disableEquityOwner)}"
