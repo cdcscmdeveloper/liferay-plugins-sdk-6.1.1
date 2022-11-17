@@ -1,23 +1,22 @@
 package my.ep.web.managedbean.sm.forcereplaceadmin;
 
+//#28765 - Start
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDoc;
+//#28765 - End
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.ReactivateSupplierVO;
-//#28765 - Start
-import java.util.ArrayList;
-import my.ep.web.vo.SoftcertUploadSuppDocVO;
-import my.ep.persistence.entity.pm.common.PmDocument;
-import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDoc;
-//#28765 - End
 
 @ManagedBean(name = "forceReplaceSuppAdminMb")
 @SessionScoped
@@ -59,7 +58,7 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private boolean bypassFlag;
 	private List<SmPersonnel> replacesupplieradminSelectList;
 	public List<PmDocument> replacesuppadminUploadSuppDocList;
-	private List<SmReplaceSupplierAdminDoc> smReplaceSupplierAdminDocs = new ArrayList();
+	private List<SmReplaceSupplierAdminDoc> smReplaceSupplierAdminDocs = new ArrayList<SmReplaceSupplierAdminDoc>();
 	private int attachedFileIndex;
 	private String fileDirectory;
 	//#28765 - End
@@ -70,6 +69,7 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private boolean disableNationality;
 	
 	//33563 - START
+	private boolean displayRolePanel = false;
 	private boolean displayRoleEquity = false;
 	private boolean displayRoleDirector = false;
 	private boolean displayRoleHighManagement = false;
@@ -495,4 +495,12 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 		this.disabledRoleClericalStaff = disabledRoleClericalStaff;
 	}
 	//END -> #33563
+
+	public boolean isDisplayRolePanel() {
+		return displayRolePanel;
+	}
+
+	public void setDisplayRolePanel(boolean displayRolePanel) {
+		this.displayRolePanel = displayRolePanel;
+	}
 }
