@@ -8589,6 +8589,14 @@ public class SupplierFinalizationBackingBean extends
 				reqDTO.setSearchBean(searchBean);
 				
 				/*
+				 * BUG 34212 - FIX SORT ITEMIZE & PACKAGE IN SUPPLIER FINALIZATION START
+				 */
+				reqDTO.setEvaluationStage(evaluationStage); //PUT THIS CODE INTO SIT
+				/*
+				 * BUG 34212 - FIX SORT ITEMIZE & PACKAGE IN SUPPLIER FINALIZATION START
+				 */
+				
+				/*
 				 * Development 32311: SLA LOG START
 				 */
 				long startTime = System.currentTimeMillis();
