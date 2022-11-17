@@ -251,7 +251,7 @@
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
+						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
 							<p:selectOneMenu id="procMode" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.procurementMode.parameterId}"
 								style="margin-bottom:5px;width:246px;"
@@ -277,7 +277,7 @@
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
+						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
 							<p:selectOneMenu id="qtType" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.qtType.parameterId}"
 								style="margin-bottom:5px;width:206px;"
@@ -321,7 +321,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
+						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
 							<p:selectOneMenu id="procTypeBoCategory" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
 								style="margin-bottom:5px;width:246px;"
