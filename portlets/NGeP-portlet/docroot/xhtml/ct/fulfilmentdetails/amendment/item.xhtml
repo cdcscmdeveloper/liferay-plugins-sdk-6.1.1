@@ -6,7 +6,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.items.spec.guideline']}" escape="false"  />
+	<!-- Start Fix #34110 -->
+	<meta http-equiv='cache-control' content='no-cache'/>
+    <meta http-equiv='expires' content='0'/>
+    <meta http-equiv='pragma' content='no-cache'/>
+    <!-- End Fix #34110 -->
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.items.spec.guideline']}" escape="false"  /> 
 	<p:commandLink value="#{lbl['lbl.ct.instruction.items.spec.click.here']}" ajax="false" 
 		style="font-style:italic" process="@this"
 		action="#{ctBackingBean.downloadItemSpecGuideline()}"></p:commandLink><br/>
