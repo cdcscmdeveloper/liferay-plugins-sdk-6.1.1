@@ -2600,13 +2600,13 @@ public void saveComplianceSample() {
 						.getCheckListResultBean().getResultList();
 				//Bug #33252 related to #33110 start
 				for (ScQtCheckList checkList : checklistList) {
-					if(!this.getManagedBean().getScQt().isDemoRequired()){//#28784
+					//if(!this.getManagedBean().getScQt().isDemoRequired()){//#28784 -Remove
 						// Update eval status proposal checklist for no supplier that cant respond because of quantity 0 at zone
 						// bug 33851 - start 
 						 evaluationSO.proposalchecklistsuppqty
 								(checkList.getQtChecklistId());
 						// bug 33851 - end 
-					}
+					//}
 					//#33252 /27/5/2022 Start Fix
 					boolean checkallitemautoscore = evaluationSO.checkbuttonAutoScore
 							(checkList.getQtChecklistId(),evalstage.get(0));
@@ -13598,10 +13598,15 @@ private void retriveCommitteeRemarksList(){
 					}
 					if(removesupplier.size()>0){//32453
 						resDTO.getComplianceResultBean().getResultList().removeAll(removesupplier);
-						//Bug #33851 REMOVE Below related to #21695
-						//resDTO.getComplianceResultBean().setTotalRecord(resDTO.getComplianceResultBean().getResultList().size());
-						//Bug #33851 REMOVE related to #21695
-					}//32453
+						// #28784, #33851 - related - Start
+						if (getManagedBean().getScQt().isDemoRequired()) {
+							if (resDTO.getComplianceResultBean().getResultList().size() == 0) {
+								// Bug #33851 REMOVE Below related to #21695
+								resDTO.getComplianceResultBean().setTotalRecord(resDTO.getComplianceResultBean().getResultList().size());
+								// Bug #33851 REMOVE related to #21695
+							}// 32453
+						}
+					}
 				}
 				return resDTO.getComplianceResultBean();
 
