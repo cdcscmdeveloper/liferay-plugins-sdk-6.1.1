@@ -49,16 +49,19 @@
 				<th width="15%"><p:outputLabel
 						value="#{lbl['lbl.pm.ta.username']}" /> <p:outputLabel value="*" styleClass="mandatory" /></th>
 				<td width="60%">
+					<!-- 29822 - start - reendorse reopen cosmetic -->
 						<p:outputPanel id="opUserLov">
 						<ac:lov id="lovUser" lovId="SM_PERSONNEL_LOV"
 						size="80"
-						update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" readonly="true"
+						update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:pUserTaskAssignResult,:form:pGroupTaskAssignResult,:form:pOthersTaskAssignResult" readonly="true"
 						headerText="#{lbl['lbl.pm.ta.user.lov']}"
 						value="#{supplierTaskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.name}"
 						saveObject="supplierTaskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user"
 						conditionField="#{supplierTaskReassignmentBackingBean.constructUserConditionFields()}"
 						postUpdateListener="supplierTaskReassignmentBackingBean.onChangeUser" />
 						</p:outputPanel></td>
+
+					<!-- 29822 - end - reendorse reopen cosmetic -->
 
 				<td width="25%"></td>
 			</tr>

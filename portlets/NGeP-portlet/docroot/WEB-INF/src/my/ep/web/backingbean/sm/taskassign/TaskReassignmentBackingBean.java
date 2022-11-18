@@ -142,6 +142,9 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		//29822 - start
 		this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
 		this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+		this.getManagedBean().setEnableDeleteGroupTasksButton(false);//29822 - bug no 2.2 on comment no 106
+		this.getManagedBean().setEnableDeleteOthersTasksButton(false);//29822 - bug no 2.2 on comment no 106
+		this.getManagedBean().setSelectedTasksToBulkReassign(null);//29822 - bug no 1.2 on comment no 106
 		this.getManagedBean().setShowRemoveProcessMessageGroup(false);
 		this.getManagedBean().setShowRemoveProcessMessageOther(false);
 		//29822 - end
@@ -173,6 +176,18 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		this.getManagedBean().getTaskAssignmentSearchBean().setSearched(false);
 		this.getManagedBean().getTaskAssignmentSearchBean().setDocType(null);
 		this.getManagedBean().setTaskLazy(false);
+
+		//29822 - start - reendorse reopen cosmetic
+		this.getManagedBean().setCheckAllOthersTasks(false);
+		this.getManagedBean().setCheckAllGroupTasks(false);
+		this.getManagedBean().setCheckAllUserTasks(false);
+		this.getManagedBean().setCheckAllOthersTasks(false);
+		this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+		this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+		this.getManagedBean().setEnableDeleteGroupTasksButton(false);//29822 - bug no 2.3 on comment no 106
+		this.getManagedBean().setEnableDeleteOthersTasksButton(false);//29822 - bug no 2.3 on comment no 106
+		this.getManagedBean().setSelectedTasksToBulkReassign(null);//29822 - bug no 1.3 on comment no 106
+		//29822 - end
 		resetAllTaskList();
 	}
 
@@ -418,7 +433,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 							
 							//#29822 - START - reendorse
 							if(!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && responseDTO.getWorklistVO().getWorklistItem().size() > 0){
-								getManagedBean().setAllUserTasks(new ArrayList <WorklistItemVO>());
+								getManagedBean().setAllGroupTasks(new ArrayList <WorklistItemVO>()); //29822 - bug no 1.1 on comment no 106
 								getManagedBean().setCheckAllGroupTasksEnabled(true);
 								for(WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()){
 									getManagedBean().getAllGroupTasks().add(worklist);
