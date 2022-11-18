@@ -677,62 +677,62 @@ public class QTScheduleDetailBackingBean extends
 	}
 	
 	// #31919 & 21692 - Start
-	public void handleChmnFinalizationDate(boolean validityDaysExpiredQt) {
-		ScQt scQt = this.getManagedBean().getQt();
-		Date chmnFinalizationDate = scQt.getChmnFinalizationDate();
-		if (chmnFinalizationDate != null) {
-			scQt.setChmnFinalizationDate(DateUtils.setDefaultDateTime(chmnFinalizationDate));
-		}
-		Boolean enableDateMOF = enableApprovalDateMOF(validityDaysExpiredQt);
-		scQt.setApprovalPBM(enableDateMOF);
-		resetDecisionCertPBM(enableDateMOF);
-	}
-
-	private void resetDecisionCertPBM(Boolean enableDateMOF) {
-		List<ScQtApprovalRequest> approvalRequests = getManagedBean().getScQtApprovalRequestList();
-		if (CollectionUtils.isNotEmpty(approvalRequests)) {
-			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
-				PmParameter pmParameter = new PmParameter();
-				if (enableDateMOF) {
-					if (approvalRequest.getDecisionCertPBM() == null) {
-						approvalRequest.setDecisionCertPBM(pmParameter);
-					}
-				} else {
-					approvalRequest.setDecisionCertPBM(null);
-				}
-			}
-		}
-	}
-
-	public boolean enableApprovalDateMOF(boolean validityDaysExpiredQt) {
-		ScQt scQt = this.getManagedBean().getQt();
-		boolean enableApprovalDateMOF = Boolean.FALSE;
-		if (!validityDaysExpiredQt) {
-			log.info("Invalid");
-			Date proposalValidityEndDate = scQt.getProposalValidityEndDate();
-			Date chmnFinalizationDate = scQt.getChmnFinalizationDate();
-			if ((null != proposalValidityEndDate) && (null != chmnFinalizationDate)) {
-				log.info("proposalValidityEndDate: " + proposalValidityEndDate);
-				log.info("chmnFinalizationDate: " + chmnFinalizationDate);
-
-				long days = DateUtils.getDaysDifference(proposalValidityEndDate, chmnFinalizationDate);
-				int day = (int) days;
-				if (day >= 0) {
-					return Boolean.TRUE;
-				}
-			}
-		}
-
-		return enableApprovalDateMOF;
-	}
-
-	public void handleMofDate() {
-		ScQt scQt = this.getManagedBean().getQt();
-		Date mofDate = scQt.getMofDate();
-		if (mofDate != null) {
-			scQt.setMofDate(DateUtils.setDefaultDateTime(mofDate));
-		}
-	}
+//	public void handleChmnFinalizationDate(boolean validityDaysExpiredQt) {
+//		ScQt scQt = this.getManagedBean().getQt();
+//		Date chmnFinalizationDate = scQt.getChmnFinalizationDate();
+//		if (chmnFinalizationDate != null) {
+//			scQt.setChmnFinalizationDate(DateUtils.setDefaultDateTime(chmnFinalizationDate));
+//		}
+//		Boolean enableDateMOF = enableApprovalDateMOF(validityDaysExpiredQt);
+//		scQt.setApprovalPBM(enableDateMOF);
+//		resetDecisionCertPBM(enableDateMOF);
+//	}
+//
+//	private void resetDecisionCertPBM(Boolean enableDateMOF) {
+//		List<ScQtApprovalRequest> approvalRequests = getManagedBean().getScQtApprovalRequestList();
+//		if (CollectionUtils.isNotEmpty(approvalRequests)) {
+//			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
+//				PmParameter pmParameter = new PmParameter();
+//				if (enableDateMOF) {
+//					if (approvalRequest.getDecisionCertPBM() == null) {
+//						approvalRequest.setDecisionCertPBM(pmParameter);
+//					}
+//				} else {
+//					approvalRequest.setDecisionCertPBM(null);
+//				}
+//			}
+//		}
+//	}
+//
+//	public boolean enableApprovalDateMOF(boolean validityDaysExpiredQt) {
+//		ScQt scQt = this.getManagedBean().getQt();
+//		boolean enableApprovalDateMOF = Boolean.FALSE;
+//		if (!validityDaysExpiredQt) {
+//			log.info("Invalid");
+//			Date proposalValidityEndDate = scQt.getProposalValidityEndDate();
+//			Date chmnFinalizationDate = scQt.getChmnFinalizationDate();
+//			if ((null != proposalValidityEndDate) && (null != chmnFinalizationDate)) {
+//				log.info("proposalValidityEndDate: " + proposalValidityEndDate);
+//				log.info("chmnFinalizationDate: " + chmnFinalizationDate);
+//
+//				long days = DateUtils.getDaysDifference(proposalValidityEndDate, chmnFinalizationDate);
+//				int day = (int) days;
+//				if (day >= 0) {
+//					return Boolean.TRUE;
+//				}
+//			}
+//		}
+//
+//		return enableApprovalDateMOF;
+//	}
+//
+//	public void handleMofDate() {
+//		ScQt scQt = this.getManagedBean().getQt();
+//		Date mofDate = scQt.getMofDate();
+//		if (mofDate != null) {
+//			scQt.setMofDate(DateUtils.setDefaultDateTime(mofDate));
+//		}
+//	}
 	// #31919 & 21692 - End
 	
 	/**
