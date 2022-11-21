@@ -20187,11 +20187,15 @@ if(null!=allTechnicalChecklist){
 						}
 						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC) && !changesFlag.get("specificationUpdated")){
 							changesFlag.put("specificationUpdated", !currentQuestionStr.equalsIgnoreCase(localQuestionStr));
+						}//bug #34048 - Start
+						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC) && !changesFlag.get("specificationDeleted")){
+							changesFlag.put("specificationDeleted", true);
 						}
 					}
 				}
 			}
-			boolean specQuestionModified = (changesFlag.get("itemAdded") || changesFlag.get("itemUpdated") || changesFlag.get("itemDeleted"));
+			boolean specQuestionModified = (changesFlag.get("itemAdded") || changesFlag.get("itemUpdated") || changesFlag.get("itemDeleted")
+					|| changesFlag.get("specificationDeleted"));//bug #34048 - End
 			return  specQuestionModified || (!specQuestionModified && !isOriginallyCompleted);
 		}
 		return false;
