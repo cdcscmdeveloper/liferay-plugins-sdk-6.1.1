@@ -7366,7 +7366,10 @@ public class SmApplicationUtil {
 								.getRecordStatusFlg()
 								.compareTo(
 										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
-						&& !isCategoryRejected(cat)) {
+						//#30766 - START
+						//&& !isCategoryRejected(cat)) {
+						) {
+					   //#30766 - END
 					String facType = "";
 					if (cat.getPmCategoryL3().getFacilityType() != null) {
 						facType = cat.getPmCategoryL3().getFacilityType();
