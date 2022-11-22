@@ -3216,6 +3216,17 @@ public class SmApplicationBackingBean extends
 						}
 					}
 				}
+				//#31043 start
+				if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+					for (SmSupplierCategory cat : getManagedBean()
+							.getActiveCategoryList()) {
+						if(cat.getPoDecFlg() == 0 && getManagedBean().isPoUser())
+							log.info("PO Remark: "+ cat.getPoRemarks());
+						else if(cat.getApprvrDecFlg() == 0 && getManagedBean().isApproverUser())
+							log.info("Approver Remark: "+ cat.getApproverRemarks());
+					}
+				}
+				
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
 				SmApplicationUtil.validateCategoriesBeforeSave(true,
@@ -3227,6 +3238,7 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.getInstance()
 						.removeNotApplicableInformationBeforeSave(
 								getManagedBean());
+				
 				//Bug #26703 set whether allowed to change business type from home office to business
 				setBusinessAndHadApprovedSpecialCatcode();
 			} else if (currentPageType
@@ -4443,6 +4455,7 @@ public class SmApplicationBackingBean extends
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY:
 			validSave = SmApplicationUtil.validateCategoriesBeforeSave(
 					validSave, getManagedBean(), currentTab);
+			log.info("Valid save: "+validSave);
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY:
 			validSave = SmApplicationUtil.validateFacilityPanel(
