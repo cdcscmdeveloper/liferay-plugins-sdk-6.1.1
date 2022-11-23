@@ -9986,8 +9986,8 @@ private void retriveCommitteeRemarksList(){
 						evalResDTO.getProposalChecklist());
 				// this.getManagedBean().getFinSpecSupplierList().remove(index);
 
-//				financialSpes.set(finindex, this.getManagedBean()
-//						.getQtProposalChecklist());//#33968
+				financialSpes.set(finindex, this.getManagedBean()
+						.getQtProposalChecklist());
 
 				getManagedBean().setFinancialSummaryGenerated(false);
 				updateSummaryGeneratedStatus();
