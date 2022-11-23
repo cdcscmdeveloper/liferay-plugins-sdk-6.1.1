@@ -2873,6 +2873,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ctBB.getManagedBean().setViewContract(false);
 		ctBB.getManagedBean().setBackFromSCL(false);
 		//Bug 34030 - shaqimi end
+		ctBB.getManagedBean().setViewContractFromAgreement(false);//Bug 34142 - shaqimi 16112022
 		
 		contractBB.getManagedBean().getContractListingPagingDataModel().resetData();
 		contractBB.getManagedBean().getServiceListingPagingDataModel().resetData();
