@@ -232,7 +232,7 @@
 								<table style="width: 100%;">
 									<tr style="width: 100%;">
 										<td><p:outputLabel style="width:190px;"
-												value="#{lbl['lbl.rpt.contractandsystem']}" /></td>
+												value="#{lbl['lbl.fl.sistem.panel.name']}" /></td><!-- 29890 - change label  -->
 									</tr>
 								</table>
 							</p:column>
@@ -240,11 +240,11 @@
 								<table style="width: 100%;">
 									<tr>
 										<td><p:inputText maxlength="400" id="contractSysTypeId"
-												label="#{lbl['lbl.rpt.contractandsystem']}"
+												label="#{lbl['lbl.fl.sistem.panel.name']}"
 												value="#{reportBackingBean.flContractSystem}"
 												style="margin-top:5px;width:268px;">
 												<p:ajax event="blur" partialSubmit="true"
-													update="@([id$=Msg])" />
+													update="@([id$=Msg])" /><!-- 29890 - change label  -->
 											</p:inputText>&#160;<p:graphicImage id="typeofcontractsystem"
 												value="/css/images/design/tooltips.png" /> <p:tooltip
 												rendered="#{reportBackingBean.rptGenBean.toolTipForCC}"
