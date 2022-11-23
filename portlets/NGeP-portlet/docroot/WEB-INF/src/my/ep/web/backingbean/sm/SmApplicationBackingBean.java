@@ -7467,18 +7467,26 @@ public class SmApplicationBackingBean extends
 		}
 		//END 27821
 		//#34138 - start - reset all state lists
+		if (getManagedBean().getShareHolderPermAddr().getSmAddress().getStateId() == null){
 		SmApplicationUtil.getInstance().populateStateByCountry(
 				getManagedBean().getShareHolderPermAddr().getSmAddress(), 
 				SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL, getManagedBean());
+		}
+		if (getManagedBean().getShareHolderOffAddr().getSmAddress().getStateId() == null){
 		SmApplicationUtil.getInstance().populateStateByCountry(
 				getManagedBean().getShareHolderOffAddr().getSmAddress(), 
 				SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL, getManagedBean());
+		}
+		if (getManagedBean().getShareHolderMailAddr().getSmAddress().getStateId() == null){
 		SmApplicationUtil.getInstance().populateStateByCountry(
 				getManagedBean().getShareHolderMailAddr() .getSmAddress(), 
 				SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL, getManagedBean());
+		}
+		if (getManagedBean().getShareHolderResdAddr().getSmAddress().getStateId() == null){
 		SmApplicationUtil.getInstance().populateStateByCountry(
 				getManagedBean().getShareHolderResdAddr().getSmAddress(), 
 				SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL, getManagedBean());
+		}
 		//#34138 - end
 	}
 	
