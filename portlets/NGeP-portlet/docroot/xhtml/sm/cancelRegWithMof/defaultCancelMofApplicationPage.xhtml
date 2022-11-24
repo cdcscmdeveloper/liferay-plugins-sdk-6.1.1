@@ -12,8 +12,10 @@
 
 
 	<ui:define name="contentSection">
-		<f:event
+		<c:if test="#{postSupplierRegBB.renderedCancelMofApplication()}">
+			<f:event
 			listener="#{backingBean.renewSesionObjectByApplicationType('C')}"
 			type="preRenderView" />
+		</c:if>
 	</ui:define>
 </ui:composition>
