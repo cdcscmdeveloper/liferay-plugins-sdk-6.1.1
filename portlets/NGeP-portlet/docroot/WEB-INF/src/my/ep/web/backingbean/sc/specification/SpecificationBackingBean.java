@@ -13157,11 +13157,14 @@ if (null != checklist && !checklist.isEmpty()) {
 			}
 			//1873 - start - note 52
 			boolean isModified = false;
+			//#34048 - Start
+			boolean isSpecNotExist = false;
 			if (!SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(specType)) { 
 			PmStatus pendingStatus = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);//#11140-Start
 			boolean isTemplateSpec = QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(scQtCheckList.getDefinationType().getParameterCode());
 			isModified = isTemplateSpec && isSpecQuestionsModified(scQtCheckList);//1873 - start - note 97
-			if(isModified || !isTemplateSpec){
+			isSpecNotExist = isSpecQuestionNotExist(scQtCheckList);
+			if(isModified || !isTemplateSpec || isSpecNotExist){//#34048 - End
 				scQtCheckList.setPmStatus(pendingStatus);
 				scQtCheckList.setPmEvalStatus(pendingStatus);
 				scQtCheckList.setSampleStatus(pendingStatus);//#11140-End
@@ -19421,15 +19424,11 @@ if(null!=allTechnicalChecklist){
 						}
 						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC) && !changesFlag.get("specificationUpdated")){
 							changesFlag.put("specificationUpdated", !currentQuestionStr.equalsIgnoreCase(localQuestionStr));
-						}//bug #34048 - Start
-						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC) && !changesFlag.get("specificationDeleted")){
-							changesFlag.put("specificationDeleted", true);
 						}
 					}
 				}
 			}
-			boolean specQuestionModified = (changesFlag.get("itemAdded") || changesFlag.get("itemUpdated") || changesFlag.get("itemDeleted")
-					|| changesFlag.get("specificationDeleted"));//bug #34048 - End
+			boolean specQuestionModified = (changesFlag.get("itemAdded") || changesFlag.get("itemUpdated") || changesFlag.get("itemDeleted"));
 			return  specQuestionModified || (!specQuestionModified && !isOriginallyCompleted);
 		}
 		return false;
@@ -21439,4 +21438,39 @@ if(null!=allTechnicalChecklist){
 		}
 	}
 	// Bug #34065@Syazani 01/11/2022 -- End
+	
+	//#34048 - Start
+	public boolean isSpecQuestionNotExist(ScQtCheckList qtCheckList) {
+		
+		TplSpecMaster spec = qtCheckList.getScQtDoc().getTplSpecMaster();
+		List<TplSpecQuestion> questionList = spec.getTplSpecQuestions();
+		boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(spec.getSpecTypeCode().getParameterCode());
+		int specCount = 0;
+		String item = null;
+		
+		if (!isFinancialSpec) {
+			for (TplSpecQuestion ques : questionList) {
+				boolean isQuestionTypeItem = TemplateSpecConst.QUESTION_TYPE_ITEM.equals(ques.getQuestionType());
+				
+				if (item != null && !item.equals(ques.getClItem()) && spec.isSpecificationReq() && isQuestionTypeItem
+						&& specCount == 0) {
+					return true;
+				}
+				
+				if (isQuestionTypeItem) {
+					specCount = 0;
+					item = ques.getClItem();
+				} else {
+					specCount++;
+				}
+			}
+			
+			if (item != null && spec.isSpecificationReq() && specCount == 0 && questionList.size() > 0) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	//#34048 - End
 }
