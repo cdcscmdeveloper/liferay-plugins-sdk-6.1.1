@@ -1202,6 +1202,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 		ctReqDTO.setViewOnly(true);
 		ctBB.getManagedBean().setViewContract(true);
+		ctBB.getManagedBean().setViewContractFromAgreement(true);//Bug 34142 - shaqimi 16112022
 		ContractDetailsBackingBean contractDetailsBB = new ContractDetailsBackingBean();
 		contractDetailsBB.getManagedBean().setAsAtDate(null);
 		contractDetailsBB.setValidateContractField(ctReqDTO);

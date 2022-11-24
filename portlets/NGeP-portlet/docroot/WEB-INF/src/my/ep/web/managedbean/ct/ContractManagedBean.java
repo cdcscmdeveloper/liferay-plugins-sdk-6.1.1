@@ -180,6 +180,9 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Long contractVerIdFromTaskList = null;//34030
 	private String taskNameFromTaskList = null;//34030
 
+	private boolean viewContractFromAgreement = false;//34142
+	private boolean viewSCLFromContract = false;//34142
+
 	//#28854 - start
 	private List<String> itemSpecification;
 	private String newOfferSpec;
@@ -1644,5 +1647,21 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.applID = applID;
 	}
     //End Fix - #33674
+	//Bug 34142 - shaqimi start 16112022
+	public boolean isViewContractFromAgreement() {
+		return viewContractFromAgreement;
+	}
 
+	public void setViewContractFromAgreement(boolean viewContractFromAgreement) {
+		this.viewContractFromAgreement = viewContractFromAgreement;
+	}
+
+	public boolean isViewSCLFromContract() {
+		return viewSCLFromContract;
+	}
+
+	public void setViewSCLFromContract(boolean viewSCLFromContract) {
+		this.viewSCLFromContract = viewSCLFromContract;
+	}
+	//Bug 34142 - shaqimi end 16112022
 }

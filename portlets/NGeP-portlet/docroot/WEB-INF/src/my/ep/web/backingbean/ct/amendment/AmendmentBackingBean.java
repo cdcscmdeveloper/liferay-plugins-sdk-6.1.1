@@ -876,7 +876,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		// Bug 34030 - shaqimi end
 		else if(ctBackingBean.getManagedBean().isAmendFromTaskList() && ctBackingBean.getManagedBean().isViewSCL()){//tasklist	
-			if(!getManagedBean().isViewSclFromAgreement()){
+			if(!getManagedBean().isViewSclFromAgreement() && !ctBackingBean.getManagedBean().isViewSCLFromContract()){//Bug 34142 - shaqimi 16112022
 				ctBackingBean.getManagedBean().setViewContract(false);
 				this.getManagedBean().setViewOnly(false);
 				ctBackingBean.getManagedBean().setHasAmendmentLoaNo(false);
@@ -887,6 +887,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 			
+			//Bug 34142 - shaqimi start 16112022
+			if(ctBackingBean.getManagedBean().isViewContractFromAgreement()){
+				ctBackingBean.getManagedBean().setViewSCLFromContract(false);
+			}
+			//Bug 34142 - shaqimi start 16112022
 			ctBackingBean.getManagedBean().setViewSCL(false);	
 			getManagedBean().setViewSclFromAgreement(false);
 			return this.getManagedBean().getBackToPreviousPage();					
@@ -988,6 +993,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
 			ctAgreementReqDTO = new ContractAgreementReqDTO();
 			ctAgreementReqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
+			//Enhancement 34142 - shaqimi start 16/11/2022
+			if(ctBackingBean.getManagedBean().isViewContractFromAgreement() && ctBackingBean.getManagedBean().isViewSCLFromContract()){
+				ctAgreementReqDTO.setViewOnly(true);
+			}
+			//Enhancement 34142 - shaqimi end 16/11/2022
 			ctAgreementResDTO = agreementSO.retrieveContractAgreements(ctAgreementReqDTO);
 			ctBackingBean.getManagedBean().setCtAgreementList(ctAgreementResDTO.getAgreementList());
 			
@@ -7876,8 +7886,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		//Bug 33096 - shaqimi end
 
+					//Bug 34142 - shaqimi start 16112022
 		reqDTO.setViewOnly(true);
-		ctBackingBean.getManagedBean().setViewContract(true);
 		getManagedBean().setSelectedTabIndex(0);
 		getManagedBean().setViewOnly(true);
 		if(getManagedBean().getCtLetterOfAcceptance() != null){
@@ -7885,6 +7895,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		setAmendmentContractVer(reqDTO);
 		
+					if(ctBackingBean.getManagedBean().isViewContractFromAgreement()){
+						ctBackingBean.getManagedBean().setViewContract(true);
+					}
+					//Bug 34142 - shaqimi start 16112022
+					
 		//for loa header
 		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,

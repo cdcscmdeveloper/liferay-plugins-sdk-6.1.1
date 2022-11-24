@@ -4041,6 +4041,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				abb.getManagedBean().setContractIdFromTaskList(new Long(this.getManagedBean().getContractVer().getCtContract().getContractId()));
 				abb.getManagedBean().setContractVerIdFromTaskList(this.getManagedBean().getContractVer().getContractVerId());
 			}
+			//Bug 34142 - shaqimi start 16112022
+			if(this.getManagedBean().isViewContractFromAgreement()){
+				this.getManagedBean().setViewSCLFromContract(true);
+			}
+			//Bug 34142 - shaqimi end 16112022
 			//Bug 34030 - shaqimi end
 			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
 		}
