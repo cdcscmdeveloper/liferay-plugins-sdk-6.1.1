@@ -480,7 +480,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				
 				if(getDocStatus()>0){
 					//33849 - Start - Need to set to PA_PENDING_PAYMENT_MATCH because status in SOA for POCO Pending Payment Match is 46000
-					if(getDocStatus()== FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH || getDocStatus()== FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH){
+					if(getDocStatus()== FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH.intValue() 
+							|| getDocStatus()== FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH.intValue()){
 						reqDTO.setStatus(FulfilmentStatusConst.PA_PENDING_PAYMENT_MATCH.intValue());
 					}else{
 						reqDTO.setStatus(getDocStatus());
@@ -694,7 +695,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				
 				if(getDocStatusGroup()>0){
 					//33849 - Start - Need to set to PA_PENDING_PAYMENT_MATCH because status in SOA for POCO Pending Payment Match is 46000
-					if(getDocStatusGroup()== FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH || getDocStatusGroup()== FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH){
+					if(getDocStatusGroup()== FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH.intValue() 
+							|| getDocStatusGroup()== FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH.intValue()){
 						reqDTO.setStatus(FulfilmentStatusConst.PA_PENDING_PAYMENT_MATCH.intValue());
 					}else{
 						reqDTO.setStatus(getDocStatusGroup());
