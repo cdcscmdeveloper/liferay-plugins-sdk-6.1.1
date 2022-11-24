@@ -20921,8 +20921,13 @@ if(null!=allTechnicalChecklist){
 			if (!q.isItemReqDemo()) {
 				q.setDemoScore(null);
 			}
-		}		
-		validatePrepareQtChecklist();
+		}
+		for (ScQtCheckList l : st2technicalproposalList) {
+			if (l.getQtChecklistId() == null
+					&& l.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+				validatePrepareQtChecklist();
+			}
+		}
 		List<ScQtCheckList> updatedCheckLists = new ArrayList<ScQtCheckList>();
 		updatedCheckLists.add(scQtCheckList);
 
