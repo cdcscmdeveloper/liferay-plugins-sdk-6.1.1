@@ -21,6 +21,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.ReactivateSupplierVO;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "reactivateBasicBackingBean")
@@ -31,6 +32,7 @@ public class ReactivateBasicBackingBean extends
 	/**
 	 * 
 	 */
+	public static Logger log = Logger.getLogger(ReactivateBasicBackingBean.class); //#34095
 	private static final long serialVersionUID = -5634641289404728683L;
 	private ReactivateSupplierVO reactivateBasic;
 	private SmSupplier basicSupplier;
@@ -58,27 +60,49 @@ public class ReactivateBasicBackingBean extends
 	public void preRenderBasicAccountReactivation() {
 		renewObject();
 		try {
+			//#34095 - START
+			log.info("#34095 - ReactiveBB log #1");
 			HttpServletRequest originalServletRequest = new FacesScopes()
 					.getOriginalServletRequest();
+			log.info("#34095 - ReactiveBB log #2");
 			encryptActivationKey = originalServletRequest.getParameter("kp");
+			log.info("#34095 - ReactiveBB log #3 - encryptActivation : " + encryptActivationKey);
 			createdTimeParam = originalServletRequest.getParameter("ct");
+			log.info("#34095 - ReactiveBB log #4 - createdTimeParam : " + createdTimeParam);
 			adminPersonnelIdParam = originalServletRequest.getParameter("pr");
+			log.info("#34095 - ReactiveBB log #5 - adminPersonnelIdParam : " + adminPersonnelIdParam);
 
 			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+			log.info("#34095 - ReactiveBB log #6");
 			reqDTO.setPersonnelId(Long.parseLong(adminPersonnelIdParam));
+			log.info("#34095 - ReactiveBB log #7 - reqDTO personnelId : " + reqDTO.getPersonnelId());
 			PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
+			log.info("#34095 - ReactiveBB log #8");
 			personnelReqDTO.setPersonnelId(reqDTO.getPersonnelId());
+			log.info("#34095 - ReactiveBB log #9 - personnelReqDTO personnelId : " + personnelReqDTO.getPersonnelId());
 			basicSupplierAdmin = SmServiceLookup.getPersonnelSO()
 					.retrievePersonnelById(personnelReqDTO).getSmPersonnel();
+			log.info("#34095 - ReactiveBB log #10 - supplierAdmin name : " + basicSupplierAdmin.getName());
+			log.info("#34095 - ReactiveBB log #10 - supplierAdmin record status : " + basicSupplierAdmin.getRecordStatusFlg());
+			log.info("#34095 - ReactiveBB log #10 - supplierAdmin email : " + basicSupplierAdmin.getEmail());
+			log.info("#34095 - ReactiveBB log #10 - supplierAdmin eprole : " + basicSupplierAdmin.getEpRole());
 			basicSupplier = SmServiceLookup.getRegistrationSO()
 					.retrieveValidReactivateBasicSupplier(reqDTO).getSmSupp();
+			log.info("#34095 - ReactiveBB log #11");
+			log.info("#34095 - ReactiveBB log #11 - supplier records : " + basicSupplier.getRecordStatusFlg());
+			log.info("#34095 - ReactiveBB log #11 - supplier records : " + basicSupplier.getEpNo());
+			log.info("#34095 - ReactiveBB log #11 - supplier changeddate : " + basicSupplier.getChangedDate());
 			loginId = basicSupplierAdmin.getPmUser().getLoginId();
+			log.info("#34095 - ReactiveBB log #12 - login id : " + loginId);
 			validateActivationUrl();
+			log.info("#34095 - log #13");
 		} catch (Exception ex) {
+			log.info("#34095 - ReactiveBB log #14 catch");
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
 					MessageConst.INFO_721031, null, FacesMessage.SEVERITY_INFO);
 		}
+		//#34095 - END
 	}
 
 	/**
