@@ -2600,25 +2600,14 @@ public void saveComplianceSample() {
 						.getCheckListResultBean().getResultList();
 				//Bug #33252 related to #33110 start
 				for (ScQtCheckList checkList : checklistList) {
-					//if(!this.getManagedBean().getScQt().isDemoRequired()){//#28784 -Remove
-						// Update eval status proposal checklist for no supplier that cant respond because of quantity 0 at zone
-						// bug 33851 - start 
-						 evaluationSO.proposalchecklistsuppqty
-								(checkList.getQtChecklistId());
-						// bug 33851 - end 
-					//}
+
+					//REMOVE bug 33851
+					
 					//#33252 /27/5/2022 Start Fix
 					boolean checkallitemautoscore = evaluationSO.checkbuttonAutoScore
 							(checkList.getQtChecklistId(),evalstage.get(0));
 					//#33252 /27/5/2022 End Fix
-					// if all item is auto score --> START
-					// 32426 - start
-					// if(proposalCheckList.isScoringReq()){
-					// localCheckList
-					// .add(checkStausForUploadNoActionCheckLists(
-					// proposalCheckList, evalstage.get(0)));
-					// }
-					//
+
 
 					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 							.equalsIgnoreCase(checkList
