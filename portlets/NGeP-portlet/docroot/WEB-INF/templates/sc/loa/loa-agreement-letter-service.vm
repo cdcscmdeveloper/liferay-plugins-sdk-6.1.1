@@ -2454,11 +2454,19 @@ Should be product and service item display if exist
 							  #end
 					#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
 						#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
+						##29006 - start
+						#set($isSameItem = 'false') 
+						
+						#foreach( $scLoiLoaItem in $scLoa.scLoiLoaItems )
+							#if($scLoiLoaItem.scRequestItem.tplSpecQuestion.specQuestionId == $tplspecQuestion.specQuestionId)
+								#set($isSameItem = 'true') 
+							#end										
+						#end
 						
 						#if ($isZonal)
 						
-							#if ($tplspecQuestion.questionType == "I")
-							 
+							#if ($tplspecQuestion.questionType == "I" && $isSameItem == 'true')
+							##29006 - end
 							<tr>							 
 								
 								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
@@ -2666,7 +2674,8 @@ Should be product and service item display if exist
 								
 							
 						#else
-							#if ($tplspecQuestion.questionType == "I")
+							##29006 - add $isSameItem
+							#if ($tplspecQuestion.questionType == "I" && $isSameItem == 'true')
 						 
 								<tr>
 								
