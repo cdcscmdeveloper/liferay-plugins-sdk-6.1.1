@@ -317,6 +317,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private boolean updatedLampiranA3DownloadedFlag = false;
 	private String newSupplierOffered;
 	private String newSupplierJustification;
+	private String selectedSupplierOffer = null;
 	private boolean oldNewSuppOfferSameFlag;
 	private boolean updateSupplierLinkFlag = false;
 	private Map<Long, List<TplSpecAnswer>> scLoiLoaItemAnswerMap;
@@ -1880,6 +1881,14 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	public void setMultipleSuppOffer(boolean multipleSuppOffer) {
 		this.multipleSuppOffer = multipleSuppOffer;
+	}
+	
+	public String getSelectedSupplierOffer() {
+		return selectedSupplierOffer;
+	}
+
+	public void setSelectedSupplierOffer(String selectedSupplierOffer) {
+		this.selectedSupplierOffer = selectedSupplierOffer;
 	}
 	//#29006 - end
 	

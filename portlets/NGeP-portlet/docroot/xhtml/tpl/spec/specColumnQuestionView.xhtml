@@ -9,7 +9,7 @@
 	<ui:param name="isRepeated"
 		value="#{prevSpecQuestion != null ? prevSpecQuestion.specQuestionId == question.specQuestionId : false}" />
 
-	<p:column style="width: 25%;white-space: normal;">
+	<p:column style="width: 25%;white-space: normal;word-break:normal;"><!-- #29006 word-break:normal -->
 		<h:outputText value="#{fn:replace(question.clItem,',',',  ')}"  escape="false"
 			rendered="#{!isRepeated}" />
 		<!-- #29007 Start Vinod -->
