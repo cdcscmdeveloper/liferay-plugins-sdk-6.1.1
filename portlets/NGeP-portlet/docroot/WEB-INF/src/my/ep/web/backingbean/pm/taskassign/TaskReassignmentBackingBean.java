@@ -1394,6 +1394,14 @@ public class TaskReassignmentBackingBean extends
 								//#7465, #29822  - end - reendorse
 							}
 						}
+						//#7465 START - reendorse
+						if(getManagedBean().isShowRemoveProcessMessageGroup()==true) {
+							//disable check box for group task
+							getManagedBean().setCheckAllGroupTasksEnabled(false);
+							//disable button for group task
+							getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+						}
+						//#7465 end - reendorse
 					}
 				}
 			} catch (Exception e) {
@@ -1575,6 +1583,14 @@ public class TaskReassignmentBackingBean extends
 //								//#7465, #29822  - end - reendorse
 							}
 						}
+						//#7465 START - reendorse
+						if(getManagedBean().isShowRemoveProcessMessageOther()==true ) {
+							//disable check box for group task
+							getManagedBean().setCheckAllOthersTasksEnabled(false);
+							//disable button for group task
+							getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+						}
+						//#7465 end - reendorse
 					}
 				}
 			} catch (Exception e) {
@@ -3437,16 +3453,13 @@ public class TaskReassignmentBackingBean extends
 				reqDTO.setModule("PM");
 				//created by
 				reqDTO.setCreatedBy(getUserByLoginId());
-				
-				List<String> docNumberList = new ArrayList<String>();
-				if (StringUtils.isNotBlank(getManagedBean()
-						.getTaskAssignmentSearchBean().getDocNo())) {
-					docNumberList.add(getManagedBean()
-							.getTaskAssignmentSearchBean().getDocNo());
-					//param_doc_no
-					reqDTO.setParamDocNo(docNumberList);
+				//#7465 START - reendorse
+				String docNumber =getManagedBean().getTaskAssignmentSearchBean().getDocNo() ;
+				if (StringUtils.isNotBlank(docNumber)) {
+					// param_doc_no
+					reqDTO.setParamDocNo(docNumber);
 				}
-
+				//#7465 end - reendorse
 				if (getManagedBean().getTaskAssignmentSearchBean().getDocType() != null
 						&& getManagedBean().getTaskAssignmentSearchBean().getDocType() != null) {
 					//param_doc_type
@@ -3466,14 +3479,19 @@ public class TaskReassignmentBackingBean extends
 		
 		
 		if (resDTO != null && resDTO.isSuccessful()) {
-			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
-			FacesMessage.SEVERITY_INFO, MessageConst.INFO_780071, null);
-			
+			//#7465 Start - reendorse
+			resetCheckAllTasks();
+			this.getManagedBean().getAllGroupTasks().clear();
+			this.getManagedBean().getSelectedGroupTasks().clear();
+			//#7465 end - reendorse
 			//#7465, #29822 - START - reendorse
 			this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
-			this.getManagedBean().setCheckAllGroupTasksEnabled(false);
 			this.getManagedBean().setShowRemoveProcessMessageGroup(true);
 			//#7465, #29822  - end - reendorse
+			reloadAllTaskList(); //#7465 - reendorse
+			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
+			FacesMessage.SEVERITY_INFO, MessageConst.INFO_780071, null);
+		
 			log.info("==============dialog is completed closed==============");
 
 		}
@@ -3530,12 +3548,13 @@ public class TaskReassignmentBackingBean extends
 				//created by
 				reqDTO.setCreatedBy(getUserByLoginId());
 
-				List<String> docNumberList = new ArrayList<String>();
-				if (StringUtils.isNotBlank(getManagedBean().getTaskAssignmentSearchBean().getDocNo())) {
-					docNumberList.add(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+				//#7465 - START - reendorse
+				String docNumber =getManagedBean().getTaskAssignmentSearchBean().getDocNo() ;
+				if (StringUtils.isNotBlank(docNumber)) {
 					// param_doc_no
-					reqDTO.setParamDocNo(docNumberList);
+					reqDTO.setParamDocNo(docNumber);
 				}
+				//#7465 - end - reendorse
 
 				if (getManagedBean().getTaskAssignmentSearchBean().getDocType() != null
 						&& getManagedBean().getTaskAssignmentSearchBean().getDocType() != null) {
@@ -3556,15 +3575,20 @@ public class TaskReassignmentBackingBean extends
 		}
 
 		if (resDTO != null && resDTO.isSuccessful()) {
+			//#7465 Start - reendorse
+			resetCheckAllTasks();
+			this.getManagedBean().getAllOthersTasks().clear();
+			this.getManagedBean().getSelectedOthersTasks().clear();
+			//#7465 end - reendorse
+			//#7465, #29822  - START - reendorse
+			this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+			this.getManagedBean().setShowRemoveProcessMessageOther(true);
+			//#7465, #29822  - end - reendorse
+			reloadAllTaskList(); //#7465 - reendorse
+			
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO,
 					MessageConst.INFO_780071, null);
 			
-			//#7465, #29822  - START - reendorse
-			this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
-			this.getManagedBean().setCheckAllOthersTasksEnabled(false); 
-			this.getManagedBean().setShowRemoveProcessMessageOther(true);
-			//#7465, #29822  - end - reendorse
-
 			log.info("==============dialog is completed closed==============");
 
 		}
