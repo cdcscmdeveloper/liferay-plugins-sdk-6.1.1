@@ -145,10 +145,6 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	
 	
 	//[#25549] add .. start
-	private String procurementDesc;
-	private String procurementTitle;
-	private String procurementCatId;
-	private String procurementMethod;
 	private List<PpProcurementItem> clonePpProcurementItemLs;
 	private List<PpExpenditureItem> clonePpExpenditureItemLs;
 	private List<PpExpenditureItem> clonePpExpenditurePItemLs;
@@ -1224,46 +1220,6 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	
 	
 	//[#25549] add .. start
-	
-	
-	public String getProcurementDesc() {
-		return procurementDesc;
-	}
-	
-	
-	public void setProcurementDesc(String procurementTitle) {
-		this.procurementTitle = procurementTitle;
-	}	
-	
-	
-	public String getProcurementTitle() {
-		return procurementTitle;
-	}
-	
-	
-	public void setProcurementTitle(String procurementTitle) {
-		this.procurementTitle = procurementTitle;
-	}	
-
-	public String getProcurementCatId() {
-		return procurementCatId;
-	}
-
-		
-	public void setProcurementCatId(String procurementCatId) {
-		this.procurementCatId = procurementCatId;
-	}
-		
-		
-	public String getProcurementMethod() {
-		return procurementMethod;
-	}
-
-		
-	public void setProcurementMethod(String procurementMethod) {
-		this.procurementMethod = procurementMethod;
-	}
-		
 	public List<PpProcurementItem> getClonePpProcurementItemLs() {
 		return clonePpProcurementItemLs;
 	}
