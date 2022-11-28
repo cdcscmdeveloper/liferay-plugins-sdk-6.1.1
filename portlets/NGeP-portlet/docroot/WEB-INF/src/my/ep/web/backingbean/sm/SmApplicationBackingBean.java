@@ -285,8 +285,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void renewSesionObjectByApplicationType(String applicationType) {
 		renewSesionObject();
-		log.info("*** renewSesionObjectByApplicationType *** "
-				+ applicationType);
+		//log.info("*** renewSesionObjectByApplicationType *** " + applicationType);
 		String errMsg = StringUtils.EMPTY;
 		if (applicationType.equals("DPA")) {
 			errMsg = getDeletePendingApplicationErrorMsg();
@@ -1849,7 +1848,10 @@ public class SmApplicationBackingBean extends
 						}*/
 						//START #27256
 						//27495
-						String[] copyPropAddress = {"address1","address2","address3","addressSsmNull","postcodeSsmNull","stateSsmNull","countrySsmNull","ssmData","postcode","pmState","pmCountry","stateId"};
+						//#34138 - start
+						String[] copyPropAddress = {"address1","address2","address3","addressSsmNull","postcodeSsmNull","stateSsmNull","countrySsmNull","ssmData","postcode","pmState","pmCountry","stateId",
+												"countryId"};
+						//#34138 - end
 						EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmAddress(),this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress(),copyPropAddress);
 						//#27256
 						SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
@@ -7245,8 +7247,28 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setCountryLs(SmApplicationUtil.retrievePmCountryList());
 		}
 		//END 27821
-		
-
+		//#34138 - start - reset all state lists
+		if (getManagedBean().getShareHolderPermAddr().getSmAddress().getStateId() == null){
+		SmApplicationUtil.getInstance().populateStateByCountry(
+				getManagedBean().getShareHolderPermAddr().getSmAddress(), 
+				SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL, getManagedBean());
+		}
+		if (getManagedBean().getShareHolderOffAddr().getSmAddress().getStateId() == null){
+		SmApplicationUtil.getInstance().populateStateByCountry(
+				getManagedBean().getShareHolderOffAddr().getSmAddress(), 
+				SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL, getManagedBean());
+		}
+		if (getManagedBean().getShareHolderMailAddr().getSmAddress().getStateId() == null){
+		SmApplicationUtil.getInstance().populateStateByCountry(
+				getManagedBean().getShareHolderMailAddr() .getSmAddress(), 
+				SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL, getManagedBean());
+		}
+		if (getManagedBean().getShareHolderResdAddr().getSmAddress().getStateId() == null){
+		SmApplicationUtil.getInstance().populateStateByCountry(
+				getManagedBean().getShareHolderResdAddr().getSmAddress(), 
+				SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL, getManagedBean());
+		}
+		//#34138 - end
 	}
 	
 	//start #31479
@@ -7454,6 +7476,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean()
 					.setIdentificationTypes(getPmIdTypeDropdownValues());
 		}
+		//#34138
+		getManagedBean().setCountryLs(SmApplicationUtil.retrievePmCountryList());
 		//#29315
 		getManagedBean().setFlagMandatoryEpfNo(false);
 		getManagedBean().setPopupAction("N");
