@@ -7518,15 +7518,23 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> qtTypes = new ArrayList<String>();
 		
+		/*#34162 Start Vinod
 		if (null != scLoa &&null != scLoa.getProcurementMode()
 				&& ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scLoa
-						.getProcurementMode().getParameterCode())) {
+						.getProcurementMode().getParameterCode())) {*/
 			qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
 			
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmParameter.parameterCode",
 							SearchOperator.OPERATOR_NOT_IN.value(), qtTypes));
+		//}
+		if (null != scLoa
+			&& scLoa.getQtType()!= null 
+			&& scLoa.getQtType().getParameterCode()!=null
+			&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER)) {
+				searchBean = new SearchBean<PmParameterDesc>();
 		}
+		//#34162 End Vinod
 
 		return super.getDropdownValuesBySearchBean(ParameterTypeConst.QUOTATION_TENDER_TYPE,
 				searchBean);
