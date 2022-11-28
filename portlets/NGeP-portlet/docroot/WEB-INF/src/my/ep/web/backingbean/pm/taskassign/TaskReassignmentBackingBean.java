@@ -3479,19 +3479,14 @@ public class TaskReassignmentBackingBean extends
 		
 		
 		if (resDTO != null && resDTO.isSuccessful()) {
-			//#7465 Start - reendorse
-			resetCheckAllTasks();
-			this.getManagedBean().getAllGroupTasks().clear();
-			this.getManagedBean().getSelectedGroupTasks().clear();
-			//#7465 end - reendorse
-			//#7465, #29822 - START - reendorse
-			this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
-			this.getManagedBean().setShowRemoveProcessMessageGroup(true);
-			//#7465, #29822  - end - reendorse
-			reloadAllTaskList(); //#7465 - reendorse
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
 			FacesMessage.SEVERITY_INFO, MessageConst.INFO_780071, null);
-		
+			
+			//#7465, #29822 - START - reendorse
+			this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+			this.getManagedBean().setCheckAllGroupTasksEnabled(false);
+			this.getManagedBean().setShowRemoveProcessMessageGroup(true);
+			//#7465, #29822  - end - reendorse
 			log.info("==============dialog is completed closed==============");
 
 		}
@@ -3575,20 +3570,15 @@ public class TaskReassignmentBackingBean extends
 		}
 
 		if (resDTO != null && resDTO.isSuccessful()) {
-			//#7465 Start - reendorse
-			resetCheckAllTasks();
-			this.getManagedBean().getAllOthersTasks().clear();
-			this.getManagedBean().getSelectedOthersTasks().clear();
-			//#7465 end - reendorse
-			//#7465, #29822  - START - reendorse
-			this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
-			this.getManagedBean().setShowRemoveProcessMessageOther(true);
-			//#7465, #29822  - end - reendorse
-			reloadAllTaskList(); //#7465 - reendorse
-			
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO,
 					MessageConst.INFO_780071, null);
 			
+			//#7465, #29822  - START - reendorse
+			this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+			this.getManagedBean().setCheckAllOthersTasksEnabled(false); 
+			this.getManagedBean().setShowRemoveProcessMessageOther(true);
+			//#7465, #29822  - end - reendorse
+
 			log.info("==============dialog is completed closed==============");
 
 		}
