@@ -171,8 +171,10 @@ public class ReactivateBasicBackingBean extends
 	}
 
 	private void validateActivationUrl() {
+		//#34095 - START
 		if (basicSupplier == null || StringUtils.isBlank(encryptActivationKey)
 				|| basicSupplierAdmin == null) {
+			log.info("#34095 - validateActivationUrl log #1");
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
 					MessageConst.INFO_721031, null, FacesMessage.SEVERITY_INFO);
@@ -180,18 +182,22 @@ public class ReactivateBasicBackingBean extends
 				&& StringUtils.isNotBlank(createdTimeParam)
 				&& new Long(createdTimeParam).compareTo(basicSupplier
 						.getChangedDate().getTime()) != 0) {
+			log.info("#34095 - validateActivationUrl log #2");
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
 					MessageConst.INFO_721031, null, FacesMessage.SEVERITY_INFO);
 		} else if (createdTimeParam == null
 				|| StringUtils.isBlank(createdTimeParam)) {
+			log.info("#34095 - validateActivationUrl log #3");
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
 					MessageConst.INFO_721031, null, FacesMessage.SEVERITY_INFO);
 		} else {
+			log.info("#34095 - validateActivationUrl log #4");
 			SmCommonUtil.redirectToPage(
 					"/xhtml/sm/reactivatebasic/basicAccountActivation.xhtml",
 					"", null, FacesMessage.SEVERITY_INFO);
+			//#34095 - END
 		}
 
 	}
