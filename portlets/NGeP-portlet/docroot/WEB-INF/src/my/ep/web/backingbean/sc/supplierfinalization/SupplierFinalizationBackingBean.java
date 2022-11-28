@@ -11271,31 +11271,34 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 		List<ScQtMeeting> meetingDetailsList = this.getManagedBean()
 				.getMeetingList();
-
-		for (ScQtMeeting meeting : meetingDetailsList) {
-			if (this.getManagedBean().isSecretaryUser()) {
-				if (null != meeting.getMeetingStatus()
-						&& null != meeting.getMeetingStatus().getStatusId()
-						&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
-								.getStatusId())
-						&& meeting.getRecordStatusFlg().equals(
-								DbValueConst.RECORD_STATUS_ACTIVE)
-						&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
-					lessThanValidityEndDate = true;
-				}
-			} else {
-				if (null != meeting.getMeetingStatus()
-						&& null != meeting.getMeetingStatus().getStatusId()
-						&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
-								.getStatusId())
-						&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
-					lessThanValidityEndDate = true;
+		
+		// #28834 - Start.
+		if (CollectionUtils.isNotEmpty(meetingDetailsList)) {
+			for (ScQtMeeting meeting : meetingDetailsList) {
+				if (this.getManagedBean().isSecretaryUser()) {
+					if (null != meeting.getMeetingStatus()
+							&& null != meeting.getMeetingStatus().getStatusId()
+							&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
+									.getStatusId())
+									&& meeting.getRecordStatusFlg().equals(
+											DbValueConst.RECORD_STATUS_ACTIVE)
+											&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
+						lessThanValidityEndDate = true;
+					}
 				} else {
-					lessThanValidityEndDate = false;
+					if (null != meeting.getMeetingStatus()
+							&& null != meeting.getMeetingStatus().getStatusId()
+							&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
+									.getStatusId())
+									&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
+						lessThanValidityEndDate = true;
+					} else {
+						lessThanValidityEndDate = false;
+					}
 				}
 			}
 		}
-
+		// #28834 - End.
 		return lessThanValidityEndDate;
 	}
 	// #21692 - end
