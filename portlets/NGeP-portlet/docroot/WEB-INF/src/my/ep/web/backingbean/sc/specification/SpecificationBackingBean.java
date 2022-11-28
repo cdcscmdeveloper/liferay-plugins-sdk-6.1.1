@@ -20210,7 +20210,12 @@ if(null!=allTechnicalChecklist){
 				q.setDemoScore(null);
 			}
 		}		
+		for (ScQtCheckList l : st2technicalproposalList) {
+			if (l.getQtChecklistId() == null
+					&& l.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
 		validatePrepareQtChecklist();
+			}
+		}
 		List<ScQtCheckList> updatedCheckLists = new ArrayList<ScQtCheckList>();
 		updatedCheckLists.add(scQtCheckList);
 
@@ -20263,8 +20268,6 @@ if(null!=allTechnicalChecklist){
 				checklistSorting(updatedNewCheckLists);
 			}//#28784 - End	
 			
-			//List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();	//#28784		
-		
 			for(ScQtCheckList t: updatedNewCheckLists){//#28784
 				if(t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)){
 					t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
