@@ -36,7 +36,9 @@
 							style="background-color:lightblue !important;text-align: left !important;color:black !important">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sm.category']} : "/>
-								<h:outputText value="#{mainTable.categoryDesc}"/>
+								<!-- 34239 -->
+								<h:outputText value="#{mainTable.categoryDesc}" 
+									style="word-wrap:break-word !important; white-space:normal !important;"/>
 							</f:facet>
 						</p:column>
 					</p:row>
