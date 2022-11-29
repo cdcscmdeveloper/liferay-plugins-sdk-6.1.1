@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -282,6 +283,9 @@ public class ViewApplHistoryBackingBean extends
 	 * Redirect to resubmit page
 	 */
 	public void redirectToResubmit() {
+		// #32628 - start
+		validateResubmitApplication();
+		// #32628 - end
 
 		// ##25969 - Blocked for resubmission if rejected application already
 		// deactivated (record status=9)
@@ -1892,6 +1896,15 @@ public class ViewApplHistoryBackingBean extends
 				}//#32002 - end
 			}
 		}
+		// #32628 - start
+		Date today = new Date();
+		SmMofAccount mofAccount = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(smAppl.getSmSupplier().getSupplierId());
+
+		if (button && smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_BUMI) && today.after(mofAccount.getExpDate())) {
+			button = false;
+		}
+		// #32628 - end
+		
 		return button;
 		//32627 - END
 	}
@@ -1979,5 +1992,26 @@ public class ViewApplHistoryBackingBean extends
 		}
 	}
 	//#31270 - END
+	
+	// #32628 - start
+	public void validateResubmitApplication() {
+		List<SmMofAccount> accounts = getManagedBean().getSmSupplier().getSmMofAccounts();
+		for (SmMofAccount account : accounts) {
+			if (account.getSupplierType().equalsIgnoreCase(getManagedBean().getSmAppl().getSupplierType())) {
+				if (account.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) || account.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_EXPIRED)) {
+					Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+					long diff = account.getExpDate().getTime() - currentDate.getTime();
+					long diffDays = diff / (24 * 60 * 60 * 1000);
+
+					if (this.getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES) && (diffDays >= 0 && diffDays < 90)) {
+						log.debug("***************MOF Account Expiry near for Ac No.: " + account.getMofNo()
+								+ "\nExp Date:" + account.getExpDate() + "\nDiff Days:" + diffDays);
+						throw new EpException(MessageConst.ERROR_722503);
+					}
+				}
+			}
+		}
+	}
+	// #32628 - end
 
 }
