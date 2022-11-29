@@ -363,8 +363,11 @@ public class SupplierFinalizationBackingBean extends
 
 				this.getManagedBean().setDisableBfButton(false);
 			} else {
-
-				this.getManagedBean().setDisableBfButton(true);
+				// #28834 - Start.
+				if (!getManagedBean().isBpkCentralContract()) {
+					this.getManagedBean().setDisableBfButton(true);
+				}
+				// #28834 - End.
 			}
 			this.evaluateDecisionList();//6906 note 117
 			//28834 end
@@ -974,6 +977,10 @@ public class SupplierFinalizationBackingBean extends
 			}
 		}
 		
+		// #28834 - Start.
+		setDisableSFJustification();
+		// #28834 - End.
+		
 		try {
 			this.getManagedBean()
 					.setJustDropdown(
@@ -985,6 +992,21 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}	
 	
+	// #28834 - Start.
+	private void setDisableSFJustification() {
+		String decision = getManagedBean().getScQtFinalization().getDecision().getParameterCode();
+		if (StringUtils.isNotEmpty(decision) && (decision.equals(ParameterConst.DECISION_RE_EVALUATION)
+				|| decision.equals(ParameterConst.DECISION_RE_PUBLISH)
+				|| decision.equals(ParameterConst.DECISION_CANCEL)
+				|| decision.equals(ParameterConst.DECISION_RBP))) {
+			getManagedBean().setDisableJustifications(true);
+			getManagedBean().getJustification().setReasonCode(null);
+		} else {
+			getManagedBean().setDisableJustifications(false);
+		}
+	}
+	// #28834 - End.
+
 	/**
 	 * Enhancement #21694
     * Get the Reversal tab data.
@@ -2741,33 +2763,38 @@ public class SupplierFinalizationBackingBean extends
 			if (this.getManagedBean().getOutcome().equalsIgnoreCase("REVISEBP")) {
 				List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
 				int pendingCount = 0;
-				for (ScQtMeeting meeting : meetingListList) {
-					if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
-							&& !QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
-							&& meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-
-						if (!getManagedBean().isBpkCentralContract()) {
-							// changeMeetingStatusBrief();
-
-							//Boolean remarksNotFound = validationRemarksBrief(meeting.getQtMeetingId());
-							if (StringUtils.isEmpty(meeting.getRemark())) {
-
-								RequestContext.getCurrentInstance().execute("ReamrksBriefPopup.show()");
+				// #28834 - Start.
+				if (CollectionUtils.isNotEmpty(meetingListList)) {
+					for (ScQtMeeting meeting : meetingListList) {
+						if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
+								&& !QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
+								&& meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+							
+							if (!getManagedBean().isBpkCentralContract()) {
+								// changeMeetingStatusBrief();
+								
+								//Boolean remarksNotFound = validationRemarksBrief(meeting.getQtMeetingId());
+								if (StringUtils.isEmpty(meeting.getRemark())) {
+									
+									RequestContext.getCurrentInstance().execute("ReamrksBriefPopup.show()");
+								} else {
+									
+									RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
+								}
+								
 							} else {
-
+								
 								RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
 							}
-
+							
 						} else {
-
-							RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
+							
 						}
-
-					} else {
-
 					}
+				} else {
+					RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
 				}
-
+				// #28834 - End.
 				// changeMeetingStatusBrief();
 
 			} else {
@@ -5942,13 +5969,15 @@ return	remarksNotFound;
 		}*/
 		// #28834 - End.
 		
-		if (getManagedBean().getQtRefinalized()) {
+		// #28834 - Start.
+		if (getManagedBean().getQtRefinalized() || getManagedBean().isBpkCentralContract()) {
 			if (excludedDecisionList == null) {
 				excludedDecisionList = new ArrayList<String>();
 			}
 			excludedDecisionList.add(
 					ParameterConst.DECISION_RBP);
 		}
+		// #28834 - End.
 		
 		//28834 end
 		
