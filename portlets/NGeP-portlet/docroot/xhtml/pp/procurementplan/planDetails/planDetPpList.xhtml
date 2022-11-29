@@ -179,19 +179,21 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	        </p:column>
 	        
 	        <p:column>
-	            <!--Bug #30643@30032021 - start -->
+	            <!-- #34156 - Start -->
+	            <!--Bug #306439@30032021 - start -->
        			<p:selectOneMenu id="somProcurementMethod" style="width:99%"
        				disabled="#{ppItem.viewMode or !(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or ppItem.procurementCat.parameterId==null or (ppItem.disableRow)}"
 					label="#{lbl['lbl.pp.procurement.method']}" value="#{ppItem.procurementType.parameterId}" required="#{!empty param['disableValidation']}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-					<f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptions(ppItem.procurementCat.parameterId)}"
+					<f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptionsNewLabel(ppItem.procurementCat.parameterId, ppItem.newLabcatMethodType)}"
 						var="obj" itemValue="#{obj.procurementType.parameterId}" itemLabel="#{pPlanBackingBean.getProcurementCategoryLabels(obj.procurementType)}"/>
-					<p:ajax event="change" listener="#{pPlanBackingBean.onSelectCategoryType(ppItem.procurementType.parameterId, index)}"
+					<p:ajax event="change" listener="#{pPlanBackingBean.onSelectCategoryTypeNewLabel(ppItem.procurementType.parameterId, index, ppItem.newLabcatMethodType)}"
 					    immediate="true" partialSubmit="true" />
 				</p:selectOneMenu>
 			 <p:message id="somProcurementMethodMsg" for="somProcurementMethod" display="icon" />
 	        </p:column>
-	         <!--Bug #30643@30032021 - end -->
+	         <!--Bug #306439@30032021 - end -->
+	         <!-- #34156 - End --> 
 	        <p:column  style="white-space:nowrap;">
 	             <!--25549@18092020 -->
 	            <!--24975@azza - start -->
