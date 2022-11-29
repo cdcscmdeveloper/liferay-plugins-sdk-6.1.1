@@ -2330,6 +2330,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		try {
 			if(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId() != getManagedBean().getCurrentPreparedOrgId()){
 				
+				reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 				resDTO = requestSO.retrieveGroupListByOrgId(reqDTO);
 				
 				getManagedBean().getUserGroupList().clear();
