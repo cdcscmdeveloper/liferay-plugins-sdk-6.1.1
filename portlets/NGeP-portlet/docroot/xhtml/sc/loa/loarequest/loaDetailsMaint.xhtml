@@ -15,9 +15,7 @@
 			<ac:title value="#{lbl['lbl.sc.loiloa.loa.header.title']}" />
 		</c:if>
 
-		<!-- #29006 start - add escape false -->
 		<p:messages id="loaMaintMsg" showDetail="true" autoUpdate="#{lOADetailBackingBean.managedBean.autoUpdate}" closable="true" showSummary="false" escape="false"/>
-		<!-- #29006 end - add escape false -->
 
 		<ui:param name="isTrackingDairyView" value="#{lOADetailBackingBean.managedBean.trackingDairyView}" />
 		<ui:param name="isDocTypeQuotation" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeQuotation}" />
