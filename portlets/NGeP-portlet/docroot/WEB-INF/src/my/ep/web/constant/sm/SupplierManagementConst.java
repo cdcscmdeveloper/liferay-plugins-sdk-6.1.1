@@ -170,7 +170,7 @@ public class SupplierManagementConst {
 	//30912 - START
 	// APPLICATION TYPE
 	public static final String APPL_TYPE_BUMI = "B";
-	public static final String APPL_TYPE_CATEGORY  = "A"; //#34098 - START_END
+	public static final String APPL_TYPE_CATEGORY  = "A"; //#34098 - START_END 
 	//30912 - END
 	public static final String PERSONNEL_TYPE_DIRECTOR = "DIR";
 	public static final String PERSONNEL_TYPE_STAFF = "STF";
