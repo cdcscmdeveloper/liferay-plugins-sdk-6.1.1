@@ -146,8 +146,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private Date  groupTaskCreatedDateTo;
 	private String roleType;
 	
-	//#32304
+	//#32304 - start
 	private List<SmAppl> cancelledBumiApplLs;
+	private PagingDataModel<SmAppl> bumiListDataModel = new BumiPagingDataModel();
+	//#32304 - end
 
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
@@ -1997,6 +1999,38 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 	public void setCancelledBumiApplLs(List<SmAppl> cancelledBumiApplLs) {
 		this.cancelledBumiApplLs = cancelledBumiApplLs;
+	}
+	
+	public PagingDataModel<SmAppl> getBumiListDataModel() {
+		return bumiListDataModel;
+	}
+
+	public void setBumiListDataModel(PagingDataModel<SmAppl> bumiListDataModel) {
+		this.bumiListDataModel = bumiListDataModel;
+	}
+	
+	private class BumiPagingDataModel extends PagingDataModel<SmAppl> {
+		private static final long serialVersionUID = 1L;
+		
+		public BumiPagingDataModel() {
+			super("bumiPagingDataModelId");
+		}
+
+		@Override
+		protected ISearchResultBean<SmAppl> pageChangeListener(ISearchBean<SmAppl> searchBean) {
+			SearchResultBean<SmAppl> resultBean = new SearchResultBean<SmAppl>();
+			resultBean.setResultList(null);
+			resultBean.setTotalRecord(0);
+			List<SmAppl> bumi = BPMTaskListManagedBean.this.getCancelledBumiApplLs();
+			if(bumi != null){
+				resultBean.setResultList(new ArrayList<SmAppl>());
+				for(int i=calculateFinalOffSet(getPageNo()); i<bumi.size(); i++){
+					resultBean.getResultList().add(bumi.get(i));
+				}
+				resultBean.setTotalRecord(resultBean.getResultList().size());
+			}
+			return resultBean;
+		}
 	}
 	//#32304 - end
 }
