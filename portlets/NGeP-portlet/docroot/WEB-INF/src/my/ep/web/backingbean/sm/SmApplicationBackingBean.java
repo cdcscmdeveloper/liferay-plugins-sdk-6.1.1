@@ -993,18 +993,62 @@ public class SmApplicationBackingBean extends
 			
 			//Bug 27022 - start 			
 			SmAppl latestAppl = supplierProfile.getSmAppl();
-			 if(latestAppl != null 
+			if(latestAppl != null 
 					 && latestAppl.getSmSupplierCategories() != null
 					 	&& getManagedBean().getSmAppl().getSmSupplierCategories() != null){
 				 for(SmSupplierCategory categoryRejectedAppl : latestAppl.getSmSupplierCategories()){
-					 if(categoryRejectedAppl.getRecordStatusFlg() == SupplierManagementConst.DELETED_RECORD_STATUS){
-						 for(SmSupplierCategory categoryResubmitAppl: getManagedBean().getSmAppl().getSmSupplierCategories()){
-							 if(categoryRejectedAppl.getPmCategoryL3().getCategoryL3Id()
-									 .equals(categoryResubmitAppl.getPmCategoryL3().getCategoryL3Id())){
-								 categoryResubmitAppl.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
+					 //34209 START - to filter duplicate category with different record status 
+					 ArrayList<SmSupplierCategory> catLatest = new ArrayList<SmSupplierCategory>() ;
+					 for(SmSupplierCategory categoryRejectedAppl2 : latestAppl.getSmSupplierCategories()){
+						 if(categoryRejectedAppl.getPmCategoryL3().getCategoryL3Id()
+								 .equals(categoryRejectedAppl2.getPmCategoryL3().getCategoryL3Id()) &&
+								 categoryRejectedAppl2.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS ||
+								 categoryRejectedAppl2.getRecordStatusFlg() == SupplierManagementConst.DELETED_RECORD_STATUS){
+							 catLatest.add(categoryRejectedAppl2);
+						 }
+					 }
+					 if(catLatest != null && catLatest.size() > 1){
+						 Boolean haveAppCat = false;
+						 for(SmSupplierCategory latestCat : catLatest){
+					 		if(latestCat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS){
+					 			haveAppCat = true;
+					 		}
+					 	 }
+						 if(!haveAppCat){
+							 for(SmSupplierCategory latestCat : catLatest){
+								 if(latestCat.getRecordStatusFlg() == SupplierManagementConst.DELETED_RECORD_STATUS){
+							 			for(SmSupplierCategory catResubmitRenewAppl: getManagedBean().getSmAppl().getSmSupplierCategories()){
+											 if(categoryRejectedAppl.getPmCategoryL3().getCategoryL3Id()
+													 .equals(catResubmitRenewAppl.getPmCategoryL3().getCategoryL3Id())){
+												 catResubmitRenewAppl.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
+											 }
+										 }
+							 		}
+							 }
+						 }
+					 }else{
+						 for(SmSupplierCategory latestCat : catLatest){
+							 if(latestCat.getRecordStatusFlg() == SupplierManagementConst.DELETED_RECORD_STATUS){
+								 for(SmSupplierCategory catResubmitRenewAppl: getManagedBean().getSmAppl().getSmSupplierCategories()){
+									 if(categoryRejectedAppl.getPmCategoryL3().getCategoryL3Id()
+											 .equals(catResubmitRenewAppl.getPmCategoryL3().getCategoryL3Id())){
+										 catResubmitRenewAppl.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
+									 }
+								 }
 							 }
 						 }
 					 }
+					 /*}else{
+						 if(categoryRejectedAppl.getRecordStatusFlg() == SupplierManagementConst.DELETED_RECORD_STATUS){
+							 for(SmSupplierCategory categoryResubmitAppl: getManagedBean().getSmAppl().getSmSupplierCategories()){
+								 if(categoryRejectedAppl.getPmCategoryL3().getCategoryL3Id()
+										 .equals(categoryResubmitAppl.getPmCategoryL3().getCategoryL3Id())){
+									 categoryResubmitAppl.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
+								 }
+							 }
+						 }
+					 }*/
+					 //34209 END
 				 }
 			 }
 			//Bug 27022 - end
