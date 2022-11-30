@@ -4362,6 +4362,16 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean) {
 		List<SmSupplierCategory> addtnlList = new ArrayList<SmSupplierCategory>();
 		List<SmSupplierCategory> existingList = new ArrayList<SmSupplierCategory>();
+		//#34209 START - to remove category with deleted status in the list - fix issue active category show in addcat list
+		List<SmSupplierCategory> delCatList = new ArrayList<SmSupplierCategory>();
+		for(SmSupplierCategory filtCat : managedBean.getSmAppl().getSmSupplier()
+				.getSmAppl().getSmSupplierCategories()){
+			if(filtCat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
+				delCatList.add(filtCat);
+			}
+		}
+		managedBean.getSmAppl().getSmSupplier().getSmAppl().getSmSupplierCategories().removeAll(delCatList);
+		//#34209 END
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
