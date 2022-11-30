@@ -844,8 +844,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return ctDT.gotoAmendPage(contractId);
 		}
 		//Bug 34030 - shaqimi start
-		else if((getManagedBean().getDocTypeFromTaskList() != null || getManagedBean().getDocTypeFromTaskList() != null) 
-				&& ctBackingBean.getManagedBean().isViewSCL()){//notification setting
+		else if(getManagedBean().getDocTypeFromTaskList() != null && ctBackingBean.getManagedBean().isViewSCL() 
+				&& !ctBackingBean.getManagedBean().isViewSCLFromContract()){//notification setting //Bug 34142 - shaqimi 29/11/2022
 			if(getManagedBean().getDocTypeFromTaskList().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING) 
 					|| getManagedBean().getDocTypeFromTaskList().equals(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
 					|| getManagedBean().getDocTypeFromTaskList().equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE)){
@@ -887,13 +887,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 			
-			//Bug 34142 - shaqimi start 16112022
-			if(ctBackingBean.getManagedBean().isViewContractFromAgreement()){
+			//Bug 34142 - shaqimi start 16112022 - this is back button from SCL link > back button
+			//if it goes scl link first, this will be fired as ViewSCLFromContract is false
+			if(!ctBackingBean.getManagedBean().isViewSCLFromContract()){
+				getManagedBean().setViewSclFromAgreement(false);
+			}
+			//this is back button from contract link > scl link > back button. if it goes contract link > scl link > back button, 
+			//this will be fired first before going on the scl page > back button.
+			if(ctBackingBean.getManagedBean().isViewContractFromAgreement() && ctBackingBean.getManagedBean().isViewSCLFromContract()){
 				ctBackingBean.getManagedBean().setViewSCLFromContract(false);
 			}
 			//Bug 34142 - shaqimi start 16112022
-			ctBackingBean.getManagedBean().setViewSCL(false);	
-			getManagedBean().setViewSclFromAgreement(false);
 			return this.getManagedBean().getBackToPreviousPage();					
 		} 
 		this.getManagedBean().setSecretaryList(null);
