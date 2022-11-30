@@ -2530,6 +2530,11 @@ public class SpecificationBackingBean extends
 
 			}
 			settinglist = null;
+			
+			//#33525 - Get User key in weightageScore if avail
+			List<ScQtCheckList> oriFinancialScoring = this.getManagedBean()
+					.getFinancialScoring();
+			
 			this.getManagedBean().setFinancialScoring(null);
 			this.getManagedBean().setFinancialScoring(
 					new ArrayList<ScQtCheckList>());
@@ -2960,6 +2965,18 @@ public class SpecificationBackingBean extends
 
 				}
 				//#25138 Reendorsed -populate total max score for TS and other element - end
+				
+				//#33525 - enter back the user weightage value if avail
+				List<ScQtCheckList> newFinancialScoring = this.getManagedBean().getFinancialScoring();
+				if (oriFinancialScoring != null) {
+					for (ScQtCheckList o : oriFinancialScoring) {
+						for (ScQtCheckList l : newFinancialScoring)
+							if (l.getQtScoreWeightage().getQtScoreWeightageId().equals(o.getQtScoreWeightage().getQtScoreWeightageId())) {
+								l.getQtScoreWeightage().setWeightage(o.getQtScoreWeightage().getWeightage());
+							}
+					}
+					this.getManagedBean().setFinancialScoring(newFinancialScoring);
+				}// #33525 - End
 				
 				finWeightageSum();
 				localChecklist = null;
