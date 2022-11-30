@@ -299,4 +299,8 @@ public interface QTConstants {
 	//#29468 Added Vinod
 	public static final String TEMPLATE_CHANGE_VALUE = "value";
 	
+	// #33831 - Start
+	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
+	// #33831 - Start
+	
 }
