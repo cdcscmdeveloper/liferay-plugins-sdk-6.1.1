@@ -896,7 +896,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Bug 34142 - shaqimi start 16112022 - this is back button from SCL link > back button
 			//if it goes scl link first, this will be fired as ViewSCLFromContract is false
 			if(!ctBackingBean.getManagedBean().isViewSCLFromContract()){
-				ctBackingBean.getManagedBean().setViewSCL(false);	
 				getManagedBean().setViewSclFromAgreement(false);
 			}
 			//this is back button from contract link > scl link > back button. if it goes contract link > scl link > back button, 
