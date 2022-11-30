@@ -296,4 +296,7 @@ public interface QTConstants {
 	//21692 QT Bpm Composite Version Validity ID
 	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
 	
+	//#29468 Added Vinod
+	public static final String TEMPLATE_CHANGE_VALUE = "value";
+	
 }

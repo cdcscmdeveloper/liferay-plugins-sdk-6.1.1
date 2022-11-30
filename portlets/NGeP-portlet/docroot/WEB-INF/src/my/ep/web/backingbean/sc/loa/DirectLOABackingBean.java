@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -8568,13 +8569,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 				ParameterReqDTO reqDTO = new ParameterReqDTO();
 				reqDTO.setParameterId(parameterId);
-				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-				scLoa.getScQt().setPmProcurementCategory(resDTO.getPmParameter());
+				scLoa.getScQt().setPmProcurementCategory(parameterSO.retrieveParameterById(reqDTO).getPmParameter());
 			}
 			
-		} finally {
-			parameterSO = null;
-		}
+		}catch (Exception e) {
+	    	  SLAUtils.getInstance().logSLAError("QT", "ProcurementCategoryChanged", scLoa.getLoaNo(), "procCategoryChanged", getUserIdSessionFromLoginId(), e);
+	    } 
 	}
 	
 	/**
@@ -8583,31 +8583,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @return an array of recommend type(s)
 	 */
 	public SelectItem[] getCloneTemplateRadioBtn() {
-		SelectItem[] items = getRadioButtonCodeValues(ParameterTypeConst.TEMPLATE_CLONE_LOA);
-		return items;
+		return getRadioButtonCodeValues(ParameterTypeConst.TEMPLATE_CLONE_LOA);
 	}
 	
-	/**
-	 * Template change.Change Templte Type(Standard/Non Standard)in Template
-	 * Spec.
-	 * 
-	 * @param event
-	 *            (String templateType).
-	 */
-	/*
-	public void templateChange(AjaxBehaviorEvent event) {
-		String template = (String) event.getComponent().getAttributes()
-				.get("value");
-		templateSpecCreate.resetData();
-		this.getManagedBean().setStandardTemplate(template);
-
-		if (null != getManagedBean().getScLoa().getScQt().getPmProcurementCategory()) {
-			getManagedBean().setSearchProcurementId(
-					getManagedBean().getScLoa().getScQt().getPmProcurementCategory()
-							.getParameterId());
-		}
-	}
-	*/
 	// 29468 - End
 	/**
 	 * QT Type dropdown change action
@@ -11165,48 +11143,66 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		// #25726 END
 		
 		//#29468 Vinod Start
+		/**
+		* Get Category Codes For Clone constructing tree node for selection of Category Codes.
+		* 
+		* @param .
+		* @return 
+		*/
 		private void getCategoryCodesForClone(){
-			ICategoryCodeSO categoryCodeSO = null;
 				
 			try {
-				categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
-				List<PmCategoryL1> pmCategoryL1s = categoryCodeSO.retrieveCategoryL1List().getCategoryL1List();
 					
-				if(pmCategoryL1s.size()!=0){
-					TreeNode rootNode = new DefaultTreeNode("root", null);
-					for (PmCategoryL1 pmCategoryL1 : pmCategoryL1s) {
-						for (PmCategoryL2 pmCategoryL2 : pmCategoryL1.getPmCategoryL2s()) {
+				  TreeNode rootNode = new DefaultTreeNode("root", null);
+				  Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode = new HashMap<>();
+				  for (PmCategoryL1 pmCategoryL1 : BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class).retrieveCategoryL1List().getCategoryL1List()) {
+					  Map<Long, String> l1Map=new HashMap<>();
+					  l1Map.put(pmCategoryL1.getCategoryL1Id(), null);
+					  for (PmCategoryL2 pmCategoryL2 : pmCategoryL1.getPmCategoryL2s()) {
+						  Map<Long, Map<Long, String>> l2Map=new HashMap<>();
+						  l2Map.put(pmCategoryL2.getCategoryL2Id(), l1Map);
 							for (PmCategoryL3 pmCategoryL3 : pmCategoryL2.getPmCategoryL3s()) {
+								Map<Long, Map<Long, Map<Long, String>>> l3Map = new HashMap<>();
 								TreeNode catCode = new DefaultTreeNode("catCode",pmCategoryL1.getCategoryL1Code()+
-																				 pmCategoryL2.getCategoryL2Code()+
-																				 pmCategoryL3.getCategoryL3Code(), rootNode);
+																			 pmCategoryL2.getCategoryL2Code()+
+																			 pmCategoryL3.getCategoryL3Code(), rootNode);
 								TreeNode catDes1 = new DefaultTreeNode("catDes1",pmCategoryL1.getCategoryL1Code()+" - "+pmCategoryL1.getCategoryName(), catCode);
 								catDes1.setSelectable(false);
 								TreeNode catDes2 = new DefaultTreeNode("catDes2",pmCategoryL2.getCategoryL2Code()+" - "+pmCategoryL2.getCategoryName(), catCode);
 								catDes2.setSelectable(false);
 								TreeNode catDes3 = new DefaultTreeNode("catDes3",pmCategoryL3.getCategoryL3Code()+" - "+pmCategoryL3.getCategoryName(), catCode);
 								catDes3.setSelectable(false);
+								
+								l3Map.put(pmCategoryL1.getCategoryL1Id(), l2Map);
+								mapCatCode.put(pmCategoryL1.getCategoryL1Code()+
+										  	   pmCategoryL2.getCategoryL2Code()+
+										  	   pmCategoryL3.getCategoryL3Code(), l3Map);
 							}
 						}
-					}
 					this.getManagedBean().setRootCategoryTree(rootNode);
+					this.getManagedBean().setMapCatCode(mapCatCode);
 				}
-			} finally {
-				categoryCodeSO = null;
-			}
+			}catch (Exception e) {
+		    	  SLAUtils.getInstance().logSLAError("QT", "ConstructTreeNodeForCategoryCodes", "docNo", "getCategoryCodesForClone", getUserIdSessionFromLoginId(), e);
+		    }
 		}
 			
+		/**
+		* update the selection of Category Codes.
+		* 
+		* @param event.
+		* @return 
+		*/
 		public void selectCategoryTreeNode(NodeSelectEvent event) {
 			TreeNode selectedTreeNode = event.getTreeNode();
 			selectedTreeNode.setSelected(true);
-			List<String> selectedCatCodes = new ArrayList<String>();
+			List<String> selectedCatCodes = new ArrayList<>();
 			String code=(String) selectedTreeNode.getData();
-			if(getManagedBean().getSelectedCategories()!=null
+			if(getManagedBean().getSelectedCategories()!=null 
 				&& !getManagedBean().getSelectedCategories().isEmpty())  
 					selectedCatCodes.addAll(getManagedBean().getSelectedCategories());
 				
-			if(selectedCatCodes!=null 
-				&& !selectedCatCodes.isEmpty()){
+			if(selectedCatCodes!= null && !selectedCatCodes.isEmpty()){
 				if(!selectedCatCodes.contains(code)) selectedCatCodes.add(code);
 			}else{
 				selectedCatCodes.add(code);
@@ -11214,25 +11210,35 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			getManagedBean().setSelectedCategories(selectedCatCodes);
 		}
 
+		/**
+		* update the unSelection of Category Codes.
+		* 
+		* @param event.
+		* @return 
+		*/
 		public void unSelectCategoryTreeNode(NodeUnselectEvent event) {
 			TreeNode selectedTreeNode = event.getTreeNode();
 			selectedTreeNode.setSelected(false);
-			List<String> selectedCatCodes = new ArrayList<String>();
-			String code=(String) selectedTreeNode.getData();
+			List<String> selectedCatCodes = new ArrayList<>();
 				
-			if(getManagedBean().getSelectedCategories()!=null
+			if(getManagedBean().getSelectedCategories()!=null 
 				&& !getManagedBean().getSelectedCategories().isEmpty())  
 					selectedCatCodes.addAll(getManagedBean().getSelectedCategories());
 				
-			if(selectedCatCodes!=null 
-				&& !selectedCatCodes.isEmpty()){
-				selectedCatCodes.remove(code);
+			if(!selectedCatCodes.isEmpty()){
+				selectedCatCodes.remove((String) selectedTreeNode.getData());
 			}
 			getManagedBean().setSelectedCategories(selectedCatCodes);
 		}
 			
+		/**
+		* when change template this method invoke to display required fields for particular tab.
+		* 
+		* @param event.
+		* @return 
+		*/
 		public void templateChange(AjaxBehaviorEvent event) {
-			String template = (String) event.getComponent().getAttributes().get("value");
+			String template = (String) event.getComponent().getAttributes().get(QTConstants.TEMPLATE_CHANGE_VALUE);
 			getManagedBean().getTemplateSpecCreate().resetData();
 			this.getManagedBean().setStandardTemplate(template);
 
@@ -11243,21 +11249,27 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			}
 		}
 			
-		public void cloneSpecPopupAction(String SpecCategory){
+		/**
+		* when user click on clone button in main menu specCategory will discribe whether SERVICE or PRODUCT.
+		* 
+		* @param specCategory.
+		* @return 
+		*/
+		public void cloneSpecPopupAction(String specCategory){
 			IParameterSO parameterSO;
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterReqDTO pmReqDTO = new ParameterReqDTO();
 			this.getCategoryCodesForClone();
 				
-			if(SpecCategory.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
+			if(specCategory.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
 				pmReqDTO.setParameterType(ParameterTypeConst.SC_ITEM_TYPE);
 				pmReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_SERVICE);
 				PmParameter itemtype = parameterSO.retrieveParameterByTypeAndCode(pmReqDTO).getPmParameter();
 				String paramDesc = ParameterHelper.getInstance().getParameterDesc(ParameterTypeConst.SC_ITEM_TYPE,ParameterConst.ITEM_TYPE_SERVICE);
 				getManagedBean().setSearchItemTypeId(itemtype.getParameterId());
 				getManagedBean().setSearchItemTypeName(paramDesc);
-			} else if (SpecCategory.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
+			} else if (specCategory.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
 				pmReqDTO.setParameterType(ParameterTypeConst.SC_ITEM_TYPE);
 				pmReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_PRODUCT);
 				PmParameter itemtype = parameterSO.retrieveParameterByTypeAndCode(pmReqDTO).getPmParameter();
@@ -11271,30 +11283,33 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			}
 		}
 			
+		/**
+		* when user click on clone button in popup this method invoke
+		* and create all new items and specifications.
+		* 
+		* @param tplSpecMaster, flowtype.
+		* @return 
+		*/
 		public void createTemplateSpec(TplSpecMaster tplSpecMaster,String flowtype) {
-			ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-											 ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
 			TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
 			TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 			String itemType = getManagedBean().getSearchItemTypeName();
-			List<TplSpecQuestion> questionsListNew = new ArrayList<TplSpecQuestion>();
+			List<TplSpecQuestion> questionsListNew = new ArrayList<>();
 			
 			specReqDTO.setSpecMaster(tplSpecMaster);
 			specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
-			TemplateSpecResDTO resDTO = templateSpecSO.getTemplateMaster(specReqDTO);
+			TemplateSpecResDTO resDTO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class).getTemplateMaster(specReqDTO);
 			TplSpecMaster specMaster = new TplSpecMaster();
 			if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
 				templateSpecBean = getManagedBean().getSpecTemplateSpecBean();
 				specMaster = this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster();
-				if(specMaster.getTplSpecQuestions()!=null
-					&& specMaster.getTplSpecQuestions().size()!=0){
+				if(!specMaster.getTplSpecQuestions().isEmpty()){
 					questionsListNew.addAll(specMaster.getTplSpecQuestions());
 				}
 			} else if (itemType.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
 				templateSpecBean = getManagedBean().getProdTemplateSpecBean();
 				specMaster = this.getManagedBean().getProdTemplateSpecBean().getSpecMaster();
-				if(specMaster.getTplSpecQuestions()!=null
-					&& specMaster.getTplSpecQuestions().size()!=0){
+				if(!specMaster.getTplSpecQuestions().isEmpty()){
 					questionsListNew.addAll(specMaster.getTplSpecQuestions());
 				}
 			}
@@ -11302,10 +11317,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 																cloneTplSpecQuestions(
 																		specMaster, 
 																		resDTO.getSpecMaster().getTplSpecQuestions());
-			if(questionsListNew!=null
-				&& questionsListNew.size()!=0
-				&& questionsListCreate!=null
-				&& questionsListCreate.size()!=0){
+			
 				for(TplSpecQuestion oldQuestion : questionsListNew){
 					for(TplSpecQuestion newQuestion : questionsListCreate){
 						if(TemplateSpecConst.QUESTION_TYPE_ITEM.equals(newQuestion.getQuestionType())
@@ -11320,7 +11332,6 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 						}
 					}
 				}
-			}
 			
 			specMaster.setProcessType(tplSpecMaster.getProcessType());
 			if (getManagedBean().getScLoa().getScQt().isZonal()) {
@@ -11328,7 +11339,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				if (null != supplierCriteria && null != supplierCriteria.getQtZoneCriterias()) {
 					TemplateSpecHelper.getInstance().updateZoneDtl(specMaster,supplierCriteria.getQtZoneCriterias());
 				} else {
-					throw new EpException("Please choose the zones before proceed.");
+					throw new EpException(MessageConst.ERROR_775188);
 				}
 			} else {
 				TemplateSpecHelper.getInstance().updateZoneDtl(specMaster, null);
@@ -11340,7 +11351,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
 					TplSpecAnswer specAnswer = specHelper.createNewSpecAnswer(templateSpecBean, question, null, null);
 						
-					specAnswers = new ArrayList<TplSpecAnswer>();
+					specAnswers = new ArrayList<>();
 					specAnswers.add(specAnswer);
 				}
 				question.setTplSpecAnswers(specAnswers);
@@ -11363,129 +11374,17 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				this.getManagedBean().getProdscQtDoc().setTplSpecMaster(this.getManagedBean().getProdTemplateSpecBean().getSpecMaster());
 			}
 					
-			templateSpecSO = null;
 			RequestContext.getCurrentInstance().execute("cloneLoaSpec.hide()");
 				
 			return;
 		}
 			
-		private void populateQTSearchCriteria(QtnTenderSearchBean templateQtnTenderSearchBean,ISearchBean<TplSpecMaster> qtSearchBean,boolean isQT) {
-			ICategoryCodeSO categoryCodeSO = null;
-
-			if (templateQtnTenderSearchBean != null) {
-				List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
-				String qtTitle = templateQtnTenderSearchBean.getQtTitle();
-				if (!StringUtils.isBlank(qtTitle)) {
-
-					qtSearchBean.getDataFilterBeans().add(
-								new SearchFilterBean("scQtDoc.scQt.qtTitle",
-										SearchOperator.OPERATOR_LIKE.value(), qtTitle,
-										true));
-				}
-				String qtNumber = templateQtnTenderSearchBean.getQtNo();
-				if (!StringUtils.isBlank(qtNumber)) {
-					qtSearchBean.getDataFilterBeans().add(
-								new SearchFilterBean("scQtDoc.scQt.qtNo",
-										SearchOperator.OPERATOR_LIKE.value(), qtNumber,
-										true));
-				}
-				String procurementMode = templateQtnTenderSearchBean.getProcurementMode();
-				if (!StringUtils.isBlank(procurementMode)) {
-					qtSearchBean.getDataFilterBeans().add(
-								new SearchFilterBean(
-										"scQtDoc.scQt.procurementMode.parameterCode",
-										SearchOperator.OPERATOR_EQUALS.value(),
-										procurementMode));
-				}
-				String loaNo = templateQtnTenderSearchBean.getLoaNo();
-				if (!StringUtils.isBlank(loaNo)) {
-					AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-					reqDTO.setLoaNo(loaNo);
-					AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOADtlByLoaNo(reqDTO);
-					ScLoa ScLoa = resDTO.getScLoa();
-						
-					if (ScLoa != null && ScLoa.getScQt() != null) {
-						qtSearchBean.getDataFilterBeans().add(
-								new SearchFilterBean(
-										"scQtDoc.scQt",
-										SearchOperator.OPERATOR_EQUALS.value(),
-										ScLoa.getScQt()));
-					}
-				}
-					
-				Date fromCreatedDate = templateQtnTenderSearchBean.getFromCreatedDate();
-				Date toCreatedDate = templateQtnTenderSearchBean.getToCreatedDate();
-				if (null != fromCreatedDate || toCreatedDate != null) {
-					Calendar c1 = Calendar.getInstance();
-					c1.setTime(fromCreatedDate);
-					Calendar fromDate = Calendar.getInstance();
-					fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
-								c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-					fromDate.set(Calendar.MILLISECOND, 0);
-					fromCreatedDate = fromDate.getTime();
-					if (toCreatedDate != null) {
-						Calendar c2 = Calendar.getInstance();
-						c2.setTime(toCreatedDate);
-						Calendar toDate = Calendar.getInstance();
-						toDate.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH),
-									c2.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
-						toDate.set(Calendar.MILLISECOND, 0);
-						toCreatedDate = toDate.getTime();
-					}
-					SearchFilterBean bean = new SearchFilterBean();
-					bean.setSearchField("scQtDoc.scQt.createdDate");
-					bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
-					SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
-								fromCreatedDate, toCreatedDate);
-					bean.setSearchValue(betweenVal);
-					searchFilterBean.add(bean);
-				}
-				String status = templateQtnTenderSearchBean.getQtStatus();
-				if (!StringUtils.isBlank(status)) {
-					qtSearchBean.getDataFilterBeans().add(
-							new SearchFilterBean("scQtDoc.scQt.scQtStatus.pmStatus.statusId",
-										SearchOperator.OPERATOR_EQUALS.value(), status));
-					qtSearchBean.getDataFilterBeans().add(
-							new SearchFilterBean("scQtDoc.scQt.scQtStatus.current",
-										SearchOperator.OPERATOR_EQUALS.value(), true));
-				}
-				if(getManagedBean().getSelectedCategories()!=null){
-					List<Long> l1Ids = new ArrayList<Long>();
-					List<Long> l2Ids = new ArrayList<Long>();
-					List<Long> l3Ids = new ArrayList<Long>();
-					categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
-					List<PmCategoryL1> pmCategoryL1s = categoryCodeSO.retrieveCategoryL1List().getCategoryL1List();
-						
-					for (PmCategoryL1 pmCategoryL1 : pmCategoryL1s) {
-						for (PmCategoryL2 pmCategoryL2 : pmCategoryL1.getPmCategoryL2s()) {
-							for (PmCategoryL3 pmCategoryL3 : pmCategoryL2.getPmCategoryL3s()) {
-								String catCode = pmCategoryL1.getCategoryL1Code()+pmCategoryL2.getCategoryL2Code()+pmCategoryL3.getCategoryL3Code();
-								if(getManagedBean().getSelectedCategories().contains(catCode)){
-									l1Ids.add(pmCategoryL1.getCategoryL1Id());
-									l2Ids.add(pmCategoryL2.getCategoryL2Id());
-									l3Ids.add(pmCategoryL3.getCategoryL3Id());
-								}
-							}
-						}
-					}
-					if(l1Ids.size()!=0 && l2Ids.size()!=0 && l3Ids.size()!=0){
-						qtSearchBean.getDataFilterBeans().add(
-								new SearchMultiFilterBean(
-									new SearchMultiFilterBean(
-										new SearchFilterBean("scQtDoc.scQt.scQtCategorys.pmCategoryL1",
-												SearchOperator.OPERATOR_IN.value(), l1Ids),
-										new SearchFilterBean(
-												"scQtDoc.scQt.scQtCategorys.pmCategoryL2",
-												SearchOperator.OPERATOR_IN.value(), l2Ids)),
-										new SearchFilterBean("scQtDoc.scQt.scQtCategorys.pmCategoryL3",
-												SearchOperator.OPERATOR_IN.value(), l3Ids, 
-												SearchCondition.CONDITION_AND.value())));
-					}
-			}
-			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
-			}
-		}
-
+		/**
+		* This method will Reset the popup form for clone.
+		* 
+		* @param .
+		* @return 
+		*/
 		public void resetTemplate() {
 			getManagedBean().setSpecName(null);
 			this.getManagedBean().getQtnTendertemplateSearchBean().setQtTitle(null);
@@ -11500,14 +11399,13 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			this.getManagedBean().getQtnTendertemplateSearchBean().setQtStatus(null);
 			this.getManagedBean().getQtnTendertemplateSearchBean().setLoaNo(null);
 			this.getManagedBean().setSelectedCategories(null);
-			List<TreeNode> childTreeList = this.getManagedBean().getRootCategoryTree().getChildren();
-			for(TreeNode childTree : childTreeList){
+			
+			for(TreeNode childTree : this.getManagedBean().getRootCategoryTree().getChildren())
 				childTree.setSelected(false);
-			}
 		}
 			
 		private class CreateTemplateSpecPagingDataModel extends
-			PagingDataModel<TplSpecMaster> {
+			PagingDataModel<TplSpecMaster> implements IPagingDataModel<TplSpecMaster>{
 			/** The Constant serialVersionUID. */
 			private static final long serialVersionUID = 1L;
 
@@ -11524,9 +11422,14 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			* my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
 			* .biz.bean.search.ISearchBean)
 			*/
+			/**
+			* This method will search qt or loa numbers to clone based on user search criteria.
+			* 
+			* @param searchBean.
+			* @return ISearchResultBean
+			*/
 			public ISearchResultBean<TplSpecMaster> pageChangeListener(ISearchBean<TplSpecMaster> searchBean) {
 				ITemplateSpecSO qtTemplateSO;
-				TemplateSpecResDTO resDto;
 				IParameterSO parameterSo;
 
 				try {
@@ -11537,26 +11440,25 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					techSpecType.setParameterType(ParameterTypeConst.SPECIFICATION_TYPE);
 					techSpecType.setParameterCode(ParameterConst.ANSWER_TYPE_TEXT);
 
-					ParameterResDTO techspecTyperesDTO = parameterSo.retrieveParameterByTypeAndCode(techSpecType);
-					String specTypeCode = techspecTyperesDTO.getPmParameter().getParameterCode();
-					
+					String specTypeCode = parameterSo.retrieveParameterByTypeAndCode(techSpecType).getPmParameter().getParameterCode();
+					QtnTenderSearchBean templateQtnTenderSearchBean =null;
 					if (getManagedBean().getStandardTemplate()!=null && getManagedBean().getStandardTemplate()!="" &&
 						TemplateSpecConst.PROCESS_TYPE_SOURCING.equalsIgnoreCase(getManagedBean().getStandardTemplate())) {
-						QtnTenderSearchBean templateQtnTenderSearchBean = getManagedBean().getQtnTendertemplateSearchBean();
-							if (null != getManagedBean().getScLoa().getScQt().getPmProcurementCategory()
-								&& null != getManagedBean().getScLoa().getScQt().getPmProcurementCategory().getParameterId()) {
+						templateQtnTenderSearchBean = getManagedBean().getQtnTendertemplateSearchBean();
+						if (null != getManagedBean().getScLoa().getScQt().getPmProcurementCategory()
+							&& null != getManagedBean().getScLoa().getScQt().getPmProcurementCategory().getParameterId()) {
 								getManagedBean().setSearchProcurementId(getManagedBean().getScLoa().getScQt().getPmProcurementCategory().getParameterId());
-					}
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("processType",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									getManagedBean().getStandardTemplate()));
+						}
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("processType",
+										SearchOperator.OPERATOR_EQUALS.value(),
+										getManagedBean().getStandardTemplate()));
 					
-					populateQTSearchCriteria(templateQtnTenderSearchBean,searchBean,true);
-
+						populateQTSearchCriteria(templateQtnTenderSearchBean,searchBean);
+					
 					}else if(getManagedBean().getStandardTemplate()!=null && getManagedBean().getStandardTemplate()!="" &&
 						TemplateSpecConst.PROCESS_TYPE_DIRECT_LOA.equalsIgnoreCase(getManagedBean().getStandardTemplate())){
-						QtnTenderSearchBean templateQtnTenderSearchBean = getManagedBean().getQtnTendertemplateSearchBean();
+						templateQtnTenderSearchBean = getManagedBean().getQtnTendertemplateSearchBean();
 						if (null != getManagedBean().getScLoa().getScQt().getPmProcurementCategory()
 							&& null != getManagedBean().getScLoa().getScQt().getPmProcurementCategory().getParameterId()) {
 							getManagedBean().setSearchProcurementId(getManagedBean().getScLoa().getScQt().getPmProcurementCategory().getParameterId());
@@ -11565,10 +11467,11 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 							new SearchFilterBean("processType",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									TemplateSpecConst.PROCESS_TYPE_STANDARD_DIRECT_LOA));
+						
+						populateQTSearchCriteria(templateQtnTenderSearchBean,searchBean);
 					
-						populateQTSearchCriteria(templateQtnTenderSearchBean,searchBean,false);
-
 					}
+					
 					if (null != getManagedBean().getSpecName()
 						&& !"".equalsIgnoreCase(getManagedBean().getSpecName())) {
 						searchBean.getDataFilterBeans().add(
@@ -11601,43 +11504,166 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
 									ITemplateSpecSO.class);
 				
-					resDto = qtTemplateSO.searchTemplateMaster(qtTemplateReqDTO);
-					if (resDto != null) {
-						return resDto.getSearchResultBean();
+					if (qtTemplateSO.searchTemplateMaster(qtTemplateReqDTO) != null) {
+						return qtTemplateSO.searchTemplateMaster(qtTemplateReqDTO).getSearchResultBean();
 					}
-				} finally {
-					qtTemplateSO = null;
-					parameterSo = null;
-				}
-			return null;
+				}catch (Exception e) {
+			    	  SLAUtils.getInstance().logSLAError("QT", "TemplateSpecPagingData", "docNo", "CreateTemplateSpecPagingDataModel", getUserIdSessionFromLoginId(), e);
+			    }
+			 return null;
 			}
+			
+			private void populateQTSearchCriteria(QtnTenderSearchBean templateQtnTenderSearchBean,ISearchBean<TplSpecMaster> qtSearchBean) {
 
+				if (templateQtnTenderSearchBean != null) {
+					List<SearchFilterBean> searchFilterBean = new ArrayList<>();
+					if (!StringUtils.isBlank(templateQtnTenderSearchBean.getQtTitle())) {
+
+						qtSearchBean.getDataFilterBeans().add(
+									new SearchFilterBean("scQtDoc.scQt.qtTitle",
+											SearchOperator.OPERATOR_LIKE.value(), templateQtnTenderSearchBean.getQtTitle(),
+											DbValueConst.FLAG_YES));
+					}
+					if (!StringUtils.isBlank(templateQtnTenderSearchBean.getQtNo())) {
+						qtSearchBean.getDataFilterBeans().add(
+									new SearchFilterBean("scQtDoc.scQt.qtNo",
+											SearchOperator.OPERATOR_LIKE.value(), templateQtnTenderSearchBean.getQtNo(),
+											DbValueConst.FLAG_YES));
+					}
+					if (!StringUtils.isBlank(templateQtnTenderSearchBean.getProcurementMode())) {
+						qtSearchBean.getDataFilterBeans().add(
+									new SearchFilterBean(
+											"scQtDoc.scQt.procurementMode.parameterCode",
+											SearchOperator.OPERATOR_EQUALS.value(),
+											templateQtnTenderSearchBean.getProcurementMode()));
+					}
+					if (!StringUtils.isBlank(templateQtnTenderSearchBean.getLoaNo())) {
+						AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+						reqDTO.setLoaNo(templateQtnTenderSearchBean.getLoaNo());
+						ScLoa scLoa = getQtAwardSO().retrieveLOADtlByLoaNo(reqDTO).getScLoa();
+							
+						if (scLoa != null && scLoa.getScQt() != null) {
+							qtSearchBean.getDataFilterBeans().add(
+									new SearchFilterBean(
+											"scQtDoc.scQt",
+											SearchOperator.OPERATOR_EQUALS.value(),
+											scLoa.getScQt()));
+						}
+					}
+						
+					Date fromCreatedDate = templateQtnTenderSearchBean.getFromCreatedDate();
+					Date toCreatedDate = templateQtnTenderSearchBean.getToCreatedDate();
+					if (null != fromCreatedDate || toCreatedDate != null) {
+						Calendar c1 = Calendar.getInstance();
+						c1.setTime(fromCreatedDate);
+						Calendar fromDate = Calendar.getInstance();
+						fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+									c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+						fromDate.set(Calendar.MILLISECOND, 0);
+						fromCreatedDate = fromDate.getTime();
+						if (toCreatedDate != null) {
+							Calendar c2 = Calendar.getInstance();
+							c2.setTime(toCreatedDate);
+							Calendar toDate = Calendar.getInstance();
+							toDate.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH),
+										c2.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+							toDate.set(Calendar.MILLISECOND, 0);
+							toCreatedDate = toDate.getTime();
+						}
+						SearchFilterBean bean = new SearchFilterBean();
+						bean.setSearchField("scQtDoc.scQt.createdDate");
+						bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+						SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<>(
+									fromCreatedDate, toCreatedDate);
+						bean.setSearchValue(betweenVal);
+						searchFilterBean.add(bean);
+					}
+					if (!StringUtils.isBlank(templateQtnTenderSearchBean.getQtStatus())) {
+						qtSearchBean.getDataFilterBeans().add(
+								new SearchFilterBean("scQtDoc.scQt.scQtStatus.pmStatus.statusId",
+											SearchOperator.OPERATOR_EQUALS.value(), templateQtnTenderSearchBean.getQtStatus()));
+						qtSearchBean.getDataFilterBeans().add(
+								new SearchFilterBean("scQtDoc.scQt.scQtStatus.current",
+											SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.FLAG_YES));
+					}
+					List<Long> l1Ids = new ArrayList<>();
+					List<Long> l2Ids = new ArrayList<>();
+					List<Long> l3Ids = new ArrayList<>();
+					
+					Iterator<Map.Entry<String, Map<Long, Map<Long, Map<Long, String>>>>> mapCat = getManagedBean().getMapCatCode().entrySet().iterator();
+			        while (mapCat.hasNext()) {
+			        	Map.Entry<String, Map<Long, Map<Long, Map<Long, String>>>> mainMap = mapCat.next();
+			        	if(getManagedBean().getSelectedCategories()!=null
+			        		&& getManagedBean().getSelectedCategories().size()!=0
+				            && mainMap.getKey()!=null
+				            && mainMap.getKey()!=""
+							&& getManagedBean().getSelectedCategories().contains(mainMap.getKey())){
+			        		
+			        		Iterator<Entry<Long, Map<Long, Map<Long, String>>>> l3It=(mainMap.getValue()).entrySet().iterator();
+			        		Entry<Long, Map<Long, Map<Long, String>>> l3CatMap = l3It.next();
+			        		Iterator<Map.Entry<Long, Map<Long, String>>> l2It=(l3CatMap.getValue()).entrySet().iterator();
+			        		Map.Entry<Long, Map<Long, String>> l2CatMap = l2It.next();
+			        		Iterator<Map.Entry<Long, String>> l1it=(l2CatMap.getValue()).entrySet().iterator();
+			        		Map.Entry<Long, String> l1CatMap = l1it.next();
+							
+			        		l1Ids.add(l1CatMap.getKey());
+							l2Ids.add(l2CatMap.getKey());
+							l3Ids.add(l3CatMap.getKey());
+						}
+			        }
+					if(l1Ids.size()!=0 && l2Ids.size()!=0 && l3Ids.size()!=0){
+						qtSearchBean.getDataFilterBeans().add(
+								new SearchMultiFilterBean(
+									new SearchMultiFilterBean(
+										new SearchFilterBean("scQtDoc.scQt.scQtCategorys.pmCategoryL1",
+												SearchOperator.OPERATOR_IN.value(), l1Ids),
+										new SearchFilterBean(
+												"scQtDoc.scQt.scQtCategorys.pmCategoryL2",
+												SearchOperator.OPERATOR_IN.value(), l2Ids)),
+										new SearchFilterBean("scQtDoc.scQt.scQtCategorys.pmCategoryL3",
+												SearchOperator.OPERATOR_IN.value(), l3Ids, 
+												SearchCondition.CONDITION_AND.value())));
+					}
+					qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
+				}
+			}
 		}  
 			
+		/**
+		* This method will redirect to Search for qt or loa details based on user data.
+		* 
+		* @param .
+		* @return 
+		*/
 		public void searchTemplateSpecAction() {
-			Date fromCreatedDate = getManagedBean().getQtnTendertemplateSearchBean().getFromCreatedDate();
-			Date toCreatedDate = getManagedBean().getQtnTendertemplateSearchBean().getToCreatedDate();
-			if (null != fromCreatedDate && toCreatedDate == null) {
+			if (null != getManagedBean().getQtnTendertemplateSearchBean().getFromCreatedDate() 
+					&& getManagedBean().getQtnTendertemplateSearchBean().getToCreatedDate() == null) {
 				throw new EpException(MessageConst.ERROR_775187);
 			}
-			if (null == fromCreatedDate && toCreatedDate != null) {
+			if (null == getManagedBean().getQtnTendertemplateSearchBean().getFromCreatedDate() 
+					&& getManagedBean().getQtnTendertemplateSearchBean().getToCreatedDate() != null) {
 				throw new EpException(MessageConst.ERROR_775184);
 			}
-			if (null != fromCreatedDate && toCreatedDate != null) {
-				if (fromCreatedDate.after(toCreatedDate)) {
+			if (null != getManagedBean().getQtnTendertemplateSearchBean().getFromCreatedDate() 
+					&& getManagedBean().getQtnTendertemplateSearchBean().getToCreatedDate() != null
+					&& getManagedBean().getQtnTendertemplateSearchBean().getFromCreatedDate().after(getManagedBean().getQtnTendertemplateSearchBean().getToCreatedDate())) {
 					throw new EpException(MessageConst.ERROR_775182);
-				}
-				if (toCreatedDate.before(fromCreatedDate)) {
+			} else if (null != getManagedBean().getQtnTendertemplateSearchBean().getFromCreatedDate() 
+					&& getManagedBean().getQtnTendertemplateSearchBean().getToCreatedDate() != null
+					&& getManagedBean().getQtnTendertemplateSearchBean().getToCreatedDate().before(getManagedBean().getQtnTendertemplateSearchBean().getFromCreatedDate())) {
 					throw new EpException(MessageConst.ERROR_775183);
-				}
 			}
-			IPagingDataModel<TplSpecMaster> pagingData = getManagedBean().getTemplateSpecCreate();
-			if(null == pagingData){
-				pagingData = new CreateTemplateSpecPagingDataModel();
-				getManagedBean().setTemplateSpecCreate(pagingData);
+			if(null == getManagedBean().getTemplateSpecCreate()){
+				getManagedBean().setTemplateSpecCreate(new CreateTemplateSpecPagingDataModel());
 			}
 			getManagedBean().getTemplateSpecCreate().reloadData();
 		}
+		/**
+		* This method will call on page load.
+		* 
+		* @param .
+		* @return IPagingDataModel<TplSpecMaster>
+		*/
 		public IPagingDataModel<TplSpecMaster> getSearchCloneTempletSpec(){
 			IPagingDataModel<TplSpecMaster> pagingData = getManagedBean().getTemplateSpecCreate();
 			if(null == pagingData){
