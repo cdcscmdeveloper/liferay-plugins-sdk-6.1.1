@@ -19,9 +19,7 @@
 				<!-- #28212 --> <p:outputPanel
 					rendered="#{not empty viewSmApplBackingBean.managedBean.resubmitUrl 
 					and viewSmApplBackingBean.managedBean.supplierUser 
-					and viewSmApplBackingBean.managedBean.displayResubmitButton 
-					and ((viewSmApplBackingBean.managedBean.smAppl.applType eq 'B' and viewSmApplBackingBean.managedBean.smMofAccount!=null and viewSmApplBackingBean.managedBean.smMofAccount.expDate gt CommonConstants.THREE_MONTHS_LATER_DATE
-					) or (viewSmApplBackingBean.managedBean.smAppl.applType ne 'B'))}">
+					and viewSmApplBackingBean.managedBean.displayResubmitButton}"> <!-- #32628 -->
 					<!-- START 29823 -->
 					<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'N'}">
 					<p:commandLink onclick="blockWidget.show()" rendered="#{viewSmApplBackingBean.isApplPORejectedAfterApprovelSV()}"
