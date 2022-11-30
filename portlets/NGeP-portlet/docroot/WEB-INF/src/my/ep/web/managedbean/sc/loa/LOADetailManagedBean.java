@@ -367,6 +367,8 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private Long supplierBankId = null;
 	//Bug #33674@Syazani - End
 	
+	private int retainPageNumber = 0;//#34242
+	
     /**
      * Gets the spki backing bean.
      *
@@ -2090,6 +2092,21 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	}
 	//Bug #33674@Syazani - End
 	
+	//#34242 - Start
+	/**
+	 * @return the retainPageNumber
+	 */
+	public int getRetainPageNumber() {
+		return retainPageNumber;
+	}
+
+	/**
+	 * @param retainPageNumber the retainPageNumber to set
+	 */
+	public void setRetainPageNumber(int retainPageNumber) {
+		this.retainPageNumber = retainPageNumber;
+	}
+	//#34242 - End
 }
 
 
