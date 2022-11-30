@@ -4461,12 +4461,12 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		
 		ScQt scQt = getManagedBean().getQt();
 		if (null != scQt.getQtStatus() && null != scQt.getQtStatus().getStatusId()
-				// #33831 - Start.
-				&& (scQt.getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION 
+				// #33831 - Start
+				&& (QTConstants.PORTLET_NAME_SUPPLIER_PROPOSAL.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) 
 				|| QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) 
 				|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
 				&& null != getManagedBean().getZoneTplSpecBeanMap() && getManagedBean().getZoneTplSpecBeanMap().size() > 0)
-				// #33831 - End.
+				// #33831 - End
 				) {
 				for (Map.Entry<Long, TemplateSpecBean> entry : zoneTplSpecBeanMap.entrySet()) {
 				
