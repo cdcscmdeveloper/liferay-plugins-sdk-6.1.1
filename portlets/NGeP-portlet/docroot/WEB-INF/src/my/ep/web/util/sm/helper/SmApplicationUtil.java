@@ -4298,7 +4298,7 @@ public class SmApplicationUtil {
 				} else if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
 					//29823 - start
-					//#34098 - START
+					//#34098 - START 
 					if(managedBean.getCurrentStatus() != null 
 							&& (managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval") ||
 							    managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan"))
