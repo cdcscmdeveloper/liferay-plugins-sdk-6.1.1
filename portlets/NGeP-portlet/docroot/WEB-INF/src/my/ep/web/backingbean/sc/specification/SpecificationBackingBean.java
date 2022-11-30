@@ -310,6 +310,7 @@ public class SpecificationBackingBean extends
 	private static List<SpecInfo> specInfo;
 	private static Map<Long, PmUom> uomMap = new HashMap<Long, PmUom>();
 	private static Map<Long, PmParameter> PmParameterMap = new HashMap<Long, PmParameter>();
+	private static Map<String, PmParameter> pmParameterMapStringKey = new HashMap<String, PmParameter>(); //Bug #34065@Syazani 30/11/2022
 	
 	/**
 	 * The scoreType String
@@ -22297,22 +22298,29 @@ if(null!=allTechnicalChecklist){
 		}
 	}
 	
+	//Bug #34065@Syazani 30/11/2022 - Start
 	private PmParameter retriveParammeterByTypeAndCode(String parameterType, String parameterCode) {
-		IParameterSO parameterSo = null;
-		ParameterResDTO resDTO = null;
-		try {
-			parameterSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterType(parameterType);
-			reqDTO.setParameterCode(parameterCode);
-			resDTO = parameterSo.retrieveParameterByTypeAndCode(reqDTO);
-			reqDTO = null;
-		} finally {
-			parameterSo = null;
+		String key = parameterType + "_" + parameterCode;
+		PmParameter pmParam = pmParameterMapStringKey.get(key); //cache
+		if (pmParam == null) {
+			IParameterSO parameterSo = null;
+			ParameterResDTO resDTO = null;
+			try {
+				parameterSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterType(parameterType);
+				reqDTO.setParameterCode(parameterCode);
+				resDTO = parameterSo.retrieveParameterByTypeAndCode(reqDTO);
+				reqDTO = null;
+				pmParam = resDTO.getPmParameter();
+				pmParameterMapStringKey.put(key, pmParam);
+			} finally {
+				parameterSo = null;
+			}
 		}
-
-		return resDTO.getPmParameter();
+		return pmParam;
 	}
+	//Bug #34065@Syazani 30/11/2022 -- End
 	
 	private void selectOneItemActionAndDefinationBugRepair(List<ScQtCheckList> chcLst, Integer currentIndex, boolean isAction) {
 		int i = 0;
