@@ -17410,8 +17410,13 @@ private void retriveCommitteeRemarksList(){
 				}
 			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+					//#28784
 				if (this.getManagedBean().getScQt().isDemoRequired()) {
+						if(this.getManagedBean().getTabItemPackageIndex() == 1){
+							evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+						} else {
 					evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
+						}
 				} else {
 					//#25138 - 040621 - start
 					if(this.getManagedBean().getScQt().isPartial()){
