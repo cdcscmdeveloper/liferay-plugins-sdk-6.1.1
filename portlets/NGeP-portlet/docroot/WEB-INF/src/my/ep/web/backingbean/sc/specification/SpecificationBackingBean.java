@@ -4386,7 +4386,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						.equalsIgnoreCase(parameterCode)) {
 					list.setScoringReq(false);
 				}
-				list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+
+				// #33670, #30493 - set status when change supplier action - start
+				if (null == list.getScQtCheckListAttachment()) {
+					list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+				} else {
+					list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+				}
+				// #33670, #30493 - set status when change supplier action - end
 
 				list.setAction(paramDesc.getPmParameter());
 				break;
@@ -4421,7 +4428,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						.equalsIgnoreCase(parameterCode)) {
 					list.setScoringReq(false);
 				}
-				list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+
+				// #33670, #30493 - set status when change supplier action - start
+				if (null == list.getScQtCheckListAttachment()) {
+					list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+				} else {
+					list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+				}
+				// #33670, #30493 - set status when change supplier action - end
 
 				list.setAction(paramDesc.getPmParameter());
 				break;
