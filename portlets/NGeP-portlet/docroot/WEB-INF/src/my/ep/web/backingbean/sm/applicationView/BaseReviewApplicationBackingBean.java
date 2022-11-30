@@ -1958,7 +1958,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					}
 				}
 				//32815 - end
-				getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
+				//34209 - START - only load category other than deleted category
+				if(cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED){
+					getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
+				}
+				//34209 END
 			} else {
 				//31480 - start
 				// for supp profile load all active category only
