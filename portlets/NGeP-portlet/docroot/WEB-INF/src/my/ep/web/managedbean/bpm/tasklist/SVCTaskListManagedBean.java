@@ -43,8 +43,10 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 	private List<Long> stateLs;
 	private List<SelectItem> applTypeList;
 	private String applType;
-	private List<SmAppl> cancelledBumiApplLs;		//#32304
-	
+	//#32304 - start
+	private List<SmAppl> cancelledBumiApplLs;
+	private PagingDataModel<SmAppl> bumiListDataModel = new BumiPagingDataModel();
+	//#32304 - end
 	private IPagingDataModel<SmAppl> searchDataModel = new SearchPagingDataModel();
 
 
@@ -265,14 +267,46 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 		this.applType = applType;
 	}
 
-
+	//#32304 - start
 	public List<SmAppl> getCancelledBumiApplLs() {
 		return cancelledBumiApplLs;
 	}
-
 
 	public void setCancelledBumiApplLs(List<SmAppl> cancelledBumiApplLs) {
 		this.cancelledBumiApplLs = cancelledBumiApplLs;
 	}
 	
+	public PagingDataModel<SmAppl> getBumiListDataModel() {
+		return bumiListDataModel;
+	}
+
+	public void setBumiListDataModel(PagingDataModel<SmAppl> bumiListDataModel) {
+		this.bumiListDataModel = bumiListDataModel;
+	}
+	
+	private class BumiPagingDataModel extends PagingDataModel<SmAppl> {
+		private static final long serialVersionUID = 1L;
+		
+		public BumiPagingDataModel() {
+			super("bumiPagingDataModelId");
+		}
+
+		@Override
+		protected ISearchResultBean<SmAppl> pageChangeListener(ISearchBean<SmAppl> searchBean) {
+			SearchResultBean<SmAppl> resultBean = new SearchResultBean<SmAppl>();
+			resultBean.setResultList(null);
+			resultBean.setTotalRecord(0);
+			List<SmAppl> bumi = SVCTaskListManagedBean.this.getCancelledBumiApplLs();
+			if(bumi != null){
+				resultBean.setResultList(new ArrayList<SmAppl>());
+				int offSet = (getPageNo() - 1) * my.ep.web.constant.PagingConst.ROWS_PER_PAGE;
+				for(int i=offSet; i<bumi.size(); i++){
+					resultBean.getResultList().add(bumi.get(i));
+				}
+				resultBean.setTotalRecord(resultBean.getResultList().size());
+			}
+			return resultBean;
+		}
+	}
+	//#32304 - end
 }
