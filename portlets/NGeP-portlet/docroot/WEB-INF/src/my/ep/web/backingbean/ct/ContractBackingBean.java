@@ -4061,24 +4061,28 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
 			//Bug 33096 - shaqimi end
 			//Bug 34030 - shaqimi start
-			if(docType.equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING) 
-					|| docType.equals(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
-					|| docType.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE)){
-				abb.getManagedBean().setStatusIdFromTaskList(statusId);
-				abb.getManagedBean().setTaskNameFromTaskList(taskNameFromTaskList);
-				abb.getManagedBean().setContractIdFromTaskList(contractIdFromTaskList);
-				abb.getManagedBean().setContractVerIdFromTaskList(contractVerIdFromTaskList);
-				
-				if((docTypeFromTaskList != null && !docTypeFromTaskList.isEmpty())){
-					abb.getManagedBean().setDocTypeFromTaskList(docTypeFromTaskList);
-				} else {
-					abb.getManagedBean().setDocTypeFromTaskList(docType);
+			//Bug 34142 - shaqimi start 29/11/2022
+			if(!getManagedBean().isViewContractFromAgreement()){
+				if(docType.equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING) 
+						|| docType.equals(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+						|| docType.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE)){
+					abb.getManagedBean().setStatusIdFromTaskList(statusId);
+					abb.getManagedBean().setTaskNameFromTaskList(taskNameFromTaskList);
+					abb.getManagedBean().setContractIdFromTaskList(contractIdFromTaskList);
+					abb.getManagedBean().setContractVerIdFromTaskList(contractVerIdFromTaskList);
+					
+					if((docTypeFromTaskList != null && !docTypeFromTaskList.isEmpty())){
+						abb.getManagedBean().setDocTypeFromTaskList(docTypeFromTaskList);
+					} else {
+						abb.getManagedBean().setDocTypeFromTaskList(docType);
+					}
+				}else if(abb.getManagedBean().getTaskId() != null){
+					abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
+					abb.getManagedBean().setContractIdFromTaskList(new Long(this.getManagedBean().getContractVer().getCtContract().getContractId()));
+					abb.getManagedBean().setContractVerIdFromTaskList(this.getManagedBean().getContractVer().getContractVerId());
 				}
-			}else if(abb.getManagedBean().getTaskId() != null){
-				abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
-				abb.getManagedBean().setContractIdFromTaskList(new Long(this.getManagedBean().getContractVer().getCtContract().getContractId()));
-				abb.getManagedBean().setContractVerIdFromTaskList(this.getManagedBean().getContractVer().getContractVerId());
 			}
+			//Bug 34142 - shaqimi end 29/11/2022
 			//Bug 34142 - shaqimi start 16112022
 			if(this.getManagedBean().isViewContractFromAgreement()){
 				this.getManagedBean().setViewSCLFromContract(true);

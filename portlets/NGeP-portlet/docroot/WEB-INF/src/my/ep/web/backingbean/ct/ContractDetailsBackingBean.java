@@ -2866,7 +2866,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ctBB.getManagedBean().setServiceselectedItem(null);
 		
 		//Bug 34030 - shaqimi start
-		ctBB.getManagedBean().setAmendFromTaskList(false);
+		//Bug 34142 - shaqimi start 25/11/2022
+		if(!ctBB.getManagedBean().isViewContractFromAgreement()){
+			ctBB.getManagedBean().setAmendFromTaskList(false);
+		}
+		//Bug 34142 - shaqimi start 29/11/2022
+		if(!ctBB.getManagedBean().isViewSCLFromContract()){
+			ctBB.getManagedBean().setViewSCL(false);
+		}
+		//Bug 34142 - shaqimi end 29/11/2022
+		//Bug 34142 - shaqimi end 25/11/2022
 		ctBB.getManagedBean().setAmendFromViewPage(false);
 		ctBB.getManagedBean().setViewSCL(false);
 		ctBB.getManagedBean().setHasAmendmentLoaNo(false);
