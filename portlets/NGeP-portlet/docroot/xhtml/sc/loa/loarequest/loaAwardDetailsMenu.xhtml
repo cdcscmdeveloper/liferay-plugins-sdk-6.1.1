@@ -109,7 +109,7 @@
 		</table> 
 		<p:dataTable id="itemtbl" var="scLoiLoaItem"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoaItems}" rows="10" rendered="#{!isZonalWithPaOrPs}">
+			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoaItems}" rows="10" rendered="#{!isZonalWithPaOrPs}" first="#{lOADetailBackingBean.managedBean.retainPageNumber}"><ui:remove>#34242</ui:remove>
 			
 			<ac:paginator for="itemtbl" />
 			
@@ -249,6 +249,7 @@
 					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}" />
 			</p:column>
+			<p:ajax event="page" listener="#{lOADetailBackingBean.retainAwardPage()}" process="@this" update="@this" /><ui:remove>#34242</ui:remove>
 		</p:dataTable>
 		<c:if test=	"#{isZonalWithPaOrPs}">
 		<table
