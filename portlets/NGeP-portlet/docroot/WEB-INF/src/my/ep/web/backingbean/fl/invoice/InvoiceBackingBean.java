@@ -342,13 +342,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						}
 					}
 				}
-				//33654-Start
-				if(reqDTO.isInvoiceRevise() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-					if(reqDTO.getInvoice().getCreatedBy() != getFacesScopes().getUserSessionBean().getUserId()){
-						reqDTO.getInvoice().setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-					}
-				}
-				//33654-End
 				
 				resDTO = invoiceSO.invoiceModification(reqDTO);
 			}else{
