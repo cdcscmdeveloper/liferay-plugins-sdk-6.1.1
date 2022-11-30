@@ -33,6 +33,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -10394,10 +10395,8 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().getQtnTendertemplateSearchBean()
 				.setQtStatus(null);
 		//#29468 Start Vinod
-		List<TreeNode> childTreeList = this.getManagedBean().getRootCategoryTree().getChildren();
-		for(TreeNode childTree : childTreeList){
+		for(TreeNode childTree : this.getManagedBean().getRootCategoryTree().getChildren())
 			childTree.setSelected(false);
-		}
 		//#29468 End Vinod
 	}
 
@@ -15237,31 +15236,31 @@ if (null != checklist && !checklist.isEmpty()) {
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
 			//#29468 Vinod Start
-			if(getManagedBean().getSelectedCategories()!=null){
-				List<Long> l1Ids = new ArrayList<Long>();
-				List<Long> l2Ids = new ArrayList<Long>();
-				List<Long> l3Ids = new ArrayList<Long>();
-				categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
-				List<PmCategoryL1> pmCategoryL1s = categoryCodeSO.retrieveCategoryL1List().getCategoryL1List();
+			List<Long> l1Ids = new ArrayList<>();
+			List<Long> l2Ids = new ArrayList<>();
+			List<Long> l3Ids = new ArrayList<>();
+			
+			Iterator<Map.Entry<String, Map<Long, Map<Long, Map<Long, String>>>>> mapCat = getManagedBean().getMapCatCode().entrySet().iterator();
+	        while (mapCat.hasNext()) {
+	        	Map.Entry<String, Map<Long, Map<Long, Map<Long, String>>>> mainMap = mapCat.next();
+	        	if(getManagedBean().getSelectedCategories()!=null
+		        	&& getManagedBean().getSelectedCategories().size()!=0
+		            && mainMap.getKey()!=null
+		            && mainMap.getKey()!=""
+					&& getManagedBean().getSelectedCategories().contains(mainMap.getKey())){
+	        		
+	        		Iterator<Entry<Long, Map<Long, Map<Long, String>>>> l3It=(mainMap.getValue()).entrySet().iterator();
+	        		Entry<Long, Map<Long, Map<Long, String>>> l3CatMap = l3It.next();
+	        		Iterator<Map.Entry<Long, Map<Long, String>>> l2It=(l3CatMap.getValue()).entrySet().iterator();
+	        		Map.Entry<Long, Map<Long, String>> l2CatMap = l2It.next();
+	        		Iterator<Map.Entry<Long, String>> l1it=(l2CatMap.getValue()).entrySet().iterator();
+	        		Map.Entry<Long, String> l1CatMap = l1it.next();
 					
-				for (PmCategoryL1 pmCategoryL1 : pmCategoryL1s) {
-					CategoryCodeReqDTO reqDTO1 = new CategoryCodeReqDTO();
-					reqDTO1.setCategoryL1Id(pmCategoryL1.getCategoryL1Id());
-					List<PmCategoryL2> pmCategoryL2s = categoryCodeSO.retrieveCategoryL2ListByL1Id(reqDTO1).getCategoryL2List();
-					for (PmCategoryL2 pmCategoryL2 : pmCategoryL2s) {
-						CategoryCodeReqDTO reqDTO2 = new CategoryCodeReqDTO();
-						reqDTO2.setCategoryL2Id(pmCategoryL2.getCategoryL2Id());
-						List<PmCategoryL3> pmCategoryL3s = categoryCodeSO.retrieveCategoryL3ListByL2Id(reqDTO2).getCategoryL3List();
-						for (PmCategoryL3 pmCategoryL3 : pmCategoryL3s) {
-							String catCode = pmCategoryL1.getCategoryL1Code()+pmCategoryL2.getCategoryL2Code()+pmCategoryL3.getCategoryL3Code();
-							if(getManagedBean().getSelectedCategories().contains(catCode)){
-								l1Ids.add(pmCategoryL1.getCategoryL1Id());
-								l2Ids.add(pmCategoryL2.getCategoryL2Id());
-								l3Ids.add(pmCategoryL3.getCategoryL3Id());
+	        		l1Ids.add(l1CatMap.getKey());
+					l2Ids.add(l2CatMap.getKey());
+					l3Ids.add(l3CatMap.getKey());
 							}
 						}
-					}
-				}
 				if(l1Ids.size()!=0 && l2Ids.size()!=0 && l3Ids.size()!=0){
 					qtSearchBean.getDataFilterBeans().add(
 							new SearchMultiFilterBean(
@@ -15275,7 +15274,6 @@ if (null != checklist && !checklist.isEmpty()) {
 											SearchOperator.OPERATOR_IN.value(), l3Ids, 
 											SearchCondition.CONDITION_AND.value())));
 				}
-		}
 		//#29468 Vinod End
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
@@ -21038,18 +21036,26 @@ if(null!=allTechnicalChecklist){
 	// #29732 End - reOpen Fix
 	
 	/*#29468 Start Vinod*/
+	/**
+	* Get Category Codes For Clone constructing tree node for selection of Category Codes.
+	* 
+	* @param .
+	* @return 
+	*/
 	private void getCategoryCodesForClone(){
-		ICategoryCodeSO categoryCodeSO = null;
 			
 		try {
-			categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
-			List<PmCategoryL1> pmCategoryL1s = categoryCodeSO.retrieveCategoryL1List().getCategoryL1List();
 				
-			if(pmCategoryL1s.size()!=0){
 				TreeNode rootNode = new DefaultTreeNode("root", null);
-				for (PmCategoryL1 pmCategoryL1 : pmCategoryL1s) {
+			  Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode = new HashMap<>();
+			  for (PmCategoryL1 pmCategoryL1 : BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class).retrieveCategoryL1List().getCategoryL1List()) {
+				  Map<Long, String> l1Map=new HashMap<>();
+				  l1Map.put(pmCategoryL1.getCategoryL1Id(), null);
 					for (PmCategoryL2 pmCategoryL2 : pmCategoryL1.getPmCategoryL2s()) {
+					  Map<Long, Map<Long, String>> l2Map=new HashMap<>();
+					  l2Map.put(pmCategoryL2.getCategoryL2Id(), l1Map);
 						for (PmCategoryL3 pmCategoryL3 : pmCategoryL2.getPmCategoryL3s()) {
+							Map<Long, Map<Long, Map<Long, String>>> l3Map = new HashMap<>();
 							TreeNode catCode = new DefaultTreeNode("catCode",pmCategoryL1.getCategoryL1Code()+
 																			 pmCategoryL2.getCategoryL2Code()+
 																			 pmCategoryL3.getCategoryL3Code(), rootNode);
@@ -21059,27 +21065,37 @@ if(null!=allTechnicalChecklist){
 							catDes2.setSelectable(false);
 							TreeNode catDes3 = new DefaultTreeNode("catDes3",pmCategoryL3.getCategoryL3Code()+" - "+pmCategoryL3.getCategoryName(), catCode);
 							catDes3.setSelectable(false);
+							
+							l3Map.put(pmCategoryL1.getCategoryL1Id(), l2Map);
+							mapCatCode.put(pmCategoryL1.getCategoryL1Code()+
+									  	   pmCategoryL2.getCategoryL2Code()+
+									  	   pmCategoryL3.getCategoryL3Code(), l3Map);
 						}
 					}
-				}
 				this.getManagedBean().setRootCategoryTree(rootNode);
+				this.getManagedBean().setMapCatCode(mapCatCode);
 			}
-		} finally {
-			categoryCodeSO = null;
+		}catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "ConstructTreeNodeForCategoryCodes", "docNo", "getCategoryCodesForClone", getUserIdSessionFromLoginId(), e);
 		}
 	}
 		
+	/**
+	* update the selection of Category Codes.
+	* 
+	* @param event.
+	* @return 
+	*/
 	public void selectCategoryTreeNode(NodeSelectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
 		selectedTreeNode.setSelected(true);
-		List<String> selectedCatCodes = new ArrayList<String>();
+		List<String> selectedCatCodes = new ArrayList<>();
 		String code=(String) selectedTreeNode.getData();
 		if(getManagedBean().getSelectedCategories()!=null
 			&& !getManagedBean().getSelectedCategories().isEmpty())  
 				selectedCatCodes.addAll(getManagedBean().getSelectedCategories());
 			
-		if(selectedCatCodes!=null 
-			&& !selectedCatCodes.isEmpty()){
+		if(selectedCatCodes!= null && !selectedCatCodes.isEmpty()){
 			if(!selectedCatCodes.contains(code)) selectedCatCodes.add(code);
 		}else{
 			selectedCatCodes.add(code);
@@ -21087,19 +21103,23 @@ if(null!=allTechnicalChecklist){
 		getManagedBean().setSelectedCategories(selectedCatCodes);
 	}
 
+	/**
+	* update the unSelection of Category Codes.
+	* 
+	* @param event.
+	* @return 
+	*/
 	public void unSelectCategoryTreeNode(NodeUnselectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
 		selectedTreeNode.setSelected(false);
-		List<String> selectedCatCodes = new ArrayList<String>();
-		String code=(String) selectedTreeNode.getData();
+		List<String> selectedCatCodes = new ArrayList<>();
 			
 		if(getManagedBean().getSelectedCategories()!=null
 			&& !getManagedBean().getSelectedCategories().isEmpty())  
 				selectedCatCodes.addAll(getManagedBean().getSelectedCategories());
 			
-		if(selectedCatCodes!=null 
-			&& !selectedCatCodes.isEmpty()){
-			selectedCatCodes.remove(code);
+		if(!selectedCatCodes.isEmpty()){
+			selectedCatCodes.remove((String) selectedTreeNode.getData());
 		}
 		getManagedBean().setSelectedCategories(selectedCatCodes);
 	}
