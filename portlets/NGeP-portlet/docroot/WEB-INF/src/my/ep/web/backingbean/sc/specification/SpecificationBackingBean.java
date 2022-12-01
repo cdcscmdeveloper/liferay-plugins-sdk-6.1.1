@@ -1211,14 +1211,18 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 8:
-			if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this
-					.getManagedBean().getFulfilmentType())
-					|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
-							.equalsIgnoreCase(this.getManagedBean()
-									.getFulfilmentType())
-					|| ParameterConst.FULFILMENT_TYPE_ONE_OFF
-							.equalsIgnoreCase(this.getManagedBean()
-									.getFulfilmentType())) {
+			if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())
+					|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equalsIgnoreCase(this.getManagedBean()
+							.getFulfilmentType())
+					|| ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(this.getManagedBean()
+							.getFulfilmentType())
+					// 25635&33723&25725 -start-
+					|| ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(this.getManagedBean()
+							.getFulfilmentType())
+					|| ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN.equalsIgnoreCase(this.getManagedBean()
+							.getFulfilmentType())
+			// 25635&33723&25725 -end-
+			) {
 				retriveFulfilmentDtls();
 			}
 			break;
@@ -5070,13 +5074,23 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						.getTplSpecMaster());
 				specReqDTO
 						.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-				TemplateSpecResDTO templateresDTO = templateSpecSO
-						.getTemplateMaster(specReqDTO);
+
+				// #25635 -start-
+				TemplateSpecResDTO templateresDTO = null;
+				templateresDTO = templateSpecSO.getTemplateMaster(specReqDTO);
+				// #25635 -end-
+
 				checkList.getScQtDoc().setTplSpecMaster(
 						templateresDTO.getSpecMaster());
 				TemplateSpecBean templateSpecBean = getManagedBean()
 						.getTemplateSpecBean();
 				
+				// #25635 -start-
+				if (null != templateresDTO) {
+					checkList.getScQtDoc().setTplSpecMaster(templateresDTO.getSpecMaster());
+				}
+				// #25635 -end-
+
 				// #27173 -start-
 				checkList.getScQtDoc().getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
 				// #27173 -end-
@@ -5128,24 +5142,29 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					this.getManagedBean().setPanelItemCategory("");
 					this.getManagedBean().setSpecNewable(true);
 					this.getManagedBean().setUpdateSpec(true);
+					
 					if (null == this.getManagedBean().getPanelItemCategory()
-							|| "".equals(this.getManagedBean()
-									.getPanelItemCategory())) {
-					//	retriveSupplierQualificationCriteria("SC");
-						//List<CtPanelItem> panelItemList = getManagedBean().getPanelItemList();
-						
-					/*	if (CollectionUtils.isNotEmpty(panelItemList)){
-							if(null!=panelItemList.get(0).getItemCategoryId()){
-							 this.getManagedBean().setPanelItemCategory(panelItemList.get(0).getItemCategoryId().getParameterCode());
-							 }
+							|| "".equals(this.getManagedBean().getPanelItemCategory())) {
+						// #25635 -start-
+						boolean panelItem = false;
 
-					}*/
-						if(null!=templateresDTO.getSpecMaster() && null==templateresDTO.getSpecMaster().getCtPanelItem()){
+						if (null != checkList.getScQtDoc().getTplSpecMaster().getCtPanelItem()) {
+							panelItem = true;
+						}
+
+						if (null != templateresDTO && null != templateresDTO.getSpecMaster()
+								&& null != templateresDTO.getSpecMaster().getCtPanelItem()) {
+							panelItem = true;
+						}
+						
+						if (panelItem) {
+							// #25635 -end-
 							this.getManagedBean().setPanelItemCategory(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC);
-						}else{
+						} else {
 							this.getManagedBean().setPanelItemCategory(ParameterConst.ITEM_CATEGORY_TYPE_GENERAL);
 						}
 					}
+					
 					if ((null != this.getManagedBean().getPanelItemCategory() && !""
 							.equals(this.getManagedBean()
 									.getPanelItemCategory()))
@@ -8675,11 +8694,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 
 		try {
-
-			selectItems.add(new SelectItem(null, ResourceBundleUtils
+			// #25635 -start-
+			selectItems.add(new SelectItem(0, ResourceBundleUtils
 					.getMessage("lbl.txt.select",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
+			// #25635 -end-
 			selectItems.add(new SelectItem(1, ResourceBundleUtils
 					.getMessage("lbl.sc.checklist.auto.score",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -10389,6 +10409,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 		}
 		
+		// #25635 -start-
+		this.getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());
+		this.getManagedBean().setMarkDeletedFinChecklist(new ArrayList<ScQtCheckList>());
+		// #25635 -end-
 		// #27173 -start-
 		Long statusId = scQt.getQtStatus().getStatusId();
 		
@@ -11008,7 +11032,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 			}
 
-			List<ScQtCheckList> checklistRemoveList = getToBeRemoveList();
+			// #25635 -start-
+			List<ScQtCheckList> checklistRemoveList = deleteSpecCheckList();
+			// #25635 -end-
+			
 			if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
 				for (int i = 0; i < checklistRemoveList.size(); i++) {
 					if (null == checklistRemoveList.get(i).getQtChecklistId()) {
@@ -11017,6 +11044,28 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				}
 
 			}
+			
+			// start #25635 danial
+			List<ScQtScoreSetting> toBeRemoveScoreSettings = new ArrayList<ScQtScoreSetting>();
+		
+			if (null != this.getManagedBean().getMarkDeletedScQtScoreSettingTechnical()
+					&& !this.getManagedBean().getMarkDeletedScQtScoreSettingTechnical().isEmpty()) {
+				toBeRemoveScoreSettings = this.getManagedBean().getMarkDeletedScQtScoreSettingTechnical();
+			}
+			
+			if (null != this.getManagedBean().getMarkDeletedScQtScoreSettingFinancial()
+					&& !this.getManagedBean().getMarkDeletedScQtScoreSettingFinancial().isEmpty()) {
+				toBeRemoveScoreSettings.addAll(this.getManagedBean().getMarkDeletedScQtScoreSettingFinancial());
+			}
+			
+			if (null != this.getManagedBean().getMarkDeletedScQtScoreSettingOverall()
+					&& !this.getManagedBean().getMarkDeletedScQtScoreSettingOverall().isEmpty()) {
+				toBeRemoveScoreSettings.addAll(this.getManagedBean().getMarkDeletedScQtScoreSettingOverall());
+			}
+
+			specReqDTO.setToBeRemoveScoreSettingList(toBeRemoveScoreSettings);
+			// #25635 danial end
+
 			specReqDTO.setTobeRemoveList(checklistRemoveList);
 			specReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);
 			specReqDTO.setToBeRemoveSchedulesList(this.getManagedBean()
@@ -11270,12 +11319,16 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 			case 8:
 				ScQt fulfilMentdtls = constructSpecCommitteDtls().getScQt();
+				
 				if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
-						.equalsIgnoreCase(this.getManagedBean()
+						.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())
+						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equalsIgnoreCase(this.getManagedBean()
 								.getFulfilmentType())
-						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
-								.equalsIgnoreCase(this.getManagedBean()
-										.getFulfilmentType())) {
+						// 25635&33723&25725 -start-
+						|| ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(this.getManagedBean()
+								.getFulfilmentType())
+				// 25635&33723&25725 -end-
+				) {
 					specReqDTO.setScQt(fulfilMentdtls);
 					specSO.validateSCFulfillmentSchedules(specReqDTO);
 					resDTO = specSO.saveQTDtl(specReqDTO);
@@ -18062,5 +18115,32 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 	}
 	// #21695 #28949 farid END 18/03/2020
+
+	// #25635 -start-
+	private List<ScQtCheckList> deleteSpecCheckList() {
+		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSpecSO.class);
+		List<ScQtCheckList> specCheckList = new ArrayList<ScQtCheckList>();
+		List<ScQtCheckList> nonspecCheckList = new ArrayList<ScQtCheckList>();
+		List<ScQtCheckList> toBeRemoveCheckLists = getToBeRemoveList();
+
+		for (ScQtCheckList cl : toBeRemoveCheckLists) {
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(cl.getDefinationType()
+					.getParameterCode())) {
+				specCheckList.add(cl);
+			} else {
+				nonspecCheckList.add(cl);
+			}
+		}
+
+		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+		specReqDTO.setScQt(this.getManagedBean().getQt());
+		specReqDTO.setCheckLists(specCheckList);
+
+		specSo.deleteChecklists(specReqDTO);
+
+		return nonspecCheckList;
+	}
+	// #25635 -end-
 
 }
