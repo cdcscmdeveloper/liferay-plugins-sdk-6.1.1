@@ -1051,6 +1051,43 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				null);
 	}
 	
+	// #25635 -start-
+	public SelectItem[] getStatusDropdownValuesWithExclusions(String moduleCode, String docType, Long... excludes) {
+		return getStatusDropdownValuesBySearchBean(moduleCode, docType, null, excludes);
+	}
+	// #25635 -end-
+
+	// #25635 -start-
+	public SelectItem[] getStatusDropdownValuesBySearchBean(String moduleCode, String docType,
+			SearchBean<PmStatusDesc> searchBean, Long... excludes) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(moduleCode, docType,
+					searchBean);
+
+			items = new SelectItem[(statusDescs.size() - excludes.length) + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			int i = 1;
+
+			for (PmStatusDesc statusDesc : statusDescs) {
+				if (!Arrays.asList(excludes).contains(statusDesc.getPmStatus().getStatusId())) {
+					items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items;
+	}
+	// #25635 -end-
+	
 	/**
 	 * Get status select items by module and doc type for dropdown.
 	 * 
