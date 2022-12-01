@@ -744,13 +744,20 @@ public class QTDocumentsBackingBean extends
 			TemplateDocBackingBean tplDocBB = new TemplateDocBackingBean();
 			tplDocBB.getManagedBean().setExternalPageUrl(DOCUMENT_PAGE);
 
-			ScQtDocReport qtDocReport = retriveRulesAndRegulationReport(scQtDocReport);
-			if (qtDocReport != null) {
-				scQtDocReport = qtDocReport;
+			if (!scQtDocReport.isCloned()) { // 33954, #25635
+				ScQtDocReport qtDocReport = retriveRulesAndRegulationReport(scQtDocReport);
+				
+				if (qtDocReport != null) {
+					scQtDocReport = qtDocReport;
+				} else {
+					// save list of documents if its not yet save
+					scQtDocReport = saveScQtReportList(scQtDocReport);
+				}
+				// 33954, #25635 -start-
 			} else {
-				// save list of documents if its not yet save
-				scQtDocReport = saveScQtReportList(scQtDocReport);
+				throw new EpException("Template was Cloned Before Edit save All Template Details");
 			}
+			// 33954, #25635 -end-
 
 			this.getManagedBean().setScQtDocReport(scQtDocReport);
 			TplDocMaster docMaster = scQtDocReport.getTplDocMaster();
