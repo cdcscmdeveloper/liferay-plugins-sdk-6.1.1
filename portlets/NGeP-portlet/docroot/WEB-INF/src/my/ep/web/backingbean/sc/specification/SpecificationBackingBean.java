@@ -11769,11 +11769,6 @@ if (null != checklist && !checklist.isEmpty()) {
 				specReqDTO.setScQt(scQt);
 				specReqDTO.setZonesDeleteOrSave(this.getManagedBean()
 						.isZoneSpecUpdate());
-				//#25138 reset offerprice if add new zone -start
-				if(specReqDTO.isZonesDeleteOrSave()){
-					specReqDTO.setCheckLists(null);
-				}
-				//#25138 -end
 				specSO.validateSpecCommitteGeneralInfo(specReqDTO);
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
