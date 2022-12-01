@@ -292,4 +292,8 @@ public interface QTConstants {
 	public static final String PORTLET_NAME_DL_CREATE = "scCreateManualSourcing_WAR_NGePportlet";//#32648
 	public static final String PORTLET_NAME_QT_LIST = "scQtLoaList_WAR_NGePportlet";//#32648
 	
+	// #33831, #21695, #25138 - Start
+	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
+	// #33831, #21695, #25138 - End
+	
 }
