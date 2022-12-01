@@ -1958,8 +1958,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					}
 				}
 				//32815 - end
-				//34209 - START - only load category other than deleted category
-				if(cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED){
+				//34209 - START
+				if(getManagedBean().isPoApprUnClaimTask()){
+					if(cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED){
+						getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
+					}
+				}else{
 					getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
 				}
 				//34209 END
