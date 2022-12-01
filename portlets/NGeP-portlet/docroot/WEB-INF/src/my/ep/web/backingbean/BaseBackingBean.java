@@ -60,7 +60,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;//#31849
+import my.ep.biz.service.pm.authorization.user.IUserSO;//#31849  #32682
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -82,7 +82,7 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;//#31849
+import my.ep.dto.pm.authorization.user.UserReqDTO;//#31849  #32682
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -126,7 +126,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
-import my.ep.persistence.logging.LogKey;//#31849
+import my.ep.persistence.logging.LogKey;//#31849  #32682
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.ReasonCategory;
@@ -4179,7 +4179,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return allowed;
 	}
 	
-	//#31849, #34090 start
+	//#31849, #34090, #32682 start
 	/**
 	 * Method to return current session userId from user screenName(loginId)
 	 * @return userId
@@ -4202,5 +4202,5 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		new LogKey(userIdSession);
 		return userIdSession;
 	}
-	//#31849, #34090 end
+	//#31849, #34090, #32682 end
 }
