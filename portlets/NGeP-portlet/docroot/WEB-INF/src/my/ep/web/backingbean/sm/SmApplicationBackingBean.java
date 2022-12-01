@@ -3216,16 +3216,6 @@ public class SmApplicationBackingBean extends
 						}
 					}
 				}
-				//#31043 start
-				if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
-					for (SmSupplierCategory cat : getManagedBean()
-							.getActiveCategoryList()) {
-						if(cat.getPoDecFlg() == 0 && getManagedBean().isPoUser())
-							log.info("PO Remark: "+ cat.getPoRemarks());
-						else if(cat.getApprvrDecFlg() == 0 && getManagedBean().isApproverUser())
-							log.info("Approver Remark: "+ cat.getApproverRemarks());
-					}
-				}
 				
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
@@ -3342,6 +3332,49 @@ public class SmApplicationBackingBean extends
 					
 					//#27356
 					SmApplicationUtil.validateCoordinate(getManagedBean());
+			}
+			
+			if((getManagedBean().isPoUser() || getManagedBean().isApproverUser()) &&
+					(currentPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)|| 
+					outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY))){
+				//#31043 start
+				if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF )|| 
+						getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES) ||
+						getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+					if (!SmCommonUtil.isCollectionEmpty(getManagedBean()
+							.getActiveCategoryList())) {
+						for (SmSupplierCategory cat : getManagedBean()
+								.getActiveCategoryList()) {
+							if(getManagedBean().isPoUser()){
+								if(cat.getPoDecFlg() == 0 && cat.getPoRemarks() == null){
+									log.info("PO remark is null!");
+								}
+							}else if(getManagedBean().isApproverUser()){
+								if(cat.getApprvrDecFlg() == 0 && cat.getApproverRemarks() == null){
+									log.info("Approver remark is null!");
+								}
+							}
+						}
+					}
+				}
+				
+				if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+					if (!SmCommonUtil.isCollectionEmpty(getManagedBean()
+							.getApprovedCategoryList())) {
+						for (SmSupplierCategory cat : getManagedBean()
+								.getApprovedCategoryList()) {
+							if(getManagedBean().isPoUser()){
+								if(cat.getPoDecFlg() == 0 && cat.getPoRemarks() == null){
+									log.info("PO remark is null!");
+								}
+							}else if(getManagedBean().isApproverUser()){
+								if(cat.getApprvrDecFlg() == 0 && cat.getApproverRemarks() == null){
+									log.info("Approver remark is null!");
+								}
+							}
+						}
+					}
+				}
 			}
 			setSupplierChangeValues(currentPageType);
 			setBranchDisplayTable(); //29727
@@ -10367,6 +10400,9 @@ public class SmApplicationBackingBean extends
 			// #31043 - end
 		}
 		
+		//#31043
+		SmApplicationUtil.checkCategoryRemark(getManagedBean());
+		
 		getManagedBean().getPoSecReview().setRecommendation(recommendation);
 		MofRegistrationResDTO resDTO = getCurrentRegStatus();
 		if (resDTO.getStatusId() != null
@@ -10756,9 +10792,7 @@ public class SmApplicationBackingBean extends
 		//#12483 - STOP
 		
 		//#31043 - start
-		if (decision.equalsIgnoreCase("APPROVE") || decision.equalsIgnoreCase("REJECT")){
-			SmApplicationUtil.checkCategoryRemark(getManagedBean());
-		}
+		SmApplicationUtil.checkCategoryRemark(getManagedBean());
 		//#31043 - end
 		
 		log.info("<<<<Appl type>>>>");
@@ -10860,6 +10894,10 @@ public class SmApplicationBackingBean extends
 				validateBeforeSubmit();
 			}
 		}
+		
+		//#31043 start	
+		SmApplicationUtil.checkCategoryRemark(this.getManagedBean());
+		//#31043 end
 
 		log.info(" **** After retrieve ***"
 				+ getManagedBean().getSmAppl().getPmStatus().getStatusId());

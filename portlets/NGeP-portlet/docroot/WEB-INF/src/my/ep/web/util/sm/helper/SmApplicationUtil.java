@@ -14949,81 +14949,94 @@ public class SmApplicationUtil {
 	
 	//#31043 - START
 	public static void checkCategoryRemark(SmApplicationManagedBean bean){
-		if(bean.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
-			if (!SmCommonUtil.isCollectionEmpty(bean
-					.getActiveCategoryList())) {
+		if (bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			if (SmCommonUtil.isCollectionEmpty(bean.getActiveCategoryList()) && SmCommonUtil.isCollectionEmpty(bean
+					.getApprovedCategoryList())){
+				assignActiveAndApprovedCategoryList(bean);
+			}
+		}else{
+			if (SmCommonUtil.isCollectionEmpty(bean.getActiveCategoryList())){
+				assignActiveAndApprovedCategoryList(bean);
+			}
+		}
+		
+		log.info("Appl type: "+ bean.getSmAppl().getApplType());
+		if (!SmCommonUtil.isCollectionEmpty(bean.getActiveCategoryList())) {
 				for (SmSupplierCategory cat : bean
 						.getActiveCategoryList()) {
-					log.info("");
-					if(cat.getApprvrDecFlg() == 0 && cat.getApproverRemarks() == null){
-						throw new EpException(SmCommonUtil.getMessage(
-							"lbl.sm.required.msg",
-							new String[] { SmCommonUtil.getMessage(
-									"lbl.sm.catCodes.rejRemarks",
-									null)
-									+ " "
-									+ cat.getPmCategoryL1().getCategoryL1Code()
-									+ cat.getPmCategoryL2().getCategoryL2Code()
-									+ cat.getPmCategoryL3().getCategoryL3Code() }));
+					if (bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF) ||
+							bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES) ||
+							bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+						if(bean.isPoUser()){
+							log.info("PO decision: "+cat.getPoDecFlg());
+							log.info("PO remark: "+cat.getPoRemarks());
+							if(cat.getPoDecFlg() == 0 && cat.getPoRemarks() == null){
+								throw new EpException(SmCommonUtil.getMessage(
+										"lbl.sm.required.msg",
+										new String[] { SmCommonUtil.getMessage(
+												"lbl.sm.catCodes.rejRemarks",
+												null)
+												+ " "
+												+ cat.getPmCategoryL1().getCategoryL1Code()
+												+ cat.getPmCategoryL2().getCategoryL2Code()
+												+ cat.getPmCategoryL3().getCategoryL3Code() }));
+							}
+						}else if(bean.isApproverUser()){
+							log.info("Approver decision: "+cat.getApprvrDecFlg());
+							log.info("Approver remark: "+cat.getApproverRemarks());
+							if(cat.getApprvrDecFlg() == 0 && cat.getApproverRemarks() == null){
+								throw new EpException(SmCommonUtil.getMessage(
+										"lbl.sm.required.msg",
+										new String[] { SmCommonUtil.getMessage(
+												"lbl.sm.catCodes.rejRemarks",
+												null)
+												+ " "
+												+ cat.getPmCategoryL1().getCategoryL1Code()
+												+ cat.getPmCategoryL2().getCategoryL2Code()
+												+ cat.getPmCategoryL3().getCategoryL3Code() }));
+							}
+						}
 					}
 				}
 			}
-		}else if(bean.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
+		
 			if (!SmCommonUtil.isCollectionEmpty(bean
-					.getActiveCategoryList())) {
-				for (SmSupplierCategory cat : bean
-						.getActiveCategoryList()) {
-					log.info("");
-					if(cat.getApprvrDecFlg() == 0 && cat.getApproverRemarks() == null){
-						throw new EpException(SmCommonUtil.getMessage(
-							"lbl.sm.required.msg",
-							new String[] { SmCommonUtil.getMessage(
-									"lbl.sm.catCodes.rejRemarks",
-									null)
-									+ " "
-									+ cat.getPmCategoryL1().getCategoryL1Code()
-									+ cat.getPmCategoryL2().getCategoryL2Code()
-									+ cat.getPmCategoryL3().getCategoryL3Code() }));
-					}
-				}
-			}
-		}else if(bean.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
-			if (!SmCommonUtil.isCollectionEmpty(bean
-					.getActiveCategoryList())) {
-				for (SmSupplierCategory cat : bean
-						.getActiveCategoryList()) {
-					log.info("");
-					if(cat.getApprvrDecFlg() == 0 && cat.getApproverRemarks() == null){
-						throw new EpException(SmCommonUtil.getMessage(
-							"lbl.sm.required.msg",
-							new String[] { SmCommonUtil.getMessage(
-									"lbl.sm.catCodes.rejRemarks",
-									null)
-									+ " "
-									+ cat.getPmCategoryL1().getCategoryL1Code()
-									+ cat.getPmCategoryL2().getCategoryL2Code()
-									+ cat.getPmCategoryL3().getCategoryL3Code() }));
-					}
-				}
-			}else if (!SmCommonUtil.isCollectionEmpty(bean
 					.getApprovedCategoryList())) {
 				for (SmSupplierCategory cat : bean
 						.getApprovedCategoryList()) {
-					log.info("");
-					if(cat.getApprvrDecFlg() == 0 && cat.getApproverRemarks() == null){
-						throw new EpException(SmCommonUtil.getMessage(
-							"lbl.sm.required.msg",
-							new String[] { SmCommonUtil.getMessage(
-									"lbl.sm.catCodes.rejRemarks",
-									null)
-									+ " "
-									+ cat.getPmCategoryL1().getCategoryL1Code()
-									+ cat.getPmCategoryL2().getCategoryL2Code()
-									+ cat.getPmCategoryL3().getCategoryL3Code() }));
+					if (bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+						if(bean.isPoUser()){
+							log.info("PO decision: "+cat.getPoDecFlg());
+							log.info("PO remark: "+cat.getPoRemarks());
+							if(cat.getPoDecFlg() == 0 && cat.getPoRemarks() == null){
+								throw new EpException(SmCommonUtil.getMessage(
+										"lbl.sm.required.msg",
+										new String[] { SmCommonUtil.getMessage(
+												"lbl.sm.catCodes.rejRemarks",
+												null)
+												+ " "
+												+ cat.getPmCategoryL1().getCategoryL1Code()
+												+ cat.getPmCategoryL2().getCategoryL2Code()
+												+ cat.getPmCategoryL3().getCategoryL3Code() }));
+							}
+						}else if(bean.isApproverUser()){
+							log.info("Approver decision: "+cat.getApprvrDecFlg());
+							log.info("Approver remark: "+cat.getApproverRemarks());
+							if(cat.getApprvrDecFlg() == 0 && cat.getApproverRemarks() == null){
+								throw new EpException(SmCommonUtil.getMessage(
+										"lbl.sm.required.msg",
+										new String[] { SmCommonUtil.getMessage(
+												"lbl.sm.catCodes.rejRemarks",
+												null)
+												+ " "
+												+ cat.getPmCategoryL1().getCategoryL1Code()
+												+ cat.getPmCategoryL2().getCategoryL2Code()
+												+ cat.getPmCategoryL3().getCategoryL3Code() }));
+							}
+						}
 					}
 				}
 			}
 		}
-	}
-	//#31043 - END
+		//#31043 - END
 }
