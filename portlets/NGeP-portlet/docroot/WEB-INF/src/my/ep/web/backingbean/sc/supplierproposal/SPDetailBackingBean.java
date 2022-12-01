@@ -4472,9 +4472,10 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		// #33567 - End.
 
 		ScQt scQt = getManagedBean().getQt();
+		
 		if (null != scQt.getQtStatus() && null != scQt.getQtStatus().getStatusId()
 				// #33831 - Start.
-				&& (scQt.getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION
+				&& (QTConstants.PORTLET_NAME_SUPPLIER_PROPOSAL.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
 						|| QTConstants.PORTLET_NAME_QT_MAINTENANCE
 								.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) || QTConstants.PORTLET_NAME_QT_SEARCH
 						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
