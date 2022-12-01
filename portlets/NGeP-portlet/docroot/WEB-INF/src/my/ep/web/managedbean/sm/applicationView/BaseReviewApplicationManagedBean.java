@@ -351,6 +351,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	
 	// #28278
 	private boolean flagShowButtonSubmit;
+	//#34209
+	private boolean poApprUnClaimTask;
 	
 	//14530
 		private SmApplInquiry poToSupplierInquiry;
@@ -2348,5 +2350,13 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 		public void setSdoRemark(String sdoRemark) {
 			this.sdoRemark = sdoRemark;
+		}
+
+		public boolean isPoApprUnclaimTask() {
+			return poApprUnClaimTask;
+		}
+
+		public void setPoApprUnclaimTask(boolean poApprUnclaimTask) {
+			this.poApprUnClaimTask = poApprUnclaimTask;
 		}
 }
