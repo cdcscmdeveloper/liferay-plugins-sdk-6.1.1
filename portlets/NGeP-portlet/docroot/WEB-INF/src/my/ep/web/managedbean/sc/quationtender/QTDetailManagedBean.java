@@ -218,7 +218,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private boolean isCheckAllList = Boolean.FALSE;
 	
-	private boolean isCloned= Boolean.FALSE;
+	private boolean isCloned = Boolean.FALSE; // #25635
 	
 	/** The zone general trees. */
 	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
@@ -928,6 +928,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The mark deleted tech checklist. */
 	private List<ScQtCheckList> markDeletedTechChecklist;
+	
+	//#25635 danial -start-
+	/** The mark deleted tech checklist. */
+	private List<ScQtScoreSetting> markDeletedScQtScoreSettingTechnical;
+	private List<ScQtScoreSetting> markDeletedScQtScoreSettingFinancial;	
+	private List<ScQtScoreSetting> markDeletedScQtScoreSettingOverall;
+	//#25635 danial -end-
 
 	/** The sc qt check st2finance proposal list. */
 	private List<ScQtCheckList> scQtCheckSt2financeProposalList;
@@ -1640,7 +1647,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScLoaBasic> searchLoaDataModel;	
 	private IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel;
 	// #19336, #25201, #17376, #19287 -end-
-	
+
+	/** The clone search qt data model. */
+	private IPagingDataModel<ScQt> mainCloneSearchQTDataModel; //34053, #25635
+
 	// ***25692 -start-
 	/*
 	 * approval. some part is readOnly, some part is updatable 
@@ -10236,6 +10246,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/** #21695 FARID END */
+
+	// #25635 -start-
+	public boolean isCloned() {
+		return isCloned;
+	}
+
+	public void setCloned(boolean isCloned) {
+		this.isCloned = isCloned;
+	}
+	// #25635 -end-
 	
 	// 26095@hatta - start
 	public Date getCurrentDate() {
@@ -10262,6 +10282,32 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.fileDirectory = fileDirectory;
 	}
 	// 26095@hatta - end
+
+	// #25635 danial start
+	public List<ScQtScoreSetting> getMarkDeletedScQtScoreSettingTechnical() {
+		return markDeletedScQtScoreSettingTechnical;
+	}
+
+	public void setMarkDeletedScQtScoreSettingTechnical(List<ScQtScoreSetting> markDeletedScQtScoreSettingTechnical) {
+		this.markDeletedScQtScoreSettingTechnical = markDeletedScQtScoreSettingTechnical;
+	}
+
+	public List<ScQtScoreSetting> getMarkDeletedScQtScoreSettingFinancial() {
+		return markDeletedScQtScoreSettingFinancial;
+	}
+
+	public void setMarkDeletedScQtScoreSettingFinancial(List<ScQtScoreSetting> markDeletedScQtScoreSettingFinancial) {
+		this.markDeletedScQtScoreSettingFinancial = markDeletedScQtScoreSettingFinancial;
+	}
+
+	public List<ScQtScoreSetting> getMarkDeletedScQtScoreSettingOverall() {
+		return markDeletedScQtScoreSettingOverall;
+	}
+
+	public void setMarkDeletedScQtScoreSettingOverall(List<ScQtScoreSetting> markDeletedScQtScoreSettingOverall) {
+		this.markDeletedScQtScoreSettingOverall = markDeletedScQtScoreSettingOverall;
+	}
+	// #25635 danial end
 	
 	// #25692 start
 	public boolean isApprovalEditableSection() {
@@ -11047,4 +11093,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.totalmaxscore = totalmaxscore;
 	}
 	//====#31913 bug related to #25138==== end
+	
+	// 34053, #25635 -Start
+	/**
+	 * @return the mainCloneSearchQTDataModel
+	 */
+	public IPagingDataModel<ScQt> getMainCloneSearchQTDataModel() {
+		return mainCloneSearchQTDataModel;
+	}
+
+	/**
+	 * @param mainCloneSearchQTDataModel the mainCloneSearchQTDataModel to set
+	 */
+	public void setMainCloneSearchQTDataModel(IPagingDataModel<ScQt> mainCloneSearchQTDataModel) {
+		this.mainCloneSearchQTDataModel = mainCloneSearchQTDataModel;
+	}
+	// 34053, #25635 -End
 }
