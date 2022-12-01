@@ -1211,18 +1211,14 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 8:
-			if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())
-					|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equalsIgnoreCase(this.getManagedBean()
-							.getFulfilmentType())
-					|| ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(this.getManagedBean()
-							.getFulfilmentType())
-					// 25635&33723&25725 -start-
-					|| ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(this.getManagedBean()
-							.getFulfilmentType())
-					|| ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN.equalsIgnoreCase(this.getManagedBean()
-							.getFulfilmentType())
-			// 25635&33723&25725 -end-
-			) {
+			if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this
+					.getManagedBean().getFulfilmentType())
+					|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+							.equalsIgnoreCase(this.getManagedBean()
+									.getFulfilmentType())
+					|| ParameterConst.FULFILMENT_TYPE_ONE_OFF
+							.equalsIgnoreCase(this.getManagedBean()
+									.getFulfilmentType())) {
 				retriveFulfilmentDtls();
 			}
 			break;
@@ -11319,16 +11315,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 			case 8:
 				ScQt fulfilMentdtls = constructSpecCommitteDtls().getScQt();
-				
 				if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
-						.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())
-						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equalsIgnoreCase(this.getManagedBean()
+						.equalsIgnoreCase(this.getManagedBean()
 								.getFulfilmentType())
-						// 25635&33723&25725 -start-
-						|| ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(this.getManagedBean()
-								.getFulfilmentType())
-				// 25635&33723&25725 -end-
-				) {
+						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+								.equalsIgnoreCase(this.getManagedBean()
+										.getFulfilmentType())) {
 					specReqDTO.setScQt(fulfilMentdtls);
 					specSO.validateSCFulfillmentSchedules(specReqDTO);
 					resDTO = specSO.saveQTDtl(specReqDTO);
