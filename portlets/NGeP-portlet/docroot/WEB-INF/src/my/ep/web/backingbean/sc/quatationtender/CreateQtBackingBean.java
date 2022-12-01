@@ -310,6 +310,10 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					scQt.setPanel(false);
 					this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
 					scQt.setObtainSpecialApproval(false);
+					// #25635 -start-
+				} else {
+					scQt.setItemGroup(new CtPanelItemGroup());
+					// #25635 -end-
 				}
 			} else {
 				addFacesMessage(fc, MessageConst.ERROR_760447, null);
