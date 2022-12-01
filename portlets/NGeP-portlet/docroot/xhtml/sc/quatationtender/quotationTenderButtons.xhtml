@@ -12,13 +12,15 @@
 	<!-- 25037 Start -->
 	<ui:param name="isQTStatusPendingSpecCommitteeApprovalAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)}" />
 	<!-- 25037 End -->
-	<ui:remove>
-		#13344 Start				
-	</ui:remove>
+	<ui:remove>#13344 Start</ui:remove>
 	<ui:param name="isCommitteeApprovalTask" value="#{qTDetailBB.isCommitteeApprovalTask(qTDetailBB.managedBean.taskName)}" />
-	<ui:remove>
-		#13344 End				
-	</ui:remove>
+	<ui:remove>#13344 End</ui:remove>
+	<!-- #25635 -start- -->
+	<ui:param name="isClone1"
+		value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
+	<ui:param name="isClone2"
+		value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION}" />
+	<!-- #25635 -end- -->
 	<ui:remove> 26095@hatta - start </ui:remove>
 	<ui:param name="isQTClosePermanently" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_CLOSE_PERMANENTLY}" />
 	<ui:param name="iscloseQTIfValidityPeriodExpiredAndStatusRelated" value="#{qTDetailBB.closeQTIfValidityPeriodExpiredAndStatusRelated()}" />
@@ -119,7 +121,20 @@
 			<!--9019 end -->	
 				
 			<c:if test="#{!qTDetailBB.managedBean.readOnly}">
-				<!-- 25037 Start -->
+					<!-- #25635 -start- -->
+					<p:commandButton value="#{lbl['lbl.btn.clone']}"
+						style="float:right;" id="cloneButton" rendered="#{isClone1}"
+						process="@this" partialSubmit="true" update="pnlid2"
+						action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
+						title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />
+					<p:commandButton value="#{lbl['lbl.sc.clone.qt.documents']}"
+						style="float:right;" id="cloneButton2"
+						rendered="#{isClone2 and !isCommitteeApprovalReviseTask}"
+						process="@this" partialSubmit="true" update="pnlid2"
+						action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
+						title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />
+					<!-- #25635 -end- -->
+					<!-- 25037 Start -->
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{qTDetailBB.saveQtDetailsAction}" process="@form" partialSubmit="true"
 					onclick="blockWidget.show();"
@@ -138,8 +153,15 @@
 							value="#{qTDetailBB.managedBean.outComes}">
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-							<ui:param name="bpAction" value="SUBMIT" />
-							<ui:remove> #30477 Start </ui:remove>	
+								<!-- #25635 -start- -->
+								<ui:param name="bpAction" value="SUBMIT" />
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									styleClass="ui-button"
+									actionListener="#{qTDetailBB.assertSpecificationUpdateInProgress(true)}"
+									update="@([id$=#{submitConfirmId2}])"
+									rendered="#{isClone2 and !isCommitteeApprovalReviseTask}" />
+								<!-- #25635 -end- -->
+								<ui:remove> #30477 Start </ui:remove>	
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
@@ -169,13 +191,20 @@
 						</ui:repeat>
 					</c:when>
 					<c:when test="#{qTDetailBB.managedBean.createQt or isQTStatusPendingQtSubmission}">
-						<p:commandButton value="#{lbl['lbl.btn.submit']}"
-							action="#{qTDetailBB.submitQTDetailsAction}" process="@form"
-							update="@all"
-							onclick="blockWidget.show();"
-							oncomplete="blockWidget.hide();" disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
-	   
-					</c:when>
+							<!-- #25635 -start- -->
+							<p:commandButton value="#{lbl['lbl.btn.submit']}"
+								action="#{qTDetailBB.submitQTDetailsAction}" process="@form"
+								update="@all" onclick="blockWidget.show();"
+								rendered="#{!isClone1 and !isClone2}"
+								oncomplete="blockWidget.hide();"
+								disabled="#{!qTDetailBB.managedBean.ptjPresent}" />
+
+							<p:commandButton value="#{lbl['lbl.btn.submit']}"
+								onclick="submitConfirmPopUp.show();"
+								update="@([id$=#{submitConfirmId}])" rendered="#{isClone1}"
+								disabled="#{!qTDetailBB.managedBean.ptjPresent}" />
+							<!-- #25635 -end- -->
+						</c:when>
 					<c:otherwise>
 						<!-- 25037 Start -->
 							<ui:remove> #30477 - update disabled part </ui:remove>
@@ -210,8 +239,58 @@
 			</td>
 		</tr>
 		</table>
-			
-		<p:dialog id="cancelQTDlg" widgetVar="cancelQTDlg"
+
+	<!-- #25635 -start- -->
+	<p:dialog id="submitConfirmId2" widgetVar="submitConfirmPopUp2"
+		header="#{lbl['lbl.sc.approval.confirm']}" resizable="false"
+		width="30%" height="100" closable="false">
+		<table>
+			<tr>
+				<td align="center"><p:outputLabel
+						value="#{lbl['lbl.sc.approval.dialog.confirm']}" /></td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"
+				onclick="submitConfirmPopUp.hide(); blockWidget.show();"
+				oncomplete="blockWidget.hide();" partialSubmit="true"
+				process="@form" update="@form"
+				action="#{qTDetailBB.updateBpmTask(bpAction)}" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}"
+				onclick="submitConfirmPopUp2.hide();" type="button"
+				partialSubmit="true" process="@this" />
+		</div>
+	</p:dialog>
+
+	<p:dialog id="submitConfirmId" widgetVar="submitConfirmPopUp"
+		header="#{lbl['lbl.sc.approval.confirm']}" resizable="false"
+		width="30%" height="100" closable="false">
+		<table>
+			<tr>
+				<td align="center"><p:outputLabel
+						value="#{lbl['lbl.sc.approval.dialog.confirm']}" /></td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"
+				onclick="submitConfirmPopUp.hide(); blockWidget.show();"
+				oncomplete="blockWidget.hide();" partialSubmit="true"
+				process="@form" update="@form"
+				action="#{qTDetailBB.submitQTDetailsAction}">
+				<!-- 9019 -start- -->
+				<f:param name="skipsubmitvalidation" value="0" />
+			</p:commandButton>
+			<!-- 9019 -end- -->
+			<p:commandButton value="#{lbl['lbl.btn.no']}"
+				onclick="submitConfirmPopUp.hide();" type="button"
+				partialSubmit="true" process="@this" />
+		</div>
+	</p:dialog>
+	<!-- #25635 -end- -->
+
+	<p:dialog id="cancelQTDlg" widgetVar="cancelQTDlg"
 			header="#{lbl['lbl.sc.cancel.confirm']}" resizable="false"
 			width="30%" height="100" closable="false">
 			<table>

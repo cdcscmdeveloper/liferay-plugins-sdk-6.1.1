@@ -370,7 +370,11 @@
 				</tr>
 			</table>
 			<ui:include src="/xhtml/sc/quatationtender/uploadPopup.xhtml" />
-		
-	</c:otherwise>
+			<!-- #25635 -start- -->
+			<ui:include
+				src="/xhtml/sc/quatationtender/createquotationtender/clone/cloneDetails.xhtml" />
+			<!-- #25635 -end- -->
+
+		</c:otherwise>
 	</c:choose>
 </ui:composition>

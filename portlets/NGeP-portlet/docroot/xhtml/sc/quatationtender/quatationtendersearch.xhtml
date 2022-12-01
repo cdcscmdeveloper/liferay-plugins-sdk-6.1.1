@@ -102,20 +102,19 @@
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<ui:remove>
-						Bug #27412,30451,17376 START
-					</ui:remove>
-					<p:column headerText="#{lbl['lbl.sc.status']}"
-						style="width:200px;" rendered="#{!qTDetailBB.isMofSupplier()}">
-						<h:outputText
-							value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}"
-							rendered="#{ParameterConst.doctypeSupplierFinalization ne qTDetailBB.managedBean.qtnTenderSearchBean.docType and !qTDetailBB.managedBean.bdSfFlow}" />
-						<h:outputText value="#{scQt.statusDesc}"
-							rendered="#{ParameterConst.doctypeSupplierFinalization eq qTDetailBB.managedBean.qtnTenderSearchBean.docType || qTDetailBB.managedBean.bdSfFlow}" />
-					</p:column>
-					<ui:remove>
-						Bug #27412,30451,17376 END
-					</ui:remove>
+						<ui:remove>Bug #27412,30451,17376 START</ui:remove>
+						<!-- #25635 -start- -->
+						<p:column headerText="#{lbl['lbl.sc.status']}"
+							style="width:200px;white-space: normal;"
+							rendered="#{!qTDetailBB.isMofSupplier()}">
+							<!-- #25635 -end- -->
+							<h:outputText
+								value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}"
+								rendered="#{ParameterConst.doctypeSupplierFinalization ne qTDetailBB.managedBean.qtnTenderSearchBean.docType and !qTDetailBB.managedBean.bdSfFlow}" />
+							<h:outputText value="#{scQt.statusDesc}"
+								rendered="#{ParameterConst.doctypeSupplierFinalization eq qTDetailBB.managedBean.qtnTenderSearchBean.docType || qTDetailBB.managedBean.bdSfFlow}" />
+						</p:column>
+						<ui:remove>Bug #27412,30451,17376 END</ui:remove>
 					<ui:remove> ***17376#55 - start </ui:remove> 
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
 						<p:menuButton value="#{lbl['lbl.btn.option']}">
@@ -182,12 +181,23 @@
 							<ui:remove>
 								Bug #27412 END
 							</ui:remove>
-
-						</p:menuButton>
+								<!-- #25635 -start- -->
+								<p:menuitem id="menuItem11" value="#{lbl['lbl.btn.clone']}"
+									rendered="#{!qTDetailBB.isAuditor() and qTDetailBB.isQTMaintenanceScreen() and (qTDetailBB.isQTStatusInBetween(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL, QTStatusConst.QT_ARCHIVED) or qTDetailBB.isQTCloneStatus(scQt.qtStatus.statusId))}"
+									icon="ui-icon-edit" update=":form:displayk"
+									title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}"
+									action="#{qtMultipleCloneBackingBean.clonePopupAction(scQt)}"
+									partialSubmit="true" process="@this" />
+								<!-- #25635 -end- -->
+							</p:menuButton>
 					</p:column>
 					<ui:remove> ***17376#55 - end </ui:remove>
 					
 				</p:dataTable>
+					<!-- #25635 -start- -->
+					<ui:include
+						src="/xhtml/sc/quatationtender/createquotationtender/clone/clone-multiple.xhtml" />
+					<!-- #25635 -end- -->
 				</div>
 	
 				<ui:remove> Loa/Loi Data Table </ui:remove>
