@@ -2405,7 +2405,9 @@ public class QTDetailBackingBean extends
 		}
 	}	
 	
-	public boolean isQTMaintenanceScreen() { // #Enhancement 9 CRs 
+	// #25635 -start-
+	public boolean isQTMaintenanceScreen() {
+		// #25635 -end-
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	
@@ -4422,17 +4424,18 @@ public class QTDetailBackingBean extends
 						.retriveQTDeductionPaymentDetails(reqDTO);
 				List<ScQtDeduction> deductionList = resDTO
 						.getDeductionResultBean().getResultList();
-				this.getManagedBean().setScQtDeductionList(deductionList);
-				this.getManagedBean().getQt().setScQtDeductions(deductionList);
-				getManagedBean().setSelectedScQtDeduction(null);
-				/*
-				 * if (null != deductionList && !deductionList.isEmpty()) {
-				 * this.
-				 * getManagedBean().setSelectedScQtDeduction(deductionList.get
-				 * (0)); this.getManagedBean().getSelectedScQtDeduction().
-				 * setScQtDeductionClauses
-				 * (deductionList.get(0).getScQtDeductionClauses()); }
-				 */
+
+				// 25635&31402-start
+				if (null != this.getManagedBean().getRemoveDeductions()
+						&& CollectionUtils.isNotEmpty(this.getManagedBean().getRemoveDeductions())) {
+
+				} else {
+					// 25635&31402 -end-
+					this.getManagedBean().setScQtDeductionList(deductionList);
+					this.getManagedBean().getQt().setScQtDeductions(deductionList);
+
+					getManagedBean().setSelectedScQtDeduction(null);
+				} // 25635, 31402
 			} finally {
 				detailSO = null;
 			}
