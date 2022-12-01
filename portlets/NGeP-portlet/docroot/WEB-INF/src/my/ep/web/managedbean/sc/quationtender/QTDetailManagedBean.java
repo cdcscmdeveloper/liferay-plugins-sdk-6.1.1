@@ -10445,10 +10445,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		return scQtReverse;
 	}
 	
-	public void setCloned(boolean isCloned) {
-		this.isCloned = isCloned;
-	}
-	
 	public boolean isEditable() {
 		return isEditable;
 	}
