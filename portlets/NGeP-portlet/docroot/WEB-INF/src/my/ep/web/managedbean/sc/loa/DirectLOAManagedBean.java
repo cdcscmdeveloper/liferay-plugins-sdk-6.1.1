@@ -13,6 +13,9 @@ import javax.faces.model.SelectItem;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCategoryL1;
+import my.ep.persistence.entity.pm.common.PmCategoryL2;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
@@ -355,6 +358,7 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 //	private boolean isRecordStatus;
 	private TreeNode rootCategoryTree;
 	List<String> selectedCategories;
+	Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode;
 	// #29468 
 	
 	// #25726 START
@@ -2126,6 +2130,12 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 	public void setSelectedCategories(List<String> selectedCategories) {
 		this.selectedCategories = selectedCategories;
+	}
+	public Map<String, Map<Long, Map<Long, Map<Long, String>>>> getMapCatCode() {
+		return mapCatCode;
+	}
+	public void setMapCatCode(Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode) {
+		this.mapCatCode = mapCatCode;
 	}
 	//#29468
 	

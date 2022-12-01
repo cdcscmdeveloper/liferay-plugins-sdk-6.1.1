@@ -13,7 +13,9 @@ package my.ep.web.managedbean.sc.quationtender;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -1655,6 +1657,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #29468 Vinod Start
 	private TreeNode rootCategoryTree;
 	List<String> selectedCategories;
+	Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode;
 	// #29468 Vinod End
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
@@ -11279,6 +11282,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 		public void setSelectedCategories(List<String> selectedCategories) {
 			this.selectedCategories = selectedCategories;
+		}
+		public Map<String, Map<Long, Map<Long, Map<Long, String>>>> getMapCatCode() {
+			return mapCatCode;
+		}
+		public void setMapCatCode(Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode) {
+			this.mapCatCode = mapCatCode;
 		}
 		//#29468 Vinod End
 		

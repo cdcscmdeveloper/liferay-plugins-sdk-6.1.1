@@ -154,13 +154,13 @@
 									value="#{directLOABackingBean.managedBean.qtnTendertemplateSearchBean.qtStatus}"
 									style="width: 210px;margin-bottom: 5px;">
 									<f:selectItems
-										value="#{directLOABackingBean.getStatusDropdownValues('SC', 'QT')}" />
+										value="#{directLOABackingBean.getStatusDropdownValues(ParameterConst.committeeTypeSpecificationCommittee, ParameterConst.doctypeQuotation)}" />
 								</p:selectOneMenu>
 								<p:selectOneMenu rendered="#{directLOABackingBean.managedBean.standardTemplate ne ParameterConst.tplDocProcessTypeSourcing}"
 									value="#{directLOABackingBean.managedBean.qtnTendertemplateSearchBean.qtStatus}"
 									style="width: 210px;margin-bottom: 5px;">
 									<f:selectItems
-										value="#{directLOABackingBean.getStatusDropdownValues('SC', 'LA')}" />
+										value="#{directLOABackingBean.getStatusDropdownValues(ParameterConst.committeeTypeSpecificationCommittee, ParameterConst.doctypeLetterOfAward)}" />
 								</p:selectOneMenu></td>
 						</tr>
 
