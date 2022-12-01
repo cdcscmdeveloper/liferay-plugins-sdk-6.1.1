@@ -11752,9 +11752,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			specReqDTO.setListNewCategoryCode(getManagedBean().getQtCategoryList());
 			FacesScopes fs = new FacesScopes();
 			specReqDTO.setPmUser(fs.getUserSessionBean());
-			//#25138 - start 30/11/2022
-			validateZonalChanges(specReqDTO);
-			//#25138 - end 30/11/2022
+			validateZonalChanges();
 			// 29521 - end
 
 			switch (activeIndex) {
@@ -11771,6 +11769,11 @@ if (null != checklist && !checklist.isEmpty()) {
 				specReqDTO.setScQt(scQt);
 				specReqDTO.setZonesDeleteOrSave(this.getManagedBean()
 						.isZoneSpecUpdate());
+				//#25138 reset offerprice if add new zone -start
+				if(specReqDTO.isZonesDeleteOrSave()){
+					specReqDTO.setCheckLists(null);
+				}
+				//#25138 -end
 				specSO.validateSpecCommitteGeneralInfo(specReqDTO);
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
@@ -14291,9 +14294,8 @@ if (null != checklist && !checklist.isEmpty()) {
 			FacesScopes fs = new FacesScopes();
 			reqDTO.setPmUser(fs.getUserSessionBean());
 		}
-		//#25138 - start 30/11/2022
-		validateZonalChanges(reqDTO);
-		//#25138 - end 30/11/2022
+
+		validateZonalChanges();
 		// 29521 - end
 				
 		SpecificationResDTO resDTO = new SpecificationResDTO();
@@ -21967,20 +21969,18 @@ if(null!=allTechnicalChecklist){
 		
 		return specificationResDTO.getScQt();
 	}
-	//#25138 - start 30/11/2022
-	public boolean validateZonalChanges(SpecificationReqDTO reqdto){
+	
+	public boolean validateZonalChanges(){
 		boolean isNewZonalAdded = Boolean.FALSE;
 		SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
-		reqdto.setNewZonalAdded(false);
-	//#25138 - end 30/11/2022
+		
 		List<TplSpecZoneDtl> listZone = new ArrayList<>();
 		List<String> listZoneName = new ArrayList<>();
 		List<String> listCurrentZoneName = new ArrayList<>();
 		List<TreeNode> listZonalTree = new ArrayList<>();
 		Long specZoneId = 0L;
-		//#25138 - start 30/11/2022
-		SpecificationResDTO resDTO = getQtSpecSO().getTplSpecZoneDtlHistoryBySpecZoneId(specificationReqDTO);
-		//#25138 - end 30/11/2022
+		
+		
 		//retrieve latest Zone from managedBean
 		if (null != getManagedBean().getZoneGeneralTrees() && getManagedBean().getZoneGeneralTrees().size() > 0){
 			listZonalTree = getManagedBean().getZoneGeneralTrees();
@@ -22027,12 +22027,7 @@ if(null!=allTechnicalChecklist){
 		// listZone == null = non zonal
 		if (null != listZone && listZone.size() > 0) {
 			if (null != specificationReqDTO.getSpecZoneId()) {
-				//#25138 - start 30/11/2022
-				if(resDTO.getSpecZoneDtlsHistory().size() > 0 && 
-						resDTO.getSpecZoneDtlsHistory().size() != listZone.size()){
-					reqdto.setNewZonalAdded(true);
-				}
-				//#25138 - end 30/11/2022
+				SpecificationResDTO resDTO = getQtSpecSO().getTplSpecZoneDtlHistoryBySpecZoneId(specificationReqDTO);
 				if (!resDTO.isSuccessful()) {
 					if (isNewZonalAdded) {
 						// data do not present in tpl spec zone dtl history
