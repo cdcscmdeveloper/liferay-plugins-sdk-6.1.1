@@ -371,6 +371,7 @@ public class SupplierFinalizationBackingBean extends
 				// #28834 - End.
 			}
 			this.evaluateDecisionList();//6906 note 117
+			setDisableSFJustification();
 			//28834 end
 			prepareUpdateCommitteeMember();//#25037
 			fc.getApplication()
@@ -1001,7 +1002,9 @@ public class SupplierFinalizationBackingBean extends
 				|| decision.equals(ParameterConst.DECISION_CANCEL)
 				|| decision.equals(ParameterConst.DECISION_RBP))) {
 			getManagedBean().setDisableJustifications(true);
-			getManagedBean().getJustification().setReasonCode(null);
+			if (null != getManagedBean().getJustification()) {
+				getManagedBean().getJustification().setReasonCode(null);
+			}
 		} else {
 			getManagedBean().setDisableJustifications(false);
 		}
@@ -1584,7 +1587,11 @@ public class SupplierFinalizationBackingBean extends
 						&& (this.getManagedBean().getFinalizationMethod()
 								.equals(ParameterConst.RECOMMEND_BY_AWARD) || this
 								.getManagedBean().getFinalizationMethod()
-								.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD))) {
+								.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD))
+								// #28834 - Start.
+								&& !getManagedBean().isDisableJustifications()
+								// #28834 - End.
+								) {
 					if (this.getManagedBean().getJustification() == null
 							|| this.getManagedBean().getJustification()
 									.getReasonId() == null) {
