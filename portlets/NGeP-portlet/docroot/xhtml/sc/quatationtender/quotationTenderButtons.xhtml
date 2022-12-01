@@ -155,14 +155,17 @@
 								rendered="#{!isClone2 and qTDetailBB.isCancel(bpmAction)}">
 							   <f:param name="skipvalidation" value="0" />
 							</p:commandButton>
-						
-							<p:commandButton value="#{lbl[buttonLabel]}"
-								styleClass="ui-button" onclick="blockWidget.show();"
-								oncomplete="blockWidget.hide();"
-								rendered="#{!isClone2 and !qTDetailBB.isCancel(bpmAction)}"
-								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
-							</p:commandButton>
-							<!-- 9019 -end- -->
+
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									styleClass="ui-button" onclick="blockWidget.show();"
+									oncomplete="blockWidget.hide();"
+									rendered="#{!isClone2 and !qTDetailBB.isCancel(bpmAction)}"
+									action="#{qTDetailBB.updateBpmTask(bpmAction)}">
+									<!-- start 9019 - Reopen #note-317-->
+									<f:param name="skipsubmitvalidation" value="0" />
+									<!-- end 9019 - Reopen #note-317-->
+								</p:commandButton>
+								<!-- 9019 -end- -->
 						</ui:repeat>
 					</c:when>
 					<c:when test="#{qTDetailBB.managedBean.createQt or isQTStatusPendingQtSubmission}">
