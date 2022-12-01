@@ -11173,7 +11173,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 								TreeNode catDes3 = new DefaultTreeNode("catDes3",pmCategoryL3.getCategoryL3Code()+" - "+pmCategoryL3.getCategoryName(), catCode);
 								catDes3.setSelectable(false);
 								
-								l3Map.put(pmCategoryL1.getCategoryL1Id(), l2Map);
+								l3Map.put(pmCategoryL3.getCategoryL3Id(), l2Map);
 								mapCatCode.put(pmCategoryL1.getCategoryL1Code()+
 										  	   pmCategoryL2.getCategoryL2Code()+
 										  	   pmCategoryL3.getCategoryL3Code(), l3Map);
