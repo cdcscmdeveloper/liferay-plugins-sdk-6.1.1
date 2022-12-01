@@ -11765,7 +11765,7 @@ if (null != checklist && !checklist.isEmpty()) {
 						throw new EpException(MessageConst.ERROR_760134);
 
 					}
-				}
+				} 
 				specReqDTO.setScQt(scQt);
 				specReqDTO.setZonesDeleteOrSave(this.getManagedBean()
 						.isZoneSpecUpdate());
