@@ -172,12 +172,15 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setTplSpecAnswers(null);
 								newSpecQuestion.setTplSpecEstimations(null);
 								newSpecQuestion.setTplSpecScorings(null);
-								// 11104-start
-								newSpecQuestion.setSampleQuantity(null);
-								newSpecQuestion.setSampleScoreTypeCode(null);
-								newSpecQuestion.setSampleScore(null);
-								newSpecQuestion.setSampleReq(Boolean.FALSE);
-								// 11104-End
+								
+								if (newSpecMaster.isSampleReq()) { // 33858, #25635
+									// 11104-start
+									newSpecQuestion.setSampleQuantity(null);
+									newSpecQuestion.setSampleScoreTypeCode(null);
+									newSpecQuestion.setSampleScore(null);
+									newSpecQuestion.setSampleReq(Boolean.FALSE);
+									// 11104-End
+								} // 33858, #25635
 								
 								if (isTechnicalSpec) {
 									if(TemplateSpecConst.QUESTION_TYPE_ITEM.equals(quesType)){
