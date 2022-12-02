@@ -446,6 +446,16 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 							//29822 - END 
 						}
 					}
+
+					//#29822 - start - reendorse change for Group user cannot submit remove all 
+					checkPendingTaskRemove();
+					if(getManagedBean().isShowRemoveProcessMessageOther()==true ) {
+						//disable check box for other task
+						getManagedBean().setCheckAllGroupTasksEnabled(false);
+						//disable button for other task
+						getManagedBean().setEnableRemoveAllGroupTasksButton(false); 
+					}
+					//#29822 - end - reendorse change for Group user cannot submit remove all  
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -565,6 +575,16 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 							}
 							//#29822 - END 
 						}
+
+						//#29822 - start - reendorse change for other user cannot submit remove all 
+						checkPendingTaskRemove();
+						if(getManagedBean().isShowRemoveProcessMessageOther()==true ) {
+							//disable check box for other task
+							getManagedBean().setCheckAllGroupTasksEnabled(false);
+							//disable button for other task
+							getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+						}
+						//#29822 - end - reendorse change for other user cannot submit remove all  
 					}
 				}
 			} catch (Exception e) {
@@ -1792,16 +1812,23 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				reqDTO.setModule("SM");
 				//created by
 				reqDTO.setCreatedBy(getUserByLoginId());
-				
-				List<String> docNumberList = new ArrayList<String>();
-				if (StringUtils.isNotBlank(getManagedBean()
-						.getTaskAssignmentSearchBean().getDocNo())) {
-					docNumberList.add(getManagedBean()
-							.getTaskAssignmentSearchBean().getDocNo());
-					//param_doc_no
-					reqDTO.setParamDocNo(docNumberList);
-				}
 
+				//#29822 START - remove by doc number
+//				List<String> docNumberList = new ArrayList<String>();
+//				if (StringUtils.isNotBlank(getManagedBean()
+//						.getTaskAssignmentSearchBean().getDocNo())) {
+//					docNumberList.add(getManagedBean()
+//							.getTaskAssignmentSearchBean().getDocNo());
+//					//param_doc_no
+//					reqDTO.setParamDocNo(docNumberList);
+//				} 
+				String docNumber =getManagedBean().getTaskAssignmentSearchBean().getDocNo() ;
+				if (StringUtils.isNotBlank(docNumber)) {
+					// param_doc_no
+					reqDTO.setParamDocNo(docNumber);
+				}
+				//#29822 end - 
+				
 				if (getManagedBean().getTaskAssignmentSearchBean().getDocType() != null
 						&& getManagedBean().getTaskAssignmentSearchBean().getDocType() != null) {
 					//param_doc_type
@@ -1962,13 +1989,22 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				reqDTO.setModule("SM");
 				//created by
 				reqDTO.setCreatedBy(getUserByLoginId());
-
-				List<String> docNumberList = new ArrayList<String>();
-				if (StringUtils.isNotBlank(getManagedBean().getTaskAssignmentSearchBean().getDocNo())) {
-					docNumberList.add(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+				
+				//#29822 START - remove by doc number
+//				List<String> docNumberList = new ArrayList<String>();
+//				if (StringUtils.isNotBlank(getManagedBean()
+//						.getTaskAssignmentSearchBean().getDocNo())) {
+//					docNumberList.add(getManagedBean()
+//							.getTaskAssignmentSearchBean().getDocNo());
+//					//param_doc_no
+//					reqDTO.setParamDocNo(docNumberList);
+//				} 
+				String docNumber =getManagedBean().getTaskAssignmentSearchBean().getDocNo() ;
+				if (StringUtils.isNotBlank(docNumber)) {
 					// param_doc_no
-					reqDTO.setParamDocNo(docNumberList);
+					reqDTO.setParamDocNo(docNumber);
 				}
+				//#29822 end - 
 
 				if (getManagedBean().getTaskAssignmentSearchBean().getDocType() != null
 						&& getManagedBean().getTaskAssignmentSearchBean().getDocType() != null) {
