@@ -3878,7 +3878,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				if (items.size() > 0) {
 					if((items.get(0).isComplete() == false) && (!currentItemName.equalsIgnoreCase(each.getScRequestItem().getItemName()))){
 						count++;
-						updatedItems.append(count + ". " + each.getScRequestItem().getItemName()+"\n");
+						updatedItems.append(count + ". " + each.getScRequestItem().getItemName() + "</br>");//#29006 - uat issue
 						currentItemName = each.getScRequestItem().getItemName();
 						}
 					}
