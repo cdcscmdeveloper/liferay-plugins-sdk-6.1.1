@@ -7932,7 +7932,7 @@ public class EvaluationBackingBean extends
 
 						}
 						if (null == this.getManagedBean().getScQt()
-								.getFecEvaluationCheck()) {
+								.getFecEvaluationCheck() && outputTab!=2) {//34219
 
 							//Bug #31751 - start5
 							boolean isSuccess = generateFinancialEvaluationresults();						
