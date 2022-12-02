@@ -447,9 +447,9 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 						}
 					}
 
-					//#29822 - start - reendorse change for Group user cannot submit remove all 
-					checkPendingTaskRemove();
-					if(getManagedBean().isShowRemoveProcessMessageOther()==true ) {
+					//#29822 - start - reendorse change for Group user cannot submit remove all   
+					//recommit change other to group
+					if(getManagedBean().isShowRemoveProcessMessageGroup()==true ) {
 						//disable check box for other task
 						getManagedBean().setCheckAllGroupTasksEnabled(false);
 						//disable button for other task
@@ -577,7 +577,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 						}
 
 						//#29822 - start - reendorse change for other user cannot submit remove all 
-						checkPendingTaskRemove();
+						//#29822 - recommit remove checking redundance
 						if(getManagedBean().isShowRemoveProcessMessageOther()==true ) {
 							//disable check box for other task
 							getManagedBean().setCheckAllGroupTasksEnabled(false);
