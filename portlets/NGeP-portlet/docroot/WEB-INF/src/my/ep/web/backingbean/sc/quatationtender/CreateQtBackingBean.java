@@ -1035,20 +1035,24 @@ public class CreateQtBackingBean extends
 			if (isPanel) {
 				BigDecimal panelThreshold = getPanelThresholdAmount();
 
+				//Start 9019 #note-342 remove the alert message while save for panel
+				if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())){
 				if (null == amount || (amount.compareTo(panelThreshold) <= 0)) {
 					throw new EpException(MessageConst.ERROR_760380,
 							new String[] { SourcingConstants.DF_AMOUNT
 									.format(panelThreshold) });
 				}
+				}
+				//End 9019 
 			} else {
-				//Start Reopen 9019 #note-289 remove the alert message while save
+				//Start 9019 #note-289 remove the alert message while save
 				if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())){
 				if (null == amount || (amount.compareTo(BigDecimal.ZERO) <= 0)) {
 					throw new EpException(MessageConst.ERROR_760024,
 							new String[] { SourcingConstants.DF_AMOUNT.format(BigDecimal.ZERO) });
 				}
 				}
-				//End Reopen 9019 #note-289 remove the alert message while save
+				//End 9019
 
 				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())
 						|| this.getManagedBean().isCreateQt()) {
