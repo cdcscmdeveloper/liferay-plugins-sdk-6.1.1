@@ -109,10 +109,12 @@
 							value="#{lbl['lbl.sm.sme.reg.status']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<!-- 29617 ReOpen - Start -->
-						<td><p:selectOneRadio id="regStatus"label="#{lbl['lbl.sm.sme.reg.status.input']}"
-						value="#{smUpdateSmeInfoBackingBean.managedBean.smeCorpRegisteredTrans}" 
-						required="true" requiredMessage="#{lbl['lbl.sm.sme.reg.status.req.msg']}">
-						<!-- 29617 - End -->
+					<td><p:selectOneRadio id="regStatus"
+							label="#{lbl['lbl.sm.sme.reg.status.input']}"
+							value="#{smUpdateSmeInfoBackingBean.managedBean.smeCorpRegisteredTrans}"
+							required="true"
+							requiredMessage="#{lbl['lbl.sm.sme.reg.status.req.msg']}">
+							<!-- 29617 - End -->
 							<f:selectItem itemLabel="#{lbl['lbl.sm.sme.txt.yes']}"
 								itemValue="1"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.sm.sme.txt.no']}"
