@@ -446,6 +446,16 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 							//29822 - END
 						}
 					}
+
+					//#29822 - start - reendorse change for Group user cannot submit remove all   
+					//recommit change other to group
+					if(getManagedBean().isShowRemoveProcessMessageGroup()==true ) {
+						//disable check box for other task
+						getManagedBean().setCheckAllGroupTasksEnabled(false);
+						//disable button for other task
+						getManagedBean().setEnableRemoveAllGroupTasksButton(false); 
+					}
+					//#29822 - end - reendorse change for Group user cannot submit remove all  
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -565,6 +575,16 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 							}
 							//#29822 - END
 						}
+
+						//#29822 - start - reendorse change for other user cannot submit remove all 
+						//#29822 - recommit remove checking redundance
+						if(getManagedBean().isShowRemoveProcessMessageOther()==true ) {
+							//disable check box for other task
+							getManagedBean().setCheckAllGroupTasksEnabled(false);
+							//disable button for other task
+							getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+						}
+						//#29822 - end - reendorse change for other user cannot submit remove all  
 					}
 				}
 			} catch (Exception e) {
@@ -768,6 +788,12 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			// isSuccess = reassignTask(pmUser, task);
 			if (resDTO != null && resDTO.isSuccessful()) {
 				RequestContext.getCurrentInstance().execute("dlSuppTaskReassignment.hide()");
+				RequestContext.getCurrentInstance().reset("form:pUserTaskAssignResult");
+				if (this.getManagedBean().getSelectedTasksToBulkReassign() != null && 
+						this.getManagedBean().getSelectedTasksToBulkReassign().size() > 0) {
+					this.getManagedBean().getSelectedTasksToBulkReassign().clear();
+				}
+				
 				reloadAllTaskList();
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
 						FacesMessage.SEVERITY_INFO, MessageConst.INFO_770104, 
@@ -1793,14 +1819,21 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				//created by
 				reqDTO.setCreatedBy(getUserByLoginId());
 				
-				List<String> docNumberList = new ArrayList<String>();
-				if (StringUtils.isNotBlank(getManagedBean()
-						.getTaskAssignmentSearchBean().getDocNo())) {
-					docNumberList.add(getManagedBean()
-							.getTaskAssignmentSearchBean().getDocNo());
+				//#29822 START - remove by doc number
+//				List<String> docNumberList = new ArrayList<String>();
+//				if (StringUtils.isNotBlank(getManagedBean()
+//						.getTaskAssignmentSearchBean().getDocNo())) {
+//					docNumberList.add(getManagedBean()
+//							.getTaskAssignmentSearchBean().getDocNo());
+//					//param_doc_no
+//					reqDTO.setParamDocNo(docNumberList);
+//				} 
+				String docNumber =getManagedBean().getTaskAssignmentSearchBean().getDocNo() ;
+				if (StringUtils.isNotBlank(docNumber)) {
 					//param_doc_no
-					reqDTO.setParamDocNo(docNumberList);
+					reqDTO.setParamDocNo(docNumber);
 				}
+				//#29822 end - 
 
 				if (getManagedBean().getTaskAssignmentSearchBean().getDocType() != null
 						&& getManagedBean().getTaskAssignmentSearchBean().getDocType() != null) {
@@ -1963,12 +1996,21 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				//created by
 				reqDTO.setCreatedBy(getUserByLoginId());
 
-				List<String> docNumberList = new ArrayList<String>();
-				if (StringUtils.isNotBlank(getManagedBean().getTaskAssignmentSearchBean().getDocNo())) {
-					docNumberList.add(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+				//#29822 START - remove by doc number
+//				List<String> docNumberList = new ArrayList<String>();
+//				if (StringUtils.isNotBlank(getManagedBean()
+//						.getTaskAssignmentSearchBean().getDocNo())) {
+//					docNumberList.add(getManagedBean()
+//							.getTaskAssignmentSearchBean().getDocNo());
+//					//param_doc_no
+//					reqDTO.setParamDocNo(docNumberList);
+//				} 
+				String docNumber =getManagedBean().getTaskAssignmentSearchBean().getDocNo() ;
+				if (StringUtils.isNotBlank(docNumber)) {
 					// param_doc_no
-					reqDTO.setParamDocNo(docNumberList);
+					reqDTO.setParamDocNo(docNumber);
 				}
+				//#29822 end - 
 
 				if (getManagedBean().getTaskAssignmentSearchBean().getDocType() != null
 						&& getManagedBean().getTaskAssignmentSearchBean().getDocType() != null) {
