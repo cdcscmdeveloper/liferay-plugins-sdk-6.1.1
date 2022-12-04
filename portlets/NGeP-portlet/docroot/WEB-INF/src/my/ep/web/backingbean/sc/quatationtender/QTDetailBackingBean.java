@@ -2326,6 +2326,13 @@ public class QTDetailBackingBean extends
 						reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 					}
 				}
+				//Bug_33484 - start
+				else if (isQcaSecretary() || isQcbSecretary() || isPbbSecretary() 
+						|| isFpbSecretary() || isApprover()){
+					// Filter By - actor user id
+					reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+				}
+				//Bug_33484 - end
 				
 				 /* Enhancement #27668 -start-
 				 * TO INCLUDE QT WHICH PPB SECRETARY INVOLVE IN IT, IF HIGHER_AUTHORITY LINK ALSO
@@ -7509,7 +7516,15 @@ public class QTDetailBackingBean extends
 		return facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value());
 	}
-											 
+	
+	//Bug_33484 - start
+	public boolean isApprover() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.COMMITTEE_APPROVER.value())
+				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value());
+	}
+	//Bug_33484 - end
+	
 	private void updateApprovalRequestDtls(List<ScQtApproval> approval,
 			String approvalCategory) {
 
