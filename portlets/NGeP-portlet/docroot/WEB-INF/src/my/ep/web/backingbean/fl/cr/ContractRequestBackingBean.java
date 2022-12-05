@@ -1102,9 +1102,16 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setSelectedContractedItemList(new ArrayList<CtContractItem>());
 		getManagedBean().setItemAutoUpdate(false);
 		getManagedBean().setAutoUpdate(true);
-		getManagedBean().setCalculateTotalExist(getManagedBean().getOverallTotalItem()-getManagedBean().getTotalNewItemsAdded());//11076
-		log.info("=========NEW CALCULATE EXISTING=========" + getManagedBean().getCalculateTotalExist());//11076
-		getManagedBean().setTotalExistingItem(getManagedBean().getCalculateTotalExist());//11076
+		
+		//11076-Start
+		int calTotalExist = getManagedBean().getOverallTotalItem()- getManagedBean().getTotalNewItemsAdded();
+		if (calTotalExist < 0) {
+			calTotalExist = 0;
+		}
+		getManagedBean().setCalculateTotalExist(calTotalExist);
+		log.info("=========NEW CALCULATE EXISTING=========" + getManagedBean().getCalculateTotalExist());
+		getManagedBean().setTotalExistingItem(getManagedBean().getCalculateTotalExist());
+		//11076-End
 	}
 	
 	// 11076 start
@@ -1254,6 +1261,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setSelectedContractedItemList(new ArrayList<CtContractItem>());
 			getManagedBean().setItemAutoUpdate(false);
 			getManagedBean().setAutoUpdate(true);
+		
+			int calTotalExist = getManagedBean().getOverallTotalItem()- getManagedBean().getTotalNewItemsAdded();
+			if (calTotalExist < 0) {
+				calTotalExist = 0;
+			}
+			getManagedBean().setCalculateTotalExist(calTotalExist);
+			getManagedBean().setTotalExistingItem(getManagedBean().getCalculateTotalExist());
 		}
 		//11076 end
 		
