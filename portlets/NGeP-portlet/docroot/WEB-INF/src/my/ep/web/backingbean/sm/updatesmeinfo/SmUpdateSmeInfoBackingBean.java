@@ -69,6 +69,12 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 		getManagedBean().setCompanyBasic(
 				SmCommonUtil.getLatestRevCompBasicByApplId(getManagedBean().getSmSupplier().getSmAppl().getApplId()));
 		buildStatusTypeList();
+		// #29617 ReOpen - Start 
+		getManagedBean().setSmeCorpRegisteredTrans(null); 
+		if(getManagedBean().getSmeSupplierDoc() != null){
+			deleteAttachment();
+		}
+		// #29617 End 
 		initDocumentList(getManagedBean().getSmeSupplier());
 		SmCommonUtil.redirectToPage("smeUpdateInfoPage.xhtml", "", null, null);
 	}
