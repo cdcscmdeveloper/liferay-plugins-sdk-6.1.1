@@ -387,8 +387,6 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		getManagedBean().setStatus(null);
 		getManagedBean().setFromDate(DateUtils.getFirstDateOfTheYear());
 		getManagedBean().setToDate(DateUtils.getCurrentDateWithoutTime());	
-		//#30418 - start
-		//#30918 - end
 	}
 
 	/**
