@@ -212,9 +212,9 @@ public class SupplierManagementConst {
 	public static final String IDENTIFICATION_TYPE_PASSPORT = "P"; //#32014
 	public static final int PENDING_ACT_STATUS = 8;
 	public static final int APPROVED_RECORD_STATUS = 1;
-	//30865 Start
+	//30865 Start & #34098 - START
 	public static final int CANCEL_RECORD_STATUS = 2;
-	//30865 End
+	//30865 End & #34098 - END
 	// 29952 Start
 	public static final int PENDING_ACTIVATION_RECORD_STATUS = 8;
 	// 29952 End
@@ -1177,11 +1177,11 @@ public class SupplierManagementConst {
 		return APPROVED_RECORD_STATUS;
 	}
 
-	//30865 Start
+	//30865 Start & #34098 - START
 	public int getCANCEL_RECORD_STATUS() {
 		return CANCEL_RECORD_STATUS;
 	}
-	//30865 End
+	//30865 End & #34098 - END
 	
 	public String getSM_SUPPLIER_BUSINESS_TYPE_LLP() {
 		return SM_SUPPLIER_BUSINESS_TYPE_LLP;
