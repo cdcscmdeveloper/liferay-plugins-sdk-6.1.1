@@ -2295,6 +2295,11 @@ public class SmApplicationUtil {
 			managedBean.setPoApproverPersonnelErr(true);
 			managedBean.setMsgPersonnelErr(sb.toString());
 		}//#31130-end
+		//#31130-start 06122022
+		else{
+			managedBean.setPoApproverPersonnelErr(false);
+		}
+		//#31130-end 06122022				
 		if (appl.getSupplierType().equalsIgnoreCase(
 				SupplierManagementConst.STYPE_CONSULTANT)) {
 			StringBuilder errMsg = new StringBuilder();
