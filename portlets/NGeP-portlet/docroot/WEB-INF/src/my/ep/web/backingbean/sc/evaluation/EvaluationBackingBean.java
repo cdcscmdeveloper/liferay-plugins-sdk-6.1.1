@@ -15809,6 +15809,13 @@ private void retriveCommitteeRemarksList(){
 											.getDefinationType()
 											.getParameterCode())
 											&& !proposalCheckList.isScoringReq()) {
+						//#34016 - Start
+						if (null != proposalCheckList.getPmEvalStatus()
+								&& proposalCheckList.getPmEvalStatus().getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
+							reqDTO2.setCheckList(proposalCheckList);
+							proposalCheckList = evaluationSO.savePendingNonscoringChecklist(reqDTO2);
+						}
+						//#34016 - End
 						localCheckList.add(proposalCheckList);
 					} 
 
