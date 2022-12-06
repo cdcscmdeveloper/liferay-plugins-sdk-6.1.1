@@ -162,12 +162,6 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
 
 /**
  * @author siew mei
@@ -1227,9 +1221,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 			items = new SelectItem[parameterDescs.size()];
 			int i = 0;
+			String codeName = "";//33849
 			for (PmParameterDesc parameterDesc : parameterDescs) {
+				//33849-Start
+				if(parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase("CO")){
+					codeName = ResourceBundleUtils.getMessage(
+							"lbl.rpt.drpdown.contractOrderlbl", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterCode(), codeName);
+				}else{
 				items[i++] = new SelectItem(parameterDesc.getPmParameter()
 						.getParameterCode(), parameterDesc.getCodeName());
+			}
+				//33849-End
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

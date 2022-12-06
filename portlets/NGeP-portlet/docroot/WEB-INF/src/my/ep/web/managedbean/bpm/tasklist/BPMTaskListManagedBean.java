@@ -10,8 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.lang.StringUtils;
-import my.ep.bean.application.NgepApplicationBean; //#12177 Refactor
+import my.ep.bean.application.NgepApplicationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
@@ -23,13 +22,10 @@ import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
-import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
-import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO; //#9133
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
+import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -53,37 +49,23 @@ import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.dto.pm.common.kpi.KpiReqDTO;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
-import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
-import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
-import my.ep.dto.sc.requestitem.RequestItemResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.jaxb.fl.dandata.FLDanDataType;
-import my.ep.jaxb.fl.frndata.FLFulFillmentReceivedNoteDataType;
-import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
-import my.ep.jaxb.fl.maintenace.cancel.invoice.FLInvoiceCancelReqType;
-import my.ep.jaxb.fl.maintenace.modification.dofulfillment.FLDOFulfillmentModificationReqType;
-import my.ep.jaxb.fl.maintenace.modification.invoice.FLInvoiceModificationReqType;
-import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault; //#9133
 import my.ep.type.pm.RoleCode;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -111,6 +93,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	
 	private List<WorklistItemVO> taskList;
 	private List<FlFulfilmentOrder> flFulfilmentOrderList;
+	@SuppressWarnings("rawtypes")
 	private static Map bpmMap = null;
 	private String processName;
 	private String[] action;
@@ -118,7 +101,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private String taskIdPair;/*#31422-basri 190821*/
 	private Integer tabActiveIndex = 0;
 	private String taskName;
-	private String tempLoginId; // TODO: temp and to be removed
+	private String tempLoginId;
 	private String viewBy = "ALL";
 	private String assignment = "ALL";	
 	private String docType = "";	
@@ -293,12 +276,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		
 		public taskPagingDataModel() {
 			super("taskListId");
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
-		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
-				ISearchBean<WorklistItemVO> searchBean) {
+		protected ISearchResultBean<WorklistItemVO> pageChangeListener( ISearchBean<WorklistItemVO> searchBean) {
 			log.info(">>>>>>>>>>>>>>>>>>>pageChangeListener<<<<<<<<<<<<<<<<<<<");
 			IBpmSO bpmSO = null;
 			try {
@@ -313,7 +294,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
-				reqDTO.setState("ASSIGNED"); // TODO : ADD filter for state and set do variable
+				reqDTO.setState("ASSIGNED");
 //				if(!getDocType().isEmpty()){
 				  reqDTO.setDocType(getDocType());
 //				}
@@ -474,9 +455,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 		public taskPagingMyTaskDataModel() {
 			super("taskListMyTaskId");
-			// TODO Auto-generated constructor stub
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
 				ISearchBean<WorklistItemVO> searchBean) {
@@ -506,7 +487,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				}
 				
 				if(getDocStatus()>0){
-					reqDTO.setStatus(getDocStatus());
+					//33849 - Start - Need to set to PA_PENDING_PAYMENT_MATCH because status in SOA for POCO Pending Payment Match is 46000
+					if(getDocStatus()== FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH.intValue() 
+							|| getDocStatus()== FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH.intValue()){
+						reqDTO.setStatus(FulfilmentStatusConst.PA_PENDING_PAYMENT_MATCH.intValue());
+					}else{
+						reqDTO.setStatus(getDocStatus());
+					}
+					//33849 - End
 				}
 
 				//Start - Task list sorting n search criteria date from and date to by Najmi 
@@ -646,7 +634,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 		public taskPagingGroupDataModel() {
 			super("taskListGroupId");
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
@@ -683,7 +670,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				}*/
 				
 				if(getDocStatusGroup()>0){
-					reqDTO.setStatus(getDocStatusGroup());
+					//33849 - Start - Need to set to PA_PENDING_PAYMENT_MATCH because status in SOA for POCO Pending Payment Match is 46000
+					if(getDocStatusGroup()== FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH.intValue() 
+							|| getDocStatusGroup()== FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH.intValue()){
+						reqDTO.setStatus(FulfilmentStatusConst.PA_PENDING_PAYMENT_MATCH.intValue());
+					}else{
+						reqDTO.setStatus(getDocStatusGroup());
+					}
+					//33849 - End
 				}
 				
 				reqDTO.setViewBy(getViewByGroup());
@@ -894,7 +888,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 		public taskPagingBothDataModel() {
 			super("taskListBothTaskId"); // Datatables ID
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
@@ -911,7 +904,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
-				reqDTO.setState("ASSIGNED"); // TODO : ADD filter for state and set do variable
+				reqDTO.setState("ASSIGNED"); 
 				
 				reqDTO.setDocType(getDocType());
 
