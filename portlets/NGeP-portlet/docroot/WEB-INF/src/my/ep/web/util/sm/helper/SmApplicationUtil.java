@@ -4151,6 +4151,9 @@ public class SmApplicationUtil {
 						apprvList.add(cat);
 					}
 					//#34098 - END
+					}else{
+						apprvList.add(cat);
+					}
 					//29823 - end
 			
 					//30865, 30921 - Starts
