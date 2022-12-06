@@ -3320,6 +3320,7 @@ public class QTDetailBackingBean extends
 			// #25077 Start
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
 					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION)
+					|| currentStatus.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)
 					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
 				if (checkSettingPopUpBPKApprovalNeeded(qt)) {
 					if (!this.getManagedBean().isResetBpkCurrentArea()) {
@@ -9732,9 +9733,11 @@ public class QTDetailBackingBean extends
 			    boolean bpkFlag = false;
 			    Long statusId = scQt.getQtStatus().getStatusId();
 			  
-			    if(this.getManagedBean().isMaintanceFlow() == false && 
-				    null != statusId && (statusId.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || 
-			    		statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION))){
+			if (this.getManagedBean().isMaintanceFlow() == false
+					&& null != statusId
+					&& (statusId.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+							|| statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION) 
+							|| statusId.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL))) {
 			    	
 			    	QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			    	reqDTO.setQtdetail(scQt);
@@ -9793,8 +9796,9 @@ public class QTDetailBackingBean extends
 								if (ParameterConst.APPROVAL_CATEGORY_BPK.equals(approvalCategoryCode)) {
 
 									if (null != statusId
-											&& (statusId.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || statusId
-													.equals(QTStatusConst.QT_REVISION_PUBLICATION))) {
+											&& (statusId.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+													|| statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION) 
+													|| statusId.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL))) {
 										List<ScQtApprovalRequest> bpkRequests = bpkApproval.getScQtApprovalDtls();
 										
 										if (CollectionUtils.isNotEmpty(bpkRequests)) {
