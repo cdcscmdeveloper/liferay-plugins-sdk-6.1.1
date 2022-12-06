@@ -4133,16 +4133,25 @@ public class SmApplicationUtil {
 					catList.add(cat);
 				} else if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
-					//30766 - START
 					//29823 - start
-					if(managedBean.getCurrentStatus() != null && (managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval") ||
-							managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan")	)){
+					//#34098 - START 
+					if(managedBean.getCurrentStatus() != null 
+							&& (managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval") ||
+							    managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan"))
+							&& !managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI)
+							&& !managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_CATEGORY)){
+						catList.add(cat);
+					}else if(managedBean.getCurrentStatus() != null 
+							&& (managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval") ||
+								managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan"))
+							&& managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_CATEGORY)){
+						if(cat.getApplRefId().equals(cat.getSmAppl().getApplId())){
 						catList.add(cat);
 					}else{
 						apprvList.add(cat);
 					}
+					//#34098 - END
 					//29823 - end
-					//30766 - END
 			
 					//30865, 30921 - Starts
 				} else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0){
