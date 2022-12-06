@@ -69,12 +69,26 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 		getManagedBean().setCompanyBasic(
 				SmCommonUtil.getLatestRevCompBasicByApplId(getManagedBean().getSmSupplier().getSmAppl().getApplId()));
 		buildStatusTypeList();
+		// #29617 CR Fix - Start
+		if (getManagedBean().getSmSupplier().getSmeRegisteredFlag() == 1) {
+			SmSmeSupplier currentSmeInfo = new SmSmeSupplier();
+			SupplierSmeReqDTO reqDTO = new SupplierSmeReqDTO();
+			reqDTO.setSmSupplier(getManagedBean().getSmSupplier());
+			currentSmeInfo = SmServiceLookup.getSupplierSmeSO().retrieveCurrentSmeInfo(reqDTO);
+			getManagedBean().setSmeSupplier(currentSmeInfo);
+			if(currentSmeInfo.isSmeCorpRegistered()){
+				getManagedBean().setSmeCorpRegisteredTrans("1");
+				getManagedBean().setSmeSupplierDoc(currentSmeInfo.getSmSmeSupplierDocs().get(0));
+			} else { getManagedBean().setSmeCorpRegisteredTrans("0"); }
+		} else {
 		// #29617 ReOpen - Start 
 		getManagedBean().setSmeCorpRegisteredTrans(null); 
 		if(getManagedBean().getSmeSupplierDoc() != null){
 			deleteAttachment();
 		}
 		// #29617 End 
+		} 
+		// #29617 CR Fix - End
 		initDocumentList(getManagedBean().getSmeSupplier());
 		SmCommonUtil.redirectToPage("smeUpdateInfoPage.xhtml", "", null, null);
 	}
