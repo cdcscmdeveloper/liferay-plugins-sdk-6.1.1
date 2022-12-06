@@ -20756,21 +20756,21 @@ if(null!=allTechnicalChecklist){
 		List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
 		List<ScQtCheckList> tempList = new ArrayList<ScQtCheckList>();
 
-		for (ScQtCheckList l : st2technicalproposalList) {
-			if (l.getQtChecklistId() == null && l.getDefinationType().getParameterCode()
-					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-				//throw new EpException(MessageConst.ERROR_760528);
-				//saveSpecificationCommitteeDtls(); //#28784 - Remove notification save
-				if (this.getManagedBean().isMaintanceFlow()) {
-					if (isSpecCommittee()) {
-						checkSpecMaintenanceOrNo(true);
-					} else {
-						checkSpecMaintenanceOrNo(false);
-					}
-				}
-				//retriveTechnicalCheckList();
-			}
-		}
+//		for (ScQtCheckList l : st2technicalproposalList) {
+//			if (l.getQtChecklistId() == null && l.getDefinationType().getParameterCode()
+//					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+//				//throw new EpException(MessageConst.ERROR_760528);
+//				//saveSpecificationCommitteeDtls(); //#28784 - Remove notification save
+//				if (this.getManagedBean().isMaintanceFlow()) {
+//					if (isSpecCommittee()) {
+//						checkSpecMaintenanceOrNo(true);
+//					} else {
+//						checkSpecMaintenanceOrNo(false);
+//					}
+//				}
+//				//retriveTechnicalCheckList();
+//			}
+//		}
 		for (ScQtCheckList cl : st2technicalproposalList) {
 			if (cl.getDefinationType().getParameterCode()
 					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
@@ -21005,6 +21005,14 @@ if(null!=allTechnicalChecklist){
 			if (l.getQtChecklistId() == null
 					&& l.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
 				validatePrepareQtChecklist();
+				
+				if (this.getManagedBean().isMaintanceFlow()) {
+					if (isSpecCommittee()) {
+						checkSpecMaintenanceOrNo(true);
+					} else {
+						checkSpecMaintenanceOrNo(false);
+					}
+				}
 			}
 		}
 		List<ScQtCheckList> updatedCheckLists = new ArrayList<ScQtCheckList>();
@@ -21636,7 +21644,7 @@ if(null!=allTechnicalChecklist){
 		SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
 		for(ScQtCheckList e: existingTechChecklist){
 			for(ScQtCheckList f: resDTO.getTechnicalCheckList()){
-				if(e.getQtChecklistId().equals(f.getQtChecklistId()) && e.getQtScoreWeightage() != null){
+				if(e.getQtChecklistId() != null && e.getQtChecklistId().equals(f.getQtChecklistId()) && e.getQtScoreWeightage() != null){
 					f.getQtScoreWeightage().setWeightage(e.getQtScoreWeightage().getWeightage());
 				}
 			}
