@@ -4758,7 +4758,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				
 				//Bug #33988@Syazani -- Start 27/09/2022 
 				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && !validateDuplicateSets.add(scQtFinalizationReport.getTitle().trim())) {
-					throw new EpException(MessageConst.ERROR_100046, new String[] { scQtFinalizationReport.getTitle() });
+					throw new EpException(MessageConst.ERROR_775190, new String[] { scQtFinalizationReport.getTitle() }); //Bug #33988@Syazani - 06/12/2022
 				}
 				//Bug #33988@Syazani -- End 27/09/2022 
 				
