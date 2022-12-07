@@ -2300,7 +2300,13 @@ public class SmApplicationBackingBean extends
 											.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
 													ssmResDTO.getSmPersonnelDirector(), "identificationNo");
 									if (personnelDirectorSSM == null && personnelSSM == null) {
+										if(isMofAccEffDatePassedCurrDate(this.getManagedBean().getSmSupplier())){
+											if(personnel.getEpRole() != null && my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES.contains(personnel.getEpRole())){
 										personnelsRole.add(personnel);
+									}
+										} else {
+											personnelsRole.add(personnel);
+										}
 									}
 								}
 							}
