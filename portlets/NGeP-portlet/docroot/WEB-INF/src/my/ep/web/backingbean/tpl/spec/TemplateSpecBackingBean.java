@@ -244,15 +244,16 @@ public class TemplateSpecBackingBean extends
 							EvaluationReqDTO evalReqDTO=new EvaluationReqDTO();
 							evalReqDTO.setQtId(templateSpecBean.getQt().getQtId());
 							evalReqDTO.setProposalChecklist(templateSpecBean.getQtProposalChecklist());
+							int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
+							if(wipstatus >= 7){
+								if (CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {
 							evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-							//evalReqDTO.setFinSpecAnswer(specAnswer);
 							evalReqDTO.setFinSpecAnswerList(resDTO.getSpecAnswerList());
 						EvaluationResDTO evalResDTO=evaluationSO.technicalItemSupplierQualified(evalReqDTO);
-							
-						//}
-						
 						templateSpecBean.setSpecAnswerList(evalResDTO.getSpecAnswers());
 						templateSpecBean.setHideanswerList(evalResDTO.getHideanswerList());
+					}
+								}
 					}
 					//templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());	
 				}else{//32453-End
