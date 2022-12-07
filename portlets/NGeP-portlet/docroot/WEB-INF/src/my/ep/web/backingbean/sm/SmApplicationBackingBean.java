@@ -2533,7 +2533,7 @@ public class SmApplicationBackingBean extends
 						//START 28454
 						//if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
 							
-						//START NEW CHANGES POPUP OWNER UPDATE ROLE							
+						//START NEW CHANGES POPUP OWNER UPDATE ROLE
 						List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
 						//start #29956
 						if(this.getManagedBean().isDowngradeRole()==null || !this.getManagedBean().isDowngradeRole()){
@@ -2558,7 +2558,13 @@ public class SmApplicationBackingBean extends
 											.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
 													ssmResDTO.getSmPersonnelDirector(), "identificationNo");
 									if (personnelDirectorSSM == null && personnelSSM == null) {
-										personnelsRole.add(personnel);
+										if(isMofAccEffDatePassedCurrDate(this.getManagedBean().getSmSupplier())){
+											if(personnel.getEpRole() != null && my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES.contains(personnel.getEpRole())){
+												personnelsRole.add(personnel);
+											}
+										} else {
+											personnelsRole.add(personnel);
+										}
 									}
 								}
 							}
