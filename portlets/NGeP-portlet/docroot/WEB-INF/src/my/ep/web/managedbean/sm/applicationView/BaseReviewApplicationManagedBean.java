@@ -2347,4 +2347,12 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setSdoRemark(String sdoRemark) {
 		this.sdoRemark = sdoRemark;
 	}
+
+		public boolean isPoApprUnClaimTask() {
+			return poApprUnClaimTask;
+		}
+
+		public void setPoApprUnClaimTask(boolean poApprUnClaimTask) {
+			this.poApprUnClaimTask = poApprUnClaimTask;
+		}
 }
