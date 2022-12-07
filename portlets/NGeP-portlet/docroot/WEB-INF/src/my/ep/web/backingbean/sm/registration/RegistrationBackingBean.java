@@ -2575,7 +2575,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 										SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
 										SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
 										if(personnelDirectorSSM == null && personnelSSM == null){
-											personnelsRole.add(personnel);
+											if(isMofAccEffDatePassedCurrDate(this.getManagedBean().getSmSupp())){
+												if(personnel.getEpRole() !=  null && my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES.contains(personnel.getEpRole())){
+													personnelsRole.add(personnel);
+												}
+											} else {
+												personnelsRole.add(personnel);
+											}
+											
 										}
 									//}
 								}
