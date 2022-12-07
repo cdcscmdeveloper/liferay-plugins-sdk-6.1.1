@@ -20755,22 +20755,24 @@ if(null!=allTechnicalChecklist){
 
 		List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
 		List<ScQtCheckList> tempList = new ArrayList<ScQtCheckList>();
-
-//		for (ScQtCheckList l : st2technicalproposalList) {
-//			if (l.getQtChecklistId() == null && l.getDefinationType().getParameterCode()
-//					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-//				//throw new EpException(MessageConst.ERROR_760528);
-//				//saveSpecificationCommitteeDtls(); //#28784 - Remove notification save
-//				if (this.getManagedBean().isMaintanceFlow()) {
-//					if (isSpecCommittee()) {
-//						checkSpecMaintenanceOrNo(true);
-//					} else {
-//						checkSpecMaintenanceOrNo(false);
-//					}
-//				}
-//				//retriveTechnicalCheckList();
-//			}
-//		}
+        
+		//#28784 - Enable back to handle record has been updated issue
+		for (ScQtCheckList l : st2technicalproposalList) {
+			if (l.getQtChecklistId() == null && l.getDefinationType().getParameterCode()
+					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+				//throw new EpException(MessageConst.ERROR_760528);
+				//saveSpecificationCommitteeDtls(); //#28784 - Remove notification save
+				validatePrepareQtChecklist();
+				if (this.getManagedBean().isMaintanceFlow()) {
+					if (isSpecCommittee()) {
+						checkSpecMaintenanceOrNo(true);
+					} else {
+						checkSpecMaintenanceOrNo(false);
+					}
+				}
+				//retriveTechnicalCheckList();
+			}
+		}
 		for (ScQtCheckList cl : st2technicalproposalList) {
 			if (cl.getDefinationType().getParameterCode()
 					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
@@ -20842,7 +20844,19 @@ if(null!=allTechnicalChecklist){
 		try {
 
 			List<TplSpecQuestion> newSpecItemList = new ArrayList<>();
+			IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
+				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+				reqDTO.setScQt(this.getManagedBean().getQt());
+				reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+				SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
+				
+				for(ScQtCheckList newchecklist: resDTO.getTechnicalCheckList()){
+					if(newchecklist.getQtChecklistId().equals(checkList.getQtChecklistId())){
+						checkList = newchecklist;
+					}
+				}
 				this.getManagedBean().setSpecStatusId(checkList.getPmStatus().getStatusId());
 				this.getManagedBean().setIndex(index);
 				this.getManagedBean().setScQtChecklist(checkList);
@@ -21001,20 +21015,21 @@ if(null!=allTechnicalChecklist){
 				q.setDemoScore(null);
 			}
 		}
-		for (ScQtCheckList l : st2technicalproposalList) {
-			if (l.getQtChecklistId() == null
-					&& l.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-				validatePrepareQtChecklist();
-				
-				if (this.getManagedBean().isMaintanceFlow()) {
-					if (isSpecCommittee()) {
-						checkSpecMaintenanceOrNo(true);
-					} else {
-						checkSpecMaintenanceOrNo(false);
-					}
-				}
-			}
-		}
+		//#28784 -revert back to save on pencil click due to causing record has been udated issue
+//		for (ScQtCheckList l : st2technicalproposalList) {
+//			if (l.getQtChecklistId() == null
+//					&& l.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+//				validatePrepareQtChecklist();
+//				
+//				if (this.getManagedBean().isMaintanceFlow()) {
+//					if (isSpecCommittee()) {
+//						checkSpecMaintenanceOrNo(true);
+//					} else {
+//						checkSpecMaintenanceOrNo(false);
+//					}
+//				}
+//			}
+//		}
 		List<ScQtCheckList> updatedCheckLists = new ArrayList<ScQtCheckList>();
 		updatedCheckLists.add(scQtCheckList);
 
