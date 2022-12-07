@@ -16947,19 +16947,20 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		 * A = RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
 		 * B = specCommitteBpmTask(outcome);
 		 * ::: use B instead of A coz A (#25635) not ready for UAT - as of 27-aug-2022.
+		 * ::: use A coz 25635 closed in SIT - as of 7-dec-2022.
 		 * */
 
-//			// 1873 - start - note 52 <<< use this when 25635 ready for UAT & remove below -start-
-//			if (!assertPendingFinancialSubmission()) {
-//				RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
-//			}
-//			// 1873 - end - note 52	 <<< use this when 25635 ready for UAT & remove below -end-
-			
-			// 1873 - start - note 52 <<< remove this when 25635 ready for UAT & use above -start-
+			// 1873 - start - note 52 <<< use this when 25635 ready for UAT & remove below -start-
 			if (!assertPendingFinancialSubmission()) {
-				specCommitteBpmTask(outcome);
+				RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
 			}
-			// 1873 - end - note 52	 <<< remove this when 25635 ready for UAT & use above -end-
+			// 1873 - end - note 52	 <<< use this when 25635 ready for UAT & remove below -end-
+			
+//			// 1873 - start - note 52 <<< remove this when 25635 ready for UAT & use above -start-
+//			if (!assertPendingFinancialSubmission()) {
+//				specCommitteBpmTask(outcome);
+//			}
+//			// 1873 - end - note 52	 <<< remove this when 25635 ready for UAT & use above -end-
 		} else {
 			specCommitteBpmTask(outcome);
 		}
