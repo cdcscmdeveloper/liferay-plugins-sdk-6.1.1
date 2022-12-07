@@ -93,12 +93,13 @@
 				<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.Indicative.unit.price']}"/>
 			</f:facet>
+			<!-- #21695 adding disable -start- -->
 			<p:inputText id="zoneEstCost" 
 				value="#{tplSpecEstimation.indicativeUnitPrice}" style="width:165px; text-align:right;" 
 				required="#{empty tplSpecEstimation.estimatedCost}" maxlength="19"
 				label="#{lbl['lbl.tpl.spec.content.Indicative.unit.price']}"
-				disabled="#{!editable}">
-
+				disabled="#{!editable or templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty eq 0}">
+			<!-- #21695 adding disable -end- -->
 				<f:converter converterId="dynamicNumberConverter" />
 				<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />						
 				<f:validator validatorId="quantityDoubleRangeValidator" />
