@@ -119,8 +119,11 @@
 								itemValue="1"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.sm.sme.txt.no']}"
 								itemValue="0"></f:selectItem>
+							<!-- #29617 ReOpen note 150 - Start -->
 							<p:ajax update="smeRegPanel" partialSubmit="true"
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+								listener="#{smUpdateSmeInfoBackingBean.SMECorpChange}" />
+							<!-- #29617 ReOpen note 150 - Start -->
 						</p:selectOneRadio> <p:message id="regStatusMsg" for="regStatus" display="icon"
 							showDetail="false" /></td>
 				</tr>

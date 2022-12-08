@@ -81,12 +81,11 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 				getManagedBean().setSmeSupplierDoc(currentSmeInfo.getSmSmeSupplierDocs().get(0));
 			} else { getManagedBean().setSmeCorpRegisteredTrans("0"); }
 		} else {
-		// #29617 ReOpen - Start 
+			// #29617 ReOpen note 150 - Start
+			getManagedBean().setSmeSupplier(null);
 		getManagedBean().setSmeCorpRegisteredTrans(null); 
-		if(getManagedBean().getSmeSupplierDoc() != null){
-			deleteAttachment();
-		}
-		// #29617 End 
+			SMECorpChange();
+			// #29617 ReOpen note 150 - End
 		} 
 		// #29617 CR Fix - End
 		initDocumentList(getManagedBean().getSmeSupplier());
@@ -315,5 +314,19 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 		return declaredSmeList;
 	}
 	// #29617 End
+	// #29617 ReOpen note 150 - Start
+	public void SMECorpChange() {
+		if(getManagedBean().getSmeCorpRegisteredTrans() != null && getManagedBean().getSmeCorpRegisteredTrans().equalsIgnoreCase("1")){
+			if (getManagedBean().getSmeSupplier() != null) {
+				getManagedBean().getSmeSupplier().setSmeRefNo(null);
+				getManagedBean().getSmeSupplier().setSmeValidStartDate(null);
+				getManagedBean().getSmeSupplier().setSmeValidEndDate(null);
+			}
+			if (getManagedBean().getSmeSupplierDoc() != null) {
+				deleteAttachment();
+			}
+		}
+	}
+	// #29617 ReOpen note 150 - Start
 
 }
