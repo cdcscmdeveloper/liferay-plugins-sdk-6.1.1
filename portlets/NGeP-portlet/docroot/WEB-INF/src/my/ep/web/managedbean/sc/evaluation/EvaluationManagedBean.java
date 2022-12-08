@@ -649,7 +649,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String downloadBy;
 	//#10542 - end
 	
-	private boolean noProposalSubmitted;//#6906
+	//#6906 start
+	private boolean noProposalSubmitted;
+	private boolean supplierRejected;
+	//#6906 end
 	
 	//Bug #33252
 	private boolean isAllItemAutoScore;
@@ -4217,6 +4220,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	public void setNoProposalSubmitted(boolean noProposalSubmitted) {
 		this.noProposalSubmitted = noProposalSubmitted;
+	}
+	
+	public boolean isSupplierRejected() {
+		return supplierRejected;
+	}
+
+	public void setSupplierRejected(boolean supplierRejected) {
+		this.supplierRejected = supplierRejected;
 	}
 	//#6906 - end
 

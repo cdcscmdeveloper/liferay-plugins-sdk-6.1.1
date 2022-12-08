@@ -17232,6 +17232,14 @@ private void retriveCommitteeRemarksList(){
 		
 		retrieveDemoSupplierNo(supplierNo);
 		
+		//6906 start
+		this.getManagedBean().setSupplierRejected(false);
+		if(demoPropChecklist.getScQtProposal()!=null){
+			ScRemark rejectionRemark = demoPropChecklist.getScQtProposal().getSupplierRejectionRemark();
+			String rejectionRemarkStr = rejectionRemark!=null ? rejectionRemark.getRemark(): "";
+			this.getManagedBean().setSupplierRejected(StringUtils.isNotEmpty(rejectionRemarkStr));
+		}
+		//6906 end
 		DemoResDTO resDto = new DemoResDTO();
 		try {
 			IQTDemoSO qtDemoSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
