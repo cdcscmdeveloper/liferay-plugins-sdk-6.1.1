@@ -18,7 +18,7 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		
+		<p:outputPanel id="verification2Panel">
 		<p:messages id="addInfoPopupMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" />
 	
 		<p:blockUI block=":form" widgetVar="blockWidget">
@@ -33,7 +33,7 @@
 				</td>
 				<td style="white-space: nowrap; float: right;">
 				<!-- #28765 -->
-					<p:commandButton value="#{lbl['lbl.sm.declare']}"  partialSubmit="true" process="@this" 
+					<p:commandButton value="#{lbl['lbl.sm.declare']}"  partialSubmit="true" process="verification2Panel" 
 					disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0].smReplacesupplieradminDocFiles[0].fileName}" 
 					update=":#{p:component('declareAlertPopUpId')},@this" id="declareBtnId" action="#{forceReplaceSuppAdminBackingBean.checkingBeforeDeclare}"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
@@ -226,9 +226,9 @@
 				</tr>
 				<h:panelGroup layout="block" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRolePanel}">
 				<tr>
-					<td class="tdTitle" ><p:outputLabel style="float: right" value="#{lbl['lbl.sm.person.composition.role']}    " /><p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td class="tdContent">
+					<td><p:outputLabel style="float: right" value="#{lbl['lbl.sm.person.composition.role']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td>
 						<table>
 							<tr>
 								<td>
@@ -345,6 +345,6 @@
 					</tr>
 				</table>
 			<br />
-
+	</p:outputPanel>
 	</ui:define>
 </ui:composition>
