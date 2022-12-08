@@ -73,6 +73,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 //#28765 - Start
 //#28765 - End
+import org.primefaces.event.SelectEvent;
 
 @ManagedBean(name = "forceReplaceSuppAdminBackingBean")
 @RequestScoped
@@ -222,8 +223,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 	//#28765 - Start
 	public void checkingBeforeDeclare() {
 		//# 33563
-		validateAdminInfo();
-		
+		validateRole();
 		RequestContext.getCurrentInstance().execute("declareDeletePopUp.show()");
 	}
 	//#28765 - End
@@ -2042,70 +2042,6 @@ public class ForceReplaceSuppAdminBackingBean extends
     		}
     		
     	}
-    }
-    
-    public void validateAdminInfo() {
-   		if(this.getManagedBean().getNewAdmin().getName() == null 
-   				|| this.getManagedBean().getNewAdmin().getName().isEmpty()){
-       		throw new EpException(MessageConst.ERROR_100022,
-                       new String[]{ResourceBundleUtils.getMessage("lbl.sm.userprofile.name",
-                               ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-       	}
-   		
-   		if(this.getManagedBean().getNewAdmin().getTitle() == null 
-   				|| this.getManagedBean().getNewAdmin().getTitle().getSalutationId() == null){
-       		throw new EpException(MessageConst.ERROR_100022,
-                       new String[]{ResourceBundleUtils.getMessage("lbl.pm.profiles.userdetails.salutation",
-                               ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-       	}
-   		
-   		if(this.getManagedBean().getNewAdmin().getPmCountry() == null){
-        		throw new EpException(MessageConst.ERROR_100022,
-                       new String[]{ResourceBundleUtils.getMessage("lbl.sm.userprofile.nationality",
-                               ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-       	}
-  		
-//   		if(this.getManagedBean().getNewAdmin().getBirthDate() == null){
-//        		throw new EpException(MessageConst.ERROR_100022,
-//                        new String[]{ResourceBundleUtils.getMessage("lbl.sm.userprofile.dob",
-//                                ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-//       	}
-    		
-   		if(this.getManagedBean().getNewAdmin().getEmail() == null 
-   				|| this.getManagedBean().getNewAdmin().getEmail().isEmpty()){
-      		throw new EpException(MessageConst.ERROR_100022,
-                       new String[]{ResourceBundleUtils.getMessage("lbl.sm.userprofile.email",
-                               ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-       	}
-   		
-   		if(this.getManagedBean().getNewAdmin().getDesignation() == null 
-   				|| this.getManagedBean().getNewAdmin().getDesignation().isEmpty()){
-      		throw new EpException(MessageConst.ERROR_100022,
-                       new String[]{ResourceBundleUtils.getMessage("lbl.sm.userprofile.designation",
-                               ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-       	}
-   		
-   		if(this.getManagedBean().getNewAdmin().getPhoneNo() == null 
-   				|| this.getManagedBean().getNewAdmin().getPhoneNo().isEmpty()){
-      		throw new EpException(MessageConst.ERROR_100022,
-                       new String[]{ResourceBundleUtils.getMessage("lbl.sm.userprofile.phone",
-                               ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-       	}
-   		
-   		if(this.getManagedBean().getNewAdmin().getPhoneNo() == null 
-   				|| this.getManagedBean().getNewAdmin().getPhoneNo().isEmpty()){
-      		throw new EpException(MessageConst.ERROR_100022,
-                       new String[]{ResourceBundleUtils.getMessage("lbl.sm.userprofile.phone",
-                               ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-       	}
-   		
-   		if(this.getManagedBean().getNewAdmin().getMobileNo() == null 
-   				|| this.getManagedBean().getNewAdmin().getMobileNo().isEmpty()){
-      		throw new EpException(MessageConst.ERROR_100022,
-                       new String[]{ResourceBundleUtils.getMessage("lbl.sm.userprofile.mobile",
-                               ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-       	}
-   		validateRole();
     }
     // END -> #33563
 }
