@@ -699,9 +699,6 @@ public class TemplateSpecBackingBean extends
 			//#25725 start
 			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN);
 			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED);		
-		}else{
-			filteredList.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
-			filteredList.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 		}
 		//#25725 end
 		filteredList.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);		
