@@ -1,0 +1,194 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<table style="width: 100%;">
+		<tr>
+			<td colspan="4">
+				<h:outputText value="#{poSumForPoCancelReasonRptBB.managedBean.reportUrl}" /><br/><br/>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.ministry']}" />
+			</td>
+			<td colspan="3">
+				<ac:lov id="searchMinistry"
+					lovId="PM_ORG_PROFILE_MINSTRY" size="131" readonly="true"
+					headerText="#{lbl['lbl.fl.ministry']}"
+					disabled="#{poSumForPoCancelReasonRptBB.disableMinistryLov()}"
+					value="#{poSumForPoCancelReasonRptBB.managedBean.ministry.orgName}"
+					postUpdateListener="poSumForPoCancelReasonRptBB.resetPtjGroupProfile()"
+					update=":form:searchPtj,:form"
+					saveObject="poSumForPoCancelReasonRptBB.managedBean.ministry"
+					conditionField="#{poSumForPoCancelReasonRptBB.getMinistryCondition()}">
+				</ac:lov>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.jabatan']}"></p:outputLabel>
+			</td>
+			<td colspan="3">
+				<ac:lov id="searchJabatan"
+					lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true"
+					headerText="#{lbl['lbl.fl.jabatan']}"
+					disabled="#{poSumForPoCancelReasonRptBB.disablePtjGroupLov()}"
+					value="#{poSumForPoCancelReasonRptBB.managedBean.ptjGroup.orgName}"
+					postUpdateListener="poSumForPoCancelReasonRptBB.resetPtjProfile()"
+					update=":form"
+					saveObject="poSumForPoCancelReasonRptBB.managedBean.ptjGroup"
+					conditionField="#{poSumForPoCancelReasonRptBB.constuctConditionFieldsForPTJGroup()}">
+				</ac:lov>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.ptj.name']}"></p:outputLabel>
+			</td>
+			<td colspan="3">
+				<ac:lov id="searchPtj"
+					lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true"
+					headerText="#{lbl['lbl.fl.ptj']}"
+					disabled="#{poSumForPoCancelReasonRptBB.disablePtjLov()}"
+					value="#{poSumForPoCancelReasonRptBB.managedBean.ptj.orgName}"
+					update=":form"
+					saveObject="poSumForPoCancelReasonRptBB.managedBean.ptj"
+					conditionField="#{poSumForPoCancelReasonRptBB.getPTJCondition()}">
+				</ac:lov>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.physical.treasury.circular']}"/>
+			</td>
+			<td>
+			<p:inputText maxlength="20" id="pkpNoId"
+					label="#{lbl['lbl.fl.physical.treasury.circular']}"
+					value="#{poSumForPoCancelReasonRptBB.managedBean.pkpNo}"
+					style="margin-top:5px;width:268px;">
+					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+				</p:inputText><ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcc']}"/>
+			</td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.sistem.panel.name']}" />
+			</td>
+
+			<td><p:inputText maxlength="30" id="panelNameId"
+					label="#{lbl['lbl.fl.sistem.panel.name']}"
+					value="#{poSumForPoCancelReasonRptBB.managedBean.panelName}"
+					style="margin-top:5px;width:268px;">
+					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+				</p:inputText><ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcc']}"/>
+				<p:message id="panelNameMsg" for="panelNameId"
+					display="icon" /></td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.supp.name']}" />
+			</td>
+			<td>
+				<ac:lov id="flSupplierName" readonly="true"
+					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44" rendered="#{!poSumForPoCancelReasonRptBB.managedBean.supplier}"
+					headerText="#{lbl['lbl.fl.supp.name']}" update="@form"
+					value="#{poSumForPoCancelReasonRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
+					saveObject="poSumForPoCancelReasonRptBB.managedBean.selectedOrgProfile" />
+				<p:inputText size="51" disabled="true" id="supplierCompName" rendered="#{poSumForPoCancelReasonRptBB.managedBean.supplier}"
+					value="#{poSumForPoCancelReasonRptBB.managedBean.supplierCompName}">
+				</p:inputText>
+			</td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.do.poco.no']}" />
+			</td>
+			<td>
+				<p:inputText maxlength="20"
+					value="#{poSumForPoCancelReasonRptBB.managedBean.purchaseOrderNo}">
+					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+				</p:inputText>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
+			</td>
+			<td>
+				<p:selectOneMenu value="#{poSumForPoCancelReasonRptBB.managedBean.group}">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+						itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phyTreasuryCrclrNo']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.phyTreasuryCrclrNo']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.centralCntrctPanel']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.centralCntrctPanel']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
+						itemDisabled="#{mcCrGenAsPoRptBB.hasSupplierRole()}"
+      					itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+      				<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" />
+			</td>
+			<td>
+				<p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{poSumForPoCancelReasonRptBB.managedBean.fromDate}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+					partialSubmit="true" process="@form">
+					<p:ajax event="dateSelect"
+							listener="#{poSumForPoCancelReasonRptBB.onChangeFromToDate}"
+							update="@form"></p:ajax>
+				</p:calendar>
+			</td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.created.date.to']}" />
+			</td>
+			<td>
+				<p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{poSumForPoCancelReasonRptBB.managedBean.toDate}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+					partialSubmit="true" process="@form">
+					<p:ajax event="dateSelect"
+							listener="#{poSumForPoCancelReasonRptBB.onChangeFromToDate}"
+							update="@form"></p:ajax>
+				</p:calendar>
+			</td>
+		</tr>
+	</table>
+	<div style="text-align: right;">
+		<p:commandButton id="generateBtnId" value="#{lbl['lbl.btn.generate']}"
+			process="@form" update="@form"
+			action="#{poSumForPoCancelReasonRptBB.generateReport()}">
+			<f:setPropertyActionListener target="#{poSumForPoCancelReasonRptBB.managedBean.reportCode}" value="#{flReportBB.managedBean.reportCode}" />
+		</p:commandButton>
+		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
+			process="@this" update="@form" action="#{poSumForPoCancelReasonRptBB.resetAction()}">
+		</p:commandButton>
+	</div>
+	<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
+		width="500px" resizable="false" styleClass="pop_up_top">
+		<h:outputText escape="false" style="float:left;margin-left:5px;"
+			value="#{poSumForPoCancelReasonRptBB.managedBean.popUpMsg}">
+		</h:outputText>
+		<br />
+		<div style="float:right;">
+			<table style="width:100%">
+				<tr>
+					<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
+							onclick="confirmationId.hide();" />
+						<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
+							action="#{poSumForPoCancelReasonRptBB.redirect()}">
+						</p:commandButton></td>
+				</tr>
+			</table>
+		</div>
+	</p:dialog>
+</ui:composition>
