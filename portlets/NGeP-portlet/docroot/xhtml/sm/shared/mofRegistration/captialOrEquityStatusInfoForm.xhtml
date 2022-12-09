@@ -64,7 +64,7 @@
 						<td><p:inputText size="10"
 								label="#{lbl['lbl.sm.equiStatus.paidUpCap']}"
 								value="#{backingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}"
-								readonly="true" disabled="true">
+								readonly="#{backingBean.managedBean.editCapital}" disabled="#{backingBean.managedBean.editCapital}"><!-- #34277 -->
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>
@@ -110,7 +110,7 @@
 						<td><p:inputText size="10"
 								label="#{lbl['lbl.sm.equiStatus.paidUpCap']}"
 								value="#{backingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}"
-								readonly="true" disabled="true">
+								readonly="#{backingBean.managedBean.editCapital}" disabled="#{backingBean.managedBean.editCapital}"><!-- #34277 -->
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>
