@@ -12,7 +12,9 @@ import javax.faces.bean.SessionScoped;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.FlReportConst;
@@ -52,6 +54,9 @@ public class InvoiceRptBackingBean extends FlReportBackingBean<InvoiceRptManaged
 		log.info("********Report Code*************" + getManagedBean().getReportCode());
 		
 		retrieveReportValueFromDb();
+		//29550 - start
+		onChangeFromToDate();
+		//29550 - end
 		params.put(FlReportConst.FL_RPT_FROM_DATE, df.format(getManagedBean().getFromDate()));
 		params.put(FlReportConst.FL_RPT_TO_DATE, df.format(getManagedBean().getToDate()));
 		checkOneYearDifferent(getManagedBean().getFromDate(), getManagedBean().getToDate());
@@ -118,5 +123,20 @@ public class InvoiceRptBackingBean extends FlReportBackingBean<InvoiceRptManaged
 		}
 		
 		resetSearchCriteriaValues();
+		//29550 - start
+		getManagedBean().setInvNo(null);
+		getManagedBean().setSupplierInvNo(null);
+		//29550 - end
 	}
+	
+	//29550 - start
+	public void onChangeFromToDate() {
+		if(this.getManagedBean().getFromDate().after(this.getManagedBean().getToDate()) || 
+				this.getManagedBean().getToDate().before(this.getManagedBean().getFromDate())){
+			throw new EpException(MessageConst.ERROR_REPORT_780071);
+		}
+		
+		getContractDuration(this.getManagedBean().getFromDate(), this.getManagedBean().getToDate());
+	}
+	//29550 - end
 }
