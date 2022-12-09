@@ -14,7 +14,9 @@ import javax.faces.model.SelectItem;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.FlReportConst;
@@ -126,7 +128,24 @@ public class PaymentMatchRptBackingBean extends FlReportBackingBean<PaymentMatch
 	 * reset action
 	 */
 	public void resetAction(){
-		resetSearchCriteriaValues();;
+		resetSearchCriteriaValues();
+		
+		//29550 - start
+		getManagedBean().setInvNo(null);
+		getManagedBean().setSupplierInvNo(null);
+		getManagedBean().setPaymentMatchNo(null);
+		//29550 - end
 	}
+	
+	//29550 - start
+		public void onChangeFromToDate() {
+			if(this.getManagedBean().getFromDate().after(this.getManagedBean().getToDate()) || 
+					this.getManagedBean().getToDate().before(this.getManagedBean().getFromDate())){
+				throw new EpException(MessageConst.ERROR_REPORT_780071);
+			}
+			
+			getContractDuration(this.getManagedBean().getFromDate(), this.getManagedBean().getToDate());
+		}
+	//29550 - end
 	
 }
