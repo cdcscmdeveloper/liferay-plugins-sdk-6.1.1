@@ -322,6 +322,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				reqDTO.setDocType(ctBB.getManagedBean().getDocTypeFromTaskList());
 				reqDTO.setContractId(ctBB.getManagedBean().getContractIdFromTaskList());
 				reqDTO.setContractVerId(ctBB.getManagedBean().getContractVerIdFromTaskList());
+				reqDTO.setViewOnly(true);//Bug 34142 - shaqimi 04/12/2022
 				
 				setValidateContractField(reqDTO);
 			}
@@ -352,6 +353,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//#25406 - End	
 	
 		ContractReqDTO reqDTO = new ContractReqDTO();
+		reqDTO.setViewOnly(true);//Bug 34142 - shaqimi 04/12/2022
 		reqDTO.setTaskName(getManagedBean().getTaskName());
 		log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][preRenderView]");
 		if ((getManagedBean().getProcessName().equalsIgnoreCase(
@@ -377,6 +379,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ctBB.getManagedBean().setContractIdFromTaskList(reqDTO.getContractId());
 		ctBB.getManagedBean().setContractVerIdFromTaskList(reqDTO.getContractVerId());
 		//Bug 34030 - shaqimi end
+		
 		
 		/*#26083 start - basri*/
 		if(reqDTO.getDocType().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)){
@@ -2567,6 +2570,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 
 			reqDTO.setUpdateAction(true);
+			reqDTO.setViewOnly(true);//Enhancement 15851, 34142 - shaqimi start 04/12/2022
 			ctBB.getManagedBean().setNotificationSetting(false);
 			ctBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setUpdateContract(true);
@@ -2601,6 +2605,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setContractVerId(contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
 				
 			reqDTO.setUpdateAction(true);
+			reqDTO.setViewOnly(true);//Enhancement 15851, 34142 - shaqimi start 04/12/2022
 			reqDTO.setDocType(ParameterConst.DOCTYPE_NOTIFICATION_SETTING); 
 			ctBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setUpdateContract(true);
