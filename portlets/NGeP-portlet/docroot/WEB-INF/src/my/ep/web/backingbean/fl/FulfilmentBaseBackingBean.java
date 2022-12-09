@@ -896,18 +896,4 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		return filteredItemName;
 	}
 	//21416 end
-	
-	//29550 - start
-	/**
-	 * Check is it login user is Factoring User but in public method
-	 * 
-	 * @return true, if user is Factoring User
-	 */
-	public boolean hasFactoringUser() {
-		if (getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value()))
-			return true;
-		else
-			return false;
-	}
-	//29550 - end
 }
