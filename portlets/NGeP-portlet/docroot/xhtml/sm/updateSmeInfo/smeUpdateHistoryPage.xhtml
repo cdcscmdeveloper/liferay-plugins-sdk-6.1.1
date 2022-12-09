@@ -83,7 +83,8 @@
 				<p:column headerText="#{lbl['lbl.sm.sme.declared.date']}" style="text-align:center;white-space: normal;" >
 					<h:outputText value="#{sme.smeDeclaredDate}" rendered="#{not empty sme.smeDeclaredDate}"
 						style="float:left;white-space: nowrap;" >
-						<f:convertDateTime pattern="dd/MM/yyyy" /> 
+						<!-- //#29617 Date to Timestamp -->
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /> 
 					</h:outputText> 
 					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}" rendered="#{empty sme.smeDeclaredDate}"
 						style="float:left;white-space: nowrap;" />
@@ -91,7 +92,8 @@
 				<p:column headerText="#{lbl['lbl.sm.sme.deleted.date']}" style="text-align:center;white-space: normal;" >
 					<h:outputText value="#{sme.smeDeletedDate}" rendered="#{not empty sme.smeDeletedDate}"
 						style="float:left;white-space: nowrap;" >
-						<f:convertDateTime pattern="dd/MM/yyyy" /> 
+						<!-- //#29617 Date to Timestamp -->
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /> 
 					</h:outputText> 
 					<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}" rendered="#{empty sme.smeDeletedDate}"
 						style="float:left;white-space: nowrap;" />
