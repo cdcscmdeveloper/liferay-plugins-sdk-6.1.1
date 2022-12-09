@@ -1,0 +1,232 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<table style="width: 100%;">
+		<tr>
+			<td colspan="4">
+				<h:outputText value="#{poSumTotalNumValofPoRptBB.managedBean.reportUrl}" /><br/><br/>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.ministry']}" />
+			</td>
+			<td colspan="3">
+				<ac:lov id="searchMinistry"
+					lovId="PM_ORG_PROFILE_MINSTRY" size="131" readonly="true"
+					headerText="#{lbl['lbl.fl.ministry']}"
+					disabled="#{poSumTotalNumValofPoRptBB.disableMinistryLov()}"
+					value="#{poSumTotalNumValofPoRptBB.managedBean.ministry.orgName}"
+					postUpdateListener="poSumTotalNumValofPoRptBB.resetPtjGroupProfile()"
+					update=":form:searchPtj,:form"
+					saveObject="poSumTotalNumValofPoRptBB.managedBean.ministry"
+					conditionField="#{poSumTotalNumValofPoRptBB.getMinistryCondition()}">
+				</ac:lov>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.jabatan']}"></p:outputLabel>
+			</td>
+			<td colspan="3">
+				<ac:lov id="searchJabatan"
+					lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true"
+					headerText="#{lbl['lbl.fl.jabatan']}"
+					disabled="#{poSumTotalNumValofPoRptBB.disablePtjGroupLov()}"
+					value="#{poSumTotalNumValofPoRptBB.managedBean.ptjGroup.orgName}"
+					postUpdateListener="poSumTotalNumValofPoRptBB.resetPtjProfile()"
+					update=":form"
+					saveObject="poSumTotalNumValofPoRptBB.managedBean.ptjGroup"
+					conditionField="#{poSumTotalNumValofPoRptBB.constuctConditionFieldsForPTJGroup()}">
+				</ac:lov>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.ptj.name']}"></p:outputLabel>
+			</td>
+			<td colspan="3">
+				<ac:lov id="searchPtj"
+					lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true"
+					headerText="#{lbl['lbl.fl.ptj']}"
+					disabled="#{poSumTotalNumValofPoRptBB.disablePtjLov()}"
+					value="#{poSumTotalNumValofPoRptBB.managedBean.ptj.orgName}"
+					update=":form"
+					saveObject="poSumTotalNumValofPoRptBB.managedBean.ptj"
+					conditionField="#{poSumTotalNumValofPoRptBB.getPTJCondition()}">
+				</ac:lov>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.physical.treasury.circular']}"/>
+			</td>
+			<td>
+			<p:inputText maxlength="20" id="pkpNoId"
+					label="#{lbl['lbl.fl.physical.treasury.circular']}"
+					value="#{poSumTotalNumValofPoRptBB.managedBean.pkpNo}"
+					style="margin-top:5px;width:268px;">
+					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+				</p:inputText><ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcc']}"/>
+			</td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.sistem.panel.name']}" />
+			</td>
+
+			<td><p:inputText maxlength="30" id="panelNameId"
+					label="#{lbl['lbl.fl.sistem.panel.name']}"
+					value="#{poSumTotalNumValofPoRptBB.managedBean.panelName}"
+					style="margin-top:5px;width:268px;">
+					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+				</p:inputText><ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcc']}"/>
+				<p:message id="panelNameMsg" for="panelNameId"
+					display="icon" /></td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.supp.name']}" />
+			</td>
+			<td>
+				<ac:lov id="flSupplierName" readonly="true"
+					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44" rendered="#{!poSumTotalNumValofPoRptBB.managedBean.supplier}"
+					headerText="#{lbl['lbl.fl.supp.name']}" update="@form"
+					value="#{poSumTotalNumValofPoRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
+					saveObject="poSumTotalNumValofPoRptBB.managedBean.selectedOrgProfile" />
+				<p:inputText size="51" disabled="true" id="supplierCompName" rendered="#{poSumTotalNumValofPoRptBB.managedBean.supplier}"
+					value="#{poSumTotalNumValofPoRptBB.managedBean.supplierCompName}">
+				</p:inputText>
+			</td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.purchaseorder.status']}"/>
+			</td>
+			<td>
+				<p:selectOneMenu value="#{poSumTotalNumValofPoRptBB.managedBean.purchaseOrderStatus}">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+						itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.beforePendingInv']}" 
+      					itemValue="#{lbl['lbl.rpt.drpdown.beforePendingInv']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingPaymentMatch']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.pendingPaymentMatch']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingPaymentClosed']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.pendingPaymentClosed']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cancelledLabel']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.cancelledLabel']}"></f:selectItem>
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
+			</td>
+			<td>
+				<p:selectOneMenu value="#{poSumTotalNumValofPoRptBB.managedBean.group}">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+						itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phyTreasuryCrclrNo']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.phyTreasuryCrclrNo']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.centralCntrctPanel']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.centralCntrctPanel']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.poOrderStatus']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.poOrderStatus']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
+						itemDisabled="#{mcCrGenAsPoRptBB.hasSupplierRole()}"
+      					itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" />
+			</td>
+			<td>
+				<p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{poSumTotalNumValofPoRptBB.managedBean.fromDate}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+					partialSubmit="true" process="@form">
+					<p:ajax event="dateSelect"
+							listener="#{poSumTotalNumValofPoRptBB.onChangeFromToDate}"
+							update="@form"></p:ajax>
+				</p:calendar>
+			</td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.created.date.to']}" />
+			</td>
+			<td>
+				<p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{poSumTotalNumValofPoRptBB.managedBean.toDate}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+					partialSubmit="true" process="@form">
+					<p:ajax event="dateSelect"
+							listener="#{poSumTotalNumValofPoRptBB.onChangeFromToDate}"
+							update="@form"></p:ajax>
+				</p:calendar>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.po.generated.date.from']}" />
+			</td>
+			<td>
+				<p:calendar showOn="button" navigator="true"
+					id="poGenDateFrom" readonlyInput="true"
+					value="#{poSumTotalNumValofPoRptBB.managedBean.poGenDateFrom}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect"
+							listener="#{poSumTotalNumValofPoRptBB.onChangeFromToDate}"
+							update="@form"></p:ajax>
+				</p:calendar>
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforpogenerateddate']}"/>
+			</td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.po.generated.date.to']}" />
+			</td>
+			<td>
+				<p:calendar showOn="button" navigator="true"
+					id="poGenDateTo" readonlyInput="true"
+					value="#{poSumTotalNumValofPoRptBB.managedBean.poGenDateTo}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect"
+							listener="#{poSumTotalNumValofPoRptBB.onChangeFromToDate}"
+							update="@form"></p:ajax>
+				</p:calendar>
+			</td>
+		</tr>
+	</table>
+	<div style="text-align: right;">
+		<p:commandButton id="generateBtnId" value="#{lbl['lbl.btn.generate']}"
+			process="@form" update="@form"
+			action="#{poSumTotalNumValofPoRptBB.generateReport()}">
+			<f:setPropertyActionListener target="#{poSumTotalNumValofPoRptBB.managedBean.reportCode}" value="#{flReportBB.managedBean.reportCode}" />
+		</p:commandButton>
+		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
+			process="@this" update="@form" action="#{poSumTotalNumValofPoRptBB.resetAction()}">
+		</p:commandButton>
+	</div>
+	<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
+		width="500px" resizable="false" styleClass="pop_up_top">
+		<h:outputText escape="false" style="float:left;margin-left:5px;"
+			value="#{poSumTotalNumValofPoRptBB.managedBean.popUpMsg}">
+		</h:outputText>
+		<br />
+		<div style="float:right;">
+			<table style="width:100%">
+				<tr>
+					<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
+							onclick="confirmationId.hide();" />
+						<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
+							action="#{poSumTotalNumValofPoRptBB.redirect()}">
+						</p:commandButton></td>
+				</tr>
+			</table>
+		</div>
+	</p:dialog>
+</ui:composition>

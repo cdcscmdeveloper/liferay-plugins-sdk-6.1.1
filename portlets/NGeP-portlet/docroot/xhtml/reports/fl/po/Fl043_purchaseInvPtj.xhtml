@@ -121,7 +121,8 @@
 								<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"></f:selectItem>	
 							</p:selectOneMenu></td>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
-			<td><p:selectOneMenu value="#{reportBackingBean.flGroupOne}">
+			<!-- 29550 - start edit syafiza(11/11/2022)-->
+			<td><p:selectOneMenu value="#{purInvRptBB.managedBean.group}">
 
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
@@ -131,6 +132,7 @@
 						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
+			<!-- 29550 - end -->
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" /></td>
@@ -138,7 +140,16 @@
 					display="inline" readonlyInput="true"
 					value="#{purInvRptBB.managedBean.fromDate}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-					partialSubmit="true" process="@form" /></td>
+					partialSubmit="true" process="@form">
+					<!-- 29550 - start -->	
+					<c:if test="#{flReportBB.hasFactoringUserRole()}">
+						<p:ajax event="dateSelect"
+							listener="#{purInvRptBB.onChangeFromToDate}"
+							update="@form"></p:ajax>
+					</c:if>
+					<!-- 29550 - end -->
+				</p:calendar>
+			</td>
 
 		</tr>
 		<tr>
@@ -148,6 +159,13 @@
 					value="#{purInvRptBB.managedBean.toDate}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					partialSubmit="true" process="@form">
+					<!-- 29550 - start -->	
+					<c:if test="#{flReportBB.hasFactoringUserRole()}">
+						<p:ajax event="dateSelect"
+							listener="#{purInvRptBB.onChangeFromToDate}"
+							update="@form"></p:ajax>
+					</c:if>
+					<!-- 29550 - end -->
 				</p:calendar></td>
 		</tr>
 	</table>

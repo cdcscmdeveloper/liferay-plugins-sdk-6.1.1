@@ -66,7 +66,11 @@
 			<td><p:inputText maxlength="20"
 					value="#{poRptBB.managedBean.contractNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-				</p:inputText></td>
+				</p:inputText>
+				<!-- 29550 - start -->
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcntrctno.fact.user']}" rendered="#{flReportBB.hasFactoringUserRole()}"/> 
+				<!-- 29550 - end -->
+			</td>
 		</tr>
 		<tr>
 			<td>
@@ -89,8 +93,17 @@
 					value="#{poRptBB.managedBean.physicalContractNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 
-				</p:inputText> <ac:iconTooltip
-					value="#{lbl['lbl.rpt.tooltipforphycontract']}" />
+				</p:inputText> 
+				<!-- 29550 - start -->
+				<c:choose>
+					<c:when test="#{flReportBB.hasFactoringUserRole()}">
+						<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphycontract.fact.user']}"/> 
+					</c:when>
+					<c:otherwise>
+						<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphycontract']}" />
+					</c:otherwise>
+				</c:choose>
+				<!-- 29550 - end -->
 				<p:message id="flphycontractIdMsg" for="flphycontractId"
 					display="icon" /></td>
 
@@ -103,7 +116,16 @@
 					value="#{poRptBB.managedBean.physicalLoaNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
-				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphysst']}" />
+				<!-- 29550 - start -->
+				<c:choose>
+					<c:when test="#{flReportBB.hasFactoringUserRole()}">
+						<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphysst.fact.user']}" /> 
+					</c:when>
+					<c:otherwise>
+						<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphysst']}" />
+					</c:otherwise>
+				</c:choose>
+				<!-- 29550 - end -->
 				<p:message id="flphyloaIdMsg" for="flphyloaId" display="icon" /></td>
 
 			<td><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}" /></td>
@@ -111,7 +133,11 @@
 					label="#{lbl['lbl.fl.doc.maintain.loa.no']}"
 					value="#{poRptBB.managedBean.loaNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-				</p:inputText></td>
+				</p:inputText>
+				<!-- 29550 - start -->
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforlaono']}" rendered="#{flReportBB.hasFactoringUserRole()}"/>
+				<!-- 29550 - end -->
+				</td>
 		</tr>
 		
 		<tr>
@@ -198,7 +224,16 @@
 					display="inline" readonlyInput="true"
 					value="#{poRptBB.managedBean.fromDate}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-					partialSubmit="true" process="@form" /></td>
+					partialSubmit="true" process="@form">
+					<!-- 29550 - start -->	
+					<c:if test="#{flReportBB.hasFactoringUserRole()}">
+						<p:ajax event="dateSelect"
+							listener="#{poRptBB.onChangeFromToDate}"
+							update="@form"></p:ajax>
+					</c:if>
+					<!-- 29550 - end -->
+				</p:calendar>
+			</td>
 
 		</tr>
 		<tr>
@@ -208,6 +243,13 @@
 					value="#{poRptBB.managedBean.toDate}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					partialSubmit="true" process="@form">
+					<!-- 29550 - start -->	
+					<c:if test="#{flReportBB.hasFactoringUserRole()}">
+						<p:ajax event="dateSelect"
+							listener="#{poRptBB.onChangeFromToDate}"
+							update="@form"></p:ajax>
+					</c:if>
+					<!-- 29550 - end -->
 				</p:calendar></td>
 		</tr>
 	</table>

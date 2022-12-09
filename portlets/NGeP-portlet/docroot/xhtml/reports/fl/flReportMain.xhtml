@@ -125,6 +125,24 @@
 					test="#{FlReportConst.fl053StopInstructionInitiatedBySupplier == flReportBB.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/fl/mc/FL053_stopInstructionInitiatedBySupplier.xhtml"></ui:include>
 				</c:when>
+				<!-- 29550 - start -->
+				<c:when
+					test="#{FlReportConst.fl073CrGeneratedAsPo == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL073_crGeneratedAsPo.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl074SumForTotalNumAndValOfPoByStat == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL074_sumForTotalNumAndValOfPoByStat.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl075SumForPoCancellationReason == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL075_sumForPoCancellationReason.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl076SupplierTransaction == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/mc/FL076_supplierTransaction.xhtml"></ui:include>
+				</c:when>
+				<!-- 29550 - end -->
 
 				
 				<!-- Others -->
@@ -189,6 +207,25 @@
 					test="#{FlReportConst.fl066Deduction == flReportBB.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/fl/cc/FL066_deduction.xhtml"></ui:include>
 				</c:when>
+				<!-- 29550 - start -->
+				<c:when
+					test="#{FlReportConst.fl077CrGeneratedAsPo == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL077_crGeneratedAsPo.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl078SumForTotalNumAndValOfPoByStat == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL078_sumForTotalNumAndValOfPoByStat.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl079SumForPoCancellationReason == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL079_sumForPoCancellationReason.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl080SupplierTransaction == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/cc/FL080_supplierTransaction.xhtml"></ui:include>
+				</c:when>
+				<!-- 29550 - end -->
+				
 			<!-- Purchase Order -->
 				
 				<c:when
@@ -247,6 +284,24 @@
 					test="#{FlReportConst.fl055PurchaseStopInstrSupp == flReportBB.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/fl/po/Fl055_purchaseStopInstrSupp.xhtml"></ui:include>
 				</c:when>
+				<!-- 29550 - start -->
+				<c:when
+					test="#{FlReportConst.fl081PrGeneratedAsPo == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl081_prGeneratedAsPo.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl082SumForTotalNumAndValOfPoByStat == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl082_sumForTotalNumAndValOfPoByStat.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl083SumForPoCancellationReason == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl083_sumForPoCancellationReason.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl084SupplierTransaction == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl084_supplierTransaction.xhtml"></ui:include>
+				</c:when>
+				<!-- 29550 - end -->
 				
 				<!-- Panel -->
 				

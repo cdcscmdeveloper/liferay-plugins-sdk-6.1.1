@@ -62,7 +62,11 @@
 			<td><p:inputText maxlength="20"
 					value="#{pmRptBB.managedBean.contractNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-				</p:inputText></td>
+				</p:inputText>
+				<!-- 29550 - start -->
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcntrctno.fact.user']}" rendered="#{flReportBB.hasFactoringUserRole() or flReportBB.hasSupplierRole()}"/> 
+				<!-- 29550 - end -->
+			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.sistem.panel.name']}" />
 			</td>
@@ -85,18 +89,37 @@
 					value="#{pmRptBB.managedBean.physicalContractNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 
-				</p:inputText> <ac:iconTooltip
-					value="#{lbl['lbl.rpt.tooltipforphycontract']}" />
-				<p:message id="flphycontractIdMsg" for="flphycontractId"
-					display="icon" /></td>
+				</p:inputText> 
+				<!-- 29550 - start -->
+				<c:choose>
+					<c:when test="#{flReportBB.hasFactoringUserRole() or flReportBB.hasSupplierRole()}">
+						<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphycontract.fact.user']}"/> 
+					</c:when>
+					<c:otherwise>
+						<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphycontract']}" />
+					</c:otherwise>
+				</c:choose>
+				<!-- 29550 - end -->
+				<p:message id="flphycontractIdMsg" for="flphycontractId" display="icon" />
+			</td>
 			<td><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}" /></td>
 			<td><p:inputText maxlength="100" id="flphyloaId"
 					label="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}"
 					value="#{pmRptBB.managedBean.physicalLoaNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
-				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphysst']}" />
-				<p:message id="flphyloaIdMsg" for="flphyloaId" display="icon" /></td>
+				<!-- 29550 - start -->
+				<c:choose>
+					<c:when test="#{flReportBB.hasFactoringUserRole() or flReportBB.hasSupplierRole()}">
+						<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphysst.fact.user']}"/> 
+					</c:when>
+					<c:otherwise>
+						<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphysst']}"/>
+					</c:otherwise>
+				</c:choose>
+				<!-- 29550 - end -->
+				<p:message id="flphyloaIdMsg" for="flphyloaId" display="icon" />
+			</td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}" /></td>
@@ -104,7 +127,11 @@
 					label="#{lbl['lbl.fl.doc.maintain.loa.no']}"
 					value="#{pmRptBB.managedBean.loaNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-				</p:inputText></td>
+				</p:inputText>
+				<!-- 29550 - start -->
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforlaono']}" rendered="#{flReportBB.hasFactoringUserRole() or flReportBB.hasSupplierRole()}"/>
+				<!-- 29550 - end -->
+			</td>
 			<td><p:outputLabel value="#{lbl['lbl.txt.paymentMatchOfficer']}"
 								style="margin-top:5px;width:191px;" /></td>
 			<td><p:selectOneMenu value="#{pmRptBB.managedBean.payOfficer}">
@@ -186,7 +213,16 @@
 					display="inline" readonlyInput="true"
 					value="#{pmRptBB.managedBean.fromDate}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-					partialSubmit="true" process="@form" /></td>
+					partialSubmit="true" process="@form">
+					<!-- 29550 - start -->	
+					<c:if test="#{flReportBB.hasFactoringUserRole() or flReportBB.hasSupplierRole()}">
+						<p:ajax event="dateSelect"
+							listener="#{pmRptBB.onChangeFromToDate}"
+							update="@form"></p:ajax>
+					</c:if>
+					<!-- 29550 - end -->
+				</p:calendar>
+			</td>
 
 		</tr>
 		<tr>
@@ -196,6 +232,13 @@
 					value="#{pmRptBB.managedBean.toDate}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					partialSubmit="true" process="@form">
+					<!-- 29550 - start -->	
+					<c:if test="#{flReportBB.hasFactoringUserRole() or flReportBB.hasSupplierRole()}">
+						<p:ajax event="dateSelect"
+							listener="#{pmRptBB.onChangeFromToDate}"
+							update="@form"></p:ajax>
+					</c:if>
+					<!-- 29550 - end -->
 				</p:calendar></td>
 		</tr>
 	</table>
