@@ -3987,6 +3987,10 @@ public void saveComplianceSample() {
 		IQTEvaluationSO evaluationSO=null;//#25138 Reendorsed
 		try {
 			// if (null == this.getManagedBean().getFinSpecZoneBean()) {
+			//#25138 add serviec -start
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			//#25138 add serviec -end
 			this.getManagedBean().setSpecZoneDtls(speczone.getZones());
 			populateFinancialSpecDetailsByZone();//#25138 Reendorsed
 			for (int i = 0; i < speczone.getZones().size(); i++) {
@@ -4017,6 +4021,7 @@ public void saveComplianceSample() {
 								if (this.getManagedBean().getTabItemPackageIndex() == 1) {
 									//wip status start
 									//#25138 farid - Start
+									zoneReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
 									int wipstatus = evaluationSO.checkWipScoreSetting(zoneReqDto);
 									if(wipstatus >= 7){
 										zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
