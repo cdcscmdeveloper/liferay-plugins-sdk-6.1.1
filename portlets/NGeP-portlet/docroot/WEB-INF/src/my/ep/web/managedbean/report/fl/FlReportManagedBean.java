@@ -48,6 +48,12 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 	private String supplierCompName;
 	private String supplierId;
 	
+	//29550 - start
+	private String businessRegNo;
+	private String epNo;
+	private String mofNo;
+	//29550 - end
+	
 	private Date fromDate;
 	private Date toDate;
 	
@@ -365,5 +371,30 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 		this.userRole = userRole;
 	}
 	/*29554 - Ends*/
-	
+
+	//29550 - start
+	public String getBusinessRegNo() {
+		return businessRegNo;
+	}
+
+	public void setBusinessRegNo(String businessRegNo) {
+		this.businessRegNo = businessRegNo;
+	}
+
+	public String getEpNo() {
+		return epNo;
+	}
+
+	public void setEpNo(String epNo) {
+		this.epNo = epNo;
+	}
+
+	public String getMofNo() {
+		return mofNo;
+	}
+
+	public void setMofNo(String mofNo) {
+		this.mofNo = mofNo;
+	}
+	//29550 - end
 }

@@ -31,6 +31,12 @@ public class FlReportConst implements Serializable {
 	public static final String FL_016_INVOICE_CANCELLATION = "FL_016";
 	public static final String FL_050_STOP_INSTRUCTION_INITIATED_BY_PTJ = "FL_050";
 	public static final String FL_053_STOP_INSTRUCTION_INITIATED_BY_SUPPLIER = "FL_053";
+	//29550 - start
+	public static final String FL_073_CR_GENERATED_AS_PO = "FL_073";
+	public static final String FL_074_SUM_FOR_TOTAL_NUM_AND_VAL_OF_PO_BY_STAT = "FL_074";
+	public static final String FL_075_SUM_FOR_PO_CANCELLATION_REASON = "FL_075";
+	public static final String FL_076_SUPPLIER_TRANSACTION = "FL_076";
+	//29550 - end
 	
 	// Central Contract Const
 	public static final String FL_018_CONTRACT_REQ = "FL_018";
@@ -48,6 +54,12 @@ public class FlReportConst implements Serializable {
 	public static final String FL_051_STOP_INST_BY_PTJ = "FL_051";
 	public static final String FL_054_STOP_INST_BY_SUPPLIER = "FL_054";
 	public static final String FL_066_DEDUCTION = "FL_066";
+	//29550 - start
+	public static final String FL_077_CR_GENERATED_AS_PO = "FL_077";
+	public static final String FL_078_SUM_FOR_TOTAL_NUM_AND_VAL_OF_PO_BY_STAT = "FL_078";
+	public static final String FL_079_SUM_FOR_PO_CANCELLATION_REASON = "FL_079";
+	public static final String FL_080_SUPPLIER_TRANSACTION = "FL_080";
+	//29550 - end
 	
 	// Purchase Order Const
 	
@@ -65,6 +77,12 @@ public class FlReportConst implements Serializable {
 	public static final String FL_049_PURCHASE_INVOICE_CANCEL = "FL_049";
 	public static final String FL_052_PURCHASE_STOP_INSTR_PTJ = "FL_052";
 	public static final String FL_055_PURCHASE_STOP_INSTR_SUPP = "FL_055";
+	//29550 - start
+	public static final String FL_081_PR_GENERATED_AS_PO = "FL_081";
+	public static final String FL_082_SUM_FOR_TOTAL_NUM_AND_VAL_OF_PO_BY_STAT= "FL_082";
+	public static final String FL_083_SUM_FOR_PO_CANCELLATION_REASON = "FL_083";
+	public static final String FL_084_SUPPLIER_TRANSACTION = "FL_084";
+	//29550 - end
 	
 	// Panel Const
 	public static final String FL_033_SUMMARY = "FL_033";
@@ -138,6 +156,17 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_PSF_PERIOD = "PSFPERIOD";
 	//29554 end
 	
+	//29550 - Start
+	public static final String FL_RPT_SUBMISSION_FROM_DATE = "PSUBFROMDATE";
+	public static final String FL_RPT_SUBMISSION_TO_DATE = "PSUBTODATE";
+	public static final String FL_RPT_APPROVED_FROM_DATE = "PAPPFROMDATE";
+	public static final String FL_RPT_APPROVED_TO_DATE = "PAPPTODATE";
+	public static final String FL_RPT_PO_GENERATED_FROM_DATE = "PPOGENFROMDATE";
+	public static final String FL_RPT_PO_GENERATED_TO_DATE = "PPOGENTODATE";
+	public static final String FL_RPT_BUSINESS_REG_NO = "PBUSREGNO"; //business registration no.
+	public static final String FL_RPT_MOF_NO = "PMOFNO";
+	public static final String FL_RPT_EP_NO = "PEPNO";
+	//29550 - End
 	
 	public FlReportConst(){}
 
@@ -333,6 +362,56 @@ public class FlReportConst implements Serializable {
 		return FL_072_ACCUMULATED_SERVICE_FEE_REPORT;
 	}
 	/*Ends 29554*/
+
+	//29550 - start
+	public String getFl073CrGeneratedAsPo() {
+		return FL_073_CR_GENERATED_AS_PO;
+	}
+
+	public String getFl074SumForTotalNumAndValOfPoByStat() {
+		return FL_074_SUM_FOR_TOTAL_NUM_AND_VAL_OF_PO_BY_STAT;
+	}
+
+	public String getFl075SumForPoCancellationReason() {
+		return FL_075_SUM_FOR_PO_CANCELLATION_REASON;
+	}
+
+	public String getFl076SupplierTransaction() {
+		return FL_076_SUPPLIER_TRANSACTION;
+	}
+
+	public String getFl077CrGeneratedAsPo() {
+		return FL_077_CR_GENERATED_AS_PO;
+	}
+
+	public String getFl078SumForTotalNumAndValOfPoByStat() {
+		return FL_078_SUM_FOR_TOTAL_NUM_AND_VAL_OF_PO_BY_STAT;
+	}
+
+	public String getFl079SumForPoCancellationReason() {
+		return FL_079_SUM_FOR_PO_CANCELLATION_REASON;
+	}
+
+	public String getFl080SupplierTransaction() {
+		return FL_080_SUPPLIER_TRANSACTION;
+	}
+
+	public String getFl081PrGeneratedAsPo() {
+		return FL_081_PR_GENERATED_AS_PO;
+	}
+
+	public String getFl082SumForTotalNumAndValOfPoByStat() {
+		return FL_082_SUM_FOR_TOTAL_NUM_AND_VAL_OF_PO_BY_STAT;
+	}
+
+	public String getFl083SumForPoCancellationReason() {
+		return FL_083_SUM_FOR_PO_CANCELLATION_REASON;
+	}
+
+	public String getFl084SupplierTransaction() {
+		return FL_084_SUPPLIER_TRANSACTION;
+	}
+	//29550 - end
 	
 	
  }

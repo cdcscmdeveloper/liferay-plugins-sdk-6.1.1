@@ -25,6 +25,7 @@ import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgResDTO;
@@ -35,9 +36,12 @@ import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjReorg;
+import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -203,7 +207,11 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 * reset search criteria values
 	*/
 	public void resetSearchCriteriaValues() {
-		if(getManagedBean().isSupplier() || hasAuditGenUserRole()){
+		if(getManagedBean().isSupplier() || hasAuditGenUserRole() ||
+			//29550 - start	
+			hasFactoringUserRole()
+			//29550 - end
+			){
 			getManagedBean().setMinistry(null);
 			getManagedBean().setPtjGroup(null);
 			getManagedBean().setPtj(null);
@@ -225,6 +233,11 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		 getManagedBean().setPayOfficer(null); 
 		 getManagedBean().setStatusDescId(null); 
 		 getManagedBean().setSelectedOrgProfile(null);//supplier name
+		 
+		 //29550 - start
+		 getManagedBean().setFromDate(DateUtils.getFirstDateOfTheYear());
+		 getManagedBean().setToDate(DateUtils.getCurrentDateWithoutTime());
+		 //29550 - end
 		
 	}
 	
@@ -437,6 +450,20 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		}
 		return Boolean.FALSE;
 	}
+	
+	//29550 - start
+	/**
+	 * Check is it login user is Factoring User
+	 * 
+	 * @return true, if user is Factoring User
+	 */
+	public boolean hasFactoringUserRole() {
+		if (getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value()))
+			return true;
+		else
+			return false;
+	}
+	//29550 - end
 
 	
 	/**
@@ -445,7 +472,11 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 */
 	public void defaultPtjAndMinistryValues() {
 		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
-			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole())) {
+			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole()) || 
+			//29550 - start
+			hasFactoringUserRole()
+			//29550 - end 
+			) {
 		} else {
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
@@ -727,6 +758,9 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 					&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))) {
 				getManagedBean().setSupplier(true);
 				retrieveSupplierCompName();
+				//29550 -start
+				retrieveSuppDataByUserId();
+				//29550 - end
 			} 
 		}
 	}
@@ -1641,5 +1675,51 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return cellStyle;
 	}
 	//#29554 end
+	
+	//29550 - start
+	/**
+	 * To validate duration of contract which exceed 1 year or not
+	 */
+	public void getContractDuration(Date fromDate, Date toDate){
+		log.info("ReportBackingBean-getContractDuration");
+		int monthsRange = 0;
+		monthsRange = DateUtils.getMonths(fromDate, toDate);
+		
+		if(monthsRange > 12 ){
+			throw new EpException(MessageConst.ERROR_REPORT_780072);
+		}
+	}
+	
+	/**
+	 * To retrieve supplier data by user id
+	 */
+	private void retrieveSuppDataByUserId() {
+		log.info("ReportBackingBean-retrieveSuppDataByUserId");
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+		List<Object[]> supplList = reportSO.retrieveSupplierCompName(getFacesScopes().getUserSessionBean().getUserId());
+		if (CollectionUtils.isNotEmpty(supplList)) {
+			for (Object[] object : supplList) {
+				Long supplierId = Long.parseLong(object[1].toString());
+				
+				SmMofAccount supplDataLst = reportSO.retrieveSupplierData(supplierId);
+				getManagedBean().setBusinessRegNo(supplDataLst.getSmSupplier().getRegNo());
+				getManagedBean().setEpNo(supplDataLst.getSmSupplier().getEpNo());
+				getManagedBean().setMofNo(supplDataLst.getMofNo());
+			}
+		}
+	}
+	
+	public void retrieveSuppDataByCompName(String compName){
+		log.info("ReportBackingBean-retrieveSuppDataByCompName");
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+		SmSupplier supplier = reportSO.retrieveSuppDataByCompName(compName);
+		
+		SmMofAccount supplDataLst = reportSO.retrieveSupplierData(supplier.getSupplierId());
+		getManagedBean().setBusinessRegNo(supplDataLst.getSmSupplier().getRegNo());
+		getManagedBean().setEpNo(supplDataLst.getSmSupplier().getEpNo());
+		getManagedBean().setMofNo(supplDataLst.getMofNo());
+	}
+	
+	//29550 - end
 
 }
