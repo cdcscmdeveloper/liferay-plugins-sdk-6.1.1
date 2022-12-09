@@ -229,6 +229,12 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setFlApprover(facesScopes.getUserSessionBean().getLoginId());
 		}
+		//29550 - start
+		if(isFactoringUser()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setFactoringUser(facesScopes.getUserSessionBean().getLoginId());
+		}
+		//29550 - end
 	}
 	
 	/**
@@ -1138,7 +1144,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
 			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole()) ||
 			//29550-start
-			//getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())
 			hasFactoringUserRole()
 			//29550-end
 			) {
