@@ -4779,6 +4779,9 @@ public void saveComplianceSample() {
 								//#25138 farid - Start
 								//#32245, #25138, #21695 - set 'TI' to qualified supplier FEC in financial item - start
 								if (this.getManagedBean().getScQt().isPartial() || !this.getManagedBean().getScQt().isPartial()) {
+									evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+											ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+
 									int wipstatus = evaluationSO.checkWipScoreSetting(zoneReqDto);
 									if(wipstatus >= 7){
 										if (this.getManagedBean().getTabItemPackageIndex() == 1) {
