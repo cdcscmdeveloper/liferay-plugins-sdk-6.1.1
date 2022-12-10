@@ -12667,6 +12667,8 @@ private void retriveCommitteeRemarksList(){
 									// #21695, #25138 -start-
 									//wip status start
 									if (this.getManagedBean().getScQt().isPartial()||!this.getManagedBean().getScQt().isPartial()) {
+										evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 										int wipstatus = evaluationSO.checkWipScoreSetting(finreqDTO);
 										if(wipstatus >= 7){
 											finreqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
