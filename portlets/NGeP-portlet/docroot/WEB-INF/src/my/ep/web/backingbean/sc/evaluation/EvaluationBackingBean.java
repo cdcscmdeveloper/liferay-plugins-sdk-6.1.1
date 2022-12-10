@@ -4755,6 +4755,9 @@ public void saveComplianceSample() {
 									if (this.getManagedBean().getTabItemPackageIndex() == 1) {
 										//wip status start
 										//#25138 farid - Start
+										evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+
 										int wipstatus = evaluationSO.checkWipScoreSetting(zoneReqDto);
 										if(wipstatus >= 7){							
 											zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
