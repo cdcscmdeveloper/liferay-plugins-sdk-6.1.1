@@ -4752,6 +4752,9 @@ public class EvaluationBackingBean extends
 									if(this.getManagedBean().getTabItemPackageIndex() == 1){
 										//wip status start
 										//#25138 farid - Start
+										evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+
 										int wipstatus = evaluationSO.checkWipScoreSetting(zoneReqDto);
 										if(wipstatus >= 7){							
 											zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
@@ -4776,6 +4779,9 @@ public class EvaluationBackingBean extends
 								//#25138 farid - Start
 								//#32245, #25138, #21695 - set 'TI' to qualified supplier FEC in financial item - start
 								if (this.getManagedBean().getScQt().isPartial() || !this.getManagedBean().getScQt().isPartial()) {
+									evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+											ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+
 									int wipstatus = evaluationSO.checkWipScoreSetting(zoneReqDto);
 									if(wipstatus >= 7){
 									if(this.getManagedBean().getTabItemPackageIndex()==1){
@@ -12613,6 +12619,8 @@ private void retriveCommitteeRemarksList(){
 									// #21695, #25138 -start-
 									//wip status start
 									if (this.getManagedBean().getScQt().isPartial()||!this.getManagedBean().getScQt().isPartial()) {
+										evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 										int wipstatus = evaluationSO.checkWipScoreSetting(finreqDTO);
 										if(wipstatus >= 7){
 											finreqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
