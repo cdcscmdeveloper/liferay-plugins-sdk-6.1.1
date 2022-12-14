@@ -20995,10 +20995,10 @@ if(null!=allTechnicalChecklist){
 		
 		List<ScQtCheckList> st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
 
-		for (ScQtCheckList t : st2technicalproposalList) {  
-			if (t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
-				if (t.getScQtDoc().getTplSpecMaster().getTplSpecQuestions() != null) {
-					List<TplSpecQuestion> list = t.getScQtDoc().getTplSpecMaster().getTplSpecQuestions();
+//		for (ScQtCheckList t : st2technicalproposalList) {  
+			if (scQtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
+				if (scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions() != null) {
+					List<TplSpecQuestion> list = scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions();
 					if (null != list && list.size() > 0) {
 						for (TplSpecQuestion obj : list) {
 							if (BooleanUtils.isTrue(obj.isItemReqDemo()) && obj.getDemoScore() == null) {
@@ -21008,7 +21008,7 @@ if(null!=allTechnicalChecklist){
 					}
 				}
 			}
-		}
+//		}
 
 		for (TplSpecQuestion q : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
 			if (!q.isItemReqDemo()) {
@@ -21659,7 +21659,8 @@ if(null!=allTechnicalChecklist){
 		SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
 		for(ScQtCheckList e: existingTechChecklist){
 			for(ScQtCheckList f: resDTO.getTechnicalCheckList()){
-				if(e.getQtChecklistId() != null && e.getQtChecklistId().equals(f.getQtChecklistId()) && e.getQtScoreWeightage() != null){
+				if(e.getQtChecklistId() != null && e.getQtScoreWeightage() != null && f.getQtScoreWeightage() != null && 
+						e.getQtScoreWeightage().getWeightage() != null && e.getQtChecklistId().equals(f.getQtChecklistId())){
 					f.getQtScoreWeightage().setWeightage(e.getQtScoreWeightage().getWeightage());
 				}
 			}
