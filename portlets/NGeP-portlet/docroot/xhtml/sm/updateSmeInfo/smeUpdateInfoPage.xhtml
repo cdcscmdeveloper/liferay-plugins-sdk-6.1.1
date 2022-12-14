@@ -157,9 +157,10 @@
 									navigator="true" display="inline" readonlyInput="true"
 									value="#{smUpdateSmeInfoBackingBean.managedBean.smeSupplier.smeValidStartDate}"
 									required="true"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 									maxdate="#{smUpdateSmeInfoBackingBean.managedBean.smeSupplier.smeValidEndDate}"
-									update=":form:calDtEnd"></p:calendar>
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+									<p:ajax event="change" update=":form:calDtEnd"/>
+								</p:calendar>
 								<p:message id="calDtStartMsg" for="calDtStart" display="icon"
 									showDetail="false" /></td>
 						</tr>
@@ -173,7 +174,9 @@
 									value="#{smUpdateSmeInfoBackingBean.managedBean.smeSupplier.smeValidEndDate}"
 									required="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-									maxdate="#{smUpdateSmeInfoBackingBean.managedBean.smeSupplier.smeValidStartDate}"></p:calendar>
+									maxdate="#{smUpdateSmeInfoBackingBean.managedBean.smeSupplier.smeValidStartDate}">
+									<p:ajax event="change" update=":form:calDtStart"/>
+								</p:calendar>
 								<p:message id="calDtEndMsg" for="calDtEnd" display="icon"
 									showDetail="false" /></td>
 						</tr>
