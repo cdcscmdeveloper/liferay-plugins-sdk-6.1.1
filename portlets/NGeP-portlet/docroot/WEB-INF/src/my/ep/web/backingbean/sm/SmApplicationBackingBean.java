@@ -10434,7 +10434,11 @@ public class SmApplicationBackingBean extends
 	 */
 	public void submitPOEscalationToApprover(String recommendation) {
 		//#31043 - start
-		SmApplicationUtil.checkCategoryRemark(getManagedBean());
+		if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			SmApplicationUtil.checkCategoryRemark(getManagedBean());
+		}
 		//#31043 - end
 		
 		assignValReqdToTrue();
@@ -10805,7 +10809,11 @@ public class SmApplicationBackingBean extends
 	public String finalDecisionApproveOrRejectAppln(String dialog,
 			String decision) {
 		//#31043 - start
-		SmApplicationUtil.checkCategoryRemark(getManagedBean());
+		if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			SmApplicationUtil.checkCategoryRemark(getManagedBean());
+		}
 		//#31043 - end
 		
 		//24964 - start
@@ -10927,7 +10935,11 @@ public class SmApplicationBackingBean extends
 	 */
 	public String submitPOorApproverReviewToBPM(String res) {
 		//#31043 - start
-		SmApplicationUtil.checkCategoryRemark(getManagedBean());
+		if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			SmApplicationUtil.checkCategoryRemark(getManagedBean());
+		}
 		//#31043 - end
 		
 		IReviewApplicationSO reqSO = null;
