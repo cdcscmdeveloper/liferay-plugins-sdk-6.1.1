@@ -4391,11 +4391,16 @@ public class SmApplicationUtil {
 								managedBean.getSmAppl().getSmSupplier()
 										.getSmAppl().getSmSupplierCategories(),
 								"pmCategoryL3");
+				//#32726 start
 				if (tmp != null
 						&& (tmp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-								|| tmp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL || tmp
-								.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)) {
-					existingList.add(cat);
+								|| tmp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL 
+								|| tmp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)) {
+					if(cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_ACT_STATUS) == 0)
+						addtnlList.add(cat);
+					else
+						existingList.add(cat);
+				//#32726 end
 				} else if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.PENDING_ACT_STATUS) == 0
 						|| cat.getRecordStatusFlg()
