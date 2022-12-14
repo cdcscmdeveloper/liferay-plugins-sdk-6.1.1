@@ -11,10 +11,12 @@
 				<td style="width: 10%"><h:outputLabel
 						value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td style="width: 10%" class="header-info-text">
+				<!-- 28780 start -->
 					<p:commandLink process="@this" partialSubmit="true"
-						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,committeBackingBean.managedBean.qtCommittee.scQt,true)}">
-				<h:outputText value="#{committeBackingBean.managedBean.qtCommittee.scQt.qtNo}" escape="false" />
+						action="#{qTDetailBB.editQuationTenderDetails(committeBackingBean.managedBean.qtCommittee.scQt, false, true, view.viewId)}">
+					<h:outputText value="#{committeBackingBean.managedBean.qtCommittee.scQt.qtNo}" escape="false" />
 					</p:commandLink>
+				<!-- 28780 end -->
 					</td>
 				<td style="width: 5%"><h:outputLabel
 						value="#{lbl['lbl.sc.ptj']}" /></td>

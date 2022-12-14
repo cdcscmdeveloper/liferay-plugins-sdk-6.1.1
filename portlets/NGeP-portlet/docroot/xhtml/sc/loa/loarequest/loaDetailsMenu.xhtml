@@ -448,9 +448,11 @@
 					<p:message id="contractTypeMsg" for="contractType" display="icon" />
 				</c:if>
 				<c:if test="#{!isEditableStatus or isDocTypeQuotation}">
+					<!-- 17376 -start -->
 					<p:inputText 
 						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.contractType)}"
-						disabled="true" size="35" />
+						disabled="true" style="min-width:235px" size="35" />
+					<!-- 17376 -end -->
 				</c:if>
 			</td>
 		</tr>
@@ -459,24 +461,30 @@
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.agency']}" />
 			</td>
 			<td colspan="3">
+				<ui:remove> #19336 - start </ui:remove>
 				<p:inputText id="contractAgency" disabled="true" size="106"
-					value="#{lOADetailBackingBean.managedBean.scLoa.contractAgency.orgName}"
+					value="#{lOADetailBackingBean.managedBeanLoaContractAgencyOrgName}"
 					rendered="#{!isEditableStatus}"/>
+					<ui:remove> #19336 - end </ui:remove>
 
 				<c:if test="#{isEditableStatus}">
+				<ui:remove> #19336 - start </ui:remove>
 					<p:inputText id="contractAgencyEdit" disabled="true" size="106"
-						value="#{lOADetailBackingBean.managedBean.scLoa.contractAgency.orgName}"
+						value="#{lOADetailBackingBean.managedBeanLoaContractAgencyOrgName}"
 						rendered="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterCode == null}" />
-
+					<ui:remove> #19336 - end </ui:remove>
+					
 					<p:outputPanel id="opPtjOrgCode" 
 						rendered="#{ParameterConst.orgTypePtj eq lOADetailBackingBean.managedBean.selectedOrgType.parameterCode or 
 						ParameterConst.orgTypePtjGroup eq lOADetailBackingBean.managedBean.selectedOrgType.parameterCode}">
+						<ui:remove> #19336 - start </ui:remove>
 						<p:inputText 
 							size="60"
 							id="itSelectedPtj" 
-							value="#{lOADetailBackingBean.managedBean.selectedPtj.orgName}" 
+							value="#{lOADetailBackingBean.managedBeanSelectedPtjOrgName}" 
 							readonly="true"
 							/>
+							<ui:remove> #19336 - end </ui:remove>
 						&#160;
 						<p:commandLink id="ptjSearchCL" partialSubmit="true"
 							disabled="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterId==null}"
@@ -607,4 +615,12 @@
 			</tr>
 		</table>
 	</p:panel>
+	<!-- 11134 -start- -->
+	<p:outputPanel id="suppRemarksPanel">
+		<ac:scRemarkAndAttachment
+			remarkList="#{lOADetailBackingBean.managedBean.supplierRemarks}"
+			showAttachment="false" readonly="true"
+			rendered="#{not empty lOADetailBackingBean.managedBean.supplierRemarks}" />
+	</p:outputPanel>
+	<!-- 11134 -end- -->
 </ui:composition>

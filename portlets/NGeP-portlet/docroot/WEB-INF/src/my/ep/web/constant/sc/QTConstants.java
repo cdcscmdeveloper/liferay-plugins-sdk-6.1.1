@@ -18,7 +18,15 @@ public interface QTConstants {
 	public static final String PUBLISH_DATE = "publishDate";
 	public static final String CLOSED_DATE = "closingDate";
 	public static final String STATUS = "";
+	
+	/* Enhancement 27668 START*/
+	public static final String FINALIZATION_SECRETARY_LOGIN_ID = "finalizationSecratery.loginId";
+	public static final String FINALIZATION_HIGH_AUTH_SECRETARY_LOGIN_ID = "finalization.higherSecretary.loginId";
+	/*  Enhancement 27668 END */
 
+	// #25692 -start-
+	public static final String MAINTANANCE_PAGE_FULL = "/xhtml/sc/quatationtender/quatationtendercreation.xhtml";
+	// #25692 -end-
 	public static final String MAINTANANCE_PAGE = "quatationtendercreation";
 	public static final String BO_MAINTANANCE_PAGE = "/xhtml/sc/quatationtender/businessowner/businessownercreation.xhtml";
 	public static final String SEARCH_PAGE = "/xhtml/sc/quatationtender/quatationtendersearch.xhtml";
@@ -64,6 +72,12 @@ public interface QTConstants {
 	public static final String ONLINE_BIDDING_MAIN_PAGE = "/xhtml/sc/bidding/onlineBidding/onlineBiddingMain.xhtml";
 	public static final String LOI_LIST_PAGE = "/xhtml/sc/loi/loilist/loiList.xhtml";
 	public static final String LOI_PAGE = "/xhtml/sc/loi/loirequest/loiDetailsMaint.xhtml";
+	
+	/* Enhancement #22211-START */
+	public static final String LOA_CANCEL_MAIN_PAGE = "/xhtml/sc/loa/cancellation/cancelLoaMain.xhtml";	
+	public static final String LOA_CANCEL_APPROVAL_PAGE = "/xhtml/sc/loa/cancellation/cancelLoaApproval.xhtml";
+	/* Enhancement #22211-END */
+	
 	public static final String SUPPLIER_LOI_PAGE = "/xhtml/sc/loi/supplierresponse/loiSupplierMaint.xhtml";
 	public static final String MULTI_LOI_PAGE = "loiNegotiationResultMenu.xhtml";
 	public static final String QT_LOA_LIST_PAGE = "/xhtml/sc/loa/qtLoaList/qtLoaList.xhtml";
@@ -73,6 +87,13 @@ public interface QTConstants {
 	public static final String PENDING_RESPONSE_DP_QT = "/xhtml/sc/pendingresponsefordpandqt/prerenderresponsedpqtmain.xhtml";
 	public static final String ONLINE_BIDDING_STATUS_COUNT = "/xhtml/sc/bidding/onlinebiddingstatus/onlinebiddingstatusmain.xhtml";
 	public static final String VIEW_QTDETAILS_GENERAL_INFO = "/xhtml/sc/viewqtdetailsgeneralinfo/viewQtDetailsGeneralInfoMain.xhtml";
+
+	// #33090, #19287 -start-
+	public static final String SUPPLIER_VIEW_QTDETAILS_GENERAL_INFO = "/xhtml/sc/viewqtdetailsgeneralinfo/supplierViewQtDetailsGeneralInfoMain.xhtml";
+	// #33090, #19287 -end-
+	// #19336, #25201, #17376, #19287 -start-
+	public static final String NAV_TO_PROPOSAL_MAIN_PAGE = "/xhtml/sc/supplierproposal/proposalcommon/supplierProposalMain.xhtml";
+	// #19336, #25201, #17376, #19287 -end-
 
 	public static final String SC_LOI_TAB = "LOI";
 	public static final String SC_AWARD_TAB = "Award Details";
@@ -210,8 +231,12 @@ public interface QTConstants {
 	public static final String HTML_GREATER_THEN = "&#62;";
 	
 	public static final String PORTLET_NAME_QT_MAINTENANCE = "scQuotationTender_WAR_NGePportlet";
+
+	// 17376#61 -start-
 	public static final String PORTLET_NAME_QT_SEARCH = "scQuotationTenderSearch_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_TECHSUPP = "scQuotationTenderSearchTechSupp_WAR_NGePportlet";
+	// 17376#61 -end-
+	
 	// ***25692#19 - start
 	public static final String PORTLET_NAME_APPROVAL = "QTApproval_WAR_NGePportlet";
 	// ***25692#19 - end
@@ -230,4 +255,13 @@ public interface QTConstants {
 	public static final String KPI_CODE_BIDDING_REMINDER = "SC018"; //Upcoming BidSessions Reminder
 	public static final String SPEC_MAINTENANCE = "SM"; 
 	public static final String SPEC_MAINTENANCE_SEARCH_PAGE = "/xhtml/sc/speccommitteemaintenance/specificationCommitteeMaintenanceSearch.xhtml";
+	
+	// 19287#91, 17376#104 -start-
+	public static final long PM_STATUS_INACTIVE_CODE = 0L;
+	// 19287#91, 17376#104 -end-
+
+	// #15391 -start-
+	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE = "scSpecCommitteeMaintenance_WAR_NGePportlet";
+	// #15391 -end-
+
 }

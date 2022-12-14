@@ -5,22 +5,25 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<!-- lbl.sc.integrity.pact -->
 	<p:panel header="#{lbl['lbl.sc.integrity.pact']}" style="width : 100%;" 
 		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" style="width: 100%">
 			<tr>
 				<td class="TableFieldRight"><p:editor id="othersEditor"  controls=""  width="930"
 						value="#{supplierProposalDetailBackingBean.managedBean.integrityPact}"
-						disabled="true" height="380" styleClass="hideToolbar" /></td>  <!-- style="overflow : auto;" -->
+						disabled="true" height="380" styleClass="hideToolbar" /></td>
 			</tr>
 			<tr height="10">
 				<td></td>
 			</tr>
 			<tr>
-				<td><p:selectBooleanCheckbox
+				<td>
+					<!-- 25201 -start- -->
+					<p:selectBooleanCheckbox
 						value="#{supplierProposalDetailBackingBean.managedBean.agreeWithOthersTermsConditions}"
-						style="vertical-align:top; float: left;" /> <p:spacer width="2" />
+						style="vertical-align:top; float: left;" disabled="#{supplierProposalDetailBackingBean.managedBean.readOnly}"/> 
+					<!-- 25201 -end- -->
+					<p:spacer width="2" />
 					<p:outputLabel value="#{lbl['lbl.sc.integrity.note']}"
 						style="vertical-align:top; float: left;" /></td>
 			</tr>

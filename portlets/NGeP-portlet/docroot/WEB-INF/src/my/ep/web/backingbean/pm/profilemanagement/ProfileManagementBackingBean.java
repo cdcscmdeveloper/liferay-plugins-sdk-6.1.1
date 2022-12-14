@@ -1748,11 +1748,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					throw ex;
 				} else if ((RoleCode.FL_APPROVER.value().equals(pmUserRole.getPmRole().getRoleCode())
 						|| RoleCode.RN_APPROVER.value().equals(pmUserRole.getPmRole().getRoleCode()))
-						&& isActiveUserGroupUser() != null) {
+						//Bug #31509 - Start 
+						&& isActiveAtUserGroupUser(pmUserRole.getPmRole().getRoleCode()) != null) {
 					// check for FL Approver and RN Approver only
 					// revert it to active
-					pmUserRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-					throw new EpException(MessageConst.ERROR_770202, isActiveUserGroupUser());
+					//pmUserRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					throw new EpException(MessageConst.ERROR_770202, isActiveAtUserGroupUser(pmUserRole.getPmRole().getRoleCode()));
+					//Bug #31509 - End
 				} else {
 					if (!pmUserRole.isModified()) {
 						pmUserRole.setModified(true);
@@ -1760,13 +1762,18 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						pmUserRole.setModified(false);
 					}
 				}
-
+				
 				if (getManagedBean().getSelectedReceivingAddrTypes() != null
 						&& !getManagedBean().getSelectedReceivingAddrTypes().isEmpty()) {
+					//Bug #32656 - start
 					List<PmAddressType> removeNewAddressTypes = new ArrayList<PmAddressType>();
+					List<PmAddressType> removeNewAddressRecTypes = new ArrayList<PmAddressType>();
 					for (PmAddressType addType : getManagedBean().getSelectedReceivingAddrTypes()) {
-						if (addType.isBrandNew()) {
+						//Bug #32656 - Check whether addressTypeId just remove or inactive 
+						logger.info("userRoleStatusChange : inactive addressTypeId :" + addType.getAddressTypeId());
+						if (addType.isBrandNew() && addType.getAddressTypeId()== null) {
 							removeNewAddressTypes.add(addType);
+							removeNewAddressRecTypes.add(addType);
 						} else {
 							if (DbValueConst.RECORD_STATUS_ACTIVE == addType.getRecordStatusFlg()) {
 								addType.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
@@ -1774,9 +1781,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						}
 					}
 					if (!removeNewAddressTypes.isEmpty()) {
-						getManagedBean().getSelectedReceivingAddrTypes().removeAll(removeNewAddressTypes);
+						this.getManagedBean().getSelectedUser().getPmAddressTypes().removeAll(removeNewAddressTypes);
+						this.getManagedBean().getSelectedReceivingAddrTypes().removeAll(removeNewAddressRecTypes);
 					}
 				}
+				  //Bug #32656 - end
 			} else if (pmUserRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 				if (!pmUserRole.isModified()) {
 					pmUserRole.setModified(true);
@@ -3111,6 +3120,20 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 									new String[] { getRoleDescByRoleCode(roleCode, languageCode) });
 						}
 					}
+					
+					// Bug #31509 - Start
+					if (userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED
+							&& (RoleCode.FL_APPROVER.value().equals(userRole.getPmRole().getRoleCode()) || RoleCode.RN_APPROVER
+									.value().equals(userRole.getPmRole().getRoleCode()))
+							&& isActiveAtUserGroupUser(userRole.getPmRole().getRoleCode()) != null) {
+						// check for FL Approver and RN Approver only
+						// revert it to active
+						userRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+						throw new EpException(MessageConst.ERROR_770202, isActiveAtUserGroupUser(userRole.getPmRole()
+								.getRoleCode()));
+					}
+					// Bug #31509 - End
+
 
 					// Check single role for all users
 					if (userRole.getPmRole().isSingleRole()
@@ -3562,11 +3585,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				checkIdentificationNumber1();
 
 				// MyIdentity Checking
+				//Redmine Bug #32423 & #32032 - START
 				if (getManagedBean().getSelectedUser().getIdentificationCode().getParameterCode()
 						.equals(ProfileManagementConst.DEFAULT_IDENTIFY_TYPE)) {
 					SmCommonUtil.getInstance().verifyWithMyIdentity(user.getUserName(), user.getIdentificationNo(),
-							null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN);
+							null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN, false);
 				}
+				//Redmine Bug #32423 & #32032 - END
 			}
 			validateUser(user, userOrg);
 			// addressEntered = validateUserAddress(this.getManagedBean()
@@ -3642,10 +3667,36 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				user.setChangedBy(loginSessionUserId);
 				user.setCreatedBy(loginSessionUserId);
 			}
+			
+			//Redmine Bug #31541 - START
+			if (this.getManagedBean().getIsNewUser()) {
+				logger.info("Tracking diary for user profile: create new user :saveUserProfile");
+				String orgCode = null;
+				String orgName = null;
+				if (ParameterConst.ORG_TYPE_FACTORING
+						.equals(userOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
+					orgCode = userOrg.getPmOrgProfile().getPmFinancialOrg().getBizRegNumber();
+					orgName = userOrg.getPmOrgProfile().getPmFinancialOrg().getFinOrgName();
+				} else if (ParameterConst.ORG_TYPE_SUPPLIER
+						.equals(userOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
+					orgCode = userOrg.getPmOrgProfile().getSmSupplier().getRegNo();
+					orgName = userOrg.getPmOrgProfile().getSmSupplier().getCompanyName();
+				} else {
+					orgCode = userOrg.getPmOrgProfile().getOrgCode();
+					orgName = userOrg.getPmOrgProfile().getOrgName();
+				}
+
+				String messageId = MessageConst.TD_80000;
+				String[] msgParam = new String[] { user.getUserName(), orgCode, orgName };
+				reqDTO.setTrackingStatus(true);
+				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,
+						getActionDesc(messageId, msgParam), userOrg.getRecordStatusFlg().longValue()));
+			}
+			
 			if (!isNewUser) {
 				checkChangesAndFillTrackingDiary(user, userOrg, reqDTO);
-
 			}
+			//Redmine Bug #31541 - END
 			
 			//Having other active user org?
 			boolean deactivateRequired = true;
@@ -3669,30 +3720,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				fillUserInfoFromUserOrg(user, userOrg);
 			}
 			
-
-			if (isNewUser) {
-				logger.info("Tracking diary for user profile: create new user :saveUserProfile");
-				String orgCode = null;
-				String orgName = null;
-				if (ParameterConst.ORG_TYPE_FACTORING
-						.equals(userOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
-					orgCode = userOrg.getPmOrgProfile().getPmFinancialOrg().getBizRegNumber();
-					orgName = userOrg.getPmOrgProfile().getPmFinancialOrg().getFinOrgName();
-				} else if (ParameterConst.ORG_TYPE_SUPPLIER
-						.equals(userOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
-					orgCode = userOrg.getPmOrgProfile().getSmSupplier().getRegNo();
-					orgName = userOrg.getPmOrgProfile().getSmSupplier().getCompanyName();
-				} else {
-					orgCode = userOrg.getPmOrgProfile().getOrgCode();
-					orgName = userOrg.getPmOrgProfile().getOrgName();
-				}
-
-				String messageId = MessageConst.TD_80000;
-				String[] msgParam = new String[] { user.getUserName(), orgCode, orgName };
-				reqDTO.setTrackingStatus(true);
-				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,
-						getActionDesc(messageId, msgParam), userOrg.getRecordStatusFlg().longValue()));
-			}
 			reqDTO.setPmUser(user);
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 
@@ -4245,6 +4272,14 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		List<PmUserGroup> userGroups = PmCommonUtil.retrieveUserActiveUserGroup(userId, null);
 		return userGroups != null ? userGroups.get(0) : null;
 	}
+	
+	//Bug #31509 - Start 
+	private PmUserGroup retrieveUserActiveAtUserGroup(Long userId, String role) {
+		logger.info("userActiveAtUserGroup");
+		List<PmUserGroup> userGroups = PmCommonUtil.retrieveUserActiveAtUserGroup(userId, role, null);
+		return userGroups != null ? userGroups.get(0) : null;
+	}
+	//Bug #31509 - Start 
 
 	/*
 	 * private boolean checkOldPassword(PmUser pmUser) throws PortalException,
@@ -5020,7 +5055,24 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		return errorParams;
 	}
+	
+	//Bug #31509 - Start 
+	private String[] isActiveAtUserGroupUser(String role) {
 
+		System.out.println("isActiveUserGroupUserTest" + role);
+
+		String[] errorParams = null;
+		// check if user group user is active
+		PmUserGroup userGroup = retrieveUserActiveAtUserGroup(this.getManagedBean().getSelectedUser().getUserId(), role);
+
+		if (userGroup != null) {
+			errorParams = new String[] { userGroup.getGroupCode(), userGroup.getGroupName() };
+		}
+
+		return errorParams;
+	}
+	//Bug #31509 - End
+	
 	private boolean isUserRoleModified(PmUserRole userRole) {
 		logger.info("isUserRoleModified");
 		if (!userRole.isBrandNew()) {

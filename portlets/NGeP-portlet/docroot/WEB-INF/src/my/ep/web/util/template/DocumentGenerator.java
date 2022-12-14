@@ -3,6 +3,8 @@
  */
 package my.ep.web.util.template;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -49,7 +51,14 @@ import org.docx4j.wml.RPr;
 import org.docx4j.wml.STFldCharType;
 import org.docx4j.wml.SectPr;
 import org.docx4j.wml.Text;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.safety.Cleaner;
+import org.jsoup.safety.Whitelist;
+import org.jsoup.select.Elements;
 import org.xhtmlrenderer.pdf.ITextRenderer;
+
+import com.lowagie.text.DocumentException;
 
 import my.ep.factory.EpLogger;
 
@@ -165,17 +174,18 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		
 		ITextRenderer render = new ITextRenderer();
 		try{
+			//#26180
 			 if (html != null) {
-		        	html = html.replaceAll("&amp;nbsp;", "");
+		        	html = html.replaceAll("&amp;nbsp;", " ");
 		        	html = html.replaceAll("&amp;", "&amp;amp;")
 		        			   .replaceAll("&", "&amp;");
 		        	html = html.replaceAll("&amp;#62", "&#62");
 		          	html = html.replaceAll("&amp;#60", "&#60");
 		          	
-					//20220921@asyrafhaziq - 29076 -  Start
+					//20220921@asyrafhaziq - 29076 -  Start == //#25142 - start
 					html = html.replaceAll("&amp;nbsp;", " ");
 					html = html.replaceAll("&amp;amp;", "&");
-					//20220921@asyrafhaziq - 29076 - End 
+					//20220921@asyrafhaziq - 29076 - End == //#25142 - end
 					
 		            render.setDocumentFromString(html);
 		            render.layout();
@@ -184,8 +194,10 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		        
 		        os.flush();
 		}finally{
+			html = null; //#25142
 			render = null;
 			os.close();
+			os = null; //#25142
 		}
 	}
 	

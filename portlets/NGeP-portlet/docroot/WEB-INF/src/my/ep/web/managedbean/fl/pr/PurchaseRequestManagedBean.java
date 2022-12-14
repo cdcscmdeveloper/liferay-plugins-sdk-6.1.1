@@ -295,6 +295,10 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private Long requestNoteId;
 	// 12177 - End	
 	
+	//#28718 - start
+	private boolean triggerPRErrorMsg = false;
+	private boolean isGrouped;
+	//#28718 - end
 /**
  * Gets the charge line item root.
  *
@@ -3321,5 +3325,29 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.chargePTJOrg = chargePTJOrg;
 	}
 	//24893 - end
+	
+	//#28718 - start
+	public boolean isTriggerPRErrorMsg() {
+		return triggerPRErrorMsg;
+	}
+
+	public void setTriggerPRErrorMsg(boolean triggerPRErrorMsg) {
+		this.triggerPRErrorMsg = triggerPRErrorMsg;
+	}
+	
+	/**
+	 * @return the isGrouped
+	 */
+	public boolean isGrouped() {
+		return isGrouped;
+	}
+
+	/**
+	 * @param isGrouped the isGrouped to set
+	 */
+	public void setGrouped(boolean isGrouped) {
+		this.isGrouped = isGrouped;
+	}
+	//#28718 - end
 	
 }

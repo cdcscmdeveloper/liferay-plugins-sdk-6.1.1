@@ -158,26 +158,30 @@
 					</td>
 					<td>
 						<p:outputPanel id="newAdminIdNoPanelId">
+							<!-- #32445 start -->
 							<p:inputText
 								label="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.idno']}"
 								required="true" id="newAdminIcNo"
 								rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq 'I'}"
 								value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.newIdentificationNo}"
-								size="35" maxlength="12">
+								size="35" maxlength="12"
+								validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 								<p:ajax event="blur" process="@this" partialSubmit="true"/>
 							</p:inputText>
+							<!-- #32445 end -->
 							<p:message id="newAdminIcNoMsg" for="newAdminIcNo"
 									showSummary="true" showDetail="false" display="icon" />
-							
+							<!-- #32445 start -->
 							<p:inputText
 								label="#{lbl['lbl.sm.userprofile.idno']}"
 								required="true" id="newAdminPasptNo"
-								rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode ne 'I'}"
+								rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq 'P'}"
 								value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.newIdentificationNo}"
 								size="35" maxlength="15">
 								<p:ajax event="blur" process="@this" partialSubmit="true"/>
 							</p:inputText>
+							<!-- #32445 end -->
 							<p:message id="newAdminPasptNoMsg" for="newAdminPasptNo"
 								showSummary="true" showDetail="false" display="icon" />
 						</p:outputPanel>
@@ -207,7 +211,40 @@
 	<ui:remove>
 		<ui:include src="/xhtml/sm/shared/forcereplaceadmin/tncPopup.xhtml" />
 	</ui:remove>
-	
+		
+	<p:dialog id="uploadDialog" widgetVar="uploadDialog" modal="true"
+			dynamic="true" resizable="false" width="700px" height="200"
+			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"
+			onShow="singleUploadListener(uploadWV);">
+			<p:fileUpload
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+				id="upload"
+				invalidFileMessage="#{lbl['lbl.sm.upload.softcert.format.errmsg']}"
+				invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"  
+				fileUploadListener="#{forceReplaceSuppAdminBackingBean.handleSupDocFileAttachment}"
+				update=":form" oncomplete="uploadDialog.hide();" 
+				uploadLabel="#{lbl['lbl.btn.upload']}"  
+				label="#{lbl['lbl.btn.choose']}" 
+				cancelLabel="#{lbl['lbl.btn.cancel']}"
+				showButtons="false" 
+				widgetVar="uploadWV" />
+		</p:dialog>
+		
+			<p:confirmDialog id="confirmDeleteSupDocDialog" closable="true"
+			message="#{lbl['lbl.sm.upload.delete.message']}"
+			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+			severity="alert" widgetVar="confirmDeleteSupDocDialog">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.delete']}" 
+					action="#{forceReplaceSuppAdminBackingBean.deleteSupDocFileAttachment}" update="@form"
+					partialSubmit="true" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" process="@this" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="confirmDeleteSupDocDialog.hide();" />
+			</div>
+		</p:confirmDialog>
+				
 	</ui:define>
 
 

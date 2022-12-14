@@ -82,13 +82,19 @@
 					<h:outputLabel value="#{lbl['lbl.sc.document.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-					<td><p:selectOneMenu
+				<td>
+					<!-- 15391 -start- -->
+					<p:selectOneMenu
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.docType}"
-							style="width: 297px;margin-bottom: 5px;"
+							style="width: 297px;margin-bottom: 5px;" disabled="#{specMaintenanceBB.isSpecCommittee()}"
 							label="#{lbl['lbl.sc.document.type']}" required="true">
+					<!-- 15391 -end- -->	
 							<f:selectItems
 								value="#{qTDetailBB.getDocTypeQtLOADropdownValues()}" />
-								<p:ajax update="@form" process="@this"/>
+								<ui:remove> #19287 - start </ui:remove>
+								<p:ajax event="change" listener="#{qTDetailBB.resetSearchDataResults}" update="@form" process="@this"/>
+								<ui:remove> #19287 - end </ui:remove>
+
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
@@ -96,9 +102,13 @@
 						  <h:outputLabel for="docNo" value="#{lbl['lbl.sc.document.no']}" />
 					</td>
 					<td style="width:385px">
+						<ui:remove> #19287 - start </ui:remove>
 						<p:inputText id="docNo"
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.docNo}"
-							maxlength="21" style="width:288px;" />
+							maxlength="21" style="width:288px;">
+							<p:ajax update="@form" process="@this"/>
+						</p:inputText>
+						<ui:remove> #19287 - end </ui:remove>
 					</td>
 							
 					<td style="width:165px"><h:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
@@ -168,13 +178,20 @@
 				</tr>
 				<tr>
 					<td><h:outputLabel   value="#{lbl['lbl.sc.status']}" /></td>
-					<td><p:selectOneMenu 
+					<td>
+						<ui:remove>
+							Enhancement #19287 #122
+							Bug #27412 #59
+						</ui:remove>
+						<p:selectOneMenu rendered="#{!qTDetailBB.isMofSupplier()}"
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtStatus}"
 							style="width: 297px;margin-bottom: 5px;">
+						<!-- 27412 note-59 -end- -->
 							<f:selectItems
-								value="#{qTDetailBB.getQTStatusDropdownValues(ParameterConst.reqNoteMethodCode, ParameterConst.doctypeQuotation,screenName)}" />
+								value="#{qTDetailBB.getQTStatusDropdownValues(ParameterConst.reqNoteMethodCode, qTDetailBB.managedBean.qtnTenderSearchBean.docType,screenName)}" />
+							<!-- 19287 note-122 -end- -->
 						</p:selectOneMenu>
-						</td>
+					</td>
 				</tr>
 			</table>
 			

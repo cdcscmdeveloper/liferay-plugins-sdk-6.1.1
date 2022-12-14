@@ -34,7 +34,7 @@
 								listener="#{backingBean.selectAll(storeCatVar.selected,storeCatVar.facilityList)}"/>
 				          </p:selectBooleanCheckbox>
 				       </f:facet>
-						<p:selectBooleanCheckbox value="#{stor.selected}">
+						<p:selectBooleanCheckbox value="#{stor.selected}" disabled="#{stor.facilityType eq 'B' or stor.facilityType eq 'H'}">
 							<p:ajax event="change" update="@this,:#{p:component('storePan')}" 
 								process="@this" partialSubmit="true" />
 						</p:selectBooleanCheckbox>

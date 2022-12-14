@@ -12,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.bean.application.NgepApplicationBean;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
@@ -151,12 +152,14 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 								.getStatusId();
 						
 						if (QTStatusConst.LOA_REJECTED.equals(statusId)) {
-							isCancelled = true;							
+							isCancelled = true;
+							//#32021 - Start
 						} else if (!QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId) && 
 								!QTStatusConst.LOA_COMPLETED.equals(statusId) && 
 								!QTStatusConst.LOA_CANCELLED_DUE_TO_SIMPLE_QUOTE_VALIDITY_EXPIRED.equals(statusId) &&
-								!QTStatusConst.LOA_REJECTED_DUE_TO_SIMPLE_QUOTE_VALIDITY_EXPIRED.equals(statusId) ) {
-							
+								!QTStatusConst.LOA_REJECTED_DUE_TO_SIMPLE_QUOTE_VALIDITY_EXPIRED.equals(statusId) &&
+								!QTStatusConst.LOA_CANCELLED.equals(statusId)) {
+							//#32021 - End
 							continue;
 						}
 						
@@ -226,8 +229,9 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 		Boolean validDate = true;	
 		ScQuote scQuote = getManagedBean().getScRequestNote().getQuote();
 			
-		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
-				.getProperty("sqTimeValidity"));
+		// Refactor: #12177 - Start
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		// Refactor: #12177 - End
 		
 		if(scQuote != null){			
 			Date currentDate = new Date();

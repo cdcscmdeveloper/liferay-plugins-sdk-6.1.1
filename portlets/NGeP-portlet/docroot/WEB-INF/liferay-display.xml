@@ -144,10 +144,14 @@
 			<portlet id="scSupplierFinalizationEndorsement"/>
             <portlet id="SpecCommitteMaintanance"></portlet>
             <portlet id="QTApproval"></portlet>
+            <portlet id="cancelLoaApproval"></portlet>
             <portlet id="QTSupplierAcceptance" />
             <portlet id="BusinessOwner"></portlet>
             <portlet id="ReviewPurchaseInquiry"></portlet>
 		    <portlet id="ReviewPurchaseInDefault"></portlet>
+			<!-- 28865 start- -->
+		    <portlet id="ResponsePurchaseInDefault"></portlet>
+			<!-- 28865 end- -->
 		    <portlet id="ReviewSimpleQuote"></portlet>
 		    <portlet id="ReviewSupplierView"></portlet>
 		    <portlet id="scRequestNoteSearch" />
@@ -175,6 +179,10 @@
 			<portlet id="scSupplierInvitationSq" />
 			<portlet id="scSupplierInvitationQt" />
 			<portlet id="directPurchaseMaintenance" />
+			<!-- Enhancement 25627-start- -->
+			<portlet id="deskOfficerMaintenance"/>
+			<portlet id="deskOfficerMaintenanceApproval"/>
+			<!-- Enhancement 25627-end- -->
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
@@ -268,7 +276,9 @@
 			<portlet id="supplierUserActivation"></portlet>
 
 			<portlet id="UserProfileMaintenance"></portlet>
-
+			<!-- #9569 START-->
+			<portlet id="SupplierUserMaintenance"></portlet>
+			<!-- #9569 END-->
 			<portlet id="SmUserProfileMaintenance"></portlet>
 			<portlet id="TaskSummary"></portlet>
 			<portlet id="taskStatusSearch"></portlet>

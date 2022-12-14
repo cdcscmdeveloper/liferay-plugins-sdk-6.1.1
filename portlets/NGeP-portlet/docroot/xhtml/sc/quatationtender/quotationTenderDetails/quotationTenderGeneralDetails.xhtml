@@ -21,20 +21,37 @@
 	<ui:param name="isReadOnly" value="#{createQtBB.managedBean.readOnly}" />
 	<ui:param name="amountsShowHide"
 		value="#{qTDetailBB.managedBean.showAndHideAmounts}" />
-		
+	<!-- 25729 -start- -->
+	<ui:param name="expectTotalIndPriceBelowThreshold"
+		value="#{createQtBB.expectTotalIndPriceBelowThreshold(scQt,'createQt')}" />
+	<!-- 25729 -end- -->
+	<!-- 25638 start -->
+	<ui:param name="isStatusInQTReviseGroupStatus" 
+		value="#{createQtBB.isStatusInQTReviseGroupStatus(scQt.qtStatus.statusId)}" />
+	<ui:param name="isMaintenanceFlow"  
+		value="#{qTDetailBB.managedBean.maintanceFlow}" />
+	<!-- 25638 end -->
+
 	<ac:lovPopup />
 
-	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}"
-		toggleable="true">
+	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}" toggleable="true">
+		<!-- Enhancement #25659 -start- -->
 		<h:outputText styleClass="instruction"
-			value="#{lbl['lbl.sc.qt.instruction']}" escape="false"
-			rendered="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
+			value="#{lbl['lbl.sc.qt.instruction']}" escape="false" />
+		<!-- Enhancement #25659 -end- -->
+		<!-- 25638 start -->
+		<br/>
+		<c:if test="#{!isMaintenanceFlow}">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.instruction.revise']}" escape="false" 
+				rendered="#{isStatusInQTReviseGroupStatus}" />
+		</c:if>		
+		<!-- 25638 end -->
+			
 			<ui:fragment rendered="#{!scQt.panel and (qtStatusChecklistScoring or qtStatusAfterChecklistScoring)}">
 				<ui:param name="checkCategoryCodemedicine" value="#{createQtBB.isMultipleProposalCategory(scQt, null)}"></ui:param>
 			<ui:fragment rendered="#{checkCategoryCodemedicine}">
 			<h:outputText styleClass="instruction"
-			value="#{lbl['lbl.sc.qt.procurement.medicine.general.info']}" escape="false"
-			 />
+			value="#{lbl['lbl.sc.qt.procurement.medicine.general.info']}" escape="false" />
 			</ui:fragment>
 			</ui:fragment>
 		<table style="width: 100%;">
@@ -253,8 +270,10 @@
 											value="#{scQt.tmpExpectedIntendedPrice}" required="true"
 											label="#{lbl['lbl.sc.spec.expected.intended.price']}"
 											disabled="#{isReadOnly}">
+											<!-- 25729 -start- -->
 											<p:ajax event="blur" partialSubmit="true" update="@form"
-												listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice)}">
+												listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice, 'Y')}">
+											<!-- 25729 -end- -->
 											</p:ajax>
 
 											<f:convertNumber
@@ -571,8 +590,10 @@
 				<td><p:outputLabel value=" #{lbl['lbl.sc.fullfillent.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
 				<td><c:choose>
+						<!-- 15391 -start- -->
 						<c:when
-							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_FULFILMENT_TYPE) and !isReadOnly}">
+							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_FULFILMENT_TYPE) and !isReadOnly or isGenInfo}">
+						<!-- 15391 -end- -->
 							<p:selectOneMenu required="true" id="fulfilId"
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
@@ -586,9 +607,24 @@
 							<p:message id="fulfilType" for="fulfilId" display="icon" />
 						</c:when>
 						<c:otherwise>
-							<p:inputText id="fulfilTypeTxt"
+							<!-- 15391 -start- --><!-- 29464 -start- -->
+							<p:inputText id="fulfilTypeTxt" rendered="#{!specificationBackingBean.managedBean.isGenInfo() or isReadOnly}"
 								value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}"
 								style="width:195px;" disabled="true" />
+							<p:selectOneMenu required="#{empty param['skipvalidation']}"
+								id="fulfilId" rendered="#{specificationBackingBean.managedBean.isGenInfo() and !isReadOnly}}"
+								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
+								label="#{lbl['lbl.sc.fullfillent.type']}"
+								value="#{scQt.fulfilmentType.parameterId}"
+								style="width: 205px;margin-bottom: 5px;">
+							<!-- 29464 -end- -->
+								<f:selectItems
+									value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
+								<p:ajax event="change" process="@this" partialSubmit="true"
+									update="@form" listener="#{createQtBB.fulfilmentChange}"></p:ajax>
+							</p:selectOneMenu>
+							<p:message id="fulfilType" for="fulfilId" display="icon" />
+							<!-- 15391 -end- -->
 						</c:otherwise>
 					</c:choose></td>
 				<td style="white-space: nowrap;"><p:outputLabel
@@ -598,24 +634,38 @@
 				</td>
 				<td>
 					<c:choose>
+						<!-- 15391 -start- -->
 						<c:when
-							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_CONTRACT_DURATION) and !isReadOnly}">
+							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_CONTRACT_DURATION) and !isReadOnly or isGenInfo}">
+						<!-- 15391 -end- -->
 							<p:inputText id="contractBo" maxlength="3"
 								label="#{lbl['lbl.sc.spec.complete.period']}"
 								value="#{scQt.contractDuration}"
 								style="text-align:right;margin-bottom:5px; width:200px;"
 								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}">
-								<p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
+								<p:ajax event="change" process="@this" partialSubmit="true" update="@this" 
+								listener="#{createQtBB.ContractPeriodChange()}"/>
 							</p:inputText>
 							<p:message id="completionBo" for="contractBo" display="icon"></p:message>
 						</c:when>
 						<c:otherwise>
+							<!-- 15391 -start- --><!-- 29464 -start- -->
 							<p:inputText label="#{lbl['lbl.sc.spec.complete.period']}"
-								value="#{scQt.contractDuration}"
+								value="#{scQt.contractDuration}" rendered="#{!specificationBackingBean.managedBean.isGenInfo() or isReadOnly}"
 								style="text-align:right;margin-bottom:5px; width:200px;"
 								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}"
 								disabled="true">
 							</p:inputText>
+							<p:inputText id="contractBo" maxlength="3"
+								label="#{lbl['lbl.sc.spec.complete.period']}"
+								value="#{scQt.contractDuration}" rendered="#{specificationBackingBean.managedBean.isGenInfo() and !isReadOnly}"
+								style="text-align:right;margin-bottom:5px; width:200px;"
+								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}">
+							<!-- 29464 -end- -->	
+								<p:ajax event="change" process="@this" partialSubmit="true"
+									update="@this" listener="#{createQtBB.ContractPeriodChange()}" />
+							</p:inputText>
+							<!-- 15391 -end- -->
 						</c:otherwise>
 					</c:choose> 
 				</td>
@@ -735,8 +785,61 @@
 						</c:otherwise>
 					</c:choose></td>
 			</tr>
+
+			<!-- 25729 -start- -->
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sc.spec.justification.procurement.value']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<!--#25729 #142 START -->
+				<c:if test="#{expectTotalIndPriceBelowThreshold}">
+
+					<td><c:choose>
+							<c:when
+								test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
+								<p:inputTextarea id="justificationProcValueId_1"
+									style="margin-bottom:5px; width: 250px;" maxlength="100"
+									value="#{scQt.justificationProcValue}" required="true"
+									label="#{lbl['lbl.sc.spec.justification.procurement.value']}"
+									disabled="#{isReadOnly}" cols="110" rows="3"
+									onkeyup="limitTextArea(this,100);"
+									onkeydown="limitTextArea(this,100);"
+									onmouseout="limitTextArea(this,100);">
+									<f:ajax></f:ajax>
+								</p:inputTextarea>
+								<p:message id="title2Msg_1" for="justificationProcValueId_1"
+									display="icon" />
+							</c:when>
+							<c:otherwise>
+								<p:inputTextarea id="justificationProcValueId_2"
+									style="margin-bottom:5px; width: 250px;" maxlength="100"
+									value="#{scQt.justificationProcValue}"
+									label="#{lbl['lbl.sc.spec.justification.procurement.value']}"
+									readonly="true" cols="110" rows="3" disabled="true">
+								</p:inputTextarea>
+								<p:message id="title2Msg_2" for="justificationProcValueId_2"
+									display="icon" />
+							</c:otherwise>
+						</c:choose></td>
+				</c:if>
+				<c:if test="#{!expectTotalIndPriceBelowThreshold}">
+					<td><p:inputTextarea id="justificationProcValueId_2"
+							style="margin-bottom:5px; width: 250px;" maxlength="100"
+							value="#{scQt.justificationProcValue}"
+							label="#{lbl['lbl.sc.spec.justification.procurement.value']}"
+							readonly="true" cols="110" rows="3" disabled="true">
+						</p:inputTextarea></td>
+				</c:if>
+				<!--#25729 #142 END -->
+				<td style="margin-top: -3px">
+					<ac:iconTooltip value="#{lbl['lbl.sc.spec.justification.procurement.value.tooltip']}" />
+				</td>
+			</tr>
+			<!-- 25729 -end- -->
 		</table>
 	</p:panel>
+
 	<ui:include src="viewCircularPanelItemsPopup.xhtml"></ui:include>
 	<h:panelGroup id="generalLocationList">
 		<ui:include
@@ -764,4 +867,48 @@
 				oncomplete="panelApprovalDlgs.hide();" />
 		</div>
 	</p:dialog>
+
+	<!-- #25729 #174 START -->
+	<p:confirmDialog id="proceedBelowQtValueId"
+		widgetVar="proceedBelowQtValueDlgs"
+		header="#{lbl['lbl.sc.confirmation']}"
+		message="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}"
+		resizable="false" closable="false">
+		<div align="right">
+			<p:commandButton id="conf20k" value="#{lbl['lbl.btn.yes']}"
+				action="#{createQtBB.enableJustificationProValue(true)}"
+				oncomplete="proceedBelowQtValueDlgs.hide()" update="@form"
+				process="@this" />
+			<p:commandButton id="decline20k" value="#{lbl['lbl.btn.no']}"
+				action="#{createQtBB.enableJustificationProValue(false)}"
+				oncomplete="proceedBelowQtValueDlgs.hide()" process="@this"
+				update="@form" />
+		</div>
+	</p:confirmDialog>
+	<!-- #25729 #174 END -->
+	
+<!-- 32929 -start- -->
+	<p:dialog id="scQtZoneChangeDlgs" widgetVar="scQtZoneChangeDlgs"
+		header="#{lbl['lbl.sc.dialog.confirm.header.nonZonal']}" modal="true"
+		resizable="false" width="700" height="140" closable="false">
+		<table>
+			<tr>
+				<td align="center"><h:graphicImage
+						value="/css/images/design/exclamation.png" /> <p:outputLabel style="text-align: left"
+						value="#{lbl['lbl.sc.dialog.confirm.nonZonal']}" escape="false"/></td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+				partialSubmit="true" update="@form" 
+				action="#{createQtBB.zoneYesConfirmation}" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}" process="@this"
+				partialSubmit="true" update="@form"
+				actionListener="#{createQtBB.zoneNoConfirmation}"
+				oncomplete="scQtZoneChangeDlgs.hide();" />
+		</div>
+	</p:dialog>
+<!-- 32929 -end- -->
+ 	
 </ui:composition>

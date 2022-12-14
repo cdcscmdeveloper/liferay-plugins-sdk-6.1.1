@@ -18,9 +18,12 @@
 					model="#{supplierProposalDetailBackingBean.managedBean.proposalZonalMenuModel}">
 				</p:tabMenu></TD>
 			<td width="84%" valign="top"><p:outputPanel id="zoneSpecAnswers">
+					<!-- 25201 -start- -->
 					<ac:templateSpec processValidationId="zoneRemote"
 						templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}"
+						editable="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"
 						title="#{lbl['lbl.sc.spec.financial.title']}" />
+					<!-- 25201 -end- -->
 				</p:outputPanel></td>
 		</tr>
 	</table>

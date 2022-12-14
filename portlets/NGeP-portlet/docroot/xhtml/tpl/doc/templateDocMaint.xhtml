@@ -16,9 +16,13 @@
 				<td style="text-align: left"><p:commandButton immediate="true"
 						action="#{templateDocBackingBean.backAction}"
 						value="#{lbl['lbl.btn.back']}" /></td>
-				<td style="text-align: right"><p:commandButton
+				<td style="text-align: right">
+					<!-- 17376 note-88 -start- -->
+					<p:commandButton
 						action="#{templateDocBackingBean.saveAction}"
-						value="#{lbl['lbl.btn.save']}" /> <p:spacer width="5px"
+						value="#{lbl['lbl.btn.save']}" rendered="#{!(templateDocBackingBean.managedBean.readOnlyFlag or templateDocBackingBean.managedBean.readOnly)}"/>
+					<!-- 17376 note-88 -end- -->
+					<p:spacer width="5px"
 						rendered="#{false and templateDocBackingBean.managedBean.externalPageUrl==null}" />
 					<p:commandButton action="#{templateDocBackingBean.saveAction}"
 						rendered="#{false and templateDocBackingBean.managedBean.externalPageUrl==null}"
@@ -146,11 +150,13 @@
 					</p:column>
 					<p:column style="width:50px;text-align:center;">
 						<f:facet name="header">#{lbl['lbl.td.action']}</f:facet>
+						<!-- 19287 note-78 -start- -->
 						<p:commandButton id="addBtn" icon="ui-icon-add"
 							style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
 							partialSubmit="true" process="@this"
-							disabled="#{templateDocBackingBean.managedBean.readOnlyFlag}"
+							rendered="#{!templateDocBackingBean.managedBean.readOnlyFlag or templateDocBackingBean.managedBean.readOnly}" 
 							title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}" />
+						<!-- 19287 note-78 -end- -->
 						<p:menu overlay="true" trigger="addBtn" my="left top"
 							at="left bottom">
 							<p:menuitem value="#{lbl['lbl.tpl.doc.import.section']}"
@@ -184,10 +190,11 @@
 								target="#{templateDocBackingBean.managedBean.selectedSection}" />
 						</p:commandLink>
 						<p:spacer width="5px" />
+						<!-- 19287 note-78 -start- -->
 						<p:commandLink update=":form"
-							disabled="#{templateDocBackingBean.managedBean.readOnlyFlag}"
+							rendered="#{!templateDocBackingBean.managedBean.readOnlyFlag}"
 							oncomplete="confirmation1.show();">
-							<!-- oncomplete="popupsEdit.show();return false;" update=":form:popupsEdit"> -->
+							<!-- 19287 note-78 -end- -->
 							<h:graphicImage value="/css/images/design/delete.png" />
 							<f:setPropertyActionListener value="#{document}"
 								target="#{templateDocBackingBean.managedBean.selectedSection}" />
@@ -199,9 +206,11 @@
 			</h:panelGrid>
 			<h:panelGrid width="100%" columns="1">
 				<h:panelGroup style="float: right;">
-					<p:commandButton value="#{lbl['lbl.tpl.doc.renumbering']}"
+					<!-- 17376 note-88 -start- -->
+					<p:commandButton value="#{lbl['lbl.tpl.doc.renumbering']}" disabled="#{templateDocBackingBean.managedBean.readOnlyFlag}"
 						action="#{templateDocBackingBean.reNumbering(templateDocBackingBean.managedBean.docSectionTN)}"
 						process="@this" update=":form:sampleTT" />
+					<!-- 17376 note-88 -end- -->
 					<p:commandButton action="#{templateDocBackingBean.previewAction}"
 						value="#{lbl['lbl.tpl.doc.preview']}" update="display"
 						oncomplete="dlg.show()" />

@@ -174,11 +174,13 @@
 						value="#{lbl['lbl.sc.loiloa.loi.res.due.date']}" /></td>
 				<td>
 				<c:if test="#{isPendingSubmissionStatus}">
+					<!-- 17376 -start- -->
 					<p:selectOneMenu id="responseDate"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.loiResponseDate}"
 						style="width: 100px;margin-bottom: 10px;"
 						label="#{lbl['lbl.sc.days']}"
-						disabled="#{!isEditableStatus}" >
+						disabled="#{!isEditableStatus or lOIDetailBackingBean.managedBean.readOnly}" >
+					<!-- 17376 -end- -->
 						<f:selectItems 
 							value="#{lOIDetailBackingBean.getDropdownCodeValues(ParameterTypeConst.loiResponsePeriod)}" />
 						<p:ajax event="change"
@@ -244,12 +246,14 @@
 				</td>
 				<td>
 					<c:if test="#{isEditableStatus and (isPendingSubmissionStatus or isPendingApprovalStatus or isPendingRevisionStatus)}">
+						<!-- 19287,17376 -start- -->
 						<p:selectOneMenu id="contractSigner" 
 						disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.userId}"
 							style="width: 276px;margin-bottom: 5px;"
-							required="true"
+							required="#{!lOIDetailBackingBean.managedBean.readOnly}"
 							label="#{lbl['lbl.sc.loiloa.loi.signer']}">
+						<!-- 19287,17376 -end- -->
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{lOIDetailBackingBean.managedBean.contractSigners}"
 								var="contractUser" itemLabel="#{contractUser.userName}"
@@ -270,13 +274,25 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.signer.desig']}" />
 					<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 				</td>
-				<td><p:inputText id="loiSignerDesigId" disabled="#{!isEditableStatus or lOIDetailBackingBean.managedBean.readOnly}"
+				<td>
+					<!-- 19287,17376 -start- -->
+					<p:inputText id="loiSignerDesigId" disabled="#{!isEditableStatus or lOIDetailBackingBean.managedBean.readOnly}"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.loiSignerDesig}"
-						size="34" maxlength="100" required="true" label="#{lbl['lbl.sc.loiloa.loi.signer.desig']}">
+						size="34" maxlength="100" required="#{!lOIDetailBackingBean.managedBean.readOnly}" label="#{lbl['lbl.sc.loiloa.loi.signer.desig']}">
+					<!-- 19287,17376 -end- -->
 					</p:inputText><p:message id="loiSignerDesigIdMsg" for="loiSignerDesigId"
 										display="icon" /></td>
 			</tr>
 		</table>
 	</p:panel>
+	
+	<!-- 11134 -start- -->
+	<p:outputPanel id="suppRemarksPanel">
+		<ac:scRemarkAndAttachment
+			remarkList="#{lOIDetailBackingBean.managedBean.supplierRemarks}"
+			showAttachment="false" readonly="true"
+			rendered="#{not empty lOIDetailBackingBean.managedBean.supplierRemarks}" />
+	</p:outputPanel>
+	<!-- 11134 -end- -->
 	
 </ui:composition>

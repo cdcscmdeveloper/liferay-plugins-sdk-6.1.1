@@ -76,9 +76,11 @@
 				<ui:fragment rendered="#{committeemember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}">
 					<c:choose>
 						<c:when test="#{isCommitteeRecordStatusActive}">
+							<!-- 26189 -start- -->						
 							<p:selectOneMenu required="#{!committeemember.selected}"
 								id="representativeType" value="#{committeemember.representativeTypeId}"
-								label="#{lbl['lbl.sc.representative.type']}" style="width: 150px;margin-bottom: 5px;">
+								label="#{lbl['lbl.sc.please.select.representative.type']}" style="width: 150px;margin-bottom: 5px;">
+								<!-- 26189 -end- -->
 								<f:selectItems value="#{committeBackingBean.getRepresentativeTypeDropdownValues(committeBackingBean.managedBean.committeeType)}" />
 								<p:ajax event="change" listener="#{committeBackingBean.representiveTypeChangedListener(committeemember)}"
 									partialSubmit="true" process="@this" />

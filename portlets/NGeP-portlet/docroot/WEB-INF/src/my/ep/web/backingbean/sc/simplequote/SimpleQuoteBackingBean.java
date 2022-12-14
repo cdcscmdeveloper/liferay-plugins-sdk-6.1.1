@@ -29,6 +29,7 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.bean.application.NgepApplicationBean; //#12177 Refactor
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
@@ -485,7 +486,6 @@ public class SimpleQuoteBackingBean extends
 			scQuote = new ScQuote();
 			
 		} else {
-			
 			if (docId != null && docId > 0) {
 				boolean isPanel = scQuote.isPanel();
 				if (isPanel) {
@@ -522,7 +522,6 @@ public class SimpleQuoteBackingBean extends
 						//ERR-760162 = Select panel items only.
 						throw new EpException(MessageConst.ERROR_760162);
 					}
-					
 				} else if (panelItemFlag) {
 					//ERR-760161 = Select non contract items only.
 					throw new EpException(MessageConst.ERROR_760161);
@@ -1690,7 +1689,6 @@ public class SimpleQuoteBackingBean extends
 			//29194 - End
 			reqDTO.setTaskExpiredDate(pidExpDate);
 			reqDTO.setPidApprovers(pidApprovers);
-			
 			reqDTO.setDoUserId(doUserId);
 
 			// ReQuote
@@ -3894,6 +3892,16 @@ public class SimpleQuoteBackingBean extends
 	/**
 	 * Page navigation to catalogue search page from simpleQuote.
 	 */
+	
+	/**
+	 * Page navigation to Direct Purchase Search.
+	 */
+	// additional back menu
+	public String backMenuToPrevious() {
+		log.info("backMenuToPrevious");
+		return "directPurchaseSearch";
+	}
+	
 	public void backToPrevious() {
 		debugLogger("backToPrevious");
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -4088,6 +4096,20 @@ public class SimpleQuoteBackingBean extends
 			Date endDate = quote.getEndDate();
 			String message ="";
 
+			 //#32855 - start
+			if (!isQuaterHourFormat(startDate)) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.ss.item.detail.start.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+			}
+			
+			if (!isQuaterHourFormat(endDate)) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.ss.item.detail.end.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+			}
+			//#32855 - end
+
 			if(getManagedBean().getPidExpiryDate() != null){
 				/*Rule : during preparation of SQ upon select start and end date, error : 
 				the end date not allowed to enter equal or more than PID approval validity period date & time. */
@@ -4156,6 +4178,22 @@ public class SimpleQuoteBackingBean extends
 								.toHours(timeDiff))));
 		return mins;
 	}
+	
+	 //#32855 - start
+	private Boolean isQuaterHourFormat(Date chosenDate){
+		long timeDiff = Math.abs(chosenDate.getTime());
+		String mins = String
+				.format("%d", (TimeUnit.MILLISECONDS
+						.toMinutes(timeDiff) - TimeUnit.HOURS
+						.toMinutes(TimeUnit.MILLISECONDS
+								.toHours(timeDiff))));
+		if (mins.equalsIgnoreCase("0") || mins.equalsIgnoreCase("15") || mins.equalsIgnoreCase("30")
+				|| mins.equalsIgnoreCase("45"))
+			return true;
+		
+		return false;
+	}
+	//#32855 - end
 
 	/*
 	 * public void calcDuration(Integer duration) throws Exception { ScQuote
@@ -5158,6 +5196,10 @@ public class SimpleQuoteBackingBean extends
 
 		if (StringUtils.isNotBlank(quoteIdStr)) {
 
+			// #28199 - Start : Remove back button from SQ Response Screen
+			getManagedBean().setSqAuditFlg(Boolean.FALSE);
+			// #28199 - End
+			
 			try {
 				FacesScopes facesScopes = new FacesScopes();
 				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
@@ -5331,6 +5373,10 @@ public class SimpleQuoteBackingBean extends
 				// quoteSO = null;
 			}
 
+			// #28199 - Start : Remove back button from SQ Response Screen
+			getManagedBean().setSqAuditFlg(Boolean.FALSE);
+			// #28199 - End
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "supplerView");
@@ -5350,7 +5396,11 @@ public class SimpleQuoteBackingBean extends
 				.getServiceTemplateSpecBean();
 
 		if (StringUtils.isNotBlank(quoteIdStr)) {
-
+			
+			// #28199 - Start : Remove back button from SQ Response Screen
+			getManagedBean().setSqAuditFlg(Boolean.TRUE);
+			// #28199 - End
+			
 			try {
 				FacesScopes facesScopes = new FacesScopes();
 				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
@@ -5359,12 +5409,20 @@ public class SimpleQuoteBackingBean extends
 				quoteReqDTO.setUserId(facesScopes.getUserSessionBean()
 						.getUserId());
 				quoteReqDTO.setFetchSubEntity(true);
+				
+				//#25396 - start
+				Long supplierId = getSupplierId();
+				quoteReqDTO.setSupplierId(supplierId);
+				//#25396 - end
+				
 				QuoteResDTO quoteResDTO = getQuoteSO().getQuoteDtlForSupplier(
 						quoteReqDTO);
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
-				Long supplierId = getSupplierId();
-				quoteReqDTO.setSupplierId(supplierId);
 				
+				//#25396 - start (comment out)
+			    /*Long supplierId = getSupplierId();
+				quoteReqDTO.setSupplierId(supplierId);*/
+				//#25396 - end				
 				// clear session data.
 				renewSesionObject();
 
@@ -5523,6 +5581,10 @@ public class SimpleQuoteBackingBean extends
 			} finally {
 				// quoteSO = null;
 			}
+			
+			// #28199 - Start : Remove back button from SQ Response Screen
+			getManagedBean().setSqAuditFlg(Boolean.TRUE);
+			// #28199 - End
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -5652,6 +5714,8 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setQuoteSupplier(getManagedBean().getScQuoteSupplier());
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
+			
+			
 			if (quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = getManagedBean().getScQuote();
 
@@ -5819,7 +5883,8 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setQuoteSupplier(getManagedBean().getScQuoteSupplier());
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
-			if (quoteResDTO.isSuccessful()) {
+			
+			if (quoteResDTO.isSuccessful()) {				
 				ScQuote scQuote = getManagedBean().getScQuote();
 
 				FacesContext
@@ -7664,10 +7729,12 @@ public class SimpleQuoteBackingBean extends
 		Boolean validDate = true;	
 		Long currentStatusId = null;
 		ScQuote scQuote = getManagedBean().getScQuote();
-		
-		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
-				.getProperty("sqTimeValidity"));
-		
+
+		// Refactor: #12177 - Start
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		log.info("Refactor 12177 (SimpleQuoteBackingBean) : getSqTimeValidity - " + sqTimeValidity);
+		// Refactor: #12177 - End
+
 		if(scQuote != null){
 			if(scQuote.getCurrentStatus() != null){
 				currentStatusId = scQuote.getCurrentStatus().getPmStatus().getStatusId();

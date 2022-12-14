@@ -30,28 +30,32 @@ public class ViewQtDetailsGeneralInfoBackingBean{
 	/**
 	 * navigate to View QtDetails General Info portlet.
 	 */
-	public void  navigatetoViewQtDetailsGeneralInfo(String backUrl,ScQt scQt,boolean amounts){
-		
-	try {
-		
-		if(null!=scQt){
-		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-		qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
-		//qtBackingBean.editQuationTenderDetails(qtBackingBean.getManagedBean().getQt(), true);
-		qtBackingBean.getManagedBean().setViewOriginalUrl(backUrl);
-		qtBackingBean.getManagedBean().setShowAndHideAmounts(amounts);
+	public void navigatetoViewQtDetailsGeneralInfo(String backUrl, ScQt scQt, boolean amounts) {
+
+		try {
+
+			if (null != scQt) {
+				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+				// Bug_30922
+				qtBackingBean.getManagedBean().setQt(null);
+				qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
+				// qtBackingBean.editQuationTenderDetails(qtBackingBean.getManagedBean().getQt(),
+				// true);
+				qtBackingBean.getManagedBean().setViewOriginalUrl(backUrl);
+				qtBackingBean.getManagedBean().setShowAndHideAmounts(amounts);
+			}
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			// #33090, #19287 -start-
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							QTConstants.SUPPLIER_VIEW_QTDETAILS_GENERAL_INFO);
+			// #33090, #19287 -end-
+
+		} finally {
+
 		}
-		
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication()
-				.getNavigationHandler()
-				.handleNavigation(fc, null,
-						QTConstants.VIEW_QTDETAILS_GENERAL_INFO);
-	
-	
-	} finally{
-		
-	}
 	}
 	
 	

@@ -39,9 +39,11 @@ import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -64,6 +66,8 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -133,6 +137,7 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loiloa.LOIDetailManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
@@ -196,6 +201,8 @@ public class LOIDetailBackingBean extends
 	/** The flag. */
 	private boolean flag;
 	
+	private List<ScLoi> loiList; // #17376 #19287 #19336 #25201
+	
 	/**
 	 * Instantiates a new LOI detail backing bean.
 	 */
@@ -205,6 +212,125 @@ public class LOIDetailBackingBean extends
 		// initializeRemarks(new ScLoi());
 		// getApproverNames();
 	}
+	
+	// #17376 #19287 #19336 #25201 - start
+	/**
+	 * 
+	 *  
+	 * @param qtId - set null if provided by SCAwardSupplierDataType 
+	 * @param otherArgs - set null if provided by SCAwardSupplierDataType
+	 *		isQtMaintenanceScreen - Boolean
+	 *		isReadOnly - Boolean
+	 *		prevPageUrl - String
+	 *		
+	 */
+	private void preRenderLoiListViewPriv(Long qtId, Map<MapKeyEnum, Object> otherArgs){
+		try {
+			
+			boolean fromBpmTaskList = false;
+			SCAwardSupplierDataType awardDataType = null;
+			Long sourceId = null;
+			String letterCreator = null;
+			String currentUser = new FacesScopes().getUserSessionBean().getLoginId();
+
+			if(qtId == null){
+				fromBpmTaskList = true;
+				awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
+				sourceId = Long.valueOf(awardDataType.getSourceId()); 
+				letterCreator = awardDataType.getLetterCreator();
+				
+				if(StringUtils.isBlank(letterCreator)) {
+					if (new FacesScopes()
+					.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+						awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
+						awardDataType.setDeskOfficer(currentUser);
+					} else {
+						awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_REQUISITIONER);
+						awardDataType.setSecretary(currentUser);
+					}
+				} else {
+					if(letterCreator.equals(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER)) {
+						awardDataType.setDeskOfficer(currentUser);
+					} else {
+						awardDataType.setSecretary(currentUser);
+					}
+				}
+				
+				getManagedBean().setRecommendDtlIds(awardDataType.getGroupkeyList());
+		
+				String finalizationMethod = getFinalizationMethodByAwardType(awardDataType.getAwardType());
+				getManagedBean().setDocType(finalizationMethod);
+			} else {
+				this.getManagedBean().setReadOnly(true);
+				fromBpmTaskList = false;
+				sourceId = qtId;
+				//letterCreator
+				//finalizationMethod
+			}
+			
+			getManagedBean().setSourceId(sourceId);
+			retrieveLOIList(sourceId);
+			
+			if(!fromBpmTaskList && !CollectionUtils.isEmpty(getManagedBean().getLoiLoas())){
+				for(ScLoiLoa ll: getManagedBean().getLoiLoas()){
+					if(!CollectionUtils.isEmpty(ll.getScLois())){
+						for(ScLoi l: ll.getScLois()){
+							AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
+							awardSupplierReqDTO.setLoiId(l.getLoiId());
+							AwardSupplierResDTO awardSupplierResDTO = getQtAwardSO()
+							.retrieveLOIDtlByLoiId(awardSupplierReqDTO);
+							String finalizationMethod = null;
+							if(awardSupplierResDTO.isSuccessful()){
+								finalizationMethod = getFinalizationMethodByAwardType(awardSupplierResDTO.getScLoi().getRecommendBy().getParameterCode());
+								getManagedBean().setDocType(finalizationMethod);
+							}														
+						}
+					}
+				}
+			}
+
+			// QT Proposal validity expired
+			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
+			
+			//qtMaintenanceScreen
+			if(isQTMaintenanceScreen()){
+				// ***25201#35 
+				//set status
+				if(getManagedBean().getScQt() != null && StringUtils.isBlank(getManagedBean().getStatus())){
+					ScWorkFlowStatusReqDTO wsReqDTO = new ScWorkFlowStatusReqDTO();
+					wsReqDTO.setDocId(getManagedBean().getScQt().getQtId());
+					wsReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+					
+					ScWorkFlowStatusResDTO wsResDTO = getScWorkflowStatusSO().retrieveCurrentWorkFlowStatus(wsReqDTO);
+					
+					if(wsResDTO != null && wsResDTO.isSuccessful()){
+						if(!CollectionUtils.isEmpty(wsResDTO.getWorkFlowStatusList())){
+							getManagedBean().setStatus(getStatusDescById(wsResDTO.getWorkFlowStatusList().get(0).getPmStatus().getStatusId()));
+						}
+					}
+				}
+				
+				// ***19287#91
+				getManagedBean().setReadOnly(true);
+			}
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, QTConstants.LOI_LIST_PAGE);
+		} catch (Exception e) {
+			handleException(e);
+		} 
+	}
+	
+	
+	public void preRenderLoiListView(Long qtId, String previousPageUrl){
+		if(!StringUtils.isBlank(previousPageUrl)){
+			this.getManagedBean().setBackToPreviousPage(previousPageUrl);
+		}
+		
+		preRenderLoiListViewPriv(qtId, null);
+	}
+	// #17376 #19287 #19336 #25201 - end
 
 	/**
 	 * Pre render page navigation to loi list view page based on task id
@@ -270,6 +396,7 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	// #17376 #19287 #19336 #25201 - start			
 	/**
 	 * Pre render page navigation to loi page based on task id
 	 * 
@@ -277,37 +404,92 @@ public class LOIDetailBackingBean extends
 	 */
 	public void preRenderView() {
 		debugLogger("preRenderView");
+		preRenderViewPriv(null, null);
+	}
+		
+	/**
+	 * 
+	 * @param loiId
+	 */
+	public void preRenderViewForQtMaintenenceScreen(Long loiId, String prevPageURL) {
+		Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
+		otherArgs.put(MapKeyEnum.prevPageURL, prevPageURL);
+		otherArgs.put(MapKeyEnum.isQtMaintenanceScreen, Boolean.TRUE);
+		otherArgs.put(MapKeyEnum.isReadOnly, Boolean.TRUE);
+		otherArgs.put(MapKeyEnum.enableDownloadAllDocuments, Boolean.TRUE);
+		
+		preRenderViewPriv(loiId, otherArgs);
+	}
+				
+	/**
+	 * 
+	 * 
+	 * @param loiId
+	 *            - set null if provided by SCAwardSupplierDataType
+	 * @param otherArgs
+	 *            - set null if provided by SCAwardSupplierDataType
+	 *            isQtMaintenanceScreen - Boolean isReadOnly - Boolean
+	 *            prevPageUrl - String
+	 * 
+	 */
+	private void preRenderViewPriv(Long loiId, Map<MapKeyEnum, Object> otherArgs){
+		boolean isQtMaintenanceScreen = isQTMaintenanceScreen();
+		
 		try {
-			SCAwardSupplierDataType awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
+			SCAwardSupplierDataType awardDataType = null;
+			Long sourceId = null;
+			Boolean isEditFlag = null;
+			String prevPageUrl = null;
+				
+			if (isQtMaintenanceScreen) {
+				prevPageUrl = new MapKeyEnum.ValueRetriever<String>().getValue(otherArgs, MapKeyEnum.prevPageURL);
+				Boolean readOnly = new MapKeyEnum.ValueRetriever<Boolean>().getValue(otherArgs, MapKeyEnum.isReadOnly);
+				isEditFlag = readOnly != null ? !readOnly : Boolean.FALSE;
+				
+				getManagedBean().setEnableDownloadAllDocuments(
+						new MapKeyEnum.ValueRetriever<Boolean>().getValue(
+								otherArgs,
+								MapKeyEnum.enableDownloadAllDocuments));
+			} else {
+				awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
 
-			Long sourceId = Long.valueOf(awardDataType.getSourceId());
+				sourceId = Long.valueOf(awardDataType.getSourceId());
 
-			getManagedBean()
-					.setRecommendDtlIds(awardDataType.getGroupkeyList());
-
+				getManagedBean().setRecommendDtlIds(awardDataType.getGroupkeyList());
+				loiId = Long.valueOf(awardDataType.getAwardId());
+				isEditFlag = Boolean.TRUE;
+			}
+				
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 
-			getManagedBean().setDocType(getPmStatusByStatusId(currentStatusId).getDocType());
-
-			Long loiId = Long.valueOf(awardDataType.getAwardId());
-			getManagedBean().setSourceId(sourceId);
+			if(currentStatusId != null){
+				getManagedBean().setDocType(getPmStatusByStatusId(currentStatusId).getDocType());
+				getManagedBean().setSourceId(sourceId);
+			}
+				
+			if(prevPageUrl != null){
+				getManagedBean().setBackToPreviousPage(prevPageUrl);
+			}
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO.setLoiId(loiId);
-			AwardSupplierResDTO awardSupplierResDTO = getQtAwardSO()
-					.retrieveLOIDtlByLoiId(awardSupplierReqDTO);
+			
+			AwardSupplierResDTO awardSupplierResDTO = getQtAwardSO().retrieveLOIDtlByLoiId(awardSupplierReqDTO);
+			
 			if (awardSupplierResDTO.getScLoi() != null) {
 				ScLoi scLoi = awardSupplierResDTO.getScLoi();
-				editLOI(scLoi, Boolean.TRUE);
+				editLOI(scLoi, isEditFlag);
 			}
-			getManagedBean().setEditFlag(Boolean.FALSE);
 			
+			getManagedBean().setEditFlag(Boolean.FALSE);
+				
 		} catch (Exception e) {
 			handleException(e);
 		} finally {
 			// qtAwardSO = null;
 		}
 	}
+	// #17376 #19287 #19336 #25201 - end
 
 	/**
 	 * Pre render page navigation to suppler response page based on task id
@@ -330,6 +512,48 @@ public class LOIDetailBackingBean extends
 					.handleNavigation(fc, null, redirectUrl);	
 		}
 	}
+
+	// #17376 #19287 #19336 #25201 - start
+	// #25201
+	/**
+	 * Edits the supplier loi action.
+	 * 
+	 * @param sourceId 
+	 * 		the source id (qt id / rn id
+	 * @param loiId 
+	 * 		the loi id
+	 * @param previousPageUrl
+	 * 		the previous page url.
+	 * @param isReadonly
+	 * 		the readonly flag
+	 * @return the supplier loi page
+	 */
+	public String retrieveSupplierLOIDtl(Long sourceId, Long loiId, String previousPageUrl, boolean isReadonly){
+		return retrieveSupplierLOIDtlPriv(sourceId, loiId, previousPageUrl, isReadonly, null);
+	}
+
+	/**
+	 * Edits the supplier loi action.
+	 * 
+	 * @param sourceId 
+	 * 		the source id (qt id / rn id
+	 * @param loiId 
+	 * 		the loi id
+	 * @param previousPageUrl
+	 * 		the previous page url.
+	 * @param isReadonly
+	 * 		the readonly flag
+	 * @param enableDownloadAllDocuments
+	 * 		either user can download all attachments/documents or not
+	 * 
+	 * @return the supplier loi page
+	 */
+	public String retrieveSupplierLOIDtl(Long sourceId, Long loiId, String previousPageUrl, boolean isReadonly, boolean enableDownloadAllDocuments){
+		Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
+		otherArgs.put(MapKeyEnum.enableDownloadAllDocuments, Boolean.valueOf(enableDownloadAllDocuments));
+		
+		return retrieveSupplierLOIDtlPriv(sourceId, loiId, previousPageUrl, isReadonly, otherArgs);
+	}
 	
 	/**
 	 * Edits the supplier loi action.
@@ -342,13 +566,30 @@ public class LOIDetailBackingBean extends
 	 * 		the previous page url.
 	 * @param isReadonly
 	 * 		the readonly flag
+	 * @param otherArgs
+	 * 		enableDownloadAllDocuments - java.lang.Boolean
+	 * 		either user can download all attachments/documents or not
 	 * 
 	 * @return the supplier loi page
 	 */
-	public String retrieveSupplierLOIDtl(Long sourceId, Long loiId, String previousPageUrl, boolean isReadonly) {
+	private String retrieveSupplierLOIDtlPriv(Long sourceId, Long loiId, String previousPageUrl, boolean isReadonly, Map<MapKeyEnum, Object> otherArgs) {
 		ScQt scQt = null;
 		
 		try { 
+			//to avoid otherArgs is null checking next time
+			if(otherArgs == null){
+				otherArgs = new HashMap<MapKeyEnum, Object>();
+			}
+			
+			if(otherArgs.containsKey(MapKeyEnum.enableDownloadAllDocuments) && otherArgs.get(MapKeyEnum.enableDownloadAllDocuments) instanceof Boolean){
+				Object o = otherArgs.get(MapKeyEnum.enableDownloadAllDocuments);
+				
+				if (o instanceof Boolean) {
+					getManagedBean().setEnableDownloadAllDocuments((Boolean) o);
+				}
+			}
+			// #17376 #19287 #19336 #25201 - end
+			
 			getManagedBean().setSourceId(sourceId);
 			if (previousPageUrl != null) {
 				getManagedBean().setBackToPreviousPage(previousPageUrl);	
@@ -399,6 +640,15 @@ public class LOIDetailBackingBean extends
 				
 				//generateDeclarationFromVelocity(scLoi, scQt);
 				
+				// #11134 - start
+				// Remarks
+				this.getManagedBean()
+						.getScLoi()
+						.setScLoiRemarks(
+								initializeRemarks(scLoi, scLoi.getScWorkFlowStatus(), scLoi.getScLoiRemarks(),
+										ScLoiRemark.class));
+				// #11134 - end
+				
 				return QTConstants.SUPPLIER_LOI_PAGE;
 			}
 		} catch (Exception e) {
@@ -437,6 +687,10 @@ public class LOIDetailBackingBean extends
 			
 			// QT Proposal validity expired
 			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
+			
+			// #25638 - Start
+			displayReviseInstrn(getManagedBean().getFcActivityList());
+			// #25638 - End
 			
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MULTI_LOI_PAGE);
@@ -812,6 +1066,12 @@ public class LOIDetailBackingBean extends
 		try {
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setQtId(qtId);
+			
+			// ***19336#62 - START
+			if(isQTMaintenanceScreen()){
+				reqDTO.setBySupplierIds(false);
+			}
+			// END
 			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
 			
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrievePendingLoiList(
@@ -850,24 +1110,37 @@ public class LOIDetailBackingBean extends
 		for (ScLoa scLoa : loaList) {
 			LoiLoaBean loiLoaBean = new LoiLoaBean();
 			loiLoaBean.setScLoa(scLoa);
-			loiLoaBean
-			.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
-			loiLoaBean.setLoiLoaStatus(getStatusDescById(scLoa
-					.getPmStatus().getStatusId()));
-			loiLoaBean.setPmStatus(scLoa.getPmStatus());
+			loiLoaBean.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+			
+			// #17376 #19287 #19336 #25201 - start
+			if(null!=scLoa.getPmStatus()){
+				loiLoaBean.setLoiLoaStatus(getStatusDescById(scLoa.getPmStatus().getStatusId()));
+				loiLoaBean.setPmStatus(scLoa.getPmStatus());
+			} else {
+				loiLoaBean.setPmStatus(getPmStatusByStatusId(new Long(QTConstants.PM_STATUS_INACTIVE_CODE)));
+			}
+			// #17376 #19287 #19336 #25201 - end
+			
 			loiloaBeans.add(loiLoaBean);
 		}
 
 		for (ScLoi scLoi : loiList) {
 			LoiLoaBean loiLoaBean = new LoiLoaBean();
 			loiLoaBean.setScLoi(scLoi);
-			loiLoaBean
-			.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
-			loiLoaBean.setLoiLoaStatus(getStatusDescById(scLoi
+			loiLoaBean.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
+			
+			// #17376 #19287 #19336 #25201 - start
+			if(null!=scLoi.getScWorkFlowStatus() && null!=scLoi.getScWorkFlowStatus().getPmStatus()){
+				loiLoaBean.setLoiLoaStatus(getStatusDescById(scLoi
 					.getScWorkFlowStatus().getPmStatus()
 					.getStatusId()));
-			loiLoaBean.setPmStatus(scLoi.getScWorkFlowStatus()
-					.getPmStatus());
+				loiLoaBean.setPmStatus(scLoi.getScWorkFlowStatus()
+						.getPmStatus());
+			} else {
+				loiLoaBean.setPmStatus(getPmStatusByStatusId(new Long(QTConstants.PM_STATUS_INACTIVE_CODE)));
+			}
+			// #17376 #19287 #19336 #25201 - end
+			
 			loiloaBeans.add(loiLoaBean);
 		}
 		return loiloaBeans;
@@ -882,6 +1155,12 @@ public class LOIDetailBackingBean extends
 	 */
 	public void onRowRecSupplierAction(SelectEvent event) {
 		debugLogger("onRowRecSupplierAction");
+		// #17376 #19287 #19336 #25201 - start
+		if(event != null){			
+			debugLogger(" onRowRecSupplierAction : " + event.toString() + "    class : " + event.getClass());
+		}
+		// #17376 #19287 #19336 #25201 - end
+		
 		ScLoiLoa scLoiLoa = (ScLoiLoa) event.getObject();
 		try {
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -1242,6 +1521,13 @@ public class LOIDetailBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 	}
 
+	// #17376 #19287 #19336 #25201 - start
+	private IScWorkFlowStatusSO getScWorkflowStatusSO(){
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+	}
+	// #17376 #19287 #19336 #25201 - end
+  
 	/**
 	 * getting Approver drop down listing in approval details.
 	 * 
@@ -1289,7 +1575,12 @@ public class LOIDetailBackingBean extends
 	 */
 	public void backToPrevious() {
 		debugLogger("backToPrevious");
-		retrieveLOIList(getManagedBean().getSourceId());
+		 // #17376 #19287 #19336 #25201 - start
+		if(!isQTMaintenanceScreen() || getManagedBean().getSourceId() != null){
+			retrieveLOIList(getManagedBean().getSourceId());
+		}
+		 // #17376 #19287 #19336 #25201 - end
+
 		getManagedBean().setEditFlag(false);
 		getManagedBean().setButtonFlag(false);
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -1471,6 +1762,7 @@ public class LOIDetailBackingBean extends
 			}
 
 			getManagedBean().setEditFlag(Boolean.TRUE);
+			getManagedBean().setReadOnly(!isEditFlag); // #17376 #19287 #19336 #25201									  
 
 			if (getManagedBean().getBackToPreviousPage() == null
 					|| getManagedBean().getBackToPreviousPage().isEmpty()) {
@@ -1704,6 +1996,12 @@ public class LOIDetailBackingBean extends
 							currentStatus,
 							getManagedBean().getScLoi().getScLoiRemarks(),
 							ScLoiRemark.class));
+			
+			// # 11134 -start-
+			List<ScLoiRemark> supplierRemarks = filterSupplierRemarks(getManagedBean().getScLoi().getScLoiRemarks(), false);
+			
+			getManagedBean().setSupplierRemarks(supplierRemarks);
+			// # 11134 -end-
 		}
 		// status
 		getCurrentStatus(currentStatus.getPmStatus()
@@ -1720,11 +2018,16 @@ public class LOIDetailBackingBean extends
 
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
-		if (scLoi.getLoiAmt() != null) {
-			userReqDTO.setApprovalLimit(scLoi.getLoiAmt());
-		}
-		userReqDTO.setOrgProfileId(scLoi.getScLoiLoa().getPmOrgProfile()
-				.getOrgProfileId());
+		//20210406@asyrafhaziq - Bug #30662 - Start
+		//if (scLoi.getLoiAmt() != null) {
+		//	userReqDTO.setApprovalLimit(scLoi.getLoiAmt());
+		//}
+		//userReqDTO.setOrgProfileId(scLoi.getScLoiLoa().getPmOrgProfile()
+		//	.getOrgProfileId());
+		userReqDTO.setMinisterOrgProfileId(retrieveMinistryOrgProfile(
+											scLoi.getScLoiLoa().getPmOrgProfile()
+						.getOrgProfileId()).getOrgProfileId());
+		//20210406@asyrafhaziq - Bug #30662 - End
 		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 
 		getManagedBean().setContractSignerUser(contractSignerUser);
@@ -2143,6 +2446,22 @@ public class LOIDetailBackingBean extends
 					.getStatusId().longValue();
 
 			parseLOIDetails(scLoi, outcome);
+			
+			//#11134 - remove empty remark - start
+			List<ScLoiRemark> scLoiRemarks = scLoi.getScLoiRemarks();
+			List<ScLoiRemark> finalScLoiRemarks = new ArrayList<>();
+			
+			if (CollectionUtils.isNotEmpty(scLoiRemarks)) {
+				for (ScLoiRemark each : scLoiRemarks) {
+					
+					if (!StringUtils.isEmpty(each.getRemark())) {
+						finalScLoiRemarks.add(each);
+					}
+				}
+			}
+			
+			scLoi.setScLoiRemarks(finalScLoiRemarks);
+			//#11134 - remove empty remark - end
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
@@ -2412,6 +2731,39 @@ public class LOIDetailBackingBean extends
 	 */
 	public void updateMultiLoiBpmTaskAction(String outcome) {
 		debugLogger("updateMultiLoiBpmTaskAction");
+		
+		//25638 - Start
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+		    boolean remarksNotFound = true; 
+		    
+	        if (!CollectionUtils.isEmpty(getManagedBean().getScQtCommittee().getQtCommitteRemarks())) {
+	            
+	        	for (ScQtCommitteRemarks scQtRemark : getManagedBean().getScQtCommittee().getQtCommitteRemarks()) {
+	        		if (null != scQtRemark.getCreatedUser() && null != scQtRemark.getCreatedUser().getUserId()) {
+	        			if (scQtRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
+	                   
+	        				if (StringUtils.isEmpty(scQtRemark.getRemark()) ) {
+	        					remarksNotFound = true;
+	        					
+	        					break;
+	        				} else {
+	        					remarksNotFound = false;
+	        				}
+	        			}
+	                }
+	            }
+	        }
+	        
+	        if (remarksNotFound) {
+	            throw new EpException(MessageConst.ERR_775152);
+	        }
+	        
+			RequestContext.getCurrentInstance().execute("reviseLoiDlgs.show()");
+			
+			return;
+		}
+		//25638 - End
+				
 		this.getManagedBean().setAction(outcome);
 		String committeeType = getManagedBean().getCommitteeType();
 		CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
@@ -2478,6 +2830,10 @@ public class LOIDetailBackingBean extends
 			reqDTO.setPayLoad(evaluationDataType);
 			reqDTO.setDigiSignData(digiSign);
 			
+			// #25638 - Start. Remove so that PmUser can get current user data
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			// #25638 - End.
+			
 			reqDTO.setStatusId(getManagedBean().getCurrentStatusId());
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveMultipleLOIDtl(
 					reqDTO);
@@ -2485,10 +2841,19 @@ public class LOIDetailBackingBean extends
 			if (resDTO.isSuccessful()) {
 				super.renewSesionObject();
 
-				successMessage(MessageConst.INFO_700033,
-						ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
-						ParameterConst.RECOMMEND_BY_MULTIPLE_LOI, scQtFinalization
-								.getScQt().getQtNo(), Boolean.TRUE);
+				// #25638 - Start.
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					successMessage(MessageConst.INFO_776042, getMessageCommon("lbl.sc.quotation.tender"), scQtFinalization
+                        .getScQt().getQtNo(), Boolean.TRUE);
+				} else {
+					// #25638 - End.
+					successMessage(MessageConst.INFO_700033,
+							ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
+							ParameterConst.RECOMMEND_BY_MULTIPLE_LOI, scQtFinalization
+							.getScQt().getQtNo(), Boolean.TRUE);
+					// #25638 - Start.
+				}
+				// #25638 - End.
 			}
 
 		} finally {
@@ -2775,9 +3140,11 @@ public class LOIDetailBackingBean extends
 	 */
 	private void debugLogger(Object message) {
 		StringBuilder msg = new StringBuilder(message.toString());
-		if (getManagedBean().getScQt() != null) {
+		// #17376 #19287 #19336 #25201 - start   
+		/*if (getManagedBean().getScQt() != null) {
 			msg.append(" qtId:" + getManagedBean().getScQt().getQtId());
-		}
+		}*/
+		// #17376 #19287 #19336 #25201 - end 
 		if (log.isDebugEnabled()) {
 			log.debug(msg);
 		}		
@@ -3410,6 +3777,35 @@ public class LOIDetailBackingBean extends
 				throw new EpException("No supplier contact address");
 			}
 		}
+		
+		// #11134 - Start
+		if (QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
+				&& BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+
+			boolean remarksEmpty = false;
+
+			// check if remark is empty
+			List<ScLoiRemark> scLoiRemarks = scLoi.getScLoiRemarks();
+			
+			if (CollectionUtils.isNotEmpty(scLoiRemarks)) {
+				for (ScLoiRemark each : scLoiRemarks) {
+					
+					if (StringUtils.isEmpty(each.getRemark())) {
+						remarksEmpty = true;
+						break;
+					}
+				}
+			} else {
+				remarksEmpty = true;
+			}
+
+			// throw message
+			if (remarksEmpty) {
+				throw new EpException(MessageConst.ERROR_716024);
+				// Remark is mandatory for rejection.
+			}
+		}
+		// #11134 -end
 	}
 
 	/**
@@ -3432,7 +3828,8 @@ public class LOIDetailBackingBean extends
 		boolean buttonFlag = getManagedBean().isButtonFlag();
 		int selectedTabIndex = getManagedBean().getSelectedTabIndex();
 		boolean isSecretaryUser = getManagedBean().isSecretaryUser();
-
+		boolean enableDownloadAllDocuments = getManagedBean().getEnableDownloadAllDocuments(); // #17376 #19287 #19336 #25201
+		
 		this.renewSesionObject();
 
 		getManagedBean().setSourceId(sourceId);
@@ -3461,6 +3858,8 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setRecSupplierList(recSupplierList);
 		getManagedBean().setSelectedTabIndex(selectedTabIndex);
 		getManagedBean().setSecretaryUser(isSecretaryUser);
+		getManagedBean().setEnableDownloadAllDocuments(enableDownloadAllDocuments); // #17376 #19287 #19336 #25201																		   
+		
 		if(null!=scQtFinalization){
 		this.getManagedBean().setScQt(scQtFinalization.getScQt());
 		}
@@ -5819,5 +6218,77 @@ public class LOIDetailBackingBean extends
 		updateBPMTask(BpmOutcomeConst.BPM_REJECT, null);
 	}
 	//end Enhancement #21573
+
+	// #17376 #19287 #19336 #25201 - start
+	public void setLoiList(List<ScLoi> loiList) {
+		this.loiList = loiList;
+	}
+
+	public List<ScLoi> getLoiList() {
+		return loiList;
+	}
+	
+	private boolean isDeskOfficer() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
+	}
+	
+	private boolean isQTMaintenanceScreen() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+			|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
+			|| QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+			;
+	}
+	
+	public boolean getIsDeskOfficer(){
+		return isDeskOfficer();
+	}
+	
+	public boolean getIsQtMaintenanceScreen(){
+		return isQTMaintenanceScreen();
+	}
+	
+	public boolean getManagedBeanIsReadOnly(){
+		return this.getManagedBean().isReadOnly();
+	}
+	// #17376 #19287 #19336 #25201 - end
+	
+	// #25638 - Start.
+	/**
+	 *  To Revise.
+	 */
+	public void reviseAction() {
+        reviseSignOff();
+        
+		updateMultiLoiBpmTask(BpmOutcomeConst.BPM_REVISE, null);
+	}
+	// #25638 - End
+	
+	// #25638 - Start.
+	private void reviseSignOff() {
+		if (StringUtils.isNotBlank(getManagedBean().getCommitteeType())) {
+		  
+			for (ScQtCommitteeActivity scQtCommitteeActivity : getManagedBean().getFcActivityList()) {
+				scQtCommitteeActivity.setMultiLoiSignedOff(false);
+			}
+		}
+	}
+	// #25638 - End
+	
+	// #25638 - Start.
+	/**
+	 * @return
+	 */
+	public boolean isPendingNegotiationStatus() {
+	  Long statusId  = getManagedBean().getCurrentStatusId();
+      
+	  if (null != statusId && (QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION.equals(statusId.longValue()) 
+          || QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION.equals(statusId.longValue()))) {
+		  return true;
+	  } else {
+		  return false;
+	  }
+	}
+	// #25638 - End
 	
 }

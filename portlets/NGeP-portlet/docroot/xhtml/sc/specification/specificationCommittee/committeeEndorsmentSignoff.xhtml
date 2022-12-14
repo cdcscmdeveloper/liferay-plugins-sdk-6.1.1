@@ -6,8 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.committee.endorsement.specification']}"
-		toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.committee.endorsement.specification']}" toggleable="true">
 
 		<p:dataTable id="scEndorsement" var="committeActivity" rows="10"
 			rowIndexVar="index" widgetVar="prepareCommittee"
@@ -51,41 +50,31 @@
 				<h:outputText
 					value="#{lbl[committeActivity.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.role']}"
-				style="width:10%;white-space: normal;">
-
-
+			<p:column headerText="#{lbl['lbl.sc.role']}" style="width:10%;white-space: normal;">
 				<h:outputText
 					value="#{specificationBackingBean.getParameterDesc(committeActivity.scCommitteeMember.memberRole)}" />
-
-
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.action']}"
-				style="width:10%;white-space: normal;">
-
-
+			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;white-space: normal;">
 				<h:outputText
 					value="#{lbl[committeActivity.signedOff ? 'lbl.btn.complete' : 'lbl.sc.pending' ]}" />
-
-
 			</p:column>
 
 		</p:dataTable>
-		<!--  commented by sagar for temporarly -->
-		<!-- <p:spacer height="20"></p:spacer>
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.spec.committee.btn.reminder']}"
-				onclick="reminder.show();" />
-
-		</div>
-		<ui:include src="committeeEndorsmentReminderpopup.xhtml" /> -->
 	</p:panel>
 	
-	<c:if test="#{specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_MSC_APPROVAL or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.SE_PENDING_ENDORSMENT or !specificationBackingBean.managedBean.readOnly}">
+	<c:if test="#{specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT 
+			or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION 
+			or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF 
+			or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_MSC_APPROVAL 
+			or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.SE_PENDING_ENDORSMENT 
+			or !specificationBackingBean.managedBean.readOnly}">
+		<!-- 25638 start -->
 		<ac:scRemarkAndAttachment
 			remarkList="#{specificationBackingBean.managedBean.specificationRemarks}"
 			showAttachment="false"
-			readonly="#{specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF or (specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION and specificationBackingBean.managedBean.readOnly)}" />
+			readonly="#{(specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION 
+				and specificationBackingBean.managedBean.readOnly)}" />
+		<!-- 25638 end -->
 	</c:if>
 </ui:composition>

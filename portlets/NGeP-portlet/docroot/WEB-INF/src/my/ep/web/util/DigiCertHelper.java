@@ -230,21 +230,25 @@ public class DigiCertHelper {
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
+					log.info("51; "+ MessageConst.ERROR_DIGICERT_776059); //#29630
 					vo.setErrMsg(MessageUtils.getMessage(
 							MessageConst.ERROR_DIGICERT_776059,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
+					log.info("50; "+ MessageConst.ERROR_DIGICERT_776060); //#29630
 					vo.setErrMsg(MessageUtils.getMessage(
 							MessageConst.ERROR_DIGICERT_776060,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
+					log.info("0; "+ MessageConst.ERROR_DIGICERT_776061); //#29630
 					vo.setErrMsg(MessageUtils.getMessage(
 							MessageConst.ERROR_DIGICERT_776061,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else {
+					log.info("99; "+MessageConst.ERROR_TRUSTGATE_776063); //#29630
 					vo.setErrMsg(MessageUtils.getMessage(
 							MessageConst.ERROR_DIGICERT_776062,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,

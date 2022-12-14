@@ -59,35 +59,28 @@
 					value="#{pidSummaryRptBackingBean.managedBean.contractName}">
 				</p:inputText></td>
 		</tr>
-	</table>
-	
-	<c:if test="#{ptjEnableDisable}">
-			<p:outputLabel value="#{lbl['lbl.rpt.ptj']}"
-				style="margin-top:5px;width:130px;" />
-			<p:selectOneMenu
-				value="#{pidSummaryRptBackingBean.managedBean.scPtj}"
-				style="margin-top:5px;width:300px;">
-				<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-					itemValue="#{null}"></f:selectItem>
 
-				<f:selectItems value="#{pidSummaryRptBackingBean.retrievePTJList()}"></f:selectItems>
-				<p:ajax event="change" partialSubmit="true" update="@this"
-					process="@this" />
-			</p:selectOneMenu>
-		</c:if>
 		<c:if test="#{requisitionerEnableDisable}">
-			<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}"
-				style="margin-top:5px;width:160px;" />
-			<p:selectOneMenu
-				value="#{pidSummaryRptBackingBean.managedBean.scRequisitioner}"
-				style="margin-top:5px;width:300px;">
-				<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-					itemValue="#{null}"></f:selectItem>
-
-				<f:selectItems value="#{pidSummaryRptBackingBean.retrieveRequisitioner()}"></f:selectItems>
-				<p:ajax event="change" partialSubmit="true" update="@this" />
-			</p:selectOneMenu>
+		<tr>
+			<td width="15%">
+				<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}"
+					style="margin-top:5px;width:160px;" /></td>
+			<td width="35%">
+				<p:selectOneMenu
+					value="#{pidSummaryRptBackingBean.managedBean.scRequisitioner}"
+					style="margin-top:5px;width:300px;">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+						itemValue="#{null}"></f:selectItem>
+	
+					<f:selectItems value="#{pidSummaryRptBackingBean.retrieveRequisitioner()}"></f:selectItems>
+					<p:ajax event="change" partialSubmit="true" update="@this" />
+				</p:selectOneMenu>
+			</td>
+			<td width="15%"></td>
+			<td width="35%"></td>
+		</tr>
 		</c:if>
+	</table>
 	
 	<table style="width: 100%;">
 		<tr>

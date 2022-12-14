@@ -35,10 +35,12 @@
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.amount']}" />
 				</f:facet>
+				<ui:remove> #25201 - start </ui:remove>
 				<p:inputText id="balanceAmt" value="#{bankstmt.balanceAmt}"
-					disabled="#{statusHide}" size="30" style="text-align:right"
+					disabled="#{statusHide or supplierProposalDetailBackingBean.managedBean.readOnly}" size="30" style="text-align:right"
 					maxlength="14" required="true"
 					label="#{bankstmt.month} #{lbl['lbl.sc.amount']}">
+					<ui:remove> #25201 - end </ui:remove>
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					<p:ajax event="blur" process="@this"

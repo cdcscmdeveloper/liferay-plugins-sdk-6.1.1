@@ -86,7 +86,9 @@
 				</f:facet>
 
 				<c:choose>
-					<c:when test="#{isCommitteeInfoEditable}">
+					<!-- 29464 -start- -->
+					<c:when test="#{isCommitteeInfoEditable and isCommitteeAppointmentMenuTab}">
+						<!-- 29464 -end- -->
 						<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
 							value="#{specificationcommittee.memberRoleId}"
 							style="width: 130px;margin-bottom: 5px;">
@@ -105,8 +107,7 @@
 						<h:outputText value="#{qTCommitteBackingBean.getParameterDesc(specificationcommittee.memberRole)}" />
 					</c:otherwise>
 				</c:choose>
-				
-				<!-- </ui:fragment> -->
+
 			</p:column>
 
 		</p:dataTable>

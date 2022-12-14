@@ -32,10 +32,31 @@
 						immediate="true" action="#{forceReplaceSuppAdminBackingBean.back}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</td>
 				<td style="white-space: nowrap; float: right;">
-					<p:commandButton value="#{lbl['lbl.sm.declare']}" id="declareBtnId" update=":form"
-							action="#{forceReplaceSuppAdminBackingBean.declare}" 
-							disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc}" 
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				
+					<p:commandButton value="#{lbl['lbl.sm.declare']}"  partialSubmit="true" process="@this" 
+					disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0].smReplacesupplieradminDocFiles[0].fileName}" 
+					update=":#{p:component('declareAlertPopUpId')},@this" id="declareBtnId" action="#{forceReplaceSuppAdminBackingBean.checkingBeforeDeclare}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+					<ac:confirmationPopup id="declareDeletePopUpId"
+		widget="declareDeletePopUp"
+		okAction="#{forceReplaceSuppAdminBackingBean.declare()}"
+		width="400" height="150"
+		title="#{lbl['lbl.msg.confirm.declare.header']}"
+		content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}" 
+		update=":form"/>
+				 <p:confirmDialog id="declareAlertPopUpId" widgetVar="declareAlertPopUp" 
+			 closable="true"  header="#{lbl['lbl.txt.alert']}"  styleClass="splNotesFontBank" >
+			<div class="ppLeftBtn">
+			<f:facet name="message">
+                   <h:outputText value="TEST" styleClass=""  escape="false"/>
+          </f:facet>
+			</div>
+		<div class="ppRightBtn">		    
+		 	<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"  onclick="declareAlertPopUp.hide();" type="button" />
+		</div>
+		</p:confirmDialog>
+		
+				
 				</td>
 			</tr>
 		</table><br />
@@ -73,7 +94,8 @@
 					<td><p:inputText id="newAdminName"
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.name}"
 							size="35" required="true"
-							label="#{lbl['lbl.sm.userprofile.name']}"/>
+							label="#{lbl['lbl.sm.userprofile.name']}">
+							<p:ajax event="change" partialSubmit="true" process="@this" /></p:inputText>
 							<p:message id="newAdminNameMsg" for="newAdminName"
 							showSummary="true" showDetail="false" display="icon" /></td>
 					<td><p:outputLabel
@@ -84,8 +106,10 @@
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.title.salutationId}"
 							style="width: 207px;margin-bottom: 5px;" required="true">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							
 							<f:selectItems
 								value="#{forceReplaceSuppAdminBackingBean.managedBean.salutationItems}" />
+								<p:ajax event="change" partialSubmit="true" process="@this" />
 						</p:selectOneMenu>
 						<p:message id="newAdminSalutationMsg" for="newAdminSalutation"
 							showSummary="true" showDetail="false" display="icon" /></td>
@@ -115,10 +139,12 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.nationality']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
+					
 					<td><p:selectOneMenu id="newAdminNationality"
 							label="#{lbl['lbl.sm.userprofile.nationality']}"
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.pmCountry.countryId}"
-							style="width: 207px;margin-bottom: 5px;" required="true">
+							style="width: 207px;margin-bottom: 5px;" required="true"
+							disabled="#{forceReplaceSuppAdminBackingBean.managedBean.accType eq SupplierManagementConst.ACC_BASIC}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{forceReplaceSuppAdminBackingBean.managedBean.nationalities}" />
@@ -129,8 +155,8 @@
 								value="#{lbl['lbl.sm.userprofile.dob']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:calendar showOn="button" navigator="true"
-							display="inline" required="true" readonlyInput="true"
-							label="#{lbl['lbl.sm.person.dob']}" id="newAdminDob"
+							display="inline" required="true" readonlyInput="true" 
+							partialsubmit="true" label="#{lbl['lbl.sm.person.dob']}" id="newAdminDob"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							yearRange="-99:+0" maxdate="#{forceReplaceSuppAdminBackingBean.getCurrDate()}"
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.birthDate}" />
@@ -144,7 +170,7 @@
 					<td><p:inputText id="newAdminEmail"
 							label="#{lbl['lbl.sm.userprofile.email']}"
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.email}"
-							size="40" required="true">
+							size="40" required="true"><p:ajax event="change" partialSubmit="true" process="@this" />
 							<f:validateRegex 
 						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 							</p:inputText>
@@ -157,7 +183,7 @@
 					<td><p:inputText id="newAdminDesignation"
 							label="#{lbl['lbl.sm.userprofile.designation']}"
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.designation}"
-							size="35" required="true" />
+							size="35" required="true"><p:ajax event="change" partialSubmit="true" process="@this" /></p:inputText>
 							<p:message id="newAdminDesignationMsg" for="newAdminDesignation"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
@@ -262,6 +288,9 @@
 		</p:panel>
 		
 		<ui:include src="/xhtml/sm/shared/forcereplaceadmin/addInfoAddress.xhtml" />
+		
+		<ui:include src="/xhtml/sm/forcereplaceadmin/forceReplaceAdminUploadDocument.xhtml" />
+		
 		<br />
 				<table>
 					<tr>

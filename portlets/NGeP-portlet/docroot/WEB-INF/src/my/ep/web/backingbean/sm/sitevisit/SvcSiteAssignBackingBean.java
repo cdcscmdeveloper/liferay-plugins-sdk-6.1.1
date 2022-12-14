@@ -226,7 +226,9 @@ public class SvcSiteAssignBackingBean extends
 		boolean invalid = true;
 		
 		for(SmSvcAssignmentVO svcAssignmentVO : getManagedBean().getSvcTaskVOLs()){
-			if(svcAssignmentVO.getSvoUserList().getTarget().size() < 2){
+			//#28774 - Start
+			if(svcAssignmentVO.getSvoUserList().getTarget().size() != 1){
+			//#28774 - End
 			  invalid = false;
 			  break;
 			}
@@ -252,8 +254,10 @@ public class SvcSiteAssignBackingBean extends
 	}
 	
 	private FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
+		//CR 28774: Static Code Analysis
+//		FacesScopes facesScopes = new FacesScopes();
+//		return facesScopes;
+		return new FacesScopes();
 	}
 	
 	/**
@@ -297,9 +301,9 @@ public class SvcSiteAssignBackingBean extends
 	 * @return
 	 */
 	public String getLabelWithParam(String label, String param){
-		String labelDesc = SmCommonUtil.getMessage(label, new String[]{param});
-		
-		return labelDesc;
+		//CR 28774: Static Code Analysis
+//		String labelDesc = SmCommonUtil.getMessage(label, new String[]{param});		
+		return SmCommonUtil.getMessage(label, new String[]{param});
 	}
 	
 	/**
@@ -317,9 +321,9 @@ public class SvcSiteAssignBackingBean extends
 	 * Set site visit address list facility name in data table
 	 */
 	private void setSiteVisitAddressesFacilityName() {
-		if (getManagedBean().getSmAppl().getSmSvTasks().size() > 0) {
+		//CR 28774: Static Code Analysis
+		if (!getManagedBean().getSmAppl().getSmSvTasks().isEmpty()) {
 			for (SmSvTask svTask : getManagedBean().getSmAppl().getSmSvTasks()) {
-				log.info("*********smAppl.getSmSvTasks()**********" + svTask.getSmSvAddress().getSiteRefId());
 				
 				if(svTask.getSmSvAddress() != null){
 					SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(svTask.getSmSvAddress().getSiteType(),
@@ -385,7 +389,13 @@ public class SvcSiteAssignBackingBean extends
 			}
 			
 			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(workFlowStatus.getCreatedBy());
+			//Start #29448
+			if(workFlowStatus.getSmAppl() != null && workFlowStatus.getSmAppl().getPoUserId() != null){
+				userReqDTO.setUserId(workFlowStatus.getSmAppl().getPoUserId());
+			}else{
+				userReqDTO.setUserId(workFlowStatus.getCreatedBy());
+			}
+			//End #29448
 			PmUser processingOfficer = SmServiceLookup.getUserSO().retrieveUserByUserId(userReqDTO).getPmUser();
 			
 			if(processingOfficer != null){
@@ -405,8 +415,8 @@ public class SvcSiteAssignBackingBean extends
 			if(svTask.getPmCategoryL3() != null){
 				List<SmSupplierCategory> suppCatLs = SmCommonUtil.getInstance().
 						retrieveSupplierCategoryByApplIdAndCategoryId(smAppl.getApplId(), svTask.getPmCategoryL3().getCategoryL3Id());
-				
-				if(suppCatLs.size() > 0){
+				//CR 28774: Static Code Analysis
+				if(!suppCatLs.isEmpty()){
 					for(SmSupplierCategory suppCat : suppCatLs){
 						StringBuilder catrStr = new StringBuilder();
 						catrStr.append(suppCat.getPmCategoryL1().getCategoryL1Code());
@@ -429,7 +439,8 @@ public class SvcSiteAssignBackingBean extends
 	private PmUser getSupplierMOFAdmin(){
 		log.info("<<<<<<<< getSupplierMOFAdmin>>>>>>>>>>>>>>" + getManagedBean().getSmAppl().getApplId());
 		PmUser pmUser = null;
-		if(getManagedBean().getSmAppl().getSmPersonnels().size() > 0){
+		//CR 28774: Static Code Analysis
+		if(!getManagedBean().getSmAppl().getSmPersonnels().isEmpty()){
 			for(SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
 				if(personnel.getEpRole() != null){
 					if(personnel.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())){

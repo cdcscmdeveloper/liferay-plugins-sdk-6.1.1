@@ -137,15 +137,19 @@
 
 						<h:panelGroup rendered="#{loiloaBean.loiLoaType eq 'LI'}">
 
+							<!-- 19287,17376 -start- -->
 							<p:commandButton title="edit" icon="ui-icon-edit"
-								rendered="#{loiloaBean.pmStatus.statusId eq QTStatusConst.LOI_PENDING_SUBMISSION}"
+								rendered="#{loiloaBean.pmStatus.statusId eq QTStatusConst.LOI_PENDING_SUBMISSION and !lOIDetailBackingBean.managedBean.readOnly }"
 								style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
 								action="#{lOIDetailBackingBean.editLOI(loiloaBean.scLoi, true)}" />
-
+							<!-- 19287,17376 -end- -->
+							
+							<!-- 19287,17376 -start- -->
 							<p:commandLink
-								rendered="#{loiloaBean.pmStatus.statusId ne QTStatusConst.LOI_PENDING_SUBMISSION}"
+								rendered="#{loiloaBean.pmStatus.statusId ne QTStatusConst.LOI_PENDING_SUBMISSION or lOIDetailBackingBean.managedBean.readOnly}"
 								action="#{lOIDetailBackingBean.editLOI(loiloaBean.scLoi, false)}"
 								process="@this">
+							<!-- 19287,17376 -end- -->
 
 								<p:graphicImage id="editLoiImgId" value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" />
 								<p:spacer width="5"></p:spacer>

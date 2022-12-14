@@ -10,6 +10,7 @@ import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
@@ -64,7 +65,6 @@ public class FacesScopes implements Serializable {
 	 * FacesScopes constructor.
 	 */
 	public FacesScopes() {
-
 		portletSession = (PortletSession) FacesContext.getCurrentInstance()
 				.getExternalContext().getSession(false);
 		portletRequest = (PortletRequest) FacesContext.getCurrentInstance()
@@ -221,7 +221,7 @@ public class FacesScopes implements Serializable {
 						// update user last login
 						if(user != null) {
 							reqDTO.setPmUser(resDTO.getPmUser());
-							userSO.updateUserLastLogin(reqDTO);							
+							userSO.updateUserLastLogin(reqDTO);
 						}					
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -244,13 +244,17 @@ public class FacesScopes implements Serializable {
 			}
 		}
 		
+		//20210723@fadhli - #31062 Moved existing user activity logging handling to cater all scenarios - Start
+		UserActivityUtil.getInstance().logUserActivity();
+		//20210723@fadhli - #31062 Moved existing user activity logging handling to cater all scenarios - End
+		
 		if (user == null) {
 			user = new PmUser();
 		}
 
 		return user;
 	}
-
+	
 	public String getUserScreenName() {
 //		log.info("#25061 getUserScreenName");
 		String screenName = "";
@@ -269,7 +273,27 @@ public class FacesScopes implements Serializable {
 		}
 		return screenName;
 	}
-
+	
+	//20210610@fadhli - #31062 Added user activity logging - Start
+	private String getObjectToString(Object object) {
+		String string = StringUtils.EMPTY;
+		if (null != object) {
+			string = object.toString();
+		}
+		return string;
+	}
+	
+	private String getPortletPage() {
+		String portletPage = StringUtils.EMPTY;
+		Object attributeObject = portletRequest.getAttribute("javax.portlet.config");
+		if (null != attributeObject && attributeObject instanceof PortletConfig) {
+			portletPage = ((PortletConfig) attributeObject).getInitParameter("javax.portlet.faces.defaultViewId.view");
+		}
+		
+		return portletPage;
+	}
+	//20210610@fadhli - #31062 Added user activity logging - End
+	
 	public List<Role> getUserRoleList() {
 		List<Role> userRoleList = null;
 		try {
@@ -377,6 +401,11 @@ public class FacesScopes implements Serializable {
 				setApplicationScope(BPM_AUTH_CONTEXT_TOKEN, ctxToken);
 			}
 		}
+		
+		//20210723@fadhli - #31062 Added user activity logging - Start
+		UserActivityUtil.getInstance().logUserActivity();
+		//20210723@fadhli - #31062 Added user activity logging - End
+		
 		return ctxToken;
 	}
 	

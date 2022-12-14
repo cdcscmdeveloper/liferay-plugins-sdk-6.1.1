@@ -30,24 +30,29 @@
 				
 			<p:ajax event="rowUnselect" listener="#{suppFinalizationBackingBean.unselectItemEvent}" 
 				update="@([id$=itemListTbl],[id$=supplierPanel],[id$=awardSupplier],[id$=supplierListTblPanel])"></p:ajax>
-				
-			<p:column styleClass="td-check-box-spacing" rendered="#{isSecretaryUser or 
-													 				isBPKTaskAndClaimed}">
+			<ui:remove>Enhancement #19336 START #142</ui:remove>
+			<p:column styleClass="td-check-box-spacing"
+				rendered="#{!suppFinalizationBackingBean.isQTMaintenanceScreen() and (isSecretaryUser or 
+													 				isBPKTaskAndClaimed)}">
+				<!-- 19336 -end- -->
 				<f:facet name="header">
-					<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalizationBackingBean.managedBean.selectAll}">
-						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=awardSupplier],[id$=supplierListTblPanel])"
-								listener="#{suppFinalizationBackingBean.selectAllItems(suppFinalizationBackingBean.managedBean.selectAll)}" 
-								onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+					<p:selectBooleanCheckbox id="selAllChk"
+						value="#{suppFinalizationBackingBean.managedBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=itemListTbl],[id$=awardSupplier],[id$=supplierListTblPanel])"
+							listener="#{suppFinalizationBackingBean.selectAllItems(suppFinalizationBackingBean.managedBean.selectAll)}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox id="selectItem" value="#{item.selected}" 
-							disabled="#{item.awardedItem or item.disabled or item.cancelled}">
-					<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=awardSupplier],[id$=supplierListTblPanel])" 
-							listener="#{suppFinalizationBackingBean.selectItemEvent(item)}"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+				<p:selectBooleanCheckbox id="selectItem" value="#{item.selected}"
+					disabled="#{item.awardedItem or item.disabled or item.cancelled}">
+					<p:ajax partialSubmit="true" process="@this"
+						update="@([id$=itemListTbl],[id$=awardSupplier],[id$=supplierListTblPanel])"
+						listener="#{suppFinalizationBackingBean.selectItemEvent(item)}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				</p:selectBooleanCheckbox>
 			</p:column>
- 
+
 			<p:column headerText="#{lbl['lbl.sc.item']}" style="width:20%; white-space:normal;">
 				<h:outputText value="#{item.requestItem.itemName}" />
 			</p:column>
@@ -69,12 +74,14 @@
 					<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.cancelled']}" />
 				</f:facet>
+				<ui:remove>Enhancement #19336 START #142</ui:remove>
 				<h:selectOneMenu value="#{item.cancelled}" 
 						required="true" label="#{lbl['lbl.sc.cancelled']}" 
-						disabled="#{item.disabled or item.awardedItem or 
+						disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or item.disabled or item.awardedItem or 
 									!(isSecretaryUser or 
 										isBPKTaskAndClaimed)}" 
 						style="width:95%;">
+				<!-- 19336 -end- -->
 						<f:selectItems value="#{suppFinalizationBackingBean.getItemCancellationDropDown(item)}" />
 						<p:ajax event="change" update="@([id$=itemListTbl],[id$=supplierPanel])" 
 								listener="#{suppFinalizationBackingBean.itemCancellationEvent(item)}"
@@ -137,12 +144,14 @@
 		
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="1"
 			columnClasses="columnWidth20">
-			<h:column>
+			<ui:remove>Enhancement #19336 START #142</ui:remove>
+			<h:column rendered="#{!suppFinalizationBackingBean.isQTMaintenanceScreen()}">
 				<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
 					process="@this" partialSubmit="true" 
 					actionListener="#{suppFinalizationBackingBean.getShortlistedCommomSupplier}"
 					oncomplete="commomSuppPopUp.show();" update="@([id$=commomSuppPopUpId])"  
-					disabled="#{!(isSecretaryUser or isBPKTaskAndClaimed) or isBidding}" style="float:right;"/>
+					disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or !(isSecretaryUser or isBPKTaskAndClaimed) or isBidding}" style="float:right;"/>
+			<!-- 19336 -end- -->
 			</h:column>
 
 		</h:panelGrid>

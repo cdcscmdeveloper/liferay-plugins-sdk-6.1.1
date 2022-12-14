@@ -66,10 +66,13 @@
 				             </td>
 				              <td>
 						     	<c:choose>
+					     				<!-- 29464 -start- -->
 	                                   <c:when test="#{qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_BPK_APPROVAL or 
 	                                                   qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL or 
 	                                                   qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_REVISION_PUBLICATION or
-	                                                   qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_PUBLICATION}" >
+	                                                   qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_PUBLICATION or
+	                                                   qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT}" >
+					     				<!-- 29464 -end- -->
 					                       <p:selectOneRadio label="#{lbl['lbl.sc.open.for']}" value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.openFor}" disabled="true" >
 												 <f:selectItems value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
 												 <p:ajax event="change" process="@this" partialSubmit="true" update="@form" listener="#{createQtBB.openForChange}"></p:ajax>				
@@ -143,9 +146,12 @@
 			<c:if test="#{!isQuotationThresHold}">
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.all.states']}"/></td>
-					<td><p:selectBooleanCheckbox
-							disabled="#{qTSupplierQulCriteriaBackingBean.managedBean.allStateCode.value() eq 'Peninsular' }"
+					<td>
+						<!-- 17376 -start- -->
+						<p:selectBooleanCheckbox
+							disabled="#{qTSupplierQulCriteriaBackingBean.managedBean.allStateCode.value() eq 'Peninsular' or qTDetailBB.managedBean.readOnly}"
 							value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
+						<!-- 17376 -end- -->
 							<f:selectItem
 								itemValue="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}" />
 							<p:ajax update="@form"
@@ -156,10 +162,13 @@
 			<tr>
 				<td style="width: 210px"><p:outputLabel
 						value="#{lbl['lbl.sc.paidup']}" /></td>
-				<td><p:inputText maxlength="18"
-						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_MINIMUM_PAID_UP_CAPITAL)}"
+				<td>
+					<!-- 17376 -start- -->
+					<p:inputText maxlength="18"
+						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_MINIMUM_PAID_UP_CAPITAL) or qTDetailBB.managedBean.readOnly}"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 						style="margin-right:5px;text-align:right; width:210px;">
+					<!-- 17376 -end- -->
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{qTSupplierQulCriteriaBackingBean.validatePaidupcapital}" />
 						<f:convertNumber
@@ -174,10 +183,13 @@
 							rendered="#{!locCoverageReadonly}" /></td>
 					<td><c:choose>
 							<c:when test="#{!locCoverageReadonly and !qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
+								<!-- 17376 -start- -->
 								<p:selectOneMenu id="locLevels"
 									label="#{lbl['lbl.sc.location.level']}"
 									value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterId}"
-									style="width: 220px;" >
+									style="width: 220px;" 
+									disabled="#{qTDetailBB.managedBean.readOnly}">
+								<!-- 17376 -end- -->
 									<f:selectItems
 										value="#{qTSupplierQulCriteriaBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 									<p:ajax event="change" update="zoneLocationDataTable"
@@ -334,8 +346,10 @@
 		
 					<c:if test="#{!locCoverageReadonly}">
 						<div align="right">
+							<!-- 17376 -start- -->
 							<p:selectBooleanCheckbox id="checkAll"
-								style="float:left;margin-top: 13px;margin-right: -4px;">
+								style="float:left;margin-top: 13px;margin-right: -4px;" disabled="#{qTDetailBB.managedBean.readOnly}">
+							<!-- 17376 -end- -->		
 								<p:ajax event="change" partialSubmit="true" process="@all"
 									update="zoneLocationDataTable"
 									listener="#{qTSupplierQulCriteriaBackingBean.checkAllConditions}" />
@@ -408,8 +422,10 @@
 										<td>
 											<div class="ppRightBtn">
 												<c:if test="#{!locCoverageReadonly}">
+													<!-- 17376 -start- -->
 													<p:selectBooleanCheckbox id="popupCheckAll"
-														style="float:left;margin-top: 13px;margin-right: -4px;">
+														style="float:left;margin-top: 13px;margin-right: -4px;" disabled="#{qTDetailBB.managedBean.readOnly}">
+													<!-- 17376 -end- -->
 														<p:ajax event="change" partialSubmit="true" process="@all"
 															update=":form:treeZoneLocationPopup"
 															listener="#{qTSupplierQulCriteriaBackingBean.checkAllPopUpConditions}" />

@@ -126,8 +126,9 @@ public class SoftCertMaintenanceBackingBean implements Serializable{
 			SystemException {
 		String epNo = getSupplierEpNo();
 		String idNo = getDigiCertUserId();
-		String certIssuer = PmCommonUtil
-				.getCertIssuerByIdentificationNoAndEpNo(idNo, epNo);
+		//#32705 - Start
+		String certIssuer = PmCommonUtil.getTypeOfCertIssuer(idNo, epNo);
+		//#32705 - End
 		if (certIssuer.equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 			TrustGateHelper.getInstance().changePIN(idNo, epNo);
 		} else {
@@ -139,8 +140,9 @@ public class SoftCertMaintenanceBackingBean implements Serializable{
 			SystemException {
 		String epNo = getSupplierEpNo();
 		String idNo = getDigiCertUserId();
-		String certIssuer = PmCommonUtil
-				.getCertIssuerByIdentificationNoAndEpNo(idNo, epNo);
+		//#32705 - Start
+		String certIssuer = PmCommonUtil.getTypeOfCertIssuer(idNo, epNo);
+		//#32705 - End
 		if (certIssuer.equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 			TrustGateHelper.getInstance().updateChallResp(idNo, epNo);
 		} else {
@@ -152,8 +154,9 @@ public class SoftCertMaintenanceBackingBean implements Serializable{
 			SystemException {
 		String epNo = getSupplierEpNo();
 		String idNo = getDigiCertUserId();
-		String certIssuer = PmCommonUtil
-				.getCertIssuerByIdentificationNoAndEpNo(idNo, epNo);
+		//#32705 - Start
+		String certIssuer = PmCommonUtil.getTypeOfCertIssuer(idNo, epNo);
+		//#32705 - End
 		if (certIssuer.equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 			TrustGateHelper.getInstance().resetPIN(idNo, epNo,
 					getSupplierEmail());

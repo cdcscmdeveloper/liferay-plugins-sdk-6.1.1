@@ -35,34 +35,49 @@
 		     				
 		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" 
 					autoUpdate="#{suppFinalizationBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" />
+		<ui:remove> #18685 - start </ui:remove>
+		<ui:include src="/xhtml/sc/supplierFinalization/upload.xhtml" />
+		<ui:remove> #18685 - end </ui:remove>
 
 		<ac:gpkiPopup
 			textBeforeSign="#{suppFinalizationBackingBean.textBeforeSign}"
 			postSignAction="#{suppFinalizationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
 			enableAutoUpdate="#{suppFinalizationBackingBean.enableAutoUpdate()}" />
 
-		<div align="right" class="BtnSpacing">
+		<!-- 19336,25201,17376,19287 -start- -->
+		<div class="BtnSpacing" style="display: inline-block; width: 30%">
+			<p:commandButton value="#{lbl['lbl.btn.back']}"
+						immediate="true"
+						action="#{suppFinalizationBackingBean.backAction}"
+						rendered="#{!empty suppFinalizationBackingBean.managedBean.previousPageUrl}" />
+		</div>
+		<div align="right" class="BtnSpacing" style="display: inline-block; width: 100%">
+		<!-- 19336,25201,17376,19287 -end- -->
 			<ui:decorate
 				template="/WEB-INF/facelets/templates/claim_template.xhtml">
 				<ui:define name="outComeSection">
+					<!-- 19336,25201,17376,19287 -start- -->
 					<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
 						partialSubmit="true" update="@form"
 						action="#{suppFinalizationBackingBean.saveSupplierFinalization}"
-						rendered="#{isSecretaryUser or isBPKTaskAndClaimed}"
+						rendered="#{(isSecretaryUser or isBPKTaskAndClaimed) and !suppFinalizationBackingBean.isQTMaintenanceScreen()}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+					<!-- 19336,25201,17376,19287 -end- -->
 
 					<ui:repeat var="bpmAction"
 						value="#{suppFinalizationBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
+						<!-- 19336,25201,17376,19287 -start- -->
 						<p:commandButton value="#{lbl[buttonLabel]}"
 							styleClass="ui-button"
 							action="#{suppFinalizationBackingBean.submitAction}"
 							actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
 							partialSubmit="true" process="@form" update="@form"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							rendered="#{validityDaysExpiredQt}" />
+							rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
+						<!-- 19336,25201,17376,19287 -end- -->
 					</ui:repeat>
 				</ui:define>
 			</ui:decorate>
@@ -86,6 +101,13 @@
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/preparation/preparation.xhtml" />
 			</c:if>
+			<ui:remove> #18685 - start </ui:remove>
+			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
+							suppFinalizationBackingBean.managedBean.evaluationReportIndex}">
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/supplierFinalization/evaluationReport/evaluationReport.xhtml" />
+			</c:if>
+			<ui:remove> #18685 - end </ui:remove>			
 			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.reportTabIndex}">
 				<ui:include
@@ -111,8 +133,29 @@
 
 		<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
 		<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
-
-		<ui:include src="/xhtml/sc/supplierFinalization/upload.xhtml" />			
+		
+		<!-- 25638 start -->
+		<p:dialog id="reviseSuppFinalizationDlgs" widgetVar="reviseSuppFinalizationDlgs"
+			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+			resizable="false" width="400" height="75" closable="false">
+			<table>
+				<tr>
+					<td align="center">
+						<h:graphicImage value="/css/images/design/exclamation.png" /> 
+						<p:outputLabel value="#{lbl['lbl.sc.dialog.confirm.to.revise']}" />
+					</td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="reviseSuppFinalizationDlgs.hide();"
+					action="#{suppFinalizationBackingBean.submitSuppFinalization(true)}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="reviseSuppFinalizationDlgs.hide();" type="button" />
+			</div>
+		</p:dialog>
+		<!-- 25638 end -->		
 		
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
@@ -128,9 +171,11 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
+				<!-- 25638 start -->
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
-					action="#{suppFinalizationBackingBean.submitSuppFinalization}"
+					action="#{suppFinalizationBackingBean.submitSuppFinalization('')}"
 					oncomplete="submissionPopup.hide();" update="@form">
+				<!-- 25638 end -->			
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"

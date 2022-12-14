@@ -26,9 +26,13 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.status']}" />
 				</f:facet>
+				
+				<ui:remove> #19287 - start </ui:remove>
 				<p:selectOneMenu id="decisiontypeid"
 					value="#{otherrequestdetails.approverAction.parameterId}"
-					style="width: 178px;margin-bottom: 5px;">
+					style="width: 178px;margin-bottom: 5px;" disabled="#{createQtBB.managedBean.readOnly}">
+					<ui:remove> #19287 - end </ui:remove>
+
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems var="app"
 						value="#{approvalBackingBean.getStatusDropdownValues()}"

@@ -53,6 +53,10 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoaBasic;
+import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
+import my.ep.persistence.entity.sc.loaloi.ScLoi;
+import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -407,8 +411,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The supplier search bean. */
 	private SupplierSearchBean supplierSearchBean;
 
-	
-
 	/** The selected category list. */
 	private List<ScQtCategory> selectedCategoryList;
 
@@ -565,8 +567,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The briefing zone bean. */
 	private List<BriefingZoneBean> briefingZoneBean = new ArrayList<BriefingZoneBean>();
 
-	
-
 	/** The sc qt supplier. */
 	private ScQtSupplier scQtSupplier;
 
@@ -712,8 +712,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The closing date. */
 	private Date closingDate;
-
-	
 
 	/** The pm document list. */
 	private List<PmDocument> pmDocumentList;
@@ -861,15 +859,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private Object[] scTdObj;
 
-	
 	private boolean createQt;
 
 	private String statecode;
-	
 
-	
-	
-	
 	private List<ScQtApproval> toBeApprovalRemoveList;
 	
 	/** The sc qt remarks. */
@@ -907,8 +900,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The evaluation type. */
 	private String evaluationType;
-
-	
 
 	/** The stage two tech compliance list. */
 	private List<PmDocument> stageTwoTechComplianceList;
@@ -967,8 +958,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The total progressive payment. */
 	private Integer totalProgressivePayment=0;
 
-	
-
 	/** The item name. */
 	private String itemName;
 
@@ -1000,8 +989,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<CtPanelSupplier> ctZoneSupplierList;
 
 	// supplier Qualification Criteria List and variables
-
-	
 
 	/** The supp criteriaopen select list. */
 	private List<ScQtCategory> suppCriteriaopenSelectList;
@@ -1110,7 +1097,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The fin points. */
 	private int finPoints;
 
-	
 	/** The year list. */
 	private List<SelectItem> yearList;
 
@@ -1257,8 +1243,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The delivery zones. */
 	private List<TplSpecZoneDtl> deliveryZones;
 
-	
-
 	/** The address zone bean. */
 	private List<BriefingZoneBean> addressZoneBean;
 
@@ -1273,8 +1257,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The active index. */
 	private int activeIndex;
-
-	
 
 	/** The ct panel zones. */
 	private List<CtPanelZone> ctPanelZones;
@@ -1427,8 +1409,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The local out come. */
 	private String localOutCome;
 
-	
-
 	/** The specification remarks. */
 	private List<ScQtSpecificationRemark> specificationRemarks;
 
@@ -1513,8 +1493,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The search supplier data model. */
 	private IPagingDataModel<PmAddressType> searchDeliveryAddressDataModel;
 
-	
-
 	private Long ptjGroupId;
 	private int checkListYesIndex;
 	private boolean technicalOtherChecklistSubmit;
@@ -1568,6 +1546,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean ButtonHideActive = true;
 	private boolean buttonHideDedActive = true;
 	private boolean buttonHideSchActive = true;
+	
+    // 26095@hatta - start
+	private Date currentDate = new Date(); 
+	private int attachFileIndex; 
+	private String fileDirectory;
+	// 26095@hatta*** - end
+
+	// #25692-start
+	private boolean isApprovalScreen = false;
+	private Long subStatusId;
+	private List<String> paramTypes = null;
+	// #25692-End
 
 	/**
 	 * Sets the panel suppliers.
@@ -1581,11 +1571,42 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private ScQtApprovalRequest scQtApprovalDtls;
 
+	// #19336, #25201, #17376, #19287 -start-
+	private IPagingDataModel<ScLoi> searchLoiDataModel;	
+	private IPagingDataModel<ScLoiForQt> searchLoiForQtDataModel;	
+	private IPagingDataModel<ScLoaBasic> searchLoaDataModel;	
+	private IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel;
+	// #19336, #25201, #17376, #19287 -end-
+	
+	// ***25692 -start-
+	/*
+	 * approval. some part is readOnly, some part is updatable 
+	 */
+	private boolean approvalEditableSection;
+	// ***25692 -end-
+
+	// #15391 - start
+	private boolean isChecklist;
+	private boolean isGenInfo;
+	private boolean specUpdateInProgress;
+	// #15391 - end
+	
+	// #30451, #17376-Start.
+	private boolean isBdSfFlow;
+	// #30451, #17376-End.
+	
+	//29464-start
+	private boolean committeeAppointmentMenuTab = true;
+	//29464-end
+	
+	// #32929 - start
+	private boolean zoneRdbButtonChecked = Boolean.FALSE;
+	// #32929 - end
+	
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
 	public QTDetailManagedBean() {
-		log.info("inside ");
 
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -9853,6 +9874,40 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setBsvDBStateId(Long bsvDBStateId) {
 		this.bsvDBStateId = bsvDBStateId;
 	}
+
+	// #19336, #25201, #17376, #19287 -start-
+	public IPagingDataModel<ScLoi> getSearchLoiDataModel() {
+		return searchLoiDataModel;
+	}
+
+	public void setSearchLoiDataModel(IPagingDataModel<ScLoi> searchLoiDataModel) {
+		this.searchLoiDataModel = searchLoiDataModel;
+	}
+
+	public IPagingDataModel<ScLoiForQt> getSearchLoiForQtDataModel() {
+		return searchLoiForQtDataModel;
+	}
+
+	public void setSearchLoiForQtDataModel(IPagingDataModel<ScLoiForQt> searchLoiForQtDataModel) {
+		this.searchLoiForQtDataModel = searchLoiForQtDataModel;
+	}
+
+	public IPagingDataModel<ScLoaBasic> getSearchLoaDataModel() {
+		return searchLoaDataModel;
+	}
+
+	public void setSearchLoaDataModel(IPagingDataModel<ScLoaBasic> searchLoaDataModel) {
+		this.searchLoaDataModel = searchLoaDataModel;
+	}
+
+	public IPagingDataModel<ScLoaForQt> getSearchLoaForQtDataModel() {
+		return searchLoaForQtDataModel;
+	}
+	
+	public void setSearchLoaForQtDataModel(IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel) {
+		this.searchLoaForQtDataModel = searchLoaForQtDataModel; 
+	}
+	// #19336, #25201, #17376, #19287 -end-
 	
 	/*basri 19637*/
 	public boolean isPanelZone() {
@@ -9904,5 +9959,139 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.zoneGeneralTreesPanel = zoneGeneralTreesPanel;
 	}
 	//20200210@asyrafhaziq_Bug #27381&#26694  - End
+	
+	// 26095@hatta - start
+	public Date getCurrentDate() {
+		return currentDate;
+	}
+
+	public void setCurrentDate(Date currentDate) {
+		this.currentDate = currentDate;
+	}
+
+	public int getAttachFileIndex() {
+		return attachFileIndex;
+	}
+
+	public void setAttachFileIndex(int attachFileIndex) {
+		this.attachFileIndex = attachFileIndex;
+	}
+
+	public String getFileDirectory() {
+		return fileDirectory;
+	}
+
+	public void setFileDirectory(String fileDirectory) {
+		this.fileDirectory = fileDirectory;
+	}
+	// 26095@hatta - end
+	
+	// #25692 start
+	public boolean isApprovalEditableSection() {
+		return approvalEditableSection;
+	}
+
+	public void setApprovalEditableSection(boolean approvalEditableSection) {
+		this.approvalEditableSection = approvalEditableSection;
+	}
+
+	public boolean isApprovalScreen() {
+		return isApprovalScreen;
+	}
+
+	public void setApprovalScreen(boolean isApprovalScreen) {
+		this.isApprovalScreen = isApprovalScreen;
+	}
+
+	/**
+	 * @return the subStatusId
+	 */
+	public Long getSubStatusId() {
+		return subStatusId;
+	}
+
+	/**
+	 * @param subStatusId
+	 *            the subStatusId to set
+	 */
+	public void setSubStatusId(Long subStatusId) {
+		this.subStatusId = subStatusId;
+	}
+
+	/**
+	 * @return the paramTypes
+	 */
+	public List<String> getParamTypes() {
+		return paramTypes;
+	}
+
+	/**
+	 * @param paramTypes
+	 *            the paramTypes to set
+	 */
+	public void setParamTypes(List<String> paramTypes) {
+		this.paramTypes = paramTypes;
+	}
+	// #25692 End
+
+	// #15391 -start-
+	public boolean isChecklist() {
+		return isChecklist;
+	}
+
+	public void setChecklist(boolean isChecklist) {
+		this.isChecklist = isChecklist;
+	}
+
+	public boolean isGenInfo() {
+		return isGenInfo;
+	}
+
+	public void setGenInfo(boolean isGenInfo) {
+		this.isGenInfo = isGenInfo;
+	}
+
+	public boolean isSpecUpdateInProgress() {
+		return specUpdateInProgress;
+	}
+
+	public void setSpecUpdateInProgress(boolean specUpdateInProgress) {
+		this.specUpdateInProgress = specUpdateInProgress;
+	}
+	// #15391 -end-
+
+	// #30451, #17376-Start.
+	/**
+	 * @return the isBdSfFlow
+	 */
+	public boolean isBdSfFlow() {
+		return isBdSfFlow;
+	}
+
+	/**
+	 * @param isBdSfFlow the isBdSfFlow to set
+	 */
+	public void setBdSfFlow(boolean isBdSfFlow) {
+		this.isBdSfFlow = isBdSfFlow;
+	}
+	// #30451, #17376-End.
+
+	//29464-start
+	public boolean isCommitteeAppointmentMenuTab() {
+		return committeeAppointmentMenuTab;
+	}
+
+	public void setCommitteeAppointmentMenuTab(boolean committeeAppointmentMenuTab) {
+		this.committeeAppointmentMenuTab = committeeAppointmentMenuTab;
+	}
+	//29464-end
+
+	public boolean isZoneRdbButtonChecked() {
+		return zoneRdbButtonChecked;
+	}
+
+	public void setZoneRdbButtonChecked(boolean zoneRdbButtonChecked) {
+		this.zoneRdbButtonChecked = zoneRdbButtonChecked;
+	}
 
 }

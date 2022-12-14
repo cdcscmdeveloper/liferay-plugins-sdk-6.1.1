@@ -61,6 +61,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.BpmCommonUtils; // Fix - #31962
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -320,8 +321,10 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			getManagedBean().setContractVer(resDTO.getCtContractVer());
 			getManagedBean().setCurentAccNoBankName(null);
 
-			if (getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
+			//Start Fix - #33399
+			if(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null && getManagedBean().getContractVer().getCtContractValue().getBankName() != null){
 				getManagedBean().setOriginalAccountNo(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
+				getManagedBean().setOriginalBankName(getManagedBean().getContractVer().getCtContractValue().getBankName());
 				getPopulateBankAccountList();
 			}
 
@@ -337,7 +340,9 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 					account = account + ContractConst.SPACE_SLASH + getManagedBean().getContractVer().getCtContractValue().getBankName();
 				}
 				getManagedBean().setAccountNoAndName(account);
+				getManagedBean().setFullBankInfo(account);
 			}	    
+			//End Fix - #33399
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT, getManagedBean().getCtContract().getContractNo()));
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
@@ -389,9 +394,20 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			if (getManagedBean().getFactoring().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 				getManagedBean().setRemoveFactoring(true);
 				getManagedBean().setDocType(reqDTO.getDocType());
-			} else {
-				getManagedBean().setRemoveFactoring(false);
-				getManagedBean().setDocType(reqDTO.getDocType());
+			} else {	
+				//#32555 start				
+				 if(reqDTO.getDocType().equals("UF")){
+						getManagedBean().setRemoveFactoring(false);
+						getManagedBean().setUpdateFactoring(true);
+						getManagedBean().setDocType(ParameterConst.DOCTYPE_UPDATE_FACTORING);
+						getManagedBean().setFcRequestType(ParameterConst.UPDATE_TYPE_FACTORING);						
+				 }else {
+						getManagedBean().setRemoveFactoring(false);
+						getManagedBean().setUpdateFactoring(false);
+						getManagedBean().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
+						getManagedBean().setFcRequestType(ParameterConst.REQUEST_TYPE_FACTORING);						
+				 }
+				//#32555 end				
 			}
 
 			if (getManagedBean().getUserMap().size() == 0) {
@@ -463,6 +479,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		ContractReqDTO reqDTO = null;
 		ContractResDTO resDTO = null;
 		try {
+		    splittedAccNoAndBankname(); //Fix - #33856
 			validateChangeBankRequest(action);
 			reqDTO = new ContractReqDTO();
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
@@ -526,12 +543,15 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 */
 	private void validateChangeBankRequest(String action){
 		getManagedBean().setAutoUpdate(true);
+		// Start Fix - #33399 , #33856
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			if (getManagedBean().getOriginalAccountNo() != null && getManagedBean().getOriginalAccountNo().equalsIgnoreCase(
-					getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())) {
+			if ((getManagedBean().getOriginalAccountNo() != null && getManagedBean().getOriginalAccountNo().equalsIgnoreCase(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo()))
+					&& (getManagedBean().getOriginalBankName() != null && getManagedBean().getOriginalBankName().equalsIgnoreCase(getManagedBean().getContractVer().getCtContractValue().getBankName()))) {
 				throw new EpException(MessageConst.ERROR_750000);
 			}
 		}
+		// End Fix - #33399, #33856
+
 		// Validation for valid contract admin for next task assignment
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isSupplierRole()) {
 			getContractAdminlist();
@@ -893,23 +913,30 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				}
 
 				items = new SelectItem[resDTO.getSmSupplierBankList().size()];
+				//Start Fix - #33399
 				for (SmSupplierBank smSupplierBank : resDTO.getSmSupplierBankList()) {
 					String account = smSupplierBank.getAccountNo();
 					if (smSupplierBank.getPmFinancialOrg() != null 
 							&& smSupplierBank.getPmFinancialOrg().getFinOrgName() != null) {
 						account = account + ContractConst.SPACE_SLASH + smSupplierBank.getPmFinancialOrg().getFinOrgName();
 					}
-					items[i++] = new SelectItem(smSupplierBank.getAccountNo(), account);
+						items[i++] = new SelectItem(account,account);
 					if (!getManagedBean().getSupplierBankAccountMap().containsKey(smSupplierBank.getAccountNo())) {
 						getManagedBean().getSupplierBankAccountMap().put(smSupplierBank.getAccountNo(), smSupplierBank);
 					}
+					if (!getManagedBean().getSupplierBankName().containsKey(smSupplierBank.getPmFinancialOrg().getFinOrgName())) {
+						getManagedBean().getSupplierBankName().put(smSupplierBank.getPmFinancialOrg().getFinOrgName(),smSupplierBank);
+					}	
 					// Default the bank account no if only 1 bank account is available
 
 					if (resDTO.getSmSupplierBankList().size() == 1) {
-						getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(smSupplierBank.getAccountNo());
+						//getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(smSupplierBank.getAccountNo());
+						getManagedBean().setFullBankInfo(account); // Fix - #33856
 						changeAccountActionListener();
 					}
+					getManagedBean().setApplID(smSupplierBank.getSmAppl().getApplId()); // Fix - #33856
 				}
+				//End Fix - #33399
 				getManagedBean().setPopulateBankAccountList(items);	
 			}
 		}  finally {
@@ -1024,23 +1051,59 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}
 		
 	}
-
+    //Start Fix - #33399
 	/**
 	 * The method used to retrieve and display the bank and account information
 	 * with the selected bank for change bank request.
 	 */
 	public void changeAccountActionListener() {
+		//Start Fix - #33399,#33856
+		IChangeBankAccSO changeBankAccSO =null;
+		ContractReqDTO reqDTO = null;
+		ContractResDTO resDTO = null;
 		getManagedBean().getContractVer().getCtContractValue().setBankName(null);
 		getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
 		getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
+		try {
+			String[] splittedBankDetails = splittedAccNoAndBankname();
 
-		SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
-		if (supplierBank != null) {
-			getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
-			getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getBankBranch());
-			getManagedBean().getContractVer().getCtContractValue().setBankAddress(CtAddressUtil.convertSmAddressToCtAddress(supplierBank.getSmAddress()));
+			if (splittedBankDetails != null
+					&& ((splittedBankDetails[0] != null && !splittedBankDetails[0].isEmpty()) && (splittedBankDetails[1] != null && !splittedBankDetails[1]
+							.isEmpty()))) {
+			SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(splittedBankDetails[0]);
+			SmSupplierBank supplierBankname = getManagedBean().getSupplierBankName().get(splittedBankDetails[1]);
+
+				changeBankAccSO = (IChangeBankAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+						IChangeBankAccSO.class);
+				reqDTO = new ContractReqDTO();
+				reqDTO.setBankAccNo(splittedBankDetails[0]);
+				reqDTO.setBankName(splittedBankDetails[1]);
+				if (getManagedBean().getApplID() != null) {
+					reqDTO.setApplID(getManagedBean().getApplID());
+				}
+
+				resDTO = changeBankAccSO.getBankDetails(reqDTO);
+
+			if (supplierBank != null && supplierBankname != null) {
+				if ((supplierBank.getAccountNo() != null && supplierBank.getAccountNo().equals(splittedBankDetails[0]))
+							&& (supplierBankname.getPmFinancialOrg().getFinOrgName() != null && supplierBankname.getPmFinancialOrg().getFinOrgName()
+									.equals(splittedBankDetails[1]))) {
+					getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBankname.getPmFinancialOrg().getFinOrgName());
+						getManagedBean().getContractVer().getCtContractValue().setBankBranch(resDTO.getBankBranch());
+					getManagedBean().getContractVer().getCtContractValue()
+								.setBankAddress(CtAddressUtil.convertSmAddressToCtAddress(resDTO.getBankAddressId()));
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}finally{
+			changeBankAccSO = null;
+            resDTO = null;			
 		}
 	}	
+	//End Fix - #33399,#33856
 
 	/**
 	 * The method used to retrieve the factoring company name.
@@ -1418,6 +1481,7 @@ public void selectFinancialAcc(){
 					fileOutputStream.close();
 				}
 			} catch (IOException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -1471,7 +1535,8 @@ public void selectFinancialAcc(){
 		UserReqDTO userReqDTO = null;
 		UserReqDTO reqDTO = null;
 		try{
-			if (getManagedBean().getContractAdminlist() == null) {
+	// Start Fix - #32186
+    // 		if (getManagedBean().getContractAdminlist() == null) {
 				getManagedBean().setContractAdminlist(new ArrayList<PmUser>());
 
 				String roleCode = (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
@@ -1496,7 +1561,6 @@ public void selectFinancialAcc(){
 									userReqDTO.getIncludeUserIds().add(ctActor.getUser().getUserId());
 									userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);									
 									getManagedBean().setContractAdminlist(userSO.retrieveUserListByRole(userReqDTO).getUserList());
-									//System.out.println("TEST list size ::: "+getManagedBean().getContractAdminlist().size());
 									
 									if(getManagedBean().getContractAdminlist() == null || getManagedBean().getContractAdminlist().isEmpty()){	
 										// in-case of when user is active but not in targeted profileid, reassigned and fetch new contract admins base on same profile id
@@ -1504,21 +1568,32 @@ public void selectFinancialAcc(){
 										reqDTO.setRoleCode(roleCode);
 										reqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 										userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
-										getManagedBean().setContractAdminlist(userSO.retrieveUserListByRole(reqDTO).getUserList());
-										//System.out.println("TEST list size ::: getManagedBean().getContractAdminlist().isEmpty() "+getManagedBean().getContractAdminlist().size());
+										// Start Fix - #31962
+										List<PmUser> userList_1 = userSO.retrieveUserListByRole(reqDTO).getUserList();
+										// Oracle BPM product limitation, ASSIGNEE field size is 1000; only can support up to 83*12(IC number)
+										userList_1 = (List<PmUser>) BpmCommonUtils.limitAssigneeSize(userList_1);
+										getManagedBean().setContractAdminlist(userList_1);
+										// End Fix - #31962
 									}
 									//getManagedBean().getContractAdminlist().add(userResDTO);
 																	
 							    // End Fixing - #29369
 								} else {
-								  
 									userReqDTO = new UserReqDTO();	      	  		
 									userReqDTO.setRoleCode(roleCode);
 									userReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 									userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
-									getManagedBean().setContractAdminlist(userSO.retrieveUserListByRole(userReqDTO).getUserList());			
+									//Start Fix - #31962
+									List<PmUser> userList_2 = userSO.retrieveUserListByRole(userReqDTO).getUserList();
+									// Oracle BPM product limitation, ASSIGNEE field size is 1000; only can support up to 83*12(IC number)
+									userList_2 = (List<PmUser>) BpmCommonUtils.limitAssigneeSize(userList_2);
+									getManagedBean().setContractAdminlist(userList_2);
+									//End Fix - #31962
+
 								}
-			}
+
+	//		     }
+	// End Fix - #32186
 		} finally {
 			userSO = null;
 		}	
@@ -1622,4 +1697,20 @@ public void selectFinancialAcc(){
 		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 	}
+	
+	//Start Fix - #33399
+	public String[] splittedAccNoAndBankname(){
+		String bankDetails = getManagedBean().getFullBankInfo();
+		String[] bankDetailsSplitted= null;	
+		if(bankDetails != null){
+			if(bankDetails.length() > 30 || bankDetails.contains(ContractConst.SPACE_SLASH)){
+				bankDetailsSplitted = bankDetails.split(ContractConst.SPACE_SLASH);
+				getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(bankDetailsSplitted[0]);
+				getManagedBean().getContractVer().getCtContractValue().setBankName(bankDetailsSplitted[1]);
+			}	
+		}
+		return bankDetailsSplitted;
+	}
+	//End Fix - #33399, #33856
+
 }

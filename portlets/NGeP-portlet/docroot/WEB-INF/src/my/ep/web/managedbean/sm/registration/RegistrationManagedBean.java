@@ -156,8 +156,13 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean divisionBox=true;//13320
 	private Long divisionId;//13320
 	private String regIcCheckSSM;
-	// 27691 - Add/Delete Supplier Owner
-	private SmSupplierOwner[] selectedSuppOwners;
+	
+	//#30829 Start
+	private boolean disableHigherManagement = false;
+	private boolean disableManagement=false;
+	private boolean disableProf=false;
+	private boolean disableSemiProf=false;
+	//#30829 end
 	
 	private boolean showOwnerPersonnel = false;
 	
@@ -718,16 +723,6 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.smSuppOwners = smSuppOwners;
 	}
 
-	// 27691 - start -  Add/Delete Supplier Owner
-	public SmSupplierOwner[] getSelectedSuppOwners() {
-		return selectedSuppOwners;
-	}
-
-	public void setSelectedSuppOwners(SmSupplierOwner[] selectedSuppOwners) {
-		this.selectedSuppOwners = selectedSuppOwners;
-	}
-	// 27691 - end -  Add/Delete Supplier Owner
-	
 	public List getDummy() {
 		return dummy;
 	}
@@ -944,4 +939,39 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	public void setPermenantDivisionLs(List<SelectItem> permenantDivisionLs) {
 		this.permenantDivisionLs = permenantDivisionLs;
 	}
+
+	//#30829 Start
+	public boolean isDisableManagement() {
+		return disableManagement;
+	}
+
+	public void setDisableManagement(boolean disableManagement) {
+		this.disableManagement = disableManagement;
+	}
+
+	public boolean isDisableProf() {
+		return disableProf;
+	}
+
+	public void setDisableProf(boolean disableProf) {
+		this.disableProf = disableProf;
+	}
+
+	public boolean isDisableSemiProf() {
+		return disableSemiProf;
+	}
+
+	public void setDisableSemiProf(boolean disableSemiProf) {
+		this.disableSemiProf = disableSemiProf;
+	}	
+
+	public boolean isDisableHigherManagement() {
+		return disableHigherManagement;
+	}
+
+	public void setDisableHigherManagement(boolean disableHigherManagement) {
+		this.disableHigherManagement = disableHigherManagement;
+	}
+	//#30829 End
+	
 }

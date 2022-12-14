@@ -53,9 +53,11 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.component.datetime.DateTimeInput;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.bidding.BiddingManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
@@ -1015,6 +1017,13 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	 */
 	public String biddingMonitorBackAction() {
 		debugLogger("supplierProposalBackAction");
+
+		// #17376-144 -start-
+		if (isQTMaintenanceScreen()) { 
+			return this.getManagedBean().getPreviousPageUrl();
+		} 
+		// #17376-144
+
 		return "/xhtml/sc/bidding/bidManagement/biddingmain.xhtml ? faces-redirect=true";
 	}
 
@@ -1238,5 +1247,94 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		
 		return pmOrgProfile;
 	}
+	
+	// #-17376-144 start
+	public String bidManagementQuotationTenderAction(ScBidSchedule bid, String previousPageUrl) {
+		//renewSesionObject();
 
+		getManagedBean().setScheduledBid(bid);
+
+		IBiddingSO biddingSO = null;
+		IQTDetailSO qTDetailSO = null;
+
+		try {
+			biddingSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+			qTDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			BiddingReqDTO reqDto = new BiddingReqDTO();
+
+			reqDto.setBidScheduleId(bid.getBidScheduleId());
+			
+			BiddingResDTO resDto = biddingSO.retrieveBidScheduleDtl(reqDto);
+
+			if (resDto.isSuccessful()) {
+				getManagedBean().setScheduledBid(resDto.getScBidSchedule());
+				getManagedBean().setBidPackages(resDto.getBidPackages());
+			}
+			
+			QuationTenderReqDTO qtreqDTO = new QuationTenderReqDTO();
+			QuationTenderResDTO qtresDTO = new QuationTenderResDTO();
+			
+			if (null != bid.getScBid()) {
+				qtreqDTO.setQtTndrNo(bid.getScBid().getDocNo());
+				qtresDTO = qTDetailSO.retriveQtByQtNumber(qtreqDTO);
+			}
+			
+			if (null != qtresDTO.getQtDetail()) {
+				this.getManagedBean().setScQt(qtresDTO.getQtDetail());
+			}
+		}
+
+		finally {
+			biddingSO = null;
+			qTDetailSO = null;
+		}
+
+		getManagedBean().setRemainingTime(
+				remainingTimeCalculator(new Date(), getManagedBean()
+						.getScheduledBid().getEndDate()));
+
+		getManagedBean().setDuration(
+				durationCalculator(getManagedBean().getScheduledBid()
+						.getStartDate(), getManagedBean().getScheduledBid()
+						.getEndDate()));
+		
+		if (ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(getManagedBean()
+				.getScheduledBid().getScBid().getRecommendedTypeId()
+				.getParameterCode())) {
+			getManagedBean().setBidManagementViewBy(
+					ParameterConst.RECOMMEND_TYPE_PACKAGE);
+			getManagedBean().setBidManagementInitialViewBy(
+					ParameterConst.RECOMMEND_TYPE_PACKAGE);
+			createViewByPackageLineChart();
+
+		} else if (ParameterConst.RECOMMEND_TYPE_ITEM.equals(getManagedBean()
+				.getScheduledBid().getScBid().getRecommendedTypeId()
+				.getParameterCode())) {
+			getManagedBean().setBidManagementViewBy(
+					ParameterConst.RECOMMEND_TYPE_ITEM);
+			getManagedBean().setBidManagementInitialViewBy(
+					ParameterConst.RECOMMEND_TYPE_ITEM);
+			getManagedBean().setSelectedBidItem(
+					getManagedBean().getScheduledBid().getScBidItems().get(0));
+			rowSelectListener();
+		}
+		
+        this.getManagedBean().setPreviousPageUrl(previousPageUrl);
+        
+		getManagedBean().setRendered(false);	
+		
+		return "/xhtml/sc/bidding/bidManagement/bidManagementMain.xhtml?faces-redirect=true"; 
+
+	}
+	// #17376-144 End
+	
+	// #-17376-144 start
+	public boolean isQTMaintenanceScreen() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
+				;
+	}
+	// #17376-144 End
 }

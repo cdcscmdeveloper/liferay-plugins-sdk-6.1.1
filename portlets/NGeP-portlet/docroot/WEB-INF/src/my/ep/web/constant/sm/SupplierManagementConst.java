@@ -3,6 +3,7 @@
  */
 package my.ep.web.constant.sm;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -183,7 +184,10 @@ public class SupplierManagementConst {
 	// Application Category Type
 	public static final String SM_APPL_CATEGORY_TYPE_NORMAL = "N";
 	public static final String SM_APPL_CATEGORY_TYPE_SPECIAL = "S";
-
+	//30912 - START
+	// APPLICATION TYPE
+	public static final String APPL_TYPE_BUMI = "B";
+	//30912 - END
 	public static final String PERSONNEL_TYPE_DIRECTOR = "DIR";
 	public static final String PERSONNEL_TYPE_STAFF = "STF";
 	public static final String PERSONNEL_TYPE_EQUITY = "EQUI";
@@ -221,6 +225,7 @@ public class SupplierManagementConst {
 	public static final String SPECIAL_SERVICE_CODE = "ISS";
 	public static final String PROF_SERVICE_CODE = "IPS";
 	public static final String NEW_IC = "I";
+	public static final String IDENTIFICATION_TYPE_PASSPORT = "P"; //#32014
 	public static final int PENDING_ACT_STATUS = 8;
 	public static final int APPROVED_RECORD_STATUS = 1;
 	public static final int DELETED_RECORD_STATUS = 9;
@@ -252,6 +257,10 @@ public class SupplierManagementConst {
 	public static final String SVO = "UPS_SVO";
 	public static final String SM_RMK_DOC_TYPE_SVO = "SVO";
 	public static final String SM_RMK_DOC_TYPE_SVC = "SVC";
+	
+	//3460 - Start
+	public static final String SM_RMK_DOC_TYPE_SDOR = "SD";
+	//3460 - End
 
 	// Site Visit
 	public static final String CAT_TYPE_TRANSPORTATION = "A";
@@ -407,6 +416,13 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2 = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2;
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER;
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY;
+	
+	// #30829 - start
+	public static List<String> LIST_OF_BUSINESS_TYPE_FOR_ROLE_IN_COMPANY = Arrays.asList(
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK);
+	// #30829 - end
 
 	public static List<String> LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED = Arrays
 			.asList(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
@@ -479,11 +495,18 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_REJECTED_BY_SYS = 20118L;
 	public static final long PM_STATUS_REGISTRATION_STATUS_REGISTERED = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
 	public static final long PM_STATUS_REGISTRATION_STATUS_FOREIGN = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN;
+	public static final long PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA;
 	public static final long PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME;
 	public static final long PM_STATUS_REGISTRATION_STATUS_NON_BUMI_FROM_HOME = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_NON_BUMI_FROM_HOME;
 	public static final long PM_STATUS_PENDING_APPLICATION_INQUIRY = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_INQUIRY;
 	public static final long PM_STATUS_PENDING_APPLICATION_DECLARATION_L = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION;
 	public static final String REJECTED_STATUSES[] = my.ep.constant.sm.SupplierManagementConst.REJECTED_STATUSES;
+	
+	// #30574 - start
+	public static final List<Long> LIST_APPLICATION_DETAILS_REPORT = new ArrayList<Long>(Arrays.asList(PM_STATUS_MOF_ACCT_REG_APPROVED, PM_STATUS_REGISTRATION_STATUS_REGISTERED,
+			PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA, PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME, PM_STATUS_REGISTRATION_STATUS_NON_BUMI_FROM_HOME,
+			PM_STATUS_PO_REJECTED_APPLICATION, PM_STATUS_APPROVER_REJECTED_APPLICATION));
+	// #30574 - end
 
 	public static final String SM_APPL_PAGE_TYPE_BASIC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC;
 	public static final String SM_APPL_PAGE_TYPE_BRANCH = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH;
@@ -654,7 +677,15 @@ public class SupplierManagementConst {
 	// SUPP_SUSPEND_OR_TERMINATED
 	public static String SUSPENDED = my.ep.constant.sm.SupplierManagementConst.SUSPENDED;
 	public static String TERMINATED = my.ep.constant.sm.SupplierManagementConst.TERMINATED;
-
+	
+	//9569
+	public static final String EPROLE_DELETED = "Delete";
+	public static final String ROLE_CODE_SM_1 = "MOF_SUPPLIER_ADMIN";
+	public static final String ROLE_CODE_SM_2 = "MOF_SUPPLIER_USER";
+	public static final String ROLE_CODE_SM_3 = "CM_USER";
+	public static final String ROLE_CODE_SM_4 = "FL_USER";
+	public static final String ROLE_CODE_SM_5 = "SUPPLIER_TEMP";
+		
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
 		return SUPP_TYPE_CONTRACTOR;
@@ -855,6 +886,12 @@ public class SupplierManagementConst {
 	public String getSM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2() {
 		return SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2;
 	}
+	
+	// #30829 - start
+	public String getSM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY() {
+		return SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY;
+	}
+	// #30829 - end
 
 	public String getSM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT() {
 		return SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT;
@@ -1198,4 +1235,33 @@ public class SupplierManagementConst {
 		return PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT;
 	}
 	// 26555 -END
+	
+	//9569
+	public String getEPROLE_DELETED() {
+		return EPROLE_DELETED;
+	}
+
+	public String getROLE_CODE_SM_1() {
+		return ROLE_CODE_SM_1;
+	}
+
+	public String getROLE_CODE_SM_2() {
+		return ROLE_CODE_SM_2;
+	}
+
+	public String getROLE_CODE_SM_3() {
+		return ROLE_CODE_SM_3;
+	}
+
+	public String getROLE_CODE_SM_4() {
+		return ROLE_CODE_SM_4;
+	}
+
+	public String getROLE_CODE_SM_5() {
+		return ROLE_CODE_SM_5;
+	}
+
+	public String getIDENTIFICATION_TYPE_PASSPORT() {
+		return IDENTIFICATION_TYPE_PASSPORT;
+	}
 }

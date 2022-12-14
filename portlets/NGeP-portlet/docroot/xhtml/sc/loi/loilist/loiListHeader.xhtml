@@ -11,8 +11,10 @@
 					<td width="15%"><h:outputLabel
 							value="#{lbl['lbl.sc.qtn.no']}" /></td>
 					<td class="header-info-text" width="12%">
+						<!-- 25201 -start- -->
 						<p:commandLink process="@this" partialSubmit="true"
-						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,lOIDetailBackingBean.managedBean.scQtFinalization.scQt,true)}">
+						action="#{qTDetailBB.editQuationTenderDetails(lOIDetailBackingBean.managedBean.scQtFinalization.scQt, false, true, view.viewId)}">
+						<!-- 25201 -end- -->
 				<h:outputText value="#{lOIDetailBackingBean.managedBean.scQtFinalization.scQt.qtNo}" escape="false" />
 					</p:commandLink>
 						</td>

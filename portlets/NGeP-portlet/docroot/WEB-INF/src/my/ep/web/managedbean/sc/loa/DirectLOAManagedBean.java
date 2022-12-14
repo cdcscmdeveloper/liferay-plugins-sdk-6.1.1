@@ -300,6 +300,14 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	//#24540 - start -
 	private SelectItem[] pk7Reasons;
 	//#24540 - end -
+	
+	// #17376 -start-
+	private boolean isValidatewitness=false;
+	// #17376 -end-
+	
+	// Bug #33674@Syazani - Start
+	private Long supplierBankId = null;
+	// Bug #33674@Syazani - End	
 
 	/**
 	 * Gets the spki backing bean.
@@ -1851,6 +1859,22 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.buttonHideSchActive = buttonHideSchActive;
 	}
 
+	// #17376-start
+	/**
+	 * @return the isValidatewitness
+	 */
+	public boolean isValidatewitness() {
+		return isValidatewitness;
+	}
+
+	/**
+	 * @param isValidatewitness the isValidatewitness to set
+	 */
+	public void setValidatewitness(boolean isValidatewitness) {
+		this.isValidatewitness = isValidatewitness;
+	}
+	// #17376-End
+
 	//#24540 - start -
 	/**
 	 * @return the pk7Reasons
@@ -1867,5 +1891,13 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.pk7Reasons = pk7Reasons;
 	}
 	//#24540 - end -
+
+	public Long getSupplierBankId() {
+		return supplierBankId;
+	}
+
+	public void setSupplierBankId(Long supplierBankId) {
+		this.supplierBankId = supplierBankId;
+	}
 	
 }

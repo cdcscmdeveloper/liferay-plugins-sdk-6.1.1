@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sm.applicationView;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
@@ -54,12 +56,21 @@ public class ViewApplHistoryManagedBean extends
 	private List<SmBulkApplicationVO> smBulkApplicationVO;
 	private SmAttachment cancellationAttachment;
 	private SmMofAccount currMof;
+	//#11641 - Start
+	private SmApplInquiry selectedInquiryResponse;
+	private boolean emptyMandatoryDocHistory;
+	private boolean emptyNonMandatoryDocHistory;
+	//#11641 - End
 
 	//25792 - start
 	private Date currentDate = new Date();
 	private String searchAccountType;
 	//25792 - end
-		
+	
+	//28771
+	private String SearchDocumentMode;
+	
+	private Boolean displayResubmitButton; //#31248
 
 	public ViewApplHistoryManagedBean() {
 
@@ -81,7 +92,11 @@ public class ViewApplHistoryManagedBean extends
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
 			reqDTO.setObjArrSearchBean(searchBean);
 			reqDTO.setViewApplicationHistory(isViewApplicationHistory());
-
+			
+			//28771 - start
+			reqDTO.setsupportingDocMode(getSupportingDocMode());
+			//28771-end
+			
 			try {
 				if (!isSupplierUser()) {
 					if (!isSearchCriteriaEmpty()) {
@@ -376,4 +391,43 @@ public class ViewApplHistoryManagedBean extends
 		this.searchAccountType = searchAccountType;
 	}
 	//25792 - end
+	
+	//28771 - start
+	public String getSearchDocumentMode(){
+		return SearchDocumentMode;
+	}
+	
+	public void setSearchDocumentMode(String SearchDocumentMode){
+		this.SearchDocumentMode = SearchDocumentMode;
+	}
+	//28771 - end
+	
+	public Boolean getDisplayResubmitButton() {
+		return displayResubmitButton;
+	}
+	public void setDisplayResubmitButton(Boolean displayResubmitButton) {
+		this.displayResubmitButton = displayResubmitButton;
+	}
+	
+	//#11641 - Start
+	public SmApplInquiry getSelectedInquiryResponse() {
+		return selectedInquiryResponse;
+	}
+
+	public void setSelectedInquiryResponse(SmApplInquiry selectedInquiryResponse) {
+		this.selectedInquiryResponse = selectedInquiryResponse;
+	}
+	public boolean isEmptyMandatoryDocHistory() {
+		return emptyMandatoryDocHistory;
+	}
+	public void setEmptyMandatoryDocHistory(boolean emptyMandatoryDocHistory) {
+		this.emptyMandatoryDocHistory = emptyMandatoryDocHistory;
+	}
+	public boolean isEmptyNonMandatoryDocHistory() {
+		return emptyNonMandatoryDocHistory;
+	}
+	public void setEmptyNonMandatoryDocHistory(boolean emptyNonMandatoryDocHistory) {
+		this.emptyNonMandatoryDocHistory = emptyNonMandatoryDocHistory;
+	}
+	//#11641 - End
 }

@@ -143,6 +143,10 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private PmOrgProfile ptjGroupProfile;
 	private PmOrgProfile ptjMinistryProfile;
 	
+	// #17376-144 -start-
+	private String previousPageUrl;	
+	// #17376-144 -end-
+
 	/**
 	 * Default Constructor
 	 */
@@ -1309,6 +1313,20 @@ public class BiddingManagedBean extends BaseManagedBean {
 	public void setPtjMinistryProfile(PmOrgProfile ptjMinistryProfile) {
 		this.ptjMinistryProfile = ptjMinistryProfile;
 	}
-	
-	
+
+	// #-17376-start
+	/**
+	 * @return the previousPageUrl
+	 */
+	public String getPreviousPageUrl() {
+		return previousPageUrl;
+	}
+
+	/**
+	 * @param previousPageUrl the previousPageUrl to set
+	 */
+	public void setPreviousPageUrl(String previousPageUrl) {
+		this.previousPageUrl = previousPageUrl;
+	}	
+	// #-17376-End
 }

@@ -317,6 +317,15 @@
 				<td>
 					<h:panelGroup id="reasonPG">
 						<c:if test="#{directLOABackingBean.isPbDropDown() || directLOABackingBean.isPk7Periodic()}">
+							<!-- 19336 -start- -->
+							<c:choose>
+							<c:when test="#{directLOABackingBean.managedBean.disableFields or directLOABackingBean.managedBean.readOnly}" >
+							<p:inputText 
+								value="#{directLOABackingBean.getReasonDesc(directLOABackingBean.managedBean.scLoa.justificationType.reasonCode)}"
+								size="35" disabled="true" />
+							</c:when>
+							<c:otherwise>
+							<!-- 19336 -end- -->
 								<p:selectOneMenu
 										style="width: 206px;margin-bottom: 5px;" id="justificationId"
 										panelStyle="overflow-y: scroll; width:400px; height:200px;"
@@ -332,6 +341,10 @@
 									
 									</p:selectOneMenu> <p:message id="justTypeMsg" for="justificationId"
 										display="icon" />
+							<!-- 19336 -start- -->
+							</c:otherwise>
+							</c:choose>
+							<!-- 19336 -end- -->
 						</c:if>
 					</h:panelGroup>
 				</td>
@@ -450,19 +463,6 @@
 					<h:outputText styleClass="instruction"
 						value=" #{lbl['lbl.sc.sst.offer.price.reminder']}"
 						escape="false" /> <BR />
-					<!-- <h:outputText styleClass="instruction"
-						value=" #{lbl['lbl.sc.gst.remainder.one.instruction']}"
-						escape="false" 
-						rendered = "#{directLOABackingBean.getGstRate() == 6}"/> 
-					<h:outputText styleClass="instruction"
-						value=" #{lbl['lbl.sc.gst.remainder.one.instruction.0']}"
-						escape="false" 
-						rendered = "#{directLOABackingBean.getGstRate() == 0}"/> 						
-						<br />
-					<h:outputText styleClass="instruction"
-						value="#{lbl['lbl.sc.gst.remainder.two.instruction']}"
-						escape="false"
-						rendered="#{directLOABackingBean.managedBean.renderRemainder}" />  -->
 				</td>
 			</tr>
 			<!-- end Enhncement #24259 #24269 -->
@@ -542,6 +542,15 @@
 												<c:when test="#{!directLOABackingBean.isPbDropDown()}">
 													<c:choose>
 														<c:when test="#{directLOABackingBean.isPk7Periodic()}">
+															<!-- 19336 -start- -->
+															<c:choose>
+															<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
+																<p:inputText 
+																value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.bondReq))}"
+																size="28" disabled="true" />
+															</c:when>
+															<c:otherwise>
+															<!-- 19336 -end- -->
 															<p:selectOneMenu id="bondReqPk7" required="true"
 																style="margin-bottom:5px;width:175px;"
 																value="#{directLOABackingBean.managedBean.bondReqSelectedVal}"
@@ -552,6 +561,10 @@
 																 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
 																 listener="#{directLOABackingBean.performanceBondChanged(directLOABackingBean.managedBean.bondReqSelectedVal)}"/>
 															</p:selectOneMenu>
+															<!-- 19336 -start- -->
+															</c:otherwise>
+															</c:choose>
+															<!-- 19336 -end- -->
 														</c:when>
 														<c:otherwise>
 															<p:inputText id="bondReqTxt"
@@ -561,6 +574,15 @@
 													</c:choose>
 												</c:when>
 												<c:otherwise>
+													<!-- 19336 -start- -->
+													<c:choose>
+													<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
+														<p:inputText 
+														value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.bondReq))}"
+														size="28" disabled="true" />
+													</c:when>
+													<c:otherwise>
+													<!-- 19336 -end- -->
 													<p:selectOneMenu id="performanceBondValId" required="true"
 														style="margin-bottom:5px;width:175px;"
 														value="#{directLOABackingBean.managedBean.bondReqSelectedVal}"
@@ -572,6 +594,10 @@
 														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
 														 listener="#{directLOABackingBean.performanceBondChanged(directLOABackingBean.managedBean.bondReqSelectedVal)}"/>
 													</p:selectOneMenu>
+													<!-- 19336 -start- -->
+													</c:otherwise>
+													</c:choose>
+													<!-- 19336 -end- -->
 												</c:otherwise>
 											</c:choose>
 										</c:otherwise>
@@ -832,6 +858,15 @@
 												<c:when test="#{!directLOABackingBean.isAgreementDropDown()}">
 													<c:choose>
 														<c:when test="#{directLOABackingBean.isPk7Periodic()}">
+															<!-- 19336 -start- -->
+															<c:choose>
+															<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
+																<p:inputText 
+																value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.agreementReq))}"
+																size="28" disabled="true" />
+															</c:when>
+															<c:otherwise>
+															<!-- 19336 -end- -->
 															<p:selectOneMenu id="agreementReqPk7" required="true"
 																style="margin-bottom:5px;width:246px;"
 																value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
@@ -842,6 +877,10 @@
 																 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
 																 listener="#{directLOABackingBean.agreementChanged(directLOABackingBean.managedBean.agreemetSelectedVal)}"/>
 															</p:selectOneMenu>
+															<!-- 19336 -start- -->
+															</c:otherwise>
+															</c:choose>
+															<!-- 19336 -end- -->
 														</c:when>
 														<c:otherwise>
 															<p:inputText id="agreementReqTxt"
@@ -851,6 +890,15 @@
 													</c:choose>
 												</c:when>
 												<c:otherwise>
+													<!-- 19336 -start- -->
+													<c:choose>
+													<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
+														<p:inputText 
+														value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.agreementReq))}"
+														size="28" disabled="true" />
+													</c:when>
+													<c:otherwise>
+													<!-- 19336 -end- -->
 													<p:selectOneMenu id="agreementValId" required="true"
 														style="margin-bottom:5px;width:246px;"
 														value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
@@ -862,6 +910,10 @@
 														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
 														 listener="#{directLOABackingBean.agreementChanged(directLOABackingBean.managedBean.agreemetSelectedVal)}"/>
 													</p:selectOneMenu>
+													<!-- 19336 -start- -->
+													</c:otherwise>
+													</c:choose>
+													<!-- 19336 -end- -->
 												</c:otherwise>
 											</c:choose>
 									</c:otherwise>
@@ -878,4 +930,13 @@
 			</tr>
 		</table>
 	</p:panel>
+	
+	<!-- 11134 -start- -->
+	<p:outputPanel id="remarksPanel">
+		<ac:scRemarkAndAttachment
+			rendered="#{not empty directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
+			remarkList="#{directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
+			showAttachment="false" readonly="true" />
+	</p:outputPanel>
+	<!-- 11134 -end- -->
 </ui:composition>

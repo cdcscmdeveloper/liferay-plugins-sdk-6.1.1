@@ -33,6 +33,12 @@
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
 
+		<ui:remove> #18685 - start </ui:remove>	
+		<ac:scSingleFileUploadPopup widgetVar="crBriefingReportAttWidget"
+			fileUploadListener="consolidationReportBackingBean.handleFileUpload"
+			update="@([id$=briefingReportUploadBtn],[id$=uploadCBP])"  />
+		<ui:remove> #18685 - end </ui:remove>
+			
 		<div align="right" class="BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
 				partialSubmit="true" update="@form"
@@ -58,11 +64,15 @@
 
 		<p:tabMenu id="tab"
 			activeIndex="#{consolidationReportBackingBean.managedBean.activeIndex}">
-			<p:menuitem value="#{lbl['lbl.sc.briefing.paper.preparation']}"
+
+			<ui:remove> #18685 - start </ui:remove>
+			<p:menuitem value="#{lbl['lbl.sc.evaluation.report']}"
 				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(0)}"
 				process="@form" update="@form" partialSubmit="true"
 				style="width:150px;">
 			</p:menuitem>
+			<ui:remove> #18685 - end </ui:remove>
+			
 			<p:menuitem value="#{lbl['lbl.sc.consolidation.report.packagewise']}"
 				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(1)}"
 				process="@form" update="@form" partialSubmit="true"
@@ -73,7 +83,15 @@
 				process="@form" update="@form" partialSubmit="true"
 				style="width:150px;">
 			</p:menuitem>
-		</p:tabMenu>
+			
+			<ui:remove> #18685 - start </ui:remove>
+			<p:menuitem value="#{lbl['lbl.sc.briefing.paper.preparation']}"
+				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(3)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:150px;">
+			</p:menuitem>
+			<ui:remove> #18685 - end </ui:remove>
+ 	</p:tabMenu>
 
 		<p:panel id="contentPanel">
 			<c:if
@@ -90,6 +108,14 @@
 				<ui:include
 					src="#{consolidationReportFolderPath}/supplierRecommendation/supplierRecommendation.xhtml" />
 			</c:if>
+			<ui:remove> #18685 - start </ui:remove>
+			<c:if
+				test="#{consolidationReportBackingBean.managedBean.activeIndex eq 
+								consolidationReportBackingBean.getEvaluationReportTabIndex()}">
+				<ui:include
+					src="#{consolidationReportFolderPath}/evaluationReport/evaluationReport.xhtml" />
+			</c:if>
+			<ui:remove> #18685 - end </ui:remove>
 		</p:panel>
 		<ui:include
 			src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierPreferencemargin.xhtml" />
@@ -98,16 +124,13 @@
 		<ui:include
 			src="#{consolidationReportFolderPath}/supplierRecommendation/boardofDirectorsDetails.xhtml" />
 
-		<ac:scSingleFileUploadPopup widgetVar="briefingReportAttWidget"
-			fileUploadListener="consolidationReportBackingBean.handleFileUpload"
-			update="@([id$=reportTbl])" />
-
-		<ac:scSingleFileUploadPopup widgetVar="kertasTaklimUploadAttWidget"
+		<ui:remove> #18685 - start </ui:remove>
+		<!-- <ac:scSingleFileUploadPopup widgetVar="kertasTaklimUploadAttWidget"
 			fileUploadListener="consolidationReportBackingBean.handleKertasFileUpload"
 			update="@([id$=reportTbl])"
 			fileType="#{CommonConstants.FILE_UPLOAD_DOC_TYPE}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.doc.file']}" />
-
+			invalidFileMessage="#{lbl['lbl.txt.upload.doc.file']}" /> -->
+		<ui:remove> #18685 - end </ui:remove>
 
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
@@ -124,15 +147,40 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
-					action="#{consolidationReportBackingBean.submitConsolidationReport}"
+					action="#{consolidationReportBackingBean.preSubmitConsolidationReport}"
 					oncomplete="submissionPopup.hide();" update="@form">
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
-					oncomplete="#{cc.attrs.widget}.hide();" />
+					oncomplete="submissionPopup.hide();" />
 
 			</div>
 		</p:dialog>
+
+		<p:dialog id="submissionPopupAndNewComId" widgetVar="submissionPopupAndNewCom"
+			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
+			resizable="false" width="325" height="100" closable="false"
+			modal="true">
+
+			<table>
+				<tr>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.sc.dialog.confirm.new.sf.commitee.report.submit']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+					action="#{consolidationReportBackingBean.submitConsolidationReport}"
+					oncomplete="submissionPopupAndNewCom.hide();" update="@form">
+				</p:commandButton>
+
+				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
+					oncomplete="submissionPopupAndNewCom.hide();" />
+
+			</div>
+		</p:dialog>		
 	</ui:define>
 
 </ui:composition>

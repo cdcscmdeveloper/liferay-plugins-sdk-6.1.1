@@ -14,18 +14,20 @@
 	<ui:include src="committeeApproval.xhtml" />
 
 	<div class="ppRightBtn">
+		<!-- 25692 -start- -->
 		<p:commandButton value="#{lbl['lbl.btn.clone']}"
 			styleClass="BtnSpacing"
-			disabled="#{approvalBackingBean.managedBean.readOnly}"
+			disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}"
 			actionListener="#{qTCommitteBackingBean.committeeclonePopupAction(qTDetailBB.managedBean.selectedTabBean.scQtCommittee)}"
 			oncomplete="screen2.show();" process="@this"
 			update="@([id$=cloneid])" />
 		<p:commandButton id="committeeapproveradd" styleClass="BtnSpacing"
-			disabled="#{approvalBackingBean.managedBean.readOnly}"
+			disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}"
 			value="#{lbl['lbl.btn.add']}" process="@this"
 			actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
 			oncomplete="newspecificationcommittee.show();"
 			update="@([id$=newspecificationcommitteeid])" />
+		<!-- 25692 -end- -->
 		<p:commandButton value="#{lbl['lbl.btn.delete']}"
 			styleClass="BtnSpacing"
 			disabled="#{qTDetailBB.deleteselectedList(membersList.scCommitteeMembers)}"
@@ -39,13 +41,15 @@
 	</div>
 	<ui:param name="committeeApprovalDeleteId"
 		value="committeeApprovalDeleteId" />
+	<!-- 25692 -start- -->
 	<ac:confirmationPopup id="#{committeeApprovalDeleteId}"
 		widget="committeeApprovalDeletePopUp"
 		okAction="qTCommitteBackingBean.deleteSpecificationCommittee"
-		width="40%" height="100"
+		width="400" height="100"
 		title="#{lbl['lbl.sc.qt.committee.appointment']}"
 		content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
 		update="@form" />
+	<!-- 25692 -end- -->
 
 	<ui:include src="/xhtml/sc/quatationtender/committeeappointment/addspecificationcommittee.xhtml" />
 	<ui:include src="/xhtml/sc/quatationtender/committeeappointment/cloneDetails.xhtml" />

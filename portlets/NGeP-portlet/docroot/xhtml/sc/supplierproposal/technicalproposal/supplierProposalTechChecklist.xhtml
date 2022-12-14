@@ -72,9 +72,13 @@
 					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'TS' 
 						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey ne 'NE')
 						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey eq 'NE' and !techList.scQtCheckList.scQtCheckListValue.allEmployee)}">
+					<!-- 17376,19287 -start- -->
 					<p:commandButton
 						action="#{supplierProposalDetailBackingBean.prepareTechnicalAction(techList)}"
-						value="#{lbl['lbl.btn.prepare']}" style="width:101px;" />
+						value="#{supplierProposalDetailBackingBean.managedBean.readOnly ? lbl['lbl.btn.view']:lbl['lbl.btn.prepare']}"
+						style="width:101px;" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" />
+					<!-- 17376,19287 -end- -->
 				</ui:fragment>
 
 				<ui:fragment

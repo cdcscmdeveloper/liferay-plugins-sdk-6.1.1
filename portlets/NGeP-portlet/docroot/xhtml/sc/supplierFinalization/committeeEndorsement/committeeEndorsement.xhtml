@@ -13,6 +13,9 @@
 			value="#{suppFinalizationBackingBean.managedBean.committeeEndorsementList}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{endorsement}" rowIndexVar="index" rows="10">
+			<ui:remove> #19287 - start </ui:remove>
+			<ui:param name="endorseStatus" value="#{suppFinalizationBackingBean.getEndorsementType(endorsement)}"></ui:param>
+			<ui:remove> #19287 - end </ui:remove>
 			<ac:paginator for="committeeEndorsement" />
 
 			<p:column headerText="#{lbl['lbl.sc.name']}" style="width:20%">
@@ -34,10 +37,14 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.status']}" style="width:20%">
+				<!-- 19287 -start- -->
 				<h:outputText value="#{lbl['lbl.sc.pending']}" 
-							  rendered="#{!endorsement.signedOff or isSupplierFinalization}" />
-				<h:outputText value="#{lbl['lbl.sc.endorse']}" 
-							  rendered="#{endorsement.signedOff and !isSupplierFinalization}" />
+							  rendered="#{!endorseStatus or isSupplierFinalization}" />
+				<!-- 25638 start -->
+				<h:outputText value="#{lbl['lbl.btn.complete']}" 
+							  rendered="#{endorseStatus and !isSupplierFinalization}" />
+				<!-- 25638 end -->
+				<!-- 19287 -end- -->
 			</p:column>
 		</p:dataTable>
 		

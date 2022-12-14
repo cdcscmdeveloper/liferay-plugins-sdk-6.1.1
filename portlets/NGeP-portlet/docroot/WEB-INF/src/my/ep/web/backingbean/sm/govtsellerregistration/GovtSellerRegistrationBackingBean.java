@@ -154,8 +154,10 @@ public class GovtSellerRegistrationBackingBean extends
 				if(bank.getAccountNo() != null){
 					sb = new StringBuilder();
 					sb.append("<font color='red'>");
-					bank.setHasActiveTransactionContractManagement(SmApplicationUtil.hasActiveTransactionForContractManagement(this.getManagedBean().getSmSupp(), bank.getAccountNo()));
-					bank.setHasActiveTransactionFulfilment(SmApplicationUtil.hasActiveTransactionForFulfilment(this.getManagedBean().getSmSupp(), bank.getAccountNo()));
+					bank.setHasActiveTransactionContractManagement(SmApplicationUtil.hasActiveTransactionForContractManagement(this.getManagedBean().getSmSupp(), bank.getAccountNo(),
+							bank.getSmAppl().getSmSupplier().getSupplierId())); //#30693));
+					bank.setHasActiveTransactionFulfilment(SmApplicationUtil.hasActiveTransactionForFulfilment(this.getManagedBean().getSmSupp(), bank.getAccountNo(),
+							bank.getSmAppl().getSmSupplier().getSupplierId())); //#30693
 					
 					if(bank.isHasActiveTransactionContractManagement()){
 						sb.append(SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied",null));
@@ -247,7 +249,10 @@ public class GovtSellerRegistrationBackingBean extends
 		if (orgProfile != null) {
 			if (orgProfile.getSmSupplier() != null
 					&& orgProfile.getSmSupplier().getRecordStatusFlg() != null) {
-				if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+				//#28765 - Start add OR DbValueConst.RECORD_STATUS_REJECTED
+				if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED || 
+						orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_REJECTED) {
+				//#28765 - End
 					supplier = orgProfile.getSmSupplier();
 					getManagedBean().setDeletedNotActivatedSupplier(true);
 				} else {
@@ -1247,6 +1252,23 @@ public class GovtSellerRegistrationBackingBean extends
 		if (!SmCommonUtil.isCollectionEmpty(orgProfile.getPmAddressTypes())) {
 			PmAddressType addrType = orgProfile.getPmAddressTypes().get(0);
 			if (addrType.getPmAddress() != null) {
+				//start #30827
+				if(addrType.getPmAddress().getPmCountry()!=null){
+					addrType.getPmAddress().getPmCountry().getCountryId();
+				}
+				if(addrType.getPmAddress().getPmCity()!=null){
+					addrType.getPmAddress().getPmCity().getCityId();
+				}
+				if(addrType.getPmAddress().getPmDistrict()!=null){
+					addrType.getPmAddress().getPmDistrict().getDistrictId();
+				}
+				if(addrType.getPmAddress().getPmState()!=null){
+					addrType.getPmAddress().getPmState().getStateId();
+				}
+				if(addrType.getPmAddress().getPmDivision()!=null){
+					addrType.getPmAddress().getPmDivision().getDivisionId();
+				}
+				//end #30827
 				addr.setAddress1(addrType.getPmAddress().getAddress1());
 				addr.setAddress2(addrType.getPmAddress().getAddress2());
 				addr.setAddress3(addrType.getPmAddress().getAddress3());

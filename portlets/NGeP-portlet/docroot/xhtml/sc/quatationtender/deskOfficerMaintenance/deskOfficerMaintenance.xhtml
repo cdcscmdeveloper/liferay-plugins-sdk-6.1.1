@@ -1,0 +1,124 @@
+<ui:composition 
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	<ui:define name="contentSection">
+		<style>
+		.ui-dialog{
+			width: 50% !important; 
+			max-width: 600px !important; 
+		}
+	</style>
+	<p:messages showDetail="true"
+			autoUpdate="#{simpleQuoteBackingBean.managedBean.autoUpdate}"
+			closable="true" severity="error, info" showSummary="false" />
+	<p:blockUI block=":form" widgetVar="doSearchBlockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif" />
+	</p:blockUI>
+	<ac:lovPopup />		
+	<ac:gpkiPopup beforeSignText="#{DOMaintenanceBackingBean.textBeforeSign}"
+				postSignAction="#{DOMaintenanceBackingBean.submitReassignmentForApproval(gpkiBackingBean.pmDigiSign)}"
+				enableAutoUpdate="#{DOMaintenanceBackingBean.enableAutoUpdate()}" />
+	<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
+			id="qtsearchid">		
+		<ui:param name="screenName" value="QT"></ui:param>
+		<ui:include src="searchQnTDeskOfficerMaintenance.xhtml"></ui:include>
+
+              <div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{DOMaintenanceBackingBean.searchQTAction}" update="searchQTs, qtList"
+					process="@this, qtsearchid" onstart="doSearchBlockWidget.show()" oncomplete="doSearchBlockWidget.hide()"/>
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+					action="#{DOMaintenanceBackingBean.reset}" 
+					resetValues="true" update="qtsearchid, qtList"
+					process="@this"  onstart="doSearchBlockWidget.show()" oncomplete="doSearchBlockWidget.hide()" />
+			</div>
+	</p:panel>	
+	
+	<p:panel id="qtList" header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
+			<h:panelGroup id="table-wrapper" style="width:100%;">
+				<p:dataTable id="searchQTs"
+					value="#{DOMaintenanceBackingBean.searchQTDataModel}" var="scQt"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowIndexVar="index" lazy="true" rows="10">
+					<p:ajax event="page" onstart="doSearchBlockWidget.show()" oncomplete="doSearchBlockWidget.hide()"></p:ajax>
+					<ac:paginator for="searchQTs" />
+					
+					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
+						<p:selectBooleanCheckbox disabled="#{!scQt.selectable}" id="selectAllItemsByItem" value="#{scQt.selected}">
+								<p:ajax onstart="doSearchBlockWidget.show()" oncomplete="doSearchBlockWidget.hide()" listener="#{DOMaintenanceBackingBean.selectedQtId(scQt.qtId)}" update=":#{p:component('taskReassignBtn')},  :#{p:component('taskReassignSubmitBtn')}, :#{p:component('searchQTs')} " />
+						</p:selectBooleanCheckbox>
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:100px;">
+						<p:commandLink process="@this" partialSubmit="true"
+							action="#{qTDetailBB.editQuationTenderDetails(scQt, false, true, view.viewId)}">
+							<h:outputText value="#{scQt.qtNo}" />
+						</p:commandLink>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.title']}">
+						<h:outputText value="#{scQt.qtTitle}" 
+							style="white-space: normal;word-wrap: break-word;"/>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}"
+						style="width:60px;white-space: normal;word-wrap: break-word;">
+						<h:outputText
+							value="#{DOMaintenanceBackingBean.getParameterDesc(scQt.procurementMode)}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.created.date']}" style="width:80px;">
+						<h:outputText value="#{scQt.createdDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.published.date']}" style="width:80px;">
+						<h:outputText value="#{scQt.publishDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.closing.date']}" style="width:80px;">
+						<h:outputText value="#{scQt.closingDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.status']}" style="width:150px;white-space: normal;word-wrap: break-word;">
+						<h:outputText value="#{DOMaintenanceBackingBean.getStatusDescById(scQt.qtStatus.statusId)}"/>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.quotation.tender.deskofficermaintenance.committeeapprover']}" style="width:100px;white-space: normal;word-wrap: break-word;">
+						<h:outputText value="#{scQt.doMaintenanceApprover}"/>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.quotation.tender.deskofficermaintenance.newDO']}" style="width:100px;white-space: normal;word-wrap: break-word;">
+						<h:outputText rendered="#{scQt.selectable}" value="#{DOMaintenanceBackingBean.getNewDeskOfficer(scQt.qtId)}" />
+						<h:outputText rendered="#{!scQt.selectable}" value="#{lbl['lbl.sc.quotation.tender.deskofficermaintenance.notSupported']}" />
+					</p:column>
+					
+				</p:dataTable>
+			</h:panelGroup>
+			
+			<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.sc.quotation.tender.deskofficermaintenance.assignment']}" id="taskReassignBtn"
+						action="#{DOMaintenanceBackingBean.redirectToTaskReassign}" update=":form:dlTaskReassignment, qtList" 
+						disabled="#{DOMaintenanceBackingBean.managedBean.disableAssignTo}" onstart="doSearchBlockWidget.show()" oncomplete="doSearchBlockWidget.hide()"/>
+						
+					<p:commandButton value="#{lbl['lbl.btn.submit']}" id="taskReassignSubmitBtn"
+						action="#{DOMaintenanceBackingBean.assertMethodIfRequireApproval}" update=":form:dlTaskReassignment, qtList" 
+						disabled="#{DOMaintenanceBackingBean.managedBean.disableSubmit}" onstart="doSearchBlockWidget.show()" oncomplete="doSearchBlockWidget.hide()"/>
+			</div>
+		</p:panel>
+			<ui:include src="deskOfficerTaskReassignPopup.xhtml" />
+	</ui:define>		
+</ui:composition>

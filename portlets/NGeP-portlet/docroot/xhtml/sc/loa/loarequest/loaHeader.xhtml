@@ -5,6 +5,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+	<ui:remove>#17376 #25201 - start</ui:remove>
+	<ui:param name="canShowSupplierProposal" value="#{lOADetailBackingBean.canShowSupplierProposal() and lOADetailBackingBean.canShowSupplierProposalByLOAStatus()}" />
+	<ui:remove>#17376 #25201 - end</ui:remove>
+
 	<div align="left" class="header-info header-spacing"
 		style="width: 100%">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -47,10 +51,12 @@
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.document.no']}" /></td>
 				<td class="header-info-text">
+				<ui:remove>#25201 - start </ui:remove>
 				<p:commandLink rendered="#{isDocTypeQuotation or isDocTypeDirectNego}" process="@this" partialSubmit="true"
-						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,lOADetailBackingBean.managedBean.scLoa.scQt,true)}">
+						action="#{qTDetailBB.editQuationTenderDetails(lOADetailBackingBean.managedBean.scLoa.scQt, false, true, view.viewId)}">
 				       #{lOADetailBackingBean.managedBean.scLoa.scQt.qtNo}
 					</p:commandLink>
+					<ui:remove>#25201 - end </ui:remove>
 				 <h:outputText
 						value="#{lOADetailBackingBean.managedBean.scLoa.scQuote.quoteNo}"
 						rendered="#{!(isDocTypeQuotation or isDocTypeDirectNego)}" /></td>
@@ -63,6 +69,36 @@
 				<td class="header-info-text">
 					#{lOADetailBackingBean.showPreparedBy(lOADetailBackingBean.managedBean.scLoa.createdBy)}</td>
 			</tr>
+			<ui:remove>#25201 - start </ui:remove>
+			<c:if
+				test="#{((not empty lOADetailBackingBean.managedBean.scQtProposal) or (not empty lOADetailBackingBean.managedBean.scLoa.scQuote)) and lOADetailBackingBean.qtPrefixIsQT()}">
+				<tr>
+					<td width="10%"><h:outputLabel
+							value="#{lbl['lbl.sc.proposal.no']}" /></td>
+					<td class="header-info-text">
+						<!-- 17376 -start- -->
+						<c:choose>
+							<c:when
+								test="#{((isDocTypeQuotation or isDocTypeDirectNego) and canShowSupplierProposal) or not empty lOADetailBackingBean.managedBean.scQtProposal}">
+								<p:commandLink process="@this" partialSubmit="true"
+									action="#{ViewSPBackingBean.navigatetoViewSupplierProposal(view.viewId, lOADetailBackingBean.managedBean.scQtProposal.qtProposalId)}">
+				       #{lOADetailBackingBean.managedBean.scQtProposal.proposalNo}
+					</p:commandLink>
+							</c:when>
+							<c:when test="#{!(isDocTypeQuotation or isDocTypeDirectNego)}">
+								<h:outputText
+									value="#{lOADetailBackingBean.managedBean.scLoa.scQuote.quoteNo}" />
+							</c:when>
+						</c:choose>
+					</td>
+					<!-- 17376 -end- -->
+					<td><p:spacer width="1" /></td>
+					<td><p:spacer width="1" /></td>
+					<td><p:spacer width="1" /></td>
+					<td><p:spacer width="1" /></td>
+				</tr>
+			</c:if>
+			<ui:remove>#25201 - end </ui:remove>
 		</table>
 	</div>
 </ui:composition>

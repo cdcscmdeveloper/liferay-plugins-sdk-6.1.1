@@ -20,6 +20,7 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -216,6 +217,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.id.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -232,6 +234,7 @@ import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
 
+// TODO: Auto-generated Javadoc
 public class SmCommonUtil {
 	private static Logger log = Logger.getLogger(SmCommonUtil.class);
 	private static SmCommonUtil instance;
@@ -1385,7 +1388,7 @@ public class SmCommonUtil {
 	 *            - String
 	 */
 	public static void calculateSmApplicationPaidUpCapitalSum(
-			SmCompanyBasic compBasic, String businessTypeVal) {
+			SmCompanyBasic compBasic, List<SmEquityCompany> smEquityCompany, String businessTypeVal) { //#30900
 		boolean llpOrRoc = false;
 		if (compBasic.getBumiEquity() != null) {
 			compBasic.setBumiEquity(compBasic.getBumiEquity().setScale(2,
@@ -1458,7 +1461,8 @@ public class SmCommonUtil {
 			compBasic.setTotalShare(compBasic.getBumiEquity().add(compBasic.getNonBumiEquity())
 					.add(compBasic.getLocalCompanyEquity()).add(compBasic.getForeignCompanyEquity())
 					.add(compBasic.getForeignerEquity()).add(compBasic.getGovtEquity())
-					.add(compBasic.getGovtUnitrustEquity()).setScale(2, RoundingMode.HALF_UP));
+					.add(compBasic.getGovtUnitrustEquity())
+					.setScale(2, RoundingMode.HALF_UP));
 		} else {
 			compBasic.setTotalShare(new BigDecimal(0));
 		}
@@ -1482,6 +1486,10 @@ public class SmCommonUtil {
 						.add(compBasic.getGovtEquity())
 						.add(compBasic.getGovtUnitrustEquity())
 						.setScale(2, RoundingMode.HALF_UP));
+			} else{
+				//start #30900
+				compBasic.setPaidUpCapital(compBasic.getPaidUpCapital().setScale(2, RoundingMode.HALF_UP));
+				//end #30900
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -1489,6 +1497,7 @@ public class SmCommonUtil {
 		}
 		log.info("**** Paid up capital ****** " + compBasic.getPaidUpCapital());
 	}
+
 
 	/**
 	 * Calculate sm application paid up capital percent.
@@ -4383,8 +4392,8 @@ public class SmCommonUtil {
 					}
 					throw new EpException(MessageConst.ERROR_721085,new String[] {sb.toString() });
 				}
-			}//END 27329			
-			
+			}//END 27329
+
 			return resDTO;
 		} catch (Exception ex) {
 			String message = MessageUtils.getMessage(ex.getMessage(),
@@ -4531,7 +4540,13 @@ public class SmCommonUtil {
 
 			if (!StringUtils.isBlank(resDTO.getStatusCode())) {
 				pers.setIdentityResponseCode(resDTO.getStatusCode());
-				pers.setIdentityResidentStatus(resDTO.getResidentStatus());
+				//31749 - start
+				if(resDTO.getResidentStatus() != null && resDTO.getResidentStatus().equalsIgnoreCase("null")){
+					pers.setIdentityResidentStatus(null);
+				}else{
+					pers.setIdentityResidentStatus(resDTO.getResidentStatus());
+				}
+				//31749 - end
 			}
 			log.info("**** My identiy output is *****" + resDTO.getStatusCode());
 			if (!resDTO.getSeverity().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_SEVERITY_SUCC)) {
@@ -5245,9 +5260,23 @@ public class SmCommonUtil {
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setApplId(applId);
 		reqDTO.setCategoryId(categoryL3Id);
-		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO()
-				.retrievePendingApprovalCategoryByApplIdAndCategoryId(reqDTO);
-
+		
+		//29823 - start
+		//to check the current appl status is after approval assignment site visit or not
+		SmWorkflowStatus wf = SmCommonUtil.getCurrentActiveWokFlowStatus(applId);
+		boolean isAfterApproval = (wf!=null && wf.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED ? true : false);
+		
+		SupplierSearchResDTO resDTO = null;
+		
+		if(isAfterApproval){
+			resDTO = SmServiceLookup.getSupplierSearchSO()
+					.retrieveAfterApprovalCategoryByApplIdAndCategoryId(reqDTO);
+		}else{
+			resDTO = SmServiceLookup.getSupplierSearchSO()
+					.retrievePendingApprovalCategoryByApplIdAndCategoryId(reqDTO);
+		}
+		//29823 - end
+		
 		return resDTO.getSmSupplierCategoryList();
 	}
 
@@ -5930,6 +5959,7 @@ public class SmCommonUtil {
 	}
 	//SSM Integration
 	public static void ssmError(SsmResDTO resDTO){
+		//27382
 		switch (resDTO.getStatusCode()) {
 		case "70001":
 			//27214 -> this changes is remove in this case. replace with  27225

@@ -44,6 +44,7 @@ public class TemplateSpecBean implements Serializable {
 	private List<TplSpecAnswer> specAnswersToDelete;
 	private TplSpecEstimation specEstimation;
 	
+
 	/**
 	 * Constructor for template specification bean
 	 */
@@ -244,5 +245,6 @@ public class TemplateSpecBean implements Serializable {
 		this.specEstimation = specEstimation;
 	}
 	//#25039 End
+
 	
 }

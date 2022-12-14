@@ -104,6 +104,24 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	
 	private boolean searchDPM;
 	
+	//#22211 - start
+	private List<String> loaList;
+	
+	private boolean searchLoaByRN;
+	//#22211 - end
+	// Redmine 25396:
+	private String searchFunctionType;
+	
+	private boolean isG2G;
+	
+	private boolean viewAsPTJ;
+	
+	private boolean viewAsSupplier;
+	
+	//Start - #25396
+	private boolean disableMinistryPtjLov = false;
+	private boolean showMinistryPtjField = true;
+	//End - #25396
 
 	/**
 	 * The Class DocumentPagingDataModel.
@@ -164,26 +182,30 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 					paramTitle ="scLoiLoa.title";
 				}
 				
-				if (getSearchPtjProfile() != null && getSearchPtjProfile().getOrgProfileId() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean(paramPtj, SearchOperator.OPERATOR_EQUALS.value(),
-							getSearchPtjProfile().getOrgProfileId()));
-					
-				} else if (getSearchPtjGroupProfile() != null && getSearchPtjGroupProfile().getOrgProfileId() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean(
-							paramPtjGroupAndMinistry+"."
-									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT
-											.value()),
-							SearchOperator.OPERATOR_EQUALS.value(),
-							getSearchPtjGroupProfile().getOrgProfileId()));
-					
-				} else if (getSearchMinistryProfile() != null && getSearchMinistryProfile().getOrgProfileId() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean(
-							paramPtjGroupAndMinistry+"."
-									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY
-											.value()),
-							SearchOperator.OPERATOR_EQUALS.value(),
-							getSearchMinistryProfile().getOrgProfileId()));
+				//#25396 - start
+				if(isGovernment()) {
+					if (getSearchPtjProfile() != null && getSearchPtjProfile().getOrgProfileId() != null) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean(paramPtj, SearchOperator.OPERATOR_EQUALS.value(),
+								getSearchPtjProfile().getOrgProfileId()));
+						
+					} else if (getSearchPtjGroupProfile() != null && getSearchPtjGroupProfile().getOrgProfileId() != null) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean(
+								paramPtjGroupAndMinistry+"."
+										+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT
+												.value()),
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getSearchPtjGroupProfile().getOrgProfileId()));
+						
+					} else if (getSearchMinistryProfile() != null && getSearchMinistryProfile().getOrgProfileId() != null) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean(
+								paramPtjGroupAndMinistry+"."
+										+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY
+												.value()),
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getSearchMinistryProfile().getOrgProfileId()));
+					}
 				}
+				//#25396 - end				
 				
 				if (StringUtils.isNotBlank(getSearchDocumentTitle())) {
 					SearchFilterBean filterBean = new SearchFilterBean(paramTitle, SearchOperator.OPERATOR_LIKE.value(),
@@ -192,7 +214,11 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 				}
 				
 				if(getSearchDocumentNo() != null && getSearchDocumentNo() != "") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_EQUALS.value(), getSearchDocumentNo()));
+					if (isSearchLoaByRN()) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_IN.value(), getLoaList()));
+					}else{
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_EQUALS.value(), getSearchDocumentNo()));
+					}
 				}
 				if(getSearchStatusId() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("status", SearchOperator.OPERATOR_EQUALS.value(), getSearchStatusId()));
@@ -232,6 +258,15 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 							}
 							reqDTO.setSupplierIds(supplierIds);
 						}
+						//#25396 - start
+						else{
+							if(isViewAsSupplier()){
+								List<Long> supplierIds = new ArrayList<Long>();
+								supplierIds.add(supplierSearchReqDTO.getUserId());
+								reqDTO.setSupplierIds(supplierIds);
+							}
+						}							
+						//#25396 - end
 
 					} finally {
 						supplierSearchSO = null;
@@ -507,6 +542,64 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	public void setSearchDPM(boolean searchDPM) {
 		this.searchDPM = searchDPM;
 	}
+	
+	// Redmine 25396: remove duplication option view by adding new drop down field
+	public String getSearchFunctionType() {
+		return searchFunctionType;
+	}
+
+	public void setSearchFunctionType(String searchFunctionType) {
+		this.searchFunctionType = searchFunctionType;
+	}
+	// end 25396:
+
+	/**
+	 * @return the isG2G
+	 */
+	public boolean isG2G() {
+		return isG2G;
+	}
+
+	/**
+	 * @param isG2G the isG2G to set
+	 */
+	public void setG2G(boolean isG2G) {
+		this.isG2G = isG2G;
+	}
+
+	public boolean isSearchLoaByRN() {
+		return searchLoaByRN;
+	}
+
+	public void setSearchLoaByRN(boolean searchLoaByRN) {
+		this.searchLoaByRN = searchLoaByRN;
+	}
+
+	public List<String> getLoaList() {
+		return loaList;
+	}
+
+	public void setLoaList(List<String> loaList) {
+		this.loaList = loaList;
+	}
+	
+	//Start - #25396
+	public boolean isViewAsPTJ() {
+		return viewAsPTJ;
+	}
+
+	public void setViewAsPTJ(boolean viewAsPTJ) {
+		this.viewAsPTJ = viewAsPTJ;
+	}
+
+	public boolean isViewAsSupplier() {
+		return viewAsSupplier;
+	}
+	
+	public void setViewAsSupplier(boolean viewAsSupplier) {
+		this.viewAsSupplier = viewAsSupplier;
+	}
+	//End - #25396
 
 	/**
 	 * @return the dpmDocumentDataModel
@@ -521,4 +614,22 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	public void setDpmDocumentDataModel(IPagingDataModel<Object[]> dpmDocumentDataModel) {
 		this.dpmDocumentDataModel = dpmDocumentDataModel;
 	}*/
+	
+	//Start - #25396
+	public boolean isDisableMinistryPtjLov() {
+		return disableMinistryPtjLov; 
+	}
+	
+	public void setDisableMinistryPtjLov(boolean disableMinistryPtjLov) {
+		this.disableMinistryPtjLov = disableMinistryPtjLov;
+	}
+	
+	public boolean isShowMinistryPtjField() {
+		return showMinistryPtjField; 
+	}
+	
+	public void setShowMinistryPtjField(boolean showMinistryPtjField) {
+		this.showMinistryPtjField = showMinistryPtjField;
+	}
+	//End - #25396
 }

@@ -32,13 +32,15 @@
 						rendered="#{!supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee and !statusHide}" />
 				</td>
 				<td><h:panelGroup id="totalNoOfEmployeesInvolved">
+						<!-- 17376,19287 -start- -->
 						<p:inputText id="totalEmployees"
 							style="text-align:right;margin-bottom:5px;"
 							rendered="#{!supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
 							size="20" required="true" maxlength="6"
 							label="#{lbl['lbl.sc.total.employees']}"
 							value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPEmployee.totalEmployees}"
-							disabled="#{supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee or statusHide}">
+							disabled="#{supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee or statusHide or supplierProposalDetailBackingBean.managedBean.readOnly}">
+							<!-- 17376,19287 -end- -->
 							<f:validateLongRange minimum="1" maximum="99999999999" />
 							<p:ajax process="@this" partialSubmit="true"
 								update="@this,totalEmployeesMsg"></p:ajax>
@@ -62,25 +64,53 @@
 
 
 					</ui:fragment></td>
-				<td><p:inputText readonly="true" disabled="true"
+				<td>
+					<p:inputText readonly="true" disabled="true"
 						value="#{noOfContracts.autoScore}" style="text-align:right"
-						rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
-						id="technicalNoOfEmployeesUserScoreId"
-						label="#{lbl['lbl.tpl.spec.content.user.score']}"
-						value="#{noOfContracts.userScore}" maxlength="18" required="true"
-						disabled="#{pageDisable or technicalorFinancialReEvaluateRequired}"
-						style="text-align:right" rendered="#{checklistScoreType eq '2'}">
-						<ac:validateNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
-							maxIntegerDigits="14" integerOnly="true" />
-						<f:attribute name="min" value="0" />
-						<f:attribute name="max" value="#{contractUserScore}" />
-					</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
+						rendered="#{ checklistScoreType eq '1'}">
+					</p:inputText>
+
+					<!-- 25638 -start- -->
+					<c:if test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'}">
+					<!-- 25638 -end- -->
+						<p:inputText
+							id="technicalNoOfEmployeesUserScoreId"
+							label="#{lbl['lbl.tpl.spec.content.user.score']}"
+							value="#{noOfContracts.userScore}" maxlength="18" required="true"
+							disabled="#{pageDisable or technicalorFinancialReEvaluateRequired}"
+							style="text-align:right" rendered="#{checklistScoreType eq '2'}">
+							<ac:validateNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+								maxIntegerDigits="14" integerOnly="true" />
+							<f:attribute name="min" value="0" />
+							<f:attribute name="max" value="#{contractUserScore}" />
+						<!-- 25638 -start- -->
+						</p:inputText>
+					</c:if>
+					<c:if test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
+						<p:inputText
+							id="technicalNoOfEmployeesUserScoreId" readonly="true" disabled="true"
+							label="#{lbl['lbl.tpl.spec.content.user.score']}"
+							value="#{noOfContracts.userScore}" maxlength="18" required="true"
+							style="text-align:right" rendered="#{checklistScoreType eq '2'}">
+							<ac:validateNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+								maxIntegerDigits="14" integerOnly="true" />
+							<f:attribute name="min" value="0" />
+							<f:attribute name="max" value="#{contractUserScore}" />
+						</p:inputText>
+					</c:if>
+					<!-- 25638 -end- -->
+
+					<p:spacer width="5"></p:spacer>
+					<h:outputText
 						value="/#{contractUserScore}"
-						rendered="#{ checklistScoreType eq '2'}" /> <p:message
+						rendered="#{ checklistScoreType eq '2'}" />
+					<p:message
 						id="technicalNoOfEmployeesUserScoreMessage"
 						for="technicalNoOfEmployeesUserScoreId" display="icon">
-					</p:message></td>
+					</p:message>
+				</td>
 			</tr>
 		</table>
 	</p:panel>

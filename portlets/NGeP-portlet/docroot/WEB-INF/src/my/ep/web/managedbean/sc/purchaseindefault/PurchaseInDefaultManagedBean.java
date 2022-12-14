@@ -5,6 +5,7 @@ package my.ep.web.managedbean.sc.purchaseindefault;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.math.BigDecimal; //#28865
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -24,6 +25,7 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
+import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark; //#28865
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -156,7 +158,14 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	
 	/** The codify flag for selected contract / panel item */
 	private boolean isCodified = true;
+	
+	private BigDecimal qtyByRequisitioner;//#28865
+	private BigDecimal qtyBySupplier;//#28865
+	private List<ScPIDRemark> suppRemarks = new ArrayList<ScPIDRemark>();//#28865
+	private Long contractId;//#28865
+	private Long suppRemarkId = null;//#28865
 
+	private Object payLoad; //#9133
 	/**
 	 * Instantiates a new purchase in default managed bean.
 	 */
@@ -805,6 +814,95 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	public void setCodified(boolean isCodified) {
 		this.isCodified = isCodified;
 	}
+
+	//#28865 - start
+	/**
+	 * @return the qtyByRequisitioner
+	 */
+	public BigDecimal getQtyByRequisitioner() {
+		return qtyByRequisitioner;
+	}
+	
+	/**
+	 * @param qtyByRequisitioner the qtyByRequisitioner to set
+	 */
+	public void setQtyByRequisitioner(BigDecimal qtyByRequisitioner) {
+		this.qtyByRequisitioner = qtyByRequisitioner;
+	}
+	
+	/**
+	 * @return the qtyBySupplier
+	 */
+	public BigDecimal getQtyBySupplier() {
+		return qtyBySupplier;
+	}
+	
+	/**
+	 * @param qtyBySupplier the qtyBySupplier to set
+	 */
+	public void setQtyBySupplier(BigDecimal qtyBySupplier) {
+		this.qtyBySupplier = qtyBySupplier;
+	}
+	
+	/**
+	 * @return the suppRemarks
+	 */
+	public List<ScPIDRemark> getSuppRemarks() {
+		return suppRemarks;
+	}
+	
+	/**
+	 * @param suppRemarks the suppRemarks to set
+	 */
+	public void setSuppRemarks(List<ScPIDRemark> suppRemarks) {
+		this.suppRemarks = suppRemarks;
+	}
+	
+	/**
+	 * @return the suppRemarkId
+	 */
+	public Long getSuppRemarkId() {
+		return suppRemarkId;
+	}
+	
+	/**
+	 * @param suppRemarkId the suppRemarkId to set
+	 */
+	public void setSuppRemarkId(Long suppRemarkId) {
+		this.suppRemarkId = suppRemarkId;
+	}
+	
+	/**
+	 * @return the contractId
+	 */
+	public Long getContractId() {
+		return contractId;
+	}
+	
+	/**
+	 * @param contractId the contractId to set
+	 */
+	public void setContractId(Long contractId) {
+		this.contractId = contractId;
+	}
+	//#28865 - end
+
+	//#9133 - start
+	/**
+	 * #9133 - code review (add documentation)
+	 * @return payLoad
+	 */
+	public Object getPayLoad() {
+		return payLoad;
+	}
+	/**
+	 * #9133 - code review (add documentation)
+	 * @param payLoad the payLoad to set
+	 */
+	public void setPayLoad(Object payLoad) {
+		this.payLoad = payLoad;
+	}
+	//#9133 - end
 	
 	
 }

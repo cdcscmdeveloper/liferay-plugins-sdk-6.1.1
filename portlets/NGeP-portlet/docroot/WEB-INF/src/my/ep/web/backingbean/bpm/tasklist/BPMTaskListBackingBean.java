@@ -19,6 +19,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FLProcessNameConst;
@@ -30,6 +31,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskListManagedBean;
@@ -102,12 +104,15 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(SCProcessNameConst.SUPPLIER_CODIFICATION_PROCESS_NAME,
 					SourcingConstants.NAV_PAGE_REQUEST_NOTE_CODE_ASSIGNMENT);
 
-			temp.put(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME,
-					SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
-			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME,
-					SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT);
-			temp.put(SCProcessNameConst.START_PURCHASE_INQUIRY_CREATION + SCProcessNameConst.START_PURCHASE_INQUIRY,
-					SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
+			temp.put(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
+			//temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865				
+			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.REQUISITIONER_RESPONSE_PURCHASE_IN_DEFAULT, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
+			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.VERIFY_PID, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
+			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.APPROVE_PID, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
+			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.SUPPLIER_RESPONSE_PURCHASE_IN_DEFAULT, SourcingConstants.NAV_PAGE_RESPONSE_PURCHASE_IN_DEFAULT); //#28865
+			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.REQUISITIONER_REVISION, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#9133
+			temp.put(SCProcessNameConst.START_PURCHASE_IN_DEFAULT + SCProcessNameConst.SUBMIT_PURCHASE_IN_DEFAULT, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#9133
+			temp.put(SCProcessNameConst.START_PURCHASE_INQUIRY_CREATION + SCProcessNameConst.START_PURCHASE_INQUIRY, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
 
 			temp.put(SCProcessNameConst.START_SIMPLE_QUOTE_CREATION,
 					SourcingConstants.NAV_PAGE_REVIEW_SIMPLE_QUOTE);
@@ -600,7 +605,16 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(SCProcessNameConst.SPEC_MAINTENANCE_PROCESS_NAME
 					+ SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING,
 					SourcingConstants.NAV_PAGE_SPECIFICATION_ENDORSMENT);
-			
+			// 25627
+			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
+					+ SCProcessNameConst.APPROVE_DO_REASSIGNMENT,
+					SourcingConstants.NAV_PAGE_DO_REASSIGNMENT_APPROVAL);
+			// 25627
+			//START - 22211
+			temp.put(SCProcessNameConst.DIRECT_PURCHASE_MAINTENANCE
+					+ ParameterConst.DOCTYPE_LETTER_OF_AWARD,
+					SourcingConstants.NAV_PAGE_CANCELLATION_LOA_APPROVAL);
+			//END - 22211
 			this.getManagedBean().setBpmMap(temp);
 		}
 
@@ -1076,10 +1090,23 @@ BaseBackingBean<BPMTaskListManagedBean> {
 				reqDTO.setDocType(this.getManagedBean().getDocType());
 				reqDTO.setLanguageCode(language);
 
+				// 25627 - Start.
+				if (isCommitteeApproverWithQT(reqDTO)) {
+					reqDTO.setRoleCode(RoleCode.COMMITTEE_APPROVER.value());
+				}
+				// 25627 - End.
+
 				StatusResDTO resDTO = statusSO.retrieveStatusDescListByDocType(reqDTO);
 
 				List<SelectItem> docStatusList = new ArrayList<SelectItem>();
 				for (PmStatusDesc docStatus : resDTO.getStatusDescList()) {
+					// 25627 - Start.
+					if (((QTStatusConst.DESK_OFFICER_MAINTENANCE_APPROVED.longValue() == docStatus.getPmStatus().getStatusId()) || (QTStatusConst.DESK_OFFICER_MAINTENANCE_REJECTED.longValue() == docStatus.getPmStatus().getStatusId()))
+							&& isCommitteeApproverWithQT(reqDTO)) {
+						continue;
+					}
+					// 25627 - End.
+
 					SelectItem si = new SelectItem();
 					si.setLabel(docStatus.getStatusName());
 					si.setValue(docStatus.getPmStatus().getStatusId());
@@ -1106,10 +1133,23 @@ BaseBackingBean<BPMTaskListManagedBean> {
 				reqDTO.setDocType(this.getManagedBean().getDocTypeGroup());
 				reqDTO.setLanguageCode(language);
 
+				// 25627 - Start.
+				if (isCommitteeApproverWithQT(reqDTO)) {
+					reqDTO.setRoleCode(RoleCode.COMMITTEE_APPROVER.value());
+				}
+				// 25627 - End.
+
 				StatusResDTO resDTO = statusSO.retrieveStatusDescListByDocType(reqDTO);
 
 				List<SelectItem> docStatusList = new ArrayList<SelectItem>();
 				for (PmStatusDesc docStatus : resDTO.getStatusDescList()) {
+					// 25627 - Start.
+					if (((QTStatusConst.DESK_OFFICER_MAINTENANCE_APPROVED.longValue() == docStatus.getPmStatus().getStatusId()) || (QTStatusConst.DESK_OFFICER_MAINTENANCE_REJECTED.longValue() == docStatus.getPmStatus().getStatusId()))
+							&& isCommitteeApproverWithQT(reqDTO)) {
+						continue;
+					}
+					// 25627 - End.
+
 					SelectItem si = new SelectItem();
 					si.setLabel(docStatus.getStatusName());
 					si.setValue(docStatus.getPmStatus().getStatusId());
@@ -1148,4 +1188,18 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		return retVal;
 
 	}
+	
+	// 25627 - Start.
+	public boolean isCommitteeApproverWithQT(StatusReqDTO reqDTO) {
+		if (ParameterConst.DOCTYPE_QUOTATION.equals(reqDTO.getDocType())) {
+			FacesScopes fs = new FacesScopes();
+			
+			if (fs.hasRoleUser(RoleCode.COMMITTEE_APPROVER.value())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	// 25627 -End.
 }

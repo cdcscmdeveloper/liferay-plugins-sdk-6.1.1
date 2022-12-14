@@ -10,7 +10,7 @@
 			 <p:outputLabel value="#{lbl['lbl.ct.bank.account.name']}" styleClass="required"/>
 		<h:panelGrid columns="2">
 		   <p:selectOneMenu id="accountNo"  style="width:310px; margin-bottom: 5px;" disabled="#{!bpmTasklistBackingBean.managedBean.claim}"
-			 value="#{ctBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}">
+			 value="#{ctBackingBean.managedBean.bankInfoDetails}"> <!-- Fix - #33674 -->
 			   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
 			   <f:selectItems value="#{amendmentBackingBean.populateBankAccountList}"/>
 			    <p:ajax event="change" process="@this" update="paymentDetails" listener="#{amendmentBackingBean.changeAccountActionListener}"/>

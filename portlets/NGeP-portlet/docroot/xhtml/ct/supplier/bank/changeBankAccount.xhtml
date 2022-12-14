@@ -62,9 +62,12 @@
 			closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
+				<!-- Bug #30038 start -->
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
 						immediate="true" onstart="blockWidget.show();"
-						oncomplete="window.history.back();blockWidget.hide();" rendered="#{supplierBackingBean.managedBean.taskId==null}" /></td>
+						action = "#{supplierBackingBean.backAction}" 
+						oncomplete="blockWidget.hide();" rendered="#{supplierBackingBean.managedBean.taskId==null}" /></td>	
+				<!-- Bug #30038 end -->					
 				<td class="ppRightBtn"><ui:repeat var="outcome"
 						value="#{supplierBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
@@ -202,9 +205,10 @@
 
 				<h:panelGrid id="menuBankId" columns="3"
 					rendered="#{supplierBackingBean.managedBean.taskId==null}">
+					<!-- Start Fix - #33399 -->
 					<p:selectOneMenu id="accountId" required="true"
 						style="width:360px;margin-bottom: 5px;"
-						value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}"
+						value="#{supplierBackingBean.managedBean.fullBankInfo}"
 						label="#{lbl['lbl.ct.bank.account.name']}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
@@ -214,6 +218,7 @@
 							update=":form:bankId, :form:messages"
 							listener="#{supplierBackingBean.changeAccountActionListener}" />
 					</p:selectOneMenu>
+					<!-- End Fix - #33399 -->
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.bank.name']}" />
 					<p:message for="accountId" display="icon" />
 				</h:panelGrid>

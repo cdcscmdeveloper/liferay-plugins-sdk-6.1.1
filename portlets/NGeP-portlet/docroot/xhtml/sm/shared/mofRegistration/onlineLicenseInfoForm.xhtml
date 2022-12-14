@@ -2,6 +2,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
@@ -60,7 +61,7 @@
 								<p:outputLabel value="*" styleClass="mandatory" rendered="#{onlineLicenseTable.pmDocument.mandatory}"/>
 							</td>
 							<td style="border-style: none !important;">
-								<p:inputText value="#{onlineLicenseTable.licenseNo}" size="20" id="licenseNoId" required="#{onlineLicenseTable.pmDocument.mandatory}" label="#{lbl['lbl.sm.suppdoc.license.no']}" >
+								<p:inputText value="#{onlineLicenseTable.licenseNo}" size="20" id="licenseNoId" required="#{onlineLicenseTable.pmDocument.mandatory}" label="#{lbl['lbl.sm.suppdoc.license.no']}" maxlength="30">
 									<p:ajax process="@this" partialSubmit="true"/>
 								</p:inputText>
 								<p:message id="licenseNoIdMsg" for="licenseNoId" showSummary="true" showDetail="false" display="icon" />
@@ -138,13 +139,24 @@
 					<h:outputText rendered="#{onlineLicenseTable.pmDocument.hardCopyReq}"
 						value="#{lbl['lbl.sm.suppDoc.document.hdrCpyRmrks']}"
 						style="float: left;white-space: normal;" />
-	
-					<p:commandLink ajax="false"
-						value="#{onlineLicenseTable.smApplDocFiles[0].fileName}"
-						rendered="#{not empty onlineLicenseTable.smApplDocFiles and !onlineLicenseTable.pmDocument.hardCopyReq}">
+					<!--#33240-START-->
+					<ui:repeat var="applDocs" value="#{onlineLicenseTable.smApplDocFiles}">
+					<h:commandLink id="file" ajax="false"
+						value="#{backingBean.getShortFileName(applDocs.fileName)}"
+						rendered="#{not empty applDocs and !onlineLicenseTable.pmDocument.hardCopyReq}">
 						<p:fileDownload
-							value="#{backingBean.commonDownload(onlineLicenseTable.smApplDocFiles[0].filePath,onlineLicenseTable.smApplDocFiles[0].fileName,onlineLicenseTable.smApplDocFiles[0].fileName)}" />
+							value="#{backingBean.commonDownload(applDocs.filePath,applDocs.fileName,applDocs.fileName)}" />
+					</h:commandLink>
+					<p:tooltip for="file" value="#{applDocs.fileName}" position="top"/>
+					<p:spacer width="10" />
+					<p:commandLink 			
+						rendered="#{fn:length(applDocs.fileName) > 1}"
+						action="#{backingBean.onDeleteMandatoryLicenseFile(applDocs,index)}" update="@form">
+						<p:graphicImage value="/css/images/design/trash.png" />
 					</p:commandLink>
+					<br/>
+					</ui:repeat>
+					<!--#33240-END-->
 				</p:column>
 			</p:dataTable>
 		</ui:repeat>
@@ -163,11 +175,27 @@
 			invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
 			fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
 			update="onlineLicenseOutPanelId"
-			oncomplete="uploadLicenseDialog.hide();"
 			uploadLabel="#{lbl['lbl.btn.upload']}"
 			label="#{lbl['lbl.btn.choose']}"
-			cancelLabel="#{lbl['lbl.btn.cancel']}" multiple="false"
+			cancelLabel="#{lbl['lbl.btn.cancel']}" 
+			multiple="true"
 			showButtons="false" />
 	</p:dialog>
+	<!--#33240-START-->
+	<p:confirmDialog id="confirmDeleteLicenseCertDialog" closable="true"
+			message="#{lbl['lbl.sm.upload.delete.message']}"
+			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+			severity="alert" widgetVar="confirmDeleteLicenseCertDialog">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					action="#{backingBean.deleteMandatoryLicenseFile}" update="@form"
+					onclick="confirmDeleteLicenseCertDialog.hide();"
+					partialSubmit="true" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" process="@this" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="confirmDeleteLicenseCertDialog.hide();" />
+			</div>
+		</p:confirmDialog>
+	<!--#33240-END-->
 
 </ui:composition>

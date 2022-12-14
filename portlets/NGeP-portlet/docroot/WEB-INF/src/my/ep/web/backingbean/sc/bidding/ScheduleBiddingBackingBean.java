@@ -47,6 +47,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
 
@@ -665,4 +666,47 @@ public class ScheduleBiddingBackingBean extends
 		this.getManagedBean().setRequestItem(requestItem);
 		this.getManagedBean().setAwardedQuantity(awardedQty);
 	}
+	
+	// #30451, #17376 - Start.
+	/**
+	 * #30451
+	 * @param taskId
+	 */
+	public void navigateToBiddingPage(String taskId) {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		
+		try {
+			SCEvaluationDataType dpDataType = getBpmTaskDetails(SCEvaluationDataType.class, null, taskId);
+			
+			this.getManagedBean().setBdSfFlow(true);
+			this.getManagedBean().setPayLoad(dpDataType);
+			
+			Long qtId = Long.valueOf(dpDataType.getQtId());
+			List<String> recommandIds = dpDataType.getGroupkeyBa();
+			List<Long> recommendDtls = new ArrayList<Long>();
+			
+			if (CollectionUtils.isNotEmpty(recommandIds)) {
+				for (String recommandId : recommandIds) {
+					if (StringUtils.isNotEmpty(recommandId)) {
+						recommendDtls.add(Long.parseLong(recommandId));
+					}
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(recommendDtls)) {
+				retriveItemsToBid(qtId, recommendDtls, ((PmUser) (new FacesScopes().getUserSessionBean())).getUserId());
+			}
+			
+			populateDurationDropDownValues();
+			
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,
+							QTConstants.SCHEDULE_BIDDING_MAIN_PAGE);
+		} catch (Exception e) {
+			handleException(e);
+			
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,
+					CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
+		}
+	}
+	// #30451, #17376 - End.
 }

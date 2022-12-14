@@ -997,6 +997,54 @@ public class TemplateSpecBackingBean extends
 		calcGrandTotalAmount(templateSpecBean);
 	}
 	
+	//20210419@asyrafhaziq - Bug #30061 - start
+	public void CheckAndUpdateCalcTotalAmount(TemplateSpecBean templateSpecBean,
+			TplSpecAnswer specAnswer, boolean isItemTypeService) {
+		try{
+				TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
+				BigDecimal quantity = null;
+				
+				if (specAnswer.getTplSpecZoneQty() != null) {
+					quantity = specAnswer.getTplSpecZoneQty().getQty();
+				} else {
+					quantity = specQuestion.getClQuantity();
+				}
+				
+				BigDecimal totalPrice = TemplateSpecHelper.getInstance()
+						.calcTotalAmount(specQuestion, specAnswer.getRatePerUom(),
+								quantity);
+			if  (!specAnswer.getAnswerNumeric().equals(totalPrice)){
+				if (totalPrice != null && isItemTypeService) {
+					TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
+					BigDecimal amountPerYear = BigDecimal.valueOf(totalPrice
+							.doubleValue());
+					BigDecimal itemDurationMonth = specQuestion
+							.getClDurationMonth();
+
+					if (itemDurationMonth != null) {
+						amountPerYear = amountPerYear.divide(itemDurationMonth, 2, RoundingMode.HALF_UP);
+					} else {
+						BigDecimal durationMonth = specMaster.getDurationMonth();
+
+						if (durationMonth != null) {
+							amountPerYear = amountPerYear.divide(durationMonth, 2, RoundingMode.HALF_UP);
+						}
+					}
+
+					specAnswer.setAmountPerYear(amountPerYear.multiply(BigDecimal
+							.valueOf(12)));
+				}
+
+			  specAnswer.setAnswerNumeric(totalPrice);
+			  calcGrandTotalAmount(templateSpecBean);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+			
+	}
+	//20210419@asyrafhaziq - Bug #30061 - end
+	
 	public void deleteConfirmationAction(TemplateSpecBean templateSpecBean, TplSpecQuestion question) {
 		debugLogger("deleteConfirmationAction");
 		
@@ -1201,6 +1249,12 @@ public class TemplateSpecBackingBean extends
 		}
 
 		templateSpecBean.setSelectAll(false);
+		//Bug #33619@Syazani -- Start 20/07/2022, #28784 check null value
+		if (tplSpecQuestion.getAnswerTypeCode() != null && ParameterConst.ANSWER_TYPE_TEXT.equalsIgnoreCase(
+				tplSpecQuestion.getAnswerTypeCode().getParameterCode()) && tplSpecQuestion.getTplSpecMaster().isScoringReq()) {
+			resetScoreTypeDtl(tplSpecQuestion);
+		}
+		//Bug #33619@Syazani -- End 20/07/2022
 	}
 
 	private void addComplianceScoringAction(TplSpecQuestion tplSpecQuestion) {
@@ -2731,7 +2785,7 @@ public class TemplateSpecBackingBean extends
 			BigDecimal totalIndicativePrice = new BigDecimal("0.00");//Bug #29808
 			BigDecimal zeroChangeTo1 = new BigDecimal("1.00");//Bug #29808
 			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice).setScale(2, BigDecimal.ROUND_UP);//Bug #29808
-			
+		
 			if (clUomFrequency.intValue() == 0 )
 			{ clUomFrequency=clUomFrequency.add(zeroChangeTo1);}
 
@@ -2743,7 +2797,6 @@ public class TemplateSpecBackingBean extends
 			
 			if (contractDuration.intValue() == 0 )
 			{ contractDuration=contractDuration.add(zeroChangeTo1);}
-			
 			//Bug #29808 - Start
 			 clUomFrequency =BigDecimal.valueOf(clUomFrequency.doubleValue());
 	       	 clUomPerDay =BigDecimal.valueOf(clUomPerDay.doubleValue());

@@ -26,6 +26,22 @@
 				enableAutoUpdate="#{simpleQuoteBackingBean.enableAutoUpdate()}" />
 
 		</p:outputPanel>
+		
+		<p:outputPanel id="backBtnPanel" >
+		<!-- #29938 --> 
+			<div style="text-align: right; min-height: 40px;">
+			<p:commandLink value="#{lbl['lbl.cm.tracking.diary']}"
+					rendered="#{simpleQuoteBackingBean.managedBean.sqAuditFlg}"
+					action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeSimpleQuote,simpleQuoteBackingBean.managedBean.scQuote.quoteId, simpleQuoteBackingBean.isSupplier())}"></p:commandLink>
+			 
+			<div class="ppLeftBtn">
+				<p:commandButton
+					immediate="true" value="#{lbl['lbl.btn.back']}" style="float:left;"
+					rendered="#{simpleQuoteBackingBean.managedBean.sqAuditFlg}"
+					action="#{simpleQuoteBackingBean.backMenuToPrevious}" />
+			</div>	
+			</div>
+	</p:outputPanel>
 		<div class="ppRightBtn">
 			<p:outputPanel autoUpdate="true">
 				<p:commandButton value="#{lbl['lbl.btn.save']}" process="@form"
@@ -42,7 +58,7 @@
 					rendered="#{simpleQuoteBackingBean.managedBean.submitButtonFlg}">
 				</p:commandButton>
 			</p:outputPanel>
-		</div>
+		</div><br />
 		<ui:include src="/xhtml/sc/directpurchase/simplequoteresponse/simpleQuoteRespHeader.xhtml" />
 		<ui:include src="/xhtml/sc/directpurchase/simplequoteresponse/simpleQuoteResp.xhtml" />
 	</ui:define>

@@ -53,6 +53,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.persistence.exceptions.ValidationException;
 
 /**
  * Singleton Helper For Template Spec.
@@ -210,9 +211,6 @@ public class TemplateSpecHelper {
 									newSpecQuestion.setScoreTypeCode(null);
 									newSpecQuestion.setMaxScore(null);
 								}
-								
-								newSpecQuestion.setWeightageReq(false);
-								newSpecQuestion.setWeightage(null);
 								
 								if (prevNewSpecQuestion != null && TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equals(newSpecQuestion.getQuestionType())) {
 									String prevQuestionType = prevNewSpecQuestion.getQuestionType();
@@ -737,6 +735,28 @@ public class TemplateSpecHelper {
 				if (uomPerMonth != null) {
 					totalPrice = totalPrice.multiply(uomPerMonth);
 				}
+			
+				// ***25201 -start-
+				TemplateSpecReqDTO templateSpecReqDTO;
+				ITemplateSpecSO	templateSpecSo;
+				TemplateSpecResDTO resDTO;
+				
+				try{
+					if(null == specQuestion.getClFulfilmentTypeCode()){}
+				} catch (ValidationException ex) {
+					templateSpecReqDTO = new TemplateSpecReqDTO();
+					templateSpecReqDTO.setSpecQuestionId(specQuestion.getSpecQuestionId());
+					
+					templateSpecSo = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+					
+					resDTO = templateSpecSo.fetchSpecQuestion(templateSpecReqDTO);
+					
+					if(resDTO.isSuccessful()){
+						specQuestion = resDTO.getSpecQuestionList().get(0);
+					}
+				}
+				// ***25201 -end-
 				
 				if (!specQuestion.getClFulfilmentTypeCode().getParameterCode()
 						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {

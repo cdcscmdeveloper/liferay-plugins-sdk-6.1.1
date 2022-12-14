@@ -26,6 +26,24 @@
 					#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.currentStatusId)}
 				</td>
 			</tr>
+
+			<!-- 29464 -start- -->
+			<ui:param name="statusId" value="#{specificationBackingBean.managedBean.currentStatusId}"/>
+			<ui:fragment rendered="#{specificationBackingBean.evaluateRepublishFromDisplay(statusId) and not empty specificationBackingBean.managedBean.qt.scQt.qtNo}">
+				<tr>
+					<td width="15%"><h:outputLabel
+							value="#{lbl['lbl.sc.qt.republishFrom']}" /></td>
+					<td class="header-info-text"><p:commandLink
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							process="@this" partialSubmit="true" id="republishFromHyperlink"
+							style="margin-right:20px;"
+							action="#{specMaintenanceBB.redirectToSpecificationMaintenance(specificationBackingBean.managedBean.qt.scQt, false,'/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true', true)}">
+							<h:outputText value="#{specificationBackingBean.managedBean.qt.scQt.qtNo}"
+								escape="false"/>
+						</p:commandLink></td>
+				</tr>
+			</ui:fragment>
+			<!-- 29464 -end- -->
 		</table>
 	</div>
 

@@ -60,14 +60,20 @@
 				<c:choose>
 					<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeExpenditure}">
 						<h:panelGroup styleClass="instruction">
+						<!-- 200911@akmal - Enhancement27624 - Start -->
 							<h:outputText value="#{lbl['lbl.pp.expenditure.plan.instruction1']}"/><br/>
-							<h:outputText value="#{lbl['lbl.pp.expenditure.plan.instruction2']}"/>
+							<h:outputText value="#{lbl['lbl.pp.expenditure.plan.instruction2']}"/><br/>
+							<h:outputText value="#{lbl['lbl.pp.expenditure.plan.instruction3']}"/>
+						<!-- 200911@akmal - Enhancement27624 - End -->
 						</h:panelGroup>
 						<ui:include src="planDetails/planDetEpList.xhtml"/>
 						<ui:include src="planDetails/itemJustification.xhtml"/> 
 					</c:when>
 					<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeProcurement}">
-						<h:outputText styleClass="instruction" value="#{lbl['lbl.pp.procurement.plan.instruction1']}"/>
+					<!-- 200911@akmal - Enhancement27624 - Start -->
+						<h:outputText styleClass="instruction" value="#{lbl['lbl.pp.procurement.plan.instruction1']}"/><br/>
+						<h:outputText styleClass="instruction" value="#{lbl['lbl.pp.procurement.plan.instruction2']}"/>
+					<!-- 200911@akmal - Enhancement27624 - End -->
 						<ui:include src="planDetails/planDetPpList.xhtml"/> 
 					</c:when>
 					<c:otherwise>

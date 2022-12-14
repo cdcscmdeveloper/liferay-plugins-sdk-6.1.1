@@ -41,7 +41,8 @@
 		</p:column>
 	</p:dataTable>
 	
-	<p:dialog widgetVar="poReportDlg" modal="true" height="400" width="1000" id="poReportDlgId" resizable="false" >
+	<!-- #24964 -->
+	<p:dialog widgetVar="poReportDlg" modal="true" height="600" width="1500" id="poReportDlgId" resizable="false" >
 		<p:outputPanel id="reportPanel" rendered="#{!empty svoSiteVisitBackingBean.managedBean.smSvTask}">
 			<ui:include src="/xhtml/sm/shared/sitevisit/siteVisitReportPOReview.xhtml"></ui:include>
 		</p:outputPanel>

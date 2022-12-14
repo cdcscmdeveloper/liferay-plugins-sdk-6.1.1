@@ -47,7 +47,10 @@
 			<p:blockUI block=":form:tt:bankInfPan" widgetVar="buiPoBank"
 				id="poBankBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.bankVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.bankVerified : false)}" />
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.bankDtls.instruction']}" escape="false" /><br />			
+			<!--#12492-START-->
+			<h:outputText styleClass="instruction" value="1. #{lbl['lbl.sm.insertcmpnybank.instruction']}" escape="false" /><br />	
+			<h:outputText styleClass="instruction" value="2. #{lbl['lbl.sm.bankDtls.instruction']}" escape="false" /><br />					
+			<!--#12492-END-->
 			<!-- #17906 -->
 			<p:messages id="bankDeleteMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" for="bankDeleteMsg" escape="false"/>	
 			<p:dataTable var="bankBean" widgetVar="suppBankInfoDtWidVar"
@@ -240,17 +243,20 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.bankName']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<!--#12492-START-->
 					<td><p:selectOneMenu
 							disabled="#{backingBean.managedBean.pendingTransaction}"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.bankName']}" id="smBankNameVal"
 							value="#{backingBean.managedBean.selectedBank.pmFinancialOrg.financialOrgId}" update="@([id$=save])"
-							style="width: 207px;margin-bottom: 5px;background-color:white;">
+							style="width: 207px;margin-bottom: 5px;background-color:white;"
+							oncomplete="scrollToTop();">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="finOrg"								
 								value="#{backingBean.managedBean.finOrgLs}"
 								itemValue="#{finOrg.financialOrgId}"
 								itemLabel="#{finOrg.finOrgName}" />
+								<p:ajax event="change" update="@this"/>
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
@@ -259,6 +265,7 @@
 							currValue="#{backingBean.managedBean.selectedBank.pmFinancialOrg.financialOrgId}" 
 							alertValue="#{backingBean.getFinOrgByIdFromList(backingBean.managedBean.latestBank.pmFinancialOrg.financialOrgId)}"/>
 					</td>
+					<!--#12492-END-->
 				</tr>
 				<tr>
 					<td><p:outputLabel
@@ -284,12 +291,14 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.acctNo']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<!--#12492-START-->
 					<td><p:inputText maxlength="18"
 							disabled="#{backingBean.managedBean.pendingTransaction}"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.acctNo']}" id="smBankAcctNo"
 							value="#{backingBean.managedBean.selectedBank.accountNo}"
 							size="35">
+							<p:ajax event="change" process="@this" update="@this" listener="#{backingBean.CheckBankAccountInfoForm('fromBankInfo')}"/>
 						</p:inputText> 
 						&#160;
 						<p:graphicImage id="banti" value="/css/images/design/tooltips.png" />
@@ -297,6 +306,7 @@
 							<p:outputLabel escape="false" value="#{lbl['tt.sm.account.no']}"  />
 						</p:tooltip>
 					</td>
+					<!--#12492-END-->
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel
@@ -628,11 +638,13 @@
 			</table>
 		</p:outputPanel>
 		<div align="right">
+		<!--#12492-START-->
 			<p:commandButton id="save" value="#{lbl['lbl.sm.button.save']}"
 				partialSubmit="true" process=":form:tt:bankDialog"
 				action="#{backingBean.addOrUpdateBankInfoToSmAppl}"
-				onclick="bankDetailsPanelWidget.show();" oncomplete="bankDetailsPanelWidget.hide();"
+				onclick="bankDetailsPanelWidget.show();" oncomplete="scrollToTop();bankDetailsPanelWidget.hide();"
 				update=":form:tt:bankDt , sfieldset, @([id$=Msg])" />
+		<!--#12492-END-->
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				partialSubmit="true" process="@this"
 				action="#{backingBean.cancelSmBankFunctions}" />
@@ -641,7 +653,22 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 	</p:dialog>
-	
+	<!--#12492-START-->
+	<p:dialog style="width: 20px; height: auto;top: 261px; align:center" widgetVar="bankDialogDuplicate"
+		id="bankDialogDuplicateId" resizable="false" modal="true" closable="false">
+		
+		<p:outputPanel layout="block" id="bankDialogDuplicatePanel">
+			<p:messages id="bankDialogDuplicateMessagePanel" showSummary="false" showDetail="true"
+				autoUpdate="true" closable="true" />
+			<div align="center">
+				<b>#{lbl['lbl.sm.duplicateInfo']}</b>
+			</div>
+			<div class="ppRightBtn">		    
+		 		<p:commandButton value="#{lbl['lbl.btn.close']}"  onclick="bankDialogDuplicate.hide();" type="button" />
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+	<!--#12492-END-->
 	<ac:confirmationPopup id="bankDeletePopUpId"
 		widget="bankDeletePopUp"
 		okAction="backingBean.deleteSelectedBanks"

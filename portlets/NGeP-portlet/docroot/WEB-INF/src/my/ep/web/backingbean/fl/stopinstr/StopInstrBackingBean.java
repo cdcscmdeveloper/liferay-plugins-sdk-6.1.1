@@ -154,6 +154,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 					for(PmUserOrg userOrg : userResDTO.getUserOrgList()) {
 						if(userOrg.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE && 
 							userOrg.getPmOrgProfile().getOrgProfileId().longValue()==flStopInstr.getFlRequest().getSmSupplier().getSupplierId().longValue()) {
+							reqDTO.setUserRole(getUserSupplierRole());//33615
 							reqDTO.setApprover(false);
 							break;
 						}
@@ -422,10 +423,12 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 * @return the user role
 	 */
 	private String getUserRole() {		
-		if(hasSupplierRole())
+		//33615-start
+		if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()))
+			return RoleCode.FL_APPROVER.value();
+		else if(hasSupplierRole())
 			return getUserSupplierRole();
-		else if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()))
-			return RoleCode.FL_APPROVER.value();		
+		//33615-end
 		else 
 			throw new EpException(MessageConst.ERROR_750040);
 	}

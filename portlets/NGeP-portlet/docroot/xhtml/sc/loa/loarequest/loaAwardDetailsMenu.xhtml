@@ -43,7 +43,9 @@
 				</p:commandLink>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.item']}">
+			<!-- 17376 -start- -->
+			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space:normal;">
+			<!-- 17376 -end- -->
 				#{scLoiLoaItem.scRequestItem.itemName} <br /><br />
 				<h:outputText value="#{scLoiLoaItem.scRequestItem.cmItem.extensionCode}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" />
 			</p:column>

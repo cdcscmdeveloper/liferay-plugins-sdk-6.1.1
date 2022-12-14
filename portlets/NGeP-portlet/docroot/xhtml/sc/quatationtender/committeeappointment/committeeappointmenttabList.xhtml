@@ -28,24 +28,32 @@
 					<ui:include src="cloneDetails.xhtml" />
 				</c:if>
 			
-				<p:commandButton id="specificationcommitteeadd"
-					value="#{lbl['lbl.btn.add']}" process="@this" styleClass="BtnSpacing"
-					rendered="#{isCommitteeInfoEditable}"
-					actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
-					oncomplete="newspecificationcommittee.show();"
-					update="@(.scAddMember)" />
-	
-				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				disabled="#{qTDetailBB.deleteselectedList(committe.scCommitteeMembers)}"
-				actionListener="#{qTDetailBB.deleteCommitteemembersData(committe.scCommitteeMembers)}"
-					process="@this, specificationcommitteeid" partialSubmit="true" styleClass="BtnSpacing"
-					oncomplete="committeeAppointmentDeletePopUp.show();"
-					update="@([id$=#{committeeAppointmentDeleteId}])"
-					rendered="#{isCommitteeInfoEditable}" >
-					<f:setPropertyActionListener target="#{qTCommitteBackingBean.managedBean.extraDeleteComitteeSelection}" value="#{qTDetailBB.managedBean.committemembers}"></f:setPropertyActionListener>
-						<f:setPropertyActionListener target="#{qTDetailBB.managedBean.committemembers}" value="#{null}"></f:setPropertyActionListener>
-					</p:commandButton>
-				
+						<!-- 29464 -start- -->
+						<p:commandButton id="specificationcommitteeadd"
+							value="#{lbl['lbl.btn.add']}" process="@this"
+							styleClass="BtnSpacing"
+							rendered="#{isCommitteeInfoEditable and isCommitteeAppointmentMenuTab}"
+							actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
+							oncomplete="newspecificationcommittee.show();"
+							update="@(.scAddMember)" />
+
+						<p:commandButton value="#{lbl['lbl.btn.delete']}"
+							disabled="#{qTDetailBB.deleteselectedList(committe.scCommitteeMembers)}"
+							actionListener="#{qTDetailBB.deleteCommitteemembersData(committe.scCommitteeMembers)}"
+							process="@this, specificationcommitteeid" partialSubmit="true"
+							styleClass="BtnSpacing"
+							oncomplete="committeeAppointmentDeletePopUp.show();"
+							update="@([id$=#{committeeAppointmentDeleteId}])"
+							rendered="#{isCommitteeInfoEditable and isCommitteeAppointmentMenuTab}">
+							<!-- 29464 -end- -->
+							<f:setPropertyActionListener
+								target="#{qTCommitteBackingBean.managedBean.extraDeleteComitteeSelection}"
+								value="#{qTDetailBB.managedBean.committemembers}"></f:setPropertyActionListener>
+							<f:setPropertyActionListener
+								target="#{qTDetailBB.managedBean.committemembers}"
+								value="#{null}"></f:setPropertyActionListener>
+						</p:commandButton>
+
 				<c:if test="#{isQTStatusChecklistAndAfter and qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTCommitteBackingBean.renderECOrTECButton(statusId,committe.committeeType.parameterCode)}">
 					<c:if test="#{qTDetailBB.managedBean.qt.evaluationType eq ParameterConst.evaluationTypesTwoTier}">
 						<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.tec']}" styleClass="BtnSpacing"

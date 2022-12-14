@@ -102,6 +102,16 @@ public class DeductionRptBackingBean extends FlReportBackingBean<DeductionRptMan
 			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
 		}
 		
+		//#14076 -start-
+		if (StringUtils.isNotBlank(getManagedBean().getFlContractOrder())) {
+			params.put(FlReportConst.FL_RPT_COTRACT_ORDER, getManagedBean().getFlContractOrder());
+		}
+
+		if (StringUtils.isNotBlank(getManagedBean().getInvNo())) {
+			params.put(FlReportConst.FL_RPT_INV_NO, getManagedBean().getInvNo());
+		}
+		//#14076 -end-
+		
 		generateFlReport(params);
 		
 	}

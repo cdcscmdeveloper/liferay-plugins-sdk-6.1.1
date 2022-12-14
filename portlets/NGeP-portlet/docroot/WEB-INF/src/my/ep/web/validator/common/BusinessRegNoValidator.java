@@ -42,9 +42,17 @@ public class BusinessRegNoValidator implements Validator {
 				businessType = dropdown.getValue().toString();
 
 				if (robList.contains(businessType)) {
-					validateRob(value.toString());
+				//30987 - start
+					String rob = value.toString();
+					rob=rob.trim();
+					validateRob(rob);
+					value = rob.replace(value.toString(), rob);
 				} else if (rocList.contains(businessType)) {
-					validateRoc(value.toString());
+					String roc = value.toString();
+					roc = roc.trim();	
+					validateRoc(roc);
+					value = roc.replace(value.toString(),roc);
+				//30987 - end
 				} else if (llpList.contains(businessType)) {
 					validateLlp(value.toString());
 				} else {
@@ -78,6 +86,8 @@ public class BusinessRegNoValidator implements Validator {
 	 *            rocNo
 	 */
 	private void validateRoc(String rocNo) {
+		//30987 
+		rocNo = rocNo.trim();
 		String[] splitRoc = rocNo.split("-");
 		String splitRoc1 = "";
 		String splitRoc2 = "";
@@ -104,6 +114,8 @@ public class BusinessRegNoValidator implements Validator {
 	 */
 	private void validateRob(String robNo) {
 		String[] splitRob = robNo.split("-");
+		//30987 
+		robNo = robNo.trim();
 		String splitRob1 = "";
 		String splitRob2 = "";
 		if (splitRob != null && splitRob.length > 1) {
@@ -162,27 +174,37 @@ public class BusinessRegNoValidator implements Validator {
 	 *            rosNo
 	 */
 	private void validateRosKoperasi(String rosNo) {
-		String[] splitRos = rosNo.split("-");
-		String splitRos1 = "";
-		String splitRos2 = "";
-		String splitRos3 = "";
-
-		if (splitRos != null && splitRos.length == 3) {
-			splitRos1 = splitRos[0];
-			splitRos2 = splitRos[1];
-			splitRos3 = splitRos[2];
-			if (splitRos1.length() != 1 || StringUtils.isNumeric(splitRos1)) {
-				throwErrorMsg("lbl.sm.businessregno.invalid.format.roskoperasiskm");
-			} else if (splitRos2.length() != 1
-					|| !StringUtils.isNumeric(splitRos2)) {
-				throwErrorMsg("lbl.sm.businessregno.invalid.format.roskoperasiskm");
-			} else if (splitRos3.length() != 4
-					|| !StringUtils.isNumeric(splitRos3)) {
-				throwErrorMsg("lbl.sm.businessregno.invalid.format.roskoperasiskm");
-			}
-		} else {
-			throwErrorMsg("lbl.sm.businessregno.notvalid.roskoperasiskm");
+		
+		// #27601 - Start - 8/2/2021
+//		String[] splitRos = rosNo.split("-");
+//		String splitRos1 = "";
+//		String splitRos2 = "";
+//		String splitRos3 = "";
+//
+//		if (splitRos != null && splitRos.length == 3) {
+//			splitRos1 = splitRos[0];
+//			splitRos2 = splitRos[1];
+//			splitRos3 = splitRos[2];
+//			if (splitRos1.length() != 1 || StringUtils.isNumeric(splitRos1)) {
+//				throwErrorMsg("lbl.sm.businessregno.invalid.format.roskoperasiskm");
+//			} else if (splitRos2.length() != 1
+//					|| !StringUtils.isNumeric(splitRos2)) {
+//				throwErrorMsg("lbl.sm.businessregno.invalid.format.roskoperasiskm");
+//			} else if (splitRos3.length() != 4
+//					|| !StringUtils.isNumeric(splitRos3)) {
+//				throwErrorMsg("lbl.sm.businessregno.invalid.format.roskoperasiskm");
+//			}
+//		} else {
+//			throwErrorMsg("lbl.sm.businessregno.notvalid.roskoperasiskm");
+//		}
+		
+		if(rosNo != null && !StringUtils.isNumeric(rosNo)){
+			throwErrorMsg("lbl.sm.businessregno.notvalid.enhancementroskoperasiskm");
+		} else if (rosNo != null && StringUtils.isNumeric(rosNo) && rosNo.length() != 12){
+			throwErrorMsg("lbl.sm.businessregno.notvalid.enhancementroskoperasiskm");
 		}
+		
+		// #27601 - End - 8/2/2021
 	}
 
 	/**
@@ -271,6 +293,8 @@ public class BusinessRegNoValidator implements Validator {
 		
 	}
 	private void validateRobFc(String robNo,boolean useFC) {
+		//30987
+		robNo = robNo.trim();
 		String[] splitRob = robNo.split("-");
 		String splitRob1 = "";
 		String splitRob2 = "";
@@ -289,6 +313,8 @@ public class BusinessRegNoValidator implements Validator {
 		}
 	}
 	private void validateRocFc(String rocNo,boolean useFC) {
+		//30987
+		rocNo = rocNo.trim();
 		String[] splitRoc = rocNo.split("-");
 		String splitRoc1 = "";
 		String splitRoc2 = "";
@@ -309,10 +335,16 @@ public class BusinessRegNoValidator implements Validator {
 	public void validateRegNo(String businessType,String regNo,boolean useFc){
 		if (businessType != null && StringUtils.isNotBlank(businessType.toString()))
 				if (robList.contains(businessType)) {
-					validateRobFc(regNo.toString(),useFc);
+				//30987 - start
+					regNo = regNo.toString();
+					regNo = regNo.trim();
+					validateRobFc(regNo,useFc);
 				} else if (rocList.contains(businessType)) {
-					validateRocFc(regNo.toString(),useFc);
+					regNo = regNo.toString();
+					regNo = regNo.trim();					
+					validateRocFc(regNo,useFc);
 				} 
+				//30987 - end
 			
 		}
 	//END SSM INTEGRATION CHANGES

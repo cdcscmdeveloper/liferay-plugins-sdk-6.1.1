@@ -198,6 +198,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
+			if(!getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//33238
+			//32967-start
+			if(null != getManagedBean().getAccountNo()){
+				getManagedBean().getInvoice().setAccountNo(getManagedBean().getAccountNo());
+			}
+			//32967-end
+			}
 			FlInvoice invoice = getManagedBean().getInvoice();
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 			adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
@@ -249,7 +256,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 			}
 			List<PmUser> listOfApprover = null;
-			if(reqDTO.isDan()){
+			if(reqDTO.isDan() || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) ){ //  #28956 set approverlist for submit wihout DAN;
 				BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(invoice.getFlRequest().getFulfilmentReqId());
 				reqDTO.setGroupId(invoice.getFlRequest().getPmUserGroup().getUserGroupId());
 				reqDTO.setApproverLimit(sumItemAmt);
@@ -618,6 +625,24 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 				
 				FLInvoiceDataType paymentObj = (FLInvoiceDataType)obj;
+			
+				//29193 all 
+				getManagedBean().setGfmasError(false);
+				if(paymentObj.getErrorId() != null && !paymentObj.getErrorId().isEmpty() ){
+					long errorId = Long.parseLong(paymentObj.getErrorId());
+					if(errorId > 0	){
+						getManagedBean().setAutoUpdate(Boolean.FALSE);
+						getManagedBean().setGfmasError(true);
+						FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+						errReq.setErrorId(Long.parseLong(paymentObj.getErrorId()));
+						IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+						FulfilmentResDTO errRes = requestSO.retrieveErrorContent(errReq);
+						getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
+						getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
+						getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+					}
+				}
+				
 				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 				reqDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);
 				reqDTO.setFlOrderId(paymentObj.getFlOrderId());
@@ -755,6 +780,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				flBB.getManagedBean().setHideRemarks(false);
 			}
 		}
+		
+		//28221 - start
+		if(getManagedBean().getInvoice().getSupplierSubmittedId() == null){
+			getManagedBean().getInvoice().setSupplierSubmittedId(getFacesScopes().getUserSessionBean().getUserId());
+		}
+		//28221 - end
+		
 		//check is normal invoice or tax invoice
 		reqDTO.setInvoice(getManagedBean().getInvoice());
 		resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
@@ -1247,6 +1279,19 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		
 		if (this.getManagedBean().getInvoice() != null) {
+			if(!getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//33238
+			//32967-Start
+			if(this.getManagedBean().getInvoice().getAccountNo()!=null){
+				if(getManagedBean().getAccountNo()==null){
+					getManagedBean().setAccountNo(this.getManagedBean().getInvoice().getAccountNo());
+				}			
+			
+				if(this.getManagedBean().getInvoice().getAccountNo().equalsIgnoreCase(getManagedBean().getAccountNo())){
+					this.getManagedBean().getInvoice().setAccountNo(this.getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId()+"|"+this.getManagedBean().getInvoice().getAccountNo());
+				}
+			}
+			//32967-End
+			}
 			if(this.getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchName() != null ){
 				supplierSearchReqDTO.setBranchCode(getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchCode());
 				supplierSearchReqDTO.setSupplierId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
@@ -1256,9 +1301,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						String account = obj.getAccountNo();
 						if (obj.getPmFinancialOrg() != null)
 							account = account + "  " + obj.getPmFinancialOrg().getFinOrgName();
-						populateBankAccountList.add(new SelectItem(obj.getAccountNo(), account));
-						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
-							getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
+						//32967-Start
+						populateBankAccountList.add(new SelectItem(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo(), account));
+						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo())) {
+							getManagedBean().getSupplierBankAccountMap().put(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo(), obj);
+						//32967-End
 						}
 					}
 				}
@@ -1272,9 +1319,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						String account = obj.getAccountNo();
 						if (obj.getPmFinancialOrg() != null)
 							account = account + "  " + obj.getPmFinancialOrg().getFinOrgName();
-						populateBankAccountList.add(new SelectItem(obj.getAccountNo(), account));
-						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
-							getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
+						//32967-Start
+						populateBankAccountList.add(new SelectItem(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo(), account));
+						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo())) {
+							getManagedBean().getSupplierBankAccountMap().put(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo(), obj);
+						//32967-End
 						}
 					}
 				}
@@ -1298,6 +1347,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					getManagedBean().getInvoice().setPaymentBankAddress(convertSmAddressToFlAddress(supplierBank.getSmAddress(),flAddress));
 				}
 				getManagedBean().getInvoice().setPaymentBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
+				if(!getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//33238
+				getManagedBean().setAccountNo(getManagedBean().getInvoice().getAccountNo().substring(supplierBank.getPmFinancialOrg().getFinancialOrgId().toString().length()+1));//32967
+			}
 			}
 		}else{
 			getManagedBean().getInvoice().setPaymentBankAddress(null);

@@ -14,18 +14,22 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 
+		<!-- 25201 -start- -->
 		<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
-			rendered="#{lOIDetailBackingBean.managedBean.editFlag}"
+			rendered="#{lOIDetailBackingBean.managedBean.editFlag or lOIDetailBackingBean.isQtMaintenanceScreen}"
 			style="float:left;" action="#{lOIDetailBackingBean.backToPrevious}" />
+		<!-- 25201 -end- -->
 			<ui:param name="readOnlyTask" value="#{lOIDetailBackingBean.managedBean.readOnly}" />
 		<ui:decorate
 			template="/WEB-INF/facelets/templates/claim_template.xhtml">
 			<ui:define name="outComeSection">
+				<!-- 25201 -start- -->
 				<p:commandButton value="#{lbl['lbl.sc.loiloa.preview.letter']}"
-					rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
+					rendered="#{lOIDetailBackingBean.managedBean.buttonFlag or (lOIDetailBackingBean.isQtMaintenanceScreen and lOIDetailBackingBean.managedBean.enableDownloadAllDocuments)}"
 					update="@all" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					action="#{lOIDetailBackingBean.previewLetter}" />
+				<!-- 25201 -end- -->
 
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{lOIDetailBackingBean.saveAction}"

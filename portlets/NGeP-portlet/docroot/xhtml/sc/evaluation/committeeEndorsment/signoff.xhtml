@@ -6,11 +6,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
-
-
-	<p:panel header="#{lbl['lbl.sc.committee.endorsement.evaluation']}"
-		toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.committee.endorsement.evaluation']}" toggleable="true">
+		<!-- 25638 -start- -->
+		<h:outputText value="#{lbl['lbl.sc.committee.endorsement.evaluation.instruction']}" rendered="#{evaluationBackingBean.displayReviseInstrn()}"
+				style="color:#0054a6;font-size:12px;font-family:Arial,helvetica,sans-serif;font-weight:normal;font-style:italic;margin-left:10px "/>
+		<!-- 25638 -end- -->
 
 		<p:dataTable id="evaluationSignOff" var="committeActivity" rows="10"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -55,35 +55,23 @@
 				<h:outputText
 					value="#{lbl[committeActivity.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
 			</p:column>
+			
 			<p:column style="width:10%;white-space: normal;">
 				<f:facet name="header">
-
 					<h:outputText value="#{lbl['lbl.sc.role']}"></h:outputText>
 				</f:facet>
-
 				<h:outputText
 					value="#{evaluationBackingBean.getParameterDesc(committeActivity.scCommitteeMember.memberRole)}" />
-
-
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.action']}"
-				style="width:10%;white-space: normal;">
-
-
+			
+			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;white-space: normal;">
 				<h:outputText
 					value="#{lbl[committeActivity.signedOff ? 'lbl.btn.complete' : 'lbl.sc.pending' ]}" />
-
-
 			</p:column>
 
 		</p:dataTable>
+		
 		<p:spacer height="10"></p:spacer>
-		<!-- <div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.send.reminder']}"
-				onclick="evaluationreminder.show();" />
-
-		</div> -->
 		<ui:include src="evaluationreminderpopup.xhtml" />
 		<ui:include src="chairPersonSignOff.xhtml" />
 	</p:panel>
@@ -103,9 +91,7 @@
 		</c:otherwise>
 	</c:choose>
 	
-	<ac:scRemarkAndAttachment
-		remarkList="#{committeeRemarkList}"
-		showAttachment="false" />
+	<ac:scRemarkAndAttachment remarkList="#{committeeRemarkList}" showAttachment="false" />
 
 	<table style="width: 100%">
 		<tr>
@@ -113,7 +99,6 @@
 					style="float:left;" styleClass="BtnSpacing"
 					actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('5','4')}"
 					action="#{evaluationBackingBean.updateSmAppl}" update=":form" /></td>
-
 		</tr>
 	</table>
 </ui:composition>

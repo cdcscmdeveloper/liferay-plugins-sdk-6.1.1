@@ -64,12 +64,21 @@ public class SuppPerformRptBackingBean extends
 						.getSelectedOrgProfile().getSmSupplier().getCompanyName());
 				supplierSearchReqDTO.setCompanyName(getManagedBean()
 						.getSelectedOrgProfile().getSmSupplier().getCompanyName());
-				
+				// #31893 - start
+				/*
 				if (supplierSearchReqDTO.getCompanyName().equalsIgnoreCase(SmReportConst.SM_SUPPLIER_PERFORMANCE_COMP_1)
 						|| supplierSearchReqDTO.getCompanyName().equalsIgnoreCase(SmReportConst.SM_SUPPLIER_PERFORMANCE_COMP_2)
 						|| supplierSearchReqDTO.getCompanyName().equalsIgnoreCase(SmReportConst.SM_SUPPLIER_PERFORMANCE_COMP_2)) {
 					getManagedBean().setReportCode(SmReportConst.SM_SUPPLIER_PERFORMANCE_V_RPT_VAL);
 				}
+				*/
+				params.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(getManagedBean()
+						.getSelectedOrgProfile().getSmSupplier().getSupplierId()));
+				
+				if (getManagedBean().getSelectedOrgProfile().getSmSupplier().isSprMv()) {
+					getManagedBean().setReportCode(SmReportConst.SM_SUPPLIER_PERFORMANCE_V_RPT_VAL);
+				}
+				// #31893 - end
 			}
 		}else{
 			if(getManagedBean().getMofNo() != null){

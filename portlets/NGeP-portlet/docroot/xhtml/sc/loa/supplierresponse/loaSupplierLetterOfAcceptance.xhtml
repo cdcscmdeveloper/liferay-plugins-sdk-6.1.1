@@ -62,13 +62,15 @@
 
 			<p:column style="text-align: center;"
 				headerText="#{lbl['lbl.sc.action']}">
+				<!-- 25201 -start- -->
 				<p:commandButton id="download" icon="ui-icon-download"
-					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+					disabled="#{not lOADetailBackingBean.managedBean.enableDownloadAllDocuments}"
 					style="background-color:transparent !important; border:0px none;"
 					ajax="false"
 					action="#{lOADetailBackingBean.downloadReport(scLoaReport)}"
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scLoaReport.scLoaReportAttachment.fileName : true or
 					scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSupplierUploadAndDownload}" />
+				<!-- 25201 -end- -->
 				<ac:scSingleFileUploadButton id="scDocUploadBtn"
 					popupWidgetVar="qtLoaSuppUploadDlg"
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or

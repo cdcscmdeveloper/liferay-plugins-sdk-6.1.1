@@ -178,6 +178,14 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FlFulfilmentNote fulfilmentNote = getManagedBean().getFulfilmentNote();
 			receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
+			//31546-Start
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
+				if(fulfilmentNote !=null && fulfilmentNote.getFulfilmentNoteNo()!=null){
+					log.info("######## SLA SubmitAction START Action::" + action +"|| FRN Doc No.:" +fulfilmentNote.getFulfilmentNoteNo());					
+				}
+				
+			}
+			//31546-End
 			
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			reqDTO.setFulfilmentNote(fulfilmentNote);
@@ -1684,4 +1692,5 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 	}
 	//30468-end
+		
 }

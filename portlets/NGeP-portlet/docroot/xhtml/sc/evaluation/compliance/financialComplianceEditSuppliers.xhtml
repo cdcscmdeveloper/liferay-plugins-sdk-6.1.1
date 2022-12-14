@@ -25,12 +25,7 @@
 					<td align="right"><p:commandButton
 							value="#{lbl['lbl.btn.back']}" style="float:left;"
 							immediate="true"
-							action="#{evaluationBackingBean.evaluationBackaction}" /> <p:commandButton
-							value="#{lbl['lbl.btn.save']}"
-							disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
-							style="float:right;" update="@all" onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();"
-							action="#{evaluationBackingBean.saveComplianceUploadCheckList}" />
+							action="#{evaluationBackingBean.evaluationBackaction}" />
 					</td>
 				</tr>
 			</table>
@@ -42,7 +37,9 @@
 			</p:panel>
 
 			<h:panelGroup>
-				<ui:include src="financialComplianceSupplierList.xhtml" />
+				<!-- 28786 -start- -->
+				<ui:include src="financialComplianceSupplierListing.xhtml" />
+				<!-- 28786 -end- -->
 			</h:panelGroup>
 
 

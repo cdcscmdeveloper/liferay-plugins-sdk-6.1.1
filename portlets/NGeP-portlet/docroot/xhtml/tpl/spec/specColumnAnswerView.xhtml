@@ -26,10 +26,12 @@
 		</p:column>
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:82px; white-space:normal; text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
 		</p:column>
-		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:82px; white-space:normal; #{isSpecTypeFinancial ? 'text-align:right;' : ''}" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : remarklbl]}">
+	<!-- #33859 - start -->
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:82px; white-space:pre-line !important; #{isSpecTypeFinancial ? 'text-align:right;' : ''}" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : remarklbl]}">
 		</p:column>
-	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:100px;white-space:normal;" headerText="#{lbl['lbl.tpl.spec.content.supplier.note']}">
+	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:100px; white-space:pre-line !important;" headerText="#{lbl['lbl.tpl.spec.content.supplier.note']}">
 	</p:column>
+	<!-- #33859 - end -->
 	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:60px; text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}" 
 		rendered="#{templateSpecBackingBean.hasWeightage(templateSpecBean)}">
 		</p:column>
@@ -137,7 +139,7 @@
 			<h:outputText value="#{lbl['lbl.txt.na']}"/>
 		</h:panelGroup>
 	</p:column>
-	<p:column style="width:82px; white-space:normal; #{isSpecTypeFinancial ? 'text-align:right;' : ''}">
+	<p:column style="width:82px; white-space:pre-line; #{isSpecTypeFinancial ? 'text-align:right;' : ''}"> <!-- 20220920@syazani - Bug #33859 -->
 		<f:facet name="footer">
 			<h:outputText value="#{templateSpecBackingBean.calcGrandTotalAmount(templateSpecBean)}" rendered="#{isSpecTypeFinancial}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -148,10 +150,12 @@
 			<h:outputText value="#{tplSpecAnswer.answerNumeric}" rendered="#{isAnswerTypeNumeric}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
-			<h:outputText value="#{tplSpecAnswer.answerCompliance ? 'Yes' : 'No'}" rendered="#{isAnswerTypeDropdown}" />
+			<!-- Bug #32389 Farid Start-->
+			<h:outputText value="#{tplSpecAnswer.answerCompliance ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}" rendered="#{isAnswerTypeDropdown}" />
+			<!-- Bug #32389 Farid end-->
 		</h:panelGroup>
 	</p:column>
-	<p:column style="width:100px;white-space:normal;">
+	<p:column style="width:100px;white-space:pre-line;"> <!-- 20220920@syazani - Bug #33859 -->
 		<ui:param name="answerRemark" value="#{fn:replace(tplSpecAnswer.answerRemark,',',',  ')}"></ui:param>
 		#{answerRemark}
 	</p:column>

@@ -37,6 +37,7 @@ import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
 
+import my.ep.bean.application.NgepApplicationBean; // #12177 Refactor
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -361,10 +362,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 					messageId = MessageConst.INFO_700010;
 				}
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), flFulfilmentRequest.getDocNo()}, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				//28718 - start
+				if(!getManagedBean().isTriggerPRErrorMsg()) {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), flFulfilmentRequest.getDocNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
+				//28718 - end
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
@@ -417,6 +422,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			List<FlFulfilmentItemAddr> fulfilmentItemAddrList = null;
 			for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 				for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
+					getManagedBean().setGrouped(itemAddr.isGrouped());//28718
 					if(itemAddr.getCmItem()==null && itemAddr.getScRequestItem().getCmItem()!=null) {
 						itemAddr.setCmItem(itemAddr.getScRequestItem().getCmItem());
 					}
@@ -2148,7 +2154,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			flItemAddress = (FlFulfilmentItemAddr) itemEntry.getValue().get(0).cloneEntity();
 			flItemAddress.setParent(true);
 			if(null != flItemAddress.getPmVotFund() && null != flItemAddress.getPmVotFund().getVotFundId()){
-				flItemAddress.setCoaValue("Y");
+				//28718 - start
+				if(flItemAddress.isGrouped() && !flItemAddress.isGroupedItemValidated()) {
+					flItemAddress.setCoaValue("N");
+				} else {
+					flItemAddress.setCoaValue("Y");
+				}	
+				//28718 - end
 			}else{
 				flItemAddress.setCoaValue("N");
 			}
@@ -2209,7 +2221,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			flTemp = (FlFulfilmentItemAddr)selectedNode.getData();
 			selectedItemAddressList.add(flTemp.getScRequestItem().getRequestNoteItemId());
 		}
-		boolean isVotSOrAmanahExist = false;
+		//#28718 - Start
+/*		boolean isVotSOrAmanahExist = false;
 		//boolean isVotBOrPOrTExist = false;
 		boolean isVotBOrTExist = false;
 		boolean isVotPExist = false;
@@ -2243,9 +2256,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			if(isVotSOrAmanahExist || isVotBOrTExist || isVotPExist) {
 				break;
 			}
-		}		
+		}*/
+		//#28718 - End	
 		PmVotFund pmVotFund = votFundCodeMap.get(getManagedBean().getVotFundId());
-		if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.BEKALAN.value()) || 
+		//#28718 - Start
+/*		if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.BEKALAN.value()) || 
 				pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.TANGGUNGAN.value())) {
 				if(isVotSOrAmanahExist || isVotPExist) {
 					throw new EpException(MessageConst.ERROR_740005);
@@ -2260,7 +2275,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				if(isVotBOrTExist || isVotPExist) {
 					throw new EpException(MessageConst.ERROR_740005);
 				}
-		}
+		}*/
+		//#28718 - End
 		
 		if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.BEKALAN.value()) || pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.TANGGUNGAN.value())) {
 			if(getManagedBean().getPmPrgActivity()==null) {
@@ -2304,6 +2320,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				for(TreeNode node:getManagedBean().getSelectedNodes()){
 					FlFulfilmentItemAddr selectedItem=(FlFulfilmentItemAddr)node.getData();
 					if(itemAddress.getScRequestItem().getRequestNoteItemId().equals(selectedItem.getScRequestItem().getRequestNoteItemId())){
+						//28718 - start
+						if(itemAddress.isGrouped()) {
+							itemAddress.setGroupedItemValidated(true);
+						}
+						//28718 - end
 						itemAddress.setCoaValue("Y");
 						break;
 					}
@@ -2740,6 +2761,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @param selectedTabIndex the selected tab index
 	 */
 	public void onTabChange(int selectedTabIndex){
+		//28718 - start
+		getManagedBean().setTriggerPRErrorMsg(Boolean.FALSE);
+		//28718 - end
 		if(selectedTabIndex==0){
 			initializeApproverGroup();
 		}
@@ -2763,6 +2787,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().setProjectLov(false);
 			getManagedBean().setVotFundDisplay(false);
 			preLoadingGlAccount();
+			//28718 - start
+			if(getManagedBean().isGrouped() && !BpmOutcomeConst.BPM_VIEW.equalsIgnoreCase(getManagedBean().getButtonVal())) {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_745089, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}			
+			//28718 - end
 		}
 		if(selectedTabIndex==4){
 			chargeLineValidationBeforeApproverList();
@@ -3211,6 +3242,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @throws Exception the exception
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
+		//#28718 - Start
+		getManagedBean().setTriggerPRErrorMsg(Boolean.FALSE);
+		boolean isTriggerNewPRNeeded = false;
+		if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+			isTriggerNewPRNeeded = checkTriggeredNewPR();
+		}
+		//#28718 - End
 		if (!isFlFulfilmentRequisitioner() &&  (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))
 				|| (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome))) {
 			validateFulfilmentRequest(outcome);
@@ -3223,6 +3261,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			// set action
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			//28718 - start
+			if(isTriggerNewPRNeeded) {
+				getManagedBean().setTriggerPRErrorMsg(isTriggerNewPRNeeded);
+				return null;
+			}
+			//28718 - end
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
 		}else{
@@ -3234,7 +3278,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
 				return null;
 			}
-			return fulfillmentRequestAction(outcome);
+			//#28718 - Start
+			if(isTriggerNewPRNeeded) {
+				getManagedBean().setTriggerPRErrorMsg(isTriggerNewPRNeeded);
+				return null;
+			}
+			//#28718 - End	
+			return fulfillmentRequestAction(outcome);				
 		}
 	}
 	
@@ -3343,12 +3393,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 				RuleReqDTO ruleReqDTO = new RuleReqDTO();
 				RuleResDTO roleResDTO = null;
-				ruleReqDTO.setRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
+				ruleReqDTO.setRuleType(RuleTypeConst.LO_PO_ACKNOWLEDGMENT_PERIOD); //#25147
 				roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
 				if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
 					getManagedBean().setTaskDeadLine(roleResDTO.getRuleValueList().get(0).getRuleValue());
 				} else {
-					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+					getManagedBean().setTaskDeadLine("0"); //temporary #25147
 				}
 				
 				for(FlDeliveryAddress deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
@@ -4753,9 +4803,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		ScQuote scQuote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote().getQuote();
 		ScRequestNote scRequestNote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote();
 		
-		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
-				.getProperty("sqTimeValidity"));
-				
+		// Refactor: #12177 - Start
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		log.info("Refactor 12177 (PurchaseRequestBackingBean) : getSqTimeValidity - " + sqTimeValidity);
+		// Refactor: #12177 - End		
+		
 		if(scQuote != null){
 			if(getManagedBean().getFulfilmentRequest().getScPurchaseInDefault() == null){
 				Date currentDate = new Date();
@@ -4896,5 +4948,98 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 		}
 		//29401-end
-	
+		
+		//#28718 - Start
+		private boolean checkTriggeredNewPR() {
+			Long currentStatusId;
+
+			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
+
+			currentStatusId = flFulfilmentRequest.getFlWorkflowStatus().getPmStatus().getStatusId();
+
+			if (currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
+					|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+					|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+					|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+					|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)) {
+
+				boolean isVotSOrAmanahExist = false;
+				boolean isVotBOrTExist = false;
+				boolean isVotPExist = false;
+
+				String votFundType;
+				for (FlDeliveryAddress deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+					for (FlFulfilmentItemAddr itemAddress : deliveryAddress.getFlFulfilmentItemAddr()) {
+						if (itemAddress.getPmVotFund() != null) {
+							if (null == votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId())) {
+								votFundType = itemAddress.getPmVotFund().getVotFundType();
+							} else {
+								votFundType = votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId())
+										.getVotFundType();
+							}
+
+							if (votFundType.equalsIgnoreCase(VotFundType.SETIA.value())
+									|| votFundType.equalsIgnoreCase(VotFundType.AMANAH.value())) {
+								isVotSOrAmanahExist = true;
+							} else if (votFundType.equalsIgnoreCase(VotFundType.BEKALAN.value())
+									|| votFundType.equalsIgnoreCase(VotFundType.TANGGUNGAN.value())) {
+								isVotBOrTExist = true;
+							} else if (votFundType.equalsIgnoreCase(VotFundType.PEMBANGUNAN.value())) {
+								isVotPExist = true;
+							}
+						}
+					}
+					if((isVotSOrAmanahExist && isVotBOrTExist) || (isVotSOrAmanahExist && isVotPExist) 
+							|| (isVotBOrTExist && isVotPExist)){
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		/**
+		 * Separate PR that according to the correct combination of charge lines code
+		 * @throws Exception
+		 */
+		public void triggeredNewPR() throws Exception{
+			fulfillmentRequestAction(BpmOutcomeConst.BPM_SAVE);
+			IFulfilmentRequestSO fulfilmentRequestSO;
+					
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
+			fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
+			reqDTO.setPurchaseRequestId(getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getPurchaseRequestId());
+			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
+			reqDTO.setToken(token);
+			if(getManagedBean().getFulfilmentRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION.longValue()) {
+				reqDTO.setOutcome(BpmOutcomeConst.BPM_DRAFT);
+			} else {
+				reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
+				if(getManagedBean().getSelectedApprover() != null){
+					PmUserGroupUser groupUser = getManagedBean().getApproverMap().get(getManagedBean().getSelectedApprover());
+					if(groupUser!=null) {
+						List<PmUser> approverUserList = sortApproverUserList(getManagedBean().getApproverGroupUserList(), groupUser.getPmUser(),getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
+						reqDTO.setApproverUserList(approverUserList);
+						reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
+					}
+				}
+				if(reqDTO.getApproverUserList() == null || reqDTO.getApproverUserList().isEmpty()){
+					reqDTO.setBpmApproverList(getManagedBean().getBpmApproverList());
+				}
+			}
+			reqDTO.setS1DocNo(flFulfilmentRequest.getScPurchaseRequest().getRequestNote().getRequestNoteNo());
+			reqDTO.setScRequestNoteDtlList(getManagedBean().getRequestNoteWithDtlsList());
+			reqDTO.setClone(Boolean.TRUE);
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			reqDTO.setRequisitioner(isFlFulfilmentRequisitioner());
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			fulfilmentRequestSO.triggerNewPurchaseRequest(reqDTO);
+
+			String[] param = null;
+			successMessage(MessageConst.INFO_745088, param, true);
+		}
+		//#28718 - End
 }

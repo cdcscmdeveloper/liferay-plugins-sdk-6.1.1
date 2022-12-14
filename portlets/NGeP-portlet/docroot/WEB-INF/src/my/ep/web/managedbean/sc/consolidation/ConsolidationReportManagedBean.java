@@ -86,9 +86,14 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> boardofDirectors;
 
 	private List<ScQtFinalizationRemarks> finalizationRemars;
+	// #18685 - Start
+	private List<ScQtFinalizationRemarks> finalizationItemizedRemarks;
+	// #18685 - End
 	private boolean isProcCategoryMedicine;
 	private List<ScQtRecommendationUlasanRemarks> finalizationUlasanremarks;
 	private List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks;
+	
+	private boolean isSetNull ; //Bug #31364
 	
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
@@ -581,5 +586,29 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 		this.finalizationPengreysonremarks = finalizationPengreysonremarks;
 	}
 
+	public boolean isSetNull() {
+		return isSetNull;
+	}
+
+	public void setSetNull(boolean isSetNull) {
+		this.isSetNull = isSetNull;
+	}
+
+	// #18685 -start-
+	/**
+	 * @return the finalizationItemizedRemars
+	 */
+	public List<ScQtFinalizationRemarks> getFinalizationItemizedRemarks() {
+		return finalizationItemizedRemarks;
+	}
+
+	/**
+	 * @param finalizationItemizedRemars the finalizationItemizedRemars to set
+	 */
+	public void setFinalizationItemizedRemarks(
+			List<ScQtFinalizationRemarks> finalizationItemizedRemarks) {
+		this.finalizationItemizedRemarks = finalizationItemizedRemarks;
+	}
+	// #18685 - End
 
 }

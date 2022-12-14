@@ -70,6 +70,9 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	
 	/** The map supp scloiloa list */
 	private Map<Long, List<ScLoiLoa>> suppLoiLoaMap;
+	
+	/** The back to previous page. */
+	private String backToPreviousPage; // 19366#40
 
 
 	/**
@@ -327,5 +330,14 @@ public class QtLOAManagedBean extends BaseManagedBean {
 		this.loiLoaListTitle = loiLoaListTitle;
 	}
 
+	// 19366#40 -start-
+	public String getBackToPreviousPage() {
+		return backToPreviousPage;
+	}
+
+	public void setBackToPreviousPage(String backToPreviousPage) {
+		this.backToPreviousPage = backToPreviousPage;
+	}
+	// 19366#40 -end-
 	
 }

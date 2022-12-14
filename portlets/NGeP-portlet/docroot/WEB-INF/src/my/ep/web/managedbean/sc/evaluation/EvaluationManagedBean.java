@@ -135,6 +135,17 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	/** The sc qt checklist. */
 	private ScQtCheckList scQtChecklist;
+	
+	//#28786 - start
+	/** The qt checklist for compliance usage. **/
+	private ScQtCheckList complianceQtChecklist;
+
+	/** The qt proposal checklist for compliance usage **/
+	private ScQtProposalChecklist complianceQtProposalChecklist;
+
+	private List<ScQtProposalChecklist> complianceFinancialProposalCheckList;
+	
+	//#28786 - end
 
 	/** The qt proposal checklist. */
 	private ScQtProposalChecklist qtProposalChecklist;
@@ -491,6 +502,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//Enhancement #26339 -start-
 	private boolean isFP_Compliance = false;
 	//Enhancement #26339 -end-	
+
+	private boolean hasPreviousMeeting; //#29473, #31675
 	
 	/**
 	 * Gets the today.
@@ -3387,5 +3400,67 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.isFP_Compliance = isFP_Compliance;
 	}
 	//Enhancement #26339 -end-
+	
+	//#28786 - start
+	/**
+	 * @return the qtChecklist
+	 */
+	public ScQtCheckList getComplianceQtChecklist() {
+		return complianceQtChecklist;
+	}
+
+	/**
+	 * @param qtChecklist the qtChecklist to set
+	 */
+	public void setComplianceQtChecklist(ScQtCheckList complianceQtChecklist) {
+		this.complianceQtChecklist = complianceQtChecklist;
+	}
+	
+	/**
+	 * @return the scQtProposalChecklist
+	 */
+	public ScQtProposalChecklist getComplianceQtProposalChecklist() {
+		return complianceQtProposalChecklist;
+	}
+
+	/**
+	 * @param scQtProposalChecklist the scQtProposalChecklist to set
+	 */
+	public void setComplianceQtProposalChecklist(ScQtProposalChecklist complianceQtProposalChecklist) {
+		this.complianceQtProposalChecklist = complianceQtProposalChecklist;
+	}
+	
+	/**
+	 * @return the complianceFinancialProposalCheckList
+	 */
+	public List<ScQtProposalChecklist> getComplianceFinancialProposalCheckList() {
+		return complianceFinancialProposalCheckList;
+	}
+
+	/**
+	 * @param complianceFinancialProposalCheckList the complianceFinancialProposalCheckList to set
+	 */
+	public void setComplianceFinancialProposalCheckList(
+			List<ScQtProposalChecklist> complianceFinancialProposalCheckList) {
+		this.complianceFinancialProposalCheckList = complianceFinancialProposalCheckList;
+	}
+	//#28786 - end
+
+	// #29473, #31675_start
+	/**
+	 * @return the hasPreviousMeeting
+	 */
+	public boolean isHasPreviousMeeting() {
+		return hasPreviousMeeting;
+	}
+
+	/**
+	 * @param hasPreviousMeeting
+	 *            the hasPreviousMeeting to set
+	 */
+	public void setHasPreviousMeeting(boolean hasPreviousMeeting) {
+		this.hasPreviousMeeting = hasPreviousMeeting;
+	}
+	// #29473, #31675 -End
 
 }

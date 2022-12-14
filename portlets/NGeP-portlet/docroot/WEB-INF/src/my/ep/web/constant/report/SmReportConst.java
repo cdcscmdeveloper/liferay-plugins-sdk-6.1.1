@@ -13,6 +13,7 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_USER_ID = "PUSER";
 	public static final String PARAM_REPORT_CODE = "PREPORTID";
 	public static final String PARAM_KEY_REPORT = "report";
+	public static final String PARAM_SUPPLIER_ID = "PSUPPID";
 	public static final String PARAM_SUPPLIER_TYPE = "PSUPPTYPE";
 	public static final String PARAM_REG_NO = "PREGNO";
 	public static final String PARAM_COMPANY_NAME = "PCOMPANYNAME";

@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:panel header="#{lbl['lbl.sm.natureofbusiness']}"
+		id="natureBusinessId" toggleable="true">
+		
+		<p:outputPanel>
+			
+			<h:outputLabel escape="false"  styleClass="outputLabel-view" value="#{lbl['lbl.sm.business.desc']}"/><br />
+			<h:outputText escape="false"  styleClass="instruction" value="#{cc.attrs.bBean.managedBean.smCompanyBasicSsm.businessDesc}"/>
+			<br />
+		</p:outputPanel>
+		<p:dataTable var="suppBizNature"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			render="#{cc.attrs.bBean.managedBean.smSupplierBusinessSsm != null and cc.attrs.bBean.managedBean.smSupplierBusinessSsm.size() >0}"
+			value="#{cc.attrs.bBean.managedBean.smSupplierBusinessSsm}"
+			rowIndexVar="index" id="suppBizNatureId" rowKey="#{suppBizNature}"
+			rows="10">
+			<ac:paginator for="suppBizNatureId" />
+			
+			<p:column>	
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.businessnature.code']}" />
+				</f:facet>
+				<h:outputText
+					value="#{cc.attrs.bBean.getBusinessNatureSection(suppBizNature)} - #{suppBizNature.pmBusinessNature.levelCode}" 
+					rendered="#{!suppBizNature.ssmDataIssue}"/>
+				<h:outputText
+					value="#{suppBizNature.pmBusinessNature.levelCode}" rendered="#{suppBizNature.ssmDataIssue}" /> 
+			</p:column>
+			
+			
+			
+			 <p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.viewSsm.business.type']}" />
+				</f:facet>
+				<h:outputText value="#{suppBizNature.pmBusinessNature.levelName}" /> 
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+
+</ui:composition>

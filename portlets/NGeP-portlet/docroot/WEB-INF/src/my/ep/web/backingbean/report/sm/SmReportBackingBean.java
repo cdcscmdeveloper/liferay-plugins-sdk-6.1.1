@@ -91,6 +91,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.context.RequestContext;
 
@@ -121,6 +123,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			getPopUpMsg(String.valueOf(resDTO.getRequestId()));
 			RequestContext.getCurrentInstance().execute("rptConfirmationDlg.show()");
 		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -1011,8 +1014,22 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		
 		params.put("PAYMENTTYPE",paymentType);
 		int paymentTypeSize = payTypeDescParam.size();
-		if("Credit".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_METHOD)))paymentMethod = "Kad Kredit";
-		else paymentMethod = "FPX";
+		// #26307 start - change payment method wording and column header
+		ArrayList<String> columnHeaderList;
+		if ("Credit".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_METHOD))) {
+			paymentMethod = "Kad Kredit/Kad Debit";
+			columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh Transaksi", "Tarikh Resit",
+					"No Resit", "Nama Pembekal", "No Permohonan", "No Rujukan", "Jenis Terimaan-Kod",
+					"Jenis Terimaan-Perihal", "Jenis Kad", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
+					"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status"));
+		} else {
+			paymentMethod = "FPX";
+			columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh Transaksi", "Tarikh Resit",
+					"No Resit", "Nama Pembekal", "No Permohonan", "No Rujukan", "Jenis Terimaan-Kod",
+					"Jenis Terimaan-Perihal", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
+					"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status"));
+		}
+		// #26307 end
 		
 		if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))reportType = "Tarikh Resit";
 		else reportType = "Tarikh Transaksi";
@@ -1026,10 +1043,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		
 		String[] rowHeaderItems = {"Kod PTJ","Nama PTJ","Kaedah Bayaran","Nama Pembekal","Jenis Bayaran"};
 		//Update Func By Include label RM inside column Caj Perkhidmatan & GST Caj Perkhidmatan
-		ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList(
+		// #26307 start - change column header
+		/*ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList(
 				"Bil", "Tarikh Transaksi", "Tarikh Resit", "No Resit","Nama Pembekal","No Permohonan","No Rujukan","Jenis Terimaan-Kod", "Jenis Terimaan-Perihal",
 				"Harga (RM)","GST (RM)","Caj Perkhidmatan (RM)","GST Caj Perkhidmatan (RM)","Amaun Bersih (RM)","Jumlah Keseluruhan (RM)","Status"
-		));
+		));*/
+		// #26307 end
 		String[] columnsRingkasan = {reportType,"Bil","Harga (RM)","GST (RM)","Caj Perkhidmatan (RM)","GST Caj Perkhidmatan (RM)","Amaun Bersih (RM)"};
 		
 		try{
@@ -1040,14 +1059,54 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					Object[] row = (Object[]) rsltReportList.get(m);
 					BigDecimal amount = row[7] != null ? (BigDecimal)row[7] : BigDecimal.ZERO;
 					BigDecimal gstAmount = row[8] != null ? (BigDecimal)row[8] : BigDecimal.ZERO;
-					BigDecimal serviceCharge = row[9] != null ? (BigDecimal)row[9] : BigDecimal.ZERO;
+					// #26307 start - change service charge
+					//START #26307#146 - Fix issue service charge
+					BigDecimal serviceCharge = row[9] != null ? (BigDecimal) row[9] : BigDecimal.ZERO;
+					/*if (row[17] != null || !"FPX".equalsIgnoreCase(row[1].toString())) {
+						serviceCharge = row[18] != null ? (BigDecimal) row[18] : BigDecimal.ZERO;
+						if(!serviceCharge.equals(BigDecimal.ZERO)){
+							BigDecimal serviceChargeRate = serviceCharge.divide(new BigDecimal(100));
+							serviceCharge = amount.multiply(serviceChargeRate);
+						}
+					} else {
+						serviceCharge = row[10] != null ? (BigDecimal) row[10] : BigDecimal.ZERO;
+					}*/
+					//END #26307#146
+					// #26307 end
 					BigDecimal gstRate = row[10] != null ? (BigDecimal)row[10] : BigDecimal.ZERO;
 					BigDecimal gstServiceChargeAmt = serviceCharge.multiply(gstRate).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					BigDecimal netPrice = amount.add(gstAmount).subtract(serviceCharge).subtract(gstServiceChargeAmt).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
-					reportListMap.put(m, new Object[]{
-						(Date)row[16],(Date)row[1],row[2].toString(),row[3].toString(),String.valueOf(row[4]),row[14].toString(),
-						row[5].toString(),row[6].toString(),amount,gstAmount,serviceCharge,gstServiceChargeAmt,netPrice,netPrice,row[13].toString()
-					});
+					// #26307 start - get and add card type
+					String cardType = "Kad Kredit";//START - #26307#146 
+					BigDecimal cardTypeCode = row[17] != null ? (BigDecimal) row[17] : BigDecimal.ZERO;
+					if (cardTypeCode.compareTo(BigDecimal.valueOf(5125L)) == 0) {
+						cardType = "Kad Kredit"; 
+					} else if (cardTypeCode.compareTo(BigDecimal.valueOf(5126L)) == 0) {
+						cardType = "Kad Debit"; 
+					} 
+					if ("Credit".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_METHOD))) {
+						reportListMap.put(m,new Object[] { 
+							(Date) row[16], 
+							(Date) row[1],
+							row[2].toString(),
+							row[3].toString(),
+							row[4] != null ? String.valueOf(row[4]) : "",
+							row[14] != null ? row[14].toString() : "",// BUG:#29454
+							row[5].toString(), row[6].toString().toUpperCase(), cardType, amount,
+							gstAmount, serviceCharge, gstServiceChargeAmt, netPrice, netPrice,row[13].toString() 
+						});
+					} else {
+						reportListMap.put(m,new Object[] { 
+							(Date) row[16], (Date) row[1], 
+							row[2].toString(),
+							row[3].toString(),
+							row[4] != null ? String.valueOf(row[4]) : "",
+							row[14] != null ? row[14].toString() : "",// BUG:#29454
+							row[5].toString(), row[6].toString().toUpperCase(), amount, gstAmount,
+							serviceCharge, gstServiceChargeAmt, netPrice, netPrice, row[13].toString() 
+						});
+					}
+					// #26307 end
 				}
 			}
 			
@@ -1078,18 +1137,32 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 		
 		//START HERE POPULATE REPORT ------ 
-		Workbook wb = new XSSFWorkbook(); 
+		Workbook wb = new XSSFWorkbook(); // Change package from XSSFWorkbook to SXSSFWorkbook due to populate large data.
 		CreationHelper createHelper = wb.getCreationHelper();
+		
+		//START - #29454
+		//Fix issue cell styles exeeded
+		CellStyle titleHeaderStyle_1 = titleHeaderStyle(wb,true,false,false,false);
+		CellStyle titleHeaderStyle_2 = titleHeaderStyle(wb,false,false,true,true);
+		CellStyle titleHeaderStyle_3 = titleHeaderStyle(wb,false,false,false,false);
+		CellStyle columnHeaderStyle = columnStyle(wb,createHelper,true,true,true,false,false,false,true);
+		CellStyle columnStyleBil = columnStyle(wb,createHelper,false,false,true,false,false,false,false);
+		CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+		CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);					
+		CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+		CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+		//END - #29454
+		
 		//Only create Sheet Senarai only if search result return has records.
 		if(!reportListMap.isEmpty()){
 			log.info("LIST IS NOT EMPTY !!!");
-			Sheet sheetList = wb.createSheet("Senarai"); 
+			Sheet sheetList = wb.createSheet("Senarai"); //BUG:#29454
 			try{
 				//Setting Report Title
 				Row titleRowSheetList = sheetList.createRow(0);
 				Cell cellTitleRow = titleRowSheetList.createCell(1);
 			    cellTitleRow.setCellValue(reportTitle);
-			    cellTitleRow.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
+			    cellTitleRow.setCellStyle(titleHeaderStyle_1);//BUG:#29454
 			    sheetList.addMergedRegion(new CellRangeAddress(0,0,1,columnHeaderList.size()-1)); 
 			    
 			    //Setting Row Items - Kod PTJ/Nama PTJ/Kaedah Bayaran/Nama Pembekal/Jenis Bayaran
@@ -1113,7 +1186,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		        		itemsDtlRow.setHeightInPoints((paymentTypeSize * sheetList.getDefaultRowHeightInPoints()));
 		        		cellItemsVal.setCellValue(paymentTypeDesc); 
 		        	}
-		        	cellItemsVal.setCellStyle(titleHeaderStyle(wb,false,false,true,true));
+		        	cellItemsVal.setCellStyle(titleHeaderStyle_2);//BUG:#29454
 		        	sheetList.addMergedRegion(new CellRangeAddress(i,i,2,4)); 
 		        }
 			    
@@ -1122,86 +1195,161 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		        for(int i = 0; i < columnHeaderList.size(); i++) {
 		            Cell cell = headerRowList.createCell(i);
 		            cell.setCellValue(columnHeaderList.get(i).toString());
-		            cell.setCellStyle(columnStyle(wb,createHelper,true,true,true,false,false,false,false));
+		            cell.setCellStyle(columnHeaderStyle);//BUG:#29454
 		        }
+		        int headerRowIndex = headerRowList.getRowNum();//BUG:#29454
 		        
 		        Set<Integer> keyIdList = reportListMap.keySet();
 				int rowid = sheetList.getLastRowNum()+1;
 				int countRowFpx = 1;
 				String receiptNo = "";
+				//START - #29454
+				int mergeRowFirst = 0;
+				int mergeRowLast = 0;
+				String referenceNo = "";
+				//END - #29454
 				for (Integer key : keyIdList) {
 					Row row = sheetList.createRow(rowid++);
 					Object[] objectArr = reportListMap.get(key);
 					int cellid = 1;
 					Cell cellBil = row.createCell(0);
-					if(receiptNo == ""){
+					//START - #29454
+					if(receiptNo == "" && referenceNo == ""){
 						cellBil.setCellValue(countRowFpx++);
+						mergeRowFirst = rowid;
 					}else if(!receiptNo.equalsIgnoreCase((String)objectArr[2])){
 						cellBil.setCellValue(countRowFpx++);
+						mergeRowFirst = rowid;
+						mergeRowLast = 0;
 					}else{
-						sheetList.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 
+						//Condition : Current Receipt No. equal to Previous row Receipt No.
+						//Fix issue on overlaping mergion during merge more than 2 row
+						//Add checking for Scenario with same Receipt No but has different Reference No.
+						if(!referenceNo.equalsIgnoreCase((String)objectArr[5])){
+							log.info("Inside Has different reference no !!");
+							//Not allowed to merge row , if Current row Reference No is not equal with previous row Reference No
+							cellBil.setCellValue(countRowFpx++);
+							mergeRowFirst = rowid;
+							mergeRowLast = 0;
+						}else{
+							log.info("Inside Has same reference no !!");
+							mergeRowLast = rowid;
+							if(key < keyIdList.size()){
+								if(key == (keyIdList.size() - 1)){
+									sheetList.addMergedRegion(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
+								}else{
+									Object[] objectArrMerge = reportListMap.get(key+1);
+									if(!receiptNo.equalsIgnoreCase((String)objectArrMerge[2])){
+										sheetList.addMergedRegion(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
+									}
+								}						
+							}
+						}
 					}
-					cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
+					cellBil.setCellStyle(columnStyleBil);
 					receiptNo = (String)objectArr[2];
+					referenceNo = (String)objectArr[5];
 					
 					for(int x=0; x<objectArr.length; x++){
 						if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
 						Cell cell = row.createCell(cellid);
 						if(objectArr[x] instanceof Date){
 							cell.setCellValue((Date) objectArr[x]);
-							cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+							cell.setCellStyle(columnStyleDate);
 						}else if(objectArr[x] instanceof BigDecimal){
 							cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
-							cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+							cell.setCellStyle(columnStyleBigDecimal);
 						}else if(objectArr[x] instanceof Double){
 							cell.setCellValue(((Double) objectArr[x]).doubleValue());
-							cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+							cell.setCellStyle(columnStyleDouble);
 						}else{
 							if("null".equalsIgnoreCase((String) objectArr[x]))cell.setCellValue("");
 							else cell.setCellValue((String) objectArr[x]);
-							cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
+							cell.setCellStyle(columnStyleString);
 						}
 						cellid++;
 					}
+					//END - #29454
 				}
 				//Setting Auto filtering in each header column list
-		        sheetList.setAutoFilter(new CellRangeAddress(headerRowList.getRowNum(),sheetList.getLastRowNum(),1,columnHeaderList.size()-1));
+				sheetList.setAutoFilter(new CellRangeAddress(headerRowIndex,headerRowIndex,1,columnHeaderList.size()-1));//BUG:#29454
 		        // Resize all columns to fit the content size
 		        for(int i = 0; i < columnHeaderList.size(); i++) {
-		        	if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE))){
-		        		if(i==0)sheetList.setColumnWidth(i, 8*256);//Col : Bil
-		            	else if(i==1)sheetList.setColumnWidth(i, 17*256); //Col : Tarikh Resit
-		            	else if(i==2)sheetList.setColumnWidth(i, 19*256); //Col : No. Resit
-		            	else if(i==3)sheetList.setColumnWidth(i, 50*256); //Col : Nama Pembekal
-		            	else if(i==4)sheetList.setColumnWidth(i, 20*256); //Col : No. Permohonan
-		            	else if(i==5)sheetList.setColumnWidth(i, 20*256); //Col : No. Rujukan
-		            	else if(i==6)sheetList.setColumnWidth(i, 23*256); //Col : Jenis Terimaan-Kod
-		            	else if(i==7)sheetList.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
-		            	else if(i==8)sheetList.setColumnWidth(i, 15*256); //Col : Harga(RM)
-		            	else if(i==9)sheetList.setColumnWidth(i, 15*256); //Col : GST (RM)
-		            	else if(i==10)sheetList.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
-		            	else if(i==11)sheetList.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
-		            	else if(i==12)sheetList.setColumnWidth(i, 28*256); //Col : Amaun Bersih
-		            	else if(i==13)sheetList.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan       
-		            	else if(i==14)sheetList.setColumnWidth(i, 22*256); //Col : Status       
-		        	}else{
-		        		if(i==0)sheetList.setColumnWidth(i, 8*256);//Col : Bil
-		            	else if(i==1)sheetList.setColumnWidth(i, 20*256); //Col : Tarikh Tarikh Transaksi
-		            	else if(i==2)sheetList.setColumnWidth(i, 20*256); //Col : Tarikh Resit
-		            	else if(i==3)sheetList.setColumnWidth(i, 19*256); //Col : No. Resit
-		            	else if(i==4)sheetList.setColumnWidth(i, 50*256); //Col : Nama Pembekal
-		            	else if(i==5)sheetList.setColumnWidth(i, 20*256); //Col : No. Permohonan
-		            	else if(i==6)sheetList.setColumnWidth(i, 20*256); //Col : No. Rujukan
-		            	else if(i==7)sheetList.setColumnWidth(i, 23*256); //Col : Jenis Terimaan-Kod
-		            	else if(i==8)sheetList.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
-		            	else if(i==9)sheetList.setColumnWidth(i, 15*256); //Col : Harga(RM)
-		            	else if(i==10)sheetList.setColumnWidth(i, 15*256); //Col : GST (RM)
-		            	else if(i==11)sheetList.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
-		            	else if(i==12)sheetList.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
-		            	else if(i==13)sheetList.setColumnWidth(i, 28*256); //Col : Amaun Bersih
-		            	else if(i==14)sheetList.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan       
-		            	else if(i==15)sheetList.setColumnWidth(i, 22*256); //Col : Status       
-		        	}
+		        	// #26307 start - set card type column width
+					if ("Credit".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_METHOD))) {
+						if ("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE))){
+			        		if(i==0)sheetList.setColumnWidth(i, 8*256);//Col : Bil
+			            	else if(i==1)sheetList.setColumnWidth(i, 17*256); //Col : Tarikh Resit
+			            	else if(i==2)sheetList.setColumnWidth(i, 19*256); //Col : No. Resit
+			            	else if(i==3)sheetList.setColumnWidth(i, 50*256); //Col : Nama Pembekal
+			            	else if(i==4)sheetList.setColumnWidth(i, 20*256); //Col : No. Permohonan
+			            	else if(i==5)sheetList.setColumnWidth(i, 20*256); //Col : No. Rujukan
+			            	else if(i==6)sheetList.setColumnWidth(i, 23*256); //Col : Jenis Terimaan-Kod
+			            	else if(i==7)sheetList.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
+			            	else if(i==8)sheetList.setColumnWidth(i, 15*256); //Col : Jenis Kad
+			            	else if(i==9)sheetList.setColumnWidth(i, 15*256); //Col : Harga(RM)
+			            	else if(i==10)sheetList.setColumnWidth(i, 15*256); //Col : GST (RM)
+			            	else if(i==11)sheetList.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
+			            	else if(i==12)sheetList.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
+			            	else if(i==13)sheetList.setColumnWidth(i, 28*256); //Col : Amaun Bersih
+			            	else if(i==14)sheetList.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan       
+			            	else if(i==15)sheetList.setColumnWidth(i, 22*256); //Col : Status    
+			        	}else{
+			        		if(i==0)sheetList.setColumnWidth(i, 8*256);//Col : Bil
+			            	else if(i==1)sheetList.setColumnWidth(i, 20*256); //Col : Tarikh Tarikh Transaksi
+			            	else if(i==2)sheetList.setColumnWidth(i, 20*256); //Col : Tarikh Resit
+			            	else if(i==3)sheetList.setColumnWidth(i, 19*256); //Col : No. Resit
+			            	else if(i==4)sheetList.setColumnWidth(i, 50*256); //Col : Nama Pembekal
+			            	else if(i==5)sheetList.setColumnWidth(i, 20*256); //Col : No. Permohonan
+			            	else if(i==6)sheetList.setColumnWidth(i, 20*256); //Col : No. Rujukan
+			            	else if(i==7)sheetList.setColumnWidth(i, 23*256); //Col : Jenis Terimaan-Kod
+			            	else if(i==8)sheetList.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
+			            	else if(i==9)sheetList.setColumnWidth(i, 15*256); //Col : Jenis Kad
+			            	else if(i==10)sheetList.setColumnWidth(i, 15*256); //Col : Harga(RM)
+			            	else if(i==11)sheetList.setColumnWidth(i, 15*256); //Col : GST (RM)
+			            	else if(i==12)sheetList.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
+			            	else if(i==13)sheetList.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
+			            	else if(i==14)sheetList.setColumnWidth(i, 28*256); //Col : Amaun Bersih
+			            	else if(i==15)sheetList.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan       
+			            	else if(i==16)sheetList.setColumnWidth(i, 22*256); //Col : Status  
+			        	}
+	        		} else {
+	        			if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE))){
+			        		if(i==0)sheetList.setColumnWidth(i, 8*256);//Col : Bil
+			            	else if(i==1)sheetList.setColumnWidth(i, 17*256); //Col : Tarikh Resit
+			            	else if(i==2)sheetList.setColumnWidth(i, 19*256); //Col : No. Resit
+			            	else if(i==3)sheetList.setColumnWidth(i, 50*256); //Col : Nama Pembekal
+			            	else if(i==4)sheetList.setColumnWidth(i, 20*256); //Col : No. Permohonan
+			            	else if(i==5)sheetList.setColumnWidth(i, 20*256); //Col : No. Rujukan
+			            	else if(i==6)sheetList.setColumnWidth(i, 23*256); //Col : Jenis Terimaan-Kod
+			            	else if(i==7)sheetList.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
+			            	else if(i==8)sheetList.setColumnWidth(i, 15*256); //Col : Harga(RM)
+			            	else if(i==9)sheetList.setColumnWidth(i, 15*256); //Col : GST (RM)
+			            	else if(i==10)sheetList.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
+			            	else if(i==11)sheetList.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
+			            	else if(i==12)sheetList.setColumnWidth(i, 28*256); //Col : Amaun Bersih
+			            	else if(i==13)sheetList.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan       
+			            	else if(i==14)sheetList.setColumnWidth(i, 22*256); //Col : Status    
+			        	}else{
+			        		if(i==0)sheetList.setColumnWidth(i, 8*256);//Col : Bil
+			            	else if(i==1)sheetList.setColumnWidth(i, 20*256); //Col : Tarikh Tarikh Transaksi
+			            	else if(i==2)sheetList.setColumnWidth(i, 20*256); //Col : Tarikh Resit
+			            	else if(i==3)sheetList.setColumnWidth(i, 19*256); //Col : No. Resit
+			            	else if(i==4)sheetList.setColumnWidth(i, 50*256); //Col : Nama Pembekal
+			            	else if(i==5)sheetList.setColumnWidth(i, 20*256); //Col : No. Permohonan
+			            	else if(i==6)sheetList.setColumnWidth(i, 20*256); //Col : No. Rujukan
+			            	else if(i==7)sheetList.setColumnWidth(i, 23*256); //Col : Jenis Terimaan-Kod
+			            	else if(i==8)sheetList.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
+			            	else if(i==9)sheetList.setColumnWidth(i, 15*256); //Col : Harga(RM)
+			            	else if(i==10)sheetList.setColumnWidth(i, 15*256); //Col : GST (RM)
+			            	else if(i==11)sheetList.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
+			            	else if(i==12)sheetList.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
+			            	else if(i==13)sheetList.setColumnWidth(i, 28*256); //Col : Amaun Bersih
+			            	else if(i==14)sheetList.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan       
+			            	else if(i==15)sheetList.setColumnWidth(i, 22*256); //Col : Status  
+			        	}
+	        		}
+					// #26307 end
 		        }
 				log.info("DONE GENERATE SENARAI!!!");
 			}catch(Exception e){
@@ -1209,19 +1357,19 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			}
 		}
 		//SECTION SHEET (Populate) : Ringkasan
-		Sheet sheetSummary = wb.createSheet("Ringkasan"); 
+		Sheet sheetSummary = wb.createSheet("Ringkasan"); //BUG:#29454
 		try{
 			//Setting Report Title
 			Row titleRowSheetSummary = sheetSummary.createRow(0);
 			Cell cellTitleRowSummary = titleRowSheetSummary.createCell(0);
 			cellTitleRowSummary.setCellValue(reportTitle);
-			cellTitleRowSummary.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
+			cellTitleRowSummary.setCellStyle(titleHeaderStyle_1);//BUG:#29454
 			sheetSummary.addMergedRegion(new CellRangeAddress(0,0,0,columnsRingkasan.length+1)); 
 			
 			Row subTitleRowSheetSummary = sheetSummary.createRow(1);
 			Cell cellSubTitleRowSummary = subTitleRowSheetSummary.createCell(0);
 			cellSubTitleRowSummary.setCellValue("RINGKASAN LAPORAN TERIMAAN :");
-			cellSubTitleRowSummary.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
+			cellSubTitleRowSummary.setCellStyle(titleHeaderStyle_1);//BUG:#29454
 			sheetSummary.addMergedRegion(new CellRangeAddress(1,1,0,columnsRingkasan.length+1)); 
 			
 			//Setting Column header list
@@ -1229,11 +1377,20 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        for(int i = 0; i < columnsRingkasan.length; i++) {
 	            Cell cell = headerRowListSummary.createCell(i);
 	            cell.setCellValue(columnsRingkasan[i]);
-	            cell.setCellStyle(columnStyle(wb,createHelper,true,true,true,false,false,false,true));
+	            cell.setCellStyle(columnHeaderStyle);//BUG:#29454
 	        }
 	        
 	        if(!summaryListMap.isEmpty()){
 	        	log.info("SUMMARY IS NOT EMPTY !!!");
+	        	//START - BUG:#29454
+	        	CellStyle columnStyleSummaryGeneral = columnStyle(wb,createHelper,false,false,false,false,false,false,true);
+	        	CellStyle columnStyleSummaryDate_1 = columnStyle(wb,createHelper,false,true,true,true,false,false,true);
+	        	CellStyle columnStyleSummaryDate_2 = columnStyle(wb,createHelper,false,false,true,true,false,false,true);
+	        	CellStyle columnStyleSummaryAmount_1 = columnStyle(wb,createHelper,false,true,false,false,true,false,true);
+	        	CellStyle columnStyleSummaryAmount_2 = columnStyle(wb,createHelper,false,false,false,false,true,false,true);
+	        	CellStyle columnStyleSummaryInteger = columnStyle(wb,createHelper,false,true,false,false,false,false,true);
+	        	CellStyle columnStyleSummaryString = columnStyle(wb,createHelper,false,true,true,false,false,false,true);
+	        	
 				Set<Integer> keyIdSummary = summaryListMap.keySet();
 				int rowid = sheetSummary.getLastRowNum()+1;
 				for (Integer key : keyIdSummary) {
@@ -1243,34 +1400,35 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						Cell cell = rowSummary.createCell(x);
 						if(objectArr[x] instanceof Date){
 							cell.setCellValue((Date) objectArr[x]);
-							if(key == (summaryListMap.size() - 1))cell.setCellStyle(columnStyle(wb,createHelper,false,true,true,true,false,false,true));
-							else cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,true));
+							if(key == (summaryListMap.size() - 1))cell.setCellStyle(columnStyleSummaryDate_1);
+							else cell.setCellStyle(columnStyleSummaryDate_2);
 						}else if(objectArr[x] instanceof BigDecimal){
 							cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
-							if(key == (summaryListMap.size() - 1))cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,true,false,true));
-							else cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
+							if(key == (summaryListMap.size() - 1))cell.setCellStyle(columnStyleSummaryAmount_1);
+							else cell.setCellStyle(columnStyleSummaryAmount_2);
 						}else if(objectArr[x] instanceof Double){
 							cell.setCellValue(((Double) objectArr[x]).doubleValue());
-							if(key == (summaryListMap.size() - 1))cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,true,false,true));
-							else cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
+							if(key == (summaryListMap.size() - 1))cell.setCellStyle(columnStyleSummaryAmount_1);
+							else cell.setCellStyle(columnStyleSummaryAmount_2);
 						}else if(objectArr[x] instanceof Integer){
 							cell.setCellValue(((Integer) objectArr[x]).intValue());
-							if(key == (summaryListMap.size() - 1))cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,false,false,true));
-							else cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,true));
+							if(key == (summaryListMap.size() - 1))cell.setCellStyle(columnStyleSummaryInteger);
+							else cell.setCellStyle(columnStyleSummaryGeneral);
 						}else{
 							cell.setCellValue((String) objectArr[x]);
-							if(key == (summaryListMap.size() - 1))cell.setCellStyle(columnStyle(wb,createHelper,false,true,true,false,false,false,true));
-							else cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,true));
+							if(key == (summaryListMap.size() - 1))cell.setCellStyle(columnStyleSummaryString);
+							else cell.setCellStyle(columnStyleSummaryGeneral);
 						}
 					}
 				}
+				//END - BUG:#29454
 	        }
 	        
 	        if(rsltSummaryList.isEmpty()){
 	        	Row noRecordRow = sheetSummary.createRow(sheetSummary.getLastRowNum()+1);
 				Cell cellNoRecord = noRecordRow.createCell(0);
 				cellNoRecord.setCellValue("Rekod tidak dijumpai");
-				cellNoRecord.setCellStyle(titleHeaderStyle(wb,false,false,false,false));
+				cellNoRecord.setCellStyle(titleHeaderStyle_3);//BUG:#29454
 				sheetSummary.addMergedRegion(new CellRangeAddress(sheetSummary.getLastRowNum(),sheetSummary.getLastRowNum(),0,columnsRingkasan.length-1)); 
 	        }
 	        // Resize all columns to fit the content size
@@ -1290,11 +1448,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
 	    	String fullPath = path+"/"+requestId+".xlsx";
-	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
+	    	//String fullPath = "D://reports//dev//2.xlsx";
 	    	log.info("FULL PATH (CREATE FILE) == "+fullPath);
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
 	        out.close();
+	        //((SXSSFWorkbook) wb).dispose();//BUG:#29454
 	        wb.close();
 	    }catch(Exception e){
 	    	e.printStackTrace();
@@ -1322,13 +1481,16 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 								+ " SEPERTI PADA "+ DateUtils.dateToString("dd/MM/yyyy",new Date())
 								+ " BAGI TAHUN KEWANGAN "+ DateUtils.dateToString("yyyy",new Date());
 		
-		String[] sheetName = {"Senarai_FPX", "Senarai_Kad Kredit","Ringkasan"};
+		// #26307 - change sheet name
+		String[] sheetName = { "Senarai_FPX", "Senarai_Kad Kredit_Kad Debit", "Ringkasan" };
 		String[] rowHeaderItems = {"Kod PTJ","Nama PTJ","Kod Penjenisan","Kaedah Bayaran"};
 		//Update Func By Include label RM inside column Caj Perkhidmatan & GST Caj Perkhidmatan
-		String[] columnsList = {
+		// #26307 start - change column header
+		/*String[] columnsList = {
 				"Bil","Tarikh","No Resit","No Permohonan","Jenis Terimaan-Kod","Jenis Terimaan-Perihal",
 				"Harga (RM)","GST (RM)","Caj Perkhidmatan (RM)","GST Caj Perkhidmatan (RM)","Amaun Bersih (RM)","Jumlah Keseluruhan (RM)","Status"
-		};
+		};*/
+		// #26307 end
 		
 		String[] columnsSummaryList = {
 				"Kod Penjenisan","Bil","Harga (RM)","GST (RM)","Caj Perkhidmatan (RM)","GST Caj Perkhidmatan (RM)","Amaun Bersih (RM)"
@@ -1345,26 +1507,65 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal gstRate = row[16] != null ? (BigDecimal)row[16] : BigDecimal.ZERO;
 					BigDecimal gstServiceCharge = serviceCharge.multiply(gstRate).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					BigDecimal netPrice = (priceAmt.add(gstAmt).subtract(serviceCharge).subtract(gstServiceCharge)).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
+					
+					// #26307 start - get and add card type
+					String cardType = "Kad Kredit"; //START - #26307#147
+					BigDecimal cardTypeCode = row[17] != null ? (BigDecimal) row[17] : BigDecimal.ZERO;
+					if (cardTypeCode.compareTo(BigDecimal.valueOf(5125L)) == 0) {
+						cardType = "Kad Kredit"; 
+					} else if (cardTypeCode.compareTo(BigDecimal.valueOf(5126L)) == 0) {
+						cardType = "Kad Debit"; 
+					} 
+					
 					if("FPX".equalsIgnoreCase(row[1].toString())){
 						fpxList.put(fpxCount, new Object[] {
-								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString(),
+								(Date) row[3],row[2].toString(),
+								row[5] != null ? row[5].toString() : "",//#29454
+								row[11].toString(),
+								row[12].toString().toUpperCase(),//#14203 - uppercase perihal
 								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString()
 						});
 						fpxCount++;
 					}else{
 						creditList.put(creditCount, new Object[] {
-								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString(),
+								(Date) row[3],row[2].toString(),
+								(row[5] != null) ? row[5].toString() : "",//#29454
+								row[11].toString(),
+								row[12].toString().toUpperCase(),//#14203 - uppercase perihal
+								cardType, //#26307
 								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString()
 						});
 						creditCount++;
 					}
+					//START - CR:#14203#159
+					totalPrice = totalPrice.add(priceAmt);
+					totalGst = totalGst.add(gstAmt);
+					totalServiceCharge = totalServiceCharge.add(serviceCharge);
+					totalGstServiceCharge = totalGstServiceCharge.add(gstServiceCharge);
+					totalNetAmount = totalNetAmount.add(netPrice);
+					//END - CR:#14203#159
 				}
-			}			
+				//START - CR:#14203#159
+				summaryList.put(0, new Object[] {
+					params.get(SmReportConst.PARAM_CODE),(fpxCount+creditCount),totalPrice,totalGst,totalServiceCharge,totalGstServiceCharge,totalNetAmount
+				});
+				
+				summaryList.put(1, new Object[] {
+						"Keseluruhan",(fpxCount+creditCount),totalPrice,totalGst,totalServiceCharge,totalGstServiceCharge,totalNetAmount
+				});
+				//END - CR:#14203#159
+			}else{//START - CR:#14203#159
+				summaryList.put(0, new Object[] {
+						"Keseluruhan",(fpxCount+creditCount),totalPrice,totalGst,totalServiceCharge,totalGstServiceCharge,totalNetAmount
+				});
+			}
+			//END - CR:#14203#159			
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
 		/*Update #15990 : Include query to get summary of the collection report based on classification code */
-		summaryReportList = generateSMCollectionReportBasedClassificationCode(params,"R");
+		//START - CR:#14203#159
+		/*summaryReportList = generateSMCollectionReportBasedClassificationCode(params,"R");
 		if(!summaryReportList.isEmpty()){
 			for(int x=0; x<summaryReportList.size(); x++){
 				Object[] row = (Object[]) summaryReportList.get(x);
@@ -1387,19 +1588,36 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			summaryList.put(summaryReportList.size(), new Object[] {
 					"Keseluruhan",totalCount,totalPrice,totalGst,totalServiceCharge,totalGstServiceCharge,totalNetAmount
 			});
-		}
+		}*/
+		//END - CR:#14203#159
 		
+		//START - BUG:#29454
 		Workbook wb = new XSSFWorkbook();
 		CreationHelper createHelper = wb.getCreationHelper();
+
+		CellStyle titleHeaderStyle_1 = titleHeaderStyle(wb,true,false,false,false);
+		CellStyle titleHeaderStyle_3 = titleHeaderStyle(wb,false,false,false,false);
+		CellStyle columnHeaderStyle = columnStyle(wb,createHelper,true,true,true,false,false,false,true);
+		CellStyle columnStyleBil = columnStyle(wb,createHelper,false,false,true,false,false,false,false);
+		CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+		CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+		CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+		CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,false,false);
+		//END - BUG:#29454
 		
 		//Only Create Sheet Senarai_FPX only if search result has return records
 		if(!fpxList.isEmpty()){
-			Sheet sheetFPX = wb.createSheet(sheetName[0]); 
+			// #26307 start - change column header
+			String[] columnsList = { "Bil", "Tarikh", "No Resit", "No Permohonan", "Jenis Terimaan-Kod",
+			 		"Jenis Terimaan-Perihal", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
+			 		"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status" };
+			// #26307 end
+			Sheet sheetFPX = wb.createSheet(sheetName[0]); //BUG:#29454
 			//Setting Report Title
 			Row titleRowSheetFpx = sheetFPX.createRow(0);
 			Cell cellTitleRow = titleRowSheetFpx.createCell(1);
 		    cellTitleRow.setCellValue(titleReport);
-		    cellTitleRow.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
+		    cellTitleRow.setCellStyle(titleHeaderStyle_1);//BUG:#29454
 		    sheetFPX.addMergedRegion(new CellRangeAddress(0,0,1,columnsList.length-1)); 
 		    
 		    //Setting Row Items - Kod PTJ/Nama PTJ/Kod Penjenisan/Kaedah Bayaran
@@ -1413,7 +1631,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	if(i==2)cellItemsVal.setCellValue("Unit Perolehan Kementerian Kewangan");
 	        	if(i==3)cellItemsVal.setCellValue(params.get(SmReportConst.PARAM_CODE));
 	        	if(i==4)cellItemsVal.setCellValue("FPX"); 
-	        	cellItemsVal.setCellStyle(titleHeaderStyle(wb,false,false,false,false));
+	        	cellItemsVal.setCellStyle(titleHeaderStyle_3);//BUG:#29454
 	        	sheetFPX.addMergedRegion(new CellRangeAddress(i,i,2,3)); 
 	        }
 		    
@@ -1422,8 +1640,9 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        for(int i = 0; i < columnsList.length; i++) {
 	            Cell cell = headerRowListFpx.createCell(i);
 	            cell.setCellValue(columnsList[i]);
-	            cell.setCellStyle(columnStyle(wb,createHelper,true,true,true,false,false,false,true));
+	            cell.setCellStyle(columnHeaderStyle);//BUG:#29454
 	        }
+	        int headerRowListIndex = headerRowListFpx.getRowNum();//BUG:#29454
 	        
 	        Set<Integer> keyIdFpx = fpxList.keySet();
 			int rowid = sheetFPX.getLastRowNum()+1;
@@ -1434,29 +1653,31 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				int cellid = 1;
 				Cell cellBil = row.createCell(0);
 				cellBil.setCellValue(countRowFpx++);
-				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
+				cellBil.setCellStyle(columnStyleBil);//BUG:#29454
 				
 				for (Object obj : objectArr) {
 					Cell cell = row.createCell(cellid);
+					//START - BUG:#29454
 					if(obj instanceof Date){
 						cell.setCellValue((Date) obj);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+						cell.setCellStyle(columnStyleDate);
 					}else if(obj instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) obj).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleBigDecimal);
 					}else if(obj instanceof Double){
 						cell.setCellValue(((Double) obj).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleDouble);
 					}else{
 						cell.setCellValue((String) obj);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,false));
+						cell.setCellStyle(columnStyleString);
 					}
 					cellid++;
+					//END - BUG:#29454
 				}
 			}
 			
 			//Setting Auto filtering in each header column list
-		    sheetFPX.setAutoFilter(new CellRangeAddress(headerRowListFpx.getRowNum(),sheetFPX.getLastRowNum(),1,columnsList.length-1));
+			sheetFPX.setAutoFilter(new CellRangeAddress(headerRowListIndex,headerRowListIndex,1,columnsList.length-1));//BUG:#29454
 		    // Resize all columns to fit the content size
 	        for(int i = 0; i < columnsList.length; i++) {
 	        	if(i==0)sheetFPX.setColumnWidth(i, 8*256);//Column : Bil	
@@ -1479,12 +1700,17 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		//Only Create Sheet Senarai_Kad Kredit only if search result has return records
 		if(!creditList.isEmpty()){
 			log.info("CREDIT LIST IS NOT NULL !!!");
-			Sheet sheetCC = wb.createSheet(sheetName[1]); 
+			// #26307 start - change column header
+			String[] columnsList = { "Bil", "Tarikh", "No Resit", "No Permohonan", "Jenis Terimaan-Kod",
+			 		"Jenis Terimaan-Perihal", "Jenis Kad", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
+			 		"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status" };
+			// #26307 end
+			Sheet sheetCC = wb.createSheet(sheetName[1]); //BUG:#29454
 			//Setting Report Title
 			Row titleRowSheetCC = sheetCC.createRow(0);
 			Cell cellTitleRowCC = titleRowSheetCC.createCell(1);
 			cellTitleRowCC.setCellValue(titleReport);
-			cellTitleRowCC.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
+			cellTitleRowCC.setCellStyle(titleHeaderStyle_1);//BUG:#29454
 			sheetCC.addMergedRegion(new CellRangeAddress(0,0,1,columnsList.length-1)); 
 			
 			//Setting Row Items - Kod PTJ/Nama PTJ/Kod Penjenisan/Kaedah Bayaran
@@ -1497,8 +1723,9 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	if(i==1)cellItemsVal.setCellValue("24010168 ");        		
 	        	if(i==2)cellItemsVal.setCellValue("Unit Perolehan Kementerian Kewangan");
 	        	if(i==3)cellItemsVal.setCellValue(params.get(SmReportConst.PARAM_CODE));
-	        	if(i==4)cellItemsVal.setCellValue("Kad Kredit"); 
-	        	cellItemsVal.setCellStyle(titleHeaderStyle(wb,false,false,false,false));
+	        	// #26307 - change wording
+	        	if(i==4)cellItemsVal.setCellValue("Kad Kredit/Kad Debit"); 
+	        	cellItemsVal.setCellStyle(titleHeaderStyle_3);//BUG:#29454
 	        	sheetCC.addMergedRegion(new CellRangeAddress(i,i,2,3)); 
 	        }
 			
@@ -1506,8 +1733,9 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        for(int i = 0; i < columnsList.length; i++) {
 	            Cell cell = headerRowListCredit.createCell(i);
 	            cell.setCellValue(columnsList[i]);
-	            cell.setCellStyle(columnStyle(wb,createHelper,true,true,true,false,false,false,true));
+	            cell.setCellStyle(columnHeaderStyle);//BUG:#29454
 	        }
+	        int headerRowListCCIndex = headerRowListCredit.getRowNum();//BUG:#29454
 	        
 			Set<Integer> keyIdCredit = creditList.keySet();
 			int rowid = sheetCC.getLastRowNum()+1;
@@ -1518,28 +1746,30 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				int cellid = 1;
 				Cell cellBil = row.createCell(0);
 				cellBil.setCellValue(countRowCC++);
-				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
+				cellBil.setCellStyle(columnStyleBil);//#BUG:29454
 				
+				//START - BUG:#29454
 				for (Object obj : objectArr) {
 					Cell cell = row.createCell(cellid);
 					if(obj instanceof Date){
 						cell.setCellValue((Date) obj);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+						cell.setCellStyle(columnStyleDate);
 					}else if(obj instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) obj).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleBigDecimal);
 					}else if(obj instanceof Double){
 						cell.setCellValue(((Double) obj).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleDouble);
 					}else{
 						cell.setCellValue((String) obj);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,false));
+						cell.setCellStyle(columnStyleString);
 					}
 					cellid++;
 				}
+				//END - BUG:#29454
 			}
 			//Setting Auto filtering in each header column list
-			sheetCC.setAutoFilter(new CellRangeAddress(headerRowListCredit.getRowNum(),sheetCC.getLastRowNum(),1,columnsList.length-1));
+			sheetCC.setAutoFilter(new CellRangeAddress(headerRowListCCIndex,headerRowListCCIndex,1,columnsList.length-1));//BUG:#29454
 			// Resize all columns to fit the content size
 	        for(int i = 0; i < columnsList.length; i++) {
 	        	if(i==0)sheetCC.setColumnWidth(i, 8*256);//Column : Bil	
@@ -1548,30 +1778,33 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	else if(i==3)sheetCC.setColumnWidth(i, 20*256);//Column : No. Permohonan	
 	        	else if(i==4)sheetCC.setColumnWidth(i, 24*256);//Column : Jenis Terimaan - Kod
 	        	else if(i==5)sheetCC.setColumnWidth(i, 29*256);//Column : Jenis Terimaan - Perihal
-	        	else if(i==6)sheetCC.setColumnWidth(i, 15*256);//Column : Harga (RM)
-	        	else if(i==7)sheetCC.setColumnWidth(i, 15*256);//Column : GST (RM)
-	        	else if(i==8)sheetCC.setColumnWidth(i, 25*256);//Column : Caj Perkhidmatan 
-	        	else if(i==9)sheetCC.setColumnWidth(i, 30*256);//Column : GST Caj Perkhidmatan
-	        	else if(i==10)sheetCC.setColumnWidth(i, 23*256);//Column : Amaun Bersih
-	        	else if(i==11)sheetCC.setColumnWidth(i, 29*256);//Column : Jumlah Keseluruhan
-	        	else if(i==12)sheetCC.setColumnWidth(i, 22*256);//Column : Status
+	        	// #26307 start - add column width
+	        	else if(i==6)sheetCC.setColumnWidth(i, 15*256);//Column : Jenis Kad 
+	        	else if(i==7)sheetCC.setColumnWidth(i, 15*256);//Column : Harga (RM) 
+	        	else if(i==8)sheetCC.setColumnWidth(i, 15*256);//Column : GST (RM) 
+	        	else if(i==9)sheetCC.setColumnWidth(i, 25*256);//Column : Caj Perkhidmatan  
+	        	else if(i==10)sheetCC.setColumnWidth(i, 30*256);//Column : GST Caj Perkhidmatan 
+	        	else if(i==11)sheetCC.setColumnWidth(i, 23*256);//Column : Amaun Bersih 
+	        	else if(i==12)sheetCC.setColumnWidth(i, 29*256);//Column : Jumlah Keseluruhan 
+	        	else if(i==13)sheetCC.setColumnWidth(i, 22*256);//Column : Status 
+				// #26307 end
 	        }
 			log.info("DONE GENERATE SENARAI_KAD KREDIT");
 		}
 		
 		//SECTION SHEET (Populate) : Ringkasan
-		Sheet sheetSummary = wb.createSheet(sheetName[2]); 
+		Sheet sheetSummary = wb.createSheet(sheetName[2]); //BUG:#29454 
         //Setting Report Title
 		Row titleRowSheetSummary = sheetSummary.createRow(0);
 		Cell cellTitleRowSummary = titleRowSheetSummary.createCell(0);
 		cellTitleRowSummary.setCellValue(titleReport);
-		cellTitleRowSummary.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
+		cellTitleRowSummary.setCellStyle(titleHeaderStyle_1);//BUG:#29454
 		sheetSummary.addMergedRegion(new CellRangeAddress(0,0,0,columnsSummaryList.length+3)); 
 		
 		Row subTitleRowSheetSummary = sheetSummary.createRow(1);
 		Cell cellSubTitleRowSummary = subTitleRowSheetSummary.createCell(0);
 		cellSubTitleRowSummary.setCellValue("RINGKASAN LAPORAN TERIMAAN :");
-		cellSubTitleRowSummary.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
+		cellSubTitleRowSummary.setCellStyle(titleHeaderStyle_1);//BUG:#29454
 		sheetSummary.addMergedRegion(new CellRangeAddress(1,1,0,columnsSummaryList.length+3)); 
 		
 		//Setting Column header list
@@ -1579,12 +1812,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         for(int i = 0; i < columnsSummaryList.length; i++) {
             Cell cell = headerRowListSummary.createCell(i);
             cell.setCellValue(columnsSummaryList[i]);
-            cell.setCellStyle(columnStyle(wb,createHelper,true,true,true,false,false,false,true));
+            cell.setCellStyle(columnHeaderStyle);//BUG:#29454
         }
-        
-        if(!summaryReportList.isEmpty()){
+        //START - CR:#14203#159
+        if(!summaryList.isEmpty()){
 			log.info("SUMMARY LIST IS NOT NULL !!!");
 			Set<Integer> keyIdSummary = summaryList.keySet();
+			int summaryListSize = summaryList.size();
 			int rowid = sheetSummary.getLastRowNum()+1;
 			for (Integer key : keyIdSummary) {
 				Row row = sheetSummary.createRow(rowid++);
@@ -1594,22 +1828,29 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					Cell cell = row.createCell(cellid++);
 					if(obj instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) obj).doubleValue());
-						if(key == 0)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
+						if(key == 0 && summaryListSize > 1)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
 						else cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,true,false,true));
 					}else if(obj instanceof Integer){
 						cell.setCellValue(((Integer) obj).intValue());
-						if(key == 0)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,true));
+						if(key == 0 && summaryListSize > 1)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,true));
 						else cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,false,true,true));
 					}else{
 						cell.setCellValue((String) obj);
-						if(key == 0)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,true));
+						if(key == 0 && summaryListSize > 1)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,true));
 						else cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,false,false,true));
 					}
 				}
 			}
+			if(summaryListSize == 1){
+				Row noRecordRow = sheetSummary.createRow(sheetSummary.getLastRowNum()+1);
+				Cell cellNoRecord = noRecordRow.createCell(0);
+				cellNoRecord.setCellValue("Rekod tidak dijumpai");
+				cellNoRecord.setCellStyle(titleHeaderStyle(wb,false,false,false,false));
+				sheetSummary.addMergedRegion(new CellRangeAddress(sheetSummary.getLastRowNum(),sheetSummary.getLastRowNum(),0,columnsSummaryList.length-1)); 
+			}
 		}
         
-        if(reportList.isEmpty()){
+        /*if(reportList.isEmpty()){
         	summaryList.put(0, new Object[] {
 					"Keseluruhan",(fpxCount+creditCount),totalPrice,totalGst,totalServiceCharge,totalGstServiceCharge,totalNetAmount
 			});
@@ -1640,8 +1881,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			cellNoRecord.setCellValue("Rekod tidak dijumpai");
 			cellNoRecord.setCellStyle(titleHeaderStyle(wb,false,false,false,false));
 			sheetSummary.addMergedRegion(new CellRangeAddress(sheetSummary.getLastRowNum(),sheetSummary.getLastRowNum(),0,columnsSummaryList.length-1)); 
-        }
-        
+        }*/
+	    //END - CR:#14203#159
         // Resize all columns to fit the content size
         for(int i = 0; i < columnsSummaryList.length; i++) {  
         	if(i==0)sheetSummary.setColumnWidth(i, 17*256);//Column : Kod Penjenisan
@@ -1655,11 +1896,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         try{
         	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
         	String fullPath = path+"/"+requestId+".xlsx";
-        	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
+        	//String fullPath = "D://reports//dev//3.xlsx";
         	log.info("FULL PATH (CREATE FILE) == "+fullPath);
         	FileOutputStream out = new FileOutputStream(new File(fullPath));
         	wb.write(out);
             out.close();
+            //((SXSSFWorkbook) wb).dispose();//BUG:#29454
             wb.close();
         }catch(Exception e){
         	e.printStackTrace();
@@ -1682,13 +1924,16 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		String reportType = "";
 		String paymentTDesc = "";
 		
-		String[] sheetName = {"Senarai_FPX", "Senarai_Kad Kredit","Ringkasan"};
+		// #26307 - change sheet name
+		String[] sheetName = { "Senarai_FPX", "Senarai_Kad Kredit_Kad Debit", "Ringkasan" };
 		String[] rowHeaderItems = {"Kod PTJ","Nama PTJ","Kaedah Bayaran","Nama Pembekal","Jenis Bayaran"};	
 		//Update Func By Include label RM inside column Caj Perkhidmatan & GST Caj Perkhidmatan
-		ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList(
-				"Bil","Tarikh Transaksi","Tarikh Resit","No Resit","Nama Pembekal","No Permohonan","No Rujukan","Jenis Terimaan-Kod","Jenis Terimaan-Perihal",
-				"Harga (RM)","GST (RM)","Caj Perkhidmatan (RM)","GST Caj Perkhidmatan (RM)","Amaun Bersih (RM)","Jumlah Keseluruhan (RM)","Status"
-		));
+		// #26307 start - change column header
+		/*ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh Transaksi",
+		 		"Tarikh Resit", "No Resit", "Nama Pembekal", "No Permohonan", "No Rujukan", "Jenis Terimaan-Kod",
+				"Jenis Terimaan-Perihal", "Jenis Kad", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
+		 		"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status"));*/
+		// #26307 end
 		
 		if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))reportType = "Tarikh Resit";
 		else reportType = "Tarikh Transaksi";
@@ -1708,19 +1953,22 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			if("M".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_TYPE1))){//MOF Registration Fee
 				payType.add("MF");
 				payType.add("RF");
-				paymentTypeDesc.add("Bayaran Pendaftaran");
+				// 14203 - Change Bayaran Pendaftaran
+				paymentTypeDesc.add("Fi Pendaftaran MOF");
 			}
 			
 			if("P".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_TYPE2))){//Processing Fee
 				payType.add("PF");
 				payType.add("RPF");
-				paymentTypeDesc.add("Bayaran Proses");
+				// 14203 - Change Bayaran Proses
+				paymentTypeDesc.add("Fi Pemprosesan MOF");
 			}
 			
 			String paymentType = "";
 			if("S".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_TYPE3))){//Soft Certificate Fee
 				payType.add("SF");
-				paymentTypeDesc.add("Bayaran Sijil Digital");
+				// 14203 - Change Bayaran Sijil Digital
+				paymentTypeDesc.add("Fi Sijil Digital");
 			}
 			
 			for(int b=0; b<payType.size(); b++){
@@ -1746,10 +1994,32 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					Object[] row = (Object[]) reportList.get(m);
 					BigDecimal priceAmt = row[14] != null ? (BigDecimal)row[14] : BigDecimal.ZERO;
 					BigDecimal gstAmt = row[15] != null ? (BigDecimal)row[15] : BigDecimal.ZERO;
-					BigDecimal serviceCharge = row[10] != null ? (BigDecimal)row[10] : BigDecimal.ZERO;
+					// #26307 start - change service charge
+					// START #26307#139 - Fix issue on service charge, fix based on pdf.
+					BigDecimal serviceCharge = row[10] != null ? (BigDecimal) row[10] : BigDecimal.ZERO;
+					/*if (row[19] != null || !"FPX".equalsIgnoreCase(row[1].toString())) {
+						serviceCharge = row[20] != null ? (BigDecimal) row[20] : BigDecimal.ZERO;
+						if(!serviceCharge.equals(BigDecimal.ZERO)){
+							BigDecimal serviceChargeRate = serviceCharge.divide(new BigDecimal(100));
+							serviceCharge = priceAmt.multiply(serviceChargeRate);
+						}
+					} else {
+						serviceCharge = row[10] != null ? (BigDecimal) row[10] : BigDecimal.ZERO;
+					}*/
+					// END #26307#139
+					// #26307 end
 					BigDecimal gstRate = row[18] != null ? (BigDecimal)row[18] : BigDecimal.ZERO;
 					BigDecimal gstServiceCharge = serviceCharge.multiply(gstRate).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					BigDecimal netPrice = priceAmt.add(gstAmt).subtract(serviceCharge).subtract(gstServiceCharge).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
+					// #26307 start - get card type
+					String cardType = "Kad Kredit"; //START #26307#139
+					BigDecimal cardTypeCode = row[19] != null ? (BigDecimal) row[19] : BigDecimal.ZERO;
+					if (cardTypeCode.compareTo(BigDecimal.valueOf(5125L)) == 0) {
+						cardType = "Kad Kredit"; 
+					} else if (cardTypeCode.compareTo(BigDecimal.valueOf(5126L)) == 0) {
+						cardType = "Kad Debit"; 
+					} 
+					// #26307 end
 					if("FPX".equalsIgnoreCase(row[1].toString())){
 						fpxList.put(fpxCount, new Object[] {
 							(Date) row[4],//Tarikh Transaksi
@@ -1757,9 +2027,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 							row[2].toString(),//No Resit
 							row[5].toString(),//Nama Pembekal
 							String.valueOf(row[6]),//No Permohonan
-							row[7].toString(),//No Rujukan
+							row[7] != null ? row[7].toString() : "", //No Rujukan ,#29454
 							row[12].toString(),//Jenis Terimaan-Kod
-							row[13].toString(),//Jenis Terimaan-Perihal
+							//#14203 - uppercase perihal
+							row[13].toString().toUpperCase(),//Jenis Terimaan-Perihal
 							priceAmt ,//Harga
 							gstAmt,//GST
 							serviceCharge, // Caj Perkhidmatan 
@@ -1776,9 +2047,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 							row[2].toString(),//No Resit
 							row[5].toString(),//Nama Pembekal
 							String.valueOf(row[6]),//No Permohonan
-							row[7].toString(),//No Rujukan
+							row[7] != null ? row[7].toString() : "",//No Rujukan , #29454
 							row[12].toString(),//Jenis Terimaan-Kod
-							row[13].toString(),//Jenis Terimaan-Perihal
+							//#14203 - uppercase perihal
+							row[13].toString().toUpperCase(),//Jenis Terimaan-Perihal
+							// 26307 - add card type
+							cardType,//Jenis Kad
 							priceAmt ,//Harga
 							gstAmt,//GST
 							serviceCharge, // Caj Perkhidmatan 
@@ -1821,28 +2095,47 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		
-		if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))columnHeaderList.remove(1);
-		
+		// #26307 - change column header
+		//if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))columnHeaderList.remove(1);
+		//START -#29454
+		//Workbook wb = new SXSSFWorkbook();// Change package from XSSFWorkbook to SXSSFWorkbook due to populate large data.
 		Workbook wb = new XSSFWorkbook();
 		CreationHelper createHelper = wb.getCreationHelper();
+		
+		//Fix issue cell styles exceeded
+		CellStyle titleHeaderStyle_1 = titleHeaderStyle(wb,true,false,false,false);
+		CellStyle titleHeaderStyle_2 = titleHeaderStyle(wb,false,false,false,false);
+		CellStyle columnHeaderStyle = columnStyle(wb,createHelper,true,true,true,false,false,false,true);
+		CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+		CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+		CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+		CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+		CellStyle columnStyleBil = columnStyle(wb,createHelper,false,false,true,false,false,false,false);
+		//END - #29454
 		//Only Create  Sheet of Senarai_FPX , only if search result has return records
 		if(!fpxList.isEmpty()){
 			log.info("FPX LIST IS NOT EMPTY !!!");
-			Sheet sheetFPX = wb.createSheet(sheetName[0]); 
+			// #26307 start - change column header
+			ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh Transaksi",
+					"Tarikh Resit", "No Resit", "Nama Pembekal", "No Permohonan", "No Rujukan", "Jenis Terimaan-Kod",
+					"Jenis Terimaan-Perihal", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
+					"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status"));
+			if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))columnHeaderList.remove(1);
+			// #26307 end
+			Sheet sheetFPX = wb.createSheet(sheetName[0]); //BUG:#29454
 			//Setting Report Title
 			Row titleRowSheetFpx = sheetFPX.createRow(0);
 			Cell cellTitleRow = titleRowSheetFpx.createCell(1);
 		    cellTitleRow.setCellValue(titleReport);
-		    cellTitleRow.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
-		    sheetFPX.addMergedRegion(new CellRangeAddress(0,0,1,columnHeaderList.size()-1)); 
+		    cellTitleRow.setCellStyle(titleHeaderStyle_1);//#29454
+		    sheetFPX.addMergedRegionUnsafe(new CellRangeAddress(0,0,1,columnHeaderList.size()-1)); 
 		    
 		    //Setting Row Items - Kod PTJ/Nama PTJ/Kaedah Bayaran/Nama Pembekal/Jenis Bayaran
 		    for(int i = 1; i <= rowHeaderItems.length; i++) {
 	        	Row itemsDtlRow = sheetFPX.createRow(i);
 	        	Cell cellItemsDtl = itemsDtlRow.createCell(1);
 	        	cellItemsDtl.setCellValue(rowHeaderItems[i-1]);
-	        	cellItemsDtl.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
+	        	cellItemsDtl.setCellStyle(titleHeaderStyle_1);//#29454
 	        	Cell cellItemsVal = itemsDtlRow.createCell(2);
 	        	if(i==1)cellItemsVal.setCellValue("24010168 ");        		
 	        	if(i==2)cellItemsVal.setCellValue("Unit Perolehan Kementerian Kewangan");
@@ -1855,8 +2148,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        		}
 	        	}
 	        	if(i==5)cellItemsVal.setCellValue(paymentTDesc); 
-	        	cellItemsVal.setCellStyle(titleHeaderStyle(wb,false,false,false,false));
-	        	sheetFPX.addMergedRegion(new CellRangeAddress(i,i,2,4)); 
+	        	cellItemsVal.setCellStyle(titleHeaderStyle_2);//#29454
+	        	sheetFPX.addMergedRegionUnsafe(new CellRangeAddress(i,i,2,4)); 
 	        }
 		    
 		    //Setting Column header list
@@ -1864,51 +2157,90 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        for(int i = 0; i < columnHeaderList.size(); i++) {
 	            Cell cell = headerRowListFpx.createCell(i);
 	            cell.setCellValue(columnHeaderList.get(i).toString());
-	            cell.setCellStyle(columnStyle(wb,createHelper,true,true,true,false,false,false,true));
+	            cell.setCellStyle(columnHeaderStyle);//#29454
 	        }
+	        int headerRowListFpxIndex = headerRowListFpx.getRowNum();//BUG:#29454
 	        //Start : Populate Record
 			Set<Integer> keyIdFpx = fpxList.keySet();
 			int rowid = sheetFPX.getLastRowNum()+1;
 			int countRowFpx = 1;
 			String receiptNo = "";
+			//START - #29454
+			int mergeRowFirstFpx = 0;
+			int mergeRowLastFpx = 0;
+			String referenceNo = "";
+			//END - #29454
 			for (Integer key : keyIdFpx) {
 				Row row = sheetFPX.createRow(rowid++);
 				Object[] objectArr = fpxList.get(key);
 				
 				int cellid = 1;
 				Cell cellBil = row.createCell(0);
-				if(receiptNo == ""){
+				//START - #29454
+				if(receiptNo == "" && referenceNo == ""){
 					cellBil.setCellValue(countRowFpx++);
+					mergeRowFirstFpx = rowid;
 				}else if(!receiptNo.equalsIgnoreCase((String)objectArr[2])){
 					cellBil.setCellValue(countRowFpx++);
+					mergeRowFirstFpx = rowid;
+					mergeRowLastFpx = 0;
 				}else{
-					sheetFPX.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 
+					//Condition : Current Receipt No. equal to Previous row Receipt No.
+					//Fix issue on overlaping mergion during merge more than 2 row
+					//Add checking for Scenario with same Receipt No but has different Reference No.
+					if(!referenceNo.equalsIgnoreCase((String)objectArr[5])){
+						//Not allowed to merge row , if Current row Reference No is not equal with previous row Reference No
+						cellBil.setCellValue(countRowFpx++);
+						mergeRowFirstFpx = rowid;
+						mergeRowLastFpx = 0;
+					}else{
+						mergeRowLastFpx = rowid;
+						if(key < keyIdFpx.size()){
+							if(key == (keyIdFpx.size() - 1)){
+								sheetFPX.addMergedRegionUnsafe(new CellRangeAddress(mergeRowFirstFpx-1,mergeRowLastFpx-1,0,0));
+							}else{
+								Object[] objectArrMerge = fpxList.get(key+1);
+								if(!receiptNo.equalsIgnoreCase((String)objectArrMerge[2])){
+									sheetFPX.addMergedRegionUnsafe(new CellRangeAddress(mergeRowFirstFpx-1,mergeRowLastFpx-1,0,0));
+								}
+							}						
+						}
+					} 
 				}
-				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
+				cellBil.setCellStyle(columnStyleBil);
 				receiptNo = (String)objectArr[2];
+				referenceNo = (String)objectArr[5];
+				//END - #29454
 				for(int x=0; x<objectArr.length; x++){
 					if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
 					Cell cell = row.createCell(cellid);
 					if(objectArr[x] instanceof Date){
-						cell.setCellValue((Date) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+						//START #26307#139
+						if((Date) objectArr[x] != null){
+							cell.setCellValue((Date) objectArr[x]);
+							cell.setCellStyle(columnStyleDate);
+						}else{
+							cell.setCellValue("");
+							cell.setCellStyle(columnStyleString);
+						}
+						//cell.setCellValue((Date) objectArr[x]);
+						//cell.setCellStyle(columnStyleDate);//#29454
 					}else if(objectArr[x] instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleBigDecimal);//#29454
 					}else if(objectArr[x] instanceof Double){
 						cell.setCellValue(((Double) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleDouble);//#29454
 					}else{
 						if("null".equalsIgnoreCase((String) objectArr[x]))cell.setCellValue("");
 						else cell.setCellValue((String) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
+						cell.setCellStyle(columnStyleString);//#29454
 					}
 					cellid++;
 				}
 			}
 			//Setting Auto filtering in each header column list
-		    sheetFPX.setAutoFilter(new CellRangeAddress(headerRowListFpx.getRowNum(),sheetFPX.getLastRowNum(),1,columnHeaderList.size()-1));
-		
+			sheetFPX.setAutoFilter(new CellRangeAddress(headerRowListFpxIndex,headerRowListFpxIndex,1,columnHeaderList.size()-1));//#29454		
 		    //Resize all columns to fit the content size
 	        for(int i = 0; i < columnHeaderList.size(); i++) {
 	        	if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE))){
@@ -1951,12 +2283,19 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		//Only Create Sheet of Senarai_Kad Kredit , only if search result has return records
 		if(!creditList.isEmpty()){
 			log.info("CREDIT LIST IS NOT EMPTY !!!");
-			Sheet sheetCC = wb.createSheet(sheetName[1]); 
+			// #26307 start - change column header
+			ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh Transaksi",
+					"Tarikh Resit", "No Resit", "Nama Pembekal", "No Permohonan", "No Rujukan", "Jenis Terimaan-Kod",
+					"Jenis Terimaan-Perihal", "Jenis Kad", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
+					"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status"));
+			if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))columnHeaderList.remove(1);
+			// #26307 end
+			Sheet sheetCC = wb.createSheet(sheetName[1]);//BUG:#29454 
 	        //Setting Report Title
 			Row titleRowSheetCC = sheetCC.createRow(0);
 			Cell cellTitleRowCC = titleRowSheetCC.createCell(1);
 			cellTitleRowCC.setCellValue(titleReport);
-			cellTitleRowCC.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
+			cellTitleRowCC.setCellStyle(titleHeaderStyle_1);//#29454
 			sheetCC.addMergedRegion(new CellRangeAddress(0,0,1,columnHeaderList.size()-1)); 
 			
 			//Setting Row Items - Kod PTJ/Nama PTJ/Kaedah Bayaran/Nama Pembekal/Jenis Bayaran
@@ -1964,11 +2303,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	Row itemsDtlRow = sheetCC.createRow(i);
 	        	Cell cellItemsDtl = itemsDtlRow.createCell(1);
 	        	cellItemsDtl.setCellValue(rowHeaderItems[i-1]);
-	        	cellItemsDtl.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
+	        	cellItemsDtl.setCellStyle(titleHeaderStyle_1);//#29454
 	        	Cell cellItemsVal = itemsDtlRow.createCell(2);
 	        	if(i==1)cellItemsVal.setCellValue("24010168 ");        		
 	        	if(i==2)cellItemsVal.setCellValue("Unit Perolehan Kementerian Kewangan");
-	        	if(i==3)cellItemsVal.setCellValue("Kad Kredit"); 
+	        	// #26307 - change cell wording
+	        	if(i==3)cellItemsVal.setCellValue("Kad Kredit/Kad Debit");
 	        	if(i==4){
 	        		if(StringUtils.isNotBlank(params.get(SmReportConst.PARAM_COMPANY_NAME))){
 	        			cellItemsVal.setCellValue(params.get(SmReportConst.PARAM_COMPANY_NAME));
@@ -1977,8 +2317,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        		}
 	        	}
 	        	if(i==5)cellItemsVal.setCellValue(paymentTDesc); 
-	        	cellItemsVal.setCellStyle(titleHeaderStyle(wb,false,false,false,false));
-	        	sheetCC.addMergedRegion(new CellRangeAddress(i,i,2,4)); 
+	        	cellItemsVal.setCellStyle(titleHeaderStyle_2);//#29454
+	        	sheetCC.addMergedRegionUnsafe(new CellRangeAddress(i,i,2,4));//#29454
 	        }
 		    
 		    //Setting Column header list
@@ -1986,50 +2326,86 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        for(int i = 0; i < columnHeaderList.size(); i++) {
 	            Cell cell = headerRowListCC.createCell(i);
 	            cell.setCellValue(columnHeaderList.get(i));
-	            cell.setCellStyle(columnStyle(wb,createHelper,true,true,true,false,false,false,true));
+	            cell.setCellStyle(columnHeaderStyle);//#29454
 	        }
+	        
+	        int headerRowListCCIndex = headerRowListCC.getRowNum();//#29454
 	        
 	        Set<Integer> keyIdCredit = creditList.keySet();
 			int rowid = sheetCC.getLastRowNum()+1;
 			int countRowCC = 1;
 			String receiptNoCC = "";
+			//START :#29454
+			int mergeRowFirst = 0;
+			int mergeRowLast = 0;
+			String referenceNoCC = "";
+			//END :#29454
 			for (Integer key : keyIdCredit) {
 				Row row = sheetCC.createRow(rowid++);
 				Object[] objectArr = creditList.get(key);
 				int cellid = 1;
 				Cell cellBil = row.createCell(0);
-				if(receiptNoCC == ""){
+				//START: #29454
+				if(receiptNoCC == "" && referenceNoCC == ""){
 					cellBil.setCellValue(countRowCC++);
+					mergeRowFirst = rowid;
 				}else if(!receiptNoCC.equalsIgnoreCase((String)objectArr[2])){
 					cellBil.setCellValue(countRowCC++);
+					mergeRowFirst = rowid;
+					mergeRowLast = 0;
 				}else{
-					sheetCC.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 	
+					//Condition : Current Receipt No. equal to Previous row Receipt No.
+					//Fix issue on overlaping mergion during merge more than 2 row
+					//Add checking for Scenario with same Receipt No but has different Reference No.
+					if(!referenceNoCC.equalsIgnoreCase((String)objectArr[5])){
+						//Not allowed to merge row , if Current row Reference No is not equal with previous row Reference No
+						cellBil.setCellValue(countRowCC++);
+						mergeRowFirst = rowid;
+						mergeRowLast = 0;
+					}else{
+						mergeRowLast = rowid;
+						if(key < keyIdCredit.size()){
+							if(key == (keyIdCredit.size() - 1)){
+								sheetCC.addMergedRegionUnsafe(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
+							}else{
+								Object[] objectArrMerge = creditList.get(key+1);
+								if(!receiptNoCC.equalsIgnoreCase((String)objectArrMerge[2])){
+									sheetCC.addMergedRegionUnsafe(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
+								}
+							}						
+						}
+					}	
 				}
-				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
+				cellBil.setCellStyle(columnStyleBil);
 				receiptNoCC = (String)objectArr[2];
+				referenceNoCC = (String)objectArr[5];
+				//END - #29454
 				for (int x=0; x<objectArr.length; x++) {
 					if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
 					Cell cell = row.createCell(cellid);
+					//START - #29454
 					if(objectArr[x] instanceof Date){
 						cell.setCellValue((Date) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+						cell.setCellStyle(columnStyleDate);
 					}else if(objectArr[x] instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleBigDecimal);
 					}else if(objectArr[x] instanceof Double){
 						cell.setCellValue(((Double) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleDouble);
 					}else{
 						if("null".equalsIgnoreCase((String) objectArr[x]))cell.setCellValue("");
 						else cell.setCellValue((String) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
+						cell.setCellStyle(columnStyleString);
 					}
+					//END - 29454
 					cellid++;
 				}
 			}
 
 			//Setting Auto filtering in each header column list
-	  		sheetCC.setAutoFilter(new CellRangeAddress(headerRowListCC.getRowNum(),sheetCC.getLastRowNum(),1,columnHeaderList.size()-1));
+			//#29454
+			sheetCC.setAutoFilter(new CellRangeAddress(headerRowListCCIndex,headerRowListCCIndex,1,columnHeaderList.size()-1));
 	  		
 	  		// Resize all columns to fit the content size
 	        for(int i = 0; i < columnHeaderList.size(); i++) {   
@@ -2042,13 +2418,16 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	            	else if(i==5)sheetCC.setColumnWidth(i, 20*256); //Col : No. Rujukan
 	            	else if(i==6)sheetCC.setColumnWidth(i, 23*256); //Col : Jenis Terimaan-Kod
 	            	else if(i==7)sheetCC.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
-	            	else if(i==8)sheetCC.setColumnWidth(i, 15*256); //Col : Harga(RM)
-	            	else if(i==9)sheetCC.setColumnWidth(i, 15*256); //Col : GST (RM)
-	            	else if(i==10)sheetCC.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
-	            	else if(i==11)sheetCC.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
-	            	else if(i==12)sheetCC.setColumnWidth(i, 28*256); //Col : Amaun Bersih
-	            	else if(i==13)sheetCC.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan  
-	            	else if(i==14)sheetCC.setColumnWidth(i, 22*256); //Col : Status 
+	            	// #26307 start - add column width
+	            	else if(i==8)sheetCC.setColumnWidth(i, 15*256); //Col : Jenis Kad 
+	            	else if(i==9)sheetCC.setColumnWidth(i, 15*256); //Col : Harga(RM) 
+	            	else if(i==10)sheetCC.setColumnWidth(i, 15*256); //Col : GST (RM) 
+	            	else if(i==11)sheetCC.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan 
+	            	else if(i==12)sheetCC.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan 
+	            	else if(i==13)sheetCC.setColumnWidth(i, 28*256); //Col : Amaun Bersih 
+	            	else if(i==14)sheetCC.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan
+	            	else if(i==15)sheetCC.setColumnWidth(i, 22*256); //Col : Status
+	        		// #26307 end
 	        	}else{
 	        		if(i==0)sheetCC.setColumnWidth(i, 8*256);//Col : Bil
 	        		else if(i==1)sheetCC.setColumnWidth(i, 20*256); //Col : Tarikh Transaksi
@@ -2059,41 +2438,52 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	            	else if(i==6)sheetCC.setColumnWidth(i, 20*256); //Col : No. Rujukan
 	            	else if(i==7)sheetCC.setColumnWidth(i, 23*256); //Col : Jenis Terimaan-Kod
 	            	else if(i==8)sheetCC.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
-	            	else if(i==9)sheetCC.setColumnWidth(i, 15*256); //Col : Harga(RM)
-	            	else if(i==10)sheetCC.setColumnWidth(i, 15*256); //Col : GST (RM)
-	            	else if(i==11)sheetCC.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
-	            	else if(i==12)sheetCC.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
-	            	else if(i==13)sheetCC.setColumnWidth(i, 28*256); //Col : Amaun Bersih
-	            	else if(i==14)sheetCC.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan  
-	            	else if(i==15)sheetCC.setColumnWidth(i, 22*256); //Col : Status 
+	            	// #26307 start - add column width
+	            	else if(i==9)sheetCC.setColumnWidth(i, 15*256); //Col : Jenis Kad 
+	            	else if(i==10)sheetCC.setColumnWidth(i, 15*256); //Col : Harga(RM) 
+	            	else if(i==11)sheetCC.setColumnWidth(i, 15*256); //Col : GST (RM) 
+	            	else if(i==12)sheetCC.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan 
+	            	else if(i==13)sheetCC.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan 
+	            	else if(i==14)sheetCC.setColumnWidth(i, 28*256); //Col : Amaun Bersih 
+	            	else if(i==15)sheetCC.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan 
+	            	else if(i==16)sheetCC.setColumnWidth(i, 22*256); //Col : Status  
+	        		// #26307 end  
 	        	}
 	        }
 		}
 		
 		//SECTION SHEET (Populate) : Ringkasan
-		Sheet sheetSummary = wb.createSheet(sheetName[2]); 
+		Sheet sheetSummary = wb.createSheet(sheetName[2]); //BUG:#29454 
         //Setting Report Title
 		Row titleRowSheetSummary = sheetSummary.createRow(0);
 		Cell cellTitleRowSummary = titleRowSheetSummary.createCell(0);
 		cellTitleRowSummary.setCellValue(titleReport);
-		cellTitleRowSummary.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
-		sheetSummary.addMergedRegion(new CellRangeAddress(0,0,0,columnsSummaryList.length)); 
+		cellTitleRowSummary.setCellStyle(titleHeaderStyle_1);//BUG:#29454
+		sheetSummary.addMergedRegionUnsafe(new CellRangeAddress(0,0,0,columnsSummaryList.length));//BUG:#29454 
 		
 		Row subTitleRowSheetSummary = sheetSummary.createRow(1);
 		Cell cellSubTitleRowSummary = subTitleRowSheetSummary.createCell(0);
 		cellSubTitleRowSummary.setCellValue("RINGKASAN LAPORAN TERIMAAN :");
-		cellSubTitleRowSummary.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
-		sheetSummary.addMergedRegion(new CellRangeAddress(1,1,0,columnsSummaryList.length)); 
+		cellSubTitleRowSummary.setCellStyle(titleHeaderStyle_1);//BUG:#29454
+		sheetSummary.addMergedRegionUnsafe(new CellRangeAddress(1,1,0,columnsSummaryList.length));//BUG:#29454 
 		
 		//Setting Column header list
 	    Row headerRowListSummary = sheetSummary.createRow(sheetSummary.getLastRowNum()+1);
         for(int i = 0; i < columnsSummaryList.length; i++) {
             Cell cell = headerRowListSummary.createCell(i);
             cell.setCellValue(columnsSummaryList[i]);
-            cell.setCellStyle(columnStyle(wb,createHelper,true,true,true,false,false,false,true));
+            cell.setCellStyle(columnHeaderStyle);//BUG:#29454
         }
         
         if(!summaryList.isEmpty()){
+        	//START - BUG:#29454
+        	CellStyle columnStyleSummaryDate_1 = columnStyle(wb,createHelper,false,true,true,true,false,false,true);
+        	CellStyle columnStyleSummaryDate_2 = columnStyle(wb,createHelper,false,false,true,true,false,false,true);
+        	CellStyle columnStyleSummaryAmount_1 = columnStyle(wb,createHelper,false,true,false,false,true,false,true);
+        	CellStyle columnStyleSummaryAmount_2 = columnStyle(wb,createHelper,false,false,false,false,true,false,true);
+        	CellStyle columnStyleSummaryInteger = columnStyle(wb,createHelper,false,true,false,false,false,false,true);
+        	CellStyle columnStyleSummaryGeneral = columnStyle(wb,createHelper,false,false,false,false,false,false,true);
+        	CellStyle columnStyleSummaryString = columnStyle(wb,createHelper,false,true,true,false,false,false,true);
         	Set<Integer> keyIdSummary = summaryList.keySet();
 			int rowid = sheetSummary.getLastRowNum()+1;
 			for (Integer key : keyIdSummary) {
@@ -2104,35 +2494,36 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					Cell cell = rowSummary.createCell(cellSummaryId);
 					if(objectArr[x] instanceof Date){
 						cell.setCellValue((Date) objectArr[x]);
-						if(key == (summaryList.size() - 1))cell.setCellStyle(columnStyle(wb,createHelper,false,true,true,true,false,false,true));
-						else cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,true));
+						if(key == (summaryList.size() - 1))cell.setCellStyle(columnStyleSummaryDate_1);
+						else cell.setCellStyle(columnStyleSummaryDate_2);
 					}else if(objectArr[x] instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
-						if(key == (summaryList.size() - 1))cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,true,false,true));
-						else cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
+						if(key == (summaryList.size() - 1))cell.setCellStyle(columnStyleSummaryAmount_1);
+						else cell.setCellStyle(columnStyleSummaryAmount_2);
 					}else if(objectArr[x] instanceof Double){
 						cell.setCellValue(((Double) objectArr[x]).doubleValue());
-						if(key == (summaryList.size() - 1))cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,true,false,true));
-						else cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
+						if(key == (summaryList.size() - 1))cell.setCellStyle(columnStyleSummaryAmount_1);
+						else cell.setCellStyle(columnStyleSummaryAmount_2);
 					}else if(objectArr[x] instanceof Integer){
 						cell.setCellValue(((Integer) objectArr[x]).intValue());
-						if(key == (summaryList.size() - 1))cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,false,false,true));
-						else cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,true));
+						if(key == (summaryList.size() - 1))cell.setCellStyle(columnStyleSummaryInteger);
+						else cell.setCellStyle(columnStyleSummaryGeneral);
 					}else{
 						cell.setCellValue((String) objectArr[x]);
-						if(key == (summaryList.size() - 1))cell.setCellStyle(columnStyle(wb,createHelper,false,true,true,false,false,false,true));
-						else cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,true));
+						if(key == (summaryList.size() - 1))cell.setCellStyle(columnStyleSummaryString);
+						else cell.setCellStyle(columnStyleSummaryGeneral);
 					}
 					cellSummaryId++;
 				}
 			}
+			//END - BUG:#29454
         }
         
         if(summaryReportList.isEmpty()){
         	Row noRecordRow = sheetSummary.createRow(sheetSummary.getLastRowNum()+1);
 			Cell cellNoRecord = noRecordRow.createCell(0);
 			cellNoRecord.setCellValue("Rekod tidak dijumpai");
-			cellNoRecord.setCellStyle(titleHeaderStyle(wb,false,false,false,false));
+			cellNoRecord.setCellStyle(titleHeaderStyle_2);//BUG:#29454
 			sheetSummary.addMergedRegion(new CellRangeAddress(sheetSummary.getLastRowNum(),sheetSummary.getLastRowNum(),0,columnsSummaryList.length-1)); 
         }
         
@@ -2150,11 +2541,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
 	    	String fullPath = path+"/"+requestId+".xlsx";
-	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
+	    	//String fullPath = "D://reports//dev//1.xlsx";
 	    	log.info("FULL PATH (CREATE FILE) == "+fullPath);
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
 	        out.close();
+	        //((SXSSFWorkbook) wb).dispose();//BUG:#29454
 	        wb.close();
 	    }catch(Exception e){
 	    	e.printStackTrace();
@@ -2191,9 +2583,33 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			if(!reportList.isEmpty()){
 				for(int m=0; m<reportList.size(); m++){
 					Object[] row = (Object[]) reportList.get(m);
+					// #26307 start - change wording					
+					/*if(row[1].toString().equalsIgnoreCase("Kad Kredit")){ 
+						row[1] = "Kad Kredit/Kad Debit"; 
+					}*/ 
+					//#26307- Re-endorsed
+					String cardType = "";
+					if(row[10] == null){
+						cardType = row[1].toString();
+					}else{
+						BigDecimal cardTypeCode = row[10] != null ? (BigDecimal) row[10] : BigDecimal.ZERO;
+						if (cardTypeCode.compareTo(BigDecimal.valueOf(5125L)) == 0) {
+							cardType = "Kad Kredit"; 
+						} else if (cardTypeCode.compareTo(BigDecimal.valueOf(5126L)) == 0) {
+							cardType = "Kad Debit"; 
+						} 
+					}
+					//#26307- Rendorsed
+					// #26307 end
 					fullList.put(m, new Object[] {
 						(Date) row[3],row[2].toString(),row[5].toString(),
-						row[4].toString(),row[1].toString(),row[7].toString(),row[8].toString(),
+						row[4].toString(),
+						//#26307 - Start Re-endorsed
+						//row[1].toString(),
+						cardType,
+						//#26307 - End Re-endorsed
+						row[7].toString(),
+						row[8].toString().toUpperCase(),//#14203 - uppercase perihal
 						(BigDecimal) row[9] != null ? (BigDecimal) row[9] : BigDecimal.ZERO
 					});
 				}
@@ -2216,17 +2632,29 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			e.printStackTrace();
 		}
 		
-		Workbook wb = new XSSFWorkbook();
+		//Workbook wb = new SXSSFWorkbook();// Change package from XSSFWorkbook to SXSSFWorkbook due to populate large data.
+		Workbook wb = new XSSFWorkbook();//#29454
 		CreationHelper createHelper = wb.getCreationHelper();
+		//START - BUG:#29454
+		CellStyle titleHeaderStyle_1 = titleHeaderStyle(wb,true,false,false,false);
+		CellStyle titleHeaderStyle_2 = titleHeaderStyle(wb,false,false,false,false);
+		CellStyle columnHeaderStyle = columnStyle(wb,createHelper,true,true,true,false,false,false,false);
+		CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+		CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);					
+		CellStyle columnStyleInteger = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+		CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+		CellStyle columnStyleBil = columnStyle(wb,createHelper,false,false,true,false,false,false,false);
+		//END - BUG:#29454
+		
 		//Only create Sheet Senarai only if search result has return records
 		if(!fullList.isEmpty()){
 			log.info("SHEET SENARAI IS NOT EMPTY !!!");
-			Sheet sheetReportList = wb.createSheet(sheetName[0]); 
+			Sheet sheetReportList = wb.createSheet(sheetName[0]); //BUG:#29454
 			//Setting Report Title
 			Row titleRowSheetList= sheetReportList.createRow(0);
 			Cell cellTitleRow = titleRowSheetList.createCell(1);
 		    cellTitleRow.setCellValue(titleReport);
-		    cellTitleRow.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
+		    cellTitleRow.setCellStyle(titleHeaderStyle_1);//BUG:#29454
 		    sheetReportList.addMergedRegion(new CellRangeAddress(0,0,1,columnHeaderList.size()-1)); 
 		    
 		    //Setting Row Items - Kod PTJ/Nama PTJ
@@ -2234,13 +2662,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	Row itemsDtlRow = sheetReportList.createRow(i);
 	        	Cell cellItemsDtl = itemsDtlRow.createCell(1);
 	        	cellItemsDtl.setCellValue(rowHeaderItems[i-1]);
-	        	cellItemsDtl.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
+	        	cellItemsDtl.setCellStyle(titleHeaderStyle_1);//BUG:#29454
 	        	
 	        	Cell cellItemsVal = itemsDtlRow.createCell(2);
 	        	if(i==1)cellItemsVal.setCellValue("24010168 ");        		
 	        	if(i==2)cellItemsVal.setCellValue("Unit Perolehan Kementerian Kewangan");
-	        	cellItemsVal.setCellStyle(titleHeaderStyle(wb,false,false,false,false));
-	        	sheetReportList.addMergedRegion(new CellRangeAddress(i,i,2,3)); 
+	        	cellItemsVal.setCellStyle(titleHeaderStyle_2);//BUG:#29454 
+	        	sheetReportList.addMergedRegionUnsafe(new CellRangeAddress(i,i,2,3));//BUG:#29454  
 	        }
 		    
 		    //Setting Column header list
@@ -2248,49 +2676,68 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        for(int i = 0; i < columnHeaderList.size(); i++) {
 	            Cell cell = headerRowList.createCell(i);
 	            cell.setCellValue(columnHeaderList.get(i).toString());
-	            cell.setCellStyle(columnStyle(wb,createHelper,true,true,true,false,false,false,false));
+	            cell.setCellStyle(columnHeaderStyle);//BUG:#29454
 	        }
 	        
+	        int headerRowIndex = headerRowList.getRowNum();//BUG:#29454
 	        Set<Integer> keyIdList = fullList.keySet();
 			int rowid = sheetReportList.getLastRowNum()+1;
 			int countRowList = 1;
 			String receiptNo = "";
+			//START - BUG:#29454
+			int mergeRowFirst = 0;
+			int mergeRowLast = 0;
 			for (Integer key : keyIdList) {
 				Row row = sheetReportList.createRow(rowid++);
 				Object[] objectArr = fullList.get(key);
 				int cellid = 1;
 				Cell cellBil = row.createCell(0);
 				if(receiptNo == ""){
+					mergeRowFirst = rowid;
 					cellBil.setCellValue(countRowList++);
 				}else if(!receiptNo.equalsIgnoreCase((String)objectArr[1])){
+					mergeRowFirst = rowid;
+					mergeRowLast = 0;
 					cellBil.setCellValue(countRowList++);
 				}else{
-					sheetReportList.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 
+					mergeRowLast = rowid;
+					if(key < keyIdList.size()){
+						if(key == (keyIdList.size() - 1)){
+							sheetReportList.addMergedRegionUnsafe(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
+						}else{
+							Object[] objectArrMerge = fullList.get(key+1);
+							if(!receiptNo.equalsIgnoreCase((String)objectArrMerge[2])){
+								sheetReportList.addMergedRegionUnsafe(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
+							}
+						}						
+					}
 				}
-				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
+				cellBil.setCellStyle(columnStyleBil);
 				receiptNo = (String)objectArr[1];
 				
 				for (int x=0; x<objectArr.length; x++) {
 					Cell cell = row.createCell(cellid);
 					if(objectArr[x] instanceof Date){
 						cell.setCellValue((Date) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+						cell.setCellStyle(columnStyleDate);
 					}else if(objectArr[x] instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleBigDecimal);
 					}else if(objectArr[x] instanceof Integer){
 						cell.setCellValue(((Integer) objectArr[x]).intValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
+						cell.setCellStyle(columnStyleInteger);
 					}else{
 						cell.setCellValue((String) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
+						cell.setCellStyle(columnStyleString);
 					}
 					cellid++;
 				}
 			}
 			
 			//Setting Auto filtering in each header column list
-	        sheetReportList.setAutoFilter(new CellRangeAddress(headerRowList.getRowNum(),sheetReportList.getLastRowNum(),1,columnHeaderList.size()-1));
+			sheetReportList.setAutoFilter(new CellRangeAddress(headerRowIndex,headerRowIndex,1,columnHeaderList.size()-1));
+			//END - BUG:#29454
+			
 	  		// Resize all columns to fit the content size
 	        for(int i = 0; i < columnHeaderList.size(); i++) {   
 	    		if(i==0)sheetReportList.setColumnWidth(i, 8*256);//Col : Bil
@@ -2306,18 +2753,18 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 		
 		//SECTION SHEET (Populate) : Ringkasan
-		Sheet sheetSummaryList = wb.createSheet(sheetName[1]); 
+		Sheet sheetSummaryList = wb.createSheet(sheetName[1]); //BUG:#29454 
         //Setting Report Title
 		Row titleRowSheetSummary = sheetSummaryList.createRow(0);
 		Cell cellTitleRowSummary = titleRowSheetSummary.createCell(0);
 		cellTitleRowSummary.setCellValue(titleReport);
-		cellTitleRowSummary.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
+		cellTitleRowSummary.setCellStyle(titleHeaderStyle_1);//#29454
 		sheetSummaryList.addMergedRegion(new CellRangeAddress(0,0,0,columnsSummaryList.length+8)); 
 		
 		Row subTitleRowSheetSummary = sheetSummaryList.createRow(1);
 		Cell cellSubTitleRowSummary = subTitleRowSheetSummary.createCell(0);
 		cellSubTitleRowSummary.setCellValue("RINGKASAN STATUS RESIT :");
-		cellSubTitleRowSummary.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
+		cellSubTitleRowSummary.setCellStyle(titleHeaderStyle_1);//#29454
 		sheetSummaryList.addMergedRegion(new CellRangeAddress(1,1,0,columnsSummaryList.length+8)); 
 		
 		//Setting Column header list
@@ -2325,49 +2772,61 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         for(int i = 0; i < columnsSummaryList.length; i++) {
             Cell cell = headerRowListSummary.createCell(i);
             cell.setCellValue(columnsSummaryList[i]);
-            cell.setCellStyle(columnStyle(wb,createHelper,true,true,true,false,false,false,false));
+            cell.setCellStyle(columnHeaderStyle);//BUG:#29454
         }
         
         if(!summaryList.isEmpty()){
         	log.info("SHEET RINGKASAN IS NOT EMPTY !!!");
+        	//START - BUG:#29454
+        	CellStyle columnStyleSummaryGeneral = columnStyle(wb,createHelper,false,false,false,false,false,false,true);
+        	CellStyle columnStyleSummaryDate_1 = columnStyle(wb,createHelper,false,true,true,true,false,false,true);
+        	CellStyle columnStyleSummaryDate_2 = columnStyle(wb,createHelper,false,false,true,true,false,false,true);
+        	CellStyle columnStyleSummaryAmount_1 = columnStyle(wb,createHelper,false,true,false,false,true,false,true);
+        	CellStyle columnStyleSummaryAmount_2 = columnStyle(wb,createHelper,false,false,false,false,true,false,true);
+        	CellStyle columnStyleSummaryInteger = columnStyle(wb,createHelper,false,true,false,false,false,false,true);
+        	CellStyle columnStyleSummaryString = columnStyle(wb,createHelper,false,true,true,false,false,false,true);
+        	//END - BUG:#29454
+        	
 			Set<Integer> keyIdSummary = summaryList.keySet();
 			int rowid = sheetSummaryList.getLastRowNum()+1;
 			for (Integer key : keyIdSummary) {
 				Row row = sheetSummaryList.createRow(rowid++);
 				Object[] objectArr = summaryList.get(key);
 				int cellid = 0;
+				//START - BUG:#29454
 				for (int x=0; x<objectArr.length; x++) {
 					Cell cell = row.createCell(cellid);
 					if(objectArr[x] instanceof Date){
 						cell.setCellValue((Date) objectArr[x]);
-						if(key == summaryList.size()-1)cell.setCellStyle(columnStyle(wb,createHelper,false,true,true,true,false,false,true));
-						else cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,true));
+						if(key == summaryList.size()-1)cell.setCellStyle(columnStyleSummaryDate_1);
+						else cell.setCellStyle(columnStyleSummaryDate_2);
 					}else if(objectArr[x] instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
-						if(key == summaryList.size()-1)cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,true,false,true));
-						else cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
+						if(key == summaryList.size()-1)cell.setCellStyle(columnStyleSummaryAmount_1);
+						else cell.setCellStyle(columnStyleSummaryAmount_2);
 					}else if(objectArr[x] instanceof Double){
 						cell.setCellValue(((Double) objectArr[x]).doubleValue());
-						if(key == summaryList.size()-1)cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,true,false,true));
-						else cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
+						if(key == summaryList.size()-1)cell.setCellStyle(columnStyleSummaryAmount_1);
+						else cell.setCellStyle(columnStyleSummaryAmount_2);
 					}else if(objectArr[x] instanceof Integer){
 						cell.setCellValue(((Integer) objectArr[x]).intValue());
-						if(key == summaryList.size()-1)cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,false,false,true));
-						else cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,true));
+						if(key == summaryList.size()-1)cell.setCellStyle(columnStyleSummaryInteger);
+						else cell.setCellStyle(columnStyleSummaryGeneral);
 					}else{
 						cell.setCellValue((String) objectArr[x]);
-						if(key == summaryList.size()-1)cell.setCellStyle(columnStyle(wb,createHelper,false,true,true,false,false,false,true));
-						else cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,true));
+						if(key == summaryList.size()-1)cell.setCellStyle(columnStyleSummaryString);
+						else cell.setCellStyle(columnStyleSummaryGeneral);
 					}
 					cellid++;
 				}
+				//END - BUG:#29454
 			}
         }
         if(summaryReportList.isEmpty()){
         	Row noRecordRow = sheetSummaryList.createRow(sheetSummaryList.getLastRowNum()+1);
 			Cell cellNoRecord = noRecordRow.createCell(0);
 			cellNoRecord.setCellValue("Rekod tidak dijumpai");
-			cellNoRecord.setCellStyle(titleHeaderStyle(wb,false,false,false,false));
+			cellNoRecord.setCellStyle(titleHeaderStyle_2);// BUG:#29454
 			sheetSummaryList.addMergedRegion(new CellRangeAddress(sheetSummaryList.getLastRowNum(),sheetSummaryList.getLastRowNum(),0,columnsSummaryList.length-1)); 
         }
         
@@ -2381,11 +2840,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
 	    	String fullPath = path+"/"+requestId+".xlsx";
-	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
+	    	//String fullPath = "D://reports//dev//4.xlsx";
 	    	log.info("FULL PATH (CREATE FILE) == "+fullPath);
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
 	        out.close();
+	        //((SXSSFWorkbook) wb).dispose();//BUG:#29454
 	        wb.close();
 	        
 	    }catch(Exception e){
@@ -2456,7 +2916,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal totalAll = jan.add(feb).add(mac).add(apr).add(may).add(jun).add(july).add(aug).add(sep).add(oct).add(nov).add(dec);
 							
 					revenueCollectionList.put(m, new Object[]{
-						row[0].toString(),row[1].toString(),
+						row[0].toString(),
+						row[1].toString().toUpperCase(),//#14203 - uppercase perihal
 						(BigDecimal)row[2] != null ? (BigDecimal)row[2] : "-",
 						(BigDecimal)row[3] != null ? (BigDecimal)row[3] : "-",
 						(BigDecimal)row[4] != null ? (BigDecimal)row[4] : "-",
@@ -2480,12 +2941,21 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		Workbook wb = new XSSFWorkbook();
 		CreationHelper createHelper = wb.getCreationHelper();
 		Sheet sheetReportList = wb.createSheet("Senarai"); 
+		//START: #29454
+		CellStyle titleHeaderStyle_1 = titleHeaderStyle(wb,true,false,false,false);
+		CellStyle titleHeaderStyle_2 = titleHeaderStyle(wb,true,false,false,true);
+		CellStyle titleHeaderStyle_3 = titleHeaderStyle(wb,false,false,true,true);
+		CellStyle columnHeaderStyle = columnStyle(wb,createHelper,true,true,true,false,false,false,true);
+		CellStyle columnStyleAmount = columnStyle(wb,createHelper,false,false,false,false,true,false,true);
+		CellStyle columnStyleString_1 = columnStyle(wb,createHelper,false,false,true,false,false,true,true);
+		CellStyle columnStyleString_2 =	columnStyle(wb,createHelper,false,false,false,false,false,true,true);
+		//END: #29454
 		
 		//Setting Report Title
 		Row titleRowSheetList= sheetReportList.createRow(0);
 		Cell cellTitleRow = titleRowSheetList.createCell(0);
 	    cellTitleRow.setCellValue(titleReport);
-	    cellTitleRow.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
+	    cellTitleRow.setCellStyle(titleHeaderStyle_1);//BUG:#29454
 	    sheetReportList.addMergedRegion(new CellRangeAddress(0,0,0,12)); 
 	    
 	    //Setting Row Items - Kod PTJ/Nama PTJ/Jenis Bayaran
@@ -2493,7 +2963,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         	Row itemsDtlRow = sheetReportList.createRow(i);
         	Cell cellItemsDtl = itemsDtlRow.createCell(0);
         	cellItemsDtl.setCellValue(rowHeaderItems[i-1]);
-        	cellItemsDtl.setCellStyle(titleHeaderStyle(wb,true,false,false,true));
+        	cellItemsDtl.setCellStyle(titleHeaderStyle_2);//BUG: #29454
         	
         	Cell cellItemsVal = itemsDtlRow.createCell(1);
         	if(i==1)cellItemsVal.setCellValue("24010168 ");        		
@@ -2502,8 +2972,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         		itemsDtlRow.setHeightInPoints((paymentTypeSize * sheetReportList.getDefaultRowHeightInPoints()));
         		cellItemsVal.setCellValue(paymentTypeDesc);
         	}
-        	cellItemsVal.setCellStyle(titleHeaderStyle(wb,false,false,true,true));
-        	sheetReportList.addMergedRegion(new CellRangeAddress(i,i,1,3));
+        	cellItemsVal.setCellStyle(titleHeaderStyle_3);//BUG: #29454
+        	sheetReportList.addMergedRegionUnsafe(new CellRangeAddress(i,i,1,3));
         }
 	    
 	    //Setting Column header list
@@ -2511,7 +2981,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         for(int i = 0; i < columnHeaderList.size(); i++) {
             Cell cell = headerRowList.createCell(i);
             cell.setCellValue(columnHeaderList.get(i).toString());
-            cell.setCellStyle(columnStyle(wb,createHelper,true,true,true,false,false,false,true));
+            cell.setCellStyle(columnHeaderStyle);//BUG: #29454
         }
         
         if(!revenueCollectionList.isEmpty()){
@@ -2526,17 +2996,17 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					Cell cell = row.createCell(cellid);
 					if(objectArr[x] instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
+						cell.setCellStyle(columnStyleAmount);//BUG:#29454
 					}else if(objectArr[x] instanceof Double){
 						cell.setCellValue(((Double) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
+						cell.setCellStyle(columnStyleAmount);//BUG:#29454
 					}else{
 						cell.setCellValue((String) objectArr[x]);
 						if(x == 0){
-							cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,true,true));
+							cell.setCellStyle(columnStyleString_1);//BUG:#29454
 						}else{
-							if("-".equalsIgnoreCase((String) objectArr[x]))cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,true,true));
-							else cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,true));
+							if("-".equalsIgnoreCase((String) objectArr[x]))cell.setCellStyle(columnStyleString_1);//BUG:#29454
+							else cell.setCellStyle(columnStyleString_2);//BUG:#29454
 						}
 					}
 					cellid++;
@@ -2576,7 +3046,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
 	    	String fullPath = path+"/"+requestId+".xlsx";
-	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
+	    	//String fullPath = "D://reports//dev//5.xlsx";
 	    	log.info("FULL PATH (CREATE FILE) == "+fullPath);
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);

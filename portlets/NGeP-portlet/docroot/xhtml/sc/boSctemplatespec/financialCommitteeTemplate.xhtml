@@ -34,17 +34,20 @@
 						<p:printer target="financialComitteeTemp" />
 					</p:commandButton>
 
+					<!-- 30917, 31151 -start- -->
 					<p:commandButton value="#{lbl['lbl.btn.complete']}"
-						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or (!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()) or isReadOnlyOrSpecMain)}"
+						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or (specificationBackingBean.isQTStatusChecklistScoringRevision()) or isReadOnlyOrSpecMain)}"
 						style="float:right;" update="@all" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{specificationBackingBean.completeTemplateSpecDetails('SC',2)}" />
 
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
-						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or (!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()) or isReadOnlyOrSpecMain)}"
+						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or (specificationBackingBean.isQTStatusChecklistScoringRevision()) or isReadOnlyOrSpecMain)}"
 						style="float:right;" update="@all" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{specificationBackingBean.saveTemplateSpecDetails('SC',2)}" />
+					<!-- 30917, 31151 -end- -->
+
 				</td>
 			</tr>
 		</table>
@@ -95,10 +98,12 @@
 				</table>
 			</p:panel>
 
+			<!-- 30917, 31151 -start- -->
 			<ac:templateSpec
-				editable="#{((specificationBackingBean.isQTStatusChecklistScoring() ) or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()) or isReadOnlyOrSpecMain)}"
+				editable="#{((specificationBackingBean.isQTStatusChecklistScoring() ) or (specificationBackingBean.isQTStatusChecklistScoringRevision()) or isReadOnlyOrSpecMain)}"
 				templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}"
 				title="#{lbl['lbl.sc.spec.financial.title']}" />
+			<!-- 30917, 31151 -end- -->
 
 		</h:panelGroup>
 	</ui:define>

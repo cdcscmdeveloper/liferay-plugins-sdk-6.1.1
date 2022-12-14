@@ -214,6 +214,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private ScQtProposalChecklist financialQtProposalChecklist;
 	private ScQtCheckList financialQtChecklist;
 	private int supplierInfoActiveIndex; //25089@hatta
+	private boolean tierType = false; //#11715 danial
 	
 	/** report download filename. */
 	private String reportDownloadFileName = "NGeP-QT-Supplier-Proposal-Report";
@@ -1908,6 +1909,16 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.supplierInfoActiveIndex = supplierInfoActiveIndex;
 	}
 	//25089@hatta - end
+
+	//#11715 danial start
+	public boolean isTierType() {
+		return tierType;
+	}
+
+	public void setTierType(boolean tierType) {
+		this.tierType = tierType;
+	}
+	//#11715 danial end
 	
 	//#28792-start
 	/**

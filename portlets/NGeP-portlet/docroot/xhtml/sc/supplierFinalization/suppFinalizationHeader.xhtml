@@ -17,8 +17,12 @@
 				<td style="width: 10%;"><h:outputLabel
 						value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td style="width: 27%;" class="header-info-text">
+				
+				<ui:remove> #25201 - start </ui:remove>
 				<p:commandLink process="@this" partialSubmit="true"
-						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,scQt,true)}">
+						action="#{qTDetailBB.editQuationTenderDetails(scQt, false, true, view.viewId)}">
+				<ui:remove> #25201 - end </ui:remove>
+				
 				<h:outputText value="#{scQt.qtNo}" escape="false" />
 					</p:commandLink>
 				</td>
@@ -35,15 +39,17 @@
 				<td style="width: 22%;" class="header-info-text">#{scQt.qtValidityPeriod}</td>
 			</tr>
 			<tr>
-				<td style="width: 10%;"><h:outputLabel
+			    <!-- 27668@hatta - start -->
+			    <td style="width: 10%;"><h:outputLabel value="#{lbl['lbl.pp.procurement.title']}" /></td>
+				<td style="width: 27%;" class="header-info-text"><h:outputText value="#{scQt.qtTitle}" /></td>
+				<!-- 27668@hatta - end -->
+				
+				<td style="width: 5%;"><h:outputLabel
 						value="#{lbl['lbl.sc.status']}" /></td>
-				<td style="width: 27%;" class="header-info-text">
+				<td style="width: 32%;" class="header-info-text">
 					#{suppFinalizationBackingBean.getStatusDescById(suppFinalizationBackingBean.managedBean.currentStatusId)}
 				</td>
-
-				<td style="width: 5%;"></td>
-				<td style="width: 32%;" class="header-info-text"></td>
-
+				
 				<td style="width: 5%;"><h:outputLabel
 						value="#{lbl['lbl.sc.proposal.validity.until']}" /></td>
 				<c:if test="#{validatevalue eq 'true'}">

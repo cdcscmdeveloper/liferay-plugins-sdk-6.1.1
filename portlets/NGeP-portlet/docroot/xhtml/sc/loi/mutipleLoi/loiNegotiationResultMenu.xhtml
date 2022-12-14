@@ -13,8 +13,10 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 
+		<!-- 25638 -start- -->
 		<ui:param name="isPendingNegotiationStatus"
-			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION}" />
+			value="#{lOIDetailBackingBean.isPendingNegotiationStatus()}" />
+		<!-- 25638 -end- -->
 
 		<ui:param name="isPendingEndorsementStatus"
 			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT}" />
@@ -135,7 +137,30 @@
 		<ac:scSingleFileUploadPopup widgetVar="loiReportAttWidget"
 			fileUploadListener="lOIDetailBackingBean.handleFileUpload"
 			update="@([id$=reportContentsTbl])" 
-			autoUpdateValue="#{lOIDetailBackingBean.managedBean.autoUpdate}"/>		
+			autoUpdateValue="#{lOIDetailBackingBean.managedBean.autoUpdate}"/>
+
+		<!-- 25638 -start- -->	
+		<p:dialog id="reviseLoiDlgs" widgetVar="reviseLoiDlgs"
+			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+			resizable="false" width="400" height="75" closable="false">
+			<table>
+				<tr>
+					<td align="center">
+						<h:graphicImage value="/css/images/design/exclamation.png" /> 
+						<p:outputLabel value="#{lbl['lbl.sc.dialog.confirm.to.revise']}" />
+					</td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"
+				oncomplete="reviseLoiDlgs.hide();"
+				action="#{lOIDetailBackingBean.reviseAction()}" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}"
+				onclick="reviseLoiDlgs.hide();" type="button" />
+			</div>
+		</p:dialog>	
+		<!-- 25638 -end- -->
 
 	</ui:define>
 </ui:composition>

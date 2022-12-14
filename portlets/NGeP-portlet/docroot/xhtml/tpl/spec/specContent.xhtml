@@ -239,9 +239,11 @@
 			
 					
 			<c:if test="#{isContentTypeAnswer or isContentTypeScore or (isContentTypeUpdateSpec and isUpdateSpecByAnswers)}">
+				<!-- #33859 - start -->
 				<p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row"
 					value="#{templateSpecBean.specAnswerList}" 	emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					scrollable1="true" scrollWidth1="#{scrollWidth}">
+					scrollable1="true" scrollWidth1="#{scrollWidth}"  style="word-break: break-all">
+				<!-- #33859 - end -->	
 					
 					<ui:param name="prevSpecQuestion" value="#{row > 0 ? templateSpecBean.specAnswerList[row-1].tplSpecQuestion : null}" />
 					<ui:param name="question" value="#{tplSpecAnswer.tplSpecQuestion}" />

@@ -45,18 +45,27 @@
 			selection="#{evaluationMeetingBackingBean.managedBean.meetingMultiSelect}"
 			editable="true" rowIndexVar="index" rowKey="#{meeting}">
 			<ac:paginator for="evaluationmeetingDetails" />
+			
+			<!-- 29473,31675 -start- -->
+			<ui:param name="disableMeeting"
+				      value="#{meeting.recordStatusFlg ne DbValueConst.recordStatusActive}" />
+			<!-- 29473,31675 -end- -->
 
-			<!-- <p:column selectionMode="multiple" style="width:2%"></p:column> -->
 			<p:column style="width:3px;text-align:center;">
 				<f:facet name="header">
+					<!-- 29473,31675 -start- -->
 					<p:selectBooleanCheckbox
+						disabled="#{evaluationMeetingBackingBean.managedBean.hasPreviousMeeting}"
 						value="#{evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll}">
+					<!-- 29473,31675 -end- -->
 						<p:ajax partialSubmit="true" process="@this"
 							 update="@([id$=evaluationConfirmmeetingId])"
 							listener="#{evaluationMeetingBackingBean.selectAll(evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll, evaluationMeetingBackingBean.managedBean.scQtMeetings)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox value="#{meeting.selected}">
+				<!-- 29473,31675 -start- -->
+				<p:selectBooleanCheckbox disabled="#{disableMeeting}" value="#{meeting.selected}">
+				<!-- 29473,31675 -end- -->
 					<p:ajax partialSubmit="true" process="@this" update="@([id$=evaluationConfirmmeetingId])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -66,13 +75,13 @@
 					<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
 				</f:facet>
                   
-					<ac:dateTime id="meetingDate"
-      required="true"
-      label="#{lbl['lbl.sc.meeting.date']}"
-      value="#{meeting.meetingDate}"
-      update="@([id$=meetingDate])"
-      rowIndex="#{index}">
-     </ac:dateTime>
+                  	<!-- 29473,31675 -start- -->
+				<ac:dateTime id="meetingDate" disabled="#{disableMeeting}"
+					required="true" label="#{lbl['lbl.sc.meeting.date']}"
+					value="#{meeting.meetingDate}" update="@([id$=meetingDate])"
+					rowIndex="#{index}">
+					<!-- 29473,31675 -end- -->
+				</ac:dateTime>
 				<p:message id="confirmMeetingId" for="meetingDate" display="icon"></p:message>
 
 			</p:column>
@@ -83,13 +92,17 @@
 					<ac:iconTooltip value="#{lbl['lbl.sc.meeting.location.tooltip']}" />
 				</f:facet>
 
+				<!-- 29473,31675 -start- -->
 				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2"
-					style="width:75%;" maxlength="255" onkeyup="limitTextArea(this,255);" onkeydown="limitTextArea(this,255);"
-						onmouseout="limitTextArea(this,255);"
+					disabled="#{disableMeeting}" style="width:75%;" maxlength="255"
+					onkeyup="limitTextArea(this,255);"
+					onkeydown="limitTextArea(this,255);"
+					onmouseout="limitTextArea(this,255);"
 					label="#{lbl['lbl.sc.meeting.location']}" id="locationId"
 					required="true" cols="140">
+					<!-- 29473,31675 -end- -->
 					<p:ajax process="@this" partialSubmit="true" update="@this"></p:ajax>
-					</p:inputTextarea>
+				</p:inputTextarea>
 				<p:message id="meetingLocationId" for="locationId" display="icon"></p:message>
 			</p:column>
 

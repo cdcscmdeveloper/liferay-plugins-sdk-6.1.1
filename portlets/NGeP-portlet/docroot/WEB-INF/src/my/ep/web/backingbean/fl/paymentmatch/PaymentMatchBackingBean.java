@@ -22,6 +22,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
@@ -58,6 +59,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -76,6 +78,8 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralResDTO;
 import my.ep.dto.pm.common.fund.FundReqDTO;
 import my.ep.dto.pm.common.fund.FundResDTO;
@@ -89,6 +93,8 @@ import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.payment.instruction.FLPaymentInstructionDataType;
 import my.ep.persistence.constant.DbValueConst;
@@ -117,6 +123,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.GSFType;
@@ -146,6 +153,10 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.InvoiceChargeLineVO;
 import my.ep.web.vo.TaxInvoiceVO;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Payment Match Backing Bean.
@@ -237,7 +248,11 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setToken(token);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			//32678-start
+			if(flBB.getManagedBean().getRemarkList().size() >0){
+				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			}
+			//32678-End
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			//start 21229
 			
@@ -277,6 +292,13 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 			
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+			//28221 - start
+			if(getManagedBean().getNewSupplierUserId() != null){
+				reqDTO.setSupplierSubmittedItd(getManagedBean().getNewSupplierUserId());
+				getManagedBean().getPaymentAdvice().getFlInvoice().setSupplierSubmittedId(getManagedBean().getNewSupplierUserId());
+				reqDTO.setInvoice(getManagedBean().getPaymentAdvice().getFlInvoice());
+			}
+			//28221 - end
 			
 			FulfilmentResDTO resDTO = paymentSO.createPaymentMatch(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -315,7 +337,11 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 					}
 					setAdjustmentDocNo(resDTO.getPaymentAdvice().getFlInvoice());
 					setStopInstrNo(resDTO.getPaymentAdvice().getFulfilmentOrder());					
-					flBB.initializeRemarkAndAttachement(resDTO.getPaymentAdvice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+					//32026 start
+					List<FlRemark> remarkList = initializeRemarkList(resDTO.getPaymentAdvice().getPaymentAdviceId());//32678
+					flBB.initializeRemarkAndAttachement(paymentAdvice.getFlWorkflowStatus(), remarkList, resDTO.getAttachmentList());
+					//32026 end
+					initializeRemarkRevision(ParameterConst.DOCTYPE_PAYMENT_ADVICE, resDTO.getPaymentAdvice().getPaymentAdviceId());//32678
 				}
 			}
 		}finally {
@@ -356,7 +382,10 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				paymentAdvice = resDTO.getPaymentAdvice();
 				setAdjustmentDocNo(paymentAdvice.getFlInvoice());
 				setStopInstrNo(paymentAdvice.getFulfilmentOrder());
-				flBB.initializeRemarkAndAttachement(paymentAdvice.getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+				//32026 start
+				List<FlRemark> remarkList = initializeRemarkList(paymentAdvice.getPaymentAdviceId());
+				flBB.initializeRemarkAndAttachement(paymentAdvice.getFlWorkflowStatus(), remarkList, resDTO.getAttachmentList());
+				//32026 end
 			}
 			
 			//start 21229
@@ -454,6 +483,24 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			getManagedBean().setTaxInvoice(resDTO.isTaxable());
 		}
 		
+		//28221 start
+		//WIP data patch
+		if (getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId() == null) {
+			getManagedBean().getPaymentAdvice().getFlInvoice()
+					.setSupplierSubmittedId(getManagedBean().getPaymentAdvice().getFlInvoice().getCreatedBy());
+			getManagedBean().setNewSupplierUserId(getManagedBean().getPaymentAdvice().getFlInvoice().getCreatedBy());
+		}
+
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId());
+
+		UserResDTO userResDTO = userSO.retrieveUserDtlById(userReqDTO);		
+		getManagedBean().setSuppInvoiceSubmitted(userResDTO.getPmUser());
+
+		checkSupplierUserActive();
+		//28221 end
 	}
 	
 	/**
@@ -1211,13 +1258,31 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	}
 	
 	/**
+	 * #32678-start
 	 * Page navigation to FLDoc search page in PA.
 	 *
 	 * @return the string
+	 * @throws PortalException the portal exception
+	 * @throws SystemException the system exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public String backToPervious() {
-		return "flDocSearch";
+	public String backToPervious() throws PortalException, SystemException, IOException {
+		if(getManagedBean().isDocMaintain()) {
+			return "flDocSearch";
+		}else if(getManagedBean().isHyperLinkPage()){
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
+			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());
+			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
+			return getManagedBean().getBackToPrevious();
+		} else {
+			String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.redirect(commonUrl + "notifications");
+			return null;
+		}
 	}
+	//32678-end
 	
 	/**
 	 * Removes Payment match deduction row.
@@ -1507,6 +1572,13 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				}
 			}
 			
+			//28221
+			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) 
+					&& !getManagedBean().isSuppInvoiceActive() && getManagedBean().getNewSupplierUserId() == null){
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_740065, new String[]{getManagedBean().getSuppInvoiceSubmitted().getUserName()});
+			}
+			
 		}finally {
 			paymentSO = null;
 		}
@@ -1769,6 +1841,14 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			invBB.getManagedBean().setHyperLinkPage(true);
 			invBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			invBB.getManagedBean().setReliefDeclarationCheck(true);
+			//start - 32678
+			invBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+			invBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
+			invBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
+			flBB.getManagedBean().setHideRemarks(true);
+			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			//end - 32678
 			reqDTO.setInvoice(resDTO.getInvoice());
 			resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
 			invBB.getManagedBean().setTaxable(resDTO.isTaxable());
@@ -1777,12 +1857,6 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			FacesContext fc = FacesContext.getCurrentInstance();
 			invBB.getManagedBean().setSelectedTabIndex(0);
 			invBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
-			invBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
-			invBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
-			invBB.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
-			flBB.getManagedBean().setHideRemarks(true);
-			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
-			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			invBB.getManagedBean().setDocMaintain(false);
 			invBB.getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
 			for(FlDeliveryOrder flDeliveryOrder : invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().getFlDeliveryOrders()) {
@@ -2496,8 +2570,27 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			remarklistT.add(remark);
 			getManagedBean().setRemarkReviseList(remarklistT);
 		}else {
+//			remarklist.add(0,remark); // 32026 *comment out for #32678
 			getManagedBean().setRemarkReviseList(remarklist);
-		}			
+		}
+	}
+	
+	/**
+	 * Initialize remark #32026 .
+	 * <p> get remarks lists.
+	 * @param docid
+	 */
+	public List<FlRemark> initializeRemarkList(Long docId) {
+		//32026 start
+		IPaymentMatchSO paymentMatchSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IPaymentMatchSO.class);
+		
+		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTORemark = new FulfilmentResDTO();
+		flReqDTO.setDocId(docId);
+		flReqDTO.setDocType(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+		resDTORemark = paymentMatchSO.retrieveRemarkByDocIdAndTypeAndNullSection(flReqDTO);
+		return resDTORemark.getRemarkList();
+		//32026 end
 		
 	}
 	
@@ -2511,4 +2604,42 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	}
 	
 	//end 21229
+	
+	//28221 -start
+	public void checkSupplierUserActive(){
+		IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IPersonnelSO.class);
+		PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
+		PersonnelResDTO personnelResDTO = new PersonnelResDTO();
+		personnelReqDTO.setUserId(getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId());
+		Long supplierId = getManagedBean().getPaymentAdvice().getFlRequest().getSmSupplier().getSupplierId();			
+		personnelReqDTO.setSmSupplierId(supplierId);
+		personnelResDTO = personnelSO.retrieveLatestActivePersonnelFL(personnelReqDTO);		
+		if(personnelResDTO.getSmPersonnelList().size() > 0){
+			getManagedBean().setSuppInvoiceActive(true);
+		}else{
+			getManagedBean().setSuppInvoiceActive(false);
+		}
+			
+	}
+		
+	public SelectItem[] showSupplierList(){
+			SelectItem[] items = null;
+			int i = 1;
+			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
+			PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
+			PersonnelResDTO personnelResDTO = new PersonnelResDTO();
+			
+			Long supplierId = getManagedBean().getPaymentAdvice().getFlRequest().getSmSupplier().getSupplierId();
+			personnelReqDTO.setSmSupplierId(supplierId);
+			personnelResDTO = personnelSO.retrieveLatestActivePersonnelBySupplierId(personnelReqDTO);
+		
+			items = new SelectItem[personnelResDTO.getSmPersonnelList().size() + 1];
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			for (SmPersonnel smPersonnel : personnelResDTO.getSmPersonnelList()) {				
+			  items[i++] = new SelectItem(smPersonnel.getPmUser().getUserId(), smPersonnel.getPmUser().getUserName());
+			}
+			return items;
+	}
+	//28221 -end
 }

@@ -1692,7 +1692,21 @@
 			userprofilemaintenance-portlet
 		</css-class-wrapper>
 	</portlet>
-	
+<!-- #9569 - START -->	
+	<portlet>
+		<portlet-name>SupplierUserMaintenance</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			supplierusermaintenance-portlet
+		</css-class-wrapper>
+	</portlet>
+<!-- #9569 - END -->	
+
 	<portlet>
 		<portlet-name>SpecCommitteMaintanance</portlet-name>
 		<icon>/icon.png</icon>
@@ -1800,7 +1814,21 @@
 				review purchase in default-portlet
 			</css-class-wrapper>
 		</portlet>
+		<!-- 28865 start -->
 		<portlet>
+			<portlet-name>ResponsePurchaseInDefault</portlet-name>
+			<icon>/icon.png</icon>
+			<requires-namespaced-parameters>false</requires-namespaced-parameters>
+			<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+			<footer-portlet-javascript>
+				/js/main.js
+			</footer-portlet-javascript>
+			<css-class-wrapper>
+				response purchase in default-portlet
+			</css-class-wrapper>
+		</portlet>
+		<portlet>
+		<!-- 28865 end -->
 			<portlet-name>ReviewSimpleQuote</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
@@ -2204,7 +2232,19 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>pm-SupplierCriteria-portlet</css-class-wrapper>
 	</portlet>
-		
+	
+	<!--  #29487 - View bank details by factoring user_endorsed - Start -->
+	<portlet>
+		<portlet-name>factoringCompanyInformation</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+			<footer-portlet-javascript>
+				/js/main.js
+			</footer-portlet-javascript>
+		<css-class-wrapper>pm-FactoringCompanyInformation-portlet</css-class-wrapper>
+	</portlet>		
+	<!--  #29487 - View bank details by factoring user_endorsed - End -->
 		
 		<portlet>
 		<portlet-name>pmLocation</portlet-name>
@@ -3321,6 +3361,48 @@
 		<css-class-wrapper>extensionCodeCreation-portlet</css-class-wrapper>
 	</portlet>
 	
+	<portlet>
+		<portlet-name>cancelLoaApproval</portlet-name>
+		<icon>/icon.png</icon>
+		<use-default-template>true</use-default-template>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>cancelLoaApproval-portlet</css-class-wrapper>
+	</portlet>
+	
+	<!-- Enhancement 25627-start- -->
+	<portlet>
+		<portlet-name>deskOfficerMaintenance</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			deskOfficerMaintenance-portlet
+		</css-class-wrapper>
+	</portlet>
+	<!-- Enhancement 25627-end- -->
+
+	<!-- Enhancement 25627-start- -->
+	<portlet>
+		<portlet-name>deskOfficerMaintenanceApproval</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			deskOfficerMaintenanceApproval-portlet
+		</css-class-wrapper>
+	</portlet>
+	<!-- Enhancement 25627-end- -->
+		
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>

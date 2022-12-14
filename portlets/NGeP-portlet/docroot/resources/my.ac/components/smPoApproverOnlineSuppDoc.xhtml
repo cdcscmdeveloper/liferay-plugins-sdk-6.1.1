@@ -82,23 +82,28 @@
 			</p:column>
 
 			<p:column style="width : 10%;">
-				<p:outputLabel rendered="#{onTable.pmDocument.hardCopyReq}"
-					value="#{lbl['lbl.sm.suppDoc.document.hdrCpySent']}"
-					style="float: left;white-space: normal;" />
-				<ui:remove>
-				<p:commandButton value="#{lbl['lbl.cm.download']}"
-					rendered="#{!onTable.pmDocument.hardCopyReq and not empty onTable.smApplDocFiles[0].fileName and onTable.smApplDocFiles[0].fileName ne ' '}"
-					action="#{backingBean.downloadSelectedSuppDoc(onTable.smApplDocFiles[0].fileName,onTable.smApplDocFiles[0].filePath)}"
-					update=":form" ajax="false">
-					<p:fileDownload value="#{backingBean.file}" />
-				</p:commandButton>
-				<br />
-				</ui:remove>
-				<h:panelGroup rendered="#{!onTable.pmDocument.hardCopyReq and not empty onTable.smApplDocFiles[0].fileName and onTable.smApplDocFiles[0].fileName ne ' '}">
-					<a href="#{DocumentRepositoryUtils.baseRepo}#{onTable.smApplDocFiles[0].filePath}#{onTable.smApplDocFiles[0].fileName}">#{onTable.smApplDocFiles[0].fileName}</a>
-				</h:panelGroup>
-				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{!onTable.pmDocument.hardCopyReq and 
-					(empty onTable.smApplDocFiles[0].fileName or onTable.smApplDocFiles[0].fileName eq ' ')}"/>
+				<!-- #28807 - End -->
+				<ui:repeat var="applDocs" value="#{onTable.smApplDocFiles}">
+					<p:outputLabel rendered="#{onTable.pmDocument.hardCopyReq}"
+						value="#{lbl['lbl.sm.suppDoc.document.hdrCpySent']}"
+						style="float: left;white-space: normal;" />
+					<ui:remove>
+					<p:commandButton value="#{lbl['lbl.cm.download']}"
+						rendered="#{!onTable.pmDocument.hardCopyReq and not empty applDocs.fileName and applDocs.fileName ne ' '}"
+						action="#{backingBean.downloadSelectedSuppDoc(applDocs.fileName,applDocs.filePath)}"
+						update=":form" ajax="false">
+						<p:fileDownload value="#{backingBean.file}" />
+					</p:commandButton>
+					<br />
+					</ui:remove>
+					<h:panelGroup rendered="#{!onTable.pmDocument.hardCopyReq and not empty applDocs.fileName and applDocs.fileName ne ' '}">
+						<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocs.filePath}#{applDocs.fileName}">#{applDocs.fileName}</a>
+					</h:panelGroup>
+					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{!onTable.pmDocument.hardCopyReq and 
+						(empty applDocs.fileName or applDocs.fileName eq ' ')}"/>
+					<br/>
+				</ui:repeat>		
+				<!-- #28807 - End -->		
 			</p:column>
 			
 			<p:column style="width : 20%;" rendered="#{backingBean.managedBean.poUser}">

@@ -68,8 +68,8 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
-import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
+import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
@@ -280,15 +280,23 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ctBB.getManagedBean().setServiceTaxAlertFlg(false);				
 			}
 			
-			//Start - Fix 29368
-			//from maintenance
-			if(ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()){
-				if(ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFileName() == null && ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFilePath() == null){
-					ctBB.getManagedBean().getCtContractAmount().setBondExempted(false);
+			// Start Fix - #30856
+			if(ctBB.getManagedBean().getCtContractAmount().isBondExempted()){
+				
+				if(!ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty()){
+					
+					removePerformanceDatatableRow();
+ 
+				}
+				
+				// Start - Fix #29368
+				if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
+					checkandResetBondExempted();
 				  }
-			   }
-			//End - Fix 29368
-
+				// End - Fix #29368
+				}
+			// End Fix - #30856
+					
 			return;
 		}
 
@@ -330,7 +338,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			  }
 		   }
 		//End - Fix 29368
-		
+	
 	}
 
 	/**
@@ -811,9 +819,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 
 			reqDTO.setCtContractVer(ctContractVer);
-			// Start - #28292/#26475
-			reqDTO.setScLoa(ctContractVer.getCtContract().getLoa());
-			// End  - #28292/#26475
 			reqDTO.setAgreementContractVer(ctBB.getManagedBean().getAgreementContractVer());
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
@@ -839,6 +844,30 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				log.debug("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
+				
+				// Start Fix - #31740
+				if(ctBB.getManagedBean().getSelectedAgencyChanges() != null){
+				    if(ctBB.getManagedBean().getSelectedAgencyChanges().size()>0) {
+					   //log.info(" getSelectedAgencyChanges ::::::::::::::::::::::: "+ctBB.getManagedBean().getSelectedAgencyChanges().size());
+					   for (CtAgency ctAgencysz : new ArrayList<CtAgency>(ctBB.getManagedBean().getSelectedAgencyChanges().values())){
+						   if(ctBB.getManagedBean().getAgencyDataDeletion().containsKey(ctAgencysz.getOrgProfile().getOrgProfileId())){
+							   ctBB.getManagedBean().getSelectedAgencyChanges().remove(ctAgencysz.getOrgProfile().getOrgProfileId());
+							  // log.info("Deleted agency profile ID :: "+ctAgencysz.getOrgProfile().getOrgProfileId());
+							  // log.info("Deleted agency name test :: "+ctAgencysz.getOrgProfile().getOrgValidity().getOrgName());
+
+						   }else{
+					    	   // log.info(" agency org profile id :: "+ctAgencysz.getOrgProfile().getOrgProfileId());
+							   // log.info(" agency name test :: "+ctAgencysz.getOrgProfile().getOrgValidity().getOrgName() );
+								contractSO.updateAgencyCeilingAmount(ctAgencysz.getCeilingAmount(), ctAgencysz.getOrgProfile().getOrgProfileId(),resDTO.getCtContractVer().getContractVerId());								    	  
+					      }				   
+						   
+					   }
+					}
+				    
+				    ctBB.getManagedBean().getSelectedAgencyChanges().clear();
+					   //log.info(" getSelectedAgencyChanges after clear() ::::::::::::::::::::::: "+ctBB.getManagedBean().getSelectedAgencyChanges().size());
+				}
+		        // End Fix - #31740
 
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					messageId = MessageConst.INFO_700021;
@@ -1100,16 +1129,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//Validation for contract item details
 		//#28320 - During Notification Setting, no need to validate
 		if ((ctBB.getManagedBean().getContractVer().getCtContractItems() != null) && !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))) {
+			// Bug #28479 - Start
 			for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
 				// Validation for minimum order quantity
 				if (item.getMinimumOrderQty() <= 0) {
-					item.setMinimumOrderQty(1);
-					if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-						setTabValue("IT");
-					} else {
-						setTabCentralValue("IT");
-					}
-					throwExceptions(MessageConst.ERROR_100033, "lbl.ct.min.order.qty");
+					throw new EpException(MessageConst.ERROR_100033,
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 				
 				// Start - 28292
@@ -1122,9 +1148,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					if (item.getMinimumOrderQty() > maxValue) {
 						throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");						
 					}
-					
 				}
-				// End - 28292
+				// End - 28292/#28479
 				
 				// Validation for ceiling quantity
 				double totalCeilingQuantity = 0.0;
@@ -1146,8 +1171,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 
 		// Validation for Deduction
-		if(ctBB.getManagedBean().getContractVer().getCtDeductions() != null 
-				&& ctBB.getManagedBean().getContractVer().getCtDeductions().size() > 0){
+		//#32123 - During Notification Setting, no need to validate
+		if((ctBB.getManagedBean().getContractVer().getCtDeductions() != null 
+				&& ctBB.getManagedBean().getContractVer().getCtDeductions().size() > 0)
+				&& !ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)){
 			for(CtDeduction deduction : ctBB.getManagedBean().getContractVer().getCtDeductions()){
 				if(deduction.getDeductionType() == null ||deduction.getDeductionType().getParameterId() == null ){
 					setTabValue("DE");
@@ -1166,7 +1193,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				/*validation error if deduction clause is empty*/
 				} else {
 						setTabValue("DE");
-						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.deduction.clause.desc");					
+						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.deduction.clause.desc");	
+					   // End Fix - #32123				
 				}
 				/*end*/
 			}  
@@ -1422,44 +1450,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 		}
-		
-		// Start - 28292
-		
-		/*ContractItemSearchBackingBean  contractBB= new ContractItemSearchBackingBean();
-		List<CtContractItem> itemlistService = contractBB.getManagedBean().getServiceListingPagingDataModel().getList();
-		List<CtContractItem> itemlistProduct = contractBB.getManagedBean().getContractListingPagingDataModel().getList();
-
-
-		if(itemlistService != null && !itemlistService.isEmpty()){
-			CommonUtils commonUtils = new CommonUtils();
-			for (CtContractItem ctItem : itemlistService) {
-				String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem
-						.getScRequestItem().getUom().getUomCode());
-				DecimalFormat formatter = new DecimalFormat(minValue);
-				String result = formatter.format(ctItem.getMinimumOrderQty());
-				ctItem.setContractItemId(ctItem.getContractItemId());
-				ctItem.setMinimumOrderQty(Double.parseDouble(result));
-
-				ctBB.onChangeMinimumQty(ctItem);
-
-			}
-		}
-		
-		if(itemlistProduct != null && !itemlistProduct.isEmpty()){
-			CommonUtils commonUtils = new CommonUtils();
-			for (CtContractItem ctItem : itemlistProduct) {
-				String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem
-						.getScRequestItem().getUom().getUomCode());
-				DecimalFormat formatter = new DecimalFormat(minValue);
-				String result = formatter.format(ctItem.getMinimumOrderQty());
-				ctItem.setContractItemId(ctItem.getContractItemId());
-				ctItem.setMinimumOrderQty(Double.parseDouble(result)); 
-
-				ctBB.onChangeMinimumQty(ctItem);
-
-			}
-		}*/
-		// End - 28292
 	}
 
 	/**
@@ -2069,6 +2059,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		SuspensionBackingBean	suspBB = new SuspensionBackingBean();
+		
+		//Development #29214 -performance Hafiz start
+		suspBB.getManagedBean().getSuspensionProductListingPagingDataModel().resetData();
+		suspBB.getManagedBean().getAgencyPersistDataModel().resetData();
+		//Development #29214 -performance Hafiz end
+				
 		suspBB.getManagedBean().setViewOnly(false);
 		suspBB.setSuspensionContractVer(reqDTO);
 		return PROCESS_SUSPEND_PAGE;
@@ -2379,7 +2375,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					supplierBB.getManagedBean().setRemoveFactoring(false);
 					supplierBB.getManagedBean().setUpdateFactoring(false);
 					supplierBB.getManagedBean().setDocType(ParameterConst.DOCTYPE_REQUEST_FACTORING);
-					supplierBB.getManagedBean().setFcRequestType("A");
+					//#32555 start
+					supplierBB.getManagedBean().setFcRequestType(ParameterConst.REQUEST_TYPE_FACTORING);
+					//#32555 end
 				}
 				supplierBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, supplierBB.getManagedBean().getDocType(), supplierBB.getManagedBean().getCtContract().getContractNo()));
 				supplierBB.setCtBB(new ContractBackingBean(supplierBB.getManagedBean().getFileDirectory()));
@@ -3100,4 +3098,48 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 				});
 	}
+	
+	// Start Fix - #30856
+	/**
+	 * The method used to delete Datatable row
+	 * for ctPerformanceBond Datatable,
+	 * No index selection required 
+	 */
+	public void removePerformanceDatatableRow() {
+		try {
+			if (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds() != null) {
+				Iterator<CtPerformanceBond> performanceBond = ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().iterator();
+				while (performanceBond.hasNext()) {
+					CtPerformanceBond  bond = performanceBond.next();
+				      if (bond != null){
+						performanceBond.remove();
+				    }
+				}
+			}
+	
+			ctBB.getManagedBean().setButtonHideActive(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		} finally {
+
+		}
+	}
+	//Start - Fix #29368
+	/**
+	 * The method used to check the bond exempted condition,
+	 * set bondExempted false if no attachment/letter for bond_exemption
+	 * otherwise true
+	 */
+	public void checkandResetBondExempted(){
+				
+		if(ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()){
+			if(ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFileName() == null && ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFilePath() == null){
+				ctBB.getManagedBean().getCtContractAmount().setBondExempted(false);
+			  }
+		   }
+	//End - Fix #29368
+
+	}
+	// End Fix - #30856
 }

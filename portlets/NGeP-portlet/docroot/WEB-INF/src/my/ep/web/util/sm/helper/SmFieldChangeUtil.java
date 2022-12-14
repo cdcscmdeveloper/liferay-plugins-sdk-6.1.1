@@ -26,8 +26,12 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 
 import org.apache.commons.lang.StringUtils;
+// #30660
+import org.apache.log4j.Logger;
 
 public class SmFieldChangeUtil {
+	// #30660
+	private static Logger log = Logger.getLogger(SmFieldChangeUtil.class);
 
 	/**
 	 * Initialized all related application change field in table compare with
@@ -1028,6 +1032,34 @@ public class SmFieldChangeUtil {
 							}
 						}
 					}
+					// #30660 start
+					log.info("<<< Current and Latest Equity Company Info Comparisaon : >>>");
+					log.info("*** CompanyName : " + currEquityCompany.getCompanyName() + " > ");
+//					log.info(latestEquityCompany.getCompanyName() + " ***");
+//					log.info("*** RegNo : " + currEquityCompany.getRegNo() + " > " + latestEquityCompany.getRegNo() + " ***");
+//					log.info("*** ShareAmt :" + currEquityCompany.getShareAmt() + " > :" + latestEquityCompany.getShareAmt() + " ***");
+//					log.info("*** SharePercentage : " + currEquityCompany.getSharePercentage() + " > " + latestEquityCompany.getSharePercentage() + " ***");
+//					log.info("*** SsmData : " + currEquityCompany.isSsmData() + " > " + latestEquityCompany.isSsmData() + " ***");
+//					log.info("*** LocalCapital : " + currEquityCompany.isLocalCapital() + " > " + latestEquityCompany.isLocalCapital() + " ***");
+//					log.info("*** ForeignCapital : " + currEquityCompany.isForeignCapital() + " > " + latestEquityCompany.isForeignCapital() + " ***");
+//					log.info("*** GovAgencyCapital : " + currEquityCompany.isGovAgencyCapital() + " > " + latestEquityCompany.isGovAgencyCapital() + " ***");
+//					log.info("*** GovEquityCapital : " + currEquityCompany.isGovEquityCapital() + " > " + latestEquityCompany.isGovEquityCapital() + " ***");
+//					log.info("*** ShareAmtSsm : " + currEquityCompany.getShareAmtSsm() + " > " + latestEquityCompany.getShareAmtSsm() + " ***");
+//					log.info("<<< Current and Latest Equity Company Address Comparison : >>>");
+//					log.info("*** Address1 : " + currEquityCompany.getSmAddress().getAddress1() + " > " + latestEquityCompany.getSmAddress().getAddress1() + " ***");
+//					log.info("*** Address2 : " + currEquityCompany.getSmAddress().getAddress2() + " > " + latestEquityCompany.getSmAddress().getAddress2() + " ***");
+//					log.info("*** Address3 : " + currEquityCompany.getSmAddress().getAddress3() + " > " + latestEquityCompany.getSmAddress().getAddress3() + " ***");
+//					log.info("*** MapLatitude : " + currEquityCompany.getSmAddress().getMapLatitude() + " > " + latestEquityCompany.getSmAddress().getMapLatitude() + " ***");
+//					log.info("*** MapLongitude : " + currEquityCompany.getSmAddress().getMapLongitude() + " > " + latestEquityCompany.getSmAddress().getMapLongitude() + " ***");
+//					log.info("*** Postcode : " + currEquityCompany.getSmAddress().getPostcode() + " > " + latestEquityCompany.getSmAddress().getPostcode() + " ***");
+//					log.info("*** PmDivision : " + currEquityCompany.getSmAddress().getPmDivision() + " > " + latestEquityCompany.getSmAddress().getPmDivision() + " ***");
+//					log.info("*** AddressSsmNull : " + currEquityCompany.getSmAddress().isAddressSsmNull() + " > " + latestEquityCompany.getSmAddress().isAddressSsmNull() + " ***");
+//					log.info("*** PostcodeSsmNull : " + currEquityCompany.getSmAddress().isPostcodeSsmNull() + " > " + latestEquityCompany.getSmAddress().isPostcodeSsmNull() + " ***");
+//					log.info("*** StateSsmNull : " + currEquityCompany.getSmAddress().isStateSsmNull() + " > " + latestEquityCompany.getSmAddress().isStateSsmNull() + " ***");
+//					log.info("*** CountrySsmNull() : " + currEquityCompany.getSmAddress().isCountrySsmNull() + " > " + latestEquityCompany.getSmAddress().isCountrySsmNull() + " ***");
+//					log.info("*** SsmData : " + currEquityCompany.getSmAddress().isSsmData() + " > " + latestEquityCompany.getSmAddress().isSsmData() + " ***");
+//					log.info("*** DivisionId : " + currEquityCompany.getSmAddress().getDivisionId() + " > " + latestEquityCompany.getSmAddress().getDivisionId() + " ***");
+					// #30660 end
 				}
 			}
 		}

@@ -29,14 +29,16 @@
 				<td>
 					<c:choose>
 						<c:when test="#{isStatusPendingPublicationApproval}">
+							<!-- 25692 -start- -->
 							<p:calendar label="#{lbl['lbl.sc.publish.date']}"
-								disabled="#{approvalBackingBean.managedBean.readOnly}"
+								disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}"
 								mindate="#{approvalBackingBean.handlePublishDate()}"
 								value="#{approvalBackingBean.managedBean.qt.newPublishDate}"
 								id="noticePublish" required="true"
 								maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}"
 								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
 								size="15">
+							<!-- 25692 -end- -->
 								<p:ajax event="dateSelect" process="@this"
 									listener="#{qTScheduleDetailBackingBean.handlePublishedDate}"
 									update="publicationApprovalScheduleDetailsId" />
@@ -45,6 +47,11 @@
 								style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 							</p:inputText>
+							<!-- 28772 -start- -->
+							<p:inputText id="pday" value="#{approvalBackingBean.managedBean.qt.publishDate}" style="width: 65px; text-align: center;" disabled="true">
+									<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" /> 
+							</p:inputText>
+							<!-- 28772 -end- -->
 							<p:message id="noticePublishMsg" for="noticePublish" display="icon" />
 						</c:when>
 						<c:otherwise>
@@ -57,6 +64,11 @@
 								style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 							</p:inputText>
+							<!-- 28772 -start- -->
+							<p:inputText id="pday2" value="#{approvalBackingBean.managedBean.qt.publishDate}" style="width: 65px; text-align: center;" disabled="true">
+									<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" /> 
+							</p:inputText>
+							<!-- 28772 -end- -->
 						</c:otherwise>
 					</c:choose>
 				</td>
@@ -75,6 +87,11 @@
 							style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 						</p:inputText>
+						<!-- 28772 -start- -->
+						<p:inputText id="pday3" value="#{approvalBackingBean.managedBean.qt.proposalStartDate}" style="width: 65px; text-align: center;" disabled="true">
+								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" /> 
+						</p:inputText>
+						<!-- 28772 -end- -->
 					</td>
 				</tr>
 			</c:if>
@@ -101,14 +118,20 @@
 						style="width: 65px;margin-top: 5px;margin-bottom: 0px;">
 						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 					</p:inputText>
+					<!-- 28772 -start- -->
+					<p:inputText id="pday4" value="#{approvalBackingBean.managedBean.qt.closingDate}" style="width: 65px; text-align: center;" disabled="true">
+							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" /> 
+					</p:inputText>
+					<!-- 28772 -end- -->
 				</td>
 			</tr>
 			
 			<c:if
 				test="#{approvalBackingBean.managedBean.qt.sampleReq eq 'true'}">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.sample.closingdate']}" />
-						<!-- <p:outputLabel value="*" styleClass="mandatory" /> --></td>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sc.sample.closingdate']}" />
+					</td>
 					<td><p:inputText
 							label="#{lbl['lbl.sc.sample.closingdate']}"
 							value="#{approvalBackingBean.managedBean.qt.sampleClosingDate}"
@@ -122,6 +145,11 @@
 							style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 						</p:inputText>
+						<!-- 28772 -start- -->
+						<p:inputText id="pday5" value="#{approvalBackingBean.managedBean.qt.sampleClosingDate}" style="width: 65px; text-align: center;" disabled="true">
+							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" /> 
+						</p:inputText>
+						<!-- 28772 -end- -->
 					</td>
 				</tr>
 			</c:if>
@@ -144,16 +172,14 @@
 						style="width: 120px;margin-top:5px;">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+					</p:inputText>
+					<!-- 28772 -start- -->
+					<p:inputText id="pday6" value="#{approvalBackingBean.managedBean.qt.proposalValidityEndDate}" style="width: 65px; text-align: center;" disabled="true">
+							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" /> 
+					</p:inputText>
+					<!-- 28772 -end- -->
+				</td>
 			</tr>
-			<!-- <tr>
-				<td style="width: 200px;"><p:outputLabel
-						value="#{lbl['lbl.sc.qt.expected.loa.date']}" /></td>
-				<td><p:calendar id="publicationLoaDate"
-						value="#{approvalBackingBean.managedBean.qt.expectedLoaDate}"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonly="true"
-						readonlyInput="true" showOn="button" /></td>
-			</tr> -->
 		</table>
 	</p:panel>
 	
@@ -161,11 +187,13 @@
 		<ui:include src="/xhtml/sc/quatationtender/briefingsitevisit/briefingsitevisitdetails.xhtml" />
 	</c:if>
 	
+	<!-- 25692 -start- -->
 	<ac:scRemarkAndAttachment
 		remarkList="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
 		showAttachment="false"
-		readonly="#{approvalBackingBean.managedBean.readOnly}"
+		readonly="#{approvalBackingBean.managedBean.readOnly and !approvalBackingBean.managedBean.approvalEditableSection}"
 		instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.approval.remarks.instruction'] : ''}"
 		autoUpdateValue="#{approvalBackingBean.managedBean.autoUpdate}" />
+	<!-- 25692 -end- -->
 		
 </ui:composition>

@@ -4799,7 +4799,9 @@
 	 
 	 <portlet>
 	 	<portlet-name>scSupplierFinalization</portlet-name>
-	 	<display-name>Supplier Finalization</display-name>
+	 	<!-- 18685 -start- -->
+	 	<display-name>Meeting Decision</display-name>
+	 	<!-- 18685 -end- -->
 	 	<portlet-class>
 	 		org.portletfaces.bridge.GenericFacesPortlet
 	 	</portlet-class>
@@ -4815,8 +4817,10 @@
 	 		<portlet-mode>view</portlet-mode>
 	 	</supports>
 	 	<portlet-info>
-	 		<title>Supplier Finalization</title>
-	 		<short-title>Supplier Finalization</short-title>
+	 		<!-- 18685 -start- -->
+	 		<title>Meeting Decision</title>
+	 		<short-title>Meeting Decision</short-title>
+	 		<!-- 18685 -end- -->
 	 		<keywords></keywords>
 	 	</portlet-info>
 	 	<security-role-ref>
@@ -5633,6 +5637,44 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	<!-- #9569 - START -->
+	<portlet>
+		<portlet-name>SupplierUserMaintenance</portlet-name>
+		<display-name>Supplier User Maintenance</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>
+				/xhtml/sm/userProfileMaintenance/preRenderSmUserMaintenance.xhtml
+			</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Supplier User Maintenance MOF</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+<!-- #9569 - end -->
+
 	<portlet>
 		<portlet-name>SpecCommitteMaintanance</portlet-name>
 		<display-name>Prepare QT Checklist</display-name>
@@ -5848,7 +5890,7 @@
 				<portlet-mode>view</portlet-mode>
 			</supports>
 			<portlet-info>
-				<title>Review / Request Purchase Inquiry</title>
+				<title>Item Inquiry</title>
 				<short-title>Review / Request Purchase Inquiry</short-title>
 				<keywords></keywords>
 			</portlet-info>
@@ -5865,6 +5907,41 @@
 				<role-name>user</role-name>
 			</security-role-ref>
 		</portlet>
+		<!-- 28865 -start- -->
+		<portlet>
+			<portlet-name>ResponsePurchaseInDefault</portlet-name>
+			<display-name>Response Purchase In Default</display-name>
+			<portlet-class>
+				org.portletfaces.bridge.GenericFacesPortlet
+			</portlet-class>
+			<init-param>
+				<name>javax.portlet.faces.defaultViewId.view</name>
+				<value>/xhtml/sc/directpurchase/purchaseindefaultresponse/preRenderPurchaseInDefaultResponse.xhtml</value>
+			</init-param>
+			<expiration-cache>0</expiration-cache>
+			<supports>
+				<mime-type>text/html</mime-type>
+				<portlet-mode>view</portlet-mode>
+			</supports>
+			<portlet-info>
+				<title>Response Purchase In Default</title>
+				<short-title>Response Purchase In Default</short-title>
+				<keywords></keywords>
+			</portlet-info>
+			<security-role-ref>
+				<role-name>administrator</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>guest</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>power-user</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>user</role-name>
+			</security-role-ref>
+		</portlet>
+		<!-- 28865 -end- -->
 		<portlet>
 			<portlet-name>ReviewPurchaseInDefault</portlet-name>
 			<display-name>Review Purchase In Default</display-name>
@@ -7167,9 +7244,39 @@
 		</security-role-ref>
 	</portlet>	
 	
-	
-	
-	
+	<!--  #29487 - View bank details by factoring user_endorsed - Start -->
+	<portlet>
+		<portlet-name>factoringCompanyInformation</portlet-name>
+		<display-name>Factoring Company Information</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/pm/profileInfo/PreRenderFinOrg.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Factoring Company Information</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>	
+	<!--  #29487 - View bank details by factoring user_endorsed - End -->
 	
 	<portlet>
 		<portlet-name>pmLocation</portlet-name>
@@ -10542,5 +10649,106 @@
 			<security-role-ref>
 				<role-name>user</role-name>
 			</security-role-ref>
-		</portlet>
+		</portlet>	
+	<portlet>
+		<portlet-name>cancelLoaApproval</portlet-name>
+		<display-name>Cancel LOA Approval</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/loa/cancellation/cancelLoaApprovalMain.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Cancel LOA Approval</title>
+			<short-title>Cancel LOA Approval</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- Enhancement 25627-start- -->
+	<portlet>
+		<portlet-name>deskOfficerMaintenance</portlet-name>
+		<display-name>Desk Officer Maintenance</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/quatationtender/deskOfficerMaintenance/deskOfficerMaintenanceMain.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Desk Officer Maintenance</title>
+			<short-title>Desk Officer Maintenance</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>		
+	<portlet>
+		<portlet-name>deskOfficerMaintenanceApproval</portlet-name>
+		<display-name>Desk Officer Maintenance Approval</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/quatationtender/deskOfficerMaintenance/approval/deskOfficerMaintenanceApprovalMain.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Desk Officer Maintenance Approval</title>
+			<short-title>Desk Officer Maintenance Approval</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- Enhancement 25627-end- -->
 </portlet-app>

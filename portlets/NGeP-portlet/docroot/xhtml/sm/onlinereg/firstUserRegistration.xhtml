@@ -133,8 +133,9 @@
 						<p:inputText size="40"  rendered="#{!registrationBackingBean.managedBean.sameAsOwner}" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.fullname']}"
 							id="fullName" maxlength="80"  readonly="#{registrationBackingBean.managedBean.sameAsOwner}" 
 							disabled="#{registrationBackingBean.managedBean.sameAsOwner}"
-							value="#{registrationBackingBean.managedBean.smPersonnel.name}" />
-							
+							value="#{registrationBackingBean.managedBean.smPersonnel.name}" >
+							<p:ajax event="change" partialSubmit="true"></p:ajax>
+							</p:inputText>
 						<p:selectOneMenu id="selectName"  rendered="#{registrationBackingBean.managedBean.sameAsOwner}" value="#{registrationBackingBean.managedBean.smPersonnelSelected.identificationNo}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				   			<f:selectItems value="#{registrationBackingBean.managedBean.selectItemsSmPersonnelOwners}"  />
@@ -147,7 +148,9 @@
 						<p:inputText size="40" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.fullname']}"
 							id="fullName" maxlength="80"  readonly="#{registrationBackingBean.managedBean.sameAsOwner}" 
 							disabled="#{registrationBackingBean.managedBean.sameAsOwner}"
-							value="#{registrationBackingBean.managedBean.smPersonnel.name}" />
+							value="#{registrationBackingBean.managedBean.smPersonnel.name}" >
+							<p:ajax event="change" partialSubmit="true"></p:ajax>
+							</p:inputText>
 					</c:if>
 						
 						
@@ -225,6 +228,7 @@
 								value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
 								size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" disabled="#{empty param['disableValidation']}"/>
+								<p:ajax event="change" partialSubmit="true"></p:ajax>
 							</p:inputText>
 						</c:when>
 						
@@ -400,6 +404,7 @@
 						<p:outputLabel value="#{lbl['lbl.sm.state']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
+					<!--#30936-START-->
 					<td class="tdContent"><p:selectOneMenu id="cmbPermState" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId}" style="width:80%">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -408,22 +413,27 @@
 								itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 							<p:ajax event="change"
 								listener="#{registrationBackingBean.populateDistrictByAddType('permenant',false)}"
-								update="pnlUsrInfo,divisionRegLabelPanelId,divisionRegDropdownPanelId,cmbPermDistrict,cmbPermCity" />
+								update="divisionRegLabelPanelId,divisionRegDropdownPanelId,cmbPermDistrict,cmbPermCity" />
 						</p:selectOneMenu>
 						<p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
+					<!--#30936-END-->
 				</tr>
 				<!-- 13320 -->
-         <tr id="">
+				<!--#30936-START-->
+            <tr id="divTrId">
 				<td></td>
 				<td></td>
 				<td class="tdTitle">
-					<h:panelGroup id="divisionRegLabelPanelId" rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.adoptDivision}">
+				<p:outputPanel id="divisionRegLabelPanelId">	
+					<ui:fragment rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.adoptDivision}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
-					</h:panelGroup>
+					</ui:fragment>
+				</p:outputPanel>
 				</td>
 				<td class="tdContent">
-					<h:panelGroup id="divisionRegDropdownPanelId" rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.adoptDivision}">
+				<p:outputPanel id="divisionRegDropdownPanelId">
+					<ui:fragment rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.adoptDivision}">
 						<p:selectOneMenu id="cmbPermDivision"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmDivision.divisionId}"
@@ -437,10 +447,11 @@
 							listener="#{registrationBackingBean.populateDivisionByAddType('permenant', true)}"
 							update="cmbPermDistrict,cmbPermCity" />
 					</p:selectOneMenu>
-					</h:panelGroup>
+					</ui:fragment>
+				</p:outputPanel>
 				</td>
             </tr>
-
+				<!--#30936-END-->
 				<tr>
 					<td class="tdTitle"></td>
 					<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address3}"
@@ -513,11 +524,22 @@
 						</p:outputPanel>
 					</td>
 					
-				<td class="tdTitle" ><p:outputLabel style="float: right" value="#{lbl['lbl.sm.person.composition.role']}    " /> </td>
+				<!-- #30829 - start -->
+				<td class="tdTitle">
+					<p:outputLabel style="float: right" value="#{lbl['lbl.sm.person.composition.role']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<!-- #30829 - end -->
 				<td class="tdContent">
 					<p:outputPanel>
 						<table>
 							<tr>
+							<!-- 30829 - start -->
+							<c:if test="#{registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN and 
+											registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI and 
+											registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN and 
+											registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2}" >
+							<!-- 30829 - end -->				
 								<td><!-- 27609 -->
 									<p:selectBooleanCheckbox disabled="#{registrationBackingBean.managedBean.disableEquity or registrationBackingBean.managedBean.smPersonnel.equityOwnerSsm or !registrationBackingBean.managedBean.smPersonnel.equityOwnerSsm}" value="#{registrationBackingBean.managedBean.smPersonnel.equityOwner}">
 									<p:ajax event="change" update="@([id$=pnlUsrInfo])" listener="#{registrationBackingBean.listenerChangeRole}"
@@ -529,7 +551,16 @@
 								<td>
 									<h:outputText style="float: left" value="#{lbl['lbl.sm.person.equiOwner']}" />
 								</td>
-								<c:if test="#{registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH}">
+							</c:if>
+								<!-- 30829 - start -->
+								<c:if test="#{registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG 
+												and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG 
+												and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK 
+												and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH 
+												and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK 
+												and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH
+												and registrationBackingBean.managedBean.smSupp.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY}">
+								<!-- 30829 - end -->
 									<td><!-- 27609 -->
 										<p:selectBooleanCheckbox disabled="true" value="#{registrationBackingBean.managedBean.smPersonnel.director}"/>
 									</td>
@@ -537,7 +568,13 @@
 										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
 									</td>
 									<td>
-										<p:selectBooleanCheckbox disabled="" value="#{registrationBackingBean.managedBean.smPersonnel.higherManagement}"/>
+										<!-- 30829 - start -->
+										<p:selectBooleanCheckbox disabled="#{registrationBackingBean.managedBean.disableHigherManagement}" value="#{registrationBackingBean.managedBean.smPersonnel.higherManagement}" >
+										<p:ajax event="change" update="@([id$=pnlUsrInfo])" listener="#{registrationBackingBean.listenerChangeRole}"
+										partialSubmit="true" 
+										process="@form" />
+										</p:selectBooleanCheckbox>
+										<!-- 30829 - end -->
 									</td>
 									<td>
 										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.hghMngmt']}" />
@@ -562,11 +599,38 @@
 						<table>
 							<tr>
 								<td>
-									<p:selectBooleanCheckbox disabled="" value="#{registrationBackingBean.managedBean.smPersonnel.management}"/>
+								<!--#30829-START-->
+									<p:selectBooleanCheckbox disabled="#{registrationBackingBean.managedBean.disableManagement}" value="#{registrationBackingBean.managedBean.smPersonnel.management}">
+									<p:ajax event="change" update="@([id$=pnlUsrInfo])" listener="#{registrationBackingBean.listenerChangeRole}"
+									partialSubmit="true" 
+									process="@form" /></p:selectBooleanCheckbox>
+								<!--#30829-End-->
 								</td>
 								<td>
 									<h:outputText style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" />
 								</td>
+							<!--#30829-START-->
+							<c:if test="#{registrationBackingBean.managedBean.smAppl.supplierType == SupplierManagementConst.STYPE_CONSULTANT}">
+								<td>
+									<p:selectBooleanCheckbox disabled="#{registrationBackingBean.managedBean.disableProf}"  value="#{registrationBackingBean.managedBean.smPersonnel.prof}">
+									<p:ajax event="change" update="@([id$=pnlUsrInfo])" listener="#{registrationBackingBean.listenerChangeRole}"
+									partialSubmit="true" 
+									process="@form" /></p:selectBooleanCheckbox>
+								</td>
+								<td>
+									<h:outputText style="float: left"  value="#{lbl['lbl.sm.professional']}" />
+								</td>
+								<td>
+									<p:selectBooleanCheckbox disabled="#{registrationBackingBean.managedBean.disableSemiProf}"  value="#{registrationBackingBean.managedBean.smPersonnel.semiProf}">
+									<p:ajax event="change" update="@([id$=pnlUsrInfo])" listener="#{registrationBackingBean.listenerChangeRole}"
+									partialSubmit="true" 
+									process="@form" /></p:selectBooleanCheckbox>
+								</td>
+								<td>
+									<h:outputText style="float: left"  value="#{lbl['lbl.sm.professional.semi']}" />
+								</td>
+							</c:if>
+							<!--#30829-END-->
 								<td>
 									<p:selectBooleanCheckbox disabled="#{registrationBackingBean.managedBean.disableStaff}"  value="#{registrationBackingBean.managedBean.smPersonnel.clerical}">
 									<p:ajax event="change" update="@([id$=pnlUsrInfo])" listener="#{registrationBackingBean.listenerChangeRole}"
@@ -576,6 +640,7 @@
 								<td>
 									<h:outputText style="float: left"  value="#{lbl['lbl.sm.person.stf']}" />
 								</td>
+								
 							</tr>
 						</table>
 					</p:outputPanel>

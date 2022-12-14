@@ -11,7 +11,6 @@
 		<cc:attribute name="update" required="true" default="@this" />
 		<cc:attribute name="title" default="" />
 		<cc:attribute name="content" default="" />
-		<!-- <cc:attribute name="postSignAction" method-signature="void action()" /> -->
 		<cc:attribute name="widget" default="" />
 		<cc:attribute name="okAction" required="true" default="" />
 		<cc:attribute name="cancelAction" default="" />
@@ -19,27 +18,55 @@
 		<cc:attribute name="height" default="200" />
 		<cc:attribute name="resetInput" default="" />
 		<cc:attribute name="okProcess" default="@this" />
+		<!-- 25692 -start- -->
+		<cc:attribute name="style" default="" />
+		<cc:attribute name="dialogCSS" default="" />
+		<cc:attribute name="loadingWidget" default=""/>
 	</cc:interface>
 
 	<cc:implementation>
+		<style>
+			#{cc.attrs.dialogCSS}
+			.confirm-ui-dialog{
+				max-width: 500px;
+				width: auto;
+			}
+			.confirm-ui-dialog .ui-dialog-content table{
+				margin: auto;
+			}
+			.confirm-ui-dialog .ui-dialog-content table td label {
+				white-space: normal;
+				padding-left: 5px;
+				display: inline !important;
+				float: none !important;
+			}
+			.confirm-ui-dialog .ui-dialog-content{
+				padding: 1em 1em !important;
+				height: auto !important;
+			}
+			.confirm-ui-dialog .ui-dialog-content span img{
+				margin-top: -4px;
+			}
+		
+		</style>
 		<ui:param name="confirmationheader" value="#{cc.attrs.title}" />
-		<ui:param name="confirmationContent" value="#{cc.attrs.content}" />
-		<!-- <ui:param name="confirmationMethod" value="#{cc.attrs.postSignAction}" /> -->
+		<ui:param name="confirmationContent" value="#{cc.attrs.content}" />		
 		
-		
-				
+		<!-- 25692 -start- -->
 		<p:dialog id="#{cc.attrs.id}" widgetVar="#{cc.attrs.widget}"
 			header="#{confirmationheader}" resizable="false"
 			width="#{cc.attrs.width}" height="#{cc.attrs.height}"
-			closable="false" modal="true">
+			closable="false" modal="true" style="#{cc.attrs.style}">
+		<!-- 25692 -end- -->
 			
 			<p:blockUI block="#{cc.attrs.id}Popup" widgetVar="confirmPopupBlockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-			<h:panelGroup id="#{cc.attrs.id}Popup">
+			<h:panelGroup id="#{cc.attrs.id}Popup" layout="block">
 			<table>
-				<tr>
-					<td align="center"><h:graphicImage
+				<tr><!-- #28765 START -->
+					<td align="center" style="white-space: normal; word-wrap: break-word !important;">
+					<!-- #28765 END --><h:graphicImage
 							value="/css/images/design/exclamation.png" /> <p:outputLabel
 							value="#{confirmationContent}" /></td>
 				</tr>

@@ -60,6 +60,9 @@ public class SmSectionEditorVO implements Serializable {
 	private boolean appEditSiteVisit;
 	private boolean suppEditSiteVisit;
 
+	//#31230
+	private boolean hasOverlapped;
+	
 	public boolean isPoEditCompBasic() {
 		return poEditCompBasic;
 	}
@@ -308,4 +311,13 @@ public class SmSectionEditorVO implements Serializable {
 		this.suppEditSiteVisit = suppEditSiteVisit;
 	}
 
+	//#31230 START
+	public boolean isHasOverlapped() {
+		return hasOverlapped;
+	}
+
+	public void setHasOverlapped(boolean hasOverlapped) {
+		this.hasOverlapped = hasOverlapped;
+	}
+	//#31230 END
 }

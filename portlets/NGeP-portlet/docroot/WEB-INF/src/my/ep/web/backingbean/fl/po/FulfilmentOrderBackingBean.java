@@ -505,6 +505,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						if(coCancelDataType.getOrderCancelDetails().getErrorIds().contains(",")) {
 							errorId = coCancelDataType.getOrderCancelDetails().getErrorIds().split(",")[0];
 						}
+						//33177-start
+						if(coCancelDataType.getOrderCancelDetails().getErrorIds().contains(";")) {
+							errorId = coCancelDataType.getOrderCancelDetails().getErrorIds().split(";")[0];
+						}
+						//33177-End
 						errReq.setErrorId(new Long(errorId));
 						FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 						getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
@@ -633,6 +638,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						if(poCancelReqType.getOrderCancelDetails().getErrorIds().contains(",")) {
 							errorId = poCancelReqType.getOrderCancelDetails().getErrorIds().split(",")[0];
 						}
+						//33177-start
+						if(poCancelReqType.getOrderCancelDetails().getErrorIds().contains(";")) {
+							errorId = poCancelReqType.getOrderCancelDetails().getErrorIds().split(";")[0];
+						}
+						//33177-end
 						errReq.setErrorId(new Long(errorId));
 						FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 						getManagedBean().setGfmasErrorCode(errRes.getErrorCode());

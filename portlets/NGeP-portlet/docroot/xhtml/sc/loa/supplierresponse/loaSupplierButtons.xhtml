@@ -36,7 +36,7 @@
 				<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
 					action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeLetterOfAward, lOADetailBackingBean.managedBean.scLoa.loaId, true)}"
 					immediate="true" 
-					rendered="#{!empty lOADetailBackingBean.managedBean.backToPreviousPage}" />
+					rendered="#{!empty lOADetailBackingBean.managedBean.backToPreviousPage and !isLoaReviseStatus}" />
 								
 				<ui:param name="readOnlyTask" value="#{lOADetailBackingBean.managedBean.readOnly}" />
 				<ui:decorate
@@ -56,8 +56,23 @@
 									value="#{lOADetailBackingBean.managedBean.outComes}">
 									<ui:param name="buttonLabel"
 										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+									<!-- Start #22211 -->
+									<h:panelGroup rendered="#{bpmAction == 'RESUBMIT' and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION}">
+										<p:commandButton value="#{lbl[buttonLabel]}"
+											rendered="#{!lOADetailBackingBean.managedBean.qtCancelRequested}"
+											styleClass="ui-button" update="@form"
+											partialSubmit="true" process="@all"
+											action="#{lOADetailBackingBean.updateReviseBPMTaskActionWithoutQt(bpmAction)}"
+											onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+											<f:setPropertyActionListener value="#{bpmAction}"
+												target="#{lOADetailBackingBean.managedBean.action}" />
+											<f:setPropertyActionListener value="false"
+												target="#{lOADetailBackingBean.managedBean.autoUpdate}" />										
+										</p:commandButton>
+									</h:panelGroup>
+									<!-- End #22211 -->
 									<!-- Enhancement #21573 -->
-									<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
+									<h:panelGroup rendered="#{bpmAction == 'ACCEPT' and !isLoaReviseStatus and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId ne QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION}">
 										<p:commandButton value="#{lbl[buttonLabel]}"
 											rendered="#{!lOADetailBackingBean.managedBean.qtCancelRequested}"
 											styleClass="ui-button" update="@form"
@@ -71,7 +86,7 @@
 										</p:commandButton>
 									</h:panelGroup>
 		
-									<h:panelGroup rendered="#{bpmAction == 'REJECT'}">
+									<h:panelGroup rendered="#{bpmAction == 'REJECT' and !isLoaReviseStatus and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId ne QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION}">
 										<p:commandButton value="#{lbl[buttonLabel]}"
 											rendered="#{!isMultipleLOI}"
 											styleClass="ui-button" onstart="blockWidget.show();"
@@ -80,13 +95,15 @@
 											partialSubmit="true" process="@all" update="@form" />
 									</h:panelGroup>
 								</ui:repeat>
-								
-								<ac:spkiPopup id="spkiPopup"
+								<h:panelGroup rendered="#{!isLoaReviseStatus}">
+									<ac:spkiPopup id="spkiPopup"
 									password="#{lOADetailBackingBean.managedBean.spkiBackingBean.password}"
 									challengeAns1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
 									challengeQues1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
 									postSignAction="#{lOADetailBackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" 
 									enableAutoUpdate="#{lOADetailBackingBean.enableAutoUpdate()}" />
+								</h:panelGroup>
+								
 							</c:when>
 						</c:choose>
 							

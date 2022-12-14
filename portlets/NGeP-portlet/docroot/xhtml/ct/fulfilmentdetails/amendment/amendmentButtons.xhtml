@@ -15,6 +15,7 @@
 			challengeQues1="#{amendmentBackingBean.managedBean.spkiBackingBean.challengeQues1}"
 			postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(spkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{amendmentBackingBean.enableAutoUpdate()}" />
+
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
@@ -43,9 +44,10 @@
 					</ui:repeat>
 					</ui:define>
 					</ui:decorate>
-					</td>
+				</td>
 			</tr>
 		</table>
+		
 	<p:remoteCommand update=":form:panelHeaderException"
 		actionListener="#{amendmentBackingBean.showCompleteButton}"
 		name="showCompleteBtn" />

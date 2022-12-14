@@ -52,19 +52,9 @@
 	<ui:decorate template="specColumnQuestionView.xhtml">
 		<ui:define name="qtySection">
 			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.quantity']}">
-				<h:panelGroup rendered="#{isPriceTypeTier and isSpecTypeFinancial}">
-					<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.fromQty}" rendered="#{isQuestionTypeItem}">
-						<f:converter converterId="dynamicNumberConverter" />
-						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
-					</h:outputText>
-					<h:outputText value=" #{lbl['lbl.sc.qty.and.above']}" rendered="#{isQuestionTypeItem and empty tplSpecAnswer.tplSpecTierQty.toQty}" />
-					<h:outputText value=" - " rendered="#{isQuestionTypeItem and !empty tplSpecAnswer.tplSpecTierQty.toQty}" />
-					<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.toQty}" rendered="#{isQuestionTypeItem and !empty tplSpecAnswer.tplSpecTierQty.toQty}">
-						<f:converter converterId="dynamicNumberConverter" />
-						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
-					</h:outputText>
-				</h:panelGroup>
-				<h:panelGroup rendered="#{((!isPriceTypeTier and isSpecTypeFinancial) or !isSpecTypeFinancial) and !isRepeated}">
+				<!-- 11715 danial -start- -->
+				<h:panelGroup rendered="#{(isSpecTypeFinancial or !isSpecTypeFinancial) and !isRepeated}">
+				<!-- 11715 danial -end- -->	
 					<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.clQuantity}" rendered="#{isQuestionTypeItem  and (empty templateSpecBean.specMaster.tplSpecZone or !templateSpecBean.specMaster.qtyByZone)}">
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
@@ -88,7 +78,22 @@
 					</p:commandButton>
 				</h:panelGroup>
 			</p:column>
-			
+			<!-- 11715 danial -start- -->
+			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.tier.title']}" rendered="#{isPriceTypeTier and isSpecTypeFinancial}">
+				<h:panelGroup rendered="#{isPriceTypeTier and isSpecTypeFinancial}">
+					<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.fromQty}" rendered="#{isQuestionTypeItem}">
+						<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
+					</h:outputText>
+					<h:outputText value=" #{lbl['lbl.sc.qty.and.above']}" rendered="#{isQuestionTypeItem and empty tplSpecAnswer.tplSpecTierQty.toQty}" />
+					<h:outputText value=" - " rendered="#{isQuestionTypeItem and !empty tplSpecAnswer.tplSpecTierQty.toQty}" />
+					<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.toQty}" rendered="#{isQuestionTypeItem and !empty tplSpecAnswer.tplSpecTierQty.toQty}">
+						<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
+					</h:outputText>
+				</h:panelGroup>
+			</p:column>
+			<!-- 11715 danial -end- -->
 			<p:column style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal and (!isSpecificationReq or isSqSpec)}" >
 				<p:commandLink id="zoneName"
 					oncomplete="zoneLocPopup.show();"
@@ -117,7 +122,8 @@
 			value="#{tplSpecAnswer.ratePerUom}"
 			disabled="#{!editable}" required="false"
 			rendered="#{isQuestionTypeItem}"  maxlength="19"
-			label="#{lbl['lbl.tpl.spec.content.unit.price']}">
+			label="#{lbl['lbl.tpl.spec.content.unit.price']}"
+			onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 -->
 			<p:ajax event="change" partialSubmit="true" process="@this" update="@this, ratePerUomMsg, ansYearPG, ansPG, @(.calcAmount)" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
 			<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 			<f:validateDoubleRange minimum="0.01" maximum="99999999999.99" />
@@ -157,18 +163,22 @@
 		</f:facet>
 		
 		<h:panelGroup id="ansPG">
+			<!-- 25201 -start- -->
 			<p:inputTextarea id="answerText" style="width:calc(100% - 40px);" value="#{tplSpecAnswer.answerText}" 
 			onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
 				rendered="#{isAnswerTypeText}" required="false" rows="1" 
-				label="#{lbl[answerlbl]}">
+				label="#{lbl[answerlbl]}" disabled="#{!editable}">
+				<!-- 25201 -end- -->
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerTextMsg" />
 				<f:validateLength for="answerText" maximum="1000" />
 			</p:inputTextarea>
 			<p:message id="answerTextMsg" for="answerText" display="icon" rendered="#{isAnswerTypeText}" />
+			<!-- 25201 -start- -->
 			<p:inputText id="answerNumeric" style="width:calc(100% - 40px); text-align:right;" 
 				value="#{tplSpecAnswer.answerNumeric}" maxlength="19"
 				rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}" required="false"
-				label="#{lbl[answerlbl]}">
+				label="#{lbl[answerlbl]}" disabled="#{!editable}">
+				<!-- 25201 -end- -->
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerNumericMsg" />
 			</p:inputText>
@@ -178,10 +188,12 @@
 				rendered="#{isAnswerTypeNumeric and (isSpecTypeFinancial and !isPriceTypeTier)}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
+			<!-- 25201 -start- -->
 			<h:selectOneMenu id="answerCompliance" style="width:calc(100% - 30px);" 
 				value="#{tplSpecAnswer.answerCompliance}" 
 				rendered="#{isAnswerTypeDropdown}" required="false"
-				label="#{lbl[answerlbl]}">
+				label="#{lbl[answerlbl]}" disabled="#{!editable}">
+				<!-- 25201 -end- -->
 				<f:selectItems value="#{templateSpecBackingBean.getDropdownCodeValues(ParameterTypeConst.yesNoFlag)}" />
 			</h:selectOneMenu>
 			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown}" />

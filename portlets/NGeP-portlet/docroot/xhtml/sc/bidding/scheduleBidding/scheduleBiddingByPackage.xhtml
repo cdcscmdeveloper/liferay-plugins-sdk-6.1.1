@@ -15,20 +15,28 @@
 					<td><h:outputText value="* " styleClass="mandatory" /> <p:outputLabel
 							id="startDateByPackage" value="#{lbl['lbl.sc.bidding.start']}" /></td>
 
-					<td><ac:dateTime id="scheduleBidPackageStartDate"
+					<td>
+						<!-- 30451,17376 -start- -->
+						<ac:dateTime id="scheduleBidPackageStartDate"
 							mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
 							postUpdateListener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleBiddingBB.managedBean.bidScheduleList[0])}"
 							required="true" label="#{lbl['lbl.sc.bidding.start']}"
 							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].startDate}"
-							update="@([id$=scheduleBidPackageEndDate],[id$=byPackageStartDateMsg])">
+							update="@([id$=scheduleBidPackageEndDate],[id$=byPackageStartDateMsg])"
+							disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+						<!-- 30451,17376 -end- -->
 						</ac:dateTime> <p:message id="byPackageStartDateMsg" showDetail="false"
 							for="scheduleBidPackageStartDate" display="icon" /></td>
 					<td><p:spacer width="10"></p:spacer></td>
 					<td><p:outputLabel id="endDateByPackage"
 							value="#{lbl['lbl.sc.bidding.end']}" /></td>
-					<td><p:inputText id="scheduleBidPackageEndDate"
+					<td>
+						<!-- 30451,17376 -start- -->
+						<p:inputText id="scheduleBidPackageEndDate"
 							readonly="true"
-							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].endDate}">
+							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].endDate}"
+							disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+							<!-- 30451,17376 -end- -->
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 						</p:inputText></td>
@@ -36,9 +44,13 @@
 					<td><h:outputText value="*" styleClass="mandatory" /> <p:outputLabel
 							id="durationByPackage" value="#{lbl['lbl.sc.duration.hours']}" /></td>
 
-					<td><p:selectOneMenu id="bidSchedulePackageDuration"
+					<td>
+						<!-- 30451,17376 -start- -->
+						<p:selectOneMenu id="bidSchedulePackageDuration"
 							required="true"
-							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].duration}">
+							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].duration}"
+							disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+							<!-- 30451,17376 -end- -->
 							<f:selectItems
 								value="#{scheduleBiddingBB.managedBean.selectItems}"
 								var="selectItem" itemLabel="#{selectItem.label}"
@@ -102,8 +114,11 @@
 					<ac:iconTooltip
 						value="#{lbl['lbl.sc.min.decrement.block.tooltip']}" />
 				</f:facet>
+				<!-- 30451,17376 -start- -->
 				<p:inputText id="decrementAmtByPackage" style="text-align : right"
-					maxlength="19" value="#{bidItem.decrementAmt }">
+					maxlength="19" value="#{bidItem.decrementAmt }"
+					disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
+					<!-- 30451,17376 -end- -->
 					<p:ajax event="change" process="@this" partialSubmit="true" />
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"

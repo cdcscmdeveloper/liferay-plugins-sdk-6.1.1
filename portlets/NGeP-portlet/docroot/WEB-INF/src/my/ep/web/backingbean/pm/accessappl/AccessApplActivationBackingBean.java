@@ -229,7 +229,6 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 	public String activateAccount() {
 		log.info("activateAccount");
 		//validateActivationAccessAppl();
-				
 		StringBuilder keyStr = new StringBuilder();
 		keyStr.append(getManagedBean().getAccessAppl().getAccessApplId());
 		keyStr.append(activationKey);
@@ -344,7 +343,7 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 	private boolean validateUserActive(PmAccessAppl accessAppl){
 		boolean isValid = true;
 		PmUser user = PmCommonUtil.retrieveUserByIdNo(accessAppl.getIdentificationNo());
-		if(user!=null){
+		if(user!=null && !user.isRecordStatus()){//#30851 add check if user inactive 
 			isValid = false;
 		}
 		return isValid;

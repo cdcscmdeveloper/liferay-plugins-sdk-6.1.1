@@ -16,12 +16,29 @@
 		<table width="100%">
 			<tr>
 				<td align="right">
-				
-				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-					action="#{specMaintenanceBB.gotoSpecMaintenanceSearchPage}" rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.taskId eq null}"
-					partialSubmit="true"
-					process="@this"
-					update="@this" />
+					<!-- 25692#95 - start --> 
+					<c:choose>
+						<c:when
+							test="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.taskId eq null and empty specMaintenanceBB.managedBean.previousPage}">
+							<p:commandButton value="#{lbl['lbl.btn.back']}"
+								style="float:left;"
+								action="#{specMaintenanceBB.gotoSpecMaintenanceSearchPage}"
+								rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.taskId eq null and empty specMaintenanceBB.managedBean.previousPage}"
+								partialSubmit="true" process="@this" update="@this" />
+						</c:when>
+						<c:when
+							test="#{(not empty specMaintenanceBB.managedBean.previousPage)}">
+							<!-- 29464 -start- -->
+							<p:commandButton value="#{lbl['lbl.btn.back']}"
+								style="float:left;"
+								action="#{specMaintenanceBB.backToQtScreen()}"
+								rendered="#{(not empty specMaintenanceBB.managedBean.previousPage)}"
+								partialSubmit="true" process="@this" update="@this"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+							<!-- 29464 -end- -->
+						</c:when>
+					</c:choose> 
+					<!-- 25692#95 - end --> 
 			<ui:fragment rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen ne specificationBackingBean.getSpecMaintenance()}">
 				<ui:repeat var="bpmAction"
 						value="#{specificationBackingBean.managedBean.outComes}">
@@ -34,7 +51,8 @@
 								styleClass="ui-button" style="float:right;"
 								action="#{specificationBackingBean.specCommitteBpmTask(bpmAction)}" />
 						</ui:fragment>
-					</ui:repeat> <ui:fragment
+					</ui:repeat>
+					<ui:fragment
 						rendered="#{!specificationBackingBean.managedBean.readOnly}">
 						<p:commandButton value="#{lbl['lbl.btn.save']}" update="@all"
 							style="float:right;" onstart="blockWidget.show();"
@@ -73,6 +91,29 @@
 			</tr>
 		</table>
 
+		<!-- 25638 start -->
+		<p:dialog id="reviseSCDlgs" widgetVar="reviseSCDlgs"
+			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+			resizable="false" width="400" height="75" closable="false">
+			<table>
+				<tr>
+					<td align="center">
+						<h:graphicImage value="/css/images/design/exclamation.png" /> 
+						<p:outputLabel value="#{lbl['lbl.sc.dialog.confirm.to.revise']}" />
+					</td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="reviseSCDlgs.hide();"
+					action="#{specificationBackingBean.reviseSC}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="reviseSCDlgs.hide();" type="button" />
+			</div>
+		</p:dialog>
+		<!-- 25638 end -->
+
 		<p:dialog id="reviceApprovalDlgs" widgetVar="reviceApprovalDlgs"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
 			resizable="false" width="400" height="75" closable="false">
@@ -92,7 +133,6 @@
 					onclick="reviceApprovalDlgs.hide();" type="button" />
 			</div>
 		</p:dialog>
-
 
 		<p:dialog id="technicalStandardDlgsSubmit"
 			widgetVar="technicalStandardChecklistDlgsSubmit"
@@ -139,8 +179,7 @@
 					oncomplete="financialStandardChecklistDlgsSubmit.hide();" />
 			</div>
 		</p:dialog>
-		
-		
+
 		<p:dialog id="revicespecMaintenanceEndorsmentDlgs" widgetVar="revicespecMaintenanceEndorsmentDlgs"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
 			resizable="false" width="400" height="75" closable="false">

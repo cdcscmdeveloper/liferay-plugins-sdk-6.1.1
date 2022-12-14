@@ -10,6 +10,9 @@
 		<h:outputText value="#{lbl['lbl.ct.panel.contract']}"/>
 		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.fulfilment.dtls']}"/>
    	</f:facet>
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.committee.member.revise']}" escape="false" 
+		rendered="#{(ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingSignOff or
+			ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingChairpersonSignOff)}"/><br/>
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.mandatory']}" escape="false" /><br/><br/>
 	<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
 		<h:panelGroup style="width:765px;" >
@@ -43,7 +46,7 @@
 					<td>
 						<p:inputText for="contractAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 			   				value="#{ctBackingBean.managedBean.ctContractAmount.contractAmount}"
-			   				disabled="#{ctBackingBean.managedBean.viewContract
+			   				disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment
 						     		or ctBackingBean.managedBean.disableContractAmount}">
@@ -69,7 +72,7 @@
 					<td>
 						<p:inputText for="gstAmount" styleClass="ppRightBtn"  
 						     maxlength="18" style="width:130px;"
-						     disabled="#{ctBackingBean.managedBean.viewContract
+						     disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment
 						     		or ctBackingBean.managedBean.disableGstAmount}"
@@ -100,7 +103,7 @@
 					<td>
 						<p:inputText for="staxAmount" styleClass="ppRightBtn"  
 						     maxlength="18" style="width:130px;"
-						     disabled="#{ctBackingBean.managedBean.viewContract
+						     disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 						     or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment
 						     or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 						     or ctBackingBean.managedBean.disableStaxAmount}"	
@@ -131,7 +134,7 @@
 					</td> 
 					<td><p:inputText id="dperiod" styleClass="ppRightBtn"  style="width:45px;" required="true"
 		              		maxlength="4" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"
-		              		disabled="#{ctBackingBean.managedBean.viewContract 
+		              		disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 		              		or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}" label="#{lbl['lbl.ct.delivery.period']}" />
                 		<p:spacer width="3"/>
                 		<h:outputText value="#{lbl['lbl.ct.days']}" />
@@ -169,7 +172,7 @@
 		<h:panelGrid  style="width:265px; margin-left:5px">
 		   <h:panelGrid columns="3" rendered="#{!ctBackingBean.managedBean.directPurchase}">
 			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.contractVer.ctContractValue.concession}"
-			 	 disabled="#{ctBackingBean.managedBean.viewContract 
+			 	 disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 			 	 or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}">
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
@@ -179,7 +182,7 @@
 			 </h:panelGrid>
 		   </h:panelGrid>
 		    <h:panelGrid columns="3">
-			       <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.contractVer.panel
+			       <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.contractVer.panel or ctBackingBean.managedBean.notificationSetting
 			       		or ctBackingBean.getValueFromAmendment() or  ctBackingBean.managedBean.disableAmendDetails}" 
 			             value="#{ctBackingBean.managedBean.contractVer.ctContractValue.pid}"  style="text-align:top;">
 			              <p:ajax event="change"  update=":form:purchaseInDefaultPanel" process="@this"></p:ajax>
@@ -193,7 +196,7 @@
 		   <h:panelGrid columns="3" 
 		     rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.managedBean.ctContractAmount.bondReq}">
 			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondExempted}"
-				 disabled="#{ctBackingBean.managedBean.viewContract
+				 disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}" style="text-align:top;">
 				 <p:ajax event="change" update="@all" process="@all" partialSubmit="true"></p:ajax>
@@ -243,7 +246,7 @@
 			 <p:commandButton oncomplete="uploadBondExemptedDlg.show();return false;"
 				 update="uploadBondExemptedPg, uploadBondExemptedDlg"  icon="ui-icon-upload"
 				  rendered="#{ctBackingBean.managedBean.ctContractAmount.bondExemptedFilePath == null}"
-				 disabled="#{ctBackingBean.managedBean.viewContract
+				 disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}"/>	
 		     <h:commandLink value="#{ctBackingBean.managedBean.ctContractAmount.bondExemptedFileName}" 
@@ -252,7 +255,7 @@
 		     <p:spacer width="3"/>
 		         <p:commandLink onclick="bondExemptedDocDlg.show();" 
 			    	rendered="#{ctBackingBean.managedBean.ctContractAmount.bondExemptedFilePath != null}"
-			     	disabled="#{ctBackingBean.managedBean.viewContract
+			     	disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 						or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 						or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}">
 			   				    <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>

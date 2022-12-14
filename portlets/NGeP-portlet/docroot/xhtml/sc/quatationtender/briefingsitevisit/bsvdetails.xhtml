@@ -52,15 +52,15 @@
 					<h:outputText value="#{briefingdtls.bsvDesc}" />
 				</h:panelGroup>
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.date.time']}"
+			<!-- 28772 -start- -->
+			<p:column headerText="#{lbl['lbl.sc.date.time.day']}"
 				style="white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{briefingdtls.bsvDate}">
 					<f:convertDateTime
-						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT_WITH_DAY}" />
 				</h:outputText>
 			</p:column>
-
+			<!-- 28772 -end- -->
 			<p:column headerText="#{lbl['lbl.sc.location']}"
 				style="white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{briefingdtls.location}" />,<br/>
@@ -167,15 +167,15 @@
 							<h:outputText value="#{sitevisitdtls.bsvDesc}" />
 						</h:panelGroup>
 					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sc.date.time']}"
+					<!-- 28772 -start- -->
+					<p:column headerText="#{lbl['lbl.sc.date.time.day']}"
 						style="white-space: normal;word-wrap: break-word;">
 						<h:outputText value="#{sitevisitdtls.bsvDate}">
 							<f:convertDateTime
-								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT_WITH_DAY}" />
 						</h:outputText>
 					</p:column>
-
+					<!-- 28772 -end- -->
 					<p:column headerText="#{lbl['lbl.sc.location']}"
 						style="white-space: normal;word-wrap: break-word;">
 						<h:outputText value="#{sitevisitdtls.location}" />,<br/>
@@ -234,34 +234,6 @@
 					content="#{lbl['lbl.sc.dialog.confirm.sitevisit.details.dtls']}"
 					update="@form" >
 				</ac:confirmationPopup>
-				<!--  commentd by VidyasagarReddy  -->
-				<!-- <h:panelGroup id="panelGrpId" rendered="#{bsvdtlbean.sitevisitList.size() ge 2}">
-					<table style="width: 100%" border="0">
-						<tr>
-							<td style="width: 27px;"><ac:iconTooltip
-									value="#{lbl['lbl.sc.qt.attendance.tooltip']}" /></td>
-							<td style="width: 145px;"><p:outputLabel
-									value="#{lbl['lbl.sc.qt.attendance.site']}" /></td>
-							<td style="width: 145px;"><p:selectOneRadio
-									disabled="#{!isBSVEnabled}"
-									value="#{bsvdtlbean.scQtBsv.allSiteVisitReq}">
-									<f:selectItem itemLabel="#{lbl['lbl.sc.qt.all']}"
-										itemValue="true" />
-									<f:selectItem itemLabel="#{lbl['lbl.sc.qt.atleast']}"
-										itemValue="false" />
-								</p:selectOneRadio></td>
-							<td><h:panelGroup id="minSiteVisitAtt">
-									<ui:fragment rendered="#{!bsvdtlbean.scQtBsv.allSiteVisitReq}">
-										<p:inputText id="minSiteVisitAttss" size="5"
-											value="#{bsvdtlbean.scQtBsv.minSiteVisitAttend}"
-											readonly="#{bsvdtlbean.scQtBsv.allSiteVisitReq}">
-											<p:ajax event="change" process="@this" partialSubmit="true" />
-										</p:inputText>
-									</ui:fragment>
-								</h:panelGroup></td>
-						</tr>
-					</table>
-				</h:panelGroup> -->
 			</p:panel>
 		</h:panelGroup>
 	</h:panelGroup>

@@ -421,12 +421,26 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 								RoleCode.SUPPLIER_TEMP.value())) {
 					getManagedBean().setSupplierTmpPersonnel(personnel);
 				}
-				// #29695 - start
-				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL) {
-					personnel.setFreeSoftCert(true);
-				// #29695 - end
+					/**
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - Start	
+					 */
+				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL || personnel.getEpRole().equals(
+                        RoleCode.MOF_SUPPLIER_USER.value())) {
+					personnel.setFreeSoftCert(false);
+					amountPerPersonnel = SmRuleHelper.getInstance()
+							.getSoftCertFee();
+					amount = amount.add(amountPerPersonnel);
+					/**
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - End
+					 */
 				} else {
+					/**
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - Start	
+					 */
 					personnel.setFreeSoftCert(true);
+					/**
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - End
+					 */
 				}
 			} else {
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
@@ -1166,6 +1180,15 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				&& !StringUtils.isBlank(appl.getApplType()) && appl
 				.getApplType().equals(SupplierManagementConst.ACC_BASIC)) ? true
 				: false;
+		// #31462 - start
+		// check role for downgrade MOF
+		if (!basic
+				&& (getManagedBean().getLoginUserPersonnelInfo().getEpRole()
+						.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || getManagedBean().getLoginUserPersonnelInfo()
+						.getEpRole().equals(RoleCode.BASIC_SUPPLIER_USER.value()))) {
+			basic = true;
+		}
+		// #31462 - end
 		String businessType = (appl != null && appl.getSmSupplier() != null) ? appl
 				.getSmSupplier().getBusinessType() : StringUtils.EMPTY;
 		List<PmDocument> softcertSuppDocList = new ArrayList<PmDocument>();
@@ -1187,9 +1210,13 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					reqDTO.setCompanyTypeCode(businessType);
 					reqDTO.setOwner(softcertUploadSuppDocVO.getPersonnel()
 							.isEquityOwner());
-					reqDTO.setFirstUser(softcertUploadSuppDocVO.getPersonnel()
-							.getEpRole().equals(RoleCode.SUPPLIER_TEMP.value()) ? true
-							: false);
+					// #31462 - start
+					reqDTO.setFirstUser((softcertUploadSuppDocVO.getPersonnel().getEpRole()
+							.equals(RoleCode.SUPPLIER_TEMP.value())
+							|| softcertUploadSuppDocVO.getPersonnel().getEpRole()
+									.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || softcertUploadSuppDocVO
+							.getPersonnel().getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value())) ? true : false);
+					// #31462 - end
 					reqDTO.setForeigner(softcertUploadSuppDocVO
 							.getPersonnel()
 							.getPmCountry()
@@ -1646,14 +1673,5 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						: "Revocation_Authorization_Letter.docx") + "\"";
 		return SmCommonUtil.getMessage("lbl.sm.softcert.revoke.instruction",
 				new String[] { url });
-	}
-	/**
-	 * Call SPKI Popup dialog
-	 */
-	public void onDisplaySpkiPopup2() {
-		getManagedBean().getSpkiBackingBean().getChallengeQuestions2(
-				getManagedBean().getLoginUserPersonnelInfo()
-						.getIdentificationNo());
-		RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 	}
 }

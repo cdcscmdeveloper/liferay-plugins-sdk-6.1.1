@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.bean.application.NgepApplicationBean; // #12177 Refactor
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -90,6 +92,7 @@ import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -333,6 +336,38 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setPurchaseInquiryId(prInqId);
 		}
 	    Object token = face.getBPMAuthenticationCtxToken();
+	    
+	    //#31679 - Start	  		 	  	   	
+	  	   	if(requestNoteReqDTO.getRequestNote() != null){
+	  	   		
+	  	   		log.info("--- Bug 31679 (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")" + "- Method: saveAction Start ---");
+	  	   		
+		  	  	if(getManagedBean().getCurrentStatusId() != null && outcome != null  ){
+		  	   		log.info("Outcome(" + outcome + ") " + "StatusId (" + getManagedBean().getCurrentStatusId() + ") "
+		  	   				+ "RN No.(" + requestNoteReqDTO.getRequestNote().getRequestNoteNo()+ ")");
+		  	   	}
+		  	  	
+	  	   		if(requestNoteReqDTO.getRequestNote().getQuote() != null){
+		  	   		log.info("RN No.(" + requestNoteReqDTO.getRequestNote().getRequestNoteNo()+ ") " 
+		  	   				+ "SQ No.(" + requestNoteReqDTO.getRequestNote().getQuote().getQuoteNo() + ") "
+		  	   				+ "Zonal(" + requestNoteReqDTO.getRequestNote().getQuote().isZonal() + ")");
+	  	   		}	  	   		 		
+	  	   		
+	  	   		if(requestNoteReqDTO.getRequestNote().getRequestNoteDtls() != null){
+	  		    		for(ScRequestNoteDtl rnDtl : requestNoteReqDTO.getRequestNote().getRequestNoteDtls()){		    			
+	  		    			if(rnDtl.getRequestItem() != null 
+	  		    					&& rnDtl.getScRequestSupplierItem() != null){	  		    				
+	  		    				log.info("RnDtlId (" + rnDtl.getRequestNoteDtlId() + ") " 
+	  		    						+ "ReqItemId (" + rnDtl.getRequestItem().getRequestNoteItemId() + ") " 
+	  		    						+ "ReqSupItemId (" + rnDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") "
+	  		    						+ "RnNo (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")"); 
+	  		    			}
+	  		    		}
+	  		    }
+	  	   	log.info("--- Bug 31679 (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")" + "- Method: saveAction End ---");
+	  	   	}  
+	  	  //#31679 - End
+	    
 	    try {
 	    	if(outcome.isEmpty()){
 		    	requestNoteReqDTO.setSubmit(Boolean.FALSE);
@@ -418,6 +453,44 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    requestNoteReqDTO.setToken(token);
 	    requestNoteReqDTO.setOutcome("");
 	    requestNoteReqDTO.setRequestNoteDtls(requestNoteDtls);
+	    
+	  //#31679 - Start	  		 	  	   	
+  	   	if(requestNote != null){
+  	   		
+  	   		log.info("--- Bug 31679 (" + requestNote.getRequestNoteNo() + ")" + "- Method: saveCodificationAction Start ---");
+  	   		
+	  	   	if(getManagedBean().getSmSupplier() != null){
+	  	   		log.info("Supplier ID (" + getManagedBean().getSmSupplier().getSupplierId() + ") "
+	  	   				+ "Company Name (" + getManagedBean().getSmSupplier().getCompanyName() + ") "
+	  	   				+ "RN No.(" + requestNote.getRequestNoteNo()+ ")");
+	  	   	}
+  	   		
+	  	  	if(getManagedBean().getCurrentStatusId() != null && outcome != null  ){
+	  	   		log.info("Outcome(" + outcome + ") " + "StatusId (" + getManagedBean().getCurrentStatusId() + ") "
+	  	   				+ "RN No.(" + requestNote.getRequestNoteNo()+ ")");
+	  	   	}
+	  	  	
+  	   		if(requestNote.getQuote() != null){
+	  	   		log.info("RN No.(" + requestNote.getRequestNoteNo()+ ") " 
+	  	   				+ "SQ No.(" + requestNote.getQuote().getQuoteNo() + ") "
+	  	   				+ "Zonal(" + requestNote.getQuote().isZonal() + ")");
+  	   		}	  	   		 		
+  	   		
+  	   		if(requestNoteDtls != null){
+  		    		for(ScRequestNoteDtl rnDtl : requestNoteDtls){		    			
+  		    			if(rnDtl.getRequestItem() != null 
+  		    					&& rnDtl.getScRequestSupplierItem() != null){	  		    				
+  		    				log.info("RnDtlId (" + rnDtl.getRequestNoteDtlId() + ") " 
+  		    						+ "ReqItemId (" + rnDtl.getRequestItem().getRequestNoteItemId() + ") " 
+  		    						+ "ReqSupItemId (" + rnDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") "
+  		    						+ "RnNo (" + requestNote.getRequestNoteNo() + ")"); 
+  		    			}
+  		    		}
+  		    }
+  	   	log.info("--- Bug 31679 (" + requestNote.getRequestNoteNo() + ")" + "- Method: saveCodificationAction End ---");
+  	   	}  
+  	   	//#31679 - End
+  	   	
 	    requestNoteReqDTO.setPayLoad(payload);
 	    requestNoteResDTO = getRequestNoteSO().submitRNDtlsAfterCodify(requestNoteReqDTO);
 	    renewSesionObject();
@@ -714,6 +787,48 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			// 12177 - Start
 			requestNoteReqDTO.setSqEndDate(getManagedBean().getSqEndDate());
 			// 12177 - End
+			
+			//#31679 - Start	  		 	  	   	
+	  	   	if(requestNoteReqDTO.getRequestNote() != null){	  	   		
+	  	   		log.info("--- Bug 31679 (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")" + "- Method: requestNoteSubmit Start ---");
+	  	   		
+		  	  	if(getManagedBean().getCurrentStatusId() != null && outcome != null  ){
+		  	   		log.info("Outcome(" + outcome + ") " + "StatusId (" + getManagedBean().getCurrentStatusId() + ") "
+		  	   				+ "RN No.(" + requestNoteReqDTO.getRequestNote().getRequestNoteNo()+ ")");
+		  	   	}
+		  	  	
+	  	   		if(requestNoteReqDTO.getRequestNote().getQuote() != null){
+		  	   		log.info("RN No.(" + requestNoteReqDTO.getRequestNote().getRequestNoteNo()+ ") " 
+		  	   				+ "SQ No.(" + requestNoteReqDTO.getRequestNote().getQuote().getQuoteNo() + ") "
+		  	   				+ "Zonal(" + requestNoteReqDTO.getRequestNote().getQuote().isZonal() + ")");
+	  	   		}	  	   		 		
+	  	   		
+	  	   		if(requestNoteReqDTO.getRequestNote().getRequestNoteDtls() != null){
+	  		    		for(ScRequestNoteDtl rnDtl : requestNoteReqDTO.getRequestNote().getRequestNoteDtls()){		    			
+	  		    			if(rnDtl.getRequestItem() != null 
+	  		    					&& rnDtl.getScRequestSupplierItem() != null){	  		    				
+	  		    				log.info("RnDtlId (" + rnDtl.getRequestNoteDtlId() + ") " 
+	  		    						+ "ReqItemId (" + rnDtl.getRequestItem().getRequestNoteItemId() + ") " 
+	  		    						+ "ReqSupItemId (" + rnDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") "
+	  		    						+ "RnNo (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")"); 
+	  		    			}
+	  		    		}
+	  		    }
+	  	   	log.info("--- Bug 31679 (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")" + "- Method: requestNoteSubmit End ---");
+	  	   	}  
+	  	   	//#31679 - End
+			
+			//#31689 - start	
+	  		if(requestNoteReqDTO.getRequestNote() != null){	
+	  	   		if(requestNoteReqDTO.getRequestNote().getRequestNoteDtls() != null){
+	  		    		for(ScRequestNoteDtl rnDtl : requestNoteReqDTO.getRequestNote().getRequestNoteDtls()){
+	  		    			if(rnDtl.getTotalPricePerItem().compareTo(BigDecimal.ZERO) == 0)
+	  		    	  	   		calculatePricePerItem(rnDtl);		    			
+	  		    		}
+	  		    }
+	  	   	}
+	  		//#31689 - end
+
 			try {
 				if(outcome.isEmpty()) {	
 					requestNoteReqDTO.setToken(ctxToken);
@@ -777,6 +892,44 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			
 			Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			requestNoteReqDTO.setRequestNoteDtls(requestNoteDtls);
+	  	   	
+			//#31679 - Start	  		 	  	   	
+	  	   	if(requestNote != null){
+	  	   		
+	  	   		log.info("--- Bug 31679 (" + requestNote.getRequestNoteNo() + ")" + "- Method: saveCodificationAction Start ---");
+	  	   		
+		  	   	if(getManagedBean().getSmSupplier() != null){
+		  	   		log.info("Supplier ID (" + getManagedBean().getSmSupplier().getSupplierId() + ") "
+		  	   				+ "Company Name (" + getManagedBean().getSmSupplier().getCompanyName() + ") "
+		  	   				+ "RN No.(" + requestNote.getRequestNoteNo()+ ")");
+		  	   	}
+	  	   		
+		  	  	if(getManagedBean().getCurrentStatusId() != null && outcome != null  ){
+		  	   		log.info("Outcome(" + outcome + ") " + "StatusId (" + getManagedBean().getCurrentStatusId() + ") "
+		  	   				+ "RN No.(" + requestNote.getRequestNoteNo()+ ")");
+		  	   	}
+		  	  	
+	  	   		if(requestNote.getQuote() != null){
+		  	   		log.info("RN No.(" + requestNote.getRequestNoteNo()+ ") " 
+		  	   				+ "SQ No.(" + requestNote.getQuote().getQuoteNo() + ") "
+		  	   				+ "Zonal(" + requestNote.getQuote().isZonal() + ")");
+	  	   		}	  	   		 		
+	  	   		
+	  	   		if(requestNoteDtls != null){
+	  		    		for(ScRequestNoteDtl rnDtl : requestNoteDtls){		    			
+	  		    			if(rnDtl.getRequestItem() != null 
+	  		    					&& rnDtl.getScRequestSupplierItem() != null){	  		    				
+	  		    				log.info("RnDtlId (" + rnDtl.getRequestNoteDtlId() + ") " 
+	  		    						+ "ReqItemId (" + rnDtl.getRequestItem().getRequestNoteItemId() + ") " 
+	  		    						+ "ReqSupItemId (" + rnDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") "
+	  		    						+ "RnNo (" + requestNote.getRequestNoteNo() + ")"); 
+	  		    			}
+	  		    		}
+	  		    }
+	  	   	log.info("--- Bug 31679 (" + requestNote.getRequestNoteNo() + ")" + "- Method: saveCodificationAction End ---");
+	  	   	}  
+	  	   	//#31679 - End
+			
 			requestNoteReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 			requestNoteReqDTO.setToken(ctxToken);
@@ -847,6 +1000,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				outcome.isEmpty() || 
 				outcome.equals(BpmOutcomeConst.BPM_APPROVE)){
 
+			//#31689 - start
+			validateReqNoteIgnoreProcurement(scRequestNote);
+			//#31689 - end
 			// validate RN
 			validateRequestNote(scRequestNote);
 
@@ -870,6 +1026,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}
+		
+		// #27545 - start
+		if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)
+				|| outcome.equals(BpmOutcomeConst.BPM_REVISE)) {
+			validateAssignedUser(requestNoteDtls);
+		}
+		// #27545 - end
 		
 		debugLogger("RequestNoteBackingBean >> submitAction ---- isExceededAmountAlerted() = "+ getManagedBean().isExceededAmountAlerted());
 		if(getManagedBean().isExceededAmountAlerted()){
@@ -899,6 +1062,64 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 	}
+	
+	// #27545 - start
+	public void validateAssignedUser(List<ScRequestNoteDtl>	requestNoteDtls) {
+		//log.info("--validateAssigneduser--");
+		Boolean throwError = false;
+		PmOrgProfile pmOrgProfile = getManagedBean().getRequestNote().getPmOrgProfile();
+		
+		if(CollectionUtils.isNotEmpty(requestNoteDtls)) {
+			
+			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+			orgProfileReqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+			orgProfileReqDTO.setGroupOrgType(ParameterConst.ORG_AUTH_TYPE_ORG_GROUP);
+			OrgProfileResDTO orgProfileResDTO = getOrgProfileSO().retrieveProfileGroupByGroupOrgType(orgProfileReqDTO);
+			
+			List<Long> orgProfileIdList = new ArrayList<Long>();
+			orgProfileIdList.add(pmOrgProfile.getOrgProfileId());
+					
+			if (CollectionUtils.isNotEmpty(orgProfileResDTO.getProfileGroups())) {
+				for(PmProfileGroup group: orgProfileResDTO.getProfileGroups()){
+					orgProfileIdList.add(group.getMainOrgProfile().getOrgProfileId());
+				}
+			}
+			
+			for (ScRequestNoteDtl requestNoteDtl : requestNoteDtls) {
+				PmUser pmUser = requestNoteDtl.getAssignedUser();				
+				String fulfilmentType = requestNoteDtl.getFulfilmentType().getParameterCode();
+				List<PmUser> userList = null;
+	
+				UserReqDTO req = new UserReqDTO();
+				req.setIncludeUserIds(new ArrayList<Long>());
+				req.getIncludeUserIds().add(pmUser.getUserId());
+	
+				if (fulfilmentType.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+					req.setRoleCodes(Arrays.asList(RoleCode.REQUISITIONER.value()));				
+				} else {
+					req.setRoleCodes(Arrays.asList(RoleCode.DESK_OFFICER.value()));
+				}
+				
+				if(orgProfileIdList != null && orgProfileIdList.size()> 1) {
+					req.setOrgProfileIds(orgProfileIdList);
+				} else {
+					req.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+				}
+	
+				UserResDTO res = getUserSO().retrieveUserListByRole(req);
+				userList = res.getUserList();
+	
+				if (CollectionUtils.isEmpty(userList)) {
+					throwError = true;
+					break;
+				}
+			}
+			if (throwError){
+				throw new EpException(MessageConst.ERROR_770242);
+			}
+		}
+	}
+	// #27545 - End
 	
 	/**
 	 * submit codification task Action. 
@@ -1012,6 +1233,49 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && 
 							!pType.equals(ParameterConst.PROC_TYPE_EMERGENCY)) && 
 							!pType.equals(ParameterConst.PROC_TYPE_PK7)) {
+						// start - #31689
+						// title validation
+						if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
+							throw new EpException(
+									MessageConst.ERROR_760315,
+									new String[] {ResourceBundleUtils.getMessage("lbl.sc.direct.purchase.title",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+
+						// pid validity
+						//log.info("pID validity begin");
+						if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
+							pidValidity(requestNoteDtl.getRequestItem().getPurchaseInDefault(), requestNote);
+						}
+						//log.info("pID validity end");
+
+						// validate price type
+						if(null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()){
+							throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getItemName()});
+						}
+
+						// validate recommended supplier
+						if(null == requestNoteDtl.getScRequestSupplierItem() || null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier() 
+								|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId() ){
+							throw new EpException(MessageConst.ERROR_760356, new String[]{requestNoteDtl.getRequestItem().getItemName()});
+						}
+
+						// quantity
+						if( null != requestNoteDtl.getRequestItem() && null == requestNoteDtl.getRequestItem().getQuantity() ){
+							throw new EpException(
+									MessageConst.ERROR_760315,
+									new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						}
+						
+						if (requestNoteDtl.getAssignedUser() == null || (requestNoteDtl.getAssignedUser() != null && requestNoteDtl.getAssignedUser().getUserId()==null)) {
+							throw new EpException(MessageConst.ERROR_100022, new String[]{
+								ResourceBundleUtils.getMessage(
+										"lbl.sc.request.note.loa.prepare.by", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale())});
+						}
+						// end - #31689						
 						// Check total procurement amount per ptj per item per year
 						FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
 						if (requestNoteDtl.getRequestItem().getCmItem() != null) {
@@ -1074,8 +1338,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						}
 					}
 
+					//  #31689 (start - comment out all)
 					// title validation
-					if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
+					/*if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
 						throw new EpException(
 								MessageConst.ERROR_760315,
 								new String[] {ResourceBundleUtils.getMessage("lbl.sc.direct.purchase.title",
@@ -1114,7 +1379,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 									new FacesScopes().getUserLocale())});
 					//26221 - end
-					}
+					}*/
+					// #31689 (end - comment out all)
 				}
 			}
 		}
@@ -1135,6 +1401,87 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 
+	//#31689 - start
+	private void validateReqNoteIgnoreProcurement(ScRequestNote requestNote) {
+		debugLogger("validateReqNoteIgnoreProcurement");
+		if (requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()) {
+			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
+				if (!requestNoteDtl.isDeleted()) {
+					String pType = requestNoteDtl.getProcurementType().getParameterCode();
+					//#32362 - comment out this condition - start
+					/*if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && !pType
+							.equals(ParameterConst.PROC_TYPE_EMERGENCY)) && !pType.equals(ParameterConst.PROC_TYPE_PK7)) {*/
+					//#32362 - comment out this condition - end
+						// title validation
+						if (StringUtils.isBlank(requestNoteDtl.getProcurementTitle())) {
+							throw new EpException(
+									MessageConst.ERROR_760315,
+									new String[] { ResourceBundleUtils.getMessage("lbl.sc.direct.purchase.title",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+						}
+
+						// pid validity
+						//log.info("pID validity begin");
+						if (requestNoteDtl.getRequestItem() != null
+								&& requestNoteDtl.getRequestItem().getPurchaseInDefault() != null) {
+							pidValidity(requestNoteDtl.getRequestItem().getPurchaseInDefault(), requestNote);
+						}
+						//log.info("pID validity end");
+
+						// validate price type
+						if (null == requestNoteDtl.getPriceType()
+								|| null == requestNoteDtl.getPriceType().getParameterId()) {
+							throw new EpException(MessageConst.ERROR_760343, new String[] { requestNoteDtl
+									.getRequestItem().getItemName() });
+						}
+
+						// validate recommended supplier
+						if (null == requestNoteDtl.getScRequestSupplierItem()
+								|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier()
+								|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId()) {
+							throw new EpException(MessageConst.ERROR_760356, new String[] { requestNoteDtl
+									.getRequestItem().getItemName() });
+						}
+
+						// quantity
+						if (null != requestNoteDtl.getRequestItem()
+								&& null == requestNoteDtl.getRequestItem().getQuantity()) {
+							throw new EpException(
+									MessageConst.ERROR_760315,
+									new String[] { ResourceBundleUtils.getMessage("lbl.sc.quantity",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+						}
+
+						if (requestNoteDtl.getAssignedUser() == null
+								|| (requestNoteDtl.getAssignedUser() != null && requestNoteDtl.getAssignedUser()
+										.getUserId() == null)) {
+							throw new EpException(
+									MessageConst.ERROR_100022,
+									new String[] { ResourceBundleUtils.getMessage("lbl.sc.request.note.loa.prepare.by",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+						}
+					//} #32362 - comment out this curly bracket
+				}
+			}
+		}
+
+		// approver group name validation
+		if(null == requestNote.getPmUserGroup()){
+			throw new EpException(
+					MessageConst.ERROR_760315,
+					new String[] {ResourceBundleUtils.getMessage("lbl.sc.ptj.approver.group",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+		// approver name validation
+		if(null == requestNote.getApprover()){
+			throw new EpException(
+					MessageConst.ERROR_760315,
+					new String[] {ResourceBundleUtils.getMessage("lbl.sc.approverName",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+	}
+	//#31689 - end
+	
 	/**
 	 * Pre render page navigation to request note page based on task id
 	 * @return void
@@ -1165,6 +1512,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		requestNoteReqDTO.setRequestNoteId(dpId);
 		
+		//28999,30063,30448 - Start
+		if(getManagedBean().getCurrentStatusId() != null 
+				&& getManagedBean().getCurrentStatusId().equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+			if(requestNoteReqDTO.getRequestNoteId() != null){
+				getRequestNoteSO().checkingPriceTypeAndRequestSupplierItem(requestNoteReqDTO);
+			}
+		}		
+		//28999,30063,30448 - End
+		
 		log.info("Temp2: start performance - getRequestNoteSO().getRequestNote");
 		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
 		log.info("Temp2: end performance - getRequestNoteSO().getRequestNote");
@@ -1173,18 +1529,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 
 		if(requestNote != null){	
-			
-			//28999 - Start
-			requestNote = checkingPriceType(requestNote);
-			//28999 - End
-			
-			//#30063 - Start
-			requestNote = checkingItemUnitPrice(requestNote);
-			//#30063 - End
-			
-			// #30448 - start
-			requestNote = checkingPriceType2(requestNote);
-			// #30448 - end
 			
 			if (requestNote.getScRNZone() != null) {
 				getManagedBean().setScRNZone(requestNote.getScRNZone());	
@@ -1539,6 +1883,37 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRequestNote(scRequestNote);
+		
+		//#31679 - Start	  		 	  	   	
+  	   	if(requestNoteReqDTO.getRequestNote() != null){
+  	   		
+  	   		log.info("--- Bug 31679 (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")" + "- Method: approverAction Start ---");
+  	   		
+	  	  	if(getManagedBean().getCurrentStatusId() != null && outcome != null  ){
+	  	   		log.info("Outcome(" + outcome + ") " + "StatusId (" + getManagedBean().getCurrentStatusId() + ") "
+	  	   				+ "RN No.(" + requestNoteReqDTO.getRequestNote().getRequestNoteNo()+ ")");
+	  	   	}
+	  	  	
+  	   		if(requestNoteReqDTO.getRequestNote().getQuote() != null){
+	  	   		log.info("RN No.(" + requestNoteReqDTO.getRequestNote().getRequestNoteNo()+ ") " 
+	  	   				+ "SQ No.(" + requestNoteReqDTO.getRequestNote().getQuote().getQuoteNo() + ") "
+	  	   				+ "Zonal(" + requestNoteReqDTO.getRequestNote().getQuote().isZonal() + ")");
+  	   		}	  	   		 		
+  	   		
+  	   		if(requestNoteReqDTO.getRequestNote().getRequestNoteDtls() != null){
+  		    		for(ScRequestNoteDtl rnDtl : requestNoteReqDTO.getRequestNote().getRequestNoteDtls()){		    			
+  		    			if(rnDtl.getRequestItem() != null 
+  		    					&& rnDtl.getScRequestSupplierItem() != null){	  		    				
+  		    				log.info("RnDtlId (" + rnDtl.getRequestNoteDtlId() + ") " 
+  		    						+ "ReqItemId (" + rnDtl.getRequestItem().getRequestNoteItemId() + ") " 
+  		    						+ "ReqSupItemId (" + rnDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") "
+  		    						+ "RnNo (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")"); 
+  		    			}
+  		    		}
+  		    }
+  	   	log.info("--- Bug 31679 (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")" + "- Method: approverAction End ---");
+  	   	}  
+  	  //#31679 - End
 
 		List<ScRequestNoteDtl> mixedDtls = scRequestNote.getRequestNoteDtls();
 		List<ScRequestNoteDtl> nonDeletedDtls = new ArrayList<ScRequestNoteDtl>();
@@ -1672,7 +2047,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 			}
 			getManagedBean().setRequestNoteDtls(requestNoteDtls);
-		} 
+		}
+		
+		//start -- 31689
+		for(ScRequestNoteDtl selectedReqDtl : getManagedBean().getRequestNoteDtls()) {
+			calculatePricePerItem(selectedReqDtl);
+		}
+		//end -- 31689
 
 
 		if(counter==0){
@@ -3006,6 +3387,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("beforeSavePostLister");
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
 		CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
+ 		
+		//32520 - Start
+		if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getScRequestSupplierItem() != null
+				&& requestNoteDtl.getScRequestNote() != null){
+				log.info("Bug 32520 : Method beforeSavePostLister ----> rnNo (" +requestNoteDtl.getScRequestNote().getRequestNoteNo() +") ");
+				log.info("Bug 32520 : " + "rnDtlsId (" + requestNoteDtl.getRequestNoteDtlId() + ") " 
+					     + "reqItemId (" + requestNoteDtl.getRequestItem().getRequestNoteItemId() + ") "
+					     + "reqSuppItemId (" + requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") "
+					     + "----> rnNo (" + requestNoteDtl.getScRequestNote().getRequestNoteNo() + ")");
+		}	
+		//32520 - End
+		
 		if(requestNoteDtl.getvCmSupplierItem() != null && requestNoteDtl.getvCmSupplierItem().getDocId() >0) {
             
 			catReqDTO.setSupplierItemId(requestNoteDtl.getvCmSupplierItem().getDocId());
@@ -3046,6 +3439,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("afterSavePostLister");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 
+		//32520 - Start
+		if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getScRequestSupplierItem() != null
+				&& requestNoteDtl.getScRequestNote() != null){
+			log.info("Bug 32520 : Method afterSavePostLister ----> rnNo (" +requestNoteDtl.getScRequestNote().getRequestNoteNo() +") ");
+			log.info("Bug 32520 : " + "rnDtlsId (" + requestNoteDtl.getRequestNoteDtlId() + ") " 
+			         + "reqItemId (" + requestNoteDtl.getRequestItem().getRequestNoteItemId() + ") "
+			         + "reqSuppItemId (" + requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") "
+			         + "----> rnNo (" + requestNoteDtl.getScRequestNote().getRequestNoteNo() + ")");
+		}	
+		//32520 - End
+		
 		if(requestNoteDtl.getScRequestSupplierItem() != null && requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() != null){
 			ScRequestSupplierItem requestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
 			requestNoteReqDTO.setSupplierItemId(requestSupplierItem.getRequestSupplierItemId());
@@ -4207,6 +4611,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
 	}
 	
+	//#27545
+	/**
+	 * Gets the org profile so.
+	 *
+	 * @return the org profile so
+	 */
+	private IOrgProfileSO getOrgProfileSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+	}
+	
 	/**
 	 * Gets the server url.
 	 *
@@ -4521,6 +4935,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		requestNoteDtl.setTotalPricePerItem(subTotalAmount);
 		
+		//#31528 - Start
+		//rounding to 2 decimal places
+		requestNoteDtl.setTotalPricePerItemRounded(subTotalAmount.setScale(2, RoundingMode.HALF_UP));
+		//#31528 - End
+		
 		return subTotalAmount;
 	}
 	
@@ -4771,8 +5190,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}	
 		}	 
 		
-		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
-				.getProperty("sqTimeValidity"));
+		// Refactor: #12177 - Start
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();	
+		log.info("Refactor 12177 (RequestNoteBackingBean) : getSqTimeValidity - " + sqTimeValidity);
+		// Refactor: #12177 - End
 		
 		if(scQuote != null && currentStatusId != null){
 			if(getManagedBean().getPurchaseInDefaultId() == null){
@@ -4962,211 +5383,4 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	// #28789 - end
-	
-	//28999 - Start
-	public ScRequestNote checkingPriceType(ScRequestNote requestNote){
-		log.info("checkingPriceType");
-		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-		boolean priceTypeChange = false;
-		boolean priceTypeChangeSpecQuestion = false;
-		
-		if(requestNote.getQuote() != null){
-
-			if(!requestNote.getQuote().isZonal()){
-
-				if(requestNote.getRequestNoteDtls() != null){
-
-					for(ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()){
-						
-						priceTypeChangeSpecQuestion = false;
-						
-						if(requestNoteDtl.getPriceType() != null){
-
-							if(requestNoteDtl.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
-								requestNoteDtl.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_STANDARD));
-								priceTypeChange = true;
-							}else if(requestNoteDtl.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
-								requestNoteDtl.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_TIER));
-								priceTypeChange = true;
-							}	
-						}
-						
-						if(requestNoteDtl.getRequestItem() != null){
-
-							if(requestNoteDtl.getRequestItem().getSupplierItems() != null){
-
-								for(ScRequestSupplierItem supplierItem : requestNoteDtl.getRequestItem().getSupplierItems()){
-									if(supplierItem.getSupplierItemPrices() != null){
-
-										for(ScSupplierItemPrice supplierItemPrice : supplierItem.getSupplierItemPrices()){
-											if(supplierItemPrice.getPriceType() != null){
-
-												if(supplierItemPrice.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
-													supplierItemPrice.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_STANDARD));
-													priceTypeChange = true;
-												}else if(supplierItemPrice.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
-													supplierItemPrice.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_TIER));
-													priceTypeChange = true;
-												}
-											}
-										}
-									}
-								}
-							}
-							
-							if(requestNoteDtl.getRequestItem().getTplSpecQuestion() != null){
-
-								if(!requestNoteDtl.getRequestItem().getTplSpecQuestion().getQuestionType()
-										.equalsIgnoreCase(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC)){
-
-									if(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode() != null){
-
-										if(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode().getParameterCode()
-												.equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
-											requestNoteDtl.getRequestItem().getTplSpecQuestion()
-											.setClPriceTypeCode(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_STANDARD));
-											priceTypeChangeSpecQuestion = true;
-										}else if(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode().getParameterCode()
-												.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
-											requestNoteDtl.getRequestItem().getTplSpecQuestion()
-											.setClPriceTypeCode(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_TIER));
-											priceTypeChangeSpecQuestion = true;
-										}
-										
-									}
-									
-								}
-							}
-							
-							if(priceTypeChangeSpecQuestion){
-								specReqDTO.setTplSpecQuestion(requestNoteDtl.getRequestItem().getTplSpecQuestion());
-								getTemplateSpecSO().updateSpecQuestionInfo(specReqDTO);
-							}
-						}
-						
-					}
-					
-				}
-				
-			}
-			
-		}
-		
-		if(priceTypeChange){
-			requestNoteReqDTO.setRequestNote(requestNote);
-			getRequestNoteSO().updateRequestNoteInfo(requestNoteReqDTO);
-			
-			// #30448 - start
-			// Retrieve data after save
-			requestNoteReqDTO.setRequestNoteId(requestNote.getRequestNoteId());
-			requestNoteReqDTO.setRequestNoteNo(requestNote.getRequestNoteNo());
-			RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
-			if(requestNoteResDTO.getRequestNoteDetail() != null){
-				requestNote = requestNoteResDTO.getRequestNoteDetail();
-			}
-			// #30448 - end
-		}
-				
-		return requestNote;
-	}
-	//28999- End
-	
-	//#30063 - Start
-	public ScRequestNote checkingItemUnitPrice(ScRequestNote requestNote){
-		
-		boolean itemPriceUnitChange;
-		BigDecimal lowestItemPriceUnit;
-		ScRequestSupplierItem reqSuppItemTemp = new ScRequestSupplierItem();
-		
-		if(requestNote.getRequestNoteDtls() != null){
-			for(ScRequestNoteDtl rnDtl : requestNote.getRequestNoteDtls()){
-				itemPriceUnitChange = true;
-				if(rnDtl.getRequestItem() != null){
-					if(rnDtl.getRequestItem().getSupplierItems() != null){
-						for(ScRequestSupplierItem reqSuppItem : rnDtl.getRequestItem().getSupplierItems()){
-							if(rnDtl.getScRequestSupplierItem() != null){
-								if(rnDtl.getScRequestSupplierItem().getRequestSupplierItemId().equals(reqSuppItem.getRequestSupplierItemId())){
-									itemPriceUnitChange = false;
-									break;
-								}
-							}			
-						}
-						
-						if(itemPriceUnitChange){
-							lowestItemPriceUnit = null;
-							for(ScRequestSupplierItem reqSuppItem : rnDtl.getRequestItem().getSupplierItems()){
-								if(reqSuppItem.getSupplierItemPrices() != null){
-									for(ScSupplierItemPrice suppItemPrice : reqSuppItem.getSupplierItemPrices()){
-										if(lowestItemPriceUnit == null){
-											lowestItemPriceUnit = suppItemPrice.getItemPrice();
-											reqSuppItemTemp = reqSuppItem;
-										}
-										
-										if(suppItemPrice.getItemPrice().compareTo(lowestItemPriceUnit) == -1){
-											lowestItemPriceUnit = suppItemPrice.getItemPrice();
-											reqSuppItemTemp = reqSuppItem;
-										}
-									}
-								}
-							}
-							rnDtl.setScRequestSupplierItem(reqSuppItemTemp);
-						}
-					}				
-				}
-			}
-		}
-		
-		return requestNote;
-	}
-	//#30063 - End
-	
-	// #30448 - start
-	public ScRequestNote checkingPriceType2(ScRequestNote requestNote) {
-		log.info("checkingPriceType2");
-		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-		boolean priceTypeChange = false;
-
-		if (requestNote.getQuote() != null) {
-
-			if (!requestNote.getQuote().isZonal()) {
-
-				if (requestNote.getRequestNoteDtls() != null) {
-
-					for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
-
-						if (requestNoteDtl.getScRequestSupplierItem() != null
-								& requestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices() != null) {
-
-							for (ScSupplierItemPrice supplierItemPrice : requestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices()) {
-								if (supplierItemPrice.getPriceType() != null) {
-									if (supplierItemPrice.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)) {
-										supplierItemPrice.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_STANDARD));
-										priceTypeChange = true;
-									} else if (supplierItemPrice.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
-										supplierItemPrice.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_TIER));
-										priceTypeChange = true;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		if (priceTypeChange) {
-			requestNoteReqDTO.setRequestNote(requestNote);
-			getRequestNoteSO().updateRequestNoteInfo(requestNoteReqDTO);
-			
-			// Retrieve data after save
-			 requestNoteReqDTO.setRequestNoteId(requestNote.getRequestNoteId());
-			 requestNoteReqDTO.setRequestNoteNo(requestNote.getRequestNoteNo());
-			 RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
-			if (requestNoteResDTO.getRequestNoteDetail() != null) {
-				requestNote = requestNoteResDTO.getRequestNoteDetail();
-			}
-		}
-		return requestNote;
-	}
-	// #30448 - end
 }

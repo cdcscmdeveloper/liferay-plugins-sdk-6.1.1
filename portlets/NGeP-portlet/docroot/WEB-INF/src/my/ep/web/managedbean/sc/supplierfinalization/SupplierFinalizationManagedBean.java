@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.sc.supplierfinalization;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import javax.faces.model.SelectItem;
 import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -41,7 +43,6 @@ import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.MenuModel;
-//import my.ep.persistence.entity.sc.quationtender.ScQtReport;
 
 /**
  * Class to handle user session data corresponding to SupplierFinalizationBackingBean
@@ -93,19 +94,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private String attachmentDocType;
 	
 	//Supplier Finalization
-	/*private String decisionType = ParameterConst.DECISION_RECOMMEND_SUPPLIER;
-	private String recommendType = ParameterConst.RECOMMEND_TYPE_PACKAGE;
-	private String biddingEndorsement = ParameterConst.ONLINE_BIDDING_MEETING;
-	private String loiLoaPreparedBy = ParameterConst.LOILOA_PREPARED_BY_DO;
-	private String fwdHigherAuthority = "false";
-	private String finalizationCommittee;
-	private PmUser committeeSecretary;
-	private String committeeSecretaryName;
-	private String reason;
-	private String reEvaluateBy;
-	private boolean reqSpecChanges;
-	private boolean reEvaluateReqForTech;
-	private boolean reEvaluateReqForFin;*/
 	private String finalizationMethod;
 	private String selectionMode = QTConstants.SF_SINGLE;
 	private String awardSupplier; 
@@ -157,8 +145,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScQtEvaluationResultDtl recommendedSupplierByItem;
 	private ScQtEvaluationResultDtl prevRecommendedSupplierByItem;
 	
-//	private List<ScQtEvaluationResultDtl> qualifiedSuppliersByEvalStage;
-	
+	private String previousPageUrl;	// #19336, #25201, #17376, #19287
+
 	/** Qualified suppliers by evaluation stage */
 	private IPagingDataModel<ScQtEvaluationResultDtl> qualifiedSuppliersByEvalStage;	
 	
@@ -166,11 +154,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScQtEvaluationResultDtl> shortlistedSuppliersByRecommendType;	
 	
 	private Map<MapKey,List<QtEvaluationResultDtlBean>> qualifiedSuppliersCache;
-	
-//	private List<ScQtEvaluationResultDtl> shortlistedPackageList;
-//	private List<ScQtEvaluationResultDtl> shortlistedSupplierList;
-//	private List<ScQtEvaluationResultDtl> recommendedSupplierList;
-//	private List<ScQtEvaluationResultDtl> unRecommendedSupplierList;
+
 	private Set<ScQtEvaluationResultDtl> resetSupplierList;
 	private List<ScQtRecommend> selectedItemList; 
 	private List<ScQtRecommend> itemList;
@@ -178,8 +162,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<Long> rejectedScQtRecommendIds;
 	
 	private Map<Long, TplSpecZoneDtl> zoneMap;
-//	private Map<Long, List<ScQtEvaluationResultDtl>> pkgShortlistedSupppliersByZone;
-//	private Map<Long, List<ScQtEvaluationResultDtl>> recommendedSupppliersByZone;
 	
 	private Map<String,String[]> higherAuthoritiesMap;
 	
@@ -233,7 +215,28 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScQtFinalizationReport endorsementReport;
 	private SelectItem[] justDropdown;
 	private String outcome;
+
+	// #18685 - Start. 
+	private int evaluationReportIndex;
+	private List<ScRemark> pendingRecItemizedRemark;
+	private List<ScRemark> pendingRecPackageRemark;
+	private List<ScRemark> scRemarks;
+	private List<ScRemark> newSfRemarks;
+	// #18685 - End.
 	
+	//#25729#142 & #26169 - Start
+	private boolean isSuppOfferPriceExceedCommunityAuthority;
+	private BigDecimal maxAmountCommitteeAuthority;
+	//#25729#142 & #26169 - End 
+	
+	//#26169 #38 - Start
+	private boolean isHasSupplierQualified;
+	//#26169 #38 - End
+	
+	// #11134 - Start
+	private boolean haveSupplierRejection;
+	// #11134 - End
+
 	/**
 	 * @return the activeIndex
 	 */
@@ -448,21 +451,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 			List<ScQtMeetingAttendance> selectedMeetingAttList) {
 		this.selectedMeetingAttList = selectedMeetingAttList;
 	}
-  	
-//
-//	/**
-//	 * @return the scQtReport
-//	 */
-//	public ScQtReport getScQtReport() {
-//		return scQtReport;
-//	}
-//
-//	/**
-//	 * @param scQtReport the scQtReport to set
-//	 */
-//	public void setScQtReport(ScQtReport scQtReport) {
-//		this.scQtReport = scQtReport;
-//	}
 
 	/**
 	 * @return the deletedMeetingAttendanceList
@@ -940,38 +928,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.disableFwdToHighAuthorityOption = disableFwdToHighAuthorityOption;
 	}
 
-//	/**
-//	 * @return the shortlistedSupplierList
-//	 */
-//	public List<ScQtEvaluationResultDtl> getShortlistedSupplierList() {
-//		return shortlistedSupplierList;
-//	}
-//
-//	/**
-//	 * @param shortlistedSupplierList 
-//	 * 						the shortlistedSupplierList to set
-//	 */
-//	public void setShortlistedSupplierList(
-//			List<ScQtEvaluationResultDtl> shortlistedSupplierList) {
-//		this.shortlistedSupplierList = shortlistedSupplierList;
-//	}
-//
-//	/**
-//	 * @return the recommendedSupplierList
-//	 */
-//	public List<ScQtEvaluationResultDtl> getRecommendedSupplierList() {
-//		return recommendedSupplierList;
-//	}
-//
-//	/**
-//	 * @param recommendedSupplierList 
-//	 * 						the recommendedSupplierList to set
-//	 */
-//	public void setRecommendedSupplierList(
-//			List<ScQtEvaluationResultDtl> recommendedSupplierList) {
-//		this.recommendedSupplierList = recommendedSupplierList;
-//	}
-
 	/**
 	 * @return the selectionMode
 	 */
@@ -1060,38 +1016,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setZoneMap(Map<Long, TplSpecZoneDtl> zoneMap) {
 		this.zoneMap = zoneMap;
 	}
-
-//	/**
-//	 * @return the pkgShortlistedSupppliersByZone
-//	 */
-//	public Map<Long, List<ScQtEvaluationResultDtl>> getPkgShortlistedSupppliersByZone() {
-//		return pkgShortlistedSupppliersByZone;
-//	}
-//
-//	/**
-//	 * @param pkgShortlistedSupppliersByZone the pkgShortlistedSupppliersByZone to set
-//	 */
-//	public void setPkgShortlistedSupppliersByZone(
-//			Map<Long, List<ScQtEvaluationResultDtl>> pkgShortlistedSupppliersByZone) {
-//		this.pkgShortlistedSupppliersByZone = pkgShortlistedSupppliersByZone;
-//	}
-
-//	/**
-//	 * @return the recommendedSupppliersByZone
-//	 */
-//	public Map<Long, List<ScQtEvaluationResultDtl>> 
-//				getRecommendedSupppliersByZone() {
-//		return recommendedSupppliersByZone;
-//	}
-//
-//	/**
-//	 * @param recommendedSupppliersByZone 
-//	 * 				the recommendedSupppliersByZone to set
-//	 */
-//	public void setRecommendedSupppliersByZone(
-//			Map<Long, List<ScQtEvaluationResultDtl>> recommendedSupppliersByZone) {
-//		this.recommendedSupppliersByZone = recommendedSupppliersByZone;
-//	}
 
 	/**
 	 * @return the scQtFinalization
@@ -1593,22 +1517,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.zoneDetails = zoneDetails;
 	}
 
-//	/**
-//	 * @return the unRecommendedSupplierList
-//	 */
-//	public List<ScQtEvaluationResultDtl> getUnRecommendedSupplierList() {
-//		return unRecommendedSupplierList;
-//	}
-//
-//	/**
-//	 * @param unRecommendedSupplierList 
-//	 * 					the unRecommendedSupplierList to set
-//	 */
-//	public void setUnRecommendedSupplierList(
-//			List<ScQtEvaluationResultDtl> unRecommendedSupplierList) {
-//		this.unRecommendedSupplierList = unRecommendedSupplierList;
-//	}
-
 	/**
 	 * @return the resetSupplierList
 	 */
@@ -1624,29 +1532,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 			Set<ScQtEvaluationResultDtl> resetSupplierList) {
 		this.resetSupplierList = resetSupplierList;
 	}
-
-//	/**
-//	 * @return the qualifiedSuppliersByEvalStage
-//	 */
-//	public List<ScQtEvaluationResultDtl> getQualifiedSuppliersByEvalStage() {
-//		return qualifiedSuppliersByEvalStage;
-//	}
-//
-//	/**
-//	 * @param qualifiedSuppliersByEvalStage
-//	 *            the qualifiedSuppliersByEvalStage to set
-//	 */
-//	public void setQualifiedSuppliersByEvalStage(
-//			List<ScQtEvaluationResultDtl> qualifiedSuppliersByEvalStage) {
-//		this.qualifiedSuppliersByEvalStage = qualifiedSuppliersByEvalStage;
-//	}
-
-//	/**
-//	 * @return the shortlistedPackageList
-//	 */
-//	public List<ScQtEvaluationResultDtl> getShortlistedPackageList() {
-//		return shortlistedPackageList;
-//	}
 
 	/**
 	 * @return the qualifiedSuppliersByEvalStage
@@ -1695,15 +1580,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 			Map<MapKey, List<QtEvaluationResultDtlBean>> qualifiedSuppliersCache) {
 		this.qualifiedSuppliersCache = qualifiedSuppliersCache;
 	}
-
-//	/**
-//	 * @param shortlistedPackageList 
-//	 * 						the shortlistedPackageList to set
-//	 */
-//	public void setShortlistedPackageList(
-//			List<ScQtEvaluationResultDtl> shortlistedPackageList) {
-//		this.shortlistedPackageList = shortlistedPackageList;
-//	}
 
 	/**
 	 * @return the isCancel
@@ -2113,4 +1989,137 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.outcome = outcome;
 	}
 
+	// #19336, #25201, #17376, #19287 -start-
+	public String getPreviousPageUrl() {
+		return previousPageUrl;
+	}
+
+	public void setPreviousPageUrl(String previousPageUrl) {
+		this.previousPageUrl = previousPageUrl;
+	}
+	// #19336, #25201, #17376, #19287 -end-
+
+	// #18685 - Start.
+	/**
+	 * @return the evaluationReportIndex
+	 */
+	public int getEvaluationReportIndex() {
+		return evaluationReportIndex;
+	}
+
+	/**
+	 * @param evaluationReportIndex the evaluationReportIndex to set
+	 */
+	public void setEvaluationReportIndex(int evaluationReportIndex) {
+		this.evaluationReportIndex = evaluationReportIndex;
+	}
+	/**
+	 * @return the pendingRecItemizedRemark
+	 */
+	public List<ScRemark> getPendingRecItemizedRemark() {
+		return pendingRecItemizedRemark;
+	}
+
+	/**
+	 * @param pendingRecItemizedRemark the pendingRecItemizedRemark to set
+	 */
+	public void setPendingRecItemizedRemark(
+	    List<ScRemark> pendingRecItemizedRemark) {
+		this.pendingRecItemizedRemark = pendingRecItemizedRemark;
+	}
+
+	/**
+	 * @return the pendingRecPackageRemark
+	 */
+	public List<ScRemark> getPendingRecPackageRemark() {
+		return pendingRecPackageRemark;
+	}
+
+	/**
+	 * @param pendingRecPackageRemark the pendingRecPackageRemark to set
+	 */
+	public void setPendingRecPackageRemark(
+	    List<ScRemark> pendingRecPackageRemark) {
+		this.pendingRecPackageRemark = pendingRecPackageRemark;
+	}
+	
+    /**
+     * @return the scRemarks
+     */
+    public List<ScRemark> getScRemarks() {
+      return scRemarks;
+    }
+  
+    /**
+     * @param scRemarks the scRemarks to set
+     */
+    public void setScRemarks(List<ScRemark> scRemarks) {
+      this.scRemarks = scRemarks;
+    }
+    
+    /**
+     * @return the newSfRemarks
+     */
+    public List<ScRemark> getNewSfRemarks() {
+      return newSfRemarks;
+    }
+
+    /**
+     * @param newSfRemarks the newSfRemarks to set
+     */
+    public void setNewSfRemarks(List<ScRemark> newSfRemarks) {
+      this.newSfRemarks = newSfRemarks;
+    }
+    //#18685 - End
+
+	//#25729#142 & #26169 - Start
+	/** 
+	 * @return the isSuppOfferPriceExceedCommunityAuthority
+	 */
+	public boolean isSuppOfferPriceExceedCommunityAuthority() {
+		return isSuppOfferPriceExceedCommunityAuthority;
+	}
+
+	/**
+	 * @param isSuppOfferPriceExceedCommunityAuthority 
+	 * 				the isSuppOfferPriceExceedCommunityAuthority to set
+	 */
+	public void setSuppOfferPriceExceedCommunityAuthority(boolean isSuppOfferPriceExceedCommunityAuthority) {
+		this.isSuppOfferPriceExceedCommunityAuthority = isSuppOfferPriceExceedCommunityAuthority;
+	}
+	
+	/**
+	 * @return the maxAmountCommitteeAuthority
+	 */
+	public BigDecimal getMaxAmountCommitteeAuthority() {
+		return maxAmountCommitteeAuthority;
+	}
+
+	/**
+	 * @param maxAmountCommitteeAuthority the maxAmountCommitteeAuthority to set
+	 */
+	public void setMaxAmountCommitteeAuthority(BigDecimal maxAmountCommitteeAuthority) {
+		this.maxAmountCommitteeAuthority = maxAmountCommitteeAuthority;
+	}	
+	//#25729#142 & #26169 - End
+	
+	//#26169 #38 - Start
+	public boolean isHasSupplierQualified() {
+		return isHasSupplierQualified;
+	}
+
+	public void setHasSupplierQualified(boolean isHasSupplierQualified) {
+		this.isHasSupplierQualified = isHasSupplierQualified;
+	}
+	//#26169 #38 - End
+
+	// #11134 -start-
+	public boolean isHaveSupplierRejection() {
+		return haveSupplierRejection;
+	}
+	
+	public void setHaveSupplierRejection(boolean haveSupplierRejection) {
+		this.haveSupplierRejection = haveSupplierRejection;
+	}
+	// #11134 -end-
 }

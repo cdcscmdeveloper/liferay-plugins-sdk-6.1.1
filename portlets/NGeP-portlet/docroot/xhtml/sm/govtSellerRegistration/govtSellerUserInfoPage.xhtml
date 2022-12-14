@@ -115,7 +115,7 @@
 		</p:commandButton>
 	</div>
 
-		<p:panel header="#{lbl['lbl.sm.userinfo']}" toggleable="true" id="pnlUsrInfo">
+		<p:panel header="#{lbl['lbl.sm.userinfo']}" toggleable="true" >
 			<table class="customTbl">
 				<tr>
 					<td class="tdTitle">
@@ -248,7 +248,10 @@
 						<p:message id="txtIdNumberMsg" for="txtIdNumber" display="icon" />
 					</td>
 				</tr>
-
+			</table>
+		
+		<p:outputPanel id="pnlUsrInfo"> 
+			<table class="customTbl">
 				<tr>
 					<td class="tdTitle">
 						<c:choose>
@@ -424,8 +427,9 @@
 						<p:outputLabel value="*" styleClass="mandatory"/>	
 					</td>
 					
+					<!-- #31140 change label  -->
 					<td class="tdContent">
-					<p:inputText value="#{bb.managedBean.smPersonnel.department}" required="#{!empty param['disableValidation']}" size="40" maxlength="255" label="#{lbl['lbl.sm.department']}">
+					<p:inputText value="#{bb.managedBean.smPersonnel.department}" required="#{!empty param['disableValidation']}" size="40" maxlength="255" label="#{lbl['lbl.sm.person.department']}">
 					<p:ajax event="blur" partialSubmit="true"></p:ajax></p:inputText> 
 					</td>
 					
@@ -433,9 +437,10 @@
 					<p:outputLabel value="#{lbl['lbl.sm.person.unit']}" /> 
 					<p:outputLabel value="*" styleClass="mandatory"/>
 					
+					<!-- #31140 change label -->
 					</td>
 					<td class="tdContent">
-					<p:inputText value="#{bb.managedBean.smPersonnel.sectionUnit}" required="#{!empty param ['disableValidation']}" size="40" maxlength="255" label="#{lbl['lbl.sm.unit']}">
+					<p:inputText value="#{bb.managedBean.smPersonnel.sectionUnit}" required="#{!empty param ['disableValidation']}" size="40" maxlength="255" label="#{lbl['lbl.sm.person.unit']}">
 					<p:ajax event="blur" partialSubmit="true"></p:ajax></p:inputText> 
 					</td>
 				</tr>
@@ -500,7 +505,7 @@
 			</tr>
 
 			</table>
-			
+			</p:outputPanel>
 			<p:outputPanel id="pnlContactInfo">
 				<table class="customTbl">
 					<tr>

@@ -1,0 +1,45 @@
+#parse("templates/sm/ssm/shared/header.vm")
+
+	<table width='100%'>
+		<tr align='center' style="background-color: #3366ff;">
+	        <td>
+	            <font style='color:#ffffff;'>$title</font>
+	        </td>
+    	</tr>
+    	<tr><td><br /></td></tr>
+	</table>
+	
+		#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
+			<table width='100%'>
+				<tr align='center' style="background-color: #3366ff;">
+	        	<td>
+	            <font style='color:#ffffff;'>$branchInfolbl</font>
+	        	</td>
+    			</tr>
+		
+    			<tr><td><br /></td></tr>
+			</table>
+	
+			<table  class="descTable" width="100%">
+				<tr style="background-color:#99ccff;" align="center">
+				<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.branch.address')</th>
+				</tr>
+				#if($branchInfo != $null && $branchInfo.size() > 0)
+					#foreach($branch in $branchInfo)
+					<tr>
+						<td width="25%">$!branch.branchName <p></p>$smVmUtil.getCompleteAddress($!branch.smAddress)</td>
+					</tr>
+					#end
+				#else
+				<tr>
+		 			<td colspan="1" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
+		 		</tr>
+				#end	
+		
+			</table>
+		<tr><td><br /></td></tr>
+		#end
+	
+	
+</body>
+</html>

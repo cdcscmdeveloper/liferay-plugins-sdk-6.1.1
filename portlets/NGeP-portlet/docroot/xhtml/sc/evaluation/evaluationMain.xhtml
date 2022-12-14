@@ -8,7 +8,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
-
 	<ui:define name="contentSection">
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
@@ -18,7 +17,19 @@
 		<ac:gpkiPopup textBeforeSign="#{evaluationBackingBean.textBeforeSign}"
 			postSignAction="#{evaluationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
 			enableAutoUpdate="#{evaluationBackingBean.enableAutoUpdate()}"/>
-
+		
+		<!-- 25638 -start- -->
+		<ac:confirmationPopup id="confirmSubmitMeetingMainId"
+			widget="confirmSubmitMeetingMainPopup" loadingWidget="blockWidget"
+			title="#{lbl['lbl.sc.confirmation']}"
+			okAction="evaluationMeetingBackingBean.submitMettingDetails()"
+			content="#{lbl['lbl.sc.popup.sendproposaleval']}" />
+		<ac:confirmationPopup id="confirmUpdateAsAttendId"
+			widget="confirmUpdateAsAttendPopup" loadingWidget="blockWidget"
+			title="#{lbl['lbl.sc.confirmation']}"
+			okAction="evaluationBackingBean.submitPrepareEvaluationDetails('SUBMIT')"
+			content="#{lbl['lbl.sc.popup.updateasattended']}" />
+		<!-- 25638 -end- -->
 
 		<ui:fragment
 			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5}">
@@ -41,14 +52,38 @@
 			style="float:right;" process="@form" update="@form"
 			action="#{evaluationBackingBean.saveMeetingDtls(true)}" />
 
+		<!-- 25638 -start- -->
+		<p:dialog id="reviseApprovalDlgs" widgetVar="reviseApprovalDlgs"
+			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+			resizable="false" width="400" height="75" closable="false">
+			<table>
+				<tr>
+					<td align="center">
+						<h:graphicImage value="/css/images/design/exclamation.png" /> 
+						<p:outputLabel value="#{lbl['lbl.sc.dialog.confirm.to.revise']}" />
+					</td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="reviseApprovalDlgs.hide();"
+					action="#{evaluationBackingBean.reviseProposalEvaluation}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="reviseApprovalDlgs.hide();" type="button" />
+			</div>
+		</p:dialog>
+		<!-- 25638 -end- -->
+		
 		<p:dialog id="reviceApprovalDlgs" widgetVar="reviceApprovalDlgs"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
 			resizable="false" width="400" height="75" closable="false">
 			<table>
 				<tr>
-					<td align="center"><h:graphicImage
-							value="/css/images/design/exclamation.png" /> <p:outputLabel
-							value="#{lbl['lbl.sc.dialog.confirm.revise']}" /></td>
+					<td align="center">
+						<h:graphicImage value="/css/images/design/exclamation.png" /> 
+						<p:outputLabel value="#{lbl['lbl.sc.dialog.confirm.revise']}" />
+					</td>
 				</tr>
 			</table>
 			<p:spacer height="1" />
@@ -64,14 +99,15 @@
 		<p:dialog id="reportContentPopupDlgId" widgetVar="reportContentPopupDlg" closable="false"
 				  modal="true" resizable="false" width="875" height="400" styleClass="pop_up_top" 
 				  header="#{evaluationBackingBean.managedBean.selectedReport.title}">
-	
 			<table>
 				<tr>
 					<td align="center">
+						<!-- 18685 -start- -->
 						<p:inputTextarea value="#{evaluationBackingBean.managedBean.selectedReport.reportContent}" 
-								 		 scrollHeight="0" rows="15" cols="130" autoResize="false"
+								 		 scrollHeight="0" rows="15" cols="130" autoResize="false" maxlength="2000"
 								 		 disabled="#{evaluationBackingBean.managedBean.readOnly}"
 								 		 rendered="#{evaluationBackingBean.managedBean.selectedReport ne null}">
+						<!-- 18685 -end- -->
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputTextarea>					
 					</td>
@@ -88,25 +124,19 @@
 
 		<ui:include src="evaluationHeader.xhtml" />
 
-
-
 		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 0}">
 			<ui:include src="/xhtml/sc/evaluation/preparation/prepareMain.xhtml" />
-
 		</c:if>
+		
 		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 1}">
-
-
 			<ui:include
 				src="/xhtml/sc/evaluation/compliance/complianceStageMain.xhtml" />
 		</c:if>
 
 		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 }">
-
 			<ui:include
 				src="/xhtml/sc/evaluation/evaluationStage/evaluationStage.xhtml" />
 		</c:if>
-
 
 		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3}">
 			<c:if
@@ -121,21 +151,15 @@
 			</c:if>
 		</c:if>
 
-
 		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 4}">
 			<ui:include src="/xhtml/sc/evaluation/report/report.xhtml" />
 		</c:if>
+		
 		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5}">
-
-			<ui:include
-				src="/xhtml/sc/evaluation/committeeEndorsment/signoff.xhtml" />
-
+			<ui:include src="/xhtml/sc/evaluation/committeeEndorsment/signoff.xhtml" />
 		</c:if>
 
 		<ui:include src="/xhtml/sc/evaluation/uploadEvaluation.xhtml"></ui:include>
 	</ui:define>
 
 </ui:composition>
-
-
-
