@@ -21648,7 +21648,10 @@ if(null!=allTechnicalChecklist){
 		return desc;
 	}
 	
-	//#28784 -  Start
+	
+	/*
+	 * reset Demo scoring and list and reasign back existing weightage to new list, #28784
+	 */
 	public void resetDemoTechSpecListAfterDelete(){
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -21666,9 +21669,8 @@ if(null!=allTechnicalChecklist){
 				}
 			}
 		}
-		getManagedBean().setScQtCheckSt2techProposal(resDTO.getTechnicalCheckList());
+		getManagedBean().setScQtCheckSt2techProposal(resDTO.getTechnicalCheckList());		
 		
-		//#28784
 		List<Integer> settinglist = new ArrayList<Integer>();
 		settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_DEMO);		
 		reqDTO.setSettingTypes(settinglist);		
