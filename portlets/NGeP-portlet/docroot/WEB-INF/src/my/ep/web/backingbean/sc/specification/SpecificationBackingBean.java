@@ -21647,11 +21647,13 @@ if(null!=allTechnicalChecklist){
 		}
 		return desc;
 	}
+		
 	
-	
-	/*
-	 * reset Demo scoring and list and reasign back existing weightage to new list, #28784
-	 */
+	/**
+	* reset Demo scoring and list and reasign back existing weightage to new list, #28784
+	* 	
+	* @return void
+	*/
 	public void resetDemoTechSpecListAfterDelete(){
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
