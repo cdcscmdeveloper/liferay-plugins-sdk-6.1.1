@@ -199,9 +199,9 @@
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.sme.supp.doc.upload']}"
 							style="width : 20%;">
-							<p:commandLink oncomplete="uploadDialog.show();return false;"
-								update="@([id$=uploadDialog])" process="@this"
-								action="#{smUpdateSmeInfoBackingBean.assignSmeSupportDoc(doc)}">
+							<!-- #29617 ReOpen note 158 --> 
+							<p:commandLink oncomplete="uploadDialog.show();return false;" 
+								update="@([id$=uploadDialog])" process="@this" >
 								<p:graphicImage value="/css/images/design/upload.png"
 									style="margin-right:2px;" />
 							</p:commandLink>
