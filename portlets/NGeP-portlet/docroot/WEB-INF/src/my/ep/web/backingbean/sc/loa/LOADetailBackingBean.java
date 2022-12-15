@@ -8972,7 +8972,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
 			
-			mandatoryItems.append(justificationMandatory+"\n&nbsp"+supplierOfferMandatory);
+			mandatoryItems.append(justificationMandatory+"<br/>&nbsp"+supplierOfferMandatory); //#29006 - note 689
 			
 			FacesContext.getCurrentInstance().addMessage(
 					null,
