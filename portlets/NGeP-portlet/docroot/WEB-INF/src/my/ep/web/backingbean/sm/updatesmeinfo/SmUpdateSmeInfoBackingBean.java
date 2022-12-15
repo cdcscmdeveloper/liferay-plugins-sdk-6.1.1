@@ -81,11 +81,11 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 				getManagedBean().setSmeSupplierDoc(currentSmeInfo.getSmSmeSupplierDocs().get(0));
 			} else { getManagedBean().setSmeCorpRegisteredTrans("0"); }
 		} else {
-			// #29617 ReOpen note 150 - Start
-			getManagedBean().setSmeSupplier(null);
-		getManagedBean().setSmeCorpRegisteredTrans(null); 
-			SMECorpChange();
-			// #29617 ReOpen note 150 - End
+			// #29617 ReOpen note 161 - Start
+			SMECorpChange(); 
+			getManagedBean().setSmeSupplier(null); 
+			getManagedBean().setSmeCorpRegisteredTrans(null);
+			// #29617 ReOpen note 161 - End
 		} 
 		// #29617 CR Fix - End
 		initDocumentList(getManagedBean().getSmeSupplier());
@@ -182,6 +182,8 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
 		if (event.getFile() != null) {
+			// #29617 ReOpen note 158
+			assignSmeSupportDoc(getManagedBean().getSmeSupplier().getSmSmeSupplierDocs().get(0));
 			if (getManagedBean().getSmeSupplierDoc() != null) {
 				String filePath = getSmeSuppDocBasePath();
 				SmSmeSupplierDoc doc = getManagedBean().getSmeSupplierDoc();
@@ -260,10 +262,10 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 			while (iter.hasNext()) {
 				SmSmeSupplierDoc doc = iter.next();
 				// #29617 ReOpen note 109
-					iter.remove();
-				}
+				iter.remove();
 			}
 		}
+	}
 
 	public void declareSme() {
 		if (getManagedBean().getSmeCorpRegisteredTrans().equalsIgnoreCase("1")) {
@@ -316,7 +318,8 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 	// #29617 End
 	// #29617 ReOpen note 150 - Start
 	public void SMECorpChange() {
-		if(getManagedBean().getSmeCorpRegisteredTrans() != null && getManagedBean().getSmeCorpRegisteredTrans().equalsIgnoreCase("1")){
+		// #29617 ReOpen note 161
+		if(getManagedBean().getSmeCorpRegisteredTrans() != null){
 			if (getManagedBean().getSmeSupplier() != null) {
 				getManagedBean().getSmeSupplier().setSmeRefNo(null);
 				getManagedBean().getSmeSupplier().setSmeValidStartDate(null);
