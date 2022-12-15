@@ -1728,6 +1728,7 @@ public class LOIDetailBackingBean extends
 		negoTerm.setPmTerm(null);
 		if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
 			negoTerm.setSelectedTerm(Boolean.FALSE);
+			negoTerm.setSelected(Boolean.FALSE);//#29007 Added Vinod
 		} else{
 			negoTerm.setSelectedTerm(Boolean.TRUE);
 			negoTerm.setSelected(true);
