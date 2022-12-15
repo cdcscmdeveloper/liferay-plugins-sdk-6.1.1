@@ -12089,13 +12089,17 @@ public class SmApplicationUtil {
 			bean.getSelectedShareHolder().setContractSignerFlg(
 					DbValueConst.RECORD_STATUS_SUSPENDED);
 			bean.getShareHolderMailAddr().setSameAsPerm(true);
+			//#32694 - START
+			bean.setePRoleList(null);
+			bean.getSelectedShareHolder().setEpRole("");
 		} else {
 			bean.getShareHolderMailAddr().setSameAsPerm(false);
 			assignSelShareHolderAddress(bean.getSelectedShareHolder(), bean);
+			bean.setePRoleList(SmApplicationUtil.getPersonnelRoleItems(
+					bean.getSelectedShareHolder(), bean.getSmAppl(),
+					bean.getAuthVO()));
 		}
-		bean.setePRoleList(SmApplicationUtil.getPersonnelRoleItems(
-				bean.getSelectedShareHolder(), bean.getSmAppl(),
-				bean.getAuthVO()));
+		//#32694 - END
 		bean.setDisableAuthorizedRadio(SmApplicationUtil
 				.isDisableAuthorizedRadio(bean.getSelectedShareHolder(),
 						bean.isValidSmUserLimit()));
