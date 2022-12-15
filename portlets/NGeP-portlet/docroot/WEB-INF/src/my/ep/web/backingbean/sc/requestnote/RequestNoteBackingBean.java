@@ -5195,6 +5195,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return codificationBB.assignProductCode(requestItem, null, false);
 	}
 	
+	/**
+	 * to retrieve top zonal tier price
+	 * @param supplierItemPrices the list of ScSupplierItemPrice
+	 * @param orderQuantity the order quantity
+	 * @param priceType the price type
+	 * @param itemName the name of items
+	 * @return ScSupplierItemPrice instance
+	 */
 	private ScSupplierItemPrice getTopZonalTierPrice(List<ScSupplierItemPrice> supplierItemPrices, 
 			BigDecimal orderQuantity, String priceType, String itemName) {
 		List<ScSupplierItemPrice> groupedItemPrice = new ArrayList<ScSupplierItemPrice>();
