@@ -535,21 +535,24 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				log.debug("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
-
+				
+				//#16190 start
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-					messageId = MessageConst.INFO_700021;
+					messageId = MessageConst.INFO_700112;
 					nextRole = RoleCode.BPK_PQ_APPROVER.value();
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-					messageId = MessageConst.INFO_700025;
+					messageId = MessageConst.INFO_700113;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-					messageId = MessageConst.INFO_700009;
+					messageId = MessageConst.INFO_700114;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					messageId = MessageConst.INFO_700007;
+					messageId = MessageConst.INFO_700115;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-					messageId = MessageConst.INFO_700008;
+					messageId = MessageConst.INFO_700116;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-					messageId = MessageConst.INFO_700010;
+					messageId = MessageConst.INFO_700117;
 				}
+				//#16190 end
+				
 				log.debug("Record saved successfully");
 				if(StringUtils.isNotBlank(nextRole)){
 					PmRoleDesc roleDesc = RoleHelper.getInstance().getRoleDescByCode(nextRole);
