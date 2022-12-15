@@ -20999,7 +20999,7 @@ if(null!=allTechnicalChecklist){
 			if (scQtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
 				if (scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions() != null) {
 					List<TplSpecQuestion> list = scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions();
-					if (null != list && list.size() > 0) {
+					if (null != list && !list.isEmpty()) {
 						for (TplSpecQuestion obj : list) {
 							if (BooleanUtils.isTrue(obj.isItemReqDemo()) && obj.getDemoScore() == null) {
 								throw new EpException(MessageConst.ERROR_760529);
@@ -21657,11 +21657,12 @@ if(null!=allTechnicalChecklist){
 		reqDTO.setScQt(this.getManagedBean().getQt());
 		reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 		SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
-		for(ScQtCheckList e: existingTechChecklist){
-			for(ScQtCheckList f: resDTO.getTechnicalCheckList()){
-				if(e.getQtChecklistId() != null && e.getQtScoreWeightage() != null && f.getQtScoreWeightage() != null && 
-						e.getQtScoreWeightage().getWeightage() != null && e.getQtChecklistId().equals(f.getQtChecklistId())){
-					f.getQtScoreWeightage().setWeightage(e.getQtScoreWeightage().getWeightage());
+		for (ScQtCheckList e : existingTechChecklist) {
+			for (ScQtCheckList f : resDTO.getTechnicalCheckList()) {
+				if (e.getQtChecklistId() != null && e.getQtScoreWeightage() != null && f.getQtScoreWeightage() != null) {
+					if (e.getQtScoreWeightage().getWeightage() != null && e.getQtChecklistId().equals(f.getQtChecklistId())) {
+						f.getQtScoreWeightage().setWeightage(e.getQtScoreWeightage().getWeightage());
+					}
 				}
 			}
 		}
