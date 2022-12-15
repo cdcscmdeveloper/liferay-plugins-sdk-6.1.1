@@ -936,7 +936,7 @@ public class SpecificationBackingBean extends
 								} else if (paramDesc.getPmParameter().getParameterCode()
 										.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION)) {
 									financialCheckListTypeChange(financialCheckList.indexOf(checkList), financialCheckList);
-			}
+								}
 							} else {
 								setDefTypeAndActionValues(checkList);
 								financialCheckListTypeChange(financialCheckList.indexOf(checkList), financialCheckList);
@@ -1356,7 +1356,7 @@ public class SpecificationBackingBean extends
 		case 2:
 			//1873 note 182 start
 			if(CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())){
-			retriveTechnicalCheckList();
+				retriveTechnicalCheckList();
 			}
 			//1873 note 182 end
 			addDemoTechnicalCheckList(); //#28784
@@ -1364,7 +1364,7 @@ public class SpecificationBackingBean extends
 		case 3:
 			//1873 note 195 start
 			if(CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())){
-			retriveTechnicalCheckList();//1873 note 86
+				retriveTechnicalCheckList();//1873 note 86
 			}
 			//1873 note 195 end
 			retriveFinancialCheckList();
@@ -4449,7 +4449,7 @@ public class SpecificationBackingBean extends
 			selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2financeProposalList(), null, false);
 			// Bug #34065@Syazani 01/11/2022 -- End
 			searchBean = null;
-
+			
 		} finally {
 			parameterSo = null;
 		}
@@ -4532,7 +4532,7 @@ public class SpecificationBackingBean extends
 		} finally {
 			parameterSo = null;
 		}
-
+		
 	}
 
 	/**
@@ -12984,7 +12984,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			SpecificationResDTO resDTO = specSo.deleteChecklists(specReqDTO);
 
 			if (resDTO.isSuccessful()) {
-			//1873 note 182 start
+				//1873 note 182 start
 				ISearchResultBean<ScQtCheckList> checklistResultBean = specSo.retrieveTemplateSpecChecklist(specReqDTO).getSpecResultBean();
 				Map<Long, ScQtCheckList> tecChecklistMap = new LinkedHashMap<Long, ScQtCheckList>();
 				Map<Long, ScQtCheckList> finChecklistMap = new LinkedHashMap<Long, ScQtCheckList>();
@@ -13123,7 +13123,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			Integer index = null;//1873 - note 97
 			
-			// Bug #33661@Syazani 16/08/2022 -- Start
+			// Bug #33661@Syazani 07/10/2022 -- Start
 			// Purpose: verify status is in Pending Specification Preparation to prevent user from altering the data by using multiple tab/windows
 			if (this.getManagedBean().isFromSpecEndorse()) {
 				retrieveStatusByTypeAndId(this.getManagedBean().getQt());
@@ -13300,7 +13300,7 @@ if (null != checklist && !checklist.isEmpty()) {
 							if (techlistTitle.trim().replaceAll("\\s", "").equalsIgnoreCase(scQtTitleSpec.trim().replaceAll("\\s", ""))
 									&& !scQtCheckList.getQtChecklistId().equals(qtChecklistId)) {
 								throw new EpException(MessageConst.ERROR_760207, new String[] { scQtCheckList.getTitle() });
-				}
+							}
 						}
 					}
 					if (null != finanicalAllCheckList && !finanicalAllCheckList.isEmpty()) {
@@ -13987,7 +13987,7 @@ if (null != checklist && !checklist.isEmpty()) {
 							throw new EpException(MessageConst.ERROR_760207, new String[] { scQtCheckList.getTitle() });
 						}
 					}
-			}
+				}
 				if (null != finanicalAllCheckList && !finanicalAllCheckList.isEmpty()) {
 					for (ScQtCheckList financiallist : finanicalAllCheckList) {
 						Long qtChecklistId = financiallist.getQtChecklistId() != null ? financiallist.getQtChecklistId() : 0;
@@ -15276,8 +15276,8 @@ if (null != checklist && !checklist.isEmpty()) {
 	        		l1Ids.add(l1CatMap.getKey());
 					l2Ids.add(l2CatMap.getKey());
 					l3Ids.add(l3CatMap.getKey());
-							}
-						}
+				}
+			}
 				if(l1Ids.size()!=0 && l2Ids.size()!=0 && l3Ids.size()!=0){
 					qtSearchBean.getDataFilterBeans().add(
 							new SearchMultiFilterBean(
@@ -15290,8 +15290,8 @@ if (null != checklist && !checklist.isEmpty()) {
 									new SearchFilterBean("scQtDoc.scQt.scQtCategorys.pmCategoryL3",
 											SearchOperator.OPERATOR_IN.value(), l3Ids, 
 											SearchCondition.CONDITION_AND.value())));
-				}
-		//#29468 Vinod End
+			}
+			//#29468 Vinod End
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 		}
@@ -19989,7 +19989,7 @@ if(null!=allTechnicalChecklist){
 
 		List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
 		List<ScQtCheckList> tempList = new ArrayList<ScQtCheckList>();
-
+		
 		//#28784 - Enable back to handle record has been updated issue
 		for (ScQtCheckList l : st2technicalproposalList) {
 			if (l.getQtChecklistId() == null && l.getDefinationType().getParameterCode()
@@ -20229,11 +20229,11 @@ if(null!=allTechnicalChecklist){
 		
 		List<ScQtCheckList> st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
 
-		for (ScQtCheckList t : st2technicalproposalList) {  
-			if (t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
-				if (t.getScQtDoc().getTplSpecMaster().getTplSpecQuestions() != null) {
-					List<TplSpecQuestion> list = t.getScQtDoc().getTplSpecMaster().getTplSpecQuestions();
-					if (null != list && list.size() > 0) {
+//		for (ScQtCheckList t : st2technicalproposalList) {  
+			if (scQtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
+				if (scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions() != null) {
+					List<TplSpecQuestion> list = scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions();
+					if (null != list && !list.isEmpty()) {
 						for (TplSpecQuestion obj : list) {
 							if (BooleanUtils.isTrue(obj.isItemReqDemo()) && obj.getDemoScore() == null) {
 								throw new EpException(MessageConst.ERROR_760529);
@@ -20242,13 +20242,13 @@ if(null!=allTechnicalChecklist){
 					}
 				}
 			}
-		}
+//		}
 
 		for (TplSpecQuestion q : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
 			if (!q.isItemReqDemo()) {
 				q.setDemoScore(null);
 			}
-		}		
+		}
 		//#28784 -revert back to save on pencil click due to causing record has been udated issue
 //		for (ScQtCheckList l : st2technicalproposalList) {
 //			if (l.getQtChecklistId() == null
@@ -20871,8 +20871,13 @@ if(null!=allTechnicalChecklist){
 		}
 		return desc;
 	}
+		
 	
-	//#28784 -  Start
+	/**
+	* reset Demo scoring and list and reasign back existing weightage to new list, #28784
+	* 	
+	* @return void
+	*/
 	public void resetDemoTechSpecListAfterDelete(){
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -20881,16 +20886,17 @@ if(null!=allTechnicalChecklist){
 		reqDTO.setScQt(this.getManagedBean().getQt());
 		reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 		SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
-		for(ScQtCheckList e: existingTechChecklist){
-			for(ScQtCheckList f: resDTO.getTechnicalCheckList()){
-				if(e.getQtChecklistId() != null && e.getQtChecklistId().equals(f.getQtChecklistId()) && e.getQtScoreWeightage() != null){
-					f.getQtScoreWeightage().setWeightage(e.getQtScoreWeightage().getWeightage());
+		for (ScQtCheckList e : existingTechChecklist) {
+			for (ScQtCheckList f : resDTO.getTechnicalCheckList()) {
+				if (e.getQtChecklistId() != null && e.getQtScoreWeightage() != null && f.getQtScoreWeightage() != null) {
+					if (e.getQtScoreWeightage().getWeightage() != null && e.getQtChecklistId().equals(f.getQtChecklistId())) {
+						f.getQtScoreWeightage().setWeightage(e.getQtScoreWeightage().getWeightage());
+					}
 				}
 			}
 		}
-		getManagedBean().setScQtCheckSt2techProposal(resDTO.getTechnicalCheckList());
+		getManagedBean().setScQtCheckSt2techProposal(resDTO.getTechnicalCheckList());		
 		
-		//#28784
 		List<Integer> settinglist = new ArrayList<Integer>();
 		settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_DEMO);		
 		reqDTO.setSettingTypes(settinglist);		
