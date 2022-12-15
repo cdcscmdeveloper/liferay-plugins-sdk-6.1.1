@@ -1315,7 +1315,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
 			//#28888 : checking empty list
 			/*if(CollectionUtils.isNotEmpty(getManagedBean().getSmSupp().getSmSupplierOwners())){
-				SmSupplierOwner smSupplierOwners = getManagedBean().getSmSupp().getSmSupplierOwners().get(0);			
+				SmSupplierOwner smSupplierOwners = getManagedBean().getSmSupp().getSmSupplierOwners().get(0);
 				getManagedBean().getSmSupp().getSmSupplierOwners().clear();
 				getManagedBean().getSmSupp().getSmSupplierOwners().add(smSupplierOwners);
 			}//end #28888
@@ -2564,8 +2564,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 										if(personnelDirectorSSM == null && personnelSSM == null){
 											if(isMofAccEffDatePassedCurrDate(this.getManagedBean().getSmSupp())){
 												if(personnel.getEpRole() !=  null && my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES.contains(personnel.getEpRole())){
-											personnelsRole.add(personnel);
-										}
+													personnelsRole.add(personnel);
+												}
 											} else {
 												personnelsRole.add(personnel);
 											}
@@ -3242,8 +3242,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		this.getManagedBean().getSmSuppOwners().add(smSupplierOwner);
 	}
 	//27691 END
+	
+	//#27691 - START 
 	public void removeSupplierOwner() {
-		if (this.getManagedBean().getSelectedSuppOwners() != null && this.getManagedBean().getSelectedSuppOwners().length > 0) {
+		if (this.getManagedBean().getSelectedSuppOwners() != null && this.getManagedBean().getSelectedSuppOwners().size() > 0) {
 			for (SmSupplierOwner smSupplierOwner : this.getManagedBean().getSelectedSuppOwners()) {
 				// #27691 - Start - Set record status to 9 for deleted personnel
 				if(!this.getManagedBean().getSmAppl().getSmPersonnels().isEmpty()){
@@ -3260,8 +3262,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		this.getManagedBean().setSelectedSuppOwners(null);
 	}
-	
-	public void supplierOwnerOnRowSelected(SelectEvent event) {
+	//remove this comment code- use new changes
+	/*public void supplierOwnerOnRowSelected(SelectEvent event) {
 		unselectSupplierOwnerAdminRow();
 	}
 	
@@ -3286,12 +3288,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if (pmUser == null || (pmUser != null && pmUser.getUserId() == null)) return "";
 		return isSmSupplierOwnerIsAdmin(smSuppOwner) ? "ui-state-disabled" : "";
-	}
+	}*/
 	
 	public boolean isSmSupplierOwnerIsAdmin(SmSupplierOwner smSupplierOwner) {
 		//32899 - Start
 		//Added checking for SmSupplier
-		if (smSupplierOwner.getSmSupplier() != null){
+		/*if (smSupplierOwner.getSmSupplier() != null){
 			for (SmPersonnel smPersonnel : smSupplierOwner.getSmSupplier().getSmAppl().getSmPersonnels()) {
 				if (smPersonnel.getIdentificationNo().equals(smSupplierOwner.getIdentificationNo()) && smPersonnel.getEpRole() != null) { //27691
 					//boolean isSupplierAdmin = smPersonnel.getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value()) || smPersonnel.getEpRole().equals(RoleCode.BASIC_SUPPLIER_ADMIN.value());
@@ -3299,7 +3301,17 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}
 				}
 			} //32899 - End
-		return false;
+		return false;*/
+		boolean isAdmin = false;
+		if (smSupplierOwner.getSmSupplier() != null){
+			for (SmPersonnel smPersonnel : smSupplierOwner.getSmSupplier().getSmAppl().getSmPersonnels()) {
+				if (smPersonnel.getIdentificationNo().equals(smSupplierOwner.getIdentificationNo()) && smPersonnel.getEpRole() != null
+						&& (smPersonnel.getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value()) || smPersonnel.getEpRole().equals(RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
+					isAdmin = true;
+				}
+			}
+		}
+		return isAdmin;
 	}
 	// 27691 - end -  Add/Delete Supplier Owner
 	
@@ -5009,6 +5021,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	//14685 - END
 	
 	//  #30829 - Start 1/11/2021
+    //  #30829 - Start 1/11/2021
 	private SmPersonnel onSaveSmPersonnelEquityOwner(SmAppl smAppl, SmSupplierOwner smSupplierOwner, SmPersonnel smPersonnel){
 		
 		smPersonnel.setName(smSupplierOwner.getOwnerName());
@@ -5053,5 +5066,67 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	// #30829 - end
+	//#27691 - START 
+	public void toggleAllOwnerTick(){
+		if(this.getManagedBean().isAllOwnerSelected()){
+			for(SmSupplierOwner owner : this.getManagedBean().getSmSuppOwners()){
+				if(!isSmSupplierOwnerIsAdmin(owner)){
+					owner.setOwnerSelected(true);
+					if(this.getManagedBean().getSelectedSuppOwners()==null || this.getManagedBean().getSelectedSuppOwners().isEmpty()){
+						this.getManagedBean().setSelectedSuppOwners(new ArrayList<SmSupplierOwner>());
+						this.getManagedBean().getSelectedSuppOwners().add(owner);
+					}else{
+						this.getManagedBean().getSelectedSuppOwners().add(owner);
+					}
+				}
+			}
+		}else{
+			for(SmSupplierOwner owner : this.getManagedBean().getSmSuppOwners()){
+				owner.setOwnerSelected(false);
+				Iterator<SmSupplierOwner> iterator = this.getManagedBean().getSelectedSuppOwners().iterator();
+				while (iterator.hasNext()) {
+					SmSupplierOwner selectedOwner = iterator.next();
+					if(owner.equals(selectedOwner)){
+						iterator.remove();
+					}
+				}
+			}
+		}
+	}
 	
+	public void toggleOwnerCheckBox(SmSupplierOwner owner){
+		if(owner.isOwnerSelected()){
+			if(this.getManagedBean().getSelectedSuppOwners()==null || this.getManagedBean().getSelectedSuppOwners().isEmpty()){
+				this.getManagedBean().setSelectedSuppOwners(new ArrayList<SmSupplierOwner>());
+				this.getManagedBean().getSelectedSuppOwners().add(owner);
+			}else{
+				this.getManagedBean().getSelectedSuppOwners().add(owner);
+			}
+		}else{
+			this.getManagedBean().setAllOwnerSelected(false);
+			Iterator<SmSupplierOwner> iterator = this.getManagedBean().getSelectedSuppOwners().iterator();
+			while (iterator.hasNext()) {
+				SmSupplierOwner selectedOwner = iterator.next();
+				if(owner.equals(selectedOwner)){
+					iterator.remove();
+				}
+			}
+		}
+		
+		if(!this.getManagedBean().getSmSuppOwners().isEmpty()){
+			boolean isSelectAll = true;
+			for(SmSupplierOwner ownerSelect : this.getManagedBean().getSmSuppOwners()){
+				if(!ownerSelect.isOwnerSelected() && !isSmSupplierOwnerIsAdmin(ownerSelect)){
+					isSelectAll = false;
+					break;
+				}
+			}
+			if(!isSelectAll){
+				this.getManagedBean().setAllOwnerSelected(false);
+			}else{
+				this.getManagedBean().setAllOwnerSelected(true);
+			}
+		}
+	}
+	//#27691 - END 
 }
