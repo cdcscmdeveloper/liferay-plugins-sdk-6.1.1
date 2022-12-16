@@ -256,6 +256,7 @@ public class PmReportsBackingBean extends
 
 	// Financial Institution List
 	private void constructPm001Map(LinkedHashMap<String, String> map) {
+		log.info("end constructPm001Map");
 		if (StringUtils.isNotBlank(getManagedBean().getServiceType())) {
 			map.put(PmReportConst.PARAM_PM_SERVICE_TYPE, getManagedBean()
 					.getServiceType());
@@ -275,6 +276,12 @@ public class PmReportsBackingBean extends
 			map.put(PmReportConst.PARAM_PM_SUPP_PROFILE_STATUS,
 					getManagedBean().getStatus().toString());
 		}
+		
+		log.info("Test result constructPm001Map = " + getManagedBean().getServiceType() 
+				+ " dan "+getManagedBean().getSelectedOrgProfile().getPmFinancialOrg().getFinOrgName() + " dan "+ getManagedBean()
+				.getSelectedOrgProfile().getPmFinancialOrg()
+				.getBizRegNumber()) ; 
+		log.info("end constructPm001Map");
 	}
 
 	// Organization list
