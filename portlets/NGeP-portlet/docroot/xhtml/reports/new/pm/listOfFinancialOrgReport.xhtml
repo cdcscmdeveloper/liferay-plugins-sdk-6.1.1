@@ -16,6 +16,9 @@
 					value="#{pmReportsBackingBean.managedBean.serviceType}">
 					<f:selectItems
 						value="#{pmReportsBackingBean.getDropdownCodeValues(ParameterTypeConst.bankServices)}" />
+					<!-- 34299 - START -reendorse -->
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+					<!-- 34299 - END -reendorse -->
 				</p:selectOneMenu></td>
 		</tr>
 		<tr>
