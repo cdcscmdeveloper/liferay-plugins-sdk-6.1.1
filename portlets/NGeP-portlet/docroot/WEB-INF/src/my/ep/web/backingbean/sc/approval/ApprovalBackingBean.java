@@ -353,7 +353,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		for (int i = 0; i < list.size(); i++) {
 			// #25077 - Start
 			if(list.get(i).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)){
-			list.get(i).setApprovalRequestAttachement(null);
+				list.get(i).setApprovalRequestAttachement(null);
 				this.getManagedBean().setScQtApprovalReqAttachementMITI(null);
 				this.getManagedBean().setFlagFileAttahmentDeletedMITI(true); 
 			}
@@ -1496,6 +1496,23 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						qtReqDTO.setRejected(true);
 						revertToOldValues(qt, approvalRequests);
 					} else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+						//#21692 - start
+						ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtId());
+						wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
+						if(wfStatus.getPmStatus()!=null) {
+							Long currentStatus = wfStatus.getPmStatus().getStatusId();
+							if (QTStatusConst.QT_RE_FINALIZATION.equals(currentStatus)) {
+								QuationTenderReqDTO qtReqDTO1 = new QuationTenderReqDTO();
+								qtReqDTO1.setQtdetail(qt);
+								QuationTenderResDTO qtResDTO1 = detailSO.updateDataTypeSupplierList(qtReqDTO1);
+								String[] supplierIdsArray = qtResDTO1.getDataTypeSupplierList();
+								dataType.getSupplierList().clear();
+
+								dataType.getSupplierList().addAll(
+										Arrays.asList(supplierIdsArray));
+							}
+						}
+						//#21692 - end
 						isFinalApproval = dataType != null && CollectionUtils.isEmpty(dataType.getSupplierList());
 						
 						approvalTypes = approveApprovalRequests(qt, 
