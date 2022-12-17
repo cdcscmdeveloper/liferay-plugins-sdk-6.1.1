@@ -17,8 +17,7 @@
 					#if($revFinDoc.pmParameter != $null)
 					<tr>
 						<td>$velocityCount</td>
-						<!-- #24964 -->
-						<td>$smVmUtil.getParameterDesc($!revFinDoc.pmParameter)</td>
+						<td>$revFinDoc.pmParameter.pmParameterDescs.get(0).codeName</td>
 						<td>$!revFinDoc.docRef</td>
 						<td>$!smVmUtil.formatDate($revFinDoc.docDate)</td>
 						<td>$!revFinDoc.remark</td>

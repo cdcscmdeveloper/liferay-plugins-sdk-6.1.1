@@ -17,7 +17,7 @@
 		    		<td>$velocityCount</td>
 		    		<td>$codeL1$codeL2$codeL3</td>
 		    		<td>$cat.pmCategoryL3.categoryName</td>
-		    		<td>$smVmUtil.getDescByLabel('lbl.sm.catCodes.approved')</td>
+		    		<td></td>
 		    	</tr>
 		  	#end
 		#else

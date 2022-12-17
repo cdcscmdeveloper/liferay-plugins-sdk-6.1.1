@@ -30,7 +30,6 @@ import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
-import my.ep.constant.EpPropertiesConst; //#28833 -shafie
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -57,7 +56,6 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.EpPropertiesUtils; //#28833 -shafie
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
@@ -75,8 +73,7 @@ public class PmReportsBackingBean extends
 		ReportBaseBackingBean<PmReportsManagedBean> {
 
 	private static final long serialVersionUID = 1L;
-	private static final String NAV_TO_PMREPORT = "/xhtml/reports/new/pm/pmreportsmain.xhtml";	
-	private static final String CAP_CHAR = "^";  // shafie - #28833
+	private static final String NAV_TO_PMREPORT = "/xhtml/reports/new/pm/pmreportsmain.xhtml";
 
 	private static Map<Long, Object> orgTypeMapper;
 	
@@ -130,24 +127,11 @@ public class PmReportsBackingBean extends
 				getManagedBean().getReportCode())) {
 			retrieveOrgTypeMap();
 			this.getManagedBean().setSearchOrgCategory(PmReportConst.ORG_CAT_CP_MR);
-		//#28833 - shafie -start
-		}else if(PmReportConst.PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT.equals(
-				getManagedBean().getReportCode())) {
-			setCurrentActiveOrg(); 
 		}
-		//#28833 - shafie -end
-		
 		
 	}
 
 	public void generatePmReport() {
-		//#29486 - shafie -start
-		if(PmReportConst.PM_MONTHLY_USER_AND_ROLE_RPT_VAL.equals(
-				getManagedBean().getReportCode())){
-			pickMonthYear();
-		}
-		//#29486 - shafie -end
-		
 		IRPTRequestSO rptRequestSO = null;
 		try {
 			LinkedHashMap<String, String> map = constructParamMap();
@@ -223,16 +207,6 @@ public class PmReportsBackingBean extends
 		case PmReportConst.PM_NO_OF_CP_AND_MR_ACCESS_APPLICATION_RPT_VAL:
 			constructPm010Map(map);
 			break;
-			//#28833 shafie  start
-		case PmReportConst.PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT:
-			constructPm012Map(map);
-			break;
-			//#28833 shafie  end
-		//shafie - #29486 -start
-		case PmReportConst.PM_MONTHLY_USER_AND_ROLE_RPT_VAL:
-			constructPm013Map(map);
-			break;
-		//shafie - #29486 - end
 		default:
 			throw new EpException("Report not found.");
 
@@ -299,17 +273,6 @@ public class PmReportsBackingBean extends
 			map.put(PmReportConst.PARAM_PM_STATUS, getManagedBean().getStatus()
 					.toString());
 		}
-		
-		// shafie #28833 start
-		if (getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_MINISTRY ||
-		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_KUMPULAN_PTJ ||
-		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_PTJ) {
-			if (getManagedBean().isGovtSeller()){
-				String PG2G = "1";
-				map.put(PmReportConst.PARAM_PM_G2G, PG2G);
-			}
-		} 
-		// shafie #28833 - end
 	}
 
 	// User Profile List
@@ -361,6 +324,7 @@ public class PmReportsBackingBean extends
 					.getSelectedOrgProfile().getPmOrgValidity().getOrgCode());
 		}	
 	}
+	
 	// 28239 - end
 
 		if (StringUtils.isNotBlank(getManagedBean().getSelectedRoleCode())) {
@@ -458,104 +422,7 @@ public class PmReportsBackingBean extends
 					getManagedBean().getStatus() == 1 ? "Active" : "Inactive");
 		}
 	}
-	
-	//#28833 -start
-	//List of PTJ allowed to approve other PTJ's procurement
-	private void constructPm012Map(LinkedHashMap<String, String> map) {
-		if (getManagedBean().getSelectedMinistry() != null) {
-			map.put(PmReportConst.PARAM_PM_ORG_TYPE_MINISTRY, 
-					getManagedBean().getSelectedMinistry().getPmOrgValidity().getOrgName());
-		}
-		
-		if (getManagedBean().getSelectedKumpulanPTJ() != null) {
-			map.put(PmReportConst.PARAM_PM_ORG_TYPE_KUMPULAN_PTJ, 
-					getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity().getOrgName());
-		}
-		
-		if (getManagedBean().getSelectedPTJ() != null) {
-			map.put(PmReportConst.PARAM_PM_ORG_TYPE_PTJ, 
-					getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName()); 
-		}
-	}	
-	//shafie - #28833 -end
-	
-	//shafie - #29486 - start
-	//Monthly User and Role Report
-	private void constructPm013Map(LinkedHashMap<String, String> map) {
-		if (getManagedBean().getSelectedMinistry() != null) {
-			map.put(PmReportConst.PARAM_PM_MINISTRY, 
-					getManagedBean().getSelectedMinistry().getPmOrgValidity().getOrgName());
-		}else if(getManagedBean().getSelectedMinistry() == null) {
-			throw new EpException(MessageConst.ERROR_REPORT_780059);}
-		
-		if (getManagedBean().getSelectedKumpulanPTJ() != null) {
-			map.put(PmReportConst.PARAM_PM_KUMPULAN_PTJ, 
-					getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity().getOrgName());
-		}else if(getManagedBean().getSelectedKumpulanPTJ() == null) {
-			throw new EpException(MessageConst.ERROR_REPORT_780063);}
-		
-		if (getManagedBean().getSelectedPTJ() != null) {
-			map.put(PmReportConst.PARAM_PM_PTJ, 
-					getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName());
-			//#29486 - start
-			map.put(PmReportConst.PARAM_PM_PTJ_CODE, 
-					getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgCode());
-			//#29486 - end
-		}else if(getManagedBean().getSelectedPTJ() == null) {
-			throw new EpException(MessageConst.ERROR_REPORT_780064);}
-		
-		if (getManagedBean().getStatus() != null) {
-			map.put(PmReportConst.PARAM_PM_USER_STATUS, getManagedBean().getStatus()
-					.toString());
-		}
-		
-		if (getManagedBean().getmonthPicked() != null) {
-			map.put(PmReportConst.PARAM_PM_MONTH, getManagedBean().getmonthPicked());
-			
-		}
-		
-	}
-	
-	public void pickMonthYear(){
-		log.info("________________Masuk pickMonthYear________________");
-        String month= FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()  
-           .get("month");
-        String year= FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()  
-           .get("year");
-        
-        if(month != null || year != null){
-        	//#29486 - START
-        	Calendar monthlyDate = Calendar.getInstance();
-        	monthlyDate.set(Integer.parseInt(year), Integer.parseInt(month), 1);
-            getManagedBean().setMonthlyDate(monthlyDate.getTime());
-            //#29486 - END
-            changeStringToDate(month, year);
-        }
-   }
-	
-	public void changeStringToDate(String month, String year){
-		
-		String monthInString = null;
-		if(month.equals("0")){monthInString = "Jan";}
-		else if(month.equals("1")){monthInString = "Feb";}
-		else if(month.equals("2")){monthInString = "Mar";}
-		else if(month.equals("3")){monthInString = "Apr";}
-		else if(month.equals("4")){monthInString = "May";}
-		else if(month.equals("5")){monthInString = "Jun";}
-		else if(month.equals("6")){monthInString = "Jul";}
-		else if(month.equals("7")){monthInString = "Aug";}
-		else if(month.equals("8")){monthInString = "Sep";}
-		else if(month.equals("9")){monthInString = "Oct";}
-		else if(month.equals("10")){monthInString = "Nov";}
-		else if(month.equals("11")){monthInString = "Dec";}
-		
-		String dateInString = monthInString + year;
-		getManagedBean().setmonthPicked(dateInString);
-	
-	}
-	
-	//shafie - #29486 - end
-	
+
 	//No of Company Profile and Market Research Access Application
 	private void constructPm010Map(LinkedHashMap<String, String> map) {
 		if (getManagedBean().getSelectedOrgType() != null && 
@@ -692,24 +559,7 @@ public class PmReportsBackingBean extends
 		getManagedBean().setSelectedAccessType(null);
 		getManagedBean().setApplicantName(null);
 		getManagedBean().setSelectedApplicationStatus(null);
-		//shafie - #28833 - start
-		if(!getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) && !getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()) && !isInternalAuditorUnderMinistry()){
-			getManagedBean().setSelectedMinistry(null);
-		}else if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()) || isInternalAuditorUnderMinistry()){
-			//#28833, #29486 - shafie start
-			if(PmReportConst.PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT.equals(getManagedBean().getReportCode())) {
-				setCurrentActiveOrg();
-			}else {   
-				getManagedBean().setSelectedMinistry(null);
-			}	
-			//#28833,#29486 - shafie end
-		}
-		getManagedBean().setSelectedKumpulanPTJ(null);
-		getManagedBean().setSelectedPTJ(null);
-		//shafie - #28833 - end
-		//#29486 - START
-		getManagedBean().setMonthlyDate(null);
-		//#29486 - END
+
 	}
 
 	public void autoSelectOrgType() {
@@ -867,240 +717,6 @@ public class PmReportsBackingBean extends
 
 		return sb.toString();
 	}
-	
-	//shafie - #28833 - start
-	public String constuctConditionFieldsForPTJGroup() {
-
-		StringBuffer parentOrgProfile = new StringBuffer();
-		PmOrgProfile ministryOrgProfile = this.getManagedBean().getSelectedMinistry();
-		Long MinistryOrgProfileId = ministryOrgProfile != null ? ministryOrgProfile
-				.getOrgProfileId() : null;
-		if (null != MinistryOrgProfileId) {
-			String minLevel = EpPropertiesUtils.getInstance().getProperty(
-					EpPropertiesConst.LVL_ORG_PROFILE_MINISTRY);
-			String ptjGrpLevel = EpPropertiesUtils.getInstance().getProperty(
-					EpPropertiesConst.LVL_ORG_PROFILE_PTJGROUP);
-			if (minLevel != null && ptjGrpLevel != null) {
-				int ministryLevel = Integer.valueOf(minLevel);
-				int ptjGroupLevel = Integer.valueOf(ptjGrpLevel);
-				int orgLevel = ministryLevel - ptjGroupLevel;
-
-				for (int i = 0; i < orgLevel; i++) {
-					parentOrgProfile.append("parentOrgProfile.");
-				}
-				parentOrgProfile.append("orgProfileId");
-				parentOrgProfile.append(CAP_CHAR);
-				parentOrgProfile.append(MinistryOrgProfileId);
-			}
-		} else {
-			parentOrgProfile.append("  ");
-		}
-		return parentOrgProfile.toString();
-	}
-	
-	public String constuctConditionFieldsForPTJ() {
-
-		String parentOrgProfile = null;
-		
-		PmOrgProfile ministryOrgProfile = this.getManagedBean().getSelectedMinistry();
-		Long MinistryOrgProfileId = ministryOrgProfile != null ? ministryOrgProfile.getOrgProfileId() : null;
-		PmOrgProfile groupOrgProfile = this.getManagedBean().getSelectedKumpulanPTJ();
-		Long PTJGroupOrgProfileId = groupOrgProfile != null ? groupOrgProfile.getOrgProfileId() : null;
-		if (null != PTJGroupOrgProfileId) {
-			parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_PTJ_GROUP)
-					+ CAP_CHAR + PTJGroupOrgProfileId + ("|groupOrgType^") + ParameterConst.ORG_AUTH_TYPE_ORG_GROUP;
-		} else if (null != MinistryOrgProfileId) {
-			parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
-					+ CAP_CHAR + MinistryOrgProfileId + ("|groupOrgType^") + ParameterConst.ORG_AUTH_TYPE_ORG_GROUP;
-		} else {
-			parentOrgProfile = ("groupOrgType^") + ParameterConst.ORG_AUTH_TYPE_ORG_GROUP;
-		}
-
-		return parentOrgProfile;
-	}
-	
-	
-	
-	public boolean isMinistryJabatanAdmin(){
-		boolean Admin = false;
-	
-		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) ||
-			getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()) ||
-			isInternalAuditorUnderMinistry()){
-			
-			Admin = true;			
-			setSelectedMinistryforMinistryJabatanAdmin();			
-		}		
-		
-		return Admin;
-	}
-	
-	public void setSelectedMinistryforMinistryJabatanAdmin(){
-		List<PmUserOrg> userOrgList = PmCommonUtil
-				.retrieveActiveOrgWithoutRole(getFacesScopes()
-						.getUserSessionBean().getUserId(), false);
-		
-		if (userOrgList == null || userOrgList.isEmpty()) {
-			throw new EpException(MessageConst.ERROR_770105);			
-		}
-
-		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
-		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
-		
-		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
-			getManagedBean().setSelectedMinistry(pmOrgProfile);
-			this.getManagedBean().getPmSearchBean().setMinistry(pmOrgProfile);
-		}
-		else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
-			getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
-			this.getManagedBean().getPmSearchBean().setMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
-		}
-		else if (isInternalAuditorUnderMinistry()){
-			getManagedBean().setSelectedMinistry(pmOrgProfile);
-			this.getManagedBean().getPmSearchBean().setMinistry(pmOrgProfile);
-		}
-		
-	}
-	
-	public boolean isInternalAuditorUnderMinistry(){
-		boolean role = false;
-		
-		List<PmUserOrg> userOrgList = PmCommonUtil
-				.retrieveActiveOrgWithoutRole(getFacesScopes()
-						.getUserSessionBean().getUserId(), false);
-		
-		if (userOrgList == null || userOrgList.isEmpty()) {
-			throw new EpException(MessageConst.ERROR_770105);			
-		}
-
-		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
-		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
-		
-		if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() !=null 
-				&& ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){
-			if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
-				role = true;
-			}
-		}
-		return role;
-	}
-	
-	/**
-	 * To construct Ministry condition fields for LOV
-	 * 
-	 * @return String
-	 */
-	public String constructMinistryConditionFields() {		
-		StringBuilder sb = new StringBuilder();
-		sb.append("orgTypeCode.parameterCode^");
-		sb.append(OrganizationType.MINISTRY.value());
-		sb.append("|recordStatus^1");
-		return sb.toString();
-	}
-	
-	/**
-	 * To construct Kumpulan PTJ condition fields for LOV
-	 * 
-	 * @return String
-	 */
-	public String constructKumpulanPTJConditionFields() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("orgTypeCode.parameterCode^");
-		sb.append(OrganizationType.DEPARTMENT.value());		
-		sb.append("|recordStatus^1");
-		sb.append("|");
-		sb.append(OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(),OrganizationType.MINISTRY.value()));
-		sb.append("^");
-		sb.append(getManagedBean().getSelectedMinistry().getOrgProfileId());
-		return sb.toString();
-	}
-	
-	/**
-	 * To construct PTJ condition fields for LOV
-	 * 
-	 * @return String
-	 */
-	public String constructPTJConditionFields() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("orgTypeCode.parameterCode^");
-		sb.append(OrganizationType.DIVISION.value());
-		sb.append("|recordStatus^1");
-		sb.append("|");
-		sb.append(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
-		sb.append("^");
-		sb.append(getManagedBean().getSelectedKumpulanPTJ().getOrgProfileId());		
-		return sb.toString();
-	}
-	
-	/**
-	 * Post Action Listener : to set PTJ in PmSearchBean after PTJ has been selected in LOV
-	 */	
-	public void updateSearchCriteria(BaseEntity entity) {
-		log.info("updateSearchCriteria");
-		PmOrgProfile orgProfile = (PmOrgProfile) entity;
-		this.getManagedBean().getPmSearchBean()
-				.setPtj(orgProfile);
-	}
-	
-	/**
-	 * Post Action Listener : to set Kumpulan PTJ in PmSearchBean after Kumpulan PTJ has been selected in LOV
-	 */	
-	public void updateKPTJSearchCriteria(BaseEntity entity) {
-		log.info("updateKPTJSearchCriteria");
-		PmOrgProfile orgProfile = (PmOrgProfile) entity;
-		this.getManagedBean().getPmSearchBean()
-				.setKptj(orgProfile);
-
-		resetPtjOrgProfile();
-	}
-		
-	/**
-	 * Post Action Listener : to set Ministry in PmSearchBean after Ministry has been selected in LOV
-	 */	
-	public void updateMinistrySearchCriteria(BaseEntity entity) {
-		log.info("updateMinistrySearchCriteria");
-		PmOrgProfile orgProfile = (PmOrgProfile) entity;
-		this.getManagedBean().getPmSearchBean()
-				.setMinistry(orgProfile);
-		
-		resetPtjGroupOrgProfile(); 
-	}
-	
-	public void resetPtjGroupOrgProfile() {
-		this.getManagedBean().setSelectedKumpulanPTJ(null);		
-		this.getManagedBean().getPmSearchBean().setKptj(null);
-		resetPtjOrgProfile();
-	}
-	
-	
-	public void resetPtjOrgProfile() {
-		this.getManagedBean().setSelectedPTJ(null);		
-		this.getManagedBean().getPmSearchBean().setPtj(null);
-	}
-	//shafie - #28833 - end
-	
-	//shafie #29486 Start
-	public String constuctConditionFieldsForPTJEpEnabled() {
-
-		String parentOrgProfile = null;
-		
-		PmOrgProfile ministryOrgProfile = this.getManagedBean().getSelectedMinistry();
-		Long MinistryOrgProfileId = ministryOrgProfile != null ? ministryOrgProfile.getOrgProfileId() : null;
-		PmOrgProfile groupOrgProfile = this.getManagedBean().getSelectedKumpulanPTJ();
-		Long PTJGroupOrgProfileId = groupOrgProfile != null ? groupOrgProfile.getOrgProfileId() : null;
-		if (null != PTJGroupOrgProfileId) {
-			parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_PTJ_GROUP)
-					+ CAP_CHAR + PTJGroupOrgProfileId + ("|epPtj^") + ParameterConst.FLAG_YES;
-		} else if (null != MinistryOrgProfileId) {
-			parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
-					+ CAP_CHAR + MinistryOrgProfileId + ("|epPtj^") + ParameterConst.FLAG_YES;
-		} else {
-			parentOrgProfile = ("epPtj^") + ParameterConst.FLAG_YES;
-		}
-
-		return parentOrgProfile;
-	}
-	//shafie #29486 end
 
 	/**
 	 * retrieve all org type into mapper
@@ -1141,22 +757,6 @@ public class PmReportsBackingBean extends
 
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
-		//#28833 -shafie -start
-		
-		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
-			getManagedBean().setSelectedMinistry(pmOrgProfile);
-			this.getManagedBean().getPmSearchBean().setMinistry(pmOrgProfile);
-		}
-		else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
-			getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
-			this.getManagedBean().getPmSearchBean().setMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
-		}
-		else if (isInternalAuditorUnderMinistry()){
-			getManagedBean().setSelectedMinistry(pmOrgProfile);
-			this.getManagedBean().getPmSearchBean().setMinistry(pmOrgProfile);
-		}
-		//#28833 -shafie -end
-		
 	}
 
 	public void searchRoleMatrix() {

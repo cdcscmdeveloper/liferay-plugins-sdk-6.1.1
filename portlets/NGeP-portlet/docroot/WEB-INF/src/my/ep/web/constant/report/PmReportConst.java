@@ -26,7 +26,6 @@ public class PmReportConst implements Serializable {
 	public static final String PARAM_PM_SERVICE_TYPE = "SERVICETYPEID";
 	public static final String PARAM_PM_FINORG_NAME = "FINORGNAME";
 	public static final String PARAM_PM_STATUS = "PSTATUS";
-	public static final String PARAM_PM_G2G = "PG2G"; //shafie - #28833 
 	public static final String PARAM_PM_ORG_NAME = "PORGNAME";
 	public static final String PARAM_PM_ORG_CODE = "PORGCODE";
 	public static final String PARAM_PM_ORG_CATEGORY = "PCATTYPE";
@@ -38,21 +37,6 @@ public class PmReportConst implements Serializable {
 	public static final String PARAM_PM_ACCESS_TYPE = "PACCESSTYPE";
 	public static final String PARAM_PM_APPLICATION_STATUS = "PAPPLICATIONSTATUS";
 	public static final String PARAM_PM_APPLICATION_STATUS_1 = "PAPPLICATIONSTATUS1";
-	//shafie - #28833 -start
-	public static final String PARAM_PM_ORG_TYPE_MINISTRY = "P2";
-	public static final String PARAM_PM_ORG_TYPE_KUMPULAN_PTJ = "P4";
-	public static final String PARAM_PM_ORG_TYPE_PTJ = "P5";
-	//shafie - #28833 -end
-	//shafie - #29486 - start
-	public static final String PARAM_PM_MINISTRY = "PMINISTRY";
-	public static final String PARAM_PM_KUMPULAN_PTJ = "PKPTJ";
-	public static final String PARAM_PM_PTJ = "PPTJ"; 
-	public static final String PARAM_PM_USER_STATUS = "PSTATUS"; 
-	public static final String PARAM_PM_MONTH = "PMTH"; 
-	//shafie - #29486 - end
-	//#29486 - start 
-    public static final String PARAM_PM_PTJ_CODE = "PPTJCD";
-    //#29486 - end
 	
 
 	// PM Report Code
@@ -66,24 +50,11 @@ public class PmReportConst implements Serializable {
 	public static final String PM_BPK_USER_PROFILE_RPT_VAL = "PM_008";
 	public static final String PM_BPK_ADMIN_PROFILE_RPT_VAL = "PM_009";
 	public static final String PM_NO_OF_CP_AND_MR_ACCESS_APPLICATION_RPT_VAL = "PM_010";
-	public static final String PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT = "PM_012"; //shafie - #28833
-	public static final String PM_MONTHLY_USER_AND_ROLE_RPT_VAL = "PM_013"; //Shafie - #29486
-	
 
 	// Org Category values
 	public static final int ORG_CAT_FEDERAL_GOVT = 0;
 	public static final int ORG_CAT_OTHERS = 1;
 	public static final int ORG_CAT_CP_MR = 2;
-	
-	//shafie - #28833 -start
-	//Org Type Values
-	public static final int ORG_TYPE_EP_PROFILE = 1;
-	public static final int ORG_TYPE_MINISTRY = 2;
-	public static final int ORG_TYPE_PEGAWAI_PENGAWAL = 3;
-	public static final int ORG_TYPE_KUMPULAN_PTJ = 4;
-	public static final int ORG_TYPE_PTJ = 5;
-	public static final int ORG_TYPE_PEROLEHAN_KERAJAAN = 6;
-	//shafie - #28833 -end
 	
 	public PmReportConst() {
 	}
@@ -158,67 +129,7 @@ public class PmReportConst implements Serializable {
 	public String getPmNoOfCpAndMrAccessApplicationRptVal() {
 		return PM_NO_OF_CP_AND_MR_ACCESS_APPLICATION_RPT_VAL;
 	}
-	
-	// shafie #28833  start
-	/**
-	 * @return the pmListOfPTJAllowedToApproveOtherPTJProcurementRptVal
-	 */
-	public String getpmListOfPTJAllowedToApproveOtherPTJProcurementRptVal() {
-		return PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT;
-	}
-	
-	/**
-	 * @return the orgTypeEPProfile
-	 */
-	public int getOrgTypeEPProfile() {
-		return ORG_TYPE_EP_PROFILE;
-	}
-	
-	/**
-	 * @return the orgTypeMinistry
-	 */
-	public int getOrgTypeMinistry() {
-		return ORG_TYPE_MINISTRY;
-	}
-	
-	/**
-	 * @return the orgTypePegawaiPengawal
-	 */
-	public int getOrgTypePegawaiPengawal() {
-		return ORG_TYPE_PEGAWAI_PENGAWAL;
-	}
-	
-	/**
-	 * @return the orgTypeKumpulanPTJ
-	 */
-	public int getOrgTypeKumpulanPTJ() {
-		return ORG_TYPE_KUMPULAN_PTJ;
-	}
-	
-	/**
-	 * @return the orgTypePTJ
-	 */
-	public int getOrgTypePTJ() {
-		return ORG_TYPE_PTJ;
-	}
-	
-	/**
-	 * @return the orgTypePerolehanKerajaan
-	 */
-	public int getOrgTypePerolehanKerajaan() {
-		return ORG_TYPE_PEROLEHAN_KERAJAAN;
-	}
-	// shafie #28833  end
 
-	//shafie - #29486 - start
-	/**
-	 * @return the pmMonthlyUserAndRoleRptVal
-	 */
-	public String getPmMonthlyUserAndRoleRptVal() {
-		return PM_MONTHLY_USER_AND_ROLE_RPT_VAL;
-	}	
-	//shafie - #29486 - end
-	
 	/**
 	 * @return the orgCatFederalGovt
 	 */

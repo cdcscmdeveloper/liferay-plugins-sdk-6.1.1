@@ -23,7 +23,6 @@ import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmZone;
-import my.ep.web.bean.pm.ProfileManagementSearchBean; //#28833 -shafie
 
 @ManagedBean(name = "pmReportsManagedBean")
 @SessionScoped
@@ -36,13 +35,6 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	private String zoneName;
 	private List<PmZone> zoneList;
 	private Long status;
-	//#28833 -shafie -start
-	private boolean govtSeller; 
-	private ProfileManagementSearchBean pmSearchBean;
-	private PmOrgProfile selectedPTJ;
-	private PmOrgProfile selectedKumpulanPTJ;
-	private PmOrgProfile selectedMinistry;
-	//#28833 -shafie -end
 	private String contractNo;
 	private String contractPhyscialNo;
 	private String loaNo;
@@ -50,7 +42,6 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	private CmUnspsc selectedUnspscItem;
 	private Date fromDate;
 	private Date toDate;
-	private String monthPicked; //shafie #29486
 	private PmOrgProfile selectedOrgProfile;
 	private String bizRegNo;
 	private String epNo;
@@ -69,7 +60,6 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	private String applicantName;
 	private String selectedAccessType;
 	private Long selectedApplicationStatus;
-	private Date monthlyDate;//#29486
 	
 	public PmReportsManagedBean(){}
 
@@ -128,24 +118,6 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	public void setStatus(Long status) {
 		this.status = status;
 	}
-	
-	//shafie - #28833 start ---------------
-	
-	/**
-	 * @return the govtSeller
-	 */
-	public boolean isGovtSeller() {
-		return govtSeller;
-	}
-
-	/**
-	 * @param govtSeller the govtSeller to set
-	 */
-	public void setGovtSeller(boolean govtSeller) {
-		this.govtSeller = govtSeller;
-	}
-	
-	//shafie - #28833 end -----------------
 
 	/**
 	 * @return the contractNo
@@ -244,24 +216,6 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
 	}
-	
-	//shafie #29486 start
-	
-	/**
-	 * @return the monthPicked
-	 */
-	public String getmonthPicked() {
-		return monthPicked;
-	}
-
-	/**
-	 * @param monthPicked the monthPicked to set
-	 */
-	public void setmonthPicked(String monthPicked) {
-		this.monthPicked = monthPicked;
-	}
-	
-	//shafie #29486 end
 
 	/**
 	 * @return the selectedOrgProfile
@@ -520,81 +474,5 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	public void setSelectedApplicationStatus(Long selectedApplicationStatus) {
 		this.selectedApplicationStatus = selectedApplicationStatus;
 	}
-	
-	//shafie - #28833 -start
-	/**
-	 * @return the selectedPTJ
-	 */
-	public PmOrgProfile getSelectedPTJ() {
-		return selectedPTJ;
-	}
-
-	/**
-	 * @param selectedPTJ the selectedPTJ to set
-	 */
-	public void setSelectedPTJ(PmOrgProfile selectedPTJ) {
-		this.selectedPTJ = selectedPTJ;
-	}
-
-	/**
-	 * @return the selectedKumpulanPTJ
-	 */
-	public PmOrgProfile getSelectedKumpulanPTJ() {
-		return selectedKumpulanPTJ;
-	}
-
-	/**
-	 * @param selectedKumpulanPTJ the selectedKumpulanPTJ to set
-	 */
-	public void setSelectedKumpulanPTJ(PmOrgProfile selectedKumpulanPTJ) {
-		this.selectedKumpulanPTJ = selectedKumpulanPTJ;
-	}
-
-	/**
-	 * @return the selectedMinistry
-	 */
-	public PmOrgProfile getSelectedMinistry() {
-		return selectedMinistry;
-	}
-
-	/**
-	 * @param selectedMinistry the selectedMinistry to set
-	 */
-	public void setSelectedMinistry(PmOrgProfile selectedMinistry) {
-		this.selectedMinistry = selectedMinistry;
-	}		
-	
-	/**
-	 * @return the pmSearchBean
-	 */
-	public ProfileManagementSearchBean getPmSearchBean() {
-		if(pmSearchBean==null)
-			pmSearchBean = new ProfileManagementSearchBean();
-		return pmSearchBean;
-	}
-
-	/**
-	 * @param pmSearchBean the pmSearchBean to set
-	 */
-	public void setPmSearchBean(ProfileManagementSearchBean pmSearchBean) {
-		this.pmSearchBean = pmSearchBean;
-	}
-	//shafie #28833 end
-	
-	//#29486 - START
-	/**
-	 * @return the monthlyDate
-	 */
-	public Date getMonthlyDate() {
-		return monthlyDate;
-	}
-
-	/**
-	 * @param monthlyDate the monthlyDate to set
-	 */
-	public void setMonthlyDate(Date monthlyDate) {
-		this.monthlyDate = monthlyDate;
-	}
-	//#29486 - END
 	
 }
