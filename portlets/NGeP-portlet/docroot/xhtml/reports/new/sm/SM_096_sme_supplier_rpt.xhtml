@@ -29,9 +29,32 @@
 					</p:selectOneMenu></td>
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.sm.sme.rpt.comp.name']}" /></td>
-				<td class="tdContent"><ac:smReportCompanyNameLOV
+				<td class="tdContent">
+					<!-- 
+					<ac:smReportCompanyNameLOV
 						bBean="#{smeSupplierRptBB}"
-						saveObj="smeSupplierRptBB.managedBean.selectedOrgProfile" /></td>
+						saveObj="smeSupplierRptBB.managedBean.selectedOrgProfile" />
+					-->
+					<p:outputPanel rendered="#{smeSupplierRptBB.managedBean.regType == SupplierManagementConst.ACC_BASIC}">
+						<ac:lov id="rptSmeBasic" lovId="SM_SME_SUPPLIER_BASIC"
+							headerText="#{lbl['lbl.rpt.cmpName']}"
+							value="#{smeSupplierRptBB.managedBean.selectedSupplier.companyName}" 
+							saveObject="#{smeSupplierRptBB.managedBean.selectedSupplier}"
+							conditionField="#{smeSupplierRptBB.constructConditionFields()}"
+							tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
+						</ac:lov>
+					</p:outputPanel>
+					
+					<p:outputPanel rendered="#{smeSupplierRptBB.managedBean.regType != SupplierManagementConst.ACC_BASIC}">
+						<ac:lov id="rptSmeMof" lovId="SM_SME_SUPPLIER_MOF"
+							headerText="#{lbl['lbl.rpt.cmpName']}"
+							value="#{smeSupplierRptBB.managedBean.selectedSupplier.companyName}" 
+							saveObject="#{smeSupplierRptBB.managedBean.selectedSupplier}"
+							conditionField="#{smeSupplierRptBB.constructConditionFields()}"
+							tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
+						</ac:lov>
+					</p:outputPanel>
+				</td>
 			</tr>
 			<!-- // #29617 Reopen Start - note #119 item 1, 3, 4, 5 -->
 			<p:outputPanel
