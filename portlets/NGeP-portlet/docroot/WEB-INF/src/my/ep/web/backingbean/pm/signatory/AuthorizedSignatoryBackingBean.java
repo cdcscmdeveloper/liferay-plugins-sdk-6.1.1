@@ -366,16 +366,14 @@ public class AuthorizedSignatoryBackingBean extends
 						+ pmcertSignatory.getSinnatoryName());
 				messageId = MessageConst.TD_80900;
 				msgParam = new String[] {this.getManagedBean().getCertSignatories().get(0).getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
-
+				pmcertSignatory.setCreatedBy(getUserIdSessionFromLoginId()); //#34090
+				pmcertSignatory.setChangedBy(getUserIdSessionFromLoginId()); //#34090
 			} else {
-				//TODO: check previous value 
 				if (pmcertSignatory.isModified()
 						&& pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 					log.info("Tracking diary for virtual certificate: de-activating status :saveRuleCatalog");
 					messageId = MessageConst.TD_80902;
 					msgParam = new String[] {pmcertSignatory.getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
-
-					
 				}else if (pmcertSignatory.isModified()
 						&& pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 					log.info("Tracking diary for virtual certificate: re-activating status :saveRuleCatalog");
@@ -418,6 +416,7 @@ public class AuthorizedSignatoryBackingBean extends
 
 		if (!signatory.isModified()) {
 			signatory.setModified(true);
+			signatory.setChangedBy(getUserIdSessionFromLoginId()); //#34090
 		} else {
 			signatory.setModified(false);
 		}

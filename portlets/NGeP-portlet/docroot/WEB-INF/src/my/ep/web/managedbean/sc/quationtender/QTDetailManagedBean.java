@@ -1559,6 +1559,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<String> paramTypes = null;
 	// #25692-End
 
+	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
+	
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -10086,6 +10088,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//29464-end
 
+	// #32929 - start
 	public boolean isZoneRdbButtonChecked() {
 		return zoneRdbButtonChecked;
 	}
@@ -10093,5 +10096,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setZoneRdbButtonChecked(boolean zoneRdbButtonChecked) {
 		this.zoneRdbButtonChecked = zoneRdbButtonChecked;
 	}
+	// #32929 - end
 
+	// Bug #33661@Syazani 07/10/2022 -- Start
+	public boolean isFromSpecEndorse() {
+		return isFromSpecEndorse;
+	}
+
+	public void setFromSpecEndorse(boolean isFromSpecEndorse) {
+		this.isFromSpecEndorse = isFromSpecEndorse;
+	}
+	// Bug #33661@Syazani 07/10/2022 -- End
+	
 }

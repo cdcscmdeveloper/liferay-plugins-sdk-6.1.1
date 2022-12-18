@@ -229,7 +229,21 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 									softcertRequest.getPmDigiCert().getValidTo(), new Date(), new Date(), true);
 						}
 						if (!result) {
-							throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+							//#30855 - START
+							FacesScopes fs = new FacesScopes();
+							if(fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value()) || 
+							   fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) || 
+							   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) ||
+							   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+								throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+							}
+							if(fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()) || 
+							   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || 
+							   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || 
+							   fs.hasRoleUser(RoleCode.FL_USER.value())){
+								throw new EpException(MessageConst.ERROR_DIGICERT_776065);
+							}
+							//#30855 - END
 						}
 					}
 				}
@@ -421,27 +435,38 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 								RoleCode.SUPPLIER_TEMP.value())) {
 					getManagedBean().setSupplierTmpPersonnel(personnel);
 				}
-					/**
+				// #29695 - start
+				if (getManagedBean().isAlreadyHadFreeSoftcert()) {
+					personnel.setFreeSoftCert(false);
+					amountPerPersonnel = SmRuleHelper.getInstance().getSoftCertFee();
+					amount = amount.add(amountPerPersonnel);
+				} else {
+					personnel.setFreeSoftCert(true);
+				}
+				/*
+					*//**
 					 * 20200908@MohdHafizAbdRahim - Bug #28264 - Start	
-					 */
+					 *//*
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL || personnel.getEpRole().equals(
                         RoleCode.MOF_SUPPLIER_USER.value())) {
 					personnel.setFreeSoftCert(false);
 					amountPerPersonnel = SmRuleHelper.getInstance()
 							.getSoftCertFee();
 					amount = amount.add(amountPerPersonnel);
-					/**
+					*//**
 					 * 20200908@MohdHafizAbdRahim - Bug #28264 - End
-					 */
+					 *//*
 				} else {
-					/**
+					*//**
 					 * 20200908@MohdHafizAbdRahim - Bug #28264 - Start	
-					 */
+					 *//*
 					personnel.setFreeSoftCert(true);
-					/**
+					*//**
 					 * 20200908@MohdHafizAbdRahim - Bug #28264 - End
-					 */
+					 *//*
 				}
+				*/
+				// #29695 - end
 			} else {
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
 					personnel.setFreeSoftCert(true);

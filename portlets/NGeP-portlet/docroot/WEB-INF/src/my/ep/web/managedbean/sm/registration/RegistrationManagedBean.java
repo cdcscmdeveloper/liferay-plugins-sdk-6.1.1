@@ -155,14 +155,17 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private String labelDataTable;
 	private boolean divisionBox=true;//13320
 	private Long divisionId;//13320
+	private List <SmSupplierOwner> supplierOwnerls = new ArrayList<SmSupplierOwner>(); // #27691
 	private String regIcCheckSSM;
-	
 	//#30829 Start
 	private boolean disableHigherManagement = false;
 	private boolean disableManagement=false;
 	private boolean disableProf=false;
 	private boolean disableSemiProf=false;
 	//#30829 end
+	
+	// 27691 - Add/Delete Supplier Owner
+	private SmSupplierOwner[] selectedSuppOwners;
 	
 	private boolean showOwnerPersonnel = false;
 	
@@ -723,6 +726,16 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.smSuppOwners = smSuppOwners;
 	}
 
+	// 27691 - start -  Add/Delete Supplier Owner
+	public SmSupplierOwner[] getSelectedSuppOwners() {
+		return selectedSuppOwners;
+	}
+
+	public void setSelectedSuppOwners(SmSupplierOwner[] selectedSuppOwners) {
+		this.selectedSuppOwners = selectedSuppOwners;
+	}
+	// 27691 - end -  Add/Delete Supplier Owner
+	
 	public List getDummy() {
 		return dummy;
 	}
@@ -939,6 +952,16 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	public void setPermenantDivisionLs(List<SelectItem> permenantDivisionLs) {
 		this.permenantDivisionLs = permenantDivisionLs;
 	}
+	
+	// #27691 - Start
+	public List<SmSupplierOwner> getSupplierOwnerls() {
+		return supplierOwnerls;
+	}
+
+	public void setSupplierOwnerls(List<SmSupplierOwner> supplierOwnerls) {
+		this.supplierOwnerls = supplierOwnerls;
+	}
+	// #27691 - End
 
 	//#30829 Start
 	public boolean isDisableManagement() {

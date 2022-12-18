@@ -38,6 +38,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import java.util.HashSet; //Bug #33988@Syazani - 27/09/2022
+import java.util.Set; //Bug #33988@Syazani - 27/09/2022
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -744,7 +746,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected IQTDetailSO getQTDetailSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
-
+	
 	/**
 	 * To initialize remarks.
 	 * 
@@ -3883,14 +3885,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public void validateEvaluationReports(String taskType){
 		List<ScQtFinalizationReport> scQtFinalizationReportList = this.getManagedBean().getNewBriefingPaperReportList();
-		
+		Set<String> validateDuplicateSets = null; //Bug #33988@Syazani - 27/09/2022
 		if (null != scQtFinalizationReportList && scQtFinalizationReportList.size() > 0) {
 			String reportNames = "";
 
 			resetUnSavedReportContent(scQtFinalizationReportList);
+			
+			//Bug #33988@Syazani -- Start 27/09/2022 
+			if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)) {
+				validateDuplicateSets = new HashSet<String>();
+			}
+			//Bug #33988@Syazani -- End 27/09/2022
 
 			for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
 				
+				//Bug #33988@Syazani -- Start 27/09/2022 
+				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && !validateDuplicateSets.add(scQtFinalizationReport.getTitle().trim())) {
+					throw new EpException(MessageConst.ERROR_775190, new String[] { scQtFinalizationReport.getTitle() }); //Bug #33988@Syazani - 06/12/2022
+				}
+				//Bug #33988@Syazani -- End 27/09/2022 
+
 				if (null != scQtFinalizationReport.getPmDocument()) {
 					if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)) {
 						if (SourcingConstants.DOC_DEF_KEY_LATAR_BELAKANG_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())
@@ -4342,10 +4356,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				int index = 0;
 				
 				for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
-					if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())) {
-						getManagedBean().getNewBriefingPaperReportList().get(index)
-								.setReportContent(scQtFinalizationReport.getReportContent());
-						reportFound = true;
+					//Bug #33988@Syazani -- Start 27/09/2022
+					if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())
+							&& (report.getDefinationType() != null && report.getDefinationType().getParameterCode()
+									.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_USER_INPUT))) {
+						//Bug #33988@Syazani -- End 27/09/2022
 						break;
 					}
 					

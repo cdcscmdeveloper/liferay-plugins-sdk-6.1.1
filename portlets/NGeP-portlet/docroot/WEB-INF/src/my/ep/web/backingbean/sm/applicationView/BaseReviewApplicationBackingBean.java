@@ -1804,6 +1804,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			if (getManagedBean().isViewApplicationHistory()) {
 				// for history load all category
 				getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
+				//34209 - START
+				if(getManagedBean().isPoApprUnClaimTask()){
+					if(cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED){
+						getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
+					}
+				}else{
+					getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
+				}
+				//34209 END
 			} else {
 				// for supp profile load all active category only
 				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {

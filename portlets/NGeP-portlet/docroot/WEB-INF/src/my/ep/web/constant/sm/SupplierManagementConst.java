@@ -22,20 +22,13 @@ public class SupplierManagementConst {
 	public static final Map<String, String> APPLICATION_BASE_PAGE_BY_TYPE;
 	static {
 		Map<String, String> tmp = new HashMap<String, String>();
-		tmp.put("N",
-				"/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
-		tmp.put("C",
-				"/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
-		tmp.put("A",
-				"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
-		tmp.put("B",
-				"/xhtml/sm/bumiPuteraApplication/smBumiSideMenu_BasePage.xhtml");
-		tmp.put("U",
-				"/xhtml/sm/updateMofDetails/smUpdateMofSideMenu_BasePage.xhtml");
-		tmp.put("R",
-				"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
-		tmp.put("RE",
-				"/xhtml/sm/NewMofApplication/mofRegSmUser_BaseWizardPage.xhtml");
+		tmp.put("N", "/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
+		tmp.put("C", "/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
+		tmp.put("A", "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+		tmp.put("B", "/xhtml/sm/bumiPuteraApplication/smBumiSideMenu_BasePage.xhtml");
+		tmp.put("U", "/xhtml/sm/updateMofDetails/smUpdateMofSideMenu_BasePage.xhtml");
+		tmp.put("R", "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+		tmp.put("RE", "/xhtml/sm/NewMofApplication/mofRegSmUser_BaseWizardPage.xhtml");
 		APPLICATION_BASE_PAGE_BY_TYPE = Collections.unmodifiableMap(tmp);
 	}
 	// Navigation
@@ -149,37 +142,27 @@ public class SupplierManagementConst {
 	public static final Map<String, String> FACILITY_TYPE_MAP;
 	static {
 		FACILITY_TYPE_MAP = new HashMap<String, String>();
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_FACTORY,
-				SmCommonUtil.getMessage("lbl.sm.facility.type.factory", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_DOCKYARD,
-				SmCommonUtil.getMessage("lbl.sm.facility.type.dockyard", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_WORKSHOP,
-				SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_STORE,
-				SmCommonUtil.getMessage("lbl.sm.facility.type.store", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_HOMEOFFICE, SmCommonUtil
-				.getMessage("lbl.sm.facility.type.home.office", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_BUSSINESSOFFICE, SmCommonUtil
-				.getMessage("lbl.sm.facility.type.business.office", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_FACTORY, SmCommonUtil.getMessage("lbl.sm.facility.type.factory", null));
+		FACILITY_TYPE_MAP
+				.put(SM_FACILITY_TYPE_DOCKYARD, SmCommonUtil.getMessage("lbl.sm.facility.type.dockyard", null));
+		FACILITY_TYPE_MAP
+				.put(SM_FACILITY_TYPE_WORKSHOP, SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_STORE, SmCommonUtil.getMessage("lbl.sm.facility.type.store", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_HOMEOFFICE,
+				SmCommonUtil.getMessage("lbl.sm.facility.type.home.office", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_BUSSINESSOFFICE,
+				SmCommonUtil.getMessage("lbl.sm.facility.type.business.office", null));
 	}
 
-	public static String[] CAT_TYPE_CODES = new String[] {
-			SupplierManagementConst.CAT_TYPE_TRANSPORTATION,
-			SupplierManagementConst.CAT_TYPE_WORKSHOP,
-			SupplierManagementConst.CAT_TYPE_INSURANCE,
-			SupplierManagementConst.CAT_TYPE_DOCKYARD,
-			SupplierManagementConst.CAT_TYPE_MANUFACTURING,
-			SupplierManagementConst.CAT_TYPE_PRINTING,
-			SupplierManagementConst.CAT_TYPE_TRAVEL };
+	public static String[] CAT_TYPE_CODES = new String[] { SupplierManagementConst.CAT_TYPE_TRANSPORTATION,
+			SupplierManagementConst.CAT_TYPE_WORKSHOP, SupplierManagementConst.CAT_TYPE_INSURANCE,
+			SupplierManagementConst.CAT_TYPE_DOCKYARD, SupplierManagementConst.CAT_TYPE_MANUFACTURING,
+			SupplierManagementConst.CAT_TYPE_PRINTING, SupplierManagementConst.CAT_TYPE_TRAVEL };
 
-	public static List<String> PROF_STAFF_EDU_LEVEL_CODES = Arrays
-			.asList(new String[] { "1", "2", "3" });
-	public static List<String> SEMI_PROF_STAFF_EDU_LEVEL_CODES = Arrays
-			.asList(new String[] { "1", "2", "3", "4" });
-	public static List<String> CLERICAL_STAFF_EDU_LEVEL_CODES = Arrays
-			.asList(new String[] { "1", "2", "3", "4", "5" });
-	public static List<String> EQUI_OWNER_EDU_LEVEL_CODES = Arrays
-			.asList(new String[] { "1", "2", "3" });
+	public static List<String> PROF_STAFF_EDU_LEVEL_CODES = Arrays.asList(new String[] { "1", "2", "3" });
+	public static List<String> SEMI_PROF_STAFF_EDU_LEVEL_CODES = Arrays.asList(new String[] { "1", "2", "3", "4" });
+	public static List<String> CLERICAL_STAFF_EDU_LEVEL_CODES = Arrays.asList(new String[] { "1", "2", "3", "4", "5" });
+	public static List<String> EQUI_OWNER_EDU_LEVEL_CODES = Arrays.asList(new String[] { "1", "2", "3" });
 
 	// Application Category Type
 	public static final String SM_APPL_CATEGORY_TYPE_NORMAL = "N";
@@ -187,6 +170,7 @@ public class SupplierManagementConst {
 	//30912 - START
 	// APPLICATION TYPE
 	public static final String APPL_TYPE_BUMI = "B";
+	public static final String APPL_TYPE_CATEGORY  = "A"; //#34098 - START_END 
 	//30912 - END
 	public static final String PERSONNEL_TYPE_DIRECTOR = "DIR";
 	public static final String PERSONNEL_TYPE_STAFF = "STF";
@@ -228,6 +212,9 @@ public class SupplierManagementConst {
 	public static final String IDENTIFICATION_TYPE_PASSPORT = "P"; //#32014
 	public static final int PENDING_ACT_STATUS = 8;
 	public static final int APPROVED_RECORD_STATUS = 1;
+	//30865 Start & #34098 - START
+	public static final int CANCEL_RECORD_STATUS = 2;
+	//30865 End & #34098 - END
 	public static final int DELETED_RECORD_STATUS = 9;
 	public static final int MIGRATION_DATA_RECORD_STATUS = 7;
 	public static final int PENDING_RE_APPROVAL_STATUS = 6;
@@ -474,6 +461,8 @@ public class SupplierManagementConst {
 	public static final String PM_STATUS_REJECTED_BY_SYSTEM = "20118";
 	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PAYMENT = "20119";
 	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE = "20120";
+	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PO_INQUIRY = "20121";//#32627 START
+	public static final String PM_STATUS_REJECTED_BY_SYSTEM_SDO_INQUIRY = "20122";//#32627 END
 	public static final String PM_STATUS_PENDING_PAYMENT_PROCESSING_FEE = "20114";
 	public static final String PM_STATUS_PENDING_CERTIFCATE_GENERATION = "20198";
 	public static final String PM_STATUS_REGISTERED = "20199";
@@ -483,6 +472,8 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PO_ESCALTED_TO_APPROVER = 20108;
 	public static final long PM_STATUS_PO_REJECTED_APPLICATION = 20112;
 	public static final long PM_STATUS_APPROVER_REJECTED_APPLICATION = 20113;
+	public static final long PM_STATUS_REJECTED_BY_SYS_PO_INQUIRY = 20121;//#32627 START
+	public static final long PM_STATUS_REJECTED_BY_SYS_SDO_INQUIRY = 20122;//#32627 END
 	public static final long PM_STATUS_PENDING_APPL_DECLARATION = 20100;
 	public static final long PM_STATUS_PENDING_PROCESS_FEE = 20114;
 	public static final long PM_STATUS_PENDING_PAYMENT = 20251;
@@ -1104,6 +1095,12 @@ public class SupplierManagementConst {
 		return APPROVED_RECORD_STATUS;
 	}
 
+	//30865 Start & #34098 - START
+	public int getCANCEL_RECORD_STATUS() {
+		return CANCEL_RECORD_STATUS;
+	}
+	//30865 End & #34098 - END
+	
 	public String getSM_SUPPLIER_BUSINESS_TYPE_LLP() {
 		return SM_SUPPLIER_BUSINESS_TYPE_LLP;
 	}

@@ -145,7 +145,10 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private Map<String, PmFinancialOrg> factoringAccountMap;
 	
 	private boolean reviseInvoice = false;
-
+	
+    //33238 start
+    private List<SelectItem> factoringAccList;
+    //33238 end
 
 	public Map<String, PmFinancialOrg> getFactoringAccountMap() {
 		if(factoringAccountMap==null) {
@@ -1212,6 +1215,16 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	}
 	
 	//End  #21229
+	
+	//33238 start
+	public List<SelectItem> getFactoringAccList() {
+		return factoringAccList;
+	}
+
+	public void setFactoringAccList(List<SelectItem> factoringAccList) {
+		this.factoringAccList = factoringAccList;
+	}
+	//33238 end
 	
 	//32967-start
 	/**

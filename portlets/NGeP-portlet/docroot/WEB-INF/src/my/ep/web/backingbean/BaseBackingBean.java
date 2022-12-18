@@ -55,6 +55,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;//#31849
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -74,6 +75,7 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;//#31849
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -111,6 +113,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.logging.LogKey;//#31849
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -1968,7 +1971,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					.getLocalAuthorityItems().get(0).getValue());
 		}
 	}
-
+	
 	/**
 	 * Get list size
 	 * 
@@ -1980,7 +1983,120 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return value.size();
 	}
 
+	//start #29956
+	/**
+	 * Compare all list in params with epRole
+	 * 
+	 * @param String
+	 *            roleCode
+        
+	 * @return String
+	 */
+	public Boolean compareSmPersonnelRoleAndStringRole(String[] params, String epRole) {
+		Boolean available = false;
+		String epRoleDesc = getEpRoleDescByRoleCode(epRole);
+		if (params != null && params.length > 0) {
+			for (int x=0; x<params.length; x++) {
+				if (params[x]!=null && params[x].equals(epRoleDesc)) {
+					available = true;
+				}
+			}
+		}
+		return available;
+	}
 	
+	/**
+	 * Get no eP Role by language
+	 * 
+	 * @param String
+	 *            roleCode
+	 * @return String
+	 */
+	public String getNoEpRoleDescByLanguage() {
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		String noEp;
+		if(language.equalsIgnoreCase("en")){
+			noEp = "no EP Role";
+		}else{
+			noEp = "profil yang tiada peranan";
+		}
+		return noEp;
+	}
+	
+	/**
+	 * Get eP Role for Downgrade Popup by personnel
+	 * 
+	 * @param String
+	 *            roleCode
+	 * @return String
+	 */
+	public String getEpRoleDowngradePopupByPersonnel(List<SmPersonnel> personnelsRole) {
+		String[] params = new String[50];
+		StringBuilder sb = new StringBuilder();
+		int x = 0;
+		Boolean noEp = false;
+		if (!personnelsRole.isEmpty()) {
+			for (SmPersonnel smPersonnel : personnelsRole) {
+				int countRole=0;
+				if(smPersonnel.isHigherManagement()){
+					countRole++;
+				}
+				if(smPersonnel.isManagement()){
+					countRole++;
+				}
+				if(smPersonnel.isEquityOwner()){
+					countRole++;
+				}
+				if(countRole>1){
+					if(smPersonnel.isHigherManagement()){
+						smPersonnel.setManagement(false);
+						smPersonnel.setEquityOwner(false);
+					}else if(smPersonnel.isManagement()){
+						smPersonnel.setHigherManagement(false);
+						smPersonnel.setEquityOwner(false);
+					}
+				}
+				if (x != 0) {
+					for (String roles : params) {
+						if(roles!=null){
+							if (smPersonnel.getEpRole() == null && !roles.equals(getNoEpRoleDescByLanguage()) && !roles.equals("/ ")
+									&& !noEp) {
+								params[x] = "/ ";
+								sb.append("/ ");
+								x++;
+								params[x] = getNoEpRoleDescByLanguage();
+								sb.append(getNoEpRoleDescByLanguage());
+								x++;
+								noEp = true;
+							} else if (smPersonnel.getEpRole() != null&& !roles.equals(getEpRoleDescByRoleCode(smPersonnel.getEpRole())) 
+									&& !compareSmPersonnelRoleAndStringRole(params, smPersonnel.getEpRole()) && !roles.equals("/ ")) {
+								params[x] = "/ ";
+								sb.append("/ ");
+								x++;
+								params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+								sb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
+								x++;
+							}
+						}
+					}
+				} else {
+					if(smPersonnel.getEpRole() == null){
+						params[x] = getNoEpRoleDescByLanguage();
+						sb.append(getNoEpRoleDescByLanguage());
+						x++;
+						noEp = true;
+					}else{
+						params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+						sb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
+						x++;
+					}
+				}
+			}
+		}
+		return sb.toString();
+	}
+	//end #29956
+
 	/**
 	 * Download file.
 	 *
@@ -2691,11 +2807,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//start loop list #28454
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
+		this.getManagedBean().setDowngradeRole(true);  //#29956
 		for(SmPersonnel personnel : this.getManagedBean().getPersonnelsRole()){
 				//27951
 				if(!personnel.isClerical() && !personnel.isHigherManagement() && !personnel.isManagement()){
 					this.getManagedBean().getPersonnelsRole().clear();
 					this.getManagedBean().setCheckRoleSSM(false);
+					this.getManagedBean().setDowngradeRole(false); //#29956
 					throw new EpException(MessageConst.ERROR_722535); 
 				}else{
 					//27951
@@ -2703,7 +2821,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					personnel.setDirector(false);
 					this.getManagedBean().setCheckRoleSSM(true);
 					//START 28454
-					if(this.getManagedBean().isResubmitAppl()){						
+			//	if (this.getManagedBean().isResubmitAppl()) {  #29956
+					
 						reqDTO.setPersonnelId(personnel.getPersonnelId());			
 						PersonnelResDTO resDTO = personnelSO.retrievePersonnelById(reqDTO);
 						String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
@@ -2716,7 +2835,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						}else{
 							//close popup
 						}
-					}
+				//	}
 					//END 28454
 					
 				}
@@ -2811,12 +2930,45 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						}
 					}
 					//END 27329
-				} else{					
+						// start #29956
+						if (postRegBean.getSmSupplier() != null && postRegBean.getSmSupplier().getSupplierId() != null) {
+							List<SmPersonnel> personnelsRole = postRegBean.getPersonnelsRole();
+							if(this.getManagedBean().isDowngradeRole()==null || !this.getManagedBean().isDowngradeRole()){
+								personnelsRole.clear();
+							}
+							if (personnelsRole != null && personnelsRole.size() <= 0) {
+								if (postRegBean.getSmSupplier().getSmAppl() != null
+										&& postRegBean.getSmSupplier().getSmAppl().getSmPersonnels() != null) {
+									for (SmPersonnel personnel : postRegBean.getSmSupplier().getSmAppl().getSmPersonnels()) {
+										if (personnel.isEquityOwner() || personnel.isDirector()) {
+												SmPersonnel personnelSSM = (SmPersonnel) EntityHelper
+														.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
+																ssmResDTO.getSmPersonnelOwners(), "identificationNo");
+												SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper
+														.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
+																ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+												if (personnelDirectorSSM == null && personnelSSM == null) {
+													personnelsRole.add(personnel);
+												}
+										}
+									}
+								}
+							}
+							if (personnelsRole != null && personnelsRole.size() > 0) {
+								postRegBean.setDontGetSsmData(false);
+								postRegBean.setSmSupplierSsm(postRegBean.getSmSupplier());
+								postRegBean.setShowPopup(true);
+								postRegBean.setPersonnelsRole(personnelsRole);
+							}
+						}
+						// end #29956
+				} 
+			else{					
 					SmCommonUtil.ssmError(ssmResDTO);
 				}
 			}
 		}
-			//SSM #27264
+		//SSM #27264
 			//SSM CHANGES #27201
 			public SmPersonnel setDesignationSSM(SmPersonnel personnel){
 				//Start #27346
@@ -3434,7 +3586,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	protected String getManagedBeanName() {
 		return managedBeanName;
 	}	
-	/*** 25692#95 - end ***/	
+	/*** 25692#95 - end ***/
 	
 	//12492 - START
 	public void CheckBankAccount(String fromPage) {
@@ -3458,4 +3610,29 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 		}
 	}
+	
+	//#31849, #34090 start
+	/**
+	 * Method to return current session userId from user screenName(loginId)
+	 * @return userId
+	 */
+	public Long getUserIdSessionFromLoginId(){
+		FacesScopes facesScopes = new FacesScopes();
+		Long userIdSession = 1L;
+		
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(facesScopes.getUserScreenName());
+		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		
+		if (pmUser == null) {
+			userIdSession = facesScopes.getUserSessionBean().getUserId();
+		} else {
+			userIdSession = pmUser.getUserId();
+		}
+		
+		new LogKey(userIdSession);
+		return userIdSession;
+	}
+	//#31849, #34090 end
 }

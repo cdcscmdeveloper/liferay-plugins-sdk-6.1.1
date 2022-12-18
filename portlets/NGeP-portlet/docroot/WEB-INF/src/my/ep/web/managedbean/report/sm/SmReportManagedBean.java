@@ -9,6 +9,7 @@ import javax.faces.model.SelectItem;
 import org.apache.commons.lang3.StringUtils;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
 import my.ep.web.vo.CategoryRptVO;
 
@@ -69,6 +70,10 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	public String orgTypeCode;
 	public String orgTypeName;
 	public List<SelectItem> agencyTypeItems;
+	
+	// #29712 - start
+	private SmSupplier selectedSupplier;
+	// #29712 - end
 
 
 	public String getDocumentType() {
@@ -471,5 +476,13 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 		this.orgTypeName = orgTypeName;
 	}
 	
-	
+	// #29712 - start
+	public SmSupplier getSelectedSupplier() {
+		return selectedSupplier;
+	}
+
+	public void setSelectedSupplier(SmSupplier selectedSupplier) {
+		this.selectedSupplier = selectedSupplier;
+	}
+	// #29712 - end
 }

@@ -39,7 +39,7 @@
 				</h:outputText>
 
 				<c:if
-					test="#{backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F'}">
+					test="#{backingBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG or backingBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG}"> <!-- #31403 -->
 					<h:outputLabel style="font-weight:bold"
 						value="#{lbl['lbl.sm.account.rob.expire']} :"></h:outputLabel>
 					<h:outputText 
@@ -70,6 +70,7 @@
 				<h:outputText
 					value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"></h:outputText>
 	
+				<c:if test="#{backingBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD or backingBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD}">
 				<h:outputLabel style="font-weight:bold" 
 					value="#{lbl['lbl.sm.annualRev']} :"></h:outputLabel>
 					<h:panelGrid columns="3" layout="grid"> 
@@ -85,13 +86,23 @@
 							<f:selectItems value="#{backingBean.getDropdownValues('SAR')}" />
 						</p:selectOneMenu>
 					</h:panelGrid>
+
+					<h:outputLabel style="font-weight:bold"
+						value="#{lbl['lbl.sm.totalIssued']} :"></h:outputLabel>
+					<h:outputText
+						value="#{backingBean.managedBean.smAppl.smCompanyBasic.paidUpCapitalSSM}">
+						<f:convertNumber groupingUsed="true" maxFractionDigits="3"
+							minFractionDigits="3" />
+					</h:outputText>
+
+				</c:if>
 				<!-- <h:outputText
 					value="#{backingBean.getParameterDesc('SAR',backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue)}"></h:outputText> -->
 			</h:panelGrid>
 		</p:panel>
 
 		<c:if
-			test="#{backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F'}">
+			test="#{backingBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG or backingBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG}"> <!-- #31403 -->
 			<ui:include
 				src="/xhtml/sm/renewMofApplication/viewSsmInformationBranch.xhtml" />
 		</c:if>
@@ -99,8 +110,10 @@
 		<ui:include
 			src="/xhtml/sm/renewMofApplication/viewSsmInformationOwnerDirector.xhtml" />
 		
-		<ui:include
-			src="/xhtml/sm/renewMofApplication/viewSsmInformationCompanyEquity.xhtml" />
+		<c:if test="#{backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD or backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD}"><!-- #31403 -->
+			<ui:include
+				src="/xhtml/sm/renewMofApplication/viewSsmInformationCompanyEquity.xhtml" />
+		</c:if><!-- #31403 -->
 
 		<ui:include
 			src="/xhtml/sm/renewMofApplication/viewSsmInformationPersonnel.xhtml" />

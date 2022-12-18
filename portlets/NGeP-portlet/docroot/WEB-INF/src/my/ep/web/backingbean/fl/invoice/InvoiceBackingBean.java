@@ -199,12 +199,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
 			if(!getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//33238
-			//32967-start
-			if(null != getManagedBean().getAccountNo()){
-				getManagedBean().getInvoice().setAccountNo(getManagedBean().getAccountNo());
+				//32967-start
+				if(null != getManagedBean().getAccountNo()){
+					getManagedBean().getInvoice().setAccountNo(getManagedBean().getAccountNo());
+				}
+				//32967-end
 			}
-			//32967-end
-			}
+			log.info("LOG for 33574:: is Factored submitAction="+ getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored());
 			FlInvoice invoice = getManagedBean().getInvoice();
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 			adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
@@ -217,6 +218,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				invoice.setInvoiceNo(invoiceSO.generateInvoiceNumber(reqDTO).getInvoiceNo());
 				log.info("InvoiceBackingBean.submitAction(). A new invoice number is generated. "+invoice.getInvoiceNo());
 			}
+			
 			// Need to call this as user may not click on summary menu
 			removeDuplicateInvoiceSummaryItem();
 			calInvSummary();
@@ -339,9 +341,16 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						}
 					}
 				}
+				//33654-Start
+				if(reqDTO.isInvoiceRevise() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+					reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+				}
+				//33654-End
+				
 				resDTO = invoiceSO.invoiceModification(reqDTO);
 			}else{
 				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+				log.info("LOG for 33574:: is Factored submitAction :before saveInvoice ="+reqDTO.getInvoice().getFlFulfilmentOrder().isFactored());
 				resDTO = invoiceSO.saveInvoice(reqDTO);
 			}
 			if(resDTO.isSuccessful()) {
@@ -622,6 +631,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						outcome[i++] = action;
 					}
 					this.getManagedBean().setOutComes(outcome);
+
 				}
 				
 				FLInvoiceDataType paymentObj = (FLInvoiceDataType)obj;
@@ -1280,17 +1290,17 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		
 		if (this.getManagedBean().getInvoice() != null) {
 			if(!getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//33238
-			//32967-Start
-			if(this.getManagedBean().getInvoice().getAccountNo()!=null){
-				if(getManagedBean().getAccountNo()==null){
-					getManagedBean().setAccountNo(this.getManagedBean().getInvoice().getAccountNo());
-				}			
-			
-				if(this.getManagedBean().getInvoice().getAccountNo().equalsIgnoreCase(getManagedBean().getAccountNo())){
-					this.getManagedBean().getInvoice().setAccountNo(this.getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId()+"|"+this.getManagedBean().getInvoice().getAccountNo());
+				//32967-Start
+				if(this.getManagedBean().getInvoice().getAccountNo()!=null){
+					if(getManagedBean().getAccountNo()==null){
+						getManagedBean().setAccountNo(this.getManagedBean().getInvoice().getAccountNo());
+					}			
+				
+					if(this.getManagedBean().getInvoice().getAccountNo().equalsIgnoreCase(getManagedBean().getAccountNo())){
+						this.getManagedBean().getInvoice().setAccountNo(this.getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId()+"|"+this.getManagedBean().getInvoice().getAccountNo());
+					}
 				}
-			}
-			//32967-End
+				//32967-End
 			}
 			if(this.getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchName() != null ){
 				supplierSearchReqDTO.setBranchCode(getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchCode());
@@ -1348,8 +1358,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 				getManagedBean().getInvoice().setPaymentBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
 				if(!getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//33238
-				getManagedBean().setAccountNo(getManagedBean().getInvoice().getAccountNo().substring(supplierBank.getPmFinancialOrg().getFinancialOrgId().toString().length()+1));//32967
-			}
+					getManagedBean().setAccountNo(getManagedBean().getInvoice().getAccountNo().substring(supplierBank.getPmFinancialOrg().getFinancialOrgId().toString().length()+1));//32967
+				}
 			}
 		}else{
 			getManagedBean().getInvoice().setPaymentBankAddress(null);
@@ -1639,13 +1649,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			resDTO = invoiceSO.updateInvoiceWithAP59(reqDTO);
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_745019;
-					
+				
 				if(getManagedBean().getStatusId().equals(FulfilmentStatusConst.AP59_PAYMENT_VIA_AP59)){
 					messageId = MessageConst.INFO_745007;
 				}
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
-				} 
+				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, 
 						null,
@@ -1660,7 +1670,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					getManagedBean().setInvoice(resDTO.getInvoice());
 					flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 					if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
-						getFactoringDtl(); 
+						getFactoringDtl();
 					}
 				}
 			}
@@ -1741,7 +1751,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 			}
 		}
-
+		
 		if(getManagedBean().getInvoice().isBrandNew()) { // validate to avoid duplicate invoice record for one order/request
 			reqDTO.setFlRequestId(getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId());
 			if(invoiceSO.retrieveInvoiceByFlRequestId(reqDTO).getInvoice()!=null) {

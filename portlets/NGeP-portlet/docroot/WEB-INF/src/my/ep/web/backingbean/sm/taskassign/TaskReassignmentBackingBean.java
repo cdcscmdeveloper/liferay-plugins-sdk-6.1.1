@@ -199,7 +199,8 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		this.getManagedBean().getTaskAssignmentSearchBean().setSearched(true);
 		this.getManagedBean().setTaskLazy(true);
 		reloadAllTaskList();
-		log.info("searchDocument - End");
+		
+		
 
 	}
 

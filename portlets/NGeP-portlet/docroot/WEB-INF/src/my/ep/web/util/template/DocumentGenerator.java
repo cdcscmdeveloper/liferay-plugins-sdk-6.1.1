@@ -169,6 +169,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	 * 		the html content to generate as PDF.
 	 * @throws Exception
 	 */
+	
 	public void generatePdf(OutputStream os, String html) throws Exception {
 		debugLogger("generatePdf");
 		
@@ -176,21 +177,21 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		try{
 			//#26180
 			 if (html != null) {
-		        	html = html.replaceAll("&amp;nbsp;", " ");
-		        	html = html.replaceAll("&amp;", "&amp;amp;")
-		        			   .replaceAll("&", "&amp;");
-		        	html = html.replaceAll("&amp;#62", "&#62");
-		          	html = html.replaceAll("&amp;#60", "&#60");
-		          	
-					//20220921@asyrafhaziq - 29076 -  Start == //#25142 - start
-					html = html.replaceAll("&amp;nbsp;", " ");
-					html = html.replaceAll("&amp;amp;", "&");
-					//20220921@asyrafhaziq - 29076 - End == //#25142 - end
+	        	html = html.replaceAll("&amp;nbsp;", " ");
+	        	html = html.replaceAll("&amp;", "&amp;amp;")
+	        			   .replaceAll("&", "&amp;");
+	        	html = html.replaceAll("&amp;#62", "&#62");
+	          	html = html.replaceAll("&amp;#60", "&#60");
+	          	
+				//20220921@asyrafhaziq - 29076 -  Start == //#25142 - start
+				html = html.replaceAll("&amp;nbsp;", " ");
+				html = html.replaceAll("&amp;amp;", "&");
+				//20220921@asyrafhaziq - 29076 - End == //#25142 - end
 					
-		            render.setDocumentFromString(html);
-		            render.layout();
-		            render.createPDF(os);
-		        }
+	            render.setDocumentFromString(html);
+	            render.layout();
+	            render.createPDF(os);
+			 }
 		        
 		        os.flush();
 		}finally{

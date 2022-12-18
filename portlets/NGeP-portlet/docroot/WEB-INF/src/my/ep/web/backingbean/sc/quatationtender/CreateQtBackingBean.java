@@ -319,30 +319,30 @@ public class CreateQtBackingBean extends
 			scQt.setPmProcurementCategory(new PmParameter());
 			scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
 
-			/*
-			 * ScQtCommittee qtCommitte = new ScQtCommittee();
-			 * qtCommitte.setScQt(scQt); setUserDetails(qtCommitte);
-			 * qtCommitte.setCommitteeActivities(null);
-			 * qtCommitte.setQtCommitteRemarks(null);
-			 * qtCommitte.setScQtMeetings(null); ScCommittee committee = new
-			 * ScCommittee(); PmStatus committeStatus = new PmStatus();
-			 * committeStatus.setStatusId(QTStatusConst.CMT_PENDING_SUBMISSION);
-			 * committee.setCommitteStatus(committeStatus);
-			 * committee.setScCommitteeMembers(new
-			 * ArrayList<ScCommitteeMember>()); ParameterReqDTO parameterReqDTO
-			 * = new ParameterReqDTO(); parameterReqDTO
-			 * .setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
-			 * parameterReqDTO .setParameterCode(ParameterConst.
-			 * COMMITTEE_TYPE_SPECIFICATION_COMMITTEE); ParameterResDTO
-			 * parameterResDTO = getParameterSO()
-			 * .retrieveParameterByTypeAndCode(parameterReqDTO);
-			 * committee.setCommitteeType(parameterResDTO.getPmParameter());
-			 * qtCommitte.setScCommittee(committee);
-			 * this.getManagedBean().setScQtCommittee(qtCommitte);
-			 * this.getManagedBean().setScCommitteeMemberList(
-			 * qtCommitte.getScCommittee().getScCommitteeMembers());
-			 * this.getManagedBean().setCommitteMember(new ScCommitteeMember());
-			 */
+			/*ScQtCommittee qtCommitte = new ScQtCommittee();
+			qtCommitte.setScQt(scQt);
+			setUserDetails(qtCommitte);
+			qtCommitte.setCommitteeActivities(null);
+			qtCommitte.setQtCommitteRemarks(null);
+			qtCommitte.setScQtMeetings(null);
+			ScCommittee committee = new ScCommittee();
+			PmStatus committeStatus = new PmStatus();
+			committeStatus.setStatusId(QTStatusConst.CMT_PENDING_SUBMISSION);
+			committee.setCommitteStatus(committeStatus);
+			committee.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO
+					.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+			parameterReqDTO
+					.setParameterCode(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
+			ParameterResDTO parameterResDTO = getParameterSO()
+					.retrieveParameterByTypeAndCode(parameterReqDTO);
+			committee.setCommitteeType(parameterResDTO.getPmParameter());
+			qtCommitte.setScCommittee(committee);
+			this.getManagedBean().setScQtCommittee(qtCommitte);
+			this.getManagedBean().setScCommitteeMemberList(
+					qtCommitte.getScCommittee().getScCommitteeMembers());
+			this.getManagedBean().setCommitteMember(new ScCommitteeMember());*/
 			PmStatus status = getPmStatusByStatusId(QTStatusConst.QT_PENDING_QT_SUBMISSION);
 			scQt.setQtStatus(status);
 			/* scQt.setQtNo(dto.getQtNo()); */
@@ -784,9 +784,10 @@ public class CreateQtBackingBean extends
 		List<String> qtTypes = new ArrayList<String>();
 
 		qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+		/* #29521 - remove restricted tender
 		if (null != scQt && null != scQt.getProcurementMode() && ParameterConst.PROCUREMENT_MODE_TENDER.equals(scQt.getProcurementMode().getParameterCode())) {
 			qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
-		}
+		}*/
 
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), qtTypes));
 
@@ -849,14 +850,16 @@ public class CreateQtBackingBean extends
 		boolean isPanel = scQt.isPanel();
 
 		if (amount != null) {
-			// QT Type
-			scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
-			// Open For
-			if (isPanel) {
-				scQt.setOpenFor(null);
-			} else {
-				if (isQuotationThresHold && isOpenForBumiputraThresHold(amount)) {
-					scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+			// Bug #31605
+			if (scQt.getQtType() == null || (amount.intValue() <= 500000 && !isPanel) || isPanel) {
+				// QT Type
+				scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+			}
+			if (scQt.getQtType().equals(ParameterConst.QUOTATION_TENDER_TYPE_OPEN)) {
+				// Open For
+				if (isPanel) {
+					scQt.setOpenFor(null);
+
 				} else {
 
 					boolean printed = false;
@@ -864,9 +867,13 @@ public class CreateQtBackingBean extends
 					if (printed || scQt.getOpenFor().equals(ParameterConst.OPEN_FOR_BUMI)) {
 						scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
 					} else {
-						scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
+						printed = isPrintedForBumiputraOnly(this.getManagedBean().getQtCategoryList(), printed);
+						if (printed || scQt.getOpenFor().equals(ParameterConst.OPEN_FOR_BUMI)) {
+							scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+						} else {
+							scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
+						}
 					}
-
 				}
 			}
 		}

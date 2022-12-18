@@ -288,6 +288,9 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.supportingDocMode = supportingDocMode;
 	}
 	//28771- end
+	
+	//#34209
+	private boolean poApprUnClaimTask;
 		
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -1990,5 +1993,13 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setSdoRemark(String sdoRemark) {
 		this.sdoRemark = sdoRemark;
+	}
+	
+	public boolean isPoApprUnClaimTask() {
+		return poApprUnClaimTask;
+	}
+
+	public void setPoApprUnClaimTask(boolean poApprUnClaimTask) {
+		this.poApprUnClaimTask = poApprUnClaimTask;
 	}
 }

@@ -56,6 +56,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO; // Fix - #33491
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
@@ -2349,7 +2350,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					  }
 			}
 		// Start Fix - #33491 
-		} else if (!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+		} 
+				else if (!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
 			   		if(isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa()) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
 			   		   //To carry over whatever setting regarding is_bond_req from LOA to set in CT	
 			   		   getManagedBean().getContractVer().getCtContractAmount().setBondReq(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq());
@@ -2360,7 +2362,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			   		  }else{
 							calculateNewBondAmount(); 
 			   		  }	
+				} 
+		//	}
+		// Start Fix - #33491 
+		//} commented off 
+			else if (!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+		   		if(isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa()) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
+		   		   //To carry over whatever setting regarding is_bond_req from LOA to set in CT	
+		   		   getManagedBean().getContractVer().getCtContractAmount().setBondReq(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq());
+		   		        if(getManagedBean().getContractVer().getCtContractAmount().isBondReq()){
+		   		        	//recalculate the bond and set into CtcontractAmount 
+		   		        	getManagedBean().getCtContractAmount().setTotalBondAmt(PerformanceBondUtil.calculatePerformanceBondAmt(getManagedBean().getGstTotalAmount(), new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod())));
+		   		        }
+		   		  }else{
+						calculateNewBondAmount(); 
+		   		  }
 		}
+			
 		// End Fix - #33491
 		// End - Fix - #32663
 	}
@@ -3199,6 +3217,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if (!getManagedBean().getContractVer().getCtContractZones().isEmpty()) {
 			for (CtContractZone ctContractZone : getManagedBean().getContractVer().getCtContractZones()) {
 				if(ctContractZone.getZoneName().equalsIgnoreCase(locationDTO.getZone())) {
+					ctContractZone.setDeliveryTerm(locationDTO.getDeliveryTerm()); //#34191
 					getManagedBean().getUpdateZoneMap().put(locationDTO.getZone(), ctContractZone);
 					break;
 				}

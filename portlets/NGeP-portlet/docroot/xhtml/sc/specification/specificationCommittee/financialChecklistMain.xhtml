@@ -223,8 +223,7 @@
 				<!-- #30559 Farid add condition definition key 'FA' and 'U' -start- -->
 				<!-- Bug #32843 - start -->		
 					<c:choose>
-						<c:when
-							test="#{(stageTwofunctional.pmDocument.docDefinitionKey ne 'UP' and stageTwofunctional.pmDocument.docDefinitionKey ne 'FA' and stageTwofunctional.pmDocument.docDefinitionKey ne 'U')}">
+						<c:when test="#{(stageTwofunctional.pmDocument.docDefinitionKey ne 'UP' and stageTwofunctional.pmDocument.docDefinitionKey ne 'FA' and stageTwofunctional.pmDocument.docDefinitionKey ne 'U')}">
 							<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
 								disabled="#{(specificationBackingBean.managedBean.readOnly) or (stageTwofunctional.definationType.parameterCode eq 'TS' and stageTwofunctional.action.parameterCode eq 'I')}"
 								rendered="#{(stageTwofunctional.pmDocument.docDefinitionKey ne 'UP' and stageTwofunctional.pmDocument.docDefinitionKey ne 'FA' and stageTwofunctional.pmDocument.docDefinitionKey ne 'U')}">
@@ -234,7 +233,7 @@
 							</p:selectBooleanCheckbox>
 						</c:when>
 						<c:otherwise>
-						    <!-- Bug #32843 - end -->
+							<!-- Bug #32843 - end -->
 							<!-- #30559 Farid add condition definition key 'FA' and 'U' -end- -->
 
 							<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"

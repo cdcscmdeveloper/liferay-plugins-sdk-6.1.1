@@ -59,7 +59,7 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private boolean bypassFlag;
 	private List<SmPersonnel> replacesupplieradminSelectList;
 	public List<PmDocument> replacesuppadminUploadSuppDocList;
-	private List<SmReplaceSupplierAdminDoc> smReplaceSupplierAdminDocs = new ArrayList();
+	private List<SmReplaceSupplierAdminDoc> smReplaceSupplierAdminDocs = new ArrayList<SmReplaceSupplierAdminDoc>();
 	private int attachedFileIndex;
 	private String fileDirectory;
 	//#28765 - End
@@ -68,7 +68,26 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private boolean disableStaff=false;
 	//28765
 	private boolean disableNationality;
-
+	
+	//33563 - START
+	private boolean displayRolePanel = false;
+	private boolean displayRoleEquity = false;
+	private boolean displayRoleDirector = false;
+	private boolean displayRoleHighManagement = false;
+	private boolean displayRoleManagement = false;
+	private boolean displayRoleProfessional = false;
+	private boolean displayRoleSemiPro = false;
+	private boolean displayRoleClericalStaff = false;
+	
+	private boolean disabledRoleEquity = false;
+	private boolean disabledRoleDirector = false;
+	private boolean disabledRoleHighManagement = false;
+	private boolean disabledRoleManagement = false;
+	private boolean disabledRoleProfessional = false;
+	private boolean disabledRoleSemiPro = false;
+	private boolean disabledRoleClericalStaff = false;
+	//33563 - END
+	
 	public ForceReplaceSuppAdminManagedBean() {
 		
 	}
@@ -364,4 +383,125 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 		this.disableNationality = disableNationality;
 	}
 	//#28765 - End
+	// START -> #33563
+	public boolean isDisplayRoleEquity() {
+		return displayRoleEquity;
+	}
+
+	public void setDisplayRoleEquity(boolean displayRoleEquity) {
+		this.displayRoleEquity = displayRoleEquity;
+	}
+
+	public boolean isDisplayRoleDirector() {
+		return displayRoleDirector;
+	}
+
+	public void setDisplayRoleDirector(boolean displayRoleDirector) {
+		this.displayRoleDirector = displayRoleDirector;
+	}
+
+	public boolean isDisplayRoleHighManagement() {
+		return displayRoleHighManagement;
+	}
+
+	public void setDisplayRoleHighManagement(boolean displayRoleHighManagement) {
+		this.displayRoleHighManagement = displayRoleHighManagement;
+	}
+
+	public boolean isDisplayRoleManagement() {
+		return displayRoleManagement;
+	}
+
+	public void setDisplayRoleManagement(boolean displayRoleManagement) {
+		this.displayRoleManagement = displayRoleManagement;
+	}
+
+	public boolean isDisplayRoleProfessional() {
+		return displayRoleProfessional;
+	}
+
+	public void setDisplayRoleProfessional(boolean displayRoleProfessional) {
+		this.displayRoleProfessional = displayRoleProfessional;
+	}
+
+	public boolean isDisplayRoleSemiPro() {
+		return displayRoleSemiPro;
+	}
+
+	public void setDisplayRoleSemiPro(boolean displayRoleSemiPro) {
+		this.displayRoleSemiPro = displayRoleSemiPro;
+	}
+
+	public boolean isDisplayRoleClericalStaff() {
+		return displayRoleClericalStaff;
+	}
+
+	public void setDisplayRoleClericalStaff(boolean displayRoleClericalStaff) {
+		this.displayRoleClericalStaff = displayRoleClericalStaff;
+	}
+
+	public boolean isDisabledRoleEquity() {
+		return disabledRoleEquity;
+	}
+
+	public void setDisabledRoleEquity(boolean disabledRoleEquity) {
+		this.disabledRoleEquity = disabledRoleEquity;
+	}
+
+	public boolean isDisabledRoleDirector() {
+		return disabledRoleDirector;
+	}
+
+	public void setDisabledRoleDirector(boolean disabledRoleDirector) {
+		this.disabledRoleDirector = disabledRoleDirector;
+	}
+
+	public boolean isDisabledRoleHighManagement() {
+		return disabledRoleHighManagement;
+	}
+
+	public void setDisabledRoleHighManagement(boolean disabledRoleHighManagement) {
+		this.disabledRoleHighManagement = disabledRoleHighManagement;
+	}
+
+	public boolean isDisabledRoleManagement() {
+		return disabledRoleManagement;
+	}
+
+	public void setDisabledRoleManagement(boolean disabledRoleManagement) {
+		this.disabledRoleManagement = disabledRoleManagement;
+	}
+
+	public boolean isDisabledRoleProfessional() {
+		return disabledRoleProfessional;
+	}
+
+	public void setDisabledRoleProfessional(boolean disabledRoleProfessional) {
+		this.disabledRoleProfessional = disabledRoleProfessional;
+	}
+
+	public boolean isDisabledRoleSemiPro() {
+		return disabledRoleSemiPro;
+	}
+
+	public void setDisabledRoleSemiPro(boolean disabledRoleSemiPro) {
+		this.disabledRoleSemiPro = disabledRoleSemiPro;
+	}
+
+	public boolean isDisabledRoleClericalStaff() {
+		return disabledRoleClericalStaff;
+	}
+
+	public void setDisabledRoleClericalStaff(boolean disabledRoleClericalStaff) {
+		this.disabledRoleClericalStaff = disabledRoleClericalStaff;
+	}
+	//END -> #33563
+
+	public boolean isDisplayRolePanel() {
+		return displayRolePanel;
+	}
+
+	public void setDisplayRolePanel(boolean displayRolePanel) {
+		this.displayRolePanel = displayRolePanel;
+	}
 }

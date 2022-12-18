@@ -1891,7 +1891,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.pk7Reasons = pk7Reasons;
 	}
 	//#24540 - end -
-
+	
+	// Bug #33674@Syazani - Start
 	public Long getSupplierBankId() {
 		return supplierBankId;
 	}
@@ -1899,5 +1900,5 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	public void setSupplierBankId(Long supplierBankId) {
 		this.supplierBankId = supplierBankId;
 	}
-	
+	// Bug #33674@Syazani - End
 }

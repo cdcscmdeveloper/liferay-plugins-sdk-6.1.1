@@ -73,9 +73,10 @@
 								disabled="#{(!specificationBackingBean.isQTStatusChecklistScoringRevision() and !specificationBackingBean.isQTStatusChecklistScoring())}"
 								style="margin-bottom:5px;width:83%;" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 								onmouseout="limitTextArea(this,200);"
-								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" />
-							<!-- 30917, 31151 -end- -->
-						</td>
+								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}"> <!-- 24112022@syazani - Bug #33249 - Start -->
+								<p:ajax event="change" partialSubmit="true" process="@this"
+								listener="#{specificationBackingBean.specTitleChange}" />
+								</p:inputTextarea></td> <!-- 24112022@syazani - Bug #33249 - End -->
 					</tr>
 
 					<tr>

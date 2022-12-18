@@ -486,21 +486,17 @@
 								style="width:200px;" disabled="true" />
 						</c:otherwise>
 					</c:choose></td>
-
 			</tr>
-
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory"
 						rendered="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 				</td>
 				<td>
-						
-						
-							<p:inputText id="evalTypeTxt"
-								value="#{createQtBB.getParameterDesc(ParameterTypeConst.scEvaluationType, scQt.evaluationType)}"
-								style="width:195px;" disabled="true" />
-						</td>
+					<p:inputText id="evalTypeTxt"
+						value="#{createQtBB.getParameterDesc(ParameterTypeConst.scEvaluationType, scQt.evaluationType)}"
+						style="width:195px;" disabled="true" />
+				</td>
 			</tr>
 
 			<tr>

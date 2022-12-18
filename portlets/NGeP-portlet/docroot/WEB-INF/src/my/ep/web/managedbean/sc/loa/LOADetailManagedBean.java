@@ -301,8 +301,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	//#11134 -start-
 	private List<ScLoaRemark> supplierRemarks;
 	//#11134 -end-	
-	
-	
+
 	//Bug #33674@Syazani - Start
 	private Long supplierBankId = null;
 	//Bug #33674@Syazani - End	
@@ -1691,7 +1690,8 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.supplierRemarks = supplierRemarks;
 	}
 	//#11134 -end-
-
+	
+	//Bug #33674@Syazani - Start
 	public Long getSupplierBankId() {
 		return supplierBankId;
 	}
@@ -1699,4 +1699,5 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setSupplierBankId(Long supplierBankId) {
 		this.supplierBankId = supplierBankId;
 	}
+	//Bug #33674@Syazani - End
 }

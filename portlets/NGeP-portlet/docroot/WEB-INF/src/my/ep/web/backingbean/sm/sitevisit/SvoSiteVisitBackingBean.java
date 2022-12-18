@@ -79,6 +79,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -2201,6 +2202,31 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 				}
 				log.info("---Curent PO Latest: "+currPo.getUserName());
+				
+				//#33955 - START
+				for (PmUserRole PmUserRole : currPo.getPmUserOrgs().get(0).getPmUserRoles()) {
+					if (PmUserRole.getPmRole().getRoleCode().equals(SupplierManagementConst.PO_HQ)
+							&& PmUserRole.getRecordStatusFlg() == 0) {
+						IZoneSO zoneReqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
+						ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
+						zoneReqDTO.setStateId(svTask.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0)
+								.getSmAddress().getPmState().getStateId());
+						PmUser newPo = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(
+								svTask.getSmAppl().getSupplierType(), svTask.getSmAppl().getApplType(),
+								svTask.getSmAppl().getApplCategoryType(),
+								zoneReqSO.retrieveZoneByStateId(zoneReqDTO).getPmZone().getZoneCode());
+						// #30504 Re-open start
+						currPo = newPo;
+						SMMOFRegDataType smObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
+						smObj.setPoUsers(newPo.getLoginId());
+						this.getManagedBean().setBpmPojo(smObj);
+
+					}
+				}
+				
+				log.info("---Curent PO Latest: "+currPo.getUserName());
+				//#33955 - END
 				
 				// #30504 end
 				Object token = getFacesScopes().getBPMAuthenticationCtxToken();

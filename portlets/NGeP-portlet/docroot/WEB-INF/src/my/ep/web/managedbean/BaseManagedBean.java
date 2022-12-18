@@ -4,6 +4,8 @@
 package my.ep.web.managedbean;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,6 +30,7 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
 
 /**
@@ -134,6 +137,14 @@ public abstract class BaseManagedBean implements Serializable {
 	// #25638 - Start		
 	private boolean displayReviseInstrn;
 	// #25638 - End
+	
+	// start #29956
+	private String termAndConditionCheckOwner;
+	private String termAndConditionCheckOwnerA;
+	private String termAndConditionCheckOwnerC;
+	private String termAndConditionCheckOwnerChangeRole;
+	private Boolean isDowngradeRole;
+	// end #29956
 	
 	//27346-start 
 	// 27346
@@ -255,8 +266,7 @@ public abstract class BaseManagedBean implements Serializable {
 		return smSupplierBusinessSsm;
 	}
 
-	public void setSmSupplierBusinessSsm(
-			List<SmSupplierBusiness> smSupplierBusinessSsm) {
+	public void setSmSupplierBusinessSsm(List<SmSupplierBusiness> smSupplierBusinessSsm) {
 		this.smSupplierBusinessSsm = smSupplierBusinessSsm;
 	}
 	//27346-end
@@ -869,4 +879,50 @@ public abstract class BaseManagedBean implements Serializable {
 		this.displayReviseInstrn = displayReviseInstrn;
 	}
 	// #25638 - End
+	
+	// start #29956
+	public String getTermAndConditionCheckOwner() {
+		return termAndConditionCheckOwner;
+	}
+
+	public void setTermAndConditionCheckOwner(String termAndConditionCheckOwner) {
+		this.termAndConditionCheckOwner = termAndConditionCheckOwner;
+	}
+
+	public String getTermAndConditionCheckOwnerA() {
+		return termAndConditionCheckOwnerA;
+	}
+
+	public void setTermAndConditionCheckOwnerA(String termAndConditionCheckOwnerA) {
+		this.termAndConditionCheckOwnerA = termAndConditionCheckOwnerA;
+	}
+
+	public String getTermAndConditionCheckOwnerC() {
+		return termAndConditionCheckOwnerC;
+	}
+
+	public void setTermAndConditionCheckOwnerC(String termAndConditionCheckOwnerC) {
+		this.termAndConditionCheckOwnerC = termAndConditionCheckOwnerC;
+	}
+
+	public String getTermAndConditionCheckOwnerChangeRole() {
+		return termAndConditionCheckOwnerChangeRole;
+	}
+
+	public void setTermAndConditionCheckOwnerChangeRole(String termAndConditionCheckOwnerChangeRole) {
+		this.termAndConditionCheckOwnerChangeRole = termAndConditionCheckOwnerChangeRole;
+	}
+
+	// end #29956
+
+	
+	//start #29956
+	public Boolean isDowngradeRole() {
+		return isDowngradeRole;
+	}
+
+	public void setDowngradeRole(Boolean isDowngradeRole) {
+		this.isDowngradeRole = isDowngradeRole;
+	}
+	//end #29956
 }

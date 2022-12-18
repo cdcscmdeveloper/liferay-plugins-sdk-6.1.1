@@ -71,6 +71,21 @@
 						rendered="#{table.verifiedFlg != 1}" />
 				</p:column>
 
+				<p:column headerText="#{lbl['lbl.btn.download']}"
+					style="width : 10%;text-align: center  !important;">
+					<h:outputText rendered="#{table.pmDocument.hardCopyReq}"
+						value="#{lbl['lbl.sm.suppDoc.document.hdrCpyOnly']}"
+						style="float: left;white-space: normal;" />
+
+					<p:commandLink rendered="#{table.pmDocument.download}"
+						action="#{backingBean.downloadSignatureSuppDoc(table.pmDocument.docDefinitionKey)}"
+						update=":form" ajax="false">
+						<p:fileDownload value="#{backingBean.file}" />
+						<p:graphicImage value="/css/images/design/download.png"
+							style="margin-right:2px;" />
+					</p:commandLink>
+				</p:column>
+
 				<p:column headerText="#{lbl['lbl.btn.upload.doc']}"
 					style="width : 10%;">
 					<p:commandLink oncomplete="attachDlg1.show();return false;"
@@ -83,9 +98,22 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.suppDoc.added.document.name']}"
 					style="width : 10%;">
-					<h:outputText value="#{table.smApplDocFiles[0].fileName}"
+					<!-- <h:outputText value="#{table.smApplDocFiles[0].fileName}"
 						rendered="#{table.verifiedFlg != 1}"
-						style="float: left;white-space: normal;" />
+						style="float: left;white-space: normal;" /> -->
+					<ui:repeat var="applDocsFile" value="#{table.smApplDocFiles}">
+						<ui:remove>
+							<p:commandLink value="#{applDocsFile.fileName}"
+								rendered="#{not empty table.smApplDocFiles}" ajax="false"
+								action="#{backingBean.downloadSuppDoc(applDocsFile.fileName,applDocsFile.filePath)}">
+								<p:fileDownload value="#{backingBean.file}" />
+							</p:commandLink>
+						</ui:remove>
+						<h:panelGroup rendered="#{not empty table.smApplDocFiles}">
+							<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{backingBean.getShortFileName(applDocsFile.fileName)}</a>
+						</h:panelGroup>
+						<br />
+					</ui:repeat>
 				</p:column>
 			</p:dataTable>
 
