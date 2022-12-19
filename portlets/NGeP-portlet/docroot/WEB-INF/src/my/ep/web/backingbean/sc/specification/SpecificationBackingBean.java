@@ -1374,6 +1374,10 @@ public class SpecificationBackingBean extends
 				retriveTechnicalCheckList();
 			}
 			//1873 note 182 end
+			else if(this.getManagedBean().getQt().isSampleReq()){//#11104-start
+					checksampleChecklist(this.getManagedBean()
+							.getScQtCheckSt2techProposal());
+			}//#11104-End
 			addDemoTechnicalCheckList(); //#28784
 			break;
 		case 3:
