@@ -152,14 +152,14 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label"
 									value="#{lbl['lbl.sm.sme.valid.start']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
-							<td><p:calendar id="calDtStart"
-									label="#{lbl['lbl.sm.sme.valid.start']}" showOn="button"
-									navigator="true" display="inline" readonlyInput="true"
-									value="#{smUpdateSmeInfoBackingBean.managedBean.smeSupplier.smeValidStartDate}"
-									required="true"
-									maxdate="#{smUpdateSmeInfoBackingBean.managedBean.smeSupplier.smeValidEndDate}"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-									<p:ajax event="dateSelect" process="@this" update=":#{p:component('calDtEnd')}"/>
+							<!-- #29617 ReOpen note #177 - Start -->
+							<td><p:calendar id="calDtStart" label="#{lbl['lbl.sm.sme.valid.start']}" showOn="button"
+									navigator="true" display="inline" readonlyInput="true"  value="#{smUpdateSmeInfoBackingBean.managedBean.smeSupplier.smeValidStartDate}"
+									required="true" maxdate="#{smUpdateSmeInfoBackingBean.managedBean.maxValidStartDate}"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"> 
+									<p:ajax event="dateSelect" process="@this" update=":#{p:component('calDtEnd')}" 
+										listener="#{smUpdateSmeInfoBackingBean.resetMinEndDate}"/>
+							<!-- #29617 - End -->
 								</p:calendar>
 								<p:message id="calDtStartMsg" for="calDtStart" display="icon"
 									showDetail="false" /></td>
