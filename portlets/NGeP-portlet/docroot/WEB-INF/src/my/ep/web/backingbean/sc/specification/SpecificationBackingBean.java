@@ -671,7 +671,7 @@ public class SpecificationBackingBean extends
 		} else {
 			//1873 note 195 start
 			if(CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())){
-			retriveTechnicalCheckList();
+				retriveTechnicalCheckList();
 			}
 			//1873 note 195 end
 			techCheckList = this.getManagedBean().getScQtCheckSt2techProposal();
@@ -850,7 +850,7 @@ public class SpecificationBackingBean extends
 						if (checkList.getPmStatus().getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
 							throw new EpException(MessageConst.ERROR_760542);
 						}
-					}					
+					}
 				
 				// Bug #34065@Syazani 01/11/2022 -- Start
 				for (PmParameterDesc paramDesc : localParamDesc) {
@@ -1359,6 +1359,10 @@ public class SpecificationBackingBean extends
 				retriveTechnicalCheckList();
 			}
 			//1873 note 182 end
+			else if(this.getManagedBean().getQt().isSampleReq()){//#11104-start
+					checksampleChecklist(this.getManagedBean()
+							.getScQtCheckSt2techProposal());
+			}//#11104-End
 			addDemoTechnicalCheckList(); //#28784
 			break;
 		case 3:
@@ -15277,8 +15281,8 @@ if (null != checklist && !checklist.isEmpty()) {
 					l2Ids.add(l2CatMap.getKey());
 					l3Ids.add(l3CatMap.getKey());
 				}
-			}
-				if(l1Ids.size()!=0 && l2Ids.size()!=0 && l3Ids.size()!=0){
+		}
+			if(l1Ids.size()!=0 && l2Ids.size()!=0 && l3Ids.size()!=0){
 					qtSearchBean.getDataFilterBeans().add(
 							new SearchMultiFilterBean(
 								new SearchMultiFilterBean(
@@ -21537,21 +21541,21 @@ if(null!=allTechnicalChecklist){
 		String key = parameterType + "_" + parameterCode;
 		PmParameter pmParam = pmParameterMapStringKey.get(key); //cache
 		if (pmParam == null) {
-		IParameterSO parameterSo = null;
-		ParameterResDTO resDTO = null;
-		try {
-			parameterSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterType(parameterType);
-			reqDTO.setParameterCode(parameterCode);
-			resDTO = parameterSo.retrieveParameterByTypeAndCode(reqDTO);
-			reqDTO = null;
+			IParameterSO parameterSo = null;
+			ParameterResDTO resDTO = null;
+			try {
+				parameterSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterType(parameterType);
+				reqDTO.setParameterCode(parameterCode);
+				resDTO = parameterSo.retrieveParameterByTypeAndCode(reqDTO);
+				reqDTO = null;
 				pmParam = resDTO.getPmParameter();
 				pmParameterMapStringKey.put(key, pmParam);
-		} finally {
-			parameterSo = null;
+			} finally {
+				parameterSo = null;
+			}
 		}
-	}
 		return pmParam;
 	}
 	//Bug #34065@Syazani 30/11/2022 -- End
