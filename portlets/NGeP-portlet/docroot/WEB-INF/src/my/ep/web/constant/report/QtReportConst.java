@@ -180,9 +180,15 @@ public class QtReportConst implements Serializable {
 		return SC_PROP_VALID_PERIOD_EXT_RPT_VAL;
 	}
 	
-	//#29580_14306 - start
+	//#21692 - start
 	public String getSC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL() {
 		return SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL;
+	}
+	//#21692 - end
+	
+	//#29580_14306 - start
+	public String getSC_QUOT_TENDER_PROPOSAL_OFFER_SUBM_RPT_BY_SUPPLIER_VAL() {
+		return SC_QUOT_TENDER_PROPOSAL_OFFER_SUBM_RPT_BY_SUPPLIER_VAL;
 	}
 	//#29580_14306 - end
 }
