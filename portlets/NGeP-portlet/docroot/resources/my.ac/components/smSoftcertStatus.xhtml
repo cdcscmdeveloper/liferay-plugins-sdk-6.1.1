@@ -43,7 +43,7 @@
 		<h:outputText styleClass="outputLabel-view"
 			value="#{lbl['lbl.txt.na']}"
 			rendered="#{cc.attrs.personnel.softcertFlg eq '0' or cc.attrs.personnel.epRole eq 'CM_USER' 
-				or empty cc.attrs.personnel.epRole or (cc.attrs.personnel.authorizedFlg eq 0 and cc.attrs.personnel.epRole ne 'FL_USER')}" />
+				or (cc.attrs.personnel.softcertFlg eq '0' and empty cc.attrs.personnel.epRole) or (cc.attrs.personnel.authorizedFlg eq 0 and cc.attrs.personnel.epRole ne 'FL_USER')}" />
 		<!-- #27371 - start -->
 		&#160;
 		<!-- <p:outputLabel styleClass="outputLabel-view"
