@@ -30,17 +30,17 @@
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.sm.sme.rpt.comp.name']}" /></td>
 				<td class="tdContent">
-					
+					<!-- 
 					<ac:smReportCompanyNameLOV
 						bBean="#{smeSupplierRptBB}"
 						saveObj="smeSupplierRptBB.managedBean.selectedOrgProfile" />
+					-->
 					
-					<!-- 
 					<p:outputPanel rendered="#{smeSupplierRptBB.managedBean.regType == SupplierManagementConst.ACC_BASIC}">
 						<ac:lov id="rptSmeBasic" lovId="SM_SME_SUPPLIER_BASIC"
 							headerText="#{lbl['lbl.rpt.cmpName']}"
 							value="#{smeSupplierRptBB.managedBean.selectedSupplier.companyName}" 
-							saveObject="#{smeSupplierRptBB.managedBean.selectedSupplier}"
+							saveObject="smeSupplierRptBB.managedBean.selectedSupplier"
 							conditionField="#{smeSupplierRptBB.constructConditionFields()}"
 							tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
 						</ac:lov>
@@ -50,12 +50,12 @@
 						<ac:lov id="rptSmeMof" lovId="SM_SME_SUPPLIER_MOF"
 							headerText="#{lbl['lbl.rpt.cmpName']}"
 							value="#{smeSupplierRptBB.managedBean.selectedSupplier.companyName}" 
-							saveObject="#{smeSupplierRptBB.managedBean.selectedSupplier}"
+							saveObject="smeSupplierRptBB.managedBean.selectedSupplier"
 							conditionField="#{smeSupplierRptBB.constructConditionFields()}"
 							tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
 						</ac:lov>
 					</p:outputPanel>
-					-->
+					
 				</td>
 			</tr>
 			<!-- // #29617 Reopen Start - note #119 item 1, 3, 4, 5 -->
@@ -68,15 +68,10 @@
 							bBean="#{smeSupplierRptBB}" showItemAll="true" /></td> 
 				<td class="tdTitle"><p:outputLabel 
 						value="#{lbl['lbl.rpt.supplierType']}" /></td> 
-				<td class="tdContent"><p:selectOneMenu style="width:300px;" 
-						value="#{smeSupplierRptBB.managedBean.supplierType}"> 
-						<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" 
-							itemValue="#{cc.attrs.allValue}"></f:selectItem> 
-						<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}" 
-							itemValue="#{SupplierManagementConst.SUPP_TYPE_CONTRACTOR}"></f:selectItem> 
-						<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}" 
-							itemValue="#{SupplierManagementConst.SUPP_TYPE_CONSULTANT}"></f:selectItem> 
-					</p:selectOneMenu></td> 
+				<td class="tdContent">
+					<ac:smReportSupplierType bBean="#{smeSupplierRptBB}" 
+						required="true" allValue="all" />
+				</td> 
 			</tr> 
 			</p:outputPanel>
 			<tr> 
