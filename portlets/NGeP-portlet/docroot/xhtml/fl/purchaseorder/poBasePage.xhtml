@@ -74,7 +74,8 @@
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 					action="#{flOrderBB.backToPervious}"
-					rendered="#{flOrderBB.managedBean.taskId==null}" />
+					rendered="#{flOrderBB.managedBean.taskId==null
+					or flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancelYEP}" />
 				</td>
 				<c:if test='#{flOrderBB.managedBean.outComes ne "null"}'>
 				<td colspan="4" style="text-align: right">
@@ -136,7 +137,8 @@
 					<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
 					process="@form" partialSubmit="true" rendered='#{(flOrderBB.managedBean.yep) and !(flOrderBB.managedBean.buttonVal eq "AP58")
 					and (flOrderBB.managedBean.getButtonVal() != BpmOutcomeConstant.bpmView)
-					and !(flOrderBB.managedBean.buttonVal eq "NONAP58") and !(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward)}'
+					and !(flOrderBB.managedBean.buttonVal eq "NONAP58") and !(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward)
+					and (flOrderBB.managedBean.yepButtonFlag == 1)}'
 					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
 					<!-- edit render -->
 					
