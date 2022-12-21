@@ -208,6 +208,11 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Map<String, SmSupplierBank> supplierBankName;
 	private Long applID;
 	//End Fix - #33674
+	
+	//#33126 hafiz start
+	private boolean inCtPerformance = false;
+	//#33126 hafiz end
+	
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1664,4 +1669,16 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.viewSCLFromContract = viewSCLFromContract;
 	}
 	//Bug 34142 - shaqimi end 16112022
+	
+	// #33126 hafiz start
+
+	public boolean isInCtPerformance() {
+		return inCtPerformance;
+	}
+
+	public void setInCtPerformance(boolean inCtPerformance) {
+		this.inCtPerformance = inCtPerformance;
+	}
+
+	// #33126 hafiz end
 }
