@@ -9,17 +9,11 @@
 <!-- 	<ui:include src="/xhtml/sm/shared/sitevisit/categoryCodeByTemplate.xhtml" /> -->
 <!-- 	<ui:include src="/xhtml/sm/shared/sitevisit/assistingOfficer.xhtml" /> -->
 	<p:panel header="#{lbl['lbl.sm.companyinfo.intvw.represent']}" id="pnlIntRep" toggleable="true">
-		<!-- #24964 - START -->
-		<c:if test="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}">
-			#{svoSiteVisitBackingBean.mapSmSvIntervieweesSVOWithPO(svoSiteVisitBackingBean.managedBean.smSvtaskSVO.smSvTemplate.smSvInterviewees)}
-		</c:if>
-		<!-- #24964 - END -->
-		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start --> 
 		<p:dataTable id="dtIntRepTbl" var="interviewee" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-		value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate.smSvInterviewees}"
+		value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvInterviewees}"
 		selection="#{svoSiteVisitBackingBean.managedBean.selectedInterviewees}" rowKey="#{interviewee}">
+		<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
 		<p:column selectionMode="multiple" style="width:2%" rendered="#{not empty svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate.smSvInterviewees}" />
-		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
 		
 		<p:ajax event="rowSelectCheckbox" update=":#{p:component('btnIntervieweeRemove')}" />
 		<p:ajax event="rowUnselectCheckbox" update=":#{p:component('btnIntervieweeRemove')}" />
@@ -32,14 +26,7 @@
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.sm.person.composition.name']}" />
 			</f:facet>
-			<p:inputText value="#{interviewee.name}" label="#{lbl['lbl.sm.person.composition.name']}" id="intName"  maxlength="50" size="55"  required="true" />
-			<!-- #24964 - START -->
-			<ac:smFieldChangeAlertSVO 
-				isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
-				oriValue="#{interviewee.svoSmSvInterviewee.name}" 
-				currValue="#{interviewee.name}" 
-				alertValue="#{interviewee.svoSmSvInterviewee.name}"   />
-			<!-- #24964 - END -->
+			<p:inputText value="#{interviewee.name}" label="#{lbl['lbl.sm.person.composition.name']}" id="intName"  maxlength="50" size="55"  required="#{!empty param['disabledValidation']}" />
 		</p:column>
 		
 		<p:column>	
@@ -48,14 +35,7 @@
 				<h:outputText value="#{lbl['lbl.sm.userprofile.designation']}" />
 			</f:facet>
 			<p:inputText value="#{interviewee.designation}" label="#{lbl['lbl.sm.userprofile.designation']}" id="intDesignation"  
-			maxlength="50" size="55"  required="true" />
-			<!-- #24964 - START -->
-			<ac:smFieldChangeAlertSVO 
-				isShow="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO ne null}"
-				oriValue="#{interviewee.svoSmSvInterviewee.designation}" 
-				currValue="#{interviewee.designation}" 
-				alertValue="#{interviewee.svoSmSvInterviewee.designation}"   />
-			<!-- #24964 - START -->
+			maxlength="50" size="55"  required="#{!empty param['disabledValidation']}" />
 		</p:column>
 		
 		</p:dataTable>

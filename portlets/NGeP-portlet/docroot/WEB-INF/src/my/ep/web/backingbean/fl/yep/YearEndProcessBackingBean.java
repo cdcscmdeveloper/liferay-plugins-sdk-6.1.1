@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,6 +59,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -701,6 +703,10 @@ public class YearEndProcessBackingBean extends
 					ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+			//#32752 start
+			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			//#32752 end
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_ORDER);
 			reqDTO.setFlOrderId(Long.valueOf(flDocId));
 			FulfilmentResDTO coResDTO = fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);
@@ -779,6 +785,30 @@ public class YearEndProcessBackingBean extends
 		flOrderBB.getManagedBean().setFlOrderId(Long.valueOf(flDocId));
 		//29440 end
 		flOrderBB.getManagedBean().setYep(true);
+		
+		//#32752 start
+		if (buttonVal.equals("CLOSEMANUAL")) {
+			String errorIds = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+					.get("errorId");
+			if(Arrays.asList("2","4").contains(progressStatus)) {
+				if (!errorIds.equals("")) {
+					flOrderBB.getManagedBean().setGfmasError(true);
+					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+					String errorId = errorIds;
+					if (errorIds.contains(",")) {
+						errorId = errorIds.split(",")[0];
+					}
+					errReq.setErrorId(new Long(errorId));
+					FulfilmentResDTO errRes = fulfilmentRequestSO.retrieveErrorContent(errReq);
+					flOrderBB.getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
+					flOrderBB.getManagedBean().setGfmasErrorDesc(
+							MessageUtils.getMessage("ERR-" + errRes.getErrorCode(), new String[] {},
+									MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
+					flOrderBB.getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+				}
+			}
+		}
+		//#32752 end
 		return navgPage;
 	}
 	

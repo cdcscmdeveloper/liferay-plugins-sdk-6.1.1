@@ -18,7 +18,7 @@
 <body>
 
 
-
+	#set($rowCount = 0)
  	#foreach( $sampleItem in $sampleItems )
  	
 	<table cellpadding="0" cellspacing="10" width="100%" style="border: 3px solid black">
@@ -43,7 +43,7 @@
         	</tr>
         	<tr style="width : 100%" border="1">
 				<td style="width : 40%"><h3>ITEM NAME</h3></td>
-				<td style="width : 60%"><h3>$sampleItem.scRequestItem.itemName</h3></td>
+				<td style="width : 60%"><h3>$bean.replaceWithBR($sampleItem.scRequestItem.itemName)</h3></td>
         	</tr>
 			<tr style="width : 100%" border="1">
 				<td style="width : 40%"><h3>LABEL NO</h3></td>
@@ -53,6 +53,10 @@
           <br/>
           
 	</table>
+	#set($rowCount = $rowCount + 1)
+	#if($rowCount < $sampleItems.size())
+		<div style="page-break-after:always;"><br/></div>
+	#end
 	#end
 	
  </body>

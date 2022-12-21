@@ -913,28 +913,39 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
+				
+				//Enhancement 29418 - shaqimi start 20/10/2022
+				Boolean hasPBQCRole = 
+						(fc.hasRoleUser(RoleCode.QCA_CHAIRPERSON.value()) || fc.hasRoleUser(RoleCode.QCA_MEMBER.value()) || fc.hasRoleUser(RoleCode.QCA_SECRETARY.value())
+								|| fc.hasRoleUser(RoleCode.QCB_CHAIRPERSON.value()) || fc.hasRoleUser(RoleCode.QCB_MEMBER.value()) || fc.hasRoleUser(RoleCode.QCB_SECRETARY.value())
+								|| fc.hasRoleUser(RoleCode.PBA_CHAIRPERSON.value()) || fc.hasRoleUser(RoleCode.PBA_MEMBER.value()) || fc.hasRoleUser(RoleCode.PBA_SECRETARY.value())
+								|| fc.hasRoleUser(RoleCode.PBB_CHAIRPERSON.value()) || fc.hasRoleUser(RoleCode.PBB_MEMBER.value()) || fc.hasRoleUser(RoleCode.PBB_SECRETARY.value())
+								|| fc.hasRoleUser(RoleCode.PPB_CHAIRPERSON.value()) || fc.hasRoleUser(RoleCode.PPB_MEMBER.value()) || fc.hasRoleUser(RoleCode.PPB_SECRETARY.value()));
 
-				if(fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) && !fc.hasRoleUser(RoleCode.BPK_CCA.value())){
-					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
-							ParameterConst.CONTRACT_TYPE_MINISTRY);
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);
-				}else if(fc.hasRoleUser(RoleCode.BPK_CCA.value()) && !fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())){
-					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
-							ParameterConst.CONTRACT_TYPE_CENTRAL);
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);		
-				} else if(fc.hasRoleUser(RoleCode.CT_APPROVER.value()) && !fc.hasRoleUser(RoleCode.BPK_CC_APPROVER.value())){
-					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
-							ParameterConst.CONTRACT_TYPE_MINISTRY);
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);			
-				} else if(!fc.hasRoleUser(RoleCode.CT_APPROVER.value()) && fc.hasRoleUser(RoleCode.BPK_CC_APPROVER.value())){
-					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
-							ParameterConst.CONTRACT_TYPE_CENTRAL);
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);		
+				if(!hasPBQCRole){
+					if(fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) && !fc.hasRoleUser(RoleCode.BPK_CCA.value())){
+						SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
+								ParameterConst.CONTRACT_TYPE_MINISTRY);
+						filterBean.setCaseInsensitive(true);
+						searchBean.getDataFilterBeans().add(filterBean);
+					}else if(fc.hasRoleUser(RoleCode.BPK_CCA.value()) && !fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())){
+						SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
+								ParameterConst.CONTRACT_TYPE_CENTRAL);
+						filterBean.setCaseInsensitive(true);
+						searchBean.getDataFilterBeans().add(filterBean);		
+					} else if(fc.hasRoleUser(RoleCode.CT_APPROVER.value()) && !fc.hasRoleUser(RoleCode.BPK_CC_APPROVER.value())){
+						SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
+								ParameterConst.CONTRACT_TYPE_MINISTRY);
+						filterBean.setCaseInsensitive(true);
+						searchBean.getDataFilterBeans().add(filterBean);			
+					} else if(!fc.hasRoleUser(RoleCode.CT_APPROVER.value()) && fc.hasRoleUser(RoleCode.BPK_CC_APPROVER.value())){
+						SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
+								ParameterConst.CONTRACT_TYPE_CENTRAL);
+						filterBean.setCaseInsensitive(true);
+						searchBean.getDataFilterBeans().add(filterBean);		
+					}
 				}
+				//Enhancement 29418 - shaqimi start 20/10/2022
 
 				if (getSearchPtjProfile() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),

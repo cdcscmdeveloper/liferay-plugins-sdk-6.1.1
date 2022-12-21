@@ -157,6 +157,7 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private EvaluationBackingBean  evalBB;
 	private boolean  committeeUpdateEnabled;
 	private List<QtCommitteeMemberBean> prevCommitteeMembers;
+	private ScQtApprovalRemark tempScQtApprovalRemark;	//25037 #568
 
 	//#25037-END
 	
@@ -929,5 +930,14 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 		this.hasPreviousMeeting = hasPreviousMeeting;
 	}
 	//#29473-End
-
+	
+	//25037 #568 - start
+	public ScQtApprovalRemark getTempScQtApprovalRemark() {
+		return tempScQtApprovalRemark;
+	}
+	
+	public void setTempScQtApprovalRemark(ScQtApprovalRemark tempScQtApprovalRemark) {
+		this.tempScQtApprovalRemark = tempScQtApprovalRemark;
+	}
+	//25037 #568 - end
 }

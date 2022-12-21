@@ -36,11 +36,14 @@
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			</h:outputText>
 			
-			<h:outputText value="0" 
-			rendered="#{isSpecTypeTechnical and isZonal and tplSpecAnswer.notOfferAll or 
-			isSpecTypeTechnical and !isZonal and tplSpecAnswer.notOfferAll}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+		<!-- Bug #33991 related to #21695 Start-->	
+			<h:outputText value="0"
+				rendered="#{isSpecTypeTechnical and tplSpecAnswer.notOfferAll or 
+							isSpecTypeTechnical and tplSpecAnswer.autoScore eq null}">
+				<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			</h:outputText>
+		<!-- Bug #33991 related to #21695 End-->	
 			
 			 <h:outputText value="/" rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq 'S' or tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}"></h:outputText> 
 			
@@ -67,7 +70,7 @@
 				</h:outputText>
 			</c:if>
 			<ui:remove><!--#29021-start--></ui:remove>
-				<ac:toggleRate show="#{isSpecTypeTechnical}" disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.notOfferAll}" value="#{tplSpecAnswer.rating}" tooltip="#{lbl['lbl.sc.tec.rating.tooltip']}"/><ui:remove>#32334  for 29021</ui:remove> 
+				<ac:toggleRate update="@([id$=questionTbl])" show="#{isSpecTypeTechnical}" disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.notOfferAll or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}" value="#{tplSpecAnswer.rating}" tooltip="#{lbl['lbl.sc.tec.rating.tooltip']}"/><ui:remove>#32334  for 29021 || #21692</ui:remove> 
 			<ui:remove><!--#29021-start--></ui:remove>
 			
 		</h:panelGroup>
@@ -88,11 +91,11 @@
 		<c:when test="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0 and tplSpecAnswer.tplSpecQuestion.questionType ne 'S'
 		or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity eq 0 and tplSpecAnswer.tplSpecQuestion.questionType ne 'S'}">
 		<h:panelGroup rendered="#{!empty question.scoreTypeCode and !isScoring and !isRepeated}">
-			  	<h:outputText disabled="#{tplSpecAnswer.ratePerUom eq 0 or evaluationBackingBean.managedBean.readOnly}" 
+			  	<h:outputText disabled="#{tplSpecAnswer.ratePerUom eq 0 or evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}" 
 			  	rendered="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0}"
 			  	style="width:calc(100% - 15px);" 
 				value="#{isSpecTypeFinancial and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity eq 0 ? lbl['lbl.sc.no.available'] : tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);">
-				</h:outputText>
+				</h:outputText><ui:remove>#21692</ui:remove>
 		</h:panelGroup>
 		</c:when>
 		<c:otherwise>
@@ -104,7 +107,7 @@
 				required="false" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.user.score']}"
 				rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null and (isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification)}"
-				disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll}">
+				disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}"><ui:remove>#21692</ui:remove>
 				<!--#29908-end -->
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" integerOnly="true" />
 				<f:attribute name="min" value="0" />
@@ -140,7 +143,7 @@
 			<p:message id="userScoreMsg" for="userScore" display="icon" />
 			<ui:remove><!--#29021-start--></ui:remove>
 			<ui:remove><!--#28784 - Start--></ui:remove>
-			<ac:toggleRate show="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.maxScore ne null}" disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll}" value="#{tplSpecAnswer.rating}" tooltip="#{lbl['lbl.sc.tec.rating.tooltip']}" /><ui:remove>#32334  for 29021</ui:remove>
+			<ac:toggleRate update="@([id$=questionTbl])" show="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.maxScore ne null}" disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}" value="#{tplSpecAnswer.rating}" tooltip="#{lbl['lbl.sc.tec.rating.tooltip']}" /><ui:remove>#32334  for 29021 || #21692</ui:remove>
 			<ui:remove><!-- #28784 - end --></ui:remove>
 			<ui:remove><!--#29021-end--></ui:remove>
 		</h:panelGroup>
@@ -149,28 +152,70 @@
 	</p:column>
 	
 <!-- Farid end -->
+	<!-- #29187 Start Vinod -->
+	<p:column style="width:5%;" rendered="#{isManSpecAndCompliance}">
+		<h:selectOneMenu id="specCompliance" 
+						 value="#{tplSpecAnswer.compliance}" 
+						 disabled="#{evaluationBackingBean.managedBean.readOnly}" 
+						 rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and tplSpecAnswer.tplSpecQuestion.mandatorySpec}">
+			<f:selectItems value="#{templateSpecBackingBean.getMandatorySpecAndComplianceDropdownValues(true)}" />
+		</h:selectOneMenu>
+		<h:outputText value="" rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and !tplSpecAnswer.tplSpecQuestion.mandatorySpec}"/>
+	</p:column>
+	<!-- #29187 End Vinod -->
 <!-- #31537 related #21695 Farid START 28/8/2021 -->
 	<p:column style="width:130px;">	
+	<ui:remove>#21692 - start</ui:remove>
 		<p:inputTextarea disabled="#{tplSpecAnswer.ratePerUom eq 0 or evaluationBackingBean.managedBean.readOnly}" 
-		  		rendered="#{isSpecTypeFinancial and isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0}"
+		  		rendered="#{isSpecTypeFinancial and isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0 and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"
 		  		style="width:calc(100% - 15px);" 
-				value="#{isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0 ? lbl['lbl.sc.spec.score.po'] : tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
+				value="#{isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0 ? lbl['lbl.sc.spec.score.po'] : tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);">
+				<p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
+		</p:inputTextarea>
 		
 		<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly}" 
-			  	rendered="#{isZonal and isSpecTypeFinancial and tplSpecAnswer.ratePerUom ne 0 or !isZonal and isSpecTypeFinancial and tplSpecAnswer.ratePerUom ne 0}"
+			  	rendered="#{(isZonal and isSpecTypeFinancial and tplSpecAnswer.ratePerUom ne 0 or !isZonal and isSpecTypeFinancial and tplSpecAnswer.ratePerUom ne 0) and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"
 			  	style="width:calc(100% - 15px);" 
-				value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
-				
+				value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);">
+				<p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
+		</p:inputTextarea>
+<!--Bug #33327 related to #21695 Farid Start-->					
 		<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.notOfferAll}" 
-			  	rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and tplSpecAnswer.notOfferAll}"
+			  	rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and tplSpecAnswer.notOfferAll and !tplSpecAnswer.notApplicable and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"
 			  	style="width:calc(100% - 15px);" 
-				value="#{lbl['lbl.sc.spec.score.po']}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
+				value="#{lbl['lbl.sc.spec.score.po']}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);">
+				<p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
+		</p:inputTextarea>
 		
+		<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.notOfferAll}" 
+			  	rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and tplSpecAnswer.notApplicable and tplSpecAnswer.notOfferAll and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"
+			  	style="width:calc(100% - 15px);" 
+				value="#{lbl['lbl.sc.not.applicable']}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);">
+				<p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
+		</p:inputTextarea>
+<!--Bug #33327 related to #21695 Farid End-->	
 		<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly}" 
-			  	rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and !tplSpecAnswer.notOfferAll}"
+			  	rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and !tplSpecAnswer.notOfferAll and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"
 			  	style="width:calc(100% - 15px);" 
-				value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
+				value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);">
+				<p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
+		</p:inputTextarea>
 		
+		<p:inputTextarea disabled="true" 
+			  	rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and !tplSpecAnswer.notOfferAll and evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}"
+			  	style="width:calc(100% - 15px);" 
+				value="#{lbl['lbl.sc.qt.proposal.evaluation.remark']}" rows="2" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
+		
+		<p:inputTextarea disabled="true" 
+			  	rendered="#{isSpecTypeFinancial and isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0 and evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}"
+			  	style="width:calc(100% - 15px);" 
+				value="#{lbl['lbl.sc.qt.proposal.evaluation.remark']}" rows="2" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
+		
+		<p:inputTextarea disabled="true" 
+			  	rendered="#{(isZonal and isSpecTypeFinancial and tplSpecAnswer.ratePerUom ne 0 or !isZonal and isSpecTypeFinancial and tplSpecAnswer.ratePerUom ne 0) and evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}"
+			  	style="width:calc(100% - 15px);" 
+				value="#{lbl['lbl.sc.qt.proposal.evaluation.remark']}" rows="2" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
+	<ui:remove>#21692 - end</ui:remove>					
 	</p:column>
 <!--#31537 related to #21695 Farid end 28/8/2021-->
 </ui:composition>

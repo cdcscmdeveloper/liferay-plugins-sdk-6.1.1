@@ -88,7 +88,7 @@
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.remarks']}" toggleable="true">
 		<ac:scRemarkAndAttachment
-		remarkList="#{suppFinalBiddingBackingBean.omitLatestRemarkForDisplay(suppFinalBiddingBackingBean.managedBean.committeeRemarkList)}"
+		remarkList="#{suppFinalBiddingBackingBean.managedBean.committeeRemarkList}"
 		showAttachment="false"
 		readonly="#{!suppFinalBiddingBackingBean.managedBean.secretaryUser}" 
 		header=""/>

@@ -22,6 +22,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -64,9 +66,9 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
-// 29961 - start
+// 29961, #30457 - start
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-//29961 - end
+//29961, #30457 - end
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -79,9 +81,9 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.cm.CmConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-//29961 - start
+//29961, #30457 - start
 import my.ep.constant.pm.RuleTypeConst;
-//29961 - end
+//29961, #30457 - end
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
@@ -106,10 +108,10 @@ import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
-//29961 - start
+//29961, #30457 - start
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
-//29961 - end
+//29961, #30457 - end
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -1428,6 +1430,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					}
 				}
 			}
+			
+			// #30457 - Start
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(), new Comparator<CmImage>() {
+				@Override
+				public int compare(CmImage o1, CmImage o2) {
+					return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName() + o2.getCreatedDate());
+				}
+			});
+		}
+		// #30457 - End
 
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStandardDisabled(true);
 
@@ -1586,6 +1599,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				&& !this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().isEmpty()) {
 			groupPricesByTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings(), "P");
 		}
+		
+		// #30457 - Start
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(), new Comparator<CmImage>() {
+				@Override
+				public int compare(CmImage o1, CmImage o2) {
+					return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName() + o2.getCreatedDate());
+				}
+			});
+		}
+		// #30457 - End
 
 		updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 		// return "addCatalogItem";
@@ -1648,6 +1672,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				&& !this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().isEmpty()) {
 			groupPricesByTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings(), "P");
 		}
+		
+		// #30457 - Start
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(), new Comparator<CmImage>() {
+				@Override
+				public int compare(CmImage o1, CmImage o2) {
+					return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName() + o2.getCreatedDate());
+				}
+			});
+		}
+		// #30457 - End
 
 		updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 		// return "addCatalogItem";
@@ -1715,6 +1750,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				log.info("userResDTO.getPmUser().getUserName():" + userResDTO.getPmUser().getUserName());
 				remark.setCreatedUser(userResDTO.getPmUser().getUserName());
 			}
+			
+			// #30457 - Start
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+				Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(),
+						new Comparator<CmImage>() {
+							@Override
+							public int compare(CmImage o1, CmImage o2) {
+								return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName()
+										+ o2.getCreatedDate());
+							}
+						});
+			}
+			// #30457 - End
+			
 			this.getManagedBean().setTabActiveIndex(1);
 			this.getManagedBean().setDisplayCatalogue(true);
 			// updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
@@ -1753,6 +1802,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
 
 		retriveSupplierGstInfomation(resDTO.getSupplierItem().getSmSupplier());
+		
+		
+		// #30457 - Start
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(), new Comparator<CmImage>() {
+				@Override
+				public int compare(CmImage o1, CmImage o2) {
+					return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName() + o2.getCreatedDate());
+				}
+			});
+		}
+		// #30457 - End
 
 		this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
 		this.getManagedBean().getSelectedMaintainItem().setCompareDesc(resDTO.getSupplierItem().getItemDesc());
@@ -1827,6 +1888,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				log.info("userResDTO.getPmUser().getUserName():" + userResDTO.getPmUser().getUserName());
 				remark.setCreatedUser(userResDTO.getPmUser().getUserName());
 			}
+			
+			// #30457 - Start
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+				Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(),
+						new Comparator<CmImage>() {
+							@Override
+							public int compare(CmImage o1, CmImage o2) {
+								return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName()
+										+ o2.getCreatedDate());
+							}
+						});
+			}
+			// #30457 - End
 
 			this.getManagedBean().setTabActiveIndex(3);
 			this.getManagedBean().setDisplayCatalogue(true);
@@ -1868,6 +1942,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			getManagedBean().setPriceTypeTariff(false);
 			getManagedBean().setPricingTabIndex(0);
 			getManagedBean().setItemSpec(null);
+			//#30457 - Start
+			getManagedBean().setCatDPScreen(true);
+			//#30457 - End
 
 			// Panel Circular Item
 			if ((supplierItem.getCircularNo() != null && supplierItem.getCircularNo().length() > 0)
@@ -2250,6 +2327,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 		log.debug("*****addNewPromotionPricing*****");
 		this.getManagedBean().setPublish(false);//#569
+		// #30457 - Start
+		this.getManagedBean().setAddPromotion(true);
+		// #30457 - End
 		
 		if (this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing() == null) {
 			log.debug("*no previous CmPromotionPricing... creating new record*");
@@ -3130,7 +3210,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			if(!this.getManagedBean().isDupplicatedInd()){
 				this.getManagedBean().setDupplicatedInd(true);
 			}
-			FacesContext.getCurrentInstance().addMessage("growlMssg",
+			//#30457- change growlMssg to null
+			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 							MessageConst.ERROR_715064, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));				
@@ -3264,17 +3345,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					&& this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate() != null) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate());
-				cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
-
+				//29961 - start Updated by Mohd Nur Naim Bin misiran. set the year range selected follow the parameter rules
+				//cal.add(Calendar.YEAR, getManagedBean().getRuleValue());
+				cal.add(Calendar.YEAR, getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY));
 				if (cal.getTime().compareTo(
 						this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate()) < 0) {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-									MessageConst.ERROR_715012, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775179, new String[] { "" + getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 					return "editCatalogItem";
 				}
+				//29961 - End
 			}
 
 			// ////Image more than 5
@@ -3506,6 +3588,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			
+			// #30457- start
+			CatalogueResDTO resDTO = new CatalogueResDTO();			
+			// #30457- end
 
 			statusReqDTO.setStatusId(CmConst.DRAFT);
 
@@ -3518,8 +3604,38 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(),
 							actionDesc, statusResDTO.getPmStatus() != null ? statusResDTO.getPmStatus()
 									: new PmStatus()));
+			// #30457- start
+			resDTO = catalogueSO.updateSupplierItem(reqDTO);
+			
+			log.info("successfull " + resDTO.isSuccessful() + this.getManagedBean().getDeleteImage());
+			
+			// #30457- start
+			if (resDTO.isSuccessful() && CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage())) {
 
-			catalogueSO.updateSupplierItem(reqDTO);
+				for (CmImage image : this.getManagedBean().getDeleteImage()) {
+
+					StringBuilder deleteImgDir = new StringBuilder();
+					deleteImgDir
+							.append(EpPropertiesUtils.getInstance().getProperty(
+									EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM/")
+							.append(this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo())
+							.append("/").append(image.getImageDesc());
+					log.info("deleteImgDir***" + deleteImgDir);
+
+					try {
+						boolean result = Files.deleteIfExists(Paths.get(deleteImgDir.toString()));
+						if (result) {
+							log.info("File is deleted!");
+						} else {
+							log.info("Sorry, unable to delete the file.");
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				this.getManagedBean().getDeleteImage().clear();
+			}
+			// #30457- end
 
 			this.getManagedBean().setRefreshDraftSuppItemFlag(false);
 			FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -3603,12 +3719,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				ISupplierSearchSO.class);
 
 		this.getManagedBean().setRefreshDraftSuppItemFlag(false);
-		this.getManagedBean().setPublish(true);//#569
-		
+		//#569 - start - set to read icon mandatory field
+		if (!this.getManagedBean().isPublish()){
+		     this.getManagedBean().setPublish(true);//#569
+		   }
+		//#569 - end
+
 		try {
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
 			boolean inactiveFlag = false;
+			
+			//#30457 - Start 29/07/2022
+			Double minPriceVal = getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM);
+			DecimalFormat df = new DecimalFormat("0.00#");
+			//#30457 - End 29/07/2022
 
 			if (!this.getManagedBean().getSelectedMaintainItem().getItemStatus().equalsIgnoreCase("D")
 					&& !this.getManagedBean().getSelectedMaintainItem().getItemStatus().equalsIgnoreCase("R")) {
@@ -3654,17 +3779,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				// //if review required = false, continue check on image
 				log.info("2nd check review" + this.getManagedBean().getSelectedMaintainItem().isReviewRequired());
 				if (!this.getManagedBean().getSelectedMaintainItem().isReviewRequired()) {
-
+                    //#30475 - Start
 					if (this.getManagedBean().getSelectedMaintainItem().getCmImages() != null
 							&& this.getManagedBean().getSelectedMaintainItem().getCmImages().size() > 0) {
 						for (CmImage image : this.getManagedBean().getSelectedMaintainItem().getCmImages()) {
 							// 201001@akmal - Bug29265 - Start
 							if (!image.isImageReviewed()) {
 								this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
-								image.setImageReviewed(true);
 								break;
 							}
 							// 201001@akmal - Bug29265 - End
+		                    //#30475 - End
 						}
 					} else {
 						this.getManagedBean().getSelectedMaintainItem().setReviewRequired(false);
@@ -3768,21 +3893,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					return "editCatalogItem";
 				}
 				//569 - End
-				//30457 START - TIER STANDARD PRICE
-				 else if (promotion.getPrice().longValue() <= -1|| promotion.getPrice().floatValue() == 0.0f) {
+				//30457 START - TIER STANDARD PRICE - 29/07/2022
+				 else if (promotion.getPrice().floatValue() < minPriceVal.floatValue()) {
 						FacesContext.getCurrentInstance().addMessage(
 								null,
 								new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 										MessageConst.ERROR_715070, new String[] { ResourceBundleUtils.getMessage(
 												"lbl.cm.standard.tier", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-												new FacesScopes().getUserLocale()),getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale()), df.format(minPriceVal)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 						this.getManagedBean().setPricingTabIndex(1);
 						this.getManagedBean().setTierPricingIndex(0);
 						return "editCatalogItem";
 					
 				}
-				//30457 - END
+				//30457 - END 29/07/2022
 				//569 -Start
 				if (promotion.getStartDate().before(cmStandardPricing.getStartDate())
 						|| promotion.getStartDate().after(cmStandardPricing.getEndDate())
@@ -3908,21 +4033,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					this.getManagedBean().setTierPricingIndex(1);
 					return "editCatalogItem";
 				}
-				//30457 START - TIER PROMOTION PRICE
-				
-				if (promotion.getPrice().longValue() <= 0 || promotion.getPrice().floatValue() == 0.0f) {
+				//#30457 START - TIER PROMOTION PRICE 29/7/2022
+				if (promotion.getPrice().floatValue() < minPriceVal.floatValue()) {
 							FacesContext.getCurrentInstance().addMessage(
 								null,
 								new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 										MessageConst.ERROR_715070, new String[] { ResourceBundleUtils.getMessage(
 												"lbl.cm.promotion.tier", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-												new FacesScopes().getUserLocale()),getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale()), df.format(minPriceVal)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 					this.getManagedBean().setPricingTabIndex(1);
 					this.getManagedBean().setTierPricingIndex(1);		
 					return "editCatalogItem";
 				}
-				//30457 - END	
+				//#30457 - END 29/7/2022
 				//569 - Start
 				if (promotion.getStartDate().before(cmStandardPricing.getStartDate())
 						|| promotion.getStartDate().after(cmStandardPricing.getEndDate())
@@ -3992,20 +4116,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					this.getManagedBean().setZonalPricingIndex(0);
 					return "editCatalogItem";
 				}
-				//30457 START - ZONAL STANDARD PRICE
-				if (promotion.getPrice().longValue() <= -1 || promotion.getPrice().floatValue() == 0.0f) {
+				//#30457 START - ZONAL STANDARD PRICE 29/7/2022
+				if (promotion.getPrice().floatValue() < minPriceVal.floatValue()) {
 					FacesContext.getCurrentInstance().addMessage(
 								null,
 								new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 										MessageConst.ERROR_715070, new String[] { ResourceBundleUtils.getMessage(
 												"lbl.cm.zonal.standard", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-												new FacesScopes().getUserLocale()),getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale()), df.format(minPriceVal)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 					this.getManagedBean().setPricingTabIndex(2);
 					this.getManagedBean().setZonalPricingIndex(0);
 					return "editCatalogItem";
 				}
-				//30457 - END
+				//#30457 - END 29/7/2022
 				//569 - Start
 				if (promotion.getStartDate().before(cmStandardPricing.getStartDate())
 						|| promotion.getStartDate().after(cmStandardPricing.getEndDate())
@@ -4088,21 +4212,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					return "editCatalogItem";
 				}
 				
-				//30457 START - ZONAL PROMOTION PRICE
-				
-				if (promotion.getPrice().longValue() <= -1 ||promotion.getPrice().floatValue() == 0.0f) {
-						FacesContext.getCurrentInstance().addMessage(
-							null,
+				//#30457 START - ZONAL PROMOTION PRICE 29/7/2022
+				if (promotion.getPrice().floatValue() < minPriceVal.floatValue()) {
+						FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 									MessageConst.ERROR_715070, new String[] { ResourceBundleUtils.getMessage(
 											"lbl.cm.zonal.promotion", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-											new FacesScopes().getUserLocale()),getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale()), df.format(minPriceVal)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 					this.getManagedBean().setPricingTabIndex(2);
 					this.getManagedBean().setZonalPricingIndex(1);
 					return "editCatalogItem";
 				}
-				//30457 - END
+				//#30457 - END 29/7/2022
 				//569 - Start
 				if (promotion.getStartDate().before(cmStandardPricing.getStartDate())
 					|| promotion.getStartDate().after(cmStandardPricing.getEndDate())
@@ -4139,9 +4261,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					this.getManagedBean().setZonalPricingIndex(1);
 					return "editCatalogItem";
 				}
-				
-				for (int i =1; i<=this.getManagedBean().getSelectedMaintainItem().getzStdPrices().size()-1;i++){
-					if(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().get(0).getPrice().doubleValue()>=this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(i).getPrice().doubleValue()){
+				//#569 - Start 13/08/2022
+				if (this.getManagedBean().getSelectedMaintainItem().getzStdPrices() != null && 
+						this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings() != null){
+				for (int i =0; i < this.getManagedBean().getSelectedMaintainItem().getzStdPrices().size();i++){
+					for (int j =0; j < this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().size();j++){
+					if(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().get(j).getPrice().doubleValue()>=
+							this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(i).getPrice().doubleValue()){
 						FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
@@ -4152,8 +4278,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						return "editCatalogItem";	
 					}
 				}
-				//569 - End
 			}
+			// #569 - End 13/08/2022
+		  }
+		} // 569 - End
 			// Zonal Tier Pricing
 			for (CmZonalTierPricing promotion : this.getManagedBean().getSelectedMaintainItem()
 					.getCmZonalTierPricings()) {
@@ -4193,20 +4321,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					return "editCatalogItem";
 				}
 				//569 - End
-				//30457 START - ZONAL TIER STANDARD PRICE
-				else if (promotion.getPrice().longValue() <= -1 || promotion.getPrice().floatValue() == 0.0f) {
-					FacesContext.getCurrentInstance().addMessage(
-							null,
+				//#30457 START - ZONAL TIER STANDARD PRICE 29/07/2022
+				else if (promotion.getPrice().floatValue() < minPriceVal.floatValue()) {
+					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 									MessageConst.ERROR_715070, new String[] { ResourceBundleUtils.getMessage(
 											"lbl.cm.zonal.standard.tier", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-											new FacesScopes().getUserLocale()),getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale()), df.format(minPriceVal)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 					this.getManagedBean().setPricingTabIndex(3);
 					this.getManagedBean().setZonalTierPricingIndex(0);
 					return "editCatalogItem";
 				}
-				//30457 - END
+				//#30457 - END 29/07/2022
 				//569 - Start
 				else if (promotion.getStartDate().before(cmStandardPricing.getStartDate())
 					|| promotion.getStartDate().after(cmStandardPricing.getEndDate())
@@ -4327,22 +4454,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					return "editCatalogItem";
 				}
 					
-				//30457 START - ZONAL TIER PROMOTION PRICE
-				/*CmPromotionPricing CmPromotionPricing = this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing();*/
-				if (promotion.getPrice().longValue() <=-1 || promotion.getPrice().floatValue() == 0.0f){
+				//#30457 START - ZONAL TIER PROMOTION PRICE 29/07/2022
+				if (promotion.getPrice().floatValue() < minPriceVal.floatValue()){
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 									MessageConst.ERROR_715070, new String[] { ResourceBundleUtils.getMessage(
 											"lbl.cm.zonal.promotion.tier", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-											new FacesScopes().getUserLocale()),getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale()), df.format(minPriceVal)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 					this.getManagedBean().setPricingTabIndex(3);
 					this.getManagedBean().setTierPricingIndex(1);
 					return "editCatalogItem";
 				}
-				//30457 - END
-				//569 - Start
+				//#30457 - END 29/07/2022
+				//569 - Start 01/08/2022
 				else if (promotion.getStartDate().before(cmStandardPricing.getStartDate())
 					|| promotion.getStartDate().after(cmStandardPricing.getEndDate())
 					|| promotion.getEndDate().before(cmStandardPricing.getStartDate())
@@ -4359,7 +4485,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
-							MessageConst.ERROR_715042, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							MessageConst.ERROR_715048, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 					this.getManagedBean().setPricingTabIndex(3);
 					this.getManagedBean().setTierPricingIndex(1);
@@ -4376,7 +4502,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 				
 				for(int i =0; i<= this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().size()-1;i++){	
-					int size = this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().size()-1;					
+					int size = this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().size()-1;
+                    //#569 - add condition control error showstopper 30/7/2022
+					if (this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(size).getPrice().doubleValue() >= 0 && 
+							this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(i).getPrice().doubleValue() >= 0) {
 					if(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(size).getPrice().doubleValue()<=this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(i).getPrice().doubleValue()){
 						FacesContext.getCurrentInstance().addMessage(
 							null,
@@ -4387,8 +4516,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						this.getManagedBean().setTierPricingIndex(1);
 						return "editCatalogItem"; 
 					}
+				  }
 				}
-				//569 - End
+				//569 - End 01/08/2022
 			}
 			
 			// ----------mandatory checking
@@ -4396,22 +4526,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			// ----------logic
 			// checking-----------------------------------------------------------------------------------------------//
-			//NORMAL STANDARD PRICE
-			if (cmStandardPricing.getPrice().longValue() <= -1 || cmStandardPricing.getPrice().floatValue() == 0.0f) {
+			//#30457 - START NORMAL STANDARD PRICE 29/7/2022
+			if (cmStandardPricing.getPrice() != null && cmStandardPricing.getPrice().floatValue() < minPriceVal.floatValue()) {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
-						//30457 - START
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 								MessageConst.ERROR_715070, new String[] { ResourceBundleUtils.getMessage(
 										"lbl.cm.normal.standard", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										new FacesScopes().getUserLocale()),getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale()), df.format(minPriceVal)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
-						//30457 - END
 				this.getManagedBean().setPricingTabIndex(0);
 				this.getManagedBean().setNormalPricingIndex(0);
 			
 				return "editCatalogItem";
 			}
+			//#30457 - END NORMAL STANDARD PRICE 29/7/2022
 			//569 - Start
 			if (cmStandardPricing.getStartDate().after(cmStandardPricing.getEndDate())){
 				FacesContext.getCurrentInstance().addMessage(
@@ -4453,14 +4582,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			// 1 year period between start and end date
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate());
-			cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
-
+			//29961 - start Updated by Mohd Nur Naim Bin misiran. set the year range selected follow the parameter rules
+			//cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
+			cal.add(Calendar.YEAR, getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY));
 			if (cal.getTime().compareTo(
 					this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate()) < 0) {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-								MessageConst.ERROR_715012, MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775179, new String[] { "" + getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 				return "editCatalogItem";
 			}
@@ -4520,38 +4649,24 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 			//PROMOTION PRICE
 			// 20200929@akmal - Enhancement27627 - Start
-			if (this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice() != null
-					&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()
-							.compareTo(BigDecimal.ZERO) == 0) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						//30457 - START
+			//#30457 - START 29/7/2022
+			if (this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing() != null && 
+					this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice() != null){
+					if (this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()
+							.compareTo(BigDecimal.ZERO) == 0 || this.getManagedBean().getSelectedMaintainItem().
+							getCmPromotionPricing().getPrice().floatValue() < minPriceVal.floatValue()) {
+								FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 								MessageConst.ERROR_715070, new String[] { ResourceBundleUtils.getMessage(
 										"lbl.cm.normal.promotion", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										new FacesScopes().getUserLocale()),getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-						//30457 - END
+										new FacesScopes().getUserLocale()), df.format(minPriceVal)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								    	new FacesScopes().getUserLocale())));
 				this.getManagedBean().setPricingTabIndex(0);
 				this.getManagedBean().setNormalPricingIndex(1);
 				return "editCatalogItem";
 			}
-			//569 - Start
-			else if (this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice() != null
-					&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice().longValue() <= -1 
-					|| cmStandardPricing.getPrice().floatValue() == 0.0f){
-				FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-						MessageConst.ERROR_715070, new String[] { ResourceBundleUtils.getMessage(
-							"lbl.cm.normal.promotion", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()),getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale())));
-				this.getManagedBean().setPricingTabIndex(0);
-				this.getManagedBean().setNormalPricingIndex(1);
-				return "editCatalogItem";
-			}
-			//569 - End
+		}
+			//#30457 - END 29/7/2022
 			// 20200929@akmal - Enhancement27627 - End
 
 			// ---------------------------------- start comparison each date
@@ -5269,6 +5384,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			
+			// #30457- start
+			CatalogueResDTO resDTO = new CatalogueResDTO();
+			// #30457- end
+
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 
 			if (this.getManagedBean().getSelectedMaintainItem().isReviewRequired()) {
@@ -5283,7 +5403,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										: new PmStatus()));
 			} else {
 				statusReqDTO.setStatusId(CmConst.DIRECT_PUBLISHED);
-				;
+				
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 				String actionDesc = "Item " + this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()
 						+ " telah diiklankan oleh " + (pmUser.getUserName() != null ? pmUser.getUserName() : "SYS");
@@ -5293,7 +5413,35 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										: new PmStatus()));
 			}
 
-			catalogueSO.updateSupplierItem(reqDTO);
+			// #30457- start
+			resDTO = catalogueSO.updateSupplierItem(reqDTO);
+						
+			if (resDTO.isSuccessful() && CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage())) {
+
+				for (CmImage image : this.getManagedBean().getDeleteImage()) {
+
+					StringBuilder deleteImgDir = new StringBuilder();
+					deleteImgDir
+							.append(EpPropertiesUtils.getInstance().getProperty(
+									EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM/")
+							.append(this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo())
+							.append("/").append(image.getImageDesc());
+					log.info("deleteImgDir***" + deleteImgDir);
+
+					try {
+						boolean result = Files.deleteIfExists(Paths.get(deleteImgDir.toString()));
+						if (result) {
+							log.info("File is deleted!");
+						} else {
+							log.info("Sorry, unable to delete the file.");
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				this.getManagedBean().getDeleteImage().clear();
+			}
+			// #30457- end
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 
@@ -5416,7 +5564,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-
+			
+			//#30457 - Start 29/07/2022
+			Double minPriceVal = Double.valueOf(getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM));
+			DecimalFormat df = new DecimalFormat("0.00#");
+			//#30457 - End 29/07/2022
+			
+			//#29961 - Start
+			Integer minYearVal = getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY);
+			//#29961 - End
+			
 			for (int i = 0; i < this.getManagedBean().getCloneCmSupplierItemLs().size(); i++) {
 				reqDTO.setSupplierItemId(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getSupplierItemId());
 				resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
@@ -5424,11 +5581,24 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				CmSupplierItem catalog = resDTO.getSupplierItem();
 
 				log.info("catalog.getPmUom().getUomName():" + catalog.getPmUom().getUomName());
+				
+				// #569 - Start
+				for (int j = 0; j < this.getManagedBean().getCloneCmSupplierItemLs().size(); j++) {
+					if (StringUtils.isBlank(this.getManagedBean().getCloneCmSupplierItemLs().get(j).getItemDesc()) || CollectionUtils
+							.isEmpty(this.getManagedBean().getCloneCmSupplierItemLs().get(j).getCmImages())
+							&& this.getManagedBean().getCloneCmSupplierItemLs().get(j).getItemStatus()
+									.equals(CmConst.ITEM_STATUS_DRAFT)) {
+						this.getManagedBean().getCloneCmSupplierItemLs().get(j).setIndicator(true);
+					} else {
+						this.getManagedBean().getCloneCmSupplierItemLs().get(j).setIndicator(false);
+					}
+				}
+				// #569 - End
 
-				//#30457-start
+				//#30457 - start
 				if((StringUtils.isBlank(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc())
 						|| CollectionUtils.isEmpty(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages()))
-					&& this.getManagedBean().getSelectedMaintainItem().getItemStatus().equals(CmConst.ITEM_STATUS_DRAFT)){
+					&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemStatus().equals(CmConst.ITEM_STATUS_DRAFT)){
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
@@ -5437,7 +5607,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					return naviToMaintenancePage(false);
 					
 				}
-				//#30457-end
+				//#30457 - end
 				
 				catalog.getCmStandardPricing().setPrice(
 						this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmStandardPricing().getPrice());
@@ -5466,19 +5636,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 						return naviToMaintenancePage(false);
 					}
+					//#30457 - Start 29/07/2022
 					// price
-					if (catalog.getCmStandardPricing().getPrice().longValue() <= -1
-							|| catalog.getCmStandardPricing().getPrice().floatValue() == 0.0f) {
-						FacesContext.getCurrentInstance().addMessage(
-								null,
-								//30457 - START
+					if (catalog.getCmStandardPricing().getPrice() != null && catalog.getCmStandardPricing().getPrice().floatValue() < minPriceVal.floatValue()) {
+						FacesContext.getCurrentInstance().addMessage(null,
 								new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-										MessageConst.ERROR_715017,new String[] {getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
+										MessageConst.ERROR_715017,new String[] {df.format(minPriceVal)}, MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
-								//30457 - END
 						return naviToMaintenancePage(false);
 					}
-	
+					//#30457 - End 29/07/2022
 					// end date before start date
 					if (catalog.getCmStandardPricing().getStartDate().after(catalog.getCmStandardPricing().getEndDate())) {
 						FacesContext.getCurrentInstance().addMessage(
@@ -5753,16 +5920,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					// 1 year period between start and end date
 					Calendar cal = Calendar.getInstance();
 					cal.setTime(catalog.getCmStandardPricing().getStartDate());
-					cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
-	
+					//#29961 - Start 27/7/2022
+					cal.add(Calendar.YEAR, minYearVal);
 					if (cal.getTime().compareTo(catalog.getCmStandardPricing().getEndDate()) < 0) {
 						FacesContext.getCurrentInstance().addMessage(
 								null,
 								new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-										MessageConst.ERROR_715012, MessageUtils.BUNDLE_COMMON_MESSAGES,
+										MessageConst.ERROR_775179, new String[] { "" + minYearVal},
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 						return naviToMaintenancePage(false);
-					}
+					} //#29961 - End 27/7/2022
 				}//#30457-end
 
 				// same item with existed one cannot overlap the date
@@ -5790,6 +5958,89 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				if (catalog.getCmStandardPricing().getStartDate().before(dateNow)) {
 					catalog.getCmStandardPricing().setStartDate(dateNow);
 				}
+				
+				// #30457- start
+				if (notSupplierTemp) {
+					if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc() != null
+							&& !this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc()
+									.equalsIgnoreCase(catalog.getItemDesc())) {
+						catalog.setItemDesc(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc());
+					} else {
+						this.getManagedBean().getCloneCmSupplierItemLs().get(i).setCompareDesc(catalog.getItemDesc());
+					}
+
+					if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCompareDesc() != null
+							&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCompareDesc().trim().length() > 0
+							&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc() != null
+							&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc().trim().length() > 0) {
+						if (!(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCompareDesc()
+								.equalsIgnoreCase(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc()))) {
+							catalog.setReviewRequired(true);
+
+						}
+					} else {
+						if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc() != null
+								&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc().trim()
+										.length() > 0) {
+							log.info("*************set true***************");
+							catalog.setReviewRequired(true);
+
+						} else {
+							// //// reset review required = false
+							log.info("*************set false***************");
+							catalog.setReviewRequired(false);
+						}
+					}
+                    //#30457 - Start
+					// //if review required = false, continue check on image
+					log.info("2nd check review" + catalog.isReviewRequired());
+					if (!catalog.isReviewRequired()) {
+						if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages() != null
+								&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages().size() > 0) {
+							for (CmImage image : this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages()) {
+								if (!image.isImageReviewed()) {
+									catalog.setReviewRequired(true);
+									break;
+								}
+							}
+							//#30457 - End
+						} else {
+							catalog.setReviewRequired(false);
+
+						}
+					}
+				} else {
+
+					if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc() != null
+							&& !this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc()
+									.equalsIgnoreCase(catalog.getItemDesc())) {
+						catalog.setItemDesc(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc());
+					}
+				}
+
+				if (CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage()) && i == 0) {
+					List<CmImage> tobeDeleted = new ArrayList<CmImage>();
+					for (CmImage image : catalog.getCmImages()) {
+						for (CmImage imgDel : this.getManagedBean().getDeleteImage()) {
+							if (image.getImageId() == imgDel.getImageId()
+									|| image.getImageName().equalsIgnoreCase(imgDel.getImageName())) {
+								tobeDeleted.add(image);
+							}
+						}
+					}
+					catalog.getCmImages().removeAll(tobeDeleted);
+				}
+
+				if (this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages() != null
+						&& this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages().size() > 0) {
+					for (CmImage ci : this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages()) {
+						if (ci.isBrandNew()) {
+							catalog.getCmImages().add(ci);
+							ci.setBrandNew(false);
+						}
+					}
+				}
+				// #30457- end
 
 				StatusReqDTO statusReqDTO = new StatusReqDTO();
 
@@ -5809,6 +6060,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									statusResDTO.getPmStatus() != null ? statusResDTO.getPmStatus() : new PmStatus()));
 
 					catalog.setItemStatus("P");
+					
+					//#30457 - start
+					this.getManagedBean().setItemStatus("P");
+					//#30457 - end
 				} else {
 
 					log.info("tracking diary for catalog Items to Publish:submitToReviewItems");
@@ -5825,6 +6080,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									statusResDTO.getPmStatus() != null ? statusResDTO.getPmStatus() : new PmStatus()));
 
 					catalog.setItemStatus("U");
+					
+					//#30457 - start
+					this.getManagedBean().setItemStatus("U");
+					//#30457 - end
 				}
 
 				// status active
@@ -5866,6 +6125,34 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			log.debug("resDTO.isSuccessful():" + resDTO.isSuccessful());
 
 			if (resDTO.isSuccessful()) {
+				
+				// #30457- start
+				if (CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage())) {
+
+					for (CmImage image : this.getManagedBean().getDeleteImage()) {
+
+						StringBuilder deleteImgDir = new StringBuilder();
+						deleteImgDir
+								.append(EpPropertiesUtils.getInstance().getProperty(
+										EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM/")
+								.append(this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo())
+								.append("/").append(image.getImageDesc());
+						log.info("deleteImgDir***" + deleteImgDir);
+
+						try {
+							boolean result = Files.deleteIfExists(Paths.get(deleteImgDir.toString()));
+							if (result) {
+								log.info("File is deleted!");
+							} else {
+								log.info("Sorry, unable to delete the file.");
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					this.getManagedBean().getDeleteImage().clear();
+				}
+				// #30457- end
 
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
@@ -5879,6 +6166,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				List<CmSupplierItem> suppLs = new ArrayList<CmSupplierItem>();
 				this.getManagedBean().setCloneCmSupplierItemLs(suppLs);
 				FacesContext facesContext = FacesContext.getCurrentInstance();
+				
+				//#30457 - start
+			if (this.getManagedBean().getItemStatus().equals("P")) {
+					facesContext.addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.ERROR_715059, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			   } else {	
 				facesContext.addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "", MessageUtils.getMessage(
@@ -5887,6 +6183,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
 			}
+		}
+        //#30457			
 
 			// } catch (Exception e) {
 			//
@@ -6726,6 +7024,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 */
 	public void preRenderCatalogue() {
 		log.debug("In preRenderCatalogue");
+		
+		//#30457 - Add refresh or renew session object
+		renewSesionObject();
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",
 				ICatalogueSO.class);
@@ -8498,8 +8799,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} else {
 			this.getManagedBean().setError3(false);
 		}
-
-		// check for 1 year period
+        
+		// # 29961 - Start Remove error7
+		/*// check for 1 year period
 		if (standardPricing.getStartDate() != null && standardPricing.getEndDate() != null) {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(standardPricing.getStartDate());
@@ -8516,7 +8818,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				this.getManagedBean().setError7(false);
 			}
 		} else
-			this.getManagedBean().setError7(false);
+			this.getManagedBean().setError7(false);*/
+		// # 29961 - End Remove error7
 	}
 
 	/**
@@ -9558,51 +9861,40 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * @param index
 	 *            (int index(mandatory))
 	 */
+	// #30457, #14118 - start
 	public void deleteImage(int index) {
+		CmImage img = this.getManagedBean().getSelectedMaintainItem().getCmImages().get(index);
 
-		this.getManagedBean().getSelectedMaintainItem().getCmImages()
-		.remove(index);
+		if (!img.isBrandNew()) {
+			this.getManagedBean().getDeleteImage().add(img);
+		}// for db data purpose
+
+		this.getManagedBean().getSelectedMaintainItem().getCmImages().remove(index);
+
 
 	}
+	// #30457, #14118 - end
 
-	// 14118 - Start
+	// #30457, #14118 - start
 	public void deleteCmImages() {
 		log.info("deleteCmImages" + this.getManagedBean().getSelectedImage().getCmImages().size());
-		//#30457 - start
-		List<CmImage> tobeDeleted =new ArrayList<CmImage>();
+
 		for (int i = 0; i < this.getManagedBean().getSelectedImage().getCmImages().size(); i++) {
 			CmImage image = (CmImage) this.getManagedBean().getSelectedImage().getCmImages().get(i);
-			
-			if(!image.isBrandNew())
-				tobeDeleted.add(image); //for db data purpose
-			
-			//#30457 - start
-			StringBuilder deleteImgDir = new StringBuilder();
-			deleteImgDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM/")
-					.append(this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo()).append("/")
-					.append(image.getImageDesc());
-			log.info("deleteImgDir***" + deleteImgDir);
-			
-			try {
-	            boolean result = Files.deleteIfExists(Paths.get(deleteImgDir.toString()));
-	            if (result) {
-	            	log.info("File is deleted!");
-	            } else {
-	            	log.info("Sorry, unable to delete the file.");
-	            }
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-			
+
+			if (!image.isBrandNew()) {
+				this.getManagedBean().getDeleteImage().add(image); // for db
+																	// data
+																	// purpose
+			}
+
 			this.getManagedBean().getSelectedMaintainItem().getCmImages().remove(image);
+
 		}
-		ICatalogueSO catalogueSO = null;
-		catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
-		catalogueSO.deleteImageSelection(tobeDeleted);
-		//#30457 - delete
 
 		this.getManagedBean().setDisableDeleteBtn(true);
 	}
+	// #30457, #14118 - end
 	
 	public void rowSelectImage() {
 		if (this.getManagedBean().getSelectedImage().getCmImages().size() > 0) {
@@ -10072,32 +10364,56 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 		// 200921@akmal - Enhancement27627 - End
 	}
-
+    
+	// #30457 - Start
 	// 20200520@akmal - Enhancement27627 - Start
 	public boolean isPromotionPriceExist(CmSupplierItem cmSupplierItem) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+		Date CurrentDate = new Date();
+
 		log.info("isPromotionPriceExist");
 		log.info(cmSupplierItem.getCmPromotionPricing().getPrice());
 		log.info(cmSupplierItem.getCmPromotionPricing().getStartDate());
 		log.info(cmSupplierItem.getCmPromotionPricing().getEndDate());
-		if (cmSupplierItem.getCmPromotionPricing().getStartDate() != null
-				|| cmSupplierItem.getCmPromotionPricing().getEndDate() != null
-				|| cmSupplierItem.getCmPromotionPricing().getPrice() != null)
-			return true;
-		// 201002@akmal - Bug29265 - Start
-		// #29177 - CR 27627: Static Code Analysis
-		// changed else-if-else statement to single-returned else statement
-		// else if(this.getManagedBean().isPromoPriceExist())
-		// return true;
-		// 201002@akmal - Bug29265 - End
-		// else
-		// return false;
-		else
-			return this.getManagedBean().isPromoPriceExist();
-		// end #29177
+		if (!this.getManagedBean().isAddPromotion()) {
+			if (!this.getManagedBean().isCatDPScreen()) {
+				if (cmSupplierItem.getCmPromotionPricing().getStartDate() != null
+						|| cmSupplierItem.getCmPromotionPricing().getEndDate() != null
+						|| cmSupplierItem.getCmPromotionPricing().getPrice() != null) {
+					this.getManagedBean().setPromoPriceExist(true);
+					// 201002@akmal - Bug29265 - Start
+					// #29177 - CR 27627: Static Code Analysis
+					// changed else-if-else statement to single-returned else
+					// statement
+					// else if(this.getManagedBean().isPromoPriceExist())
+					// return true;
+					// 201002@akmal - Bug29265 - End
+					// else
+					// return false;
+				} else {
+					this.getManagedBean().setPromoPriceExist(false);
+					// end #29177
+				}
+			} else {
+				if (cmSupplierItem.getCmPromotionPricing().getStartDate() != null
+						|| cmSupplierItem.getCmPromotionPricing().getEndDate() != null
+						|| cmSupplierItem.getCmPromotionPricing().getPrice() != null) {
+					if (dateFormat.format(cmSupplierItem.getCmPromotionPricing().getStartDate()).compareTo(
+							dateFormat.format(CurrentDate)) <= 0
+							&& dateFormat.format(cmSupplierItem.getCmPromotionPricing().getEndDate()).compareTo(
+									dateFormat.format(CurrentDate)) >= 0) {
+						this.getManagedBean().setPromoPriceExist(true);
+					} else {
+						this.getManagedBean().setPromoPriceExist(false);
+					}
+				}
+			}
+		}
+		return this.getManagedBean().isPromoPriceExist();
 	}
-
 	// 20200520@akmal - Enhancement27627 - End
-
+	// #30457 - End
+	
 	/**
 	 * This method is used to navigate the pending task page.
 	 * 
@@ -11073,11 +11389,79 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					resDTO.getSupplierItem().setPmUom(item.getPmUom());
 					resDTO.getSupplierItem().setChangedDate(resDTO.getSupplierItem().getChangedDate());
 					
-					//#30457-start
-					if(item.getItemDesc()!=null && !item.getItemDesc().equals(resDTO.getSupplierItem().getItemDesc())){
+					// #30457- start
+					if (item.getItemDesc() != null
+							&& !item.getItemDesc().equals(resDTO.getSupplierItem().getItemDesc())) {
 						resDTO.getSupplierItem().setItemDesc(item.getItemDesc());
+					} else {
+						item.setCompareDesc(resDTO.getSupplierItem().getItemDesc());
 					}
-					if(CollectionUtils.isNotEmpty(item.getCmImages())){
+					// #30457- end
+				
+					// #30457- start
+					if (!this.getManagedBean().isSavedFirst()){
+						this.getManagedBean().setSavedFirst(true);
+					}
+					
+					log.info("getCompareDesc:" + item.getCompareDesc());
+					log.info("getItemDesc:" + item.getItemDesc());
+					log.info("begining isReviewRequired:"
+							+ item.isReviewRequired());
+
+					
+					if (item.getCompareDesc() != null && item.getCompareDesc().trim().length() > 0
+							&& item.getItemDesc() != null && item.getItemDesc().trim().length() > 0) {
+						if (!(item.getCompareDesc().equalsIgnoreCase(item.getItemDesc()))) {
+							resDTO.getSupplierItem().setReviewRequired(true);
+
+						}
+					} else {
+						if (item.getItemDesc() != null && item.getItemDesc().trim().length() > 0) {
+							log.info("*************set true***************");
+							resDTO.getSupplierItem().setReviewRequired(true);
+
+						} else {
+							// //// reset review required = false
+							log.info("*************set false***************");
+							resDTO.getSupplierItem().setReviewRequired(false);
+						}
+					}
+
+					// //if review required = false, continue check on image
+					log.info("2nd check review" + item.isReviewRequired());
+					if (!resDTO.getSupplierItem().isReviewRequired()) {
+
+						if (item.getCmImages() != null && item.getCmImages().size() > 0) {
+							for (CmImage image : item.getCmImages()) {
+								if (image.isBrandNew()) {
+									resDTO.getSupplierItem().setModified(true);
+									resDTO.getSupplierItem().setReviewRequired(true);
+
+									break;
+								}
+							}
+						} else {
+							resDTO.getSupplierItem().setReviewRequired(false);
+
+						}
+					}
+					// #30457- end
+					
+					//#30457- start
+					if (CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage())) {
+     					List<CmImage> tobeDeleted = new ArrayList<CmImage>();
+     					for (CmImage image : resDTO.getSupplierItem().getCmImages()){
+     						for (CmImage imgDel : this.getManagedBean().getDeleteImage()) {
+     							if(image.getImageId() == imgDel.getImageId() 
+     									|| image.getImageName().equalsIgnoreCase(imgDel.getImageName())){
+     								tobeDeleted.add(image);
+     							}
+     						}
+     					}
+     					resDTO.getSupplierItem().getCmImages().removeAll(tobeDeleted);
+     				}
+					
+     				if(CollectionUtils.isNotEmpty(item.getCmImages())){
 						boolean newImageExist = false;
 						for(CmImage ci: item.getCmImages()){
 							if(ci.isBrandNew()){
@@ -11086,8 +11470,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							}
 						}
 					}
-					//#30457-end
-					
+     				//#30457- end
+     				
 					listToSave.add(resDTO.getSupplierItem());
 
 				} finally {
@@ -11103,6 +11487,35 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				reqDTO.setSaveSupplierItems(listToSave);
 				try {
 					resDTO = catalogueSO.updateSupplierItem(reqDTO);
+				    
+					// #30457- start
+					if (resDTO.isSuccessful() && CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage())) {
+
+						for (CmImage image : this.getManagedBean().getDeleteImage()) {
+
+							StringBuilder deleteImgDir = new StringBuilder();
+							deleteImgDir
+									.append(EpPropertiesUtils.getInstance().getProperty(
+											EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM/")
+									.append(this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo())
+									.append("/").append(image.getImageDesc());
+							log.info("deleteImgDir***" + deleteImgDir);
+
+							try {
+								boolean result = Files.deleteIfExists(Paths.get(deleteImgDir.toString()));
+								if (result) {
+									log.info("File is deleted!");
+								} else {
+									log.info("Sorry, unable to delete the file.");
+								}
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+						this.getManagedBean().getDeleteImage().clear();
+					}
+					// #30457- end
+					
 					FacesContext facesContext = FacesContext.getCurrentInstance();
 					facesContext.addMessage(
 							null,
@@ -11147,11 +11560,28 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					resDTO.getSupplierItem().setPmUom(item.getPmUom());
 					resDTO.getSupplierItem().setChangedDate(resDTO.getSupplierItem().getChangedDate());
 					
-					//#30457-start
-					if(item.getItemDesc()!=null && !item.getItemDesc().equals(resDTO.getSupplierItem().getItemDesc())){
+					// #30457- start
+					if (item.getItemDesc() != null
+							&& !item.getItemDesc().equals(resDTO.getSupplierItem().getItemDesc())) {
 						resDTO.getSupplierItem().setItemDesc(item.getItemDesc());
 					}
-					if(CollectionUtils.isNotEmpty(item.getCmImages())){
+					// #30457- end
+
+				//#30457 - start
+					if (CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage())) {
+     					List<CmImage> tobeDeleted = new ArrayList<CmImage>();
+     					for (CmImage image : resDTO.getSupplierItem().getCmImages()){
+     						for (CmImage imgDel : this.getManagedBean().getDeleteImage()) {
+     							if(image.getImageId() == imgDel.getImageId() 
+     									|| image.getImageName().equalsIgnoreCase(imgDel.getImageName())){
+     								tobeDeleted.add(image);
+     							}
+     						}
+     					}
+     					resDTO.getSupplierItem().getCmImages().removeAll(tobeDeleted);
+     				}	
+					
+				if(CollectionUtils.isNotEmpty(item.getCmImages())){
 						boolean newImageExist = false;
 						for(CmImage ci: item.getCmImages()){
 							if(ci.isBrandNew()){
@@ -11160,7 +11590,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							}
 						}
 					}
-					//#30457-endO
+					//#30457-end
 					listToSave.add(resDTO.getSupplierItem());
 
 				} finally {
@@ -11176,6 +11606,35 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				reqDTO.setSaveSupplierItems(listToSave);
 				try {
 					resDTO = catalogueSO.updateSupplierItem(reqDTO);
+					
+					// #30457- start
+					if (resDTO.isSuccessful() && CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteImage())) {
+
+						for (CmImage image : this.getManagedBean().getDeleteImage()) {
+
+							StringBuilder deleteImgDir = new StringBuilder();
+							deleteImgDir
+									.append(EpPropertiesUtils.getInstance().getProperty(
+											EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM/")
+									.append(this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo())
+									.append("/").append(image.getImageDesc());
+							log.info("deleteImgDir***" + deleteImgDir);
+
+							try {
+								boolean result = Files.deleteIfExists(Paths.get(deleteImgDir.toString()));
+								if (result) {
+									log.info("File is deleted!");
+								} else {
+									log.info("Sorry, unable to delete the file.");
+								}
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+						this.getManagedBean().getDeleteImage().clear();
+					}
+					// #30457- end
+					
 					FacesContext facesContext = FacesContext.getCurrentInstance();
 					facesContext.addMessage(
 							null,
@@ -11781,26 +12240,25 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 	// 29961 - end
 	
-	//30457 - START
-	public String getMinimumPrice(String RuleType) {
+	//30457 - START 27/7/2022
+	public Double getMinimumPrice(String RuleType) {
 		log.info("getMinimumPrice");
 
 		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject("pm", IRuleSO.class);
 
-		String ruleValue = "";
+		Double ruleValuePrice = null;
 
 		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		RuleResDTO ruleResDTO = null;
 
 		ruleReqDTO.setRuleType(RuleType);
-		RuleResDTO rules = ruleSO.getRuleValueByRuleType(ruleReqDTO);
-
-		if (rules.getRulevalue() != null) {
-			ruleValue = rules.getRulevalue();
+		RuleResDTO ruleResDTO = ruleSO.getRuleValueByRuleType(ruleReqDTO);
+		
+		if (ruleResDTO.getRulevalue() != null) {
+			ruleValuePrice = Double.parseDouble(ruleResDTO.getRulevalue());
 		}
-		return ruleValue;
+		return ruleValuePrice;
 	}
-	// 30457 - END
+	// 30457 - END 27/7/2022
 
 	
 	//#30457 -farid - start
@@ -11827,54 +12285,79 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().setItemSelectedIndex(i % this.getManagedBean().getPublishTabPageSize());
 			this.getManagedBean().setSelectedMaintainItem(
 					this.getManagedBean().getPublishSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()));
+		// #30457 - Start
+		}else if(this.getManagedBean().getTabActiveIndex() == 5){
+			this.getManagedBean().setItemSelectedIndex(i % this.getManagedBean().getExpiredTabPageSize());
+			this.getManagedBean().setSelectedMaintainItem(
+					this.getManagedBean().getExpiredSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()));
 		}
+		
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(), new Comparator<CmImage>() {
+				@Override
+				public int compare(CmImage o1, CmImage o2) {
+					// TODO Auto-generated method stub
+
+					return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName() + o2.getCreatedDate());
+				}
+			});
+		}
+		// #30457 - End
 	}
+	
 	
 	public void closeImagePopup(){ //only affecting draft tab and draft_supp_temp only
-			this.getManagedBean().getDraftSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()).setCmImages(
-					this.getManagedBean().getSelectedMaintainItem().getCmImages());
-		
-		this.getManagedBean().getDraftSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()).setItemDesc(
-				this.getManagedBean().getSelectedMaintainItem().getItemDesc());
-	}
+		this.getManagedBean().getDraftSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()).setCmImages(
+				this.getManagedBean().getSelectedMaintainItem().getCmImages());
 	
-	public void deleteImageFromPopup(int imageIndex){
+	this.getManagedBean().getDraftSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()).setItemDesc(
+			this.getManagedBean().getSelectedMaintainItem().getItemDesc());
+       }
+	
+	// #30457, #14188 - start
+	public void deleteImageFromPopup(int imageIndex) {
 		log.info("imageIndex:" + imageIndex);
-		List<CmImage> tobeDeleted =new ArrayList<CmImage>();
 		CmImage img = this.getManagedBean().getSelectedMaintainItem().getCmImages().get(imageIndex);
-		tobeDeleted.add(img);
-		
-		StringBuilder deleteImgDir = new StringBuilder();
-		deleteImgDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM/")
-				.append(this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo()).append("/")
-				.append(img.getImageDesc());
-		log.info("deleteImgDir***" + deleteImgDir);
-		
-		try {
-            boolean result = Files.deleteIfExists(Paths.get(deleteImgDir.toString()));
-            if (result) {
-            	log.info("File is deleted!");
-            } else {
-            	log.info("Sorry, unable to delete the file.");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-		
-		if(!img.isBrandNew()) {
-			ICatalogueSO catalogueSO = null;
-			catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
-			catalogueSO.deleteImageSelection(tobeDeleted);
-		}
+
+		if (!img.isBrandNew()) {
+			this.getManagedBean().getDeleteImage().add(img);
+		}// for db data purpose
+
 		this.getManagedBean().getSelectedMaintainItem().getCmImages().remove(imageIndex);
 	}
-
+	// #30457, #14188 - end
 	
 	public void validateBeforePopup(){
+		//#569 - start - set to read icon mandatory field
+		if (!this.getManagedBean().isPublish()){
+			this.getManagedBean().setPublish(true);
+		}
+		//#569 - end
+		
+		//#30457 - Start 29/07/2022
+		Double minPriceVal = getMinimumPrice(RuleTypeConst.MINIMUM_PRICE_CAT_ITEM);
+		DecimalFormat df = new DecimalFormat("0.00#");
+		//#30457 - End 29/07/2022
+		//#29961 - Start
+		Integer minYearVal = getEndYearByRulesValue(RuleTypeConst.CATLOGUE_ITEM_VALIDITY);
+		//#29961 - End
+		
 		if (this.getManagedBean().getCloneCmSupplierItemLs().size() < 1) {
 			throw new EpException(MessageConst.ERROR_715013);
 		}
 		for (int i = 0; i < this.getManagedBean().getCloneCmSupplierItemLs().size(); i++) {
+			
+			// #569 - Start
+			for (int j = 0; j < this.getManagedBean().getCloneCmSupplierItemLs().size(); j++) {
+				if (StringUtils.isBlank(this.getManagedBean().getCloneCmSupplierItemLs().get(j).getItemDesc()) 
+						|| CollectionUtils.isEmpty(this.getManagedBean().getCloneCmSupplierItemLs().get(j).getCmImages())) {
+					this.getManagedBean().getCloneCmSupplierItemLs().get(j).setIndicator(true);
+				} else {
+					this.getManagedBean().getCloneCmSupplierItemLs().get(j).setIndicator(false);
+				}
+			}
+			// #569 - End
+			
 			if(StringUtils.isBlank(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getItemDesc())
 					|| CollectionUtils.isEmpty(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmImages())){
 				throw new EpException(MessageConst.ERROR_715050);
@@ -11899,13 +12382,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				log.info("********validation**********");
 				throw new EpException(MessageConst.ERROR_715050);
 			}
-
+			//#30457 - Start 29/07/2022
 			// price
-			if (catalog.getCmStandardPricing().getPrice().longValue() <= -1
-					|| catalog.getCmStandardPricing().getPrice().floatValue() == 0.0f) {
-				throw new EpException(MessageConst.ERROR_715017);
+			if (catalog.getCmStandardPricing().getPrice()!= null
+				&& catalog.getCmStandardPricing().getPrice().floatValue() < minPriceVal.floatValue()) {
+				 throw new EpException(MessageConst.ERROR_715017, new String[] {df.format(minPriceVal)});
 			}
-
+            //#30457 - End 29/07/2022
 			// end date before start date
 			if (catalog.getCmStandardPricing().getStartDate().after(catalog.getCmStandardPricing().getEndDate())) {
 				throw new EpException(MessageConst.ERROR_715011);
@@ -11930,15 +12413,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			// 1 year period between start and end date
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(catalog.getCmStandardPricing().getStartDate());
-			cal.add(Calendar.YEAR, CmHelper.getInstance().getStandardPricingYear());
-
+			//#29961 - Start
+			cal.add(Calendar.YEAR, minYearVal);
 			if (cal.getTime().compareTo(catalog.getCmStandardPricing().getEndDate()) < 0) {
-				throw new EpException(MessageConst.ERROR_715012);
-			}
+				throw new EpException(MessageConst.ERROR_775179, new String[] { ""
+						+ minYearVal});
+			} //#29961 - End
 		}
 		RequestContext.getCurrentInstance().execute("updateDeclareDialog.show()");
 	}
-	
+
 	public void enableBtn(boolean tick){
 		this.getManagedBean().setYesEnable(tick);
 	}

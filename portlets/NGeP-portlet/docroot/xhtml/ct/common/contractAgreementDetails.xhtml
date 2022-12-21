@@ -6,43 +6,42 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:param name="language" value="#{ctBackingBean.getLanguage()}"></ui:param>
-	
-	<p:panel id="fd2" toggleable="true" toggleSpeed="500"
-		rendered="#{ctBackingBean.managedBean.ctContractAmount.agreement}">
+		<p:panel id="fd2" toggleable="true" toggleSpeed="500" rendered="#{ctBackingBean.managedBean.ctContractAmount.agreement}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.agreement.detail']}" />
 			<ac:iconTooltip value="#{lbl['lbl.ct.agreement.detail.tooltip']}" />
 		</f:facet>
-		<p:dataTable id="contractAgreementTableID" lazy="true"
-			value="#{ctBackingBean.filterAgreementList()}" var="agreement"
-			width="100%" rows="10" rowIndexVar="index">
+				<p:dataTable id="contractAgreementTableID" lazy="true"
+					value="#{ctBackingBean.filterAgreementList()}"
+					var="agreement" width="100%" rows="10" rowIndexVar="index">
 
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.ct.agreement.no']}" />
-				</f:facet>
-				<h:outputText value="#{index + 1}" />
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.ct.agreement.file.refno']}" />
-				</f:facet>
-				<h:outputText
-					value="#{ctBackingBean.getAgreementLoaPhysicalNo(agreement)}" />
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.ct.agreement.signed.date']}" />
-				</f:facet>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.ct.agreement.no']}" />
+						</f:facet>
+						<h:outputText value="#{index + 1}"/>
+				</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.ct.agreement.file.refno']}" />
+						</f:facet>
+				<h:outputText value="#{ctBackingBean.getAgreementLoaPhysicalNo(agreement)}" />
+				</p:column>
+				<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.ct.agreement.signed.date']}" />
+						</f:facet>
 				<!-- Enhancement 29418 - shaqimi start -->
 				<h:outputText
 					value="#{ctBackingBean.getAgreementSignedDate(agreement)}" rendered="#{agreement.status.statusId == CtStatusConst.saComplete or agreement.status.statusId == CtStatusConst.acComplete}" >
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
-				<p:outputPanel style="display:flex; justify-content:center;" rendered="#{agreement.status.docType == ParameterConst.doctypeSupplementalAgreement and agreement.status.statusId != CtStatusConst.saComplete}">
+				<!-- Enhancement 29418 - shaqimi start 11102022 -->
+				<p:outputPanel rendered="#{agreement.status.docType == ParameterConst.doctypeSupplementalAgreement and agreement.status.statusId != CtStatusConst.saComplete}">
 					<h:outputText value="#{lbl['lbl.ct.view.value.na']}"/>
 				</p:outputPanel>
+				<!-- Enhancement 29418 - shaqimi end 11102022 -->
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -121,9 +120,11 @@
 						<br />
 				</ui:repeat>
 				</p:outputPanel>
-				<p:outputPanel style="display:flex; justify-content:center;" rendered="#{agreement.status.docType == ParameterConst.doctypeSupplementalAgreement and agreement.status.statusId != CtStatusConst.saComplete}">
+				<!-- Enhancement 29418 - shaqimi start 11102022 -->
+				<p:outputPanel rendered="#{agreement.status.docType == ParameterConst.doctypeSupplementalAgreement and agreement.status.statusId != CtStatusConst.saComplete}">
 					<h:outputText value="#{lbl['lbl.ct.view.value.na']}"/>
 				</p:outputPanel>
+				<!-- Enhancement 29418 - shaqimi end 11102022 -->
 			</p:column>
 			<p:column style="text-align: center;">
 				<f:facet name="header">
@@ -131,15 +132,18 @@
 					<ac:iconTooltip
 						value="#{lbl['lbl.ct.tooltip.view.amendment.details']}" />
 				</f:facet>
+				<!-- Enhancement 29418 - shaqimi end 11102022 -->
 				<p:commandButton
-					rendered="#{agreement.status.statusId == CtStatusConst.saComplete}" ajax="false"
+					rendered="#{agreement.status.statusId == CtStatusConst.saComplete or agreement.status.statusId == CtStatusConst.saPendingCreation
+						or agreement.status.statusId == CtStatusConst.saPendingApproval or agreement.status.statusId == CtStatusConst.saPendingRevision 
+						or agreement.status.statusId == CtStatusConst.saPendingRevisionApproval}" ajax="false"
 					value="#{lbl['lbl.btn.download']}">
 					<p:fileDownload
 						value="#{ctBackingBean.generateReportPDF(agreement)}" />
 				</p:commandButton>
+				<!-- Enhancement 29418 - shaqimi end 11102022 -->
 			</p:column>
 			<!-- Enhancement 29418- shaqimi end -->
 		</p:dataTable>
 	</p:panel>
-	
 </ui:composition>

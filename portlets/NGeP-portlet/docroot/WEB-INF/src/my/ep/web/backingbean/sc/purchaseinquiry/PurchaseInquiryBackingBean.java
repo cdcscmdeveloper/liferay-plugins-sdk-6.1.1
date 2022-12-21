@@ -1133,14 +1133,17 @@ public class PurchaseInquiryBackingBean extends
 	public void validatePk7(String procurementType) {
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
 			// MaxProcurementAmt
-			BigDecimal maxProcurementAmt = getPRThresholdAmount();
-			DecimalFormat amountDF = new DecimalFormat(
-					new CommonUtils().getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+			//Temp(#34274 - Start)
+//			BigDecimal maxProcurementAmt = getPRThresholdAmount();
+//			DecimalFormat amountDF = new DecimalFormat(
+//					new CommonUtils().getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+			
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-							MessageConst.INFO_760440, new String[] { amountDF.format(maxProcurementAmt) },
+							MessageConst.INFO_760440, null,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			//Temp(#34274 - End)
 
 		}
 	}
@@ -1409,6 +1412,9 @@ public class PurchaseInquiryBackingBean extends
 	}
 	
 	//#29557 - start
+	/**
+	 * To validate final order quantity.
+	 */
 	private void validateFinalOrderQty() {
 		ScRequestSupplierItem scRequestSupplierItem = getManagedBean().getScRequestSupplierItem();
 		BigDecimal  minTierQty = BigDecimal.ZERO;
@@ -2227,6 +2233,12 @@ public class PurchaseInquiryBackingBean extends
 	}
 
 	// Start - #26129
+	/**
+	 * To validate required remark.
+	 * 
+	 * @param prInquiryDetail
+	 *            the ScPrInquiry instance
+	 */
 	private void validateRequiredRemark(ScPrInquiry prInquiryDetail) {
 		boolean newRemark = false;
 		if (prInquiryDetail != null) {
@@ -2252,6 +2264,20 @@ public class PurchaseInquiryBackingBean extends
 	// End - #26129
 	
 	// Start - #29557
+	/**
+	 * Checks if is last row of tier.
+	 * 
+	 * @param specZoneId
+	 *            the Id of spec zone
+	 * @param fromQty
+	 *            the value of from quantity
+	 * @param userId
+	 *            the Id of user
+	 * @param priceType
+	 *            the price type
+	 *       
+	 * @return true, if is last row of tier.
+	 */
 	public boolean isLastRowOfTier(Long specZoneId, BigDecimal fromQty, Long userId , String priceType){
 		ScSupplierItemPrice scSupplierItemPrice = getManagedBean().getSupplierItemPrices().get(0);
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -2283,6 +2309,11 @@ public class PurchaseInquiryBackingBean extends
 				pmUser.getUserId());
 	}
 	
+	/**
+	 * Checks if is current user.
+	 * 
+	 * @return true, if is current user
+	 */
 	public boolean isCurrentUser(Long userId){
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if ((userId != null && userId.compareTo(pmUser.getUserId()) == 0) || userId == 0){
@@ -2291,6 +2322,16 @@ public class PurchaseInquiryBackingBean extends
 		return false;
 	}
 
+	/**
+	 * To determine to quantity.
+	 * 
+	 * @param specZoneId
+	 *            the Id of spec zone
+	 * @param priceType
+	 *            the price type
+	 * @param itemPrice
+	 *            the ScSupplierItemPrice instance
+	 */
 	public void toDetermineToQty(Long specZoneId, String priceType,ScSupplierItemPrice itemPrice){		
 		List<ScSupplierItemPrice> scSupplierItemPrices = new ArrayList<ScSupplierItemPrice>();
 		switch (priceType) {
@@ -2324,6 +2365,11 @@ public class PurchaseInquiryBackingBean extends
 		}
 	}	
 	
+	/**
+	 * Checks if is zone limit into two row.
+	 * 
+	 * @param event
+	 */
 	public Boolean checkZoneLimitTwoRow(Long specZoneId, String priceType){
 		Boolean disAllowZone = false;
 		List<ScSupplierItemPrice> scSupplierItemPrices = new ArrayList<ScSupplierItemPrice>();
@@ -2357,6 +2403,12 @@ public class PurchaseInquiryBackingBean extends
 		return disAllowZone;
 	}
 
+	/**
+	 * Checks if is changes on to quantity.
+	 * 
+	 * @param priceType
+	 *            the price type
+	 */
 	public void onChangeToQty(String priceType){
 		FacesScopes facesScopes = new FacesScopes();
 		List<ScSupplierItemPrice> scSupplierItemPrices = new ArrayList<ScSupplierItemPrice>();
@@ -2423,6 +2475,9 @@ public class PurchaseInquiryBackingBean extends
 		}
 	}
 	
+	/**
+	 * To validate changes from quantity.
+	 */
 	public void onChangeFromQty(String priceType) {
 		FacesScopes facesScopes = new FacesScopes();
 		List<ScSupplierItemPrice> scSupplierItemPrices = new ArrayList<ScSupplierItemPrice>();
@@ -2461,6 +2516,16 @@ public class PurchaseInquiryBackingBean extends
 		}
 	}
 	
+	/**
+	 * To determine changes on new prices.
+	 * 
+	 * @param priceType
+	 *            the price type
+	 * @param newPrice
+	 *            the new price
+	 * @param cataloguePrice
+	 *            the catalogue price
+	 */
 	public void onChangeNewPrice(String priceType, BigDecimal newPrice, BigDecimal cataloguePrice) {
 		FacesScopes facesScopes = new FacesScopes();
 		List<ScSupplierItemPrice> scSupplierItemPrices = new ArrayList<ScSupplierItemPrice>();
@@ -2535,6 +2600,12 @@ public class PurchaseInquiryBackingBean extends
 		}
 	}
 	
+	/**
+	 * To validate ScSupplierItemPrice.
+	 * 
+	 * @param scSupplierItemPrices
+	 *            the list of ScSupplierItemPrice
+	 */
 	private void validateScSupplierItemPrice(List<ScSupplierItemPrice> scSupplierItemPrices) {
 		FacesScopes facesScopes = new FacesScopes();
 		for (ScSupplierItemPrice scSupplierItemPrice : scSupplierItemPrices) {
@@ -2547,6 +2618,9 @@ public class PurchaseInquiryBackingBean extends
 
 	}
 	
+	/**
+	 * To validate tier row count.
+	 */
 	private void validateTierRowCount(){
 		
 		Boolean throwError = false;
@@ -2564,6 +2638,9 @@ public class PurchaseInquiryBackingBean extends
 		}
 	}
 
+	/**
+	 * To validate scSupplierItemPriceList.
+	 */
 	private void validateScSupplierItemPriceList(Integer priceTypeList,ScSupplierItemPrice addedScSupplierItemPrice,Boolean ignoreLastTier) {
 		int i = priceTypeList;
 		FacesScopes facesScopes = new FacesScopes();
@@ -2608,6 +2685,12 @@ public class PurchaseInquiryBackingBean extends
 			
 	}
 	
+	/**
+	 * To save price tab
+	 *
+	 * @param outcome
+	 *            the outcome
+	 */
 	public void savePriceTab(String outcome) {
 
 		HashMap<Long, List<ScSupplierItemPrice>> scSupplierItemPriceListing = new HashMap<Long, List<ScSupplierItemPrice>>();
@@ -2738,6 +2821,9 @@ public class PurchaseInquiryBackingBean extends
 		}
 	}
 	
+	/**
+	 * To deleteScSupplierItemPrices.
+	 */
 	public void deleteScSupplierItemPrices() {
 		
 		List<ScSupplierItemPrice> deleteScSupplierItemPrices = new ArrayList<ScSupplierItemPrice>();
@@ -2768,6 +2854,12 @@ public class PurchaseInquiryBackingBean extends
 	}
 	
 	// ZonalTierStandardPrice -- start
+	/**
+	 * To add supplierItemZonalTierStandardPrices.
+	 * 
+	 * @param getSupplierItemZonalTierStandardPrices
+	 *            the list of ScSupplierItemPrice
+	 */
 	public void addSupplierItemZonalTierStandardPrices(List<ScSupplierItemPrice> getSupplierItemZonalTierStandardPrices) {
 		FacesScopes facesScopes = new FacesScopes();
 		
@@ -2826,6 +2918,11 @@ public class PurchaseInquiryBackingBean extends
 		
 	}
 	
+ 	/**
+	 * To select singleRowZonalTierStandardPrice
+	 * 
+	 * @param event
+	 */
 	public void selectSingleRowZonalTierStandardPrice(AjaxBehaviorEvent event) {
 		boolean isSelectedALL= Boolean.TRUE;
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
@@ -2857,6 +2954,11 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setZonalTierPricingIndex(0);
 	}
 	
+	/**
+	 * To select allZonalTierStandardPrice
+	 * 
+	 * @param event
+	 */
 	public void selectAllZonalTierStandardPrice(AjaxBehaviorEvent event) {
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		List<ScSupplierItemPrice> scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalTierStandardPrices();
@@ -2879,6 +2981,9 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setZonalTierPricingIndex(0);
 	}
 	
+	/**
+	 * To delete supplierItemZonalTierStandardPrices
+	 */
 	public void deleteSupplierItemZonalTierStandardPrices() {
 		log.info("deleteZonalTierStandard");
 		
@@ -2928,6 +3033,12 @@ public class PurchaseInquiryBackingBean extends
 	// ZonalTierStandardPrice -- end
 	
 	// ZonalTierPromotionPrice -- start
+	/**
+	 * To add supplierItemZonalTierPromotionPrices.
+	 * 
+	 * @param getSupplierItemZonalTierPromotionPrices
+	 *            the list of ScSupplierItemPrice
+	 */
 	public void addSupplierItemZonalTierPromotionPrices(List<ScSupplierItemPrice> getSupplierItemZonalTierPromotionPrices) {
 		FacesScopes facesScopes = new FacesScopes();
 		for (ScSupplierItemPrice scSupplierItemPrice : getSupplierItemZonalTierPromotionPrices) {
@@ -2985,6 +3096,11 @@ public class PurchaseInquiryBackingBean extends
 
 	}
 
+	 /**
+	  * To select singleRowZonalTierPromotionPrice.
+	  * 
+	  * @param event
+	  */
 	public void selectSingleRowZonalTierPromotionPrice(AjaxBehaviorEvent event) {
 		boolean isSelectedALL = Boolean.TRUE;
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
@@ -3016,6 +3132,11 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setZonalTierPricingIndex(1);
 	}
 
+	 /**
+	  * To select allZonalTierPromotionPrice.
+	  * 
+	  * @param event
+	  */
 	public void selectAllZonalTierPromotionPrice(AjaxBehaviorEvent event) {
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		List<ScSupplierItemPrice> scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalTierPromotionPrices();
@@ -3038,6 +3159,9 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setZonalTierPricingIndex(1);
 	}
 
+	/**
+	 * to delete supplierItemZonalTierPromotionPrices.
+	 */
 	public void deleteSupplierItemZonalTierPromotionPrices() {
 		log.info("deleteZonalTierStandard");
 
@@ -3087,6 +3211,9 @@ public class PurchaseInquiryBackingBean extends
 	// ZonalTierPromotionPrice -- end
 	
 	// ZonalStandardPrice -- start
+	/**
+	 * to add supplierItemZonalStandardPrices.
+	 */
 	public void addSupplierItemZonalStandardPrices() {		
 		if(getManagedBean().getSupplierItemZonalStandardPrices() == null){
 			this.getManagedBean().setSupplierItemZonalStandardPrices(new ArrayList<ScSupplierItemPrice>());
@@ -3105,6 +3232,11 @@ public class PurchaseInquiryBackingBean extends
 		
 	}
 	
+	 /**
+	  * To select singleRowZonalStandardPrice.
+	  * 
+	  * @param event
+	  */
 	public void selectSingleRowZonalStandardPrice(AjaxBehaviorEvent event) {
 		boolean isSelectedALL= Boolean.TRUE;
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
@@ -3135,6 +3267,11 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setZonalPricingIndex(0);
 	}
 	
+	/**
+	  * To select allZonalStandardPrice.
+	  * 
+	  * @param event
+	  */
 	public void selectAllZonalStandardPrice(AjaxBehaviorEvent event) {
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		List<ScSupplierItemPrice> scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalStandardPrices();
@@ -3157,6 +3294,9 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setZonalPricingIndex(0);
 	}
 	
+	/**
+	 * to delete supplierItemZonalStandardPrices.
+	 */
 	public void deleteSupplierItemZonalStandardPrices() {
 		log.info("deleteZonalStandard");
 		
@@ -3206,6 +3346,9 @@ public class PurchaseInquiryBackingBean extends
 	// ZonalStandardPrice -- end
 	
 	// ZonalPromotionPrice -- start
+	/**
+	 * To add supplierItemZonalPromotionPrices.
+	 */
 	public void addSupplierItemZonalPromotionPrices() {		
 		if(getManagedBean().getSupplierItemZonalPromotionPrices() == null){
 			this.getManagedBean().setSupplierItemZonalPromotionPrices(new ArrayList<ScSupplierItemPrice>());
@@ -3224,6 +3367,11 @@ public class PurchaseInquiryBackingBean extends
 		
 	}
 	
+	/**
+	  * To select singleRowZonalPromotionPrice.
+	  * 
+	  * @param event
+	  */
 	public void selectSingleRowZonalPromotionPrice(AjaxBehaviorEvent event) {
 		boolean isSelectedALL= Boolean.TRUE;
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
@@ -3254,6 +3402,11 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setZonalPricingIndex(1);
 	}
 	
+	/**
+	  * To select allZonalPromotionPrice.
+	  * 
+	  * @param event
+	  */
 	public void selectAllZonalPromotionPrice(AjaxBehaviorEvent event) {
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		List<ScSupplierItemPrice> scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalPromotionPrices();
@@ -3276,6 +3429,9 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setZonalPricingIndex(1);
 	}
 	
+	/**
+	 * To delete supplierItemZonalPromotionPrices
+	 */
 	public void deleteSupplierItemZonalPromotionPrices() {
 		log.info("deleteZonalPromotion");
 		
@@ -3324,7 +3480,10 @@ public class PurchaseInquiryBackingBean extends
 	}
 	// ZonalPromotionPrice -- end
 
-	// TierStandardPrice -- start	
+	// TierStandardPrice -- start
+	/**
+	 * to add supplierItemTierStandardPrices.
+	 */
 	public void addSupplierItemTierStandardPrices() {
 		FacesScopes facesScopes = new FacesScopes();
 		
@@ -3361,6 +3520,9 @@ public class PurchaseInquiryBackingBean extends
 		
 	}
 	
+	/**
+	 * to select singleRowTierStandardPrice.
+	 */
 	public void selectSingleRowTierStandardPrice(AjaxBehaviorEvent event) {
 		boolean isSelectedALL= Boolean.TRUE;
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
@@ -3391,6 +3553,11 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setTierPricingIndex(0);
 	}
 	
+	/**
+	 * To select allTierStandardPrice
+	 * 
+	 * @param event
+	 */
 	public void selectAllTierStandardPrice(AjaxBehaviorEvent event) {
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		List<ScSupplierItemPrice> scSupplierItemPrices = this.getManagedBean().getSupplierItemTierStandardPrices();
@@ -3413,6 +3580,9 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setTierPricingIndex(0);
 	}
 	
+	/**
+	 * To delete supplierItemTierStandardPrices
+	 */
 	public void deleteSupplierItemTierStandardPrices() {
 		log.info("deleteTierStandard");
 		
@@ -3462,6 +3632,9 @@ public class PurchaseInquiryBackingBean extends
 	// TierStandardPrice -- end
 
 	// TierPromotionPrice -- start
+	/**
+	 * To add supplierItemTierPromotionPrices.
+	 */
 	public void addSupplierItemTierPromotionPrices() {
 		FacesScopes facesScopes = new FacesScopes();
 
@@ -3496,6 +3669,9 @@ public class PurchaseInquiryBackingBean extends
 
 	}
 
+	/**
+	 * To selectSingleRowTierPromotionPrice.
+	 */
 	public void selectSingleRowTierPromotionPrice(AjaxBehaviorEvent event) {
 		boolean isSelectedALL = Boolean.TRUE;
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
@@ -3527,6 +3703,9 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setTierPricingIndex(1);
 	}
 
+	/**
+	 * To selectAllTierPromotionPrice.
+	 */
 	public void selectAllTierPromotionPrice(AjaxBehaviorEvent event) {
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		List<ScSupplierItemPrice> scSupplierItemPrices = this.getManagedBean().getSupplierItemTierPromotionPrices();
@@ -3549,6 +3728,9 @@ public class PurchaseInquiryBackingBean extends
 		this.getManagedBean().setTierPricingIndex(1);
 	}
 
+	/**
+	 * To deleteSupplierItemTierPromotionPrices.
+	 */
 	public void deleteSupplierItemTierPromotionPrices() {
 		log.info("deleteTierPromotion");
 
@@ -3597,50 +3779,110 @@ public class PurchaseInquiryBackingBean extends
 	}
 	// TierPromotionPrice -- end
 
+	/**
+	 * Checks if is tier standard flag.
+	 *
+	 * @return the flagTierStandard
+	 */
 	public boolean isFlagTierStandard() {
 		return flagTierStandard;
 	}
 
+	/**
+	 * Sets the tier standard flag.
+	 *
+	 * @param flagTierStandard the flagTierStandard to set
+	 */
 	public void setFlagTierStandard(boolean flagTierStandard) {
 		this.flagTierStandard = flagTierStandard;
 	}
 
+	/**
+	 * Checks if is tier promotion flag.
+	 *
+	 * @return the flagTierPromotion
+	 */
 	public boolean isFlagTierPromotion() {
 		return flagTierPromotion;
 	}
 
+	/**
+	 * Sets the tier promotion flag.
+	 *
+	 * @param flagTierPromotion the flagTierPromotion to set
+	 */
 	public void setFlagTierPromotion(boolean flagTierPromotion) {
 		this.flagTierPromotion = flagTierPromotion;
 	}
 
+	/**
+	 * Checks if is zonal standard flag.
+	 *
+	 * @return the flagZonalStandard
+	 */
 	public boolean isFlagZonalStandard() {
 		return flagZonalStandard;
 	}
 
+	/**
+	 * Sets the zonal standard flag.
+	 *
+	 * @param flagZonalStandard the flagZonalStandard to set
+	 */
 	public void setFlagZonalStandard(boolean flagZonalStandard) {
 		this.flagZonalStandard = flagZonalStandard;
 	}
 
+	/**
+	 * Checks if is zonal promotion flag.
+	 *
+	 * @return the flagZonalPromotion
+	 */
 	public boolean isFlagZonalPromotion() {
 		return flagZonalPromotion;
 	}
 
+	/**
+	 * Sets the zonal promotion flag.
+	 *
+	 * @param flagZonalPromotion the flagZonalPromotion to set
+	 */
 	public void setFlagZonalPromotion(boolean flagZonalPromotion) {
 		this.flagZonalPromotion = flagZonalPromotion;
 	}
 
+	/**
+	 * Checks if is zonal tier standard flag.
+	 *
+	 * @return the flagZonalTierStandard
+	 */
 	public boolean isFlagZonalTierStandard() {
 		return flagZonalTierStandard;
 	}
 
+	/**
+	 * Sets the zonal tier standard flag.
+	 *
+	 * @param flagZonalTierStandard the flagZonalTierStandard to set
+	 */
 	public void setFlagZonalTierStandard(boolean flagZonalTierStandard) {
 		this.flagZonalTierStandard = flagZonalTierStandard;
 	}
 
+	/**
+	 * Checks if is zonal tier promotion flag.
+	 *
+	 * @return the flagZonalTierPromotion
+	 */
 	public boolean isFlagZonalTierPromotion() {
 		return flagZonalTierPromotion;
 	}
 
+	/**
+	 * Sets the zonal tier promotion flag.
+	 *
+	 * @param flagZonalTierPromotion the flagZonalTierPromotion to set
+	 */
 	public void setFlagZonalTierPromotion(boolean flagZonalTierPromotion) {
 		this.flagZonalTierPromotion = flagZonalTierPromotion;
 	}

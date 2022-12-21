@@ -917,6 +917,11 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void deleteMoreRuleValue() {
+		
+		//#30672 - Start
+		RequestContext.getCurrentInstance().reset("form:settingTabId:ruleTypeValueTableID"); // reset form UI validation error
+		//#30672 - End
+		
 		Integer rowIndex = getManagedBean().getDeleteRowIndex();
 		List<PmConfigRuleValue> removeList = new ArrayList<PmConfigRuleValue>();
 		PmConfigRule configRuleType = this.getManagedBean()
@@ -1100,10 +1105,10 @@ public class RuleCatalogueBackingBean extends
 							&& ruleTypeValue.getCategoryL3Id()
 									.getCategoryL3Id() == null) {
 						// throw required msg
-						// 29669 start
+						// 29669,30672 start
 						throw new EpException(MessageConst.ERROR_770133,
 								new String[] { ruleTypeDesc.getRuleDesc() });
-						// 29669 end
+						// 29669,30672 end
 
 					} else { // fill CategoryDisplayValue for further validation
 						PmCategoryL3 categoryL3 = ruleTypeValue
@@ -1127,7 +1132,7 @@ public class RuleCatalogueBackingBean extends
 			}
 			// check validation
 			
-			// 29669,29641 start 
+			// 29669,29641,30672 start 
 			if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode().matches("A|N|M|P") 
 					&& ruleTypeDesc.getRuleType().getRangeType() != 2) {
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType().getConfigRuleValues()) {
@@ -1137,7 +1142,7 @@ public class RuleCatalogueBackingBean extends
 					}
 				}
 			}
-			// 29669,29641 end
+			// 29669,29641,30672 end
 			// 29650 start
 			if (ruleTypeDesc.getRuleType().getRangeType() == 3) {
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType().getConfigRuleValues()) {
@@ -1157,7 +1162,7 @@ public class RuleCatalogueBackingBean extends
 
 				PmConfigRuleValue baseValueToCompare = ruleTypeDesc
 						.getRuleType().getConfigRuleValues().get(i);
-
+			
 				if (baseValueToCompare.getRecordStatusFlg() == 0) {// if is
 					// inActive
 					// one go to
@@ -1190,6 +1195,21 @@ public class RuleCatalogueBackingBean extends
 						throw new EpException(MessageConst.ERROR_770241, new String[] { ruleTypeDesc.getRuleDesc() });
 				} 
 				// 29650 - end
+				
+				// 30672 - start 19/07/2022
+				if (ruleTypeDesc.getRuleType().getRangeType() != 1
+						|| (ruleTypeDesc.getRuleType().getRangeType() == 1 && baseValueToCompare.isShowFlag())) {
+					if (baseValueToCompare.isErrorExpDate()) {
+						if (!this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()
+								.equals(ruleTypeDesc.getRuleType().getRuleType())) {
+							throw new EpException(MessageConst.ERROR_770111,
+									new String[] { ruleTypeDesc.getRuleDesc() });
+						} else {
+							throw new EpException(MessageConst.ERROR_770113);
+						}
+					}
+				}
+				// 30672 - end 19/07/2022
 
 				for (int j = i + 1; j <= (ruleTypeDesc.getRuleType()
 						.getConfigRuleValues().size() - 1); j++) {
@@ -1209,7 +1229,6 @@ public class RuleCatalogueBackingBean extends
 						throw new EpException(MessageConst.ERROR_770210, new String[] { ruleTypeDesc.getRuleDesc() });
 					}
 					// 29669 - end
-
 					if (!ruleValueValidation(baseValueToCompare, value,
 							ruleTypeDesc.getRuleType())) {
 
@@ -4937,6 +4956,27 @@ public class RuleCatalogueBackingBean extends
 	}
 	// 29650 - end
 	
-	
-	
+	// 30672 - start
+	public void valueCheckExpDateError(int index) {
+
+		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
+		PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues().get(index);
+
+		if (selectedValue.getEffDate() != null || selectedValue.getExpDate() != null)
+			if (configRuleType.getRangeType() != 1
+					|| (configRuleType.getRangeType() == 1 && selectedValue.isShowFlag())) {
+				if (selectedValue.getEffDate().after(selectedValue.getExpDate())) {
+					selectedValue.setErrorExpDate(true);
+					throw new EpException(MessageConst.ERROR_770113);
+					//#30672 - start 19/07/2022
+				} else if (selectedValue.getEffDate().equals(selectedValue.getExpDate())) {
+					selectedValue.setErrorExpDate(true);
+					throw new EpException(MessageConst.ERROR_770113);
+					//#30672 - end 19/07/2022
+				} else {
+					selectedValue.setErrorExpDate(false);
+				}
+			}
+	   }
+	// 30672 - end
 }

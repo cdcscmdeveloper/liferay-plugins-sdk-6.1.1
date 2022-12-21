@@ -90,11 +90,12 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
 				style="width:24%;white-space: normal;">
 
- 
+ 				<ui:remove><!-- #28784 --></ui:remove>
 				<ui:fragment rendered="#{stageTwoTechnical.pmDocument eq null and stageTwoTechnical.qtChecklistId eq null}">
 				<h:panelGroup id="technicalChecklistTitleHeader">
 					<p:inputText required="true" id="techChecklistTitle"
-						label="#{lbl['lbl.sc.spec.checklist.title']}" rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1}"
+						label="#{lbl['lbl.sc.spec.checklist.title']}" rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 or 
+						stageTwoTechnical.title eq null}"
 						value="#{stageTwoTechnical.title}" size="35" maxlength="1000">
 						<p:ajax event="change" process="@this,technicalChecklistTitleHeader" partialSubmit="true"
 							update="technicalChecklisttypes"
@@ -342,12 +343,11 @@
 					rendered="#{stageTwoTechnical.definationType.parameterCode eq 'TS' or stageTwoTechnical.definationType.parameterCode eq 'SP' or ((stageTwoTechnical.pmDocument ne null) and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TG' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TN' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'NE' or (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TL' and stageTwoTechnical.scoringReq)))}"
 					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical,'T')}">
 					<ui:fragment
-						rendered="#{specificationBackingBean.isQTStatusChecklistScoring() or 
-						(specificationBackingBean.isQTStatusChecklistScoringRevision()) or(specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.specMaintenance)}">
+						rendered="#{!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly)}"><ui:remove><!-- 1873 note 74 --></ui:remove>
 						<h:graphicImage value="/css/images/design/edit.png" />
 					</ui:fragment>
 					<ui:fragment
-						rendered="#{((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring() and !specificationBackingBean.isQTStatusChecklistScoringRevision()) or (specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and !specificationBackingBean.managedBean.specMaintenance))}">
+						rendered="#{!(!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly))}"><ui:remove><!-- 1873 note 74 --></ui:remove>
 						<h:graphicImage value="/css/images/design/ico-view.png" />
 					</ui:fragment>
 					<f:setPropertyActionListener value="#{stageTwoTechnical}"
@@ -361,12 +361,16 @@
 					update="@([id$=demoSpecTempId])"
 					disabled="#{specificationBackingBean.isTSChecklistCompleted()}"> <!--#28784--> 		 			
 					<ui:fragment
-						rendered="#{specificationBackingBean.isQTStatusChecklistScoring() or 
-						(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()) or(specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.specMaintenance)}">
+						rendered="#{(specificationBackingBean.isQTStatusChecklistScoring() and  specificationBackingBean.isAllTSDemoChecklistCompleted()) or 
+						(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()) or
+						(specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and 
+						specificationBackingBean.managedBean.specMaintenance)}">
 						<h:graphicImage value="/css/images/design/edit.png" />
 					</ui:fragment>
 					<ui:fragment
-						rendered="#{((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or (specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and !specificationBackingBean.managedBean.specMaintenance))}">
+						rendered="#{((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or 
+						(specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and 
+						!specificationBackingBean.managedBean.specMaintenance))}">
 						<h:graphicImage value="/css/images/design/ico-view.png" />
 					</ui:fragment>
 					<f:setPropertyActionListener value="#{stageTwoTechnical}"

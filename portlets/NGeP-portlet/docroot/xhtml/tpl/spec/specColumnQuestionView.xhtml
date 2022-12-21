@@ -8,10 +8,21 @@
 
 	<ui:param name="isRepeated"
 		value="#{prevSpecQuestion != null ? prevSpecQuestion.specQuestionId == question.specQuestionId : false}" />
-<!-- Bug #31733 Related to #21695 12/10/2021 rendered-->
-	<p:column style="width: 25%;white-space: normal;" rendered="#{(!qtyZero) or (!isSqSpec and !isZonal) or (isSqSpec)}">
+		<ui:param name="isRenderUOMandQuantity" value="#{evaluationBackingBean.checkUOMandQuantityRender()}" /> <!-- #29187 Added Vinod -->
+ <!-- #32952 remove here -->
+	<p:column style="width: 25%;white-space: normal;word-break:normal;"><!-- #29006 word-break:normal -->
+		<!-- #29187 Start Vinod -->
+		<p:commandLink value="#{fn:replace(question.clItem,',',',  ')}"
+					   rendered="#{!isRepeated and !isRenderUOMandQuantity}" process="@this" partialSubmit="true"
+					   update="@([id$=viewUOMQuantityDetailsId])"
+					   action="#{templateSpecBackingBean.showUOMQuantityDetails()}"
+					   oncomplete="viewUOMQuantityDetails.show();" >
+			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.questionForItemHlink}" value="#{question}"></f:setPropertyActionListener>
+			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.zoneForItemHlink}" value="#{isZonal}"></f:setPropertyActionListener>
+		</p:commandLink>
+		<!-- #29187 End Vinod -->
 		<h:outputText value="#{fn:replace(question.clItem,',',',  ')}"  escape="false"
-			rendered="#{!isRepeated}" />
+				rendered="#{!isRepeated and isRenderUOMandQuantity}" /> <!-- #29187 Added condition Vinod-->
 			<!-- #29007 Start Vinod -->
 		<p:spacer width="5" />
 		<ui:fragment rendered="#{!empty question.cmItem.extensionCode and directLOABackingBean.managedBean.iconForDL}">
@@ -48,46 +59,49 @@
 		</c:if>
 		</ui:fragment>
 	</p:column>
-	<!-- Bug #31733 Related to #21695 12/10/2021 rendered-->
+	 <!-- #32952 remove here -->
 	<p:column style="width:75px;"
-		rendered="#{(!qtyZero and isItemTypeService and isFulfilmentTypeReq) or !isSqSpec and !isZonal and isItemTypeService and isFulfilmentTypeReq or isSqSpec and isItemTypeService and isFulfilmentTypeReq}">
+		
+		rendered="#{isItemTypeService and isFulfilmentTypeReq}">
 		<h:outputText
 			value="#{templateSpecBackingBean.getParameterDesc(question.clFulfilmentTypeCode)}"
 			rendered="#{isQuestionTypeItem and !isRepeated}" />
 	</p:column>
-	<!-- Bug #31733 Related to #21695 12/10/2021 rendered-->
-	<p:column style="width:8%;white-space:normal;" rendered="#{(!qtyZero) or (!isSqSpec and !isZonal) or (isSqSpec)}">
+	 <!-- #32952 remove here -->
+	<c:if test="#{!isContentTypeScore or isRenderUOMandQuantity}"> <!-- #29187 Added Vinod -->
+	<p:column style="width:8%;white-space:normal;">
 		<h:outputText value="#{question.clUom.uomName}"
 			rendered="#{isQuestionTypeItem and !isRepeated}" />
 	</p:column>
 
 	<ui:insert name="answerSection" />
-<!-- Bug #31733 Related to #21695 12/10/2021 rendered-->
+ <!-- #32952 remove here -->
 	<c:if test="#{isItemTypeService}">
-		<p:column style="width:70px;white-space:normal;text-align:right;" rendered="#{(!qtyZero) or (!isSqSpec and !isZonal) or (isSqSpec)}">
+		<p:column style="width:70px;white-space:normal;text-align:right;">
 			<h:outputText value="#{question.clUomFrequency}"
 				rendered="#{isQuestionTypeItem and !isRepeated}">
 				<f:convertNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			</h:outputText>
 		</p:column>
-<!-- Bug #31733 Related to #21695 12/10/2021 rendered-->
-		<p:column style="width:60px;white-space:normal;text-align:right;" rendered="#{(!qtyZero) or (!isSqSpec and !isZonal) or (isSqSpec)}">
+		 <!-- #32952 remove here -->
+		<p:column style="width:60px;white-space:normal;text-align:right;"
+			>
 			<h:outputText value="#{question.clUomPerDay}"
 				rendered="#{isQuestionTypeItem and !isRepeated}">
 				<f:convertNumber pattern="0.0" />
 			</h:outputText>
 		</p:column>
-<!-- Bug #31733 Related to #21695 12/10/2021 rendered-->
-		<p:column style="width:60px;white-space:normal;text-align:right;" rendered="#{(!qtyZero) or !isSqSpec and !isZonal or isSqSpec}">
+		 <!-- #32952 remove here -->
+		<p:column style="width:60px;white-space:normal;text-align:right;">
 			<h:outputText value="#{question.clUomPerMonth}"
 				rendered="#{isQuestionTypeItem and !isRepeated}">
 				<f:convertNumber pattern="0.0" />
 			</h:outputText>
 		</p:column>
-		<!-- Bug #31733 Related to #21695 12/10/2021 rendered-->
+		 <!-- #32952 remove here -->
 		<p:column style="width:2%;white-space:normal;text-align:right;"
-			rendered="#{(!qtyZero and isDurationByItem) or (!isSqSpec and !isZonal and isDurationByItem) or (isSqSpec and isDurationByItem)}">
+			rendered="#{isDurationByItem}">
 			<h:outputText value="#{question.clDurationMonth}"
 				rendered="#{isQuestionTypeItem and !isRepeated}">
 				<f:convertNumber
@@ -95,16 +109,16 @@
 			</h:outputText>
 		</p:column>
 	</c:if>
-<!-- Bug #31733 Related to #21695 12/10/2021 rendered-->
+ <!-- #32952 remove here -->
 	<p:column style="width:75px; white-space:normal;"
-		rendered="#{(!qtyZero and !isItemTypeService) or (!isSqSpec and !isZonal and !isItemTypeService) or (isSqSpec and !isItemTypeService)}">
+		rendered="#{!isItemTypeService}">
 		<h:outputText
 			value="#{templateSpecBackingBean.getParameterDesc(question.clPriceTypeCode)}"
 			rendered="#{isQuestionTypeItem and !isRepeated}" />
 	</p:column>
-<!-- Bug #31733 Related to #21695 12/10/2021 rendered-->
+ <!-- #32952 remove here -->
 	<ui:insert name="qtySection">
-		<p:column style="width:4%;text-align:right;" rendered="#{(!qtyZero) or (!isSqSpec and !isZonal) or (isSqSpec)}">
+		<p:column style="width:4%;text-align:right;">
 
 			<h:outputText value="#{question.clQuantity}"
 				rendered="#{isQuestionTypeItem and isPriceTypeAllStandard and (empty templateSpecBean.specMaster.tplSpecZone or !templateSpecBean.specMaster.qtyByZone)}">
@@ -143,11 +157,17 @@
 			</p:commandButton>
 		</p:column>
 	</ui:insert>
+	<!-- #29187 Start Vinod -->
+	</c:if>
+	<p:column style="width:5%;text-align:right;" rendered="#{isManSpecAndCompliance}">
+			<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.mandatorySpec ? lbl['lbl.txt.yes']:''}" rendered="#{!isQuestionTypeItem}"/>
+	</p:column>
+	<!-- #29187 End Vinod -->
 	<!-- #29007 Start Vinod -->
 	<!-- Bug #31733 Related to #21695 12/10/2021 rendered-->
 	<c:if test="#{directLOABackingBean.managedBean.searchItemForDL and !templateSpecBean.specMaster.brandNew and !isItemTypeService}">
-	<p:column style="width:97px; white-space:normal;" rendered="#{(!qtyZero) or (!isSqSpec and !isZonal) or (isSqSpec)}">
-		
+	<p:column style="width:97px; white-space:normal;">
+		 <!-- #32952 remove here -->
 		<h:panelGroup id="ratePerUomPG1">
 			<h:outputText id="ratePerUom1"
 				style="min-width:0px !important;width:86px; text-align:right;"
@@ -160,9 +180,9 @@
 			</h:outputText>
 		</h:panelGroup>
 	</p:column>
-	<!-- Bug #31733 Related to #21695 12/10/2021 -->
+	 <!-- #32952 remove here -->
 	<p:column style="width:90px;white-space:normal;text-align:right;"
-		rendered="#{(!qtyZero and isItemTypeService) or (!isSqSpec and !isZonal and isItemTypeService) or (isSqSpec and isItemTypeService)}">
+		rendered="#{isItemTypeService}">
 		<h:panelGroup id="ansYearPG1" rendered="#{isDurationYear}">
 			<h:outputText value="#{question.tplSpecAnswers[0].amountPerYear}"
 				rendered="#{isQuestionTypeItem and isPriceTypeStandard}">
@@ -174,8 +194,8 @@
 			<h:outputText value="#{lbl['lbl.txt.na']}"/>
 		</h:panelGroup>
 	</p:column>
-	<!-- Bug #31733 Related to #21695 12/10/2021 -->
-	<p:column style="width:115px; text-align:right; white-space:normal;" rendered="#{(!qtyZero) or (!isSqSpec and !isZonal) or (isSqSpec)}">
+	 <!-- #32952 remove here -->
+	<p:column style="width:115px; text-align:right; white-space:normal;">
 
 		<h:panelGroup id="ansPG1">
 			<h:outputText id="answerNumText1"
@@ -188,14 +208,14 @@
 	</p:column>
 	</c:if>
 	<!-- #29007 End Vinod -->
-<!-- Bug #31733 Related to #21695 12/10/2021 rendered-->
+ <!-- #32952 remove here -->
 	<p:column style="width:100px;white-space:normal;"
-		rendered="#{(!qtyZero and isUpdateSpecByAnswers) or (!isSqSpec and !isZonal and isUpdateSpecByAnswers) or (isSqSpec and isUpdateSpecByAnswers)}">
+		rendered="#{isUpdateSpecByAnswers}">
 		<h:outputText value="#{fn:replace(tplSpecAnswer.answerRemark,',',',  ')}" escape="false" />
 	</p:column>
-<!-- Bug #31733 Related to #21695 12/10/2021 rendered-->
+ <!-- #32952 remove here -->
 	<p:column style="width:100px;white-space:normal;"
-		rendered="#{(!qtyZero and isUpdateSpecByAnswers) or (!isSqSpec and !isZonal and isUpdateSpecByAnswers) or (isSqSpec and isUpdateSpecByAnswers)}">
+		rendered="#{isUpdateSpecByAnswers}">
 		<h:outputText value="#{fn:replace(tplSpecAnswer.userRemark,',',',  ')}"  escape="false" />
 	</p:column>
 </ui:composition>

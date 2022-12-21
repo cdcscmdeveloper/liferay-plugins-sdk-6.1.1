@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.businessnature;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -147,7 +148,7 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 					}
 				}
 			}
-
+			getManagedBean().setCurrentBizNatures(null); // 9442 - REOPEN
 			
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/supplierbusinessnature/businessNatureMaint.xhtml");
 		}
@@ -206,7 +207,18 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 					SmSupplierBusiness existSupplierBiz = getManagedBean().getSupplierBusinessMap().get(bn.getBusinessNatureId());
 					getManagedBean().getSmSupplier().getSmSupplierBusinesses().add(existSupplierBiz);
 				}else{
-					getManagedBean().getSmSupplier().getSmSupplierBusinesses().add(suppBusiness);
+					// 9442 - REOPEN - START
+					// prevent duplicate error when re-added existing data.
+					if (getManagedBean().getCurrentBizNatures() != null && getManagedBean().getCurrentBizNatures().contains(suppBusiness.getPmBusinessNature().getLevelCode())){
+						for(SmSupplierBusiness aa : getManagedBean().getDeletedSupplierBusiness()){
+							if(aa.getPmBusinessNature().getLevelCode().equalsIgnoreCase(suppBusiness.getPmBusinessNature().getLevelCode())){
+								getManagedBean().getSmSupplier().getSmSupplierBusinesses().add(aa);
+							}
+						}
+					} else {
+						getManagedBean().getSmSupplier().getSmSupplierBusinesses().add(suppBusiness);
+					}
+					// 9442 - REOPEN - END
 				}
 			}
 		
@@ -257,7 +269,20 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 		if(this.getManagedBean().getSelectedBusinessNatureLs().length ==  this.getManagedBean().getSmSupplier().getSmSupplierBusinesses().size()){
 			throw new EpException(MessageConst.ERROR_721014);
 		}
-
+		// 9442 - REOPEN - START
+		// add existing data to a list for check duplicate when re-add the same data.
+		if(this.getManagedBean().getCurrentBizNatures() == null){
+			List<String> assocBodyList = new ArrayList<String>();
+			List<SmSupplierBusiness> deletedSupplierBusiness = new ArrayList<SmSupplierBusiness>();
+			for (SmSupplierBusiness currBusinessNature : this.getManagedBean().getSmSupplier().getSmSupplierBusinesses()) {
+				assocBodyList.add(currBusinessNature.getPmBusinessNature().getLevelCode());
+				deletedSupplierBusiness.add(currBusinessNature);
+			}
+			this.getManagedBean().setDeletedSupplierBusiness(deletedSupplierBusiness);
+			this.getManagedBean().setCurrentBizNatures(assocBodyList);
+		}
+		// 9442 - REOPEN - END
+		
 		for (SmSupplierBusiness suppBusinessNature : this.getManagedBean().getSelectedBusinessNatureLs()) {
 			log.info("---------------removeBusinessNature.------------" + suppBusinessNature);
 			this.getManagedBean().getSmSupplier().getSmSupplierBusinesses().remove(suppBusinessNature);
@@ -275,6 +300,7 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 			reqDTO.setSmSupplier(getManagedBean().getSmSupplier());
 			try{
 				SupplierBusinessNatureResDTO resDTO = supplierBusinessSO.saveBusinessNature(reqDTO);
+				getManagedBean().setCurrentBizNatures(null); // 9442 - REOPEN
 
 				if(resDTO.isSuccessful()){
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_100002,
@@ -296,6 +322,19 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 		
 		super.downloadFile(downloadPath.toString());
 	}
+	
+	// 9442 - START
+	public String excludeLevelCodeSupplier(){
+		StringBuilder sb = new StringBuilder();
+		if(getManagedBean().getSmSupplier().getSmSupplierBusinesses() != null){
+			for(SmSupplierBusiness suppBusiness: getManagedBean().getSmSupplier().getSmSupplierBusinesses()){
+				sb.append("|levelCode^" +suppBusiness.getPmBusinessNature().getLevelCode());
+			}
+		}
+		log.info("9442- excludeLevelCodeSupplier():"+sb.toString());
+		return sb.toString();
+	}
+	// 9442 - END
 }
 
 

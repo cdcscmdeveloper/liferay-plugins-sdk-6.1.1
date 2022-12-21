@@ -537,7 +537,13 @@ public class LovBackingBean implements Serializable {
 						if(!isThis && fieldMapping[1].equals("this")) {
 							continue;
 						} else if(!isThis) {
-							filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());					
+							// 9442 - START
+							if(filterBean.getSearchField().equalsIgnoreCase("levelCode")){
+								filterBean.setSearchOperator(SearchOperator.OPERATOR_NOT_EQUALS.value());					
+							} else {
+								filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());					
+							}
+							// 9442 - END
 							filterBean.setSearchValue(fieldMapping[1]);
 						} else {
 							filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());

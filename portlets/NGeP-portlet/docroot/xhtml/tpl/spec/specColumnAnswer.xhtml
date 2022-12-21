@@ -8,8 +8,7 @@
 	
 	<ui:param name="answerlbl" value="#{isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer'}" />
 	<ui:param name="remarklbl" value="#{isSqSpec or isSpecTypeTechnical ? 'lbl.sc.supplier.offer' : 'lbl.tpl.spec.content.note'}" /><!-- #29007 Vinod changed lbl.tpl.spec.content.note to lbl.sc.supplier.offer -->
-	<ui:param name="qtyZero" value= "#{!isSqSpec and isZonal and tplSpecAnswer.tplSpecZoneQty.qty eq 0}" /> 
-<!-- Bug #31733 Related to #21695 12/10/2021 -->
+	<!---remove here #32952 -->
 	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
 	<ui:define name="otherHeaderSection">
 	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
@@ -55,8 +54,8 @@
 	<ui:decorate template="specColumnQuestionView.xhtml">
 		<ui:define name="qtySection">
 		<!-- #11715 danial start -->
-		<!-- Bug #31733 Related to #21695 12/10/2021 -->
-			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.quantity']}" rendered="#{(!qtyZero) or (!isSqSpec and !isZonal and isSpecTypeFinancial) or (isSqSpec)}">
+		<!---remove here #32952 -->
+			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.quantity']}">
 				<h:panelGroup rendered="#{(isSpecTypeFinancial or !isSpecTypeFinancial) and !isRepeated}">
 					<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.clQuantity}" rendered="#{isQuestionTypeItem  and (empty templateSpecBean.specMaster.tplSpecZone or !templateSpecBean.specMaster.qtyByZone)}">
 						<f:converter converterId="dynamicNumberConverter" />
@@ -81,10 +80,17 @@
 					</p:commandButton>
 				</h:panelGroup>
 			</p:column>
+			<!-- #29187 Start Vinod -->
+			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification']}" rendered="#{templateSpecBackingBean.displayMandatorySpecColumn(templateSpecBean)}">
+				<h:panelGroup rendered="#{!isSpecTypeFinancial}">
+					<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.mandatorySpec ? lbl['lbl.txt.yes']:''}" rendered="#{!isQuestionTypeItem}"/>
+					<ac:iconTooltip rendered="#{tplSpecAnswer.tplSpecQuestion.mandatorySpec}" value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.instruction']}" />
+				</h:panelGroup>
+			</p:column>
+			<!-- #29187 End Vinod -->
 			<!-- #31134 Farid Start 25/6/2021-->
-			<!-- Bug #31733 Related to #21695 12/10/2021 -->
-			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.tier.title']}" rendered="#{(isSqSpec and isPriceTypeTier and isSpecTypeFinancial) or (!isSqSpec and !isZonal and isPriceTypeTier and isSpecTypeFinancial)
-			 or (!qtyZero and isSpecTypeFinancial and templateSpecBackingBean.checkPriceTierEnableColumn(templateSpecBean))}">
+			<!---remove here #32952 -->
+			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.tier.title']}" rendered="#{isPriceTypeTier and isSpecTypeFinancial or !isSqSpec and isSpecTypeFinancial and templateSpecBackingBean.checkPriceTierEnableColumn(templateSpecBean)}">
 				<h:panelGroup rendered="#{isPriceTypeTier and isSpecTypeFinancial}">
 				<!-- Align if has mix data normal standard and tier price -->
 					<h:outputText value=" " rendered="#{!isSqSpec and isSpecTypeFinancial and templateSpecBackingBean.checkPriceTierEnableColumn(templateSpecBean)}">
@@ -123,13 +129,13 @@
 			<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
 		</h:outputText>
 	</p:column>
-		
-<!-- Bug #31733 Related to #21695 12/10/2021 -->
+	<!---remove here #32952 -->
 <!-- Bug #32110 Related to #21695 18/11/2021 START-->
 		<p:column style="width:10%;" rendered="#{isSqSpec and isSpecTypeFinancial or (!qtyZero and isSpecTypeFinancial) or (!isSqSpec and !isZonal and isSpecTypeFinancial)}">
 		<f:facet name="footer">
-			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard and !(isZonal and isSqSpec) and !templateSpecBackingBean.checkItemAllQtyZero(templateSpecBean)}" />
-			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard and isZonal and isSqSpec}" /><!-- #31789  -->
+		<!---remove here #32952 -->
+			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard and !(isZonal and isSqSpec)}" />
+						<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard and isZonal and isSqSpec}" /><!-- #31789  -->
 		</f:facet>
 		<!-- 20220127@syazani - Enhancement #3657 - specific error message - Start -->
 <!-- Bug #32110 Related to #21695 18/11/2021 END-->
@@ -163,9 +169,8 @@
 
 		<p:message id="ratePerUomMsg" for="ratePerUom" display="icon" />
 	</p:column>
-
-<!-- Bug #31733 Related to #21695 12/10/2021 -->
-	<p:column style="width:90px;white-space:normal;text-align:right;" rendered="#{(!qtyZero and isItemTypeService and isSpecTypeFinancial and !isDurationByItem) or (!isSqSpec and !isZonal and isItemTypeService and isSpecTypeFinancial and !isDurationByItem) or (isSqSpec and  isItemTypeService and isSpecTypeFinancial and !isDurationByItem)}">
+	<!---remove here #32952 -->
+	<p:column style="width:90px;white-space:normal;text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}">
 		<f:facet name="footer">
 			<h:outputText id="totalAmountPerYr" rendered="#{isDurationYear}"
 				styleClass="calcAmount" 
@@ -184,20 +189,16 @@
 			<h:outputText value="#{lbl['lbl.txt.na']}"/>
 		</h:panelGroup>
 	</p:column>
-<!-- Bug #31733 Related to #21695 29/10/2021 -->	
-	<p:column style="#{isSpecTypeFinancial ? 'width:115px; text-align:right;' : 'width:150px;'}"  
-	rendered="#{!isSpecTypeFinancial or (isSpecTypeFinancial and (((!isZonal or isItemTypeService) and !isSpecificationReq)
-				or (isSpecificationReq and !qtyZero)
-				or (isSpecificationReq and isSqSpec)
-				or (isSpecificationReq and !isZonal))) 
-				and isAllPriceTypesStandard}">
+	<!---remove here #32952 -->
+	<p:column style="#{isSpecTypeFinancial ? 'width:115px; text-align:right;' : 'width:150px;'}"  rendered="#{!isSpecTypeFinancial or (isSpecTypeFinancial and (((!isZonal or isItemTypeService) and !isSpecificationReq) or isSpecificationReq)) and isAllPriceTypesStandard}">
+		
 		<f:facet name="footer">
 		<!-- Bug #32110 Related to #21695 18/11/2021 START-->
+			<!---remove here #32952 -->
 			<h:outputText id="totalAmount" 
 				styleClass="calcAmount" 
 				value="#{templateSpecBean.specMaster.totalAmount}"
-				rendered="#{isSpecTypeFinancial and isAllPriceTypesStandard and !(isZonal and isSqSpec)
-				and !templateSpecBackingBean.checkItemAllQtyZero(templateSpecBean)}">
+								rendered="#{isSpecTypeFinancial and isAllPriceTypesStandard and !(isZonal and isSqSpec)}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
 			<!-- Bug #32110 Related to #21695 18/11/2021 END-->
@@ -210,12 +211,13 @@
 			</h:outputText>
 			<!-- #31789 END -->
 		</f:facet>
-<!-- #21695 Farid start 1/4/2021-->	
+<!-- #21695 Farid start 1/4/2021-->
+<!---remove here #32952 disable-->	
 		<h:panelGroup id="ansPG">
 			<p:inputTextarea id="answerText" style="width:calc(100% - 40px);" value="#{tplSpecAnswer.answerText}" 
 			onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
 				rendered="#{isAnswerTypeText}" required="false" rows="1" 
-				label="#{lbl[answerlbl]}" disabled="#{(!editable or !isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isSpecTypeTechnical and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer) and !tplSpecAnswer.offer)}"> 
+				label="#{lbl[answerlbl]}" disabled="#{(!editable or !isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isSpecTypeTechnical and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer))}"> 
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerTextMsg" />
 				<f:validateLength for="answerText" maximum="1000" />
 			</p:inputTextarea>
@@ -224,7 +226,7 @@
 			<p:inputText id="answerNumeric" style="width:calc(100% - 40px); text-align:right;" 
 				value="#{tplSpecAnswer.answerNumeric}" maxlength="19"
 				rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}" required="false"
-				label="#{lbl[answerlbl]}" disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isSpecTypeTechnical and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer) and !tplSpecAnswer.offer)}"> 
+				label="#{lbl[answerlbl]}" disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isSpecTypeTechnical and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer))}"> 
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerNumericMsg" />
 			</p:inputText>
@@ -233,19 +235,19 @@
 			<h:outputText id="answerNumText" 
 				value="#{tplSpecAnswer.answerNumeric}"
 				rendered="#{isAnswerTypeNumeric and (isSpecTypeFinancial and !isPriceTypeTier)}"
-				disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and  isSpecTypeTechnical and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer) and !tplSpecAnswer.offer)}"> 
+				disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and  isSpecTypeTechnical and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer))}"> 
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
 			<h:selectOneMenu id="answerCompliance" style="width:calc(100% - 30px);" 
 				value="#{tplSpecAnswer.answerCompliance}" 
 				rendered="#{isAnswerTypeDropdown}" required="false"
 				label="#{lbl[answerlbl]}" 
-				disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isSpecTypeTechnical and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer) and !tplSpecAnswer.offer)}"> 
+				disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isSpecTypeTechnical and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer))}"> 
 				<f:selectItems value="#{templateSpecBackingBean.getDropdownCodeValues(ParameterTypeConst.yesNoFlag)}" />
 			</h:selectOneMenu>
 			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown}" />
 <!-- #21695 Farid end 1/4/2021-->				
-<!-- #21695 Farid Start - fix proposal checking 18/2/2022-->	
+<!-- #21695 Farid start 3/8/2021-->	
 			<h:panelGroup layout="div" rendered="#{!isSqSpec and !isSpecTypeFinancial}">
 				<h:selectOneMenu id="answerOffer" style="width:calc(100% - 30px);" 
 						value="#{tplSpecAnswer.offer}"
@@ -254,12 +256,12 @@
 						!isSpecTypeFinancial and isQuestionTypeItem}" 
 						label="#{lbl[answerlbl]}"
 						disabled="#{isZonal and tplSpecAnswer.disableRow or !editable}">
-					<f:selectItems value="#{templateSpecBackingBean.offerDetails}"></f:selectItems>
+					<f:selectItems value="#{templateSpecBackingBean.getOfferDetails(tplSpecAnswer)}"></f:selectItems>
 									  
 					<p:ajax event="change" partialSubmit="true" process="@form" update="@form"
 						listener="#{templateSpecBackingBean.offerTypeChange(tplSpecAnswer.offer,tplSpecAnswer.tplSpecQuestion.specQuestionId,row)}"/>					  							  	
-	   
 				</h:selectOneMenu>
+<!-- Bug #32952 related to 21695 Farid End add not applicable 14/4/2022-->
 <!-- #21695 Farid End - fix proposal checking 18/2/2022-->				
 		<c:if test="#{isZonal}">		
 			<h:panelGroup layout="div" 
@@ -279,8 +281,7 @@
 		
 		</h:panelGroup>
 	</p:column>
-	<!-- Bug #31733 Related to #21695 12/10/2021 -->
-	<p:column style="width:8%;" rendered="#{(!qtyZero and !isItemTypeService and isDeliveryTermReq) or (!isSqSpec and !isZonal and !isItemTypeService and isDeliveryTermReq) or (isSqSpec and !isZonal and !isItemTypeService and isDeliveryTermReq)}">
+	<p:column style="width:8%;" rendered="#{!isItemTypeService and isDeliveryTermReq}">
 		
 		<h:panelGroup rendered="#{!isRepeated}">
 			<h:outputText id="deliveryTerm" 
@@ -311,8 +312,7 @@
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 		</h:outputText>
 	</p:column>
-	<!-- Bug #31733 Related to #21695 12/10/2021 -->
-	<p:column  style="width:200px;"  rendered="#{!(isSpecTypeFinancial and !isSpecificationReq) and !isSqSpec and !isRepeated and !qtyZero}"> <!-- #29006 add !isSqSpec -->
+	<p:column  style="width:200px;"  rendered="#{!(isSpecTypeFinancial and !isSpecificationReq) and !isSqSpec}"> <!-- #29006 add !isSqSpec -->
 		<p:inputTextarea id="answerRemarks" label="#{lbl[remarklbl]}" style="width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" 
 		disabled="#{!editable}" rows="1"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 		onmouseout="limitTextArea(this,1000);" rendered="#{!isSqSpec or (isSqSpec and isQuestionTypeItem)}">
@@ -324,9 +324,9 @@
 	<!-- #29006 start -->
 	<p:column  style="width:200px;"  rendered="#{!(isSpecTypeFinancial and !isSpecificationReq) and isSqSpec}">
 	
-	<c:if test="#{isZonal}">
+	<c:if test="#{isZonal}"><!-- #34108 allow resize text area-->
 		<h:panelGroup rendered="#{!isRepeated}">
-			<p:inputTextarea id="answerSqZonalRemarks" label="#{lbl[remarklbl]}" style="width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" 
+			<p:inputTextarea id="answerSqZonalRemarks" label="#{lbl[remarklbl]}" style="resize: vertical;width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" 
 			disabled="#{!editable}" rows="1"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 			onmouseout="limitTextArea(this,1000);" rendered="#{!isSqSpec or (isSqSpec and isQuestionTypeItem)}">
 			<p:ajax partialSubmit="true" process="@this" update="@this" />
@@ -335,8 +335,8 @@
 			<p:message id="answerSqZonalRemarksMsg" for="answerSqZonalRemarks" display="icon" />
 		</h:panelGroup>	
 	</c:if>	
-	<c:if test="#{!isZonal}">
-		<p:inputTextarea id="answerSqRemarks" label="#{lbl[remarklbl]}" style="width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" 
+	<c:if test="#{!isZonal}"><!-- #34108 allow resize text area-->
+		<p:inputTextarea id="answerSqRemarks" label="#{lbl[remarklbl]}" style="resize: vertical;width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" 
 		disabled="#{!editable}" rows="1"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 		onmouseout="limitTextArea(this,1000);" rendered="#{!isSqSpec or (isSqSpec and isQuestionTypeItem)}">
 		<p:ajax partialSubmit="true" process="@this" update="@this" />

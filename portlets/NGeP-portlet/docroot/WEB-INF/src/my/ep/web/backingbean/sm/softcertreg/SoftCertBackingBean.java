@@ -436,12 +436,37 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					getManagedBean().setSupplierTmpPersonnel(personnel);
 				}
 				// #29695 - start
-				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL) {
-					personnel.setFreeSoftCert(true);
-				// #29695 - end
+				if (getManagedBean().isAlreadyHadFreeSoftcert()) {
+					personnel.setFreeSoftCert(false);
+					amountPerPersonnel = SmRuleHelper.getInstance().getSoftCertFee();
+					amount = amount.add(amountPerPersonnel);
 				} else {
 					personnel.setFreeSoftCert(true);
 				}
+				/*
+					*//**
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - Start	
+					 *//*
+				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL || personnel.getEpRole().equals(
+                        RoleCode.MOF_SUPPLIER_USER.value())) {
+					personnel.setFreeSoftCert(false);
+					amountPerPersonnel = SmRuleHelper.getInstance()
+							.getSoftCertFee();
+					amount = amount.add(amountPerPersonnel);
+					*//**
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - End
+					 *//*
+				} else {
+					*//**
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - Start	
+					 *//*
+					personnel.setFreeSoftCert(true);
+					*//**
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - End
+					 *//*
+				}
+				*/
+				// #29695 - end
 			} else {
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
 					personnel.setFreeSoftCert(true);
@@ -790,13 +815,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	private void setSpkiInformation(PmDigiSign pmDigiSign, String docType,
 			Long docId, String docNumber, String textBeforeSign) {
-		FacesScopes facesScope = new FacesScopes();
-		Long userId = facesScope.getUserSessionBean().getUserId();
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		pmDigiSign.setDocId(new BigDecimal(docId));
 		pmDigiSign.setDocNo(docNumber);
 		pmDigiSign.setDocType(docType);
-		pmDigiSign.setCreatedBy(userId);
+		pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 		pmDigiSign.setCreatedDate(date);
 		pmDigiSign.setOriginalData(textBeforeSign);
 	}

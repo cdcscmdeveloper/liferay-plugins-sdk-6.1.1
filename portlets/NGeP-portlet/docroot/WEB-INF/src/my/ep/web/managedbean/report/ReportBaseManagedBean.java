@@ -47,7 +47,10 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 	
 	private String reportTitle;
 	
-	private String reportUrl;
+	private String reportUrl;	
+	//Enhancement 32675 - shaqimi start
+	private boolean factoringUser = false;
+	//Enhancement 32675 - shaqimi end
 	
 	/**
 	 * @return the reportCategoryList
@@ -243,4 +246,13 @@ public class ReportBaseManagedBean extends BaseManagedBean {
 		
 		return false;
 	}
+	//Enhancement 32675 - shaqimi start
+	public boolean isFactoringUser() {
+		return factoringUser;
+	}
+
+	public void setFactoringUser(boolean factoringUser) {
+		this.factoringUser = factoringUser;
+	}
+	//Enhancement 32675 - shaqimi end
 }

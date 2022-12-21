@@ -210,6 +210,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 				/*html = html.replaceAll("&amp;lt", "&#60");
 				html = html.replaceAll("&amp;gt", "&#62");*/					
 			//#25142 - end
+				
 				//#26130 - start
 				String fontPath ="";
 				String  getPortalBaseURL = SmCommonUtil.getBasePortalUrl();
@@ -217,10 +218,12 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 				
 				log.info("font path: "+fontPath);
 				render.getFontResolver().addFont(fontPath, true);
+				//#25025 & #26770 - start
 				render.getFontResolver().addFont(getPortalBaseURL+"/NGeP-portlet/resources/fonts/Ariali.ttf",BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);  
 				render.getFontResolver().addFont(getPortalBaseURL+"/NGeP-portlet/resources/fonts/Arialbd.ttf",BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 				render.getFontResolver().addFont(getPortalBaseURL+"/NGeP-portlet/resources/fonts/Arialbi.ttf",BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-		        //#26130 - end
+		        //#25025 & #26770 - end
+				//#26130 - end
 				render.setDocumentFromString(html);
 				render.layout();
 				log.info("Velocity Issue : Create PDF");

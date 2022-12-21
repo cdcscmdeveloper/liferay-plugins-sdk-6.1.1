@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	
+		<table style="width: 100%;table-layout:fixed">
+			<tr><td height="15" colspan="2">&#160;</td></tr>
+			<tr>
+				<td><u><b><h:outputText
+							value="#{lbl['lbl.sm.gst.info']} " /></b></u></td>
+			</tr>
+			<tr><td height="15" colspan="2">&#160;</td></tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.gstNo']}" styleClass="outputLabel-view-label"/></td>
+				<td>
+					<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBranch.gst.gstRegNo}" 
+						rendered="#{not empty viewSmApplBackingBean.managedBean.selectedBranch.gst.gstRegNo}"/>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" 
+						rendered="#{empty viewSmApplBackingBean.managedBean.selectedBranch.gst.gstRegNo}"/>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.gst.effdate']}" styleClass="outputLabel-view-label"/></td>
+				<td>
+					<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.selectedBranch.gst.gstEffDate}">
+						<ac:labelDate value="#{viewSmApplBackingBean.managedBean.selectedBranch.gst.gstEffDate}" styleClass="outputLabel-view"/>
+					</p:outputPanel>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" 
+						rendered="#{empty viewSmApplBackingBean.managedBean.selectedBranch.gst.gstEffDate}"/>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" styleClass="outputLabel-view-label"/></td>
+				<td>
+					<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.selectedBranch.gst.gstEndDate}">
+						<ac:labelDate value="#{viewSmApplBackingBean.managedBean.selectedBranch.gst.gstEndDate}" styleClass="outputLabel-view" />
+					</p:outputPanel>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" 
+						rendered="#{empty viewSmApplBackingBean.managedBean.selectedBranch.gst.gstEndDate}"/>
+				</td>
+			</tr>
+			<tr><td colspan="2" height="10"></td></tr>
+		</table>
+		<table style="width: 100%;table-layout:fixed">
+			<tr>
+				<td>
+					<p:dataTable var="table" id="brSuppDocDtId" value="#{viewSmApplBackingBean.managedBean.selectedBranch.gst.smGstSupplierDocs}" rowIndexVar="index">
+			
+						<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+							style="width : 5%;">
+							<p:outputLabel value="#{index + 1}"
+								style="float: left;white-space: normal;" />
+						</p:column>
+			
+						<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
+							style="width : 65%;">
+							<h:outputText value="#{table.pmDocument.docName}"
+								style="float: left;white-space: normal;" />
+						</p:column>
+			
+						<p:column headerText="#{lbl['lbl.pm.document.name']}"
+							style="width : 30%;">
+							<h:outputText value="#{table.fileName}" rendered="#{not empty table.fileName}"
+								style="float: left;white-space: normal;" />
+							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty table.fileName}" />
+							&#160;&#160;
+							<p:commandLink rendered="#{not empty table.fileName}"
+								action="#{viewSmApplBackingBean.downloadSelectedSuppDoc(table.fileName,table.filePath)}"
+								update="@form" ajax="false">
+								<p:fileDownload value="#{viewSmApplBackingBean.file}" />
+								<p:graphicImage value="/css/images/design/download.png"
+									style="margin-right:2px;" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+				</td>
+			</tr>
+		</table>
+
+</ui:composition>

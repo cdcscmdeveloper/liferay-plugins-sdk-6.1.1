@@ -11,6 +11,7 @@
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.quantity')</th>
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.value')</th>
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.purMthd')</th>
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.purchase.year')</th>
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.guarnName')</th>
 		</tr>
 	
@@ -27,15 +28,18 @@
 					$smVmUtil.formatToTwoDecimalPoint($svmachine.value)
 				#end
 				</td>
-				<td>
-					$purchaseMethodMap.get($svmachine.purchaseMethod)
+				<td>$purchaseMethodMap.get($svmachine.purchaseMethod)
+					#if($svmachine.purchaseMethod == 'O')
+						<br /> ($!svmachine.purchaseMethodRemark)
+					#end
 				</td>
+				<td>$!svmachine.purchaseYear</td>
 				<td>$!svmachine.guarantorName</td>
 			</tr>
 			#end
 		#else
 			<tr>
-				<td colspan="8" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
+				<td colspan="9" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 			</tr>
 		#end
 </table>

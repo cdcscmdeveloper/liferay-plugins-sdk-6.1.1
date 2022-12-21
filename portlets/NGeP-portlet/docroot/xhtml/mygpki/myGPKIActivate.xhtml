@@ -1,0 +1,145 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+
+	<ui:define name="contentSection">
+		<!-- 	<cc:interface> -->
+		<!-- 		<cc:attribute name="deactivateOTP" /> -->
+		<!-- 	</cc:interface> -->
+		<!-- 		<cc:implementation> -->
+		<p:remoteCommand name="deactivateOTP"
+			action="#{myGpkiBackingBean.deactivate}" />
+
+
+		<style>
+textarea {
+	width: 205px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000;
+	line-height: 1.5em;
+}
+
+.myProfile-title {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #000;
+	margin: 10px;
+}
+
+.myProfile-text {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000;
+	margin: 10px;
+	word-wrap: break-word;
+	padding: 3px;
+}
+
+.div-content-break-word {
+	word-wrap: break-word;
+}
+
+.ui-dialog-footer {
+	text-align: right !important;
+}
+</style>
+
+		<p:blockUI block="myGPKIActivate" widgetVar="gpkiBlockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<p:messages id="mygpkiActivateMessages" for="mygpkiActivateNotify" showDetail="true"
+			autoUpdate="true" closable="true" />
+			
+		<p:panel id="myGPKIActivate">
+
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tbody>
+					<tr>
+						<td><p:commandLink value="Activate OTP"
+								action="#{myGpkiBackingBean.loadQRCode}"
+								onstart="gpkiBlockWidget.show()"
+								oncomplete="updateQRImage();gpkiBlockWidget.hide();qrDialog.show()"></p:commandLink></td>
+
+					</tr>
+
+					<tr>
+						<td><p:commandLink value="Deactivate OTP"
+								action="#{myGpkiBackingBean.deactivate}"
+								onstart="gpkiBlockWidget.show()"
+								oncomplete="gpkiBlockWidget.hide()"></p:commandLink></td>
+					</tr>
+
+					<!-- 						<tr> -->
+					<!-- 							<td colspan="2" valign="top" class="myProfile-text"><p:password -->
+					<!-- 									binding="#{pin}" id="password" /> <p:commandButton -->
+					<!-- 									value="Verify OTP" -->
+					<!-- 									action="#{myGpkiBackingBean.verifyOTP(pin.value)}" -->
+					<!-- 									onstart="gpkiBlockWidget.show()" -->
+					<!-- 									oncomplete="gpkiBlockWidget.hide()"></p:commandButton></td> -->
+					<!-- 						</tr> -->
+				</tbody>
+			</table>
+		</p:panel>
+
+		<p:remoteCommand name="updateQRImage" update="qrPanel" />
+		<p:dialog header="Activate OTP" widgetVar="qrDialog" modal="true">
+
+			<b>STEP 1: Click below to download Nexus Smart ID</b>
+			<br></br>
+
+			<table>
+				<tr>
+					<td><a
+						href="https://play.google.com/store/apps/details?id=com.nexusgroup.personal.mobile&amp;hl=en&amp;gl=US"
+						target="_blank"> <p:graphicImage
+								value="/css/images/google.png" alt="Android" /></a></td>
+					<td><a
+						href="https://apps.apple.com/my/app/nexus-smart-id/id1067260504?l=ms"
+						target="_blank"> <p:graphicImage
+								value="/css/images/apstore.png" alt="Apple" /></a></td>
+				</tr>
+				<tr>
+					<td colspan="2">OR scan below QR with mobile phone to download
+						Nexus Smart ID</td>
+				</tr>
+				<tr>
+					<td><p:graphicImage value="/css/images/qr_g.png" alt="Android" /></td>
+					<td><p:graphicImage value="/css/images/qr_a.png" alt="Apple" /></td>
+				</tr>
+			</table>
+
+
+			<br></br>
+			<b>STEP 2: Please SCAN QR Code with Nexus Smart ID. </b>
+			<p:outputPanel id="qrPanel">
+				<table>
+					<tr>
+						<td style="height: 300px; width: 300px;"><p:graphicImage
+								value="data:image/jpg;base64,#{myGpkiBackingBean.qrCodeText}"
+								alt="Image failed to load"
+								style="max-width: 300px; max-height: 300px;" /></td>
+					</tr>
+				</table>
+			</p:outputPanel>
+
+			<f:facet name="footer">
+				<h:form>
+					<p:commandButton type="button" onclick="qrDialog.hide();"
+						value="OK" />
+				</h:form>
+			</f:facet>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

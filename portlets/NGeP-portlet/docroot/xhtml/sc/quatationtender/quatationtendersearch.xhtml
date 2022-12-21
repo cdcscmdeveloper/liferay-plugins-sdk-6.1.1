@@ -241,8 +241,10 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}"
 						style="width:100px;">
+						<!-- 33356 -start- -->
 						<h:outputText
-							value="#{qTDetailBB.getParameterDesc(scQt.procurementMode)}" />
+							value="#{qTDetailBB.getParameterDesc(procurementMode)}" />
+						<!-- 33356 -end- -->
 					</p:column>
 			
 					<p:column headerText="#{lbl['lbl.sc.created.date']}" style="width:80px;">

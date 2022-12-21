@@ -115,10 +115,10 @@
 						<ui:include
 							src="/xhtml/sm/shared/mofRegistration/onlineSupportingDocsForm.xhtml" />
 						<c:choose>
-							<!-- #26671 - START -->
+							<!-- #26671 - Site Visit Grouping Enhancement - 28775 - START -->
 							<c:when
 								test="#{backingBean.managedBean.smAppl.applCategoryType == 'S' or backingBean.managedBean.showFacilityMachine}">
-								<!-- #26671 - END -->
+								<!-- #26671 - Site Visit Grouping Enhancement - 28775 - END -->
 								<div class="nav-wrapper">
 								<c:choose>
 									<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
@@ -155,6 +155,7 @@
 														actionListener="#{backingBean.setTabValue('8','7')}"
 														action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 														update=":form" />
+													<!-- #26671 - Site Visit Grouping Enhancement - 28775 -->
 													<!--<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 														actionListener="#{backingBean.setTabValue('7','6')}"
 														rendered="#{!backingBean.managedBean.showMachineryEquipmentPanel and !backingBean.managedBean.showTravelSoftwarePanel}"
@@ -170,6 +171,7 @@
 															actionListener="#{backingBean.setTabValue('8','9')}"
 															action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
 															update=":form" />
+														<!-- #26671 - Site Visit Grouping Enhancement - 28775 -->
 														<!--<p:commandButton value="#{lbl['lbl.sm.next.section']}"
 															onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 															actionListener="#{backingBean.setTabValue('7','8')}"

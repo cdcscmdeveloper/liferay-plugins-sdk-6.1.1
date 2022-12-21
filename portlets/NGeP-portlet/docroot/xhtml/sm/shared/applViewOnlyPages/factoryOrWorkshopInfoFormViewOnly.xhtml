@@ -17,13 +17,14 @@
 			<table style="width: 100%;">
 				<!-- 29380  - Site Visit Grouping Enhancement -28775 - Start -->
 				<tr>
-					<td style="white-space: nowrap; float: left;">
-					    <p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} (#{factoryCatVar.pmCategoryL2.pmCategoryL1.categoryName}/#{factoryCatVar.pmCategoryL2.categoryName}/#{factoryCatVar.categoryName})" />
+					<td style="float: left;">
+					    <p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} (#{factoryCatVar.pmCategoryL2.pmCategoryL1.categoryName}/#{factoryCatVar.pmCategoryL2.categoryName}/#{factoryCatVar.categoryName})" 
+					    style="text-align:left;"/>
 					</td>
 				</tr>
 					<ui:repeat var="categoryVar" value="#{viewSmApplBackingBean.managedBean.suppProfileOrHistoryCategoryList}" >
 					<tr>
-						<td style="white-space: nowrap; float: left;" >
+						<td style="float: left;" >
 						    <p:outputLabel style="text-indent: 10px;" value="#{lbl['lbl.sm.catCodes.othDesc']}: #{categoryVar.otherDesc}" 
 						    rendered="#{categoryVar.otherDesc != null and categoryVar.pmCategoryL3.categoryL3Id eq factoryCatVar.categoryL3Id}"/>
 						</td>

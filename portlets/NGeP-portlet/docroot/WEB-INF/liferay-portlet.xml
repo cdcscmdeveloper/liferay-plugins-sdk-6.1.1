@@ -3545,6 +3545,20 @@
 		<css-class-wrapper>demoInvitation-portlet</css-class-wrapper>
 	</portlet>
 	
+	
+	<!-- #33986 -->
+	<portlet>
+		<portlet-name>myGPKIPOC</portlet-name>
+		<icon>/icon.png</icon>
+		<use-default-template>true</use-default-template>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>myGPKIPOC-portlet</css-class-wrapper>
+	</portlet>
+	
 		
 	<role-mapper>
 		<role-name>administrator</role-name>

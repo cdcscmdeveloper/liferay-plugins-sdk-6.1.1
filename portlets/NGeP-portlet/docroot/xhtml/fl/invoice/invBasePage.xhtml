@@ -29,7 +29,6 @@
 					'.portlet-title-text').html(
 					'#{invoiceBackingBean.getPortletTitle()}');
 		</script>
-		<f:event listener="#{invoiceBackingBean.ministryTypeChecking}" type="preRenderView" />
 		<h:panelGroup rendered="#{(invoiceBackingBean.managedBean.taxInvoice=='false' and (invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or 
 					  invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate or
 					  invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel or

@@ -6,6 +6,19 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+<!-- #29521 - start -->
+	<style>
+	.ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem a {
+    float: left;
+    padding: 0.5em 1em;
+    padding-top: 0.5em;
+    padding-right: 1em;
+    padding-bottom: 0.5em;
+    text-decoration: none;
+}
+	</style>
+	<!-- #29521 - end -->
 	
 	<!-- ***25692 - start -->
 	<c:if test="#{qTDetailBB.approvalScreen}">
@@ -31,17 +44,41 @@
 	<!-- 26095@hatta - end -->
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+			<td width="22%" valign="top" class="sidemenutd"><p:tabMenu
 					styleClass="sidemenu"
 					activeIndex="#{qTDetailBB.managedBean.activeIndex}"	>
-					<p:menuitem value="#{lbl['lbl.sc.qt.qtn.details']}"
-						action="#{qTDetailBB.qtDetailsTabChange(0)}" update="@form"
+										
+					<c:if test="#{qTDetailBB.managedBean.isScEditGeneral and (statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}">
+							<p:menuitem value="#{lbl['lbl.sc.qt.qtn.details']}"
+							id="qtGenInfoIc"
+							action="#{qTDetailBB.qtDetailsTabChange(0)}" update="@form" icon="#{lbl['lbl.sc.edit.icon']}" 
+							process="@form" 
+							style="width: 210px;"
+							rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemDetails)}" />
+					</c:if>
+					<c:if test="#{!(qTDetailBB.managedBean.isScEditGeneral eq true and (statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or statusId eq QTStatusConst.QT_REVISION_PUBLICATION))}">
+							<p:menuitem value="#{lbl['lbl.sc.qt.qtn.details']}"
+							action="#{qTDetailBB.qtDetailsTabChange(0)}" update="@form" 
+							process="@form" 
+							rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemDetails)}" />	
+					</c:if>
+					##-----------------------------------
+					<c:if test="#{qTDetailBB.managedBean.isScEditSupplierQualificationCriteria and (statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}">
+						<p:menuitem value="#{lbl['lbl.sc.supplier.qulification.criteria']}"
+						id="qtQulificationCriteriaIC"
+						action="#{qTDetailBB.qtDetailsTabChange(1)}" update="@form" icon="#{lbl['lbl.sc.edit.icon']}" 
 						process="@form" 
-						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemDetails)}" />
-					<p:menuitem value="#{lbl['lbl.sc.supplier.qulification.criteria']}"
-						action="#{qTDetailBB.qtDetailsTabChange(1)}" update="@form"
+						style="width: 210px;"
+						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemSuppQualificationCriteria)}" />
+					</c:if>
+					<c:if test="#{!(qTDetailBB.managedBean.isScEditSupplierQualificationCriteria and (statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or statusId eq QTStatusConst.QT_REVISION_PUBLICATION))}">
+						<p:menuitem value="#{lbl['lbl.sc.supplier.qulification.criteria']}"
+						action="#{qTDetailBB.qtDetailsTabChange(1)}" update="@form"  
 						process="@form" 
 						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemSuppQualificationCriteria)}" />
+					</c:if>
+					##-------------------------------
+
 					<p:menuitem value="#{lbl['lbl.sc.qt.committee.appointment']}"
 						action="#{qTDetailBB.qtDetailsTabChange(2)}" update="@form"
 						process="@form" 
@@ -146,8 +183,8 @@
 										or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeOneOff or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen}"
 						action="#{qTDetailBB.qtDetailsTabChange(7)}" update="@form"
 						process="@form"
-						rendered="#{isQTStatusScheduleDocAndAfter and qTDetailBB.displayMenuItem(qTDetailBB.menuItemFulfilmentSchhedule)}"
-					/>
+						rendered="#{isQTStatusScheduleDocAndAfter and qTDetailBB.displayMenuItem(qTDetailBB.menuItemFulfilmentSchhedule) and  !qTDetailBB.disableFieldsforCommitteeRevision()}"
+					/><ui:remove>#11299 Vinod added disableFieldsforCommitteeRevision</ui:remove>
 					<p:menuitem value="#{lbl['lbl.sc.activities']}"
 						action="#{qTDetailBB.qtDetailsTabChange(7)}" update="@form"
 						process="@form"
@@ -193,7 +230,11 @@
 					
 							
 				</p:tabMenu></td>
-			<td width="80%" valign="top">
+				<!-- #29521 - start -->
+					<p:tooltip for="qtGenInfoIc" value="#{lbl['lbl.sc.edit.by.sc']}"  rendered="#{qTDetailBB.managedBean.isScEditGeneral and (statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}"/>	
+					<p:tooltip for="qtQulificationCriteriaIC" value="#{lbl['lbl.sc.edit.by.sc']}" rendered="#{qTDetailBB.managedBean.isScEditSupplierQualificationCriteria and (statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}"/>
+				<!-- #29521 - end -->				
+			<td width="78%" valign="top">
 			<h:panelGroup id="menuQTContent">
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '0'}">
 						<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderGeneralDetails.xhtml" />
@@ -383,5 +424,10 @@
 	<ui:include src="/xhtml/sc/quatationtender/createquotationtender/clone/cloneDetails.xhtml" />	
 	</c:otherwise>
 	</c:choose>
+<!-- #29732 Start - reOpen Fix -->
+	<ac:qtCategoryChangeAlertPopup
+		catCodeList="#{qTDetailBB.managedBean.catCodeList}"
+		widget="catCodeChangeAlert" />
+<!-- #29732 End - reOpen Fix -->
 </ui:composition>
 

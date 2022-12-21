@@ -35,13 +35,13 @@
 					styleClass="BtnSpacing" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.spkiSignAction}"
-					rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.supplierBranchListDeleted}"
+					rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.supplierBranchDeleted}"
 					update="spkiOutputPanel,proposalMenuContent" process="@form"
 					disabled="#{supplierProposalDetailBackingBean.checkDisciplinaryActionForQTCat()}" />
 					
 				<p:commandButton value="#{lbl['lbl.btn.update']}"
 					styleClass="BtnSpacing"  onstart="updateProposal.show()"
-					rendered="#{supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtClosed and !supplierProposalDetailBackingBean.managedBean.supplierBranchListDeleted}"
+					rendered="#{supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtClosed and !supplierProposalDetailBackingBean.managedBean.supplierBranchDeleted}"
 					update="@this" process="@this" partialSubmit="true"/>
 					</td>
 		</tr>

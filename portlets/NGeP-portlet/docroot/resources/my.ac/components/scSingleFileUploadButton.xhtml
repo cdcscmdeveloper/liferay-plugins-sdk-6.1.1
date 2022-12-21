@@ -30,20 +30,26 @@
 			<cc:insertChildren />
 		</p:commandButton>
 		
-		<h:panelGroup rendered="#{!empty cc.attrs.attachment}">
+		<h:panelGroup style="text-align: center;" rendered="#{!empty cc.attrs.attachment}">
 			<c:choose>
 				<c:when test="#{cc.attrs.encrypted}">
+					<!-- #34014 display Bug fix. Inserted inline css to be inline-block and override primefaces white-space. -->
 					<h:commandLink value="#{cc.attrs.attachment.fileName}" styleClass="blue_font"
+						style="max-width: 90%;display:inline-block;white-space: normal !important;"
 						immediate="true"
 						action="#{scRemarkAndAttachmentBackingBean.downloadEncryptedFile(cc.attrs.attachment, cc.attrs.encryptionKey)}" />
 				</c:when>
 				<c:otherwise>
+					<!-- #34014 display Bug fix. Inserted inline css to be inline-block and override primefaces white-space. -->
 					<h:commandLink value="#{cc.attrs.attachment.fileName}" styleClass="blue_font"
+						style="max-width: 90%;display:inline-block;white-space: normal !important;"
 						immediate="true"
 						action="#{scRemarkAndAttachmentBackingBean.downloadFile(cc.attrs.attachment)}" />
 				</c:otherwise>
 			</c:choose>
+			<!-- #34014 display Bug fix. Inserted inline css to be inline-block. -->
 			<p:commandLink id="#{cc.attrs.id}Del"
+				style="width: auto; display:inline-block;"
 				process="@this" partialSubmit="true" update="@([id$=#{cc.attrs.popupWidgetVar}delAttPopupId])"
 				oncomplete="#{cc.attrs.popupWidgetVar}delAttPopup.show();" 
 				rendered="#{!cc.attrs.readonly}">

@@ -22,6 +22,11 @@
 		<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.sf.finalization.supplier.selection.package.instruction']}"
 				escape="false" rendered="#{suppFinalizationBackingBean.managedBean.onlineBidding}" />
+		<ui:remove>#21692 - start</ui:remove>
+		<c:if test="#{approvalBackingBean.isEPVApprovalRequestAccepted(suppFinalizationBackingBean.managedBean.scQt.qtId)}">
+			<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.qt.pending.finalization.instruction']}" />
+		</c:if>
+		<ui:remove>#21692 - end</ui:remove>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} " escape="false" />
 		<h:outputText styleClass="instruction" value="#{suppFinalizationBackingBean.managedBean.scQt.closingDate}">
 		<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
@@ -30,8 +35,7 @@
 			columnClasses="columnWidth20"
 			rendered="#{suppFinalizationBackingBean.managedBean.scQt.zonal and 
 							!suppFinalizationBackingBean.managedBean.itemize and 
-								(suppFinalizationBackingBean.managedBean.recommendSupplier or
-						 			suppFinalizationBackingBean.managedBean.forwardToHigherAuthority)}">
+								decisionSupplFinalOrFwdHighAuth}"><!-- 6906 note 117 -->
 			
 			<h:column>
 				<h:outputLabel value="#{lbl['lbl.sc.cancelled']}" />
@@ -44,7 +48,7 @@
 							<p:selectOneMenu id="cancelItems" label="#{lbl['lbl.sc.cancelled']}" required="true"
 								value="#{suppFinalizationBackingBean.managedBean.itemCancelled}"
 								disabled="#{!(isSecretaryUser or 
-												isBPKTaskAndClaimed)}">
+												isBPKTaskAndClaimed) or supplierFinalizationReadOnly}"><!-- 6906 note 117 -->
 								<f:selectItems value="#{suppFinalizationBackingBean.getItemCancellationDropDown()}" />
 								<p:ajax event="change" process="@this" update="@([id$=cancelItems],[id$=supplierListTblPanel])" 
 										listener="#{suppFinalizationBackingBean.zonalPackageItemsCancellationEvent}" />
@@ -58,8 +62,10 @@
 		<p:outputPanel id="supplierListTblPanel" styleClass="header-spacing">
 			<ui:param name="canShowSupplierProposal" 
 					value="#{suppFinalizationBackingBean.canShowSupplierProposal() or isSecretaryUser or !empty suppFinalizationBackingBean.managedBean.previousPageUrl}" />
-			<ui:param name="showSelectionColumn" value="#{empty suppFinalizationBackingBean.managedBean.finalizationMethod or 
-		               			  			 				!suppFinalizationBackingBean.managedBean.itemCancelled}" />
+			<!-- 6906 note 117 start -->
+			<ui:param name="showSelectionColumn" value="#{(empty suppFinalizationBackingBean.managedBean.finalizationMethod or 
+		               			  			 				!suppFinalizationBackingBean.managedBean.itemCancelled) and !supplierFinalizationReadOnly}" />
+		    <!-- 6906 note 117 end -->        			  			 				
 		               			  			 				
 			<p:remoteCommand name="fetchQualifiedSuppliers" actionListener="#{suppFinalizationBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
 							 process="@this" update="@([id$=qualSuppDetailsPopupId])" oncomplete="qualSuppDetailsPopup.show(); return false;"/>
@@ -147,7 +153,7 @@
 						 <p:spacer width="15" height="15"/>
 		                     <p:commandLink  process="@this"  action="#{suppFinalizationBackingBean.showSupplierBranchList(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
 				         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
-								<h:outputText value="!" />
+								<h:graphicImage value="/css/images/exclam-info.png" />
 			         		</p:commandLink> 
 					   </c:if>
 					 <!-- #29729 End -->
@@ -287,7 +293,8 @@
 													shortlistedSupp.suppSelectionDisabled or 
 														suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding 
 														or (shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions
-														and !shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)}" />
+														and !shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)
+															or shortlistedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}" /><ui:remove>#21692</ui:remove>
 			</p:dataTable>		 	    
 
 			<p:dataTable id="supplierListTblMultiple" var="shortlistedSupp" 
@@ -363,7 +370,7 @@
 						 <p:spacer width="15" height="15"/>
 		                     <p:commandLink  process="@this"  action="#{suppFinalizationBackingBean.showSupplierBranchList(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
 				         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
-								<h:outputText value="!" />
+								<h:graphicImage value="/css/images/exclam-info.png" />
 			         		</p:commandLink> 
 					   </c:if>
 					 <!-- #29729 End -->
@@ -508,7 +515,8 @@
 						disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or !(isSecretaryUser or isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
 											suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding
 											or (shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions
-														and !shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)}">
+														and !shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)
+														 	or shortlistedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}"><ui:remove>#21692</ui:remove>
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" 
 								listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, false)}" />
 					</p:selectBooleanCheckbox>	

@@ -49,6 +49,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplierBank; // Fix - #33674
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.circular.CircularBackingBean;
@@ -201,6 +202,10 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private Long contractIdFromTaskList = null;
 	private Long contractVerIdFromTaskList = null;
 	//Enhancement 15851 - shaqimi end
+	private String supplementalLoaNo = null;//Bug 33096 - shaqimi
+	private String docTypeFromTaskList = null;//Bug 34030 - shaqimi
+	private String taskNameFromTaskList = null;//Bug 34030 - shaqimi
+	private Long statusIdFromTaskList;//Bug 34030 - shaqimi
 	
 	public void reassignValue(boolean value) 
 	{
@@ -228,6 +233,11 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		prodcollapse=value;
 		
 	}
+	// Start Fix - #33256
+	private Map<Long, CtItemMaxQty> selectedChangeItemQuantity;
+	
+	private Map<Long, CtItemPrice> selectedChangeItemPrice;
+	// End Fix - #33256
 	
 private class ServiceListingPagingDataModel extends PagingDataModel<CtContractItem> {
 		
@@ -1674,5 +1684,59 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	public void setTaskIdFromAgreement(String taskIdFromAgreement) {
 		this.taskIdFromAgreement = taskIdFromAgreement;
 	}
+	//Bug 33096 - shaqimi start
+	public String getSupplementalLoaNo() {
+		return supplementalLoaNo;
+	}
+	public void setSupplementalLoaNo(String supplementalLoaNo) {
+		this.supplementalLoaNo = supplementalLoaNo;
+	}
+	//Bug 33096 - shaqimi end
 	//15851 - shaqimi end
+	//Bug 34030 - shaqimi start
+	public String getDocTypeFromTaskList() {
+		return docTypeFromTaskList;
+	}
+	
+	public void setDocTypeFromTaskList(String docTypeFromTaskList) {
+		this.docTypeFromTaskList = docTypeFromTaskList;
+	}
+
+	public String getTaskNameFromTaskList() {
+		return taskNameFromTaskList;
+	}
+
+	public void setTaskNameFromTaskList(String taskNameFromTaskList) {
+		this.taskNameFromTaskList = taskNameFromTaskList;
+	}
+
+	public Long getStatusIdFromTaskList() {
+		return statusIdFromTaskList;
+	}
+
+	public void setStatusIdFromTaskList(Long statusIdFromTaskList) {
+		this.statusIdFromTaskList = statusIdFromTaskList;
+	}
+	//Bug 34030 - shaqimi end
+
+	// Start Fix - #33256
+	public Map<Long, CtItemMaxQty> getSelectedChangeItemQuantity() {
+		if (selectedChangeItemQuantity == null){
+			selectedChangeItemQuantity = new HashMap<Long, CtItemMaxQty>();
+			}
+		return selectedChangeItemQuantity;
+	}
+	public void setSelectedChangeItemQuantity(Map<Long, CtItemMaxQty> selectedChangeItemQuantity) {
+		this.selectedChangeItemQuantity = selectedChangeItemQuantity;
+	}
+	public Map<Long, CtItemPrice> getSelectedChangeItemPrice() {
+		if (selectedChangeItemPrice == null){
+			selectedChangeItemPrice = new HashMap<Long, CtItemPrice>();
+			}
+		return selectedChangeItemPrice;
+	}
+	public void setSelectedChangeItemPrice(Map<Long, CtItemPrice> selectedChangeItemPrice) {
+		this.selectedChangeItemPrice = selectedChangeItemPrice;
+	}
+	// End Fix - #33256
 }

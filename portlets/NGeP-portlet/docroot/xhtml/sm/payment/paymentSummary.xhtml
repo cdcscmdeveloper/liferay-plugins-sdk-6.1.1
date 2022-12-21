@@ -31,9 +31,10 @@
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 	
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.payment.how.msg']}" escape="false"/><br /><br />
-	<h:outputText styleClass="warning" value="#{lbl['lbl.sm.payment.reminder.header']}" /><br />
-	<h:outputText styleClass="warning" value="#{lbl['lbl.sm.payment.reminder.msg']}" escape="false"/>
-	
+	<!-- START - 26307 -->
+	<h:outputText styleClass="warning" value="#{lbl['lbl.sm.payment.reminder.header']}"  style="font-size: 17px !important;"/><br />
+	<h:outputText styleClass="warning" value="#{lbl['lbl.sm.payment.reminder.msg']}" escape="false" style="font-size: 17px !important;"/>
+	<!-- END - 26307 -->
 	<p:outputPanel rendered="#{paymentBackingBean.managedBean.softcertPayment}">
 		<br /><br /><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.gst.disclaimer']}" />
 	</p:outputPanel>
@@ -104,6 +105,11 @@
 						<p:commandButton value="#{lbl['lbl.sm.button.proceed.to.pymnt']}" id="btnSubmit1" 
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							action="#{paymentBackingBean.submitPayment}" />
+						<!-- START 34136 -->	
+					    <p:commandButton value="#{lbl['lbl.sm.button.proceed.to.cdc.pymnt']}" id="btnSubmit2" 
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							action="#{paymentBackingBean.submitNewPaymentGateway}" />
+						<!-- END 34136 -->
 					</p:outputPanel>
 				</div>
 				

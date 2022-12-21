@@ -35,6 +35,7 @@ public interface QTConstants {
 	public static final String BO_MAINTANANCE_PAGE = "/xhtml/sc/quatationtender/businessowner/businessownercreation.xhtml";
 	public static final String SEARCH_PAGE = "/xhtml/sc/quatationtender/quatationtendersearch.xhtml";
 	public static final String CREATE_COMMITTE = "committeemaintanancepage";
+	public static final String QT_SEARCHING_PAGE = "/xhtml/sc/quatationtender/quatationtendersearch.xhtml?faces-redirect=true"; //#9019
 
 	public static final String QT_DETAILS_TAB = "Quotation Details";
 	public static final String QT_SUPPLIERQULIFICATION_TAB = "Supplier Qualification Criteria";
@@ -96,6 +97,7 @@ public interface QTConstants {
 	public static final String PENDING_RESPONSE_DP_QT = "/xhtml/sc/pendingresponsefordpandqt/prerenderresponsedpqtmain.xhtml";
 	public static final String ONLINE_BIDDING_STATUS_COUNT = "/xhtml/sc/bidding/onlinebiddingstatus/onlinebiddingstatusmain.xhtml";
 	public static final String VIEW_QTDETAILS_GENERAL_INFO = "/xhtml/sc/viewqtdetailsgeneralinfo/viewQtDetailsGeneralInfoMain.xhtml";
+	public static final String SUPPLIER_VIEW_QTDETAILS_GENERAL_INFO = "/xhtml/sc/viewqtdetailsgeneralinfo/supplierViewQtDetailsGeneralInfoMain.xhtml";//bug #33090
 	public static final String NAV_TO_PROPOSAL_MAIN_PAGE = "/xhtml/sc/supplierproposal/proposalcommon/supplierProposalMain.xhtml";  // ***25201
 
 	public static final String SC_LOI_TAB = "LOI";
@@ -284,5 +286,21 @@ public interface QTConstants {
 	
 	public static final String FINANCIAL_ITEM_SPEC_ANSWER="FISA";//32453
 	
+	//9019 - Start (Harun) WIP transaction Pending QT Submission
+	public static final String SC_WFTASK_COMPOSITENAME = "SourcingQT";
+	//9019 - End (Harun) 
+
+	public static final String PORTLET_NAME_DL_CREATE = "scCreateManualSourcing_WAR_NGePportlet";//#32648
+	public static final String PORTLET_NAME_QT_LIST = "scQtLoaList_WAR_NGePportlet";//#32648
+	
+	//21692 QT Bpm Composite Version Validity ID
+	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
+	
+	//#29468 Added Vinod
+	public static final String TEMPLATE_CHANGE_VALUE = "value";
+	
+	// #33831 - Start
+	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
+	// #33831 - Start
 	
 }

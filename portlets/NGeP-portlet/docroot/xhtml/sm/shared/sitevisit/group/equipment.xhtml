@@ -43,12 +43,6 @@
 					required="#{equipMaint.equipmentAvailable and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}" >
 					<f:validateLongRange minimum="1" />
 				</p:inputText>
-				<!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty equipMaint and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvEquipment(equipMaint).equipmentQty}" 
-					currValue="#{equipMaint.equipmentQty}" 
-					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvEquipment(equipMaint).equipmentQty}"/>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -86,12 +80,6 @@
 					required="#{equipBinding.equipmentAvailable and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}">
 						<f:validateLongRange minimum="1" />
 				</p:inputText>
-				<!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty equipBinding and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvEquipment(equipBinding).equipmentQty}" 
-					currValue="#{equipBinding.equipmentQty}" 
-					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvEquipment(equipBinding).equipmentQty}"/>
 			</p:column>
 		</p:dataTable>
 	</p:panel>

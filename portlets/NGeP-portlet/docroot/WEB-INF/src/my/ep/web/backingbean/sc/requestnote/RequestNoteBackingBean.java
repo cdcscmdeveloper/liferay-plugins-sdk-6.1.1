@@ -1074,23 +1074,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}	
 		}
-		//#32362 - Start
-		log.info("Bug 32362: outcome (" + outcome + ")");
+
 		if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || 
 				outcome.isEmpty() || 
 				outcome.equals(BpmOutcomeConst.BPM_APPROVE)){
-			log.info("Bug 32362: in validate");
+
 			//#31689 - start
-			log.info("Bug 32362: validateReqNoteIgnoreProcurement Start");
 			validateReqNoteIgnoreProcurement(scRequestNote);
-			log.info("Bug 32362: validateReqNoteIgnoreProcurement End");
 			//#31689 - end
 			
 			// validate RN
-			log.info("Bug 32362: validateRequestNote Start");
-			validateRequestNote(scRequestNote);	
-			log.info("Bug 32362: validateRequestNote End");
-			//#32362 - End
+			validateRequestNote(scRequestNote);
 			
 			// remarks
 			if(!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) 
@@ -1291,17 +1285,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	private void validateRequestNote(ScRequestNote requestNote){
 		debugLogger("validateRequestNote");
+		//Temp(#34274 - Start)
+		boolean isShowMessage = getManagedBean().isExceededAmountAlerted();
+		//Temp(#34274 - End)
 		// show message for first submission, skip the message for second time submission
 		if(requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()){
-			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
-				//#32362 - Start
-				log.info("Bug 32362: requestNoteDtlId (" + requestNoteDtl.getRequestNoteDtlId() + ")");
-				log.info("Bug 32362: isDeleted (" + requestNoteDtl.isDeleted() + ")");
+			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {			
 				if(!requestNoteDtl.isDeleted()) {
 					String pType = requestNoteDtl.getProcurementType()
 							.getParameterCode();
-					log.info("Bug 32362: pType (" + pType + ")");
-					//#32362 - End
 					if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && 
 							!pType.equals(ParameterConst.PROC_TYPE_EMERGENCY)) && 
 							!pType.equals(ParameterConst.PROC_TYPE_PK7)) {
@@ -1326,20 +1318,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getItemName()});
 						}
 
-						// validate recommended supplier
-						//#32362 - Start
-						if(requestNoteDtl.getScRequestSupplierItem() != null){
-							log.info("Bug 32362: RequestSupplierItemId (" + requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ")");
-							if(requestNoteDtl.getScRequestSupplierItem().getSmSupplier() != null){
-								log.info("Bug 32362: SmSupplierId (" + requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId() + ")");
-							}
-						}										
+						// validate recommended supplier																
 						if(null == requestNoteDtl.getScRequestSupplierItem() || null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier() 
 								|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId() ){
-							log.info("Bug 32362: ERROR_760356");
 							throw new EpException(MessageConst.ERROR_760356, new String[]{requestNoteDtl.getRequestItem().getItemName()});
 						}
-						//#32362 - End
 
 						// quantity
 						if( null != requestNoteDtl.getRequestItem() && null == requestNoteDtl.getRequestItem().getQuantity() ){
@@ -1397,25 +1380,43 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 							if (ruleValueList != null && ruleValueList.size() > 0) {
 								PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-								//26059 - start
-								ScQuote quote = null;
-								String sourceMethod = requestNote.getSourceMethod();
-								if(sourceMethod.equals(ParameterConst.REQUEST_NOTE_SQ)) {
-									quote = requestNote.getQuote();
-								}								
+								//Temp(#34274 - Start)
 								//Rule : ITEM_THRESHOLD For 20k
-								if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0 && ((quote != null && !quote.isPanel())
-										|| !sourceMethod.equals(ParameterConst.REQUEST_NOTE_SQ))) {									
-										String language = new FacesScopes().getUserLocale().getLanguage();
-										String itemTitle;
-										if(CommonConstants.DEFAULT_USER_LANGUAGE_CODE.equalsIgnoreCase(language)) {
-											itemTitle = requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitleEng();
-										} else {
-											itemTitle = requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitle();
-										}
-										throw new EpException(MessageConst.ERROR_760518,
-												new String[] {itemTitle, requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscCode()});
+								if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0) {
+									if(!isShowMessage){
+										getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
+										
+										FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+												MessageUtils.getMessage(MessageConst.ERROR_760036, 
+														new String[]{requestNoteDtl.getRequestItem().getItemName(),requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()}, 
+														MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+										
+										
+//										throw new EpException(MessageConst.ERROR_760036,
+//												new String[] {requestNoteDtl.getRequestItem().getItemName(), requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()});
+									}
 								}
+								//Temp(#34274 - End)
+								
+								//26059 - start
+//								ScQuote quote = null;
+//								String sourceMethod = requestNote.getSourceMethod();
+//								if(sourceMethod.equals(ParameterConst.REQUEST_NOTE_SQ)) {
+//									quote = requestNote.getQuote();
+//								}								
+//								//Rule : ITEM_THRESHOLD For 20k
+//								if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0 && ((quote != null && !quote.isPanel())
+//										|| !sourceMethod.equals(ParameterConst.REQUEST_NOTE_SQ))) {									
+//										String language = new FacesScopes().getUserLocale().getLanguage();
+//										String itemTitle;
+//										if(CommonConstants.DEFAULT_USER_LANGUAGE_CODE.equalsIgnoreCase(language)) {
+//											itemTitle = requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitleEng();
+//										} else {
+//											itemTitle = requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitle();
+//										}
+//										throw new EpException(MessageConst.ERROR_760518,
+//												new String[] {itemTitle, requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscCode()});
+//								}
 								//26059 - end
 							} else {
 								throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
@@ -1493,11 +1494,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("validateReqNoteIgnoreProcurement");
 		if (requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()) {
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
-				log.info("Bug 32362: requestNoteDtlId (" + requestNoteDtl.getRequestNoteDtlId() + ")");
-				log.info("Bug 32362: isDeleted (" + requestNoteDtl.isDeleted() + ")");
 				if (!requestNoteDtl.isDeleted()) {
 					String pType = requestNoteDtl.getProcurementType().getParameterCode();
-					log.info("Bug 32362: pType (" + pType + ")");
 					//#32362 - comment out this condition - start
 					/*if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && !pType
 							.equals(ParameterConst.PROC_TYPE_EMERGENCY)) && !pType.equals(ParameterConst.PROC_TYPE_PK7)) {*/
@@ -1526,21 +1524,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						}
 
 						// validate recommended supplier
-						//#32362 - Start
-						if(requestNoteDtl.getScRequestSupplierItem() != null){
-							log.info("Bug 32362: RequestSupplierItemId (" + requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ")");
-							if(requestNoteDtl.getScRequestSupplierItem().getSmSupplier() != null){
-								log.info("Bug 32362: SmSupplierId (" + requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId() + ")");
-							}
-						}
 						if (null == requestNoteDtl.getScRequestSupplierItem()
 								|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier()
 								|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId()) {
-							log.info("Bug 32362: ERROR_760356");
 							throw new EpException(MessageConst.ERROR_760356, new String[] { requestNoteDtl
 									.getRequestItem().getItemName() });
 						}
-						//#32362 - End
 
 						// quantity
 						if (null != requestNoteDtl.getRequestItem()
@@ -2931,20 +2920,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		// when procurement type as pk7 selected 
 		if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
+			//Temp(#34274 - Start)
 			// MaxProcurementAmt
-			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-
-			BigDecimal maxProcurementAmt = getPRThresholdAmount();
+//			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
+//			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+//
+//			BigDecimal maxProcurementAmt = getPRThresholdAmount();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
 							.getMessage(
 									MessageConst.INFO_760440,
-									new String[] {amountDF.format(maxProcurementAmt)},
+									null,
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
-
+			//Temp(#34274 - End)
 		}
 	}
 	
@@ -3570,6 +3560,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("beforeSavePostLister");
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
 		CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
+		
+		//32520 - Start
+		if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getScRequestSupplierItem() != null
+				&& requestNoteDtl.getScRequestNote() != null){
+				log.info("Bug 32520 : Method beforeSavePostLister ----> rnNo (" +requestNoteDtl.getScRequestNote().getRequestNoteNo() +") ");
+				log.info("Bug 32520 : " + "rnDtlsId (" + requestNoteDtl.getRequestNoteDtlId() + ") " 
+					     + "reqItemId (" + requestNoteDtl.getRequestItem().getRequestNoteItemId() + ") "
+					     + "reqSuppItemId (" + requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") "
+					     + "----> rnNo (" + requestNoteDtl.getScRequestNote().getRequestNoteNo() + ")");
+		}	
+		//32520 - End
+		
 		if(requestNoteDtl.getvCmSupplierItem() != null && requestNoteDtl.getvCmSupplierItem().getDocId() >0) {
             
 			catReqDTO.setSupplierItemId(requestNoteDtl.getvCmSupplierItem().getDocId());
@@ -3609,7 +3611,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void afterSavePostListener(ScRequestNoteDtl requestNoteDtl) {
 		debugLogger("afterSavePostLister");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-
+		
+		//32520 - Start
+		if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getScRequestSupplierItem() != null
+				&& requestNoteDtl.getScRequestNote() != null){
+			log.info("Bug 32520 : Method afterSavePostLister ----> rnNo (" +requestNoteDtl.getScRequestNote().getRequestNoteNo() +") ");
+			log.info("Bug 32520 : " + "rnDtlsId (" + requestNoteDtl.getRequestNoteDtlId() + ") " 
+			         + "reqItemId (" + requestNoteDtl.getRequestItem().getRequestNoteItemId() + ") "
+			         + "reqSuppItemId (" + requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") "
+			         + "----> rnNo (" + requestNoteDtl.getScRequestNote().getRequestNoteNo() + ")");
+		}	
+		//32520 - End
+		
 		if(requestNoteDtl.getScRequestSupplierItem() != null && requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() != null){
 			ScRequestSupplierItem requestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
 			requestNoteReqDTO.setSupplierItemId(requestSupplierItem.getRequestSupplierItemId());
@@ -5182,6 +5195,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return codificationBB.assignProductCode(requestItem, null, false);
 	}
 	
+	/**
+	 * to retrieve top zonal tier price
+	 * @param supplierItemPrices the list of ScSupplierItemPrice
+	 * @param orderQuantity the order quantity
+	 * @param priceType the price type
+	 * @param itemName the name of items
+	 * @return ScSupplierItemPrice instance
+	 */
 	private ScSupplierItemPrice getTopZonalTierPrice(List<ScSupplierItemPrice> supplierItemPrices, 
 			BigDecimal orderQuantity, String priceType, String itemName) {
 		List<ScSupplierItemPrice> groupedItemPrice = new ArrayList<ScSupplierItemPrice>();
@@ -5350,7 +5371,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}	 
 		
 		// Refactor: #12177 - Start
-		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();	
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		log.info("Refactor 12177 (RequestNoteBackingBean) : getSqTimeValidity - " + sqTimeValidity);
 		// Refactor: #12177 - End
 		
 		if(scQuote != null && currentStatusId != null){

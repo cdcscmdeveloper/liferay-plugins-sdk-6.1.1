@@ -24,6 +24,7 @@
 	(directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)}"></ui:param>
 	<ui:param name="isPK7" value="#{(directLOABackingBean.managedBean.scLoa.qtType.parameterCode eq ParameterConst.quotationTenderTypeItemInPk7)}"></ui:param>	
 	<ui:param name="above500K" value="#{(directLOABackingBean.managedBean.above500K)}"/>
+	<ui:param name="StatusLOASubmission" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"></ui:param>
 	<!-- #25726 END -->
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
 		toggleable="true">
@@ -170,8 +171,10 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.contact.person']}" />
 				</td>
-				<td><p:inputText id="suppContact" size="35" disabled="true"
+				<td><!-- #30453 start -->
+					<p:inputText id="suppContact" size="35" disabled="true"
 						value="#{directLOABackingBean.managedBean.scLoa.scSupplierAddress.pmContactUserID.salutationCode.salutationName.concat(' ').concat(directLOABackingBean.managedBean.scLoa.scSupplierAddress.contactPerson)}" />
+					<!-- #30453 start -->
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.email']}" /></td>
 				<td><p:inputText id="suppEmail" size="28"
@@ -234,9 +237,9 @@
 							size="110"
 							value="#{directLOABackingBean.managedBean.scLoa.scQt.qtTitle}"
 							cols="110" rows="3" style="margin-bottom:5px;width: 670px;"
-							maxlength="500">
+							maxlength="1000">
 							<p:ajax event="blur" process="title" update="@form" />
-						</p:inputTextarea>
+						</p:inputTextarea> <!-- #34163  Changed maxlength to 1000 Vinod -->
 						<p:message id="titleMsg" for="title" display="icon" /></td>
 				</tr>
 			</h:panelGroup>
@@ -248,7 +251,7 @@
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
+						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
 							<p:selectOneMenu id="procMode" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.procurementMode.parameterId}"
 								style="margin-bottom:5px;width:246px;"
@@ -274,7 +277,7 @@
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
+						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
 							<p:selectOneMenu id="qtType" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.qtType.parameterId}"
 								style="margin-bottom:5px;width:206px;"
@@ -318,7 +321,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
+						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
 							<p:selectOneMenu id="procTypeBoCategory" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
 								style="margin-bottom:5px;width:246px;"
@@ -404,15 +407,15 @@
 						 <p:message
 						id="fileExtNoMsg" for="fileExtNo" display="icon" />
 				</td>
+				<!-- 29468 Start Vinod -->
 				<td width="160px">
 					<p:outputLabel	value="#{lbl['lbl.sc.procurement.category']}" /> 
 					<p:outputLabel	value="*" styleClass="mandatory" />
 				</td>
 				<td><c:choose>
 							<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
-							<p:selectOneMenu id="procBoCategory" required="true"
+							<p:selectOneMenu id="procBoCategory" 
 								style="margin-bottom:5px;width:206px;"
-								label="#{lbl['lbl.sc.procurement.category']}"
 								value="#{directLOABackingBean.managedBean.scLoa.scQt.pmProcurementCategory.parameterId}">
 								<f:selectItems
 									value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
@@ -428,7 +431,8 @@
 								value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.scLoa.scQt.pmProcurementCategory)}"
 								size="35" disabled="true" />
 						</c:otherwise>
-					</c:choose></td>
+				</c:choose></td>
+				<!-- 29468 End Vinod -->
 			</tr>
 			
 			<tr>
@@ -925,7 +929,8 @@
 													<p:selectOneMenu id="agreementReqPk7Per" required="true"
 														style="margin-bottom:5px;width:246px;"
 														value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
-														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
+														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+														disabled="#{!StatusLOASubmission}">
 														<f:selectItems
 															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
 														<!-- #25726 START -->
@@ -938,7 +943,7 @@
 													<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
 														value="#{directLOABackingBean.managedBean.scLoa.agreementReq}"
 														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-														disabled="#{directLOABackingBean.disabledButton()}">
+														disabled="#{directLOABackingBean.disabledButton() || !StatusLOASubmission}">
 														<f:selectItems
 															value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 															<!-- #25726 START -->
@@ -965,7 +970,8 @@
 															<p:selectOneMenu id="agreementReqPk7" required="true"
 																style="margin-bottom:5px;width:246px;"
 																value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
-																label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
+																label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+																disabled="#{!StatusLOASubmission}">
 																<f:selectItems
 																	value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
 																<!-- #25726 START -->
@@ -995,7 +1001,7 @@
 														style="margin-bottom:5px;width:246px;"
 														value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
 														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-														disabled="#{directLOABackingBean.managedBean.disableFields}">
+														disabled="#{directLOABackingBean.managedBean.disableFields || !StatusLOASubmission}">
 														<f:selectItems
 															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
 															<!-- #25726 START -->
@@ -1025,7 +1031,7 @@
 				<td colspan="3">
 					<p:outputPanel id="uploadApprovalLetterPg"> 
 						<!-- #25726 START -->													
-						<h:panelGroup  rendered="#{((((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and !directLOABackingBean.managedBean.readOnly)||(((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.agreementReqChange and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and directLOABackingBean.managedBean.readOnly))}" 
+						<h:panelGroup  rendered="#{StatusLOASubmission and ((((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and !directLOABackingBean.managedBean.readOnly)||(((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.agreementReqChange and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and directLOABackingBean.managedBean.readOnly))}" 
 						required="true">
 						<!-- #25726 END -->
 							<table>
@@ -1058,7 +1064,31 @@
 									</td>
 			 	 				</tr>
 			 	 			</table>			 	 				
-			 	 		</h:panelGroup>		 							
+			 	 		</h:panelGroup>
+			 	 		<h:panelGroup  rendered="#{!StatusLOASubmission and directLOABackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
+							<table>
+								<tr>
+									<td width="300">
+										<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}" escape="false"/> 										
+									</td>
+									<td>
+										<p:outputPanel id="uploadedPage2">						
+																			
+											<p:commandLink
+											title="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
+											value="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
+											action="#{directLOABackingBean.fileDownload}"
+											styleClass="blue_font"
+											rendered="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment.filePath != null}"/>											
+			 	 						</p:outputPanel> 
+			 	 					</td>
+			 	 					<td style="margin-top: -3px">
+										<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
+									</td>
+			 	 				</tr>
+			 	 			</table>			 	 				
+			 	 		</h:panelGroup>
+			 	 		<!-- #25726 END -->
 					</p:outputPanel>		 	 								
 				</td>
 				<td>
@@ -1121,33 +1151,6 @@
 			oncomplete="deleteApprovalLetterDlg.hide();"  update="uploadedPage"/>
 			<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteApprovalLetterDlg.hide();" />	
 		</div>
-	</p:confirmDialog>
-	
-	<p:dialog id="approvalLetterAlert" widgetVar="approvalLetterAlertDlg"
-		header="#{lbl['lbl.txt.alert']}" resizable="false" width="500"
-		modal="true">
-			<p:panel>				
-				<table>
-					<tr>
-						<td>
-							<h:graphicImage value="/css/images/design/exclamation.png" style="margin-top: 3px" />
-							<p:spacer width="10"></p:spacer>
-							<ui:fragment>
-								<h:outputText value="#{lbl['lbl.sc.approval.letter.alert']}" style="margin-top: 3px" escape="false"/>								
-								<br />
-								<br />
-							</ui:fragment> 							
-						</td>
-					</tr>
-				</table>			
-				
-				<p:spacer height="1px" />
-				<div class="ppRightBtn" style="width: 100%">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}"
-						id="approvalLetterAlertButton"
-						onclick ="approvalLetterAlertDlg.hide();"/>
-				</div>				
-			</p:panel>	
-		</p:dialog>
+	</p:confirmDialog>	
 	<!-- #25726 END -->
 </ui:composition>

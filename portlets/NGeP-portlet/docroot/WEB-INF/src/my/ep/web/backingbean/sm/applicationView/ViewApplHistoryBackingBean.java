@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -258,6 +259,7 @@ public class ViewApplHistoryBackingBean extends
 	public void viewUnClaimTask(String applNo) {
 		getManagedBean().setViewApplicationHistory(true);
 		getManagedBean().setViewSupplierProfile(true);
+		getManagedBean().setPoApprUnClaimTask(true); //#34209
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setApplNo(applNo);
 		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
@@ -282,6 +284,9 @@ public class ViewApplHistoryBackingBean extends
 	 * Redirect to resubmit page
 	 */
 	public void redirectToResubmit() {
+		// #32628 - start
+		validateResubmitApplication();
+		// #32628 - end
 
 		// ##25969 - Blocked for resubmission if rejected application already
 		// deactivated (record status=9)
@@ -293,15 +298,13 @@ public class ViewApplHistoryBackingBean extends
 		resubmitSSM();
 		//#27250 - END SSM CHANGES FOR RESUBMIT
 		
-		//#32002-start
-		if(getManagedBean().getSmAppl().getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED &&
-				getManagedBean().getSmAppl().getSmSupplier().getSmMofAccount().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
-			throw new EpException(SmCommonUtil.getMessage(
-					"lbl.sm.resubmitExpired.mofExpired", null));
-		}//#32002-end
 		// #14832 - To cater if resubmit link already expired and supplier still
 		// in progress (Supplier Temp), so will call alert popup that will
 		// redirect to clone new application and start fresh
+		//32627 START
+		List<String> rejectedStatus = Arrays
+				.asList(SupplierManagementConst.REJECTED_STATUSES);
+		//32627 END
 		if (getManagedBean().getSmAppl().getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
 			if (SmApplicationUtil
 					.isRejectedApplValidForResubmission(getManagedBean()
@@ -334,8 +337,29 @@ public class ViewApplHistoryBackingBean extends
 							.getSmAppl())) {
 				redirectToReapplyNewAppl(true); //29956
 			} else {
-				throw new EpException(SmCommonUtil.getMessage(
-						"lbl.sm.resubmitExpired", null));
+				//32627 START
+				SmAppl currAppl = this.getManagedBean().getSmAppl();
+				Boolean resubmit = true;
+				if(rejectedStatus.contains(currAppl.getPmStatus().getStatusId().toString())){
+					List<SmAppl> applList = this.getManagedBean().getSmSupplier().getSmAppls();
+					for(SmAppl appl : applList){
+						if(appl.getPmStatus() != null){ //32627
+							if(currAppl.getCreatedDate().before(appl.getCreatedDate()) &&
+									currAppl.getApplType().equals(appl.getApplType()) && 
+									appl.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED)){
+								resubmit = false;
+							}
+						}
+					}
+				}
+				if(!resubmit){
+					throw new EpException(SmCommonUtil.getMessage(
+							"lbl.sm.approvedApplicationCantProceed", null));
+				}else{
+					throw new EpException(SmCommonUtil.getMessage(
+							"lbl.sm.resubmitExpired", null));
+				}
+				//32627 END
 			}
 		}
 	}
@@ -785,10 +809,16 @@ public class ViewApplHistoryBackingBean extends
 		SmRemaksResDTO remaksResDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(remarksReqDTO);
 
 		if (remaksResDTO.getRemarksList().size() > 0) {
+			SmWorkflowStatus currWorkflowStatus = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean()
+					.getSmAppl().getApplId()); //#32424 --050822--
 			log.info("getRemarksList().size():: " + remaksResDTO.getRemarksList().size());
 			for (SmRemark poRemark : remaksResDTO.getRemarksList()) {
 				// #32424 - start
-				if (!StringUtils.isEmpty(poRemark.getRoleCode()) && poRemark.getRoleCode().equals(RoleCode.UPS_PO.value())) {
+				if (!StringUtils.isEmpty(poRemark.getRoleCode()) && poRemark.getRoleCode().equals(RoleCode.UPS_PO.value()))
+					//#32424 --comment code-- 
+						/*|| (poRemark.getCreatedBy().equals(currWorkflowStatus.getCreatedBy())
+								&& getManagedBean().getSmAppl().getPmStatus().getStatusId() != SupplierManagementConst.PM_STATUS_REGISTERED && currWorkflowStatus
+								.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTERED)*/ {				
 					System.out.println("getDocId:: " + poRemark.getDocId() + " || getRoleCode:: "
 							+ poRemark.getRoleCode() + " || getCreatedDate:: " + poRemark.getCreatedDate()
 							+ " || getRemark:: " + poRemark.getRemark());
@@ -804,7 +834,8 @@ public class ViewApplHistoryBackingBean extends
 					break;
 				} else if (StringUtils.isEmpty(poRemark.getRoleCode())) {
 					// #32424 - start
-					SmWorkflowStatus currWorkflowStatus = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean().getSmAppl().getApplId());					
+					//#32424 --050822--comment below line   
+					//SmWorkflowStatus currWorkflowStatus = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean().getSmAppl().getApplId());					
 					SimpleDateFormat sdf = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 					String poCreatedDate = sdf.format(poRemark.getCreatedDate());
 					String wFlowCreatedDate = sdf.format(currWorkflowStatus.getCreatedDate());
@@ -1105,19 +1136,6 @@ public class ViewApplHistoryBackingBean extends
 				.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
 		if (!EntityHelper.isCollectionEmpty(resultList)
 				&& resultList.size() > 0) {
-			//#29659 - START
-			List<Object[]> resultListNew = new ArrayList<>();
-			for (Object[] arr : resultList) {
-				
-				Object[] object = new Object[arr.length + 1];
-				for(int i=0; i<arr.length;i++){
-					object[i]=arr[i];
-				}
-				String title = SmServiceLookup.getPersonnelSO().getSalutationNameByPersonnelId(Long.parseLong(arr[23] + ""));
-				object[object.length - 1] = title;
-				resultListNew.add(object);
-			}
-			
 			retVal = new SmOverlapCategoryVO();
 			retVal.setOverLappedCategoryExist(true);
 			retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
@@ -1130,9 +1148,8 @@ public class ViewApplHistoryBackingBean extends
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc)
 					+ System.lineSeparator() + System.lineSeparator());
 			retVal.setOverlapCategoryVOList(getOverlapCategoryVOList(
-					resultListNew, smAppl.getSupplierType()));
+					resultList, smAppl.getSupplierType()));
 		}
-		//#29659 - END
 		return retVal;
 	}
 
@@ -1224,7 +1241,7 @@ public class ViewApplHistoryBackingBean extends
 							+ ""
 							: applStatus);
 					//#29659 - START 
-					voSubTmp.setTitle(arr[24] + "");
+					voSubTmp.setTitle(arr[23] + "");
 					//#29659 - END
 					voTmp.getOverlapInfoList().add(voSubTmp);
 					isSubAdd = false;
@@ -1839,7 +1856,21 @@ public class ViewApplHistoryBackingBean extends
 	public Boolean setResubmitButton(SmAppl smAppl){
 		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
 		SmWorkFlowStatusReqDTO smWorkFlowStatusReqDTO = new SmWorkFlowStatusReqDTO();
+		//32627 - START
+		//retrieve by latest reject appl id
+		MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+		mofReqDTO.setSupplierId(smAppl.getSmSupplier().getSupplierId());
+		mofReqDTO.setSmAppl(smAppl);
+		SmAppl latestRejectedAppl = SmServiceLookup
+				.getMofRegistrationSO()
+				.retrieveLatestRejectedApplicationBySupplierId(mofReqDTO)
+				.getSmAppl();
+		if(latestRejectedAppl != null &&
+				smAppl.getApplId().equals(latestRejectedAppl.getApplId())){
 		smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
+		}
+		List<String> rejectedStatus = Arrays
+				.asList(SupplierManagementConst.REJECTED_STATUSES);
 		
 		SmWorkFlowStatusResDTO smWorkFlowStatusResDTO = workFlowStatusSO.retrieveCurrentWorkFlowStatusByDocId(smWorkFlowStatusReqDTO);
 		Boolean button = false;
@@ -1860,14 +1891,23 @@ public class ViewApplHistoryBackingBean extends
 				}else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED)){
 					button = false;
 				}//#32002 - start
-				else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION)
-						|| smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION)
+				else if(rejectedStatus.contains(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().toString())
 						 && checkStatusMofNoBySupplierId(smAppl)== false){
 					button = false;
 				}//#32002 - end
 			}
 		}
+		// #32628 - start
+		Date today = new Date();
+		SmMofAccount mofAccount = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(smAppl.getSmSupplier().getSupplierId());
+
+		if (button && smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_BUMI) && today.after(mofAccount.getExpDate())) {
+			button = false;
+		}
+		// #32628 - end
+		
 		return button;
+		//32627 - END
 	}
 	//#31248 - END	
 	
@@ -1917,14 +1957,62 @@ public class ViewApplHistoryBackingBean extends
 	public Boolean checkStatusMofNoBySupplierId(SmAppl smAppl){
 		
 		SmSupplier supplier = smAppl.getSmSupplier();
-		if (supplier.getSupplierId()!=null){
-			for (SmMofAccount mofs : supplier.getSmMofAccounts()){
-				if (mofs.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED) 
-						&& supplier.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+		if (supplier.getSupplierId() != null
+				&& (smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_RENEW_MOF)
+				|| smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_UPDATE_MOF) //32627 START
+				|| smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_ADD_CATEGORY))) { //32627 END
+			SmMofAccount resultList = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(
+					supplier.getSupplierId());
+			if (resultList != null) {
+				if (resultList.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)
+						&& supplier.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
+					return false;
+				}
+				if (resultList.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)
+						&& supplier.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 					return false;
 				}
 			}
 		}
 		return true;
 	}//#32002 - end
+	
+	/**
+	 * Reminder before to resubmit page
+	 */
+	//#31270 - START
+	public void reminderToResubmit() {
+		String businessType = this.getManagedBean().getSmSupplier().getBusinessType();
+		if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+																|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
+																		|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
+																						|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)){
+			RequestContext.getCurrentInstance().execute("reminderConfirmDialog.show()");
+		} else {
+			redirectToResubmit();
+		}
+	}
+	//#31270 - END
+	
+	// #32628 - start
+	public void validateResubmitApplication() {
+		List<SmMofAccount> accounts = getManagedBean().getSmSupplier().getSmMofAccounts();
+		for (SmMofAccount account : accounts) {
+			if (account.getSupplierType().equalsIgnoreCase(getManagedBean().getSmAppl().getSupplierType())) {
+				if (account.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) || account.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_EXPIRED)) {
+					Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+					long diff = account.getExpDate().getTime() - currentDate.getTime();
+					long diffDays = diff / (24 * 60 * 60 * 1000);
+
+					if (this.getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES) && (diffDays >= 0 && diffDays < 90)) {
+						log.debug("***************MOF Account Expiry near for Ac No.: " + account.getMofNo()
+								+ "\nExp Date:" + account.getExpDate() + "\nDiff Days:" + diffDays);
+						throw new EpException(MessageConst.ERROR_722503);
+					}
+				}
+			}
+		}
+	}
+	// #32628 - end
+
 }

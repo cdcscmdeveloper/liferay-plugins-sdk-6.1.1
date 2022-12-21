@@ -53,7 +53,7 @@
 					rendered="#{receivedNoteBackingBean.managedBean.contractFlag}"
 					action="#{receivedNoteBackingBean.frnItemInfoList(item.flDelOrderItem.flFulfilmentItemAddr)}"
 					update=":form:frnItemInfoDialog,@(.orderSummaryChange)">
-					<ac:iconTooltip value="#{lbl['lbl.fl.request.item.info.contract']}"  escape="false"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.item.tooltip']}"  escape="false"/>
 					</p:commandLink>
 			</p:column>
 			<p:column >
@@ -254,19 +254,28 @@
 		<table style="width: 100%">
 			<tr>
 				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.item.name']} :&#160;" /></td>
-				<td><h:outputText style="float:left;" 
-						value="#{receivedNoteBackingBean.managedBean.itemName}"/></td>
+				<td><p:inputText disabled="true" size="35" style="float:left;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"
+						value="#{receivedNoteBackingBean.managedBean.itemName}"	/>
+					<h:outputText style="float:left;" rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
+						value="#{receivedNoteBackingBean.managedBean.itemName}"	/>
+				</td>
 						
 			</tr>		
 			<tr>
 				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.supp.offer']} :&#160;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"/></td>
-				<td><h:outputText style="float:left;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}" escape="false" 
-						value="#{receivedNoteBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.supplierOffer}"/></td>
+				<td><p:inputText disabled="true"  style="float:left;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}" escape="false" 
+						value="#{receivedNoteBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.supplierOffer}"
+						size="35"/>
+						<ac:iconTooltip value="#{lbl['lbl.fl.supp.offer.tooltip']}" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"/>
+				</td>
 			</tr>			
 			<tr>
 				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.new.supp.offer']} :&#160;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"/></td>
-				<td><h:outputText style="float:left;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"
-						value="#{receivedNoteBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.newOfferedSpec}"/></td>
+				<td><p:inputText disabled="true" style="float:left;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"
+						value="#{receivedNoteBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.newOfferedSpec}"
+						size="35"/>
+						<ac:iconTooltip value="#{lbl['lbl.fl.new.supp.offer.tooltip']}" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"/>
+				</td>
 			</tr>
 			</table> 
 			
@@ -290,8 +299,11 @@
 						disabled="true"
 						value="#{specificationList.itemSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.itemSpec}" /> 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.supp.offer']}" style="text-align:center"
-						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">
+			<p:column rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">	
+				<f:facet name="header" style="text-align:center">
+					<h:outputText value="#{lbl['lbl.fl.supp.offer']}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.supp.offer.spec.tooltip']}"/>
+				</f:facet>
 			<p:inputTextarea cols="41" rows="10" id="supplierOffer"
 						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
 						styleClass="colFloatLeft"
@@ -300,8 +312,11 @@
 						disabled="true"
 						value="#{specificationList.supplierOffer == null ? lbl['lbl.fl.supp.na'] : specificationList.supplierOffer}" /> 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.new.offer.spec']}" style="text-align:center"
-						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">
+			<p:column rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">	
+				<f:facet name="header" style="text-align:center">
+					<h:outputText value="#{lbl['lbl.fl.new.offer.spec']}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.new.supp.offer.tooltip']}"/>
+				</f:facet>
 			<p:inputTextarea cols="41" rows="10" id="newOfferedSpec"
 						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
 						styleClass="colFloatLeft"

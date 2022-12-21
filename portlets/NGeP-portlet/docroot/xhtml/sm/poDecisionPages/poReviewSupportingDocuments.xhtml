@@ -35,8 +35,17 @@
 						<!-- #12483 - START -->
 						<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.renderRevisedReason()}" styleClass="splNotesFonts" escape="false" />
 						<!-- #12483 - END -->
-						<td><h:outputText value="#{lbl['lbl.sm.suppDoc.reviewNote']}"
-								style="float :left" escape="false" /> <h:inputHidden
+						<td><!-- #28776 - start -->
+							<c:if test="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_OFFLINE}">
+								<h:outputText value="#{lbl['lbl.sm.suppDoc.reviewNote.old']}" 
+								style="float :left" escape="false" /> 
+							</c:if> 
+							<c:if test="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+								<h:outputText value="#{lbl['lbl.sm.suppDoc.reviewNote']}"
+								style="float :left" escape="false" />
+							</c:if>
+							<!-- #28776 - end -->
+								<h:inputHidden
 								value="#{backingBean.managedBean.smAppl.applCategoryType}" /> <p:spacer
 								height="10px" />
 							<p:commandButton value="#{lbl['lbl.sm.valid.all']}" style="float:right;" 

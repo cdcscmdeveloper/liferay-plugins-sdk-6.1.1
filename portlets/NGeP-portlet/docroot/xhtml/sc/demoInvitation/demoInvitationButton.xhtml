@@ -15,17 +15,17 @@
 						<p:commandButton value="#{lbl['lbl.btn.save']}"
 							action="#{demoInvBB.saveDemoInvitation}" process="@form"
 							partialSubmit="true" onclick="blockWidget.show();"
-							oncomplete="blockWidget.hide();" update="@form" />
+							oncomplete="blockWidget.hide();" update="@form" disabled="#{demoInvBB.managedBean.disableSaveAndSubmitButton}" />
 
 						<p:commandButton value="#{lbl['lbl.btn.submit']}"
 							styleClass="amendButton" update="@([id$=#{submitConfirmId}])"
 							onclick="submitConfirmPopUp.show();" process="@form"
-							oncomplete="blockWidget.hide();" />
+							oncomplete="blockWidget.hide();" disabled="#{demoInvBB.managedBean.disableSaveAndSubmitButton}" />
 					</c:if>
 
 					<c:if test="#{!demoInvBB.managedBean.qualifiedSupplier}">
 						<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
-							onclick="cancelTaskPopUp.show();" style="float:right;" />
+							onclick="cancelTaskPopUp.show();" style="float:right;" disabled="#{demoInvBB.managedBean.showCancelButton}"/>
 					</c:if>
 
 				</div>

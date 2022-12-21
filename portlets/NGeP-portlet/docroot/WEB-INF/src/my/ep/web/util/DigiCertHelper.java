@@ -146,28 +146,7 @@ public class DigiCertHelper {
 			IKMCAPIResponse res = client.requestService(KMCRequestBuilder
 					.getChallengeQuestions(identificationNo, 1));
 			
-			PmUser pmUser = new FacesScopes().getUserSessionBean();
-			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setUserId(pmUser.getUserId());
-			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
-			log.info("getPersonnelId:: " + resDTO.getSmPersonnel().getPersonnelId());
-			log.info("getSoftcertFlg:: " + resDTO.getSmPersonnel().getSoftcertFlg());
-			log.info("getSmAppl.getSmSupplier.getSupplierId:: " + resDTO.getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
-			
-			reqDTO.setSmSupplierId(resDTO.getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());//30425
-			if (!SmServiceLookup.getPersonnelSO().isNotExpiredSoftcertBySupplierIdAndUserId(reqDTO)) { //30425
-			//#30855 - START
-//			if (!(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED)) {
-			//#30855 - END
-				log.info("#25061 getSoftcertFlg:: if log 1");
-				if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
-						|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
-						|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
-					log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
-					throw new EpException(MessageConst.ERROR_DIGICERT_776063);
-				} else {
-					log.info("getSoftcertFlg|776064 2 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
-					//#29630 - start
+					//#30425 - remove all validation to spkibackingBean
 					if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
 						log.info("51; " + MessageConst.ERROR_DIGICERT_776059);
 					} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
@@ -177,24 +156,7 @@ public class DigiCertHelper {
 					} else {
 						log.info("99; " + MessageConst.ERROR_TRUSTGATE_776063);
 					}
-					//#29630 - end
-					//#30855 - START
-					FacesScopes fs = new FacesScopes();
-					if(fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value()) || 
-					   fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) || 
-					   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) ||
-					   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
-						throw new EpException(MessageConst.ERROR_DIGICERT_776064);
-					}
-					if(fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()) || 
-					   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || 
-					   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || 
-					   fs.hasRoleUser(RoleCode.FL_USER.value())){
-						throw new EpException(MessageConst.ERROR_DIGICERT_776065);
-					}
-					//#30855 - END
-				}
-			}
+					//#30425 - end
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:

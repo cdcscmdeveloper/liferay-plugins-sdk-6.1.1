@@ -29,9 +29,9 @@
 	    	opacity: 0.55;
 	    }
 	</style>
-			
+	<!-- #30457 - Start -->		
 	<p:dialog id="imageAndBasicId" widgetVar="imageBasicDialog" position="center"
-		width="780" height="400" closable="true" resizable="true" styleClass="pop_up_top"
+		width="700" height="400" closable="true" resizable="false" styleClass="pop_up_top"
 		header="#{lbl['lbl.cm.image.basic.item.spec']}" modal="true" >
 			<c:if test="#{!catalogueBackingBean.managedBean.viewOnlyBasicPopup}">
 				<p:ajax event="close" process="@form"
@@ -42,11 +42,13 @@
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
 			<p:growl for="growlMssg" showDetail="true"/>
-			<p:outputPanel id="imageAndBasicIdPopup" layout="block">			
-				<p:panel id="imageUploadId" header="#{lbl['lbl.pm.profiles.userdetails.upload.image']}" toggleable="true">
+			<p:outputPanel id="imageAndBasicIdPopup" layout="block">
+			<!-- #30457 change label -->			
+				<p:panel id="imageUploadId" header="#{lbl['lbl.cm.image.delpopup.upload.image']}" toggleable="true">
 					<table class="noBorder" width="100%">
 						<tr class="noBorder">
 							<td class="noBorder" width="80%">
+							  <!-- #30457 remove sortBy --> 
 								<p:dataTable value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}" 
 								var="item" id="imageTable" rowIndexVar="rowIndex" rowKey="#{item.supplierItemId}"
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -54,12 +56,15 @@
 									<p:column width="85%" style="text-align: center;">
 										<f:facet name="header">
 											<h:outputText value="* " styleClass="mandatory" />
-											<h:outputText value="#{lbl['lbl.cm.image']}" />
+											<!-- #30457 -->
+											<h:outputText value="#{lbl['lbl.cm.image.delpopup']}" />
 										</f:facet>
-										
-										<p:graphicImage styleClass="catImageStyle"
-											value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{item.imageName}" />
-										
+										<!-- #30457 - Start -->
+										<div style="width:200px;margin-left: 120px">
+										<p:graphicImage style="max-height:100%;max-width:100%;"
+											value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{item.imageName}" /></div>
+										<!-- #30457 - End -->
+											
 									</p:column>
 									<p:column width="15%" headerText="#{lbl['lbl.cm.action']}" style="text-align: center;">
 										<p:commandLink process="@this"
@@ -142,4 +147,5 @@
 				</p:panel>
 			</p:outputPanel>
 	</p:dialog>
+	<!-- #30457 - End -->	
 </ui:composition>

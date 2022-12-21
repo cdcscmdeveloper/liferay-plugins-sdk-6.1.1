@@ -23,6 +23,7 @@
 
 
 			<p:column headerText="#{lbl['lbl.sm.rptpreview.template']}">
+				<!-- 32963 -->
 				<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false"
 					action="#{svoSiteVisitBackingBean.downloadSiteVisitTemplate(cTask,true)}">
 					<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
@@ -74,11 +75,6 @@
 						value="#{svoSiteVisitBackingBean.managedBean.smSvTask.actualVisitDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" 
 						disabled="#{viewFlag}"/>
-					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-						oriValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.actualVisitDate}" 
-						currValue="#{svoSiteVisitBackingBean.managedBean.smSvTask.actualVisitDate}" 
-						alertValue="#{svoSiteVisitBackingBean.managedBean.smSvtaskSVO.actualVisitDate}"/>
 				</td>
 				<td class="tdTitle" /><td class="tdContent" />
 			</tr>
@@ -97,18 +93,18 @@
 				return address;
 			}
 		</script>
-	
-		<p:dataTable var="svTask"
+		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
+		<p:dataTable var="task"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			
 			<p:column headerText="#{lbl['lbl.sm.facility.facilityType']}">
 				<h:outputText 
-				value="#{svTask.smSvAddress.facilityType}" />
+				value="#{task.smSvAddress.facilityType}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.address']}">
-				<h:outputText value="#{svoSiteVisitBackingBean.getSMFullAddress(svTask.smSvAddress.address)}"
+				<h:outputText value="#{svoSiteVisitBackingBean.getSMFullAddress(task.smSvAddress.address)}"
 					escape="false" style="float : left" />
 			</p:column>
 			
@@ -131,22 +127,22 @@
 				</ui:remove>
 			
 				<ac:gmap id="gmap" disabled="#{viewFlag}"
-					locationName="#{svTask.smAppl.smCompanyBasic.companyName}"
-					latitude="#{svTask.smSvAddress.address.mapLatitude}" 
-					longitude="#{svTask.smSvAddress.address.mapLongitude}" 
-					address="getAddress('#{svTask.smSvAddress.address.address1}','#{svTask.smSvAddress.address.address2}','#{svTask.smSvAddress.address.address3}',
-					'#{svTask.smSvAddress.address.pmCity.cityName}','#{svTask.smSvAddress.address.pmDistrict.districtName}','#{svTask.smSvAddress.address.pmState.stateName}',
-					'#{svTask.smSvAddress.address.pmCountry.countryName}')" />
+					locationName="#{task.smAppl.smCompanyBasic.companyName}"
+					latitude="#{task.smSvAddress.address.mapLatitude}" 
+					longitude="#{task.smSvAddress.address.mapLongitude}" 
+					address="getAddress('#{task.smSvAddress.address.address1}','#{task.smSvAddress.address.address2}','#{task.smSvAddress.address.address3}',
+					'#{task.smSvAddress.address.pmCity.cityName}','#{task.smSvAddress.address.pmDistrict.districtName}','#{task.smSvAddress.address.pmState.stateName}',
+					'#{task.smSvAddress.address.pmCountry.countryName}')" />
 			</p:column>
 			
 			<p:column
 				headerText="#{lbl['lbl.sm.siteassign.expected.visiting.date']}">
-				<h:outputText value="#{svTask.scheduleDate}">
+				<h:outputText value="#{task.scheduleDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
 		</p:dataTable>
-		
+		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
 		<c:choose>
 			<c:when test="#{!viewFlag}">
 				<ui:include src="/xhtml/sm/shared/sitevisit/addressRepresentatives.xhtml" />

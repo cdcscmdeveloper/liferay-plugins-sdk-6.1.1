@@ -55,7 +55,7 @@ public class ContractManagementReportBackingBean extends CtReportBaseBackingBean
 		getManagedBean().setCircularEffFromDate(null);
 		getManagedBean().setCircularEffToDate(null);
 		getManagedBean().setFulfilmentType(null);
-		getManagedBean().setSelectedSupplier(null);
+		getManagedBean().setSelectedSupplier(null); //#30918
 		
 	}
 	@Override

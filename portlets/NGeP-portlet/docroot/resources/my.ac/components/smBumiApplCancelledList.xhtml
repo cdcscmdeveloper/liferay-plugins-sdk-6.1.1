@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:cc="http://java.sun.com/jsf/composite">
+	
+	<cc:interface>
+		<cc:attribute name="bBean" required="true" />
+		<cc:attribute name="applList" required="true" />
+		<cc:attribute name="isSvc" default="false"/>
+		<!-- <cc:attribute name="file" required="true" /> -->
+	</cc:interface>
+	
+	<cc:implementation>
+	<p:outputPanel>
+		<h:outputText value="#{lbl['lbl.sm.bumi.cancel.notif']}"/><p:spacer width="2"/>
+		<p:commandLink onclick="bumiApplCancelledDlg.show()">
+			<u><h:outputText value="#{lbl['lbl.sm.bumi.cancel.notif.here']}" styleClass="warning" /></u>
+		</p:commandLink><p:spacer width="2"/>
+		<h:outputText value="#{lbl['lbl.sm.bumi.cancel.notif.svc']}" rendered="#{cc.attrs.isSvc}"/>
+		<h:outputText value="#{lbl['lbl.sm.bumi.cancel.notif.svo']}" rendered="#{!cc.attrs.isSvc}"/>
+	</p:outputPanel>
+	
+	<p:dialog id="bumiApplCancelledDlg" header="#{lbl['lbl.sm.bumi.cancel.header']}" closable="true"
+		widgetVar="bumiApplCancelledDlg" modal="true" width="1100px" height="auto" style="display: block;">		
+		
+		<p:dataTable value="#{cc.attrs.applList}" id="bumiPagingDataModelId" rowIndexVar="index"
+			sortBy="#{appl.createdDate}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
+			lazy="true" rows="10" var="appl" style="table-layout: fixed;">
+			<ac:paginator for="bumiPagingDataModelId" />
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2% !important;">
+				<p:outputLabel value="#{index + 1}"
+					style="float: left;white-space: normal !important;" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.sme.app.no']}" style="width : 15% !important;">
+				<h:outputText value="#{appl.applNo}"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.epno']}" style="width : 15% !important;">
+				<h:outputText value="#{appl.smSupplier.epNo}"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.supplier']}" style="width : 38% !important;">
+				<h:outputText value="#{appl.smSupplier.companyName}"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.applicationstatus']}" style="width : 15% !important;">
+				<h:outputText value="#{appl.workflowStatusDesc}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.bumi.cancel.date']}" style="width : 15% !important;">
+				<ac:labelDate styleClass="outputLabel-view" value="#{appl.changedDate}"/>
+			</p:column>
+		</p:dataTable>
+		
+		<p:commandButton value="#{lbl['lbl.btn.download']}" style="float:right;"
+			 	immediate="true" ajax="false">
+			<!-- <p:fileDownload value="#{cc.attrs.bBean.downloadCancelledBumiAppl()}" /> -->
+			<!-- <f:ajax execute="@this" render="@form" /> -->
+		</p:commandButton>
+	</p:dialog>
+	</cc:implementation>
+</ui:composition>

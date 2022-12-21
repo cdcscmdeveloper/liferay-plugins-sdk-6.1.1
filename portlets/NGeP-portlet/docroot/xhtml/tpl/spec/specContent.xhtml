@@ -23,7 +23,17 @@
 	<p:blockUI block="spg" widgetVar="#{templateSpecId}specBlockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif" />
 	</p:blockUI>
-
+	<ui:remove>
+		Development #34216 START
+		</ui:remove>
+	<script type="text/javascript">
+		$(document).on('ready', function(){
+			blockWidget.show();
+		})
+	</script>
+	<ui:remove>
+		Development #34216 END
+	</ui:remove>
 	<p:panel id="spg" header="#{title}" toggleable="true">
 			<h:panelGroup rendered="false">
 			Content Type: 
@@ -113,11 +123,10 @@
 				<p:remoteCommand name="#{templateSpecId}SpecReRender" 
 					partialSubmit="true" process="@this" update="@(.ac-paginator)"
 					oncomplete="#{templateSpecId}specBlockWidget.hide();" />
-					
+				<!-- SHAFFUL START HERE (ITEM) -->
 				<ac:dataTable id="questionTbl" converter="PositionMetricConverter" value="#{templateSpecBean.specMaster.tplSpecQuestions}" widgetVar="#{templateSpecId}questionTblWidget" var="question" rowIndexVar="row"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					scrollable1="true" scrollWidth1="#{scrollWidth}">
-					
+					scrollable1="true" scrollWidth1="#{scrollWidth}">					
 					<ui:param name="prevSpecQuestion" value="#{row > 0 ? templateSpecBean.specMaster.tplSpecQuestions[row-1] : null}" />
 					<ui:param name="isQuestionTypeItem" value="#{question.questionType == TplSpecConst.questionTypeItem}" />
 					<ui:param name="isPriceTypeStandard" value="#{question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard}" />
@@ -251,9 +260,13 @@
 				</ui:param>
 				<ui:remove> #32110 related to #21695 Farid End 30/11/2021</ui:remove>
 				<ui:remove> #32110 related to #21695 Farid Start 30/11/2021</ui:remove>
-				<p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row"
+				<ui:include src="uomAndQuantityDetailsPopUp.xhtml" /><!-- #29187 Added Vinod -->
+				<!-- #33859 - start -->
+				<!-- SHAFFUL (START HERE)UOM oncomplete="blockWidget.hide();" -->
+			    <p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row" 
 					value="#{filterList}" 	emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					scrollable1="true" scrollWidth1="#{scrollWidth}">
+					scrollable1="true" scrollWidth1="#{scrollWidth}" style="word-break: break-all">
+				<!-- #33859 - end -->
 					
 					<ui:param name="prevSpecQuestion" value="#{row > 0 ? templateSpecBean.specAnswerList[row-1].tplSpecQuestion : null}" />
 					<ui:param name="question" value="#{tplSpecAnswer.tplSpecQuestion}" />
@@ -285,6 +298,7 @@
 						<ui:decorate template="specColumnQuestionView.xhtml" />
 					</c:if>
 				</p:dataTable>
+				<!-- SHAFFUL (END HERE)UOM -->
 			<!--  #21695 REMOVE TOTAL SCORE START	
 				<c:if test="#{isContentTypeScore and isSpecTypeFinancial}">
 					<p:spacer height="10" />
@@ -410,4 +424,17 @@
 				</p:dialog>
 			</c:if>
 		</p:panel>
+		<ui:remove>
+		Development #34216 START
+		</ui:remove>
+		<script type="text/javascript">		
+			$(window).on('load', function (e) {
+				setTimeout(function() { 
+					blockWidget.hide();
+			    }, 7000);				
+			})
+    	</script>
+    	<ui:remove>
+		Development #34216 END
+		</ui:remove>
 </ui:composition>

@@ -93,13 +93,13 @@
 						#{ctBackingBean.managedBean.contractVer.ctContract.contractNo}
 					</td>
 					<td style="width: 10%">
-						<h:outputLabel value="#{lbl['lbl.fl.doc.maintain.business.company.name']}" />
+						<h:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
 					</td>
 					<td style="width: 25%" class="header-info-text">
-						#{ctBackingBean.managedBean.supplierCompanyName}
+						#{ctBackingBean.managedBean.contractVer.ctContract.ownerOrgProfile.orgName}
 					</td>
 					<td style="width: 5%">
-						<h:outputLabel value="#{lbl['lbl.ct.status']}" />
+						<h:outputLabel value="#{lbl['lbl.ct.fulfilment.details.status']}" />
 					</td>
 					<td style="width: 15%" class="header-info-text">
 						#{ctBackingBean.getStatusDescById(ctBackingBean.managedBean.contractVer.status.statusId)}
@@ -170,12 +170,12 @@
 		
 						<h:panelGroup>
 							<div style="height: 40px; vertical-align: top;">
-								<p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
+								<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.business.company.name']}" />
 							</div>
 						</h:panelGroup>
 						<h:panelGrid>
-							<p:inputTextarea id="ptjName" rows="3" style="width:200px;" disabled="true"
-								value="#{ctBackingBean.managedBean.contractVer.ctContract.ownerOrgProfile.orgName}" autoResize="false" />
+							<p:inputTextarea id="compName" rows="3" style="width:200px;" disabled="true"
+								value="#{ctBackingBean.managedBean.supplierCompanyName}" autoResize="false" />
 						</h:panelGrid>
 				</h:panelGrid>
 		</p:panel>
@@ -216,6 +216,21 @@
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="cancelConfirmDlg.hide()" type="button" />
 			</div>
+		</p:confirmDialog>
+		<p:confirmDialog message="#{requestCtAdminBackingBean.getRejectRequestAdminConfirmationContent(requestCtAdminBackingBean.managedBean.contractVer.docType)}" 
+			severity="alert" widgetVar="rejectConfirmDlg" closeAble="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.reject.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form" partialSubmit="true" 
+					process="@this" action="#{requestCtAdminBackingBean.saveRequestCtAdmin('REJECT')}" 
+					onstart="rejectConfirmDlg.hide();blockWidget.show();" 
+					oncomplete="blockWidget.hide();"/>
+				
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					type="button"  onclick="rejectConfirmDlg.hide()" />
+			</div>
+		
+		
 		</p:confirmDialog>
 	</ui:define>
 </ui:composition>

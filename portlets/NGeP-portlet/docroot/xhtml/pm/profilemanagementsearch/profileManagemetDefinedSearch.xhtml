@@ -1,0 +1,18 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	
+   <p:panel id="pProfileMngSearch" header="#{lbl['lbl.pm.search.user']}" toggleable="true">
+		<!-- Search -->
+	    <ui:include src="/xhtml/pm/profilemanagementsearch/profileManagementSearch.xhtml" />
+  </p:panel> 
+	<!-- Result -->
+	 <ui:include src="/xhtml/pm/profilemanagementsearch/profileManagementResult.xhtml" />
+	
+</ui:composition>

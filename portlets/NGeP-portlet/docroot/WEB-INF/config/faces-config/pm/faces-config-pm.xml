@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<faces-config
+    version="2.0"
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+>
+	<!-- deprecated replace with ParameterTypeConst  -->
+	<managed-bean>
+		  <description>Profile Management Code Category Constants</description>
+		  <managed-bean-name>PmCodeCatConst</managed-bean-name>
+		  <managed-bean-class>my.ep.constant.pm.PmCodeCategoryConst</managed-bean-class>
+		  <managed-bean-scope>application</managed-bean-scope>
+ 	</managed-bean>
+ 	
+ 	<!-- deprecated replace with ParameterConst  -->
+	<managed-bean>
+		  <description>Profile Management Code Constants</description>
+		  <managed-bean-name>PmCodeConst</managed-bean-name>
+		  <managed-bean-class>my.ep.constant.pm.PmCodeConst</managed-bean-class>
+		  <managed-bean-scope>application</managed-bean-scope>
+ 	</managed-bean> 
+ 	
+ 	<managed-bean>
+		  <description>Profile Management Parameter Type Constants</description>
+		  <managed-bean-name>ParameterTypeConst</managed-bean-name>
+		  <managed-bean-class>my.ep.constant.pm.ParameterTypeConst</managed-bean-class>
+		  <managed-bean-scope>application</managed-bean-scope>
+ 	</managed-bean>
+ 	
+	<managed-bean>
+		  <description>Profile Management Parameter Constants</description>
+		  <managed-bean-name>ParameterConst</managed-bean-name>
+		  <managed-bean-class>my.ep.constant.pm.ParameterConst</managed-bean-class>
+		  <managed-bean-scope>application</managed-bean-scope>
+ 	</managed-bean>
+ 	
+ 	<managed-bean>
+		<description>Profile Management Constants</description>
+		<managed-bean-name>ProfileManagementConst</managed-bean-name>
+		<managed-bean-class>my.ep.constant.pm.ProfileManagementConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+</faces-config>

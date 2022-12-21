@@ -8,20 +8,26 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.service.rpt.IRPTRequestSO; 	//#32675 - shaqimi
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;//#32675 - shaqimi
+import my.ep.dto.pm.common.report.RPTRequestReqDTO;//#32675 - shaqimi
+import my.ep.dto.pm.common.report.RPTRequestResDTO;//#32675 - shaqimi
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;//#32675 - shaqimi
 import my.ep.web.backingbean.report.ct.cc.ContractItemMonitoringCCRptBackingBean;
 import my.ep.web.backingbean.report.ct.cc.ContractManagementReportBackingBean;
 import my.ep.web.backingbean.report.ct.cc.ListOfCircularRptBackingBean;
 import my.ep.web.backingbean.report.ct.cc.StatementOfOrderRptBackingBean;
 import my.ep.web.constant.report.CtReportConst;
+import my.ep.web.constant.report.ReportConst;//#32675 - shaqimi
 import my.ep.web.managedbean.report.ct.CtReportManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -30,6 +36,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;//#32675 - shaqimi
 
 /**
  * The Class CtReportBackingBean.
@@ -56,6 +63,13 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	public void preRenderView() {
 		log.debug("preRenderView");
 		this.renewSesionObject();
+		
+		//Enhancement 32675 - shaqimi start
+		if(getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())) {
+			this.getManagedBean().setFactoringUser(true);
+		}
+		//Enhancement 32675 - shaqimi start
 		
 		retrieveReportCategoryListByModuleCode(
 				ModuleCodeConst.CONTRACT_MANAGEMENT.toUpperCase());
@@ -92,7 +106,13 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 			setCurrentActiveOrg();
 		}
 	}
-	
+	//Enhancement 32675 - shaqimi start
+	public void onChangeFromToDate() {
+		if(this.getManagedBean().getFromDate().after(this.getManagedBean().getToDate())){
+			throw new EpException(MessageConst.ERROR_775186);
+		}
+	}
+	//Enhancement 32675 - shaqimi end
 	private void clearAllSearchCriteria() {
 		StatementOfOrderRptBackingBean ccStatementOfOrderRptBB = new StatementOfOrderRptBackingBean();
 		ListOfCircularRptBackingBean ccListOfCircularRptBB = new ListOfCircularRptBackingBean();		
@@ -134,11 +154,15 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		if (getFacesScopes().getUserSessionBean().getUserId() == null) {
 			throw new EpException(MessageConst.ERROR_770149);
 		}
+		//Enhancement 32675 - shaqimi start
 		if (!getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
 				&& !getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				&& !getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
 				&& !getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-				&& !getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+				&& !getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+				&& !getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())
+				&& !getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value())) {
+		//Enhancement 32675 - shaqimi start
 			List<PmUserOrg> userOrgList = PmCommonUtil
 					.retrieveActiveOrgWithoutRole(getFacesScopes()
 							.getUserSessionBean().getUserId(), false);
@@ -329,14 +353,31 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	 */
 	@Override
 	public void resetSearch() {
-		log.debug("resetSearch: ctReportBB");		
+		log.debug("resetSearch: ctReportBB");
+		
+		//#29416 Nordin start
+		if (!getManagedBean().isDisableMinistryField()) 
+		{
+			getManagedBean().setSelectedMinistry(null);
+			getManagedBean().setDisableMinistryField(false);
+			getManagedBean().setDisableOrgField(false);
+			getManagedBean().setSelectedKumpulanPTJ(null);
+			getManagedBean().setSelectedPTJ(null);
+		}
+		
+		//#29416 Nordin end
+		
 		getManagedBean().setPopUpMsg(null);
 		getManagedBean().setReportUrl(null);
-		getManagedBean().setDisableMinistryField(false);
-		getManagedBean().setDisableOrgField(false);
-		getManagedBean().setSelectedMinistry(null);
-		getManagedBean().setSelectedKumpulanPTJ(null);
-		getManagedBean().setSelectedPTJ(null);
+		
+		//#29416 Nordin start
+		//getManagedBean().setDisableMinistryField(false);
+		//getManagedBean().setDisableOrgField(false);
+		//getManagedBean().setSelectedMinistry(null);
+		//getManagedBean().setSelectedKumpulanPTJ(null);
+		//getManagedBean().setSelectedPTJ(null);
+		//#29416 Nordin end
+		
 		getManagedBean().setContractNo(null);
 		getManagedBean().setContractPhysicalNo(null);
 		getManagedBean().setLoaNo(null);
@@ -346,8 +387,6 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		getManagedBean().setStatus(null);
 		getManagedBean().setFromDate(DateUtils.getFirstDateOfTheYear());
 		getManagedBean().setToDate(DateUtils.getCurrentDateWithoutTime());	
-		//#30418 - start
-		//#30918 - end
 	}
 
 	/**
@@ -418,9 +457,79 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					.getReportCode());
 			map.put(CtReportConst.PARAM_KEY_USER_ID, getFacesScopes()
 					.getUserSessionBean().getUserId().toString());
+			//Enhancement 32675 - shaqimi start
+			if(getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())) {
+				map.put(CtReportConst.PARAM_KEY_USER_ROLE, RoleCode.FACTORING_USER.value());
+			}
+			//Enhancement 32675 - shaqimi end
 		} else {
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 		return map;
 	}
+	
+	//#32675 - shaqimi start
+	/**
+	 * The method used to generate the Contract Report
+	 * 
+	 * @param params  the map of param key and value
+	 */
+	
+	public void generateReportFactoring(LinkedHashMap<String, String> params) {
+		log.debug("generateReport");
+		
+		if(this.getManagedBean().getFromDate().before(this.getManagedBean().getToDate())){
+			IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IRPTRequestSO.class);
+			params.put(ReportConst.PARAM_KEY_REPORT, getManagedBean()
+					.getReportName());
+			params.put(ReportConst.PARAM_REPORT_ID, getManagedBean()
+					.getReportCode());
+			params.put(ReportConst.PARAM_USER_ID, getFacesScopes()
+					.getUserSessionBean().getUserId().toString());
+
+			RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
+			reqDTO.setDefaultOutputType(this.getManagedBean()
+					.getDefaultOutputType());
+			reqDTO.setTempAccess(this.getManagedBean().isTempAccess());
+			reqDTO.setParametersMap(params);
+			
+			try {
+				RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
+				
+				//R5 #14076 start
+				RPTRequestDtlReqDTO restDtlDTO = new RPTRequestDtlReqDTO();
+				restDtlDTO.getRptRequestDtl().setRequestId(resDTO.getRequestId());
+				
+				if(params.get(CtReportConst.PARAM_KEY_CONTRACT_NO) != null){
+					restDtlDTO.getRptRequestDtl().setDocumentNo01(params.get(CtReportConst.PARAM_KEY_CONTRACT_NO));
+				}
+				if(params.get(CtReportConst.PARAM_KEY_PHYSICAL_CONTRACT_NO) != null){
+					restDtlDTO.getRptRequestDtl().setDocumentNo02(params.get(CtReportConst.PARAM_KEY_PHYSICAL_CONTRACT_NO));
+				}
+				if(params.get(CtReportConst.PARAM_KEY_CIRCULAR_NO) != null){
+					restDtlDTO.getRptRequestDtl().setDocumentNo03(params.get(CtReportConst.PARAM_KEY_CIRCULAR_NO));
+				}
+					
+				if(restDtlDTO.getRptRequestDtl().getDocumentNo01() != null || restDtlDTO.getRptRequestDtl().getDocumentNo02() != null || restDtlDTO.getRptRequestDtl().getDocumentNo03() != null ){
+					addRptRequestDetail(restDtlDTO);	
+				}
+				//R5 #14076 end
+				
+				getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId().toString() : "");
+				RequestContext.getCurrentInstance().execute(
+						"rptConfirmationDlg.show()");
+				
+				log.debug("Report URL: "+resDTO.getReportUrl());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			FacesContext.getCurrentInstance().validationFailed();
+			throw new EpException(MessageConst.ERROR_775186);
+		}
+	}
+	//#32675 - shaqimi end
 }

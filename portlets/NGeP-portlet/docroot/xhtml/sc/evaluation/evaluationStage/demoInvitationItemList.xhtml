@@ -206,9 +206,112 @@
 			</p:column>
 
 			<p:column style="width:170px;white-space:normal">
-				<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
-					<h:outputText value="#{question.clQuantity}" />
-				</h:panelGroup>
+				<c:choose>
+				<ui:remove> #28784 zonal quantity not showing - start </ui:remove> 
+							<c:when
+								test="#{!empty evaluationBackingBean.managedBean.templateSpecBean.specMaster.tplSpecZone and 
+								evaluationBackingBean.managedBean.templateSpecBean.specMaster.qtyByZone}">								
+								<p:commandButton id="zoneQtyBtn" icon="ui-icon-pencil"
+									style="background-color:transparent !important; border:0px none;"
+									action="#{templateSpecBackingBean.displayDemozoneQtyPopupAction(evaluationBackingBean.managedBean.templateSpecBean)}"
+									partialSubmit="true" process="@this"
+									update="@([id$=zoneQtyPopup])"
+									title="#{lbl['lbl.tpl.qty.instruction.tooltip']}">
+									<f:setPropertyActionListener
+										target="#{evaluationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion}"
+										value="#{question}" />
+									<f:setPropertyActionListener
+										target="#{evaluationBackingBean.managedBean.templateSpecBean.specComponentId}"
+										value="#{templateSpecId}" />
+								</p:commandButton>
+							</c:when>
+							<c:otherwise>
+								<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
+									<h:outputText value="#{question.clQuantity}" />
+								</h:panelGroup>
+							</c:otherwise>
+						</c:choose>
+
+						<p:dialog id="zoneQtyPopup"
+							header="#{lbl['lbl.tpl.spec.content.zone.quantity.title']}"
+							widgetVar="zoneQtyPopup" modal="true" width="450" height="290"
+							closable="true">
+
+							<c:if
+								test="#{!empty evaluationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion}">
+								<div style="height: 250px;">
+									<h:panelGroup id="zoneQtyPnl">
+										<p:messages id="zoneQtyPopupMsg" showDetail="true"
+											autoUpdate="true" closable="true" showSummary="false"
+											severity="error, info" />
+
+										<table style="width: 425px;">
+											<tr>
+												<td><h:outputText style="float: left;"
+														styleClass="instruction" escape="false"
+														value="#{lbl['lbl.tpl.qty.instruction.tooltip']}"
+														rendered="#{isSpecificationReq and isSpecTypeTechnical}" />
+													<h:outputText style="float: left;" styleClass="instruction"
+														escape="false"
+														value="#{lbl['lbl.tpl.qty.instruction.tooltip.financial']}"
+														rendered="#{isSpecificationReq and !isSpecTypeTechnical}" />
+													<h:outputText></h:outputText></td>
+											</tr>
+
+											<tr>
+												<td><p:dataTable id="specZoneQtyTbl"
+														var="tplSpecZoneQty" rowIndexVar="rowIndex"
+														value="#{evaluationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion.tplSpecZoneQties}"
+														rowKey="#{tplSpecZoneQty}">
+
+														<ac:paginator for="specZoneQtyTbl" />
+
+														<p:column
+															headerText="#{lbl['lbl.tpl.spec.content.estimation.zone.name']}">
+															#{tplSpecZoneQty.tplSpecZoneDtl.zoneName}
+														</p:column>
+														<p:column style="width:95px;">
+															<f:facet name="header">
+																<h:outputText
+																	value="#{lbl['lbl.tpl.spec.content.quantity']}" />
+															</f:facet>
+															<p:inputText id="zoneQty"
+																style="min-width:0px !important;width:90px; text-align:right;"
+																value="#{tplSpecZoneQty.qty}" required="true"
+																maxlength="14"
+																label="#{lbl['lbl.tpl.spec.content.quantity']}"
+																disabled="true">
+																<p:ajax partialSubmit="true" process="@this"
+																	listener="#{templateSpecBackingBean.calcTotalAmount(evaluationBackingBean.managedBean.templateSpecBean, 
+	 													evaluationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion.tplSpecAnswers[0], isItemTypeService)}"
+																	update="@this, zoneQtyMsg, @(.calcAmount)" />
+																<c:choose>
+																	<c:when
+																		test="#{!templateSpecBackingBean.managedBean.secretaryValidate}">
+																		<ac:validateNumber
+																			pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, 
+	 															evaluationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion.clUom.uomCode)}"
+																			maxIntegerDigits="10" />
+																	</c:when>
+																	<c:otherwise>
+																		<f:attribute name="min" value="0"></f:attribute>
+																		<ac:validateNumber
+																			pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, 
+	  															evaluationBackingBean.managedBean.templateSpecBean.selectedSpecQuestion.clUom.uomCode)}"
+																			maxIntegerDigits="10" />
+																	</c:otherwise>
+																</c:choose>
+															</p:inputText>
+															<p:message id="zoneQtyMsg" for="zoneQty" display="icon" />
+														</p:column>
+													</p:dataTable></td>
+											</tr>
+										</table>
+									</h:panelGroup>
+								</div>
+							</c:if>
+						</p:dialog>
+				<ui:remove> #28784 zonal quantity not showing - end </ui:remove>
 			</p:column>
 
 			<p:column style="width:125px;">

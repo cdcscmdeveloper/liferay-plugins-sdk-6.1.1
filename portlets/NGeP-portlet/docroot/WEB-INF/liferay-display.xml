@@ -418,6 +418,13 @@
 			<portlet id="codificationMaintenance"></portlet>
 			<portlet id="itemCodeCreation"></portlet>
 			<portlet id="extensionCodeCreation"></portlet>
-		</category>			
+		</category>	
+		
+		<!-- MyGPKI POC START  -->
+		<category name="MyGPKIPOC">
+			<portlet id="myGPKIPOC"></portlet>
+		</category>
+		<!-- MyGPKI POC END  -->
+				
 	</category>
 </display>

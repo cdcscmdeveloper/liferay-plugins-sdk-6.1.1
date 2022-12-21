@@ -68,10 +68,12 @@
 								style="white-space: normal;">
 								<h:outputText value="#{history.createdUsername}" />
 							</p:column>
-							<p:column headerText="#{lbl['lbl.pm.table.history.remark']}">
-								<h:outputText value="#{history.remark}" />
+							<!-- #29665 - Start -->
+							<p:column headerText="#{lbl['lbl.pm.table.history.remark']}"
+							    style="white-space: normal;">
+								<h:outputText value="#{history.remark}"/>
 							</p:column>
-							
+						   <!-- #29665 - End -->
 						</p:dataTable>
 					</p:panel>
 				</h:panelGrid>

@@ -19,10 +19,17 @@
 	   	<p:spacer width="2" />	
 	   	<h:panelGrid columns="2">
 	   		<p:outputLabel id="contractPeriod" value="#{lbl['lbl.ct.bond.contractperiod']}" />
+	   		<h:panelGrid columns="6">
 			<p:inputText for="contractPeriod" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 	  			value="#{ctBackingBean.calculateBondPeriod()}"  disabled="true">
 			</p:inputText>
-			
+			<p:spacer width="2" />
+			<p:outputLabel value="#{lbl['lbl.ct.months']}" />
+			<p:inputText id="contractPeriodBondDaysId" styleClass="ppRightBtn"  value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendDaysPeriod}" maxlength="3" disabled="true" >
+			</p:inputText>
+			<p:spacer width="2" />
+			<p:outputLabel value="#{lbl['lbl.ct.days']}" />
+			</h:panelGrid>
 			<p:outputLabel id="overallContractAmount" value="#{lbl['lbl.ct.bond.overallamount']}" />
 			<p:inputText for="overallContractAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 	  			value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.loaAmt}"  disabled="true">
@@ -198,8 +205,8 @@
 		
 		<p:spacer width="2" />	
 		
-		<p:panel  id="bondSpl" toggleable="true" rendered="#{(ctBackingBean.managedBean.extendContract and (ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractUpdate
-		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplementand))}" toggleSpeed="500">
+		<p:panel  id="bondSpl" toggleable="true" rendered="#{(ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractUpdate
+		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement)}" toggleSpeed="500">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.spl.bond']}"/>
 	   	</f:facet>
@@ -304,7 +311,7 @@
 			</p:column>
 					
 			<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.txt.attachment']}" style="width:15%;">			
-				<h:panelGroup id="uploadBondPg" columns="2">
+				<h:panelGroup id="uploadBondSpl" columns="2">
 					<p:commandButton oncomplete="uploadBondSplDlg.show();return false;" update=":form:uploadBondSplDlg"
 					   	process="@this" partialSubmit="true" actionListener="#{ctBackingBean.PerformanceBondValue(varBondsupplemental)}"
 						rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting and varBondsupplemental.fileName == null
@@ -319,7 +326,7 @@
 					<p:commandLink rendered="#{varBondsupplemental.fileName != null and (!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
 						or !ctBackingBean.managedBean.ctContractAmount.bondReq)}" style="float:left;" 
 					  	action="#{ctBackingBean.setIndexProperty(index)}"
-					   	process="@this" partialSubmit="true"  onsuccess="deleteBondAttachmentDlg.show();">
+					   	process="@this" partialSubmit="true"  onsuccess="deleteBondAttachmentSplDlg.show();">
 			   			<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	</p:commandLink>
 				</h:panelGroup>

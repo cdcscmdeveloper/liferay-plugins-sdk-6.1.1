@@ -1103,7 +1103,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 		if (remarks.size() == 0 || !ctWorkflowStatusMatch) {
 			CtRemark remark = new CtRemark();
-			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
@@ -1158,10 +1158,23 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			
 			//#30453 start
 			for (PmUser pmUser : list) {
-				items[i++] = new SelectItem(pmUser.getUserId(),new StringBuilder().append( pmUser.getSalutationCode().getSalutationName() ).append( " " ).append(pmUser.getUserName()).toString());
+				items[i++] = new SelectItem(
+						pmUser.getUserId(),
+						pmUser.getSalutationCode()!=null ?
+								new StringBuilder().append(	pmUser.getSalutationCode().getSalutationName() ).append( " " ).append(pmUser.getUserName()).toString() :
+									pmUser.getUserName()
+						
+						);
 			}
 			//#30453 end
-		} finally {
+		} 
+		//#30453 start
+		catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+		//#30453 end
+		finally {
 			userSO = null;
 			reqDTO = null;
 			resDTO = null;
@@ -1199,8 +1212,11 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 				for (SmPersonnel personnel : resDTO.getPersonnels()) {
 					//#30453 start
-					items[i++] = new SelectItem(personnel.getPmUser().getSalutationCode().getSalutationName().concat(" ").concat(personnel.getName()),personnel.getPmUser().getSalutationCode().getSalutationName().concat(" ").concat(personnel.getName()));
-					getManagedBean().getSupplierUserMap().put(personnel.getPmUser().getSalutationCode().getSalutationName().concat(" ").concat(personnel.getName()),personnel);
+					items[i++] = new SelectItem(
+							personnel.getPmUser().getSalutationCode()!=null ? personnel.getPmUser().getSalutationCode().getSalutationName().concat(" ").concat(personnel.getName()) : personnel.getName(),
+							personnel.getPmUser().getSalutationCode()!=null ? personnel.getPmUser().getSalutationCode().getSalutationName().concat(" ").concat(personnel.getName()) : personnel.getName());
+					getManagedBean().getSupplierUserMap().put(
+							personnel.getPmUser().getSalutationCode()!=null ? personnel.getPmUser().getSalutationCode().getSalutationName().concat(" ").concat(personnel.getName()) : personnel.getName(),personnel);
 					//#30453 end					
 				} 			             
 				getManagedBean().setSupplierSignerDropdown(items);
@@ -1216,7 +1232,14 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 						supplierSigner.setOfficerPosition(null);
 					}
 				}
-			} finally {
+			} 
+			//#30453 start
+			catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			}
+			//#30453 end
+			finally {
 				supplierSearchSO = null;
 			}
 		}
@@ -1237,6 +1260,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 		ctReqDTO.setViewOnly(true);
 		ctBB.getManagedBean().setViewContract(true);
+		ctBB.getManagedBean().setViewContractFromAgreement(true);//Bug 34142 - shaqimi 16112022
 		ContractDetailsBackingBean contractDetailsBB = new ContractDetailsBackingBean();
 		contractDetailsBB.getManagedBean().setAsAtDate(null);
 		contractDetailsBB.setValidateContractField(ctReqDTO);
@@ -1265,6 +1289,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			abb.getManagedBean().setTrackingDairyView(true);
 			ctBB.getManagedBean().setViewSCL(true);
 			abb.getManagedBean().setViewSclFromAgreement(true);
+			//Bug 33096 - shaqimi start
+			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
+			//Bug 33096 - shaqimi end
 			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
 		}
 		//#15851 - end
@@ -1331,7 +1358,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		CtAttachment attachment = new CtAttachment();
 		attachment.setFileName(item.getFileName());
 		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 

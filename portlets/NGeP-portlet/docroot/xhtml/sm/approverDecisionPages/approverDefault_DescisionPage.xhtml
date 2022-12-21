@@ -258,4 +258,14 @@
 	<!-- 13362 START -->
 	<ac:smOverlapCategoryDialog voList="#{backingBean.managedBean.overlapCategoryVOList}" bBean="#{backingBean}" showButton="true"/>
 	<!-- 13362 END -->
+	<!-- 32304 - start -->
+	<p:confirmDialog widgetVar="smBumiCancelAlert" id="smBumiCancelAlert" closable="false"
+		header="#{lbl['lbl.sm.bumi.cancel.other.appl.alert.header']}"
+		message="#{lbl['lbl.sm.bumi.cancel.other.appl.alert']}" severity="alert" >
+		<div align="right">
+		<p:commandButton value="#{lbl['lbl.btn.ok']}" action="#{backingBean.redirectToTaskList()}" 
+			onclick="smBumiCancelAlert.hide();blockWidget.show();" oncomplete="blockWidget.hide()"/>
+		</div>
+	</p:confirmDialog>
+	<!-- 32304 - end -->
 </ui:composition>

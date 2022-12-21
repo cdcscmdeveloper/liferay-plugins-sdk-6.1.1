@@ -611,7 +611,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		this.getManagedBean().getPersonnelMembers().clear();
 		BigDecimal sum = new BigDecimal(0);
 		for(SmPersonnel personnel:this.getManagedBean().getSmAppl().getSmPersonnels()){
-			BigDecimal shareAmt = personnel.getShareAmt();
+			BigDecimal shareAmtSsm = personnel.getShareAmtSsm();
 				if(personnel.getDesignation() != null){
 					String designation = populateDesignationSSM(personnel.getDesignation());
 					personnel.setDesignation(designation);
@@ -619,9 +619,18 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				if(personnel.isDirector() || personnel.isManagement()){
 				this.getManagedBean().getPersonnelDirectorManager().add(personnel);	
 				}
+				//28767
+				for (SmPersonnelAddress address : personnel.getSmPersonnelAddresses()){
+					if (address.getAddressType().equals("R")){
+						personnel.setSmPersonnelAdd(address);
+					}	
+				}
+				if (personnel.isSsmData()!= true){
+					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
+				}
 				if(personnel.isEquityOwner()){
-					if(shareAmt != null && !(personnel.getShareAmt() == null)){
-						sum =  sum.add(shareAmt);
+					if(shareAmtSsm != null && !(personnel.getShareAmtSsm() == null)){
+						sum =  sum.add(shareAmtSsm);
 						getManagedBean().setTotalShare(sum);
 						
 					}
@@ -1021,20 +1030,17 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& my.ep.constant.pm.ParameterConst.CATEGORY_TYPE_MANUFACTURING
 							.equals(cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode())) {
+					//#33467 - start, #32809 - nested loop for checking each SmManufacturingDtl for every SmSupplierCategory
 					for (SmManufacturingDtl manuFacDtl : getManagedBean().getSmAppl().getSmManufacturingDtls()) { // filter manufacture not imposed DA
-						if (manuFacDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
-							if(activeManufacturingDtls.size() > 0){
-								for (SmManufacturingDtl manuFacDtlAct : activeManufacturingDtls) {
-									if (!manuFacDtl.equals(manuFacDtlAct)) {
-										activeManufacturingDtls.add(manuFacDtl);
-									} 
-								}
-							} else {
-								activeManufacturingDtls.add(manuFacDtl);
-							}
+						if(manuFacDtl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) continue;
+						if(activeManufacturingDtls.size() == 0) activeManufacturingDtls.add(manuFacDtl);
+						SmManufacturingDtl manDtl = (SmManufacturingDtl) EntityHelper.getEntityBySinglePropertyFromList(
+								manuFacDtl.getManufacturingDtlId(), activeManufacturingDtls, "manufacturingDtlId");
+						if(manDtl == null){
+							activeManufacturingDtls.add(manuFacDtl);
 						}
 					}
-					// #32809 - end
+					//#33467, #32809 - end
 				}
 			}
 			getManagedBean().getSmAppl().setSmManufacturingDtls(
@@ -1050,6 +1056,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setStoreFacilitiesVOList(
 				getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_STORE));
+		//28775 - Site Visit Grouping Enhancement - 28775 - start
+		getManagedBean().getStoreFacilitiesVOList().addAll(
+				getCategoryFacilityVO(getManagedBean().getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE));
+		//28775 - Site Visit Grouping Enhancement - 28775 - end
 		getManagedBean().setFactoryFacilitiesVOList(
 				getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_FACTORY));
@@ -1947,7 +1958,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					}
 				}
 				//32815 - end
-				getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
+				//34209 - START
+				if(getManagedBean().isPoApprUnClaimTask()){
+					if(cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED){
+						getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
+					}
+				}else{
+					getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
+				}
+				//34209 END
 			} else {
 				//31480 - start
 				// for supp profile load all active category only
@@ -4127,13 +4146,21 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 									String catCode = StringUtils.EMPTY;
 									catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
 									catVo.setCategoryCode(catCode);
+									//#33303 - START
+									catVo.setCategoryL1Code(arr[3].toString());
+									catVo.setCategoryL2Code(arr[4].toString());
+									catVo.setCategoryL3Code(arr[5].toString());
+									//#3303 - END
 									if(!catCodeList.contains(catCode)){
 										catVoList.add(catVo);
 										catCodeList.add(catCode);
 									}
 									//28281 (bumi cat code) end
 								}
-							}						
+							}
+							//#33303 - START
+							SmApplicationUtil.sortSupplierCategoryDA(catVoList);
+							//#33303 - END
 							retVal.setCategoryCodeList(catVoList);
 						}
 					}
@@ -4281,9 +4308,16 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 								String catCode = StringUtils.EMPTY;
 								catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
 								catVo.setCategoryCode(catCode);	
+								//#33303 - START
+								catVo.setCategoryL1Code(arr[3].toString());
+								catVo.setCategoryL2Code(arr[4].toString());
+								catVo.setCategoryL3Code(arr[5].toString());
+								//#33303 - END
 								catVoList.add(catVo);
 							}	
-							
+							//#33303 - START
+							SmApplicationUtil.sortSupplierCategoryDA(catVoList);
+							//#33303 - END
 							this.getManagedBean().setCategoryCodeList(catVoList);
 						}
 					}
@@ -4356,19 +4390,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
 				if (!EntityHelper.isCollectionEmpty(resultList)
 						&& resultList.size() > 0) {
-					//#29659 - START
-					List<Object[]> resultListNew = new ArrayList<>();
-					for (Object[] arr : resultList) {
-						
-						Object[] object = new Object[arr.length + 1];
-						for(int i=0; i<arr.length;i++){
-							object[i]=arr[i];
-						}
-						String title = SmServiceLookup.getPersonnelSO().getSalutationNameByPersonnelId(Long.parseLong(arr[23] + ""));
-						object[object.length - 1] = title;
-						resultListNew.add(object);
-					}
-					
 					retVal = new SmOverlapCategoryVO();
 					retVal.setOverLappedCategoryExist(true);
 					retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
@@ -4381,8 +4402,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc)
 							+ System.lineSeparator() + System.lineSeparator());
 					retVal.setOverlapCategoryVOList(getOverlapCategoryVOList(
-							resultListNew, smAppl.getSupplierType()));
-					//#29659 - END
+							resultList, smAppl.getSupplierType()));
 				}
 				return retVal;
 			}
@@ -4475,7 +4495,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 									+ ""
 									: applStatus);
 							//#29659 - START 
-							voSubTmp.setTitle(arr[24] + "");
+							voSubTmp.setTitle(arr[23] + "");
 							//#29659 - END
 							voTmp.getOverlapInfoList().add(voSubTmp);
 							isSubAdd = false;
@@ -4660,6 +4680,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 									String catCode = StringUtils.EMPTY;
 									catCode = arr[3].toString() + arr[4].toString() + arr[5].toString();
 									catVo.setCategoryCode(catCode);
+									//#33303 - START
+									catVo.setCategoryL1Code(arr[3].toString());
+									catVo.setCategoryL2Code(arr[4].toString());
+									catVo.setCategoryL3Code(arr[5].toString());
+									//#33303 - END
 									if (!catCodeList.contains(catCode)) {
 										catVoList.add(catVo);
 										catCodeList.add(catCode);
@@ -4667,6 +4692,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 									// 28281 (bumi cat code) end
 								}
 							}
+							//#33303 - START
+							SmApplicationUtil.sortSupplierCategoryDA(catVoList);
+							//#33303 - END
 							retVal.setCategoryCodeList(catVoList);
 						}
 					}

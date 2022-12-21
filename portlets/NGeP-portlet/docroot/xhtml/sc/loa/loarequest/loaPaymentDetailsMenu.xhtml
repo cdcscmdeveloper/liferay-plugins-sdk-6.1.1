@@ -17,14 +17,15 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td width="18%">
-				<h:outputLabel value="#{lbl['lbl.sc.account.no']}" />
+				<h:outputLabel value="#{isSupplierAckStatus ? lbl['lbl.sc.account.no.bank.name'] : lbl['lbl.sc.account.no']}" /> <!-- 20220906@syazani - Bug #33674 -->
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isSupplierAckStatus}" />
 			</td>
 			<td>
 				<c:if test="#{isSupplierAckStatus}">
+				<!-- 20220908@syazani - Bug #33674 - Start -->
 					<p:selectOneMenu id="accountNoId"
 					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-						value="#{lOADetailBackingBean.managedBean.scLoa.bankAccNo}"
+						value="#{lOADetailBackingBean.managedBean.supplierBankId}" 
 						style="width: 277px;margin-bottom: 5px;"
 						required="false"
 						label="#{lbl['lbl.sc.account.no']}">
@@ -32,18 +33,21 @@
 						<f:selectItems
 							value="#{lOADetailBackingBean.managedBean.bankList}"
 							var="smSupplierBank" 
-							itemValue="#{smSupplierBank.accountNo}" itemLabel="#{smSupplierBank.accountNo}" />
+							itemValue="#{smSupplierBank.supplierBankId}" itemLabel="#{smSupplierBank.accountNo} / #{smSupplierBank.pmFinancialOrg.finOrgName}" />
 						<p:ajax event="change"
 							listener="#{lOADetailBackingBean.handleBankDetailsChanged}"
 							partialSubmit="true" process="@this" update="bankName, bankBranch, bankAddress" />
-					</p:selectOneMenu> <p:message id="accountNoIdMsg" for="accountNoId" display="icon" />
+					</p:selectOneMenu> 
+					<!-- 20220908@syazani - Bug #33674 - End -->
+					<p:message id="accountNoIdMsg" for="accountNoId" display="icon" />
+					
 				</c:if>
 				<c:if test="#{!isSupplierAckStatus}">
 					<p:inputText value="#{lOADetailBackingBean.managedBean.scLoa.bankAccNo}" disabled="true" size="40" />
 				</c:if>
 			</td>
 		</tr>
-		<tr>
+		<tr style="display: #{isSupplierAckStatus ? 'none' : ''};"> <!-- 20220906@syazani - Bug #33674 -->
 			<td>
 				<h:outputLabel value="#{lbl['lbl.sc.bank.name']}" />
 			</td>

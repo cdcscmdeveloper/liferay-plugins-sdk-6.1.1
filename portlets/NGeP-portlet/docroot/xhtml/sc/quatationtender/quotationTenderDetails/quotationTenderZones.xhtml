@@ -76,6 +76,24 @@
 
 							<p:treeNode type="zone">
 								<h:outputText value="#{location.zoneName}" />
+								<!-- #29521 - start -->
+								<c:choose>
+									<c:when test="#{qTDetailBB.managedBean.listZonalHistory ne null and not empty qTDetailBB.managedBean.listZonalHistory}">
+										<p:graphicImage id="zoneNameIC" style="margin-bottom:-3px; margin-left:2px;" 
+										value="/css/images/design/icon_alert.png" rendered="#{(scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION) and (not empty qTDetailBB.managedBean.listZonalHistory and not qTDetailBB.managedBean.listZonalHistory.contains(location.zoneName)) }"/>
+										<p:tooltip for="zoneNameIC">
+											<p:outputLabel escape="false" value="#{lbl['lbl.zone.change']}"  />
+										</p:tooltip>
+									</c:when>
+									<c:otherwise>
+										<p:graphicImage id="zoneNameIC" style="margin-bottom:-3px; margin-left:2px;" 
+										value="/css/images/design/icon_alert.png" rendered="#{(scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION) and qTDetailBB.managedBean.isZonalChange eq 'true'}"/>
+										<p:tooltip for="zoneNameIC">
+											<p:outputLabel escape="false" value="#{lbl['lbl.zone.change']}"  />
+										</p:tooltip>
+									</c:otherwise>
+								</c:choose>	
+								<!-- #29521 - end -->
 							</p:treeNode>
 
 							<p:treeNode type="state">

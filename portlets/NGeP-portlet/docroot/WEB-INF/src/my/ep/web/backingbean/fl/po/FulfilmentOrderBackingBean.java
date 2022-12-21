@@ -308,6 +308,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			if(getManagedBean().getPmDigiSign() != null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
+			log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][fulfillmentOrderAction]");
 			if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) && !hasFactoringUserRole()){
 				resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
 				
@@ -335,7 +336,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				resDTO = fulfilmentOrderSO.cancelFulfillmentOrder(reqDTO);
 			}else if(action.equalsIgnoreCase(FulfilmentConst.REMOVE_FACTORING) 
 					|| getManagedBean().getProcessName() != null 
-					&& getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME)){
+					&& getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME) || getManagedBean().getProcessName()
+					.equalsIgnoreCase(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME.replaceAll("\\s", ""))){
 				resDTO = fulfilmentOrderSO.removeFactoringComp(reqDTO);
 				messagePrefix = ResourceBundleUtils.getMessage("lbl.fl.rfc.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 			}
@@ -576,7 +578,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		
 		if(taskId != null){
 			Object obj = super.getBpmTaskDetails(Object.class, null);
-			if (this.getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME)){
+			log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][preRenderViewCR]");
+			if (this.getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME) || getManagedBean().getProcessName()
+					.equalsIgnoreCase(FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME.replaceAll("\\s", ""))){
 				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 				FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
@@ -590,7 +594,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
 				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
-				if(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.equalsIgnoreCase(this.getManagedBean().getProcessName())){
+				if(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.equalsIgnoreCase(this.getManagedBean().getProcessName()) || getManagedBean().getProcessName()
+						.equalsIgnoreCase(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.replaceAll("\\s", ""))){
 					FLCOCancelReqType coCancelDataType = (FLCOCancelReqType)obj;
 					flReqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 					flReqDTO.setFlOrderId(coCancelDataType.getOrderCancelDetails().getOrderDetails().getOrderId());
@@ -602,6 +607,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						if(coCancelDataType.getOrderCancelDetails().getErrorIds().contains(",")) {
 							errorId = coCancelDataType.getOrderCancelDetails().getErrorIds().split(",")[0];
 						}
+						//33177-start
+						if(coCancelDataType.getOrderCancelDetails().getErrorIds().contains(";")) {
+							errorId = coCancelDataType.getOrderCancelDetails().getErrorIds().split(";")[0];
+						}
+						//33177-End
 						errReq.setErrorId(new Long(errorId));
 						FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 						getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
@@ -726,9 +736,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 
 		if(taskId != null){
 			Object obj = super.getBpmTaskDetails(Object.class, null);
+			log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][preRenderViewPR]");
 			if(null==this.getManagedBean().getProcessName() || this.getManagedBean().getProcessName().equalsIgnoreCase("")){
 				log.info("Process name is NUll");
-			} else if (FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME.equalsIgnoreCase(this.getManagedBean().getProcessName())) {
+			} else if (FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME.equalsIgnoreCase(this.getManagedBean().getProcessName()) || getManagedBean().getProcessName()
+					.equalsIgnoreCase(FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME.replaceAll("\\s", ""))) {
 				FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				flReqDTO.setFlOrderId(stopFlData.getOrderId());
@@ -738,7 +750,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				getManagedBean().setContractRequest(Boolean.TRUE);
-			} else if(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME.equalsIgnoreCase(this.getManagedBean().getProcessName())){
+			} else if(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME.equalsIgnoreCase(this.getManagedBean().getProcessName()) || getManagedBean().getProcessName()
+					.equalsIgnoreCase(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME.replaceAll("\\s", ""))){
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
 				FLFactoringRemoveReqType removeReqType = (FLFactoringRemoveReqType)obj;
@@ -755,7 +768,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
 				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
-				if(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.equalsIgnoreCase(this.getManagedBean().getProcessName())){
+				if(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.equalsIgnoreCase(this.getManagedBean().getProcessName()) || getManagedBean().getProcessName()
+						.equalsIgnoreCase(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.replaceAll("\\s", ""))){
 					FLPOCancelReqType poCancelReqType = (FLPOCancelReqType)obj;
 					flReqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 					flReqDTO.setFlOrderId(poCancelReqType.getOrderCancelDetails().getOrderDetails().getOrderId());
@@ -767,6 +781,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						if(poCancelReqType.getOrderCancelDetails().getErrorIds().contains(",")) {
 							errorId = poCancelReqType.getOrderCancelDetails().getErrorIds().split(",")[0];
 						}
+						//33177-start
+						if(poCancelReqType.getOrderCancelDetails().getErrorIds().contains(";")) {
+							errorId = poCancelReqType.getOrderCancelDetails().getErrorIds().split(";")[0];
+						}
+						//33177-end
 						errReq.setErrorId(new Long(errorId));
 						FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 						getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
@@ -1141,18 +1160,29 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
 					String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 					String docType = getManagedBean().getFulfilmentOrder().getDocType();
-					if(docType.equalsIgnoreCase("PO"))
+					//#33659 start
+					/*if(docType.equalsIgnoreCase("PO"))
 						messagePrefix="Purchase Order";
 					else
-						messagePrefix="Contract Order";
+						messagePrefix="Contract Order";*/
 					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)) {
-						messageId = MessageConst.INFO_745022;
+						if(docType.equalsIgnoreCase("PO")){
+							messageId = MessageConst.INFO_745022;
+						}else{
+							messageId = MessageConst.INFO_745028;
+						}
 					}
+					/*FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+							FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));*/
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 							FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(messageId, 
-									new String[]{messagePrefix/*+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)*/+messageSuffix, docNo}, 
+									new String[]{docNo}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					//#33659 end
 				} else {
 					throw new EpException(MessageConst.ERROR_700020);
 				}
@@ -1207,6 +1237,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						yepReqDTO.setCarryFoward(true);
 						yepReqDTO.setProgressStatus((long) 4);
 						yepReqDTO.setUserRole(getUserRole());
+						//#33729 start
+						yepReqDTO.setPmuser(getFacesScopes().getUserSessionBean());
+						//#33729 end
 						yepResDTO=fulfilmentYepSO.updateCarryForwardFlYepTaskList(yepReqDTO);
 						log.info("Update task list carry forward as true");
 					}
@@ -1255,6 +1288,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					yepReqDTO.setCarryFoward(true);
 					yepReqDTO.setProgressStatus((long) 4);
 					yepReqDTO.setUserRole(getUserRole());
+					//#33729 start
+					yepReqDTO.setPmuser(getFacesScopes().getUserSessionBean());
+					//#33729 end
 					yepResDTO=fulfilmentYepSO.updateCarryForwardFlYepTaskList(yepReqDTO);
 					log.info("Progress status set to 4");
 					
@@ -1264,19 +1300,20 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 						
 						String docType = getManagedBean().getFulfilmentOrder().getDocType();
-						if(docType.equalsIgnoreCase("PO"))
-							messagePrefix="Purchase Order";
-						else
-							messagePrefix="Contract Order";
-						
+						//#33725 start
 						if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_PROCEED)) {
-							messageId = MessageConst.INFO_745023;
+							if(docType.equalsIgnoreCase("PO")){
+								messageId = MessageConst.INFO_745023;
+							}else{
+								messageId = MessageConst.INFO_745123;
+							}
 						}
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(messageId, 
-										new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
+										new String[]{docNo}, 
 										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+						//#33725 end
 					} else {
 						throw new EpException(MessageConst.ERROR_700020);
 					}
@@ -1442,13 +1479,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		 */
 		private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
 				Long docId, String docNumber , String textBeforeSign) {
-			FacesScopes facesScope = new FacesScopes();
-			Long userId = facesScope.getUserSessionBean().getUserId();
 			Timestamp date = new Timestamp(System.currentTimeMillis());
 			pmDigiSign.setDocId(new BigDecimal(docId));
 			pmDigiSign.setDocNo(docNumber);
 			pmDigiSign.setDocType(docType);
-			pmDigiSign.setCreatedBy(userId);
+			pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 	        pmDigiSign.setCreatedDate(date);
 	        pmDigiSign.setOriginalData(textBeforeSign);
 	     // spki 
@@ -2387,7 +2422,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			attachment.setFileName(item.getFileName());
 			attachment.setDocType(getManagedBean().getFulfilmentOrder().getDocType());
 			attachment.setDocId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
-			attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			attachment.setSecId(FulfilmentConst.AP58_AL);
 			attachment.setBrandNew(this.getManagedBean().getAttachment().isBrandNew());

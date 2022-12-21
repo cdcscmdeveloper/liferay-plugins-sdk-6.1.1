@@ -751,7 +751,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 	{
 		// managedBean.selectedAdmin.email
 		String email = this.getManagedBean().getSelectedAdmin().getEmail().toLowerCase();
-		if(email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com"))
+		if(!isAllowedEmail(email))
 		{
 			this.getManagedBean().getSelectedAdmin().setEmail("");
 			RequestContext.getCurrentInstance().execute(

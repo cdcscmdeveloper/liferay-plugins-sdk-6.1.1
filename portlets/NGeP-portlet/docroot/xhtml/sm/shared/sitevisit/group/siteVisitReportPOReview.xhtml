@@ -5,38 +5,37 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:param name="viewFlag" value="true" />
 	
 	<p:tabMenu activeIndex="#{svoSiteVisitBackingBean.managedBean.activeIndex}" id="tabIndex" update="outPnlSiteVisitReport">
 				
-		<p:menuitem value="#{lbl['lbl.sm.svo.sitevisit.info']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changePageIndex(0,null,false)}" />
-		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.b']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changePageIndex(1,null,false)}" />	
+		<p:menuitem value="#{lbl['lbl.sm.svo.sitevisit.info']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changePageIndex(0,viewFlag)}" />
+		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.b']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changePageIndex(1,viewFlag)}" />	
 		<p:menuitem value="#{lbl['lbl.sm.sitevisit.licenseinsurance']}" update="outPnlSiteVisitReport,tabIndex" 
-					actionListener="#{svoSiteVisitBackingBean.changePageIndex('l',null,false)}" 
+					actionListener="#{svoSiteVisitBackingBean.changePageIndex('l',viewFlag)}" 
 					rendered="#{svoSiteVisitBackingBean.managedBean.licensed}"/>
 		<p:menuitem value="#{svoSiteVisitBackingBean.getParameterDesc(svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3.categoryTypeCode)}" update="outPnlSiteVisitReport,tabIndex" 
-					actionListener="#{svoSiteVisitBackingBean.changePageIndex('c',svoSiteVisitBackingBean.managedBean.selectedSvTemplate,false)}"
+					actionListener="#{svoSiteVisitBackingBean.changePageIndex('c',viewFlag)}"
 					rendered="#{not empty svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3}" />
 		<p:menuitem value="#{lbl['lbl.sm.sv.templ.bumiputera']}" update="outPnlSiteVisitReport,tabIndex" 
-					actionListener="#{svoSiteVisitBackingBean.changePageIndex('c',svoSiteVisitBackingBean.managedBean.selectedSvTemplate,false)}" 
+					actionListener="#{svoSiteVisitBackingBean.changePageIndex('c',viewFlag)}" 
 					rendered="#{empty svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3}" />
-		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.d']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changePageIndex('r',null,false)}" />
-		<p:menuitem value="#{lbl['lbl.sm.officeloc']}"  update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changePageIndex('o',null,false)}" />
+		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.d']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changePageIndex('r',viewFlag)}" />
+		<p:menuitem value="#{lbl['lbl.sm.officeloc']}"  update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changePageIndex('o',viewFlag)}" />
 		<p:menuitem value="#{lbl['lbl.sm.sitevist.report.submission']}" 
-					update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changePageIndex('s',null,false)}" />
+					update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changePageIndex('s',viewFlag)}" />
 	</p:tabMenu>
 	
 	
 	<p:outputPanel id="outPnlSiteVisitReport">
-		<p:messages id="messages1" showDetail="true" escape="false"
-				autoUpdate="#{backingBean.managedBean.showParentMsg}"
-				closable="true" showSummary="false" />
 		<ui:param name="template"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3.categoryTypeCode.parameterCode}" />
-		<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 0}">
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage == '0' 
+					|| svoSiteVisitBackingBean.managedBean.activePage == null}">
 			<ui:include src="/xhtml/sm/svositevisit/siteVisitCommonInfo.xhtml" />
 		</c:if>
 
-		<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 1}">
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage == '1'}">
 			<ui:include src="/xhtml/sm/svositevisit/commonFinancialInfo.xhtml" />
 		</c:if>
 		
@@ -99,14 +98,9 @@
 		</c:if>
 						
 		<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage eq 's'}">
-			<ui:include src="/xhtml/sm/svositevisit/reportPreview.xhtml" />
+			<!-- <ui:include src="/xhtml/sm/svositevisit/reportPreview.xhtml" /> -->
+			<ui:include src="/xhtml/sm/shared/sitevisit/view_uploadedSiteVisitReport.xhtml" />
+			<ui:include src="/xhtml/sm/shared/sitevisit/recommendation.xhtml" />
 		</c:if>
-		
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.close']}" action="#{svoSiteVisitBackingBean.saveSiteVisitReportByPO}"
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" rendered="#{!viewFlag}"/>
-			<p:commandButton value="#{lbl['lbl.btn.close']}" onclick="poReportDlg.hide()" 
-				actionListener="#{svoSiteVisitBackingBean.changePageIndex(0,null,false)}" rendered="#{viewFlag}"/>
-		</div>	
 	</p:outputPanel>
 </ui:composition>

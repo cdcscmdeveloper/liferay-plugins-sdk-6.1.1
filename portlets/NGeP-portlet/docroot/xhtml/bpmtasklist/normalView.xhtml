@@ -8,6 +8,14 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:outputStylesheet library="ep/css" name="blinktext.css" />
+	<!--#29810-START-->
+	<style>
+		div.ui-selectonemenu-items-wrapper {
+			max-width: auto;
+      		min-width: 200px;
+		}
+	</style>
+	<!--#29810-END-->
 	
 	<p:panel header="#{lbl['lbl.bpm.my.task']}" collapsed="true" toggleable="true" id="normalViewPanelId">
 
@@ -42,6 +50,33 @@
 				<td width="10%"></td>
 				<td width="40%"></td>
 			</tr>
+			<!--#29810-START-->
+			<tr>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.createdDateFrom']} :" /></td>
+				<td width="40%">
+					<p:calendar showOn="button" navigator="true" display="inline" required="false" readonlyInput="false"
+						label="#{lbl['lbl.cm.doc.createdDate']}" id="myTaskCreatedDateFrom"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="21"
+						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
+						value="#{bpmTasklistBackingBean.managedBean.myTaskCreatedDateFrom}">
+						<p:ajax event="dateSelect" listener="#{bpmTasklistBackingBean.compareDate('normal', 'fromDate')}"/>
+						<p:ajax event="change" listener="#{bpmTasklistBackingBean.compareDate('normal', 'fromDate')}"/>
+					</p:calendar>
+				</td>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.createdDateTo']} :" /></td>
+				<td width="40%">
+					<p:calendar showOn="button" navigator="true"
+						display="inline" required="false" readonlyInput="false"
+						label="#{lbl['lbl.cm.doc.createdDate']}" id="myTaskCreatedDateTo"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="21"
+						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
+						value="#{bpmTasklistBackingBean.managedBean.myTaskCreatedDateTo}">
+						<p:ajax event="dateSelect" listener="#{bpmTasklistBackingBean.compareDate('normal', 'toDate')}"/>
+						<p:ajax event="change" listener="#{bpmTasklistBackingBean.compareDate('normal', 'toDate')}"/>
+					</p:calendar>
+				</td>
+			</tr>
+			<!--#29810-END-->
 			<!-- <tr>
 				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.created.date']} : " /></td>
 				<td width="40%">
@@ -60,51 +95,27 @@
 			<tr>
 				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.sort.by']} :" /></td>
 				<td width="40%">
+					<c:if test="#{bpmTasklistBackingBean.managedBean.roleType ne 'PO'}">
 					<p:selectOneMenu id="taskListSortBy" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.sort_by}">
-						<f:selectItem itemLabel="" itemValue=""></f:selectItem>
-						<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
-						<f:selectItem itemLabel="#{lbl['lbl.bpm.doc.no']}" itemValue="DOCNUMBER"></f:selectItem>
-						<f:selectItem itemLabel="#{lbl['lbl.bpm.doc.type']}" itemValue="DOCTYPE"></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.bpm.created.date']}" itemValue="CREATEDATE"></f:selectItem>
-						<f:selectItem itemLabel="#{lbl['lbl.bpm.description']}" itemValue="TITLE"></f:selectItem>
-						<f:selectItem itemLabel="#{lbl['lbl.bpm.status']}" itemValue="DOCSTATUS"></f:selectItem>
-						<f:selectItem itemLabel="#{lbl['lbl.bpm.received.date']}" itemValue="RECEIVEDDATE"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.doc.no']}" itemValue="DOCNUMBER"></f:selectItem>
 						<!-- <f:selectItem itemLabel="Document Receive Date" itemValue="CREATEDATE"></f:selectItem> -->
 					</p:selectOneMenu>
+					</c:if>
+					<c:if test="#{bpmTasklistBackingBean.managedBean.roleType eq 'PO'}">
+					<p:selectOneMenu id="taskListSortBy" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.sort_by}">
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.created.date']}" itemValue="CREATEDATE"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.doc.no']}" itemValue="DOCNUMBER"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.received.date']}" itemValue="RECEIVEDDATE"></f:selectItem>
+					</p:selectOneMenu>
+					</c:if>
 				</td>
 				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.order.by']} :"  /></td>
 				<td width="40%">
 					<p:selectOneMenu id="taskListOrderBy" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.ascending}">
-						<f:selectItem itemLabel="" itemValue=""></f:selectItem>
-						<f:selectItem itemLabel="#{lbl['lbl.bpm.ascending']}" itemValue="true"></f:selectItem>
 						<f:selectItem itemLabel="#{lbl['lbl.bpm.descending']}" itemValue="false"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.ascending']}" itemValue="true"></f:selectItem>
 					</p:selectOneMenu>
-				</td>
-			</tr>
-			<tr>
-				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.createdDateFrom']} :" /></td>
-				<td width="40%">
-					<p:calendar showOn="button" navigator="true"
-						display="inline" required="false" readonlyInput="false"
-						label="#{lbl['lbl.cm.doc.createdDate']}" id="myTaskCreatedDateFrom"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
-						value="#{bpmTasklistBackingBean.managedBean.myTaskCreatedDateFrom}">
-						<p:ajax event="dateSelect" listener="#{bpmTasklistBackingBean.compareDate('normal')}"/>
-						<p:ajax event="change" listener="#{bpmTasklistBackingBean.compareDate('normal')}"/>
-					</p:calendar>
-				</td>
-				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.createdDateTo']} :" /></td>
-				<td width="40%">
-					<p:calendar showOn="button" navigator="true"
-						display="inline" required="false" readonlyInput="false"
-						label="#{lbl['lbl.cm.doc.createdDate']}" id="myTaskCreatedDateTo"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
-						value="#{bpmTasklistBackingBean.managedBean.myTaskCreatedDateTo}">
-						<p:ajax event="dateSelect" listener="#{bpmTasklistBackingBean.compareDate('normal')}"/>
-						<p:ajax event="change" listener="#{bpmTasklistBackingBean.compareDate('normal')}"/>
-					</p:calendar>
 				</td>
 			</tr>
 			<!--#29810-END-->
@@ -140,7 +151,7 @@
 		<!--#29810-START-->
 		<ac:paginator for="taskListMyTaskId"></ac:paginator>
 		<p:ajax event="sort" listener="#{bpmTasklistBackingBean.orderByMyTaskList}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"></p:ajax>
-		<p:column width="5%;" sortBy="#{tasks.docNumber}" >
+		<p:column width="5%;" >
 			<f:facet name="header">	
 				#{lbl['lbl.bpm.doc.no']}				
 			</f:facet>
@@ -154,13 +165,13 @@
 			<!-- end updated for #24968 -->
 		</p:column>
 		
-		<p:column width="20%;" style="white-space:normal;" sortBy="#{tasks.docType}">
+		<p:column width="20%;" style="white-space:normal;">
 			<f:facet name="header">
 				#{lbl['lbl.bpm.doc.type']}
 			</f:facet>
 			#{bpmTasklistBackingBean.getParameterDesc(ParameterTypeConst.documentTypes,tasks.docType)}				
 		</p:column>
-		<p:column style="white-space:normal;" sortBy="#{tasks.title}">
+		<p:column style="white-space:normal;">
 			<f:facet name="header">
 				#{lbl['lbl.bpm.description']}
 			</f:facet>
@@ -175,19 +186,23 @@
 				<f:param name="docNo" value="#{tasks.docNumber}" />
 			</p:commandLink>
 		</p:column>
-		<p:column width="10%" sortBy="#{tasks.createDate}">
-			<f:facet name="header">
+		<p:column width="10%">
+			<f:facet name="header" >
 					#{lbl['lbl.bpm.created.date']}
-				</f:facet>
+			<p:graphicImage id="createdDateId" value="/css/images/design/tooltips.png" />
+			<p:tooltip for="createdDateId" value="#{lbl['lbl.bpm.created.date.tooltip']}" position="top"/>
+			</f:facet>
 			<h:outputText value="#{tasks.createDate.time}">
 				<f:convertDateTime
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 			</h:outputText>
 		</p:column>
-		<p:column rendered="#{bpmTasklistBackingBean.managedBean.roleType eq 'PO'}" width="10%" sortBy="#{tasks.receivedDate}">
+		<p:column rendered="#{bpmTasklistBackingBean.managedBean.roleType eq 'PO'}" width="13%">
 			<f:facet name="header">
 					#{lbl['lbl.bpm.documentReceivedDate']}
-				</f:facet>
+			<p:graphicImage id="receivedDateId" value="/css/images/design/tooltips.png" />
+			<p:tooltip for="receivedDateId" value="#{lbl['lbl.bpm.received.date.tooltip']}" position="top"/>				
+			</f:facet>
 			<h:outputText value="#{tasks.receivedDate.time}">
 				<f:convertDateTime
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
@@ -212,7 +227,7 @@
 			<!-- #12483 - END -->
 		</p:column>
 		<!--#29810-START-->
-		<p:column width="18%;" style="white-space:normal;" sortBy="#{tasks.docStatus}">
+		<p:column width="18%;" style="white-space:normal;">
 			<f:facet name="header">
 				#{lbl['lbl.bpm.status']}
 			</f:facet>				

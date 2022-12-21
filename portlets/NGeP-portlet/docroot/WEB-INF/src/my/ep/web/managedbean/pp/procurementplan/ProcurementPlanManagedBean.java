@@ -174,6 +174,10 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean planDetailSearchReset;
 	private boolean getProcurementItemList;
 	// 27624 - end
+	//#32730 - start
+	private boolean preYear = true;
+	//#32730 - end
+	
 	public ProcurementPlanManagedBean(){}
 
 	/**
@@ -1485,4 +1489,14 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.getProcurementItemList = getProcurementItemList;
 	}
 	//27624 - end
+	
+	//#32730 - start
+	public boolean isPreYear() {
+		return preYear;
+	}
+	
+	public void setPreYear(boolean preYear) {
+		this.preYear = preYear;
+	}
+	//#32730 - end
 }

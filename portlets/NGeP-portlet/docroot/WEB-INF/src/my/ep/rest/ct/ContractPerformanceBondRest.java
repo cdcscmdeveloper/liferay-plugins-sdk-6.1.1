@@ -28,6 +28,6 @@ public class ContractPerformanceBondRest {
             log.info("callNotifications -  Exception>>>> " + ex.getMessage() );
             return Response.status(406).entity(ex.getMessage()).build();
         }
-    } 
+    }
     //#13847 end
 }

@@ -970,11 +970,21 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_REMARK = "PREMARK";
 	public static final String PARAM_RECOM = "PRECOM";
 	public static final String PARAM_REPORT_OUTPUT_FORMAT = "desformat";
+	//Bug #33714 - start
+	public static final String PARAM_REPORT_BUFFERS = "buffers"; 
+	public static final int BUFFER_SIZE = 1024; 
+	//Bug #33714 - end
+
 	//Enhancement 29418 - shaqimi
 	public static final String PARAM_CONTRACT_VER_ID = "PCONTRECTVERID";
+	public static final String PARAM_FD_CONTRACT_VER_ID = "PFDCONTRECTVERID";
 	public static final String PARAM_AMENDMENT_ID = "PCONTAMENDID";
-	//Enhancement 29418 - shaqimi
+	public static final String PARAM_PRV_AMENDMENT_ID = "PPRVCONTAMENDID";
 	
+
+	public static final String PARAM_PREV_VER_ID = "P_PREV_VER_ID";
+	public static final String PARAM_CURRENT_VER_ID = "P_CURRENT_VER_ID";
+	//Enhancement 29418 - shaqimi
 
 	// Report parameter key for s1 market research report
 	public static final String PARAM_BIZ_REG_NO = "PBIZREGNO";

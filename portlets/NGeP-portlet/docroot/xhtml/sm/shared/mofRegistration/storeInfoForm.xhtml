@@ -14,8 +14,9 @@
 				<table style="width: 100%;">
 					<!-- 29380  - Site Visit Grouping Enhancement -28775 -Start -->
 					<tr>
-						<td style="white-space: nowrap; float: left;">
-						    <p:outputLabel value="#{storeCatVarStatus.index + 1}. #{storeCatVar.fullCatcode} (#{storeCatVar.pmCategoryL2.pmCategoryL1.categoryName}/#{storeCatVar.pmCategoryL2.categoryName}/#{storeCatVar.categoryName})" />
+						<td style="float: left;">
+						    <p:outputLabel value="#{storeCatVarStatus.index + 1}. #{storeCatVar.fullCatcode} (#{storeCatVar.pmCategoryL2.pmCategoryL1.categoryName}/#{storeCatVar.pmCategoryL2.categoryName}/#{storeCatVar.categoryName})" 
+						    style="text-align:left;"/>
 						</td>
 					</tr>
 					<ui:repeat var="categoryVar" value="#{backingBean.managedBean.smAppl.smSupplierCategories}" >
@@ -46,6 +47,7 @@
 								listener="#{backingBean.selectAll(storeCatVar.selected,storeCatVar.facilityList)}"/>
 				          </p:selectBooleanCheckbox>
 				       </f:facet>
+				       <!-- #30043 -->
 						<p:selectBooleanCheckbox value="#{stor.selected}" disabled="#{stor.facilityType eq 'B' or stor.facilityType eq 'H'}">
 							<p:ajax event="change" update="@this,:#{p:component('storePan')}" 
 								process="@this" partialSubmit="true" />

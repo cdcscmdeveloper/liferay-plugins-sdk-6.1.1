@@ -13,7 +13,9 @@ package my.ep.web.managedbean.sc.quationtender;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -78,6 +80,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
 import my.ep.persistence.entity.sc.quationtender.ScQtBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategoryHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
@@ -91,6 +94,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
+import my.ep.persistence.entity.sc.quationtender.ScQtHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
@@ -1636,7 +1640,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean buttonHideSchActive = true;
 	
 	private PmParameter pmParam;//bug #30435
-	private ScQtApprovalReqAttachement scQtApprovalReqAttachement;//bug #30435
+	private ScQtApprovalReqAttachement scQtApprovalReqAttachementICT;//#25077
+	private ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI;//#25077
 	private String scQtAppRequestRemark;//bug #30435
 	private boolean approverTabLoaded = false;//bug #30435
 	
@@ -1652,6 +1657,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Long subStatusId;
 	private List<String> paramTypes = null;
 	//#25692-End
+	// #29468 Vinod Start
+	private TreeNode rootCategoryTree;
+	List<String> selectedCategories;
+	Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode;
+	// #29468 Vinod End
+	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
+	
+	public boolean proposalValidityChangeValue; //#21692
+	
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -1671,6 +1685,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScLoaBasic> searchLoaDataModel;
 	
 	private IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel;
+	
+	/** The clone search qt data model. */
+	private IPagingDataModel<ScQt> mainCloneSearchQTDataModel;//34053
 	
 	// ***25692
 	/*
@@ -1713,10 +1730,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean showPopUpBPKApprovalNeeded=false;
 	private boolean resetBpkCurrentArea=false;
 	private String previousApprovalTabName;
-	private ScQtApprovalReqAttachement scQtApprovalReqAttachementHistory;
-	private boolean flagFileAttahmentDeleted=false;
+	private ScQtApprovalReqAttachement scQtApprovalReqAttachementHistoryICT;
+	private ScQtApprovalReqAttachement scQtApprovalReqAttachementHistoryMITI;
+	private boolean flagFileAttahmentDeletedICT=false;
+	private boolean flagFileAttahmentDeletedMITI=false;
 	private boolean firstPagePA=false;
 	//#25077 - End
+	
+	//#25426 - Start
+	private boolean firstViewPageCAUsers = false; 
+	//#25426 - End
 
 	//#11104-start
 		private ScQtCheckList sampleCheckList;
@@ -1735,6 +1758,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean technicalOtherCheckList;
 	private boolean technicalTemplateEdited;
 	private boolean fromSubmit;
+	private ScQtCheckList tempScQtChecklist;//1873 - note 97
+	private ScQtCheckList finTempScQtChecklist;//1873 - note 97
 	//#1873 -end
 
 	//#25138-start
@@ -1768,6 +1793,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean qtSpecMaintanance;
 	private boolean demoEvalDisabled;
 	private boolean demoSpecialCase;
+	private Long demoSampleChecklistStatusId;
 
 	// #30451-Start.
 	private boolean isBdSfFlow;
@@ -1792,6 +1818,43 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<BriefingZoneBean> sampleAddressBean;//11104-start
 	
 	private List<TabBean> readOnlyCommitteeTabBean;//Bug 32277
+	
+	private Long qtRemarksIdRemove;//#9019 (Harun)
+	
+	/** The qt remark missing issues. */
+	private boolean scQtRemarksEmpty = false; //#9019 08082022 (Harun)
+	
+	// #32929 - start
+	private boolean zoneRdbButtonChecked = Boolean.FALSE;
+	// #32929 - end
+	
+	// #29521 - start
+	private Boolean isZonalChange;
+	private Boolean isOpenForChange;
+	private Boolean isProcTypeCatChange;
+	private Boolean isPmProcurementCategoryChange;
+	private Boolean isEvaluationTypeChange;
+	private Boolean isExistingContractChange;
+	private Boolean isFulfilmentTypeChange;
+	private Boolean isContractCompletionPeriodChange;
+	private Boolean isScEditGeneral;
+	private Boolean isScEditSupplierQualificationCriteria;
+	private Boolean isCategoryCodeChange;
+	private ScQtHistory scQtHistory;
+	private String componentName;
+	private List<ScQtCategory> qtCategoryHistoryList;
+	private ScQtCategoryHistory categoryHistory;
+	private List<Boolean> catBoolean;
+	private List<Long> listCatHistory;
+	private List<String> listZonalHistory;
+	private Boolean isZonalHistoryExist;
+	private Boolean fromFinancialChecklist;
+	private ScQt backupScQt;
+	private List<ScQtCategory> backupCategoryCode;
+	private List<TplSpecZoneDtl> backupZoneList;
+	private List<Long> listCategory;
+				
+	// #29521 - end
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10662,20 +10725,36 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.previousApprovalTabName = previousApprovalTabName;
 		}
 		
-		public ScQtApprovalReqAttachement getScQtApprovalReqAttachementHistory() {
-			return scQtApprovalReqAttachementHistory;
+		public ScQtApprovalReqAttachement getScQtApprovalReqAttachementHistoryICT() {
+			return scQtApprovalReqAttachementHistoryICT;
 		}
 
-		public void setScQtApprovalReqAttachementHistory(ScQtApprovalReqAttachement scQtApprovalReqAttachementHistory) {
-			this.scQtApprovalReqAttachementHistory = scQtApprovalReqAttachementHistory;
-		}
-		
-		public boolean isFlagFileAttahmentDeleted() {
-			return flagFileAttahmentDeleted;
+		public void setScQtApprovalReqAttachementHistoryICT(ScQtApprovalReqAttachement scQtApprovalReqAttachementHistoryICT) {
+			this.scQtApprovalReqAttachementHistoryICT = scQtApprovalReqAttachementHistoryICT;
 		}
 
-		public void setFlagFileAttahmentDeleted(boolean flagFileAttahmentDeleted) {
-			this.flagFileAttahmentDeleted = flagFileAttahmentDeleted;
+		public ScQtApprovalReqAttachement getScQtApprovalReqAttachementHistoryMITI() {
+			return scQtApprovalReqAttachementHistoryMITI;
+		}
+
+		public void setScQtApprovalReqAttachementHistoryMITI(ScQtApprovalReqAttachement scQtApprovalReqAttachementHistoryMITI) {
+			this.scQtApprovalReqAttachementHistoryMITI = scQtApprovalReqAttachementHistoryMITI;
+		}
+
+		public boolean isFlagFileAttahmentDeletedICT() {
+			return flagFileAttahmentDeletedICT;
+		}
+
+		public void setFlagFileAttahmentDeletedICT(boolean flagFileAttahmentDeletedICT) {
+			this.flagFileAttahmentDeletedICT = flagFileAttahmentDeletedICT;
+		}
+
+		public boolean isFlagFileAttahmentDeletedMITI() {
+			return flagFileAttahmentDeletedMITI;
+		}
+
+		public void setFlagFileAttahmentDeletedMITI(boolean flagFileAttahmentDeletedMITI) {
+			this.flagFileAttahmentDeletedMITI = flagFileAttahmentDeletedMITI;
 		}
 		
 		public boolean isFirstPagePA() {
@@ -10945,20 +11024,37 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.pmParam = pmParam;
 		}
 		
+		// #25077 - Start
 		/**
-		 * @return the scQtApprovalReqAttachement
+		 * @return the scQtApprovalReqAttachementICT
 		 */
-		public ScQtApprovalReqAttachement getScQtApprovalReqAttachement() {
-			return scQtApprovalReqAttachement;
+		public ScQtApprovalReqAttachement getScQtApprovalReqAttachementICT() {
+			return scQtApprovalReqAttachementICT;
 		}
 
 		/**
-		 * @param scQtApprovalReqAttachement the scQtApprovalReqAttachement to set
+		 * @param scQtApprovalReqAttachementICT the scQtApprovalReqAttachementICT to set
 		 */
-		public void setScQtApprovalReqAttachement(
-				ScQtApprovalReqAttachement scQtApprovalReqAttachement) {
-			this.scQtApprovalReqAttachement = scQtApprovalReqAttachement;
+		public void setScQtApprovalReqAttachementICT(
+				ScQtApprovalReqAttachement scQtApprovalReqAttachementICT) {
+			this.scQtApprovalReqAttachementICT = scQtApprovalReqAttachementICT;
 		}
+		
+		/**
+		 * @return the scQtApprovalReqAttachementMITI
+		 */
+		public ScQtApprovalReqAttachement getScQtApprovalReqAttachementMITI() {
+			return scQtApprovalReqAttachementMITI;
+		}
+
+		/**
+		 * @param scQtApprovalReqAttachementMITI the scQtApprovalReqAttachementMITI to set
+		 */
+		public void setScQtApprovalReqAttachementMITI(
+				ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI) {
+			this.scQtApprovalReqAttachementMITI = scQtApprovalReqAttachementMITI;
+		}
+		// #25077 - End
 		
 		/**
 		 * @return the scQtAppRequestRemark
@@ -11144,6 +11240,508 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.readOnlyCommitteeTabBean = readOnlyCommitteeTabBean;
 		}
 		//Bug 32277 - end
+		//1873 - start - note 97
+		public ScQtCheckList getTempScQtChecklist() {
+			return tempScQtChecklist;
+		}
+
+		public void setTempScQtChecklist(ScQtCheckList tempScQtChecklist) {
+			this.tempScQtChecklist = tempScQtChecklist;
+		}
+
+		public ScQtCheckList getFinTempScQtChecklist() {
+			return finTempScQtChecklist;
+		}
+
+		public void setFinTempScQtChecklist(ScQtCheckList finTempScQtChecklist) {
+			this.finTempScQtChecklist = finTempScQtChecklist;
+		}
+		//1873 - end - note 97
+		
+		//#9019 - Start (Harun)
+		public Long getQtRemarksIdRemove() {
+			return qtRemarksIdRemove;
+		}
+
+		public void setQtRemarksIdRemove(Long qtRemarksIdRemove) {
+			this.qtRemarksIdRemove = qtRemarksIdRemove;
+		}
+		//#9019 - End (Harun)
+		
+		// #21692 - start
+		/**
+		 * @return the proposalValidityChangeValue
+		 */
+		public boolean isProposalValidityChangeValue() {
+			return proposalValidityChangeValue;
+		}
+
+		/**
+		 * @param proposalValidityChangeValue
+		 *            the proposalValidityChangeValue to set
+		 */
+		public void setProposalValidityChangeValue(
+				boolean proposalValidityChangeValue) {
+			this.proposalValidityChangeValue = proposalValidityChangeValue;
+		}
+		// #21692 - end
+		//#29468 Vinod Start
+		public TreeNode getRootCategoryTree() {
+			return rootCategoryTree;
+		}
+
+		public void setRootCategoryTree(TreeNode rootCategoryTree) {
+			this.rootCategoryTree = rootCategoryTree;
+		}
+
+		public List<String> getSelectedCategories() {
+			return selectedCategories;
+		}
+
+		public void setSelectedCategories(List<String> selectedCategories) {
+			this.selectedCategories = selectedCategories;
+		}
+		public Map<String, Map<Long, Map<Long, Map<Long, String>>>> getMapCatCode() {
+			return mapCatCode;
+		}
+		public void setMapCatCode(Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode) {
+			this.mapCatCode = mapCatCode;
+		}
+		//#29468 Vinod End
+		
+		//#9019 - Start (Harun) 08082022 Missing remarks issue
+		public boolean isScQtRemarksEmpty() {
+			return scQtRemarksEmpty;
+		}
+
+		public void setScQtRemarksEmpty(boolean scQtRemarksEmpty) {
+			this.scQtRemarksEmpty = scQtRemarksEmpty;
+		}
+		//#9019 - End (Harun)
+		
+		//#28784 - start
+		/**
+		 * @return the demoSampleChecklist
+		 */
+		public Long getDemoSampleChecklistStatusId() {
+			return demoSampleChecklistStatusId;
+		}
+
+		/**
+		 * @param demoSampleChecklist the demoSampleChecklist to set
+		 */
+		public void setDemoSampleChecklistStatusId(Long demoSampleChecklistStatusId) {
+			this.demoSampleChecklistStatusId = demoSampleChecklistStatusId;
+		}
+		//#28784 - end
+		
+		// #32929 - start
+		public boolean isZoneRdbButtonChecked() {
+			return zoneRdbButtonChecked;
+		}
+
+		public void setZoneRdbButtonChecked(boolean zoneRdbButtonChecked) {
+			this.zoneRdbButtonChecked = zoneRdbButtonChecked;
+		}
+		// #32929 - end
+		
+	// #29521 - start
+	/**
+	 * @return the isZonalChange
+	 */
+	public Boolean getIsZonalChange() {
+		return isZonalChange;
+	}
+
+	/**
+	 * @param isZonalChange
+	 *            the isZonalChange to set
+	 */
+	public void setIsZonalChange(Boolean isZonalChange) {
+		this.isZonalChange = isZonalChange;
+	}
+
+	/**
+	 * @return the isOpenForChange
+	 */
+	public Boolean getIsOpenForChange() {
+		return isOpenForChange;
+	}
+
+	/**
+	 * @param isOpenForChange
+	 *            the isOpenForChange to set
+	 */
+	public void setIsOpenForChange(Boolean isOpenForChange) {
+		this.isOpenForChange = isOpenForChange;
+	}
+
+	/**
+	 * @return the isProcTypeCatChange
+	 */
+	public Boolean getIsProcTypeCatChange() {
+		return isProcTypeCatChange;
+	}
+
+	/**
+	 * @param isProcTypeCatChange
+	 *            the isProcTypeCatChange to set
+	 */
+	public void setIsProcTypeCatChange(Boolean isProcTypeCatChange) {
+		this.isProcTypeCatChange = isProcTypeCatChange;
+	}
+
+	/**
+	 * @return the isPmProcurementCategoryChange
+	 */
+	public Boolean getIsPmProcurementCategoryChange() {
+		return isPmProcurementCategoryChange;
+	}
+
+	/**
+	 * @param isPmProcurementCategoryChange
+	 *            the isPmProcurementCategoryChange to set
+	 */
+	public void setIsPmProcurementCategoryChange(Boolean isPmProcurementCategoryChange) {
+		this.isPmProcurementCategoryChange = isPmProcurementCategoryChange;
+	}
+
+	/**
+	 * @return the isEvaluationTypeChange
+	 */
+	public Boolean getIsEvaluationTypeChange() {
+		return isEvaluationTypeChange;
+	}
+
+	/**
+	 * @param isEvaluationTypeChange
+	 *            the isEvaluationTypeChange to set
+	 */
+	public void setIsEvaluationTypeChange(Boolean isEvaluationTypeChange) {
+		this.isEvaluationTypeChange = isEvaluationTypeChange;
+	}
+
+	/**
+	 * @return the isExistingContractChange
+	 */
+	public Boolean getIsExistingContractChange() {
+		return isExistingContractChange;
+	}
+
+	/**
+	 * @param isExistingContractChange
+	 *            the isExistingContractChange to set
+	 */
+	public void setIsExistingContractChange(Boolean isExistingContractChange) {
+		this.isExistingContractChange = isExistingContractChange;
+	}
+
+	/**
+	 * @return the isFulfilmentTypeChange
+	 */
+	public Boolean getIsFulfilmentTypeChange() {
+		return isFulfilmentTypeChange;
+	}
+
+	/**
+	 * @param isFulfilmentTypeChange
+	 *            the isFulfilmentTypeChange to set
+	 */
+	public void setIsFulfilmentTypeChange(Boolean isFulfilmentTypeChange) {
+		this.isFulfilmentTypeChange = isFulfilmentTypeChange;
+	}
+
+	/**
+	 * @return the isContractCompletionPeriodChange
+	 */
+	public Boolean getIsContractCompletionPeriodChange() {
+		return isContractCompletionPeriodChange;
+	}
+
+	/**
+	 * @param isContractCompletionPeriodChange
+	 *            the isContractCompletionPeriodChange to set
+	 */
+	public void setIsContractCompletionPeriodChange(Boolean isContractCompletionPeriodChange) {
+		this.isContractCompletionPeriodChange = isContractCompletionPeriodChange;
+	}
+
+	/**
+	 * @return the isScEditGeneral
+	 */
+	public Boolean getIsScEditGeneral() {
+		return isScEditGeneral;
+	}
+
+	/**
+	 * @param isScEditGeneral
+	 *            the isScEditGeneral to set
+	 */
+	public void setIsScEditGeneral(Boolean isScEditGeneral) {
+		this.isScEditGeneral = isScEditGeneral;
+	}
+
+	/**
+	 * @return the isScEditSupplierQualificationCriteria
+	 */
+	public Boolean getIsScEditSupplierQualificationCriteria() {
+		return isScEditSupplierQualificationCriteria;
+	}
+
+	/**
+	 * @param isScEditSupplierQualificationCriteria
+	 *            the isScEditSupplierQualificationCriteria to set
+	 */
+	public void setIsScEditSupplierQualificationCriteria(Boolean isScEditSupplierQualificationCriteria) {
+		this.isScEditSupplierQualificationCriteria = isScEditSupplierQualificationCriteria;
+	}
+
+	/**
+	 * @return the isCategoryCodeChange
+	 */
+	public Boolean getIsCategoryCodeChange() {
+		return isCategoryCodeChange;
+	}
+
+	/**
+	 * @param isCategoryCodeChange
+	 *            the isCategoryCodeChange to set
+	 */
+	public void setIsCategoryCodeChange(Boolean isCategoryCodeChange) {
+		this.isCategoryCodeChange = isCategoryCodeChange;
+	}
+
+	/**
+	 * @return the scQtHistory
+	 */
+	public ScQtHistory getScQtHistory() {
+		return scQtHistory;
+	}
+
+	/**
+	 * @param scQtHistory
+	 *            the scQtHistory to set
+	 */
+	public void setScQtHistory(ScQtHistory scQtHistory) {
+		this.scQtHistory = scQtHistory;
+	}
+
+	/**
+	 * @return the componentName
+	 */
+	public String getComponentName() {
+		return componentName;
+	}
+
+	/**
+	 * @param componentName
+	 *            the componentName to set
+	 */
+	public void setComponentName(String componentName) {
+		this.componentName = componentName;
+	}
+
+	/**
+	 * @return the qtCategoryHistoryList
+	 */
+	public List<ScQtCategory> getQtCategoryHistoryList() {
+		return qtCategoryHistoryList;
+	}
+
+	/**
+	 * @param qtCategoryHistoryList
+	 *            the qtCategoryHistoryList to set
+	 */
+	public void setQtCategoryHistoryList(List<ScQtCategory> qtCategoryHistoryList) {
+		this.qtCategoryHistoryList = qtCategoryHistoryList;
+	}
+
+	/**
+	 * @return the categoryHistory
+	 */
+	public ScQtCategoryHistory getCategoryHistory() {
+		return categoryHistory;
+	}
+
+	/**
+	 * @param categoryHistory
+	 *            the categoryHistory to set
+	 */
+	public void setCategoryHistory(ScQtCategoryHistory categoryHistory) {
+		this.categoryHistory = categoryHistory;
+	}
+
+	/**
+	 * @return the catBoolean
+	 */
+	public List<Boolean> getCatBoolean() {
+		return catBoolean;
+	}
+
+	/**
+	 * @param catBoolean
+	 *            the catBoolean to set
+	 */
+	public void setCatBoolean(List<Boolean> catBoolean) {
+		this.catBoolean = catBoolean;
+	}
+
+	/**
+	 * @return the listCatHistory
+	 */
+	public List<Long> getListCatHistory() {
+		return listCatHistory;
+	}
+
+	/**
+	 * @param listCatHistory
+	 *            the listCatHistory to set
+	 */
+	public void setListCatHistory(List<Long> listCatHistory) {
+		this.listCatHistory = listCatHistory;
+	}
+
+	/**
+	 * @return the listZonalHistory
+	 */
+	public List<String> getListZonalHistory() {
+		return listZonalHistory;
+	}
+
+	/**
+	 * @param listZonalHistory
+	 *            the listZonalHistory to set
+	 */
+	public void setListZonalHistory(List<String> listZonalHistory) {
+		this.listZonalHistory = listZonalHistory;
+	}
+
+	/**
+	 * @return the isZonalHistoryExist
+	 */
+	public Boolean getIsZonalHistoryExist() {
+		return isZonalHistoryExist;
+	}
+
+	/**
+	 * @param isZonalHistoryExist
+	 *            the isZonalHistoryExist to set
+	 */
+	public void setZonalHistoryExist(Boolean isZonalHistoryExist) {
+		this.isZonalHistoryExist = isZonalHistoryExist;
+	}
+
+	/**
+	 * @return the fromFinancialChecklist
+	 */
+	public Boolean getFromFinancialChecklist() {
+		return fromFinancialChecklist;
+	}
+
+	/**
+	 * @param fromFinancialChecklist
+	 *            the fromFinancialChecklist to set
+	 */
+	public void setFromFinancialChecklist(Boolean fromFinancialChecklist) {
+		this.fromFinancialChecklist = fromFinancialChecklist;
+	}
+
+	/**
+	 * @return the backupScQt
+	 */
+	public ScQt getBackupScQt() {
+		return backupScQt;
+	}
+
+	/**
+	 * @param backupScQt
+	 *            the backupScQt to set
+	 */
+	public void setBackupScQt(ScQt backupScQt) {
+		this.backupScQt = backupScQt;
+	}
+
+	/**
+	 * @return the backupCategoryCode
+	 */
+	public List<ScQtCategory> getBackupCategoryCode() {
+		return backupCategoryCode;
+	}
+
+	/**
+	 * @param backupCategoryCode
+	 *            the backupCategoryCode to set
+	 */
+	public void setBackupCategoryCode(List<ScQtCategory> backupCategoryCode) {
+		this.backupCategoryCode = backupCategoryCode;
+	}
+
+	/**
+	 * @return the backupZoneList
+	 */
+	public List<TplSpecZoneDtl> getBackupZoneList() {
+		return backupZoneList;
+	}
+
+	/**
+	 * @param backupZoneList
+	 *            the backupZoneList to set
+	 */
+	public void setBackupZoneList(List<TplSpecZoneDtl> backupZoneList) {
+		this.backupZoneList = backupZoneList;
+	}
+
+	/**
+	 * @return the listCategory
+	 */
+	public List<Long> getListCategory() {
+		return listCategory;
+	}
+
+	/**
+	 * @param listCategory
+	 *            the listCategory to set
+	 */
+	public void setListCategory(List<Long> listCategory) {
+		this.listCategory = listCategory;
+	}
+	// #29521 - end
+
+	//#25426 - Start
+	public boolean isFirstViewPageCAUsers() {
+		return firstViewPageCAUsers;
+	}
+
+	public void setFirstViewPageCAUsers(boolean firstViewPageCAUsers) {
+		this.firstViewPageCAUsers = firstViewPageCAUsers;
+	}
+	//#25426 - End
+
+	/**
+	 * 34053-Start
+	 * @return the mainCloneSearchQTDataModel
+	 */
+	public IPagingDataModel<ScQt> getMainCloneSearchQTDataModel() {
+		return mainCloneSearchQTDataModel;
+	}
+
+	/**
+	 * @param mainCloneSearchQTDataModel the mainCloneSearchQTDataModel to set
+	 */
+	public void setMainCloneSearchQTDataModel(
+			IPagingDataModel<ScQt> mainCloneSearchQTDataModel) {
+		this.mainCloneSearchQTDataModel = mainCloneSearchQTDataModel;
+	}//34053-End
+
+	// Bug #33661@Syazani 07/10/2022 -- Start
+	public boolean isFromSpecEndorse() {
+		return isFromSpecEndorse;
+	}
+
+	public void setFromSpecEndorse(boolean isFromSpecEndorse) {
+		this.isFromSpecEndorse = isFromSpecEndorse;
+	}
+	// Bug #33661@Syazani 07/10/2022 -- End
 }
 
 // ***25201

@@ -138,6 +138,7 @@ import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
@@ -764,7 +765,7 @@ public class SimpleQuoteBackingBean extends
 		// WorkFlow Status should be set In the save
 		updateWorkFlowAndRemarks(scQuote);
 		
-		scQuote.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
+		scQuote.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		
 		// zone location level by default - district
@@ -2549,20 +2550,21 @@ public class SimpleQuoteBackingBean extends
 		
 		// when procurement type as pk7 selected 
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
+			//Temp(#34274 - Start)
 			// MaxProcurementAmt
-			BigDecimal maxProcurementAmt = getPRThresholdAmount();
-			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+//			BigDecimal maxProcurementAmt = getPRThresholdAmount();
+//			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
+//			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
 							.getMessage(
 									MessageConst.INFO_760440,
-									new String[] {amountDF.format(maxProcurementAmt)},
+									null,
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
-
+			//Temp(#34274 - End)
 		}
 		// #28536 - start
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
@@ -4043,6 +4045,20 @@ public class SimpleQuoteBackingBean extends
 			Date startDate = quote.getStartDate();
 			Date endDate = quote.getEndDate();
 			String message ="";
+		
+			 //#32855 - start
+			if (!isQuaterHourFormat(startDate)) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.ss.item.detail.start.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+			}
+			
+			if (!isQuaterHourFormat(endDate)) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.ss.item.detail.end.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+			}
+			//#32855 - end
 
 			if(getManagedBean().getPidExpiryDate() != null){
 				/*Rule : during preparation of SQ upon select start and end date, error : 
@@ -4106,6 +4122,22 @@ public class SimpleQuoteBackingBean extends
 								.toHours(timeDiff))));
 		return mins;
 	}
+	
+	 //#32855 - start
+	private Boolean isQuaterHourFormat(Date chosenDate){
+		long timeDiff = Math.abs(chosenDate.getTime());
+		String mins = String
+				.format("%d", (TimeUnit.MILLISECONDS
+						.toMinutes(timeDiff) - TimeUnit.HOURS
+						.toMinutes(TimeUnit.MILLISECONDS
+								.toHours(timeDiff))));
+		if (mins.equalsIgnoreCase("0") || mins.equalsIgnoreCase("15") || mins.equalsIgnoreCase("30")
+				|| mins.equalsIgnoreCase("45"))
+			return true;
+		
+		return false;
+	}
+	//#32855 - end
 
 	/**
 	 * Tab menu listener. to view selected tab
@@ -5593,41 +5625,7 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setQuoteSupplier(getManagedBean().getScQuoteSupplier());
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
-			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
-			
-			//#30840 - Start
-			if(quote != null){
-				log.info("--- Bug 30840 (" + quote.getQuoteNo() + ") Method: supplierSave Start ---");
-				
-				if(reqDTO.getOutcome() != null){
-					log.info("Outcome: " + reqDTO.getOutcome() + " SqNo(" + quote.getQuoteNo() + ")");
-				}
-				
-				if(reqDTO.getQuoteSupplier() != null){
-					if(reqDTO.getQuoteSupplier().getSmSupplier() != null){
-						log.info("Supplier ID (" + reqDTO.getQuoteSupplier().getSmSupplier().getSupplierId() + ")" 
-								+ "Supplier Name (" + reqDTO.getQuoteSupplier().getSupplierName() + ") "
-								+ "SqNo (" + quote.getQuoteNo() + ")");
-					}
-					
-					if(reqDTO.getSpecAnswers() != null){
-						int totalItemCount = 0;
-						int itemRespondCount = 0;
-						for(TplSpecAnswer specAnswer : reqDTO.getSpecAnswers()){
-							if(specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom() != BigDecimal.ZERO){
-								itemRespondCount++;
-							}
-							totalItemCount++;
-						}
-						log.info("totalItemCount (" + totalItemCount + ") "
-								+ "itemRespondCount (" + itemRespondCount + ") "
-								+ "SqNo (" + quote.getQuoteNo() + ")");					
-					}
-				}	
-				log.info("--- Bug 30840 (" + quote.getQuoteNo() + ") Method: supplierSave End ---");
-			}
-			//#30840 - End
-			
+			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);		
 			if (quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = getManagedBean().getScQuote();
 
@@ -5808,16 +5806,13 @@ public class SimpleQuoteBackingBean extends
 				RequestContext.getCurrentInstance().execute("gpki_dlg.hide();");
 
 			} else {
-				log.info("Bug 30840 - spki SqNo (" + quote.getQuoteNo() + ")");
 				// spki
 				String originalText = prepareOriginalText(Boolean.FALSE); 
 				if (null != pmDigiSign) {
-					log.info("Bug 30840 - start updateSpkiDigiSignData SqNo (" + quote.getQuoteNo() + ")");
 					updateSpkiDigiSignData(pmDigiSign,
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
 							quote.getQuoteId(), quote.getQuoteNo(),
 							originalText);
-					log.info("Bug 30840 - end updateSpkiDigiSignData SqNo (" + quote.getQuoteNo() + ")");
 				}
 				
 				byte[] signedData = getManagedBean().getSpkiBackingBean()
@@ -5869,46 +5864,9 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setQuoteSupplier(getManagedBean().getScQuoteSupplier());
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
-			log.info("Bug 30840 - start saveSupplierResponse SqNo (" + quote.getQuoteNo() + ")");
-			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
-			log.info("Bug 30840 - end saveSupplierResponse SqNo (" + quote.getQuoteNo() + ")");
-			
-			//#30840 - Start
-			if(quote != null){
-				log.info("--- Bug 30840 (" + quote.getQuoteNo() + ") Method: updateSupplierResponse Start ---");
-				
-				if(reqDTO.getOutcome() != null){
-					log.info("Outcome: " + reqDTO.getOutcome() + " SqNo(" + quote.getQuoteNo() + ")");
-				}
-				
-				if(reqDTO.getQuoteSupplier() != null){
-					if(reqDTO.getQuoteSupplier().getSmSupplier() != null){
-						log.info("Supplier ID (" + reqDTO.getQuoteSupplier().getSmSupplier().getSupplierId() + ")" 
-								+ "Supplier Name (" + reqDTO.getQuoteSupplier().getSupplierName() + ") "
-								+ "SqNo (" + quote.getQuoteNo() + ")");
-					}
-					
-					if(reqDTO.getSpecAnswers() != null){
-						int totalItemCount = 0;
-						int itemRespondCount = 0;
-						for(TplSpecAnswer specAnswer : reqDTO.getSpecAnswers()){
-							if(specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom() != BigDecimal.ZERO){
-								itemRespondCount++;
-							}
-							totalItemCount++;
-						}
-						log.info("totalItemCount (" + totalItemCount + ") "
-								+ "itemRespondCount (" + itemRespondCount + ") "
-								+ "SqNo (" + quote.getQuoteNo() + ")");					
-					}
-				}	
-				log.info("--- Bug 30840 (" + quote.getQuoteNo() + ") Method: updateSupplierResponse End ---");
-			}
-			//#30840 - End
-			
+			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);		
 			if (quoteResDTO.isSuccessful()) {				
 				ScQuote scQuote = getManagedBean().getScQuote();
-				log.info("Bug 30840 - isSuccessful SqNo (" + scQuote.getQuoteNo() + ")");
 
 				FacesContext
 						.getCurrentInstance()
@@ -5931,12 +5889,10 @@ public class SimpleQuoteBackingBean extends
 
 				FacesContext fc = FacesContext.getCurrentInstance();
 				if (scQuote.getMultipleQuote().equals(Boolean.TRUE)) {
-					log.info("Bug 30840 - getMultipleQuote SqNo (" + scQuote.getQuoteNo() + ")");
 					retrieveSupplierView(scQuote);
 					fc.getApplication().getNavigationHandler()
 							.handleNavigation(fc, null, "supplerView");
 				} else {
-					log.info("Bug 30840 - ACKNOWLEDGE_PAGE SqNo (" + scQuote.getQuoteNo() + ")");
 					fc.getApplication()
 							.getNavigationHandler()
 							.handleNavigation(fc, null,
@@ -6248,7 +6204,7 @@ public class SimpleQuoteBackingBean extends
 		// WorkFlow Status should be set In the save
 		updateWorkFlowAndRemarks(scQuote);
 
-		scQuote.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
+		scQuote.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		// zone location level by default - district
 		if (getManagedBean().getLocationLevel() == null) {
@@ -7774,6 +7730,7 @@ public class SimpleQuoteBackingBean extends
 			
 			// Refactor: #12177 - Start
 			Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+			log.info("Refactor 12177 (SimpleQuoteBackingBean) : getSqTimeValidity - " + sqTimeValidity);
 			// Refactor: #12177 - End
 			
 			if(scQuote != null){
@@ -8295,6 +8252,13 @@ public class SimpleQuoteBackingBean extends
 		// #29800 - end
 		
 		// #29832 @zaim added method to pass the value into lovBackingBean
+		
+		/**
+		 * @return SimpleQuoteManagedBean that contain SimpleQuoteManagedBean object.
+		 *
+		 */
+		
+		
 		public SimpleQuoteManagedBean deleteSuccess(){
 			
 			return getManagedBean();
@@ -8409,4 +8373,23 @@ public class SimpleQuoteBackingBean extends
 	    
 	    
 		//#5426 - end
+	    
+	    
+	    //29832 start
+		/**
+		 * @return list of PmBusinessNature level code 
+		 * that need to exclude.
+		 * The selected Business Nature will be exclude 
+		 * from Business Nature popup view.
+		 */
+		public String excludeLevelCodeSupplier(){
+			StringBuilder sb = new StringBuilder();
+			if (getManagedBean().getScQuote().getBusinessNatureCriterias() != null) {
+				for(ScBusinessNatureQuoteCriteria quoteCriteria: getManagedBean().getScQuote().getBusinessNatureCriterias() ){
+					sb.append("|levelCode^" +quoteCriteria.getPmBusinessNature().getLevelCode());
+				}
+			}
+			return sb.toString();
+		}
+	    //29832 - end
 }

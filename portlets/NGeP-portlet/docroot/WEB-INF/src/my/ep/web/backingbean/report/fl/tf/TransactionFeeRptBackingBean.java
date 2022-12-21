@@ -124,8 +124,17 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 		params.put(FlReportConst.FL_RPT_TRANSACTION_FROM_DATE, df.format(getManagedBean().getTransactionFromDate()));
 		params.put(FlReportConst.FL_RPT_TRANSACTION_TO_DATE, df.format(getManagedBean().getTransactionToDate()));
 		checkOneYearDifferent(getManagedBean().getTransactionFromDate(), getManagedBean().getTransactionToDate());
-
-		generateFlReport(params);
+		
+		//generate report for excel or pdf
+		if("PDF".equals(getManagedBean().getDocumentType())){
+			generateFlReport(params);
+		}else{
+			try{
+				generateFLExcelReport(getManagedBean().getReportCode(), params);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void selectedAgOff(){

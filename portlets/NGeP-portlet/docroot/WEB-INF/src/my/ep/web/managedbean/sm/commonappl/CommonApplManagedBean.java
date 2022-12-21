@@ -33,9 +33,8 @@ public class CommonApplManagedBean extends BaseManagedBean {
 	private String secs;		
 	private String mofBeforeExpiryMsg;
 	private String mofAfterExpiryMsg;
-	//28778 - Start
+	//28778 - Site Visit Grouping Enhancement - 28775
 	private boolean specialCategoryRechecked;
-	//28778 - End
 
 	public String[] getBpmAction() {
 		return bpmAction;

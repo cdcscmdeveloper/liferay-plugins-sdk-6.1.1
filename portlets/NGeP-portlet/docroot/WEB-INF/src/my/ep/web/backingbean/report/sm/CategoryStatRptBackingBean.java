@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.report.sm;
 
+import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 
 import javax.faces.bean.ManagedBean;
@@ -8,6 +9,7 @@ import javax.faces.bean.ViewScoped;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import my.ep.constants.CommonConstants;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.CategoryStatRptManagedBean;
 
@@ -20,6 +22,9 @@ public class CategoryStatRptBackingBean extends SmReportBackingBean<CategoryStat
 	public CategoryStatRptBackingBean(){
 		initStates();
 		getManagedBean().setRegStatusLs(retrieveRegStatusList());
+		//#32521 - START
+		setDefaultDateFromAndDateTo();
+		//#32521 - END
 	}
 	
 	public void generateReport(){
@@ -30,6 +35,16 @@ public class CategoryStatRptBackingBean extends SmReportBackingBean<CategoryStat
 			
 			addStateParam(params);
 			addDistrictParam(params);
+			
+			//#32521 - START
+			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+			params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
+			params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
+			
+			if(StringUtils.isNotBlank(getManagedBean().getDisciplinaryActionStatus())){
+				params.put(SmReportConst.PARAM_DA_STATUS, getManagedBean().getDisciplinaryActionStatus());
+			}
+			//#32521 - END
 			
 			if(StringUtils.isNotBlank(getManagedBean().getSupplierType())){
 				params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean().getSupplierType());
@@ -69,6 +84,10 @@ public class CategoryStatRptBackingBean extends SmReportBackingBean<CategoryStat
 		getManagedBean().setState(null);
 		getManagedBean().setDistrict(null);
 		resetCategory();
+		//#32521 - START
+		setDefaultDateFromAndDateTo();
+		getManagedBean().setDisciplinaryActionStatus(null);
+		//#32521 - END
 	}
 
 	public void onChangeState(){

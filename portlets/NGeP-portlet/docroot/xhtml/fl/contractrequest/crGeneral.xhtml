@@ -49,11 +49,6 @@
 	<!-- 29728 - end -->
 	<p:panel header="#{lbl['lbl.fl.agency.details']}"  toggleable="true" id="flDetails">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
-		<!-- 13291 - start -->
-		<c:if test="#{contractRequestBackingBean.isApprover()}">
-			<br /><h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.agency.details']}"/><br /><br />
-		</c:if>
-		<!-- 13291 - end -->
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 138px;"><p:outputLabel
@@ -84,14 +79,16 @@
 				<td style="width: 560px;">
 					<p:inputTextarea id="preparedOrgProfileId" rows="2" cols="63" readonly="true" autoResize="false" style="resize:none;" 
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgCode} #{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}" />					
-					<p:commandLink oncomplete="dlgPreparePtj.show();"
-						action="#{contractRequestBackingBean.resetPreparedForPtjDetails}"
-						update=":form:preparedOrgProfileId,:form:issuedOrgProfile,:form:controlOff,:form:ptjGroup,:form:agOffice,:form:espkbCommNo,dlgPreparePtj"
-						disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or contractRequestBackingBean.isApprover() or !bpmTasklistBackingBean.managedBean.claim}"
-						style="padding-left:10px">
-						<p:graphicImage value="/css/images/design/search.png" />
-					</p:commandLink>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}" />
+					<ac:lov id="preparedPtj" uiMode="link" 
+						lovId="PM_ORG_PROFILE_FL" headerText="#{lbl['lbl.fl.prepared.for.ptj']}"
+						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
+						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
+						disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or contractRequestBackingBean.isApprover() or !bpmTasklistBackingBean.managedBean.claim or contractRequestBackingBean.isRequisitioner()}"
+						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgProfile,:form:controlOff,:form:ptjGroup,:form:agOffice,:form:espkbCommNo" readonly="true"
+						postUpdateListener="contractRequestBackingBean.getAgAccount"
+						conditionField="#{contractRequestBackingBean.getPreparedPTJCondition()}"
+						tooltip="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"	>
+					</ac:lov>
 				</td>
 			</tr>
 			<tr>
@@ -196,7 +193,7 @@
 				<tr>
 
 					<!--#17087 radio select -->
-					<td colspan="15">
+					<td colspan="5"> <!--#24956-->
 
 						<table>
 							<tr>
@@ -251,10 +248,12 @@
 							update="delEndDate" />
 					</p:calendar>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.start.date']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" /></td>
-					<td><p:inputText size="25" disabled="true" 	value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType)}">
+				<td ><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" /></td> <!--#24956-->
+					<td colspan="2"><p:inputText size="25" disabled="true" 	value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType)}">
 					</p:inputText>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.fulfilment.type']}" rendered="#{contractRequestBackingBean.managedBean.ctTypeMinistry}"/>
+					<!-- 24956 - start -->
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.fulfilment.type']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"/>
+				    <!-- 24956 - end -->
 				</td>
 				
 					
@@ -371,8 +370,8 @@
 						<p:ajax event="dateSelect"
 							listener="#{contractRequestBackingBean.updateDeliveryEndDate}" />
 					</p:calendar></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.factored.contract']}" /></td>
-				<td><p:selectBooleanCheckbox disabled="true" style="vertical-align:-4px"
+				<td ><p:outputLabel value="#{lbl['lbl.fl.factored.contract']}" /></td> <!--#24956-->
+				<td colspan="2"><p:selectBooleanCheckbox disabled="true" style="vertical-align:-4px"
 						value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
 						contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factored : 
 						contractRequestBackingBean.managedBean.factored}" />
@@ -381,14 +380,16 @@
 			<tr>
 				<td></td>
 				<td></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.zonal.price']}"  /></td>
-				<td><p:selectBooleanCheckbox style="vertical-align:-4px"
+				<td ><p:outputLabel value="#{lbl['lbl.fl.zonal.price']}"  /></td> <!--#24956-->
+				<td colspan="2"><p:selectBooleanCheckbox style="vertical-align:-4px"
 						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.zonal.price']}" /></td>
 			</tr>
 			<tr>
-				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.payment.match.mto']}" rendered="false"/></td>
-				<td><p:selectBooleanCheckbox style="vertical-align:-4px"
+			    <td></td> <!--#24956-->
+				<td></td>
+				<td ><p:outputLabel value="#{lbl['lbl.fl.payment.match.mto']}" rendered="false"/></td>
+				<td colspan="2"><p:selectBooleanCheckbox style="vertical-align:-4px"
 						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.mto}"
 						disabled="true" rendered="false"/></td>	
 			</tr>
@@ -610,76 +611,4 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:dialog id="dlgPreparePtj"  header="#{lbl['lbl.fl.add.prepared.ptj']}" widgetVar="dlgPreparePtj" 
-			styleClass="pop_up_top" modal="true" width="700" resizable="false" position="top">
-			<p:messages id="preparePtjMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
-		   <h:panelGroup  id="preparePtj">
-		   	 <p:panel id="preparePtjSearchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
-              <h:panelGrid columns="3">
-                 <p:selectOneMenu for="prepareMinistry"  style="width:150px" disabled="true">
-            	    <f:selectItem itemLabel="#{lbl['lbl.fl.ministry']}" itemValue=""/>
-                 </p:selectOneMenu>
-                 <p:spacer height="1"/>
-                 <p:selectOneMenu id="prepareMinistry" style="width:300px"
-                      value="#{contractRequestBackingBean.managedBean.ministryProfileId}" disabled="#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctAgencies == null}">
-            	   <f:selectItems value="#{contractRequestBackingBean.getMinistryDropdown()}"/>
-            	   <p:ajax event="change" update=":form:prepareJabatan" />
-                 </p:selectOneMenu>
-                 <p:selectOneMenu for="prepareJabatan"  style="width:150px" disabled="true" >
-            	    <f:selectItem itemLabel="#{lbl['lbl.fl.jabatan']}" itemValue=""/>
-                 </p:selectOneMenu>
-                 <p:spacer height="1"/>
-                 <p:selectOneMenu id="prepareJabatan" style="width:300px"
-                      value="#{contractRequestBackingBean.managedBean.jabatanProfileId}" >
-            	   <f:selectItems value="#{contractRequestBackingBean.getJabatanDropdown()}"/>
-            	    <p:ajax event="change" update=":form:prepareJabatan"/>
-                 </p:selectOneMenu>
-                 <p:selectOneMenu for="preparePtjCodeName" 
-                    value="#{contractRequestBackingBean.managedBean.ptjCodeName}"  style="width:150px;">
-                       <f:selectItem itemLabel="#{lbl['lbl.fl.ptj.code']}" itemValue="#{CtConst.ptjCode}"/>
-            	      <f:selectItem itemLabel="#{lbl['lbl.fl.ptj.name']}" itemValue="#{CtConst.ptjName}"/>
-            	      <p:ajax process="@this"/>
-                 </p:selectOneMenu>
-				 <p:spacer height="1"/>
-                 <p:inputText id="preparePtjCodeValue"  style="width:300px;" 
-                     value="#{contractRequestBackingBean.managedBean.ptjCodeNameSearchValues}" >
-                     <p:ajax process="@this"/></p:inputText>
-			  </h:panelGrid>
-			  </p:panel>
-			  	<div class="ppRightBtn">
-       		         
-       		         <p:commandButton id="preparePtjSearchId" value="#{lbl['lbl.btn.search']}" update=":form:tablePreparePtj"  
-       		            action="#{contractRequestBackingBean.searchPreparedForPtjDetails}" process="@this" /> 
-			         <p:commandButton id="resetBtn1" value="#{lbl['lbl.btn.reset']}" process="@this"
-			            action="#{contractRequestBackingBean.resetPreparedForPtjDetails}" update=":form:preparePtj"   />
-		       </div>
-			  <p:panel id="prepareResultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
-				<p:dataTable id="tablePreparePtj" var="pmVar"
-					value="#{contractRequestBackingBean.managedBean.preparedForPtjDataModel}"
-					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					rowIndexVar="rowIndex"
-					selection="#{contractRequestBackingBean.selectedPreparedForPTJOrg}"
-					rowKey="#{pmVar}" lazy="true" rows="10">
-					 <p:ajax event="rowSelectRadio" update=":form:preparePtjSelectBtn" ></p:ajax>
-					<ac:paginator for="tablePreparePtj" />
-					<p:column selectionMode="single" style="width:18px;">
-						<f:facet name="header">
-						</f:facet>
-					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.ptj.code']}">
-                       	#{pmVar.orgCode}
-					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.ptj.name']}">
-                      	#{pmVar.orgName}
-					</p:column>
-				</p:dataTable>
-			</p:panel>           
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form"   update=":form:preparedOrgProfileId,:form:issuedOrgProfile,:form:controlOff,:form:ptjGroup,:form:agOffice,:form:espkbCommNo"  id="preparePtjSelectBtn"
-					disabled="#{fn:length(contractRequestBackingBean.managedBean.preparedForPtjDataModel.list) == 0 }"
-				    action="#{contractRequestBackingBean.addPreparedForPtjDetails()}" onclick="dlgPreparePtj.hide();"/>
-				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgPreparePtj.hide();" />
-           </div>
-           </h:panelGroup>
-	</p:dialog>
 </ui:composition>

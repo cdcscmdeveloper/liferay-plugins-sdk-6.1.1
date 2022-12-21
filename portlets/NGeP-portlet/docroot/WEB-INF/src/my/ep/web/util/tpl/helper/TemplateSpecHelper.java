@@ -69,6 +69,9 @@ public class TemplateSpecHelper {
 	
 	private static TemplateSpecHelper instance;	
 	
+	//#28784
+	private boolean demoSpecClone = false;
+	
 	/**
 	 * Get singleton of TemplateSpecHelper
 	 * 
@@ -96,7 +99,7 @@ public class TemplateSpecHelper {
 	 * 		clone including child entities.
 	 * @return	the new cloned TplSpecMaster instance.
 	 */
-	public TplSpecMaster cloneTplSpecMaster(TplSpecMaster specMaster, boolean includeQuestions, boolean isScoringReq, boolean isQtyByZone) {
+	public TplSpecMaster cloneTplSpecMaster(TplSpecMaster specMaster, boolean includeQuestions, boolean isScoringReq, boolean isQtyByZone, boolean isDemoCloneSpec) {
 		debugLogger("cloneTplSpecMaster : " + specMaster);
 		
 		TplSpecMaster newSpecMaster = null;
@@ -117,6 +120,12 @@ public class TemplateSpecHelper {
 					newSpecMaster.setScoringReq(isScoringReq);
 					newSpecMaster.setQtyByZone(isQtyByZone);
 					setUserDetails(newSpecMaster);
+					
+					if(isDemoCloneSpec){
+						demoSpecClone = true;
+					} else {
+						demoSpecClone = false;
+					}
 
 					if (includeQuestions) {
 						// clone spec questions
@@ -174,10 +183,17 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setTplSpecAnswers(null);
 								newSpecQuestion.setTplSpecEstimations(null);
 								newSpecQuestion.setTplSpecScorings(null);
+								if(newSpecMaster.isSampleReq()){//33858-start
+								newSpecQuestion.setSampleQuantity(null);//11104-start
+								newSpecQuestion.setSampleScoreTypeCode(null);
+								newSpecQuestion.setSampleScore(null);
+								newSpecQuestion.setSampleReq(Boolean.FALSE);//11104-End
+								}//33858-End
 								//#28784 Reset clone value for demo
-								//newSpecQuestion.setItemReqDemo(false);//25635
-								//newSpecQuestion.setDemoScore(null);//25635
-								
+								if(demoSpecClone){
+									newSpecQuestion.setItemReqDemo(false);
+									newSpecQuestion.setDemoScore(null);
+								}								
 								
 								if (isTechnicalSpec) {
 									if(TemplateSpecConst.QUESTION_TYPE_ITEM.equals(quesType)){
@@ -597,6 +613,11 @@ public class TemplateSpecHelper {
 			if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType())) {
 				resetPriceType(specMaster, specQuestion);
 			}
+			//Bug #34223@Syazani 30/11/2022 - Start
+			if (specZone == null) {
+				specQuestion.setTplSpecZoneQties(null);
+			}
+			//Bug #34223@Syazani 30/11/2022 - Start
 		}
 		}
 	}
@@ -769,17 +790,20 @@ public class TemplateSpecHelper {
 						specQuestion = resDTO.getSpecQuestionList().get(0);
 					}
 				}
-				if (!specQuestion.getClFulfilmentTypeCode().getParameterCode()
+				//#25726 - Remove one-off from the condition
+				if(null != specQuestion.getClFulfilmentTypeCode()){
+					if (!specQuestion.getClFulfilmentTypeCode().getParameterCode()
 						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) && 
 						!specQuestion.getClFulfilmentTypeCode().getParameterCode()
 						.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)) {
-					if (itemDurationMonth != null) {
-						totalPrice = totalPrice.multiply(itemDurationMonth);
-					} else {
-						BigDecimal durationMonth = specQuestion.getTplSpecMaster().getDurationMonth();
+						if (itemDurationMonth != null) {
+							totalPrice = totalPrice.multiply(itemDurationMonth);
+						} else {
+							BigDecimal durationMonth = specQuestion.getTplSpecMaster().getDurationMonth();
 
-						if (durationMonth != null) {
-							totalPrice = totalPrice.multiply(durationMonth);
+							if (durationMonth != null) {
+								totalPrice = totalPrice.multiply(durationMonth);
+							}
 						}
 					}
 				}

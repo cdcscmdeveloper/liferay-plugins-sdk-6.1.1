@@ -47,15 +47,29 @@ public class ProfileOfRegCompanyRptBackingBean extends
 				// #29712 & #30824, #32564 - start
 				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getSelectedSupplier().getCompanyName());
 				// #29712 & #30824, #32564 - end
+				// #32564 & #26238, #30824 - Start
+				params.put(SmReportConst.PARAM_SUPPLIER_ID,
+						String.valueOf(getManagedBean().getSelectedSupplier().getSupplierId()));
+				// #32564 & #26238, #30824 - End
 			} else {
 				params.put(SmReportConst.PARAM_REG_TYPE, SmReportConst.REG_ACC_TYPE_G2G);
 				// #29712 & #30824, #32564 - start
 				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getSelectedOrgProfile().getPmOrgValidity().getOrgName());
 				// #29712 & #30824, #32564 - end
+				// #32564 & #26238, #30824 - Start
+				params.put(SmReportConst.PARAM_SUPPLIER_ID,
+						String.valueOf(getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId()));
+				// #32564 & #26238, #30824 - End
 			}
 		} else {
 			params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
 			params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean().getSupplierType());
+			// #32564 & #26238 - Start
+			if(getManagedBean().getSmSupplier() != null){
+				params.put(SmReportConst.PARAM_SUPPLIER_ID,
+						String.valueOf(getManagedBean().getSmSupplier().getSupplierId()));	
+			}
+			// #32564 & #26238 - End
 		}
 		log.info("********Report Code************* after set newCode: " + getManagedBean().getReportCode());
 		
@@ -163,7 +177,7 @@ public class ProfileOfRegCompanyRptBackingBean extends
 	}
 	// #29712, #32564 - end
 	
-	//#32564 - start
+	//#32564, #30824 - start
 	public String constructConditionFieldsBasic(){
 		StringBuilder sb = new StringBuilder("smAppl.supplierType^"+SupplierManagementConst.SUPP_TYPE_BASIC);
 		if (getManagedBean().getZone() != null) {
@@ -178,6 +192,6 @@ public class ProfileOfRegCompanyRptBackingBean extends
 		log.info("32564- constructConditionFieldsBasic():"+sb.toString());
 		return sb.toString();
 	}
-	//#32564 - end
+	//#32564, #30824 - end
 	
 }

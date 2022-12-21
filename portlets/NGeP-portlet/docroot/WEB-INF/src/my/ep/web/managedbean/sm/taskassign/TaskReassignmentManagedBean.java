@@ -76,6 +76,8 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	// #29822 - start
 	private boolean enableRemoveAllGroupTasksButton;
 	private boolean enableRemoveAllOthersTasksButton;
+	private boolean showRemoveProcessMessageGroup;
+	private boolean showRemoveProcessMessageOther;
 	// #29822 - end
 	
 	public TaskReassignmentManagedBean(){}
@@ -504,6 +506,23 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	public void setEnableRemoveAllOthersTasksButton(boolean enableRemoveAllOthersTasksButton) {
 		this.enableRemoveAllOthersTasksButton = enableRemoveAllOthersTasksButton;
 	}
-	// #29822 - start
+	
+	public boolean isShowRemoveProcessMessageGroup() {
+		return showRemoveProcessMessageGroup;
+	}
+
+	public void setShowRemoveProcessMessageGroup(boolean showRemoveProcessMessageGroup) {
+		this.showRemoveProcessMessageGroup = showRemoveProcessMessageGroup;
+	}
+
+	public boolean isShowRemoveProcessMessageOther() {
+		return showRemoveProcessMessageOther;
+	}
+
+	public void setShowRemoveProcessMessageOther(boolean showRemoveProcessMessageOther) {
+		this.showRemoveProcessMessageOther = showRemoveProcessMessageOther;
+	}
+	
+	// #29822 - end
 	
 }

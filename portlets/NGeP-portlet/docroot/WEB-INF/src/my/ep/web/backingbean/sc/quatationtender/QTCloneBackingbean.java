@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -35,6 +37,7 @@ import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
 import my.ep.constant.MessageConst;
@@ -45,6 +48,7 @@ import my.ep.constant.sc.QTFieldConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateDocConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -61,6 +65,8 @@ import my.ep.dto.sc.quationtender.QTTemplateDocReqDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.quationtender.SpecificationReqDTO;
+import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
@@ -97,8 +103,11 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
+import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
+import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtRequestContent;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
@@ -522,6 +531,21 @@ public class QTCloneBackingbean extends
 				searchFilterBean.add(bean);
 				
 			}//21695&25635-End
+	Long statusId=this.getManagedBean().getQt().getQtStatus().getStatusId();//33904
+	if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId)){//33904
+		SearchFilterBean samplebean = new SearchFilterBean();
+		samplebean.setSearchField("sampleReq");
+		samplebean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		samplebean.setSearchValue(this.getManagedBean().getQt().isSampleReq());
+		searchFilterBean.add(samplebean);
+		
+		SearchFilterBean demobean = new SearchFilterBean();//33905
+		demobean.setSearchField("demoRequired");
+		demobean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		demobean.setSearchValue(this.getManagedBean().getQt().isDemoRequired());
+		searchFilterBean.add(demobean);//33905
+		
+	}//33904
 						
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
@@ -549,14 +573,15 @@ public class QTCloneBackingbean extends
 		this.getManagedBean().setSelectedCloneTender(null);//25635
 
 		IPagingDataModel<ScQt> cloneSearchQTDataModel = getManagedBean()
-				.getCloneSearchQTDataModel();
+				.getMainCloneSearchQTDataModel();//34053
+		
 
 		if (null == cloneSearchQTDataModel) {
-			getManagedBean().setCloneSearchQTDataModel(
+			getManagedBean().setMainCloneSearchQTDataModel(
 					new QTPagingDataModel("clonesearchCommitteid2",
-							getManagedBean().getCloneQtnTenderSearchBean()));
+							getManagedBean().getCloneQtnTenderSearchBean()));//34053
 		}
-		getManagedBean().getCloneSearchQTDataModel().resetData();
+		getManagedBean().getMainCloneSearchQTDataModel().resetData();//34053
 
 		getManagedBean().getCloneQtnTenderSearchBean().setQtTitle(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setQtNo(null);
@@ -565,12 +590,32 @@ public class QTCloneBackingbean extends
 		getManagedBean().getCloneQtnTenderSearchBean().setToCreatedDate(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
 		getManagedBean().setCloneTenderList(null);
-		getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());
+		//getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());//34053
 		RequestContext.getCurrentInstance().execute("screen3.show()");
 		getManagedBean().setAutoUpdate(false);
 		 getManagedBean().setSelectSearchcommitteeNode(new TreeNode[0]);
 		 getManagedBean().setCommType(null);
 		
+		//9019 - Start (Harun) initializing remark 
+	    //       This code for initialize back after Clone button is trigger while remarks is 
+		//       able to entered when available.Reopen remarks disabled #note-253
+		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			
+			ScQt scQt = this.getManagedBean().getQt();
+			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
+
+			for (ScQtRemark qtRemark : qtRemarks) {
+				qtRemark.setEditable(true);
+			}
+			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+
+		} else{
+			ScQt scQt = this.getManagedBean().getQt();
+			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+		}
+		//9019 - End (Harun)
+		 
         //9019 added for disable mandatory checking while clone
          ScQt scQt = getManagedBean().getQt();
 		 scQt.setCloned(true);
@@ -847,6 +892,7 @@ public class QTCloneBackingbean extends
 					retrieveDeductionPaymentTabDtl(scQt,copyScqt,QtDetailsSO);
 					retrieveDocs(copyScqt);
 					retrievePublicationApprovalTabDtl(copyScqt);
+					retriveFulfilmentDtls(copyScqt);//33916
 				}
 				
 			}
@@ -857,6 +903,7 @@ public class QTCloneBackingbean extends
 		}
 		RequestContext.getCurrentInstance().execute("screen3.hide()");
 	}
+
 	
 	public List<ScQtDocReport> retrieveAllDocumentsByQt(ScQt scQt) {
 		List<ScQtDocReport> list=null;
@@ -996,7 +1043,13 @@ public class QTCloneBackingbean extends
 								qtDocReportAttachment.setScQtDocReport(qtDocReport);
 								setUserDetails(qtDocReportAttachment);
 								qtDocReportAttachment.setChangedDate(null);
-								
+								qtDocReportAttachment.setDocNo(qtDocReport.getScQt().getQtNo());//33954
+								try {
+									uploadAttachment(qtDocReportAttachment,docReport.getScQtDocReportAttachment());
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}//33954
 								qtDocReport.setScQtDocReportAttachment(qtDocReportAttachment);
 							}
 						} catch (IllegalAccessException | InstantiationException
@@ -1009,7 +1062,8 @@ public class QTCloneBackingbean extends
 					String docDefinitionKey=null;
 					if(null!=docReport.getPmDocument()){
 						docDefinitionKey=docReport.getPmDocument().getDocDefinitionKey();
-					}		
+					}
+					boolean templateDoc=Boolean.FALSE;//33954
 					if(null!=docDefinitionKey && SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
 							.equals(docDefinitionKey)){
 						IQTTemplateSO qtTemplateSO = null;
@@ -1018,23 +1072,30 @@ public class QTCloneBackingbean extends
 									ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
 							QTTemplateDocReqDTO reqDTO = new QTTemplateDocReqDTO();
 							if (docReport.getTplDocMaster() != null) {
+								templateDoc=Boolean.TRUE;//33954
 								if(null!=templetDoc){
+								log.info("=======removeDocumentCodesexecuted======");//33954
+								int index=reportList.indexOf(templetDoc);
 								reportList.remove(templetDoc);
 								templetDoc=retriveRulesAndRegulationReport(templetDoc);
 								TplDocMaster master=	retrieveTplDocMasterById(docReport.getTplDocMaster().getDocMasterId());
 								master=cloneDocMasterDocSectionDetails(master, templetDoc); //replace tplDocmaster
 								templetDoc.setTplDocMaster(master);
 									reqDTO.setScQtDocReport(templetDoc);
-									
+									templetDoc.setCloned(Boolean.TRUE);
+									reportList.add(index,templetDoc);//33954
 								}else{
+									log.info("=======UnremoveDocumentCodesexecuted======");//33954
 									TplDocMaster master=	retrieveTplDocMasterById(docReport.getTplDocMaster().getDocMasterId());
 									master=cloneDocMasterDocSectionDetails(master, qtDocReport);
 									qtDocReport.setTplDocMaster(master);
-										reqDTO.setScQtDocReport(qtDocReport);
+									reqDTO.setScQtDocReport(qtDocReport);
+									qtDocReport.setCloned(Boolean.TRUE);
+									reportList.add(qtDocReport);//33954
 									
 								}
-								QTTemplateDocResDTO resDTO = qtTemplateSO.saveQtReports(reqDTO);
-								qtDocReport=resDTO.getScQtDocReport();	
+								//QTTemplateDocResDTO resDTO = qtTemplateSO.saveQtReports(reqDTO);//33954
+								//qtDocReport=resDTO.getScQtDocReport();//33954	
 							}else{
 								//if(null!=templetDoc){
 								//	reportList.remove(templetDoc);
@@ -1049,7 +1110,7 @@ public class QTCloneBackingbean extends
 						}
 					}
 					
-					if(toClone){
+					if(toClone && !templateDoc){//33954
 						reportList.add(qtDocReport);
 					}
 					
@@ -1438,10 +1499,22 @@ public class QTCloneBackingbean extends
 					.getResultList();
 			
 			//this.getManagedBean().setToBeRemovalContactPersonList(contactPersonList);
+			QuationTenderReqDTO reqDTOS = new QuationTenderReqDTO();//33921
+			// reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			reqDTOS.setQtdetail(this.getManagedBean().getQt());
+			QuationTenderResDTO resDTO1 = detailSO
+					.retriveQTScheduleDetails(reqDTOS);
+			List<ScQtContactPerson> delcontactpersonList=new ArrayList<ScQtContactPerson>();
+			if(CollectionUtils.isNotEmpty(resDTO1.getContactPersons().getResultList())){
+				delcontactpersonList.addAll(resDTO1.getContactPersons().getResultList());
+			}
+			if(CollectionUtils.isNotEmpty(resDTO1.getDeskOfficers().getResultList())){
+				delcontactpersonList.addAll(resDTO1.getDeskOfficers().getResultList());
+			}//33921
 			
-			if (qt.getScQtContactPersons() != null || !qt.getScQtContactPersons().isEmpty()) {
+			if (delcontactpersonList != null || !delcontactpersonList.isEmpty()) {//33921
 				List<ScQtContactPerson> listDel=new ArrayList<ScQtContactPerson>();
-				for(ScQtContactPerson p:qt.getScQtContactPersons()){
+				for(ScQtContactPerson p:delcontactpersonList){//33921
 					p.setDeleted(true);
 					listDel.add(p);
 				}
@@ -1513,14 +1586,22 @@ public class QTCloneBackingbean extends
 			if(qt.isSampleReq()){
 				if (!qt.isZonal()){
 					ScQtSampleSubmission srcSub=resDTO.getSampleSubmissionResultBean().get(0);
-					if(null!=srcSub){
+					ScQtSampleSubmission existing=resDTO1.getSampleSubmissionResultBean().get(0);//33946
+					if(null!=existing){
+						setUserDetails(existing);
+						existing.setScAddress(populateScAddress(srcSub.getScAddress()));
+						this.getManagedBean().setScQtSampleSubmission(existing);
+					}
+					else{//33946
+						if(null!=srcSub){
 						ScQtSampleSubmission sbs=new ScQtSampleSubmission();
 						sbs.setBrandNew(true);
 						setUserDetails(sbs);
 						sbs.setScQt(qt);
-						sbs.setScAddress(srcSub.getScAddress());
+						sbs.setScAddress(populateScAddress(srcSub.getScAddress()));//33946
 						this.getManagedBean().setScQtSampleSubmission(sbs);
 					}
+					}//33946
 					
 					if (null != this.getManagedBean()
 							.getScQtSampleSubmission()) {//25635-start
@@ -4274,7 +4355,7 @@ public class QTCloneBackingbean extends
 		getManagedBean().setCloneCommitteeSelectQt(null);
 		this.getManagedBean().setSelectedCloneTender(null);//25635
 
-		getManagedBean().getCloneSearchQTDataModel().reloadData();
+		getManagedBean().getMainCloneSearchQTDataModel().reloadData();//34053
 	}
 	
 	/**
@@ -4291,7 +4372,7 @@ public class QTCloneBackingbean extends
 		this.getManagedBean().getCloneQtnTenderSearchBean()
 				.setToCreatedDate(null);
 		this.getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
-		this.getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());
+		//this.getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());//34053
 		this.getManagedBean().getCloneQtnTenderSearchBean()
 				.setFromPublishDate(null);
 		this.getManagedBean().getCloneQtnTenderSearchBean()
@@ -4387,6 +4468,8 @@ public class QTCloneBackingbean extends
 		scAddress.setContactPhoneCountry(address.getPhoneCountry());
 		scAddress.setContactFaxNo(address.getFaxNo());
 		scAddress.setContactPhoneNo(address.getPhoneNo());
+		scAddress.setContactMobileNo(address.getContactMobileNo());//33946
+		scAddress.setContactPerson(address.getContactPerson());//33946
         setUserDetails(scAddress);
 		return scAddress;
 	}
@@ -4588,4 +4671,215 @@ public class QTCloneBackingbean extends
 	  		this.getManagedBean().setQt(scQt);
 		
 	}//31350-End
+	
+	private void retriveFulfilmentDtls(ScQt copy){//33916
+		IQTSpecSO specSo = null;
+		ScQt cloned=this.getManagedBean().getQt();
+		try {
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			specSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			reqDTO.setQtId(copy.getQtId());
+			SpecificationResDTO resDTO = specSo
+					.retrieveFulFilMentScheduleDtls(reqDTO);
+			
+			List<ScQtSchedule> scheduleList = new ArrayList<ScQtSchedule>();
+			List<ScQtProgressivePayment> paymentList = new ArrayList<ScQtProgressivePayment>();
+			
+			if (null != resDTO.getScheduleResults()
+					&& null != resDTO.getScheduleResults().getResultList()
+					&& !resDTO.getScheduleResults().getResultList()
+							.isEmpty()) {
+				
+				this.getManagedBean().setTotalFrequency(resDTO.getScheduleResults().getResultList().size());
+				try{
+					
+					for (ScQtSchedule scQtSchedule : resDTO
+							.getScheduleResults().getResultList()) {
+						String startMonth = "";
+						String endMonth = "";
+						SimpleDateFormat dateFormat = new SimpleDateFormat(
+								CommonConstants.DEFAULT_DATE_FORMAT);
+						int months;
+						Date startDate = null;
+						Date endDate = null;
+						String fromdate = dateFormat.format(scQtSchedule
+								.getFromDate());
+						String todate = dateFormat.format(scQtSchedule
+								.getToDate());
+						String startdate = fromdate.substring(3, 5);
+						String startYear = fromdate.substring(6,
+								fromdate.length());
+						String fromDay = fromdate.substring(0, 2);
+	
+						String enddate = todate.substring(3, 5);
+						String endYear = todate.substring(6,
+								todate.length());
+						String toDay = todate.substring(0, 2);
+	
+						startMonth = fulfilmentMonthlyDtls(startdate);
+						endMonth = fulfilmentMonthlyDtls(enddate);
+	
+						int sYear = Integer.parseInt(startYear);
+						int eYear = Integer.parseInt(endYear);
+	
+						String fromDate = fromDay + "/" + startdate + "/"
+								+ sYear;
+						String toDate = toDay + "/" + enddate + "/" + eYear;
+	
+						startDate = dateFormat.parse(fromDate);
+						endDate = dateFormat.parse(toDate);
+	
+						months = DateUtils.getMonths(startDate, endDate);
+					
+						ScQtSchedule cls=new ScQtSchedule();
+						cls.setBrandNew(true);
+						setUserDetails(cls);
+						cls.setFromDate(scQtSchedule.getFromDate());
+						cls.setToDate(scQtSchedule.getToDate());
+						cls.setEndMonth(endMonth);
+						cls.setEndYear(endYear);
+						cls.setScheduleNo(scQtSchedule.getScheduleNo());
+						cls.setScheduleType(scQtSchedule.getScheduleType());
+						cls.setScQt(cloned);
+						cls.setStartMonth(startMonth);
+						cls.setStartYear(startYear);
+						cls.setTotalMonths(new BigDecimal(months));
+						scheduleList.add(cls);
+				
+					}
+					
+				} catch (ParseException e) {
+
+				}
+			}
+			this.getManagedBean().setScheduleList(scheduleList);
+			
+			
+			if (null != resDTO.getProgressivePaymentResults()
+					&& null != resDTO.getProgressivePaymentResults()
+							.getResultList()
+					&& !resDTO.getProgressivePaymentResults()
+							.getResultList().isEmpty()) {
+				
+				this.getManagedBean().setTotalProgressivePayment(
+						resDTO.getProgressivePaymentResults()
+								.getResultList().size());
+				
+				String startMonth = "";
+				String endMonth = "";
+				for (ScQtProgressivePayment payment : resDTO
+						.getProgressivePaymentResults().getResultList()) {
+					SimpleDateFormat dateFormat = new SimpleDateFormat(
+							"dd/MM/yyyy");
+
+					String fromdate = dateFormat.format(payment
+							.getFromDate());
+					String todate = dateFormat.format(payment.getToDate());
+					String startdate = fromdate.substring(3, 5);
+					String startYear = fromdate.substring(6,
+							fromdate.length());
+					String enddate = todate.substring(3, 5);
+					String endYear = todate.substring(6, todate.length());
+					startMonth = fulfilmentMonthlyDtls(startdate);
+					endMonth = fulfilmentMonthlyDtls(enddate);
+					
+					ScQtProgressivePayment clp =new ScQtProgressivePayment();
+					
+					clp.setBrandNew(true);
+					clp.setScQt(cloned);
+					setUserDetails(clp);
+					clp.setFromDate(payment.getFromDate());
+					clp.setToDate(payment.getToDate());
+					clp.setPercentage(payment.getPercentage());
+					clp.setPhaseDesc(payment.getPhaseDesc());
+					clp.setPhaseNo(payment.getPhaseNo());
+					clp.setTotalMonths(payment.getTotalMonths());
+					
+					clp.setStartMonth(startMonth);
+					clp.setEndMonth(endMonth);
+					clp.setStartYear(startYear);
+					clp.setEndYear(endYear);
+					
+					paymentList.add(clp);
+
+				}
+				
+				
+			}
+			this.getManagedBean().setProgressivePaymentList(paymentList);
+			
+			reqDTO.setQtId(cloned.getQtId());
+			resDTO = specSo
+					.retrieveFulFilMentScheduleDtls(reqDTO);
+			
+			if (null != resDTO.getScheduleResults()
+					&& null != resDTO.getScheduleResults().getResultList()
+					&& !resDTO.getScheduleResults().getResultList()
+							.isEmpty()) {
+				List<ScQtSchedule> deletes=new ArrayList<ScQtSchedule>();
+				for(ScQtSchedule toDel:resDTO.getScheduleResults().getResultList()){
+					toDel.setDeleted(true);
+					deletes.add(toDel);
+				}
+				this.getManagedBean().setToBeRemoveSchedules(deletes);
+			}
+			
+			if (null != resDTO.getProgressivePaymentResults()
+					&& null != resDTO.getProgressivePaymentResults()
+							.getResultList()
+					&& !resDTO.getProgressivePaymentResults()
+							.getResultList().isEmpty()) {
+				List<ScQtProgressivePayment> deletes=new ArrayList<ScQtProgressivePayment>();
+				for(ScQtProgressivePayment toDel:resDTO.getProgressivePaymentResults().getResultList()){
+					toDel.setDeleted(true);
+					deletes.add(toDel);
+				}
+				this.getManagedBean().setToBeRemoveProgPayments(deletes);
+			}
+			
+		}finally{
+			specSo = null;
+		}
+	}
+	
+	private String fulfilmentMonthlyDtls(String startdate) {
+		String startMonth = "";
+		try {
+			if (startdate.equalsIgnoreCase("01")) {
+				startMonth = "0";
+			} else if (startdate.equalsIgnoreCase("02")) {
+				startMonth = "1";
+			} else if (startdate.equalsIgnoreCase("03")) {
+				startMonth = "2";
+			} else if (startdate.equalsIgnoreCase("04")) {
+				startMonth = "3";
+			} else if (startdate.equalsIgnoreCase("05")) {
+				startMonth = "4";
+			} else if (startdate.equalsIgnoreCase("06")) {
+				startMonth = "5";
+			}
+
+			else if (startdate.equalsIgnoreCase("07")) {
+				startMonth = "6";
+			} else if (startdate.equalsIgnoreCase("08")) {
+				startMonth = "7";
+			} else if (startdate.equalsIgnoreCase("09")) {
+				startMonth = "8";
+			} else if (startdate.equalsIgnoreCase("10")) {
+				startMonth = "9";
+			} else if (startdate.equalsIgnoreCase("11")) {
+				startMonth = "10";
+			} else if (startdate.equalsIgnoreCase("12")) {
+				startMonth = "11";
+			}
+
+		} finally {
+
+		}
+		return startMonth;
+	}//33916
+	
+	
+	
 }

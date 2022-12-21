@@ -152,6 +152,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(PanelBackingBean.class);
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+	private static final String PROCESS_CENTRAL_PAGE = "/xhtml/ct/circular/centralcontract/circularBase.xhtmll?faces-redirect=true"; //#33533
+	private static final String PROCESS_PANEL_PAGE = "/xhtml/ct/circular/panel/circularBase.xhtml?faces-redirect=true"; //#33533
 	private ContractBackingBean ctBB = new ContractBackingBean();
 	
 	/**
@@ -318,17 +320,29 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
+			
+			//#33533 start
+			if(getManagedBean().getTaskIdFromTaskList()!=null && !getManagedBean().isChkCancelPage()){
+				taskId = getManagedBean().getTaskIdFromTaskList();
+				getManagedBean().setTaskIdFromTaskList(null);
+			}
+			
 			if(taskId==null) {
 				if((isPanelAdmin() || isCentralContractAdmin()) && !getManagedBean().isChkCancelPage()) {
 					getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SUBMIT});	
 				}
 				return;
 			}
-
-			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-			CTCircularCancellationDataType dataType = super.getBpmTaskDetails(CTCircularCancellationDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});			
+			
 			CircularReqDTO cancelReqDTO = new CircularReqDTO();
-			cancelReqDTO.setCancelCircularReqId(dataType.getDocId().longValue());
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+			if(getManagedBean().getCancelCircularReq()!=null && getManagedBean().getCancelCircularReq().getCancelCircularReqId()!=null){
+				cancelReqDTO.setCancelCircularReqId(getManagedBean().getCancelCircularReq().getCancelCircularReqId().longValue());
+			}else{
+				CTCircularCancellationDataType dataType = super.getBpmTaskDetails(CTCircularCancellationDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});						
+				cancelReqDTO.setCancelCircularReqId(dataType.getDocId().longValue());
+			}
+			//#33533 end
 
 			CircularResDTO resDTO = circularSO.retrieveCancelCircularReqById(cancelReqDTO);
 			getManagedBean().setCancelCircularReq(resDTO.getCancelCircularReq());
@@ -372,6 +386,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+			ctBB.getManagedBean().setViewContract(this.getManagedBean().isViewContract()); //#33533
 			ctBB.initializeRemarkAndAttachement(resDTO.getCancelCircularReq().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			ctBB.getManagedBean().setDeleteAttachmentList(null);
 		} catch (Exception e) {
@@ -389,8 +404,24 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 */
 	public String backAction() {
 		if(getManagedBean().isChkCancelPage()) {
-			getManagedBean().setChkCancelPage(false);
-			return "cancelCircularBase.xhtml?faces-redirect=true";
+			//#33533 /#33752 start		
+			getManagedBean().setAction(null);
+			getManagedBean().setViewContract(false); //set false view contract because its not for view
+			getManagedBean().setTaskId(getManagedBean().getTaskIdFromTaskList()); //set back the task id from tasklist
+			getManagedBean().setOutComes(getManagedBean().getOutComesFromTaskList()); //set back the button from the tasklist	
+			getManagedBean().setChkCancelPage(false); //set false from cancel page
+			
+			if(getManagedBean().getTaskIdFromTaskList()==null){
+				getManagedBean().setUpdateAction(true);
+				initializeRemarks();
+				ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+				ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract()); 
+				ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+			}
+			
+			return getManagedBean().getBackToPreviousPage(); //return the previous page (cancel circular page)
+			//return "cancelCircularBase.xhtml?faces-redirect=true";
+			//#33533 /#33752 end
 		} else if(getManagedBean().isFromCircularNotice()) {
 			return "../portal/circularListing.xhtml?faces-redirect=true";
 		} else if(getManagedBean().isDifferentModule()){
@@ -504,21 +535,24 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				log.debug("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
-
+				
+				//#16190 start
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-					messageId = MessageConst.INFO_700021;
+					messageId = MessageConst.INFO_700112;
 					nextRole = RoleCode.BPK_PQ_APPROVER.value();
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-					messageId = MessageConst.INFO_700025;
+					messageId = MessageConst.INFO_700113;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-					messageId = MessageConst.INFO_700009;
+					messageId = MessageConst.INFO_700114;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					messageId = MessageConst.INFO_700007;
+					messageId = MessageConst.INFO_700115;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-					messageId = MessageConst.INFO_700008;
+					messageId = MessageConst.INFO_700116;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-					messageId = MessageConst.INFO_700010;
+					messageId = MessageConst.INFO_700117;
 				}
+				//#16190 end
+				
 				log.debug("Record saved successfully");
 				if(StringUtils.isNotBlank(nextRole)){
 					PmRoleDesc roleDesc = RoleHelper.getInstance().getRoleDescByCode(nextRole);
@@ -627,6 +661,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					messageId = MessageConst.INFO_700009;
 				} 
+				//#33752 start
+				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					messageId = MessageConst.INFO_700025;
+				}
+				//#33752 end
 				log.debug("Record saved successfully");
 				if(StringUtils.isNotBlank(nextRole)){
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
@@ -667,6 +706,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 			 //#cr 28713 - start
 			if(getManagedBean().getCircularVer().getCircularAttachments().size() < 1 ){
+				getManagedBean().setSelectedTabIndex(0); //#33752
 				throw new EpException(MessageConst.ERROR_100022, 
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.letter", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -978,7 +1018,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		if(!getManagedBean().isViewContract()){
 			if(remarks.isEmpty() || !ctWorkflowStatusMatch) {
 				CtRemark remark = new CtRemark();
-				remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				remark.setChangedBy(remark.getCreatedBy());
 				remark.setChangedDate(remark.getCreatedDate());
@@ -1723,30 +1763,46 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * User need to make decision on panel circular maintenance page
 	 * Navigate to cancel panel circular page as per user selection 
 	 * */
-	public String gotoCancelPage() {
+	public void gotoCancelPage() {
 
 		String action = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("action");
 		Long circularVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("circularVerId"));
 		log.debug("Action :"+action+" Id :"+circularVerId);
 		String docType = this.getManagedBean().getCircularDocType();
 		CircularReqDTO reqDTO = new CircularReqDTO();
+		FacesContext fc = FacesContext.getCurrentInstance(); //#33533
 		reqDTO.setCircularVerId(circularVerId);
 
 		if(docType.equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)) {
 			CentralContractBackingBean ccBB = new CentralContractBackingBean();
-
+			 //#33533 start
+			ccBB.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()); //set the previous page
+			ccBB.getManagedBean().setTaskIdFromTaskList(getManagedBean().getTaskId()); //set the task id from tasklist
+			ccBB.getManagedBean().setOutComesFromTaskList(getManagedBean().getOutComes()); //set button set from tasklist
+			ccBB.getManagedBean().setTaskId(null);
+			 //#33533 end
 			ccBB.getManagedBean().setSelectedTabIndex(0);
-			ccBB.getManagedBean().setAction(action);
+			ccBB.getManagedBean().setAction(action); //set action 'view'
 			ccBB.getManagedBean().setUpdateAction(false);
 			ccBB.getManagedBean().setViewContract(true);
 			ccBB.getManagedBean().setOutComes(new String[]{});
-			ccBB.getManagedBean().setChkCancelPage(true);			
+			ccBB.getManagedBean().setChkCancelPage(true); //set true from cancel page 
 			ccBB.setContractCircularVar(reqDTO);
-			return "/xhtml/ct/circular/centralcontract/circularBase.xhtmll?faces-redirect=true";
+			
+			//33533 start
+			//return "/xhtml/ct/circular/centralcontract/circularBase.xhtmll?faces-redirect=true";
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PROCESS_CENTRAL_PAGE); //using facescontext to handle the new managebean
+			//33533 end
 		}
 		else {
 			PanelBackingBean panelBB = new PanelBackingBean();
-
+			
+			 //#33533 start
+			panelBB.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			panelBB.getManagedBean().setTaskIdFromTaskList(getManagedBean().getTaskId());
+			panelBB.getManagedBean().setOutComesFromTaskList(getManagedBean().getOutComes());
+			panelBB.getManagedBean().setTaskId(null);
+			 //#33533 end
 			panelBB.getManagedBean().setSelectionOfZone(false);
 			panelBB.getManagedBean().setSelectedPanelItems(null);
 			panelBB.getManagedBean().setSelectedPanelZone(null);
@@ -1754,10 +1810,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			panelBB.getManagedBean().setAction(action);				
 			panelBB.getManagedBean().setUpdateAction(false);
 			panelBB.getManagedBean().setViewContract(true);
-			panelBB. getManagedBean().setOutComes(new String[]{});	
+			panelBB.getManagedBean().setOutComes(new String[]{});	
 			panelBB.getManagedBean().setChkCancelPage(true);
 			panelBB.setPanelCircularVar(reqDTO);
-			return "/xhtml/ct/circular/panel/circularBase.xhtml?faces-redirect=true";
+			
+			//33533 start
+			//return "/xhtml/ct/circular/panel/circularBase.xhtml?faces-redirect=true";
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PROCESS_PANEL_PAGE);
+			//33533 end
 		}
 	}
 
@@ -1790,7 +1850,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				
 				attachment.setFileName(item.getFileName());
 				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-				attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+				attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 				attachment.setCreatedUser(facesScopes.getUserSessionBean());
 				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				getManagedBean().getCircularVer().getItemAttachments().add(attachment);
@@ -1798,7 +1858,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				
 				attachment.setFileName(item.getFileName());
 				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-				attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+				attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 				attachment.setCreatedUser(facesScopes.getUserSessionBean());
 				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				getManagedBean().getCircularVer().getCircularAttachments().add(attachment);
@@ -2365,7 +2425,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
 			// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getCircularVer().getCircularNo());
+			sb.append(getManagedBean().getCircularVer().getCircularNo().trim()); //#25685
 			sb.append(ContractConst.SEPRATE_LINE);
 			if(getManagedBean().getCircularVer().getCtCircular().getLatestCircularVer() != null){
 				sb.append(ContractConst.CIRCULAR_UPDATE);
@@ -2388,7 +2448,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			sb.append(outcome);
 			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());
+			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo().trim()); //#25685
 			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
 			getManagedBean().setAction(outcome);

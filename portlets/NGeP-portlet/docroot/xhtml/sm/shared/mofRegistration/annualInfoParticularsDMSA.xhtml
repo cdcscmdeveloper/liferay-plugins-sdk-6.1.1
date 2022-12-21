@@ -73,27 +73,27 @@
 			
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.person.resiAddr']}" />
+					<h:outputText value="#{lbl['lbl.sm.person.residentialAdress']}" />
 				</f:facet>
 				<h:outputText
-					rendered="#{not empty varOwner1.smPersonnelAddresses[0].smAddress.address1}"
-					value="#{varOwner1.smPersonnelAddresses[0].smAddress.address1}"
+					rendered="#{not empty varOwner1.smPersonnelAdd.smAddress.address1}"
+					value="#{varOwner1.smPersonnelAdd.smAddress.address1}"
 					converter="toUpperCaseConverter" />
 				<h:outputText
-					rendered="#{not empty varOwner1.smPersonnelAddresses[0].smAddress.address2}"
-					value="&lt;br/&gt; #{varOwner1.smPersonnelAddresses[0].smAddress.address2}"
+					rendered="#{not empty varOwner1.smPersonnelAdd.smAddress.address2}"
+					value="&lt;br/&gt; #{varOwner1.smPersonnelAdd.smAddress.address2}"
 					escape="false" converter="toUpperCaseConverter" />
 				<h:outputText
-					rendered="#{not empty varOwner1.smPersonnelAddresses[0].smAddress.address3}"
-					value="&lt;br/&gt; #{varOwner1.smPersonnelAddresses[0].smAddress.address3}"
+					rendered="#{not empty varOwner1.smPersonnelAdd.smAddress.address3}"
+					value="&lt;br/&gt; #{varOwner1.smPersonnelAdd.smAddress.address3}"
 					escape="false" converter="toUpperCaseConverter" />
 				<h:outputText
-					rendered="#{not empty varOwner1.smPersonnelAddresses[0].smAddress.postcode}"
-					value="&lt;br/&gt; #{varOwner1.smPersonnelAddresses[0].smAddress.postcode}"
+					rendered="#{not empty varOwner1.smPersonnelAdd.smAddress.postcode}"
+					value="&lt;br/&gt; #{varOwner1.smPersonnelAdd.smAddress.postcode}"
 					escape="false" converter="toUpperCaseConverter" />
 				<h:outputText
-					rendered="#{not empty varOwner1.smPersonnelAddresses[0].smAddress.pmState.stateName}"
-					value="&lt;br/&gt; #{varOwner1.smPersonnelAddresses[0].smAddress.pmState.stateName}"
+					rendered="#{not empty varOwner1.smPersonnelAdd.smAddress.pmState.stateName}"
+					value="&lt;br/&gt; #{varOwner1.smPersonnelAdd.smAddress.pmState.stateName}"
 					escape="false" converter="toUpperCaseConverter" />
 			</p:column>
 
@@ -138,7 +138,7 @@
 					<h:outputText value="#{lbl['lbl.sm.idType']}" />
 				</f:facet>
 				<h:outputText
-					value="#{backingBean.getParameterDesc(Secretary1.identificationType)}" />
+					value="#{backingBean.getParameterDesc(Secretary1.identificationType)}"/>
 			</p:column>
 			
 			<p:column styleClass="column-align-center">
@@ -271,14 +271,21 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.share']}" />
 				</f:facet>
-				<h:outputText value="#{Members1.shareAmt}">
-				</h:outputText>
+				<!-- 28767 - start -->
+				<ac:labelAmount value="#{Members1.shareAmtSsm}" styleClass="outputLabel-view"/>
+				<!-- 28767 - end -->
 			</p:column>
 			
 	   <p:columnGroup type="footer">
             <p:row>
                 <p:column colspan="5" style="text-align:left" footerText="#{lbl['lbl.sm.shareNum']}" />
-                <p:column style="text-align:left" footerText="#{backingBean.managedBean.totalShare}" />
+                <!-- 28776 - start -->
+                <p:column style="text-align:left">
+           			<f:facet name="footer">
+               			<ac:labelAmount value="#{backingBean.managedBean.totalShare}" styleClass="outputLabel-view"/>
+            		</f:facet>
+       			</p:column>
+       			<!-- 28767 - end -->
             </p:row>
         </p:columnGroup>
 

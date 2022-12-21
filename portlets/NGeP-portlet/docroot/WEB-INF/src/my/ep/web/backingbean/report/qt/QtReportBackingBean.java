@@ -13,10 +13,12 @@ package my.ep.web.backingbean.report.qt;
 
 import java.math.BigDecimal;
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -66,6 +68,7 @@ import my.ep.web.bean.report.ScReportFieldsSearchBean;
 import my.ep.web.constant.report.QtReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.qt.QtReportManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -234,8 +237,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		
 		IRPTRequestDtlSO rptRequestDtlSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestDtlSO.class);
 		if(restDtlDTO.getRptRequestDtl().getCreatedBy() == null){
-			restDtlDTO.getRptRequestDtl().setCreatedBy(getFacesScopes()
-				.getUserSessionBean().getUserId());
+			restDtlDTO.getRptRequestDtl().setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		}
 		rptRequestDtlSO.saveRPTRequestDtlDTO(restDtlDTO);
 	}
@@ -730,9 +732,11 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		this.getManagedBean().setQuotationId(null);
 		ScReportFieldsSearchBean reportFileSearchBean = this.getManagedBean().getScReportSearchBean();
 		String reportCode = this.getManagedBean().getReportCode();
-		if (QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode) && reportFileSearchBean != null) {
+		if ((QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode) 
+				|| QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL.equals(reportCode)) && reportFileSearchBean != null) {//#21692
 			reportFileSearchBean.setScPtj(null);
 			reportFileSearchBean.setScPtjName(null);
+			reportFileSearchBean.setScStatus(null);//#21692 reset status
 			if (!isDeskOfficer()) {
 				reportFileSearchBean.setScDeskOfficer(null);
 				reportFileSearchBean.setPtjProfile(null);
@@ -748,7 +752,8 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		String ptjCode = "";
 		boolean deskOfficerRoles = retriveUserRoles();
 		String reportCode = this.getManagedBean().getReportCode();
-		if (deskOfficerRoles && QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode)) {
+		if (deskOfficerRoles && (QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode)
+				|| QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL.equals(reportCode))) {//#21692
 			if (scQt != null && scQt.getQtId() != null) {
 				Date date = retriveDatesforOrgProfile(scQt.getPublishDate(), scQt.getCreatedDate());
 
@@ -963,4 +968,184 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		
 		return pmOrgProfile;
 	}
+
+	// 29580 - Start (Harun) change dropdown list to selectManyMenu for status
+	public List<String> reportStatusDropdownValuesSelectManyMenu(String reportCode) {
+		List<String> statusValues = new ArrayList<String>();
+		List<String> statusValuesRemove = null;
+		boolean checkRemove = false;
+
+		String[] removeReportStr = { ReportConst.SC_BRIF_SITE_VISIT_OR_RPT_VAL,
+				ReportConst.SC_PROPOSAL_DTLS_PRODUCT_RPT_VAL, ReportConst.SC_PROPOSAL_DTLS_SERVICE_RPT_VAL,
+				ReportConst.SC_LETTER_OF_ACCPT_OR_RPT_VAL };
+		String[] removeStsStr = { getStatusDesc("lbl.rpt.preparation"), getStatusDesc("lbl.rpt.publishing") };
+
+		statusValues.add(getStatusDesc("lbl.rpt.preparation"));
+		statusValues.add(getStatusDesc("lbl.rpt.publishing"));
+		statusValues.add(getStatusDesc("lbl.rpt.pendingEvaluation"));
+		statusValues.add(getStatusDesc("lbl.rpt.pendingSupplierFinalization"));
+		statusValues.add(getStatusDesc("lbl.rpt.pendingLOInLOA"));
+		statusValues.add(getStatusDesc("lbl.rpt.loaCompleted"));
+		statusValues.add(getStatusDesc("lbl.rpt.drpdown.cancelledLabel"));
+
+		for (String strRpt : removeReportStr) {
+			if (reportCode.equalsIgnoreCase(strRpt)) {
+				statusValuesRemove = new ArrayList<String>(statusValues);
+				checkRemove = true;
+				break;
+			} else {
+				checkRemove = false;
+			}
+		}
+
+		if (checkRemove) {
+			for (Iterator<String> it = statusValuesRemove.iterator(); it.hasNext();) {
+				String strVal = (String) it.next();
+				for (String strSts : removeStsStr) {
+					if (strSts.equalsIgnoreCase(strVal)) {
+						statusValues.remove(strSts);
+					}
+				}
+			}
+		}
+
+		return statusValues;
+	}
+	// 29580 - End (Harun)
+
+	// 29580 - Start (Harun) for trigger selectALL
+	public void onSelectAll(String reportCode) {
+
+		boolean checkAll = false;
+		List<String> statusList = new ArrayList<String>(this.getManagedBean().getScReportSearchBean()
+				.getScStatusManyMenu());
+		List<String> allList = new ArrayList<String>();
+
+		for (String stsvalue : statusList) {
+			if (stsvalue.equalsIgnoreCase(getStatusDesc("lbl.rpt.all"))) {
+				allList = reportStatusDropdownValuesSelectManyMenu(reportCode);
+
+				List<SelectItem> items = new ArrayList<SelectItem>();
+				for (String strSelectItem : allList) {
+					items.add(new SelectItem(strSelectItem));
+				}
+				for (Iterator<SelectItem> it = items.iterator(); it.hasNext();) {
+					SelectItem si = (SelectItem) it.next();
+					//this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().add((String) si.getValue());
+					this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().remove((String) si.getValue());
+					si.setDisabled(Boolean.TRUE);
+				}
+				checkAll = true;
+			} else {
+				checkAll = false;
+			}
+		}
+		if (!checkAll) {
+			if (allList.size() == statusList.size()) {
+				List<SelectItem> items = new ArrayList<SelectItem>();
+				for (String strSelectItem : statusList) {
+					items.add(new SelectItem(strSelectItem));
+				}
+				for (Iterator<SelectItem> it = items.iterator(); it.hasNext();) {
+					SelectItem si = (SelectItem) it.next();
+					//this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().remove((String) si.getValue());
+					si.setDisabled(Boolean.FALSE);
+				}
+			}
+		}
+
+	}
+	
+	public boolean isDisabled(String item,String reportCode) {
+		List<String> allList = reportStatusDropdownValuesSelectManyMenu(reportCode);
+	
+		if(this.getManagedBean().getScReportSearchBean().getScStatusManyMenu() != null 
+				&& this.getManagedBean().getScReportSearchBean().getScStatusManyMenu().size() > 0){
+			for (String stsvalue : this.getManagedBean().getScReportSearchBean().getScStatusManyMenu()) {
+				if(stsvalue.equalsIgnoreCase(getStatusDesc("lbl.rpt.all"))){
+					for (String strSelectItem : allList) {
+						if(strSelectItem.equalsIgnoreCase(item)){
+							return strSelectItem.equals(item);
+						}
+					}
+				}
+			}
+		}else{
+			return false;
+		}
+		return false;
+	}
+	
+	public List<String> reportStatusDropdownValuesProposalOfferSubmission() {
+		List<String> statusValues = new ArrayList<String>();
+
+		statusValues.add(getStatusDesc("lbl.rpt.pending.proposal.submission"));
+		statusValues.add(getStatusDesc("lbl.rpt.proposal.submitted"));
+	
+		return statusValues;
+	}
+	// 29580 - End (Harun)
+	
+	// #21692 - start
+	/**
+	 * Generate approval status list.
+	 * 
+	 * @param language
+	 *            the language
+	 * @return the list
+	 */
+	public List<SelectItem> generateApprovalStatusList() {
+		List<SelectItem> statusList = new ArrayList<SelectItem>();
+		if ((strLanguage != null) && (strLanguage.equalsIgnoreCase("en"))) {
+
+			SelectItem selectItem = new SelectItem();
+			selectItem
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_ENG_CODE);
+			selectItem.setValue(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_ID);
+			statusList.add(selectItem);
+			SelectItem selectItem1 = new SelectItem();
+			selectItem1
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ENG_CODE);
+			selectItem1.setValue(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ID);
+			statusList.add(selectItem1);
+
+		} else if ((strLanguage != null)
+				&& (strLanguage.equalsIgnoreCase("ms"))) {
+
+			SelectItem selectItem = new SelectItem();
+			selectItem
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_MY_CODE);
+			selectItem.setValue(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_ID);
+			statusList.add(selectItem);
+			SelectItem selectItem1 = new SelectItem();
+			selectItem1
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REJECT_MY_CODE);
+			selectItem1.setValue(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ID);
+			statusList.add(selectItem1);
+
+		}
+		return statusList;
+	}
+	
+	/*
+	 * set to be a year before today
+	 */
+	public Date handleMinDateForEPV() {
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -1); // to get previous year
+		Date earlyDate = cal.getTime();
+		earlyDate = DateUtils.addDays(earlyDate, 1); // to get a day after
+		
+		return earlyDate;
+	}
+	
+	/*
+	 * set to be today
+	 */
+	public Date handleMaxDateForEPV() {
+		
+		return new Date();
+	}
+	// #21692 - end
 }

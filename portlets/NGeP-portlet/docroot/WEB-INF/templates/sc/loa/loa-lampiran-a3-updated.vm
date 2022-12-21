@@ -3,6 +3,8 @@
 	<style>
 @page {
 	size: A4 portrait;
+	margin-left: 20px;
+	margin-right: 20px;
 }
 
 @page { @bottom-center { content:"Page "counter(page)" / "counter(pages);	
@@ -153,10 +155,10 @@ u {
 					<td>
 						<span style="font-family: Arial, Helvetica, sans-serif; font-size: 10px;"><b>Nama Item : </b></span>
 						<span style="font-family: Arial, Helvetica, sans-serif; font-size: 10px;"><b>$scLoiLoaItem.scRequestItem.itemName </b></span><br />  
-						#if ($scLoiLoaItem.loaSpecJustification != $null && $scLoiLoaItem.loaSpecJustification != "")
+						#if ($scLoiLoaItem.loaSpecJustification != $null && $scLoiLoaItem.loaSpecJustification != "" && $scLoiLoaItem.Complete == 'true')
 							<span style="font-family: Arial, Helvetica, sans-serif; font-size: 10px;"><b>Justifikasi : </b></span>
-							<span style="font-family: Arial, Helvetica, sans-serif; font-size: 10px;"><b>Dikemas kini atas sebab $scLoiLoaItem.loaSpecJustification </b></span>
-							<span style="font-family: Arial, Helvetica, sans-serif; font-size: 10px;"><b>$dateStamp</b></span>
+							<span style="font-family: Arial, Helvetica, sans-serif; font-size: 10px;"><b>Dikemas kini atas sebab $scLoiLoaItem.loaSpecJustification, </b></span>
+							<span style="font-family: Arial, Helvetica, sans-serif; font-size: 10px;"><b>$dateStamp, $timeStamp</b></span>
 						#end
 					</td>
 				</tr>
@@ -235,7 +237,7 @@ u {
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;border: 1px solid black !important;">
 					</td>
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;border: 1px solid black !important;">
-					#if ($tplSpecAnswer.newSupplierOffer != $null && $tplSpecAnswer.newSupplierOffer != "")
+					#if ($tplSpecAnswer.newSupplierOffer != $null && $tplSpecAnswer.newSupplierOffer != ""  && $scLoiLoaItem.Complete == 'true')
 						$tplSpecAnswer.newSupplierOffer
 					#else
 						#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
@@ -277,7 +279,7 @@ u {
 					#end
 					#end
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;border: 1px solid black; colspan="1"">
-					#if ($tplSpecAnswer.newSupplierOffer != $null && $tplSpecAnswer.newSupplierOffer != "")
+					#if ($tplSpecAnswer.newSupplierOffer != $null && $tplSpecAnswer.newSupplierOffer != ""  && $scLoiLoaItem.Complete == 'true')
 						$tplSpecAnswer.newSupplierOffer
 					#else
 						#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
@@ -455,7 +457,7 @@ u {
 					</td>
 							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" colspan="1" style="border: 1px solid black;padding-left: 2px; padding-right: 2px;padding-top: 2px;padding-bottom: 2px;">
 									 <td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" colspan="1" style="text-align: left; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; padding-left: 5px; padding-right: 5px;">
-										#if ($tplSpecAnswer.newSupplierOffer != $null && $tplSpecAnswer.newSupplierOffer != "")
+										#if ($tplSpecAnswer.newSupplierOffer != $null && $tplSpecAnswer.newSupplierOffer != "" && $scLoiLoaItem.Complete == 'true')
 											<span>$tplSpecAnswer.newSupplierOffer</span>
 										#else											
 											#set($rowCount = 0)
@@ -596,7 +598,7 @@ u {
 									#end
 								#else
 									 <td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="1" colspan="1" style="text-align: left; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; padding-left: 5px; padding-right: 5px;">
-										#if ($tplSpecAnswer.newSupplierOffer != $null && $tplSpecAnswer.newSupplierOffer != "")
+										#if ($tplSpecAnswer.newSupplierOffer != $null && $tplSpecAnswer.newSupplierOffer != ""  && $scLoiLoaItem.Complete == 'true')
 											<span>$tplSpecAnswer.newSupplierOffer</span>
 										#else
 											#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
@@ -611,7 +613,7 @@ u {
 						#else
 							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="1" colspan="1" style="text-align: left; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; padding-left: 5px; padding-right: 5px; border-bottom: 1px solid black;
 							border-right: 1px solid black;">
-								#if ($tplSpecAnswer.newSupplierOffer != $null && $tplSpecAnswer.newSupplierOffer != "")
+								#if ($tplSpecAnswer.newSupplierOffer != $null && $tplSpecAnswer.newSupplierOffer != "" && $scLoiLoaItem.Complete == 'true')
 									<span>$tplSpecAnswer.newSupplierOffer</span>
 								#else
 									#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
@@ -669,7 +671,6 @@ u {
 			#end
 			</tbody>
 		</table>
-		<br/>
 		<br/>
 		#end
 		#end

@@ -11,13 +11,7 @@
 
 	<ui:define name="contentSection">
 		
-		<!--start #29665 -->
-		<style type="text/css">
-		    .textLeft label{
-				float: left;
-			}
-		</style>
-		<!--end #29665 -->
+		<!-- #29665 - remove style -->
 
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" severity="error,info" showSummary="false"></p:messages>
@@ -401,17 +395,20 @@
 						<p:outputLabel value="#{lbl['lbl.pm.remarks']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
+					<!-- Start #29665 - Start -->
 					<td>
 						<p:inputTextarea id="remarkFieldId" cols="50" maxlength="1000" value="#{categoryBackingBean.managedBean.remarkCategory}"
 						disabled="#{categoryBackingBean.remarkDisable}" required="#{!categoryBackingBean.remarkDisable}"
-						requiredMessage="#{lbl['lbl.pm.categ.remark.div.required']}" autoResize="false"
-						validatorMessage="#{lbl['lbl.pm.categ.remark.div.required']}">
+						validator="#{categoryBackingBean.validateRequiredField}"
+						requiredMessage="#{lbl['lbl.pm.categ.remark.div.required']}" autoResize="false">
 						<p:ajax event="change" update="@(.catLevelClass :not(.ui-inputfield,.ui-selectonemenu)) 
 						tabCatId:tabpanel1,tabCatId:tabpanel2" 
 						process="@this"/>
+						<f:attribute name="labelName" value="#{lbl['lbl.pm.sub.div']}" />
 						</p:inputTextarea>
 						<ac:iconTooltip value="#{lbl['lbl.pm.categ.remark.main.tooltips']}"/>
 					</td>
+					<!-- Start #29665 - End -->
 					<td colspan="2"></td>
 				</tr>
 				</c:if>
@@ -680,8 +677,8 @@
 					#{lbl['lbl.pm.machine.sitevisitsection']}
 					<ac:iconTooltip value="#{lbl['lbl.pm.machine.sitevisitsection.tooltip']}"/>	
 				</f:facet>
-								<!-- start #29665 new checkbox -->
-								<p:selectManyCheckbox layout="pageDirection" styleClass="textLeft"
+								<!-- start #29665 new checkbox change styleClass -->
+								<p:selectManyCheckbox layout="pageDirection" styleClass="float-left"
 									value="#{pmMachineCategory.pmMachineCategorySectionList}"
 									>
 									<f:selectItem 

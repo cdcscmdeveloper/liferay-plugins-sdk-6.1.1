@@ -1762,13 +1762,18 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						pmUserRole.setModified(false);
 					}
 				}
-
+				
 				if (getManagedBean().getSelectedReceivingAddrTypes() != null
 						&& !getManagedBean().getSelectedReceivingAddrTypes().isEmpty()) {
+					//Bug #32656 - start
 					List<PmAddressType> removeNewAddressTypes = new ArrayList<PmAddressType>();
+					List<PmAddressType> removeNewAddressRecTypes = new ArrayList<PmAddressType>();
 					for (PmAddressType addType : getManagedBean().getSelectedReceivingAddrTypes()) {
-						if (addType.isBrandNew()) {
+						//Bug #32656 - Check whether addressTypeId just remove or inactive 
+						logger.info("userRoleStatusChange : inactive addressTypeId :" + addType.getAddressTypeId());
+						if (addType.isBrandNew() && addType.getAddressTypeId()== null) {
 							removeNewAddressTypes.add(addType);
+							removeNewAddressRecTypes.add(addType);
 						} else {
 							if (DbValueConst.RECORD_STATUS_ACTIVE == addType.getRecordStatusFlg()) {
 								addType.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
@@ -1776,9 +1781,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						}
 					}
 					if (!removeNewAddressTypes.isEmpty()) {
-						getManagedBean().getSelectedReceivingAddrTypes().removeAll(removeNewAddressTypes);
+						this.getManagedBean().getSelectedUser().getPmAddressTypes().removeAll(removeNewAddressTypes);
+						this.getManagedBean().getSelectedReceivingAddrTypes().removeAll(removeNewAddressRecTypes);
 					}
 				}
+				  //Bug #32656 - end
 			} else if (pmUserRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 				if (!pmUserRole.isModified()) {
 					pmUserRole.setModified(true);
@@ -2070,7 +2077,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				PmUserAttachment attachment = new PmUserAttachment();
 				attachment.setFileName(item.getFileName());
 				attachment.setFilePath(PmCommonUtil.getUploadPath(loginId, item.getFileName()));
-				attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				attachment.setCreatedBy(getUserIdSessionFromLoginId());//#31849 add log key
 				attachment.setCreatedUser(getFacesScopes().getUserSessionBean());
 				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
@@ -2380,10 +2387,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				roleReqDTO.setBpk(getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() != null
 						? getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() : false);
 				roleReqDTO.setAssignRole(true);
-				// roleReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-				logger.info("..getFacesScopes().getUserSessionBean().getUserId()="
-						+ getFacesScopes().getUserSessionBean().getUserId());
-
 				roleReqDTO.setSearchRoleBean(searchBeanData);
 				roleReqDTO.setRoleName(getManagedBean().getSearchRoleName());
 				roleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,

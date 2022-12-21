@@ -52,8 +52,10 @@
 						onstart="blockWidget.show()" oncomplete="this.disabled=false;blockWidget.hide();"
 						update="@form"/>
 
-						<!-- 29430,28775 - Site Visit Grouping Enhancement - 28775 -->
-						<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit" onclick="submissionConfirmDlg.show()" 
+						<!-- 29430,28775 - Site Visit Grouping Enhancement - 28775, 32304 -->
+						<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							action="#{svoSiteVisitBackingBean.checkCancelBumiApplFromNewAppl()}"
 							rendered="#{svoSiteVisitBackingBean.managedBean.activePage eq 's'}" 
 							disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}">
 							<f:param name="disableValidation" value="true" />
@@ -66,11 +68,12 @@
 						
 					</div>
 					<ui:param name="template" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3.categoryTypeCode.parameterCode}" />
-						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 0}">
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage == '0'
+									|| svoSiteVisitBackingBean.managedBean.activePage == null}">
 							<ui:include src="/xhtml/sm/svositevisit/siteVisitCommonInfo.xhtml" />
 						</c:if>
 
-						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 1}">
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage == '1'}">
 							<ui:include src="/xhtml/sm/svositevisit/commonFinancialInfo.xhtml" />
 						</c:if>
 
@@ -139,5 +142,16 @@
 					</p:outputPanel></td>
 			</tr>
 		</table>
+		<!-- #32304 - start -->
+		<p:confirmDialog widgetVar="smBumiCancelAlert" id="smBumiCancelAlert" closable="false"
+			header="#{lbl['lbl.sm.bumi.cancel.other.appl.alert.header']}"
+			message="#{lbl['lbl.sm.bumi.cancel.other.appl.alert']}" severity="alert" >
+			<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+				action="#{svoSiteVisitBackingBean.redirectToTaskList()}" 
+				onclick="smBumiCancelAlert.hide();blockWidget.show();" oncomplete="blockWidget.hide()"/>
+			</div>
+		</p:confirmDialog>
+		<!-- #32304 - end -->
 	</ui:define>
 </ui:composition>

@@ -255,6 +255,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 			
 		// Refactor: #12177 - Start
 		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		log.info("Refactor 12177 (DpLOABackingBean) : getSqTimeValidity - " + sqTimeValidity);
 		// Refactor: #12177 - End
 		
 		if(scQuote != null){			

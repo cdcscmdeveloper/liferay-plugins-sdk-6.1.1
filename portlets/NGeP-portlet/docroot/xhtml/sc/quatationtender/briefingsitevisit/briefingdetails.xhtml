@@ -205,5 +205,9 @@
 				</div>
 			</p:panel>
 		</c:if>
+		<ui:remove>#34217 - Start</ui:remove>
+		<p:ajax event="close"
+            listener="#{qTBriefingSiteVisitBackingBean.closeBriefingList()}"/>
+        <ui:remove>#34217 - End</ui:remove>
 	</p:dialog>
 </ui:composition>

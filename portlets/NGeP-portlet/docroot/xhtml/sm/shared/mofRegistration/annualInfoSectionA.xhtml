@@ -9,7 +9,10 @@
 	<p:outputPanel id="catCodeInfPan" layout="block" >
 	<table>
 		<tr>
-			<td style="width: 15"><h:outputLabel escape="false" value="#{lbl['lbl.sm.annualInfoNote']}"></h:outputLabel></td>
+			<td style="width: 15"><h:outputText escape="false" value="#{lbl['lbl.sm.annualInfoNote1']}"></h:outputText></td>
+		</tr>
+		<tr>
+			<td style="width: 15"><h:outputText escape="false" value="#{lbl['lbl.sm.annualInfoNote2']}"></h:outputText></td>
 		</tr>
 	</table>
 	</p:outputPanel>
@@ -60,7 +63,11 @@
 					<h:outputLabel style="font-weight:bold"
 					value="#{lbl['lbl.sm.dateofRgistration']} :"></h:outputLabel>
 				<h:outputText
-					value="#{backingBean.managedBean.smAppl.smApplIndebtedness.dateOfRegistration}"></h:outputText>
+					value="#{backingBean.managedBean.smAppl.smApplIndebtedness.dateOfRegistration}">
+					<!-- #28767 - start -->
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+					<!-- #28767 - end -->
+					</h:outputText>
 					
 					<h:outputLabel style="font-weight:bold"
 					value="#{lbl['lbl.sm.chargeAmount']} :"></h:outputLabel>

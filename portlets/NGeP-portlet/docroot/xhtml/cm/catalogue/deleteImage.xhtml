@@ -9,7 +9,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 		
-	<!-- #14118 Allow multiple image deletion in delete image screen - Start --> 	
+	<!-- #14118 Allow multiple image deletion in delete image screen - Start -->
+	<!-- #14118, #30457 change rowKey to cmImage Back -->
 	<p:dataTable id="deleteImageId" var="cmImage" rowIndexVar="rowIndex" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}"
 		selection="#{catalogueBackingBean.managedBean.selectedImage.cmImages}" rowSelectMode="checkbox" rowKey="#{cmImage}" >
@@ -27,9 +28,11 @@
 			<f:facet name="header">
 					#{lbl['lbl.cm.image']}
 				</f:facet>
-				<div style="height:200px; width:200px; text-align:center; margin:0 auto;">
+				<!-- #30457 - Start -->
+				<div style="width:200px;margin-left: 80px;">
 			<img src="/NGeP-portlet/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}"  style="max-height:100%;max-width:100%;" />
 			</div>
+			<!-- #30457 - End -->
 		</p:column>
 		<p:column style="text-align: center;">
 			<f:facet name="header">

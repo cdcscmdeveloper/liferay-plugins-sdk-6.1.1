@@ -14,6 +14,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
@@ -535,6 +536,50 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 	}
 	//#27927 - End
+	
+
+	
+	//#21692 - start
+	public boolean isSupplierEPVStatusRejected() {
+		boolean supplierStatus = false;
+		
+		IQTDetailSO detailSO;
+		
+		if (null != getManagedBean().getScLoiLoaList()) {
+			
+			try {
+				detailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				
+				List<Long> suppList = new ArrayList<>();
+				for (ScLoiLoa scLo : getManagedBean().getScLoiLoaList()) {
+					suppList.add(scLo.getSmSupplier().getSupplierId());
+				}
+				if (null != getManagedBean().getScLoiLoaList()
+						&& !getManagedBean().getScLoiLoaList().isEmpty()
+						&& !suppList.isEmpty()) {
+					supplierStatus = detailSO.checkSupplierEPVStatus(getManagedBean().getQt().getQtId(), suppList);
+				}
+				
+			} finally {
+				detailSO = null;
+			}
+			
+			boolean isValidFor21692 = this.validateSupportedTask(this.getManagedBean().getQt().getQtNo(), QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
+			
+			supplierStatus = (supplierStatus && isLoaListPortlet()
+					&& isValidFor21692
+					) ? true : false;
+		}
+		
+		return supplierStatus;
+	}
+	
+	public boolean isLoaListPortlet() {
+		return QTConstants.PORTLET_NAME_QT_LIST
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	//#21692 - end
 	
 }
 

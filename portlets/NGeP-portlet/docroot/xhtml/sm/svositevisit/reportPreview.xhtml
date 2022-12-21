@@ -12,15 +12,15 @@
 	<p:dialog widgetVar="submissionConfirmDlg" id="submissionConfirmDlg" modal="true" height="100" width="500">
    			 #{lbl['lbl.sm.rptpreview.want.proceed/download.qmark']}	
    			<div align="right">
-   			<!-- 29430, 24964 -->
+   			<!-- #32963 - start -->
 			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false" onclick="submissionConfirmDlg.hide()">
 					<p:fileDownload value="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(null)}" />
-				</p:commandButton>
-			<!--28775 - Site Visit Grouping Enhancement - 28775 - start-->
+			</p:commandButton>
+			<!-- #32963 - end -->
+			<!--28775 - Site Visit Grouping Enhancement - 28775 -->
 			<p:commandButton value="#{lbl['lbl.btn.proceed']}" 
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide();submissionConfirmDlg.hide()"
-				action="#{svoSiteVisitBackingBean.saveSiteVisitReport(SupplierManagementConst.BPM_SUBMIT)}" />
-			<!--28775 - Site Visit Grouping Enhancement - 28775 - end-->
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide();submissionConfirmDlg.hide()"
+				action="#{svoSiteVisitBackingBean.saveSiteVisitReport(SupplierManagementConst.BPM_SUBMIT)}"></p:commandButton>
 		</div>
 	</p:dialog>
 	<!-- #12483 - END -->
@@ -44,15 +44,16 @@
 			</p:column>
 	
 			<p:column headerText="#{lbl['lbl.sm.rptpreview.template']}">
+				<!--28775 - Site Visit Grouping Enhancement - 28775 -->
 				<p:commandButton value="#{lbl['lbl.sm.button.preview']}" oncomplete="rptDlg.show();" id="btnPreview" action="#{svoSiteVisitBackingBean.rptPreview(svTask.smSvTemplate)}" />
 			</p:column>
-			<!--28775 - Site Visit Grouping Enhancement - 28775 - start-->
+			
 			<p:column>
-				<p:commandButton value="#{lbl['lbl.btn.upload']}" onclick="uploadDlg.show();" actionListener="#{svoSiteVisitBackingBean.setReportUploadTemplate(svTask.smSvTemplate)}" />
+				<p:commandButton value="#{lbl['lbl.btn.upload']}" onclick="uploadDlg.show();" actionListener="#{svoSiteVisitBackingBean.setReportUploadTemplate(svTask.smSvTemplate)}"></p:commandButton>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sm.sitevist.report.uploadedfile']}">
-			<!--28775 - Site Visit Grouping Enhancement - 28775 - end-->
+			<!--28775 - Site Visit Grouping Enhancement - 28775 -->
+			<p:column>
 				<table>
 					<ui:repeat var="attch" value="#{svTask.smSvTemplate.smAttachments}">
 					<p:outputPanel rendered="#{attch.recordStatusFlg == svoSiteVisitBackingBean.getRecordStatusActive()}">
@@ -98,7 +99,7 @@
 					<p:tab title="#{lbl['lbl.sm.sitevisit.equipment.detail']}">
 						<ui:include src="/xhtml/sm/svositevisit/group/categoryType.xhtml" />
 					</p:tab>
-					<p:tab title="#{lbl['lbl.sm.sitevisit.premiselocation']}">
+					<p:tab title="#{lbl['lbl.sm.officeloc']}">
 						<ui:include src="/xhtml/sm/svositevisit/officeLocation.xhtml" />
 					</p:tab>
 				</p:tabView>

@@ -70,9 +70,6 @@
 					action="#{svoSiteVisitBackingBean.editMachine(svMachine)}" process="@this">
 					<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"/>
 				</p:commandLink>
-				<!-- #24964 -->
-				<p:graphicImage style="vertical-align:top" value="/css/images/design/icon_alert.png" 
-					rendered="#{svMachine != null and svoSiteVisitBackingBean.isSVOSmSvMachineDifferent(svMachine,template.svTemplateId)}"/>
 			</p:column>
 		</p:dataTable>
 	</p:panel>

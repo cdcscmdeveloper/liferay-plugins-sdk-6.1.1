@@ -22,6 +22,10 @@
 
 		<p:panel header="#{lbl['lbl.sc.loiloa.recom.supp.list']}"
 			id="recSupplierListId" toggleable="true">
+			<ui:remove>#21692 - start</ui:remove>
+			<h:outputText styleClass="instruction" 
+			value="#{lbl['lbl.sc.qt.pending.loi.epv.instruction']}" />
+			<ui:remove>#21692 - end</ui:remove>
 			<table>
 				<tr>
 					<td style="width: 210px;"><p:outputLabel
@@ -78,7 +82,7 @@
 				</p:column>
 						
 				<p:column headerText="#{lbl['lbl.sc.loiloa.is.loi.required']}" style="width:15%" rendered="#{!isMultipleLoi}">
-					<h:selectOneMenu value="#{loiLoa.loiRequired}" required="true"
+					<h:selectOneMenu value="#{loiLoa.loiRequired}" 
 					    disabled="#{lOIDetailBackingBean.isLoiRequiredDisabled(loiLoa) or readOnly}"
 					    label="#{loiLoa.smSupplier.companyName} : #{lbl['lbl.sc.loiloa.is.loi.required']}" 
 						id="isLoiReq">

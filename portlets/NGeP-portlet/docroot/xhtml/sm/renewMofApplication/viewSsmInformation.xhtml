@@ -12,6 +12,9 @@
 			$('#portlet_MOFApplication_WAR_NGePportlet').find(
 					'.portlet-title-text').html(
 					"#{lbl['lbl.sm.view.ssm.infomation']}");
+			$('#portlet_viewApplicationHistory_WAR_NGePportlet').find(
+					'.portlet-title-text').html(
+					"#{lbl['lbl.sm.view.ssm.infomation']}");
 		</script>
 		<p:panel header="#{lbl['lbl.sm.panHdr.comBasic']}" toggleable="true"
 			toggleSpeed="500">
@@ -75,6 +78,7 @@
 				<h:outputText
 					value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"></h:outputText>
 	
+				<c:if test="#{backingBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD or backingBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD}">
 				<h:outputLabel style="font-weight:bold" 
 					value="#{lbl['lbl.sm.annualRev']} :"></h:outputLabel>
 					<h:panelGrid columns="3" layout="grid"> 
@@ -90,6 +94,16 @@
 							<f:selectItems value="#{backingBean.getDropdownValues('SAR')}" />
 						</p:selectOneMenu>
 					</h:panelGrid>
+
+					<h:outputLabel style="font-weight:bold"
+						value="#{lbl['lbl.sm.totalIssued']} :"></h:outputLabel>
+					<h:outputText
+						value="#{backingBean.managedBean.smAppl.smCompanyBasic.paidUpCapitalSSM}">
+						<f:convertNumber groupingUsed="true" maxFractionDigits="3"
+							minFractionDigits="3" />
+					</h:outputText>
+
+				</c:if>
 				<!-- <h:outputText
 					value="#{backingBean.getParameterDesc('SAR',backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue)}"></h:outputText> -->
 			</h:panelGrid>

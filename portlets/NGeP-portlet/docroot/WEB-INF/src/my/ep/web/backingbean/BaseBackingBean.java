@@ -60,6 +60,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;//#31849  #32682
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -81,6 +82,7 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;//#31849  #32682
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -124,6 +126,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.logging.LogKey;//#31849  #32682
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.ReasonCategory;
@@ -1242,9 +1245,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 			items = new SelectItem[parameterDescs.size()];
 			int i = 0;
+			String codeName = "";//33849
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				items[i++] = new SelectItem(parameterDesc.getPmParameter()
-						.getParameterCode(), parameterDesc.getCodeName());
+				//33849-Start
+				if(parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase("CO")){
+					codeName = ResourceBundleUtils.getMessage(
+							"lbl.rpt.drpdown.contractOrderlbl", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterCode(), codeName);
+				}else{
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterCode(), parameterDesc.getCodeName());
+				}
+				//33849-End
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1368,7 +1382,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	public void commonDownloadUtil(String filePath, String displayFileName) throws IOException{
-		
+		log.info("START TO DOWNLOAD FILE");
 		PortletResponse resp = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
@@ -1384,17 +1398,17 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		InputStream docInputStream = null;
 		try {
-			URLConnection uc = new URL("file:///C://"+filePath).openConnection();//192.168.8.145
-			
-			log.info("ZAIM getURL "+uc.getURL().toString());
+			URLConnection uc = new URL(filePath).openConnection();
 			docInputStream = new BufferedInputStream(uc.getInputStream());
+			log.info("ZAIM getURL "+uc.getURL().toString());
+			log.info("filePath----"+filePath);
 		} catch (Exception e) {
 			// Cannot open connection, maybe local file
 			docInputStream = new FileInputStream(filePath);
-			
+			log.info("docInputStream==="+docInputStream);
 			log.info("Error found while downloading file "+filePath+" : "+e);
-			//log.error(e);
-//			e.printStackTrace();
+			log.error(e);
+			e.printStackTrace();
 			
 		}
 
@@ -1418,7 +1432,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				docInputStream.close();	
 			}
 		}
-
+		log.info("END TO DOWNLOAD FILE");
 	}
 	
 	private String getMimeType(String fileName) {
@@ -2267,8 +2281,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		StreamedContent graphicText = null;
 		ByteArrayOutputStream os = null;
 		try {
-			BufferedImage bufferedImg = new BufferedImage(100, 25,
+			//#33136 - start
+			BufferedImage bufferedImg = new BufferedImage(110, 25,
 					BufferedImage.TYPE_BYTE_BINARY);
+			//#33136 - end
 			Graphics2D g2 = bufferedImg.createGraphics();
 
 			String captchaText = RandomStringUtils.randomAlphanumeric(6);
@@ -3446,6 +3462,68 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		
 	}
 	
+	//#31269 - start
+	public void redirectToViewSSMInfo(SmAppl smAppl){
+		getManagedBean().setSmAppl(smAppl);
+		getManagedBean().setSmSupplier(smAppl.getSmSupplier());
+		getManagedBean().setBusinessTypeParamCode(
+			smAppl.getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) 
+			? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE	: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT);
+		clearPersonnelList();
+		for(SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
+			if(!personnel.isSsmData()) continue;
+			
+			validateSsmPersonnel(personnel);
+			if(personnel.isEquityOwnerSsm())
+				getManagedBean().getPersonnelsOwner().add(personnel);
+			
+			if(personnel.isDirectorSsm())
+				getManagedBean().getPersonnelsDirector().add(personnel);
+			
+			getManagedBean().getPersonnelsSsm().add(personnel);
+		}
+		
+		getManagedBean().getSmSupplierBranchSsm().clear();
+		for(SmSupplierBranch branch : getManagedBean().getSmAppl().getSmSupplierBranches()){
+			if(!branch.isSsmData()) continue;
+			getManagedBean().getSmSupplierBranchSsm().add(branch);
+		}
+		
+		getManagedBean().getSmSupplierBranchSsm().clear();
+		for(SmSupplierBusiness business : getManagedBean().getSmAppl().getSmSupplier().getSmSupplierBusinesses()){
+			if(!business.isSsmData()) continue;
+			getManagedBean().getSmSupplierBusinessSsm().add(business);
+		}
+		
+		getManagedBean().getSmEquityCompaniesSsm().clear();
+		for(SmEquityCompany company : getManagedBean().getSmAppl().getSmEquityCompanies()){
+			if(!company.isSsmData()) continue;
+			getManagedBean().getSmEquityCompaniesSsm().add(company);
+		}
+
+		SmCommonUtil.redirectToExternalUrl(SupplierManagementConst.VIEW_SSM_INFOMATION);
+	}
+	
+	public boolean renderViewSSMInfo(){
+		return getManagedBean().getSmAppl().isApplValidWithSsm()
+			&& businessTypeTovalidateWithSSM(null, 
+				getManagedBean().getSmAppl().getSmSupplier().getBusinessType());
+	}
+	
+	public SmPersonnel validateSsmPersonnel(SmPersonnel personnel){
+		if(personnel == null || !personnel.isSsmData()) return personnel;
+		if(personnel.getSmPersonnelAddresses() != null){
+			for(int i=0; i < personnel.getSmPersonnelAddresses().size(); i++){
+				if(personnel.getSmPersonnelAddresses().get(i).getSmAddress().isSsmData()){
+					Collections.swap(personnel.getSmPersonnelAddresses(), 0, i);
+					break;
+				}
+			}
+		}
+		return personnel;
+	}
+	//#31269 - end
+	
 	public void clearPersonnelList() {
 		this.getManagedBean().getPersonnelsOwnerSsm().clear();
 		this.getManagedBean().getSmPersonnelDirectorSsm().clear();
@@ -3834,7 +3912,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public boolean checkOtherDescDockyard(PmCategoryL3 dockyardCatVar, SmSupplierCategory categoryVar){
 		boolean result=false;
 		if(categoryVar == null || categoryVar.getPmCategoryL3() == null){
-			log.info("NUll Here");
 			return result;
 		}
 		if(dockyardCatVar.getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id()) ){
@@ -4084,4 +4161,46 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
   	//#29466 - END
+  	
+  	//28729
+  	/**
+	 * Validate allowed email type
+	 * 
+	 * @param String
+	 *            email
+	 * @return boolean
+	 */
+	public boolean isAllowedEmail(String email) {
+		boolean allowed = true;
+		if(email.toLowerCase().contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com")){
+			allowed = false;
+		}
+			
+		return allowed;
+	}
+	
+	//#31849, #34090, #32682 start
+	/**
+	 * Method to return current session userId from user screenName(loginId)
+	 * @return userId
+	 */
+	public Long getUserIdSessionFromLoginId(){
+		FacesScopes facesScopes = new FacesScopes();
+		Long userIdSession = 1L;
+		
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(facesScopes.getUserScreenName());
+		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		
+		if (pmUser == null) {
+			userIdSession = facesScopes.getUserSessionBean().getUserId();
+		} else {
+			userIdSession = pmUser.getUserId();
+		}
+		
+		new LogKey(userIdSession);
+		return userIdSession;
+	}
+	//#31849, #34090, #32682 end
 }

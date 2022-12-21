@@ -1,0 +1,32 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	
+	
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_supplierMofExpiryAlert_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.suppalert.mofexpiry.header']}");
+		</script>
+	</ui:define>
+	
+	<ui:define name="contentSection">
+		<p:poll update="@form" interval="1" listener="#{supplierAlertBackingBean.initCountDown}"/>
+		<p:outputPanel rendered="#{not empty supplierAlertBackingBean.managedBean.mofExpiryLeftDaysMsg}">
+			<FONT style="color: red;font-weight: bold;font-size: 16px;font-family: Arial;">
+				<h:outputText id="msgId" value="#{supplierAlertBackingBean.managedBean.mofExpiryLeftDaysMsg} "/>
+				<h:outputText id="daysId" value="#{supplierAlertBackingBean.managedBean.days} days "/>
+				<h:outputText id="hoursId" value="#{supplierAlertBackingBean.managedBean.hours} hours "/>
+				<h:outputText id="minsId" value="#{supplierAlertBackingBean.managedBean.mins} minutes "/>
+				<h:outputText id="secsId" value="#{supplierAlertBackingBean.managedBean.secs} seconds "/>
+			</FONT>
+		</p:outputPanel>
+	</ui:define>
+
+
+</ui:composition>

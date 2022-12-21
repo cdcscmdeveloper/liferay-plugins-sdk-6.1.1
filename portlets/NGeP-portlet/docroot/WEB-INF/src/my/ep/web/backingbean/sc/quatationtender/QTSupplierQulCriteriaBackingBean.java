@@ -1345,12 +1345,14 @@ public class QTSupplierQulCriteriaBackingBean extends
 					if (zoneTree.isSelected()) {
 						rootTrees.remove(row--);
 					} else {
-						deleteChildTreeNodes(zoneTree.getChildren());
-						if (zoneTree.getChildren().size() == 0) {
-							//20191127@asyrafhaziq - Bug #26289 - Start
-							 rootTrees.remove(row--);
-						    //20191127@asyrafhaziq - Bug #26289 - End
-						}
+						if(!zoneTree.isLeaf()){//START- #33638
+							deleteChildTreeNodes(zoneTree.getChildren());
+							if (zoneTree.getChildren().size() == 0) {
+								//20191127@asyrafhaziq - Bug #26289 - Start
+								 rootTrees.remove(row--);
+							    //20191127@asyrafhaziq - Bug #26289 - End
+							}
+						}//END - //#33638
 					}
 				}
 			}
@@ -2119,8 +2121,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		
 	}
+
 	// #29732 Start
-	public void onClickHistoryIcon(String catCode, int catCodeLevel,
+	public void onClickHistoryIcon(String catCode, String catCodeLevel,
 			Long catCodeID) {
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject(
@@ -2128,13 +2131,14 @@ public class QTSupplierQulCriteriaBackingBean extends
 						ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
-		if (catCodeLevel == 1) {
+
+		if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
 			reqDTO.setCategoryL1Id(catCodeID);
 			resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
-		} else if (catCodeLevel == 2) {
+		} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
 			reqDTO.setCategoryL2Id(catCodeID);
 			resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
-		} else if (catCodeLevel == 3) {
+		} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
 			reqDTO.setCategoryL3Id(catCodeID);
 			resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
 		}

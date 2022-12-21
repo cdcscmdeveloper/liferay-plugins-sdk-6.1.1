@@ -112,10 +112,10 @@
 						disabled="#{flOrderBB.managedBean.iscarryForward eq 'true'}" >
 						<f:param name="actionName" value="#{BpmOutcomeConstant.carryForward}" />
 					</p:commandButton>
-					
+					<!-- 29387 start -->
 					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" immediate="true"  
-					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"
-					disabled="#{flOrderBB.managedBean.progressStatus eq '4'}"/>
+					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"/>
+					<!-- 29387 end -->
 			</c:if>
 					
 					

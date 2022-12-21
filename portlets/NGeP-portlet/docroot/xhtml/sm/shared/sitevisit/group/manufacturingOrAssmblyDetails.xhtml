@@ -16,7 +16,6 @@
 
 			<p:column selectionMode="multiple" style="width:2%"
 				rendered="#{!viewFlag and not empty svoSiteVisitBackingBean.managedBean.manufacturingDtlLs}" />
-			<!-- #24964 -->
 			<p:ajax event="rowSelectCheckbox" update="@parent" />
 			<p:ajax event="rowUnselectCheckbox" update="@parent" />
 			<p:ajax event="rowSelect" update="@parent" />
@@ -47,9 +46,6 @@
 					action="#{svoSiteVisitBackingBean.editMachine(manufacturingDtl)}" >
 					<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 				</p:commandLink>
-				<!-- #24964 -->
-				<p:graphicImage style="vertical-align:top" value="/css/images/design/icon_alert.png" 
-					rendered="#{svoSiteVisitBackingBean.isSVOSmManufacturingDtlDifferent(manufacturingDtl)}"/>
 			</p:column>
 
 		</p:dataTable>
@@ -60,7 +56,7 @@
 				action="#{svoSiteVisitBackingBean.addAdditionalManufacturing}"
 				rendered="#{!viewFlag}" update="@parent">
 			</p:commandButton>
-			<!-- #24964 -->
+			
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				oncomplete="additionalManufacturingDeletePopUp.show();"
 				rendered="#{!viewFlag}" update="@parent"

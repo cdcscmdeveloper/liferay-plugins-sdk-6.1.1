@@ -608,8 +608,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showDifferenceRejection;
 	// #30974 - END
 
-	// 29379 - Site Visit Grouping Enhancement -28775
+	// 29379 - Site Visit Grouping Enhancement -28775 - start
 	private SmSvWorker[] selectedWorkers;
+	private List<SmSvWorker> deletedWorkers;
+	// 29379 - Site Visit Grouping Enhancement -28775 - end
 	
 	// #28778 - Start
 	private boolean specialCategoryRechecked;
@@ -640,6 +642,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
 	
+	private boolean poApproverPersonnelErr;//#31130-start
+	private String msgPersonnelErr;
+	private boolean poApproverAcedemicErr;//#31130-end
+	
 	//#30691 - START - 26112021
 	private boolean poApproverChgBusiness;
 	private String msgChgBusiness;
@@ -648,6 +654,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//#12492 - start
 	private boolean showDifferenceBankInfoAction;
 	//#12492 - end
+	//32968 START
+	private boolean checkBranch;
+	//32968 END
+	//#32304
+	private SmAppl pendingBumiAppl;
+	private boolean editCapital;	//#34277
 	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4389,9 +4401,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedWorkers(SmSvWorker[] selectedWorkers) {
 		this.selectedWorkers = selectedWorkers;
 	}
-	// 29379 - Site Visit Grouping Enhancement -28775 END
 
-	
+	public List<SmSvWorker> getDeletedWorkers() {
+		return deletedWorkers;
+	}
+
+	public void setDeletedWorkers(List<SmSvWorker> deletedWorkers) {
+		this.deletedWorkers = deletedWorkers;
+	}
+	// 29379 - Site Visit Grouping Enhancement -28775 END
 
 	public List<SmSupplierBranch> getDisplayBranches() {
 		return displayBranches;
@@ -4560,4 +4578,57 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.showDifferenceBankInfoAction = showDifferenceBankInfoAction;
 	}
 	//#12492 - end
+	//#32968 START
+	public boolean isCheckBranch() {
+		return checkBranch;
+	}
+
+	public void setCheckBranch(boolean checkBranch) {
+		this.checkBranch = checkBranch;
+	}
+	//#32968 END
+
+	//31130-start
+	public boolean isPoApproverPersonnelErr() {
+		return poApproverPersonnelErr;
+	}
+
+	public void setPoApproverPersonnelErr(boolean poApproverPersonnelErr) {
+		this.poApproverPersonnelErr = poApproverPersonnelErr;
+	}
+
+	public String getMsgPersonnelErr() {
+		return msgPersonnelErr;
+	}
+
+	public void setMsgPersonnelErr(String msgPersonnelErr) {
+		this.msgPersonnelErr = msgPersonnelErr;
+	}
+
+	public boolean isPoApproverAcedemicErr() {
+		return poApproverAcedemicErr;
+	}
+
+	public void setPoApproverAcedemicErr(boolean poApproverAcedemicErr) {
+		this.poApproverAcedemicErr = poApproverAcedemicErr;
+	}//31130-end
+
+	//#32304 - start
+	public SmAppl getPendingBumiAppl() {
+		return pendingBumiAppl;
+	}
+
+	public void setPendingBumiAppl(SmAppl pendingBumiAppl) {
+		this.pendingBumiAppl = pendingBumiAppl;
+	}
+	//#32304 - end
+	//#34277 - start
+	public boolean isEditCapital() {
+		return editCapital;
+	}
+
+	public void setEditCapital(boolean editCapital) {
+		this.editCapital = editCapital;
+	}
+	//#34277 - end
 }

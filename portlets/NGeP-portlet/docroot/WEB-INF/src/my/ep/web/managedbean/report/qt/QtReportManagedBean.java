@@ -11,6 +11,7 @@
 
 package my.ep.web.managedbean.report.qt;
 
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.web.bean.report.ScReportFieldsSearchBean;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
@@ -31,6 +32,7 @@ public abstract class QtReportManagedBean extends ReportBaseManagedBean {
 	private boolean isPtjEnable=Boolean.FALSE;
 	private boolean isDeskOfficerEnable=Boolean.FALSE;
 	private ScQt scQt;
+	private PmParameter decisionType;//#21692
 	/**
 	 * @return the quotationNumner
 	 */
@@ -103,6 +105,21 @@ public abstract class QtReportManagedBean extends ReportBaseManagedBean {
 	public void setScQt(ScQt scQt) {
 		this.scQt = scQt;
 	}
+	
+	//#21692 - start
+	/**
+	 * @return the decisionType
+	 */
+	public PmParameter getDecisionType() {
+		return decisionType;
+	}
+	/**
+	 * @param decisionType the decisionType to set
+	 */
+	public void setDecisionType(PmParameter decisionType) {
+		this.decisionType = decisionType;
+	}
+	//#21692 - end
 	
 
 }

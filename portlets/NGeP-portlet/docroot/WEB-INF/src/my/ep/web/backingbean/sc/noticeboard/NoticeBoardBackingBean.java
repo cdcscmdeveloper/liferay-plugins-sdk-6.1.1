@@ -22,9 +22,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import javax.faces.model.ListDataModel;
-import my.ep.persistence.entity.pm.common.PmRemarkCategory; //#29665
-
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.sc.SupplierQualificationBean;
@@ -79,6 +76,7 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -125,12 +123,14 @@ import my.ep.web.bean.sc.quatationtender.AwardedItemsBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
 import my.ep.web.bean.tree.EpDefaultTreeNode;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.noticeboard.NoticeBoardManagedBean;
 import my.ep.web.type.sc.quationtender.NoticeBoardSection;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
@@ -142,6 +142,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.autocomplete.AutoComplete;
 import org.primefaces.component.menuitem.MenuItem;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -154,11 +155,10 @@ import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
-//#29732 Start
-import my.ep.web.util.pm.helper.PmCommonUtil;
-import org.primefaces.context.RequestContext;
-//#29732 End
-
+// #29732 Start - fix ReOpen
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+//#29732 End - fix ReOpen
 /**
  * Notice Board Backing Bean class displays the status of 
  * 'Publish,Changes,Closed,Awarded' Quotation/Tender's in Notice Board screen.
@@ -2754,7 +2754,14 @@ public class NoticeBoardBackingBean extends
 			if (supplier != null) {
 				List<SmMofAccount> mofAccounts = supplier.getSmMofAccounts();
 				if (CollectionUtils.isNotEmpty(mofAccounts)) {
-					mofAccount = mofAccounts.get(0);
+					//Bug #34208 start
+					for (SmMofAccount mof : mofAccounts){
+						if(mof.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE){
+							mofAccount = mof;
+							break;
+						}
+					}
+					//Bug #34208 end
 				}
 			}
 		
@@ -3461,7 +3468,7 @@ public class NoticeBoardBackingBean extends
 		//#30447 - end
 
 		// #29732 Start
-		public void onClickHistoryIcon(String catCode, int catCodeLevel,
+		public void onClickHistoryIcon(String catCode, String catCodeLevel,
 				Long catCodeID) {
 			ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
 					.getInstance().getServiceObject(
@@ -3469,13 +3476,14 @@ public class NoticeBoardBackingBean extends
 							ICategoryCodeSO.class);
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 			CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
-			if (catCodeLevel == 1) {
+
+			if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
 				reqDTO.setCategoryL1Id(catCodeID);
 				resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
-			} else if (catCodeLevel == 2) {
+			} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
 				reqDTO.setCategoryL2Id(catCodeID);
 				resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
-			} else if (catCodeLevel == 3) {
+			} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
 				reqDTO.setCategoryL3Id(catCodeID);
 				resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
 			}
@@ -3495,5 +3503,12 @@ public class NoticeBoardBackingBean extends
 			return remarkList;
 		}
 		// #29732 End
-	
+	// #29732 Start - fix ReOpen
+	public String toDate(Timestamp changedDate){
+		String pattern = CommonConstants.DEFAULT_12HR_DATETIME_FORMAT;
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		String newChangedDate = simpleDateFormat.format(changedDate.getTime());
+		return newChangedDate;
+	}
+	// #29732 Start - fix ReOpen
 }

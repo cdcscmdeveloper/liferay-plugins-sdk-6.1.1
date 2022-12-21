@@ -670,9 +670,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			reset(false);
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)){
 			PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
+			pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE); //9133 - reopen 166
 			pidBackingBean.viewPurchaseInDefault(docId);
 			pidBackingBean.getManagedBean().setDpObj(dpObj);
-			pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
+			//pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE); //9133 - reopen 166
 
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_SIMPLE_QUOTE)){
 			SimpleQuoteBackingBean sqBackingBean = new SimpleQuoteBackingBean();
@@ -1242,7 +1243,8 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		Boolean validDate = true;	
 			
 		// Refactor: #12177 - Start
-		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();	
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		log.info("Refactor 12177 (DirectPurchaseBackingBean) : getSqTimeValidity - " + sqTimeValidity);
 		// Refactor: #12177 - End
 		
 		if(sqEndDate != null){

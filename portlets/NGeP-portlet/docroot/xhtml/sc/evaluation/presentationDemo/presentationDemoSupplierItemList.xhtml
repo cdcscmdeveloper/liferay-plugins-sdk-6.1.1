@@ -29,7 +29,8 @@
 							style="float:right;" update="@all" onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.saveDemoScoring}" 
-							rendered="#{!evaluationBackingBean.managedBean.readOnly}"/>
+							rendered="#{!evaluationBackingBean.managedBean.readOnly}"
+							disabled="#{evaluationBackingBean.managedBean.supplierRejected}"/><ui:remove>6906</ui:remove>
 					</td>
 				</tr>
 			</table>
@@ -54,7 +55,7 @@
 				style="width:2%; text-align:center;">
 				<p:inputText value="#{demoitemsupplier.demoEvalScore}"
 					style="text-align:right" maxlength="18"
-					disabled="#{evaluationBackingBean.managedBean.readOnly}">
+					disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.supplierRejected}"><ui:remove>6906</ui:remove>
 				</p:inputText>
 				<p:spacer width="5"></p:spacer>
 				<h:outputText

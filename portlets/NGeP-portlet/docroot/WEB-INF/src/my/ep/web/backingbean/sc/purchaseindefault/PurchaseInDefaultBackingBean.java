@@ -388,6 +388,9 @@ public class PurchaseInDefaultBackingBean extends
 	}
 	
 	//start #28865
+	/**
+	 * Checking for dialog message shown 
+	 */
 	public void dialogMsgCheck(){
 		if(getManagedBean().getPmReason() != null){
 			if (getManagedBean().getPmReason().getReasonId().intValue() == reasonAllowSupplierResponse().getReasonId().intValue())
@@ -721,6 +724,7 @@ public class PurchaseInDefaultBackingBean extends
 									purchaseInDefault.getPurchaseInDefaultNo(), Boolean.TRUE);
 						}				
 						else{
+							getManagedBean().setAutoUpdate(false); //#9133 - note 232
 							successMessage(MessageConst.INFO_700004,
 									ParameterTypeConst.DOCUMENT_TYPES,
 									ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
@@ -745,6 +749,7 @@ public class PurchaseInDefaultBackingBean extends
 									purchaseInDefault.getPurchaseInDefaultNo(), Boolean.TRUE);
 						}				
 						else{
+							getManagedBean().setAutoUpdate(false); //#9133 - note 232
 							successMessage(MessageConst.INFO_700004,
 									ParameterTypeConst.DOCUMENT_TYPES,
 									ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
@@ -821,6 +826,13 @@ public class PurchaseInDefaultBackingBean extends
 			PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
 			ScPurchaseInDefault scPurchaseInDefault = getManagedBean()
 					.getPurchaseInDefault();
+			//#9133 - start - note 212
+			if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)
+					|| BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)
+					|| BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome))
+				validateRemark();
+			//#9133 - end - note 212
+			
 			// remarks
 			//#9133 - comment out
 			/*scPurchaseInDefault.setRemarks(initializeRemarks(
@@ -829,6 +841,19 @@ public class PurchaseInDefaultBackingBean extends
 					scPurchaseInDefault.getRemarks(), ScPIDRemark.class));*/
 
 			Long stsId = getManagedBean().getPidStatus().getStatusId(); //#28865
+			
+			// start - #9133 (reopen comment 146)
+			List<ScPIDRemark> deleteRemarks = new ArrayList<ScPIDRemark>();
+			for (ScPIDRemark remark : scPurchaseInDefault.getRemarks()) {
+				if (remark.getRemark().equalsIgnoreCase("") && remark.getRemarkId() != null) {
+					deleteRemarks.add(remark);
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(deleteRemarks)) {
+				purchaseInDefaultSO.deleteListOfRemark(deleteRemarks);
+			}
+			// end - #9133		
 			
 			if (!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)
 					&& !BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome) //#9133
@@ -1091,6 +1116,7 @@ public class PurchaseInDefaultBackingBean extends
 		debugLogger("approverAction");
 		
 		if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
+				getManagedBean().setAutoUpdate(true);//#9133
 				RequestContext.getCurrentInstance().execute("rejectPID.show()");
 		} else {
 			approverAction(outcome);
@@ -1741,7 +1767,10 @@ public class PurchaseInDefaultBackingBean extends
 	}
 	
 	// start - #28865
-	public void preRenderResponseView(){
+	/**
+	 * Pre render page navigation to purchase in default
+	 */
+	public void preRenderResponseView(){ 
 		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
 		
 		// Purchase In Default
@@ -1825,6 +1854,7 @@ public class PurchaseInDefaultBackingBean extends
 			for (ScPIDRemark remark : remarks) {
 				if(remark.getCreatedBy().equals(facesScopes.getUserSessionBean().getUserId()))
 				{
+					remark.setEditable(true); //#28865 - minor fixing 22/09/2022
 					supScPIDRemarks.add(remark);
 				}
 				if(!StringUtils.isEmpty(remark.getRemark())){
@@ -1858,6 +1888,10 @@ public class PurchaseInDefaultBackingBean extends
 				.handleNavigation(fc, null, PURCHASE_IN_DEFAULT_RESPONSE_PAGE);
 	}
 	
+	/**
+	 * To save purchase in default data record
+	 * 
+	 */
 	public void updatePID(){
 		debugLogger("updatePurchaseInDefault");
 		IPurchaseInDefaultSO purchaseInDefaultSO = null;
@@ -1904,6 +1938,7 @@ public class PurchaseInDefaultBackingBean extends
 				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.savePurchaseInDefault(reqDTO);
 
 				if (resDTO.isSuccessful()) {
+					getManagedBean().setAutoUpdate(false); //#9133 - note 232
 					successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, scPurchaseInDefault.getPurchaseInDefaultNo(),
 							Boolean.FALSE);
@@ -1962,7 +1997,7 @@ public class PurchaseInDefaultBackingBean extends
 				scPID.setReasonType(getManagedBean().getPmReason());
 				scPID.setSourceMethod(getManagedBean().getPurchaseInDefault().getSourceMethod());
 				scPID.setReqQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
-				scPID.setQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
+				scPID.setQuantity(getManagedBean().getPurchaseInDefault().getQuantity()); //#9133 reopen comment 138
 				scPID.setScPurchaseInDefaultAttachment(scPurchaseInDefault.getScPurchaseInDefaultAttachment());//#9133
 
 				reqDTO.setPurchaseInDefaultDtl(scPID);
@@ -1985,6 +2020,7 @@ public class PurchaseInDefaultBackingBean extends
 				// #9133 - start					
 					
 				if (resDTO.isSuccessful()) {
+					getManagedBean().setAutoUpdate(false);	//#9133 - note 232				
 					successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, scPurchaseInDefault.getPurchaseInDefaultNo(),
 							Boolean.FALSE);
@@ -1995,9 +2031,22 @@ public class PurchaseInDefaultBackingBean extends
 		}
 	}
 	
+	/**
+	 * To validate input data for PID response
+	 * 
+	 * @param scPurchaseInDefault
+	 * 		ScPurchaseInDefault instance
+	 * @param validateRemark
+	 * 		validate remark true/false
+	 * @param isQuantityCheckNeeded
+	 * 		isQuantityCheckNeeded true/false
+	 * @param outcome
+	 * 		The outcome of system
+	 * @return void 
+	 */ 
 	private void validateResponsePID(ScPurchaseInDefault scPurchaseInDefault, Boolean validateRemark, Boolean isQuantityCheckNeeded, String outcome){
 		FacesScopes facesScopes = new FacesScopes();
-		BigDecimal qtyByRequisitioner = getManagedBean().getQtyByRequisitioner();
+		BigDecimal qtyByRequisitioner = getManagedBean().getQtyByRequisitioner(); 
 		BigDecimal qtyBySupplier = getManagedBean().getQtyBySupplier();
 		// validate if qtyBySupplier more than qtyByRequisitioner
 		if (qtyBySupplier != null && qtyBySupplier.intValue() >= 1) {
@@ -2081,6 +2130,19 @@ public class PurchaseInDefaultBackingBean extends
 		}
 	}
 	
+	/**
+	 * To validate input data for PID response
+	 * 
+	 * @param scPurchaseInDefault
+	 * 		ScPurchaseInDefault instance
+	 * @param validateRemark
+	 * 		validate remark true/false
+	 * @param isQuantityCheckNeeded
+	 * 		isQuantityCheckNeeded true/false
+	 * @param outcome
+	 * 		the outcome of system
+	 * @return void 
+	 */ 
 	private void validateRequisitionerResponsePID(ScPurchaseInDefault scPurchaseInDefault, Boolean validateRemark, Boolean isQuantityCheckNeeded, String outcome){
 		FacesScopes facesScopes = new FacesScopes();
 		BigDecimal qtyByRequisitioner = getManagedBean().getPurchaseInDefault().getReqQuantity();		
@@ -2141,12 +2203,18 @@ public class PurchaseInDefaultBackingBean extends
 		}
 	}
 	
+	/**
+	 * To save supplier remark
+	 * 
+	 * @return void
+	 */
 	public void saveSupplierRemark() {
 		IPurchaseInDefaultSO purchaseInDefaultSO = null;
 		//FacesScopes facesScopes = new FacesScopes();
 		purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 		PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
+		List <ScPIDRemark> deleteRemarks = new ArrayList<ScPIDRemark> (); //#28865 - minor fixing 22/09/2022
 		try {
 			for (ScPIDRemark remark : getManagedBean().getSuppRemarks()) {
 				if (remark.getRemark() != null && !remark.getRemark().equalsIgnoreCase("")) {
@@ -2165,19 +2233,37 @@ public class PurchaseInDefaultBackingBean extends
 					purchaseInDefaultSO.updateRemark(reqDTO);
 					break;
 				}
+				//#28865 - minor fixing 22/09/2022-start
+				else{
+					if (remark.getRemarkId() != null && getManagedBean().getSuppRemarkId() != null) {
+						deleteRemarks.add(remark);
+					}
+				}//#28865 - minor fixing 22/09/2022-end
 			}
+			//#28865 - minor fixing 22/09/2022 -start
+			if(CollectionUtils.isNotEmpty(deleteRemarks)){
+				purchaseInDefaultSO.deleteListOfRemark(deleteRemarks);
+			}//#28865 - minor fixing 22/09/2022 -end
 
 		} catch (NullPointerException e) {
 			log.info(e.getStackTrace());
 		}
 	}
 	
+	/**
+	 * 
+	 * @param ScPurchaseInDefault (
+	 * 		List<ScPIDRemark> remarks - list of ScPIDRemark data record
+	 * )
+	 * @return void
+	 */
 	public void saveRemark(ScPurchaseInDefault scPurchaseInDefault) {
 		IPurchaseInDefaultSO purchaseInDefaultSO = null;
 		//FacesScopes facesScopes = new FacesScopes();
 		purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 		PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
+		List <ScPIDRemark> deleteRemarks = new ArrayList<ScPIDRemark> ();// #9133 (reopen comment 146)
 		
 		try {
 			for (ScPIDRemark remark : scPurchaseInDefault.getRemarks()) {
@@ -2202,13 +2288,33 @@ public class PurchaseInDefaultBackingBean extends
 							.getPidStatus().getStatusId()))// #31603
 						break;
 				}
+				// start - #9133 (reopen comment 146)
+				else{
+					if (remark.getRemarkId() != null) {
+						deleteRemarks.add(remark);
+					}
+				}
+				// end - #9133
 			}
+			
+			// start - #9133 (reopen comment 146)
+			if(CollectionUtils.isNotEmpty(deleteRemarks)){
+				purchaseInDefaultSO.deleteListOfRemark(deleteRemarks);
+			}
+			// end - #9133
 
 		} catch (NullPointerException e) {
 			log.info(e.getStackTrace());
 		}
 	}
 	
+	/**
+	 * Checking for reject dialog popup shown
+	 * 
+	 * @param outcome
+	 * 		the outcome of system
+	 * @return void
+	 */
 	public void supplierAction(String outcome) {
 		debugLogger("supplierAction");
 		this.getManagedBean().setAction(outcome);
@@ -2221,6 +2327,13 @@ public class PurchaseInDefaultBackingBean extends
 		}
 	}
 	
+	/**
+	 * Checking for cancel dialog popup shown
+	 * 
+	 * @param outcome
+	 * 		the outcome of system
+	 * @return void
+	 */
 	public void requisitionerAction(String outcome) {
 		debugLogger("requisitionerAction");
 		this.getManagedBean().setAction(outcome);
@@ -2233,10 +2346,27 @@ public class PurchaseInDefaultBackingBean extends
 		}
 	}
 	
+	/**
+	 * To update BPM tasks
+	 * 
+	 * @param outcome
+	 * 		the outcome of system
+	 * @return void
+	 */
 	public void updateBPMTasks(String outcome) {
 		updateBPMTask(outcome, null);
 	}
 	
+	/**
+	 * To get PID contract type
+	 * 
+	 * @param ScPurchaseInDefault (
+	 * 		CtPanelItem panelItem - CtPanelItem instance
+	 * 		CtContractItem contractedItem - CtContractItem instance
+	 * )
+	 * @return contractType
+	 * 		the contract type
+	 */
 	private String getPIDContractType (ScPurchaseInDefault scPurchaseInDefault) {
 		String contractType = null;
 		if(scPurchaseInDefault.getPanelItem() != null) {
@@ -2261,6 +2391,12 @@ public class PurchaseInDefaultBackingBean extends
 		return contractType;
 	}
 	
+	/**
+	 * To retrieve PmReason instance
+	 * 
+	 * @return pmReason
+	 * 		PmReason instance
+	 */
 	public PmReason reasonAllowSupplierResponse(){
 
 		IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance()
@@ -2286,6 +2422,14 @@ public class PurchaseInDefaultBackingBean extends
 		return pmReason;
 	}
 	
+	/**
+	 * To retrieve child reason
+	 * 
+	 * @param PmReason(
+	 * )
+	 * @return pmReason
+	 * 		PmReason instance
+	 */
 	public PmReason retrieveChildReason(PmReason parentReason) {
 		IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
@@ -2304,6 +2448,15 @@ public class PurchaseInDefaultBackingBean extends
 		return pmReason;
 	}
 	
+	/**
+	 * To check if CtPidReason instance exist
+	 * 
+	 * @param PmReason (
+	 * 		Long reasonId - the reason id
+	 * )
+	 * @return exist
+	 * 		Return exist CtPidReason instance true/false
+	 */
 	public boolean reasonExitsCtPidReason(PmReason pmReason){
 		boolean exist = false;
 		IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(
@@ -2321,6 +2474,15 @@ public class PurchaseInDefaultBackingBean extends
 		return exist;
 	}
 	
+	/**
+	 * To check if CtCircularPidReason instance exist
+	 * 
+	 * @param PmReason (
+	 * 		Long reasonId - the reason id
+	 * )
+	 * @return exist
+	 * 		Return exist CtCircularPidReason instance true/false
+	 */
 	public boolean reasonExitsCtCircularPidReason(PmReason pmReason){
 		boolean exist = false;
 		IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(
@@ -2338,7 +2500,11 @@ public class PurchaseInDefaultBackingBean extends
 		return exist;
 	}
 	
-	//to insert child reason
+	/**
+	 * To insert child reason
+	 * 
+	 * @return void
+	 */
 	public void savePidReason() {
 		ScPurchaseInDefault purchaseInDefault = getManagedBean().getPurchaseInDefault();
 		PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
@@ -2386,6 +2552,12 @@ public class PurchaseInDefaultBackingBean extends
 		}
 	}
 	
+	/**
+	 * To check supplier quantity equal to requistioner quantity
+	 * 
+	 * @return isValueEqual
+	 * 		Return isValueEqual true/false
+	 */
 	public boolean isQtySupEqualQtyReq() {
 		Boolean isValueEqual = false;
 		if (getManagedBean().getPurchaseInDefault().getReqQuantity() != null
@@ -2403,6 +2575,12 @@ public class PurchaseInDefaultBackingBean extends
 		return isValueEqual;
 	}
 	
+	/**
+	 * To check justification changed
+	 * 
+	 * @return isJustificationChanged
+	 * 		Return isJustificationChanged true/false
+	 */
 	public boolean isJustificationChanged() {
 		Boolean isJustificationChanged = true;
 		
@@ -2496,7 +2674,14 @@ public class PurchaseInDefaultBackingBean extends
 					getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.PID_COMPLETED));
 				}
 				//end - 9133
-				
+				//start - 9133 - fixing on comment 166
+				if(getManagedBean().isTrackingDairyView()){
+					for(ScPIDRemark scPIDRemark : purchaseInDefault.getRemarks()){
+						scPIDRemark.setBrandNew(false);
+						scPIDRemark.setEditable(false);
+					}
+				}
+				//end - 9133
 				// disable all for pid view
 				getManagedBean().setPidBtnFlag(Boolean.FALSE);
 
@@ -2511,6 +2696,16 @@ public class PurchaseInDefaultBackingBean extends
 	}
 	
 	//start - #28865
+	/**
+	 * To update workflow status
+	 * 
+	 * @param ScPurchaseInDefault (
+	 * 		Long purchaseInDefaultId - the PID id
+	 * )
+	 * @param duringSubmitPID
+	 * 		the duringSubmitPID true/false
+	 * @return void
+	 */
 	protected void updateWorkflowStatus(ScPurchaseInDefault purchaseInDefault, Boolean duringSubmitPID ) {		
 		IScWorkFlowStatusSO workFlowStatusSO;
 					workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2964,6 +3159,7 @@ public class PurchaseInDefaultBackingBean extends
 	}
 	
 	public void beforeCancelPid() {
+		getManagedBean().setAutoUpdate(true);//#9133
 		RequestContext.getCurrentInstance().execute("cancelDlg.show()");
 	}
 	
@@ -2978,6 +3174,7 @@ public class PurchaseInDefaultBackingBean extends
 			}
 		}
 		if (newRemark) {
+			getManagedBean().setAutoUpdate(false);//#9133
 			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
 					"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
 		}

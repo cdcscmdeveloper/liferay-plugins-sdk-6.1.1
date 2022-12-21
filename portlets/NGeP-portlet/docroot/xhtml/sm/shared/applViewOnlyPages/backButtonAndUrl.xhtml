@@ -19,24 +19,33 @@
 				<!-- #28212 --> <p:outputPanel
 					rendered="#{not empty viewSmApplBackingBean.managedBean.resubmitUrl 
 					and viewSmApplBackingBean.managedBean.supplierUser 
-					and viewSmApplBackingBean.managedBean.displayResubmitButton 
-					and ((viewSmApplBackingBean.managedBean.smAppl.applType eq 'B' and viewSmApplBackingBean.managedBean.smMofAccount!=null and viewSmApplBackingBean.managedBean.smMofAccount.expDate gt CommonConstants.THREE_MONTHS_LATER_DATE
-					) or (viewSmApplBackingBean.managedBean.smAppl.applType ne 'B'))}">
+					and viewSmApplBackingBean.managedBean.displayResubmitButton}"> <!-- #32628 -->
 					<!-- START 29823 -->
 					<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'N'}">
+					<!-- START - 31270 -->
 					<p:commandLink onclick="blockWidget.show()" rendered="#{viewSmApplBackingBean.isApplPORejectedAfterApprovelSV()}"
-							action="#{viewSmApplBackingBean.redirectToResubmit()}"
+							action="#{viewSmApplBackingBean.reminderToResubmit()}"
 							process="@this" partialSubmit="true" update=":form"
 							value="#{lbl['lbl.sm.resubmit']}" />&#160;&#160;
 				</p:outputPanel>
 				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType ne 'N'}">
 					<p:commandLink onclick="blockWidget.show()" rendered="#{viewSmApplBackingBean.isApplPORejectedAfterApprovelSV()}"
-							action="#{viewSmApplBackingBean.redirectToResubmit()}"
+							action="#{viewSmApplBackingBean.reminderToResubmit()}"
 							process="@this" partialSubmit="true" update=":form"
 							value="#{lbl['lbl.sm.resubmit']}" />&#160;&#160;
 				</p:outputPanel>
+				<!-- END - 31270 -->			
 				<!-- END 29823 -->
-					</p:outputPanel> <p:commandLink onstart="blockWidget.show()"
+					</p:outputPanel> 
+				<!-- 31269 - start -->
+				<h:commandLink value="#{lbl['lbl.sm.view.ssm.infomation']}"
+					rendered="#{!viewSmApplBackingBean.managedBean.supplierUser
+							and viewSmApplBackingBean.managedBean.viewApplicationHistory
+							and viewSmApplBackingBean.renderViewSSMInfo()}"
+					action="#{backingBean.redirectToViewSSMInfo(viewSmApplBackingBean.managedBean.smAppl)}"	
+					target="_blank"/>&#160;&#160;
+				<!-- 31269 - end -->
+				<p:commandLink onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					rendered="#{viewSmApplBackingBean.managedBean.smSupplier.smAppl.supplierType eq 'J' 
 						or viewSmApplBackingBean.managedBean.smSupplier.smAppl.supplierType eq 'K'}"
@@ -63,6 +72,28 @@
 			</div><!-- # 29956 Start -->
 	
 		</p:confirmDialog>
+		<!-- START - 31270 -->
+		<p:confirmDialog id="reminderConfirmDialog" closable="false"
+		header="#{lbl['lbl.sm.resubmit.reminder.header']}" severity="alert"
+		widgetVar="reminderConfirmDialog">
+		
+		<f:facet name="message">
+			    	<h:outputText value="#{lbl['lbl.sm.resubmit.reminder.msg']}" escape="false"/>
+		    </f:facet>
+	    
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"
+				onclick="reminderConfirmDialog.hide()"
+				onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()"
+				partialSubmit="true"
+				process="@this" action="#{viewSmApplBackingBean.redirectToResubmit()}"
+				update="@form"/>
+			<p:commandButton value="#{lbl['lbl.btn.no']}"
+				onclick="reminderConfirmDialog.hide()" type="button" />
+		</div>
+		</p:confirmDialog>
+		<!-- END - 31270 -->
 		<!-- START 27951 -->
 		<ac:smOwnerSsmPopup bBean="#{viewSmApplBackingBean}" title="#{lbl['lbl.sm.term.and.condition.header']}" dialogId="ownerChecking" 
 				btnOkLabel="#{lbl['lbl.btn.change']}" 

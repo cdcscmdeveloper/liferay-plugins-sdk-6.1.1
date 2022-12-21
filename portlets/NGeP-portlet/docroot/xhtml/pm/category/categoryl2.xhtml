@@ -29,17 +29,18 @@
 						action="#{categoryBackingBean.backToSearch}" style="float:left;" />
 				</td>
 				
-				<td>
 				<!-- Start #29665 remove save button, replace by update and save, change update button behaviour -->
+				<!-- #29665 - Start -->
+				<td style="display: #{!categoryBackingBean.managedBean.newCategory ? 'block' : 'none'}">
 					<p:commandButton value="#{lbl['lbl.btn.update']}"
 						oncomplete="if(args &amp;&amp; !args.validationFailed) updateCategDialog.show();"
-						rendered="#{!categoryBackingBean.managedBean.newCategory}"
-						style="float:right;width: auto;" /> 
+						style="float:right;width: auto;" /></td>
+				<td style="display: #{categoryBackingBean.managedBean.newCategory ? 'block' : 'none'}"> 
 					<p:commandButton partialSubmit="true" 
 						value="#{lbl['lbl.btn.save']}"
 						action="#{categoryBackingBean.saveSubCategory}"
-						rendered="#{categoryBackingBean.managedBean.newCategory}"
 						update="@([id$=Msg])" style="float:right;width: auto;" /></td> 
+				<!-- #29665 - End -->
 				<!-- End #29665 remove save button, replace by update and save, change update button behaviour -->
 								
 			</tr>
@@ -149,14 +150,18 @@
 						<p:outputLabel value="#{lbl['lbl.pm.remarks']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
+					<!-- Start #29665 - Start -->
 					<td>
 						<p:inputTextarea id="remarkFieldId" cols="50" style="width:auto;" maxlength="1000" 
 						value="#{categoryBackingBean.managedBean.remarkCategory}" autoResize="false"
 						disabled="#{categoryBackingBean.remarkDisable}" required="#{!categoryBackingBean.remarkDisable}"
-						requiredMessage="#{lbl['lbl.pm.categ.remark.sub.required']}"
-						validatorMessage="#{lbl['lbl.pm.categ.remark.sub.required']}"/>
+						validator="#{categoryBackingBean.validateRequiredField}"
+						requiredMessage="#{lbl['lbl.pm.categ.remark.sub.required']}">
+						<f:attribute name="labelName" value="#{lbl['lbl.pm.sub.category']}" />
+						</p:inputTextarea>
 						<ac:iconTooltip value="#{lbl['lbl.pm.categ.remark.main.tooltips']}"/>
 					</td>
+					<!-- Start #29665 - End -->
 				</tr>
 				</c:if>
 				<!-- End #29665: Add Remark Field -->

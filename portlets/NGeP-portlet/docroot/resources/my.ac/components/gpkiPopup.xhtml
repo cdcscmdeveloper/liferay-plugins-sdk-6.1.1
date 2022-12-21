@@ -181,10 +181,10 @@
 	<p:dialog header="#{lbl['lbl.cc.gpki.title']}" widgetVar="gpki_dlg"
 		resizable="false" modal="true">
 		
-		<p:ajax event="close" listener="#{gpkiBackingBean.onDialogCloseAction()}" 
-			onstart="gpkiBlockWidget.show();return isRunGPKIEnableAutoUpdate()" 
-			oncomplete="setRunGPKIEnableAutoUpdate(true);gpkiBlockWidget.hide();" 
-			disabled="#{empty cc.getValueExpression('enableAutoUpdate')}" />
+<!-- 		<p:ajax event="close" listener="#{gpkiBackingBean.onDialogCloseAction()}"  -->
+<!-- 			onstart="gpkiBlockWidget.show();return isRunGPKIEnableAutoUpdate()"  -->
+<!-- 			oncomplete="setRunGPKIEnableAutoUpdate(true);gpkiBlockWidget.hide();"  -->
+<!-- 			disabled="#{empty cc.getValueExpression('enableAutoUpdate')}" /> -->
 				
 		<p:blockUI block="gpkiPopup" widgetVar="gpkiBlockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -200,7 +200,7 @@
 <!-- 					<f:selectItem id="r2" itemLabel="Smart Card" itemValue="Smart Card" /> -->
 <!-- 				</p:selectOneRadio> -->
 <!-- 			</h:panelGrid> -->
-			<h:panelGrid columns="5" cellpadding="5">
+			<h:panelGrid columns="6" cellpadding="6">
 				<h:outputLabel value="*" styleClass="mandatory" />
 				<h:outputLabel for="password" value="#{lbl['lbl.cc.gpki.pin']}" />
 				<p:password binding="#{pin}" id="password" />
@@ -208,8 +208,13 @@
 				<!-- BELOW BUTTON IS TO SKIP USE TOKEN. DO NOT MERGE TO PROD!!! -->
 				<p:commandButton id="signButtonId1" value="Sign W/O Token"  onstart="setRunGPKIEnableAutoUpdate(false);gpkiBlockWidget.show();" oncomplete="gpkiBlockWidget.hide();"  rendered="#{gpkiBackingBean.getGpkiEnabledProperty() eq false}" action="#{gpkiBackingBean.gpkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}" >
 					<f:param name="textBeforeSign" value="#{cc.attrs.textBeforeSign}" />
-				</p:commandButton>
+				</p:commandButton>	
 				
+				<!--20220909@Nasim - #33986 MyGPKI POC START-->
+				<p:commandButton id="signButtonId2" value="Signing OTP"  onstart="setRunGPKIEnableAutoUpdate(false);gpkiBlockWidget.show();" oncomplete="gpkiBlockWidget.hide();" rendered="#{gpkiBackingBean.getGpkiEnabledProperty() eq false}" action="#{gpkiBackingBean.nexusSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate, pin.value)}">
+					<f:param name="textBeforeSign" value="#{cc.attrs.textBeforeSign}" />
+				</p:commandButton>	
+				<!--20220909@Nasim - #33986 MyGPKI POC END-->
 			</h:panelGrid>
 		</p:panel>
 	</p:dialog>

@@ -68,7 +68,9 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}" /></td>
 				<td><p:inputText disabled="true" size="66" value="#{invoiceBackingBean.getParameterDesc(invoiceBackingBean.managedBean.invoice.flRequest.ctContract.fulfillmentType)}" 
 				rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}"/>
+				<!-- 24956 - start -->
 				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.fulfilment.type']}" rendered="#{invoiceBackingBean.managedBean.ctTypeMinistry}"/>
+				<!-- 24956 - end -->
 				</td>
 			</tr>
 		</table>
@@ -279,13 +281,14 @@
 				<td style="width: 170px;"><p:outputLabel
 						value="#{lbl['lbl.fl.bank.acc.no.name']}" /></td>
 				<td><p:inputText size="55" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.accountNo}  #{invoiceBackingBean.managedBean.invoice.paymentBankName}" rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}"/>
+				<p:inputText size="55" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.accountNo}  #{invoiceBackingBean.managedBean.invoice.paymentBankName}" rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'PR' and invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}"/>
 					<p:selectOneMenu id="factoringAccountId" label="#{lbl['lbl.fl.bank.acc.no']}" 
-						rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'PR'}"
+						rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'PR' and invoiceBackingBean.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}"
 						disabled="#{invoiceBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmCancel || invoiceBackingBean.managedBean.buttonVal=='ACK' || !bpmTasklistBackingBean.managedBean.claim}"
 						style="width:350px;margin-bottom: 5px;"
 						value="#{invoiceBackingBean.managedBean.invoice.accountNo}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-						<f:selectItems value="#{invoiceBackingBean.managedBean.factoringAccList}" />
+						<f:selectItems value="#{invoiceBackingBean.getFactoringAccountList()}" />
 						<p:ajax event="change" update="@this" listener="#{invoiceBackingBean.factoringInfoActionListener()}" />
 					</p:selectOneMenu>
 				</td>

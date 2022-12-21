@@ -60,7 +60,7 @@
 				<td><p:inputText
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo}"
 						size="30" disabled="true" readonly="true" /></td>
-				<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}"
+				<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}"  update="@([id$=supplierSampleLabelDlg])"
 						action="#{supplierProposalDetailBackingBean.printLabelAction}"
 						partialSubmit="true" process="@this" /></td>
 				<td />
@@ -123,7 +123,7 @@
 				<td><p:inputText
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo}"
 						size="30" disabled="true" readonly="true" /></td>
-				<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}"
+				<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}" update="@([id$=supplierSampleLabelDlg])"
 						action="#{supplierProposalDetailBackingBean.printLabelAction}"
 						partialSubmit="true" process="@this" /></td>
 				<td />
@@ -131,13 +131,21 @@
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.sp.sampletosubmit']}" toggleable="true">
+	<!-- #29187 Start Vinod -->
+	<h:outputText styleClass="instruction"  
+			value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.sample.instruction']}"
+			escape="false" />
+	<!-- #29187 End Vinod -->
 		<p:dataTable id="sampleitemid" var="sampleitemdtl"
 			style="width : 100%" editable="true" rowIndexVar="rowIndex"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.sampleItems}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			styleClass="sampleitemdtl" rowKey="#{sampleitemdtl}">
 			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space: normal;width:55%;">
-				<h:outputText value="#{sampleitemdtl.scRequestItem.itemName}" />
+				<h:outputText
+				value="#{supplierProposalDetailBackingBean.replaceWithBR(sampleitemdtl.scRequestItem.itemName)}"
+				escape="false"
+				style="white-space: normal;word-wrap: break-word;" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.local.goods']}" style="width:15%;">
 			<h:outputText value="#{lbl['lbl.sc.qt.sample.type.of.goods.local']}" rendered="#{sampleitemdtl.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.LOCAL_GOODS}"></h:outputText>

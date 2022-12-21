@@ -450,35 +450,17 @@ public class SmApplicationNotificationUtil {
 		}
 		Locale usrLocale = getLocaleByLang(preferredLang);
 		
-		log.info("preferredLang>>>>>>>>>>" + preferredLang);
-		log.info("User Locale>>>>>>>>>>" + usrLocale.getLanguage());
-		
-
-		String applType = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol1"
-				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
-		log.info("applType>>>>>>>>>>>>>>>>>>"+applType);
-		String applNo = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol2"
-				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
-		log.info("applNo>>>>>>>>>>>>>>>>>>"+applNo);
 		String companyName = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol3"
 				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
-		log.info("companyName>>>>>>>>>>>>>>>>>>"+companyName);
 		String regNo = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol4"
 				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
-		log.info("regNo>>>>>>>>>>>>>>>>>>"+regNo);
 		String epNo = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol5"
 				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
-		log.info("epNo>>>>>>>>>>>>>>>>>>"+epNo);
 		String approveDate = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol6"
 				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
-		log.info("approveDate>>>>>>>>>>>>>>>>>>"+approveDate);
-		String addNewCatCodes = ResourceBundleUtils.getMessage("lbl.sm.addNewCategory.notifCol7"
-				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
-		log.info("addNewCatCodes>>>>>>>>>>>>>>>>>>"+addNewCatCodes);
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
 		StringBuilder sb = new StringBuilder();
-		log.info("*********** retriveAddNewCategoryMessageForNotification *********");
 		sb.append("<table style=\"width:50%; border: 1px solid black;border-collapse: collapse;\">");
 		// <VAR1>
 		//Company Name 
@@ -488,7 +470,6 @@ public class SmApplicationNotificationUtil {
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(supplier.getCompanyName()).append("</td>");
 		sb.append("</tr>");
-		log.info("*********** Company Name ********* :"+supplier.getCompanyName());
 		//Business Registration No. 
 		sb.append("<tr>"); 
 		sb.append("<td style=\"border: 1px solid black;\">")
@@ -496,7 +477,6 @@ public class SmApplicationNotificationUtil {
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(supplier.getRegNo()).append("</td>");
 		sb.append("</tr>");
-		log.info("*********** Business Registration No. ********* :"+supplier.getRegNo());
 		//eP No.
 		sb.append("<tr>"); 
 		sb.append("<td style=\"border: 1px solid black;\">")
@@ -504,7 +484,6 @@ public class SmApplicationNotificationUtil {
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(supplier.getEpNo()).append("</td>");
 		sb.append("</tr>");
-		log.info("*********** eP No. ********* :"+supplier.getEpNo());
 		//Approved Date
 		sb.append("<tr>"); 
 		sb.append("<td style=\"border: 1px solid black;\">")
@@ -512,7 +491,6 @@ public class SmApplicationNotificationUtil {
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(sdf.format(new Date())).append("</td>");
 		sb.append("</tr>");
-		log.info("*********** Approved Date ********* :"+sdf.format(new Date()));
 		sb.append("</tr>");
 		sb.append("</table>");
 		return sb.toString();

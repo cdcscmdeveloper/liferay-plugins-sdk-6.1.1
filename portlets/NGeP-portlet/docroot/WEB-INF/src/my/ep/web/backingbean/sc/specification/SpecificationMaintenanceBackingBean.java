@@ -13,6 +13,7 @@ package my.ep.web.backingbean.sc.specification;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -433,7 +434,7 @@ public void editSpecificationMaintenance(ScQt scQt, boolean isEditable){
 public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean popup){
 	editSpecificationMaintenance(scQt, isEditable, true,false, null);
 	if(popup){
-		this.assertSpecCommitteeMaintenanceInProgress(scQt);
+		this.assertSpecCommitteeMaintenanceInProgress(scQt, false);
 		if(this.getManagedBean().getInactiveSCMemberStr().length()>0){
 			SpecificationBackingBean specBB = new SpecificationBackingBean();
 			specBB.qtChecklistTabChange(10);
@@ -492,12 +493,13 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
  /* boolean isStatusPublish=  isQTStatusPublished(scQt
 			.getQtStatus().getStatusId());*/
      log.debug("status Publish");
+     	//1873 note 125 start
+		ScWorkFlowStatus workFlowStatus = retrieveStatusByTypeAndId(
+				ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,scQt.getQtId());
+		this.getManagedBean().setSpecMaintenanceWorkFlowStatus(workFlowStatus);
+		//1873 note 125 end
 		if (specCommitteeSecreatry) {
 			if (isEditable) {
-				
-				ScWorkFlowStatus workFlowStatus = retrieveStatusByTypeAndId(
-						ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,scQt.getQtId());
-				this.getManagedBean().setSpecMaintenanceWorkFlowStatus(workFlowStatus);
 				if (null == workFlowStatus
 						|| QTStatusConst.SE_PENDING_SUBMISSION
 								.equals(workFlowStatus.getPmStatus().getStatusId())
@@ -577,10 +579,13 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 				this.getManagedBean().setGenInfo(false);
 			}
 		}
+		log.info("asdsadwereeee " + scQt.getQtStatus().getStatusId());
 		if((QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId())) 
 				|| (QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt.getQtStatus().getStatusId()))
 				|| (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
-				|| (QTStatusConst.QT_PENDING_PUBLICATION_REVISION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))){
+				|| (QTStatusConst.QT_PENDING_PUBLICATION_REVISION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
+				|| (QTStatusConst.QT_PENDING_BPK_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
+				|| (QTStatusConst.QT_PENDING_SCHEDULE_REVISION.equals(scQt.getQtStatus().getStatusId()))){//#33837 - add bpk and reschedule
 			this.getManagedBean().setChecklist(true);
 			if(QTStatusConst.SE_PENDING_ENDORSMENT.equals(this.getManagedBean().getCurrentStatusId())
 					|| QTStatusConst.SE_PENDING_SIGNOFF.equals(this.getManagedBean().getCurrentStatusId())
@@ -588,6 +593,11 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 				this.getManagedBean().setChecklist(false);
 			}
 		}
+		//#33795 - start
+		if (!isSpecCommittee()) {
+			this.getManagedBean().setChecklist(false);
+		}
+		//#33795 - end
 		//#15391 - end		
 		
 		//29464-start
@@ -706,13 +716,21 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 	}
 }
 
-public boolean renderIcon(Long currentStatusId) {
-
-	boolean isRenderIcon = false;
-	if (currentStatusId != null) {
-		isRenderIcon = checkStatus(currentStatusId);
-	}
-	return isRenderIcon;
+//1873 note 125 start
+public boolean renderIcon(ScQt qt) {
+	Long qtStatusId = (qt!=null && qt.getQtStatus()!=null) ? qt.getQtStatus().getStatusId(): 0L;
+	Long specMaintenanceStatusId = (qt!=null && qt.getSpecMaintenanceStatus()!=null) ? qt.getSpecMaintenanceStatus().getStatusId(): 0L;
+	boolean isRenderIcon = false; 
+	if (qtStatusId != null) {
+		isRenderIcon = checkStatus(qtStatusId);
+	} 
+	
+	return isRenderIcon 
+			&& !Arrays.asList(new Long[] {
+					QTStatusConst.SE_PENDING_ENDORSMENT, 
+					QTStatusConst.SE_PENDING_SIGNOFF, 
+					QTStatusConst.SE_PENDING_REVISION}).contains(specMaintenanceStatusId);
+	//1873 note 125 end
 }
 
 private boolean checkStatus(Long statusId){
@@ -729,6 +747,18 @@ public boolean isSpecCommittee() {
 	return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 }	
 //#15391 - end
+
+	//33837 - start
+	public boolean isSpecCommitteeSecretaryAndSpecCommMaintPortlet() {
+		boolean isSpec = false;
+		FacesScopes facesScopes = new FacesScopes();
+		if (facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value())
+				&& QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())) {
+			isSpec = true;
+		}
+		return isSpec;
+	}
+	//33837 - end
 
 	// 29464-start
 	public void redirectToSpecificationMaintenance(ScQt scQt,

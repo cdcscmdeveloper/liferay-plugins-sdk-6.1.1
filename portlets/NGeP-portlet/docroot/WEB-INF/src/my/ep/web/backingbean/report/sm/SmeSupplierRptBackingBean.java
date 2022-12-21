@@ -34,7 +34,7 @@ public class SmeSupplierRptBackingBean extends SmReportBackingBean<SmeSupplierRp
 
 	public void generateReport() {
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-
+		retrieveReportValueFromDb();
 		if (StringUtils.isNotBlank(getManagedBean().getAccountType())) {
 			params.put(SmReportConst.PARAM_ACCOUNT_TYPE, getManagedBean().getAccountType());
 		}
@@ -103,11 +103,26 @@ public class SmeSupplierRptBackingBean extends SmReportBackingBean<SmeSupplierRp
 		reqDTO.setLanguageCode(languageCode);
 		ParameterResDTO resDTO = SmServiceLookup.getParameterSO().retrieveParameterDescListByTypeAndParamCodes(reqDTO);
 		List<SelectItem> statusType = new ArrayList<SelectItem>();
-		for (PmParameterDesc list : resDTO.getParameterDescList()) {
-			SelectItem type = new SelectItem();
-			type.setValue(list.getPmParameter().getParameterCode());
-			type.setLabel(list.getCodeDesc());
-			statusType.add(type);
+		// #29617 Reopen Start - note #119 item 2
+		while(statusType.size() < 6) statusType.add(null);
+		for (PmParameterDesc list : resDTO.getParameterDescList()) { 
+			SelectItem type = new SelectItem(); 
+			type.setValue(list.getPmParameter().getParameterCode()); 
+			type.setLabel(list.getCodeDesc()); 
+			if(type.getValue().toString().equalsIgnoreCase("MANMICRO")){
+				statusType.set(0, type);
+			}else if(type.getValue().toString().equalsIgnoreCase("MANSMALL")){
+				statusType.set(1, type);
+			}else if(type.getValue().toString().equalsIgnoreCase("MANMED")){
+				statusType.set(2, type);
+			}else if(type.getValue().toString().equalsIgnoreCase("SERMICRO")){
+				statusType.set(3, type);
+			}else if(type.getValue().toString().equalsIgnoreCase("SERSMALL")){
+				statusType.set(4, type);
+			}else if(type.getValue().toString().equalsIgnoreCase("SERMED")){
+				statusType.set(5, type);
+			}
+		//#29617 Reopen End 
 		}
 		getManagedBean().setStatusTypeList(statusType);
 	}

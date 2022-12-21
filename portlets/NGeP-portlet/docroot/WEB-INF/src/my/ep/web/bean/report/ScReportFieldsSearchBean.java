@@ -12,6 +12,7 @@ package my.ep.web.bean.report;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.model.SelectItem;
 
@@ -45,6 +46,7 @@ public class ScReportFieldsSearchBean implements Serializable {
 	private String scPtjName;
 	private PmOrgProfile ptjProfile;
 	private SelectItem doSelectItem;
+	private List<String> scStatusManyMenu;//#29580
 
 	/**
 	 * @return the allCheckboxValue
@@ -295,4 +297,19 @@ public class ScReportFieldsSearchBean implements Serializable {
 	public void setDoSelectItem(SelectItem doSelectItem) {
 		this.doSelectItem = doSelectItem;
 	}
+	/**
+	 * @return the scStatusManyMenu
+	 */
+	//#29580 - Start
+	public List<String> getScStatusManyMenu() {
+		return scStatusManyMenu;
+	}
+	/**
+	 * @param scStatusManyMenu the scStatusManyMenu to set
+	 */
+	public void setScStatusManyMenu(List<String> scStatusManyMenu) {
+		this.scStatusManyMenu = scStatusManyMenu;
+	}
+	//#29580 - End 
+
 }

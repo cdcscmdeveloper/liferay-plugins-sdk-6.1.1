@@ -31,6 +31,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sm.SmSupplierBank; //Fix - #33674
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -172,6 +173,15 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean amendFromViewPage = false;//15851
 	private boolean amendFromTaskList = false;//15851
 	private boolean viewSCL = false;//15851
+	
+	private boolean backFromSCL = false;//34030
+	private String docTypeFromTaskList = null;//34030
+	private Long contractIdFromTaskList = null;//34030
+	private Long contractVerIdFromTaskList = null;//34030
+	private String taskNameFromTaskList = null;//34030
+	
+	private boolean viewContractFromAgreement = false;//34142
+	private boolean viewSCLFromContract = false;//34142
 
 	//#28854 - start
 	private List<String> itemSpecification;
@@ -192,12 +202,12 @@ public class ContractManagedBean extends BaseManagedBean {
 	
 	private Map<Long, CtAgency> agencyDataDeletion;
 	//End Fix - #31740
-	
-	
-	//#33126 hafiz start
-	private boolean inCtPerformance = false;
-	//#33126 hafiz end
-	
+	//Start Fix - #33674
+	private String bankInfoDetails;
+	private Map<String, SmSupplierBank> supplierBankAccNo;
+	private Map<String, SmSupplierBank> supplierBankName;
+	private Long applID;
+	//End Fix - #33674
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1556,15 +1566,102 @@ public class ContractManagedBean extends BaseManagedBean {
 	//Enhancement 15851 - shaqimi end
 	// End Fix - #31740
 
-	// #33126 hafiz start
-
-	public boolean isInCtPerformance() {
-		return inCtPerformance;
+	//Bug 34030 - shaqimi start
+	public boolean isBackFromSCL() {
+		return backFromSCL;
 	}
 
-	public void setInCtPerformance(boolean inCtPerformance) {
-		this.inCtPerformance = inCtPerformance;
+	public void setBackFromSCL(boolean backFromSCL) {
+		this.backFromSCL = backFromSCL;
 	}
 
-	// #33126 hafiz end
+	public String getDocTypeFromTaskList() {
+		return docTypeFromTaskList;
+	}
+
+	public void setDocTypeFromTaskList(String docTypeFromTaskList) {
+		this.docTypeFromTaskList = docTypeFromTaskList;
+	}
+
+	public String getTaskNameFromTaskList() {
+		return taskNameFromTaskList;
+	}
+
+	public void setTaskNameFromTaskList(String taskNameFromTaskList) {
+		this.taskNameFromTaskList = taskNameFromTaskList;
+	}
+
+	public Long getContractIdFromTaskList() {
+		return contractIdFromTaskList;
+	}
+
+	public void setContractIdFromTaskList(Long contractIdFromTaskList) {
+		this.contractIdFromTaskList = contractIdFromTaskList;
+	}
+
+	public Long getContractVerIdFromTaskList() {
+		return contractVerIdFromTaskList;
+	}
+
+	public void setContractVerIdFromTaskList(Long contractVerIdFromTaskList) {
+		this.contractVerIdFromTaskList = contractVerIdFromTaskList;
+	}
+	//Bug 34030 - shaqimi end
+
+	// Start Fix - #33674
+	public String getBankInfoDetails() {
+		return bankInfoDetails;
+	}
+
+	public void setBankInfoDetails(String bankInfoDetails) {
+		this.bankInfoDetails = bankInfoDetails;
+	}
+
+	public Map<String, SmSupplierBank> getSupplierBankAccNo() {
+		if (supplierBankAccNo == null) {
+			supplierBankAccNo = new HashMap<String, SmSupplierBank>();
+		}
+		return supplierBankAccNo;
+	}
+
+	public void setSupplierBankAccNo(Map<String, SmSupplierBank> supplierBankAccNo) {
+		this.supplierBankAccNo = supplierBankAccNo;
+	}
+
+	public Map<String, SmSupplierBank> getSupplierBankName() {
+		if (supplierBankName == null) {
+			supplierBankName = new HashMap<String, SmSupplierBank>();
+		}
+		return supplierBankName;
+	}
+
+	public void setSupplierBankName(Map<String, SmSupplierBank> supplierBankName) {
+		this.supplierBankName = supplierBankName;
+	}
+
+	public Long getApplID() {
+		return applID;
+	}
+
+	public void setApplID(Long applID) {
+		this.applID = applID;
+	}
+    //End Fix - #33674
+	//Bug 34142 - shaqimi start 16112022
+	public boolean isViewContractFromAgreement() {
+		return viewContractFromAgreement;
+	}
+
+	public void setViewContractFromAgreement(boolean viewContractFromAgreement) {
+		this.viewContractFromAgreement = viewContractFromAgreement;
+	}
+
+	public boolean isViewSCLFromContract() {
+		return viewSCLFromContract;
+	}
+
+	public void setViewSCLFromContract(boolean viewSCLFromContract) {
+		this.viewSCLFromContract = viewSCLFromContract;
+	}
+	//Bug 34142 - shaqimi end 16112022
 }

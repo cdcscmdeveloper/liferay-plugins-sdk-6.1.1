@@ -76,6 +76,14 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private PmDigiSign pmDigiSign;
 	private String fcRequestType;
 	private int attachFileIndex;
+	//Start Fix - #33399
+	private String originalBankName; 	
+	private Map<String, SmSupplierBank> supplierBankName;
+	private String fullBankInfo;
+	//End Fix - #33399
+	// Start Fix - #33856
+	private Long applID;
+	// End Fix - #33856
 
 	@ManagedProperty(value="#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -634,7 +642,45 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.attachFileIndex = attachFileIndex;
 	}	
 	/*25139-end*/
+	//Start Fix - #33399
+	public String getOriginalBankName() {
+		return originalBankName;
+	}
+
+	public void setOriginalBankName(String originalBankName) {
+		this.originalBankName = originalBankName;
+	}
 	
-	
-	
+	public Map<String, SmSupplierBank> getSupplierBankName() {
+		if (supplierBankName == null) {
+			supplierBankName = new HashMap<String, SmSupplierBank>();
+		}
+		return supplierBankName;
+	}
+
+	public void setSupplierBankName(Map<String, SmSupplierBank> supplierBankName) {
+		this.supplierBankName = supplierBankName;
+	}
+
+	public String getFullBankInfo() {
+		return fullBankInfo;
+	}
+
+	public void setFullBankInfo(String fullBankInfo) {
+		this.fullBankInfo = fullBankInfo;
+	}
+	//End Fix - #33399
+    // Start Fix - #33856
+	public Long getApplID() {
+		return applID;
+	}
+
+	public void setApplID(Long applID) {
+		this.applID = applID;
+	}
+	// End Fix - #33856
+
+
+
+
 }

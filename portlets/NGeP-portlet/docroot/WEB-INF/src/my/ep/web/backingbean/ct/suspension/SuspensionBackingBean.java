@@ -47,12 +47,16 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
+import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
+import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
+import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
 import my.ep.web.util.DateUtils;
@@ -227,7 +231,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			getManagedBean().setSearchItemString("");
 			getManagedBean().getContractItemList().clear();
 			
-			/*If statement  for check contact item start  (close) #33125*/
+			/*If statement  for check contact item start  //#33125 - basri*/
 			/*if(getManagedBean().getContractVer().getCtContractItems() != null && getManagedBean().getContractVer().getCtContractItems().size() > 0 ) {
 				Collections.sort(getManagedBean().getContractVer().getCtContractItems(), new CtContractItem());
 
@@ -241,13 +245,13 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 						}
 					}
 				}
-			} //#33125*/
+			}*/
 			/*If statement for contract item end*/			
 
-			/*If statement  to check agency start*/
-			if(getManagedBean().getContractVer().getCtAgencies() != null && getManagedBean().getContractVer().getCtAgencies().size() > 0 )  {	
+			/*If statement  to check agency start*///#33125 - basri
+			/*if(getManagedBean().getContractVer().getCtAgencies() != null && getManagedBean().getContractVer().getCtAgencies().size() > 0 )  {	
 				for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
-					/*Get latest agency and map with the org profile*/
+					Get latest agency and map with the org profile
 					for (CtAgency latestAgency : getManagedBean().getCtContract().getLatestContractVer().getCtAgencies()) {
 						if(ctAgency.getOrgProfile().getOrgProfileId().equals(latestAgency.getOrgProfile().getOrgProfileId())) {
 							getManagedBean().getAgencyMap().put(ctAgency.getOrgProfile().getOrgProfileId(), latestAgency);
@@ -255,7 +259,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 						}
 					}			 		
 				}
-			}//If statement for agency end  //(close)  
+			}*/
+			//If statement for agency end  ////#33125 - basri  
 			
 			if(getManagedBean().getUserMap().size()==0) {
 				initializeApproverList();
@@ -475,7 +480,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 					}
 				}
 			}
-		}*///#33125
+		}*///#33125 - basri
 		//CT_CHANGE_LOG
 		ctBB.getManagedBean().getUpdateItemMap().put(item.getScRequestItem().getRequestNoteItemId(), item);
 	}
@@ -486,7 +491,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 */
 	public void setSuspensionAgencyStatusValue(CtAgency agency){
 		Date currentDate = DateUtils.getCurrentDateWithoutTime();
-		for(CtAgency ctAgency  : getManagedBean().getAgencyPersistDataModel().getList()) {//Development #29214
+		//#33125 - basri
+		/*for(CtAgency ctAgency  : getManagedBean().getAgencyPersistDataModel().getList()) {//Development #29214
 			if(ctAgency.equals(agency)) {
 				CtAgency latestAgency = getManagedBean().getAgencyMap().get(agency.getOrgProfile().getOrgProfileId());
 				Date effDate = null;
@@ -504,7 +510,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 					ctAgency.setExpDate(expDate);		
 				}
 			}
-		}  
+		}  *///#33125 - basri
 		//CT_CHANGE_LOG
 		ctBB.getManagedBean().getUpdateAgencyMap().put(agency.getOrgProfile().getOrgCode(), agency);
 	}
@@ -530,7 +536,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			
 			validateSuspensionDetails(outcome);		
 			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
-			//#20997 - to copy from searching list to items list(close) #33125 - basri
+			//#33125 - basri
+			//#20997 - to copy from searching list to items list
 			/*if (getManagedBean().getSuspensionProductListingPagingDataModel() != null && getManagedBean().getSuspensionProductListingPagingDataModel().getList() != null) {
 				for (CtContractItem ctContractItem : getManagedBean().getSuspensionProductListingPagingDataModel().getList()) {			
 					for(CtContractItem ctItem : this.getManagedBean().getContractVer().getCtContractItems()){
@@ -545,7 +552,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 					}
 				}
 			}*/
-			//(close) #33125 - basri
+			//#33125 - basri
 			//#20997 - end
 
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
@@ -560,6 +567,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			//adding ct items list from pagination to object 
 			//#33125 - basri
 			reqDTO.getCtContractVer().setCtContractItems(getManagedBean().getSuspensionProductListingPagingDataModel().getList());
+			reqDTO.getCtContractVer().setCtAgencies(getManagedBean().getAgencyPersistDataModel().getList());
+			
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
@@ -965,5 +974,39 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		}*/
 	}
 	
+	//Enhancement 15851, 34142 - shaqimi start 02/12/2022
+	/**
+	 * The method used to navigate to contract details screen
+	 * for view purpose.
+	 * 
+	 * @return the navigate URL 
+	 */
+	@Override
+	public void goToLoaView(ScLoa scLoa) {
+		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
+		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
+		
+		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
+			AmendmentBackingBean abb = new AmendmentBackingBean();
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
+			abb.getManagedBean().setTrackingDairyView(true);
+			ctBB.getManagedBean().setViewSCL(true);
 
+			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
+
+			abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
+			abb.getManagedBean().setContractIdFromTaskList(new Long(this.getManagedBean().getContractVer().getCtContract().getContractId()));
+			abb.getManagedBean().setContractVerIdFromTaskList(this.getManagedBean().getContractVer().getContractVerId());
+
+			if(ctBB.getManagedBean().isViewContractFromAgreement()){
+				ctBB.getManagedBean().setViewSCLFromContract(true);
+			}
+			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
+		} else {
+			super.goToLoaView(scLoa);
+		}
+	}
+	//Enhancement 15851, 34142 - shaqimi end 02/12/2022
 }

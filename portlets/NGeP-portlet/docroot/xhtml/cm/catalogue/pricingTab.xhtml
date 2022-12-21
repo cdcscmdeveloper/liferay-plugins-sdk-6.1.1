@@ -36,11 +36,13 @@
 		<p:row>
 			
 			<p:column>
+			<!-- #30457 - Start -->
 				<p:inputText id="normalPriceId" disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}" maxlength="18" style="text-align:right">
-						<f:converter converterId="bigDecimalConverter" />
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					<p:ajax process="@this" update="normalPriceId"></p:ajax>
 				</p:inputText>
+			<!-- #30457 - Start -->
 				<!-- 569 Start -->
 				<p:graphicImage
 				    rendered="#{catalogueBackingBean.managedBean.publish and catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price==null 

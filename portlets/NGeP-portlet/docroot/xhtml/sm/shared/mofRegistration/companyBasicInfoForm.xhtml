@@ -47,7 +47,7 @@
 			<table style="width: 100%">
 				<tr>
 
-					<td><p:outputLabel value="#{lbl['lbl.sm.companyname']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.companyname']}  -- test" /></td>
 					<td><p:inputText
 							disabled="#{backingBean.managedBean.disabledCompanyName || backingBean.managedBean.smAppl.applValidWithSsm}"
 							readonly="#{backingBean.managedBean.disabledCompanyName}"
@@ -60,10 +60,14 @@
 							alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.companyName}"/>
 					</td>
 					
-					<td><p:outputLabel value="#{lbl['lbl.sm.account.rob.expire']}" rendered="#{backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F'}" /></td>
+				<!-- 32304 - start-->
 					<td>
-					<c:if test="#{backingBean.managedBean.smSupplier.businessType == 'C' or backingBean.managedBean.smSupplier.businessType == 'F'}">
-						<c:choose> 
+						<p:outputLabel value="#{lbl['lbl.sm.account.rob.expire']}" rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'C' or backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'F'}" /></td>
+					<td>
+					<c:if test="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'C' or backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'F'}">
+						
+				<!-- 32304 - end-->
+				<c:choose> 
 								<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm and !empty backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate}">
 								<p:calendar  navigator="true"
 							display="inline" readonlyInput="true" disabled = "true"
@@ -489,22 +493,24 @@
 							alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.website}"/>
 					</td>
 					<td>
+				<!-- 32304 - start-->
 						<p:outputPanel id="localAuthLabelOutPanelId">
 							<p:outputLabel value="#{lbl['lbl.sm.local.authority']}" 
-								rendered="#{backingBean.managedBean.smSupplier.businessType eq 'D' or backingBean.managedBean.smSupplier.businessType eq 'E'
-								or backingBean.managedBean.smSupplier.businessType eq 'G' or backingBean.managedBean.smSupplier.businessType eq 'H'}"/>
+								rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'D' or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'E'
+								or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'G' or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'H'}"/>
 							<p:outputLabel value="*" styleClass="mandatory" 
-								rendered="#{backingBean.managedBean.smSupplier.businessType eq 'D' or backingBean.managedBean.smSupplier.businessType eq 'E'
-								or backingBean.managedBean.smSupplier.businessType eq 'G' or backingBean.managedBean.smSupplier.businessType eq 'H'}"/>
-						</p:outputPanel>
+								rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'D' or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'E'
+								or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'G' or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'H'}"/>
+						</p:outputPanel> 
 					</td>
-					<td>
+					<td> 
 						<p:outputPanel id="localAuthInputOutPanelId" >
 							<ac:smLocalAuthoritySelectItems backingBean="#{backingBean}" 
-								isShow="#{backingBean.managedBean.smSupplier.businessType eq 'D' or backingBean.managedBean.smSupplier.businessType eq 'E'
-								or backingBean.managedBean.smSupplier.businessType eq 'G' or backingBean.managedBean.smSupplier.businessType eq 'H'}"
+								isShow="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'D' or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'E'
+								or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'G' or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'H'}"
 								smSupplier="#{backingBean.managedBean.smSupplier}" required="true"/>
 						</p:outputPanel>
+				<!-- 32304 - end-->
 					</td>
 				</tr>
 				
@@ -578,11 +584,18 @@
 				</p:outputPanel>
 			</table>
 		</p:outputPanel>
-		
+		<!-- #32304 - start -->
 		<p:confirmDialog id="changeBussTypeConfirmDialog" closable="true"
-			message="#{lbl['lbl.sm.confirm.buss.type.changed.msg']}"
 			header="#{lbl['lbl.sm.confirm.buss.type.changed.header']}" severity="alert"
 			widgetVar="changeBussTypeConfirmDialog">
+			<f:facet name="message">
+				<h:outputText value="#{lbl['lbl.sm.confirm.buss.type.changed.msg']}" /><br/>
+				<h:outputText value="#{lbl['lbl.sm.confirm.buss.type.changed.msg2']}"
+					style="word-break:break-word"
+					rendered="#{backingBean.managedBean.pendingBumiAppl != null
+							and backingBean.managedBean.pendingBumiAppl.applNo != null}" />
+			</f:facet>
+			<!-- #32304 - end -->
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="changeBussTypeConfirmDialog.hide();" />
 			</div>

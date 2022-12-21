@@ -309,6 +309,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private boolean updatedLampiranA3DownloadedFlag = false;
 	private String newSupplierOffered;
 	private String newSupplierJustification;
+	private String selectedSupplierOffer = null;
 	private boolean oldNewSuppOfferSameFlag;
 	private boolean updateSupplierLinkFlag = false;
 	private Map<Long, List<TplSpecAnswer>> scLoiLoaItemAnswerMap;
@@ -361,6 +362,13 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	//#32280 - start
 	private Long reqItemAssignButtonSession = 0L;
 	//#32280 - end	
+	
+	//Bug #33674@Syazani - Start
+	private Long supplierBankId = null;
+	//Bug #33674@Syazani - End
+	
+	private int retainPageNumber = 0;//#34242
+	
     /**
      * Gets the spki backing bean.
      *
@@ -1825,6 +1833,14 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setMultipleSuppOffer(boolean multipleSuppOffer) {
 		this.multipleSuppOffer = multipleSuppOffer;
 	}
+	
+	public String getSelectedSupplierOffer() {
+		return selectedSupplierOffer;
+	}
+
+	public void setSelectedSupplierOffer(String selectedSupplierOffer) {
+		this.selectedSupplierOffer = selectedSupplierOffer;
+	}
 	//#29006 - end
 
 	public String getSourcePage() {
@@ -2065,6 +2081,32 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.procurementType = procurementType;
 	}
 	//#25725 - end
+
+	//Bug #33674@Syazani - Start
+	public Long getSupplierBankId() {
+		return supplierBankId;
+	}
+
+	public void setSupplierBankId(Long supplierBankId) {
+		this.supplierBankId = supplierBankId;
+	}
+	//Bug #33674@Syazani - End
+	
+	//#34242 - Start
+	/**
+	 * @return the retainPageNumber
+	 */
+	public int getRetainPageNumber() {
+		return retainPageNumber;
+	}
+
+	/**
+	 * @param retainPageNumber the retainPageNumber to set
+	 */
+	public void setRetainPageNumber(int retainPageNumber) {
+		this.retainPageNumber = retainPageNumber;
+	}
+	//#34242 - End
 }
 
 

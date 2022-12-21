@@ -105,6 +105,17 @@
 			font-size: 9px;
 			color: #333333;
 		}
+		.underline{
+			font-family: Arial;
+			font-size: 14.5px;
+			font-weight: normal;
+			font-style: normal;
+			line-height: 20px;
+			text-decoration: none;
+			color: #333333;
+			text-decoration:underline;
+		}
+
 		##26770 - end
 	</style>
 </head>
@@ -157,7 +168,7 @@
 			</p>	
 
 			<p>
-				2.	Dengan pengakuan penerimaan Surat ini, suatu kontrak 
+				2.	<span class="text_indent">Dengan </span>pengakuan penerimaan Surat ini, suatu kontrak 
 				yang mengikat terbentuk antara Kerajaan dengan syarikat tuan. Satu dokumen kontrak 
 				hendaklah ditandatangani dalam kadar segera dengan memasukkan semua terma sebagaimana 
 				dokumen $procurementMode.toLowerCase() serta semua terma dalam <b><i>Lampiran A</i></b>. 
@@ -165,7 +176,7 @@
 				kedua-dua pihak.
 			</p>
 			<p style="margin-bottom:1px">
-				<span class="text_family">*3.    Harga kontrak adalah tidak termasuk cukai jualan selaras dengan pengecualian yang 
+				<span class="text_family">*3.    <span class="text_indent">Harga</span> kontrak adalah tidak termasuk cukai jualan selaras dengan pengecualian yang 
 				diberikan di bawah Perintah Cukai Jualan (Orang Yang Dikecualikan Daripada Pembayaran Cukai) 2018 
 				yang dengannya Sijil Di Bawah Perintah Cukai Jualan (Orang Yang Dikecualikan Daripada Pembayaran Cukai) 
 				2018 akan dikeluarkan sebelum sebarang pembayaran dibuat.</span>
@@ -173,15 +184,15 @@
 			</p>
 			<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk Perolehan Bekalan yang diberi pengecualian cukai di bawah Perintah Cukai Jualan (Orang Yang Dikecualikan Daripada Pembayaran Cukai) 2018.</span>
 			<p style="margin-bottom:1px">
-				<span class="text_family" >*3.	Harga kontrak ini adalah termasuk peruntukan Kerajaan 
-				sebanyak ...................% Cukai jualan memandangkan barangan ini dikenakan cukai dan syarikat tuan telah berdaftar 
+				<span class="text_family" >*3.	<span class="text_indent">Harga</span> kontrak ini adalah termasuk peruntukan Kerajaan 
+				sebanyak <span class="underline">0%</span> Cukai jualan memandangkan barangan ini dikenakan cukai dan syarikat tuan telah berdaftar 
 				dengan Jabatan Kastam Diraja Malaysia (JKDM). Pembayaran cukai jualan ini adalah dikira berdasarkan 
 				tuntutan sebenar dan tarikh kuat kuasa pendaftaran syarikat tuan dengan JKDM. </span>
 				
 			</p>
 			<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk syarikat yang berdaftar dengan JKDM dan Barangan Dikenakan Cukai Dibawah Akta Cukai Jualan 2018.</span>	
 			<p>
-				*3.     Harga kontrak adalah tidak termasuk peruntukan Kerajaan sebanyak ...............% cukai jualan memandangkan syarikat tuan 
+				*3. <span class="text_indent">Harga</span> kontrak adalah tidak termasuk peruntukan Kerajaan sebanyak <span class="underline">0%</span> cukai jualan memandangkan syarikat tuan 
 				tidak berdaftar dengan Jabatan Kastam Diraja Malaysia (JKDM). Sekiranya syarikat tuan telah berdaftar dengan JKDM, 
 				tuan adalah dikehendaki untuk memaklumkan nombor pendaftaran dan tarikh kuat kuasanya kepada Kerajaan untuk pelarasan harga kontrak 
 				dalam tempoh tujuh (7) hari dari tarikh surat kelulusan JKDM. Pembayaran cukai jualan ini adalah dikira 
@@ -190,14 +201,14 @@
 			</p>
 			
 			<p style="margin-bottom:1px">
-				<span class="text_family">*3.      Harga kontrak adalah termasuk peruntukan Kerajaan sebanyak  ...................% cukai perkhidmatan 
+				<span class="text_family">*3. <span class="text_indent">Harga</span> kontrak adalah termasuk peruntukan Kerajaan sebanyak  <span class="underline">0%</span> cukai perkhidmatan 
 				memandangkan perkhidmatan ini dikenakan cukai dan syarikat tuan berdaftar dengan Jabatan Kastam Diraja Malaysia (JKDM). 
 				Pembayaran cukai perkhidmatan ini adalah dikira berdasarkan tuntutan sebenar dan tarikh kuat kuasa pendaftaran syarikat tuan dengan JKDM.</span>
 				
 			</p>
 			<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk perolehan dengan syarikat yang berdaftar di bawah JKDM dan Perkhidmatan Dikenakan Cukai di bawah  Akta Cukai Perkhidmatan 2018.</span>
 			<p>
-				*3.        Harga kontrak adalah tidak termasuk peruntukan Kerajaan sebanyak ..............% cukai perkhidmatan memandangkan 
+				*3. <span class="text_indent">Harga</span> kontrak adalah tidak termasuk peruntukan Kerajaan sebanyak <span class="underline">0%</span> cukai perkhidmatan memandangkan 
 				syarikat tuan tidak berdaftar dengan Jabatan Kastam Diraja Malaysia (JKDM). Sekiranya syarikat tuan telah berdaftar dengan JKDM, 
 				tuan adalah dikehendaki untuk memaklumkan nombor pendaftaran dan tarikh kuat kuasanya kepada Kerajaan untuk pelarasan harga kontrak 
 				dalam tempoh tujuh (7) hari dari tarikh surat kelulusan JKDM. Pembayaran cukai perkhidmatan ini adalah dikira berdasarkan tuntutan sebenar 
@@ -206,7 +217,7 @@
 			</p>
 			
 			<p>
-				4.	Adalah dimaklumkan bahawa tiada pembekalan 
+				4. <span class="text_indent">Adalah</span> dimaklumkan bahawa tiada pembekalan 
 				barang/ perkhidmatan boleh dibuat <b>melainkan</b> jika syarikat tuan telah mengemukakan kepada Kerajaan 
 				dokumen-dokumen berikut: 
 			</p>
@@ -250,7 +261,7 @@
 	<tr>
 		<td>
 			<p>
-				5. Setelah pesanan/arahan dikeluarkan oleh Kerajaan, syarikat tuan 
+				5. <span class="text_indent">Setelah</span> pesanan/arahan dikeluarkan oleh Kerajaan, syarikat tuan 
 				dikehendaki melaksanakan pembekalan barang/ perkhidmatan dalam tempoh yang ditetapkan dan kualiti barang/ perkhidmatan 
 				tersebut hendaklah memuaskan hati serta memenuhi kehendak Kerajaan. Sekiranya syarikat tuan gagal melaksanakan 
 				pembekalan barang/ perkhidmatan dalam tempoh dan/atau kualiti yang ditetapkan, Kerajaan berhak membatalkan 
@@ -259,24 +270,24 @@
 			</p>
 			
 			<p>
-				*6. Syarikat tuan juga adalah dikehendaki melaksanakan program 
+				*6. <span class="text_indent">Syarikat</span> tuan juga adalah dikehendaki melaksanakan program 
 				<i>Professional Training and Education for Growing Entrepreneurs</i> (PROTÉGÉ) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak dengan bilangan 
 				minimum peserta PROTÉGÉ sebanyak ............... orang tanpa sebarang kos kepada Kerajaan. 
 				Bilangan minimum peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:
 			</p>
 			
 			<p>
-				<table width="50%" align="center" style="border-collapse: collapse;">
-					<tr>
-						<td class="text_family" style="border-bottom: 1px solid black;text-align: center;">
-							1% X Harga Kontrak*
-						</td>
-					</tr>
-					<tr >
-						<td class="text_family" style="border-top: 1px solid black;text-align: center;">
-							RM24,000**
-						</td>
-					</tr>
+				<table width="25%" align="center" style="border-collapse: collapse;">
+							<tr>
+								<td style="border-bottom: 1px solid black;text-align: center; margin-bottom:1px;">
+									<span class="text_family">1% X Harga Kontrak*</span>
+								</td>
+							</tr>
+							<tr>
+								<td style="border-top: 1px solid black;text-align: center;">
+									<span class="text_family">RM24,000**</span>
+								</td>
+							</tr>
 				</table>
 				##26770 - start
 				<table width="80%" align="center">
@@ -296,12 +307,12 @@
 			</p>
 			
 			<p style="margin-bottom:1px">
-				<span class="text_family" >*6.&nbsp;&nbsp;&nbsp;&nbsp;Syarikat tuan juga adalah digalakkan melaksanakan program <i>Professional Training and Education for Growing Entrepreneurs</i> (PROTÉGÉ)
+				<span class="text_family" >*6. <span class="text_indent">Syarikat</span> tuan juga adalah digalakkan melaksanakan program <i>Professional Training and Education for Growing Entrepreneurs</i> (PROTÉGÉ)
 				seperti yang ditetapkan oleh Kerajaan.</span>
 			</p>
 			<span class="text_family_small_black">Perenggan ini terpakai sekiranya Harga Kontrak <b>di bawah nilai ambang</b> dan syarikat digalakkan untuk melaksanakan Program PROTÉGÉ berdasarkan PP/PK 1.2. </span>
 			<p>
-				7.	Bagi tujuan program PROTÉGÉ ini, syarikat tuan adalah dikehendaki untuk: 
+				7.	<span class="text_indent">Bagi</span> tujuan program PROTÉGÉ ini, syarikat tuan adalah dikehendaki untuk: 
 			</p>
 			
 			<div class="text_indent">
@@ -330,13 +341,13 @@
 			</div>
 			
 			<p style="margin-bottom:1px">
-				<span class="text_family">*8.	Sekiranya syarikat tuan gagal mematuhi mana-mana terma 
+				<span class="text_family">*8. <span class="text_indent">Sekiranya</span> syarikat tuan gagal mematuhi mana-mana terma 
 				di perenggan 6 dan 7 atau arahan oleh Kerajaan, Kerajaan berhak untuk tidak mempertimbangkan sebarang 
 				tawaran kontrak baharu atau pelanjutan kontrak pada masa hadapan kepada syarikat tuan.</span>
 			</p>
 			<span class="text_family_small_black">Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program PROTÉGÉ berdasarkan PP/PK1.2. Bagi Harga Kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong</span>
 			<p>
-				9.	Syarikat tuan juga adalah diingatkan bahawa Kerajaan berhak 
+				9. <span class="text_indent">Syarikat</span> tuan juga adalah diingatkan bahawa Kerajaan berhak 
 				untuk membatalkan Surat ini sekiranya:
 			</p>
 			
@@ -403,16 +414,16 @@
 			</div>
 			
 			<p>
-				10.	Sekiranya Surat ini dibatalkan atas alasan seperti yang ditetapkan 
+				10.	<span class="text_indent">Sekiranya</span> Surat ini dibatalkan atas alasan seperti yang ditetapkan 
 				di perenggan 9, Kerajaan tidak akan bertanggungan terhadap apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan.
 			</p>
 			<p>
-				11.	Bersama-bersama Surat ini disertakan Surat Akuan Pembida Berjaya 
+				11.	<span class="text_indent">Bersama-bersama</span> Surat ini disertakan Surat Akuan Pembida Berjaya 
 				dan Surat Akuam Sumpah Syarikat seperti di <b><i>Lampiran B</i></b> dan <b><i>Lampiran C</i></b> untuk 
 				ditandatangani oleh syarikat tuan dan dikembalikan bersama-sama dengan Surat ini. 
 			</p>
 			<p>
-				12.	Surat ini dihantar kepada syarikat tuan dalam tiga (3) salinan. 
+				12.	<span class="text_indent">Surat</span> ini dihantar kepada syarikat tuan dalam tiga (3) salinan. 
 				Sila kembalikan ke pejabat ini salinan asal dan kedua berserta lampiran yang berkaitan yang telah ditandatangani 
 				dengan sempurna oleh syarikat tuan dan saksi syarikat tuan tidak melebihi *3/7/14 hari dari tarikh Surat ini 
 				diterima untuk tindakan kami selanjutnya. Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam 
@@ -609,7 +620,7 @@
 	<tr valign="top">
 		<td>
 				<td align="left" class="submenu_padding"><span class="text_family">4.1</span></td>
-				<td align="left"><span class="text_family">Harga $procurementMode.toLowerCase() (butiran harga seperti di <b><i>Lampiran A1</i></b>)</span></td>
+				<td align="left"><span class="text_family">Harga $procurementMode (butiran harga seperti di <b><i>Lampiran A1</i></b>)</span></td>
 		</td>
 		<td class="text_family">:</td>
 		<td class="text_family">RM ........................................</td>
@@ -674,7 +685,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td colspan="3"  style="padding-left: 20px; padding-top:10px;"><span class="text_family"><b><i>Lampiran A2</i></b> adalah untuk menyatakan tempoh atau jadual pembekalan/jadual perkhidmatan mengikut tawaran syarikat dan disediakan oleh Agensi</span></td>
+		<td colspan="3"  style="padding-left: 20px; padding-top:10px;"><span class="text_family"><i><b>Lampiran A2</b> adalah untuk menyatakan tempoh atau jadual pembekalan/jadual perkhidmatan mengikut tawaran syarikat dan disediakan oleh Agensi</i></span></td>
 	</tr>
 
 	<tr>
@@ -805,7 +816,7 @@
 			<table>
 				<tr>
 					<td align="center" style="vertical-align: top;" class="text_family_header">9. </td>
-					<td class="text_header_submenu">Kenaan *Denda/ Tolakan/ <i>Liquidated & Ascertained Damages</i> (LAD)</td>
+					<td class="text_header_submenu">Kenaan *Denda/ Tolakan/ <i>Liquidated & Ascertained Damages (LAD)</i></td>
 				</tr>
 				<tr>
 					<td></td>
@@ -874,14 +885,24 @@
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<span class="text_family">Formula : </span><span class="text_family" style="text-decoration:underline;padding-left:15px;"> 1% X Harga Kontrak*</span>
-							</td>
-						</tr>
-						<tr>
-							<td style="text-align: center;">
-								<span class="text_family" >RM24,000**</span>
-							</td>
+							<table>
+								<tr style="margin-bottom:1px" align="bottom">
+									<td align="top">
+										<span class="text_family_small_black">Formula : </span>
+									</td>
+									<td>
+										<span class="text_family_small_black" style="text-decoration:underline;padding-left:15px;"> 1% X Harga Kontrak*</span>
+										
+									</td>
+								</tr>
+								<tr >
+									<td/>
+									<td style="padding-left:20px; padding-bottom:5px;" align="center" >
+										<span class="text_family_small_black" >RM24,000**</span>
+									</td>
+								</tr>
+								
+							</table>
 						</tr>
 						<tr>
 							<td>

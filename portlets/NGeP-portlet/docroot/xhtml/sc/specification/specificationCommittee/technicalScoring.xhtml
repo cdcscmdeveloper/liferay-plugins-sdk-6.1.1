@@ -192,10 +192,7 @@
 <!-- #21695 START FARID -->	
 	<p:panel id="technicalScoringItemPanel"
 		header="#{lbl['lbl.sc.by.item']}" toggleable="true">
-		<h:outputText styleClass="instruction"
-			value="#{lbl['lbl.sc.passing.score.financial.instruction']}"
-			escape="false" />
-
+<!-- #21695 REMOVE INSTRUCTION Here -->	
 
 <!-- #21695 START FARID 7/4/2021 (at tooltip below lbl.sc.spec.others.tooltip)-->
 
@@ -262,9 +259,12 @@
 						value="#{specificationBackingBean.managedBean.technicalItemScoreSetting.passingScore}">
 						<p:ajax event="change" process="@this" partialSubmit="true" 
 							listener="#{specificationBackingBean.checkTechnicalItemPassingScore(specificationBackingBean.managedBean.technicalItemScoreSetting)}"/>
-						<ac:validateNumber
+					<ui:remove><!-- #33863 remove ac validate number --></ui:remove>
+					<ui:remove><!--  	<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
-							maxIntegerDigits="3" integerOnly="true" />
+							maxIntegerDigits="3" integerOnly="true" /> 
+							-->
+					</ui:remove>
 					</p:inputText><p:message id="numberFromTechnicalMsg" for="numberFromTechnicalItemScore" display="icon" /><p:spacer width="5"></p:spacer></td>
 			</tr>
 		</table>

@@ -18,6 +18,8 @@
 	<cc:attribute name="businessTypeCode" type="java.lang.String"/>
 	<cc:attribute name="supplierId" type="java.lang.Long"/>
 	<cc:attribute name="catcodeL1" type="java.lang.String"/>
+	<cc:attribute name="activeCategoryList" type="java.util.List"/> <!-- #33387 -->
+	
 </cc:interface>
 
 <cc:implementation>
@@ -85,7 +87,9 @@
 						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl3}"
 						style="width: 500px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems value="#{categoryCodeSearchBackingBean.retrieveCategoryL3List(categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl2, cc.attrs.supplierType, cc.attrs.facilityType, cc.attrs.paidUpCapital, cc.attrs.bumiPercentage, cc.attrs.categoryType, cc.attrs.supplierId, cc.attrs.businessTypeCode)}" />
+						<!-- #33387 - START -->
+						<f:selectItems value="#{categoryCodeSearchBackingBean.retrieveCategoryL3List(categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl2, cc.attrs.supplierType, cc.attrs.facilityType, cc.attrs.paidUpCapital, cc.attrs.bumiPercentage, cc.attrs.categoryType, cc.attrs.supplierId, cc.attrs.businessTypeCode, cc.attrs.activeCategoryList)}" />
+						<!-- #33387 - END -->
 						<p:ajax event="change" partialSubmit="true" process="@this" update="@this" />
 					</h:selectOneMenu>
 				</td>

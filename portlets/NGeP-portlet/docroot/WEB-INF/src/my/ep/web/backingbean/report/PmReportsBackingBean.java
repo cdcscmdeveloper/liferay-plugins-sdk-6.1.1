@@ -503,6 +503,10 @@ public class PmReportsBackingBean extends
 		if (getManagedBean().getSelectedPTJ() != null) {
 			map.put(PmReportConst.PARAM_PM_PTJ, 
 					getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName());
+			//#29486 - start
+			map.put(PmReportConst.PARAM_PM_PTJ_CODE, 
+					getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgCode());
+			//#29486 - end
 		}else if(getManagedBean().getSelectedPTJ() == null) {
 			throw new EpException(MessageConst.ERROR_REPORT_780064);}
 		
@@ -526,7 +530,12 @@ public class PmReportsBackingBean extends
            .get("year");
         
         if(month != null || year != null){
-        	changeStringToDate(month, year);
+        	//#29486 - START
+        	Calendar monthlyDate = Calendar.getInstance();
+        	monthlyDate.set(Integer.parseInt(year), Integer.parseInt(month), 1);
+            getManagedBean().setMonthlyDate(monthlyDate.getTime());
+            //#29486 - END
+            changeStringToDate(month, year);
         }
    }
 	
@@ -709,6 +718,9 @@ public class PmReportsBackingBean extends
 		//29991 start
 		getManagedBean().setSelectedSupplier(null);
 		//29991 end
+		//#29486 - START
+		getManagedBean().setMonthlyDate(null);
+		//#29486 - END
 	}
 
 	public void autoSelectOrgType() {
@@ -790,12 +802,14 @@ public class PmReportsBackingBean extends
 			this.getManagedBean().getSelectedOrgType()
 					.setParameterCode(pmParameter.getParameterCode());
 			//#29991 start--
-			if(pmParameter.getParameterId() == PmReportConst.ORG_TYPE_SUPPLIER){
-				hideOrgCodeName();
-				
-			}else{
-				this.getManagedBean().setSelectedSupplier(null);
-				showOrgCodeName();
+			if(getManagedBean().getReportCode().equals(PmReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)) {
+				if(pmParameter.getParameterId() == PmReportConst.ORG_TYPE_SUPPLIER){
+					hideOrgCodeName();
+					
+				}else{
+					this.getManagedBean().setSelectedSupplier(null);
+					showOrgCodeName();
+				}
 			}
 			//#29991 end--
 		} else {

@@ -14,6 +14,11 @@
 		</script>
 	</ui:define>
 	<ui:define name="contentSection">
+		<!-- #32304 - start -->
+		<ac:smBumiApplCancelledList bBean="#{svcTasklistBackingBean}" isSvc="true"
+				applList="#{svcTasklistBackingBean.managedBean.bumiListDataModel}"
+				rendered="#{not empty svcTasklistBackingBean.managedBean.cancelledBumiApplLs}" />
+		<!-- #32304 - end -->
 		<div id="customContainer">
 			<p:blockUI block=":form" widgetVar="blockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>

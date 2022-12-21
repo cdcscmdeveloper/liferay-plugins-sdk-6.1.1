@@ -135,7 +135,7 @@
 								update=":form:tt:sendInqDialog" />
 						</c:when>
 						
-						<!-- #28778 - Start -->
+						<!-- #28778 - Site Visit Grouping Enhancement - 28775 - Start -->
 						<c:when
 							test="#{ backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL and  
 													backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew  and 
@@ -181,7 +181,7 @@
 								update=":form:tt:sendInqDialog" />
 
 						</c:when>
-						<!-- #28778 - End -->
+						<!-- #28778 - Site Visit Grouping Enhancement - 28775 - End -->
 						
 						<c:otherwise>
 							<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
@@ -469,4 +469,14 @@
 	<!-- 13362 START -->
 	<ac:smOverlapCategoryDialog voList="#{backingBean.managedBean.overlapCategoryVOList}" bBean="#{backingBean}" showButton="true"/>
 	<!-- 13362 END -->
+	<!-- #32304 - start -->
+	<p:confirmDialog widgetVar="smBumiCancelAlert" id="smBumiCancelAlert" closable="false"
+		header="#{lbl['lbl.sm.bumi.cancel.other.appl.alert.header']}"
+		message="#{lbl['lbl.sm.bumi.cancel.other.appl.alert']}" severity="alert" >
+		<div align="right">
+		<p:commandButton value="#{lbl['lbl.btn.ok']}" action="#{backingBean.redirectToTaskList()}" 
+			onclick="smBumiCancelAlert.hide();blockWidget.show();" oncomplete="blockWidget.hide()"/>
+		</div>
+	</p:confirmDialog>
+	<!-- 32304 - end -->
 </ui:composition>

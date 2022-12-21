@@ -220,6 +220,12 @@ public class SvcSiteAssignBackingBean extends
 			  break;
 			}
 		}
+		//#32304 - start
+		if(SmCommonUtil.checkCancelBumiApplFromNewAppl(getManagedBean().getSmAppl())){
+			RequestContext.getCurrentInstance().execute("smBumiCancelAlert.show()");
+			return;
+		}
+		//#32304 - end
 		
 		if(!invalid){
 			throw new EpException(MessageConst.ERROR_721201);
@@ -323,8 +329,13 @@ public class SvcSiteAssignBackingBean extends
 			}
 			
 			UserReqDTO userReqDTO = new UserReqDTO();
-			//#29448
-			userReqDTO.setUserId(workFlowStatus.getSmAppl().getPoUserId());
+			//Start #29448
+			if(workFlowStatus.getSmAppl() != null && workFlowStatus.getSmAppl().getPoUserId() != null){
+				userReqDTO.setUserId(workFlowStatus.getSmAppl().getPoUserId());
+			}else{
+				userReqDTO.setUserId(workFlowStatus.getCreatedBy());
+			}
+			//End #29448
 			PmUser processingOfficer = SmServiceLookup.getUserSO().retrieveUserByUserId(userReqDTO).getPmUser();
 			
 			if(processingOfficer != null){

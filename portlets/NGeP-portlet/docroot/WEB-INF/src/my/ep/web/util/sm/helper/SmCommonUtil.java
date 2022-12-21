@@ -130,6 +130,7 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
@@ -1797,13 +1798,11 @@ public class SmCommonUtil {
 			reqDTO.setSmAppl(smAppl);
 			if (serType.equalsIgnoreCase("SUP")) {
 				reqDTO.setType("supplier");
-			//#24964 - START
-			} else if(serType.equalsIgnoreCase("SVO")){
-				reqDTO.setType("svo");
-			}else if (serType.equalsIgnoreCase("PO")){
+			//#24964 - START, 31230
+			} else if (serType.equalsIgnoreCase("PO")){
 				reqDTO.setType("po");
-			//#24964 - END
-			}else {
+			//#24964 - END, 31230
+			} else {
 				reqDTO.setType("approved");
 			}
 			applRevisionSO.applicationHist(reqDTO);
@@ -1813,65 +1812,6 @@ public class SmCommonUtil {
 			applRevisionSO = null;
 		}
 	}
-	
-	//#24964 - START
-	public static void createSerFileSVO(SmSvTask smSvTask, String serType) {
-		ISmApplRevisionSO applRevisionSO = null;
-		try {
-			log.info("start creating SVO SER file for appNo:" + smSvTask.getSmAppl().getApplNo()
-					+ "  serType:" + serType);
-			applRevisionSO = (ISmApplRevisionSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							ISmApplRevisionSO.class);
-
-			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
-			//28775 - Site Visit Grouping Enhancement - 28775 - start
-			smSvTask.setSmSupplierSystems(smSvTask.getSmAppl().getSmSupplierSystems());
-			smSvTask.setSmManufacturingDtls(smSvTask.getSmAppl().getSmManufacturingDtls());
-			//28775 - Site Visit Grouping Enhancement - 28775 - end
-			reqDTO.setSmAppl(smSvTask.getSmAppl());
-			reqDTO.setSmSvTask(smSvTask);
-			if (serType.equalsIgnoreCase("SUP")) {
-				reqDTO.setType("supplier");
-			} else if(serType.equalsIgnoreCase("SVO")){
-				reqDTO.setType("svo");
-			//#24964 - start
-			} else if(serType.equalsIgnoreCase("PO")){
-				reqDTO.setType("po_svTask");
-			//#24964 - end
-			}else {
-				reqDTO.setType("approved");
-			}
-			applRevisionSO.applicationHist(reqDTO);
-		} catch (Exception ex) {
-			log.info("Failed to create SER file  [" + ex.getMessage() + "]");
-		} finally {
-			applRevisionSO = null;
-		}
-	}
-	//#24964 - END
-	
-	//24964 - start
-	public static String readSerFileSvTask(String applNo, Long svTaskId, String role){
-		String retVal = StringUtils.EMPTY;
-		String fileName = applNo + "_" + role.toUpperCase()+"_" + svTaskId + ".ser";
-		String baseDir = EpPropertiesUtils.getInstance().getProperty(
-				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)
-				+ File.separator
-				+ Calendar.getInstance().get(Calendar.YEAR)
-				+ File.separator;
-		String smRevisionDir = "SM" + File.separator + applNo + File.separator
-				+ "Revision" + File.separator;
-		
-		log.info("File Name:" + fileName);
-		log.info("Directory:" + baseDir + smRevisionDir);
-		if (new File(baseDir + smRevisionDir, fileName).exists()) {
-			retVal = baseDir + smRevisionDir + fileName;
-			log.info("Is File Exist: true");
-		}
-		return retVal;
-	}
-	//24964 - end
 
 	/**
 	 * Assigns the default address for the given address parameter.
@@ -3660,6 +3600,9 @@ public class SmCommonUtil {
 		}
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setAppl(latestAppl);
+		//#32510 - start
+		latestAppl.setApplNo("");
+		//#32510 - end
 		return SmServiceLookup.getPersonnelSO().getSoftcertDocNo(reqDTO)
 				.getSoftcertDocNo();
 	}
@@ -4334,10 +4277,7 @@ public class SmCommonUtil {
 		if (appl.getSupplierType().equals("J")) {
 			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 			reqDTO.setApplId(appl.getApplId());
-			//START 24964
-			reqDTO.setCategoryCode(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);		
-			reqDTO.setActiveAppl(appl.isActiveAppl());
-			//END 24964
+			reqDTO.setCategoryCode(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);
 			int count = SmServiceLookup.getMofRegistrationSO()
 					.countSuppCatByApplIdAndCatCode(reqDTO).getCount();
 			if (count > 0) {
@@ -5621,23 +5561,17 @@ public class SmCommonUtil {
 	}
 
 	public List<SmSupplierCategory> retrieveSupplierCategoryByApplIdAndCategoryId(
-			Long applId, Long categoryL3Id, String applType) {
+			Long applId, Long categoryL3Id) {
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setApplId(applId);
 		reqDTO.setCategoryId(categoryL3Id);
 		
-		SupplierSearchResDTO resDTO = null;
-		//28775 - Site Visit Grouping Enhancement - 28775 - start
-		if(applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
-			resDTO = SmServiceLookup.getSupplierSearchSO()
-					.retrieveCategoryByApplIdAndCategoryId(reqDTO);
-			return resDTO.getSmSupplierCategoryList();
-		}
-		//28775 - Site Visit Grouping Enhancement - 28775 - end
 		//29823 - start
 		//to check the current appl status is after approval assignment site visit or not
 		SmWorkflowStatus wf = SmCommonUtil.getCurrentActiveWokFlowStatus(applId);
 		boolean isAfterApproval = (wf!=null && wf.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED ? true : false);
+		
+		SupplierSearchResDTO resDTO = null;
 		
 		if(isAfterApproval){
 			resDTO = SmServiceLookup.getSupplierSearchSO()
@@ -5650,6 +5584,22 @@ public class SmCommonUtil {
 		
 		return resDTO.getSmSupplierCategoryList();
 	}
+	
+	//28775 - Site Visit Grouping Enhancement - 28775 - start
+	public List<SmSupplierCategory> retrieveSupplierCategoryByApplIdAndCategoryId(
+			Long applId, Long categoryL3Id, String applType){
+	
+		if(applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+			reqDTO.setApplId(applId);
+			reqDTO.setCategoryId(categoryL3Id);
+			SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO()
+					.retrieveCategoryByApplIdAndCategoryId(reqDTO);
+			return resDTO.getSmSupplierCategoryList();
+		}
+		return retrieveSupplierCategoryByApplIdAndCategoryId(applId, categoryL3Id);
+	}
+	//28775 - Site Visit Grouping Enhancement - 28775 - end
 
 	/**
 	 * Gets the my identity status description based on the responsecode.
@@ -6439,4 +6389,143 @@ public class SmCommonUtil {
 			return userLoginId.getUserId();
 		}
 		//END 30974
+		
+		//START 34136
+		/**
+		 * SHA-256.
+		 * 
+		 * @param str
+		 *            the str
+		 * @return the string
+		 */
+		public static String sha256(String str) {
+
+			MessageDigest md = null;
+			try {
+				md = MessageDigest.getInstance("SHA-256");
+			} catch (NoSuchAlgorithmException ex) {
+				log.info(ex.getMessage());
+				// return;
+			}
+			md.update(str.getBytes());
+			byte[] md5Dig = md.digest();
+
+			return new String(Hex.encodeHex(md5Dig));
+		}
+		/**
+		 * Get New CDC Payment Gateway VKey Value by Bill Type
+		 * 
+		 * @param str
+		 *            the str
+		 * @return the string
+		 */
+		public String getCDCPaymentGatewayVKeyByBillType(String billType) {
+			String vKey = null;
+
+			if (billType
+					.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+				vKey = EpPropertiesUtils.getInstance().getProperty(
+						"payment.cdc.vkey");
+			} else {
+				vKey = EpPropertiesUtils.getInstance().getProperty(
+						"payment.gov.vkey");
+			}
+			return vKey;
+		}
+		/**
+		 * Get New CDC Payment Gateway merchant id by Bill Type
+		 * 
+		 * @param str
+		 *            the str
+		 * @return the string
+		 */
+		public String getCDCPaymentGatewayMerchantIdByBillType(String billType) {
+			String vCode = null;
+
+			if (billType
+					.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+				vCode = EpPropertiesUtils.getInstance().getProperty(
+						"payment.cdc.merchantid");
+			} else {
+				vCode = EpPropertiesUtils.getInstance().getProperty(
+						"payment.gov.merchantid");
+			}
+
+			return vCode;
+		}
+		//END 34136
+	
+	//#32304 - start
+	/**
+	 * Retrieve a list of Bumi applications cancelled by system (status: 20210)
+	 * for SVC, SVO, PO & approver
+	 * @param isSVC
+	 * @return
+	 */
+	public static List<SmAppl> getCancelledBumiApplList(boolean isSVC){
+		List<SmAppl> list;
+		if(isSVC){
+			list = SmServiceLookup.getMofRegistrationSO().
+					retrieveAutoCancelledBumiAppl(null, false, false).getApplList();
+		} else {
+			FacesScopes fc = new FacesScopes();
+			list = SmServiceLookup.getMofRegistrationSO().retrieveAutoCancelledBumiAppl(
+					fc.getUserSessionBean().getUserId(), fc.hasRoleUser(RoleCode.UPS_SDO.value()), 
+					fc.hasRoleUser(RoleCode.UPS_APPROVER.value()) || fc.hasRoleUser(RoleCode.UPS_PO.value()))
+					.getApplList();
+		}
+		if(list.isEmpty()) return null;
+		
+		StatusReqDTO statReqDTO = new StatusReqDTO();
+		statReqDTO.setStatusId(SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_BUSSTYPE);
+		statReqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+		PmStatusDesc statDesc = SmServiceLookup.getStatusSO()
+				.retrieveStatusDescById(statReqDTO).getPmStatusDesc();
+		if(statDesc == null) return list;
+		
+		SmWorkFlowStatusReqDTO wfDTO = new SmWorkFlowStatusReqDTO();
+		for(SmAppl smAppl : list){
+			smAppl.setWorkflowStatusDesc(statDesc.getStatusName());
+			wfDTO.setApplId(smAppl.getApplId());
+			SmWorkflowStatus wf = SmServiceLookup.getSmWorkFlowStatusSO()
+				.retrieveCurrentWorkFlowStatusByDocId(wfDTO).getWorkflowStatus();
+			if(wf != null)	//set cancelled date
+				smAppl.setChangedDate(wf.getCreatedDate());
+		}
+		return list;
+	}
+	
+	/**
+	 * Download report of a list of Bumi applications cancelled by system (status: 20210)
+	 */
+	public static void downloadCancelledBumiAppl(){
+		//report
+		log.info("32304 dload btn test");
+	}
+	
+	/**
+	 * Cancel Bumi application if supplier has other active application
+	 * @param smAppl bumi Appl
+	 * @return true if bumi Appl is cancelled
+	 */
+	public static boolean checkCancelBumiApplFromNewAppl(SmAppl smAppl){
+		if(smAppl == null || smAppl.isActiveAppl() || 
+				!smAppl.getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI)) 
+			return false;
+		
+		SmAppl activeAppl = SmServiceLookup.getReviewApplicationSO()
+				.retrieveActiveSmApplBySupp(smAppl.getSmSupplier().getSupplierId()).getSmAppl();
+		if(activeAppl == null) return false;
+		if(!activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+			&& !activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+			&& !activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE))
+			return false;
+		
+		//cancel bumi if sv after approval && supplier create new KR/KU/KA
+		ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
+		reqDTO.setPendingKBAppl(smAppl);
+		reqDTO.setSmAppl(activeAppl);
+		return SmServiceLookup.getReviewApplicationSO().cancelBumiApplicationFromOtherAppl(reqDTO);
+	}
+	//#32304 - end
 }

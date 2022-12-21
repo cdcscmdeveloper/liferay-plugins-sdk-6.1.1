@@ -1665,8 +1665,13 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			if(docNo != null && !"".equalsIgnoreCase(docNo) && !"null".equalsIgnoreCase(docNo)){
 				MofRegistrationReqDTO reqDTO1 = new MofRegistrationReqDTO();
 				reqDTO1.setApplNo(docNo);
-				SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO()
-						.retrieveSmApplWithChildByApplNo(reqDTO1).getSmAppl();
+
+				//26238 -  START Disciplinary Action  - for getting smsupplier data - start
+//				SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO()
+//				.retrieveSmApplWithChildByApplNo(reqDTO1).getSmAppl();
+				SmAppl srcAppl =  SmServiceLookup.getMofRegistrationSO().retrieveSmSupplierByApplNo(reqDTO1).getSmAppl();								
+				//26238 -  START Disciplinary Action - end
+		
 				if(srcAppl == null){
 					return;
 				}
@@ -1828,7 +1833,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	public void onChangeEmail()
 	{
 		String email = this.getManagedBean().getSelectedUser().getEmail().toLowerCase();
-		if(email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com"))
+		if(!isAllowedEmail(email))
 		{
 			this.getManagedBean().getSelectedUser().setEmail("");
 			RequestContext.getCurrentInstance().execute(

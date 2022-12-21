@@ -1,0 +1,33 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<div align="left" class="header-info">
+		<table style="width: 100%">
+			<tr>
+				<td>
+					<h:outputLabel value="#{lbl['lbl.td.doc.type']} " />
+				</td>
+				<td class="header-info-text">
+					#{trackingDiarySearchBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, trackingDiarySearchBackingBean.managedBean.docType)}
+				</td>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.td.doc.no']} " />
+				</td>
+				<td class="header-info-text">
+					#{trackingDiarySearchBackingBean.managedBean.docNo}
+				</td>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.td.doc.status']} " />
+				</td>
+				<td class="header-info-text">
+					#{trackingDiarySearchBackingBean.getStatusDescById(trackingDiarySearchBackingBean.managedBean.statusId)}
+				</td>
+			</tr>
+		</table>
+	</div>
+	<p:spacer height="10px" />
+</ui:composition>

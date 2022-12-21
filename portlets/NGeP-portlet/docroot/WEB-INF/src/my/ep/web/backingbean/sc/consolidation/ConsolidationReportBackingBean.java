@@ -1011,70 +1011,43 @@ public class ConsolidationReportBackingBean extends
 			qtSuppFinalizationSO = null;
 		}
 	}
-//#21695 Farid Start
+//#21695 Farid Start -(19/5/2022 update whole method)
 	private void retrieveSupplierOfferOrNotOffer() {
 		ScQt scQt = getManagedBean().getScQt();
 		IQTEvaluationSO evaluationSO = null;
 
 		try {
-			
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTEvaluationSO.class);
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
-			ISearchBean<Object[]> searchBean = new SearchBean<Object[]>(); 
+			ISearchBean<Object[]> searchBean = new SearchBean<Object[]>();
 			reqDTO.setNotOfferSupplierSearchBean(searchBean);
-			boolean isOfferAll = false;	 
-			
-			
-			if (getManagedBean().getScQt()
-					.getEvaluateBy().equalsIgnoreCase(SourcingConstants.EVALUATE_BY__ITEM)){
-				isOfferAll = true;	 
+			boolean isOfferAll = false;
+
+			if (getManagedBean().getScQt().getEvaluateBy()
+					.equalsIgnoreCase(SourcingConstants.EVALUATE_BY__ITEM)) {
+				isOfferAll = true;
 			}
-//#21695 Farid Start 18/8/2020			
-			else if (getManagedBean().getScQt()
-					.getEvaluateBy().equalsIgnoreCase(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM)){
-	
-				 List <Object[]> allSuppliers = evaluationSO.retrieveOfferOrNotOfferSuppliers(reqDTO)
-							.getOfferOrNotOfferSupplierResultBean().getResultList();
-						 
-				 List <Object[]> suppliersNotOffer = evaluationSO.retrieveSummaryNotOfferSuppliers(reqDTO)
-								.getNotOfferSupplierResultBean().getResultList();
-					
-				 log.info("allSuppliers size " +  allSuppliers.size());
-				 log.info("suppliersNotOffer size " +  suppliersNotOffer.size());
-						
-				 if ( allSuppliers.size() == suppliersNotOffer.size() && allSuppliers.size() != 0 && suppliersNotOffer.size() != 0 ){
-						isOfferAll = true;	 
-					}
+			else if (getManagedBean()
+					.getScQt()
+					.getEvaluateBy()
+					.equalsIgnoreCase(
+							SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM)) {
+
+				int check = evaluationSO
+						.retrieveOfferOrNotOfferSuppliers(reqDTO);
+				if (check == 0) {
+					isOfferAll = true;
+				}
 			}
-			
-//#21695 Farid End 18/8/2020
-			 
-//             for (  Object[] paramsObjallSupplier : allSuppliers){
-//	              Long supplierId = ((BigDecimal) paramsObjallSupplier[0]).longValue();
-//	              
-//	              for (  Object[] paramsObjsuppliersNotOffer : suppliersNotOffer){
-//	            	  
-//		              Long notOfferSupplierId = ((BigDecimal) paramsObjsuppliersNotOffer[0]).longValue();
-//		              
-//		              if (supplierId == notOfferSupplierId){
-//		            	  
-//		            	  isAllOffer = false;
-//		            	  
-//		              }
-//				 }
-//	         
-//			 }
-			
-			 getManagedBean().setOfferAll(isOfferAll);
+			getManagedBean().setOfferAll(isOfferAll);
 		} finally {
 			evaluationSO = null;
 		}
 	}
-//#21695 Farid end
+//#21695 Farid end -(19/5/2022 update whole method)
 	
 	private void retrieveSupplierFinalizationDtls() {
 		ScQt scQt = getManagedBean().getScQt();
@@ -1841,6 +1814,7 @@ public class ConsolidationReportBackingBean extends
 		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
 				.getUserSessionBean().getUserId() + "");
 		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
+		paramMap.put(ReportConst.PARAM_REPORT_BUFFERS, String.valueOf(ReportConst.BUFFER_SIZE)); //Bug #33714
 		StringBuilder ulasan = new StringBuilder();
 		List<ScQtRecommendationUlasanRemarks> ulasanRemarks = this
 				.getManagedBean().getFinalizationUlasanremarks();
@@ -2085,6 +2059,13 @@ public class ConsolidationReportBackingBean extends
 				 * Development 32311: SLA LOG START
 				 */
 				long startTime = System.currentTimeMillis();
+				/*
+				 * BUG 32373 #83
+				 */
+				reqDTO.setEvaluationStage(evaluationStage); //32373 #83
+				/*
+				 * BUG 32373 #83
+				 */
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 						.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
 				SLAUtils.getInstance().logSQLPerformanceInfo("QT","32311(B)","QTSuppFinalizationSO.retrieveQualifiedSuppliersInfoByEvalStage", startTime,"#32311");
@@ -2211,7 +2192,9 @@ public class ConsolidationReportBackingBean extends
 		} else if (this.getManagedBean().getActiveIndex() == ITEMIZED_TYPE_TAB_INDEX) {
 			log.info("ITEMIZED_TYPE_TAB_INDEX"
 					+ this.getManagedBean().getActiveIndex());
-			if (evaluationStageId == 2) {
+			//#21695 tec by itemize result pop up farid - start
+			if (evaluationStageId == 2 || evaluationStageId == 1) {
+			//#21695 tec by itemize result pop up farid - end
 				supplierFinalizationBB.getManagedBean()
 						.setItemize(Boolean.TRUE);
 				if (null != this.getManagedBean().getSelectedItem()) {
@@ -2227,9 +2210,13 @@ public class ConsolidationReportBackingBean extends
 			log.info("setItemize"
 					+ supplierFinalizationBB.getManagedBean().isItemize());
 		}
+		
+		
 		TplSpecZoneDtl specZoneDtl = this.getManagedBean().getSelectedZone();
 		log.info("specZoneDtl" + specZoneDtl);
-		if(evaluationStageId==2){ //#26440 Start
+		//#21695 tec by itemize result pop up farid - start
+		if(evaluationStageId==2 || evaluationStageId == 1){ //#26440 Start
+		//#21695 tec by itemize result pop up farid - end
 		supplierFinalizationBB.getManagedBean().setCurrentZone(specZoneDtl);
 		} //#26440 End
 		supplierFinalizationBB.getManagedBean().setCheckCategoryCodeQt(this.getManagedBean().getScQt());//#29466
@@ -2549,10 +2536,10 @@ public class ConsolidationReportBackingBean extends
 							specZoneDtl, item.getRequestItem(),
 							itemQualifiedSuppliers);
 		// #31443 Start -exclude validate if quantity 0					
-//-------------> HERE #31556 & #31555 related to #21695 Farid START	
+//-------------> HERE #31556 & #31555 related to #21695 Farid START
 					 if(specZoneDtl != null){
 						for(TplSpecZoneQty finditemOfferZone : item.getRequestItem().getTplSpecQuestion().getTplSpecZoneQties()){
-							if(finditemOfferZone != null && !finditemOfferZone.getTplSpecZoneOffer().isOffer()
+							if(finditemOfferZone != null && finditemOfferZone.getTplSpecZoneOffer() != null && !finditemOfferZone.getTplSpecZoneOffer().isOffer()
 									&& item.getOrderQty() != null && item.getOrderQty().compareTo(BigDecimal.ZERO) > 0){
 								log.info("validate zonal offer");
 								validateRankingPO(qualifiedSupplierBeans, true, item,
@@ -2560,7 +2547,7 @@ public class ConsolidationReportBackingBean extends
 							}
 						}
 					}
-//-------------> HERE #31556 & #31555 related to #21695 Farid END						 
+//-------------> HERE #31556 & #31555 related to #21695 Farid END					 
 //-------------> HERE #31556 & #31555 related to #21695 Farid START				 
 					else {
 						for(TplSpecAnswer finditemOfferNonZonal : item.getRequestItem().getTplSpecQuestion().getTplSpecAnswers()){

@@ -48,12 +48,14 @@ import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
+import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.requestCtAdmin.RequestCtAdminManagedBean;
 import my.ep.web.util.DocumentRepositoryUtils;
@@ -188,11 +190,12 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			//21387 start
+			//21387 start -basri 13/4/22
+			if(BpmOutcomeConst.BPM_REJECT.equals(outcome)){
+				RequestContext.getCurrentInstance().execute("rejectConfirmDlg.show()");
+			}
 			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			}else{
-				return saveRequestCtAdmin(outcome);
 			}//21387 end
 			return null;
 		}else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
@@ -673,4 +676,40 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			return userRole;
 		}
 	}
+
+	//Enhancement 15851, 34142 - shaqimi start 02/12/2022
+	@Override
+	public void goToLoaView(ScLoa scLoa) {
+		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
+		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
+		
+		String docType = getManagedBean().getContractVer().getDocType();
+		Long statusId = getManagedBean().getContractVer().getStatus().getStatusId();
+		
+		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
+			AmendmentBackingBean abb = new AmendmentBackingBean();
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
+			abb.getManagedBean().setTrackingDairyView(true);
+			ctBB.getManagedBean().setViewSCL(true);
+			ctBB.getManagedBean().setAmendFromTaskList(true);
+
+			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
+
+			abb.getManagedBean().setStatusIdFromTaskList(statusId);
+			abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
+			abb.getManagedBean().setContractIdFromTaskList(new Long(this.getManagedBean().getContractVer().getCtContract().getContractId()));
+			abb.getManagedBean().setContractVerIdFromTaskList(this.getManagedBean().getContractVer().getContractVerId());
+			abb.getManagedBean().setDocTypeFromTaskList(docType);
+
+			if(ctBB.getManagedBean().isViewContractFromAgreement()){
+				ctBB.getManagedBean().setViewSCLFromContract(true);
+			}
+			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
+		} else {
+			super.goToLoaView(scLoa);
+		}
+	}
+	//Enhancement 15851, 34142 - shaqimi end 02/12/2022
 }

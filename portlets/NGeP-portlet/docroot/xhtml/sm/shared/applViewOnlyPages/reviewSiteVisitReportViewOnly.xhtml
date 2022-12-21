@@ -22,8 +22,8 @@
 			</p:column>
 
 			<!-- #28175 start -->
+			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
 			<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}" style="white-space: normal; width:30%;">
-				<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
 				<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
 					value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} - 
 					#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName} / #{svTask.pmCategoryL3.pmCategoryL2.categoryName} / #{svTask.pmCategoryL3.categoryName}"/>
@@ -37,8 +37,8 @@
 					<h:outputText rendered="#{!taskGroup.redundant and taskGroup.smSvTemplate.suppCategory.otherDesc != null}"
 						value=" (#{taskGroup.smSvTemplate.suppCategory.otherDesc})"/>
 				</ui:repeat>
-				<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
 			</p:column>
+			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
 			<!-- #28175 end -->
 
 			<p:column headerText="#{lbl['lbl.sm.address']}"
@@ -49,13 +49,11 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.action']}">
-				<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
 				<p:commandButton value="#{lbl['lbl.btn.view']}"
 					oncomplete="blockWidget.hide();poReportDlg.show();"
 					update=":#{p:component('poReportDlgId')}"
 					onclick="blockWidget.show();"
-					action="#{svoSiteVisitBackingBean.selectReportTask(svTask,true)}">
-				<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
+					action="#{svoSiteVisitBackingBean.selectReportTask(svTask)}">
 				</p:commandButton>
 				<p:commandButton value="#{lbl['lbl.btn.download']}"
 					action="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(svTask)}"
@@ -69,8 +67,14 @@
 			width="1000" id="poReportDlgId" resizable="false">
 			<p:outputPanel id="reportPanel"
 				rendered="#{!empty svoSiteVisitBackingBean.managedBean.smSvTask}">
-				<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
-				<ui:include src="/xhtml/sm/shared/sitevisit/group/siteVisitReportPOReview.xhtml" />
+				<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
+				<c:if test="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.siteVisitGroup}">
+					<ui:include src="/xhtml/sm/shared/sitevisit/group/siteVisitReportPOReview.xhtml" />
+				</c:if>
+				<c:if test="#{!svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.siteVisitGroup}">
+					<ui:include src="/xhtml/sm/shared/sitevisit/siteVisitReportPOReview.xhtml" />
+				</c:if>
+				<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
 			</p:outputPanel>
 		</p:dialog>
 

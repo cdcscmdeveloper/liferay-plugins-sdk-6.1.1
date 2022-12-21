@@ -69,6 +69,25 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 		getManagedBean().setCompanyBasic(
 				SmCommonUtil.getLatestRevCompBasicByApplId(getManagedBean().getSmSupplier().getSmAppl().getApplId()));
 		buildStatusTypeList();
+		// #29617 CR Fix - Start
+		if (getManagedBean().getSmSupplier().getSmeRegisteredFlag() == 1) {
+			SmSmeSupplier currentSmeInfo = new SmSmeSupplier();
+			SupplierSmeReqDTO reqDTO = new SupplierSmeReqDTO();
+			reqDTO.setSmSupplier(getManagedBean().getSmSupplier());
+			currentSmeInfo = SmServiceLookup.getSupplierSmeSO().retrieveCurrentSmeInfo(reqDTO);
+			getManagedBean().setSmeSupplier(currentSmeInfo);
+			if(currentSmeInfo.isSmeCorpRegistered()){
+				getManagedBean().setSmeCorpRegisteredTrans("1");
+				getManagedBean().setSmeSupplierDoc(currentSmeInfo.getSmSmeSupplierDocs().get(0));
+			} else { getManagedBean().setSmeCorpRegisteredTrans("0"); }
+		} else {
+			// #29617 ReOpen note 161 - Start
+			SMECorpChange(); 
+			getManagedBean().setSmeSupplier(null); 
+			getManagedBean().setSmeCorpRegisteredTrans(null);
+			// #29617 ReOpen note 161 - End
+		} 
+		// #29617 CR Fix - End
 		initDocumentList(getManagedBean().getSmeSupplier());
 		SmCommonUtil.redirectToPage("smeUpdateInfoPage.xhtml", "", null, null);
 	}
@@ -80,11 +99,27 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 		reqDTO.setLanguageCode(languageCode);
 		ParameterResDTO resDTO = SmServiceLookup.getParameterSO().retrieveParameterDescListByTypeAndParamCodes(reqDTO);
 		List<SelectItem> statusType = new ArrayList<SelectItem>();
+		//#29617 ReOpen note #82
+		while(statusType.size() < 6) statusType.add(null);
 		for (PmParameterDesc list : resDTO.getParameterDescList()) {
 			SelectItem type = new SelectItem();
 			type.setValue(list.getPmParameter().getParameterCode());
 			type.setLabel(list.getCodeDesc());
-			statusType.add(type);
+			//#29617 ReOpen note #82 - Start
+			if(type.getValue().toString().equalsIgnoreCase("MANMICRO")){
+				statusType.set(0, type);
+			}else if(type.getValue().toString().equalsIgnoreCase("MANSMALL")){
+				statusType.set(1, type);
+			}else if(type.getValue().toString().equalsIgnoreCase("MANMED")){
+				statusType.set(2, type);
+			}else if(type.getValue().toString().equalsIgnoreCase("SERMICRO")){
+				statusType.set(3, type);
+			}else if(type.getValue().toString().equalsIgnoreCase("SERSMALL")){
+				statusType.set(4, type);
+			}else if(type.getValue().toString().equalsIgnoreCase("SERMED")){
+				statusType.set(5, type);
+			}
+			//#29617 ReOpen note #82 - End
 		}
 		getManagedBean().setStatusTypeList(statusType);
 	}
@@ -147,6 +182,8 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
 		if (event.getFile() != null) {
+			// #29617 ReOpen note 158
+			assignSmeSupportDoc(getManagedBean().getSmeSupplier().getSmSmeSupplierDocs().get(0));
 			if (getManagedBean().getSmeSupplierDoc() != null) {
 				String filePath = getSmeSuppDocBasePath();
 				SmSmeSupplierDoc doc = getManagedBean().getSmeSupplierDoc();
@@ -224,9 +261,8 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 			Iterator<SmSmeSupplierDoc> iter = sme.getSmSmeSupplierDocs().iterator();
 			while (iter.hasNext()) {
 				SmSmeSupplierDoc doc = iter.next();
-				if (StringUtils.isBlank(doc.getFileName()) || StringUtils.isBlank(doc.getFilePath())) {
-					iter.remove();
-				}
+				// #29617 ReOpen note 109
+				iter.remove();
 			}
 		}
 	}
@@ -236,6 +272,11 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 			getManagedBean().getSmeSupplier().setSmeCorpRegistered(true);
 		} else if (getManagedBean().getSmeCorpRegisteredTrans().equalsIgnoreCase("0")) {
 			getManagedBean().getSmeSupplier().setSmeCorpRegistered(false);
+			// #29617 ReOpen note 109 - Start 
+			getManagedBean().getSmeSupplier().setSmeRefNo(null);
+			getManagedBean().getSmeSupplier().setSmeValidStartDate(null);
+			getManagedBean().getSmeSupplier().setSmeValidEndDate(null);
+			// #29617 ReOpen note 109 - Start 
 			removeNotUploadedSuppDoc(getManagedBean().getSmeSupplier());
 		}
 		SupplierSmeReqDTO reqDTO = new SupplierSmeReqDTO();
@@ -275,5 +316,20 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 		return declaredSmeList;
 	}
 	// #29617 End
+	// #29617 ReOpen note 150 - Start
+	public void SMECorpChange() {
+		// #29617 ReOpen note 161
+		if(getManagedBean().getSmeCorpRegisteredTrans() != null){
+			if (getManagedBean().getSmeSupplier() != null) {
+				getManagedBean().getSmeSupplier().setSmeRefNo(null);
+				getManagedBean().getSmeSupplier().setSmeValidStartDate(null);
+				getManagedBean().getSmeSupplier().setSmeValidEndDate(null);
+			}
+			if (getManagedBean().getSmeSupplierDoc() != null) {
+				deleteAttachment();
+			}
+		}
+	}
+	// #29617 ReOpen note 150 - Start
 
 }

@@ -48,7 +48,7 @@ public class ViewQtDetailsGeneralInfoBackingBean{
 		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
-						QTConstants.VIEW_QTDETAILS_GENERAL_INFO);
+						QTConstants.SUPPLIER_VIEW_QTDETAILS_GENERAL_INFO);
 	
 	
 	} finally{

@@ -88,7 +88,10 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.rpt.month']}" /></td>
 				<td>
-					<p:calendar id="monthPicker" navigator="true" showOn="button" mode="inline" yearRange="c-7:c"/>
+					<!-- 29486 - START -->
+					<p:calendar id="monthPicker" navigator="true" showOn="button" mode="inline" yearRange="c-7:c"
+								value="#{pmReportsBackingBean.managedBean.monthlyDate}"/>
+					<!-- 29486 - END -->
 				</td>
 				<td width="15%"><p:remoteCommand name="passToJSFBackingBean" actionListener="#{pmReportsBackingBean.pickMonthYear()}"/></td>
 		

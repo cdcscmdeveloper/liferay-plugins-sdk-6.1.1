@@ -86,7 +86,7 @@
 	</p:panel>
 	
 	<ac:scRemarkAndAttachment
-		remarkList="#{suppFinalizationBackingBean.omitLatestRemarkForDisplay(suppFinalizationBackingBean.managedBean.committeeRemarkList)}"
+		remarkList="#{suppFinalizationBackingBean.managedBean.committeeRemarkList}"
 		readonly="#{suppFinalizationBackingBean.managedBean.readOnly}"
 		showAttachment="false" />
 

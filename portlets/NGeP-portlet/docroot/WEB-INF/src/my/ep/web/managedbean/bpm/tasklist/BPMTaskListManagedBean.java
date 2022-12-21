@@ -66,6 +66,7 @@ import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault; //#9133
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -144,6 +145,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private Date groupTaskCreatedDateFrom;
 	private Date  groupTaskCreatedDateTo;
 	private String roleType;
+	
+	//#32304 - start
+	private List<SmAppl> cancelledBumiApplLs;
+	private PagingDataModel<SmAppl> bumiListDataModel = new BumiPagingDataModel();
+	//#32304 - end
 
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
@@ -475,7 +481,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				}
 				
 				if(getDocStatus()>0){
-					reqDTO.setStatus(getDocStatus());
+					//33849 - Start - Need to set to PA_PENDING_PAYMENT_MATCH because status in SOA for POCO Pending Payment Match is 46000
+					if(getDocStatus()== FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH.intValue() 
+							|| getDocStatus()== FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH.intValue()){
+						reqDTO.setStatus(FulfilmentStatusConst.PA_PENDING_PAYMENT_MATCH.intValue());
+					}else{
+						reqDTO.setStatus(getDocStatus());
+					}
+					//33849 - End
 				}
 				
 				//Start - Task list sorting n search criteria date from and date to by Najmi 
@@ -497,6 +510,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
 						} else if (getSort_by().equalsIgnoreCase(BpmConstants.SORT_BY_RECEIVEDDATE)){
 							reqDTO.setSortBy(BpmConstants.SORT_BY_RECEIVEDDATE);
+						} else if (getSort_by().equalsIgnoreCase(BpmConstants.SORT_BY_DOCSTATUS)){
+							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
 						}					
 					}
 				} else {
@@ -513,6 +528,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
 						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_RECEIVEDDATE)){
 							reqDTO.setSortBy(BpmConstants.SORT_BY_RECEIVEDDATE);
+						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_DOCSTATUS)){
+							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
 						}
 					}
 				}				 			
@@ -571,6 +588,17 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.ct.revise.circular.cancellation",ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));									
 								}
 								//CR 28766: Static Code Analysis End
+								//#21692 - start
+								int docStatus = worklistItemVO.getDocStatus().intValue();
+								String noteEPV = ResourceBundleUtils.getMessage("lbl.sc.qt.proposal.extension.tasklist.note",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale());
+								
+								if (QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE.intValue() == docStatus) {
+									worklistItemVO.setTitle(worklistItemVO.getTitle()
+											+ "<br/>"
+											+ "<span style=\"color:red;font-weight:bold\">" + noteEPV + "<span>");
+								}
+								//#21692 - end
 	
 						       processWorklistItemByDocType(worklistItemVO);
 							}catch(Exception ex){
@@ -668,7 +696,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				}*/
 				
 				if(getDocStatusGroup()>0){
-					reqDTO.setStatus(getDocStatusGroup());
+					//33849 - Start - Need to set to PA_PENDING_PAYMENT_MATCH because status in SOA for POCO Pending Payment Match is 46000
+					if(getDocStatusGroup()== FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH.intValue() 
+							|| getDocStatusGroup()== FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH.intValue()){
+						reqDTO.setStatus(FulfilmentStatusConst.PA_PENDING_PAYMENT_MATCH.intValue());
+					}else{
+						reqDTO.setStatus(getDocStatusGroup());
+					}
+					//33849 - End
 				}
 				
 				reqDTO.setViewBy(getViewByGroup());
@@ -695,6 +730,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_CREATEDATE);
 						} else if (getSort_byGroup().equalsIgnoreCase(BpmConstants.SORT_BY_STATUS)) {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
+						} else if (getSort_byGroup().equalsIgnoreCase(BpmConstants.SORT_BY_DOCSTATUS)){
+							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
+						} else if (getSort_byGroup().equalsIgnoreCase(BpmConstants.SORT_BY_RECEIVEDDATE)){
+							reqDTO.setSortBy(BpmConstants.SORT_BY_RECEIVEDDATE);
 						} else {
 							//reqDTO.setSortBy(getSort_by());
 						}					
@@ -711,7 +750,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_CREATEDATE);
 						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_STATUS)) {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
-						} else {
+						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_DOCSTATUS)){
+							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
+						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_RECEIVEDDATE)){
+							reqDTO.setSortBy(BpmConstants.SORT_BY_RECEIVEDDATE);
+						} else{
 							//reqDTO.setSortBy(getSort_by());
 						}
 					}
@@ -1409,8 +1452,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		Boolean validDate = true;	
 		
 		// Refactor: To make sqTimeValidity to read only once - Start.
-		/*Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
-				.getProperty("sqTimeValidity"));*/
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		logger.info("Refactor 12177 (BPMTaskListManagedBean) : getSqTimeValidity - " + sqTimeValidity);
 		// Refactor: To make sqTimeValidity to read only once - End.
 		
 		if(sqEndDate != null){
@@ -1421,7 +1464,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				cal.clear(); 
 				cal.setTime(closingDate);
 				// Refactor: #12177 - Start
-				cal.add(Calendar.DATE, NgepApplicationBean.getSqTimeValidity()); //add 60days to closing/end date
+				cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
 				// Refactor: #12177 - End
 				setExpirationDate(dateToCalendar(cal.getTime()));
 					
@@ -1948,5 +1991,46 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return taskIdPair;
 	}
 	/*#31422-basri 190821*/
+
+	//#32304 - start
+	public List<SmAppl> getCancelledBumiApplLs() {
+		return cancelledBumiApplLs;
+	}
+
+	public void setCancelledBumiApplLs(List<SmAppl> cancelledBumiApplLs) {
+		this.cancelledBumiApplLs = cancelledBumiApplLs;
+	}
 	
+	public PagingDataModel<SmAppl> getBumiListDataModel() {
+		return bumiListDataModel;
+	}
+
+	public void setBumiListDataModel(PagingDataModel<SmAppl> bumiListDataModel) {
+		this.bumiListDataModel = bumiListDataModel;
+	}
+	
+	private class BumiPagingDataModel extends PagingDataModel<SmAppl> {
+		private static final long serialVersionUID = 1L;
+		
+		public BumiPagingDataModel() {
+			super("bumiPagingDataModelId");
+		}
+
+		@Override
+		protected ISearchResultBean<SmAppl> pageChangeListener(ISearchBean<SmAppl> searchBean) {
+			SearchResultBean<SmAppl> resultBean = new SearchResultBean<SmAppl>();
+			resultBean.setResultList(null);
+			resultBean.setTotalRecord(0);
+			List<SmAppl> bumi = BPMTaskListManagedBean.this.getCancelledBumiApplLs();
+			if(bumi != null){
+				resultBean.setResultList(new ArrayList<SmAppl>());
+				for(int i=calculateFinalOffSet(getPageNo()); i<bumi.size(); i++){
+					resultBean.getResultList().add(bumi.get(i));
+				}
+				resultBean.setTotalRecord(resultBean.getResultList().size());
+			}
+			return resultBean;
+		}
+	}
+	//#32304 - end
 }

@@ -22,8 +22,10 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDemoByItemScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoContact;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoItem;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.TreeNode;
@@ -134,6 +136,18 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 	private List<ScQtDemoItem> tempDemoItemList;
 	
 	private List<ScQtDemoSupplier> tempDemoSuppList;
+	
+	private boolean ctzones = Boolean.FALSE;
+	
+	private List<TplSpecZoneDtl> templateSpecZoneDtls;
+	
+	private List<TreeNode> zoneSuppQualTrees = null;
+	
+	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+	
+	private boolean showCancelButton = true;
+	
+	private boolean disableSaveAndSubmitButton = true;
 
 	public int getTabActiveIndex() {
 		return tabActiveIndex;
@@ -495,10 +509,54 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 		this.tempDemoItemList = tempDemoItemList;
 	}
 
-	
-	
+	public boolean isCtzones() {
+		return ctzones;
+	}
+
+	public void setCtzones(boolean ctzones) {
+		this.ctzones = ctzones;
+	}
+
+	public List<TplSpecZoneDtl> getTemplateSpecZoneDtls() {
+		return templateSpecZoneDtls;
+	}
+
+	public void setTemplateSpecZoneDtls(List<TplSpecZoneDtl> templateSpecZoneDtls) {
+		this.templateSpecZoneDtls = templateSpecZoneDtls;
+	}
+
+	public List<TreeNode> getZoneSuppQualTrees() {
+		return zoneSuppQualTrees;
+	}
+
+	public void setZoneSuppQualTrees(List<TreeNode> zoneSuppQualTrees) {
+		this.zoneSuppQualTrees = zoneSuppQualTrees;
+	}
 
 	
+	public TemplateSpecBean getTemplateSpecBean() {
+		return templateSpecBean;
+	}
+
+	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
+		this.templateSpecBean = templateSpecBean;
+	}
+
+	public boolean isShowCancelButton() {
+		return showCancelButton;
+	}
+
+	public void setShowCancelButton(boolean showCancelButton) {
+		this.showCancelButton = showCancelButton;
+	}
+
+	public boolean isDisableSaveAndSubmitButton() {
+		return disableSaveAndSubmitButton;
+	}
+
+	public void setDisableSaveAndSubmitButton(boolean disableSaveAndSubmitButton) {
+		this.disableSaveAndSubmitButton = disableSaveAndSubmitButton;
+	}
 	
 	
 	

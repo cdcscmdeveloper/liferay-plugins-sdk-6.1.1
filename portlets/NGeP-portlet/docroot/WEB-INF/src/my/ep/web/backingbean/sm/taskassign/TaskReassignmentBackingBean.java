@@ -142,6 +142,11 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		//29822 - start
 		this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
 		this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+		this.getManagedBean().setEnableDeleteGroupTasksButton(false);//29822 - bug no 2.2 on comment no 106
+		this.getManagedBean().setEnableDeleteOthersTasksButton(false);//29822 - bug no 2.2 on comment no 106
+		this.getManagedBean().setSelectedTasksToBulkReassign(null);//29822 - bug no 1.2 on comment no 106
+		this.getManagedBean().setShowRemoveProcessMessageGroup(false);
+		this.getManagedBean().setShowRemoveProcessMessageOther(false);
 		//29822 - end
 	}
 	
@@ -171,6 +176,18 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		this.getManagedBean().getTaskAssignmentSearchBean().setSearched(false);
 		this.getManagedBean().getTaskAssignmentSearchBean().setDocType(null);
 		this.getManagedBean().setTaskLazy(false);
+
+		//29822 - start - reendorse reopen cosmetic
+		this.getManagedBean().setCheckAllOthersTasks(false);
+		this.getManagedBean().setCheckAllGroupTasks(false);
+		this.getManagedBean().setCheckAllUserTasks(false);
+		this.getManagedBean().setCheckAllOthersTasks(false);
+		this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+		this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+		this.getManagedBean().setEnableDeleteGroupTasksButton(false);//29822 - bug no 2.3 on comment no 106
+		this.getManagedBean().setEnableDeleteOthersTasksButton(false);//29822 - bug no 2.3 on comment no 106
+		this.getManagedBean().setSelectedTasksToBulkReassign(null);//29822 - bug no 1.3 on comment no 106
+		//29822 - end
 		resetAllTaskList();
 	}
 
@@ -414,19 +431,31 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 							resultBean.setTotalRecord(responseDTO.getWorklistVO().getTotal());
 							resultBean.setResultList(responseDTO.getWorklistVO().getWorklistItem());
 							
-							//#29822 - START
+							//#29822 - START - reendorse
 							if(!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && responseDTO.getWorklistVO().getWorklistItem().size() > 0){
-								getManagedBean().setAllUserTasks(new ArrayList <WorklistItemVO>());
+								getManagedBean().setAllGroupTasks(new ArrayList <WorklistItemVO>()); //29822 - bug no 1.1 on comment no 106
 								getManagedBean().setCheckAllGroupTasksEnabled(true);
 								for(WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()){
 									getManagedBean().getAllGroupTasks().add(worklist);
 								}
 							}else{
 								getManagedBean().setCheckAllGroupTasksEnabled(false);
+								getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+								
 							}
-							//29822 - END
+							//29822 - END 
 						}
 					}
+
+					//#29822 - start - reendorse change for Group user cannot submit remove all   
+					//recommit change other to group
+					if(getManagedBean().isShowRemoveProcessMessageGroup()==true ) {
+						//disable check box for other task
+						getManagedBean().setCheckAllGroupTasksEnabled(false);
+						//disable button for other task
+						getManagedBean().setEnableRemoveAllGroupTasksButton(false); 
+					}
+					//#29822 - end - reendorse change for Group user cannot submit remove all  
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -533,7 +562,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 							resultBean.setResultList(responseDTO
 									.getWorklistVO().getWorklistItem());
 							
-							//#29822 - START
+							//#29822 - START - reendorse
 							if(!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && responseDTO.getWorklistVO().getWorklistItem().size() > 0){
 								getManagedBean().setAllOthersTasks(new ArrayList <WorklistItemVO>());
 								getManagedBean().setCheckAllOthersTasksEnabled(true);
@@ -541,10 +570,21 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 									getManagedBean().getAllOthersTasks().add(worklist);
 								}
 							}else{
-								getManagedBean().setCheckAllOthersTasksEnabled(false);
+								getManagedBean().setCheckAllOthersTasksEnabled(false); 
+								getManagedBean().setEnableRemoveAllOthersTasksButton(false);
 							}
-							//#29822 - END
+							//#29822 - END 
 						}
+
+						//#29822 - start - reendorse change for other user cannot submit remove all 
+						//#29822 - recommit remove checking redundance
+						if(getManagedBean().isShowRemoveProcessMessageOther()==true ) {
+							//disable check box for other task
+							getManagedBean().setCheckAllGroupTasksEnabled(false);
+							//disable button for other task
+							getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+						}
+						//#29822 - end - reendorse change for other user cannot submit remove all  
 					}
 				}
 			} catch (Exception e) {
@@ -721,7 +761,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				reqDTO.setGroupDocType(StringUtils.isNotBlank(vo.getGroupDocType()) ? vo.getGroupDocType() : null);
 				reqDTO.setDocStatus(task.getDocStatus());
 				reqDTO.setRoleCode(SmCommonUtil.getUserRoleValue());
-				reqDTO.setActionedByUser(getFacesScopes().getUserSessionBean().getUserId());
+				reqDTO.setActionedByUser(getUserIdSessionFromLoginId()); //#31849 add log key
 				reqDTO.setFromUser(getManagedBean().getTaskAssignmentSearchBean().getUser().getPmUser());
 				reqDTO.setUserLocale(getFacesScopes().getUserLocale());
 				
@@ -748,6 +788,12 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			// isSuccess = reassignTask(pmUser, task);
 			if (resDTO != null && resDTO.isSuccessful()) {
 				RequestContext.getCurrentInstance().execute("dlSuppTaskReassignment.hide()");
+				RequestContext.getCurrentInstance().reset("form:pUserTaskAssignResult");
+				if (this.getManagedBean().getSelectedTasksToBulkReassign() != null && 
+						this.getManagedBean().getSelectedTasksToBulkReassign().size() > 0) {
+					this.getManagedBean().getSelectedTasksToBulkReassign().clear();
+				}
+				
 				reloadAllTaskList();
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
 						FacesMessage.SEVERITY_INFO, MessageConst.INFO_770104, 
@@ -1772,16 +1818,23 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				reqDTO.setModule("SM");
 				//created by
 				reqDTO.setCreatedBy(getUserByLoginId());
-				
-				List<String> docNumberList = new ArrayList<String>();
-				if (StringUtils.isNotBlank(getManagedBean()
-						.getTaskAssignmentSearchBean().getDocNo())) {
-					docNumberList.add(getManagedBean()
-							.getTaskAssignmentSearchBean().getDocNo());
-					//param_doc_no
-					reqDTO.setParamDocNo(docNumberList);
-				}
 
+				//#29822 START - remove by doc number
+//				List<String> docNumberList = new ArrayList<String>();
+//				if (StringUtils.isNotBlank(getManagedBean()
+//						.getTaskAssignmentSearchBean().getDocNo())) {
+//					docNumberList.add(getManagedBean()
+//							.getTaskAssignmentSearchBean().getDocNo());
+//					//param_doc_no
+//					reqDTO.setParamDocNo(docNumberList);
+//				} 
+				String docNumber =getManagedBean().getTaskAssignmentSearchBean().getDocNo() ;
+				if (StringUtils.isNotBlank(docNumber)) {
+					// param_doc_no
+					reqDTO.setParamDocNo(docNumber);
+				}
+				//#29822 end - 
+				
 				if (getManagedBean().getTaskAssignmentSearchBean().getDocType() != null
 						&& getManagedBean().getTaskAssignmentSearchBean().getDocType() != null) {
 					//param_doc_type
@@ -1797,16 +1850,19 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 
 		}
 		
-		
+		//#29822 - START - reendorse
 		if (resDTO != null && resDTO.isSuccessful()) {
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
 			FacesMessage.SEVERITY_INFO, MessageConst.INFO_780071, null);
-			
+
 			this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+			this.getManagedBean().setCheckAllGroupTasksEnabled(false);
+			this.getManagedBean().setShowRemoveProcessMessageGroup(true);
 			
 			log.info("==============dialog is completed closed==============");
 
 		}
+		//#29822 - end - reendorse
 	}
 	
 	//#29822 - end
@@ -1897,6 +1953,10 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	}
 	
 	//#29822 - start
+	/**
+	 * To remove all other task
+	 * 
+	 */	
 	public void removeReassignAllOthersTasks() {
 		
 		String loginId = null;
@@ -1935,13 +1995,22 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				reqDTO.setModule("SM");
 				//created by
 				reqDTO.setCreatedBy(getUserByLoginId());
-
-				List<String> docNumberList = new ArrayList<String>();
-				if (StringUtils.isNotBlank(getManagedBean().getTaskAssignmentSearchBean().getDocNo())) {
-					docNumberList.add(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+				
+				//#29822 START - remove by doc number
+//				List<String> docNumberList = new ArrayList<String>();
+//				if (StringUtils.isNotBlank(getManagedBean()
+//						.getTaskAssignmentSearchBean().getDocNo())) {
+//					docNumberList.add(getManagedBean()
+//							.getTaskAssignmentSearchBean().getDocNo());
+//					//param_doc_no
+//					reqDTO.setParamDocNo(docNumberList);
+//				} 
+				String docNumber =getManagedBean().getTaskAssignmentSearchBean().getDocNo() ;
+				if (StringUtils.isNotBlank(docNumber)) {
 					// param_doc_no
-					reqDTO.setParamDocNo(docNumberList);
+					reqDTO.setParamDocNo(docNumber);
 				}
+				//#29822 end - 
 
 				if (getManagedBean().getTaskAssignmentSearchBean().getDocType() != null
 						&& getManagedBean().getTaskAssignmentSearchBean().getDocType() != null) {
@@ -1957,20 +2026,25 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		} finally {
 
 		}
-
+		//#29822 - START - reendorse
 		if (resDTO != null && resDTO.isSuccessful()) {
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO,
 					MessageConst.INFO_780071, null);
-			
+
 			this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+			this.getManagedBean().setCheckAllOthersTasksEnabled(false); 
+			this.getManagedBean().setShowRemoveProcessMessageOther(true);
 
 			log.info("==============dialog is completed closed==============");
 
-		}
+		}//#29822 - end - reendorse
 	}
 	
 	//#29822 - end
-	
+	/**
+	 * To remove other task
+	 * 
+	 */	
 	public void removeReassignOthersTasks() {
 	
 		log.info("removeReassignOthersTasks");
@@ -2037,12 +2111,18 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
 		}
 	}
-	
+	/**
+	 * To Show confirmation dialog
+	 * 
+	 */	
 	public void showDialog(String dialog){
 		log.info("Displaying " + dialog);
 		RequestContext.getCurrentInstance().execute(dialog+".show()");	
 	}
-	
+	/**
+	 * To Check all group task
+	 * 
+	 */	
 	public void checkAllGroupTasks() {
 		log.info("Total number of GROUP tasks= " + this.getManagedBean().getAllGroupTasks().size());
 		
@@ -2088,12 +2168,12 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
     	} else {
     		this.getManagedBean().setEnableDeleteGroupTasksButton(false);
     	}
-		log.info("getSelectedGroupTasks= " + this.getManagedBean().getSelectedGroupTasks().size());
-		log.info("enableDeleteGroupTasksButton= " + this.getManagedBean().isEnableDeleteGroupTasksButton());
 	}
-	
+	/**
+	 * To check all other task
+	 * 
+	 */	
 	public void checkAllOthersTasks() {
-		log.info("Total number of OTHERS tasks= " + this.getManagedBean().getAllOthersTasks().size());
 		
 		if (this.getManagedBean().getSelectedOthersTasks() != null && 
 				this.getManagedBean().getSelectedOthersTasks().size() > 0) {
@@ -2111,8 +2191,6 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
     		}
 		}
     	this.getManagedBean().setEnableDeleteOthersTasksButton(this.getManagedBean().isCheckAllOthersTasks());
-    	log.info("getSelectedOthersTasks= " + this.getManagedBean().getSelectedOthersTasks().size());
-    	log.info("enableDeleteOthersTasksButton= " + this.getManagedBean().isEnableDeleteOthersTasksButton());
 	}
 	
 	public void checkOthersTask(AjaxBehaviorEvent event) {
@@ -2137,31 +2215,47 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
     	} else {
     		this.getManagedBean().setEnableDeleteOthersTasksButton(false);
     	}
-		log.info("getSelectedOthersTasks= " + this.getManagedBean().getSelectedOthersTasks().size());
-		log.info("enableDeleteOthersTasksButton= " + this.getManagedBean().isEnableDeleteOthersTasksButton());
 	}
 	//#29822 - END
 	
 	//#29822 - start
+	/**
+	 * To check pending remove task active or not
+	 * 
+	 */	
 	public void checkPendingTaskRemove() {
 		PmUser pmUser = this.getManagedBean().getTaskAssignmentSearchBean().getUser().getPmUser();
 		ISupplierDataMaintenanceSO iSupplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
-		PmPendingRemoveTask hasActivePending = iSupplierDataMaintenanceSO.checkActivePendingTaskRemove(pmUser
+		List<PmPendingRemoveTask> hasActivePendingList = iSupplierDataMaintenanceSO.checkActivePendingTaskRemove(pmUser
 				.getLoginId());
 		
-		if (hasActivePending != null) {
-			if (hasActivePending.getParamTask().equalsIgnoreCase("GROUP")) {
-				this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
-			} else {
-				this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+		if(hasActivePendingList != null){
+			for (PmPendingRemoveTask hasActivePending : hasActivePendingList) {
+				if (hasActivePending != null) {
+					if (hasActivePending.getParamTask().equalsIgnoreCase("GROUP")) {
+						this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+						this.getManagedBean().setShowRemoveProcessMessageGroup(true);
+					} else {
+						this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+						this.getManagedBean().setShowRemoveProcessMessageOther(true);
+					}
+				}
 			}
-		} else {
+		}
+		
+		if(hasActivePendingList == null || hasActivePendingList.size() == 0){
+			//no pending
 			this.getManagedBean().setEnableRemoveAllGroupTasksButton(true);
 			this.getManagedBean().setEnableRemoveAllOthersTasksButton(true);
+			this.getManagedBean().setShowRemoveProcessMessageGroup(false);
+			this.getManagedBean().setShowRemoveProcessMessageOther(false);
 		}
 	}
-	
+	/**
+	 * To get user id
+	 * 
+	 */	
 	public Long getUserByLoginId(){
 		Long loginSessionUserId = 1L;
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()

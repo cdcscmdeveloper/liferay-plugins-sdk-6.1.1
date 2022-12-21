@@ -6,9 +6,9 @@
 @page {
 	size: A4 portrait;
 }
-
-@page { @bottom-center { content:"Page "counter(page)" / "counter(pages);	
-}
+##26130 - start
+#include("/templates/sc/loa/footerStyle.vm")
+##26130- end
 p {
 	text-align: justify;
 }
@@ -135,6 +135,27 @@ u {
   left: 16px;
   font-size: 18px;
 }
+##26130 - start
+		
+.standard{
+	font-family:Arial;
+	font-size:11px;
+	font-weight:normal;
+	font-style:normal;
+	text-decoration:none;
+	color:#333333;
+}
+		
+.redText{
+	text-align:justify;
+	font-family:Arial;
+	font-size:12px;
+	font-weight:normal;
+	font-style:normal;
+	text-decoration:none;
+	color:red;
+}
+##26130-end
 </style>
 </head>
 
@@ -144,7 +165,13 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 </div>
 
 <br/><br/>
-<div class="break-after"><br/></div>
+##26130 - start
+##<div class="break-after"><br/></div>
+#include("/templates/sc/loa/sstFooter.vm")
+##26130 - end
+##26130 - start
+#include("/templates/sc/loa/footerContentStart.vm")
+##26130 - end
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	  <tr>
 			<td align="right"> <span style="font-family: Arial;
@@ -156,261 +183,208 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 	color: #333333;"> <b><i>Lampiran A3</i></b></span></td>
 	  </tr>
 		<tr>
-			<td><span class="text_header_submenu"><u style="font-family: Arial;font-size: 14.5px;font-weight: bold;font-style: normal;line-height: 20px;text-decoration: underline;">*Spesifikasi/Skop Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</u></span> <br />
-				<br /></td>
+		##26130 -start
+			<td><span class="text_header_submenu">*Spesifikasi/Skop Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</span> <br /></td>
+		##26130 - end
 		</tr>
 	</table>
 	
 #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
 #set($rowCount = 0)	
 #if ($scLoa.scLoiLoa.docType == "NG")
-		<table width="100%" border="1" cellpadding="0" cellspacing="0">
-		<tbody>
-			#foreach( $tplspecMaster in $masters )
-				#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
-				#set($specType = $tplspecMaster.specTypeCode.parameterCode)
-				#if ($itemType == "Produk" || $itemType == "Product")
-					 #if ($rowCount == 0)
+	##26130 - start
+#set ($count = 0)	
+#set ($whitespace = "&nbsp;")	
+#if ($specCombineProduct.listOfZonalProduct.size() > 0 || $specCombineProduct.listOfNonZonalProduct.size() > 0)
+<br/>
+<table width="100%" border="1" cellpadding="0" cellspacing="0">
+<tbody>		
+#if ($isZonal)
+	#foreach ($listSpecDLOA in $specCombineProduct.listOfZonalProduct)
+	#set($indi = 0)		
+		#foreach ($specDLOA in $listSpecDLOA)
+			#set($itemType = $specDLOA.itemType)
+			#set($specType = $specDLOA.specType)
+			#set($rowspanClItem = $listSpecDLOA.size() + $specDLOA.specVal.size())
+			#if ($itemType == "Produk" || $itemType == "Product")
+			#set ($count = 1)
+				#if ($rowCount == 0)
+					<tr>
+								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Item</th>
+								<th bgcolor="#6d839b" class="title border left" style="text-align: left; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">UOM</th>
+								<th bgcolor="#6d839b" class="title border left" style="text-align: left; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Jenis Harga</th>
+								#if ($isZonal)
+									<th bgcolor="#6d839b" class="title border left" style="text-align: left; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Zon</th>
+								#end	
+								<th bgcolor="#6d839b" class="title border left" style="text-align: left; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti</th>
+								<th bgcolor="#6d839b" class="title border left" style="text-align: left; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti Berperingkat</th>
+								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Skop Perkhidmatan / SLA</th>
+					</tr>
+					<tr>
+								<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center; border: 1px solid black; font-family: Arial;">Spesifikasi</th>
+								
+					</tr>
+				#end
+				
+				#set ($rowspanItemName = $specDLOA.rowSpan )
+					
+					
 						<tr>
+							#if ($specDLOA.clItem == "&nbsp;" || $specDLOA.clItem == " ")
+							#else
+								<td valign="top" class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName"><strong>$specDLOA.clItem</strong></td>
+							#end
+							#if ($specDLOA.uomName == "&nbsp;" || $specDLOA.uomName == " ")	
+							#else
+								<td  class="standard border-bottom left"  style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$specDLOA.uomName</td>
+								#end
+							#if ($specDLOA.clPriceTypeCode == "&nbsp;" || $specDLOA.clPriceTypeCode == " ")
+							#else
+								<td  class="standard border-bottom left"  style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$specDLOA.clPriceTypeCode</td>
+							#end
+							#if ($specType == "F")
+								<td class="standard border-bottom left-right" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specDLOA.zoneName</td>
+								<td  class="standard border-bottom left-right" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specDLOA.qty</td>
+								<td  class="standard border-bottom left-right" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specDLOA.answerNumeric</td>	
+							#else 
+								#if ($specType == "T")
+									<td class="standard border-bottom left-right" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" >$specDLOA.zoneName</td>
+									<td class="standard border-bottom left-right" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specDLOA.qty</td>
+									#if ($specDLOA.tierQty == "&nbsp;" || $specDLOA.tierQty == " ")
+									#else
+										<td rowspan="$listSpecDLOA.size()" class="standard border-bottom left-right" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specDLOA.tierQty</td>
+									#end
+								#else
+									<td rowspan="$listSpecDLOA.size()" class="standard border-bottom left-right"  style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial;">$serviceScope</td>
+									<td rowspan="$listSpecDLOA.size()" class="standard border-bottom left-right"  style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial;">$serviceScope</td>
+									<td rowspan="$listSpecDLOA.size()" class="standard border-bottom left-right"  style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial;">$serviceScope</td>
+								#end
+							#end
+							#if ($indi == 0)
+								#set($indi = 1)	
+								#set($rowCount = 1)	
+									<td class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="$rowspanItemName">$whitespace</td>
+							#end
+						</tr>
+						#foreach($specVal in $specDLOA.specVal)
+							<tr>
+								
+								<td colspan="5" class="standard border-bottom left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" >$specVal</td>
+							</tr>
+						#end
+					
+						#set($rowCount = $rowCount + 1)	
+										
+					
+										
+					
+			#end	
+		#end			
+	#end
+#else
+##non zonal start
+
+#foreach ($listSpecDLOA in $specCombineProduct.listOfNonZonalProduct)
+#set($indi = 0)
+
+	#set($itemType = $listSpecDLOA.itemType)
+		#set($specType = $listSpecDLOA.specType)
+		#set($rowspanClItem = $listSpecDLOA.size() + $listSpecDLOA.specVal.size())
+		#if ($itemType == "Produk" || $itemType == "Product")
+		#set ($count = 1)
+			#if ($rowCount == 0)
+				<tr>
 				            <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Item</th>
 				            <th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">UOM</th>
 							<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Jenis Harga</th>
-			            	#if ($isZonal)
-			            		<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Zon</th>
-							#end	
-							<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti</th>
+			            	<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti</th>
 							<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti Berperingkat</th>
 				            <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Skop Perkhidmatan / SLA</th>
 						</tr>
-						<tr>
-							#if ($isZonal)
-								<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center; font-family: Arial;">Spesifikasi</th>
-							#else
-								<th bgcolor="#6d839b" class="title border left" colspan="4" style="text-align: center; font-family: Arial;">Spesifikasi</th>
-							#end
-						</tr>
-					#end
-						
-					#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
-											
-					#if ($isZonal)
-
-						#if ($tplspecQuestion.questionType == "I")
-						 
-						<tr>							 
-							
-							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
-							<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
-							<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
-							
-							#if ($specType == "F")
-								<td bgcolor="#d0eaee">
-									#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-									<table width="100%" border="1" cellpadding="0" cellspacing="0">
-										<tbody>
-										<tr style="border-bottom: 1px solid black;" >
-											#if ($tplSpecAnswer.tplSpecZoneQty.tplSpecZoneDtl.zoneName) 
-												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplSpecAnswer.tplSpecZoneQty.tplSpecZoneDtl.zoneName</td>
-											#else
-												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$serviceScope</td>
-											#end
-										</tr>
-										</tbody>
-										</table>
-									#end
-								</td>
-								
-								<td bgcolor="#d0eaee">
-									#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-									<table width="100%"  border="1" cellpadding="0" cellspacing="0">
-										<tbody>
-										<tr style="border-bottom: 1px solid black;" >
-											#if ($tplSpecAnswer.tplSpecZoneQty.qty) 
-												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplSpecAnswer.tplSpecZoneQty.qty</td>
-											#else
-												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$serviceScope</td>
-											#end
-										</tr>
-										</tbody>
-										</table>
-									#end
-								</td>
-								
-								<td bgcolor="#d0eaee">
-									#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-									<table width="100%" border="1" cellpadding="0" cellspacing="0">
-										<tbody>
-										<tr style="border-bottom: 1px solid black;" >
-											#if ($tplSpecAnswer.answerNumeric) 
-												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplSpecAnswer.answerNumeric</td>
-											#else
-												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$serviceScope</td>
-											#end
-										</tr>
-										</tbody>
-										</table>
-									#end
-								</td>
-									
-							#else 
-							
-							  #if ($specType == "T")
-									<td bgcolor="#d0eaee">
-										#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
-										<table width="100%" border="1" cellpadding="0" cellspacing="0">
-											<tbody>
-											<tr style="border-bottom: 1px solid black;" >
-												<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplSpecZoneQtie.tplSpecZoneDtl.zoneName</td>
-											</tr>
-											</tbody>
-											</table>
-										#end
-									</td>
-									
-									<td bgcolor="#d0eaee">
-										#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
-										<table width="100%" border="1"  cellpadding="0" cellspacing="0">
-											<tbody>
-											<tr style="border-bottom: 1px solid black;" >
-												<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplSpecZoneQtie.qty</td>
-											</tr>
-											</tbody>
-											</table>
-										#end
-									</td>
-							
-									<td bgcolor="#d0eaee">
-										#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
-										<table width="100%" border="1"  cellpadding="0" cellspacing="0">
-											<tbody>
-											<tr style="border-bottom: 1px solid black;" >
-												<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$serviceScope</td>
-											</tr>
-											</tbody>
-											</table>
-										#end
-									</td>
-								#else
-									<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$serviceScope</td>
-									<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$serviceScope</td>
-									<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$serviceScope</td>
-								#end
-							#end
-											
-							#if ($rowCount == 0)
-								#set($rowCount = $rowCount + 1)
-								<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
-							#end
-							</tr>	
-							
-							<tr>
-							<td bgcolor="#d0eaee" colspan="5">						
-									#if ($tplspecQuestion.specList)
-										#foreach( $specVal in $tplspecQuestion.specList )
-											
-											<table width="100%">
-												<tbody>
-												<tr>
-													<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specVal</td>
-												</tr>
-												</tbody>
-											</table>
-												
-										#end
-									#end
-							</td>
-							</tr>
-							#end	
-						#else
-							#if ($tplspecQuestion.questionType == "I")
-											 
-								<tr>
-								
-								
-								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
-								<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
-								<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
-								<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clQuantity</td>
-								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$serviceScope</td>	
-								#if ($rowCount == 0)
-										#set($rowCount = $rowCount + 1)
-										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
-									#end
-								</tr>	
-								
-								<tr>
-								<td bgcolor="#d0eaee" colspan="4">						
-										#if ($tplspecQuestion.specList)
-											#foreach( $specVal in $tplspecQuestion.specList )
-												
-												<table width="100%">
-													<tbody>
-													<tr>
-														<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:16.5px; font-family: Arial;">$specVal</td>
-													</tr>
-													</tbody>
-												</table>
-													
-											#end
-										#end
-									</td>
-								</tr>
-								#end	
-							
-							#end
-
-						#end 
-						
-						#set($rowCount = $rowCount + 1)
-					#end
-				#end
-		</tbody>
-		</table>
-		#if ($rowCount > 0)
-			<div style="margin-top: 200px; font-family: Arial; font-size:13px; float:right">
-				$pageNo
-			</div>
+				<tr>
+					<th bgcolor="#6d839b" class="title border left" colspan="4" style="text-align: center; font-family: Arial;">Spesifikasi</th>
+				</tr>
 			
-			<div style="margin-top: 200px; font-family: Arial; font-size:13px;">
-			Tandatangan & Cop (Kerajaan) : _____________
-			<br/>
-			<br/>
-			<br/>
-			Tandatangan & Cop (Syarikat ) : _____________
-			<br/>
-			<br/>
-			</div>
-			<div style="color:red; font-family: Arial; font-size:13px;">
-			<span>Pihak Kerajaan : pegawai yang diberi kuasa oleh Kerajaan di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk</span><br />
-			menandatangani Surat ini<br/>
-			Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangani Surat ini.
-			</div>
-			<div style="page-break-after:always;"><br/></div>
-		#end
+			#end
+			
+			#set ($rowspanItemName = $listSpecDLOA.rowSpan )
+			
+			<tr>
+				#if ($listSpecDLOA.clItem == "&nbsp;" || $listSpecDLOA.clItem == " ")
+				#else
+					<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName"><strong>$listSpecDLOA.clItem</strong></td>
+				#end
+				
+				#if ($listSpecDLOA.uomName == "&nbsp;" || $listSpecDLOA.uomName == " ")
+				#else
+					<td  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">$listSpecDLOA.uomName</td>
+				#end
+				
+				#if ($listSpecDLOA.clPriceTypeCode == "&nbsp;" || $listSpecDLOA.clPriceTypeCode == " ")
+				#else
+					<td  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">$listSpecDLOA.clPriceTypeCode</td>
+				#end
+				
+				#if ($listSpecDLOA.qty == "&nbsp;" || $listSpecDLOA.qty == " ")
+				#else
+					<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">$listSpecDLOA.qty</td>
+				#end
+				
+				#if ($listSpecDLOA.tierQty == "&nbsp;" || $listSpecDLOA.tierQty == " ")
+				#else
+					<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">$listSpecDLOA.tierQty</td>												
+				#end
+				
+				#if ($indi == 0)
+					#set($indi = 1)	
+					#set($rowCount = 1)	
+					<td class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName">$whitespace</td>
+				#end
+			</tr>
+											
+										
+			#foreach ($spec in $listSpecDLOA.specVal)
+				<tr>		
+					<td colspan="4" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:16.5px; font-family: Arial; ">$spec</td>
+				</tr>
+			#end
+		#end	
+#end
+
+##non zonal end
+
+#end
+</tbody>
+</table>
+#end
+	##26130 -end
 		<br/>
 		<br/>
 	  #else 
-		<table width="100%" border="1" cellpadding="0" cellspacing="0">
-		<tbody>
+		
 		  	#foreach( $tplspecMaster in $masters )
+		  	##26130 - start - move inside for to prevent table generate without data
+		  	<table width="100%" border="1" cellpadding="0" cellspacing="0">
+			<tbody>
+		  	##26130 - end - move inside for to prevent table generate without data
 					#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
 					#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
 					#if ($itemType == "Produk" || $itemType == "Product")
 					  #if ($rowCount == 0)
 							<tr>
 								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;"><nobr>Tajuk Templat:</nobr></td>
-								<td bgcolor="#d0eaee" class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">$tplspecMaster.specName</td>
+								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">$tplspecMaster.specName</td>
 							</tr>
 							<tr>
 								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;"><nobr>Jenis Item:</nobr></td>
-								<td bgcolor="#d0eaee" class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecMaster.itemTypeCode)</td>
+								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecMaster.itemTypeCode)</td>
 							</tr>
 							<tr>
 								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;"><nobr>Jenis Barangan:</nobr></td>
-								<td bgcolor="#d0eaee" class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecMaster.itemOriginCode)</td>
+								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecMaster.itemOriginCode)</td>
 							</tr>
 							<tr>
-								<td bgcolor="#d0eaee" class="title border left" colspan="10" style="text-align: left;">&nbsp;</td>
+								<td class="title border left" colspan="10" style="text-align: left;">&nbsp;</td>
 							</tr>
 							<tr>
 					            <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Item</th>
@@ -445,9 +419,9 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 								 
 								<tr>							 
 									
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
+									<td  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
 									
 									#if ($specType == "F")
 										<td bgcolor="#d0eaee">
@@ -544,7 +518,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 									#end
 									
 									
-									<td bgcolor="#d0eaee" rowspan="2">
+									<td rowspan="2">
 									#if ($tplspecQuestion.feedbackList)
 										#if ($specType == "T")
 											#foreach( $feedback in $tplspecQuestion.feedbackList)
@@ -552,7 +526,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 													<tbody>
 													<tr>
 													#if ($feedback) 
-														<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$feedback</td>
+														<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$feedback</td>
 													#end
 													</tr>
 													</tbody>
@@ -562,14 +536,14 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 									#end
 									</td>
 									
-									<td bgcolor="#d0eaee" rowspan="2">
+									<td rowspan="2">
 										#if ($tplspecQuestion.answerRemarkList)
 											#foreach( $answerRemark in $tplspecQuestion.answerRemarkList )
 												<table width="100%">
 													<tbody>
 													<tr>
 														#if ($answerRemark) 
-															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$answerRemark</td>
+															<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$answerRemark</td>
 														#end
 													</tr>
 													</tbody>
@@ -580,19 +554,19 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 									
 									#if ($rowCount == 0)
 										#set($rowCount = $rowCount + 1)
-										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+										<td class="standard border-bottom left"  style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
 									#end
 									</tr>
 								
 									<tr>
-									<td valign="top" bgcolor="#d0eaee" colspan="5">						
+									<td valign="top" colspan="5">						
 											#if ($tplspecQuestion.specList)
 											#foreach( $specVal in $tplspecQuestion.specList )
 												
 												<table width="100%">
 													<tbody>
 													<tr>
-														<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:16.5px; font-family: Arial;">$specVal</td>
+														<td class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:16.5px; font-family: Arial;">$specVal</td>
 													</tr>
 													</tbody>
 												</table>
@@ -613,12 +587,12 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 									<tr>
 									
 									
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
-									<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clQuantity</td>
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$serviceScope</td>	
-									<td bgcolor="#d0eaee" rowspan="2">
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
+									<td  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
+									<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clQuantity</td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$serviceScope</td>	
+									<td rowspan="2">
 										#if ($tplspecQuestion.feedbackList)
 											#if ($specType == "T")
 												#foreach( $feedback in $tplspecQuestion.feedbackList)
@@ -626,7 +600,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 														<tbody>
 														<tr>
 														#if ($feedback) 
-															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$feedback</td>
+															<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$feedback</td>
 														#end
 														</tr>
 														</tbody>
@@ -636,14 +610,14 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 										#end
 									</td>
 														
-									<td bgcolor="#d0eaee" rowspan="2">
+									<td rowspan="2">
 										#if ($tplspecQuestion.answerRemarkList)
 											#foreach( $answerRemark in $tplspecQuestion.answerRemarkList )
 												<table width="100%">
 													<tbody>
 													<tr>
 														#if ($answerRemark) 
-															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$answerRemark</td>
+															<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$answerRemark</td>
 														#end
 													</tr>
 													</tbody>
@@ -654,19 +628,19 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 													
 									#if ($rowCount == 0)
 										#set($rowCount = $rowCount + 1)
-										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+										<td class="standard border-bottom left"  style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
 									#end
 									</tr>	
 									
 									<tr>
-									<td bgcolor="#d0eaee" colspan="4">						
+									<td colspan="4">						
 											#if ($tplspecQuestion.specList)
 												#foreach( $specVal in $tplspecQuestion.specList )
 													
 													<table width="100%">
 														<tbody>
 														<tr>
-															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:16.5px; font-family: Arial;">$specVal</td>
+															<td class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:16.5px; font-family: Arial;">$specVal</td>
 														</tr>
 														</tbody>
 													</table>
@@ -683,28 +657,15 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 						
 						#set($rowCount = $rowCount + 1)
 					#end
+					##26130 - start - move inside for to prevent table generate without data
+					</tbody>
+					</table>
+					##26130 - end - move inside for to prevent table generate without data
 					#end
-			</tbody>
-			</table>
+			
 			#if ($rowCount > 0)
-				<div style="margin-top: 200px; font-family:calibri; font-size:13px; float:right">
-					$pageNo
-				</div>
+				##<div style="margin-top: 200px; font-family:calibri; font-size:13px; float:right">$pageNo</div>
 				
-				<div style="margin-top: 200px; font-family: Arial; font-size:13px;">
-				Tandatangan & Cop (Kerajaan) : _____________
-				<br/>
-				<br/>
-				<br/>
-				Tandatangan & Cop (Syarikat ) : _____________
-				<br/>
-				<br/>
-				</div>
-				<div style="color:red; font-family: Arial; font-size:13px;">
-				<span>Pihak Kerajaan : pegawai yang diberi kuasa oleh Kerajaan di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk</span><br />
-				menandatangani Surat ini<br/>
-				Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangani Surat ini.
-				</div>
 				<div style="page-break-after:always;"><br/></div>
 			#end
 			<br/>
@@ -740,24 +701,8 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 						#end
 					</table>
 					#if ($rowCount > 0)
-						<div style="margin-top: 200px; font-family: Arial; font-size:13px; float:right">
-							$pageNo
-						</div>
+						##<div style="margin-top: 200px; font-family: Arial; font-size:13px; float:right">$pageNo</div>
 						
-						<div style="margin-top: 200px; font-family: Arial; font-size:13px;">
-						Tandatangan & Cop (Kerajaan) : _____________
-						<br/>
-						<br/>
-						<br/>
-						Tandatangan & Cop (Syarikat ) : _____________
-						<br/>
-						<br/>
-						</div>
-						<div style="color:red; font-family: Arial; font-size:13px;">
-						<span>Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk</span><br />
-						menandatangani kontrak<br/>
-						Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangani Surat ini.
-						</div>
 						<div style="page-break-after:always;"><br/></div>
 					#end
 			</span></td>
@@ -769,235 +714,234 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
 #set($rowCount = 0)	
 #if ($scLoa.scLoiLoa.docType == "NG")
-		<table width="100%" border="1" cellpadding="0" cellspacing="0">
-		<tbody>
-			#foreach( $tplspecMaster in $masters )
-				#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
-				#set($specType = $tplspecMaster.specTypeCode.parameterCode)
-				#if ($itemType == "Perkhidmatan" || $itemType == "Service")
-					 #if ($rowCount == 0)
-						<tr>
-							<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Item</th>
-							<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">UOM</th>
-							<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kekerapan / <br/>Unit Ukuran</th>
-							<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Bil. Unit <br/>Ukuran Sehari</th>
-							<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Bil. Unit <br/>Ukuran Sebulan</th>
+## 26130 - start
+#set ($whitespace = "&nbsp;")	
+#if ($specCombineService.listOfZonalService.size() > 0 || $specCombineService.listOfNonZonalService.size() > 0)
+#if ($count == 0)
+#else
+	<div class="break-after"><br/></div>
+#end
+
+<table width="100%" border="1" cellpadding="0" cellspacing="0">
+<tbody>	
+#if ($isZonal)
+#foreach ($listSpecDLOA in $specCombineService.listOfZonalService)
+
+#set($indi = 0)
+	#foreach ($zonalDLOA in $listSpecDLOA)
+			
+		#set($itemType = $zonalDLOA.itemType)
+		#set($specType = $zonalDLOA.specType)
+		#set($rowspanClItem = $listSpecDLOA.size() + $zonalDLOA.specVal.size())
+		#if ($itemType == "Perkhidmatan" || $itemType == "Service")
+			#if ($rowCount == 0)
+				<tr>
+					<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Item</th>
+					<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">UOM</th>
+					<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kekerapan / <br/>Unit Ukuran</th>
+					<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Bil. Unit <br/>Ukuran Sehari</th>
+					<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Bil. Unit <br/>Ukuran Sebulan</th>
 							
-							#if ($isZonal)
-								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Zon</th>
-							#end
-							
-							<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti</th>
-							<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Skop Perkhidmatan / SLA</th>
-						</tr>
-						<tr>
-							#if ($isZonal)
-								<th bgcolor="#6d839b" class="title border left" colspan="6" style="text-align: center; font-family: Arial;">Spesifikasi</th>
-							#else
-								<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center; font-family: Arial;">Spesifikasi</th>
-							#end
-						</tr>
-					#end
-						
-					#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
-											
 					#if ($isZonal)
-
-						#if ($tplspecQuestion.questionType == "I")
-						 
-						<tr>							 
+						<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Zon</th>
+					#end
 							
-							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
-							<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
-							
-							<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
-								#if ($tplspecQuestion.clUomFrequency)
-									$tplspecQuestion.clUomFrequency
-								#end
-							</td>
-							<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
-								#if ($tplspecQuestion.clUomPerDay)
-									$tplspecQuestion.clUomPerDay
-								#end
-							</td>
-							<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
-								#if ($tplspecQuestion.clUomPerMonth)
-									$tplspecQuestion.clUomPerMonth
-								#end
-							</td>
-							#if ($specType == "F")
-										<td bgcolor="#d0eaee">
-											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-											<table width="100%" border="1" cellpadding="0" cellspacing="0">
-												<tbody>
-												<tr style="border-bottom: 1px solid black;" >
-													#if ($tplSpecAnswer.tplSpecZoneQty.tplSpecZoneDtl.zoneName) 
-														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplSpecAnswer.tplSpecZoneQty.tplSpecZoneDtl.zoneName</td>
-													#else
-														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$serviceScope</td>
-													#end
-												</tr>
-												</tbody>
-												</table>
-											#end
-										</td>
-										
-										<td bgcolor="#d0eaee">
-											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-											<table width="100%"  border="1" cellpadding="0" cellspacing="0">
-												<tbody>
-												<tr style="border-bottom: 1px solid black;" >
-													#if ($tplSpecAnswer.tplSpecZoneQty.qty) 
-														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplSpecAnswer.tplSpecZoneQty.qty</td>
-													#else
-														<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$serviceScope</td>
-													#end
-												</tr>
-												</tbody>
-												</table>
-											#end
-										</td>
-									#else 
-									
-									  #if ($specType == "T")
-											<td bgcolor="#d0eaee">
-												#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
-												<table width="100%" border="1" cellpadding="0" cellspacing="0">
-													<tbody>
-													<tr style="border-bottom: 1px solid black;" >
-														<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplSpecZoneQtie.tplSpecZoneDtl.zoneName</td>
-													</tr>
-													</tbody>
-													</table>
-												#end
-											</td>
-											
-											<td bgcolor="#d0eaee">
-												#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
-												<table width="100%"  border="1" cellpadding="0" cellspacing="0">
-													<tbody>
-													<tr style="border-bottom: 1px solid black;" >
-														<td rowspan="$tplSpecZoneQtie.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplSpecZoneQtie.qty</td>
-													</tr>
-													</tbody>
-													</table>
-												#end
-											</td>
-											#else
-												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$serviceScope</td>
-												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial;">$serviceScope</td>
-											#end
-									#end
-											
-							#if ($rowCount == 0)
-										#set($rowCount = $rowCount + 1)
-										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
-									#end
-							</tr>	
-							
-							<tr>
-							<td bgcolor="#d0eaee" colspan="6">						
-									#if ($tplspecQuestion.specList)
-										#foreach( $specVal in $tplspecQuestion.specList )
-											
-											<table width="100%">
-												<tbody>
-												<tr>
-													<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specVal</td>
-												</tr>
-												</tbody>
-											</table>
-												
-										#end
-									#end
-							</td>
-							</tr>
-							#end	
+					<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti</th>
+					<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Skop Perkhidmatan / SLA</th>
+				</tr>
+				<tr>
+					#if ($isZonal)
+						<th bgcolor="#6d839b" class="title border left" colspan="6" style="text-align: center; font-family: Arial;">Spesifikasi</th>
+					#else
+						<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center; font-family: Arial;">Spesifikasi</th>
+					#end
+				</tr>
+			
+			#end
+			
+			
+				#set ($rowspanItemName = $zonalDLOA.rowSpan )
+					<tr>
+						#if ($zonalDLOA.clItem == " " || $zonalDLOA.clItem == $whitespace)
 						#else
-							#if ($tplspecQuestion.questionType == "I")
-											 
-								<tr>
-								
-								
-								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
-								<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
-								<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
-									#if ($tplspecQuestion.clUomFrequency)
-										$tplspecQuestion.clUomFrequency
-									#end
-								</td>
-								<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
-									#if ($tplspecQuestion.clUomPerDay)
-										$tplspecQuestion.clUomPerDay
-									#end
-								</td>
-								<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
-									#if ($tplspecQuestion.clUomPerMonth)
-										$tplspecQuestion.clUomPerMonth
-									#end
-								</td>
-								<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clQuantity</td>
-									
-									
-												
-								#if ($rowCount == 0)
-										#set($rowCount = $rowCount + 1)
-										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
-									#end
-								</tr>		
-								
-								<tr>
-								<td bgcolor="#d0eaee" colspan="5">						
-										#if ($tplspecQuestion.specList)
-											#foreach( $specVal in $tplspecQuestion.specList )
-												
-												<table width="100%">
-													<tbody>
-													<tr>
-														<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specVal</td>
-													</tr>
-													</tbody>
-												</table>
-													
-											#end
-										#end
-								</td>
-								</tr>
-								#end	
+							<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName"><strong>$zonalDLOA.clItem</strong></td>	
+						#end
+						
+						#if($zonalDLOA.uomName == " " || $zonalDLOA.uomName == $whitespace)
+						#else
+							<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$zonalDLOA.uomName</td>
+						#end
+						
+						#if ($zonalDLOA.clUomFrequency == " " || $zonalDLOA.clUomFrequency == $whitespace)
+						#else
+							<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$zonalDLOA.clUomFrequency</td>
+							
+						#end
+						
+						#if($zonalDLOA.clUomPerDay == " " || $zonalDLOA.clUomPerDay == $whitespace)
+						#else
+							<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$zonalDLOA.clUomPerDay</td>
+							
+							
+						#end
+						
+						#if ($zonalDLOA.clUomPerMonth == " " || $zonalDLOA.clUomPerMonth == $whitespace)
+						#else
+							<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$zonalDLOA.clUomPerMonth</td>
+							
+						#end
+						
+						
+						#if ($specType == "F")
+							<td class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">$zonalDLOA.zoneName</td>
+							<td class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">$zonalDLOA.qty</td>
+							
+						#else
+							#if ($specType == "T")
+							<td class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">$zonalDLOA.zoneName</td>
+							<td class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">$zonalDLOA.qty</td>
+							#else
+								<td class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">N/A</td>
+								<td class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">N/A</td>
+							#end
+						#end
+						
+
+							#if ($indi == 0)
+							#set($indi = 1)	
+							#set($rowCount = 1)	
+							<td class="standard border-bottom left"  style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName" >$whitespace</td>
 							
 							#end
-
-						#end 
-						
-						#set($rowCount = $rowCount + 1)
+								
+					</tr>
+					#foreach($specVal in $zonalDLOA.specVal)
+						<tr>
+							
+							<td colspan="6" class="standard border-bottom left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specVal</td>
+						</tr>
 					#end
-				#end
-		</tbody>
-		</table>
+					
+						#set($rowCount = $rowCount + 1)	
+				
+			
+		#end
+	#end
+
+#end
+#else
+##non zonal start
+#foreach ($listSpecDLOA in $specCombineService.listOfNonZonalService)
+	#set($indi = 0)
+	
+		#set($itemType = $listSpecDLOA.itemType)
+		#set($specType = $listSpecDLOA.specType)
+		#set($rowspanClItem = $listSpecDLOA.size() + $listSpecDLOA.specVal.size())
+		#if ($itemType == "Perkhidmatan" || $itemType == "Service")
+			#if ($rowCount == 0)
+				<tr>
+					<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Item</th>
+					<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">UOM</th>
+					<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kekerapan / <br/>Unit Ukuran</th>
+					<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Bil. Unit <br/>Ukuran Sehari</th>
+					<th bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Bil. Unit <br/>Ukuran Sebulan</th>
+					<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti</th>
+					<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Skop Perkhidmatan / SLA</th>
+				</tr>
+				<tr>
+					<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center; font-family: Arial;">Spesifikasi</th>
+				</tr>
+			
+			#end
+			
+			#set ($rowspanItemName = $listSpecDLOA.rowSpan )
+			
+						#if ($listSpecDLOA.clItem == " " || $listSpecDLOA.clItem == $whitespace)
+						#else
+							<td valign="top" class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName"><strong>$listSpecDLOA.clItem</strong></td>	
+						#end
+						
+						#if($listSpecDLOA.uomName == " " || $listSpecDLOA.uomName == $whitespace)
+						#else
+							<td class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" >$listSpecDLOA.uomName</td>
+						#end
+						
+						#if ($listSpecDLOA.clUomFrequency == " " || $listSpecDLOA.clUomFrequency == $whitespace)
+						#else
+							<td class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" >$listSpecDLOA.clUomFrequency</td>
+							
+						#end
+						
+						#if($listSpecDLOA.clUomPerDay == " " || $listSpecDLOA.clUomPerDay == $whitespace)
+						#else
+							<td class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" >$listSpecDLOA.clUomPerDay</td>
+							
+							
+						#end
+						
+						#if ($listSpecDLOA.clUomPerMonth == " " || $listSpecDLOA.clUomPerMonth == $whitespace)
+						#else
+							<td class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" >$listSpecDLOA.clUomPerMonth</td>
+							
+						#end
+						
+						#if ($listSpecDLOA.qty == " " || $listSpecDLOA.qty == $whitespace)
+						#else
+							<td class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$listSpecDLOA.qty</td>
+						#end
+						
+						#if ($indi == 0)
+							#set($indi = 1)	
+							#set($rowCount = 1)	
+							<td class="standard border-bottom left"  style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName" >$whitespace</td>
+							
+						#end
+						
+						#foreach($specVal in $listSpecDLOA.specVal)
+							<tr>
+								
+								<td colspan="5" class="standard border-bottom left"   style="text-align: center; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specVal</td>
+							</tr>
+						#end
+					
+						#set($rowCount = $rowCount + 1)	
+				
+		#end	
+	
+#end
+
+#end			
+</tbody>
+</table>
+#end		
+##26130 - end	
 		<br/>
 		<br/>
 	  #else 
-		<table width="100%" border="1" cellpadding="0" cellspacing="0">
-		<tbody>
+		
 		  	#foreach( $tplspecMaster in $masters )
+		  	##26130 - start - move inside for to prevent table generate without data
+		  	<table width="100%" border="1" cellpadding="0" cellspacing="0">
+			<tbody>
+		  	##26130 - end - move inside for to prevent table generate without data
 					#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
 					#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
 					#if ($itemType == "Perkhidmatan" || $itemType == "Service")
 					  #if ($rowCount == 0)
 							<tr>
 								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;"><nobr>Tajuk Templat:</nobr></td>
-								<td bgcolor="#d0eaee" class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">$tplspecMaster.specName</td>
+								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">$tplspecMaster.specName</td>
 							</tr>
 							<tr>
 								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;"><nobr>Jenis Item:</nobr></td>
-								<td bgcolor="#d0eaee" class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecMaster.itemTypeCode)</td>
+								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecMaster.itemTypeCode)</td>
 							</tr>
 							<tr>
 								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;"><nobr>Jenis Barangan:</nobr></td>
-								<td bgcolor="#d0eaee" class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecMaster.itemOriginCode)</td>
+								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecMaster.itemOriginCode)</td>
 							</tr>
 							<tr>
-								<td bgcolor="#d0eaee" class="title border left" colspan="10" style="text-align: left;">&nbsp;</td>
+								<td class="title border left" colspan="10" style="text-align: left;">&nbsp;</td>
 							</tr>
 						
 							<tr>
@@ -1033,21 +977,21 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 								 
 								<tr>							 
 									
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
 								
 										
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
+									<td  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
 										#if ($tplspecQuestion.clUomFrequency)
 											$tplspecQuestion.clUomFrequency
 										#end
 									</td>
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
+									<td  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
 										#if ($tplspecQuestion.clUomPerDay)
 											$tplspecQuestion.clUomPerDay
 										#end
 									</td>
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
+									<td  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
 										#if ($tplspecQuestion.clUomPerMonth)
 											$tplspecQuestion.clUomPerMonth
 										#end
@@ -1118,7 +1062,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 									#end
 									
 									
-									<td bgcolor="#d0eaee" rowspan="2">
+									<td rowspan="2">
 									#if ($tplspecQuestion.feedbackList)
 										#if ($specType == "T")
 											#foreach( $feedback in $tplspecQuestion.feedbackList)
@@ -1126,7 +1070,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 													<tbody>
 													<tr>
 													#if ($feedback) 
-														<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$feedback</td>
+														<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$feedback</td>
 													#end
 													</tr>
 													</tbody>
@@ -1136,14 +1080,14 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 									#end
 									</td>
 									
-									<td bgcolor="#d0eaee" rowspan="2">
+									<td rowspan="2">
 										#if ($tplspecQuestion.answerRemarkList)
 											#foreach( $answerRemark in $tplspecQuestion.answerRemarkList )
 												<table width="100%">
 													<tbody>
 													<tr>
 														#if ($answerRemark) 
-															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$answerRemark</td>
+															<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$answerRemark</td>
 														#end
 													</tr>
 													</tbody>
@@ -1154,19 +1098,19 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 									
 									#if ($rowCount == 0)
 										#set($rowCount = $rowCount + 1)
-										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+										<td class="standard border-bottom left"  style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
 									#end
 									</tr>
 								
 									<tr>
-									<td valign="top" bgcolor="#d0eaee" colspan="6">						
+									<td valign="top" colspan="6">						
 											#if ($tplspecQuestion.specList)
 											#foreach( $specVal in $tplspecQuestion.specList )
 												
 												<table width="100%">
 													<tbody>
 													<tr>
-														<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:16.5px; font-family: Arial;">$specVal</td>
+														<td class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:16.5px; font-family: Arial;">$specVal</td>
 													</tr>
 													</tbody>
 												</table>
@@ -1184,25 +1128,25 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 									<tr>
 									
 									
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
+									<td  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
 										#if ($tplspecQuestion.clUomFrequency)
 											$tplspecQuestion.clUomFrequency
 										#end
 									</td>
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
+									<td  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
 										#if ($tplspecQuestion.clUomPerDay)
 											$tplspecQuestion.clUomPerDay
 										#end
 									</td>
-									<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
+									<td  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">
 										#if ($tplspecQuestion.clUomPerMonth)
 											$tplspecQuestion.clUomPerMonth
 										#end
 									</td>
-									<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clQuantity</td>
-									<td bgcolor="#d0eaee" rowspan="2">
+									<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clQuantity</td>
+									<td rowspan="2">
 										#if ($tplspecQuestion.feedbackList)
 											#if ($specType == "T")
 												#foreach( $feedback in $tplspecQuestion.feedbackList)
@@ -1210,7 +1154,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 														<tbody>
 														<tr>
 														#if ($feedback) 
-															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$feedback</td>
+															<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$feedback</td>
 														#end
 														</tr>
 														</tbody>
@@ -1220,14 +1164,14 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 										#end
 									</td>
 														
-									<td bgcolor="#d0eaee" rowspan="2">
+									<td rowspan="2">
 										#if ($tplspecQuestion.answerRemarkList)
 											#foreach( $answerRemark in $tplspecQuestion.answerRemarkList )
 												<table width="100%">
 													<tbody>
 													<tr>
 														#if ($answerRemark) 
-															<td bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$answerRemark</td>
+															<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;">$answerRemark</td>
 														#end
 													</tr>
 													</tbody>
@@ -1238,19 +1182,19 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 													
 									#if ($rowCount == 0)
 										#set($rowCount = $rowCount + 1)
-										<td bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
+										<td class="standard border-bottom left"  style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="$tplspecMaster.tplSpecQuestions.size()"></td>
 									#end
 									</tr>	
 									
 									<tr>
-									<td bgcolor="#d0eaee" colspan="5">						
+									<td colspan="5">						
 											#if ($tplspecQuestion.specList)
 												#foreach( $specVal in $tplspecQuestion.specList )
 													
 													<table width="100%">
 														<tbody>
 														<tr>
-															<td bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specVal</td>
+															<td class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specVal</td>
 														</tr>
 														</tbody>
 													</table>
@@ -1267,9 +1211,12 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 						
 						#set($rowCount = $rowCount + 1)
 					#end
+					##26130 - start - move inside for to prevent table generate without data
+					</tbody>
+					</table>
+					##26130 - end - move inside for to prevent table generate without data
 					#end
-			</tbody>
-			</table>
+			
 			
 			<br/>
 			<br/>
@@ -1317,28 +1264,14 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 			<td align="center"><span class="text_family_header">KADAR DENDA/TOLAKAN</span> <br /> <br /></td>
 		</tr>
 	</table>
-	
+	##26130 - start
+	#include("/templates/sc/loa/footerContentEnd.vm")
+	##26130 - end
 	#if ($serviceItemPageNo)
 		
 		
-		<div style="margin-top: 200px; font-family: Arial; font-size:13px; float:right">
-			$serviceItemPageNo
-		</div>
+		##<div style="margin-top: 200px; font-family: Arial; font-size:13px; float:right">$serviceItemPageNo</div>
 		
-		<div style="margin-top: 200px; font-family: Arial; font-size:13px;">
-		Tandatangan & Cop (Kerajaan) : _____________
-		<br/>
-		<br/>
-		<br/>
-		Tandatangan & Cop (Syarikat ) : _____________
-		<br/>
-		<br/>
-		</div>
-		<div style="color:red; font-family: Arial; font-size:13px;">
-		<span>Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk</span><br />
-		menandatangani kontrak<br/>
-		Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangani Surat ini.
-		</div>
 	#end
 </body>
 </html>

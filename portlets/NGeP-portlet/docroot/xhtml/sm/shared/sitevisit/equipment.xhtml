@@ -4,8 +4,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="#{lbl['lbl.sm.equipment.maintnce.ovrhl']}">
 		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.equipmentMain}" var="equipMaint" id="dtlEquipMain"
@@ -43,12 +42,6 @@
 						required="#{equipMaint.equipmentAvailable and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}" >
 						<f:validateLongRange minimum="1"  for="dtlEquipMainQtySetId"></f:validateLongRange>
 					</p:inputText>
-					<!-- #24964 -->
-					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty equipMaint and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-						oriValue="#{svoSiteVisitBackingBean.getSVOSmSvEquipment(equipMaint).equipmentQty}" 
-						currValue="#{equipMaint.equipmentQty}" 
-						alertValue="#{svoSiteVisitBackingBean.getSVOSmSvEquipment(equipMaint).equipmentQty}"/>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -86,12 +79,6 @@
 						required="#{equipBinding.equipmentAvailable and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}">
 							<f:validateLongRange minimum="1" for="dtlEquipBeatingQtySetId"></f:validateLongRange>
 					</p:inputText>
-					<!-- #24964 -->
-					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty equipBinding and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-						oriValue="#{svoSiteVisitBackingBean.getSVOSmSvEquipment(equipBinding).equipmentQty}" 
-						currValue="#{equipBinding.equipmentQty}" 
-						alertValue="#{svoSiteVisitBackingBean.getSVOSmSvEquipment(equipBinding).equipmentQty}"/>
 			</p:column>
 		</p:dataTable>
 	</p:panel>

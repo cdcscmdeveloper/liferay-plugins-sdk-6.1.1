@@ -66,6 +66,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private String docType;
 	private Map<String, SmSupplierBank> supplierBankAccountMap;
 	private List<PmStatusDesc>decisionList;
+	private String accountNo;//32967
 	
 	// Inv Items
 	private TreeNode chargeLineItemRoot ;
@@ -159,6 +160,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
     //30911 start
     private List<SelectItem> factoringAccList;
     //30911 end
+
+    private boolean isSupplementContractComplete = true; //28719
 
 	public Map<String, PmFinancialOrg> getFactoringAccountMap() {
 		if(factoringAccountMap==null) {
@@ -1251,6 +1254,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	}
 	//26279 - end
 
+	//24956 start
 	public boolean isCtTypeMinistry() {
 		return CtTypeMinistry;
 	}
@@ -1258,6 +1262,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	public void setCtTypeMinistry(boolean ctTypeMinistry) {
 		CtTypeMinistry = ctTypeMinistry;
 	}
+	//24956 end
 	
 	//30911 start
 	public List<SelectItem> getFactoringAccList() {
@@ -1268,4 +1273,29 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.factoringAccList = factoringAccList;
 	}
 	//30911 end
+	
+	//32967-start
+	/**
+	 * @return the accountNo
+	 */
+	public String getAccountNo() {
+		return accountNo;
+	}
+
+	/**
+	 * @param accountNo the accountNo to set
+	 */
+	public void setAccountNo(String accountNo) {
+		this.accountNo = accountNo;
+	}
+	//32967-end
+	//28719-start
+	public boolean isSupplementContractComplete() {
+		return isSupplementContractComplete;
+	}
+
+	public void setSupplementContractComplete(boolean isSupplementContractComplete) {
+		this.isSupplementContractComplete = isSupplementContractComplete;
+	}
+	//28719-end	
 }

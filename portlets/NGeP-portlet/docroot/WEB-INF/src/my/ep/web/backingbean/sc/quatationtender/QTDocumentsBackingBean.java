@@ -745,7 +745,8 @@ public class QTDocumentsBackingBean extends
 			ScQt scQt = getManagedBean().getQt();
 			TemplateDocBackingBean tplDocBB = new TemplateDocBackingBean();
 			tplDocBB.getManagedBean().setExternalPageUrl(DOCUMENT_PAGE);
-
+			log.info("========isClonedQTCodesExecuted====="+scQtDocReport.isCloned());//33954
+            if(!scQtDocReport.isCloned()){
 			ScQtDocReport qtDocReport = retriveRulesAndRegulationReport(scQtDocReport);
 			if (qtDocReport != null) {
 				scQtDocReport = qtDocReport;
@@ -753,7 +754,10 @@ public class QTDocumentsBackingBean extends
 				// save list of documents if its not yet save
 				scQtDocReport = saveScQtReportList(scQtDocReport);
 			}
-
+		}//33954
+         else{//33954
+            	throw new EpException("Template was Cloned Before Edit save All Template Details");	
+          }//33954
 			this.getManagedBean().setScQtDocReport(scQtDocReport);
 			TplDocMaster docMaster = scQtDocReport.getTplDocMaster();
 			if (docMaster == null) {

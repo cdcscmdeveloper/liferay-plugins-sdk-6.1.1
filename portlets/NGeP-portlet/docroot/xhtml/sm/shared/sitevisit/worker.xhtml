@@ -18,12 +18,6 @@
 					</f:facet>
 					<p:inputText id="workerSpecializationId" value="#{svWorker.expertise}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.specialization']}"
 					maxlength="100" required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}" />
-					<!-- #24964 -->
-					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svWorker and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-						oriValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).expertise}" 
-						currValue="#{svWorker.expertise}" 
-						alertValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).expertise}"/>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -31,12 +25,6 @@
 					</f:facet>
 				<p:inputText id="workerNameId" value="#{svWorker.name}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.name']}"
 				maxlength="50" required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}"/>
-				<!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svWorker and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).name}" 
-					currValue="#{svWorker.name}" 
-					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).name}"/>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -46,12 +34,6 @@
 				maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}" required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}"> 
 				<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
                 </p:inputText>                				
-                <!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svWorker and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).identificationNo}" 
-					currValue="#{svWorker.identificationNo}" 
-					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).identificationNo}"/>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -59,12 +41,6 @@
 				</f:facet>
 				<p:inputText id="workExpYearId" value="#{svWorker.workExpYear}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.experience']}"
 				maxlength="2" required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}" />
-				<!-- #24964 -->
-				<ac:smFieldChangeAlertSVO
-					isShow="#{not empty svWorker and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-					oriValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).workExpYear}" 
-					currValue="#{svWorker.workExpYear}" 
-					alertValue="#{svoSiteVisitBackingBean.getSVOSmSvWorker(svWorker).workExpYear}"/>
 			</p:column>
 		</p:dataTable>		
 		

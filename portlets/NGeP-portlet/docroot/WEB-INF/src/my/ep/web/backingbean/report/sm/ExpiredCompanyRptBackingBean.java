@@ -31,11 +31,11 @@ public class ExpiredCompanyRptBackingBean extends SmReportBackingBean<ExpiredCom
 		//7754 - Start
 		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone() == null ? StringUtils.EMPTY : getManagedBean()
 				.getZone());
-		//7754 - End
 		
-		if(StringUtils.isNotBlank(getManagedBean().getApplType())){
+		if(!StringUtils.isBlank(getManagedBean().getSupplierType())){
 			params.put(SmReportConst.PARAM_SUPPLIER_TYPE,getManagedBean().getSupplierType());
 		}
+		//7754 - End
 
 		if(StringUtils.isNotBlank(getManagedBean().getDateFrom().toString())){
 			checkOneYearDifferent(getManagedBean().getDateFrom(),getManagedBean().getDateTo());

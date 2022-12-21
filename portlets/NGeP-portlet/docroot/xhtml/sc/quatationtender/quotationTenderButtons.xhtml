@@ -109,15 +109,25 @@
 			</c:if>
 			<!-- ***25692 - end -->
 				
+			<!-- 9019 Start (Harun) WIP transaction Pending QT Submission -->
+			<c:if test="#{!qTDetailBB.getTaskByDocNoModule(qTDetailBB.managedBean.qt.qtNo, QTStatusConst.SC_WFTASK_COMPOSITENAME) and qTDetailBB.managedBean.maintanceFlow}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.update.sc.wip']}" partialSubmit="true" process="@this"
+					action="#{qTDetailBB.updateWIPTransaction()}">
+				</p:commandButton>
+			</div>
+			</c:if>
+			<!--9019 end -->
+				
 			<c:if test="#{!qTDetailBB.managedBean.readOnly}">
 			  	
 			 <!-- danial #25635 - rollback 22/11/2020-->
 			 <p:commandButton value="#{lbl['lbl.btn.clone']}" style="float:right;" id="cloneButton" rendered="#{isClone1}"
-											process="@this" partialSubmit="true" update="pnlid2"
+											process="@this" partialSubmit="true" update="pnlid2" disabled="#{qTDetailBB.isCloneBtnDisable()}"
 											action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
 											title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />
 				<p:commandButton value="#{lbl['lbl.sc.clone.qt.documents']}" style="float:right;" id="cloneButton2" rendered="#{isClone2 and !isCommitteeApprovalReviseTask}"
-											process="@this" partialSubmit="true" update="pnlid2"
+											process="@this" partialSubmit="true" update="pnlid2" disabled="#{qTDetailBB.isCloneBtnDisable()}"
 											action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
 											title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />	
 				
@@ -148,11 +158,13 @@
 								rendered="#{isClone2 and !isCommitteeApprovalReviseTask}" />
 								
 							<ui:remove> #30477 Start </ui:remove>	
-							<p:commandButton value="#{lbl[buttonLabel]}"
-								styleClass="ui-button" onclick="blockWidget.show();"
-								oncomplete="blockWidget.hide();"
-								rendered="#{isClone2 and isCommitteeApprovalReviseTask}"
-								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
+<!-- #29732 Start - reOpen Fix -->
+							<p:commandButton value="#{lbl[buttonLabel]}" 
+								styleClass="ui-button" onclick="blockWidget.show();" 
+								oncomplete="blockWidget.hide();" 
+								rendered="#{isClone2 and isCommitteeApprovalReviseTask}" 
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}" update="@form">
+<!-- #29732 End - reOpen Fix -->
 							</p:commandButton>
 							<ui:remove> #30477 End </ui:remove>
 							
@@ -164,11 +176,17 @@
 							   <f:param name="skipvalidation" value="0" />
 							</p:commandButton>
 						
-							<p:commandButton value="#{lbl[buttonLabel]}"
-								styleClass="ui-button" onclick="blockWidget.show();"
-								oncomplete="blockWidget.hide();"
-								rendered="#{!isClone2 and !qTDetailBB.isCancel(bpmAction)}"
-								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
+<!-- #29732 Start - reOpen Fix -->							
+							<p:commandButton value="#{lbl[buttonLabel]}" 
+								styleClass="ui-button" onclick="blockWidget.show();" 
+								oncomplete="blockWidget.hide();" 
+								rendered="#{!isClone2 and !qTDetailBB.isCancel(bpmAction)}" 
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}" 
+								update="@form">
+							<!-- start 9019 - Reopen #note-317-->
+				    		<f:param name="skipsubmitvalidation" value="0" />
+			       			<!-- end 9019 - Reopen #note-317-->		
+<!-- #29732 End - reOpen Fix -->
 							</p:commandButton>
 							<!-- 9019 -end- -->
 						</ui:repeat>
@@ -181,11 +199,14 @@
 							rendered="#{!isClone1 and !isClone2}" 
 							oncomplete="blockWidget.hide();" disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
 							
+						<!--#9019 01082022 Reopen change onclick and add oncomplete #note-253-->
 						<p:commandButton value="#{lbl['lbl.btn.submit']}"
-							onclick="submitConfirmPopUp.show();"
+							onclick="blockWidget.show();"
 							update="@([id$=#{submitConfirmId}])" 
-							rendered="#{isClone1}" 
+							rendered="#{isClone1}"
+							oncomplete="blockWidget.hide();submitConfirmPopUp.show();" 
 							disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
+						<!--9019 end -->	
 						</c:when>
 						<c:otherwise>
 							<ui:remove>#29472 - start</ui:remove>
@@ -258,10 +279,10 @@
 					oncomplete="blockWidget.hide();"
 					 partialSubmit="true" process="@form" update="@form" 
 					action="#{qTDetailBB.submitQTDetailsAction}">
-					<!-- 9019 -start- -->
-					<f:param name="skipvalidation" value="0" />
-				</p:commandButton>	
-				<!-- 9019 -end- -->
+					<!-- start 9019 - Reopen #note-289-->
+				    <f:param name="skipsubmitvalidation" value="0" />
+			    </p:commandButton>    
+				    <!-- end 9019 - Reopen #note-289-->
 				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					onclick="submitConfirmPopUp.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>

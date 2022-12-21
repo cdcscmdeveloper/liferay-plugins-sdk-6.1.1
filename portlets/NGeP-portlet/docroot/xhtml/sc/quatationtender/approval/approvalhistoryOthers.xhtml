@@ -7,7 +7,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-
+    <ui:param name="isMandatoryDocument" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION}" />  
+	
 	<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
 		<p:dataTable
 		    value="#{approvalDtlsList.historyApprovalRequests}" 
@@ -34,7 +35,7 @@
 			     <c:if test="#{not empty approvalDtlsList.historyApprovalRequests}">
 	                <c:choose>
 					    <c:when test="#{qTDetailBB.managedBean.maintanceFlow}">	
-				              <p:column headerText="#{lbl['lbl.sc.document']}">
+				              <p:column headerText="#{lbl['lbl.sc.document']}" style="text-align: center;white-space: normal;width: 50%;"><!-- #34014 -->
 				                  <c:if test="#{qTDetailBB.isApprovalScreen() and qTDetailBB.userTaskIsCommitteeAppointmentApproval}">
 										<ui:include src="downloadOthersFile.xhtml" />
 				                  </c:if>
@@ -53,20 +54,36 @@
 							  </p:column>  
 				        </c:when>
 				        <c:otherwise>
-		                       <p:column>
+		                       <p:column style="text-align: center;white-space: normal;width: 50%;"><!-- #34014 -->
 							      <f:facet name="header">
-								        <h:outputText value="* " styleClass="mandatory" />
+							            <c:if test="#{isMandatoryDocument}">
+							               <h:outputText value="* " styleClass="mandatory" />
+							            </c:if>
 										<h:outputText value="#{lbl['lbl.sc.document']}" />
 								  </f:facet>
-						          <ac:scSingleFileUploadButton id="historyOtheruploadId"
-										popupWidgetVar="otherHistoryApprUploadDlg"
+								  
+						          <ac:scSingleFileUploadButton id="historyOtheruploadIdICT"
+										popupWidgetVar="otherHistoryApprUploadDlgICT"
 										attachment="#{historyOthersDtls.approvalRequestAttachement}"
-										deleteFileUploadListener="approvalBackingBean.deleteHistoryOthersApprovalFile"
+										rendered="#{historyOthersDtls.approvalType.parameterCode eq ParameterConst.approvalRequestIctProjects}"
+										deleteFileUploadListener="approvalBackingBean.deleteHistoryOthersApprovalFileICT"
 										rowIndex="#{indexHistory}">
 										<f:setPropertyActionListener for="actionEvent"
 											value="#{historyOthersDtls}"
 											target="#{approvalBackingBean.managedBean.historyApprovalRequests}" />
 							      </ac:scSingleFileUploadButton>
+							      
+							      <ac:scSingleFileUploadButton id="historyOtheruploadIdMITI"
+										popupWidgetVar="otherHistoryApprUploadDlgMITI"
+										attachment="#{historyOthersDtls.approvalRequestAttachement}"
+										rendered="#{historyOthersDtls.approvalType.parameterCode eq ParameterConst.approvalRequestImportedGoods}"
+										deleteFileUploadListener="approvalBackingBean.deleteHistoryOthersApprovalFileMITI"
+										rowIndex="#{indexHistory}">
+										<f:setPropertyActionListener for="actionEvent"
+											value="#{historyOthersDtls}"
+											target="#{approvalBackingBean.managedBean.historyApprovalRequests}" />
+							      </ac:scSingleFileUploadButton>
+							      
 					          </p:column> 
 					    </c:otherwise>
 				    </c:choose>

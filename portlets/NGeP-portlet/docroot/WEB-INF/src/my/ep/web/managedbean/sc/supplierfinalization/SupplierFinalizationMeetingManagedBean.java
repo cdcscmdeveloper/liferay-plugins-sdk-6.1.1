@@ -16,6 +16,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
@@ -95,6 +96,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private SupplierFinalizationBackingBean finalBB; 
 	private SupplierFinalizationBiddingBackingBean finalBiddingBB; 
 	private List<QtCommitteeMemberBean> prevCommitteeMembers;
+	private List<ScQtApprovalRemark> cmtAppointmentApprovalRemarks;	//25037 note 284
 	//#25037-END
 
 	/** 
@@ -675,9 +677,14 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		this.finalBiddingBB = finalBiddingBB;
 	}
 	//#25037-end
-
-	
-	
-	
-
+	//25037 note 284 - start
+	public List<ScQtApprovalRemark> getCmtAppointmentApprovalRemarks() {
+		return cmtAppointmentApprovalRemarks;
+	}
+	 
+	public void setCmtAppointmentApprovalRemarks(
+			List<ScQtApprovalRemark> cmtAppointmentApprovalRemarks) {
+		this.cmtAppointmentApprovalRemarks = cmtAppointmentApprovalRemarks;
+	}
+	//25037 note 284 - end
 }

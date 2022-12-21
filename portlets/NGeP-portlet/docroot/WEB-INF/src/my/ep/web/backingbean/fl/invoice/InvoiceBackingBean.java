@@ -36,9 +36,7 @@ import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -63,12 +61,8 @@ import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
-import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
@@ -103,12 +97,10 @@ import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
-import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -139,7 +131,6 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.InvoiceChargeLineVO;
 import my.ep.web.vo.TaxInvoiceVO;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -209,6 +200,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
+			if(!getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//33238
+				//32967-start
+				if(null != getManagedBean().getAccountNo()){
+					getManagedBean().getInvoice().setAccountNo(getManagedBean().getAccountNo());
+				}
+				//32967-end
+			}
 			FlInvoice invoice = getManagedBean().getInvoice();
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 			adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
@@ -277,12 +275,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 				FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getInvoice().getFlRequest().getDocType(), getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
 				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),actor.getUser(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
-				//13291 - start
-				if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && reqDTO.isDan()) {
-					log.info("Is DAN");
-					getOtherApproverList(listOfApprover, sumItemAmt);
-				}
-				//13291 - end
 			}
 			reqDTO.setApproverUserList(listOfApprover);
 			reqDTO.setOutcome(action);
@@ -332,11 +324,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					approver = getFacesScopes().getUserSessionBean();
 				}
 				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),approver,getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
-				//13291 - start
-				if(BpmOutcomeConst.BPM_UPDATE.equalsIgnoreCase(action) || BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action)) {
-					getOtherApproverList(listOfApprover, sumItemAmt);
-				}						
-				//13291 - end
 				reqDTO.setApproverUserList(listOfApprover);
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					if(reqDTO.isDan()){
@@ -355,6 +342,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						}
 					}
 				}
+				//33654-Start
+				if(reqDTO.isInvoiceRevise() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+					reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+				}
+				//33654-End
 				
 				resDTO = invoiceSO.invoiceModification(reqDTO);
 			}else{
@@ -419,8 +411,15 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && resDTO.getInvoice()!=null && resDTO.getInvoice().getAp59Status()!=null && 
 						resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
 					isPendingAP59Decision = true;
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_745001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					//28719-Start
+					if(!getManagedBean().isSupplementContractComplete()){
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.INFO_745027, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					}else{
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.INFO_745001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					}
+					//28719-End
 				}
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && reqDTO.isCan()) {
 					if(resDTO.getInvoice().getAp59Status()==null || 
@@ -860,15 +859,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "invBasePage.xhtml");
 	}
 	
-	//24956 - start
-	public void ministryTypeChecking() {
-			if (getManagedBean().getInvoice().getFlRequest().getCtContract() != null
-					&& getManagedBean().getInvoice().getFlRequest().getCtContract().getContractType().
-					getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				getManagedBean().setCtTypeMinistry(true);
-			}
-	}
-	//24956 - end
 	
 	/**
 	 * View invoice.
@@ -1354,6 +1344,19 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		
 		if (this.getManagedBean().getInvoice() != null) {
+			if(!getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//33238
+				//32967-Start
+				if(this.getManagedBean().getInvoice().getAccountNo()!=null){
+					if(getManagedBean().getAccountNo()==null){
+						getManagedBean().setAccountNo(this.getManagedBean().getInvoice().getAccountNo());
+					}			
+				
+					if(this.getManagedBean().getInvoice().getAccountNo().equalsIgnoreCase(getManagedBean().getAccountNo())){
+						this.getManagedBean().getInvoice().setAccountNo(this.getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId()+"|"+this.getManagedBean().getInvoice().getAccountNo());
+					}
+				}
+				//32967-End
+			}
 			if(this.getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchName() != null ){
 				supplierSearchReqDTO.setBranchCode(getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchCode());
 				supplierSearchReqDTO.setSupplierId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
@@ -1363,9 +1366,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						String account = obj.getAccountNo();
 						if (obj.getPmFinancialOrg() != null)
 							account = account + "  " + obj.getPmFinancialOrg().getFinOrgName();
-						populateBankAccountList.add(new SelectItem(obj.getAccountNo(), account));
-						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
-							getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
+						//32967-Start
+						populateBankAccountList.add(new SelectItem(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo(), account));
+						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo())) {
+							getManagedBean().getSupplierBankAccountMap().put(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo(), obj);
+						//32967-End
 						}
 					}
 				}
@@ -1379,9 +1384,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						String account = obj.getAccountNo();
 						if (obj.getPmFinancialOrg() != null)
 							account = account + "  " + obj.getPmFinancialOrg().getFinOrgName();
-						populateBankAccountList.add(new SelectItem(obj.getAccountNo(), account));
-						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
-							getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
+						//32967-Start
+						populateBankAccountList.add(new SelectItem(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo(), account));
+						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo())) {
+							getManagedBean().getSupplierBankAccountMap().put(obj.getPmFinancialOrg().getFinancialOrgId()+"|"+ obj.getAccountNo(), obj);
+						//32967-End
 						}
 					}
 				}
@@ -1405,6 +1412,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					getManagedBean().getInvoice().setPaymentBankAddress(convertSmAddressToFlAddress(supplierBank.getSmAddress(),flAddress));
 				}
 				getManagedBean().getInvoice().setPaymentBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
+				if(!getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//33238
+					getManagedBean().setAccountNo(getManagedBean().getInvoice().getAccountNo().substring(supplierBank.getPmFinancialOrg().getFinancialOrgId().toString().length()+1));//32967
+				}
 			}
 		}else{
 			getManagedBean().getInvoice().setPaymentBankAddress(null);
@@ -1905,6 +1915,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			reqDTO.setInvoice(getManagedBean().getInvoice());
 			FulfilmentReqDTO reqDTO2 = invoiceSO.validationCheck(reqDTO);
 			getManagedBean().setInvoice(reqDTO2.getInvoice());
+			getManagedBean().setSupplementContractComplete(reqDTO2.isSupplementContractComplete());//28719
 			
 			if(hasGovtSellerRole()){
 				setTextBeforeSign(outcome);
@@ -2018,13 +2029,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 */
 	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
 				Long docId, String docNumber , String textBeforeSign) {
-			FacesScopes facesScope = new FacesScopes();
-			Long userId = facesScope.getUserSessionBean().getUserId();
 			Timestamp date = new Timestamp(System.currentTimeMillis());
 			pmDigiSign.setDocId(new BigDecimal(docId));
 			pmDigiSign.setDocNo(docNumber);
 			pmDigiSign.setDocType(docType);
-			pmDigiSign.setCreatedBy(userId);
+			pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			pmDigiSign.setCreatedDate(date);
 			pmDigiSign.setOriginalData(textBeforeSign);
 			// spki 
@@ -2642,48 +2651,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				"disciplinaryActionHistoryDlg.show();");
 	}
 	//26279 - end
-	//13291 - start
-	private List<PmUser> getOtherApproverList(List<PmUser> approverList, BigDecimal sumItemAmt) {
-		List<Long> orgProfileIdList = new ArrayList<>();
-		if(!getManagedBean().getInvoice().getFlRequest().getCreatedOrgProfile().getOrgProfileId().equals(getManagedBean().getInvoice().getFlRequest().getPreparedOrgProfile().getOrgProfileId())) {
-			orgProfileIdList.add(getManagedBean().getInvoice().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
-		}						
-		orgProfileIdList.add(getManagedBean().getInvoice().getFlRequest().getCreatedOrgProfile().getOrgProfileId());
-		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();		
-		orgProfileReqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getCreatedOrgProfile().getOrgProfileId());
-		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IOrgProfileSO.class);
-		OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveAuthorizedProfileGroupByMainProfileId(orgProfileReqDTO);
-		List<PmProfileGroup> pmProfileGroups = orgProfileResDTO.getProfileGroups();
-		if(!CollectionUtils.isEmpty(pmProfileGroups)) {
-			for(PmProfileGroup pmProfileGroup: pmProfileGroups) {
-				if(!orgProfileIdList.contains(pmProfileGroup.getAuthorizedOrgProfile().getOrgProfileId())) {
-					orgProfileIdList.add(pmProfileGroup.getAuthorizedOrgProfile().getOrgProfileId());
-				}
-			}
-		}
-		
-		List<Long> excludeUserIds = new ArrayList<>();
-		for(PmUser pmUser: approverList) {
-			excludeUserIds.add(pmUser.getUserId());
-		}
-		UserGroupReqDTO userGroupReqDTO = new UserGroupReqDTO();
-		userGroupReqDTO.setOrgProfileIdList(orgProfileIdList);
-		userGroupReqDTO.setApprovalLimit(sumItemAmt);
-		userGroupReqDTO.setExcludeUserIds(excludeUserIds);
-		IUserGroupSO userGroupSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
-		UserGroupResDTO userGroupResDTO = userGroupSO.retrieveUserGroupUserListByOrgProfiles(userGroupReqDTO);
-		List<PmUser> otherApproverUserList = userGroupResDTO.getPmUserList();
-		if(!CollectionUtils.isEmpty(otherApproverUserList)) {
-			for(PmUser pmUser: otherApproverUserList) {
-				if(!approverList.get(approverList.size() - 1).getUserId().equals(pmUser.getUserId())) {//filter for duplicate user even having different group id
-					approverList.add(pmUser);
-				}
-			}
-		}
-		return approverList;
-	}
-	//13291 - end
 	//#21416 start
 	public String filterItemName(String itemName) {
 		if(this.getManagedBean().getInvoice() != null){

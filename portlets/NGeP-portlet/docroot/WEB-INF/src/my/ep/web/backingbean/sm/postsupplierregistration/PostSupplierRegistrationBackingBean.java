@@ -263,7 +263,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION ||
 									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS ||
 									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_SDO_INQUIRY ||
-									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_PO_INQUIRY)){
+									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_PO_INQUIRY ||
+									wfStat.getStatusId() == SupplierManagementConst.PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT)){
 								//32627 END	
 									log.info("*******Resubmit********");
 									//path = RESUBMIT_APPLICATION + wfStatus.getDocId();
@@ -857,9 +858,12 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	 */
 	public boolean validMofUser(){
 		log.info("*******check validMofUser********");
-		if(new FacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){ 
-			return true;
-		}
+		FacesScopes fs = new FacesScopes();
+		Long userid = fs.getUserSessionBean().getUserId();
+//		SmMofAccount resultList = SmServiceLookup.getMofRegistrationSO().retrieveMofAccountByUserId(userid);
+//		if(resultList.getRecordStatusFlg().equals("3")){ 
+//			return true;
+//		}
 		return false;
 	}
 	
@@ -1529,4 +1533,25 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	}
 	//Remove Function callUpgradeRole
 	//END : LOG 12491
+	
+	/**
+	 * Validate User is MOF Admin
+	 * @return boolean
+	 */
+	public boolean renderedCancelMofApplication(){
+		log.info("*******check validMofUser********");
+		FacesScopes fs = new FacesScopes();
+		Long userid = fs.getUserSessionBean().getUserId();
+		
+		IMofRegistrationSO mofRegSO = SmServiceLookup.getMofRegistrationSO();
+		MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
+		mofRegistrationReqDTO.setUserId(userid);
+		MofRegistrationResDTO mofRegistrationResDTO = mofRegSO.retrieveMofAccountByUserId(mofRegistrationReqDTO);
+		
+		if(mofRegistrationResDTO.getSmMofAccount() != null){ 
+			return true;
+		}else{
+			return false;
+		}
+	}
 }

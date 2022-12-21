@@ -11,7 +11,7 @@
 		<c:if test="#{purchaseInDefaultBackingBean.managedBean.titleChecker}">
 			<ac:title value="#{lbl['lbl.sc.purchase.in.default']}" />
 		</c:if>
-		<p:messages showDetail="true"
+		<p:messages showDetail="true" id="messages"
 			autoUpdate="#{purchaseInDefaultBackingBean.managedBean.autoUpdate}"
 			closable="true" severity="error, info" showSummary="false" />
 
@@ -39,7 +39,7 @@
 			height="100"
 			okAction="#{purchaseInDefaultBackingBean.approverAction(reject)}"
 			title="#{lbl['lbl.reject.details']}"
-			content="#{lbl['lbl.reject.dialog.confirm.message']}" update="@this" />
+			content="#{lbl['lbl.reject.dialog.confirm.message']}" update="@this,@([id$=messages])" />
 		<!-- 20190417@asyrafhaziq_12095 - End -->
 
 		<ac:gpkiPopup
@@ -74,7 +74,7 @@
 						<p:commandButton value="#{lbl['lbl.btn.save']}"
 							action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault(draft)}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							update="@form" process="@all" partialSubmit="true"
+							update="@form" process="@form,@([id$=messages])" partialSubmit="true"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" /> 
 						<!-- #9133 - end --> 
 						<!-- #28865 change submitPurchaseInDefault() to dialogMsgCheck()-->	
@@ -87,7 +87,7 @@
 						<!-- #9133 - start -->	
 						<p:commandButton
 							immediate="true" value="#{lbl['lbl.btn.cancel']}"
-							partialSubmit="true" process="@this" style="float:right;"
+							update="@form,@([id$=messages])" style="float:right;" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag and !isPidGenerated}"
 							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> 	
 						<!-- #9133 - end -->
@@ -111,7 +111,7 @@
 						<p:commandButton value="#{lbl['lbl.btn.save']}"
 							action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault(draft)}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							update="@form" process="@all" partialSubmit="true"
+							update="@form" process="@form" partialSubmit="true"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" />
 						<p:commandButton
 							value="#{lbl['lbl.btn.submit']}"
@@ -122,7 +122,7 @@
 						<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 							action="#{purchaseInDefaultBackingBean.beforeCancelPid()}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							update="@form" process="@all" partialSubmit="true"
+							update="@form,@([id$=messages])"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag and isPidGenerated}" />
 					</td>
 				</tr>
@@ -138,7 +138,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
 							action="#{purchaseInDefaultBackingBean.updatePID()}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							update="@form" process="@all" partialSubmit="true"
+							update="@form,@([id$=messages])" process="@form" partialSubmit="true"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" />
 					<!-- #9133 - end -->
 					<ui:repeat var="bpmAction"
@@ -150,7 +150,7 @@
 
 							<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
 							    onstart="#{isReject ? '' : 'blockWidget.show();'}" oncomplete="#{isReject ? '' : 'blockWidget.hide();'}" 
-								styleClass="ui-button" update="#{isReject ? '@form' : ''}"
+								styleClass="ui-button" update="#{isReject ? '@form' : ''},@([id$=messages])"
 								partialSubmit="true"
 								actionListener="#{purchaseInDefaultBackingBean.beforeApproverAction(bpmAction)}" />
 
@@ -179,7 +179,7 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					actionListener="#{purchaseInDefaultBackingBean.updateBPMTasks('CANCEL')}"
-					oncomplete="cancelDlg.hide();" partialSubmit="true" process="@this"
+					oncomplete="cancelDlg.hide();" partialSubmit="true" process="@this,@([id$=messages])"
 					immediate="true" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					oncomplete="cancelDlg.hide();" />

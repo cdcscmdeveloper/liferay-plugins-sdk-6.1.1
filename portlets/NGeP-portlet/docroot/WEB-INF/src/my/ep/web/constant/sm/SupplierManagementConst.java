@@ -170,6 +170,7 @@ public class SupplierManagementConst {
 	//30912 - START
 	// APPLICATION TYPE
 	public static final String APPL_TYPE_BUMI = "B";
+	public static final String APPL_TYPE_CATEGORY  = "A"; //#34098 - START_END 
 	//30912 - END
 	public static final String PERSONNEL_TYPE_DIRECTOR = "DIR";
 	public static final String PERSONNEL_TYPE_STAFF = "STF";
@@ -208,11 +209,12 @@ public class SupplierManagementConst {
 	public static final String SPECIAL_SERVICE_CODE = "ISS";
 	public static final String PROF_SERVICE_CODE = "IPS";
 	public static final String NEW_IC = "I";
+	public static final String IDENTIFICATION_TYPE_PASSPORT = "P"; //#32014
 	public static final int PENDING_ACT_STATUS = 8;
 	public static final int APPROVED_RECORD_STATUS = 1;
-	//30865 Start
+	//30865 Start & #34098 - START
 	public static final int CANCEL_RECORD_STATUS = 2;
-	//30865 End
+	//30865 End & #34098 - END
 	// 29952 Start
 	public static final int PENDING_ACTIVATION_RECORD_STATUS = 8;
 	// 29952 End
@@ -451,6 +453,11 @@ public class SupplierManagementConst {
 	public static final String SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
 	// bug #29156 -END
 
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - start 
+	public static final String SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST = "B";
+	public static final String SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG = "C";
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - end 
+
 	public static final String RESUBMIT_APPL_PATH = "resubmit-application?";
 
 	public static final String APPL_PM_STATUS_REJECT = "20109";
@@ -502,6 +509,10 @@ public class SupplierManagementConst {
 	// 26238 - Disciplonary action - 28801 - START
 	public static final long PM_STATUS_PENDING_REVIEW_APPLICATION = 20104;
 	// 28801 - END
+	//#32304 - start
+	public static final long PM_STATUS_BUMI_CANCELLED_FROM_BUSSTYPE = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_BUSSTYPE;
+	public static final long PM_STATUS_BUMI_CANCELLED_FROM_OTHER_APPL = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_OTHER_APPL;
+	//#32304 - end
 	public static final long PM_STATUS_REJECTED_BY_SYS = 20118L;
 	public static final long PM_STATUS_REGISTRATION_STATUS_REGISTERED = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
 	public static final long PM_STATUS_REGISTRATION_STATUS_FOREIGN = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN;
@@ -1166,11 +1177,11 @@ public class SupplierManagementConst {
 		return APPROVED_RECORD_STATUS;
 	}
 
-	//30865 Start
+	//30865 Start & #34098 - START
 	public int getCANCEL_RECORD_STATUS() {
 		return CANCEL_RECORD_STATUS;
 	}
-	//30865 End
+	//30865 End & #34098 - END
 	
 	public String getSM_SUPPLIER_BUSINESS_TYPE_LLP() {
 		return SM_SUPPLIER_BUSINESS_TYPE_LLP;
@@ -1339,6 +1350,16 @@ public class SupplierManagementConst {
 
 	// #29156 -START
 
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - start 
+	public String getSM_BASIC_DISCIPLINARY_ACTION_BLACKLIST() {
+		return SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST;
+	}
+
+	public String getSM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG() {
+		return SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG;
+	}
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - end 
+	
 	// #12483 - START
 	public long getPM_STATUS_PENDING_REVISE_APPLICATION_LONG_VALUE() {
 		return Long.parseLong(PM_STATUS_PENDING_REVISE_APPLICATION);
@@ -1394,5 +1415,9 @@ public class SupplierManagementConst {
 
 	public String getROLE_CODE_SM_5() {
 		return ROLE_CODE_SM_5;
+	}
+
+	public String getIDENTIFICATION_TYPE_PASSPORT() {
+		return IDENTIFICATION_TYPE_PASSPORT;
 	}
 }

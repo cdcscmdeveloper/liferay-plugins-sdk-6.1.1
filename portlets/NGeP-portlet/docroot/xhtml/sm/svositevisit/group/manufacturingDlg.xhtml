@@ -22,12 +22,6 @@
 						id="smManuDtlProdType" size="35" maxlength="50"
 						required="#{!empty param['disableMsgAutoUpdateMac']}"
 						value="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.goodsType}" />
-					<!-- #24964 -->
-					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedManufacturer and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-						oriValue="#{svoSiteVisitBackingBean.managedBean.latestManufacturer.goodsType}" 
-						currValue="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.goodsType}" 
-						alertValue="#{svoSiteVisitBackingBean.managedBean.latestManufacturer.goodsType}"/>
 					<p:message id="smManuDtlProdTypeMsg" for="smManuDtlProdType"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
@@ -39,12 +33,6 @@
 						id="smManuDtlBrdType" size="35" maxlength="50"
 						required="#{!empty param['disableMsgAutoUpdateMac']}"
 						value="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.brand}" />
-					<!-- #24964 -->
-					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedManufacturer and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-						oriValue="#{svoSiteVisitBackingBean.managedBean.latestManufacturer.brand}" 
-						currValue="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.brand}" 
-						alertValue="#{svoSiteVisitBackingBean.managedBean.latestManufacturer.brand}"/>
 					<p:message id="smManuDtlBrdTypeMsg" for="smManuDtlBrdType"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
@@ -57,12 +45,6 @@
 						id="smManuDtlProdCap" size="35" maxlength="6"
 						required="#{!empty param['disableMsgAutoUpdateMac']}"
 						value="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.productionCapacity}" />
-					<!-- #24964 -->
-					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedManufacturer and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-						oriValue="#{svoSiteVisitBackingBean.managedBean.latestManufacturer.productionCapacity}" 
-						currValue="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.productionCapacity}" 
-						alertValue="#{svoSiteVisitBackingBean.managedBean.latestManufacturer.productionCapacity}"/>
 					<p:message id="smManuDtlProdCapMsg" for="smManuDtlProdCap"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
@@ -75,12 +57,6 @@
 						maxlength="20"
 						required="#{!empty param['disableMsgAutoUpdateMac']}"
 						value="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.uom}" />
-					<!-- #24964 -->
-					<ac:smFieldChangeAlertSVO
-						isShow="#{not empty svoSiteVisitBackingBean.managedBean.selectedManufacturer and not empty svoSiteVisitBackingBean.managedBean.smSvtaskSVO}"
-						oriValue="#{svoSiteVisitBackingBean.managedBean.latestManufacturer.uom}" 
-						currValue="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.uom}" 
-						alertValue="#{svoSiteVisitBackingBean.managedBean.latestManufacturer.uom}"/>
 					<p:message id="smManuDtlMesUnitMsg" for="smManuDtlMesUnit"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>

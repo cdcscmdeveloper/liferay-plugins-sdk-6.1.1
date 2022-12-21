@@ -816,52 +816,89 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	}
 
 	//#28865 - start
+	/**
+	 * @return the qtyByRequisitioner
+	 */
 	public BigDecimal getQtyByRequisitioner() {
 		return qtyByRequisitioner;
 	}
-
+	
+	/**
+	 * @param qtyByRequisitioner the qtyByRequisitioner to set
+	 */
 	public void setQtyByRequisitioner(BigDecimal qtyByRequisitioner) {
 		this.qtyByRequisitioner = qtyByRequisitioner;
 	}
-
+	
+	/**
+	 * @return the qtyBySupplier
+	 */
 	public BigDecimal getQtyBySupplier() {
 		return qtyBySupplier;
 	}
-
+	
+	/**
+	 * @param qtyBySupplier the qtyBySupplier to set
+	 */
 	public void setQtyBySupplier(BigDecimal qtyBySupplier) {
 		this.qtyBySupplier = qtyBySupplier;
 	}
-
+	
+	/**
+	 * @return the suppRemarks
+	 */
 	public List<ScPIDRemark> getSuppRemarks() {
 		return suppRemarks;
 	}
-
+	
+	/**
+	 * @param suppRemarks the suppRemarks to set
+	 */
 	public void setSuppRemarks(List<ScPIDRemark> suppRemarks) {
 		this.suppRemarks = suppRemarks;
 	}
-
+	
+	/**
+	 * @return the suppRemarkId
+	 */
 	public Long getSuppRemarkId() {
 		return suppRemarkId;
 	}
-
+	
+	/**
+	 * @param suppRemarkId the suppRemarkId to set
+	 */
 	public void setSuppRemarkId(Long suppRemarkId) {
 		this.suppRemarkId = suppRemarkId;
 	}
-
+	
+	/**
+	 * @return the contractId
+	 */
 	public Long getContractId() {
 		return contractId;
 	}
-
+	
+	/**
+	 * @param contractId the contractId to set
+	 */
 	public void setContractId(Long contractId) {
 		this.contractId = contractId;
 	}
 	//#28865 - end
 
 	//#9133 - start
+	/**
+	 * #9133 - code review (add documentation)
+	 * @return payLoad
+	 */
 	public Object getPayLoad() {
 		return payLoad;
 	}
-
+	/**
+	 * #9133 - code review (add documentation)
+	 * @param payLoad the payLoad to set
+	 */
 	public void setPayLoad(Object payLoad) {
 		this.payLoad = payLoad;
 	}

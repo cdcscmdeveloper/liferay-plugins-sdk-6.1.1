@@ -11,12 +11,18 @@
 			#foreach($travel in $travelSystems)
 			<tr>
 				<td>$velocityCount</td>
-				<td>$travel.systemName</td>
+				<td>
+				#if(!$travel.machineId)
+					$!travel.systemName
+				#else
+					$!travel.machineDesc
+				#end				
+				</td>
 			</tr>
 			#end
 		#else
 			<tr>
-				<td colspan="8" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
+				<td colspan="2" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 			</tr>
 		#end
 

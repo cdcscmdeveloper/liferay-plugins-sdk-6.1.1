@@ -109,6 +109,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private String flSupplier;
 	private String flPmOfficer;
 	private String flApprover;
+	//29550-start
+	private String factoringUser;
+	//29550-end
 	
 	// for selected Approver List
 	private DualListModel<String> approverModel;
@@ -676,6 +679,18 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		return facesScopes.hasRoleUser(RoleCode.PAY_OFFICER.value());
 	}
 	
+	//29550 - start
+	/**
+	 * Checks if is factoring user.
+	 *
+	 * @return true, if is factoring user
+	 */
+	public boolean isFactoringUser() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.FACTORING_USER.value());
+	}
+	//29550 - end
+	
 	/**
 	 * Gets the doc type list by role.
 	 *
@@ -716,6 +731,12 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 			}
+			//29550-start
+			if(isFactoringUser()){
+				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+			}
+			//29550-end
 		} else if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(getSearchOrderType())) {
 			flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 			if(isFlFulfilmentRequisitioner()) {
@@ -747,6 +768,12 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 			}
+			//29550-start
+			if(isFactoringUser()){
+				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+			}
+			//29550-end
 		}
 		
 		return flDocTypes;
@@ -1471,6 +1498,26 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	public void setFlApprover(String flApprover) {
 		this.flApprover = flApprover;
 	}
+	
+	//29550-start
+	/**
+	 * Gets the factoring user.
+	 *
+	 * @return the factoringUser
+	 */
+	public String getFactoringUser() {
+		return factoringUser;
+	}
+
+	/**
+	 * Sets the factoring user.
+	 *
+	 * @param factoringUser the factoringUser to set
+	 */
+	public void setFactoringUser(String factoringUser) {
+		this.factoringUser = factoringUser;
+	}
+	//29550-end
 
 	/**
 	 * Gets the approver model.

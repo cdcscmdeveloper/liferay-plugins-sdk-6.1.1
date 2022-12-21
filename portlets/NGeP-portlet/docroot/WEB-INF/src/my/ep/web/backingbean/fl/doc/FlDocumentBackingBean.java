@@ -229,6 +229,12 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setFlApprover(facesScopes.getUserSessionBean().getLoginId());
 		}
+		//29550 - start
+		if(isFactoringUser()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setFactoringUser(facesScopes.getUserSessionBean().getLoginId());
+		}
+		//29550 - end
 	}
 	
 	/**
@@ -253,6 +259,12 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setFlApprover(facesScopes.getUserSessionBean().getLoginId());
 		}
+		//29550-start
+		if(isFactoringUser()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setFactoringUser(facesScopes.getUserSessionBean().getLoginId());
+		}
+		//29550-end
 		
 		List<SelectItem> selectedItemList = new ArrayList<SelectItem>();
 		try {
@@ -611,6 +623,15 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			invBB.getManagedBean().setChargeLineItemRoot(null);
 			invBB.getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
 			invBB.getManagedBean().setBackToPrevious(null);
+			
+			//24956 - start
+			if (invBB.getManagedBean().getInvoice().getFlRequest().getCtContract() != null
+					&& invBB.getManagedBean().getInvoice().getFlRequest().getCtContract().getContractType().
+					getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				invBB.getManagedBean().setCtTypeMinistry(true);
+			}
+			//24956 - end
+			
 			for(FlDeliveryOrder flDeliveryOrder : invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().getFlDeliveryOrders()) {
 				if(flDeliveryOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
 					invBB.getManagedBean().getDelOrderList().add(flDeliveryOrder);
@@ -961,6 +982,18 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	}
 	
 	/**
+	 * Checks if is factoring user.
+	 *
+	 * @return true, if is factoring user.
+	 */
+	//29550-start
+	public boolean isFactoringUser() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.FACTORING_USER.value());
+	}
+	//29550-end
+	
+	/**
 	 * calculate order quantity sum based on ordered quantity
 	 *
 	 * @param flRequest the fl request
@@ -1109,7 +1142,11 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 */
 	private void defaultPtjAndMinistryValues() {
 		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
-			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole())) {
+			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole()) ||
+			//29550-start
+			hasFactoringUserRole()
+			//29550-end
+			) {
 		} else {
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
@@ -1194,7 +1231,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			for(PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
 				ptjList = ptjList + "," + pmPtjReorg.getOldPtjId();
 			}
-			condition = condition + "*orgProfileId^"+ptjList+"^9";//13291
+			condition = condition + "|orgProfileId^"+ptjList+"^9";
 		}
 		return condition;
 	}
@@ -1245,8 +1282,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	public boolean disablePtjLov() {
 		if(getManagedBean().getPtjGroup() == null) {
 			return true;
-		} else if(!getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) 
-				&& !getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value()) && hasGovernmentUserRole()) {//13291 - edit if
+		} else if(hasGovernmentUserRole()) {
 			if(isPTJReOrg()) {
 				return false;
 			} else {
@@ -1268,8 +1304,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	public boolean disablePtjGroupLov() {
 		if(getManagedBean().getMinistry() == null) {
 			return true;
-		} else if(!getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) 
-				&& !getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value()) && hasGovernmentUserRole()) {//13291 edit if
+		} else if(hasGovernmentUserRole()) {
 			if(isPTJReOrg()) {
 				return false;
 			} else {
@@ -1330,7 +1365,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 					kumpulanPtjList = kumpulanPtjList + "," + kumpulanPtj.getOrgProfileId();
 				}
 			}
-			condition = condition + "*orgProfileId^"+kumpulanPtjList+"^9";//13291
+			condition = condition + "|orgProfileId^"+kumpulanPtjList+"^9";
 		}
 		return condition;
 	}
@@ -1344,6 +1379,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		List<String> typeList = new ArrayList<String>();
 		typeList.add(ParameterConst.ORG_TYPE_PTJ);
 		typeList.add(ParameterConst.ORG_TYPE_SUPPLIER);
+		//29550-start
+		typeList.add(ParameterConst.ORG_TYPE_FACTORING);
+		//29550-end
 
 		SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",
@@ -1365,7 +1403,13 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		} else {
 			if(hasSupplierRole()) {
 				getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_SUPPLIER);
-			} else {
+			}
+			//29550-start
+			else if(hasFactoringUserRole()){
+				getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_FACTORING);
+			}
+			//29550-end
+			else {
 				getManagedBean().setSearchFunctionType(ParameterConst.ORG_TYPE_PTJ);
 			}
 			return false;
@@ -1473,6 +1517,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 
 		// Refactor: #12177 - Start
 		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		log.info("Refactor 12177 (FlDocumentBackingBean) : getSqTimeValidity - " + sqTimeValidity);
 		// Refactor: #12177 - End
 		
 		if(endDate != null){

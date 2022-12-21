@@ -29,6 +29,10 @@
 	</c:if>
 	
 	<!-- #25725 end -->	
+	
+	<!-- #25726 start -->
+	<ui:param name="StatusLOASubmission" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"></ui:param>
+	<!-- #25726 end -->
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -63,26 +67,22 @@
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
 					disabled="true" />
 			</td>
-			<!-- Bug #30600 , #31033 Start -->
+			<!-- Bug #30600 , #31033, #33073, #33354 Start -->
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.action.headerLbl']}" />
 			</td>
 			<td>
-			    <c:forEach var="actionDA" items="#{qtLOABackingBean.managedBean.scLoiLoaList}">
-				  <c:if test="#{actionDA.smSupplier.supplierId eq lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier.supplierId}">
-				     <p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-							rendered="#{actionDA.smSupplier.disciplinaryActions}"
-							action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(actionDA.smSupplier)}" 
-							process="@this" partialSubmit="true" update=":form">
-								<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-					 </p:commandLink><p:spacer width="2"/>
-					 <h:outputText rendered="#{!actionDA.smSupplier.disciplinaryActions}"
-						 value="#{lbl['lbl.cm.dialog.cofirm.no']}" /><p:spacer width="2"/>
-					 <ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" /> 
-			      </c:if>
-				</c:forEach>
+				<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
+					rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier.disciplinaryActions}"
+					action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier)}" 
+					process="@this" partialSubmit="true" update=":form">
+				<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
+				</p:commandLink><p:spacer width="2"/>
+				<h:outputText rendered="#{!lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier.disciplinaryActions}"
+					value="#{lbl['lbl.cm.dialog.cofirm.no']}" /><p:spacer width="2"/>
+				<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 			</td>
-		    <!-- Bug #30600 , #31033 End -->
+		    <!-- Bug #30600 , #31033, #33073, #33354 End -->
 		</tr>
 
 		<tr>
@@ -568,33 +568,6 @@
 				<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.agency.tooltip']}" />
 			</td>
 		</tr>
-		<!-- #26475 - start -->
-<!--  	<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}"/>
-				<p:outputLabel value="*" styleClass="mandatory"  rendered="#{isEditableStatus}" />
-			</td> 
-			<td>
-				<c:if test="#{isEditableStatus}">
-					<p:selectOneMenu id="contAdminId" styleClass="ppDropDownWidthM"
-						disabled="false" label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}"
-						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userId}"
-						style="width: 275px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{lOADetailBackingBean.getUsersByAgency()}" />
-						<p:ajax event="change" listener="#{lOADetailBackingBean.updateContractAdmin()}" 
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"/>
-					</p:selectOneMenu>
-				</c:if>
-				<c:if test="#{!isEditableStatus}">
-					<p:inputText 
-						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userName}"
-						disabled="true" size="35" />
-				</c:if>
-			</td>
-		</tr> -->
-		<!-- #26475 - end -->
-		
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl[lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period']}" />
@@ -695,7 +668,7 @@
 					<td colspan="3">
 						<p:outputPanel id="uploadApprovalLetterPg"> 
 							<!-- #25726 START -->													
-							<h:panelGroup  rendered="#{((lOADetailBackingBean.managedBean.agreementReqChange and !lOADetailBackingBean.managedBean.scLoa.agreementReq and lOADetailBackingBean.managedBean.above500K and isNonPeriodic and !isPK7  and !isDocTypeQuotation) || (((isNonPeriodic || isOneOff) and !isPK7)  and isDocTypeQuotation and lOADetailBackingBean.managedBean.agreementReqChange and !lOADetailBackingBean.managedBean.scLoa.agreementReq))}" 
+							<h:panelGroup  rendered="#{StatusLOASubmission and ((lOADetailBackingBean.managedBean.agreementReqChange and !lOADetailBackingBean.managedBean.scLoa.agreementReq and lOADetailBackingBean.managedBean.above500K and isNonPeriodic and !isPK7  and !isDocTypeQuotation) || (((isNonPeriodic || isOneOff) and !isPK7)  and isDocTypeQuotation and lOADetailBackingBean.managedBean.agreementReqChange and !lOADetailBackingBean.managedBean.scLoa.agreementReq))}" 
 							required="true">
 							<!-- #25726 END -->
 								<table>
@@ -728,7 +701,29 @@
 										</td>
 			 	 					</tr>
 			 	 				</table>			 	 				
-			 	 			</h:panelGroup>		 							
+			 	 			</h:panelGroup>	
+			 	 			<h:panelGroup rendered="#{!StatusLOASubmission and lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
+			 	 				<table>
+									<tr>
+										<td width="300">
+											<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}" escape="false"/>											
+										</td>
+										<td>
+											<p:outputPanel id="uploadedPage2">																			
+												<p:commandLink
+												title="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
+												value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
+												action="#{lOADetailBackingBean.fileDownload}"
+												styleClass="blue_font"
+												rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.filePath != null}"/>												
+			 	 							</p:outputPanel> 
+			 	 						</td>
+			 	 						<td style="margin-top: -3px">
+											<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
+										</td>
+			 	 					</tr>
+			 	 				</table>		
+			 	 			</h:panelGroup>	 							
 						</p:outputPanel>		 	 								
 					</td>
 					<td>
@@ -796,34 +791,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.no']}" update="agReqID" onclick="changeAgreementReqDlg.hide();"
 				process="@this" partialSubmit="true" action="#{lOADetailBackingBean.agreementReqNo}"/>					
 		</div>
-	</p:confirmDialog>
-	
-	<p:dialog id="approvalLetterAlert" widgetVar="approvalLetterAlertDlg"
-		header="#{lbl['lbl.txt.alert']}" resizable="false" width="500"
-		modal="true">
-			<p:panel>				
-				<table>
-					<tr>
-						<td>
-							<h:graphicImage value="/css/images/design/exclamation.png" style="margin-top: 3px" />
-							<p:spacer width="10"></p:spacer>
-							<ui:fragment>
-								<h:outputText value="#{lbl['lbl.sc.approval.letter.alert']}" style="margin-top: 3px" escape="false"/>								
-								<br />
-								<br />
-							</ui:fragment> 							
-						</td>
-					</tr>
-				</table>			
-				
-				<p:spacer height="1px" />
-				<div class="ppRightBtn" style="width: 100%">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}"
-						id="approvalLetterAlertButton"
-						onclick ="approvalLetterAlertDlg.hide();"/>
-				</div>				
-			</p:panel>	
-		</p:dialog>	
+	</p:confirmDialog>		
 	
 	<!-- #25725 end -->		
 </ui:composition>

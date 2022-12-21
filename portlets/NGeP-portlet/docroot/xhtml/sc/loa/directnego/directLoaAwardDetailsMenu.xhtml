@@ -13,6 +13,7 @@
 	<ui:include src="/xhtml/common/uominstruction.xhtml"></ui:include> <br/>
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.pm.uom.instruction.view.progressive.payment.option']}" escape="false" />
 	<ui:include src="/xhtml/common/uompopinclude.xhtml"></ui:include>
+	<ui:include src="/xhtml/sc/loa/directnego/loaCloneTemplate.xhtml"></ui:include> <!-- #29468 Vinod Added -->
 	
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}" toggleable="true">
 	<!-- #29007 Start Vinod -->
@@ -128,9 +129,16 @@
 			title="#{lbl['lbl.txt.product']}"
 			isWorkflowStatus="#{isSupplierAckStatus}"
 			newable="#{!(isPendingApprovalStatus or isPendingVerification) and !directLOABackingBean.managedBean.readOnly}" />
-		
-			<p:commandButton value="#{lbl['lbl.btn.clone']}" onclick="cloneLoaSpec.show();" process="@this"></p:commandButton>
-			
+			<!-- #29468 Vinod Start -->
+			<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.clone']}"
+						styleClass="BtnSpacing"
+						rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
+						actionListener="#{directLOABackingBean.cloneSpecPopupAction(ParameterConst.itemTypeProductString)}"
+						oncomplete="cloneLoaSpec.show();" process="@this"
+						update="@form" />
+			</div>
+			<!-- #29468 Vinod End -->
 		<ac:templateSpec
 			first="#{directLOABackingBean.managedBean.servFirst}"
 		    editable ="#{editable}" 
@@ -139,7 +147,16 @@
 			isWorkflowStatus="#{isSupplierAckStatus}"
 			newable="#{!(isPendingApprovalStatus or isPendingVerification) and !directLOABackingBean.managedBean.readOnly}" />
 	
-		<p:commandButton value="#{lbl['lbl.btn.clone']}" onclick="cloneLoaSpec.show();" process="@this"></p:commandButton>
+			<!-- #29468 Vinod Start -->
+			<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.clone']}"
+						styleClass="BtnSpacing"
+						rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
+						actionListener="#{directLOABackingBean.cloneSpecPopupAction(ParameterConst.itemTypeServiceString)}"
+						oncomplete="cloneLoaSpec.show();" process="@this"
+						update="@form" />
+			</div>
+			<!-- #29468 Vinod End -->
 			
 	</h:panelGroup>
 

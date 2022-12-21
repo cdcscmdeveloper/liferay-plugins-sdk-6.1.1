@@ -12,11 +12,15 @@
 			value="#{lbl['lbl.sc.eva.compliance.stage.document.instruction']}"
 			escape="false" />
 
+		<ui:remove><!-- Bug #33770 #25138 adding paginator Start--></ui:remove>
 		<p:dataTable var="complianceTechnicalSupplier" rows="10" lazy="true"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckListDM}"
-			id="sampleComplianceListId" editable="true" rowIndexVar="index"
+			id="complianceTechnicalSupplier" editable="true" rowIndexVar="index"
 			style="width:100%" rowKey="#{complianceTechnicalSupplier}">
+			
+			<ac:paginator for="complianceTechnicalSupplier" />
+		<ui:remove><!-- Bug #33770 #25138 adding paginator End--></ui:remove>	
 			
 			<ui:remove><!-- 6906 - start --></ui:remove>
 			<ui:param name="isRejected" value="#{not empty complianceTechnicalSupplier.scQtProposal.supplierRejectionRemark}"/>

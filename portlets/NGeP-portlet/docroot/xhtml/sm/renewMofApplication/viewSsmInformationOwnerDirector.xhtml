@@ -29,11 +29,11 @@
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
 					<c:if
-						test="#{backingBean.managedBean.smAppl.smSupplier.businessType == 'K'}">
+						test="#{backingBean.managedBean.smAppl.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN}">
 						<h:outputText value="#{lbl['lbl.sm.directorname']}" />
 					</c:if>
 					<c:if
-						test="#{backingBean.managedBean.smAppl.smSupplier.businessType != 'K'}">
+						test="#{backingBean.managedBean.smAppl.smSupplier.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN}">
 						<h:outputText value="#{lbl['lbl.sm.ownername']}" />
 					</c:if>
 				</f:facet>
@@ -66,54 +66,64 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.nationality']}" />
 				</f:facet>
-				<h:outputText value="#{varOwner.pmCountry.countryName}" />
+				<!-- #31269 -->
+				<h:outputText value="#{varOwner.pmCountry.countryName}" rendered="#{!varOwner.nationalitySsmNull}" />
 			</p:column>
 
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.person.race']}" />
 				</f:facet>
-				<h:outputText value="#{varOwner.pmRace.raceName}" />
+				<!-- #31269 -->
+				<h:outputText value="#{varOwner.pmRace.raceName}" rendered="#{!varOwner.raceSsmNull}" />
 			</p:column>
 
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.address']}" />
 				</f:facet>
+				<!-- #31269 - start -->
 				<h:outputText
-					rendered="#{not empty varOwner.smPersonnelAddresses[0].smAddress.address1}"
+					rendered="#{not empty varOwner.smPersonnelAddresses[0].smAddress.address1
+								and not varOwner.smPersonnelAddresses[0].smAddress.addressSsmNull}"
 					value="#{varOwner.smPersonnelAddresses[0].smAddress.address1}"
 					converter="toUpperCaseConverter" />
 				<h:outputText
-					rendered="#{not empty varOwner.smPersonnelAddresses[0].smAddress.address2}"
+					rendered="#{not empty varOwner.smPersonnelAddresses[0].smAddress.address2
+								and not varOwner.smPersonnelAddresses[0].smAddress.addressSsmNull}"
 					value="&lt;br/&gt; #{varOwner.smPersonnelAddresses[0].smAddress.address2}"
 					escape="false" converter="toUpperCaseConverter" />
 				<h:outputText
-					rendered="#{not empty varOwner.smPersonnelAddresses[0].smAddress.address3}"
+					rendered="#{not empty varOwner.smPersonnelAddresses[0].smAddress.address3
+								and not varOwner.smPersonnelAddresses[0].smAddress.addressSsmNull}"
 					value="&lt;br/&gt; #{varOwner.smPersonnelAddresses[0].smAddress.address3}"
 					escape="false" converter="toUpperCaseConverter" />
 				<h:outputText
-					rendered="#{not empty varOwner.smPersonnelAddresses[0].smAddress.postcode}"
+					rendered="#{not empty varOwner.smPersonnelAddresses[0].smAddress.postcode} and
+								not varOwner.smPersonnelAddresses[0].smAddress.postcodeSsmNull"
 					value="&lt;br/&gt; #{varOwner.smPersonnelAddresses[0].smAddress.postcode}"
 					escape="false" converter="toUpperCaseConverter" />
 				<h:outputText
-					rendered="#{not empty varOwner.smPersonnelAddresses[0].smAddress.pmState.stateName}"
+					rendered="#{not empty varOwner.smPersonnelAddresses[0].smAddress.pmState.stateName}
+								and not varOwner.smPersonnelAddresses[0].smAddress.stateSsmNull}"
 					value="&lt;br/&gt; #{varOwner.smPersonnelAddresses[0].smAddress.pmState.stateName}"
 					escape="false" converter="toUpperCaseConverter" />
+				<!-- #31269 - end -->
 			</p:column>
 
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.person.dob']}" />
 				</f:facet>
-				<h:outputText value="#{varOwner.birthDate}">
+				<!-- #31269 -->
+				<h:outputText value="#{varOwner.birthDate}" rendered="#{!varOwner.birthDateSsmNull}">
 					<f:convertDateTime pattern="dd/MM/yyyy" />
 				</h:outputText>
 			</p:column>
 			
 			<p:column styleClass="column-align-center" rendered="#{backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD or backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD}"> <!-- #31403 -->
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt']}" />
+					<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt.roc']}" />
 					</f:facet>
 				<h:outputText value="#{varOwner.shareAmtSsm}"><!-- #31403 -->
 					<f:convertNumber groupingUsed="true" maxFractionDigits="2" minFractionDigits="2" />
@@ -176,54 +186,64 @@
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sm.nationality']}" />
 					</f:facet>
-					<h:outputText value="#{varDirector.pmCountry.countryName}" />
+					<!-- #31269 -->
+					<h:outputText value="#{varDirector.pmCountry.countryName}" rendered="#{!varDirector.nationalitySsmNull}" />
 				</p:column>
 
 				<p:column styleClass="column-align-center">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sm.person.race']}" />
 					</f:facet>
-					<h:outputText value="#{varDirector.pmRace.raceName}" />
+					<!-- #31269 -->
+					<h:outputText value="#{varDirector.pmRace.raceName}" rendered="#{!varDirector.raceSsmNull}" />
 				</p:column>
 
 				<p:column styleClass="column-align-center">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sm.address']}" />
 					</f:facet>
+					<!-- #31269 - start -->
 					<h:outputText
-						rendered="#{not empty varDirector.smPersonnelAddresses[0].smAddress.address1}"
+						rendered="#{not empty varDirector.smPersonnelAddresses[0].smAddress.address1
+									and not varDirector.smPersonnelAddresses[0].smAddress.addressSsmNull}"
 						value="#{varDirector.smPersonnelAddresses[0].smAddress.address1}"
 						converter="toUpperCaseConverter" />
 					<h:outputText
-						rendered="#{not empty varDirector.smPersonnelAddresses[0].smAddress.address2}"
+						rendered="#{not empty varDirector.smPersonnelAddresses[0].smAddress.address2
+									and not varDirector.smPersonnelAddresses[0].smAddress.addressSsmNull}"
 						value="&lt;br/&gt; #{varDirector.smPersonnelAddresses[0].smAddress.address2}"
 						escape="false" converter="toUpperCaseConverter" />
 					<h:outputText
-						rendered="#{not empty varDirector.smPersonnelAddresses[0].smAddress.address3}"
+						rendered="#{not empty varDirector.smPersonnelAddresses[0].smAddress.address3
+									and not varDirector.smPersonnelAddresses[0].smAddress.addressSsmNull}"
 						value="&lt;br/&gt; #{varDirector.smPersonnelAddresses[0].smAddress.address3}"
 						escape="false" converter="toUpperCaseConverter" />
 					<h:outputText
-						rendered="#{not empty varDirector.smPersonnelAddresses[0].smAddress.postcode}"
+						rendered="#{not empty varDirector.smPersonnelAddresses[0].smAddress.postcode and 
+									not varDirector.smPersonnelAddresses[0].smAddress.postcodeSsmNull}"
 						value="&lt;br/&gt; #{varDirector.smPersonnelAddresses[0].smAddress.postcode}"
 						escape="false" converter="toUpperCaseConverter" />
 					<h:outputText
-						rendered="#{not empty varDirector.smPersonnelAddresses[0].smAddress.pmState.stateName}"
+						rendered="#{not empty varDirector.smPersonnelAddresses[0].smAddress.pmState.stateName
+									and not varDirector.smPersonnelAddresses[0].smAddress.stateSsmNull}"
 						value="&lt;br/&gt; #{varDirector.smPersonnelAddresses[0].smAddress.pmState.stateName}"
 						escape="false" converter="toUpperCaseConverter" />
+					<!-- #31269 - end -->
 				</p:column>
 
 				<p:column styleClass="column-align-center">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sm.person.dob']}" />
 					</f:facet>
-					<h:outputText value="#{varDirector.birthDate}">
+					<!-- #31269 -->
+					<h:outputText value="#{varDirector.birthDate}" rendered="#{!varDirector.birthDateSsmNull}">
 						<f:convertDateTime pattern="dd/MM/yyyy" />
 					</h:outputText>
 				</p:column>
 
 				<p:column styleClass="column-align-center">
 					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt']}" />
+						<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt.roc']}" />
 					</f:facet>
 					<h:outputText value="#{varDirector.shareAmtSsm}"> <!-- #31403 -->
 						<f:convertNumber groupingUsed="true" maxFractionDigits="2"

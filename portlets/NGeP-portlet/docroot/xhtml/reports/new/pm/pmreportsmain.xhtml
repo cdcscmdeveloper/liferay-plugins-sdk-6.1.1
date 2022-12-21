@@ -134,7 +134,7 @@
 				<div align="right" style="width: 100%">
 				<!-- #29486 shafie start -->
 					<p:commandButton id="generateBtnId"
-						value="#{lbl['lbl.btn.generate']}" process="@form" update="@form"
+						value="#{lbl['lbl.btn.generate']}" process="@this" update="@form"
 						onclick="if(#{PmReportConst.pmMonthlyUserAndRoleRptVal eq pmReportsBackingBean.managedBean.reportCode}){GenerateCal()}" 
 						action="#{pmReportsBackingBean.generatePmReport()}">
 						<f:param name="disableValidation" value="true" />

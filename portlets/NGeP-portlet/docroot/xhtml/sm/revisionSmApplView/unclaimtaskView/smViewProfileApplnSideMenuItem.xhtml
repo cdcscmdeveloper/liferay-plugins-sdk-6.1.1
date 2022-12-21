@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:tabMenu activeIndex="#{viewSmApplBackingBean.managedBean.tabActiveIndex}" styleClass="sidemenu">
+
+		<p:menuitem value="#{lbl['lbl.sm.companyStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{viewSmApplBackingBean.setTabValue('0',SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)}"
+			update=":form" />
+		<p:menuitem value="#{lbl['lbl.sm.branchStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{viewSmApplBackingBean.setTabValue('1',SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
+			update=":form" />
+		<p:menuitem value="#{lbl['lbl.sm.personStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{viewSmApplBackingBean.setTabValue('2',SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
+			update=":form" />
+		<p:menuitem value="#{lbl['lbl.sm.capitalStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{viewSmApplBackingBean.setTabValue('3',SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
+			update=":form" />
+		<p:menuitem value="#{lbl['lbl.sm.bankStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{viewSmApplBackingBean.setTabValue('4',SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
+			update=":form" />
+		<p:menuitem value="#{lbl['lbl.sm.catCodeStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{viewSmApplBackingBean.setTabValue('5',SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+			update=":form" />
+		<p:menuitem value="#{lbl['lbl.sm.factoryStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{viewSmApplBackingBean.setTabValue('6',SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
+			update=":form" />
+		<p:menuitem value="#{lbl['lbl.sm.equipmentStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{viewSmApplBackingBean.setTabValue('7',SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
+			update=":form" />
+		<c:if test="#{viewSmApplBackingBean.managedBean.viewApplicationHistory}">
+			<p:menuitem value="#{lbl['lbl.sm.supDocStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				actionListener="#{viewSmApplBackingBean.setTabValue('8',SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+				update=":form" />
+		</c:if>
+	</p:tabMenu>
+
+</ui:composition>

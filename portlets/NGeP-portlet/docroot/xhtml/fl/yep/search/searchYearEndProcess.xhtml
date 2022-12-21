@@ -383,7 +383,9 @@
 				</p:column> 
 				<p:column headerText="#{lbl['lbl.fl.yep.category']}" style="white-space:normal;" >
 					<!-- #28373 added by vinod start -->
-					<h:outputText value="#{(flYep.isAp58 eq 1) ? 'Ap58a' : ''}" rendered="#{flYep.isAp58 eq 1}"/>
+					<!-- #33688 update wording ap58 start -->
+					<h:outputText value="#{(flYep.isAp58 eq 1) ? 'AP58(a) ' : ''}" rendered="#{flYep.isAp58 eq 1}"/>
+					<!-- #33688 update wording ap58 end -->
 					<h:outputText value="#{lbl['lbl.fl.yep.carryFow']}" rendered="#{flYep.carryForward}"/>
 					<!-- #28373 added by vinod End -->
 				</p:column> 
@@ -406,12 +408,13 @@
 							        	rendered="#{flYep.isAp58 == null and flYep.phase == 5}"
 							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'NONAP58'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
 					                <!-- 29440 end -->
-									<!-- #29041 start added flYep.phase in rendered by Vinod -->		
+									<!-- #29041 start added flYep.phase in rendered by Vinod -->
+									<!-- #32752 update gotodetail param for close pay(add progressStatus n errorid)-->	
 									<p:menuitem value="#{lbl['lbl.fl.yep.closeManPay']}"  
 							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							        	rendered="#{yearEndProcessBackingBean.getAllowClose(flYep.statusId) and !(flYep.phase eq '3')}"
 							        	icon="ui-icon-fl-cancel"
-							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmCloseManual}'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmCloseManual}'}, {name:'statusDesc', value:'#{flYep.statusId}'}, {name:'progressStatus', value:'#{flYep.progressStatus}'}, {name:'errorId', value:'#{flYep.errorId}'}])"/>
 							        	<!-- #29041 End Vinod-->
 							        	<!-- start 28377 -->
 							        	<p:menuitem value="#{lbl['lbl.fl.ap58']}"  
@@ -424,13 +427,13 @@
 					                    
 				
 						<!-- #28375- Beginning Logan -->
-					
+						<!-- #29223- start - remove taskid -->					
 						<p:menuitem value="#{lbl['lbl.fl.yep.carryForward']}"  
 							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							        	rendered="#{yearEndProcessBackingBean.isCarryForward(flYep.statusId) and flYep.phase eq '3'}"
 							        	icon="ui-icon-amendment"
-							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'taskId', value:'#{flYep.yepTaskId}'}, {name:'orderN', value:'#{flYep.orderNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.carryForward}'} , {name:'phase', value:'#{flYep.phase}'} , {name:'statusDesc', value:'#{flYep.statusId}'}, {name:'progressStatus', value:'#{flYep.progressStatus}'}, {name:'carryForward', value:'#{flYep.carryForward}'}])"/>
-					
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'orderN', value:'#{flYep.orderNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.carryForward}'} , {name:'phase', value:'#{flYep.phase}'} , {name:'statusDesc', value:'#{flYep.statusId}'}, {name:'progressStatus', value:'#{flYep.progressStatus}'}, {name:'carryForward', value:'#{flYep.carryForward}'}])"/>
+						<!-- #29223- end -->
 					<!-- #28375- Ending Logan-->
 					<!-- #28374	Vinod Start -->
 						<p:menuitem value="#{lbl['lbl.fl.yep.cancel']}"  

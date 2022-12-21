@@ -248,6 +248,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 String urlliferay = PortalUtil.getLayoutFriendlyURL(selectedLayout, theme);
 			 if(urlliferay.contains("plan-maintenance")){//09022021@24975 - start
 				 this.getManagedBean().setAudit(false);
+				//#32730 - start
+				 this.getManagedBean().setPreYear(false);
+				//#32730 - end
 		       }else if(urlliferay.contains("procurement-plan-search")){
 				 this.getManagedBean().setAudit(true);
 			 //if procurement-plan-search = audit /web/dashboard/procurement-plan-search 
@@ -364,6 +367,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public String redirectToMaintainPlan(Long id,String action,boolean isTrackingDiary) throws Exception{
 		log.info("redirectToMaintainPlan");
+		//#32730 - start
+		this.getManagedBean().setPreYear(true);
+		//#32730 - end
 		this.resetManagedBean();
 		this.getManagedBean().setBtnValue(action);
 		this.getManagedBean().setTrackingDiary(isTrackingDiary);
@@ -686,11 +692,39 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 									ppItem.setDisableForPindaan(false);
 									ppItem.setReasonForUpdateEnabled(true);
 									ppItem.setBrandNew(false);
+									//#34156 10/11/2022- Start
+									ppItem.setNewLabcatMethodType(true);
+									
+									if (!ppItem.isEditable()){
+											if (ppItem.getProcurementType().getParameterCode()
+													.equals(ProcurementPlanConst.LIMITED_TENDER)
+											|| ppItem.getProcurementType().getParameterCode()
+													.equals(ProcurementPlanConst.SELECTIVE_TENDER)) {
+										ppItem.setNewLabcatMethodType(false);
+										}
+									}
+																		
+									if (ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())) {
+										if (ppItem.getProcurementType().getParameterCode()
+												.equals(ProcurementPlanConst.LIMITED_TENDER)
+												|| ppItem.getProcurementType().getParameterCode()
+														.equals(ProcurementPlanConst.SELECTIVE_TENDER)) {
+											ppItem.setNewLabcatMethodType(false);
+										}
+									}
+									//#34156 10/11/2022- End
 								} else { 
 									ppItem.setCloneEnabled(false);
 									ppItem.setDisableForPindaan(false);
 									ppItem.setReasonForUpdateEnabled(true);
-									ppItem.setBrandNew(false);
+									ppItem.setBrandNew(false);									
+									//#34156 10/11/2022- Start
+									if (ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
+											|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)
+											|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.REQUEST_FOR_PROPOSAL)){
+										ppItem.setNewLabcatMethodType(true);
+									}
+									//#34156 10/11/2022- End
 									//#27624@322021 - start
 									if (!ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())){
 									this.getManagedBean().setModeEditable(true);
@@ -724,10 +758,27 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								ppItem.setCloneEnabled(true);
 								ppItem.setDisableForPindaan(true);
 								ppItem.setReasonForUpdateEnabled(true);
+
+								//#34156 10/11/2022- Start
+								if (ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
+										|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)
+										|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.REQUEST_FOR_PROPOSAL)){
+									ppItem.setNewLabcatMethodType(true);
+								}
+								//#34156 10/11/2022- End
+								
 							} else {
 								// The rest should retain the existing field logics
 								ppItem.setDisableForPindaan(false);
 								ppItem.setReasonForUpdateEnabled(true);
+   
+								//#34156 10/11/2022- Start
+								if (ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
+										|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)
+										|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.REQUEST_FOR_PROPOSAL)){
+									ppItem.setNewLabcatMethodType(true);
+								}
+								//#34156 10/11/2022- End
 							}
 						}
 					}
@@ -739,6 +790,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		List<PpProcurementItem> tempClonedPpItemList = new ArrayList<PpProcurementItem>();
 				
         for (PpProcurementItem ppItem : ppItems) {
+        	
+        	//#34156 13/11/2022- Start
+			if (ppItem.isSelectable() && !ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())) {
+				if (ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.LIMITED_TENDER)
+						|| ppItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDER)) {
+					ppItem.setProcurementType(new PmParameter());
+				}
+			}
+			//#34156 13/11/2022- End
+			
 			if (!this.getManagedBean().isPlanDetailSearch() && ppItem.getFromPpItem() != null) {//01022021@27624 - start
 				tempClonedPpItemList.add(ppItem);
 			} else if (this.getManagedBean().isPlanDetailSearch() && ppItem.getFromPpItem() != null
@@ -769,6 +830,26 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
         for (PpProcurementItem ppit : tempOriginalPpItemList) {
         	log.info("tempOriginalPpItemList.title= "+
         			ppit.getProcurementTitle());
+
+        	//#34156 10/11/2022- Start
+        	if (ppit.isOriginal() && ppit.getFromPpItem() == null && ppit.isSelectable()) {
+				ppit.setNewLabcatMethodType(true);
+			} else if (ppit.isOriginal() && ppit.getFromPpItem() == null 
+					&& ppit.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
+					|| ppit.getProcurementType().getParameterCode().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)
+					|| ppit.getProcurementType().getParameterCode().equals(ProcurementPlanConst.REQUEST_FOR_PROPOSAL)){
+				ppit.setNewLabcatMethodType(true);
+			}
+        	
+        	if (ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())) {
+				if (ppit.getProcurementType().getParameterCode()
+						.equals(ProcurementPlanConst.LIMITED_TENDER)
+						|| ppit.getProcurementType().getParameterCode()
+								.equals(ProcurementPlanConst.SELECTIVE_TENDER)) {
+					ppit.setNewLabcatMethodType(false);
+				}
+			}
+        	//#34156 10/11/2022- End
         }
         
         if (!ppItemMap.isEmpty() && ppItemMap.size() > 0) {
@@ -1936,7 +2017,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			PpRemark remark = new PpRemark();
 			remark.setEditable(true);
 			remark.setRemarkType(ProcurementPlanConst.REMARK_TYPE_REMARK);
-			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
@@ -1981,8 +2062,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			SelectItem[] items;
 			Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
 			Integer nextYear = currentYear + 1;
-		
-			if(this.getManagedBean().isAudit()){
+			//#32730 - add isPreYear
+			if(this.getManagedBean().isAudit() || this.getManagedBean().isPreYear()){
 				currentYear = startyear;
 				int diff = nextYear - currentYear + 1;
 				items = new SelectItem[diff+1];
@@ -2867,6 +2948,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 		}
 	}
+	
+	//#34156 - Start
+	public void onSelectCategoryTypeNewLabel(Long id, int index, boolean NewLabcatMethodType){		
+		log.info("The category type id " + id);
+		Long procurementCatId = this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).getProcurementCat().getParameterId();
+		List<PmProcurementCatType> pmProcCats= 	PpCommonUtil.retrieveProcurementTypeListByCatIdNewLabel(getFacesScopes().getUserLocale().getLanguage(), procurementCatId, NewLabcatMethodType);
+		for(PmProcurementCatType pmProcCat : pmProcCats ){
+			if(pmProcCat.getProcurementType().getParameterId().equals(id)){
+				this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).setProcurementType(pmProcCat.getProcurementType());
+				break;
+			}
+		}
+	}
+	//#34156 - End
+	
 	public String savePlan(String action) throws Exception{	
 		//LOG : 26549 : SLA Monitoring
 		long startTime = System.currentTimeMillis();
@@ -3226,10 +3322,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		
 		if(newReason && this.getManagedBean().isModeReviewEditable()){
-			log.info("new reason added");
+			log.info("new reason added");			
 			PpRejectReason reason = new PpRejectReason();
 			reason.setEditable(true);
-			reason.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			reason.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			reason.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			reason.setChangedBy(reason.getCreatedBy());
 			reason.setChangedDate(reason.getCreatedDate());
@@ -3296,7 +3392,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		PpExpenditureItem epItem = new PpExpenditureItem();
 		//24975@22012021 - start
 		epItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		epItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+		epItem.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		log.info("setCreatedDate " + new Timestamp(System.currentTimeMillis()) + " setCreatedBy " + getFacesScopes().getUserSessionBean().getUserId());
 		//24975@22012021 - end
 		epItem.setPmGlAccount(new PmGlAccount());
@@ -4111,7 +4207,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			PpRemark remark = new PpRemark();
 			remark.setEditable(true);
 			remark.setRemarkType(ProcurementPlanConst.REMARK_TYPE_REMARK);
-			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
@@ -4226,7 +4322,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			PpRemark remark = new PpRemark();
 			remark.setEditable(true);
 			remark.setRemarkType(ProcurementPlanConst.REMARK_TYPE_JUSTIFICATION);
-			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
@@ -4372,11 +4468,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 
 		validatePpItem(); // disabled this if no validation required at this stage
-		
+
 		PpProcurementItem ppItem = new PpProcurementItem();
 		//24975@22012021 - start
 		ppItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		ppItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+		ppItem.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		log.info("setCreatedDate " + new Timestamp(System.currentTimeMillis()) + " setCreatedBy " + getFacesScopes().getUserSessionBean().getUserId());
 		//24975@22012021 - end
 		ppItem.setProcurementCat(new PmParameter());
@@ -4387,18 +4483,31 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ppItem.setOriginal(true);
 		//25549@09102020 - end
 		ppItem.setEnableRevise(true);
-
+		//#34156 - Start
+		ppItem.setNewLabcatMethodType(true);
+		//#34156 - End
+		
+		//#32730 - Start
+		int currentYear = Calendar.getInstance().get(Calendar.YEAR);				
+		int nextYear = currentYear + 1;
+				
 		if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
 			//current year
 			ppItem.setInvitationDate(new Date());
-		}else{ 
+		}else if(nextYear == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
 			System.out.println("next year ");
 			//next year
-			int nextYear = Calendar.getInstance().get(Calendar.YEAR);
-			Calendar date = new GregorianCalendar((nextYear+1), Calendar.JANUARY, 1);
+			Calendar date = new GregorianCalendar((nextYear), Calendar.JANUARY, 1);
 			
 			ppItem.setInvitationDate(date.getTime());
+		}else{
+			//previous year
+			Long preYear = this.getManagedBean().getSelectedPlan().getPlanYear();
+			Calendar datePreYear = new GregorianCalendar((preYear.intValue()), Calendar.DECEMBER, 31);
+			
+			ppItem.setInvitationDate(datePreYear.getTime());
 		}
+		//#32730 - End
 		this.getManagedBean().getSelectedPlan().addPpProcurementItems(ppItem);
 		
 	}
@@ -4737,7 +4846,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			PpRemark remark = new PpRemark();
 			remark.setEditable(true);
 			remark.setRemarkType(ProcurementPlanConst.REMARK_TYPE_REMARK);
-			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
@@ -4783,6 +4892,28 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		return procurementCatTypeList;
 	}
+	
+	//#34156 - Start
+	public List<PmProcurementCatType> getProcurementTypeOptionsNewLabel(Long procurementCatId, boolean NewLabcatMethodType) {
+		log.info("getProcurementTypeOptionsNewLabel");
+		List<PmProcurementCatType> procurementCatTypeList = new ArrayList<PmProcurementCatType>();
+		if(procurementCatId!=null && procurementCatId>0L){
+			String languageCode = getFacesScopes().getUserLocale().getLanguage();
+			procurementCatTypeList = PpCommonUtil.retrieveProcurementTypeListByCatIdNewLabel(languageCode, procurementCatId, NewLabcatMethodType);
+		}
+		return procurementCatTypeList;
+	}
+	
+	public List<PmProcurementCatType> getProcurementTypeOptionsClone(Long procurementCatId) {
+		log.info("getProcurementTypeOptionsClone");
+		List<PmProcurementCatType> procurementCatTypeList = new ArrayList<PmProcurementCatType>();
+		if(procurementCatId!=null && procurementCatId>0L){
+			String languageCode = getFacesScopes().getUserLocale().getLanguage();
+			procurementCatTypeList = PpCommonUtil.retrieveProcurementTypeListByCatIdClone(languageCode, procurementCatId);
+		}
+		return procurementCatTypeList;
+	}
+	//#34156 - End	
 	
 	public void verifyPlanYearControl(ValueChangeEvent event){		
 		if(getManagedBean().getSelectedPlan().isBrandNew() 
@@ -4872,6 +5003,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	private void initialSearchPlan(){
 		log.info("initialSearchPlan");
+		//#32730 - start
+		this.getManagedBean().setPreYear(false);
+		//#32730 - end
 		//200911@akmal - Enhancement27624 - Start
 		Long userId = getFacesScopes().getUserSessionBean().getUserId() != null ? getFacesScopes().getUserSessionBean().getUserId() : new LogKey().getUserId();
 		
@@ -5100,7 +5234,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			bean.setSearchValue(planSearchBean.getYear());
 			searchBean.getDataFilterBeans().add(bean);
 			isEmpty = false;
-		}else{
+		}
+		//Remove code #32730
+		/*else{
 			//27012021@27624 - Start
 			log.info("+ getYeardefault "  + Calendar.getInstance().get(Calendar.YEAR));
 			
@@ -5123,7 +5259,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			searchBean.getDataFilterBeans().add(beans);		
 			isEmpty = false;
 			//27012021@27624 - End
-		}
+		}*/
 		// vot type
 		if(planSearchBean.getVotType()!=null && planSearchBean.getVotType().getParameterId()!=null){
 			log.info("+ getVotType "  +planSearchBean.getVotType().getParameterId());
@@ -5898,8 +6034,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		if(filteredlist.isEmpty()){ 
 			log.info("filteredlist.isEmpty size - "+filteredlist.size());
-			filteredlist = arrlist;
+			//#34156 10/11/2022- Start
+			for(PmParameterDesc paramdesc : arrlist){
+				log.info("arrlist - "+paramdesc.getPmParameter().getParameterId());
+				if((!paramdesc.getPmParameter().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)) 
+						&& (!paramdesc.getPmParameter().getParameterCode().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)) 
+						&& (!paramdesc.getPmParameter().getParameterCode().equals(ProcurementPlanConst.REQUEST_FOR_PROPOSAL))){
+					filteredlist.add(paramdesc);
+				}
+			}
 		}
+		//#34156 10/11/2022- End
 		log.info("retrievePplanProcurementMethod - End");
 		return filteredlist;
 	}
@@ -6391,7 +6536,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    	if (this.getManagedBean().getSelectedPlan().getPlanYear() == null) {	
 	    		throw new EpException(MessageConst.ERROR_730028);
 	    	}
-	    	 	
+	    	   
 	    	if (ppPlan.getPpProcurementItems() != null && 
 	    			!ppPlan.getPpProcurementItems().isEmpty()) {
 	    		
@@ -6409,15 +6554,23 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    				get(index).cloneEntity();*/
 	    		newPpItem.setCloned(true);
 	    		
+	    		//#32730 - Start
+	    		int currentYear = Calendar.getInstance().get(Calendar.YEAR);				
+	    		int nextYear = currentYear + 1;
+	    		
 	    		if (Calendar.getInstance().get(Calendar.YEAR) == 
 		    			this.getManagedBean().getSelectedPlan().getPlanYear()) { 
 	    			newPpItem.setInvitationDate(new Date());
-		    	} else {
-		    		int nextYear = Calendar.getInstance().get(Calendar.YEAR);
-		    		Calendar date = new GregorianCalendar((nextYear+1), Calendar.JANUARY, 1);
+		    	}else if(nextYear == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
+		    		Calendar date = new GregorianCalendar((nextYear), Calendar.JANUARY, 1);
 		    		newPpItem.setInvitationDate(date.getTime());
+			    }else{
+				   // previous year
+				   Long preYear = this.getManagedBean().getSelectedPlan().getPlanYear();
+				   Calendar datePreYear = new GregorianCalendar((preYear.intValue()), Calendar.DECEMBER, 31);
+				   newPpItem.setInvitationDate(datePreYear.getTime());
 		    	}
-	    		
+	    		//#32730 - End
 	    		// Always allow user to clone without key in reason
 	    		/*if (originalPpItem.getPpUpdateReasons().isEmpty()) {
 	    			PpUpdateReason clonedUpdateReason = new PpUpdateReason();
@@ -6431,14 +6584,29 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    			}
 	    			
 	    		}*/
-	    		
-	    		newPpItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+	    		newPpItem.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 	    		newPpItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	    		newPpItem.setChangedDate(new Timestamp(new Date().getTime()));
 	    		 //24975@06112020@azza - Start
 	    		newPpItem.setProcurementCat(originalPpItem.getProcurementCat());
-		    	newPpItem.setProcurementType(originalPpItem.getProcurementType());		    	
-	    		 //24975@06112020@azza - End
+	    		//#34156 10/11/2022- Start
+			if (originalPpItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
+					|| originalPpItem.getProcurementType().getParameterCode()
+							.equals(ProcurementPlanConst.DIRECT_NEGOTIATION)
+					|| originalPpItem.getProcurementType().getParameterCode()
+							.equals(ProcurementPlanConst.REQUEST_FOR_PROPOSAL)
+					|| originalPpItem.getProcurementType().getParameterCode()
+							.equals(ProcurementPlanConst.DIRECT_PURCHASE)
+					|| originalPpItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.QUOTATION)
+					|| originalPpItem.getProcurementType().getParameterCode().equals(ProcurementPlanConst.TENDER)
+					|| originalPpItem.getProcurementType().getParameterCode()
+							.equals(ProcurementPlanConst.DIRECT_APPOINTMENT)) {
+				newPpItem.setProcurementType(originalPpItem.getProcurementType());
+			} else {
+				newPpItem.setProcurementType(new PmParameter());
+			}
+			//#34156 10/11/2022- End
+	    	    //24975@06112020@azza - End
 		    	newPpItem.setProcurementTitle(originalPpItem.getProcurementTitle());
 		    	newPpItem.setProcurementDesc(originalPpItem.getProcurementDesc());
 		    	newPpItem.setEstimatedAmt(originalPpItem.getEstimatedAmt());
@@ -6459,7 +6627,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		if (newPpItem.getPpPlan() == null) {
 	    			newPpItem.setPpPlan(ppPlan);
 	    		}
-	    		
+	    		//#34156 - Start
+	    		newPpItem.setNewLabcatMethodType(true);
+	    		//#34156 - End
+
 	    		log.info("PpUpdateReasons size= "+newPpItem.getPpUpdateReasons().size());
 	    		
     			if (newPpItem.getPpUpdateReasons() != null && 
@@ -6491,7 +6662,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		for (PpProcurementItem linkedPpItem : procurementLinkedList) {
 	    			newProcurementList.add(linkedPpItem);
 	    		}
-	    		
+	    			    		
 	    		this.getManagedBean().getSelectedPlan().setPpProcurementItems(newProcurementList);
 	    		
 	    		log.info("Size of procurementList= "+this.getManagedBean().getSelectedPlan().getPpProcurementItems().size());
@@ -6649,7 +6820,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			log.info("new reason added");
 			PpUpdateReason reason = new PpUpdateReason();
 			reason.setEditable(true);
-			reason.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			reason.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			reason.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			reason.setChangedBy(reason.getCreatedBy());
 			reason.setChangedDate(reason.getCreatedDate());
@@ -6952,11 +7123,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		//set procurement item type		
 		log.info("[#25550] Procurement item type is: " + ProcurementPlanConst.PROCUREMENT_ITEM_TYPE_TD);
-		bean = new SearchFilterBean();
-		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-		bean.setSearchField("procurementType.parameterCode");
-		bean.setSearchValue(ProcurementPlanConst.PROCUREMENT_ITEM_TYPE_TD);	// TD - Tender
-		searchBean.getDataFilterBeans().add(bean);
+		//34233 - Start
+		List<String> procurementTypeList = new ArrayList<String>();
+		procurementTypeList.add(ProcurementPlanConst.PROCUREMENT_ITEM_TYPE_TD); // TD - Tender
+		procurementTypeList.add(ProcurementPlanConst.SELECTIVE_TENDERING); 	// STR - Selective Tendering
+		procurementTypeList.add(ProcurementPlanConst.REQUEST_FOR_PROPOSAL); // RP - Tender Terbuka Request For Proposal
+		searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementType.parameterCode",SearchOperator.OPERATOR_IN.value(), procurementTypeList));
+		//34233 - End
 			
 		//set procurement item title or description
 		if(StringUtils.isNotBlank(planSearchBean.getTitleOrDesc())){
@@ -7984,29 +8157,53 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 				
 	                ppItem.setProcurementCat(PpItemClone.getProcurementCat());
-	                ppItem.setProcurementType(PpItemClone.getProcurementType());
+	                //#34156 10/11/2022- Start
+	                if (PpItemClone.getProcurementType().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)
+	    					|| PpItemClone.getProcurementType().getParameterCode().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)
+	    					|| PpItemClone.getProcurementType().getParameterCode().equals(ProcurementPlanConst.REQUEST_FOR_PROPOSAL)
+	    					|| PpItemClone.getProcurementType().getParameterCode().equals(ProcurementPlanConst.DIRECT_PURCHASE)
+	    					|| PpItemClone.getProcurementType().getParameterCode().equals(ProcurementPlanConst.QUOTATION)
+	    					|| PpItemClone.getProcurementType().getParameterCode().equals(ProcurementPlanConst.TENDER)
+	    					|| PpItemClone.getProcurementType().getParameterCode().equals(ProcurementPlanConst.DIRECT_APPOINTMENT)) {
+		                ppItem.setProcurementType(PpItemClone.getProcurementType());
+	    			} else {
+	    				ppItem.setProcurementType(new PmParameter());
+	    			}
+	              //#34156 10/11/2022- End
 	                ppItem.setProcurementTitle(PpItemClone.getProcurementTitle());
 	                ppItem.setProcurementDesc(PpItemClone.getProcurementDesc());
 	                ppItem.setEstimatedAmt(PpItemClone.getEstimatedAmt());
-	                // 25549 - start
+	                // 25549, #32730 - start
+	                int currentYear = Calendar.getInstance().get(Calendar.YEAR);				
+	        		int nextYear = currentYear + 1;
+	                
 	                if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
 	        			//current year
 	        			ppItem.setInvitationDate(new Date());
-	        		}else{ 
+	        		}else if(nextYear == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
 	        			System.out.println("next year ");
 	        			//next year
-	        			int nextYear = Calendar.getInstance().get(Calendar.YEAR);
-	        			Calendar date = new GregorianCalendar((nextYear+1), Calendar.JANUARY, 1);
+	        			Calendar date = new GregorianCalendar((nextYear), Calendar.JANUARY, 1);
 	        			
 	        			ppItem.setInvitationDate(date.getTime());
+	        		}else{
+	        			System.out.println("previous year ");
+	        			//previous year
+	        			Long preYear = this.getManagedBean().getSelectedPlan().getPlanYear();
+	        			Calendar datePreYear = new GregorianCalendar((preYear.intValue()), Calendar.DECEMBER, 31);
+
+	        			ppItem.setInvitationDate(datePreYear.getTime());
 	        		}//25549 - end
+	                //#32730 - End
 	                ppItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 	                ppItem.setEditable(true);
 	                //25549@12102020 - start
 	                ppItem.setReviseReject(true);
 	                ppItem.setOriginal(true);
 	                //25549@12102020 - end
-	              
+	                //#34156 - Start
+	                ppItem.setNewLabcatMethodType(true);
+	                //#34156 - End
 	                
 	                
 	               System.out.println("size list " + j );
@@ -8260,10 +8457,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		    	if (ppPlan.getPpExpenditureItems() != null && 
 		    			!ppPlan.getPpExpenditureItems().isEmpty()) {
 		    		
-		    		PpExpenditureItem clonedPpExpItem =  PpExpenditureItemList.get(index);
-		    				
+		    		PpExpenditureItem clonedPpExpItem =  PpExpenditureItemList.get(index);		
 		    	    newPpExItem.setCloned(true);
-		    		newPpExItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+		    		newPpExItem.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		    		newPpExItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		    		newPpExItem.setChangedDate(new Timestamp(new Date().getTime()));
 		    		newPpExItem.setPmGlAccount(clonedPpExpItem.getPmGlAccount());

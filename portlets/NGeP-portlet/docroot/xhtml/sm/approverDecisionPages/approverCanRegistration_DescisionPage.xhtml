@@ -35,7 +35,7 @@
 		<ui:include src="approverContactInfo.xhtml" />
 		<ui:include src="approverDecisionPage.xhtml" />
 
-
+		<!-- #33376 - start -->
 		<p:dialog width="800px" height="250px" closable="false"
 			header="#{lbl['lbl.sm.approve.application']}" id="approveAppCanDialog"
 			widgetVar="approveAppCanDialog" resizable="false" showEffect="fade"
@@ -46,9 +46,9 @@
 					src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 				<div align="center">
 					<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])"
-						onclick="approvedCancelMofBlockWidget.show();" oncomplete="approveAppCanDialog.hide();approvedCancelMofBlockWidget.hide();"
+						onclick="approvedCancelMofBlockWidget.show();" oncomplete="approvedCancelMofBlockWidget.hide();"
 						partialSubmit="true" process="approvedCancelMofBlockPanel"
-						action="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}" />
+						action="#{backingBean.finalCancelDecisionApproveOrRejectAppln('approveAppCanDialog','APPROVE')}" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 						onclick="approveAppCanDialog.hide();" />
 				</div>
@@ -57,6 +57,8 @@
 				</p:blockUI>
 			</p:outputPanel>
 		</p:dialog>
+		<!-- #33376 - end -->
+		
 		<p:dialog width="1000px" height="250px" closable="false"
 			header="#{lbl['lbl.sm.reject.application']}" id="rejectAppCanDialog"
 			widgetVar="rejectAppCanDialog" resizable="false" showEffect="fade"

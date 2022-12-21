@@ -14,16 +14,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.ct.ContractConst;
-import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
@@ -55,16 +45,8 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
-import my.ep.type.aut.SearchCondition;
-import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.OrganizationType;
-import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.bean.paginator.IPagingDataModel;
-import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.DateUtils;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.FLSupplierItemVO;
 
@@ -327,16 +309,11 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	//29728 - start
 	private boolean isBranchNeedToBeChanged;
+	private Long branchCode;
 	//29728 - end
 	//29555 start
     private String preparedBy;
     //29555 end
-    //13291 - start
-    private IPagingDataModel<PmOrgProfile> preparedForPtjDataModel = new PreparedForPtjPagingDataModel();
-    private List<Object[]> approverPTJOrgList;
-    private Long selectedApproverPTJ;
-    private Long selectedPmoPTJ;
-    //13291 - end
 
 /**
  * Gets the charge line item root.
@@ -3425,6 +3402,19 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setBranchNeedToBeChanged(boolean isBranchNeedToBeChanged) {
 		this.isBranchNeedToBeChanged = isBranchNeedToBeChanged;
 	}
+	/**
+	 * @return the branchCode
+	 */
+	public Long getBranchCode() {
+		return branchCode;
+	}
+
+	/**
+	 * @param branchCode the branchCode to set
+	 */
+	public void setBranchCode(Long branchCode) {
+		this.branchCode = branchCode;
+	}
 	//29728 - end
 
 	public String getPreparedBy() {
@@ -3434,142 +3424,4 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setPreparedBy(String preparedBy) {
 		this.preparedBy = preparedBy;
 	}
-	//13291 - start
-	private class PreparedForPtjPagingDataModel extends PagingDataModel<PmOrgProfile> {
-
-		/** The Constant serialVersionUID. */
-		private static final long serialVersionUID = 1L;
-
-		public PreparedForPtjPagingDataModel() {
-			super("tablePreparePtj", false);
-		}
-
-		@Override
-		protected ISearchResultBean<PmOrgProfile> pageChangeListener(
-				ISearchBean<PmOrgProfile> searchBean) {
-			try {
-				// Filter By - parameterType
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.pmParameterType.parameterType",SearchOperator.OPERATOR_EQUALS.value(),ParameterTypeConst.ORGANISATION_TYPES));
-			
-				// Filter By - Org Type
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),OrganizationType.DIVISION.value()));
-				
-				
-				// Filter By - Ministry Profile Id
-				Long ministryOrgProfileId = getMinistryProfileId();
-				if (ministryOrgProfileId == null) {
-					ministryOrgProfileId = 0L;
-				}
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
-								SearchOperator.OPERATOR_EQUALS.value(),
-								ministryOrgProfileId));
-				
-				if (getJabatanProfileId() != null) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
-									SearchOperator.OPERATOR_EQUALS.value(),
-									jabatanProfileId));
-				}
-				
-				Date currentDate = DateUtils.getCurrentDateWithoutTime();
-				// Filter By - Org effDate
-				searchBean.getDataFilterBeans()
-						.add(new SearchFilterBean("pmOrgValidity.effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
-
-				// Filter By - Org expDate
-				searchBean.getDataFilterBeans().add(
-						new SearchMultiFilterBean(new SearchFilterBean(
-								"pmOrgValidity.expDate",
-								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-								currentDate), new SearchFilterBean(
-								"pmOrgValidity.expDate",
-								SearchOperator.OPERATOR_IS_NULL.value(), null,
-								SearchCondition.CONDITION_OR.value())));
-				
-				if (ptjCodeName != null
-						&& (ptjCodeNameSearchValues != null && !"".equalsIgnoreCase(ptjCodeNameSearchValues))) {
-					if (ptjCodeName.equalsIgnoreCase(ContractConst.PTJ_CODE)) {
-						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE.value(), ptjCodeNameSearchValues);
-						filterBean.setCaseInsensitive(true);
-					    searchBean.getDataFilterBeans().add(filterBean);
-					
-					} else if (ptjCodeName.equalsIgnoreCase(ContractConst.PTJ_NAME)) {
-						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName", SearchOperator.OPERATOR_LIKE.value(), ptjCodeNameSearchValues);
-						filterBean.setCaseInsensitive(true);
-					    searchBean.getDataFilterBeans().add(filterBean);
-					}
-				}
-				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				reqDTO.setOrgProfileSearchBean(searchBean);
-				OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
-				if (resDTO.isSuccessful()) {
-					 return resDTO.getOrgProfileResultBean();
-				}
-			} catch (Exception e) {
-				log.error(e.getMessage());
-			}
-			return null;
-		}
-		
-	}
-	/**
-	 * @return the preparedForPtjDataModel
-	 */
-	public IPagingDataModel<PmOrgProfile> getPreparedForPtjDataModel() {
-		return preparedForPtjDataModel;
-	}
-
-	/**
-	 * @param preparedForPtjDataModel the preparedForPtjDataModel to set
-	 */
-	public void setPreparedForPtjDataModel(
-			IPagingDataModel<PmOrgProfile> preparedForPtjDataModel) {
-		this.preparedForPtjDataModel = preparedForPtjDataModel;
-	}
-
-	/**
-	 * @return the approverPTJOrgList
-	 */
-	public List<Object[]> getApproverPTJOrgList() {
-		return approverPTJOrgList;
-	}
-
-	/**
-	 * @param approverPTJOrgList the approverPTJOrgList to set
-	 */
-	public void setApproverPTJOrgList(List<Object[]> approverPTJOrgList) {
-		this.approverPTJOrgList = approverPTJOrgList;
-	}
-
-	/**
-	 * @return the selectedApproverPTJ
-	 */
-	public Long getSelectedApproverPTJ() {
-		return selectedApproverPTJ;
-	}
-
-	/**
-	 * @param selectedApproverPTJ the selectedApproverPTJ to set
-	 */
-	public void setSelectedApproverPTJ(Long selectedApproverPTJ) {
-		this.selectedApproverPTJ = selectedApproverPTJ;
-	}
-
-	/**
-	 * @return the selectedPmoPTJ
-	 */
-	public Long getSelectedPmoPTJ() {
-		return selectedPmoPTJ;
-	}
-
-	/**
-	 * @param selectedPmoPTJ the selectedPmoPTJ to set
-	 */
-	public void setSelectedPmoPTJ(Long selectedPmoPTJ) {
-		this.selectedPmoPTJ = selectedPmoPTJ;
-	}
-	//13291 - end
 }
