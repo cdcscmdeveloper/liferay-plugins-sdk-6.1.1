@@ -8965,6 +8965,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 					try {
 						// Save and update new supplier offer into related ScLoiLoaItem in DB
+						//#29006 - note 702 - start
+						if (!StringUtils.isBlank(getManagedBean().getNewSupplierOffered()))
+							getQtAwardSO().updateAndSaveNewSupplierJustification("",
+									each.getLoiLoaItemId(),isComplete); 
+						//#29006 - note 702 - end
 						getQtAwardSO().updateAndSaveNewSupplierJustification(getManagedBean().getNewSupplierJustification(),
 								each.getLoiLoaItemId(),isComplete); //#29006 - note 607
 						log.info("-- SAVE JUSTIFICATION --");
@@ -9494,6 +9499,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				scLoiLoaItem.setComplete(items.get(0).isComplete());
 			else
 				scLoiLoaItem.setComplete(false);
+			
+			//#29006 - note 702 - start
+			for (ScLoiLoaItem item : items) {
+				if(item.getLoiLoaItemId().equals(scLoiLoaItem.getLoiLoaItemId())){
+					scLoiLoaItem.setDateGeneratedA3(DateUtils.getLocalizeDate(item.getChangedDate(), myLocale));
+					scLoiLoaItem.setTimeGeneratedA3(new SimpleDateFormat(CommonConstants.DEFAULT_TIME_FORMAT).format(item.getChangedDate()));
+				}					
+			}
+			//#29006 - note 702 - end
 		}
 		//#29006 - end -  note 607
 		context.put("itemsList", scLoiLoaItemCloneList);
@@ -10850,6 +10864,5 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	// #34242 - End
-	
 }
 
