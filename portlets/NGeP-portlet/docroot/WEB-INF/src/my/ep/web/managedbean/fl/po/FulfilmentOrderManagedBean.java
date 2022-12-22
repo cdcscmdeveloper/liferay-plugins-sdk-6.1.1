@@ -183,6 +183,11 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private String progressStatus;
 	private String iscarryForward="";
 	//#28374	Vinod End
+	
+	//34316-Start
+	private int yepButtonFlag =0;
+	//34316-End
+	
     /**
 	 * @return the pendingDoDataModel
 	 */
@@ -1542,5 +1547,25 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	public void setAttachment(FlAttachment attachment) {
 		this.attachment = attachment;
 	}
+	
+	//34316 - start
+	/**
+	 * Gets the yepButtonFlag.
+	 *
+	 * @return the yepButtonFlag
+	 */
+	public int getYepButtonFlag() {
+		return yepButtonFlag;
+	}
+
+	/**
+	 * Sets the yepButtonFlag.
+	 *
+	 * @param yepButtonFlag the yepButtonFlag to set
+	 */
+	public void setYepButtonFlag(int yepButtonFlag) {
+		this.yepButtonFlag = yepButtonFlag;
+	}
+	//34316 - end
 
 }
