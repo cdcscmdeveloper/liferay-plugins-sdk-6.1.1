@@ -19,7 +19,9 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.web.constant.report.SmReportConst;
@@ -64,12 +66,14 @@ public class SmeSupplierRptBackingBean extends SmReportBackingBean<SmeSupplierRp
 		if (getManagedBean().getDateStartFrom() != null) {
 			getManagedBean().setDateFrom(getManagedBean().getDateStartFrom());
 			getManagedBean().setDateTo(getManagedBean().getDateStartTo());
-			params.put(SmReportConst.PARAM_START_DATE_FROM, df.format(getManagedBean().getDateFrom()));
-			params.put(SmReportConst.PARAM_START_DATE_TO, df.format(getManagedBean().getDateTo()));
 		} else if (getManagedBean().getDateEndFrom() != null) {
 			getManagedBean().setDateFrom(getManagedBean().getDateEndFrom());
 			getManagedBean().setDateTo(getManagedBean().getDateEndTo());
+		}
+		if(getManagedBean().getDateFrom() != null){
 			params.put(SmReportConst.PARAM_END_DATE_FROM, df.format(getManagedBean().getDateFrom()));
+		}
+		if(getManagedBean().getDateTo() != null){
 			params.put(SmReportConst.PARAM_END_DATE_TO, df.format(getManagedBean().getDateTo()));
 		}
 		generateSmReport(params);
@@ -133,6 +137,15 @@ public class SmeSupplierRptBackingBean extends SmReportBackingBean<SmeSupplierRp
 		getManagedBean().setStatusTypeList(statusType);
 	}
 	
+	public void populateCompanyName(BaseEntity entity){
+		getManagedBean().setCompanyName(((SmSupplier)entity).getCompanyName());
+	}
+	
+	public void onChangeAccountType(){
+		getManagedBean().setSelectedSupplier(null);
+		getManagedBean().setCompanyName(null);
+	}
+	
 	public String constructConditionFields() {
 		StringBuilder sb = new StringBuilder("smeRegisteredFlag^1,9^" + SearchOperator.OPERATOR_IN.value());
 		
@@ -140,11 +153,11 @@ public class SmeSupplierRptBackingBean extends SmReportBackingBean<SmeSupplierRp
 		if(accType != null && accType.equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
 			if (getManagedBean().getZone() != null) {
 				String zone = "|smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^";
-				if (getManagedBean().getZone().equalsIgnoreCase("SEMENANJUNG")) {
+				if (getManagedBean().getZone().equalsIgnoreCase(SmReportConst.SM_ZONE_SEMENANJUNG)) {
 					sb.append(zone + "1");
-				} else if (getManagedBean().getZone().equalsIgnoreCase("SABAH")) {
+				} else if (getManagedBean().getZone().equalsIgnoreCase(SmReportConst.SM_ZONE_SABAH)) {
 					sb.append(zone + "2");
-				} else if (getManagedBean().getZone().equalsIgnoreCase("SARAWAK")) {
+				} else if (getManagedBean().getZone().equalsIgnoreCase(SmReportConst.SM_ZONE_SARAWAK)) {
 					sb.append(zone + "3");
 				}
 			}

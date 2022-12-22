@@ -25,7 +25,8 @@
 						<f:selectItem itemLabel="#{lbl['lbl.sm.sme.rpt.account.mof']}"
 							itemValue="#{SupplierManagementConst.ACC_MOF}"></f:selectItem>
 						<p:ajax update="smeRptPanel" partialSubmit="true"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+							listener="#{smeSupplierRptBB.onChangeAccountType}"/>
 					</p:selectOneMenu></td>
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.sm.sme.rpt.comp.name']}" /></td>
@@ -39,9 +40,10 @@
 					<p:outputPanel rendered="#{smeSupplierRptBB.managedBean.regType == SupplierManagementConst.ACC_BASIC}">
 						<ac:lov id="rptSmeBasic" lovId="SM_SME_SUPPLIER_BASIC"
 							headerText="#{lbl['lbl.rpt.cmpName']}"
-							value="#{smeSupplierRptBB.managedBean.selectedSupplier.companyName}" 
+							value="#{smeSupplierRptBB.managedBean.companyName}" 
 							saveObject="smeSupplierRptBB.managedBean.selectedSupplier"
 							conditionField="#{smeSupplierRptBB.constructConditionFields()}"
+							postUpdateListener="smeSupplierRptBB.populateCompanyName"
 							tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
 						</ac:lov>
 					</p:outputPanel>
@@ -49,9 +51,10 @@
 					<p:outputPanel rendered="#{smeSupplierRptBB.managedBean.regType != SupplierManagementConst.ACC_BASIC}">
 						<ac:lov id="rptSmeMof" lovId="SM_SME_SUPPLIER_MOF"
 							headerText="#{lbl['lbl.rpt.cmpName']}"
-							value="#{smeSupplierRptBB.managedBean.selectedSupplier.companyName}" 
+							value="#{smeSupplierRptBB.managedBean.companyName}" 
 							saveObject="smeSupplierRptBB.managedBean.selectedSupplier"
 							conditionField="#{smeSupplierRptBB.constructConditionFields()}"
+							postUpdateListener="smeSupplierRptBB.populateCompanyName"
 							tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
 						</ac:lov>
 					</p:outputPanel>
