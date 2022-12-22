@@ -64,11 +64,10 @@
 		<tr>
 					
 			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.flPurchaseOrderNo']}" rendered="#{!yepRptBB.managedBean.contractFlag}"/>
+				<p:outputLabel value="#{lbl['lbl.rpt.flPurchaseOrderNo']}" />
 			</td>
 			<td>
-				<p:inputText maxlength="35" rendered="#{!yepRptBB.managedBean.contractFlag}"
-					value="#{yepRptBB.managedBean.purchaseOrderNo}">
+				<p:inputText maxlength="35" value="#{yepRptBB.managedBean.purchaseOrderNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 			</td>
@@ -236,9 +235,7 @@
 			<td>
 				<p:selectOneMenu id="financialYear"
 								value="#{yepRptBB.managedBean.financialYear}"
-								style="width: 314px;">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-									itemValue="#{null}"></f:selectItem>
+								style="width: 100px;">
 								<f:selectItems
 									value="#{yepRptBB.getFinancialYearOpt()}" />
 							</p:selectOneMenu>
@@ -307,7 +304,7 @@
 		
 		<tr>
 			<td>
-			<p:outputLabel value="#{lbl['lbl.fl.deduction.loa']}" rendered="#{yepRptBB.managedBean.contractFlag}"/></td>
+			<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" rendered="#{yepRptBB.managedBean.contractFlag}"/></td>
 			<td><p:inputText maxlength="20"
 					rendered="#{yepRptBB.managedBean.contractFlag}"
 					value="#{yepRptBB.managedBean.loaNo}">
