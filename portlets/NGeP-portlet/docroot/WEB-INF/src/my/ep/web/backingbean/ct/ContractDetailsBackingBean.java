@@ -3984,4 +3984,85 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	// End Fix - #30856
 	
+	// Start #32906 haiza
+		public String saveToSchedulerToInitiate() throws Exception {
+			log.debug("start saveToSchedulerToInitiate");
+			IContractSO contractSO = null;
+			String action = BpmOutcomeConst.BPM_SAVE;
+			
+			validateOwnerOrgProfile(
+						ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+
+			validateFDDescAndAmount(action);
+			ctBB.getZoneObjDetails();
+
+			if(!ctBB.getManagedBean().getContractVer().getCtContractValue().isPid()){
+				ctBB.getManagedBean().getContractVer().setCtPidReasons(null);
+			}
+
+			validateCtContractVer(action);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
+			reqDTO.setOutcome(action);
+			reqDTO.setTaskId(getManagedBean().getTaskId());
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+
+			reqDTO.setCtContract(ctBB.getManagedBean().getContractVer().getCtContract());
+			CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+
+			ctContractVer.getCtContractValue().setSupplierName(ctBB.getManagedBean().getSupplierCompanyName());
+			ctContractVer.getCtContractValue().setSupplierBranch(ctBB.getManagedBean().getSupplierBranchName());
+			ctContractVer.getCtContractValue().setSupplierRegNo(ctBB.getManagedBean().getSupplierRegNo());
+			ctContractVer.getCtContractValue().setSupplierMofNo(ctBB.getManagedBean().getSupplierMofNo());
+
+			ctContractVer.setWaiverAttachment(ctBB.getManagedBean().getWaiverDetail());
+			ctContractVer.setWaiverAttachmentLatest(ctBB.getManagedBean().getCtAttachmentLatest());
+			
+			reqDTO.setCtContractVer(ctContractVer);
+			reqDTO.setScLoa(ctContractVer.getCtContract().getLoa());
+			reqDTO.setAgreementContractVer(ctBB.getManagedBean().getAgreementContractVer());
+			reqDTO.setUserRole(getUserRole());
+			//reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
+			reqDTO.setAttachments(getManagedBean().getAttachmentList());
+			reqDTO.setUserMap(getManagedBean().getUserMap());
+			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+
+			if (this.getManagedBean().getPmDigiSign() != null) {
+				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+			}
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);	
+			ContractResDTO resDTO = contractSO.saveToScheduler(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				log.debug("Record saved successfully");
+				String messageId = MessageConst.INFO_700005;
+
+				messageId = MessageConst.INFO_700110;
+		
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(messageId,
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ctBB.getManagedBean().getContractVer().getDocType()), 
+								ctBB.getManagedBean().getContractVer().getCtContract().getContractNo(),CommonConstants.performanceSchedulerTiming}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
+				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
+						|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null)) { 				  
+					renewSesionObject();
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				} else {				    	
+					ContractReqDTO ctReqDTO = new ContractReqDTO();
+					ctReqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+					ctReqDTO.setDocType(resDTO.getCtContractVer().getDocType());
+					setValidateContractField(ctReqDTO);
+				}
+			} else {
+				throw new EpException(MessageConst.ERROR_700020);
+			}
+		
+		return null;	
+		}
+		// # 32906 haiza
+	
 }
