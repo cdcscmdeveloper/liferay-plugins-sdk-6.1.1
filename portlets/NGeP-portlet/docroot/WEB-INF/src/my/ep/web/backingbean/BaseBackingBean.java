@@ -1133,9 +1133,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 			items = new SelectItem[parameterDescs.size()];
 			int i = 0;
+			String codeName = "";//33849
 			for (PmParameterDesc parameterDesc : parameterDescs) {
+				//33849-Start
+				if(parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase("CO")){
+					codeName = ResourceBundleUtils.getMessage(
+							"lbl.rpt.drpdown.contractOrderlbl", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterCode(), codeName);
+				}else{
 				items[i++] = new SelectItem(parameterDesc.getPmParameter()
 						.getParameterCode(), parameterDesc.getCodeName());
+			}
+				//33849-End
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

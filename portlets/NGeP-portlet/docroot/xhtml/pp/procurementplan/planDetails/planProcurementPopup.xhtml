@@ -135,14 +135,15 @@
 					<f:facet name="header">
 					#{lbl['lbl.pp.procurement.method']}
 				</f:facet>
+				<!-- #34156 - Start -->
 				  <p:selectOneMenu disabled="true" id="somProcurementMethod" style="width:99%"
        			    label="#{lbl['lbl.pp.procurement.method']}" value="#{ppItem.procurementType.parameterId}">
-					<f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptions(ppItem.procurementCat.parameterId)}"
+					<f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptionsClone(ppItem.procurementCat.parameterId)}"
 						var="obj" itemValue="#{obj.procurementType.parameterId}" 
 						itemLabel="#{pPlanBackingBean.getProcurementCategoryLabels(obj.procurementType)}"
 						noSelectionOption="true"/>
-					<p:ajax event="change" listener="#{pPlanBackingBean.onSelectCategoryType(ppItem.procurementType.parameterId, index)}" process="@this" />
 				</p:selectOneMenu>
+				<!-- #34156 - End -->
 				</p:column>
 				<p:column>
 					<f:facet name="header">

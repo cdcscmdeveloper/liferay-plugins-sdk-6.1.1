@@ -714,6 +714,26 @@ public class PpCommonUtil implements Serializable{
 		return retrieveProcurementTypeList(langugageCode, procurementCatId);
 	}
 	
+	//#34156 - Start
+	public static List<PmProcurementCatType> retrieveProcurementTypeListByCatIdNewLabel(
+			String langugageCode, Long procurementCatId, boolean NewLabcatMethodType) {
+		log.info("retrieveProcurementTypeListByCatIdNewLabel");
+		if (procurementCatId == null) {
+			throw new EpException(MessageConst.ERROR_730026);
+		}		
+		return retrieveProcurementTypeListNewLabel(langugageCode, procurementCatId, NewLabcatMethodType);
+	}
+	
+	public static List<PmProcurementCatType> retrieveProcurementTypeListByCatIdClone(
+			String langugageCode, Long procurementCatId) {
+		log.info("retrieveProcurementTypeListByCatIdClone");
+		if (procurementCatId == null) {
+			throw new EpException(MessageConst.ERROR_730026);
+		}		
+		return retrieveProcurementTypeListClone(langugageCode, procurementCatId);
+	}
+	//#34156 - End
+	
 	/**
 	 * Retrieve Procurement Type List BY  Language Code
 	 * 
@@ -754,6 +774,79 @@ public class PpCommonUtil implements Serializable{
 		}
 		return procurementCatTypeList;
 	}
+	
+	//#34156 - Start
+	public static List<PmProcurementCatType> retrieveProcurementTypeListNewLabel(
+			String langugageCode,Long procurementCatId, boolean newLabcatMethodType) {
+		log.info("retrieveProcurementTypeListNewLabel");
+		List<PmProcurementCatType> procurementCatTypeList = new ArrayList<PmProcurementCatType>();
+		String locale = "";
+		if (langugageCode == null) {
+			locale = new FacesScopes().getUserLocale().getLanguage();
+		} else {
+			locale = langugageCode;
+		}
+		
+		IProcurementCatTypeSO reqSO = null;
+		try {
+			ProcurementCatTypeReqDTO reqDTO = new ProcurementCatTypeReqDTO();
+			ProcurementCatTypeResDTO resDTO = new ProcurementCatTypeResDTO();
+			if(procurementCatId != null){
+				reqDTO.setProcurementCatId(procurementCatId);
+				reqDTO.setNewLabcatMethodType(newLabcatMethodType);
+			}
+			reqDTO.setLanguageCode(locale);
+			reqSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT,
+					IProcurementCatTypeSO.class);
+			resDTO = reqSO
+					.retrieveDistinctProcurementTypeListByProcurementCatNewLabel(reqDTO);
+
+			if (resDTO.isSuccessful()
+					&& resDTO.getProcurementCatTypeList() != null) {
+				procurementCatTypeList = resDTO.getProcurementCatTypeList();
+			}
+		} finally {
+			reqSO = null;
+		}
+		return procurementCatTypeList;
+	}
+	
+	public static List<PmProcurementCatType> retrieveProcurementTypeListClone(
+			String langugageCode,Long procurementCatId) {
+		log.info("retrieveProcurementTypeListClone");
+		List<PmProcurementCatType> procurementCatTypeList = new ArrayList<PmProcurementCatType>();
+		String locale = "";
+		if (langugageCode == null) {
+			locale = new FacesScopes().getUserLocale().getLanguage();
+		} else {
+			locale = langugageCode;
+		}
+		
+		IProcurementCatTypeSO reqSO = null;
+		try {
+			ProcurementCatTypeReqDTO reqDTO = new ProcurementCatTypeReqDTO();
+			ProcurementCatTypeResDTO resDTO = new ProcurementCatTypeResDTO();
+			if(procurementCatId != null){
+				reqDTO.setProcurementCatId(procurementCatId);
+			}
+			reqDTO.setLanguageCode(locale);
+			reqSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT,
+					IProcurementCatTypeSO.class);
+			resDTO = reqSO
+					.retrieveDistinctProcurementTypeListByProcurementCatClone(reqDTO);
+
+			if (resDTO.isSuccessful()
+					&& resDTO.getProcurementCatTypeList() != null) {
+				procurementCatTypeList = resDTO.getProcurementCatTypeList();
+			}
+		} finally {
+			reqSO = null;
+		}
+		return procurementCatTypeList;
+	}
+	//#34156 - End
 
 	/**
 	 * retrieve org profile by orgProfileId

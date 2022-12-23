@@ -84,7 +84,7 @@
 							popupWidgetVar="evaluationManualReportUploadWidget"
 							attachment="#{scQtEvaluationReport.scQtFinalizationReportAttachment}"
 							deleteFileUploadListener="suppFinalizationBackingBean.deleteReportsUploadFile"
-							rowIndex="#{index}">
+							rowIndex="#{rowIndex}"> <!-- Bug #34083 -->
 							<f:setPropertyActionListener for="actionEvent"
 								value="#{scQtEvaluationReport}"
 								target="#{suppFinalizationBackingBean.managedBean.selectedBriefingReport}" />

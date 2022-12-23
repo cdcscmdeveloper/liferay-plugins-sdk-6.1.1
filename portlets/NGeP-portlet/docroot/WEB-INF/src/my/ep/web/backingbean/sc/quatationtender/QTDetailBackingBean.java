@@ -46,6 +46,7 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.bean.search.sc.QTSearchBean;
+import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -88,6 +89,8 @@ import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
+import my.ep.dto.ct.circular.CircularDetailReqDTO;
+import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -2158,6 +2161,13 @@ public class QTDetailBackingBean extends
 						reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 					}
 				}
+				//Bug_33484 - start
+				else if (isQcaSecretary() || isQcbSecretary() || isPbbSecretary() 
+						|| isFpbSecretary() || isApprover()){
+					// Filter By - actor user id
+					reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+				}
+				//Bug_33484 - end
 				
 				 /* Enhancement #27668 -start-
 				 * TO INCLUDE QT WHICH PPB SECRETARY INVOLVE IN IT, IF HIGHER_AUTHORITY LINK ALSO
@@ -3650,6 +3660,30 @@ public class QTDetailBackingBean extends
 					QTSupplierReqDTO supplierReqDTO = new QTSupplierReqDTO();
 					QTSupplierResDTO supplierResDTO = new QTSupplierResDTO();
 					supplierReqDTO.setPanelItemId(panelItemList.get(0).getPanelItemId());
+					//#34220-start
+					if(null!=this.getManagedBean().getQt().getCircularVer().getCtCircular().getCurrentCircularVerId()&& null!=this.getManagedBean().getQt().getCircularVer().getCtCircular().getCurrentCircularVerId().getCircularVerId()&& !this.getManagedBean().getQt().getCircularVer().getCircularVerId().equals(this.getManagedBean().getQt().getCircularVer().getCtCircular().getCurrentCircularVerId().getCircularVerId())){ 
+						log.info("=======qtCircularQTNUMBER========"+this.getManagedBean().getQt().getQtNo());
+						CircularDetailReqDTO cirreqDTO = new CircularDetailReqDTO();
+						cirreqDTO.setCircularVerId(this.getManagedBean().getQt().getCircularVer().getCtCircular().getCurrentCircularVerId().getCircularVerId());
+						cirreqDTO.setPanelItemTypeGroup(true);
+						cirreqDTO.setGroupItemId(this.getManagedBean().getQt()
+								.getItemGroup().getPanelItemGroupId());
+						ICircularDetailSO	circularDetailSO = (ICircularDetailSO) EpEjbBusinessDelegate
+								.getInstance().getServiceObject(
+										ModuleCodeConst.CONTRACT_MANAGEMENT,
+										ICircularDetailSO.class);
+						CircularDetailResDTO cirresDTO = circularDetailSO
+							.getPanelItemsByCircularVerId(cirreqDTO);
+						if(CollectionUtils.isNotEmpty(cirresDTO.getPanelItemList())){
+						Long panelItemId=cirresDTO.getPanelItemList().get(0)
+							.getPanelItemId();
+						log.info("=======qtCircularQTNUMBER========"+this.getManagedBean().getQt().getQtNo()+"=======qtCircularVersionId========"+panelItemId);
+						supplierReqDTO.setPanelItemId(cirresDTO.getPanelItemList().get(0)
+									.getPanelItemId());
+						}
+						
+					}
+					//#34220-end
 					supplierResDTO = supplierSo
 							.retrievePanelSuppliersByPanelItem(supplierReqDTO);
 					
@@ -6559,7 +6593,15 @@ public class QTDetailBackingBean extends
 		return facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value());
 	}
-
+	
+	//Bug_33484 - start
+	public boolean isApprover() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.COMMITTEE_APPROVER.value())
+				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value());
+	}
+	//Bug_33484 - end
+	
 	private void updateApprovalRequestDtls(List<ScQtApproval> approval,
 			String approvalCategory) {
 

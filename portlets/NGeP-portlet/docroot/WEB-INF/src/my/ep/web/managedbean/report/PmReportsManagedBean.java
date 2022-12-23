@@ -50,6 +50,7 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	private CmUnspsc selectedUnspscItem;
 	private Date fromDate;
 	private Date toDate;
+	private String monthPicked; //shafie #29486
 	private PmOrgProfile selectedOrgProfile;
 	private String bizRegNo;
 	private String epNo;
@@ -68,6 +69,7 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	private String applicantName;
 	private String selectedAccessType;
 	private Long selectedApplicationStatus;
+	private Date monthlyDate;//#29486
 	
 	public PmReportsManagedBean(){}
 
@@ -242,6 +244,24 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
 	}
+	
+	//shafie #29486 start
+	
+	/**
+	 * @return the monthPicked
+	 */
+	public String getmonthPicked() {
+		return monthPicked;
+	}
+
+	/**
+	 * @param monthPicked the monthPicked to set
+	 */
+	public void setmonthPicked(String monthPicked) {
+		this.monthPicked = monthPicked;
+	}
+	
+	//shafie #29486 end
 
 	/**
 	 * @return the selectedOrgProfile
@@ -560,5 +580,21 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 		this.pmSearchBean = pmSearchBean;
 	}
 	//shafie #28833 end
+	
+	//#29486 - START
+	/**
+	 * @return the monthlyDate
+	 */
+	public Date getMonthlyDate() {
+		return monthlyDate;
+	}
+
+	/**
+	 * @param monthlyDate the monthlyDate to set
+	 */
+	public void setMonthlyDate(Date monthlyDate) {
+		this.monthlyDate = monthlyDate;
+	}
+	//#29486 - END
 	
 }
