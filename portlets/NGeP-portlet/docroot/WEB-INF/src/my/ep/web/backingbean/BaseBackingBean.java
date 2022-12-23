@@ -4203,4 +4203,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return userIdSession;
 	}
 	//#31849, #34090, #32682 end
+	//#34135 START
+	/**
+	 * Gets the full address.
+	 *
+	 * @param smAddress the sm address
+	 * @return the full address
+	 */
+	public String getFullBranchAddress(SmAddress smAddress) {
+		return AddressUtils.getFullBranchAddress(smAddress);
+	}
+	//#34135 END
 }
