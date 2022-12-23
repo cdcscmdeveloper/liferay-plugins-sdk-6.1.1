@@ -860,6 +860,9 @@ public class TaskReassignmentBackingBean extends
 				resetReassigneeList();
 				resetCheckAllTasks();
 				searchUsers();
+				//7465 - start
+				checkPendingTaskRemove();
+				//7465 - end
 			//}
 		}
 	}
