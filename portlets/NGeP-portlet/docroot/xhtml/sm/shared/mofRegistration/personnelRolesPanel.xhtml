@@ -38,23 +38,27 @@
 									<c:if
 										test="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT and 
 										backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT}">
-										<td style="width: 20px"><p:selectBooleanCheckbox
-												value="#{backingBean.managedBean.selectedShareHolder.director}"
-												disabled="#{backingBean.managedBean.selectedShareHolder.directorSsm || 
-												backingBean.managedBean.selectedShareHolder.disableEquityOwner}" > <!--#30444-->
-												<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog])"
-													process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
-													listener="#{backingBean.managePersonnelRoles('Y')}" />
-											</p:selectBooleanCheckbox>
-										</td>
-										<td>
-											<ac:smCheckBoxChangeAlert 
-												isShow="#{backingBean.managedBean.showFieldChanges
-													and not empty backingBean.managedBean.latestPersonnel}"
-												oriValue="#{backingBean.managedBean.latestPersonnel.director}" 
-												currValue="#{backingBean.managedBean.selectedShareHolder.director}" />
-											<h:outputText style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
-										</td>
+										<!-- #34174 start -->	
+										<h:panelGroup rendered="#{backingBean.showDirector(backingBean.managedBean)}">
+											<td style="width: 20px">
+												<p:selectBooleanCheckbox
+													value="#{backingBean.managedBean.selectedShareHolder.director}"           
+													disabled="#{backingBean.managedBean.selectedShareHolder.directorSsm || backingBean.managedBean.selectedShareHolder.disableEquityOwner}" > <!--#30444-->
+													<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog])"
+														process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
+														listener="#{backingBean.managePersonnelRoles('Y')}" />
+												</p:selectBooleanCheckbox>
+											</td>
+											<td>
+												<ac:smCheckBoxChangeAlert 
+													isShow="#{backingBean.managedBean.showFieldChanges
+														and not empty backingBean.managedBean.latestPersonnel}"
+													oriValue="#{backingBean.managedBean.latestPersonnel.director}" 
+													currValue="#{backingBean.managedBean.selectedShareHolder.director}" />
+												<h:outputText style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
+											</td>
+										</h:panelGroup>
+										<!-- #34174 end -->	
 										<td style="width: 20px"><p:selectBooleanCheckbox
 												value="#{backingBean.managedBean.selectedShareHolder.higherManagement}"
 												disabled="#{backingBean.managedBean.selectedShareHolder.disableEquityOwner}" ><!--#30444-->
@@ -153,21 +157,27 @@
 									<c:if
 										test="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT and 
 										backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT}">
-										<td style="width: 20px"><p:selectBooleanCheckbox
-												value="#{backingBean.managedBean.selectedShareHolder.director}"
-												disabled="#{backingBean.managedBean.selectedShareHolder.directorSsm || backingBean.managedBean.selectedShareHolder.disableEquityOwner}" > <!--#30444 -17022022 add condition in disabled-->
-												<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog])"
-													process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
-													listener="#{backingBean.managePersonnelRoles('Y')}" />
-											</p:selectBooleanCheckbox></td>
-										<td>
-											<ac:smCheckBoxChangeAlert 
-												isShow="#{backingBean.managedBean.showFieldChanges
-													and not empty backingBean.managedBean.latestPersonnel}"
-												oriValue="#{backingBean.managedBean.latestPersonnel.director}" 
-												currValue="#{backingBean.managedBean.selectedShareHolder.director}" />
-											<h:outputText style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
-										</td>
+										<!-- #34174 start -->	
+										<h:panelGroup rendered="#{backingBean.showDirector(backingBean.managedBean)}" >
+											<td style="width: 20px">
+												<p:selectBooleanCheckbox
+													value="#{backingBean.managedBean.selectedShareHolder.director}" 
+													disabled="#{backingBean.managedBean.selectedShareHolder.directorSsm || backingBean.managedBean.selectedShareHolder.disableEquityOwner}" > <!--#30444 -17022022 add condition in disabled-->
+													<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog])"
+														process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
+														listener="#{backingBean.managePersonnelRoles('Y')}" />
+												</p:selectBooleanCheckbox>
+											</td>
+											<td>
+												<ac:smCheckBoxChangeAlert 
+													isShow="#{backingBean.managedBean.showFieldChanges
+														and not empty backingBean.managedBean.latestPersonnel}"
+													oriValue="#{backingBean.managedBean.latestPersonnel.director}" 
+													currValue="#{backingBean.managedBean.selectedShareHolder.director}" />
+												<h:outputText style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
+											</td>
+										</h:panelGroup>
+										<!-- #34174 end -->	
 										<td style="width: 20px"><p:selectBooleanCheckbox
 												value="#{backingBean.managedBean.selectedShareHolder.higherManagement}"
 												disabled="#{backingBean.managedBean.selectedShareHolder.disableEquityOwner}" ><!--#30444 -25082021 add disabled-->
