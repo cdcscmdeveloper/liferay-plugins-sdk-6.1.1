@@ -222,14 +222,17 @@
 						</div>
 						
 						<div class="ppRightBtn">
-							<p:commandButton value="#{lbl['lbl.btn.ok']}" 
-								action="#{templateSpecBackingBean.zoneEstCostOkAction(templateSpecBean)}"
-								partialSubmit="true"
-								process="@this, zoneEstimationPnl"
-								update="zoneEstimationPnl, @(.calcEstAmount), @(.indicativeBtn)"> <!--#25039#67 add indicativeBtn -->
-								<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
-							</p:commandButton>
-							<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
+						<!-- 34148 -start- -->
+						<p:commandButton value="#{lbl['lbl.btn.ok']}"
+							action="#{templateSpecBackingBean.zoneEstCostOkAction(templateSpecBean)}"
+							partialSubmit="true" process="@this, zoneEstimationPnl"
+							update="zoneEstimationPnl, @(.calcEstAmount)"> <!--#25039#67 add indicativeBtn -->
+							<!-- 34148 -end- -->
+							<f:setPropertyActionListener
+								target="#{templateSpecBean.specComponentId}"
+								value="#{templateSpecId}" />
+						</p:commandButton>
+						<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
 								partialSubmit="true" process="@this" update="@this"
 								action="#{templateSpecBackingBean.zoneEstCostCancelAction(templateSpecBean)}"
 								oncomplete="#{zoneEstimationPopup}.hide()" rendered="#{editable}" />
