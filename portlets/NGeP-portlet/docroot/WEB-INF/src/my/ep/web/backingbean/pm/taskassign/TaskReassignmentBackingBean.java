@@ -859,11 +859,15 @@ public class TaskReassignmentBackingBean extends
 			} else {*/
 				resetReassigneeList();
 				resetCheckAllTasks();
-				searchUsers();
 				//7465 - start
+				if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() != null && this.getManagedBean()
+						.getTaskAssignmentSearchBean().getUser().getLoginId() != null) {
+				searchUsers();
 				checkPendingTaskRemove();
+				} else {
+					searchUsers();
+				}
 				//7465 - end
-			//}
 		}
 	}
 	
