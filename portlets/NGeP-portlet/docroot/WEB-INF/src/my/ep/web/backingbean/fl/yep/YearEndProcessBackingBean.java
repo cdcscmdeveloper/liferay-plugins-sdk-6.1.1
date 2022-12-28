@@ -261,12 +261,11 @@ public class YearEndProcessBackingBean extends
 			throw new EpException(MessageConst.ERROR_780068);
 		}
 		
-		//34325
-//		if(getManagedBean().getSearchDocType().equals(FulfilmentConst.DOC_TYPE_CO)){
-//			if(null == getManagedBean().getSearchLoaNo() || getManagedBean().getSearchLoaNo() == ""){
-//				throw new EpException(MessageConst.ERROR_780069);
-//			}
-//		}
+		if(getManagedBean().getSearchDocType().equals(FulfilmentConst.DOC_TYPE_CO)){
+			if(null == getManagedBean().getSearchLoaNo() || getManagedBean().getSearchLoaNo() == ""){
+				throw new EpException(MessageConst.ERROR_780069);
+			}
+		}
 		
 		if(null == getManagedBean().getSearchStartDate() && null != getManagedBean().getSearchToDate()){
 			throw new EpException(MessageConst.ERROR_760494);
