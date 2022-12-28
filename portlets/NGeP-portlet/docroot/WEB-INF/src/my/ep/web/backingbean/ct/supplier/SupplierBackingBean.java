@@ -1571,7 +1571,7 @@ public void selectFinancialAcc(){
 										// Start Fix - #31962
 										List<PmUser> userList_1 = userSO.retrieveUserListByRole(reqDTO).getUserList();
 										// Oracle BPM product limitation, ASSIGNEE field size is 1000; only can support up to 83*12(IC number)
-										userList_1 = (List<PmUser>) BpmCommonUtils.limitAssigneeSize(userList_1);
+										userList_1 = (List<PmUser>) BpmCommonUtils.limitAssigneeSizeArrayList(userList_1); // Fix - #34213										
 										getManagedBean().setContractAdminlist(userList_1);
 										// End Fix - #31962
 									}
@@ -1586,7 +1586,7 @@ public void selectFinancialAcc(){
 									//Start Fix - #31962
 									List<PmUser> userList_2 = userSO.retrieveUserListByRole(userReqDTO).getUserList();
 									// Oracle BPM product limitation, ASSIGNEE field size is 1000; only can support up to 83*12(IC number)
-									userList_2 = (List<PmUser>) BpmCommonUtils.limitAssigneeSize(userList_2);
+									userList_2 = (List<PmUser>) BpmCommonUtils.limitAssigneeSizeArrayList(userList_2); // Fix - #34213
 									getManagedBean().setContractAdminlist(userList_2);
 									//End Fix - #31962
 

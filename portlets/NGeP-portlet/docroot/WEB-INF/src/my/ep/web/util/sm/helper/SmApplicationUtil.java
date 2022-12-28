@@ -11559,7 +11559,8 @@ public class SmApplicationUtil {
 							if(address != null){
 								if(address.getPmState()!= null && address.getPmDistrict() != null){
 									if(address.getPmDistrict().getPmState() != null){
-										if(address.getPmDistrict().getPmState().getStateId() != address.getPmState().getStateId()){
+										//#34138
+										if(!address.getPmDistrict().getPmState().getStateId().equals(address.getPmState().getStateId())){
 											address.setPmDistrict(new PmDistrict());
 											address.setPmCity(new PmCity());
 										}

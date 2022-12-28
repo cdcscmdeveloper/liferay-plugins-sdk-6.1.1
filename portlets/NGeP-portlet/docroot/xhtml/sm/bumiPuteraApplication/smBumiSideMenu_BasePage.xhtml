@@ -51,18 +51,6 @@
 						"#{lbl['lbl.sm.review.application']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
 			</script>
 		</h:panelGroup>
-		<!-- #12483 - START -->
-		<h:panelGroup
-			rendered="#{backingBean.managedBean.poUser and backingBean.currentReviseReason() ne null and 
-						(backingBean.managedBean.currentStatus eq 'Pending Revise Application' or 
-						 backingBean.managedBean.currentStatus eq 'Menunggu Kaji Semula Permohonan')}">
-			<script>
-				$('#portlet_MOFApplication_WAR_NGePportlet').find(
-						'.portlet-title-text').html(
-						"#{lbl['lbl.sm.revise.application']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
-			</script>
-		</h:panelGroup>
-		<!-- #12483 - END -->
 	</ui:define>
 
 

@@ -1041,6 +1041,10 @@ public class ApprovalBackingBean extends
 
 				if (isPendingReScheduleInvolved) {
 					successMessage(MessageConst.INFO_60118, new String[] { qt.getQtNo() }, true);
+				} else {
+					successMessage(getMessgeConstant(this.getManagedBean().getAction()),
+							getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
+							qt.getQtNo(), true);
 				}
 				// #14398 - End.
 			} else {

@@ -24,14 +24,8 @@
 					<tr>
 						<td style="width: 20%; vertical-align: top;" class="sidemenutd"><ui:include
 								src="smMofApplnSideMenuItem.xhtml" /></td>
-						<td style="vertical-align: top;">
-						<!-- #12483 - START -->
-						<c:if test="#{backingBean.renderRevisedReason()}"> 
-							<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" styleClass="splNotesFonts" escape="false"/>
-							<br/> 
-						</c:if>
-						<!-- #12483 - END -->
-						<ui:include src="/xhtml/sm/shared/mofRegistration/captialOrEquityStatusInfoForm.xhtml" />
+						<td style="vertical-align: top;"><ui:include
+								src="/xhtml/sm/shared/mofRegistration/captialOrEquityStatusInfoForm.xhtml" />
 							<c:if
 								test="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT}">
 								<ui:include

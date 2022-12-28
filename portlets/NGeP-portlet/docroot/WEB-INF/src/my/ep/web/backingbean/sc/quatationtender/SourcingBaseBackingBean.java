@@ -462,28 +462,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param fileName
 	 * @throws IOException
 	 */
-	protected void downloadFileByInputStream(InputStream input, String fileName)
-			throws IOException {
+	protected void downloadFileByInputStream(InputStream input, String fileName) throws IOException {
 		log.info("Inside downloadFile(..)");
-		PortletResponse portletResponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse response = com.liferay.portal.util.PortalUtil
-				.getHttpServletResponse(portletResponse);
+		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 		OutputStream out = null;
 		
 		try{
 			response.setHeader("Pragma", "no-cache");
-			response.setDateHeader("Expires", 0);
+			//response.setDateHeader("Expires", 0);
 			// response.setContentType("application/vnd.ms-excel");
 			// response.setHeader("Content-Transfer-Encoding", "binary");
 			// to fix firefox issue of space
-			String finalFileName = fileName.replaceAll("\\s+",
-					QTConstants.REPLACE_CHAR);
+			String finalFileName = fileName.replaceAll("\\s+", QTConstants.REPLACE_CHAR);
 			log.info("finalFileName: " + finalFileName);
 			response.setHeader("Content-Disposition", "attachment; filename=\""+ finalFileName + "\";");
 //			response.setHeader("Content-Disposition", "attachment; filename=" + finalFileName);
 //			response.setContentType("application/octet-stream");
-			response.setContentType(getMimeType(finalFileName));
+			//response.setContentType(getMimeType(finalFileName)); // asal
+			response.setContentType("application/pdf"); //najmi test
+			
 			response.flushBuffer();
 
 			out = response.getOutputStream();
@@ -496,8 +494,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			out.flush();
 			FacesContext.getCurrentInstance().responseComplete();
-		}
-		finally{
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally{
 			if(input!= null){
 				input.close();
 			}
@@ -514,24 +513,30 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param scAttachments
 	 * @throws IOException
 	 */
-	protected <ATTACHMENT extends ScAttachment> void downloadAllFiles(
-			String zipFileName, List<ATTACHMENT> scAttachments)
-			throws IOException {
-		PortletResponse portalresponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse response = PortalUtil
-				.getHttpServletResponse(portalresponse);
-		response.setContentType("Content-type: text/zip");
-		response.setHeader("Content-Disposition", "attachment; filename="
-				+ zipFileName + ".zip");
-		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
-				response.getOutputStream()));
-		
+	protected <ATTACHMENT extends ScAttachment> void downloadAllFiles(String zipFileName, List<ATTACHMENT> scAttachments) throws IOException {
+		HttpServletResponse response = null;
+		ZipOutputStream zos = null;
+		log.info("-----------before set header----------");
 		try {
+			PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+			response = PortalUtil.getHttpServletResponse(portalresponse);
+//			response.setContentType("Content-type: text/zip");
+			
+			//START:test by syazwan
+			//response.setContentType("application/x-download");
+			response.setHeader("Content-Disposition", "attachment; filename="+ zipFileName + ".zip");
+			response.setContentType("application/zip");
+			//response.setHeader("Content-Transfer-Encoding", "application/octet-stream");
+			log.info("-----------after set header----------");
+			//END:Test by syazwan
+			
+			zos = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()));
+		
+		
 			downloadAllFilesAsZipFile(zos,scAttachments);
 			
 		} catch (Exception ex) {
-
+			ex.printStackTrace();
 		} finally {
 			zos.close();
 			response.flushBuffer();
