@@ -222,6 +222,134 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
+	 * The method used for searching the circular list.
+	 * A warning message will display on screen when searching
+	 * with empty search criteria.
+	 * 
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
+	 */
+	/*public void searchCircular() throws Exception {
+		try {				 
+					if( getManagedBean().getItemcode().equals("") && 
+							getManagedBean().getItemname().equals("") &&
+							getManagedBean().getItemstatus() == null &&
+							getManagedBean().getItemtype()== null &&
+							getManagedBean().getSkuno().equals("") &&
+							getManagedBean().getTypeofgoods()== null  )
+				{
+					
+					throw new EpException(MessageConst.ERROR_750049);
+					
+				}else if(getManagedBean().getItemtype()!=null)
+				{
+					getManagedBean().setResetval(true);
+					ContractBackingBean ccBB = new ContractBackingBean();
+					ccBB.getManagedBean().setSelectedItem(null);
+					ccBB.getManagedBean().setServiceselectedItem(null);
+					if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT)){
+						getManagedBean().getContractListingPagingDataModel().reloadData();
+
+							getManagedBean().setItemProductExist(true);
+							getManagedBean().setItemServiceExist(false);
+							
+					}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+
+						  getManagedBean().getServiceListingPagingDataModel().reloadData();
+
+								getManagedBean().setItemServiceExist(true);
+
+							getManagedBean().setItemProductExist(false); 
+					}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE))
+					{
+						  getManagedBean().getContractListingPagingDataModel().reloadData();
+						  getManagedBean().getServiceListingPagingDataModel().reloadData(); 
+						  
+							if(ccBB.getManagedBean().getCtItemList().size() > 0 || !ccBB.getManagedBean().getCtItemList().isEmpty()){
+								getManagedBean().setItemProductExist(true);
+							}else{
+								getManagedBean().setItemProductExist(false);
+								getManagedBean().setItemProductNotExist(false);
+							}
+							
+							if(ccBB.getManagedBean().getCtItemServiceList().size() > 0 || !ccBB.getManagedBean().getCtItemServiceList().isEmpty()){
+								getManagedBean().setItemServiceExist(true);
+							}else{
+								getManagedBean().setItemServiceExist(false);
+								getManagedBean().setItemServiceNotExist(false);
+							} 
+					}
+					}// Start Fix - #31042
+				 else if(getManagedBean().getItemtype() == null){
+					
+					  getManagedBean().getContractListingPagingDataModel().reloadData();
+					  getManagedBean().getServiceListingPagingDataModel().reloadData();
+					  
+				}
+				    // End Fix - #31042
+					
+			//System.out.println("*****************searchCircular************-->5"+getManagedBean().get);
+			if (getManagedBean().getSearchCircularDocType() == null) {
+				
+		
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_100022,
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())},
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+			else {
+				
+				getManagedBean().getCircularListingPagingDataModel().reloadData();
+			}
+		} finally{
+			    // Do nothing
+			}
+	}*/
+	
+	/**
+	* Gets the local goods radio values.
+	* 
+	* @param itemType
+	* the item type
+	* @return the local goods radio values
+	*/
+	
+	public SelectItem[] getLocalGoodsRadioValues(String itemType){
+		List<String> types = new ArrayList<String>();
+		types.add(ParameterConst.LOCAL_GOODS);
+		types.add(ParameterConst.IMPORTED_GOODS);
+		SelectItem[] items = null;
+		try{
+			items = new SelectItem[types.size()];
+			int i = 0;
+			for(String location : types){
+				List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(itemType);
+				for(PmParameterDesc paramDesc : localParamDesc){
+					if(paramDesc.getPmParameter().getParameterCode().equals(location)){
+						items[i++] = new SelectItem(paramDesc.getPmParameter().getParameterId(),paramDesc.getCodeName());
+						
+					}
+				}
+			}
+		}finally{
+			
+		}
+		return items;
+	}
+	
+	/**
+	 * Retrieve parameter desc by type.
+	 * 
+	 * @param type
+	 *            (String type)
+	 * @returnList<PmParameterDesc>
+	 */
+	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
+		return ParameterHelper.getInstance().getParameterDescList(type);
+
+	}
+	
+	/**
 	 * Constructor used to initialize file path directory
 	 */
 	public ContractBackingBean() {
@@ -2002,6 +2130,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 							}	
 						}
 						//CT_CHANGE_LOG
+						
+						log.info("agency - "+agency.getOrgProfile().getOrgName());
+						
 						if((agency.isBrandNew() && !agency.isCloned()) || 
 								getManagedBean().getNewAgencyMap().containsKey(agency.getOrgProfile().getOrgCode())) {
 							getManagedBean().getNewAgencyMap().remove(agency.getOrgProfile().getOrgCode());
@@ -3646,7 +3777,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 			
-	if (ctContractItem.getMinimumOrderQty() > 0) {
+/*	if (ctContractItem.getMinimumOrderQty() > 0) {
 		for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
 		if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
 		   item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
@@ -3664,7 +3795,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						}
 					}//#28479 - End Putra
 				}
-			}			
+			}	*/		
 		}
 		getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
 		log.info("Putra Check Item :"+ctContractItem.getMinimumOrderQty() );			

@@ -15,13 +15,13 @@
 	<tr >
 		<td colspan="1" rowspan="1"><h:outputLabel value="#{lbl['lbl.ct.item.name']}"/></td>
 		<td colspan="1" rowspan="1">
-		<h:inputText value="#{contractItemSearchBackingBean.managedBean.itemname}" style="width:270px;" maxlength="50"></h:inputText>	
+		<h:inputText value="#{ctBackingBean.managedBean.itemname}" style="width:270px;" maxlength="50"></h:inputText>	
 		</td>	
 		<td colspan="1" rowspan="1">
 	        <p:outputLabel value="#{lbl['lbl.ct.item.code']}" style="float:center-left;"  />
 	    </td>
 		<td colspan="1" rowspan="1">
-			<p:inputText value="#{contractItemSearchBackingBean.managedBean.itemcode}" style="width:270px; float:center;"  maxlength="20"  />
+			<p:inputText value="#{ctBackingBean.managedBean.itemcode}" style="width:270px; float:center;"  maxlength="20"  />
 		</td>	
 	</tr>
 
@@ -30,7 +30,7 @@
 		   				<p:outputLabel value="#{lbl['lbl.ct.item.type']}" />
 		   </td>
 			<td colspan="1" rowspan="1">
-				<p:selectOneMenu value="#{contractItemSearchBackingBean.managedBean.itemtype}"  style="width:280px;" maxlength="500" >
+				<p:selectOneMenu value="#{ctBackingBean.managedBean.itemtype}"  style="width:280px;" maxlength="500" >
 							<f:selectItems value="#{contractRequestBackingBean.itemTypeValues}"></f:selectItems>
 							<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="3" >  </f:selectItem>      	
 				</p:selectOneMenu>
@@ -39,7 +39,7 @@
 	   			<p:outputLabel value="#{lbl['lbl.ct.item.skuno']}"/> 
 	   		</td>
 	  		<td colspan="1" rowspan="1">
-	  		<p:inputText value="#{contractItemSearchBackingBean.managedBean.skuno}" style="width:270px;" maxlength="50"></p:inputText>	
+	  		<p:inputText value="#{ctBackingBean.managedBean.skuno}" style="width:270px;" maxlength="50"></p:inputText>	
 	 		</td>
 	</tr>			
 	
@@ -48,7 +48,7 @@
 		 	<p:outputLabel value="#{lbl['lbl.ct.item.status']}"/>
 		</td>
 		 <td colspan="1" rowspan="1">
-				 <p:selectOneMenu value="#{contractItemSearchBackingBean.managedBean.itemstatus}" style="width:280px;" maxlength="500" >  
+				 <p:selectOneMenu value="#{ctBackingBean.managedBean.itemstatus}" style="width:280px;" maxlength="500" >  
 		    	<f:selectItem itemLabel="#{lbl['lbl.ct.selectOne']}" itemValue="" />  
 		    	<f:selectItem itemLabel="#{lbl['lbl.ct.inactive']}" itemValue="0" />   
 		    	<f:selectItem itemLabel="#{lbl['lbl.ct.active']}" itemValue="1" /> 
@@ -61,10 +61,10 @@
 		<td colspan="1" rowspan="1"> 
 						
 			<p:autoComplete panelStyleClass="uomAuto" id="uomDetId" scrollHeight="250" size="40" var="pmUom" converter="PmUomConverter"
-							itemLabel="#{contractItemSearchBackingBean.retriveUomCodeDesc(pmUom)}"
+							itemLabel="#{ctBackingBean.retriveUomCodeDesc(pmUom)}"
 							itemValue="#{pmUom}" 
-							value="#{contractItemSearchBackingBean.managedBean.selectedSearchItem}"
-							completeMethod="#{contractItemSearchBackingBean.autoCompleteUom}"
+							value="#{ctBackingBean.managedBean.selectedSearchItem}"
+							completeMethod="#{ctBackingBean.autoCompleteUom}"
 							maxResults="50" dropdown="false" forceSelection="true" />						
 		</td>
 
@@ -77,22 +77,22 @@
 				 </td>
 		
 	    	  <td colspan="1" rowspan="1">
-		    	  <p:selectOneMenu value="#{contractItemSearchBackingBean.managedBean.typeofgoods}" style="width:280px;" maxlength="500" >  
+		    	  <p:selectOneMenu value="#{ctBackingBean.managedBean.typeofgoods}" style="width:280px;" maxlength="500" >  
 	            	<f:selectItem itemLabel="#{lbl['lbl.ct.selectOne']}" itemValue="" />  
-	            	<f:selectItems value="#{contractItemSearchBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
+	            	<f:selectItems value="#{ctBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
 	            	<f:selectItem itemLabel="#{lbl['lbl.ct.all']}" itemValue="197" />      	
 	              </p:selectOneMenu> 
              </td>
 	 </tr>
 	 </table>	
 			<div class="ppRightBtn" style="width:100%" > 
-				<p:commandButton id="panelSearchIditem" value="#{lbl['lbl.btn.search']}" action="#{contractItemSearchBackingBean.searchCircular}" process="@this,searchId" partialsubmit="true" 
+				<p:commandButton id="panelSearchIditem" value="#{lbl['lbl.btn.search']}" action="#{ctBackingBean.searchCircular}" process="@this,searchId" partialsubmit="true" 
 				    onstart="circularSearchBlk.show();" oncomplete="circularSearchBlk.hide();" update="@form"  />
-				<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{contractItemSearchBackingBean.searchReset}"  update="@form" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{ctBackingBean.searchReset}"  update="@form" />
 			</div>		  
 	</p:panel><br/>
     <p:panel id="itemId" toggleSpeed="500" header="Toggleable" 
-    rendered="#{contractItemSearchBackingBean.managedBean.itemProductExist}"  toggleable="true" collapsed="false" >
+  toggleable="true" collapsed="false" >
        <f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.product']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls']}"/>
@@ -104,7 +104,7 @@
        <h:panelGrid  style="width:100%;">
       
              <p:dataTable id="itemTable" var="ctItemVar" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-                 value="#{contractItemSearchBackingBean.managedBean.contractListingPagingDataModel}"  widgetVar="itemTableObj" 
+                 value="#{ctBackingBean.managedBean.contractListingPagingDataModel}"  widgetVar="itemTableObj" 
                  selectionMode="single" selection="#{ctBackingBean.managedBean.selectedItem}" rowIndexVar="index" rowKey="#{ctItemVar}"
                   onExpandStart="">
                  <ac:paginator for="itemTable"/>
@@ -636,8 +636,7 @@
 		</p:dialog>
   	 </p:panel>
           
-          <p:panel id="itemId2"  toggleSpeed="500"  header="Toggleable" toggleable="true"  collapsed="false"
-          rendered="#{contractItemSearchBackingBean.managedBean.itemServiceExist}" >
+          <p:panel id="itemId2"  toggleSpeed="500"  header="Toggleable" toggleable="true"  collapsed="false" >
           <f:facet name="header">
    			<h:outputText value="#{lbl['lbl.ct.panel.service']}"/>
    			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.dtls']}"/>
@@ -649,7 +648,7 @@
           <h:panelGrid  style="width:100%;">
           
           <p:dataTable id="itemServiceTable" var="srItemVar" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-              value="#{contractItemSearchBackingBean.managedBean.serviceListingPagingDataModel}"  widgetVar="itemServiceTableObj" 
+              value="#{ctBackingBean.managedBean.serviceListingPagingDataModel}"  widgetVar="itemServiceTableObj" 
               selectionMode="single" selection="#{ctBackingBean.managedBean.serviceselectedItem}" rowIndexVar="index"  rowKey="#{srItemVar}"
                onExpandStart="">
               <ac:paginator for="itemServiceTable"/>
@@ -1163,44 +1162,44 @@
    		styleClass="pop_up_top" modal="true" width="auto" height="auto" resizable="false">
    		
    		<h:panelGroup rendered="#{ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeDirectPurchase}">
-   			<h:panelGrid column="2" cellspacing="7" style="margin-bottom: 20px;margin-top: 10px;">    		
+   			<h:panelGrid column="2" style="margin-bottom: 20px;margin-top: 10px;">    		
     			<!-- #31558 start - Aligning the output so that the display will not affect long data -->
     			<h:panelGroup>
-     		 			<h:outputText value="#{lbl['lbl.ct.item.desc']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
+     		 			<h:outputText value="#{lbl['lbl.ct.item.desc']}" escape="false" style="float:left;font-weight:bold;display:block;width:80px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
      		 		 	<h:outputText value="#{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}" escape="false" style="float:left;font-weight:bold;display:block;width:600px"/>
      		 	</h:panelGroup>
-     		 	
+     		 		
      			<c:if test="#{ctBackingBean.managedBean.supplierOffer ne null}">    		 		
      		 		<h:panelGroup>
-     		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
+     		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:80px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{fn:replace(ctBackingBean.managedBean.supplierOffer,'\\n','&lt;br/&gt;')}" escape="false" style="float:left;font-weight:bold;display:block;width:400px"/>
+     		 		 	<h:outputText value="#{ctBackingBean.managedBean.supplierOffer}" escape="false" style="float:left;font-weight:bold;display:block;width:200px"/>
      		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}"/>
      		 		</h:panelGroup>      		 				
      			</c:if>
      			<c:if test="#{ctBackingBean.managedBean.supplierOffer eq null}">										
      				<h:panelGroup>
-     		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
+     		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:80px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;width:400px"/>
+     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;width:200px"/>
      		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}"/>
      		 		</h:panelGroup> 
      			</c:if>     		   	
      		   		
      			<c:if test="#{ctBackingBean.managedBean.newOfferSpec ne null}">
      		 		<h:panelGroup>
-     		 			<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}" escape="false" style="float:left; font-weight:bold; display:block; width: 125px; "/>     		 			
+     		 			<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:80px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{fn:replace(ctBackingBean.managedBean.newOfferSpec,'\\n','&lt;br/&gt;')}" escape="false" style="float:left;font-weight:bold;display:block;width:400px"/>
+     		 		 	<h:outputText value="#{ctBackingBean.managedBean.newOfferSpec}" escape="false" style="float:left;font-weight:bold;display:block;width:200px"/>
      		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"/>
      		 		</h:panelGroup>      		 				 			
      			</c:if>
      			<c:if test="#{ctBackingBean.managedBean.newOfferSpec eq null}">
      				<h:panelGroup>
-     		 			<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
+     		 			<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:80px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;width:400px"/>
+     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;width:200px"/>
      		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"/>
      		 		</h:panelGroup> 
      			</c:if>
