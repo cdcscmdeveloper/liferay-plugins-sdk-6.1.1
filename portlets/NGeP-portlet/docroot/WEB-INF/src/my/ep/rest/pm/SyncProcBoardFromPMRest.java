@@ -287,4 +287,38 @@ public class SyncProcBoardFromPMRest {
 			return Response.status(406).entity(e.getMessage()).build();
 		}
 	}
+	///START 32821 TO CREATE USER IF ONLY EXIST IN PM
+	@GET
+	@Path("/createuser/{loginId}")
+	public Response synccreateLiferayAndOIMFromPMRoleByLoginId(@PathParam("loginId") String loginId) {
+		UserReqDTO reqDTO = null;
+		UserResDTO resDTO = null;
+		Long userId = null;
+		try {
+			log.info("#Start Sync By Login Id");
+			reqDTO = new UserReqDTO();
+			reqDTO.setLoginId(loginId);
+			resDTO = SmServiceLookup.getUserSO().retrieveUserByLoginId(reqDTO);
+			if(resDTO.getPmUser() == null){
+				resDTO = SmServiceLookup.getUserSO().retrieveUserByLoginIdInactive(reqDTO);
+			}
+			if(resDTO.isSuccessful() && resDTO.getPmUser()!=null)
+			{
+				userId = resDTO.getPmUser().getUserId();
+				reqDTO = new UserReqDTO();
+				reqDTO.setLoginId(loginId);
+				reqDTO.setUserId(userId);
+				reqDTO.setSupplierUser(false);
+				resDTO = SmServiceLookup.getUserSO().createnSyncLiferayAndOimRoleFromPm(reqDTO);
+				log.info("End Sync user by login Id: " + resDTO.isSuccessful());
+			}
+			
+			log.info("Finished Sync By Login Id");			
+			return Response.status(200).entity("Success sync Procurement Board users !!").build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(406).entity(e.getMessage()).build();
+		}
+	}
+	///END 32821 TO CREATE USER IF ONLY EXIST IN PM
 }
