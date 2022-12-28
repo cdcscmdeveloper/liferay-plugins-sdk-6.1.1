@@ -4611,13 +4611,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return new contract period
 	 */
 	public String calculateBondPeriod() {
-		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
-			return String.valueOf(getManagedBean().getContractVer().getCtContractValue().getContractPeriod());
-
-		} 
+		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)){	
+			
 			return String.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration());
-
+		}else{
+			return String.valueOf(getManagedBean().getContractVer().getCtContractValue().getContractPeriod());
+		}
 	}
 	//#24333 - End	
 	/**
