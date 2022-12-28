@@ -7549,7 +7549,11 @@ public class SupplierFinalizationBackingBean extends
 					selectedItemId = selectedItem.getRequestItem().getRequestNoteItemId();
 					reqDTO.setRequestItemId(selectedItemId);
 				} 
+				
 				reqDTO.setSearchBean(searchBean);
+				// BUG 34212, #21695, #25138 -start-
+				reqDTO.setEvaluationStage(evaluationStage);
+				// BUG 34212, #21695, #25138 -end-
 				
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 							.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);

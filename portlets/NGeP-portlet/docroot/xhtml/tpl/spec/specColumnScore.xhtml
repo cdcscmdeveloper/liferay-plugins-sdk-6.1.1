@@ -41,9 +41,11 @@
 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			</h:outputText>
 
+			<!-- Bug #33991 Start-->
 			<h:outputText value="0"
-				rendered="#{isSpecTypeTechnical and isZonal and tplSpecAnswer.notOfferAll or 
-			isSpecTypeTechnical and !isZonal and tplSpecAnswer.notOfferAll}">
+				rendered="#{isSpecTypeTechnical and tplSpecAnswer.notOfferAll or 
+							isSpecTypeTechnical and tplSpecAnswer.autoScore eq null}">
+				<!-- Bug #33991 End-->
 				<f:convertNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 			</h:outputText>

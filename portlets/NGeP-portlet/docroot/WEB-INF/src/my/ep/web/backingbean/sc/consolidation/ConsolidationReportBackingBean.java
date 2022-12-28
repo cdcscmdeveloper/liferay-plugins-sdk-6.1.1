@@ -1995,6 +1995,10 @@ public class ConsolidationReportBackingBean extends
 							.getRequestNoteItemId();
 					reqDTO.setRequestItemId(selectedItemId);
 				}
+				
+				// BUG 32373 #83, #21695, #25138 -start-
+				reqDTO.setEvaluationStage(evaluationStage);
+				// BUG 32373 #83, #21695, #25138 -end-
 
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 						.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);

@@ -1274,11 +1274,12 @@ public class SpecificationBackingBean extends
 			checktemplateSpecStatus(this.getManagedBean().getQt());
 			checkFinancialSpecStatus(this.getManagedBean().getQt());
 		}
+		
 		if (!this.getManagedBean().isReadOnly()) {
 			// #21695, #25138 -start-
-			validateTechnicalPassingScoring(this.getManagedBean()
-					.getTechnicalScoreSetting(),this.getManagedBean()
+			validateTechnicalPassingScoring(this.getManagedBean().getTechnicalScoreSetting(), this.getManagedBean()
 					.getTechnicalItemScoreSetting());
+			resetTechnicalWeightage(this.getManagedBean().getTechnicalScoreSetting());
 			// #21695, #25138 -end-
 			
 			validateTechnicalDemoPassingScoring(this.getManagedBean()
@@ -1292,6 +1293,7 @@ public class SpecificationBackingBean extends
 			validateFinancialPackageItemPassingScoring(this.getManagedBean()
 					.getFinancialScoreSetting(), this.getManagedBean()
 					.getFinacialItemScoreSetting());
+			resetFinancialWeightage(this.getManagedBean().getFinancialScoreSetting()); // #21695
 			financialWeightageCalculate();
 			financialItemScoreCalculate(this.getManagedBean()
 					.getFinacialItemScoreSetting());
@@ -2637,7 +2639,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				// #21695, #25138 -end-
 
 				finWeightageSum();
-				finScoreSum();
+
 				localChecklist=null;
 				specChecklist=null;
 				sb=null;
@@ -15781,6 +15783,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			// #21695, #25138 -start-
 			validateTechnicalPassingScoring(this.getManagedBean().getTechnicalScoreSetting(), this.getManagedBean()
 					.getTechnicalItemScoreSetting());
+			resetTechnicalWeightage(this.getManagedBean().getTechnicalScoreSetting());
 			// #21695, #25138 -end-
 			validateTechnicalDemoPassingScoring(this.getManagedBean()
 					.getDemoScoreSetting());
@@ -15793,6 +15796,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			validateFinancialPackageItemPassingScoring(this.getManagedBean()
 					.getFinancialScoreSetting(), this.getManagedBean()
 					.getFinacialItemScoreSetting());
+			resetFinancialWeightage(this.getManagedBean().getFinancialScoreSetting()); // #21695
 			financialWeightageCalculate();
 			financialItemScoreCalculate(this.getManagedBean()
 					.getFinacialItemScoreSetting());
@@ -16593,8 +16597,35 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		return isDisable;
 	}
 
+	// #21695 -start-
+	private void resetTechnicalWeightage(ScQtScoreSetting technicalScoreSetting) {
+		if (null != technicalScoreSetting && !technicalScoreSetting.isWeightageReq()) {
+			List<ScQtCheckList> allTechnicalChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
+			
+			for (ScQtCheckList technicalChecklist : allTechnicalChecklist) {
+				if (null != technicalChecklist.getQtScoreWeightage()) {
+					technicalChecklist.getQtScoreWeightage().setWeightage(new BigDecimal(0));
+				}
+			}
+		}
+	}
+	// #21695 -end-
+
+	// #21695 -start-
+	private void resetFinancialWeightage(ScQtScoreSetting financialScoreSetting) {
+		if (null != financialScoreSetting && !financialScoreSetting.isWeightageReq()) {
+			List<ScQtCheckList> allFinancialChecklist = this.getManagedBean().getScQtCheckSt2financeProposalList();
+			
+			for (ScQtCheckList financialChecklist : allFinancialChecklist) {
+				if (null != financialChecklist.getQtScoreWeightage()) {
+					financialChecklist.getQtScoreWeightage().setWeightage(new BigDecimal(0));
+				}
+			}
+		}
+	}
+	// #21695 -end-
+
 	private void checkProcurementModeValue(){
-		log.debug("===========checkProcurementCodeValue============");
 		if(null!=this.getManagedBean().getQt() && null==this.getManagedBean().getQt().getProcurementMode()){
 			BigDecimal estimatedAmount=null;
 			if(null!=this.getManagedBean().getQt().getEstimatedAmount() && this.getManagedBean().getQt().getEstimatedAmount().compareTo(BigDecimal.ZERO)>0){
@@ -16602,7 +16633,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}else{
 				estimatedAmount=this.getManagedBean().getQt().getTmpExpectedIntendedPrice();
 			}
-			log.info("mangalatestChangedCodesExecutedestimatedAmount"+estimatedAmount);
+
 			if(null==estimatedAmount){
 				estimatedAmount=new BigDecimal(0);
 			}

@@ -2613,6 +2613,24 @@ public class LOIDetailBackingBean extends
 			// iqtAwardSO = null;
 		}
 	}
+	
+	// BUG 33353, #21695, #25138 -start-
+	/**
+	 * To Update ScQtRecommendDtl (Reject Scenario, to prevent bugs on Multipla LOI (Recommendation) Stage)
+	 * @param List<ScQtRecommendDtl>
+	 * @return null
+	 */
+	private void updateRejectQtRecommendDtl(ScLoiLoa scLoiLoa) {
+		try {
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setScLoiLoa(scLoiLoa);
+			
+			getQtAwardSO().saveSupplierRejectQTRecommendDtl(reqDTO);
+		} catch (Exception e) {
+
+		}
+	}
+	// BUG 33353, #21695, #25138 -end-
 
 	/**
 	 * Update bpm task. update bpm - save data into database and BPM process
