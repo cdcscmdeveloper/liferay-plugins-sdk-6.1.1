@@ -12914,4 +12914,122 @@ public void retrieveDemoQtDetails(Long qtId) {
 				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	//#28784 note #507 - end
+	
+	//#28784 note-#634 - Start
+	public void retrieveZonalDetailAfterDemoDeletion(Long qtId) {
+
+		
+		debugLogger("retrieveQuationTenderDetails, @qtId"+qtId);
+		if (null != qtId) {
+			IQTDetailSO QtDetailsSO;
+			try {
+				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+				tenderReqDTO.setMaintanceFlow(this.getManagedBean()
+						.isMaintanceFlow());
+				tenderReqDTO.setQtId(qtId);
+				tenderReqDTO.setBdgDtlsReq(true);
+				QuationTenderResDTO tenderResDTO = null;
+				ScQt scQt = this.getManagedBean().getQt();
+
+				/*
+				 * TRACE HI-EXEC TIME
+				 * Development #29385
+				 */
+				long startTime = System.currentTimeMillis();
+				tenderResDTO = QtDetailsSO.retrieveZonalDetail(tenderReqDTO);
+				SLAUtils.getInstance().logHiExecInfo("QT","QTDetailBackingBean.retrieveQuationTenderDetails", startTime);
+				/*
+				 * END
+				 */
+				if (tenderResDTO.getQtDetail() != null) {
+					boolean demoRequired = false;//#28784	
+					String evalType = null;
+					if(scQt != null){//#28784
+						demoRequired = scQt.isDemoRequired();
+						evalType = scQt.getEvaluationType();							
+					}
+					scQt = tenderResDTO.getQtDetail();						
+					getManagedBean().setQt(scQt);
+					if(demoRequired){//#28784
+						getManagedBean().getQt().setDemoRequired(demoRequired);
+						getManagedBean().getQt().setEvaluationType(evalType);
+					}
+					this.getManagedBean().setPanel(scQt.isPanel());
+					Long currentStatus = this.getManagedBean().getQt()
+							.getQtStatus().getStatusId();
+					this.getManagedBean().setCurrentStatusId(currentStatus);
+					getManagedBean().getCtContract().setContractNo(
+							this.getManagedBean().getQt()
+									.getExistingContractNo());
+					//29521 - start
+					String ctNameandNo = "";
+					ctNameandNo = QtDetailsSO.getContractNameByContractNo(this.getManagedBean().getQt().getExistingContractNo());
+					this.getManagedBean().getCtContract().setCtNameandNo(ctNameandNo);
+					//29521 - end
+					// this.getManagedBean().setContractType(scQt.getContractType());
+					if (this.getManagedBean().getQt().isZonal()) {							
+						if (null != this.getManagedBean().getQt()
+								.getZoneLocationLevel()) {
+							this.getManagedBean().setStateCodes(
+									this.getManagedBean().getQt()
+											.getZoneLocationLevel()
+											.getParameterCode());
+						}
+
+						// Populate zone detail into tree node
+						if (scQt.getScQtSupplierCriteria() != null &&
+								scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
+							List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls();
+							populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
+							// setting into zones bean to validate zones while adding 
+							if (CollectionUtils.isNotEmpty(specZoneDtls)) {
+								List<ZonesBean> zoneBeanLst = new ArrayList<ZonesBean>();
+								for (TplSpecZoneDtl specZoneDtl : specZoneDtls) {
+									ZonesBean bean = new ZonesBean();
+									bean.setTplSpecZoneDtl(specZoneDtl);
+									zoneBeanLst.add(bean);
+								}
+								this.getManagedBean().setBeans(zoneBeanLst);
+							}
+						}
+					}
+					//Setting special approval info for login user
+					if (scQt.getObtainSpecialApproval() != null && !scQt.getObtainSpecialApproval()) {
+						this.getManagedBean().setPtjSpecialApproval(
+								getPtjSpecialApprovalByOrgProfileId(scQt.getPmOrgProfile().getOrgProfileId()));
+										
+					} else {
+						this.getManagedBean().setPtjSpecialApproval(scQt.getPtjSpecialApproval());
+					}
+					
+					//#28784
+					checkDemoPresentationByStatus();						
+			
+				}
+
+				this.getManagedBean().setAmendMentBean(
+						tenderResDTO.getAmendMentBean());
+				if (this.getManagedBean().getGosodos() == null) {
+					this.getManagedBean().setGosodos(
+							tenderResDTO.getBudgetDtls());
+				}
+				if (null != getManagedBean().getQt()
+						&& null == getManagedBean().getQt()
+								.getProcurementTypeCatId()) {
+					getManagedBean().getQt().setProcurementTypeCatId(
+							new PmParameter());
+				}
+				
+
+			
+			} finally {
+				QtDetailsSO = null;
+			}
+			debugLogger("end of retrieveQuationTenderDetails");
+		}
+	
+	}
+	//#28784 note-#634 - End
 }
