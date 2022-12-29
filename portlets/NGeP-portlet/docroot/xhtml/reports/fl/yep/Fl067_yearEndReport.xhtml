@@ -235,7 +235,9 @@
 			<td>
 				<p:selectOneMenu id="financialYear"
 								value="#{yepRptBB.managedBean.financialYear}"
-								style="width: 100px;">
+								style="width: 314px;">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+									itemValue="#{null}"></f:selectItem>
 								<f:selectItems
 									value="#{yepRptBB.getFinancialYearOpt()}" />
 							</p:selectOneMenu>

@@ -140,7 +140,7 @@
 							<td><p:inputText id="smeRefNo" 
 									label="#{lbl['lbl.sm.sme.ref.no']}" 
 									value="#{smUpdateSmeInfoBackingBean.managedBean.smeSupplier.smeRefNo}" 
-									required="true" maxlength="20"/>						
+									required="true" />						
 								<p:graphicImage id="smeCertNoti"  value="/css/images/design/tooltips.png" /> 
 								<p:tooltip id="smeCert" for="smeCertNoti" style="transform: translateY(40%) !important;">						        
 								<img src="/NGeP-portlet/images/smeCert.png"
@@ -152,15 +152,12 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label"
 									value="#{lbl['lbl.sm.sme.valid.start']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
-							<!-- #29617 ReOpen note #177 - Start -->
-							<td><p:calendar id="calDtStart" label="#{lbl['lbl.sm.sme.valid.start']}" showOn="button"
-									navigator="true" display="inline" readonlyInput="true"  value="#{smUpdateSmeInfoBackingBean.managedBean.smeSupplier.smeValidStartDate}"
-									required="true" maxdate="#{smUpdateSmeInfoBackingBean.managedBean.maxValidStartDate}"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"> 
-									<p:ajax event="dateSelect" process="@this" update=":#{p:component('calDtEnd')}" 
-										listener="#{smUpdateSmeInfoBackingBean.resetMinEndDate}"/>
-							<!-- #29617 - End -->
-								</p:calendar>
+							<td><p:calendar id="calDtStart"
+									label="#{lbl['lbl.sm.sme.valid.start']}" showOn="button"
+									navigator="true" display="inline" readonlyInput="true"
+									value="#{smUpdateSmeInfoBackingBean.managedBean.smeSupplier.smeValidStartDate}"
+									required="true"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"></p:calendar>
 								<p:message id="calDtStartMsg" for="calDtStart" display="icon"
 									showDetail="false" /></td>
 						</tr>
@@ -173,10 +170,7 @@
 									navigator="true" display="inline" readonlyInput="true"
 									value="#{smUpdateSmeInfoBackingBean.managedBean.smeSupplier.smeValidEndDate}"
 									required="true"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-									mindate="#{smUpdateSmeInfoBackingBean.managedBean.smeSupplier.smeValidStartDate}">
-									<p:ajax event="dateSelect" process="@this" update=":#{p:component('calDtStart')}"/>
-								</p:calendar>
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"></p:calendar>
 								<p:message id="calDtEndMsg" for="calDtEnd" display="icon"
 									showDetail="false" /></td>
 						</tr>
@@ -199,9 +193,9 @@
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.sme.supp.doc.upload']}"
 							style="width : 20%;">
-							<!-- #29617 ReOpen note 158 --> 
-							<p:commandLink oncomplete="uploadDialog.show();return false;" 
-								update="@([id$=uploadDialog])" process="@this" >
+							<p:commandLink oncomplete="uploadDialog.show();return false;"
+								update="@([id$=uploadDialog])" process="@this"
+								action="#{smUpdateSmeInfoBackingBean.assignSmeSupportDoc(doc)}">
 								<p:graphicImage value="/css/images/design/upload.png"
 									style="margin-right:2px;" />
 							</p:commandLink>

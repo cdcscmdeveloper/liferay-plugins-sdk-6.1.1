@@ -1246,12 +1246,6 @@ public class ReportBackingBean extends
 	/** The sc status multiple. */
 	private List<String> scStatusManyMenu; //29580
 	
-	/** The sc Proposal submitted from date. */
-	private Date scProposalSubmittedFromDate; //14306
-	
-	/** The sc Proposal submitted to date. */
-	private Date scProposalSubmittedToDate; //14306
-	
 	/**
 	 * Gets the select cat deletion list.
 	 * 
@@ -8028,34 +8022,6 @@ public class ReportBackingBean extends
 	 */
 	public void setScStatusManyMenu(List<String> scStatusManyMenu) {
 		this.scStatusManyMenu = scStatusManyMenu;
-	}
-	
-	/**
-	 * @return the scProposalSubmittedFromDate
-	 */
-	public Date getScProposalSubmittedFromDate() {
-		return scProposalSubmittedFromDate;
-	}
-
-	/**
-	 * @param scProposalSubmittedFromDate the scProposalSubmittedFromDate to set
-	 */
-	public void setScProposalSubmittedFromDate(Date scProposalSubmittedFromDate) {
-		this.scProposalSubmittedFromDate = scProposalSubmittedFromDate;
-	}
-
-	/**
-	 * @return the scProposalSubmittedToDate
-	 */
-	public Date getScProposalSubmittedToDate() {
-		return scProposalSubmittedToDate;
-	}
-
-	/**
-	 * @param scProposalSubmittedToDate the scProposalSubmittedToDate to set
-	 */
-	public void setScProposalSubmittedToDate(Date scProposalSubmittedToDate) {
-		this.scProposalSubmittedToDate = scProposalSubmittedToDate;
 	}
 
 	/**

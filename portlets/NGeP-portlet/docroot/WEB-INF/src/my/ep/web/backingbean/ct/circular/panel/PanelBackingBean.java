@@ -2646,8 +2646,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 		return false;
 	}
-	
-	public void validatePidReason(Long resonId){  //#16190
+
+	private void validatePidReason(Long resonId){
 
 		if(resonId == null || resonId.intValue() == 0){
 			return;

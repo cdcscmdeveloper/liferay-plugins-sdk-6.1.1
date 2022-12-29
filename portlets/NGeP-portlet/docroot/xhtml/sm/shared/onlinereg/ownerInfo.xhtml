@@ -8,29 +8,27 @@
 
 	<p:panel header="#{registrationBackingBean.managedBean.headerName}" id="ownerBusiness"
 		toggleable="true">
-		<!-- 27691 START -->
 		<p:dataTable id="tableOwner" var="varOwner" rowIndexVar="index"
 			widgetVar="tableOwnerWidget"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.ssm']}"
 			rendered="#{!registrationBackingBean.managedBean.showOwnerPersonnel}"
 			value="#{registrationBackingBean.managedBean.smSuppOwners}"
+			selection="#{registrationBackingBean.managedBean.selectedSuppOwners}"
 			rowKey="#{varOwner}"
+			rowStyleClass="#{registrationBackingBean.getSupplierOwnerRowStyle(varOwner)}"
 			sortBy="#{varOwner.ownerName}"	>
 			<ac:paginator for="tableOwner" />	
-			<p:column style="width:2%" disabledSelection="#{registrationBackingBean.isSmSupplierOwnerIsAdmin(varOwner)}" rendered="#{not empty registrationBackingBean.managedBean.smSuppOwners and registrationBackingBean.managedBean.companyValidWithSSM eq 'false'}">
-				<f:facet name="header">
-		        	<p:selectBooleanCheckbox value="#{registrationBackingBean.managedBean.allOwnerSelected}" >
-		          		<p:ajax event="change" update=":#{p:component('ownerBusiness')}" 
-							process="@this" partialSubmit="true" 
-							listener="#{registrationBackingBean.toggleAllOwnerTick()}"/>
-		          	</p:selectBooleanCheckbox>
-		       	</f:facet>
-				<p:selectBooleanCheckbox value="#{varOwner.ownerSelected}" disabled="#{registrationBackingBean.isSmSupplierOwnerIsAdmin(varOwner)}">
-					<p:ajax event="change" update=":#{p:component('ownerBusiness')}" listener="#{registrationBackingBean.toggleOwnerCheckBox(varOwner)}"
-						process="@this" partialSubmit="true" />
-				</p:selectBooleanCheckbox>
-			</p:column>
-		<!-- 27691 END -->
+			<p:ajax event="rowSelectCheckbox" listener="#{registrationBackingBean.supplierOwnerOnRowSelected}" update=":#{p:component('deleteOwnerBtnId')}" />
+			<p:ajax event="rowUnselectCheckbox" listener="#{registrationBackingBean.supplierOwnerOnRowUnselected}" update=":#{p:component('deleteOwnerBtnId')}" />
+			<p:ajax event="rowSelect" listener="#{registrationBackingBean.supplierOwnerOnRowSelected}" update=":#{p:component('deleteOwnerBtnId')}" />   
+			<p:ajax event="rowUnselect" listener="#{registrationBackingBean.supplierOwnerOnRowUnselected}" update=":#{p:component('deleteOwnerBtnId')}" />  
+			<p:ajax event="toggleSelect" listener="#{registrationBackingBean.supplierOwnerOnCheckboxToggled}" update=":#{p:component('deleteOwnerBtnId')}" /> 
+			<!-- 27691 START -->
+			<p:column
+				selectionMode="multiple"
+				style="width:2%"	
+				rendered="#{not empty registrationBackingBean.managedBean.smSuppOwners and registrationBackingBean.managedBean.companyValidWithSSM eq 'false'}" />
+			<!-- 27691 END -->
 			<p:column style="width:3%" styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.no']}" />
@@ -112,13 +110,13 @@
 										<c:choose>
 										<c:when test="registrationBackingBean.managedBean.smPersonnelAll.size() != null and registrationBackingBean.managedBean.smPersonnelAll.size() > 0">
 										<!-- 27691 Start -->
-											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{varOwner.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole or registrationBackingBean.isSmSupplierOwnerIsAdmin(varOwner)}" />												
+											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{varOwner.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole}" />												
 										</c:when>
 										<c:otherwise>
-											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{varOwner.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole or registrationBackingBean.isSmSupplierOwnerIsAdmin(varOwner)}" />																						
+											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{varOwner.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole}" />																						
 										</c:otherwise>
 										</c:choose>
-										<p:selectBooleanCheckbox rendered="#{varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{varOwner.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole or registrationBackingBean.isSmSupplierOwnerIsAdmin(varOwner)}" />
+										<p:selectBooleanCheckbox rendered="#{varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{varOwner.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole}" />
 										<!-- 27691 End -->
 									</td>
 									<td style="width:20%" >
@@ -130,14 +128,14 @@
 										<c:choose>
 										<c:when test="registrationBackingBean.managedBean.smPersonnelAll.size() != null and registrationBackingBean.managedBean.smPersonnelAll.size() > 0">
 										<!-- 27691 Start -->
-											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" value="#{varOwner.ownerIsDirector}" disabled="#{registrationBackingBean.managedBean.disableRole or registrationBackingBean.isSmSupplierOwnerIsAdmin(varOwner)}" />
+											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" value="#{varOwner.ownerIsDirector}" disabled="#{registrationBackingBean.managedBean.disableRole}" />
 										</c:when>
 										<c:otherwise>
-											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" disabled="#{registrationBackingBean.managedBean.disableRole or registrationBackingBean.isSmSupplierOwnerIsAdmin(varOwner)}" value="#{varOwner.ownerIsDirector}"/>
+											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" disabled="#{registrationBackingBean.managedBean.disableRole}" value="#{varOwner.ownerIsDirector}"/>
 										</c:otherwise>
 										</c:choose>
 										
-										<p:selectBooleanCheckbox rendered="#{varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" disabled="#{registrationBackingBean.managedBean.disableRole or registrationBackingBean.isSmSupplierOwnerIsAdmin(varOwner)}" value="#{varOwner.ownerIsDirector}"/>
+										<p:selectBooleanCheckbox rendered="#{varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" disabled="#{registrationBackingBean.managedBean.disableRole}" value="#{varOwner.ownerIsDirector}"/>
 										<!-- 27691 End -->
 									</td>
 									<td style="width:20%" >
