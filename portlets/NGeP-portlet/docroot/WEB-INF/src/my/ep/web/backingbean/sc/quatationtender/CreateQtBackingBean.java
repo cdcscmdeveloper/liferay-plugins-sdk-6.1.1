@@ -4099,6 +4099,7 @@ public class CreateQtBackingBean extends
 			if (this.getManagedBean().getQt().isZonal()) {
 				QTDetailBackingBean qtDetail = new QTDetailBackingBean();
 				qtDetail.retrieveZonalDetailAfterDemoDeletion(this.getManagedBean().getQt().getQtId());
+				this.getManagedBean().setDemoScoreSetting(null);
 			}
 			//#28784 note-#634 - End
 
