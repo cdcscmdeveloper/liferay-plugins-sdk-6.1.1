@@ -12934,9 +12934,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 				tenderReqDTO.setMaintanceFlow(this.getManagedBean().isMaintanceFlow());
 				tenderReqDTO.setQtId(qtId);
 				tenderReqDTO.setBdgDtlsReq(true);
-				QuationTenderResDTO tenderResDTO = null;
 				ScQt scQt = this.getManagedBean().getQt();
-				tenderResDTO = QtDetailsSO.retrieveZonalDetail(tenderReqDTO);
+				QuationTenderResDTO tenderResDTO = QtDetailsSO.retrieveZonalDetail(tenderReqDTO);
 				if (tenderResDTO.getQtDetail() != null) {
 					ScQt newScQt = tenderResDTO.getQtDetail();
 					scQt.setScQtSupplierCriteria(newScQt.getScQtSupplierCriteria());
