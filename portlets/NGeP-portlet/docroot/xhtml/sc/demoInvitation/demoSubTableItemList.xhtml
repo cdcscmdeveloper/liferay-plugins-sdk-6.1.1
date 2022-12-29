@@ -19,7 +19,7 @@
 				value="#{demoInvBB.managedBean.byItemList}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{demoSpecTempList}" rowIndexVar="pIndex" >
-				<p:column headerText="By Item">
+				<p:column headerText="#{lbl['lbl.sc.by.item']}">
 					<h:outputText style="white-space: normal; font-weight:bold"
 						value="#{demoSpecTempList.itemName}"></h:outputText>
 					<p:dataTable id="byItem"

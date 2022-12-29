@@ -4095,6 +4095,13 @@ public class CreateQtBackingBean extends
 			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 			specificationBackingBean.getDemoScoreSetting(reqDTO);
 			resDTO = specSo.deleteDemoSpecChecklist(reqDTO);
+			//#28784 note-#634 - Start
+			if (this.getManagedBean().getQt().isZonal()) {
+				QTDetailBackingBean qtDetail = new QTDetailBackingBean();
+				qtDetail.retrieveZonalDetailAfterDemoDeletion(this.getManagedBean().getQt().getQtId());
+				this.getManagedBean().setDemoScoreSetting(null);
+			}
+			//#28784 note-#634 - End
 
 			if (resDTO.isSuccessful()) {
 				specificationBackingBean.resetDemoTechSpecListAfterDelete();

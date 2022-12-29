@@ -121,8 +121,6 @@ public class ReportConst implements Serializable{
 	public static final String SC_OPENING_COMMITTEE_RPT_VAL = "SC_071";
 	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_072";
 	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_073";
-	public static final String SC_SUPP_QT_PROPOSAL_OFFER_SUBM_RPT_VAL = "SC_074"; //14306
-	public static final String SC_QUOT_TENDER_PROPOSAL_OFFER_SUBM_RPT_BY_SUPPLIER_VAL = "SC_079"; //29580_14306
 	public static final String PYMT_RCPT_RPT_NAME = "lbl.rpt.sc.PYMT_RCPT_RPT_NAME";
 	public static final String PYMT_RCPT_RPT_VAL = "PymtRcpt";
 	// S1 Report

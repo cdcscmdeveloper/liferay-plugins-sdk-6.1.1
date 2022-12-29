@@ -116,14 +116,13 @@
 					</table>
 
 				</p:column>
-				<!-- #34135 START -->
+
 				<p:column headerText="#{lbl['lbl.sm.companyaddress']}"
 					style="width :50%;white-space : normal">
 					<h:outputText
-						value="#{backingBean.getFullBranchAddress(branchBean.smAddress)}"
+						value="#{backingBean.getFullAddress(branchBean.smAddress)}"
 						style="float : left" />
 				</p:column>
-				<!-- #34135 START -->
 				<p:column headerText="#{lbl['lbl.sm.person.composition.poc']}"
 					style="width :150px;white-space : normal">
 					<h:outputText value="#{branchBean.smPersonnel.name}" />

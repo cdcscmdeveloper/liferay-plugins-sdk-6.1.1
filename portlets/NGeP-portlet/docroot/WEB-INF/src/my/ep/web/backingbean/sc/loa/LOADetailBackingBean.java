@@ -70,7 +70,6 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
-import my.ep.constants.SpecialCharacter; //# 29006 - note 702
 import my.ep.dto.osb.sc.QTOsbReqDTO;
 import my.ep.dto.osb.sc.QTOsbResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -8973,7 +8972,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
 			
-			mandatoryItems.append(justificationMandatory+"<br/>"+SpecialCharacter.NON_BREAKING_SPACE.getHtmlEntityName()+supplierOfferMandatory); //#29006 - note 702
+			mandatoryItems.append(justificationMandatory+"\n&nbsp"+supplierOfferMandatory);
 			
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -9047,11 +9046,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 					try {
 						// Save and update new supplier offer into related ScLoiLoaItem in DB
-						//#29006 - note 702 - start
-						if (!StringUtils.isBlank(getManagedBean().getNewSupplierOffered()))
-							getQtAwardSO().updateAndSaveNewSupplierJustification("",
-									each.getLoiLoaItemId(),isComplete); 
-						//#29006 - note 702 - end
 						getQtAwardSO().updateAndSaveNewSupplierJustification(getManagedBean().getNewSupplierJustification(),
 								each.getLoiLoaItemId(),isComplete); //#29006 - note 607
 						log.info("-- SAVE JUSTIFICATION --");
@@ -9581,18 +9575,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				scLoiLoaItem.setComplete(items.get(0).isComplete());
 			else
 				scLoiLoaItem.setComplete(false);
-			
-			//#29006 - note 702 - start
-			for (ScLoiLoaItem item : items) {
-				if(item.getLoiLoaItemId().equals(scLoiLoaItem.getLoiLoaItemId())
-						|| ((item.getScLoa().getLoaId().equals(scLoiLoaItem.getScLoa().getLoaId())) && (item
-								.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem()
-								.getRequestNoteItemId())))) {
-					scLoiLoaItem.setDateGeneratedA3(DateUtils.getLocalizeDate(item.getChangedDate(), myLocale));
-					scLoiLoaItem.setTimeGeneratedA3(new SimpleDateFormat(CommonConstants.DEFAULT_TIME_FORMAT).format(item.getChangedDate()));
-				}					
-			}
-			//#29006 - note 702 - end
 		}
 		//#29006 - end -  note 607
 		context.put("itemsList", scLoiLoaItemCloneList);

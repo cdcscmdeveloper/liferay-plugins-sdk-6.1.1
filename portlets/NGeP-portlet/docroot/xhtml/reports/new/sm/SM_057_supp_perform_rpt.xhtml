@@ -7,9 +7,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<table class="customTbl">
-		<!-- #33741 - START -->
-		<h:outputText value="#{lbl['lbl.rpt.instruction.oneyearmaxperiod']}" styleClass="splNotesFonts" escape="false" />
-		<!-- #33741 - END -->
 		<tr>
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}" />
@@ -51,32 +48,30 @@
 			<table style="width: 100%;">
 			<tr>
 			<td class="columnDateFromClass">
-			<!-- #33741 - START -->
-				<p:calendar showOn="button" navigator="true" id="calFromDate"
+			<p:calendar showOn="button" navigator="true"
 					display="inline" readonlyInput="true"
 					value="#{suppPerformRptBB.managedBean.dateFrom}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" partialSubmit="true" process="@this"
-						listener="#{suppPerformRptBB.findMinMaxDate('from', suppPerformRptBB.managedBean.dateFrom)}"
-						update="@this, calToDate" />
+						update="@this" />
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						update="@this" />
 				</p:calendar>
-				<!-- #33741 - END -->
+				
 			</td><td class="columnDateToClass">
 				<p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td >
-				<!-- #33741 - START -->
-				<p:calendar showOn="button" navigator="true" id="calToDate" 
-					mindate="#{suppPerformRptBB.managedBean.minToDate}" maxdate="#{suppPerformRptBB.managedBean.maxToDate}"
+				<p:calendar showOn="button" navigator="true"
 					display="inline" readonlyInput="true"
 					value="#{suppPerformRptBB.managedBean.dateTo}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" partialSubmit="true" process="@this"
-						listener="#{suppPerformRptBB.findMinMaxDate('to', suppPerformRptBB.managedBean.dateTo)}"
-						update="@this, calFromDate" />
+						update="@this" />
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						update="@this" />
 				</p:calendar>
-				<!-- #33741 - END -->
 			</td>
 			
 			</tr>
