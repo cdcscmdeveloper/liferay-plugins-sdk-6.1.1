@@ -12926,16 +12926,16 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 */
 	public void retrieveZonalDetailAfterDemoDeletion(Long qtId) {
 		if (null != qtId) {
-			IQTDetailSO QtDetailsSO;
+			IQTDetailSO qtDetailsSO;
 			try {
-				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
 				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 				tenderReqDTO.setMaintanceFlow(this.getManagedBean().isMaintanceFlow());
 				tenderReqDTO.setQtId(qtId);
 				tenderReqDTO.setBdgDtlsReq(true);
 				ScQt scQt = this.getManagedBean().getQt();
-				QuationTenderResDTO tenderResDTO = QtDetailsSO.retrieveZonalDetail(tenderReqDTO);
+				QuationTenderResDTO tenderResDTO = qtDetailsSO.retrieveZonalDetail(tenderReqDTO);
 				if (tenderResDTO.getQtDetail() != null) {
 					ScQt newScQt = tenderResDTO.getQtDetail();
 					scQt.setScQtSupplierCriteria(newScQt.getScQtSupplierCriteria());
