@@ -18,6 +18,13 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<h:panelGroup layout="block" class="ui-messages ui-widget" rendered="#{flOrderBB.managedBean.fulfilmentOrder.status.statusId.longValue() == FulfilmentStatusCont.coPendingCancellationSubmission.longValue() 
+		and not empty flOrderBB.managedBean.disciplinaryActionMessage}">
+		<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
+		<h:outputText class="ui-messages-info-icon" /><ul><li>
+		<h:outputText class="ui-messages-info-detail" /> #{flOrderBB.managedBean.disciplinaryActionMessage} <p:commandLink id="sharedcommand" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{flOrderBB.viewDisciplinaryAction(flOrderBB.managedBean.smDisciplinaryAction)}" process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink> #{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li></ul>
+		</h:panelGroup>
+		</h:panelGroup>
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
@@ -63,7 +70,8 @@
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 						action="#{flOrderBB.backToPervious}"
-						rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
+						rendered="#{flOrderBB.managedBean.taskId==null
+						or flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancelYEP}" /></td>
 				<td colspan="4" style="text-align: right">
 				<c:if test='#{flOrderBB.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>
 				<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
@@ -147,7 +155,8 @@
 					<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
 					process="@form" partialSubmit="true" rendered='#{(flOrderBB.managedBean.yep) and !(flOrderBB.managedBean.buttonVal eq "AP58")
 					and (flOrderBB.managedBean.getButtonVal() != BpmOutcomeConstant.bpmView)
-					and !(flOrderBB.managedBean.buttonVal eq "NONAP58") and !(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward)}'
+					and !(flOrderBB.managedBean.buttonVal eq "NONAP58") and !(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward)}
+					and (flOrderBB.managedBean.yepButtonFlag == 1)}'
 					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
 					<!-- edit render -->
 					
@@ -210,6 +219,8 @@
 			<div style="width: 100%; text-align: right">
 				<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="gfmasError.hide();" />
 			</div>
-		</p:dialog>	
+		</p:dialog>
+		<ac:disciplinaryActionHistory voList="#{flOrderBB.managedBean.disciplineVOs}" 
+		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />	
 	</ui:define>
 </ui:composition>
