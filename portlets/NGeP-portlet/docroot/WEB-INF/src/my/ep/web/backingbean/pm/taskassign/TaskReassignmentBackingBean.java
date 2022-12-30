@@ -482,6 +482,8 @@ public class TaskReassignmentBackingBean extends
 		resetAllTaskList();
 		resetCheckAllTasks();
 		//7465 - start  - reendorse
+		this.getManagedBean().setShowRemoveProcessMessageGroup(false);
+		this.getManagedBean().setShowRemoveProcessMessageOther(false);
 		this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
 		this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
 		this.getManagedBean().setEnableDeleteGroupTasksButton(false);
@@ -887,8 +889,6 @@ public class TaskReassignmentBackingBean extends
 			this.getManagedBean().setEnableDeleteOthersTasksButton(false);
 		}
 		//[#22117 - end]
-		
-		checkPendingTaskRemove();//7465 - endose
 		log.info("searchDocument - End");
 
 	}
