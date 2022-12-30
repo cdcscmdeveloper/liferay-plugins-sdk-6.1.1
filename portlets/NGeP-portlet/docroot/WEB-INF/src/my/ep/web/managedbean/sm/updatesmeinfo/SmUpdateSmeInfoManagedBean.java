@@ -11,8 +11,6 @@ import my.ep.persistence.entity.sm.SmSmeSupplier;
 import my.ep.persistence.entity.sm.SmSmeSupplierDoc;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
-//#29617 ReOpen note #177
-import java.util.Date;
 
 @ManagedBean(name = "smeInfoMB")
 @SessionScoped
@@ -27,8 +25,6 @@ public class SmUpdateSmeInfoManagedBean extends BaseManagedBean {
 	private SmSmeSupplierDoc smeSupplierDoc;
 	private List<SelectItem> statusTypeList;
 	private List<SmSmeSupplier> supplierSmeList;
-	// #29617 ReOpen note #177 - Start
-	private Date maxValidStartDate;
 
 	public boolean isAgreeTC() {
 		return agreeTC;
@@ -93,19 +89,4 @@ public class SmUpdateSmeInfoManagedBean extends BaseManagedBean {
 	public void setSupplierSmeList(List<SmSmeSupplier> supplierSmeList) {
 		this.supplierSmeList = supplierSmeList;
 	}
-	// #29617 ReOpen note #177 - Start
-	/**
-	 * @return the maxValidStartDate
-	 */
-	public Date getMaxValidStartDate() {
-		return maxValidStartDate;
-	}
-
-	/**
-	 * @param maxValidStartDate the maxValidStartDate to set
-	 */
-	public void setMaxValidStartDate(Date maxValidStartDate) {
-		this.maxValidStartDate = maxValidStartDate;
-	}
-	// #29617 - End
 }

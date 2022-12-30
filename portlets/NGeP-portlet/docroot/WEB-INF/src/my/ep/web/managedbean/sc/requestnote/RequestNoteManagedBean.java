@@ -2159,21 +2159,10 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	//28865 - End
 
 	//29557 - Start
-	/**
-	 * Checks if is purchase inquiry continuity.
-	 *
-	 * @return the purchaseInquiryContinuity
-	 */
 	public boolean isPurchaseInquiryContinuity() {
 		return purchaseInquiryContinuity;
 	}
 
-	/**
-	 * Sets the  purchase inquiry continuity.
-	 * 
-	 * @param purchaseInquiryContinuity
-	 *            the purchaseInquiryContinuity to set
-	 */
 	public void setPurchaseInquiryContinuity(boolean purchaseInquiryContinuity) {
 		this.purchaseInquiryContinuity = purchaseInquiryContinuity;
 	}

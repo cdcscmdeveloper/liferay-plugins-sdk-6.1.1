@@ -4097,7 +4097,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 			directLoaBackingBean.getManagedBean().setTrackingDairyView(true);
-			directLoaBackingBean.getManagedBean().setIconForDL(true); //28854
 			directLoaBackingBean.viewLOA(scLoa.getLoaId());
 		} else {
 			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
@@ -4612,12 +4611,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return new contract period
 	 */
 	public String calculateBondPeriod() {
-		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)){	
-			
-			return String.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration());
-		}else{
+		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
 			return String.valueOf(getManagedBean().getContractVer().getCtContractValue().getContractPeriod());
-		}
+
+		} 
+			return String.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration());
+
 	}
 	//#24333 - End	
 	/**

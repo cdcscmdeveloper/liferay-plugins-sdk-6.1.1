@@ -855,17 +855,14 @@ public class TaskReassignmentBackingBean extends
 			//7465, 29822 - end
 			log.info("[#22117] - isBpkAdminUser: " + this.getManagedBean().isBpkAdminUser());
 		} else {
-			resetReassigneeList();
-			resetCheckAllTasks();
-			//7465 - start
-			if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() != null && this.getManagedBean()
-					.getTaskAssignmentSearchBean().getUser().getLoginId() != null) {
+			/*if (!verifiedDocNumber(this.getManagedBean().
+					getTaskAssignmentSearchBean().getDocNo())) {
+				throw new EpException(MessageConst.ERROR_770207);
+			} else {*/
+				resetReassigneeList();
+				resetCheckAllTasks();
 				searchUsers();
-				checkPendingTaskRemove();
-			} else {
-				searchUsers();
-			}
-			//7465 - end
+			//}
 		}
 	}
 	
