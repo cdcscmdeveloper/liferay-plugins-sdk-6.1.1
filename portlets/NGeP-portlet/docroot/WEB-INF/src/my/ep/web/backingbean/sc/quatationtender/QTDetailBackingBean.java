@@ -12914,4 +12914,63 @@ public void retrieveDemoQtDetails(Long qtId) {
 				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	//#28784 note #507 - end
+	
+	
+	//#28784 note-#634 - Start
+	/**
+	 * To Retrieve zonal Detail by qt id.
+	 * 
+	 * @param QuationTenderReqDTO
+	 * 
+	 * @return QuationTenderResDTO
+	 * 
+	 */
+	public void retrieveZonalDetailAfterDemoDeletion(Long qtId) {
+		if (null != qtId) {
+			IQTDetailSO qtDetailsSO;
+			try {
+				qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTDetailSO.class);
+				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+				tenderReqDTO.setMaintanceFlow(this.getManagedBean().isMaintanceFlow());
+				tenderReqDTO.setQtId(qtId);
+				tenderReqDTO.setBdgDtlsReq(true);
+				ScQt scQt = this.getManagedBean().getQt();
+				QuationTenderResDTO tenderResDTO = qtDetailsSO.retrieveZonalDetail(tenderReqDTO);
+				if (tenderResDTO.getQtDetail() != null) {
+					ScQt newScQt = tenderResDTO.getQtDetail();
+					scQt.setScQtSupplierCriteria(newScQt.getScQtSupplierCriteria());
+					getManagedBean().setQt(scQt);
+
+					if (null != this.getManagedBean().getQt().getZoneLocationLevel()) {
+						this.getManagedBean().setStateCodes(
+								this.getManagedBean().getQt().getZoneLocationLevel().getParameterCode());
+					}
+
+					// Populate zone detail into tree node
+					if (scQt.getScQtSupplierCriteria() != null
+							&& scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
+						List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias()
+								.getTplSpecZoneDtls();
+						populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
+						// setting into zones bean to validate zones while
+						// adding
+						if (CollectionUtils.isNotEmpty(specZoneDtls)) {
+							List<ZonesBean> zoneBeanLst = new ArrayList<ZonesBean>();
+							for (TplSpecZoneDtl specZoneDtl : specZoneDtls) {
+								ZonesBean bean = new ZonesBean();
+								bean.setTplSpecZoneDtl(specZoneDtl);
+								zoneBeanLst.add(bean);
+							}
+							this.getManagedBean().setBeans(zoneBeanLst);
+						}
+					}
+				}
+			} catch(Exception e) {
+				SLAUtils.getInstance().logSLAError("QT", "RetrieveZonalDetailForDemo", qtId.toString(), "retrieveZonalDetailAfterDemoDeletion", getUserIdSessionFromLoginId(), e);
+			}
+		}
+
+	}
+	// #28784 note-#634 - End
 }
