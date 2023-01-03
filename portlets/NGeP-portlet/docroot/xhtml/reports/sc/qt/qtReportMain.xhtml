@@ -132,6 +132,10 @@
 					<ui:include src="SC_080_Prop_Valid_Period_Ext_List.xhtml"></ui:include>
 				</c:if>
 				<ui:remove>#21692 - end</ui:remove>
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_QUOT_TENDER_PROPOSAL_OFFER_SUBM_RPT_BY_SUPPLIER_VAL}">
+					<ui:include src="SC_079_QTProposal_OfferSubmission_BySupplier.xhtml"></ui:include>
+				</c:if>
 
 			</p:panel>
 

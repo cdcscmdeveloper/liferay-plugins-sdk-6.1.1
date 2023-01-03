@@ -435,6 +435,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 							if(!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && responseDTO.getWorklistVO().getWorklistItem().size() > 0){
 								getManagedBean().setAllGroupTasks(new ArrayList <WorklistItemVO>()); //29822 - bug no 1.1 on comment no 106
 								getManagedBean().setCheckAllGroupTasksEnabled(true);
+								getManagedBean().setEnableRemoveAllGroupTasksButton(true);//#29822 - remove button disable - reopen 20/12/2022
 								for(WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()){
 									getManagedBean().getAllGroupTasks().add(worklist);
 								}
@@ -566,6 +567,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 							if(!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && responseDTO.getWorklistVO().getWorklistItem().size() > 0){
 								getManagedBean().setAllOthersTasks(new ArrayList <WorklistItemVO>());
 								getManagedBean().setCheckAllOthersTasksEnabled(true);
+								getManagedBean().setEnableRemoveAllOthersTasksButton(true);//#29822 - remove button disable - reopen 20/12/2022
 								for(WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()){
 									getManagedBean().getAllOthersTasks().add(worklist);
 								}
@@ -577,14 +579,14 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 						}
 
 						//#29822 - start - reendorse change for other user cannot submit remove all 
-						//#29822 - recommit remove checking redundance
+						//#29822 - check all and trash can didn't disable - reopen 20/12/2022
 						if(getManagedBean().isShowRemoveProcessMessageOther()==true ) {
 							//disable check box for other task
-							getManagedBean().setCheckAllGroupTasksEnabled(false);
+							getManagedBean().setCheckAllOthersTasksEnabled(false);
 							//disable button for other task
-							getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+							getManagedBean().setEnableRemoveAllOthersTasksButton(false);
 						}
-						//#29822 - end - reendorse change for other user cannot submit remove all  
+						//#29822 - end  - check all and trash can didn't disable - reopen 20/12/2022
 					}
 				}
 			} catch (Exception e) {

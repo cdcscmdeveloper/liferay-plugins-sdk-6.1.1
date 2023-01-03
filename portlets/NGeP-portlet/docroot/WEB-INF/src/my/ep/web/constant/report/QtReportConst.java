@@ -44,6 +44,7 @@ public class QtReportConst implements Serializable {
 	public static final String SC_OPENING_COMMITTEE_RPT_VAL = "SC_071";
 	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_072";
 	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_073";
+	public static final String SC_QUOT_TENDER_PROPOSAL_OFFER_SUBM_RPT_BY_SUPPLIER_VAL = "SC_079"; //29580_14306
 	
 	
 	//Report parameterKey
@@ -64,6 +65,7 @@ public class QtReportConst implements Serializable {
 	public static final String PARAM_SUBMIT_TO_DT = "SUBMITTODT";
 	public static final String PARAM_LOGIN = "LOGIN";
 	public static final String PARAM_DECISION_TYPE = "PSTATUSID";//#21692
+	public static final String QUOTATION_TENDER_TITLE ="qttitle";//#14306
 	
 	// 29580 - Start (Harun) Add report status for mutiple option 
 	//Report status
@@ -183,4 +185,10 @@ public class QtReportConst implements Serializable {
 		return SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL;
 	}
 	//#21692 - end
+	
+	//#29580_14306 - start
+	public String getSC_QUOT_TENDER_PROPOSAL_OFFER_SUBM_RPT_BY_SUPPLIER_VAL() {
+		return SC_QUOT_TENDER_PROPOSAL_OFFER_SUBM_RPT_BY_SUPPLIER_VAL;
+	}
+	//#29580_14306 - end
 }

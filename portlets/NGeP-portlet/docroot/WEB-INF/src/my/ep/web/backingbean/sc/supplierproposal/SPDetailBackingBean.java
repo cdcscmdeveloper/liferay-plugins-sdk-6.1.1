@@ -1280,8 +1280,9 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 								if (specAnswer.getRatePerUom() != null
 										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
 									answers.add(specAnswer);
-								
-								}else if (specAnswer.getRatePerUom() != null
+								}
+								//Bug_34259 - Start
+								else if (specAnswer.getRatePerUom() != null
 											&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
 								
@@ -1301,7 +1302,9 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
 								//#21695 farid IN MONITORING END	
-								}else{
+								}
+								//Bug_34259 - End
+								else{
 									specAnswer.setDeleted(true);
 									toDeleteZoneAnswers.add(specAnswer);
 								}
@@ -1399,7 +1402,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						for (String zone : errorLst) {
 							strB.append(MessageUtils.getMessage(MessageConst.ERROR_760538, new String[] {unitPrice,zone}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
 						}
-						throw new EpException(strB.toString());
+						throw new EpException(strB.toString());	
 					} else {
 						throw new EpException(MessageConst.ERROR_760464);
 					}

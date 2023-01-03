@@ -412,4 +412,61 @@ public class AddressUtils {
 		}
 		return address.toString();
 	}
+	
+	/**
+	 * Get Full Branch Address based on SmAddress
+	 * @param smAddress
+	 * @return full branch address
+	 */
+	public static String getFullBranchAddress(SmAddress smAddress) {
+		StringBuilder address = new StringBuilder();
+		if(smAddress!=null) {
+			if (smAddress.getAddress1() != null && smAddress.getAddress1().length() > 0) {
+				address.append(smAddress.getAddress1());
+				address.append(separator);
+			}
+			if (smAddress.getAddress2() != null && smAddress.getAddress2().length() > 0) {
+				address.append(smAddress.getAddress2());
+				address.append(separator);
+			}
+			if (smAddress.getAddress3() != null && smAddress.getAddress3().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(smAddress.getAddress3());
+				address.append(separator);
+			}
+			//#34135 START
+			if (smAddress.getPmDivision() != null && smAddress.getPmDivision().getDivisionName() !=null && smAddress.getPmDivision().getDivisionName().length() > 0) {
+				address.append(smAddress.getPmDivision().getDivisionName());
+				address.append(separator);
+			}
+			
+			if (smAddress.getPmDistrict() != null && smAddress.getPmDistrict().getDistrictName() !=null && smAddress.getPmDistrict().getDistrictName().length() > 0) {
+				address.append(smAddress.getPmDistrict().getDistrictName());
+				address.append(separator);
+			}
+			
+			if (smAddress.getPostcode() != null && smAddress.getPostcode().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(smAddress.getPostcode());
+				address.append(" ");
+			}
+			if (smAddress.getPmCity() != null && smAddress.getPmCity().getCityName() !=null && smAddress.getPmCity().getCityName().length() > 0) {
+				address.append(smAddress.getPmCity().getCityName());
+				address.append(separator);
+			}
+
+			if (smAddress.getPmState() != null && smAddress.getPmState().getStateName() !=null && smAddress.getPmState().getStateName().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(smAddress.getPmState().getStateName());
+				address.append(separator);
+			}	
+						
+			if (smAddress.getPmCountry() != null && smAddress.getPmCountry().getCountryName() !=null && smAddress.getPmCountry().getCountryName().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(smAddress.getPmCountry().getCountryName());
+			}
+			//#34135 END
+		}
+		return address.toString();
+	}
 }
