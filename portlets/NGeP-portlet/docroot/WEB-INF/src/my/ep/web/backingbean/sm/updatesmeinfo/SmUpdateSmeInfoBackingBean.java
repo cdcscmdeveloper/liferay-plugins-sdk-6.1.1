@@ -105,27 +105,16 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 		reqDTO.setLanguageCode(languageCode);
 		ParameterResDTO resDTO = SmServiceLookup.getParameterSO().retrieveParameterDescListByTypeAndParamCodes(reqDTO);
 		List<SelectItem> statusType = new ArrayList<SelectItem>();
-		//#29617 ReOpen note #82
-		while(statusType.size() < 6) statusType.add(null);
+		//#29617 Move sort to DB
+		// Remove code
 		for (PmParameterDesc list : resDTO.getParameterDescList()) {
 			SelectItem type = new SelectItem();
 			type.setValue(list.getPmParameter().getParameterCode());
 			type.setLabel(list.getCodeDesc());
-			//#29617 ReOpen note #82 - Start
-			if(type.getValue().toString().equalsIgnoreCase("MANMICRO")){
-				statusType.set(0, type);
-			}else if(type.getValue().toString().equalsIgnoreCase("MANSMALL")){
-				statusType.set(1, type);
-			}else if(type.getValue().toString().equalsIgnoreCase("MANMED")){
-				statusType.set(2, type);
-			}else if(type.getValue().toString().equalsIgnoreCase("SERMICRO")){
-				statusType.set(3, type);
-			}else if(type.getValue().toString().equalsIgnoreCase("SERSMALL")){
-				statusType.set(4, type);
-			}else if(type.getValue().toString().equalsIgnoreCase("SERMED")){
-				statusType.set(5, type);
-			}
-			//#29617 ReOpen note #82 - End
+			//#29617 Move sort to DB - Start
+			statusType.add(type);
+			// Remove code
+			//#29617 Move sort to DB - End
 		}
 		getManagedBean().setStatusTypeList(statusType);
 	}
