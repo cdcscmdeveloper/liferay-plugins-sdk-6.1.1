@@ -5642,6 +5642,9 @@ public class SpecificationBackingBean extends
 				for(ScQtCheckList checklist:technicalChecklist){
 					if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checklist
 							.getDefinationType().getParameterCode()) & QTStatusConst.TS_COMPLETED.equals(checklist.getPmStatus().getStatusId())) {
+						if(checkList.isBrandNew()){//#11104-start
+							checklist.setCloned(Boolean.TRUE);	
+						}//#11104-End
 						this.getManagedBean().getSampleSpecCheckList().	add(checklist);
 					}
 				}//#25635-End
@@ -19800,6 +19803,17 @@ if (null != checklist && !checklist.isEmpty()) {
 	public String sampleTemplateView(ScQtCheckList templateChecklist){
 		this.getManagedBean().setSampleCheckList(templateChecklist);
 		retriveSampleSpecmaster(templateChecklist,null);
+		if(templateChecklist.isCloned()){//11104-start
+			List<TplSpecQuestion> specSampleQuestionList=	this.getManagedBean().getSampleCheckList().getScQtDoc()
+					.getTplSpecMaster().getTplSpecQuestions();
+			for(TplSpecQuestion samplespecQuestion: specSampleQuestionList){
+				samplespecQuestion.setSampleReq(Boolean.FALSE);
+				samplespecQuestion.setSampleQuantity(null);
+				samplespecQuestion.setSampleScoreTypeCode(null);
+				samplespecQuestion.setSampleScore(null);
+			}
+			
+		}//11104-End
 		scoringPopUpAction(null);
 		return "/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleItemView.xhtml?faces-redirect=true";		
 	}
