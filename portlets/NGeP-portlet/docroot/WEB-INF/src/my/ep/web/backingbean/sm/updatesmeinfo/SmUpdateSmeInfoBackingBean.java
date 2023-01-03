@@ -41,6 +41,8 @@ import org.primefaces.model.StreamedContent;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 //#29617 End
+//#29617 ReOpen note #177
+import java.util.Date;
 
 @ManagedBean(name = "smUpdateSmeInfoBackingBean")
 @RequestScoped
@@ -81,13 +83,17 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 				getManagedBean().setSmeSupplierDoc(currentSmeInfo.getSmSmeSupplierDocs().get(0));
 			} else { getManagedBean().setSmeCorpRegisteredTrans("0"); }
 		} else {
-			// #29617 ReOpen note 150 - Start
-			getManagedBean().setSmeSupplier(null);
-			getManagedBean().setSmeCorpRegisteredTrans(null); 
-			SMECorpChange();
-			// #29617 ReOpen note 150 - End
+			// #29617 ReOpen note 161 - Start
+			SMECorpChange(); 
+			getManagedBean().setSmeSupplier(null); 
+			getManagedBean().setSmeCorpRegisteredTrans(null);
+			// #29617 ReOpen note 161 - End
 		} 
 		// #29617 CR Fix - End
+		// #29617 ReOpen note #177 - Start
+		Date maxValidStartDate = new Date();
+		getManagedBean().setMaxValidStartDate(maxValidStartDate);
+		// #29617 - End
 		initDocumentList(getManagedBean().getSmeSupplier());
 		SmCommonUtil.redirectToPage("smeUpdateInfoPage.xhtml", "", null, null);
 	}
@@ -182,6 +188,8 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
 		if (event.getFile() != null) {
+			// #29617 ReOpen note 158
+			assignSmeSupportDoc(getManagedBean().getSmeSupplier().getSmSmeSupplierDocs().get(0));
 			if (getManagedBean().getSmeSupplierDoc() != null) {
 				String filePath = getSmeSuppDocBasePath();
 				SmSmeSupplierDoc doc = getManagedBean().getSmeSupplierDoc();
@@ -316,7 +324,8 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 	// #29617 End
 	// #29617 ReOpen note 150 - Start
 	public void SMECorpChange() {
-		if(getManagedBean().getSmeCorpRegisteredTrans() != null && getManagedBean().getSmeCorpRegisteredTrans().equalsIgnoreCase("1")){
+		// #29617 ReOpen note 161
+		if(getManagedBean().getSmeCorpRegisteredTrans() != null){
 			if (getManagedBean().getSmeSupplier() != null) {
 				getManagedBean().getSmeSupplier().setSmeRefNo(null);
 				getManagedBean().getSmeSupplier().setSmeValidStartDate(null);
@@ -328,5 +337,10 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 		}
 	}
 	// #29617 ReOpen note 150 - Start
+	// #29617 ReOpen note #177 - Start
+	public void resetMinEndDate(){
+		getManagedBean().getSmeSupplier().setSmeValidEndDate(null);
+	}
+	// #29617 - End
 
 }
