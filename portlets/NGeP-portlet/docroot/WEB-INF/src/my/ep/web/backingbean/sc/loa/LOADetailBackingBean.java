@@ -8891,7 +8891,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
 			
-			mandatoryItems.append(justificationMandatory+"<br/>&nbsp"+supplierOfferMandatory); //#29006 - note 689
+			mandatoryItems.append(justificationMandatory+"<br/>"+SpecialCharacter.NON_BREAKING_SPACE.getHtmlEntityName()+supplierOfferMandatory); //#29006 - note 702
 			
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -9502,7 +9502,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			
 			//#29006 - note 702 - start
 			for (ScLoiLoaItem item : items) {
-				if(item.getLoiLoaItemId().equals(scLoiLoaItem.getLoiLoaItemId())){
+				if(item.getLoiLoaItemId().equals(scLoiLoaItem.getLoiLoaItemId())
+						|| ((item.getScLoa().getLoaId().equals(scLoiLoaItem.getScLoa().getLoaId())) && (item
+								.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem()
+								.getRequestNoteItemId())))) {
 					scLoiLoaItem.setDateGeneratedA3(DateUtils.getLocalizeDate(item.getChangedDate(), myLocale));
 					scLoiLoaItem.setTimeGeneratedA3(new SimpleDateFormat(CommonConstants.DEFAULT_TIME_FORMAT).format(item.getChangedDate()));
 				}					
