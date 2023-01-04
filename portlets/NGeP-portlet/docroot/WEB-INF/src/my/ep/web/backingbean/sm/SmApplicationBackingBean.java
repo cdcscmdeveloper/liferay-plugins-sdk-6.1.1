@@ -9587,6 +9587,9 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 		}
 		//#28776 - end
+		//#32286 - START
+		assignApplicationSupportingDocs();
+		//#32286 - END 
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
