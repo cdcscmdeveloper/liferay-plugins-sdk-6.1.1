@@ -14062,7 +14062,17 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		getManagedBean().setSelectedBankBranchIds(bankBranchesIds);
-
+		//#34135 START - remove deleted branch from list at bank information
+		if(getManagedBean().getSmAppl().getSmSupplierBranches() != null){
+			Iterator<SmSupplierBranch> iterator = getManagedBean().getSmAppl().getSmSupplierBranches().iterator();
+			while (iterator.hasNext()) {
+				SmSupplierBranch suppBranch = iterator.next();
+				if(suppBranch.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
+					iterator.remove();
+				}
+			}
+		}
+		//#34135 END
 		if (shareBankBean.getSmAddress() != null
 				&& shareBankBean.getSmAddress().getPmCountry().getCountryId() != null
 				&& shareBankBean.getSmAddress().getPmState().getStateId() != null
