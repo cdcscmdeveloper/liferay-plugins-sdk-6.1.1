@@ -224,7 +224,13 @@ public class ForceReplaceSuppAdminBackingBean extends
 	public void checkingBeforeDeclare() {
 		//# 33563
 		validateRole();
-		RequestContext.getCurrentInstance().execute("declareDeletePopUp.show()");
+		//#33589 - Start
+		if(getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)){
+			RequestContext.getCurrentInstance().execute("declareDeletePopUpBeforeId.show()");
+		}else{
+			RequestContext.getCurrentInstance().execute("declareDeletePopUp.show()");
+		}
+		//#33589 - End
 	}
 	//#28765 - End
 	public void declare() {
@@ -317,9 +323,13 @@ public class ForceReplaceSuppAdminBackingBean extends
 	public void replaceWithExistingUser() {
 		
 		//bug #26798, #25969
-		SmCommonUtil.setNewPersonnelPermAndMailAddress(getManagedBean()
-				.getNewAdmin(), getManagedBean().getMailAddr(),
-				getManagedBean().getPermAddr());
+		//#33589 - Start
+		if(!getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)){
+			SmCommonUtil.setNewPersonnelPermAndMailAddress(getManagedBean()
+					.getNewAdmin(), getManagedBean().getMailAddr(),
+					getManagedBean().getPermAddr());	
+		}
+		//#33589 - End
 		validateMyIdentity();
 		// Start 28765 comment changes 12981
 		//12981 START
@@ -748,11 +758,17 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 		// replace with existing personnel
 		else {
-			setShowOrHideEmail();
-			initDefaultNewAdmin();
-			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "",
-					null, null);
+			//#33589 - Start
+			if(getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)){
+				checkingBeforeDeclare();
+			}else{
+				setShowOrHideEmail();
+				initDefaultNewAdmin();
+				SmCommonUtil.redirectToPage(
+						"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "",
+						null, null);
+			}
+			//#33589 - End
 		}
 	}
 
