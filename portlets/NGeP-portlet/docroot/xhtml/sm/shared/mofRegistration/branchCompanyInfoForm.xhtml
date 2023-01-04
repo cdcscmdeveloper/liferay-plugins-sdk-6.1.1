@@ -116,13 +116,14 @@
 					</table>
 
 				</p:column>
-
+				<!-- #34135 START -->
 				<p:column headerText="#{lbl['lbl.sm.companyaddress']}"
 					style="width :50%;white-space : normal">
 					<h:outputText
-						value="#{backingBean.getFullAddress(branchBean.smAddress)}"
+						value="#{backingBean.getFullBranchAddress(branchBean.smAddress)}"
 						style="float : left" />
 				</p:column>
+				<!-- #34135 START -->
 				<p:column headerText="#{lbl['lbl.sm.person.composition.poc']}"
 					style="width :150px;white-space : normal">
 					<h:outputText value="#{branchBean.smPersonnel.name}" />
@@ -243,7 +244,7 @@
 			cancelLabel="#{lbl['lbl.btn.cancel']}" 
 			multiple="false" showButtons="false"/>
 	</p:dialog>
-	
+
 	<ac:confirmationPopup id="branchDeletePopUpId"
 		widget="branchDeletePopUp"
 		okAction="backingBean.deleteSelectedBranches"

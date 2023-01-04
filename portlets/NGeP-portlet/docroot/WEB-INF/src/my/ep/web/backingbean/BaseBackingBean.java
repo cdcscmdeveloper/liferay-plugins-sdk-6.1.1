@@ -1245,9 +1245,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					items[i++] = new SelectItem(parameterDesc.getPmParameter()
 							.getParameterCode(), codeName);
 				}else{
-				items[i++] = new SelectItem(parameterDesc.getPmParameter()
-						.getParameterCode(), parameterDesc.getCodeName());
-			}
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterCode(), parameterDesc.getCodeName());
+				}
 				//33849-End
 			}
 		} catch (Exception e) {
@@ -2262,7 +2262,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			g2.drawString(captchaText, 15, 20);
 			os = new ByteArrayOutputStream();
 			ImageIO.write(bufferedImg, "png", os);
-			graphicText = new DefaultStreamedContent(new ByteArrayInputStream( os.toByteArray()), "image/png");
+			graphicText = new DefaultStreamedContent(new ByteArrayInputStream(os.toByteArray()), "image/png");
 			if (graphicText == null) {
 				log.info(">>>>>>>>>>>>Graphic is null!!!");
 			} else {
@@ -3418,7 +3418,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}*/
 		//#27165 
 		RequestContext.getCurrentInstance().execute("viewssminfoWidgetVar.show()");
-	
+		
 	}
 	
 	public void clearPersonnelList() {
@@ -3916,28 +3916,39 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
   	//#29466 - END
   	
-  //#31849, #34090 start
+  	//#31849, #34090 start
   	/**
-  	 * Method to return current session userId from user screenName(loginId)
-  	 * @return userId
-  	 */
-  	public Long getUserIdSessionFromLoginId(){
-  		FacesScopes facesScopes = new FacesScopes();
-  		Long userIdSession = 1L;
-  		
-  		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-  		UserReqDTO userReqDTO = new UserReqDTO();
-  		userReqDTO.setLoginId(facesScopes.getUserScreenName());
-  		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
-  		
-  		if (pmUser == null) {
-  			userIdSession = facesScopes.getUserSessionBean().getUserId();
-  		} else {
-  			userIdSession = pmUser.getUserId();
-  		}
-  		
-  		new LogKey(userIdSession);
-  		return userIdSession;
-  	}
+	 * Method to return current session userId from user screenName(loginId)
+	 * @return userId
+	 */
+	public Long getUserIdSessionFromLoginId(){
+		FacesScopes facesScopes = new FacesScopes();
+		Long userIdSession = 1L;
+		
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(facesScopes.getUserScreenName());
+		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		
+		if (pmUser == null) {
+			userIdSession = facesScopes.getUserSessionBean().getUserId();
+		} else {
+			userIdSession = pmUser.getUserId();
+		}
+		
+		new LogKey(userIdSession);
+		return userIdSession;
+	}
   	//#31849, #34090 end
+	//#34135 START
+	/**
+	 * Gets the full address.
+	 *
+	 * @param smAddress the sm address
+	 * @return the full address
+	 */
+	public String getFullBranchAddress(SmAddress smAddress) {
+		return AddressUtils.getFullBranchAddress(smAddress);
+	}
+	//#34135 END
 }
