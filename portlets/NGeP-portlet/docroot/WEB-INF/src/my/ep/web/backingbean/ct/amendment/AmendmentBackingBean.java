@@ -3201,12 +3201,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							&& (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
 									&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted())){
 						getManagedBean().setSelectedTabIndex(6);
+						}else if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+								&& (!ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+								&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted())){
+							getManagedBean().setSelectedTabIndex(5);
 						}else if((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
 								|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())
 								&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
 								&& (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
 										&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted())){
 							getManagedBean().setSelectedTabIndex(5);
+						}else  if((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
+								||ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
+								&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())
+								&& (!ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+										&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted())){
+							getManagedBean().setSelectedTabIndex(4);
 						}else  if((!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
 							&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
 							&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())
@@ -5392,8 +5402,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					changeAccountActionListener();
 				}
 				ctBackingBean.getManagedBean().setApplID(ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getApplId());
-					}
-				}     
+			}
+		}
 		return populateBankAccountList;
 	}
 //  End Fix - #33674 
@@ -7685,7 +7695,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		
 		//#25956 - Start
 		/**
-		 * The method used for validating Remark Cancel Button.
+		 * The method used for validating Remark Cancel/Revise/Reject Button. 
 		 * A warning message will display on screen when Remark is null
 		 * 
 		 * @throws Exception  if an exception occurred
@@ -7835,7 +7845,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * when user changed Max Quantity or Ceiling Quantity on the amendment.
 	 */
 	public void resetItemQty() {
-		
+					
 		for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {						
 			if(item.getCtItemMaxQties().size() >= 2){
 				for(CtItemMaxQty itemMaxQty : item.getCtItemMaxQties()){
@@ -7889,8 +7899,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			reqDTO.setContractVerId(ctDT.getManagedBean().getLoaContractVerId());
 		}
 		//Bug 33096 - shaqimi end
-
-					//Bug 34142 - shaqimi start 16112022
+		
+		//Bug 34142 - shaqimi start 16112022
 		reqDTO.setViewOnly(true);
 		getManagedBean().setSelectedTabIndex(0);
 		getManagedBean().setViewOnly(true);
@@ -7898,11 +7908,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().getCtLetterOfAcceptance().clear();
 		}
 		setAmendmentContractVer(reqDTO);
-		
-					if(ctBackingBean.getManagedBean().isViewContractFromAgreement()){
-						ctBackingBean.getManagedBean().setViewContract(true);
-					}
-					//Bug 34142 - shaqimi start 16112022
+					
+		if(ctBackingBean.getManagedBean().isViewContractFromAgreement()){
+			ctBackingBean.getManagedBean().setViewContract(true);
+		}
+		//Bug 34142 - shaqimi start 16112022
 					
 		//for loa header
 		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance()
@@ -7919,7 +7929,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if(resDTO.getScLoa().getScQuote() != null){
 				ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().setScQuote(resDTO.getScLoa().getScQuote());
 			}						
-						
+			
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, PROCESS_AMEND_PAGE);
@@ -7941,13 +7951,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if(list!=null){
 			Collections.sort(list, new Comparator<CtItemPrice>() {	
 				public int compare(CtItemPrice l1, CtItemPrice l2) {
-					log.info(" Test Test Test compare "+l1.getExpDate().compareTo(l2.getExpDate()));
 					return l1.getExpDate().compareTo(l2.getExpDate());
 				}
 			});
 		}
 	}	
-	//End Fix - #33256
+	// End Fix - #33256
+	
 	// Start Fix - #33674
 	public String[] splittedAccNoAndBankname() {
 		String bankDetails = ctBackingBean.getManagedBean().getBankInfoDetails();
@@ -7959,21 +7969,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						.setBankAccountNo(bankDetailsSplitted[0]);
 				ctBackingBean.getManagedBean().getContractVer().getCtContractValue()
 						.setBankName(bankDetailsSplitted[1]);
-					}
-				}
+			}
+		}
 		return bankDetailsSplitted;
-				}
-				
+	}
+
 	public void setBankDetails() {
 		if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
 			String account = ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo();
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankName() != null) {
 				account = account + ContractConst.SPACE_SLASH
 						+ ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankName();
-				}
+			}
 			ctBackingBean.getManagedBean().setBankInfoDetails(account);
-				}
-				}
+		}
+	}
 	// End Fix - #33674
 	// Start Fix - #34110
 	public void sortItemPriceForTier(List<CtItemPrice> list){
@@ -7986,7 +7996,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (fromQtyComp != 0) {
 						return fromQtyComp;
 					}				
-
+		
 					BigDecimal y1 = o1.getToQty();
 					BigDecimal y2 = o2.getToQty();
 					int toQtyComp = y1.compareTo(y2);
