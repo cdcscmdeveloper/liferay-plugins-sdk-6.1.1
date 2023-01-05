@@ -328,9 +328,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 			SmCommonUtil.setNewPersonnelPermAndMailAddress(getManagedBean()
 					.getNewAdmin(), getManagedBean().getMailAddr(),
 					getManagedBean().getPermAddr());	
+			
+			validateMyIdentity();
 		}
 		//#33589 - End
-		validateMyIdentity();
 		// Start 28765 comment changes 12981
 		//12981 START
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
