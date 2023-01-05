@@ -305,9 +305,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		reqDTO.setTaskName(getManagedBean().getTaskName());
-		if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME) 
-				|| getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME)) {
-			CTContractAmendmentDataType dataType = (CTContractAmendmentDataType)obj;
+		
+		log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][preRenderView]");
+		if ((getManagedBean().getProcessName().equalsIgnoreCase(
+				CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME) || getManagedBean().getProcessName()
+				.equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME.replaceAll("\\s", "")))
+				|| (getManagedBean().getProcessName().equalsIgnoreCase(
+						CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME) || getManagedBean().getProcessName()
+						.equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME.replaceAll("\\s", "")))) {
+			CTContractAmendmentDataType dataType = (CTContractAmendmentDataType) obj;
 			reqDTO.setContractId(new Long(dataType.getContractId()));
 			reqDTO.setContractVerId(new Long(dataType.getDocId()));
 			reqDTO.setDocType(dataType.getDocType());
@@ -2802,32 +2808,42 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the role of login user
 	 */
 	private String getUserRole() {
-		String userRole = null;		
+		String userRole = null;	
+		
+		log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][getUserRole]");
 		if (getManagedBean().getTaskName() == null
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FD_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FD_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FD_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME)) {
-			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-					ParameterConst.CONTRACT_TYPE_MINISTRY)
+				|| (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FD_HT_NAME) || getManagedBean()
+						.getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FD_HT_NAME.replaceAll("\\s", "")))
+				|| (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FD_HT_NAME) || getManagedBean()
+						.getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FD_HT_NAME.replaceAll("\\s", "")))
+				|| (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FD_HT_NAME) || getManagedBean()
+						.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FD_HT_NAME.replaceAll("\\s", "")))
+				|| (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME) || getManagedBean()
+						.getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME.replaceAll("\\s", "")))
+				|| (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME) || getManagedBean()
+						.getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME.replaceAll("\\s", "")))
+				|| (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME) || getManagedBean()
+						.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME.replaceAll("\\s", "")))) {
+			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)
 					&& getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
 				userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
-			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-					ParameterConst.CONTRACT_TYPE_CENTRAL)
+			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)
 					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
-				userRole = RoleCode.BPK_CCA.value();			
+				userRole = RoleCode.BPK_CCA.value();
 			}
 		} else if (getManagedBean().getTaskName() != null
-				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FD_HT_NAME)
-						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME))) {
-			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-					ParameterConst.CONTRACT_TYPE_MINISTRY)
+				&& ((getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FD_HT_NAME) || getManagedBean()
+						.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FD_HT_NAME.replaceAll("\\s", ""))) || (getManagedBean()
+						.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME) || getManagedBean()
+						.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME.replaceAll("\\s", ""))))) {
+			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)
 					&& getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
 				userRole = RoleCode.CT_APPROVER.value();
-			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-					ParameterConst.CONTRACT_TYPE_CENTRAL)
+			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)
 					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
 				userRole = RoleCode.BPK_CC_APPROVER.value();
 			}
@@ -2847,13 +2863,27 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 *         false, if approver setting tab menu is not required
 	 */
 	public boolean isApproverSetting() {
-		if (isContractAdmin() && (getManagedBean().getTaskName() == null
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FD_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FD_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FD_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME))) {
+		
+		log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][isApproverSetting]");
+		if (isContractAdmin()
+				&& (getManagedBean().getTaskName() == null
+						|| (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FD_HT_NAME) || getManagedBean()
+								.getTaskName().equalsIgnoreCase(
+										CTProcessNameConst.CREATE_FD_HT_NAME.replaceAll("\\s", "")))
+						|| (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FD_HT_NAME) || getManagedBean()
+								.getTaskName().equalsIgnoreCase(
+										CTProcessNameConst.SUBMIT_FD_HT_NAME.replaceAll("\\s", "")))
+						|| (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FD_HT_NAME) || getManagedBean()
+								.getTaskName().equalsIgnoreCase(
+										CTProcessNameConst.REVISE_FD_HT_NAME.replaceAll("\\s", "")))
+						|| (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME) || getManagedBean()
+								.getTaskName().equalsIgnoreCase(
+										CTProcessNameConst.CREATE_FA_HT_NAME.replaceAll("\\s", "")))
+						|| (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME) || getManagedBean()
+								.getTaskName().equalsIgnoreCase(
+										CTProcessNameConst.SUBMIT_FA_HT_NAME.replaceAll("\\s", "")))
+						|| (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME)) || getManagedBean()
+						.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME.replaceAll("\\s", "")))) {
 			return true;
 		} else {
 			return false;
