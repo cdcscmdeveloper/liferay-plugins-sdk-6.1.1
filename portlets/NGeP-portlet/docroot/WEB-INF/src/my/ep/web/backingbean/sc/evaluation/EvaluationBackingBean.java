@@ -4648,7 +4648,11 @@ public class EvaluationBackingBean extends
 								return QTConstants.TECHNICAL_EVALUATION;
 							}
 							
-						} 
+							// #25138 add condition as usual
+							} else {
+								return QTConstants.TECHNICAL_EVALUATION;
+							}
+							// #25138 add condition as usual
 
 					} 
 					//#25138 farid - End
