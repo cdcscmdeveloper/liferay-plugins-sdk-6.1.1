@@ -5713,12 +5713,11 @@ public class SimpleQuoteBackingBean extends
 				if (getManagedBean().getScQuote().getMultipleQuote() == false) {
 					if (getManagedBean().getScQuote().isZonal() == true) {
 						ScQuote scQuote = getManagedBean().getScQuote();
-						getTemplateSpecSO().validateSubmitSimpleQuoteResponse(specMaster, specAnswerList, scQuote);
+						getTemplateSpecSO().validateSubmitSimpleQuoteResponse(specAnswerList, scQuote);
 					}
 				}
 			}
 			// #34147 end
-
 		}
 		
 		if (!isServiceContainPrice && !isProdContainPrice) {
