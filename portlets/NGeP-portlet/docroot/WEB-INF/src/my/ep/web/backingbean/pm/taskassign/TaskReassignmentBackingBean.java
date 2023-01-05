@@ -482,6 +482,8 @@ public class TaskReassignmentBackingBean extends
 		resetAllTaskList();
 		resetCheckAllTasks();
 		//7465 - start  - reendorse
+		this.getManagedBean().setShowRemoveProcessMessageGroup(false);
+		this.getManagedBean().setShowRemoveProcessMessageOther(false);
 		this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
 		this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
 		this.getManagedBean().setEnableDeleteGroupTasksButton(false);
@@ -853,14 +855,18 @@ public class TaskReassignmentBackingBean extends
 			//7465, 29822 - end
 			log.info("[#22117] - isBpkAdminUser: " + this.getManagedBean().isBpkAdminUser());
 		} else {
-			/*if (!verifiedDocNumber(this.getManagedBean().
-					getTaskAssignmentSearchBean().getDocNo())) {
-				throw new EpException(MessageConst.ERROR_770207);
-			} else {*/
-				resetReassigneeList();
-				resetCheckAllTasks();
+			resetReassigneeList();
+			resetCheckAllTasks();
+			//7465 - start
+			if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() != null && this.getManagedBean()
+					.getTaskAssignmentSearchBean().getUser().getLoginId() != null) {	
 				searchUsers();
-			//}
+				checkPendingTaskRemove();
+			}
+			} else {
+				searchUsers();
+			}
+			//7465 - end
 		}
 	}
 	
@@ -887,8 +893,6 @@ public class TaskReassignmentBackingBean extends
 			this.getManagedBean().setEnableDeleteOthersTasksButton(false);
 		}
 		//[#22117 - end]
-		
-		checkPendingTaskRemove();//7465 - endose
 		log.info("searchDocument - End");
 
 	}
