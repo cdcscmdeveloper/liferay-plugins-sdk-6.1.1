@@ -5642,6 +5642,9 @@ public class SpecificationBackingBean extends
 				for(ScQtCheckList checklist:technicalChecklist){
 					if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checklist
 							.getDefinationType().getParameterCode()) & QTStatusConst.TS_COMPLETED.equals(checklist.getPmStatus().getStatusId())) {
+						if(checkList.isBrandNew()){//#11104-start
+							checklist.setCloned(Boolean.TRUE);	
+						}//#11104-End
 						this.getManagedBean().getSampleSpecCheckList().	add(checklist);
 					}
 				}//#25635-End
@@ -19800,6 +19803,17 @@ if (null != checklist && !checklist.isEmpty()) {
 	public String sampleTemplateView(ScQtCheckList templateChecklist){
 		this.getManagedBean().setSampleCheckList(templateChecklist);
 		retriveSampleSpecmaster(templateChecklist,null);
+		if(templateChecklist.isCloned()){//11104-start
+			List<TplSpecQuestion> specSampleQuestionList=	this.getManagedBean().getSampleCheckList().getScQtDoc()
+					.getTplSpecMaster().getTplSpecQuestions();
+			for(TplSpecQuestion samplespecQuestion: specSampleQuestionList){
+				samplespecQuestion.setSampleReq(Boolean.FALSE);
+				samplespecQuestion.setSampleQuantity(null);
+				samplespecQuestion.setSampleScoreTypeCode(null);
+				samplespecQuestion.setSampleScore(null);
+			}
+			
+		}//11104-End
 		scoringPopUpAction(null);
 		return "/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleItemView.xhtml?faces-redirect=true";		
 	}
@@ -20999,19 +21013,20 @@ if(null!=allTechnicalChecklist){
 		
 		List<ScQtCheckList> st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
 
-//		for (ScQtCheckList t : st2technicalproposalList) {  
-			if (scQtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
-				if (scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions() != null) {
-					List<TplSpecQuestion> list = scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions();
-					if (null != list && !list.isEmpty()) {
-						for (TplSpecQuestion obj : list) {
-							if (BooleanUtils.isTrue(obj.isItemReqDemo()) && obj.getDemoScore() == null) {
-								throw new EpException(MessageConst.ERROR_760529);
-							}
-						}
-					}
+//		for (ScQtCheckList t : st2technicalproposalList) {
+		List<TplSpecQuestion> list = null;
+		if (scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions() != null) {
+			list = scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions();
+		}
+		if ((scQtCheckList.getDefinationType().getParameterCode()
+				.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION))
+				&& (null != list && !list.isEmpty())) {
+			for (TplSpecQuestion obj : list) {
+				if (BooleanUtils.isTrue(obj.isItemReqDemo()) && obj.getDemoScore() == null) {
+					throw new EpException(MessageConst.ERROR_760529);
 				}
 			}
+		}
 //		}
 
 		for (TplSpecQuestion q : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
@@ -21668,16 +21683,15 @@ if(null!=allTechnicalChecklist){
 		SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
 		for (ScQtCheckList e : existingTechChecklist) {
 			for (ScQtCheckList f : resDTO.getTechnicalCheckList()) {
-				if (e.getQtChecklistId() != null && e.getQtScoreWeightage() != null && f.getQtScoreWeightage() != null) {
-					if (e.getQtScoreWeightage().getWeightage() != null && e.getQtChecklistId().equals(f.getQtChecklistId())) {
-						f.getQtScoreWeightage().setWeightage(e.getQtScoreWeightage().getWeightage());
+				if ((e.getQtChecklistId() != null && e.getQtScoreWeightage() != null && f.getQtScoreWeightage() != null)
+						&& (e.getQtScoreWeightage().getWeightage() != null && e.getQtChecklistId().equals(f.getQtChecklistId()))) {
+					f.getQtScoreWeightage().setWeightage(e.getQtScoreWeightage().getWeightage());
 					}
-				}
 			}
 		}
 		getManagedBean().setScQtCheckSt2techProposal(resDTO.getTechnicalCheckList());		
 		
-		List<Integer> settinglist = new ArrayList<Integer>();
+		List<Integer> settinglist = new ArrayList<>();
 		settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_DEMO);		
 		reqDTO.setSettingTypes(settinglist);		
 		SpecificationResDTO resDTOnew = specSo.retrieveScoreSettingDtls(reqDTO);
