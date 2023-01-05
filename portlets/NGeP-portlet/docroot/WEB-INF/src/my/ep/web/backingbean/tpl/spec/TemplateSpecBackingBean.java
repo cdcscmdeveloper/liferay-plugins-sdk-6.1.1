@@ -52,6 +52,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -271,7 +272,7 @@ public class TemplateSpecBackingBean extends
 							evalReqDTO.setQtId(templateSpecBean.getQt().getQtId());
 							evalReqDTO.setProposalChecklist(templateSpecBean.getQtProposalChecklist());
 							int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
-							if(wipstatus >= 7){
+							if(wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){
 								if (CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {
 									evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 									evalReqDTO.setFinSpecAnswerList(resDTO.getSpecAnswerList());
