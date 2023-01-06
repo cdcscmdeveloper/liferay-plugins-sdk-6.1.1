@@ -862,7 +862,7 @@ public class TaskReassignmentBackingBean extends
 					.getTaskAssignmentSearchBean().getUser().getLoginId() != null) {	
 				searchUsers();
 				checkPendingTaskRemove();
-			}
+			
 			} else {
 				searchUsers();
 			}
