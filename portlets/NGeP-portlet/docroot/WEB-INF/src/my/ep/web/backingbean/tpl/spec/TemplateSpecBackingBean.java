@@ -53,6 +53,7 @@ import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -245,7 +246,7 @@ public class TemplateSpecBackingBean extends
 							evalReqDTO.setQtId(templateSpecBean.getQt().getQtId());
 							evalReqDTO.setProposalChecklist(templateSpecBean.getQtProposalChecklist());
 							int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
-							if(wipstatus >= 7){
+							if(wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){
 								if (CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {
 							evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 							evalReqDTO.setFinSpecAnswerList(resDTO.getSpecAnswerList());
