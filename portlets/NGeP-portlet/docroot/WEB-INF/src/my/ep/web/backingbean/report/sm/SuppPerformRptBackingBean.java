@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.report.sm;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -185,6 +187,11 @@ public class SuppPerformRptBackingBean extends
 		getManagedBean().setMofNo(StringUtils.EMPTY);
 		getManagedBean().setRegType(StringUtils.EMPTY);
 		getManagedBean().setEpNo(StringUtils.EMPTY);
+		//#33741 - START
+		Date currDate = new Date();
+		getManagedBean().setDateTo(currDate);
+		getManagedBean().setDateFrom(null);
+		//#33741 - END
 		setDefaultDateFromAndDateTo();
 	}
 
@@ -202,4 +209,41 @@ public class SuppPerformRptBackingBean extends
 		getManagedBean().setRegDateLabel(label);
 	}
 
+	//#33741 - START
+	public void findMinMaxDate(String dateType, Date selectedDate) {
+		Calendar addedCal = new GregorianCalendar();
+		Date currDate = new Date();
+		addedCal.setTime(selectedDate);
+
+		if (dateType.equalsIgnoreCase("from")) {
+			addedCal.add(Calendar.MONTH, 12);
+			if (1 == currDate.compareTo(addedCal.getTime())) {
+				if(getManagedBean().getDateTo().compareTo(addedCal.getTime()) < 0){
+					if(getManagedBean().getDateFrom().compareTo(getManagedBean().getDateTo()) > 0){
+						getManagedBean().setDateTo(addedCal.getTime());
+					}else{
+						getManagedBean().setDateTo(getManagedBean().getDateTo());
+					}	
+				}else{
+					getManagedBean().setDateTo(addedCal.getTime());
+				}
+			} else {
+				getManagedBean().setMaxToDate(currDate);
+				if(getManagedBean().getDateTo().compareTo(addedCal.getTime()) > 0){
+					getManagedBean().setDateTo(currDate);
+				}
+			}
+			getManagedBean().setMinToDate(selectedDate);
+		} else if (dateType.equalsIgnoreCase("to")) {
+			addedCal.setTime(getManagedBean().getDateFrom());
+			addedCal.add(Calendar.MONTH, 12);
+			if (selectedDate.compareTo(addedCal.getTime()) > 0) {
+				addedCal.setTime(selectedDate);
+				addedCal.add(Calendar.MONTH, -12);
+				getManagedBean().setDateFrom(addedCal.getTime());
+				getManagedBean().setMinToDate(addedCal.getTime());
+			}
+		}
+	}
+	//#33741 - END
 }

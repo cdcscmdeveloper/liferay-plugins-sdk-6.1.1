@@ -48,7 +48,9 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.categoryRegistered']}" />
 			</td>
 			<td>
-				<ac:smReportDateFromTo bBean="#{applApprovedRptBB}" limitYearRange="true" dateRange="36" mandatoryDateTo="true"  />
+				<!-- 32521 - START -->
+				<ac:smReportDateFromTo bBean="#{categoryStatRptBB}" limitYearRange="true" dateRange="36" mandatoryDateTo="true"  />
+				<!-- 32521 - END -->
 			</td>
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.disciplinaryActionStatus']}"  />
