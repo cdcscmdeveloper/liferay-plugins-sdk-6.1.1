@@ -14404,6 +14404,23 @@ public class SmApplicationBackingBean extends
 		return show;
 	}
 	
+	// #34174 - START
+	public boolean showDirector(SmApplicationManagedBean managedBean) {
+		boolean show = true;
+		if (managedBean != null && managedBean.getSmAppl() != null) {
+			if (managedBean.getSmAppl().isApplValidWithSsm()) {
+				if (businessTypeIsROC(this.getManagedBean().getSmSupplier()
+						.getBusinessType())) {
+					if (managedBean.getSelectedShareHolder().isDirector() != true) {
+						show = false;
+					}
+				}
+			}
+		}
+		return show;
+	}
+	// #34174 - END
+	
 	//#27232 - START SSM CHANGES FOR RESUBMIT
 	public void ssmIntegrationResubmit(){
 		//#27165
