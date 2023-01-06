@@ -62,14 +62,14 @@ public class ProfileOfRegCompanyRptBackingBean extends
 				// #32564 & #26238, #30824 - End
 			}
 		} else {
-			params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
+			params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getSmMofAccount().getMofNo()); //#30824
 			params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean().getSupplierType());
-			// #32564 & #26238 - Start
-			if(getManagedBean().getSmSupplier() != null){
+			// #32564 & #26238 & #30824 - Start
+			if(getManagedBean().getSmMofAccount().getSmSupplier() != null){
 				params.put(SmReportConst.PARAM_SUPPLIER_ID,
-						String.valueOf(getManagedBean().getSmSupplier().getSupplierId()));	
+						String.valueOf(getManagedBean().getSmMofAccount().getSmSupplier().getSupplierId()));	
 			}
-			// #32564 & #26238 - End
+			// #32564 & #26238 & #30824 - End
 		}
 		log.info("********Report Code************* after set newCode: " + getManagedBean().getReportCode());
 		
@@ -152,21 +152,21 @@ public class ProfileOfRegCompanyRptBackingBean extends
 			} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_MOF)) {
 				if (this.getManagedBean().getZone() != null) {
 					if (getManagedBean().getZone().toUpperCase().equalsIgnoreCase("SEMENANJUNG")) {
-						sb.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^1");
+						sb.append("smSupplier.smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^1"); //#30824
 					} else if (getManagedBean().getZone().toUpperCase().equalsIgnoreCase("SABAH")) {
-						sb.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^2");
+						sb.append("smSupplier.smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^2"); //#30824
 					} else if (getManagedBean().getZone().toUpperCase().equalsIgnoreCase("SARAWAK")) {
-						sb.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^3");
+						sb.append("smSupplier.smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^3"); //#30824
 					}
 				}
 				//#32564 - start - ac:smReportSupplierType
 				if (getManagedBean().getSupplierType() != null && !getManagedBean().getSupplierType().equals("all")){
 					if(sb.length() != 0) sb.append("|");
-					sb.append("smMofAccounts.supplierType^" + this.getManagedBean().getSupplierType());
+					sb.append("supplierType^" + this.getManagedBean().getSupplierType()); //#30824
 				} else {
 					if(sb.length() != 0) sb.append("|");
-					sb.append("smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONSULTANT
-							+ "*smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONTRACTOR);
+					sb.append("smSupplier.smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONSULTANT //#30824
+							+ "*smSupplier.smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONTRACTOR);//#30824
 				}
 				//#32564 - end
 			}
