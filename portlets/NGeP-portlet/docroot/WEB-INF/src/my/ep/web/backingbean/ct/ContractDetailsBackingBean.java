@@ -1003,8 +1003,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		List<CtContractItem> listItem = new ArrayList<CtContractItem>();
 		
-		listItem.addAll(ctBB.getManagedBean().getContractListingPagingDataModel().getList());
-		listItem.addAll(ctBB.getManagedBean().getServiceListingPagingDataModel().getList());
+		if(ctBB.getManagedBean().getContractListingPagingDataModel().getList()!=null){
+			log.info("not null");
+			
+			listItem.addAll(ctBB.getManagedBean().getContractListingPagingDataModel().getList());
+		}
+		
+		if(ctBB.getManagedBean().getServiceListingPagingDataModel().getList()!=null){
+			listItem.addAll(ctBB.getManagedBean().getServiceListingPagingDataModel().getList());
+		}
+		
 		
 		reqDTO.getCtContractVer().setCtContractItems(listItem);
 		

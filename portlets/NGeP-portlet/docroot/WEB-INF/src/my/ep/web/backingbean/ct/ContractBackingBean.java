@@ -4212,6 +4212,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					abb.getManagedBean().setContractIdFromTaskList(new Long(this.getManagedBean().getContractVer().getCtContract().getContractId()));
 					abb.getManagedBean().setContractVerIdFromTaskList(this.getManagedBean().getContractVer().getContractVerId());
 				}
+			}else if(abb.getManagedBean().getTaskId() != null){
+				abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
+				abb.getManagedBean().setContractIdFromTaskList(new Long(this.getManagedBean().getContractVer().getCtContract().getContractId()));
+				abb.getManagedBean().setContractVerIdFromTaskList(this.getManagedBean().getContractVer().getContractVerId());
 			}
 			//Bug 34142 - shaqimi end 29/11/2022
 			//Bug 34142 - shaqimi start 16112022
