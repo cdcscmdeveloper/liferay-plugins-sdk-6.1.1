@@ -1704,11 +1704,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 								.getScQtProposalChecklistAttachment() == null) {
 							finProposalChecklist.setSubmitted(false);
 							finProposalChecklist
-							.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE); //#34204
-						}
+							.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 						} else {
 							finProposalChecklist
-									.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+							.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE); //#34204	
 						}
 					}else{
 						finProposalChecklist
