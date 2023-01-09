@@ -286,6 +286,15 @@ public class SPDetailBackingBean extends
 				resDTO = proposalSO.retrieveProposalDetail(reqDTO);
 			}
 			// #25201 -end-
+			
+			// 32723 -start-
+			if (this.getManagedBean().getQt() != null) {
+				if (this.getManagedBean().getQt().getDisciplinaryActionPresent() != null) {
+					resDTO.getScQt().setDisciplinaryActionPresent(
+							this.getManagedBean().getQt().getDisciplinaryActionPresent());
+				}
+			}
+			// 32723 -end-
 
 			ScQt scQt = resDTO.getScQt();
 			

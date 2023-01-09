@@ -80,6 +80,13 @@
 				<h:outputText
 					rendered="#{(financeList.scQtCheckList.pmDocument.docDefinitionKey eq 'BS' ) and (financeList.scQtCheckList.action.parameterCode eq 'I' or financeList.scQtCheckList.definationType.parameterCode eq 'WF')}"
 					value="#{lbl['lbl.sc.prepare.proposal.instruction']}" />
+
+				<!-- #32723 -start- -->
+			  	<h:outputText
+					rendered="#{(financeList.scQtCheckList.pmDocument.docDefinitionKey eq 'FN') and (financeList.scQtCheckList.action.parameterCode eq 'I' or financeList.scQtCheckList.definationType.parameterCode eq 'WF')}"
+					value="#{lbl['lbl.sc.prepare.proposal.instruction']}" />
+				<!-- #32723 -end- -->
+
 				<h:outputText
 					rendered="#{(financeList.scQtCheckList.pmDocument.docDefinitionKey eq null) and (financeList.scQtCheckList.action.parameterCode eq'I' or financeList.scQtCheckList.definationType.parameterCode eq 'TS' )}"
 					value="#{lbl['lbl.sc.prepare.proposal.instruction']}" />
