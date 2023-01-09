@@ -57,8 +57,11 @@ public class PaymentMatchRptBackingBean extends FlReportBackingBean<PaymentMatch
 		
 		retrieveReportValueFromDb();
 		//29550 - start
-		onChangeFromToDate();
+		if(hasFactoringUserRole() || hasSupplierRole()){
+			onChangeFromToDate();
+		}
 		//29550 - end
+		
 		params.put(FlReportConst.FL_RPT_FROM_DATE, df.format(getManagedBean().getFromDate()));
 		params.put(FlReportConst.FL_RPT_TO_DATE, df.format(getManagedBean().getToDate()));
 		checkOneYearDifferent(getManagedBean().getFromDate(), getManagedBean().getToDate());
