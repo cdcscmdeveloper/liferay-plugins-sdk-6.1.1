@@ -301,6 +301,6 @@ public interface QTConstants {
 	// 21692 QT Bpm Composite Version Validity ID
 	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
 	
-	public static final String PORTLET_NAME_QT_LOI_LIST="scLoiList_WAR_NGePportlet";//29007 use under 21692-start
+	public static final String PORTLET_NAME_QT_LOI_LIST="scLoiList_WAR_NGePportlet";//#21692
 	
 }
