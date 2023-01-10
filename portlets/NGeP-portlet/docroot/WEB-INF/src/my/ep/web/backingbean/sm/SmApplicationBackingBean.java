@@ -2895,7 +2895,7 @@ public class SmApplicationBackingBean extends
 		}
 	//END 28767
 		//#34277 - start
-		if(getManagedBean().getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI)){
+		if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 			getManagedBean().setEditCapital(businessTypeIsROC(
 					getManagedBean().getSmSupplier().getBusinessType()));
 		}
