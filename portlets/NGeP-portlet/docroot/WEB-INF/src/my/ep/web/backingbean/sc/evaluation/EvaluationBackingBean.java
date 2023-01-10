@@ -2528,7 +2528,9 @@ public void saveComplianceSample() {
 								evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 							}
 							
-						} 
+						} else {
+							evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+						}
 						// #32453-end
 						//wip status end
 					}
@@ -4648,9 +4650,11 @@ public void saveComplianceSample() {
 							}else {
 								return QTConstants.TECHNICAL_EVALUATION;
 							}
-							
-						} 
-
+						// #25138 add condition as usual
+						} else {
+							return QTConstants.TECHNICAL_EVALUATION;
+						}
+						// #25138 add condition as usual
 					} 
 					//#25138 farid - End
 					//wip status end
@@ -17666,6 +17670,8 @@ private void retriveCommitteeRemarksList(){
 									evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 								}
 								
+							}else{
+								evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 							}
 							//#25138 farid - End
 							//wip status end

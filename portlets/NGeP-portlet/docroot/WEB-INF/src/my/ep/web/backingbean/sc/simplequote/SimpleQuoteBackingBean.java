@@ -5710,11 +5710,14 @@ public class SimpleQuoteBackingBean extends
 			//#Newly add
 			// #34147 start
 			if (getManagedBean().getScQuote() != null) {
-				ScQuote scQuote = getManagedBean().getScQuote();
-				getTemplateSpecSO().validateSubmitSimpleQuoteResponse(specMaster, specAnswerList, scQuote);
+				if (getManagedBean().getScQuote().getMultipleQuote() == false) {
+					if (getManagedBean().getScQuote().isZonal() == true) {
+						ScQuote scQuote = getManagedBean().getScQuote();
+						getTemplateSpecSO().validateSubmitSimpleQuoteResponse(specAnswerList, scQuote);
+					}
+				}
 			}
 			// #34147 end
-
 		}
 		
 		if (!isServiceContainPrice && !isProdContainPrice) {
