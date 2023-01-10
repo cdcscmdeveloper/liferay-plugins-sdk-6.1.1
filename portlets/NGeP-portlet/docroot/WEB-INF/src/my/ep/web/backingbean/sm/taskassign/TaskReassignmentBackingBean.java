@@ -240,6 +240,8 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		//29822 - start
 		checkPendingTaskRemove();
 		//29822 - end
+		
+		searchTask();//#29822 - checking if record not found to throw ERROR_770208
 
 	}
 
@@ -2277,5 +2279,62 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		return loginSessionUserId;
 	}
 	//#29822 - end
+	
+	//#29822-start - checking if record not found to throw ERROR_770208
+	public void searchTask() {
+		log.info("search for alert if record not found");
+		IBpmSO bpmSO = null;
+		BpmRequestDTO reqDTO = null;
+		BpmResponseDTO responseDTO = null;
+		String loginId = null;
+		List<Integer> statusIds = null;
+		TaskAssignmentSearchBean taskSearchBean = null;
+
+		try {
+			taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
+			loginId = taskSearchBean.getUser().getPmUser() != null ? taskSearchBean.getUser().getPmUser().getLoginId() : null;
+			if (loginId != null && loginId.length() > 0) {
+				statusIds = retrieveAvailableStatusId();
+				if (statusIds != null && !statusIds.isEmpty()) {
+					bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+					reqDTO = new BpmRequestDTO();
+					Object ctxToken = bpmSO.authenticate(loginId);
+
+					reqDTO.setLimit(PagingConst.ROWS_PER_PAGE); 
+					reqDTO.setStatusList(statusIds);
+					reqDTO.setUserId(loginId);
+					reqDTO.setCtxToken(ctxToken);
+					List<String> docNumberList = new ArrayList<String>();
+					if (StringUtils.isNotBlank(getManagedBean().getTaskAssignmentSearchBean().getDocNo())) {
+						docNumberList.add(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+						reqDTO.setDocNumberList(docNumberList);
+					}
+
+					if (getManagedBean().getTaskAssignmentSearchBean().getDocType() != null) {
+						reqDTO.setDocType(getManagedBean().getTaskAssignmentSearchBean().getDocType());
+					}
+					
+					reqDTO.setState(BpmConstants.STATE_ASSIGNED);
+					reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
+					reqDTO.setIsClaimed(false);
+					responseDTO = bpmSO.getReassignedItems(reqDTO);
+					
+					if (responseDTO.getWorklistVO() != null) {
+						log.info("BPM size******"+ responseDTO.getWorklistVO().getWorklistItem().size());
+						log.info("BPM total******"+ responseDTO.getWorklistVO().getTotal());
+
+						System.out.println("getManagedBean().getTaskAssignmentSearchBean().getDocNo(): " + getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+
+						if(responseDTO.getWorklistVO().getWorklistItem().isEmpty() && responseDTO.getWorklistVO().getWorklistItem().size() == 0){
+							throw new EpException(MessageConst.ERROR_770208);
+						}
+					}
+				}
+			}
+		} finally {
+			bpmSO = null;
+		} 
+	}
+	//#29822-end - checking if record not found to throw ERROR_770208
 	
 }
