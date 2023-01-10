@@ -1380,6 +1380,32 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if ((ctBB.getManagedBean().getContractVer().getCtContractItems() != null) && !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))
 				&& !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 
+			
+//Nordin start
+			
+			if(ctBB.getManagedBean().getContractVer().getCtContractItems().size()==0 ){
+				
+				log.info("ctBB.getManagedBean().getContractVer().getCtContractItems().size() = 0");
+				
+				List<CtContractItem> listItem = new ArrayList<CtContractItem>();
+
+				if(ctBB.getManagedBean().getContractListingPagingDataModel().getList()!=null){
+					log.info("not null");
+					
+					listItem.addAll(ctBB.getManagedBean().getContractListingPagingDataModel().getList());
+				}
+				
+				if(ctBB.getManagedBean().getServiceListingPagingDataModel().getList()!=null){
+					listItem.addAll(ctBB.getManagedBean().getServiceListingPagingDataModel().getList());
+				}
+				
+
+				ctBB.getManagedBean().getContractVer().setCtContractItems(listItem);
+
+			}
+			
+			//Nordin end
+			
 			for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
 				// Validation for minimum order quantity
 				if (item.getMinimumOrderQty() <= 0) {
