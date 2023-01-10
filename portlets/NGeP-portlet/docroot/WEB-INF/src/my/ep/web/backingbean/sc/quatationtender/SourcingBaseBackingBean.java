@@ -4402,7 +4402,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			int index = 0;
 			
 			for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
-				if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())) {
+				//Bug #33988@Syazani -- Start 27/09/2022
+				if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())
+						&& (report.getDefinationType() != null && report.getDefinationType().getParameterCode()
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_USER_INPUT))) {
+					//Bug #33988@Syazani -- End 27/09/2022
 					getManagedBean().getNewBriefingPaperReportList().set(index, finalizationReport);
 					getManagedBean().setSelectedBriefingReport(finalizationReport);
 
