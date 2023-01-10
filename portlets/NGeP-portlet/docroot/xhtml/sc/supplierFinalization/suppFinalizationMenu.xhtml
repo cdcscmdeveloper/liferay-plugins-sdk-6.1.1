@@ -77,6 +77,7 @@
 						value="#{suppFinalizationBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<ui:remove>#21692 - start</ui:remove>
 						<h:panelGroup rendered="#{bpmAction ne 'REVISEBP'}">
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
@@ -84,8 +85,25 @@
 								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
 								partialSubmit="true" process="@form" update="@form"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-								rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
+								rendered="#{!suppFinalizationBackingBean.isQTMaintenanceScreen() and (bpmAction == 'SUBMIT')}" />
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button"
+								action="#{suppFinalizationBackingBean.submitAction}"
+								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
+								partialSubmit="true" process="@form" update="@form"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								rendered="#{(suppFinalizationBackingBean.managedBean.qtRefinalized or
+									suppFinalizationBackingBean.checkMeetingDoneLessThanValidityEndDate(suppFinalizationBackingBean.managedBean.scQt.proposalValidityEndDate))
+									and !suppFinalizationBackingBean.isQTMaintenanceScreen() and bpmAction != 'SUBMIT' and bpmAction != 'REVISE'}" />
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button"
+								action="#{suppFinalizationBackingBean.submitAction}"
+								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
+								partialSubmit="true" process="@form" update="@form"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen() and bpmAction == 'REVISE'}" />
 						</h:panelGroup>
+						<ui:remove>#21692 - end</ui:remove>
 						<h:panelGroup rendered="#{bpmAction == 'REVISEBP'}">
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"

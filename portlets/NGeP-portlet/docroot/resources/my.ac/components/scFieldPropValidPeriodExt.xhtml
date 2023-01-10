@@ -124,6 +124,7 @@
 			</c:if>
 		</table>
 		<ac:lovPopup />
+		<ui:remove><!-- #21692 - start -->
 		<TABLE style="width: 100%; margin-top: 10px;">
 			<TR>
 				<TD class="columnGenClass"><p:outputLabel
@@ -144,7 +145,8 @@
 						partialSubmit="true" process="@form">
 					</p:calendar></TD>
 			</TR>
-		</TABLE>
+		</TABLE><!-- #21692 - end -->
+		</ui:remove>
 
 	</cc:implementation>
 </ui:component>

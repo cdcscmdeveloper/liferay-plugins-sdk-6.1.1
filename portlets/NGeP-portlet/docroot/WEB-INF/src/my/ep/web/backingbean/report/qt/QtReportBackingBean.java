@@ -66,6 +66,7 @@ import my.ep.web.bean.report.ScReportFieldsSearchBean;
 import my.ep.web.constant.report.QtReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.qt.QtReportManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -730,9 +731,11 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		this.getManagedBean().setQuotationId(null);
 		ScReportFieldsSearchBean reportFileSearchBean = this.getManagedBean().getScReportSearchBean();
 		String reportCode = this.getManagedBean().getReportCode();
-		if (QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode) && reportFileSearchBean != null) {
+		if ((QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode) 
+				|| QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL.equals(reportCode)) && reportFileSearchBean != null) {//#21692
 			reportFileSearchBean.setScPtj(null);
 			reportFileSearchBean.setScPtjName(null);
+			reportFileSearchBean.setScStatus(null);//#21692 reset status
 			if (!isDeskOfficer()) {
 				reportFileSearchBean.setScDeskOfficer(null);
 				reportFileSearchBean.setPtjProfile(null);
@@ -748,7 +751,8 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		String ptjCode = "";
 		boolean deskOfficerRoles = retriveUserRoles();
 		String reportCode = this.getManagedBean().getReportCode();
-		if (deskOfficerRoles && QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode)) {
+		if (deskOfficerRoles && (QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode)
+				|| QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL.equals(reportCode))) {//#21692
 			if (scQt != null && scQt.getQtId() != null) {
 				Date date = retriveDatesforOrgProfile(scQt.getPublishDate(), scQt.getCreatedDate());
 
@@ -963,4 +967,63 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		
 		return pmOrgProfile;
 	}
+
+	// #21692 - start
+	/**
+	 * Generate approval status list.
+	 * 
+	 * @param language
+	 *            the language
+	 * @return the list
+	 */
+	public List<SelectItem> generateApprovalStatusList() {
+		List<SelectItem> statusList = new ArrayList<SelectItem>();
+		if ((strLanguage != null) && (strLanguage.equalsIgnoreCase("en"))) {
+
+			SelectItem selectItem = new SelectItem();
+			selectItem.setLabel(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_ENG_CODE);
+			selectItem.setValue(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_ID);
+			statusList.add(selectItem);
+			SelectItem selectItem1 = new SelectItem();
+			selectItem1.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ENG_CODE);
+			selectItem1.setValue(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ID);
+			statusList.add(selectItem1);
+
+		} else if ((strLanguage != null) && (strLanguage.equalsIgnoreCase("ms"))) {
+
+			SelectItem selectItem = new SelectItem();
+			selectItem.setLabel(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_MY_CODE);
+			selectItem.setValue(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_ID);
+			statusList.add(selectItem);
+			SelectItem selectItem1 = new SelectItem();
+			selectItem1.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REJECT_MY_CODE);
+			selectItem1.setValue(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ID);
+			statusList.add(selectItem1);
+
+		}
+		return statusList;
+	}
+	
+
+	/*
+	 * set to be early 2022
+	 */
+	public Date handleMinDateForEPV() {
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -1); // to get previous year
+		Date earlyDate = cal.getTime();
+		earlyDate = DateUtils.addDays(earlyDate, 1); // to get a day after
+		
+		return earlyDate;
+	}
+	
+	/*
+	 * set to be today
+	 */
+	public Date handleMaxDateForEPV() {
+		
+		return new Date();
+	}
+	// #21692 - end
 }

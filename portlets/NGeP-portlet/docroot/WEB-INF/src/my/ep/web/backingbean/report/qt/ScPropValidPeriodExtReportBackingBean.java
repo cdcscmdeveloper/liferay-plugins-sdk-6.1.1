@@ -52,11 +52,18 @@ public class ScPropValidPeriodExtReportBackingBean extends QtReportBackingBean<S
 		ScReportFieldsSearchBean reportFieldBean = this.getManagedBean().getScReportSearchBean();
 
 		//report change date strformat -start-
-		String fromDate = new SimpleDateFormat("dd/MM/yyyy").format(reportFieldBean.getScPublishFromDate());
-		String toDate = new SimpleDateFormat("dd/MM/yyyy").format(reportFieldBean.getScPublishToDate());
-		
-		params.put(QtReportConst.PARAM_SUBMIT_FR_DT, fromDate);
-		params.put(QtReportConst.PARAM_SUBMIT_TO_DT, toDate);
+		// #21692 - start
+		/*
+		 * String fromDate = new
+		 * SimpleDateFormat("dd/MM/yyyy").format(reportFieldBean
+		 * .getScPublishFromDate()); String toDate = new
+		 * SimpleDateFormat("dd/MM/yyyy"
+		 * ).format(reportFieldBean.getScPublishToDate());
+		 * 
+		 * params.put(QtReportConst.PARAM_SUBMIT_FR_DT, fromDate);
+		 * params.put(QtReportConst.PARAM_SUBMIT_TO_DT, toDate);
+		 */
+		// #21692 - end
 		//report change date strformat -end-
 		
 		params.put(QtReportConst.QUOTATION_TENDER_ID, this.getManagedBean().getQuotationId());

@@ -30,6 +30,7 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
@@ -2453,12 +2454,18 @@ public class QTDocumentsBackingBean extends
 				commonUtils
 						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
 		VelocityContext context = new VelocityContext();
+		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
 
-		FacesScopes fs = new FacesScopes();
-		String hostUrl = fs.getRequest().getServerName() + ":"
-				+ fs.getRequest().getServerPort();
+		String hostUrl = "";
+		if(!isFromWebService){
+			FacesScopes fs = new FacesScopes();
+			hostUrl = fs.getRequest().getServerName() + ":"
+					+ fs.getRequest().getServerPort();
+		}else{
+			hostUrl = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl").toString();
+		}
+		
 		context.put("hostUrl", hostUrl);
-
 		context.put("commonUtils", commonUtils);
 		context.put("AddressUtils", new AddressUtils());
 		context.put("QTStatusConst", new QTStatusConst());
@@ -2741,7 +2748,7 @@ public class QTDocumentsBackingBean extends
 	 *             the exception
 	 */
 	public void reGenerateDocuments(Long qtId, String... qtFields) {
-		debugLogger("reGenerateDocuments-->qtId: " + qtId + ", qtFields: " + StringUtils.join(qtFields, "|"));
+		log.info("reGenerateDocuments-->qtId: " + qtId + ", qtFields: " + StringUtils.join(qtFields, "|"));
 		
 		IQTDocumentSO qtDocumentSO;
 		try {
@@ -2799,7 +2806,10 @@ public class QTDocumentsBackingBean extends
 			quationTenderReqDTO.setScReports(reports);
 			qtDocumentSO.saveReportAndAttachment(quationTenderReqDTO);
 			
-		} finally {
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		}finally {
 			qtDocumentSO = null;
 		}
 		
@@ -3186,5 +3196,4 @@ public class QTDocumentsBackingBean extends
 				
 				return tplDocMaster;
 	}
-
 }

@@ -647,7 +647,7 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		}
 	}
 
-	/*public void handleChmnFinalizationDate(boolean validityDaysExpiredQt) {
+	public void handleChmnFinalizationDate(boolean validityDaysExpiredQt) {
 		ScQt scQt = this.getManagedBean().getQt();
 		Date chmnFinalizationDate = scQt.getChmnFinalizationDate();
 		if (chmnFinalizationDate != null) {
@@ -702,7 +702,7 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		if (mofDate != null) {
 			scQt.setMofDate(DateUtils.setDefaultDateTime(mofDate));
 		}
-	}*/
+	}
 
 	/**
 	 * To update publish date for reschedule

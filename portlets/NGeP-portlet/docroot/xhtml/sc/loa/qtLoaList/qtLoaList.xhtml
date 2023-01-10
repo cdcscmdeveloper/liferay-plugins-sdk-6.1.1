@@ -15,6 +15,10 @@
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sc.loiloa.recom.supp.list']}" />
 			</f:facet>
+			<ui:remove>#21692 - start</ui:remove>
+			<h:outputText styleClass="instruction" 
+			value="#{lbl['lbl.sc.qt.pending.loa.epv.instruction']}" />
+			<ui:remove>#21692 - end</ui:remove>
 			<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
 				<h:outputLabel value="#{lbl['lbl.sc.award.type']}"></h:outputLabel>
 				<p:inputText id="awardType"
