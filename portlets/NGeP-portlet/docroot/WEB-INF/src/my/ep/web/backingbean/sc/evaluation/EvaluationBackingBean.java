@@ -17668,6 +17668,8 @@ private void retriveCommitteeRemarksList(){
 									evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 								}
 								
+							}else{
+								evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 							}
 							//#25138 farid - End
 							//wip status end
