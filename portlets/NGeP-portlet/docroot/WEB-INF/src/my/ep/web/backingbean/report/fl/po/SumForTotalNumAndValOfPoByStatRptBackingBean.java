@@ -13,6 +13,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.FlReportConst;
 import my.ep.web.managedbean.report.fl.po.SumForTotalNumAndValOfPoByStatRptManagedBean;
@@ -54,9 +55,10 @@ public class SumForTotalNumAndValOfPoByStatRptBackingBean extends FlReportBackin
 		
 		retrieveReportValueFromDb();
 		onChangeFromToDate();
+		
 		params.put(FlReportConst.FL_RPT_FROM_DATE, df.format(getManagedBean().getFromDate()));
 		params.put(FlReportConst.FL_RPT_TO_DATE, df.format(getManagedBean().getToDate()));
-		checkOneYearDifferent(getManagedBean().getFromDate(), getManagedBean().getToDate());
+		
 		if(getManagedBean().getMinistry() != null){
 			params.put(FlReportConst.FL_RPT_MINISTRY, getManagedBean().getMinistry().getOrgProfileId().toString());
 		}
@@ -98,11 +100,13 @@ public class SumForTotalNumAndValOfPoByStatRptBackingBean extends FlReportBackin
 	 * reset action
 	 */
 	public void resetAction(){
+		if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
+			getManagedBean().setMinistry(null);
+			getManagedBean().setPtjGroup(null);
+			getManagedBean().setPtj(null);
+		}
+	
 		resetSearchCriteriaValues();
-		
-		getManagedBean().setMinistry(null);
-		getManagedBean().setPtjGroup(null);
-		getManagedBean().setPtj(null);
 		getManagedBean().setPurchaseOrderStatus(null);
 		getManagedBean().setPoGenDateFrom(null);
 		getManagedBean().setPoGenDateTo(null);
