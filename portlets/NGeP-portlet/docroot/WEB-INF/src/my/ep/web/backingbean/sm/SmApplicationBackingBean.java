@@ -163,6 +163,7 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCategoryFacility;
 import my.ep.persistence.entity.sm.SmSupplierCert;
+import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvWorker;
@@ -9585,6 +9586,9 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 		}
 		//#28776 - end
+		//#32286 - START
+		assignApplicationSupportingDocs();
+		//#32286 - END 
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
@@ -15483,7 +15487,17 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		getManagedBean().setSelectedBankBranchIds(bankBranchesIds);
-
+		//#34135 START - remove deleted branch from list at bank information
+		if(getManagedBean().getSmAppl().getSmSupplierBranches() != null){
+			Iterator<SmSupplierBranch> iterator = getManagedBean().getSmAppl().getSmSupplierBranches().iterator();
+			while (iterator.hasNext()) {
+				SmSupplierBranch suppBranch = iterator.next();
+				if(suppBranch.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
+					iterator.remove();
+				}
+			}
+		}
+		//#34135 END
 		if (shareBankBean.getSmAddress() != null
 				&& shareBankBean.getSmAddress().getPmCountry().getCountryId() != null
 				&& shareBankBean.getSmAddress().getPmState().getStateId() != null
@@ -15814,12 +15828,13 @@ public class SmApplicationBackingBean extends
 		return show;
 	}
 	
-	public boolean showDirector(SmApplicationManagedBean managedBean){
+	// #34174 - START
+	public boolean showDirector(SmApplicationManagedBean managedBean) {
 		boolean show = true;
-		if(managedBean != null && managedBean.getSmAppl() != null){
-			if(managedBean.getSmAppl().isApplValidWithSsm()){
-				if(businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType())){
-					if(managedBean.getSelectedShareHolder().isDirector() != true){
+		if (managedBean != null && managedBean.getSmAppl() != null) {
+			if (managedBean.getSmAppl().isApplValidWithSsm()) {
+				if (businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType())) {
+					if (managedBean.getSelectedShareHolder().isDirector() != true) {
 						show = false;
 					}
 				}
@@ -15827,6 +15842,7 @@ public class SmApplicationBackingBean extends
 		}
 		return show;
 	}
+	// #34174 - END
 	//#27232 - START SSM CHANGES FOR RESUBMIT
 	public void ssmIntegrationResubmit(){
 		//#27165
@@ -16766,6 +16782,9 @@ public class SmApplicationBackingBean extends
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
 					reqDTO.setSelectedBranch(managedBean.getSelectedBranches());
+					//#28777 - START
+					reqDTO.setSmAppl(managedBean.getSmAppl());
+					//#28777 - END
 					/**
 					 * check The supplier been invited for Briefing/Site Visit/
 					 * Proposal Preparation, supplier been participated in QT
@@ -16828,10 +16847,10 @@ public class SmApplicationBackingBean extends
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
 					reqDTO.setSelectedBranch(supplierBranch);
-					
 					//#28777 - START
+					reqDTO.setSmAppl(managedBean.getSmAppl());
 					pendingQT = mofRegistrationSO.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
-					//#28777 - END
+					//#28777 - END 
 					
 					if (pendingQT == true) {
 						msg.append(SmCommonUtil.getMessage("lbl.msg.confirmation.deletebranch.qt.pending", null));
@@ -16897,7 +16916,10 @@ public class SmApplicationBackingBean extends
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
 					reqDTO.setSelectedBranch(supplierBranch);
-
+					//#28777 - START
+					reqDTO.setSmAppl(managedBean.getSmAppl());
+					//#28777 - END
+					
 					pendingQT = mofRegistrationSO
 							.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
 					if (pendingQT == true) {
@@ -16993,6 +17015,10 @@ public class SmApplicationBackingBean extends
 				MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 				reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
 				reqDTO.setSelectedBranch(getManagedBean().getSmAppl().getSmSupplierBranches());
+				//#28777 - START
+				reqDTO.setSmAppl(getManagedBean().getSmAppl());
+				//#28777 - END
+				
 				pendingQT = mofRegistrationSO
 						.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
 

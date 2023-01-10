@@ -707,7 +707,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			//34316-Start
 			if(getManagedBean().getFulfilmentOrder().isYep()){
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-				flReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
+				flReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_ORDER);
 				flReqDTO.setFlOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
 				
 				FulfilmentResDTO resDTO = null;
@@ -1360,7 +1360,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			} catch (Exception e) {
-				throw new EpException(MessageConst.ERROR_776107);
+				throw new EpException(MessageConst.ERROR_000001);//34349
 				
 			}
 			return messageSuffix;	

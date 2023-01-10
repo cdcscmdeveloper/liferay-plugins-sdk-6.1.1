@@ -112,12 +112,11 @@
 			<td colspan="4" style="text-align: right">
 				<!-- #28375- Beginning - Logan-->
 					
-				
-					
-				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward}'>
+
 				<!-- 28375 start -->		
 				<p:commandButton
 						value="#{lbl['lbl.fl.yep.proceed']}" 
+						rendered='#{(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward) and (flOrderBB.managedBean.yepButtonFlag == 2)}'
 						action="#{flOrderBB.carryForward(BpmOutcomeConstant.proceed)}" 
 						disabled="#{!(flOrderBB.managedBean.patCheck eq 'true')}">
 						<f:param name="actionName" value="#{BpmOutcomeConstant.proceed}" />
@@ -126,15 +125,17 @@
 					
 									<p:commandButton
 						value="#{lbl['lbl.fl.yep.carryForward']}"
+						rendered='#{(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward) and (flOrderBB.managedBean.yepButtonFlag == 2)}'
 						action="#{flOrderBB.carryForward(BpmOutcomeConstant.carryForward)}" 
 						disabled="#{flOrderBB.managedBean.iscarryForward eq 'true'}" >
 						<f:param name="actionName" value="#{BpmOutcomeConstant.carryForward}" />
 					</p:commandButton>
 					<!-- 29387 start -->
-					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" immediate="true"  
+					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" 
+					rendered='#{(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward) and (flOrderBB.managedBean.yepButtonFlag == 2)}'
+					immediate="true"  
 					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"/>
 					<!-- 29387 end -->
-			</c:if>
 					
 					
 					<!-- #28375- Ending -->

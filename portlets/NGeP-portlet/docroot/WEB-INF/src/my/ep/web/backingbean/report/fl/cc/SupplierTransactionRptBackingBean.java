@@ -5,18 +5,25 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.type.pm.RoleCode;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.FlReportConst;
 import my.ep.web.managedbean.report.fl.cc.SupplierTransactionRptManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -57,9 +64,10 @@ private static final long serialVersionUID = 1L;
 		
 		retrieveReportValueFromDb();
 		onChangeFromToDate();
+		
 		params.put(FlReportConst.FL_RPT_FROM_DATE, df.format(getManagedBean().getFromDate()));
 		params.put(FlReportConst.FL_RPT_TO_DATE, df.format(getManagedBean().getToDate()));
-		checkOneYearDifferent(getManagedBean().getFromDate(), getManagedBean().getToDate());
+		
 		if(getManagedBean().getMinistry() != null){
 			params.put(FlReportConst.FL_RPT_MINISTRY, getManagedBean().getMinistry().getOrgProfileId().toString());
 		}
@@ -122,11 +130,14 @@ private static final long serialVersionUID = 1L;
 	 * reset action
 	 */
 	public void resetAction(){
-		resetSearchCriteriaValues();
+		if( getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
+				getManagedBean().setMinistry(null);
+				getManagedBean().setPtjGroup(null);
+				getManagedBean().setPtj(null);
+		}
 		
-		getManagedBean().setMinistry(null);
-		getManagedBean().setPtjGroup(null);
-		getManagedBean().setPtj(null);
+		resetSearchCriteriaValues();
 		getManagedBean().setPurchaseOrderStatus(null);
 		getManagedBean().setBusinessRegNo(null);
 		getManagedBean().setMofNo(null);
@@ -159,8 +170,56 @@ private static final long serialVersionUID = 1L;
 	
 	public void autopopSuppData(){
 		if(StringUtils.isNotBlank(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName())){
-			retrieveSuppDataByCompName(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+			log.info("**inside autopopSuppData**");
+			retrieveSuppDataByCompName(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName(),
+					this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getRegNo());	
 		}
+	}
+	
+	/**
+	 * Get status select items by module and report category for dropdown.
+	 * 
+	 * @param moduleCode
+	 *            the module code
+	 * @param reportCategory
+	 *            the report category
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getPOStatusDropdownValues(String moduleCode, String reportCategory) {
+		log.info("**inside getPOStatusDropdownValues**");
+		log.info("moduleCode: "+ moduleCode + " , "+ "reportCategory: " + reportCategory);
+		int i = 1;
+		String newdocType = null;
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			if(reportCategory != null){
+				if(("PO").equals(reportCategory)){
+					newdocType = "PO";
+				}else{
+					newdocType = "CO";
+				}
+			}
+			
+			List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(moduleCode, newdocType, null);
+
+			items = new SelectItem[statusDescs.size()];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			
+			for (PmStatusDesc statusDesc : statusDescs) {
+				if(!("Cancelled").equals(statusDesc.getStatusName())){
+					items[i++] = new SelectItem(statusDesc.getPmStatus()
+							.getStatusId(), statusDesc.getStatusName());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage( null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items;
 	}
 
 }
