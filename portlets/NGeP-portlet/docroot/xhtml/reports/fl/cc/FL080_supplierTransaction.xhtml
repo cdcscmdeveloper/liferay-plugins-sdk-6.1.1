@@ -206,16 +206,11 @@
 				<p:outputLabel value="#{lbl['lbl.fl.purchaseorder.status']}"/>
 			</td>
 			<td>
-				<p:selectOneMenu value="#{ccSuppTransRptBB.managedBean.purchaseOrderStatus}">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.beforePendingInv']}" 
-      					itemValue="#{lbl['lbl.rpt.drpdown.beforePendingInv']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingPaymentMatch']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.pendingPaymentMatch']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingPaymentClosed']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.pendingPaymentClosed']}"></f:selectItem>
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				<p:selectOneMenu id="poStatus" 
+				label="#{lbl['lbl.fl.purchaseorder.status']}"
+				value="#{ccSuppTransRptBB.managedBean.purchaseOrderStatus}">
+					<f:selectItems value="#{ccSuppTransRptBB.getPOStatusDropdownValues('FL',flReportBB.managedBean.reportCategory)}" />
+					<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"></f:selectItem>
 				</p:selectOneMenu>
 			</td>
 		</tr>

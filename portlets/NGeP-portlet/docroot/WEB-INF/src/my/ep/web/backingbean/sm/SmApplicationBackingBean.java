@@ -2894,6 +2894,10 @@ public class SmApplicationBackingBean extends
 				}
 		}
 	//END 28767
+		//#34277 - start
+		getManagedBean().setEditCapital(businessTypeIsROC(
+				getManagedBean().getSmSupplier().getBusinessType()));
+		//#34277 - end
 		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
 		if (fromBpm) {
 		
@@ -3975,11 +3979,6 @@ public class SmApplicationBackingBean extends
 								getManagedBean().getSmAppl(), getManagedBean()
 										.getPrevApprovedPersonnels(),
 								getManagedBean().isDisAllowOwnerEdit());
-						//#34277 - start
-						getManagedBean().setEditCapital(
-								!getManagedBean().isDisAllowOwnerEdit() &&
-								businessTypeIsROC(getManagedBean().getSmSupplier().getBusinessType()));
-						//#34277 - end
 						/*#28458 - Start*/
 						if (getManagedBean().isDisAllowOwnerEdit()){
 							throw new EpException(MessageConst.ERROR_722683
@@ -15829,12 +15828,13 @@ public class SmApplicationBackingBean extends
 		return show;
 	}
 	
-	public boolean showDirector(SmApplicationManagedBean managedBean){
+	// #34174 - START
+	public boolean showDirector(SmApplicationManagedBean managedBean) {
 		boolean show = true;
-		if(managedBean != null && managedBean.getSmAppl() != null){
-			if(managedBean.getSmAppl().isApplValidWithSsm()){
-				if(businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType())){
-					if(managedBean.getSelectedShareHolder().isDirector() != true){
+		if (managedBean != null && managedBean.getSmAppl() != null) {
+			if (managedBean.getSmAppl().isApplValidWithSsm()) {
+				if (businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType())) {
+					if (managedBean.getSelectedShareHolder().isDirector() != true) {
 						show = false;
 					}
 				}
@@ -15842,6 +15842,7 @@ public class SmApplicationBackingBean extends
 		}
 		return show;
 	}
+	// #34174 - END
 	//#27232 - START SSM CHANGES FOR RESUBMIT
 	public void ssmIntegrationResubmit(){
 		//#27165
