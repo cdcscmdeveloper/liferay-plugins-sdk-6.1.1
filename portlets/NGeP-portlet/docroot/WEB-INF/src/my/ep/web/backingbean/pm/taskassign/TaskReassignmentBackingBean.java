@@ -964,7 +964,7 @@ public class TaskReassignmentBackingBean extends
 			this.getManagedBean().setShowReassigneeList(true);
 		}
 		reloadAllTaskList();
-		
+		checkPendingTaskRemoveByDocNo(this.getManagedBean().getSelectedReassignee().get(0)); //#7465
 		
 		this.getManagedBean().setBpkAdminUser(checkBpkAdminSameUser());
 		if(this.getManagedBean().isBpkAdminUser()) {
@@ -4167,6 +4167,37 @@ public class TaskReassignmentBackingBean extends
 		new LogKey(loginSessionUserId);
 		
 		return loginSessionUserId;
+	}
+	/**
+	 * To check task in progress remove or not based on DocNo searching only
+	 * 
+	 */
+	public void checkPendingTaskRemoveByDocNo(String loginId) {
+		ISupplierDataMaintenanceSO iSupplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+		List<PmPendingRemoveTask> hasActivePendingList = iSupplierDataMaintenanceSO.checkActivePendingTaskRemove(loginId);
+		
+		if(hasActivePendingList != null){
+			for(PmPendingRemoveTask hasActivePending : hasActivePendingList){
+				if (hasActivePending != null) {
+					if (hasActivePending.getParamTask().equalsIgnoreCase("GROUP")) {
+						this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+						this.getManagedBean().setShowRemoveProcessMessageGroup(true);
+					} else {
+						this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+						this.getManagedBean().setShowRemoveProcessMessageOther(true);
+					}
+				}
+			}
+		}
+		
+		if(hasActivePendingList == null || hasActivePendingList.size() == 0){
+			//no pending
+			this.getManagedBean().setEnableRemoveAllGroupTasksButton(true);
+			this.getManagedBean().setEnableRemoveAllOthersTasksButton(true);
+			this.getManagedBean().setShowRemoveProcessMessageGroup(false);
+			this.getManagedBean().setShowRemoveProcessMessageOther(false);
+		}
 	}
 	//7465, 29822 - end
 }
