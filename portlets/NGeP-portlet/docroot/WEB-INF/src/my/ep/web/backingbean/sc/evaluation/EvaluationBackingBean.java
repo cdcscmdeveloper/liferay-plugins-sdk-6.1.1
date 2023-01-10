@@ -2532,7 +2532,9 @@ public class EvaluationBackingBean extends
 								evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 							}
 							
-						} 
+						} else {
+							evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+						}
 						// #32453-end
 						//wip status end
 					}
