@@ -2636,9 +2636,11 @@ public class SmApplicationBackingBean extends
 		}
 	//END 28767
 		//#34277 - start
-		getManagedBean().setEditCapital(businessTypeIsROC(
-				getManagedBean().getSmSupplier().getBusinessType()));
-		//#34277 - end
+				if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+					getManagedBean().setEditCapital(businessTypeIsROC(
+							getManagedBean().getSmSupplier().getBusinessType()));
+				}
+				//#34277 - end
 		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
 		if (fromBpm) {
 		
@@ -3721,6 +3723,11 @@ public class SmApplicationBackingBean extends
 								getManagedBean().getSmAppl(), getManagedBean()
 										.getPrevApprovedPersonnels(),
 								getManagedBean().isDisAllowOwnerEdit());
+						//#34277 - start
+						getManagedBean().setEditCapital(
+								!getManagedBean().isDisAllowOwnerEdit() &&
+								businessTypeIsROC(getManagedBean().getSmSupplier().getBusinessType()));
+						//#34277 - end
 						/*#28458 - Start*/
 						if (getManagedBean().isDisAllowOwnerEdit()){
 							throw new EpException(MessageConst.ERROR_722683);
@@ -9237,6 +9244,9 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 		}
 		//#28776 - end
+		//#32286 - START
+		assignApplicationSupportingDocs();
+		//#32286 - END 
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {

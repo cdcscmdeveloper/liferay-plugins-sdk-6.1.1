@@ -4035,7 +4035,9 @@ public class EvaluationBackingBean extends
 										zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 									}
 									
-								} 
+									} else {
+										zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+									}
 									//#25138 farid - End
 									//wip status end
 							}else{
@@ -4716,6 +4718,9 @@ public class EvaluationBackingBean extends
 						specZoneDtl.getZoneName())) {
 
 					EvaluationReqDTO zoneReqDto = new EvaluationReqDTO();
+					//#25138 set qtid -start
+					zoneReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
+					//#25138 end
 					if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType())) {
