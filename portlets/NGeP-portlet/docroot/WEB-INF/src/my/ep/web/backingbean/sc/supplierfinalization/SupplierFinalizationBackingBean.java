@@ -11227,14 +11227,14 @@ public class SupplierFinalizationBackingBean extends
 				|| this.getManagedBean().isReversed();
 		this.getManagedBean().setDisabledSelection(disabledSelection);
 		boolean proposalValid = this.checkProposalValidityDateReach(scQt.getProposalValidityEndDate());
-		//boolean meetingDoneBeforeproposalValidityExpired = this.checkMeetingDoneLessThanValidityEndDate(scQt.getProposalValidityEndDate());
+		boolean meetingDoneBeforeproposalValidityExpired = this.checkMeetingDoneLessThanValidityEndDate(scQt.getProposalValidityEndDate());
 		if(disabledSelection){
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDownAll());
-		}else /*if(proposalValid)*/{			
+		}else if(proposalValid || meetingDoneBeforeproposalValidityExpired){			
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDown());
-		}/*else if(!proposalValid){
+		}else if(!proposalValid && !meetingDoneBeforeproposalValidityExpired){
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDownExpiredProposal());
-		}*/
+		}
 		if(this.getManagedBean().getDecisionDropdown() != null && this.getManagedBean().getDecisionDropdown().length>0){
 			for(SelectItem item: this.getManagedBean().getDecisionDropdown()){
 				if(item.getValue()!=null && ParameterConst.DECISION_RECOMMEND_SUPPLIER.equals(item.getValue())){
