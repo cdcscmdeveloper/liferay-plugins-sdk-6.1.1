@@ -1365,31 +1365,30 @@ public class SPDetailBackingBean extends
 						.getSpecAnswerList();
 			}
             if(answers == null || answers.size() == 0){
-            	throw new EpException(MessageConst.ERROR_760463);	
-			} else {
-				List<String> errorLst = null;
-				boolean isThrow = false;
+				// #21695 -start-
             	for(TplSpecAnswer answer:answers){
+					// #21695 to allow item has 0 qty and 0 price
+					if (answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty() != null
+							|| answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty() == null) {
+						throw new EpException(MessageConst.ERROR_760463);
+					}
+				}
+				// #21695 -end-
+			} else {
+				for (TplSpecAnswer answer : answers) {
 					if (isCompleted) {
-						// bug #31733, #21695 -start-
+						// start #21695 to allow item has 0 qty and 0 price
+						// bug #31733 add condition -start-
 						if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty() != null
 								&& answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
-								|| answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null) {
-							if (errorLst == null) {
-								errorLst = new ArrayList<String>();
-							}
-
-							String zone = answer.getTplSpecZoneQty() != null
-									&& answer.getTplSpecZoneQty().getTplSpecZoneDtl() != null
-									&& answer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() != null ? answer
-									.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() : "";
-							if (!duplicateErrorZoneCheck(zone, errorLst))
-								errorLst.add(zone);
-							isThrow = true;
+								|| answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null)
+						// bug #31733 -end-
+						// #21695 -end-
+						{
+							throw new EpException(MessageConst.ERROR_760464);
 						}
-						// bug #31733, #21695 -end-
 					}
-					
+
             		//added because of Bug #17772, please do not remove or change the order of if statements
             		if(answer.getAnswerNumeric() == null || answer.getAnswerNumeric().equals(0)){
             			boolean isItemTypeService = false; 
