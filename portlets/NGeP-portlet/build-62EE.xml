@@ -47,7 +47,6 @@
 		<delete file="${62PortletDir}/docroot/WEB-INF/liferay-portlet.xml" />
 		<delete file="${62PortletDir}/docroot/WEB-INF/faces-config.xml" />
 		<delete file="${62PortletDir}/docroot/WEB-INF/jboss-deployment-structure.xml" />
-		<!--<delete file="${62PortletDir}/docroot/WEB-INF/liferay-plugin-package.properties" />-->
 		<delete file="${62PortletDir}/docroot/WEB-INF/web.xml" />
 		
 		<delete dir="${62PortletDir}/docroot/xhtml" />
@@ -55,9 +54,6 @@
 	</target>
 	
 	<target name="copyTo62EE" >
-		
-		<!--<copy file="${61PortletDir}/kmc.properties" todir="${62PortletDir}"></copy>
-		<copy file="${61PortletDir}/kmc-host.crt" 	todir="${62PortletDir}"></copy>-->
 		
 		<copydir forceoverwrite="true" dest="${62PortletDir}/docroot/css/images" 		src="${61PortletDir}/docroot/css/images" />
 		<copydir forceoverwrite="true" dest="${62PortletDir}/docroot/excelUpload" src="${61PortletDir}/docroot/excelUpload" />
@@ -86,7 +82,6 @@
 		<delete file="${62PortletDir}/docroot/WEB-INF/lib/liferay-faces-bridge-impl-3.1.1-ga2.jar" />
 		<delete file="${62PortletDir}/docroot/WEB-INF/lib/liferay-faces-portal-3.1.1-ga2.jar" />
 		<delete file="${62PortletDir}/docroot/WEB-INF/lib/liferay-faces-util-3.1.1-ga2.jar" />
-		<!-- <delete file="${62PortletDir}/docroot/WEB-INF/lib/primefaces-3.5.jar" /> -->
 		
 		<copy overwrite="true" file="${61PortletDir}/docroot/WEB-INF/liferay-hook.xml" 		todir="${62PortletDir}/docroot/WEB-INF" />
 		<copy overwrite="true" file="${61PortletDir}/docroot/WEB-INF/portlet.xml" 			todir="${62PortletDir}/docroot/WEB-INF" />
@@ -94,7 +89,6 @@
 		<copy overwrite="true" file="${61PortletDir}/docroot/WEB-INF/liferay-portlet.xml" 	todir="${62PortletDir}/docroot/WEB-INF" />
 		<copy overwrite="true" file="${61PortletDir}/docroot/WEB-INF/faces-config.xml" 		todir="${62PortletDir}/docroot/WEB-INF" />
 		<copy overwrite="true" file="${61PortletDir}/docroot/WEB-INF/jboss-deployment-structure.xml" 	todir="${62PortletDir}/docroot/WEB-INF" />
-		<!--<copy overwrite="true" file="${61PortletDir}/docroot/WEB-INF/liferay-plugin-package.properties" 	todir="${62PortletDir}/docroot/WEB-INF" />-->
 		<copy overwrite="true" file="${61PortletDir}/docroot/WEB-INF/web.xml" 				todir="${62PortletDir}/docroot/WEB-INF" />
 		
 		<replaceregexp file="${62PortletDir}/docroot/WEB-INF/liferay-hook.xml" match="DTD Hook 6.1.0" replace="DTD Hook 6.2.0" flags="g" byline="true" />
