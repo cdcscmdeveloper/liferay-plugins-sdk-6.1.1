@@ -796,8 +796,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			page = "/xhtml/sc/quatationtender/Approver/supplierAccepetance.xhtml";
 			qtPageFirst = false;
 		} else if (SCProcessNameConst.FC_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)) {
-//			page = "/xhtml/sc/quatationtender/Approver/applProposalValidPeriodExtension.xhtml";
-			page = "/xhtml/sc/quatationtender/Approver/approverMain.xhtml";
+			page = "/xhtml/sc/quatationtender/Approver/applProposalValidPeriodExtension.xhtml";
 			qtPageFirst = false;
 		}
 		else if(SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName) 
