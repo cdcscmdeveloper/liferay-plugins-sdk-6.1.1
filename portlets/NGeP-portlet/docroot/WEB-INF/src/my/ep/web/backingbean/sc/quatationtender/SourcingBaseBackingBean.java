@@ -326,9 +326,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected void populateAttachmentDetails(ScAttachment attachment)
 			throws FileNotFoundException, IOException {
 		Timestamp date = new Timestamp(System.currentTimeMillis());
-//		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
-//		PmUser createdUser = isFromWebService ? retrivePmUser(new Long(1)): new FacesScopes().getUserSessionBean();
-		PmUser createdUser = new FacesScopes().getUserSessionBean();
+		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
+		PmUser createdUser = isFromWebService ? retrivePmUser(new Long(1)): new FacesScopes().getUserSessionBean();
 		
 		attachment.setCreatedBy(createdUser.getUserId());
 		attachment.setCreatedDate(date);
@@ -979,10 +978,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			log.debug("reportUrl: " + reportUrl);
 		}
 		OutputStream out = null;
-		PortletResponse portletResponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil
-				.getHttpServletResponse(portletResponse);
+		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
+		HttpServletResponse res = null;
+		if(!isFromWebService){
+			PortletResponse portletResponse = (PortletResponse) FacesContext
+					.getCurrentInstance().getExternalContext().getResponse();
+			 res = com.liferay.portal.util.PortalUtil
+					.getHttpServletResponse(portletResponse);
+		}else{
+			res = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		}
+		
 		InputStream input = null;
 		FileOutputStream fos = null;
 		try{

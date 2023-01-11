@@ -2971,6 +2971,15 @@ public class CreateQtBackingBean extends
 			if (null != newValue) {
 				qtDtl.validateNewValueForValidityDays((int) newValue);
 			}
+			
+			//#21692 - start
+			if (null != newValue && null != valueBean.getOldValue()
+					&& (int) newValue > (int) valueBean.getOldValue()) {
+				this.getManagedBean().setProposalValidityChangeValue(true);
+			} else {
+				this.getManagedBean().setProposalValidityChangeValue(false);
+			}
+			//#21692 - end
 		}
 		//#29425 - end
 		
@@ -3864,7 +3873,7 @@ public class CreateQtBackingBean extends
 	   }
 		//20200210@asyrafhaziq_Bug #27381&#26694  - End
 
-	/*public boolean isQTStatusInProposalValidPeriodExtApproval(Long currentStatusId) {
+	public boolean isQTStatusInProposalValidPeriodExtApproval(Long currentStatusId) {
 		List<Long> validPeriodExts = Arrays.asList(QTStatusConst.QT_PENDING_PUBLICATION,
 				QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_PROPOSAL_PREPARATION,
 				QTStatusConst.QT_EVALUATION_PROPOSAL, QTStatusConst.QT_SUPPLIER_FINALIZATION,
@@ -3877,7 +3886,7 @@ public class CreateQtBackingBean extends
 		}
 
 		return Boolean.FALSE;
-	}*/
+	}
 	
 	/*:::Enhancement #25638 #29 - start:::*/
 	public boolean isStatusInQTReviseGroupStatus(Long currentStatusId) {

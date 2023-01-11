@@ -3915,7 +3915,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		Long statusId = scLoa.getPmStatus().getStatusId();
 
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-				.equals(statusId)) {
+				.equals(statusId) && !outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_EPV_CANCEL)) {//#21692 if cancel for epv no need checking
 			validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
 		}
 		parseLOADetails(scLoa, outcome);
@@ -4068,6 +4068,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					.equals(statusId)) {
 				messageCode = MessageConst.INFO_700001;
 			}
+			//#21692 - start
+			if (BpmOutcomeConst.BPM_EPV_CANCEL
+					.equalsIgnoreCase(outcome)) {
+				messageCode = MessageConst.INFO_700031;
+			}
+			//#21692 - end
 
 			if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 					.equals(statusId)) {
@@ -4564,6 +4570,28 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		// #11134 -End
+		// #21692 add supplier remark - start
+		if (BpmOutcomeConst.BPM_EPV_CANCEL.equals(outcome)
+				&& isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId())) {
+
+			boolean remarksEmpty = false;
+
+			// check if remark is empty
+			List<ScLoaRemark> scLoaRemarks = scLoa.getScLoaRemarks();
+			if (CollectionUtils.isNotEmpty(scLoaRemarks)) {
+				for (ScLoaRemark each : scLoaRemarks) {
+					if (StringUtils.isEmpty(each.getRemark())) {
+						each.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
+						break;
+					}
+				}
+			} else {
+				for (ScLoaRemark each : scLoaRemarks) {
+					each.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
+				}
+			}
+		}
+		// #21692 add supplier remark - end
 
 		if(QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) || 
 				QTStatusConst.LOA_PENDING_REVISION.equals(statusId)) {
@@ -10868,5 +10896,51 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	// #34242 - End
+	
+	// #21692 - start
+	public boolean isSupplierStatusRejectedEPV(Long supplierId) {
+		boolean supplierStatus = false;
+
+		IQTDetailSO detailSO;
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class);
+
+			List<Long> suppList = new ArrayList<>();
+			if (null != supplierId) {
+				suppList.add(supplierId);
+				supplierStatus = detailSO.checkSupplierEPVStatus(getManagedBean().getScQt().getQtId(), suppList);
+			}
+
+		} finally {
+			detailSO = null;
+		}
+
+		return supplierStatus;
+	}
+
+	public boolean isLOAStatusAbleToCancel() {
+		boolean isAble = false;
+
+		IScWorkFlowStatusSO workFlowStatusSO;
+		ScWorkFlowStatusReqDTO scWreqDTO = new ScWorkFlowStatusReqDTO();
+		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IScWorkFlowStatusSO.class);
+		scWreqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+		scWreqDTO.setDocId(this.getManagedBean().getScLoa().getLoaId());
+
+		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO)
+				.getWorkFlowStatus();
+
+		isAble = null != currentWorkFlowStatus
+				&& (currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUBMISSION)
+						|| currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_APPROVAL)
+						|| currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_REVISION) || currentWorkFlowStatus
+						.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)) ? true
+				: false;
+
+		return isAble;
+	}
+	// #21692 - end
 }
 

@@ -126,6 +126,7 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
@@ -2369,6 +2370,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 		}// 9019 end
+		
+		// #21692 - start
+		if (null == scQt.getResponsePeriod()) {
+			int result = retrieveResponsePeriod(ParameterConst.RULE_VALUE);
+			scQt.setResponsePeriod(result);
+		} else {
+			// TODO
+		}
+		// #21692 - end
 
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		quationTenderReqDTO.setQtdetail(scQt);
@@ -10053,7 +10063,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			return false;
 	}
 
-	/*public Timestamp getExtensionResponseDueDate(Long qtId) {
+	public Timestamp getExtensionResponseDueDate(Long qtId, int resPeriod) {//#21692
 		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
 		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
@@ -10065,12 +10075,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if(status.isCurrent() 
 					&& (status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_APPROVED)
 					|| status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE))){
-				Timestamp extensionRespDate = getQTDetailSO().getExtensionResponseDueDate(qtId);
+				Timestamp extensionRespDate = getQTDetailSO().getExtensionResponseDueDate(qtId, resPeriod);//#21692
 				return extensionRespDate;
 			}
 		}
 		return null;
-	}*/
+	}
 	
 	public String getProcurementMode(ScQt qt){
 		String method = null;
@@ -12851,4 +12861,76 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 	}
 	// #28784 note-#634 - End
+	
+	// #21692 - start
+	public int retrieveResponsePeriod(String value) {
+
+		IRuleSO ruleSO = null;
+		int result = 0;
+		try {
+			RuleReqDTO reqDTO = new RuleReqDTO();
+			reqDTO.setRuleType(RuleTypeConst.VALIDITY_PERIOD_EXTENSION_RESPONSE_PERIOD);
+			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IRuleSO.class);
+			RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(reqDTO);
+			if (roleResDTO.isSuccessful() && roleResDTO.getRuleValueList() != null
+					&& roleResDTO.getRuleValueList().size() > 0) {
+				if (value.equals(ParameterConst.RULE_VALUE)) {
+					result = Integer.parseInt(roleResDTO.getRuleValueList().get(0).getRuleValue());
+				}
+				if (value.equals(ParameterConst.FROM_VALUE)) {
+					result = Integer.parseInt(roleResDTO.getRuleValueList().get(0).getFromValue().toString());
+				}
+				if (value.equals(ParameterConst.TO_VALUE)) {
+					result = Integer.parseInt(roleResDTO.getRuleValueList().get(0).getToValue().toString());
+				}
+			} else {
+				throw new EpException(MessageConst.ERROR_770222, new String[] { getRuleTypeDesc(reqDTO.getRuleType()) });
+			}
+		} finally {
+			ruleSO = null;
+		}
+
+		return result;
+	}
+
+	public Timestamp getNewValidityDueDate(ScQt scQt, int newValidityPeriod) {
+		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		reqDTO.setDocId(scQt.getQtId());
+		reqDTO.setDocType(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD);
+
+		ScWorkFlowStatus status = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+		if (status != null) {
+
+			Date date = null;
+
+			date = DateUtils.addDays(scQt.getClosingDate(), newValidityPeriod);
+
+			Timestamp ts = null;
+			if (date != null) {
+				ts = new Timestamp(date.getTime());
+			}
+			return ts;
+		}
+		return null;
+	}
+
+	public boolean isQTStatusInProposalValidPeriodExtApprovalAndIsRefinalization(Long currentStatusId) {
+		List<Long> validPeriodExts = Arrays.asList(QTStatusConst.QT_PENDING_PUBLICATION,
+				QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_PROPOSAL_PREPARATION,
+				QTStatusConst.QT_EVALUATION_PROPOSAL, QTStatusConst.QT_SUPPLIER_FINALIZATION,
+				QTStatusConst.QT_PENDING_LOI, QTStatusConst.QT_PENDING_LOA, QTStatusConst.QT_AWARDED,
+				QTStatusConst.QT_CLOSED, QTStatusConst.QT_CONSOLIDATION_REPORT, QTStatusConst.QT_RE_FINALIZATION);
+
+		for (int i = 0; i < validPeriodExts.size(); i++) {
+			if (validPeriodExts.get(i).longValue() == currentStatusId)
+				return Boolean.TRUE;
+		}
+
+		return Boolean.FALSE;
+	}
+	// #21692 - end
 }
