@@ -261,11 +261,12 @@ public class YearEndProcessBackingBean extends
 			throw new EpException(MessageConst.ERROR_780068);
 		}
 		
-		if(getManagedBean().getSearchDocType().equals(FulfilmentConst.DOC_TYPE_CO)){
-			if(null == getManagedBean().getSearchLoaNo() || getManagedBean().getSearchLoaNo() == ""){
-				throw new EpException(MessageConst.ERROR_780069);
-			}
-		}
+		//34325
+//		if(getManagedBean().getSearchDocType().equals(FulfilmentConst.DOC_TYPE_CO)){
+//			if(null == getManagedBean().getSearchLoaNo() || getManagedBean().getSearchLoaNo() == ""){
+//				throw new EpException(MessageConst.ERROR_780069);
+//			}
+//		}
 		
 		if(null == getManagedBean().getSearchStartDate() && null != getManagedBean().getSearchToDate()){
 			throw new EpException(MessageConst.ERROR_760494);
@@ -714,8 +715,8 @@ public class YearEndProcessBackingBean extends
 				Date d1 = df.parse(df.format(currTime.getTime()));
 				Date d2 = df.parse(df.format(resFeeDTO.getFeeExemptions().get(2).getEffDate()));
 				Date d3 = df.parse(df.format(resFeeDTO.getFeeExemptions().get(2).getExpDate()));
-				//System.out.println("d2 is : " + d2);
-				//System.out.println("d3 is : " + d3);
+				System.out.println("d2 is : " + d2);
+				System.out.println("d3 is : " + d3);
 				if (d1.compareTo(d3) <= 0 && d1.compareTo(d2) >= 0) { //28375
 					flOrderBB.getManagedBean().setPatCheck("true");
 
