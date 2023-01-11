@@ -1441,6 +1441,11 @@ public class EvaluationBackingBean extends
 								throw new EpException(MessageConst.ERROR_760198);
 							}
 						}
+						if (null != proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod()
+								&& proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED) {
+							proposalCheckList.setCompliance(new Integer(ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE));
+							proposalCheckList.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
+						}
 					}
 
 				}
@@ -9464,6 +9469,13 @@ private void retriveCommitteeRemarksList(){
 			if (null != this.getManagedBean().getNoOfContractsProposalScore()) {
 				ScQtProposalScore contract = this.getManagedBean()
 						.getNoOfContractsProposalScore();
+				//#21692 - start
+				if (null == contract.getUserScore() &&
+						null != this.getManagedBean().getQtProposalChecklist().getScQtProposal().getIsAgreeQtExtendPeriod()
+						&& this.getManagedBean().getQtProposalChecklist().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED) {
+					contract.setUserScore(new BigDecimal(0));
+				}
+				//#21692 - end
 				if (null != contract.getUserScore() && null != this.getManagedBean().getUserScores()) {
 						if (contract.getUserScore().intValue() > new Integer(
 								getManagedBean().getUserScores())) {
@@ -17952,5 +17964,23 @@ private void retriveCommitteeRemarksList(){
 	}
 	//32373 - saperate for recalculate pref margin after done financial package - End
 
-	
+	// #21692 - start
+	public boolean checkMeetingDoneLessThanValidityEndDate(Date proposalValidityEndDate) {
+		boolean lessThanValidityEndDate = false;
+
+		List<ScQtMeeting> meetingDetailsList = this.getManagedBean().getScQtMeetings();
+
+		for (ScQtMeeting meeting : meetingDetailsList) {
+			if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
+					&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
+					&& meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)
+					&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
+				lessThanValidityEndDate = true;
+
+			}
+		}
+
+		return lessThanValidityEndDate;
+	}
+	// #21692 - end
 }

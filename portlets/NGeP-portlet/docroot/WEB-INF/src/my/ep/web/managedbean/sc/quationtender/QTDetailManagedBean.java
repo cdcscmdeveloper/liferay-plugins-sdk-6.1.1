@@ -1654,6 +1654,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<String> paramTypes = null;
 	//#25692-End
 	
+	public boolean proposalValidityChangeValue; //#21692
+	
 	// #29468 Vinod Start
 	private TreeNode rootCategoryTree;
 	List<String> selectedCategories;
@@ -11724,6 +11726,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isFromSpecEndorse = isFromSpecEndorse;
 	}
 	// Bug #33661@Syazani 07/10/2022 -- End
+	
+	// #21692 - start
+	/**
+	 * @return the proposalValidityChangeValue
+	 */
+	public boolean isProposalValidityChangeValue() {
+		return proposalValidityChangeValue;
+	}
+
+	/**
+	 * @param proposalValidityChangeValue
+	 *            the proposalValidityChangeValue to set
+	 */
+	public void setProposalValidityChangeValue(boolean proposalValidityChangeValue) {
+		this.proposalValidityChangeValue = proposalValidityChangeValue;
+	}
+	// #21692 - end
 	
 }
 
