@@ -2334,6 +2334,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							} else {
 								evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 							}
+						} else {
+							evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 						}
 						// wip status end
 						// #32453-end
@@ -3668,6 +3670,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 									} else {
 										zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 									}
+								} else {
+									zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 								}
 								// wip status end
 							} else {
@@ -4330,6 +4334,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 						specZoneDtl.getZoneName())) {
 
 					EvaluationReqDTO zoneReqDto = new EvaluationReqDTO();
+					// #25138 set qtid -start
+					zoneReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
+					// #25138 end
+
 					if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType())) {
@@ -15974,7 +15982,8 @@ private void retriveCommitteeRemarksList(){
 							} else {
 								evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 							}
-
+						} else {
+							evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 						}
 						// #25138 wip status - End
 						// #32453-end
