@@ -468,11 +468,11 @@ u {
 														<tbody>
 															<tr>
 															#if ($scLoiLoaItem.supplierOfferDetailList.size() == $rowCount)
-																<td valign="top"  class="standard border-bottom left" colspan="1" style="text-align: center; font-size:7px; font-family: Arial, Helvetica, sans-serif;">
+																<td valign="top"  class="standard border-bottom left" colspan="1" style="text-align: center; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">
 																	<span>$supplierOffer</span>																
 																</td>
 															#else
-																<td valign="top"  class="standard border-bottom left" colspan="1" style="text-align: center; font-size:7px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
+																<td valign="top"  class="standard border-bottom left" colspan="1" style="text-align: center; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
 																	<span>$supplierOffer</span>
 																</td>
 															#end
