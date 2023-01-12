@@ -697,7 +697,10 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			Object obj = super.getBpmTaskDetails(Object.class, null);
 			getManagedBean().setModificationCancel(false);
-			if(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.equals(this.getManagedBean().getProcessName())){
+			
+			log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][preRenderView]");
+			if(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.equals(this.getManagedBean().getProcessName()) || getManagedBean().getProcessName()
+					.equalsIgnoreCase(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.replaceAll("\\s", "")+"Submition")){
 				FLDOFulfillmentModificationReqType doModDataType = (FLDOFulfillmentModificationReqType) obj;
 				if(doModDataType.getErrorId() != null && doModDataType.getErrorId() > 0){
 					getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -712,7 +715,8 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().setButtonVal("ACK");
 				getManagedBean().setModificationCancel(true);
 				reqDTO.setDeliveryOrderId(Long.valueOf(doModDataType.getDoId()));
-			}else if(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.equals(this.getManagedBean().getProcessName())){
+			}else if(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.equals(this.getManagedBean().getProcessName()) || getManagedBean().getProcessName()
+					.equalsIgnoreCase(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.replaceAll("\\s", ""))){
 				FLDOFulfillmentCancelReqType doCancelDataType = (FLDOFulfillmentCancelReqType) obj;
 				if(doCancelDataType.getErrorId() != null && doCancelDataType.getErrorId() > 0){
 					getManagedBean().setAutoUpdate(Boolean.FALSE);

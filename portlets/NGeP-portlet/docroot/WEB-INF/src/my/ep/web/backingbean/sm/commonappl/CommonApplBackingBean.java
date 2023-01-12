@@ -109,7 +109,9 @@ public class CommonApplBackingBean extends
 				subStartTime); //20211005@fadhli - #31754
 
 		this.getManagedBean().setTaskName(resDTO.getTaskName());
-
+		
+		log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][preRenderView]");
+		
 		if (isRedirectToViewOnlyApplication(isClaim, resDTO)) {
 			ViewApplHistoryBackingBean backingBean = new ViewApplHistoryBackingBean();
 			backingBean.getManagedBean().setTaskId(taskId);
@@ -120,20 +122,24 @@ public class CommonApplBackingBean extends
 							"/xhtml/sm/revisionSmApplView/unclaimtaskView/smViewUnClaimTask.xhtml",
 							"", null);
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
-				SMProcessNameConst.VERIFY_SUPP_DOC)) {
+				SMProcessNameConst.VERIFY_SUPP_DOC) || resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.VERIFY_SUPP_DOC.replaceAll("\\s", ""))) {
 			SdoReviewBackingBean sdoBB = new SdoReviewBackingBean();
 			Object bpmObj = new Object();
 
 			log.info("------Verify Supporting Documents-----------");
-
+			
+			
 			if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
+					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION) || resDTO.getProcessName().equalsIgnoreCase(
+							SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))) {
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				sdoBB.getManagedBean().setAppId(
 						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
+					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN) || resDTO.getProcessName().equalsIgnoreCase(
+							SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				sdoBB.getManagedBean().setAppId(
 						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
@@ -152,7 +158,8 @@ public class CommonApplBackingBean extends
 					.handleNavigation(fc, null,
 							"/xhtml/sm/sdoreview/reviewSupportingDocuments");
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
-				SMProcessNameConst.MAKE_PAYMENT)) {
+				SMProcessNameConst.MAKE_PAYMENT) || resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.MAKE_PAYMENT.replaceAll("\\s", ""))) {
 			// System.out.println("Process Name: " + resDTO.getProcessName());
 			// /*
 			// * SMMOFRegDataType smMofObj = (SMMOFRegDataType)
@@ -229,11 +236,13 @@ public class CommonApplBackingBean extends
 					.handleNavigation(fc, null,
 							"/xhtml/sm/payment/paymentSummary.xhtml");
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
-				SMProcessNameConst.RESPOND_PO_INQUIRY)) {
+				SMProcessNameConst.RESPOND_PO_INQUIRY) || resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.RESPOND_PO_INQUIRY.replaceAll("\\s", ""))) {
 			log.info("** Respond to PO Inquiry *********"
 					+ resDTO.getProcessName());
 			if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
+					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN) || resDTO.getProcessName().equalsIgnoreCase(
+							SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 				// TODO Remove this code and get the applicationType From DB
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
@@ -252,7 +261,8 @@ public class CommonApplBackingBean extends
 				smApplBB.getManagedBean().setClaimTask(isClaim);
 				setNavigationForSmDecision("RS", smApplBB);
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
+					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION) || resDTO.getProcessName().equalsIgnoreCase(
+							SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))) {
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 				// TODO Remove this code and get the applicationType From DB
 				log.info(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
@@ -278,20 +288,26 @@ public class CommonApplBackingBean extends
 				setNavigationForSmDecision("RS", smApplBB);
 			}
 
-		} else if (resDTO.getTaskName().equalsIgnoreCase(
-				SMProcessNameConst.REVIEW_APPL_ESCALATED)
-				|| resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_APPL)
-				|| resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_APPL_SPLCAT)
-				|| resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.VERIFY_APPL)
-				|| resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
+		} else if ((resDTO.getTaskName().equalsIgnoreCase(
+				SMProcessNameConst.REVIEW_APPL_ESCALATED) || resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", "")))
+				|| (resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.REVIEW_APPL) || resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", "")))
+				|| (resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.REVIEW_APPL_SPLCAT) || resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", "")))
+				|| (resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
+				|| (resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) || resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", "")))) {
 			log.info(" ******* The selected process name is ******"
 					+ resDTO.getProcessName());
 			if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
+					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN) || resDTO.getProcessName().equalsIgnoreCase(
+							SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 
 				// TODO Remove this code and get the applicationType From DB
@@ -311,24 +327,29 @@ public class CommonApplBackingBean extends
 						.getDocStatus());
 				smApplBB.getManagedBean().setCurrentStatus(currentStatus);
 				//
-				if (resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_APPL)
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.REVIEW_APPL_SPLCAT)
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.VERIFY_APPL)
-						|| resDTO
+				if ((resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.REVIEW_APPL) || resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", "")))
+						|| (resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL_SPLCAT) || resDTO.getTaskName().equalsIgnoreCase(
+										SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", "")))
+						|| (resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(
+										SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
+						|| (resDTO
 								.getTaskName()
 								.equalsIgnoreCase(
-										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
+										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) || resDTO.getTaskName().equalsIgnoreCase(
+												SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", ""))) {
 					smApplBB.getManagedBean().setPoUser(true);
 					// #29664 - start
 					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
 					// #29664 - end
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(false);
-				} else if (resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_APPL_ESCALATED)) {
+				} else if ((resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.REVIEW_APPL_ESCALATED)) || resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
 					smApplBB.getManagedBean().setPoUser(false);
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(true);
@@ -339,8 +360,9 @@ public class CommonApplBackingBean extends
 							smObj.isSiteVisitComplete());
 
 				}
-				if (resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.VERIFY_APPL)
+				if ((resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
 						|| resDTO
 								.getTaskName()
 								.equalsIgnoreCase(
@@ -348,7 +370,8 @@ public class CommonApplBackingBean extends
 					log.info("*** This is po or approver action after site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(true);
 				} else if (!resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_APPL_ESCALATED)) {
+						SMProcessNameConst.REVIEW_APPL_ESCALATED) && !resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
 					log.info("*** This is po or approver for normal review without site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(false);
 				}
@@ -364,8 +387,9 @@ public class CommonApplBackingBean extends
 				smApplBB.getManagedBean().setTaskId(taskId);
 				smApplBB.getManagedBean().setClaimTask(isClaim);
 				setNavigationForSmDecision(appl.getApplType(), smApplBB);
-			} else if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
+			} else if ((resDTO.getProcessName().equalsIgnoreCase(
+					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) || resDTO.getProcessName().equalsIgnoreCase(
+							SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))) {
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 				// TODO Remove this code and get the applicationType From DB
 				log.info(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
@@ -399,24 +423,29 @@ public class CommonApplBackingBean extends
 						.getDocStatus());
 				smApplBB.getManagedBean().setCurrentStatus(currentStatus);
 				log.info("[preRenderView] #31754 resDTO.getTaskName(): " + resDTO.getTaskName());
-				if (resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_APPL)
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.REVIEW_APPL_SPLCAT)
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.VERIFY_APPL)
-						|| resDTO
+				if ((resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.REVIEW_APPL) || resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", "")))
+						|| (resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL_SPLCAT) || resDTO.getTaskName().equalsIgnoreCase(
+										SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", "")))
+						|| (resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(
+										SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
+						|| (resDTO
 								.getTaskName()
 								.equalsIgnoreCase(
-										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
+										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) || resDTO.getTaskName().equalsIgnoreCase(
+												SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", ""))) {
 					smApplBB.getManagedBean().setPoUser(true);
 					// #29664 - start
 					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
 					// #29664 - end
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(false);
-				} else if (resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_APPL_ESCALATED)) {
+				} else if ((resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.REVIEW_APPL_ESCALATED)) || resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
 					smApplBB.getManagedBean().setPoUser(false);
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(true);
@@ -426,16 +455,19 @@ public class CommonApplBackingBean extends
 					smApplBB.getManagedBean().setReviewSiteVisit(
 							smObj.isSiteVisitComplete());
 				}
-				if (resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.VERIFY_APPL)
-						|| resDTO
+				if ((resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
+						|| (resDTO
 								.getTaskName()
 								.equalsIgnoreCase(
-										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
+										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) || resDTO.getTaskName().equalsIgnoreCase(
+												SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", ""))) {
 					log.info("*** This is po or approver action after site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(true);
 				} else if (!resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_APPL_ESCALATED)) {
+						SMProcessNameConst.REVIEW_APPL_ESCALATED) && !resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
 					log.info("*** This is po or approver for normal review without site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(false);
 				}
@@ -462,7 +494,8 @@ public class CommonApplBackingBean extends
 						"CommonApplBackingBean.preRenderView", startTime);
 				setNavigationForSmDecision(appl.getApplType(), smApplBB);
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT)) {
+					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT) || resDTO.getProcessName().equalsIgnoreCase(
+							SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT.replaceAll("\\s", ""))) {
 				// TODO: new added by andrew - temporary solve the new
 				// implementation
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
@@ -475,17 +508,25 @@ public class CommonApplBackingBean extends
 						+ smObj.getDocumentId());
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 				//SSM CHANGES 11012020
-				if (resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_APPL)
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.REVIEW_APPL_SPLCAT)
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.VERIFY_APPL)
-						|| resDTO
+				if ((resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.REVIEW_APPL) || resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", "")))
+						|| (resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL_SPLCAT) || resDTO.getTaskName().equalsIgnoreCase(
+										SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", "")))
+						|| (resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(
+										SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
+						|| (resDTO
 								.getTaskName()
 								.equalsIgnoreCase(
-										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) || resDTO.getTaskName().equalsIgnoreCase(
-												SMProcessNameConst.REVIEW_APPL_ESCALATED)) {
+										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) || resDTO
+										.getTaskName()
+										.equalsIgnoreCase(
+												SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", "")))
+										|| (resDTO.getTaskName().equalsIgnoreCase(
+												SMProcessNameConst.REVIEW_APPL_ESCALATED) || resDTO.getTaskName().equalsIgnoreCase(
+														SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", "")))) {
 					isPoSdoUser = true;
 				}
 				mofResDto = retriveApplicationById(smObj.getDocumentId());
@@ -501,16 +542,22 @@ public class CommonApplBackingBean extends
 				String currentStatus = bpmBean.applicationStatus(resDTO
 						.getDocStatus());
 				smApplBB.getManagedBean().setCurrentStatus(currentStatus);
-				if (resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_APPL)
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.REVIEW_APPL_SPLCAT)
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.VERIFY_APPL)
-						|| resDTO
+				if ((resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.REVIEW_APPL) || resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", "")))
+						|| (resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL_SPLCAT) || resDTO.getTaskName().equalsIgnoreCase(
+										SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", "")))
+						|| (resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(
+										SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
+						|| (resDTO
 								.getTaskName()
 								.equalsIgnoreCase(
-										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
+										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) || resDTO
+										.getTaskName()
+										.equalsIgnoreCase(
+												SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", "")))) {
 					smApplBB.getManagedBean().setPoUser(true);
 					// #29664 - start
 					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
@@ -518,7 +565,8 @@ public class CommonApplBackingBean extends
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(false);
 				} else if (resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_APPL_ESCALATED)) {
+						SMProcessNameConst.REVIEW_APPL_ESCALATED) || resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
 					smApplBB.getManagedBean().setPoUser(false);
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(true);
@@ -534,16 +582,21 @@ public class CommonApplBackingBean extends
 						}
 					}
 				}
-				if (resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.VERIFY_APPL)
-						|| resDTO
+				if ((resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
+						|| (resDTO
 								.getTaskName()
 								.equalsIgnoreCase(
-										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
+										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) || resDTO
+										.getTaskName()
+										.equalsIgnoreCase(
+												SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", "")))) {
 					log.info("*** This is po or approver action after site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(true);
 				} else if (!resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_APPL_ESCALATED)) {
+						SMProcessNameConst.REVIEW_APPL_ESCALATED) && !resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
 					log.info("*** This is po or approver for normal review without site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(false);
 				}
@@ -562,7 +615,8 @@ public class CommonApplBackingBean extends
 			}
 
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
-				SMProcessNameConst.DRAFT_REGISTER_ACCOUNT)) {
+				SMProcessNameConst.DRAFT_REGISTER_ACCOUNT) || resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.DRAFT_REGISTER_ACCOUNT.replaceAll("\\s", ""))) {
 			log.info(" ******* The selected process name is  Draft Register Account ******"
 					+ resDTO.getProcessName());
 			// if (resDTO.getProcessName().equalsIgnoreCase(
@@ -592,7 +646,8 @@ public class CommonApplBackingBean extends
 			// }
 
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
-				SMProcessNameConst.DRAFT_MAINTAIN_ACCOUNT)) {
+				SMProcessNameConst.DRAFT_MAINTAIN_ACCOUNT) || resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.DRAFT_MAINTAIN_ACCOUNT.replaceAll("\\s", ""))) {
 			log.info(" ******* The selected process name is  Draft Maintain Account******"
 					+ resDTO.getProcessName());
 			// if (resDTO.getProcessName().equalsIgnoreCase(
@@ -627,12 +682,14 @@ public class CommonApplBackingBean extends
 			setNavigationForDraftAppl(appl.getApplType());
 			// }
 
-		} else if (resDTO.getTaskName().equalsIgnoreCase(
-				SMProcessNameConst.REVIEW_CANCELLATION)
-				&& resDTO
+		} else if ((resDTO.getTaskName().equalsIgnoreCase(
+				SMProcessNameConst.REVIEW_CANCELLATION) || resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.REVIEW_CANCELLATION.replaceAll("\\s", "")))
+				&& (resDTO
 						.getProcessName()
 						.equalsIgnoreCase(
-								SMProcessNameConst.PROCESS_NAME_MOF_REGISTRATION_CANCELLATION)) {
+								SMProcessNameConst.PROCESS_NAME_MOF_REGISTRATION_CANCELLATION) || resDTO.getProcessName().equalsIgnoreCase(
+										SMProcessNameConst.PROCESS_NAME_MOF_REGISTRATION_CANCELLATION.replaceAll("\\s", "")))) {
 			log.info("**********MOF Registration Cancellation***********"
 					+ taskId);
 			SMMOFRegCanDataType srcObj = (SMMOFRegCanDataType) resDTO.getPojo();
@@ -679,10 +736,12 @@ public class CommonApplBackingBean extends
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							"/xhtml/sm/approverDecisionPages/approverCanRegistration_DescisionPage.xhtml");
-		} else if (resDTO.getTaskName().equalsIgnoreCase(
-				SMProcessNameConst.REVIEW_CANCELLATION)
-				&& resDTO.getProcessName().equalsIgnoreCase(
-						SMProcessNameConst.PROCESS_NAME_MOF_APPL_CANCELLATION)) {
+		} else if ((resDTO.getTaskName().equalsIgnoreCase(
+				SMProcessNameConst.REVIEW_CANCELLATION) || resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.REVIEW_CANCELLATION.replaceAll("\\s", "")))
+				&& (resDTO.getProcessName().equalsIgnoreCase(
+						SMProcessNameConst.PROCESS_NAME_MOF_APPL_CANCELLATION) || resDTO.getProcessName().equalsIgnoreCase(
+								SMProcessNameConst.PROCESS_NAME_MOF_APPL_CANCELLATION.replaceAll("\\s", "")))) {
 			log.info("**********MOF Application Cancellation***********"
 					+ taskId);
 			SMMOFAppCanDataType srcObj = (SMMOFAppCanDataType) resDTO.getPojo();
@@ -738,18 +797,21 @@ public class CommonApplBackingBean extends
 					.handleNavigation(fc, null,
 							"/xhtml/sm/deletePendingMofAppln/cancelPendingApplicationDescisionPage.xhtml");
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
-				SMProcessNameConst.RESPOND_SDO_INQUIRY)) {
+				SMProcessNameConst.RESPOND_SDO_INQUIRY) || resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.RESPOND_SDO_INQUIRY.replaceAll("\\s", ""))) {
 			Object bpmObj = new Object();
 			SupportingDocInquiryBackingBean suppDocIn = new SupportingDocInquiryBackingBean();
 
 			if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
+					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION) || resDTO.getProcessName().equalsIgnoreCase(
+							SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))) {
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				suppDocIn.getManagedBean().setAppId(
 						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
+					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN) || resDTO.getProcessName().equalsIgnoreCase(
+							SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				suppDocIn.getManagedBean().setAppId(
 						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
@@ -775,17 +837,20 @@ public class CommonApplBackingBean extends
 							"/xhtml/sm/suppliersupportingdocinquiry/inquiryresponse.xhtml");
 
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
-				SMProcessNameConst.PROCESSING_FEE)) {
+				SMProcessNameConst.PROCESSING_FEE) || resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.PROCESSING_FEE.replaceAll("\\s", ""))) {
 			Object bpmObj = new Object();
 			PaymentBackingBean paymentBB = new PaymentBackingBean();
 			if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
+					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION) || resDTO.getProcessName().equalsIgnoreCase(
+							SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))) {
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				paymentBB.getManagedBean().setAppId(
 						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
+					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN) || resDTO.getProcessName().equalsIgnoreCase(
+							SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				paymentBB.getManagedBean().setAppId(
 						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
@@ -805,7 +870,8 @@ public class CommonApplBackingBean extends
 					.handleNavigation(fc, null,
 							"/xhtml/sm/payment/paymentSummary.xhtml");
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
-				SMProcessNameConst.COMPLETE_SV_REPORT)) {
+				SMProcessNameConst.COMPLETE_SV_REPORT) || resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.COMPLETE_SV_REPORT.replaceAll("\\s", ""))) {
 			siteVisitTask(resDTO, taskId, isClaim);
 		}
 	}catch(Exception e){
@@ -837,19 +903,24 @@ public class CommonApplBackingBean extends
 
 	private boolean isRedirectToViewOnlyApplication(boolean isClaim,
 			BpmResponseDTO resDTO) {
+		log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][isRedirectToViewOnlyApplication]");
 		boolean retVal = false;
 		if (!isClaim
-				&& (resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_APPL_ESCALATED)
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.REVIEW_APPL)
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.REVIEW_APPL_SPLCAT)
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.VERIFY_APPL) || resDTO
-						.getTaskName()
-						.equalsIgnoreCase(
-								SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE))) {
+				&& ((resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.REVIEW_APPL_ESCALATED) || resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", "")))
+						|| (resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL) || resDTO.getTaskName().equalsIgnoreCase(
+										SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", "")))
+						|| (resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL_SPLCAT) || resDTO.getTaskName().equalsIgnoreCase(
+										SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", "")))
+						|| (resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(
+										SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", ""))) 
+						|| (resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) || resDTO.getTaskName().equalsIgnoreCase(
+										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", "")))) {
 			retVal = true;
 		}
 		return retVal;
@@ -857,6 +928,7 @@ public class CommonApplBackingBean extends
 
 	private void siteVisitTask(BpmResponseDTO resDTO, String taskId,
 			boolean isClaim) {
+		log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][siteVisitTask]");
 		Object svObj = null;
 		Long docId = null;
 		String svTaskId = null;
@@ -882,7 +954,8 @@ public class CommonApplBackingBean extends
 		this.getManagedBean().setTaskName(resDTO.getTaskName());
 
 		log.info("----------Common SIte Visit--------" + resDTO.getTaskName());
-		if (resDTO.getTaskName().equalsIgnoreCase("Assign Site Visit")) {
+		if (resDTO.getTaskName().equalsIgnoreCase("Assign Site Visit")
+				|| resDTO.getTaskName().equalsIgnoreCase("Assign Site Visit".replaceAll("\\s", ""))) {
 			SvcSiteAssignBackingBean svcBB = new SvcSiteAssignBackingBean();
 			svcBB.renewSesionObject();
 
@@ -900,7 +973,8 @@ public class CommonApplBackingBean extends
 					.handleNavigation(fc, null,
 							"/xhtml/sm/svcassignment/assignSiteVisitView");
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
-				SMProcessNameConst.COMPLETE_SV_REPORT)) {
+				SMProcessNameConst.COMPLETE_SV_REPORT) || resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.COMPLETE_SV_REPORT.replaceAll("\\s", ""))) {
 			log.info("------Complete Site Visit Report-------------" + docId);
 			SvoSiteVisitBackingBean svoBB = new SvoSiteVisitBackingBean();
 			svoBB.renewSesionObject();
