@@ -81,10 +81,10 @@
 				<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.search']}" partialSubmit="true" update="itemtbl"
 								 action="#{lOADetailBackingBean.searchSupplierItemByName}"
-								 styleClass="BtnSpacing" process="@this,itemNameSearchInputQT" />
+								 styleClass="BtnSpacing" process="@this,itemNameSearchInputQT" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/><ui:remove>29007 - fix issue 2 search action note 347</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 								 action="#{lOADetailBackingBean.onResetSupplierCriteria()}"
-								 update="supplierUpdateInstructionPanel, itemtbl" /><ui:remove>29007 - fix issue 2 search action note 347</ui:remove>
+								 update="supplierUpdateInstructionPanel, itemtbl" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/><ui:remove>29007 - fix issue 2 search action note 347</ui:remove>
 				</div>
 			</p:panel>
 			<!-- #29007 End Vinod -->
@@ -221,7 +221,8 @@
 
 			<p:column style="width:12%; text-align:right;" headerText="#{lbl['lbl.sc.unit.price']}">
 				<f:facet name="footer">
-					<h:outputText value="#{lbl['lbl.sc.total']}" />
+					<ui:remove>29007 - fix issue 2 search action note 347</ui:remove>
+					<h:outputText value="#{lbl['lbl.sc.total']}" rendered="#{not empty lOADetailBackingBean.managedBean.loiLoaItemsResult}"/>
 				</f:facet>	
 				
 				<h:outputText value="#{scLoiLoaItem.unitPrice}">
@@ -231,7 +232,8 @@
 			
 			<p:column style="width:12%; text-align:right;" headerText="#{lbl['lbl.sc.sub.total']}">
 				<f:facet name="footer">
-					<h:outputText value="#{lOADetailBackingBean.managedBean.scLoa.loaAmt}">
+					<ui:remove>29007 - fix issue 2 search action note 347</ui:remove>
+					<h:outputText value="#{lOADetailBackingBean.calculateTotalItemPrice()}" rendered="#{not empty lOADetailBackingBean.managedBean.loiLoaItemsResult}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</f:facet>

@@ -11007,5 +11007,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	// #34242 - End
+	
+	//29007 - fix issue 2 search action note 347 - start
+	public BigDecimal calculateTotalItemPrice() {
+		BigDecimal totalPrice = BigDecimal.ZERO;
+		if(CollectionUtils.isNotEmpty(this.getManagedBean().getLoiLoaItemsResult())){
+			for(ScLoiLoaItem item: this.getManagedBean().getLoiLoaItemsResult()){
+				totalPrice = calcSubTotalPrice(item).add(totalPrice) ;
+			}
+		}
+		totalPrice.setScale(2, BigDecimal.ROUND_UP);
+
+		return totalPrice;
+	}
+	//29007 - fix issue 2 search action note 347 - end
+
 }
 
