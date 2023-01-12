@@ -156,21 +156,21 @@
 	<p:column style="width:130px;">	
 	<ui:remove>#21692 - start</ui:remove>
 		<p:inputTextarea disabled="#{tplSpecAnswer.ratePerUom eq 0 or evaluationBackingBean.managedBean.readOnly}" 
-		  		rendered="#{isSpecTypeFinancial and isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0 and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"}"
+		  		rendered="#{isSpecTypeFinancial and isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0 and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"
 		  		style="width:calc(100% - 15px);" 
 				value="#{isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0 ? lbl['lbl.sc.spec.score.po'] : tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);">
 				<p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
 		</p:inputTextarea>
 		
 		<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly}" 
-			  	rendered="#{(isZonal and isSpecTypeFinancial and tplSpecAnswer.ratePerUom ne 0 or !isZonal and isSpecTypeFinancial and tplSpecAnswer.ratePerUom ne 0) and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"}"
+			  	rendered="#{(isZonal and isSpecTypeFinancial and tplSpecAnswer.ratePerUom ne 0 or !isZonal and isSpecTypeFinancial and tplSpecAnswer.ratePerUom ne 0) and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"
 			  	style="width:calc(100% - 15px);" 
 				value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);">
 				<p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
 		</p:inputTextarea>
 		<!--Bug #33327 related to #21695 Farid Start-->					
 		<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.notOfferAll}" 
-			  	rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and tplSpecAnswer.notOfferAll and !tplSpecAnswer.notApplicable and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"}"
+			  	rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and tplSpecAnswer.notOfferAll and !tplSpecAnswer.notApplicable and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"
 			  	style="width:calc(100% - 15px);" 
 				value="#{lbl['lbl.sc.spec.score.po']}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);">
 				<p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
