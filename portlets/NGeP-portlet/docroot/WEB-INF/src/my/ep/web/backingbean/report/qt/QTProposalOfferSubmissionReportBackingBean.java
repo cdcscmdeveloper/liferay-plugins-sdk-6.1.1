@@ -14,6 +14,7 @@ package my.ep.web.backingbean.report.qt;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.web.bean.report.ScReportFieldsSearchBean;
 import my.ep.web.constant.report.QtReportConst;
@@ -88,42 +90,62 @@ QtReportBackingBean<QTProposalOfferSubmissionReportManagedBean> implements Seria
 	public void resetSearch() {
 		resetSearchBB();
 	}
-
+	
+	//14306 - Start (Harun)
 	@Override
 	public LinkedHashMap<String, String> getparams() {
 		LinkedHashMap<String, String> params = new LinkedHashMap<>();
 		ScReportFieldsSearchBean reportFieldBean = this.getManagedBean().getScReportSearchBean();
-
-		//report change date strformat -start-
-		String fromDate = new SimpleDateFormat("dd/MM/yyyy").format(reportFieldBean.getScPublishFromDate());
-		String toDate = new SimpleDateFormat("dd/MM/yyyy").format(reportFieldBean.getScPublishToDate());
+										
+																									  
+//		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
+//				QtReportConst.URL_RPT_DATE_ANOTHER_FORMAT);
 		
-		params.put(QtReportConst.PARAM_SUBMIT_FR_DT, fromDate);
-		params.put(QtReportConst.PARAM_SUBMIT_TO_DT, toDate);
-		//report change date strformat -end-
-		
-		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationNumber())) {
-			params.put(QtReportConst.QUOTATION_TENDER_ID, this.getManagedBean().getQuotationId());
+		if (StringUtils.isNotEmpty(reportFieldBean.getScPropSubmitToMonth())
+				&& StringUtils.isNotEmpty(reportFieldBean
+						.getScPropSubmitFromMonth())) {
+			StringBuilder propSubmitFromDate=new StringBuilder();
+			propSubmitFromDate.append(reportFieldBean
+						.getScPropSubmitFromMonth()).append(reportFieldBean.getScPropSubmitFromYear());
+			params.put(QtReportConst.PARAM_SUBMIT_FR_DT, propSubmitFromDate.toString());
+			log.info("proposalSubmitFromDate"+propSubmitFromDate.toString());
+			StringBuilder propSubmitToDate=new StringBuilder();
+			propSubmitToDate.append(reportFieldBean
+						.getScPropSubmitToMonth()).append(reportFieldBean.getScPropSubmitToYear());
+			params.put(QtReportConst.PARAM_SUBMIT_TO_DT, propSubmitToDate.toString());
+			log.info("proposalSubmitToDate"+propSubmitToDate.toString());
+			
+		} else {
+			params.put(QtReportConst.PARAM_SUBMIT_FR_DT, reportFieldBean.getScPropSubmitFromYear());
+			params.put(QtReportConst.PARAM_SUBMIT_TO_DT, reportFieldBean.getScPropSubmitToYear());
+			
 		}
 		
-		log.info("this.getManagedBean().getAutoQtTitle().getQtTitle()================="+this.getManagedBean().getAutoScQt().getQtTitle());
+		if (StringUtils.isNotEmpty(this.getManagedBean().getAutoScQt().getQtNo())) {
+			params.put(QtReportConst.QUOTATION_TENDER_ID, this.getManagedBean().getAutoScQt().getQtNo());
+		}
+		
 		if (StringUtils.isNotEmpty(this.getManagedBean().getAutoScQt().getQtTitle())) {
 			params.put(QtReportConst.QUOTATION_TENDER_TITLE, this.getManagedBean().getAutoScQt().getQtTitle());
 		}
-		
-		
-		if (null != reportFieldBean.getPtjProfile()) {
-			params.put(QtReportConst.PARAM_PROCURE_PTJ_EQ, reportFieldBean.getPtjProfile().getOrgCode());
-		} else if (StringUtils.isNotEmpty(reportFieldBean.getScPtj())) {
-			params.put(QtReportConst.PARAM_PROCURE_PTJ_EQ, reportFieldBean.getScPtj());
+												
+																								
+		if (StringUtils.isNotEmpty(this.getManagedBean().getAutoScQtProposal().getProposalNo())) {
+			params.put(QtReportConst.QUOTATION_TENDER_TITLE, this.getManagedBean().getAutoScQt().getQtTitle());
 		}
 
-		if (StringUtils.isNotEmpty(reportFieldBean.getScDeskOfficer())) {
-			params.put(QtReportConst.PARAM_DESK_OFFCR_EQ, reportFieldBean.getScDeskOfficer());
+		if(!reportFieldBean.getScStatusManyMenu().isEmpty()){
+			int count=0;
+			for (String strManyMenu: reportFieldBean.getScStatusManyMenu()){
+				count++;
+				params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ+count, getConversionParam(strManyMenu));
+			}
+			
 		}
 
 		return params;
 	}
+	//14306 - End (Harun)
 	
 	//14306 - Start (Harun) get SupplierName
 	public void getSupplierName() {
@@ -273,5 +295,37 @@ QtReportBackingBean<QTProposalOfferSubmissionReportManagedBean> implements Seria
 
 		return qtNoLs;
 	}
+	
+	//14306 - Start (Harun) 
+	/**
+	 * To Retrieve conversion Parameter for Report Status
+	 * 
+	 * @param status ScStatus Multiple Menu
+	 *
+	 * @return HashMap<String>
+	 */
+	
+	public String getConversionParam(String status) {
+		HashMap<String, String> statusmap = new HashMap<>();
+		statusmap.put(getStatusDesc("lbl.rpt.pending.proposal.submission"), QtReportConst.STATUS_PENDING_PROPOSAL_SUBMISSION);
+		statusmap.put(getStatusDesc("lbl.rpt.proposal.submitted"), QtReportConst.STATUS_PROPOSAL_SUBMITTED);
+		
+		return statusmap.get(status);
+	}
+	
+	/**
+	 * To Retrieve Status Description conversion
+	 * 
+	 * @param label Status Desc
+	 *
+	 * @return ResourceBundleUtils<String>
+	 */
+	@Override
+	public String getStatusDesc(String label) {
+		return ResourceBundleUtils.getMessage(label,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale());
+	}
+	//14306 - End (Harun)
 
 }
