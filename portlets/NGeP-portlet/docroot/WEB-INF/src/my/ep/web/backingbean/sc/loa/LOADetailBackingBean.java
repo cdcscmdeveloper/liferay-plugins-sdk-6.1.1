@@ -167,6 +167,7 @@ import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
@@ -2317,7 +2318,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @throws Exception the exception
 	 */
 	private void generateAgreementLetterDocFromVelocity(ScAttachment attachment, ScLoa scLoa, ScQt scQt) throws Exception {
-		//debugLogger("generateAgreementLetterDocFromVelocity" );
 		populateAttachmentDetails(attachment);
 		CommonUtils commonUtils = new CommonUtils();
 		SimpleDateFormat dateSDF = new SimpleDateFormat(
@@ -2633,9 +2633,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		//26226 Start 
 		String itemType = null;
 		
-		String dafaltValue = "T/B";
-		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-			dafaltValue = "N/A";//#29006
+		String dafaltValue = SSTConstant.TB;
+		if (SSTConstant.LANGUAGE_CODE_EN.equals(new FacesScopes().getUserLocale().getLanguage())) {
+			dafaltValue = SSTConstant.NA;//#29006
 		}
 		//End
 
@@ -2665,8 +2665,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		jadualHargaItemBean.setServiceItemBeans(serviceItemBeans);
 		context.put("jadualHargaItemBean", jadualHargaItemBean);
 		//26226 Start
-		context.put("serviceScope", dafaltValue);
-		context.put("itemType", itemType);
+		context.put(SSTConstant.serviceScope, dafaltValue);
+		context.put(SSTConstant.itemType, itemType);
 		// End
 	}
 
@@ -5615,10 +5615,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		//End
 		
-		/*log.info("Item Name --->"+item.getScRequestItem().getItemName() );
-		log.info("Zone Name --->"+item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : "" );
-		log.info("Delivery Term --->"+tplSpecQuestion.getClDeliveryTerm().toString() );
-		log.info("Duration month --->"+tplSpecQuestion.getClDurationMonth().toString());*/
 		/*BigDecimal unitPrice = item.getUnitPrice().setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		jadualHarga.setUnitPrice(unitPrice.toString());
 		jadualHarga.setFreqUom(null == item.getScRequestItem().getTplSpecQuestion()
