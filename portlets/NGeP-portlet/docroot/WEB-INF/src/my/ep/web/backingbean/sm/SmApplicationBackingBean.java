@@ -2636,11 +2636,9 @@ public class SmApplicationBackingBean extends
 		}
 	//END 28767
 		//#34277 - start
-				if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
-					getManagedBean().setEditCapital(businessTypeIsROC(
-							getManagedBean().getSmSupplier().getBusinessType()));
-				}
-				//#34277 - end
+		getManagedBean().setEditCapital(businessTypeIsROC(
+				getManagedBean().getSmSupplier().getBusinessType()));
+		//#34277 - end
 		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
 		if (fromBpm) {
 		
@@ -3723,11 +3721,6 @@ public class SmApplicationBackingBean extends
 								getManagedBean().getSmAppl(), getManagedBean()
 										.getPrevApprovedPersonnels(),
 								getManagedBean().isDisAllowOwnerEdit());
-						//#34277 - start
-						getManagedBean().setEditCapital(
-								!getManagedBean().isDisAllowOwnerEdit() &&
-								businessTypeIsROC(getManagedBean().getSmSupplier().getBusinessType()));
-						//#34277 - end
 						/*#28458 - Start*/
 						if (getManagedBean().isDisAllowOwnerEdit()){
 							throw new EpException(MessageConst.ERROR_722683);

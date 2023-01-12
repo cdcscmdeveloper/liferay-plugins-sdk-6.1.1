@@ -644,7 +644,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//32968 START
 	private boolean checkBranch;
 	//32968 END
-	private boolean editCapital;	//#34277
 	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4560,13 +4559,5 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setPoApproverAcedemicErr(boolean poApproverAcedemicErr) {
 		this.poApproverAcedemicErr = poApproverAcedemicErr;
 	}//31130-end
-	//#34277 - start
-	public boolean isEditCapital() {
-		return editCapital;
-	}
 
-	public void setEditCapital(boolean editCapital) {
-		this.editCapital = editCapital;
-	}
-	//#34277 - end
 }
