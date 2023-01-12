@@ -10,6 +10,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
 import my.ep.web.constant.report.SmReportConst;
@@ -65,11 +66,11 @@ public class ProfileOfRegCompanyRptBackingBean extends
 			params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getSmMofAccount().getMofNo()); //#30824
 			params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean().getSupplierType());
 			// #32564 & #26238 & #30824 - Start
-						if(getManagedBean().getSmMofAccount().getSmSupplier() != null){
+			if(getManagedBean().getSmMofAccount().getSmSupplier() != null){
 				params.put(SmReportConst.PARAM_SUPPLIER_ID,
-						String.valueOf(getManagedBean().getSmMofAccount().getSmSupplier().getSupplierId()));
+						String.valueOf(getManagedBean().getSmMofAccount().getSmSupplier().getSupplierId()));	
 			}
-						// #32564 & #26238 & #30824 - End
+			// #32564 & #26238 & #30824 - End
 		}
 		log.info("********Report Code************* after set newCode: " + getManagedBean().getReportCode());
 		
@@ -96,8 +97,8 @@ public class ProfileOfRegCompanyRptBackingBean extends
 	}
 	
 	public void populateMofNo(BaseEntity entity) {
-		SmSupplier selectedSupplier = (SmSupplier)entity;
-		this.getManagedBean().setMofNo(selectedSupplier.getMofNo());
+		SmMofAccount selectedMof= (SmMofAccount)entity;
+		this.getManagedBean().setMofNo(selectedMof.getMofNo());
 	}
 	
 	// #29712, #32564 - start
@@ -169,7 +170,7 @@ public class ProfileOfRegCompanyRptBackingBean extends
 							+ "*smSupplier.smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONTRACTOR);//#30824
 				}
 				//#32564 - end
-			} 
+			}
 		}
 		//32564
 		log.info("32564- constructConditionFields():"+sb.toString());
