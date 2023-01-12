@@ -1061,7 +1061,7 @@ public class QTCloneBackingbean extends
 					String docDefinitionKey=null;
 					if(null!=docReport.getPmDocument()){
 						docDefinitionKey=docReport.getPmDocument().getDocDefinitionKey();
-					}		
+					}
 					boolean templateDoc=Boolean.FALSE;//33954
 					if(null!=docDefinitionKey && SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
 							.equals(docDefinitionKey)){
@@ -1088,7 +1088,7 @@ public class QTCloneBackingbean extends
 									TplDocMaster master=	retrieveTplDocMasterById(docReport.getTplDocMaster().getDocMasterId());
 									master=cloneDocMasterDocSectionDetails(master, qtDocReport);
 									qtDocReport.setTplDocMaster(master);
-										reqDTO.setScQtDocReport(qtDocReport);
+									reqDTO.setScQtDocReport(qtDocReport);
 									qtDocReport.setCloned(Boolean.TRUE);
 									reportList.add(qtDocReport);//33954
 									
@@ -1592,7 +1592,7 @@ public class QTCloneBackingbean extends
 						this.getManagedBean().setScQtSampleSubmission(existing);
 					}
 					else{//33946
-					if(null!=srcSub){
+						if(null!=srcSub){
 						ScQtSampleSubmission sbs=new ScQtSampleSubmission();
 						sbs.setBrandNew(true);
 						setUserDetails(sbs);
@@ -3930,6 +3930,7 @@ public class QTCloneBackingbean extends
 		CreateQtBackingBean createQtBB = (CreateQtBackingBean) elContext.getELResolver().getValue(elContext, null, "createQtBB");
 		if(null!=scQt.getCircularVer()){//25635-start
 		createQtBB.changePanelGroupItem();
+		this.getManagedBean().setPanelItemList(null);//34330&25635
 		}//25635-End
 		}
 	
