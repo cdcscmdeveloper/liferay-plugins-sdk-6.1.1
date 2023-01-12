@@ -2635,10 +2635,6 @@ public class SmApplicationBackingBean extends
 				}
 		}
 	//END 28767
-		//#34277 - start
-		getManagedBean().setEditCapital(businessTypeIsROC(
-				getManagedBean().getSmSupplier().getBusinessType()));
-		//#34277 - end
 		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
 		if (fromBpm) {
 		
