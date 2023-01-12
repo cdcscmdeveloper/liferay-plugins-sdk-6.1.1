@@ -1155,6 +1155,11 @@ public class SpecificationBackingBean extends
 				retriveTechnicalCheckList();
 			}
 			// 1873 note 182 end
+			// #11104-start
+			else if (this.getManagedBean().getQt().isSampleReq()) {
+				checksampleChecklist(this.getManagedBean().getScQtCheckSt2techProposal());
+			}
+			// #11104-End
 
 			break;
 		case 3:
@@ -5214,6 +5219,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checklist.getDefinationType()
 							.getParameterCode())
 							& QTStatusConst.TS_COMPLETED.equals(checklist.getPmStatus().getStatusId())) {
+						// #11104-start
+						if (checkList.isBrandNew()) {
+							checklist.setCloned(Boolean.TRUE);
+						}
+						// #11104-End
+						
 						this.getManagedBean().getSampleSpecCheckList().add(checklist);
 					}
 				}
@@ -17152,6 +17163,18 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		this.getManagedBean().setSampleCheckList(templateChecklist);
 		
 		retriveSampleSpecmaster(templateChecklist, null);
+		
+		if (templateChecklist.isCloned()) {
+			List<TplSpecQuestion> specSampleQuestionList = this.getManagedBean().getSampleCheckList().getScQtDoc()
+					.getTplSpecMaster().getTplSpecQuestions();
+
+			for (TplSpecQuestion samplespecQuestion : specSampleQuestionList) {
+				samplespecQuestion.setSampleReq(Boolean.FALSE);
+				samplespecQuestion.setSampleQuantity(null);
+				samplespecQuestion.setSampleScoreTypeCode(null);
+				samplespecQuestion.setSampleScore(null);
+			}
+		}
 		
 		scoringPopUpAction(null);
 		
