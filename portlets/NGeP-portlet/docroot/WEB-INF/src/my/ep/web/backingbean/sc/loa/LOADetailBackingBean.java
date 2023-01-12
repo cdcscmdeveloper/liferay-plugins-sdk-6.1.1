@@ -9969,8 +9969,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	/*public void resetSpecKeyword(){
 		this.getManagedBean().setSpecKeyword(null);
 	}*/
-	public void searchSupplierItemByName(){
-		//29007 - fix issue 2 search action start note 347
+	//29007 - fix issue 2 search action start note 347
+	/**
+	 * Search populated ScLoiLoaItems by ScRequestItem.itemName and build filtered results
+	 * @return void
+	 */
+	public void searchSupplierItemByName(){ 
 		String itemNameInput = this.getItemNameSearchCriteria()==null? "": this.getItemNameSearchCriteria().trim();
 		if(StringUtils.isEmpty(itemNameInput)){
 			this.getManagedBean().setLoiLoaItemsResult(new ArrayList<ScLoiLoaItem>(this.getManagedBean().getScLoa().getScLoiLoaItems()));
@@ -11009,6 +11013,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	// #34242 - End
 	
 	//29007 - fix issue 2 search action note 347 - start
+	/**
+	 * To calculate total price based on item search result
+	 * @return BigDecimal - Total Price of ScLoiLoaItem list
+	 */
 	public BigDecimal calculateTotalItemPrice() {
 		BigDecimal totalPrice = BigDecimal.ZERO;
 		if(CollectionUtils.isNotEmpty(this.getManagedBean().getLoiLoaItemsResult())){
