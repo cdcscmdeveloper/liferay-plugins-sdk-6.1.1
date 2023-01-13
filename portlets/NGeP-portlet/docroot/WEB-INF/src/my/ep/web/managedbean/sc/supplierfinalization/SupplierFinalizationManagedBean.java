@@ -211,6 +211,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean disabledSelection;
 	private boolean noProposalSubmitted;
 	private List<String> disqualifiedStages;
+	private boolean hasSupplierQualifiedForCurrentSelection;//6906 note 202
 	//6906 note 117 - end
 
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
@@ -2557,5 +2558,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.disqualifiedStages = disqualifiedStages;
 	}
 	//6906 note 117 - end
+
+	//6906 note 202 - start
+	public boolean isHasSupplierQualifiedForCurrentSelection() {
+		return hasSupplierQualifiedForCurrentSelection;
+	}
+
+	public void setHasSupplierQualifiedForCurrentSelection(boolean hasSupplierQualifiedForCurrentSelection) {
+		this.hasSupplierQualifiedForCurrentSelection = hasSupplierQualifiedForCurrentSelection;
+	}
+	//6906 note 202 - end
+
 }
 // ***25201
