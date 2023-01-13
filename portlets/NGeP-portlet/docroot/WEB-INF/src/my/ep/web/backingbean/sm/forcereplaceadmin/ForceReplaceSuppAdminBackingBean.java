@@ -725,6 +725,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * dialog pop up and for new personnel redirect to new personnel info page
 	 */
 	private void executeDecision() {
+		
+		hideShowRoleByBusinessTypeAndSupplierType(this.getManagedBean().getSmSupplier().getSmAppl().getSupplierType(),this.getManagedBean().getSmSupplier().getBusinessType());
 		// replace with new personnel
 		if (!getManagedBean().isExistingUser()) {
 			RequestContext.getCurrentInstance().execute(
