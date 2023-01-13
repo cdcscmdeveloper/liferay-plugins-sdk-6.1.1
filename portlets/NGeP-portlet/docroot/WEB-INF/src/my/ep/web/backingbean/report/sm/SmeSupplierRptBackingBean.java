@@ -12,13 +12,16 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.web.constant.report.SmReportConst;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.report.sm.SmeSupplierRptManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmServiceLookup;
@@ -27,6 +30,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 @ViewScoped
 public class SmeSupplierRptBackingBean extends SmReportBackingBean<SmeSupplierRptManagedBean> {
 	private static final long serialVersionUID = 1L;
+	private static final Logger log = EpLogger.getLogger(SmeSupplierRptBackingBean.class);
 
 	public SmeSupplierRptBackingBean() {
 		buildStatusTypeList();
@@ -37,18 +41,23 @@ public class SmeSupplierRptBackingBean extends SmReportBackingBean<SmeSupplierRp
 		retrieveReportValueFromDb();
 		if (StringUtils.isNotBlank(getManagedBean().getAccountType())) {
 			params.put(SmReportConst.PARAM_ACCOUNT_TYPE, getManagedBean().getAccountType());
+			// #29617 ReOpen - Start
+			if(this.getManagedBean().getAccountType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
+				if (getManagedBean().getZone() != null) {
+					params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
+				}
+				if (getManagedBean().getSupplierType() != null) {
+					params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean().getSupplierType());
+				}
+			}
+			// #29617 ReOpen - End
 		}
 		if (getManagedBean().getSelectedOrgProfile() != null
 				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
 			params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getSelectedOrgProfile().getSmSupplier()
 					.getCompanyName());
 		}
-		if (getManagedBean().getZone() != null) {
-			params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
-		}
-		if (getManagedBean().getSupplierType() != null) {
-			params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean().getSupplierType());
-		}
+		// #29617 ReOpen - remove code
 		if (getManagedBean().getSmeStatusType() != null) {
 			params.put(SmReportConst.PARAM_SME_STATUS_TYPE, getManagedBean().getSmeStatusType());
 		}
@@ -105,10 +114,10 @@ public class SmeSupplierRptBackingBean extends SmReportBackingBean<SmeSupplierRp
 		List<SelectItem> statusType = new ArrayList<SelectItem>();
 		// #29617 Reopen Start - note #119 item 2
 		while(statusType.size() < 6) statusType.add(null);
-		for (PmParameterDesc list : resDTO.getParameterDescList()) {
-			SelectItem type = new SelectItem();
-			type.setValue(list.getPmParameter().getParameterCode());
-			type.setLabel(list.getCodeDesc());
+		for (PmParameterDesc list : resDTO.getParameterDescList()) { 
+			SelectItem type = new SelectItem(); 
+			type.setValue(list.getPmParameter().getParameterCode()); 
+			type.setLabel(list.getCodeDesc()); 
 			if(type.getValue().toString().equalsIgnoreCase("MANMICRO")){
 				statusType.set(0, type);
 			}else if(type.getValue().toString().equalsIgnoreCase("MANSMALL")){
