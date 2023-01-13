@@ -4041,12 +4041,20 @@ public class EvaluationBackingBean extends
 									//#25138 farid - End
 									//wip status end
 							}else{
-								if(this.getManagedBean().getTabItemPackageIndex() == 1){
-									zoneReqDto
-									.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-								}else{
-									zoneReqDto
-									.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+								if(this.getManagedBean().getTabItemPackageIndex() == 1) {
+									// wip status start
+									zoneReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
+
+									int wipstatus = evaluationSO.checkWipScoreSetting(zoneReqDto);
+									
+									if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+										zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+									} else {
+										zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+									}
+									// wip status end
+								} else {
+									zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 								}
 							}
 						//END	
@@ -4776,20 +4784,40 @@ public class EvaluationBackingBean extends
 										int wipstatus = evaluationSO.checkWipScoreSetting(zoneReqDto);
 										if(wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){							
 											zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+										}else {
+											zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 										}
 										//#25138 farid - End
 										//wip status end
 									} else {
-										zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+										// wip status start
+										evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+
+										int wipstatus = evaluationSO.checkWipScoreSetting(zoneReqDto);
+										
+										if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+											zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+										}else {
+											zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+										}
+										// wip status end
 									}
 									
 								}else{
-									if(this.getManagedBean().getTabItemPackageIndex() == 1){
-										zoneReqDto
-										.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-									}else{
-										zoneReqDto
-										.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+									if (this.getManagedBean().getTabItemPackageIndex() == 1) {
+										// wip status start
+										evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+										int wipstatus = evaluationSO.checkWipScoreSetting(zoneReqDto);
+										
+										if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+											zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+										}else {
+											zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+										}
+									} else {
+										zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 									}
 								}
 							} else {
@@ -13573,6 +13601,8 @@ private void retriveCommitteeRemarksList(){
 							}
 								//Bug #33851 REMOVE related to #21695
 						}//#28784, #34091 - related - End
+					}else {
+						return resDTO.getComplianceResultBean();
 					}
 				}
 				//#25138 farid -start (end)
