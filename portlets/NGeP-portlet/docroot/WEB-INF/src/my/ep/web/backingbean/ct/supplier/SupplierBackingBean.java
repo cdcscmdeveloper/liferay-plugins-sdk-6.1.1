@@ -275,9 +275,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}	
 		Object payLoad = super.getBpmTaskDetails(Object.class, null);
 		getManagedBean().setAutoUpdate(true);		    
-
+		
+		log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][preRenderView]");
 		// Change Bank Account
-		if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)) {
+		if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME) || getManagedBean().getProcessName()
+				.equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME.replaceAll("\\s", ""))) {
 
 			CTBankAccountDataType bankAccDataType= (CTBankAccountDataType) payLoad;
 			UserReqDTO userReqDTO = new UserReqDTO();
@@ -291,7 +293,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			ctReqDTO.setDocType(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
 			setChangeBankDetails(ctReqDTO);       
 
-		} else if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)) {	// Factoring Request		            
+		} else if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME) || getManagedBean().getProcessName()
+				.equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME.replaceAll("\\s", ""))) {	// Factoring Request		            
 			CTFactoringDataType dataType = (CTFactoringDataType) payLoad;
 			reqDTO = new ContractSupplierReqDTO();
 			reqDTO.setFactoringId(new Long(dataType.getDocId()));

@@ -1114,8 +1114,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			Object obj = super.getBpmTaskDetails(Object.class, new String[]{BpmOutcomeConst.BPM_SAVE});
 			initializeCRBeans();
 			FLContractOrderDataType coObj = null;
-			if(this.getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME) && 
-					this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_PHIS_CR)) {
+			log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][preRenderView]");
+			if((this.getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME) || this.getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME.replaceAll("\\s", ""))) && 
+					(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_PHIS_CR) || this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_PHIS_CR.replaceAll("\\s", "")))) {
 				FLPHISContractOrderDataType phisCoObj = (FLPHISContractOrderDataType) obj;
 				coObj = phisCoObj.getContractOrder();
 			} else {
@@ -4313,10 +4314,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				contractItemReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
 				contractItemReqDTO.setRequestItemId(flTempItem.getScRequestItem().getRequestNoteItemId());
 				ContractItemResDTO contractItemResDTO = contractItemSO.getContractItemByRequestItem(contractItemReqDTO);
+				log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][setFulfilmentItemAddr]");
 				if(getManagedBean().getTaskName() != null){
-					if((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) ||
-							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT) ||
-							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT)) && 
+					if((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT.replaceAll("\\s", "")) ||
+							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT.replaceAll("\\s", "")) ||
+							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT.replaceAll("\\s", ""))) && 
 							contractItemResDTO.getCtContractItem().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_SUSPENDED)){
 						suspendedItem.add(flTempItem);
 					}
@@ -4865,10 +4867,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				contractItemReqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
 				contractItemReqDTO.setRequestItemId(itemAddr.getScRequestItem().getRequestNoteItemId());
 				ContractItemResDTO contractItemResDTO = contractItemSO.getContractItemByRequestItem(contractItemReqDTO);
+				log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][validateSuspensionItems]");
 				if(getManagedBean().getTaskName() != null){
-					if((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) ||
-							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT) ||
-							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT)) && 
+					if((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT.replaceAll("\\s", "")) ||
+							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT.replaceAll("\\s", "")) ||
+							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT.replaceAll("\\s", ""))) && 
 							contractItemResDTO.getCtContractItem().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_SUSPENDED)){
 						suspendedItem.add(itemAddr);
 					}
