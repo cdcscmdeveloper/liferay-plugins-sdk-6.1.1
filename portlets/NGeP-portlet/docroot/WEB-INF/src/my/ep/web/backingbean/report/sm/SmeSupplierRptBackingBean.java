@@ -45,17 +45,22 @@ public class SmeSupplierRptBackingBean extends SmReportBackingBean<SmeSupplierRp
 		retrieveReportValueFromDb();
 		if (StringUtils.isNotBlank(getManagedBean().getAccountType())) {
 			params.put(SmReportConst.PARAM_ACCOUNT_TYPE, getManagedBean().getAccountType());
+			// #29617 ReOpen - Start
+			if(this.getManagedBean().getAccountType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
+				if (getManagedBean().getZone() != null) {
+					params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
+				}
+				if (getManagedBean().getSupplierType() != null) {
+					params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean().getSupplierType());
+				}
+			}
+			// #29617 ReOpen - End
 		}
 		if (getManagedBean().getSelectedSupplier() != null) {
 			params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getSelectedSupplier()
 					.getCompanyName());
 		}
-		if (getManagedBean().getZone() != null) {
-			params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
-		}
-		if (getManagedBean().getSupplierType() != null) {
-			params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean().getSupplierType());
-		}
+		// #29617 ReOpen - remove code
 		if (getManagedBean().getSmeStatusType() != null) {
 			params.put(SmReportConst.PARAM_SME_STATUS_TYPE, getManagedBean().getSmeStatusType());
 		}

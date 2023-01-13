@@ -343,6 +343,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private String loaBpmVerify;
 	private ScLoiLoaItem scLoiLoaItem;
 	private List<TplSpecAnswer> tplSpecAnswerList;
+	private List<ScLoiLoaItem> loiLoaItemsResult;//29007 - fix issue 2 search action note 347
 	/*#29007 End Vinod*/
 	
 	//#27797 - start
@@ -2107,6 +2108,16 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.retainPageNumber = retainPageNumber;
 	}
 	//#34242 - End
+
+	//29007 - fix issue 2 search action note 347 - start
+	public List<ScLoiLoaItem> getLoiLoaItemsResult() {
+		return loiLoaItemsResult;
+	}
+
+	public void setLoiLoaItemsResult(List<ScLoiLoaItem> loiLoaItemsResult) {
+		this.loiLoaItemsResult = loiLoaItemsResult;
+	}
+	//29007 - fix issue 2 search action note 347 - end
 }
 
 
