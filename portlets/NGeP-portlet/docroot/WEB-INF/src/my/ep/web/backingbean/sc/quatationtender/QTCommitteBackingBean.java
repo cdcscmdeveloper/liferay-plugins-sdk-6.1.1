@@ -1011,10 +1011,12 @@ public class QTCommitteBackingBean extends
 		}
 		getManagedBean().getUserSearchCommitteeDataModel().resetData();
 
-		getManagedBean().getUserCommitteeSearchBean().setName(null);
-		getManagedBean().getUserCommitteeSearchBean().setIdentificationType(
-				null);
-		getManagedBean().getUserCommitteeSearchBean().setIdentificationNo(null);
+		// #12471 - Start
+		this.getManagedBean().setPTJConst(QTConstants.ORG_CATEGORY_PTJ);
+		this.getManagedBean().setOthersConst(QTConstants.ORG_CATEGORY_OTHERS);
+		this.getManagedBean().getUserCommitteeSearchBean().setOrgCat(this.getManagedBean().getPTJConst());
+		reset();
+		// #12471 - End
 		getManagedBean().setSelectedPmUser(null);
 		this.getManagedBean().setCommitteMember(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
@@ -1546,6 +1548,15 @@ public class QTCommitteBackingBean extends
 	 */
 	public void reset() {
 		debugLogger("reset");
+		// #12471 Start
+		if (this.getManagedBean().getUserCommitteeSearchBean().getOrgCat()
+				.equalsIgnoreCase(QTConstants.ORG_CATEGORY_PTJ)) {
+			log.info("PTJ");
+		} else if (this.getManagedBean().getUserCommitteeSearchBean().getOrgCat()
+				.equalsIgnoreCase(QTConstants.ORG_CATEGORY_OTHERS)) {
+			log.info("OTH");
+		}
+		// #12471 End
 		this.getManagedBean().getUserCommitteeSearchBean().setName(null);
 		this.getManagedBean().getUserCommitteeSearchBean()
 				.setIdentificationType(null);

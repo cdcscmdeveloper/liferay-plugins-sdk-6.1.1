@@ -31,6 +31,10 @@ public class UserCommitteeSearchBean implements Serializable {
 	/** The identification type. */
 	private String identificationType;
 
+	// #12471 Start
+	/** The organization category. */
+	private String orgCat;
+	// #12471 End
 	/**
 	 * Instantiates a new user committee search bean.
 	 */
@@ -90,5 +94,21 @@ public class UserCommitteeSearchBean implements Serializable {
 	public void setIdentificationType(String identificationType) {
 		this.identificationType = identificationType;
 	}
+	// #12471 Start
+	/**
+	 * @return the organization category
+	 */
+	public String getOrgCat() {
+		return orgCat;
+	}
+	
+	/**
+	 * @param orgCat
+	 *            the organization category to set
+	 */
+	public void setOrgCat(String orgCat) {
+		this.orgCat = orgCat;
+	}
+	// #12471 End
 
 }
