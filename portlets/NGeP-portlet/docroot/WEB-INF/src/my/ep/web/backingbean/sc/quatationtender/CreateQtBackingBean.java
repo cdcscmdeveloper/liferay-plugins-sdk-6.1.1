@@ -114,7 +114,7 @@ import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.CommonUtils;
-import my.ep.web.util.EpPortletUtil; // #11104
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -3415,6 +3415,42 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * @param event
 	 *            (String Samplechange)
 	 */
+	public void sampleChange(AjaxBehaviorEvent event) {
+		Boolean type = (Boolean) event.getComponent().getAttributes().get("value");
+		this.getManagedBean().getQt().setSampleReq(type);
+		
+		List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
+
+		if (null == st2technicalproposalList) {
+			st2technicalproposalList = new ArrayList<ScQtCheckList>();
+		}
+		
+		if (type == true) {
+			this.getManagedBean().getQt().setPartial(Boolean.FALSE);
+		} else {
+			if (getManagedBean().getMarkDeletedTechChecklist() == null) {
+				getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());
+			}
+
+			if (null == st2technicalproposalList || CollectionUtils.isEmpty(st2technicalproposalList)) {
+				SpecificationBackingBean spBB = new SpecificationBackingBean();
+				spBB.retriveTechnicalCheckList();
+				
+				st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
+			}
+
+			if (CollectionUtils.isNotEmpty(st2technicalproposalList)) {
+				for (ScQtCheckList checklist : st2technicalproposalList) {
+					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist.getDefinationType()
+							.getParameterCode())) {
+						getManagedBean().getMarkDeletedTechChecklist().add(checklist);
+						st2technicalproposalList.remove(checklist);
+						break;
+					}
+				}
+			}
+		}
+	}
 	// #11104 -end-
 
 	/***11104 -start-
