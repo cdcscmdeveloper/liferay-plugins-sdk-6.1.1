@@ -2313,27 +2313,29 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 							reqDTO.setDocType(getManagedBean().getTaskAssignmentSearchBean().getDocType());
 						}
 						
-						reqDTO.setState(BpmConstants.STATE_ASSIGNED);
-						reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
-						reqDTO.setIsClaimed(false);
-						responseDTO = bpmSO.getReassignedItems(reqDTO);
-						
-						if (responseDTO.getWorklistVO() != null) {
-							log.info("BPM size******"+ responseDTO.getWorklistVO().getWorklistItem().size());
-							log.info("BPM total******"+ responseDTO.getWorklistVO().getTotal());
+					
+					//#29822-start - parsing value to bpm
+					reqDTO.setState(BpmConstants.STATE_ASSIGNED);
+					reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
+					responseDTO = bpmSO.getReassignedItems(reqDTO);
+					//#29822-end - parsing value to bpm
+					
+					if (responseDTO.getWorklistVO() != null) {
+						log.info("BPM size******"+ responseDTO.getWorklistVO().getWorklistItem().size());
+						log.info("BPM total******"+ responseDTO.getWorklistVO().getTotal());
 
-							System.out.println("getManagedBean().getTaskAssignmentSearchBean().getDocNo(): " + getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+						System.out.println("getManagedBean().getTaskAssignmentSearchBean().getDocNo(): " + getManagedBean().getTaskAssignmentSearchBean().getDocNo());
 
-							if(responseDTO.getWorklistVO().getWorklistItem().isEmpty() && responseDTO.getWorklistVO().getWorklistItem().size() == 0){
-								throw new EpException(MessageConst.ERROR_770208);
-							}
+						if(responseDTO.getWorklistVO().getWorklistItem().isEmpty() && responseDTO.getWorklistVO().getWorklistItem().size() == 0){
+							throw new EpException(MessageConst.ERROR_770208);
 						}
 					}
 				}
-			} finally {
-				bpmSO = null;
-			} 
-		}
-		//#29822-end - checking if record not found to throw ERROR_770208
+			}
+		} finally {
+			bpmSO = null;
+		} 
+	}
+	//#29822-end - checking if record not found to throw ERROR_770208
 	
 }
