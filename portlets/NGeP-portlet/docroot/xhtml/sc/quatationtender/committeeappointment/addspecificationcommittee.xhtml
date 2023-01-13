@@ -16,6 +16,11 @@
 			test="#{qTCommitteBackingBean.managedBean.committeMember.userSelection eq 'E' }">
 			<p:panel id="usersearchpnlid" header="#{lbl['lbl.sc.search']}"
 				toggleable="true">
+				<!-- #12471 Start -->
+				<ac:instructionText value="#{lbl['lbl.sc.add.committee.instruction.one']}" />
+				<br /><br />
+				<ac:instructionText value="#{lbl['lbl.sc.add.committee.instruction.two']}" />
+				<!-- #12471 End -->
 				<table style="width: 100%;">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.name']}" />
