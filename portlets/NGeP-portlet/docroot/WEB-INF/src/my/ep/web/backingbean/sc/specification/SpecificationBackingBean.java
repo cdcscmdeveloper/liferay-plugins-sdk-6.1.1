@@ -11418,13 +11418,27 @@ if (null != checklist && !checklist.isEmpty()) {
 			} else {
 				scQt.setScQtProgressivePayments(null);
 			}
-		}
+		}	
 
 		List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
 		ScQtScoreSetting technicalScoreSetting = this.getManagedBean()
 				.getTechnicalScoreSetting();
 		if (null != technicalScoreSetting
 				&& technicalScoreSetting.getSettingType() == 1) {
+			/*
+			 * #28784,  Checking if score setting already created or not
+			 * Start
+			 */
+			SpecificationReqDTO reqTempDTO = new SpecificationReqDTO();
+			List<Integer> settinglist = new ArrayList<Integer>();
+			reqTempDTO.setScQt(scQt);
+			settinglist.add(technicalScoreSetting.getSettingType());
+			reqTempDTO.setSettingTypes(settinglist);
+			ScQtScoreSetting newTechnicalScoreSetting = checkScoreSetting(reqTempDTO);
+			if(newTechnicalScoreSetting != null && newTechnicalScoreSetting.getQtScoreSettingId() != null){
+				technicalScoreSetting = newTechnicalScoreSetting;
+			}//#28784 - end
+			
 			scoreSetting.add(technicalScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
 // #21695 farid, if partial set weightage to false		
@@ -11436,6 +11450,20 @@ if (null != checklist && !checklist.isEmpty()) {
 				.getFinancialScoreSetting();
 		if (null != financialScoreSetting
 				&& financialScoreSetting.getSettingType() == 2) {
+			/*
+			 * #28784,  Checking if score setting already created or not
+			 * Start
+			 */
+			SpecificationReqDTO reqTempDTO = new SpecificationReqDTO();
+			List<Integer> settinglist = new ArrayList<Integer>();
+			reqTempDTO.setScQt(scQt);
+			settinglist.add(financialScoreSetting.getSettingType());
+			reqTempDTO.setSettingTypes(settinglist);
+			ScQtScoreSetting newFinancialScoreSetting = checkScoreSetting(reqTempDTO);
+			if(newFinancialScoreSetting != null &&  newFinancialScoreSetting.getQtScoreSettingId() != null){
+				financialScoreSetting = newFinancialScoreSetting;
+			}//#28784 - end
+			
 			scoreSetting.add(financialScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
 		}
@@ -11446,6 +11474,20 @@ if (null != checklist && !checklist.isEmpty()) {
 			if (null != scQt.getEvaluationType()
 					&& ParameterConst.EVALUATION_TYPES_TWO_TIER
 							.equalsIgnoreCase(scQt.getEvaluationType())) {
+				/*
+				 * #28784,  Checking if score setting already created or not
+				 * Start
+				 */
+				SpecificationReqDTO reqTempDTO = new SpecificationReqDTO();
+				List<Integer> settinglist = new ArrayList<Integer>();
+				reqTempDTO.setScQt(scQt);
+				settinglist.add(demoScoreSetting.getSettingType());
+				reqTempDTO.setSettingTypes(settinglist);
+				ScQtScoreSetting newDemoScoreSetting = checkScoreSetting(reqTempDTO);
+				if(newDemoScoreSetting != null && newDemoScoreSetting.getQtScoreSettingId() != null){
+					demoScoreSetting = newDemoScoreSetting;
+				}//#28784 - end
+				
 				if(null!=technicalScoreSetting){
 			demoScoreSetting.setWeightageReq(technicalScoreSetting.isWeightageReq()); 
 				}
@@ -11461,6 +11503,20 @@ if (null != checklist && !checklist.isEmpty()) {
 				.getFinacialItemScoreSetting();
 		if (null != financialItemScoreSetting
 				&& financialItemScoreSetting.getSettingType() == 6) {
+			/*
+			 * #28784,  Checking if score setting already created or not
+			 * Start
+			 */
+			SpecificationReqDTO reqTempDTO = new SpecificationReqDTO();
+			List<Integer> settinglist = new ArrayList<Integer>();
+			reqTempDTO.setScQt(scQt);
+			settinglist.add(financialItemScoreSetting.getSettingType());
+			reqTempDTO.setSettingTypes(settinglist);
+			ScQtScoreSetting newFinancialItemScoreSetting = checkScoreSetting(reqTempDTO);
+			if(newFinancialItemScoreSetting != null && newFinancialItemScoreSetting.getQtScoreSettingId() != null){
+				financialItemScoreSetting = newFinancialItemScoreSetting;
+			}//#28784 - end
+			
 			scoreSetting.add(financialItemScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
 // #21695 farid, if partial set weightage to false			
@@ -11472,6 +11528,19 @@ if (null != checklist && !checklist.isEmpty()) {
 				.getRecommendationPackageScore();
 		if (null != packageScoreSetting
 				&& packageScoreSetting.getSettingType() == 4) {
+			/*
+			 * #28784,  Checking if score setting already created or not
+			 * Start
+			 */
+			SpecificationReqDTO reqTempDTO = new SpecificationReqDTO();
+			List<Integer> settinglist = new ArrayList<Integer>();
+			reqTempDTO.setScQt(scQt);
+			settinglist.add(packageScoreSetting.getSettingType());
+			reqTempDTO.setSettingTypes(settinglist);
+			ScQtScoreSetting newPackageScoreSetting = checkScoreSetting(reqTempDTO);
+			if(newPackageScoreSetting != null && newPackageScoreSetting.getQtScoreSettingId() != null){
+				packageScoreSetting = newPackageScoreSetting;
+			}//#28784 - end
 			scoreSetting.add(packageScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
 		}
@@ -11479,6 +11548,19 @@ if (null != checklist && !checklist.isEmpty()) {
 		ScQtScoreSetting itemScoreSetting = this.getManagedBean()
 				.getRecommendationScore();
 		if (null != itemScoreSetting && itemScoreSetting.getSettingType() == 5) {
+			/*
+			 * #28785,  Checking if score setting already created or not
+			 * Start
+			 */
+			SpecificationReqDTO reqTempDTO = new SpecificationReqDTO();
+			List<Integer> settinglist = new ArrayList<Integer>();
+			reqTempDTO.setScQt(scQt);
+			settinglist.add(itemScoreSetting.getSettingType());
+			reqTempDTO.setSettingTypes(settinglist);
+			ScQtScoreSetting newItemScoreSetting = checkScoreSetting(reqTempDTO);
+			if(newItemScoreSetting != null && newItemScoreSetting.getQtScoreSettingId() != null){
+				itemScoreSetting = newItemScoreSetting;
+			}//#28784 - end
 			scoreSetting.add(itemScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
 		}
@@ -11487,6 +11569,19 @@ if (null != checklist && !checklist.isEmpty()) {
 				.getTechnicalItemScoreSetting();
 		if (null != technicalItemScoreSetting
 				&& technicalItemScoreSetting.getSettingType() == 7) {
+			/*
+			 * #28784,  Checking if score setting already created or not
+			 * Start
+			 */
+			SpecificationReqDTO reqTempDTO = new SpecificationReqDTO();
+			List<Integer> settinglist = new ArrayList<Integer>();
+			reqTempDTO.setScQt(scQt);
+			settinglist.add(technicalItemScoreSetting.getSettingType());
+			reqTempDTO.setSettingTypes(settinglist);
+			ScQtScoreSetting newTechnicalItemScoreSetting = checkScoreSetting(reqTempDTO);
+			if(newTechnicalItemScoreSetting != null && newTechnicalItemScoreSetting.getQtScoreSettingId() != null){
+				technicalItemScoreSetting = newTechnicalItemScoreSetting;
+			}//#28784 - end
 			scoreSetting.add(technicalItemScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
 		}
@@ -14646,16 +14741,30 @@ if (null != checklist && !checklist.isEmpty()) {
 		this.getManagedBean().setNewTemplateSpec(true);
 		return "/xhtml/sc/boSctemplatespec/technicalCommitteeTemplate.xhtml?faces-redirect=true";
 	}
-
-	//#28784
-	private void resetDemoSpecStatus() {		
+	
+	/**
+	 * #28784,Check Demo status base on tech spec status, if spec pending =demo pending
+	 * @param none
+	 * @return none
+	 */
+	private void resetDemoSpecStatus() {	
+		boolean isTechSpecPending = false;
 		List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
 		for (ScQtCheckList t : st2technicalproposalList) {
 			if (t.getDefinationType().getParameterCode()
-					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-				t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-				t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));			
-				break;
+					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
+				if (QTStatusConst.TS_PENDING_SUBMISSION.equals(t.getPmStatus().getStatusId())) {
+					isTechSpecPending = true;
+				}
+			}
+
+			if (isTechSpecPending) {
+				if (t.getDefinationType().getParameterCode()
+						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+					t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+					t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+					break;
+				}
 			}
 		}
 	}
@@ -21697,7 +21806,7 @@ if(null!=allTechnicalChecklist){
 		SpecificationResDTO resDTOnew = specSo.retrieveScoreSettingDtls(reqDTO);
 		if(resDTOnew.getScoreSettingResultBean() != null){
 			for (ScQtScoreSetting demoScoreSetting : resDTOnew.getScoreSettingResultBean().getResultList()) {
-				getManagedBean().setDemoScoreSetting(demoScoreSetting);
+				getManagedBean().setDemoScoreSetting(demoScoreSetting);				
 			}
 		}	
 		
@@ -21983,6 +22092,24 @@ if(null!=allTechnicalChecklist){
 			
 		}
 		return reqDTO.setDemoScoreToBeRemoveList(demoScoreList);
+	}
+	
+	/**
+	 * #28784, To Check existing score setting if record has been created
+	 * @param SpecificationReqDTO reqDTO
+	 * @return ScQtScoreSetting
+	 */
+	private ScQtScoreSetting checkScoreSetting(SpecificationReqDTO reqDTO){
+		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		SpecificationResDTO resDTO = specSo.retrieveScoreSettingDtls(reqDTO);
+		if(resDTO.getScoreSettingResultBean() != null){
+			for (ScQtScoreSetting demoScoreSetting : resDTO.getScoreSettingResultBean().getResultList()) {
+				return demoScoreSetting;
+			}
+			
+		}
+		return null;
 	}
 	
 	//#28784 bug note-#424 - start
