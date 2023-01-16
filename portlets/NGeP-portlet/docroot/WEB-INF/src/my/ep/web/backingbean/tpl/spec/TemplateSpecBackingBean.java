@@ -280,7 +280,11 @@ public class TemplateSpecBackingBean extends
 									templateSpecBean.setSpecAnswerList(evalResDTO.getSpecAnswers());
 									templateSpecBean.setHideanswerList(evalResDTO.getHideanswerList());
 									}					
-								}
+								}//#25138 add start
+							else{
+								templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
+							}
+							//#25138 add end
 					}
 					//templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());	
 				}else{//32453-End
