@@ -302,11 +302,5 @@ public interface QTConstants {
 	// #33831 - Start
 	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
 	// #33831 - Start
-	// #12471 Start
-	/** The organization category PTJ constant. */
-	public static final String ORG_CATEGORY_PTJ = "PTJ";
-	/** The organization category Others constant. */
-	public static final String ORG_CATEGORY_OTHERS = "OTH";
-	// #12471 End
 	
 }

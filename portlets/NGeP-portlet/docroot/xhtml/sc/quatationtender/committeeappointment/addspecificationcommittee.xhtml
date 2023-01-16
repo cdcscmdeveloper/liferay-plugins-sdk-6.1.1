@@ -36,17 +36,17 @@
 									listener="#{qTCommitteBackingBean.reset}" />
 								<f:selectItem
 									itemLabel="#{lbl['lbl.sc.add.committee.ptj.full']}"
-									itemValue="#{qTCommitteBackingBean.managedBean.PTJConst}" />
+									itemValue="#{ParameterConst.orgCatPTJ}" />
 								<f:selectItem itemLabel="#{lbl['lbl.sc.add.committee.oth']}"
-									itemValue="#{qTCommitteBackingBean.managedBean.othersConst}" />
+									itemValue="#{ParameterConst.orgCatOTH}" />
 							</p:selectOneRadio></td>
 					</tr>
 					<c:if
-						test="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat eq qTCommitteBackingBean.managedBean.PTJConst}">
+						test="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat eq ParameterConst.orgCatPTJ}">
 						<td>PTJ</td>
 					</c:if>
 					<c:if
-						test="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat eq qTCommitteBackingBean.managedBean.othersConst}">
+						test="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat eq ParameterConst.orgCatOTH}">
 						<td>Others</td>
 					</c:if>
 					<!-- #12471 End -->

@@ -1012,9 +1012,7 @@ public class QTCommitteBackingBean extends
 		getManagedBean().getUserSearchCommitteeDataModel().resetData();
 
 		// #12471 - Start
-		this.getManagedBean().setPTJConst(QTConstants.ORG_CATEGORY_PTJ);
-		this.getManagedBean().setOthersConst(QTConstants.ORG_CATEGORY_OTHERS);
-		this.getManagedBean().getUserCommitteeSearchBean().setOrgCat(this.getManagedBean().getPTJConst());
+		this.getManagedBean().getUserCommitteeSearchBean().setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
 		reset();
 		// #12471 - End
 		getManagedBean().setSelectedPmUser(null);
@@ -1550,11 +1548,11 @@ public class QTCommitteBackingBean extends
 		debugLogger("reset");
 		// #12471 Start
 		if (this.getManagedBean().getUserCommitteeSearchBean().getOrgCat()
-				.equalsIgnoreCase(QTConstants.ORG_CATEGORY_PTJ)) {
-			log.info("PTJ");
+				.equalsIgnoreCase(ParameterConst.ORG_CATEGORY_PTJ)) {
+			log.info(ParameterConst.ORG_CATEGORY_PTJ);
 		} else if (this.getManagedBean().getUserCommitteeSearchBean().getOrgCat()
-				.equalsIgnoreCase(QTConstants.ORG_CATEGORY_OTHERS)) {
-			log.info("OTH");
+				.equalsIgnoreCase(ParameterConst.ORG_CATEGORY_OTHERS)) {
+			log.info(ParameterConst.ORG_CATEGORY_OTHERS);
 		}
 		// #12471 End
 		this.getManagedBean().getUserCommitteeSearchBean().setName(null);
