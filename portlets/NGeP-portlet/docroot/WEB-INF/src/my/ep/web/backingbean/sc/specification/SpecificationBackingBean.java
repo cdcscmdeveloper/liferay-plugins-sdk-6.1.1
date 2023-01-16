@@ -11430,7 +11430,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			 * Start
 			 */
 			SpecificationReqDTO reqTempDTO = new SpecificationReqDTO();
-			List<Integer> settinglist = new ArrayList<Integer>();
+			List<Integer> settinglist = new ArrayList<>();
 			reqTempDTO.setScQt(scQt);
 			settinglist.add(technicalScoreSetting.getSettingType());
 			reqTempDTO.setSettingTypes(settinglist);
@@ -11455,7 +11455,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			 * Start
 			 */
 			SpecificationReqDTO reqTempDTO = new SpecificationReqDTO();
-			List<Integer> settinglist = new ArrayList<Integer>();
+			List<Integer> settinglist = new ArrayList<>();
 			reqTempDTO.setScQt(scQt);
 			settinglist.add(financialScoreSetting.getSettingType());
 			reqTempDTO.setSettingTypes(settinglist);
@@ -11479,7 +11479,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				 * Start
 				 */
 				SpecificationReqDTO reqTempDTO = new SpecificationReqDTO();
-				List<Integer> settinglist = new ArrayList<Integer>();
+				List<Integer> settinglist = new ArrayList<>();
 				reqTempDTO.setScQt(scQt);
 				settinglist.add(demoScoreSetting.getSettingType());
 				reqTempDTO.setSettingTypes(settinglist);
@@ -11508,7 +11508,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			 * Start
 			 */
 			SpecificationReqDTO reqTempDTO = new SpecificationReqDTO();
-			List<Integer> settinglist = new ArrayList<Integer>();
+			List<Integer> settinglist = new ArrayList<>();
 			reqTempDTO.setScQt(scQt);
 			settinglist.add(financialItemScoreSetting.getSettingType());
 			reqTempDTO.setSettingTypes(settinglist);
@@ -11533,7 +11533,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			 * Start
 			 */
 			SpecificationReqDTO reqTempDTO = new SpecificationReqDTO();
-			List<Integer> settinglist = new ArrayList<Integer>();
+			List<Integer> settinglist = new ArrayList<>();
 			reqTempDTO.setScQt(scQt);
 			settinglist.add(packageScoreSetting.getSettingType());
 			reqTempDTO.setSettingTypes(settinglist);
@@ -11553,7 +11553,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			 * Start
 			 */
 			SpecificationReqDTO reqTempDTO = new SpecificationReqDTO();
-			List<Integer> settinglist = new ArrayList<Integer>();
+			List<Integer> settinglist = new ArrayList<>();
 			reqTempDTO.setScQt(scQt);
 			settinglist.add(itemScoreSetting.getSettingType());
 			reqTempDTO.setSettingTypes(settinglist);
@@ -11574,7 +11574,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			 * Start
 			 */
 			SpecificationReqDTO reqTempDTO = new SpecificationReqDTO();
-			List<Integer> settinglist = new ArrayList<Integer>();
+			List<Integer> settinglist = new ArrayList<>();
 			reqTempDTO.setScQt(scQt);
 			settinglist.add(technicalItemScoreSetting.getSettingType());
 			reqTempDTO.setSettingTypes(settinglist);
@@ -14752,19 +14752,16 @@ if (null != checklist && !checklist.isEmpty()) {
 		List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
 		for (ScQtCheckList t : st2technicalproposalList) {
 			if (t.getDefinationType().getParameterCode()
-					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
-				if (QTStatusConst.TS_PENDING_SUBMISSION.equals(t.getPmStatus().getStatusId())) {
-					isTechSpecPending = true;
+					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)
+					&& QTStatusConst.TS_PENDING_SUBMISSION.equals(t.getPmStatus().getStatusId())) {
+				isTechSpecPending = true;
 				}
-			}
 
-			if (isTechSpecPending) {
-				if (t.getDefinationType().getParameterCode()
-						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-					t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-					t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-					break;
-				}
+			if (isTechSpecPending && t.getDefinationType().getParameterCode()
+					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+				t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+				t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+				break;
 			}
 		}
 	}
