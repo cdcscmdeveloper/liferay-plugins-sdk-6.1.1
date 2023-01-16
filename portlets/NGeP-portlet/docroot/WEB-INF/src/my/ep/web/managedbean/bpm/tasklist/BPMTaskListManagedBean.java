@@ -627,12 +627,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						+ ResourceBundleUtils.getMessage("lbl.sc.loiloa.loi.preparation.due.date.message",
 								new String[] { loiPreparationDays != null ? loiPreparationDays.toString() : "" },
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-			} else if (QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE.intValue() == docStatus) {
+			} /*else if (QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE.intValue() == docStatus) {
 				worklistItemVO.setTitle(worklistItemVO.getTitle()
 						+ "<br/> - "
 						+ ResourceBundleUtils.getMessage("lbl.sc.proposal.validity.period.extension.response.supplier",
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-			}
+			}*/
 		}
 	}
 

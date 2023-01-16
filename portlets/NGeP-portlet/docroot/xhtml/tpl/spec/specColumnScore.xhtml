@@ -177,14 +177,14 @@
 		</p:inputTextarea>
 		
 		<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.notOfferAll}" 
-			  	rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and tplSpecAnswer.notApplicable and tplSpecAnswer.notOfferAll}"
+			  	rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and tplSpecAnswer.notApplicable and tplSpecAnswer.notOfferAll and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"
 			  	style="width:calc(100% - 15px);" 
 				value="#{lbl['lbl.sc.not.applicable']}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);">
 				<p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
 		</p:inputTextarea>
 <!--Bug #33327 related to #21695 Farid End-->
 		<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly}" 
-			  	rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and !tplSpecAnswer.notOfferAll}"
+			  	rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and !tplSpecAnswer.notOfferAll and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"
 			  	style="width:calc(100% - 15px);" 
 				value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);">
 				<p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
