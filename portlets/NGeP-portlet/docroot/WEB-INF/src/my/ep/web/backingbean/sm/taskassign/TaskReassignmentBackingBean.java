@@ -2312,11 +2312,11 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 						if (getManagedBean().getTaskAssignmentSearchBean().getDocType() != null) {
 							reqDTO.setDocType(getManagedBean().getTaskAssignmentSearchBean().getDocType());
 						}
-						
+						//#29822-start - parsing value to bpm
 						reqDTO.setState(BpmConstants.STATE_ASSIGNED);
 						reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
-						reqDTO.setIsClaimed(false);
 						responseDTO = bpmSO.getReassignedItems(reqDTO);
+						//#29822-end - parsing value to bpm
 						
 						if (responseDTO.getWorklistVO() != null) {
 							log.info("BPM size******"+ responseDTO.getWorklistVO().getWorklistItem().size());

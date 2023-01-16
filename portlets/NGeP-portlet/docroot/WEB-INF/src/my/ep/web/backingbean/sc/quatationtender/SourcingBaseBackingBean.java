@@ -202,11 +202,13 @@ import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
@@ -3784,279 +3786,216 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * CR Enhancement 26226  Nov 2019
 	 */
 	public void constructPRSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa) {
-		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();	
+		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
 		IQuoteSO quoteSO;
-		Integer days=null;
-		Long zoneId =new Long(0l);
-		boolean isSpecificationEnable=false;
-		boolean isWipData=false; //#29006
+		Integer days = null;
+		Long zoneId = new Long(0l);
+		boolean isSpecificationEnable = false;
+		boolean isWipData = false; // #29006
 		try {
-			quoteSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
-			String supplierName= scLoa.getScLoiLoa().getSupplierName();
-			log.info("constructPRSupplierSpecificationAndRemarks supplierName    "+supplierName+ " quoteId :   "+scLoa.getScQuote().getQuoteId() );
-			
+			quoteSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQuoteSO.class);
+			String supplierName = scLoa.getScLoiLoa().getSupplierName();
+
 			QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
-		
 			quoteReqDTO.setQuoteId(scLoa.getScQuote().getQuoteId());
-			
 			quoteReqDTO.setQuoteId(scLoa.getScQuote().getQuoteId());
 			quoteReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-			
-			
+
 			if (scLoa.getScLoiLoa().getSmSupplier() != null) {
 				quoteReqDTO.setSupplierId(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
 				quoteReqDTO.setSmSupplier(scLoa.getScLoiLoa().getSmSupplier());
 			}
-			//quoteReqDTO.setFetchSubEntity(true);
 			QuoteResDTO quoteResDTO = quoteSO.getQuoteDtlForLOASupplier(quoteReqDTO);
-			log.info("Supplier ID"+quoteReqDTO.getSupplierId());  
-		
+
 			List<ScLoiLoaItem> items = scLoa.getScLoiLoaItems();
-			log.info("ScLoiLoaItem Item size  -->"+items.size());
-			String dafaltValue = "T/B";
-			if(masters.size() > 0)
-			{	
+			String dafaltValue = SSTConstant.TB;
+			if (masters.size() > 0) {
 				masters.clear();
-				log.info("Master Record List Size I -->"+masters.size());
 			}
-			for (ScLoiLoaItem item :items)	
-			{	
-				Long  itemId =item.getScRequestItem().getTplSpecQuestion().getSpecQuestionId();
-				
-				Long loaid=scLoa.getLoaId();
-				
-				//	Long requestItemId=item.getScRequestItem().getRequestNote().getRequestNoteId();
-				log.info("Loa id +"   +"+ItemId"+"    "+loaid+"  --->   " +itemId);
-				
-			
-			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-				dafaltValue = "N/A";
-			}
-			
-			if (CollectionUtils.isNotEmpty(quoteResDTO.getServiceAnswersTpl())) {
-				TplSpecMaster master = null;
-				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
-				
-				for (TplSpecAnswer answer : quoteResDTO.getServiceAnswersTpl()) {
-					//log.info("constructPRSupplierSpecificationAndRemarks I"+answer.getTplSpecQuestion().getClFulfilmentTypeCode().getParameterCode());
-					if(answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone()!=null)
-					{
-						//quoteResDTO.getServiceTpl().getTplSpecZone().getSpecZoneId()
-					  zoneId =answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone().getSpecZoneId();
-					 log.info("Size of the Zone ID" +zoneId);
-					}else{
-						zoneId=0l;  //Long Object initialization
-					}
-					
-					if(answer.getTplSpecQuestion().getClFulfilmentTypeCode() == null)
-					{
-						answer.getTplSpecQuestion().setClFulfilmentTypeCode(scLoa.getScLoiLoa().getFulfilmentTypeCode()); 
-						
-						
-					}
-				     if(days == null)
-				     {
-				    	 days=answer.getTplSpecQuestion().getClDeliveryTerm();
-				     }else{
-				    	 
-				    	 if(!days.equals(answer.getTplSpecQuestion().getClDeliveryTerm()) && (answer.getTplSpecQuestion().getClDeliveryTerm()!=null)){
-				    		 days=answer.getTplSpecQuestion().getClDeliveryTerm();
-				    	 }
-				     }
-					//log.info("constructPRSupplierSpecificationAndRemarks I"+ answer.getTplSpecQuestion().getClFulfilmentTypeCode().getParameterCode());
-					log.info("TplSpecAnswer for service:- "
-							+ "|" + answer.getSpecAnswerId()
-							+ "|" + answer.getAnswerText()
-							+ "|" + answer.getTplSpecQuestion().getSpecQuestionId()
-							+ "|" + answer.getTplSpecQuestion().getClItem()
-							//+ "|" + SmCommonUtil.retrieveParameterDescByTypeAndCodeAndLang(answer.getTplSpecQuestion().getClFulfilmentTypeCode().getParameterCode(),new FacesScopes().getUserLocale().getLanguage())
-							+ "|"+getParameterDescForReport(answer.getTplSpecQuestion().getClFulfilmentTypeCode())
-							+ "|" + answer.getTplSpecQuestion().getClSpecDetail()
-							//+ "|" + answer.getTplSpecQuestion().getClUom().getUomCode()
-							+ "|" + answer.getTplSpecQuestion().getClUomFrequency()
-							+ "|" + answer.getTplSpecQuestion().getClUomPerDay()
-							+ "|" + answer.getTplSpecQuestion().getClUomPerMonth()
-							+ "|" + answer.getTplSpecQuestion().getClQuantity()
-							+ "|" + answer.getTplSpecQuestion().getClReviewRemark()
-							+ "|" + answer.getRatePerUom() 
-							+ "|" + answer.getAnswerRemark()
-							+ "|" + answer.getTplSpecQuestion().getClDeliveryTerm()
-							+ "|" + answer.getIsWip() //#29006
-							//+ "|" + answer.getTplSpecZoneDtls().size()
-							//+ "|" + answer.getTplSpecZoneQty()
-							//+ "|" + answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone().getSpecZoneId()
-							);
-					if(answer.getTplSpecZoneDtls()!=null)
-					{
-						log.info("Size of the Zone Dtls" +answer.getTplSpecZoneDtls().size());
-						log.info("Size of the Zone Qty" +answer.getTplSpecZoneQty());
-					}
-					//log.info("TplSpecQuestion for Delivery Term:-------> "+answer.getTplSpecQuestion().getClDeliveryTerm());
-					log.info("TplSpecQuestion for days:-------> "+days);
-					if(answer.getAnswerRemark()!=null)
-					{
-						answer.getTplSpecQuestion().setAnswerRemarks(answer.getAnswerRemark());
-					}
-					else{
-						answer.getTplSpecQuestion().setAnswerRemarks(dafaltValue);
-					}
-					
-					isWipData = answer.getIsWip();//#29006
-					
-					if((days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())) && (answer.getTplSpecQuestion().getClItem()!=null))
-					{ 
-						// #25025 - Start.
-						List<String> specList = null;
-						boolean addSpecList = false;
-						for (TplSpecAnswer tplSpecAns : quoteResDTO.getServiceAnswersTpl()) {
-							if (tplSpecAns.getTplSpecQuestion().getSpecQuestionId() == answer.getTplSpecQuestion().getSpecQuestionId()) {
-								addSpecList = true;
-								continue;
+			for (ScLoiLoaItem item : items) {
+				Long itemId = item.getScRequestItem().getTplSpecQuestion().getSpecQuestionId();
+				if (SSTConstant.LANGUAGE_CODE_EN.equals(new FacesScopes().getUserLocale().getLanguage())) {
+					dafaltValue = SSTConstant.NA;
+				}
+
+				if (CollectionUtils.isNotEmpty(quoteResDTO.getServiceAnswersTpl())) {
+					TplSpecMaster master = null;
+					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+
+					for (TplSpecAnswer answer : quoteResDTO.getServiceAnswersTpl()) {
+						if (answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone() != null) {
+							zoneId = answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone().getSpecZoneId();
+						} else {
+							zoneId = 0l; // Long Object initialization
+						}
+
+						if (answer.getTplSpecQuestion().getClFulfilmentTypeCode() == null) {
+							answer.getTplSpecQuestion().setClFulfilmentTypeCode(
+									scLoa.getScLoiLoa().getFulfilmentTypeCode());
+						}
+						if (days == null) {
+							days = answer.getTplSpecQuestion().getClDeliveryTerm();
+						} else {
+							if (!days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())
+									&& (answer.getTplSpecQuestion().getClDeliveryTerm() != null)) {
+								days = answer.getTplSpecQuestion().getClDeliveryTerm();
 							}
-							if (addSpecList) {
-								if (tplSpecAns.getTplSpecQuestion().getQuestionType().equals("S")) {
-									if (specList == null) {
-										specList = new ArrayList<>();
+						}
+						
+						if (answer.getAnswerRemark() != null) {
+							answer.getTplSpecQuestion().setAnswerRemarks(answer.getAnswerRemark());
+						} else {
+							answer.getTplSpecQuestion().setAnswerRemarks(dafaltValue);
+						}
+
+						isWipData = answer.getIsWip();// #29006
+
+						if ((days.equals(answer.getTplSpecQuestion().getClDeliveryTerm()))
+								&& (answer.getTplSpecQuestion().getClItem() != null)) {
+							// #25025 - Start.
+							List<String> specList = null;
+							boolean addSpecList = false;
+							for (TplSpecAnswer tplSpecAns : quoteResDTO.getServiceAnswersTpl()) {
+								if (tplSpecAns.getTplSpecQuestion().getSpecQuestionId() == answer.getTplSpecQuestion()
+										.getSpecQuestionId()) {
+									addSpecList = true;
+									continue;
+								}
+								if (addSpecList) {
+									if (tplSpecAns.getTplSpecQuestion().getQuestionType().equals(SSTConstant.specification)) {
+										if (specList == null) {
+											specList = new ArrayList<>();
+										}
+										specList.add(tplSpecAns.getTplSpecQuestion().getClSpecDetail());
+									} else {
+										break;
 									}
-									specList.add(tplSpecAns.getTplSpecQuestion().getClSpecDetail());
-								} else {
+								}
+							}
+							answer.getTplSpecQuestion().setSpecList(specList);
+							// #25025 - End.
+
+							/** This code is for LOA with Single Item Details **/
+
+							if (items.size() == 1) {
+								if (itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId())
+										|| (answer.getTplSpecQuestion().getParentSpecQuestion() != null && itemId
+												.equals(answer.getTplSpecQuestion().getParentSpecQuestion()
+														.getSpecQuestionId()))) {
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									if (master.getTplSpecZone() != null) {
+										for (int i = 0; i < master.getTplSpecZone().getTplSpecZoneDtls().size(); i++) {
+											TplSpecZoneDtl tplspecZoneDtls = master.getTplSpecZone()
+													.getTplSpecZoneDtls().get(i);
+											tplspecZoneDtls.getZoneName();
+										}
+									}
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									isSpecificationEnable = true;
+								}
+							} else {
+								/**
+								 * This code is for LOA with multiple Items
+								 * Details
+								 **/
+								if (days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())) {
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									if (master.getTplSpecZone() != null) {
+										for (int i = 0; i < master.getTplSpecZone().getTplSpecZoneDtls().size(); i++) {
+											TplSpecZoneDtl tplspecZoneDtls = master.getTplSpecZone()
+													.getTplSpecZoneDtls().get(i);
+											tplspecZoneDtls.getZoneName();
+										}
+									}
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									isSpecificationEnable = true;
+								}
+							}
+						} else if (isSpecificationEnable && answer.getTplSpecQuestion().getClSpecDetail() != null) {
+							/**
+							 * This code is for LOA with Single Item
+							 * specification
+							 **/
+							if (items.size() == 1) {
+								if (itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId())
+										|| (answer.getTplSpecQuestion().getParentSpecQuestion() != null && itemId
+												.equals(answer.getTplSpecQuestion().getParentSpecQuestion()
+														.getSpecQuestionId()))) {
+
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									// #25025 - Start.
+									isSpecificationEnable = true;
+									// #25025 - End.
+								}
+							} else {
+								/**
+								 * This code is for LOA with multiple Items
+								 * specification
+								 **/
+								if (answer.getTplSpecQuestion().getClDeliveryTerm() == null) {
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									// #25025 - Start.
+									isSpecificationEnable = true;
+									// #25025 - End.
+								}
+							}
+						}
+					}
+					if (master != null) {
+						if (masters.size() == 0) {
+							masters.add(master);
+						} else {
+							boolean itemFound = false;
+							for (TplSpecMaster tplSpecMaster : masters) {
+								if (tplSpecMaster.getSpecMasterId() == master.getSpecMasterId()) {
+									itemFound = true;
 									break;
 								}
 							}
-							
-						}
-						answer.getTplSpecQuestion().setSpecList(specList);
-						// #25025 - End.
-						
-						/**  This code is for LOA with Single Item Details  **/
-						
-						if(items.size() == 1)
-						{
-							
-							if(itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId()) || (answer.getTplSpecQuestion().getParentSpecQuestion()!=null && itemId.equals(answer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId())))
-							{
-								master = answer.getTplSpecQuestion().getTplSpecMaster();
-								if(master.getTplSpecZone()!=null)
-								{
-									
-									for(int i=0; i<master.getTplSpecZone().getTplSpecZoneDtls().size();i++)
-									{
-										TplSpecZoneDtl tplspecZoneDtls =master.getTplSpecZone().getTplSpecZoneDtls().get(i);
-										tplspecZoneDtls.getZoneName();
-										log.info("Zone Name"+tplspecZoneDtls.getZoneName());
-									}
-								}
-								constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
-								// #26226 - Start
-								populateSpecAnswers(answer);
-								// #26226 - End
-								master.setTplSpecQuestions(newTplSpecQuestionsList);
-								isSpecificationEnable=true;
+							if (!itemFound) {
+								masters.add(master);
 							}
-							
-						}else {
-							/** This code is for  LOA with multiple Items Details **/
-							if(days.equals(answer.getTplSpecQuestion().getClDeliveryTerm()))
-							{
-								master = answer.getTplSpecQuestion().getTplSpecMaster();
-								if(master.getTplSpecZone()!=null)
-								{
-									
-									for(int i=0; i<master.getTplSpecZone().getTplSpecZoneDtls().size();i++)
-									{
-										TplSpecZoneDtl tplspecZoneDtls =master.getTplSpecZone().getTplSpecZoneDtls().get(i);
-										tplspecZoneDtls.getZoneName();
-										log.info("Zone Name "+tplspecZoneDtls.getZoneName());
-									}
-								}
-								constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
-								// #26226 - Start
-								populateSpecAnswers(answer);
-								// #26226 - End
-								master.setTplSpecQuestions(newTplSpecQuestionsList);
-								isSpecificationEnable=true;
-							}
-							
-						}
-						
-					}
-					else if(isSpecificationEnable && answer.getTplSpecQuestion().getClSpecDetail()!=null)
-					{
-						/**  This code is for LOA with Single Item specification **/
-						if(items.size() == 1)
-						{
-							if(itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId()) || (answer.getTplSpecQuestion().getParentSpecQuestion()!=null && itemId.equals(answer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId())))
-							{
-			
-							master = answer.getTplSpecQuestion().getTplSpecMaster();
-							constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
-							// #26226 - Start
-							populateSpecAnswers(answer);
-							// #26226 - End
-							master.setTplSpecQuestions(newTplSpecQuestionsList);
-							// #25025 - Start.
-							isSpecificationEnable=true;
-							// #25025 - End.
-							}
-						
-						
-						}else{
-							/** This code is for LOA with multiple Items specification**/
-							if(answer.getTplSpecQuestion().getClDeliveryTerm() == null)
-							{
-								master = answer.getTplSpecQuestion().getTplSpecMaster();
-								constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, answer.getTplSpecQuestion());
-								// #26226 - Start
-								populateSpecAnswers(answer);
-								// #26226 - End
-								master.setTplSpecQuestions(newTplSpecQuestionsList);
-								// #25025 - Start.
-								isSpecificationEnable=true;
-								// #25025 - End.
-								
-							}
-
-						}
-						
-												
-					}
-					
-				}
-				if(master !=null)
-				{
-					if (masters.size() == 0) {
-						masters.add(master);
-					} else {
-						boolean itemFound = false;
-						for (TplSpecMaster tplSpecMaster : masters) {
-							if (tplSpecMaster.getSpecMasterId() == master.getSpecMasterId()) {
-								itemFound = true;
-								break;
-							}
-						}
-						if (!itemFound) {
-							masters.add(master);
 						}
 					}
-					
 				}
 			}
-			
-		}	
-			log.info("Master Record List Size II -->"+masters.size());
-			context.put("serviceScope", dafaltValue);
-			context.put("supplierName", supplierName);
-			context.put("zoneId", zoneId);
-			context.put("masters", masters);
-			context.put("bean", this);
-			context.put("isZonal", scLoa.getScLoiLoa().isZonal());
-			context.put("isWipData", isWipData); //#29006
-			
+			context.put(SSTConstant.serviceScope, dafaltValue);
+			context.put(SSTConstant.SUPPLIER_NAME, supplierName);
+			context.put(SSTConstant.ZONE_ID, zoneId);
+			context.put(SSTConstant.masters, masters);
+			context.put(SSTConstant.bean, this);
+			context.put(SSTConstant.isZonal, scLoa.getScLoiLoa().isZonal());
+			context.put("isWipData", isWipData); // #29006
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "GenerateSST", scLoa.getLoaNo(),
+					"constructPRSupplierSpecificationAndRemarks", getUserIdSessionFromLoginId(), e);
 		} finally {
 			quoteSO = null;
-			days=null;
-			//masters.clear();
+			days = null;
+			// masters.clear();
 		}
 	}
 	// #26226 - End
@@ -4081,6 +4020,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			List<TplSpecAnswer> answers = new ArrayList<>();
 			answers.add(answer);
 			answer.getTplSpecQuestion().setTplSpecAnswers(answers);
+			SLAUtils.getInstance().logSLAError("DP", "populateSpecAnswers", answer.getSpecAnswerId().toString(),
+					"populateSpecAnswers", getUserIdSessionFromLoginId(), e);
 		}
 	}
 	// #26226 - End
@@ -4205,8 +4146,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		
 		// #26226 - Start
-		if(newTplSpecQuestionsList !=null)
-		{
+		if (newTplSpecQuestionsList != null) {
 			if (newTplSpecQuestionsList.size() == 0) {
 				newTplSpecQuestionsList.add(question);
 			} else {
@@ -4221,7 +4161,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					newTplSpecQuestionsList.add(question);
 				}
 			}
-			
 		}
 		// #26226 - End
 	}
