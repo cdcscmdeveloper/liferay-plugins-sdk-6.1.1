@@ -321,7 +321,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			getManagedBean().setBypassFlag1(1);
 		}
 		// #28765 - End
-		if (!getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
+		if (getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
 			redirectToSuccessPageForInProgress(resDto);
 		} else {
 			redirectToSuccessPage(resDto);
@@ -565,7 +565,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setAdminPersonnel(getManagedBean().getOldAdmin());
 		
 		//#33589 - Start
-		if(getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)){
+		if(!getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)){
 			reqDTO.setSmPersonnel(getManagedBean().getNewAdmin());
 			reqDTO.setEmail(getManagedBean().getNewAdmin().getEmail());	
 		}
