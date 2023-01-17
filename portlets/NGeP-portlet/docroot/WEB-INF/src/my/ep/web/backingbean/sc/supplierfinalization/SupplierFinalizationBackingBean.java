@@ -5809,7 +5809,7 @@ public class SupplierFinalizationBackingBean extends
 		//START - #26169
 		else{
 			//If no available/qualified supplier, exclude the defined decision type(s)
-			if(!getManagedBean().isHasSupplierQualified()){
+			if(!getManagedBean().isHasSupplierQualifiedForCurrentSelection()){	//6906 note 202
 				if (excludedDecisionList == null) {
 					excludedDecisionList = new ArrayList<String>();
 				}
@@ -10220,10 +10220,12 @@ public class SupplierFinalizationBackingBean extends
 				if(resDTO.isSuccessful()) getManagedBean().setHasSupplierQualified(Boolean.TRUE);
 				else getManagedBean().setHasSupplierQualified(Boolean.FALSE);
 				
+				this.getManagedBean().setHasSupplierQualifiedForCurrentSelection(resDTO.isHasSupplierQualifiedForCurrentSelection());//6906 note 202
+
 			}finally {
 				qtSuppFinalizationSO = null;
 			}	
-		}
+		} 
 		
 		private boolean checkSelectedSupplierOfferPriceIsExceedCommitteeAuthority(ScQtFinalization scQtFinalization) {
 			log.info("checkSelectedSupplierOfferPriceIsExceedCommitteeAuthority");
