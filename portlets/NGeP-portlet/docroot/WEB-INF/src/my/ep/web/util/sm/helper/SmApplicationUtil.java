@@ -15096,45 +15096,6 @@ public class SmApplicationUtil {
 					}
 				}
 			}
-			//check via db
-			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
-			ISupplierSearchSO reqSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-			reqDTO.setApplId(bean.getSmAppl().getApplId());
-			
-			SupplierSearchResDTO resDTO = reqSO.retrieveSupplierActiveCategoryCodeByApplId(reqDTO);
-			List<SmSupplierCategory> apprvdCat = resDTO.getSmSupplierCategoryList();
-			for(SmSupplierCategory cat: apprvdCat){
-				if(bean.isPoUser()){
-					log.info("PO decision: "+cat.getPoDecFlg());
-					log.info("PO remark: "+cat.getPoRemarks());
-					if(cat.getPoDecFlg() == 0 && (cat.getPoRemarks() == null || cat.getPoRemarks().isEmpty())){
-						throw new EpException(SmCommonUtil.getMessage(
-								"lbl.sm.required.msg",
-								new String[] { SmCommonUtil.getMessage(
-										"lbl.sm.catCodes.rejRemarks",
-										null)
-										+ " "
-										+ cat.getPmCategoryL1().getCategoryL1Code()
-										+ cat.getPmCategoryL2().getCategoryL2Code()
-										+ cat.getPmCategoryL3().getCategoryL3Code() }));
-					}
-				}
-				else if(bean.isApproverUser()){
-					log.info("Approver decision: "+cat.getApprvrDecFlg());
-					log.info("Approver remark: "+cat.getApproverRemarks());
-					if(cat.getApprvrDecFlg() == 0 && cat.getApproverRemarks() == null){
-						throw new EpException(SmCommonUtil.getMessage(
-								"lbl.sm.required.msg",
-								new String[] { SmCommonUtil.getMessage(
-										"lbl.sm.catCodes.rejRemarks",
-										null)
-										+ " "
-										+ cat.getPmCategoryL1().getCategoryL1Code()
-										+ cat.getPmCategoryL2().getCategoryL2Code()
-										+ cat.getPmCategoryL3().getCategoryL3Code() }));
-					}
-				}
-			}
 		}
 		//#31043 - END
 }
