@@ -9312,14 +9312,17 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		if (null == financialCheckList) {
 			financialCheckList = new ArrayList<ScQtCheckList>();
 		}
+		
+		// #25138, Bug #33249@Syazani -- Start
+		String curCheckList = checkList.getTitle() + "_" + (checkList.getDefinationType() != null ? checkList.getDefinationType().getParameterId() : "");
+	
 		for (int i = 0; i < financialCheckList.size(); i++) {
-			if (checkList.getTitle().equalsIgnoreCase(
-					financialCheckList.get(i).getTitle())) {
-				ScQtCheckList localCheckList = financialCheckList.get(i);
+			ScQtCheckList localCheckList = financialCheckList.get(i);
+			String loopCheckList = localCheckList.getTitle() + "_" + (localCheckList.getDefinationType() != null ? localCheckList.getDefinationType().getParameterId() : "");
 
-				financialCheckList.remove(localCheckList);
-				financialCheckList.add(checkList);
-				
+			if (curCheckList.equals(loopCheckList)) {
+				financialCheckList.set(i, checkList);
+				// #25138, Bug #33249@Syazani 28/07/2022 -- End
 				// #25138 - set score weightage for dettype 217 - start
 				financialCheckList.get(i).getQtScoreWeightage().setScore(checkList.getQtScoreWeightage().getScore());
 				// #25138 - set score weightage for dettype 217 - end
