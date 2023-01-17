@@ -1657,34 +1657,46 @@ public class QTDetailBackingBean extends
 			// 25037 - 497 -start-
 			if (this.getManagedBean().isMaintanceFlow() && StringUtils.isEmpty(this.getManagedBean().getTaskName())) {
 				// 25037 - 497 -end-
-				if (CollectionUtils.isNotEmpty(scQt.getRequestContents()) && this.getManagedBean().getRequestContent()!=null ) { 
+				if (CollectionUtils.isNotEmpty(scQt.getRequestContents())
+						&& this.getManagedBean().getRequestContent() != null) {
 					ScQtRequestContent requestContent = this.getManagedBean().getRequestContent();
-					deskOfficerAdminList = deskOfficerAdminList==null? new ArrayList<ScQtContactPerson>(): deskOfficerAdminList;
+					deskOfficerAdminList = deskOfficerAdminList == null ? new ArrayList<ScQtContactPerson>()
+							: deskOfficerAdminList;
+
 					requestContent.setModified(isDOAListModified());
-					if(requestContent.isModified()){
+					// #25037, #31112 -start-
+					// remove request content container when no modification
+					requestContent.setDeleted(requestContent.isBrandNew() && !requestContent.isModified());
+					// #25037, #31112 -end-
+
+					if (requestContent.isModified()) {
 						requestContent.setRequireApproval(true);
+
 						Map<Long, String> map = new HashMap<Long, String>();
-						for(ScQtContactPerson p:deskOfficerAdminList){
-							if(p.getUser().getUserId()==null){
+
+						for (ScQtContactPerson p : deskOfficerAdminList) {
+							if (p.getUser().getUserId() == null) {
 								throw new EpException(getMessageCommon("lbl.sc.required.select.doa"));
 							}
+
 							map.put(p.getUser().getUserId(), p.getUser().getLoginId());
 						}
+
 						try {
 							requestContent.setRequestContent(map);
 						} catch (IOException e) {
 							throw new EpException(e.getMessage());
 						}
-					}else if(requestContent.isBrandNew()){
-						if(this.getManagedBean().isMaintanceFlow()){
+					} else if (requestContent.isBrandNew()) {
+						if (this.getManagedBean().isMaintanceFlow()) {
 							scQt.getRequestContents().remove(requestContent);
 						}
 					}
 				}
-			}else if(CollectionUtils.isNotEmpty(deskOfficerAdminList)){
+			} else if (CollectionUtils.isNotEmpty(deskOfficerAdminList)) {
 				contactList.addAll(deskOfficerAdminList);
 			}
-			//25037-end
+			// 25037-end
 
 			if (contactPersonsList != null && !contactPersonsList.isEmpty()) {
 				contactList.addAll(contactPersonsList);
