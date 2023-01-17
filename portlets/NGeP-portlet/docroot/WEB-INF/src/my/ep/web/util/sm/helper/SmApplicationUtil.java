@@ -15030,7 +15030,7 @@ public class SmApplicationUtil {
 					if(bean.isPoUser()){
 						log.info("PO decision: "+cat.getPoDecFlg());
 						log.info("PO remark: "+cat.getPoRemarks());
-						if(cat.getPoDecFlg() == 0 && cat.getPoRemarks() == null){
+						if(cat.getPoDecFlg() == 0 && (cat.getPoRemarks() == null || cat.getPoRemarks().isEmpty())){
 							throw new EpException(SmCommonUtil.getMessage(
 									"lbl.sm.required.msg",
 									new String[] { SmCommonUtil.getMessage(
@@ -15044,7 +15044,7 @@ public class SmApplicationUtil {
 						}else if(bean.isApproverUser()){
 							log.info("Approver decision: "+cat.getApprvrDecFlg());
 							log.info("Approver remark: "+cat.getApproverRemarks());
-							if(cat.getApprvrDecFlg() == 0 && cat.getApproverRemarks() == null){
+							if(cat.getApprvrDecFlg() == 0 && (cat.getApproverRemarks() == null || cat.getApproverRemarks().isEmpty())){
 								throw new EpException(SmCommonUtil.getMessage(
 										"lbl.sm.required.msg",
 										new String[] { SmCommonUtil.getMessage(
