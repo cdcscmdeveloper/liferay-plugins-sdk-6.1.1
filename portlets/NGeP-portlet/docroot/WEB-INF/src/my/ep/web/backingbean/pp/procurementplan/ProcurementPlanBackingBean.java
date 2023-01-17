@@ -653,6 +653,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if (!ppItem.isOriginal() && ppItem.getFromPpItem() != null) {
 				fromPpItemList.add(ppItem.getFromPpItem());
 			}
+			
+			// #34390 - Start
+			if (ppItem.isOriginal() && ppItem.getFromPpItem() != null && this.getManagedBean().isSearch()
+					&& this.getManagedBean().getPlanSearchBean().getPlanDetstatus() != null) {
+				fromPpItemList.add(ppItem.getFromPpItem());
+			}
+
+			if (this.getManagedBean().isSearch()
+					&& this.getManagedBean().getPlanSearchBean().getPlanDetstatus() != null) {
+				procurementItemIdList.add(ppItem.getFromPpItem());
+			}
+			// #34390 - End
+			
 			procurementItemIdList.add(ppItem.getProcurementItemId());
 		}
 		
