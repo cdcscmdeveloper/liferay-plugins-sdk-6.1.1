@@ -932,22 +932,17 @@
 														<f:selectItems
 															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
 														<!-- #25726 START -->
-														 <p:ajax event="change" partialSubmit="true" update="agreementReqPG @([id$=uploadApprovalLetterPg])" 
-														 listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
+														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
+														 listener="#{directLOABackingBean.agreementChanged(directLOABackingBean.managedBean.agreemetSelectedVal)}"/>
 														<!-- #25726 END -->
 													</p:selectOneMenu>
 												</c:when>
 												<c:otherwise>
 													<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
 														value="#{directLOABackingBean.managedBean.scLoa.agreementReq}"
-														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-														disabled="#{directLOABackingBean.disabledButton() || !StatusLOASubmission}">
+														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">														
 														<f:selectItems
-															value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-															<!-- #25726 START -->
-															<p:ajax event="change" partialSubmit="true"
-														 	listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
-															<!-- #25726 END -->
+															value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />	
 													</p:selectOneRadio> 
 													<p:message id="agreementReqMsg" for="agreementReq" display="icon" />
 												</c:otherwise>
@@ -1003,9 +998,8 @@
 														<f:selectItems
 															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
 															<!-- #25726 START -->
-														 <p:ajax event="change" partialSubmit="true" update="agreementReqPG @([id$=uploadApprovalLetterPg])" 
-														 listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
-														<!-- #25726 END -->
+														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
+														 listener="#{directLOABackingBean.agreementChanged(directLOABackingBean.managedBean.agreemetSelectedVal)}"/>
 													</p:selectOneMenu>
 													</c:otherwise>
 													</c:choose>

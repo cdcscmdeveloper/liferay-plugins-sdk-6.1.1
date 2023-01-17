@@ -1743,13 +1743,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			ScLoaAttachment attachment = new ScLoaAttachment();							
 			
 			attachment.setScLoa(scLoa);	
-			// #25726 START
-			if(getManagedBean().getScLoa().getProcurementMode().getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
-				attachment.setDocNo(scLoa.getScQuote().getQuoteNo());
-			}else{
-				attachment.setDocNo(scLoa.getScQt().getQtNo());
-			}
-			// #25726 END
+			attachment.setDocNo(scLoa.getScQuote().getQuoteNo());
 			attachment
 					.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			attachment.setCreatedUser(facesScopes.getUserSessionBean());
@@ -1857,10 +1851,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		//#29006 - end
 		
 		try{
-			downloadFile(scLoaReportAttachmentGenerated);			
-			//#25726 start							
-			scLoaReport.setIsPK42BondCalc(true);
-			//#25726 end			
+			downloadFile(scLoaReportAttachmentGenerated);		
 		}
 		catch(IOException ex){
 			if(ex instanceof FileNotFoundException){
@@ -3722,31 +3713,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				parseLOADetails(scLoa, outcome);
 				validateLOADetails(scLoa, outcome);
 				updateContractDetails(scLoa);
-				validateContractDetails(scLoa);
-				
-				//#25726 start
-				if (null != scLoa && CollectionUtils.isNotEmpty(scLoa.getScLoaReports())) {
-					if(!scLoa.isBrandNew()){
-						if(null != scLoa.getScLoiLoa()){
-							if(!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) &&
-									!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){ 
-								for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-									if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
-										if (report.getScLoaReportAttachment() != null) {
-											if(null == report.getIsPK42BondCalc()){
-												boolean newBond = validateNewBond(scLoa);
-												if (newBond == false){
-													return;
-												} 
-											}
-										}	                
-									}
-								}
-			        		}
-			        	}
-					}
-			     }
-				//#25726 end
+				validateContractDetails(scLoa);			
 				
 				scLoa.setScLoaWorkFlowStatuses(null);
 				// To avoid insert workflow status when direct submit without save.
@@ -4168,23 +4135,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void approveBeforeupdateBpmTaskAction(String outcome) {
 		debugLogger("approveBeforeupdateBpmTaskAction");
 		
-		//#25726 start
-		ScLoa scLoa = this.getManagedBean().getScLoa();
-		if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
-	         for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-	             if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
-	                 if (report.getScLoaReportAttachment() != null) {
-	                	 if(null == report.getIsPK42BondCalc()){
-	                		boolean newBond = validateNewBond(scLoa);
-	     					if (newBond == false){
-	     						return;
-	     					} 
-	     				}
-	                 }	                
-	            }
-	         }
-	     }
-		//#25726 end
         
 		this.getManagedBean().setAction(outcome);
 		 		
@@ -6381,17 +6331,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				loa.setAgreementReq(isAgreementMandatory);
 			}
 		}else{
-			// #25726 START
-			if((isOneOffFulfilment && !over500K(loa)) || (isNonPeriodic && !over500K(loa))) {
-				isAgreementMandatory = false;
+			if(!isOneOffFulfilment) {
+				isAgreementMandatory = true;
 				loa.setAgreementReq(isAgreementMandatory);
-			} else if ((isOneOffFulfilment && over500K(loa)) || (isNonPeriodic && over500K(loa)) || (isPeriodic)){
+			} else if (isOneOffFulfilment && !isQuotationThresHold(overallContractAmtOrLoaAmt)){
 				//Bug #24065
 				//isAgreementMandatory = false;
 				isAgreementMandatory = true;
 				loa.setAgreementReq(isAgreementMandatory);
-			}			
-			// #25726 END
+			}
 		}		
 
 		getManagedBean().setAgreementMandatory(isAgreementMandatory);
@@ -10511,22 +10459,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			this.getManagedBean().setAgreementReqChange(true);
 			this.getManagedBean().getScLoa().setScLoaAttachment(null);
 			RequestContext.getCurrentInstance().update("contractDetailsId");
-		}
-		
-		// #25726 START
-		if(!this.getManagedBean().getScLoa().getProcurementMode().getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
-			
-			if(((isOneOff && over500K(scLoa)) || (isNonPeriodic && over500K(scLoa))) && !agreementReq){
-				scLoa.setAgreementReq(false);
-				this.getManagedBean().setAgreementReqChange(true);
-				RequestContext.getCurrentInstance().update("contractDetailsId");
-			}else if(((isOneOff && over500K(scLoa)) || (isNonPeriodic && over500K(scLoa))) && agreementReq){
-				scLoa.setAgreementReq(true);				
-				RequestContext.getCurrentInstance().update("contractDetailsId");
-			}
-		}
-		// #25726 END
-			
+		}			
 	}
 	
 	public boolean disabledButton(){
@@ -10542,14 +10475,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					result = true;
 				}
 			}
-		}else{
-			result = false;
-			// #25726 START
-			if(isPeriodic){
-				result = true;
-			}
-			// #25726 END
-		}		
+		}
 		return result;
 	}
 	
@@ -10858,22 +10784,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	
 	//#25725 end
-	
-	//#25726 start
-	private boolean validateNewBond(ScLoa scLoa) {
-		if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
-	         for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-	             if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
-	                 if (report.getScLoaReportAttachment() != null) {
-	                	 RequestContext.getCurrentInstance().execute("bondChangesAlertDlg.show()");
-	                	 return false;
-	                 }	                
-	            }
-	         }
-	     }
-		return true;
-	}	
-	//#25726 end
 	
 	//Bug #33674@Syazani -- Start 14/09/2022
 	private void retrieveValBankAccNoDropdown() {

@@ -74,11 +74,10 @@
 						
 						<!-- #25726 START -->
 						<c:if
-							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.fulfilmentType eq 'OF'
-							or specificationBackingBean.managedBean.fulfilmentType eq 'NPA' or specificationBackingBean.managedBean.fulfilmentType eq 'NPS'}">
+							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 								disabled="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PA' 
-								 or specificationBackingBean.managedBean.fulfilmentType eq 'OF' or specificationBackingBean.managedBean.fulfilmentType eq 'NPA'}"
+								 or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(9)}"
 								update="@form" 
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /><ui:remove>#29474</ui:remove>
@@ -143,7 +142,6 @@
 					</c:if> 
 					<ui:remove>#29474 - start</ui:remove><c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '8'}">
-						<!-- #25726 START -->
 						<ui:include
 							src="/xhtml/sc/quatationtender/quotationTenderDetails/specQuotationTenderPaymentDeduction.xhtml" />
 					</c:if>
