@@ -2934,6 +2934,9 @@ return	remarksNotFound;
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 			scQt = qtBackingBean.getManagedBean().getQt();
+			// #28834- Start.
+			this.getManagedBean().setScQt(scQt);
+			// #28834- End.
 			boolean isBpkCentralContract = false;
 			isBpkCentralContract = isBpkCentralContract(scQt);
 			boolean hidden = false;
@@ -3342,6 +3345,14 @@ return	remarksNotFound;
 				}
 				reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 				// #18685 - End
+				
+				// #28834- Start.
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISEBP)) {
+					reqDTO.setRoleCode(QTStatusConst.QT_SF_MOF_COMMIEEE
+							.equals(getManagedBean().getCurrentStatusId()) ? 
+									RoleCode.MOF_DESK_OFFICER.value() : getCommitteeRoleCode());
+				}
+				// #28834- End.
 				
 				resDTO = qtSuppFinalizationSO.submitSupplierFinalizationBrief(reqDTO);
 
@@ -5960,7 +5971,7 @@ return	remarksNotFound;
 		//START - #26169
 		else{
 			//If no available/qualified supplier, exclude the defined decision type(s)
-			if(!getManagedBean().isHasSupplierQualified()){
+			if(!getManagedBean().isHasSupplierQualifiedForCurrentSelection()){	//6906 note 202
 				if (excludedDecisionList == null) {
 					excludedDecisionList = new ArrayList<String>();
 				}
@@ -10421,6 +10432,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				if(resDTO.isSuccessful()) getManagedBean().setHasSupplierQualified(Boolean.TRUE);
 				else getManagedBean().setHasSupplierQualified(Boolean.FALSE);
 				
+				this.getManagedBean().setHasSupplierQualifiedForCurrentSelection(resDTO.isHasSupplierQualifiedForCurrentSelection());//6906 note 202
 			}finally {
 				qtSuppFinalizationSO = null;
 			}	
@@ -10715,9 +10727,13 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					}
 				} else {
 					// need to set Keputusan report at time of Endorsement and signOff status
-					this.getManagedBean().getScQtFinalization()
-							.getScQtFinalizationReports()
-							.addAll(this.getManagedBean().getEndorsementReports());
+					// #28834- Start.
+					if (!isBpkCentralContract(this.getManagedBean().getScQt())) {
+						this.getManagedBean().getScQtFinalization()
+						.getScQtFinalizationReports()
+						.addAll(this.getManagedBean().getEndorsementReports());
+					}
+					// #28834- End.
 				}
 				
 				// Disabling kertas taklimat as per Bug #16172

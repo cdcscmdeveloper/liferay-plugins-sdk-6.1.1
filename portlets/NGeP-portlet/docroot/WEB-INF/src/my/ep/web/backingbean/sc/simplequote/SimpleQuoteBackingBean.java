@@ -5675,6 +5675,7 @@ public class SimpleQuoteBackingBean extends
 		debugLogger("supplierSubmit");
 		boolean isProdContainPrice = Boolean.FALSE;
 		boolean isServiceContainPrice = Boolean.FALSE;
+		boolean isZonalChecking = Boolean.FALSE;
 		// validate tpl spec - product before spki authenticate
 		List<TplSpecAnswer> specAnswerList = getManagedBean().getProductTemplateSpecBean()
 				.getSpecAnswerList();
@@ -5700,14 +5701,25 @@ public class SimpleQuoteBackingBean extends
 			// 30552 - end
 			//#Newly add
 			///#21695 farid start
+			//Bug_34259 - Start
 			TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
 			.getTplSpecMaster();
-			specMaster.setSpecCreatedBySQ(true);			
+			specMaster.setSpecCreatedBySQ(true);	
+			//Bug_34259 - End
 			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(specMaster
 					, specAnswerList, locale);
 			///#21695 farid end
 			//#Newly add
-
+			// #34147 start
+			if (getManagedBean().getScQuote() != null) {
+				if (getManagedBean().getScQuote().getMultipleQuote() == false) {
+					if (getManagedBean().getScQuote().isZonal() == true) {
+						ScQuote scQuote = getManagedBean().getScQuote();
+						getTemplateSpecSO().validateSubmitSimpleQuoteResponse(specAnswerList, scQuote);
+					}
+				}
+			}
+			// #34147 end
 		}
 		
 		if (!isServiceContainPrice && !isProdContainPrice) {

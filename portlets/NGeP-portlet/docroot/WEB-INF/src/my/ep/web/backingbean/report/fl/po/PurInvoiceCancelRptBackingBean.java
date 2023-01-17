@@ -55,8 +55,11 @@ public class PurInvoiceCancelRptBackingBean extends FlReportBackingBean<PurInvoi
 		
 		retrieveReportValueFromDb();
 		//29550 - start
-		onChangeFromToDate();
+		if(hasFactoringUserRole()){
+			onChangeFromToDate();
+		}
 		//29550 - end
+		
 		params.put(FlReportConst.FL_RPT_FROM_DATE, df.format(getManagedBean().getFromDate()));
 		params.put(FlReportConst.FL_RPT_TO_DATE, df.format(getManagedBean().getToDate()));
 		checkOneYearDifferent(getManagedBean().getFromDate(), getManagedBean().getToDate());

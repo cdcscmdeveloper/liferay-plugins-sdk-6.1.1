@@ -163,6 +163,7 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCategoryFacility;
 import my.ep.persistence.entity.sm.SmSupplierCert;
+import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvWorker;
@@ -2893,10 +2894,6 @@ public class SmApplicationBackingBean extends
 				}
 		}
 	//END 28767
-		//#34277 - start
-		getManagedBean().setEditCapital(businessTypeIsROC(
-				getManagedBean().getSmSupplier().getBusinessType()));
-		//#34277 - end
 		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
 		if (fromBpm) {
 		
@@ -3198,6 +3195,12 @@ public class SmApplicationBackingBean extends
 	 */
 	public void updateSmAppl(String applType, String currentPageType,
 			String outputPageType) {
+		
+		// #34166 - Start
+		if (currentPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
+			validateText();
+		}
+		// #34166 - End
 
 		// show confirm popup to save draft before proceed to next section if
 		// still not save draft
@@ -9021,6 +9024,17 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722616);
 		}
 		
+		// #34166 - Start
+		if (getManagedBean().getSelectedBank().getSignatureInstruction().contains("<")
+				|| getManagedBean().getSelectedBank().getSignatureInstruction().contains(">")) {
+			StringBuilder sb = new StringBuilder();
+			Locale locale = new FacesScopes().getUserLocale();
+			sb.append(ResourceBundleUtils.getMessage("lbl.sm.bankDtls.chequesign.tnc",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			throw new EpException(MessageConst.ERROR_775191, new String[] { sb.toString().toLowerCase() });
+		}
+		// #34166 - End
+		
 		if (getManagedBean().isPendingTransaction()){
 			getManagedBean().setPendingTransaction(false);			
 		} 
@@ -9585,6 +9599,9 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 		}
 		//#28776 - end
+		//#32286 - START
+		assignApplicationSupportingDocs();
+		//#32286 - END 
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
@@ -15483,7 +15500,17 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		getManagedBean().setSelectedBankBranchIds(bankBranchesIds);
-
+		//#34135 START - remove deleted branch from list at bank information
+		if(getManagedBean().getSmAppl().getSmSupplierBranches() != null){
+			Iterator<SmSupplierBranch> iterator = getManagedBean().getSmAppl().getSmSupplierBranches().iterator();
+			while (iterator.hasNext()) {
+				SmSupplierBranch suppBranch = iterator.next();
+				if(suppBranch.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
+					iterator.remove();
+				}
+			}
+		}
+		//#34135 END
 		if (shareBankBean.getSmAddress() != null
 				&& shareBankBean.getSmAddress().getPmCountry().getCountryId() != null
 				&& shareBankBean.getSmAddress().getPmState().getStateId() != null
@@ -15814,12 +15841,13 @@ public class SmApplicationBackingBean extends
 		return show;
 	}
 	
-	public boolean showDirector(SmApplicationManagedBean managedBean){
+	// #34174 - START
+	public boolean showDirector(SmApplicationManagedBean managedBean) {
 		boolean show = true;
-		if(managedBean != null && managedBean.getSmAppl() != null){
-			if(managedBean.getSmAppl().isApplValidWithSsm()){
-				if(businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType())){
-					if(managedBean.getSelectedShareHolder().isDirector() != true){
+		if (managedBean != null && managedBean.getSmAppl() != null) {
+			if (managedBean.getSmAppl().isApplValidWithSsm()) {
+				if (businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType())) {
+					if (managedBean.getSelectedShareHolder().isDirector() != true) {
 						show = false;
 					}
 				}
@@ -15827,6 +15855,7 @@ public class SmApplicationBackingBean extends
 		}
 		return show;
 	}
+	// #34174 - END
 	//#27232 - START SSM CHANGES FOR RESUBMIT
 	public void ssmIntegrationResubmit(){
 		//#27165
@@ -16766,6 +16795,9 @@ public class SmApplicationBackingBean extends
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
 					reqDTO.setSelectedBranch(managedBean.getSelectedBranches());
+					//#28777 - START
+					reqDTO.setSmAppl(managedBean.getSmAppl());
+					//#28777 - END
 					/**
 					 * check The supplier been invited for Briefing/Site Visit/
 					 * Proposal Preparation, supplier been participated in QT
@@ -16828,10 +16860,10 @@ public class SmApplicationBackingBean extends
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
 					reqDTO.setSelectedBranch(supplierBranch);
-					
 					//#28777 - START
+					reqDTO.setSmAppl(managedBean.getSmAppl());
 					pendingQT = mofRegistrationSO.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
-					//#28777 - END
+					//#28777 - END 
 					
 					if (pendingQT == true) {
 						msg.append(SmCommonUtil.getMessage("lbl.msg.confirmation.deletebranch.qt.pending", null));
@@ -16897,7 +16929,10 @@ public class SmApplicationBackingBean extends
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
 					reqDTO.setSelectedBranch(supplierBranch);
-
+					//#28777 - START
+					reqDTO.setSmAppl(managedBean.getSmAppl());
+					//#28777 - END
+					
 					pendingQT = mofRegistrationSO
 							.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
 					if (pendingQT == true) {
@@ -16993,6 +17028,10 @@ public class SmApplicationBackingBean extends
 				MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 				reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
 				reqDTO.setSelectedBranch(getManagedBean().getSmAppl().getSmSupplierBranches());
+				//#28777 - START
+				reqDTO.setSmAppl(getManagedBean().getSmAppl());
+				//#28777 - END
+				
 				pendingQT = mofRegistrationSO
 						.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
 
@@ -17182,6 +17221,10 @@ public class SmApplicationBackingBean extends
 	
 	//#31407 - START
 	public void checkBeforeSubmit() {
+		
+		// #34166 - Start
+		validateText();
+		// #34166 - End
 		
 		//check category code start
 		StringBuilder msg = new StringBuilder();
@@ -17462,4 +17505,23 @@ public class SmApplicationBackingBean extends
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "taskListView");
 	}
 	//#32304 - end
+	
+	// #34166 - Start
+	public void validateText() {
+		if (getManagedBean().getSmAppl() != null) {
+			if (!(getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty())) {
+				for (SmSupplierBank banks : getManagedBean().getSmAppl().getSmSupplierBanks()) {
+					if (banks.getSignatureInstruction().contains("<") || banks.getSignatureInstruction().contains(">")) {
+						StringBuilder sb = new StringBuilder();
+						Locale locale = new FacesScopes().getUserLocale();
+						sb.append(ResourceBundleUtils.getMessage("lbl.sm.bankDtls.chequesign.tnc",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+						throw new EpException(MessageConst.ERROR_775191, new String[] { sb.toString().toLowerCase() });
+
+					}
+				}
+			}
+		}
+	}
+	// #34166 - End
 }

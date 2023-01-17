@@ -26,8 +26,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.application.ViewHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -3312,4 +3314,19 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "taskListView");
 	}
 	//#32304 - end
+	
+	// #34166 - Start
+	public void validateText(FacesContext f, UIComponent c, Object obj) {
+		String remarks = (String) obj;
+		log.info("This is the remark >>>>>>> " + remarks);
+		String fieldsName = (String) c.getAttributes().get("param");
+		log.info("This is the second parameter >>>>>>> " + fieldsName);
+		if (remarks.contains("<") || remarks.contains(">")) {
+			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775191,
+							new String[] { fieldsName.toLowerCase() })));
+		}
+	}
+	// #34166 - End
+	
 }

@@ -7128,16 +7128,32 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
 		}
 		//9019 - End (Harun)
+		
+		//9019 - Start (Harun) #Note-360 Remove checking while not submit and allow to proceed 
+		//       when click sidemenu
+		boolean isSubmit = StringUtils.isNotEmpty(reqDTO.getOutcome())
+				&& reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) ? true : false;
+		//9019 - End (Harun)
 
 		if (priviousIndex != activeIndex) {
 			if (!isReadOnly) {
 				switch (priviousIndex) {
 				case 0:
-					detailSO.validateQTDetails(reqDTO);
+					//9019 - Start (Harun) #Note-360 Remove checking while not submit and allow to proceed 
+					//       when click sidemenu
+					if (isSubmit) {
+						detailSO.validateQTDetails(reqDTO);
+					}
+					//9019 - End (Harun)
 					// retrieveQuationTenderDetails(this.getManagedBean().getQt().getQtId());
 					break;
 				case 1:
-					detailSO.validateSupplierQualificationDtls(reqDTO);
+					//9019 - Start (Harun) #Note-360 Remove checking while not submit and allow to proceed 
+					//       when click sidemenu
+					if (isSubmit) {
+						detailSO.validateSupplierQualificationDtls(reqDTO);
+					}
+					//9019 - End (Harun)
 					break;
 
 				case 2:
@@ -7156,7 +7172,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							// #25077 - #91 - End
 						}
 						
-					detailSO.validateApprovalDetails(reqDTO);
+					//9019 - Start (Harun) #Note-360 Remove checking while not submit and allow to proceed 
+					//       when click sidemenu
+					if (isSubmit) {
+						detailSO.validateApprovalDetails(reqDTO);
+					}
+					//9019 - End (Harun)
 					// retrieveApprovalTabDtl();
 					break;
 
@@ -12914,4 +12935,63 @@ public void retrieveDemoQtDetails(Long qtId) {
 				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	//#28784 note #507 - end
+	
+	
+	//#28784 note-#634 - Start
+	/**
+	 * To Retrieve zonal Detail by qt id.
+	 * 
+	 * @param QuationTenderReqDTO
+	 * 
+	 * @return QuationTenderResDTO
+	 * 
+	 */
+	public void retrieveZonalDetailAfterDemoDeletion(Long qtId) {
+		if (null != qtId) {
+			IQTDetailSO qtDetailsSO;
+			try {
+				qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTDetailSO.class);
+				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+				tenderReqDTO.setMaintanceFlow(this.getManagedBean().isMaintanceFlow());
+				tenderReqDTO.setQtId(qtId);
+				tenderReqDTO.setBdgDtlsReq(true);
+				ScQt scQt = this.getManagedBean().getQt();
+				QuationTenderResDTO tenderResDTO = qtDetailsSO.retrieveZonalDetail(tenderReqDTO);
+				if (tenderResDTO.getQtDetail() != null) {
+					ScQt newScQt = tenderResDTO.getQtDetail();
+					scQt.setScQtSupplierCriteria(newScQt.getScQtSupplierCriteria());
+					getManagedBean().setQt(scQt);
+
+					if (null != this.getManagedBean().getQt().getZoneLocationLevel()) {
+						this.getManagedBean().setStateCodes(
+								this.getManagedBean().getQt().getZoneLocationLevel().getParameterCode());
+					}
+
+					// Populate zone detail into tree node
+					if (scQt.getScQtSupplierCriteria() != null
+							&& scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
+						List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias()
+								.getTplSpecZoneDtls();
+						populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
+						// setting into zones bean to validate zones while
+						// adding
+						if (CollectionUtils.isNotEmpty(specZoneDtls)) {
+							List<ZonesBean> zoneBeanLst = new ArrayList<ZonesBean>();
+							for (TplSpecZoneDtl specZoneDtl : specZoneDtls) {
+								ZonesBean bean = new ZonesBean();
+								bean.setTplSpecZoneDtl(specZoneDtl);
+								zoneBeanLst.add(bean);
+							}
+							this.getManagedBean().setBeans(zoneBeanLst);
+						}
+					}
+				}
+			} catch(Exception e) {
+				SLAUtils.getInstance().logSLAError("QT", "RetrieveZonalDetailForDemo", qtId.toString(), "retrieveZonalDetailAfterDemoDeletion", getUserIdSessionFromLoginId(), e);
+			}
+		}
+
+	}
+	// #28784 note-#634 - End
 }

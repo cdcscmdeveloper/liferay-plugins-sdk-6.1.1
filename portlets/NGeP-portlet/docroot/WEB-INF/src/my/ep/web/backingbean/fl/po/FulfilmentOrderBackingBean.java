@@ -703,6 +703,18 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				}
 				
 			}
+			
+			//34316-Start
+			if(getManagedBean().getFulfilmentOrder().isYep()){
+				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+				flReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_ORDER);
+				flReqDTO.setFlOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
+				
+				FulfilmentResDTO resDTO = null;
+				resDTO= getFulfilmentOrderSO().validateYepPOCOCurrentStatus(flReqDTO);
+				getManagedBean().setYepButtonFlag(resDTO.getYepButtonFlag());
+			}
+			//34316-End
 		}
 
 		getEspkbCommitmentNo();
@@ -857,6 +869,18 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(false);
 			}
+			
+			//34316-Start
+			if(getManagedBean().getFulfilmentOrder().isYep()){
+				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+				flReqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
+				flReqDTO.setFlOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
+				
+				FulfilmentResDTO resDTO = null;
+				resDTO= getFulfilmentOrderSO().validateYepPOCOCurrentStatus(flReqDTO);
+				getManagedBean().setYepButtonFlag(resDTO.getYepButtonFlag());
+			}
+			//34316-End
 		}
 	}
 	
@@ -1336,7 +1360,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			} catch (Exception e) {
-				throw new EpException(MessageConst.ERROR_776107);
+				throw new EpException(MessageConst.ERROR_000001);//34349
 				
 			}
 			return messageSuffix;	

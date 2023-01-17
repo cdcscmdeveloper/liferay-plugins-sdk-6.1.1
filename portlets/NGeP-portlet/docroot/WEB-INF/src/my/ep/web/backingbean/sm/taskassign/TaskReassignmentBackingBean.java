@@ -240,6 +240,8 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		//29822 - start
 		checkPendingTaskRemove();
 		//29822 - end
+		
+		searchTask();//#29822 - checking if record not found to throw ERROR_770208
 
 	}
 
@@ -435,6 +437,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 							if(!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && responseDTO.getWorklistVO().getWorklistItem().size() > 0){
 								getManagedBean().setAllGroupTasks(new ArrayList <WorklistItemVO>()); //29822 - bug no 1.1 on comment no 106
 								getManagedBean().setCheckAllGroupTasksEnabled(true);
+								getManagedBean().setEnableRemoveAllGroupTasksButton(true);//#29822 - remove button disable - reopen 20/12/2022
 								for(WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()){
 									getManagedBean().getAllGroupTasks().add(worklist);
 								}
@@ -566,6 +569,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 							if(!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && responseDTO.getWorklistVO().getWorklistItem().size() > 0){
 								getManagedBean().setAllOthersTasks(new ArrayList <WorklistItemVO>());
 								getManagedBean().setCheckAllOthersTasksEnabled(true);
+								getManagedBean().setEnableRemoveAllOthersTasksButton(true);//#29822 - remove button disable - reopen 20/12/2022
 								for(WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()){
 									getManagedBean().getAllOthersTasks().add(worklist);
 								}
@@ -577,14 +581,14 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 						}
 
 						//#29822 - start - reendorse change for other user cannot submit remove all 
-						//#29822 - recommit remove checking redundance
+						//#29822 - check all and trash can didn't disable - reopen 20/12/2022
 						if(getManagedBean().isShowRemoveProcessMessageOther()==true ) {
 							//disable check box for other task
-							getManagedBean().setCheckAllGroupTasksEnabled(false);
+							getManagedBean().setCheckAllOthersTasksEnabled(false);
 							//disable button for other task
-							getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+							getManagedBean().setEnableRemoveAllOthersTasksButton(false);
 						}
-						//#29822 - end - reendorse change for other user cannot submit remove all  
+						//#29822 - end  - check all and trash can didn't disable - reopen 20/12/2022
 					}
 				}
 			} catch (Exception e) {
@@ -2275,5 +2279,63 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		return loginSessionUserId;
 	}
 	//#29822 - end
+	
+	//#29822-start - checking if record not found to throw ERROR_770208
+	public void searchTask() {
+		log.info("search for alert if record not found");
+		IBpmSO bpmSO = null;
+		BpmRequestDTO reqDTO = null;
+		BpmResponseDTO responseDTO = null;
+		String loginId = null;
+		List<Integer> statusIds = null;
+		TaskAssignmentSearchBean taskSearchBean = null;
+
+		try {
+			taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
+			loginId = taskSearchBean.getUser().getPmUser() != null ? taskSearchBean.getUser().getPmUser().getLoginId() : null;
+			if (loginId != null && loginId.length() > 0) {
+				statusIds = retrieveAvailableStatusId();
+				if (statusIds != null && !statusIds.isEmpty()) {
+					bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+					reqDTO = new BpmRequestDTO();
+					Object ctxToken = bpmSO.authenticate(loginId);
+
+					reqDTO.setLimit(PagingConst.ROWS_PER_PAGE); 
+					reqDTO.setStatusList(statusIds);
+					reqDTO.setUserId(loginId);
+					reqDTO.setCtxToken(ctxToken);
+					List<String> docNumberList = new ArrayList<String>();
+					if (StringUtils.isNotBlank(getManagedBean().getTaskAssignmentSearchBean().getDocNo())) {
+						docNumberList.add(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+						reqDTO.setDocNumberList(docNumberList);
+					}
+
+					if (getManagedBean().getTaskAssignmentSearchBean().getDocType() != null) {
+						reqDTO.setDocType(getManagedBean().getTaskAssignmentSearchBean().getDocType());
+					}
+
+					//#29822-start - parsing value to bpm
+					reqDTO.setState(BpmConstants.STATE_ASSIGNED);
+					reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
+					responseDTO = bpmSO.getReassignedItems(reqDTO);
+					//#29822-end - parsing value to bpm
+					
+					if (responseDTO.getWorklistVO() != null) {
+						log.info("BPM size******"+ responseDTO.getWorklistVO().getWorklistItem().size());
+						log.info("BPM total******"+ responseDTO.getWorklistVO().getTotal());
+
+						System.out.println("getManagedBean().getTaskAssignmentSearchBean().getDocNo(): " + getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+
+						if(responseDTO.getWorklistVO().getWorklistItem().isEmpty() && responseDTO.getWorklistVO().getWorklistItem().size() == 0){
+							throw new EpException(MessageConst.ERROR_770208);
+						}
+					}
+				}
+			}
+		} finally {
+			bpmSO = null;
+		} 
+	}
+	//#29822-end - checking if record not found to throw ERROR_770208
 	
 }
