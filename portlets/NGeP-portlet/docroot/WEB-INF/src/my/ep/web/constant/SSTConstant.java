@@ -58,4 +58,10 @@ public class SSTConstant {
 	public static String isZonal = "isZonal";
 	public static String serviceScope = "serviceScope";
 	public static String bean = "bean";
+	//26226 - start
+	public static String SUPPLIER_NAME = "supplierName";
+	public static String ZONE_ID = "zoneId";
+	public static String LANGUAGE_CODE_EN = "en";
+	//26226 - end
+	
 }

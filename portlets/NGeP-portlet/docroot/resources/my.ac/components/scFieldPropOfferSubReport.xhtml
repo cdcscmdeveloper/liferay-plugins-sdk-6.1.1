@@ -10,12 +10,22 @@
 	<cc:interface>
 		<cc:attribute name="bBean" required="true" default="" />
 		<cc:attribute name="required" default="true" />
+		
 	</cc:interface>
 
 	<cc:implementation>
-
-
-
+     <style type="text/css">
+			.ui-autocomplete-list-item {
+				border: 0px none;
+			    cursor: pointer;
+			    font-weight: normal;
+			    margin: 1px 0;
+			    padding: 3px 5px;
+			    text-align: left;
+			    white-space: normal !important;
+			    width: 500px;
+			}
+	  </style>
 
 
 		<h:outputText styleClass="instruction"
@@ -27,7 +37,7 @@
 		<ui:param name="ptjEnableDisable"
 			value="#{cc.attrs.bBean.getPtjValues()}"></ui:param>
 		
-		<table style="width:80%;margin-left: auto;margin-right: auto;">
+		<table style="width:100%;margin-left: auto;margin-right: auto;">
 			<tr>
 				<td>
 				<p:outputLabel value="#{lbl['lbl.rpt.supplier']}"/>
@@ -36,7 +46,7 @@
 			    
 			    <td>	
 					<p:inputText value="#{qtPropOfferSubReportBB.managedBean.supplierName}"
-					disabled="true" readonly="true" style="width:520px;" />	
+					disabled="true" readonly="true" style="width:560px;" />	
 			    </td>
 			</tr>				
 			
@@ -45,7 +55,7 @@
 					<p:outputLabel value="#{lbl['lbl.sc.qtn.no']}"/>
 				</td>
 				<td>
-					<p:autoComplete size="40" width="200px !important"
+					<p:autoComplete size="60" 
 							title="#{lbl['lbl.sc.qtn.no']}"
 							value="#{qtPropOfferSubReportBB.managedBean.autoScQt.qtNo}"
 							completeMethod="#{qtPropOfferSubReportBB.autoCompleteQtNo}"
@@ -58,7 +68,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.title']}"/>
 				</td>
 				<td colspan="2">
-				<p:autoComplete size="90" width="500px !important"
+				<p:autoComplete size="90"
 							title="#{lbl['lbl.sc.title']}"
 							value="#{qtPropOfferSubReportBB.managedBean.autoScQt.qtTitle}"
 							completeMethod="#{qtPropOfferSubReportBB.autoCompleteQtTitle}"
@@ -70,7 +80,7 @@
 					<p:outputLabel value="#{lbl['lbl.sc.proposal.no']}"/>
 				</td>
 				<td>
-					<p:autoComplete size="40" width="200px !important"
+					<p:autoComplete size="60" 
 							title="#{lbl['lbl.sc.proposal.no']}"
 							value="#{qtPropOfferSubReportBB.managedBean.autoScQtProposal.proposalNo}"
 							completeMethod="#{qtPropOfferSubReportBB.autoCompleteProposalNo}"
@@ -83,7 +93,7 @@
 				<td>		
 					 <p:selectManyMenu id="manyMenuSts" value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scStatusManyMenu}" 
 						converter="#{statusConverter}" filter="true" multiple="true" filterMatchMode="startsWith" showCheckbox="true" styleClass="manymenu-advanced"
-						style="width:200px;height:70px;position:relative;">
+						style="width:300px;height:70px;position:relative;">
 						<f:selectItems
 							value="#{cc.attrs.bBean.reportStatusDropdownValuesProposalOfferSubmission()}"
 							var="status" itemValue="#{status}" itemLabel="#{status}" 
@@ -94,23 +104,42 @@
 				</td>	
 			</tr>
 			<tr>
-				<td class="columnGenClass"><p:outputLabel
-						value="#{lbl['lbl.rpt.proposal.submitted.date.from']}" style="width:120px;" /></td>
-				<td class="columnDateFromClass"><p:calendar showOn="button"
-						value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scPublishFromDate}"
-						navigator="true" display="inline" readonlyInput="true" size="9"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						partialSubmit="true" process="@form">
-
-					</p:calendar></td>
-				<td class="columnDateToClass"><p:outputLabel
-						value="#{lbl['lbl.rpt.proposal.submitted.date.to']}" style="width:120px;" /></td>
-				<td><p:calendar showOn="button" navigator="true"
-						value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scPublishToDate}"
-						display="inline" readonlyInput="true" size="9"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						partialSubmit="true" process="@form">
-					</p:calendar></td>
+				<TD><p:outputLabel value="#{lbl['lbl.rpt.proposal.submitted.date.from']}"
+						style="margin-top:5px;width:120px;margin-left:4px" /></TD>
+				<TD><p:selectOneMenu
+						value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scPropSubmitFromMonth}"
+						style="margin-top:5px;width:130px;">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+							itemValue="#{null}"></f:selectItem>
+						<f:selectItems value="#{cc.attrs.bBean.generateMonthList()}"></f:selectItems>
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							listener="#{cc.attrs.bBean.propSubmitToMonthUpdate(cc.attrs.bBean.managedBean.scReportSearchBean)}" 
+							update="@([id$=propSubmitMonth])" />
+					</p:selectOneMenu>
+					<p:selectOneMenu
+						value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scPropSubmitFromYear}"
+						style="margin-top:5px;width:90px;">
+						<f:selectItems value="#{cc.attrs.bBean.generateYearList()}"></f:selectItems>
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							listener="#{cc.attrs.bBean.propSubmitToDtUpdate(cc.attrs.bBean.managedBean.scReportSearchBean)}"
+							update="@([id$=propSubmitDt])" />
+					</p:selectOneMenu></TD>
+				<TD><p:outputLabel value="#{lbl['lbl.rpt.proposal.submitted.date.to']}"
+						style="margin-top:2px;width:120px;margin-left:-8px" /></TD>
+				<TD><p:selectOneMenu id="propSubmitMonth"
+						value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scPropSubmitToMonth}"
+						style="margin-top:5px;width:130px;">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+							itemValue="#{null}"></f:selectItem>
+						<f:selectItems value="#{cc.attrs.bBean.generateMonthList()}"></f:selectItems>
+						<p:ajax event="change" process="@this" partialSubmit="true" />
+					</p:selectOneMenu>
+					<p:selectOneMenu id="propSubmitDt" disabled="true"
+						value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scPropSubmitToYear}"
+						style="margin-top:5px;width:90px;">
+						<f:selectItems value="#{cc.attrs.bBean.generateYearList()}"></f:selectItems>
+						<p:ajax event="change" process="@this" partialSubmit="true" />
+					</p:selectOneMenu></TD>
 			</tr>
 		</table>	
 

@@ -10,6 +10,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
 import my.ep.web.constant.report.SmReportConst;
@@ -96,8 +97,8 @@ public class ProfileOfRegCompanyRptBackingBean extends
 	}
 	
 	public void populateMofNo(BaseEntity entity) {
-		SmSupplier selectedSupplier = (SmSupplier)entity;
-		this.getManagedBean().setMofNo(selectedSupplier.getMofNo());
+		SmMofAccount selectedMof= (SmMofAccount)entity;
+		this.getManagedBean().setMofNo(selectedMof.getMofNo());
 	}
 	
 	// #29712, #32564 - start

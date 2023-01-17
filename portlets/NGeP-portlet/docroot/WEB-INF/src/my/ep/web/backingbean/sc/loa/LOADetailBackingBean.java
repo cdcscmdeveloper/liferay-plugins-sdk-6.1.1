@@ -167,6 +167,7 @@ import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
@@ -532,7 +533,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		// #27797 - end
 		removeUnwantedLampiranA3Report(1); //#29006 - note 650
-					
+		this.getManagedBean().setLoiLoaItemsResult(new ArrayList<ScLoiLoaItem>(this.getManagedBean().getScLoa().getScLoiLoaItems()));//29007 - fix issue 2 search action note 347		
 		return QTConstants.LOA_PAGE;
 	}
 	
@@ -2317,7 +2318,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @throws Exception the exception
 	 */
 	private void generateAgreementLetterDocFromVelocity(ScAttachment attachment, ScLoa scLoa, ScQt scQt) throws Exception {
-		//debugLogger("generateAgreementLetterDocFromVelocity" );
 		populateAttachmentDetails(attachment);
 		CommonUtils commonUtils = new CommonUtils();
 		SimpleDateFormat dateSDF = new SimpleDateFormat(
@@ -2633,9 +2633,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		//26226 Start 
 		String itemType = null;
 		
-		String dafaltValue = "T/B";
-		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-			dafaltValue = "N/A";//#29006
+		String dafaltValue = SSTConstant.TB;
+		if (SSTConstant.LANGUAGE_CODE_EN.equals(new FacesScopes().getUserLocale().getLanguage())) {
+			dafaltValue = SSTConstant.NA;//#29006
 		}
 		//End
 
@@ -2665,8 +2665,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		jadualHargaItemBean.setServiceItemBeans(serviceItemBeans);
 		context.put("jadualHargaItemBean", jadualHargaItemBean);
 		//26226 Start
-		context.put("serviceScope", dafaltValue);
-		context.put("itemType", itemType);
+		context.put(SSTConstant.serviceScope, dafaltValue);
+		context.put(SSTConstant.itemType, itemType);
 		// End
 	}
 
@@ -5615,10 +5615,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		//End
 		
-		/*log.info("Item Name --->"+item.getScRequestItem().getItemName() );
-		log.info("Zone Name --->"+item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : "" );
-		log.info("Delivery Term --->"+tplSpecQuestion.getClDeliveryTerm().toString() );
-		log.info("Duration month --->"+tplSpecQuestion.getClDurationMonth().toString());*/
 		/*BigDecimal unitPrice = item.getUnitPrice().setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		jadualHarga.setUnitPrice(unitPrice.toString());
 		jadualHarga.setFreqUom(null == item.getScRequestItem().getTplSpecQuestion()
@@ -8764,6 +8760,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 	public void onResetSupplierCriteria() {
 		setItemNameSearchCriteria(null);
+		this.getManagedBean().setLoiLoaItemsResult(new ArrayList<ScLoiLoaItem>(this.getManagedBean().getScLoa().getScLoiLoaItems()));//29007 - fix issue 2 search action note 347
 	}
 
 	public void onClickSupplierProposalUpdateLink(ScLoiLoaItem scLoiLoaItem) {
@@ -9972,20 +9969,40 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	/*public void resetSpecKeyword(){
 		this.getManagedBean().setSpecKeyword(null);
 	}*/
-	public void searchSupplierItemByName(){
-		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-		if(this.getItemNameSearchCriteria() != null && this.getItemNameSearchCriteria() != ""){
-			reqDTO.setItemName(this.getItemNameSearchCriteria());
-			reqDTO.setScLoa( this.getManagedBean().getScLoa());
-			AwardSupplierResDTO resDTO = getQtAwardSO().searchSupplierItemByName(reqDTO);
-			
-			this.getManagedBean().getScLoa().setScLoiLoaItems(resDTO.getScLoiLoaItemList());
-		}else{
-			reqDTO.setScLoa( this.getManagedBean().getScLoa());
-			AwardSupplierResDTO resDTO = getQtAwardSO().searchSupplierItemByID(reqDTO);
-			
-			this.getManagedBean().getScLoa().setScLoiLoaItems(resDTO.getScLoiLoaItemList());
-		}
+	//29007 - fix issue 2 search action start note 347
+	/**
+	 * Search populated ScLoiLoaItems by ScRequestItem.itemName and build filtered results
+	 * @return void
+	 */
+	public void searchSupplierItemByName(){ 
+		String itemNameInput = this.getItemNameSearchCriteria()==null? "": this.getItemNameSearchCriteria().trim();
+		if(StringUtils.isEmpty(itemNameInput)){
+			this.getManagedBean().setLoiLoaItemsResult(new ArrayList<ScLoiLoaItem>(this.getManagedBean().getScLoa().getScLoiLoaItems()));
+			return;
+		} 
+		this.getManagedBean().setLoiLoaItemsResult(new ArrayList<ScLoiLoaItem>());
+		if(CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoiLoaItems())){
+			for(ScLoiLoaItem item: this.getManagedBean().getScLoa().getScLoiLoaItems()){
+				String itemName = item.getScRequestItem()!=null ? item.getScRequestItem().getItemName().trim():"";
+				if(item.getScRequestItem()!=null && StringUtils.containsIgnoreCase(itemName, itemNameInput)){
+					this.getManagedBean().getLoiLoaItemsResult().add(item);
+				}
+			}
+		} 
+//		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+//		if(this.getItemNameSearchCriteria() != null && this.getItemNameSearchCriteria() != ""){
+//			reqDTO.setItemName(this.getItemNameSearchCriteria());
+//			reqDTO.setScLoa( this.getManagedBean().getScLoa());
+//			AwardSupplierResDTO resDTO = getQtAwardSO().searchSupplierItemByName(reqDTO);
+//			
+//			this.getManagedBean().getScLoa().setScLoiLoaItems(resDTO.getScLoiLoaItemList());
+//		}else{
+//			reqDTO.setScLoa( this.getManagedBean().getScLoa());
+//			AwardSupplierResDTO resDTO = getQtAwardSO().searchSupplierItemByID(reqDTO);
+//			
+//			this.getManagedBean().getScLoa().setScLoiLoaItems(resDTO.getScLoiLoaItemList());
+//		}
+		//29007 - fix issue 2 search action end note 347
 	}
 	public void searchSupplierSpecification(ScLoiLoaItem loiLoaItem,boolean mainSearch){
 		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
@@ -10994,5 +11011,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	// #34242 - End
+	
+	//29007 - fix issue 2 search action note 347 - start
+	/**
+	 * To calculate total price based on item search result
+	 * @return BigDecimal - Total Price of ScLoiLoaItem list
+	 */
+	public BigDecimal calculateTotalItemPrice() {
+		BigDecimal totalPrice = BigDecimal.ZERO;
+		if(CollectionUtils.isNotEmpty(this.getManagedBean().getLoiLoaItemsResult())){
+			for(ScLoiLoaItem item: this.getManagedBean().getLoiLoaItemsResult()){
+				totalPrice = calcSubTotalPrice(item).add(totalPrice) ;
+			}
+		}
+		totalPrice.setScale(2, BigDecimal.ROUND_UP);
+
+		return totalPrice;
+	}
+	//29007 - fix issue 2 search action note 347 - end
+
 }
 
