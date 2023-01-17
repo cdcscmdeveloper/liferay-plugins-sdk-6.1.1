@@ -1148,4 +1148,29 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		return new Date();
 	}
 	// #21692 - end
+	
+	//#14306 - Start
+	/**
+	 * construct the proposal Submitted to year based on ScPropSubmitFromYear(
+	 * 
+	 * @param reportSearchbean getScPropSubmitFromYear
+	 * 
+	 * @return ScPropSubmitToYear 
+	 */
+	public void propSubmitToDtUpdate(ScReportFieldsSearchBean reportSearchbean) {
+		
+		reportSearchbean.setScPropSubmitToYear(reportSearchbean.getScPropSubmitFromYear());
+	}
+
+	/**
+	 * construct the proposal Submitted to month based on ScPropSubmitFromMonth(
+	 * 
+	 * @param reportSearchbean getScPropSubmitFromMonth
+	 * 
+	 * @return ScPropSubmitToMonth
+	 */
+	public void propSubmitToMonthUpdate(ScReportFieldsSearchBean reportSearchbean) {
+		reportSearchbean.setScPropSubmitToMonth(reportSearchbean.getScPropSubmitFromMonth());
+	}
+	//#14306 - End
 }

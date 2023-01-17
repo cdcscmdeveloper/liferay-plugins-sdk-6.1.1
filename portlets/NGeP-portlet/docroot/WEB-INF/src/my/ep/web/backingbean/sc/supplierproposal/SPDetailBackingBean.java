@@ -1696,6 +1696,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						//finProposalChecklist.setScQtProposalChecklistAttachment(null);
 						removeAttachment = true;
 						// #26339 - End
+	
 						finProposalChecklist.setSubmitted(true);
 						finProposalChecklist
 								.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
@@ -2236,9 +2237,11 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					// #26339 - End
 					//start Bug #28887
 					if (null != assetProposalChecklist) {
+							
 						assetProposalChecklist.setSubmitted(true);
 						//this.getManagedBean().setReadOnly(true);
 						assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+							
 					}
 					//end Bug #28887
 					// #28398 BUG - 26339 CR - End
@@ -5562,7 +5565,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			validateFinacialProposalAttachments(true);//#28792
 			//#21695 Farid start 1/4/2021
 			validateTechSuppNotOfferAll();
-			//#21695 Farid end 1/4/2021			
+			//#21695 Farid end 1/4/2021		
+			//#34204 - Start
+			checkFinancialProposalAttachmentsForStatusCompliance();
+			//#34204 - End
 			this.getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 		} finally {
 			proposalSO = null;
@@ -6495,5 +6501,52 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		return true;
 	}
 	//Bug #33141@Syazani -- End 01/07/2022
+	
+	//#34204 - Start
+	/**
+	 * To set complience status for financial checklist attachment for asset liabilities & credit facility 
+	 */
+	private void checkFinancialProposalAttachmentsForStatusCompliance(){
+		List<ScQtProposalChecklist> financialChecklist = getManagedBean().getFinanceCheckDetailsList();
+		if(null!=financialChecklist && CollectionUtils.isNotEmpty(financialChecklist)){
+			for (ScQtProposalChecklist checklist : financialChecklist) {
+
+				PmDocument document = checklist.getScQtCheckList().getPmDocument();
+				if(null!=document && null!=document.getDocGroupId() && new Integer(ParameterConst.ASSET_LIABILITIES_GROUP_ID).equals(document.getDocGroupId()) ){
+				
+					ScQtProposalChecklist finProposalChecklist = findProposalChecklistByDocDefKey(
+							getManagedBean().getFinanceCheckDetailsList(),
+							QTConstants.FINANCIAL_ASSET_LIABILITY_CODE);
+					
+						if(null!=finProposalChecklist && finProposalChecklist.isSubmitted()){
+							boolean assetLiabilityUpload=assetLiabilitiesUpload(finProposalChecklist);
+							if(assetLiabilityUpload){
+								checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+						    }else{
+						    	checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+						    }
+						}
+	
+					
+			    }else if(null!=document && null!=document.getDocGroupId() && new Integer(ParameterConst.CREDIT_FACILITIES_GROUP_ID).equals(document.getDocGroupId()) ){
+		
+					 ScQtProposalChecklist finProposalChecklist = findProposalChecklistByDocDefKey(
+							getManagedBean().getFinanceCheckDetailsList(),
+							QTConstants.FINANCIAL_CREDIT_FACILITY_CODE);
+					
+					    if(null!=finProposalChecklist && finProposalChecklist.isSubmitted()){
+							boolean creditfacilityUpload=creditFacilityUpload(finProposalChecklist);
+							if(creditfacilityUpload){
+								checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+							}else{
+								checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+							}
+				        }
+			    }
+	
+		    } // end loop
+	    }
+	}
+	//#34204 - End
 	
 }

@@ -3931,6 +3931,7 @@ public class QTCloneBackingbean extends
 		CreateQtBackingBean createQtBB = (CreateQtBackingBean) elContext.getELResolver().getValue(elContext, null, "createQtBB");
 		if(null!=scQt.getCircularVer()){//25635-start
 		createQtBB.changePanelGroupItem();
+		this.getManagedBean().setPanelItemList(null);//34330&25635
 		}//25635-End
 		}
 	
