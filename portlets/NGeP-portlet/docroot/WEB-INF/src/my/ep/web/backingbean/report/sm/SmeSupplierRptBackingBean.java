@@ -66,21 +66,25 @@ public class SmeSupplierRptBackingBean extends SmReportBackingBean<SmeSupplierRp
 		}
 		if (getManagedBean().getSmeCorpRegistered() != null) {
 			params.put(SmReportConst.PARAM_SME_CORP_REG, getManagedBean().getSmeCorpRegistered());
-		}
-		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-		if (getManagedBean().getDateStartFrom() != null) {
-			getManagedBean().setDateFrom(getManagedBean().getDateStartFrom());
-			getManagedBean().setDateTo(getManagedBean().getDateStartTo());
-		} else if (getManagedBean().getDateEndFrom() != null) {
-			getManagedBean().setDateFrom(getManagedBean().getDateEndFrom());
-			getManagedBean().setDateTo(getManagedBean().getDateEndTo());
-		}
-		if(getManagedBean().getDateFrom() != null){
-			params.put(SmReportConst.PARAM_END_DATE_FROM, df.format(getManagedBean().getDateFrom()));
-		}
-		if(getManagedBean().getDateTo() != null){
-			params.put(SmReportConst.PARAM_END_DATE_TO, df.format(getManagedBean().getDateTo()));
-		}
+			// #29617 ReOpen - Start
+			if(getManagedBean().getSmeCorpRegistered().equalsIgnoreCase("1")){
+				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+				if (getManagedBean().getDateStartFrom() != null) {
+					getManagedBean().setDateFrom(getManagedBean().getDateStartFrom());
+					getManagedBean().setDateTo(getManagedBean().getDateStartTo());
+				} else if (getManagedBean().getDateEndFrom() != null) {
+					getManagedBean().setDateFrom(getManagedBean().getDateEndFrom());
+					getManagedBean().setDateTo(getManagedBean().getDateEndTo());
+				}
+				if(getManagedBean().getDateFrom() != null){
+					params.put(SmReportConst.PARAM_END_DATE_FROM, df.format(getManagedBean().getDateFrom()));
+				}
+				if(getManagedBean().getDateTo() != null){
+					params.put(SmReportConst.PARAM_END_DATE_TO, df.format(getManagedBean().getDateTo()));
+				}
+			}
+		} 
+		// #29617 ReOpen - Start 
 		generateSmReport(params);
 	}
 
