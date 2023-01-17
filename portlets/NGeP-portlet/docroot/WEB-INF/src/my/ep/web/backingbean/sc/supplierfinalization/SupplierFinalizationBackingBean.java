@@ -5971,7 +5971,7 @@ return	remarksNotFound;
 		//START - #26169
 		else{
 			//If no available/qualified supplier, exclude the defined decision type(s)
-			if(!getManagedBean().isHasSupplierQualified()){
+			if(!getManagedBean().isHasSupplierQualifiedForCurrentSelection()){	//6906 note 202
 				if (excludedDecisionList == null) {
 					excludedDecisionList = new ArrayList<String>();
 				}
@@ -10432,6 +10432,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				if(resDTO.isSuccessful()) getManagedBean().setHasSupplierQualified(Boolean.TRUE);
 				else getManagedBean().setHasSupplierQualified(Boolean.FALSE);
 				
+				this.getManagedBean().setHasSupplierQualifiedForCurrentSelection(resDTO.isHasSupplierQualifiedForCurrentSelection());//6906 note 202
 			}finally {
 				qtSuppFinalizationSO = null;
 			}	
