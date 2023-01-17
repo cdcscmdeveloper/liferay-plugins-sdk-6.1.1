@@ -66,21 +66,41 @@ public class SmeSupplierRptBackingBean extends SmReportBackingBean<SmeSupplierRp
 		}
 		if (getManagedBean().getSmeCorpRegistered() != null) {
 			params.put(SmReportConst.PARAM_SME_CORP_REG, getManagedBean().getSmeCorpRegistered());
-		}
-		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-		if (getManagedBean().getDateStartFrom() != null) {
-			getManagedBean().setDateFrom(getManagedBean().getDateStartFrom());
-			getManagedBean().setDateTo(getManagedBean().getDateStartTo());
-		} else if (getManagedBean().getDateEndFrom() != null) {
-			getManagedBean().setDateFrom(getManagedBean().getDateEndFrom());
-			getManagedBean().setDateTo(getManagedBean().getDateEndTo());
-		}
-		if(getManagedBean().getDateFrom() != null){
-			params.put(SmReportConst.PARAM_END_DATE_FROM, df.format(getManagedBean().getDateFrom()));
-		}
-		if(getManagedBean().getDateTo() != null){
-			params.put(SmReportConst.PARAM_END_DATE_TO, df.format(getManagedBean().getDateTo()));
-		}
+			// #29617 ReOpen - Start
+			if(getManagedBean().getSmeCorpRegistered().equalsIgnoreCase("1")){
+				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+				if (getManagedBean().getDateStartFrom() != null) {
+					getManagedBean().setDateFrom(getManagedBean().getDateStartFrom());
+					// #29617 ReOpen - Start
+					params.put(SmReportConst.PARAM_START_DATE_FROM, df.format(getManagedBean().getDateFrom()));
+					if (getManagedBean().getDateStartTo() != null) {
+						getManagedBean().setDateTo(getManagedBean().getDateStartTo());
+					} else {
+						Calendar calTo = Calendar.getInstance();
+						Date dtTo = getManagedBean().getDateFrom();
+						calTo.setTime(dtTo);
+						calTo.add(Calendar.MONTH, 12);
+						getManagedBean().setDateTo(calTo.getTime());
+					}
+					params.put(SmReportConst.PARAM_START_DATE_TO, df.format(getManagedBean().getDateTo()));
+				} else if (getManagedBean().getDateEndFrom() != null) { 
+					getManagedBean().setDateFrom(getManagedBean().getDateEndFrom()); 
+					params.put(SmReportConst.PARAM_END_DATE_FROM, df.format(getManagedBean().getDateFrom())); 
+					if(getManagedBean().getDateEndTo() != null){
+						getManagedBean().setDateTo(getManagedBean().getDateEndTo());
+					} else {
+						Calendar calTo = Calendar.getInstance();
+						Date dtTo = getManagedBean().getDateFrom();
+						calTo.setTime(dtTo);
+						calTo.add(Calendar.MONTH, 12);
+						getManagedBean().setDateTo(calTo.getTime());
+					}
+					// #29617 ReOpen - End
+					params.put(SmReportConst.PARAM_END_DATE_TO, df.format(getManagedBean().getDateTo()));
+				}
+			}
+		} 
+		// #29617 ReOpen - Start 
 		generateSmReport(params);
 	}
 
