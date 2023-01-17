@@ -565,7 +565,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setAdminPersonnel(getManagedBean().getOldAdmin());
 		
 		//#33589 - Start
-		if(!getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)){
+		if(getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)){
 			reqDTO.setSmPersonnel(getManagedBean().getNewAdmin());
 			reqDTO.setEmail(getManagedBean().getNewAdmin().getEmail());	
 		}
