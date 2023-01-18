@@ -21102,6 +21102,17 @@ if(null!=allTechnicalChecklist){
 		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTSpecSO.class);
 		ScQtCheckList scQtCheckList = this.getManagedBean().getScQtChecklist();
+		//#28784 note-#647 issue 4 - Start
+		for (TplSpecQuestion ques : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
+			for (TplSpecQuestion oldQues : this.getManagedBean().getDemoOriSpecQuestionTemplateList()) {
+				if (oldQues.getSpecQuestionId().equals(ques.getSpecQuestionId())) {
+					oldQues.setItemReqDemo(ques.isItemReqDemo());
+					oldQues.setDemoScore(ques.getDemoScore());
+				}
+			}
+		}
+		scQtCheckList.getScQtDoc().getTplSpecMaster().setTplSpecQuestions(this.getManagedBean().getDemoOriSpecQuestionTemplateList());
+		//#28784 note-#647 issue 4 - End
 		scQtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster().getSpecName());
 		scQtCheckList.getScQtDoc().getTplSpecMaster().setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -21250,6 +21261,12 @@ if(null!=allTechnicalChecklist){
 			}
 			saveSpecMaintenanceWorkFlowStatus();
 			addDemoTechnicalCheckList();//#28784
+			//#28784 note-#647 issue 4 - Start
+			this.getManagedBean().setDemoOriSpecQuestionTemplateList(this.getManagedBean().getScQtChecklist().getScQtDoc().getTplSpecMaster().getTplSpecQuestions());
+			if (StringUtils.isNotBlank(this.getManagedBean().getItemName())) {
+				actionSearchPresentationDemo();
+			}
+			//#28784 note-#647 issue 4 - End
 			updatedCheckLists = null;
 			successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.template.spec"), "", Boolean.FALSE);
 		}
