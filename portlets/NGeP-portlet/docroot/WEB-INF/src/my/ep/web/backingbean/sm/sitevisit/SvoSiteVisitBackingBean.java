@@ -27,6 +27,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.faces.component.UIComponent;
+import javax.faces.validator.ValidatorException;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 //#30504 start
@@ -2782,4 +2784,18 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return categoryL3Name;
 	}
 	// #28175 end	
+	
+	// #34166 - Start
+		public void validateText(FacesContext f, UIComponent c, Object obj) {
+			String remarks = (String) obj;
+			log.info("This is the remark >>>>>>> " + remarks);
+			String fieldsName = (String) c.getAttributes().get("param");
+			log.info("This is the second parameter >>>>>>> " + fieldsName);
+			if (remarks.contains("<") || remarks.contains(">")) {
+				throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775191,
+								new String[] { fieldsName.toLowerCase() })));
+			}
+		}
+		// #34166 - End
 }
