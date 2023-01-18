@@ -2389,33 +2389,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						}
 					}
 				}else{//27691 START - to view owner&director if smsupplierowner empty
-					this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>());
 					if(this.getManagedBean().getSmSupp().getSmAppl().isApplValidWithSsm()){
+						this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>());
 						for(SmPersonnel personnel: this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels()){
 							if(personnel.isSsmData() && (personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE ||
 									personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)
-									&& personnel.getIdentificationType() != null && personnel.getIdentificationType().getParameterCode()		
-											.equals(ParameterConst.IDENTIFICATION_TYPES_IC)){
-								if(personnel.isDirector()){
-									this.getManagedBean().getSmPersonnelDirector().add(personnel);
-								}
-								if(personnel.isEquityOwner()){
-									SmSupplierOwner suppOwner = new SmSupplierOwner();
-									suppOwner.setSmSupplier(this.getManagedBean().getSmSupp());
-									suppOwner.setOwnerName(personnel.getName());
-									suppOwner.setNationality(personnel.getPmCountry());
-									suppOwner.setIdentificationType(personnel.getIdentificationType());
-									suppOwner.setIdentificationTypeId(personnel.getIdentificationTypeId());
-									suppOwner.setIdentificationNo(personnel.getIdentificationNo());
-									this.getManagedBean().getSmSuppOwners().add(suppOwner);
-									resDTO.getSmSupp().getSmSupplierOwners().add(suppOwner);
-								}
-							}
-						}
-					}else{
-						for(SmPersonnel personnel: this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels()){
-							if(personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE ||
-									personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
 									&& personnel.getIdentificationType() != null && personnel.getIdentificationType().getParameterCode()		
 											.equals(ParameterConst.IDENTIFICATION_TYPES_IC)){
 								if(personnel.isDirector()){
