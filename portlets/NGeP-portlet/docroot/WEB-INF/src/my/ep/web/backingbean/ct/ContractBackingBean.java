@@ -3646,25 +3646,29 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 			
-	if (ctContractItem.getMinimumOrderQty() > 0) {
-		for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-		if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
-		   item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
-			if (!item.getCtItemMaxQties().isEmpty()) {
-				Double maxValue = new Double(0);							
-				for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
-					if(maxQty.getMaxQuantity().doubleValue() > maxValue)
-						maxValue = maxQty.getMaxQuantity().doubleValue();				
-				}
-				if (item.getMinimumOrderQty() > maxValue) {
-					throw new EpException(MessageConst.ERROR_100034,
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});					
-							}				
+			if(!getManagedBean().isInCtPerformance()){
+				if (ctContractItem.getMinimumOrderQty() > 0) {
+					for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+					if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
+					   item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
+						if (!item.getCtItemMaxQties().isEmpty()) {
+							Double maxValue = new Double(0);							
+							for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
+								if(maxQty.getMaxQuantity().doubleValue() > maxValue)
+									maxValue = maxQty.getMaxQuantity().doubleValue();				
+							}
+							if (item.getMinimumOrderQty() > maxValue) {
+								throw new EpException(MessageConst.ERROR_100034,
+										new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});					
+										}				
+									}
+								}//#28479 - End Putra
+							}
 						}
-					}//#28479 - End Putra
-				}
-			}			
+			}
+			
+				
 		}
 		getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
 		log.info("Putra Check Item :"+ctContractItem.getMinimumOrderQty() );			
@@ -4983,4 +4987,48 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	// End Fix - #33491
 	
+	//Start Hafiz
+	/**
+	* Gets the local goods radio values.
+	* 
+	* @param itemType
+	* the item type
+	* @return the local goods radio values
+	*/
+	
+	public SelectItem[] getLocalGoodsRadioValues(String itemType){
+		List<String> types = new ArrayList<String>();
+		types.add(ParameterConst.LOCAL_GOODS);
+		types.add(ParameterConst.IMPORTED_GOODS);
+		SelectItem[] items = null;
+		try{
+			items = new SelectItem[types.size()];
+			int i = 0;
+			for(String location : types){
+				List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(itemType);
+				for(PmParameterDesc paramDesc : localParamDesc){
+					if(paramDesc.getPmParameter().getParameterCode().equals(location)){
+						items[i++] = new SelectItem(paramDesc.getPmParameter().getParameterId(),paramDesc.getCodeName());
+						
+					}
+				}
+			}
+		}finally{
+			
+		}
+		return items;
+	}
+	
+	/**
+	 * Retrieve parameter desc by type.
+	 * 
+	 * @param type
+	 *            (String type)
+	 * @returnList<PmParameterDesc>
+	 */
+	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
+		return ParameterHelper.getInstance().getParameterDescList(type);
+
+	}
+	//End Hafiz
 }  
