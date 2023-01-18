@@ -5679,16 +5679,14 @@ public class SimpleQuoteBackingBean extends
 					, specAnswerList, locale);
 			///#21695 farid end
 			//#Newly add
-			// #34147 start
-						if (getManagedBean().getScQuote() != null) {
-							if (getManagedBean().getScQuote().getMultipleQuote() == false) {
-								if (getManagedBean().getScQuote().isZonal() == true) {
-									ScQuote scQuote = getManagedBean().getScQuote();
-									getTemplateSpecSO().validateSubmitSimpleQuoteResponse(specAnswerList, scQuote);
-								}
+			// #34147 #34395 start
+						if (getManagedBean().getScQuote() != null) {				
+							if (getManagedBean().getScQuote().isZonal() == true) {
+								ScQuote scQuote = getManagedBean().getScQuote();
+								getTemplateSpecSO().validateSubmitSimpleQuoteResponse(specAnswerList, scQuote);
 							}
 						}
-						// #34147 end
+						// #34147 #34395 end
 		}
 		
 		if (!isServiceContainPrice && !isProdContainPrice) {
