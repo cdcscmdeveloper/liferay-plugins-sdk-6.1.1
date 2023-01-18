@@ -1709,8 +1709,8 @@ public class QTCloneBackingbean extends
 			for (ScQtBsvDtl bsvDtl : qtBsv.getScQtBsvDtls()) {
 				ScQtBsvDtl copydtl=new ScQtBsvDtl();
 				copydtl.setScQtBsv(toUpdate);
-				copydtl.setBsvStatus(bsvDtl.getBsvStatus());
-				copydtl.setBsvStatusId(bsvDtl.getBsvStatusId());
+				copydtl.setBsvStatus(getPmStatusByStatusId(QTStatusConst.BSV_PENDING));//34347&25635-Start
+				copydtl.setBsvStatusId(QTStatusConst.BSV_PENDING);//34347&25635-End
 				copydtl.setLocation(bsvDtl.getLocation());
 				copydtl.setBsvType(bsvDtl.getBsvType());
 				copydtl.setBsvDesc(bsvDtl.getBsvDesc());
@@ -1766,8 +1766,8 @@ public class QTCloneBackingbean extends
 			for (ScQtBsvDtl bsvDtl : qtBsv.getScQtBsvDtls()) {
 				ScQtBsvDtl copydtl=new ScQtBsvDtl();
 				copydtl.setScQtBsv(copy);
-				copydtl.setBsvStatus(bsvDtl.getBsvStatus());
-				copydtl.setBsvStatusId(bsvDtl.getBsvStatusId());
+				copydtl.setBsvStatus(getPmStatusByStatusId(QTStatusConst.BSV_PENDING));//34347&25635-Start
+				copydtl.setBsvStatusId(QTStatusConst.BSV_PENDING);//34347&25635-End
 				copydtl.setLocation(bsvDtl.getLocation());
 				copydtl.setBsvType(bsvDtl.getBsvType());
 				copydtl.setBsvType(bsvDtl.getBsvType());
