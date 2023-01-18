@@ -1253,8 +1253,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			reqDTO.getSmSupp().setSmSupplierOwners(getManagedBean().getSmSupp().getSmSupplierOwners());
 		}else{
 			if (smSupp.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE
-					&& reqDTO.getSmSupp().getSmSupplierOwners().size() > 0) {
-				for (SmSupplierOwner smSupplierOwner : reqDTO.getSmSupp().getSmSupplierOwners()) {
+					&& getManagedBean().getSmSuppOwners().size() > 0) {
+				for (SmSupplierOwner smSupplierOwner : getManagedBean().getSmSuppOwners()) {
 					Boolean personnelAvailable = false;
 					for (SmPersonnel smPersonnel : reqDTO.getSmSupp().getSmAppl().getSmPersonnels()) {
 						if (smSupplierOwner.getIdentificationNo().equals(smPersonnel.getIdentificationNo())) {
@@ -1305,9 +1305,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}
 					if (personnelAvailable == false) {
 						SmPersonnel smPersonnel = new SmPersonnel();
+						PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
 						smPersonnel.setSmAppl(reqDTO.getSmSupp().getSmAppl());
 						smPersonnel.setName(smSupplierOwner.getOwnerName());
 						smPersonnel.setIdentificationType(smSupplierOwner.getIdentificationType());
+						smPersonnel.setIdentificationTypeId(identificationType.getParameterId());
 						smPersonnel.setIdentificationNo(smSupplierOwner.getIdentificationNo());
 						smPersonnel.setPmCountry(smSupplierOwner.getNationality());
 						smPersonnel.setRevNo(1); 
@@ -1341,6 +1343,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						
 						reqDTO.getSmSupp().getSmAppl().getSmPersonnels().add(smPersonnel);
 					}
+					reqDTO.getSmSupp().setSmSupplierOwners(getManagedBean().getSmSuppOwners());
 				}
 			} 
 		}
@@ -2386,11 +2389,33 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						}
 					}
 				}else{//27691 START - to view owner&director if smsupplierowner empty
+					this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>());
 					if(this.getManagedBean().getSmSupp().getSmAppl().isApplValidWithSsm()){
-						this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>());
 						for(SmPersonnel personnel: this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels()){
 							if(personnel.isSsmData() && (personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE ||
 									personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)
+									&& personnel.getIdentificationType() != null && personnel.getIdentificationType().getParameterCode()		
+											.equals(ParameterConst.IDENTIFICATION_TYPES_IC)){
+								if(personnel.isDirector()){
+									this.getManagedBean().getSmPersonnelDirector().add(personnel);
+								}
+								if(personnel.isEquityOwner()){
+									SmSupplierOwner suppOwner = new SmSupplierOwner();
+									suppOwner.setSmSupplier(this.getManagedBean().getSmSupp());
+									suppOwner.setOwnerName(personnel.getName());
+									suppOwner.setNationality(personnel.getPmCountry());
+									suppOwner.setIdentificationType(personnel.getIdentificationType());
+									suppOwner.setIdentificationTypeId(personnel.getIdentificationTypeId());
+									suppOwner.setIdentificationNo(personnel.getIdentificationNo());
+									this.getManagedBean().getSmSuppOwners().add(suppOwner);
+									resDTO.getSmSupp().getSmSupplierOwners().add(suppOwner);
+								}
+							}
+						}
+					}else{
+						for(SmPersonnel personnel: this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels()){
+							if(personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE ||
+									personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
 									&& personnel.getIdentificationType() != null && personnel.getIdentificationType().getParameterCode()		
 											.equals(ParameterConst.IDENTIFICATION_TYPES_IC)){
 								if(personnel.isDirector()){
@@ -2645,6 +2670,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								this.getManagedBean().getSmSupp().getSmAppl().setSmPersonnels(new ArrayList<SmPersonnel>());
 							}
 							for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
+								//#27691 START
 								//Show all personnel based on data current SSM personnel
 								if(this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels() != null){
 									Boolean existPerson = false;
@@ -2682,14 +2708,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 										}
 									}
 								}
-								if(EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels(), "identificationNo") == null){
-									personnel.setSmAppl(this.getManagedBean().getSmAppl());
-									//27477
-									personnel.setSmPersonnelAddresses(null);
-									personnel.setSmPersonnelAdd(null);
-									this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels().add(personnel);
+								//Add personnel using ID Type IC in SM_PERSONNEL only
+								if(personnel.getIdentificationType() != null && personnel.getIdentificationType().getParameterCode()		
+										.equals(ParameterConst.IDENTIFICATION_TYPES_IC)){
+									if(EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels(), "identificationNo") == null){
+										personnel.setSmAppl(this.getManagedBean().getSmAppl());
+										//27477
+										personnel.setSmPersonnelAddresses(null);
+										personnel.setSmPersonnelAdd(null);
+										this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels().add(personnel);
+									}
 								}
-							}
+							} //#27691 END
 						}
 						
 						//SET SMSUPPLIEROWNER
