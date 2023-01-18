@@ -533,7 +533,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		// #27797 - end
 		removeUnwantedLampiranA3Report(1); //#29006 - note 650
-		this.getManagedBean().setLoiLoaItemsResult(new ArrayList<ScLoiLoaItem>(this.getManagedBean().getScLoa().getScLoiLoaItems()));//29007 - fix issue 2 search action note 347		
+		//Bug 34404 - related to 29007 - start
+		if(this.getManagedBean().getScLoa()!=null){
+			this.getManagedBean().setLoiLoaItemsResult(new ArrayList<ScLoiLoaItem>(this.getManagedBean().getScLoa().getScLoiLoaItems()));//29007 - fix issue 2 search action note 347			
+		}else{
+			this.getManagedBean().setLoiLoaItemsResult(null);
+		}
+		//Bug 34404 - related to 29007 - end
 		return QTConstants.LOA_PAGE;
 	}
 	
@@ -844,6 +850,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// getQtProposalValidExpiredMessage(scQt);
 
 			prepareSupplierSignerInfo();
+			//Bug 34404 - related to 29007 - start
+			if(this.getManagedBean().getScLoa()!=null){
+				this.getManagedBean().setLoiLoaItemsResult(new ArrayList<ScLoiLoaItem>(this.getManagedBean().getScLoa().getScLoiLoaItems()));//29007 - fix issue 2 search action note 347			
+			}else{
+				this.getManagedBean().setLoiLoaItemsResult(null);
+			}
+			//Bug 34404 - related to 29007 - end
 
 			return QTConstants.SUPPLIER_LOA_PAGE;
 
