@@ -1199,6 +1199,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 	}
 	
+	//#33589 - Start
 	private void redirectToSuccessPageForInProgress(PersonnelResDTO resDTO) {
 		if (resDTO.isSuccessful()) {
 			String accTypeStr = "";
@@ -1227,6 +1228,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			throw new EpException(MessageConst.ERROR_721113);
 		}
 	}
+	//#33589 - End
 
 	/**
 	 * Set identification type
