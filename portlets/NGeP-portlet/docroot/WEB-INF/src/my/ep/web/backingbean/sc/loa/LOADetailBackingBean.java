@@ -8769,6 +8769,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 			getManagedBean().getScLoa().setScLoiLoaItems(filteredItemList);
 		}
+		//Bug 34404 - related to 29007 - start
+		if(this.getManagedBean().getScLoa()!=null){
+			this.getManagedBean().setLoiLoaItemsResult(new ArrayList<ScLoiLoaItem>(this.getManagedBean().getScLoa().getScLoiLoaItems()));//29007 - fix issue 2 search action note 347			
+		}else{
+			this.getManagedBean().setLoiLoaItemsResult(null);
+		}
+		//Bug 34404 - related to 29007 - end
 	}
 
 	public void onResetSupplierCriteria() {
