@@ -2937,6 +2937,12 @@ public class SmApplicationBackingBean extends
 	public void updateSmAppl(String applType, String currentPageType,
 			String outputPageType) {
 
+		// #34166 - Start
+		if (currentPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
+			validateText();
+		}
+		// #34166 - End
+				
 		// show confirm popup to save draft before proceed to next section if
 		// still not save draft
 		if (!StringUtils.isBlank(applType)
@@ -8669,6 +8675,17 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722616);
 		}
 		
+		// #34166 - Start
+		if (getManagedBean().getSelectedBank().getSignatureInstruction().contains("<")
+				|| getManagedBean().getSelectedBank().getSignatureInstruction().contains(">")) {
+			StringBuilder sb = new StringBuilder();
+			Locale locale = new FacesScopes().getUserLocale();
+			sb.append(ResourceBundleUtils.getMessage("lbl.sm.bankDtls.chequesign.tnc",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			throw new EpException(MessageConst.ERROR_775191, new String[] { sb.toString().toLowerCase() });
+		}
+		// #34166 - End
+				
 		if (getManagedBean().isPendingTransaction()){
 			getManagedBean().setPendingTransaction(false);			
 		} 
@@ -16749,6 +16766,10 @@ public class SmApplicationBackingBean extends
 	//#31407 - START
 	public void checkBeforeSubmit() {
 		
+		// #34166 - Start
+		validateText();
+		// #34166 - End
+		
 		//check category code start
 		StringBuilder msg = new StringBuilder();
 		msg.append("<br />");
@@ -16947,4 +16968,24 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	//#33240 - end
+	
+	// #34166 - Start
+	public void validateText() {
+		if (getManagedBean().getSmAppl() != null) {
+			if (!(getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty())) {
+				for (SmSupplierBank banks : getManagedBean().getSmAppl().getSmSupplierBanks()) {
+					if (banks.getSignatureInstruction().contains("<") || banks.getSignatureInstruction().contains(">")) {
+						StringBuilder sb = new StringBuilder();
+						Locale locale = new FacesScopes().getUserLocale();
+						sb.append(ResourceBundleUtils.getMessage("lbl.sm.bankDtls.chequesign.tnc",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+						throw new EpException(MessageConst.ERROR_775191, new String[] { sb.toString().toLowerCase() });
+
+					}
+				}
+			}
+		}
+	}
+	// #34166 - End
+	
 }
