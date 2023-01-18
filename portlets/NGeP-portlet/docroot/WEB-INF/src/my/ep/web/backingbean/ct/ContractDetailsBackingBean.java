@@ -1383,7 +1383,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			
 //Nordin start
 			
-			if(ctBB.getManagedBean().getContractVer().getCtContractItems().size()==0 ){
+			if(ctBB.getManagedBean().getContractListingPagingDataModel().getList()!=null || ctBB.getManagedBean().getServiceListingPagingDataModel().getList()!=null){
 				
 				log.info("ctBB.getManagedBean().getContractVer().getCtContractItems().size() = 0");
 				
