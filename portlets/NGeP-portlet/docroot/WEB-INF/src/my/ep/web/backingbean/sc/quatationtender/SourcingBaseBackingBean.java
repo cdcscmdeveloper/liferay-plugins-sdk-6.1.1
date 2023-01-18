@@ -3674,7 +3674,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					}
 					//32648 - start
 					if (null != tplSpecQuestion.getTplSpecAnswers() && !tplSpecQuestion.getTplSpecAnswers().isEmpty()){
-						answerRemarkList.add(tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark());
+						//32648 & 34406 - start						
+						if (tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark() != null){
+							answerRemarkList.add(tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark());
+						}
+						//32648 & 34406 - end
 					}
 					//32648 - end
 					// #26130 - End
