@@ -1687,10 +1687,6 @@ public class QTDetailBackingBean extends
 						} catch (IOException e) {
 							throw new EpException(e.getMessage());
 						}
-					} else if (requestContent.isBrandNew()) {
-						if (this.getManagedBean().isMaintanceFlow()) {
-							scQt.getRequestContents().remove(requestContent);
-						}
 					}
 				}
 			} else if (CollectionUtils.isNotEmpty(deskOfficerAdminList)) {
