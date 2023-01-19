@@ -244,7 +244,27 @@
 					onclick="confirmDeleteSupDocDialog.hide();" />
 			</div>
 		</p:confirmDialog>
-				
+		<!-- #33589 Start -->
+		<ac:confirmationPopup id="declareDeletePopUpBeforeId"
+			widget="declareDeletePopUpBeforeId"
+			okAction="#{forceReplaceSuppAdminBackingBean.declare()}" width="400"
+			height="150" title="#{lbl['lbl.msg.confirm.declare.header']}"
+			content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}"
+			update=":form" />
+		<p:confirmDialog id="declareAlertPopUpBeforeId"
+			widgetVar="declareAlertPopUpBefore" closable="true"
+			header="#{lbl['lbl.txt.alert']}" styleClass="splNotesFontBank">
+			<div class="ppLeftBtn">
+				<f:facet name="message">
+					<h:outputText value="TEST" styleClass="" escape="false" />
+				</f:facet>
+			</div>
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					onclick="declareAlertPopUpBefore.hide();" type="button" />
+			</div>
+		</p:confirmDialog>
+		<!-- #33589 End -->		
 	</ui:define>
 
 
