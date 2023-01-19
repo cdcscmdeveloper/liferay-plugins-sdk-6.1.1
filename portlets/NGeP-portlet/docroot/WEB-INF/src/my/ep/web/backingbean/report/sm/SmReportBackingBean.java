@@ -80,6 +80,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -927,6 +928,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		RPTRequestResDTO resDTO = new RPTRequestResDTO();
 		try{
 			resDTO = rptRequestSO.generateReportSMInExcel(reqDTO);
+			//resDTO.setRequestId(BigDecimal.ZERO);
 			log.info("REQUEST ID === "+resDTO.getRequestId());
 			
 		}catch(Exception e){
@@ -1233,6 +1235,9 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				int mergeRowFirst = 0;
 				int mergeRowLast = 0;
 				String referenceNo = "";
+				int mergeRowFirstIndex = 0;//#34366
+				int mergeRowLastIndex = 0;//#34366
+				Date paramDate = null;//#34366
 				//END - #29454
 				for (Integer key : keyIdList) {
 					Row row = sheetList.createRow(rowid++);
@@ -1251,14 +1256,14 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						//Condition : Current Receipt No. equal to Previous row Receipt No.
 						//Fix issue on overlaping mergion during merge more than 2 row
 						//Add checking for Scenario with same Receipt No but has different Reference No.
-						if(!referenceNo.equalsIgnoreCase((String)objectArr[5])){
-							log.info("Inside Has different reference no !!");
+						if(!referenceNo.equalsIgnoreCase((String)objectArr[5]) || !paramDate.equals((Date)objectArr[0])){//#34366
+							//log.info("Inside Has different reference no !!");
 							//Not allowed to merge row , if Current row Reference No is not equal with previous row Reference No
 							cellBil.setCellValue(countRowFpx++);
 							mergeRowFirst = rowid;
 							mergeRowLast = 0;
 						}else{
-							log.info("Inside Has same reference no !!");
+							//log.info("Inside Has same reference no !!");
 							mergeRowLast = rowid;
 							if(key < keyIdList.size()){
 								if(key == (keyIdList.size() - 1)){
@@ -1273,17 +1278,78 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						}
 					}
 					cellBil.setCellStyle(columnStyleBil);
-					receiptNo = (String)objectArr[2];
-					referenceNo = (String)objectArr[5];
 					
 					for(int x=0; x<objectArr.length; x++){
 						if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
 						Cell cell = row.createCell(cellid);
+						//#34366 - START
+						//Fixed Issue on merge row(rowspan)for selected column
+						if(objectArr[x] instanceof Date || 
+								(objectArr[x] instanceof String && (x == 2 || x == 3 || x == 4 || x == 5 || x == 14 || x == 15)) ||
+										(objectArr[x] instanceof BigDecimal && 
+											(("Credit".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_METHOD)) &&
+												(x == 14)) || 
+											("FPX".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_METHOD)) &&
+														(x == 13))))){
+							if(receiptNo == "" && referenceNo == ""){
+								mergeRowFirstIndex = rowid;
+							}else if(!receiptNo.equalsIgnoreCase((String)objectArr[2])){
+								mergeRowFirstIndex = rowid;
+								mergeRowLastIndex = 0;
+							}else{
+								if(!referenceNo.equalsIgnoreCase((String)objectArr[5]) || !paramDate.equals((Date)objectArr[0])){
+									mergeRowFirstIndex = rowid;
+									mergeRowLastIndex = 0;
+								}else{
+									mergeRowLastIndex = rowid;
+									if(key < keyIdList.size()){
+										if(key == (keyIdList.size() - 1)){
+											sheetList.addMergedRegion(new CellRangeAddress(mergeRowFirstIndex-1,mergeRowLastIndex-1,cellid,cellid));
+										}else{
+											Object[] objectArrMerge = reportListMap.get(key+1);
+											if(!receiptNo.equalsIgnoreCase((String)objectArrMerge[2])){
+												sheetList.addMergedRegion(new CellRangeAddress(mergeRowFirstIndex-1,mergeRowLastIndex-1,cellid,cellid));
+											}
+										}						
+									}
+								}
+							}
+						}
+
 						if(objectArr[x] instanceof Date){
 							cell.setCellValue((Date) objectArr[x]);
 							cell.setCellStyle(columnStyleDate);
 						}else if(objectArr[x] instanceof BigDecimal){
-							cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
+							String columnIndex = "";
+							if(("Credit".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_METHOD)) && x == 14) || 
+								("FPX".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_METHOD)) && x == 13)){
+								if(x == 13){//
+									if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE))){
+										columnIndex = "M";
+									}else{
+										columnIndex = "N";
+									}
+								}else if(x == 14){
+									if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE))){
+										columnIndex = "N";
+									}else{
+										columnIndex = "O";
+									}
+								}
+								
+								if(mergeRowLastIndex != 0){//Merge row column
+									Cell cellPrev = null;
+									cellPrev = sheetList.getRow(mergeRowFirstIndex-1).getCell(cellid);
+									//log.info("FORMULA : "+"SUM("+columnIndex+mergeRowFirstTest+":"+columnIndex+(mergeRowLastTest != 0 ? mergeRowLastTest : mergeRowFirstTest)+")");
+									cellPrev.setCellFormula("SUM("+columnIndex+mergeRowFirstIndex+":"+columnIndex+(mergeRowLastIndex != 0 ? mergeRowLastIndex : mergeRowFirstIndex)+")");
+									cellPrev.setCellType(CellType.FORMULA);
+								}else{//Unmerge Row column
+									cell.setCellFormula("SUM("+columnIndex+mergeRowFirstIndex+":"+columnIndex+mergeRowFirstIndex+ ")");
+									cell.setCellType(CellType.FORMULA);
+								}
+							}else{
+								cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
+							}
 							cell.setCellStyle(columnStyleBigDecimal);
 						}else if(objectArr[x] instanceof Double){
 							cell.setCellValue(((Double) objectArr[x]).doubleValue());
@@ -1293,9 +1359,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 							else cell.setCellValue((String) objectArr[x]);
 							cell.setCellStyle(columnStyleString);
 						}
+						//#34366 - END
 						cellid++;
 					}
 					//END - #29454
+					receiptNo = (String)objectArr[2];//#34366
+					referenceNo = (String)objectArr[5];//#34366
+					paramDate = (Date)objectArr[0];//#34366
 				}
 				//Setting Auto filtering in each header column list
 				sheetList.setAutoFilter(new CellRangeAddress(headerRowIndex,headerRowIndex,1,columnHeaderList.size()-1));//BUG:#29454
