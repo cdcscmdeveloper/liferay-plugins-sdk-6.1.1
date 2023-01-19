@@ -1011,10 +1011,10 @@ public class QTCommitteBackingBean extends
 		}
 		getManagedBean().getUserSearchCommitteeDataModel().resetData();
 
-		// #12471 - Start
-		this.getManagedBean().getUserCommitteeSearchBean().setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
-		reset();
-		// #12471 - End
+		getManagedBean().getUserCommitteeSearchBean().setName(null);
+		getManagedBean().getUserCommitteeSearchBean().setIdentificationType(
+				null);
+		getManagedBean().getUserCommitteeSearchBean().setIdentificationNo(null);
 		getManagedBean().setSelectedPmUser(null);
 		this.getManagedBean().setCommitteMember(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
@@ -1546,15 +1546,6 @@ public class QTCommitteBackingBean extends
 	 */
 	public void reset() {
 		debugLogger("reset");
-		// #12471 Start
-		if (this.getManagedBean().getUserCommitteeSearchBean().getOrgCat()
-				.equalsIgnoreCase(ParameterConst.ORG_CATEGORY_PTJ)) {
-			log.info(ParameterConst.ORG_CATEGORY_PTJ);
-		} else if (this.getManagedBean().getUserCommitteeSearchBean().getOrgCat()
-				.equalsIgnoreCase(ParameterConst.ORG_CATEGORY_OTHERS)) {
-			log.info(ParameterConst.ORG_CATEGORY_OTHERS);
-		}
-		// #12471 End
 		this.getManagedBean().getUserCommitteeSearchBean().setName(null);
 		this.getManagedBean().getUserCommitteeSearchBean()
 				.setIdentificationType(null);

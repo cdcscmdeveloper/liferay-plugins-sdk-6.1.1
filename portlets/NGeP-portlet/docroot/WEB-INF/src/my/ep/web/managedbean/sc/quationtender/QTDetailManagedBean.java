@@ -1855,12 +1855,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<Long> listCategory;
 				
 	// #29521 - end
-	// #12471 - Start
-	/** The organization category PTJ constant. */
-	private String ptjConst = "PTJ";
-	/** The organization category Others constant. */
-	private String othersConst = "OTH";
-	// #12471 - End
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11748,37 +11742,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isFromSpecEndorse = isFromSpecEndorse;
 	}
 	// Bug #33661@Syazani 07/10/2022 -- End
-	// #12471 - Start
-	/**
-	 * @return the PTJ constant
-	 */
-	public String getPTJConst() {
-		return ptjConst;
-	}
-
-	/**
-	 * @param PTJConst
-	 *            the PTJ constant to set
-	 */
-	public void setPTJConst(String ptjConst) {
-		this.ptjConst = ptjConst;
-	}
-
-	/**
-	 * @return the Others constant
-	 */
-	public String getOthersConst() {
-		return othersConst;
-	}
-
-	/**
-	 * @param othersConst
-	 *            the Others constant to set
-	 */
-	public void setOthersConst(String othersConst) {
-		this.othersConst = othersConst;
-	}
-	// #12471 - End
 }
 
 // ***25201

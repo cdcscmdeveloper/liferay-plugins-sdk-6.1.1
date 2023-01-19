@@ -16,40 +16,7 @@
 			test="#{qTCommitteBackingBean.managedBean.committeMember.userSelection eq 'E' }">
 			<p:panel id="usersearchpnlid" header="#{lbl['lbl.sc.search']}"
 				toggleable="true">
-				<!-- #12471 Start -->
-				<ac:instructionText
-					value="#{lbl['lbl.sc.add.committee.instruction.one']}" />
-				<br />
-				<br />
-				<ac:instructionText
-					value="#{lbl['lbl.sc.add.committee.instruction.two']}" />
-				<!-- #12471 End -->
 				<table style="width: 100%;">
-					<!-- #12471 Start -->
-					<tr>
-						<td><p:outputLabel
-								value="#{lbl['lbl.sc.add.committee.org.cat']}" /></td>
-						<td><p:selectOneRadio id="orgCat"
-								value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat}">
-								<p:ajax onstart="blockWidget.show()"
-									oncomplete="blockWidget.hide()" update="usersearchpnlid"
-									listener="#{qTCommitteBackingBean.reset}" />
-								<f:selectItem
-									itemLabel="#{lbl['lbl.sc.add.committee.ptj.full']}"
-									itemValue="#{ParameterConst.orgCatPTJ}" />
-								<f:selectItem itemLabel="#{lbl['lbl.sc.add.committee.oth']}"
-									itemValue="#{ParameterConst.orgCatOTH}" />
-							</p:selectOneRadio></td>
-					</tr>
-					<c:if
-						test="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat eq ParameterConst.orgCatPTJ}">
-						<td>PTJ</td>
-					</c:if>
-					<c:if
-						test="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat eq ParameterConst.orgCatOTH}">
-						<td>Others</td>
-					</c:if>
-					<!-- #12471 End -->
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.name']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
