@@ -36,20 +36,20 @@
 									listener="#{qTCommitteBackingBean.reset}" />
 								<f:selectItem
 									itemLabel="#{lbl['lbl.sc.add.committee.ptj.full']}"
-									itemValue="#{ParameterConst.orgCatPtj}" />
+									itemValue="#{ParameterConst.getOrgCatPtj()}" />
 								<f:selectItem itemLabel="#{lbl['lbl.sc.add.committee.oth']}"
-									itemValue="#{ParameterConst.orgCatOthers}" />
+									itemValue="#{ParameterConst.getOrgCatOthers()}" />
 							</p:selectOneRadio></td>
 					</tr>
 					<c:if
-						test="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat eq ParameterConst.orgCatPtj}">
+						test="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat eq ParameterConst.getOrgCatPtj()}">
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sc.add.committee.ministry']}" /></td>
 							<td><p:selectOneMenu id="ministryDD"
 									value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.ministry}">
 									<p:ajax
-										listener="#{qTCommitteBackingBean.onChangeDD(ParameterConst.ministryDD)}"
+										listener="#{qTCommitteBackingBean.onChangeDD(ParameterConst.getMinistryDD())}"
 										update="ptjGroupDD ptjDD" onstart="blockWidget.show()"
 										oncomplete="blockWidget.hide()" />
 									<f:selectItems
@@ -62,7 +62,7 @@
 							<td><p:selectOneMenu id="ptjGroupDD"
 									value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.ptjGroup}">
 									<p:ajax
-										listener="#{qTCommitteBackingBean.onChangeDD(ParameterConst.ptjGroupDD)}"
+										listener="#{qTCommitteBackingBean.onChangeDD(ParameterConst.getPtjGroupDD())}"
 										update="ptjDD" onstart="blockWidget.show()"
 										oncomplete="blockWidget.hide()" />
 									<f:selectItems
@@ -80,14 +80,14 @@
 						</tr>
 					</c:if>
 					<c:if
-						test="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat eq ParameterConst.orgCatOthers}">
+						test="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat eq ParameterConst.getOrgCatOthers()}">
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sc.add.committee.org.type']}" /></td>
 							<td><p:selectOneMenu id="orgTypeDD"
 									value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgType}">
 									<p:ajax
-										listener="#{qTCommitteBackingBean.onChangeDD(ParameterConst.orgTypeDD)}"
+										listener="#{qTCommitteBackingBean.onChangeDD(ParameterConst.getOrgTypeDD())}"
 										update="orgNameDD" onstart="blockWidget.show()"
 										oncomplete="blockWidget.hide()" />
 									<f:selectItems
