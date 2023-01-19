@@ -3942,6 +3942,7 @@ public class QTCloneBackingbean extends
 		if(null!=scQt.getCircularVer()){//25635-start
 		createQtBB.changePanelGroupItem();
 		this.getManagedBean().setPanelItemList(null);//34330&25635
+		this.getManagedBean().setPanelGroupItems(null);//34330&25635
 		}//25635-End
 		}
 	

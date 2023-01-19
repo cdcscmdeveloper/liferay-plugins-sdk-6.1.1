@@ -1466,6 +1466,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						
 						reqDTO.getSmSupp().getSmAppl().getSmPersonnels().add(smPersonnel);
 					}
+					reqDTO.getSmSupp().setSmSupplierOwners(getManagedBean().getSmSuppOwners());
 				}
 			} 
 		}
