@@ -533,7 +533,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		// #27797 - end
 		removeUnwantedLampiranA3Report(1); //#29006 - note 650
-		this.getManagedBean().setLoiLoaItemsResult(new ArrayList<ScLoiLoaItem>(this.getManagedBean().getScLoa().getScLoiLoaItems()));//29007 - fix issue 2 search action note 347		
+		//Bug 34404 - related to 29007 - start
+		if(this.getManagedBean().getScLoa()!=null){
+			this.getManagedBean().setLoiLoaItemsResult(new ArrayList<ScLoiLoaItem>(this.getManagedBean().getScLoa().getScLoiLoaItems()));//29007 - fix issue 2 search action note 347			
+		}else{
+			this.getManagedBean().setLoiLoaItemsResult(null);
+		}
+		//Bug 34404 - related to 29007 - end
 		return QTConstants.LOA_PAGE;
 	}
 	
@@ -844,6 +850,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// getQtProposalValidExpiredMessage(scQt);
 
 			prepareSupplierSignerInfo();
+			//Bug 34404 - related to 29007 - start
+			if(this.getManagedBean().getScLoa()!=null){
+				this.getManagedBean().setLoiLoaItemsResult(new ArrayList<ScLoiLoaItem>(this.getManagedBean().getScLoa().getScLoiLoaItems()));//29007 - fix issue 2 search action note 347			
+			}else{
+				this.getManagedBean().setLoiLoaItemsResult(null);
+			}
+			//Bug 34404 - related to 29007 - end
 
 			return QTConstants.SUPPLIER_LOA_PAGE;
 
@@ -8756,6 +8769,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 			getManagedBean().getScLoa().setScLoiLoaItems(filteredItemList);
 		}
+		//Bug 34404 - related to 29007 - start
+		if(this.getManagedBean().getScLoa()!=null){
+			this.getManagedBean().setLoiLoaItemsResult(new ArrayList<ScLoiLoaItem>(this.getManagedBean().getScLoa().getScLoiLoaItems()));//29007 - fix issue 2 search action note 347			
+		}else{
+			this.getManagedBean().setLoiLoaItemsResult(null);
+		}
+		//Bug 34404 - related to 29007 - end
 	}
 
 	public void onResetSupplierCriteria() {
@@ -9916,6 +9936,30 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		return itemClone;
 	}
+	
+	// #29006 - note 746 - start
+	/**
+	 * To calculate total zonal price based on item search result
+	 * 
+	 * @return BigDecimal - Total Price of ScLoiLoaItem list
+	 */
+	public BigDecimal calculateTotalPriceZonal() {
+		BigDecimal totalPrice = BigDecimal.ZERO;
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getNameZoneScLoiLoaItemList())) {
+			Long currentRequestItem = 0L;
+			
+			for (ScLoiLoaItem item : this.getManagedBean().getNameZoneScLoiLoaItemList()) {				
+				if (!currentRequestItem.equals(item.getScRequestItem().getRequestNoteItemId())){
+					totalPrice = calcSubTotalPrice(item).add(totalPrice);
+					currentRequestItem = item.getScRequestItem().getRequestNoteItemId();
+				}
+			}
+		}
+		totalPrice.setScale(2, BigDecimal.ROUND_UP);
+
+		return totalPrice;
+	}
+	// #29006 - note 746 - end
 
 	public String getNotAvailabilityStr() {
 		return notAvailabilityStr;

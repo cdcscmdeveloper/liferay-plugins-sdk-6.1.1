@@ -321,7 +321,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			getManagedBean().setBypassFlag1(1);
 		}
 		// #28765 - End
-		if (!getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
+		if (getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
 			redirectToSuccessPageForInProgress(resDto);
 		} else {
 			redirectToSuccessPage(resDto);
@@ -565,8 +565,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setAdminPersonnel(getManagedBean().getOldAdmin());
 		
 		//#33589 - Start
-		if(getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)){
-			reqDTO.setSmPersonnel(getManagedBean().getNewAdmin());
+		reqDTO.setSmPersonnel(getManagedBean().getNewAdmin());
+		if(!getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)){
 			reqDTO.setEmail(getManagedBean().getNewAdmin().getEmail());	
 		}
 		//#33589 - End
@@ -1199,6 +1199,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 	}
 	
+	//#33589 - Start
 	private void redirectToSuccessPageForInProgress(PersonnelResDTO resDTO) {
 		if (resDTO.isSuccessful()) {
 			String accTypeStr = "";
@@ -1227,6 +1228,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			throw new EpException(MessageConst.ERROR_721113);
 		}
 	}
+	//#33589 - End
 
 	/**
 	 * Set identification type
