@@ -302,5 +302,9 @@ public interface QTConstants {
 	// #33831 - Start
 	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
 	// #33831 - Start
-	
+
+	// #12471 Start
+	public static final Long ORGANIZATION_CATEGORY_TYPE_OTHER_ID = 209L;
+	public static final Long ORGANIZATION_CATEGORY_NAME_EXTERNAL_PARTIES_ID = 1001332L;
+	// #12471 End
 }

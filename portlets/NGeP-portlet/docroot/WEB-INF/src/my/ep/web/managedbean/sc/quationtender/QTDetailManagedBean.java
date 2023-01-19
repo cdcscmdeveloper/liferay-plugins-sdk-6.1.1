@@ -1855,6 +1855,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<Long> listCategory;
 				
 	// #29521 - end
+	// #12471 Start
+	/** The ministry dropdown list. */
+	private SelectItem[] ministryDD;
+	/** The PTJ Group dropdown list. */
+	private SelectItem[] ptjGroupDD;
+	/** The PTJ dropdown list. */
+	private SelectItem[] ptjDD;
+	/** The organization type dropdown list. */
+	private SelectItem[] orgTypeDD;
+	/** The organization name dropdown list. */
+	private SelectItem[] orgNameDD;
+	// #12471 End
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11742,6 +11754,83 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isFromSpecEndorse = isFromSpecEndorse;
 	}
 	// Bug #33661@Syazani 07/10/2022 -- End
+
+	// #12471 Start
+	/**
+	 * @return the ministryDD
+	 */
+	public SelectItem[] getMinistryDD() {
+		return ministryDD;
+	}
+
+	/**
+	 * @param ministryDD
+	 *            the ministryDD to set
+	 */
+	public void setMinistryDD(SelectItem[] ministryDD) {
+		this.ministryDD = ministryDD;
+	}
+
+	/**
+	 * @return the PTJ Group dropdown list
+	 */
+	public SelectItem[] getPtjGroupDD() {
+		return ptjGroupDD;
+	}
+
+	/**
+	 * @param ptjGroupDD
+	 *            the PTJ Group dropdown list to set
+	 */
+	public void setPtjGroupDD(SelectItem[] ptjGroupDD) {
+		this.ptjGroupDD = ptjGroupDD;
+	}
+
+	/**
+	 * @return the PTJ dropdown list
+	 */
+	public SelectItem[] getPtjDD() {
+		return ptjDD;
+	}
+
+	/**
+	 * @param ptjDD
+	 *            the PTJ dropdown list to set
+	 */
+	public void setPtjDD(SelectItem[] ptjDD) {
+		this.ptjDD = ptjDD;
+	}
+
+	/**
+	 * @return the organization type dropdown list
+	 */
+	public SelectItem[] getOrgTypeDD() {
+		return orgTypeDD;
+	}
+
+	/**
+	 * @param orgTypeDD
+	 *            the organization type dropdown list to set
+	 */
+	public void setOrgTypeDD(SelectItem[] orgTypeDD) {
+		this.orgTypeDD = orgTypeDD;
+	}
+
+	/**
+	 * @return the organization name dropdown list
+	 */
+	public SelectItem[] getOrgNameDD() {
+		return orgNameDD;
+	}
+
+	/**
+	 * @param orgNameDD
+	 *            the organization name dropdown list to set
+	 */
+	public void setOrgNameDD(SelectItem[] orgNameDD) {
+		this.orgNameDD = orgNameDD;
+	}
+	// #12471 End
 }
 
 // ***25201
