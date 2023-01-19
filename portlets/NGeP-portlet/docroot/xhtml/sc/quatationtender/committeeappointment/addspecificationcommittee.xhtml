@@ -106,8 +106,9 @@
 					</c:if>
 					<!-- #12471 End -->
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sc.name']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<!-- #12471 Start -->
+						<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
+						<!-- #12471 End -->
 						<td colspan="3"><p:inputText  onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentAddSearch.jq.click(); return false; }"
 								value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.name}"
 								size="64" required="#{qTCommitteBackingBean.managedBean.nameRequired}" id="name2" 
