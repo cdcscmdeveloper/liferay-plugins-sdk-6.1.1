@@ -2582,6 +2582,12 @@ public class SmApplicationBackingBean extends
 	 */
 	public void updateSmAppl(String applType, String currentPageType,
 			String outputPageType) {
+		
+		// #34166 - Start
+		if (currentPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
+			validateText();
+		}
+		// #34166 - End
 
 		// show confirm popup to save draft before proceed to next section if
 		// still not save draft
@@ -8127,9 +8133,20 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722616);
 		}
 		
+		// #34166 - Start
+		if (getManagedBean().getSelectedBank().getSignatureInstruction().contains("<")
+				|| getManagedBean().getSelectedBank().getSignatureInstruction().contains(">")) {
+			StringBuilder sb = new StringBuilder();
+			Locale locale = new FacesScopes().getUserLocale();
+			sb.append(ResourceBundleUtils.getMessage("lbl.sm.bankDtls.chequesign.tnc",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			throw new EpException(MessageConst.ERROR_775191, new String[] { sb.toString().toLowerCase() });
+		}
+		// #34166 - End
+		
 		if (getManagedBean().isPendingTransaction()){
 			getManagedBean().setPendingTransaction(false);			
-		}
+		} 
 
 		if (SmApplicationUtil.checkValidBank(
 				getManagedBean().getSelectedBank(), getManagedBean()
@@ -14973,40 +14990,6 @@ public class SmApplicationBackingBean extends
 	}
 	//#11641 - END
 	
-	//#33240 - start
-	/**
-	 * Delete file for license certificate information
-	 */
-	public void onDeleteMandatoryLicenseFile(SmApplDocFile doc, int index) {
-
-		this.getManagedBean().setSupportDoc(doc.getSmApplSupportDoc());
-		this.getManagedBean().setAttachedFileIndex(index);
-		this.getManagedBean().setSmApplDocFile(doc);
-		
-		RequestContext.getCurrentInstance().execute(
-				"confirmDeleteLicenseCertDialog.show();");
-	}
-	
-	public void deleteMandatoryLicenseFile() {
-		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
-				.getSmApplSupportDocs()) {
-			if (doc.getPmDocument() != null) {
-				if (doc.getPmDocument().isMandatory()) {
-					if (doc.getPmDocument().isLicenseReq()
-							&& !doc.getPmDocument().getPmDocumentRestrs()
-									.isEmpty()) {
-						if(doc.getSmApplDocFiles().contains(this.getManagedBean().getSmApplDocFile())){
-							doc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
-							this.getManagedBean().setSmApplDocFile(null);
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
-	//#33240 - end
-	
 	//#32014 - START
 	//reassign the address since the first time assigning the data is not displayed/populate
 	public void reassignSelShareHolderResAddress(SmPersonnelAddress personnelAddress){
@@ -15135,4 +15118,58 @@ public class SmApplicationBackingBean extends
 		return catList;
 	}
 	//30766 END
+	
+	//#33240 - start
+	/**
+	 * Delete file for license certificate information
+	 */
+	public void onDeleteMandatoryLicenseFile(SmApplDocFile doc, int index) {
+
+		this.getManagedBean().setSupportDoc(doc.getSmApplSupportDoc());
+		this.getManagedBean().setAttachedFileIndex(index);
+		this.getManagedBean().setSmApplDocFile(doc);
+		
+		RequestContext.getCurrentInstance().execute(
+				"confirmDeleteLicenseCertDialog.show();");
+	}
+	
+	public void deleteMandatoryLicenseFile() {
+		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
+				.getSmApplSupportDocs()) {
+			if (doc.getPmDocument() != null) {
+				if (doc.getPmDocument().isMandatory()) {
+					if (doc.getPmDocument().isLicenseReq()
+							&& !doc.getPmDocument().getPmDocumentRestrs()
+									.isEmpty()) {
+						if(doc.getSmApplDocFiles().contains(this.getManagedBean().getSmApplDocFile())){
+							doc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
+							this.getManagedBean().setSmApplDocFile(null);
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	//#33240 - end
+	
+	
+	// #34166 - Start
+	public void validateText() {
+		if (getManagedBean().getSmAppl() != null) {
+			if (!(getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty())) {
+				for (SmSupplierBank banks : getManagedBean().getSmAppl().getSmSupplierBanks()) {
+					if (banks.getSignatureInstruction().contains("<") || banks.getSignatureInstruction().contains(">")) {
+						StringBuilder sb = new StringBuilder();
+						Locale locale = new FacesScopes().getUserLocale();
+						sb.append(ResourceBundleUtils.getMessage("lbl.sm.bankDtls.chequesign.tnc",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+						throw new EpException(MessageConst.ERROR_775191, new String[] { sb.toString().toLowerCase() });
+
+					}
+				}
+			}
+		}
+	}
+	// #34166 - End
 }
