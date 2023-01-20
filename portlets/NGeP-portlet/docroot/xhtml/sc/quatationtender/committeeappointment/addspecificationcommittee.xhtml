@@ -32,7 +32,7 @@
 						<td><p:selectOneRadio id="orgCat"
 								value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat}">
 								<p:ajax onstart="blockWidget.show()"
-									oncomplete="blockWidget.hide()" update="usersearchpnlid"
+									oncomplete="blockWidget.hide()" update="usersearchpnlid existingcommitteesearchid"
 									listener="#{qTCommitteBackingBean.reset}" />
 								<f:selectItem
 									itemLabel="#{lbl['lbl.sc.add.committee.ptj.full']}"
@@ -185,7 +185,23 @@
 						<h:outputText value="#{existcommitteeuser.designation}"
 							style="white-space: normal;" />
 					</p:column>
-
+					<!-- #12471 Start -->
+					<c:if
+						test="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat eq ParameterConst.getOrgCatPtj()}">
+						<p:column headerText="#{lbl['lbl.sc.add.committee.ministry']}">
+							<h:outputText
+								value="#{qTCommitteBackingBean.getOrgDesc(existcommitteeuser.pmUserOrgs,ParameterConst.getOrgTypeMinistry())}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.add.committee.ptj.group']}">
+							<h:outputText
+								value="#{qTCommitteBackingBean.getOrgDesc(existcommitteeuser.pmUserOrgs,ParameterConst.getOrgTypePtjGroup())}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.add.committee.ptj']}">
+							<h:outputText
+								value="#{qTCommitteBackingBean.getOrgDesc(existcommitteeuser.pmUserOrgs,ParameterConst.getOrgTypePtj())}" />
+						</p:column>
+					</c:if>
+					<!-- #12471 End -->
 					<p:column headerText="#{lbl['lbl.sc.email']}">
 						<h:outputText value="#{existcommitteeuser.email}"
 							style="white-space: normal;" />

@@ -2914,5 +2914,32 @@ public class QTCommitteBackingBean extends
 		}
 		this.getManagedBean().setOrgNameDD(items);
 	}
+	
+	/**
+	 * Get user organization description
+	 */
+	public String getOrgDesc(List<PmUserOrg> pmUserOrgs, String orgType) {
+		String desc = "";
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		for (PmUserOrg org : pmUserOrgs) {
+			if (org.getRecordStatusFlg() == 1) {
+				reqDTO.setOrgProfileId(org.getPmOrgProfile().getOrgProfileId());
+				OrgProfileResDTO resDTO = null;
+				if(orgType.equalsIgnoreCase(ParameterConst.ORG_TYPE_MINISTRY)){
+					resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+					desc = resDTO.getPmOrgProfile().getOrgName();
+				} else if(orgType.equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ_GROUP)){
+					resDTO = orgProfileSO.retrieveJabatanByOrgProfileId(reqDTO);
+					desc = resDTO.getPmOrgProfile().getOrgName();
+				} else if(orgType.equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)){
+					desc = org.getPmOrgProfile().getOrgName();
+				} 
+				break;
+			}
+		}
+		return desc;
+	}
 	// #12471 End
 }
