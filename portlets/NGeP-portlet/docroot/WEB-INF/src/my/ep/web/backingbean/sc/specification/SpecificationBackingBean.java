@@ -20404,11 +20404,11 @@ if(null!=allTechnicalChecklist){
 		
 		//#28784 note-#647 issue 4 - Start
 		for (TplSpecQuestion ques : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
-			for (TplSpecQuestion oldQues : this.getManagedBean().getDaddDemoTechnicalCheckList();//#28784emoOriSpecQuestionTemplateList()) {
+			for (TplSpecQuestion oldQues : this.getManagedBean().getDemoOriSpecQuestionTemplateList()) {
 				if (oldQues.getSpecQuestionId().equals(ques.getSpecQuestionId())) {
 					oldQues.setItemReqDemo(ques.isItemReqDemo());
 					oldQues.setDemoScore(ques.getDemoScore());
-				}
+				} 
 			}
 		}
 		scQtCheckList.getScQtDoc().getTplSpecMaster().setTplSpecQuestions(this.getManagedBean().getDemoOriSpecQuestionTemplateList());
