@@ -133,7 +133,10 @@
 					<td>
 						<p:inputText label="#{lbl['lbl.sm.userprofile.idno']}" id="newAdminIdNo"
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationNo}"
-							size="35" disabled="false" required="true" styleClass="mandatory" ><p:ajax event="change" partialSubmit="true" process="@this" /></p:inputText><p:message id="newAdminIdNoMsg" for="newAdminIdNo"
+							size="35" disabled="false" required="true" styleClass="mandatory" >
+							<p:ajax event="change" partialSubmit="true" process="@this" />
+						</p:inputText>
+						<p:message id="newAdminIdNoMsg" for="newAdminIdNo"
 							showSummary="true" showDetail="false" display="icon" />
 					</td>
 				</tr>
