@@ -195,6 +195,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScTechnicalUserScoringSchemaAttachment;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -14535,8 +14536,10 @@ if (null != checklist && !checklist.isEmpty()) {
 				if(isModified || !isTemplateSpec || isSpecNotExist){
 					List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
 					for (ScQtCheckList t : st2technicalproposalList) {
-						if (t.getQtChecklistId()
-								.equals(scQtCheckList.getQtChecklistId())) {
+						if (!t.getDefinationType().getParameterCode()
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)
+								&& t.getQtChecklistId()
+								.equals(scQtCheckList.getQtChecklistId())) {//#28784 exclude demo
 							t.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));//#28784
 							}
 
@@ -19990,6 +19993,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			
 		}//11104-End
 		scoringPopUpAction(null);
+		this.retriveSampleSpecmasterForMandatorySpecChecking(templateChecklist);//#29187 Added Vinod
 		return "/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleItemView.xhtml?faces-redirect=true";		
 	}
 	/**** 11104-start
@@ -22460,6 +22464,28 @@ if(null!=allTechnicalChecklist){
 		}
 
 		return render;
+	}
+	
+	public void retriveSampleSpecmasterForMandatorySpecChecking(ScQtCheckList templateChecklist){
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+						ITemplateSpecSO.class);
+		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+		
+		for(TplSpecQuestion itemQuestion : templateChecklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()){
+			specReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			specReqDTO.setItemName(itemQuestion.getClItem());
+			TemplateSpecResDTO resDTO = templateSpecSO
+					.retrieveTechSpecByItemNames(specReqDTO);
+			
+			if (null != resDTO && null != resDTO.getSpecQuestionList()) {
+				for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
+					if (question.isMandatorySpec()) {
+						itemQuestion.setMandatorySpecForSample(true);
+					}
+				}
+			}
+		}
 	}
 	/*#29187 End Vinod*/
 	
