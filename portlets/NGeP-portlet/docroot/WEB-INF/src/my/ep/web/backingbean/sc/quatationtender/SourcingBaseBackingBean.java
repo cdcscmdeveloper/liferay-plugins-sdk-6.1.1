@@ -5103,8 +5103,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					}
 					// 32648 - end
 
-					answerRemarkList.add(tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark());
-
 					addSpecList = true;
 					continue;
 				}
