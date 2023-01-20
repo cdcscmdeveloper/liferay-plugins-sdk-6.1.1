@@ -3216,8 +3216,14 @@ public class TemplateSpecBackingBean extends
 		// #32130, #21695, #25138 - Start.
 		if (CollectionUtils.isNotEmpty(specEstimations)) {
 			Iterator<TplSpecEstimation> iterator = specEstimations.iterator();
+			
 			while (iterator.hasNext()) {
 				TplSpecEstimation tplSpecEstimation = iterator.next();
+				
+				if(tplSpecEstimation.getEstimatedCost().compareTo(BigDecimal.ZERO) == 0){
+					tplSpecEstimation.setIndicativeUnitPrice(new BigDecimal(0.00));
+				}
+				
 				if (tplSpecEstimation.getTplSpecZoneDtl() == null) {
 					iterator.remove();
 				}
