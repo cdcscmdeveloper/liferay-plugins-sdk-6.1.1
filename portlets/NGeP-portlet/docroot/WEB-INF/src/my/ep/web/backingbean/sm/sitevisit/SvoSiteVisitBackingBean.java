@@ -170,10 +170,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param templateType
 	 */
 	private void setSelectedSmSvFacility(SmSvTemplate svTemplate){
-		//getManagedBean().getSelectedSvTemplate().setSmSvFacility(getManagedBean().getSmSvTask().getSmSvAddress().getSmAddress().getSmFacilities().get(0));
-		log.info("*******setSelectedSmSvFacility*********" + getManagedBean().getSelectedSvTemplate().getSvTemplateId());
 		if(getManagedBean().getSelectedSvTemplate().getSmSvFacility() == null){
-			//log.info("smFacility 0 - " +getManagedBean().getSmSvTask().getSmSvAddress().getSmAddress().getAddressId());
 			SmFacility smFacility = retrieveFacilityByAddress(getManagedBean().getSmSvTask().getSmSvAddress().getSiteRefId());
 			SmSvFacility smSvFacility = getManagedBean().getSelectedSvTemplate().getSmSvFacility();
 
@@ -183,12 +180,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}
 
 				smSvFacility.setOwnershipType(smFacility.getOwnershipType());
-				//				smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
-				//				smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
 				if(smFacility.getAreaSquareFeet()!=null){
-					//smSvFacility.setOverallSqft(formatter.format(smFacility.getAreaSquareFeet()));
-					//smSvFacility.setEnclosedSqft(formatter.format(smFacility.getAreaSquareFeet()));
-
 					smSvFacility.setOverallSqft(smFacility.getAreaSquareFeet().toString());
 					smSvFacility.setEnclosedSqft(smFacility.getAreaSquareFeet().toString());
 					smSvFacility.setEnclosedCapacitySqft(smFacility.getAreaSquareFeet().toString());
@@ -201,18 +193,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				smSvFacility.setSmSvTemplate(svTemplate);
 				getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
 			}else{
-				//NumberFormat formatter = new DecimalFormat("#0.00");
 				smSvFacility = new SmSvFacility();
-				//smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
-				//smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
-
 				smSvFacility.setSmSvTemplate(svTemplate);
 				getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
 			}
 		}
 	}
 
-//	}
 
 	
 	/**
@@ -301,17 +288,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					break;
 				}
 			}
-			
-			//Set Template Map for index of tabMenu
-/*			this.getManagedBean().setIndexPageMap(new HashMap<Integer,SmSvTemplate>());
-			int i = viewMode.equalsIgnoreCase("V") ? 1 : 3;
-		
-			log.info("iCount before------" + i);
-			getManagedBean().getIndexPageMap().put(i, smSvTask.getSmSvTemplate());
-			
-			if(viewMode.equalsIgnoreCase("V")){
-				this.getManagedBean().setViewMode(true);
-			}*/
 	
 			this.getManagedBean().setLastIndex(5);
 			
@@ -327,10 +303,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			SmGstSupplier gstSupp = SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(getManagedBean().
 					getSmSvTask().getSmAppl().getSmSupplier().getSupplierId(), null, null,true);
 			getManagedBean().setSmGstSupplier(gstSupp);
-			
-			//populateSmSvAddresses();
-			//groupCategoryCodeByType(svoTask.getSmSvTemplate());
-			
+						
 			getManagedBean().setSelectedSvTemplate(smSvTask.getSmSvTemplate());
 			getManagedBean().setBusinessTypeDesc(getBusinessTypeDesc());
 			getManagedBean().setCompanyAddress(getCompanyAddressInLine());
@@ -3024,5 +2997,19 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
 
 		return url;
+	}    
+	
+	// #34166 - Start
+	public void validateText(FacesContext f, UIComponent c, Object obj) {
+		String remarks = (String) obj;
+		log.info("This is the remark >>>>>>> " + remarks);
+		String fieldsName = (String) c.getAttributes().get("param");
+		log.info("This is the second parameter >>>>>>> " + fieldsName);
+		if (remarks.contains("<") || remarks.contains(">")) {
+			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775191,
+							new String[] { fieldsName.toLowerCase() })));
+		}
 	}
+	// #34166 - End
 }
