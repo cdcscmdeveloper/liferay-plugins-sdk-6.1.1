@@ -20408,7 +20408,7 @@ if(null!=allTechnicalChecklist){
 				if (oldQues.getSpecQuestionId().equals(ques.getSpecQuestionId())) {
 					oldQues.setItemReqDemo(ques.isItemReqDemo());
 					oldQues.setDemoScore(ques.getDemoScore());
-				}
+				} 
 			}
 		}
 		scQtCheckList.getScQtDoc().getTplSpecMaster().setTplSpecQuestions(this.getManagedBean().getDemoOriSpecQuestionTemplateList());
