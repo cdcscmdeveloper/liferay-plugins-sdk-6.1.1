@@ -5783,6 +5783,11 @@ public class SimpleQuoteBackingBean extends
 			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(
 					specAnswerList.get(0).getTplSpecQuestion()
 							.getTplSpecMaster(), specAnswerList, locale);
+			//Bug_34259 - Start
+			TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
+			.getTplSpecMaster();
+			specMaster.setSpecCreatedBySQ(true);	
+			//Bug_34259 - End
 		}
 		
 		if (!isServiceContainPrice && !isProdContainPrice) {
