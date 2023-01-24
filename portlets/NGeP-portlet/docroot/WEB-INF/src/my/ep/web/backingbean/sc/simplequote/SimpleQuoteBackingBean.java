@@ -5672,9 +5672,11 @@ public class SimpleQuoteBackingBean extends
 			// 30552 - end
 			//#Newly add
 			///#21695 farid start
+			//Bug_34259 - Start
 			TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
 			.getTplSpecMaster();
-			specMaster.setSpecCreatedBySQ(true);			
+			specMaster.setSpecCreatedBySQ(true);
+			//Bug_34259 - End
 			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(specMaster
 					, specAnswerList, locale);
 			///#21695 farid end
