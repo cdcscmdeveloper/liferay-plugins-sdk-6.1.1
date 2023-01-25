@@ -21,18 +21,11 @@
 		<!-- 32521 - START -->
 		<c:choose>
 			<c:when test="#{cc.attrs.statusApplication}">
-				<p:selectOneMenu value="#{cc.attrs.bBean.managedBean.applStatus}" style="width:300px;">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.pleaseSelect']}" itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingApplicationVerification']}" itemValue="PAV" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingApplicationApproval']}" itemValue="PAA" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingSiteVisitAssignmentBefore']}" itemValue="PSVAB" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingSiteVisitAssignmentAfter']}" itemValue="PSVAA" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingSiteVisitBefore']}" itemValue="PSVB" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingSiteVisitAfter']}" itemValue="PSVA" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingReviewSiteVisitReportAfter']}" itemValue="PRSVRA" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingReviewSiteVisitReportBefore']}" itemValue="PRSVRB" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.registered']}" itemValue="REG" />
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				<p:selectOneMenu value="#{cc.attrs.bBean.managedBean.applStatus}"
+						style="width:300px;" required="#{cc.attrs.required}">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
+						<f:selectItems value="#{cc.attrs.bBean.retrieveReportApplStatus()}"/>
+						<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</c:when>
 			<c:otherwise>

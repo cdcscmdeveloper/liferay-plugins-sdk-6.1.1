@@ -14,6 +14,7 @@
 	    <cc:attribute name="onSelectHistory" required="true" />
 	    <cc:attribute name="committeeName" required="true" />
 	    <cc:attribute name="isSFCommittee" default="#{false}" required="false" />
+	    <cc:attribute name="isLegacy" default="#{false}" required="false" /><ui:remove>25037 note 670, add islegacy</ui:remove>
 	</cc:interface>
 
 	<cc:implementation>
@@ -24,6 +25,7 @@
 		<ui:param name="onSelectHistory" value="#{cc.attrs.onSelectHistory}" />
 		<ui:param name="backingBean" value="#{cc.attrs.backingBean}" />
 		<ui:param name="isSFCommittee" value="#{cc.attrs.isSFCommittee}" />
+		<ui:param name="isLegacy" value="#{cc.attrs.isLegacy}" /> <ui:remove>25037 note 670, add islegacy</ui:remove>
 		
 		<style>
 			.firstCol {
@@ -125,7 +127,7 @@
 				<ac:detachablePaginator loopId="historyMemberTableId" paginatorObject="#{memberHistoryPaginator}" />
 			</p:panel>
 		</h:panelGrid>
-		<h:panelGrid columns="1" styleClass="gridContainer" rendered="#{isSFCommittee}">
+		<h:panelGrid columns="1" styleClass="gridContainer" rendered="#{isSFCommittee and isLegacy}"><ui:remove>25037 note 670, add islegacy</ui:remove>
 			<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true" >
 				<p:dataTable
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
