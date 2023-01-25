@@ -307,23 +307,24 @@ public class ForceReplaceSuppAdminBackingBean extends
 		// #28765 - Start - to pass through inactiveSupplierRole for G2G normal
 		// replace supplier admin
 
-		if ((getManagedBean().isBypassFlag() == false && !getManagedBean().getAccType().equals(
-				SupplierManagementConst.ACC_GOVT_SELLER))
-		// && resDto.isTerminateSupplier() == false
-		) {
-			// End 28765 comment changes 12981
-			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
-		} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)
-				&& (getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
-						.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) || getManagedBean()
-						.getSmAppl().getPmStatus().getStatusId().toString()
-						.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER))) {
-			getManagedBean().setBypassFlag1(1);
-		}
-		// #28765 - End
 		if (getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
 			redirectToSuccessPageForInProgress(resDto);
 		} else {
+			
+			//#28765 - Start - to pass through inactiveSupplierRole for G2G normal replace supplier admin	
+			if((getManagedBean().isBypassFlag()==false && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) 
+//					&& resDto.isTerminateSupplier() == false
+					) {
+				// End 28765 comment changes 12981
+				PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
+						.inactiveSupplierRole(getOldAdminReqDTO());
+			} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
+					(getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
+					getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){
+				getManagedBean().setBypassFlag1(1);
+			}
+			//#28765 - End
+			
 			redirectToSuccessPage(resDto);
 		}
 		//#33589 - End
