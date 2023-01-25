@@ -290,44 +290,44 @@ public class ForceReplaceSuppAdminBackingBean extends
 	public void replaceWithNewUser() {
 
 		//#33589 - Start
-				PersonnelResDTO resDto = null;
-				if (!getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
-					getManagedBean().getNewAdmin().setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-					SmCommonUtil.setNewPersonnelPermAndMailAddress(getManagedBean().getNewAdmin(), getManagedBean()
-							.getMailAddr(), getManagedBean().getPermAddr());
+		PersonnelResDTO resDto = null;
+		if (!getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
+			getManagedBean().getNewAdmin().setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+			SmCommonUtil.setNewPersonnelPermAndMailAddress(getManagedBean().getNewAdmin(), getManagedBean()
+					.getMailAddr(), getManagedBean().getPermAddr());
 
-					validateMyIdentity();
-					resDto = SmServiceLookup.getPersonnelSO().replaceAdminWithNewPersonnel(getReqDTO());
-				} else {
-					resDto = SmServiceLookup.getPersonnelSO().replaceAdminWithoutNewPersonnel(getReqDTO());
-				}
+			validateMyIdentity();
+			resDto = SmServiceLookup.getPersonnelSO().replaceAdminWithNewPersonnel(getReqDTO());
+		} else {
+			resDto = SmServiceLookup.getPersonnelSO().replaceAdminWithoutNewPersonnel(getReqDTO());
+		}
 
 		// Start 28765 comment changes 12981
-				// START 12981
-				// #28765 - Start - to pass through inactiveSupplierRole for G2G normal
-				// replace supplier admin
+		// START 12981
+		// #28765 - Start - to pass through inactiveSupplierRole for G2G normal
+		// replace supplier admin
 
-				if ((getManagedBean().isBypassFlag() == false && !getManagedBean().getAccType().equals(
-						SupplierManagementConst.ACC_GOVT_SELLER))
-				// && resDto.isTerminateSupplier() == false
-				) {
-					// End 28765 comment changes 12981
-					PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
-				} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)
-						&& (getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
-								.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) || getManagedBean()
-								.getSmAppl().getPmStatus().getStatusId().toString()
-								.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER))) {
-					getManagedBean().setBypassFlag1(1);
+		if ((getManagedBean().isBypassFlag() == false && !getManagedBean().getAccType().equals(
+				SupplierManagementConst.ACC_GOVT_SELLER))
+		// && resDto.isTerminateSupplier() == false
+		) {
+			// End 28765 comment changes 12981
+			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
+		} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)
+				&& (getManagedBean().getSmAppl().getPmStatus().getStatusId().toString()
+						.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) || getManagedBean()
+						.getSmAppl().getPmStatus().getStatusId().toString()
+						.equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER))) {
+			getManagedBean().setBypassFlag1(1);
 		}
-				// #28765 - End
-				if (getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
-					redirectToSuccessPageForInProgress(resDto);
-				} else {
-					redirectToSuccessPage(resDto);
-				}
-				//#33589 - End
-				// END 12981
+		// #28765 - End
+		if (getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
+			redirectToSuccessPageForInProgress(resDto);
+		} else {
+			redirectToSuccessPage(resDto);
+		}
+		//#33589 - End
+		// END 12981
 	}
 
 	/**
@@ -341,9 +341,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 			SmCommonUtil.setNewPersonnelPermAndMailAddress(getManagedBean()
 					.getNewAdmin(), getManagedBean().getMailAddr(),
 					getManagedBean().getPermAddr());	
+			
+			validateMyIdentity();
 		}
 		//#33589 - End
-		validateMyIdentity();
 		// Start 28765 comment changes 12981
 		//12981 START
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
@@ -562,6 +563,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());
 		reqDTO.setAdminPersonnel(getManagedBean().getOldAdmin());
+		
 		//#33589 - Start
 		reqDTO.setSmPersonnel(getManagedBean().getNewAdmin());
 		if(!getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)){
@@ -1198,7 +1200,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			throw new EpException(MessageConst.ERROR_721113);
 		}
 	}
-
+	
 	//#33589 - Start
 	private void redirectToSuccessPageForInProgress(PersonnelResDTO resDTO) {
 		if (resDTO.isSuccessful()) {
@@ -1229,7 +1231,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 	}
 	//#33589 - End
-	
+
 	/**
 	 * Set identification type
 	 * 
