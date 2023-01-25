@@ -37,23 +37,27 @@
 				</f:facet>
 				<h:outputText value="#{index + 1}" />
 			</p:column>
-
+			<!-- #27691 START -->
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
-				<c:if test="#{registrationBackingBean.managedBean.smSupp.businessType == 'K'}">
-					<h:outputText value="#{lbl['lbl.sm.directorname']}" />
-				</c:if>
-				<c:if test="#{registrationBackingBean.managedBean.smSupp.businessType != 'K'}">
-					<h:outputText value="#{lbl['lbl.sm.ownername']}" />
-				</c:if>
-					
+				<c:choose>
+				<c:when test="#{registrationBackingBean.managedBean.smSupp.businessType == 'K' or 
+				registrationBackingBean.managedBean.smSupp.businessType == 'L' or 
+				registrationBackingBean.managedBean.smSupp.businessType == 'M' or 
+				registrationBackingBean.managedBean.smSupp.businessType == 'O'}">
+					<h:outputText value="#{lbl['lbl.sm.directorname']}"/>
+				</c:when>
+				<c:otherwise>
+					<h:outputText value="#{lbl['lbl.sm.ownername']}"/>
+				</c:otherwise>
+				</c:choose>	
 				</f:facet>
 						<h:outputText rendered="#{!varOwner.showTextField}" value="#{varOwner.ownerName}" />
 					
 						<p:inputText rendered="#{varOwner.showTextField}" maxlength="80"  value="#{varOwner.ownerName}"  converter="toUpperCaseConverter">								
 						</p:inputText>		
 			</p:column>
-			
+			<!-- #27691 END -->
 			<p:column  styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.identificationtype']}" />
