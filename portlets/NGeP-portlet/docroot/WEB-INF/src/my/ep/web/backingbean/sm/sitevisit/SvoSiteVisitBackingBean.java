@@ -25,37 +25,22 @@ import javax.faces.application.FacesMessage;
 import javax.faces.application.ViewHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.velocity.VelocityContext;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.StreamedContent;
-
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 //#30504 start
 import my.ep.biz.service.pm.common.zone.IZoneSO;
-import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
-import my.ep.dto.pm.common.zone.ZoneReqDTO;
 //#30504 end
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
-import my.ep.biz.service.sm.trackingdiary.ISmTrackingDiarySO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -64,6 +49,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -73,7 +59,6 @@ import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
 import my.ep.dto.sm.siteVisit.SiteVisitResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
-import my.ep.dto.sm.trackingdiary.SmTrackingDiaryReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
@@ -143,7 +128,20 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.StreamedContent;
+
 import com.liferay.portal.util.PortalUtil;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
 @ManagedBean(name = "svoSiteVisitBackingBean")
 @RequestScoped
 public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManagedBean> {
@@ -170,10 +168,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param templateType
 	 */
 	private void setSelectedSmSvFacility(SmSvTemplate svTemplate){
-		//getManagedBean().getSelectedSvTemplate().setSmSvFacility(getManagedBean().getSmSvTask().getSmSvAddress().getSmAddress().getSmFacilities().get(0));
-		log.info("*******setSelectedSmSvFacility*********" + getManagedBean().getSelectedSvTemplate().getSvTemplateId());
 		if(getManagedBean().getSelectedSvTemplate().getSmSvFacility() == null){
-			//log.info("smFacility 0 - " +getManagedBean().getSmSvTask().getSmSvAddress().getSmAddress().getAddressId());
 			SmFacility smFacility = retrieveFacilityByAddress(getManagedBean().getSmSvTask().getSmSvAddress().getSiteRefId());
 			SmSvFacility smSvFacility = getManagedBean().getSelectedSvTemplate().getSmSvFacility();
 
@@ -183,12 +178,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}
 
 				smSvFacility.setOwnershipType(smFacility.getOwnershipType());
-				//				smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
-				//				smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
 				if(smFacility.getAreaSquareFeet()!=null){
-					//smSvFacility.setOverallSqft(formatter.format(smFacility.getAreaSquareFeet()));
-					//smSvFacility.setEnclosedSqft(formatter.format(smFacility.getAreaSquareFeet()));
-
 					smSvFacility.setOverallSqft(smFacility.getAreaSquareFeet().toString());
 					smSvFacility.setEnclosedSqft(smFacility.getAreaSquareFeet().toString());
 					smSvFacility.setEnclosedCapacitySqft(smFacility.getAreaSquareFeet().toString());
@@ -201,18 +191,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				smSvFacility.setSmSvTemplate(svTemplate);
 				getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
 			}else{
-				//NumberFormat formatter = new DecimalFormat("#0.00");
 				smSvFacility = new SmSvFacility();
-				//smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
-				//smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
-
 				smSvFacility.setSmSvTemplate(svTemplate);
 				getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
 			}
 		}
 	}
 
-//	}
 
 	
 	/**
@@ -301,17 +286,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					break;
 				}
 			}
-			
-			//Set Template Map for index of tabMenu
-/*			this.getManagedBean().setIndexPageMap(new HashMap<Integer,SmSvTemplate>());
-			int i = viewMode.equalsIgnoreCase("V") ? 1 : 3;
-		
-			log.info("iCount before------" + i);
-			getManagedBean().getIndexPageMap().put(i, smSvTask.getSmSvTemplate());
-			
-			if(viewMode.equalsIgnoreCase("V")){
-				this.getManagedBean().setViewMode(true);
-			}*/
 	
 			this.getManagedBean().setLastIndex(5);
 			
@@ -327,10 +301,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			SmGstSupplier gstSupp = SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(getManagedBean().
 					getSmSvTask().getSmAppl().getSmSupplier().getSupplierId(), null, null,true);
 			getManagedBean().setSmGstSupplier(gstSupp);
-			
-			//populateSmSvAddresses();
-			//groupCategoryCodeByType(svoTask.getSmSvTemplate());
-			
+						
 			getManagedBean().setSelectedSvTemplate(smSvTask.getSmSvTemplate());
 			getManagedBean().setBusinessTypeDesc(getBusinessTypeDesc());
 			getManagedBean().setCompanyAddress(getCompanyAddressInLine());
@@ -3024,5 +2995,19 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
 
 		return url;
+	}    
+	
+	// #34166 - Start
+	public void validateText(FacesContext f, UIComponent c, Object obj) {
+		String remarks = (String) obj;
+		log.info("This is the remark >>>>>>> " + remarks);
+		String fieldsName = (String) c.getAttributes().get("param");
+		log.info("This is the second parameter >>>>>>> " + fieldsName);
+		if (remarks.contains("<") || remarks.contains(">")) {
+			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775191,
+							new String[] { fieldsName.toLowerCase() })));
+		}
 	}
+	// #34166 - End
 }
