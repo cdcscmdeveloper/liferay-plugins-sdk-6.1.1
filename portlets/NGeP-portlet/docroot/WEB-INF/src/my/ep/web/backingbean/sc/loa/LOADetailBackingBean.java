@@ -9950,7 +9950,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			
 			for (ScLoiLoaItem item : this.getManagedBean().getNameZoneScLoiLoaItemList()) {				
 				if (!currentRequestItem.equals(item.getScRequestItem().getRequestNoteItemId())){
-					totalPrice = calcSubTotalPrice(item).add(totalPrice);
+					totalPrice = getScRequestSubTotalZonal(item.getScRequestItem().getRequestNoteItemId()).add(totalPrice);
 					currentRequestItem = item.getScRequestItem().getRequestNoteItemId();
 				}
 			}
