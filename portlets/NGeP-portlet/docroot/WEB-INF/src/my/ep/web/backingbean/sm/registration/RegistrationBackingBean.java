@@ -272,22 +272,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	//16052019 - SSM INTEGRATION CR 
 	public void setHeaderName(){
 		// 27691 - Start
-			if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
-					|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
-					|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
-					|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())){
+		if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())
+				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())){
 			this.getManagedBean().setHeaderName(SmCommonUtil.getMessage("lbl.sm.directorinfo", null));
-		
 		//Display both director and owner
 		}else if(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP.equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())){
 			this.getManagedBean().setHeaderName(SmCommonUtil.getMessage("lbl.sm.llp.ownerinfo", null));
 			this.getManagedBean().setShowDirectorInOwner(true);
 		}
-		
 		else{
 			this.getManagedBean().setHeaderName(SmCommonUtil.getMessage("lbl.sm.ownerinfo", null));
 		}
-			//#27691 - End
+		//#27691 - End
 	}
 	public String validateWithSSM() {
 		this.getManagedBean().setHideButton(false);
@@ -2514,15 +2512,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								//27691 END
 								this.getManagedBean().getSmPersonnelOwners().add(personnel);
 							}
-							// 27691 - Start
+							// 27691 - Start 
 							if (smSupp.getBusinessType().equals("J")
 									|| smSupp.getBusinessType().equals("I")){
 								if (personnel.isDirector() && personnel.getIdentificationType() != null			
 										&& personnel.getIdentificationType().getParameterCode()		
 										.equals(ParameterConst.IDENTIFICATION_TYPES_IC)){
-
 									this.getManagedBean().getSmPersonnelDirector().add(personnel);
-										
+								}
 							}
 							// 27691 - End
 						}
@@ -2794,7 +2791,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								this.getManagedBean().getSmSupp().getSmAppl().setSmPersonnels(new ArrayList<SmPersonnel>());
 							}
 							for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
-								
 								//#27691 START
 								//Show all personnel based on data current SSM personnel
 								if(this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels() != null){
@@ -2833,23 +2829,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 										}
 									}
 								}
-								//#27691 END
-
-							}
-							//Add personnel using ID Type IC in SM_PERSONNEL only
-							if(personnel.getIdentificationType() != null && personnel.getIdentificationType().getParameterCode()		
-									.equals(ParameterConst.IDENTIFICATION_TYPES_IC)){
-								if(EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels(), "identificationNo") == null){
-									personnel.setSmAppl(this.getManagedBean().getSmAppl());
-									//27477
-									personnel.setSmPersonnelAddresses(null);
-									personnel.setSmPersonnelAdd(null);
-									this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels().add(personnel);
-								}
+								//Add personnel using ID Type IC in SM_PERSONNEL only
+								if(personnel.getIdentificationType() != null && personnel.getIdentificationType().getParameterCode()		
+										.equals(ParameterConst.IDENTIFICATION_TYPES_IC)){
+									if(EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels(), "identificationNo") == null){
+										personnel.setSmAppl(this.getManagedBean().getSmAppl());
+										//27477
+										personnel.setSmPersonnelAddresses(null);
+										personnel.setSmPersonnelAdd(null);
+										this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels().add(personnel);
+									}
 								}
 							}
-								//#27691 END
-						
+							//#27691 END
+						}
 						
 						//SET SMSUPPLIEROWNER
 						//27691 START - TO HANDLE ISSUE OWNER ID NULL
@@ -3792,6 +3785,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if(this.getManagedBean().getSmSupp().getSmSupplierOwners() != null){
 			for(SmSupplierOwner suppOwner : this.getManagedBean().getSmSupp().getSmSupplierOwners()){
 				validateIDFormat(suppOwner.getIdentificationNo(),suppOwner.getIdentificationType().getParameterCode());
+				
 				if(!this.getManagedBean().getSmSupp().getSmAppl().isApplValidWithSsm() &&
 						( !suppOwner.isOwnerIsEquity() && !suppOwner.isOwnerIsDirector() )
 						&&(this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP)
