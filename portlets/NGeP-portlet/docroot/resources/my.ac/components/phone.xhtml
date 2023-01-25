@@ -36,7 +36,7 @@
 			<f:validator validatorId="phoneValidator" />
 			<f:attribute name="isMobileName" value="#{cc.attrs.isMobile ? 'Y' : 'N'}" />
 	        <f:attribute name="labelName" value="#{cc.attrs.label}" />
-		</p:inputText>	
+		</p:inputText>
 		<!-- 29487 - View bank details by factoring user_endorsed - Start --> 			
 		<p:graphicImage id="#{phonePanelId}teleno"	value="/css/images/design/ico-tooltips.png" rendered="#{!financialOrgBackingBean.isRoleFactoringUser()}" /> 
 		<!-- 29487 - View bank details by factoring user_endorsed - End -->

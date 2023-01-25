@@ -223,41 +223,41 @@
 					<td><p:outputLabel style="float: right" value="#{lbl['lbl.sm.person.composition.role']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td>
-							<table>
-								<tr>
-									<td>
+						<table>
+							<tr>
+								<td>
 									<p:selectBooleanCheckbox id="chkOwner" disabled="#{forceReplaceSuppAdminBackingBean.managedBean.disabledRoleEquity}" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.equityOwner}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleEquity}">
 										<p:ajax event="change" update="chkDirector,chkOwner,chkHighManagement,chkProf,chkSemiPro,chkManagement,chkStaff" listener="#{forceReplaceSuppAdminBackingBean.listenerClickStaffRole}"
-										partialSubmit="true" 
-										process="@this" /></p:selectBooleanCheckbox>
-									</td>
-									<td>
+									partialSubmit="true" 
+									process="@this" /></p:selectBooleanCheckbox>
+								</td>
+								<td>
 									<h:outputText style="float: left" value="#{lbl['lbl.sm.person.equiOwner']}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleEquity}" />
-									</td>
-									<td>
-										<table>
-												<tr>
-													<td>
+								</td>
+								<td>
+									<table>
+										<tr>
+											<td>
 												<p:selectBooleanCheckbox id="chkDirector" disabled="#{forceReplaceSuppAdminBackingBean.managedBean.disabledRoleEquity}" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.director}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleDirector}">
 													<p:ajax event="change" update="chkDirector,chkOwner,chkHighManagement,chkProf,chkSemiPro,chkManagement,chkStaff" listener="#{forceReplaceSuppAdminBackingBean.listenerClickStaffRole}" partialSubmit="true" process="@this" />
 												</p:selectBooleanCheckbox>
-													</td>
-													<td>
+											</td>
+											<td>
 												<h:outputText style="float: left" value="#{lbl['lbl.sm.person.dir']}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleDirector}" />
-													</td>
-													<td>
+											</td>
+											<td>
 												<p:selectBooleanCheckbox id="chkHighManagement" disabled="#{forceReplaceSuppAdminBackingBean.managedBean.disabledRoleHighManagement}" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.higherManagement}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleHighManagement}">
 													<p:ajax event="change" update="chkDirector,chkOwner,chkHighManagement,chkProf,chkSemiPro,chkManagement,chkStaff" listener="#{forceReplaceSuppAdminBackingBean.listenerClickStaffRole}" partialSubmit="true" process="@this" />
 												</p:selectBooleanCheckbox>
-													</td>
-													<td>
+											</td>
+											<td>
 												<h:outputText style="float: left" value="#{lbl['lbl.sm.person.hghMngmt']}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleHighManagement}" />
-													</td>
-												</tr>
-										</table>
-									</td>
-								</tr>
-							</table>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
 					</td>
 					<td></td>
 					<td></td>
@@ -268,8 +268,8 @@
 					<td>
 						<table>
 							<ui:fragment rendered="#{forceReplaceSuppAdminBackingBean.managedBean.smSupplier.smAppl.supplierType == SupplierManagementConst.SUPP_TYPE_CONSULTANT}">
-							<tr>
-								<td>
+								<tr>
+									<td>
 										<p:selectBooleanCheckbox id="chkProf" disabled="#{forceReplaceSuppAdminBackingBean.managedBean.disabledRoleProfessional}" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.prof}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleProfessional}">
 											<p:ajax event="change" update="chkDirector,chkOwner,chkHighManagement,chkProf,chkSemiPro,chkManagement,chkStaff" listener="#{forceReplaceSuppAdminBackingBean.listenerClickStaffRole}" partialSubmit="true" process="@this" />
 										</p:selectBooleanCheckbox>

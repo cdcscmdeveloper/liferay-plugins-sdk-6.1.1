@@ -782,7 +782,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 		// replace with existing personnel
 		else {
-			//#33589 - Start
 			if(getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)){
 				checkingBeforeDeclare();
 			}else{
@@ -792,7 +791,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 						"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "",
 						null, null);
 			}
-			//#33589 - End
 		}
 		//#33589 - End
 	}
