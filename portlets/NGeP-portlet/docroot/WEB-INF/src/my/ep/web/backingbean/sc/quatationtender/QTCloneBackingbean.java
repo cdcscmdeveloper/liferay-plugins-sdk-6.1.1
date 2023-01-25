@@ -880,11 +880,13 @@ public class QTCloneBackingbean extends
 					if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){//31350-start
 						log.info("==========stratCommitteeCloneDuringPendingDocument========="+scQt.getQtNo());//31350
 						retrieveComittee1And2Tier(scQt,copyScqt);
+						qTDetailBB.retrieveApprovalTabDtl();//34332&25635
 						log.info("==========EndCommitteeCloneDuringPendingDocument========="+scQt.getQtNo());//31350
 					}//31350-End
 					else if(QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId)){//31350-start
 						log.info("==========stratCommitteeCloneDuringPendingrevision========="+scQt.getQtNo());//31350
 						retrieveComittee1And2TierRevision(scQt,copyScqt);
+						qTDetailBB.retrieveApprovalTabDtl();//34332&25635
 						log.info("==========EndCommitteeCloneDuringPendingrevision========="+scQt.getQtNo());//31350
 					}//31350-End
 					retrieveBrief(copyScqt);
@@ -2053,8 +2055,8 @@ public class QTCloneBackingbean extends
 		tenderReqDTO.setAvaliableApprovals(copyScqt.getScQtApprovals());
 		tenderReqDTO.setAmendMentBean(this.getManagedBean().getAmendMentBean());
 		tenderReqDTO.setDeskOfficer(new FacesScopes().getUserSessionBean());
-		QuationTenderResDTO resDTO = QtDetailsSO.retriveQTApprovalDetails(tenderReqDTO);
-		List<ScQtApproval> requiredApproval = resDTO.getApproval();
+	    //QuationTenderResDTO resDTO = QtDetailsSO.retriveQTApprovalDetails(tenderReqDTO);//34332&25635_start
+		List<ScQtApproval> requiredApproval = copyScqt.getScQtApprovals();//34332&25635_end
 		List<ScQtApproval> approvals=new ArrayList<ScQtApproval>();
 		List<ScQtApproval> newApprovals=new ArrayList<ScQtApproval>();
 		if(null!=requiredApproval && CollectionUtils.isNotEmpty(requiredApproval)){//25635-start
