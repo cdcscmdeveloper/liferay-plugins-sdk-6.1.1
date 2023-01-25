@@ -9,11 +9,10 @@
 	<p:panel id="agencyDetailsId" toggleable="true" 
 		rendered="#{suspensionBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}"
 	    header="#{lbl['lbl.ct.panel.agency']}"   toggleSpeed="500">
-        <p:dataTable id="tableAgencyDetails"
-	        lazy="true"
-	         var="data"
-             value="#{suspensionBackingBean.managedBean.agencyPersistDataModel}">
-		     <ac:paginator for="tableAgencyDetails"/>
+        
+        <p:dataTable id="agencyDetailsTable" var="data"
+             value="#{suspensionBackingBean.managedBean.contractVer.ctAgencies}">
+		     <ac:paginator for="agencyDetailsTable"/>
 		
 		      <p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:20%;white-space:normal;" styleClass="column-align-center" >
 		             <div align="left">
