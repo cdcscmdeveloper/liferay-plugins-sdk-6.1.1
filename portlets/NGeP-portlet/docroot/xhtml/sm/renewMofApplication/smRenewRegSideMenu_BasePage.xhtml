@@ -37,6 +37,22 @@
 						"#{lbl['lbl.sm.appli.new.categories']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
 			</script>
 		</h:panelGroup>
+		<!-- #27282 - start -->
+		<h:panelGroup
+			rendered="#{backingBean.managedBean.supplierUser and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+			<script>
+				var emptyText = document.createTextNode("");
+				$('#breadcrumbs').find('.last').append(emptyText);
+				if(emptyText.parentNode != null) {
+					emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.apply.bumi.status']}";
+				}
+				
+				$('#portlet_MOFApplication_WAR_NGePportlet').find(
+						'.portlet-title-text').html(
+						"#{lbl['lbl.sm.apply.bumi.status']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
+			</script>
+		</h:panelGroup>
+		<!-- #27282 - end -->
 		<h:panelGroup
 			rendered="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and backingBean.managedBean.smAppl.resubmit}">
 			<script>
