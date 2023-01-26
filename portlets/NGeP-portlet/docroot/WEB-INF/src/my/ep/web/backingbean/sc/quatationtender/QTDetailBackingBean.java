@@ -12967,34 +12967,13 @@ public void retrieveDemoQtDetails(Long qtId) {
 						this.getManagedBean().setStateCodes(
 								this.getManagedBean().getQt().getZoneLocationLevel().getParameterCode());
 					}
-					//#28784 zone missing after demo = no (if not save) - Start
-					List<TplSpecZoneDtl> zoneList = new ArrayList<>();
+					// #28784 zone missing after demo = no (if not save) - Start
+					List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias()
+							.getTplSpecZoneDtls();
 
-					// Populate zone detail into tree node
-					if (scQt.getScQtSupplierCriteria() != null
-							&& scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
-						
-						List<ZonesBean> list = getManagedBean().getBeans();
-						if (list != null && list.size() > 0) {
+					populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
+					// #28784 zone missing after demo = no (if not save) - End
 
-							for (ZonesBean zonesBean : list) {
-								TplSpecZoneDtl zone = zonesBean.getTplSpecZoneDtl();
-
-								if (zone != null && !zoneList.contains(zone)) {
-
-									zoneList.add(zone);
-								}
-							}
-						}
-						scQt.getScQtSupplierCriteria().getQtZoneCriterias()
-						.setTplSpecZoneDtls(zoneList);
-						
-						List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias()
-								.getTplSpecZoneDtls();
-						
-						populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
-						//#28784 zone missing after demo = no (if not save) - End
-					}
 				}
 			} catch(Exception e) {
 				SLAUtils.getInstance().logSLAError("QT", "RetrieveZonalDetailForDemo", qtId.toString(), "retrieveZonalDetailAfterDemoDeletion", getUserIdSessionFromLoginId(), e);
