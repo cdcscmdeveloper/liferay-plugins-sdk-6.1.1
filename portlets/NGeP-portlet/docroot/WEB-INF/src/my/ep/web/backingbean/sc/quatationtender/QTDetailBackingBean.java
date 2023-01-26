@@ -12974,7 +12974,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 						List<TplSpecZoneDtl> specZoneDtls = new ArrayList<>();
 						
 						List<ZonesBean> list = getManagedBean().getBeans();
-						if (list != null && list.size() > 0) {
+						if (list != null && !list.isEmpty()) {
 
 							for (ZonesBean zonesBean : list) {
 								TplSpecZoneDtl zone = zonesBean.getTplSpecZoneDtl();
