@@ -1686,20 +1686,9 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						removeAttachment = true;
 						// #26339 - End
 						
-						//#34204 - Start
-						if(finProposalChecklist.getScQtProposalChecklistAttachment()!=null){
-						//#34204 - End	
-	
-							finProposalChecklist.setSubmitted(true);
-							finProposalChecklist
-									.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
-						
-						//#34204 - Start
-						}else{
-							finProposalChecklist.setSubmitted(true);
-							finProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-						}
-						//#34204 - End
+						finProposalChecklist.setSubmitted(true);
+						finProposalChecklist
+								.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
 
 				} else{
 					if (finProposalChecklist.isSubmitted()){
@@ -1710,7 +1699,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 						} else {
 							finProposalChecklist
-							.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE); //#34204	
+							.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 						}
 					}else{
 						finProposalChecklist
@@ -2237,20 +2226,9 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					// #26339 - End
 					//start Bug #28887
 					if (null != assetProposalChecklist) {
-						//#34204 - Start
-						if(assetProposalChecklist.getScQtProposalChecklistAttachment()!=null){
-						//#34204 - End	
-							
-							assetProposalChecklist.setSubmitted(true);
-							//this.getManagedBean().setReadOnly(true);
-							assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
-							
-						//#34204 - Start
-						}else{
-							assetProposalChecklist.setSubmitted(true);
-							assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-						}
-						//#34204 - End
+						assetProposalChecklist.setSubmitted(true);
+						//this.getManagedBean().setReadOnly(true);
+						assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);		
 					}
 					//end Bug #28887
 					// #28398 BUG - 26339 CR - End
