@@ -2332,7 +2332,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 									if(key == (keyIdFpx.size() - 1)){
 										sheetFPX.addMergedRegion(new CellRangeAddress(mergeRowFirstFpxIndex-1,mergeRowLastFpxIndex-1,cellid,cellid));
 									}else{
-										Object[] objectArrMerge = creditList.get(key+1);
+										Object[] objectArrMerge = fpxList.get(key+1);
 										if(!receiptNo.equalsIgnoreCase((String)objectArrMerge[2])){
 											sheetFPX.addMergedRegion(new CellRangeAddress(mergeRowFirstFpxIndex-1,mergeRowLastFpxIndex-1,cellid,cellid));
 										}

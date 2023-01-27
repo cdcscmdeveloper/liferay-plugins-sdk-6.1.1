@@ -9581,6 +9581,10 @@ public class SmApplicationBackingBean extends
 	 */
 	public String submitSmApplToBpm(String applType) {
 		
+		// #34166 - Start
+		validateText();
+		// #34166 - End
+		
 		//30953 & 30945 - Start		
 		//add checking to make sure, supporting doc mode is not null
 		log.info("This is the Supporting Document Mode === " +getManagedBean().getSmAppl().getSupportingDocMode());
@@ -10425,10 +10429,14 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setMissinDocs(new ArrayList<SmApplSupportDoc>());
 		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
+			//#34392 - START
 			if (doc.getPmDocument().isMandatory()
 					&& (doc.getVerifiedFlg() == null || doc.getVerifiedFlg() != 1)) {
 				getManagedBean().getMissinDocs().add(doc);
+			}else if(!doc.getPmDocument().isMandatory() && (doc.getVerifiedFlg() == null || doc.getVerifiedFlg() != 1)){
+				getManagedBean().getMissinDocs().add(doc);
 			}
+			//#34392 - End
 		}
 		log.info("**** Send Inquiry List Size ***** "
 				+ getManagedBean().getMissinDocs().size());
@@ -17221,10 +17229,6 @@ public class SmApplicationBackingBean extends
 	
 	//#31407 - START
 	public void checkBeforeSubmit() {
-		
-		// #34166 - Start
-		validateText();
-		// #34166 - End
 		
 		//check category code start
 		StringBuilder msg = new StringBuilder();
