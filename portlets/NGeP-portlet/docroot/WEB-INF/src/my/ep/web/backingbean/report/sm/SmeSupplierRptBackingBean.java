@@ -172,12 +172,12 @@ public class SmeSupplierRptBackingBean extends SmReportBackingBean<SmeSupplierRp
 	}
 	
 	public String constructConditionFields() {
-		StringBuilder sb = new StringBuilder("smeRegisteredFlag^1,9^" + SearchOperator.OPERATOR_IN.value());
+		StringBuilder sb = new StringBuilder();
 		
 		String accType = getManagedBean().getAccountType();
 		if(accType != null && accType.equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
 			if (getManagedBean().getZone() != null) {
-				String zone = "|smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^";
+				String zone = "smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^";
 				if (getManagedBean().getZone().equalsIgnoreCase(SmReportConst.SM_ZONE_SEMENANJUNG)) {
 					sb.append(zone + "1");
 				} else if (getManagedBean().getZone().equalsIgnoreCase(SmReportConst.SM_ZONE_SABAH)) {
@@ -187,14 +187,15 @@ public class SmeSupplierRptBackingBean extends SmReportBackingBean<SmeSupplierRp
 				}
 			}
 			String suppType = getManagedBean().getSupplierType();
+			if(sb.length() != 0) sb.append("|");
 			if (suppType != null && !suppType.equalsIgnoreCase("all")){
-				sb.append("|smAppl.supplierType^" + suppType);
+				sb.append("smAppl.supplierType^" + suppType);
 			} else {
-				sb.append("|smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONSULTANT + "," 
+				sb.append("smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONSULTANT + "," 
 					+ SupplierManagementConst.SUPP_TYPE_CONTRACTOR + "^" + SearchOperator.OPERATOR_IN.value());
 			}
 		} else if (accType != null && accType.equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)){
-			sb.append("|smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_BASIC);
+			sb.append("smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_BASIC);
 		}
 		log.info("29617- constructConditionFields():"+sb.toString());
 		return sb.toString();
