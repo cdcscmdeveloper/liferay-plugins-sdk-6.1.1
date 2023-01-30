@@ -1120,8 +1120,10 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			log.info("markupWorklistItem");
 			for(WorklistItemVO worklistItemVO : worklistItem) {
 				// fl module Purchase Request Initiation Submit PR
-				if(worklistItemVO.getProcess().equalsIgnoreCase(FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME) && 
-						worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_PR_HT)) {
+				//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
+				if ((worklistItemVO.getProcess().equalsIgnoreCase(FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME) || worklistItemVO
+						.getProcess().equalsIgnoreCase(FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME.replaceAll("\\s", "")))
+						&& worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_PR_HT)) {
 					if(!worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 						worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale())+" - "+worklistItemVO.getTitle());									
 					}
