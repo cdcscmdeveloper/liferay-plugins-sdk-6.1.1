@@ -2697,7 +2697,7 @@ public class RuleCatalogueBackingBean extends
 		}
 		
 		// #30672, #29669 - start 29/01/2023
-		if (ruleValue.getEffDate() != null && ruleValue.getExpDate() != null)
+		if (ruleValue.getEffDate() != null && ruleValue.getExpDate() != null) {
 			if (configRuleType.getRangeType() != 1 || (configRuleType.getRangeType() == 1 && ruleValue.isShowFlag())) {
 				if (ruleValue.getEffDate().after(ruleValue.getExpDate())) {
 					ruleValue.setErrorExpDate(true);
@@ -2709,6 +2709,7 @@ public class RuleCatalogueBackingBean extends
 					ruleValue.setErrorExpDate(false);
 				}
 			}
+		}
 		// #30672, #29669 - end 29/01/2023
 	}
 
