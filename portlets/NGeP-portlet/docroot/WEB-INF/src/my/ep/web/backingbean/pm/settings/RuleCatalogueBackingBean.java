@@ -4971,27 +4971,5 @@ public class RuleCatalogueBackingBean extends
 	}
 	// 29650 - end
 	
-	// #30672, #29669 - start 29/01/2023 - Remove this code
-//	public void valueCheckExpDateError(int index) {
-//
-//		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
-//		PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues().get(index);
-//
-//		if (selectedValue.getEffDate() != null || selectedValue.getExpDate() != null)
-//			if (configRuleType.getRangeType() != 1
-//					|| (configRuleType.getRangeType() == 1 && selectedValue.isShowFlag())) {				
-//				if (selectedValue.getEffDate().after(selectedValue.getExpDate())) {
-//					selectedValue.setErrorExpDate(true);
-//					throw new EpException(MessageConst.ERROR_770113);
-//					//#30672 - start 19/07/2022
-//				} else if (selectedValue.getEffDate().equals(selectedValue.getExpDate())) {
-//					selectedValue.setErrorExpDate(true);
-//					throw new EpException(MessageConst.ERROR_770113);
-//					//#30672 - end 19/07/2022
-//				} else {
-//					selectedValue.setErrorExpDate(false);
-//				}
-//			}
-//	   }
-	// #30672, #29669 - end 29/01/2023 - Remove this code
+	// #30672, #29669 - 29/01/2023 - Remove this code
 }
