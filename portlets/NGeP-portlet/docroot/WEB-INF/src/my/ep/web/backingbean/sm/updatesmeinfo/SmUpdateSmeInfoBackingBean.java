@@ -81,7 +81,12 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 			if(currentSmeInfo.isSmeCorpRegistered()){
 				getManagedBean().setSmeCorpRegisteredTrans("1");
 				getManagedBean().setSmeSupplierDoc(currentSmeInfo.getSmSmeSupplierDocs().get(0));
-			} else { getManagedBean().setSmeCorpRegisteredTrans("0"); }
+			// #29617 ReOpen note 161 - Start
+			} else {
+				getManagedBean().setSmeCorpRegisteredTrans("0");
+				removeNotUploadedSuppDoc(currentSmeInfo);
+			}
+			// #29617 ReOpen note 161 - End
 		} else {
 			// #29617 ReOpen note 161 - Start
 			SMECorpChange(); 
