@@ -12967,24 +12967,27 @@ public void retrieveDemoQtDetails(Long qtId) {
 						this.getManagedBean().setStateCodes(
 								this.getManagedBean().getQt().getZoneLocationLevel().getParameterCode());
 					}
-
 					// Populate zone detail into tree node
 					if (scQt.getScQtSupplierCriteria() != null
 							&& scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
-						List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias()
-								.getTplSpecZoneDtls();
-						populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
-						// setting into zones bean to validate zones while
-						// adding
-						if (CollectionUtils.isNotEmpty(specZoneDtls)) {
-							List<ZonesBean> zoneBeanLst = new ArrayList<ZonesBean>();
-							for (TplSpecZoneDtl specZoneDtl : specZoneDtls) {
-								ZonesBean bean = new ZonesBean();
-								bean.setTplSpecZoneDtl(specZoneDtl);
-								zoneBeanLst.add(bean);
+						//#28784 zone missing after demo = no (if not save) - Start
+						List<TplSpecZoneDtl> specZoneDtls = new ArrayList<>();
+						
+						List<ZonesBean> list = getManagedBean().getBeans();
+						if (list != null && !list.isEmpty()) {
+
+							for (ZonesBean zonesBean : list) {
+								TplSpecZoneDtl zone = zonesBean.getTplSpecZoneDtl();
+
+								if (zone != null && !specZoneDtls.contains(zone)) {
+
+									specZoneDtls.add(zone);
+								}
 							}
-							this.getManagedBean().setBeans(zoneBeanLst);
 						}
+						
+						populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
+						//#28784 zone missing after demo = no (if not save) - End
 					}
 				}
 			} catch(Exception e) {

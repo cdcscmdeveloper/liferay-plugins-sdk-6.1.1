@@ -55,8 +55,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
-import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
-import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
 import my.ep.web.util.DateUtils;
@@ -213,7 +211,6 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		try{
 			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSuspensionSO.class);
 			resDTO = contractSuspensionSO.retrieveSuspensionContractVerDtls(reqDTO);
-			getManagedBean().setAgencyDataModelVerId(reqDTO.getContractVerId());//Development #29214 -performance
 			getManagedBean().setContractVer(resDTO.getCtContractVer());	
 			getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
@@ -231,13 +228,13 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			getManagedBean().setSearchItemString("");
 			getManagedBean().getContractItemList().clear();
 			
-			/*If statement  for check contact item start  //#33125 - basri*/
-			/*if(getManagedBean().getContractVer().getCtContractItems() != null && getManagedBean().getContractVer().getCtContractItems().size() > 0 ) {
+			/*If statement  for check contact item start*/
+			if(getManagedBean().getContractVer().getCtContractItems() != null && getManagedBean().getContractVer().getCtContractItems().size() > 0 ) {
 				Collections.sort(getManagedBean().getContractVer().getCtContractItems(), new CtContractItem());
 
 				for (CtContractItem contractItem : getManagedBean().getContractVer().getCtContractItems()) {
 					getManagedBean().getContractItemList().add(contractItem);
-					//Get latest contract item and map with the sc request item
+					/*Get latest contract item and map with the sc request item*/
 					for (CtContractItem latestContractItem : getManagedBean().getCtContract().getLatestContractVer().getCtContractItems()) {
 						if (contractItem.getScRequestItem().getRequestNoteItemId().equals(latestContractItem.getScRequestItem().getRequestNoteItemId())) {
 							getManagedBean().getItemMap().put(contractItem.getScRequestItem().getRequestNoteItemId(), latestContractItem);
@@ -245,13 +242,12 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 						}
 					}
 				}
-			}*/
-			/*If statement for contract item end*/			
+			}/*If statement for contract item end*/			
 
-			/*If statement  to check agency start*///#33125 - basri
-			/*if(getManagedBean().getContractVer().getCtAgencies() != null && getManagedBean().getContractVer().getCtAgencies().size() > 0 )  {	
+			/*If statement  to check agency start*/
+			if(getManagedBean().getContractVer().getCtAgencies() != null && getManagedBean().getContractVer().getCtAgencies().size() > 0 )  {	
 				for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
-					Get latest agency and map with the org profile
+					/*Get latest agency and map with the org profile*/
 					for (CtAgency latestAgency : getManagedBean().getCtContract().getLatestContractVer().getCtAgencies()) {
 						if(ctAgency.getOrgProfile().getOrgProfileId().equals(latestAgency.getOrgProfile().getOrgProfileId())) {
 							getManagedBean().getAgencyMap().put(ctAgency.getOrgProfile().getOrgProfileId(), latestAgency);
@@ -259,9 +255,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 						}
 					}			 		
 				}
-			}*/
-			//If statement for agency end  ////#33125 - basri  
-			
+			}/*If statement for agency end*/    
+
 			if(getManagedBean().getUserMap().size()==0) {
 				initializeApproverList();
 			}
@@ -458,9 +453,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	public void setSuspensionStatusValue(CtContractItem item) {
 		Date currentDate = DateUtils.getCurrentDateWithoutTime();
 		//#20997 - start
-		//#33125 - basri
 		//for(CtContractItem ctItem :this.getManagedBean().getContractVer().getCtContractItems()) {
-		/*for (CtContractItem ctItem : getManagedBean().getSuspensionProductListingPagingDataModel().getList()) {
+		for (CtContractItem ctItem : getManagedBean().getSuspensionProductListingPagingDataModel().getList()) {
 			if(ctItem != null && item != null) {
 				// #28367
 				if(ctItem.equals(item)) {
@@ -480,7 +474,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 					}
 				}
 			}
-		}*///#33125 - basri
+		}
 		//CT_CHANGE_LOG
 		ctBB.getManagedBean().getUpdateItemMap().put(item.getScRequestItem().getRequestNoteItemId(), item);
 	}
@@ -491,8 +485,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 */
 	public void setSuspensionAgencyStatusValue(CtAgency agency){
 		Date currentDate = DateUtils.getCurrentDateWithoutTime();
-		//#33125 - basri
-		/*for(CtAgency ctAgency  : getManagedBean().getAgencyPersistDataModel().getList()) {//Development #29214
+		for(CtAgency ctAgency  : getManagedBean().getContractVer().getCtAgencies()) {
 			if(ctAgency.equals(agency)) {
 				CtAgency latestAgency = getManagedBean().getAgencyMap().get(agency.getOrgProfile().getOrgProfileId());
 				Date effDate = null;
@@ -510,7 +503,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 					ctAgency.setExpDate(expDate);		
 				}
 			}
-		}  *///#33125 - basri
+		}  
 		//CT_CHANGE_LOG
 		ctBB.getManagedBean().getUpdateAgencyMap().put(agency.getOrgProfile().getOrgCode(), agency);
 	}
@@ -536,9 +529,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			
 			validateSuspensionDetails(outcome);		
 			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
-			//#33125 - basri
 			//#20997 - to copy from searching list to items list
-			/*if (getManagedBean().getSuspensionProductListingPagingDataModel() != null && getManagedBean().getSuspensionProductListingPagingDataModel().getList() != null) {
+			if (getManagedBean().getSuspensionProductListingPagingDataModel() != null && getManagedBean().getSuspensionProductListingPagingDataModel().getList() != null) {
 				for (CtContractItem ctContractItem : getManagedBean().getSuspensionProductListingPagingDataModel().getList()) {			
 					for(CtContractItem ctItem : this.getManagedBean().getContractVer().getCtContractItems()){
 						if(ctContractItem.getContractItemId().equals(ctItem.getContractItemId())
@@ -551,8 +543,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 						}
 					}
 				}
-			}*/
-			//#33125 - basri
+			}
 			//#20997 - end
 
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
@@ -564,11 +555,6 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 
 			reqDTO.setCtContract(getManagedBean().getContractVer().getCtContract());
 			reqDTO.setCtContractVer(getManagedBean().getContractVer());
-			//adding ct items list from pagination to object 
-			//#33125 - basri
-			reqDTO.getCtContractVer().setCtContractItems(getManagedBean().getSuspensionProductListingPagingDataModel().getList());
-			reqDTO.getCtContractVer().setCtAgencies(getManagedBean().getAgencyPersistDataModel().getList());
-			
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
