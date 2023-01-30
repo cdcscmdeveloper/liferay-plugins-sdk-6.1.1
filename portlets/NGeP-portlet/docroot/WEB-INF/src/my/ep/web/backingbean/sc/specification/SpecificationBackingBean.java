@@ -11421,7 +11421,8 @@ if (null != checklist && !checklist.isEmpty()) {
 			settinglist.add(technicalScoreSetting.getSettingType());
 			reqTempDTO.setSettingTypes(settinglist);
 			ScQtScoreSetting newTechnicalScoreSetting = checkScoreSetting(reqTempDTO);
-			if(newTechnicalScoreSetting != null && newTechnicalScoreSetting.getQtScoreSettingId() != null){
+			if(newTechnicalScoreSetting != null && newTechnicalScoreSetting.getQtScoreSettingId() != null
+					&& !this.getManagedBean().getQt().isCloned()){//#28784 cloning error
 				newTechnicalScoreSetting.setPassingScore(technicalScoreSetting.getPassingScore());
 				newTechnicalScoreSetting.setOverallTechnical(technicalScoreSetting.getOverallTechnical());
 				newTechnicalScoreSetting.setOverallOtherTechnical(technicalScoreSetting.getOverallOtherTechnical());
@@ -11450,7 +11451,8 @@ if (null != checklist && !checklist.isEmpty()) {
 			settinglist.add(financialScoreSetting.getSettingType());
 			reqTempDTO.setSettingTypes(settinglist);
 			ScQtScoreSetting newFinancialScoreSetting = checkScoreSetting(reqTempDTO);
-			if(newFinancialScoreSetting != null &&  newFinancialScoreSetting.getQtScoreSettingId() != null){
+			if(newFinancialScoreSetting != null &&  newFinancialScoreSetting.getQtScoreSettingId() != null
+					&& !this.getManagedBean().getQt().isCloned()){//#28784 cloning error
 				newFinancialScoreSetting.setPassingScore(financialScoreSetting.getPassingScore());
 				newFinancialScoreSetting.setOverallTechnical(financialScoreSetting.getOverallTechnical());
 				newFinancialScoreSetting.setOverallOtherTechnical(financialScoreSetting.getOverallOtherTechnical());
@@ -11478,7 +11480,8 @@ if (null != checklist && !checklist.isEmpty()) {
 				settinglist.add(demoScoreSetting.getSettingType());
 				reqTempDTO.setSettingTypes(settinglist);
 				ScQtScoreSetting newDemoScoreSetting = checkScoreSetting(reqTempDTO);
-				if(newDemoScoreSetting != null && newDemoScoreSetting.getQtScoreSettingId() != null){
+				if(newDemoScoreSetting != null && newDemoScoreSetting.getQtScoreSettingId() != null
+						&& !this.getManagedBean().getQt().isCloned()){//#28784 cloning error
 					newDemoScoreSetting.setPassingScore(demoScoreSetting.getPassingScore());
 					newDemoScoreSetting.setOverallTechnical(demoScoreSetting.getOverallTechnical());
 					newDemoScoreSetting.setOverallOtherTechnical(demoScoreSetting.getOverallOtherTechnical());
@@ -11513,7 +11516,8 @@ if (null != checklist && !checklist.isEmpty()) {
 			settinglist.add(financialItemScoreSetting.getSettingType());
 			reqTempDTO.setSettingTypes(settinglist);
 			ScQtScoreSetting newFinancialItemScoreSetting = checkScoreSetting(reqTempDTO);
-			if(newFinancialItemScoreSetting != null && newFinancialItemScoreSetting.getQtScoreSettingId() != null){
+			if(newFinancialItemScoreSetting != null && newFinancialItemScoreSetting.getQtScoreSettingId() != null
+					&& !this.getManagedBean().getQt().isCloned()){//#28784 cloning error
 				newFinancialItemScoreSetting.setPassingScore(financialItemScoreSetting.getPassingScore());
 				newFinancialItemScoreSetting.setOverallTechnical(financialItemScoreSetting.getOverallTechnical());
 				newFinancialItemScoreSetting.setOverallOtherTechnical(financialItemScoreSetting.getOverallOtherTechnical());
@@ -11544,7 +11548,8 @@ if (null != checklist && !checklist.isEmpty()) {
 			settinglist.add(packageScoreSetting.getSettingType());
 			reqTempDTO.setSettingTypes(settinglist);
 			ScQtScoreSetting newPackageScoreSetting = checkScoreSetting(reqTempDTO);
-			if(newPackageScoreSetting != null && newPackageScoreSetting.getQtScoreSettingId() != null){
+			if(newPackageScoreSetting != null && newPackageScoreSetting.getQtScoreSettingId() != null
+					&& !this.getManagedBean().getQt().isCloned()){//#28784 cloning error
 				newPackageScoreSetting.setPassingScore(packageScoreSetting.getPassingScore());
 				newPackageScoreSetting.setOverallTechnical(packageScoreSetting.getOverallTechnical());
 				newPackageScoreSetting.setOverallOtherTechnical(packageScoreSetting.getOverallOtherTechnical());
@@ -11571,7 +11576,8 @@ if (null != checklist && !checklist.isEmpty()) {
 			settinglist.add(itemScoreSetting.getSettingType());
 			reqTempDTO.setSettingTypes(settinglist);
 			ScQtScoreSetting newItemScoreSetting = checkScoreSetting(reqTempDTO);
-			if(newItemScoreSetting != null && newItemScoreSetting.getQtScoreSettingId() != null){
+			if(newItemScoreSetting != null && newItemScoreSetting.getQtScoreSettingId() != null
+					&& !this.getManagedBean().getQt().isCloned()){//#28784 cloning error
 				newItemScoreSetting.setPassingScore(itemScoreSetting.getPassingScore());
 				newItemScoreSetting.setOverallTechnical(itemScoreSetting.getOverallTechnical());
 				newItemScoreSetting.setOverallOtherTechnical(itemScoreSetting.getOverallOtherTechnical());
@@ -11599,7 +11605,8 @@ if (null != checklist && !checklist.isEmpty()) {
 			settinglist.add(technicalItemScoreSetting.getSettingType());
 			reqTempDTO.setSettingTypes(settinglist);
 			ScQtScoreSetting newTechnicalItemScoreSetting = checkScoreSetting(reqTempDTO);
-			if(newTechnicalItemScoreSetting != null && newTechnicalItemScoreSetting.getQtScoreSettingId() != null){
+			if(newTechnicalItemScoreSetting != null && newTechnicalItemScoreSetting.getQtScoreSettingId() != null
+					&& !this.getManagedBean().getQt().isCloned()){//#28784 cloning error
 				newTechnicalItemScoreSetting.setPassingScore(technicalItemScoreSetting.getPassingScore());
 				newTechnicalItemScoreSetting.setOverallTechnical(technicalItemScoreSetting.getOverallTechnical());
 				newTechnicalItemScoreSetting.setOverallOtherTechnical(technicalItemScoreSetting.getOverallOtherTechnical());
