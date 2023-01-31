@@ -3397,7 +3397,7 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.validateCoordinate(getManagedBean());
 			}
 			setSupplierChangeValues(currentPageType);
-			setBranchDisplayTable(); //29727
+			setBranchDisplayTable(); //29727 , //#34135
 			validateUpdateSmAppl(applType, currentPageType, outputPageType,
 					false);
 			log.info("******* Current page AFTER in managed bean ********"
@@ -5310,6 +5310,13 @@ public class SmApplicationBackingBean extends
 
 		SmCommonUtil.getInstance().setUserDetails(
 				getManagedBean().getSelectedBranch());
+		//#34135 START
+		if(getManagedBean().getSelectedBranch().getSmAddress().getPmDivision() != null &&
+				!getManagedBean().getSelectedBranch().getSmAddress().getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+			getManagedBean().getSelectedBranch().getSmAddress().setPmDivision(null);
+			this.getManagedBean().setBranchCompanyDivisions(new ArrayList<SelectItem>());
+		}
+		//#34135 END
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedBranch(), getManagedBean().getSmAppl()
 				.getSmSupplierBranches());
@@ -5319,7 +5326,7 @@ public class SmApplicationBackingBean extends
 		}
 		saveOrUpdateAppl();
 		assignValReqdToFalse();
-		setBranchDisplayTable(); //29727
+		setBranchDisplayTable(); //29727 , //#34135
 		RequestContext.getCurrentInstance().execute("banchDialog.hide()");
 		calcPersonnelListCount();
 	}
@@ -8147,7 +8154,7 @@ public class SmApplicationBackingBean extends
 			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false,
 					getManagedBean().getCurrentPageType());
 			
-			setBranchDisplayTable(); //29727
+			setBranchDisplayTable(); //29727 , #34135
 		}
 	}
 
@@ -12612,6 +12619,13 @@ public class SmApplicationBackingBean extends
 	 *            panelName
 	 */
 	public void onChangeCountry(SmAddress addr, String panelName) {
+		//#34135 START
+		if(addr.getPmDivision() != null || addr.getDivisionId() != null){
+			addr.setPmDivision(null);
+			addr.setDivisionId(null);
+			this.getManagedBean().setBranchCompanyDivisions(new ArrayList<SelectItem>());
+			this.getManagedBean().getSelectedBranch().getSmAddress().getPmState().setAdoptDivision(false);
+		}//#34135 END
 		SmApplicationUtil.getInstance().populateStateByCountry(addr, panelName,
 				getManagedBean());
 		setRoleStaffAddrReqd();
@@ -12638,9 +12652,15 @@ public class SmApplicationBackingBean extends
 			setRoleStaffAddrReqd();
 			
 		}else{//13320-end
-		SmApplicationUtil.getInstance().populateDistrictsByState(addr,
-				panelName, getManagedBean());
-		setRoleStaffAddrReqd();
+			//#34135 START
+			if(addr.getPmDivision() != null || addr.getDivisionId() != null){
+				addr.setPmDivision(null);
+				addr.setDivisionId(null);
+				this.getManagedBean().setBranchCompanyDivisions(new ArrayList<SelectItem>());
+			}//#34135 END
+			SmApplicationUtil.getInstance().populateDistrictsByState(addr,
+					panelName, getManagedBean());
+			setRoleStaffAddrReqd();
 		}
 		
 	}
@@ -15509,15 +15529,16 @@ public class SmApplicationBackingBean extends
 		}
 		getManagedBean().setSelectedBankBranchIds(bankBranchesIds);
 		//#34135 START - remove deleted branch from list at bank information
-		if(getManagedBean().getSmAppl().getSmSupplierBranches() != null){
-			Iterator<SmSupplierBranch> iterator = getManagedBean().getSmAppl().getSmSupplierBranches().iterator();
-			while (iterator.hasNext()) {
-				SmSupplierBranch suppBranch = iterator.next();
-				if(suppBranch.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
-					iterator.remove();
+		List<SmSupplierBranch> displayBranches = new ArrayList<SmSupplierBranch>();
+		if (getManagedBean().getSmAppl().getSmSupplierBranches().size() > 0) {
+			for (SmSupplierBranch smSupplierBranch : getManagedBean().getSmAppl().getSmSupplierBranches()) {
+				if (smSupplierBranch.getRecordStatusFlg() != SupplierManagementConst.RECORD_DELETED) {
+					continue;
 				}
+				displayBranches.add(smSupplierBranch);
 			}
 		}
+		getManagedBean().setDisplayBranches(displayBranches);
 		//#34135 END
 		if (shareBankBean.getSmAddress() != null
 				&& shareBankBean.getSmAddress().getPmCountry().getCountryId() != null
@@ -17008,7 +17029,7 @@ public class SmApplicationBackingBean extends
 			break;
 		}
 	}
-
+	//#34135 START - Commit half part from redmine 29727 into pds
 	public void setBranchDisplayTable() {
 		List<SmSupplierBranch> displayBranches = new ArrayList<SmSupplierBranch>();
 		if (getManagedBean().getSmAppl().getSmSupplierBranches().size() > 0) {
@@ -17019,8 +17040,8 @@ public class SmApplicationBackingBean extends
 				displayBranches.add(smSupplierBranch);
 			}
 		}
-		getManagedBean().setDisplayBranches(displayBranches);
-
+		getManagedBean().setDisplayBranches(displayBranches); 
+		//#34135 END
 		Boolean pendingQT = false;
 		Boolean closedQTSubmitProposal = false;
 		StringBuilder msg = new StringBuilder();
