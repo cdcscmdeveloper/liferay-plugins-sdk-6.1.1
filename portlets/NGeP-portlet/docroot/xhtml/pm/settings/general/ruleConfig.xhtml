@@ -358,13 +358,13 @@
 					<!--  #30672, #29669 - Start  29/01/2023 -->
 					<p:ajax event="dateSelect"
 						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
-						update=":form:settingTabId:ruleTypeValueTableID, @([id$=cloneLink])"
+						update=":form:settingTabId:ruleTypeValueTableID, @([id$=cloneLink])" />
 					<p:ajax event="change"
 						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
 						update=":form:settingTabId:ruleTypeValueTableID, @([id$=cloneLink])" />
 					<!--  #30672, #29669 - End 29/01/2023 -->
 					<!--  #30672, #29669 - 29/01/2023 - Remove code -->
-
+                    
 				</p:calendar>
 			</p:column>
 
