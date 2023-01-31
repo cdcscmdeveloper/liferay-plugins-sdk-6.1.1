@@ -1311,8 +1311,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			Object obj = super.getBpmTaskDetails(Object.class, new String[]{BpmOutcomeConst.BPM_SAVE});
 			initializeCRBeans();
 			FLContractOrderDataType coObj = null;
-			if(this.getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME) && 
-					this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_PHIS_CR)) {
+			
+			//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
+			if ((this.getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME) || this
+					.getManagedBean().getProcessName()
+					.equalsIgnoreCase(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME.replaceAll("\\s", "")))
+					&& this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_PHIS_CR)) {
 				FLPHISContractOrderDataType phisCoObj = (FLPHISContractOrderDataType) obj;
 				coObj = phisCoObj.getContractOrder();
 			} else {
