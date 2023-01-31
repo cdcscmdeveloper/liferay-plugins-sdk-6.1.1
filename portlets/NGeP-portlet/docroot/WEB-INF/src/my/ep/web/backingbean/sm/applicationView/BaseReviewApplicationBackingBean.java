@@ -695,6 +695,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		// init company basic gst
 		getManagedBean().setHqGst(getSupplierGst(null));
+		// #29617 start
+		if(getManagedBean().getSmSupplier().getSmeRegisteredFlag() == 1){
+			setSmeSupplierInfo(getManagedBean().getSmSupplier());
+		}
+		// #29617 end
 
 	}
 
@@ -4338,7 +4343,17 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 	//28281 - end
-	
+	// #29617 start
+	public void setSmeSupplierInfo(SmSupplier supplier) {
+		SupplierSmeReqDTO reqDTO = new SupplierSmeReqDTO();
+		SmSmeSupplier smeSupplier = new SmSmeSupplier();
+		reqDTO.setSmSupplier(supplier);
+		ISupplierSmeSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+				ISupplierSmeSO.class);
+		smeSupplier = reqSO.retrieveCurrentSmeInfo(reqDTO);
+		getManagedBean().setSmeSupplier(smeSupplier);
+	}
+	// #29617 end
 	//#12483 - START
 	public void sortApplicationRevises(){
 		Collections.sort(this.getManagedBean().getSmAppl().getSmApplRevises(), new Comparator<SmApplRevise>(){

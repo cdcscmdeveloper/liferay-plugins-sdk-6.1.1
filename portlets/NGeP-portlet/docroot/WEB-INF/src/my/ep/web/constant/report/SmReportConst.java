@@ -149,6 +149,8 @@ public class SmReportConst implements Serializable {
 	//12483 - Start
 	public static final String SM_APPL_REVISED_RPT_VAL = "SM_095";
 	//12483 - End
+	// #29617
+	public static final String SM_SME_SUPPLIER_RPT_VAL = "SM_096";
 
 	// Screen fields constants
 	public static final String SM_ZONE_SEMENANJUNG = "Semenanjung";
@@ -212,6 +214,16 @@ public class SmReportConst implements Serializable {
 	public static final String SM_SUPPLIER_PERFORMANCE_COMP_2 = "CCM PHARMACEUTICALS SDN BHD";
 	public static final String SM_SUPPLIER_PERFORMANCE_COMP_3 = "MS ALI ENTERPRISE";
 	// #27199 - end
+	
+	// #29617 start
+	public static final String PARAM_ACCOUNT_TYPE = "PACCTYPE";
+	public static final String PARAM_SME_STATUS_TYPE = "PSMESTATTYPE";
+	public static final String PARAM_SME_CORP_REG = "PSMECORPREG";
+	public static final String PARAM_START_DATE_FROM = "PSTDATEFROM";
+	public static final String PARAM_START_DATE_TO = "PSTDATETO";
+	public static final String PARAM_END_DATE_FROM = "PENDDATEFROM";
+	public static final String PARAM_END_DATE_TO = "PENDDATETO";
+	// #29617 end
 	
 	public String getSM_RESPONSE_REPORT() {
 		return SM_RESPONSE_REPORT;
@@ -660,4 +672,10 @@ public class SmReportConst implements Serializable {
 	public String getSmApplRevisedRptVal() {
 		return SM_APPL_REVISED_RPT_VAL;
 	}
+
+	// #29617 start
+	public String getSmeSupplierRptVal() {
+		return SM_SME_SUPPLIER_RPT_VAL;
+	}
+	// #29617 end
 }
