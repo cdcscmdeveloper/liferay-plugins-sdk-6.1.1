@@ -126,7 +126,7 @@
 											process="@this" partialSubmit="true" update="pnlid2"
 											action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
 											title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />
-				<p:commandButton value="#{lbl['lbl.sc.clone.qt.documents']}" style="float:right;" id="cloneButton2" rendered="#{isClone2 and !isCommitteeApprovalReviseTask}"
+				<p:commandButton value="#{lbl['lbl.sc.clone.qt.documents']}" style="float:right;" id="cloneButton2" rendered="#{isClone2 and !isCommitteeApprovalReviseTask and !qTDetailBB.managedBean.maintanceFlow}"
 											process="@this" partialSubmit="true" update="pnlid2"
 											action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
 											title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />	
