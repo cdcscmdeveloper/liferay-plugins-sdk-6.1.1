@@ -1828,8 +1828,15 @@ public class QTCloneBackingbean extends
 					ScQtBsv qtBsv = resDTO.getScQtBsv();
 					BriefingZoneBean briefingZoneBean=null;
 					if(qt.isBsvRequired()){
-						if(qt.getScQtBriefings()!=null && !qt.getScQtBriefings().isEmpty()){
-							ScQtBsv ori=qt.getScQtBriefings().get(0);
+						BriefingReqDTO currreqDTO = new BriefingReqDTO();//33954&25635-start
+						currreqDTO.setScQt(qt);
+						currreqDTO.setLanguageCode(languageCode);
+						currreqDTO.setMaintanceFlow(true);
+						BriefingResDTO CurrresDTO = qTBriefingSO
+								.retrieveBriefingSiteVisitDtl(currreqDTO);	
+						 ScQtBsv CurrqtBsv = CurrresDTO.getScQtBsv();	
+						if(!CurrqtBsv.isBrandNew()&& null!=CurrqtBsv.getQtBsvId()){						
+							ScQtBsv ori=CurrqtBsv;//33954&25635-end
 							briefingZoneBean=updateBrief(ori,qtBsv);
 						}else{//25635-start
 							
