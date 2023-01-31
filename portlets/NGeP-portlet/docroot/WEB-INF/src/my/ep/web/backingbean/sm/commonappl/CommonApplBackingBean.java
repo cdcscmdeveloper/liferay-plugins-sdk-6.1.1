@@ -120,15 +120,16 @@ public class CommonApplBackingBean extends
 			Object bpmObj = new Object();
 
 			//log.info("------Verify Supporting Documents-----------");
-
-			if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
+			
+			//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
+			if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))) {
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				sdoBB.getManagedBean().setAppId(
 						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 
-			} else if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
+			} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				sdoBB.getManagedBean().setAppId(
 						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
@@ -229,8 +230,9 @@ public class CommonApplBackingBean extends
 			//#12483 - END
 			log.info("** Respond to PO Inquiry *********"
 					+ resDTO.getProcessName());
-			if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
+			//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
+			if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 				mofResDto = retriveApplicationById(smObj.getDocumentId());
@@ -247,8 +249,11 @@ public class CommonApplBackingBean extends
 				smApplBB.getManagedBean().setClaimTask(isClaim);
 				setNavigationForSmDecision("RS", smApplBB);
 				//#12483 - START
-			} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION) ||
-					resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT)) {
+				//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
+			} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT.replaceAll("\\s", ""))) {
 				//#12483 - END
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 				//log.info(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
@@ -285,8 +290,10 @@ public class CommonApplBackingBean extends
 						SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 			//log.info(" ******* The selected process name is ******"
 					//+ resDTO.getProcessName());
-			if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
+			
+			//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
+			if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
@@ -357,8 +364,10 @@ public class CommonApplBackingBean extends
 				smApplBB.getManagedBean().setTaskId(taskId);
 				smApplBB.getManagedBean().setClaimTask(isClaim);
 				setNavigationForSmDecision(appl.getApplType(), smApplBB);
-			} else if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
+			} 
+			//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
+			else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))) {
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 				//log.info(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
 						//+ resDTO.getDocNumber());
@@ -438,8 +447,10 @@ public class CommonApplBackingBean extends
 				SLAUtils.getInstance().logSLAInfo("SM","VA",
 						"CommonApplBackingBean.preRenderView", startTime);
 				setNavigationForSmDecision(appl.getApplType(), smApplBB);
-			} else if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT)) {
+			} 
+			//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
+			else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT.replaceAll("\\s", ""))) {
 				// implementation
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 				//log.info(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
@@ -637,12 +648,11 @@ public class CommonApplBackingBean extends
 			setNavigationForDraftAppl(appl.getApplType());
 			// }
 
-		} else if (resDTO.getTaskName().equalsIgnoreCase(
-				SMProcessNameConst.REVIEW_CANCELLATION)
-				&& resDTO
-						.getProcessName()
-						.equalsIgnoreCase(
-								SMProcessNameConst.PROCESS_NAME_MOF_REGISTRATION_CANCELLATION)) {
+		} 
+		//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
+		else if (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_CANCELLATION)
+				&& (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_REGISTRATION_CANCELLATION) || resDTO
+						.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_REGISTRATION_CANCELLATION.replaceAll("\\s", "")))) {
 			//log.info("**********MOF Registration Cancellation***********"
 					//+ taskId);
 			SMMOFRegCanDataType srcObj = (SMMOFRegCanDataType) resDTO.getPojo();
@@ -688,10 +698,13 @@ public class CommonApplBackingBean extends
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							"/xhtml/sm/approverDecisionPages/approverCanRegistration_DescisionPage.xhtml");
-		} else if (resDTO.getTaskName().equalsIgnoreCase(
+		} 
+		//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
+		else if (resDTO.getTaskName().equalsIgnoreCase(
 				SMProcessNameConst.REVIEW_CANCELLATION)
-				&& resDTO.getProcessName().equalsIgnoreCase(
-						SMProcessNameConst.PROCESS_NAME_MOF_APPL_CANCELLATION)) {
+				&& (resDTO.getProcessName().equalsIgnoreCase(
+						SMProcessNameConst.PROCESS_NAME_MOF_APPL_CANCELLATION) || resDTO.getProcessName().equalsIgnoreCase(
+								SMProcessNameConst.PROCESS_NAME_MOF_APPL_CANCELLATION.replaceAll("\\s", "")))) {
 			//log.info("**********MOF Application Cancellation***********"
 					//+ taskId);
 			SMMOFAppCanDataType srcObj = (SMMOFAppCanDataType) resDTO.getPojo();
@@ -750,14 +763,14 @@ public class CommonApplBackingBean extends
 			Object bpmObj = new Object();
 			SupportingDocInquiryBackingBean suppDocIn = new SupportingDocInquiryBackingBean();
 
-			if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
+			if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))) {
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				suppDocIn.getManagedBean().setAppId(
 						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 
-			} else if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
+			} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				suppDocIn.getManagedBean().setAppId(
 						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
@@ -786,14 +799,16 @@ public class CommonApplBackingBean extends
 				SMProcessNameConst.PROCESSING_FEE)) {
 			Object bpmObj = new Object();
 			PaymentBackingBean paymentBB = new PaymentBackingBean();
-			if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
+			
+			//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
+			if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))) {
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				paymentBB.getManagedBean().setAppId(
 						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 
-			} else if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
+			} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				paymentBB.getManagedBean().setAppId(
 						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());

@@ -326,8 +326,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		//#25406 - Start
 		/* re-Setting Cancel button*/
-		if(this.getManagedBean().getOutComes()!= null 
-				&& getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_INITIATION_PROCESS_NAME)){
+		log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"]");
+		if (this.getManagedBean().getOutComes() != null
+				&& (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_INITIATION_PROCESS_NAME) || getManagedBean()
+						.getProcessName()
+						.equalsIgnoreCase(CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_INITIATION_PROCESS_NAME.replaceAll("\\s", "")))) {
 		String[] str_array = this.getManagedBean().getOutComes();
 		List<String> list = new ArrayList<String>(Arrays.asList(str_array));
 		if(list.contains(BpmOutcomeConst.BPM_CANCEL)){
@@ -342,8 +345,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		reqDTO.setTaskName(getManagedBean().getTaskName());
-		if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME) 
-				|| getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME)) {
+		
+		//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
+		if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME)
+				|| getManagedBean().getProcessName().equalsIgnoreCase(
+						CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME.replaceAll("\\s", ""))
+				|| getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME)
+				|| getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME.replaceAll("\\s", ""))) {
 			CTContractAmendmentDataType dataType = (CTContractAmendmentDataType)obj;
 			reqDTO.setContractId(new Long(dataType.getContractId()));
 			reqDTO.setContractVerId(new Long(dataType.getDocId()));
