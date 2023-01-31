@@ -628,6 +628,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//32968 START
 	private boolean checkBranch;
 	//32968 END
+	//#34135 START
+	private List<SmSupplierBranch> displayBranches;
+	//#34135 END
 	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4644,4 +4647,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setPoApproverAcedemicErr(boolean poApproverAcedemicErr) {
 		this.poApproverAcedemicErr = poApproverAcedemicErr;
 	}//31130-end
+	//#34135 START
+	public List<SmSupplierBranch> getDisplayBranches() {
+		return displayBranches;
+	}
+
+	public void setDisplayBranches(List<SmSupplierBranch> displayBranches) {
+		this.displayBranches = displayBranches;
+	}
+	//#34135 END
 }
