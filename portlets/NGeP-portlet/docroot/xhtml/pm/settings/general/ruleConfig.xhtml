@@ -355,17 +355,15 @@
 					<f:validator validatorId="primeDateRangeValidatorPm" />
 					<p:ajax event="dateSelect" update="@this"
 						process="@this" />
+					<!--  #30672, #29669 - Start  29/01/2023 -->
 					<p:ajax event="dateSelect"
 						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
-						update="@([id$=cloneLink])" />
+						update=":form:settingTabId:ruleTypeValueTableID, @([id$=cloneLink])"
 					<p:ajax event="change"
 						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
-						update="@([id$=cloneLink])" />
-					<!-- #30672 - start  -->
-					<p:ajax event="dateSelect"
-					    listener="#{ruleCatalogueBackingBean.valueCheckExpDateError(index)}"
-					    update=":form:settingTabId:ruleTypeValueTableID"  />
-                    <!-- #30672 - end -->
+						update=":form:settingTabId:ruleTypeValueTableID, @([id$=cloneLink])" />
+					<!--  #30672, #29669 - End 29/01/2023 -->
+					<!--  #30672, #29669 - 29/01/2023 - Remove code -->
 
 				</p:calendar>
 			</p:column>
