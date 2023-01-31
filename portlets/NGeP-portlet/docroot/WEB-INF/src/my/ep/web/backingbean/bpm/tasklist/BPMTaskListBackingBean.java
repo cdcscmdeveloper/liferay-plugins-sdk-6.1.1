@@ -40,6 +40,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskListManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -1246,7 +1247,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 	
 	private String getProcessNameRemoveSpace(String processName) {
 		processName = capitalizeWord(processName);
-		String retVal = CommonUtils.removeSpace(processName);
+		String retVal = processName.replaceAll("\\s", "");
 		log.info("Process name before:" + processName + " after:" + retVal);
 		return retVal;
 	}
