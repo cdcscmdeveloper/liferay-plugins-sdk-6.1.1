@@ -929,7 +929,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		try{
 			resDTO = rptRequestSO.generateReportSMInExcel(reqDTO);
 			//resDTO.setRequestId(BigDecimal.ZERO);
-			log.info("REQUEST ID === "+resDTO.getRequestId());
+			//log.info("REQUEST ID === "+resDTO.getRequestId());
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -2265,6 +2265,9 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			int mergeRowFirstFpx = 0;
 			int mergeRowLastFpx = 0;
 			String referenceNo = "";
+			int mergeRowFirstFpxIndex = 0;//#34366
+			int mergeRowLastFpxIndex = 0;//#34366
+			Date paramDateFpx = null;//#34366
 			//END - #29454
 			for (Integer key : keyIdFpx) {
 				Row row = sheetFPX.createRow(rowid++);
@@ -2284,7 +2287,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					//Condition : Current Receipt No. equal to Previous row Receipt No.
 					//Fix issue on overlaping mergion during merge more than 2 row
 					//Add checking for Scenario with same Receipt No but has different Reference No.
-					if(!referenceNo.equalsIgnoreCase((String)objectArr[5])){
+					if(!referenceNo.equalsIgnoreCase((String)objectArr[5]) || !paramDateFpx.equals((Date)objectArr[0])){//#34366
 						//Not allowed to merge row , if Current row Reference No is not equal with previous row Reference No
 						cellBil.setCellValue(countRowFpx++);
 						mergeRowFirstFpx = rowid;
@@ -2304,12 +2307,41 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					} 
 				}
 				cellBil.setCellStyle(columnStyleBil);
-				receiptNo = (String)objectArr[2];
-				referenceNo = (String)objectArr[5];
+				
 				//END - #29454
 				for(int x=0; x<objectArr.length; x++){
 					if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
 					Cell cell = row.createCell(cellid);
+					//#34366 - Start
+					//Fixed Issue on merge row(rowspan)for selected column
+					if(objectArr[x] instanceof Date || 
+							(objectArr[x] instanceof String && (x == 2 || x == 3 || x == 4 || x == 5 || x == 14 || x == 15)) ||
+									(objectArr[x] instanceof BigDecimal && (x == 13))){
+						if(receiptNo == "" && referenceNo == ""){
+							mergeRowFirstFpxIndex = rowid;
+						}else if(!receiptNo.equalsIgnoreCase((String)objectArr[2])){
+							mergeRowFirstFpxIndex = rowid;
+							mergeRowLastFpxIndex = 0;
+						}else{
+							if(!referenceNo.equalsIgnoreCase((String)objectArr[5]) || !paramDateFpx.equals((Date)objectArr[0])){
+								mergeRowFirstFpxIndex = rowid;
+								mergeRowLastFpxIndex = 0;
+							}else{
+								mergeRowLastFpxIndex = rowid;
+								if(key < keyIdFpx.size()){
+									if(key == (keyIdFpx.size() - 1)){
+										sheetFPX.addMergedRegion(new CellRangeAddress(mergeRowFirstFpxIndex-1,mergeRowLastFpxIndex-1,cellid,cellid));
+									}else{
+										Object[] objectArrMerge = fpxList.get(key+1);
+										if(!receiptNo.equalsIgnoreCase((String)objectArrMerge[2])){
+											sheetFPX.addMergedRegion(new CellRangeAddress(mergeRowFirstFpxIndex-1,mergeRowLastFpxIndex-1,cellid,cellid));
+										}
+									}						
+								}
+							}
+						}
+					}
+					
 					if(objectArr[x] instanceof Date){
 						//START #26307#139
 						if((Date) objectArr[x] != null){
@@ -2322,7 +2354,26 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						//cell.setCellValue((Date) objectArr[x]);
 						//cell.setCellStyle(columnStyleDate);//#29454
 					}else if(objectArr[x] instanceof BigDecimal){
-						cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
+						String columnIndex = "";
+						if(x == 13){
+							if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE))){
+								columnIndex = "M";
+							}else { 
+								columnIndex = "N";
+							}
+							if(mergeRowLastFpxIndex != 0){//Merge row column
+								Cell cellPrev = null;
+								cellPrev = sheetFPX.getRow(mergeRowFirstFpxIndex-1).getCell(cellid);
+								//log.info("FORMULA : "+"SUM("+columnIndex+mergeRowFirstTest+":"+columnIndex+(mergeRowLastTest != 0 ? mergeRowLastTest : mergeRowFirstTest)+")");
+								cellPrev.setCellFormula("SUM("+columnIndex+mergeRowFirstFpxIndex+":"+columnIndex+(mergeRowLastFpxIndex != 0 ? mergeRowLastFpxIndex : mergeRowFirstFpxIndex)+")");
+								cellPrev.setCellType(CellType.FORMULA);
+							}else{//Unmerge Row column
+								cell.setCellFormula("SUM("+columnIndex+mergeRowFirstFpxIndex+":"+columnIndex+mergeRowFirstFpxIndex+ ")");
+								cell.setCellType(CellType.FORMULA);
+							}
+						}else{
+							cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
+						}
 						cell.setCellStyle(columnStyleBigDecimal);//#29454
 					}else if(objectArr[x] instanceof Double){
 						cell.setCellValue(((Double) objectArr[x]).doubleValue());
@@ -2332,8 +2383,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						else cell.setCellValue((String) objectArr[x]);
 						cell.setCellStyle(columnStyleString);//#29454
 					}
+					//#34366 - END
 					cellid++;
 				}
+				receiptNo = (String)objectArr[2];//#34366
+				referenceNo = (String)objectArr[5];//#34366
+				paramDateFpx = (Date)objectArr[0];//#34366
 			}
 			//Setting Auto filtering in each header column list
 			sheetFPX.setAutoFilter(new CellRangeAddress(headerRowListFpxIndex,headerRowListFpxIndex,1,columnHeaderList.size()-1));//#29454		
@@ -2435,6 +2490,9 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			int mergeRowFirst = 0;
 			int mergeRowLast = 0;
 			String referenceNoCC = "";
+			int mergeRowFirstIndex = 0;//#34366
+			int mergeRowLastIndex = 0;//#34366
+			Date paramDateCC = null;//#34366
 			//END :#29454
 			for (Integer key : keyIdCredit) {
 				Row row = sheetCC.createRow(rowid++);
@@ -2453,7 +2511,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					//Condition : Current Receipt No. equal to Previous row Receipt No.
 					//Fix issue on overlaping mergion during merge more than 2 row
 					//Add checking for Scenario with same Receipt No but has different Reference No.
-					if(!referenceNoCC.equalsIgnoreCase((String)objectArr[5])){
+					if(!referenceNoCC.equalsIgnoreCase((String)objectArr[5]) || !paramDateCC.equals((Date)objectArr[0])){//#34366
 						//Not allowed to merge row , if Current row Reference No is not equal with previous row Reference No
 						cellBil.setCellValue(countRowCC++);
 						mergeRowFirst = rowid;
@@ -2473,18 +2531,65 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					}	
 				}
 				cellBil.setCellStyle(columnStyleBil);
-				receiptNoCC = (String)objectArr[2];
-				referenceNoCC = (String)objectArr[5];
+				
 				//END - #29454
 				for (int x=0; x<objectArr.length; x++) {
 					if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
 					Cell cell = row.createCell(cellid);
+					//#34366 - Start
+					//Fixed Issue on merge row(rowspan)for selected column
+					if(objectArr[x] instanceof Date || 
+							(objectArr[x] instanceof String && (x == 2 || x == 3 || x == 4 || x == 5 || x == 14 || x == 15)) ||
+									(objectArr[x] instanceof BigDecimal && (x == 14))){
+						if(receiptNoCC == "" && referenceNoCC == ""){
+							mergeRowFirstIndex = rowid;
+						}else if(!receiptNoCC.equalsIgnoreCase((String)objectArr[2])){
+							mergeRowFirstIndex = rowid;
+							mergeRowLastIndex = 0;
+						}else{
+							if(!referenceNoCC.equalsIgnoreCase((String)objectArr[5]) || !paramDateCC.equals((Date)objectArr[0])){
+								mergeRowFirstIndex = rowid;
+								mergeRowLastIndex = 0;
+							}else{
+								mergeRowLastIndex = rowid;
+								if(key < keyIdCredit.size()){
+									if(key == (keyIdCredit.size() - 1)){
+										sheetCC.addMergedRegion(new CellRangeAddress(mergeRowFirstIndex-1,mergeRowLastIndex-1,cellid,cellid));
+									}else{
+										Object[] objectArrMerge = creditList.get(key+1);
+										if(!receiptNoCC.equalsIgnoreCase((String)objectArrMerge[2])){
+											sheetCC.addMergedRegion(new CellRangeAddress(mergeRowFirstIndex-1,mergeRowLastIndex-1,cellid,cellid));
+										}
+									}						
+								}
+							}
+						}
+					}
 					//START - #29454
 					if(objectArr[x] instanceof Date){
 						cell.setCellValue((Date) objectArr[x]);
 						cell.setCellStyle(columnStyleDate);
 					}else if(objectArr[x] instanceof BigDecimal){
-						cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
+						String columnIndex = "";
+						if(x == 14){
+							if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE))){
+								columnIndex = "N";
+							}else { 
+								columnIndex = "O";
+							}
+							if(mergeRowLastIndex != 0){//Merge row column
+								Cell cellPrev = null;
+								cellPrev = sheetCC.getRow(mergeRowFirstIndex-1).getCell(cellid);
+								//log.info("FORMULA : "+"SUM("+columnIndex+mergeRowFirstTest+":"+columnIndex+(mergeRowLastTest != 0 ? mergeRowLastTest : mergeRowFirstTest)+")");
+								cellPrev.setCellFormula("SUM("+columnIndex+mergeRowFirstIndex+":"+columnIndex+(mergeRowLastIndex != 0 ? mergeRowLastIndex : mergeRowFirstIndex)+")");
+								cellPrev.setCellType(CellType.FORMULA);
+							}else{//Unmerge Row column
+								cell.setCellFormula("SUM("+columnIndex+mergeRowFirstIndex+":"+columnIndex+mergeRowFirstIndex+ ")");
+								cell.setCellType(CellType.FORMULA);
+							}
+						}else{
+							cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
+						}
 						cell.setCellStyle(columnStyleBigDecimal);
 					}else if(objectArr[x] instanceof Double){
 						cell.setCellValue(((Double) objectArr[x]).doubleValue());
@@ -2494,9 +2599,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						else cell.setCellValue((String) objectArr[x]);
 						cell.setCellStyle(columnStyleString);
 					}
+					//#34366 - END
 					//END - 29454
 					cellid++;
 				}
+				receiptNoCC = (String)objectArr[2];//#34366
+				referenceNoCC = (String)objectArr[5];//#34366
+				paramDateCC = (Date)objectArr[0];//#34366
 			}
 
 			//Setting Auto filtering in each header column list
@@ -2783,6 +2892,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			//START - BUG:#29454
 			int mergeRowFirst = 0;
 			int mergeRowLast = 0;
+			int mergeRowFirstIndex = 0;//#34366
+			int mergeRowLastIndex = 0;//#34366
 			for (Integer key : keyIdList) {
 				Row row = sheetReportList.createRow(rowid++);
 				Object[] objectArr = fullList.get(key);
@@ -2809,10 +2920,34 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					}
 				}
 				cellBil.setCellStyle(columnStyleBil);
-				receiptNo = (String)objectArr[1];
+				
 				
 				for (int x=0; x<objectArr.length; x++) {
 					Cell cell = row.createCell(cellid);
+					//#34366- START
+					//Fixed Merge issue for selected column
+					if(objectArr[x] instanceof Date || 
+							(objectArr[x] instanceof String && (x == 1 || x == 2 || x == 3 || x == 4))){
+						if(receiptNo == ""){
+							mergeRowFirstIndex = rowid;
+						}else if(!receiptNo.equalsIgnoreCase((String)objectArr[1])){
+							mergeRowFirstIndex = rowid;
+							mergeRowLastIndex = 0;
+						}else{
+							mergeRowLastIndex = rowid;
+							if(key < keyIdList.size()){
+								if(key == (keyIdList.size() - 1)){
+									sheetReportList.addMergedRegion(new CellRangeAddress(mergeRowFirstIndex-1,mergeRowLastIndex-1,cellid,cellid));
+								}else{
+									Object[] objectArrMerge = fullList.get(key+1);
+									if(!receiptNo.equalsIgnoreCase((String)objectArrMerge[1])){
+										sheetReportList.addMergedRegion(new CellRangeAddress(mergeRowFirstIndex-1,mergeRowLastIndex-1,cellid,cellid));
+									}
+								}						
+							}
+						}
+					}
+					
 					if(objectArr[x] instanceof Date){
 						cell.setCellValue((Date) objectArr[x]);
 						cell.setCellStyle(columnStyleDate);
@@ -2828,6 +2963,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					}
 					cellid++;
 				}
+				receiptNo = (String)objectArr[1];//#34366
 			}
 			
 			//Setting Auto filtering in each header column list
