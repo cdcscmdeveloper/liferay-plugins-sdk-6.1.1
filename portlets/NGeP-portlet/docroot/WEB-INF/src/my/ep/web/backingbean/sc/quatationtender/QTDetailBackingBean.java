@@ -6815,7 +6815,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			getfulfilmentDtls(resDTO.getQtDetail());//#29474
 			break;
 		case 1:
-			detailSO.validateSupplierQualificationDtls(reqDTO);
+			//9019 - Start (Harun) #Note-378 Remove checking while not submit and allow to proceed 
+			//       when click sidemenu
+			if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				detailSO.validateSupplierQualificationDtls(reqDTO);
+			}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				//validate mandatory alert mesg for CR #9019 for others sidemenu for prevent save
+				//even alert mesg doesn't fill in at QT Details tab
+				detailSO.validateQTGeneralInformation(reqDTO);
+			}
+			//9019 - End (Harun)
+			
 			//9019 - start using new method
 			//9019 - Start (Harun) 11082022 Reopen reset to null as remarks that initialize empty will cause error 
 			//       while save due to save empty object
@@ -6842,7 +6852,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			committeReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			committeReqDTO.setSaveFlow(true);
-			committeSO.validateAppointCommitteDtls(committeReqDTO);
+			
+			//9019 - Start (Harun) #Note-378 Remove checking while not submit and allow to proceed 
+			//       when click sidemenu
+			if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				committeSO.validateAppointCommitteDtls(committeReqDTO);
+			}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				//validate mandatory alert mesg for CR #9019 for others sidemenu for prevent save
+				//even alert mesg doesn't fill in at QT Details tab
+				detailSO.validateQTGeneralInformation(reqDTO);
+			}
+			//9019 - End (Harun)
 			
 			//9019 - start using new method
 			//9019 - Start (Harun) 11082022 Reopen reset to null as remarks that initialize empty will cause error 
@@ -6874,7 +6894,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		case 3:
 			reqDTO.getQtdetail().setModified(false);
 			reqDTO.getQtdetail().setFCApproval(true);
-			detailSO.validateApprovalDetails(reqDTO);
+			
+			//9019 - Start (Harun) #Note-378 Remove checking while not submit and allow to proceed 
+			//       when click sidemenu
+			if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				detailSO.validateApprovalDetails(reqDTO);
+			}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				//validate mandatory alert mesg for CR #9019 for others sidemenu for prevent save
+				//even alert mesg doesn't fill in at QT Details tab
+				detailSO.validateQTGeneralInformation(reqDTO);
+			}
+			//9019 - End (Harun)
 			
 			//9019 - start using new method
 			//9019 - Start (Harun) 11082022 Reopen reset to null as remarks that initialize empty will cause error 
@@ -6906,7 +6936,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				retrieveBriefingSitevisitTabDtl();
 			} else if(super.isQTStatusLessThanOrEquals(currentStatus, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)){
 				// save scQt info onclick of Activites tab
-				detailSO.validateQTDetails(reqDTO);
+				//9019 - Start (Harun) #Note-378 Remove checking while not submit and allow to proceed 
+				//       when click sidemenu
+				if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+					detailSO.validateQTDetails(reqDTO);
+				}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+					//validate mandatory alert mesg for CR #9019 for others sidemenu for prevent save
+					//even alert mesg doesn't fill in at QT Details tab
+					detailSO.validateQTGeneralInformation(reqDTO);
+				} 
+				//9019 - End (Harun)
+				
 				detailSO.removeSchedule(reqDTO);//#29474
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
@@ -12967,24 +13007,27 @@ public void retrieveDemoQtDetails(Long qtId) {
 						this.getManagedBean().setStateCodes(
 								this.getManagedBean().getQt().getZoneLocationLevel().getParameterCode());
 					}
-
 					// Populate zone detail into tree node
 					if (scQt.getScQtSupplierCriteria() != null
 							&& scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
-						List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias()
-								.getTplSpecZoneDtls();
-						populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
-						// setting into zones bean to validate zones while
-						// adding
-						if (CollectionUtils.isNotEmpty(specZoneDtls)) {
-							List<ZonesBean> zoneBeanLst = new ArrayList<ZonesBean>();
-							for (TplSpecZoneDtl specZoneDtl : specZoneDtls) {
-								ZonesBean bean = new ZonesBean();
-								bean.setTplSpecZoneDtl(specZoneDtl);
-								zoneBeanLst.add(bean);
+						//#28784 zone missing after demo = no (if not save) - Start
+						List<TplSpecZoneDtl> specZoneDtls = new ArrayList<>();
+						
+						List<ZonesBean> list = getManagedBean().getBeans();
+						if (list != null && !list.isEmpty()) {
+
+							for (ZonesBean zonesBean : list) {
+								TplSpecZoneDtl zone = zonesBean.getTplSpecZoneDtl();
+
+								if (zone != null && !specZoneDtls.contains(zone)) {
+
+									specZoneDtls.add(zone);
+								}
 							}
-							this.getManagedBean().setBeans(zoneBeanLst);
 						}
+						
+						populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
+						//#28784 zone missing after demo = no (if not save) - End
 					}
 				}
 			} catch(Exception e) {
