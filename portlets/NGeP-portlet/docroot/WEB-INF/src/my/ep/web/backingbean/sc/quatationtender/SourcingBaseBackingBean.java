@@ -6166,5 +6166,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			
 			return false;
 		}//25635
-
+		
+		//25037 - note 677 - start
+		/**
+		 * Evaluate the corresponding Representative/Agency parameter type based on committee type.
+		 * PBA, PBB, QCA, FSW, FSB, QCB, PB, PPB, MOF
+		 * @return String (Parameter Type Code)
+		 */ 
+		public String getRepresentativeType(String committeeType) {
+			if(Arrays.asList(new String[] { ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B,
+							ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A}).contains(committeeType)){
+				return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
+			}else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equalsIgnoreCase(committeeType)){
+				return ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
+			}else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(committeeType)){
+				return ParameterTypeConst.REPRESENTATIVE_TYPE_PBB;
+			}else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(committeeType)){
+				return ParameterTypeConst.REPRESENTATIVE_TYPE_PBA;
+			}else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equalsIgnoreCase(committeeType)){
+				return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH;
+			}else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equalsIgnoreCase(committeeType)){
+				return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK;
+			}
+			return "";
+		}
+		//25037 - note 677 - end
 }
