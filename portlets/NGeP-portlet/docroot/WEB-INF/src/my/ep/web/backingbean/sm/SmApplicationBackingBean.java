@@ -8700,6 +8700,10 @@ public class SmApplicationBackingBean extends
 	 */
 	public String submitSmApplToBpm(String applType) {
 		
+		// #34166 - Start
+		validateText();
+		// #34166 - End
+		
 		//30953 & 30945 - Start		
 		//add checking to make sure, supporting doc mode is not null
 		log.info("This is the Supporting Document Mode === " +getManagedBean().getSmAppl().getSupportingDocMode());
