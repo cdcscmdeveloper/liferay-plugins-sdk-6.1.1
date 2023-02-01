@@ -1388,7 +1388,8 @@ public class SmApplicationUtil {
 				.getSmSupplierBranches())) {
 			for (SmSupplierBranch brAppl : bean.getSmAppl()
 					.getSmSupplierBranches()) {
-				if (!isBranchAssignToBank(bean.getSmAppl(), brAppl)) {
+				if (!isBranchAssignToBank(bean.getSmAppl(), brAppl) 
+						&& brAppl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {	//#34135
 					validSave = false;
 					throw new EpException(MessageConst.ERROR_722622,
 							new String[] { brAppl.getBranchName() });
@@ -1412,7 +1413,8 @@ public class SmApplicationUtil {
 				.getSmSupplierBranches())) {
 			for (SmSupplierBranch brAppl : bean.getSmAppl()
 					.getSmSupplierBranches()) {
-				if (!isBranchAssignToBank(bean.getSmAppl(), brAppl)) {
+				if (!isBranchAssignToBank(bean.getSmAppl(), brAppl)
+						&& brAppl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) { //#34135
 					validSave = false;
 					throw new EpException(MessageConst.ERROR_722622,
 							new String[] { brAppl.getBranchName() });
