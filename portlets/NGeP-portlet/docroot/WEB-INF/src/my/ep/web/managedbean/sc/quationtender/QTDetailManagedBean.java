@@ -1866,6 +1866,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private SelectItem[] orgTypeDD;
 	/** The organization name dropdown list. */
 	private SelectItem[] orgNameDD;
+	/** The popup member name. */
+	private String comMemPopUpName;
+	/** The popup member ministry/organization. */
+	private String comMemPopUpMinOrg;
+	/** The popup member ptj/organization code. */
+	private String comMemPopUpPtjOrgCode;
+	/** The popup member ptj/organization name. */
+	private String comMemPopUpPtjOrgName;
 	// #12471 End
 	
 	public QTDetailManagedBean() {
@@ -11830,7 +11838,68 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setOrgNameDD(SelectItem[] orgNameDD) {
 		this.orgNameDD = orgNameDD;
 	}
+
+	/**
+	 * @return the comMemPopUpName
+	 */
+	public String getComMemPopUpName() {
+		return comMemPopUpName;
+	}
+
+	/**
+	 * @param comMemPopUpName
+	 *            the popup member name to set
+	 */
+	public void setComMemPopUpName(String comMemPopUpName) {
+		this.comMemPopUpName = comMemPopUpName;
+	}
+
+	/**
+	 * @return the comMemPopUpMinOrg
+	 */
+	public String getComMemPopUpMinOrg() {
+		return comMemPopUpMinOrg;
+	}
+
+	/**
+	 * @param comMemPopUpMinOrg
+	 *            the popup member ministry/organization to set
+	 */
+	public void setComMemPopUpMinOrg(String comMemPopUpMinOrg) {
+		this.comMemPopUpMinOrg = comMemPopUpMinOrg;
+	}
+
+	/**
+	 * @return the comMemPopUpPtjOrgCode
+	 */
+	public String getComMemPopUpPtjOrgCode() {
+		return comMemPopUpPtjOrgCode;
+	}
+
+	/**
+	 * @param comMemPopUpPtjOrgCode
+	 *            the popup member ptj/organization code to set
+	 */
+	public void setComMemPopUpPtjOrgCode(String comMemPopUpPtjOrgCode) {
+		this.comMemPopUpPtjOrgCode = comMemPopUpPtjOrgCode;
+	}
+
+	/**
+	 * @return the comMemPopUpPtjOrgName
+	 */
+	public String getComMemPopUpPtjOrgName() {
+		return comMemPopUpPtjOrgName;
+	}
+
+	/**
+	 * @param comMemPopUpPtjOrgName
+	 *            the popup member ptj/organization name to set
+	 */
+	public void setComMemPopUpPtjOrgName(String comMemPopUpPtjOrgName) {
+		this.comMemPopUpPtjOrgName = comMemPopUpPtjOrgName;
+	}
 	// #12471 End
+	
 }
 
 // ***25201

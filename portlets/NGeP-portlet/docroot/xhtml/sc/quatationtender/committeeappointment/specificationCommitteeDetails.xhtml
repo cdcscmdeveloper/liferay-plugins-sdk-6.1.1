@@ -46,10 +46,17 @@
 				</p:selectBooleanCheckbox>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<h:outputText value="#{specificationcommittee.memberName}"
-					style="white-space: normal;" />
-			</p:column>
+			<!-- #12471 Start -->
+			<p:column headerText="#{lbl['lbl.sc.name']}"> 
+				<p:commandLink
+					actionListener="#{qTCommitteBackingBean.onClickMemberInfo(specificationcommittee.pmUser)}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					update="@form">
+					<h:outputText value="#{specificationcommittee.memberName}"
+						style="white-space: normal;" />
+				</p:commandLink>
+			</p:column> 
+			<!-- #12471 End -->
 
 			<p:column headerText="#{lbl['lbl.sc.identification.no']}"
 				style="width: 10%">
@@ -109,6 +116,10 @@
 		<ui:fragment rendered="#{showHistory}">
 			<ui:include src="committeeHistory.xhtml" />
 		</ui:fragment>
+		<!-- #12471 Start -->
+		<ac:qtCommitteMemberInfoPopup bBean="#{qTCommitteBackingBean}"
+			widget="comMemInfoPopUp" />
+		<!-- #12471 End -->
 	</p:panel>
 
 </ui:composition>
