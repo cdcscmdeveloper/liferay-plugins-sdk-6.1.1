@@ -86,6 +86,11 @@
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.smAppl.bumi}"  />
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{!viewSmApplBackingBean.managedBean.smAppl.bumi}"  />
 						</td>
+						<p:outputPanel rendered="#{!viewSmApplBackingBean.managedBean.viewSupplierProfile}">
+							<td colspan="2"></td>
+						</p:outputPanel>
+					</tr>
+				</p:outputPanel>
 				<!-- #29617 start-->
 				<p:outputPanel
 					rendered="#{viewSmApplBackingBean.managedBean.viewSupplierProfile}">
