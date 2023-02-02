@@ -12970,22 +12970,9 @@ public void retrieveDemoQtDetails(Long qtId) {
 					// Populate zone detail into tree node
 					if (scQt.getScQtSupplierCriteria() != null
 							&& scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
-						//#28784 zone missing after demo = no (if not save) - Start
-						List<TplSpecZoneDtl> specZoneDtls = new ArrayList<>();
-						
-						List<ZonesBean> list = getManagedBean().getBeans();
-						if (list != null && !list.isEmpty()) {
-
-							for (ZonesBean zonesBean : list) {
-								TplSpecZoneDtl zone = zonesBean.getTplSpecZoneDtl();
-
-								if (zone != null && !specZoneDtls.contains(zone)) {
-
-									specZoneDtls.add(zone);
-								}
-							}
-						}
-						
+						//#28784 zone missing after demo = no (if not save) - Start						
+						List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias()
+								.getTplSpecZoneDtls();
 						populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
 						//#28784 zone missing after demo = no (if not save) - End
 					}
