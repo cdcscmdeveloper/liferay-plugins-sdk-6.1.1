@@ -20964,6 +20964,12 @@ if(null!=allTechnicalChecklist){
 					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
 				//throw new EpException(MessageConst.ERROR_760528);
 				//saveSpecificationCommitteeDtls(); //#28784 - Remove notification save
+				//#28784 record has been updated bug fix - Start
+				if (this.getManagedBean().getQt().isZonal()) {
+					QTDetailBackingBean qtDetail = new QTDetailBackingBean();
+					qtDetail.retrieveZonalDetailAfterDemoDeletion(this.getManagedBean().getQt().getQtId());
+				}
+				//#28784 record has been updated bug fix - End
 				validatePrepareQtChecklist();
 				if (this.getManagedBean().isMaintanceFlow()) {
 					if (isSpecCommittee()) {
