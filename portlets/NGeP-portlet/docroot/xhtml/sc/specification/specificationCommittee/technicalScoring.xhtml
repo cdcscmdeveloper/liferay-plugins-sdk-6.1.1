@@ -190,8 +190,10 @@
 
 	</p:panel>
 <!-- #21695 START FARID -->	
+<!-- #34451,#34458,#34450 related to #25138 add rendered -->
 	<p:panel id="technicalScoringItemPanel"
-		header="#{lbl['lbl.sc.by.item']}" toggleable="true">
+		header="#{lbl['lbl.sc.by.item']}" toggleable="true"
+		rendered="#{specificationBackingBean.managedBean.wipStatusMax > '6'}">
 <!-- #21695 REMOVE INSTRUCTION Here -->	
 
 <!-- #21695 START FARID 7/4/2021 (at tooltip below lbl.sc.spec.others.tooltip)-->
