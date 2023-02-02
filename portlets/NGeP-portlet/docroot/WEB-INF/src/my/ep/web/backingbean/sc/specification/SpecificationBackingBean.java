@@ -21419,10 +21419,6 @@ if(null!=allTechnicalChecklist){
 			finSpecType.setParameterCode(ParameterConst.SPECIFICATION_TYPE_FINANCIAL);
 			ParameterResDTO finSpecresDTO = parameterSO.retrieveParameterByTypeAndCode(finSpecType);
 			specMaster.setSpecTypeCode(finSpecresDTO.getPmParameter());
-			
-			if(specMaster.getTplSpecZone().getTplSpecZoneDtls() == null){
-				specMaster.getTplSpecZone().setTplSpecZoneDtls(null);
-			}
 		
 			TemplateSpecHelper.getInstance().cloneTplSpecQuestions(specMaster, scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions());			
 			updatedCheckLists.add(scQtCheckList);
