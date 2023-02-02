@@ -85,9 +85,12 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="branchCountry"
 						value="#{backingBean.managedBean.countryItems}" />
+					<!-- #34135 START -->	
 					<p:ajax event="change" process="@this"
 						listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="supBrnCntry,branchState,branchDivision,branchDist,branchCity,postCodeBranchPanelId" />
+						update="supBrnCntry,branchState,branchDivision,branchDist,branchCity,postCodeBranchPanelId,
+						divisionBranchTbleLabelPanelId,divisionBranchTbleDropdownPanelId" />
+					<!-- #34135 END -->
 				</p:selectOneMenu> 
 				<ac:smFieldChangeAlert 
 					isShow="#{backingBean.managedBean.showFieldChanges

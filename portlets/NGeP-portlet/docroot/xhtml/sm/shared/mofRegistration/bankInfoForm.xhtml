@@ -577,9 +577,11 @@
 											label="#{lbl['lbl.sm.bankDtls.assocBran']}" id="banBranchVal"
 											value="#{backingBean.managedBean.selectedBankBranchIds}"
 											style="height:100px;width: 200px;">
+											<!-- #34135 START -->
 											<f:selectItems
-												value="#{backingBean.managedBean.smAppl.smSupplierBranches}" var="br"
+												value="#{backingBean.managedBean.displayBranches}" var="br"
 												itemLabel="#{br.branchName}" itemValue="#{br.supplierBranchId}" />
+											<!-- #34135 END -->
 										</p:selectManyMenu>
 									</td>
 									<td style="vertical-align: baseline;">
