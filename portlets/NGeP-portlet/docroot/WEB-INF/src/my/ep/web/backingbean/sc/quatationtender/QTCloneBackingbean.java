@@ -2178,7 +2178,7 @@ public class QTCloneBackingbean extends
 				newApproval.setScQtApprovalDtls(approverRequest);
 				}
 			}//25635&31484-start
-			List<ScQtApprovalRemark> existedRemark=new ArrayList<ScQtApprovalRemark>();//34466&25635-start
+			List<ScQtApprovalRemark> existedRemark=new ArrayList<>();//34466&25635-start
 			if(!newApproval.isBrandNew() && CollectionUtils.isNotEmpty(newApproval
 							.getScQtApprovalRemarks())){
 				for(ScQtApprovalRemark committeeApproval:newApproval
