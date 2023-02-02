@@ -6852,7 +6852,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			committeReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			committeReqDTO.setSaveFlow(true);
-			committeSO.validateAppointCommitteDtls(committeReqDTO);
+			
+			//9019 - Start (Harun) #Note-378 Remove checking while not submit and allow to proceed 
+			//       when click sidemenu
+			if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				committeSO.validateAppointCommitteDtls(committeReqDTO);
+			}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				//validate mandatory alert mesg for CR #9019 for others sidemenu for prevent save
+				//even alert mesg doesn't fill in at QT Details tab
+				detailSO.validateQTGeneralInformation(reqDTO);
+			}
+			//9019 - End (Harun)
 			
 			//9019 - start using new method
 			//9019 - Start (Harun) 11082022 Reopen reset to null as remarks that initialize empty will cause error 
@@ -6884,7 +6894,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		case 3:
 			reqDTO.getQtdetail().setModified(false);
 			reqDTO.getQtdetail().setFCApproval(true);
-			detailSO.validateApprovalDetails(reqDTO);
+			
+			//9019 - Start (Harun) #Note-378 Remove checking while not submit and allow to proceed 
+			//       when click sidemenu
+			if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				detailSO.validateApprovalDetails(reqDTO);
+			}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				//validate mandatory alert mesg for CR #9019 for others sidemenu for prevent save
+				//even alert mesg doesn't fill in at QT Details tab
+				detailSO.validateQTGeneralInformation(reqDTO);
+			}
+			//9019 - End (Harun)
 			
 			//9019 - start using new method
 			//9019 - Start (Harun) 11082022 Reopen reset to null as remarks that initialize empty will cause error 
@@ -6916,7 +6936,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				retrieveBriefingSitevisitTabDtl();
 			} else if(super.isQTStatusLessThanOrEquals(currentStatus, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)){
 				// save scQt info onclick of Activites tab
-				detailSO.validateQTDetails(reqDTO);
+				//9019 - Start (Harun) #Note-378 Remove checking while not submit and allow to proceed 
+				//       when click sidemenu
+				if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+					detailSO.validateQTDetails(reqDTO);
+				}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+					//validate mandatory alert mesg for CR #9019 for others sidemenu for prevent save
+					//even alert mesg doesn't fill in at QT Details tab
+					detailSO.validateQTGeneralInformation(reqDTO);
+				} 
+				//9019 - End (Harun)
+				
 				detailSO.removeSchedule(reqDTO);//#29474
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();

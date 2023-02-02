@@ -126,7 +126,7 @@
 											process="@this" partialSubmit="true" update="pnlid2" disabled="#{qTDetailBB.isCloneBtnDisable()}"
 											action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
 											title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />
-				<p:commandButton value="#{lbl['lbl.sc.clone.qt.documents']}" style="float:right;" id="cloneButton2" rendered="#{isClone2 and !isCommitteeApprovalReviseTask}"
+				<p:commandButton value="#{lbl['lbl.sc.clone.qt.documents']}" style="float:right;" id="cloneButton2" rendered="#{isClone2 and !isCommitteeApprovalReviseTask and !qTDetailBB.managedBean.maintanceFlow}"
 											process="@this" partialSubmit="true" update="pnlid2" disabled="#{qTDetailBB.isCloneBtnDisable()}"
 											action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
 											title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />	
@@ -169,12 +169,11 @@
 							<ui:remove> #30477 End </ui:remove>
 							
 							<!-- 9019 -start- -->
+							<!-- 9019 Reopen note#383 Remove skipvalidation checking when cancel -->
 							 <p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onclick="cancel1QTDlg.show();"
 								update="@([id$=#{cancel1QTDlg}])"
-								rendered="#{!isClone2 and qTDetailBB.isCancel(bpmAction)}">
-							   <f:param name="skipvalidation" value="0" />
-							</p:commandButton>
+								rendered="#{!isClone2 and qTDetailBB.isCancel(bpmAction)}"/>
 						
 <!-- #29732 Start - reOpen Fix -->							
 							<p:commandButton value="#{lbl[buttonLabel]}" 
@@ -320,11 +319,10 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
+			    <!-- 9019 Reopen note#383 Remove skipvalidation checking when cancel -->
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					oncomplete="cancel1QTDlg.hide();" partialSubmit="true" process="@this"
-					action="#{qTDetailBB.cancelQTDraft()}">
-				     <f:param name="skipvalidation" value="0" />		
-				 </p:commandButton>
+					action="#{qTDetailBB.cancelQTDraft()}"/>
 		
 				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					onclick="cancel1QTDlg.hide();" type="button" partialSubmit="true"  process="@this"/>
