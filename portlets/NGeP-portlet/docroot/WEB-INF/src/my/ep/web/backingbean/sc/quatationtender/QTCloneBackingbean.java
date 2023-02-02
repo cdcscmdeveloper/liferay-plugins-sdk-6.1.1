@@ -2178,13 +2178,23 @@ public class QTCloneBackingbean extends
 				newApproval.setScQtApprovalDtls(approverRequest);
 				}
 			}//25635&31484-start
+			List<ScQtApprovalRemark> existedRemark=new ArrayList<>();//34466&25635-start
+			if(!newApproval.isBrandNew() && CollectionUtils.isNotEmpty(newApproval
+							.getScQtApprovalRemarks())){
+				for(ScQtApprovalRemark committeeApproval:newApproval
+							.getScQtApprovalRemarks()){
+					if(!committeeApproval.isBrandNew()){		
+						existedRemark.add(committeeApproval);
+					}
+				}
+				
+			}//34466&25635-end
 			newApproval
 			.setScQtApprovalRemarks(initializeRemarks(
 					newApproval, scQt
 							.getCurrentWorkFlowStatus(),
-							newApproval
-							.getScQtApprovalRemarks(),
-					ScQtApprovalRemark.class));//34342&25635
+							existedRemark,
+					ScQtApprovalRemark.class));//34342&25635&34466
 			List<TabBean> tabBeans = new ArrayList<TabBean>();
 			ParameterHelper parameterHelper = ParameterHelper.getInstance();
 			String approvalCategoryCode = newApproval
@@ -3228,12 +3238,18 @@ public class QTCloneBackingbean extends
 			List<ScQtCategory> categoryResults = resDTO
 					.getCategories();
 			List<ScQtSupplier> restrictResults=resDTO.getRestrictedSuppliers();
-			
-			
+			List<ScQtCategory> currentExistingCategory=null;//34466&25635-start
+			if(!this.getManagedBean().getQt().isBrandNew()){
+			QuationTenderReqDTO currentReqDTO = new QuationTenderReqDTO();
+			currentReqDTO.setQtdetail(this.getManagedBean().getQt());
+			QuationTenderResDTO currentresDTO =QtDetailsSO.retriveQTSuppQulCriDetails(currentReqDTO);
+			currentExistingCategory = currentresDTO
+					.getCategories();
+			}//34466&25635-end
 			//to Delete
 			List<ScQtCategory> tobeRemoveCategoryCodes=new ArrayList<ScQtCategory>();
-			if(scQt.getScQtCategorys()!=null && !scQt.getScQtCategorys().isEmpty()){
-				for(ScQtCategory toDel:scQt.getScQtCategorys()){
+			if(CollectionUtils.isNotEmpty(currentExistingCategory)){//34466&25635-start
+				for(ScQtCategory toDel:currentExistingCategory){//34466&25635-end
 					toDel.setDeleted(true);
 					tobeRemoveCategoryCodes.add(toDel);
 				}
