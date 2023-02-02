@@ -121,7 +121,7 @@
 								value="#{qTDetailBB.getParameterDesc('CR', member.memberRole)}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sc.representative.type']}" rendered="#{isSFCommittee}">
-						<h:outputText value="#{qTDetailBB.getParameterDesc('RPQ', member.representativeType)}" />
+						<h:outputText value="#{qTDetailBB.getParameterDesc(qTDetailBB.getRepresentativeType(selectedHistory.committeeType), member.representativeType)}" /><ui:remove><!-- 25037 - note 677 --></ui:remove>
 						</p:column>
 					</p:dataTable>
 				<ac:detachablePaginator loopId="historyMemberTableId" paginatorObject="#{memberHistoryPaginator}" />
