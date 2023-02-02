@@ -5856,6 +5856,14 @@ public class SimpleQuoteBackingBean extends
 			
 			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(specMaster, specAnswerList, locale);
 			// /#21695 farid end
+			// #34147 #34395 start
+			if (getManagedBean().getScQuote() != null) {
+				if (getManagedBean().getScQuote().isZonal() == true) {
+					ScQuote scQuote = getManagedBean().getScQuote();
+					getTemplateSpecSO().validateSubmitSimpleQuoteResponse(specAnswerList, scQuote);
+				}
+			}
+			// #34147 #34395 end
 		}
 		
 		if (!isServiceContainPrice && !isProdContainPrice) {

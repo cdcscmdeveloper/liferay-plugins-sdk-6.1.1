@@ -51,17 +51,17 @@
 					<p:commandButton id="searchSupplierBtn" rendered="#{!isZonalWithPaOrPs}"
 						value="#{lbl['lbl.btn.search']}"
 						action="#{lOADetailBackingBean.onSearchSupplier}"
-						update="supplierUpdateInstructionPanel, itemtbl" />
+						update="supplierUpdateInstructionPanel, itemtbl" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 					<!-- #277977 Start -->
 					<p:commandButton id="searchZonalSupplierBtn" rendered="#{isZonalWithPaOrPs}"
 						value="#{lbl['lbl.btn.search']}"
 						action="#{lOADetailBackingBean.onZonalSearchSupplier}"
-						update="supplierUpdateInstructionPanel, form" />
+						update="supplierUpdateInstructionPanel, form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 					<!-- #277977 End -->
 					<p:commandButton id="resetSupplierBtn"
 						value="#{lbl['lbl.btn.reset']}"
 						action="#{lOADetailBackingBean.onResetSupplierCriteria()}"
-						update="supplierUpdateInstructionPanel" />
+						update="supplierUpdateInstructionPanel" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</div>
 			</p:panel>
 			<!-- #29007 Start Vinod -->
@@ -455,7 +455,7 @@
 				<td colspan="9"><h:outputLabel value="#{lbl['lbl.sc.total']}"
 						style="white-space:normal;color: black;font-weight:bold"></h:outputLabel></td>
 				<td style="white-space: normal; color: black; font-weight: bold;text-align: right;"><h:outputText
-						value="#{lOADetailBackingBean.managedBean.totalZonePrice}">
+						value="#{lOADetailBackingBean.calculateTotalPriceZonal()}" rendered="#{not empty lOADetailBackingBean.managedBean.nameZoneScLoiLoaItemList}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText></td>

@@ -66,6 +66,7 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
+mport my.ep.constants.SpecialCharacter;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -8538,7 +8539,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
 			
-			mandatoryItems.append(justificationMandatory+"\n&nbsp"+supplierOfferMandatory);
+			mandatoryItems.append(justificationMandatory+"<br/>"+SpecialCharacter.NON_BREAKING_SPACE.getHtmlEntityName()+supplierOfferMandatory); //#29006 - note 702
 			
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -8612,6 +8613,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 					try {
 						// Save and update new supplier offer into related ScLoiLoaItem in DB
+						//#29006 - note 702 - start
+						if (!StringUtils.isBlank(getManagedBean().getNewSupplierOffered()))
+							getQtAwardSO().updateAndSaveNewSupplierJustification("",
+									each.getLoiLoaItemId(),isComplete); 
+						//#29006 - note 702 - end
 						getQtAwardSO().updateAndSaveNewSupplierJustification(getManagedBean().getNewSupplierJustification(),
 								each.getLoiLoaItemId(),isComplete); //#29006 - note 607
 						log.info("-- SAVE JUSTIFICATION --");
@@ -9141,6 +9147,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				scLoiLoaItem.setComplete(items.get(0).isComplete());
 			else
 				scLoiLoaItem.setComplete(false);
+			
+			//#29006 - note 702 - start
+			for (ScLoiLoaItem item : items) {
+				if(item.getLoiLoaItemId().equals(scLoiLoaItem.getLoiLoaItemId())
+						|| ((item.getScLoa().getLoaId().equals(scLoiLoaItem.getScLoa().getLoaId())) && (item
+								.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem()
+								.getRequestNoteItemId())))) {
+					scLoiLoaItem.setDateGeneratedA3(DateUtils.getLocalizeDate(item.getChangedDate(), myLocale));
+					scLoiLoaItem.setTimeGeneratedA3(new SimpleDateFormat(CommonConstants.DEFAULT_TIME_FORMAT).format(item.getChangedDate()));
+				}					
+			}
+			//#29006 - note 702 - end
 		}
 		//#29006 - end -  note 607
 		context.put("itemsList", scLoiLoaItemCloneList);
@@ -9467,6 +9485,30 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		return itemClone;
 	}
+	
+	// #29006 - note 746 - start
+	/**
+	 * To calculate total zonal price based on item search result
+	 * 
+	 * @return BigDecimal - Total Price of ScLoiLoaItem list
+	 */
+	public BigDecimal calculateTotalPriceZonal() {
+		BigDecimal totalPrice = BigDecimal.ZERO;
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getNameZoneScLoiLoaItemList())) {
+			Long currentRequestItem = 0L;
+			
+			for (ScLoiLoaItem item : this.getManagedBean().getNameZoneScLoiLoaItemList()) {				
+				if (!currentRequestItem.equals(item.getScRequestItem().getRequestNoteItemId())){
+					totalPrice = getScRequestSubTotalZonal(item.getScRequestItem().getRequestNoteItemId()).add(totalPrice);
+					currentRequestItem = item.getScRequestItem().getRequestNoteItemId();
+				}
+			}
+		}
+		totalPrice.setScale(2, BigDecimal.ROUND_UP);
+
+		return totalPrice;
+	}
+	// #29006 - note 746 - end
 
 	public String getNotAvailabilityStr() {
 		return notAvailabilityStr;
