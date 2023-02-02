@@ -135,7 +135,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmSupplierBranch selectedBranchPrev;
 	private int selectedBranchIndex;
 	private List<SmSupplierBranch> selectedBranches;
-	private List<SmSupplierBranch> displayBranches;
+	private List<SmSupplierBranch> displayBranches; //#34135 - commit part from redmine 29727
 	private SmAssociateCompany selectedAssocCompany;
 	private List<SmAssociateCompany> selectedAssocCompanies;
 	private List<SmSupplierCert> selectedCertList;
@@ -4409,7 +4409,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.deletedWorkers = deletedWorkers;
 	}
 	// 29379 - Site Visit Grouping Enhancement -28775 END
-
+	//#34135 - START - Commit part from Redmine 29727
 	public List<SmSupplierBranch> getDisplayBranches() {
 		return displayBranches;
 	}
@@ -4417,7 +4417,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setDisplayBranches(List<SmSupplierBranch> displayBranches) {
 		this.displayBranches = displayBranches;
 	}
-
+	//#34135 - END
 	public String getDeleteBranchMsg() {
 		return deleteBranchMsg;
 	}

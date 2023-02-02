@@ -10242,6 +10242,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				specReqDto.setTplSpecAnswer(tplSpecAnswer);
 				
 			}
+			specReqDto.setSpecSearchForApp(true);
 			boolean qtMaint = isQTMaintenanceScreen();
 			if(QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
 				&& !qtMaint) {
@@ -10251,9 +10252,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				getManagedBean().setSupPropSpecDisable(false);
 			}else{
 				getManagedBean().setSupPropSpecDisable(true);
+				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
+				if(templateSpecResDTO.getSpecAnswerList().isEmpty()){
+					DirectAwardReqDTO awardReqDTOnew = new DirectAwardReqDTO();
+					awardReqDTOnew.setScLoa(this.getManagedBean().getScLoa());
+					DirectAwardResDTO awardResDTOnew =getQtDirectAwardSO().saveScloiloaitemforDirectLOA(awardReqDTOnew);
+					if(awardResDTOnew.isSuccessful()){
+						log.info("WIP data Saved");	
+						this.getManagedBean().getScLoa().setScLoiLoaItems(awardResDTOnew.getLoa().getScLoiLoaItems());
+					}
+				}
 			}
 			
-			specReqDto.setSpecSearchForApp(true);
 			TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
 			for(TplSpecAnswer tplSpecAnswer: templateSpecResDTO.getSpecAnswerList()){
 				if(tplSpecAnswer.getNewSupplierOffer() != null && tplSpecAnswer.getNewSupplierOffer() != ""){
