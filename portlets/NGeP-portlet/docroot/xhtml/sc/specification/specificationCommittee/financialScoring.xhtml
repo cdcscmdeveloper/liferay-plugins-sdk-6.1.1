@@ -31,6 +31,9 @@
 				</td>
 			</tr>
 		</table>
+	
+	<!-- #34451,#34458,#34450 related to #25138 adding if statement start-->
+	<c:if test="#{specificationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">	
 		<!-- #25138 Spec Zone menu model if zonal - start-->
 		<table style="width: 100%">
 			<td style="width: 16%;" valign="top"><p:remoteCommand 
@@ -43,6 +46,7 @@
 			</td>
 		</table>
 		<!-- #25138 Spec Zone menu model if zonal - end-->
+		</c:if>
 		<p:dataTable id="financialweightage" var="finance" rowKey="#{finance}"
 			value="#{specificationBackingBean.managedBean.financialScoring}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -138,6 +142,8 @@
 			</table>
 		</h:panelGroup>
 	</p:panel>
+	
+	<c:if test="#{specificationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
 	<!-- ahmaa-#25138 Reendorsed- start -->
 	<h:panelGroup id="offeredPrice" toggleable="true" rendered="#{!specificationBackingBean.managedBean.isSingleItem()}">
 		<p:panel header="#{lbl['lbl.sc.by.package']}" id="financialScoringPackageOfferedPrice" toggleable="true"> 			
@@ -311,8 +317,97 @@
 		</p:panel>
 	</h:panelGroup>
 	<!-- ahmaa-#25138 Reendorsed - end -->
+	</c:if>
+	<c:if test="#{specificationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
+		<h:panelGroup id="offeredPrice">
+		<p:panel header="#{lbl['lbl.sc.by.package']}" id="financialScoringPackageOfferedPrice" toggleable="true">
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.passing.score.financial.instruction']}"
+				escape="false" />		
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.spec.score.variance.instruction']}"
+				escape="false" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.spec.scoring.offered.price.tooltip']}" />
+
+			<p:panelGrid style="margin-top:5px;width:100%;"
+				styleClass="panelGridBorders tr, panelGridBorders td">
+				<f:facet name="header">
+					<p:row>
+						<p:column styleClass="panelGridHeaders" style="width:15%;"
+							colspan="1">#{lbl['lbl.tpl.spec.content.scoring.scoring.from.variance']}</p:column>
+						<p:column styleClass="panelGridHeaders" style="width:15%;"
+							colspan="1">#{lbl['lbl.tpl.spec.content.scoring.scoring.to.variance']}</p:column>
+						<p:column styleClass="panelGridHeaders" style="width:20%;">#{lbl['lbl.tpl.spec.content.scoring.scoring.below.score']}</p:column>
+						<p:column styleClass="panelGridHeaders"
+							style="width:15%;text-align:center;">#{lbl['lbl.tpl.spec.content.scoring.scoring.within.score']}</p:column>
+						<p:column styleClass="panelGridHeaders" style="width:15%;">#{lbl['lbl.tpl.spec.content.scoring.scoring.above.score']}</p:column>
+					</p:row>
+				</f:facet>
+				<p:row>
+					<p:column>
+						<p:inputText style="text-align:right;" maxlength="14" size="15"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
+							value="#{specificationBackingBean.managedBean.offerPricePackage.fromVariance}">
+							<p:ajax event="blur" process="@all" partialSubmit="true"
+								listener="#{specificationBackingBean.specOfferpricePackageFromVarieance(specificationBackingBean.managedBean.offerPricePackage)}" />
+						</p:inputText>
+					</p:column>
+
+					<p:column colspan="1">
+						<p:inputText style="text-align:right;" maxlength="14" size="15"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
+							value="#{specificationBackingBean.managedBean.offerPricePackage.toVariance}">
+							<p:ajax event="blur" process="@all" partialSubmit="true"
+								listener="#{specificationBackingBean.specOfferpricePackageToVarieance(specificationBackingBean.managedBean.offerPricePackage)}" />
+						</p:inputText>
+					</p:column>
+					<p:column colspan="1">
+						<p:inputText style="text-align:right;" maxlength="14" size="15"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
+							value="#{specificationBackingBean.managedBean.offerPricePackage.belowScore}">
+							<p:ajax event="blur" process="@all" partialSubmit="true"
+								listener="#{specificationBackingBean.specOfferpricePackageBelowScore(specificationBackingBean.managedBean.offerPricePackage)}" />
+
+						</p:inputText>
+					</p:column>
+					<p:column colspan="1">
+						<p:inputText style="text-align:right;" size="15" disabled="true"
+							value="#{specificationBackingBean.managedBean.scoreVarience}" />
+					</p:column>
+					<p:column colspan="1">
+						<p:inputText style="text-align:right;" maxlength="14" size="15"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
+							value="#{specificationBackingBean.managedBean.offerPricePackage.aboveScore}">
+							<p:ajax event="blur" process="@all" partialSubmit="true"
+								listener="#{specificationBackingBean.specOfferpricePackageAboveScore(specificationBackingBean.managedBean.offerPricePackage)}" />
+
+						</p:inputText>
+					</p:column>					 
+				</p:row>
+			</p:panelGrid>
+			<p:spacer height="15"></p:spacer>
+			  
+			<table>
+				<tr>
+					<td style="width: 260px;"><p:outputLabel
+							value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText style="text-align:right" maxlength="3"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
+							value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}">
+							<p:ajax event="blur" process="@all" partialSubmit="true"
+								listener="#{specificationBackingBean.checkFinancialPassingScore(specificationBackingBean.managedBean.financialScoreSetting)}" />
+						</p:inputText> <p:spacer width="5"></p:spacer></td>
+				</tr>
+			</table>
+
+
+
+		</p:panel>
+	</h:panelGroup>
 	
-	
+	</c:if>
 	<p:panel id="financialScoringItemPanle"
 		header="#{lbl['lbl.sc.by.item']}" toggleable="true">
 		<h:outputText styleClass="instruction"
