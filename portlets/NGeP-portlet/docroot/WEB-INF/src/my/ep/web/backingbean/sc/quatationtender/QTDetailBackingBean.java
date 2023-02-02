@@ -6815,7 +6815,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			getfulfilmentDtls(resDTO.getQtDetail());//#29474
 			break;
 		case 1:
-			detailSO.validateSupplierQualificationDtls(reqDTO);
+			//9019 - Start (Harun) #Note-378 Remove checking while not submit and allow to proceed 
+			//       when click sidemenu
+			if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				detailSO.validateSupplierQualificationDtls(reqDTO);
+			}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				//validate mandatory alert mesg for CR #9019 for others sidemenu for prevent save
+				//even alert mesg doesn't fill in at QT Details tab
+				detailSO.validateQTGeneralInformation(reqDTO);
+			}
+			//9019 - End (Harun)
+			
 			//9019 - start using new method
 			//9019 - Start (Harun) 11082022 Reopen reset to null as remarks that initialize empty will cause error 
 			//       while save due to save empty object
