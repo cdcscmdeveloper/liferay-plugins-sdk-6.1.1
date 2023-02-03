@@ -8430,14 +8430,22 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		if (null == technicalCheckList) {
 			technicalCheckList = new ArrayList<ScQtCheckList>();
 		}
+		
+		// Bug #33249@Syazani 28/07/2022 -- Start
+		String curCheckList = checkList.getTitle() + "_"
+				+ (checkList.getDefinationType() != null ? checkList.getDefinationType().getParameterId() : "");
 		for (int i = 0; i < technicalCheckList.size(); i++) {
-			if (checkList.getTitle().equalsIgnoreCase(
-					technicalCheckList.get(i).getTitle())) {
-				ScQtCheckList localCheckList = technicalCheckList.get(i);
+			ScQtCheckList localCheckList = technicalCheckList.get(i);
+			String loopCheckList = localCheckList.getTitle() + "_"
+					+ (localCheckList.getDefinationType() != null ? localCheckList.getDefinationType().getParameterId() : "");
+			if (curCheckList.equals(loopCheckList)) {
+				// ScQtCheckList localCheckList = technicalCheckList.get(i);
 				// technicalCheckList.setDeleted(true);
 				// toBeRemoveCheckLists.add(technicalCheckList);
-				technicalCheckList.remove(localCheckList);
-				technicalCheckList.add(checkList);
+				// technicalCheckList.remove(localCheckList);
+				// technicalCheckList.add(checkList);
+				technicalCheckList.set(i, checkList);
+				// Bug #33249@Syazani 28/07/2022 -- End
 				break;
 			}
 		}
@@ -8458,14 +8466,20 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		if (null == financialCheckList) {
 			financialCheckList = new ArrayList<ScQtCheckList>();
 		}
+		
+		// Bug #33249@Syazani 28/07/2022 -- Start
+		String curCheckList = checkList.getTitle() + "_" + (checkList.getDefinationType() != null ? checkList.getDefinationType().getParameterId() : "");
 		for (int i = 0; i < financialCheckList.size(); i++) {
-			if (checkList.getTitle().equalsIgnoreCase(
-					financialCheckList.get(i).getTitle())) {
-				ScQtCheckList localCheckList = financialCheckList.get(i);
+			ScQtCheckList localCheckList = financialCheckList.get(i);	
+			String loopCheckList = localCheckList.getTitle() + "_" + (localCheckList.getDefinationType() != null ? localCheckList.getDefinationType().getParameterId() : "");
+			if (curCheckList.equals(loopCheckList)) {
+				// ScQtCheckList localCheckList = financialCheckList.get(i);
 				// technicalCheckList.setDeleted(true);
 				// toBeRemoveCheckLists.add(technicalCheckList);
-				financialCheckList.remove(localCheckList);
-				financialCheckList.add(checkList);
+				// financialCheckList.remove(localCheckList);
+				// financialCheckList.add(checkList);
+				financialCheckList.set(i, checkList);
+				// Bug #33249@Syazani 28/07/2022 -- End
 				break;
 			}
 		}
@@ -9733,13 +9747,16 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 				// localChecklist.addAll(finSpecs);
 				for (ScQtCheckList financialSpecs : finSpecs) {
+					// Bug #33249@Syazani 27/07/2022 -- Start
+					String titleSpec = financialSpecs.getTitle() + "_"
+							+ (financialSpecs.getDefinationType() != null ? financialSpecs.getDefinationType().getParameterId() : "");
 					for (ScQtCheckList financialList : financialCheckList) {
-						if (financialList.getTitle().equalsIgnoreCase(
-								financialSpecs.getTitle())
-								&& ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
-										.equalsIgnoreCase(financialSpecs
-												.getDefinationType()
-												.getParameterCode())) {
+						String titleList = financialList.getTitle() + "_"
+								+ (financialList.getDefinationType() != null ? financialList.getDefinationType().getParameterId() : "");
+						if (titleList.equals(titleSpec)
+								&& ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(financialSpecs.getDefinationType()
+										.getParameterCode())) {
+							// Bug #33249@Syazani 27/07/2022 -- End
 							if (null != financialSpecs.getQtScoreWeightage()
 									&& financialSpecs.getQtScoreWeightage()
 											.getScore().intValue() > 0) {
@@ -11386,6 +11403,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					.getScQtCheckSt2techProposal();
 			List<ScQtCheckList> finanicalAllCheckList = this.getManagedBean()
 					.getScQtCheckSt2financeProposalList();
+			// Bug #33249@Syazani 24/11/2022 -- Start
+			String scQtTitleSpec = scQtCheckList.getTitle() + "_"
+					+ (scQtCheckList.getDefinationType() != null ? scQtCheckList.getDefinationType().getParameterId() : "");
+			// Bug #33249@Syazani 24/11/2022 -- End
 			if (this.getManagedBean().getIndex() == -1
 					&& null == scQtCheckList.getQtChecklistId()) {
 				if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
@@ -11397,30 +11418,65 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	                    		   technicalSpecCount++;
 	                    		   localChecckListseq= localChecckListseq <techlist.getChecklistSeq()?techlist.getChecklistSeq(): localChecckListseq;
 	                    		   
-	                    	   }
-					if (techlist.getTitle().trim()
-							.replaceAll("\\s", "").equalsIgnoreCase(scQtCheckList.getTitle().trim().replaceAll("\\s", ""))) {
-						throw new EpException(MessageConst.ERROR_760207,
-								new String[] { scQtCheckList.getTitle() });
-					}
-                      }
+                    	   }
+							// Bug #33249@Syazani 27/07/2022 -- Start
+							String techTitleList = techlist.getTitle() + "_"
+									+ (techlist.getDefinationType() != null ? techlist.getDefinationType().getParameterId() : "");
+							if (techTitleList.trim()
+									.replaceAll("\\s", "").equalsIgnoreCase(scQtTitleSpec.trim().replaceAll("\\s", ""))) {
+							// Bug #33249@Syazani 27/07/2022 -- End
+								throw new EpException(MessageConst.ERROR_760207,
+										new String[] { scQtCheckList.getTitle() });
+							}
+                       }
                        log.info("QTID:"+getManagedBean().getQt().getQtId()+"localChecckListseq"+localChecckListseq);
                        if(technicalSpecCount>0){
 						scQtCheckList.setChecklistSeq(localChecckListseq+1);
                        }
 				}
 				if (null != finanicalAllCheckList && !finanicalAllCheckList.isEmpty()) {
-                    for(ScQtCheckList financiallist:finanicalAllCheckList){
-					if (null!=financiallist
-							.getDefinationType() && !QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(financiallist
-							.getDefinationType().getParameterCode()) && financiallist.getTitle().trim()
-							.replaceAll("\\s", "").equalsIgnoreCase(scQtCheckList.getTitle().trim().replaceAll("\\s", ""))) {
+					// Bug #33249@Syazani 27/07/2022 -- Start
+					// Bug #33249@Syazani 24/11/2022
+					for (ScQtCheckList financiallist : finanicalAllCheckList) {
+						String financialTitleList = financiallist.getTitle() + "_"
+								+ (financiallist.getDefinationType() != null ? financiallist.getDefinationType().getParameterId() : "");
+						if (null != financiallist.getDefinationType()
+								&& !QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(financiallist.getDefinationType().getParameterCode())
+								&& financialTitleList.trim().replaceAll("\\s", "").equalsIgnoreCase(scQtTitleSpec.trim().replaceAll("\\s", ""))) {
+						// Bug #33249@Syazani 27/07/2022 -- End
 						throw new EpException(MessageConst.ERROR_760207,
 								new String[] { scQtCheckList.getTitle() });
-					}
+						}
                    }
 				}
+				// Bug #33249@Syazani 24/11/2022 -- Start
+			} else {
+				if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
+					for (ScQtCheckList techlist : technicalCheckList) {
+						Long qtChecklistId = techlist.getQtChecklistId() != null ? techlist.getQtChecklistId() : 0;
+						String techlistTitle = techlist.getTitle() + "_"
+								+ (techlist.getDefinationType() != null ? techlist.getDefinationType().getParameterId() : "");
+						if (techlistTitle.trim().replaceAll("\\s", "").equalsIgnoreCase(scQtTitleSpec.trim().replaceAll("\\s", ""))
+								&& !scQtCheckList.getQtChecklistId().equals(qtChecklistId)) {
+							throw new EpException(MessageConst.ERROR_760207, new String[] { scQtCheckList.getTitle() });
+						}
+					}
+				}
+				if (null != finanicalAllCheckList && !finanicalAllCheckList.isEmpty()) {
+					for (ScQtCheckList financiallist : finanicalAllCheckList) {
+						Long qtChecklistId = financiallist.getQtChecklistId() != null ? financiallist.getQtChecklistId() : 0;
+						String financiallistTitle = financiallist.getTitle() + "_"
+								+ (financiallist.getDefinationType() != null ? financiallist.getDefinationType().getParameterId() : "");
+						if (null != financiallist.getDefinationType()
+								&& !QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(financiallist.getDefinationType().getParameterCode())
+								&& financiallistTitle.trim().replaceAll("\\s", "").equalsIgnoreCase(scQtTitleSpec.trim().replaceAll("\\s", ""))
+								&& !scQtCheckList.getQtChecklistId().equals(qtChecklistId)) {
+							throw new EpException(MessageConst.ERROR_760207, new String[] { scQtCheckList.getTitle() });
+						}
+					}
+				}		
 			}
+			// Bug #33249@Syazani 24/11/2022 -- End
 
 			List<ScQtCheckList> finanicalCheckList = this.getManagedBean()
 					.getScQtCheckSt2financeProposalList();
@@ -11699,13 +11755,17 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						if (null != technicalCheckLists
 								&& !technicalCheckLists.isEmpty()) {
 							boolean techSpec = false;
-
+							// Bug #33249@Syazani 27/07/2022 -- Start
+							String checkListTitle = checkList.getTitle() + "_"
+									+ (checkList.getDefinationType() != null ? checkList.getDefinationType().getParameterId() : "");
 							for (int i = 0; i < technicalCheckLists.size(); i++) {
 								ScQtCheckList qtCheckList = technicalCheckLists
 										.get(i);
-
-								if (qtCheckList.getTitle().equalsIgnoreCase(
-										checkList.getTitle())) {
+								
+								String qtCheckListTitle = qtCheckList.getTitle() + "_"
+										+ (qtCheckList.getDefinationType() != null ? qtCheckList.getDefinationType().getParameterId() : "");
+								if (qtCheckListTitle.equals(checkListTitle)) {
+									// Bug #33249@Syazani 27/07/2022 -- End
 									techSpec = true;
 									technicalCheckLists.remove(i);
 									technicalCheckLists.add(i, checkList);
@@ -11753,12 +11813,16 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						if (null != finanicialCheckLists
 								&& !finanicialCheckLists.isEmpty()) {
 							boolean finspec = false;
-
+							// Bug #33249@Syazani 27/07/2022 -- Start
+							String checkListTitle = checkList.getTitle() + "_"
+									+ (checkList.getDefinationType() != null ? checkList.getDefinationType().getParameterId() : "");
 							for (int i = 0; i < finanicialCheckLists.size(); i++) {
 								ScQtCheckList qtCheckList = finanicialCheckLists
 										.get(i);
-								if (qtCheckList.getTitle().equalsIgnoreCase(
-										checkList.getTitle())) {
+								String qtCheckListTitle = qtCheckList.getTitle() + "_"
+										+ (qtCheckList.getDefinationType() != null ? qtCheckList.getDefinationType().getParameterId() : "");
+								if (qtCheckListTitle.equals(checkListTitle)) {
+									// Bug #33249@Syazani 27/07/2022 -- End
 									finspec = true;
 									finanicialCheckLists.remove(i);
 									finanicialCheckLists.add(i, checkList);
@@ -11848,6 +11912,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					.getScQtCheckSt2techProposal();
 			List<ScQtCheckList> finanicalAllCheckList = this.getManagedBean()
 					.getScQtCheckSt2financeProposalList();
+			// Bug #33249@Syazani 24/11/2022 -- Start
+			String scQtCheckListTitle = scQtCheckList.getTitle() + "_"
+					+ (scQtCheckList.getDefinationType() != null ? scQtCheckList.getDefinationType().getParameterId() : "");
+			// Bug #33249@Syazani 24/11/2022 -- End
 			if (this.getManagedBean().getIndex() == -1
 					&& null == scQtCheckList.getQtChecklistId()) {
 				if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
@@ -11859,12 +11927,15 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	                    		   technicalSpecCount++;
 	                    		   localChecckListseq= localChecckListseq <techlist.getChecklistSeq()?techlist.getChecklistSeq(): localChecckListseq;
 	                    		   
-	                    	   }
-							if (techlist.getTitle().trim()
-									.replaceAll("\\s", "").equalsIgnoreCase(scQtCheckList.getTitle().trim().replaceAll("\\s", ""))) {
-						throw new EpException(MessageConst.ERROR_760207,
-								new String[] { scQtCheckList.getTitle() });
-					}
+						  }
+						  // Bug #33249@Syazani 27/07/2022 -- Start
+						  String techlistTitle = techlist.getTitle() + "_"
+								  + (techlist.getDefinationType() != null ? techlist.getDefinationType().getParameterId() : "");
+						  if (techlistTitle.trim().replaceAll("\\s", "").equalsIgnoreCase(scQtCheckListTitle.trim().replaceAll("\\s", ""))) {
+							// Bug #33249@Syazani 27/07/2022 -- End
+							  throw new EpException(MessageConst.ERROR_760207,
+									  new String[] { scQtCheckList.getTitle() });
+						  }
 					  }
 					  log.info("QTID:"+getManagedBean().getQt().getQtId()+"localChecckListseq"+localChecckListseq);
 					  if(technicalSpecCount>0){
@@ -11872,17 +11943,47 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					  }
 				}
 				if (null != finanicalAllCheckList && !finanicalAllCheckList.isEmpty()) {
+					// Bug #33249@Syazani 24/11/2022
                     for(ScQtCheckList financiallist:finanicalAllCheckList){
-					if (null!=financiallist
-							.getDefinationType() && !QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(financiallist
-							.getDefinationType().getParameterCode()) && financiallist.getTitle().trim()
-							.replaceAll("\\s", "").equalsIgnoreCase(scQtCheckList.getTitle().trim().replaceAll("\\s", ""))) {
-						throw new EpException(MessageConst.ERROR_760207,
-								new String[] { scQtCheckList.getTitle() });
+						String financiallistTitle = financiallist.getTitle() + "_"
+								+ (financiallist.getDefinationType() != null ? financiallist.getDefinationType().getParameterId() : "");
+						if (null != financiallist.getDefinationType()
+								&& !QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(financiallist.getDefinationType().getParameterCode())
+								&& financiallistTitle.trim().replaceAll("\\s", "").equalsIgnoreCase(scQtCheckListTitle.trim().replaceAll("\\s", ""))) {
+							// Bug #33249@Syazani 27/07/2022 -- End
+							throw new EpException(MessageConst.ERROR_760207,
+									new String[] { scQtCheckList.getTitle() });
+						}
+                    }
+				}
+				// Bug #33249@Syazani 24/11/2022 -- Start
+			} else {
+				if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
+					for (ScQtCheckList techlist : technicalCheckList) {
+						Long qtChecklistId = techlist.getQtChecklistId() != null ? techlist.getQtChecklistId() : 0;
+						String techlistTitle = techlist.getTitle() + "_"
+								+ (techlist.getDefinationType() != null ? techlist.getDefinationType().getParameterId() : "");
+						if (techlistTitle.trim().replaceAll("\\s", "").equalsIgnoreCase(scQtCheckListTitle.trim().replaceAll("\\s", ""))
+								&& !scQtCheckList.getQtChecklistId().equals(qtChecklistId)) {
+							throw new EpException(MessageConst.ERROR_760207, new String[] { scQtCheckList.getTitle() });
+						}
 					}
-                   }
+				}
+				if (null != finanicalAllCheckList && !finanicalAllCheckList.isEmpty()) {
+					for (ScQtCheckList financiallist : finanicalAllCheckList) {
+						Long qtChecklistId = financiallist.getQtChecklistId() != null ? financiallist.getQtChecklistId() : 0;
+						String financiallistTitle = financiallist.getTitle() + "_"
+								+ (financiallist.getDefinationType() != null ? financiallist.getDefinationType().getParameterId() : "");
+						if (null != financiallist.getDefinationType()
+								&& !QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(financiallist.getDefinationType().getParameterCode())
+								&& financiallistTitle.trim().replaceAll("\\s", "").equalsIgnoreCase(scQtCheckListTitle.trim().replaceAll("\\s", ""))
+								&& !scQtCheckList.getQtChecklistId().equals(qtChecklistId)) {
+							throw new EpException(MessageConst.ERROR_760207, new String[] { scQtCheckList.getTitle() });
+						}
+					}
 				}
 			}
+			// Bug #33249@Syazani 24/11/2022 -- End
 			scQtCheckList.setTitle(scQtCheckList.getScQtDoc()
 					.getTplSpecMaster().getSpecName());
 			scQtCheckList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
