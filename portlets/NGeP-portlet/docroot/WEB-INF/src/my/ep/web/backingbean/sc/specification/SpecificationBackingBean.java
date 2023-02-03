@@ -21323,8 +21323,7 @@ if(null!=allTechnicalChecklist){
 					//#28784 - Start
 					for(ScQtCheckList up :updatedNewCheckLists){
 						if(up.getQtChecklistId().equals(st.getQtChecklistId())){
-							up.setPmDemoStatus(st.getPmDemoStatus());
-							break;
+							up.setPmDemoStatus(st.getPmDemoStatus());							
 						}
 					}//#28784 - End
 				
