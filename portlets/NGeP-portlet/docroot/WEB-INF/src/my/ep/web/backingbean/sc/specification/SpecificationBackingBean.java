@@ -272,6 +272,7 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
+
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.util.PortalUtil;
 //#29732 Start - reOpen Fix
@@ -20530,6 +20531,13 @@ if(null!=allTechnicalChecklist){
 					if (!updatedNewCheckLists.contains(st)) {
 						updatedNewCheckLists.add(st);
 					}
+					//#28784 - Start
+					for(ScQtCheckList up :updatedNewCheckLists){
+						if(up.getQtChecklistId().equals(st.getQtChecklistId())){
+							up.setPmDemoStatus(st.getPmDemoStatus());
+							break;
+						}
+					}//#28784 - End
 				}
 				checklistSorting(updatedNewCheckLists);
 			}//#28784 - End	
@@ -20994,6 +21002,7 @@ if(null!=allTechnicalChecklist){
 				if (null != obj.getDefinationType().getParameterCode()
 						&& obj.getDefinationType().getParameterCode()
 								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
+								this.setTemplateSpecMaster(obj);
 					if (QTStatusConst.TS_PENDING_SUBMISSION.equals(obj.getPmDemoStatus().getStatusId())) {
 						checkTS = true;
 						break;
