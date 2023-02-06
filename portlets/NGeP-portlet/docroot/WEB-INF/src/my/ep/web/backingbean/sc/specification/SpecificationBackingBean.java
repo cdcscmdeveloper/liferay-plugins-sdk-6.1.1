@@ -2219,13 +2219,6 @@ public class SpecificationBackingBean extends
 						resDTO.getFinancialCheckLists());
 			}
 			// reqDTO.setSpecType("T");
-			//#34451,#34458,#34450 related to #25138 -start
-			if(reqDTO.getScQt() != null){
-				specSo = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
-				this.getManagedBean().setWipStatusMax(specSo.checkWipScoreSettingMax(reqDTO));
-			}
-			//#34451,#34458,#34450 related to #25138 -end
 			List<Integer> settinglist = new ArrayList<Integer>();
 			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL);
 			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_DEMO);
@@ -2711,20 +2704,12 @@ public class SpecificationBackingBean extends
 							SpecificationResDTO resDTO2 = specSo
 									.retrieveQtScoreOfferPricesZonal(reqDTO2);
 							//====#31913 bug related to #25138====end
-							//#34451,#34458,#34450 related to #25138 -start
-							if (this.getManagedBean().getCurrentStatusId()
-									.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
-									&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())
-									||  this.getManagedBean().getCurrentStatusId()
-									.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
-									&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())
-									||  this.getManagedBean().getCurrentStatusId()
-									.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT)
-									&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())) {
-								populateZonalDetails(tmpCheckList, newOfferList);
+							// #25138 - 31578 - Start.
+							if (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
+										&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())) {
+						        	populateZonalDetails(tmpCheckList, newOfferList);
 							}
 							// #25138 - 31578 - End.
-							//#34451,#34458,#34450 related to #25138 -end
 							//====#31913 bug related to #25138==== start
 							List<ScQtScoreOfferPrice> scQtScoreOfferPrices = new ArrayList<ScQtScoreOfferPrice>();
 							if(!resDTO2.getScoreOfferPrice().isEmpty()){
@@ -2952,14 +2937,6 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().getFinancialScoring()
 						.addAll(localChecklist);
-				
-				//#34451,#34458,#34450 related to #25138 -start
-				if(reqDTO.getScQt() != null){
-					specSo = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
-					this.getManagedBean().setWipStatusMax(specSo.checkWipScoreSettingMax(reqDTO));
-				}
-				//#34451,#34458,#34450 related to #25138 -end
 				
 				//#25138 Reendorsed -populate total max score for TS and other element - start
 				if(this.getManagedBean().getQt().isZonal()){
