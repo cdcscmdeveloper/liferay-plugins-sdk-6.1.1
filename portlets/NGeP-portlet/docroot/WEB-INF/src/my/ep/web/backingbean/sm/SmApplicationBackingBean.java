@@ -10084,10 +10084,14 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setMissinDocs(new ArrayList<SmApplSupportDoc>());
 		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
+			//#34392 - START
 			if (doc.getPmDocument().isMandatory()
 					&& (doc.getVerifiedFlg() == null || doc.getVerifiedFlg() != 1)) {
 				getManagedBean().getMissinDocs().add(doc);
+			}else if(!doc.getPmDocument().isMandatory() && (doc.getVerifiedFlg() == null || doc.getVerifiedFlg() != 1)){
+				getManagedBean().getMissinDocs().add(doc);
 			}
+			//#34392 - End
 		}
 		//log.info("**** Send Inquiry List Size ***** "
 			//	+ getManagedBean().getMissinDocs().size());
