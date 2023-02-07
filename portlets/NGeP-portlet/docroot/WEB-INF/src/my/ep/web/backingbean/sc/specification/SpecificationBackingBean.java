@@ -13417,6 +13417,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			throw e;
 		} finally {
 			this.getManagedBean().setFinTempScQtChecklist(null);
+			// Bug #34100 - Start
+			this.getManagedBean().getScQtChecklist()
+					.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			// Bug #34100 - End
 		}
 		// 1873 - end - note 97	
 
