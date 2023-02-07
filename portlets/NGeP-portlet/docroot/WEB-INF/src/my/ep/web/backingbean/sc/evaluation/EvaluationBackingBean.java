@@ -31,7 +31,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -1348,7 +1347,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			EvaluationResDTO resDTO = new EvaluationResDTO();
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-			
+
 			//#28786 - start
 			List<ScQtProposalChecklist> technicalCompliance = new ArrayList<ScQtProposalChecklist>();
 
@@ -1368,16 +1367,20 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							technicalCompliance.add(proposalCheckList);
 						}
 					}
+					
 					reqDTO.setCheckList(this.getManagedBean().getQtProposalChecklist().getScQtCheckList());
 				} else {
 					for(ScQtProposalChecklist proposalCheckList2 : this.getManagedBean()
 							.getComplianceFinancialProposalCheckList()) {
 						if(proposalCheckList2.getScQtProposal().getSupplierNo() == this.getManagedBean().getQtProposalChecklist().getScQtProposal().getSupplierNo()) {
 							proposalCheckList2.setCompliance(this.getManagedBean().getQtProposalChecklist().getCompliance());
+							
 							if (null != this.getManagedBean().getQtProposalChecklist().getRemark()) {
 								proposalCheckList2.setRemark(this.getManagedBean().getQtProposalChecklist().getRemark());
 							}
+							
 							technicalCompliance.add(proposalCheckList2);
+							
 							reqDTO.setCheckList(proposalCheckList2.getScQtCheckList());
 						}
 					}
@@ -1467,9 +1470,12 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			}
 
 			if (qtCheckLists != null) {
-				updateCheckListIntoQtCheckLists(qtCheckLists,
-						qtCheckLists.indexOf(getManagedBean()
-								.getScQtChecklist()), resDTO.getCheckList());
+				// Bug #33249@Syazani 03/08/2022 -- Start
+//				updateCheckListIntoQtCheckLists(qtCheckLists,
+//						qtCheckLists.indexOf(getManagedBean()
+//								.getScQtChecklist()), resDTO.getCheckList());
+				updateCheckListIntoQtCheckLists(qtCheckLists, getManagedBean().getScQtChecklist(), resDTO.getCheckList());
+				// Bug #33249@Syazani 03/08/2022 -- End
 			}
 
 			/*
@@ -1516,7 +1522,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			evaluationSo = null;
 		}
 	}
-
+	// Bug #33249@Syazani 03/08/2022 -- Start
+	/*private void updateCheckListIntoQtCheckLists(
 	private void updateCheckListIntoQtCheckLists(
 			List<ScQtCheckList> qtCheckLists, int toBeUpdateChecklistIndex,
 			ScQtCheckList toBeUpdateCheckList) {
@@ -1537,7 +1544,29 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				qtCheckLists.add(toBeUpdateChecklistIndex, toBeUpdateCheckList);
 			}
 		}
+	}*/
+	
+	/**
+	 * Replaced current method above due to replace object from list is not
+	 * effective if got more than two(2) list that contains same title with
+	 * different mechanism
+	 *
+	 */
+	private void updateCheckListIntoQtCheckLists(List<ScQtCheckList> qtCheckLists, ScQtCheckList oldCurrChecklist, ScQtCheckList toBeUpdateCheckList) {
+		if (oldCurrChecklist != null && qtCheckLists != null && qtCheckLists.size() > 0) {
+			for (int i = 0; i < qtCheckLists.size(); i++) {
+				ScQtCheckList tempChecklist = qtCheckLists.get(i);
+				Long tempChckLstId = tempChecklist.getQtChecklistId();
+				Long oldChckLstId = oldCurrChecklist.getQtChecklistId();
+				if (tempChckLstId.equals(oldChckLstId)) {
+					qtCheckLists.set(i, toBeUpdateCheckList);
+					break;
+				}
+			}
+		}
+		this.getManagedBean().setScQtChecklist(toBeUpdateCheckList);
 	}
+	// Bug #33249@Syazani 03/08/2022 -- End
 
 	/**
 	 * Save presentation demo dtls.user click on save button in presentation demo tab.
@@ -1759,13 +1788,12 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 	public String complianceFinancialBackaction() {
 		this.getManagedBean().setTechindex(-1);
 		if(this.getManagedBean().getNonScoringActiveIndex() != 1){
-		this.getManagedBean().getComplianceTechnicalProposalCheckListDM().reloadDataWithoutReset(); // Bug #33541@Syazani 07/07/2022
-		return "/xhtml/sc/evaluation/compliance/financialComplianceEditSuppliers.xhtml";
+			this.getManagedBean().getComplianceTechnicalProposalCheckListDM().reloadDataWithoutReset(); // Bug #33541@Syazani 07/07/2022
+			return "/xhtml/sc/evaluation/compliance/financialComplianceEditSuppliers.xhtml";
+		} else {
+			return "/xhtml/sc/evaluation/compliance/financialComplianceViewSuppliers.xhtml";
+		}
 	}
-	else {
-		return "/xhtml/sc/evaluation/compliance/financialComplianceViewSuppliers.xhtml";
-	}
-}
 	//#28786 - end
 
 	/**
@@ -2163,7 +2191,9 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 											QTConstants.COMPLIANCE_CHECK));
 						}
 					}
+
 				}
+
 			}
 
 			this.getManagedBean().setEvaluationStgTechnicalCheckList(
@@ -8964,9 +8994,12 @@ private void retriveCommitteeRemarksList(){
 					.getQtProposalChecklist());
 
 			if (qtCheckLists != null) {
-				updateCheckListIntoQtCheckLists(qtCheckLists,
-						qtCheckLists.indexOf(getManagedBean()
-								.getScQtChecklist()), resDto.getCheckList());
+				// Bug #33249@Syazani 03/08/2022 -- Start
+//				updateCheckListIntoQtCheckLists(qtCheckLists,
+//						qtCheckLists.indexOf(getManagedBean()
+//								.getScQtChecklist()), resDto.getCheckList());
+				updateCheckListIntoQtCheckLists(qtCheckLists, getManagedBean().getScQtChecklist(), resDto.getCheckList());
+				// Bug #33249@Syazani 03/08/2022 -- End
 			}
 			if (SourcingConstants.TECHNICAL_DOCTYPE.equals(qtProposalChecklist
 					.getScQtCheckList().getDocCategory())) {
@@ -9438,9 +9471,12 @@ private void retriveCommitteeRemarksList(){
 			}
 
 			if (qtCheckLists != null) {
-				updateCheckListIntoQtCheckLists(qtCheckLists,
-						qtCheckLists.indexOf(getManagedBean()
-								.getScQtChecklist()), evalResDTO.getCheckList());
+				// Bug #33249@Syazani 03/08/2022 -- Start
+//				updateCheckListIntoQtCheckLists(qtCheckLists,
+//						qtCheckLists.indexOf(getManagedBean()
+//								.getScQtChecklist()), evalResDTO.getCheckList());
+				updateCheckListIntoQtCheckLists(qtCheckLists, getManagedBean().getScQtChecklist(), evalResDTO.getCheckList());
+				// Bug #33249@Syazani 03/08/2022 -- End
 			}
 
 			successMessage(MessageConst.INFO_700004,
@@ -11895,16 +11931,21 @@ private void retriveCommitteeRemarksList(){
 							&& !technicalChecklsit.isEmpty()) {
 						for (int i = 0; i < technicalChecklsit.size(); i++) {
 							ScQtCheckList checkList = technicalChecklsit.get(i);
-							if (checkList.getTitle()
-									.equalsIgnoreCase(
-											technicalUploadNoActionCheckList
-													.getTitle())) {
-								int index = technicalChecklsit.indexOf(this
-										.getManagedBean().getScQtChecklist());
-								// technicalChecklsit.remove(checkList);
-								technicalChecklsit.set(index,
-										technicalUploadNoActionCheckList);
+							// Bug #33249@Syazani 03/08/2022 -- Start
+							if (checkList.getQtChecklistId().equals(technicalUploadNoActionCheckList.getQtChecklistId())) {
+								technicalChecklsit.set(i, technicalUploadNoActionCheckList);
 							}
+//							if (checkList.getTitle()
+//									.equalsIgnoreCase(
+//											technicalUploadNoActionCheckList
+//													.getTitle())) {
+//								int index = technicalChecklsit.indexOf(this
+//										.getManagedBean().getScQtChecklist());
+//								// technicalChecklsit.remove(checkList);
+//								technicalChecklsit.set(index,
+//										technicalUploadNoActionCheckList);
+//							}
+							// Bug #33249@Syazani 03/08/2022 -- End
 
 						}
 					}
@@ -11999,16 +12040,21 @@ private void retriveCommitteeRemarksList(){
 							&& !technicalChecklsit.isEmpty()) {
 						for (int i = 0; i < technicalChecklsit.size(); i++) {
 							ScQtCheckList checkList = technicalChecklsit.get(i);
-							if (checkList.getTitle()
-									.equalsIgnoreCase(
-											financialUploadNoActionCheckList
-													.getTitle())) {
-								// technicalChecklsit.remove(checkList);
-								int index = technicalChecklsit.indexOf(this
-										.getManagedBean().getScQtChecklist());
-								technicalChecklsit.set(index,
-										financialUploadNoActionCheckList);
+							// Bug #33249@Syazani 03/08/2022 -- Start
+							if (checkList.getQtChecklistId().equals(financialUploadNoActionCheckList.getQtChecklistId())) {
+								technicalChecklsit.set(i, financialUploadNoActionCheckList);
 							}
+//							if (checkList.getTitle()
+//									.equalsIgnoreCase(
+//											financialUploadNoActionCheckList
+//													.getTitle())) {
+//								// technicalChecklsit.remove(checkList);
+//								int index = technicalChecklsit.indexOf(this
+//										.getManagedBean().getScQtChecklist());
+//								technicalChecklsit.set(index,
+//										financialUploadNoActionCheckList);
+//							}
+							// Bug #33249@Syazani 03/08/2022 -- End
 
 						}
 					}
