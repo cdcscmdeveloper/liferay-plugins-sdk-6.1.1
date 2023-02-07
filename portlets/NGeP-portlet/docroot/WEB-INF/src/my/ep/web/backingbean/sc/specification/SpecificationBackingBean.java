@@ -16558,6 +16558,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						}
 						// #32130, #25138 - Start.
 					} else {
+						// Bug #34100 - Start
+						this.getManagedBean().getScQtChecklist().getPmStatus()
+								.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+						// Bug #34100 - End
+
 						throw new EpException(MessageConst.ERROR_760520);
 					}
 					// #32130, #25138 - End.
