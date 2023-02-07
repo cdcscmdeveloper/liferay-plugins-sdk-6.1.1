@@ -166,24 +166,53 @@ public class TaskReassignmentBackingBean extends
 		adminRolesForBulkReassignment.put(RoleCode.MIN_CONTRACT_ADMIN.value(), RoleCode.MIN_CONTRACT_ADMIN.value());
 		adminRolesForBulkReassignment.put(RoleCode.PTJ_ADMIN.value(), RoleCode.PTJ_ADMIN.value());
 		adminRolesForBulkReassignment.put(RoleCode.SUPPORT_ADMIN.value(), RoleCode.SUPPORT_ADMIN.value());
-		
-		invalidRolesForBulkReassignmentLst.add(RoleCode.FEC_CHAIRPERSON.value());
-		invalidRolesForBulkReassignmentLst.add(RoleCode.FEC_MEMBER.value());
-		invalidRolesForBulkReassignmentLst.add(RoleCode.FEC_SECRETARY.value());
-		invalidRolesForBulkReassignmentLst.add(RoleCode.TEC_CHAIRPERSON.value());
-		invalidRolesForBulkReassignmentLst.add(RoleCode.TEC_MEMBER.value());
-		invalidRolesForBulkReassignmentLst.add(RoleCode.TEC_SECRETARY.value());
-		invalidRolesForBulkReassignmentLst.add(RoleCode.EC_CHAIRPERSON.value());
-		invalidRolesForBulkReassignmentLst.add(RoleCode.EC_MEMBER.value());
-		invalidRolesForBulkReassignmentLst.add(RoleCode.EC_SECRETARY.value());
+
+		//34331 - start -Adding new status for QT
 		invalidRolesForBulkReassignmentLst.add(RoleCode.SC_CHAIRPERSON.value());
 		invalidRolesForBulkReassignmentLst.add(RoleCode.SC_MEMBER.value());
 		invalidRolesForBulkReassignmentLst.add(RoleCode.SC_SECRETARY.value());
-		invalidRolesForBulkReassignmentLst.add(RoleCode.OC_CHAIRPERSON.value());
-		invalidRolesForBulkReassignmentLst.add(RoleCode.OC_MEMBER.value());
-		invalidRolesForBulkReassignmentLst.add(RoleCode.OC_SECRETARY.value());
-		invalidRolesForBulkReassignmentLst.add(RoleCode.PBA_MEMBER.value());
-		invalidRolesForBulkReassignmentLst.add(RoleCode.PPB_MEMBER.value());
+		
+
+		adminRolesForBulkReassignment.put(RoleCode.FEC_CHAIRPERSON.value(),RoleCode.FEC_CHAIRPERSON.value());
+		adminRolesForBulkReassignment.put(RoleCode.FEC_MEMBER.value(),RoleCode.FEC_MEMBER.value());
+		adminRolesForBulkReassignment.put(RoleCode.FEC_SECRETARY.value(),RoleCode.FEC_SECRETARY.value());
+		
+		adminRolesForBulkReassignment.put(RoleCode.TEC_CHAIRPERSON.value(),RoleCode.TEC_CHAIRPERSON.value());
+		adminRolesForBulkReassignment.put(RoleCode.TEC_MEMBER.value(),RoleCode.TEC_MEMBER.value());
+		adminRolesForBulkReassignment.put(RoleCode.TEC_SECRETARY.value(),RoleCode.TEC_SECRETARY.value());
+		
+		adminRolesForBulkReassignment.put(RoleCode.EC_CHAIRPERSON.value(),RoleCode.EC_CHAIRPERSON.value());
+		adminRolesForBulkReassignment.put(RoleCode.EC_MEMBER.value(),RoleCode.EC_MEMBER.value());
+		adminRolesForBulkReassignment.put(RoleCode.EC_SECRETARY.value(),RoleCode.EC_SECRETARY.value());
+
+		adminRolesForBulkReassignment.put(RoleCode.OC_CHAIRPERSON.value(),RoleCode.OC_CHAIRPERSON.value());
+		adminRolesForBulkReassignment.put(RoleCode.OC_MEMBER.value(),RoleCode.OC_MEMBER.value());
+		adminRolesForBulkReassignment.put(RoleCode.OC_SECRETARY.value(),RoleCode.OC_SECRETARY.value());	
+		
+		adminRolesForBulkReassignment.put(RoleCode.FPB_CHAIRPERSON.value(),RoleCode.FPB_CHAIRPERSON.value());
+		adminRolesForBulkReassignment.put(RoleCode.FPB_MEMBER.value(),RoleCode.FPB_MEMBER.value());
+		adminRolesForBulkReassignment.put(RoleCode.FPB_SECRETARY.value(),RoleCode.FPB_SECRETARY.value());
+		
+		adminRolesForBulkReassignment.put(RoleCode.PBA_CHAIRPERSON.value(),RoleCode.PBA_CHAIRPERSON.value()); 
+		adminRolesForBulkReassignment.put(RoleCode.PBA_MEMBER.value(),RoleCode.PBA_MEMBER.value());
+		adminRolesForBulkReassignment.put(RoleCode.PBA_SECRETARY.value(),RoleCode.PBA_SECRETARY.value());
+		
+		adminRolesForBulkReassignment.put(RoleCode.PBB_CHAIRPERSON.value(),RoleCode.PBB_CHAIRPERSON.value()); 
+		adminRolesForBulkReassignment.put(RoleCode.PBB_SECRETARY.value(),RoleCode.PBB_SECRETARY.value());
+		
+		adminRolesForBulkReassignment.put(RoleCode.PPB_CHAIRPERSON.value(),RoleCode.PPB_CHAIRPERSON.value());
+		adminRolesForBulkReassignment.put(RoleCode.PPB_MEMBER.value(),RoleCode.PPB_MEMBER.value());
+		adminRolesForBulkReassignment.put(RoleCode.PPB_SECRETARY.value(),RoleCode.PPB_SECRETARY.value());
+		
+		adminRolesForBulkReassignment.put(RoleCode.QCA_CHAIRPERSON.value(),RoleCode.QCA_CHAIRPERSON.value());
+		adminRolesForBulkReassignment.put(RoleCode.QCA_MEMBER.value(),RoleCode.QCA_MEMBER.value());
+		adminRolesForBulkReassignment.put(RoleCode.QCA_SECRETARY.value(),RoleCode.QCA_SECRETARY.value());
+		
+		adminRolesForBulkReassignment.put(RoleCode.QCB_CHAIRPERSON.value(),RoleCode.QCB_CHAIRPERSON.value());
+		adminRolesForBulkReassignment.put(RoleCode.QCB_MEMBER.value(),RoleCode.QCB_MEMBER.value());
+		adminRolesForBulkReassignment.put(RoleCode.QCB_SECRETARY.value(),RoleCode.QCB_SECRETARY.value());
+
+		//34331 - end		
 		//invalidRolesForBulkReassignmentLst.add(RoleCode.PPB_SECRETARY.value()); //for test validation
 	}
 	//[#25018] - end
