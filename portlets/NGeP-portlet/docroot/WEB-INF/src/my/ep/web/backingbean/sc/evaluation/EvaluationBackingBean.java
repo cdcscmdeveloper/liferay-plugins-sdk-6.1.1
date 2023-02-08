@@ -18168,9 +18168,7 @@ private void retriveCommitteeRemarksList(){
 			
 			if (null != resDTO && null != resDTO.getSpecQuestionList()) {
 				for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
-					if (question.isMandatorySpec()) {
-						item.getScRequestItem().getTplSpecQuestion().setMandatorySpecForSample(true);
-					}
+						item.getScRequestItem().getTplSpecQuestion().setMandatorySpecForSample(question.isMandatorySpec()?true:false);
 				}
 			}
 		}
