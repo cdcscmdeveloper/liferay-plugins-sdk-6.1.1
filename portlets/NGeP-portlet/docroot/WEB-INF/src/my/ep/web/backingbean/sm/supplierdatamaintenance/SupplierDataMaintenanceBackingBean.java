@@ -945,8 +945,6 @@ public class SupplierDataMaintenanceBackingBean extends
 					} else if (delCat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS) {
 						apprCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						apprCat.setCancelledDate(new Date());
-						apprCat.setPoDecFlg(null);    //#34209 START
-						apprCat.setApprvrDecFlg(1);   //#34209 END
 						getManagedBean().getDeleteApprovedCategories().add(apprCat);
 					}
 				}
@@ -964,11 +962,8 @@ public class SupplierDataMaintenanceBackingBean extends
 				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
 				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
 				cat.setApprovedDate(new Date());
-				if (getManagedBean().isPoUser()) {
-					cat.setPoDecFlg(1);
-				} else {
-					cat.setApprvrDecFlg(1);
-				}
+				cat.setApprvrDecFlg(1);		//#34209 START
+				cat.setPoDecFlg(null);		//#34209 END
 				SmApplicationUtil.setSupplierCategoryEffectiveDate(cat,
 						getManagedBean().getSmAppl().getApplType());
 			}
