@@ -1856,6 +1856,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 				
 	// #29521 - end
 	
+	//#34451,#34458,#34450 related to #25138 -start
+	private int wipStatusMax;
+	//#34451,#34458,#34450 related to #25138 -end
+
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11742,6 +11747,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isFromSpecEndorse = isFromSpecEndorse;
 	}
 	// Bug #33661@Syazani 07/10/2022 -- End
+	
+	//#34451,#34458,#34450 related to #25138 -start
+	/**
+	 * @return the max wip 3serangkai
+	 */
+	public int getWipStatusMax() {
+		return wipStatusMax;
+	}
+
+	/**
+	 * @param  max wip check 3serangkai
+	 *            the wipRequired to set
+	 */
+	public void setWipStatusMax(int wipStatusMax) {
+		this.wipStatusMax = wipStatusMax;
+	}
+	//#34451,#34458,#34450 related to #25138 -end
 
 }
 
