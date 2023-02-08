@@ -2007,7 +2007,14 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return epv;
 		
 	}
-	
+	/**
+	 * Get latest status of Extension of Proposal Validity (EPV) return true if Approved
+	 * 
+	 * @param qtId
+	 * 
+	 * @return the boolean
+	 * 
+	 */
 	public boolean isEPVLatestStatusApprove(Long qtId) {
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		
