@@ -16,10 +16,99 @@
 			test="#{qTCommitteBackingBean.managedBean.committeMember.userSelection eq 'E' }">
 			<p:panel id="usersearchpnlid" header="#{lbl['lbl.sc.search']}"
 				toggleable="true">
+				<!-- #12471 Start -->
+				<ac:instructionText
+					value="#{lbl['lbl.sc.add.committee.instruction.one']}" />
+				<br />
+				<br />
+				<ac:instructionText
+					value="#{lbl['lbl.sc.add.committee.instruction.two']}" />
+				<!-- #12471 End -->
 				<table style="width: 100%;">
+					<!-- #12471 Start -->
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sc.name']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.add.committee.org.cat']}" /></td>
+						<td><p:selectOneRadio id="orgCat"
+								value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat}">
+								<p:ajax onstart="blockWidget.show()"
+									oncomplete="blockWidget.hide()" update="usersearchpnlid existingcommitteesearchid"
+									listener="#{qTCommitteBackingBean.reset}" />
+								<f:selectItem
+									itemLabel="#{lbl['lbl.sc.add.committee.ptj.full']}"
+									itemValue="#{ParameterConst.getOrgCatPtj()}" />
+								<f:selectItem itemLabel="#{lbl['lbl.sc.add.committee.oth']}"
+									itemValue="#{ParameterConst.getOrgCatOthers()}" />
+							</p:selectOneRadio></td>
+					</tr>
+					<c:if
+						test="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat eq ParameterConst.getOrgCatPtj()}">
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.add.committee.ministry']}" /></td>
+							<td><p:selectOneMenu id="ministryDD"
+									value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.ministry}">
+									<p:ajax
+										listener="#{qTCommitteBackingBean.onChangeDD(ParameterConst.getMinistryDD())}"
+										update="ptjGroupDD ptjDD" onstart="blockWidget.show()"
+										oncomplete="blockWidget.hide()" />
+									<f:selectItems
+										value="#{qTCommitteBackingBean.managedBean.ministryDD}" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.add.committee.ptj.group']}" /></td>
+							<td><p:selectOneMenu id="ptjGroupDD"
+									value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.ptjGroup}">
+									<p:ajax
+										listener="#{qTCommitteBackingBean.onChangeDD(ParameterConst.getPtjGroupDD())}"
+										update="ptjDD" onstart="blockWidget.show()"
+										oncomplete="blockWidget.hide()" />
+									<f:selectItems
+										value="#{qTCommitteBackingBean.managedBean.ptjGroupDD}" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.add.committee.ptj']}" /></td>
+							<td><p:selectOneMenu id="ptjDD"
+									value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.ptj}">
+									<f:selectItems
+										value="#{qTCommitteBackingBean.managedBean.ptjDD}" />
+								</p:selectOneMenu></td>
+						</tr>
+					</c:if>
+					<c:if
+						test="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat eq ParameterConst.getOrgCatOthers()}">
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.add.committee.org.type']}" /></td>
+							<td><p:selectOneMenu id="orgTypeDD"
+									value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgType}">
+									<p:ajax
+										listener="#{qTCommitteBackingBean.onChangeDD(ParameterConst.getOrgTypeDD())}"
+										update="orgNameDD" onstart="blockWidget.show()"
+										oncomplete="blockWidget.hide()" />
+									<f:selectItems
+										value="#{qTCommitteBackingBean.managedBean.orgTypeDD}" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.add.committee.org.name']}" /></td>
+							<td><p:selectOneMenu id="orgNameDD"
+									value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgName}">
+									<f:selectItems
+										value="#{qTCommitteBackingBean.managedBean.orgNameDD}" />
+								</p:selectOneMenu></td>
+						</tr>
+					</c:if>
+					<!-- #12471 End -->
+					<tr>
+						<!-- #12471 Start -->
+						<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
+						<!-- #12471 End -->
 						<td colspan="3"><p:inputText  onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentAddSearch.jq.click(); return false; }"
 								value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.name}"
 								size="64" required="#{qTCommitteBackingBean.managedBean.nameRequired}" id="name2" 
@@ -96,7 +185,23 @@
 						<h:outputText value="#{existcommitteeuser.designation}"
 							style="white-space: normal;" />
 					</p:column>
-
+					<!-- #12471 Start -->
+					<c:if
+						test="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgCat eq ParameterConst.getOrgCatPtj()}">
+						<p:column headerText="#{lbl['lbl.sc.add.committee.ministry']}">
+							<h:outputText
+								value="#{qTCommitteBackingBean.getOrgDesc(existcommitteeuser.pmUserOrgs,ParameterConst.getOrgTypeMinistry())}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.add.committee.ptj.group']}">
+							<h:outputText
+								value="#{qTCommitteBackingBean.getOrgDesc(existcommitteeuser.pmUserOrgs,ParameterConst.getOrgTypePtjGroup())}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.add.committee.ptj']}">
+							<h:outputText
+								value="#{qTCommitteBackingBean.getOrgDesc(existcommitteeuser.pmUserOrgs,ParameterConst.getOrgTypePtj())}" />
+						</p:column>
+					</c:if>
+					<!-- #12471 End -->
 					<p:column headerText="#{lbl['lbl.sc.email']}">
 						<h:outputText value="#{existcommitteeuser.email}"
 							style="white-space: normal;" />

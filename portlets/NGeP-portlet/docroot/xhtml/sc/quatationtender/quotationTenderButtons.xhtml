@@ -27,6 +27,9 @@
 	<ui:remove> #30477 Start </ui:remove>
 	<ui:param name="isCommitteeApprovalReviseTask" value="#{qTDetailBB.isCommitteeApprovalReviseTask(qTDetailBB.managedBean.taskName)}" />
 	<ui:remove> #30477 End </ui:remove>
+	<!-- 12471 - start -->
+	<ui:param name="isQTPendingCMTSubmissionAfterPublicationApproval" value="#{qtDetailBB.isQTPendingCMTSubmissionAfterPublicationApproval()}"/>
+	<!-- 12471 - end -->
 		<table width="100%">
 		<tr>
 		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
@@ -229,9 +232,11 @@
 				  	       action="#{qTDetailBB.closeQTDialogPopUp}" disabled="#{isQTClosePermanently}" />
 				  	</c:if>
 				  	<!-- 26095@hatta - end -->
-			  	 	<!--9019 update condition to disable cancel button for QT status was pending  -->
-					<c:if test="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_LOA) and !isQTStatusPendingQtSubmission}">
-					<!-- 9019 -end- -->
+			  	 	<!--9019 update condition to disable cancel button for QT status was pending 
+			  	 	12471 add checking if QT has been approved for publication and current committee status is Pending Submission / Revision -->
+					<c:if test="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_LOA) and !isQTStatusPendingQtSubmission 
+					and (isQTPendingCMTSubmissionAfterPublicationApproval eq false)}">
+					<!-- 9019 & 12471 -end- -->
 						<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 							style="float:right;" action="#{qTDetailBB.checkIsQTAllowCancel}"
 							disabled="#{qTDetailBB.managedBean.qt.brandNew}" />

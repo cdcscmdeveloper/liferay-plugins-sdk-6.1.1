@@ -148,6 +148,7 @@ import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.scretry.ScRetryReqDTO;
 import my.ep.dto.sc.scretry.ScRetryResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
@@ -13024,4 +13025,27 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 	}
 	// #28784 note-#634 - End
+	
+	//12471 - Start - Dayan
+	public boolean isQTPendingCMTSubmissionAfterPublicationApproval(){
+		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		
+		// Check Workflow status for CMT DocType
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_COMMITTE_APROVAL);
+		ScWorkFlowStatusResDTO CMTResDTO = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO);
+
+		// Check if QT has been approved for Publication
+		boolean isQTAfterPublicationApproved = isQTStatusGreaterThan(this.getManagedBean().getQt().getQtStatus().getStatusId(), QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL);
+		Long currentActiveCMTStatusId = CMTResDTO.getWorkFlowStatus().getPmStatus().getStatusId();
+		List<Long> qtStatuses = Arrays.asList(QTStatusConst.CMT_PENDING_SUBMISSION,QTStatusConst.CMT_PENDING_REVISION);
+		
+		if (null != CMTResDTO && isQTAfterPublicationApproved == true && qtStatuses.contains(currentActiveCMTStatusId)) {
+			return true;
+		}
+		return false;
+	}
+	//12471 - End - Dayan
 }
