@@ -3234,6 +3234,11 @@ public class SmApplicationBackingBean extends
 					&& currentPageType
 							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
 
+				//#31043 start
+				SmApplicationUtil.validateCategoriesBeforeSave(true,
+						getManagedBean(), currentTab);
+				//#31043 end
+				
 				SmApplicationUtil
 						.validateOverlapCategoryJustificationAndSuppDocs(
 								getManagedBean(), currentPageType);
