@@ -10252,13 +10252,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				getManagedBean().setSupPropSpecDisable(false);
 			}else{
 				getManagedBean().setSupPropSpecDisable(true);
-				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
+				TemplateSpecResDTO templateSpecResDTO  = new TemplateSpecResDTO();
+				templateSpecResDTO =templateSpecSO.searchSupplierSpecification(specReqDto);
+				
+				if(templateSpecResDTO.getSpecAnswerList().isEmpty()){
+					specReqDto.setCheckingForWIP(true);
+					templateSpecResDTO =templateSpecSO.searchSupplierSpecification(specReqDto);
+				}
 				if(templateSpecResDTO.getSpecAnswerList().isEmpty()){
 					DirectAwardReqDTO awardReqDTOnew = new DirectAwardReqDTO();
 					awardReqDTOnew.setScLoa(this.getManagedBean().getScLoa());
 					DirectAwardResDTO awardResDTOnew =getQtDirectAwardSO().saveScloiloaitemforDirectLOA(awardReqDTOnew);
 					if(awardResDTOnew.isSuccessful()){
-						log.info("WIP data Saved");	
+						log.info("WIP data Saved :"+templateSpecResDTO.getSpecAnswerList().size());	
 						this.getManagedBean().getScLoa().setScLoiLoaItems(awardResDTOnew.getLoa().getScLoiLoaItems());
 					}
 				}
