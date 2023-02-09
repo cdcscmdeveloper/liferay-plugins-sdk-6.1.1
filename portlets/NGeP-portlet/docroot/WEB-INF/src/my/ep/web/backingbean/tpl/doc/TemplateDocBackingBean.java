@@ -80,6 +80,8 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import weblogic.wsee.util.StringUtil; // Bug #34463@Syazani 09/02/2023
+
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfPTable;
 
@@ -105,19 +107,45 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 	public void positionNode(String position) {
 		TreeNode selectedNode = getManagedBean().getDocSectionMap().get(getManagedBean().getSelectedSection());
 		TreeNode parentNode = selectedNode.getParent();
+		// Bug #34463@Syazani 09/02/2023 -- Start
+		TplDocSection tDocSec = null;
+		TplDocSection tDocSecUp = null;
+		// Bug #34463@Syazani 09/02/2023 -- End
 		if (position.equalsIgnoreCase("left")) {
 			if (parentNode != null && !parentNode.getType().equalsIgnoreCase("root")) {
 				selectedNode.setParent(parentNode.getParent());
 				rePosition(parentNode);
 			} else {
-				System.out.println("Cannot move as parent is ROOT.");
+				// Bug #34463@Syazani 09/02/2023 -- Start
+				tDocSec = (TplDocSection) selectedNode.getData();
+				if (tDocSec != null) {
+					if (parentNode.getType().equalsIgnoreCase("root") && !StringUtil.isEmpty(tDocSec.getSectionNumber())) {
+						tDocSec.setSectionNumber(null);
+					} else {
+						System.out.println("Cannot move as parent is ROOT.");
+					}
+				}
+				// Bug #34463@Syazani 09/02/2023 -- End
 			}
 		} else if (position.equalsIgnoreCase("right")) {
 			// First item in the level cannot indent to right
 			int index = parentNode.getChildren().indexOf(selectedNode);
 			if (index > 0) {
-				selectedNode.setParent(parentNode.getChildren().get(index - 1));
-				parentNode.getChildren().get(index - 1).setExpanded(true);
+				// Bug #34463@Syazani 09/02/2023 -- Start
+				tDocSec = (TplDocSection) selectedNode.getData();
+				if (StringUtil.isEmpty(tDocSec.getSectionNumber())) {
+					tDocSecUp = parentNode.getChildren().get(index - 1) != null ? (TplDocSection) parentNode.getChildren().get(index - 1).getData() : null;
+					int number = 1;
+					if (tDocSecUp != null && !StringUtil.isEmpty(tDocSecUp.getSectionNumber()) && tDocSecUp.getSectionNumber().matches(".*\\d.*")) {
+						number = Integer.valueOf(tDocSecUp.getSectionNumber().replaceAll("[^0-9]", ""));
+						number++;
+					}
+					tDocSec.setSectionNumber(String.valueOf(number));		
+				} else {
+					selectedNode.setParent(parentNode.getChildren().get(index - 1));
+					parentNode.getChildren().get(index - 1).setExpanded(true);
+				}
+				// Bug #34463@Syazani 09/02/2023 -- End
 			} else {
 				System.out.println("First item in the level cannot indent to right");
 			}
@@ -327,24 +355,31 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 
 	public void reNumbering(TreeNode root) {
 		int index = 1;
+		int number = 1; // Bug #34463@Syazani 09/02/2023
 		for (TreeNode node : root.getChildren()) {			
 			TplDocSection docSection= (TplDocSection)node.getData()  ;
 			docSection.setIndex(index);
-
-			StringBuilder key = new StringBuilder();
-			if (node.getParent().getData() != null && !node.getParent().getType().equalsIgnoreCase("root")) {
-				TplDocSection docSecNum= (TplDocSection)node.getParent().getData()  ;
-				key.append(docSecNum.getSectionNumber());
-				if(key.length() > 0){
-					key.append(".");
+			// Bug #34463@Syazani 09/02/2023 -- Start
+			if (!StringUtil.isEmpty(docSection.getSectionNumber())) {
+				StringBuilder key = new StringBuilder();
+				if (node.getParent().getData() != null && !node.getParent().getType().equalsIgnoreCase("root")) {
+					TplDocSection docSecNum= (TplDocSection)node.getParent().getData()  ;
+					key.append(docSecNum.getSectionNumber());
+					if(key.length() > 0){
+						key.append(".");
+					}
 				}
+				key.append(number);
+				docSection.setSectionNumber(key.toString());
+				if (!node.getChildren().isEmpty()) {
+					reNumbering(node);
+				}
+			} else {
+				number = 0;
 			}
-			key.append(index);
-			docSection.setSectionNumber(key.toString());
-			if (!node.getChildren().isEmpty()) {
-				reNumbering(node);
-			}
+			// Bug #34463@Syazani 09/02/2023 -- End
 			index++;
+			number++; // Bug #34463@Syazani 09/02/2023
 		}
 	}
 	
@@ -633,7 +668,11 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 				docSetionList.add(docSec);
 				if (!parent.isLeaf()) {
 					getDocSectionList(level + 1, parent, docSetionList);
+					// Bug #34463@Syazani 09/02/2023 -- Start
+				} else if (StringUtil.isEmpty(docSec.getSectionNumber())) {
+					docSec.setSectionLevel(0);
 				}
+				// Bug #34463@Syazani 09/02/2023 -- End
 			}
 		}
 	}
