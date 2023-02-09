@@ -1255,7 +1255,7 @@ public void saveComplianceSample() {
 						String sampleItemRemark = sampleItem.getRemark();
 						if (StringUtils.isBlank(sampleItemRemark)
 								|| StringUtils.isEmpty(sampleItemRemark)) {
-							throw new EpException(MessageConst.ERROR_760543);
+							throw new EpException(MessageConst.ERROR_760545);
 
 						}
 
