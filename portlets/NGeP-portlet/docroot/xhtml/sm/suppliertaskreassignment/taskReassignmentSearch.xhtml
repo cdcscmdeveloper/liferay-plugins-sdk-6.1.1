@@ -28,6 +28,13 @@
 		</p:outputPanel>
 	<p:panel id="pTaskAssignSearch" header="#{lbl['lbl.pm.ta.search']}"
 		toggleable="true">
+		
+		<!-- 29822 start -->
+		<p:blockUI block="pTaskAssignSearch" widgetVar="taskReassignconfirmPopupBlockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<!-- 29822 end -->
+		
 		<table class="ppTwoTable">
 			<tr>
 				<th width="15%"><p:outputLabel value="#{lbl['lbl.sm.companyname']}" /> </th>
@@ -42,16 +49,19 @@
 				<th width="15%"><p:outputLabel
 						value="#{lbl['lbl.pm.ta.username']}" /> <p:outputLabel value="*" styleClass="mandatory" /></th>
 				<td width="60%">
+					<!-- 29822 - start - reendorse reopen cosmetic -->
 						<p:outputPanel id="opUserLov">
 						<ac:lov id="lovUser" lovId="SM_PERSONNEL_LOV"
 						size="80"
-						update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" readonly="true"
+						update=":form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:pUserTaskAssignResult,:form:pGroupTaskAssignResult,:form:pOthersTaskAssignResult" readonly="true"
 						headerText="#{lbl['lbl.pm.ta.user.lov']}"
 						value="#{supplierTaskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.name}"
 						saveObject="supplierTaskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user"
 						conditionField="#{supplierTaskReassignmentBackingBean.constructUserConditionFields()}"
 						postUpdateListener="supplierTaskReassignmentBackingBean.onChangeUser" />
 						</p:outputPanel></td>
+
+					<!-- 29822 - end - reendorse reopen cosmetic -->
 
 				<td width="25%"></td>
 			</tr>
@@ -131,26 +141,34 @@
 					
 				</td>
 			</tr>
+			<!-- 29822 start -->
 			<tr>
 				<td colspan="4">
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.search']}" 
 							id="cbSearchTask" widgetVar="cbSearchTask"
 							process="pTaskAssignSearch" action="#{supplierTaskReassignmentBackingBean.searchTaskAssign}"
-							update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" 
+							update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,
+							:form:dtOthersTaskAssignResult,:form:deleteGroupTasks,:form:deleteOthersTasks,
+							:form:pGroupTaskAssignResult,:form:pOthersTaskAssignResult" 
 							onclick="cbSearchTask.disable();cbResetTask.disable()"  
-			  				oncomplete="cbSearchTask.enable();cbResetTask.enable()"
+							onstart="taskReassignconfirmPopupBlockWidget.show()"
+			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();taskReassignconfirmPopupBlockWidget.hide();"
 							/>
 						<p:commandButton id="cbResetTask" widgetVar="cbResetTask"
 							onclick="cbSearchTask.disable();cbResetTask.disable()"  
-			  				oncomplete="cbSearchTask.enable();cbResetTask.enable()"
+							onstart="taskReassignconfirmPopupBlockWidget.show()"
+			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();taskReassignconfirmPopupBlockWidget.hide();"
 							value="#{lbl['lbl.btn.reset']}" 
 							action="#{supplierTaskReassignmentBackingBean.resetTaskAssignSearchBean}"
-							update="pTaskAssignSearch,:form:userTaskListID,:form:groupTaskListID,:form:othersTaskListID," 
+							update="pTaskAssignSearch,:form:userTaskListID,:form:groupTaskListID,
+							:form:othersTaskListID,:form:deleteGroupTasks,:form:deleteOthersTasks,
+							:form:pGroupTaskAssignResult,:form:pOthersTaskAssignResult" 
 							/> 
 					</div>
 				</td>
 			</tr>
+			<!-- 29822 end -->
 		</table>
 		
 		
