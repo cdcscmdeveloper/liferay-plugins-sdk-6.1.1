@@ -228,6 +228,14 @@
 			<p:ajax event="close" />
 
 			<h:panelGroup id="docs">
+				<ui:remove>#33346 - START </ui:remove>
+				<table style="width: 100%">
+					<tr>
+						<td><p:messages id="sectionContentPopupMsg" showDetail="true" autoUpdate="true" 
+						closable="true" showSummary="false" severity="error, info" /></td>
+					</tr>
+				</table>
+				<ui:remove>#33346 - END </ui:remove>
 				<table style="width: 100%;">
 					<tr>
 						<td width="100%"><h:outputText styleClass="instruction"
@@ -330,10 +338,14 @@
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGroup style="float:right">
+				<ui:remove>#33346 - START </ui:remove>
 				<p:commandButton id="editlinkM"
 					action="#{templateDocBackingBean.saveContent}"
-					value="#{lbl['lbl.btn.ok']}" oncomplete="popupEdit.hide()"
+					value="#{lbl['lbl.btn.ok']}"
+					process="@this, docs"
+					partialSubmit="true"
 					update=":form:sampleTT" />
+				<ui:remove>#33346 - END </ui:remove>
 				<p:commandButton id="editl"
 					action="#{templateDocBackingBean.saveContent}"
 					value="#{lbl['lbl.btn.cancel']}" oncomplete="popupEdit.hide()"
