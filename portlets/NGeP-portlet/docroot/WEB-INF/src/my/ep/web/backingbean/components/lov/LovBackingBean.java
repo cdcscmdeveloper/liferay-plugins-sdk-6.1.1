@@ -675,6 +675,18 @@ public class LovBackingBean implements Serializable {
 					return false;
 				}
 			} else if(getSelectedEntities()!=null && getSelectedEntities().size()>0){
+				// #29832 & #9442 added if else to make sure the selected cb save after tick. 
+				// Default save after click next page onPageChange listener
+				if(getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")){
+					for(BaseEntity item : selectedEntities){
+						if(item instanceof PmBusinessNature){
+							Long key = ((PmBusinessNature) item).getBusinessNatureId();
+							if(!persistedEntities.containsKey(key))
+								persistedEntities.put(key, item);
+							
+						}
+					}
+				}
 				return false;
 			}
 		}
@@ -687,6 +699,42 @@ public class LovBackingBean implements Serializable {
 			bundle = ResourceBundle.getBundle(column.getBundleFile(), new FacesScopes().getUserLocale());
 			column.setColumnTitle(bundle.getString(column.getBundleKey()));
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void onToggleSelect(ToggleSelectEvent event){
+		List<BaseEntity> templist = !selectedEntities.isEmpty() ? selectedEntities : searchDataModel.getList();
+		//#32721 start
+		if (templist instanceof BaseEntity){
+			for(BaseEntity value : templist){
+				if(value instanceof PmBusinessNature){
+					Long key = ((PmBusinessNature) value).getBusinessNatureId();
+					if(persistedEntities.containsKey(key)) 
+						persistedEntities.remove(key);
+					else
+						persistedEntities.put(key,value);
+				}
+			}
+		}
+		//#32721 ends
+	}
+	
+	public void onPageChange(PageEvent event){
+		// put selected into hashmap
+		
+		//#29832 #9442 added if else for Pm_business_nature to skip save selected cb onPageChage
+		if (getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")){
+			
+		}else{
+			for(BaseEntity item : selectedEntities){
+				if(item instanceof PmBusinessNature){
+					Long key = ((PmBusinessNature) item).getBusinessNatureId();
+					if(!persistedEntities.containsKey(key))
+						persistedEntities.put(key, item);
+				}
+			}
+		}
+		
 	}
 	
 	private void enableDisplayResult() {

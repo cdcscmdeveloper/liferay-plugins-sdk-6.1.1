@@ -128,6 +128,7 @@ import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBusiness; // #29832
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
@@ -8016,4 +8017,35 @@ public class SimpleQuoteBackingBean extends
 		preRenderView();
 	}
 	// #29800 - end
+
+	// #29832 @zaim added method to pass the value into lovBackingBean
+	
+	/**
+	 * @return SimpleQuoteManagedBean that contain SimpleQuoteManagedBean object.
+	 *
+	 */
+	
+	public SimpleQuoteManagedBean deleteSuccess(){
+		
+		return getManagedBean();
+	}
+	// #29832 end
+	
+    //29832 start
+	/**
+	 * @return list of PmBusinessNature level code 
+	 * that need to exclude.
+	 * The selected Business Nature will be exclude 
+	 * from Business Nature popup view.
+	 */
+	public String excludeLevelCodeSupplier(){
+		StringBuilder sb = new StringBuilder();
+		if (getManagedBean().getScQuote().getBusinessNatureCriterias() != null) {
+			for(ScBusinessNatureQuoteCriteria quoteCriteria: getManagedBean().getScQuote().getBusinessNatureCriterias() ){
+				sb.append("|levelCode^" +quoteCriteria.getPmBusinessNature().getLevelCode());
+			}
+		}
+		return sb.toString();
+	}
+    //29832 - end
 }
