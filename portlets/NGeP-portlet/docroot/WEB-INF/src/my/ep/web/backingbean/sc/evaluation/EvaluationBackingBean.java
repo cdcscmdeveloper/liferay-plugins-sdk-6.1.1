@@ -1246,15 +1246,21 @@ public void saveComplianceSample() {
 					.getComplianceSampleItemListDM().getList();
 			ScQtSampleLable sampleLabel = null;
 			if (null != sampleCompliance && !sampleCompliance.isEmpty()) {
-			/*	for (ScQtSampleItem sampleItem : sampleCompliance) {//#11104-start
-					if (null == sampleItem.getSubmissionStatus()
-							|| null == sampleItem.getSubmissionStatus()
-									.getParameterId()) {
-						//throw new EpException(MessageConst.ERROR_760363);
-						sampleItem.setSubmissionStatus(null);
+				for (ScQtSampleItem sampleItem : sampleCompliance) {//#11104-start
+					PmParameter sampleSubStatus = sampleItem
+							.getSubmissionStatus();
+					if (null != sampleSubStatus.getParameterId()
+							&& ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_COMPLIANCE
+									.equals(sampleSubStatus.getParameterCode())) {
+						String sampleItemRemark = sampleItem.getRemark();
+						if (StringUtils.isBlank(sampleItemRemark)
+								|| StringUtils.isEmpty(sampleItemRemark)) {
+							throw new EpException(MessageConst.ERROR_760545);
+
+						}
 
 					}
-				}*///#11104-End
+				}// #11104-End
 				sampleLabel = sampleCompliance.get(0).getScQtSampleLable();
 				reqDTO.setSampleComplianceList(sampleCompliance);
 				reqDTO.setSampleLabel(this.getManagedBean().getScQtSampleLbl());
