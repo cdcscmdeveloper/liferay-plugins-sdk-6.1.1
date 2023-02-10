@@ -1006,7 +1006,7 @@
 				<ui:fragment id="responsePeriodId" rendered="#{qtStatusIsProposalValidPeriodExtApproval and (createQtBB.managedBean.isProposalValidityChangeValue()
 					or isReadOnly)}">
 				<c:choose>
-				<c:when test="#{approvalBackingBean.isEPVApprovalRequestAccepted(scQt.qtId)}">
+				<c:when test="#{!approvalBackingBean.isEPVLatestStatusApprove(scQt.qtId)}">
 				<tr>
 						<td>
 							<p:outputLabel value="#{lbl['lbl.sc.qt.supplier.accept.response.period']}" /> 

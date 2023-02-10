@@ -1246,15 +1246,21 @@ public void saveComplianceSample() {
 					.getComplianceSampleItemListDM().getList();
 			ScQtSampleLable sampleLabel = null;
 			if (null != sampleCompliance && !sampleCompliance.isEmpty()) {
-			/*	for (ScQtSampleItem sampleItem : sampleCompliance) {//#11104-start
-					if (null == sampleItem.getSubmissionStatus()
-							|| null == sampleItem.getSubmissionStatus()
-									.getParameterId()) {
-						//throw new EpException(MessageConst.ERROR_760363);
-						sampleItem.setSubmissionStatus(null);
+				for (ScQtSampleItem sampleItem : sampleCompliance) {//#11104-start
+					PmParameter sampleSubStatus = sampleItem
+							.getSubmissionStatus();
+					if (null != sampleSubStatus.getParameterId()
+							&& ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_COMPLIANCE
+									.equals(sampleSubStatus.getParameterCode())) {
+						String sampleItemRemark = sampleItem.getRemark();
+						if (StringUtils.isBlank(sampleItemRemark)
+								|| StringUtils.isEmpty(sampleItemRemark)) {
+							throw new EpException(MessageConst.ERROR_760545);
+
+						}
 
 					}
-				}*///#11104-End
+				}// #11104-End
 				sampleLabel = sampleCompliance.get(0).getScQtSampleLable();
 				reqDTO.setSampleComplianceList(sampleCompliance);
 				reqDTO.setSampleLabel(this.getManagedBean().getScQtSampleLbl());
@@ -18029,8 +18035,10 @@ private void retriveCommitteeRemarksList(){
 		if(null!=this.getManagedBean().getScQt() 
 			&& null!=this.getManagedBean().getScQt().getQtStatus() 
 			&& null!=this.getManagedBean().getScQt().getQtStatus().getStatusId() 
-			&& this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_EVALUATION_PROPOSAL
-			&& "T".equalsIgnoreCase(getManagedBean().getCheckListType())){
+			&& (this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_EVALUATION_PROPOSAL
+				|| this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL
+				|| this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL
+				|| this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)){
 			render=false;
 		}
 		return render;
@@ -18168,9 +18176,7 @@ private void retriveCommitteeRemarksList(){
 			
 			if (null != resDTO && null != resDTO.getSpecQuestionList()) {
 				for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
-					if (question.isMandatorySpec()) {
-						item.getScRequestItem().getTplSpecQuestion().setMandatorySpecForSample(true);
-					}
+						item.getScRequestItem().getTplSpecQuestion().setMandatorySpecForSample(question.isMandatorySpec()?true:false);
 				}
 			}
 		}
