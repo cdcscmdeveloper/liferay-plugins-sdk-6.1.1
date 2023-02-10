@@ -12,6 +12,7 @@
 	<ui:define name="contentSection">
 		<ui:param name="scQt" value="#{approvalBackingBean.managedBean.qt}" />
 		<ui:param name="scQtApproval" value="#{approvalBackingBean.managedBean.scQtApproval}" />
+		<ui:param name="scRemark" value="#{approvalBackingBean.managedBean.suppResp}" />
 		<ui:remove>#21692 - start</ui:remove>
 		<ac:confirmationPopup id="supplierRejectConfirmation"
 			widget="supplierRejectConfirmation" loadingWidget="blockWidget"
@@ -59,13 +60,39 @@
 
 		<ui:include src="requestPTJdetails.xhtml" />
 		<ui:include src="FinalaizationCommitteeApproval.xhtml" />
-		<ac:scRemarkAndAttachment
-		remarkList="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
-		showAttachment="false"
-		readonly="#{approvalBackingBean.managedBean.readOnly}"
-		fileUploadListener="approvalBackingBean.handleFileUpload"
-		instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.qt.supplier.accept.remark'] : ''}"
-		autoUpdateValue="#{approvalBackingBean.managedBean.autoUpdate}" /><ui:remove>#21692</ui:remove>
+
+		<p:panel header="#{lbl['lbl.sc.qt.remarks']}" toggleable="true">
+			<td class="TableFieldLeft" width="100px"><p:outputLabel
+					value="#{lbl['lbl.sc.remark']}" /></td>
+			<td class="TableFieldRight" width="35%">
+				<table>
+					<tr>
+						<td rowspan="2" valign="top"><ui:fragment
+								rendered="#{scRemark ne null and scRemark.createdBy ne null}">
+								<h:graphicImage
+									value="#{scRemarkAndAttachmentBackingBean.userImagePath(scRemark.createdBy.loginId)}"
+									height="30" width="30" />
+							</ui:fragment></td>
+						<td width="5"></td>
+						<td><h:outputText id="remarkCreator"
+								value="#{scRemark.createdBy.userName}" />,</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><p:inputTextarea cols="40" maxlength="1000"
+								onkeyup="limitTextArea(this,1000);"
+								onkeydown="limitTextArea(this,1000);"
+								onmouseout="limitTextArea(this,1000);"
+								value="#{scRemark.remark}"
+								rendered="#{approvalBackingBean.managedBean.readOnly}"
+								disabled="#{!approvalBackingBean.managedBean.readonly}">
+								<p:ajax partialSubmit="true" process="@this" update="@this" />
+							</p:inputTextarea></td>
+					</tr>
+				</table>
+			</td>
+		</p:panel>
+		<ui:remove>#21692</ui:remove>
 
 	</ui:define>
 </ui:composition>

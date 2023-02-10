@@ -101,6 +101,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvSupplierResponse;
+import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtRequestContent;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
@@ -798,6 +800,26 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		boolean qtPageFirst = false;
 		String page = "/xhtml/sc/quatationtender/Approver/approverMain.xhtml";
 		if (SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE.equalsIgnoreCase(taskName)) {
+			//#21692 new remark for supplier - Start
+			if (SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE.equalsIgnoreCase(taskName)) {
+				IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				QuationTenderReqDTO epvReqDTO = new QuationTenderReqDTO();
+				FacesScopes facesScope = new FacesScopes();
+				epvReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+				epvReqDTO.setPmUser(facesScope.getUserSessionBean());
+				QuationTenderResDTO epvResDTO = detailSO.retrieveEpvApprovalRequest(epvReqDTO);
+				ScQtApprovalRequest qtEPVApprolvaReq = epvResDTO.getDoaActiveRequest();
+				ScQtProposal prop = epvResDTO.getScQtProposal();
+				
+				ScQtEpvSupplierResponse suppResp = new ScQtEpvSupplierResponse();
+				suppResp.setScQtApprovalRequest(qtEPVApprolvaReq);
+				suppResp.setScQtSupplier(prop.getScQtSupplier());
+				suppResp.setQtSupplierName(prop.getSupplierName());
+				
+				this.getManagedBean().setSuppResp(suppResp);
+			}
+			//#21692 new remark for supplier - End
 			page = "/xhtml/sc/quatationtender/Approver/supplierAccepetance.xhtml";
 			qtPageFirst = false;
 		} else if (SCProcessNameConst.FC_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)) {
@@ -2027,7 +2049,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		ScWorkFlowStatus workflowStatus = resDTO.getWorkflowStatus();
 		if (null != workflowStatus) {
 			return workflowStatus.getPmStatus().getStatusId().equals(QTStatusConst.EPV_APPROVED) ||
-					workflowStatus.getPmStatus().getStatusId().equals(QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE);
+					workflowStatus.getPmStatus().getStatusId().equals(QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE) ||
+					workflowStatus.getPmStatus().getStatusId().equals(QTStatusConst.EPV_ACCEPTED);
 		} else {
 			return false;
 		}
@@ -2529,7 +2552,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 			qt.setScQtCommittees(null);
 			
-			
+			qtReqDTO.setSuppResp(this.getManagedBean().getSuppResp());//#21962 new remark for supplier
 			qtReqDTO.setDigiSignData(digiSign);
 			qtReqDTO.setPayLoad(dataType);
 			FacesScopes facesScope = new FacesScopes();
