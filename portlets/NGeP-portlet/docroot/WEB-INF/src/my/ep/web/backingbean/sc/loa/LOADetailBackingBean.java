@@ -7197,7 +7197,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			File newName = new File(aFilePath.toString());
 			//log.info("New Path : " + aFilePath.toString());
 			//log.info("Before rename to new path");
-			//boolean isFileRenamed = oldName.renameTo(newName);
+			boolean isFileRenamed = oldName.renameTo(newName);
 			//log.info("After rename to new path");
 			/*
 			if(isFileRenamed) 

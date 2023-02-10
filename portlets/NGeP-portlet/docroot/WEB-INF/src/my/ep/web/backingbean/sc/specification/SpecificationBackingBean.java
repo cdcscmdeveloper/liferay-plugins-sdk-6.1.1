@@ -13417,6 +13417,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			throw e;
 		} finally {
 			this.getManagedBean().setFinTempScQtChecklist(null);
+			// Bug #34100 - Start
+			this.getManagedBean().getScQtChecklist()
+					.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			// Bug #34100 - End
 		}
 		// 1873 - end - note 97	
 
@@ -16558,6 +16562,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						}
 						// #32130, #25138 - Start.
 					} else {
+						// Bug #34100 - Start
+						this.getManagedBean().getScQtChecklist().getPmStatus()
+								.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+						// Bug #34100 - End
+
 						throw new EpException(MessageConst.ERROR_760520);
 					}
 					// #32130, #25138 - End.
