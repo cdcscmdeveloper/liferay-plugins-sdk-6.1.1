@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
-import my.ep.persistence.entity.pm.common.PmStatus;
 
 
 
@@ -35,9 +34,6 @@ public class SmTaskReassignmentVO implements Serializable {
 	private BigDecimal orderAmount;
 	private boolean supplier;
 	private List<TrackingDiaryReqDTO> trackingDiaryList;
-	//#29822 - START
-	private PmStatus status; 
-	//#29822 - START
 	
 	
 	public SmTaskReassignmentVO(){
@@ -253,11 +249,4 @@ public class SmTaskReassignmentVO implements Serializable {
 	}
 	
 
-	public PmStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(PmStatus status) {
-		this.status = status;
-	}
 }
