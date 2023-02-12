@@ -28,12 +28,6 @@
 		</p:outputPanel>
 	<p:panel id="pTaskAssignSearch" header="#{lbl['lbl.pm.ta.search']}"
 		toggleable="true">
-		<!-- 7465 start -->
-		<p:blockUI block="pTaskAssignSearch" widgetVar="taskReassignconfirmPopupBlockWidget">
-			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-		</p:blockUI>
-		<!-- 7465 end -->
-		
 		<table class="ppTwoTable">
 			<tr>
 				<th width="15%"><p:outputLabel
@@ -178,7 +172,6 @@
 					
 				</td>
 			</tr>
-			<!-- 7465, 29822 start -->
 			<tr>
 				<td colspan="4">
 					<div class="ppRightBtn">
@@ -188,27 +181,20 @@
 							widgetVar="cbSearchTask"
 							process="pTaskAssignSearch" 
 							action="#{taskReassignmentBackingBean.searchTasks}"
-							update=":form:dtTaskAssignResult,:form:deleteGroupTasks,:form:deleteOthersTasks,:form:dtGroupTaskAssignResult,
-							:form:dtOthersTaskAssignResult,showReassigneeList,:form:messages,:form:noReassignees,:form:bulkReassignBtnId,
-							:form:pGroupTaskAssignResult,:form:pOthersTaskAssignResult"
+							update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,showReassigneeList,:form:messages,:form:noReassignees"
 							onclick="cbSearchTask.disable();cbResetTask.disable();"
-							onstart="taskReassignconfirmPopupBlockWidget.show()"
-			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();taskReassignconfirmPopupBlockWidget.hide();"
+			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();"
 						/>
 						<p:commandButton id="cbResetTask" widgetVar="cbResetTask"
-							onclick="cbSearchTask.disable();cbResetTask.disable();" 
-							onstart="taskReassignconfirmPopupBlockWidget.show()"
-			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();taskReassignconfirmPopupBlockWidget.hide();"
+							onclick="cbSearchTask.disable();cbResetTask.disable();"  
+			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();"
 							value="#{lbl['lbl.btn.reset']}" 
 							action="#{taskReassignmentBackingBean.resetTaskAssignSearchBean}"
-							update="@form,pTaskAssignSearch,:form:userTaskListID,:form:groupTaskListID,:form:othersTaskListID,
-							showReassigneeList,:form:messages,:form:noReassignees,:form:deleteGroupTasks,
-							:form:deleteOthersTasks,:form:pGroupTaskAssignResult,:form:pOthersTaskAssignResult"
+							update="@form,pTaskAssignSearch,:form:userTaskListID,:form:groupTaskListID,:form:othersTaskListID,showReassigneeList,:form:messages,:form:noReassignees"
 						/>
 					</div>
 				</td>
 			</tr>
-			<!-- 7465,29822 end -->
 		</table>
 		
 		<ac:ptjPopup id="orgProfileCcId"
