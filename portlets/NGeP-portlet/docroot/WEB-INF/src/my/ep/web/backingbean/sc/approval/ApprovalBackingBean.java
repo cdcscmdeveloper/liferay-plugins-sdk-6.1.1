@@ -800,25 +800,24 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		boolean qtPageFirst = false;
 		String page = "/xhtml/sc/quatationtender/Approver/approverMain.xhtml";
 		if (SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE.equalsIgnoreCase(taskName)) {
-			//#21692 new remark for supplier - Start
-			if (SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE.equalsIgnoreCase(taskName)) {
-				IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-				QuationTenderReqDTO epvReqDTO = new QuationTenderReqDTO();
-				FacesScopes facesScope = new FacesScopes();
-				epvReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-				epvReqDTO.setPmUser(facesScope.getUserSessionBean());
-				QuationTenderResDTO epvResDTO = detailSO.retrieveEpvApprovalRequest(epvReqDTO);
-				ScQtApprovalRequest qtEPVApprolvaReq = epvResDTO.getDoaActiveRequest();
-				ScQtProposal prop = epvResDTO.getScQtProposal();
-				
-				ScQtEpvSupplierResponse suppResp = new ScQtEpvSupplierResponse();
-				suppResp.setScQtApprovalRequest(qtEPVApprolvaReq);
-				suppResp.setScQtSupplier(prop.getScQtSupplier());
-				suppResp.setQtSupplierName(prop.getSupplierName());
-				
-				this.getManagedBean().setSuppResp(suppResp);
-			}
+			// #21692 new remark for supplier - Start
+			IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class);
+			QuationTenderReqDTO epvReqDTO = new QuationTenderReqDTO();
+			FacesScopes facesScope = new FacesScopes();
+			epvReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			epvReqDTO.setPmUser(facesScope.getUserSessionBean());
+			this.getManagedBean().setPmUser(facesScope.getUserSessionBean());
+			QuationTenderResDTO epvResDTO = detailSO.retrieveEpvApprovalRequest(epvReqDTO);
+			ScQtApprovalRequest qtEPVApprolvaReq = epvResDTO.getDoaActiveRequest();
+			ScQtProposal prop = epvResDTO.getScQtProposal();
+
+			ScQtEpvSupplierResponse suppResp = new ScQtEpvSupplierResponse();
+			suppResp.setScQtApprovalRequest(qtEPVApprolvaReq);
+			suppResp.setScQtSupplier(prop.getScQtSupplier());
+			suppResp.setQtSupplierName(prop.getSupplierName());
+
+			this.getManagedBean().setSuppResp(suppResp);
 			//#21692 new remark for supplier - End
 			page = "/xhtml/sc/quatationtender/Approver/supplierAccepetance.xhtml";
 			qtPageFirst = false;
@@ -2528,20 +2527,32 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			
 			if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
-				List<ScQtApprovalRemark> remarks = approval.getScQtApprovalRemarks();
-				if (null != remarks) {
-					for (int i = 0; i < remarks.size(); i++) {
-						String userRemark = remarks.get(i).getRemark();
-						
-						if (null == userRemark || "".equals(userRemark)) {
+				//#21692 remark checking - Start
+				if (SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE.equalsIgnoreCase(getManagedBean().getTaskName())) {
+					if(null != this.getManagedBean().getSuppResp() &&
+							(this.getManagedBean().getSuppResp().getRemark() == null || this.getManagedBean().getSuppResp().getRemark().equals(""))) {
+						FacesContext.getCurrentInstance().addMessage(null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR,null,
+										getMessage("lbl.sc.qt.supplier.accept.reject.alert",null)));
+						return;
+					}
+				} else {
+					List<ScQtApprovalRemark> remarks = approval.getScQtApprovalRemarks();
+					if (null != remarks) {
+						for (int i = 0; i < remarks.size(); i++) {
+							String userRemark = remarks.get(i).getRemark();
 							
-							FacesContext.getCurrentInstance().addMessage(null,
-									new FacesMessage(FacesMessage.SEVERITY_ERROR,null,
-											getMessage("lbl.sc.qt.supplier.accept.reject.alert",null)));//#21692
-							return;
+							if (null == userRemark || "".equals(userRemark)) {
+								
+								FacesContext.getCurrentInstance().addMessage(null,
+										new FacesMessage(FacesMessage.SEVERITY_ERROR,null,
+												getMessage("lbl.sc.qt.supplier.accept.reject.alert",null)));//#21692
+								return;
+							}
 						}
 					}
 				}
+				//#21692 remark checking - End
 			}
 
 			finalizeRemarks(approval.getScQtApprovalRemarks());

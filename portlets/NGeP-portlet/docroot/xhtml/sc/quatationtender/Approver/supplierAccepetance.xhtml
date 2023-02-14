@@ -60,37 +60,42 @@
 
 		<ui:include src="requestPTJdetails.xhtml" />
 		<ui:include src="FinalaizationCommitteeApproval.xhtml" />
-
 		<p:panel header="#{lbl['lbl.sc.qt.remarks']}" toggleable="true">
-			<td class="TableFieldLeft" width="100px"><p:outputLabel
-					value="#{lbl['lbl.sc.remark']}" /></td>
-			<td class="TableFieldRight" width="35%">
-				<table>
-					<tr>
-						<td rowspan="2" valign="top"><ui:fragment
-								rendered="#{scRemark ne null and scRemark.createdBy ne null}">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.supplier.accept.remark']}" escape="false"/>
+		<table>
+			<tr>
+				<td class="TableFieldLeft" width="100px">
+					<p:outputLabel value="#{lbl['lbl.sc.remark']}"/>
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td rowspan="2" valign="top">
 								<h:graphicImage
-									value="#{scRemarkAndAttachmentBackingBean.userImagePath(scRemark.createdBy.loginId)}"
+									value="#{scRemarkAndAttachmentBackingBean.userImagePath(approvalBackingBean.managedBean.pmUser.loginId)}"
 									height="30" width="30" />
-							</ui:fragment></td>
-						<td width="5"></td>
-						<td><h:outputText id="remarkCreator"
-								value="#{scRemark.createdBy.userName}" />,</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><p:inputTextarea cols="40" maxlength="1000"
-								onkeyup="limitTextArea(this,1000);"
-								onkeydown="limitTextArea(this,1000);"
-								onmouseout="limitTextArea(this,1000);"
-								value="#{scRemark.remark}"
-								rendered="#{approvalBackingBean.managedBean.readOnly}"
-								disabled="#{!approvalBackingBean.managedBean.readonly}">
-								<p:ajax partialSubmit="true" process="@this" update="@this" />
-							</p:inputTextarea></td>
-					</tr>
-				</table>
-			</td>
+							</td>
+							<td width="5"></td>
+							<td><h:outputText id="remarkCreator"
+								value="#{approvalBackingBean.managedBean.pmUser.userName}" />,
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><p:inputTextarea cols="40" maxlength="1000"
+									onkeyup="limitTextArea(this,1000);"
+									onkeydown="limitTextArea(this,1000);"
+									onmouseout="limitTextArea(this,1000);"
+									value="#{scRemark.remark}"
+									rendered="true"
+									disabled="#{approvalBackingBean.managedBean.readOnly}">
+								</p:inputTextarea>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
 		</p:panel>
 		<ui:remove>#21692</ui:remove>
 
