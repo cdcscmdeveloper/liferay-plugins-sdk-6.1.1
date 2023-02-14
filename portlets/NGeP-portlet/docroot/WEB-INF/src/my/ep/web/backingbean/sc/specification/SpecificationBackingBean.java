@@ -14566,7 +14566,7 @@ if (null != checklist && !checklist.isEmpty()) {
 						if (t.getDefinationType().getParameterCode()
 								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)
 								&& null != t.getQtChecklistId() && t.getQtChecklistId()
-								.equals(scQtCheckList.getQtChecklistId())) {//#28784 exclude demo
+								.equals(scQtCheckList.getQtChecklistId())) {//#28784 exclude demo & add null condition
 							t.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));//#28784
 							}
 
