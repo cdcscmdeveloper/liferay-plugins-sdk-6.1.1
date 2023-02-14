@@ -71,6 +71,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTSearchBeanConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -13444,14 +13445,14 @@ private void retriveCommitteeRemarksList(){
 				//#34497 related to #32453 fixing(#25138,#21695) - start
 				ISearchResultBean<ScQtProposalChecklist> resultBean = evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO).getComplianceResultBean();
 				if(scoringReq != null && !scoringReq && CollectionUtils.isNotEmpty(resultBean.getResultList())){
-				List<Long> proposalChecklistIds = new ArrayList<Long>();
+				List<Long> proposalChecklistIds = new ArrayList<>();
 					if(getManagedBean().getTabItemPackageIndex()==2 && SourcingConstants.TECHINICAL_STAGE.equals(evalStage) && getManagedBean().getScQt().isPartial()){
 						for(ScQtProposalChecklist proposalChecklist: resultBean.getResultList()){
 							if(!checkFinancialpackageOtherChecklist(proposalChecklist,evalStage,getManagedBean().getScQt())){
 								proposalChecklistIds.add(proposalChecklist.getQtProposalChecklistId());
 							}
 						}
-						reqDTO.getProposalChecklistSearchBean().getDataFilterBeans().add(new SearchFilterBean("qtProposalChecklistId",
+						reqDTO.getProposalChecklistSearchBean().getDataFilterBeans().add(new SearchFilterBean(QTSearchBeanConst.SEARCH_QTPROPOSALCHECKLIST_ID,
 								SearchOperator.OPERATOR_NOT_IN.value(), proposalChecklistIds));
 					}
 				}else{//32453-Technical Other package start
@@ -13465,12 +13466,12 @@ private void retriveCommitteeRemarksList(){
 						reqDTOP.setObjectSearchBean(packagesearchBean);
 						reqDTOP.setZonal(getManagedBean().getScQt().isZonal());
 						ISearchResultBean<Object[]> pagingModelDataPackage = evaluationSO.retrieveComplianceDtlsByCheckListPackage(reqDTOP).getScoreObjResultBean();
-						List<Long> supplierNos = new ArrayList<Long>();
+						List<Long> supplierNos = new ArrayList<>();
 						for(Object[] qualified:pagingModelDataPackage.getResultList()){
 							Long supplierNo = ((BigDecimal)qualified[2]).longValue();
 							supplierNos.add(supplierNo);
 						}
-						reqDTO.getProposalChecklistSearchBean().getDataFilterBeans().add(new SearchFilterBean("scQtProposal.supplierNo",
+						reqDTO.getProposalChecklistSearchBean().getDataFilterBeans().add(new SearchFilterBean(QTSearchBeanConst.SEARCH_SCQTPROPOSAL_SUPPLIERNO,
 								SearchOperator.OPERATOR_IN.value(), supplierNos));
 					}
 				}
