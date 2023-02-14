@@ -2428,6 +2428,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							this.getManagedBean().getSmSuppOwners().add(suppOwnerDirector);
 							resDTO.getSmSupp().getSmSupplierOwners().add(suppOwnerDirector);
 						}
+						if(personnel.getRevNo() == 0){ //#27691 Set rev_no=1 
+							personnel.setRevNo(1);
+						}
 					}
 				}
 				//27691 END
@@ -2550,6 +2553,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 										.equals(ParameterConst.IDENTIFICATION_TYPES_IC)){
 									this.getManagedBean().getSmPersonnelDirector().add(personnel);
 								}
+							}
+							if(personnel.getRevNo() == 0){ //#27691 set rev_no=1
+								personnel.setRevNo(1);
 							}
 							// 27691 - End
 						}
