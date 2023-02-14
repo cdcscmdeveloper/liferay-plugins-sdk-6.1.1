@@ -814,6 +814,12 @@
 								cols="25"
 								maxlength="1018"/>
 								<p:spacer width="10" height="0"/>
+								<p:graphicImage id="existContractTooltipIC"
+								value="/css/images/design/tooltips.png" />
+								<p:tooltip for="existContractTooltipIC">
+									<p:outputLabel escape="false"
+										value="#{lbl['lbl.existing.contract']}" />
+								</p:tooltip>
 								<p:graphicImage id="existContractIC" rendered="#{qTDetailBB.managedBean.isExistingContractChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}" value="/css/images/design/icon_alert.png" />
 								<p:tooltip for="existContractIC">
 									<p:outputLabel escape="false" value="#{qTDetailBB.managedBean.scQtHistory.existingContractNo}"  />
@@ -829,6 +835,12 @@
 									autoResize="false"
 									maxlength="1018"/> 
 									<p:spacer width="10" height="0"/>
+									<p:graphicImage id="existContractTooltipIC"
+										value="/css/images/design/tooltips.png" />
+									<p:tooltip for="existContractTooltipIC">
+										<p:outputLabel escape="false"
+											value="#{lbl['lbl.existing.contract']}" />
+									</p:tooltip>
 									<p:graphicImage
 										id="existContractIC"
 										rendered="#{qTDetailBB.managedBean.isExistingContractChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}"
@@ -1006,7 +1018,7 @@
 				<ui:fragment id="responsePeriodId" rendered="#{qtStatusIsProposalValidPeriodExtApproval and (createQtBB.managedBean.isProposalValidityChangeValue()
 					or isReadOnly)}">
 				<c:choose>
-				<c:when test="#{approvalBackingBean.isEPVApprovalRequestAccepted(scQt.qtId)}">
+				<c:when test="#{!approvalBackingBean.isEPVLatestStatusApprove(scQt.qtId)}">
 				<tr>
 						<td>
 							<p:outputLabel value="#{lbl['lbl.sc.qt.supplier.accept.response.period']}" /> 
