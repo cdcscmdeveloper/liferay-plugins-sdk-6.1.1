@@ -15187,8 +15187,13 @@ private void retriveCommitteeRemarksList(){
 									
 								}else{
 									if(specdetails.getScoreOfferPrices()!= null){
-										this.getManagedBean().setOfferScoreType(specdetails.getScoreOfferPrices()
-												.getScoreType().toString());
+										//#34453 fix bug ,#25138 suspect WIP dont need scoretype(adding checking not null) - start
+										//#25138 adding new column for scoretype
+										if(specdetails.getScoreOfferPrices().getScoreType() != null){
+											this.getManagedBean().setOfferScoreType(
+													specdetails.getScoreOfferPrices().getScoreType().toString());
+										}
+										//#34453 fix bug - end
 									}
 									
 								}
