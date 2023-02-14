@@ -2121,7 +2121,9 @@ public class ConsolidationReportBackingBean extends
 		} else if (this.getManagedBean().getActiveIndex() == ITEMIZED_TYPE_TAB_INDEX) {
 			log.info("ITEMIZED_TYPE_TAB_INDEX"
 					+ this.getManagedBean().getActiveIndex());
-			if (evaluationStageId == 2) {
+			//#21695 tec by itemize result pop up farid - start
+			if (evaluationStageId == 2 || evaluationStageId == 1) {
+			//#21695 tec by itemize result pop up farid - end
 				supplierFinalizationBB.getManagedBean()
 						.setItemize(Boolean.TRUE);
 				if (null != this.getManagedBean().getSelectedItem()) {
