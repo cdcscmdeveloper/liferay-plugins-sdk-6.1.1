@@ -2533,7 +2533,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							(this.getManagedBean().getSuppResp().getRemark() == null || this.getManagedBean().getSuppResp().getRemark().equals(""))) {
 						FacesContext.getCurrentInstance().addMessage(null,
 								new FacesMessage(FacesMessage.SEVERITY_ERROR,null,
-										getMessage("lbl.sc.qt.supplier.accept.reject.alert",null)));
+										getMessage(SourcingConstants.EXTENSION_PROPOSAL_VALIDITY_REMARK,null)));//#21692 change to constant
 						return;
 					}
 				} else {
@@ -2546,7 +2546,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								
 								FacesContext.getCurrentInstance().addMessage(null,
 										new FacesMessage(FacesMessage.SEVERITY_ERROR,null,
-												getMessage("lbl.sc.qt.supplier.accept.reject.alert",null)));//#21692
+												getMessage(SourcingConstants.EXTENSION_PROPOSAL_VALIDITY_REMARK,null)));//#21692 change to constant
 								return;
 							}
 						}
