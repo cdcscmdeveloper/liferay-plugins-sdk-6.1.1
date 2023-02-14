@@ -8193,16 +8193,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			isNonPeriodic = ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN.equals(fulfilmentType)
 					|| ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equals(fulfilmentType);
 			isOneOff = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType);
-
-			if ((isPeriodic && ((isNonPeriodic || isOneOff) && over500K(loa)) && !change) || isPk7Periodic()) {
-				isAgreementMandatory = true;
-				loa.setAgreementReq(isAgreementMandatory);				
-			} else if (((isOneOff || isNonPeriodic) && !over500K(loa)) && !change) {
-				// Bug #24065
-				// isAgreementMandatory = false;
-				isAgreementMandatory = false;
-				loa.setAgreementReq(isAgreementMandatory);				
-			}				
+			
+			//#34460 start
+			if (loa != null && loa.isBrandNew()) {
+				if ((isPeriodic && ((isNonPeriodic || isOneOff) && over500K(loa)) && !change) || isPk7Periodic()) {
+					isAgreementMandatory = true;
+					loa.setAgreementReq(isAgreementMandatory);
+				} else if (((isOneOff || isNonPeriodic) && !over500K(loa)) && !change) {
+					// Bug #24065
+					// isAgreementMandatory = false;
+					isAgreementMandatory = false;
+					loa.setAgreementReq(isAgreementMandatory);
+				}
+			}
+			//#34460 end
 		}
 		// #25726 END
 		return isAgreementMandatory;
@@ -10252,13 +10256,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				getManagedBean().setSupPropSpecDisable(false);
 			}else{
 				getManagedBean().setSupPropSpecDisable(true);
-				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
+				TemplateSpecResDTO templateSpecResDTO  = new TemplateSpecResDTO();
+				templateSpecResDTO =templateSpecSO.searchSupplierSpecification(specReqDto);
+				
+				if(templateSpecResDTO.getSpecAnswerList().isEmpty()){
+					specReqDto.setCheckingForWIP(true);
+					templateSpecResDTO =templateSpecSO.searchSupplierSpecification(specReqDto);
+				}
 				if(templateSpecResDTO.getSpecAnswerList().isEmpty()){
 					DirectAwardReqDTO awardReqDTOnew = new DirectAwardReqDTO();
 					awardReqDTOnew.setScLoa(this.getManagedBean().getScLoa());
 					DirectAwardResDTO awardResDTOnew =getQtDirectAwardSO().saveScloiloaitemforDirectLOA(awardReqDTOnew);
 					if(awardResDTOnew.isSuccessful()){
-						log.info("WIP data Saved");	
+						log.info("WIP data Saved :"+templateSpecResDTO.getSpecAnswerList().size());	
 						this.getManagedBean().getScLoa().setScLoiLoaItems(awardResDTOnew.getLoa().getScLoiLoaItems());
 					}
 				}

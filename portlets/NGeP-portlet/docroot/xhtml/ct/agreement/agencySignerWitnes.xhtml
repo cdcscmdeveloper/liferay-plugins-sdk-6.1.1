@@ -62,7 +62,7 @@
 					     <p:column style="width:15%;" styleClass="column-align-center">
 					     <f:facet name="header">
 					         <h:outputText value="#{lbl['lbl.ct.contract.signer']}" styleClass="required"/>
-					         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.agency.contract.signer']}"/>
+					         <ac:iconTooltip value="#{agreementBackingBean.managedBean.agreementType eq CtConst.supplementalAgreement ? lbl['lbl.ct.tooltip.supplemental.agreement.signer'] : lbl['lbl.ct.tooltip.agreement.signer']}"/>
 					        </f:facet>
                  
                              <p:selectOneMenu id="contractSigner" style="width:180px;" value="#{agSignerVar.officer.userId}" label="#{lbl['lbl.ct.contract.signer']}">

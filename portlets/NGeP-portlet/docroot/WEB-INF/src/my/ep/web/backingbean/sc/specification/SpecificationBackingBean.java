@@ -6455,8 +6455,8 @@ public class SpecificationBackingBean extends
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getScQtCheckListValue()) {
-						
-						if(null!=checkList.getScQtCheckListValue() && isIndirectWithInstantiated(checkList.getScQtCheckListScores())){ // Bug #34412@Syazani 02/02/2023
+						//#25138 fix lazy -start (adding condition isnotempty checklistscore)
+						if(null!=checkList.getScQtCheckListValue() && CollectionUtils.isNotEmpty(checkList.getScQtCheckListScores()) && isIndirectWithInstantiated(checkList.getScQtCheckListScores())){ // Bug #34412@Syazani 02/02/2023
 							List<ScQtCheckListScore> bankStatement = new ArrayList<ScQtCheckListScore>();
 							for (ScQtCheckListScore checklistScore : checkList.getScQtCheckListScores()) {
 								if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT) {
@@ -14563,10 +14563,10 @@ if (null != checklist && !checklist.isEmpty()) {
 				if(isModified || !isTemplateSpec || isSpecNotExist){
 					List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
 					for (ScQtCheckList t : st2technicalproposalList) {
-						if (!t.getDefinationType().getParameterCode()
-								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)
-								&& t.getQtChecklistId()
-								.equals(scQtCheckList.getQtChecklistId())) {//#28784 exclude demo
+						if (t.getDefinationType().getParameterCode()
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)
+								&& null != t.getQtChecklistId() && t.getQtChecklistId()
+								.equals(scQtCheckList.getQtChecklistId())) {//#28784 exclude demo & add null condition
 							t.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));//#28784
 							}
 
@@ -21322,7 +21322,8 @@ if(null!=allTechnicalChecklist){
 					}
 					//#28784 - Start
 					for(ScQtCheckList up :updatedNewCheckLists){
-						if(up.getQtChecklistId().equals(st.getQtChecklistId())){
+						if(null != up.getQtChecklistId() &&
+								up.getQtChecklistId().equals(st.getQtChecklistId())){//#28784 add null checking
 							up.setPmDemoStatus(st.getPmDemoStatus());							
 						}
 					}//#28784 - End
@@ -22507,6 +22508,12 @@ if(null!=allTechnicalChecklist){
 		return render;
 	}
 	
+	/**
+	* retrives the specification details to check mandatory specification.
+	* 
+	* @param ScQtCheckList templateChecklist.
+	* @return 
+	*/
 	public void retriveSampleSpecmasterForMandatorySpecChecking(ScQtCheckList templateChecklist){
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
@@ -22521,9 +22528,7 @@ if(null!=allTechnicalChecklist){
 			
 			if (null != resDTO && null != resDTO.getSpecQuestionList()) {
 				for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
-					if (question.isMandatorySpec()) {
-						itemQuestion.setMandatorySpecForSample(true);
-					}
+						itemQuestion.setMandatorySpecForSample(question.isMandatorySpec()?true:false);
 				}
 			}
 		}
