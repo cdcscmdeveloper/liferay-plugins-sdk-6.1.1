@@ -31,8 +31,8 @@
 				<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType ne SupplierManagementConst.SUPP_TYPE_BASIC 
 				and viewSmApplBackingBean.managedBean.smAppl.supplierType ne SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
 				<ac:smPanel id="tt">
-					
-					<p:messages id="messages" showDetail="true" closable="false" showSummary="false" />
+					<!--29582-->
+					<p:messages id="messages" showDetail="true" closable="false" showSummary="false" escape="false"/>
 					
 					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 0}">
 						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step1ViewProfileCompanyInfo.xhtml" />
