@@ -1666,6 +1666,26 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
 	public boolean proposalValidityChangeValue; //#21692
+	// #12471 Start
+	/** The ministry dropdown list. */
+	private SelectItem[] ministryDD;
+	/** The PTJ Group dropdown list. */
+	private SelectItem[] ptjGroupDD;
+	/** The PTJ dropdown list. */
+	private SelectItem[] ptjDD;
+	/** The organization type dropdown list. */
+	private SelectItem[] orgTypeDD;
+	/** The organization name dropdown list. */
+	private SelectItem[] orgNameDD;
+	/** The popup member name. */
+	private String comMemPopUpName;
+	/** The popup member ministry/organization. */
+	private String comMemPopUpMinOrg;
+	/** The popup member ptj/organization code. */
+	private String comMemPopUpPtjOrgCode;
+	/** The popup member ptj/organization name. */
+	private String comMemPopUpPtjOrgName;
+	// #12471 End
 	
 	/**
 	 * Sets the panel suppliers.
@@ -11776,6 +11796,142 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.suppResp = suppResp;
 	}
 	//#21692 - End
+	// #12471 Start
+	/**
+	 * @return the ministryDD
+	 */
+	public SelectItem[] getMinistryDD() {
+		return ministryDD;
+	}
+
+	/**
+	 * @param ministryDD
+	 *            the ministryDD to set
+	 */
+	public void setMinistryDD(SelectItem[] ministryDD) {
+		this.ministryDD = ministryDD;
+	}
+
+	/**
+	 * @return the PTJ Group dropdown list
+	 */
+	public SelectItem[] getPtjGroupDD() {
+		return ptjGroupDD;
+	}
+
+	/**
+	 * @param ptjGroupDD
+	 *            the PTJ Group dropdown list to set
+	 */
+	public void setPtjGroupDD(SelectItem[] ptjGroupDD) {
+		this.ptjGroupDD = ptjGroupDD;
+	}
+
+	/**
+	 * @return the PTJ dropdown list
+	 */
+	public SelectItem[] getPtjDD() {
+		return ptjDD;
+	}
+
+	/**
+	 * @param ptjDD
+	 *            the PTJ dropdown list to set
+	 */
+	public void setPtjDD(SelectItem[] ptjDD) {
+		this.ptjDD = ptjDD;
+	}
+
+	/**
+	 * @return the organization type dropdown list
+	 */
+	public SelectItem[] getOrgTypeDD() {
+		return orgTypeDD;
+	}
+
+	/**
+	 * @param orgTypeDD
+	 *            the organization type dropdown list to set
+	 */
+	public void setOrgTypeDD(SelectItem[] orgTypeDD) {
+		this.orgTypeDD = orgTypeDD;
+	}
+
+	/**
+	 * @return the organization name dropdown list
+	 */
+	public SelectItem[] getOrgNameDD() {
+		return orgNameDD;
+	}
+
+	/**
+	 * @param orgNameDD
+	 *            the organization name dropdown list to set
+	 */
+	public void setOrgNameDD(SelectItem[] orgNameDD) {
+		this.orgNameDD = orgNameDD;
+	}
+
+	/**
+	 * @return the comMemPopUpName
+	 */
+	public String getComMemPopUpName() {
+		return comMemPopUpName;
+	}
+
+	/**
+	 * @param comMemPopUpName
+	 *            the popup member name to set
+	 */
+	public void setComMemPopUpName(String comMemPopUpName) {
+		this.comMemPopUpName = comMemPopUpName;
+	}
+
+	/**
+	 * @return the comMemPopUpMinOrg
+	 */
+	public String getComMemPopUpMinOrg() {
+		return comMemPopUpMinOrg;
+	}
+
+	/**
+	 * @param comMemPopUpMinOrg
+	 *            the popup member ministry/organization to set
+	 */
+	public void setComMemPopUpMinOrg(String comMemPopUpMinOrg) {
+		this.comMemPopUpMinOrg = comMemPopUpMinOrg;
+	}
+
+	/**
+	 * @return the comMemPopUpPtjOrgCode
+	 */
+	public String getComMemPopUpPtjOrgCode() {
+		return comMemPopUpPtjOrgCode;
+	}
+
+	/**
+	 * @param comMemPopUpPtjOrgCode
+	 *            the popup member ptj/organization code to set
+	 */
+	public void setComMemPopUpPtjOrgCode(String comMemPopUpPtjOrgCode) {
+		this.comMemPopUpPtjOrgCode = comMemPopUpPtjOrgCode;
+	}
+
+	/**
+	 * @return the comMemPopUpPtjOrgName
+	 */
+	public String getComMemPopUpPtjOrgName() {
+		return comMemPopUpPtjOrgName;
+	}
+
+	/**
+	 * @param comMemPopUpPtjOrgName
+	 *            the popup member ptj/organization name to set
+	 */
+	public void setComMemPopUpPtjOrgName(String comMemPopUpPtjOrgName) {
+		this.comMemPopUpPtjOrgName = comMemPopUpPtjOrgName;
+	}
+	// #12471 End
 
 }
 
