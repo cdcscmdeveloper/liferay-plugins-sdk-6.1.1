@@ -93,6 +93,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvSupplierResponse;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
@@ -1853,6 +1854,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCategory> backupCategoryCode;
 	private List<TplSpecZoneDtl> backupZoneList;
 	private List<Long> listCategory;
+	private ScQtEpvSupplierResponse suppResp;//#21692
 				
 	// #29521 - end
 	
@@ -1860,26 +1862,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private int wipStatusMax;
 	//#34451,#34458,#34450 related to #25138 -end
 
-	// #12471 Start
-	/** The ministry dropdown list. */
-	private SelectItem[] ministryDD;
-	/** The PTJ Group dropdown list. */
-	private SelectItem[] ptjGroupDD;
-	/** The PTJ dropdown list. */
-	private SelectItem[] ptjDD;
-	/** The organization type dropdown list. */
-	private SelectItem[] orgTypeDD;
-	/** The organization name dropdown list. */
-	private SelectItem[] orgNameDD;
-	/** The popup member name. */
-	private String comMemPopUpName;
-	/** The popup member ministry/organization. */
-	private String comMemPopUpMinOrg;
-	/** The popup member ptj/organization code. */
-	private String comMemPopUpPtjOrgCode;
-	/** The popup member ptj/organization name. */
-	private String comMemPopUpPtjOrgName;
-	// #12471 End
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11785,143 +11767,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#34451,#34458,#34450 related to #25138 -end
 
-	// #12471 Start
-	/**
-	 * @return the ministryDD
-	 */
-	public SelectItem[] getMinistryDD() {
-		return ministryDD;
+	//#21692 - Start
+	public ScQtEpvSupplierResponse getSuppResp() {
+		return suppResp;
 	}
 
-	/**
-	 * @param ministryDD
-	 *            the ministryDD to set
-	 */
-	public void setMinistryDD(SelectItem[] ministryDD) {
-		this.ministryDD = ministryDD;
+	public void setSuppResp(ScQtEpvSupplierResponse suppResp) {
+		this.suppResp = suppResp;
 	}
+	//#21692 - End
 
-	/**
-	 * @return the PTJ Group dropdown list
-	 */
-	public SelectItem[] getPtjGroupDD() {
-		return ptjGroupDD;
-	}
-
-	/**
-	 * @param ptjGroupDD
-	 *            the PTJ Group dropdown list to set
-	 */
-	public void setPtjGroupDD(SelectItem[] ptjGroupDD) {
-		this.ptjGroupDD = ptjGroupDD;
-	}
-
-	/**
-	 * @return the PTJ dropdown list
-	 */
-	public SelectItem[] getPtjDD() {
-		return ptjDD;
-	}
-
-	/**
-	 * @param ptjDD
-	 *            the PTJ dropdown list to set
-	 */
-	public void setPtjDD(SelectItem[] ptjDD) {
-		this.ptjDD = ptjDD;
-	}
-
-	/**
-	 * @return the organization type dropdown list
-	 */
-	public SelectItem[] getOrgTypeDD() {
-		return orgTypeDD;
-	}
-
-	/**
-	 * @param orgTypeDD
-	 *            the organization type dropdown list to set
-	 */
-	public void setOrgTypeDD(SelectItem[] orgTypeDD) {
-		this.orgTypeDD = orgTypeDD;
-	}
-
-	/**
-	 * @return the organization name dropdown list
-	 */
-	public SelectItem[] getOrgNameDD() {
-		return orgNameDD;
-	}
-
-	/**
-	 * @param orgNameDD
-	 *            the organization name dropdown list to set
-	 */
-	public void setOrgNameDD(SelectItem[] orgNameDD) {
-		this.orgNameDD = orgNameDD;
-	}
-
-	/**
-	 * @return the comMemPopUpName
-	 */
-	public String getComMemPopUpName() {
-		return comMemPopUpName;
-	}
-
-	/**
-	 * @param comMemPopUpName
-	 *            the popup member name to set
-	 */
-	public void setComMemPopUpName(String comMemPopUpName) {
-		this.comMemPopUpName = comMemPopUpName;
-	}
-
-	/**
-	 * @return the comMemPopUpMinOrg
-	 */
-	public String getComMemPopUpMinOrg() {
-		return comMemPopUpMinOrg;
-	}
-
-	/**
-	 * @param comMemPopUpMinOrg
-	 *            the popup member ministry/organization to set
-	 */
-	public void setComMemPopUpMinOrg(String comMemPopUpMinOrg) {
-		this.comMemPopUpMinOrg = comMemPopUpMinOrg;
-	}
-
-	/**
-	 * @return the comMemPopUpPtjOrgCode
-	 */
-	public String getComMemPopUpPtjOrgCode() {
-		return comMemPopUpPtjOrgCode;
-	}
-
-	/**
-	 * @param comMemPopUpPtjOrgCode
-	 *            the popup member ptj/organization code to set
-	 */
-	public void setComMemPopUpPtjOrgCode(String comMemPopUpPtjOrgCode) {
-		this.comMemPopUpPtjOrgCode = comMemPopUpPtjOrgCode;
-	}
-
-	/**
-	 * @return the comMemPopUpPtjOrgName
-	 */
-	public String getComMemPopUpPtjOrgName() {
-		return comMemPopUpPtjOrgName;
-	}
-
-	/**
-	 * @param comMemPopUpPtjOrgName
-	 *            the popup member ptj/organization name to set
-	 */
-	public void setComMemPopUpPtjOrgName(String comMemPopUpPtjOrgName) {
-		this.comMemPopUpPtjOrgName = comMemPopUpPtjOrgName;
-	}
-	// #12471 End
-	
 }
 
 // ***25201
