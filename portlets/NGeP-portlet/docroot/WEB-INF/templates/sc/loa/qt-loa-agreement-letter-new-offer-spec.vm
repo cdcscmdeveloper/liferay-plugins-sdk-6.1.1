@@ -239,7 +239,6 @@ u {
 					$serviceScope
 				</td>
 			</tr>
-			<tr></tr>
 			#end
 			#if ($tplSpecAnswer.tplSpecQuestion.questionType == "S" )
 			<tr>
@@ -280,8 +279,6 @@ u {
 		#end
 	</tbody>
 </table>
-	<br/>
-	<br/>
 #end
 #if ($itemType == "Perkhidmatan" || $itemType == "Service")
 <table width="100%" border="1" cellpadding="0" cellspacing="0">
@@ -383,7 +380,6 @@ u {
 					$serviceScope
 				</td>
 			</tr>
-			<tr></tr>
 			#end
 			#if ($tplSpecAnswer.tplSpecQuestion.questionType == "S" )
 			<tr>
@@ -424,8 +420,6 @@ u {
 		#end
 	</tbody>
 </table>
-<br/>
-<br/>
 #end
 	#set($rowCount = $rowCount + 1)
 	#if($rowCount < $itemsList.size())
