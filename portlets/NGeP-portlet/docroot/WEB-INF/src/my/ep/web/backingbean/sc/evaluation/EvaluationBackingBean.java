@@ -1219,6 +1219,22 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			ScQtSampleLable sampleLabel = null;
 			
 			if (null != sampleCompliance && !sampleCompliance.isEmpty()) {
+				// #11104-start
+				for (ScQtSampleItem sampleItem : sampleCompliance) {
+					PmParameter sampleSubStatus = sampleItem.getSubmissionStatus();
+					
+					if (null != sampleSubStatus.getParameterId()
+							&& ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_COMPLIANCE.equals(sampleSubStatus
+									.getParameterCode())) {
+						String sampleItemRemark = sampleItem.getRemark();
+						
+						if (StringUtils.isBlank(sampleItemRemark) || StringUtils.isEmpty(sampleItemRemark)) {
+							throw new EpException(MessageConst.ERROR_760545);
+						}
+					}
+				}
+				// #11104-End
+				
 				sampleLabel = sampleCompliance.get(0).getScQtSampleLable();
 
 				reqDTO.setSampleComplianceList(sampleCompliance);
