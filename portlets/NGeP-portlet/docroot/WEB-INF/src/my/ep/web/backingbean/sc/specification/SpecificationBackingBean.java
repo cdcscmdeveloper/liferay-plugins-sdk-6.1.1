@@ -1977,15 +1977,6 @@ public class SpecificationBackingBean extends
 						resDTO.getFinancialCheckLists());
 			}
 		
-			// #34451,#34458,#34450 related to #25138 -start
-			if (reqDTO.getScQt() != null) {
-				specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTSpecSO.class);
-				
-				this.getManagedBean().setWipStatusMax(specSo.checkWipScoreSettingMax(reqDTO));
-			}
-			// #34451,#34458,#34450 related to #25138 -end
-
 			List<Integer> settinglist = new ArrayList<Integer>();
 			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL);
 			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_DEMO);
@@ -2419,23 +2410,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							reqDTO2.setWeightageId(tmpCheckList.getQtScoreWeightage().getQtScoreWeightageId());
 							SpecificationResDTO resDTO2 = specSo.retrieveQtScoreOfferPricesZonal(reqDTO2);
 							// ====#31913 bug related to #25138====end
-
 							// #25138 - 31578 - Start.
-							// #34451,#34458,#34450 related to #25138 -start
 							if (this.getManagedBean().getCurrentStatusId()
 									.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
-									&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())
-									|| this.getManagedBean().getCurrentStatusId()
-											.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
-									&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())
-									|| this.getManagedBean().getCurrentStatusId()
-											.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT)
 									&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())) {
-								// #34451,#34458,#34450 related to #25138 -end
 								populateZonalDetails(tmpCheckList, newOfferList);
 							}
 							// #25138 - 31578 - End.
-							
 							// ====#31913 bug related to #25138==== start
 							List<ScQtScoreOfferPrice> scQtScoreOfferPrices = new ArrayList<ScQtScoreOfferPrice>();
 							
@@ -2450,13 +2431,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							} else {
 								scQtScoreOfferPrices = tmpCheckList.getQtScoreWeightage().getScQtScoreOfferPrices();
 							}
-							
 							// Bug #33642 related to #25138 START
 							if (CollectionUtils.isNotEmpty(this.getManagedBean().getOfferPricePackageList())) {
 								scQtScoreOfferPrices = this.getManagedBean().getOfferPricePackageList();
 							}
 							// Bug #33642 to #25138 END
-
 							for (ScQtScoreOfferPrice offerScore : scQtScoreOfferPrices) {
 								// ====#31913 bug related to #25138==== end
 								if (ParameterConst.RECOMMEND_TYPE_PACKAGE.equalsIgnoreCase(offerScore
@@ -2647,14 +2626,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				}
 
 				this.getManagedBean().getFinancialScoring().addAll(localChecklist);
-
-				// #34451,#34458,#34450 related to #25138 -start
-				if (reqDTO.getScQt() != null) {
-					specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSpecSO.class);
-					this.getManagedBean().setWipStatusMax(specSo.checkWipScoreSettingMax(reqDTO));
-				}
-				// #34451,#34458,#34450 related to #25138 -end
 				
 				//#25138 -populate total max score for TS and other element - start
 				if (this.getManagedBean().getQt().isZonal()) {
@@ -6023,10 +5994,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getScQtCheckListValue()) {
 						// #21695, #25138 -start-
-						// fix lazy -start (adding condition isnotempty checklistscore) -start-
-						if (null != checkList.getScQtCheckListValue()
-								&& CollectionUtils.isNotEmpty(checkList.getScQtCheckListScores())) {
-							// fix lazy -start (adding condition isnotempty checklistscore) -end-
+						if (null != checkList.getScQtCheckListValue()) {
 							List<ScQtCheckListScore> bankStatement = new ArrayList<ScQtCheckListScore>();
 							
 							for (ScQtCheckListScore checklistScore : checkList.getScQtCheckListScores()) {
