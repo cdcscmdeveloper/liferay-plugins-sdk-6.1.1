@@ -47,7 +47,7 @@
 			</p:column>
 
 			<!-- #12471 Start -->
-			<p:column headerText="#{lbl['lbl.sc.name']}"> 
+			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<p:commandLink
 					actionListener="#{qTCommitteBackingBean.onClickMemberInfo(specificationcommittee.pmUser)}"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -55,7 +55,7 @@
 					<h:outputText value="#{specificationcommittee.memberName}"
 						style="white-space: normal;" />
 				</p:commandLink>
-			</p:column> 
+			</p:column>
 			<!-- #12471 End -->
 
 			<p:column headerText="#{lbl['lbl.sc.identification.no']}"

@@ -28,14 +28,14 @@
 			</p:column>
 
 			<!-- #12471 Start -->
-			<p:column headerText="#{lbl['lbl.sc.name']}"> 
+			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<p:commandLink
 					actionListener="#{approvalBackingBean.onClickMemberInfo(committeeapprover.pmUser)}"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					update="@form">
 					<h:outputText value="#{committeeapprover.memberName}" />
 				</p:commandLink>
-			</p:column> 
+			</p:column>
 			<!-- #12471 End -->
 
 			<p:column headerText="#{lbl['lbl.sc.identification.no']}"

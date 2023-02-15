@@ -50,6 +50,7 @@ public class UserCommitteeSearchBean implements Serializable {
 	/** The organization name. */
 	private String orgName;
 	// #12471 End
+	
 	/**
 	 * Instantiates a new user committee search bean.
 	 */

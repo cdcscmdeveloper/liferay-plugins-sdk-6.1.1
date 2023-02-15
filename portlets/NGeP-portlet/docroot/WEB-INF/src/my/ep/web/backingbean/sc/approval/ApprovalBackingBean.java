@@ -3295,7 +3295,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			return msgCode;
 		}
 		//#21692 - end
-	// #12471 Start	
+	
+	// #12471 Start
 	/**
 	 * Initialize member info for popup
 	 */

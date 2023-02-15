@@ -1666,23 +1666,32 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
 	public boolean proposalValidityChangeValue; //#21692
+	
 	// #12471 Start
 	/** The ministry dropdown list. */
 	private SelectItem[] ministryDD;
+	
 	/** The PTJ Group dropdown list. */
 	private SelectItem[] ptjGroupDD;
+	
 	/** The PTJ dropdown list. */
 	private SelectItem[] ptjDD;
+	
 	/** The organization type dropdown list. */
 	private SelectItem[] orgTypeDD;
+	
 	/** The organization name dropdown list. */
 	private SelectItem[] orgNameDD;
+	
 	/** The popup member name. */
 	private String comMemPopUpName;
+	
 	/** The popup member ministry/organization. */
 	private String comMemPopUpMinOrg;
+	
 	/** The popup member ptj/organization code. */
 	private String comMemPopUpPtjOrgCode;
+	
 	/** The popup member ptj/organization name. */
 	private String comMemPopUpPtjOrgName;
 	// #12471 End
@@ -11796,6 +11805,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.suppResp = suppResp;
 	}
 	//#21692 - End
+	
 	// #12471 Start
 	/**
 	 * @return the ministryDD
