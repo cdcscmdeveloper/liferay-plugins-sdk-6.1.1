@@ -55,6 +55,8 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
+import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
+import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
 import my.ep.web.util.DateUtils;
@@ -176,8 +178,6 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			
 		  getManagedBean().getSuspensionProductListingPagingDataModel().reloadDatatable();
 		}
-		
-	
 		
 		// 20997 - end
 		/*Return when not call from tasklist*/
@@ -971,7 +971,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	public void goToLoaView(ScLoa scLoa) {
 		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
 		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
-		
+
 		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
 			AmendmentBackingBean abb = new AmendmentBackingBean();
 			
@@ -981,10 +981,12 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			ctBB.getManagedBean().setViewSCL(true);
 
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
-
-			abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
-			abb.getManagedBean().setContractIdFromTaskList(new Long(this.getManagedBean().getContractVer().getCtContract().getContractId()));
-			abb.getManagedBean().setContractVerIdFromTaskList(this.getManagedBean().getContractVer().getContractVerId());
+			
+			//To reset status from FU, NT, FW
+			ctBB.getManagedBean().setDocTypeFromTaskList(null);
+			ctBB.getManagedBean().setContractIdFromTaskList(null);
+			ctBB.getManagedBean().setContractVerIdFromTaskList(null);
+			ctBB.getManagedBean().setTaskNameFromTaskList(null);
 
 			if(ctBB.getManagedBean().isViewContractFromAgreement()){
 				ctBB.getManagedBean().setViewSCLFromContract(true);

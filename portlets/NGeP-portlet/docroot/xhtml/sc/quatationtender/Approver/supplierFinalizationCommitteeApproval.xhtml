@@ -35,9 +35,9 @@
 			<c:if test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryFinalizationCommittee}">
 				<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange}" >
 					<tr>
-						<td style="width: 235px; padding: 10px; text-align: right;">
+						<td style="width: 235px;">
+							<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}" /> 
 							<p:outputLabel value="*" styleClass="mandatory"/>
-							<span style="font-size: 12px;"><p:outputLabel value="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}" /></span>
 						</td>
 						<td>
 							<p:calendar label="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}"
