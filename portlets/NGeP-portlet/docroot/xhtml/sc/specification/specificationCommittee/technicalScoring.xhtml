@@ -181,8 +181,11 @@
 		<!-- 21695 -start- -->
 	</p:panel>
 
+	<!-- #34451,#34458,#34450 related to #25138 add rendered -start- -->
 	<p:panel id="technicalScoringItemPanel"
-		header="#{lbl['lbl.sc.by.item']}" toggleable="true">
+		header="#{lbl['lbl.sc.by.item']}" toggleable="true"
+		rendered="#{specificationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
+		<!-- #34451,#34458,#34450 related to #25138 add rendered -end- -->
 		<p:panelGrid style="margin-top:5px;width:100%;">
 			<f:facet name="header">
 				<p:row>
