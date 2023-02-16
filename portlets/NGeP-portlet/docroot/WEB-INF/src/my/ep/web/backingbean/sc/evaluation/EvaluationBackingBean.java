@@ -71,6 +71,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTSearchBeanConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -13441,41 +13442,21 @@ private void retriveCommitteeRemarksList(){
 				reqDTO.setCheckZonal(getManagedBean().getScQt().isZonal());
 	//Bug #31551 Farid end 23/9/2021
 				//32426-start
+				//#34497 related to #32453 fixing(#25138,#21695) - start
 				ISearchResultBean<ScQtProposalChecklist> resultBean = evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO).getComplianceResultBean();
 				if(scoringReq != null && !scoringReq && CollectionUtils.isNotEmpty(resultBean.getResultList())){
-					List<ScQtProposalChecklist> removesupplier=new ArrayList<ScQtProposalChecklist>();//32453-Financial Other package start
-					for(ScQtProposalChecklist pChecklist: resultBean.getResultList()){
-						pChecklist.setEvaluationStatus(getPmStatusByStatusId(QTStatusConst.PR_COMPLETED));					
-						if(getManagedBean().getTabItemPackageIndex()==2 && SourcingConstants.TECHINICAL_STAGE.equals(evalStage) && getManagedBean().getScQt().isPartial() && !getManagedBean().getScQt().isZonal()){
-						checkFinancialpackageOtherChecklist(pChecklist,evalStage,getManagedBean().getScQt());
-						boolean existvalue=checkFinancialpackageOtherChecklist(pChecklist,evalStage,getManagedBean().getScQt());
-						
-						if(!existvalue){
-							
-							removesupplier.add(pChecklist);	
-						}
-						}
-						if(getManagedBean().getTabItemPackageIndex()==2 && SourcingConstants.TECHINICAL_STAGE.equals(evalStage) && getManagedBean().getScQt().isPartial() && getManagedBean().getScQt().isZonal()){//32741-Financial Other package start
-							checkFinancialpackageOtherChecklist(pChecklist,evalStage,getManagedBean().getScQt());
-							boolean existvalue=checkFinancialpackageOtherChecklist(pChecklist,evalStage,getManagedBean().getScQt());
-							
-							if(!existvalue){
-								
-								removesupplier.add(pChecklist);	
+				List<Long> proposalChecklistIds = new ArrayList<>();
+					if(getManagedBean().getTabItemPackageIndex()==2 && SourcingConstants.TECHINICAL_STAGE.equals(evalStage) && getManagedBean().getScQt().isPartial()){
+						for(ScQtProposalChecklist proposalChecklist: resultBean.getResultList()){
+							if(!checkFinancialpackageOtherChecklist(proposalChecklist,evalStage,getManagedBean().getScQt())){
+								proposalChecklistIds.add(proposalChecklist.getQtProposalChecklistId());
 							}
-							}//32741-Financial Other package End
+						}
+						reqDTO.getProposalChecklistSearchBean().getDataFilterBeans().add(new SearchFilterBean(QTSearchBeanConst.SEARCH_QTPROPOSALCHECKLIST_ID,
+								SearchOperator.OPERATOR_NOT_IN.value(), proposalChecklistIds));
 					}
-					if(removesupplier.size()>0){
-						
-						resultBean.getResultList().removeAll(removesupplier);	
-					}//32453-Financial Other package End
 				}else{//32453-Technical Other package start
-					ISearchResultBean<Object[]> pagingModelDataPackage=null;
-					boolean partia=Boolean.FALSE;
-					
-					if(getManagedBean().getTabTechnicalIndex()==2 && SourcingConstants.COMPLAINCE_STAGE.equals(evalStage) && getManagedBean().getScQt().isPartial() ){
-						
-
+					if(getManagedBean().getTabTechnicalIndex()==2 && SourcingConstants.COMPLAINCE_STAGE.equals(evalStage) && getManagedBean().getScQt().isPartial()){
                         ISearchBean<Object[]> packagesearchBean=new SearchBean<Object[]>();
 						EvaluationReqDTO reqDTOP = new EvaluationReqDTO();
 						reqDTOP.setQtId(getManagedBean().getScQt().getQtId());
@@ -13484,76 +13465,22 @@ private void retriveCommitteeRemarksList(){
 						reqDTOP.setPmCode(QTConstants.TEMPLETE_SPEC_CODE);
 						reqDTOP.setObjectSearchBean(packagesearchBean);
 						reqDTOP.setZonal(getManagedBean().getScQt().isZonal());
-
-/*						 pagingModelDataPackage = new ComplianceSupplierPagingDataModelPackage(
-												"templateSpecIdPackage",null, reqDTOP
-												.getCompliance(),getManagedBean().getScQt()
-												.getQtId(), reqDTOP
-												.getEvalStage(),reqDTOP
-												.getDocCategory(),reqDTOP
-												.getPmCode(),getManagedBean().getScQt().isZonal());*/
-						pagingModelDataPackage=evaluationSO.retrieveComplianceDtlsByCheckListPackage(reqDTOP).getScoreObjResultBean();
-						 partia=Boolean.TRUE; 
-					
-					List<ScQtProposalChecklist> removesupplier=new ArrayList<ScQtProposalChecklist>();
-					for(ScQtProposalChecklist pChecklist: resultBean.getResultList()){
-						if(partia){
-							boolean exist=Boolean.FALSE;
-							if(null!=pagingModelDataPackage){
-								
-							List<Object[]> packageQualified= pagingModelDataPackage.getResultList();
-							for(Object[] qualified:packageQualified){
-							
-							long supplierNumber=((BigDecimal)qualified[2]).longValue();
-							
-							if(supplierNumber==pChecklist.getScQtProposal().getSupplierNo()){
-								
-								exist=true;
-							}
-							}
-							if(!exist){
-								removesupplier.add(pChecklist);
-							}
-							}
+						ISearchResultBean<Object[]> pagingModelDataPackage = evaluationSO.retrieveComplianceDtlsByCheckListPackage(reqDTOP).getScoreObjResultBean();
+						List<Long> supplierNos = new ArrayList<>();
+						for(Object[] qualified:pagingModelDataPackage.getResultList()){
+							Long supplierNo = ((BigDecimal)qualified[2]).longValue();
+							supplierNos.add(supplierNo);
 						}
+						reqDTO.getProposalChecklistSearchBean().getDataFilterBeans().add(new SearchFilterBean(QTSearchBeanConst.SEARCH_SCQTPROPOSAL_SUPPLIERNO,
+								SearchOperator.OPERATOR_IN.value(), supplierNos));
 					}
-					if(removesupplier.size()>0){
-						resultBean.getResultList().removeAll(removesupplier);	
-					}
-					}
+				}
 				
-					if(getManagedBean().getTabItemPackageIndex()==2 && SourcingConstants.TECHINICAL_STAGE.equals(evalStage) && getManagedBean().getScQt().isPartial() && !getManagedBean().getScQt().isZonal()){//32453-Financial Other package start
-						List<ScQtProposalChecklist> removesupplier=new ArrayList<ScQtProposalChecklist>();
-						for(ScQtProposalChecklist pChecklist: resultBean.getResultList()){
-						boolean existvalue=checkFinancialpackageOtherChecklist(pChecklist,evalStage,getManagedBean().getScQt());
-						
-						if(!existvalue){
-							removesupplier.add(pChecklist);	
-						}
-						}
-						if(removesupplier.size()>0){
-							
-							resultBean.getResultList().removeAll(removesupplier);
-						}
-						}//32453-Financial Other package End
-					if(getManagedBean().getTabItemPackageIndex()==2 && SourcingConstants.TECHINICAL_STAGE.equals(evalStage) && getManagedBean().getScQt().isPartial() && getManagedBean().getScQt().isZonal()){//32741-Financial Other package start
-						List<ScQtProposalChecklist> removesupplier=new ArrayList<ScQtProposalChecklist>();
-						for(ScQtProposalChecklist pChecklist: resultBean.getResultList()){
-						boolean existvalue=checkFinancialpackageOtherChecklist(pChecklist,evalStage,getManagedBean().getScQt());
-						
-						if(!existvalue){
-							removesupplier.add(pChecklist);	
-						}
-						}
-						if(removesupplier.size()>0){
-							
-							resultBean.getResultList().removeAll(removesupplier);
-						}
-						}//32741-Financial Other package End
-				}//32453-Technical Other package End
+				resultBean = evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO).getComplianceResultBean();
+			
 				return resultBean;
 				//32426-end
-
+				//#34497 related to #32453 fixing(#25138,#21695) - end
 			} finally {
 				evaluationSO = null;
 			}
