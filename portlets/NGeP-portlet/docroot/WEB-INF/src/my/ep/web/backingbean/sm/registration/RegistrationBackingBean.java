@@ -1018,8 +1018,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPersonnel = setDesignationSSM(smPersonnel);
 		//END SSM CHANGES #27201		
 		smAppl.getSmPersonnels().add(smPersonnel);
+		//#27691 START - Comment this line to proceed testing basic account maintenance-issue duplicate personnel for SSM company
 		//32764 - start
-		if(!getManagedBean().isSameAsOwner() && getManagedBean().getSmSuppOwners() != null
+		/*if(!getManagedBean().isSameAsOwner() && getManagedBean().getSmSuppOwners() != null
 				&& getManagedBean().getSmSuppOwners().size() > 0){
 			SmPersonnel per = new SmPersonnel();
 			SmSupplierOwner owner = getManagedBean().getSmSuppOwners().get(0);
@@ -1030,9 +1031,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			per.setEquityOwner(true);
 			per.setSmAppl(smAppl);
 			smAppl.getSmPersonnels().add(per);			
-		}
+		}*/
 		//32764 - end
-		
+		//#27691 END
 		/*if(!smPersonnel.getIdentificationNo().equalsIgnoreCase(smSuppOwner.getIdentificationNo())){
 			SmPersonnel smPersonnelSupplierOwner = new SmPersonnel();
 			smPersonnelSupplierOwner= onSaveSmPersonnelEquityOwner(smAppl, smSuppOwner, smPersonnelSupplierOwner);
@@ -2418,6 +2419,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						for(SmSupplierOwner suppOwner : this.getManagedBean().getSmSupp().getSmSupplierOwners()){
 							if(suppOwner!=null && personnel.getIdentificationNo().equals(suppOwner.getIdentificationNo())){
 								ownerExist = true;
+								if(suppOwner.isShowTextField()){ //#27691 - set show text field to false for existing data
+									suppOwner.setShowTextField(false);
+								}
 								break;
 							}
 						}
@@ -2435,6 +2439,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							suppOwnerDirector.setIdentificationNo(personnel.getIdentificationNo());
 							this.getManagedBean().getSmSuppOwners().add(suppOwnerDirector);
 							resDTO.getSmSupp().getSmSupplierOwners().add(suppOwnerDirector);
+						}
+						if(personnel.getRevNo() == 0){ //#27691 Set rev_no=1 
+							personnel.setRevNo(1);
 						}
 					}
 				}
@@ -2457,8 +2464,33 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								if(smSuppOwner.getIdentificationNo().equals(smPersonnel.getIdentificationNo())){ //#27691
 									smSuppOwner.setOwnerIsEquity(smPersonnel.isEquityOwner());
 									smSuppOwner.setOwnerIsDirector(smPersonnel.isDirector());
+									//#27691 START - fix with correct checkbox
+									if(this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN) ||
+											this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI) ||
+											this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN) ||
+											this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2)){
+										if(smPersonnel.isEquityOwner()){
+											smSuppOwner.setOwnerIsEquity(false);
+											smSuppOwner.setOwnerIsDirector(true);
+										}
+									}
 								}
 							}
+							if(this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN)
+									|| this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI) 
+									|| this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN) 
+									|| this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2)){
+								if(!smSuppOwner.isOwnerIsDirector()){
+									smSuppOwner.setOwnerIsDirector(true);
+								}
+							}else if(this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
+									|| this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) 
+									|| this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH) 
+									|| this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)){
+								if(!smSuppOwner.isOwnerIsEquity()){
+									smSuppOwner.setOwnerIsEquity(true);
+								}
+							} //#27691 END
 						}
 						this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
 						this.getManagedBean().setSmSuppOwners(resDTO.getSmSupp().getSmSupplierOwners());
@@ -2533,6 +2565,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 										.equals(ParameterConst.IDENTIFICATION_TYPES_IC)){
 									this.getManagedBean().getSmPersonnelDirector().add(personnel);
 								}
+							}
+							if(personnel.getRevNo() == 0){ //#27691 set rev_no=1
+								personnel.setRevNo(1);
 							}
 							// 27691 - End
 						}
