@@ -6772,6 +6772,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().getQt().setScQtRemarks(null);
 			} 
 			//9019 - End (Harun)
+			//9019 - Start (Harun) #Note-398 Remove checking for (ERR-100022) error mesg while save 
+			if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().getQt().getSpecApprovalReq() == true) {
+				this.getManagedBean().getQt().setSpecApprovalReq(false);
+				reqDTO.getQtdetail().setSpecApprovalReq(false);
+				reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
+			}
+			//9019 - End (Harun)
 			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
 			//9019 - end
 			renewQTSesionObject();
@@ -7145,6 +7152,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		if (priviousIndex != activeIndex) {
 			if (!isReadOnly) {
+				//9019 - Start (Harun) #Note-398 include in this note fixing while unit test
+				//       This changes is for #Note-360
+				detailSO.validateQTGeneralInformation(reqDTO);
+				//9019 - End (Harun)
 				switch (priviousIndex) {
 				case 0:
 					//9019 - Start (Harun) #Note-360 Remove checking while not submit and allow to proceed 
