@@ -584,6 +584,11 @@ public class TemplateSpecHelper {
 			if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType())) {
 				resetPriceType(specMaster, specQuestion);
 			}
+			//Bug #34223@Syazani 30/11/2022 - Start
+			if (specZone == null) {
+				specQuestion.setTplSpecZoneQties(null);
+			}
+			//Bug #34223@Syazani 30/11/2022 - Start
 		}
 		}
 	}
