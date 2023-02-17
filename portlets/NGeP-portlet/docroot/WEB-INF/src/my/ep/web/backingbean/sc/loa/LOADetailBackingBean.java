@@ -2812,14 +2812,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				context.put("agency", ptjName);
 				context.put("qtNo", qtNo);
 
-				//#32648 populate lampiran 7 if LOA at supplier - start 
-				int isLoa = 0;
-				if (null != pmUser) {
-					isLoa = 1;
-				}
-
-				context.put("isSupplierLoa", isLoa);
-				//#32648 populate lampiran 7 if LOA at supplier - end
 				String loaNo = "&#60;LOA No.&#62;";
 				if(scLoa.getLoaNo() != null){
 					loaNo = scLoa.getLoaNo();
@@ -10106,18 +10098,4 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	//#25025 - end
 
-	// #32648 populate lampiran 7 if LOA at supplier - start
-	public boolean isDpAuditOrQtAuditOrQtMaint() {
-		return QTConstants.PORTLET_NAME_QT_MAINTENANCE
-				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-				|| QTConstants.PORTLET_NAME_QT_SEARCH
-						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-					|| SourcingConstants.PORTLET_NAME_DP_SEARCH
-						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-						|| SourcingConstants.PORTLET_NAME_DP_LOA_LIST
-						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-						|| QTConstants.PORTLET_NAME_QT_LIST
-						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
-	}
-	// #32648 populate lampiran 7 if LOA at supplier - end
 }
