@@ -3500,8 +3500,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			if(!company.isSsmData()) continue;
 			getManagedBean().getSmEquityCompaniesSsm().add(company);
 		}
-
-		SmCommonUtil.redirectToExternalUrl(SupplierManagementConst.VIEW_SSM_INFOMATION);
+		//#31269
+		RequestContext.getCurrentInstance().execute("viewssminfoWidgetVar.show()");
 	}
 	
 	public boolean renderViewSSMInfo(){
