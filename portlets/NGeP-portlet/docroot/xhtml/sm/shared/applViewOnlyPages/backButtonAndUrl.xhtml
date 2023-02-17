@@ -38,12 +38,12 @@
 				<!-- END 29823 -->
 					</p:outputPanel> 
 				<!-- 31269 - start -->
-				<h:commandLink value="#{lbl['lbl.sm.view.ssm.infomation']}"
+				<p:commandLink value="#{lbl['lbl.sm.view.ssm.infomation']}"
 					rendered="#{!viewSmApplBackingBean.managedBean.supplierUser
 							and viewSmApplBackingBean.managedBean.viewApplicationHistory
 							and viewSmApplBackingBean.renderViewSSMInfo()}"
 					action="#{backingBean.redirectToViewSSMInfo(viewSmApplBackingBean.managedBean.smAppl)}"	
-					target="_blank"/>&#160;&#160;
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />&#160;&#160;
 				<!-- 31269 - end -->
 				<p:commandLink onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
@@ -99,5 +99,13 @@
 				btnOkLabel="#{lbl['lbl.btn.change']}" 
 				btnCancelLabel="#{lbl['lbl.btn.cancel']}"/>
 		<!-- END 27951 -->
+		<!-- #31269 - start -->
+		<p:dialog id="viewssminfo" header="#{lbl['lbl.sm.view.ssm.infomation']}"
+			widgetVar="viewssminfoWidgetVar" modal="true"
+			height="500px" width="1000px" resizable="false" style="display: static;">
+			<ui:param name="backingBean" value="#{viewSmApplBackingBean}" />
+			<ui:include src="/xhtml/sm/renewMofApplication/viewSsmInformation.xhtml"/>
+		</p:dialog>
+		<!-- #31269 - start -->
 	
 </ui:composition>
