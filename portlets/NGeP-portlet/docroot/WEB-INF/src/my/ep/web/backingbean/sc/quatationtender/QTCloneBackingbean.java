@@ -2223,7 +2223,11 @@ public class QTCloneBackingbean extends
 			newApprovals.add(newApproval);
 		}
 		scQt.setScQtApprovals(newApprovals);
-		
+		this.getManagedBean().setFlagFileAttahmentDeletedICT(Boolean.TRUE);//34502&25635-start
+		this.getManagedBean().setScQtApprovalReqAttachementICT(null);
+		this.getManagedBean().setScQtAppRequestRemark(StringUtils.EMPTY);
+		this. getManagedBean().setPmParam(null);
+		scQt.setCloneEnabled(Boolean.TRUE);//34502&25635-end
 		
 		
 		return scQt;
