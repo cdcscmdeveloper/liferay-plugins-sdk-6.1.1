@@ -661,6 +661,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//Bug #33178
 	private boolean noSupplierPackageExist;
 	//Bug #33178
+	/*#29187 Start Vinod*/
+	private TplSpecZoneDtl tplSpecZoneDtl;
+	/*#29187 End Vinod*/
 	
 	/**tabIndex
 	 * Gets the today.
@@ -4297,4 +4300,12 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.demoTechnicalCommitteeRemark = demoTechnicalCommitteeRemark;
 	}
 	//#28784 add remarks - end
+	/*#29187 Start Vinod*/
+	public TplSpecZoneDtl getTplSpecZoneDtl() {
+		return tplSpecZoneDtl;
+	}
+	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
+		this.tplSpecZoneDtl = tplSpecZoneDtl;
+	}
+	/*#29187 End Vinod*/
 }
