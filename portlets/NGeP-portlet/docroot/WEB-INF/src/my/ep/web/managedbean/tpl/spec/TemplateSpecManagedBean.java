@@ -160,6 +160,13 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	/** The evaluatio stage active index. */
 	private int evaluatioStageActiveIndex;//#25138
 	
+	//#29187 Start Vinod
+	List<SelectItem> mandatorySpecList;
+	private boolean zoneForItemHlink;
+	private TplSpecQuestion questionForItemHlink;
+	private List<TplSpecZoneQty> zoneQtyForItemHlink;
+	//#29187 End Vinod
+	
 	/**
 	 * @return the statecode
 	 */
@@ -962,4 +969,37 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	}
 
 /* #21695 END */		
+	//#29187 Start Vinod
+	public List<SelectItem> getMandatorySpecList() {
+		return mandatorySpecList;
+	}
+
+	public void setMandatorySpecList(List<SelectItem> mandatorySpecList) {
+		this.mandatorySpecList = mandatorySpecList;
+	}
+
+	public boolean isZoneForItemHlink() {
+		return zoneForItemHlink;
+	}
+
+	public void setZoneForItemHlink(boolean zoneForItemHlink) {
+		this.zoneForItemHlink = zoneForItemHlink;
+	}
+
+	public TplSpecQuestion getQuestionForItemHlink() {
+		return questionForItemHlink;
+	}
+	
+	public void setQuestionForItemHlink(TplSpecQuestion questionForItemHlink) {
+		this.questionForItemHlink = questionForItemHlink;
+	}
+
+	public List<TplSpecZoneQty> getZoneQtyForItemHlink() {
+		return zoneQtyForItemHlink;
+	}
+
+	public void setZoneQtyForItemHlink(List<TplSpecZoneQty> zoneQtyForItemHlink) {
+		this.zoneQtyForItemHlink = zoneQtyForItemHlink;
+	}
+	//#29187 End Vinod
 }
