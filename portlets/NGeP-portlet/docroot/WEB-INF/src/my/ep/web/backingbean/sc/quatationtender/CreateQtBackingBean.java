@@ -2897,11 +2897,24 @@ public class CreateQtBackingBean extends
 		Long parameterId = (approvalDetails != null && approvalDetails.getApproverAction() != null) ? approvalDetails.getApproverAction().getParameterId() : null;
 		if (parameterId != null) {
 			approvalDetails.setApproverAction(retrieveParameterById(parameterId));
+
+			// bug #30435, Enhancement #25077 - start
+			getManagedBean().setPmParam(retrieveParameterById(parameterId));
+			// #30435, #25077 -end-			
 		} else {
 			approvalDetails.setApproverAction(new PmParameter());
 		}
 
 	}
+	 
+	// #30435, #25077 -start-
+	public void otherAppValueChanged(ValueChangeEvent event) {
+
+		if (null != event.getNewValue()) {
+			getManagedBean().setScQtAppRequestRemark(event.getNewValue().toString());
+		}
+	}
+	// bug #30435, Enhancement #25077 - end
 
 	/**
 	 * To remove the non bumi suppliers as open for Bumi for Restricted tender

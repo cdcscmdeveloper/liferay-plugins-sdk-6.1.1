@@ -4390,6 +4390,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						templateresDTO.getSpecMaster());
 				TemplateSpecBean templateSpecBean = getManagedBean()
 						.getTemplateSpecBean();
+
+				// #27173 -start-
+				checkList.getScQtDoc().getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
+				// #27173 -end-
+
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
 				if (this.getManagedBean().getQt().isZonal()
@@ -4935,6 +4940,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						templateresDTO.getSpecMaster());
 				TemplateSpecBean templateSpecBean = getManagedBean()
 						.getTemplateSpecBean();
+
+				// #27173 -start-
+				checkList.getScQtDoc().getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
+				// #27173 -end-
+
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
 
@@ -9568,6 +9578,33 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				this.getManagedBean().setProcMethodDropdownPresent(checkForProcumentMethodDropdown(scQt));
 			}
 		}
+
+		// #27173 -start-
+		Long statusId = scQt.getQtStatus().getStatusId();
+		
+		// #25077 - #91 -start-
+		if (!(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(statusId))) {
+			// #25077 - #91 -end-
+			if (null == scQt.getEstimatedAmount()) {
+				SpecificationReqDTO estimatedReqDTo = new SpecificationReqDTO();
+				estimatedReqDTo.setQtId(scQt.getQtId());
+				
+				IQTSpecSO specSO = getSpecSO();
+				SpecificationResDTO resTO = specSO.calCulateTemplateSpecEstimations(estimatedReqDTo);
+				
+				if (null != resTO && null != resTO.getTotalSpecEstimatedAmount()) {
+					scQt.setEstimatedAmount(resTO.getTotalSpecEstimatedAmount());
+				}
+				
+				// #31293, #25077 Farid Start
+				if (scQt.getEstimatedAmount().compareTo(BigDecimal.ZERO) > 0) {
+					new CreateQtBackingBean().setProcurementMode(scQt, scQt.getEstimatedAmount());
+				}
+				// #31293, #25077 Farid End
+			}
+		}
+		// #27173 -end-
+		
 		checkProcurementModeValue();
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
@@ -11588,6 +11625,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		localCheckList.getScQtDoc().setTplSpecMaster(tmpresDTO.getSpecMaster());
 		TemplateSpecBean templateSpecBean = getManagedBean()
 				.getTemplateSpecBean();
+
+		// #27173 -start-
+		localCheckList.getScQtDoc().getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
+		// #27173 -end-
+
 		templateSpecBean.setSpecMaster(localCheckList.getScQtDoc()
 				.getTplSpecMaster());
 		if (this.getManagedBean().getQt().isZonal()) {
