@@ -16,8 +16,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -589,11 +587,16 @@ public class TemplateSpecHelper {
 	public void updateZoneDtl(TplSpecMaster specMaster, TplSpecZone specZone) {
 		specMaster.setTplSpecZone(specZone);
 		if(CollectionUtils.isNotEmpty(specMaster.getTplSpecQuestions())){
-		for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
-			if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType())) {
-				resetPriceType(specMaster, specQuestion);
+			for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
+				if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType())) {
+					resetPriceType(specMaster, specQuestion);
+				}
+				//Bug #34223@Syazani 30/11/2022 - Start
+				if (specZone == null) {
+					specQuestion.setTplSpecZoneQties(null);
+				}
+				//Bug #34223@Syazani 30/11/2022 - Start
 			}
-		}
 		}
 	}
 	
@@ -745,14 +748,14 @@ public class TemplateSpecHelper {
 					totalPrice = totalPrice.multiply(uomPerMonth);
 				}
 			
-				// ***25201
+				// ***25201 -start-
 				TemplateSpecReqDTO templateSpecReqDTO;
 				ITemplateSpecSO	templateSpecSo;
 				TemplateSpecResDTO resDTO;
+				
 				try{
 					if(null == specQuestion.getClFulfilmentTypeCode()){}
-				}
-				catch(ValidationException ex){
+				} catch (ValidationException ex) {
 					templateSpecReqDTO = new TemplateSpecReqDTO();
 					templateSpecReqDTO.setSpecQuestionId(specQuestion.getSpecQuestionId());
 					
@@ -760,10 +763,13 @@ public class TemplateSpecHelper {
 							ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 					
 					resDTO = templateSpecSo.fetchSpecQuestion(templateSpecReqDTO);
+					
 					if(resDTO.isSuccessful()){
 						specQuestion = resDTO.getSpecQuestionList().get(0);
 					}
 				}
+				// ***25201 -end-
+				
 				if (!specQuestion.getClFulfilmentTypeCode().getParameterCode()
 						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
 					if (itemDurationMonth != null) {
