@@ -98,9 +98,8 @@
 				<ui:fragment rendered="#{evaFinSupplier.submitted eq 'true'
 				and evaFinSupplier.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected}">
 					<p:inputTextarea rows="2" cols="55" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" onmouseout="limitTextArea(this,200);"
-						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
-						or isRejected}"
-						value="#{evaFinSupplier.remark}"><ui:remove>6906 add isrejected</ui:remove> 
+						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
+						value="#{evaFinSupplier.remark}">
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 					</p:inputTextarea>
 				</ui:fragment>
