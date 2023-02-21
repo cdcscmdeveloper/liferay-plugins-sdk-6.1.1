@@ -438,7 +438,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 			
 			else{
-				ctBB.getManagedBean().setViewContract(false);
+				ctBB.getManagedBean().setInCtPerformance(false);
 			}
 			
 			//Retrieve agreement list
@@ -2649,6 +2649,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				reqDTO.setViewOnly(true);
 				ctBB.getManagedBean().setFromViewPage(true); 
 				ctBB.getManagedBean().setInCtPerformance(true);
+				ctBB.getManagedBean().setFromUpdateButton(true);
 			}
 			
 			else{
@@ -2991,6 +2992,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		contractBB.getManagedBean().getContractListingPagingDataModel().resetData();
 		contractBB.getManagedBean().getServiceListingPagingDataModel().resetData();
 		contractBB.getManagedBean().setResetval(true);
+		ctBB.getManagedBean().setFromUpdateButton(false);
 	
 		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
 	}

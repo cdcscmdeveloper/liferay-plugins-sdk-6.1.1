@@ -235,6 +235,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	
 	//#33126 hafiz start
 	private boolean inCtPerformance = false;
+	private boolean fromUpdateButton = false;
 	//#33126 hafiz end
 	
 	private String itemstatus;
@@ -1807,6 +1808,14 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setInCtPerformance(boolean inCtPerformance) {
 		this.inCtPerformance = inCtPerformance;
+	}
+	
+	public boolean isFromUpdateButton() {
+		return fromUpdateButton;
+	}
+
+	public void setFromUpdateButton(boolean fromUpdateButton) {
+		this.fromUpdateButton = fromUpdateButton;
 	}
 
 	// #33126 hafiz end

@@ -35,7 +35,7 @@
 				
 				
 				<c:if
-					test="#{ctBackingBean.managedBean.viewContract and ctBackingBean.managedBean.inCtPerformance }">
+					test="#{ctBackingBean.managedBean.viewContract and ctBackingBean.managedBean.fromUpdateButton }">
 					<ui:decorate template="/xhtml/ct/shared/claim_template.xhtml">
 					<ui:define name="outComeSection">
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
@@ -47,7 +47,7 @@
 				</c:if>
 				
 				</td>
-			<c:if test='#{ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.inCtPerformance}'>
+			<c:if test="#{ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.fromUpdateButton}">
 				<td style="text-align: right">
 					<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}" immediate="true"
 						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode,
