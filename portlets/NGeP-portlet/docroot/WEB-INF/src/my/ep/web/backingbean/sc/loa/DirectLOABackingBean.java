@@ -10060,7 +10060,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
 			fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType(); 
 		}
-
+		
+		//#34413 - Start
+		if(null != qtType && ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())){
+			if (null == getManagedBean().getScLoa().getJustificationType()) {
+				getManagedBean().getScLoa().setJustificationType(new PmReason());
+			}
+			return true;
+		}else 
+		//#34413 - End	
 		if (null != qtType && null != fulfilmentType 
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType()) 
 				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
