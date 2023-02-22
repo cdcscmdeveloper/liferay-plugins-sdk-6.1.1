@@ -3992,28 +3992,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		//Bug 34030 - shaqimi start
 		String docType = getManagedBean().getContractVer().getDocType();
 		Long statusId = getManagedBean().getContractVer().getStatus().getStatusId();
-		String taskNameFromTaskList = "";
-		Long contractIdFromTaskList = null;
-		Long contractVerIdFromTaskList = null;
-		String docTypeFromTaskList = "";
-		
-		if(this.getManagedBean().getTaskNameFromTaskList() != null && !this.getManagedBean().getTaskNameFromTaskList().isEmpty()){
-			taskNameFromTaskList = this.getManagedBean().getTaskNameFromTaskList();
-		}
-		if(this.getManagedBean().getContractIdFromTaskList() != null && !this.getManagedBean().getContractIdFromTaskList().equals(null)){
-			contractIdFromTaskList = this.getManagedBean().getContractIdFromTaskList();
-		}
-		if(this.getManagedBean().getContractVerIdFromTaskList() != null && !this.getManagedBean().getContractVerIdFromTaskList().equals(null)){
-			contractVerIdFromTaskList = this.getManagedBean().getContractVerIdFromTaskList();
-		}
-		if(this.getManagedBean().getDocTypeFromTaskList() != null && !this.getManagedBean().getDocTypeFromTaskList().isEmpty()){
-			docTypeFromTaskList = this.getManagedBean().getDocTypeFromTaskList();
-		}
-		//Bug 34030 - shaqimi end
+		getManagedBean().setInPage(false);//Bug 34142 - shaqimi 04/12/2022
 		
 		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
 			AmendmentBackingBean abb = new AmendmentBackingBean();
-			getManagedBean().setAmendFromTaskList(true);
+			//Bug 34142, 15851 - shaqimi start 04122022
+			if(getManagedBean().getTaskIdFromTaskList() != null){
+				getManagedBean().setAmendFromTaskList(true);
+			}
+			//Bug 34142, 15851 - shaqimi end 04122022
+			
 			//follow structure but for amendment
 			FacesContext fc = FacesContext.getCurrentInstance();
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
@@ -4022,35 +4010,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			//Bug 33096 - shaqimi start
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
 			//Bug 33096 - shaqimi end
-			//Bug 34030 - shaqimi start
-			//Bug 34142 - shaqimi start 29/11/2022
-			if(!getManagedBean().isViewContractFromAgreement()){
-				if(docType.equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING) 
-						|| docType.equals(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
-						|| docType.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE)){
-					abb.getManagedBean().setStatusIdFromTaskList(statusId);
-					abb.getManagedBean().setTaskNameFromTaskList(taskNameFromTaskList);
-					abb.getManagedBean().setContractIdFromTaskList(contractIdFromTaskList);
-					abb.getManagedBean().setContractVerIdFromTaskList(contractVerIdFromTaskList);
-					
-					if((docTypeFromTaskList != null && !docTypeFromTaskList.isEmpty())){
-						abb.getManagedBean().setDocTypeFromTaskList(docTypeFromTaskList);
-					} else {
-						abb.getManagedBean().setDocTypeFromTaskList(docType);
-					}
-				}else if(abb.getManagedBean().getTaskId() != null){
-					abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
-					abb.getManagedBean().setContractIdFromTaskList(new Long(this.getManagedBean().getContractVer().getCtContract().getContractId()));
-					abb.getManagedBean().setContractVerIdFromTaskList(this.getManagedBean().getContractVer().getContractVerId());
-				}
-			}
-			//Bug 34142 - shaqimi end 29/11/2022
+			//Bug 34142, 15851 - shaqimi end 04/12/2022
+			getManagedBean().setStatusIdFromTaskList(statusId);
+			getManagedBean().setDocTypeFromTaskList(docType);
+			//Bug 34142, 15851 - shaqimi end 04/12/2022
 			//Bug 34142 - shaqimi start 16112022
-			if(this.getManagedBean().isViewContractFromAgreement()){
-				this.getManagedBean().setViewSCLFromContract(true);
+			if(getManagedBean().isViewContractFromAgreement()){
+				getManagedBean().setViewSCLFromContract(true);
 			}
 			//Bug 34142 - shaqimi end 16112022
-			//Bug 34030 - shaqimi end
 			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
 		}
 		//Enhancement 15851 - shaqimi end
