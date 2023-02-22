@@ -6,7 +6,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sm.equiComp.panHdr']}" toggleable="true">
+	<!-- #33783 - start -->
+	<ui:param name="headerShrHolder" value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyTypeSSM 
+		== SupplierManagementConst.COMPANY_TYPE_CLBG ? lbl['lbl.sm.equiComp.panHdr.clbg'] : lbl['lbl.sm.equiComp.panHdr']}c012e" />
+	<p:panel header="#{headerEquiCompany}" toggleable="true">
+	<!-- #33783 - end -->
 		<!-- 28466 - start - add screen instruction -->
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sm.shareholder.valid.value.shareholding']}"
@@ -148,9 +152,10 @@
 				<table style="width: 50%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+						<!-- #33783 -->
 						<td><p:inputTextarea autoResize="false" cols="41"
 								maxlength="200" id="capEquiShrCompPoRmrk" readonly="#{backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser}"
-								validatorMessage="#{lbl['lbl.sm.equiComp.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+								validatorMessage="#{headerEquiCompany} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
 								value="#{backingBean.managedBean.poSecReview.equityCompRemark}">
 								<f:validateLength maximum="200" />
 							</p:inputTextarea> <p:message id="capEquiShrCompPoRmrkMsg"
@@ -167,9 +172,10 @@
 								disabled="true" cols="41" maxlength="200"
 								value="#{backingBean.managedBean.poSecReview.equityCompRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
+						<!-- #33783 -->
 						<td><p:inputTextarea autoResize="false" cols="41"
 								maxlength="200" id="capEquiShrCompApprvrRmrk"
-								validatorMessage="#{lbl['lbl.sm.equiComp.panHdr']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+								validatorMessage="#{headerEquiCompany} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
 								value="#{backingBean.managedBean.apprvrSecReview.equityCompRemark}">
 								<f:validateLength maximum="200" />
 							</p:inputTextarea> <p:message id="capEquiShrCompApprvrRmrkMsg"

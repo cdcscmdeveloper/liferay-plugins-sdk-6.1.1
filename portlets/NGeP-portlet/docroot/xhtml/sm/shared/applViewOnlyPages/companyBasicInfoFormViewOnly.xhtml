@@ -96,8 +96,16 @@
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.smAppl.bumi}"  />
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{!viewSmApplBackingBean.managedBean.smAppl.bumi}"  />
 					</td>
-					<td></td>
-					<td></td>
+					<!-- #33783 - start -->
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.clbg']} cew902" 
+							rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType == 'I' or
+										viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType == 'J'}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" 
+							value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.companyTypeSSM 
+											== SupplierManagementConst.COMPANY_TYPE_CLBG ? lbl['lbl.btn.yes'] : lbl['lbl.btn.no']}" 
+							rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType == 'I' or
+										viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType == 'J'}"/></td>
+					<!-- #33783 - end -->
 	
 					</tr>
 				</p:outputPanel>

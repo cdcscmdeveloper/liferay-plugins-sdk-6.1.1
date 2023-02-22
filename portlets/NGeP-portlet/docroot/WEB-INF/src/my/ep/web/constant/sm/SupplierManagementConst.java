@@ -734,6 +734,14 @@ public class SupplierManagementConst {
 	public static final String ROLE_CODE_SM_3 = "CM_USER";
 	public static final String ROLE_CODE_SM_4 = "FL_USER";
 	public static final String ROLE_CODE_SM_5 = "SUPPLIER_TEMP";
+	
+	//33783 - start
+	public static final String COMPANY_TYPE_CLBG = my.ep.constant.sm.SupplierManagementConst.COMPANY_TYPE_CLBG;
+	
+	public String getCOMPANY_TYPE_CLBG() {
+		return COMPANY_TYPE_CLBG;
+	}
+	//33783 - end
 
 	public String getCATEGORY_CODE_L3_99() {
 		return CATEGORY_CODE_L3_99;

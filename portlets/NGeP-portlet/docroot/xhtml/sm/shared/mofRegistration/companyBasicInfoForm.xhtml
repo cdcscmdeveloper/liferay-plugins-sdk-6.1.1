@@ -59,7 +59,18 @@
 							currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}" 
 							alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.companyName}"/>
 					</td>
-					
+					<!-- #33783 - start -->
+					<c:if test="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'I'
+								or backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'J'}">
+					<td><p:outputLabel value="#{lbl['lbl.sm.clbg']}"/></td>
+					<td><p:selectOneRadio value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyTypeSSM 
+											== SupplierManagementConst.COMPANY_TYPE_CLBG}" readonly="true">
+							<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
+							<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
+						</p:selectOneRadio>
+					</td>
+					</c:if>
+					<!-- #33783 - end  -->
 				<!-- 32304 - start-->
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sm.account.rob.expire']}" rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'C' or backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'F'}" /></td>
