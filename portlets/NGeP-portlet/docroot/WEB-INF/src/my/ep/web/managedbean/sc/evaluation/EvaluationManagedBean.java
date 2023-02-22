@@ -669,6 +669,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int wipStatusMax;
 	//#34452 related to #25138 -end
 	
+	//34528-uat 4serangkai 
+	private Paginator financialPackagePaginator;
+
+	
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -4329,4 +4333,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.wipStatusMax = wipStatusMax;
 	}
 	//#34452 related to #25138 -end
+
+	//34528-uat 4serangkai - start
+	public Paginator getFinancialPackagePaginator() {
+		return financialPackagePaginator;
+	}
+
+	public void setFinancialPackagePaginator(Paginator financialPackagePaginator) {
+		this.financialPackagePaginator = financialPackagePaginator;
+	}
+	//34528-uat 4serangkai - end
 }
