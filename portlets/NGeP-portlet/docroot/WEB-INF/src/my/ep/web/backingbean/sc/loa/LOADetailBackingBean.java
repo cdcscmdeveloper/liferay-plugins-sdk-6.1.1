@@ -6488,6 +6488,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	
 	//#25725 - end
 	
+	// #25725 - note 125/128 - start
+	private boolean isReasonPK2(ScLoa loa) {
+		boolean isReasonPK2 = false;
+		if (loa.getScQuote().getJustificationType() != null) {
+			if (loa.getScQuote().getJustificationType().getReasonCode().equals(ParameterConst.PK2_REASON_CODE)) {
+				isReasonPK2 = true;
+			}
+		}
+		return isReasonPK2;
+	}
+	// #25725 - note 125/128 - end
+	
 	private BigDecimal overallCtAmtOrLoaAmt(ScLoa loa){
 		BigDecimal overallContractAmtOrLoaAmt = BigDecimal.valueOf(0d);
 		// if supplier Gst Registered  
@@ -10232,10 +10244,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					
 					tplSpecQuestion.setClSpecDetail(this.getManagedBean().getSpecKeyword());
 					tplSpecAnswer.setTplSpecQuestion(tplSpecQuestion);
+					specReqDto.setTplSpecAnswer(tplSpecAnswer);
 					specReqDto.setScLoiLoaItem(resDTO.getScLoiLoaItem());
 					
 					specReqDto.setSpecSearchForApp(true);
 					
+				}else{
+					specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
+					specReqDto.setScQt(this.getManagedBean().getScQt());
+					specReqDto.setScLoiLoaItem(this.getManagedBean().getScLoiLoaItem());
+					specReqDto.setSpecSearchForApp(true);
 				}
 				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
 				
@@ -10584,6 +10602,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		RequestContext.getCurrentInstance().execute("resetAllConfirmPopUp.show()");
 	}
 	public void resetAllNewOfferedSpecificationSubmit(){
+		TemplateSpecReqDTO specReqDto = new TemplateSpecReqDTO();
+		if(this.getManagedBean().getSpecKeyword() != null){
+			this.getManagedBean().setSpecKeyword(null);
+			specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
+			specReqDto.setScQt(this.getManagedBean().getScQt());
+			specReqDto.setScLoiLoaItem(this.getManagedBean().getScLoiLoaItem());
+			specReqDto.setSpecSearchForApp(true);
+			
+			TemplateSpecResDTO templateSpecResDTO  = getTemplateSpecSO().searchSupplierSpecification(specReqDto);
+			
+			this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
+		}
+		
 		for(TplSpecAnswer answer : this.getManagedBean().getTplSpecAnswerList()){
 			answer.setNewSupplierOffer(null);
 		}
@@ -10647,6 +10678,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			
 			if(isNonPeriodic || (isPK7(this.getManagedBean().getScLoa()) && isPeriodic)){
 				result = false;
+				//#25725 - note 125/128 - start
+				if(isReasonPK2(this.getManagedBean().getScLoa()) && isPeriodic){
+					result = true;
+				}
+				//#25725 - note 125/128 - end
 				if(getManagedBean().getScLoa().getPmStatus().getStatusId().equals(disabledID)){
 					result = true;
 				}
