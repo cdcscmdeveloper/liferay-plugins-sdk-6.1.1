@@ -23,8 +23,8 @@
 					style="width:100%;margin-top:10px;">
 					<c:if
 						test="#{evaluationMeetingBackingBean.managedBean.committeMember.userSelection eq 'E' }">
-						<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true">
-							<!-- #12471 Start -->
+						<!-- #12471 Start -->
+						<p:panel id="usersearchpnlid" header="#{lbl['lbl.sc.search']}" toggleable="true">
 							<ac:instructionText
 								value="#{lbl['lbl.sc.add.committee.instruction.one']}" />
 							<br />
@@ -41,7 +41,7 @@
 											value="#{evaluationMeetingBackingBean.managedBean.orgCat}">
 											<p:ajax onstart="blockWidget.show()"
 												oncomplete="blockWidget.hide()"
-												update="usersearchpnlid existingcommitteesearchid"
+												update="usersearchpnlid existingcommitteesearch"
 												listener="#{evaluationMeetingBackingBean.reset}" />
 											<f:selectItem
 												itemLabel="#{lbl['lbl.sc.add.committee.ptj.full']}"
@@ -71,7 +71,7 @@
 										<td><p:selectOneMenu id="ptjGroupDD"
 												value="#{evaluationMeetingBackingBean.managedBean.ptjGroup}">
 												<p:ajax
-													listener="#{evaluationMeetingBackingBea.onChangeDD(ParameterConst.getPtjGroupDD())}"
+													listener="#{evaluationMeetingBackingBean.onChangeDD(ParameterConst.getPtjGroupDD())}"
 													update="ptjDD" onstart="blockWidget.show()"
 													oncomplete="blockWidget.hide()" />
 												<f:selectItems
@@ -96,7 +96,7 @@
 										<td><p:selectOneMenu id="orgTypeDD"
 												value="#{evaluationMeetingBackingBean.managedBean.orgType}">
 												<p:ajax
-													listener="#{evaluationMeetingBackingBea.onChangeDD(ParameterConst.getOrgTypeDD())}"
+													listener="#{evaluationMeetingBackingBean.onChangeDD(ParameterConst.getOrgTypeDD())}"
 													update="orgNameDD" onstart="blockWidget.show()"
 													oncomplete="blockWidget.hide()" />
 												<f:selectItems
@@ -196,6 +196,24 @@
 									headerText="#{lbl['lbl.sc.designation']}">
 									<h:outputText value="#{existcommitteeuser.designation}" />
 								</p:column>
+
+								<!-- #12471 Start -->
+								<c:if
+									test="#{evaluationMeetingBackingBean.managedBean.orgCat eq ParameterConst.getOrgCatPtj()}">
+									<p:column headerText="#{lbl['lbl.sc.add.committee.ministry']}">
+										<h:outputText
+											value="#{evaluationMeetingBackingBean.getOrgDesc(existcommitteeuser.pmUserOrgs,ParameterConst.getOrgTypeMinistry())}" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.sc.add.committee.ptj.group']}">
+										<h:outputText
+											value="#{evaluationMeetingBackingBean.getOrgDesc(existcommitteeuser.pmUserOrgs,ParameterConst.getOrgTypePtjGroup())}" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.sc.add.committee.ptj']}">
+										<h:outputText
+											value="#{evaluationMeetingBackingBean.getOrgDesc(existcommitteeuser.pmUserOrgs,ParameterConst.getOrgTypePtj())}" />
+									</p:column>
+								</c:if>
+								<!-- #12471 End -->
 
 								<p:column style="width:20%;white-space: normal;"
 									headerText="#{lbl['lbl.sc.email']}">
