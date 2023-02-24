@@ -6489,6 +6489,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	//#25725 - end
 	
 	// #25725 - note 125/128 - start
+	/**
+	 * To check is reason PK2
+	 * @return boolean isReasonPK2
+	 */
 	private boolean isReasonPK2(ScLoa loa) {
 		boolean isReasonPK2 = false;
 		if (loa.getScQuote().getJustificationType() != null) {
