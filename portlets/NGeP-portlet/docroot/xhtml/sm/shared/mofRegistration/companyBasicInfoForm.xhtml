@@ -63,10 +63,10 @@
 					<c:if test="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'I'
 								or backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'J'}">
 					<td><p:outputLabel value="#{lbl['lbl.sm.clbg']}"/></td>
-					<td><p:selectOneRadio value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyTypeSSM 
-											== SupplierManagementConst.COMPANY_TYPE_CLBG}" readonly="true">
+					<td><p:selectOneRadio value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyTypeSSM eq
+										SupplierManagementConst.COMPANY_TYPE_CLBG}" disabled="true">
 							<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
-							<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
+							<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false"/>
 						</p:selectOneRadio>
 					</td>
 					</c:if>

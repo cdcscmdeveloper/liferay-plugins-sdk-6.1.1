@@ -97,14 +97,21 @@
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{!viewSmApplBackingBean.managedBean.smAppl.bumi}"  />
 					</td>
 					<!-- #33783 - start -->
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.clbg']} cew902" 
-							rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType == 'I' or
-										viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType == 'J'}"/></td>
-					<td><p:outputLabel styleClass="outputLabel-view" 
-							value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.companyTypeSSM 
-											== SupplierManagementConst.COMPANY_TYPE_CLBG ? lbl['lbl.btn.yes'] : lbl['lbl.btn.no']}" 
-							rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType == 'I' or
-										viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType == 'J'}"/></td>
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType == 'I'
+								or viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType == 'J'}">
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.clbg']}"/></td>
+						<ui:param name="isCLBG" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.companyTypeSSM 
+											== SupplierManagementConst.COMPANY_TYPE_CLBG}"/>
+						<c:choose><c:when test="#{!isSuppDataMaintenance}">
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{isCLBG ? lbl['lbl.btn.yes'] : lbl['lbl.btn.no']}"/></td>
+						</c:when>
+						<c:otherwise>
+							<td><p:selectOneRadio value="#{isCLBG}" disabled="true">
+									<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
+									<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
+								</p:selectOneRadio></td>
+						</c:otherwise></c:choose>	
+					</c:if>
 					<!-- #33783 - end -->
 	
 					</tr>
