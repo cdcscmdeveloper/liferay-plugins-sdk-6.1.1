@@ -6488,6 +6488,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	
 	//#25725 - end
 	
+	// #25725 - note 125/128 - start
+	/**
+	 * To check is reason PK2
+	 * @return boolean isReasonPK2
+	 */
+	private boolean isReasonPK2(ScLoa loa) {
+		boolean isReasonPK2 = false;
+		if (loa.getScQuote().getJustificationType() != null) {
+			if (loa.getScQuote().getJustificationType().getReasonCode().equals(ParameterConst.PK2_REASON_CODE)) {
+				isReasonPK2 = true;
+			}
+		}
+		return isReasonPK2;
+	}
+	// #25725 - note 125/128 - end
+	
 	private BigDecimal overallCtAmtOrLoaAmt(ScLoa loa){
 		BigDecimal overallContractAmtOrLoaAmt = BigDecimal.valueOf(0d);
 		// if supplier Gst Registered  
@@ -10666,6 +10682,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			
 			if(isNonPeriodic || (isPK7(this.getManagedBean().getScLoa()) && isPeriodic)){
 				result = false;
+				//#25725 - note 125/128 - start
+				if(isReasonPK2(this.getManagedBean().getScLoa()) && isPeriodic){
+					result = true;
+				}
+				//#25725 - note 125/128 - end
 				if(getManagedBean().getScLoa().getPmStatus().getStatusId().equals(disabledID)){
 					result = true;
 				}
