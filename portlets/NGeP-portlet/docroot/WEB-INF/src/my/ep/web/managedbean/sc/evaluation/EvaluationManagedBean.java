@@ -665,6 +665,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private TplSpecZoneDtl tplSpecZoneDtl;
 	/*#29187 End Vinod*/
 	
+	//34528-uat 4serangkai 
+	private Paginator financialPackagePaginator;
+		
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -4308,4 +4311,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
 	}
 	/*#29187 End Vinod*/
+	//34528-uat 4serangkai - start
+	public Paginator getFinancialPackagePaginator() {
+		return financialPackagePaginator;
+	}
+
+	public void setFinancialPackagePaginator(Paginator financialPackagePaginator) {
+		this.financialPackagePaginator = financialPackagePaginator;
+	}
+	//34528-uat 4serangkai - end
 }
