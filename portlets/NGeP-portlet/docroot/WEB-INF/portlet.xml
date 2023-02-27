@@ -1010,7 +1010,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/quatationtender/prerenderQtSearch.xhtml</value>
+			<value>/xhtml/sc/quatationtender/quatationtendersearch.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -3928,9 +3928,6 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<supported-locale>en_US</supported-locale>
-		<supported-locale>ms_MY</supported-locale>
-		<resource-bundle>content/Language</resource-bundle>
 		<portlet-info>
 			<title>Basic Account Maintenance</title>
 			<short-title>NewJSFPortlet</short-title>
@@ -5950,7 +5947,7 @@
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>
-				/xhtml/pm/notify/prerenderPmNotify.xhtml
+				/xhtml/pm/notify/notify.xhtml
 			</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
@@ -7381,39 +7378,9 @@
 		</security-role-ref>
 	</portlet>	
 	
-	<!--  #29487 - View bank details by factoring user_endorsed - Start -->
-	<portlet>
-		<portlet-name>factoringCompanyInformation</portlet-name>
-		<display-name>Factoring Company Information</display-name>
-		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
-		<init-param>
-			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/pm/profileInfo/PreRenderFinOrg.xhtml</value>
-		</init-param>
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>Factoring Company Information</title>
-			<short-title>NewJSFPortlet</short-title>
-			<keywords></keywords>
-		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>	
-	<!--  #29487 - View bank details by factoring user_endorsed - End -->
+	
+	
+	
 	
 	<portlet>
 		<portlet-name>pmLocation</portlet-name>
@@ -8678,115 +8645,6 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	<!-- #29617 start -->
-	<portlet>
-		<portlet-name>updateSmeInfo</portlet-name>
-		<display-name>Update SME Information</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
-		<init-param>
-			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>
-				/xhtml/sm/updateSmeInfo/preRenderSmeInfo.xhtml
-			</value>
-		</init-param>
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>Update SME Information</title>
-			<short-title>NewJSFPortlet</short-title>
-			<keywords></keywords>
-		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-	<portlet>
-		<portlet-name>alertSmeInfo</portlet-name>
-		<display-name>Alert SME Information</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
-		<init-param>
-			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>
-				/xhtml/sm/updateSmeInfo/preRenderAlertSmeInfo.xhtml
-			</value>
-		</init-param>
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>Alert SME Information</title>
-			<short-title>NewJSFPortlet</short-title>
-			<keywords></keywords>
-		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-	<!-- #29617 end -->
-	<!-- #10724 START -->
-	<portlet>
-		<portlet-name>commonSmOverviewInfo</portlet-name>
-		<display-name>Common SM Overview</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
-		<init-param>
-			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>
-				/xhtml/sm/commonapploverview/preRenderCommonSmOverviewInfo.xhtml
-			</value>
-		</init-param>
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>Common SM Overview</title>
-			<short-title>NewJSFPortlet</short-title>
-			<keywords></keywords>
-		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-	<!-- #10724 END  -->
 	<portlet>
 		<portlet-name>updateGstInfo</portlet-name>
 		<display-name>Update GST Information</display-name>
@@ -9541,7 +9399,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/quatationtender/prerenderQtSearch.xhtml</value>
+			<value>/xhtml/sc/quatationtender/quatationtendersearch.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -9574,7 +9432,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/quatationtender/prerenderQtSearch.xhtml</value>
+			<value>/xhtml/sc/quatationtender/quatationtendersearch.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -11063,41 +10921,6 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
-	<portlet>
-		<portlet-name>demoInvitation</portlet-name>
-		<display-name>Presentation/Demo Invitation</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
-		<init-param>
-			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/demoInvitation/demoInvitationHeader.xhtml</value>
-		</init-param>
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>Presentation/Demo Invitation</title>
-			<short-title>Presentation/Demo Invitation</short-title>
-			<keywords></keywords>
-		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-	
 	<portlet>
 		<portlet-name>myGPKIPOC</portlet-name>
 		<display-name>MyGPKi POC</display-name>
@@ -11131,5 +10954,4 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
 </portlet-app>
