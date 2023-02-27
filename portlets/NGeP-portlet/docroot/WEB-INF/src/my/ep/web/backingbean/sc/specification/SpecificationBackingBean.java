@@ -8482,6 +8482,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 			List<ScQtCheckListScore> noOfContractScore = new ArrayList<ScQtCheckListScore>();
 			if (checkList.isScoringReq()) {
+				//bug #30438, #21695 - start
+				if (null == contractScoreType
+						|| "".equalsIgnoreCase(contractScoreType) || "0".equalsIgnoreCase(contractScoreType)) {
+					throw new EpException(MessageConst.ERROR_760190);
+				}
+				//bug #30438, #21695 - end
+
 				if (QTConstants.USER_SCORE.equalsIgnoreCase(contractScoreType)) {
 					ScQtCheckListScore noContract = this.getManagedBean()
 							.getScQtCheckListScore();
