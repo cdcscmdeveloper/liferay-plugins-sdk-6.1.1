@@ -115,7 +115,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean disableStaxAmount;	
 	private boolean disableContractAmount = true;
 	private boolean bondWaiver;
-	private CtContractAmount ctTestBondWaiverAmount;	
+	private CtContractAmount ctTestBondWaiverAmount;
 
 	private boolean selectAll;
 	private CtPerformanceBond ctPerformanceBond;
