@@ -232,7 +232,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 						<tr>
 							#if ($specDLOA.clItem == "&nbsp;" || $specDLOA.clItem == " ")
 							#else
-								<td valign="top" class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName"><strong>$specDLOA.clItem</strong></td>
+								<td valign="top" class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName">$specDLOA.clItem</td>
 							#end
 							#if ($specDLOA.uomName == "&nbsp;" || $specDLOA.uomName == " ")	
 							#else
@@ -312,7 +312,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 			<tr>
 				#if ($listSpecDLOA.clItem == "&nbsp;" || $listSpecDLOA.clItem == " ")
 				#else
-					<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName"><strong>$listSpecDLOA.clItem</strong></td>
+					<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName">$listSpecDLOA.clItem</td>
 				#end
 				
 				#if ($listSpecDLOA.uomName == "&nbsp;" || $listSpecDLOA.uomName == " ")
@@ -419,7 +419,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 								 
 								<tr>							 
 									
-									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2">$tplspecQuestion.clItem</td>
 									<td  class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
 									<td  class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
 									
@@ -587,7 +587,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 									<tr>
 									
 									
-									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2">$tplspecQuestion.clItem</td>
 									<td  class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
 									<td  class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
 									<td class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clQuantity</td>
@@ -764,7 +764,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 					<tr>
 						#if ($zonalDLOA.clItem == " " || $zonalDLOA.clItem == $whitespace)
 						#else
-							<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName"><strong>$zonalDLOA.clItem</strong></td>	
+							<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName">$zonalDLOA.clItem</td>	
 						#end
 						
 						#if($zonalDLOA.uomName == " " || $zonalDLOA.uomName == $whitespace)
@@ -858,7 +858,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 			
 						#if ($listSpecDLOA.clItem == " " || $listSpecDLOA.clItem == $whitespace)
 						#else
-							<td valign="top" class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName"><strong>$listSpecDLOA.clItem</strong></td>	
+							<td valign="top" class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName">$listSpecDLOA.clItem</td>	
 						#end
 						
 						#if($listSpecDLOA.uomName == " " || $listSpecDLOA.uomName == $whitespace)
@@ -977,7 +977,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 								 
 								<tr>							 
 									
-									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2">$tplspecQuestion.clItem</td>
 									<td  class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
 								
 										
@@ -1128,7 +1128,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 									<tr>
 									
 									
-									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2">$tplspecQuestion.clItem</td>
 									<td  class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
 									<td  class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial;">
 										#if ($tplspecQuestion.clUomFrequency)
