@@ -60,18 +60,17 @@
 					<h:outputText value="#{lbl['lbl.sc.action']}" />
 				
 				</f:facet>
-				<ui:param name="supplierRejectedSample" value="#{isRejected and othersList.scQtCheckList.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample}"></ui:param> <ui:remove><!-- 6906 --></ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 					rendered="#{othersList.evaluationStatus.statusId eq '61600'}"
 					process="@this" partialSubmit="true"
 					action="#{evaluationBackingBean.technicalSupplierEvaluate(othersList,'T')}" 
-					disabled="#{supplierRejectedSample}"/><ui:remove><!-- 6906 --></ui:remove>
+					disabled="#{isRejected}"/><ui:remove><!-- 6906 --></ui:remove>
 
 				<p:commandButton value="#{lbl['lbl.btn.view']}"
 					rendered="#{othersList.evaluationStatus.statusId eq '61601'}"
 					process="@this" partialSubmit="true"
 					action="#{evaluationBackingBean.technicalSupplierEvaluate(othersList,'T')}"
-					disabled="#{supplierRejectedSample}"/><ui:remove><!-- 6906 --></ui:remove>
+					disabled="#{isRejected}"/><ui:remove><!-- 6906 --></ui:remove>
 
 			</p:column>
 		</p:dataTable>

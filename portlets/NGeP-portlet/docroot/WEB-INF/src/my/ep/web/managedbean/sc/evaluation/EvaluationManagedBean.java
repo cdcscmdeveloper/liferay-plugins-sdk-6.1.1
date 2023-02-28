@@ -665,6 +665,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private TplSpecZoneDtl tplSpecZoneDtl;
 	/*#29187 End Vinod*/
 	
+	//#34452 related to #25138 -start
+	private int wipStatusMax;
+	//#34452 related to #25138 -end
+	
+	//34528-uat 4serangkai 
+	private Paginator financialPackagePaginator;
+
+	
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -4308,4 +4316,31 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
 	}
 	/*#29187 End Vinod*/
+	
+	//#34452 related to #25138 -start
+	/**
+	 * @return the max wip 3serangkai
+	 */
+	public int getWipStatusMax() {
+		return wipStatusMax;
+	}
+
+	/**
+	 * @param  max wip check 3serangkai
+	 *            the wipRequired to set
+	 */
+	public void setWipStatusMax(int wipStatusMax) {
+		this.wipStatusMax = wipStatusMax;
+	}
+	//#34452 related to #25138 -end
+
+	//34528-uat 4serangkai - start
+	public Paginator getFinancialPackagePaginator() {
+		return financialPackagePaginator;
+	}
+
+	public void setFinancialPackagePaginator(Paginator financialPackagePaginator) {
+		this.financialPackagePaginator = financialPackagePaginator;
+	}
+	//34528-uat 4serangkai - end
 }
