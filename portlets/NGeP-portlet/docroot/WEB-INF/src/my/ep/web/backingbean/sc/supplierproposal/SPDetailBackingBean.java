@@ -1332,6 +1332,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				// 20220127@syazani - Enhancement #3657 - specific error message - Start
 				List<String> errorLst = null;
 				boolean isThrow = false;
+				int count=0;//#3657 Added Vinod
 				for (TplSpecAnswer answer : answers) {
 					if (isCompleted) {
 						// #21695 7/10/2021	START
@@ -1348,9 +1349,17 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 								&& answer.getTplSpecZoneQty().getTplSpecZoneDtl() != null
 								&& answer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() != null ? answer
 								.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() : "";
-						if (!duplicateErrorZoneCheck(zone, errorLst))
+								if (!duplicateErrorZoneCheck(zone, errorLst) 
+										&& answer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() != null
+										&& getManagedBean().getSelectedZone().getZoneName().equals(answer
+										.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName())){//#3657 Added zone name checking Vinod							
 							errorLst.add(zone);
 							isThrow = true;
+							//#3657 Start Vinod
+							} else if (!duplicateErrorZoneCheck(zone, errorLst)){
+								count++;
+							}
+								//#3657 End Vinod
 						}
 						// bug #31733 add condition 5/11/2021
 						// farid end #21695 7/10/2021
@@ -1384,6 +1393,8 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					}
 				}
 			
+				if(count!=0) scQtProposalChecklist.setSubmitted(false);//#3657 Added Vinod
+
 				if (isThrow && errorLst != null && errorLst.size() > 0) {
 					if (getManagedBean().getQt().isZonal()) {
 						StringBuffer strB = new StringBuffer();
