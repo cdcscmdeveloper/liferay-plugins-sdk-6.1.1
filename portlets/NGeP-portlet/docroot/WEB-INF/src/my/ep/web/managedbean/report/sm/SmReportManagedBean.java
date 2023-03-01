@@ -81,7 +81,9 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private PmUser selectedUser;
 	private String disciplinaryActionStatus;
 	//#32521 - END
-		
+	//#33783
+	private Boolean isCLBG;
+	
 	public String getDocumentType() {
 		return documentType;
 	}
@@ -509,5 +511,14 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 		this.disciplinaryActionStatus = disciplinaryActionStatus;
 	}
 	//#32521 - END
+	//#33783 - start
+	public Boolean getIsCLBG() {
+		return isCLBG;
+	}
+
+	public void setIsCLBG(Boolean isCLBG) {
+		this.isCLBG = isCLBG;
+	}
+	//#33783 - end
 
 }
