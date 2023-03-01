@@ -1390,7 +1390,7 @@ u.underline {
 						 
 						<tr>							 
 							
-							<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+							<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2">$tplspecQuestion.clItem</td>
 							<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 							<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
 							
@@ -1518,7 +1518,7 @@ u.underline {
 								<tr>
 								
 								
-								<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+								<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2">$tplspecQuestion.clItem</td>
 								<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 								<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
 								<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
@@ -1630,7 +1630,7 @@ u.underline {
 														#set($rowSpanSizeForItem = $tplspecQuestion.tplSpecZoneQties.size())
 														#if ($specCombine.clItem == "&nbsp")
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"><strong>$specCombine.clItem</strong></td>
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
 														#end
 														#if ($specCombine.uomName == "&nbsp")
 														#else
@@ -1762,7 +1762,7 @@ u.underline {
 											<tr>
 																				
 												#set($rowSpanSize = $tplspecQuestion.specList.size()+1)
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"><strong>$specCombine.clItem</strong></td>
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
 												##26130 - zaim end
 													<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$specCombine.uomName</td>
 													<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$specCombine.clPriceTypeCode</td>
@@ -1954,7 +1954,7 @@ u.underline {
 								 
 								<tr>							 
 									
-									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2">$tplspecQuestion.clItem</td>
 									<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 										
 									<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">
@@ -2071,7 +2071,7 @@ u.underline {
 							 
 									<tr>
 									
-									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2">$tplspecQuestion.clItem</td>
 									<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 									<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">
 										#if ($tplspecQuestion.clUomFrequency)
@@ -2198,7 +2198,7 @@ u.underline {
 														#set($rowSpanSizeForItem = $tplspecQuestion.tplSpecZoneQties.size())
 														#if ($specCombine.clItem == "&nbsp")
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"><strong>$specCombine.clItem</strong></td>
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
 														#end
 														#if ($specCombine.uomName == "&nbsp")
 														#else
@@ -2335,7 +2335,7 @@ u.underline {
 													
 													##26130- zaim start
 													#set($rowSpanSize = $tplspecQuestion.specList.size()+1)
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"><strong>$specCombine.clItem</strong></td>
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
 													##26130 - zaim end
 													<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$specCombine.uomName</td>
 													<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">
@@ -2501,7 +2501,7 @@ u.underline {
 							## #26006 - end 
 							<tr>							 
 								
-								<td valign="top" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px; font-weight: bold;" >
+								<td valign="top" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
 									
 										$tplspecQuestion.clItem
 									
@@ -2713,7 +2713,7 @@ u.underline {
 								<tr>
 								
 								
-								<td valign="top" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px; font-weight: bold;" >
+								<td valign="top" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
 										$tplspecQuestion.clItem
 								</td>
 								 <td valign="top" class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;" >
