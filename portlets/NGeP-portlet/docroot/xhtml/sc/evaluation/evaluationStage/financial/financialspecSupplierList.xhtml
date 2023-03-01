@@ -29,8 +29,8 @@
 			<p:dataTable var="finSpec" editable="true" lazy="true"
 			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				id="financialSpecEvaluationStage"
-				value="#{evaluationBackingBean.managedBean.qtProposalAmounts}"
-				style="width:100%">
+				value="#{evaluationBackingBean.managedBean.financialPackagePaginator.model}"
+				style="width:100%; margin-bottom: -1px;">
 
 				<!-- ahmaa-#25138 - start -->
 				 <p:columnGroup type="header">  
@@ -93,6 +93,7 @@
 			    </p:column>
 			    
 			</p:dataTable>
+			<ac:detachablePaginator loopId="financialSpecEvaluationStage" paginatorObject="#{evaluationBackingBean.managedBean.financialPackagePaginator}" />
 		</p:panel>
 	</h:panelGroup>
 
