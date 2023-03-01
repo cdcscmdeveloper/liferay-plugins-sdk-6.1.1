@@ -1458,6 +1458,43 @@ public class EvaluationBackingBean extends
 
 				reqDTO.setComplianceList(technicalCompliance);
 			}
+			
+			//#28786 - start
+			if (null != this.getManagedBean()
+					.getComplianceTechnicalProposalCheckListDM().getList()) {
+				for (ScQtProposalChecklist propCheck : this.getManagedBean()
+						.getComplianceTechnicalProposalCheckListDM().getList()) {
+					if (propCheck.getScQtProposalChecklistAttachment() != null
+							&& (propCheck.getCompliance() == null || propCheck
+									.getCompliance() == 2)) {
+						reqDTO.setEvalStgCompliance(false);
+						break;
+					} else if (propCheck.getScQtProposalChecklistAttachment() != null
+							&& propCheck.getCompliance() != null
+							&& propCheck.getCompliance() != 2) {
+						reqDTO.setEvalStgCompliance(true);
+					} else if (propCheck.getScQtProposalChecklistAttachment() == null) {
+						reqDTO.setEvalStgCompliance(true);
+					}
+				}
+			} else {
+				for (ScQtProposalChecklist propCheck : this.getManagedBean()
+						.getComplianceFinancialProposalCheckList()) {
+					if (propCheck.getScQtProposalChecklistAttachment() != null
+							&& (propCheck.getCompliance() == null || propCheck
+									.getCompliance() == 2)) {
+						reqDTO.setEvalStgCompliance(false);
+						break;
+					} else if (propCheck.getScQtProposalChecklistAttachment() != null
+							&& propCheck.getCompliance() != null
+							&& propCheck.getCompliance() != 2) {
+						reqDTO.setEvalStgCompliance(true);
+					} else if (propCheck.getScQtProposalChecklistAttachment() == null) {
+						reqDTO.setEvalStgCompliance(true);
+					}
+				}
+			}
+			//#28786 - end
 
 			resDTO = evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
 			List<ScQtCheckList> qtCheckLists = getManagedBean()
