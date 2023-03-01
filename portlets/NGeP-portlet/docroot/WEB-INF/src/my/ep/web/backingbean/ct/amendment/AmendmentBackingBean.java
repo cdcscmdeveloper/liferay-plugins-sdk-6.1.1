@@ -2595,7 +2595,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					setTabValue("AD");
 					throw new EpException(MessageConst.ERROR_750073);
 				}
-						}
+			}
 			// End Fix - #33952
 			//32418 Start
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
