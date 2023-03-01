@@ -583,6 +583,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	// #31485, #21695, #25138 - end
 	
 	private boolean hasPreviousMeeting; //#29473, #31675
+	
+	//34528-uat 4serangkai 
+	private Paginator financialPackagePaginator;
+
 
 	/**
 	 * Gets the today.
@@ -3993,4 +3997,15 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.noSupplierPackageExist = noSupplierPackageExist;
 	}
 	// #25138, #21695 -end-
+	
+	//34528-uat 4serangkai - start
+	public Paginator getFinancialPackagePaginator() {
+		return financialPackagePaginator;
+	}
+
+	public void setFinancialPackagePaginator(Paginator financialPackagePaginator) {
+		this.financialPackagePaginator = financialPackagePaginator;
+	}
+	//34528-uat 4serangkai - end
+
 }

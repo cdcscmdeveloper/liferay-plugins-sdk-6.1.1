@@ -3883,6 +3883,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 
 						this.getManagedBean().setQtProposalAmounts(listProposalAmountByZone);
 						this.getManagedBean().setQtProposalAmountByProposal(listProposalAmountByQualifiedProposal);
+					    //34528-uat 4serangkai - start
+					    listProposalAmountByZone = listProposalAmountByZone==null ? new ArrayList<ScQtProposalAmount>(): listProposalAmountByZone;
+					    this.getManagedBean().setFinancialPackagePaginator(new Paginator(listProposalAmountByZone, 10));
+						//34528-uat 4serangkai - end
 					}
 					// #31438, #25138, #21695 - end
 					
@@ -4604,6 +4608,11 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							this.getManagedBean().setQtProposalAmounts(qtProposalAmountByZone);
 
 						}
+					    //34528-uat 4serangkai - start
+						qtProposalAmountByZone = qtProposalAmountByZone==null ? new ArrayList<ScQtProposalAmount>(): qtProposalAmountByZone;
+						this.getManagedBean().setFinancialPackagePaginator(new Paginator(qtProposalAmountByZone, 10));
+					    //34528-uat 4serangkai - end
+						
 					}
 					// #31438, #25138, #21695 - end
 
@@ -11997,55 +12006,7 @@ private void retriveCommitteeRemarksList(){
 											.getScQtChecklist()
 											.getDefinationType()
 											.getParameterCode())) {
-						// reqDTO.setCompliance(true);
-						if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-								.equalsIgnoreCase(this.getManagedBean()
-										.getCommitteeType())
-								|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-										.equalsIgnoreCase(this.getManagedBean()
-												.getCommitteeType())) {
-							if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-									.equalsIgnoreCase(this.getManagedBean()
-											.getCommitteeType())) {
-								finreqDTO
-										.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
-							} else if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-									.equalsIgnoreCase(this.getManagedBean()
-											.getCommitteeType())) {
-								if (this.getManagedBean().getScQt()
-										.isTechEvaluationReq()) {
-									// #21695, #25138 -start-
-									// wip status start
-									if (this.getManagedBean().getScQt().isPartial()
-											|| !this.getManagedBean().getScQt().isPartial()) {
-										evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-												ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-										int wipstatus = evaluationSO.checkWipScoreSetting(finreqDTO);
-										
-										if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
-											finreqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-										} else {
-											finreqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
-										}
-									}
-									// wip status end
-									// #21695, #25138 -end-
-								} else {
-									finreqDTO
-											.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
-								}
-
-							}
-						} else {
-							if (this.getManagedBean().getScQt()
-									.isDemoRequired()) {
-								finreqDTO
-										.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
-							} else {
-								finreqDTO
-										.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
-							}
-						}
+						finreqDTO.setEvalStage(getEvaluationStageForFinancialChecklist());//34526-uat 4serangkai	
 					}
 					ScQtCheckList financialUploadNoActionCheckList = checkStausForUploadNoActionCheckLists(
 							qtProposalChecklist.getScQtCheckList(),
@@ -14722,6 +14683,10 @@ private void retriveCommitteeRemarksList(){
 				} else {
 					this.getManagedBean().setQtProposalAmounts(null);
 					this.getManagedBean().setQtProposalAmounts(evalResDTO.getProposalAmountListbyProposal());
+				    //34528-uat 4serangkai - start
+					List<ScQtProposalAmount> proposalAmounts = evalResDTO.getProposalAmountListbyProposal()==null ? new ArrayList<ScQtProposalAmount>(): evalResDTO.getProposalAmountListbyProposal();				
+					this.getManagedBean().setFinancialPackagePaginator(new Paginator(proposalAmounts, 10));
+				    //34528-uat 4serangkai - end
 				}
 
 				if (evalResDTO.isSuccessful()) {
@@ -15857,6 +15822,10 @@ private void retriveCommitteeRemarksList(){
 					}
 					
 					this.getManagedBean().setQtProposalAmounts(checklistamount);
+				    //34528-uat 4serangkai - start
+					checklistamount = checklistamount==null ? new ArrayList<ScQtProposalAmount>(): checklistamount;
+					this.getManagedBean().setFinancialPackagePaginator(new Paginator(checklistamount, 10));//34528-uat 4serangkai
+				    //34528-uat 4serangkai - end
 					
 					return "/xhtml/sc/evaluation/evaluationStage/financial/financialSpecWithOutzone.xhtml";
 				}
