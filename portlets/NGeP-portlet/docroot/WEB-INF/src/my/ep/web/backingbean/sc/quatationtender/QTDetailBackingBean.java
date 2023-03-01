@@ -6745,7 +6745,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 		
 		//9019 - Start (Harun) set Group Item to NULL when save while left blank and panel is selected
-		if (isPanel && null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId()) {
+		//9019 Start - #Note-418 Fix able to submit without key in mandatory fields add checking parameterId=0
+		if (isPanel && (null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId() || this.getManagedBean()
+				.getQt().getItemGroup().getPanelItemGroupId() == ParameterConst.PM_PARAMETERID_ZERO)) {
 			this.getManagedBean().getQt().setItemGroup(null);
 			this.getManagedBean().getQt().setCircularVer(null);
 		}
