@@ -2437,15 +2437,25 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							// #25138 - 31578 - End.
 							
 							// ====#31913 bug related to #25138==== start
+							//#34531, #34529 - start
+							Map<Long, TplSpecZoneDtl> tplSpecZoneDtlMap = new HashMap<Long, TplSpecZoneDtl>();
+							if(CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())){
+								for(TplSpecZoneDtl zoneDtl: this.getManagedBean().getTemplateSpecZoneDtls()){
+									tplSpecZoneDtlMap.put(zoneDtl.getSpecZoneId(), zoneDtl);
+								}
+							}
+							//#34531, #34529 - end
 							List<ScQtScoreOfferPrice> scQtScoreOfferPrices = new ArrayList<ScQtScoreOfferPrice>();
 							
 							if (!resDTO2.getScoreOfferPrice().isEmpty()) {
 								scQtScoreOfferPrices = resDTO2.getScoreOfferPrice();
-								int i = 0;
-								for (ScQtScoreOfferPrice testoffer : scQtScoreOfferPrices) {
-									TplSpecZoneDtl specZoneDtl = this.getManagedBean().getTemplateSpecZoneDtls().get(i);
-									testoffer.setTplSpecZoneDtl(specZoneDtl);
-									i++;
+								//#34531, #34529 - start
+								for(ScQtScoreOfferPrice testoffer:scQtScoreOfferPrices){ 
+									TplSpecZoneDtl specZoneDtl = tplSpecZoneDtlMap.get(testoffer.getTplSpecZoneDtl().getSpecZoneId());
+									if(specZoneDtl!=null){
+										testoffer.setTplSpecZoneDtl(specZoneDtl);
+									}
+								//#34531, #34529 - end
 								}
 							} else {
 								scQtScoreOfferPrices = tmpCheckList.getQtScoreWeightage().getScQtScoreOfferPrices();
