@@ -25,8 +25,7 @@ public class CompSuppTypeRegStatusRptBackingBean extends
 		initBusinesTypeList();
 		onChangeBussType();
 		getManagedBean().setRegStatusLs(retrieveRegStatusList());
-		//#33783
-		onChangeZone();
+		onChangeZone();  //#33783
 	}
 
 	public void generateReport() {
@@ -57,12 +56,12 @@ public class CompSuppTypeRegStatusRptBackingBean extends
 		if(StringUtils.isNotBlank(getManagedBean().getState())){
 			params.put(SmReportConst.PARAM_STATE, getManagedBean().getState());
 		}
-		
 		if(StringUtils.isNotBlank(getManagedBean().getDistrict())){
 			params.put(SmReportConst.PARAM_DISTRICT, getManagedBean().getDistrict());
 		}
-		
-		//params.put( clbg )
+		if(getManagedBean().getIsCLBG() != null){
+			params.put(SmReportConst.PARAM_IS_CLBG, getManagedBean().getIsCLBG().toString());
+		}
 		/*
 		if (!StringUtils.isBlank(getManagedBean().getMofRegNoFrom())) {
 			params.put(SmReportConst.PARAM_MOF_REG_NO_FROM, getManagedBean()
