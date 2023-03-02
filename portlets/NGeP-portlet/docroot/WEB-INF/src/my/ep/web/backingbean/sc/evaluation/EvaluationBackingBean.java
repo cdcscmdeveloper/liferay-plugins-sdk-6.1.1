@@ -13374,7 +13374,7 @@ private void retriveCommitteeRemarksList(){
 				//32426-start
 				//#34497 related to #32453 fixing(#25138,#21695) - start
 				ISearchResultBean<ScQtProposalChecklist> resultBean = evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO).getComplianceResultBean();
-				if(scoringReq != null && !scoringReq && CollectionUtils.isNotEmpty(resultBean.getResultList())){
+				if(CollectionUtils.isNotEmpty(resultBean.getResultList())){// 34523 4serangkai
 				List<Long> proposalChecklistIds = new ArrayList<>();
 					if(getManagedBean().getTabItemPackageIndex()==2 && SourcingConstants.TECHINICAL_STAGE.equals(evalStage) && getManagedBean().getScQt().isPartial()){
 						for(ScQtProposalChecklist proposalChecklist: resultBean.getResultList()){
@@ -14739,6 +14739,7 @@ private void retriveCommitteeRemarksList(){
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 			reqDTO.setCompliance(null);
+			evaluationSO.preInitializeChecklist(reqDTO);//34496 4serangkai
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 			
 			List<List<ScQtCheckList>> localCheckList = new ArrayList<List<ScQtCheckList>>();
