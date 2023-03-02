@@ -580,11 +580,16 @@ public class TemplateSpecHelper {
 	public void updateZoneDtl(TplSpecMaster specMaster, TplSpecZone specZone) {
 		specMaster.setTplSpecZone(specZone);
 		if(CollectionUtils.isNotEmpty(specMaster.getTplSpecQuestions())){
-		for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
-			if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType())) {
-				resetPriceType(specMaster, specQuestion);
+			for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
+				if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType())) {
+					resetPriceType(specMaster, specQuestion);
+				}
+				//Bug #34223@Syazani 30/11/2022 - Start
+				if (specZone == null) {
+					specQuestion.setTplSpecZoneQties(null);
+				}
+				//Bug #34223@Syazani 30/11/2022 - Start
 			}
-		}
 		}
 	}
 	
