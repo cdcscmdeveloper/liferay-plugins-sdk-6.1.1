@@ -1367,7 +1367,7 @@ Should be product and service item display if exist
 							#if ($tplspecQuestion.questionType == "I")
 							 
 							<tr>							 
-								<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+								<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2">$tplspecQuestion.clItem</td>
 								<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 								<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
 								
@@ -1495,7 +1495,7 @@ Should be product and service item display if exist
 									<tr>
 									
 									
-									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2">$tplspecQuestion.clItem</td>
 									<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 									<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
 									<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
@@ -1607,7 +1607,7 @@ Should be product and service item display if exist
 														#set($rowSpanSizeForItem = $tplspecQuestion.tplSpecZoneQties.size())
 														#if ($specCombine.clItem == "&nbsp")
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"><strong>$specCombine.clItem</strong></td>
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
 														#end
 														#if ($specCombine.uomName == "&nbsp")
 														#else
@@ -1738,7 +1738,7 @@ Should be product and service item display if exist
 											<tr>
 																				
 												#set($rowSpanSize = $tplspecQuestion.specList.size()+1)
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"><strong>$specCombine.clItem</strong></td>
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
 												##26130 - zaim end
 													<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$specCombine.uomName</td>
 													<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$specCombine.clPriceTypeCode</td>
@@ -1928,7 +1928,7 @@ Should be product and service item display if exist
 								#if ($tplspecQuestion.questionType == "I")
 								 
 								<tr>							 
-									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2">$tplspecQuestion.clItem</td>
 									<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 										
 									<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">
@@ -2043,7 +2043,7 @@ Should be product and service item display if exist
 									<tr>
 									
 									
-									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2">$tplspecQuestion.clItem</td>
 									 <td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 									<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">
 										#if ($tplspecQuestion.clUomFrequency)
@@ -2167,7 +2167,7 @@ Should be product and service item display if exist
 														#set($rowSpanSizeForItem = $tplspecQuestion.tplSpecZoneQties.size())
 														#if ($specCombine.clItem == "&nbsp")
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"><strong>$specCombine.clItem</strong></td>
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
 														#end
 														#if ($specCombine.uomName == "&nbsp")
 														#else
@@ -2303,7 +2303,7 @@ Should be product and service item display if exist
 													
 													##26130- zaim start
 													#set($rowSpanSize = $tplspecQuestion.specList.size()+1)
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"><strong>$specCombine.clItem</strong></td>
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
 													##26130 - zaim end
 													<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$specCombine.uomName</td>
 													<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">
@@ -2472,7 +2472,7 @@ Should be product and service item display if exist
 							 
 							<tr>							 
 								
-								<td valign="top" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px; font-weight: bold;" >
+								<td valign="top" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
 									
 										$tplspecQuestion.clItem
 									
@@ -2690,7 +2690,7 @@ Should be product and service item display if exist
 								<tr>
 								
 								
-								<td valign="top" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px; font-weight: bold;" >
+								<td valign="top" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
 										$tplspecQuestion.clItem
 								</td>
 								 <td valign="top" class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;" >
