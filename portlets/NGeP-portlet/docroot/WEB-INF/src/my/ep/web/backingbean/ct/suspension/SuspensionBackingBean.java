@@ -228,13 +228,14 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			getManagedBean().setSearchItemString("");
 			getManagedBean().getContractItemList().clear();
 			
-			/*If statement  for check contact item start*/
+			//Development #33125 -performance Nordin start
+			/*If statement  for check contact item start
 			if(getManagedBean().getContractVer().getCtContractItems() != null && getManagedBean().getContractVer().getCtContractItems().size() > 0 ) {
 				Collections.sort(getManagedBean().getContractVer().getCtContractItems(), new CtContractItem());
 
 				for (CtContractItem contractItem : getManagedBean().getContractVer().getCtContractItems()) {
 					getManagedBean().getContractItemList().add(contractItem);
-					/*Get latest contract item and map with the sc request item*/
+					Get latest contract item and map with the sc request item
 					for (CtContractItem latestContractItem : getManagedBean().getCtContract().getLatestContractVer().getCtContractItems()) {
 						if (contractItem.getScRequestItem().getRequestNoteItemId().equals(latestContractItem.getScRequestItem().getRequestNoteItemId())) {
 							getManagedBean().getItemMap().put(contractItem.getScRequestItem().getRequestNoteItemId(), latestContractItem);
@@ -242,7 +243,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 						}
 					}
 				}
-			}/*If statement for contract item end*/			
+			}If statement for contract item end*/	
+			//Development #33125 -performance Nordin end
 
 			/*If statement  to check agency start*/
 			if(getManagedBean().getContractVer().getCtAgencies() != null && getManagedBean().getContractVer().getCtAgencies().size() > 0 )  {	
@@ -478,6 +480,39 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		//CT_CHANGE_LOG
 		ctBB.getManagedBean().getUpdateItemMap().put(item.getScRequestItem().getRequestNoteItemId(), item);
 	}
+	
+	/**
+	 * This  method used to set contract item status value for suspension
+	 * Status set to zero is suspension of item created Nordin 8/2/2023
+	 */
+	public void setSuspensionStatusValue2(CtContractItem item) {
+		Date currentDate = DateUtils.getCurrentDateWithoutTime();
+		//#20997 - start
+		//for(CtContractItem ctItem :this.getManagedBean().getContractVer().getCtContractItems()) {
+		for (CtContractItem ctItem : getManagedBean().getSuspensionProductListingPagingDataModel().getList()) {
+			if(ctItem != null && item != null) {
+				// #28367
+				if(ctItem.equals(item)) {
+					//CtContractItem latestVerItem = getManagedBean().getItemMap().get(ctItem.getScRequestItem().getRequestNoteItemId());
+					Date effDate = null;
+					Date expDate = null;
+					if(item.getRecordStatusFlg().intValue() == 1) {
+						effDate = (ctItem.getRecordStatusFlg() == 0) ? currentDate : ctItem.getEffDate();
+						expDate = (ctItem.getRecordStatusFlg() == 0) ? getManagedBean().getContractVer().getCtContractValue().getExpDate() : ctItem.getExpDate();
+						item.setEffDate(effDate);
+						item.setExpDate(expDate);
+					} else {
+						effDate = (ctItem.getRecordStatusFlg() == 0) ? ctItem.getEffDate() : currentDate;
+						expDate = (ctItem.getRecordStatusFlg() == 0) ?  ctItem.getExpDate() : getManagedBean().getContractVer().getCtContractValue().getExpDate();
+						item.setEffDate(effDate);
+						item.setExpDate(expDate);
+					}
+				}
+			}
+		}
+		//CT_CHANGE_LOG
+		ctBB.getManagedBean().getUpdateItemMap().put(item.getScRequestItem().getRequestNoteItemId(), item);
+	}
 
 	/**
 	 * This  method used to set agency status  for suspension
@@ -529,8 +564,10 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			
 			validateSuspensionDetails(outcome);		
 			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
+			
+			//commented out for performance
 			//#20997 - to copy from searching list to items list
-			if (getManagedBean().getSuspensionProductListingPagingDataModel() != null && getManagedBean().getSuspensionProductListingPagingDataModel().getList() != null) {
+			/*if (getManagedBean().getSuspensionProductListingPagingDataModel() != null && getManagedBean().getSuspensionProductListingPagingDataModel().getList() != null) {
 				for (CtContractItem ctContractItem : getManagedBean().getSuspensionProductListingPagingDataModel().getList()) {			
 					for(CtContractItem ctItem : this.getManagedBean().getContractVer().getCtContractItems()){
 						if(ctContractItem.getContractItemId().equals(ctItem.getContractItemId())
@@ -543,7 +580,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 						}
 					}
 				}
-			}
+			}*/
 			//#20997 - end
 
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
@@ -572,6 +609,22 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			}
 			// #28367 - end
 			reqDTO.setUpdateItemMap(ctBB.getManagedBean().getUpdateItemMap());
+			
+
+			//Nordin start ct_performance
+			
+			List<CtContractItem> listItem = new ArrayList<CtContractItem>();
+			
+			if(this.getManagedBean().getSuspensionProductListingPagingDataModel().getList()!=null){
+				log.info("not null");
+				
+				listItem.addAll(this.getManagedBean().getSuspensionProductListingPagingDataModel().getList());
+			}
+			
+			
+			reqDTO.getCtContractVer().setCtContractItems(listItem);
+			
+			//Nordin end ct_performance
 			
 
 			if(this.getManagedBean().getPmDigiSign() !=null){
@@ -971,7 +1024,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	public void goToLoaView(ScLoa scLoa) {
 		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
 		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
-
+		
 		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
 			AmendmentBackingBean abb = new AmendmentBackingBean();
 			

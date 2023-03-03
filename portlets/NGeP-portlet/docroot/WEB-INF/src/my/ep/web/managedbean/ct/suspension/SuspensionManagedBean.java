@@ -222,7 +222,9 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 
 				IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
 				ContractItemResDTO resDTO = null;
-				resDTO=contractItemSO.retrieveProductServiceContractItemDtls(reqDTO);
+				//resDTO=contractItemSO.retrieveProductServiceContractItemDtls(reqDTO);
+				resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
+				
 				return resDTO.getContractItemResultBean();
 				//return null;
 				

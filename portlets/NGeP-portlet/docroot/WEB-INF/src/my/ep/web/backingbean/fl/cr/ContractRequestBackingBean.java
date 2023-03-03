@@ -4644,7 +4644,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//getManagedBean().setValidateItem(contractedItemList);
 			//11076 end
 			
-			resDTO = contractItemSO.searchContractItem(reqDTO);
+			//resDTO = contractItemSO.searchContractItem(reqDTO);
+			resDTO = contractItemSO.searchProductServiceItemDtls(reqDTO);
 			//11076 start
 			if(resDTO.getContractItemResultBean() != null) {
 				contractedItemList = resDTO.getContractItemResultBean().getTotalRecord();
