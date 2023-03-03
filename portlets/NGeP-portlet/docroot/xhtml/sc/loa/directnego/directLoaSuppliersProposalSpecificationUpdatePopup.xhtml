@@ -23,7 +23,7 @@
 					<p:commandButton id="resetAll" value="#{lbl['lbl.btn.reset.all']}"
 					disabled="#{directLOABackingBean.managedBean.supPropSpecDisable}"
 					action="#{directLOABackingBean.resetAllNewOfferedSpecification}" process="@form"
-					update="@form" onstart="blockWidget.show();"
+					onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
 					<p:tooltip id="toolResetAll" for="resetAll" value="#{lbl['lbl.btn.reset.all.mouseover']}" trackMouse="true" />
 					<p:commandButton value="#{lbl['lbl.btn.save']}" disabled="#{directLOABackingBean.managedBean.supPropSpecDisable}" action="#{directLOABackingBean.saveSupplierSpecification(false)}">

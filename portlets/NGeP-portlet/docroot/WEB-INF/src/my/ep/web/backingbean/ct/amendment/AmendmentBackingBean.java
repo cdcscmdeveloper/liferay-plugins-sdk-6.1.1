@@ -2549,14 +2549,54 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 			
-			// Validation for amendment extension period for expired contract
-			//28848
-			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
-					&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0
-						&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() == 0)){ //32418
-			   setTabValue("AD");
-			   throw new EpException(MessageConst.ERROR_750073);
-			  }
+			// Start Fix - #33952
+			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() && ctBackingBean
+					.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0)
+					&& ctBackingBean.getManagedBean().isContractExpired()
+					&& ((ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION.equals(ctBackingBean.getManagedBean()
+							.getContractVer().getStatus().getStatusId()))
+							|| (ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION_REVISION.equals(ctBackingBean
+									.getManagedBean().getContractVer().getStatus().getStatusId()))
+							|| (ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean()
+									.getContractVer().getStatus().getStatusId()))
+							|| (ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(ctBackingBean
+									.getManagedBean().getContractVer().getStatus().getStatusId()))
+							|| (ContractStatusConst.FA_PENDING_SIGN_OFF.equals(ctBackingBean.getManagedBean()
+									.getContractVer().getStatus().getStatusId()))
+							|| (ContractStatusConst.FA_PENDING_CHAIRPERSON_SIGN_OFF.equals(ctBackingBean
+									.getManagedBean().getContractVer().getStatus().getStatusId()))
+							|| (ContractStatusConst.FA_PENDING_LOA_SUBMISSION.equals(ctBackingBean.getManagedBean()
+									.getContractVer().getStatus().getStatusId()))
+							|| (ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.equals(ctBackingBean
+									.getManagedBean().getContractVer().getStatus().getStatusId()))
+							|| (ContractStatusConst.FA_PENDING_VERIFICATION.equals(ctBackingBean.getManagedBean()
+									.getContractVer().getStatus().getStatusId()))
+							|| (ContractStatusConst.FA_PENDING_MOF_MEETING_DECISION.equals(ctBackingBean
+									.getManagedBean().getContractVer().getStatus().getStatusId()))
+							|| (ContractStatusConst.FA_PENDING_LOA_APPROVAL.equals(ctBackingBean.getManagedBean()
+									.getContractVer().getStatus().getStatusId()))
+							|| (ContractStatusConst.FA_PENDING_LOA_REVISION.equals(ctBackingBean.getManagedBean()
+									.getContractVer().getStatus().getStatusId()))
+							|| (ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL.equals(ctBackingBean
+									.getManagedBean().getContractVer().getStatus().getStatusId()))
+							|| (ContractStatusConst.FA_PENDING_REJECTION_ACKNOWLEDGEMENT.equals(ctBackingBean
+									.getManagedBean().getContractVer().getStatus().getStatusId())) || (ContractStatusConst.FA_PENDING_CANCELLATION_ACKNOWLEDGEMENT
+								.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())))) {
+
+				setTabValue("AD");
+				throw new EpException(MessageConst.ERROR_750075);
+			} else {
+				// Validation for amendment extension period for expired
+				// contract
+				// 28848
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
+						&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0 && ctBackingBean
+								.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() == 0)) { // 32418
+					setTabValue("AD");
+					throw new EpException(MessageConst.ERROR_750073);
+				}
+			}
+			// End Fix - #33952
 			//32418 Start
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
 					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() >= 28){ 
