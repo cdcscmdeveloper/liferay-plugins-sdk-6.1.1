@@ -48,6 +48,7 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.bean.search.sc.QTSearchBean;
+import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
@@ -94,6 +95,8 @@ import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
+import my.ep.dto.ct.circular.CircularDetailReqDTO;
+import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -4198,6 +4201,38 @@ public class QTDetailBackingBean extends
 					QTSupplierReqDTO supplierReqDTO = new QTSupplierReqDTO();
 					QTSupplierResDTO supplierResDTO = new QTSupplierResDTO();
 					supplierReqDTO.setPanelItemId(panelItemList.get(0).getPanelItemId());
+				// #34220-start
+				if (null != this.getManagedBean().getQt().getCircularVer().getCtCircular().getCurrentCircularVerId()
+						&& null != this.getManagedBean().getQt().getCircularVer().getCtCircular()
+								.getCurrentCircularVerId().getCircularVerId()
+						&& !this.getManagedBean()
+								.getQt()
+								.getCircularVer()
+								.getCircularVerId()
+								.equals(this.getManagedBean().getQt().getCircularVer().getCtCircular()
+										.getCurrentCircularVerId().getCircularVerId())) { 
+//						log.info("=======qtCircularQTNUMBER========"+this.getManagedBean().getQt().getQtNo());
+						CircularDetailReqDTO cirreqDTO = new CircularDetailReqDTO();
+						cirreqDTO.setCircularVerId(this.getManagedBean().getQt().getCircularVer().getCtCircular()
+							.getCurrentCircularVerId().getCircularVerId());
+						cirreqDTO.setPanelItemTypeGroup(true);
+						cirreqDTO.setGroupItemId(this.getManagedBean().getQt()
+								.getItemGroup().getPanelItemGroupId());
+						ICircularDetailSO	circularDetailSO = (ICircularDetailSO) EpEjbBusinessDelegate
+								.getInstance().getServiceObject(
+										ModuleCodeConst.CONTRACT_MANAGEMENT,
+										ICircularDetailSO.class);
+						CircularDetailResDTO cirresDTO = circularDetailSO
+							.getPanelItemsByCircularVerId(cirreqDTO);
+						if(CollectionUtils.isNotEmpty(cirresDTO.getPanelItemList())){
+						Long panelItemId=cirresDTO.getPanelItemList().get(0)
+							.getPanelItemId();
+//						log.info("=======qtCircularQTNUMBER========"+this.getManagedBean().getQt().getQtNo()+"=======qtCircularVersionId========"+panelItemId);
+						supplierReqDTO.setPanelItemId(cirresDTO.getPanelItemList().get(0)
+									.getPanelItemId());
+					}
+				}
+				// #34220-end
 					supplierResDTO = supplierSo
 							.retrievePanelSuppliersByPanelItem(supplierReqDTO);
 					
