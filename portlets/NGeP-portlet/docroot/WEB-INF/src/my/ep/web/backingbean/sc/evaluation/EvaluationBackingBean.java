@@ -1458,43 +1458,6 @@ public class EvaluationBackingBean extends
 
 				reqDTO.setComplianceList(technicalCompliance);
 			}
-			
-			//#28786 - start
-			if (null != this.getManagedBean()
-					.getComplianceTechnicalProposalCheckListDM().getList()) {
-				for (ScQtProposalChecklist propCheck : this.getManagedBean()
-						.getComplianceTechnicalProposalCheckListDM().getList()) {
-					if (propCheck.getScQtProposalChecklistAttachment() != null
-							&& (propCheck.getCompliance() == null || propCheck
-									.getCompliance() == 2)) {
-						reqDTO.setEvalStgCompliance(false);
-						break;
-					} else if (propCheck.getScQtProposalChecklistAttachment() != null
-							&& propCheck.getCompliance() != null
-							&& propCheck.getCompliance() != 2) {
-						reqDTO.setEvalStgCompliance(true);
-					} else if (propCheck.getScQtProposalChecklistAttachment() == null) {
-						reqDTO.setEvalStgCompliance(true);
-					}
-				}
-			} else {
-				for (ScQtProposalChecklist propCheck : this.getManagedBean()
-						.getComplianceFinancialProposalCheckList()) {
-					if (propCheck.getScQtProposalChecklistAttachment() != null
-							&& (propCheck.getCompliance() == null || propCheck
-									.getCompliance() == 2)) {
-						reqDTO.setEvalStgCompliance(false);
-						break;
-					} else if (propCheck.getScQtProposalChecklistAttachment() != null
-							&& propCheck.getCompliance() != null
-							&& propCheck.getCompliance() != 2) {
-						reqDTO.setEvalStgCompliance(true);
-					} else if (propCheck.getScQtProposalChecklistAttachment() == null) {
-						reqDTO.setEvalStgCompliance(true);
-					}
-				}
-			}
-			//#28786 - end
 
 			resDTO = evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
 			List<ScQtCheckList> qtCheckLists = getManagedBean()
@@ -2328,6 +2291,7 @@ public class EvaluationBackingBean extends
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 			reqDTO.setCompliance(null);
+			evaluationSO.preInitializeChecklist(reqDTO);//34496 4serangkai
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 			List<ScQtCheckList> localCheckList = new ArrayList<ScQtCheckList>();
 			this.getManagedBean().setCheckQualifiedSuppliers(
@@ -13393,7 +13357,7 @@ private void retriveCommitteeRemarksList(){
 				//32426-start
 				//#34497 related to #32453 fixing(#25138,#21695) - start
 				ISearchResultBean<ScQtProposalChecklist> resultBean = evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO).getComplianceResultBean();
-				if(scoringReq != null && !scoringReq && CollectionUtils.isNotEmpty(resultBean.getResultList())){
+				if(CollectionUtils.isNotEmpty(resultBean.getResultList())){// 34523 4serangkai
 					List<Long> proposalChecklistIds = new ArrayList<>();
 					if(getManagedBean().getTabItemPackageIndex()==2 && SourcingConstants.TECHINICAL_STAGE.equals(evalStage) && getManagedBean().getScQt().isPartial()){
 						for(ScQtProposalChecklist proposalChecklist: resultBean.getResultList()){
