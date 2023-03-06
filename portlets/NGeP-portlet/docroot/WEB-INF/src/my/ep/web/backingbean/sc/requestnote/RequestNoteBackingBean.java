@@ -399,8 +399,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    		getManagedBean().setAssignedState(isAssignedState);
 	    		reloadRequestNote(scRequestNote);
 	    		
-	    		successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
-	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.FALSE);
+	    		//#29557 - start
+	    		Boolean PIcontinuity = false;
+	    		for (ScRequestNoteDtl scRequestNoteDtl : scRequestNote.getRequestNoteDtls()) {
+	    			if(scRequestNoteDtl.isShowPurchaseInquiry()){
+	    				PIcontinuity = true;
+	    				break;
+	    			}
+	    		}
+
+	    		if(PIcontinuity){
+	    			successMessage(MessageConst.INFO_700004,ParameterTypeConst.DOCUMENT_TYPES,
+		    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.FALSE);
+	    		}else{
+	    			successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
+		    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.FALSE);
+	    		}
+	    		//#29557 - else	    		
 	    	} else{
 	    		successMessage(MessageConst.INFO_700024,ParameterTypeConst.DOCUMENT_TYPES,
 	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.TRUE);
@@ -4998,6 +5013,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return codificationBB.assignProductCode(requestItem, null, false);
 	}
 	
+	/**
+	 * to retrieve top zonal tier price
+	 * @param supplierItemPrices the list of ScSupplierItemPrice
+	 * @param orderQuantity the order quantity
+	 * @param priceType the price type
+	 * @param itemName the name of items
+	 * @return ScSupplierItemPrice instance
+	 */
 	private ScSupplierItemPrice getTopZonalTierPrice(List<ScSupplierItemPrice> supplierItemPrices, 
 			BigDecimal orderQuantity, String priceType, String itemName) {
 		List<ScSupplierItemPrice> groupedItemPrice = new ArrayList<ScSupplierItemPrice>();
@@ -5022,7 +5045,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 		if(isTierPrice && !isTierPriceMatched) {
-			throw new EpException(MessageConst.ERROR_760399, new String[] {itemName});
+			//#29557 - start
+			//throw new EpException(MessageConst.ERROR_760399, new String[] {itemName});
+			throw new EpException(MessageConst.ERROR_760527, new String[] {itemName});
+			//#29557 - end
 		} else {
 			if(CollectionUtils.isNotEmpty(groupedItemPrice)) {
 				topPricedItem = findMaxPriceItem(groupedItemPrice);
