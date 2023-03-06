@@ -515,7 +515,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		getEspkbCommitmentNo();
 		//29555 start
-		getLoginUserName();
+		getPreparedByName();
 		//29555 end
 	}
 	
@@ -1765,7 +1765,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		
 		//29555 start
-		getLoginUserName();
+		getPreparedByName();
 		//29555 end
 		
 		//Redmine #20011
@@ -1980,32 +1980,29 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	}
 	
 	//29555 start
-	public void getLoginUserName() {
+	public void getPreparedByName() {
 		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 		FlActor actor = null;
-		try{
+		
 		actor = fulfilmentSO.retrieveFlActors(
 				getManagedBean().getFlRequest().getDocType(),
 				getManagedBean().getFlRequest().getFulfilmentReqId(),
 				FulfilmentConst.Requistioner_Role_Code);
-		}catch(Exception  e){
-			actor = null;
-		}
+		
 		if(actor != null){
-			log.info("29555: actor exist");
 			getManagedBean().setpreparedBy(actor.getUserName());
 		}else{
-			log.info("29555: actor not exist");
-		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		UserReqDTO userReqDTO = new UserReqDTO();
-		if(getManagedBean().getFlRequest().getCreatedBy() != null){
-		userReqDTO.setUserId(getManagedBean().getFlRequest().getCreatedBy());
-		UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
-		if(userResDTO.getPmUser().getUserName() != null){
-		getManagedBean().setpreparedBy(userResDTO.getPmUser().getUserName());
-		}}else{
-			getManagedBean().setpreparedBy(null);
-		}
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			if(getManagedBean().getFlRequest().getCreatedBy() != null){
+				userReqDTO.setUserId(getManagedBean().getFlRequest().getCreatedBy());
+				UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+				if(userResDTO.getPmUser().getUserName() != null){
+					getManagedBean().setpreparedBy(userResDTO.getPmUser().getUserName());
+				}
+			}else{
+				getManagedBean().setpreparedBy(null);
+			}
 		}
 	}
 	//29555 end
@@ -6397,7 +6394,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 			}
 			//29555 start
-			getLoginUserName();
+			getPreparedByName();
 			//29555 end
 			getManagedBean().setBackToDocument(null);
 			flBB.getManagedBean().setHideRemarks(true);

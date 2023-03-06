@@ -6473,7 +6473,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}		
 	}
 	
-	private boolean isPK7(ScLoa loa){				
+	// #25725 - note 146 - add javadoc and change to public
+	/**
+	 * To check is PK7 procurement
+	 * @return boolean isPK7
+	 */
+	public boolean isPK7(ScLoa loa){				
 		boolean PK7 = false;
 		if(loa.getProcurementType()!=null){					
 			if(loa.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7)){
@@ -6487,6 +6492,49 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	
 	//#25725 - end
+	
+	// #25725 - note 125/128 - start
+	/**
+	 * To check is reason PK2
+	 * @return boolean isReasonPK2
+	 */
+	public boolean isReasonPK2(ScLoa loa) { // #25725 - note 146 - change to public
+		boolean isReasonPK2 = false;
+		if (loa.getScQuote().getJustificationType() != null) {
+			if (loa.getScQuote().getJustificationType().getReasonCode().equals(ParameterConst.PK2_REASON_CODE)) {
+				isReasonPK2 = true;
+			}
+		}
+		return isReasonPK2;
+	}
+	// #25725 - note 125/128 - end
+	// #25725 - note 146 - start
+	/**
+	 * To check is reason special item
+	 * @return boolean isReasonSpecialItem
+	 */
+	public boolean isReasonSpecialItem(ScLoa loa) {
+		boolean isReasonSpecialItem = false;
+		if (loa.getScQuote().getJustificationType() != null) {
+			if (loa.getScQuote().getJustificationType().getReasonCode().equals(ParameterConst.SPECIAL_ITEM_REASON_CODE)) {
+				isReasonSpecialItem = true;
+			}
+		}
+		return isReasonSpecialItem;
+	}
+	
+	/**
+	 * To enable/disable approval letter field
+	 */
+	public void showApprovalLetter() {
+		ScLoa loa = getManagedBean().getScLoa();
+		Boolean isNonPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
+
+		if((!loa.isAgreementReq())&&((isNonPeriodic && over500K(loa)) && (!isPK7(loa) || isReasonPK2(loa) || isReasonSpecialItem(loa)))){
+			this.getManagedBean().setShowApprovalLetter(Boolean.TRUE);
+		}		
+	}
+	// #25725 - note 146 - end
 	
 	private BigDecimal overallCtAmtOrLoaAmt(ScLoa loa){
 		BigDecimal overallContractAmtOrLoaAmt = BigDecimal.valueOf(0d);
@@ -10051,6 +10099,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void searchSupplierSpecification(ScLoiLoaItem loiLoaItem,boolean mainSearch){
 		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
 			TemplateSpecReqDTO specReqDto=new TemplateSpecReqDTO();
+			AwardSupplierReqDTO reqDTO=new AwardSupplierReqDTO();
+			reqDTO.setScLoiLoaItem(loiLoaItem);
+			AwardSupplierResDTO resDTO  = getQtAwardSO().retriveLatestLoiLoaItemDetails(reqDTO);
+			if(resDTO.getScLoiLoaItem()!=null){
+				loiLoaItem = new ScLoiLoaItem();
+				loiLoaItem=resDTO.getScLoiLoaItem();
+			}
 			this.getManagedBean().setItemNamePopup(loiLoaItem.getScRequestItem().getItemName());
 			this.getManagedBean().setScLoiLoaItem(loiLoaItem);
 			this.getManagedBean().setNewSupplierJustification(loiLoaItem.getLoaSpecJustification());
@@ -10123,6 +10178,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		if(this.getManagedBean().getTplSpecAnswerList() != null || this.getManagedBean().getNewSupplierJustification() != null){
 			ScLoiLoaItem  scLoiLoaItem  = this.getManagedBean().getScLoiLoaItem();
+			AwardSupplierReqDTO reqDTOLatest=new AwardSupplierReqDTO();
+			reqDTOLatest.setScLoiLoaItem(scLoiLoaItem);
+			AwardSupplierResDTO resDTOLatest  = getQtAwardSO().retriveLatestLoiLoaItemDetails(reqDTOLatest);
+			if(resDTOLatest.getScLoiLoaItem()!=null){
+				scLoiLoaItem = new ScLoiLoaItem();
+				scLoiLoaItem=resDTOLatest.getScLoiLoaItem();
+			}
 			scLoiLoaItem.setComplete(isComplete);
 			if(isComplete){//29007-start
 				if(null==this.getManagedBean().getNewSupplierJustification() || StringUtils.isBlank(this.getManagedBean().getNewSupplierJustification())|| StringUtils.isEmpty(this.getManagedBean().getNewSupplierJustification())){
@@ -10218,10 +10280,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					
 					tplSpecQuestion.setClSpecDetail(this.getManagedBean().getSpecKeyword());
 					tplSpecAnswer.setTplSpecQuestion(tplSpecQuestion);
+					specReqDto.setTplSpecAnswer(tplSpecAnswer);
 					specReqDto.setScLoiLoaItem(resDTO.getScLoiLoaItem());
 					
 					specReqDto.setSpecSearchForApp(true);
 					
+				}else{
+					specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
+					specReqDto.setScQt(this.getManagedBean().getScQt());
+					specReqDto.setScLoiLoaItem(this.getManagedBean().getScLoiLoaItem());
+					specReqDto.setSpecSearchForApp(true);
 				}
 				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
 				
@@ -10570,6 +10638,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		RequestContext.getCurrentInstance().execute("resetAllConfirmPopUp.show()");
 	}
 	public void resetAllNewOfferedSpecificationSubmit(){
+		TemplateSpecReqDTO specReqDto = new TemplateSpecReqDTO();
+		if(this.getManagedBean().getSpecKeyword() != null){
+			this.getManagedBean().setSpecKeyword(null);
+			specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
+			specReqDto.setScQt(this.getManagedBean().getScQt());
+			specReqDto.setScLoiLoaItem(this.getManagedBean().getScLoiLoaItem());
+			specReqDto.setSpecSearchForApp(true);
+			
+			TemplateSpecResDTO templateSpecResDTO  = getTemplateSpecSO().searchSupplierSpecification(specReqDto);
+			
+			this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
+		}
+		
 		for(TplSpecAnswer answer : this.getManagedBean().getTplSpecAnswerList()){
 			answer.setNewSupplierOffer(null);
 		}
@@ -10594,16 +10675,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}else{			
 			this.getManagedBean().setAbove500K(false);
 		}
-		if((isPK7(scLoa) && (isPeriodic || (isNonPeriodic && over500K(scLoa))))&& !agreementReq){
+		if(((isPK7(scLoa) && !isReasonPK2(scLoa) && !isReasonSpecialItem(scLoa)) && (isPeriodic || (isNonPeriodic && over500K(scLoa))))&& !agreementReq){// #25725 - note 146
 			this.getManagedBean().setAgreementReqChange(true);
 			RequestContext.getCurrentInstance().execute("changeAgreementReqDlg.show()");			
-		}else if((agreementReq == false)&&((isNonPeriodic && over500K(scLoa)) && !isPK7(scLoa))){						
+		}else if((agreementReq == false)&&((isNonPeriodic && over500K(scLoa)) && (!isPK7(scLoa) || isReasonPK2(scLoa) || isReasonSpecialItem(scLoa)))){// #25725 - note 146						
 			scLoa.setAgreementReq(false);
+			this.getManagedBean().setShowApprovalLetter(Boolean.TRUE); // #25725 - note 146
 			this.getManagedBean().setAgreementReqChange(true);
 			RequestContext.getCurrentInstance().update("contractDetailsId");
 		}else{					
 			scLoa.setAgreementReq(true);
 			this.getManagedBean().setAgreementReqChange(true);
+			this.getManagedBean().setShowApprovalLetter(Boolean.FALSE); // #25725 - note 146
 			this.getManagedBean().getScLoa().setScLoaAttachment(null);
 			RequestContext.getCurrentInstance().update("contractDetailsId");
 		}
@@ -10633,7 +10716,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			
 			if(isNonPeriodic || (isPK7(this.getManagedBean().getScLoa()) && isPeriodic)){
 				result = false;
-				if(getManagedBean().getScLoa().getPmStatus().getStatusId().equals(disabledID)){
+				//#25725 - note 125/128 - start
+				//#25725 note 146 - start (comment out)
+				/*if(isReasonPK2(this.getManagedBean().getScLoa()) && isPeriodic){
+					result = true;
+				}*/
+				//#25725 note 146 - end
+				//#25725 - note 125/128 - end
+				if(getManagedBean().getScLoa().getPmStatus().getStatusId().equals(disabledID)
+						|| (isReasonPK2(this.getManagedBean().getScLoa()) && isPeriodic) //#25725 note 146
+						|| (isReasonSpecialItem(this.getManagedBean().getScLoa()) && isPeriodic)) { //#25725 note 146
 					result = true;
 				}
 			}

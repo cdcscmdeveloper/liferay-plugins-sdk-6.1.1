@@ -175,8 +175,19 @@ public class ForceReplaceSuppAdminBackingBean extends
 				// Agency name does not exist for G2G
 				throw new EpException(MessageConst.ERROR_722659);
 			} else {
-				// Buss Reg No. and Established Date does not exist for Supplier
-				throw new EpException(MessageConst.ERROR_722593);
+				//33129 - START
+				if(getManagedBean().getSmSupplier() != null){
+					switch (getManagedBean().getSmSupplier().getRecordStatusFlg()){
+						case DbValueConst.RECORD_STATUS_SUSPENDED : throw new EpException(MessageConst.ERROR_722700);
+						case DbValueConst.RECORD_STATUS_CANCELLED : throw new EpException(MessageConst.ERROR_722698);
+						case DbValueConst.RECORD_STATUS_DELETED   : throw new EpException(MessageConst.ERROR_722699);
+					}
+				}
+				else{
+					// Buss Reg No. and Established Date does not exist for Supplier
+					throw new EpException(MessageConst.ERROR_722593);
+				}
+				//#33129 - END
 			}
 		} else {
 			//#28765 - Start
@@ -1555,11 +1566,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 					checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId())
 				)) {
 			getManagedBean().setBypassFlag1(1);
-		}
-		//33072 START
-		else if (	admin!=null && getManagedBean().getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal() &&
+		} else if (	admin!=null && getManagedBean().getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal() &&
 				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && getManagedBean().getOldAdmin().getPmUser().getUserId()!=null && 
-				activeAppl==null && getManagedBean().getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.parseLong(SupplierManagementConst.PM_STATUS_REGISTERED)) &&(
+				activeAppl==null && appl==null && (
 						checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null 
 						|| 
 						checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId())	
@@ -1569,15 +1578,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 					&& getManagedBean().getNewAdmin().getIdentificationNo().equalsIgnoreCase(getManagedBean().getReactivateBasic().getNewIdentificationNo())){
 				log.info("MOF ACCOUNT DOES NOT HAVE ACTIVEAPPL VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
 				getManagedBean().setBypassFlag1(1);
+			}else{
+				getManagedBean().setBypassFlag1(2);
 			}
-		}else if (	admin!=null && getManagedBean().getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal() &&
-				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && getManagedBean().getOldAdmin().getPmUser().getUserId()!=null && 
-				activeAppl==null && appl == null
-			) {
-			getManagedBean().setBypassFlag1(1);
-		}  
-		//33072 END
-		else if (	admin!=null && !getManagedBean().getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal() &&
+		} else if (	admin!=null && !getManagedBean().getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal() &&
 				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && getManagedBean().getOldAdmin().getPmUser().getUserId()!=null && 
 				activeAppl==null && appl==null) {
 			if(getManagedBean().getNewAdmin() != null && getManagedBean().isExistingUser()

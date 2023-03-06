@@ -1861,11 +1861,8 @@ public class SupplierDataMaintenanceBackingBean extends
 				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
 				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
 				cat.setApprovedDate(new Date());
-				if (getManagedBean().isPoUser()) {
-					cat.setPoDecFlg(1);
-				} else {
-					cat.setApprvrDecFlg(1);
-				}
+				cat.setApprvrDecFlg(1);		//#34209 START
+				cat.setPoDecFlg(null);		//#34209 END
 				SmApplicationUtil.setSupplierCategoryEffectiveDate(cat,
 						getManagedBean().getSmAppl().getApplType());
 			}
