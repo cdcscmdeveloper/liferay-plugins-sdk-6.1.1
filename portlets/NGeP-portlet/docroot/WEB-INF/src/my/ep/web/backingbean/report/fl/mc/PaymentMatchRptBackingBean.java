@@ -138,7 +138,7 @@ public class PaymentMatchRptBackingBean extends FlReportBackingBean<PaymentMatch
 		//29550 - start
 		getManagedBean().setInvNo(null);
 		getManagedBean().setSupplierInvNo(null);
-		getManagedBean().setPaymentAdviceNo(null);
+		getManagedBean().setPaymentMatchNo(null);
 		//29550 - end
 	}
 	
