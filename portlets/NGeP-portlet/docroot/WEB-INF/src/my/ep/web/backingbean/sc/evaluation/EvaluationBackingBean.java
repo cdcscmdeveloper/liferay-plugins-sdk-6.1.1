@@ -2293,6 +2293,13 @@ public class EvaluationBackingBean extends
 			reqDTO.setCompliance(null);
 			evaluationSO.preInitializeChecklist(reqDTO);//34496 4serangkai
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
+			
+			//#34452 related to #25138 -start
+			if(this.getManagedBean().getScQt() != null){
+				this.getManagedBean().setWipStatusMax(evaluationSO.checkWipScoreSettingMax(reqDTO));
+			}
+			//#34452 related to #25138 -end
+			
 			List<ScQtCheckList> localCheckList = new ArrayList<ScQtCheckList>();
 			this.getManagedBean().setCheckQualifiedSuppliers(
 					resDTO.isCheckQualifiedSuppliers());
