@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17114,9 +17115,15 @@ public class SmApplicationBackingBean extends
 
 		List<String> branchName = mofRegistrationSO.isProgessFLReturnBranchName(reqDTO);
 		StringBuilder allBranchName = new StringBuilder();
-		for (String str : branchName) {
-			allBranchName.append(str + ",");
-		}
+		//#28777 - START
+	    final Set<String> duplicateCheck = new HashSet<>();
+	         
+	    for (String str : branchName) {
+	        if (duplicateCheck.add(str)) {
+				allBranchName.append(str + ",");
+	        }
+	    }
+		//#28777 - END
 		if (allBranchName.length() > 0) {
 			allBranchName.setLength(allBranchName.length() - 1);
 		}

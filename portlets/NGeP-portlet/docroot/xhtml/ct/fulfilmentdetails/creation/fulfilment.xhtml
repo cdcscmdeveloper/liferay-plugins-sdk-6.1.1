@@ -286,20 +286,6 @@
 					onclick="cancelConfirmDlg.hide()" type="button" />
 			</div>
 		</p:confirmDialog>
-		<!-- Enhancement 13847 - start -->
-		<p:confirmDialog message="#{lbl['lbl.ct.menu.performanceBond.confirm']}"
-			severity="alert" widgetVar="addPBConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
-					partialSubmit="true" process="@this"
-					action="#{ctBackingBean.saveBondWaiverToTable()}"
-					onstart="addPBConfirmDlg.hide();blockWidget.show();"
-					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="addPBConfirmDlg.hide()" type="button" />
-			</div>
-		</p:confirmDialog>
-		<!-- Enhancement 13847 - end -->
+		
 	</ui:define>
 </ui:composition>
