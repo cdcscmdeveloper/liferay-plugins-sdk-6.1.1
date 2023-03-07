@@ -583,10 +583,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	// #31485, #21695, #25138 - end
 	
 	private boolean hasPreviousMeeting; //#29473, #31675
-	
-	//34528-uat 4serangkai 
-	private Paginator financialPackagePaginator;
 
+	private int wipStatusMax; // #34452 related to #25138
+
+	private Paginator financialPackagePaginator; // 34528-uat 4serangkai
 
 	/**
 	 * Gets the today.
@@ -3997,6 +3997,23 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.noSupplierPackageExist = noSupplierPackageExist;
 	}
 	// #25138, #21695 -end-
+	
+	// #34452 related to #25138 -start
+	/**
+	 * @return the max wip 3serangkai
+	 */
+	public int getWipStatusMax() {
+		return wipStatusMax;
+	}
+
+	/**
+	 * @param  max wip check 3serangkai
+	 *            the wipRequired to set
+	 */
+	public void setWipStatusMax(int wipStatusMax) {
+		this.wipStatusMax = wipStatusMax;
+	}
+	// #34452 related to #25138 -end
 	
 	//34528-uat 4serangkai - start
 	public Paginator getFinancialPackagePaginator() {
