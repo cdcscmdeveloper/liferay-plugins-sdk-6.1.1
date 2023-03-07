@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -1708,10 +1709,27 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 */
 	public void getContractDuration(Date fromDate, Date toDate){
 		log.info("ReportBackingBean-getContractDuration");
-		int monthsRange = 0;
-		monthsRange = DateUtils.getMonths(fromDate, toDate);
+		Calendar startCal = new GregorianCalendar();
+		startCal.setTime(fromDate);
+		Calendar endCal = new GregorianCalendar();
+		endCal.setTime(toDate);
+
+		int dayFrom = startCal.get(Calendar.DAY_OF_MONTH);
+		int dayTo = endCal.get(Calendar.DAY_OF_MONTH);
+		int monthFrom = startCal.get(Calendar.MONTH) + 1;
+		int monthTo = endCal.get(Calendar.MONTH) + 1;
+		int yearFrom = startCal.get(Calendar.YEAR);
+		int yearTo = endCal.get(Calendar.YEAR);
 		
-		if(monthsRange > 12 ){
+		if(yearTo == yearFrom + 1){
+			if(monthTo == monthFrom){
+				if(dayTo > dayFrom){
+					throw new EpException(MessageConst.ERROR_REPORT_780072);
+				}
+			}else if(monthTo > monthFrom){
+				throw new EpException(MessageConst.ERROR_REPORT_780072);
+			}
+		}else if(yearTo > yearFrom + 1){
 			throw new EpException(MessageConst.ERROR_REPORT_780072);
 		}
 	}
@@ -1735,6 +1753,9 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		}
 	}
 	
+	/**
+	 * To retrieve supplier data by company name
+	 */
 	public void retrieveSuppDataByCompName(String compName, String regNo){
 		log.info("ReportBackingBean-retrieveSuppDataByCompName");
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
