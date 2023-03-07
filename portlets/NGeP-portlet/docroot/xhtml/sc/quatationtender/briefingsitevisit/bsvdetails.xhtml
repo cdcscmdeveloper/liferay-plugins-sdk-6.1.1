@@ -85,14 +85,22 @@
 			<p:column headerText="#{lbl['lbl.sc.action']}"
 				style="width:5%;white-space: normal;text-align: center;"
 				rendered="#{isBSVEnabled}">
-				<p:commandLink 
+				<!-- 28188 - Start-->
+				<p:commandButton id="cloneBSVDtl" value="#{lbl['lbl.btn.clone']}"
+					process="@this, briefingdtlid"
+					disabled="#{briefingdtls.disableRow != null and briefingdtls.disableRow eq true}"
+					action="#{qTBriefingSiteVisitBackingBean.cloneScQtBsvDtl(briefingdtls,index,'B')}"
+					update="@(.briefingList)"
+					rendered="#{briefingdtls.bsvStatus.statusId eq QTStatusConst.BSV_POSTPONED}" />
+				<p:commandLink
 					action="#{qTBriefingSiteVisitBackingBean.editAction(briefingdtls,index,'B')}"
 					partialSubmit="true" process="@this" update="@([id$=briefdlgId])"
-					rendered="#{briefingdtls.bsvStatus.statusId ne QTStatusConst.BSV_COMPLETED}">
+					rendered="#{briefingdtls.bsvStatus.statusId ne QTStatusConst.BSV_COMPLETED and briefingdtls.bsvStatus.statusId ne QTStatusConst.BSV_POSTPONED}">
 					<h:graphicImage
 						value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
 						styleClass="tasklist_title1" />
 				</p:commandLink>
+				<!-- 28188 - End-->
 			</p:column>
 		</p:dataTable>
 		<ui:param name="briefingDelPopUp" value="briefingDelPopUp#{!empty bsvdtlbean.tplSpecZoneDtl ? bsvdtlbean.tplSpecZoneDtl.specZoneId : ''}" />
@@ -201,14 +209,22 @@
 					<p:column headerText="#{lbl['lbl.sc.action']}"
 						style="width:5%;white-space: normal;text-align: center;"
 						rendered="#{isBSVEnabled}">
+						<!-- 28188 - Start-->
+						<p:commandButton id="cloneSVtl" value="#{lbl['lbl.btn.clone']}"
+							process="@this, sitevisitdtlid"
+							disabled="#{sitevisitdtls.disableRow != null and sitevisitdtls.disableRow eq true}"
+							action="#{qTBriefingSiteVisitBackingBean.cloneScQtBsvDtl(sitevisitdtls,rowIndex,'S')}"
+							update="@([id$=sameasbsvrequired])"
+							rendered="#{sitevisitdtls.bsvStatus.statusId eq QTStatusConst.BSV_POSTPONED}" />
 						<p:commandLink
 							action="#{qTBriefingSiteVisitBackingBean.editAction(sitevisitdtls,rowIndex,'S')}"
 							partialSubmit="true" process="@this" update="@([id$=briefdlgId])"
-							rendered="#{sitevisitdtls.bsvStatus.statusId ne QTStatusConst.BSV_COMPLETED}">
+							rendered="#{sitevisitdtls.bsvStatus.statusId ne QTStatusConst.BSV_COMPLETED and sitevisitdtls.bsvStatus.statusId ne QTStatusConst.BSV_POSTPONED}">
 							<h:graphicImage
 								value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
 								styleClass="tasklist_title1" />
 						</p:commandLink>
+						<!-- 28188 - End-->
 					</p:column>
 				</p:dataTable>
 				<ui:param name="siteVisitDelPopUp" value="siteVisitDelPopUp#{!empty bsvdtlbean.tplSpecZoneDtl ? bsvdtlbean.tplSpecZoneDtl.specZoneId : ''}" />

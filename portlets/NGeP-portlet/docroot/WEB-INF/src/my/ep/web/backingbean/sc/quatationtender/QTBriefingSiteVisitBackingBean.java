@@ -1221,6 +1221,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		// Filter By - statusId
 		List<Long> statusIds = new ArrayList<Long>();
 		statusIds.add(QTStatusConst.BSV_COMPLETED);
+		statusIds.add(QTStatusConst.BSV_CANCELLED); //28188
 		searchBean.getDataFilterBeans().add(new SearchFilterBean(
 				"pmStatus.statusId",
 				SearchOperator.OPERATOR_NOT_IN.value(),
@@ -1261,4 +1262,25 @@ public class QTBriefingSiteVisitBackingBean extends
 		getManagedBean().setRequired(Boolean.FALSE);
 	}
 	//#34217 - End
+	
+	//#28188 - Start
+	public void cloneScQtBsvDtl(ScQtBsvDtl bsvDtl, int index, String bsvType) {
+		ScQtBsvDtl newScQtBsvDtl = (ScQtBsvDtl) bsvDtl.cloneEntity();
+		PmStatus pmStat = new PmStatus();
+		pmStat.setStatusId(QTStatusConst.BSV_PENDING);
+		newScQtBsvDtl.setBsvDate(null);
+		newScQtBsvDtl.setQtBsvDtlId(null);
+		newScQtBsvDtl.setBsvStatusId(QTStatusConst.BSV_PENDING);
+		newScQtBsvDtl.setBsvStatus(pmStat);
+		bsvDtl.setDisableRow(true);
+		
+		if (bsvType.equalsIgnoreCase(SourcingConstants.BSV_TYPE_BRIEFING)) {
+			this.getManagedBean().getBsvDtlBean().getBriefingList().add(newScQtBsvDtl);
+			this.getManagedBean().getBsvDtlBean().getBriefingList().set(index, bsvDtl);
+		} else if (bsvType.equalsIgnoreCase(SourcingConstants.BSV_TYPE_SITEVISIT)) {
+			this.getManagedBean().getBsvDtlBean().getSitevisitList().add(newScQtBsvDtl);
+			this.getManagedBean().getBsvDtlBean().getSitevisitList().set(index, bsvDtl);
+		}
+	}
+	//#28188 - End
 }
