@@ -2178,7 +2178,17 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 			reqDTO.setCompliance(null);
+			
+			evaluationSO.preInitializeChecklist(reqDTO); //34496 4serangkai
+			
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
+			
+			// #34452 related to #25138 -start
+			if (this.getManagedBean().getScQt() != null) {
+				this.getManagedBean().setWipStatusMax(evaluationSO.checkWipScoreSettingMax(reqDTO));
+			}
+			// #34452 related to #25138 -end
+			
 			List<ScQtCheckList> localCheckList = new ArrayList<ScQtCheckList>();
 			this.getManagedBean().setCheckQualifiedSuppliers(
 					resDTO.isCheckQualifiedSuppliers());
@@ -12701,7 +12711,7 @@ private void retriveCommitteeRemarksList(){
 				// #34497 related to #32453 fixing(#25138,#21695) - start
 				ISearchResultBean<ScQtProposalChecklist> resultBean = evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO).getComplianceResultBean();
 			
-				if (scoringReq != null && !scoringReq && CollectionUtils.isNotEmpty(resultBean.getResultList())) {
+				if (CollectionUtils.isNotEmpty(resultBean.getResultList())) {// 34523 4serangkai
 					List<Long> proposalChecklistIds = new ArrayList<>();
 
 					if (getManagedBean().getTabItemPackageIndex() == 2
