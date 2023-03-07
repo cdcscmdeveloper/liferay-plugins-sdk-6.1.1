@@ -149,13 +149,11 @@
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
 					 <!-- #29729 Start -->
-					   <c:if test="#{suppFinalizationBackingBean.managedBean.currentStatusId eq QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION}">
 						 <p:spacer width="15" height="15"/>
 		                     <p:commandLink  process="@this"  action="#{suppFinalizationBackingBean.showSupplierBranchList(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
 				         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
 								<h:graphicImage value="/css/images/exclam-info.png" />
 			         		</p:commandLink> 
-					   </c:if>
 					 <!-- #29729 End -->
 				</p:column>
 				<c:if test="#{canShowSupplierProposal}">
@@ -361,13 +359,11 @@
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
 					 <!-- #29729 Start -->
-					   <c:if test="#{suppFinalizationBackingBean.managedBean.currentStatusId eq QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION}">
 						 <p:spacer width="15" height="15"/>
 		                     <p:commandLink  process="@this"  action="#{suppFinalizationBackingBean.showSupplierBranchList(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
 				         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
 								<h:graphicImage value="/css/images/exclam-info.png" />
 			         		</p:commandLink> 
-					   </c:if>
 					 <!-- #29729 End -->
 				</p:column>
 				<c:if test="#{canShowSupplierProposal}">

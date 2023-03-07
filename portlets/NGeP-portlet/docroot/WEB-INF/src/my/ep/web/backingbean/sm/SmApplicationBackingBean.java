@@ -26,6 +26,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -2974,7 +2975,10 @@ public class SmApplicationBackingBean extends
 					.isPoUser())
 					&& currentPageType
 							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
-
+				//#31043 start
+				SmApplicationUtil.validateCategoriesBeforeSave(true,
+						getManagedBean(), currentTab);
+				//#31043 end
 				SmApplicationUtil
 						.validateOverlapCategoryJustificationAndSuppDocs(
 								getManagedBean(), currentPageType);
@@ -10084,10 +10088,14 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setMissinDocs(new ArrayList<SmApplSupportDoc>());
 		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
+			//#34392 - START
 			if (doc.getPmDocument().isMandatory()
 					&& (doc.getVerifiedFlg() == null || doc.getVerifiedFlg() != 1)) {
 				getManagedBean().getMissinDocs().add(doc);
+			}else if(!doc.getPmDocument().isMandatory() && (doc.getVerifiedFlg() == null || doc.getVerifiedFlg() != 1)){
+				getManagedBean().getMissinDocs().add(doc);
 			}
+			//#34392 - End
 		}
 		//log.info("**** Send Inquiry List Size ***** "
 			//	+ getManagedBean().getMissinDocs().size());
@@ -13575,9 +13583,24 @@ public class SmApplicationBackingBean extends
 				&& getManagedBean().getSmAppl().getSupplierType().equals("J")) {
 			if (SmCommonUtil.isApplPhysicalConsultant(getManagedBean()
 					.getSmAppl())) {
-				getManagedBean()
-						.setPhysicalConsulting(
-								my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);
+				//#34271 START
+				if(getManagedBean().getSmAppl().getSmSupplierCategories() != null){
+					for(SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()){
+						if(Integer.toString(cat.getRecordStatusFlg()).contains("8") 
+								&& cat.getPmCategoryL1().getCategoryL1Code().equals("34")){
+							getManagedBean().setPhysicalConsulting(
+									my.ep.constant.sm.SupplierManagementConst.NON_PHYSICAL_SERVICES_CAT_CODE);
+							break;
+						}else{
+							getManagedBean().setPhysicalConsulting(
+									my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);
+						}
+					}
+				}else{
+					getManagedBean().setPhysicalConsulting(
+							my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);
+				}
+				//#34271 END
 			} else {
 				getManagedBean()
 						.setPhysicalConsulting(
@@ -16646,9 +16669,15 @@ public class SmApplicationBackingBean extends
 
 		List<String> branchName = mofRegistrationSO.isProgessFLReturnBranchName(reqDTO);
 		StringBuilder allBranchName = new StringBuilder();
-		for (String str : branchName) {
-			allBranchName.append(str + ",");
-		}
+		//#28777 - START
+	    final Set<String> duplicateCheck = new HashSet<>();
+	         
+	    for (String str : branchName) {
+	        if (duplicateCheck.add(str)) {
+				allBranchName.append(str + ",");
+	        }
+	    }
+		//#28777 - END
 		if (allBranchName.length() > 0) {
 			allBranchName.setLength(allBranchName.length() - 1);
 		}
