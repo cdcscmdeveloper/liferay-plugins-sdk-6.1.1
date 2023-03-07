@@ -3494,6 +3494,18 @@
 	</portlet>
 	
 	<portlet>
+		<portlet-name>demoInvitation</portlet-name>
+		<icon>/icon.png</icon>
+		<use-default-template>true</use-default-template>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>demoInvitation-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
 		<portlet-name>ctContractOwnerManagement</portlet-name>
 		<icon>/icon.png</icon>
 		<requires-namespaced-parameters>false</requires-namespaced-parameters>
