@@ -11807,7 +11807,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		map.put(SSTConstant.uomName, question.getClUom().getUomName());
 		map.put(SSTConstant.spesifikasi, SSTConstant.whiteSpace);
 		if (itemType.equalsIgnoreCase(SSTConstant.product) || itemType.equalsIgnoreCase(SSTConstant.produk)) {
-			map.put(SSTConstant.clPriceTypeCode, getParameterDesc(question.getClPriceTypeCode()));
+			map.put(SSTConstant.clPriceTypeCode, getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
 		}
 		if (itemType.equalsIgnoreCase(SSTConstant.service) || itemType.equalsIgnoreCase(SSTConstant.perkhidmatan)) {
 			map.put(SSTConstant.clUomFrequency, (null != question.getClUomFrequency()) ? question.getClUomFrequency().toString() : SSTConstant.TB);
@@ -11871,7 +11871,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 						map.put(SSTConstant.uomName, question.getClUom().getUomName());
 						map.put(SSTConstant.spesifikasi, SSTConstant.whiteSpace);
 						if (itemType.equalsIgnoreCase(SSTConstant.product) || itemType.equalsIgnoreCase(SSTConstant.produk)) {
-							map.put(SSTConstant.clPriceTypeCode, getParameterDesc(question.getClPriceTypeCode()));
+							map.put(SSTConstant.clPriceTypeCode, getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
 						}
 						if (itemType.equalsIgnoreCase(SSTConstant.service) || itemType.equalsIgnoreCase(SSTConstant.perkhidmatan)) {
 							map.put(SSTConstant.clUomFrequency, (null != question.getClUomFrequency()) ? question
@@ -11944,7 +11944,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 						map.put(SSTConstant.uomName, question.getClUom().getUomName());
 						map.put(SSTConstant.spesifikasi, SSTConstant.whiteSpace);
 						if (itemType.equalsIgnoreCase(SSTConstant.product) || itemType.equalsIgnoreCase(SSTConstant.produk)) {
-							map.put(SSTConstant.clPriceTypeCode, getParameterDesc(question.getClPriceTypeCode()));
+							map.put(SSTConstant.clPriceTypeCode, getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
 						}
 						if (itemType.equalsIgnoreCase(SSTConstant.service) || itemType.equalsIgnoreCase(SSTConstant.perkhidmatan)) {
 							map.put(SSTConstant.clUomFrequency, (null != question.getClUomFrequency()) ? question
