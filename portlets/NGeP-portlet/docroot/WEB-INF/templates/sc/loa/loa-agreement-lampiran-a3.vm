@@ -232,27 +232,27 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 						<tr>
 							#if ($specDLOA.clItem == "&nbsp;" || $specDLOA.clItem == " ")
 							#else
-								<td valign="top" class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName"><strong>$specDLOA.clItem</strong></td>
+								<td valign="top" class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName">$specDLOA.clItem</td>
 							#end
 							#if ($specDLOA.uomName == "&nbsp;" || $specDLOA.uomName == " ")	
 							#else
-								<td  class="standard border-bottom left"  style="text-align: top; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$specDLOA.uomName</td>
+								<td valign="top" class="standard border-bottom left"  style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$specDLOA.uomName</td>
 								#end
 							#if ($specDLOA.clPriceTypeCode == "&nbsp;" || $specDLOA.clPriceTypeCode == " ")
 							#else
-								<td  class="standard border-bottom left"  style="text-align: top; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$specDLOA.clPriceTypeCode</td>
+								<td valign="top" class="standard border-bottom left"  style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$specDLOA.clPriceTypeCode</td>
 							#end
 							#if ($specType == "F")
-								<td class="standard border-bottom left-right" style="text-align: top; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specDLOA.zoneName</td>
-								<td  class="standard border-bottom left-right" style="text-align: top; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specDLOA.qty</td>
-								<td  class="standard border-bottom left-right" style="text-align: top; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specDLOA.answerNumeric</td>	
+								<td valign="top" class="standard border-bottom left-right" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specDLOA.zoneName</td>
+								<td valign="top" class="standard border-bottom left-right" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specDLOA.qty</td>
+								<td valign="top" class="standard border-bottom left-right" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specDLOA.answerNumeric</td>	
 							#else 
 								#if ($specType == "T")
-									<td class="standard border-bottom left-right" style="text-align: top; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" >$specDLOA.zoneName</td>
-									<td class="standard border-bottom left-right" style="text-align: top; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specDLOA.qty</td>
+									<td valign="top" class="standard border-bottom left-right" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" >$specDLOA.zoneName</td>
+									<td valign="top" class="standard border-bottom left-right" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specDLOA.qty</td>
 									#if ($specDLOA.tierQty == "&nbsp;" || $specDLOA.tierQty == " ")
 									#else
-										<td rowspan="$listSpecDLOA.size()" class="standard border-bottom left-right" style="text-align: top; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specDLOA.tierQty</td>
+										<td valign="top" rowspan="$listSpecDLOA.size()" class="standard border-bottom left-right" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$specDLOA.tierQty</td>
 									#end
 								#else
 									<td rowspan="$listSpecDLOA.size()" class="standard border-bottom left-right"  style="text-align: top; border: 1px solid black; padding-left: 5px; font-family: Arial;">$serviceScope</td>
@@ -312,27 +312,27 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 			<tr>
 				#if ($listSpecDLOA.clItem == "&nbsp;" || $listSpecDLOA.clItem == " ")
 				#else
-					<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName"><strong>$listSpecDLOA.clItem</strong></td>
+					<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName">$listSpecDLOA.clItem</td>
 				#end
 				
 				#if ($listSpecDLOA.uomName == "&nbsp;" || $listSpecDLOA.uomName == " ")
 				#else
-					<td  class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial; font-size:16.5px;">$listSpecDLOA.uomName</td>
+					<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">$listSpecDLOA.uomName</td>
 				#end
 				
 				#if ($listSpecDLOA.clPriceTypeCode == "&nbsp;" || $listSpecDLOA.clPriceTypeCode == " ")
 				#else
-					<td  class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial; font-size:16.5px;">$listSpecDLOA.clPriceTypeCode</td>
+					<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">$listSpecDLOA.clPriceTypeCode</td>
 				#end
 				
 				#if ($listSpecDLOA.qty == "&nbsp;" || $listSpecDLOA.qty == " ")
 				#else
-					<td class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial; font-size:16.5px;">$listSpecDLOA.qty</td>
+					<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">$listSpecDLOA.qty</td>
 				#end
 				
 				#if ($listSpecDLOA.tierQty == "&nbsp;" || $listSpecDLOA.tierQty == " ")
 				#else
-					<td valign="top" class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial; font-size:16.5px;">$listSpecDLOA.tierQty</td>												
+					<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">$listSpecDLOA.tierQty</td>												
 				#end
 				
 				#if ($indi == 0)
@@ -419,7 +419,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 								 
 								<tr>							 
 									
-									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2">$tplspecQuestion.clItem</td>
 									<td  class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
 									<td  class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
 									
@@ -587,7 +587,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 									<tr>
 									
 									
-									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2">$tplspecQuestion.clItem</td>
 									<td  class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
 									<td  class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
 									<td class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clQuantity</td>
@@ -764,45 +764,45 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 					<tr>
 						#if ($zonalDLOA.clItem == " " || $zonalDLOA.clItem == $whitespace)
 						#else
-							<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName"><strong>$zonalDLOA.clItem</strong></td>	
+							<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName">$zonalDLOA.clItem</td>	
 						#end
 						
 						#if($zonalDLOA.uomName == " " || $zonalDLOA.uomName == $whitespace)
 						#else
-							<td class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$zonalDLOA.uomName</td>
+							<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$zonalDLOA.uomName</td>
 						#end
 						
 						#if ($zonalDLOA.clUomFrequency == " " || $zonalDLOA.clUomFrequency == $whitespace)
 						#else
-							<td class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$zonalDLOA.clUomFrequency</td>
+							<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$zonalDLOA.clUomFrequency</td>
 							
 						#end
 						
 						#if($zonalDLOA.clUomPerDay == " " || $zonalDLOA.clUomPerDay == $whitespace)
 						#else
-							<td class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$zonalDLOA.clUomPerDay</td>
+							<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$zonalDLOA.clUomPerDay</td>
 							
 							
 						#end
 						
 						#if ($zonalDLOA.clUomPerMonth == " " || $zonalDLOA.clUomPerMonth == $whitespace)
 						#else
-							<td class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$zonalDLOA.clUomPerMonth</td>
+							<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$listSpecDLOA.size()">$zonalDLOA.clUomPerMonth</td>
 							
 						#end
 						
 						
 						#if ($specType == "F")
-							<td class="standard border-bottom left-right" style="text-align: top; padding-left: 5px; font-family: Arial; font-size:16.5px;">$zonalDLOA.zoneName</td>
-							<td class="standard border-bottom left-right" style="text-align: top; padding-left: 5px; font-family: Arial; font-size:16.5px;">$zonalDLOA.qty</td>
+							<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">$zonalDLOA.zoneName</td>
+							<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">$zonalDLOA.qty</td>
 							
 						#else
 							#if ($specType == "T")
-							<td class="standard border-bottom left-right" style="text-align: top; padding-left: 5px; font-family: Arial; font-size:16.5px;">$zonalDLOA.zoneName</td>
-							<td class="standard border-bottom left-right" style="text-align: top; padding-left: 5px; font-family: Arial; font-size:16.5px;">$zonalDLOA.qty</td>
+							<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">$zonalDLOA.zoneName</td>
+							<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">$zonalDLOA.qty</td>
 							#else
-								<td class="standard border-bottom left-right" style="text-align: top; padding-left: 5px; font-family: Arial; font-size:16.5px;">N/A</td>
-								<td class="standard border-bottom left-right" style="text-align: top; padding-left: 5px; font-family: Arial; font-size:16.5px;">N/A</td>
+								<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">N/A</td>
+								<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px;">N/A</td>
 							#end
 						#end
 						
@@ -858,36 +858,36 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 			
 						#if ($listSpecDLOA.clItem == " " || $listSpecDLOA.clItem == $whitespace)
 						#else
-							<td valign="top" class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName"><strong>$listSpecDLOA.clItem</strong></td>	
+							<td valign="top" class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" rowspan="$rowspanItemName">$listSpecDLOA.clItem</td>	
 						#end
 						
 						#if($listSpecDLOA.uomName == " " || $listSpecDLOA.uomName == $whitespace)
 						#else
-							<td class="standard border-bottom left" style="text-align: top; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" >$listSpecDLOA.uomName</td>
+							<td valign="top" class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" >$listSpecDLOA.uomName</td>
 						#end
 						
 						#if ($listSpecDLOA.clUomFrequency == " " || $listSpecDLOA.clUomFrequency == $whitespace)
 						#else
-							<td class="standard border-bottom left" style="text-align: top; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" >$listSpecDLOA.clUomFrequency</td>
+							<td valign="top" class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" >$listSpecDLOA.clUomFrequency</td>
 							
 						#end
 						
 						#if($listSpecDLOA.clUomPerDay == " " || $listSpecDLOA.clUomPerDay == $whitespace)
 						#else
-							<td class="standard border-bottom left" style="text-align: top; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" >$listSpecDLOA.clUomPerDay</td>
+							<td valign="top" class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" >$listSpecDLOA.clUomPerDay</td>
 							
 							
 						#end
 						
 						#if ($listSpecDLOA.clUomPerMonth == " " || $listSpecDLOA.clUomPerMonth == $whitespace)
 						#else
-							<td class="standard border-bottom left" style="text-align: top; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" >$listSpecDLOA.clUomPerMonth</td>
+							<td valign="top" class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;" >$listSpecDLOA.clUomPerMonth</td>
 							
 						#end
 						
 						#if ($listSpecDLOA.qty == " " || $listSpecDLOA.qty == $whitespace)
 						#else
-							<td class="standard border-bottom left" style="text-align: top; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$listSpecDLOA.qty</td>
+							<td valign="top" class="standard border-bottom left" style="text-align: left; border: 1px solid black; padding-left: 5px; font-family: Arial; font-size:16.5px;">$listSpecDLOA.qty</td>
 						#end
 						
 						#if ($indi == 0)
@@ -977,7 +977,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 								 
 								<tr>							 
 									
-									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2">$tplspecQuestion.clItem</td>
 									<td  class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
 								
 										
@@ -1128,7 +1128,7 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 									<tr>
 									
 									
-									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial;" rowspan="2">$tplspecQuestion.clItem</td>
 									<td  class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial;">$tplspecQuestion.clUom.uomName</td>
 									<td  class="standard border-bottom left" style="text-align: top; padding-left: 5px; font-family: Arial;">
 										#if ($tplspecQuestion.clUomFrequency)
