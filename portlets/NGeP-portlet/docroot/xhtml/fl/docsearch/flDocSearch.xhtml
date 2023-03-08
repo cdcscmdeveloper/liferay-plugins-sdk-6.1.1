@@ -135,7 +135,7 @@
 			<td><p:inputText size="28" value="#{flDocumentBackingBean.managedBean.searchDocNo}" />
 			<!-- 29550 - start -->
 			<c:choose>
-				<c:when test='#{flReportBB.hasFactoringUserRole()}'>
+				<c:when test='#{flDocumentBackingBean.isFactoringUser()}'>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.document.no.example.fact.user']}"/>
 				</c:when>
 				<c:otherwise>
@@ -185,10 +185,8 @@
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGroup id="docInvStatusSearch">
-				<!-- 29550 - start -->
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkInDocType and !flReportBB.hasFactoringUserRole()}">
-				<!-- 29550 - end -->
+					rendered="#{flDocumentBackingBean.managedBean.checkInDocType}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.reference']}" />
 					<p:inputText size="28"
 						value="#{flDocumentBackingBean.managedBean.searchSuppInvRef}"></p:inputText>
@@ -217,7 +215,7 @@
 						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
 						<!-- 29550 - start -->
 						<c:choose>
-							<c:when test='#{flReportBB.hasFactoringUserRole()}'>
+							<c:when test='#{flDocumentBackingBean.isFactoringUser()}'>
 								<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa.fact.user']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/>
 							</c:when>
 							<c:otherwise>
@@ -231,7 +229,7 @@
 						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
 						value="#{flDocumentBackingBean.managedBean.searchPhysLoaNo}"></p:inputText>
 						<!-- 29550 - start -->
-						<c:if test='#{flReportBB.hasFactoringUserRole()}'>
+						<c:if test='#{flDocumentBackingBean.isFactoringUser()}'>
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.file.ref.no.fact.user']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/>
 						</c:if>
 						<!-- 29550 - end -->
@@ -247,7 +245,7 @@
 						value="#{flDocumentBackingBean.managedBean.searchContractNo}"></p:inputText>
 						<!-- 29550 - start -->
 						<c:choose>
-							<c:when test='#{flReportBB.hasFactoringUserRole()}'>
+							<c:when test='#{flDocumentBackingBean.isFactoringUser()}'>
 								<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no.fact.user']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/>
 							</c:when>
 							<c:otherwise>
@@ -262,7 +260,7 @@
 						value="#{flDocumentBackingBean.managedBean.searchPhysContractNo}"></p:inputText>
 						<!-- 29550 - start -->
 						<c:choose>
-							<c:when test='#{flReportBB.hasFactoringUserRole()}'>
+							<c:when test='#{flDocumentBackingBean.isFactoringUser()}'>
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phycontr.no.fact.user']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/>
 							</c:when>
 							<c:otherwise>
@@ -317,7 +315,7 @@
 		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.doc.maintain.result']}"/><br/><br/>
 			<!-- 29550 - start -->
-			<c:if test='#{!flReportBB.hasFactoringUserRole()}'>
+			<c:if test='#{!flDocumentBackingBean.isFactoringUser()}'>
 				<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.doc.maintain.cogst.report']}"/><br/><br/>
 				<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.order.no']}" escape="false"/><br/>
 			</c:if>

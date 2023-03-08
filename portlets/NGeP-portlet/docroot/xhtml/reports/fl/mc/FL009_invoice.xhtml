@@ -48,16 +48,7 @@
 		</tr>
 		<tr>
 			<td>
-			<!-- 29550 - Start (add condition to display PTJ label)-->
-				<c:choose>
-					<c:when test="#{flReportBB.hasFactoringUserRole()}">
-						<p:outputLabel value="#{lbl['lbl.fl.ptj']}"></p:outputLabel>
-					</c:when>
-					<c:otherwise>
-						<p:outputLabel value="#{lbl['lbl.fl.ptj.name']}"></p:outputLabel>
-					</c:otherwise>
-				</c:choose>
-			<!-- 29550 - End -->
+				<p:outputLabel value="#{lbl['lbl.fl.ptj.name']}"></p:outputLabel>
 			</td>
 			<td colspan="3">
 				<ac:lov id="searchPtj"
@@ -81,7 +72,7 @@
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 				<!-- 29550 - start -->
-				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no.fact.user']}" rendered="#{flReportBB.hasFactoringUserRole()}"/> 
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcntrctno.fact.user']}" rendered="#{flReportBB.hasFactoringUserRole()}"/> 
 				<!-- 29550 - end -->
 			</td>
 					<td>
@@ -98,7 +89,7 @@
 				<!-- 29550 - start -->
 				<c:choose>
 					<c:when test="#{flReportBB.hasFactoringUserRole()}">
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phycontr.no.fact.user']}"/> 
+						<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphycontract.fact.user']}"/> 
 					</c:when>
 					<c:otherwise>
 						<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphycontract']}" />
@@ -122,7 +113,7 @@
 				<!-- 29550 - start -->
 				<c:choose>
 					<c:when test="#{flReportBB.hasFactoringUserRole()}">
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.file.ref.no.fact.user']}"/> 
+						<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphysst.fact.user']}"/> 
 					</c:when>
 					<c:otherwise>
 						<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphysst']}"/>
@@ -139,7 +130,7 @@
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 				<!-- 29550 - start -->
-				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa.fact.user']}" rendered="#{flReportBB.hasFactoringUserRole()}"/>
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforlaono']}" rendered="#{flReportBB.hasFactoringUserRole()}"/>
 				<!-- 29550 - end -->
 			</td>
 		</tr>
@@ -188,7 +179,6 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
 			</td>
 			<td>
-			<!-- 29550 - start(to cater option displayed by factoring user)-->
 				<p:selectOneMenu value="#{mcInvRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
@@ -203,25 +193,10 @@
 						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
-					<c:choose>
-						<c:when test="#{flReportBB.hasFactoringUserRole()}">
-							<f:selectItem itemLabel="#{lbl['lbl.rpt.invoiceNo']}"
-								itemValue="#{lbl['lbl.rpt.invoiceNo']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.fl.supp.invoice.no']}"
-								itemValue="#{lbl['lbl.fl.supp.invoice.no']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
-								itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
-								itemValue="#{lbl['lbl.fl.doc.maintain.doc.status']}"></f:selectItem>
-						</c:when>
-						<c:otherwise>
-							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
-								itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
-						</c:otherwise>
-					</c:choose>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
-			<!-- 29550 - end -->
 			</td>
 			<td>
 				<p:outputLabel
@@ -230,16 +205,7 @@
 			<td>
 				<p:selectOneMenu id="statusId"
 					value="#{mcInvRptBB.managedBean.statusDescId}" style="width: 314px;">
-					<!-- 29550 - start  -->
-					<c:choose>
-						<c:when test="#{flReportBB.hasFactoringUserRole()}">
-							<f:selectItems value="#{mcInvRptBB.getStatusDropDownValues('IN')}" />
-						</c:when>
-						<c:otherwise>
-							<f:selectItems value="#{mcInvRptBB.getStatusDropDownValues('CR')}" />
-						</c:otherwise>
-					</c:choose>
-					<!-- 29550 - end -->
+					<f:selectItems value="#{mcInvRptBB.getStatusDropDownValues('CR')}" />
 					<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"/>
 				</p:selectOneMenu>
 			</td>

@@ -172,32 +172,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 						.getSmSupplier().getRecordStatusFlg() != 7)) {
 			if (getManagedBean().getAccType().equals(
 					SupplierManagementConst.ACC_GOVT_SELLER)) {
-				//#33129 - START 
-				if(getManagedBean().getSmSupplier() != null){
-					switch (getManagedBean().getSmSupplier().getRecordStatusFlg()){
-						case DbValueConst.RECORD_STATUS_SUSPENDED : throw new EpException(MessageConst.ERROR_722703);
-						case DbValueConst.RECORD_STATUS_CANCELLED : throw new EpException(MessageConst.ERROR_722701);
-						case DbValueConst.RECORD_STATUS_DELETED   : throw new EpException(MessageConst.ERROR_722702);
-					}
-				} else {
-					// Agency name does not exist for G2G
-					throw new EpException(MessageConst.ERROR_722659);
-				}
-				//#33129 - END
+				// Agency name does not exist for G2G
+				throw new EpException(MessageConst.ERROR_722659);
 			} else {
-				//33129 - START
-				if(getManagedBean().getSmSupplier() != null){
-					switch (getManagedBean().getSmSupplier().getRecordStatusFlg()){
-						case DbValueConst.RECORD_STATUS_SUSPENDED : throw new EpException(MessageConst.ERROR_722700);
-						case DbValueConst.RECORD_STATUS_CANCELLED : throw new EpException(MessageConst.ERROR_722698);
-						case DbValueConst.RECORD_STATUS_DELETED   : throw new EpException(MessageConst.ERROR_722699);
-					}
-				}
-				else{
-					// Buss Reg No. and Established Date does not exist for Supplier
-					throw new EpException(MessageConst.ERROR_722593);
-				}
-				//#33129 - END
+				// Buss Reg No. and Established Date does not exist for Supplier
+				throw new EpException(MessageConst.ERROR_722593);
 			}
 		} else {
 			//#28765 - Start

@@ -48,7 +48,7 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.ptj']}"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.fl.ptj.name']}"></p:outputLabel>
 			</td>
 			<td colspan="3">
 				<ac:lov id="searchPtj"
@@ -127,12 +127,12 @@
 				<p:selectOneMenu value="#{poPrGenAsPoRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.fl.physical.treasury.circular']}"
-						itemValue="#{lbl['lbl.fl.physical.treasury.circular']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.fl.sistem.panel.name']}"
-						itemValue="#{lbl['lbl.fl.sistem.panel.name']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.prNo']}"
-						itemValue="#{lbl['lbl.rpt.prNo']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phyTreasuryCrclrNo']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.phyTreasuryCrclrNo']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.centralCntrctPanel']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.centralCntrctPanel']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.prNo']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.prNo']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 

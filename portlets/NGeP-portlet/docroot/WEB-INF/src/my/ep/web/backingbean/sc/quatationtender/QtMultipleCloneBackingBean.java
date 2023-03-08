@@ -691,7 +691,6 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 			scQt.setOrgProfileId(pmOrgProfile.getOrgProfileId());
 			scQt.setOwnerOrgProfileId(pmOrgProfile.getOrgProfileId());
 		}
-		scQt.setJustificationProcValue(copyScqt.getJustificationProcValue());//25635&34545
 		
 		
 		return scQt;
