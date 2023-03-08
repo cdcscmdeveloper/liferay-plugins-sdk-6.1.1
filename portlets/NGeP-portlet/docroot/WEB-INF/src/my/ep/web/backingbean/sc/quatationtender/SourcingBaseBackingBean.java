@@ -4756,7 +4756,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
 				
 				//Bug #33988@Syazani -- Start 27/09/2022 
-				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && !validateDuplicateSets.add(scQtFinalizationReport.getTitle().trim())) {
+				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && !validateDuplicateSets.add(scQtFinalizationReport.getTitle().toLowerCase().trim())) { //Bug #33988@Syazani -- 01/03/2023
 					throw new EpException(MessageConst.ERROR_775190, new String[] { scQtFinalizationReport.getTitle() }); //Bug #33988@Syazani - 06/12/2022
 				}
 				//Bug #33988@Syazani -- End 27/09/2022 
@@ -5871,7 +5871,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					if (getFirstValue){
 						map.put(SSTConstant.clItem, question.getClItem());
 						map.put(SSTConstant.uomName, question.getClUom().getUomName());
-						map.put(SSTConstant.clPriceTypeCode, getParameterDescForReport(question.getClPriceTypeCode()));
+						map.put(SSTConstant.clPriceTypeCode, getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
 						map.put(SSTConstant.zoneName,zone.getTplSpecZoneDtl().getZoneName());
 						map.put(SSTConstant.quantity, zone.getQty().toString());
 						if (null != question.getTplSpecTierQties() && question.getTplSpecTierQties().size() > 0 ){
@@ -5945,7 +5945,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								map.put(SSTConstant.clUomPerMonth, question.getClUomPerMonth().toString());
 							}else {
 								//product
-								map.put(SSTConstant.clPriceTypeCode, getParameterDescForReport(question.getClPriceTypeCode()));
+								map.put(SSTConstant.clPriceTypeCode, getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
 								String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
 								map.put(SSTConstant.qtyBerperingkat, tierValue);
 							}
