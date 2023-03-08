@@ -1365,7 +1365,7 @@ u.underline {
 						 
 						<tr>							 
 							
-							<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2">$tplspecQuestion.clItem</td>
+							<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
 							<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 							<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
 							
@@ -1493,7 +1493,7 @@ u.underline {
 								<tr>
 								
 								
-								<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2">$tplspecQuestion.clItem</td>
+								<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
 								<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 								<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
 								<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
@@ -1605,56 +1605,56 @@ u.underline {
 														#set($rowSpanSizeForItem = $tplspecQuestion.tplSpecZoneQties.size())
 														#if ($specCombine.clItem == "&nbsp")
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"><strong>$specCombine.clItem</strong></td>
 														#end
 														#if ($specCombine.uomName == "&nbsp")
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSizeForItem">$specCombine.uomName</td>	
+														<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;" rowspan="$rowSpanSizeForItem">$specCombine.uomName</td>	
 														#end
 														#if ($specCombine.clPriceTypeCode == "&nbsp")
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSizeForItem">$specCombine.clPriceTypeCode</td>
+														<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;" rowspan="$rowSpanSizeForItem">$specCombine.clPriceTypeCode</td>
 														#end
 														#if ($specType == "F")
 															#if ($specCombine.zoneName) 
-															<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.zoneName</td>
+															<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$specCombine.zoneName</td>
 															#else
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$serviceScope</td>
 															#end
 															
 															#if ($specCombine.tplSpecZoneQty.qty) 
-															<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.tplSpecZoneQty.qty</td>
+															<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$specCombine.tplSpecZoneQty.qty</td>
 															#else
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$serviceScope</td>
 															#end
 															
 															#if ($specCombine.answerNumeric) 
-															<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.answerNumeric</td>
+															<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$specCombine.answerNumeric</td>
 															#else
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$serviceScope</td>
 															#end
 														#else 
 															#if ($specType == "T")
 															
 																#if($specCombine.zoneName == "&nbsp")
 																#else
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.zoneName</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$specCombine.zoneName</td>
 																#end
 																
 																#if($specCombine.qty == "&nbsp")
 																#else
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.qty</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$specCombine.qty</td>
 																#end
 																		##26130 start 12052022
 																#if($specCombine.qtyBerperingkat == "&nbsp")
 																#else
-																<td valign="top" rowspan="$rowSpanSize" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.qtyBerperingkat</td>
+																<td valign="top" rowspan="$rowSpanSize" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$specCombine.qtyBerperingkat</td>
 																#end
 																		##26130 end 12052022
 															#else
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$serviceScope</td>
 															#end
 														
 														#end
@@ -1663,7 +1663,7 @@ u.underline {
 															#if ($specCombine.feedback == "&nbsp;" ) 
 																<td rowspan="$rowSpanSizeForItem" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$whiteSpace</td>
 															#else
-																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
+																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
 															#end
 															
 															#if ($specCombine.answerRemark == "&nbsp;" || $specCombine.answerRemark == " ") 
@@ -1701,7 +1701,7 @@ u.underline {
 																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$whiteSpace</td>
 																				
 																#else
-																		<td valign="top" class="title border left"   style="text-align: left; padding-left: 5px; font-size:12px;">$combine.feedback</td>
+																		<td valign="top" class="title border left"   style="text-align: center; padding-left: 5px; font-size:12px;">$combine.feedback</td>
 																			
 																#end
 																			
@@ -1737,17 +1737,17 @@ u.underline {
 											<tr>
 																				
 												#set($rowSpanSize = $tplspecQuestion.specList.size()+1)
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"><strong>$specCombine.clItem</strong></td>
 												##26130 - zaim end
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.uomName</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.clPriceTypeCode</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.qty</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.qtyBerperingkat</td>	
+													<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$specCombine.uomName</td>
+													<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$specCombine.clPriceTypeCode</td>
+													<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$specCombine.qty</td>
+													<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$specCombine.qtyBerperingkat</td>	
 												#if ($specType == "T")
 													#if ($specCombine.feedback == "&nbsp" || $specCombine.feedback == " ")
-														<td class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$whitespace</td>
+														<td class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$whitespace</td>
 													#else
-														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
+														<td valign="top" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
 													#end
 												#end						
 																				
@@ -1785,10 +1785,10 @@ u.underline {
 																#set($count = 1)
 
 																	#if ($combine.feedback)
-																			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$combine.feedback</td>
+																			<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$combine.feedback</td>
 																			
 																	#else
-																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$combine.feedback</td>
+																			<td valign="top" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$combine.feedback</td>
 																		
 																	#end
 																		
@@ -1929,7 +1929,7 @@ u.underline {
 								 
 								<tr>							 
 									
-									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2">$tplspecQuestion.clItem</td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
 									<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 										
 									<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">
@@ -2046,7 +2046,7 @@ u.underline {
 							 
 									<tr>
 									
-									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2">$tplspecQuestion.clItem</td>
+									<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="2"><strong>$tplspecQuestion.clItem</strong></td>
 									 <td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 									<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">
 										#if ($tplspecQuestion.clUomFrequency)
@@ -2173,43 +2173,43 @@ u.underline {
 														#set($rowSpanSizeForItem = $tplspecQuestion.tplSpecZoneQties.size())
 														#if ($specCombine.clItem == "&nbsp")
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"><strong>$specCombine.clItem</strong></td>
 														#end
 														#if ($specCombine.uomName == "&nbsp")
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSizeForItem">$specCombine.uomName</td>	
+														<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;" rowspan="$rowSpanSizeForItem">$specCombine.uomName</td>	
 														#end
 														#if ($specCombine.clUomFrequency == "&nbsp")		
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomFrequency</td>														
+														<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomFrequency</td>														
 														#end
 														#if ($specCombine.clUomPerDay == "&nbsp")
 																
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomPerDay</td>														
+														<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomPerDay</td>														
 														#end
 														#if ($specCombine.clUomPerMonth == "&nbsp")
 																
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomPerMonth</td>														
+														<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomPerMonth</td>														
 														#end
 														
 														#if ($specType == "F")
 															#if ($specCombine.zoneName == "&nbsp")
 															#else
 																#if ($specCombine.zoneName) 
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.zoneName</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$specCombine.zoneName</td>
 																#else
-																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																	<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$serviceScope</td>
 																#end
 															#end
 															#if ($specCombine.tplSpecZoneQty.qty) == "&nbsp" 
 																
 															#else
 																#if ($specCombine.tplSpecZoneQty.qty) 
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.tplSpecZoneQty.qty</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$specCombine.tplSpecZoneQty.qty</td>
 																#else
-																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																	<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$serviceScope</td>
 																#end
 															#end
 														
@@ -2218,16 +2218,16 @@ u.underline {
 															#if ($specType == "T")
 																#if($specCombine.zoneName == "&nbsp")
 																#else
-																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.zoneName</td>
+																	<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$specCombine.zoneName</td>
 																#end
 																#if($specCombine.qty == "&nbsp")
 																#else
-																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.qty</td>
+																	<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$specCombine.qty</td>
 																#end
 																
 															#else
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: center; padding-left: 5px;">$serviceScope</td>
 															#end
 														
 														#end
@@ -2235,7 +2235,7 @@ u.underline {
 															#if ($specCombine.feedback == "&nbsp;" || $specCombine.feedback == " ") 
 																<td rowspan="$rowSpanSizeForItem" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$whitespace</td>
 															#else
-																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
+																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
 															#end
 															##26130 - start 03032022
 															#if ($specCombine.answerRemark == "&nbsp;" || $specCombine.answerRemark == " ") 
@@ -2270,10 +2270,10 @@ u.underline {
 
 																#if ($combine.feedback == "&nbsp;" && $tplspecQuestion.tplSpecZoneQties.size() != $count ) 
 																	#set($count = $count + 1)
-																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$combine.feedback</td>
+																		<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$combine.feedback</td>
 																				
 																#else
-																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$combine.feedback</td>
+																		<td valign="top" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$combine.feedback</td>
 																			
 																#end
 																			
@@ -2310,30 +2310,30 @@ u.underline {
 													
 													##26130- zaim start
 													#set($rowSpanSize = $tplspecQuestion.specList.size()+1)
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize"><strong>$specCombine.clItem</strong></td>
 													##26130 - zaim end
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.uomName</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
+													<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$specCombine.uomName</td>
+													<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">
 														#if ($specCombine.clUomFrequency)
 															$specCombine.clUomFrequency
 														#end
 													</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
+													<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">
 														#if ($specCombine.clUomPerDay)
 															$specCombine.clUomPerDay
 														#end
 													</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
+													<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">
 														#if ($specCombine.clUomPerMonth)
 															$specCombine.clUomPerMonth
 														#end
 													</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.qty</td>
+													<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$specCombine.qty</td>
 													#if ($specType == "T")
 														#if ($specCombine.feedback == "&nbsp;" || $specCombine.feedback == " ")
-															<td  class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$whitespace</td>
+															<td  class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$whitespace</td>
 														#else
-															<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.feedback</td>
+															<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$specCombine.feedback</td>
 														#end					
 													#end
 
@@ -2369,10 +2369,10 @@ u.underline {
 
 																	#if ($combine.feedback == "&nbsp;" && $tplspecQuestion.tplSpecZoneQties.size() != $count ) 
 																			#set($count = $count + 1)
-																			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$combine.feedback</td>
+																			<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px;">$combine.feedback</td>
 																			
 																	#else
-																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$combine.feedback</td>
+																			<td valign="top" class="title border left"   style="text-align: center;  padding-left: 5px; font-size:12px;">$combine.feedback</td>
 																		
 																	#end
 																		
@@ -2476,7 +2476,7 @@ u.underline {
 							 
 							<tr>							 
 								
-								<td valign="top" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
+								<td valign="top" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px; font-weight: bold;" >
 									
 										$tplspecQuestion.clItem
 									
@@ -2695,7 +2695,7 @@ u.underline {
 								<tr>
 								
 								
-								<td valign="top" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
+								<td valign="top" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px; font-weight: bold;" >
 										$tplspecQuestion.clItem
 								</td>
 								 <td valign="top" class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;" >

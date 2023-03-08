@@ -48,7 +48,7 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.ptj']}"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.fl.ptj.name']}"></p:outputLabel>
 			</td>
 			<td colspan="3">
 				<ac:lov id="searchPtj"
@@ -72,7 +72,7 @@
 					value="#{mcSumForPoCancelReasonRptBB.managedBean.physicalContractNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText> 
-				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phycontr.no.fact.user']}" />
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphycontract.fact.user']}" />
 				<p:message id="flphycontractIdMsg" for="flphycontractId" display="icon" />
 			</td>
 			<td>
@@ -83,7 +83,7 @@
 					value="#{mcSumForPoCancelReasonRptBB.managedBean.contractNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
-				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no.fact.user']}"/> 
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcntrctno.fact.user']}"/> 
 			</td>
 		</tr>
 		<tr>
@@ -94,7 +94,7 @@
 				<p:inputText maxlength="20" value="#{mcSumForPoCancelReasonRptBB.managedBean.loaNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
-				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa.fact.user']}"/>
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforlaono']}"/>
 			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}" />
@@ -105,7 +105,7 @@
 					value="#{mcSumForPoCancelReasonRptBB.managedBean.physicalLoaNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText> 
-				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.file.ref.no.fact.user']}"/> 
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphysst.fact.user']}"/> 
 				<p:message id="flphyloaIdMsg" for="flphyloaId" display="icon" />
 			</td>
 		</tr>

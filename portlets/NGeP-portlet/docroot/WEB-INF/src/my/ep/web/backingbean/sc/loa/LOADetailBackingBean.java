@@ -6473,12 +6473,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}		
 	}
 	
-	// #25725 - note 146 - add javadoc and change to public
-	/**
-	 * To check is PK7 procurement
-	 * @return boolean isPK7
-	 */
-	public boolean isPK7(ScLoa loa){				
+	private boolean isPK7(ScLoa loa){				
 		boolean PK7 = false;
 		if(loa.getProcurementType()!=null){					
 			if(loa.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7)){
@@ -6498,7 +6493,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * To check is reason PK2
 	 * @return boolean isReasonPK2
 	 */
-	public boolean isReasonPK2(ScLoa loa) { // #25725 - note 146 - change to public
+	private boolean isReasonPK2(ScLoa loa) {
 		boolean isReasonPK2 = false;
 		if (loa.getScQuote().getJustificationType() != null) {
 			if (loa.getScQuote().getJustificationType().getReasonCode().equals(ParameterConst.PK2_REASON_CODE)) {
@@ -6508,33 +6503,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return isReasonPK2;
 	}
 	// #25725 - note 125/128 - end
-	// #25725 - note 146 - start
-	/**
-	 * To check is reason special item
-	 * @return boolean isReasonSpecialItem
-	 */
-	public boolean isReasonSpecialItem(ScLoa loa) {
-		boolean isReasonSpecialItem = false;
-		if (loa.getScQuote().getJustificationType() != null) {
-			if (loa.getScQuote().getJustificationType().getReasonCode().equals(ParameterConst.SPECIAL_ITEM_REASON_CODE)) {
-				isReasonSpecialItem = true;
-			}
-		}
-		return isReasonSpecialItem;
-	}
-	
-	/**
-	 * To enable/disable approval letter field
-	 */
-	public void showApprovalLetter() {
-		ScLoa loa = getManagedBean().getScLoa();
-		Boolean isNonPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
-
-		if((!loa.isAgreementReq())&&((isNonPeriodic && over500K(loa)) && (!isPK7(loa) || isReasonPK2(loa) || isReasonSpecialItem(loa)))){
-			this.getManagedBean().setShowApprovalLetter(Boolean.TRUE);
-		}		
-	}
-	// #25725 - note 146 - end
 	
 	private BigDecimal overallCtAmtOrLoaAmt(ScLoa loa){
 		BigDecimal overallContractAmtOrLoaAmt = BigDecimal.valueOf(0d);
@@ -10675,18 +10643,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}else{			
 			this.getManagedBean().setAbove500K(false);
 		}
-		if(((isPK7(scLoa) && !isReasonPK2(scLoa) && !isReasonSpecialItem(scLoa)) && (isPeriodic || (isNonPeriodic && over500K(scLoa))))&& !agreementReq){// #25725 - note 146
+		if((isPK7(scLoa) && (isPeriodic || (isNonPeriodic && over500K(scLoa))))&& !agreementReq){
 			this.getManagedBean().setAgreementReqChange(true);
 			RequestContext.getCurrentInstance().execute("changeAgreementReqDlg.show()");			
-		}else if((agreementReq == false)&&((isNonPeriodic && over500K(scLoa)) && (!isPK7(scLoa) || isReasonPK2(scLoa) || isReasonSpecialItem(scLoa)))){// #25725 - note 146						
+		}else if((agreementReq == false)&&((isNonPeriodic && over500K(scLoa)) && !isPK7(scLoa))){						
 			scLoa.setAgreementReq(false);
-			this.getManagedBean().setShowApprovalLetter(Boolean.TRUE); // #25725 - note 146
 			this.getManagedBean().setAgreementReqChange(true);
 			RequestContext.getCurrentInstance().update("contractDetailsId");
 		}else{					
 			scLoa.setAgreementReq(true);
 			this.getManagedBean().setAgreementReqChange(true);
-			this.getManagedBean().setShowApprovalLetter(Boolean.FALSE); // #25725 - note 146
 			this.getManagedBean().getScLoa().setScLoaAttachment(null);
 			RequestContext.getCurrentInstance().update("contractDetailsId");
 		}
@@ -10717,15 +10683,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			if(isNonPeriodic || (isPK7(this.getManagedBean().getScLoa()) && isPeriodic)){
 				result = false;
 				//#25725 - note 125/128 - start
-				//#25725 note 146 - start (comment out)
-				/*if(isReasonPK2(this.getManagedBean().getScLoa()) && isPeriodic){
+				if(isReasonPK2(this.getManagedBean().getScLoa()) && isPeriodic){
 					result = true;
-				}*/
-				//#25725 note 146 - end
+				}
 				//#25725 - note 125/128 - end
-				if(getManagedBean().getScLoa().getPmStatus().getStatusId().equals(disabledID)
-						|| (isReasonPK2(this.getManagedBean().getScLoa()) && isPeriodic) //#25725 note 146
-						|| (isReasonSpecialItem(this.getManagedBean().getScLoa()) && isPeriodic)) { //#25725 note 146
+				if(getManagedBean().getScLoa().getPmStatus().getStatusId().equals(disabledID)){
 					result = true;
 				}
 			}

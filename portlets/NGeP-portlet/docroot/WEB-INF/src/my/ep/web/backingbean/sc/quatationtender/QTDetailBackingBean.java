@@ -7192,14 +7192,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		if (priviousIndex != activeIndex) {
 			if (!isReadOnly) {
-				
+				//9019 - Start (Harun) #Note-398 include in this note fixing while unit test
+				//       This changes is for #Note-360
+				detailSO.validateQTGeneralInformation(reqDTO);
+				//9019 - End (Harun)
 				switch (priviousIndex) {
 				case 0:
-					//9019 - Start (Harun) #Note-398 include in this note fixing while unit test
-					//       This changes is for #Note-360
-					//       #Note-433 Relocate code for fix 'File Reference No is mandatory. (ERR-760455)' displayed.
-					detailSO.validateQTGeneralInformation(reqDTO);
-					//9019 - End (Harun)
 					//9019 - Start (Harun) #Note-360 Remove checking while not submit and allow to proceed 
 					//       when click sidemenu
 					if (isSubmit) {

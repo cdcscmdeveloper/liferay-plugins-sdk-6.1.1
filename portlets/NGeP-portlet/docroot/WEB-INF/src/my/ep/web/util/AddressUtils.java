@@ -435,8 +435,7 @@ public class AddressUtils {
 				address.append(separator);
 			}
 			//#34135 START
-			if (smAddress.getPmDivision() != null && smAddress.getPmDivision().getDivisionName() !=null && smAddress.getPmDivision().getDivisionName().length() > 0
-					&& smAddress.getPmState() != null && smAddress.getPmState().getStateCode().equalsIgnoreCase("13")) {
+			if (smAddress.getPmDivision() != null && smAddress.getPmDivision().getDivisionName() !=null && smAddress.getPmDivision().getDivisionName().length() > 0) {
 				address.append(smAddress.getPmDivision().getDivisionName());
 				address.append(separator);
 			}

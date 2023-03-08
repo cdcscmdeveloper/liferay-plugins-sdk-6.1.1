@@ -195,6 +195,10 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private PmFinancialOrg factoringOrg;
 	//30911 - end
 	
+	//29550 - start
+	private boolean factoringUser = false;
+	//29550 - end
+	
 	//34316-Start
 	private int yepButtonFlag =0;
 	//34316-End
@@ -1594,6 +1598,16 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 		this.factoringOrg = factoringOrg;
 	}
 	//30911 - end
+
+	//29550 - start
+	public boolean isFactoringUser() {
+		return factoringUser;
+	}
+
+	public void setFactoringUser(boolean factoringUser) {
+		this.factoringUser = factoringUser;
+	}
+	//29550 - end
 	
 	//34316 - start
 	/**
