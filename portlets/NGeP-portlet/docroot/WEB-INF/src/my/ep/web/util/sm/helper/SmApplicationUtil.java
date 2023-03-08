@@ -8998,9 +8998,14 @@ public class SmApplicationUtil {
 					// if dont have prev approved directly set softcert to
 					// pending request and contract to 0
 					if (prevPersonnel == null) {
-						currPersonnel
-								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-						currPersonnel.setContractSignerFlg(0);
+						//#33129 - START
+						//maintain softcert 1 if the personnel was an admin previously
+						if(currPersonnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_ISSUED){
+							currPersonnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+							currPersonnel.setContractSignerFlg(0);
+						}
+						//#33129 - END
+					
 					}
 					// if have prev approved
 					else {
