@@ -19,7 +19,7 @@
 	<ui:param name="isOneOff" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff}"></ui:param>
 	<ui:param name="isNonPeriodic" value="#{(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen) or
 	(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)}"></ui:param>
-	<ui:param name="isPK7" value="#{lOADetailBackingBean.isPK7(lOADetailBackingBean.managedBean.scLoa)}"></ui:param><!-- #25725 note 146 -->
+	<ui:param name="isPK7" value="#{(lOADetailBackingBean.managedBean.procurementType eq ParameterConst.procTypePk7)}"></ui:param>
 	
 	<c:if test="#{lOADetailBackingBean.managedBean.above500K}">
 		<ui:param name="above500K" value="#{true}"></ui:param>
@@ -27,19 +27,11 @@
 	<c:if test="#{!lOADetailBackingBean.managedBean.above500K}">
 		<ui:param name="above500K" value="#{false}"></ui:param>
 	</c:if>
-	<!-- #25725 note 146 start -->
-	<ui:param name="reasonPK2"  
-		value="#{lOADetailBackingBean.isReasonPK2(lOADetailBackingBean.managedBean.scLoa)}" />
-	<ui:param name="reasonSpecialItem"  
-		value="#{lOADetailBackingBean.isReasonSpecialItem(lOADetailBackingBean.managedBean.scLoa)}" />	
-	<!-- #25725 note 146 end -->
+	
 	<!-- #25725 end -->	
 	
 	<!-- #25726 start -->
 	<ui:param name="StatusLOASubmission" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"></ui:param>
-	<ui:param name="StatusLOAApproval" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_APPROVAL}"></ui:param>
-	<ui:param name="StatusLOARevision" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION}"></ui:param>
-	<ui:param name="StatusLOARevisionApproval" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION_APPROVAL}"></ui:param>
 	<!-- #25726 end -->
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
@@ -638,7 +630,7 @@
 										disabled="#{(!isEditableStatus or lOADetailBackingBean.managedBean.readOnly) or lOADetailBackingBean.disabledButton()}">									
 									<f:selectItems id="agreementReqSelect"
 										value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />																		
-									<!-- #25725 note 146 --><p:ajax event="change" process="@this" update="@([id$=uploadApprovalLetterPg])"
+									<p:ajax partialSubmit="true" update="@([id$=uploadApprovalLetterPg])"
 									listener="#{lOADetailBackingBean.onChangeAgreementReqType}"/>
 									</p:selectOneRadio>
 									<p:message id="agreementReqMsg" for="agreementReq" display="icon" />								
@@ -676,7 +668,7 @@
 					<td colspan="3">
 						<p:outputPanel id="uploadApprovalLetterPg"> 
 							<!-- #25726 START -->													
-							<!-- #25725 note 146  --><h:panelGroup  rendered="#{(StatusLOASubmission || StatusLOAApproval || StatusLOARevision || StatusLOARevisionApproval) and (((lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter) and lOADetailBackingBean.managedBean.above500K and isNonPeriodic and (!isPK7 || reasonPK2 || reasonSpecialItem) and !isDocTypeQuotation) || (((isNonPeriodic || isOneOff) and (!isPK7 || reasonPK2 || reasonSpecialItem))  and isDocTypeQuotation and lOADetailBackingBean.managedBean.agreementReqChange and !lOADetailBackingBean.managedBean.scLoa.agreementReq))}" 
+							<h:panelGroup  rendered="#{StatusLOASubmission and ((lOADetailBackingBean.managedBean.agreementReqChange and !lOADetailBackingBean.managedBean.scLoa.agreementReq and lOADetailBackingBean.managedBean.above500K and isNonPeriodic and !isPK7  and !isDocTypeQuotation) || (((isNonPeriodic || isOneOff) and !isPK7)  and isDocTypeQuotation and lOADetailBackingBean.managedBean.agreementReqChange and !lOADetailBackingBean.managedBean.scLoa.agreementReq))}" 
 							required="true">
 							<!-- #25726 END -->
 								<table>
@@ -710,7 +702,7 @@
 			 	 					</tr>
 			 	 				</table>			 	 				
 			 	 			</h:panelGroup>	
-			 	 			<h:panelGroup rendered="#{(!StatusLOASubmission and !StatusLOAApproval and !StatusLOARevision and !StatusLOARevisionApproval) and lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
+			 	 			<h:panelGroup rendered="#{!StatusLOASubmission and lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
 			 	 				<table>
 									<tr>
 										<td width="300">

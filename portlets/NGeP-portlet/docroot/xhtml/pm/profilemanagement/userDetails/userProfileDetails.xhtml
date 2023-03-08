@@ -407,12 +407,10 @@
 										<p:commandButton
 											value="#{lbl['lbl.pm.profiles.userdetails.changepic']}"
 											oncomplete="dlImageUpload.show();" immediate="true" />
-										<!-- #34527 defect start -->
 										<p:commandButton
 											value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}"
 											action="#{profileManagementBackingBean.deletePortrait}"
-											immediate="true" update="giUserImage" style="width:auto !important;" />
-										<!-- #34527 defect end -->
+											immediate="true" update="giUserImage" />
 									</div>
 								</div>
 							</p:outputPanel>

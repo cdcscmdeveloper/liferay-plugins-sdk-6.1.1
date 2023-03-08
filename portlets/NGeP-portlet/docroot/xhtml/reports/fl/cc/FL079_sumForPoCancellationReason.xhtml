@@ -48,7 +48,7 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.ptj']}"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.fl.ptj.name']}"></p:outputLabel>
 			</td>
 			<td colspan="3">
 				<ac:lov id="searchPtj"
@@ -96,7 +96,7 @@
 					value="#{ccSumForPoCancelReasonRptBB.managedBean.physicalContractNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText> 
-				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phycontr.no.fact.user']}" />
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphycontract.fact.user']}" />
 				<p:message id="flphycontractIdMsg" for="flphycontractId" display="icon" />
 			</td>
 			<td>
@@ -107,7 +107,7 @@
 					value="#{ccSumForPoCancelReasonRptBB.managedBean.contractNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
-				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no.fact.user']}"/> 
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcntrctno.fact.user']}"/> 
 			</td>
 		</tr>
 		<tr>
@@ -118,7 +118,7 @@
 				<p:inputText maxlength="20" value="#{ccSumForPoCancelReasonRptBB.managedBean.loaNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
-				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa.fact.user']}"/>
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforlaono']}"/>
 			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}" />
@@ -129,7 +129,7 @@
 					value="#{ccSumForPoCancelReasonRptBB.managedBean.physicalLoaNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText> 
-				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.file.ref.no.fact.user']}"/> 
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphysst.fact.user']}"/> 
 				<p:message id="flphyloaIdMsg" for="flphyloaId" display="icon" />
 			</td>
 		</tr>
@@ -165,10 +165,10 @@
 				<p:selectOneMenu value="#{ccSumForPoCancelReasonRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.fl.physical.treasury.circular']}"
-						itemValue="#{lbl['lbl.fl.physical.treasury.circular']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.fl.sistem.panel.name']}"
-						itemValue="#{lbl['lbl.fl.sistem.panel.name']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phyTreasuryCrclrNo']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.phyTreasuryCrclrNo']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.centralCntrctPanel']}"
+						itemValue="#{lbl['lbl.rpt.drpdown.centralCntrctPanel']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
