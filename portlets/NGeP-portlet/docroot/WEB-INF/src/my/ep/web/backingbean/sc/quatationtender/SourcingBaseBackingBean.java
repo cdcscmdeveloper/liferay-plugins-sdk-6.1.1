@@ -5814,7 +5814,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						if (getFirstValue){
 							map.put("clItem", question.getClItem());
 							map.put("uomName", question.getClUom().getUomName());
-							map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
+							//#26130 - start
+							map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
+							//#26130 - end
 							map.put("zoneName",zone.getTplSpecZoneDtl().getZoneName());
 							map.put("qty", zone.getQty().toString());
 							if (null != question.getTplSpecTierQties() && question.getTplSpecTierQties().size() > 0 ){
@@ -5892,7 +5894,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 									map.put("clUomPerMonth", question.getClUomPerMonth().toString());
 								}else {
 									//product
-									map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
+									//#26130 - start
+									map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
+									//#26130 - end
 									String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
 									map.put("qtyBerperingkat", tierValue);
 									
