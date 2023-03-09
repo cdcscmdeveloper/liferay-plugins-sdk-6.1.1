@@ -3338,6 +3338,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			return null;
 		}
+		
+		public boolean isEpvRequestApproved(ScQtApprovalRequest apprvReq) {
+			return QTStatusConst.PCB_RQ1_APPROVED.longValue() == apprvReq.getDecessionType().getParameterId()
+					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == apprvReq.getDecessionType().getParameterId();
+		}
 		//#21692 - end
 		
 }

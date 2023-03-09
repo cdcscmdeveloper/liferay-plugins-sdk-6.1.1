@@ -266,7 +266,8 @@
 									style="width: 178px;margin-bottom: 5px;">
 									<f:selectItems
 										value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest2)}" />
-								</p:selectOneMenu> <p:message id="decisiontypeidhMsgRq2" for="decisiontypeidRq2" display="icon" /></td>
+								</p:selectOneMenu> <p:message id="decisiontypeidhMsgRq2" for="decisiontypeidRq2"
+									display="icon" /></td>
 						</tr>
 						<c:if
 							test="#{qTDetailBB.managedBean.scQtApprovalRequest.decisionCertPBM != null and
@@ -302,7 +303,7 @@
 										id="decisiontypeidRq3"
 										value="#{qTDetailBB.managedBean.scQtApprovalRequest.decessionType.parameterId}"
 										label="#{lbl['lbl.sc.decision']}"
-										disabled="#{approvalBackingBean.managedBean.readOnly}"
+										disabled="true"
 										style="width: 178px;margin-bottom: 5px;">
 										<f:selectItems
 											value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest3)}" />
@@ -324,28 +325,24 @@
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.qt.supplier.response.period']}" /></td>
-					<td><p:inputText value="#{scQt.responsePeriod}"
-							style="width:200px;"
-							disabled="true" /> <ac:iconTooltip
+					<td><p:inputText value="#{qTDetailBB.managedBean.scQtApprovalRequest.responsePeriod}"
+							style="width:200px;" disabled="true" /> <ac:iconTooltip
 							value="#{lbl['lbl.sc.qt.response.period.tooltip5']}#{lbl['lbl.sc.qt.response.period.tooltip2']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.fromValue)} #{lbl['lbl.sc.qt.response.period.tooltip3']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.toValue)} #{lbl['lbl.sc.qt.response.period.tooltip4']}" />
 					</td>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date']}" />
 					</td>
-					<td><c:if
-							test="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId, scQt.responsePeriod) != null}">
-							<p:inputText
-								value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId, scQt.responsePeriod)}"
-								style="width:200px;" disabled="true">
-								<f:convertDateTime
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-							</p:inputText>
-						</c:if> <c:if
-							test="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId, scQt.responsePeriod) == null}">
-							<p:inputText value="#{lbl['lbl.sc.no.available']}"
-								style="width:200px;" disabled="true">
-							</p:inputText>
-						</c:if></td>
+					<td><p:inputText
+							value="#{qTDetailBB.getHistoryExtensionResponseDueDate(qTDetailBB.managedBean.scQtApprovalRequest.approverActionDate, 
+							qTDetailBB.managedBean.scQtApprovalRequest.responsePeriod)}"
+							style="width:200px;" disabled="true"
+							rendered="#{approvalBackingBean.isEpvRequestApproved(qTDetailBB.managedBean.scQtApprovalRequest)}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+						</p:inputText> <p:inputText value="#{lbl['lbl.sc.no.available']}"
+							style="width:200px;" disabled="true"
+							rendered="#{!approvalBackingBean.isEpvRequestApproved(qTDetailBB.managedBean.scQtApprovalRequest)}">
+						</p:inputText></td>
 				</tr>
 			</table>
 		</p:panel>

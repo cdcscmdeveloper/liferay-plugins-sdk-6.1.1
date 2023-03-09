@@ -13106,5 +13106,24 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 		return enableApprovalDateMOF;
 	}
+	
+	/**
+	 * Specific for History usage only since it always shows due date
+	 * 
+	 * @param approverActionDate
+	 * @param resPeriod
+	 * @return
+	 */
+	public Timestamp getHistoryExtensionResponseDueDate(Date approverActionDate, int resPeriod) {
+		Date date = null;
+		if (null != approverActionDate) {
+			date = DateUtils.addDays(approverActionDate, resPeriod);
+		}
+		Timestamp ts = null;
+		if (date != null) {
+			ts = new Timestamp(date.getTime());
+		}
+		return ts;
+	}
 	// #21692 add Approval detail at EPV QT Maint - End
 }
