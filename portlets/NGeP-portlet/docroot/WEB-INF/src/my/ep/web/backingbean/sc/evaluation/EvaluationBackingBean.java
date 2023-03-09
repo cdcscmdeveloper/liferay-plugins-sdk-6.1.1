@@ -12709,6 +12709,12 @@ private void retriveCommitteeRemarksList(){
 
 				// 32426-start
 				// #34497 related to #32453 fixing(#25138,#21695) - start
+				//34523 - start
+				if (reqDTO.getProposalChecklistSearchBean() == null) {
+					reqDTO.setProposalChecklistSearchBean(new SearchBean<ScQtProposalChecklist>());
+				}
+				reqDTO.getProposalChecklistSearchBean().setNavigatable(false);
+				//34523 - end
 				ISearchResultBean<ScQtProposalChecklist> resultBean = evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO).getComplianceResultBean();
 			
 				if (CollectionUtils.isNotEmpty(resultBean.getResultList())) {// 34523 4serangkai
@@ -12735,6 +12741,7 @@ private void retriveCommitteeRemarksList(){
 								&& getManagedBean().getScQt().isPartial()) {
 							ISearchBean<Object[]> packagesearchBean = new SearchBean<Object[]>();
 							
+							packagesearchBean.setNavigatable(false);//34523
 							EvaluationReqDTO reqDTOP = new EvaluationReqDTO();
 							reqDTOP.setQtId(getManagedBean().getScQt().getQtId());
 							reqDTOP.setEvalStage(getEvaluationStageForTechnicalChecklist());
@@ -12759,7 +12766,7 @@ private void retriveCommitteeRemarksList(){
 						}	
 					}//#34582 move code position 4serangkai -end
 				}
-				
+				reqDTO.getProposalChecklistSearchBean().setNavigatable(true);//34523
 				resultBean = evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO).getComplianceResultBean();
 
 				return resultBean;
