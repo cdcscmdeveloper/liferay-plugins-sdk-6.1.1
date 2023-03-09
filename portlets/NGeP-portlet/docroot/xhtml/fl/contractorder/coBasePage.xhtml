@@ -152,12 +152,14 @@
 					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCloseManual || flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward}'
 					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
 					<!-- end 29442 -->
+					<!-- 34336 start -->
 					<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
 					process="@form" partialSubmit="true" rendered='#{(flOrderBB.managedBean.yep) and !(flOrderBB.managedBean.buttonVal eq "AP58")
 					and (flOrderBB.managedBean.getButtonVal() != BpmOutcomeConstant.bpmView)
-					and !(flOrderBB.managedBean.buttonVal eq "NONAP58") and !(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward)}
+					and !(flOrderBB.managedBean.buttonVal eq "NONAP58") and !(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward)
 					and (flOrderBB.managedBean.yepButtonFlag == 1)}'
 					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- 34336 end -->
 					<!-- edit render -->
 					
 					<p:commandButton value="#{lbl['lbl.fl.general.save']}" immediate="true" action="#{flOrderBB.saveAP58}" 
