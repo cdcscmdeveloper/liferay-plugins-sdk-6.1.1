@@ -676,12 +676,12 @@
 					<td colspan="3">
 						<p:outputPanel id="uploadApprovalLetterPg"> 
 							<!-- #25726 START -->													
-							<!-- #25725 note 146  --><h:panelGroup  rendered="#{(StatusLOASubmission || StatusLOAApproval || StatusLOARevision || StatusLOARevisionApproval) and (((lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter) and lOADetailBackingBean.managedBean.above500K and isNonPeriodic and (!isPK7 || reasonPK2 || reasonSpecialItem) and !isDocTypeQuotation) || (((isNonPeriodic || isOneOff) and (!isPK7 || reasonPK2 || reasonSpecialItem))  and isDocTypeQuotation and lOADetailBackingBean.managedBean.agreementReqChange and !lOADetailBackingBean.managedBean.scLoa.agreementReq))}" 
+							<!-- #25725 note 165  --><h:panelGroup  rendered="#{isEditableStatus and (((lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter) and lOADetailBackingBean.managedBean.above500K and isNonPeriodic and (!isPK7 || reasonPK2 || reasonSpecialItem) and !isDocTypeQuotation) || (((isNonPeriodic || isOneOff) and (!isPK7 || reasonPK2 || reasonSpecialItem))  and isDocTypeQuotation and (lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter)))}" 
 							required="true">
 							<!-- #25726 END -->
-								<table>
+								<!-- #25725 note 165  --><table border="0" cellspacing="0" cellpadding="0" width="100%">
 									<tr>
-										<td width="300">
+										<!-- #25725 note 165  --><td>
 											<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}" escape="false"/> 
 											<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 										</td>
@@ -690,7 +690,7 @@
 												<p:commandButton 
 												oncomplete="uploadApprovalLetterDlg.show();return false;"
 					 							icon="ui-icon-upload" immediate="true" update="uploadApprovalLetterDlg" 
-					 							rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment eq null}"/>								
+					 							rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment eq null and isEditableStatus}"/><!-- #25725 note 165  -->								
 												<p:commandLink
 												title="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
 												value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
@@ -710,10 +710,10 @@
 			 	 					</tr>
 			 	 				</table>			 	 				
 			 	 			</h:panelGroup>	
-			 	 			<h:panelGroup rendered="#{(!StatusLOASubmission and !StatusLOAApproval and !StatusLOARevision and !StatusLOARevisionApproval) and lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
-			 	 				<table>
+			 	 			<!-- #25725 note 165  --><h:panelGroup rendered="#{!isEditableStatus and !isSupplierAckStatus and !isAckReceiptSupplierActStatus and lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
+			 	 				<!-- #25725 note 165  --><table border="0" cellspacing="0" cellpadding="0" width="100%">
 									<tr>
-										<td width="300">
+										<!-- #25725 note 165  --><td>
 											<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}" escape="false"/>											
 										</td>
 										<td>
