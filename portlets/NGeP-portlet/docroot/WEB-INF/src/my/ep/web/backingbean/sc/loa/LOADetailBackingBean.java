@@ -3408,8 +3408,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		try {
 			PmParameter contractType = getManagedBean().getScLoa().getContractType();
    
-			if (this.getManagedBean().getFlowamt()==null && null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType()) && ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType.getParameterCode())) {
-				throw new EpException(MessageConst.ERROR_760485);				
+			if (this.getManagedBean().getFlowamt() == null && null != contractType
+					&& ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType())
+					&& ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType.getParameterCode())
+					// 29826, #34569 -start-
+					// 27502 adding condition coz error when save at supplier loa acceptance -start-
+					&& !this.getManagedBean().getCurrentStatusId()
+							.equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)
+			// 27502 adding condition coz error when save at supplier loa acceptance -end-
+			// 29826, #34569 -end-
+			) {
+				throw new EpException(MessageConst.ERROR_760485);
 			} else {
 				String outcome = BpmOutcomeConst.BPM_SAVE;
 				ScLoa scLoa = this.getManagedBean().getScLoa();
