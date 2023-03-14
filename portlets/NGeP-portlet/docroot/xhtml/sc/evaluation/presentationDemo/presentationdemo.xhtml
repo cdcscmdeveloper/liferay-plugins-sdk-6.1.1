@@ -91,12 +91,12 @@
 				<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 					rendered="#{demoSupplier.totalUserScore == null and !evaluationBackingBean.managedBean.readOnly}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.presentationDemoScoring(demoSupplier.scQtProposal.supplierNo, demoSupplier)}" />
+					action="#{evaluationBackingBean.presentationDemoScoring(demoSupplier.scQtProposal.supplierNo, demoSupplier)}" disabled="#{isRejected}"/><ui:remove>6906, add disabled</ui:remove>
 					
 						<p:commandButton value="#{lbl['lbl.btn.view']}"
 					rendered="#{demoSupplier.totalUserScore != null or evaluationBackingBean.managedBean.readOnly}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.presentationDemoScoring(demoSupplier.scQtProposal.supplierNo, demoSupplier)}" />
+					action="#{evaluationBackingBean.presentationDemoScoring(demoSupplier.scQtProposal.supplierNo, demoSupplier)}" disabled="#{isRejected}"/><ui:remove>6906, add disabled</ui:remove>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
