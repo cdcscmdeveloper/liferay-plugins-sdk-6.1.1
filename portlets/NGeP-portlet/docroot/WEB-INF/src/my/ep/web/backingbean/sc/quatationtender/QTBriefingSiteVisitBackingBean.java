@@ -343,82 +343,80 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 		validatePostcode();
 		
-		// Checking for duplication.. if it is add flow..
-		if (!bsvDetail.isSelected()) {
-			if (null != briefingBean.getBriefingList()
-					&& briefingBean.getBriefingList().contains(bsvDetail)) {
-				throw new EpException(MessageConst.ERROR_760099);
-			} else if (null != briefingBean.getSitevisitList()
-					&& briefingBean.getSitevisitList().contains(bsvDetail)) {
-				throw new EpException(MessageConst.ERROR_760099);
+		if (!bsvDetail.isCloned()) { //28188
+			// Checking for duplication.. if it is add flow..
+			if (!bsvDetail.isSelected()) {
+				if (null != briefingBean.getBriefingList() && briefingBean.getBriefingList().contains(bsvDetail)) {
+					throw new EpException(MessageConst.ERROR_760099);
+				} else if (null != briefingBean.getSitevisitList()
+						&& briefingBean.getSitevisitList().contains(bsvDetail)) {
+					throw new EpException(MessageConst.ERROR_760099);
+				}
+				bsvDetail.setScQtBsv(briefingBean.getScQtBsv());
 			}
-			bsvDetail.setScQtBsv(briefingBean.getScQtBsv());
-		}
-		/*
-		 * if (null != bsvDetail) { Date bsvDate = bsvDetail.getBsvDate(); if
-		 * (null != bsvDate) { Date publishDate =
-		 * this.getManagedBean().getQt().getPublishDate(); if (null !=
-		 * publishDate) { if (bsvDate.compareTo(publishDate) < 0 ) { throw new
-		 * EpException("Publish Date is more Than Briefing/Site Visit date."); }
-		 * } } }
-		 */
-		if (SourcingConstants.BSV_TYPE_BRIEFING.equalsIgnoreCase(bsvType)) {
-			List<ScQtBsvDtl> briefingDetails = briefingBean.getBriefingList();
-			if (null == briefingDetails) {
-				briefingDetails = new ArrayList<ScQtBsvDtl>();
+			/*
+			 * if (null != bsvDetail) { Date bsvDate = bsvDetail.getBsvDate();
+			 * if (null != bsvDate) { Date publishDate =
+			 * this.getManagedBean().getQt().getPublishDate(); if (null !=
+			 * publishDate) { if (bsvDate.compareTo(publishDate) < 0 ) { throw
+			 * new
+			 * EpException("Publish Date is more Than Briefing/Site Visit date."
+			 * ); } } } }
+			 */
+			if (SourcingConstants.BSV_TYPE_BRIEFING.equalsIgnoreCase(bsvType)) {
+				List<ScQtBsvDtl> briefingDetails = briefingBean.getBriefingList();
+				if (null == briefingDetails) {
+					briefingDetails = new ArrayList<ScQtBsvDtl>();
+				}
+				if (!briefingDetails.contains(bsvDetail)) {
+					briefingDetails.add(bsvDetail);
+				}
+				briefingBean.setBriefingList(briefingDetails);
+			} else if (SourcingConstants.BSV_TYPE_SITEVISIT.equalsIgnoreCase(bsvType)) {
+				List<ScQtBsvDtl> siteVisitDetails = briefingBean.getSitevisitList();
+				if (null == siteVisitDetails) {
+					siteVisitDetails = new ArrayList<ScQtBsvDtl>();
+				}
+				if (!siteVisitDetails.contains(bsvDetail)) {
+					siteVisitDetails.add(bsvDetail);
+				}
+				if (siteVisitDetails.size() == 1) {
+					briefingBean.getScQtBsv().setAllSiteVisitReq(true);
+				}
+				briefingBean.setSitevisitList(siteVisitDetails);
 			}
-			if (!briefingDetails.contains(bsvDetail)) {
-				briefingDetails.add(bsvDetail);
+			if (this.getManagedBean().getQt().isZonal()) {
+				List<BriefingZoneBean> zoneBeans = this.getManagedBean().getBriefingZoneBean();
+				for (int i = 0; i < zoneBeans.size(); i++) {
+					if (zoneBeans.get(i).getTplSpecZoneDtl().getZoneName()
+							.equalsIgnoreCase(briefingBean.getTplSpecZoneDtl().getZoneName())) {
+						zoneBeans.remove(i);
+						zoneBeans.add(i, briefingBean);
+						break;
+					}
+				}
+
 			}
-			briefingBean.setBriefingList(briefingDetails);
-		} else if (SourcingConstants.BSV_TYPE_SITEVISIT
-				.equalsIgnoreCase(bsvType)) {
-			List<ScQtBsvDtl> siteVisitDetails = briefingBean.getSitevisitList();
-			if (null == siteVisitDetails) {
-				siteVisitDetails = new ArrayList<ScQtBsvDtl>();
-			}
-			if (!siteVisitDetails.contains(bsvDetail)) {
-				siteVisitDetails.add(bsvDetail);
-			}
-			if (siteVisitDetails.size() == 1) {
-				briefingBean.getScQtBsv().setAllSiteVisitReq(true);
-			}
-			briefingBean.setSitevisitList(siteVisitDetails);
-		}
-		if (this.getManagedBean().getQt().isZonal()) {
-			List<BriefingZoneBean> zoneBeans = this.getManagedBean()
-					.getBriefingZoneBean();
-			for (int i = 0; i < zoneBeans.size(); i++) {
-				if (zoneBeans
-						.get(i)
-						.getTplSpecZoneDtl()
-						.getZoneName()
-						.equalsIgnoreCase(
-								briefingBean.getTplSpecZoneDtl().getZoneName())) {
-					zoneBeans.remove(i);
-					zoneBeans.add(i, briefingBean);
-					break;
+			this.getManagedBean().setBsvDtlBean(briefingBean);
+			this.getManagedBean().setQtBriefing(null);
+			// facesmgs error hide..
+
+			this.getManagedBean().setRequired(Boolean.FALSE);
+
+			ScQtBsvDtl tempScQtBsvDtl = this.getManagedBean().getTempScQtBsvDtl();
+			if (null != tempScQtBsvDtl) {
+				updateQtAmmendMentDtls(bsvType, tempScQtBsvDtl, bsvDetail);
+			} else {
+				updateLatestBsvDate();
+				if (this.getManagedBean().getAmendMentBean() == null) {
+					this.getManagedBean().setAmendMentBean(new QtAmendMentBean());
 				}
 			}
-
-		}
-		this.getManagedBean().setBsvDtlBean(briefingBean);
-		this.getManagedBean().setQtBriefing(null);
-		// facesmgs error hide..
-		
-		this.getManagedBean().setRequired(Boolean.FALSE);
-		
-		ScQtBsvDtl tempScQtBsvDtl = this.getManagedBean().getTempScQtBsvDtl();
-		if (null != tempScQtBsvDtl) {
-			updateQtAmmendMentDtls(bsvType, tempScQtBsvDtl,bsvDetail);
+			//28188 - Start
 		} else {
-			updateLatestBsvDate();
-			if(this.getManagedBean().getAmendMentBean() == null){
-				this.getManagedBean().setAmendMentBean(new QtAmendMentBean());
-			}
-			
+			cloneScQtBsvDtl(bsvDetail, this.getManagedBean().getBsvIndex(), bsvType);
 		}
-		
+		//28188 - End	
 		RequestContext.getCurrentInstance().execute("addbsvdtls.hide();");
 	}
 
@@ -1265,22 +1263,61 @@ public class QTBriefingSiteVisitBackingBean extends
 	
 	//#28188 - Start
 	public void cloneScQtBsvDtl(ScQtBsvDtl bsvDtl, int index, String bsvType) {
-		ScQtBsvDtl newScQtBsvDtl = (ScQtBsvDtl) bsvDtl.cloneEntity();
+		QtAmendMentBean amendMentBean = this.getManagedBean().getAmendMentBean();
+		QtAmendMentValueBean valueBean = new QtAmendMentValueBean();
+		String fieldPrefix = bsvDtl.isCloned() ? bsvDtl.getCloneKey() : bsvDtl.getQtBsvDtlId() + QTFieldConst.FIELD_QT_BSV_SEPARATOR + "CLONE";
+		ScQtBsvDtl newScQtBsvDtl = new ScQtBsvDtl();
 		PmStatus pmStat = new PmStatus();
+		BriefingZoneBean briefingBean = this.getManagedBean().getBsvDtlBean();
+		List<ScQtBsvDtl> briefingDetails = null;
+		List<ScQtBsvDtl> siteVisitDetails = null;
 		pmStat.setStatusId(QTStatusConst.BSV_PENDING);
-		newScQtBsvDtl.setBsvDate(null);
+		newScQtBsvDtl.setBsvDate(bsvDtl.getBsvDate());
 		newScQtBsvDtl.setQtBsvDtlId(null);
 		newScQtBsvDtl.setBsvStatusId(QTStatusConst.BSV_PENDING);
 		newScQtBsvDtl.setBsvStatus(pmStat);
+		newScQtBsvDtl.setScQtBsv(bsvDtl.getScQtBsv());
+		newScQtBsvDtl.setBsvType(bsvDtl.getBsvType());
+		newScQtBsvDtl.setBsvDesc(bsvDtl.getBsvDesc());
+		newScQtBsvDtl.setLocation(bsvDtl.getLocation());
+		newScQtBsvDtl.setAddress(bsvDtl.getAddress());
+		newScQtBsvDtl.setCoordinatingOfficer(bsvDtl.getCoordinatingOfficer());
+		newScQtBsvDtl.setMaxNoOfAttendance(bsvDtl.getMaxNoOfAttendance());
+		newScQtBsvDtl.setRecordStatus(false);
+		newScQtBsvDtl.setCloned(true);
+		newScQtBsvDtl.setCloneKey(fieldPrefix);
+		newScQtBsvDtl.setBsvStatusId(QTStatusConst.BSV_PENDING);
 		bsvDtl.setDisableRow(true);
 		
-		if (bsvType.equalsIgnoreCase(SourcingConstants.BSV_TYPE_BRIEFING)) {
-			this.getManagedBean().getBsvDtlBean().getBriefingList().add(newScQtBsvDtl);
-			this.getManagedBean().getBsvDtlBean().getBriefingList().set(index, bsvDtl);
-		} else if (bsvType.equalsIgnoreCase(SourcingConstants.BSV_TYPE_SITEVISIT)) {
-			this.getManagedBean().getBsvDtlBean().getSitevisitList().add(newScQtBsvDtl);
-			this.getManagedBean().getBsvDtlBean().getSitevisitList().set(index, bsvDtl);
+		if (SourcingConstants.BSV_TYPE_SITEVISIT.equalsIgnoreCase(bsvType)) {
+			siteVisitDetails = briefingBean.getSitevisitList();
+			if (null == siteVisitDetails) {
+				siteVisitDetails = new ArrayList<ScQtBsvDtl>();
+			}
+			if (!bsvDtl.isCloned()) {
+				siteVisitDetails.add(newScQtBsvDtl);
+			} else {
+				siteVisitDetails.set(index, newScQtBsvDtl);
+			}
+			briefingBean.setSitevisitList(siteVisitDetails);
+		} else if (SourcingConstants.BSV_TYPE_BRIEFING.equalsIgnoreCase(bsvType)) {
+			briefingDetails = briefingBean.getBriefingList();
+			if (null == briefingDetails) {
+				briefingDetails = new ArrayList<ScQtBsvDtl>();
+			}
+			if (!bsvDtl.isCloned()) {
+				briefingDetails.add(newScQtBsvDtl);
+			} else {
+				briefingDetails.set(index, newScQtBsvDtl);
+			}
+			briefingBean.setBriefingList(briefingDetails);
 		}
+		
+		this.getManagedBean().setBsvDtlBean(briefingBean);
+		valueBean.setNewValue(newScQtBsvDtl);
+		//amendMentBean.getValueMap().put(fieldPrefix, valueBean);
+		//this.getManagedBean().setAmendMentBean(amendMentBean);	
 	}
+	
 	//#28188 - End
 }
