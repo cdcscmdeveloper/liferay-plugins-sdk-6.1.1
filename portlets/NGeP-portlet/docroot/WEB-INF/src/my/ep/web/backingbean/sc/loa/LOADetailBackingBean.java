@@ -6479,15 +6479,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public void showApprovalLetter() {
 		ScLoa loa = getManagedBean().getScLoa();
-		Boolean isNonPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode()
-				.getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED))
-				|| (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
-						.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
-
-		if ((!loa.isAgreementReq())
-				&& ((isNonPeriodic && over500K(loa)) && (!isPK7(loa) || isReasonPK2(loa) || isReasonSpecialItem(loa)))) {
+		Boolean isNonPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
+		Boolean isOneOff = loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+		Boolean isDocTypeQuotation = loa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION);
+		
+		if (!loa.isAgreementReq() && over500K(loa) && isNonPeriodic
+				&& (!isPK7(loa) || isReasonPK2(loa) || isReasonSpecialItem(loa)) && !isDocTypeQuotation) {
+			this.getManagedBean().setShowApprovalLetter(Boolean.TRUE);
+		} else if (isDocTypeQuotation
+				&& !loa.isAgreementReq()
+				&& ((isNonPeriodic || isOneOff) && (!isPK7(loa) || isReasonPK2(loa) || isReasonSpecialItem(loa)) && over500K(loa))) {
 			this.getManagedBean().setShowApprovalLetter(Boolean.TRUE);
 		}
+		else{
+			this.getManagedBean().setShowApprovalLetter(Boolean.FALSE);
+		}		
 	}
 
 	// #25725 - note 146 - end
@@ -10988,15 +10994,30 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		Boolean approvalLetter = true;
 		Boolean isNonPeriodic = (scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
 		Boolean isOneOff = scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-		if((!scLoa.isAgreementReq())&&((isNonPeriodic||isOneOff) && !isPK7(scLoa) && over500K(scLoa))){
-			if(scLoa.getScLoaAttachment() == null){
-				RequestContext.getCurrentInstance().execute("approvalLetterAlertDlg.show()");
-				approvalLetter = false;
-				return approvalLetter;
+		Boolean isDocTypeQuotation = scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION);
+		
+		if (scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUBMISSION)
+				|| scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_APPROVAL)
+				|| scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_REVISION)
+				|| scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)) {		
+			
+			if(this.getManagedBean().isShowApprovalLetter() &&  over500K(scLoa) && isNonPeriodic && (!isPK7(scLoa) || isReasonPK2(scLoa) || isReasonSpecialItem(scLoa)) && !isDocTypeQuotation){
+				if(scLoa.getScLoaAttachment() == null){
+					RequestContext.getCurrentInstance().execute("approvalLetterAlertDlg.show()");
+					approvalLetter = false;
+					return approvalLetter;
+				}
 			}
-		}else{
-			scLoa.setScLoaAttachment(null);
-		}
+			else if(isDocTypeQuotation && this.getManagedBean().isShowApprovalLetter()&&((isNonPeriodic||isOneOff) && (!isPK7(scLoa) || isReasonPK2(scLoa) || isReasonSpecialItem(scLoa)) && over500K(scLoa))){
+				if(scLoa.getScLoaAttachment() == null){
+					RequestContext.getCurrentInstance().execute("approvalLetterAlertDlg.show()");
+					approvalLetter = false;
+					return approvalLetter;
+				}
+			}else{
+				scLoa.setScLoaAttachment(null);
+			}
+		}		
 		return approvalLetter;
 	}
 	
