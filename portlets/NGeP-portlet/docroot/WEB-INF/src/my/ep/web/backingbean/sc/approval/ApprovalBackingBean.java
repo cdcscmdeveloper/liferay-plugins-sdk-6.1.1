@@ -12,6 +12,7 @@ package my.ep.web.backingbean.sc.approval;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -125,6 +126,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -1069,6 +1071,21 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		ScQt scQt = this.getManagedBean().getQt();
 
 		reqDTO.setQtdetail(scQt);
+		//#21692 add data for report/history usage - Start
+		List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<ScQtApprovalRequest>();
+		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
+			
+			approvalRequest.setProposalValidityEndDateOri(this.getManagedBean().getQt().getProposalValidityEndDate());
+			approvalRequest.setProposalValidityEndDateNew(getNewValidityDueDate(this.getManagedBean().getQt(), 
+					Integer.parseInt(approvalRequest.getChangedValue())));
+			approvalRequest.setMofDate(this.getManagedBean().getQt().getMofDate());
+			approvalRequest.setChmnFinalizationDate(this.getManagedBean().getQt().getChmnFinalizationDate());
+			approvalRequest.setResponsePeriod(this.getManagedBean().getQt().getResponsePeriod());
+
+			scQtApprovalRequests.add(approvalRequest);
+		}
+		//#21692 add data for report/history usage - End
+		
 		reqDTO.setApprovalRequests(this.getManagedBean().getScQtApprovalRequestList());
 		checkValidProposalPeriodExtension(reqDTO);
 		//#21692 - start
@@ -1160,6 +1177,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (!enableDateMOF) {
 				approvalRequest.setDecisionCertPBM(null);
 			}
+			
+			//#21692 add data for report/history usage - Start
+			approvalRequest.setProposalValidityEndDateOri(this.getManagedBean().getQt().getProposalValidityEndDate());
+			approvalRequest.setProposalValidityEndDateNew(getNewValidityDueDate(this.getManagedBean().getQt(), 
+					Integer.parseInt(approvalRequest.getChangedValue())));
+			approvalRequest.setMofDate(this.getManagedBean().getQt().getMofDate());
+			approvalRequest.setChmnFinalizationDate(this.getManagedBean().getQt().getChmnFinalizationDate());
+			approvalRequest.setResponsePeriod(this.getManagedBean().getQt().getResponsePeriod());
+			//#21692 add data for report/history usage - End
 
 			scQtApprovalRequests.add(approvalRequest);
 		}
@@ -3287,6 +3313,41 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			
 			return msgCode;
+		}
+		
+		private Timestamp getNewValidityDueDate(ScQt scQt, int newValidityPeriod) {
+			IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocId(scQt.getQtId());
+			reqDTO.setDocType(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD);
+			
+			ScWorkFlowStatus status = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+			if (status != null) {
+
+				Date date = null;
+
+				date = DateUtils.addDays(scQt.getClosingDate(), newValidityPeriod);
+
+				Timestamp ts = null;
+				if (date != null) {
+					ts = new Timestamp(date.getTime());
+				}
+				return ts;
+			}
+			return null;
+		}
+		
+		/**
+		 * check if FC approve EPV 
+		 * 
+		 * @param apprvReq
+		 * @return
+		 */
+		public boolean isEpvRequestApproved(ScQtApprovalRequest apprvReq) {
+			return QTStatusConst.PCB_RQ1_APPROVED.longValue() == apprvReq.getDecessionType().getParameterId()
+					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == apprvReq.getDecessionType().getParameterId();
 		}
 		//#21692 - end
 		
