@@ -2797,5 +2797,17 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 								new String[] { fieldsName.toLowerCase() })));
 			}
 		}
+		
+		public void validatorRequired(FacesContext f, UIComponent c, Object obj){
+			String remarks = (String) obj;
+			String fieldsName = (String) c.getAttributes().get("param");
+			
+			if(remarks == null || remarks.isEmpty()){
+				String capitalizedStr = fieldsName.substring(0, 1).toUpperCase() + fieldsName.substring(1);
+				throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775192,
+								new String[] { capitalizedStr })));
+			}
+		}
 		// #34166 - End
 }
