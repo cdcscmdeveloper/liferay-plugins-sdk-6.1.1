@@ -462,7 +462,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public void addInterviewee(){
 		log.info("*******addInterviewee**********");
+		//34166 - Start
 		checkRepresentative();
+		//34166 - End
 		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
 		
 
