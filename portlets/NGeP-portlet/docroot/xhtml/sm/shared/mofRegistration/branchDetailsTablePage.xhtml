@@ -23,12 +23,15 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.branch.address']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
-			<td><p:inputText required="#{backingBean.managedBean.valueReqd}"
-					label="#{lbl['lbl.sm.companyaddress']}" id="supBrnAddr"
+			<td>
+			<!-- #34135 START -->	
+			<p:inputText required="#{backingBean.managedBean.valueReqd}"
+					label="#{lbl['lbl.sm.branch.address']}" id="supBrnAddr"
 					maxlength="100"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address1}"
 					disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.selectedBranch.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedBranch.smAddress.addressSsmNull)}"
 					size="35" >
+			<!-- #34135 END -->	
 					<p:ajax process="@this" partialSubmit="true"/>
 					</p:inputText> 
 					<ac:smFieldChangeAlert 
@@ -147,8 +150,10 @@
 					<td>
 				<p:outputPanel id="divisionBranchTbleDropdownPanelId">
 				<ui:fragment rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmState.adoptDivision}">
-			<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-					label="#{lbl['lbl.sm.state']}"
+				<!-- #34135 START -->	
+				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+					required="#{backingBean.managedBean.valueReqd}"
+					label="#{lbl['lbl.sm.division']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.divisionId}"
 					id="branchDivision">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -160,6 +165,9 @@
 				</p:selectOneMenu>
 				</ui:fragment>
 				</p:outputPanel>
+				<p:message id="branchDivisionMsg" for="branchDivision" showSummary="true"
+					showDetail="false" display="icon" />
+				<!-- #34135 END -->	
 				</td>
 		</tr>
 		
