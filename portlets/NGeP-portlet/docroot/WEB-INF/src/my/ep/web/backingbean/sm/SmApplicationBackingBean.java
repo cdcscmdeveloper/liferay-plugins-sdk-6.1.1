@@ -6809,11 +6809,18 @@ public class SmApplicationBackingBean extends
 		if(getManagedBean().getSelectedShareHolder().isClerical()){
 			getManagedBean().getSelectedShareHolder().setClericalFlg(1);
 		}
-		
-		if(getManagedBean().getSelectedShareHolder().isContractSigner()){
+		//34197 START 
+		/*if(getManagedBean().getSelectedShareHolder().isContractSigner()){
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(1);
+		}*/
+		if(getManagedBean().getSelectedShareHolder().getContractSignerFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+			getManagedBean().getSelectedShareHolder().setContractSigner(true);
 		}
 		
+		if(getManagedBean().getSelectedShareHolder().getContractSignerFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
+			getManagedBean().getSelectedShareHolder().setContractSigner(false);
+		}
+		//34197 END
 		if(getManagedBean().getSelectedShareHolder().isSemiProf()){
 			getManagedBean().getSelectedShareHolder().setSemiProfFlg(1);
 		}
