@@ -9802,7 +9802,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		map.put("spesifikasi", whiteSpace);
 		
 		if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
-			map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode()));
+			map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
 		}
 		
 		if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")) {
@@ -9877,7 +9877,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						map.put("spesifikasi", whiteSpace);
 						
 						if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
-							map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode()));
+							map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
 						}
 						
 						if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")) {
@@ -9957,7 +9957,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						map.put("spesifikasi", whiteSpace);
 						
 						if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
-							map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode()));
+							map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
 						}
 						
 						if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")) {
