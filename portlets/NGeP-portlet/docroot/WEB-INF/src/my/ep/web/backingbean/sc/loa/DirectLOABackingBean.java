@@ -5302,6 +5302,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		context.put("qtNo", qtNo);
 
+		//#32648 populate lampiran 7 if LOA at supplier - start 
+		int isLoa = 0;
+		if (null != pmUser) {
+			isLoa = 1;
+		}
+
+		context.put("isSupplierLoa", isLoa);
+		//#32648 populate lampiran 7 if LOA at supplier - end
+
 		String loaNo = "&#60;LOA No.&#62;";
 		if(scLoa.getLoaNo() != null){
 			loaNo = scLoa.getLoaNo();
@@ -7910,15 +7919,23 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> qtTypes = new ArrayList<String>();
 		
+		/*#34162 Start Vinod
 		if (null != scLoa &&null != scLoa.getProcurementMode()
 				&& ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scLoa
-						.getProcurementMode().getParameterCode())) {
+						.getProcurementMode().getParameterCode())) {*/
 			qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
 			
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmParameter.parameterCode",
 							SearchOperator.OPERATOR_NOT_IN.value(), qtTypes));
+		//}
+		if (null != scLoa
+			&& scLoa.getQtType()!= null 
+			&& scLoa.getQtType().getParameterCode()!=null
+			&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER)) {
+				searchBean = new SearchBean<PmParameterDesc>();
 		}
+		//#34162 End Vinod
 
 		return super.getDropdownValuesBySearchBean(ParameterTypeConst.QUOTATION_TENDER_TYPE,
 				searchBean);
@@ -10725,4 +10742,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 	/* #31033, #26247 End */
 	
+	// #32648 populate lampiran 7 if LOA at supplier - start
+	public boolean isDpAuditOrQtAuditOrQtMaint() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| SourcingConstants.PORTLET_NAME_DP_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+						|| QTConstants.PORTLET_NAME_DL_CREATE
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	// #32648 populate lampiran 7 if LOA at supplier - end
 }

@@ -13,9 +13,9 @@
 			<td width="20%;" class="sidemenutd" valign="top"><p:tabMenu
 					activeIndex="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex}"
 					styleClass="sidemenu">
-					<!-- technical item tab -->
+					<!-- Bug #34452 hide for wip, adding condition-->
 					<c:if
-						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' or evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
+						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore or evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.technical.item']}"
 							action="#{evaluationBackingBean.retriveTechnicalEvaluationStage}"
 							update="@form" />

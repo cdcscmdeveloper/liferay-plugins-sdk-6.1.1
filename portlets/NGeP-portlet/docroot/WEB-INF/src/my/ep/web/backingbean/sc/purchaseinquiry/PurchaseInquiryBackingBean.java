@@ -1019,21 +1019,27 @@ public class PurchaseInquiryBackingBean extends
 		validatePk7(procurementType);
 	}
 	
+	/**
+	 * Validate type of procurement and display threshold message
+	 * 
+	 * @param procurementType
+	 *            the type of procurement
+	 */
 	public void validatePk7(String procurementType) {
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
 			// MaxProcurementAmt
-			//Temp(#34274 - Start)
-//			BigDecimal maxProcurementAmt = getPRThresholdAmount();
-//			DecimalFormat amountDF = new DecimalFormat(
-//					new CommonUtils().getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-			
+			// Temp(#34274 - Start)
+			// BigDecimal maxProcurementAmt = getPRThresholdAmount();
+			// DecimalFormat amountDF = new DecimalFormat(
+			// new
+			// CommonUtils().getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-							MessageConst.INFO_760440, null,
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			//Temp(#34274 - End)
-
+							MessageConst.INFO_760440, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+			// Temp(#34274 - End)
 		}
 	}
 

@@ -2178,7 +2178,17 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 			reqDTO.setCompliance(null);
+			
+			evaluationSO.preInitializeChecklist(reqDTO); //34496 4serangkai
+			
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
+			
+			// #34452 related to #25138 -start
+			if (this.getManagedBean().getScQt() != null) {
+				this.getManagedBean().setWipStatusMax(evaluationSO.checkWipScoreSettingMax(reqDTO));
+			}
+			// #34452 related to #25138 -end
+			
 			List<ScQtCheckList> localCheckList = new ArrayList<ScQtCheckList>();
 			this.getManagedBean().setCheckQualifiedSuppliers(
 					resDTO.isCheckQualifiedSuppliers());
@@ -12699,9 +12709,15 @@ private void retriveCommitteeRemarksList(){
 
 				// 32426-start
 				// #34497 related to #32453 fixing(#25138,#21695) - start
+				//34523 - start
+				if (reqDTO.getProposalChecklistSearchBean() == null) {
+					reqDTO.setProposalChecklistSearchBean(new SearchBean<ScQtProposalChecklist>());
+				}
+				reqDTO.getProposalChecklistSearchBean().setNavigatable(false);
+				//34523 - end
 				ISearchResultBean<ScQtProposalChecklist> resultBean = evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO).getComplianceResultBean();
 			
-				if (scoringReq != null && !scoringReq && CollectionUtils.isNotEmpty(resultBean.getResultList())) {
+				if (CollectionUtils.isNotEmpty(resultBean.getResultList())) {// 34523 4serangkai
 					List<Long> proposalChecklistIds = new ArrayList<>();
 
 					if (getManagedBean().getTabItemPackageIndex() == 2
@@ -12718,37 +12734,39 @@ private void retriveCommitteeRemarksList(){
 								.getDataFilterBeans()
 								.add(new SearchFilterBean(QTSearchBeanConst.SEARCH_QTPROPOSALCHECKLIST_ID,
 										SearchOperator.OPERATOR_NOT_IN.value(), proposalChecklistIds));
-					}
-				} else {// 32453-Technical Other package start
-					if (getManagedBean().getTabTechnicalIndex() == 2
-							&& SourcingConstants.COMPLAINCE_STAGE.equals(evalStage)
-							&& getManagedBean().getScQt().isPartial()) {
-						ISearchBean<Object[]> packagesearchBean = new SearchBean<Object[]>();
-						
-						EvaluationReqDTO reqDTOP = new EvaluationReqDTO();
-						reqDTOP.setQtId(getManagedBean().getScQt().getQtId());
-						reqDTOP.setEvalStage(getEvaluationStageForTechnicalChecklist());
-						reqDTOP.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
-						reqDTOP.setPmCode(QTConstants.TEMPLETE_SPEC_CODE);
-						reqDTOP.setObjectSearchBean(packagesearchBean);
-						reqDTOP.setZonal(getManagedBean().getScQt().isZonal());
-
-						ISearchResultBean<Object[]> pagingModelDataPackage = evaluationSO
-								.retrieveComplianceDtlsByCheckListPackage(reqDTOP).getScoreObjResultBean();
-						List<Long> supplierNos = new ArrayList<>();
-					
-						for (Object[] qualified : pagingModelDataPackage.getResultList()) {
-							Long supplierNo = ((BigDecimal) qualified[2]).longValue();
-							supplierNos.add(supplierNo);
-						}
-						
-						reqDTO.getProposalChecklistSearchBean()
-								.getDataFilterBeans()
-								.add(new SearchFilterBean(QTSearchBeanConst.SEARCH_SCQTPROPOSAL_SUPPLIERNO,
-										SearchOperator.OPERATOR_IN.value(), supplierNos));
-					}
+						//#34582 move code position 4serangkai -start
+					}else{//32453-Technical Other package start
+						if (getManagedBean().getTabTechnicalIndex() == 2
+								&& SourcingConstants.COMPLAINCE_STAGE.equals(evalStage)
+								&& getManagedBean().getScQt().isPartial()) {
+							ISearchBean<Object[]> packagesearchBean = new SearchBean<Object[]>();
+							
+							packagesearchBean.setNavigatable(false);//34523
+							EvaluationReqDTO reqDTOP = new EvaluationReqDTO();
+							reqDTOP.setQtId(getManagedBean().getScQt().getQtId());
+							reqDTOP.setEvalStage(getEvaluationStageForTechnicalChecklist());
+							reqDTOP.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
+							reqDTOP.setPmCode(QTConstants.TEMPLETE_SPEC_CODE);
+							reqDTOP.setObjectSearchBean(packagesearchBean);
+							reqDTOP.setZonal(getManagedBean().getScQt().isZonal());
+							
+							ISearchResultBean<Object[]> pagingModelDataPackage = evaluationSO
+									.retrieveComplianceDtlsByCheckListPackage(reqDTOP).getScoreObjResultBean();
+							List<Long> supplierNos = new ArrayList<>();
+							
+							for (Object[] qualified : pagingModelDataPackage.getResultList()) {
+								Long supplierNo = ((BigDecimal) qualified[2]).longValue();
+								supplierNos.add(supplierNo);
+							}
+							
+							reqDTO.getProposalChecklistSearchBean()
+									.getDataFilterBeans()
+									.add(new SearchFilterBean(QTSearchBeanConst.SEARCH_SCQTPROPOSAL_SUPPLIERNO,
+											SearchOperator.OPERATOR_IN.value(), supplierNos));
+						}	
+					}//#34582 move code position 4serangkai -end
 				}
-				
+				reqDTO.getProposalChecklistSearchBean().setNavigatable(true);//34523
 				resultBean = evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO).getComplianceResultBean();
 
 				return resultBean;
