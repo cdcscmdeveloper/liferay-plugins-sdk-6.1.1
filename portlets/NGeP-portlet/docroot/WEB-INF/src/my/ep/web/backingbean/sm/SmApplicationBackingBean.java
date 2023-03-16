@@ -5118,7 +5118,7 @@ public class SmApplicationBackingBean extends
 		saveOrUpdateAppl();
 		SmSideMenuIconUtil.getSideMenuVerificationIcon(getManagedBean(), 
 				getManagedBean().getCurrentPageType());
-		//31043 end
+		//#31043 end
 	}
 
 	public void assignCategoryReApprovalOnOtherDescChange(SmSupplierCategory cat) {
