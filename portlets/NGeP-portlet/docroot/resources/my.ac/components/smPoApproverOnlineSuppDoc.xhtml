@@ -114,8 +114,6 @@
 						itemValue="1" />
 					<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.document.invalid']}"
 						itemValue="0" />
-					<p:ajax event="change" partialSubmit="true" process="@this"
-							update=":form" listener="#{backingBean.assignDocVerified}"></p:ajax>
 				</p:selectOneRadio>
 				<p:message id="onlnPoMsg" for="onlnPo" showSummary="true"
 					showDetail="false" display="icon" />
@@ -129,8 +127,6 @@
 						itemValue="1" />
 					<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.document.invalid']}"
 						itemValue="0" />
-					<p:ajax event="change" partialSubmit="true" process="@this"
-							update=":form" listener="#{backingBean.assignDocVerified}"></p:ajax>
 				</p:selectOneRadio>
 				<p:message id="onlnAppMsg" for="onlnApp" showSummary="true"
 					showDetail="false" display="icon" />

@@ -5114,11 +5114,6 @@ public class SmApplicationBackingBean extends
 					+ category.getApprvrDecFlg());
 		}
 		category.setApprovedDate(new Date());
-		//#31043 start
-		saveOrUpdateAppl();
-		SmSideMenuIconUtil.getSideMenuVerificationIcon(getManagedBean(), 
-				getManagedBean().getCurrentPageType());
-		//#31043 end
 	}
 
 	public void assignCategoryReApprovalOnOtherDescChange(SmSupplierCategory cat) {
@@ -5158,11 +5153,6 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignDocVerified(AjaxBehaviorEvent e) {
 		log.info(" *******Docs verified******88");
-		//#31043 start
-		saveOrUpdateAppl();
-		SmSideMenuIconUtil.getSideMenuVerificationIcon(getManagedBean(), 
-				getManagedBean().getCurrentPageType());
-		//31043 end
 	}
 
 	/**
@@ -6407,7 +6397,6 @@ public class SmApplicationBackingBean extends
 				}//#31043 end
 			}
 		}
-		saveOrUpdateAppl();
 		//#31043 end
 	}
 
