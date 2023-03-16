@@ -346,6 +346,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 					//start #29956
 					if(!this.getManagedBean().getPersonnelsRole().isEmpty()){
 						String epRole = getEpRoleDowngradePopupByPersonnel(this.getManagedBean().getPersonnelsRole());
+						this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
+								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[]{epRole}));
+						
 						this.getManagedBean().setTermAndConditionCheckOwner(
 								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[]{epRole}));
 						this.getManagedBean().setTermAndConditionCheckOwnerA(
