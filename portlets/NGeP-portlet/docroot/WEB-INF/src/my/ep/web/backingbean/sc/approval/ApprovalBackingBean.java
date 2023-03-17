@@ -3495,16 +3495,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		 * @param epvType
 		 * @return
 		 */
-		public String assignValueForEpvAttachment(String epvType) {
-			
-			if (epvType.equals(ParameterConst.EPV_TYPE_REQUEST_1)) {
-				return ParameterConst.EPV_TYPE_REQUEST_1;
-			} else if (epvType.equals(ParameterConst.EPV_TYPE_REQUEST_2)) {
-				return ParameterConst.EPV_TYPE_REQUEST_2;
-			} else if (epvType.equals(ParameterConst.EPV_TYPE_REQUEST_3)) {
-				return ParameterConst.EPV_TYPE_REQUEST_3;
-			}
-			
+		public String assignValueForEpvAttachment(String epvType) {			
 			return epvType;
 		}
 		
