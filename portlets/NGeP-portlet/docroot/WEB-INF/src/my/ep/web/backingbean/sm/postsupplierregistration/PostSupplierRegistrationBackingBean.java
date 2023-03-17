@@ -235,11 +235,15 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							SmWorkflowStatus wfStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
 							if(wfStatus != null){
 								PmStatus wfStat = wfStatus.getPmStatus();
-								if(wfStat != null && 
+								//32627 START
+								if(wfStat != null &&
 									(wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION || 
 									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION ||
-									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS)){
-									
+									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS ||
+									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_SDO_INQUIRY ||
+									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_PO_INQUIRY ||
+									wfStat.getStatusId() == SupplierManagementConst.PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT)){
+								//32627 END	
 									log.info("*******Resubmit********");
 									//path = RESUBMIT_APPLICATION + wfStatus.getDocId();
 									getManagedBean().setFlowStatus(3);
@@ -1246,6 +1250,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION);
 		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION);
 		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS);
+		//32627 START
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_PO_INQUIRY);
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_SDO_INQUIRY);
+		//32627 END
 		reqDTO.setSupplierId(supplierId);
 		
 		SmWorkFlowStatusResDTO resDTO = workFlowStatusSO.
