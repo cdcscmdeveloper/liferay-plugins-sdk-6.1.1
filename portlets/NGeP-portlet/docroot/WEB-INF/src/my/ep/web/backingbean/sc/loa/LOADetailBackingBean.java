@@ -2812,6 +2812,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				context.put("agency", ptjName);
 				context.put("qtNo", qtNo);
 
+				//#32648 populate lampiran 7 if LOA at supplier - start 
+				int isLoa = 0;
+				if (null != pmUser) {
+					isLoa = 1;
+				}
+
+				context.put("isSupplierLoa", isLoa);
+				//#32648 populate lampiran 7 if LOA at supplier - end
 				String loaNo = "&#60;LOA No.&#62;";
 				if(scLoa.getLoaNo() != null){
 					loaNo = scLoa.getLoaNo();
@@ -3400,8 +3408,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		try {
 			PmParameter contractType = getManagedBean().getScLoa().getContractType();
    
-			if (this.getManagedBean().getFlowamt()==null && null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType()) && ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType.getParameterCode())) {
-				throw new EpException(MessageConst.ERROR_760485);				
+			if (this.getManagedBean().getFlowamt() == null && null != contractType
+					&& ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType())
+					&& ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType.getParameterCode())
+					// 29826, #34569 -start-
+					// 27502 adding condition coz error when save at supplier loa acceptance -start-
+					&& !this.getManagedBean().getCurrentStatusId()
+							.equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)
+			// 27502 adding condition coz error when save at supplier loa acceptance -end-
+			// 29826, #34569 -end-
+			) {
+				throw new EpException(MessageConst.ERROR_760485);
 			} else {
 				String outcome = BpmOutcomeConst.BPM_SAVE;
 				ScLoa scLoa = this.getManagedBean().getScLoa();
@@ -10098,4 +10115,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	//#25025 - end
 
+	// #32648 populate lampiran 7 if LOA at supplier - start
+	public boolean isDpAuditOrQtAuditOrQtMaint() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+					|| SourcingConstants.PORTLET_NAME_DP_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+						|| SourcingConstants.PORTLET_NAME_DP_LOA_LIST
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+						|| QTConstants.PORTLET_NAME_QT_LIST
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	// #32648 populate lampiran 7 if LOA at supplier - end
 }
