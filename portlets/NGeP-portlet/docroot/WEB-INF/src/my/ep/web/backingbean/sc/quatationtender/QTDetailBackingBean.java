@@ -7192,12 +7192,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		if (priviousIndex != activeIndex) {
 			if (!isReadOnly) {
-				//9019 - Start (Harun) #Note-398 include in this note fixing while unit test
-				//       This changes is for #Note-360
-				detailSO.validateQTGeneralInformation(reqDTO);
-				//9019 - End (Harun)
+				
 				switch (priviousIndex) {
 				case 0:
+					//9019 - Start (Harun) #Note-398 include in this note fixing while unit test
+					//       This changes is for #Note-360
+					//       #Note-433 Relocate code for fix 'File Reference No is mandatory. (ERR-760455)' displayed.
+					detailSO.validateQTGeneralInformation(reqDTO);
+					//9019 - End (Harun)
 					//9019 - Start (Harun) #Note-360 Remove checking while not submit and allow to proceed 
 					//       when click sidemenu
 					if (isSubmit) {
@@ -13043,4 +13045,85 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 	}
 	// #28784 note-#634 - End
+	
+	// #21692 add Approval detail at EPV QT Maint - Start
+	/**
+	 * 
+	 * get new page for EPV approval details (PTJ details, EPV Type of Request,
+	 * Remarks)
+	 * 
+	 * @param approvalReq
+	 * @return String
+	 */
+	public String getEpvApprovalDtl(ScQtApprovalRequest approvalReq) {
+		this.getManagedBean().setScQtApprovalRequest(approvalReq);
+		return QTConstants.MAINT_EPV_APPROVAL_DETAIL;
+	}
+
+	/**
+	 * 
+	 * check approval type to be EPV
+	 * 
+	 * @param approvalType
+	 * @return boolean
+	 */
+	public boolean isApprovalTypeEpv(PmParameter approvalType) {
+		return approvalType == null ? false : approvalType.getParameterCode().equals(
+				ParameterConst.DOCTYPE_EXTENSION_PROPOSAL_VALIDITY);
+	}
+
+	/**
+	 * 
+	 * Back action for new EPV approval details page
+	 * 
+	 * @return String
+	 */
+	public String epvBackAction() {
+		return QTConstants.MAINTANANCE_PAGE_FULL;
+	}
+	
+	/**
+	 * Check if Ministry of Finance decision date render
+	 * 
+	 * @param validityDaysExpiredQt
+	 * @return
+	 */
+	public boolean handleChmnFinalizationDate(boolean validityDaysExpiredQt) {
+		boolean enableApprovalDateMOF = Boolean.FALSE;
+		if (!validityDaysExpiredQt) {
+			log.info("Invalid");
+			Date proposalValidityEndDate = this.getManagedBean().getScQtApprovalRequest().getProposalValidityEndDateOri();
+			Date chmnFinalizationDate = this.getManagedBean().getScQtApprovalRequest().getChmnFinalizationDate();
+			if ((null != proposalValidityEndDate) && (null != chmnFinalizationDate)) {
+
+				long days = DateUtils.getDaysDifference(proposalValidityEndDate, chmnFinalizationDate);
+				int day = (int) days;
+				if (day >= 0) {
+					return Boolean.TRUE;
+				}
+			}
+		}
+
+		return enableApprovalDateMOF;
+	}
+	
+	/**
+	 * Specific for History usage only since it always shows due date
+	 * 
+	 * @param approverActionDate
+	 * @param resPeriod
+	 * @return
+	 */
+	public Timestamp getHistoryExtensionResponseDueDate(Date approverActionDate, int resPeriod) {
+		Date date = null;
+		if (null != approverActionDate) {
+			date = DateUtils.addDays(approverActionDate, resPeriod);
+		}
+		Timestamp ts = null;
+		if (date != null) {
+			ts = new Timestamp(date.getTime());
+		}
+		return ts;
+	}
+	// #21692 add Approval detail at EPV QT Maint - End
 }
