@@ -1828,8 +1828,15 @@ public class QTCloneBackingbean extends
 					ScQtBsv qtBsv = resDTO.getScQtBsv();
 					BriefingZoneBean briefingZoneBean=null;
 					if(qt.isBsvRequired()){
-						if(qt.getScQtBriefings()!=null && !qt.getScQtBriefings().isEmpty()){
-							ScQtBsv ori=qt.getScQtBriefings().get(0);
+						BriefingReqDTO currreqDTO = new BriefingReqDTO();//33954&25635-start
+						currreqDTO.setScQt(qt);
+						currreqDTO.setLanguageCode(languageCode);
+						currreqDTO.setMaintanceFlow(true);
+						BriefingResDTO CurrresDTO = qTBriefingSO
+								.retrieveBriefingSiteVisitDtl(currreqDTO);	
+						 ScQtBsv CurrqtBsv = CurrresDTO.getScQtBsv();	
+						if(!CurrqtBsv.isBrandNew()&& null!=CurrqtBsv.getQtBsvId()){						
+							ScQtBsv ori=CurrqtBsv;//33954&25635-end
 							briefingZoneBean=updateBrief(ori,qtBsv);
 						}else{//25635-start
 							
@@ -2168,13 +2175,23 @@ public class QTCloneBackingbean extends
 				newApproval.setScQtApprovalDtls(approverRequest);
 				}
 			}//25635&31484-start
+			List<ScQtApprovalRemark> existedRemark=new ArrayList<>();//34466&25635-start
+			if(!newApproval.isBrandNew() && CollectionUtils.isNotEmpty(newApproval
+							.getScQtApprovalRemarks())){
+				for(ScQtApprovalRemark committeeApproval:newApproval
+							.getScQtApprovalRemarks()){
+					if(!committeeApproval.isBrandNew()){		
+						existedRemark.add(committeeApproval);
+					}
+				}
+				
+			}//34466&25635-end
 			newApproval
 			.setScQtApprovalRemarks(initializeRemarks(
 					newApproval, scQt
 							.getCurrentWorkFlowStatus(),
-							newApproval
-							.getScQtApprovalRemarks(),
-					ScQtApprovalRemark.class));//34342&25635
+							existedRemark,
+							ScQtApprovalRemark.class));//34342&25635&34466
 			List<TabBean> tabBeans = new ArrayList<TabBean>();
 			ParameterHelper parameterHelper = ParameterHelper.getInstance();
 			String approvalCategoryCode = newApproval
@@ -3219,11 +3236,18 @@ public class QTCloneBackingbean extends
 					.getCategories();
 			List<ScQtSupplier> restrictResults=resDTO.getRestrictedSuppliers();
 			
-			
+			List<ScQtCategory> currentExistingCategory=null;//34466&25635-start
+			if(!this.getManagedBean().getQt().isBrandNew()){
+			QuationTenderReqDTO currentReqDTO = new QuationTenderReqDTO();
+			currentReqDTO.setQtdetail(this.getManagedBean().getQt());
+			QuationTenderResDTO currentresDTO =QtDetailsSO.retriveQTSuppQulCriDetails(currentReqDTO);
+			currentExistingCategory = currentresDTO
+					.getCategories();
+			}//34466&25635-end
 			//to Delete
 			List<ScQtCategory> tobeRemoveCategoryCodes=new ArrayList<ScQtCategory>();
-			if(scQt.getScQtCategorys()!=null && !scQt.getScQtCategorys().isEmpty()){
-				for(ScQtCategory toDel:scQt.getScQtCategorys()){
+			if(CollectionUtils.isNotEmpty(currentExistingCategory)){//34466&25635-start
+				for(ScQtCategory toDel:currentExistingCategory){//34466&25635-end
 					toDel.setDeleted(true);
 					tobeRemoveCategoryCodes.add(toDel);
 				}
