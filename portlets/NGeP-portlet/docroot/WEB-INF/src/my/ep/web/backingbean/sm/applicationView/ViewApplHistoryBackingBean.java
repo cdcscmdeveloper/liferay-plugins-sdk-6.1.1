@@ -294,6 +294,10 @@ public class ViewApplHistoryBackingBean extends
 		// #14832 - To cater if resubmit link already expired and supplier still
 		// in progress (Supplier Temp), so will call alert popup that will
 		// redirect to clone new application and start fresh
+		//32627 START
+		List<String> rejectedStatus = Arrays
+				.asList(SupplierManagementConst.REJECTED_STATUSES);
+		//32627 END
 		if (getManagedBean().getSmAppl().getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
 			if (SmApplicationUtil
 					.isRejectedApplValidForResubmission(getManagedBean()
@@ -329,8 +333,29 @@ public class ViewApplHistoryBackingBean extends
 				SmCommonUtil.redirectToExternalUrl(getManagedBean()
 						.getResubmitUrl());
 			} else {
-				throw new EpException(SmCommonUtil.getMessage(
-						"lbl.sm.resubmitExpired", null));
+				//32627 START
+				SmAppl currAppl = this.getManagedBean().getSmAppl();
+				Boolean resubmit = true;
+				if(rejectedStatus.contains(currAppl.getPmStatus().getStatusId().toString())){
+					List<SmAppl> applList = this.getManagedBean().getSmSupplier().getSmAppls();
+					for(SmAppl appl : applList){
+						if(appl.getPmStatus() != null){ //32627
+							if(currAppl.getCreatedDate().before(appl.getCreatedDate()) &&
+									currAppl.getApplType().equals(appl.getApplType()) && 
+									appl.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED)){
+								resubmit = false;
+							}
+						}
+					}
+				}
+				if(!resubmit){
+					throw new EpException(SmCommonUtil.getMessage(
+							"lbl.sm.approvedApplicationCantProceed", null));
+				}else{
+					throw new EpException(SmCommonUtil.getMessage(
+							"lbl.sm.resubmitExpired", null));
+				}
+				//32627 END
 			}
 		}
 	}
@@ -1343,7 +1368,21 @@ public class ViewApplHistoryBackingBean extends
 	public Boolean setResubmitButton(SmAppl smAppl){
 		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
 		SmWorkFlowStatusReqDTO smWorkFlowStatusReqDTO = new SmWorkFlowStatusReqDTO();
+		//32627 - START
+		//retrieve by latest reject appl id
+		MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+		mofReqDTO.setSupplierId(smAppl.getSmSupplier().getSupplierId());
+		mofReqDTO.setSmAppl(smAppl);
+		SmAppl latestRejectedAppl = SmServiceLookup
+				.getMofRegistrationSO()
+				.retrieveLatestRejectedApplicationBySupplierId(mofReqDTO)
+				.getSmAppl();
+		if(latestRejectedAppl != null &&
+				smAppl.getApplId().equals(latestRejectedAppl.getApplId())){
 		smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
+		}
+		List<String> rejectedStatus = Arrays
+				.asList(SupplierManagementConst.REJECTED_STATUSES);
 		
 		SmWorkFlowStatusResDTO smWorkFlowStatusResDTO = workFlowStatusSO.retrieveCurrentWorkFlowStatusByDocId(smWorkFlowStatusReqDTO);
 		Boolean button = false;
@@ -1364,15 +1403,14 @@ public class ViewApplHistoryBackingBean extends
 				}else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED)){
 					button = false;
 				}//#32002 - start
-				else if((smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION)
-						|| smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION))
+				else if(rejectedStatus.contains(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().toString())
 						 && checkStatusMofNoBySupplierId(smAppl)== false){
 					button = false;
 				}//#32002 - end
-				
 			}
 		}
 		return button;
+		//32627 - END
 	}
 	//#31248 - END
 	
@@ -1488,7 +1526,9 @@ public class ViewApplHistoryBackingBean extends
 		
 		SmSupplier supplier = smAppl.getSmSupplier();
 		if (supplier.getSupplierId() != null
-				&& smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_RENEW_MOF)) {
+				&& (smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_RENEW_MOF)
+				|| smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_UPDATE_MOF) //32627 START
+				|| smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_ADD_CATEGORY))) { //32627 END
 			SmMofAccount resultList = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(
 					supplier.getSupplierId());
 			if (resultList != null) {
