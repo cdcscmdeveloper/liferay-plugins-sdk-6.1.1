@@ -12,21 +12,30 @@
 		}
 		
 	</style>
-	<p:dialog id="dlImageUpload" header="#{lbl['lbl.pm.profiles.userdetails.upload.image']}" 
-		widgetVar="dlImageUpload" dynamic="true" width="700px" height="200">
-		<p:outputPanel id="opImageUpload">
+	<p:dialog id="dlImageUpload" widgetVar="dlImageUpload"
+		modal="true" dynamic="true" resizable="false" width="700px"
+		height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.pm.profiles.userdetails.upload.image']}" 
+		onShow="singleUploadListener(uploadWV);">
+		
+			<p:ajax event="close" update=":form:dlImageUpload"/>
 			<p:fileUpload id="fuPortrait" update=":form:giUserImage"
+						widgetVar="uploadWV"
 					 	fileUploadListener="#{profileManagementBackingBean.handlePortraitUpload}" mode="advance" 
 	   					sizeLimit="200000" allowTypes="/(\.|\/)(png|jpe?g)$/" multiple="false"
 	   					invalidFileMessage="#{lbl['lbl.pm.profiles.authorisation.invalid.pictype']}" 
 	   					invalidSizeMessage="#{lbl['lbl.pm.profiles.authorisation.invalid.filesize']}"
-	   					fileLimit="1" dragDropSupport="false" 
-	   					uploadLabel="#{lbl['lbl.btn.upload.all']}" 
-		   				label="#{lbl['lbl.btn.choose']}" 
-		   				cancelLabel="#{lbl['lbl.btn.remove.all']}" 
-		   				oncomplete="dlImageUpload.hide();">
+	   					fileLimit="1" dragDropSupport="false"  
+		   				label="#{lbl['lbl.btn.choose']}"
+   						>
 			</p:fileUpload>
-	
-		</p:outputPanel>
+	 
+			<f:facet name="footer">
+			
+			<div class="ppRightBtn"> 
+			
+			    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlImageUpload.hide(); " />
+	   		</div>
+	   		</f:facet>
 	</p:dialog>
 </ui:composition>
