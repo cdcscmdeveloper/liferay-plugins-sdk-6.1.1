@@ -11789,7 +11789,9 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					map.put("uomName", question.getClUom().getUomName());
 					map.put("spesifikasi", whiteSpace);
 					if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")){
-						map.put("clPriceTypeCode",getParameterDesc(question.getClPriceTypeCode()));
+						//#26130 - start
+						map.put("clPriceTypeCode",getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
+						//#26130 - end
 					}
 				if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")){
 						map.put("clUomFrequency", (null != question.getClUomFrequency())? question.getClUomFrequency().toString(): getDefaultValue());
@@ -11852,7 +11854,9 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 							map.put("uomName", question.getClUom().getUomName());
 							map.put("spesifikasi", whiteSpace);
 							if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
-								map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode()));
+								//#26130 - start
+								map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
+								//#26130 - end
 							}
 						if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")) {
 								map.put("clUomFrequency", (null != question.getClUomFrequency()) ? question
@@ -11926,7 +11930,9 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 							map.put("uomName", question.getClUom().getUomName());
 							map.put("spesifikasi", whiteSpace);
 							if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
-								map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode()));
+								//#26130 - start
+								map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
+								//#26130 - end
 							}
 						if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")) {
 								map.put("clUomFrequency", (null != question.getClUomFrequency()) ? question
