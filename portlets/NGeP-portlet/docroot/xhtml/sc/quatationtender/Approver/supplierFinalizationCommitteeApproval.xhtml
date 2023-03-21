@@ -170,11 +170,11 @@
 								<h:panelGroup id="epvAttachmentEV1">
 									<ac:scSingleFileUploadButton id="epvAttachmentEV1Id"
 										popupWidgetVar="epvAttachmentEV1UploadDlg"
-										attachment="#{requestdetails.epvApprovalReqAttachementR1}"
+										attachment="#{requestdetails.epvApprovalReqAttachmentR1}"
 										deleteFileUploadListener="approvalBackingBean.deleteEpvUploadFile"
 										readonly="#{approvalBackingBean.managedBean.readOnly}">
 											<f:setPropertyActionListener for="actionEvent"
-												value="#{ParameterConst.getEpvTypeRequest1}"
+												value="#{approvalBackingBean.assignValueForEpvAttachment(ParameterConst.epvTypeRequest1)}"
 												target="#{approvalBackingBean.managedBean.epvAttachmentValue}" />
 									</ac:scSingleFileUploadButton>
 								</h:panelGroup>
@@ -220,11 +220,11 @@
 								<h:panelGroup id="epvAttachmentEV2">
 									<ac:scSingleFileUploadButton id="epvAttachmentEV2Id"
 										popupWidgetVar="epvAttachmentEV2UploadDlg"
-										attachment="#{requestdetails.epvApprovalReqAttachementR1}"
+										attachment="#{requestdetails.epvApprovalReqAttachmentR2}"
 										deleteFileUploadListener="approvalBackingBean.deleteEpvUploadFile"
 										readonly="#{approvalBackingBean.managedBean.readOnly}">
 											<f:setPropertyActionListener for="actionEvent"
-												value="#{ParameterConst.getEpvTypeRequest2}"
+												value="#{approvalBackingBean.assignValueForEpvAttachment(ParameterConst.epvTypeRequest2)}"
 												target="#{approvalBackingBean.managedBean.epvAttachmentValue}" />
 									</ac:scSingleFileUploadButton>
 								</h:panelGroup>
@@ -268,11 +268,11 @@
 								<h:panelGroup id="epvAttachmentEV3">
 									<ac:scSingleFileUploadButton id="epvAttachmentEV3Id"
 										popupWidgetVar="epvAttachmentEV3UploadDlg"
-										attachment="#{requestdetails.epvApprovalReqAttachementR1}"
+										attachment="#{requestdetails.epvApprovalReqAttachmentR3}"
 										deleteFileUploadListener="approvalBackingBean.deleteEpvUploadFile"
 										readonly="#{approvalBackingBean.managedBean.readOnly}">
 											<f:setPropertyActionListener for="actionEvent"
-												value="#{ParameterConst.getEpvTypeRequest3}"
+												value="#{approvalBackingBean.assignValueForEpvAttachment(ParameterConst.epvTypeRequest3)}"
 												target="#{approvalBackingBean.managedBean.epvAttachmentValue}" />
 									</ac:scSingleFileUploadButton>
 								</h:panelGroup>

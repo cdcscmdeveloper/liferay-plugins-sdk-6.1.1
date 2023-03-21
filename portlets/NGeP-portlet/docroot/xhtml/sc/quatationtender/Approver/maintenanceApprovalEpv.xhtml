@@ -186,9 +186,14 @@
 						<h:outputText value="#{lbl['lbl.sc.to.value']}" />
 					</th>
 					<th
-						style="width: 50%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+						style="width: 20%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
 						<h:outputText value="* " styleClass="mandatory" /> <h:outputText
 							value="#{lbl['lbl.sc.decision']}" />
+					</th>
+					<th
+						style="width: 30%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+						<h:outputText value="* " styleClass="mandatory" /> <h:outputText
+							value="#{lbl['lbl.fl.attach.files']}" />
 					</th>
 				</tr>
 				<c:if
@@ -229,6 +234,18 @@
 										value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest1)}" />
 								</p:selectOneMenu> <p:message id="decisiontypeidhMsg" for="decisiontypeid"
 									display="icon" /></td>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><h:panelGroup
+									id="epvAttachmentEV2">
+									<ac:scSingleFileUploadButton id="epvAttachmentEV2Id"
+										popupWidgetVar="epvAttachmentEV2UploadDlg"
+										attachment="#{qTDetailBB.managedBean.scQtApprovalRequest.epvApprovalReqAttachmentR2}"
+										deleteFileUploadListener="approvalBackingBean.deleteEpvUploadFile"
+										readonly="true">
+										<f:setPropertyActionListener for="actionEvent"
+											value="#{approvalBackingBean.assignValueForEpvAttachment(ParameterConst.epvTypeRequest2)}"
+											target="#{approvalBackingBean.managedBean.epvAttachmentValue}" />
+									</ac:scSingleFileUploadButton>
+								</h:panelGroup></td>
 						</tr>
 					</c:if>
 					<c:if
@@ -268,6 +285,18 @@
 										value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest2)}" />
 								</p:selectOneMenu> <p:message id="decisiontypeidhMsgRq2" for="decisiontypeidRq2"
 									display="icon" /></td>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><h:panelGroup
+									id="epvAttachmentEV3">
+									<ac:scSingleFileUploadButton id="epvAttachmentEV3Id"
+										popupWidgetVar="epvAttachmentEV3UploadDlg"
+										attachment="#{qTDetailBB.managedBean.scQtApprovalRequest.epvApprovalReqAttachmentR3}"
+										deleteFileUploadListener="approvalBackingBean.deleteEpvUploadFile"
+										readonly="true">
+										<f:setPropertyActionListener for="actionEvent"
+											value="#{approvalBackingBean.assignValueForEpvAttachment(ParameterConst.epvTypeRequest3)}"
+											target="#{approvalBackingBean.managedBean.epvAttachmentValue}" />
+									</ac:scSingleFileUploadButton>
+								</h:panelGroup></td>
 						</tr>
 						<c:if
 							test="#{qTDetailBB.managedBean.scQtApprovalRequest.decisionCertPBM != null and
@@ -309,6 +338,18 @@
 											value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest3)}" />
 									</p:selectOneMenu> <p:message id="decisiontypeidhMsgRq3" for="decisiontypeidRq3"
 										display="icon" /></td>
+								<td style="padding: 5px; border: 1px solid #dddddd;"><h:panelGroup
+										id="epvAttachmentEV2">
+										<ac:scSingleFileUploadButton id="epvAttachmentEV2Id"
+											popupWidgetVar="epvAttachmentEV2UploadDlg"
+											attachment="#{qTDetailBB.managedBean.scQtApprovalRequest.epvApprovalReqAttachmentR2}"
+											deleteFileUploadListener="approvalBackingBean.deleteEpvUploadFile"
+											readonly="true">
+											<f:setPropertyActionListener for="actionEvent"
+												value="#{approvalBackingBean.assignValueForEpvAttachment(ParameterConst.epvTypeRequest2)}"
+												target="#{approvalBackingBean.managedBean.epvAttachmentValue}" />
+										</ac:scSingleFileUploadButton>
+									</h:panelGroup></td>
 							</tr>
 						</c:if>
 					</c:if>
