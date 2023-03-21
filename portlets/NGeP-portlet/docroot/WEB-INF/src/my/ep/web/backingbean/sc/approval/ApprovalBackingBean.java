@@ -12,6 +12,7 @@ package my.ep.web.backingbean.sc.approval;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -101,6 +102,10 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachementR1;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachementR2;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachementR3;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtEpvSupplierResponse;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtRequestContent;
@@ -125,6 +130,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -548,6 +554,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					getManagedBean().getQt().getQtId());
 
 			setFCApproveQTChangeValues(approvalRequests);
+			setEpvAttachment(approvalRequests);//#21692 add attachments
 			docType = ParameterConst.DOCTYPE_PCB_APPROVAL; //#25692#128
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
@@ -1069,6 +1076,21 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		ScQt scQt = this.getManagedBean().getQt();
 
 		reqDTO.setQtdetail(scQt);
+		//#21692 add data for report/history usage - Start
+		List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<ScQtApprovalRequest>();
+		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
+			
+			approvalRequest.setProposalValidityEndDateOri(this.getManagedBean().getQt().getProposalValidityEndDate());
+			approvalRequest.setProposalValidityEndDateNew(getNewValidityDueDate(this.getManagedBean().getQt(), 
+					Integer.parseInt(approvalRequest.getChangedValue())));
+			approvalRequest.setMofDate(this.getManagedBean().getQt().getMofDate());
+			approvalRequest.setChmnFinalizationDate(this.getManagedBean().getQt().getChmnFinalizationDate());
+			approvalRequest.setResponsePeriod(this.getManagedBean().getQt().getResponsePeriod());
+
+			scQtApprovalRequests.add(approvalRequest);
+		}
+		//#21692 add data for report/history usage - End
+		
 		reqDTO.setApprovalRequests(this.getManagedBean().getScQtApprovalRequestList());
 		checkValidProposalPeriodExtension(reqDTO);
 		//#21692 - start
@@ -1160,6 +1182,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (!enableDateMOF) {
 				approvalRequest.setDecisionCertPBM(null);
 			}
+			
+			//#21692 add data for report/history usage - Start
+			approvalRequest.setProposalValidityEndDateOri(this.getManagedBean().getQt().getProposalValidityEndDate());
+			approvalRequest.setProposalValidityEndDateNew(getNewValidityDueDate(this.getManagedBean().getQt(), 
+					Integer.parseInt(approvalRequest.getChangedValue())));
+			approvalRequest.setMofDate(this.getManagedBean().getQt().getMofDate());
+			approvalRequest.setChmnFinalizationDate(this.getManagedBean().getQt().getChmnFinalizationDate());
+			approvalRequest.setResponsePeriod(this.getManagedBean().getQt().getResponsePeriod());
+			//#21692 add data for report/history usage - End
 
 			scQtApprovalRequests.add(approvalRequest);
 		}
@@ -3254,16 +3285,17 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		private void checkAttachedDocument(QuationTenderReqDTO reqDTO) {
 			
-			List<ScQtApprovalRequest> approvalRequests = reqDTO.getApprovalRequests();
-			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
-					if (CollectionUtils.isEmpty(getManagedBean().getAttachments())) {
-						if (null != approvalRequest.getDecisionCertPBM()
-								&& approvalRequest.getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_ACKNOWLEDGE)) {
-							throw new EpException(MessageConst.ERROR_770402);
-						} else {
-							throw new EpException(MessageConst.ERROR_770401);
-						}
-					}
+			ScQtApprovalRequest approvalRequest = reqDTO.getApprovalRequests().get(0);
+			if (getManagedBean().getQt().isApprovalPBM()) {
+				if (approvalRequest.getEpvApprovalReqAttachmentR2() == null) {
+					throw new EpException(MessageConst.ERROR_770401);
+				} else if (approvalRequest.getEpvApprovalReqAttachmentR3() == null) {
+					throw new EpException(MessageConst.ERROR_770402);
+				}
+			} else {
+				if (approvalRequest.getEpvApprovalReqAttachmentR1() == null) {
+					throw new EpException(MessageConst.ERROR_770401);
+				}
 			}
 		}
 		
@@ -3288,8 +3320,177 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			return msgCode;
 		}
-		//#21692 - end
 		
+		private Timestamp getNewValidityDueDate(ScQt scQt, int newValidityPeriod) {
+			IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocId(scQt.getQtId());
+			reqDTO.setDocType(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD);
+			
+			ScWorkFlowStatus status = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+			if (status != null) {
+
+				Date date = null;
+
+				date = DateUtils.addDays(scQt.getClosingDate(), newValidityPeriod);
+
+				Timestamp ts = null;
+				if (date != null) {
+					ts = new Timestamp(date.getTime());
+				}
+				return ts;
+			}
+			return null;
+		}
+		
+		/**
+		 * check if FC approve EPV 
+		 * 
+		 * @param apprvReq
+		 * @return
+		 */
+		public boolean isEpvRequestApproved(ScQtApprovalRequest apprvReq) {
+			return QTStatusConst.PCB_RQ1_APPROVED.longValue() == apprvReq.getDecessionType().getParameterId()
+					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == apprvReq.getDecessionType().getParameterId();
+		}
+		
+		/**
+		 * enable each Type of Request to has attachment
+		 * 
+		 * @param event
+		 * @throws FileNotFoundException
+		 * @throws IOException
+		 */
+		public void epvHandleFileUpload(FileUploadEvent event)
+				throws FileNotFoundException, IOException {
+			String typeOfRequest = this.getManagedBean().getEpvAttachmentValue();
+			ScQtApprovalRequest apprvRequest = this.getManagedBean().getScQtApprovalRequestList().get(0);
+			
+			ScQtEpvApprovalReqAttachment attachment = null;
+			List<ScQtEpvApprovalReqAttachment> attachmentList = new ArrayList<>();
+			boolean attachmentNull = true;
+			//check if epv approval request attachments empty
+			if (CollectionUtils.isNotEmpty(apprvRequest.getEpvApprovalReqAttachment())) {
+				for (ScQtEpvApprovalReqAttachment att : apprvRequest.getEpvApprovalReqAttachment()) {
+					//if sub doc type same as needed will assign as exist
+					if (att.getSubDocType().equalsIgnoreCase(typeOfRequest)) {
+						attachment = att;
+						attachmentNull = false;
+					}
+					attachmentList.add(att);
+				}
+			}
+			//if attachment current not exist, create new one
+			if (attachment == null) {
+				attachment = new ScQtEpvApprovalReqAttachment();
+				attachment.setApprovalRequest(apprvRequest);
+				attachment.setSubDocType(typeOfRequest);
+			}
+			attachment.setDocNo(getManagedBean().getQt().getQtNo());
+			uploadAttachment(event.getFile(), attachment);
+			//if no existing attachment just add new attachment, else make sure to replace existing with new one
+			if (attachmentNull) {
+				attachmentList.add(attachment);
+			} else {
+				for (ScQtEpvApprovalReqAttachment attch : attachmentList) {
+					if (attch.getSubDocType().equalsIgnoreCase(typeOfRequest)) {
+						attch = attachment;
+					}
+				}
+			}
+			apprvRequest.setEpvApprovalReqAttachment(attachmentList);
+			
+			ScQtApprovalRequest apprvReq = getQTDetailSO().saveApprovalRequest(apprvRequest);
+			
+			List<ScQtApprovalRequest> newApprovalReqList = new ArrayList<>();
+			newApprovalReqList.add(apprvReq);
+			this.getManagedBean().setScQtApprovalRequestList(newApprovalReqList);
+			for (ScQtEpvApprovalReqAttachment attach : this.getManagedBean()
+					.getScQtApprovalRequestList().get(0).getEpvApprovalReqAttachment()) {
+				if (attach.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_1)) {
+					this.getManagedBean()
+					.getScQtApprovalRequestList().get(0).setEpvApprovalReqAttachmentR1(attach);
+				} else if (attach.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_2)) {
+					this.getManagedBean()
+					.getScQtApprovalRequestList().get(0).setEpvApprovalReqAttachmentR2(attach);
+				} else if (attach.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_3)) {
+					this.getManagedBean()
+					.getScQtApprovalRequestList().get(0).setEpvApprovalReqAttachmentR3(attach);
+				}
+			}
+		}
+		
+		/**
+		 * delete EPV file update either R1, R2 or R3
+		 * 
+		 * @param delEntity
+		 */
+		public void deleteEpvUploadFile(BaseEntity delEntity) {
+			String typeOfRequest = this.getManagedBean().getEpvAttachmentValue();
+			ScQtApprovalRequest apprvRequest = this.getManagedBean().getScQtApprovalRequestList().get(0);
+			
+			ScQtEpvApprovalReqAttachment deletedAttachment = null;
+			List<ScQtEpvApprovalReqAttachment> attachmentList = apprvRequest.getEpvApprovalReqAttachment();
+			
+			for (ScQtEpvApprovalReqAttachment att : attachmentList) {
+				if (att.getSubDocType().equalsIgnoreCase(typeOfRequest)) {
+					deletedAttachment = att;
+				}
+			}
+			
+			if (deletedAttachment != null) {
+				attachmentList.remove(deletedAttachment);
+			}
+			apprvRequest.setEpvApprovalReqAttachment(attachmentList);
+			
+			ScQtApprovalRequest apprvReq = getQTDetailSO().saveApprovalRequest(apprvRequest);
+			
+			List<ScQtApprovalRequest> newApprovalReqList = new ArrayList<>();
+			newApprovalReqList.add(apprvReq);
+			this.getManagedBean().setScQtApprovalRequestList(newApprovalReqList);
+			for (ScQtEpvApprovalReqAttachment attach : this.getManagedBean()
+					.getScQtApprovalRequestList().get(0).getEpvApprovalReqAttachment()) {
+				if (attach.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_1)) {
+					this.getManagedBean()
+					.getScQtApprovalRequestList().get(0).setEpvApprovalReqAttachmentR1(attach);
+				} else if (attach.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_2)) {
+					this.getManagedBean()
+					.getScQtApprovalRequestList().get(0).setEpvApprovalReqAttachmentR2(attach);
+				} else if (attach.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_3)) {
+					this.getManagedBean()
+					.getScQtApprovalRequestList().get(0).setEpvApprovalReqAttachmentR3(attach);
+				}
+			}
+		}
+		
+		/**
+		 * cannot assign value a constant directly from html, take the value to backing bean and return string
+		 * 
+		 * @param epvType
+		 * @return
+		 */
+		public String assignValueForEpvAttachment(String epvType) {			
+			return epvType;
+		}
+		
+		//make sure if epv attachment is not empty, assign each of them to their transient
+		private void setEpvAttachment(List<ScQtApprovalRequest> apprvReqList) {
+			ScQtApprovalRequest apprvReq = apprvReqList.get(0);
+			
+			if (CollectionUtils.isNotEmpty(apprvReq.getEpvApprovalReqAttachment())) {
+				for (ScQtEpvApprovalReqAttachment att : apprvReq.getEpvApprovalReqAttachment()) {
+					if (att.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_1)) {
+						apprvReq.setEpvApprovalReqAttachmentR1(att);
+					} else if (att.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_2)) {
+						apprvReq.setEpvApprovalReqAttachmentR2(att);
+					} else if (att.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_3)) {
+						apprvReq.setEpvApprovalReqAttachmentR3(att);
+					}
+				}
+			}
+		}		
 }
 
 // ***25692
