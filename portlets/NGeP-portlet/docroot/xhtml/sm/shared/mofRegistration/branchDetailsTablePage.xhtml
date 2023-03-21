@@ -104,7 +104,11 @@
 				<p:message id="supBrnCntryMsg" for="supBrnCntry" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
-
+		<!-- #34135 START -->
+		<p:outputPanel rendered="#{backingBean.managedBean.selectedBranch.smAddress.stateId eq null}">
+			#{backingBean.onChangeCountry(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}
+		</p:outputPanel>
+		<!-- #34135 END -->
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
