@@ -4198,6 +4198,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	         }
 	     }
 		//#25726 end
+		// #25725 start
+		boolean approvalLetter = validateApprovalLetter(scLoa);
+
+		if (approvalLetter == false) {
+			return;
+		}
+		// #25725 end
         
 		this.getManagedBean().setAction(outcome);
 		 		
