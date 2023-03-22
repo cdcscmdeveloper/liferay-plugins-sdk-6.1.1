@@ -13269,7 +13269,7 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	private void printBankVerificationForm() throws Exception {
+	public void printBankVerificationForm() throws Exception {
 		SmApplicationUtil.generateBankVerificationFormPdf(getManagedBean()
 				.getSmAppl());
 		String fileName = SmCommonUtil
