@@ -23,8 +23,9 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.branch.address']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
-			<!-- #34135 START -->	
-			<td><p:inputText required="#{backingBean.managedBean.valueReqd}"
+			<td>
+			<!-- #34135 START -->
+			<p:inputText required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.branch.address']}" id="supBrnAddr"
 					maxlength="100"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address1}"
@@ -32,7 +33,7 @@
 					size="35" >
 					<p:ajax process="@this" partialSubmit="true"/>
 					</p:inputText> 
-			<!-- #34135 END -->	
+			<!-- #34135 END -->
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
 							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
@@ -108,7 +109,7 @@
 		</tr>
 		<!-- #34135 START -->
 		<p:outputPanel rendered="#{backingBean.managedBean.selectedBranch.smAddress.stateId eq null}">
-		#{backingBean.onChangeCountry(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}
+			#{backingBean.onChangeCountry(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}
 		</p:outputPanel>
 		<!-- #34135 END -->
 		<tr>
@@ -153,10 +154,8 @@
 					<td>
 				<p:outputPanel id="divisionBranchTbleDropdownPanelId">
 				<ui:fragment rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmState.adoptDivision}">
-				<!-- #34135 START -->	
 			<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-					required="#{backingBean.managedBean.valueReqd}"
-					label="#{lbl['lbl.sm.division']}"
+					label="#{lbl['lbl.sm.state']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.divisionId}"
 					id="branchDivision">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -168,9 +167,6 @@
 				</p:selectOneMenu>
 				</ui:fragment>
 				</p:outputPanel>
-				<p:message id="branchDivisionMsg" for="branchDivision" showSummary="true"
-					showDetail="false" display="icon" />
-				<!-- #34135 END -->	
 				</td>
 		</tr>
 		
