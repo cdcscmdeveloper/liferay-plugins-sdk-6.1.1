@@ -8905,9 +8905,14 @@ public class SmApplicationUtil {
 					// if dont have prev approved directly set softcert to
 					// pending request and contract to 0
 					if (prevPersonnel == null) {
-						currPersonnel
-								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-						currPersonnel.setContractSignerFlg(0);
+						//#33129 - START 
+						//maintain softcert 1 if the personnel was an admin previously
+						if(currPersonnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_ISSUED){
+							currPersonnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+							currPersonnel.setContractSignerFlg(0);
+						}
+						//#33129 - END
+					
 					}
 					// if have prev approved
 					else {
@@ -14442,9 +14447,7 @@ public class SmApplicationUtil {
 						bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES) ||
 						bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 					if(bean.isPoUser()){
-						log.info("PO decision: "+cat.getPoDecFlg());
-						log.info("PO remark: "+cat.getPoRemarks());
-						if(cat.getPoDecFlg() == 0 && cat.getPoRemarks() == null){
+						if(cat.getPoDecFlg() == 0 && (cat.getPoRemarks() == null || cat.getPoRemarks().isEmpty())){
 							throw new EpException(SmCommonUtil.getMessage(
 									"lbl.sm.required.msg",
 									new String[] { SmCommonUtil.getMessage(
@@ -14456,9 +14459,7 @@ public class SmApplicationUtil {
 											+ cat.getPmCategoryL3().getCategoryL3Code() }));
 							}
 						}else if(bean.isApproverUser()){
-							log.info("Approver decision: "+cat.getApprvrDecFlg());
-							log.info("Approver remark: "+cat.getApproverRemarks());
-							if(cat.getApprvrDecFlg() == 0 && cat.getApproverRemarks() == null){
+							if(cat.getApprvrDecFlg() == 0 && (cat.getApproverRemarks() == null || cat.getApproverRemarks().isEmpty())){
 								throw new EpException(SmCommonUtil.getMessage(
 										"lbl.sm.required.msg",
 										new String[] { SmCommonUtil.getMessage(
@@ -14479,9 +14480,7 @@ public class SmApplicationUtil {
 				for (SmSupplierCategory cat : bean.getApprovedCategoryList()) {
 					if (bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 						if(bean.isPoUser()){
-							log.info("PO decision: "+cat.getPoDecFlg());
-							log.info("PO remark: "+cat.getPoRemarks());
-							if(cat.getPoDecFlg() == 0 && cat.getPoRemarks() == null){
+							if(cat.getPoDecFlg() == 0 && (cat.getPoRemarks() == null || cat.getPoRemarks().isEmpty())){
 								throw new EpException(SmCommonUtil.getMessage(
 										"lbl.sm.required.msg",
 										new String[] { SmCommonUtil.getMessage(
@@ -14493,9 +14492,7 @@ public class SmApplicationUtil {
 												+ cat.getPmCategoryL3().getCategoryL3Code() }));
 							}
 						}else if(bean.isApproverUser()){
-							log.info("Approver decision: "+cat.getApprvrDecFlg());
-							log.info("Approver remark: "+cat.getApproverRemarks());
-							if(cat.getApprvrDecFlg() == 0 && cat.getApproverRemarks() == null){
+							if(cat.getApprvrDecFlg() == 0 && (cat.getApproverRemarks() == null || cat.getApproverRemarks().isEmpty())){
 								throw new EpException(SmCommonUtil.getMessage(
 										"lbl.sm.required.msg",
 										new String[] { SmCommonUtil.getMessage(

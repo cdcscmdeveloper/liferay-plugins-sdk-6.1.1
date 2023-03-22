@@ -1362,9 +1362,9 @@ public class EvaluationBackingBean extends
 			evaluationSo = null;
 		}
 	}
-
 	// Bug #33249@Syazani 03/08/2022 -- Start
 	/*private void updateCheckListIntoQtCheckLists(
+	private void updateCheckListIntoQtCheckLists(
 			List<ScQtCheckList> qtCheckLists, int toBeUpdateChecklistIndex,
 			ScQtCheckList toBeUpdateCheckList) {
 		this.getManagedBean().setScQtChecklist(toBeUpdateCheckList);
@@ -10839,6 +10839,7 @@ private void retriveCommitteeRemarksList(){
 //										technicalUploadNoActionCheckList);
 //							}
 							// Bug #33249@Syazani 03/08/2022 -- End
+
 						}
 					}
 					this.getManagedBean()
@@ -10933,6 +10934,7 @@ private void retriveCommitteeRemarksList(){
 //										financialUploadNoActionCheckList);
 //							}
 							// Bug #33249@Syazani 03/08/2022 -- End
+
 						}
 					}
 					this.getManagedBean()

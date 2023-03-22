@@ -2614,7 +2614,9 @@ public class SmApplicationBackingBean extends
 					.isPoUser())
 					&& currentPageType
 							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
-
+				//#31043 start
+				SmApplicationUtil.validateCategoriesBeforeSave(true,getManagedBean(), currentTab);
+				//#31043 end
 				SmApplicationUtil
 						.validateOverlapCategoryJustificationAndSuppDocs(
 								getManagedBean(), currentPageType);
@@ -4581,6 +4583,13 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void addOrUpdateBranchToSmAppl() {
+		//#34135 START - set stateid from pmstate
+		if(getManagedBean().getSelectedBranch().getSmAddress().getStateId() != null &&
+				getManagedBean().getSelectedBranch().getSmAddress().getPmState() != null &&
+				!getManagedBean().getSelectedBranch().getSmAddress().getStateId().equals(getManagedBean().getSelectedBranch().getSmAddress().getPmState().getStateId())){
+			getManagedBean().getSelectedBranch().getSmAddress().setStateId(getManagedBean().getSelectedBranch().getSmAddress().getPmState().getStateId());
+		}
+		//#34135 END
 		// validate branch GST only for New Application
 		SmApplicationUtil.validateBranchGstInformation(getManagedBean()
 				.getSelectedBranch(), getManagedBean().getSelectedBranch()
@@ -12676,9 +12685,24 @@ public class SmApplicationBackingBean extends
 				&& getManagedBean().getSmAppl().getSupplierType().equals("J")) {
 			if (SmCommonUtil.isApplPhysicalConsultant(getManagedBean()
 					.getSmAppl())) {
-				getManagedBean()
-						.setPhysicalConsulting(
-								my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);
+				//#34271 START
+				if(getManagedBean().getSmAppl().getSmSupplierCategories() != null){
+					for(SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()){
+						if(Integer.toString(cat.getRecordStatusFlg()).contains("8") 
+								&& cat.getPmCategoryL1().getCategoryL1Code().equals("34")){
+							getManagedBean().setPhysicalConsulting(
+									my.ep.constant.sm.SupplierManagementConst.NON_PHYSICAL_SERVICES_CAT_CODE);
+							break;
+						}else{
+							getManagedBean().setPhysicalConsulting(
+									my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);
+						}
+					}
+				}else{
+					getManagedBean().setPhysicalConsulting(
+							my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);
+				}
+				//#34271 END
 			} else {
 				getManagedBean()
 						.setPhysicalConsulting(

@@ -69,14 +69,18 @@
 								value="#{lbl['lbl.sc.document.title']}"></h:outputLabel></td>
 						<td colspan="3">
 							<!-- 30917, 31151 -start- -->
+							<!-- 24112022@syazani - Bug #33249 - Start -->
 							<p:inputTextarea rows="2" cols="95"
 								disabled="#{(!specificationBackingBean.isQTStatusChecklistScoringRevision() and !specificationBackingBean.isQTStatusChecklistScoring())}"
 								style="margin-bottom:5px;width:83%;" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 								onmouseout="limitTextArea(this,200);"
-								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}"> <!-- 24112022@syazani - Bug #33249 - Start -->
+								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}"> 
 								<p:ajax event="change" partialSubmit="true" process="@this"
 								listener="#{specificationBackingBean.specTitleChange}" />
-								</p:inputTextarea></td> <!-- 24112022@syazani - Bug #33249 - End -->
+							</p:inputTextarea>
+							<!-- 24112022@syazani - Bug #33249 - End -->
+							<!-- 30917, 31151 -end- -->
+						</td>
 					</tr>
 
 					<tr>

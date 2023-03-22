@@ -3900,7 +3900,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
 				
 				//Bug #33988@Syazani -- Start 27/09/2022 
-				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && !validateDuplicateSets.add(scQtFinalizationReport.getTitle().trim())) {
+				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && !validateDuplicateSets.add(scQtFinalizationReport.getTitle().toLowerCase().trim())) { //Bug #33988@Syazani -- 01/03/2023
 					throw new EpException(MessageConst.ERROR_775190, new String[] { scQtFinalizationReport.getTitle() }); //Bug #33988@Syazani - 06/12/2022
 				}
 				//Bug #33988@Syazani -- End 27/09/2022 
@@ -3981,17 +3981,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		    
 		    SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveFinalizationReport(reqDTO);
 		    
-		    if (null != resDTO && null != resDTO.getScQtFinalizationReports()
-		    		&& resDTO.getScQtFinalizationReports().size() > 0) {
-		    repLoop:	for (ScQtFinalizationReport repScQtFinalizationReport : resDTO.getScQtFinalizationReports()) {
-		    		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
-		    			if (repScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
-		    				scQtFinalizationReport.setReportContent(repScQtFinalizationReport.getReportContent());
-		    				continue repLoop;
-		    			}
-		    		}
-		    	}
-		    }
+			if (null != resDTO && null != resDTO.getScQtFinalizationReports()
+					&& resDTO.getScQtFinalizationReports().size() > 0) {
+				repLoop: for (ScQtFinalizationReport repScQtFinalizationReport : resDTO.getScQtFinalizationReports()) {
+					for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
+						// Bug #33988@Syazani -- Start 14/03/2023
+						String repParaCode = repScQtFinalizationReport.getDefinationType() != null ? repScQtFinalizationReport
+								.getDefinationType().getParameterCode() : "";
+						String scQtParaCode = scQtFinalizationReport.getDefinationType() != null ? scQtFinalizationReport
+								.getDefinationType().getParameterCode() : "";
+						if (repScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())
+								&& repParaCode.equals(scQtParaCode)) {
+							// Bug #33988@Syazani -- End 14/03/2023
+							scQtFinalizationReport.setReportContent(repScQtFinalizationReport.getReportContent());
+							continue repLoop;
+						}
+					}
+				}
+			}
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -4356,11 +4363,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				int index = 0;
 				
 				for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
-					//Bug #33988@Syazani -- Start 27/09/2022
-					if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())
-							&& (report.getDefinationType() != null && report.getDefinationType().getParameterCode()
-									.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_USER_INPUT))) {
-						//Bug #33988@Syazani -- End 27/09/2022
+					if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())) {
+						getManagedBean().getNewBriefingPaperReportList().get(index)
+								.setReportContent(scQtFinalizationReport.getReportContent());
+						reportFound = true;
 						break;
 					}
 					
