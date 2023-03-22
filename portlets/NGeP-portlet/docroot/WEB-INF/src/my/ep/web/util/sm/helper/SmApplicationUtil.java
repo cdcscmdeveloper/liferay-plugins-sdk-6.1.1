@@ -3803,9 +3803,23 @@ public class SmApplicationUtil {
 						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
 					//30766 - START
 					//29823 - start
-					if(managedBean.getCurrentStatus() != null && (managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval") ||
-							managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan")	)){
+					//#34098 - START 
+					if(managedBean.getCurrentStatus() != null 
+							&& (managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval") ||
+							    managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan"))
+							&& !managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI)
+							&& !managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_CATEGORY)){
 						catList.add(cat);
+					}else if(managedBean.getCurrentStatus() != null 
+							&& (managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval") ||
+								managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan"))
+							&& managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_CATEGORY)){
+						if(cat.getApplRefId().equals(cat.getSmAppl().getApplId())){
+							catList.add(cat);
+						}else{
+							apprvList.add(cat);
+						}
+					//#34098 - END 
 					}else{
 						apprvList.add(cat);
 					}
@@ -3832,7 +3846,7 @@ public class SmApplicationUtil {
 						//#32810 Alert message not display for cancel bumi - end 
 						//#32298 DA cancel manufacture alert warning - end - <26238>
 //					}
-					}
+				}
 				//30865, 30921  - Ends
 			}
 			if (managedBean.getActiveCategoryList() != null
