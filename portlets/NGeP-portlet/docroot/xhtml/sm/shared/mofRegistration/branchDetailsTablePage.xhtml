@@ -154,8 +154,10 @@
 					<td>
 				<p:outputPanel id="divisionBranchTbleDropdownPanelId">
 				<ui:fragment rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmState.adoptDivision}">
+			<!-- #34135 START -->	
 			<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-					label="#{lbl['lbl.sm.state']}"
+					required="#{backingBean.managedBean.valueReqd}"
+					label="#{lbl['lbl.sm.division']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.divisionId}"
 					id="branchDivision">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -167,6 +169,9 @@
 				</p:selectOneMenu>
 				</ui:fragment>
 				</p:outputPanel>
+				<p:message id="branchDivisionMsg" for="branchDivision" showSummary="true"
+					showDetail="false" display="icon" />
+			<!-- #34135 END -->		
 				</td>
 		</tr>
 		
