@@ -103,9 +103,14 @@
 					<h:outputText value="#{lbl['lbl.sc.to.value']}" />
 				</th>
 				<th
-					style="width: 50%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+					style="width: 20%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
 					<h:outputText value="* " styleClass="mandatory" /> <h:outputText
 						value="#{lbl['lbl.sc.decision']}" />
+				</th>
+				<th
+					style="width: 30%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+					<h:outputText value="* " styleClass="mandatory" /> <h:outputText
+						value="#{lbl['lbl.fl.attach.files']}" />
 				</th>
 			</tr>
 			<c:if
@@ -161,6 +166,19 @@
 										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}" />
 								</p:selectOneMenu> <p:message id="decisiontypeidhMsg" for="decisiontypeid"
 									display="icon" /></td>
+							<td style="padding: 5px; border: 1px solid #dddddd;">
+								<h:panelGroup id="epvAttachmentEV1">
+									<ac:scSingleFileUploadButton id="epvAttachmentEV1Id"
+										popupWidgetVar="epvAttachmentEV1UploadDlg"
+										attachment="#{requestdetails.epvApprovalReqAttachmentR1}"
+										deleteFileUploadListener="approvalBackingBean.deleteEpvUploadFile"
+										readonly="#{approvalBackingBean.managedBean.readOnly}">
+											<f:setPropertyActionListener for="actionEvent"
+												value="#{approvalBackingBean.assignValueForEpvAttachment(ParameterConst.epvTypeRequest1)}"
+												target="#{approvalBackingBean.managedBean.epvAttachmentValue}" />
+									</ac:scSingleFileUploadButton>
+								</h:panelGroup>
+							</td>
 						</tr>
 					</c:if>
 					<c:if
@@ -198,6 +216,19 @@
 										update="requestDetailsId"/>
 								</p:selectOneMenu> <p:message id="decisiontypeidhMsgRq2" for="decisiontypeidRq2"
 									display="icon" /></td>
+							<td style="padding: 5px; border: 1px solid #dddddd;">
+								<h:panelGroup id="epvAttachmentEV2">
+									<ac:scSingleFileUploadButton id="epvAttachmentEV2Id"
+										popupWidgetVar="epvAttachmentEV2UploadDlg"
+										attachment="#{requestdetails.epvApprovalReqAttachmentR2}"
+										deleteFileUploadListener="approvalBackingBean.deleteEpvUploadFile"
+										readonly="#{approvalBackingBean.managedBean.readOnly}">
+											<f:setPropertyActionListener for="actionEvent"
+												value="#{approvalBackingBean.assignValueForEpvAttachment(ParameterConst.epvTypeRequest2)}"
+												target="#{approvalBackingBean.managedBean.epvAttachmentValue}" />
+									</ac:scSingleFileUploadButton>
+								</h:panelGroup>
+							</td>
 						</tr>
 						<c:if test="#{requestdetails.decisionCertPBM != null and requestdetails.decisionCertPBM.parameterCode == ParameterConst.tr2Acknowledge}">
 						<tr
@@ -233,6 +264,19 @@
 										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}" />
 								</p:selectOneMenu> <p:message id="decisiontypeidhMsgRq3" for="decisiontypeidRq3"
 									display="icon" /></td>
+							<td style="padding: 5px; border: 1px solid #dddddd;">
+								<h:panelGroup id="epvAttachmentEV3">
+									<ac:scSingleFileUploadButton id="epvAttachmentEV3Id"
+										popupWidgetVar="epvAttachmentEV3UploadDlg"
+										attachment="#{requestdetails.epvApprovalReqAttachmentR3}"
+										deleteFileUploadListener="approvalBackingBean.deleteEpvUploadFile"
+										readonly="#{approvalBackingBean.managedBean.readOnly}">
+											<f:setPropertyActionListener for="actionEvent"
+												value="#{approvalBackingBean.assignValueForEpvAttachment(ParameterConst.epvTypeRequest3)}"
+												target="#{approvalBackingBean.managedBean.epvAttachmentValue}" />
+									</ac:scSingleFileUploadButton>
+								</h:panelGroup>
+							</td>
 						</tr>
 						</c:if>
 					</c:if>
