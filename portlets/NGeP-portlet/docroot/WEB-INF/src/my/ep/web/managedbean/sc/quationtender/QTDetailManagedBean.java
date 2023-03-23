@@ -1666,6 +1666,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
 	public boolean proposalValidityChangeValue; //#21692
+	private String epvAttachmentValue;//#21692 for EPV attachment usage only
 	
 	/**
 	 * Sets the panel suppliers.
@@ -11776,6 +11777,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.suppResp = suppResp;
 	}
 	//#21692 - End
+
+	public String getEpvAttachmentValue() {
+		return epvAttachmentValue;
+	}
+
+	public void setEpvAttachmentValue(String epvAttachmentValue) {
+		this.epvAttachmentValue = epvAttachmentValue;
+	}
 
 }
 
