@@ -5197,4 +5197,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			updateSupplierHqAddress(supplierDtl,supplier);
 		}
 		//29728 -end
+		
+		private void foo() {
+			// This is a dummy method to test some possible issue with merge request
+		}
 }
