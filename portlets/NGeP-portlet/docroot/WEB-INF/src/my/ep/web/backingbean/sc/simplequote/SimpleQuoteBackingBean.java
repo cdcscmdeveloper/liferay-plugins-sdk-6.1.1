@@ -2548,20 +2548,18 @@ public class SimpleQuoteBackingBean extends
 		
 		// when procurement type as pk7 selected 
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
+			// Temp(#34274 - Start)
 			// MaxProcurementAmt
-			BigDecimal maxProcurementAmt = getPRThresholdAmount();
-			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+			// BigDecimal maxProcurementAmt = getPRThresholdAmount();
+			// DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
+			// .getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-							.getMessage(
-									MessageConst.INFO_760440,
-									new String[] {amountDF.format(maxProcurementAmt)},
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							MessageConst.INFO_760440, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+			// Temp(#34274 - End)
 		}
 		// #28536 - start
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
@@ -5672,23 +5670,23 @@ public class SimpleQuoteBackingBean extends
 			// 30552 - end
 			//#Newly add
 			///#21695 farid start
+			//Bug_34259 - Start
 			TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
 			.getTplSpecMaster();
-			specMaster.setSpecCreatedBySQ(true);			
+			specMaster.setSpecCreatedBySQ(true);
+			//Bug_34259 - End
 			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(specMaster
 					, specAnswerList, locale);
 			///#21695 farid end
 			//#Newly add
-			// #34147 start
-						if (getManagedBean().getScQuote() != null) {
-							if (getManagedBean().getScQuote().getMultipleQuote() == false) {
-								if (getManagedBean().getScQuote().isZonal() == true) {
-									ScQuote scQuote = getManagedBean().getScQuote();
-									getTemplateSpecSO().validateSubmitSimpleQuoteResponse(specAnswerList, scQuote);
-								}
+			// #34147 #34395 start
+						if (getManagedBean().getScQuote() != null) {				
+							if (getManagedBean().getScQuote().isZonal() == true) {
+								ScQuote scQuote = getManagedBean().getScQuote();
+								getTemplateSpecSO().validateSubmitSimpleQuoteResponse(specAnswerList, scQuote);
 							}
 						}
-						// #34147 end
+						// #34147 #34395 end
 		}
 		
 		if (!isServiceContainPrice && !isProdContainPrice) {

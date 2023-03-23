@@ -74,7 +74,6 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -105,6 +104,11 @@ import org.primefaces.context.RequestContext;
 @ManagedBean(name = "supplierTaskReassignmentBackingBean")
 @ViewScoped
 public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmentManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = Logger
 			.getLogger(TaskReassignmentBackingBean.class);
 
@@ -1667,8 +1671,6 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
     	log.info("checkAllUserTasks - End");
 	}
 	
-	
-	
 	/**
 	 * Validate doc type and doc status 
 	 * 
@@ -1776,8 +1778,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		
 	}
 	
-	//#29822 - start
-	
+	//#29822 - start	
 	public void removeReassignAllGroupTasks() {
 		
 		String loginId = null;
@@ -1866,8 +1867,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 
 		}
 		//#29822 - end - reendorse
-	}
-	
+	}	
 	//#29822 - end
 	
 	public void resetCheckAllTasks() {
@@ -2041,9 +2041,9 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			log.info("==============dialog is completed closed==============");
 
 		}//#29822 - end - reendorse
-		}
-	
+	}	
 	//#29822 - end
+	
 	/**
 	 * To remove other task
 	 * 
@@ -2114,6 +2114,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
 		}
 	}
+	
 	/**
 	 * To Show confirmation dialog
 	 * 
@@ -2122,6 +2123,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		log.info("Displaying " + dialog);
 		RequestContext.getCurrentInstance().execute(dialog+".show()");	
 	}
+	
 	/**
 	 * To Check all group task
 	 * 
@@ -2172,6 +2174,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
     		this.getManagedBean().setEnableDeleteGroupTasksButton(false);
     	}
 	}
+	
 	/**
 	 * To check all other task
 	 * 
@@ -2235,14 +2238,14 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		
 		if(hasActivePendingList != null){
 			for (PmPendingRemoveTask hasActivePending : hasActivePendingList) {
-		if (hasActivePending != null) {
-			if (hasActivePending.getParamTask().equalsIgnoreCase("GROUP")) {
-				this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
-				this.getManagedBean().setShowRemoveProcessMessageGroup(true);
-			} else {
-				this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
-				this.getManagedBean().setShowRemoveProcessMessageOther(true);
-			}
+				if (hasActivePending != null) {
+					if (hasActivePending.getParamTask().equalsIgnoreCase("GROUP")) {
+						this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+						this.getManagedBean().setShowRemoveProcessMessageGroup(true);
+					} else {
+						this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+						this.getManagedBean().setShowRemoveProcessMessageOther(true);
+					}
 				}
 			}
 		}
@@ -2280,60 +2283,60 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	//#29822 - end
 	
 	//#29822-start - checking if record not found to throw ERROR_770208
-		public void searchTask() {
-			log.info("search for alert if record not found");
-			IBpmSO bpmSO = null;
-			BpmRequestDTO reqDTO = null;
-			BpmResponseDTO responseDTO = null;
-			String loginId = null;
-			List<Integer> statusIds = null;
-			TaskAssignmentSearchBean taskSearchBean = null;
+	public void searchTask() {
+		log.info("search for alert if record not found");
+		IBpmSO bpmSO = null;
+		BpmRequestDTO reqDTO = null;
+		BpmResponseDTO responseDTO = null;
+		String loginId = null;
+		List<Integer> statusIds = null;
+		TaskAssignmentSearchBean taskSearchBean = null;
 
-			try {
-				taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
-				loginId = taskSearchBean.getUser().getPmUser() != null ? taskSearchBean.getUser().getPmUser().getLoginId() : null;
-				if (loginId != null && loginId.length() > 0) {
-					statusIds = retrieveAvailableStatusId();
-					if (statusIds != null && !statusIds.isEmpty()) {
-						bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-						reqDTO = new BpmRequestDTO();
-						Object ctxToken = bpmSO.authenticate(loginId);
+		try {
+			taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
+			loginId = taskSearchBean.getUser().getPmUser() != null ? taskSearchBean.getUser().getPmUser().getLoginId() : null;
+			if (loginId != null && loginId.length() > 0) {
+				statusIds = retrieveAvailableStatusId();
+				if (statusIds != null && !statusIds.isEmpty()) {
+					bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+					reqDTO = new BpmRequestDTO();
+					Object ctxToken = bpmSO.authenticate(loginId);
 
-						reqDTO.setLimit(PagingConst.ROWS_PER_PAGE); 
-						reqDTO.setStatusList(statusIds);
-						reqDTO.setUserId(loginId);
-						reqDTO.setCtxToken(ctxToken);
-						List<String> docNumberList = new ArrayList<String>();
-						if (StringUtils.isNotBlank(getManagedBean().getTaskAssignmentSearchBean().getDocNo())) {
-							docNumberList.add(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
-							reqDTO.setDocNumberList(docNumberList);
-						}
+					reqDTO.setLimit(PagingConst.ROWS_PER_PAGE); 
+					reqDTO.setStatusList(statusIds);
+					reqDTO.setUserId(loginId);
+					reqDTO.setCtxToken(ctxToken);
+					List<String> docNumberList = new ArrayList<String>();
+					if (StringUtils.isNotBlank(getManagedBean().getTaskAssignmentSearchBean().getDocNo())) {
+						docNumberList.add(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+						reqDTO.setDocNumberList(docNumberList);
+					}
 
-						if (getManagedBean().getTaskAssignmentSearchBean().getDocType() != null) {
-							reqDTO.setDocType(getManagedBean().getTaskAssignmentSearchBean().getDocType());
-						}
-						//#29822-start - parsing value to bpm
-						reqDTO.setState(BpmConstants.STATE_ASSIGNED);
-						reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
-						responseDTO = bpmSO.getReassignedItems(reqDTO);
-						//#29822-end - parsing value to bpm
-						
-						if (responseDTO.getWorklistVO() != null) {
-							log.info("BPM size******"+ responseDTO.getWorklistVO().getWorklistItem().size());
-							log.info("BPM total******"+ responseDTO.getWorklistVO().getTotal());
-
-							System.out.println("getManagedBean().getTaskAssignmentSearchBean().getDocNo(): " + getManagedBean().getTaskAssignmentSearchBean().getDocNo());
-
-							if(responseDTO.getWorklistVO().getWorklistItem().isEmpty() && responseDTO.getWorklistVO().getWorklistItem().size() == 0){
-								throw new EpException(MessageConst.ERROR_770208);
-							}
+					if (getManagedBean().getTaskAssignmentSearchBean().getDocType() != null) {
+						reqDTO.setDocType(getManagedBean().getTaskAssignmentSearchBean().getDocType());
+					}					
+				
+					//#29822-start - parsing value to bpm
+					reqDTO.setState(BpmConstants.STATE_ASSIGNED);
+					reqDTO.setAssignment(BpmConstants.ASSIGNMENT_ALL);
+					responseDTO = bpmSO.getReassignedItems(reqDTO);
+					//#29822-end - parsing value to bpm
+					
+					if (responseDTO.getWorklistVO() != null) {
+						log.info("BPM size******"+ responseDTO.getWorklistVO().getWorklistItem().size());
+						log.info("BPM total******"+ responseDTO.getWorklistVO().getTotal());
+	
+						System.out.println("getManagedBean().getTaskAssignmentSearchBean().getDocNo(): " + getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+	
+						if(responseDTO.getWorklistVO().getWorklistItem().isEmpty() && responseDTO.getWorklistVO().getWorklistItem().size() == 0){
+							throw new EpException(MessageConst.ERROR_770208);
 						}
 					}
 				}
-			} finally {
-				bpmSO = null;
-			} 
-		}
-		//#29822-end - checking if record not found to throw ERROR_770208
-	
+			}
+		} finally {
+			bpmSO = null;
+		} 
+	}
+	//#29822-end - checking if record not found to throw ERROR_770208
 }

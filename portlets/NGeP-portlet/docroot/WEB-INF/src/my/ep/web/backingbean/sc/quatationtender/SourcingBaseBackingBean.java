@@ -3603,7 +3603,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					}
 					//32648 - start
 					if (null != tplSpecQuestion.getTplSpecAnswers() && tplSpecQuestion.getTplSpecAnswers().size() > 0){
-					answerRemarkList.add(tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark());
+						//32648 & 34406 - start						
+						if (tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark() != null){
+							answerRemarkList.add(tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark());
+						}
+						//32648 & 34406 - end
+						
 					}
 					//32648 - end
 					// #26130 - End
@@ -4702,7 +4707,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
 				
 				//Bug #33988@Syazani -- Start 27/09/2022 
-				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && !validateDuplicateSets.add(scQtFinalizationReport.getTitle().trim())) {
+				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && !validateDuplicateSets.add(scQtFinalizationReport.getTitle().toLowerCase().trim())) { //Bug #33988@Syazani -- 01/03/2023
 					throw new EpException(MessageConst.ERROR_775190, new String[] { scQtFinalizationReport.getTitle() }); //Bug #33988@Syazani - 06/12/2022
 				}
 				//Bug #33988@Syazani -- End 27/09/2022 
@@ -4781,17 +4786,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		    reqDTO.setQtReportIdList(qtReportIds);
 		    reqDTO.setDocumentCategory(this.getManagedBean().getNewBriefingPaperReportList().get(0).getDocCategory());
 		    SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveFinalizationReport(reqDTO);
-		    if (null != resDTO && null != resDTO.getScQtFinalizationReports()
-		    		&& resDTO.getScQtFinalizationReports().size() > 0) {
-		    repLoop:	for (ScQtFinalizationReport repScQtFinalizationReport : resDTO.getScQtFinalizationReports()) {
-		    		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
-		    			if (repScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
-		    				scQtFinalizationReport.setReportContent(repScQtFinalizationReport.getReportContent());
-		    				continue repLoop;
-		    			}
-		    		}
-		    	}
-		    }
+			if (null != resDTO && null != resDTO.getScQtFinalizationReports()
+					&& resDTO.getScQtFinalizationReports().size() > 0) {
+				repLoop: for (ScQtFinalizationReport repScQtFinalizationReport : resDTO.getScQtFinalizationReports()) {
+					for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
+						// Bug #33988@Syazani -- Start 14/03/2023
+						String repParaCode = repScQtFinalizationReport.getDefinationType() != null ? repScQtFinalizationReport
+								.getDefinationType().getParameterCode() : "";
+						String scQtParaCode = scQtFinalizationReport.getDefinationType() != null ? scQtFinalizationReport
+								.getDefinationType().getParameterCode() : "";
+						if (repScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())
+								&& repParaCode.equals(scQtParaCode)) {
+							// Bug #33988@Syazani -- End 14/03/2023
+							scQtFinalizationReport.setReportContent(repScQtFinalizationReport.getReportContent());
+							continue repLoop;
+						}
+					}
+				}
+			}
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -5762,71 +5774,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return result;
 	}
     // #11134 - end
-    
-    //#27927 - Start
-    /**
-  	 * Method to return true, if branch in supplier has been deleted
-  	 * @param supplier id and scQt
-  	 * @return	true or false
-  	 **/
-  	
-  	public boolean localitySupplierBranchListDeleted(Long supplierId, ScQt scQt){ 
-  		
-  		 QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-  		 qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
-  		 ScQt qt = qtBackingBean.getManagedBean().getQt();
-  		 ScQtSupplierCriteria scQtSupplierCriteria = qt.getScQtSupplierCriteria();
-  			
-  		 ISupplierSearchSO supplierSearchSO = null;
-  		 IQTDetailSO QtDetailsSO = null;
-  	     boolean isSupplierBranchListDeleted = false;
-  		 List<SmSupplierBranch> supplierBranchListDeleted = new ArrayList<>();
-  		 try{
-  			 
-  			 supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
-  			 ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-  			 QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-  			 ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-  			 
-  			 SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
-  		 	 suppSearchReqDTO.setSupplierId(supplierId);
-  		     SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retrieveSmSupplierBranchDeletedBySupplier(suppSearchReqDTO);
-  		     supplierBranchListDeleted = suppSearchResDTO.getSmSupplierBranchList();
-  		     
-  		     if(scQtSupplierCriteria.isAllState()){
-  		    	  for (SmSupplierBranch supplierBranch : supplierBranchListDeleted) {
-  						if(supplierBranch.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
-  							isSupplierBranchListDeleted = true;
-  						}
-  				 }
-  		    	 
-  		     }else{
-  		    	 
-  		    	 for (SmSupplierBranch supplierBranch : supplierBranchListDeleted) {
-  						QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-  			    		tenderReqDTO.setQtdetail(qt);
-  			    		QuationTenderResDTO tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
-  			    		if(tenderResDTO != null && tenderResDTO.getLocationDetails()!= null){
-  			    			for(TplSpecLoc location : tenderResDTO.getLocationDetails()){
-  								if(supplierBranch.getSmAddress().getPmState().getStateId() != null && location.getPmState().getStateId() != null){
-  			    					if(supplierBranch.getSmAddress().getPmState().getStateCode().equals(location.getPmState().getStateCode())){
-  			    						if(supplierBranch.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
-  				    						isSupplierBranchListDeleted = true;
-  			    						}			    						
-  			    					}	
-  			    				}
-  			    			}
-  			    		}
-  		    		}
-  		    	 
-  		     }
-  			 
-  		} finally {
-  			supplierSearchSO = null;
-  		}     
-  		return isSupplierBranchListDeleted;
-  	}
-    //#27927 - End
   	
   	public boolean isQTCloneStatus(Long currentStatusId){//25635-start
   		List<Long> CheckStatus=new ArrayList<Long>();
@@ -5874,7 +5821,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						if (getFirstValue){
 							map.put("clItem", question.getClItem());
 							map.put("uomName", question.getClUom().getUomName());
-							map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
+							//#26130 - start
+							map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
+							//#26130 - end
 							map.put("zoneName",zone.getTplSpecZoneDtl().getZoneName());
 							map.put("qty", zone.getQty().toString());
 							if (null != question.getTplSpecTierQties() && question.getTplSpecTierQties().size() > 0 ){
@@ -5952,7 +5901,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 									map.put("clUomPerMonth", question.getClUomPerMonth().toString());
 								}else {
 									//product
-									map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
+									//#26130 - start
+									map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
+									//#26130 - end
 									String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
 									map.put("qtyBerperingkat", tierValue);
 									
@@ -6099,4 +6050,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
 		}//11104_end
 
+		//25037 - note 677 - start
+		/**
+		 * Evaluate the corresponding Representative/Agency parameter type based on committee type.
+		 * PBA, PBB, QCA, FSW, FSB, QCB, PPB
+		 * @return String (Parameter Type Code)
+		 */ 
+		public String getRepresentativeType(String committeeType) {
+			switch (committeeType) {
+			case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B:
+				return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
+			case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A:
+				return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
+			case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD:
+				return ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
+			case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B:
+				return ParameterTypeConst.REPRESENTATIVE_TYPE_PBB;
+			case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A:
+				return ParameterTypeConst.REPRESENTATIVE_TYPE_PBA;
+			case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH:
+				return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH;
+			case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK:
+				return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK;
+			default:
+				return "";
+		} 
+		}
+		//25037 - note 677 - end
 }

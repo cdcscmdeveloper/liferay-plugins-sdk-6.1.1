@@ -7,7 +7,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.select.disagree.proposal.validity.period.extension']} " escape="false" />
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.select.disagree.proposal.validity.period.extension.item']} " escape="false" />
+		<!-- #29729 Start -->
+		<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.list.branch.supplier.related.qt.deleted.pr']}" /> 
+		<!-- #29729 End -->
 		<ui:remove>#21692 - start</ui:remove>
 		<c:if test="#{approvalBackingBean.isEPVApprovalRequestAccepted(consolidationReportBackingBean.managedBean.scQt.qtId)}">
 			<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.qt.pending.rec.instruction']}" />

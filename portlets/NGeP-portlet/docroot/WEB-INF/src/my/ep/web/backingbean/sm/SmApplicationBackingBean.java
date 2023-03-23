@@ -26,6 +26,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -2937,6 +2938,12 @@ public class SmApplicationBackingBean extends
 	public void updateSmAppl(String applType, String currentPageType,
 			String outputPageType) {
 
+		// #34166 - Start
+		if (currentPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
+			validateText();
+		}
+		// #34166 - End
+				
 		// show confirm popup to save draft before proceed to next section if
 		// still not save draft
 		if (!StringUtils.isBlank(applType)
@@ -2968,7 +2975,10 @@ public class SmApplicationBackingBean extends
 					.isPoUser())
 					&& currentPageType
 							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
-
+				//#31043 start
+				SmApplicationUtil.validateCategoriesBeforeSave(true,
+						getManagedBean(), currentTab);
+				//#31043 end
 				SmApplicationUtil
 						.validateOverlapCategoryJustificationAndSuppDocs(
 								getManagedBean(), currentPageType);
@@ -3132,7 +3142,7 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.validateCoordinate(getManagedBean());
 			}
 			setSupplierChangeValues(currentPageType);
-			setBranchDisplayTable(); //29727
+			setBranchDisplayTable(); //29727 , 34135
 			validateUpdateSmAppl(applType, currentPageType, outputPageType,
 					false);
 			//log.info("******* Current page AFTER in managed bean ********"
@@ -5032,6 +5042,13 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void addOrUpdateBranchToSmAppl() {
+		//#34135 START - set stateid from pmstate
+		if(getManagedBean().getSelectedBranch().getSmAddress().getStateId() != null &&
+				getManagedBean().getSelectedBranch().getSmAddress().getPmState() != null &&
+				!getManagedBean().getSelectedBranch().getSmAddress().getStateId().equals(getManagedBean().getSelectedBranch().getSmAddress().getPmState().getStateId())){
+			getManagedBean().getSelectedBranch().getSmAddress().setStateId(getManagedBean().getSelectedBranch().getSmAddress().getPmState().getStateId());
+		}
+		//#34135  END		
 		// validate branch GST only for New Application
 		SmApplicationUtil.validateBranchGstInformation(getManagedBean()
 				.getSelectedBranch(), getManagedBean().getSelectedBranch()
@@ -5039,6 +5056,13 @@ public class SmApplicationBackingBean extends
 
 		SmCommonUtil.getInstance().setUserDetails(
 				getManagedBean().getSelectedBranch());
+		//#34135 START
+		if(getManagedBean().getSelectedBranch().getSmAddress().getPmDivision() != null &&
+				!getManagedBean().getSelectedBranch().getSmAddress().getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+			getManagedBean().getSelectedBranch().getSmAddress().setPmDivision(null);
+			this.getManagedBean().setBranchCompanyDivisions(new ArrayList<SelectItem>());
+		}
+		//#34135 END
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedBranch(), getManagedBean().getSmAppl()
 				.getSmSupplierBranches());
@@ -5048,7 +5072,7 @@ public class SmApplicationBackingBean extends
 		}
 		saveOrUpdateAppl();
 		assignValReqdToFalse();
-		setBranchDisplayTable(); //29727
+		setBranchDisplayTable(); //29727 , 34135
 		RequestContext.getCurrentInstance().execute("banchDialog.hide()");
 		calcPersonnelListCount();
 	}
@@ -7793,7 +7817,7 @@ public class SmApplicationBackingBean extends
 			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false,
 					getManagedBean().getCurrentPageType());
 			
-			setBranchDisplayTable(); //29727
+			setBranchDisplayTable(); //29727 , 34135
 		}
 	}
 
@@ -8669,6 +8693,17 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722616);
 		}
 		
+		// #34166 - Start
+		if (getManagedBean().getSelectedBank().getSignatureInstruction().contains("<")
+				|| getManagedBean().getSelectedBank().getSignatureInstruction().contains(">")) {
+			StringBuilder sb = new StringBuilder();
+			Locale locale = new FacesScopes().getUserLocale();
+			sb.append(ResourceBundleUtils.getMessage("lbl.sm.bankDtls.chequesign.tnc",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			throw new EpException(MessageConst.ERROR_775191, new String[] { sb.toString().toLowerCase() });
+		}
+		// #34166 - End
+				
 		if (getManagedBean().isPendingTransaction()){
 			getManagedBean().setPendingTransaction(false);			
 		} 
@@ -9214,6 +9249,10 @@ public class SmApplicationBackingBean extends
 	 * @return the redirect page
 	 */
 	public String submitSmApplToBpm(String applType) {
+		
+		// #34166 - Start
+		validateText();
+		// #34166 - End
 		
 		//30953 & 30945 - Start		
 		//add checking to make sure, supporting doc mode is not null
@@ -10056,10 +10095,14 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setMissinDocs(new ArrayList<SmApplSupportDoc>());
 		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
+			//#34392 - START
 			if (doc.getPmDocument().isMandatory()
 					&& (doc.getVerifiedFlg() == null || doc.getVerifiedFlg() != 1)) {
 				getManagedBean().getMissinDocs().add(doc);
+			}else if(!doc.getPmDocument().isMandatory() && (doc.getVerifiedFlg() == null || doc.getVerifiedFlg() != 1)){
+				getManagedBean().getMissinDocs().add(doc);
 			}
+			//#34392 - End
 		}
 		//log.info("**** Send Inquiry List Size ***** "
 			//	+ getManagedBean().getMissinDocs().size());
@@ -12220,6 +12263,13 @@ public class SmApplicationBackingBean extends
 	 *            panelName
 	 */
 	public void onChangeCountry(SmAddress addr, String panelName) {
+		//#34135 START
+		if(addr.getPmDivision() != null || addr.getDivisionId() != null){
+			addr.setPmDivision(null);
+			addr.setDivisionId(null);
+			this.getManagedBean().setBranchCompanyDivisions(new ArrayList<SelectItem>());
+			this.getManagedBean().getSelectedBranch().getSmAddress().getPmState().setAdoptDivision(false);
+		}//#34135 END
 		SmApplicationUtil.getInstance().populateStateByCountry(addr, panelName,
 				getManagedBean());
 		setRoleStaffAddrReqd();
@@ -12246,9 +12296,15 @@ public class SmApplicationBackingBean extends
 			setRoleStaffAddrReqd();
 			
 		}else{//13320-end
-		SmApplicationUtil.getInstance().populateDistrictsByState(addr,
-				panelName, getManagedBean());
-		setRoleStaffAddrReqd();
+			//#34135 START
+			if(addr.getPmDivision() != null || addr.getDivisionId() != null){
+				addr.setPmDivision(null);
+				addr.setDivisionId(null);
+				this.getManagedBean().setBranchCompanyDivisions(new ArrayList<SelectItem>());
+			}//#34135 END
+			SmApplicationUtil.getInstance().populateDistrictsByState(addr,
+					panelName, getManagedBean());
+			setRoleStaffAddrReqd();
 		}
 		
 	}
@@ -13213,7 +13269,7 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	private void printBankVerificationForm() throws Exception {
+	public void printBankVerificationForm() throws Exception {
 		SmApplicationUtil.generateBankVerificationFormPdf(getManagedBean()
 				.getSmAppl());
 		String fileName = SmCommonUtil
@@ -13534,9 +13590,24 @@ public class SmApplicationBackingBean extends
 				&& getManagedBean().getSmAppl().getSupplierType().equals("J")) {
 			if (SmCommonUtil.isApplPhysicalConsultant(getManagedBean()
 					.getSmAppl())) {
-				getManagedBean()
-						.setPhysicalConsulting(
-								my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);
+				//#34271 START
+				if(getManagedBean().getSmAppl().getSmSupplierCategories() != null){
+					for(SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()){
+						if(Integer.toString(cat.getRecordStatusFlg()).contains("8") 
+								&& cat.getPmCategoryL1().getCategoryL1Code().equals("34")){
+							getManagedBean().setPhysicalConsulting(
+									my.ep.constant.sm.SupplierManagementConst.NON_PHYSICAL_SERVICES_CAT_CODE);
+							break;
+						}else{
+							getManagedBean().setPhysicalConsulting(
+									my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);
+						}
+					}
+				}else{
+					getManagedBean().setPhysicalConsulting(
+							my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);
+				}
+				//#34271 END
 			} else {
 				getManagedBean()
 						.setPhysicalConsulting(
@@ -15107,15 +15178,16 @@ public class SmApplicationBackingBean extends
 		}
 		getManagedBean().setSelectedBankBranchIds(bankBranchesIds);
 		//#34135 START - remove deleted branch from list at bank information
-		if(getManagedBean().getSmAppl().getSmSupplierBranches() != null){
-			Iterator<SmSupplierBranch> iterator = getManagedBean().getSmAppl().getSmSupplierBranches().iterator();
-			while (iterator.hasNext()) {
-				SmSupplierBranch suppBranch = iterator.next();
-				if(suppBranch.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
-					iterator.remove();
+		List<SmSupplierBranch> displayBranches = new ArrayList<SmSupplierBranch>();
+		if (getManagedBean().getSmAppl().getSmSupplierBranches().size() > 0) {
+			for (SmSupplierBranch smSupplierBranch : getManagedBean().getSmAppl().getSmSupplierBranches()) {
+				if (smSupplierBranch.getRecordStatusFlg() != SupplierManagementConst.RECORD_DELETED) {
+					continue;
 				}
+				displayBranches.add(smSupplierBranch);
 			}
 		}
+		getManagedBean().setDisplayBranches(displayBranches);
 		//#34135 END
 		if (shareBankBean.getSmAddress() != null
 				&& shareBankBean.getSmAddress().getPmCountry().getCountryId() != null
@@ -16539,7 +16611,7 @@ public class SmApplicationBackingBean extends
 			break;
 		}
 	}
-
+	//#34135 START - Commit half part from redmine 29727 into pds
 	public void setBranchDisplayTable() {
 		List<SmSupplierBranch> displayBranches = new ArrayList<SmSupplierBranch>();
 		if (getManagedBean().getSmAppl().getSmSupplierBranches().size() > 0) {
@@ -16551,7 +16623,7 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		getManagedBean().setDisplayBranches(displayBranches);
-
+		//#34135 END
 		Boolean pendingQT = false;
 		Boolean closedQTSubmitProposal = false;
 		StringBuilder msg = new StringBuilder();
@@ -16604,9 +16676,15 @@ public class SmApplicationBackingBean extends
 
 		List<String> branchName = mofRegistrationSO.isProgessFLReturnBranchName(reqDTO);
 		StringBuilder allBranchName = new StringBuilder();
-		for (String str : branchName) {
-			allBranchName.append(str + ",");
-		}
+		//#28777 - START
+	    final Set<String> duplicateCheck = new HashSet<>();
+	         
+	    for (String str : branchName) {
+	        if (duplicateCheck.add(str)) {
+				allBranchName.append(str + ",");
+	        }
+	    }
+		//#28777 - END
 		if (allBranchName.length() > 0) {
 			allBranchName.setLength(allBranchName.length() - 1);
 		}
@@ -16947,4 +17025,24 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	//#33240 - end
+	
+	// #34166 - Start
+	public void validateText() {
+		if (getManagedBean().getSmAppl() != null) {
+			if (!(getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty())) {
+				for (SmSupplierBank banks : getManagedBean().getSmAppl().getSmSupplierBanks()) {
+					if (banks.getSignatureInstruction().contains("<") || banks.getSignatureInstruction().contains(">")) {
+						StringBuilder sb = new StringBuilder();
+						Locale locale = new FacesScopes().getUserLocale();
+						sb.append(ResourceBundleUtils.getMessage("lbl.sm.bankDtls.chequesign.tnc",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+						throw new EpException(MessageConst.ERROR_775191, new String[] { sb.toString().toLowerCase() });
+
+					}
+				}
+			}
+		}
+	}
+	// #34166 - End
+	
 }

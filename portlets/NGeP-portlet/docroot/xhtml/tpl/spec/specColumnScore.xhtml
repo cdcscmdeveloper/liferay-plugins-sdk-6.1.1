@@ -152,6 +152,17 @@
 	</p:column>
 	
 <!-- Farid end -->
+	<!-- #29187 Start Vinod -->
+	<p:column style="width:5%;" rendered="#{isManSpecAndCompliance}">
+		<h:selectOneMenu id="specCompliance" 
+						 value="#{tplSpecAnswer.compliance}" 
+						 disabled="#{evaluationBackingBean.managedBean.readOnly}" 
+						 rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and tplSpecAnswer.tplSpecQuestion.mandatorySpec}">
+			<f:selectItems value="#{templateSpecBackingBean.getMandatorySpecAndComplianceDropdownValues(true)}" />
+		</h:selectOneMenu>
+		<h:outputText value="" rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and !tplSpecAnswer.tplSpecQuestion.mandatorySpec}"/>
+	</p:column>
+	<!-- #29187 End Vinod -->
 <!-- #31537 related #21695 Farid START 28/8/2021 -->
 	<p:column style="width:130px;">	
 	<ui:remove>#21692 - start</ui:remove>

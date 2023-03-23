@@ -10,6 +10,9 @@
 
 
 	<h:panelGroup>
+	<!-- #29187 Start Vinod -->
+	<ui:param name="isManSpecAndCompliance" value="#{evaluationBackingBean.displayMandatorySpecAndComplianceColumnSample()}" /> 
+	<!-- #29187 End Vinod -->
 		<h:panelGroup id="sampleItemList">
 			<p:panel header="#{lbl['lbl.sc.item.list']}"
 				id="evaluationStageTechnicalSampleItemsListForDatatable"
@@ -43,6 +46,12 @@
 						style="width:15%">
 						#{sampleItem.scQtSampleLable.lableNo} - #{sampleItem.subLableNo}
 					</p:column>
+					<!-- #29187 Start Vinod -->
+					<p:column headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification']}"
+						style="width:10%;white-space: normal;" rendered="#{isManSpecAndCompliance}">
+						<h:outputText value="#{sampleItem.scRequestItem.tplSpecQuestion.mandatorySpecForSample ? lbl['lbl.txt.yes']:''}"/>
+					</p:column>
+					<!-- #29187 End Vinod -->
 					<p:column style="width:15%">
 						<f:facet name="header">
 							<h:outputText value="*" styleClass="mandatory"></h:outputText>
@@ -73,6 +82,35 @@
 							for="sampleaddressmanualScoreEvaluation" display="icon"></p:message>
 
 					</p:column>
+					<!-- #29187 Start Vinod -->
+					<p:column style="width:10%;white-space: normal;" rendered="#{isManSpecAndCompliance}">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.compliance']}"/>
+							<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.compliance.sample.tooltip']}" />
+						</f:facet>
+						<h:selectOneMenu id="itemCompliance" 
+										 rendered="#{sampleItem.scRequestItem.tplSpecQuestion.mandatorySpecForSample}"
+										 disabled="#{evaluationBackingBean.managedBean.readOnly 
+										 			or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
+													or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}"
+										 value="#{sampleItem.compliance}">
+							<f:selectItems value="#{evaluationBackingBean.getComplianceDropdownValues()}" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.tpl.spec.content.comment']}"
+						style="width:15%;white-space: normal;" rendered="#{isManSpecAndCompliance}">
+						<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly 
+													or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
+													or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}" 
+			  							 style="width:calc(100% - 15px);" 
+										 value="#{sampleItem.remark}" 
+										 rows="1" 
+										 maxlength="100" 
+										 onkeyup="limitTextArea(this,100);" 
+										 onkeydown="limitTextArea(this,100);" 
+										 onmouseout="limitTextArea(this,100);"/>
+					</p:column>
+					<!-- #29187 End Vinod -->
 
 				</p:dataTable>
 				<p:spacer height="7px;"></p:spacer>
@@ -81,7 +119,7 @@
 
 
 						<tr>
-
+							<c:if test="#{!evaluationBackingBean.managedBean.itemSampleReq}"><!-- #29187 Added Vinod -->
 							<td><p:outputLabel
 									value="#{lbl[evaluationBackingBean.managedBean.itemSampleReq ? 'lbl.sc.spec.total.points' : 'lbl.tpl.spec.content.user.score']}"
 									rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}" />
@@ -109,7 +147,7 @@
 									value="/#{evaluationBackingBean.managedBean.userScores}" /> <p:message
 									id="sampleaddressUserScoreMessage"
 									for="sampleaddressUserScoreId" display="icon"></p:message></td>
-
+							</c:if><!-- #29187 Added Vinod -->
 
 
 						</tr>

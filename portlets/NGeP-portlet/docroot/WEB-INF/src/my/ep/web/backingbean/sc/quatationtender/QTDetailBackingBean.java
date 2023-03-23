@@ -4537,6 +4537,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										
 										//#25077 - Start
 										if(approvalRequest.get(i).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS)){
+											if(this.getManagedBean().getQt().isCloneEnabled()){//34502&25635-start
+												approvalRequest.get(i).getAppRequestRemark().setRemark(getManagedBean().getScQtAppRequestRemark());
+												approvalRequest.get(i).setApproverAction(new PmParameter());
+												approvalRequest.get(i).setApprovalRequestAttachement(null);
+											    this.getManagedBean().getQt().setCloneEnabled(Boolean.FALSE);
+											}//34502&25635-end
+											
 											if(this.getManagedBean().isFlagFileAttahmentDeletedICT()){
 												if (null != getManagedBean().getScQtApprovalReqAttachementICT()) {
 													approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementICT());
@@ -6738,7 +6745,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 		
 		//9019 - Start (Harun) set Group Item to NULL when save while left blank and panel is selected
-		if (isPanel && null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId()) {
+		//9019 Start - #Note-418 Fix able to submit without key in mandatory fields add checking parameterId=0
+		if (isPanel && (null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId() || this.getManagedBean()
+				.getQt().getItemGroup().getPanelItemGroupId() == ParameterConst.PM_PARAMETERID_ZERO)) {
 			this.getManagedBean().getQt().setItemGroup(null);
 			this.getManagedBean().getQt().setCircularVer(null);
 		}
@@ -6772,6 +6781,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().getQt().setScQtRemarks(null);
 			} 
 			//9019 - End (Harun)
+			//9019 - Start (Harun) #Note-398 Remove checking for (ERR-100022) error mesg while save 
+			if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().getQt().getSpecApprovalReq() == true) {
+				this.getManagedBean().getQt().setSpecApprovalReq(false);
+				reqDTO.getQtdetail().setSpecApprovalReq(false);
+				reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
+			}
+			//9019 - End (Harun)
 			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
 			//9019 - end
 			renewQTSesionObject();
@@ -6782,7 +6798,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			getfulfilmentDtls(resDTO.getQtDetail());//#29474
 			break;
 		case 1:
-			detailSO.validateSupplierQualificationDtls(reqDTO);
+			//9019 - Start (Harun) #Note-378 Remove checking while not submit and allow to proceed 
+			//       when click sidemenu
+			if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				detailSO.validateSupplierQualificationDtls(reqDTO);
+			}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				//validate mandatory alert mesg for CR #9019 for others sidemenu for prevent save
+				//even alert mesg doesn't fill in at QT Details tab
+				detailSO.validateQTGeneralInformation(reqDTO);
+			}
+			//9019 - End (Harun)
+			
 			//9019 - start using new method
 			//9019 - Start (Harun) 11082022 Reopen reset to null as remarks that initialize empty will cause error 
 			//       while save due to save empty object
@@ -6809,7 +6835,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			committeReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			committeReqDTO.setSaveFlow(true);
-			committeSO.validateAppointCommitteDtls(committeReqDTO);
+			
+			//9019 - Start (Harun) #Note-378 Remove checking while not submit and allow to proceed 
+			//       when click sidemenu
+			if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				committeSO.validateAppointCommitteDtls(committeReqDTO);
+			}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				//validate mandatory alert mesg for CR #9019 for others sidemenu for prevent save
+				//even alert mesg doesn't fill in at QT Details tab
+				detailSO.validateQTGeneralInformation(reqDTO);
+			}
+			//9019 - End (Harun)
 			
 			//9019 - start using new method
 			//9019 - Start (Harun) 11082022 Reopen reset to null as remarks that initialize empty will cause error 
@@ -6841,7 +6877,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		case 3:
 			reqDTO.getQtdetail().setModified(false);
 			reqDTO.getQtdetail().setFCApproval(true);
-			detailSO.validateApprovalDetails(reqDTO);
+			
+			//9019 - Start (Harun) #Note-378 Remove checking while not submit and allow to proceed 
+			//       when click sidemenu
+			if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				detailSO.validateApprovalDetails(reqDTO);
+			}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				//validate mandatory alert mesg for CR #9019 for others sidemenu for prevent save
+				//even alert mesg doesn't fill in at QT Details tab
+				detailSO.validateQTGeneralInformation(reqDTO);
+			}
+			//9019 - End (Harun)
 			
 			//9019 - start using new method
 			//9019 - Start (Harun) 11082022 Reopen reset to null as remarks that initialize empty will cause error 
@@ -6873,7 +6919,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				retrieveBriefingSitevisitTabDtl();
 			} else if(super.isQTStatusLessThanOrEquals(currentStatus, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)){
 				// save scQt info onclick of Activites tab
-				detailSO.validateQTDetails(reqDTO);
+				//9019 - Start (Harun) #Note-378 Remove checking while not submit and allow to proceed 
+				//       when click sidemenu
+				if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+					detailSO.validateQTDetails(reqDTO);
+				}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+					//validate mandatory alert mesg for CR #9019 for others sidemenu for prevent save
+					//even alert mesg doesn't fill in at QT Details tab
+					detailSO.validateQTGeneralInformation(reqDTO);
+				} 
+				//9019 - End (Harun)
+				
 				detailSO.removeSchedule(reqDTO);//#29474
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
@@ -7105,8 +7161,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		if (priviousIndex != activeIndex) {
 			if (!isReadOnly) {
+				
 				switch (priviousIndex) {
 				case 0:
+					//9019 - Start (Harun) #Note-398 include in this note fixing while unit test
+					//       This changes is for #Note-360
+					//	     #Note-433 Relocate code for fix 'File Reference No is mandatory. (ERR-760455)' displayed.
+					detailSO.validateQTGeneralInformation(reqDTO);
+					//9019 - End (Harun)
 					//9019 - Start (Harun) #Note-360 Remove checking while not submit and allow to proceed 
 					//       when click sidemenu
 					if (isSubmit) {
@@ -12855,25 +12917,16 @@ public void retrieveDemoQtDetails(Long qtId) {
 						this.getManagedBean().setStateCodes(
 								this.getManagedBean().getQt().getZoneLocationLevel().getParameterCode());
 					}
-
+					
 					// Populate zone detail into tree node
 					if (scQt.getScQtSupplierCriteria() != null
 							&& scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
-						List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias()
-								.getTplSpecZoneDtls();
+						//#28784 zone missing after demo = no (if not save) - Start						
+						List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls();
 						populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
-						// setting into zones bean to validate zones while
-						// adding
-						if (CollectionUtils.isNotEmpty(specZoneDtls)) {
-							List<ZonesBean> zoneBeanLst = new ArrayList<ZonesBean>();
-							for (TplSpecZoneDtl specZoneDtl : specZoneDtls) {
-								ZonesBean bean = new ZonesBean();
-								bean.setTplSpecZoneDtl(specZoneDtl);
-								zoneBeanLst.add(bean);
-							}
-							this.getManagedBean().setBeans(zoneBeanLst);
-						}
+						//#28784 zone missing after demo = no (if not save) - End
 					}
+					
 				}
 			} catch(Exception e) {
 				SLAUtils.getInstance().logSLAError("QT", "RetrieveZonalDetailForDemo", qtId.toString(), "retrieveZonalDetailAfterDemoDeletion", getUserIdSessionFromLoginId(), e);

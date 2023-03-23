@@ -5809,7 +5809,7 @@ public class SupplierFinalizationBackingBean extends
 		//START - #26169
 		else{
 			//If no available/qualified supplier, exclude the defined decision type(s)
-			if(!getManagedBean().isHasSupplierQualified()){
+			if(!getManagedBean().isHasSupplierQualifiedForCurrentSelection()){	//6906 note 202
 				if (excludedDecisionList == null) {
 					excludedDecisionList = new ArrayList<String>();
 				}
@@ -8117,7 +8117,13 @@ public class SupplierFinalizationBackingBean extends
 			if (!minSuppliersExist) {
 				throw new EpException(MessageConst.ERROR_760243,
 						new String[] { recommendByDesc });
-			} else {
+			} 
+			//#28834 - Start
+			else if(!supplierSelected && minSuppliersExist){ 
+				throw new EpException(MessageConst.ERROR_760206);
+			} 
+			//#28834 - End
+			else {
 				//#21695 allow no records validation start
 				if(CollectionUtils.isNotEmpty(
 						scQtRecommend.getRecommendDtls())){
@@ -10220,10 +10226,12 @@ public class SupplierFinalizationBackingBean extends
 				if(resDTO.isSuccessful()) getManagedBean().setHasSupplierQualified(Boolean.TRUE);
 				else getManagedBean().setHasSupplierQualified(Boolean.FALSE);
 				
+				this.getManagedBean().setHasSupplierQualifiedForCurrentSelection(resDTO.isHasSupplierQualifiedForCurrentSelection());//6906 note 202
+
 			}finally {
 				qtSuppFinalizationSO = null;
 			}	
-		}
+		} 
 		
 		private boolean checkSelectedSupplierOfferPriceIsExceedCommitteeAuthority(ScQtFinalization scQtFinalization) {
 			log.info("checkSelectedSupplierOfferPriceIsExceedCommitteeAuthority");
