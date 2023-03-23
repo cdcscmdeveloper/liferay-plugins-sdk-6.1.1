@@ -2277,8 +2277,7 @@ public class QTCloneBackingbean extends
 							try {
 								uploadAttachment(approvalReqAttachement,approvalRequest.getApprovalRequestAttachement());
 							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								SLAUtils.getInstance().logSLAError("QT", "ICTAPProvalATTAchemnt", "docNo", "ICTAPProvalATTAchemntClone", getUserIdSessionFromLoginId(), e);
 							}
 							req.setApprovalRequestAttachement(approvalReqAttachement);//25635 & 34502
 							ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
@@ -2324,12 +2323,10 @@ public class QTCloneBackingbean extends
 		    }
 		}
 		Long status = copyScqt.getQtStatus().getStatusId();//34502&25635-start
-		if (QTStatusConst.QT_CANCELLED.equals(status)) {
+		if (QTStatusConst.QT_CANCELLED.equals(status) && ParameterConst.PROCUREMENT_CATEGORY_ICT.equals(scQt
+				.getPmProcurementCategory().getParameterCode())
+				&& CollectionUtils.isEmpty(otherapprovals)) {
 			ScQtApproval newOthersApproval = null;
-			if (ParameterConst.PROCUREMENT_CATEGORY_ICT.equals(scQt
-					.getPmProcurementCategory().getParameterCode())
-					&& CollectionUtils.isEmpty(otherapprovals)) {
-				if (CollectionUtils.isNotEmpty(scQt.getScQtApprovals())) {
 					for (ScQtApproval approval : scQt.getScQtApprovals()) {
 						if (ParameterConst.APPROVAL_CATEGORY_OTHERS
 								.equalsIgnoreCase(approval
@@ -2394,10 +2391,7 @@ public class QTCloneBackingbean extends
 
 						newApprovals.add(newOthersApproval);
 					}
-				}
-			}
-
-		}//34502&25635-End
+				}//34502&25635-End
 		
 		if (CollectionUtils.isNotEmpty(tabBeans)) {
 			int selectedTabIndex = this.getManagedBean().getSelectedApprovalTabIndex();
