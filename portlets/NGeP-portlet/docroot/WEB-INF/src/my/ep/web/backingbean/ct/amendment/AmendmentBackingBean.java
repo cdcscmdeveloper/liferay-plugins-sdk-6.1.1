@@ -8033,10 +8033,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if(getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
 					for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {
 						if(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
-							// Start Fix - #34539
-							item.getCtItemCeilingQties().clear();
-							item.getCtItemCeilingQties().addAll(getManagedBean().getSelectedItem().getCtItemCeilingQties());
-							// End Fix - #34539
+							// Start Fix - #34539  
+							if (item.isBrandNew()) {
+								if (item.getCtItemCeilingQties().size() != getManagedBean().getSelectedItem().getCtItemCeilingQties().size()) {
+									getManagedBean().getSelectedItem().getCtItemCeilingQties().remove(item.getCtItemCeilingQties());
+									getManagedBean().getSelectedItem().setCtItemCeilingQties(item.getCtItemCeilingQties());
+								} 
+							} else {
+								if (item.getCtItemCeilingQties().size() != getManagedBean().getSelectedItem().getCtItemCeilingQties().size()) {
+									item.getCtItemCeilingQties().clear();
+									item.getCtItemCeilingQties().addAll(getManagedBean().getSelectedItem().getCtItemCeilingQties());
+								} 
+							}
+							// End Fix - #34539 
 							if (!item.getCtItemCeilingQties().isEmpty()) {						
 								for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {
 									if(ceilingQty.getCtAgency().getCommitmentNo().equalsIgnoreCase(ctItemCeilingQty.getCtAgency().getCommitmentNo())){
