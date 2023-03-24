@@ -5198,7 +5198,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 		//29728 -end
 		
-		private void foo(int bar) {
-			// This is a dummy method
+		private void foo() {
+			// This is a dummy method to test some possible issue with merge request
 		}
 }
