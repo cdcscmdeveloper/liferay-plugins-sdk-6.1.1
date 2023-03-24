@@ -5102,6 +5102,8 @@ public class QTCloneBackingbean extends
 		return startMonth;
 	}//33916
 	
-	
+	private void foo() {
+		// This is a dummy method
+	}
 	
 }
