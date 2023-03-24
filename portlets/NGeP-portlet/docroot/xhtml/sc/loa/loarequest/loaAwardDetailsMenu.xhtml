@@ -79,12 +79,17 @@
 					</tr>
 				</table>
 				<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.search']}" partialSubmit="true" update="itemtbl"
-								 action="#{lOADetailBackingBean.searchSupplierItemByName}"
-								 styleClass="BtnSpacing" process="@this,itemNameSearchInputQT" />
-				<p:commandButton value="#{lbl['lbl.btn.reset']}"
-								 action="#{lOADetailBackingBean.onResetSupplierCriteria()}"
-								 update="supplierUpdateInstructionPanel" />
+					<ui:remove>29007 - fix issue 2 search action note 347 -start-</ui:remove>
+					<p:commandButton value="#{lbl['lbl.btn.search']}"
+						partialSubmit="true" update="itemtbl"
+						action="#{lOADetailBackingBean.searchSupplierItemByName}"
+						styleClass="BtnSpacing" process="@this,itemNameSearchInputQT"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					<p:commandButton value="#{lbl['lbl.btn.reset']}"
+						action="#{lOADetailBackingBean.onResetSupplierCriteria()}"
+						update="supplierUpdateInstructionPanel, itemtbl"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					<ui:remove>29007 - fix issue 2 search action note 347 -end-</ui:remove>
 				</div>
 			</p:panel>
 			<!-- #29007 End Vinod -->
@@ -106,10 +111,14 @@
 					disabled="true" size="30" readonly="true" />
 			</td>
 		</tr>
-		</table> 
+		</table>
+		<ui:remove>#34242, #29007 - fix issue 2 search action note 347 -start-</ui:remove>
 		<p:dataTable id="itemtbl" var="scLoiLoaItem"
-		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoaItems}" rows="10" rendered="#{!isZonalWithPaOrPs}">
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{lOADetailBackingBean.managedBean.loiLoaItemsResult}"
+			rows="10" rendered="#{!isZonalWithPaOrPs}"
+			first="#{lOADetailBackingBean.managedBean.retainPageNumber}">
+			<ui:remove>#34242, #29007 - fix issue 2 search action note 347 -end-</ui:remove>
 			
 			<ac:paginator for="itemtbl" />
 			
@@ -221,7 +230,10 @@
 
 			<p:column style="width:12%; text-align:right;" headerText="#{lbl['lbl.sc.unit.price']}">
 				<f:facet name="footer">
-					<h:outputText value="#{lbl['lbl.sc.total']}" />
+					<ui:remove>29007 - fix issue 2 search action note 347 -start-</ui:remove>
+					<h:outputText value="#{lbl['lbl.sc.total']}"
+						rendered="#{not empty lOADetailBackingBean.managedBean.loiLoaItemsResult}" />
+					<ui:remove>29007 - fix issue 2 search action note 347 -end-</ui:remove>
 				</f:facet>	
 				
 				<h:outputText value="#{scLoiLoaItem.unitPrice}">
@@ -231,7 +243,11 @@
 			
 			<p:column style="width:12%; text-align:right;" headerText="#{lbl['lbl.sc.sub.total']}">
 				<f:facet name="footer">
-					<h:outputText value="#{lOADetailBackingBean.managedBean.scLoa.loaAmt}">
+					<ui:remove>29007 - fix issue 2 search action note 347 -start-</ui:remove>
+					<h:outputText
+						value="#{lOADetailBackingBean.calculateTotalItemPrice()}"
+						rendered="#{not empty lOADetailBackingBean.managedBean.loiLoaItemsResult}">
+						<ui:remove>29007 - fix issue 2 search action note 347 -end-</ui:remove>
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</f:facet>
@@ -249,6 +265,11 @@
 					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}" />
 			</p:column>
+			<ui:remove>#34242, #29007 -start-</ui:remove>
+			<p:ajax event="page"
+				listener="#{lOADetailBackingBean.retainAwardPage()}" process="@this"
+				update="@this" />
+			<ui:remove>#34242, #29007 -end-</ui:remove>
 		</p:dataTable>
 		<c:if test=	"#{isZonalWithPaOrPs}">
 		<table
