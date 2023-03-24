@@ -1504,6 +1504,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	public List<SmGstSupplier> getCleanGst() {
+		log.info("[getCleanGst] Dummy logger"); // To test some possible issue with merge request
 		List<SmGstSupplier> supplierGstList = new ArrayList<SmGstSupplier>();
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 				.getSmGstSupplier());
