@@ -56,6 +56,7 @@ import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.CustomUtils;
@@ -659,10 +660,40 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		if (chmnFinalizationDate != null) {
 			scQt.setChmnFinalizationDate(DateUtils.setDefaultDateTime(chmnFinalizationDate));
 		}
+		//#21692 attachment - Start
+		Boolean oldApprovalPBM = scQt.isApprovalPBM();
 		Boolean enableDateMOF = enableApprovalDateMOF(validityDaysExpiredQt);
 		scQt.setApprovalPBM(enableDateMOF);
 		resetDecisionCertPBM(enableDateMOF);
+		if ((oldApprovalPBM && !enableDateMOF)
+				|| (!oldApprovalPBM && enableDateMOF)) {
+			deleteEpvAttachments();
+		}
+		//#21692 attachment - End
 	}
+	//#21692 attachment - Start
+	private void deleteEpvAttachments() {
+		ScQtApprovalRequest apprvRequest = this.getManagedBean().getScQtApprovalRequestList().get(0);
+		
+		List<ScQtEpvApprovalReqAttachment> deletedAttachment = new ArrayList<>();
+		List<ScQtEpvApprovalReqAttachment> attachmentList = apprvRequest.getEpvApprovalReqAttachment();
+		
+		for (ScQtEpvApprovalReqAttachment att : attachmentList) {
+			deletedAttachment.add(att);
+		}
+		
+		if (deletedAttachment != null) {
+			attachmentList.removeAll(deletedAttachment);
+		}
+		apprvRequest.setEpvApprovalReqAttachment(attachmentList);
+		
+		ScQtApprovalRequest apprvReq = getQTDetailSO().saveApprovalRequest(apprvRequest);
+		
+		List<ScQtApprovalRequest> newApprovalReqList = new ArrayList<>();
+		newApprovalReqList.add(apprvReq);
+		this.getManagedBean().setScQtApprovalRequestList(newApprovalReqList);
+	}
+	//#21692 attachment - End
 
 	private void resetDecisionCertPBM(Boolean enableDateMOF) {
 		List<ScQtApprovalRequest> approvalRequests = getManagedBean().getScQtApprovalRequestList();

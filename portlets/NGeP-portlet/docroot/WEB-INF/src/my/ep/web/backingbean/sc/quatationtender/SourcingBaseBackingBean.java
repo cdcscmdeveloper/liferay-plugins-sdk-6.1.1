@@ -4835,17 +4835,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		    reqDTO.setQtReportIdList(qtReportIds);
 		    reqDTO.setDocumentCategory(this.getManagedBean().getNewBriefingPaperReportList().get(0).getDocCategory());
 		    SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveFinalizationReport(reqDTO);
-		    if (null != resDTO && null != resDTO.getScQtFinalizationReports()
-		    		&& resDTO.getScQtFinalizationReports().size() > 0) {
-		    repLoop:	for (ScQtFinalizationReport repScQtFinalizationReport : resDTO.getScQtFinalizationReports()) {
-		    		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
-		    			if (repScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
-		    				scQtFinalizationReport.setReportContent(repScQtFinalizationReport.getReportContent());
-		    				continue repLoop;
-		    			}
-		    		}
-		    	}
-		    }
+			if (null != resDTO && null != resDTO.getScQtFinalizationReports()
+					&& resDTO.getScQtFinalizationReports().size() > 0) {
+				repLoop: for (ScQtFinalizationReport repScQtFinalizationReport : resDTO.getScQtFinalizationReports()) {
+					for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
+						//Bug #33988@Syazani -- Start 14/03/2023
+						String repParaCode = repScQtFinalizationReport.getDefinationType() != null ? repScQtFinalizationReport
+								.getDefinationType().getParameterCode() : "";
+						String scQtParaCode = scQtFinalizationReport.getDefinationType() != null ? scQtFinalizationReport
+								.getDefinationType().getParameterCode() : "";
+						if (repScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())
+								&& repParaCode.equals(scQtParaCode)) {
+							//Bug #33988@Syazani -- End 14/03/2023
+							scQtFinalizationReport.setReportContent(repScQtFinalizationReport.getReportContent());
+							continue repLoop;
+						}
+					}
+				}
+			}
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -5704,10 +5711,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					} else {
 						ctType = scQt.getContractType().getParameterId();
 					}
-
-					if (isRuleBpk && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
-						return isBpkCentralContract = true;
+					
+					//#9019 Start #note-445 User unable to open side menu for Committee Appointment and Approval when ctType is null. 
+					//      Contract type is not selected while cancel QT
+					if(ctType != null){
+						if (isRuleBpk && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
+							return isBpkCentralContract = true;
+						}
 					}
+					//9019 End #note-445
 				}
 			
 			return isBpkCentralContract;

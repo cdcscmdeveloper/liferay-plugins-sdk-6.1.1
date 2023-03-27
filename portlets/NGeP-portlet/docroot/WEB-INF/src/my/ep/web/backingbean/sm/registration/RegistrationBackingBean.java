@@ -1504,6 +1504,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	public List<SmGstSupplier> getCleanGst() {
+		log.info("[getCleanGst] Dummy logger"); // To test some possible issue with merge request
 		List<SmGstSupplier> supplierGstList = new ArrayList<SmGstSupplier>();
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 				.getSmGstSupplier());
@@ -3364,14 +3365,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	//16052019 - SSM INTEGRATION CR
 	public String getParamDescriptionByLanguageAndPmParameter(PmParameter parameter) {
-		//start - #30064
-		if (parameter.getParameterType().equals(ParameterTypeConst.IDENTIFICATION_TYPES)) {
-			return SmCommonUtil.getParamDescriptionByLanguageAndPmParameter(parameter);
-		} else {
-			return SmCommonUtil.retrieveParameterDescByTypeAndCodeAndLang(ParameterTypeConst.IDENTIFICATION_TYPES,
-					ParameterConst.IDENTIFICATION_TYPES_IC).getCodeName();
-		}
-		//end - #30064
+		return SmCommonUtil.getParamDescriptionByLanguageAndPmParameter(parameter);
 	}
 	
 	// 27691 - start -  Add/Delete Supplier Owner
