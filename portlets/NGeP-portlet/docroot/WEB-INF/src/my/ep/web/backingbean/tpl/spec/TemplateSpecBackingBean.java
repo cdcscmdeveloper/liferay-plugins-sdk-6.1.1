@@ -280,7 +280,11 @@ public class TemplateSpecBackingBean extends
 									templateSpecBean.setSpecAnswerList(evalResDTO.getSpecAnswers());
 									templateSpecBean.setHideanswerList(evalResDTO.getHideanswerList());
 									}					
-								}
+								}//#25138 add start
+							else{
+								templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
+							}
+							//#25138 add end
 					}
 					//templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());	
 				}else{//32453-End
@@ -3299,6 +3303,11 @@ public class TemplateSpecBackingBean extends
 			Iterator<TplSpecEstimation> iterator = specEstimations.iterator();
 			while (iterator.hasNext()) {
 				TplSpecEstimation tplSpecEstimation = iterator.next();
+				// #21695 fix #32130 - start
+				if(tplSpecEstimation.getEstimatedCost().compareTo(BigDecimal.ZERO) == 0){
+					tplSpecEstimation.setIndicativeUnitPrice(new BigDecimal(0.00));
+				}
+				// #21695 fix #32130 - end
 				if (tplSpecEstimation.getTplSpecZoneDtl() == null) {
 					iterator.remove();
 				}

@@ -326,6 +326,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public boolean AgreementReqChange = false;
 	public String docStatus;
 	public String procurementType;
+	private boolean showApprovalLetter = false;//# note 146
 	//#25725 end
 	
 	//#19336
@@ -343,6 +344,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private String loaBpmVerify;
 	private ScLoiLoaItem scLoiLoaItem;
 	private List<TplSpecAnswer> tplSpecAnswerList;
+	private List<ScLoiLoaItem> loiLoaItemsResult;//29007 - fix issue 2 search action note 347
 	/*#29007 End Vinod*/
 	
 	//#27797 - start
@@ -2107,6 +2109,32 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.retainPageNumber = retainPageNumber;
 	}
 	//#34242 - End
+
+	//29007 - fix issue 2 search action note 347 - start
+	public List<ScLoiLoaItem> getLoiLoaItemsResult() {
+		return loiLoaItemsResult;
+	}
+
+	public void setLoiLoaItemsResult(List<ScLoiLoaItem> loiLoaItemsResult) {
+		this.loiLoaItemsResult = loiLoaItemsResult;
+	}
+	//29007 - fix issue 2 search action note 347 - end
+
+	// #25725 - note 146 - start
+	/**
+	 * @return the showApprovalLetter
+	 */
+	public boolean isShowApprovalLetter() {
+		return showApprovalLetter;
+	}
+
+	/**
+	 * @param showApprovalLetter the showApprovalLetter to set
+	 */
+	public void setShowApprovalLetter(boolean showApprovalLetter) {
+		this.showApprovalLetter = showApprovalLetter;
+	}
+	// #25725 - note 146 - end
 }
 
 

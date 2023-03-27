@@ -149,13 +149,11 @@
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
 					 <!-- #29729 Start -->
-					   <c:if test="#{suppFinalizationBackingBean.managedBean.currentStatusId eq QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION}">
 						 <p:spacer width="15" height="15"/>
 		                     <p:commandLink  process="@this"  action="#{suppFinalizationBackingBean.showSupplierBranchList(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
 				         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
 								<h:graphicImage value="/css/images/exclam-info.png" />
 			         		</p:commandLink> 
-					   </c:if>
 					 <!-- #29729 End -->
 				</p:column>
 				<c:if test="#{canShowSupplierProposal}">
@@ -294,7 +292,8 @@
 														suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding 
 														or (shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions
 														and !shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)
-															or shortlistedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}" /><ui:remove>#21692</ui:remove>
+															or shortlistedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+															or suppFinalizationBackingBean.disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId, suppFinalizationBackingBean.managedBean.scQt)}" /><ui:remove>#21692 <!-- #28777 & #29729 --> </ui:remove>
 			</p:dataTable>		 	    
 
 			<p:dataTable id="supplierListTblMultiple" var="shortlistedSupp" 
@@ -366,13 +365,11 @@
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
 					 <!-- #29729 Start -->
-					   <c:if test="#{suppFinalizationBackingBean.managedBean.currentStatusId eq QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION}">
 						 <p:spacer width="15" height="15"/>
 		                     <p:commandLink  process="@this"  action="#{suppFinalizationBackingBean.showSupplierBranchList(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
 				         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
 								<h:graphicImage value="/css/images/exclam-info.png" />
 			         		</p:commandLink> 
-					   </c:if>
 					 <!-- #29729 End -->
 				</p:column>
 				<c:if test="#{canShowSupplierProposal}">
@@ -516,7 +513,8 @@
 											suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding
 											or (shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions
 														and !shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)
-														 	or shortlistedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}"><ui:remove>#21692</ui:remove>
+														 	or shortlistedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+														 	or suppFinalizationBackingBean.disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId, suppFinalizationBackingBean.managedBean.scQt)}"><ui:remove>#21692 <!-- #28777 & #29729 --></ui:remove>
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" 
 								listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, false)}" />
 					</p:selectBooleanCheckbox>	

@@ -510,21 +510,24 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				|| QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	
-	//#27927 - Start
+	//#28777 & #29729 - Start
     /**
   	 * Method to return true, if branch in supplier has been deleted (LOA)
   	 * @param supplier id 
   	 * @return	true or false
   	 **/
 	public boolean displaySupplierBranchListDeletedForLOA(Long supplierId){
-		 boolean deleted = false;
-		 ScQt scQt = this.getManagedBean().getQt();
-		 if(localitySupplierBranchListDeleted(supplierId, scQt)){
-			 deleted = true;
-		 }else{
-			 deleted = false;
-		 }
-	  return deleted;
+		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+		
+		boolean isSupplierBranchDeleted = false;
+		ScQt scQt = this.getManagedBean().getQt();
+		if(supplierId != null && scQt != null){
+			if(qtAwardSO.isCheckLOIorLOASupplierBranchDeleted(supplierId, scQt.getQtId())){
+				isSupplierBranchDeleted = true;
+		    }
+		}
+	    return isSupplierBranchDeleted;
 	}
 	
     /**
@@ -535,7 +538,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 					MessageUtils.getMessage(MessageConst.INFO_760523, 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 	}
-	//#27927 - End
+	//#28777 & #29729 - End
 	
 
 	

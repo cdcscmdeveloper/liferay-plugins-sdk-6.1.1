@@ -5971,7 +5971,7 @@ return	remarksNotFound;
 		//START - #26169
 		else{
 			//If no available/qualified supplier, exclude the defined decision type(s)
-			if(!getManagedBean().isHasSupplierQualified()){
+			if(!getManagedBean().isHasSupplierQualifiedForCurrentSelection()){	//6906 note 202
 				if (excludedDecisionList == null) {
 					excludedDecisionList = new ArrayList<String>();
 				}
@@ -8295,7 +8295,13 @@ return	remarksNotFound;
 			if (!minSuppliersExist) {
 				throw new EpException(MessageConst.ERROR_760243,
 						new String[] { recommendByDesc });
-			} else {
+			} 
+			//#28834 - Start
+			else if(!supplierSelected && minSuppliersExist){ 
+				throw new EpException(MessageConst.ERROR_760206);
+			} 
+			//#28834 - End
+			else {
 				//#21695 allow no records validation start
 				if(CollectionUtils.isNotEmpty(
 						scQtRecommend.getRecommendDtls())){
@@ -10432,6 +10438,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				if(resDTO.isSuccessful()) getManagedBean().setHasSupplierQualified(Boolean.TRUE);
 				else getManagedBean().setHasSupplierQualified(Boolean.FALSE);
 				
+				this.getManagedBean().setHasSupplierQualifiedForCurrentSelection(resDTO.isHasSupplierQualifiedForCurrentSelection());//6906 note 202
 			}finally {
 				qtSuppFinalizationSO = null;
 			}	
@@ -10834,47 +10841,29 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 		//28834 ends
 		
-		//#27927 - Start
+		//#28777 & #29729 - Start
 		/**
 		* Method to display list of supplier branch had deleted or not with related current QT
 		**/
 		public void showSupplierBranchList(Long supplierId) {
-	      
-			ScQt scQt = this.getManagedBean().getScQt();
-			ScQtSupplierCriteria qtSupplierCriteria = scQt.getScQtSupplierCriteria();
 			
 			List<SmSupplierBranch> supplierBranchListDeleted = new ArrayList<>();
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-			IQTDetailSO QtDetailsSO = (IQTDetailSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		
 		    SupplierSearchReqDTO suppSearchDeletedReqDTO = new SupplierSearchReqDTO();
 		    suppSearchDeletedReqDTO.setSupplierId(supplierId);
 	    	SupplierSearchResDTO suppSearchDeletedResDTO = supplierSearchSO.retrieveSmSupplierBranchDeletedBySupplier(suppSearchDeletedReqDTO);
 			supplierBranchListDeleted = suppSearchDeletedResDTO.getSmSupplierBranchList();
-			
-			if(qtSupplierCriteria.isAllState()){
-	    		for(SmSupplierBranch supplierBranch : supplierBranchListDeleted) {
-	    	        supplierBranch.setQtRelatedSupplierBranch(true);
-	    		}
-	  		}else{
-	  			
-	    			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-		    		tenderReqDTO.setQtdetail(scQt);
-		    		QuationTenderResDTO tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
-		    		if(tenderResDTO != null && tenderResDTO.getLocationDetails()!= null){
-		    			for(TplSpecLoc locality : tenderResDTO.getLocationDetails()){
-			    			for(SmSupplierBranch  supplierBranch : supplierBranchListDeleted){
-								if(locality.getPmState().getStateId() != null && supplierBranch.getSmAddress().getPmState().getStateId() != null){
-									if(locality.getPmState().getStateCode().equals(supplierBranch.getSmAddress().getPmState().getStateCode())){
-			    						supplierBranch.setQtRelatedSupplierBranch(true);
-			    					}
-			    			    }
-			    			}
-		    			}
-		    		}
-	  		}
+
+			for(SmSupplierBranch supplierBranch : supplierBranchListDeleted) {
+				int statusFlag = supplierBranch.getRecordStatusFlg();
+				if(statusFlag == DbValueConst.RECORD_STATUS_DELETED){
+					supplierBranch.setQtRelatedSupplierBranch(DbValueConst.FLAG_YES);
+				}else{
+					supplierBranch.setQtRelatedSupplierBranch(DbValueConst.FLAG_NO);
+				}
+			}
 			
 			if(CollectionUtils.isEmpty(supplierBranchListDeleted)){
 	    		getManagedBean().setSupplierBranchList(listSupplierBranchList(supplierId,scQt));
@@ -10888,43 +10877,37 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		private List<SmSupplierBranch> listSupplierBranchList(Long supplierId,ScQt scQt){
 			
 			List<SmSupplierBranch> supplierBranchList = new ArrayList<>();
-			ScQtSupplierCriteria qtSupplierCriteria = scQt.getScQtSupplierCriteria();
-			
+
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-			IQTDetailSO QtDetailsSO = (IQTDetailSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			
 			SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
 			suppSearchReqDTO.setSupplierId(supplierId);
 	    	SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retrieveSmSupplierBranchBySupplier(suppSearchReqDTO);
 	    	supplierBranchList = suppSearchResDTO.getSmSupplierBranchList();
-	    	
-	    	if(qtSupplierCriteria.isAllState()){
-	    		for(SmSupplierBranch supplierBranch : supplierBranchList) {
-	    	        supplierBranch.setQtRelatedSupplierBranch(true);
-	    		}
-	  		}else{
-	  			
-	    			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-		    		tenderReqDTO.setQtdetail(scQt);
-		    		QuationTenderResDTO tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
-		    		if(tenderResDTO != null && tenderResDTO.getLocationDetails()!= null){
-		    			for(TplSpecLoc locality : tenderResDTO.getLocationDetails()){
-			    			for(SmSupplierBranch  supplierBranch : supplierBranchList){
-								if(locality.getPmState().getStateId() != null && supplierBranch.getSmAddress().getPmState().getStateId() != null){
-									if(locality.getPmState().getStateCode().equals(supplierBranch.getSmAddress().getPmState().getStateCode())){
-			    						supplierBranch.setQtRelatedSupplierBranch(true);
-			    					}
-			    			    }
-			    			}
-		    			}
-		    		}
-	  		}
 	    	  
 	    	return supplierBranchList;
 		}
-		//#27927 - End
+		
+		/**
+		* Method to return true, if branch in supplier has been deleted
+		* @param supplier id 
+		* @return true or false
+		**/
+		public boolean disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(Long supplierId, ScQt scQt){
+			
+			IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
+			
+			boolean isSupplierBranchDeleted = false;
+			if(supplierId != null && scQt != null){
+				if(qtSuppFinalizationSO.isCheckCRandSFCurrentSupplierBranchDeleted(supplierId, scQt)){
+					isSupplierBranchDeleted = true;
+			    }
+			}
+		    return isSupplierBranchDeleted;
+		}
+		//#28777 & #29729 - End
 		
 		//#32400 - Start
 		private List<ScQtRecommend> sortingItemizedFollowedOrderByQtId(List<ScQtRecommend> oldRequestItemsRecommend,ScQt scQt){

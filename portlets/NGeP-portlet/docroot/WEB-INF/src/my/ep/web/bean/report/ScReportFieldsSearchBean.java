@@ -47,6 +47,10 @@ public class ScReportFieldsSearchBean implements Serializable {
 	private PmOrgProfile ptjProfile;
 	private SelectItem doSelectItem;
 	private List<String> scStatusManyMenu;//#29580
+	private String scPropSubmitFromMonth;//#14306
+	private String scPropSubmitFromYear;//#14306
+	private String scPropSubmitToMonth;//#14306
+	private String scPropSubmitToYear;//#14306
 
 	/**
 	 * @return the allCheckboxValue
@@ -310,6 +314,58 @@ public class ScReportFieldsSearchBean implements Serializable {
 	public void setScStatusManyMenu(List<String> scStatusManyMenu) {
 		this.scStatusManyMenu = scStatusManyMenu;
 	}
-	//#29580 - End 
+	//#29580 - End
+	
+	//#14306 - Start
+	/**
+	 * @return the scPropSubmitFromMonth
+	 */
+	public String getScPropSubmitFromMonth() {
+		return scPropSubmitFromMonth;
+	}
+	/**
+	 * @param scPropSubmitFromMonth the scPropSubmitFromMonth to set
+	 */
+	public void setScPropSubmitFromMonth(String scPropSubmitFromMonth) {
+		this.scPropSubmitFromMonth = scPropSubmitFromMonth;
+	}
+	/**
+	 * @return the scPropSubmitFromYear
+	 */
+	public String getScPropSubmitFromYear() {
+		return scPropSubmitFromYear;
+	}
+	/**
+	 * @param scPropSubmitFromYear the scPropSubmitFromYear to set
+	 */
+	public void setScPropSubmitFromYear(String scPropSubmitFromYear) {
+		this.scPropSubmitFromYear = scPropSubmitFromYear;
+	}
+	/**
+	 * @return the scPropSubmitToMonth
+	 */
+	public String getScPropSubmitToMonth() {
+		return scPropSubmitToMonth;
+	}
+	/**
+	 * @param scPropSubmitToMonth the scPropSubmitToMonth to set
+	 */
+	public void setScPropSubmitToMonth(String scPropSubmitToMonth) {
+		this.scPropSubmitToMonth = scPropSubmitToMonth;
+	}
+	/**
+	 * @return the scPropSubmitToYear
+	 */
+	public String getScPropSubmitToYear() {
+		return scPropSubmitToYear;
+	}
+	/**
+	 * @param scPropSubmitToYear the scPropSubmitToYear to set
+	 */
+	public void setScPropSubmitToYear(String scPropSubmitToYear) {
+		this.scPropSubmitToYear = scPropSubmitToYear;
+	}
+	//#14306 - End
+	
 
 }
