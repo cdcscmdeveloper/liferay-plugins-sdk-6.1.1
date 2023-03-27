@@ -427,8 +427,8 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	/**
 	 * Convert Ct Address to FL Address 
 	 */
-	protected void convertCtAddressToFlAddress(FlFulfilmentRequest flRequest,FlSupplierDtl supplierDtl){
-		CtContractValue ctSupplierDtl = flRequest.getCtContract().getLatestContractVer().getCtContractValue();
+	protected void convertCtAddressToFlAddress(CtContractValue ctSupplierDtl,FlSupplierDtl supplierDtl){//33917
+		//CtContractValue ctSupplierDtl = flRequest.getCtContract().getLatestContractVer().getCtContractValue(); //33917
 		if(ctSupplierDtl.getSupplierBranch() != null){
 			supplierDtl.setBranchCode(null);
 			supplierDtl.setBranchName(ctSupplierDtl.getSupplierBranch());
