@@ -76,6 +76,7 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -2757,7 +2758,14 @@ public class NoticeBoardBackingBean extends
 			if (supplier != null) {
 				List<SmMofAccount> mofAccounts = supplier.getSmMofAccounts();
 				if (CollectionUtils.isNotEmpty(mofAccounts)) {
-					mofAccount = mofAccounts.get(0);
+					//Bug #34208 start
+					for (SmMofAccount mof : mofAccounts){
+						if(mof.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE){
+							mofAccount = mof;
+							break;
+						}
+					}
+					//Bug #34208 end
 				}
 			}
 		

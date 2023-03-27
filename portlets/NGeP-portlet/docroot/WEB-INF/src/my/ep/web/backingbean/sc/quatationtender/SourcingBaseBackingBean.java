@@ -5093,7 +5093,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						answerRemarkList = new ArrayList<>();
 					}
 
-					answerRemarkList.add(tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark());
+					// 32648 - start
+					if (null != tplSpecQuestion.getTplSpecAnswers() && tplSpecQuestion.getTplSpecAnswers().size() > 0) {
+						// 32648 & 34406 - start
+						if (tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark() != null) {
+							answerRemarkList.add(tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark());
+						}
+						// 32648 & 34406 - end
+					}
+					// 32648 - end
 
 					addSpecList = true;
 					continue;
@@ -5290,7 +5298,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					if (getFirstValue) {
 						map.put("clItem", question.getClItem());
 						map.put("uomName", question.getClUom().getUomName());
-						map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
+						map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
 						map.put("zoneName", zone.getTplSpecZoneDtl().getZoneName());
 						map.put("qty", zone.getQty().toString());
 
@@ -5377,7 +5385,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							map.put("clUomPerMonth", question.getClUomPerMonth().toString());
 						} else {
 							// product
-							map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
+							map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
 
 							String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
 
@@ -5981,5 +5989,33 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return CheckStatus.contains(currentStatusId);
 	}
 	// 25635-End
+
+	// 25037 - note 677 - start
+	/**
+	 * Evaluate the corresponding Representative/Agency parameter type based on committee type.
+	 * PBA, PBB, QCA, FSW, FSB, QCB, PPB
+	 * @return String (Parameter Type Code)
+	 */ 
+	public String getRepresentativeType(String committeeType) {
+		switch (committeeType) {
+		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
+		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
+		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
+		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_PBB;
+		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_PBA;
+		case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH;
+		case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK;
+		default:
+			return "";
+		}
+	}
+	// 25037 - note 677 - end
 	
 }

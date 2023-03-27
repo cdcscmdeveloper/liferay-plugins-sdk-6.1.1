@@ -924,7 +924,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		setSchInfo(schInfo);
 		return schInfo;
 
-	}	
+	}
+
 	
 	/**
 	 * Navigate to CR UI
@@ -1311,8 +1312,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			Object obj = super.getBpmTaskDetails(Object.class, new String[]{BpmOutcomeConst.BPM_SAVE});
 			initializeCRBeans();
 			FLContractOrderDataType coObj = null;
-			if(this.getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME) && 
-					this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_PHIS_CR)) {
+			
+			//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
+			if ((this.getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME) || this
+					.getManagedBean().getProcessName()
+					.equalsIgnoreCase(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME.replaceAll("\\s", "")))
+					&& this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_PHIS_CR)) {
 				FLPHISContractOrderDataType phisCoObj = (FLPHISContractOrderDataType) obj;
 				coObj = phisCoObj.getContractOrder();
 			} else {
@@ -1765,13 +1770,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	private void setFlSupplierDtl(FlFulfilmentRequest flRequest) {
 		if(flRequest.getFlSupplierDtl() == null){
 			FlSupplierDtl supplierDtl = new FlSupplierDtl();
-			IContractSupplierSO ctSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
-			supplierDtl.setMofNo(ctSupplierSO.retrieveSupplierMOFNoByContractId(flRequest.getCtContract().getContractId()));
+			//33917-Start
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			CtContractValue ctSupplierDtl  = contractSO.getCtValueSupplierAddressByContractId(flRequest.getCtContract().getContractId());
 			
-			CtContractValue ctSupplierDtl = flRequest.getCtContract().getLatestContractVer().getCtContractValue();
-			convertCtAddressToFlAddress(flRequest,supplierDtl);
-			supplierDtl.setFlFulfilmentRequest(flRequest);
+			supplierDtl.setMofNo(ctSupplierDtl.getSupplierMofNo());
 			supplierDtl.setSupplierName(ctSupplierDtl.getSupplierName());
+			convertCtAddressToFlAddress(ctSupplierDtl,supplierDtl);
+			//33917-End
+			supplierDtl.setFlFulfilmentRequest(flRequest);
 			flRequest.setFlSupplierDtl(supplierDtl);
 		}
 	}
@@ -7057,23 +7064,23 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 *	 
 	 */
 	private void checkAP59() {
-
+		
 		IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-
+		
 		if(getManagedBean().getFlRequest().getCtContract().getContractId() != null){
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());		
-
+			
 			BigDecimal sumOrderedAmt = BigDecimal.ZERO;
 			sumOrderedAmt = calculatesTotalOrderedAmt();
 			reqDTO.setAmount(sumOrderedAmt);
 			resDTO=fulfilmentRequestSO.validateAP59(reqDTO);
-
+		
 			if(!resDTO.isCrComplete()) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-
+				
 			}
 		}		
 	}
@@ -7101,5 +7108,5 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 	}
 	//29401-end
-}
 	
+}

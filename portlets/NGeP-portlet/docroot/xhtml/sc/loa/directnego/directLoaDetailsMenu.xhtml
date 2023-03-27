@@ -226,9 +226,9 @@
 							size="110"
 							value="#{directLOABackingBean.managedBean.scLoa.scQt.qtTitle}"
 							cols="110" rows="3" style="margin-bottom:5px;width: 670px;"
-							maxlength="500">
+							maxlength="1000">
 							<p:ajax event="blur" process="title" update="@form" />
-						</p:inputTextarea>
+						</p:inputTextarea> <!-- #34163  Changed maxlength to 1000 Vinod -->
 						<p:message id="titleMsg" for="title" display="icon" /></td>
 				</tr>
 			</h:panelGroup>
@@ -240,7 +240,7 @@
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
+						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
 							<p:selectOneMenu id="procMode" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.procurementMode.parameterId}"
 								style="margin-bottom:5px;width:246px;"
@@ -266,7 +266,7 @@
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
+						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
 							<p:selectOneMenu id="qtType" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.qtType.parameterId}"
 								style="margin-bottom:5px;width:206px;"
@@ -303,7 +303,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
+						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
 							<p:selectOneMenu id="procTypeBoCategory" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
 								style="margin-bottom:5px;width:246px;"

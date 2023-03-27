@@ -187,6 +187,7 @@ public class SupplierManagementConst {
 	//30912 - START
 	// APPLICATION TYPE
 	public static final String APPL_TYPE_BUMI = "B";
+	public static final String APPL_TYPE_CATEGORY  = "A"; //#34098 - START_END 
 	//30912 - END
 	public static final String PERSONNEL_TYPE_DIRECTOR = "DIR";
 	public static final String PERSONNEL_TYPE_STAFF = "STF";
@@ -681,6 +682,8 @@ public class SupplierManagementConst {
 	public static final String SM_REASON_CODE_OTHER = "OTHER";
 
 	public static final String GST_FILE_PATH = "/SM/GST/";
+	// #29617
+	public static final String SME_FILE_PATH = "/SM/SME/";
 	public static final String SITE_VISIT_REPORT_PATH = "/SM/SITE_VISIT/";
 	public static final String OFFLINE_DOC_CHECKLIST_PATH = "/SM/OFFLINE_DOC/CHECKLIST/";
 	public static final String SUPPORTING_DOC_TEMP_PATH = "/SM/SUPPORTING_TEMP_DOWNLOAD/";
