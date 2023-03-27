@@ -459,6 +459,14 @@ public class SmApplicationBackingBean extends
 							.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)
 							.append(",")
 							.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM)
+							//#32627 START
+							.append(",")
+							.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_SDO_INQUIRY)
+							.append(",")
+							.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PO_INQUIRY)
+							.append(",")
+							.append(SupplierManagementConst.PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT)
+							//#32627 END
 							.append(")");
 					reqDTO.setWorkflowStatus(sb.toString());
 					resDto = mofRegistrationSO
@@ -6809,11 +6817,18 @@ public class SmApplicationBackingBean extends
 		if(getManagedBean().getSelectedShareHolder().isClerical()){
 			getManagedBean().getSelectedShareHolder().setClericalFlg(1);
 		}
-		
-		if(getManagedBean().getSelectedShareHolder().isContractSigner()){
+		//34197 START 
+		/*if(getManagedBean().getSelectedShareHolder().isContractSigner()){
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(1);
+		}*/
+		if(getManagedBean().getSelectedShareHolder().getContractSignerFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+			getManagedBean().getSelectedShareHolder().setContractSigner(true);
 		}
 		
+		if(getManagedBean().getSelectedShareHolder().getContractSignerFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
+			getManagedBean().getSelectedShareHolder().setContractSigner(false);
+		}
+		//34197 END
 		if(getManagedBean().getSelectedShareHolder().isSemiProf()){
 			getManagedBean().getSelectedShareHolder().setSemiProfFlg(1);
 		}

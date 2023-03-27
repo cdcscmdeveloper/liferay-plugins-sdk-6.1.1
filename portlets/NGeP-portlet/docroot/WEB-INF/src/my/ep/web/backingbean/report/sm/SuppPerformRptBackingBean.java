@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.report.sm;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -36,12 +38,19 @@ public class SuppPerformRptBackingBean extends
 	private static final Logger log = EpLogger.getLogger(SuppPerformRptBackingBean.class);
 
 	public SuppPerformRptBackingBean() {
+		// #33741 - start
+		resetSearch();
+		// #33741 - end
 		//getManagedBean().setYearList(getYearList());
 		setDefaultDateFromAndDateTo();
 		onChangeRegType();
 	}
 
 	public void generateReport() {
+		// #31893 - start
+		Long supplierId = null;
+		boolean isSprMv = false;
+		// #31893 - end
 		
 		if (getManagedBean().getSelectedOrgProfile() == null && getManagedBean().getMofNo().isEmpty() && getManagedBean().getEpNo().isEmpty() ) {
 				throw new EpException(MessageConst.ERROR_REPORT_780044);		
@@ -54,6 +63,14 @@ public class SuppPerformRptBackingBean extends
 		} else if(getManagedBean().getDateFrom() == null && getManagedBean().getDateTo() != null) {
 			throw new EpException(MessageConst.ERROR_REPORT_780054);
 		}
+		// #33741 - start
+		// reset selectedOrgProfile if user select supplierId = 2
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId() == 2) {
+			getManagedBean().setSelectedOrgProfile(null);
+		}
+		// #33741 - end
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
@@ -64,6 +81,7 @@ public class SuppPerformRptBackingBean extends
 						.getSelectedOrgProfile().getSmSupplier().getCompanyName());
 				supplierSearchReqDTO.setCompanyName(getManagedBean()
 						.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+				// #33741 - start
 				// #31893 - start
 				/*
 				if (supplierSearchReqDTO.getCompanyName().equalsIgnoreCase(SmReportConst.SM_SUPPLIER_PERFORMANCE_COMP_1)
@@ -71,14 +89,19 @@ public class SuppPerformRptBackingBean extends
 						|| supplierSearchReqDTO.getCompanyName().equalsIgnoreCase(SmReportConst.SM_SUPPLIER_PERFORMANCE_COMP_2)) {
 					getManagedBean().setReportCode(SmReportConst.SM_SUPPLIER_PERFORMANCE_V_RPT_VAL);
 				}
-				*/
+				
 				params.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(getManagedBean()
 						.getSelectedOrgProfile().getSmSupplier().getSupplierId()));
 				
 				if (getManagedBean().getSelectedOrgProfile().getSmSupplier().isSprMv()) {
 					getManagedBean().setReportCode(SmReportConst.SM_SUPPLIER_PERFORMANCE_V_RPT_VAL);
 				}
+				*/
 				// #31893 - end
+				
+				supplierId = getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId();
+				isSprMv = getManagedBean().getSelectedOrgProfile().getSmSupplier().isSprMv();
+				// #33741 - end
 			}
 		}else{
 			if(getManagedBean().getMofNo() != null){
@@ -90,8 +113,19 @@ public class SuppPerformRptBackingBean extends
 			SupplierSearchResDTO suResDTO = ValidateSupplier(supplierSearchReqDTO);
 			supplierSearchReqDTO.setCompanyName(suResDTO.getSmSupplier().getCompanyName());
 			params.put(SmReportConst.PARAM_COMPANY_NAME, suResDTO.getSmSupplier().getCompanyName());
+			
+			// #33741 - start
+			supplierId = suResDTO.getSmSupplier().getSupplierId();
+			isSprMv = suResDTO.getSmSupplier().isSprMv();
+			// #33741 - end
 		}
+		// #33741 - start		
+		params.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(supplierId));
 		
+		if (isSprMv) {
+			getManagedBean().setReportCode(SmReportConst.SM_SUPPLIER_PERFORMANCE_V_RPT_VAL);
+		}
+		// #33741 - end		
 		params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getMofNo());
 		
 		
@@ -149,6 +183,11 @@ public class SuppPerformRptBackingBean extends
 		getManagedBean().setMofNo(StringUtils.EMPTY);
 		getManagedBean().setRegType(StringUtils.EMPTY);
 		getManagedBean().setEpNo(StringUtils.EMPTY);
+		//#33741 - START
+		Date currDate = new Date();
+		getManagedBean().setDateTo(currDate);
+		getManagedBean().setDateFrom(null);
+		//#33741 - END
 		setDefaultDateFromAndDateTo();
 	}
 
@@ -166,4 +205,41 @@ public class SuppPerformRptBackingBean extends
 		getManagedBean().setRegDateLabel(label);
 	}
 
+	//#33741 - START
+	public void findMinMaxDate(String dateType, Date selectedDate) {
+		Calendar addedCal = new GregorianCalendar();
+		Date currDate = new Date();
+		addedCal.setTime(selectedDate);
+
+		if (dateType.equalsIgnoreCase("from")) {
+			addedCal.add(Calendar.MONTH, 12);
+			if (1 == currDate.compareTo(addedCal.getTime())) {
+				if(getManagedBean().getDateTo().compareTo(addedCal.getTime()) < 0){
+					if(getManagedBean().getDateFrom().compareTo(getManagedBean().getDateTo()) > 0){
+						getManagedBean().setDateTo(addedCal.getTime());
+					}else{
+						getManagedBean().setDateTo(getManagedBean().getDateTo());
+					}	
+				}else{
+					getManagedBean().setDateTo(addedCal.getTime());
+				}
+			} else {
+				getManagedBean().setMaxToDate(currDate);
+				if(getManagedBean().getDateTo().compareTo(addedCal.getTime()) > 0){
+					getManagedBean().setDateTo(currDate);
+				}
+			}
+			getManagedBean().setMinToDate(selectedDate);
+		} else if (dateType.equalsIgnoreCase("to")) {
+			addedCal.setTime(getManagedBean().getDateFrom());
+			addedCal.add(Calendar.MONTH, 12);
+			if (selectedDate.compareTo(addedCal.getTime()) > 0) {
+				addedCal.setTime(selectedDate);
+				addedCal.add(Calendar.MONTH, -12);
+				getManagedBean().setDateFrom(addedCal.getTime());
+				getManagedBean().setMinToDate(addedCal.getTime());
+			}
+		}
+	}
+	//#33741 - END
 }
