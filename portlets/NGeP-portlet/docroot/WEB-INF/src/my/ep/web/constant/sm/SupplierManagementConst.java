@@ -187,6 +187,7 @@ public class SupplierManagementConst {
 	//30912 - START
 	// APPLICATION TYPE
 	public static final String APPL_TYPE_BUMI = "B";
+	public static final String APPL_TYPE_CATEGORY  = "A"; //#34098 - START_END 
 	//30912 - END
 	public static final String PERSONNEL_TYPE_DIRECTOR = "DIR";
 	public static final String PERSONNEL_TYPE_STAFF = "STF";
@@ -474,6 +475,8 @@ public class SupplierManagementConst {
 	public static final String PM_STATUS_REJECTED_BY_SYSTEM = "20118";
 	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PAYMENT = "20119";
 	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE = "20120";
+	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PO_INQUIRY = "20121";//#32627 START
+	public static final String PM_STATUS_REJECTED_BY_SYSTEM_SDO_INQUIRY = "20122";//#32627 END
 	public static final String PM_STATUS_PENDING_PAYMENT_PROCESSING_FEE = "20114";
 	public static final String PM_STATUS_PENDING_CERTIFCATE_GENERATION = "20198";
 	public static final String PM_STATUS_REGISTERED = "20199";
@@ -483,6 +486,8 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PO_ESCALTED_TO_APPROVER = 20108;
 	public static final long PM_STATUS_PO_REJECTED_APPLICATION = 20112;
 	public static final long PM_STATUS_APPROVER_REJECTED_APPLICATION = 20113;
+	public static final long PM_STATUS_REJECTED_BY_SYS_PO_INQUIRY = 20121;//#32627 START
+	public static final long PM_STATUS_REJECTED_BY_SYS_SDO_INQUIRY = 20122;//#32627 END
 	public static final long PM_STATUS_PENDING_APPL_DECLARATION = 20100;
 	public static final long PM_STATUS_PENDING_PROCESS_FEE = 20114;
 	public static final long PM_STATUS_PENDING_PAYMENT = 20251;
