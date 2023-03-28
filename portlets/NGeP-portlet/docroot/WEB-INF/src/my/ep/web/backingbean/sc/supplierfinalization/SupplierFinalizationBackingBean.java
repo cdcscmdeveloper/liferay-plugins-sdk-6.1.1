@@ -2942,6 +2942,10 @@ public class SupplierFinalizationBackingBean extends
 				}
 				// #18685 - End.
 			}
+			//#28784
+			if(getManagedBean().getScQt().isDemoRequired()) {
+				this.getManagedBean().setDemoReq(true);
+			}
 
 		} finally {
 			qtSuppFinalizationSO = null;

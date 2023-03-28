@@ -502,7 +502,8 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
     //#15391 -start-
     this.getManagedBean().setGenInfo(false);
     this.getManagedBean().setChecklist(false);
-    //#15391 -end-
+	//#28784		
+	this.getManagedBean().setQtSpecMaintanance(true);	
    
 		// 1873 note 125 start
 		ScWorkFlowStatus workFlowStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,
@@ -617,7 +618,7 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		// 29464-start
 		String renderPage = QTConstants.SPECIFICICATON_COMM_PREPARATION;
 		
-		if (redirect) {
+		if (redirect|| checkDemoRedirect()){//#28784
 			renderPage = renderPage.concat("?faces-redirect=true");
 		}
 		// 29464-end
@@ -633,11 +634,26 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 	public String gotoSpecMaintenanceSearchPage() {
 		// renewSesionObject();
 		return QTConstants.SPEC_MAINTENANCE_SEARCH_PAGE;
-	}
+			}
 
 	private boolean isSpecCommitteeSecretary() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
+	}
+	
+	//#28784
+	private boolean checkDemoRedirect() {
+		Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt().getQtStatus()
+				.getStatusId() : null;
+		boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
+		if (null != status
+				&& ((status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+						|| status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) || status
+							.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)))
+				&& this.getManagedBean().isMaintanceFlow() && demoRequired) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

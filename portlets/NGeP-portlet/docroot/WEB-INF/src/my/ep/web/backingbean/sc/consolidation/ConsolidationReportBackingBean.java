@@ -516,9 +516,11 @@ public class ConsolidationReportBackingBean extends
 		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport
 				.getScQtFinalizationReportAttachment();
 		String definitionType = scQtFinalizationReport.getDefinationType()
-				.getParameterCode();
-		String docDefinitionKey = scQtFinalizationReport.getPmDocument()
-				.getDocDefinitionKey();
+				.getParameterCode();	
+		String docDefinitionKey = null;
+		if (!SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(scQtFinalizationReport.getTitle())) {//#28784
+			docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
+		}
        //codes fixed related to 25619 issue.
 		if (reportAttachment == null
 				|| (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
@@ -1132,6 +1134,10 @@ public class ConsolidationReportBackingBean extends
 					saveNewBriefingPaperReportList(reportDocDefList, _scQtFinalization, qtId);
 				}
 				//#18685 -end-
+			}
+			//#28784
+			if(this.getManagedBean().getScQt().isDemoRequired()) {
+				this.getManagedBean().setDemoReq(true);
 			}
 		} finally {
 			qtSuppFinalizationSO = null;

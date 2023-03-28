@@ -4415,8 +4415,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							List<ScQtFinalizationReport> erList = new ArrayList<>();
 							getManagedBean().setEvaluationReportList(erList);
 						}
-
-						if (null != report.getPmDocument()) {
+																				//#28784
+						if (null != report.getPmDocument() || report.getTitle().equalsIgnoreCase(SourcingConstants.DEMO_EVALUATION_REPORT)) {
 							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
 								if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
 									getManagedBean().getEvaluationReportList().add(report);
@@ -4424,9 +4424,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 									iterator.remove();
 								}
 							} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
-								if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
+								//#28784
+								if (SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(report.getTitle())
+										|| SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
 										|| SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
-										|| SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
+										|| SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
+										|| SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(report.getTitle())) {//#28784
 									getManagedBean().getEvaluationReportList().add(report);
 									
 									iterator.remove();
