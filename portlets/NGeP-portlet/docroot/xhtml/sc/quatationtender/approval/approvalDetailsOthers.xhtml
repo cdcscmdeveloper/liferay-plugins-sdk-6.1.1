@@ -72,7 +72,7 @@
 						<!-- #25077#355 - Start (Temporary fixed, before #9019 merge to Prod env) -->
 						<c:choose>
 							<c:when
-								test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION and qTDetailBB.isQTMaintenanceScreen()}">
+								test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}">
 								<ac:scSingleFileUploadButton id="otheruploadId"
 									popupWidgetVar="otherApprUploadDlg"
 									attachment="#{otherrequestdetails.approvalRequestAttachement}"
