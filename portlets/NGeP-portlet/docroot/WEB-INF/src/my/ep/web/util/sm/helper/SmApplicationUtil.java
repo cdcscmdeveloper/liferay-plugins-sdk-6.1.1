@@ -2719,7 +2719,11 @@ public class SmApplicationUtil {
 			s = ResourceBundleUtils.getMessage("lbl.sm.authorized.share",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		}
-
+		//#34277 - start
+		if(managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() == null){
+			managedBean.getSmAppl().getSmCompanyBasic().setPaidUpCapital(new BigDecimal(0));
+		}
+		//#34277 - end
 		if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
 			boolean validPaidUp = true;
 			// String amt = "";
