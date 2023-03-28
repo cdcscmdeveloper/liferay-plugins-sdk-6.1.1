@@ -233,7 +233,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			}
 			reqDTO.setApproverUserList(getManagedBean().getApproverList());
 			
-			//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
+			//#34178 - added inside if statement to also include process name without space to cater Oracle 12C upgrade issue
 			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)
 					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)
 					|| (getManagedBean().getProcessName() != null && (getManagedBean().getProcessName().equalsIgnoreCase(
@@ -268,7 +268,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 						messageId = MessageConst.INFO_700018;
 						
-						//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
+						//#34178 - added inside if statement to also include process name without space to cater Oracle 12C upgrade issue
 						if (getManagedBean().getProcessName() != null
 								&& (getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME) || getManagedBean()
 										.getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME.replaceAll("\\s", "")))) {
@@ -339,7 +339,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		FulfilmentResDTO resDTO = new FulfilmentResDTO();	
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		FulfilmentResDTO resDTOInvoice = new FulfilmentResDTO();
 		if(taskId != null){
 			renewSesionObject();
@@ -478,8 +478,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				checkLastTaxFRN();//Issuance of CoGSTR
 			}
 			getAcknowledgeOfficerDropdown();
-			
-			// Set evaluation
+		    
 			if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
 				getManagedBean().setDisableEvaluation(Boolean.TRUE);
 			}
@@ -1762,6 +1761,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	public void closeListener() {
 		RequestContext.getCurrentInstance().execute("rejectionRemarksHistory.hide()");
 	}
+	
 	//26279 - start
 	public void viewDisciplinaryAction() {
 		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
@@ -1829,6 +1829,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 
 			if (loaDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
 				getManagedBean().setDpFlag(true);
+				String supplierOffer = getManagedBean().getSupplierOffer();
+				if(supplierOffer !=null && supplierOffer.length() > 0) {
+					String trimWipDpZone = supplierOffer.replace("<br/>", "");
+					getManagedBean().setSupplierOffer(trimWipDpZone);
+				}
 			} else {
 				getManagedBean().setDpFlag(false);
 				if (getManagedBean().getItemSpecList().isEmpty() && !getManagedBean().getSpecificationList().isEmpty()) {

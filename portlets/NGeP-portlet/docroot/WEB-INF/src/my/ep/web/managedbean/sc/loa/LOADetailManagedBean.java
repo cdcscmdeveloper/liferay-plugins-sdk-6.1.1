@@ -20,7 +20,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem; // #29007
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
@@ -31,7 +31,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
-import my.ep.persistence.entity.tpl.spec.TplSpecAnswer; // #29007
+import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -329,7 +329,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	
 	private boolean enablePBForDP;
 
-	/*#29007 Start Vinod*/
+	/* #29007 Start Vinod */
 	private boolean supPropSpecDisable = false;
 	private boolean supPropSpecUpdate = false;
 	private boolean uploadA3Templet = false;
@@ -339,7 +339,9 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private String loaBpmVerify;
 	private ScLoiLoaItem scLoiLoaItem;
 	private List<TplSpecAnswer> tplSpecAnswerList;
-	/*#29007 End Vinod*/
+	private List<ScLoiLoaItem> loiLoaItemsResult; // fix issue 2 search action note 347
+	private int retainPageNumber = 0; // #34242
+	/* #29007 End Vinod */
 	
 	//#27797 - start
 	private ScLoiLoaItem highestZoneScLoiLoaItem;
@@ -1892,62 +1894,106 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	}
 	//#29006 - end
 	
-	/*#29007 Start Vinod*/
+	/* #29007 Start Vinod */
 	public List<TplSpecAnswer> getTplSpecAnswerList() {
 		return tplSpecAnswerList;
 	}
+
 	public void setTplSpecAnswerList(List<TplSpecAnswer> tplSpecAnswerList) {
 		this.tplSpecAnswerList = tplSpecAnswerList;
 	}
+
 	public String getItemNamePopup() {
 		return itemNamePopup;
 	}
+
 	public void setItemNamePopup(String itemNamePopup) {
 		this.itemNamePopup = itemNamePopup;
 	}
+
 	public String getSpecKeyword() {
 		return specKeyword;
 	}
+
 	public void setSpecKeyword(String specKeyword) {
 		this.specKeyword = specKeyword;
 	}
+
 	public ScLoiLoaItem getScLoiLoaItem() {
 		return scLoiLoaItem;
 	}
+
 	public void setScLoiLoaItem(ScLoiLoaItem scLoiLoaItem) {
 		this.scLoiLoaItem = scLoiLoaItem;
 	}
+
 	public boolean isSupPropSpecUpdate() {
 		return supPropSpecUpdate;
 	}
+
 	public void setSupPropSpecUpdate(boolean supPropSpecUpdate) {
 		this.supPropSpecUpdate = supPropSpecUpdate;
 	}
+
 	public boolean isSpecificationAndSupplierDialogFlagQT() {
 		return specificationAndSupplierDialogFlagQT;
 	}
+
 	public void setSpecificationAndSupplierDialogFlagQT(boolean specificationAndSupplierDialogFlagQT) {
 		this.specificationAndSupplierDialogFlagQT = specificationAndSupplierDialogFlagQT;
 	}
+
 	public String getLoaBpmVerify() {
 		return loaBpmVerify;
 	}
+
 	public void setLoaBpmVerify(String loaBpmVerify) {
 		this.loaBpmVerify = loaBpmVerify;
 	}
+
 	public boolean isSupPropSpecDisable() {
 		return supPropSpecDisable;
 	}
+
 	public void setSupPropSpecDisable(boolean supPropSpecDisable) {
 		this.supPropSpecDisable = supPropSpecDisable;
 	}
+
 	public boolean isUploadA3Templet() {
 		return uploadA3Templet;
 	}
+
 	public void setUploadA3Templet(boolean uploadA3Templet) {
 		this.uploadA3Templet = uploadA3Templet;
 	}
-	/*#29007 End Vinod*/
+	/* #29007 End Vinod */
+	
+	// #34242, #29007 - Start
+	/**
+	 * @return the retainPageNumber
+	 */
+	public int getRetainPageNumber() {
+		return retainPageNumber;
+	}
+
+	/**
+	 * @param retainPageNumber the retainPageNumber to set
+	 */
+	public void setRetainPageNumber(int retainPageNumber) {
+		this.retainPageNumber = retainPageNumber;
+	}
+	// #34242, #29007 - End
+	
+	// 29007 - fix issue 2 search action note 347 - start
+	public List<ScLoiLoaItem> getLoiLoaItemsResult() {
+		return loiLoaItemsResult;
+	}
+
+	public void setLoiLoaItemsResult(List<ScLoiLoaItem> loiLoaItemsResult) {
+		this.loiLoaItemsResult = loiLoaItemsResult;
+	}
+	// 29007 - fix issue 2 search action note 347 - end
+
 	//#27797 - start
 	public ScLoiLoaItem getHighestZoneScLoiLoaItem() {
 		return highestZoneScLoiLoaItem;

@@ -2061,6 +2061,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	private void initSupplierDisciplinaryAction(SmSupplier supplier) {
 		//getManagedBean().setEditDisciplinaryAction(false); //27857: Disciplinary Action - disabled hardcoded value - 26238
+		getManagedBean().setHasActiveDA(false); //#34626
 		DisciplinaryActionVO discipline = getInitDisciplinaryActionVO();
 		if (!EntityHelper
 				.isCollectionEmpty(supplier.getSmDisciplinaryActions())) {
@@ -2151,7 +2152,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					discipline.getSmDiscplinaryAction().setEndDate(
 							disc.getEndDate());
 					discipline.setSuspend(true);
-					
+					getManagedBean().setHasActiveDA(true); //#34626
 					break;
 				}
 			}
