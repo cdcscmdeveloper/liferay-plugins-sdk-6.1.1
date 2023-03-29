@@ -1651,6 +1651,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 
 			if (loaDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
 				getManagedBean().setDpFlag(true);
+				String supplierOffer = getManagedBean().getSupplierOffer();
+				if(supplierOffer !=null && supplierOffer.length() > 0) {
+					String trimWipDpZone = supplierOffer.replace("<br/>", "");
+					getManagedBean().setSupplierOffer(trimWipDpZone);
+				}
 			} else {
 				getManagedBean().setDpFlag(false);
 				if (getManagedBean().getItemSpecList().isEmpty() && !getManagedBean().getSpecificationList().isEmpty()) {
