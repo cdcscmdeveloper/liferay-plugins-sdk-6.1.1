@@ -13111,17 +13111,16 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 */
 	public boolean handleChmnFinalizationDate(boolean validityDaysExpiredQt) {
 		boolean enableApprovalDateMOF = Boolean.FALSE;
-		if (!validityDaysExpiredQt) {
-			log.info("Invalid");
-			Date proposalValidityEndDate = this.getManagedBean().getScQtApprovalRequest().getProposalValidityEndDateOri();
-			Date chmnFinalizationDate = this.getManagedBean().getScQtApprovalRequest().getChmnFinalizationDate();
-			if ((null != proposalValidityEndDate) && (null != chmnFinalizationDate)) {
 
-				long days = DateUtils.getDaysDifference(proposalValidityEndDate, chmnFinalizationDate);
-				int day = (int) days;
-				if (day >= 0) {
-					return Boolean.TRUE;
-				}
+		log.info("Invalid");
+		Date proposalValidityEndDate = this.getManagedBean().getScQtApprovalRequest().getProposalValidityEndDateOri();
+		Date chmnFinalizationDate = this.getManagedBean().getScQtApprovalRequest().getChmnFinalizationDate();
+		if ((null != proposalValidityEndDate) && (null != chmnFinalizationDate)) {
+
+			long days = DateUtils.getDaysDifference(proposalValidityEndDate, chmnFinalizationDate);
+			int day = (int) days;
+			if (day >= 0) {
+				return Boolean.TRUE;
 			}
 		}
 
