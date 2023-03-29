@@ -686,10 +686,12 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 			attachmentList.removeAll(deletedAttachment);
 		}
 		apprvRequest.setEpvApprovalReqAttachment(attachmentList);
+		apprvRequest.setDecisionCertPBM(null);
 		
 		ScQtApprovalRequest apprvReq = getQTDetailSO().saveApprovalRequest(apprvRequest);
 		
 		List<ScQtApprovalRequest> newApprovalReqList = new ArrayList<>();
+		apprvReq.setDecisionCertPBM(new PmParameter());//#21692
 		newApprovalReqList.add(apprvReq);
 		this.getManagedBean().setScQtApprovalRequestList(newApprovalReqList);
 	}

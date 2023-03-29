@@ -3286,7 +3286,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (getManagedBean().getQt().isApprovalPBM()) {
 				if (approvalRequest.getEpvApprovalReqAttachmentR2() == null) {
 					throw new EpException(MessageConst.ERROR_770401);
-				} else if (approvalRequest.getEpvApprovalReqAttachmentR3() == null) {
+				} else if (approvalRequest.getDecisionCertPBM().getParameterId().equals(QTStatusConst.PCB_RQ2_APPROVED)
+						&& approvalRequest.getEpvApprovalReqAttachmentR3() == null) {
 					throw new EpException(MessageConst.ERROR_770402);
 				}
 			} else {
