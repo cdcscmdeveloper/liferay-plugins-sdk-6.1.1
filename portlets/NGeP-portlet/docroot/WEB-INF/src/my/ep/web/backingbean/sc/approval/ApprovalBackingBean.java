@@ -3365,6 +3365,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				throws FileNotFoundException, IOException {
 			String typeOfRequest = this.getManagedBean().getEpvAttachmentValue();
 			ScQtApprovalRequest apprvRequest = this.getManagedBean().getScQtApprovalRequestList().get(0);
+			setDecisionsNull(apprvRequest);
 			
 			ScQtEpvApprovalReqAttachment attachment = null;
 			List<ScQtEpvApprovalReqAttachment> attachmentList = new ArrayList<>();
@@ -3403,6 +3404,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			ScQtApprovalRequest apprvReq = getQTDetailSO().saveApprovalRequest(apprvRequest);
 			
 			List<ScQtApprovalRequest> newApprovalReqList = new ArrayList<>();
+			setDecisionsNewParam(apprvReq);
 			newApprovalReqList.add(apprvReq);
 			this.getManagedBean().setScQtApprovalRequestList(newApprovalReqList);
 			for (ScQtEpvApprovalReqAttachment attach : this.getManagedBean()
@@ -3428,7 +3430,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		public void deleteEpvUploadFile(BaseEntity delEntity) {
 			String typeOfRequest = this.getManagedBean().getEpvAttachmentValue();
 			ScQtApprovalRequest apprvRequest = this.getManagedBean().getScQtApprovalRequestList().get(0);
-			
+			setDecisionsNull(apprvRequest);
 			ScQtEpvApprovalReqAttachment deletedAttachment = null;
 			List<ScQtEpvApprovalReqAttachment> attachmentList = apprvRequest.getEpvApprovalReqAttachment();
 			
@@ -3446,6 +3448,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			ScQtApprovalRequest apprvReq = getQTDetailSO().saveApprovalRequest(apprvRequest);
 			
 			List<ScQtApprovalRequest> newApprovalReqList = new ArrayList<>();
+			setDecisionsNewParam(apprvReq);
 			newApprovalReqList.add(apprvReq);
 			this.getManagedBean().setScQtApprovalRequestList(newApprovalReqList);
 			for (ScQtEpvApprovalReqAttachment attach : this.getManagedBean()
@@ -3488,7 +3491,40 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 				}
 			}
-		}		
+		}
+		
+		//set decisions null for attachments
+		private void setDecisionsNull(ScQtApprovalRequest apprvRequest) {
+			if (this.getManagedBean().getQt().isApprovalPBM()) {
+				if (apprvRequest.getDecisionCertPBM().getParameterId() == null) {
+					apprvRequest.setDecisionCertPBM(null);
+				}
+				if (apprvRequest.getDecessionType().getParameterId() == null) {
+					apprvRequest.setDecessionType(null);
+				}
+			} else {
+				if (apprvRequest.getDecessionType().getParameterId() == null) {
+					apprvRequest.setDecessionType(null);
+				}
+			}
+		}
+		
+		//set new param for null decisions
+		private void setDecisionsNewParam(ScQtApprovalRequest apprvReq) {
+			if (this.getManagedBean().getQt().isApprovalPBM()) {
+				if (apprvReq.getDecisionCertPBM() == null) {
+					apprvReq.setDecisionCertPBM(new PmParameter());
+				}
+				if (apprvReq.getDecessionType() == null) {
+					apprvReq.setDecessionType(new PmParameter());
+				}
+			} else {
+				if (apprvReq.getDecessionType() == null) {
+					apprvReq.setDecessionType(new PmParameter());
+				}
+			}
+		}
+		//#21692 - End
 }
 
 // ***25692
