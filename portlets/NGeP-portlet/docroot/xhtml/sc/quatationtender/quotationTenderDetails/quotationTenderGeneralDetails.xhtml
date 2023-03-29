@@ -1032,8 +1032,21 @@
 							<table>
 								<tr>
 									<td>
-							<p:inputText value="#{lbl['lbl.sc.no.available']}" style="width:200px;" disabled="true" >
-							</p:inputText></td>
+							<p:inputText value="#{lbl['lbl.sc.no.available']}" style="width:200px;" disabled="true"
+							rendered="#{!approvalBackingBean.isEPVWorkflowStatusNull(scQt.qtId)}">
+							</p:inputText>
+							<p:inputMask id="responsePeriod" mask="9?9999"
+									maxlength="3" placeHolder=""
+									label="#{lbl['lbl.sc.qt.response.period']}" required="#{empty param['skipvalidation']}"
+									value="#{scQt.responsePeriod}"
+									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) or (scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation and qTDetailBB.isQTStatusPublished(scQt.qtStatus.statusId)) or (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"
+									style="text-align:right; width:200px;"
+									rendered="#{approvalBackingBean.isEPVWorkflowStatusNull(scQt.qtId)}">
+							</p:inputMask>
+							<td><p:message id="responsePeriodMsg"
+								for="responsePeriod" display="icon"
+								rendered="#{approvalBackingBean.isEPVWorkflowStatusNull(scQt.qtId)}"/></td>
+							</td>
 									<td colspan="2">
 										<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip1']}#{lbl['lbl.sc.qt.response.period.tooltip2']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.fromValue)} #{lbl['lbl.sc.qt.response.period.tooltip3']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.toValue)} #{lbl['lbl.sc.qt.response.period.tooltip4']}"/>
 									</td>
