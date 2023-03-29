@@ -13612,6 +13612,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			}
 			reqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
 	//#29732 End - reOpen Fix
+
 			//1873 - start - note 97
 			SpecificationResDTO resDTO  = new SpecificationResDTO(); 
 			try{
@@ -14478,6 +14479,10 @@ if (null != checklist && !checklist.isEmpty()) {
 
 		validateZonalChanges();
 		// 29521 - end
+		
+		// #33860 related to #25138 only validate when complete- start
+		specSO.validateSpecZoneQtyZero(reqDTO);
+		// #33860 related to #25138 - end
 				
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
