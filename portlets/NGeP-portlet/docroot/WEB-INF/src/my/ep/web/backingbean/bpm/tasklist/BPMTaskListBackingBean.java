@@ -983,7 +983,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
 					)+ SCProcessNameConst.RECOMMEND_MA_SUPPLIER,
 					SourcingConstants.NAV_PAGE_MULTIPLE_LOI_RECOMMENDATION);
-			//Bug_34625 - Start
+			//Bug_34625 - Start 
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
 					)+ SCProcessNameConst.ENDORSE_FC_SELECTION,
 					SourcingConstants.NAV_PAGE_MULTIPLE_LOI_RECOMMENDATION);
