@@ -2064,6 +2064,31 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			return false;
 		}
 	}
+	
+	/**
+	 * Check if EPV workflow null or not, if null return true
+	 * 
+	 * @param qtId
+	 * @return
+	 */
+	public boolean isEPVWorkflowStatusNull(Long qtId) {
+
+		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+		
+		tenderReqDTO.setQtId(qtId);
+		
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		QuationTenderResDTO resDTO = detailSO.getLatestEPVWorkflowStatus(tenderReqDTO);
+		
+		ScWorkFlowStatus workflowStatus = resDTO.getWorkflowStatus();
+		if (null != workflowStatus) {
+			return false;
+		} else {
+			return true;
+		}
+	
+	}
 	// #21692 - end
 
 	/**
