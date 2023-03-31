@@ -1068,6 +1068,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			approvalRequest.setProposalValidityEndDateNew(getNewValidityDueDate(this.getManagedBean().getQt(),
 					Integer.parseInt(approvalRequest.getChangedValue())));
 			approvalRequest.setMofDate(this.getManagedBean().getQt().getMofDate());
+			//#21692 - ensure that is date of FC chairperson less than QT validity, date of MOF = null
+			if (!scQt.isApprovalPBM()) {
+				approvalRequest.setMofDate(null);
+			}
 			approvalRequest.setChmnFinalizationDate(this.getManagedBean().getQt().getChmnFinalizationDate());
 			approvalRequest.setResponsePeriod(this.getManagedBean().getQt().getResponsePeriod());
 
@@ -1172,6 +1176,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			approvalRequest.setProposalValidityEndDateNew(getNewValidityDueDate(this.getManagedBean().getQt(), 
 					Integer.parseInt(approvalRequest.getChangedValue())));
 			approvalRequest.setMofDate(this.getManagedBean().getQt().getMofDate());
+			//#21692 - ensure that is date of FC chairperson less than QT validity, date of MOF = null
+			if (!scQt.isApprovalPBM()) {
+				approvalRequest.setMofDate(null);
+			}
 			approvalRequest.setChmnFinalizationDate(this.getManagedBean().getQt().getChmnFinalizationDate());
 			approvalRequest.setResponsePeriod(this.getManagedBean().getQt().getResponsePeriod());
 			//#21692 add data for report/history usage - End
