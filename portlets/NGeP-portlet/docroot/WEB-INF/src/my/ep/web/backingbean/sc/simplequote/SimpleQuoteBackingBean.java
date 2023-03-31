@@ -5780,6 +5780,11 @@ public class SimpleQuoteBackingBean extends
 		specAnswerList = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
 		// validate tpl spec - service before spki authenticate
 		if (CollectionUtils.isNotEmpty(specAnswerList)) {
+			//Bug_34259 - Start
+			TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
+			.getTplSpecMaster();
+			specMaster.setSpecCreatedBySQ(true);	
+			//Bug_34259 - End
 			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(
 					specAnswerList.get(0).getTplSpecQuestion()
 							.getTplSpecMaster(), specAnswerList, locale);
