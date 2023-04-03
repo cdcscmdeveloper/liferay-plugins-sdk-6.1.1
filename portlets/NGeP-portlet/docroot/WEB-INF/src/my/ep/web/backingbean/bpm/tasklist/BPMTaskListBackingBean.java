@@ -983,15 +983,14 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
 					)+ SCProcessNameConst.RECOMMEND_MA_SUPPLIER,
 					SourcingConstants.NAV_PAGE_MULTIPLE_LOI_RECOMMENDATION);
+			//Bug_34625 - Start 
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
 					)+ SCProcessNameConst.ENDORSE_FC_SELECTION,
 					SourcingConstants.NAV_PAGE_MULTIPLE_LOI_RECOMMENDATION);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
-					)+ SCProcessNameConst.ENDORSE_FC_SELECTION,
+					)+ SCProcessNameConst.SIGNOFF_FC_SELECTION,
 					SourcingConstants.NAV_PAGE_MULTIPLE_LOI_RECOMMENDATION);
-			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
-					)+ SCProcessNameConst.ENDORSE_FC_SELECTION,
-					SourcingConstants.NAV_PAGE_LOI_LIST);
+			//Bug_34625 - End
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.DIRECT_AWARD_PROCESS_NAME)
 					+ SCProcessNameConst.PREPARE_LOI, SourcingConstants.NAV_PAGE_LOI_LIST);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
