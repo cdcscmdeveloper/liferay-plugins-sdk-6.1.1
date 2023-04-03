@@ -69,7 +69,6 @@ import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
-import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -707,13 +706,11 @@ public class ViewApplHistoryBackingBean extends
 				} //#32424 END--03032023--
 
 				if (roleType != null) {
-					if (roleType
-							.equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+					if (roleType.equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)) {
 						isPoUser = true;
 					}
 
-					if (roleType
-							.equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+					if (roleType.equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_APP)) {
 						isApproverUser = true;
 					}
 				}
@@ -1023,9 +1020,9 @@ public class ViewApplHistoryBackingBean extends
 		commonDownloadUtil(filePath, displayFileName);
 		return null;
 	}
-
+	
 	public void commonDownloadUtil(String filePath, String displayFileName) throws IOException{
-
+		
 		PortletResponse resp = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
@@ -1075,7 +1072,7 @@ public class ViewApplHistoryBackingBean extends
 		}
 
 	}
-
+	
 	private String getMimeType(String fileName) {
 		String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
 		
@@ -1083,7 +1080,7 @@ public class ViewApplHistoryBackingBean extends
 		
 		return (mimeType != null) ? mimeType : "octet-stream";
 	}
-
+	
 	public void onViewOverlapCategory(SmAppl smAppl) {
 		SmBulkApplicationVO vo = new SmBulkApplicationVO();
 		SmOverlapCategoryVO overlapCategoryVO = getOverlapCategoryVO(smAppl);
@@ -1099,7 +1096,7 @@ public class ViewApplHistoryBackingBean extends
 		RequestContext.getCurrentInstance().execute(
 				"overlapCategoryDialog.show();");
 	}
-
+	
 	private SmOverlapCategoryVO getOverlapCategoryVO(SmAppl smAppl) {
 		SmOverlapCategoryVO retVal = null;
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
@@ -1539,7 +1536,6 @@ public class ViewApplHistoryBackingBean extends
 	}
 	//28771 - end 
 	
-
 	//#31248 - START
 	public Boolean setResubmitButton(SmAppl smAppl){
 		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
@@ -1560,7 +1556,7 @@ public class ViewApplHistoryBackingBean extends
 		}
 		List<String> rejectedStatus = Arrays
 				.asList(SupplierManagementConst.REJECTED_STATUSES);
-			
+		
 		SmWorkFlowStatusResDTO smWorkFlowStatusResDTO = workFlowStatusSO.retrieveCurrentWorkFlowStatusByDocId(smWorkFlowStatusReqDTO);
 		Boolean button = false;
 		if(smWorkFlowStatusResDTO != null 
@@ -1599,9 +1595,8 @@ public class ViewApplHistoryBackingBean extends
 		return button;
 		//32627 - END
 	}
-	//#31248 - END	
+	//#31248 - END
 	
-
 	//#11641 - Start
 	public int getMandatoryCounter() {
 		return mandatoryCounter++;
