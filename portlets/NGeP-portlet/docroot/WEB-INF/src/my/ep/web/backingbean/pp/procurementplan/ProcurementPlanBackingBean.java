@@ -636,9 +636,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setEpTotalBudgetH(null);
 		this.getManagedBean().setEpTotalPlanH(null);
 		this.getManagedBean().setEpTotalNonEpAllocH(null);
-
 		
-
 	}
 	
 	private void resetPpProcurementItems(List<PpProcurementItem> ppItems) {
@@ -841,7 +839,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
         			ppit.getProcurementTitle());
 
         	//#34156 10/11/2022- Start
-			//#34390- Start
+        	//#34390- Start
         	if (ppit.isOriginal() && ppit.getFromPpItem() == null && ppit.isSelectable()
         			&& ppit.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 				ppit.setNewLabcatMethodType(true);
@@ -8550,6 +8548,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 				 
 			 }
 			 
+			 log.info("cloned= "+cloned.getPmGlAccount()+" ("+cloned.getExpenditureItemId()
+					 +"), isCloned= "+cloned.isCloned()+", isClonedItem= "
+					 +cloned.isClonedItem()+", isBrandNew= "+cloned.isBrandNew()
+					 +", allowAnotherPindaan= "+cloned.isAllowAnotherPindaan());
+			 
 			 idx -= 1;
 			 PpExpenditureItem original = items.get(idx);
 			 
@@ -9081,9 +9084,3 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}//#25549@24022021 - end
 }
-	   
-
-
-
-
-			

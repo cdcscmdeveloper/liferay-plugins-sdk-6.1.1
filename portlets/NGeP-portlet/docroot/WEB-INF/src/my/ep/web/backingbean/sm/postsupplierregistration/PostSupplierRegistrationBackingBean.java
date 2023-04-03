@@ -20,7 +20,6 @@ import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.biz.service.sm.upgraderole.IUpgradeRoleSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
@@ -28,7 +27,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
-import my.ep.dto.osb.sm.SMOsbReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
@@ -138,6 +136,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 			SmWorkflowStatus rejectedWf = rejectedApplExist(supplier.getSupplierId());
 			boolean isRejectedApplExist = (rejectedWf == null) ? false : true;
+			
 			boolean successPayment = checkSuccessPaymentBySupplierId(supplier.getSupplierId());
 			
 			//Self Request Supplier Admin
@@ -235,6 +234,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							SmWorkflowStatus wfStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
 							if(wfStatus != null){
 								PmStatus wfStat = wfStatus.getPmStatus();
+								//31792
 								//32627 START
 								if(wfStat != null &&
 									(wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION || 
@@ -321,6 +321,20 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 					log.info("pageNavigate------------"+path1);
 					checkSSMValid(supplier,this.getManagedBean());
 					log.info("this.getManagedBean().getPersonnelsRole()------------"+this.getManagedBean().getPersonnelsRole());
+					//start #29956
+					if(!this.getManagedBean().getPersonnelsRole().isEmpty()){
+						String epRole = getEpRoleDowngradePopupByPersonnel(this.getManagedBean().getPersonnelsRole());
+						this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
+								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[]{epRole}));
+						
+						this.getManagedBean().setTermAndConditionCheckOwner(
+								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[]{epRole}));
+						this.getManagedBean().setTermAndConditionCheckOwnerA(
+								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a",new String[]{epRole}));
+						this.getManagedBean().setTermAndConditionCheckOwnerC(
+								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c",new String[]{epRole}));
+					}
+					//end #29956
 					log.info("this.getManagedBean().isCheckRoleSSM()------------"+this.getManagedBean().isCheckRoleSSM());
 					if(this.getManagedBean().getPersonnelsRole()!= null && this.getManagedBean().getPersonnelsRole().size() > 0 && !this.getManagedBean().isCheckRoleSSM()){
 						proceed =false;
