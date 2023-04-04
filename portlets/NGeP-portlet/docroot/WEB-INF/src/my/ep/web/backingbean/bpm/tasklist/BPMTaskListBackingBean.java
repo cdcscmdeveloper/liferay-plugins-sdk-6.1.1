@@ -57,7 +57,7 @@ public class BPMTaskListBackingBean extends
 BaseBackingBean<BPMTaskListManagedBean> {
 
 	private static Logger log = Logger.getLogger(BPMTaskListBackingBean.class);
-	
+
 	private String language = new FacesScopes().getUserLocale().getLanguage();
 
 	private ISearchBean<PmParameterDesc> docTypeSearchBean;
@@ -107,7 +107,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_REQUEST_NOTE_CODE_ASSIGNMENT);
 
 			temp.put(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
-			//temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865				
+			//temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
 			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.REQUISITIONER_RESPONSE_PURCHASE_IN_DEFAULT, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
 			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.VERIFY_PID, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
 			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.APPROVE_PID, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
@@ -269,7 +269,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME
 					+ FLProcessNameConst.REVIEW_CANCEL_DO_HT, "delivery-order");
 			temp.put(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME
-					+ FLProcessNameConst.REVIEW_FAILED_CANCEL_DO_HT, "delivery-order");			
+					+ FLProcessNameConst.REVIEW_FAILED_CANCEL_DO_HT, "delivery-order");
 			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME
 					+ FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT, "invoice");
 			temp.put(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME,
@@ -288,7 +288,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ SCProcessNameConst.REVISE_QT_SCHEDULE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
 					+ SCProcessNameConst.REVISE_QT_DOCUMENT, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
-			
+
 			temp.put(SCProcessNameConst.BUDGET_APPROVAL_PROCESS_NAME
 					+ SCProcessNameConst.APPROVE_BUDGET,
 					SourcingConstants.NAV_PAGE_QT_APPROVAL);
@@ -307,7 +307,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ SCProcessNameConst.VIEW_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
 			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
 					+ SCProcessNameConst.SIGNOFF_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
-			
+
 
 			temp.put(SCProcessNameConst.PCB_APPROVAL_PROCESS_NAME
 					+ SCProcessNameConst.APPROVE_PCB,
@@ -350,13 +350,13 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_QT_APPROVAL);
 
 			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE, 
+					+ SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_TEC_COMMITTEE, 
+					+ SCProcessNameConst.ASSIGN_TEC_COMMITTEE,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_FEC_COMMITTEE, 
+					+ SCProcessNameConst.ASSIGN_FEC_COMMITTEE,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
 					+ SCProcessNameConst.COORDINATE_EC_MEETING,
@@ -519,7 +519,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
 			temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 					+ SCProcessNameConst.ENDORSE_FC_SELECTION,
-					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);			
+					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
 			temp.put(SCProcessNameConst.LOI_ACCEPTANCE_PROCESS_NAME
 					+ SCProcessNameConst.APPROVE_LOI,
 					SourcingConstants.NAV_PAGE_REVIEW_LOI);
@@ -540,13 +540,13 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 					+ SCProcessNameConst.COORDINATE_FC_MEETING,
 					SourcingConstants.NAV_PAGE_FC_COORDINATE_MEETING);
-			
+
 			temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_FC_SECRETARY, 
+					+ SCProcessNameConst.ASSIGN_FC_SECRETARY,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 
 			temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_FC_MEMBER, 
+					+ SCProcessNameConst.ASSIGN_FC_MEMBER,
 					SourcingConstants.NAV_PAGE_FC_APPOINT_MEMBERS);
 
 			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
@@ -595,11 +595,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(SCProcessNameConst.LOA_MANUAL_PROCESS_NAME
 					+ SCProcessNameConst.VERIFY_MANUAL_LOA,
 					SourcingConstants.NAV_PAGE_REVIEW_DIRECT_LOA);
-			
+
 			temp.put(SCProcessNameConst.SPEC_MAINTENANCE_PROCESS_NAME
 					+ SCProcessNameConst.SPEC_MAINTENANCE_ENDORSE_SCORING,
 					SourcingConstants.NAV_PAGE_SPECIFICATION_ENDORSMENT);
-			
+
 			temp.put(SCProcessNameConst.SPEC_MAINTENANCE_PROCESS_NAME
 					+ SCProcessNameConst.SPEC_MAINTENANCE_SIGNOFF_SCORING,
 					SourcingConstants.NAV_PAGE_SPECIFICATION_ENDORSMENT);
@@ -617,7 +617,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ ParameterConst.DOCTYPE_LETTER_OF_AWARD,
 					SourcingConstants.NAV_PAGE_CANCELLATION_LOA_APPROVAL);
 			//END - 22211
-			
+
 			log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"]");
 			temp.put(getProcessNameRemoveSpace("UNSPSC Code Request"), "review-unspsc-code");
 			temp.put(getProcessNameRemoveSpace("Extension Code Request"), "review-extension");
@@ -657,7 +657,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.SUPPLIER_CODIFICATION_PROCESS_NAME),
 					SourcingConstants.NAV_PAGE_REQUEST_NOTE_CODE_ASSIGNMENT);
 
-			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME), SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);			
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME), SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME) + SCProcessNameConst.REQUISITIONER_RESPONSE_PURCHASE_IN_DEFAULT, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME) + SCProcessNameConst.VERIFY_PID, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME) + SCProcessNameConst.APPROVE_PID, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
@@ -770,7 +770,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME)+ FLProcessNameConst.ACK_MODIFIED_INVOICE_HT, "invoice");
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME)+ FLProcessNameConst.REVIEW_CANCEL_DO_HT, "delivery-order");
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME
-					)+ FLProcessNameConst.REVIEW_FAILED_CANCEL_DO_HT, "delivery-order");			
+					)+ FLProcessNameConst.REVIEW_FAILED_CANCEL_DO_HT, "delivery-order");
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME
 					)+ FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT, "invoice");
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME),
@@ -789,7 +789,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					)+ SCProcessNameConst.REVISE_QT_SCHEDULE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
 					)+ SCProcessNameConst.REVISE_QT_DOCUMENT, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
-			
+
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.BUDGET_APPROVAL_PROCESS_NAME
 					)+ SCProcessNameConst.APPROVE_BUDGET,
 					SourcingConstants.NAV_PAGE_QT_APPROVAL);
@@ -808,7 +808,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					)+ SCProcessNameConst.VIEW_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
 					)+ SCProcessNameConst.SIGNOFF_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
-			
+
 
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PCB_APPROVAL_PROCESS_NAME
 					)+ SCProcessNameConst.APPROVE_PCB,
@@ -851,13 +851,13 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_QT_APPROVAL);
 
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					)+ SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE, 
+					)+ SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					)+ SCProcessNameConst.ASSIGN_TEC_COMMITTEE, 
+					)+ SCProcessNameConst.ASSIGN_TEC_COMMITTEE,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					)+ SCProcessNameConst.ASSIGN_FEC_COMMITTEE, 
+					)+ SCProcessNameConst.ASSIGN_FEC_COMMITTEE,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
 					)+ SCProcessNameConst.COORDINATE_EC_MEETING,
@@ -983,15 +983,14 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
 					)+ SCProcessNameConst.RECOMMEND_MA_SUPPLIER,
 					SourcingConstants.NAV_PAGE_MULTIPLE_LOI_RECOMMENDATION);
+			//Bug_34625 - Start 
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
 					)+ SCProcessNameConst.ENDORSE_FC_SELECTION,
 					SourcingConstants.NAV_PAGE_MULTIPLE_LOI_RECOMMENDATION);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
-					)+ SCProcessNameConst.ENDORSE_FC_SELECTION,
+					)+ SCProcessNameConst.SIGNOFF_FC_SELECTION,
 					SourcingConstants.NAV_PAGE_MULTIPLE_LOI_RECOMMENDATION);
-			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
-					)+ SCProcessNameConst.ENDORSE_FC_SELECTION,
-					SourcingConstants.NAV_PAGE_LOI_LIST);
+			//Bug_34625 - End
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.DIRECT_AWARD_PROCESS_NAME)
 					+ SCProcessNameConst.PREPARE_LOI, SourcingConstants.NAV_PAGE_LOI_LIST);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
@@ -1022,7 +1021,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 					)+ SCProcessNameConst.ENDORSE_FC_SELECTION,
-					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);			
+					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.LOI_ACCEPTANCE_PROCESS_NAME
 					)+ SCProcessNameConst.APPROVE_LOI,
 					SourcingConstants.NAV_PAGE_REVIEW_LOI);
@@ -1043,13 +1042,13 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 					)+ SCProcessNameConst.COORDINATE_FC_MEETING,
 					SourcingConstants.NAV_PAGE_FC_COORDINATE_MEETING);
-			
+
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
-					)+ SCProcessNameConst.ASSIGN_FC_SECRETARY, 
+					)+ SCProcessNameConst.ASSIGN_FC_SECRETARY,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
-					)+ SCProcessNameConst.ASSIGN_FC_MEMBER, 
+					)+ SCProcessNameConst.ASSIGN_FC_MEMBER,
 					SourcingConstants.NAV_PAGE_FC_APPOINT_MEMBERS);
 
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.EVALUATION_PROCESS_NAME
@@ -1098,11 +1097,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.LOA_MANUAL_PROCESS_NAME
 					)+ SCProcessNameConst.VERIFY_MANUAL_LOA,
 					SourcingConstants.NAV_PAGE_REVIEW_DIRECT_LOA);
-			
+
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.SPEC_MAINTENANCE_PROCESS_NAME
 					)+ SCProcessNameConst.SPEC_MAINTENANCE_ENDORSE_SCORING,
 					SourcingConstants.NAV_PAGE_SPECIFICATION_ENDORSMENT);
-			
+
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.SPEC_MAINTENANCE_PROCESS_NAME
 					)+ SCProcessNameConst.SPEC_MAINTENANCE_SIGNOFF_SCORING,
 					SourcingConstants.NAV_PAGE_SPECIFICATION_ENDORSMENT);
@@ -1125,7 +1124,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		log.info("testing BPM******");
 
 	}
-	
+
 	private String getProcessNameRemoveSpace(String processName) {
 		processName = capitalizeWord(processName);
 		String retVal = processName.replaceAll("\\s", "");
@@ -1133,16 +1132,16 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		return retVal;
 	}
 	
-	private String capitalizeWord(String str){  
-	    String words[]=str.split("\\s");  
-	    String capitalizeWord="";  
-	    for(String w:words){  
-	        String first=w.substring(0,1);  
-	        String afterfirst=w.substring(1);  
-	        capitalizeWord+=first.toUpperCase()+afterfirst+" ";  
-	    }  
-	    return capitalizeWord.trim();  
-	}  
+	private String capitalizeWord(String str){
+	    String words[]=str.split("\\s");
+	    String capitalizeWord="";
+	    for(String w:words){
+	        String first=w.substring(0,1);
+	        String afterfirst=w.substring(1);
+	        capitalizeWord+=first.toUpperCase()+afterfirst+" ";
+	    }
+	    return capitalizeWord.trim();
+	}
 
 	// public void retrieveWorklistItems(String status, String viewBy, String
 	// assignment) {
@@ -1240,7 +1239,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 				url = (String) this.getManagedBean().getBpmMap().get(process);
 				if (StringUtils.isBlank(url)) {
 					url = (String) this.getManagedBean().getBpmMap().get(process + taskName);
-					
+
 					if(StringUtils.isBlank(url)){
 						url = (String) this.getManagedBean().getBpmMap().get(process + docType);
 					}
@@ -1304,14 +1303,14 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 	/*
 	 * public void filterStatus() {
-	 * 
+	 *
 	 * BpmResponseDTO responseDTO = retrieveWorklistItems("ASSIGNED" ,this
 	 * .getManagedBean().getStatus()); }
 	 */
 
 	/*
 	 * public void tempFilterLogin() {
-	 * 
+	 *
 	 * BpmResponseDTO responseDTO = retrieveWorklistItems("ASSIGNED" ,this
 	 * .getManagedBean().getStatus()); }
 	 */
@@ -1326,7 +1325,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		PmStatusDesc pmStatusDesc = StatusHelper.getInstance().getStatusDescById(docInt.longValue());
 
 		if (log.isDebugEnabled()) {
-			log.debug("docInt:" + docInt);	
+			log.debug("docInt:" + docInt);
 		}
 
 		return pmStatusDesc != null ? pmStatusDesc.getStatusName() : "Review";
@@ -1349,7 +1348,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 	}
-	
+
 	//Enhancement #24714
 	public void refreshBothTaskList(){
 
@@ -1438,15 +1437,15 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		//this.getManagedBean().getTaskListDataModel().reloadData();
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
-		
+
 		getManagedBean().setSdoWithMultipleRoles(sdoWithMultipleRole());
-		
+
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, "taskListView");
-	
+
 	}
-	
+
 	// #24714
 	public void preRenderTaskViewCombined() {
 		log.info("......................preRenderTaskView (Combined)");
@@ -1474,11 +1473,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		} else {
 			this.getManagedBean().setDocType("");
 		}
-		
+
 		this.getManagedBean().getTaskListBothDataModel().reloadData();
-		
+
 		getManagedBean().setSdoWithMultipleRoles(sdoWithMultipleRole());
-		
+
 		FacesScopes sc = new FacesScopes();
 		getManagedBean().setLoginIc(sc.getUserSessionBean().getLoginId());
 
@@ -1492,9 +1491,9 @@ BaseBackingBean<BPMTaskListManagedBean> {
 	public String claimTask()  {
 
 		log.info("**********claimTask");
-		
+
 			claimBpmTask();
-			
+
 			this.getManagedBean().getTaskListGroupDataModel().reloadData();
 			this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 
@@ -1505,35 +1504,35 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 	public String releaseTask()  {
 		log.info("**********releaseTask");
-		
+
 		releaseBpmTask();
-		
+
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 
 		return "taskListView?faces-redirect=true";
 	}
-	
-	
+
+
 	public String claimTaskCombined()  {
 
 		log.info("**********claimTaskCombined");
-		
+
 			claimBpmTask();
-			
+
 			this.getManagedBean().getTaskListBothDataModel().reloadData();
 			//this.getManagedBean().getTaskListGroupDataModel().reloadData();
 			//this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
-		
+
 		return "taskListCombined?faces-redirect=true";
 
 	}
-	
+
 	public String releaseTaskCombined()  {
 		log.info("**********releaseTaskCombined");
-		
+
 		releaseBpmTask();
-		
+
 		this.getManagedBean().getTaskListBothDataModel().reloadData();
 
 		return "taskListCombined?faces-redirect=true";
@@ -1578,11 +1577,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		IParameterSO statusSO = (IParameterSO) BusinessDelegate
 				.getInstance().getServiceObject("pm",
 						IParameterSO.class);
-		
+
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
-		
+
 		ParameterResDTO resDTO = statusSO.findDOcTypeList(reqDTO);
-		
+
 		StringBuilder docType = new StringBuilder();
 		docType.append("CD,");
 		if(resDTO.getDocTypeLs()!=null && resDTO.getDocTypeLs().size()>0){
@@ -1590,10 +1589,10 @@ BaseBackingBean<BPMTaskListManagedBean> {
 				docType.append(doc+",");
 			}
 		}
-		
+
 		String outCome = docType.substring(0, docType.length()-1);
 		log.info("outCome:"+outCome);
-		
+
 		StringBuilder sb = new StringBuilder();
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 
@@ -1606,7 +1605,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		log.info("sb.toString()"+sb.toString());
 		return sb.toString();
 	}
-	
+
 	public void findDocStatus() {
 		if (this.getManagedBean().getDocType() != null) {
 				log.info("*********findDocStatus*********");
@@ -1649,7 +1648,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			this.getManagedBean().setDocStatusList(null);
 		}
 	}
-	
+
 	public void findDocStatusGroup() {
 		if (this.getManagedBean().getDocTypeGroup() != null) {
 				log.info("*********findDocStatusGroup*********");
@@ -1699,15 +1698,15 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		log.info("***********hasManyRole**********");
 		FacesScopes fs = new FacesScopes();
 		long roleCount = PmCommonUtil.retrieveActiveOrg(fs.getUserSessionBean().getUserId()).get(0).getPmUserRoles().size();
-		
+
 		if(roleCount > 1){
 			return true;
 		}
-		
+
 		return false;
 
 	}
-	
+
 	public String poKpiByCompanyState(int docId, int statusId) {
 
 		String retVal = SmApplicationUtil.getInstance()
@@ -1716,17 +1715,17 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		return retVal;
 
 	}
-	
+
 	// 25627 - Start.
 	public boolean isCommitteeApproverWithQT(StatusReqDTO reqDTO) {
 		if (ParameterConst.DOCTYPE_QUOTATION.equals(reqDTO.getDocType())) {
 			FacesScopes fs = new FacesScopes();
-			
+
 			if (fs.hasRoleUser(RoleCode.COMMITTEE_APPROVER.value())) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 	// 25627 -End.

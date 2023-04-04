@@ -15045,6 +15045,40 @@ public class SmApplicationBackingBean extends
 	}
 	//#11641 - END
 	
+	//#33240 - start
+	/**
+	 * Delete file for license certificate information
+	 */
+	public void onDeleteMandatoryLicenseFile(SmApplDocFile doc, int index) {
+
+		this.getManagedBean().setSupportDoc(doc.getSmApplSupportDoc());
+		this.getManagedBean().setAttachedFileIndex(index);
+		this.getManagedBean().setSmApplDocFile(doc);
+		
+		RequestContext.getCurrentInstance().execute(
+				"confirmDeleteLicenseCertDialog.show();");
+	}
+	
+	public void deleteMandatoryLicenseFile() {
+		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
+				.getSmApplSupportDocs()) {
+			if (doc.getPmDocument() != null) {
+				if (doc.getPmDocument().isMandatory()) {
+					if (doc.getPmDocument().isLicenseReq()
+							&& !doc.getPmDocument().getPmDocumentRestrs()
+									.isEmpty()) {
+						if(doc.getSmApplDocFiles().contains(this.getManagedBean().getSmApplDocFile())){
+							doc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
+							this.getManagedBean().setSmApplDocFile(null);
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	//#33240 - end
+	
 	//#32014 - START
 	//reassign the address since the first time assigning the data is not displayed/populate
 	public void reassignSelShareHolderResAddress(SmPersonnelAddress personnelAddress){
@@ -15172,42 +15206,7 @@ public class SmApplicationBackingBean extends
 		}
 		return catList;
 	}
-	//30766 END
-	
-	//#33240 - start
-	/**
-	 * Delete file for license certificate information
-	 */
-	public void onDeleteMandatoryLicenseFile(SmApplDocFile doc, int index) {
-
-		this.getManagedBean().setSupportDoc(doc.getSmApplSupportDoc());
-		this.getManagedBean().setAttachedFileIndex(index);
-		this.getManagedBean().setSmApplDocFile(doc);
-		
-		RequestContext.getCurrentInstance().execute(
-				"confirmDeleteLicenseCertDialog.show();");
-	}
-	
-	public void deleteMandatoryLicenseFile() {
-		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
-				.getSmApplSupportDocs()) {
-			if (doc.getPmDocument() != null) {
-				if (doc.getPmDocument().isMandatory()) {
-					if (doc.getPmDocument().isLicenseReq()
-							&& !doc.getPmDocument().getPmDocumentRestrs()
-									.isEmpty()) {
-						if(doc.getSmApplDocFiles().contains(this.getManagedBean().getSmApplDocFile())){
-							doc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
-							this.getManagedBean().setSmApplDocFile(null);
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
-	//#33240 - end
-	
+	//30766 END	
 	
 	// #34166 - Start
 	public void validateText() {
