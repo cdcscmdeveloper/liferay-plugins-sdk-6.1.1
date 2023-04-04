@@ -9692,7 +9692,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDto = new TemplateSpecReqDTO();
-		
+
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setScLoiLoaItem(loiLoaItem);
+
+		AwardSupplierResDTO resDTO = getQtAwardSO().retriveLatestLoiLoaItemDetails(reqDTO);
+
+		if (resDTO.getScLoiLoaItem() != null) {
+			loiLoaItem = new ScLoiLoaItem();
+			loiLoaItem = resDTO.getScLoiLoaItem();
+		}
+
 		this.getManagedBean().setItemNamePopup(loiLoaItem.getScRequestItem().getItemName());
 		this.getManagedBean().setScLoiLoaItem(loiLoaItem);
 		this.getManagedBean().setNewSupplierJustification(loiLoaItem.getLoaSpecJustification());
@@ -9783,6 +9793,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (this.getManagedBean().getTplSpecAnswerList() != null
 				|| this.getManagedBean().getNewSupplierJustification() != null) {
 			ScLoiLoaItem scLoiLoaItem = this.getManagedBean().getScLoiLoaItem();
+
+			AwardSupplierReqDTO reqDTOLatest = new AwardSupplierReqDTO();
+			reqDTOLatest.setScLoiLoaItem(scLoiLoaItem);
+
+			AwardSupplierResDTO resDTOLatest = getQtAwardSO().retriveLatestLoiLoaItemDetails(reqDTOLatest);
+
+			if (resDTOLatest.getScLoiLoaItem() != null) {
+				scLoiLoaItem = new ScLoiLoaItem();
+				scLoiLoaItem = resDTOLatest.getScLoiLoaItem();
+			}
+			
 			scLoiLoaItem.setComplete(isComplete);
 			
 			if (isComplete) {

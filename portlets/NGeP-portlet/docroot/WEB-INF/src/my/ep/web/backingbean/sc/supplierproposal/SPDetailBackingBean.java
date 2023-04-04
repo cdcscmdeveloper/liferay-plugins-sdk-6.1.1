@@ -1327,10 +1327,11 @@ public class SPDetailBackingBean extends
 										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
 									answers.add(specAnswer);
 									// #21695 farid IN MONITORING START
-								} else if (specAnswer.getRatePerUom() != null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
+								}
+								//Bug_34259 - Start
+								else if (specAnswer.getRatePerUom() != null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
-
+								
 								} else if (specAnswer.getRatePerUom() == null
 										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
@@ -1349,7 +1350,9 @@ public class SPDetailBackingBean extends
 										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
 									// #21695 farid IN MONITORING END
-								}else{
+								} 
+								//Bug_34259 - End
+								else{
 									specAnswer.setDeleted(true);
 									toDeleteZoneAnswers.add(specAnswer);
 								}
