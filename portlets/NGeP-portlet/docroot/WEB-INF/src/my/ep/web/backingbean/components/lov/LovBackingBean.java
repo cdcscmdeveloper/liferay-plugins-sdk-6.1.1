@@ -2,7 +2,14 @@ package my.ep.web.backingbean.components.lov;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+//20200909@akmal - Enhancement28951 - Start
+import java.util.HashMap;
+import java.util.Iterator;
+//20200909@akmal - Enhancement28951 - End
 import java.util.List;
+//20200909@akmal - Enhancement28951 - Start
+import java.util.Map;
+//20200909@akmal - Enhancement28951 - End
 import java.util.ResourceBundle;
 
 import javax.el.MethodExpression;
@@ -31,6 +38,9 @@ import my.ep.dto.cc.lov.LovResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.aut.AutUser;
+//20200909@akmal - Enhancement28951 - Start
+import my.ep.persistence.entity.pm.common.PmBusinessNature;
+//20200909@akmal - Enhancement28951 - End
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
@@ -43,6 +53,11 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+//20200909@akmal - Enhancement28951 - Start
+import org.primefaces.event.ToggleSelectEvent;
+import org.primefaces.event.UnselectEvent;
+import org.primefaces.event.data.PageEvent;
+//20200909@akmal - Enhancement28951 - End
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -71,6 +86,9 @@ public class LovBackingBean implements Serializable {
 	private List resultList = new ArrayList();
 	private Object selectedEntity;
 	private List<BaseEntity> selectedEntities;
+	//20200909@akmal - Enhancement28951 - Start
+	private Map<Long,BaseEntity> persistedEntities = new HashMap<Long,BaseEntity>();
+	//20200909@akmal - Enhancement28951 - End
 //	private BaseEntity[] selectedEntities;
 	
 	private List<LovColumnBean> columnsToDisplay = new ArrayList<LovColumnBean>();
@@ -386,10 +404,18 @@ public class LovBackingBean implements Serializable {
 		this.getSearchDataModel().resetData();
 		this.setLovSearchBean(new SearchBean());
 //		this.setLovBean(new LovBean());
-		
+		//20200909@akmal - Enhancement28951 - Start
+		if(this.getSelectedEntities() != null){
+			this.getSelectedEntities().clear();
+		}		
+		//20200909@akmal - Enhancement28951 - End
 		if(!getLovBean().isDisplayResultWhenReset()) {
 			disableDisplayResult();
 		}
+		
+		//9442 - start
+		persistedEntities.clear();
+		//9442 - end
 	}
 	
 
@@ -400,6 +426,10 @@ public class LovBackingBean implements Serializable {
 		this.getSearchDataModel().resetData();
 		this.setLovSearchBean(new SearchBean());
 		this.setLovBean(new LovBean());
+		
+		//9442 - start
+		persistedEntities.clear();
+		//9442 - end
 	}
 	
 	//OR: columnName1^value1*columnName1^value2
@@ -497,7 +527,13 @@ public class LovBackingBean implements Serializable {
 						if(!isThis && fieldMapping[1].equals("this")) {
 							continue;
 						} else if(!isThis) {
+							// 9442 - START
+							if(filterBean.getSearchField().equalsIgnoreCase("levelCode")){
+								filterBean.setSearchOperator(SearchOperator.OPERATOR_NOT_EQUALS.value());					
+							} else {
 							filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());					
+							}
+							// 9442 - END
 							filterBean.setSearchValue(fieldMapping[1]);
 						} else {
 							filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
@@ -609,7 +645,9 @@ public class LovBackingBean implements Serializable {
 	
 			}
 		} else	if(this.getLovBean().getSelectionMode().equalsIgnoreCase("multiple")) {
-			
+			//20200909@akmal - Enhancement28951 - Start
+			if(!persistedEntities.isEmpty()) selectedEntities = new ArrayList<BaseEntity>(persistedEntities.values());
+			//20200909@akmal - Enhancement28951 - End
 			debugLogger("this.getSelectedEntities().size(): " + this.getSelectedEntities().size());
 			debugLogger("this.getSelectedEntities(): " + this.getSelectedEntities());
 			
@@ -675,6 +713,18 @@ public class LovBackingBean implements Serializable {
 					return false;
 				}
 			} else if(getSelectedEntities()!=null && getSelectedEntities().size()>0){
+				// #29832 & #9442 added if else to make sure the selected cb save after tick. 
+				// Default save after click next page onPageChange listener
+				if(getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")){
+					for(BaseEntity item : selectedEntities){
+						if(item instanceof PmBusinessNature){
+							Long key = ((PmBusinessNature) item).getBusinessNatureId();
+							if(!persistedEntities.containsKey(key))
+								persistedEntities.put(key, item);
+							
+						}
+					}
+				}
 				return false;
 			}
 		}
@@ -688,6 +738,57 @@ public class LovBackingBean implements Serializable {
 			column.setColumnTitle(bundle.getString(column.getBundleKey()));
 		}
 	}
+	
+	//20200909@akmal - Enhancement28951 - Start
+	public void onUnselectRow(UnselectEvent event){
+		Object value = event.getObject();
+		if(value instanceof PmBusinessNature){
+			Long key = ((PmBusinessNature) value).getBusinessNatureId();
+			if(persistedEntities.containsKey(key)) 
+				persistedEntities.remove(key);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void onToggleSelect(ToggleSelectEvent event){
+		List<BaseEntity> templist = !selectedEntities.isEmpty() ? selectedEntities : searchDataModel.getList();
+		//#32721 start
+		if (templist instanceof BaseEntity){
+			for(BaseEntity value : templist){
+				if(value instanceof PmBusinessNature){
+					Long key = ((PmBusinessNature) value).getBusinessNatureId();
+					if(persistedEntities.containsKey(key)) 
+						persistedEntities.remove(key);
+					else
+						persistedEntities.put(key,value);
+				}
+			}
+		}
+		//#32721 ends
+	}
+	
+	public void onPageChange(PageEvent event){
+		// put selected into hashmap
+		
+		//#29832 #9442 added if else for Pm_business_nature to skip save selected cb onPageChage
+		if (getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")){
+			
+		}else{
+			for(BaseEntity item : selectedEntities){
+				if(item instanceof PmBusinessNature){
+					Long key = ((PmBusinessNature) item).getBusinessNatureId();
+					if(!persistedEntities.containsKey(key))
+						persistedEntities.put(key, item);
+				}
+			}
+		}
+		
+	}
+	
+	public void populateSelectedItems(){
+		selectedEntities = new ArrayList<BaseEntity>(persistedEntities.values()); 
+	}
+	//20200909@akmal - Enhancement28951 - End
 	
 	private void enableDisplayResult() {
 		getLovBean().setDisplayResultWhenFirstLoad(true);
@@ -767,5 +868,14 @@ public class LovBackingBean implements Serializable {
 	public void setColumnsToDisplay(List<LovColumnBean> columnsToDisplay) {
 		this.columnsToDisplay = columnsToDisplay;
 	}
+	//20200909@akmal - Enhancement28951 - Start
+	public Map<Long, BaseEntity> getPersistedEntities() {
+		return persistedEntities;
+	}
+
+	public void setPersistedEntities(Map<Long, BaseEntity> persistedEntities) {
+		this.persistedEntities = persistedEntities;
+	}
+	//20200909@akmal - Enhancement28951 - End
 	
 }
