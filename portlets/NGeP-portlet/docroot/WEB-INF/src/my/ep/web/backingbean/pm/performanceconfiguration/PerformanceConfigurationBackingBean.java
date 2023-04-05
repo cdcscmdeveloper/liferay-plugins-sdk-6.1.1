@@ -31,6 +31,8 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.IContractIntegrationSO;
+import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.ICtConfigSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -58,6 +60,10 @@ import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
 import my.ep.dto.ct.ContractIntegrationResDTO;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ctconfig.CtConfigReqDTO;
+import my.ep.dto.ctconfig.CtConfigResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
@@ -76,6 +82,8 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.ct.CtConfig;
+import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -94,6 +102,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.TaskAssignmentSearchBean;
 import my.ep.web.constant.PagingConst;
@@ -110,6 +119,7 @@ import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.DualListModel;
 
 /**
  * Backing Bean for Task Reasssingment (new)
@@ -121,7 +131,7 @@ import org.primefaces.context.RequestContext;
 @ManagedBean(name = "performanceConfigurationBackingBean")
 @ViewScoped
 public class PerformanceConfigurationBackingBean extends
-		BaseBackingBean<PerformanceConfigurationManagedBean> {
+ ContractBaseBackingBean<PerformanceConfigurationManagedBean> {
 	/**
 	 * 
 	 */
@@ -134,54 +144,163 @@ public class PerformanceConfigurationBackingBean extends
 	public static final String NAV_TO_SEARCH = "performanceConfiguration";
 
 
+	public PerformanceConfigurationBackingBean(){
+		//initiateCtConfigList();
+	}
 	
-	public void preLoading() throws EpException {
+	
+	public void preLoading()  {
 		log.info("preLoading");
-
+		
+		try{
+		initiateCtConfigList();
+		
+		getManagedBean().getCtConfigModel().setSource(null);
+		getManagedBean().getCtConfigModel().setSource(getSourceCtConfigList());
+			
+		getManagedBean().getCtConfigModel().setTarget(null);
+		getManagedBean().getCtConfigModel().setTarget(getTargetCtConfigList());
+		
+		
+		List<CtConfig> lstConfig = getTargetCtConfigList();
+		if(!lstConfig.isEmpty()){
+			for(CtConfig targetConfig : getManagedBean().getCtConfigModel().getTarget()){
+				Iterator<CtConfig> sourceConfig = getManagedBean().getCtConfigModel().getSource().iterator();
+				while(sourceConfig.hasNext()){
+					CtConfig contract = sourceConfig.next();
+					if(contract != null && targetConfig != null && (contract.getContractNo().equalsIgnoreCase(targetConfig.getContractNo()))){
+						
+						sourceConfig.remove();
+						contract.setBrandNew(true);
+						
+					}else{
+						contract.setBrandNew(true);
+						contract.setRemove(true);
+					}
+				}
+				targetConfig.setRemove(true);
+			}
+		}else{
+			Iterator<CtConfig> sourceConfig = getManagedBean().getCtConfigModel().getSource().iterator();
+			while(sourceConfig.hasNext()){
+				CtConfig contract = sourceConfig.next();
+				contract.setBrandNew(true);
+			}
+		}
 		//[#25018] - end
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_SEARCH);
-
+		
+		}catch(Exception e){
+				e.printStackTrace();
+			} finally {
+				
+			}
+			
 	}
 
-
-
-	/**
-	 * get faces scopes
-	 * 
-	 * @return FacesScopes
-	 */
-	private FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-	}
-
-
-
-	/**
-	 * To get user id
-	 * 
-	 */	
-	public Long getUserByLoginId(){
-		Long loginSessionUserId = 1L;
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
 	
-		UserReqDTO userReqDTO = new UserReqDTO();
-		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
-		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
-		if (pmUser == null) {
-			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
-		}
-		else{
-			loginSessionUserId = pmUser.getUserId();
-		}
-		
-		new LogKey(loginSessionUserId);
-		
-		return loginSessionUserId;
+
+	private void initiateCtConfigList() {
+		// TODO Auto-generated method stub
+		getManagedBean().setCtConfigModel(new DualListModel<CtConfig>(new ArrayList<CtConfig>(),new ArrayList<CtConfig>()));
 	}
-	//7465, 29822 - end
+	
+	private List<CtConfig> getTargetCtConfigList() {
+		ICtConfigSO ctconfigSO = null;
+		List<CtConfig> targetList = new ArrayList<CtConfig>();
+		CtConfigReqDTO reqDTO = new CtConfigReqDTO();
+		CtConfigResDTO resDTO = new CtConfigResDTO();
+		try{
+			ctconfigSO = (ICtConfigSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CONTRACT_MANAGEMENT, ICtConfigSO.class);
+
+		
+		resDTO = ctconfigSO.targetContractForCtConfig(reqDTO);
+		List<CtConfig> list = resDTO.getCtConfigList();
+		for(CtConfig ctConfig : list){
+			targetList.add(ctConfig);
+		}
+		
+		}catch(Exception e){
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}finally{
+			ctconfigSO = null;
+		}
+		return targetList;
+		
+		
+	}
+	
+	
+	/**
+	 * The method used to save the ct Config.
+	 * This method will navigate to acknowledgment page with a 
+	 * confirmation message once submit successfully. 
+	 *
+	 * @param  action  the user action on this contract
+	 * @return the navigate URL 
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
+	 */
+	@SuppressWarnings("unchecked")
+	
+	public void saveCtConfig() throws Exception{
+		ICtConfigSO ctConfigSO = null;
+		
+		
+		CtConfigReqDTO reqDTO = new CtConfigReqDTO();
+		
+		reqDTO.setSelectedCtConfig(getManagedBean().getCtConfigModel().getTarget());
+		reqDTO.setAvailableCtConfig(getManagedBean().getCtConfigModel().getSource());
+		
+		ctConfigSO = (ICtConfigSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CONTRACT_MANAGEMENT, ICtConfigSO.class);	
+		CtConfigResDTO resDTO = ctConfigSO.saveCtConfigurationContract(reqDTO);	
+		
+		
+	}
+	
+	private List<CtConfig> getSourceCtConfigList(){
+		ICtConfigSO ctconfigSO = null;
+		List<CtConfig> sourceList = new ArrayList<CtConfig>();
+		CtConfigReqDTO reqDTO = new CtConfigReqDTO();
+		CtConfigResDTO resDTO = new CtConfigResDTO();
+		try{
+			ctconfigSO = (ICtConfigSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CONTRACT_MANAGEMENT, ICtConfigSO.class);
+
+		
+		resDTO = ctconfigSO.sourceContractForCtConfig(reqDTO);
+		List<CtConfig> list = resDTO.getCtConfigList();
+		for(CtConfig ctConfig : list){
+			sourceList.add(ctConfig);
+		}
+		
+		}catch(Exception e){
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}finally{
+			ctconfigSO = null;
+		}
+		return sourceList;
+	}
+	
+	
+	/**
+	 * This  method used to initialize approver list.
+	 */
+	private void initializeApproverList() {
+		if (getManagedBean().getApproverModel() == null) {
+			getManagedBean().setApproverModel(new DualListModel<PmUser>(new ArrayList<PmUser>(),  new ArrayList<PmUser>()));
+		}
+	}
+	
+	
+
+
+
+
 }
