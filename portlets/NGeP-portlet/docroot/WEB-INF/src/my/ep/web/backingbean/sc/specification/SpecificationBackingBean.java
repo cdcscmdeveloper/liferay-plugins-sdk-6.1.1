@@ -1419,14 +1419,14 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 6:
+			//#34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			//#34656 validate - end
 			retriveRecommendationDetails();
 			if (!this.getManagedBean().isReadOnly() && this.getManagedBean().isTechnicalOtherCheckList()) {//1873 note 149
 				checktemplateSpecStatus(this.getManagedBean().getQt());
 				checkFinancialSpecStatus(this.getManagedBean().getQt());
 			}
-			//#34656 validate - start
-			specSo.validateSpecZoneQtyZero(specReqDTO);
-			//#34656 validate - end
 			break;
 
 		case 7:
@@ -14508,9 +14508,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		validateZonalChanges();
 		// 29521 - end
 		
-		// #33860 related to #25138 only validate when complete- start
-		specSO.validateSpecZoneQtyZero(reqDTO);
-		// #33860 related to #25138 - end
+		// #34656 validateSpecZoneQtyZero
 				
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
