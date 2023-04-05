@@ -480,6 +480,11 @@ public class TemplateSpecBackingBean extends
 					questionToDelete.setClPriceTypeCode(null);
 				}	
 			}
+			//34617 - start
+			if (questionToDelete.getClPriceTypeCode() != null && questionToDelete.getClPriceTypeCode().getParameterType() == null){
+				questionToDelete.setClPriceTypeCode(null);
+			}
+			//34617 - end
 			
 			techicalDeleteQuestionList.add(questionToDelete);
 		}
