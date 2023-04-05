@@ -2666,6 +2666,7 @@ public class SmApplicationBackingBean extends
 				}
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+				getManagedBean().setOutputPage(outputPageType);
 				SmApplicationUtil.validateCategoriesBeforeSave(true,
 						getManagedBean(), currentTab);
 				SmApplicationUtil
