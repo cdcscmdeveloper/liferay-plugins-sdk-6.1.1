@@ -1097,9 +1097,7 @@ public class FinancialOrgBackingBean extends
 		for (PmFinancialSvc financialSvc : financialOrg.getPmFinancialSvcs()) {
 			//System.out.println("Record Status Fin SVC---====>>>"+financialSvc.getRecordStatusFlg());
 			PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialSvc.getServiceTypeCode().getParameterId());
-			//#34488 defect start - add filter to read only active financialSvc
-			if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode()) && financialSvc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
-			//#34488 defect end 
+			if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
 				factoringServiceRecordStatus = financialSvc.getRecordStatusFlg();
 				if(financialSvc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
 					for(PmFinancialAcc finAcc:financialOrg.getPmFinancialAccs()){
