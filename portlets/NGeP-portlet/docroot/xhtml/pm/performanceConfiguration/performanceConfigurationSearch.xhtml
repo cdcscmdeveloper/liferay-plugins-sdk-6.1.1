@@ -6,30 +6,33 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	
+	
   <p:panel id="settingId" toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
-			<h:outputText value="#{lbl['lbl.ct.panel.approver.list']}"/>
-			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.approver.list']}"/>
+			<h:outputText value="#{lbl['lbl.ct.panel.ctconfig.list']}"/>
+			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ctconfig.list']}"/>
 	   	</f:facet>
 		<h:panelGrid columns="2">
 			<p:spacer width="50" />
 			<h:panelGrid style="width:500px;">
-				<p:pickList id="approverpickList" 
-					var="" itemValue="" itemLabel=""
+				<p:pickList id="ctConfigPickList" value="#{performanceConfigurationBackingBean.managedBean.ctConfigModel}"
+					var="data" itemValue="#{data}" itemLabel="#{data.contractNo}"
 					showTargetControls="true" filterMatchMode="contains"
-					converter="pmUserConverter">
+					converter="pmConfigConverter">
 					<f:facet name="sourceCaption">
-						#{lbl['lbl.ct.available.approver']}
+						#{lbl['lbl.ct.available.ctconfig']}
 						<p:graphicImage id="sourceList" value="/css/images/design/tooltips.png" /> 
 						  <p:tooltip id="sourceTooltip" for="sourceList">
-							<h:outputText id="sourceApprover" escape="false" value="#{lbl['lbl.ct.tooltip.available.approver']}" />
+							<h:outputText id="sourceCtConfig" escape="false" value="#{lbl['lbl.ct.tooltip.available.approver']}" />
 						</p:tooltip> 
 					</f:facet>  
         			<f:facet name="targetCaption">
-        				<h:outputText value="#{lbl['lbl.ct.selected.approver']}" styleClass="required"/>
+        				<h:outputText value="#{lbl['lbl.ct.selected.ctconfig']}" styleClass="required"/>
         				<p:graphicImage id="targetList" value="/css/images/design/tooltips.png" /> 
 						  <p:tooltip id="targetTooltip" for="targetList">
-							<h:outputText id="targetApprover" escape="false" value="#{lbl['lbl.ct.tooltip.selected.approver']}" />
+							<h:outputText id="targetCtConfig" escape="false" value="#{lbl['lbl.ct.tooltip.selected.approver']}" />
 						</p:tooltip> 
         			</f:facet>
 				</p:pickList>
@@ -37,3 +40,8 @@
 		</h:panelGrid>
 	</p:panel>
 </ui:composition>
+
+
+
+                                       
+                                       
