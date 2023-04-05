@@ -76,5 +76,22 @@
 					onclick="rejectApprovalDlg.hide();" type="button" />
 			</div>
 		</p:dialog>
+		<ui:remove>#21692 add attachment for each type of request - Start</ui:remove>
+		<ac:scSingleFileUploadPopup widgetVar="epvAttachmentEV1UploadDlg"
+			fileUploadListener="approvalBackingBean.epvHandleFileUpload"
+			update="@([id$=epvAttachmentEV1])"
+			readonly="#{approvalBackingBean.managedBean.readOnly}"
+			autoUpdateValue="#{approvalBackingBean.managedBean.autoUpdate}" />
+		<ac:scSingleFileUploadPopup widgetVar="epvAttachmentEV2UploadDlg"
+			fileUploadListener="approvalBackingBean.epvHandleFileUpload"
+			update="@([id$=epvAttachmentEV2])"
+			readonly="#{approvalBackingBean.managedBean.readOnly}"
+			autoUpdateValue="#{approvalBackingBean.managedBean.autoUpdate}" />
+		<ac:scSingleFileUploadPopup widgetVar="epvAttachmentEV3UploadDlg"
+			fileUploadListener="approvalBackingBean.epvHandleFileUpload"
+			update="@([id$=epvAttachmentEV3])"
+			readonly="#{approvalBackingBean.managedBean.readOnly}"
+			autoUpdateValue="#{approvalBackingBean.managedBean.autoUpdate}" />
+		<ui:remove>#21692 add attachment for each type of request - End</ui:remove>
 	</ui:define>
 </ui:composition>

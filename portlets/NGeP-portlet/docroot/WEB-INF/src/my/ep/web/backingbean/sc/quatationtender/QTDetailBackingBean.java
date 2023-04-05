@@ -223,6 +223,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
@@ -11661,6 +11662,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			quationTenderReqDTO.setToken(facesScopes
 					.getBPMAuthenticationCtxToken());
 			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
+			
+			//9019 Start #note-445 Wrong displayed alert message for Cancel Yes button
+			//     Validate when QT title and File ref no is null while cancel
+			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getQt().getQtStatus().getStatusId())) {
+				detailSO.validateQTGeneralInformation(quationTenderReqDTO);
+			}
+			//9019 End #note-445
 			QuationTenderResDTO quationTenderResDTO = detailSO.cancleQTForDraft(quationTenderReqDTO);
 
 			if (quationTenderResDTO.isSuccessful()) {
@@ -13057,6 +13065,19 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 */
 	public String getEpvApprovalDtl(ScQtApprovalRequest approvalReq) {
 		this.getManagedBean().setScQtApprovalRequest(approvalReq);
+		//#21692 add attachment - Start
+		if (CollectionUtils.isNotEmpty(approvalReq.getEpvApprovalReqAttachment())) {
+			for (ScQtEpvApprovalReqAttachment att : approvalReq.getEpvApprovalReqAttachment()) {
+				if (att.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_1)) {
+					approvalReq.setEpvApprovalReqAttachmentR1(att);
+				} else if (att.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_2)) {
+					approvalReq.setEpvApprovalReqAttachmentR2(att);
+				} else if (att.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_3)) {
+					approvalReq.setEpvApprovalReqAttachmentR3(att);
+				}
+			}
+		}
+		//#21692 add attachment - End
 		return QTConstants.MAINT_EPV_APPROVAL_DETAIL;
 	}
 
@@ -13090,17 +13111,16 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 */
 	public boolean handleChmnFinalizationDate(boolean validityDaysExpiredQt) {
 		boolean enableApprovalDateMOF = Boolean.FALSE;
-		if (!validityDaysExpiredQt) {
-			log.info("Invalid");
-			Date proposalValidityEndDate = this.getManagedBean().getScQtApprovalRequest().getProposalValidityEndDateOri();
-			Date chmnFinalizationDate = this.getManagedBean().getScQtApprovalRequest().getChmnFinalizationDate();
-			if ((null != proposalValidityEndDate) && (null != chmnFinalizationDate)) {
 
-				long days = DateUtils.getDaysDifference(proposalValidityEndDate, chmnFinalizationDate);
-				int day = (int) days;
-				if (day >= 0) {
-					return Boolean.TRUE;
-				}
+		log.info("Invalid");
+		Date proposalValidityEndDate = this.getManagedBean().getScQtApprovalRequest().getProposalValidityEndDateOri();
+		Date chmnFinalizationDate = this.getManagedBean().getScQtApprovalRequest().getChmnFinalizationDate();
+		if ((null != proposalValidityEndDate) && (null != chmnFinalizationDate)) {
+
+			long days = DateUtils.getDaysDifference(proposalValidityEndDate, chmnFinalizationDate);
+			int day = (int) days;
+			if (day >= 0) {
+				return Boolean.TRUE;
 			}
 		}
 

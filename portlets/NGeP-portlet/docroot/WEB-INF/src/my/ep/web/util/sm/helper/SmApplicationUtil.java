@@ -1701,7 +1701,9 @@ public class SmApplicationUtil {
 		validateSpecialAndNormalCategory(validSave, managedBean, currentTab);//#30508
 		//#32236 - start
 		if(managedBean.isSupplierUser()){
-			validateSpecialAndNormalCategoryCapital(managedBean);	
+			if(currentTab == 5 && !managedBean.getOutputPage().equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)){
+				validateSpecialAndNormalCategoryCapital(managedBean);	
+			}	
 		}
 		//#32236 - end
 		if (!managedBean.isSiteVisitAfterApproval()) {
@@ -2737,7 +2739,11 @@ public class SmApplicationUtil {
 			s = ResourceBundleUtils.getMessage("lbl.sm.authorized.share",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		}
-
+		//#34277 - start
+		if(managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() == null){
+			managedBean.getSmAppl().getSmCompanyBasic().setPaidUpCapital(new BigDecimal(0));
+		}
+		//#34277 - end
 		if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
 			boolean validPaidUp = true;
 			// String amt = "";

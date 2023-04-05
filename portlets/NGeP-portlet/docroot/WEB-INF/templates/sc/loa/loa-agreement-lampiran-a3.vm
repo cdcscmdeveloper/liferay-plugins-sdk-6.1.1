@@ -210,18 +210,18 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 			#set ($count = 1)
 				#if ($rowCount == 0)
 					<tr>
-								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Item</th>
-								<th bgcolor="#6d839b" class="title border left" style="text-align: center; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">UOM</th>
-								<th bgcolor="#6d839b" class="title border left" style="text-align: center; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Jenis Harga</th>
+								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Item</th>
+								<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">UOM</th>
+								<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Jenis Harga</th>
 								#if ($isZonal)
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Zon</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Zon</th>
 								#end	
-								<th bgcolor="#6d839b" class="title border left" style="text-align: center; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti</th>
-								<th bgcolor="#6d839b" class="title border left" style="text-align: center; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti Berperingkat</th>
-								<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Skop Perkhidmatan / SLA</th>
+								<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti</th>
+								<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti Berperingkat</th>
+								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; border: 1px solid black; padding-left: 5px; padding-right: 5px; font-family: Arial;">Skop Perkhidmatan / SLA</th>
 					</tr>
 					<tr>
-								<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center; border: 1px solid black; font-family: Arial;">Spesifikasi</th>
+								<th valign="top" bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center; border: 1px solid black; font-family: Arial;">Spesifikasi</th>
 								
 					</tr>
 				#end
@@ -294,12 +294,12 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 		#set ($count = 1)
 			#if ($rowCount == 0)
 				<tr>
-				            <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Item</th>
-				            <th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">UOM</th>
-							<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Jenis Harga</th>
-			            	<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti</th>
-							<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti Berperingkat</th>
-				            <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Skop Perkhidmatan / SLA</th>
+				            <th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Item</th>
+				            <th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">UOM</th>
+							<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Jenis Harga</th>
+			            	<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti</th>
+							<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti Berperingkat</th>
+				            <th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Skop Perkhidmatan / SLA</th>
 						</tr>
 				<tr>
 					<th bgcolor="#6d839b" class="title border left" colspan="4" style="text-align: center; font-family: Arial;">Spesifikasi</th>
@@ -736,24 +736,24 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 		#if ($itemType == "Perkhidmatan" || $itemType == "Service")
 			#if ($rowCount == 0)
 				<tr>
-					<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Item</th>
-					<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">UOM</th>
-					<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kekerapan / <br/>Unit Ukuran</th>
-					<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Bil. Unit <br/>Ukuran Sehari</th>
-					<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Bil. Unit <br/>Ukuran Sebulan</th>
+					<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Item</th>
+					<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">UOM</th>
+					<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kekerapan / <br/>Unit Ukuran</th>
+					<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Bil. Unit <br/>Ukuran Sehari</th>
+					<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Bil. Unit <br/>Ukuran Sebulan</th>
 							
 					#if ($isZonal)
-						<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Zon</th>
+						<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Zon</th>
 					#end
 							
-					<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti</th>
-					<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Skop Perkhidmatan / SLA</th>
+					<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti</th>
+					<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Skop Perkhidmatan / SLA</th>
 				</tr>
 				<tr>
 					#if ($isZonal)
-						<th bgcolor="#6d839b" class="title border left" colspan="6" style="text-align: center; font-family: Arial;">Spesifikasi</th>
+						<th valign="top" bgcolor="#6d839b" class="title border left" colspan="6" style="text-align: center; font-family: Arial;">Spesifikasi</th>
 					#else
-						<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center; font-family: Arial;">Spesifikasi</th>
+						<th valign="top" bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center; font-family: Arial;">Spesifikasi</th>
 					#end
 				</tr>
 			
@@ -840,13 +840,13 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 		#if ($itemType == "Perkhidmatan" || $itemType == "Service")
 			#if ($rowCount == 0)
 				<tr>
-					<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Item</th>
-					<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">UOM</th>
-					<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kekerapan / <br/>Unit Ukuran</th>
-					<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Bil. Unit <br/>Ukuran Sehari</th>
-					<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Bil. Unit <br/>Ukuran Sebulan</th>
-					<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti</th>
-					<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-family: Arial;">Skop Perkhidmatan / SLA</th>
+					<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Item</th>
+					<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">UOM</th>
+					<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kekerapan / <br/>Unit Ukuran</th>
+					<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Bil. Unit <br/>Ukuran Sehari</th>
+					<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Bil. Unit <br/>Ukuran Sebulan</th>
+					<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Kuantiti</th>
+					<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial;">Skop Perkhidmatan / SLA</th>
 				</tr>
 				<tr>
 					<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center; font-family: Arial;">Spesifikasi</th>

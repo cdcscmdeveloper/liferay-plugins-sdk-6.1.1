@@ -3289,6 +3289,7 @@ public class SmApplicationBackingBean extends
 				}
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+				getManagedBean().setOutputPage(outputPageType);
 				SmApplicationUtil.validateCategoriesBeforeSave(true,
 						getManagedBean(), currentTab);
 				SmApplicationUtil
@@ -3316,7 +3317,7 @@ public class SmApplicationBackingBean extends
 						currentTab, ruleHelper);
 				SmApplicationUtil.validateEquityCompanyAmount(getManagedBean(),
 						currentTab);
-			//#31446 --START
+			//#31446, #34277 --START
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
 					&& !applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
@@ -3324,7 +3325,7 @@ public class SmApplicationBackingBean extends
 						currentTab, ruleHelper);
 				SmApplicationUtil.validateEquityCompanyAmount(getManagedBean(),
 						currentTab); 
-			//#31446 --END
+			//#31446, #34277 --END
 			}else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)
 					|| currentPageType
@@ -5114,6 +5115,11 @@ public class SmApplicationBackingBean extends
 					+ category.getApprvrDecFlg());
 		}
 		category.setApprovedDate(new Date());
+		//#31043 start
+		saveOrUpdateAppl();
+		SmSideMenuIconUtil.getSideMenuVerificationIcon(getManagedBean(), 
+				getManagedBean().getCurrentPageType());
+		//#31043 end
 	}
 
 	public void assignCategoryReApprovalOnOtherDescChange(SmSupplierCategory cat) {
@@ -5153,6 +5159,11 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignDocVerified(AjaxBehaviorEvent e) {
 		log.info(" *******Docs verified******88");
+		//#31043 start
+		saveOrUpdateAppl();
+		SmSideMenuIconUtil.getSideMenuVerificationIcon(getManagedBean(), 
+				getManagedBean().getCurrentPageType());
+		//#31043 end
 	}
 
 	/**
@@ -5309,6 +5320,13 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void addOrUpdateBranchToSmAppl() {
+		//#34135 START - set stateid from pmstate
+		if(getManagedBean().getSelectedBranch().getSmAddress().getStateId() != null &&
+				getManagedBean().getSelectedBranch().getSmAddress().getPmState() != null &&
+				!getManagedBean().getSelectedBranch().getSmAddress().getStateId().equals(getManagedBean().getSelectedBranch().getSmAddress().getPmState().getStateId())){
+			getManagedBean().getSelectedBranch().getSmAddress().setStateId(getManagedBean().getSelectedBranch().getSmAddress().getPmState().getStateId());
+		}
+		//#34135 END
 		// validate branch GST only for New Application
 		SmApplicationUtil.validateBranchGstInformation(getManagedBean()
 				.getSelectedBranch(), getManagedBean().getSelectedBranch()
@@ -6397,6 +6415,7 @@ public class SmApplicationBackingBean extends
 				}//#31043 end
 			}
 		}
+		saveOrUpdateAppl();
 		//#31043 end
 	}
 
@@ -12424,15 +12443,20 @@ public class SmApplicationBackingBean extends
 				if (doc.getApplSupportDocId().compareTo(
 						getManagedBean().getSupportDoc().getApplSupportDocId()) == 0) {
 					log.info("**** This is the selected object ***** ");
-					doc.getSmApplDocFiles()
-							.get(0)
-							.setFileName(
-									StringUtils.replace(event.getFile()
-											.getFileName(), " ", "-"));
+					//#34522 - start
+					SmApplDocFile file = new SmApplDocFile();
+					file.setFileName(StringUtils.replace(event.getFile()
+							.getFileName(), " ", "-"));
 					String filePath = Calendar.getInstance().get(Calendar.YEAR)
 							+ "/SM/" + getManagedBean().getSmAppl().getApplNo()
 							+ "/SD/";
-					doc.getSmApplDocFiles().get(0).setFilePath(filePath);
+					file.setFilePath(filePath);
+					file.setSmApplSupportDoc(doc);
+					if(doc.getSmApplDocFiles() == null){
+						doc.setSmApplDocFiles(new ArrayList<SmApplDocFile>());
+					}
+					doc.getSmApplDocFiles().add(file);
+					//#34522 - end
 					commonUploadFile(event, filePath);
 				}
 			}
@@ -13631,7 +13655,7 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	private void printBankVerificationForm() throws Exception {
+	public void printBankVerificationForm() throws Exception {
 		SmApplicationUtil.generateBankVerificationFormPdf(getManagedBean()
 				.getSmAppl());
 		String fileName = SmCommonUtil

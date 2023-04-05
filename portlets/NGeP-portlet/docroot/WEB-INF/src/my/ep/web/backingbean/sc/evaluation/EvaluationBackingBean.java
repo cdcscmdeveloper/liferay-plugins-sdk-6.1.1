@@ -230,6 +230,7 @@ public class EvaluationBackingBean extends
 	
    private static final String  UNDER_SCORE = "_";
 
+   private static final String DUMMY_CONSTANT = "Dummy constant"; // To test some possible issue with merge request
 	/**
 	 * Instantiates a new evaluation backing bean.
 	 * 
@@ -13482,8 +13483,14 @@ private void retriveCommitteeRemarksList(){
 				//wip status start
 				//#25138 farid - Start
 				int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+				//#25138 fix
 				if(wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){
+					if(reqDTO.getEvalStage().equalsIgnoreCase(QTConstants.PRESENTATION_DEMO_EVALUATION)){
+						reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+
+					}else{
 					reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+					}
 				}else{
 					reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 				}
@@ -15602,8 +15609,18 @@ private void retriveCommitteeRemarksList(){
 			evalReqDTO.setProposalChecklist(qtProposalChecklist);
 			evalReqDTO.setFinSpecAnswerList(specresDTO1.getSpecAnswerList());
 			int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
+			//#25138 fix demo
 			if(wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){
-				evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+				if(this.getManagedBean().getScQt().isDemoRequired()){
+					evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+
+				}else{
+					evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+					EvaluationResDTO evalResDTO = evaluationSO.technicalItemSupplierQualified(evalReqDTO);
+					specresDTO1.setSpecAnswerList(evalResDTO.getSpecAnswers());					
+					}
+				
+
 			}else{
 				evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 			}

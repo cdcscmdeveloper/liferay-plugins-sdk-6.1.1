@@ -92,6 +92,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtAppRequestRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
@@ -2265,10 +2266,24 @@ public class QTCloneBackingbean extends
 							req.setBrandNew(true);
 							req.setApprovalType(approvalRequest.getApprovalType());
 							req.setApproverAction(new PmParameter());
+							req.setApproverAction(approvalRequest.getApproverAction());//25635 & 34502
 							req.setApprovalRequestAttachement(null);//25635 & 34502
+							ScQtApprovalReqAttachement approvalReqAttachement = 	req.getApprovalRequestAttachement();//25635 & 34502
+							if (null == approvalReqAttachement) {
+								approvalReqAttachement = new ScQtApprovalReqAttachement();
+								approvalReqAttachement.setApprovalRequest(req);
+							}
+							approvalReqAttachement.setDocNo(scQt.getQtNo());
+							try {
+								uploadAttachment(approvalReqAttachement,approvalRequest.getApprovalRequestAttachement());
+							} catch (IOException e) {
+								SLAUtils.getInstance().logSLAError("QT", "ICTAPProvalATTAchemnt", "docNo", "ICTAPProvalATTAchemntClone", getUserIdSessionFromLoginId(), e);
+							}
+							req.setApprovalRequestAttachement(approvalReqAttachement);//25635 & 34502
 							ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
 							approvalRemark.setApprovalRequest(req);//25635 & 34502
 							req.setAppRequestRemark(approvalRemark);
+							req.getAppRequestRemark().setRemark(approvalRequest.getAppRequestRemark().getRemark());//25635 & 34502
 							req.setScQtApproval(newOthersApproval);
 							approverRequest.add(req);
 									
@@ -2307,6 +2322,76 @@ public class QTCloneBackingbean extends
 				newApprovals.add(newOthersApproval);
 		    }
 		}
+		Long status = copyScqt.getQtStatus().getStatusId();//34502&25635-start
+		if (QTStatusConst.QT_CANCELLED.equals(status) && ParameterConst.PROCUREMENT_CATEGORY_ICT.equals(scQt
+				.getPmProcurementCategory().getParameterCode())
+				&& CollectionUtils.isEmpty(otherapprovals)) {
+			ScQtApproval newOthersApproval = null;
+					for (ScQtApproval approval : scQt.getScQtApprovals()) {
+						if (ParameterConst.APPROVAL_CATEGORY_OTHERS
+								.equalsIgnoreCase(approval
+										.getApprovalCategory()
+										.getParameterCode())) {
+							newOthersApproval = approval;
+							break;
+						}
+					}
+					if (null != newOthersApproval) {
+						List<PmParameter> settings = null;
+						ParameterHelper parameterHelper = ParameterHelper
+								.getInstance();
+
+						String approvalCategoryCode = newOthersApproval
+								.getApprovalCategory().getParameterCode();
+						String titleName = parameterHelper.getParameterDesc(
+								ParameterTypeConst.APPROVAL_CATEGORY,
+								approvalCategoryCode);
+
+						tabBeans.add(new TabBean(titleName,
+								approvalCategoryCode, newOthersApproval,
+								settings));
+
+						newApprovals.add(newOthersApproval);
+					} else {
+
+						List<ScQtApprovalRequest> approverRequest = new ArrayList<>();
+						newOthersApproval = new ScQtApproval();
+						newOthersApproval.setBrandNew(true);
+						newOthersApproval
+								.setApprovalCategory(getParameterByTypeAndCode(
+										ParameterTypeConst.APPROVAL_CATEGORY,
+										ParameterConst.APPROVAL_CATEGORY_OTHERS));
+						newOthersApproval.setScQt(scQt);
+						setUserDetails(newOthersApproval);
+						ScQtApprovalRequest req = new ScQtApprovalRequest();
+						req.setBrandNew(true);
+						req.setApprovalType(getParameterByTypeAndCode(
+								ParameterTypeConst.APPROVAL_REQUEST_TYPES,
+								ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS));
+						req.setApproverAction(new PmParameter());
+						req.setApprovalRequestAttachement(null);
+						ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
+						approvalRemark.setApprovalRequest(req);
+						req.setAppRequestRemark(approvalRemark);
+						req.setScQtApproval(newOthersApproval);
+						approverRequest.add(req);
+						newOthersApproval.setScQtApprovalDtls(approverRequest);
+						List<PmParameter> settings = null;
+						ParameterHelper parameterHelper = ParameterHelper
+								.getInstance();
+
+						String approvalCategoryCode = newOthersApproval
+								.getApprovalCategory().getParameterCode();
+						String titleName = parameterHelper.getParameterDesc(
+								ParameterTypeConst.APPROVAL_CATEGORY,
+								approvalCategoryCode);
+						tabBeans.add(new TabBean(titleName,
+								approvalCategoryCode, newOthersApproval,
+								settings));
+
+						newApprovals.add(newOthersApproval);
+					}
+				}//34502&25635-End
 		
 		if (CollectionUtils.isNotEmpty(tabBeans)) {
 			int selectedTabIndex = this.getManagedBean().getSelectedApprovalTabIndex();
@@ -5017,6 +5102,8 @@ public class QTCloneBackingbean extends
 		return startMonth;
 	}//33916
 	
-	
+	private void foo() {
+		// This is a dummy method
+	}
 	
 }
