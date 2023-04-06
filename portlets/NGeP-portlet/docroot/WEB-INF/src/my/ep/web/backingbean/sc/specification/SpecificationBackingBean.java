@@ -1189,6 +1189,8 @@ public class SpecificationBackingBean extends
 		case 2:
 			// ScQt scQtTechChecklist = constructSpecCommitteDtls().getScQt();
 			specSo.validateCheckList(constructSpecCommitteDtls());
+			//#34656 move to top
+			specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
 			// checktemplateSpecStatus(scQtTechChecklist);
 			//1873 - start- note 52
 			String taskName = this.getManagedBean().getTaskName();
@@ -1198,6 +1200,9 @@ public class SpecificationBackingBean extends
 				SCProcessNameConst.VIEW_SCORING,
 				SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING //1873 note 149
 			};
+			//#34656 move validation position ,trigger before popup-start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			//#34656 move validation position -end
 			if (Arrays.asList(allowedTaskName).contains(taskName)
 					|| (StringUtils.isEmpty(taskName) && !this.getManagedBean().isReadOnly())) {
 				if(isTechnicalTemplatesEdited() && !this.getManagedBean().isFromSubmit()){
@@ -1209,7 +1214,6 @@ public class SpecificationBackingBean extends
 			}
 			//1873 - end- note 52
 
-			specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
 			specSo.validateCheckList(specReqDTO);
 			//#31292 - start
 			specSo.validateSpecZoneQtyZero(specReqDTO);
@@ -1385,6 +1389,9 @@ public class SpecificationBackingBean extends
 				retriveTechnicalCheckList();//1873 note 86
 			}
 			//1873 note 195 end
+			//#34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			//#34656 validate - end
 			retriveFinancialCheckList();
 			// checktemplateSpecStatus(this.getManagedBean().getQt());
 			break;
@@ -1394,6 +1401,9 @@ public class SpecificationBackingBean extends
 				checktemplateSpecStatus(this.getManagedBean().getQt());
 				checkFinancialSpecStatus(this.getManagedBean().getQt());
 			}
+			//#34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			//#34656 validate - end
 			retriveTechnicalScoring();
 			break;
 
@@ -1402,10 +1412,16 @@ public class SpecificationBackingBean extends
 				checktemplateSpecStatus(this.getManagedBean().getQt());
 				checkFinancialSpecStatus(this.getManagedBean().getQt());
 			}
+			//#34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			//#34656 validate - end
 			retriveFinancialScoring();
 			break;
 
 		case 6:
+			//#34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			//#34656 validate - end
 			retriveRecommendationDetails();
 			if (!this.getManagedBean().isReadOnly() && this.getManagedBean().isTechnicalOtherCheckList()) {//1873 note 149
 				checktemplateSpecStatus(this.getManagedBean().getQt());
@@ -1414,6 +1430,9 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 7:
+			//#34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			//#34656 validate - end
 			retriveDeliveryDetails();
 			// checktemplateSpecStatus(this.getManagedBean().getQt());
 			// checkFinancialSpecStatus(this.getManagedBean().getQt());
@@ -1421,10 +1440,16 @@ public class SpecificationBackingBean extends
 
 			//#29474 - start
 		case 8:
+			//#34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			//#34656 validate - end
 			retrieveDeductionPaymentTabDtl();
 			break;
 
 		case 9:
+			//#34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			//#34656 validate - end
 			if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this
 					.getManagedBean().getFulfilmentType())
 					|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
@@ -1444,6 +1469,9 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 10:// #29474 - end
+			//#34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			//#34656 validate - end
 			retriveCommitteeEndorsment();
 			// checktemplateSpecStatus(this.getManagedBean().getQt());
 			// checkFinancialSpecStatus(this.getManagedBean().getQt());
@@ -13612,6 +13640,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			}
 			reqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
 	//#29732 End - reOpen Fix
+
 			//1873 - start - note 97
 			SpecificationResDTO resDTO  = new SpecificationResDTO(); 
 			try{
@@ -14478,6 +14507,8 @@ if (null != checklist && !checklist.isEmpty()) {
 
 		validateZonalChanges();
 		// 29521 - end
+		
+		// #34656 validateSpecZoneQtyZero
 				
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
