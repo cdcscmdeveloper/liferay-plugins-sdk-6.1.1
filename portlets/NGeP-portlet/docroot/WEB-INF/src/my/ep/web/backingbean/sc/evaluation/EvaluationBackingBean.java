@@ -8097,19 +8097,12 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 						else if(currentTab == 3) {
 							if (this.getManagedBean()
 									.getPresentationDemoActiveIndex() < 1) {
-								//#28784 related to 10542 - start
-								if (this.getManagedBean().getScQt() != null
-										&& this.getManagedBean().getScQt().getCurrentActiveTab() != null
-										&& this.getManagedBean().getScQt().getCurrentActiveTab().intValue() == 4) {
-									retrivePresentationDemo();
-								}
-								//#28784 related to 10542 - end
 								demoAttachmentChecking();
 								retrivePresentationDemoSummary();
-								checkDemoStatusForQtCheckList();// #25138, #21695								
+								
+								checkDemoStatusForQtCheckList(); // #25138, #21695
+								
 								outputTab = 3;
-								
-								
 							}
 						}
 					}
@@ -16850,17 +16843,9 @@ private void retriveCommitteeRemarksList(){
 				this.getManagedBean().setAfterDemoInv(true);
 				this.getManagedBean().setReadOnly(true);
 			} else {
-				//#28784 related to #10542 - start
-				if (this.getManagedBean().getScQt() != null
-						&& this.getManagedBean().getScQt().getCurrentActiveTab() != null
-						&& this.getManagedBean().getScQt().getCurrentActiveTab().intValue() == 4) {
-					//do nothing
-				} else {
-					this.getManagedBean().setTabActiveIndex(3);
-					getManagedBean().setTempTab(3);
-					retrivePresentationDemo();
-				}
-				//#28784 related to #10542 - end
+				this.getManagedBean().setTabActiveIndex(3);
+				getManagedBean().setTempTab(3);
+				retrivePresentationDemo();
 				this.getManagedBean().setPresentationDemoActiveIndex(0);
 				retrieveReportTabDtl();
 				this.getManagedBean().setAfterDemoInv(true);
