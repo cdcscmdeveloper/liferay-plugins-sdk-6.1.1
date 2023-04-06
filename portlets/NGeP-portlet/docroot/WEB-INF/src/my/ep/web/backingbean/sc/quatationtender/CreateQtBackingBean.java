@@ -2690,6 +2690,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							technicalchecklist.setPmStatus(status);
 
 						}
+				}
 						// #28784 - Start
 						if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(technicalchecklist.getDefinationType()
 								.getParameterCode())) {
@@ -2707,7 +2708,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					ZonesUpdateWarningMessage(this.getManagedBean().isZonesWarnMessageUpdate());
 
 				}
-			}
+			
 		} finally {
 
 		}
