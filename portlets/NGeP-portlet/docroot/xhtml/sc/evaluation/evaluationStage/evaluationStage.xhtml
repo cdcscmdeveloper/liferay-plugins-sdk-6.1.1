@@ -57,13 +57,6 @@
 							update="@form" />
 					</c:if>
 					<c:if
-						test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.technical.presentation.demo']}" process="@this" partialSubmit="true" 
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							action="#{evaluationBackingBean.retrivePresentationOrDemoEvaluationStage}"
-							update="@form" />
-					</c:if>
-					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
 						<p:menuitem value="#{lbl['lbl.sc.summary']}" process="@this" partialSubmit="true" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -82,6 +75,13 @@
 						<p:menuitem value="#{lbl['lbl.sc.summary']}" process="@this" partialSubmit="true" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retriveSummaryEvaluationStage}"
+							update="@form" />
+					</c:if>
+					<c:if
+						test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+						<p:menuitem value="#{lbl['lbl.sc.eva.technical.presentation.demo']}" process="@this" partialSubmit="true" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							action="#{evaluationBackingBean.retrivePresentationOrDemoEvaluationStage}"
 							update="@form" />
 					</c:if>
 			
