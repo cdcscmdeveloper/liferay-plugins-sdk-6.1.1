@@ -5161,6 +5161,7 @@ public class SmApplicationBackingBean extends
 		log.info(" *******Docs verified******88");
 		//#31043 start
 		saveOrUpdateAppl();
+		initNonMandatoryAndMandatoryDocs();
 		SmSideMenuIconUtil.getSideMenuVerificationIcon(getManagedBean(), 
 				getManagedBean().getCurrentPageType());
 		//#31043 end
