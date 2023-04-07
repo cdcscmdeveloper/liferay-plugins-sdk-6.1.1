@@ -17353,11 +17353,20 @@ public class SmApplicationBackingBean extends
 			log.info("#32014 - SSM isActive : " + SmCommonUtil.getInstance().ssmActive());
 			if(!personnelAddress.isSameAsPerm() && getManagedBean().getSmAppl().isApplValidWithSsm() && SmCommonUtil.getInstance().ssmActive()){
 				//#34277 - start
+				boolean hasResAddr = false;
+				for(SmPersonnelAddress a : getManagedBean().getSelectedShareHolder().getSmPersonnelAddresses()){
+					if(a.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
+						hasResAddr = true;
+						break;
+					}
+				}
 				SmAddress ssmAddress = new SmAddress();
-				SmApplicationUtil.getInstance().cloneAddress(
-						ssmAddress, getManagedBean().getShareHolderResdAddr().getSmAddress());
-				SmApplicationUtil.cloneAddressSSM(
-						ssmAddress, getManagedBean().getShareHolderResdAddr().getSmAddress());
+				if(!hasResAddr){
+					SmApplicationUtil.getInstance().cloneAddress(
+							ssmAddress, getManagedBean().getShareHolderResdAddr().getSmAddress());
+					SmApplicationUtil.cloneAddressSSM(
+							ssmAddress, getManagedBean().getShareHolderResdAddr().getSmAddress());
+				}
 				//#34277 - end
 				SmPersonnelAddress res = new SmPersonnelAddress();
 				res.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
@@ -17436,7 +17445,7 @@ public class SmApplicationBackingBean extends
 				}
 				//#34277 - start
 				//personnel has no residential address, overwrite with SSM address
-				if(getManagedBean().getShareHolderResdAddr().getSmAddress().getAddress1() == null){
+				if(!hasResAddr){
 					getManagedBean().getShareHolderResdAddr().setSmAddress(ssmAddress);
 				}
 				//to check, if district state not equal to pm state set district to null & City
