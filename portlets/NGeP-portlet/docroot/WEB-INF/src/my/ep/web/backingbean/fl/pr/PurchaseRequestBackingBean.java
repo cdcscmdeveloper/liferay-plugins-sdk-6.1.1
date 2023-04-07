@@ -1530,9 +1530,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		log.info("start - initializePRBeans");
 		initializePRBeans();
 		log.info("end - initializePRBeans");
-		log.info("start - updateDeliveryDate");
-//		updateDeliveryDate(); //Close for #34555
-		log.info("end - updateDeliveryDate");
+		//34555-start
+		log.info("start - updateMaxDeliveryDate");
+		updateMaxDeliveryDate();
+		log.info("end - updateMaxDeliveryDate");
+		//34555-end
 		/*#17087 Get Zonal flag*/
 		log.info("start - getzonalTest");
 		getzonalTest();
@@ -5162,5 +5164,24 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			updateSupplierHqAddress(supplierDtl,supplier);
 		}
 		//29728 -end
+		
+		//34555-start
+		/**
+		 * Update delivery date based on delivery Term and uomCode.
+		 */
+		public void updateMaxDeliveryDate() {
+			Date startDate = getManagedBean().getFulfilmentRequest().getStartDate();
+			int deliveryTerm = 0;
+			String uomCode = "";
+			deliveryTerm = getManagedBean().getFulfilmentRequest().getDeliveryTerm();
+			uomCode = getManagedBean().getFulfilmentRequest().getPmUom().getParameterCode();
+			
+			if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
+				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
+			}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
+				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
+			}
+		}
+		//34555-End
 				
 }
