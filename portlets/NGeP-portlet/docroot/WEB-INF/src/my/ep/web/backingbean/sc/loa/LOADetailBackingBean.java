@@ -8118,20 +8118,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		log.info("Refactor 12177 (LOADetailBackingBean) : getSqTimeValidity - " + sqTimeValidity);
 		// Refactor: #12177 - End
 		
-
-		// by default days
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
-		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
-		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
-		if (ruleValueList != null && ruleValueList.size() > 0) {
-			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
-		} else {
-			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-		}
-
 		if(scQuote != null){
 			
 			Date currentDate = new Date();
@@ -9692,7 +9678,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDto = new TemplateSpecReqDTO();
-		
+
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setScLoiLoaItem(loiLoaItem);
+
+		AwardSupplierResDTO resDTO = getQtAwardSO().retriveLatestLoiLoaItemDetails(reqDTO);
+
+		if (resDTO.getScLoiLoaItem() != null) {
+			loiLoaItem = new ScLoiLoaItem();
+			loiLoaItem = resDTO.getScLoiLoaItem();
+		}
+
 		this.getManagedBean().setItemNamePopup(loiLoaItem.getScRequestItem().getItemName());
 		this.getManagedBean().setScLoiLoaItem(loiLoaItem);
 		this.getManagedBean().setNewSupplierJustification(loiLoaItem.getLoaSpecJustification());
@@ -9783,6 +9779,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (this.getManagedBean().getTplSpecAnswerList() != null
 				|| this.getManagedBean().getNewSupplierJustification() != null) {
 			ScLoiLoaItem scLoiLoaItem = this.getManagedBean().getScLoiLoaItem();
+
+			AwardSupplierReqDTO reqDTOLatest = new AwardSupplierReqDTO();
+			reqDTOLatest.setScLoiLoaItem(scLoiLoaItem);
+
+			AwardSupplierResDTO resDTOLatest = getQtAwardSO().retriveLatestLoiLoaItemDetails(reqDTOLatest);
+
+			if (resDTOLatest.getScLoiLoaItem() != null) {
+				scLoiLoaItem = new ScLoiLoaItem();
+				scLoiLoaItem = resDTOLatest.getScLoiLoaItem();
+			}
+			
 			scLoiLoaItem.setComplete(isComplete);
 			
 			if (isComplete) {
