@@ -4584,6 +4584,10 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void addOrUpdateBranchToSmAppl() {
+		log.info("#34135 - START ENTER METHOD addOrUpdateBranchToSmAppl - SMAPPLICATION BB");
+		log.info("district id before save== " + getManagedBean().getSelectedBranch().getSmAddress().getDistrictId());
+		log.info("city id before save== " + getManagedBean().getSelectedBranch().getSmAddress().getCityId());
+		
 		//#34135 START - set stateid from pmstate
 		if(getManagedBean().getSelectedBranch().getSmAddress().getStateId() != null &&
 				getManagedBean().getSelectedBranch().getSmAddress().getPmState() != null &&
@@ -4617,6 +4621,10 @@ public class SmApplicationBackingBean extends
 		setBranchDisplayTable(); //29727 , #34135
 		RequestContext.getCurrentInstance().execute("banchDialog.hide()");
 		calcPersonnelListCount();
+
+		log.info("district id after save== " + getManagedBean().getSelectedBranch().getSmAddress().getDistrictId());
+		log.info("city id after save== " + getManagedBean().getSelectedBranch().getSmAddress().getCityId());
+		log.info("#34135 - END METHOD addOrUpdateBranchToSmAppl - SMAPPLICATION BB");
 	}
 
 	/**
@@ -11465,12 +11473,18 @@ public class SmApplicationBackingBean extends
 	 *            panelName
 	 */
 	public void onChangeDistrict(SmAddress addr, String panelName) {
+		log.info("#34135 - START ENTER METHOD onChangeDistrict - SMAPPLICATION BB");
+		log.info("district id before====" + addr.getPmDistrict().getDistrictId());
+		log.info("district name before====" + addr.getPmDistrict().getDistrictName());
 		SmApplicationUtil.getInstance().populateCitiesByDistrict(addr,
 				panelName, getManagedBean());
 		setRoleStaffAddrReqd();
 		populateLocalAuthority(getManagedBean().getSmSupplier(),
 				getManagedBean().getSmAppl().getSmCompanyBasic()
 						.getSmCompanyAddresses().get(0).getSmAddress());
+		log.info("district id after====" + addr.getPmDistrict().getDistrictId());
+		log.info("district name after====" + addr.getPmDistrict().getDistrictName());
+		log.info("#34135 - END METHOD onChangeDistrict - SMAPPLICATION BB");
 	}
 
 	/**
@@ -11481,8 +11495,14 @@ public class SmApplicationBackingBean extends
 	 *            addr
 	 */
 	public void onChangeCity(SmAddress addr, String panelName) {
+		log.info("#34135 - START ENTER METHOD onChangeCity - SMAPPLICATION BB");
+		log.info("city id before====" + addr.getPmCity().getCityId());
+		log.info("city name before====" + addr.getPmCity().getCityName());
 		addr.setPmCity(SmCommonUtil.getInstance().getCityById(addr.getCityId()));
 		setRoleStaffAddrReqd();
+		log.info("city id after====" + addr.getPmCity().getCityId());
+		log.info("city name after====" + addr.getPmCity().getCityName());
+		log.info("#34135 - END METHOD onChangeCity - SMAPPLICATION BB");
 	}
 
 	/**
