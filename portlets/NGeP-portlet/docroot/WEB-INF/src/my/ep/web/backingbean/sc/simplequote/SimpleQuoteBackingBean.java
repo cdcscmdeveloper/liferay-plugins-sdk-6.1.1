@@ -10,7 +10,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -138,7 +137,6 @@ import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks; //#32643 & #3264
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;//#26284
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.sm.SmSupplierBusiness; // #29832
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
@@ -166,7 +164,6 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.simplequote.SimpleQuoteManagedBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -192,6 +189,7 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+// #29832
 
 // TODO: Auto-generated Javadoc
 
@@ -5848,9 +5846,11 @@ public class SimpleQuoteBackingBean extends
 		// validate tpl spec - service before spki authenticate
 		if (CollectionUtils.isNotEmpty(specAnswerList)) {
 			// /#21695 farid start
-			TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion().getTplSpecMaster();
+			//Bug_34259 - Start
+			TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
+			.getTplSpecMaster();
 			specMaster.setSpecCreatedBySQ(true);
-			
+			//Bug_34259 - End
 			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(specMaster, specAnswerList, locale);
 			// /#21695 farid end
 			// #34147 #34395 start
@@ -7815,6 +7815,19 @@ public class SimpleQuoteBackingBean extends
 			if(scQuote.getCurrentStatus() != null){
 				currentStatusId = scQuote.getCurrentStatus().getPmStatus().getStatusId();
 			}
+		}
+			
+		// by default days
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
+		} else {
+			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 		}
 			
 		if(scQuote != null && currentStatusId != null && scQuote.getEndDate() != null){
