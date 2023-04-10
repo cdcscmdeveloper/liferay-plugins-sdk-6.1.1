@@ -1667,7 +1667,13 @@ public class ViewApplHistoryBackingBean extends
 		return null;
 	}
 	//11641 - END
-		
+	
+	//#29482 - Start
+	public void assignSelAcadQualify(SmPersonnel smPersonnel) {
+		this.getManagedBean().setSmPersonnel(smPersonnel);
+		RequestContext.getCurrentInstance().execute("qualifyDialog.show()");
+	}
+	//#29482 - End
 	//#29823 - START
 	public boolean isApplPORejectedAfterApprovelSV(){
 		boolean isRejected = false;

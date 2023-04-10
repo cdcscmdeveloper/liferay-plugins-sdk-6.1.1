@@ -14445,9 +14445,9 @@ public class SmApplicationBackingBean extends
 					.divide(totalCapitalCompany,RoundingMode.HALF_UP);
 		}
 		return sharePercentage;
-		
+			
 	}
-	
+		
 	public void unSelectEquityCompany(AjaxBehaviorEvent e) {
 		SmApplicationUtil.removeEquityCompanyFromList(getManagedBean()
 						.getSelectedEquityCompanies());
@@ -14870,8 +14870,7 @@ public class SmApplicationBackingBean extends
 	}
 	//END : #27239 
 	
-	//13320-Start
-	
+	//13320-Start	
 	public void onChangeDistrictByDivision(SmAddress addr, String panelName) {
 		SmApplicationUtil.getInstance().populateDistrictsByUsingDivision(addr,
 				panelName, getManagedBean());
