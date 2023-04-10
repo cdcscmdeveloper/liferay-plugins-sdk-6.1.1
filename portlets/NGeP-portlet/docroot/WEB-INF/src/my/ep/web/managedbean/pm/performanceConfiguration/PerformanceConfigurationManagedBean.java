@@ -39,11 +39,11 @@ public class PerformanceConfigurationManagedBean extends BaseManagedBean {
 	
 	private DualListModel<CtConfig> ctConfigModel;
 	
-	private HashMap<String, PmUserGroupUser> ctConfigMap;
-	
-	private DualListModel<PmUser> approverModel;
-	
-	private Map<Long, PmUser> userMap;
+//	private HashMap<String, PmUserGroupUser> ctConfigMap;
+//	
+//	private DualListModel<PmUser> approverModel;
+//	
+//	private Map<Long, PmUser> userMap;
 	
 	public PerformanceConfigurationManagedBean(){}
 
@@ -68,48 +68,48 @@ public class PerformanceConfigurationManagedBean extends BaseManagedBean {
 	/**
 	 * @return the ctConfigMap
 	 */
-	public HashMap<String, PmUserGroupUser> getCtConfigMap() {
-		return ctConfigMap;
-	}
+//	public HashMap<String, PmUserGroupUser> getCtConfigMap() {
+//		return ctConfigMap;
+//	}
 
 
 
 	/**
 	 * @param ctConfigMap the ctConfigMap to set
 	 */
-	public void setCtConfigMap(HashMap<String, PmUserGroupUser> ctConfigMap) {
-		this.ctConfigMap = ctConfigMap;
-	}
+//	public void setCtConfigMap(HashMap<String, PmUserGroupUser> ctConfigMap) {
+//		this.ctConfigMap = ctConfigMap;
+//	}
 	
 	
 	/**
 	 * @return the approverModel
 	 */
-	public DualListModel<PmUser> getApproverModel() {
-		return approverModel;
-	}
+//	public DualListModel<PmUser> getApproverModel() {
+//		return approverModel;
+//	}
 
 	/**
 	 * @param approverModel the approverModel to set
 	 */
-	public void setApproverModel(DualListModel<PmUser> approverModel) {
-		this.approverModel = approverModel;
-	}
+//	public void setApproverModel(DualListModel<PmUser> approverModel) {
+//		this.approverModel = approverModel;
+//	}
 	
 	/**
 	 * @return the userMap
 	 */
-	public Map<Long, PmUser> getUserMap() {
-		if (userMap == null) {
-			userMap = new HashMap<Long, PmUser>();
-		}
-		return userMap;
-	}
+//	public Map<Long, PmUser> getUserMap() {
+//		if (userMap == null) {
+//			userMap = new HashMap<Long, PmUser>();
+//		}
+//		return userMap;
+//	}
 
 	/**
 	 * @param userMap the userMap to set
 	 */
-	public void setUserMap(Map<Long, PmUser> userMap) {
-		this.userMap = userMap;
-	}
+//	public void setUserMap(Map<Long, PmUser> userMap) {
+//		this.userMap = userMap;
+//	}
 }

@@ -292,11 +292,11 @@ public class PerformanceConfigurationBackingBean extends
 	/**
 	 * This  method used to initialize approver list.
 	 */
-	private void initializeApproverList() {
-		if (getManagedBean().getApproverModel() == null) {
-			getManagedBean().setApproverModel(new DualListModel<PmUser>(new ArrayList<PmUser>(),  new ArrayList<PmUser>()));
-		}
-	}
+//	private void initializeApproverList() {
+//		if (getManagedBean().getApproverModel() == null) {
+//			getManagedBean().setApproverModel(new DualListModel<PmUser>(new ArrayList<PmUser>(),  new ArrayList<PmUser>()));
+//		}
+//	}
 	
 	
 
