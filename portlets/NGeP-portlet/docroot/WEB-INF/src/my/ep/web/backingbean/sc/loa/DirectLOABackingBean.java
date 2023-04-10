@@ -10333,14 +10333,52 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 
 		TemplateSpecResDTO templateSpecResDTO = templateSpecSO.searchSupplierSpecification(specReqDto);
+		List<TplSpecAnswer> afterTireCheckAnswerList = new ArrayList<>();
 		
 		for (TplSpecAnswer tplSpecAnswer : templateSpecResDTO.getSpecAnswerList()) {
+			int contains=0;
+			
 			if (tplSpecAnswer.getNewSupplierOffer() != null && tplSpecAnswer.getNewSupplierOffer() != "") {
 				tplSpecAnswer.setRenderNewSpec(true);
 			}
+			for(TplSpecAnswer answer :afterTireCheckAnswerList){
+				if(qtMaint
+					&& answer.getTplSpecQuestion()!=null
+					&& tplSpecAnswer.getTplSpecQuestion()!=null
+					&& answer.getTplSpecQuestion().getSpecQuestionId() == tplSpecAnswer.getTplSpecQuestion().getSpecQuestionId()){
+					contains++;
+				}
+			}
+			
+			if(qtMaint
+				&& afterTireCheckAnswerList.isEmpty()){
+				afterTireCheckAnswerList.add(tplSpecAnswer);
+			}else if(qtMaint
+					&& tplSpecAnswer.getTplSpecQuestion() != null 
+					&& tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion() != null
+					&& tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getClPriceTypeCode() != null
+					&& tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getClPriceTypeCode().getParameterCode() != null
+					&& !afterTireCheckAnswerList.isEmpty()
+					&& !tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)){
+				afterTireCheckAnswerList.add(tplSpecAnswer);
+			}else if (qtMaint
+					&& tplSpecAnswer.getTplSpecQuestion() != null 
+					&& tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion() != null
+					&& tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getClPriceTypeCode() != null
+					&& tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getClPriceTypeCode().getParameterCode() != null
+					&& !afterTireCheckAnswerList.isEmpty()
+					&& tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)
+					&& contains==0) {
+				afterTireCheckAnswerList.add(tplSpecAnswer);
+				
+			}
 		}
 
-		this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
+		if(qtMaint){
+			this.getManagedBean().setTplSpecAnswerList(afterTireCheckAnswerList);
+		}else{
+			this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
+		}
 		this.getManagedBean().setScLoiLoaItem(loiLoaItem);
 		
 		if (mainSearch) {
