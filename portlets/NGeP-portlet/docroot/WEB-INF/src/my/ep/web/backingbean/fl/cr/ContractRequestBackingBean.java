@@ -924,7 +924,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		setSchInfo(schInfo);
 		return schInfo;
 
-	}	
+	}
+
 	
 	/**
 	 * Navigate to CR UI
@@ -1769,13 +1770,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	private void setFlSupplierDtl(FlFulfilmentRequest flRequest) {
 		if(flRequest.getFlSupplierDtl() == null){
 			FlSupplierDtl supplierDtl = new FlSupplierDtl();
-			IContractSupplierSO ctSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
-			supplierDtl.setMofNo(ctSupplierSO.retrieveSupplierMOFNoByContractId(flRequest.getCtContract().getContractId()));
+			//33917-Start
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			CtContractValue ctSupplierDtl  = contractSO.getCtValueSupplierAddressByContractId(flRequest.getCtContract().getContractId());
 			
-			CtContractValue ctSupplierDtl = flRequest.getCtContract().getLatestContractVer().getCtContractValue();
-			convertCtAddressToFlAddress(flRequest,supplierDtl);
-			supplierDtl.setFlFulfilmentRequest(flRequest);
+			supplierDtl.setMofNo(ctSupplierDtl.getSupplierMofNo());
 			supplierDtl.setSupplierName(ctSupplierDtl.getSupplierName());
+			convertCtAddressToFlAddress(ctSupplierDtl,supplierDtl);
+			//33917-End
+			supplierDtl.setFlFulfilmentRequest(flRequest);
 			flRequest.setFlSupplierDtl(supplierDtl);
 		}
 	}
@@ -4651,10 +4654,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				contractItemReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
 				contractItemReqDTO.setRequestItemId(flTempItem.getScRequestItem().getRequestNoteItemId());
 				ContractItemResDTO contractItemResDTO = contractItemSO.getContractItemByRequestItem(contractItemReqDTO);
+				log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][setFulfilmentItemAddr]");
 				if(getManagedBean().getTaskName() != null){
-					if((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) ||
-							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT) ||
-							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT)) && 
+					if((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT.replaceAll("\\s", "")) ||
+							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT.replaceAll("\\s", "")) ||
+							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT.replaceAll("\\s", ""))) && 
 							contractItemResDTO.getCtContractItem().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_SUSPENDED)){
 						suspendedItem.add(flTempItem);
 					}
@@ -5207,9 +5211,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				contractItemReqDTO.setRequestItemId(itemAddr.getScRequestItem().getRequestNoteItemId());
 				ContractItemResDTO contractItemResDTO = contractItemSO.getContractItemByRequestItem(contractItemReqDTO);
 				if(getManagedBean().getTaskName() != null){
-					if((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) ||
-							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT) ||
-							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT)) && 
+					if((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT.replaceAll("\\s", "")) ||
+							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CR_HT.replaceAll("\\s", "")) ||
+							getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_CR_HT.replaceAll("\\s", ""))) && 
 							contractItemResDTO.getCtContractItem().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_SUSPENDED)){
 						suspendedItem.add(itemAddr);
 					}
@@ -7061,23 +7065,23 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 *	 
 	 */
 	private void checkAP59() {
-
+		
 		IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-
+		
 		if(getManagedBean().getFlRequest().getCtContract().getContractId() != null){
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());		
-
+			
 			BigDecimal sumOrderedAmt = BigDecimal.ZERO;
 			sumOrderedAmt = calculatesTotalOrderedAmt();
 			reqDTO.setAmount(sumOrderedAmt);
 			resDTO=fulfilmentRequestSO.validateAP59(reqDTO);
-
+		
 			if(!resDTO.isCrComplete()) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-
+				
 			}
 		}		
 	}
@@ -7105,5 +7109,5 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 	}
 	//29401-end
-}
 	
+}

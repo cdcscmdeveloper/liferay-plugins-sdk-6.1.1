@@ -341,6 +341,12 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						}
 					}
 				}
+				//33654-Start
+				if(reqDTO.isInvoiceRevise() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+					reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+				}
+				//33654-End
+				
 				resDTO = invoiceSO.invoiceModification(reqDTO);
 			}else{
 				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
@@ -2533,6 +2539,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	}
 	
 	//End  #21229
+	
 	//26279 - start
 	public void viewDisciplinaryAction() {
 		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());

@@ -7,6 +7,14 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<table style="width: 100%;">
+		<!-- [#34314] - start -->
+		<tr> 
+			<td>
+			<h:outputText styleClass="instruction"
+				style="float:left;margin-left:20px;"
+				value="#{lbl['lbl.rpt.instructioninfo2']}" /></td>
+		</tr>		
+		<!-- [#34314] - end -->
 		<tr>
 			<td colspan="4">
 				<h:outputText value="#{yepRptBB.managedBean.reportUrl}" /><br/><br/>
