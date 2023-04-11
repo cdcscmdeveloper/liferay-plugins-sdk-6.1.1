@@ -14490,9 +14490,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		validateZonalChanges();
 		// 29521 - end
 		
-		// #33860 related to #25138 only validate when complete- start
-		specSO.validateSpecZoneQtyZero(reqDTO);
-		// #33860 related to #25138 - end	
+		// #34656 remove #33860
 		
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
