@@ -5244,7 +5244,13 @@ public class SmCommonUtil {
 			String applCatTyep) {
 
 		UserReqDTO userReqDTO = new UserReqDTO();
-		userReqDTO.setZoneCode(zoneZode);
+		//#12483 - START
+		if(supplierType.equals(SupplierManagementConst.STYPE_CONSULTANT)){
+			userReqDTO.setZoneCode("1");
+		}else{
+			userReqDTO.setZoneCode(zoneZode);
+		}
+		//#12483 - END
 		userReqDTO.setRoleCode(roleCode);
 		userReqDTO.setSupplierType(supplierType);
 		userReqDTO.setApplicationType(applType);
