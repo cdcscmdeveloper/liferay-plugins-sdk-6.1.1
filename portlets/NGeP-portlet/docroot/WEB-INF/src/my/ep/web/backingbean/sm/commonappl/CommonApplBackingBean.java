@@ -34,6 +34,7 @@ import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -235,9 +236,12 @@ public class CommonApplBackingBean extends
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							"/xhtml/sm/payment/paymentSummary.xhtml");
+			//#12483 - START
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
 				SMProcessNameConst.RESPOND_PO_INQUIRY) || resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.RESPOND_PO_INQUIRY.replaceAll("\\s", ""))) {
+						SMProcessNameConst.RESPOND_PO_INQUIRY.replaceAll("\\s", "")) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_PO_INQUIRY_REVISE) 
+						|| resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_PO_INQUIRY_REVISE.replaceAll("\\s", ""))) {
+				//#12483 - END
 			log.info("** Respond to PO Inquiry *********"
 					+ resDTO.getProcessName());
 			if (resDTO.getProcessName().equalsIgnoreCase(
@@ -260,9 +264,13 @@ public class CommonApplBackingBean extends
 				smApplBB.getManagedBean().setTaskId(taskId);
 				smApplBB.getManagedBean().setClaimTask(isClaim);
 				setNavigationForSmDecision("RS", smApplBB);
-			} else if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION) || resDTO.getProcessName().equalsIgnoreCase(
-							SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))) {
+				//#12483 - START
+				//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
+			} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT.replaceAll("\\s", ""))) {
+				//#12483 - END
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 				// TODO Remove this code and get the applicationType From DB
 				log.info(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
@@ -593,7 +601,29 @@ public class CommonApplBackingBean extends
 										.equalsIgnoreCase(
 												SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", "")))) {
 					log.info("*** This is po or approver action after site visit *** ");
-					smApplBB.getManagedBean().setReviewSiteVisit(true);
+					//#12483 - START
+					if(!appl.getSmApplRevises().isEmpty()){
+						if(!appl.getSmSvTasks().isEmpty()){
+							boolean hasSvTaskNotVisit = false;
+							for(SmSvTask smSvTask : appl.getSmSvTasks()){
+								if(!hasSvTaskNotVisit){
+									if(smSvTask.getActualVisitDate() == null){
+										hasSvTaskNotVisit = true;
+									}
+								}
+							}
+							if(hasSvTaskNotVisit){
+								smApplBB.getManagedBean().setReviewSiteVisit(false);
+							} else {
+								smApplBB.getManagedBean().setReviewSiteVisit(true);
+							}
+						} else {
+							smApplBB.getManagedBean().setReviewSiteVisit(false);
+						}
+					} else {
+						smApplBB.getManagedBean().setReviewSiteVisit(true);
+					}
+					//#12483 - END
 				} else if (!resDTO.getTaskName().equalsIgnoreCase(
 						SMProcessNameConst.REVIEW_APPL_ESCALATED) && !resDTO.getTaskName().equalsIgnoreCase(
 								SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))) {
