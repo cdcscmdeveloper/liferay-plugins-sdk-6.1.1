@@ -116,7 +116,8 @@
 						itemValue="0" />
 					<!-- #31043 start -->	
 					<p:ajax event="change" partialSubmit="true" process="@this"
-							update=":form" listener="#{backingBean.assignDocVerified}"></p:ajax>
+							update=":form" listener="#{backingBean.assignDocVerified}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"></p:ajax>
 					<!-- #31043 end -->
 				</p:selectOneRadio>
 				<p:message id="onlnPoMsg" for="onlnPo" showSummary="true"
@@ -133,7 +134,8 @@
 						itemValue="0" />
 					<!-- #31043 start -->	
 					<p:ajax event="change" partialSubmit="true" process="@this"
-							update=":form" listener="#{backingBean.assignDocVerified}"></p:ajax>
+							update=":form" listener="#{backingBean.assignDocVerified}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"></p:ajax>
 					<!-- #31043 end -->
 				</p:selectOneRadio>
 				<p:message id="onlnAppMsg" for="onlnApp" showSummary="true"
