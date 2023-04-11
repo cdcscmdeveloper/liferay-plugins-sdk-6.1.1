@@ -6503,7 +6503,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 							if(assetLiabilityUpload){
 								checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 						    }else{
-						    	checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+						    	checklist.setCompliance(null);
 						    }
 						}
 	
@@ -6519,7 +6519,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 							if(creditfacilityUpload){
 								checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 							}else{
-								checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+								checklist.setCompliance(null);
 							}
 				        }
 			    }

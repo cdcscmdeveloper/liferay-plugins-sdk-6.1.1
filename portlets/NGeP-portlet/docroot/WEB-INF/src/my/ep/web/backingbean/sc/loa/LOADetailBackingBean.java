@@ -158,6 +158,7 @@ import my.ep.type.sc.ApprovalAction;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
@@ -11126,12 +11127,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	// #32648 populate lampiran 7 if LOA at supplier - end
 	
 	//#21692 - start
+	/**
+	 * Check if Selected Supplier Reject Proposal Validity Extension
+	 * 
+	 * @param supplierId
+	 * @return
+	 */
 	public boolean isSupplierStatusRejectedEPV(Long supplierId) {
 		boolean supplierStatus = false;
 		
-		IQTDetailSO detailSO;
 		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
+			IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			
 			List<Long> suppList = new ArrayList<>();
@@ -11140,15 +11146,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				supplierStatus = detailSO.checkSupplierEPVStatus(getManagedBean().getScQt().getQtId(), suppList);
 			}
 			
-		} finally {
-			detailSO = null;
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QTLOA", "CheckIfSupplierEPVStatusIsRejected", getManagedBean().getScQt().getQtId().toString(), "isSupplierStatusRejectedEPV",
+					getUserIdSessionFromLoginId(), e);
 		}
 		
 		return supplierStatus;
 	}
 	
 	public boolean isLOAStatusAbleToCancel() {
-		boolean isAble = false;
 		
 		IScWorkFlowStatusSO workFlowStatusSO;
 		ScWorkFlowStatusReqDTO scWreqDTO = new ScWorkFlowStatusReqDTO();
@@ -11159,11 +11165,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
 		
-		isAble = null != currentWorkFlowStatus && (
-				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUBMISSION) ||
-				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_APPROVAL)||
-				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_REVISION)||
-				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)
+		List<Long> statusList = new ArrayList<>();
+		statusList.add(QTStatusConst.LOA_PENDING_SUBMISSION);
+		statusList.add(QTStatusConst.LOA_PENDING_APPROVAL);
+		statusList.add(QTStatusConst.LOA_PENDING_REVISION);
+		statusList.add(QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
+		
+		boolean isAble = null != currentWorkFlowStatus && (
+				statusList.contains(currentWorkFlowStatus.getPmStatus().getStatusId())
 				)? true : false;
 		
 		return isAble;

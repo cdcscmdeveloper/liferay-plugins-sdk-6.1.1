@@ -6680,6 +6680,12 @@ return	remarksNotFound;
 					setSelectionMode(finalizationMethod.getParameterCode());
 				}
 			} 
+			
+			//#28834 - Start
+			if(scQtFinalization.getCurrentStatus().getPmStatus().getStatusId().equals(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION)){
+				this.getManagedBean().setDisableJustifications(false);
+			}
+			//#28834 - End
 
 		} else if (decision.equals(ParameterConst.DECISION_RE_EVALUATION)) {
 			scQtFinalization.setRePublishOption(null);

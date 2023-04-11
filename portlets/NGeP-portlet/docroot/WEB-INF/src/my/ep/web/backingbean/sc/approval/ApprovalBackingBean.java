@@ -115,6 +115,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.demoInvitation.DemoInvitationBackingBean;
@@ -823,14 +824,14 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 			this.getManagedBean().setSuppResp(suppResp);
 			//#21692 new remark for supplier - End
-			page = "/xhtml/sc/quatationtender/Approver/supplierAccepetance.xhtml";
+			page = QTConstants.EXTEND_PROPOSAL_VALIDITY_SUPPLIER_ACCEPTANCE;
 			qtPageFirst = false;
 		} else if (SCProcessNameConst.FC_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)) {
 			initializeRemarks(this.getManagedBean().getScQtApproval(), 
 					currentStatus, 
 					getManagedBean().getScQtApproval().getScQtApprovalRemarks(),
 					ScQtApprovalRemark.class, true);
-			page = "/xhtml/sc/quatationtender/Approver/applProposalValidPeriodExtension.xhtml";
+			page = QTConstants.EXTEND_PROPOSAL_VALIDITY_PENDING_APPROVAL;
 			qtPageFirst = false;
 		}
 		//#21692 Re-open - End
@@ -1602,18 +1603,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						//#21692 - start
 						ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtId());
 						wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
-						if(wfStatus.getPmStatus()!=null) {
-							Long currentStatus = wfStatus.getPmStatus().getStatusId();
-							if (QTStatusConst.QT_RE_FINALIZATION.equals(currentStatus)) {
-								QuationTenderReqDTO qtReqDTO1 = new QuationTenderReqDTO();
-								qtReqDTO1.setQtdetail(qt);
-								QuationTenderResDTO qtResDTO1 = detailSO.updateDataTypeSupplierList(qtReqDTO1);
-								String[] supplierIdsArray = qtResDTO1.getDataTypeSupplierList();
-								dataType.getSupplierList().clear();
+						if(wfStatus.getPmStatus()!=null
+								&& QTStatusConst.QT_RE_FINALIZATION.equals(wfStatus.getPmStatus().getStatusId())) {
+							QuationTenderReqDTO qtReqDTO1 = new QuationTenderReqDTO();
+							qtReqDTO1.setQtdetail(qt);
+							QuationTenderResDTO qtResDTO1 = detailSO.updateDataTypeSupplierList(qtReqDTO1);
+							String[] supplierIdsArray = qtResDTO1.getDataTypeSupplierList();
+							dataType.getSupplierList().clear();
 
-								dataType.getSupplierList().addAll(
-										Arrays.asList(supplierIdsArray));
-							}
+							dataType.getSupplierList().addAll(
+									Arrays.asList(supplierIdsArray));
 						}
 						//#21692 - end
 						isFinalApproval = dataType != null && CollectionUtils.isEmpty(dataType.getSupplierList());
@@ -2373,9 +2372,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 
 	private ScQt checkProcuremntCategoryMedicine(ScQt scQt) {
-		IQTSpecSO qtSpecSO = null;
+		
 		try {
-			qtSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+			IQTSpecSO qtSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTSpecSO.class);
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 			specReqDTO.setScQt(scQt);
@@ -2388,8 +2387,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} else {
 				scQt.setEvaluateBy(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM);
 			}
-		} finally {
-			qtSpecSO = null;
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "CheckIfProcurementCategoryIsMedicine", scQt.getQtId().toString(), "checkProcuremntCategoryMedicine",
+					getUserIdSessionFromLoginId(), e);
 		}
 		return scQt;
 	}

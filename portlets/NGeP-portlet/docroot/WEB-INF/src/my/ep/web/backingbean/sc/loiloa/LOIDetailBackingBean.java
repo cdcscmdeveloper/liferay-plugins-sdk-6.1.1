@@ -135,6 +135,7 @@ import my.ep.type.sc.ApprovalAction;
 import my.ep.type.sc.LoiLoaDocType;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
@@ -6729,13 +6730,16 @@ public class LOIDetailBackingBean extends
 		
 		return agreeEPV;
 	}
-	
+	/**
+	 * Check If Supplier EPV Status Is Rejected
+	 * 
+	 * @return
+	 */
 	public boolean isSupplierEPVStatusRejected() {
 		boolean supplierStatus = false;
 		
-		IQTDetailSO detailSO;
 		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
+			IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			
 			List<Long> suppList = new ArrayList<>();
@@ -6748,19 +6752,23 @@ public class LOIDetailBackingBean extends
 				supplierStatus = detailSO.checkSupplierEPVStatus(getManagedBean().getScQt().getQtId(), suppList);
 			}
 			
-		} finally {
-			detailSO = null;
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QTLOA", "CheckIfSupplierEPVStatusIsRejected", getManagedBean().getRecSupplierList().get(0).getDocId().toString(), "isSupplierEPVStatusRejected",
+					getUserIdSessionFromLoginId(), e);
 		}
 		
 		boolean isValidFor21692 = this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(), QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
 		
+		List<Long> statusList = new ArrayList<>();
+		statusList.add(QTStatusConst.LOI_PENDING_SUBMISSION);
+		statusList.add(QTStatusConst.LOI_PENDING_APPROVAL);
+		statusList.add(QTStatusConst.LOI_PENDING_REVISION);
+		statusList.add(QTStatusConst.LOI_PENDING_NEGOTIATION);
+		statusList.add(QTStatusConst.LOI_PENDING_REVISION_APPROVAL);
+		
 		supplierStatus = (supplierStatus && isLoiListPortlet() && !this.getManagedBean().getScLoi().isBrandNew() && (
 				null != this.getManagedBean().getScLoi().getScWorkFlowStatus() &&
-				(this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_SUBMISSION) || 
-				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_APPROVAL) || 
-				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_REVISION) || 
-				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_NEGOTIATION) || 
-				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_REVISION_APPROVAL)))
+				(statusList.contains(this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId())))
 				&& isValidFor21692
 				) ? true : false;
 		

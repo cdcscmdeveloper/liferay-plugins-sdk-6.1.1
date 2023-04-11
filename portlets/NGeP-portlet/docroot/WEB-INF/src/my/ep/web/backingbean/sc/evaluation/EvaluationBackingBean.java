@@ -17515,6 +17515,12 @@ private void retriveCommitteeRemarksList(){
 	//6906 - end
 	
 	//#21692 - start
+	/**
+	 * Check if latest meeting with status Done less than Proposal Validity End Date
+	 * 
+	 * @param proposalValidityEndDate
+	 * @return
+	 */
 	public boolean checkMeetingDoneLessThanValidityEndDate(Date proposalValidityEndDate) {
 		boolean lessThanValidityEndDate = false;
 
