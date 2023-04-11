@@ -1141,6 +1141,8 @@ public class SpecificationBackingBean extends
 						IQTSpecSO.class);
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 		specReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+		//#34656 set scqt
+		specReqDTO.setScQt(this.getManagedBean().getQt());
 		this.getManagedBean().setTechnicalOtherCheckList(true);	//1873 - note 52
 		boolean financialOtherCheckList = true;
 
