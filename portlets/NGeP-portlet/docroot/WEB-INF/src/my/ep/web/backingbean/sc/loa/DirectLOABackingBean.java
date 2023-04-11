@@ -10359,7 +10359,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					&& tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getClPriceTypeCode() != null
 					&& tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getClPriceTypeCode().getParameterCode() != null
 					&& !afterTireCheckAnswerList.isEmpty()
-					&& !tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)){
+					&& !tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)
+					&& contains==0){
 				afterTireCheckAnswerList.add(tplSpecAnswer);
 			}else if (qtMaint
 					&& tplSpecAnswer.getTplSpecQuestion() != null 
