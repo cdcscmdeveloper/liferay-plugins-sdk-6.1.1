@@ -3870,7 +3870,12 @@ public class CreateQtBackingBean extends
 							
 	   }
 		//20200210@asyrafhaziq_Bug #27381&#26694  - End
-
+		/**
+		 * Check if current QT Status is in between QT Publication and QT Closed/Awarded
+		 * 
+		 * @param currentStatusId
+		 * @return
+		 */
 	public boolean isQTStatusInProposalValidPeriodExtApproval(Long currentStatusId) {
 		List<Long> validPeriodExts = Arrays.asList(QTStatusConst.QT_PENDING_PUBLICATION,
 				QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_PROPOSAL_PREPARATION,
