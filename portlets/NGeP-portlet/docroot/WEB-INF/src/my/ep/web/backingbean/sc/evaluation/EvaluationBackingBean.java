@@ -12837,7 +12837,13 @@ private void retriveCommitteeRemarksList(){
 				int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
 			
 				if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
-					reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+					// #25138 for demo -start-
+					if (reqDTO.getEvalStage().equalsIgnoreCase(QTConstants.PRESENTATION_DEMO_EVALUATION)) {
+						reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+					} else {
+					// #25138 for demo -end-
+						reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+					} // #25138 for demo
 				} else {
 					reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 				}
@@ -14756,7 +14762,17 @@ private void retriveCommitteeRemarksList(){
 				int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
 
 				if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
-					evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+					// #25138 for demo -start-
+					if (this.getManagedBean().getScQt().isDemoRequired()) {
+						evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+					} else {
+						evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+						
+						EvaluationResDTO evalResDTO = evaluationSO.technicalItemSupplierQualified(evalReqDTO);
+						
+						specresDTO1.setSpecAnswerList(evalResDTO.getSpecAnswers());
+					}
+					// #25138 for demo -end-
 				} else {
 					evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 				}
