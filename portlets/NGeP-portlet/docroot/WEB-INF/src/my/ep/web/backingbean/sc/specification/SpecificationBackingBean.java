@@ -1215,9 +1215,6 @@ public class SpecificationBackingBean extends
 			//1873 - end- note 52
 
 			specSo.validateCheckList(specReqDTO);
-			//#31292 - start
-			specSo.validateSpecZoneQtyZero(specReqDTO);
-			//#31292 - end
 
 			break;
 		case 3:
@@ -1397,24 +1394,24 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 4:
+			//#34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			//#34656 validate - end
 			if (!this.getManagedBean().isReadOnly() && this.getManagedBean().isTechnicalOtherCheckList()) {//1873 note 149
 				checktemplateSpecStatus(this.getManagedBean().getQt());
 				checkFinancialSpecStatus(this.getManagedBean().getQt());
 			}
-			//#34656 validate - start
-			specSo.validateSpecZoneQtyZero(specReqDTO);
-			//#34656 validate - end
 			retriveTechnicalScoring();
 			break;
 
 		case 5:
+			//#34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			//#34656 validate - end
 			if (!this.getManagedBean().isReadOnly() && this.getManagedBean().isTechnicalOtherCheckList()) {//1873 note 149
 				checktemplateSpecStatus(this.getManagedBean().getQt());
 				checkFinancialSpecStatus(this.getManagedBean().getQt());
 			}
-			//#34656 validate - start
-			specSo.validateSpecZoneQtyZero(specReqDTO);
-			//#34656 validate - end
 			retriveFinancialScoring();
 			break;
 
