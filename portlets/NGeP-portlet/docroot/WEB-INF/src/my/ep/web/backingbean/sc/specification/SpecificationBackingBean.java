@@ -1039,12 +1039,20 @@ public class SpecificationBackingBean extends
 		case 2:
 			specSo.validateCheckList(constructSpecCommitteDtls());
 
+			// #34656 move to top -start-
+			specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
+			// #34656 -end-
+
 			// 1873 - start- note 52
 			String taskName = this.getManagedBean().getTaskName();
 			String[] allowedTaskName = new String[] { SCProcessNameConst.FINALISE_SCORING,
 					SCProcessNameConst.UPDATE_SCORING, SCProcessNameConst.VIEW_SCORING,
 					SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING //1873 note 149
 				};
+			
+			// #34656 move validation position ,trigger before popup-start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			// #34656 move validation position -end
 
 			if (Arrays.asList(allowedTaskName).contains(taskName)
 					|| (StringUtils.isEmpty(taskName) && !this.getManagedBean().isReadOnly())) {
@@ -1058,11 +1066,8 @@ public class SpecificationBackingBean extends
 			}
 			// 1873 - end- note 52
 
-			specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
 			specSo.validateCheckList(specReqDTO);
-			// #31292, #21695, #25138 - start
-			specSo.validateSpecZoneQtyZero(specReqDTO);
-			// #31292, #21695, #25138 - end
+			// #34656 adjust position (remove #31292)
 
 			break;
 		case 3:
@@ -1223,11 +1228,19 @@ public class SpecificationBackingBean extends
 			}
 			// 1873 note 195 end
 
+			// #34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			// #34656 validate - end
+
 			retriveFinancialCheckList();
 
 			break;
 
 		case 4:
+			// #34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			// #34656 validate - end
+
 			if (!this.getManagedBean().isReadOnly()
 			// 1873 note 149 -start-
 					&& this.getManagedBean().isTechnicalOtherCheckList()
@@ -1240,6 +1253,10 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 5:
+			// #34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			// #34656 validate - end
+
 			if (!this.getManagedBean().isReadOnly()
 			// 1873 note 149 -start-
 					&& this.getManagedBean().isTechnicalOtherCheckList()
@@ -1252,6 +1269,10 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 6:
+			// #34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			// #34656 validate - end
+
 			retriveRecommendationDetails();
 
 			if (!this.getManagedBean().isReadOnly()
@@ -1265,11 +1286,19 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 7:
+			// #34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			// #34656 validate - end
+
 			retriveDeliveryDetails();
 
 			break;
 
 		case 8:
+			// #34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			// #34656 validate - end
+
 			if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this
 					.getManagedBean().getFulfilmentType())
 					|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
@@ -1283,6 +1312,10 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 9:
+			// #34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			// #34656 validate - end
+
 			retriveCommitteeEndorsment();
 
 			break;
