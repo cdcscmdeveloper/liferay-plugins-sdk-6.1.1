@@ -192,6 +192,8 @@ public class ViewSuppProfileManagedBean extends
 	// #26238 start
 	private boolean cancelMofAccount;
 	// #26238 eend
+	
+	private boolean hasActiveDA; //#34626
 		
 	public ViewSuppProfileManagedBean() {
 
@@ -1003,5 +1005,13 @@ public class ViewSuppProfileManagedBean extends
 		this.cancelMofAccount = cancelMofAccount;
 	}
 	// #26238 end
-	
+	//#34626 - start
+	public boolean isHasActiveDA() {
+		return hasActiveDA;
+	}
+
+	public void setHasActiveDA(boolean hasActiveDA) {
+		this.hasActiveDA = hasActiveDA;
+	}
+	//#34626 - end
 }

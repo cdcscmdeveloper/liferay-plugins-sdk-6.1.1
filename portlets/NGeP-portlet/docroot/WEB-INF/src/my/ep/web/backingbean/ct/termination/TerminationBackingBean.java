@@ -1377,10 +1377,12 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			ctBB.getManagedBean().setViewSCL(true);
 	
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
-	
-			abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
-			abb.getManagedBean().setContractIdFromTaskList(new Long(this.getManagedBean().getContractVer().getCtContract().getContractId()));
-			abb.getManagedBean().setContractVerIdFromTaskList(this.getManagedBean().getContractVer().getContractVerId());
+			
+			//To reset status from FU, NT, FW
+			ctBB.getManagedBean().setDocTypeFromTaskList(null);
+			ctBB.getManagedBean().setContractIdFromTaskList(null);
+			ctBB.getManagedBean().setContractVerIdFromTaskList(null);
+			ctBB.getManagedBean().setTaskNameFromTaskList(null);
 	
 			if(ctBB.getManagedBean().isViewContractFromAgreement()){
 				ctBB.getManagedBean().setViewSCLFromContract(true);
