@@ -64,7 +64,9 @@
 					</ui:fragment></td>
 				<td><p:inputText readonly="true" disabled="true"
 						value="#{noOfContracts.autoScore}" style="text-align:right"
-						rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
+						rendered="#{ checklistScoreType eq '1'}"></p:inputText>
+						<c:if test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'}">
+					<p:inputText
 						id="technicalEmployeeListUserScoreId"
 						label="#{lbl['lbl.tpl.spec.content.user.score']}"
 						value="#{noOfContracts.userScore}" maxlength="18" required="true"
@@ -75,7 +77,23 @@
 							maxIntegerDigits="14" integerOnly="true" />
 						<f:attribute name="min" value="0" />
 						<f:attribute name="max" value="#{contractUserScore}" />
-					</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
+					</p:inputText>
+					</c:if>
+					<c:if test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
+					<p:inputText
+						id="technicalEmployeeListUserScoreId"
+						label="#{lbl['lbl.tpl.spec.content.user.score']}"
+						value="#{noOfContracts.userScore}" maxlength="18" required="true"
+						disabled="true"
+						style="text-align:right" rendered="#{ checklistScoreType eq '2'}">
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+							maxIntegerDigits="14" integerOnly="true" />
+						<f:attribute name="min" value="0" />
+						<f:attribute name="max" value="#{contractUserScore}" />
+					</p:inputText>
+					</c:if>
+					<p:spacer width="5"></p:spacer> <h:outputText
 						value="/#{contractUserScore}"
 						rendered="#{ checklistScoreType eq '2'}" /> <p:message
 						id="technicalEmployeeListUserScoreMessage"
