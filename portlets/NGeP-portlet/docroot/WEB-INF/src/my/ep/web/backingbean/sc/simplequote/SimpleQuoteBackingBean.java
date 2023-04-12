@@ -7034,6 +7034,11 @@ public class SimpleQuoteBackingBean extends
 				getManagedBean().setNewableFlag(Boolean.FALSE);
 				getManagedBean().setAddNewSpecFlag(Boolean.TRUE);
 			}
+			//32169 - start
+			if (scQuote.getQuoteZone() != null && (scQuote.getQuoteZone().getTplSpecZoneDtls() == null || scQuote.getQuoteZone().getTplSpecZoneDtls().isEmpty())){
+				preparePanelZones(quotePanelItem,scQuote);
+			}
+			//32169 - end
 		}
 		// duration calc
 		calculateDuration(scQuote);
