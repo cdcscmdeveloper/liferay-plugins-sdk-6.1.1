@@ -2324,6 +2324,7 @@ public class QTCloneBackingbean extends
 				.getPmProcurementCategory().getParameterCode())
 				&& CollectionUtils.isEmpty(otherapprovals)) {
 			ScQtApproval newOthersApproval = null;
+			if(CollectionUtils.isNotEmpty(scQt.getScQtApprovals())){//34502&25635&43-start
 					for (ScQtApproval approval : scQt.getScQtApprovals()) {
 						if (ParameterConst.APPROVAL_CATEGORY_OTHERS
 								.equalsIgnoreCase(approval
@@ -2333,6 +2334,7 @@ public class QTCloneBackingbean extends
 							break;
 						}
 					}
+			}//34502&25635&43-End
 					if (null != newOthersApproval) {
 						List<PmParameter> settings = null;
 						ParameterHelper parameterHelper = ParameterHelper
