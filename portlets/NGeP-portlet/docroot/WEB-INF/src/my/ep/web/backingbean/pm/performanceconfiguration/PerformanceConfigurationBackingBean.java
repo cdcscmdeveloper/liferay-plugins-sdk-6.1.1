@@ -162,12 +162,12 @@ public class PerformanceConfigurationBackingBean extends
 		getManagedBean().getCtConfigModel().setTarget(getTargetCtConfigList());
 		
 		
-		List<CtConfig> lstConfig = getTargetCtConfigList();
+		List<CtContract> lstConfig = getTargetCtConfigList();
 		if(!lstConfig.isEmpty()){
-			for(CtConfig targetConfig : getManagedBean().getCtConfigModel().getTarget()){
-				Iterator<CtConfig> sourceConfig = getManagedBean().getCtConfigModel().getSource().iterator();
+			for(CtContract targetConfig : getManagedBean().getCtConfigModel().getTarget()){
+				Iterator<CtContract> sourceConfig = getManagedBean().getCtConfigModel().getSource().iterator();
 				while(sourceConfig.hasNext()){
-					CtConfig contract = sourceConfig.next();
+					CtContract contract = sourceConfig.next();
 					if(contract != null && targetConfig != null && (contract.getContractNo().equalsIgnoreCase(targetConfig.getContractNo()))){
 						
 						sourceConfig.remove();
@@ -175,15 +175,15 @@ public class PerformanceConfigurationBackingBean extends
 						
 					}else{
 						contract.setBrandNew(true);
-						contract.setRemove(true);
+						//contract.setRemove(true);
 					}
 				}
-				targetConfig.setRemove(true);
+				//targetConfig.setRemove(true);
 			}
 		}else{
-			Iterator<CtConfig> sourceConfig = getManagedBean().getCtConfigModel().getSource().iterator();
+			Iterator<CtContract> sourceConfig = getManagedBean().getCtConfigModel().getSource().iterator();
 			while(sourceConfig.hasNext()){
-				CtConfig contract = sourceConfig.next();
+				CtContract contract = sourceConfig.next();
 				contract.setBrandNew(true);
 			}
 		}
@@ -204,12 +204,12 @@ public class PerformanceConfigurationBackingBean extends
 
 	private void initiateCtConfigList() {
 		// TODO Auto-generated method stub
-		getManagedBean().setCtConfigModel(new DualListModel<CtConfig>(new ArrayList<CtConfig>(),new ArrayList<CtConfig>()));
+		getManagedBean().setCtConfigModel(new DualListModel<CtContract>(new ArrayList<CtContract>(),new ArrayList<CtContract>()));
 	}
 	
-	private List<CtConfig> getTargetCtConfigList() {
+	private List<CtContract> getTargetCtConfigList() {
 		ICtConfigSO ctconfigSO = null;
-		List<CtConfig> targetList = new ArrayList<CtConfig>();
+		List<CtContract> targetList = new ArrayList<CtContract>();
 		CtConfigReqDTO reqDTO = new CtConfigReqDTO();
 		CtConfigResDTO resDTO = new CtConfigResDTO();
 		try{
@@ -218,8 +218,8 @@ public class PerformanceConfigurationBackingBean extends
 
 		
 		resDTO = ctconfigSO.targetContractForCtConfig(reqDTO);
-		List<CtConfig> list = resDTO.getCtConfigList();
-		for(CtConfig ctConfig : list){
+		List<CtContract> list = resDTO.getCtConfigList();
+		for(CtContract ctConfig : list){
 			targetList.add(ctConfig);
 		}
 		
@@ -263,9 +263,9 @@ public class PerformanceConfigurationBackingBean extends
 		
 	}
 	
-	private List<CtConfig> getSourceCtConfigList(){
+	private List<CtContract> getSourceCtConfigList(){
 		ICtConfigSO ctconfigSO = null;
-		List<CtConfig> sourceList = new ArrayList<CtConfig>();
+		List<CtContract> sourceList = new ArrayList<CtContract>();
 		CtConfigReqDTO reqDTO = new CtConfigReqDTO();
 		CtConfigResDTO resDTO = new CtConfigResDTO();
 		try{
@@ -274,8 +274,8 @@ public class PerformanceConfigurationBackingBean extends
 
 		
 		resDTO = ctconfigSO.sourceContractForCtConfig(reqDTO);
-		List<CtConfig> list = resDTO.getCtConfigList();
-		for(CtConfig ctConfig : list){
+		List<CtContract> list = resDTO.getCtConfigList();
+		for(CtContract ctConfig : list){
 			sourceList.add(ctConfig);
 		}
 		

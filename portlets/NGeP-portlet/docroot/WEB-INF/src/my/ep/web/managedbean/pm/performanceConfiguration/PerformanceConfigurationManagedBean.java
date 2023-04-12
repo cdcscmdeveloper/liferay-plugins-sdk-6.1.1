@@ -37,7 +37,7 @@ public class PerformanceConfigurationManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	
-	private DualListModel<CtConfig> ctConfigModel;
+	private DualListModel<CtContract> ctConfigModel;
 	
 //	private HashMap<String, PmUserGroupUser> ctConfigMap;
 //	
@@ -52,14 +52,14 @@ public class PerformanceConfigurationManagedBean extends BaseManagedBean {
 	/**
 	 * @return the ctConfigModel
 	 */
-	public DualListModel<CtConfig> getCtConfigModel() {
+	public DualListModel<CtContract> getCtConfigModel() {
 		return ctConfigModel;
 	}
 
 	/**
 	 * @param ctConfigModel the ctConfigModel to set
 	 */
-	public void setCtConfigModel(DualListModel<CtConfig> ctConfigModel) {
+	public void setCtConfigModel(DualListModel<CtContract> ctConfigModel) {
 		this.ctConfigModel = ctConfigModel;
 	}
 
