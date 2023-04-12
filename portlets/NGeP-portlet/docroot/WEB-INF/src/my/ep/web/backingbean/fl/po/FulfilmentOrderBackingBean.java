@@ -321,7 +321,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			//#34686 start
 			else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 				if(getManagedBean().getAttachment().getFileName() != null){
-					log.info("razin ap58 save attachment "+ getManagedBean().getAttachment().getFileName());
 					FulfilmentReqDTO AttachreqDTO = new FulfilmentReqDTO();
 					AttachreqDTO.setAttachment(this.getManagedBean().getAttachment());
 					AttachreqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
@@ -2493,6 +2492,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			reqDTOflorder.setFlOrderId(docId);
 			resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTOflorder);
 			reqDTOnonAP58.setFulfilmentOrder(resDTO.getFlOrder());
+			reqDTOnonAP58.setToken(getFacesScopes().getBPMAuthenticationCtxToken()); //#34686 add token
 			resDTO = fulfilmentOrderSO.hideYEPtasklist(reqDTOnonAP58);
 			log.info("29440: "+resDTO.isSuccessful());
 			if(resDTO.isSuccessful()) {
