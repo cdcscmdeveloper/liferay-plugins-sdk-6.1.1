@@ -23,8 +23,8 @@ public class pmConfigConverter implements Converter {
 			@SuppressWarnings("unchecked")
 			DualListModel<Object> dl = (DualListModel<Object>) dualList;
 			for (Object o : dl.getSource()) {
-				if (o instanceof CtConfig) {
-					id = "" + ((CtConfig) o).getContractNo();	
+				if (o instanceof CtContract) {
+					id = "" + ((CtContract) o).getContractNo();	
 				} 
 				
 				if (arg2.equals(id)) {
@@ -34,8 +34,8 @@ public class pmConfigConverter implements Converter {
 			}
 			if (ret == null)
 				for (Object o : dl.getTarget()) {
-					if (o instanceof CtConfig) {
-						id = "" + ((CtConfig) o).getContractNo();	
+					if (o instanceof CtContract) {
+						id = "" + ((CtContract) o).getContractNo();	
 					} 
 					
 					if (arg2.equals(id)) {
@@ -50,8 +50,8 @@ public class pmConfigConverter implements Converter {
 	@Override
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object arg2) {
 		String str = "";
-		if (arg2 instanceof CtConfig) {
-			str = "" + ((CtConfig) arg2).getContractNo();
+		if (arg2 instanceof CtContract) {
+			str = "" + ((CtContract) arg2).getContractNo();
 		} 
 		return str;
 	}
