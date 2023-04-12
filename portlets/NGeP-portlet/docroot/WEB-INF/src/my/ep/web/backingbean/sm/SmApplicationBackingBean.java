@@ -10471,6 +10471,11 @@ public class SmApplicationBackingBean extends
 			}
 			//#34392 - End
 		}
+		//#34552 - start
+		for (SmApplSupportDoc doc : getManagedBean().getMissinDocs()){
+			doc.getSmApplDocFiles().clear();
+		}
+		//#34552 - end
 		log.info("**** Send Inquiry List Size ***** "
 				+ getManagedBean().getMissinDocs().size());
 		if (dialogId != null) {
