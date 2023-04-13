@@ -12444,7 +12444,7 @@ public class SmApplicationBackingBean extends
 				if (doc.getApplSupportDocId().compareTo(
 						getManagedBean().getSupportDoc().getApplSupportDocId()) == 0) {
 					log.info("**** This is the selected object ***** ");
-					//#34522 - start
+					//#34552 - start
 					SmApplDocFile file = new SmApplDocFile();
 					file.setFileName(StringUtils.replace(event.getFile()
 							.getFileName(), " ", "-"));
@@ -12457,7 +12457,7 @@ public class SmApplicationBackingBean extends
 						doc.setSmApplDocFiles(new ArrayList<SmApplDocFile>());
 					}
 					doc.getSmApplDocFiles().add(file);
-					//#34522 - end
+					//#34552 - end
 					commonUploadFile(event, filePath);
 				}
 			}
