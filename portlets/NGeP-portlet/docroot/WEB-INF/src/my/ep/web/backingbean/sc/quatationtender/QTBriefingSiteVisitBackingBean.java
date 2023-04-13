@@ -13,6 +13,7 @@ package my.ep.web.backingbean.sc.quatationtender;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap; //28188
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -405,7 +406,7 @@ public class QTBriefingSiteVisitBackingBean extends
 
 			ScQtBsvDtl tempScQtBsvDtl = this.getManagedBean().getTempScQtBsvDtl();
 			if (null != tempScQtBsvDtl) {
-				updateQtAmmendMentDtls(bsvType, tempScQtBsvDtl, bsvDetail);
+				updateQtAmmendMentDtls(bsvType, tempScQtBsvDtl, bsvDetail, false, ""); //28188
 			} else {
 				updateLatestBsvDate();
 				if (this.getManagedBean().getAmendMentBean() == null) {
@@ -981,27 +982,35 @@ public class QTBriefingSiteVisitBackingBean extends
 	 * @param bsvDetail
 	 * @param tempScQtBsvDtl
 	 */
+	 //#28188 -- Start
 	private void updateQtAmmendMentDtls(String bsvType,
-			ScQtBsvDtl oldBsvDtl, ScQtBsvDtl newBsvDtl) {
+			ScQtBsvDtl oldBsvDtl, ScQtBsvDtl newBsvDtl, boolean isCloned, String fieldPrefix) {
 
-		String fieldPrefix = oldBsvDtl.getQtBsvDtlId() + QTFieldConst.FIELD_QT_BSV_SEPARATOR;
+		fieldPrefix = !isCloned ? oldBsvDtl.getQtBsvDtlId() + QTFieldConst.FIELD_QT_BSV_SEPARATOR : fieldPrefix;
+		//#28188 -- End
 		QtAmendMentBean amendMentBean = this.getManagedBean().getAmendMentBean();
 		
 		if (null == amendMentBean) {
 			amendMentBean = new QtAmendMentBean();
 		}
 		
+		//#28188 -- Start
+		if (isCloned && amendMentBean.getCloneValueMap() == null) {
+			amendMentBean.setCloneValueMap(new HashMap<String, Object>());
+		}
+		//#28188 -- End
+		
 		// bsvDesc
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FIELD_QT_BSV_DESC, 
 				oldBsvDtl.getBsvDesc(), newBsvDtl.getBsvDesc(),
-				true);
+				true, isCloned); //#28188
 		
 		// bsvDate
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FIELD_QT_BSV_DATE, 
 				oldBsvDtl.getBsvDate(), newBsvDtl.getBsvDate(),
-				true);
+				true, isCloned); //#28188
 		
 		// Proposal Start Date
 		ScQt scQt = getManagedBean().getQt();
@@ -1010,23 +1019,26 @@ public class QTBriefingSiteVisitBackingBean extends
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				QTFieldConst.FIELD_QT_PROPOSAL_START_DATE, 
 				oldProposalStartDate, scQt.getProposalStartDate(),
-				true);
+				true, isCloned); //#28188
 		
 		// location
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FIELD_QT_BSV_LOCATION, 
 				oldBsvDtl.getLocation(), newBsvDtl.getLocation(),
-				true);
+				true, isCloned); //#28188
 
 		// address
 		ScAddress oldAddress = oldBsvDtl.getAddress();
 		ScAddress newAddress = newBsvDtl.getAddress();
-		if (newAddress.getAddress2().equals("")) {
+		//#28188 -- Start
+		if (newAddress.getAddress2() != null && newAddress.getAddress2().equals("")) {
 			newAddress.setAddress2(null);
 		}
-		if (newAddress.getAddress3().equals("")) {
+		if (newAddress.getAddress3() != null && newAddress.getAddress3().equals("")) {
 			newAddress.setAddress3(null);
 		}
+		//#28188 -- End
+		
 		/*if (newAddress.getAddress4().equals("")) {
 			newAddress.setAddress4(null);
 		}*/
@@ -1034,17 +1046,17 @@ public class QTBriefingSiteVisitBackingBean extends
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_1, 
 				oldAddress.getAddress1(), newAddress.getAddress1(),
-				true);
+				true, isCloned); //#28188
 		// address2
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_2, 
 				oldAddress.getAddress2(), newAddress.getAddress2(),
-				true);
+				true, isCloned); //#28188
 		// address3
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_3, 
 				oldAddress.getAddress3(), newAddress.getAddress3(),
-				true);
+				true, isCloned); //#28188
 		// address4
 	/*	putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_4, 
@@ -1053,24 +1065,24 @@ public class QTBriefingSiteVisitBackingBean extends
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_POSTCODE, 
 				oldAddress.getPostcode(), newAddress.getPostcode(),
-				true);
+				true, isCloned); //#28188
 		// cityId
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FIELD_QT_BSV_ADDRESS_CITY, 
 				oldAddress.getPmCity().getCityId(), newAddress.getPmCity().getCityId(),
-				true);
+				true, isCloned); //#28188
 
 		// coordinatingOfficer
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FIELD_QT_BSV_COORDINATING_OFFICER, 
 				oldBsvDtl.getCoordinatingOfficer(), newBsvDtl.getCoordinatingOfficer(),
-				true);
+				true, isCloned); //#28188
 
 		// maxNoOfAttendance
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FIELD_QT_BSV_MAX_NO_OF_ATTENDANCE, 
 				oldBsvDtl.getMaxNoOfAttendance(), newBsvDtl.getMaxNoOfAttendance(),
-				true);
+				true, isCloned); //#28188
 
 		// bsvStatus
 		Long oldBsvStatusId = oldBsvDtl.getBsvStatus() != null ? oldBsvDtl.getBsvStatus().getStatusId() : null;
@@ -1078,7 +1090,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		putIntoAmendMentBeanIfChanged(amendMentBean, 
 				fieldPrefix + QTFieldConst.FIELD_QT_BSV_STATUS, 
 				oldBsvStatusId, newBsvStatusId,
-				true);
+				true, isCloned); //#28188
 
 		this.getManagedBean().setAmendMentBean(amendMentBean);
 		this.getManagedBean().setTempScQtBsvDtl(null);
@@ -1098,45 +1110,52 @@ public class QTBriefingSiteVisitBackingBean extends
 	 * 		the new value
 	 * @return	the indicator field is changed.
 	 */
-	public boolean putIntoAmendMentBeanIfChanged(QtAmendMentBean amendMentBean, String key, Object oldValue, Object newValue, boolean ptjApprovalReqFlg) {
+	 //28188 -- Start
+	public boolean putIntoAmendMentBeanIfChanged(QtAmendMentBean amendMentBean, String key, Object oldValue, Object newValue, boolean ptjApprovalReqFlg, boolean isClone) {
 		boolean isChanged = false;
-		QtAmendMentValueBean oldValueBean = amendMentBean.getValueMap().get(key);
-		
-		// Always get the original old value. 
-		if (oldValueBean != null) {
-			oldValue = oldValueBean.getOldValue();
-		}
-		
-		if (oldValue instanceof String || newValue instanceof String) {
-			if (!StringUtils.equals((String)oldValue, (String)newValue)) {
-				isChanged = true;
-			}
-		} else {
-			if (oldValue != null && newValue != null &&
-					!oldValue.equals(newValue)) {
-				isChanged = true;
-			}	
-		}
-		
-		if (isChanged) {
-			QtAmendMentValueBean valueBean = new QtAmendMentValueBean();
-			valueBean.setOldValue(oldValue);
-			valueBean.setNewValue(newValue);
-			amendMentBean.getValueMap().put(key, valueBean);
-			
-			if (ptjApprovalReqFlg) {
-				amendMentBean.setPTJApprovalReq(true);	
-			} else {
-				valueBean.setApprovalDate(new Date());
-				valueBean.setIsApproved(true);
-			}
-		} else {
-			// remove if had been revert to old value.
+		if (!isClone) { 
+			// 28188 -- End
+			QtAmendMentValueBean oldValueBean = amendMentBean.getValueMap().get(key);
+
+			// Always get the original old value.
 			if (oldValueBean != null) {
-				amendMentBean.getValueMap().remove(key);
+				oldValue = oldValueBean.getOldValue();
 			}
+
+			if (oldValue instanceof String || newValue instanceof String) {
+				if (!StringUtils.equals((String) oldValue, (String) newValue)) {
+					isChanged = true;
+				}
+			} else {
+				if (oldValue != null && newValue != null && !oldValue.equals(newValue)) {
+					isChanged = true;
+				}
+			}
+
+			if (isChanged) {
+				QtAmendMentValueBean valueBean = new QtAmendMentValueBean();
+				valueBean.setOldValue(oldValue);
+				valueBean.setNewValue(newValue);
+				amendMentBean.getValueMap().put(key, valueBean);
+
+				if (ptjApprovalReqFlg) {
+					amendMentBean.setPTJApprovalReq(true);
+				} else {
+					valueBean.setApprovalDate(new Date());
+					valueBean.setIsApproved(true);
+				}
+			} else {
+				// remove if had been revert to old value.
+				if (oldValueBean != null) {
+					amendMentBean.getValueMap().remove(key);
+				}
+			}
+			//28188 - Start
+		} else {
+			key = key + "_CLONED";
+			amendMentBean.getCloneValueMap().put(key, newValue);
 		}
-		
+		//28188 - End
 		return isChanged;
 	}
 
@@ -1265,7 +1284,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	public void cloneScQtBsvDtl(ScQtBsvDtl bsvDtl, int index, String bsvType) {
 		QtAmendMentBean amendMentBean = this.getManagedBean().getAmendMentBean();
 		QtAmendMentValueBean valueBean = new QtAmendMentValueBean();
-		String fieldPrefix = bsvDtl.isCloned() ? bsvDtl.getCloneKey() : bsvDtl.getQtBsvDtlId() + QTFieldConst.FIELD_QT_BSV_SEPARATOR + "CLONE";
+		String fieldPrefix = bsvDtl.isCloned() ? bsvDtl.getCloneKey() : bsvDtl.getQtBsvDtlId() + QTFieldConst.FIELD_QT_BSV_SEPARATOR;
 		ScQtBsvDtl newScQtBsvDtl = new ScQtBsvDtl();
 		PmStatus pmStat = new PmStatus();
 		BriefingZoneBean briefingBean = this.getManagedBean().getBsvDtlBean();
@@ -1315,8 +1334,8 @@ public class QTBriefingSiteVisitBackingBean extends
 		
 		this.getManagedBean().setBsvDtlBean(briefingBean);
 		valueBean.setNewValue(newScQtBsvDtl);
-		//amendMentBean.getValueMap().put(fieldPrefix, valueBean);
-		//this.getManagedBean().setAmendMentBean(amendMentBean);	
+		
+		updateQtAmmendMentDtls(bsvType, bsvDtl, newScQtBsvDtl, true, fieldPrefix);
 	}
 	
 	//#28188 - End
