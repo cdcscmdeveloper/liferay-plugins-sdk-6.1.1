@@ -5161,6 +5161,7 @@ public class SmApplicationBackingBean extends
 		log.info(" *******Docs verified******88");
 		//#31043 start
 		saveOrUpdateAppl();
+		initNonMandatoryAndMandatoryDocs();
 		SmSideMenuIconUtil.getSideMenuVerificationIcon(getManagedBean(), 
 				getManagedBean().getCurrentPageType());
 		//#31043 end
@@ -12443,7 +12444,7 @@ public class SmApplicationBackingBean extends
 				if (doc.getApplSupportDocId().compareTo(
 						getManagedBean().getSupportDoc().getApplSupportDocId()) == 0) {
 					log.info("**** This is the selected object ***** ");
-					//#34522 - start
+					//#34552 - start
 					SmApplDocFile file = new SmApplDocFile();
 					file.setFileName(StringUtils.replace(event.getFile()
 							.getFileName(), " ", "-"));
@@ -12456,7 +12457,7 @@ public class SmApplicationBackingBean extends
 						doc.setSmApplDocFiles(new ArrayList<SmApplDocFile>());
 					}
 					doc.getSmApplDocFiles().add(file);
-					//#34522 - end
+					//#34552 - end
 					commonUploadFile(event, filePath);
 				}
 			}
@@ -17351,6 +17352,22 @@ public class SmApplicationBackingBean extends
 			log.info("#32014 - SSM Application : " + getManagedBean().getSmAppl().isApplValidWithSsm());
 			log.info("#32014 - SSM isActive : " + SmCommonUtil.getInstance().ssmActive());
 			if(!personnelAddress.isSameAsPerm() && getManagedBean().getSmAppl().isApplValidWithSsm() && SmCommonUtil.getInstance().ssmActive()){
+				//#34277 - start
+				boolean hasResAddr = false;
+				for(SmPersonnelAddress a : getManagedBean().getSelectedShareHolder().getSmPersonnelAddresses()){
+					if(a.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
+						hasResAddr = true;
+						break;
+					}
+				}
+				SmAddress ssmAddress = new SmAddress();
+				if(!hasResAddr){
+					SmApplicationUtil.getInstance().cloneAddress(
+							ssmAddress, getManagedBean().getShareHolderResdAddr().getSmAddress());
+					SmApplicationUtil.cloneAddressSSM(
+							ssmAddress, getManagedBean().getShareHolderResdAddr().getSmAddress());
+				}
+				//#34277 - end
 				SmPersonnelAddress res = new SmPersonnelAddress();
 				res.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
 				res.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
@@ -17423,31 +17440,28 @@ public class SmApplicationBackingBean extends
 						if (addr.getAddressType().equalsIgnoreCase(
 								SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
 							getManagedBean().setShareHolderResdAddr(addr);
-							SmApplicationUtil
-									.getInstance()
-									.assignStateDistAndCityForSelVal(
-											getManagedBean(),
-											getManagedBean().getShareHolderResdAddr()
-													.getSmAddress(),
-											SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
-							//to check, if district state not equal to pm state set district to null & City
-							if(getManagedBean().getShareHolderResdAddr().getSmAddress().isSsmData()){
-								SmAddress address = getManagedBean().getShareHolderResdAddr().getSmAddress();
-								if(address != null){
-									if(address.getPmState()!= null && address.getPmDistrict() != null){
-										if(address.getPmDistrict().getPmState() != null){
-											if(address.getPmDistrict().getPmState().getStateId() != address.getPmState().getStateId()){
-												address.setPmDistrict(new PmDistrict());
-												address.setPmCity(new PmCity());
-											}
-											
-										}
-									}
-								}
-							}
 						}
 					}
 				}
+				//#34277 - start
+				//personnel has no residential address, overwrite with SSM address
+				if(!hasResAddr){
+					getManagedBean().getShareHolderResdAddr().setSmAddress(ssmAddress);
+				}
+				//to check, if district state not equal to pm state set district to null & City
+				if(getManagedBean().getShareHolderResdAddr().getSmAddress().isSsmData()){
+					SmAddress addr = getManagedBean().getShareHolderResdAddr().getSmAddress();
+					if(addr != null && addr.getPmState()!= null && addr.getPmDistrict() != null
+						&& addr.getPmDistrict().getPmState() != null
+						&& addr.getPmDistrict().getPmState().getStateId() != addr.getPmState().getStateId()){
+							addr.setPmDistrict(new PmDistrict());
+							addr.setPmCity(new PmCity());
+					}
+				}
+				SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(getManagedBean(),
+						getManagedBean().getShareHolderResdAddr().getSmAddress(),
+						SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+				//#34277 - end
 				getManagedBean().setSelectedShareHolder(this.getManagedBean().getSelectedShareHolder());
 			}
 		}
