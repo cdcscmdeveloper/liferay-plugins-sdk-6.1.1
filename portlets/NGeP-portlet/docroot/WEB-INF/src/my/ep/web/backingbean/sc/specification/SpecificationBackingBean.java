@@ -20120,7 +20120,8 @@ if (null != checklist && !checklist.isEmpty()) {
 		this.getManagedBean().getSampleCheckList().getScQtDoc()
 		.getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
 		templateSpecBean.setSpecMaster(this.getManagedBean().getSampleCheckList().getScQtDoc()
-				.getTplSpecMaster());	
+				.getTplSpecMaster());
+		this.retriveSampleSpecmasterForMandatorySpecChecking(templateChecklist);//#29187 Added Vinod
 	}
 /***11104-start
  * display samplequantityerror in sample checkbox selected for sample item.
