@@ -2266,7 +2266,9 @@ public class QTCloneBackingbean extends
 							req.setBrandNew(true);
 							req.setApprovalType(approvalRequest.getApprovalType());
 							req.setApproverAction(new PmParameter());
+							if(null!=approvalRequest.getApproverAction()){//34502&25635&43-start
 							req.setApproverAction(approvalRequest.getApproverAction());//25635 & 34502
+							}//34502&25635&43-End
 							req.setApprovalRequestAttachement(null);//25635 & 34502
 							ScQtApprovalReqAttachement approvalReqAttachement = 	req.getApprovalRequestAttachement();//25635 & 34502
 							if (null == approvalReqAttachement) {
@@ -2275,15 +2277,19 @@ public class QTCloneBackingbean extends
 							}
 							approvalReqAttachement.setDocNo(scQt.getQtNo());
 							try {
+								if(null!=approvalRequest.getApprovalRequestAttachement()){//34502&25635&43-start
 								uploadAttachment(approvalReqAttachement,approvalRequest.getApprovalRequestAttachement());
+								req.setApprovalRequestAttachement(approvalReqAttachement);//25635 & 34502
+								}//34502&25635&43-End
 							} catch (IOException e) {
 								SLAUtils.getInstance().logSLAError("QT", "ICTAPProvalATTAchemnt", "docNo", "ICTAPProvalATTAchemntClone", getUserIdSessionFromLoginId(), e);
 							}
-							req.setApprovalRequestAttachement(approvalReqAttachement);//25635 & 34502
 							ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
 							approvalRemark.setApprovalRequest(req);//25635 & 34502
 							req.setAppRequestRemark(approvalRemark);
+							if(null!=approvalRequest.getAppRequestRemark()){//34502&25635&43-start
 							req.getAppRequestRemark().setRemark(approvalRequest.getAppRequestRemark().getRemark());//25635 & 34502
+							}//34502&25635&43-End
 							req.setScQtApproval(newOthersApproval);
 							approverRequest.add(req);
 									
