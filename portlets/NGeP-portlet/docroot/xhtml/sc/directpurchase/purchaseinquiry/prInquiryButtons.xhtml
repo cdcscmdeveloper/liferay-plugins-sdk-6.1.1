@@ -50,12 +50,16 @@
 		<c:if test="#{isPendingSubmissionStatus}">
 			<table border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tr>
+					<!-- 29557 - Start -->
+					<c:if test="#{empty purchaseInquiryBackingBean.managedBean.taskId}">
 					<td>
 						<p:commandButton immediate="true"
 							value="#{lbl['lbl.btn.item.search']}" partialSubmit="true"
 							process="@this"
 							action="#{purchaseInquiryBackingBean.backToPrevious}" />
 					</td>
+					</c:if>
+					<!-- 29557 - End -->
 					<!-- 26129 - Start -->
 					<c:if test="#{!empty purchaseInquiryBackingBean.managedBean.taskId}">
 						<td style="float: right;">
@@ -131,9 +135,8 @@
 
 						<p:commandButton value="#{lbl['lbl.btn.save']}"
 							action="#{purchaseInquiryBackingBean.supplierSave}"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							process="@this" />
-
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+							<!-- 29557 - remove process="@this"  -->
 						<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" update="@([id$=spkiOutputPanel])"
 								action="#{purchaseInquiryBackingBean.supplierSubmit}"

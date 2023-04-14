@@ -1515,6 +1515,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smSuppBank.setSmAppl(this.getManagedBean().getSmAppl());
 		smSuppBank.setAccountPurpose(defaultAccPurpose);
 		smSuppBank.setForHqFlg(1);
+		// #34640 - start
+		smSuppBank.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
+		// #34640 - end
 		this.getManagedBean().getSmAppl().getSmSupplierBanks().add(smSuppBank);
 	}
 
@@ -3348,14 +3351,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	//16052019 - SSM INTEGRATION CR
 	public String getParamDescriptionByLanguageAndPmParameter(PmParameter parameter) {
-		//start - #30064
-		if (parameter.getParameterType().equals(ParameterTypeConst.IDENTIFICATION_TYPES)) {
-			return SmCommonUtil.getParamDescriptionByLanguageAndPmParameter(parameter);
-		} else {
-			return SmCommonUtil.retrieveParameterDescByTypeAndCodeAndLang(ParameterTypeConst.IDENTIFICATION_TYPES,
-					ParameterConst.IDENTIFICATION_TYPES_IC).getCodeName();
-		}
-		//end - #30064
+		return SmCommonUtil.getParamDescriptionByLanguageAndPmParameter(parameter);
 	}
 	
 	// 27691 - start -  Add/Delete Supplier Owner

@@ -225,7 +225,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 */
 	public void preRenderAgreement() {
 		renewSesionObject();
-		ctBB.getManagedBean().setAmendFromTaskList(true);//Enhancement 15851 - shaqimi
+		ctBB.renewSesionObject();//Bug 34142, 15851 - shaqimi 06/12/2022
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"agreementTab.xhtml?faces-redirect=true");
 	}
@@ -244,6 +244,26 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
+			
+			//Bug 34142, 15851 - shaqimi start 04/12/2022
+			if(!ctBB.getManagedBean().isInPage()){
+				if(ctBB.getManagedBean().isBackFromSCL() || ctBB.getManagedBean().isBackFromContract()){
+					getManagedBean().setSelectedTabIndex(0);
+					ctBB.getManagedBean().setBackFromSCL(false);
+					ctBB.getManagedBean().setBackFromContract(false);
+				}
+				
+				if(taskId != null && !taskId.isEmpty()){
+					ctBB.getManagedBean().setTaskIdFromAgreementTaskList(taskId);
+				} else {
+					if(ctBB.getManagedBean().getTaskIdFromAgreementTaskList() != null && !ctBB.getManagedBean().getTaskIdFromAgreementTaskList().isEmpty()){
+						taskId = ctBB.getManagedBean().getTaskIdFromAgreementTaskList();
+					}
+				}
+				ctBB.getManagedBean().setInPage(true);
+			}
+			//Bug 34142, 15851 - shaqimi end 04/12/2022
+			
 			if (taskId == null) {
 				//Enhancement 15851 - shaqimi start
 				if(!getManagedBean().isFromViewSCL()){
@@ -276,8 +296,27 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				}
 				//Enhancement 15851 - shaqimi end
 			}
+			
+			//Bug 34142, 15851 - shaqimi start 04/12/2022
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
+			
+			if (ctBB.getManagedBean().getDocTypeFromAgreementTaskList() != null){
+				ctReqDTO = new ContractAgreementReqDTO();
+				
+				ctReqDTO.setDocId(ctBB.getManagedBean().getDocIdFromAgreementTaskList());
+				ctReqDTO.setDocType(ctBB.getManagedBean().getDocTypeFromAgreementTaskList());
+				ctReqDTO.setContractId(ctBB.getManagedBean().getContractIdFromAgreementTaskList());
+				ctReqDTO.setAgreementId(ctBB.getManagedBean().getAgreementIdFromAgreementTaskList());
+				
+				resDTO = agreementSO.retrieveAgreement(ctReqDTO);
+				setCtAgreementDetails(resDTO);
+				ctBB.getManagedBean().setBackFromSCL(false);
+				ctBB.getManagedBean().setBackFromContract(false);
+				return;
+			}
+			
 			ctReqDTO = new ContractAgreementReqDTO();
+			//Bug 34142, 15851 - shaqimi end 04/12/2022
 			CTAgreementDataType dataType =  super.getBpmTaskDetails(CTAgreementDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});		
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setDocId(new Long(dataType.getDocId()));
@@ -317,6 +356,14 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				resDTO = agreementSO.retrieveAgreement(ctReqDTO);
 				setCtAgreementDetails(resDTO);
 			}
+			
+			//Bug 34142, 15851 - shaqimi start 04/12/2022
+			ctBB.getManagedBean().setDocIdFromAgreementTaskList(ctReqDTO.getDocId());
+			ctBB.getManagedBean().setDocTypeFromAgreementTaskList(ctReqDTO.getDocType());
+			ctBB.getManagedBean().setContractIdFromAgreementTaskList(ctReqDTO.getContractId());
+			ctBB.getManagedBean().setAgreementIdFromAgreementTaskList(ctReqDTO.getAgreementId());
+			//Bug 34142, 15851 - shaqimi end 04/12/2022
+			
 //#28715 - Remove Code
 //			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME)
 //					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)
@@ -1209,6 +1256,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		ctReqDTO.setViewOnly(true);
 		ctBB.getManagedBean().setViewContract(true);
 		ctBB.getManagedBean().setViewContractFromAgreement(true);//Bug 34142 - shaqimi 16112022
+		ctBB.getManagedBean().setInPage(false);//Bug 34142 - shaqimi 04/12/2022
 		ContractDetailsBackingBean contractDetailsBB = new ContractDetailsBackingBean();
 		contractDetailsBB.getManagedBean().setAsAtDate(null);
 		contractDetailsBB.setValidateContractField(ctReqDTO);
@@ -1227,9 +1275,18 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		//#15851 - start
 		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
 		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
+		
+		ctBB.getManagedBean().setInPage(false);//Bug 34142 - shaqimi 04/12/2022
+		
 		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
 			AmendmentBackingBean abb = new AmendmentBackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
+
+			//Bug 34142, 15851 - shaqimi start 04/12/2022
+			if(ctBB.getManagedBean().getTaskIdFromAgreementTaskList() != null){
+				ctBB.getManagedBean().setAmendFromTaskList(true);
+			}
+			//Bug 34142, 15851 - shaqimi end 04/12/2022
 			
 			getManagedBean().setFromViewSCL(true);
 			
@@ -1250,12 +1307,14 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			directLoaBackingBean.getManagedBean().setTrackingDairyView(true);
 			directLoaBackingBean.getManagedBean().setIconForDL(true); //28854
 			directLoaBackingBean.viewLOA(scLoa.getLoaId());
+			ctBB.getManagedBean().setBackFromSCL(true);//Bug 34142, 15851 - shaqimi 04/12/2022
 		} else {
 			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 			loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
 			loaDetailBackingBean.viewLOA(scLoa.getLoaId());
+			ctBB.getManagedBean().setBackFromSCL(true);//Bug 34142, 15851 - shaqimi 04/12/2022
 		}
 	}
 
@@ -2768,8 +2827,6 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		}else if(contractAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
 		
 			newAdditionAmt = ctContractAmount.getContractAmount().add(additionContract);
-		}else{
-			newAdditionAmt = ctContractAmount.getContractAmount();
 		}
 		
 		if (gstAmtChange.equals(ContractConst.ADD_AMOUNT)) {

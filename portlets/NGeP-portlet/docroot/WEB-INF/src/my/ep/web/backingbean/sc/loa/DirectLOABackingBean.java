@@ -10263,13 +10263,39 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			
 			TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
-			for(TplSpecAnswer tplSpecAnswer: templateSpecResDTO.getSpecAnswerList()){
-				if(tplSpecAnswer.getNewSupplierOffer() != null && tplSpecAnswer.getNewSupplierOffer() != ""){
+			List<TplSpecAnswer> afterTireCheckAnswerList = new ArrayList<>();
+			
+			for (TplSpecAnswer tplSpecAnswer : templateSpecResDTO.getSpecAnswerList()) {
+				int contains=0;
+				
+				if (tplSpecAnswer.getNewSupplierOffer() != null && tplSpecAnswer.getNewSupplierOffer() != "") {
 					tplSpecAnswer.setRenderNewSpec(true);
 				}
+				for(TplSpecAnswer answer :afterTireCheckAnswerList){
+					if(answer.getTplSpecQuestion()!=null
+						&& tplSpecAnswer.getTplSpecQuestion()!=null
+						&& answer.getTplSpecQuestion().getSpecQuestionId() == tplSpecAnswer.getTplSpecQuestion().getSpecQuestionId()){
+						contains++;
+						break;
+					}
+				}
+				if(qtMaint
+					&& afterTireCheckAnswerList.isEmpty()){
+					afterTireCheckAnswerList.add(tplSpecAnswer);
+				} else if(qtMaint
+						   && !afterTireCheckAnswerList.isEmpty()
+						   && contains==0){
+					afterTireCheckAnswerList.add(tplSpecAnswer);
+				} else {
+					continue;
+				}
 			}
-			
-			this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
+
+			if(qtMaint){
+				this.getManagedBean().setTplSpecAnswerList(afterTireCheckAnswerList);
+			}else{
+				this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
+			}
 			this.getManagedBean().setScLoiLoaItem(loiLoaItem);
 			if(mainSearch){
 				this.getManagedBean().setTplSpecQuestion(tplSpecQuestion1);
@@ -10375,6 +10401,11 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					
 					specReqDto.setSpecSearchForApp(true);
 					
+				}else{
+					specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
+					specReqDto.setScQt(this.getManagedBean().getScQt());
+					specReqDto.setScLoiLoaItem(this.getManagedBean().getScLoiLoaItem());
+					specReqDto.setSpecSearchForApp(true);
 				}
 				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
 				
@@ -10727,6 +10758,19 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		RequestContext.getCurrentInstance().execute("resetAllConfirmPopUp.show()");
 	}
 	public void resetAllNewOfferedSpecificationSubmit(){
+		TemplateSpecReqDTO specReqDto = new TemplateSpecReqDTO();
+		if(this.getManagedBean().getSpecKeyword() != null){
+			this.getManagedBean().setSpecKeyword(null);
+			specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
+			specReqDto.setScQt(this.getManagedBean().getScQt());
+			specReqDto.setScLoiLoaItem(this.getManagedBean().getScLoiLoaItem());
+			specReqDto.setSpecSearchForApp(true);
+			
+			TemplateSpecResDTO templateSpecResDTO  = getTemplateSpecSO().searchSupplierSpecification(specReqDto);
+			
+			this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
+		}
+		
 		for(TplSpecAnswer answer : this.getManagedBean().getTplSpecAnswerList()){
 			answer.setNewSupplierOffer(null);
 		}
@@ -11771,7 +11815,9 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					map.put("uomName", question.getClUom().getUomName());
 					map.put("spesifikasi", whiteSpace);
 					if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")){
-						map.put("clPriceTypeCode",getParameterDesc(question.getClPriceTypeCode()));
+						//#26130 - start
+						map.put("clPriceTypeCode",getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
+						//#26130 - end
 					}
 				if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")){
 						map.put("clUomFrequency", (null != question.getClUomFrequency())? question.getClUomFrequency().toString(): getDefaultValue());
@@ -11834,7 +11880,9 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 							map.put("uomName", question.getClUom().getUomName());
 							map.put("spesifikasi", whiteSpace);
 							if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
-								map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode()));
+								//#26130 - start
+								map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
+								//#26130 - end
 							}
 						if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")) {
 								map.put("clUomFrequency", (null != question.getClUomFrequency()) ? question
@@ -11908,7 +11956,9 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 							map.put("uomName", question.getClUom().getUomName());
 							map.put("spesifikasi", whiteSpace);
 							if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
-								map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode()));
+								//#26130 - start
+								map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
+								//#26130 - end
 							}
 						if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")) {
 								map.put("clUomFrequency", (null != question.getClUomFrequency()) ? question
