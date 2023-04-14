@@ -18079,7 +18079,7 @@ private void retriveCommitteeRemarksList(){
 	public boolean renderDisqialified(){
 		boolean renderDisqialifiedColumn = false;
 		List<ScQtEvaluationResultDtl> disQualDtls= this.getManagedBean().getDisqualifiedSuppliersDM().getList();
-		if(disQualDtls.isEmpty()){
+		if(!disQualDtls.isEmpty()){
 			for(ScQtEvaluationResultDtl disQualDtl : disQualDtls){
 				if(null !=disQualDtl.isCompliance() && !disQualDtl.isCompliance()){
 					renderDisqialifiedColumn=true;
