@@ -159,8 +159,8 @@
 						 disabled="#{evaluationBackingBean.managedBean.readOnly}" 
 						 rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification and tplSpecAnswer.tplSpecQuestion.mandatorySpec}">
 			<f:selectItems value="#{templateSpecBackingBean.getMandatorySpecAndComplianceDropdownValues(true)}" />
+			<p:ajax event="change" process="@this" partialSubmit="true" update="@([id$=questionTbl])" listener="#{templateSpecBackingBean.onchangeCompliance(tplSpecAnswer)}" />
 		</h:selectOneMenu>
-		<p:ajax event="change" process="@this" partialSubmit="true" update="@([id$=questionTbl])" listener="#{templateSpecBackingBean.onchangeCompliance(tplSpecAnswer)}" />
 		<h:outputText value="" rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification  and !tplSpecAnswer.tplSpecQuestion.mandatorySpec}"/>
 	</p:column>
 	<!-- #29187 End Vinod -->
