@@ -2500,7 +2500,7 @@ public class SupplierFinalizationBackingBean extends
 			// #29921 - End.
 			
 			// #28834 - Start.
-			if (QTStatusConst.QT_SF_MOF_COMMIEEE.longValue() == getManagedBean().getCurrentStatusId().longValue()
+			if (QTStatusConst.SF_MOF_COMMITTEE.longValue() == getManagedBean().getCurrentStatusId().longValue()
 					&& (ParameterConst.DECISION_RBP.equals(getManagedBean().getScQtFinalization().getDecision().getParameterCode()) || ParameterConst.DECISION_RE_EVALUATION.equals(getManagedBean().getScQtFinalization().getDecision().getParameterCode()))
 					&& getManagedBean().isBpkCentralContract()
 					&& BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
