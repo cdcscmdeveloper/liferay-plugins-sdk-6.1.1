@@ -1263,6 +1263,9 @@ public class SupplierFinalizationBackingBean extends
 		//#21695 tec by itemize result pop up farid - end
 			 selectedZoneId = getManagedBean().getCurrentZone().getSpecZoneId();
 		 }
+
+		this.getManagedBean().setCheckCategoryCodeQt(this.getManagedBean().getScQt()); // #29466
+
 		getManagedBean().setQualifiedSuppliersByEvalStage(
 				new QualifiedSuppliersPagingDataModel(
 						"evaluationQualifiedSuppliers", qtId,
