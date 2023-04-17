@@ -18079,10 +18079,12 @@ private void retriveCommitteeRemarksList(){
 	public boolean renderDisqialified(){
 		log.info("renderDisqialified ******** Dev Test ******* Start");
 		boolean renderDisqialifiedColumn = false;
-		if(null!=this.getManagedBean().getDisqualifiedSuppliersDM()
-			&& !this.getManagedBean().getDisqualifiedSuppliersDM().getList().isEmpty()){
-			log.info("renderDisqialified ******** Dev Test ******* size :"+this.getManagedBean().getDisqualifiedSuppliersDM().getList());
-			for(ScQtEvaluationResultDtl disQualDtl : this.getManagedBean().getDisqualifiedSuppliersDM().getList()){
+		IPagingDataModel<ScQtEvaluationResultDtl> evalResDtl = this.getManagedBean().getDisqualifiedSuppliersDM();
+		log.info("renderDisqialified ******** Dev Test ******* evalResDtl :"+evalResDtl);
+		if(null!=evalResDtl
+			&& !evalResDtl.getList().isEmpty()){
+			log.info("renderDisqialified ******** Dev Test ******* size :"+evalResDtl.getList());
+			for(ScQtEvaluationResultDtl disQualDtl : evalResDtl.getList()){
 				log.info("renderDisqialified ******** Dev Test ******* disQualDtl :"+disQualDtl);
 				if(null != disQualDtl && null !=disQualDtl.isCompliance() && !disQualDtl.isCompliance()){
 					log.info("renderDisqialified ******** Dev Test ******* Start");
