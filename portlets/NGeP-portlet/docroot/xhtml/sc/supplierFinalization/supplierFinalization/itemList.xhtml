@@ -78,7 +78,7 @@
 						required="true" label="#{lbl['lbl.sc.cancelled']}" 
 						disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or item.disabled or item.awardedItem or 
 									!(isSecretaryUser or 
-										isBPKTaskAndClaimed)}" 
+										isBPKTaskAndClaimed) or supplierFinalizationReadOnly}" 
 						style="width:95%;">
 						<f:selectItems value="#{suppFinalizationBackingBean.getItemCancellationDropDown(item)}" />
 						<p:ajax event="change" update="@([id$=itemListTbl],[id$=supplierPanel])" 
@@ -131,7 +131,7 @@
 				<p:selectBooleanCheckbox value="#{item.higherAuthReq}" disabled="#{!isSupplierFinalization or item.cancelled or 
 					item.disabled or item.awardedItem or (item.higherAuthReq and 
 					suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userId eq 
-						suppFinalizationBackingBean.managedBean.loggedInUserId)}">
+						suppFinalizationBackingBean.managedBean.loggedInUserId) or supplierFinalizationReadOnly}"><!-- 6906 note 117 -->
 					<p:ajax partialSubmit="true" process="@this" update="@this"/>
 				</p:selectBooleanCheckbox>				
 			</p:column>		
@@ -150,7 +150,7 @@
 					process="@this" partialSubmit="true" 
 					actionListener="#{suppFinalizationBackingBean.getShortlistedCommomSupplier}"
 					oncomplete="commomSuppPopUp.show();" update="@([id$=commomSuppPopUpId])"  
-					disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or !(isSecretaryUser or isBPKTaskAndClaimed) or isBidding}" style="float:right;"/>
+					disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or !(isSecretaryUser or isBPKTaskAndClaimed) or isBidding or supplierFinalizationReadOnly}" style="float:right;"/> <!-- 6906 note 117 -->
 			</h:column>
 
 		</h:panelGrid>
