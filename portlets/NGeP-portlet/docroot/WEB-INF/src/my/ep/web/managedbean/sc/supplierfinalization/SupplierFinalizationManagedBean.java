@@ -288,6 +288,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean ktReportGenerated;
 	//28834 end
 	
+	private ScQt checkCategoryCodeQt; // #29466
+
 	/**
 	 * @return the activeIndex
 	 */
@@ -2360,6 +2362,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.pacDisable = pacDisable;
 	}
 	// //#33174 #21695 End
+	
+	// #29466 - START
+	/**
+	 * @return the checkCategoryCodeQt
+	 */
+	public ScQt getCheckCategoryCodeQt() {
+		return checkCategoryCodeQt;
+	}
+
+	/**
+	 * @param checkCategoryCodeQt the checkCategoryCodeQt to set
+	 */
+	public void setCheckCategoryCodeQt(ScQt checkCategoryCodeQt) {
+		this.checkCategoryCodeQt = checkCategoryCodeQt;
+	}
+	// #29466 - END
 	//6906 note 117 - start
 	public SelectItem[] getDecisionDropdown() {
 		return decisionDropdown;
@@ -2412,4 +2430,3 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	//6906 note 202 - end
 }
-
