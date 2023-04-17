@@ -786,6 +786,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			}
 			//34316-End
 		}
+		
 	}
 	
 	/**
@@ -2381,13 +2382,14 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			}	
 		}
 	  //29440 end
-	//29442 start
-	  public void saveCloseManual() throws Exception{
-			  try {
-				  signingAction(BpmOutcomeConst.BPM_SAVE);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-  }
-	//29442 end
+	  
+	// 29442 start
+	public void saveCloseManual() throws Exception {
+		try {
+			signingAction(BpmOutcomeConst.BPM_SAVE);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	// 29442 end
 }

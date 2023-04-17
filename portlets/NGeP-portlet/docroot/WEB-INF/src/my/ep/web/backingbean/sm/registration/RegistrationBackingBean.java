@@ -1397,6 +1397,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smSuppBank.setSmAppl(this.getManagedBean().getSmAppl());
 		smSuppBank.setAccountPurpose(defaultAccPurpose);
 		smSuppBank.setForHqFlg(1);
+		// #34640 - start
+		smSuppBank.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
+		// #34640 - end
 		this.getManagedBean().getSmAppl().getSmSupplierBanks().add(smSuppBank);
 	}
 

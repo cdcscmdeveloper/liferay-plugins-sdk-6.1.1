@@ -1463,10 +1463,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		log.info("start - initializePRBeans");
 		initializePRBeans();
 		log.info("end - initializePRBeans");
+		//log.info("start - updateDeliveryDate");
+		//updateDeliveryDate();
+		//log.info("end - updateDeliveryDate");
 		//34555-start
-		log.info("start - updateMaxDeliveryDate");
+		//log.info("start - updateMaxDeliveryDate");
 		updateMaxDeliveryDate();
-		log.info("end - updateMaxDeliveryDate");
+		//log.info("end - updateMaxDeliveryDate");
 		//34555-end
 		/*#17087 Get Zonal flag*/
 		log.info("start - getzonalTest");
