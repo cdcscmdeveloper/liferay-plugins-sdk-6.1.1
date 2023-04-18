@@ -435,7 +435,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				sqbb.getManagedBean().setActiveIndex(0);
 				// #29800 - start
 				if (getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession() == null) {
-					sqbb.simpleQuoteAction(getManagedBean().getSupplierItemDocId(), true, null);
+					sqbb.simpleQuoteAction(null, getManagedBean().getSupplierItemDocId(), true, null);//#34579 - add new parameter on simpleQuoteAction
 				} else {
 					sqbb.getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(
 							getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession());
