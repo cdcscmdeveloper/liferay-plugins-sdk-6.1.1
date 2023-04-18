@@ -158,8 +158,8 @@
 						 value="#{tplSpecAnswer.compliance}" 
 						 disabled="#{evaluationBackingBean.managedBean.readOnly}" 
 						 rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification and tplSpecAnswer.tplSpecQuestion.mandatorySpec}">
-			<p:ajax event="change" process="@this" partialSubmit="true" update="@([id$=questionTbl])" listener="#{templateSpecBackingBean.onchangeCompliance(tplSpecAnswer)}" />
 			<f:selectItems value="#{templateSpecBackingBean.getMandatorySpecAndComplianceDropdownValues(true)}" />
+			<p:ajax event="change" process="@this" partialSubmit="true" update="@([id$=questionTbl])" listener="#{templateSpecBackingBean.onchangeCompliance(tplSpecAnswer)}" />
 		</h:selectOneMenu>
 		<h:outputText value="" rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification  and !tplSpecAnswer.tplSpecQuestion.mandatorySpec}"/>
 	</p:column>
