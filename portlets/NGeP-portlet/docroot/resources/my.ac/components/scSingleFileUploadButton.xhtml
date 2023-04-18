@@ -29,47 +29,33 @@
 			rendered="#{empty cc.attrs.attachment}">
 			<cc:insertChildren />
 		</p:commandButton>
-
-			<!-- 34014, 25077 -start- -->
-			<h:panelGroup style="text-align: center;" rendered="#{!empty cc.attrs.attachment}">
-				<!-- 34014, 25077 -end- -->
-				<c:choose>
-					<c:when test="#{cc.attrs.encrypted}">
-						<!-- 34014, 25077 -start- -->
-						<h:commandLink value="#{cc.attrs.attachment.fileName}"
-							styleClass="blue_font"
-							style="max-width: 90%;display:inline-block;white-space: normal !important;"
-							immediate="true"
-							action="#{scRemarkAndAttachmentBackingBean.downloadEncryptedFile(cc.attrs.attachment, cc.attrs.encryptionKey)}" />
-						<!-- 34014, 25077 -end- -->
-					</c:when>
-					<c:otherwise>
-						<!-- 34014, 25077 -start- -->
-						<h:commandLink value="#{cc.attrs.attachment.fileName}"
-							styleClass="blue_font"
-							style="max-width: 90%;display:inline-block;white-space: normal !important;"
-							immediate="true"
-							action="#{scRemarkAndAttachmentBackingBean.downloadFile(cc.attrs.attachment)}" />
-						<!-- 34014, 25077 -end- -->
+		
+		<h:panelGroup rendered="#{!empty cc.attrs.attachment}">
+			<c:choose>
+				<c:when test="#{cc.attrs.encrypted}">
+					<h:commandLink value="#{cc.attrs.attachment.fileName}" styleClass="blue_font"
+						immediate="true"
+						action="#{scRemarkAndAttachmentBackingBean.downloadEncryptedFile(cc.attrs.attachment, cc.attrs.encryptionKey)}" />
+				</c:when>
+				<c:otherwise>
+					<h:commandLink value="#{cc.attrs.attachment.fileName}" styleClass="blue_font"
+						immediate="true"
+						action="#{scRemarkAndAttachmentBackingBean.downloadFile(cc.attrs.attachment)}" />
 				</c:otherwise>
 			</c:choose>
-				<!-- 34014, 25077 -start- -->
-				<p:commandLink id="#{cc.attrs.id}Del"
-					style="width: auto; display:inline-block;" process="@this"
-					partialSubmit="true"
-					update="@([id$=#{cc.attrs.popupWidgetVar}delAttPopupId])"
-					oncomplete="#{cc.attrs.popupWidgetVar}delAttPopup.show();"
-					rendered="#{!cc.attrs.readonly}">
-					<!-- 34014, 25077 -end- -->
-					<h:graphicImage
-						value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png"
-						styleClass="tasklist_title1" />
-					<f:setPropertyActionListener
-						target="#{scRemarkAndAttachmentBackingBean.selectedComponentId}"
-						value="#{cc.attrs.id}#{cc.attrs.rowIndex}" />
-					<cc:insertChildren />
-				</p:commandLink>
-			</h:panelGroup>
+			<p:commandLink id="#{cc.attrs.id}Del"
+				process="@this" partialSubmit="true" update="@([id$=#{cc.attrs.popupWidgetVar}delAttPopupId])"
+				oncomplete="#{cc.attrs.popupWidgetVar}delAttPopup.show();" 
+				rendered="#{!cc.attrs.readonly}">
+				<h:graphicImage
+					value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png"
+					styleClass="tasklist_title1" />
+				<f:setPropertyActionListener
+					target="#{scRemarkAndAttachmentBackingBean.selectedComponentId}"
+					value="#{cc.attrs.id}#{cc.attrs.rowIndex}" />
+				<cc:insertChildren />
+			</p:commandLink>
+		</h:panelGroup>
 	</h:panelGroup>
 		
 	
