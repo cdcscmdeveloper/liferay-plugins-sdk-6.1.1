@@ -60,10 +60,10 @@
 						<p:inputText id="sampleaddressmanualScoreEvaluation"
 							rendered="#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleReq}"
 							label="#{lbl['lbl.tpl.spec.content.user.score']}" 
-							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
+							disabled="#{(sampleItem.compliance ne null and !sampleItem.compliance) or evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
 								or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}"
 							size="15" value="#{sampleItem.userScore}" maxlength="3"
-							style="text-align:right">
+							style="text-align:right"><!-- #29187 Vinod Added Compliance checking -->
 							<ac:validateNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 								maxIntegerDigits="3" integerOnly="true" />
@@ -94,6 +94,7 @@
 										 			or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
 													or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}"
 										 value="#{sampleItem.compliance}">
+										 <p:ajax event="change" process="@this" partialSubmit="true" update="@([id$=techSampleEvaluateId])" listener="#{evaluationBackingBean.onchangeCompliance(sampleItem)}" />
 							<f:selectItems value="#{evaluationBackingBean.getComplianceDropdownValues()}" />
 						</h:selectOneMenu>
 					</p:column>
