@@ -1684,7 +1684,6 @@ u.underline {
 													</tr>
 													
 											#end
-										#end	
 												
 													##specval
 													#foreach($combine in $tplspecQuestion.listCombineSpec)
@@ -1720,8 +1719,7 @@ u.underline {
 															#end
 														</tr>
 													#end
-													
-											
+												#end	
 											#end	
 									
 							##26130 - zaim end	070220222
@@ -1769,7 +1767,6 @@ u.underline {
 											
 											
 											#end
-								#end			
 									##26130 - end 11032022		
 									
 									##26130 - zaim start
@@ -1808,6 +1805,7 @@ u.underline {
 															#end
 														#end
 												#end
+											#end	
 											</tr>
 									
 									#end
@@ -2256,7 +2254,6 @@ u.underline {
 													</tr>
 													
 											#end
-										#end	
 												
 													##specval
 													#foreach($combine in $tplspecQuestion.listCombineSpec)
@@ -2390,6 +2387,7 @@ u.underline {
 															#end
 														#end
 												#end
+											#end	
 											</tr>
 									
 									#end
