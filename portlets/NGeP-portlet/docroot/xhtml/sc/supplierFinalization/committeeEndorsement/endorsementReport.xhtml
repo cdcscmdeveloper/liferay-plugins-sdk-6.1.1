@@ -99,7 +99,8 @@
 				<tr>
 					<td style="width: 20%; margin-left: 55px;"><p:outputLabel
 							value="#{lbl['lbl.sc.sf.justification.selection']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+							value="*" styleClass="mandatory" 
+							rendered="#{!suppFinalizationBackingBean.managedBean.disableJustifications}"/></td>
 
 					<ui:remove> #19287 - start </ui:remove>
 					<td style="margin-left: 55px;"><p:selectOneMenu
@@ -107,7 +108,7 @@
 							value="#{suppFinalizationBackingBean.managedBean.justification.reasonCode}"
 							style="width: 300px;margin-bottom: 5px;"
 							label="#{lbl['lbl.sc.sf.justification.selection']}"
-							disabled="#{readOnly}">
+							disabled="#{readOnly or suppFinalizationBackingBean.managedBean.disableJustifications}">
 							<f:selectItems
 								value="#{suppFinalizationBackingBean.managedBean.justDropdown}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"

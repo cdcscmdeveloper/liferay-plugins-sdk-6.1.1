@@ -300,8 +300,11 @@ public class SupplierFinalizationBackingBean extends
 			if (pendingCount > 0) {
 				this.getManagedBean().setDisableBfButton(false);
 			} else {
-				this.getManagedBean().setDisableBfButton(true);
+				//if (!getManagedBean().isBpkCentralContract()) {
+				  this.getManagedBean().setDisableBfButton(true);
+				//}
 			}
+			setDisableSFJustification();
 			// 28834 ends
 
 			prepareUpdateCommitteeMember();//#25037
@@ -822,6 +825,10 @@ public class SupplierFinalizationBackingBean extends
 			}
 		}
 		
+		// #28834 - Start.
+		setDisableSFJustification();
+		// #28834 - End.
+		
 		try {
 			this.getManagedBean()
 					.setJustDropdown(
@@ -832,7 +839,23 @@ public class SupplierFinalizationBackingBean extends
 			log.error(e);
 		}
 	}	
-
+	
+	// #28834 - Start.
+	private void setDisableSFJustification() {
+		String decision = getManagedBean().getScQtFinalization().getDecision().getParameterCode();
+		if (StringUtils.isNotEmpty(decision) && (decision.equals(ParameterConst.DECISION_RE_EVALUATION)
+				|| decision.equals(ParameterConst.DECISION_RE_PUBLISH)
+				|| decision.equals(ParameterConst.DECISION_CANCEL)
+				|| decision.equals(ParameterConst.DECISION_RBP))) {
+			getManagedBean().setDisableJustifications(true);
+			if (null != getManagedBean().getJustification()) {
+			   getManagedBean().getJustification().setReasonCode(null);
+			}
+		} else {
+			getManagedBean().setDisableJustifications(false);
+		}
+	}
+	// #28834 - End.
 
 	private void retrievePreparationDtls(Long qtId, String committeeType) {
 		IQTMeetingSO meetingSO = null;
@@ -1357,7 +1380,11 @@ public class SupplierFinalizationBackingBean extends
 						&& (this.getManagedBean().getFinalizationMethod()
 								.equals(ParameterConst.RECOMMEND_BY_AWARD) || this
 								.getManagedBean().getFinalizationMethod()
-								.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD))) {
+								.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD))
+								// #28834 - Start.
+								&& !getManagedBean().isDisableJustifications()
+								// #28834 - End.
+						         ) {
 					if (this.getManagedBean().getJustification() == null
 							|| this.getManagedBean().getJustification()
 									.getReasonId() == null) {
@@ -2186,7 +2213,7 @@ public class SupplierFinalizationBackingBean extends
 						}
 					}				
 					
-					if (ParameterConst.DECISION_RBP.equals(decisionTypeCode)
+					if ((ParameterConst.DECISION_RBP.equals(decisionTypeCode) || ParameterConst.DECISION_RE_EVALUATION.equals(decisionTypeCode))
 							&& CollectionUtils.isNotEmpty(getManagedBean().getDocumentList())
 							&& getManagedBean().getDocumentList().size() > 0) {
 						addBriefingPaper(scQtFinalization);
@@ -2310,7 +2337,8 @@ public class SupplierFinalizationBackingBean extends
 				List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
 				int pendingCount = 0;
 				
-				for (ScQtMeeting meeting : meetingListList) {
+				if (CollectionUtils.isNotEmpty(meetingListList)) {
+				  for (ScQtMeeting meeting : meetingListList) {
 					if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
 							&& !QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
 							&& meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
@@ -2330,6 +2358,9 @@ public class SupplierFinalizationBackingBean extends
 //						}
 
 					}
+				  }
+				}else{
+					RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
 				}
 
 			} else {
@@ -2475,9 +2506,15 @@ public class SupplierFinalizationBackingBean extends
 				}
 			} else {
 				// need to set Keputusan report at time of Endorsement and signOff status
-				this.getManagedBean().getScQtFinalization()
-						.getScQtFinalizationReports()
-						.addAll(this.getManagedBean().getEndorsementReports());
+				// #28834- Start.
+				// if (!isBpkCentralContract(this.getManagedBean().getScQt())) {
+			    // #28834- End.
+					this.getManagedBean().getScQtFinalization()
+					.getScQtFinalizationReports()
+					.addAll(this.getManagedBean().getEndorsementReports());
+				// #28834- Start.
+				//}
+			    // #28834- End.
 			}
 			
 			// Disabling kertas taklimat as per Bug #16172
@@ -2497,7 +2534,11 @@ public class SupplierFinalizationBackingBean extends
 					&& (this.getManagedBean().getFinalizationMethod()
 							.equals(ParameterConst.RECOMMEND_BY_AWARD) || this
 							.getManagedBean().getFinalizationMethod()
-							.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD))) {
+							.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD))
+							// #28834 - Start.
+							&& !getManagedBean().isDisableJustifications()
+							// #28834 - End.
+					         ) {
 				if (this.getManagedBean().getJustification() == null
 						|| this.getManagedBean().getJustification()
 								.getReasonId() == null) {
@@ -4890,7 +4931,9 @@ public class SupplierFinalizationBackingBean extends
 		}
 		
 		// #28834 - Start.
-		if (getManagedBean().getQtRefinalized()) {
+		if (getManagedBean().getQtRefinalized()
+		        // || getManagedBean().isBpkCentralContract()		
+				) {
 			if (excludedDecisionList == null) {
 				excludedDecisionList = new ArrayList<String>();
 			}
@@ -5566,6 +5609,12 @@ public class SupplierFinalizationBackingBean extends
 					setSelectionMode(finalizationMethod.getParameterCode());
 				}
 			} 
+			
+			//#28834 - Start
+			if(scQtFinalization.getCurrentStatus().getPmStatus().getStatusId().equals(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION)){
+				this.getManagedBean().setDisableJustifications(false);
+			}
+			//#28834 - End
 
 		} else if (decision.equals(ParameterConst.DECISION_RE_EVALUATION)) {
 			scQtFinalization.setRePublishOption(null);
@@ -7117,7 +7166,13 @@ public class SupplierFinalizationBackingBean extends
 			if (!minSuppliersExist) {
 				throw new EpException(MessageConst.ERROR_760243,
 						new String[] { recommendByDesc });
-			} else {
+			} 
+			//#28834 - Start
+			else if(!supplierSelected && minSuppliersExist){ 
+				throw new EpException(MessageConst.ERROR_760206);
+			} 
+			//#28834 - End
+			else {
 				// #21695 allow no records validation start
 				if (CollectionUtils.isNotEmpty(scQtRecommend.getRecommendDtls())) {
 					throw new EpException(MessageConst.ERROR_760206);
@@ -9405,6 +9460,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 		
 		scQt = qtBackingBean.getManagedBean().getQt();
+		// #28834- Start.
+		this.getManagedBean().setScQt(scQt);
+		// #28834- End.
 //		boolean isBpkCentralContract = false;
 //		isBpkCentralContract = isBpkCentralContract(scQt);
 		boolean hidden = false;
@@ -9800,7 +9858,15 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			}
 
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
-			// #18685 - End			
+			// #18685 - End		
+			
+			// #28834- Start.
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISEBP)) {
+				reqDTO.setRoleCode(QTStatusConst.QT_SF_MOF_COMMIEEE
+						.equals(getManagedBean().getCurrentStatusId()) ? 
+								RoleCode.MOF_DESK_OFFICER.value() : getCommitteeRoleCode());
+			}
+			// #28834- End.
 
 			resDTO = qtSuppFinalizationSO.submitSupplierFinalizationBrief(reqDTO);
 
