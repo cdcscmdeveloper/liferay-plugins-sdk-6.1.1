@@ -18082,7 +18082,7 @@ private void retriveCommitteeRemarksList(){
 		IPagingDataModel<ScQtEvaluationResultDtl> evalResDtl = this.getManagedBean().getDisqualifiedSuppliersDM();
 		log.info("renderDisqialified ******** Dev Test ******* evalResDtl :"+evalResDtl);
 		if(null!=evalResDtl
-			&& !evalResDtl.getList().isEmpty()){
+			&& null!=evalResDtl.getList()){
 			log.info("renderDisqialified ******** Dev Test ******* size :"+evalResDtl.getList());
 			for(ScQtEvaluationResultDtl disQualDtl : evalResDtl.getList()){
 				log.info("renderDisqialified ******** Dev Test ******* disQualDtl :"+disQualDtl);
