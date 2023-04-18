@@ -1012,7 +1012,8 @@ public class SpecificationBackingBean extends
 						IQTSpecSO.class);
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 		specReqDTO.setUserLocale(new FacesScopes().getUserLocale());
-		
+		specReqDTO.setScQt(this.getManagedBean().getQt()); // #34656 set scqt
+
 		this.getManagedBean().setTechnicalOtherCheckList(true);	//1873 - note 52
 		
 		boolean financialOtherCheckList = true;
@@ -1039,12 +1040,20 @@ public class SpecificationBackingBean extends
 		case 2:
 			specSo.validateCheckList(constructSpecCommitteDtls());
 
+			// #34656 move to top -start-
+			specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
+			// #34656 -end-
+
 			// 1873 - start- note 52
 			String taskName = this.getManagedBean().getTaskName();
 			String[] allowedTaskName = new String[] { SCProcessNameConst.FINALISE_SCORING,
 					SCProcessNameConst.UPDATE_SCORING, SCProcessNameConst.VIEW_SCORING,
 					SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING //1873 note 149
 				};
+			
+			// #34656 move validation position ,trigger before popup-start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			// #34656 move validation position -end
 
 			if (Arrays.asList(allowedTaskName).contains(taskName)
 					|| (StringUtils.isEmpty(taskName) && !this.getManagedBean().isReadOnly())) {
@@ -1058,11 +1067,8 @@ public class SpecificationBackingBean extends
 			}
 			// 1873 - end- note 52
 
-			specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
 			specSo.validateCheckList(specReqDTO);
-			// #31292, #21695, #25138 - start
-			specSo.validateSpecZoneQtyZero(specReqDTO);
-			// #31292, #21695, #25138 - end
+			// #34656 adjust position (remove #31292)
 
 			break;
 		case 3:
@@ -1223,11 +1229,19 @@ public class SpecificationBackingBean extends
 			}
 			// 1873 note 195 end
 
+			// #34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			// #34656 validate - end
+
 			retriveFinancialCheckList();
 
 			break;
 
 		case 4:
+			// #34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			// #34656 validate - end
+
 			if (!this.getManagedBean().isReadOnly()
 			// 1873 note 149 -start-
 					&& this.getManagedBean().isTechnicalOtherCheckList()
@@ -1240,6 +1254,10 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 5:
+			// #34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			// #34656 validate - end
+
 			if (!this.getManagedBean().isReadOnly()
 			// 1873 note 149 -start-
 					&& this.getManagedBean().isTechnicalOtherCheckList()
@@ -1252,6 +1270,10 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 6:
+			// #34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			// #34656 validate - end
+
 			retriveRecommendationDetails();
 
 			if (!this.getManagedBean().isReadOnly()
@@ -1265,11 +1287,19 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 7:
+			// #34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			// #34656 validate - end
+
 			retriveDeliveryDetails();
 
 			break;
 
 		case 8:
+			// #34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			// #34656 validate - end
+
 			if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this
 					.getManagedBean().getFulfilmentType())
 					|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
@@ -1283,6 +1313,10 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 9:
+			// #34656 validate - start
+			specSo.validateSpecZoneQtyZero(specReqDTO);
+			// #34656 validate - end
+
 			retriveCommitteeEndorsment();
 
 			break;
@@ -13461,23 +13495,29 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 			// 32134 note-32, 25729 -end-
 
-			// 1873 - start 
-			String finChecklistTitle = scQtCheckList.getTitle().trim().replaceAll("\\s", "");
-
+			// Bug #33249@Syazani 27/07/2022 -- Start
+			// 1873 - start - note 52
+			String finChecklistTitle = (scQtCheckList.getTitle() + "_" + (scQtCheckList.getDefinationType() != null ? scQtCheckList
+					.getDefinationType().getParameterId() : "")).trim().replaceAll("\\s", ""); // 1873 - note 97
+			// 1873 note 86 - start
 			if (CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())) {
 				for (ScQtCheckList checklist : this.getManagedBean().getScQtCheckSt2techProposal()) {
 					boolean edited = checklist.isEdited() == null ? false : checklist.isEdited();
+					String checklistTitle = (checklist.getTitle() + "_" + (checklist.getDefinationType() != null ? checklist.getDefinationType()
+							.getParameterId() : "")).trim().replaceAll("\\s", "");
 					
-					if (finChecklistTitle.equals(checklist.getTitle().trim().replaceAll("\\s", "")) && edited) {
+					if (finChecklistTitle.equals(checklistTitle) && edited) { // 1873 - note 97
+						// Bug #33249@Syazani 27/07/2022 -- End
 						checklist.setEdited(false);
-						
+
 						updatedCheckLists.add(checklist);
-						
+
 						break;
 					}
+					// 1873 note 86 - end
 				}
 			}
-			// 1873 - end
+			// 1873 - end - note 52
 
 			scQtCheckList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 			scQtCheckList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
