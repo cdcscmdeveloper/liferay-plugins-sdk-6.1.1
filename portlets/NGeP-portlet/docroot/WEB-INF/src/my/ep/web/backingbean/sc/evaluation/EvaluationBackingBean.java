@@ -18077,23 +18077,16 @@ private void retriveCommitteeRemarksList(){
 	 * @return boolean
 	 */
 	public boolean renderDisqialified(){
-		log.info("renderDisqialified ******** Dev Test ******* Start");
 		boolean renderDisqialifiedColumn = false;
-		IPagingDataModel<ScQtEvaluationResultDtl> evalResDtl = this.getManagedBean().getDisqualifiedSuppliersDM();
-		log.info("renderDisqialified ******** Dev Test ******* evalResDtl :"+evalResDtl);
-		if(null!=evalResDtl
-			&& null!=evalResDtl.getList()){
-			log.info("renderDisqialified ******** Dev Test ******* size :"+evalResDtl.getList());
-			for(ScQtEvaluationResultDtl disQualDtl : evalResDtl.getList()){
-				log.info("renderDisqialified ******** Dev Test ******* disQualDtl :"+disQualDtl);
+		if(null!=this.getManagedBean().getDisqualifiedSuppliersDM()
+			&& null!=this.getManagedBean().getDisqualifiedSuppliersDM().getList()){
+			for(ScQtEvaluationResultDtl disQualDtl : this.getManagedBean().getDisqualifiedSuppliersDM().getList()){
 				if(null != disQualDtl && null !=disQualDtl.isCompliance() && !disQualDtl.isCompliance()){
-					log.info("renderDisqialified ******** Dev Test ******* Start");
 					renderDisqialifiedColumn=true;
 					break;
 				}
 			}
 		}
-		log.info("renderDisqialified ******** Dev Test ******* End");
 		return renderDisqialifiedColumn;
 	}
 	/**
@@ -18102,21 +18095,10 @@ private void retriveCommitteeRemarksList(){
 	 * @return boolean
 	 */
 	public boolean isDisqialifiedByCompliance(ScQtEvaluationResultDtl evalResultDtl){
-		log.info("isDisqialifiedByCompliance ******** Dev Test ******* Start");
 		boolean renderDisqialifiedColumn = false;
-		log.info("isDisqialifiedByCompliance ******** Dev Test");
-		if(null!=evalResultDtl){
-			log.info("isDisqialifiedByCompliance ******** Dev Test ****** not null");
-			log.info("isDisqialifiedByCompliance ******** Dev Test ****** compliance :"+evalResultDtl.isCompliance());
-		}else{
-			log.info("isDisqialifiedByCompliance ******** Dev Test ****** null");
-		}
 			if(null!=evalResultDtl && null!=evalResultDtl.isCompliance() && !evalResultDtl.isCompliance()){
-				log.info("isDisqialifiedByCompliance ******** Dev Test ****** inside if");
 				renderDisqialifiedColumn=true;
-				log.info("isDisqialifiedByCompliance ******** Dev Test ****** set True");
 			}
-			log.info("isDisqialifiedByCompliance ******** Dev Test ******* End");
 		return renderDisqialifiedColumn;
 	}
 	/**
