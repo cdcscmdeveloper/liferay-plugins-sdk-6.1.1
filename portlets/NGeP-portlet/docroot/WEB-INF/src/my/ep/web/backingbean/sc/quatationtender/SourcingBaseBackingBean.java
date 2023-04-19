@@ -5873,8 +5873,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		int countIndex = 0;
 		int indi = 0;
 		boolean getFirstValue = true;
-		//26130 - start
-		if (null != master.getTplSpecZone()){
+		//26130 - start 
+		if (master.getTplSpecZone() != null){
 		//26130 - end	
 		if (question.getTplSpecZoneQties().size()  > 0){
 			for (TplSpecZoneQty zone: question.getTplSpecZoneQties()){
