@@ -19371,6 +19371,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		.getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
 		templateSpecBean.setSpecMaster(this.getManagedBean().getSampleCheckList().getScQtDoc()
 				.getTplSpecMaster());	
+		this.retriveSampleSpecmasterForMandatorySpecChecking(templateChecklist);//#29187 Added Vinod
 	}
 /***11104-start
  * display samplequantityerror in sample checkbox selected for sample item.
@@ -21801,8 +21802,13 @@ if(null!=allTechnicalChecklist){
 	// #28784
 	
 	/*#29187 Start Vinod*/
+	/**
+	 * This method is to get dropdown values for mandatory spec.
+	 * @param 
+	 * @return List<SelectItem>
+	 */
 	public List<SelectItem> getMandatorySpecDropdownValues() {
-		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+		List<SelectItem> selectItems = new ArrayList<>();
 
 		try {
 			selectItems.add(new SelectItem(false, ResourceBundleUtils
@@ -21813,8 +21819,9 @@ if(null!=allTechnicalChecklist){
 					.getMessage("lbl.txt.yes",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
-		} finally {
-
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", this.getManagedBean().getQt().getQtNo(),
+					"getMandatorySpecDropdownValues", getUserIdSessionFromLoginId(), e);
 		}
 		
 		return selectItems;
