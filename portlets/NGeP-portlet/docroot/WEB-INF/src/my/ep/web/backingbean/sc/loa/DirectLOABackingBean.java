@@ -10341,45 +10341,32 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (tplSpecAnswer.getNewSupplierOffer() != null && tplSpecAnswer.getNewSupplierOffer() != "") {
 				tplSpecAnswer.setRenderNewSpec(true);
 			}
-			for(TplSpecAnswer answer :afterTireCheckAnswerList){
-				if(qtMaint
-					&& answer.getTplSpecQuestion()!=null
-					&& tplSpecAnswer.getTplSpecQuestion()!=null
-					&& answer.getTplSpecQuestion().getSpecQuestionId() == tplSpecAnswer.getTplSpecQuestion().getSpecQuestionId()){
+
+			for (TplSpecAnswer answer : afterTireCheckAnswerList) {
+				if (answer.getTplSpecQuestion() != null
+						&& tplSpecAnswer.getTplSpecQuestion() != null
+						&& answer.getTplSpecQuestion().getSpecQuestionId() == tplSpecAnswer.getTplSpecQuestion()
+								.getSpecQuestionId()) {
 					contains++;
+					break;
 				}
 			}
 			
-			if(qtMaint
-				&& afterTireCheckAnswerList.isEmpty()){
+			if (qtMaint && afterTireCheckAnswerList.isEmpty()) {
 				afterTireCheckAnswerList.add(tplSpecAnswer);
-			}else if(qtMaint
-					&& tplSpecAnswer.getTplSpecQuestion() != null 
-					&& tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion() != null
-					&& tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getClPriceTypeCode() != null
-					&& tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getClPriceTypeCode().getParameterCode() != null
-					&& !afterTireCheckAnswerList.isEmpty()
-					&& !tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)
-					&& contains==0){
+			} else if (qtMaint && !afterTireCheckAnswerList.isEmpty() && contains == 0) {
 				afterTireCheckAnswerList.add(tplSpecAnswer);
-			}else if (qtMaint
-					&& tplSpecAnswer.getTplSpecQuestion() != null 
-					&& tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion() != null
-					&& tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getClPriceTypeCode() != null
-					&& tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getClPriceTypeCode().getParameterCode() != null
-					&& !afterTireCheckAnswerList.isEmpty()
-					&& tplSpecAnswer.getTplSpecQuestion().getParentSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)
-					&& contains==0) {
-				afterTireCheckAnswerList.add(tplSpecAnswer);
-				
+			} else {
+				continue;
 			}
 		}
 
-		if(qtMaint){
+		if (qtMaint) {
 			this.getManagedBean().setTplSpecAnswerList(afterTireCheckAnswerList);
-		}else{
+		} else {
 			this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
 		}
+		
 		this.getManagedBean().setScLoiLoaItem(loiLoaItem);
 		
 		if (mainSearch) {
