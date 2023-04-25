@@ -13495,23 +13495,29 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 			// 32134 note-32, 25729 -end-
 
-			// 1873 - start 
-			String finChecklistTitle = scQtCheckList.getTitle().trim().replaceAll("\\s", "");
-
+			// Bug #33249@Syazani 27/07/2022 -- Start
+			// 1873 - start - note 52
+			String finChecklistTitle = (scQtCheckList.getTitle() + "_" + (scQtCheckList.getDefinationType() != null ? scQtCheckList
+					.getDefinationType().getParameterId() : "")).trim().replaceAll("\\s", ""); // 1873 - note 97
+			// 1873 note 86 - start
 			if (CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())) {
 				for (ScQtCheckList checklist : this.getManagedBean().getScQtCheckSt2techProposal()) {
 					boolean edited = checklist.isEdited() == null ? false : checklist.isEdited();
+					String checklistTitle = (checklist.getTitle() + "_" + (checklist.getDefinationType() != null ? checklist.getDefinationType()
+							.getParameterId() : "")).trim().replaceAll("\\s", "");
 					
-					if (finChecklistTitle.equals(checklist.getTitle().trim().replaceAll("\\s", "")) && edited) {
+					if (finChecklistTitle.equals(checklistTitle) && edited) { // 1873 - note 97
+						// Bug #33249@Syazani 27/07/2022 -- End
 						checklist.setEdited(false);
-						
+
 						updatedCheckLists.add(checklist);
-						
+
 						break;
 					}
+					// 1873 note 86 - end
 				}
 			}
-			// 1873 - end
+			// 1873 - end - note 52
 
 			scQtCheckList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 			scQtCheckList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
