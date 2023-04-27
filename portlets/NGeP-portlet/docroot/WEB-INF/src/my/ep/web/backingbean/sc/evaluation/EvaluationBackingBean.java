@@ -13537,8 +13537,12 @@ private void retriveCommitteeRemarksList(){
 								proposalChecklistIds.add(proposalChecklist.getQtProposalChecklistId());
 							}
 						}
+						//#34712 related to #25138 start
+						if(CollectionUtils.isNotEmpty(proposalChecklistIds)){
 						reqDTO.getProposalChecklistSearchBean().getDataFilterBeans().add(new SearchFilterBean(QTSearchBeanConst.SEARCH_QTPROPOSALCHECKLIST_ID,
 								SearchOperator.OPERATOR_NOT_IN.value(), proposalChecklistIds));
+						}
+						//#34712 related to #25138 end
 						//#34582 move code position 4serangkai -start
 					}else{//32453-Technical Other package start
 						if(getManagedBean().getTabTechnicalIndex()==2 && SourcingConstants.COMPLAINCE_STAGE.equals(evalStage) && getManagedBean().getScQt().isPartial()){
@@ -13557,8 +13561,12 @@ private void retriveCommitteeRemarksList(){
 								Long supplierNo = ((BigDecimal)qualified[2]).longValue();
 								supplierNos.add(supplierNo);
 							}
+							//#34712 related to #25138 start
+							if(CollectionUtils.isNotEmpty(supplierNos)){
 							reqDTO.getProposalChecklistSearchBean().getDataFilterBeans().add(new SearchFilterBean(QTSearchBeanConst.SEARCH_SCQTPROPOSAL_SUPPLIERNO,
 									SearchOperator.OPERATOR_IN.value(), supplierNos));
+							}
+							//#34712 related to #25138 end
 						}
 					}//#34582 move code position 4serangkai -end
 				}
