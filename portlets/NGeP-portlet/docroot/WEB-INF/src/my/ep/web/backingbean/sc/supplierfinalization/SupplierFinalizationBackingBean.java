@@ -46,7 +46,6 @@ import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
-import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
@@ -81,7 +80,6 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
-import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
@@ -305,7 +303,7 @@ public class SupplierFinalizationBackingBean extends
 				this.getManagedBean().setDisableBfButton(true);
 			}
 			// 28834 ends
-			this.evaluateDecisionList();//6906 note 117
+
 			prepareUpdateCommitteeMember();//#25037
 			fc.getApplication()
 					.getNavigationHandler()
@@ -542,10 +540,8 @@ public class SupplierFinalizationBackingBean extends
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		String decisionTypeCode = scQtFinalization.getDecision()
 												  .getParameterCode();
-		//6906 note 117 - start
-		if (decisionTypeCode!=null && (decisionTypeCode.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER) ||
-				  decisionTypeCode.equals(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY))) {
-		//6906 note 117 - end
+		if (decisionTypeCode.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER) ||
+				  decisionTypeCode.equals(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY)) {
 			retrieveSupplierDetailsByRecommendType(scQtFinalization);
 			hasTierPriceInMixtureOfItems(scQtFinalization);
 		}
@@ -1287,7 +1283,6 @@ public class SupplierFinalizationBackingBean extends
 	public void saveSupplierFinalization(boolean skipValidation) {	
 	// #25037 - end
 		this.getManagedBean().setSubmit(false);
-		this.getManagedBean().setAction(null);//6906 note 117
 
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		int activeIndex = this.getManagedBean().getActiveIndex();
@@ -1306,24 +1301,7 @@ public class SupplierFinalizationBackingBean extends
 			finalizationReports.addAll(this.getManagedBean().getDocumentList());
 			finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
-			//6906 - note 117 - start
-			String desicion = scQtFinalization.getDecision() ==null ? null: scQtFinalization.getDecision().getParameterCode();
-			List<String> decisionList = new ArrayList<String>();
-			if(this.getManagedBean().getDecisionDropdown() != null && this.getManagedBean().getDecisionDropdown().length>0){
-				for(SelectItem item: this.getManagedBean().getDecisionDropdown()){
-					if(item.getValue()!=null) decisionList.add(item.getValue().toString());
-				}
-			} 
-			if (CollectionUtils.isEmpty(decisionList) || StringUtils.isEmpty(desicion) || !decisionList.contains(desicion)) {
-				if(this.getManagedBean().getActiveIndex() == this.getManagedBean().getFinalizationTabIndex()){
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { ResourceBundleUtils.getMessage("lbl.sc.sf.meeting.decision", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}else{
-					scQtFinalization.getDecision().setParameterCode(ParameterConst.DECISION_RECOMMEND_SUPPLIER);
-				}
-			} 
-			//6906 - note 117 - end
+			
 			SuppFinalizationReqDTO reqDTO = null;
 			
 			// Save Preparation and Supplier finalization tab(s) data 
@@ -2169,21 +2147,7 @@ public class SupplierFinalizationBackingBean extends
 			finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
 			
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
-			//6906 note 117 - start
-			String desicion = scQtFinalization.getDecision() ==null ? null: scQtFinalization.getDecision().getParameterCode();
-			List<String> decisionList = new ArrayList<String>();
-			if(this.getManagedBean().getDecisionDropdown() != null && this.getManagedBean().getDecisionDropdown().length>0){
-				for(SelectItem item: this.getManagedBean().getDecisionDropdown()){
-					if(item.getValue()!=null) decisionList.add(item.getValue().toString());
-				}
-			}
-			if (CollectionUtils.isEmpty(decisionList) || StringUtils.isEmpty(desicion) || !decisionList.contains(desicion)) {
-				navigateToSupplierFinalizationTab();
-				throw new EpException(MessageConst.ERROR_100022, 
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.sf.meeting.decision", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()) });
-			}
-			//6906 note 117 - end
+			
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 
 			if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.equals(currentStatusId)
@@ -2609,8 +2573,7 @@ public class SupplierFinalizationBackingBean extends
 
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 									.saveSupplierFinalization(reqDTO);
-			reloadData(resDTO);
-			this.evaluateDecisionList();//6906 note 117
+			reloadData(resDTO);				
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -4906,19 +4869,13 @@ public class SupplierFinalizationBackingBean extends
 		// START - #26169
 		else {
 			// If no available/qualified supplier, exclude the defined decision type(s)
-			if(!getManagedBean().isHasSupplierQualifiedForCurrentSelection()){	//6906 note 202
+			if (!getManagedBean().isHasSupplierQualified()) {
 				if (excludedDecisionList == null) {
 					excludedDecisionList = new ArrayList<String>();
 				}
 				
 				excludedDecisionList.add(ParameterConst.DECISION_RECOMMEND_SUPPLIER);
 				excludedDecisionList.add(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY);
-				//6906 note 117 - start
-				if(CollectionUtils.isEmpty(this.getManagedBean().getDisqualifiedStages())){
-					excludedDecisionList.add(
-							ParameterConst.DECISION_RE_EVALUATION);
-				}
-				//6906 note 117 - end
 			}
 		}
 		// END - #26169
@@ -4972,14 +4929,9 @@ public class SupplierFinalizationBackingBean extends
 							excludedDecisionList));
 		}
 		
-		//6906 note 117 - start
-		if(this.getManagedBean().isNoProposalSubmitted()){
-			excludedDecisionList.add(
-					ParameterConst.DECISION_RE_EVALUATION);	
-		}
-		//6906 note 117 - end
 		items = getDropdownCodeValuesBySearchBean(
 				ParameterTypeConst.FINALIZATION_DECISION_TYPE, searchBean);
+		
 		return items;		
 	}
  	
@@ -9242,7 +9194,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.checkHasQualifiedSuppliers(reqDTO);	
 				if(resDTO.isSuccessful()) getManagedBean().setHasSupplierQualified(Boolean.TRUE);
 				else getManagedBean().setHasSupplierQualified(Boolean.FALSE);
-				this.getManagedBean().setHasSupplierQualifiedForCurrentSelection(resDTO.isHasSupplierQualifiedForCurrentSelection());//6906 note 202
+				
 			}finally {
 				qtSuppFinalizationSO = null;
 			}	
@@ -10563,67 +10515,4 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			}
 		}
 		//#33174 disable package if there is no supplier qualified by package #21695 - End
-		//6906 note 117 - start
-		private void evaluateDecisionList(){
-			ScQt scQt = this.getManagedBean().getScQt();
-			IQTProposalSO proposalSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTProposalSO.class);
-			ProposalReqDTO reqDTO = new ProposalReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
-			Long proposalSubmitted = proposalSO.getTotalSubmittedProposal(reqDTO).getTotalSubmitted();
-			this.getManagedBean().setNoProposalSubmitted(proposalSubmitted.compareTo(0L) < 0);
-			if(!this.getManagedBean().isNoProposalSubmitted()){
-				List<String> disqualifiedStages= getQTSuppFinalizationSO().retrieveDisqualifiedStages(scQt.getQtId());
-				this.getManagedBean().setDisqualifiedStages(disqualifiedStages);
-			}
-			boolean disabledSelection = !((this.getManagedBean()
-					.isInitialDecisionFwdToBPK() && !this.getManagedBean()
-					.isReadOnly()) || this.getManagedBean().isSecretaryUser())
-					|| this.isQTMaintenanceScreen();
-			this.getManagedBean().setDisabledSelection(disabledSelection);
-			boolean proposalValid = this.checkProposalValidityDateReach(scQt.getProposalValidityEndDate());
-//			boolean meetingDoneBeforeproposalValidityExpired = this.checkMeetingDoneLessThanValidityEndDate(scQt.getProposalValidityEndDate());
-			if(disabledSelection){
-				this.getManagedBean().setDecisionDropdown(this.getDecisionDropDownAll());
-			}else if(proposalValid 
-//					|| meetingDoneBeforeproposalValidityExpired
-			){			
-				this.getManagedBean().setDecisionDropdown(this.getDecisionDropDown());
-			}else if(!proposalValid 
-//					&& !meetingDoneBeforeproposalValidityExpired
-			){
-				this.getManagedBean().setDecisionDropdown(this.getDecisionDropDownExpiredProposal());
-			}
-			if(this.getManagedBean().getDecisionDropdown() != null && this.getManagedBean().getDecisionDropdown().length>0){
-				for(SelectItem item: this.getManagedBean().getDecisionDropdown()){
-					if(item.getValue()!=null && ParameterConst.DECISION_RECOMMEND_SUPPLIER.equals(item.getValue())){
-						this.getManagedBean().setSupplierFinalizationReadOnly(false);
-						break;
-					}
-				}
-			}
-		}
-		public boolean disableReevaluationOptions(String stage){
-			boolean disabled = false;
-			List<String> list = this.getManagedBean().getDisqualifiedStages();
-			if(CollectionUtils.isNotEmpty(list) && !getManagedBean().isHasSupplierQualified()){
-				Collections.sort(list, new Comparator<String>() {
-					List<String> sortOrder = Arrays.asList("F", "T", "C");
-					public int compare(String s1, String s2) {
-						return Integer.valueOf(sortOrder.indexOf(s1)).compareTo(Integer.valueOf(sortOrder.indexOf(s2)));
-					}
-				});
-				List<String> disabledStages = new ArrayList<String>();
-				if (stage.equals("T"))
-					disabledStages = Arrays.asList(new String[] { "C" });
-				else if (stage.equals("F"))
-					disabledStages = Arrays.asList(new String[] { "T", "C" });
-				
-				return disabledStages.contains(list.get(0));
-				
-			}
-			return disabled;
-		}
-		//6906 note 117 - end
 }
