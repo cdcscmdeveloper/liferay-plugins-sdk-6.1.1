@@ -5494,6 +5494,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		String whiteSpace = "&nbsp";
 		boolean getFirstValue = true;
 		
+		// 26130 - start
+		if (master.getTplSpecZone() != null) {
+		// 26130 - end
 		if (question.getTplSpecZoneQties().size() > 0) {
 
 			for (TplSpecZoneQty zone : question.getTplSpecZoneQties()) {
@@ -5573,7 +5576,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				
 				listSpec.add(map);
 			}
-		} else {
+		}
+		// 26130 - start
+		}
+		// 26130 - end
+		else {
 			// non-zonal
 			HashMap<String, String> map = new HashMap<>();
 
