@@ -3863,11 +3863,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}
 			}
 		}
-		if(!this.getManagedBean().getSmAppl().isApplValidWithSsm()
-				&& this.getManagedBean().getSmSupp().getSmSupplierOwners().size() < 1){
+		if(this.getManagedBean().getSmSupp().getSmSupplierOwners().size() < 1){
 			throw new EpException(MessageConst.ERROR_775195);
-		}else if(!this.getManagedBean().getSmAppl().isApplValidWithSsm()
-				&& this.getManagedBean().getSmSupp().getSmSupplierOwners() != null){
+		}else if(this.getManagedBean().getSmSupp().getSmSupplierOwners() != null){
 			Boolean exist = false;
 			for(SmSupplierOwner suppOwner : this.getManagedBean().getSmSupp().getSmSupplierOwners()){
 				if(suppOwner.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
@@ -3875,7 +3873,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					break;
 				}
 			}
-			if(!exist && !this.getManagedBean().getSmSupp().getSmAppl().isApplValidWithSsm()){
+			if(!exist){
 				throw new EpException(MessageConst.ERROR_775195);
 			}
 		}
