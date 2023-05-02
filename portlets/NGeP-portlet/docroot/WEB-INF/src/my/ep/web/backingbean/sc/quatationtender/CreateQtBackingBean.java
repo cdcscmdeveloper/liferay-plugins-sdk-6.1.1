@@ -3870,7 +3870,12 @@ public class CreateQtBackingBean extends
 							
 	   }
 		//20200210@asyrafhaziq_Bug #27381&#26694  - End
-
+		/**
+		 * Check if current QT Status is in between QT Publication and QT Closed/Awarded
+		 * 
+		 * @param currentStatusId
+		 * @return
+		 */
 	public boolean isQTStatusInProposalValidPeriodExtApproval(Long currentStatusId) {
 		List<Long> validPeriodExts = Arrays.asList(QTStatusConst.QT_PENDING_PUBLICATION,
 				QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_PROPOSAL_PREPARATION,
@@ -3982,23 +3987,24 @@ public class CreateQtBackingBean extends
 		RequestContext.getCurrentInstance().execute("blockWidget.show()");
 		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 			String type = (String) event.getComponent().getAttributes().get("value");
-			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-			IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTSpecSO.class);	
+//			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+//			IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+//					IQTSpecSO.class);	
 			boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
-			reqDTO.setScQt(this.getManagedBean().getQt());
-			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
-			SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
-			for (ScQtCheckList checklist : resDTO.getTechnicalCheckList()) {
+			//reqDTO.setScQt(this.getManagedBean().getQt());
+			//reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+			//SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
+			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
+			for (ScQtCheckList checklist : scQtTechChecklist) {
 				if (checklist.getDefinationType().getParameterCode()
 						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-					if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && demoRequired
-							&& checklist.getQtChecklistId() != null) {
+					if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && demoRequired){
+//							&& checklist.getQtChecklistId() != null) {
 						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
 						break;
 
-					} else if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
-							&& checklist.getQtChecklistId() != null) {
+					} else if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)){
+//							&& checklist.getQtChecklistId() != null) {
 						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
 						break;
 					}
@@ -4038,25 +4044,30 @@ public class CreateQtBackingBean extends
 
 	// #21695 Farid END 3/7/2021
 
+	/**
+	 * #28784 - check demo radio button and display popup to delete
+	 * @param event
+	 */
 	public void validateDemoTechList(AjaxBehaviorEvent event) {
-		SpecificationResDTO resDTO = null;
-		IQTSpecSO specSo = null;
+//		SpecificationResDTO resDTO = null;
+//		IQTSpecSO specSo = null;
 		Boolean type = (Boolean) event.getComponent().getAttributes().get("value");
 		this.getManagedBean().getQt().setDemoRequired(type);
 		if (type == false) {
-			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-			specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTSpecSO.class);
-			reqDTO.setScQt(this.getManagedBean().getQt());
-			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
-			resDTO = specSo.retrieveCheckLists(reqDTO);
-			if (null != resDTO.getTechnicalCheckList()) {
-				for (ScQtCheckList checklist : resDTO.getTechnicalCheckList()) {
+//			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+//			specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+//					IQTSpecSO.class);
+//			reqDTO.setScQt(this.getManagedBean().getQt());
+//			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+//			resDTO = specSo.retrieveCheckLists(reqDTO);
+			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
+			if (null != scQtTechChecklist) {
+				for (ScQtCheckList checklist : scQtTechChecklist) {
 					if (checklist.getDefinationType().getParameterCode()
 							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-						if (checklist.getQtChecklistId() != null) {
+//						if (checklist.getQtChecklistId() != null) {
 							RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");
-						}
+//						}
 					}
 				}
 			}
