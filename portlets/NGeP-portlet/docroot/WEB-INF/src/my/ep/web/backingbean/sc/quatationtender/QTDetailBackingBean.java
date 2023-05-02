@@ -228,6 +228,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
@@ -4537,6 +4538,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										
 										//#25077 - Start
 										if(approvalRequest.get(i).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS)){
+											if(this.getManagedBean().getQt().isCloneEnabled()){//34502&25635-start
+												approvalRequest.get(i).getAppRequestRemark().setRemark(getManagedBean().getScQtAppRequestRemark());
+												approvalRequest.get(i).setApproverAction(new PmParameter());
+												approvalRequest.get(i).setApprovalRequestAttachement(null);
+											    this.getManagedBean().getQt().setCloneEnabled(Boolean.FALSE);
+											}//34502&25635-end
+											
 											if(this.getManagedBean().isFlagFileAttahmentDeletedICT()){
 												if (null != getManagedBean().getScQtApprovalReqAttachementICT()) {
 													approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementICT());
@@ -6738,7 +6746,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 		
 		//9019 - Start (Harun) set Group Item to NULL when save while left blank and panel is selected
-		if (isPanel && null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId()) {
+		//9019 Start - #Note-418 Fix able to submit without key in mandatory fields add checking parameterId=0
+		if (isPanel && (null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId() || this.getManagedBean()
+				.getQt().getItemGroup().getPanelItemGroupId() == ParameterConst.PM_PARAMETERID_ZERO)) {
 			this.getManagedBean().getQt().setItemGroup(null);
 			this.getManagedBean().getQt().setCircularVer(null);
 		}
@@ -6771,6 +6781,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (this.getManagedBean().isScQtRemarksEmpty()) {
 				this.getManagedBean().getQt().setScQtRemarks(null);
 			} 
+			//9019 - End (Harun)
+			//9019 - Start (Harun) #Note-398 Remove checking for (ERR-100022) error mesg while save 
+			if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().getQt().getSpecApprovalReq() == true) {
+				this.getManagedBean().getQt().setSpecApprovalReq(false);
+				reqDTO.getQtdetail().setSpecApprovalReq(false);
+				reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
+			}
 			//9019 - End (Harun)
 			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
 			//9019 - end
@@ -7145,8 +7162,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		if (priviousIndex != activeIndex) {
 			if (!isReadOnly) {
+				
 				switch (priviousIndex) {
 				case 0:
+					//9019 - Start (Harun) #Note-398 include in this note fixing while unit test
+					//       This changes is for #Note-360
+					//	     #Note-433 Relocate code for fix 'File Reference No is mandatory. (ERR-760455)' displayed.
+					detailSO.validateQTGeneralInformation(reqDTO);
+					//9019 - End (Harun)
 					//9019 - Start (Harun) #Note-360 Remove checking while not submit and allow to proceed 
 					//       when click sidemenu
 					if (isSubmit) {
@@ -11603,6 +11626,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			quationTenderReqDTO.setToken(facesScopes
 					.getBPMAuthenticationCtxToken());
 			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
+			
+			//9019 Start #note-445 Wrong displayed alert message for Cancel Yes button
+			//     Validate when QT title and File ref no is null while cancel
+			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getQt().getQtStatus().getStatusId())) {
+				detailSO.validateQTGeneralInformation(quationTenderReqDTO);
+			}
+			//9019 End #note-445
 			QuationTenderResDTO quationTenderResDTO = detailSO.cancleQTForDraft(quationTenderReqDTO);
 
 			if (quationTenderResDTO.isSuccessful()) {
@@ -12985,4 +13015,97 @@ public void retrieveDemoQtDetails(Long qtId) {
 		return Boolean.FALSE;
 	}
 	// #21692 - end
+	
+	// #21692 add Approval detail at EPV QT Maint - Start
+	/**
+	 * 
+	 * get new page for EPV approval details (PTJ details, EPV Type of Request,
+	 * Remarks)
+	 * 
+	 * @param approvalReq
+	 * @return String
+	 */
+	public String getEpvApprovalDtl(ScQtApprovalRequest approvalReq) {
+		this.getManagedBean().setScQtApprovalRequest(approvalReq);
+		//#21692 add attachment - Start
+		if (CollectionUtils.isNotEmpty(approvalReq.getEpvApprovalReqAttachment())) {
+			for (ScQtEpvApprovalReqAttachment att : approvalReq.getEpvApprovalReqAttachment()) {
+				if (att.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_1)) {
+					approvalReq.setEpvApprovalReqAttachmentR1(att);
+				} else if (att.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_2)) {
+					approvalReq.setEpvApprovalReqAttachmentR2(att);
+				} else if (att.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_3)) {
+					approvalReq.setEpvApprovalReqAttachmentR3(att);
+				}
+			}
+		}
+		//#21692 add attachment - End
+		return QTConstants.MAINT_EPV_APPROVAL_DETAIL;
+	}
+
+	/**
+	 * 
+	 * check approval type to be EPV
+	 * 
+	 * @param approvalType
+	 * @return boolean
+	 */
+	public boolean isApprovalTypeEpv(PmParameter approvalType) {
+		return approvalType == null ? false : approvalType.getParameterCode().equals(
+				ParameterConst.DOCTYPE_EXTENSION_PROPOSAL_VALIDITY);
+	}
+
+	/**
+	 * 
+	 * Back action for new EPV approval details page
+	 * 
+	 * @return String
+	 */
+	public String epvBackAction() {
+		return QTConstants.MAINTANANCE_PAGE_FULL;
+	}
+
+	/**
+	 * Check if Ministry of Finance decision date render
+	 * 
+	 * @param validityDaysExpiredQt
+	 * @return
+	 */
+	public boolean handleChmnFinalizationDate(boolean validityDaysExpiredQt) {
+		boolean enableApprovalDateMOF = Boolean.FALSE;
+
+		Date proposalValidityEndDate = this.getManagedBean().getScQtApprovalRequest()
+				.getProposalValidityEndDateOri();
+		Date chmnFinalizationDate = this.getManagedBean().getScQtApprovalRequest().getChmnFinalizationDate();
+		if ((null != proposalValidityEndDate) && (null != chmnFinalizationDate)) {
+
+			long days = DateUtils.getDaysDifference(proposalValidityEndDate, chmnFinalizationDate);
+			int day = (int) days;
+			if (day >= 0) {
+				return Boolean.TRUE;
+			}
+		}	
+
+		return enableApprovalDateMOF;
+	}
+
+	/**
+	 * Specific for History usage only since it always shows due date
+	 * 
+	 * @param approverActionDate
+	 * @param resPeriod
+	 * @return
+	 */
+	public Timestamp getHistoryExtensionResponseDueDate(Date approverActionDate, int resPeriod) {
+		Date date = null;
+		if (null != approverActionDate) {
+			date = DateUtils.addDays(approverActionDate, resPeriod);
+		}
+		Timestamp ts = null;
+		if (date != null) {
+			ts = new Timestamp(date.getTime());
+		}
+		return ts;
+	}
+	// #21692 add Approval detail at EPV QT Maint - End
 }

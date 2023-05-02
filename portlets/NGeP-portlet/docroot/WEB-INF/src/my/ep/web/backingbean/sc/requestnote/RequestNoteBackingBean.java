@@ -399,8 +399,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    		getManagedBean().setAssignedState(isAssignedState);
 	    		reloadRequestNote(scRequestNote);
 	    		
-	    		successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
-	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.FALSE);
+	    		//#29557 - start
+	    		Boolean PIcontinuity = false;
+	    		for (ScRequestNoteDtl scRequestNoteDtl : scRequestNote.getRequestNoteDtls()) {
+	    			if(scRequestNoteDtl.isShowPurchaseInquiry()){
+	    				PIcontinuity = true;
+	    				break;
+	    			}
+	    		}
+
+	    		if(PIcontinuity){
+	    			successMessage(MessageConst.INFO_700004,ParameterTypeConst.DOCUMENT_TYPES,
+		    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.FALSE);
+	    		}else{
+	    			successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
+		    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.FALSE);
+	    		}
+	    		//#29557 - else	    		
 	    	} else{
 	    		successMessage(MessageConst.INFO_700024,ParameterTypeConst.DOCUMENT_TYPES,
 	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.TRUE);
@@ -1134,6 +1149,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	private void validateRequestNote(ScRequestNote requestNote){
 		debugLogger("validateRequestNote");
+		// Temp(#34274 - Start)
+		boolean isShowMessage = getManagedBean().isExceededAmountAlerted();
+		// Temp(#34274 - End)
 		// show message for first submission, skip the message for second time submission
 		if(requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()){
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
@@ -1240,26 +1258,63 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 							if (ruleValueList != null && ruleValueList.size() > 0) {
 								PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-								//26059 - start
-								ScQuote quote = null;
-								String sourceMethod = requestNote.getSourceMethod();
-								if(sourceMethod.equals(ParameterConst.REQUEST_NOTE_SQ)) {
-									quote = requestNote.getQuote();
-								}								
-								//Rule : ITEM_THRESHOLD For 20k
-								if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0 && ((quote != null && !quote.isPanel())
-										|| !sourceMethod.equals(ParameterConst.REQUEST_NOTE_SQ))) {									
-										String language = new FacesScopes().getUserLocale().getLanguage();
-										String itemTitle;
-										if(CommonConstants.DEFAULT_USER_LANGUAGE_CODE.equalsIgnoreCase(language)) {
-											itemTitle = requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitleEng();
-										} else {
-											itemTitle = requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitle();
-										}
-										throw new EpException(MessageConst.ERROR_760518,
-												new String[] {itemTitle, requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscCode()});
+								// Temp(#34274 - Start)
+								// Rule : ITEM_THRESHOLD For 20k
+								if (totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0) {
+									if (!isShowMessage) {
+										getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
+
+										FacesContext.getCurrentInstance().addMessage(
+												null,
+												new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+														.getMessage(MessageConst.ERROR_760036, new String[] {
+																requestNoteDtl.getRequestItem().getItemName(),
+																requestNoteDtl.getRequestItem().getCmItem()
+																		.getExtensionCode() },
+																MessageUtils.BUNDLE_COMMON_MESSAGES,
+																new FacesScopes().getUserLocale())));
+
+										// throw new
+										// EpException(MessageConst.ERROR_760036,
+										// new String[]
+										// {requestNoteDtl.getRequestItem().getItemName(),
+										// requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()});
+									}
 								}
-								//26059 - end
+								// Temp(#34274 - End)
+								
+								// 26059 - start
+								// ScQuote quote = null;
+								// String sourceMethod =
+								// requestNote.getSourceMethod();
+								// if(sourceMethod.equals(ParameterConst.REQUEST_NOTE_SQ))
+								// {
+								// quote = requestNote.getQuote();
+								// }
+								// //Rule : ITEM_THRESHOLD For 20k
+								// if(totalAmt.compareTo(new
+								// BigDecimal(configRuleValue.getRuleValue())) >
+								// 0 && ((quote != null && !quote.isPanel())
+								// ||
+								// !sourceMethod.equals(ParameterConst.REQUEST_NOTE_SQ)))
+								// {
+								// String language = new
+								// FacesScopes().getUserLocale().getLanguage();
+								// String itemTitle;
+								// if(CommonConstants.DEFAULT_USER_LANGUAGE_CODE.equalsIgnoreCase(language))
+								// {
+								// itemTitle =
+								// requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitleEng();
+								// } else {
+								// itemTitle =
+								// requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitle();
+								// }
+								// throw new
+								// EpException(MessageConst.ERROR_760518,
+								// new String[] {itemTitle,
+								// requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscCode()});
+								// }
+								// 26059 - end
 							} else {
 								throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 							}
@@ -2686,20 +2741,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		// when procurement type as pk7 selected 
 		if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
+			// Temp(#34274 - Start)
 			// MaxProcurementAmt
-			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-
-			BigDecimal maxProcurementAmt = getPRThresholdAmount();
+			// DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
+			// .getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+			//
+			// BigDecimal maxProcurementAmt = getPRThresholdAmount();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-							.getMessage(
-									MessageConst.INFO_760440,
-									new String[] {amountDF.format(maxProcurementAmt)},
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							MessageConst.INFO_760440, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+			// Temp(#34274 - End)
 		}
 	}
 	
@@ -4960,6 +5013,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return codificationBB.assignProductCode(requestItem, null, false);
 	}
 	
+	/**
+	 * to retrieve top zonal tier price
+	 * @param supplierItemPrices the list of ScSupplierItemPrice
+	 * @param orderQuantity the order quantity
+	 * @param priceType the price type
+	 * @param itemName the name of items
+	 * @return ScSupplierItemPrice instance
+	 */
 	private ScSupplierItemPrice getTopZonalTierPrice(List<ScSupplierItemPrice> supplierItemPrices, 
 			BigDecimal orderQuantity, String priceType, String itemName) {
 		List<ScSupplierItemPrice> groupedItemPrice = new ArrayList<ScSupplierItemPrice>();
@@ -4984,7 +5045,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 		if(isTierPrice && !isTierPriceMatched) {
-			throw new EpException(MessageConst.ERROR_760399, new String[] {itemName});
+			//#29557 - start
+			//throw new EpException(MessageConst.ERROR_760399, new String[] {itemName});
+			throw new EpException(MessageConst.ERROR_760527, new String[] {itemName});
+			//#29557 - end
 		} else {
 			if(CollectionUtils.isNotEmpty(groupedItemPrice)) {
 				topPricedItem = findMaxPriceItem(groupedItemPrice);
