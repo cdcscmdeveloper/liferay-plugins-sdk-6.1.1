@@ -20149,28 +20149,29 @@ public String sampleQuantityError(String itemName){
  * @param specQuestion
  */
 public void sampleRequiredChange(TplSpecQuestion specQuestion){
-		IParameterSO parameterSo = null;
-		log.info("sampleRequiredChange===" + specQuestion.isSampleReq());
-		if (specQuestion.isSampleReq()) {
-			log.info("ifsampleRequiredChange===" + specQuestion.isSampleReq());
-			parameterSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			ParameterReqDTO scoreType = new ParameterReqDTO();
-			scoreType.setParameterType(ParameterTypeConst.ANSWER_TYPE);
-			scoreType.setParameterCode(ParameterConst.ANSWER_TYPE_TEXT);
-			ParameterResDTO scoreTyperesDTO = parameterSo
-					.retrieveParameterByTypeAndCode(scoreType);
-			specQuestion.setSampleScoreTypeCode(scoreTyperesDTO
-					.getPmParameter());
-			specQuestion.setMandatorySpec(true);// #29187 Added Vinod
-		} else {
-			log.info("elsesampleRequiredChange===" + specQuestion.isSampleReq());
-			specQuestion.setSampleQuantity(null);
-			specQuestion.setSampleScoreTypeCode(null);
-			specQuestion.setSampleScore(null);
-			scoringPopUpAction(null);
-			specQuestion.setMandatorySpec(false);// #29187 Added Vinod
-		}
+	IParameterSO parameterSo = null;
+	log.info("sampleRequiredChange==="+specQuestion.isSampleReq());
+	if(specQuestion.isSampleReq()){
+		log.info("ifsampleRequiredChange==="+specQuestion.isSampleReq());
+	parameterSo = BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+	ParameterReqDTO  scoreType = new ParameterReqDTO();
+	scoreType
+			.setParameterType(ParameterTypeConst.ANSWER_TYPE);
+	scoreType
+			.setParameterCode(ParameterConst.ANSWER_TYPE_TEXT);
+	ParameterResDTO scoreTyperesDTO = parameterSo
+			.retrieveParameterByTypeAndCode(scoreType);
+	specQuestion.setSampleScoreTypeCode(scoreTyperesDTO.getPmParameter());
+	specQuestion.setMandatorySpec(true);//#29187 Added Vinod
+	}else{
+		log.info("elsesampleRequiredChange==="+specQuestion.isSampleReq());
+		specQuestion.setSampleQuantity(null);
+		specQuestion.setSampleScoreTypeCode(null);
+		specQuestion.setSampleScore(null);
+		scoringPopUpAction(null);
+		specQuestion.setMandatorySpec(false);//#29187 Added Vinod
+	}
 	
 	
 }
