@@ -1345,7 +1345,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	public String preSubmitFulfillmentOrder(PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
-			if(((hasSupplierRole() && !hasGovtSellerRole())) || getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED) ) { //29440
+			if(((hasSupplierRole() && !hasGovtSellerRole()))) {
 				setTextBeforeSign(getManagedBean().getButtonAction());
 				updateSpkiDigiSignData(getManagedBean().getPmDigiSign(), getManagedBean().getFulfilmentOrder().getDocType(), 
 						getManagedBean().getFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getFulfilmentOrder().getDocNo(), 
