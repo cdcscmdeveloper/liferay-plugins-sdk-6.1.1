@@ -8633,310 +8633,306 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 	}
 		
-		/**
-		 * @param e
-		 */
-		public void selectAllSchedule(AjaxBehaviorEvent e) {
+	/**
+	 * @param e
+	 */
+	public void selectAllSchedule(AjaxBehaviorEvent e) {
 
-			for (ScQtSchedule ScQtSchedule : getManagedBean().getScLoa()
-					.getScQtSchedules()) {
-				if (getManagedBean().isSelectAll()) {
-					ScQtSchedule.setSelected(true);
-					if (getManagedBean().isButtonHideSchActive()) {
-						getManagedBean().setButtonHideSchActive(false);
-					}
-				} else {
-					ScQtSchedule.setSelected(false);
-					if (!getManagedBean().isButtonHideSchActive()) {
-						getManagedBean().setButtonHideSchActive(true);
-					}
+		for (ScQtSchedule ScQtSchedule : getManagedBean().getScLoa()
+				.getScQtSchedules()) {
+			if (getManagedBean().isSelectAll()) {
+				ScQtSchedule.setSelected(true);
+				if (getManagedBean().isButtonHideSchActive()) {
+					getManagedBean().setButtonHideSchActive(false);
 				}
-			}
-			for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean()
-					.getScLoa().getScQtProgPayments()) {
-				if (getManagedBean().isSelectAll()) {
-					ScQtProgressivePayment.setSelected(true);
-					if (getManagedBean().isButtonHideSchActive()) {
-						getManagedBean().setButtonHideSchActive(false);
-					}
-				} else {
-					ScQtProgressivePayment.setSelected(false);
-					if (!getManagedBean().isButtonHideSchActive()) {
-						getManagedBean().setButtonHideSchActive(true);
-					}
+			} else {
+				ScQtSchedule.setSelected(false);
+				if (!getManagedBean().isButtonHideSchActive()) {
+					getManagedBean().setButtonHideSchActive(true);
 				}
 			}
 		}
+		for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean()
+				.getScLoa().getScQtProgPayments()) {
+			if (getManagedBean().isSelectAll()) {
+				ScQtProgressivePayment.setSelected(true);
+				if (getManagedBean().isButtonHideSchActive()) {
+					getManagedBean().setButtonHideSchActive(false);
+				}
+			} else {
+				ScQtProgressivePayment.setSelected(false);
+				if (!getManagedBean().isButtonHideSchActive()) {
+					getManagedBean().setButtonHideSchActive(true);
+				}
+			}
+		}
+	}
 
-		public void selectOneScheCheckboxSelect(AjaxBehaviorEvent e) {
-			getManagedBean().setSelectAll(false);
-			for (ScQtSchedule ScQtSchedule : getManagedBean().getScLoa()
-					.getScQtSchedules()) {
-				if (ScQtSchedule.isSelected()) {
-					getManagedBean().setButtonHideSchActive(false);
-					return;
-				}
-			}
-			for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean()
-					.getScLoa().getScQtProgPayments()) {
-				if (ScQtProgressivePayment.isSelected()) {
-					getManagedBean().setButtonHideSchActive(false);
-					return;
-				}
-			}
-			if ((boolean) e.getComponent().getAttributes().get("value")) {
+	public void selectOneScheCheckboxSelect(AjaxBehaviorEvent e) {
+		getManagedBean().setSelectAll(false);
+		for (ScQtSchedule ScQtSchedule : getManagedBean().getScLoa()
+				.getScQtSchedules()) {
+			if (ScQtSchedule.isSelected()) {
 				getManagedBean().setButtonHideSchActive(false);
-			} else {
-				getManagedBean().setButtonHideSchActive(true);
+				return;
 			}
 		}
+		for (ScQtProgressivePayment ScQtProgressivePayment : getManagedBean()
+				.getScLoa().getScQtProgPayments()) {
+			if (ScQtProgressivePayment.isSelected()) {
+				getManagedBean().setButtonHideSchActive(false);
+				return;
+			}
+		}
+		if ((boolean) e.getComponent().getAttributes().get("value")) {
+			getManagedBean().setButtonHideSchActive(false);
+		} else {
+			getManagedBean().setButtonHideSchActive(true);
+		}
+	}
 
-		public void deleteFreqScheduleDetails() {
-			AwardSupplierResDTO resDTO = null;
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setScLoa(this.getManagedBean().getScLoa());
-			try {
-				if (null != getManagedBean().getScLoa().getScQtSchedules()) {
-					resDTO = getQtAwardSO()
-							.deletetScheduleIdAndPaymentId(reqDTO);
-					if (resDTO.isSuccessful()) {
-						getManagedBean().setSelectAll(false);
-						getManagedBean().setButtonHideSchActive(true);
+	public void deleteFreqScheduleDetails() {
+		AwardSupplierResDTO resDTO = null;
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setScLoa(this.getManagedBean().getScLoa());
+		try {
+			if (null != getManagedBean().getScLoa().getScQtSchedules()) {
+				resDTO = getQtAwardSO()
+						.deletetScheduleIdAndPaymentId(reqDTO);
+				if (resDTO.isSuccessful()) {
+					getManagedBean().setSelectAll(false);
+					getManagedBean().setButtonHideSchActive(true);
 
-					}
-					getManagedBean().getScLoa().setScQtSchedules(resDTO.getScLoa().getScQtSchedules());
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-								e.getMessage()));
+				getManagedBean().getScLoa().setScQtSchedules(resDTO.getScLoa().getScQtSchedules());
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
 		}
-		public void deleteProgPaymentDetails() {
-			AwardSupplierResDTO resDTO = null;
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setScLoa(this.getManagedBean().getScLoa());
-			try {
-				if (null != getManagedBean().getScLoa().getScQtProgPayments()) {
-					resDTO = getQtAwardSO()
-							.deletetScheduleIdAndPaymentId(reqDTO);
-					if (resDTO.isSuccessful()) {
-						getManagedBean().setSelectAll(false);
-						getManagedBean().setButtonHideSchActive(true);
+	}
+	public void deleteProgPaymentDetails() {
+		AwardSupplierResDTO resDTO = null;
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setScLoa(this.getManagedBean().getScLoa());
+		try {
+			if (null != getManagedBean().getScLoa().getScQtProgPayments()) {
+				resDTO = getQtAwardSO()
+						.deletetScheduleIdAndPaymentId(reqDTO);
+				if (resDTO.isSuccessful()) {
+					getManagedBean().setSelectAll(false);
+					getManagedBean().setButtonHideSchActive(true);
 
-					}
-					getManagedBean().getScLoa().setScQtProgPayments(resDTO.getScLoa().getScQtProgPayments());
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-								e.getMessage()));
+				getManagedBean().getScLoa().setScQtProgPayments(resDTO.getScLoa().getScQtProgPayments());
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
 		}
+	}
 		
-		//#24540 - start -
-		/**
-		 * To display Performance Bond dropdown when QT Type is <b>Special Item / Item In PK 7</b> 
-		 * and Fulfilment Type is <b>One Off</b>.
-		 * 
-		 * @return
-		 */
-		public boolean isPbDropDown() {
-			PmParameter qtType = null;
-			PmParameter fulfilmentType = null;
-			PmParameter contractType = null;
-			boolean QtTypepk7 = false;
+	//#24540 - start -
+	/**
+	 * To display Performance Bond dropdown when QT Type is <b>Special Item / Item In PK 7</b>
+	 * and Fulfilment Type is <b>One Off</b>.
+	 *
+	 * @return
+	 */
+	public boolean isPbDropDown() {
+		PmParameter qtType = null;
+		PmParameter fulfilmentType = null;
+		PmParameter contractType = null;
+		boolean QtTypepk7 = false;
 			
-			if (null != getManagedBean().getScLoa().getQtType()) {
-				qtType = getManagedBean().getScLoa().getQtType(); 
+		if (null != getManagedBean().getScLoa().getQtType()) {
+			qtType = getManagedBean().getScLoa().getQtType();
+		}
+			
+		if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
+			fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType();
+		}
+			
+		if (null != getManagedBean().getScLoa().getContractType()) {
+			contractType = getManagedBean().getScLoa().getContractType();
+		}
+			
+		if (getManagedBean().getPk7Reasons() == null) {
+			setPk7DropDownValues();
+		}
+
+		if (StringUtils.isEmpty(getManagedBean().getYesParameterId())) {
+			getManagedBean().setYesParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_COMPLIANCE.toUpperCase())));
+		}
+			
+		if (StringUtils.isEmpty(getManagedBean().getNoParameterId())) {
+			getManagedBean().setNoParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_NOT_COMPLIANCE.toUpperCase())));
+		}
+			
+		if (StringUtils.isEmpty(getManagedBean().getBondReqSelectedVal())) {
+			if (getManagedBean().getScLoa().isBondReq()) {
+				getManagedBean().setBondReqSelectedVal(getManagedBean().getYesParameterId());
+			} else if (getManagedBean().getScLoa().getLoaNo() != null) {
+				getManagedBean().setBondReqSelectedVal(getManagedBean().getNoParameterId());
 			}
+		}
+
+		// 34420-start
+		// MC
+		if (null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType())
+				&& !ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType.getParameterCode())) {
+			return false;
+		}
+		// 34420-end
 			
-			if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
-				fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType();
+		if (null != qtType && ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())) {
+			QtTypepk7 = true;
+
+			if (null == getManagedBean().getScLoa().getJustificationType()) {
+				getManagedBean().getScLoa().setJustificationType(new PmReason());
 			}
-			
-			if (null != getManagedBean().getScLoa().getContractType()) {
-				contractType = getManagedBean().getScLoa().getContractType();
+		}
+
+		if (QtTypepk7 && null != fulfilmentType
+				&& ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType())
+				&& ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType.getParameterCode())) {
+				
+			if (null == getManagedBean().getBondReqSelectedVal()) {
+				getManagedBean().getScLoa().setBondReq(false);
+			} else if (getManagedBean().getNoParameterId().equals(getManagedBean().getBondReqSelectedVal())) {
+				getManagedBean().getScLoa().setBondReq(false);
 			}
-			
-			if (getManagedBean().getPk7Reasons() == null) {
-				setPk7DropDownValues();
-			}
-			
-			// MC
-			if (null != contractType 
-					&& ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType()) 
+				
+			// If Contract Type is selected and its not 'Ministry', then return false.
+			if (null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType())
 					&& !ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType.getParameterCode())) {
 				return false;
 			}
-			
-			if (StringUtils.isEmpty(getManagedBean().getYesParameterId())) {
-				getManagedBean().setYesParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_COMPLIANCE.toUpperCase())));
-			}
-			
-			if (StringUtils.isEmpty(getManagedBean().getNoParameterId())) {
-				getManagedBean().setNoParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_NOT_COMPLIANCE.toUpperCase())));
-			}
-			
-			if (StringUtils.isEmpty(getManagedBean().getBondReqSelectedVal())) {
-				if (getManagedBean().getScLoa().isBondReq()) { 
-					getManagedBean().setBondReqSelectedVal(getManagedBean().getYesParameterId());
-				} else if (getManagedBean().getScLoa().getLoaNo() != null) {
-					getManagedBean().setBondReqSelectedVal(getManagedBean().getNoParameterId());
+				
+			if (!getManagedBean().isDisableFields()) {
+				String loaStatus = getStatusDescById(this.getManagedBean().getScLoa().getPmStatus().getStatusId());
+				if (StringEscapeUtils.unescapeJava(SourcingConstants.LOA_PENDING_VERIFICATION_STATUS).equals(loaStatus)) {
+					getManagedBean().setDisableFields(true);
 				}
 			}
-			
-			if (null != qtType 
-					&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType()) 
-					&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())) {
-				QtTypepk7 = true;
 				
-				if (null == getManagedBean().getScLoa().getJustificationType()) {
-					getManagedBean().getScLoa().setJustificationType(new PmReason());
-				}
-			}
-			
-			if (QtTypepk7 && null != fulfilmentType 
-					&& ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
-					&& ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType.getParameterCode())) {
-				
-				if (null == getManagedBean().getBondReqSelectedVal()) {
-					getManagedBean().getScLoa().setBondReq(false);
-				} else if (getManagedBean().getNoParameterId().equals(getManagedBean().getBondReqSelectedVal())) {
-					getManagedBean().getScLoa().setBondReq(false);
-				}
-				
-				// If Contract Type is selected and its not 'Ministry', then return false.
-				if (null != contractType 
-						&& ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType()) 
-						&& !ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType.getParameterCode())) {
-					return false;
-				}
-				
-				if (!getManagedBean().isDisableFields()) {
-					String loaStatus = getStatusDescById(this.getManagedBean().getScLoa().getPmStatus().getStatusId());
-					if (StringEscapeUtils.unescapeJava(SourcingConstants.LOA_PENDING_VERIFICATION_STATUS).equals(loaStatus)) {
-						getManagedBean().setDisableFields(true);
-					}
-				}
-				
-				return true;
-			} else {
-				// 17376 -start-
-				if (!getManagedBean().getScLoa().isBondReq() && !isPk7Periodic() && !this.getManagedBean().isReadOnly()) {
+			return true;
+		} else {
+			// 17376 -start-
+			if (!getManagedBean().getScLoa().isBondReq() && !isPk7Periodic() && !this.getManagedBean().isReadOnly()) {
 				// 17376 -end-
-					setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
-				}
-				
-				//getManagedBean().getScLoa().setJustificationType(null);
+				setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
 			}
-			
-			//RequestContext.getCurrentInstance().execute("reasonPG.hide()");
-			return false;
 		}
 
-		private Long getParameterIdByTypeAndCode(String paramType, String paramCode) {
-			IParameterSO parameterSO = null;
+		return false;
+	}
+
+	private Long getParameterIdByTypeAndCode(String paramType, String paramCode) {
+		IParameterSO parameterSO = null;
 			
-			try {
-				parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IParameterSO.class);
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IParameterSO.class);
 				
-				ParameterReqDTO reqDTO = new ParameterReqDTO();
-				reqDTO.setParameterType(paramType);
-				reqDTO.setParameterCode(paramCode);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(paramType);
+			reqDTO.setParameterCode(paramCode);
 				
-				ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 				
-				if (null != resDTO && resDTO.isSuccessful() && null != resDTO.getPmParameter()) {
-					return resDTO.getPmParameter().getParameterId();
-				}
-			} finally {
-				parameterSO = null;
+			if (null != resDTO && resDTO.isSuccessful() && null != resDTO.getPmParameter()) {
+				return resDTO.getPmParameter().getParameterId();
 			}
-			
-			return null;
+		} finally {
+			parameterSO = null;
 		}
+			
+		return null;
+	}
 		
-		/**
-		 * To display Agreement dropdown when QT Type is <b>Special Item / Item In PK 7</b> 
-		 * and Fulfilment Type is <b>One Off</b>.
-		 * 
-		 * @return
-		 */
-		public boolean isAgreementDropDown() {
-			PmParameter qtType = null;
-			PmParameter fulfilmentType = null;
-			PmParameter contractType = null;
+	/**
+	 * To display Agreement dropdown when QT Type is <b>Special Item / Item In PK 7</b> 
+	 * and Fulfilment Type is <b>One Off</b>.
+	 * 
+	 * @return
+	 */
+	public boolean isAgreementDropDown() {
+		PmParameter qtType = null;
+		PmParameter fulfilmentType = null;
+		PmParameter contractType = null;
 			
-			if (null != getManagedBean().getScLoa().getQtType()) {
-				qtType = getManagedBean().getScLoa().getQtType(); 
+		if (null != getManagedBean().getScLoa().getQtType()) {
+			qtType = getManagedBean().getScLoa().getQtType();
+		}
+			
+		if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
+			fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType();
+		}
+			
+		if (null != getManagedBean().getScLoa().getContractType()) {
+			contractType = getManagedBean().getScLoa().getContractType();
+		}
+
+		if (StringUtils.isEmpty(getManagedBean().getYesParameterId())) {
+			getManagedBean().setYesParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_COMPLIANCE.toUpperCase())));
+		}
+			
+		if (StringUtils.isEmpty(getManagedBean().getNoParameterId())) {
+			getManagedBean().setNoParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_NOT_COMPLIANCE.toUpperCase())));
+		}
+			
+		if (StringUtils.isEmpty(getManagedBean().getAgreemetSelectedVal())) {
+			if (getManagedBean().getScLoa().isAgreementReq()) { 
+				getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
+			} else if (getManagedBean().getScLoa().getLoaNo() != null) {
+				getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
 			}
+		}
 			
-			if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
-				fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType();
+		// 34420-start
+		if (null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType())
+				&& !ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType.getParameterCode())) {
+			return false;
+		}
+		// 34420-end
+			
+		if (null != qtType && null != fulfilmentType
+				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
+				&& ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType())
+				&& ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType.getParameterCode())) {
+				
+			if (null == getManagedBean().getAgreemetSelectedVal()) {
+				getManagedBean().getScLoa().setAgreementReq(false);
+			} else if (getManagedBean().getNoParameterId().equals(getManagedBean().getAgreemetSelectedVal())) {
+				getManagedBean().getScLoa().setAgreementReq(false);
 			}
-			
-			if (null != getManagedBean().getScLoa().getContractType()) {
-				contractType = getManagedBean().getScLoa().getContractType();
-			}
-			
-			if (null != contractType 
-					&& ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType()) 
+				
+			// If Contract Type is selected and its not 'Ministry', then return false.
+			if (null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType()) 
 					&& !ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType.getParameterCode())) {
 				return false;
 			}
-			
-			if (StringUtils.isEmpty(getManagedBean().getYesParameterId())) {
-				getManagedBean().setYesParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_COMPLIANCE.toUpperCase())));
-			}
-			
-			if (StringUtils.isEmpty(getManagedBean().getNoParameterId())) {
-				getManagedBean().setNoParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_NOT_COMPLIANCE.toUpperCase())));
-			}
-			
-			if (StringUtils.isEmpty(getManagedBean().getAgreemetSelectedVal())) {
-				if (getManagedBean().getScLoa().isAgreementReq()) { 
-					getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
-				} else if (getManagedBean().getScLoa().getLoaNo() != null) {
-					getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
-				}
-			}
-			
-			if (null != qtType && null != fulfilmentType 
-					&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType()) 
-					&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
-					&& ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
-					&& ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType.getParameterCode())) {
 				
-				if (null == getManagedBean().getAgreemetSelectedVal()) {
-					getManagedBean().getScLoa().setAgreementReq(false);
-				} else if (getManagedBean().getNoParameterId().equals(getManagedBean().getAgreemetSelectedVal())) {
-					getManagedBean().getScLoa().setAgreementReq(false);
-				}
-				
-				// If Contract Type is selected and its not 'Ministry', then return false.
-				if (null != contractType 
-						&& ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType()) 
-						&& !ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType.getParameterCode())) {
-					return false;
-				}
-				
-				return true;
-			} else {
-				// 17376 -start-
-				if (!getManagedBean().getScLoa().isAgreementReq() && !isPk7Periodic() && !this.getManagedBean().isReadOnly()) {
-				// 17376 -end-
-					setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
-				}
+			return true;
+		} else {
+			// 17376 -start-
+			if (!getManagedBean().getScLoa().isAgreementReq() && !isPk7Periodic() && !this.getManagedBean().isReadOnly()) {
+			// 17376 -end-
+				setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
 			}
-			
-			return false;
 		}
+			
+		return false;
+	}
 		
 		public void setPk7DropDownValues() {
 		    getManagedBean().setPk7Reasons(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value()));

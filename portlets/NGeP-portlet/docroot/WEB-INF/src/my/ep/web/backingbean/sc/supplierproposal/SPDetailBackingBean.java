@@ -61,7 +61,6 @@ import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -116,7 +115,6 @@ import my.ep.util.SLAUtils;
 import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
-import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
@@ -5841,23 +5839,23 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	
 	//#28785-Start
 	public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSpecBean value) {
-		  TplSpecZoneDtl specZoneDetail=null;
-		  try{
-	    for (Entry<Long, TemplateSpecBean> entry : map.entrySet()) {
-	        if (Objects.equals(value, entry.getValue())) {
-	        if(null!=getManagedBean().getZones() && getManagedBean().getZones().size()>0){
-	            for(TplSpecZoneDtl specZoneDtl:getManagedBean().getZones()){
-	            if(entry.getKey().equals(specZoneDtl.getSpecZoneId())){	
-	            	  return specZoneDtl;
-	            }
-	            }
-	        	}
-	        }
-	    }
-		  }finally{
-			  
-		  }
-	    return specZoneDetail;
+		TplSpecZoneDtl specZoneDetail = null;
+		try {
+			for (Entry<Long, TemplateSpecBean> entry : map.entrySet()) {
+				if (Objects.equals(value, entry.getValue())) {
+					if (null != getManagedBean().getZones() && getManagedBean().getZones().size() > 0) {
+						for (TplSpecZoneDtl specZoneDtl : getManagedBean().getZones()) {
+							if (entry.getKey().equals(specZoneDtl.getSpecZoneId())) {
+								return specZoneDtl;
+							}
+						}
+					}
+				}
+			}
+		} finally {
+
+		}
+		return specZoneDetail;
 	}
 	//#28785-End	
 }

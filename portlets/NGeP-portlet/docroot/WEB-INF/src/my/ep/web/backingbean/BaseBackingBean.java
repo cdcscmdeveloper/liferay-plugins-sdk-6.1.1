@@ -2888,7 +2888,41 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						}
 						this.getManagedBean().setStatusDescFromSSM(sb.toString());
 						throw new EpException(MessageConst.ERROR_721085,new String[] {sb.toString() });
-					}else if(postRegBean.isResubmitAppl() && !this.getManagedBean().isCheckRoleSSM()){
+					}
+				// #29582-start
+				}else if (ssmResDTO.getSmPersonnelAll() != null && ssmResDTO.getSmPersonnelAll().size() > 0) {
+					log.info("ssm status: " + ssmResDTO.getStatusCode());
+					boolean errMsg = false;
+					int i = 0;
+					for (SmPersonnel per : ssmResDTO.getSmPersonnelAll()) {
+						if (per.getIdentificationTypeSsm() != null) {
+							String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
+									ParameterConst.IDENTIFICATION_TYPES_SSM, per.getIdentificationTypeSsm());
+							if (ssmTypeDesc == null){
+								ssmTypeDesc =ParameterHelper.getInstance().getParameterDesc(
+										ParameterConst.IDENTIFICATION_TYPES_SSM, "NA");
+							}
+							sb.append("<br/>");
+							sb.append(++i + ". ");
+							sb.append(per.getName() + " ");
+							sb.append("("
+									+ ResourceBundleUtils.getMessage("lbl.sm.register.identification.no.ssm",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+									+ " ");
+							sb.append(per.getIdentificationNo() + ", ");
+							sb.append(ResourceBundleUtils.getMessage("lbl.sm.register.identification.type.ssm",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
+							sb.append(per.getIdentificationTypeSsm() + " = ");
+							sb.append(ssmTypeDesc + ")");
+							sb.append("<br/>");
+							errMsg = true;
+						}
+					}
+					if (errMsg) {
+						this.getManagedBean().setStatusDescFromSSM(sb.toString());
+						throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
+					}// #29582- end
+					else if(postRegBean.isResubmitAppl() && !this.getManagedBean().isCheckRoleSSM()){
 						//START NEW CHANGES POPUP OWNER UPDATE ROLE		
 						SmAppl appl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(postRegBean.getSmSupplier().getSupplierId(), "N");
 						if(appl == null){

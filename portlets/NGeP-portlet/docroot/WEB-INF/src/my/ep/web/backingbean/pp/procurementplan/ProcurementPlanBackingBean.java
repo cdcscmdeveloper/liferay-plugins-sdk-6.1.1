@@ -636,7 +636,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setEpTotalBudgetH(null);
 		this.getManagedBean().setEpTotalPlanH(null);
 		this.getManagedBean().setEpTotalNonEpAllocH(null);
+
 		
+
 	}
 	
 	private void resetPpProcurementItems(List<PpProcurementItem> ppItems) {
@@ -652,16 +654,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 			
 			// #34390 - Start
-				if (ppItem.isOriginal() && ppItem.getFromPpItem() != null && this.getManagedBean().isSearch()
-						&& this.getManagedBean().getPlanSearchBean().getPlanDetstatus() != null) {
-					fromPpItemList.add(ppItem.getFromPpItem());
-				}
+			if (ppItem.isOriginal() && ppItem.getFromPpItem() != null && this.getManagedBean().isSearch()
+					&& this.getManagedBean().getPlanSearchBean().getPlanDetstatus() != null) {
+				fromPpItemList.add(ppItem.getFromPpItem());
+			}
 
-				if (this.getManagedBean().isSearch()
-						&& this.getManagedBean().getPlanSearchBean().getPlanDetstatus() != null) {
-					procurementItemIdList.add(ppItem.getFromPpItem());
-				}
-				// #34390 - End
+			if (this.getManagedBean().isSearch()
+					&& this.getManagedBean().getPlanSearchBean().getPlanDetstatus() != null) {
+				procurementItemIdList.add(ppItem.getFromPpItem());
+			}
+			// #34390 - End
 			
 			procurementItemIdList.add(ppItem.getProcurementItemId());
 		}

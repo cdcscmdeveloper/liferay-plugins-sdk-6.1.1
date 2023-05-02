@@ -1685,7 +1685,9 @@ public class SmApplicationUtil {
 		validateSpecialAndNormalCategory(validSave, managedBean, currentTab);//#30508
 		//#32236 - start
 		if(managedBean.isSupplierUser()){
-			validateSpecialAndNormalCategoryCapital(managedBean);	
+			if(currentTab == 5 && !managedBean.getOutputPage().equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)){
+				validateSpecialAndNormalCategoryCapital(managedBean);	
+			}	
 		}
 		//#32236 - end
 		if (!managedBean.isSiteVisitAfterApproval()) {
@@ -8905,9 +8907,14 @@ public class SmApplicationUtil {
 					// if dont have prev approved directly set softcert to
 					// pending request and contract to 0
 					if (prevPersonnel == null) {
-						currPersonnel
-								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-						currPersonnel.setContractSignerFlg(0);
+						//#33129 - START 
+						//maintain softcert 1 if the personnel was an admin previously
+						if(currPersonnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_ISSUED){
+							currPersonnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+							currPersonnel.setContractSignerFlg(0);
+						}
+						//#33129 - END
+					
 					}
 					// if have prev approved
 					else {
