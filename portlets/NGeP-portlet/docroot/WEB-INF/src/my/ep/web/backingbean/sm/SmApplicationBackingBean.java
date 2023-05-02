@@ -14938,12 +14938,15 @@ public class SmApplicationBackingBean extends
 	
 	//#12483 - START
 	public boolean renderRevisedReason(){
-		if(currentReviseReason() != null){
+		//if(currentReviseReason() != null){
 			if(!this.getManagedBean().getCurrentStatus().equals("Pending Review Site Visit Report - After Approval") && !this.getManagedBean().getCurrentStatus().equals("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan")){
 				return true;
 			}
-		}
-		return false;
+			else{
+				return false;
+			}
+		//}
+		//return false;
 	}
 	//#12483 - END
 }
