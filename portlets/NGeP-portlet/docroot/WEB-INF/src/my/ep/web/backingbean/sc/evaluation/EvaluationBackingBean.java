@@ -16512,7 +16512,7 @@ private void retriveCommitteeRemarksList(){
 			int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
 			String view = null;
 			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-				 view = "TPM";
+				view = QTConstants.TECHNICAL_PREFERENCE_MARGIN;
 			}else if(event != null){
 				 view = (String) event.getComponent().getAttributes().get("value");
 
