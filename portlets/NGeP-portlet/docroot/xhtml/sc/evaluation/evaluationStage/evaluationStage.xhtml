@@ -312,7 +312,7 @@
 					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'
 					and evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 					
-					 <p:commandButton value="#{lbl['lbl.btn.next'].concat(' 02')}"
+					 <p:commandButton value="#{lbl['lbl.btn.next']}"
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
@@ -325,7 +325,7 @@
 					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'
 					and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
 					
-					 <p:commandButton value="#{lbl['lbl.btn.next'].concat(' 02')}"
+					 <p:commandButton value="#{lbl['lbl.btn.next']}"
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','4')}"
@@ -369,7 +369,7 @@
 <!-- #34588 start cater WIP -->
 					
 						<c:if test="#{evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
-							<p:commandButton value="#{lbl['lbl.btn.next'].concat(' 05')}"
+							<p:commandButton value="#{lbl['lbl.btn.next']}"
 								style="float:right;" styleClass="BtnSpacing"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
