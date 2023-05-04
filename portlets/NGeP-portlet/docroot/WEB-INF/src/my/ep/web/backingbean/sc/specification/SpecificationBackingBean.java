@@ -3071,11 +3071,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 									|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)
 									|| currentStatusId.equals(QTStatusConst.QT_PENDING_MSC_APPROVAL)
 									|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
-									|| currentStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT)
-									//33819 - start
-									|| currentStatusId.equals(QTStatusConst.SE_PENDING_SIGNOFF)
-									//33819 - end
-									|| !this.getManagedBean().isReadOnly())) {
+									|| currentStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT) || !this
+									.getManagedBean().isReadOnly())) {
 						// #25638 -end-
 						initializeRemarks(this.getManagedBean().getQt(), this
 								.getManagedBean().getQt()
@@ -3108,11 +3105,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 									|| currentStatusId.equals(QTStatusConst.QT_PENDING_MSC_APPROVAL)
 									|| (currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) && !this
 											.getManagedBean().isReadOnly())
-									|| currentStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT)
-									// 33819 - start
-									|| currentStatusId.equals(QTStatusConst.SE_PENDING_SIGNOFF)
-							// 33819 - end
-							|| !this.getManagedBean().isReadOnly())) {
+									|| currentStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT) || !this
+									.getManagedBean().isReadOnly())) {
 						// #25638 -end-
 						initializeRemarks(this.getManagedBean().getQt(), this
 								.getManagedBean().getQt()
@@ -4460,11 +4454,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						templateresDTO.getSpecMaster());
 				TemplateSpecBean templateSpecBean = getManagedBean()
 						.getTemplateSpecBean();
-
-				// #27173 -start-
-				checkList.getScQtDoc().getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
-				// #27173 -end-
-
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
 				if (this.getManagedBean().getQt().isZonal()
@@ -5010,11 +4999,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						templateresDTO.getSpecMaster());
 				TemplateSpecBean templateSpecBean = getManagedBean()
 						.getTemplateSpecBean();
-
-				// #27173 -start-
-				checkList.getScQtDoc().getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
-				// #27173 -end-
-
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
 
@@ -9648,33 +9632,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				this.getManagedBean().setProcMethodDropdownPresent(checkForProcumentMethodDropdown(scQt));
 			}
 		}
-
-		// #27173 -start-
-		Long statusId = scQt.getQtStatus().getStatusId();
-		
-		// #25077 - #91 -start-
-		if (!(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(statusId))) {
-			// #25077 - #91 -end-
-			if (null == scQt.getEstimatedAmount()) {
-				SpecificationReqDTO estimatedReqDTo = new SpecificationReqDTO();
-				estimatedReqDTo.setQtId(scQt.getQtId());
-				
-				IQTSpecSO specSO = getSpecSO();
-				SpecificationResDTO resTO = specSO.calCulateTemplateSpecEstimations(estimatedReqDTo);
-				
-				if (null != resTO && null != resTO.getTotalSpecEstimatedAmount()) {
-					scQt.setEstimatedAmount(resTO.getTotalSpecEstimatedAmount());
-				}
-				
-				// #31293, #25077 Farid Start
-				if (scQt.getEstimatedAmount().compareTo(BigDecimal.ZERO) > 0) {
-					new CreateQtBackingBean().setProcurementMode(scQt, scQt.getEstimatedAmount());
-				}
-				// #31293, #25077 Farid End
-			}
-		}
-		// #27173 -end-
-		
 		checkProcurementModeValue();
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
@@ -11695,11 +11652,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		localCheckList.getScQtDoc().setTplSpecMaster(tmpresDTO.getSpecMaster());
 		TemplateSpecBean templateSpecBean = getManagedBean()
 				.getTemplateSpecBean();
-
-		// #27173 -start-
-		localCheckList.getScQtDoc().getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
-		// #27173 -end-
-
 		templateSpecBean.setSpecMaster(localCheckList.getScQtDoc()
 				.getTplSpecMaster());
 		if (this.getManagedBean().getQt().isZonal()) {
