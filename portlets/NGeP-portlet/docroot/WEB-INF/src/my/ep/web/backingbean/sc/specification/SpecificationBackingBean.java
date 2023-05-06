@@ -996,8 +996,8 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setTechnicalOtherCheckList(validateTechnicalStandardCheckList());
 				}
 			}
-			// 1873 - end- note 52			
-			
+			// 1873 - end- note 52
+
 			specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
 			specSo.validateCheckList(specReqDTO);
 
@@ -11562,10 +11562,26 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 
 		}
-		
+
+		boolean isModified = false; // 1873 - note 52
+		boolean isSpecNotExist = false; // #34048
+
 		if (!SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(specType)) {
-			scQtCheckList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-			scQtCheckList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			// 1873 - start - note 52
+			PmStatus pendingStatus = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+			boolean isTemplateSpec = QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(scQtCheckList.getDefinationType()
+					.getParameterCode());
+			isModified = isTemplateSpec && isSpecQuestionsModified(scQtCheckList); // 1873 note 97
+			// #34048 - Start
+			isSpecNotExist = isSpecQuestionNotExist(scQtCheckList);
+
+			if (isModified || !isTemplateSpec || isSpecNotExist) {
+				// #34048 - End
+				scQtCheckList.setPmStatus(pendingStatus);
+				scQtCheckList.setPmEvalStatus(pendingStatus);
+			}
+			// 1873 - end - note 52
+
 			if (getManagedBean().getQt().isZonal()) {
 				ScQtSupplierCriteria supplierCriteria = getManagedBean()
 						.getQt().getScQtSupplierCriteria();
@@ -16205,6 +16221,41 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 	}
 	// Bug #34065@Syazani 01/11/2022 -- End
+	
+	//#34048 - Start
+	public boolean isSpecQuestionNotExist(ScQtCheckList qtCheckList) {
+		
+		TplSpecMaster spec = qtCheckList.getScQtDoc().getTplSpecMaster();
+		List<TplSpecQuestion> questionList = spec.getTplSpecQuestions();
+		boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(spec.getSpecTypeCode().getParameterCode());
+		int specCount = 0;
+		String item = null;
+		
+		if (!isFinancialSpec) {
+			for (TplSpecQuestion ques : questionList) {
+				boolean isQuestionTypeItem = TemplateSpecConst.QUESTION_TYPE_ITEM.equals(ques.getQuestionType());
+				
+				if (item != null && !item.equals(ques.getClItem()) && spec.isSpecificationReq() && isQuestionTypeItem
+						&& specCount == 0) {
+					return true;
+				}
+				
+				if (isQuestionTypeItem) {
+					specCount = 0;
+					item = ques.getClItem();
+				} else {
+					specCount++;
+				}
+			}
+			
+			if (item != null && spec.isSpecificationReq() && specCount == 0 && questionList.size() > 0) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	//#34048 - End
 	
 	// #1873-start
 	private String buildQuestionCompareString(TplSpecQuestion question) {
