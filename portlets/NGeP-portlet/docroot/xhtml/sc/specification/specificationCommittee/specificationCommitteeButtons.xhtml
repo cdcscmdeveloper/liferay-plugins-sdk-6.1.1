@@ -200,6 +200,27 @@
 			</div>
 		</p:dialog>
 
+		<!-- //1873 - note 52,149 -start- -->
+		<p:dialog id="alertFinancialTemplateIncompleteId" widgetVar="alertFinancialTemplateIncompletePopup"
+			header="#{lbl['lbl.sc.confirmation']}" modal="true"
+			resizable="false" width="400" closable="false">
+		<!-- //1873 - note 149 -end- -->			
+			<table>
+				<tr>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.sc.popup.technicalSpecUpdated']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+					action="#{specificationBackingBean.getMethodHandlerOnConfirmation()}"
+					oncomplete="alertFinancialTemplateIncompletePopup.hide();"
+					update="@form"/>
+			</div>
+		</p:dialog>
+		<!-- //1873 - note 52 -end- -->
 	</h:panelGroup>
 
 </ui:composition>
