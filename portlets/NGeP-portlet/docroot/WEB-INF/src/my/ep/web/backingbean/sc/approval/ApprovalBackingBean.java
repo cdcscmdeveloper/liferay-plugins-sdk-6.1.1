@@ -1556,7 +1556,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				// Bug #31759 - Start
 				checkApprovalAndRefreshDetails (qt.getQtId(),taskName, this.getManagedBean().getScQtApproval());
 				// Bug #31759 - End
-				invokeRemarksWhileExecuteReviseFlow(this.getManagedBean().getScQtApproval()); // 25077
+				invokeRemarksWhileExecuteReviseFlow(this.getManagedBean().getScQtApproval(), outcome); // 25077
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
 
 				String approvalCategoryCode = approval.getApprovalCategory().getParameterCode();
@@ -3095,14 +3095,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		/**
 		 * insert remarks while doing revise process flow
 		 */
-		private void invokeRemarksWhileExecuteReviseFlow(ScQtApproval approval){
+		private void invokeRemarksWhileExecuteReviseFlow(ScQtApproval approval, String outcome){
 			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtId());
 			wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
-			if(wfStatus.getPmStatus()!=null){
-				Long currentStatusId = wfStatus.getPmStatus().getStatusId();
-				if(currentStatusId.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)){	
-					QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-					if(!qtBackingBean.getManagedBean().isFirstPagePA()){
+			if(wfStatus.getPmStatus()!=null && wfStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) && 
+					BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && !this.getManagedBean().isFirstPagePA()){
+				
 						ScQtApproval publication = this.getManagedBean().getPublicationApproval();
 						List<ScQtApprovalRemark> qtRemarks = initializeRemarks(publication, 
 								wfStatus,
@@ -3113,8 +3111,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 						publication.setScQtApprovalRemarks(qtRemarks);
 						this.getManagedBean().setScQtApproval(publication);
-					}    
-				}
 			}
 		}
 		//#25077 - End
