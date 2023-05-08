@@ -10,6 +10,12 @@
 			<td style="width: 20%; vertical-align: top;" class="sidemenutd"><ui:include
 					src="smRenewApplnSideMenuItem.xhtml" /></td>
 			<td style="vertical-align: top;">
+						<!-- #12483 - START -->
+						<c:if test="#{backingBean.renderRevisedReason()}"> 
+							<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" styleClass="splNotesFonts" escape="false"/>
+							<br/> 
+						</c:if>
+						<!-- #12483 - END -->
 			<p:outputPanel
 					id="renewStep1OnlySuppPan"
 					rendered="#{backingBean.managedBean.supplierUser}">

@@ -109,6 +109,9 @@
 							value="#{qTDetailBB.managedBean.outComes}">
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<!-- 25077 -start- -->
+							<ui:param name="bpAction" value="SUBMIT" />
+							<!-- 25077 -end- -->
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
 								onclick="blockWidget.show();"
