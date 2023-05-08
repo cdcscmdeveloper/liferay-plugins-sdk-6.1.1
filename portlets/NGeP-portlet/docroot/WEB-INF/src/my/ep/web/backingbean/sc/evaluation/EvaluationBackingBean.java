@@ -7687,6 +7687,29 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					// #25138, #21695 -end-
 					
 					// evaluationStageCheck();
+					//Bug #34748 - Start
+					if (currentTab == 0 || currentTab == 1) {
+
+						if (null == this.getManagedBean().getScQt().getFecEvaluationCheck()) {
+							
+							boolean isSuccess = generateFinancialEvaluationresults();
+							if (!isSuccess) {
+								throw new EpException(MessageConst.ERROR_760530);
+							}
+							this.getManagedBean().getScQt().setFecEvaluationCheck(2);
+							EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+							reqDTO.setScQt(this.getManagedBean().getScQt());
+							evalResDTO = evaluationSo.saveReportDtls(reqDTO);
+							this.getManagedBean().setScQt(evalResDTO.getScQt());
+						}
+						retriveFinancialEvaluationStage();
+						retriveNonScoringComplianceFinancial(true);
+						financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgTechnicalCheckList().get(0)
+								.getDocCategory());
+						outputTab = 3;
+						this.getManagedBean().setTabFinancialIndex(1);
+					}
+					//Bug #34748 - End
 					if (currentTab == 2) {
 
 						if (this.getManagedBean()
@@ -12750,10 +12773,14 @@ private void retriveCommitteeRemarksList(){
 							}
 						}
 
-						reqDTO.getProposalChecklistSearchBean()
-								.getDataFilterBeans()
-								.add(new SearchFilterBean(QTSearchBeanConst.SEARCH_QTPROPOSALCHECKLIST_ID,
-										SearchOperator.OPERATOR_NOT_IN.value(), proposalChecklistIds));
+						// #34712 start
+						if (CollectionUtils.isNotEmpty(proposalChecklistIds)) {
+							reqDTO.getProposalChecklistSearchBean()
+									.getDataFilterBeans()
+									.add(new SearchFilterBean(QTSearchBeanConst.SEARCH_QTPROPOSALCHECKLIST_ID,
+											SearchOperator.OPERATOR_NOT_IN.value(), proposalChecklistIds));
+						}
+						// #34712 end
 						//#34582 move code position 4serangkai -start
 					}else{//32453-Technical Other package start
 						if (getManagedBean().getTabTechnicalIndex() == 2
@@ -12779,10 +12806,14 @@ private void retriveCommitteeRemarksList(){
 								supplierNos.add(supplierNo);
 							}
 							
-							reqDTO.getProposalChecklistSearchBean()
-									.getDataFilterBeans()
-									.add(new SearchFilterBean(QTSearchBeanConst.SEARCH_SCQTPROPOSAL_SUPPLIERNO,
-											SearchOperator.OPERATOR_IN.value(), supplierNos));
+							// #34712 start
+							if (CollectionUtils.isNotEmpty(supplierNos)) {
+								reqDTO.getProposalChecklistSearchBean()
+										.getDataFilterBeans()
+										.add(new SearchFilterBean(QTSearchBeanConst.SEARCH_SCQTPROPOSAL_SUPPLIERNO,
+												SearchOperator.OPERATOR_IN.value(), supplierNos));
+							}
+							// #34712 end
 						}	
 					}//#34582 move code position 4serangkai -end
 				}
@@ -14798,10 +14829,6 @@ private void retriveCommitteeRemarksList(){
 					evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 				}
 				// wip status end
-
-				EvaluationResDTO evalResDTO = evaluationSO.technicalItemSupplierQualified(evalReqDTO);
-				
-				specresDTO1.setSpecAnswerList(evalResDTO.getSpecAnswers());
 			}
 
 			for (TplSpecAnswer specAnswer : specresDTO1.getSpecAnswerList()) {
