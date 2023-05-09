@@ -286,6 +286,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//28834 starts
 	private boolean disableBfButton;
 	private boolean ktReportGenerated;
+	private boolean disableJustifications;
 	//28834 end
 	
 	private ScQt checkCategoryCodeQt; // #29466
@@ -2345,6 +2346,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setKtReportGenerated(boolean ktReportGenerated) {
 		this.ktReportGenerated = ktReportGenerated;
 	}	
+	
+	/**
+	 * @return the disableJustifications
+	 */
+	public boolean isDisableJustifications() {
+		return disableJustifications;
+	}
+
+	/**
+	 * @param disableJustifications the disableJustifications to set
+	 */
+	public void setDisableJustifications(boolean disableJustifications) {
+		this.disableJustifications = disableJustifications;
+	}
 	//28834 end
 	
 	// //#33174 #21695 Farid

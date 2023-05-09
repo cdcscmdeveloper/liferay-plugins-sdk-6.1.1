@@ -7687,6 +7687,29 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					// #25138, #21695 -end-
 					
 					// evaluationStageCheck();
+					//Bug #34748 - Start
+					if (currentTab == 0 || currentTab == 1) {
+
+						if (null == this.getManagedBean().getScQt().getFecEvaluationCheck()) {
+							
+							boolean isSuccess = generateFinancialEvaluationresults();
+							if (!isSuccess) {
+								throw new EpException(MessageConst.ERROR_760530);
+							}
+							this.getManagedBean().getScQt().setFecEvaluationCheck(2);
+							EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+							reqDTO.setScQt(this.getManagedBean().getScQt());
+							evalResDTO = evaluationSo.saveReportDtls(reqDTO);
+							this.getManagedBean().setScQt(evalResDTO.getScQt());
+						}
+						retriveFinancialEvaluationStage();
+						retriveNonScoringComplianceFinancial(true);
+						financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgTechnicalCheckList().get(0)
+								.getDocCategory());
+						outputTab = 3;
+						this.getManagedBean().setTabFinancialIndex(1);
+					}
+					//Bug #34748 - End
 					if (currentTab == 2) {
 
 						if (this.getManagedBean()
