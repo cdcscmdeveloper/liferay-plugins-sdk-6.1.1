@@ -4585,9 +4585,16 @@ public class SmApplicationBackingBean extends
 	 */
 	public void addOrUpdateBranchToSmAppl() {
 		log.info("#34135 - START ENTER METHOD addOrUpdateBranchToSmAppl - SMAPPLICATION BB");
-		log.info("district id before save== " + getManagedBean().getSelectedBranch().getSmAddress().getDistrictId());
-		log.info("city id before save== " + getManagedBean().getSelectedBranch().getSmAddress().getCityId());
-		
+		if(getManagedBean().getSelectedBranch().getSmAddress().getDistrictId() == null){
+			log.info("district id before save is NULL ");
+		}else{
+			log.info("district id before save== " + getManagedBean().getSelectedBranch().getSmAddress().getDistrictId());
+		}
+		if(getManagedBean().getSelectedBranch().getSmAddress().getCityId() == null){
+			log.info("city id before save is NULL ");
+		}else{
+			log.info("city id before save== " + getManagedBean().getSelectedBranch().getSmAddress().getCityId());
+		}
 		//#34135 START - set stateid from pmstate
 		if(getManagedBean().getSelectedBranch().getSmAddress().getStateId() != null &&
 				getManagedBean().getSelectedBranch().getSmAddress().getPmState() != null &&
@@ -4622,8 +4629,16 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().execute("banchDialog.hide()");
 		calcPersonnelListCount();
 
-		log.info("district id after save== " + getManagedBean().getSelectedBranch().getSmAddress().getDistrictId());
-		log.info("city id after save== " + getManagedBean().getSelectedBranch().getSmAddress().getCityId());
+		if(getManagedBean().getSelectedBranch().getSmAddress().getDistrictId() == null){
+			log.info("district id after save is NULL ");
+		}else{
+			log.info("district id after save== " + getManagedBean().getSelectedBranch().getSmAddress().getDistrictId());
+		}
+		if(getManagedBean().getSelectedBranch().getSmAddress().getCityId() == null){
+			log.info("city id after save is NULL ");
+		}else{
+			log.info("city id after save== " + getManagedBean().getSelectedBranch().getSmAddress().getCityId());
+		}
 		log.info("#34135 - END METHOD addOrUpdateBranchToSmAppl - SMAPPLICATION BB");
 	}
 
@@ -11474,16 +11489,32 @@ public class SmApplicationBackingBean extends
 	 */
 	public void onChangeDistrict(SmAddress addr, String panelName) {
 		log.info("#34135 - START ENTER METHOD onChangeDistrict - SMAPPLICATION BB");
-		log.info("district id before====" + addr.getPmDistrict().getDistrictId());
-		log.info("district name before====" + addr.getPmDistrict().getDistrictName());
+		if(addr.getPmDistrict().getDistrictId() == null){
+			log.info("---- district id before is NULL ----");
+		}else{
+			log.info("---- district id before===" + addr.getPmDistrict().getDistrictId());
+		}
+		if(addr.getPmDistrict().getDistrictName() == null){
+			log.info("--- district name before is NULL ----");
+		}else{
+			log.info("--- district name before===" + addr.getPmDistrict().getDistrictName());
+		}
 		SmApplicationUtil.getInstance().populateCitiesByDistrict(addr,
 				panelName, getManagedBean());
 		setRoleStaffAddrReqd();
 		populateLocalAuthority(getManagedBean().getSmSupplier(),
 				getManagedBean().getSmAppl().getSmCompanyBasic()
 						.getSmCompanyAddresses().get(0).getSmAddress());
-		log.info("district id after====" + addr.getPmDistrict().getDistrictId());
-		log.info("district name after====" + addr.getPmDistrict().getDistrictName());
+		if(addr.getPmDistrict().getDistrictId() == null){
+			log.info("---- district id after is NULL ----");
+		}else{
+			log.info("district id after====" + addr.getPmDistrict().getDistrictId());
+		}
+		if(addr.getPmDistrict().getDistrictName() == null){
+			log.info("--- district name after is NULL ----");
+		}else{
+			log.info("district name after====" + addr.getPmDistrict().getDistrictName());
+		}
 		log.info("#34135 - END METHOD onChangeDistrict - SMAPPLICATION BB");
 	}
 
@@ -11496,12 +11527,28 @@ public class SmApplicationBackingBean extends
 	 */
 	public void onChangeCity(SmAddress addr, String panelName) {
 		log.info("#34135 - START ENTER METHOD onChangeCity - SMAPPLICATION BB");
-		log.info("city id before====" + addr.getPmCity().getCityId());
-		log.info("city name before====" + addr.getPmCity().getCityName());
+		if(addr.getPmCity().getCityId() == null){
+			log.info("--- city id before is NULL ---");
+		}else{
+			log.info("--- city id before===" + addr.getPmCity().getCityId());
+		}
+		if(addr.getPmCity().getCityName() == null){
+			log.info("--- city name before is NULL ---");
+		}else{
+			log.info("--- city name before===" + addr.getPmCity().getCityName());
+		}
 		addr.setPmCity(SmCommonUtil.getInstance().getCityById(addr.getCityId()));
 		setRoleStaffAddrReqd();
-		log.info("city id after====" + addr.getPmCity().getCityId());
-		log.info("city name after====" + addr.getPmCity().getCityName());
+		if(addr.getPmCity().getCityId() == null){
+			log.info("--- city id after is NULL ---");
+		}else{
+			log.info("city id after====" + addr.getPmCity().getCityId());
+		}
+		if(addr.getPmCity().getCityName() == null){
+			log.info("--- city name after is NULL ---");
+		}else{
+			log.info("city name after====" + addr.getPmCity().getCityName());
+		}
 		log.info("#34135 - END METHOD onChangeCity - SMAPPLICATION BB");
 	}
 
