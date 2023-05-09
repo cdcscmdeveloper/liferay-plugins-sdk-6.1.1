@@ -16474,6 +16474,8 @@ private void retriveCommitteeRemarksList(){
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO evalResDTO = null;
 		try {
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTEvaluationSO.class);
 			//#34588 start
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			reqDTO.setScQt(this.getManagedBean().getScQt());
