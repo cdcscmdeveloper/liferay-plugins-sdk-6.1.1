@@ -13404,50 +13404,34 @@ if (null != checklist && !checklist.isEmpty()) {
 			//#34048 - Start
 			boolean isSpecNotExist = false;
 			if (!SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(specType)) { 
-			PmStatus pendingStatus = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);//#11140-Start
-			boolean isTemplateSpec = QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(scQtCheckList.getDefinationType().getParameterCode());
-			isModified = isTemplateSpec && isSpecQuestionsModified(scQtCheckList);//1873 - start - note 97
-			isSpecNotExist = isSpecQuestionNotExist(scQtCheckList);
-			if(isModified || !isTemplateSpec || isSpecNotExist){//#34048 - End
-				scQtCheckList.setPmStatus(pendingStatus);
-				scQtCheckList.setPmEvalStatus(pendingStatus);
-				scQtCheckList.setSampleStatus(pendingStatus);//#11140-End
-				scQtCheckList.setPmDemoStatus(pendingStatus);//#28784
-			}
-			//1873 - end - note 52
+				PmStatus pendingStatus = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);//#11140-Start
+				boolean isTemplateSpec = QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(scQtCheckList.getDefinationType().getParameterCode());
+				isModified = isTemplateSpec && isSpecQuestionsModified(scQtCheckList);//1873 - start - note 97
+				isSpecNotExist = isSpecQuestionNotExist(scQtCheckList);
+				if(isModified || !isTemplateSpec || isSpecNotExist){//#34048 - End
+					scQtCheckList.setPmStatus(pendingStatus);
+					scQtCheckList.setPmEvalStatus(pendingStatus);
+					scQtCheckList.setSampleStatus(pendingStatus);//#11140-End
+					scQtCheckList.setPmDemoStatus(pendingStatus);//#28784
+				}
+				//1873 - end - note 52
 				if (getManagedBean().getQt().isZonal()) {
-					ScQtSupplierCriteria supplierCriteria = getManagedBean()
-							.getQt().getScQtSupplierCriteria();
-					if (null != supplierCriteria
-							&& null != supplierCriteria.getQtZoneCriterias()) {
-						scQtCheckList
-								.getScQtDoc()
-								.getTplSpecMaster()
-								.setTplSpecZone(
-										supplierCriteria.getQtZoneCriterias());
+					ScQtSupplierCriteria supplierCriteria = getManagedBean().getQt().getScQtSupplierCriteria();
+					if (null != supplierCriteria && null != supplierCriteria.getQtZoneCriterias()) {
+						scQtCheckList.getScQtDoc().getTplSpecMaster().setTplSpecZone(supplierCriteria.getQtZoneCriterias());
 					} else {
-						throw new EpException(
-								"Please choose the zones before proceed.");
+						throw new EpException("Please choose the zones before proceed.");
 					}
 				}
 
 			} else {
-				if (this.getManagedBean().getSpecMaintenanceScreen()
-						.equalsIgnoreCase("SC")) {
-					if (getManagedBean().getQt().getEstimatedAmount() != null
-							&& getManagedBean().getQt().getEstimatedAmount()
-									.intValue() > 0) {
-						checkFinancialSpecEstimations(this.getManagedBean()
-								.getScQtCheckSt2financeProposalList(),
-								scQtCheckList, getManagedBean().getQt(),true);//20210205@haziq- Bug #30046 
+				if (this.getManagedBean().getSpecMaintenanceScreen().equalsIgnoreCase("SC")) {
+					if (getManagedBean().getQt().getEstimatedAmount() != null && getManagedBean().getQt().getEstimatedAmount().intValue() > 0) {
+						checkFinancialSpecEstimations(this.getManagedBean().getScQtCheckSt2financeProposalList(), scQtCheckList, getManagedBean().getQt(),true);//20210205@haziq- Bug #30046 
 					}
 					checkFinancialparentSpecQuestion(scQtCheckList);
-				}
-				else if(this.getManagedBean().getSpecMaintenanceScreen()
-						.equalsIgnoreCase(QTConstants.SPEC_MAINTENANCE)) {//32134-start
-					checkFinancialSpecEstimations(this.getManagedBean()
-							.getScQtCheckSt2financeProposalList(), scQtCheckList,
-							getManagedBean().getQt(),true);
+				} else if(this.getManagedBean().getSpecMaintenanceScreen().equalsIgnoreCase(QTConstants.SPEC_MAINTENANCE)) {//32134-start
+					checkFinancialSpecEstimations(this.getManagedBean().getScQtCheckSt2financeProposalList(), scQtCheckList, getManagedBean().getQt(),true);
 				}//32134-End
 				PmStatus pendingStatus=	getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);//#11140-Start
 				scQtCheckList
