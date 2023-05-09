@@ -1058,6 +1058,16 @@ public class LOIDetailBackingBean extends
 					this.getManagedBean().getMultiLOIZoneDetails())) {
 			List<TplSpecZoneDtl> zoneDtls 
 						= this.getManagedBean().getMultiLOIZoneDetails();
+			
+			// sorting by spec zone id for tab zone order view
+			// #32479 - Start
+			Collections.sort(zoneDtls, new Comparator<TplSpecZoneDtl>() {
+				public int compare(TplSpecZoneDtl o1, TplSpecZoneDtl o2) {
+							return Integer.valueOf((int) o1.getSpecZoneId().longValue()).compareTo(
+								   Integer.valueOf((int) o2.getSpecZoneId().longValue()));
+				}
+			}); 
+		    // #32479 - End
 
 			// Dynamically generating the zone tabs
 			MenuModel zoneMenuModel = new DefaultMenuModel();
@@ -4014,6 +4024,18 @@ public class LOIDetailBackingBean extends
 			}
 		}
 		// #11134 -end
+		//#34725 Start Vinod
+		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) 
+			&& QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)
+			&& CollectionUtils.isNotEmpty(scLoi.getScNegoTerms())){
+			for(ScLoiTerm scLoiTerm : scLoi.getScNegoTerms()){
+				if(StringUtils.isEmpty(scLoiTerm.getNegoResult())){
+					getManagedBean().setSelectedTabIndex(3);
+					throw new EpException(MessageConst.ERROR_100022, new String[] {getMessageCommon("lbl.sc.loiloa.nego.results")});
+				}
+			}
+		}
+		//#34725 End vinod
 	}
 
 	/**
