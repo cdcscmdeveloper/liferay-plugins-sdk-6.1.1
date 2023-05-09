@@ -392,6 +392,8 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setTechnicalSummaryView("");
 				this.getManagedBean().setSummaryViewBy("");
 				EvaluationReqDTO summaryReqDTO = setSummaryPrepareData(view);
+				//#34588
+				this.getManagedBean().setWipStatusMax(evaluationSO.checkWipScoreSettingMax(summaryReqDTO));
 
 				evalResDTO = evaluationSO.retrieveSummaryDetails(summaryReqDTO);
 				this.getManagedBean().setEvaluationStageZonesSummary(
