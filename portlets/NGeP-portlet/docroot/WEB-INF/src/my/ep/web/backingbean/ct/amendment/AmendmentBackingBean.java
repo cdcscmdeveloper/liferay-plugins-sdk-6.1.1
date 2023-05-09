@@ -2024,9 +2024,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				setTabValue("AD");
 				throw new EpException(MessageConst.ERROR_750075);
 			} else {
-				// Validation for amendment extension period for expired
-				// contract
-				// 28848
+				// Validation for amendment extension period for expired contract
+				//28848
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
 						&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0) {
 					setTabValue("AD");
@@ -4648,7 +4647,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		return populateBankAccountList;
 	}
-//  End Fix - #33674 
+	//End Fix - #33674 
 	/**
 	 * The method used for generating a list of available display type
 	 * of product or service item as selection.

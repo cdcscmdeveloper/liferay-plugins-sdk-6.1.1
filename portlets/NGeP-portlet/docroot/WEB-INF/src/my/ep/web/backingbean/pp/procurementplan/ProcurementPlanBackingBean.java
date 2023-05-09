@@ -636,7 +636,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setEpTotalBudgetH(null);
 		this.getManagedBean().setEpTotalPlanH(null);
 		this.getManagedBean().setEpTotalNonEpAllocH(null);
+
 		
+
 	}
 	
 	private void resetPpProcurementItems(List<PpProcurementItem> ppItems) {
