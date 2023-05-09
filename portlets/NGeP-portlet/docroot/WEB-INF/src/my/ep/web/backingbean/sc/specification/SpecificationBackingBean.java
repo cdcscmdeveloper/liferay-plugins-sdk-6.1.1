@@ -183,6 +183,7 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
@@ -11606,9 +11607,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 		}
 		
+		//1873 - start - note 52
+		boolean isModified = false;
+		//#34048 - Start
 		if (!SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(specType)) {
 			scQtCheckList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 			scQtCheckList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			boolean isTemplateSpec = QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(scQtCheckList.getDefinationType().getParameterCode());
+			isModified = isTemplateSpec && isSpecQuestionsModified(scQtCheckList);//1873 - start - note 97
 			if (getManagedBean().getQt().isZonal()) {
 				ScQtSupplierCriteria supplierCriteria = getManagedBean()
 						.getQt().getScQtSupplierCriteria();
@@ -11751,10 +11757,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							this.getManagedBean().setFinTempScQtChecklist((ScQtCheckList) SerializationUtils.clone(localCheckList));
 
 							if (isModified) {
-								finanicalCheckList.remove(localCheckList);
-								
-								toBeRemoveList.add(localCheckList);
-								
+								finanicalCheckList.remove(localCheckList);								
+								toBeRemoveList.add(localCheckList);								
 								localCheckList.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 							} else {
 								setTemplateSpecMaster(localCheckList);
