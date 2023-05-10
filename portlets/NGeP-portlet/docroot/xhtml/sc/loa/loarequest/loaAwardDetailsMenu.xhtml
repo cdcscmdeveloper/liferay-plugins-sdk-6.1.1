@@ -173,7 +173,7 @@
 				<!-- #29007 End Vinod -->
 				<br /><br />
 				<!-- #29006 - end -->
-				<h:outputText value="#{scLoiLoaItem.scRequestItem.cmItem.extensionCode}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" />
+				<h:outputText value="#{lOADetailBackingBean.getLatestItemCode(scLoiLoaItem.scRequestItem)}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" /><ui:remove>Bug #34757</ui:remove>
 				
 			</p:column>
 			
