@@ -1627,9 +1627,9 @@ public class GovtSellerRegistrationBackingBean extends
 				log.info("Not Null + Size >> " + resDTO.getSmSupplier().getSmAppls().size());
 				supplierSearchReqDTO.setSmSupplier(resDTO.getSmSupplier());
 				//checking if the application has a record in smPersonnelAuthLog
-				resDTO = SmServiceLookup.getSupplierSearchSO().checkSupplierApplAuthLogRecord(supplierSearchReqDTO);
-				if(resDTO.isRecord()){
-					getManagedBean().getSmSupp().getSmAppls().addAll(resDTO.getSmSupplier().getSmAppls());
+				SupplierSearchResDTO resDTO1 = SmServiceLookup.getSupplierSearchSO().checkSupplierApplAuthLogRecord(supplierSearchReqDTO);
+				if(resDTO1.isRecord()){
+					getManagedBean().getSmSupp().getSmAppls().addAll(resDTO1.getSmSupplier().getSmAppls());
 				}
 			}
 		}
