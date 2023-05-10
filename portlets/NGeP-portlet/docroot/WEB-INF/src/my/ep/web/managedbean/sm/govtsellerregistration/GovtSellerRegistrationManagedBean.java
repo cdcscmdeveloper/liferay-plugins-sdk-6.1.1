@@ -57,6 +57,7 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 	
 	//#34319 - Start
 	private boolean cancelApp;
+	private boolean SmAuthlogChecked;
 	//#34319 - End
 
 	private class OrgProfilePagingDataModel extends PagingDataModel<Object[]> {
@@ -278,5 +279,13 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 
 	public void setCancelApp(boolean cancelApp) {
 		this.cancelApp = cancelApp;
+	}
+
+	public boolean isSmAuthlogChecked() {
+		return SmAuthlogChecked;
+	}
+
+	public void setSmAuthlogChecked(boolean smAuthlogChecked) {
+		SmAuthlogChecked = smAuthlogChecked;
 	}
 }
