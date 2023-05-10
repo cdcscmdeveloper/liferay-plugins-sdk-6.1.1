@@ -2680,7 +2680,6 @@ public class LOIDetailBackingBean extends
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOIDtl(reqDTO);
-
 			if (resDTO.isSuccessful()) {
 				scLoi = resDTO.getScLoi();
 				renewSesionObject();
