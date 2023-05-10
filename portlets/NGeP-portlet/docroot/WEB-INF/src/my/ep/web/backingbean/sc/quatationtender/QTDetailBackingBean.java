@@ -6695,7 +6695,23 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				if(this.getManagedBean().isMaintanceFlow()==false){
-					QuationTenderReqDTO reqDTO = prepareQTInfo();
+					ScQt scQt = this.getManagedBean().getQt();
+					// Setting the Approval details to Qtdetails
+					List<TabBean> tabList = this.getManagedBean().getTabList();
+					if (CollectionUtils.isNotEmpty(tabList)) {
+						List<ScQtApproval> approvalList = null;
+						approvalList = new ArrayList<ScQtApproval>();
+						for (TabBean tabBean : tabList) {
+							if (this.getManagedBean().getQt().isBrandNew()) {
+								tabBean.getScQtApproval().setScQt(
+										this.getManagedBean().getQt());
+							}
+							approvalList.add(tabBean.getScQtApproval());
+						}
+						scQt.setScQtApprovals(approvalList);
+					}
+					QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+					reqDTO.setQtdetail(scQt);
 					reqDTO.getQtdetail().setOtherApproval(true);
 					// #25077 - #91 - Start
 					reqDTO.getQtdetail().setMitiApproval(true);
