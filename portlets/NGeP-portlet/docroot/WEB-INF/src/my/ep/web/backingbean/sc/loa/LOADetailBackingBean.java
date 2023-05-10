@@ -11211,6 +11211,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return totalPrice;
 	}
 	//29007 - fix issue 2 search action note 347 - end
+	
+	// Bug #34757 - Start
+	public String getLatestItemCode(ScRequestItem reqItem) {
+
+		if (reqItem.getTplSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)) {
+			return getQtAwardSO().getCmItemExtensionCode(reqItem);
+		} else {
+			return reqItem.getCmItem().getExtensionCode();
+		}
+	}
+	// Bug #34757 - End
 
 }
 
