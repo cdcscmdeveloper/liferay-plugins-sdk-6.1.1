@@ -10,7 +10,8 @@
 
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="20%;" class="sidemenutd" valign="top"><p:tabMenu
+			<td width="20%;" class="sidemenutd" valign="top">
+			<p:tabMenu
 					activeIndex="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex}"
 					styleClass="sidemenu">
 					<!-- Bug #34452 hide for wip, adding condition-->
@@ -85,13 +86,6 @@
 						<p:menuitem value="#{lbl['lbl.sc.summary']}" process="@this" partialSubmit="true" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retriveSummaryEvaluationStage}"
-							update="@form" />
-					</c:if>
-					<c:if
-						test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.technical.presentation.demo']}" process="@this" partialSubmit="true" 
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							action="#{evaluationBackingBean.retrivePresentationOrDemoEvaluationStage}"
 							update="@form" />
 					</c:if>
 
@@ -177,6 +171,15 @@
 
 					
 					<ui:include src="TECSummary.xhtml" />
+			
+				</c:if><c:if
+					test="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2'
+					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+
+					<ui:param name="passingScore"
+								value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>
+					<ui:include src="technicalPackageSummary.xhtml"></ui:include>
+					
 
 				</c:if><c:if
 					test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true' 
@@ -184,20 +187,6 @@
 
 					
 					<ui:include src="TECSummary.xhtml" />
-
-				</c:if><c:if
-					test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2' 
-					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
-
-					
-					<ui:include src="TECSummaryPresentationDemo.xhtml" />
-
-				</c:if><c:if
-					test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '3'
-					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
-
-					
-					<ui:include src="presentationOrDemoTech.xhtml" />
 
 				</c:if></td>
 		</tr>
@@ -258,37 +247,6 @@
 						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','4')}"
 						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 						update=":form" />
-
-
-				</ui:fragment>
-				<ui:remove>#28784 - start</ui:remove>
-				<ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
-					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '4'}">
-
-
-
-					<p:commandButton value="#{lbl['lbl.btn.next']}"
-						style="float:right;" styleClass="BtnSpacing"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
-						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right" disabled="#{!evaluationBackingBean.managedBean.afterDemoInv}"
-						update=":form" /><!-- #28784 -->
-
-
-				</ui:fragment>
-				<ui:remove>#28784 - end</ui:remove><ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
-					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '5'}">
-
-
-
-					<p:commandButton value="#{lbl['lbl.btn.next']}"
-						style="float:right;" styleClass="BtnSpacing"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
-						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right" disabled="#{!evaluationBackingBean.managedBean.afterDemoInv}"
-						update=":form" /><!-- #28784 -->
 
 
 				</ui:fragment><ui:fragment
@@ -354,7 +312,7 @@
 					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'
 					and evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 					
-					 <p:commandButton value="#{lbl['lbl.btn.next']}"
+					 <p:commandButton value="#{lbl['lbl.btn.next'].concat(' 02')}"
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
@@ -367,7 +325,7 @@
 					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'
 					and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
 					
-					 <p:commandButton value="#{lbl['lbl.btn.next']}"
+					 <p:commandButton value="#{lbl['lbl.btn.next'].concat(' 02')}"
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','4')}"
@@ -411,7 +369,7 @@
 <!-- #34588 start cater WIP -->
 					
 						<c:if test="#{evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
-							<p:commandButton value="#{lbl['lbl.btn.next']}"
+							<p:commandButton value="#{lbl['lbl.btn.next'].concat(' 05')}"
 								style="float:right;" styleClass="BtnSpacing"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"

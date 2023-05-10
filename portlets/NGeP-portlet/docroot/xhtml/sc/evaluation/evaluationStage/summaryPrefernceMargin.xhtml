@@ -67,13 +67,12 @@
 				<h:outputText value="#{prefQualSupplier.totalScore}"></h:outputText>
 			</p:column>
 
-<!-- #34588 - start -->
-			 <p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
-				style="width:15%"
-				rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
-				<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 																	  		fn:toUpperCase(prefQualSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
-			</p:column>
-<!-- #34588 - end -->
+			<!-- <p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
+				style="width:15%">
+				<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+																	  		fn:toUpperCase(prefQualSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
+			</p:column> -->
+
 			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
 				style="width:15%; text-align:right;">
 				<h:outputText
@@ -84,8 +83,7 @@
 
 			</p:column>
 
-<!-- #34588 - start -->
-			 <p:column style="width:15%; text-align:right;" rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
+			<!-- <p:column style="width:15%; text-align:right;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.difference.rm']}" />
 					<ac:iconTooltip id="summaryPrefMargin#{row}"
@@ -97,12 +95,10 @@
 				</h:outputText>
 
 
-			</p:column> 
-<!-- #34588 - end -->
-<!-- #34588 - start -->
-			 <p:column headerText="#{lbl['lbl.sc.difference.perc']}"
-				style="width:15%; text-align:right;"
-				rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
+			</p:column> -->
+
+			<!-- <p:column headerText="#{lbl['lbl.sc.difference.perc']}"
+				style="width:15%; text-align:right;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.difference.perc']}" />
 					<ac:iconTooltip id="summaryPriceDiff#{row}"
@@ -114,13 +110,10 @@
 				</h:outputText>
 
 
-			</p:column> 
-<!-- #34588 - end -->
+			</p:column> -->
 
-<!-- #34588 - start -->
-		 <p:column headerText="#{lbl['lbl.sc.pref.margin']}"
-				style="width:25%; text-align:right;"
-				rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
+			<!-- <p:column headerText="#{lbl['lbl.sc.pref.margin']}"
+				style="width:25%; text-align:right;">
 
 				<h:outputText
 					rendered="#{prefQualSupplier.qtEvaluationResult.scQtProposal.proposalAmount.preferenceMargin gt 0}"
@@ -130,8 +123,7 @@
 				</h:outputText>
 
 
-			</p:column>
-<!-- #34588 - end -->
+			</p:column> -->
 
 
 		</p:dataTable>
@@ -208,13 +200,11 @@
 				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
 
-<!-- #34588 - start -->
-			 <p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
-				style="width:25%" rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
+			<!-- <p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
+				style="width:25%">
 				<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
 																	  		fn:toUpperCase(disQualifiedSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
-			</p:column>
-<!-- #34588 - end -->
+			</p:column> -->
 
 
 		</p:dataTable>
