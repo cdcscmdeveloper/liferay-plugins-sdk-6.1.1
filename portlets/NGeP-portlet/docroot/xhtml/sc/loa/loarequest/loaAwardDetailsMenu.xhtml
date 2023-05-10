@@ -346,8 +346,8 @@
 									value="#{lbl['lbl.sc.update.supplier.offer.tooltip']}"
 									trackMouse="true" hideEvent="mouseleave click" />
 							</c:if> <br /> <br /> <!-- #29006 - end --> <h:outputText
-								value="#{scLoiLoaItem.scRequestItem.cmItem.extensionCode}"
-								rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" /> <!-- #29007 Start Vinod -->
+								value="#{lOADetailBackingBean.getLatestItemCode(scLoiLoaItem.scRequestItem)}"
+								rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" /> <!-- #29007 Start Vinod --><ui:remove>Bug #34757</ui:remove>
 							<p:spacer width="5" /> <c:if
 								test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}">
 								<p:commandLink id="itemName#{varStatus.index}"
