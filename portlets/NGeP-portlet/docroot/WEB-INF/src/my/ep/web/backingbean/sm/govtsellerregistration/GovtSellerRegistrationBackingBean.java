@@ -1627,10 +1627,9 @@ public class GovtSellerRegistrationBackingBean extends
 				log.info("Not Null + Size >> " + resDTO.getSmSupplier().getSmAppls().size());
 				supplierSearchReqDTO.setSmSupplier(resDTO.getSmSupplier());
 				//checking if the application has a record in smPersonnelAuthLog
-				resDTO = SmServiceLookup.getSupplierSearchSO().checkSupplierApplAuthLogRecord(supplierSearchReqDTO);
-				if(resDTO.isRecord()){
-					getManagedBean().setSmAuthlogChecked(resDTO.isRecord());
-					getManagedBean().getSmSupp().getSmAppls().addAll(resDTO.getSmSupplier().getSmAppls());
+				SupplierSearchResDTO resDTO1 = SmServiceLookup.getSupplierSearchSO().checkSupplierApplAuthLogRecord(supplierSearchReqDTO);
+				if(resDTO1.isRecord()){
+					getManagedBean().getSmSupp().getSmAppls().addAll(resDTO1.getSmSupplier().getSmAppls());
 				}
 			}
 		}
@@ -1716,9 +1715,6 @@ public class GovtSellerRegistrationBackingBean extends
 		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 		reqDTO.setLanguage(fs.getUserLocale().getLanguage());
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
-		//#34319 - Start
-		reqDTO.setSmAuthlogChecked(getManagedBean().isSmAuthlogChecked());
-		//#34319 - End
 
 		// insert tracking diary
 		reqDTO.setTrackingDiaryVO(SmCommonUtil.assignTrackingDiaryValues(
