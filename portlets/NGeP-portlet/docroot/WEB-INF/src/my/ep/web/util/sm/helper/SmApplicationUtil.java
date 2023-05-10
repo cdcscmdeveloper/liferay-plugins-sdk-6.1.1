@@ -4185,6 +4185,14 @@ public class SmApplicationUtil {
 				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)
 				.append(",")
 				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM)
+				//#32627 START
+				.append(",")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_SDO_INQUIRY)
+				.append(",")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PO_INQUIRY)
+				.append(",")
+				.append(SupplierManagementConst.PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT)
+				//#32627 END
 				.append(")");
 		reqDTO.setWorkflowStatus(sb.toString());
 		IMofRegistrationSO reqSO = (IMofRegistrationSO) BusinessDelegate
@@ -8723,6 +8731,14 @@ public class SmApplicationUtil {
 				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)
 				.append(",")
 				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM)
+				//#32627 START
+				.append(",")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_SDO_INQUIRY)
+				.append(",")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PO_INQUIRY)
+				.append(",")
+				.append(SupplierManagementConst.PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT)
+				//#32627 END
 				.append(")");
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSupplierId(supplierId);
@@ -13190,6 +13206,19 @@ public class SmApplicationUtil {
 		statusIds
 				.add(Long
 						.parseLong(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER));
+		//#32627 START
+		statusIds
+				.add(Long
+						.parseLong(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM));
+		statusIds
+				.add(Long
+						.parseLong(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_SDO_INQUIRY));
+		statusIds
+				.add(Long
+						.parseLong(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PO_INQUIRY));
+		statusIds
+				.add(SupplierManagementConst.PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT);
+		//#32627 END
 		SmWorkFlowStatusReqDTO swReqDTO = new SmWorkFlowStatusReqDTO();
 		swReqDTO.setStatusIds(statusIds);
 		swReqDTO.setApplId(rejAppl.getApplId());
@@ -14306,6 +14335,14 @@ public class SmApplicationUtil {
 				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)
 				.append(",")
 				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM)
+				//#32627 START
+				.append(",")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_SDO_INQUIRY)
+				.append(",")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PO_INQUIRY)
+				.append(",")
+				.append(SupplierManagementConst.PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT)
+				//#32627 END
 				.append(")");
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setNotUsedConditionExpired(true);
