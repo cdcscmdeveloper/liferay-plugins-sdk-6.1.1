@@ -414,6 +414,11 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	private String loiTaskId;
 	
+	//#30008
+	private String decision;
+	private String justification;
+	
+	
     /**
      * Gets the spki backing bean.
      *
@@ -2364,5 +2369,22 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.renderInstruction = renderInstruction;
 	}
 	//#29007 End Vinod
+	
+	//#30008
+	public String getJustification() {
+		return justification;
+	}
+
+	public void setJustification(String justification) {
+		this.justification = justification;
+	}
+
+	public String getDecision() {
+		return decision;
+	}
+
+	public void setDecision(String decision) {
+		this.decision = decision;
+	}
 	
 }

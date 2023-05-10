@@ -2236,6 +2236,10 @@ public class LOIDetailBackingBean extends
 		// TODO
 		scLoi.setFileExtnNo("001");
 		
+		//#30008 
+		getManagedBean().setDecision(String.valueOf(scLoi.getNegoDecision()));
+		getManagedBean().setJustification(scLoi.getDecisionJustification());
+		
 		/*
 		 * if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi
 		 * .getScWorkFlowStatus().getPmStatus().getStatusId())) {
@@ -2414,6 +2418,11 @@ public class LOIDetailBackingBean extends
 			ScLoi scLoi = this.getManagedBean().getScLoi();
 			ScQt scQt=this.getManagedBean().getScQt();
 			String outcome = BpmOutcomeConst.BPM_SAVE;
+			
+			//#30008 - Start
+			scLoi.setNegoDecision(Integer.parseInt(this.getManagedBean().getDecision()));
+			scLoi.setDecisionJustification(this.getManagedBean().getJustification());
+			//#30008 - end
 			
 			parseLOIDetails(scLoi, outcome);
 			
@@ -2772,6 +2781,11 @@ public class LOIDetailBackingBean extends
 			}
 			scLoi.setScLoiRemarks(finalScLoiRemarks);
 			// remove empty remark - end
+			
+			//#30008 - Start
+			scLoi.setNegoDecision(Integer.parseInt(this.getManagedBean().getDecision()));
+			scLoi.setDecisionJustification(this.getManagedBean().getJustification());
+			//#30008 - end
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
@@ -6792,4 +6806,33 @@ public class LOIDetailBackingBean extends
 				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	//#21692 - end
+	
+	/**
+	 * #30008 - Validate LOI Negotiation result before submit
+	 * @param bpmAction
+	 * @return void
+	 */
+	public void validateNegoDecisionAction(String bpmAction) {
+		try {
+			String decision = this.getManagedBean().getDecision();
+			String justification = this.getManagedBean().getJustification();
+
+			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(bpmAction)) {
+				if (decision == null) {
+					throw new EpException(MessageConst.ERROR_775192);
+				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
+					throw new EpException(MessageConst.ERROR_775193);
+				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
+					RequestContext.getCurrentInstance().execute("submitNegoConfirmPopUp.show()");
+				} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
+					updateBpmTaskAction(bpmAction);
+				}
+			} else {
+				updateBpmTaskAction(bpmAction);
+			}
+
+		} finally {
+		}
+
+	}
 }
