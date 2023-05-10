@@ -6922,7 +6922,9 @@ public class EvaluationBackingBean extends
 			evalReqDTO.setRecomandationType(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL);
 			List<String> resultStg = new ArrayList<String>();
 			resultStg.add(SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO);
-			resultStg.add(QTConstants.TECHNICAL_SUMMARY_ITEM);
+			// Bug #34768 -start- remove <-- need to insert back when demo #28784 is deploying
+			//resultStg.add(QTConstants.TECHNICAL_SUMMARY_ITEM);
+			// #21695, #25138 -end-
 			evalReqDTO.setResultStages(resultStg);
 			evalReqDTO.setScQt(this.getManagedBean().getScQt());
 			evalReqDTO.setDemo(true);
