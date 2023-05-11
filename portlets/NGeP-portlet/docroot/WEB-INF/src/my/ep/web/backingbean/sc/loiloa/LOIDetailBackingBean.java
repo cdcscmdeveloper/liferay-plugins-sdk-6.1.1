@@ -2664,6 +2664,13 @@ public class LOIDetailBackingBean extends
 			
 			//pending loiloas
 			List<ScLoiLoa> pendingloiloas  = getPendingLoiLoas(scLoi, getManagedBean().getRecSupplierList());
+			
+			//#30008
+			if (ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision()))) {	
+				awardDataType.setIsAgreement(false);
+			} else {
+				awardDataType.setIsAgreement(true);
+			}
 
 			scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 			//Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
@@ -2678,6 +2685,8 @@ public class LOIDetailBackingBean extends
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setPendingloiloas(pendingloiloas);
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			
+			
 
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOIDtl(reqDTO);
 			if (resDTO.isSuccessful()) {
