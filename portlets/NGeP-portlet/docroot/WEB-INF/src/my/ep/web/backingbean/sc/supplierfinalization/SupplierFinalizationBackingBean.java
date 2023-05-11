@@ -9510,7 +9510,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		public ISearchResultBean<Object[]> pageChangeListener(
 				ISearchBean<Object[]> searchBean) {
 			log.info("ShortlistedCommonSuppliersPagingDataModel.pageChangeListener");
-			SuppFinalizationResDTO resDTO = null;
+			//34746 - start
+			SuppFinalizationResDTO resDTO = new SuppFinalizationResDTO();
+			//34746 - end
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			try {
 				List<ScQtRecommend> selectedItemList = getManagedBean()
