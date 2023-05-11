@@ -6699,8 +6699,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					// Setting the Approval details to Qtdetails
 					List<TabBean> tabList = this.getManagedBean().getTabList();
 					if (CollectionUtils.isNotEmpty(tabList)) {
-						List<ScQtApproval> approvalList = null;
-						approvalList = new ArrayList<ScQtApproval>();
+						List<ScQtApproval> approvalList = new ArrayList<>();
 						for (TabBean tabBean : tabList) {
 							if (this.getManagedBean().getQt().isBrandNew()) {
 								tabBean.getScQtApproval().setScQt(
