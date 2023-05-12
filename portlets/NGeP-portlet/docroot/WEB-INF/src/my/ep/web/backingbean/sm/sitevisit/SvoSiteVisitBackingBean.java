@@ -2216,6 +2216,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				//#30504 Re-open end
 			}
 
+			log.info("---BPM POJO Submit SV: "+((SMMOFRegDataType) reqDTO.getBpmPojo()).getPoUsers());
 			reqDTO.setSmSvTask(svTask);
 			reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
 			ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
