@@ -1602,6 +1602,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #32929 - start
 	private boolean zoneRdbButtonChecked = Boolean.FALSE;
 	// #32929 - end
+
+	// #1873 -start
+	private boolean technicalOtherCheckList;
+	private boolean technicalTemplateEdited;
+	private boolean fromSubmit;
+	private ScQtCheckList tempScQtChecklist; // 1873 - note 97
+	private ScQtCheckList finTempScQtChecklist; // 1873 - note 97
+	// #1873 -end
 	
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -10093,5 +10101,47 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setZoneRdbButtonChecked(boolean zoneRdbButtonChecked) {
 		this.zoneRdbButtonChecked = zoneRdbButtonChecked;
 	}
+	
+	// 1873 - start
+	public boolean isTechnicalOtherCheckList() {
+		return technicalOtherCheckList;
+	}
+
+	public void setTechnicalOtherCheckList(boolean technicalOtherCheckList) {
+		this.technicalOtherCheckList = technicalOtherCheckList;
+	}
+
+	public boolean isTechnicalTemplateEdited() {
+		return technicalTemplateEdited;
+	}
+
+	public void setTechnicalTemplateEdited(boolean technicalTemplateEdited) {
+		this.technicalTemplateEdited = technicalTemplateEdited;
+	}
+
+	public boolean isFromSubmit() {
+		return fromSubmit;
+	}
+
+	public void setFromSubmit(boolean fromSubmit) {
+		this.fromSubmit = fromSubmit;
+	}
+
+	public ScQtCheckList getTempScQtChecklist() {
+		return tempScQtChecklist;
+	}
+
+	public void setTempScQtChecklist(ScQtCheckList tempScQtChecklist) {
+		this.tempScQtChecklist = tempScQtChecklist;
+	}
+
+	public ScQtCheckList getFinTempScQtChecklist() {
+		return finTempScQtChecklist;
+	}
+
+	public void setFinTempScQtChecklist(ScQtCheckList finTempScQtChecklist) {
+		this.finTempScQtChecklist = finTempScQtChecklist;
+	}
+	// 1873 - end
 
 }
