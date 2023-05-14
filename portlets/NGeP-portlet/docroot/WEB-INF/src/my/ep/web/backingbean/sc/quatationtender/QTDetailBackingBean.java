@@ -4709,8 +4709,6 @@ public class QTDetailBackingBean extends
 					}
 				}
 				// #19336 - end
-				
-				log.info("Bug #34702 related #9019 checking logger getResultList().size()============"+resDTO.getQtResultBean().getResultList().size());
 
 				// set search result doc type for navigate to diff page based on diff doc type selected.
 				// #30451-Start.
@@ -5840,9 +5838,7 @@ public class QTDetailBackingBean extends
 		reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 
 		// - Start (Harun) set Group Item to NULL when save while left blank and panel is selected
-		//9019 - #Note-418
-		if (isPanel && (null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId() || this.getManagedBean()
-				.getQt().getItemGroup().getPanelItemGroupId() == ParameterConst.PM_PARAMETERID_ZERO)) {
+		if (isPanel && null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId()) {
 			this.getManagedBean().getQt().setItemGroup(null);
 			this.getManagedBean().getQt().setCircularVer(null);
 		}
@@ -5872,14 +5868,6 @@ public class QTDetailBackingBean extends
 			if (this.getManagedBean().isScQtRemarksEmpty()) {
 				this.getManagedBean().getQt().setScQtRemarks(null);
 			}
-			
-			//9019 - Start (Harun) #Note-398  
-			if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().getQt().getSpecApprovalReq() == true) {
-				this.getManagedBean().getQt().setSpecApprovalReq(false);
-				reqDTO.getQtdetail().setSpecApprovalReq(false);
-				reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
-			}
-			//9019 - End (Harun)
 		
 			// using new method
 			resDTO = detailSO.saveQTDetailsForDraft(reqDTO);
@@ -5896,14 +5884,8 @@ public class QTDetailBackingBean extends
 
 			break;
 		case 1:
-			//9019 - Start (Harun) #Note-378
-			if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-				detailSO.validateSupplierQualificationDtls(reqDTO);
-			}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-				detailSO.validateQTGeneralInformation(reqDTO);
-			}
-			//9019 - End (Harun)
-	
+			detailSO.validateSupplierQualificationDtls(reqDTO);
+
 			// 9019 -start-
 			if (this.getManagedBean().isScQtRemarksEmpty()) {
 				this.getManagedBean().getQt().setScQtRemarks(null);
@@ -5931,14 +5913,6 @@ public class QTDetailBackingBean extends
 			committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			committeReqDTO.setSaveFlow(true);
 			committeSO.validateAppointCommitteDtls(committeReqDTO);
-			
-			//9019 - Start (Harun) #Note-378 
-			if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-				committeSO.validateAppointCommitteDtls(committeReqDTO);
-			}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-				detailSO.validateQTGeneralInformation(reqDTO);
-			}
-			//9019 - End (Harun)
 			
 			// 9019 -start-
 			if (this.getManagedBean().isScQtRemarksEmpty()) {
@@ -5968,15 +5942,8 @@ public class QTDetailBackingBean extends
 		case 3:
 			reqDTO.getQtdetail().setModified(false);
 			reqDTO.getQtdetail().setFCApproval(true);
-			
-			//9019 - Start (Harun) #Note-378
-			if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-				detailSO.validateApprovalDetails(reqDTO);
-			}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-				detailSO.validateQTGeneralInformation(reqDTO);
-			}
-			//9019 - End (Harun)
-	
+			detailSO.validateApprovalDetails(reqDTO);
+
 			// 9019 -start-
 			if (this.getManagedBean().isScQtRemarksEmpty()) {
 				this.getManagedBean().getQt().setScQtRemarks(null);
@@ -6005,14 +5972,7 @@ public class QTDetailBackingBean extends
 				retrieveBriefingSitevisitTabDtl();
 			} else if(super.isQTStatusLessThanOrEquals(currentStatus, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)){
 				// save scQt info onclick of Activites tab
-				//9019 - Start (Harun) #Note-378 
-				if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-					detailSO.validateQTDetails(reqDTO);
-				}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-					detailSO.validateQTGeneralInformation(reqDTO);
-				} 
-				//9019 - End (Harun)
-				
+				detailSO.validateQTDetails(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setTaskName(taskName);
@@ -6221,32 +6181,16 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
 		}
 		// 9019 - End (Harun)
-		
-		//9019 - Start (Harun) #Note-360 
-		boolean isSubmit = StringUtils.isNotEmpty(reqDTO.getOutcome())
-				&& reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) ? true : false;
-		//9019 - End (Harun)
 
 		if (priviousIndex != activeIndex) {
 			if (!isReadOnly) {
 				switch (priviousIndex) {
 				case 0:
-					//9019 - Start (Harun) #Note-360,#Note-398,#Note-433
-					detailSO.validateQTGeneralInformation(reqDTO);
-					//9019 - End (Harun)
-					//9019 - Start (Harun) #Note-360 
-					if (isSubmit) {
-						detailSO.validateQTDetails(reqDTO);
-					}
-					//9019 - End (Harun)
+					detailSO.validateQTDetails(reqDTO);
 					// retrieveQuationTenderDetails(this.getManagedBean().getQt().getQtId());
 					break;
 				case 1:
-					//9019 - Start (Harun) #Note-360
-					if (isSubmit) {
-						detailSO.validateSupplierQualificationDtls(reqDTO);
-					}
-					//9019 - End (Harun)
+					detailSO.validateSupplierQualificationDtls(reqDTO);
 					break;
 
 				case 2:
@@ -6270,12 +6214,7 @@ public class QTDetailBackingBean extends
 							// #25077 - #91 - End
 						}
 						
-					//9019 - Start (Harun) #Note-360 
-					//       when click sidemenu
-					if (isSubmit) {
-						detailSO.validateApprovalDetails(reqDTO);
-					}
-					//9019 - End (Harun)	
+					detailSO.validateApprovalDetails(reqDTO);
 					// retrieveApprovalTabDtl();
 					break;
 
@@ -10196,12 +10135,6 @@ public class QTDetailBackingBean extends
 			
 			quationTenderReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
-			
-			//9019 Start #note-445
-			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getQt().getQtStatus().getStatusId())) {
-				detailSO.validateQTGeneralInformation(quationTenderReqDTO);
-			}
-			//9019 End 
 			
 			QuationTenderResDTO quationTenderResDTO = detailSO.cancleQTForDraft(quationTenderReqDTO);
 
