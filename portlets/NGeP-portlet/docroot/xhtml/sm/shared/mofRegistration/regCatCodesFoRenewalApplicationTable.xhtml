@@ -27,9 +27,9 @@
 					rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" />
 				<p:column headerText="#{lbl['lbl.sm.catCodes.appAct']}"
 					rendered="#{backingBean.managedBean.approverUser}" />
-				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}"
+				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width:24%"
 					rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" />
-				<p:column rendered="#{backingBean.managedBean.smAppl.resubmit}"
+				<p:column rendered="#{backingBean.managedBean.smAppl.resubmit}" style="width:13%"
 					headerText="#{lbl['lbl.sm.catCodes.prevDecision']}" />
 			</p:row>
 		</p:columnGroup>
@@ -105,7 +105,8 @@
 					itemValue="0" />
 				<p:ajax event="change" process="@this" update="poCatRDecisionRmrk"
 					partialSubmit="true"
-					listener="#{backingBean.assignCategoryApproveOrRejectDate(catBeanR)}" />
+					listener="#{backingBean.assignCategoryApproveOrRejectDate(catBeanR)}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</p:selectOneRadio>
 
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
@@ -131,8 +132,8 @@
 						<td
 							style="border: none !important; white-space: normal; word-wrap: break-word !important;">
 							<p:scrollPanel mode="native" style="height:100px; width:auto;">
-								<h:outputText value="#{catBean.poRemarks}"
-									rendered="#{not empty catBean.poRemarks}" />
+								<h:outputText value="#{catBeanR.poRemarks}"
+									rendered="#{not empty catBeanR.poRemarks}" />
 							</p:scrollPanel>
 						</td>
 					</tr>
@@ -160,7 +161,8 @@
 					itemValue="0" />
 				<p:ajax event="change" process="@this"
 					update="apprvrCatRDecisionRmrk" partialSubmit="true"
-					listener="#{backingBean.assignCategoryApproveOrRejectDate(catBeanR)}" />
+					listener="#{backingBean.assignCategoryApproveOrRejectDate(catBeanR)}" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 			</p:selectOneRadio>
 			<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 				rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />

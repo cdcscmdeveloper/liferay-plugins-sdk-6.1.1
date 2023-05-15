@@ -507,7 +507,8 @@
 
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
-				<td> <!-- START #21695 farid remove colspan="3"-->
+				<td> 
+					<!-- START #21695 farid remove colspan="3"-->
 					<table>
 						<tr>
 							<td><c:choose><!-- #28784 Disable zonal for qt maintanance-->
@@ -538,18 +539,19 @@
 											</p:tooltip>
 										</td>
 								<!-- #29521 - end -->
-<!-- START #21695 farid -->
-								</tr>
+						
+						</tr>
 					</table>
+					<!-- START #21695 farid -->
 				</td>
-					<td><h:outputLabel value="#{lbl['lbl.sc.qt.partiallyoffer']}" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.qt.partiallyoffer']}" /></td>
 				<td>
 					<table>
 						<tr>
 							<td>
 							<c:choose>
 							<!-- #21695 farid -->
-				<!-- #21695 farid 7/04/2020 -->
+							<!-- #21695 farid 7/04/2020 -->
 				                <c:when test="#{!isMaintenanceFlow and !qtStatusChecklistScoring and !qtStatusScheduleDocAndAfter and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) and !isReadOnly}"><!-- #9019 Harun disabled old code as while Pending QT Submission partial offer can be edit when view at QT Maintenance -->
 								<!-- c:when test="#{!isMaintenanceFlow and !qtStatusChecklistScoring and !qtStatusScheduleDocAndAfter and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION and !isReadOnly}"-->
 										<p:outputPanel id="partialPop">
@@ -562,8 +564,8 @@
 														</p:ajax>
 														<p:ajax render="confirmDialog" ></p:ajax>
 													</p:selectOneRadio>
-										</p:outputPanel>
-				<!-- #21695 Add Closable & resizable 30/7/2020 -->									
+												</p:outputPanel>
+												<!-- #21695 Add Closable & resizable 30/7/2020 -->									
 												<p:confirmDialog message="#{lbl['lbl.sc.spec.partial.confirm']}" header="#{lbl['lbl.cm.dialog.cofirm.header']}" 
 													widgetVar="confirmDialogWidgetVar" closable="false" severity="alert">
 													<div class="ppRightBtn">
@@ -577,7 +579,7 @@
 												
 									</c:when>
 									<c:otherwise>
-				<!-- #21695 Add inputext 30/7/2020 -->						
+										<!-- #21695 Add inputext 30/7/2020 -->						
 										<p:inputText id="partialTxt"
 											value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.partial))}"
 											style="width:195px;" disabled="true" />
@@ -588,25 +590,27 @@
 						</tr>				
 					</table>
 				</td>
-				<tr>
-					<td colspan="3"></td>
-					<td>
-						<table>				
-							<tr>
-								<td style="width: 255px; float: left;">
-									<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.spec.partial.info']}" escape="false" /> 
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
 			</tr>
-<!-- END #21695 farid End-->
+			<tr>
+				<td colspan="3"></td>
+				<td>
+					<table>				
+						<tr>
+							<td style="width: 255px; float: left;">
+								<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.spec.partial.info']}" escape="false" /> 
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			
+			<!-- END #21695 farid End-->
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><c:choose>
+				<td>
+				<c:choose>
 						<c:when
 							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_PROCUREMENT_TYPE_CAT_ID) and !isReadOnly}">
 							<!-- 9019 Reopen #note-289 - change required validation-->
@@ -734,7 +738,7 @@
 										<p:tooltip for="evalMsgT">
 											<p:outputLabel escape="false" value="#{lbl['lbl.sc.evaluation.type.tooltip']}"  />
 										</p:tooltip>
-	</td>
+									</td>
 									<!-- #29521 - start -->
 										<td>
 										<p:spacer width="10" height="5"/>
@@ -1028,8 +1032,21 @@
 							<table>
 								<tr>
 									<td>
-							<p:inputText value="#{lbl['lbl.sc.no.available']}" style="width:200px;" disabled="true" >
-							</p:inputText></td>
+							<p:inputText value="#{lbl['lbl.sc.no.available']}" style="width:200px;" disabled="true"
+							rendered="#{!approvalBackingBean.isEPVWorkflowStatusNull(scQt.qtId)}">
+							</p:inputText>
+							<p:inputMask id="responsePeriod" mask="9?9999"
+									maxlength="3" placeHolder=""
+									label="#{lbl['lbl.sc.qt.response.period']}" required="#{empty param['skipvalidation']}"
+									value="#{scQt.responsePeriod}"
+									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) or (scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation and qTDetailBB.isQTStatusPublished(scQt.qtStatus.statusId)) or (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"
+									style="text-align:right; width:200px;"
+									rendered="#{approvalBackingBean.isEPVWorkflowStatusNull(scQt.qtId)}">
+							</p:inputMask>
+							<td><p:message id="responsePeriodMsg"
+								for="responsePeriod" display="icon"
+								rendered="#{approvalBackingBean.isEPVWorkflowStatusNull(scQt.qtId)}"/></td>
+							</td>
 									<td colspan="2">
 										<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip1']}#{lbl['lbl.sc.qt.response.period.tooltip2']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.fromValue)} #{lbl['lbl.sc.qt.response.period.tooltip3']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.toValue)} #{lbl['lbl.sc.qt.response.period.tooltip4']}"/>
 									</td>
