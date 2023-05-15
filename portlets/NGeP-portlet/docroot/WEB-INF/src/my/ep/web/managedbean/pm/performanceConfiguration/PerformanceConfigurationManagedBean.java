@@ -1,7 +1,7 @@
 /*
  * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
  */
-package my.ep.web.managedbean.pm.performanceconfiguration;
+package my.ep.web.managedbean.pm.performanceConfiguration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
