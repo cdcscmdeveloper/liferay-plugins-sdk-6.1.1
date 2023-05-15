@@ -174,12 +174,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Date waiverStartDate;
 	private Date waiverEndDate;
 	private String referenceNo;
-//	private List<CtAttachment> waiverDetail;
-//	private List<CtAttachment> waiverDetailDelete; //13847 - shaqimi
 	private CtAttachment ctAttachment;
-//	private CtAttachment ctAttachmentTemp;
-//	private CtAttachment ctAttachmentLatest;
-//	private CtAttachment ctAttachmentDelete;
 	private List<ScLoa> bondDetail;
 	// #24333 - Start
 	private boolean extendContract = false;
@@ -229,6 +224,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	
 	//#13847 - start
 	private boolean disableDeferment = false;
+	private CtBondWaiverDetail bondWaiverLatestTemp;
+	//13847 end
 	
 	//#29983 start
 	private String businessRegNoNew;
@@ -1434,6 +1431,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setCtAgreementList(List<CtAgreement> ctAgreementList) {
 		this.ctAgreementList = ctAgreementList;
 	}
+	
+	//13847 start
 	public Date getWaiverStartDate() {
 		return waiverStartDate;
 	}
@@ -1441,20 +1440,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setWaiverStartDate(Date waiverStartDate) {
 		this.waiverStartDate = waiverStartDate;
 	}
-	
-	//#13847 start
-	/*
-	public List<CtAttachment> getWaiverDetail() {
-		if(waiverDetail == null){
-			waiverDetail = new ArrayList<CtAttachment>();
-	}
-		return waiverDetail;
-	}
-
-	public void setWaiverDetail(List<CtAttachment> waiverDetail) {
-		this.waiverDetail = waiverDetail;
-	}*/
-	//#13847 end
 
 	public Date getWaiverEndDate() {
 		return waiverEndDate;
@@ -1479,29 +1464,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setCtAttachment(CtAttachment ctAttachment) {
 		this.ctAttachment = ctAttachment;
 	}
+	//13847 end
 	
-	//#13847 start
-	/*public CtAttachment getCtAttachmentLatest() {
-		if(ctAttachmentLatest == null){
-			ctAttachmentLatest = new CtAttachment();
-		}
-		return ctAttachmentLatest;
-	}
-
-	public void setCtAttachmentLatest(CtAttachment ctAttachmentLatest) {
-		this.ctAttachmentLatest = ctAttachmentLatest;
-	}
-
-	public CtAttachment getCtAttachmentTemp() {
-		return ctAttachmentTemp;
-	}
-
-	public void setCtAttachmentTemp(CtAttachment ctAttachmentTemp) {
-		this.ctAttachmentTemp = ctAttachmentTemp;
-	}*/
-	//#13847 end
-
-
 	public CtContractItem getServiceselectedItem() {
 		return serviceselectedItem;
 	}
@@ -1509,16 +1473,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setServiceselectedItem(CtContractItem serviceselectedItem) {
 		this.serviceselectedItem = serviceselectedItem;
 	}
-	
-	//#13847 start
-	/*public CtAttachment getCtAttachmentDelete() {
-		return ctAttachmentDelete;
-	}
-
-	public void setCtAttachmentDelete(CtAttachment ctAttachmentDelete) {
-		this.ctAttachmentDelete = ctAttachmentDelete;
-	}*/
-	//#13847
 
 	public List<ScLoa> getBondDetail() {
 		if(bondDetail == null){
@@ -1611,7 +1565,8 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
 	}	
 	/* #28854 end*/
-
+	
+	//#13847 start
 	public boolean isDisableDeferment() {
 		return disableDeferment;
 	}
@@ -1620,18 +1575,14 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.disableDeferment = disableDeferment;
 	}
 
-	//13847 - shaqimi start
-	/*public List<CtAttachment> getWaiverDetailDelete() {
-		if(waiverDetailDelete == null){
-			waiverDetailDelete = new ArrayList<CtAttachment>();
-		}
-		return waiverDetailDelete;
+	public CtBondWaiverDetail getBondWaiverLatestTemp() {
+		return bondWaiverLatestTemp;
 	}
 
-	public void setWaiverDetailDelete(List<CtAttachment> waiverDetailDelete) {
-		this.waiverDetailDelete = waiverDetailDelete;
-	}*/
-	//13847 - shaqimi end
+	public void setBondWaiverLatestTemp(CtBondWaiverDetail bondWaiverLatestTemp) {
+		this.bondWaiverLatestTemp = bondWaiverLatestTemp;
+	}
+	//#13847 end
 
 	//#29983 start
 	/**

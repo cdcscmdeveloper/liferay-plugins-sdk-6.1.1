@@ -1686,7 +1686,6 @@ Should be product and service item display if exist
 													</tr>
 													
 											#end
-										#end	
 												
 													##specval
 													#foreach($combine in $tplspecQuestion.listCombineSpec)
@@ -1722,8 +1721,7 @@ Should be product and service item display if exist
 															#end
 														</tr>
 													#end
-													
-											
+												#end	
 											#end	
 									
 							##26130 - zaim end	070220222
@@ -1770,7 +1768,6 @@ Should be product and service item display if exist
 											
 											
 											#end
-								#end			
 									##26130 - end 11032022	
 									
 									##26130 - zaim start
@@ -1807,6 +1804,7 @@ Should be product and service item display if exist
 															#end
 														#end
 												#end
+											#end	
 											</tr>
 									
 							#end
@@ -2251,7 +2249,6 @@ Should be product and service item display if exist
 													</tr>
 													
 											#end
-										#end	
 												
 													##specval
 													#foreach($combine in $tplspecQuestion.listCombineSpec)
@@ -2287,6 +2284,7 @@ Should be product and service item display if exist
 															#end
 														</tr>
 													#end
+												#end	
 													
 											
 											#end	
@@ -2345,7 +2343,6 @@ Should be product and service item display if exist
 												##26130 - end 03032022
 											</tr>	
 											#end
-									#end		
 									##26130 - end 11032022
 									
 									##26130 - zaim start
@@ -2386,6 +2383,7 @@ Should be product and service item display if exist
 															#end
 														#end
 												#end
+											#end	
 											</tr>
 									
 									#end

@@ -10299,10 +10299,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						break;
 					}
 				}
-				if(qtMaint
+				if((qtMaint || (QTStatusConst.LOA_COMPLETED.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+					&& !qtMaint))
 					&& afterTireCheckAnswerList.isEmpty()){
 					afterTireCheckAnswerList.add(tplSpecAnswer);
-				} else if(qtMaint
+				} else if((qtMaint || (QTStatusConst.LOA_COMPLETED.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+						   && !qtMaint))
 						   && !afterTireCheckAnswerList.isEmpty()
 						   && contains==0){
 					afterTireCheckAnswerList.add(tplSpecAnswer);
@@ -10311,7 +10313,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				}
 			}
 
-			if(qtMaint){
+			if(qtMaint || (QTStatusConst.LOA_COMPLETED.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+					&& !qtMaint)){
 				this.getManagedBean().setTplSpecAnswerList(afterTireCheckAnswerList);
 			}else{
 				this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
