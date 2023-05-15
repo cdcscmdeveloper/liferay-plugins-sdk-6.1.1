@@ -57,6 +57,7 @@ import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtBondWaiverDetail;
+import my.ep.persistence.entity.ct.CtConfig;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
@@ -274,7 +275,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-
+		
+		ctBB.getManagedBean().getContractListingPagingDataModel().reloadDatatable();
+		ctBB.getManagedBean().getServiceListingPagingDataModel().reloadDatatable();
+		
 		//Bug 34142, 15851 - shaqimi start 04/12/2022
 		if(!ctBB.getManagedBean().isInPage()){
 			if(ctBB.getManagedBean().isBackFromSCL()){
@@ -470,6 +474,20 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 			ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
+
+			//#33126 CT - Performance (Portlet - User Interface) Fulfilment Update with Scheduler Start Nordin
+			
+			CtConfig ctConfigStatus = contractSO.getCtPerformanceStatus(reqDTO);
+			
+			if(ctConfigStatus != null) {
+				//log.info("ctConfigStatus not null");
+				ctBB.getManagedBean().setInCtPerformance(true);
+			}
+			
+			else{
+				ctBB.getManagedBean().setInCtPerformance(false);
+			}
+			//#33126 CT - Performance (Portlet - User Interface) Fulfilment Update with Scheduler End Nordin
 			
 			//Retrieve agreement list
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
@@ -529,49 +547,55 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 
+			//#33126 CT - Performance (Portlet - User Interface) Fulfilment Update with Scheduler Start Nordin
 			// Retrieve Items
-			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
-			cisbb.getManagedBean().setItemProductExist(false);
-			cisbb.getManagedBean().setItemServiceExist(false);
-			ctBB.getManagedBean().getCtItemList().clear();
-			ctBB.getManagedBean().getCtItemServiceList().clear();	        	   
-			ctBB.getManagedBean().setShowItem(null);
-			ctBB.getManagedBean().setShowServiceItem(null);
-			ctBB.getManagedBean().setSelectedItem(null);
-			ctBB.getManagedBean().setSelectedServiceItem(null);	  
-			if (ctBB.getManagedBean().getContractVer().getCtContractItems().size() > 0) {  	  
-				for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
-					// If effective date is after current date, status is still display old status
-					if (item.getRecordStatusFlg() == 0) {				       		
-						if (item.getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
-							item.setChkStatus(true);
+			if(ctConfigStatus == null) {
+				ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
+				cisbb.getManagedBean().setItemProductExist(false);
+				cisbb.getManagedBean().setItemServiceExist(false);
+				ctBB.getManagedBean().getCtItemList().clear();
+				ctBB.getManagedBean().getCtItemServiceList().clear();	        	   
+				ctBB.getManagedBean().setShowItem(null);
+				ctBB.getManagedBean().setShowServiceItem(null);
+				ctBB.getManagedBean().setSelectedItem(null);
+				ctBB.getManagedBean().setSelectedServiceItem(null);	  
+				
+				if (ctBB.getManagedBean().getContractVer().getCtContractItems().size() > 0) {  	  
+					for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
+						// If effective date is after current date, status is still display old status
+						if (item.getRecordStatusFlg() == 0) {				       		
+							if (item.getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
+								item.setChkStatus(true);
+							} else {
+								item.setChkStatus(false);
+							}
 						} else {
-							item.setChkStatus(false);
-						}
-					} else {
-						if (item.getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
-							item.setChkStatus(false);
-						} else {
-							item.setChkStatus(true);
-						}
-					}
-
-					if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-						cisbb.getManagedBean().setItemServiceExist(true);
-						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-						ctBB.getManagedBean().getCtItemServiceList().add(item);			           
-					} else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
-						cisbb.getManagedBean().setItemProductExist(true);
-						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-						if (item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0) {
-							for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {			        	        	    	   
-								ctBB.checkAgencyStatus(ceilingQty.getCtAgency());		        	   
+							if (item.getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
+								item.setChkStatus(false);
+							} else {
+								item.setChkStatus(true);
 							}
 						}
-						ctBB.getManagedBean().getCtItemList().add(item);
+
+						if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+							cisbb.getManagedBean().setItemServiceExist(true);
+							Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+							ctBB.getManagedBean().getCtItemServiceList().add(item);			           
+						} else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
+							cisbb.getManagedBean().setItemProductExist(true);
+							Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+							if (item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0) {
+								for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {			        	        	    	   
+									ctBB.checkAgencyStatus(ceilingQty.getCtAgency());		        	   
+								}
+							}
+							ctBB.getManagedBean().getCtItemList().add(item);
+						}
 					}
 				}
 			}
+			//#33126 CT - Performance (Portlet - User Interface) Fulfilment Update with Scheduler End Nordin
+
 
 			// Retrieve Deduction Clauses
 			if (ctBB.getManagedBean().getContractVer().getCtDeductions().size() > 0) {
@@ -1010,11 +1034,17 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 		}
 
-		if (ctBB.getManagedBean().getContractVer().getCtContractItems().size() > 0) {
-			ctBB.getManagedBean().getContractVer().getCtContractItems().clear();
+		//#33126 CT - Performance (Portlet - User Interface) Fulfilment Update with Scheduler Start Nordin
+
+		if (!ctBB.getManagedBean().isInCtPerformance()) {
+			if (ctBB.getManagedBean().getContractVer().getCtContractItems().size() > 0) {
+				ctBB.getManagedBean().getContractVer().getCtContractItems().clear();
+			}
+			ctBB.getManagedBean().getContractVer().getCtContractItems().addAll(ctBB.getManagedBean().getCtItemList());
+			ctBB.getManagedBean().getContractVer().getCtContractItems().addAll(ctBB.getManagedBean().getCtItemServiceList());
+
 		}
-		ctBB.getManagedBean().getContractVer().getCtContractItems().addAll(ctBB.getManagedBean().getCtItemList());
-		ctBB.getManagedBean().getContractVer().getCtContractItems().addAll(ctBB.getManagedBean().getCtItemServiceList());
+		//#33126 CT - Performance (Portlet - User Interface) Fulfilment Update with Scheduler End Nordin
 
 		if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 			ctBB.scheduleProgressiveDate();
@@ -1090,6 +1120,31 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setScLoa(ctContractVer.getCtContract().getLoa());
 		// End  - #28292/#26475
 		reqDTO.setAgreementContractVer(ctBB.getManagedBean().getAgreementContractVer());
+		
+
+		//#33126 CT - Performance (Portlet - User Interface) Fulfilment Update with Scheduler Start Nordin
+		
+		if(ctBB.getManagedBean().isInCtPerformance()){
+
+			List<CtContractItem> listItem = new ArrayList<CtContractItem>();
+			
+			if(ctBB.getManagedBean().getContractListingPagingDataModel().getList()!=null){
+				log.info("not null");
+				
+				listItem.addAll(ctBB.getManagedBean().getContractListingPagingDataModel().getList());
+			}
+			
+			if(ctBB.getManagedBean().getServiceListingPagingDataModel().getList()!=null){
+				listItem.addAll(ctBB.getManagedBean().getServiceListingPagingDataModel().getList());
+			}
+			
+			
+			reqDTO.getCtContractVer().setCtContractItems(listItem);
+		}
+		
+		//#33126 CT - Performance (Portlet - User Interface) Fulfilment Update with Scheduler End Nordin
+		
+		
 		reqDTO.setUserRole(getUserRole());
 		reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
 		reqDTO.setAttachments(getManagedBean().getAttachmentList());
@@ -1447,6 +1502,32 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if ((ctBB.getManagedBean().getContractVer().getCtContractItems() != null) && !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))
 				&& !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 
+			
+			//#32910,#32911 start
+			
+			if(ctBB.getManagedBean().isInCtPerformance()){
+				
+				log.info("ctBB.getManagedBean().getContractVer().getCtContractItems().size() = 0");
+				
+				List<CtContractItem> listItem = new ArrayList<CtContractItem>();
+
+				if(ctBB.getManagedBean().getContractListingPagingDataModel().getList()!=null){
+					log.info("not null");
+					
+					listItem.addAll(ctBB.getManagedBean().getContractListingPagingDataModel().getList());
+				}
+				
+				if(ctBB.getManagedBean().getServiceListingPagingDataModel().getList()!=null){
+					listItem.addAll(ctBB.getManagedBean().getServiceListingPagingDataModel().getList());
+				}
+				
+
+				ctBB.getManagedBean().getContractVer().setCtContractItems(listItem);
+
+			}
+			
+			//#32910,#32911 end
+			
 			for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
 				// Validation for minimum order quantity
 				if (item.getMinimumOrderQty() <= 0) {
@@ -1471,7 +1552,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				
 				// Validation for ceiling quantity
 				double totalCeilingQuantity = 0.0;
-				if (item.getCtItemMaxQties().size() != 0) {						
+				//#32910,#32911 start
+				/*if (item.getCtItemMaxQties().size() != 0) {						
 					for (CtItemCeilingQty ctItemCeilingQty : item.getCtItemCeilingQties()) {
 						totalCeilingQuantity = totalCeilingQuantity + ctItemCeilingQty.getCeilingQuantity().doubleValue();
 					}
@@ -1484,7 +1566,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						}
 						throw new EpException(MessageConst.ERROR_750009, new String[]{item.getScRequestItem().getItemName()});
 					}
-				}
+				}*/
+				//#32910,#32911 end
 			}
 		}
 
@@ -2625,6 +2708,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setViewOnly(true);
 		ctBB.renewSesionObject();//Bug 34142, 15851 - shaqimi start 06/12/2022
 		ctBB.getManagedBean().setViewContract(true);
+		ctBB.getManagedBean().setInCtPerformance(false);  //#32910,#32911 
 		ctBB.getManagedBean().setFromViewPage(true); //#15851
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		getManagedBean().setAsAtDate(null);
@@ -2677,27 +2761,49 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public String gotoUpdatePage(Long contractId, int agStatus) {
 		IContractSO contractSO = null;
+		ctBB.getManagedBean().setInCtPerformance(false);
+		
 		try {
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			reqDTO.setContractId(contractId);	
 			reqDTO.setContractVerId(contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
+			
+			CtConfig ctConfigStatus = contractSO.getCtPerformanceStatus(reqDTO);
+			
 			if (agStatus == 1) {
 				reqDTO.setDocType(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT);
 			} else {
 				reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
 			}
+			
+			//#33126 CT - Performance (Portlet - User Interface) Fulfilment Update with Scheduler Start Nordin
+			
+			if(ctConfigStatus != null) {
+				log.info("ctConfigStatus not null");
+				
+				ctBB.getManagedBean().setViewContract(true);
+				reqDTO.setViewOnly(true);
+				ctBB.getManagedBean().setFromViewPage(true); 
+				ctBB.getManagedBean().setInCtPerformance(true);
+				ctBB.getManagedBean().setFromUpdateButton(true);
+			}
+			
+			else{
+				log.info("ctConfigStatus null");
+				
+				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+				ctBB.getManagedBean().setViewContract(false);
+				ctBB.getManagedBean().setInCtPerformance(false);
+			}
+			
+			//#33126 CT - Performance (Portlet - User Interface) Fulfilment Update with Scheduler End Nordin
 
 			reqDTO.setUpdateAction(true);
-			reqDTO.setViewOnly(true);//Bug 34142, 15851 - shaqimi start 04/12/2022
-			ctBB.renewSesionObject();//Bug 34142, 15851 - shaqimi start 06/12/2022
-			ctBB.getManagedBean().setViewSCL(false);//34142, 15851 to reset viewSCL before anything
 			ctBB.getManagedBean().setNotificationSetting(false);
-			ctBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setUpdateContract(true);
 			ctBB.getManagedBean().setCtAddress(null);
 			setValidateContractField(reqDTO);
-			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			ctBB.chkServiceTaxAlert();
 			getManagedBean().setExternalPageUrl(null);
 			getManagedBean().setSelectedTabIndex(0);	
@@ -2725,16 +2831,38 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setContractId(contractId);
 			reqDTO.setContractVerId(contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
 				
+			CtConfig ctConfigStatus = contractSO.getCtPerformanceStatus(reqDTO); //#33126 CT 
+			
 			reqDTO.setUpdateAction(true);
 			reqDTO.setViewOnly(true);//Bug 34142, 15851 - shaqimi start 04/12/2022
 			reqDTO.setDocType(ParameterConst.DOCTYPE_NOTIFICATION_SETTING);
+			
+			//#33126 CT start
+			if(ctConfigStatus != null) {
+				//log.info("ctConfigStatus not null");
+				
+				ctBB.getManagedBean().setViewContract(true);
+				reqDTO.setViewOnly(true);
+				ctBB.getManagedBean().setFromViewPage(true); 
+				ctBB.getManagedBean().setInCtPerformance(true);
+			}
+			
+			else{
+				//log.info("ctConfigStatus null");
+				
+				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+				ctBB.getManagedBean().setViewContract(false);
+				ctBB.getManagedBean().setInCtPerformance(false);
+			}
+			//#33126 CT end
+			
 			ctBB.renewSesionObject();//Bug 34142, 15851 - shaqimi start 06/12/2022
 			ctBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setUpdateContract(true);
 			ctBB.getManagedBean().setNotificationSetting(true);
 			ctBB.getManagedBean().setCtAddress(null);
 			setValidateContractField(reqDTO);
-			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+			//getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});//#33126 CT 
 			ctBB.chkServiceTaxAlert();
 			getManagedBean().setExternalPageUrl(null);
 			getManagedBean().setSelectedTabIndex(0);	
@@ -3013,6 +3141,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		contractBB.getManagedBean().getContractListingPagingDataModel().resetData();
 		contractBB.getManagedBean().getServiceListingPagingDataModel().resetData();
 		contractBB.getManagedBean().setResetval(true);
+		ctBB.getManagedBean().setFromUpdateButton(false); //#33126 CT - Performance (Portlet - User Interface) Fulfilment Update with Scheduler Nordin
 	
 		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
 	}
@@ -4075,5 +4204,91 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 	}
 	// End Fix - #30856
+	
+	// Start #32906 haiza
+	public String saveToSchedulerToInitiate() throws Exception {
+		log.debug("start saveToSchedulerToInitiate");
+		IContractSO contractSO = null;
+		String action = BpmOutcomeConst.BPM_SAVE;
+
+		validateOwnerOrgProfile(ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile()
+				.getOrgProfileId());
+
+		validateFDDescAndAmount(action);
+		ctBB.getZoneObjDetails();
+
+		if (!ctBB.getManagedBean().getContractVer().getCtContractValue().isPid()) {
+			ctBB.getManagedBean().getContractVer().setCtPidReasons(null);
+		}
+
+		validateCtContractVer(action);
+		ContractReqDTO reqDTO = new ContractReqDTO();
+		reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
+		reqDTO.setOutcome(action);
+		reqDTO.setTaskId(getManagedBean().getTaskId());
+		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+
+		reqDTO.setCtContract(ctBB.getManagedBean().getContractVer().getCtContract());
+		CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+
+		ctContractVer.getCtContractValue().setSupplierName(ctBB.getManagedBean().getSupplierCompanyName());
+		ctContractVer.getCtContractValue().setSupplierBranch(ctBB.getManagedBean().getSupplierBranchName());
+		ctContractVer.getCtContractValue().setSupplierRegNo(ctBB.getManagedBean().getSupplierRegNo());
+		ctContractVer.getCtContractValue().setSupplierMofNo(ctBB.getManagedBean().getSupplierMofNo());
+
+		//ctContractVer.setWaiverAttachment(ctBB.getManagedBean().getWaiverDetail());
+		//ctContractVer.setWaiverAttachmentLatest(ctBB.getManagedBean().getCtAttachmentLatest());
+
+		reqDTO.setCtContractVer(ctContractVer);
+		reqDTO.setScLoa(ctContractVer.getCtContract().getLoa());
+		reqDTO.setAgreementContractVer(ctBB.getManagedBean().getAgreementContractVer());
+		reqDTO.setUserRole(getUserRole());
+		// reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
+		reqDTO.setAttachments(getManagedBean().getAttachmentList());
+		reqDTO.setUserMap(getManagedBean().getUserMap());
+		reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+		reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+
+		if (this.getManagedBean().getPmDigiSign() != null) {
+			reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+		}
+		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+				IContractSO.class);
+		ContractResDTO resDTO = contractSO.saveToScheduler(reqDTO);
+
+		if (resDTO.isSuccessful()) {
+			log.debug("Record saved successfully");
+			String messageId = MessageConst.INFO_700005;
+
+			messageId = MessageConst.INFO_700110;
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							messageId,
+							new String[] {
+									getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ctBB.getManagedBean()
+											.getContractVer().getDocType()),
+									ctBB.getManagedBean().getContractVer().getCtContract().getContractNo(),
+									CommonConstants.performanceSchedulerTiming }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+
+			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
+					|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null)) {
+				renewSesionObject();
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			} else {
+				ContractReqDTO ctReqDTO = new ContractReqDTO();
+				ctReqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+				ctReqDTO.setDocType(resDTO.getCtContractVer().getDocType());
+				setValidateContractField(ctReqDTO);
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_700020);
+		}
+
+		return null;
+	}
+	// # 32906 haiza
 	
 }

@@ -31,8 +31,23 @@
 					</ui:repeat>
 					</ui:define><!-- #31422-basri 190821 -->
 					 </ui:decorate><!-- #31422-basri 190821 -->
-				</c:if></td>
-			<c:if test='#{ctBackingBean.managedBean.viewContract}'>
+				</c:if>
+				
+				
+				<c:if
+					test="#{ctBackingBean.managedBean.viewContract and ctBackingBean.managedBean.fromUpdateButton }">
+					<ui:decorate template="/xhtml/ct/shared/claim_template.xhtml">
+					<ui:define name="outComeSection">
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
+					immediate="true"
+					action="#{contractDetailsBackingBean.saveToSchedulerToInitiate}"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+					</ui:define>
+					 </ui:decorate>
+				</c:if>
+				
+				</td>
+			<c:if test="#{ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.fromUpdateButton}">
 				<td style="text-align: right">
 					<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}" immediate="true"
 						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode,
