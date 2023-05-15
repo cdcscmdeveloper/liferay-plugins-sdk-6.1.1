@@ -17715,7 +17715,7 @@ private void retriveCommitteeRemarksList(){
 	
 	//6906 - start
 	private void checkNoSuppliersSubmitted() {
-		if (!this.getManagedBean().isReadOnly() && this.getManagedBean().isNoProposalSubmitted()) {
+		if (this.getManagedBean().isNoProposalSubmitted()) {
 			String message = MessageUtils.getMessage(MessageConst.WARN_760530, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			Iterator<FacesMessage> messageIterator = facesContext.getMessages();
