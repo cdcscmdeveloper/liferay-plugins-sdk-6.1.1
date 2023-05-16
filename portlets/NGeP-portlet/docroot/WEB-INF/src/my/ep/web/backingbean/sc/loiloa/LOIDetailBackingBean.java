@@ -233,11 +233,13 @@ public class LOIDetailBackingBean extends
 			Long sourceId = null;
 			String letterCreator = null;
 			String currentUser = new FacesScopes().getUserSessionBean().getLoginId();
+
 			if(qtId == null){
 				fromBpmTaskList = true;
 				awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
 				sourceId = Long.valueOf(awardDataType.getSourceId()); 
 				letterCreator = awardDataType.getLetterCreator();
+				
 				if(StringUtils.isBlank(letterCreator)) {
 					if (new FacesScopes()
 					.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
@@ -253,14 +255,13 @@ public class LOIDetailBackingBean extends
 					} else {
 						awardDataType.setSecretary(currentUser);
 					}
-				} 
-				getManagedBean()
-				.setRecommendDtlIds(awardDataType.getGroupkeyList());
+				}
+				
+				getManagedBean().setRecommendDtlIds(awardDataType.getGroupkeyList());
 		
 				String finalizationMethod = getFinalizationMethodByAwardType(awardDataType.getAwardType());
 				getManagedBean().setDocType(finalizationMethod);
-			}
-			else{
+			} else {
 				this.getManagedBean().setReadOnly(true);
 				fromBpmTaskList = false;
 				sourceId = qtId;
@@ -291,6 +292,7 @@ public class LOIDetailBackingBean extends
 
 			// QT Proposal validity expired
 			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
+			
 			//qtMaintenanceScreen
 			if(isQTMaintenanceScreen()){
 				// ***25201#35 
@@ -299,7 +301,9 @@ public class LOIDetailBackingBean extends
 					ScWorkFlowStatusReqDTO wsReqDTO = new ScWorkFlowStatusReqDTO();
 					wsReqDTO.setDocId(getManagedBean().getScQt().getQtId());
 					wsReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+					
 					ScWorkFlowStatusResDTO wsResDTO = getScWorkflowStatusSO().retrieveCurrentWorkFlowStatus(wsReqDTO);
+					
 					if(wsResDTO != null && wsResDTO.isSuccessful()){
 						if(!CollectionUtils.isEmpty(wsResDTO.getWorkFlowStatusList())){
 							getManagedBean().setStatus(getStatusDescById(wsResDTO.getWorkFlowStatusList().get(0).getPmStatus().getStatusId()));
@@ -324,6 +328,7 @@ public class LOIDetailBackingBean extends
 		if(!StringUtils.isBlank(previousPageUrl)){
 			this.getManagedBean().setBackToPreviousPage(previousPageUrl);
 		}
+		
 		preRenderLoiListViewPriv(qtId, null);
 	}
 	// #17376 #19287 #19336 #25201 - end
@@ -392,7 +397,7 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
-// #17376 #19287 #19336 #25201 - start			
+	// #17376 #19287 #19336 #25201 - start			
 	/**
 	 * Pre render page navigation to loi page based on task id
 	 * 
@@ -435,21 +440,21 @@ public class LOIDetailBackingBean extends
 					}
 		// #29007	Vinod End
 	}
-	
+		
 	/**
 	 * 
 	 * @param loiId
 	 */
-	public void preRenderViewForQtMaintenenceScreen(Long loiId, String prevPageURL){
+	public void preRenderViewForQtMaintenenceScreen(Long loiId, String prevPageURL) {
 		Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
 		otherArgs.put(MapKeyEnum.prevPageURL, prevPageURL);
 		otherArgs.put(MapKeyEnum.isQtMaintenanceScreen, Boolean.TRUE);
 		otherArgs.put(MapKeyEnum.isReadOnly, Boolean.TRUE);
 		otherArgs.put(MapKeyEnum.enableDownloadAllDocuments, Boolean.TRUE);
+		
 		preRenderViewPriv(loiId, otherArgs);
 	}
-	
-	
+				
 	/**
 	 * 
 	 *  
@@ -461,20 +466,21 @@ public class LOIDetailBackingBean extends
 	 *		
 	 */
 	private void preRenderViewPriv(Long loiId, Map<MapKeyEnum, Object> otherArgs){
-		//boolean isQtMaintenanceScreen = otherArgs != null && otherArgs.containsKey(MapKeyEnum.isQtMaintenanceScreen) && (Boolean)otherArgs.get(MapKeyEnum.isQtMaintenanceScreen)!=null?((Boolean)otherArgs.get(MapKeyEnum.isQtMaintenanceScreen)).booleanValue():false;
 		boolean isQtMaintenanceScreen = isQTMaintenanceScreen();
+		
 		try {
 			SCAwardSupplierDataType awardDataType = null;
 			Long sourceId = null;
 			Boolean isEditFlag = null;
 			String prevPageUrl = null;
-			if(isQtMaintenanceScreen){
+				
+			if (isQtMaintenanceScreen) {
 				prevPageUrl = new MapKeyEnum.ValueRetriever<String>().getValue(otherArgs, MapKeyEnum.prevPageURL);
-				Boolean readOnly = new MapKeyEnum.ValueRetriever<Boolean>().getValue(otherArgs, MapKeyEnum.isReadOnly); 
-				isEditFlag = readOnly!=null?!readOnly:Boolean.FALSE;
-				getManagedBean().setEnableDownloadAllDocuments(new MapKeyEnum.ValueRetriever<Boolean>().getValue(otherArgs, MapKeyEnum.enableDownloadAllDocuments));
-			}
-			else{
+				Boolean readOnly = new MapKeyEnum.ValueRetriever<Boolean>().getValue(otherArgs, MapKeyEnum.isReadOnly);
+				isEditFlag = readOnly != null ? !readOnly : Boolean.FALSE;
+				
+				getManagedBean().setEnableDownloadAllDocuments(new MapKeyEnum.ValueRetriever<Boolean>().getValue( otherArgs, MapKeyEnum.enableDownloadAllDocuments));
+			} else {
 				awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
 
 				sourceId = Long.valueOf(awardDataType.getSourceId());
@@ -482,38 +488,39 @@ public class LOIDetailBackingBean extends
 				getManagedBean().setRecommendDtlIds(awardDataType.getGroupkeyList());
 				loiId = Long.valueOf(awardDataType.getAwardId());
 				isEditFlag = Boolean.TRUE;
-				
 			}
-			
+				
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 
 			if(currentStatusId != null){
 				getManagedBean().setDocType(getPmStatusByStatusId(currentStatusId).getDocType());
 				getManagedBean().setSourceId(sourceId);
 			}
-			
+				
 			if(prevPageUrl != null){
 				getManagedBean().setBackToPreviousPage(prevPageUrl);
 			}
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO.setLoiId(loiId);
-			AwardSupplierResDTO awardSupplierResDTO = getQtAwardSO()
-					.retrieveLOIDtlByLoiId(awardSupplierReqDTO);
+			
+			AwardSupplierResDTO awardSupplierResDTO = getQtAwardSO().retrieveLOIDtlByLoiId(awardSupplierReqDTO);
+			
 			if (awardSupplierResDTO.getScLoi() != null) {
 				ScLoi scLoi = awardSupplierResDTO.getScLoi();
 				editLOI(scLoi, isEditFlag);
 			}
-			getManagedBean().setEditFlag(Boolean.FALSE);
 			
+			getManagedBean().setEditFlag(Boolean.FALSE);
+				
 		} catch (Exception e) {
 			handleException(e);
 		} finally {
 			// qtAwardSO = null;
 		}
 	}
-		
 	// #17376 #19287 #19336 #25201 - end
+
 	/**
 	 * Pre render page navigation to suppler response page based on task id
 	 * 
@@ -574,6 +581,7 @@ public class LOIDetailBackingBean extends
 	public String retrieveSupplierLOIDtl(Long sourceId, Long loiId, String previousPageUrl, boolean isReadonly, boolean enableDownloadAllDocuments){
 		Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
 		otherArgs.put(MapKeyEnum.enableDownloadAllDocuments, Boolean.valueOf(enableDownloadAllDocuments));
+		
 		return retrieveSupplierLOIDtlPriv(sourceId, loiId, previousPageUrl, isReadonly, otherArgs);
 	}
 	
@@ -602,12 +610,16 @@ public class LOIDetailBackingBean extends
 			if(otherArgs == null){
 				otherArgs = new HashMap<MapKeyEnum, Object>();
 			}
+			
 			if(otherArgs.containsKey(MapKeyEnum.enableDownloadAllDocuments) && otherArgs.get(MapKeyEnum.enableDownloadAllDocuments) instanceof Boolean){
 				Object o = otherArgs.get(MapKeyEnum.enableDownloadAllDocuments);
-				if(o instanceof Boolean){	getManagedBean().setEnableDownloadAllDocuments((Boolean)o);	}
+				
+				if (o instanceof Boolean) {
+					getManagedBean().setEnableDownloadAllDocuments((Boolean) o);
+				}
 			}
-			
 			// #17376 #19287 #19336 #25201 - end
+			
 			getManagedBean().setSourceId(sourceId);
 			if (previousPageUrl != null) {
 				getManagedBean().setBackToPreviousPage(previousPageUrl);	
@@ -1214,26 +1226,25 @@ public class LOIDetailBackingBean extends
 		for (ScLoa scLoa : loaList) {
 			LoiLoaBean loiLoaBean = new LoiLoaBean();
 			loiLoaBean.setScLoa(scLoa);
-			loiLoaBean
-			.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+			loiLoaBean.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+			
 			// #17376 #19287 #19336 #25201 - start
 			if(null!=scLoa.getPmStatus()){
-				loiLoaBean.setLoiLoaStatus(getStatusDescById(scLoa
-					.getPmStatus().getStatusId()));
+				loiLoaBean.setLoiLoaStatus(getStatusDescById(scLoa.getPmStatus().getStatusId()));
 				loiLoaBean.setPmStatus(scLoa.getPmStatus());
-			}
-			else{
+			} else {
 				loiLoaBean.setPmStatus(getPmStatusByStatusId(new Long(QTConstants.PM_STATUS_INACTIVE_CODE)));
 			}
 			// #17376 #19287 #19336 #25201 - end
+			
 			loiloaBeans.add(loiLoaBean);
 		}
 
 		for (ScLoi scLoi : loiList) {
 			LoiLoaBean loiLoaBean = new LoiLoaBean();
 			loiLoaBean.setScLoi(scLoi);
-			loiLoaBean
-			.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
+			loiLoaBean.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
+			
 			// #17376 #19287 #19336 #25201 - start
 			if(null!=scLoi.getScWorkFlowStatus() && null!=scLoi.getScWorkFlowStatus().getPmStatus()){
 				loiLoaBean.setLoiLoaStatus(getStatusDescById(scLoi
@@ -1241,11 +1252,11 @@ public class LOIDetailBackingBean extends
 					.getStatusId()));
 				loiLoaBean.setPmStatus(scLoi.getScWorkFlowStatus()
 						.getPmStatus());
-			}
-			else{
+			} else {
 				loiLoaBean.setPmStatus(getPmStatusByStatusId(new Long(QTConstants.PM_STATUS_INACTIVE_CODE)));
 			}
-			// #17376 #19287 #19336 #25201 - end		
+			// #17376 #19287 #19336 #25201 - end
+			
 			loiloaBeans.add(loiLoaBean);
 		}
 		return loiloaBeans;
@@ -1265,6 +1276,7 @@ public class LOIDetailBackingBean extends
 			debugLogger(" onRowRecSupplierAction : " + event.toString() + "    class : " + event.getClass());
 		}
 		// #17376 #19287 #19336 #25201 - end
+		
 		ScLoiLoa scLoiLoa = (ScLoiLoa) event.getObject();
 
 		// #32757- Start.
@@ -1638,7 +1650,7 @@ public class LOIDetailBackingBean extends
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
 	}
-	 // #17376 #19287 #19336 #25201 - end
+	// #17376 #19287 #19336 #25201 - end
   
 	/**
 	 * getting Approver drop down listing in approval details.
@@ -2162,6 +2174,7 @@ public class LOIDetailBackingBean extends
 			
 			// # 11134 -start-
 			List<ScLoiRemark> supplierRemarks = filterSupplierRemarks(getManagedBean().getScLoi().getScLoiRemarks(), false);
+			
 			getManagedBean().setSupplierRemarks(supplierRemarks);
 			// # 11134 -end-
 		}
@@ -2181,10 +2194,10 @@ public class LOIDetailBackingBean extends
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
 		//20210406@asyrafhaziq - Bug #30662 - Start
-		if (scLoi.getLoiAmt() != null) {
+		//if (scLoi.getLoiAmt() != null) {
 		//	userReqDTO.setApprovalLimit(scLoi.getLoiAmt());
 		//}
-		}
+		//userReqDTO.setOrgProfileId(scLoi.getScLoiLoa().getPmOrgProfile()
 		//	.getOrgProfileId());
 		userReqDTO.setMinisterOrgProfileId(retrieveMinistryOrgProfile(
 											scLoi.getScLoiLoa().getPmOrgProfile()
@@ -3060,16 +3073,18 @@ public class LOIDetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				super.renewSesionObject();
-				
+
 				// #25638 - Start.
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					successMessage(MessageConst.INFO_776042, getMessageCommon("lbl.sc.quotation.tender"), scQtFinalization
                         .getScQt().getQtNo(), Boolean.TRUE);
 				} else {
+					// #25638 - End.
 					successMessage(MessageConst.INFO_700033,
 							ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
 							ParameterConst.RECOMMEND_BY_MULTIPLE_LOI, scQtFinalization
 							.getScQt().getQtNo(), Boolean.TRUE);
+					// #25638 - Start.
 				}
 				// #25638 - End.
 			}
@@ -4059,6 +4074,7 @@ public class LOIDetailBackingBean extends
 		int selectedTabIndex = getManagedBean().getSelectedTabIndex();
 		boolean isSecretaryUser = getManagedBean().isSecretaryUser();
 		boolean enableDownloadAllDocuments = getManagedBean().getEnableDownloadAllDocuments(); // #17376 #19287 #19336 #25201
+		
 		this.renewSesionObject();
 
 		getManagedBean().setSourceId(sourceId);
@@ -4088,6 +4104,7 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setSelectedTabIndex(selectedTabIndex);
 		getManagedBean().setSecretaryUser(isSecretaryUser);
 		getManagedBean().setEnableDownloadAllDocuments(enableDownloadAllDocuments); // #17376 #19287 #19336 #25201																		   
+		
 		if(null!=scQtFinalization){
 		this.getManagedBean().setScQt(scQtFinalization.getScQt());
 		}
@@ -6448,7 +6465,7 @@ public class LOIDetailBackingBean extends
 	//end Enhancement #21573
 
 	// #17376 #19287 #19336 #25201 - start
-		public void setLoiList(List<ScLoi> loiList) {
+	public void setLoiList(List<ScLoi> loiList) {
 		this.loiList = loiList;
 	}
 
@@ -6487,9 +6504,12 @@ public class LOIDetailBackingBean extends
 	 */
 	public void reviseAction() {
         reviseSignOff();
+        
 		updateMultiLoiBpmTask(BpmOutcomeConst.BPM_REVISE, null);
 	}
+	// #25638 - End
 	
+	// #25638 - Start.
 	private void reviseSignOff() {
 		if (StringUtils.isNotBlank(getManagedBean().getCommitteeType())) {
 		  
@@ -6498,7 +6518,9 @@ public class LOIDetailBackingBean extends
 			}
 		}
 	}
+	// #25638 - End
 	
+	// #25638 - Start.
 	/**
 	 * @return
 	 */
