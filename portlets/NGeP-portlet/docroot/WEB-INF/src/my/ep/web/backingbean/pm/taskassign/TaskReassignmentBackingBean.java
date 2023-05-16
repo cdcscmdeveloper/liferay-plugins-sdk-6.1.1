@@ -3205,8 +3205,8 @@ public class TaskReassignmentBackingBean extends
 			//Bug #25021
 			committeReqDTO.setOrgProfileId(orgProfileId);
 			//end Bug #25021
-			
-			return committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();
+			//return committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();
+			return committeSO.retrieveUserListByCommTypeForTaskReassignment(committeReqDTO).getUserResultBean(); //Fix - #34699
 		} finally {
 			committeSO = null;
 		}
