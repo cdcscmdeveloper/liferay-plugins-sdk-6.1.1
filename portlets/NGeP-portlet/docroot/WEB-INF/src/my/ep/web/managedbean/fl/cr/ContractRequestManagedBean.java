@@ -316,6 +316,18 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	//24893 - start
 	private PmOrgProfile chargePTJOrg;
 	//24893 - end
+	//11076 - start
+    private int totalExistingItem;
+    private int totalNewItemsAdded;
+    private int overallTotalItem;
+    private int validateItem;
+    private int addAllItem;
+    private int updateItem;
+    private int calculateTotalExist;
+    private int deleteItem;
+    private int deleteOverallItem;
+    //11076 - end
+    
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
 		/** The Constant serialVersionUID. */
@@ -3135,4 +3147,77 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 			this.catalogueFlag = catalogueFlag;
 		}
 		//end-13984 - CrList - Back Button
+		//11076 -start
+		public int getTotalExistingItem() {
+			return totalExistingItem;
+		}
+		
+		public void setTotalExistingItem(int totalExistingItem) {
+			this.totalExistingItem = totalExistingItem;
+		}
+
+		public int getTotalNewItemsAdded() {
+			return totalNewItemsAdded;
+		}
+
+		public void setTotalNewItemsAdded(int totalNewItemsAdded) {
+			this.totalNewItemsAdded = totalNewItemsAdded;
+		}
+
+		public int getOverallTotalItem() {
+			return overallTotalItem;
+		}
+
+		public void setOverallTotalItem(int overallTotalItem) {
+			this.overallTotalItem = overallTotalItem;
+		}
+
+		public int getValidateItem() {
+			return validateItem;
+		}
+
+		public void setValidateItem(int validateItem) {
+			this.validateItem = validateItem;
+		}
+
+		public int getAddAllItem() {
+			return addAllItem;
+		}
+
+		public void setAddAllItem(int addAllItem) {
+			this.addAllItem = addAllItem;
+		}
+
+		public int getUpdateItem() {
+			return updateItem;
+		}
+
+		public void setUpdateItem(int updateItem) {
+			this.updateItem = updateItem;
+		}
+		
+		public int getCalculateTotalExist() {
+			return calculateTotalExist;
+		}
+
+		public void setCalculateTotalExist(int calculateTotalExist) {
+			this.calculateTotalExist = calculateTotalExist;
+		}
+		
+		public int getDeleteItem() {
+			return deleteItem;
+		}
+
+		public void setDeleteItem(int deleteItem) {
+			this.deleteItem = deleteItem;
+		}
+
+		public int getDeleteOverallItem() {
+			return deleteOverallItem;
+		}
+
+		public void setDeleteOverallItem(int deleteOverallItem) {
+			this.deleteOverallItem = deleteOverallItem;
+		}
+		//11076 - end
 }
