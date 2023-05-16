@@ -10263,13 +10263,42 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			
 			TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
-			for(TplSpecAnswer tplSpecAnswer: templateSpecResDTO.getSpecAnswerList()){
-				if(tplSpecAnswer.getNewSupplierOffer() != null && tplSpecAnswer.getNewSupplierOffer() != ""){
+			List<TplSpecAnswer> afterTireCheckAnswerList = new ArrayList<>();
+			
+			for (TplSpecAnswer tplSpecAnswer : templateSpecResDTO.getSpecAnswerList()) {
+				int contains=0;
+				
+				if (tplSpecAnswer.getNewSupplierOffer() != null && tplSpecAnswer.getNewSupplierOffer() != "") {
 					tplSpecAnswer.setRenderNewSpec(true);
 				}
+				for(TplSpecAnswer answer :afterTireCheckAnswerList){
+					if(answer.getTplSpecQuestion()!=null
+						&& tplSpecAnswer.getTplSpecQuestion()!=null
+						&& answer.getTplSpecQuestion().getSpecQuestionId() == tplSpecAnswer.getTplSpecQuestion().getSpecQuestionId()){
+						contains++;
+						break;
+					}
+				}
+				if((qtMaint || (QTStatusConst.LOA_COMPLETED.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+					&& !qtMaint))
+					&& afterTireCheckAnswerList.isEmpty()){
+					afterTireCheckAnswerList.add(tplSpecAnswer);
+				} else if((qtMaint || (QTStatusConst.LOA_COMPLETED.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+						   && !qtMaint))
+						   && !afterTireCheckAnswerList.isEmpty()
+						   && contains==0){
+						   afterTireCheckAnswerList.add(tplSpecAnswer);
+				} else {
+					continue;
+				}
 			}
-			
-			this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
+
+			if(qtMaint || (QTStatusConst.LOA_COMPLETED.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+					&& !qtMaint)){
+				this.getManagedBean().setTplSpecAnswerList(afterTireCheckAnswerList);
+			}else{
+				this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
+			}
 			this.getManagedBean().setScLoiLoaItem(loiLoaItem);
 			if(mainSearch){
 				this.getManagedBean().setTplSpecQuestion(tplSpecQuestion1);

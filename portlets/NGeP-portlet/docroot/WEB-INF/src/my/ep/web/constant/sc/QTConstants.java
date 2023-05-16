@@ -36,6 +36,7 @@ public interface QTConstants {
 	public static final String SEARCH_PAGE = "/xhtml/sc/quatationtender/quatationtendersearch.xhtml";
 	public static final String CREATE_COMMITTE = "committeemaintanancepage";
 	public static final String QT_SEARCHING_PAGE = "/xhtml/sc/quatationtender/quatationtendersearch.xhtml?faces-redirect=true"; //#9019
+	public static final String MAINT_EPV_APPROVAL_DETAIL = "/xhtml/sc/quatationtender/Approver/maintenanceApprovalEpv.xhtml";//#21692 add new page for history
 
 	public static final String QT_DETAILS_TAB = "Quotation Details";
 	public static final String QT_SUPPLIERQULIFICATION_TAB = "Supplier Qualification Criteria";
