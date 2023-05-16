@@ -180,14 +180,14 @@ public class ProfileOfRegCompanyRptBackingBean extends
 	
 	//#32564, #30824 - start
 	public String constructConditionFieldsBasic(){
-		StringBuilder sb = new StringBuilder("smAppl.supplierType^"+SupplierManagementConst.SUPP_TYPE_BASIC);
+		StringBuilder sb = new StringBuilder();
 		if (getManagedBean().getZone() != null) {
 			if (getManagedBean().getZone().equalsIgnoreCase("SEMENANJUNG")) {
-				sb.append("|smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^1");
+				sb.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^1");
 			} else if (getManagedBean().getZone().equalsIgnoreCase("SABAH")) {
-				sb.append("|smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^2");
+				sb.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^2");
 			} else if (getManagedBean().getZone().equalsIgnoreCase("SARAWAK")) {
-				sb.append("|smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^3");
+				sb.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^3");
 			}
 		}
 		log.info("32564- constructConditionFieldsBasic():"+sb.toString());

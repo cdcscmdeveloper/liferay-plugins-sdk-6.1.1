@@ -1136,8 +1136,10 @@ public class EvaluationBackingBean extends
 			detailBackingBean.getManagedBean().setReadOnly(true);
 			//#28786 bug - start
 			//#28786 fix under 28784 change hardcoded to constant - start
+			//Bug #34745 start
 			if (proposalCheckList.getScQtCheckList().getTitle()
-					.equals(SourcingConstants.PENGESAHAN_TIGA_BULAN)) {
+					.equals(SourcingConstants.PENGESAHAN_TIGA_BULAN)
+					&& proposalCheckList.getScQtCheckList().getPmDocument() != null) {
 				retrieveAllFinancialChecklist(SourcingConstants.PENYATA_TIGA_BULAN);
 				log.info("This is Pengesahan dari Institusi Kewangan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
 				retrieveComplianceUploadedProposalChecklist(proposalCheckList, true);
@@ -1146,7 +1148,8 @@ public class EvaluationBackingBean extends
 						.retrieveBankStmtDtls(this.getManagedBean().getComplianceQtProposalChecklist());
 			}
 			if (proposalCheckList.getScQtCheckList().getTitle()
-					.equals(SourcingConstants.KUNCI_KIRA_KIRA_TAHUNAN)) {
+					.equals(SourcingConstants.KUNCI_KIRA_KIRA_TAHUNAN)
+					&& proposalCheckList.getScQtCheckList().getPmDocument() != null) {
 				retrieveAllFinancialChecklist(SourcingConstants.ASSET_DAN_LIABILITI);
 				log.info("This is Kunci Kira-Kira Tahunan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
 				retrieveComplianceUploadedProposalChecklist(proposalCheckList, true);
@@ -1155,7 +1158,8 @@ public class EvaluationBackingBean extends
 						.retrieveAssetLiabilityDtls(this.getManagedBean().getComplianceQtProposalChecklist());
 			}
 			if (proposalCheckList.getScQtCheckList().getTitle()
-					.equals(SourcingConstants.PENGESAHAN_DARI_INSITUSI)) {
+					.equals(SourcingConstants.PENGESAHAN_DARI_INSITUSI)
+					&& proposalCheckList.getScQtCheckList().getPmDocument() != null) {
 				retrieveAllFinancialChecklist(SourcingConstants.KEMUDAHAN_KREDIT);
 				log.info("This is Institusi Kewangan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
 				retrieveComplianceUploadedProposalChecklist(proposalCheckList, true);
@@ -1163,6 +1167,7 @@ public class EvaluationBackingBean extends
 				proposalPage = detailBackingBean
 						.retrieveCreditFacilitiesDtls(this.getManagedBean().getComplianceQtProposalChecklist());
 			}
+			//Bug #34745 end
 			//#28786 fix under 28784 change hardcoded to constant - end
 			//#28786 bug - end
 			this.getManagedBean().setProposalPage(proposalPage);
@@ -1639,7 +1644,7 @@ public void saveComplianceSample() {
 				
 				for(ScQtCheckList checklistOfTitle : resDTO.getCheckListResultBean().getResultList()) {
 					log.info("Doc title =======================>>> " + checklistOfTitle.getTitle());
-					if(checklistOfTitle.getTitle().equals(title)) {
+					if (checklistOfTitle.getTitle().equals(title) && checklistOfTitle.getPmDocument() != null) {//Bug #34745
 						this.getManagedBean().setComplianceQtChecklist(checklistOfTitle);
 					}
 				}
@@ -8269,6 +8274,29 @@ public void saveComplianceSample() {
 															 
 											   
 					// evaluationStageCheck();
+					//Bug #34748 - Start
+					if (currentTab == 0 || currentTab == 1) {
+
+						if (null == this.getManagedBean().getScQt().getFecEvaluationCheck()) {
+							
+							boolean isSuccess = generateFinancialEvaluationresults();
+							if (!isSuccess) {
+								throw new EpException(MessageConst.ERROR_760530);
+							}
+							this.getManagedBean().getScQt().setFecEvaluationCheck(2);
+							EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+							reqDTO.setScQt(this.getManagedBean().getScQt());
+							evalResDTO = evaluationSo.saveReportDtls(reqDTO);
+							this.getManagedBean().setScQt(evalResDTO.getScQt());
+						}
+						retriveFinancialEvaluationStage();
+						retriveNonScoringComplianceFinancial(true);
+						financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgTechnicalCheckList().get(0)
+								.getDocCategory());
+						outputTab = 3;
+						this.getManagedBean().setTabFinancialIndex(1);
+					}
+					//Bug #34748 - End
 					if (currentTab == 2) {
 
 						if (this.getManagedBean()
@@ -17687,7 +17715,7 @@ private void retriveCommitteeRemarksList(){
 	
 	//6906 - start
 	private void checkNoSuppliersSubmitted() {
-		if (!this.getManagedBean().isReadOnly() && this.getManagedBean().isNoProposalSubmitted()) {
+		if (this.getManagedBean().isNoProposalSubmitted()) {
 			String message = MessageUtils.getMessage(MessageConst.WARN_760530, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			Iterator<FacesMessage> messageIterator = facesContext.getMessages();
