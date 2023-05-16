@@ -1629,7 +1629,7 @@ public class GovtSellerRegistrationBackingBean extends
 				//checking if the application has a record in smPersonnelAuthLog
 				SupplierSearchResDTO resDTO1 = SmServiceLookup.getSupplierSearchSO().checkSupplierApplAuthLogRecord(supplierSearchReqDTO);
 				if(resDTO1.isRecord()){
-					getManagedBean().getSmSupp().getSmAppls().addAll(resDTO1.getSmSupplier().getSmAppls());
+					getManagedBean().getSmSupp().getSmAppls().addAll(resDTO.getSmSupplier().getSmAppls());
 				}
 			}
 		}
