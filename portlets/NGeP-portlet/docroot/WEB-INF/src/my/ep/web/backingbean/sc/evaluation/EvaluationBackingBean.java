@@ -4445,8 +4445,24 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 						}
 					} else {
 						if (this.getManagedBean().getScQt().isDemoRequired()) {
-							zoneReqDto
-									.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
+							// Bug #34770 (4Serangkai)
+							//wip status start
+							evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+									ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+
+							int wipstatus = evaluationSO.checkWipScoreSetting(zoneReqDto);
+							
+							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+								if (this.getManagedBean().getTabItemPackageIndex() == 1) {
+									zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+								} else if (this.getManagedBean().getTabItemPackageIndex() == 2) {
+									zoneReqDto.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
+								}
+							} else {
+								zoneReqDto
+								.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
+							}
+							// Bug #34770 (4Serangkai) wip status end
 						} else {
 							// #32391, #25138, #21695 - Start.
 							if (this.getManagedBean().getScQt().isTechEvaluationReq()) {
@@ -6462,9 +6478,9 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			
 			List<String> resultStg = new ArrayList<String>();
 			resultStg.add(SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO);
-			// #21695, #25138 -start-
-			resultStg.add(QTConstants.TECHNICAL_SUMMARY_ITEM);
-			// #21695, #25138 -end-
+			// #21695, #25138 start remove
+			//resultStg.add(QTConstants.TECHNICAL_SUMMARY_ITEM);
+			// #21695, #25138 end
 			
 			evalReqDTO.setResultStages(resultStg);
 			// #21695, #25138 -start-
