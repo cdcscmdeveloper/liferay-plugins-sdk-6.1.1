@@ -10646,6 +10646,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	// #25638 -start-
 	public void specCommitteBpmTask(String action) {
 		// #25638 -end-
+		// #1873 -start-
+		if (assertPendingFinancialSubmission())
+			return;
+		// #1873 -end-
+
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
@@ -15149,7 +15154,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 		//#15391 - end
 		
-      committeSO =null;   
+		retriveTechnicalCheckList(); // 1873 - note 52
+
+		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
 		
 		fc.getApplication()
@@ -15169,6 +15176,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	// #25638 -start-
 	public void specCommitteMaintenanceBpmTask(String action) {
 		// #25638 -end-
+		// #1873 -start-
+		if (assertPendingFinancialSubmission())
+			return;
+		// #1873 -end-
+
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
