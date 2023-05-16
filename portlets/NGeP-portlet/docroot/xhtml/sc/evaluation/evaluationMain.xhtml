@@ -13,6 +13,18 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
+		<!-- 6906 note 263 start -->
+		<c:if test="#{evaluationBackingBean.managedBean.noProposalSubmitted}">
+			<div class="ui-messages ui-widget">
+				<div class="ui-messages-warn ui-corner-all">
+					<span class="ui-messages-warn-icon"></span>
+					<ul>
+						<li><span class="ui-messages-warn-detail">#{evaluationBackingBean.getNoSupplierWarningMessage()}</span></li>
+					</ul>
+				</div>
+			</div>
+		</c:if>
+		<!-- 6906 note 263 end -->
 		<p:messages id="evaluateMessages" showDetail="true" autoUpdate="#{evaluationBackingBean.managedBean.autoUpdate}"
 			showSummary="false" closable="true" severity="error, info,warn" />
 		<ac:gpkiPopup textBeforeSign="#{evaluationBackingBean.textBeforeSign}"
