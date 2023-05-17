@@ -55,6 +55,7 @@ import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
@@ -65,9 +66,11 @@ import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault; //#9133
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.util.sm.SmUserUtil;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -858,6 +861,56 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							    	   }
 						    	   }
 						       }
+								// 25884 - start
+								if (worklistItemVO.getDocStatus() != null
+										&& worklistItemVO.getDocStatus().intValue() == DPStatusConstants.RN_PENDING_ITEM_CODIFICATION
+												.intValue()) {
+									IRequestNoteSO rnSO = BusinessDelegate.getInstance().getServiceObject(
+											ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
+									RequestNoteReqDTO NotereqDTO = new RequestNoteReqDTO();
+									if (worklistItemVO.getDocNumber() != null
+											&& !worklistItemVO.getDocNumber().isEmpty()) {
+										NotereqDTO.setRequestNoteNo(worklistItemVO.getDocNumber());
+									}
+									RequestNoteResDTO resDTO = rnSO.getRequestNote(NotereqDTO);
+
+									if (resDTO.getRequestNoteDetail() != null) {
+										if (resDTO.getRequestNoteDetail().getRequestNoteDtls() != null
+												&& !resDTO.getRequestNoteDetail().getRequestNoteDtls().isEmpty()) {
+											StringBuffer sb = new StringBuffer();
+											String spacer = " ";
+											List<String> listProcurementTitle = new ArrayList<>();
+											for (ScRequestNoteDtl noteDtl : resDTO.getRequestNoteDetail()
+													.getRequestNoteDtls()) {
+												if (noteDtl.getScRequestSupplierItem() != null
+														&& noteDtl.getScRequestSupplierItem().getSmSupplier() != null) {
+													SupplierSearchResDTO searchResDTO = SmUserUtil
+															.getCurrentSupplier(face.getUserSessionBean().getUserId());
+													if (searchResDTO != null && searchResDTO.getSmSupplier() != null) {
+														if (searchResDTO.getSmSupplier().getSupplierId().intValue() == noteDtl
+																.getScRequestSupplierItem().getSmSupplier()
+																.getSupplierId().intValue()) {
+															if (!listProcurementTitle.contains(noteDtl
+																	.getProcurementTitle())) {
+																listProcurementTitle.add(noteDtl.getProcurementTitle());
+																sb.append(noteDtl.getProcurementTitle()).append(spacer)
+																		.append("/").append(spacer);
+															}
+
+															if (sb.toString().length() > SourcingConstants.PROCUREMENT_TITLE_LIMIT) {
+																sb.substring(0,
+																		SourcingConstants.PROCUREMENT_TITLE_LIMIT);
+															}
+														}
+													}
+												}
+											}
+											sb.deleteCharAt(sb.toString().lastIndexOf("/"));
+											worklistItemVO.setTitle(sb.toString());
+										}
+									}
+								}
+								// 25884 - end
 						       processWorklistItemByTaskName(worklistItemVO, face); //#24968  - performance
 							} catch (Exception ex) {
 								worklistItemVO.setTitle("please check");
@@ -1558,7 +1611,53 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					worklistItemVO.setTitle(sb.toString());
 				}
 			}
-		} else {
+		}
+		// 25884 - start
+		else if (worklistItemVO.getDocStatus() != null
+				&& worklistItemVO.getDocStatus().intValue() == DPStatusConstants.RN_PENDING_ITEM_CODIFICATION
+						.intValue()) {
+			IRequestNoteSO rnSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IRequestNoteSO.class);
+			RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
+			if (worklistItemVO.getDocNumber() != null && !worklistItemVO.getDocNumber().isEmpty()) {
+				reqDTO.setRequestNoteNo(worklistItemVO.getDocNumber());
+			}
+			RequestNoteResDTO resDTO = rnSO.getRequestNote(reqDTO);
+
+			if (resDTO.getRequestNoteDetail() != null) {
+				if (resDTO.getRequestNoteDetail().getRequestNoteDtls() != null
+						&& !resDTO.getRequestNoteDetail().getRequestNoteDtls().isEmpty()) {
+					StringBuffer sb = new StringBuffer();
+					String spacer = " ";
+					List<String> listProcurementTitle = new ArrayList<>();
+					for (ScRequestNoteDtl noteDtl : resDTO.getRequestNoteDetail().getRequestNoteDtls()) {
+						if (noteDtl.getScRequestSupplierItem() != null
+								&& noteDtl.getScRequestSupplierItem().getSmSupplier() != null) {
+							SupplierSearchResDTO searchResDTO = SmUserUtil.getCurrentSupplier(face.getUserSessionBean()
+									.getUserId());
+							if (searchResDTO != null && searchResDTO.getSmSupplier() != null) {
+								if (searchResDTO.getSmSupplier().getSupplierId().intValue() == noteDtl
+										.getScRequestSupplierItem().getSmSupplier().getSupplierId().intValue()) {
+									if (!listProcurementTitle.contains(noteDtl.getProcurementTitle())) {
+										listProcurementTitle.add(noteDtl.getProcurementTitle());
+										sb.append(noteDtl.getProcurementTitle()).append(spacer).append("/")
+												.append(spacer);
+									}
+
+									if (sb.toString().length() > SourcingConstants.PROCUREMENT_TITLE_LIMIT) {
+										sb.substring(0, SourcingConstants.PROCUREMENT_TITLE_LIMIT);
+									}
+								}
+							}
+						}
+					}
+					sb.deleteCharAt(sb.toString().lastIndexOf("/"));
+					worklistItemVO.setTitle(sb.toString());
+				}
+			}
+		}
+		// 25884 - end
+		else {
 			processTitleWithDocStatus(worklistItemVO, face);
 		}
 	}
