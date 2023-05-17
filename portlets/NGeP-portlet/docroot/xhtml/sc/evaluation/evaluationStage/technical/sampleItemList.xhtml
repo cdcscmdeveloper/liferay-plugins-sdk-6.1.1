@@ -83,9 +83,9 @@
 
 					</p:column>
 					<!-- #29187 Start Vinod -->
-					<p:column style="width:10%;white-space: normal;" rendered="#{isManSpecAndCompliance}">
+					<p:column style="width:10%;" rendered="#{isManSpecAndCompliance}">
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.sc.compliance']}"/>
+							<h:outputText value="#{lbl['lbl.sc.tec.compliance']}"/>
 							<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.compliance.sample.tooltip']}" />
 						</f:facet>
 						<h:selectOneMenu id="itemCompliance" 
@@ -99,7 +99,7 @@
 						</h:selectOneMenu>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.tpl.spec.content.comment']}"
-						style="width:15%;white-space: normal;" rendered="#{isManSpecAndCompliance}">
+						style="width:15%;" rendered="#{isManSpecAndCompliance}">
 						<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly 
 													or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
 													or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}" 
