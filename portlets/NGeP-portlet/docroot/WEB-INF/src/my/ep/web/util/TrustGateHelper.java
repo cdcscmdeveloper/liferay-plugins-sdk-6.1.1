@@ -363,7 +363,7 @@ public class TrustGateHelper {
 			return updateCRUrl;
 		}else if("resetpin".equalsIgnoreCase(type)){
 			if (StringUtils.isBlank(resetPinUrl)) {
-				resetPinUrl = EpPropertiesUtils.getInstance().getProperty("trustgate.resitpin");
+				resetPinUrl = EpPropertiesUtils.getInstance().getProperty("trustgate.resetpin");
 			}
 			return resetPinUrl;
 		}else if("changepin".equalsIgnoreCase(type)){
