@@ -1138,6 +1138,8 @@ public class TaskReassignmentBackingBean extends
 			BpmRequestDTO reqDTO = null;
 			BpmResponseDTO responseDTO = null;
 			String loginId = null;
+			//#7465 - missing parse for doc number
+			String docNo = null;
 			List<Integer> statusIds = getManagedBean().getStatusIds(); //status_id list from pm_status
 			TaskAssignmentSearchBean taskSearchBean = null;
 			SearchResultBean<WorklistItemVO> resultBean = null;
@@ -1146,6 +1148,10 @@ public class TaskReassignmentBackingBean extends
 				taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
 				loginId = taskSearchBean.getUser() != null ? taskSearchBean
 						.getUser().getLoginId() : null;
+
+				//#7465 - missing parse for doc number
+				docNo = taskSearchBean.getDocNo();
+				
 				// #20117		
 				if (loginId == null) {
 					if (getManagedBean().getResultUser() != null) {
@@ -1164,7 +1170,8 @@ public class TaskReassignmentBackingBean extends
 						log.info("BPM loginId******" + loginId);
 						log.info("BPM statusIds******" + statusIds.size());
 				
-
+						//#7465 - missing parse for doc number 
+						reqDTO.setDocNumber(docNo);
 						reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 						reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 						reqDTO.setStatusList(statusIds);
@@ -1320,6 +1327,8 @@ public class TaskReassignmentBackingBean extends
 			BpmRequestDTO reqDTO = null;
 			BpmResponseDTO responseDTO = null;
 			String loginId = null;
+			//#7465 - missing parse for doc number 
+			String docNo = null;
 			List<Integer> statusIds = getManagedBean().getStatusIds();
 			TaskAssignmentSearchBean taskSearchBean = null;
 			SearchResultBean<WorklistItemVO> resultBean = null;
@@ -1328,6 +1337,9 @@ public class TaskReassignmentBackingBean extends
 				taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
 				loginId = taskSearchBean.getUser() != null ? taskSearchBean
 						.getUser().getLoginId() : null;
+
+				//#7465 - missing parse for doc number 
+				docNo = taskSearchBean.getDocNo();
 				// #20117		
 				if (loginId == null) {
 					if (getManagedBean().getResultUser() != null) {
@@ -1347,6 +1359,8 @@ public class TaskReassignmentBackingBean extends
 						log.info("BPM loginId******" + loginId);
 						log.info("BPM statusIds******" + statusIds.size());
 
+						//#7465 - missing parse for doc number 
+						reqDTO.setDocNumber(docNo);
 						reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 						reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 						reqDTO.setStatusList(statusIds);
@@ -1511,6 +1525,8 @@ public class TaskReassignmentBackingBean extends
 			BpmRequestDTO reqDTO = null;
 			BpmResponseDTO responseDTO = null;
 			String loginId = null;
+			//#7465 - missing parse for doc number 
+			String docNo = null;
 			List<Integer> statusIds = getManagedBean().getStatusIds();
 			TaskAssignmentSearchBean taskSearchBean = null;
 			SearchResultBean<WorklistItemVO> resultBean = null;
@@ -1519,6 +1535,9 @@ public class TaskReassignmentBackingBean extends
 				taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
 				loginId = taskSearchBean.getUser() != null ? taskSearchBean
 						.getUser().getLoginId() : null;
+
+				//#7465 - missing parse for doc number 
+				docNo = taskSearchBean.getDocNo();
 				// #20117		
 				if (loginId == null) {
 					if (getManagedBean().getResultUser() != null) {
@@ -1537,6 +1556,8 @@ public class TaskReassignmentBackingBean extends
 						log.info("BPM loginId******" + loginId);
 						log.info("BPM statusIds******" + statusIds.size());
 
+						//#7465 - missing parse for doc number 
+						reqDTO.setDocNumber(docNo);
 						reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 						reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 						reqDTO.setStatusList(statusIds);
