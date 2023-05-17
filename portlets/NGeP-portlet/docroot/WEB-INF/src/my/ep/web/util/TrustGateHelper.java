@@ -41,6 +41,12 @@ public class TrustGateHelper {
 	private static KMCClient client;
 	private static KMCRequestBuilder reqBuilder;
 	private static String dns;
+	//34807
+	private static String revokeUrl;
+	private static String changePinUrl;
+	private static String resetPinUrl;
+	private static String updateCRUrl;
+	
 	public static Logger log = Logger.getLogger(TrustGateHelper.class);
 
 	public KMCClient getKMCClient() {
@@ -237,7 +243,7 @@ public class TrustGateHelper {
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
 
-		String url4 = getDns() + "/certificate/request-revoke/"+ encodedtoken;//34807
+		String url4 = getDns() + "/" +getTgUrl("revoke") + encodedtoken;//34807
 		RequestContext.getCurrentInstance().execute("window.open('"+url4+"', '_blank')");
 		//externalContext.redirect(url4); 
 	}
@@ -251,7 +257,7 @@ public class TrustGateHelper {
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
 
-		String url = getDns() + "/certificate/reset-pin/" + encodedtoken;//34807
+		String url = getDns() + "/" + getTgUrl("resetpin") + encodedtoken;//34807
 
 		externalContext.redirect(url);
 	}
@@ -264,7 +270,7 @@ public class TrustGateHelper {
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
 
-		String url = getDns() + "/certificate/change-pin/"+ encodedtoken;//34807
+		String url = getDns() + "/" + getTgUrl("changepin") + encodedtoken;//34807
 
 		externalContext.redirect(url);
 	}
@@ -278,7 +284,7 @@ public class TrustGateHelper {
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
 
-		String url = getDns() + "/certificate/update-challenge-response-check-pin/" + encodedtoken;//34807
+		String url = getDns() + "/" + getTgUrl("updateCR") + encodedtoken;//34807
 
 		externalContext.redirect(url);
 	}
@@ -338,5 +344,35 @@ public class TrustGateHelper {
 			}
 		}
 		return dns;
+	}
+	//34807
+	/*
+	 * To get TG URL by type
+	 * 
+	 * */
+	public static String getTgUrl(String type) {
+		if("revoke".equalsIgnoreCase(type)){
+			if (StringUtils.isBlank(revokeUrl)) {
+				revokeUrl = EpPropertiesUtils.getInstance().getProperty("trustgate.revoke");
+			}
+			return revokeUrl;
+		}else if("updateCR".equalsIgnoreCase(type)){
+			if (StringUtils.isBlank(updateCRUrl)) {
+				updateCRUrl = EpPropertiesUtils.getInstance().getProperty("trustgate.updatecr");
+			}
+			return updateCRUrl;
+		}else if("resetpin".equalsIgnoreCase(type)){
+			if (StringUtils.isBlank(resetPinUrl)) {
+				resetPinUrl = EpPropertiesUtils.getInstance().getProperty("trustgate.resetpin");
+			}
+			return resetPinUrl;
+		}else if("changepin".equalsIgnoreCase(type)){
+			if (StringUtils.isBlank(changePinUrl)) {
+				changePinUrl = EpPropertiesUtils.getInstance().getProperty("trustgate.changepin");
+			}
+			return changePinUrl;
+		}else{
+			return "";
+		}		
 	}
 }
