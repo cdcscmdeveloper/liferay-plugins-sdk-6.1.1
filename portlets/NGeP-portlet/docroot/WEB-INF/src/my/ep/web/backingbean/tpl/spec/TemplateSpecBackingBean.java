@@ -3224,7 +3224,7 @@ public class TemplateSpecBackingBean extends
 			while (iterator.hasNext()) {
 				TplSpecEstimation tplSpecEstimation = iterator.next();
 				
-				if(tplSpecEstimation.getEstimatedCost().compareTo(BigDecimal.ZERO) == 0){
+				if(null!=tplSpecEstimation.getEstimatedCost() && tplSpecEstimation.getEstimatedCost().compareTo(BigDecimal.ZERO) == 0){//34786
 					tplSpecEstimation.setIndicativeUnitPrice(new BigDecimal(0.00));
 				}
 				
