@@ -46,11 +46,11 @@ public class ProfileOfRegCompanyRptBackingBean extends
 			if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_BASIC)) {
 				params.put(SmReportConst.PARAM_REG_TYPE, SmReportConst.REG_ACC_TYPE_BASIC);
 				// #29712 & #30824, #32564 - start
-				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getSelectedSupplier().getCompanyName());
+				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean().getSelectedBasicAccount().getCompanyName());
 				// #29712 & #30824, #32564 - end
 				// #32564 & #26238, #30824 - Start
 				params.put(SmReportConst.PARAM_SUPPLIER_ID,
-						String.valueOf(getManagedBean().getSelectedSupplier().getSupplierId()));
+						String.valueOf(getManagedBean().getSelectedBasicAccount().getSupplierId()));
 				// #32564 & #26238, #30824 - End
 			} else {
 				params.put(SmReportConst.PARAM_REG_TYPE, SmReportConst.REG_ACC_TYPE_G2G);
