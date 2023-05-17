@@ -6051,15 +6051,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		if(filteredlist.isEmpty()){ 
 			log.info("filteredlist.isEmpty size - "+filteredlist.size());
+			//34422 - start - adding new status and hide old status
 			//#34156 10/11/2022- Start
 			for(PmParameterDesc paramdesc : arrlist){
-				log.info("arrlist - "+paramdesc.getPmParameter().getParameterId());
-				if((!paramdesc.getPmParameter().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDERING)) 
-						&& (!paramdesc.getPmParameter().getParameterCode().equals(ProcurementPlanConst.DIRECT_NEGOTIATION)) 
-						&& (!paramdesc.getPmParameter().getParameterCode().equals(ProcurementPlanConst.REQUEST_FOR_PROPOSAL))){
+				if((!paramdesc.getPmParameter().getParameterCode().equals(ProcurementPlanConst.LIMITED_TENDER)) 
+						&& (!paramdesc.getPmParameter().getParameterCode().equals(ProcurementPlanConst.SELECTIVE_TENDER))  ){
+					log.info("arrlist - "+paramdesc.getPmParameter().getParameterId()+ " - " + paramdesc.getCodeName());
 					filteredlist.add(paramdesc);
 				}
 			}
+			//34422 end - new status
 		}
 		//#34156 10/11/2022- End
 		log.info("retrievePplanProcurementMethod - End");
