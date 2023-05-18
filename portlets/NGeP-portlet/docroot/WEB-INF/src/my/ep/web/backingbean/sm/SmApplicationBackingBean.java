@@ -17448,7 +17448,8 @@ public class SmApplicationBackingBean extends
 				}
 				//#34277 - start
 				//personnel has no residential address, overwrite with SSM address
-				if(!hasResAddr){
+				//#34799
+				if(!hasResAddr && getManagedBean().getShareHolderResdAddr().getSmAddress().getPostcode() != null){
 					getManagedBean().getShareHolderResdAddr().setSmAddress(ssmAddress);
 				}
 				//to check, if district state not equal to pm state set district to null & City
