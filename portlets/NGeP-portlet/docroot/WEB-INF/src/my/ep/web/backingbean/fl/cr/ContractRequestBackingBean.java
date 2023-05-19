@@ -948,8 +948,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		
 		List<ScheduleInfo> schInfoo = getSchInfo();
-		//log.info("schInfoo is : "+schInfoo);
-		//log.info("schInfo is : "+schInfo);
+		log.info("schInfoo is : "+schInfoo);
+		log.info("schInfo is : "+schInfo);
 	
 		String nav = "crlist";
 		setNavi(nav);
@@ -6847,7 +6847,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if (schInfo == null)
 			schInfo = new ArrayList<ScheduleInfo>();
 		
-        //log.info("schInfo is,ln5983 : "+schInfo);
+        log.info("schInfo is,ln5983 : "+schInfo);
 		return schInfo;
 	}
 	@SuppressWarnings("static-access")
