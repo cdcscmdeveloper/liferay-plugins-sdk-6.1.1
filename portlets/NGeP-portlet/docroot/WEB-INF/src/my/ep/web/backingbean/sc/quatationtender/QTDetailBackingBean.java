@@ -6280,7 +6280,9 @@ public class QTDetailBackingBean extends
 				break;
 			case 3:
 				// detailSO.validateApprovalDetails(reqDTO);
+				if(!this.getManagedBean().getQt().isCloneEnabled()){//25635&34502-start
 				retrieveApprovalTabDtl();
+				}//25635&34502-End
 				break;
 
 			case 4:
