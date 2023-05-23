@@ -874,6 +874,48 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							    	   }
 						    	   }
 						       }
+						     //25884 - start
+								 if (worklistItemVO.getDocStatus() != null && worklistItemVO.getDocStatus().intValue() == DPStatusConstants.RN_PENDING_ITEM_CODIFICATION.intValue()){
+									 IRequestNoteSO rnSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
+									 RequestNoteReqDTO NotereqDTO = new RequestNoteReqDTO();
+									if (worklistItemVO.getDocNumber() != null && !worklistItemVO.getDocNumber().isEmpty()) {
+										NotereqDTO.setRequestNoteNo(worklistItemVO.getDocNumber());
+									}
+									RequestNoteResDTO resDTO = rnSO.getRequestNote(NotereqDTO);
+
+									if (resDTO.getRequestNoteDetail() != null) {
+										if (resDTO.getRequestNoteDetail().getRequestNoteDtls() != null
+												&& !resDTO.getRequestNoteDetail().getRequestNoteDtls().isEmpty()) {
+											StringBuffer sb = new StringBuffer();
+											String spacer = " ";
+											List<String> listProcurementTitle = new ArrayList<>();
+											for (ScRequestNoteDtl noteDtl : resDTO.getRequestNoteDetail().getRequestNoteDtls()) {
+												if (noteDtl.getScRequestSupplierItem() != null
+														&& noteDtl.getScRequestSupplierItem().getSmSupplier() != null) {
+													SupplierSearchResDTO searchResDTO = SmUserUtil.getCurrentSupplier(face.getUserSessionBean()
+															.getUserId());
+													if (searchResDTO != null && searchResDTO.getSmSupplier() != null){
+														if (searchResDTO.getSmSupplier().getSupplierId().intValue() == noteDtl
+																.getScRequestSupplierItem().getSmSupplier().getSupplierId().intValue()) {
+															if (!listProcurementTitle.contains(noteDtl.getProcurementTitle())){
+																listProcurementTitle.add(noteDtl.getProcurementTitle());
+																sb.append(noteDtl.getProcurementTitle()).append(spacer).append("/").append(spacer);
+															}
+															
+															if (sb.toString().length() > SourcingConstants.PROCUREMENT_TITLE_LIMIT){
+																sb.substring(0, SourcingConstants.PROCUREMENT_TITLE_LIMIT);
+															}
+														}
+													}
+												}
+											}
+											sb.deleteCharAt(sb.toString().lastIndexOf("/"));
+											worklistItemVO.setTitle(sb.toString());
+										}
+									}
+								}
+								//25884 - end
 						       processWorklistItemByTaskName(worklistItemVO, face); //#24968  - performance
 							} catch (Exception ex) {
 								worklistItemVO.setTitle("please check");
@@ -1603,6 +1645,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						&& !resDTO.getRequestNoteDetail().getRequestNoteDtls().isEmpty()) {
 					StringBuffer sb = new StringBuffer();
 					String spacer = " ";
+					List<String> listProcurementTitle = new ArrayList<>();
 					for (ScRequestNoteDtl noteDtl : resDTO.getRequestNoteDetail().getRequestNoteDtls()) {
 						if (noteDtl.getScRequestSupplierItem() != null
 								&& noteDtl.getScRequestSupplierItem().getSmSupplier() != null) {
@@ -1611,7 +1654,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							if (searchResDTO != null && searchResDTO.getSmSupplier() != null){
 								if (searchResDTO.getSmSupplier().getSupplierId().intValue() == noteDtl
 										.getScRequestSupplierItem().getSmSupplier().getSupplierId().intValue()) {
-									sb.append(noteDtl.getProcurementTitle()).append(spacer).append("/").append(spacer);
+									if (!listProcurementTitle.contains(noteDtl.getProcurementTitle())){
+										listProcurementTitle.add(noteDtl.getProcurementTitle());
+										sb.append(noteDtl.getProcurementTitle()).append(spacer).append("/").append(spacer);
+									}
+									
 									if (sb.toString().length() > SourcingConstants.PROCUREMENT_TITLE_LIMIT){
 										sb.substring(0, SourcingConstants.PROCUREMENT_TITLE_LIMIT);
 									}
@@ -1932,6 +1979,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.taskname.title.".concat(worklistItemVO.getDocType()).concat(worklistItemVO.getTaskName().split(" ")[0]), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 		}
     	//#25037-end
+		
 		  
 	}
  	// end #24968 
