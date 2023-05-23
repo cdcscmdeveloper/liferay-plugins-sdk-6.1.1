@@ -772,21 +772,23 @@ public class SpecificationBackingBean extends
 		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE); // Bug #34065@Syazani 01/11/2022
 		if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
 			for (ScQtCheckList checkList : technicalCheckList) {
-				if (ParameterTypeConst.DOCUMENT_DEFINITION_PTJ_UPLOAD.equalsIgnoreCase(checkList.getDefinationType()
-						.getParameterCode())
-						&& ParameterTypeConst.SC_SUPPLIER_ACTION_VIEW.equalsIgnoreCase(checkList.getAction()
-								.getParameterCode()) && checkList.isScoringReq()) {
-					this.getManagedBean().setActiveIndex(2);
-					throw new EpException(MessageConst.ERROR_760513, new String[] { checkList.getTitle() });
+				if (ParameterTypeConst.DOCUMENT_DEFINITION_PTJ_UPLOAD
+						.equalsIgnoreCase(checkList.getDefinationType()
+								.getParameterCode()) && ParameterTypeConst.SC_SUPPLIER_ACTION_VIEW
+								.equalsIgnoreCase(checkList.getAction().getParameterCode()) &&
+								checkList.isScoringReq()) {
+						this.getManagedBean().setActiveIndex(2);
+						throw new EpException(MessageConst.ERROR_760513, new String[]{checkList.getTitle()});
 				}
-				// Bug #30637
-				if (ParameterTypeConst.DOCUMENT_DEFINITION_SUPPLIER_UPLOAD.equalsIgnoreCase(checkList
-						.getDefinationType().getParameterCode())
-						&& (ParameterTypeConst.SC_SUPPLIER_ACTION_VIEW.equalsIgnoreCase(checkList.getAction()
-								.getParameterCode()) || ParameterTypeConst.SC_SUPPLIER_ACTION_DOWN_UPLOAD
-								.equalsIgnoreCase(checkList.getAction().getParameterCode()))) {
-					this.getManagedBean().setActiveIndex(2);
-					throw new EpException(MessageConst.ERROR_760513, new String[] { checkList.getTitle() });
+				//Bug #30637
+				if (ParameterTypeConst.DOCUMENT_DEFINITION_SUPPLIER_UPLOAD
+						.equalsIgnoreCase(checkList.getDefinationType().getParameterCode()) && 
+					(ParameterTypeConst.SC_SUPPLIER_ACTION_VIEW
+							.equalsIgnoreCase(checkList.getAction().getParameterCode()) ||	
+					ParameterTypeConst.SC_SUPPLIER_ACTION_DOWN_UPLOAD
+						.equalsIgnoreCase(checkList.getAction().getParameterCode()))) {
+						this.getManagedBean().setActiveIndex(2);
+						throw new EpException(MessageConst.ERROR_760513, new String[]{checkList.getTitle()});
 				}
 				//#28784 - Start				
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
@@ -868,6 +870,7 @@ public class SpecificationBackingBean extends
 						totalGroupId.put(groupId, total);
 					}
 				}
+				
 				// Bug #34065@Syazani 01/11/2022 -- Start
 				for (PmParameterDesc paramDesc : localParamDesc) {
 					if (paramDesc.getPmParameter().getParameterId().equals(checkList.getDefinationType().getParameterId())) {
@@ -4372,7 +4375,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		} finally {
 			parameterSo = null;
 		}
-
+		
 	}
 
 	/**
@@ -10905,19 +10908,19 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				
 				if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(checkList
 						.getDefinationType().getParameterCode())) {
-					if (null != scQt.getEvaluationType()
-							&& ParameterConst.EVALUATION_TYPES_TWO_TIER
-									.equalsIgnoreCase(scQt.getEvaluationType())) {
-						checkList.setScoringReq(true);
+					if(null!=scQt.getEvaluationType() && ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(scQt.getEvaluationType())){
+					demo = true;
+					checkList.setScoringReq(true);
 					}
 
-				} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+				}
+				else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 						.equalsIgnoreCase(checkList.getDefinationType()
 								.getParameterCode())) {
 					sample = true;
 					checkList.setScoringReq(true);
-					scQt.setSampleReq(sample);//#11104
-
+					
+					scQt.setSampleReq(sample); //#11104
 				}
 			}
 
@@ -14183,7 +14186,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		checkList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 		setUserDetails(checkList);
 		scqtDocDest.setScQtCheckList(checkList);
-		parameterSo = null;
+		 parameterSo = null;
 		return checkList;
 	}
 
@@ -14940,7 +14943,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			for (ScQtCheckList technicalCheckList : this.getManagedBean()
 					.getScQtCheckSt2techProposal()) {
 				if (null == technicalCheckList.getPmDocument()
-						&& !QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(technicalCheckList.getDefinationType().getParameterCode()) 
+						&& !QTConstants.TEMPLETE_SPEC_CODE
+								.equalsIgnoreCase(technicalCheckList
+										.getDefinationType().getParameterCode())
 						&& !QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(technicalCheckList.getDefinationType().getParameterCode())) {//#28784
 					if (null != technicalCheckList.getDefinationType()
 							&& null == technicalCheckList.getDefinationType()
@@ -18102,7 +18107,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	//29464 - note 90 - end
-	
+
 	// Bug #34065@Syazani 01/11/2022 -- Start
 	private void setDefTypeAndActionValues(ScQtCheckList qtCheckList) {
 		if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV.equalsIgnoreCase(qtCheckList.getPmDocument().getDocDefinitionKey())) {
@@ -18181,7 +18186,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED));
 			qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, ParameterConst.CHECKLIST_ACTION_VIEW));
 
-			}
+		}
 
 		else if (SourcingConstants.DOC_DEF_KEY_CASH_ON_HAND.equalsIgnoreCase(qtCheckList.getPmDocument().getDocDefinitionKey())) {
 
@@ -18189,7 +18194,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM));
 			qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, ParameterConst.CHECKLIST_ACTION_INPUT));
 
-			}
+		}
 
 		else if (null != qtCheckList.getDefinationType()
 				&& ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION.equalsIgnoreCase(qtCheckList.getDefinationType().getParameterCode())) {
@@ -18199,7 +18204,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION,
 					ParameterConst.CHECKLIST_ACTION_SUPPLIER_UPLOAD));
 
-		}		
+		}
 	}
 	
 	//Bug #34065@Syazani 30/11/2022 - Start
@@ -18350,7 +18355,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			sb.append(uomPerMonth.doubleValue());
 			sb.append(quantity.doubleValue());
 		}
-		
 		
 		String scoreType = question.getScoreTypeCode() == null ? "" : question.getScoreTypeCode().getParameterCode();
 		String clSpecDetail = question.getClSpecDetail() == null ? "" : question.getClSpecDetail();

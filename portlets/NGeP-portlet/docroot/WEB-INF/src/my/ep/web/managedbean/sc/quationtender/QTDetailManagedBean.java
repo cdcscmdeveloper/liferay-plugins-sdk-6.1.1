@@ -10800,7 +10800,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	//#25077 - Start
 	public ScQtApprovalRequest getHistoryApprovalRequests() {
-		return historyApprovalRequests;		
+		return historyApprovalRequests;
 	}
 
 	public void setHistoryApprovalRequests(ScQtApprovalRequest historyApprovalRequests) {

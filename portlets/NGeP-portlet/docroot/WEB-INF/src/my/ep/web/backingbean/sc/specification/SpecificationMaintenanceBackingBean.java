@@ -594,7 +594,7 @@ private class SpecMaintenanceSearchQtDataModel extends
 	public String gotoSpecMaintenanceSearchPage() {
 		// renewSesionObject();
 		return QTConstants.SPEC_MAINTENANCE_SEARCH_PAGE;
-			}
+	}
 
 	private boolean isSpecCommitteeSecretary() {
 		FacesScopes facesScopes = new FacesScopes();

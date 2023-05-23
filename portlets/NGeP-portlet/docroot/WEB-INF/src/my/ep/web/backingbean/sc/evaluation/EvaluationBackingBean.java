@@ -6675,7 +6675,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			
 			List<String> resultStg = new ArrayList<String>();
 			resultStg.add(SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO);
-			// #21695, #25138 start remove
+			// #21695, #25138 start
 			resultStg.add(QTConstants.TECHNICAL_SUMMARY_ITEM);
 			// #21695, #25138 end
 			
