@@ -13,21 +13,31 @@
 			<td width="20%;" class="sidemenutd" valign="top"><p:tabMenu
 					activeIndex="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex}"
 					styleClass="sidemenu">
-					<!-- technical item tab -->
+					<!-- Bug #34452 hide for wip, adding condition-->
 					<c:if
-						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' or evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
+						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore or evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.technical.item']}"
 							action="#{evaluationBackingBean.retriveTechnicalEvaluationStage}"
 							update="@form" />
 					</c:if>
 					<!-- Technical package tab -->
 					<!-- Bug #33178 adding noSupplierPackageExist-->
+					<!-- #34588 start cater below -->
 					<c:if
-						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' or evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
+						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore 
+						or evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.technical.package']}" disabled="#{evaluationBackingBean.managedBean.scQt.evaluateBy eq SourcingConstants.EVALUATE_BY__ITEM or evaluationBackingBean.managedBean.noSupplierPackageExist}"
 							action="#{evaluationBackingBean.retriveTechnicalEvaluationStagePackage}"
 							update="@form" /><!-- 32453 -->
 					</c:if>
+					<c:if
+						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent 
+						or evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
+						<p:menuitem value="#{lbl['lbl.sc.technical']}"
+							action="#{evaluationBackingBean.retriveTechnicalEvaluationStage}"
+							update="@form" />
+					</c:if>
+					<!-- 34588 wip below -->
 					<!-- Financial item tab -->
 					<!-- Bug #33178 adding noSupplierPackageExist-->
 					<c:if
@@ -101,10 +111,18 @@
 					or (evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'))}">
 					<c:if
 						test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
+<!-- #34588 start cater WIP -->
+						<c:choose>
 
-						<ui:include
-							src="/xhtml/sc/evaluation/evaluationStage/technical/technicalEvaluationPackage.xhtml"></ui:include>
+				         <c:when test = "#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
+				            					<ui:include src="TECSummary.xhtml" />
 
+				         </c:when>
+				         <c:otherwise>
+							<ui:include src="/xhtml/sc/evaluation/evaluationStage/technical/technicalEvaluationPackage.xhtml"></ui:include>
+				         </c:otherwise>
+      					</c:choose>
+<!-- #34588 end cater WIP -->
 					</c:if>
 				</c:if> <c:if
 					test="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq 
@@ -329,21 +347,36 @@
 						update=":form" />
 
 
-				</ui:fragment> <ui:fragment
+				</ui:fragment> 
+				<!-- #34588 start cater WIP -->
+				<ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'
-					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}">
-
-
-
-					<p:commandButton value="#{lbl['lbl.btn.next']}"
+					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'
+					and evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
+					
+					 <p:commandButton value="#{lbl['lbl.btn.next']}"
+						style="float:right;" styleClass="BtnSpacing"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
+						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
+						update=":form" />
+					
+				</ui:fragment>
+				<ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'
+					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'
+					and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
+					
+					 <p:commandButton value="#{lbl['lbl.btn.next']}"
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','4')}"
 						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 						update=":form" />
-
-
-				</ui:fragment><ui:fragment
+					
+				</ui:fragment>
+<!-- #34588 start cater WIP -->
+				<ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'
 					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '3'}">
 
@@ -375,16 +408,18 @@
 				<ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'
 					and evaluationBackingBean.managedBean.tabFinancialIndex eq '1'}">
-
-
-
-					<p:commandButton value="#{lbl['lbl.btn.next']}"
-						style="float:right;" styleClass="BtnSpacing"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
-						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
-						update=":form" />
-
+<!-- #34588 start cater WIP -->
+					
+						<c:if test="#{evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
+							<p:commandButton value="#{lbl['lbl.btn.next']}"
+								style="float:right;" styleClass="BtnSpacing"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
+								action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
+								update=":form" />
+						</c:if>
+						
+<!-- #34588 start cater WIP -->
 
 				</ui:fragment> <ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'

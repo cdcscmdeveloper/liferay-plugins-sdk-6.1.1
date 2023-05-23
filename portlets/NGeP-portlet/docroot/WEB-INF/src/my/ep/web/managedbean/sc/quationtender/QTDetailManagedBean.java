@@ -92,6 +92,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvSupplierResponse;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
@@ -1655,6 +1656,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#25692-End
 	
 	public boolean proposalValidityChangeValue; //#21692
+	private String epvAttachmentValue;//#21692 for EPV attachment usage only
 	
 	// #29468 Vinod Start
 	private TreeNode rootCategoryTree;
@@ -1850,8 +1852,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCategory> backupCategoryCode;
 	private List<TplSpecZoneDtl> backupZoneList;
 	private List<Long> listCategory;
+	private ScQtEpvSupplierResponse suppResp;//#21692
 				
 	// #29521 - end
+	
+	//#34451,#34458,#34450 related to #25138 -start
+	private int wipStatusMax;
+	//#34451,#34458,#34450 related to #25138 -end
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11727,6 +11734,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	// Bug #33661@Syazani 07/10/2022 -- End
 	
+	//#34451,#34458,#34450 related to #25138 -start
+	/**
+	 * @return the max wip 3serangkai
+	 */
+	public int getWipStatusMax() {
+		return wipStatusMax;
+	}
+
+	/**
+	 * @param  max wip check 3serangkai
+	 *            the wipRequired to set
+	 */
+	public void setWipStatusMax(int wipStatusMax) {
+		this.wipStatusMax = wipStatusMax;
+	}
+	//#34451,#34458,#34450 related to #25138 -end
+	
 	// #21692 - start
 	/**
 	 * @return the proposalValidityChangeValue
@@ -11743,6 +11767,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.proposalValidityChangeValue = proposalValidityChangeValue;
 	}
 	// #21692 - end
+
+	public ScQtEpvSupplierResponse getSuppResp() {
+		return suppResp;
+	}
+
+	public void setSuppResp(ScQtEpvSupplierResponse suppResp) {
+		this.suppResp = suppResp;
+	}
+
+	public String getEpvAttachmentValue() {
+		return epvAttachmentValue;
+	}
+
+	public void setEpvAttachmentValue(String epvAttachmentValue) {
+		this.epvAttachmentValue = epvAttachmentValue;
+	}
 	
 }
 

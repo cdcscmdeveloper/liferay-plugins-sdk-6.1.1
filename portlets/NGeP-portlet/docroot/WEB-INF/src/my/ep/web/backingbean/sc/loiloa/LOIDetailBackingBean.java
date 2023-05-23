@@ -1728,7 +1728,7 @@ public class LOIDetailBackingBean extends
 		negoTerm.setPmTerm(null);
 		if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
 			negoTerm.setSelectedTerm(Boolean.FALSE);
-			negoTerm.setSelected(Boolean.FALSE);//#29007 Added Vinod
+			//negoTerm.setSelected(Boolean.FALSE);//#29007 Added Vinod removed 14/02/2023.
 		} else{
 			negoTerm.setSelectedTerm(Boolean.TRUE);
 			negoTerm.setSelected(true);
@@ -4034,6 +4034,18 @@ public class LOIDetailBackingBean extends
 			}
 		}
 		// #11134 -end
+		//#34725 Start Vinod
+		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) 
+			&& QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)
+			&& CollectionUtils.isNotEmpty(scLoi.getScNegoTerms())){
+			for(ScLoiTerm scLoiTerm : scLoi.getScNegoTerms()){
+				if(StringUtils.isEmpty(scLoiTerm.getNegoResult())){
+					getManagedBean().setSelectedTabIndex(3);
+					throw new EpException(MessageConst.ERROR_100022, new String[] {getMessageCommon("lbl.sc.loiloa.nego.results")});
+				}
+			}
+		}
+		//#34725 End vinod
 	}
 
 	/**
@@ -6539,21 +6551,24 @@ public class LOIDetailBackingBean extends
 	}
 	// #29007	Vinod End
 	
-	//#27927 - Start
+	//#28777 & #29729 - Start
     /**
 	* Method to return true, if branch in supplier has been deleted (LOI)
 	* @param supplier id 
 	* @return	true or false
 	**/
 	public boolean displaySupplierBranchListDeletedForLOI(Long supplierId){
-		 boolean deleted = false;
-		 ScQt scQt = this.getManagedBean().getScQt();
-		 if(localitySupplierBranchListDeleted(supplierId, scQt)){
-			 deleted = true;
-		 }else{
-			 deleted = false;
-		 }
-	  return deleted;
+		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+		
+		boolean isSupplierBranchDeleted = false;
+		ScQt scQt = this.getManagedBean().getScQt();
+		if(supplierId != null && scQt != null){
+			if(qtAwardSO.isCheckLOIorLOASupplierBranchDeleted(supplierId, scQt.getQtId())){
+				isSupplierBranchDeleted = true;
+		    }
+		}
+	    return isSupplierBranchDeleted;
 	}
 	
 	/**
@@ -6564,7 +6579,7 @@ public class LOIDetailBackingBean extends
 					MessageUtils.getMessage(MessageConst.INFO_760523, 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 	}
-	//#27927 - End
+	//#28777 & #29729 - End
 	
 	/**
 	 * 29007-start
