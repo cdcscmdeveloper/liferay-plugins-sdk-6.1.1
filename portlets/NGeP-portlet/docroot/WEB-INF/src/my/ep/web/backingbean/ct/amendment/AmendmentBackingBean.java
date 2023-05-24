@@ -1548,7 +1548,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().longValue() >= 20000L){
 				getManagedBean().setCommitteeType(retrieveCommitteeType());
 			}
-			ctBackingBean.getManagedBean().setDisableAmendDetails(false);
+			//ctBackingBean.getManagedBean().setDisableAmendDetails(false); #34662 Nordin
 			if (getManagedBean().getTaskName() != null
 					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
 							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)

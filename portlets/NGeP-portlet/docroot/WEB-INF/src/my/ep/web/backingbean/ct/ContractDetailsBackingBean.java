@@ -2683,20 +2683,45 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public String gotoAmendPage(Long contractId) {		
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		
+		ctBB.getManagedBean().setInCtPerformance(false); #34662
+		
 		reqDTO.setContractId(contractId);
 		Long contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
 		reqDTO.setContractVerId(contractVerId);
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 		reqDTO.setUpdateAction(true);
+		
+		CtConfig ctConfigStatus = contractSO.getCtPerformanceStatus(reqDTO);
 
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		ctBB.getManagedBean().setAmendFromViewPage(true); // #15851
 		ctBB.getManagedBean().setViewSCL(false);//34142, 15851 to reset viewSCL before anything
 		AmendmentBackingBean amendBB = new AmendmentBackingBean();
 		amendBB.getManagedBean().setSelectedTabIndex(0);
-		/*#25956 Start*/
-		amendBB.getManagedBean().setViewOnly(false); /*#25956 notification setting*/
-		/*#25956 End*/
+		
+		//#34662 Nordin start
+		
+		if(ctConfigStatus != null) {
+			log.info("ctConfigStatus not null");
+			
+			/*#25956 Start*/
+			amendBB.getManagedBean().setViewOnly(true); /*#25956 notification setting*/
+			/*#25956 End*/
+			ctBB.getManagedBean().setInCtPerformance(true);
+			ctBB.getManagedBean().setDisableAmendDetails(true);
+			
+		}
+		
+		else{
+			/*#25956 Start*/
+			amendBB.getManagedBean().setViewOnly(false); /*#25956 notification setting*/
+			/*#25956 End*/
+			ctBB.getManagedBean().setDisableAmendDetails(false);
+			ctBB.getManagedBean().setInCtPerformance(false);
+		}
+		//#34662 Nordin end
+		
 		//log.info("Check Putra gotoAmendPage contractId "+contractId);
 		amendBB.setAmendmentContractVer(reqDTO);
 		return PROCESS_AMEND_PAGE;
