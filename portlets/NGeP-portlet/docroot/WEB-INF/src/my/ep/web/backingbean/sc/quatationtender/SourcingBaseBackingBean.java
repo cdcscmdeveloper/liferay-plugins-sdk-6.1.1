@@ -6114,31 +6114,46 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return false;
 		}//25635
 		
-		//25037 - note 677 - start
-		/**
-		 * Evaluate the corresponding Representative/Agency parameter type based on committee type.
-		 * PBA, PBB, QCA, FSW, FSB, QCB, PPB
-		 * @return String (Parameter Type Code)
-		 */ 
-		public String getRepresentativeType(String committeeType) {
-			switch (committeeType) {
-				case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B:
-					return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
-				case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A:
-					return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
-				case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD:
-					return ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
-				case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B:
-					return ParameterTypeConst.REPRESENTATIVE_TYPE_PBB;
-				case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A:
-					return ParameterTypeConst.REPRESENTATIVE_TYPE_PBA;
-				case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH:
-					return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH;
-				case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK:
-					return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK;
-				default:
-					return "";
-			} 
+	//25037 -start-
+	/**
+	 * Evaluate the corresponding Representative/Agency parameter type based on
+	 * committee type. PBA, PBB, QCA, FSW, FSB, QCB, PPB
+	 * 
+	 * @return String (Parameter Type Code)
+	 */
+	public String getRepresentativeType(String committeeType) {
+		switch (committeeType) {
+		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
+		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
+		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
+		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_PBB;
+		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_PBA;
+		case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH;
+		case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK;
+		default:
+			return "";
 		}
 		//25037 - note 677 - end
+	}
+	/**
+	 * Evaluate if taskname is endorsement and signoff
+	 * 
+	 * @return String (BPM task Name)
+	 */
+	public boolean evaluateEndorseSignoffTask(String taskName) {
+		if (StringUtils.isEmpty(taskName))
+			return false;
+		String[] actions = new String[] { "ENDORSE", "SIGNOFF" };
+		String action = StringUtils.upperCase(taskName.split(" ")[0]);
+		return Arrays.asList(actions).contains(action);
+	}	
+	//25037 -end-
+
 }
