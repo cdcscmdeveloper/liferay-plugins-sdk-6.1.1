@@ -75,6 +75,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
@@ -4542,6 +4543,25 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	// #25638 - End
+
+	// 11104-start
+	public boolean isQTSampleStatus(Long currentStatusId) {
+		List<Long> CheckStatus = new ArrayList<Long>();
+		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT);
+		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF);
+		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH);
+		CheckStatus.add(QTStatusConst.SE_PENDING_ENDORSMENT);
+		CheckStatus.add(QTStatusConst.SE_PENDING_SIGNOFF);
+
+		return CheckStatus.contains(currentStatusId);
+	}
+	// 11104-End
+
+	// 11104_start
+	public String replaceWithBR(String specDetails) {
+		return specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+	}
+	// 11104_end
 	
     // #11134 - Start
 	protected <A extends ScRemark> List<A> filterSupplierRemarks(List<A> scRemarksIn, boolean includedBrandNew) {
