@@ -5838,9 +5838,11 @@ public class SupplierFinalizationBackingBean extends
 						ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY);
 				//6906 note 117 - start
 				if(CollectionUtils.isEmpty(this.getManagedBean().getDisqualifiedStages())){
-				excludedDecisionList.add(
-						ParameterConst.DECISION_RE_EVALUATION);
-			}
+					excludedDecisionList.add(
+							ParameterConst.DECISION_RE_EVALUATION);
+					excludedDecisionList.add(
+							ParameterConst.DECISION_RBP);
+				}
 				//6906 note 117 - end
 			}
 		}
@@ -9288,7 +9290,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 			//} //17376-165
 		}
-		
+		this.evaluateDecisionList();//6906 &34812
 		return QTConstants.FC_SUPPLIER_FINALIZATION_PAGE;
 	}
 		
