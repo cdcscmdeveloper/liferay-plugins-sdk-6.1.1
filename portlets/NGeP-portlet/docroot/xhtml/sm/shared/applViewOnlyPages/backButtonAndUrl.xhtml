@@ -25,13 +25,13 @@
 					<!-- START - 31270 -->
 					<p:commandLink onclick="blockWidget.show()" rendered="#{viewSmApplBackingBean.isApplPORejectedAfterApprovelSV()}"
 							action="#{viewSmApplBackingBean.reminderToResubmit()}"
-							process="@this" partialSubmit="true" update=":form"
+							process="@this" update=":form"
 							value="#{lbl['lbl.sm.resubmit']}" />&#160;&#160;
 				</p:outputPanel>
 				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType ne 'N'}">
 					<p:commandLink onclick="blockWidget.show()" rendered="#{viewSmApplBackingBean.isApplPORejectedAfterApprovelSV()}"
 							action="#{viewSmApplBackingBean.reminderToResubmit()}"
-							process="@this" partialSubmit="true" update=":form"
+							process="@this" update=":form"
 							value="#{lbl['lbl.sm.resubmit']}" />&#160;&#160;
 				</p:outputPanel>
 				<!-- END - 31270 -->			

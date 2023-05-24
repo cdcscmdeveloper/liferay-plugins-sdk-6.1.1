@@ -2273,9 +2273,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		//#13847 start
 		else if(event.getComponent().getId().equalsIgnoreCase("uploadWaiver")){
-			if(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtContractVer()==null){
-				getManagedBean().getContractVer().getBondWaiverDefermentLatest().setCtContractVer(getManagedBean().getContractVer());
-			}
 			attachment.setDocType(getManagedBean().getContractVer().getDocType());
 			attachment.setDocId(getManagedBean().getContractVer().getContractVerId());
 			attachment.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
@@ -2399,7 +2396,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @throws EpException
 	 */
 	public void saveBondWaiverToTable() throws EpException {
-		FacesScopes facesScopes = new FacesScopes();
 		long noOfDays = 0;
 		if(getManagedBean().getContractVer().getBondWaiverDefermentHistory()==null
 				|| CollectionUtils.isEmpty(getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
@@ -2408,15 +2404,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		//add to tracking list first
 		//reverse list to insert new data at first row
-		Collections.reverse(getManagedBean().getContractVer().getBondWaiverDefermentHistory());
-		
-		getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment().setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
-		getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment().setCreatedUser(facesScopes.getUserSessionBean());
-		getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment().setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		getManagedBean().getContractVer().getBondWaiverDefermentLatest().setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
-		getManagedBean().getContractVer().getBondWaiverDefermentLatest().setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		
-		
+		Collections.reverse(getManagedBean().getContractVer().getBondWaiverDefermentHistory());		
 		getManagedBean().getContractVer().getBondWaiverDefermentHistory().add(SerializationUtils.clone(getManagedBean().getContractVer().getBondWaiverDefermentLatest()));
 		
 		//gets the last list for editing
@@ -2463,9 +2451,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @throws EpException
 	 */
 	public void checkPerformanceBondExceedDate() throws EpException {
-		if(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtContractVer()==null){
-			getManagedBean().getContractVer().getBondWaiverDefermentLatest().setCtContractVer(getManagedBean().getContractVer());
-		}
 		if(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate()!=null && getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate()!=null){
 			if(findDifference(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate(),
 					getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate()) > 60){
@@ -2698,9 +2683,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setDisableDeferment(false);
 			if(getManagedBean().getContractVer().getBondWaiverDefermentLatest()==null){
 				getManagedBean().getContractVer().setBondWaiverDefermentLatest(new CtBondWaiverDetail());
-				if(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtContractVer()==null){
-					getManagedBean().getContractVer().getBondWaiverDefermentLatest().setCtContractVer(getManagedBean().getContractVer());
-				}
 			}
 			
 			if (!getManagedBean().getCtContractAmount().isBondWaived()) {
@@ -2793,7 +2775,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		List<CtAttachment> attach= contractSO.retrieveAttachmentBySectionId(reqDTO).getCtAttachments();
 		if(attach != null && attach.size() > 0){
 			for(CtAttachment waivedAttach : attach){
-				if(waivedAttach.getFilePath().equalsIgnoreCase(attachments.getFilePath())){
+				if(waivedAttach.getFilePath().equalsIgnoreCase(attachments.getFilePath())
+						&& waivedAttach.getFileName().trim().equalsIgnoreCase(attachments.getFileName().trim())){
 					return true;
 				}
 			}
@@ -3492,7 +3475,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						refreshAgencyCeilingQuantityList();
 					}else if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
 						refreshAgencyCeilingQuantityList();
-					}	
+					}// Start Fix - #34539
+					else if(getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)){
+						refreshAgencyCeilingQuantityList();
+					}// End Fix - #34539	
 				}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -4720,7 +4706,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if(getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
 			for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
 				if(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
-	
+					// Start Fix - #34539  
+					if (item.isBrandNew()) {
+						if (item.getCtItemCeilingQties().size() != getManagedBean().getSelectedItem().getCtItemCeilingQties().size()) {
+							getManagedBean().getSelectedItem().getCtItemCeilingQties().remove(item.getCtItemCeilingQties());
+							getManagedBean().getSelectedItem().setCtItemCeilingQties(item.getCtItemCeilingQties());
+						} 
+					} else {
+						if (item.getCtItemCeilingQties().size() != getManagedBean().getSelectedItem().getCtItemCeilingQties().size()) {
+							item.getCtItemCeilingQties().clear();
+							item.getCtItemCeilingQties().addAll(getManagedBean().getSelectedItem().getCtItemCeilingQties());
+						} 
+					}
+					// End Fix - #34539
 					if (!item.getCtItemCeilingQties().isEmpty()) {						
 						for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {
 							if(ceilingQty.getCtAgency().getCommitmentNo().equalsIgnoreCase(ctItemCeilingQty.getCtAgency().getCommitmentNo())){
