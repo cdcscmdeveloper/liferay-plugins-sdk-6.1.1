@@ -4756,7 +4756,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
 				
 				//Bug #33988@Syazani -- Start 27/09/2022 
-				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && !validateDuplicateSets.add(scQtFinalizationReport.getTitle().toLowerCase().trim())) { //Bug #33988@Syazani -- 01/03/2023
+				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && !validateDuplicateSets.add(scQtFinalizationReport.getTitle().trim())) {
 					throw new EpException(MessageConst.ERROR_775190, new String[] { scQtFinalizationReport.getTitle() }); //Bug #33988@Syazani - 06/12/2022
 				}
 				//Bug #33988@Syazani -- End 27/09/2022 
@@ -4835,24 +4835,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		    reqDTO.setQtReportIdList(qtReportIds);
 		    reqDTO.setDocumentCategory(this.getManagedBean().getNewBriefingPaperReportList().get(0).getDocCategory());
 		    SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveFinalizationReport(reqDTO);
-			if (null != resDTO && null != resDTO.getScQtFinalizationReports()
-					&& resDTO.getScQtFinalizationReports().size() > 0) {
-				repLoop: for (ScQtFinalizationReport repScQtFinalizationReport : resDTO.getScQtFinalizationReports()) {
-					for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
-						//Bug #33988@Syazani -- Start 14/03/2023
-						String repParaCode = repScQtFinalizationReport.getDefinationType() != null ? repScQtFinalizationReport
-								.getDefinationType().getParameterCode() : "";
-						String scQtParaCode = scQtFinalizationReport.getDefinationType() != null ? scQtFinalizationReport
-								.getDefinationType().getParameterCode() : "";
-						if (repScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())
-								&& repParaCode.equals(scQtParaCode)) {
-							//Bug #33988@Syazani -- End 14/03/2023
-							scQtFinalizationReport.setReportContent(repScQtFinalizationReport.getReportContent());
-							continue repLoop;
-						}
-					}
-				}
-			}
+		    if (null != resDTO && null != resDTO.getScQtFinalizationReports()
+		    		&& resDTO.getScQtFinalizationReports().size() > 0) {
+		    repLoop:	for (ScQtFinalizationReport repScQtFinalizationReport : resDTO.getScQtFinalizationReports()) {
+		    		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
+		    			if (repScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
+		    				scQtFinalizationReport.setReportContent(repScQtFinalizationReport.getReportContent());
+		    				continue repLoop;
+		    			}
+		    		}
+		    	}
+		    }
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -5711,15 +5704,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					} else {
 						ctType = scQt.getContractType().getParameterId();
 					}
-					
-					//#9019 Start #note-445 User unable to open side menu for Committee Appointment and Approval when ctType is null. 
-					//      Contract type is not selected while cancel QT
-					if(ctType != null){
-						if (isRuleBpk && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
-							return isBpkCentralContract = true;
-						}
+
+					if (isRuleBpk && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
+						return isBpkCentralContract = true;
 					}
-					//9019 End #note-445
 				}
 			
 			return isBpkCentralContract;
@@ -5840,6 +5828,71 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return result;
 	}
     // #11134 - end
+    
+    //#27927 - Start
+    /**
+  	 * Method to return true, if branch in supplier has been deleted
+  	 * @param supplier id and scQt
+  	 * @return	true or false
+  	 **/
+  	
+  	public boolean localitySupplierBranchListDeleted(Long supplierId, ScQt scQt){ 
+  		
+  		 QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+  		 qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
+  		 ScQt qt = qtBackingBean.getManagedBean().getQt();
+  		 ScQtSupplierCriteria scQtSupplierCriteria = qt.getScQtSupplierCriteria();
+  			
+  		 ISupplierSearchSO supplierSearchSO = null;
+  		 IQTDetailSO QtDetailsSO = null;
+  	     boolean isSupplierBranchListDeleted = false;
+  		 List<SmSupplierBranch> supplierBranchListDeleted = new ArrayList<>();
+  		 try{
+  			 
+  			 supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+  			 ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+  			 QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+  			 ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+  			 
+  			 SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
+  		 	 suppSearchReqDTO.setSupplierId(supplierId);
+  		     SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retrieveSmSupplierBranchDeletedBySupplier(suppSearchReqDTO);
+  		     supplierBranchListDeleted = suppSearchResDTO.getSmSupplierBranchList();
+  		     
+  		     if(scQtSupplierCriteria.isAllState()){
+  		    	  for (SmSupplierBranch supplierBranch : supplierBranchListDeleted) {
+  						if(supplierBranch.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+  							isSupplierBranchListDeleted = true;
+  						}
+  				 }
+  		    	 
+  		     }else{
+  		    	 
+  		    	 for (SmSupplierBranch supplierBranch : supplierBranchListDeleted) {
+  						QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+  			    		tenderReqDTO.setQtdetail(qt);
+  			    		QuationTenderResDTO tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
+  			    		if(tenderResDTO != null && tenderResDTO.getLocationDetails()!= null){
+  			    			for(TplSpecLoc location : tenderResDTO.getLocationDetails()){
+  								if(supplierBranch.getSmAddress().getPmState().getStateId() != null && location.getPmState().getStateId() != null){
+  			    					if(supplierBranch.getSmAddress().getPmState().getStateCode().equals(location.getPmState().getStateCode())){
+  			    						if(supplierBranch.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+  				    						isSupplierBranchListDeleted = true;
+  			    						}			    						
+  			    					}	
+  			    				}
+  			    			}
+  			    		}
+  		    		}
+  		    	 
+  		     }
+  			 
+  		} finally {
+  			supplierSearchSO = null;
+  		}     
+  		return isSupplierBranchListDeleted;
+  	}
+    //#27927 - End
   	
   	public boolean isQTCloneStatus(Long currentStatusId){//25635-start
   		List<Long> CheckStatus=new ArrayList<Long>();
@@ -5873,8 +5926,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		int countIndex = 0;
 		int indi = 0;
 		boolean getFirstValue = true;
-		//26130 - start 
-		if (master.getTplSpecZone() != null){
+		//26130 - start
+		if (null != master.getTplSpecZone()){
 		//26130 - end	
 		if (question.getTplSpecZoneQties().size()  > 0){
 			for (TplSpecZoneQty zone: question.getTplSpecZoneQties()){
@@ -5883,7 +5936,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					if (getFirstValue){
 						map.put(SSTConstant.clItem, question.getClItem());
 						map.put(SSTConstant.uomName, question.getClUom().getUomName());
-						map.put(SSTConstant.clPriceTypeCode, getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
+						map.put(SSTConstant.clPriceTypeCode, getParameterDescForReport(question.getClPriceTypeCode()));
 						map.put(SSTConstant.zoneName,zone.getTplSpecZoneDtl().getZoneName());
 						map.put(SSTConstant.quantity, zone.getQty().toString());
 						if (null != question.getTplSpecTierQties() && question.getTplSpecTierQties().size() > 0 ){
@@ -5957,7 +6010,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								map.put(SSTConstant.clUomPerMonth, question.getClUomPerMonth().toString());
 							}else {
 								//product
-								map.put(SSTConstant.clPriceTypeCode, getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
+								map.put(SSTConstant.clPriceTypeCode, getParameterDescForReport(question.getClPriceTypeCode()));
 								String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
 								map.put(SSTConstant.qtyBerperingkat, tierValue);
 							}
@@ -6113,6 +6166,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			
 			return false;
 		}//25635
+		
 		
 	//25037 -start-
 	/**
