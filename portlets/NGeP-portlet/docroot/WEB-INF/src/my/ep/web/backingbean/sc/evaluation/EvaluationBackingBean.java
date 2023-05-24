@@ -832,7 +832,6 @@ public class EvaluationBackingBean extends
 	 */
 	public void retrieveGeneralInfo() {
 		this.getManagedBean().setPrepareActiveIndex(0);
-		this.checkNoSuppliersSubmitted();//6906
 	}
 
 	/**
@@ -987,7 +986,6 @@ public class EvaluationBackingBean extends
 			}
 				prepareUpdateCommitteeMember();//25037 #568
 			}
-			this.checkNoSuppliersSubmitted();//6906
 		} finally {
 			meetingSO = null;
 			evaluationSo = null;
@@ -1005,7 +1003,6 @@ public class EvaluationBackingBean extends
 
 		try {
 			this.getManagedBean().setPrepareActiveIndex(index);
-			this.checkNoSuppliersSubmitted();//6906
 		} finally {
 
 		}
@@ -1028,7 +1025,6 @@ public class EvaluationBackingBean extends
 			if (null == meetingAttendanceRemoveList) {
 				meetingAttendanceRemoveList = new ArrayList<ScQtMeetingAttendance>();
 			}
-			this.checkNoSuppliersSubmitted();//6906
 		} finally {
 
 		}
@@ -1136,8 +1132,10 @@ public class EvaluationBackingBean extends
 			detailBackingBean.getManagedBean().setReadOnly(true);
 			//#28786 bug - start
 			//#28786 fix under 28784 change hardcoded to constant - start
+			//Bug #34745 start
 			if (proposalCheckList.getScQtCheckList().getTitle()
-					.equals(SourcingConstants.PENGESAHAN_TIGA_BULAN)) {
+					.equals(SourcingConstants.PENGESAHAN_TIGA_BULAN)
+					&& proposalCheckList.getScQtCheckList().getPmDocument() != null) {
 				retrieveAllFinancialChecklist(SourcingConstants.PENYATA_TIGA_BULAN);
 				log.info("This is Pengesahan dari Institusi Kewangan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
 				retrieveComplianceUploadedProposalChecklist(proposalCheckList, true);
@@ -1146,7 +1144,8 @@ public class EvaluationBackingBean extends
 						.retrieveBankStmtDtls(this.getManagedBean().getComplianceQtProposalChecklist());
 			}
 			if (proposalCheckList.getScQtCheckList().getTitle()
-					.equals(SourcingConstants.KUNCI_KIRA_KIRA_TAHUNAN)) {
+					.equals(SourcingConstants.KUNCI_KIRA_KIRA_TAHUNAN)
+					&& proposalCheckList.getScQtCheckList().getPmDocument() != null) {
 				retrieveAllFinancialChecklist(SourcingConstants.ASSET_DAN_LIABILITI);
 				log.info("This is Kunci Kira-Kira Tahunan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
 				retrieveComplianceUploadedProposalChecklist(proposalCheckList, true);
@@ -1155,7 +1154,8 @@ public class EvaluationBackingBean extends
 						.retrieveAssetLiabilityDtls(this.getManagedBean().getComplianceQtProposalChecklist());
 			}
 			if (proposalCheckList.getScQtCheckList().getTitle()
-					.equals(SourcingConstants.PENGESAHAN_DARI_INSITUSI)) {
+					.equals(SourcingConstants.PENGESAHAN_DARI_INSITUSI)
+					&& proposalCheckList.getScQtCheckList().getPmDocument() != null) {
 				retrieveAllFinancialChecklist(SourcingConstants.KEMUDAHAN_KREDIT);
 				log.info("This is Institusi Kewangan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
 				retrieveComplianceUploadedProposalChecklist(proposalCheckList, true);
@@ -1163,6 +1163,7 @@ public class EvaluationBackingBean extends
 				proposalPage = detailBackingBean
 						.retrieveCreditFacilitiesDtls(this.getManagedBean().getComplianceQtProposalChecklist());
 			}
+			//Bug #34745 end
 			//#28786 fix under 28784 change hardcoded to constant - end
 			//#28786 bug - end
 			this.getManagedBean().setProposalPage(proposalPage);
@@ -1639,7 +1640,7 @@ public void saveComplianceSample() {
 				
 				for(ScQtCheckList checklistOfTitle : resDTO.getCheckListResultBean().getResultList()) {
 					log.info("Doc title =======================>>> " + checklistOfTitle.getTitle());
-					if(checklistOfTitle.getTitle().equals(title)) {
+					if (checklistOfTitle.getTitle().equals(title) && checklistOfTitle.getPmDocument() != null) {//Bug #34745
 						this.getManagedBean().setComplianceQtChecklist(checklistOfTitle);
 					}
 				}
@@ -1952,7 +1953,6 @@ public void saveComplianceSample() {
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getComplianceTechnicalCheckList())){
 			checklistSorting(this.getManagedBean().getComplianceTechnicalCheckList());
 			}
-			this.checkNoSuppliersSubmitted();//6906
 		} finally {
 			evaluationSO = null;
 		}
@@ -2055,7 +2055,6 @@ public void saveComplianceSample() {
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getCompliancefinancialCheckList())){
 				checklistSorting(this.getManagedBean().getCompliancefinancialCheckList());
 				}
-			this.checkNoSuppliersSubmitted();//6906
 		} finally {
 			evaluationSO = null;
 		}
@@ -2137,7 +2136,6 @@ public void saveComplianceSample() {
 					new SummarySupplierPagingDataModel(
 							"complianceDisQualifiedSupplier", false, false,
 							null, evalstage));
-			this.checkNoSuppliersSubmitted();//6906
 		} finally {
 			evaluationSO = null;
 		}
@@ -2376,7 +2374,6 @@ public void saveComplianceSample() {
 			}
 			//#33178 related to #21695 End
 			checkTechnicalSuppliersQualified();
-			this.checkNoSuppliersSubmitted();//6906
 			localCheckList=null;
 			evalstage=null;
 		} finally {
@@ -2648,7 +2645,6 @@ public void saveComplianceSample() {
 							.getManagedBean().getScQt().getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq())) {
 				checkFinancialSuppliersQualified();
-				this.checkNoSuppliersSubmitted();//6906
 			}
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getEvaluationStgfinancialCheckList())){
 				checklistSorting(this.getManagedBean().getEvaluationStgfinancialCheckList());
@@ -3018,7 +3014,6 @@ public void saveComplianceSample() {
             	this.getManagedBean().setEvalStatusComp(false);
             }
             //28784 - end
-    		this.checkNoSuppliersSubmitted();//6906
 
 		} finally {
 			evaluationSo = null;
@@ -3254,7 +3249,6 @@ public void saveComplianceSample() {
 					//#25138-end
 				}
 			}
-			this.checkNoSuppliersSubmitted();//6906
 		} finally {
 			evaluationSo = null;
 		}
@@ -8603,7 +8597,6 @@ public void saveComplianceSample() {
 			getManagedBean().setTabActiveIndex(outputTab);
 			//6906 - start
 			this.getManagedBean().setNoProposalSubmitted(noProposalSubmitted);
-			this.checkNoSuppliersSubmitted();
 			//6906 - end
 		}catch(Exception e){
 			log.info("ExceptionBlock"+currentTab);
@@ -15042,7 +15035,6 @@ private void retriveCommitteeRemarksList(){
 //				checklistSorting(this.getManagedBean().getDetachedPaginatorTest());
 //				}
 			checkTechnicalSuppliersQualified();
-			this.checkNoSuppliersSubmitted();//6906
 			innerCheckList=null;
 			evalstage=null;
 			
@@ -15064,6 +15056,9 @@ private void retriveCommitteeRemarksList(){
 	public void retriveFinancialEvaluationStagePackage() {
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = new EvaluationResDTO();
+		//#34779 start
+		financialCheckListStatusCheck();
+		//34779 end
 		this.getManagedBean().setEvaluatioStageActiveIndex(1);
 		this.getManagedBean().setNonScoringActiveIndex(1);
 		this.getManagedBean().setTabItemPackageIndex(2);//#25138
@@ -15296,7 +15291,6 @@ private void retriveCommitteeRemarksList(){
 							.getManagedBean().getScQt().getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq())) {
 				checkFinancialSuppliersQualified();
-				this.checkNoSuppliersSubmitted();//6906
 
 			}
 			//#25138 - filter auto score condition - Start
@@ -16706,7 +16700,6 @@ private void retriveCommitteeRemarksList(){
 				}*/
 
 			}
-			this.checkNoSuppliersSubmitted();//6906
 		} finally {
 			evaluationSO=null;
 		}
@@ -17707,24 +17700,7 @@ private void retriveCommitteeRemarksList(){
 		
 	return checkProposalamount;	
 	}//32453-Financial Other package End
-	
-	//6906 - start
-	private void checkNoSuppliersSubmitted() {
-		if (!this.getManagedBean().isReadOnly() && this.getManagedBean().isNoProposalSubmitted()) {
-			String message = MessageUtils.getMessage(MessageConst.WARN_760530, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			Iterator<FacesMessage> messageIterator = facesContext.getMessages();
-			while (messageIterator.hasNext()) {
-				FacesMessage fm = messageIterator.next();
-				if(StringUtils.equals(fm.getDetail(), message)){
-					messageIterator.remove();
-				}
-			} 
-			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, null, message));
-		}
-	}
-	//6906 - end
-	
+		
 	//#21692 - start
 	/**
 	 * Check if latest meeting with status Done less than Proposal Validity End Date
@@ -18399,5 +18375,19 @@ private void retriveCommitteeRemarksList(){
 			return  isSuccess; //Bug #31751
 		}
 		//32373 - saperate for recalculate pref margin after done financial package - End
+	
+	//6906 - start
+	/**
+	 * Get warning message when no supplier participate on evaluation
+	 * 
+	 * @param
+	 * @return String
+	 */
+	public String getNoSupplierWarningMessage() {
+		return MessageUtils.getMessage(MessageConst.WARN_760530, MessageUtils.BUNDLE_COMMON_MESSAGES,
+				new FacesScopes().getUserLocale());
+
+	}
+	//6906 - end
 
 }
