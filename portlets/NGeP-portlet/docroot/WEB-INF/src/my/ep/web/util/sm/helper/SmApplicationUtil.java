@@ -8035,11 +8035,7 @@ public class SmApplicationUtil {
 							|| !catTypeList.contains(fac.getFacilityType())) {
 						// #34303 - start
 						for(SmSupplierCategoryFacility SmSupplierCategoryFacility : fac.getSmSupplierCategoryFacilities()){
-<<<<<<< HEAD
-							if(!SmSupplierCategoryFacility.getPmCategoryL3().isNotalloweddelete()){
-=======
 							if(SmSupplierCategoryFacility.getPmCategoryL3().isNotalloweddelete()){
->>>>>>> branch 'master_bug_34303' of http://192.168.120.16/cdc-application/ep-apps/liferay-plugins-sdk-6.1.1.git
 								facIt.remove();	
 							}
 						}
