@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.ViewBasicAccountWithMof;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
 import my.ep.web.vo.CategoryRptVO;
 
@@ -75,7 +76,17 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	
 	// #29712, #32564 - start
 	private SmSupplier selectedSupplier;
+	
+	private ViewBasicAccountWithMof selectedBasicAccount;
 	// #29712, #32564 - end
+
+	public ViewBasicAccountWithMof getSelectedBasicAccount() {
+		return selectedBasicAccount;
+	}
+
+	public void setSelectedBasicAccount(ViewBasicAccountWithMof selectedBasicAccount) {
+		this.selectedBasicAccount = selectedBasicAccount;
+	}
 
 	//#32521 - START
 	private PmUser selectedUser;

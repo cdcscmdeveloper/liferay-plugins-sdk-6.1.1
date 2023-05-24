@@ -993,7 +993,9 @@ public class SmApplicationBackingBean extends
 				}
 			}
 			
-			//Bug 27022 - start 			
+			//Bug 27022 - start 
+			/* 
+			//#34209 - START
 			SmAppl latestAppl = supplierProfile.getSmAppl();
 			if(latestAppl != null 
 					 && latestAppl.getSmSupplierCategories() != null
@@ -1049,10 +1051,11 @@ public class SmApplicationBackingBean extends
 								 }
 							 }
 						 }
-					 }*/
-					 //34209 END
+					 }
 				 }
 			 }
+			 */
+			//34209 END
 			//Bug 27022 - end
 			 
 			 //3460 - Start
@@ -1795,6 +1798,16 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		
+		//#34624 start
+		log.info("Application Type: " + applicationType);
+		log.info("Application Category Type: " + getManagedBean().getSmAppl().getApplCategoryType());
+		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
+				&& getManagedBean().getSmAppl().getApplCategoryType().equals("S")){
+			getManagedBean().getSmAppl().setApplCategoryType("N");
+		}
+		log.info("Application Category Type: " + getManagedBean().getSmAppl().getApplCategoryType());
+		//#34624 end
+		
 		// 26671 - Site Visit Grouping Enhancement -28775 - START
 		getManagedBean().setShowFacilityMachine(false);
 		if (applicationType.equals("R")) {
@@ -2391,24 +2404,24 @@ public class SmApplicationBackingBean extends
 						//SET COMPANY NAME
 						//if rob no need to copy capital.
 						//long tempAnnualRevenue = this.getManagedBean().getSmAppl().getSmCompanyBasic().getAnnualRevenue();						
-						if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
-							String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
+						if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){//34138
+							String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM","ssmCompanyCountry"};
 							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 						}else{
 							// 28466 - add paid up capital, 28767 add registerAdressSSM
-							// #30660 start 
+							// #30660, #34138 start
 							if (businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType()) && getManagedBean().isDisAllowOwnerEdit()) {
 								String[] copyProp = { "companyName", "robExpiryDate", "annualRevenue", "businessDesc", "revenueSsmNull", "robExpirySsmNull",
-										"authorizedCapitalSsmNull", "companySsmStatus", "annualRevenueSSM", "paidUpCapitalSSM", "registerAdressSSM" };
+										"authorizedCapitalSsmNull", "companySsmStatus", "annualRevenueSSM", "paidUpCapitalSSM", "registerAdressSSM", "ssmCompanyCountry"};
 								EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(), this.getManagedBean().getSmAppl().getSmCompanyBasic(), copyProp);
 							} else { 
 								String[] copyProp = { "companyName", "robExpiryDate", "authorizedCapital", "nonBumiEquity", "annualRevenue", "bumiEquity",
 										"localCompanyEquity", "foreignCompanyEquity", "foreignerEquity", "govtEquity", "govtUnitrustEquity", "businessDesc",
 										"revenueSsmNull", "robExpirySsmNull", "authorizedCapitalSsmNull", "companySsmStatus", "annualRevenueSSM", "paidUpCapitalSSM",
-										"paidUpCapital", "registerAdressSSM" };
+										"paidUpCapital", "registerAdressSSM", "ssmCompanyCountry" };
 								EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(), this.getManagedBean().getSmAppl().getSmCompanyBasic(), copyProp);
 							} 
-							// #30660 end 
+							// #30660, #34138 end 
 							//START 28767	- ni set untuk save ke dalam DB		- perlu buat dalam ni sebab data tu firsttime je dr SSM			
 							if(ssmResDTO.getSmApplIndebtedness() != null){
 								ssmResDTO.getSmApplIndebtedness().setSmAppl(this.getManagedBean().getSmAppl());
@@ -2479,8 +2492,8 @@ public class SmApplicationBackingBean extends
 							}
 						}
 						// end #29956
-						if(dontGetSsmData){	
-							String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
+						if(dontGetSsmData){	//34138
+							String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM","ssmCompanyCountry"};
 							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);														
 						}
 						/*if((ssmResDTO.getSmCompanyBasic().getAnnualRevenue() == null || ssmResDTO.getSmCompanyBasic().getAnnualRevenue()==0) && tempAnnualRevenue > 0){
@@ -10968,6 +10981,7 @@ public class SmApplicationBackingBean extends
 		reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 		reqSO.approveOrRejectPendingApplicationCancellation(reqDTO);
 
+		log.info("31181-applNo:"+getManagedBean().getSmAppl().getApplNo()); //#31181 add log 
 		res = res.equals("REJECT") ? SmCommonUtil.getMessage(
 				"lbl.sm.cancelpending.reject.uppercase", null) : SmCommonUtil
 				.getMessage("lbl.sm.cancelpending.approve.uppercase", null);
@@ -10980,7 +10994,10 @@ public class SmApplicationBackingBean extends
 												.getApplNo(), res },
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
+		
+		log.info("31181-message for reject before renew session:"+res); //#31181 add log
 		renewSesionObject();
+		log.info("31181-message for reject after renew session:"+res); //#31181 add log
 		return "cancelPendingAcknowledgePage";
 	}
 
@@ -15972,29 +15989,29 @@ public class SmApplicationBackingBean extends
 			//SET COMPANY NAME
 			//if rob no need to copy capital.
 			//long tempAnnualRevenue = this.getManagedBean().getSmAppl().getSmCompanyBasic().getAnnualRevenue();
-			if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
-				String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
+			if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){//34138
+				String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM","ssmCompanyCountry"};
 				EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 			}else{
 				// 28466 - add paid up capital & #30660 start - fix reopen
-				if (getManagedBean().isDisAllowOwnerEdit()) {
+				if (getManagedBean().isDisAllowOwnerEdit()) {//34138
 					String[] copyProp = { "companyName", "robExpiryDate", "annualRevenue",  "businessDesc", "revenueSsmNull", "robExpirySsmNull",
-							"authorizedCapitalSsmNull", "companySsmStatus", "annualRevenueSSM",	"paidUpCapitalSSM" };
+							"authorizedCapitalSsmNull", "companySsmStatus", "annualRevenueSSM",	"paidUpCapitalSSM","ssmCompanyCountry" };
 					EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(), this.getManagedBean()
 							.getSmAppl().getSmCompanyBasic(), copyProp);
-				} else {
+				} else {//34138
 					String[] copyProp = { "companyName", "robExpiryDate", "authorizedCapital", "nonBumiEquity",	"annualRevenue", "bumiEquity",
 							"localCompanyEquity", "foreignCompanyEquity", "foreignerEquity", "govtEquity", "govtUnitrustEquity", "businessDesc",
 							"revenueSsmNull", "robExpirySsmNull", "authorizedCapitalSsmNull", "companySsmStatus", "annualRevenueSSM", "paidUpCapitalSSM",
-							"paidUpCapital" };
+							"paidUpCapital","ssmCompanyCountry" };
 					EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(), this.getManagedBean()
 							.getSmAppl().getSmCompanyBasic(), copyProp);
 				}
 				//#30660 end
 			}
 			//#27165
-			if(dontGetSsmData){	
-				String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
+			if(dontGetSsmData){//34138	
+				String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM","ssmCompanyCountry"};
 				EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);														
 			}
 			/*if((ssmResDTO.getSmCompanyBasic().getAnnualRevenue() == null || ssmResDTO.getSmCompanyBasic().getAnnualRevenue()==0) && tempAnnualRevenue > 0){
@@ -17444,8 +17461,9 @@ public class SmApplicationBackingBean extends
 					}
 				}
 				//#34277 - start
+				//34799
 				//personnel has no residential address, overwrite with SSM address
-				if(!hasResAddr){
+				if(!hasResAddr && getManagedBean().getShareHolderResdAddr().getSmAddress().getPostcode() != null){
 					getManagedBean().getShareHolderResdAddr().setSmAddress(ssmAddress);
 				}
 				//to check, if district state not equal to pm state set district to null & City
@@ -17458,9 +17476,13 @@ public class SmApplicationBackingBean extends
 							addr.setPmCity(new PmCity());
 					}
 				}
-				SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(getManagedBean(),
-						getManagedBean().getShareHolderResdAddr().getSmAddress(),
-						SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+				//34799
+				if(getManagedBean().getShareHolderResdAddr().getSmAddress() != null && getManagedBean().getShareHolderResdAddr().getSmAddress().getPmState() !=null){
+					SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(getManagedBean(),
+							getManagedBean().getShareHolderResdAddr().getSmAddress(),
+							SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+				}
+				
 				//#34277 - end
 				getManagedBean().setSelectedShareHolder(this.getManagedBean().getSelectedShareHolder());
 			}

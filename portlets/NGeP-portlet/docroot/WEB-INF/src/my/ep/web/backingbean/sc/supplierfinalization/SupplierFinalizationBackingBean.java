@@ -2533,7 +2533,7 @@ public class SupplierFinalizationBackingBean extends
 						}
 				  }
 				  // #28834 - End.
-				  if (ParameterConst.DECISION_RBP.equals(decisionTypeCode) && CollectionUtils.isNotEmpty(getManagedBean().getDocumentList()) && getManagedBean().getDocumentList().size() > 0) {
+				  if ((ParameterConst.DECISION_RBP.equals(decisionTypeCode) || ParameterConst.DECISION_RE_EVALUATION.equals(decisionTypeCode)) && CollectionUtils.isNotEmpty(getManagedBean().getDocumentList()) && getManagedBean().getDocumentList().size() > 0) {
 					  // #28834 - Start. 
 					  addBriefingPaper(scQtFinalization);
 		              // #28834 - End. 
@@ -2642,8 +2642,8 @@ public class SupplierFinalizationBackingBean extends
 			// #29921 - End.
 			
 			// #28834 - Start.
-			if (QTStatusConst.QT_SF_MOF_COMMIEEE.longValue() == getManagedBean().getCurrentStatusId().longValue()
-					&& ParameterConst.DECISION_RBP.equals(getManagedBean().getScQtFinalization().getDecision().getParameterCode())
+			if (QTStatusConst.SF_MOF_COMMITTEE.longValue() == getManagedBean().getCurrentStatusId().longValue()
+					&& (ParameterConst.DECISION_RBP.equals(getManagedBean().getScQtFinalization().getDecision().getParameterCode()) || ParameterConst.DECISION_RE_EVALUATION.equals(getManagedBean().getScQtFinalization().getDecision().getParameterCode()))
 					&& getManagedBean().isBpkCentralContract()
 					&& BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
 				addBriefingPaper(scQtFinalization);
@@ -5983,6 +5983,8 @@ return	remarksNotFound;
 				if(CollectionUtils.isEmpty(this.getManagedBean().getDisqualifiedStages())){
 					excludedDecisionList.add(
 							ParameterConst.DECISION_RE_EVALUATION);
+					excludedDecisionList.add(
+							ParameterConst.DECISION_RBP);
 				}
 				//6906 note 117 - end
 			}
@@ -9458,7 +9460,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				}
 			//} //17376-165
 		}
-		
+		this.evaluateDecisionList();//6906 &34812
 		return QTConstants.FC_SUPPLIER_FINALIZATION_PAGE;
 	}
 		
@@ -9510,7 +9512,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		public ISearchResultBean<Object[]> pageChangeListener(
 				ISearchBean<Object[]> searchBean) {
 			log.info("ShortlistedCommonSuppliersPagingDataModel.pageChangeListener");
-			SuppFinalizationResDTO resDTO = null;
+			//34746 - start
+			SuppFinalizationResDTO resDTO = new SuppFinalizationResDTO();
+			//34746 - end
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			try {
 				List<ScQtRecommend> selectedItemList = getManagedBean()

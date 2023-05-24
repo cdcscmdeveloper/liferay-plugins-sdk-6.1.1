@@ -321,7 +321,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			//#34686 start
 			else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 				if(getManagedBean().getAttachment().getFileName() != null){
-					log.info("razin ap58 save attachment "+ getManagedBean().getAttachment().getFileName());
 					FulfilmentReqDTO AttachreqDTO = new FulfilmentReqDTO();
 					AttachreqDTO.setAttachment(this.getManagedBean().getAttachment());
 					AttachreqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
@@ -1425,6 +1424,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			validateFulfillmentOrder(outcome);
 			//28377 - uncomment function
 			setTextBeforeSign(outcome);
+			log.info("#34686: Original Data: "+getManagedBean().getTextBeforeSign()); //#34686 log for original_data
 			//28377 - end uncomment function
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -1464,6 +1464,12 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						getManagedBean().getFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getFulfilmentOrder().getDocNo(), 
 						getManagedBean().getTextBeforeSign());					
 			}
+			//#34686 start
+			if(getManagedBean().getPmDigiSign().getOriginalData().isEmpty()) {
+				setTextBeforeSign(getManagedBean().getButtonAction());
+				getManagedBean().getPmDigiSign().setOriginalData(getManagedBean().getTextBeforeSign());
+			}
+			//#34686 end
 		}
 		return fulfillmentOrderAction(getManagedBean().getButtonAction());
 	}
@@ -2493,6 +2499,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			reqDTOflorder.setFlOrderId(docId);
 			resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTOflorder);
 			reqDTOnonAP58.setFulfilmentOrder(resDTO.getFlOrder());
+			//reqDTOnonAP58.setToken(getFacesScopes().getBPMAuthenticationCtxToken()); //#34686 remove token
 			resDTO = fulfilmentOrderSO.hideYEPtasklist(reqDTOnonAP58);
 			log.info("29440: "+resDTO.isSuccessful());
 			if(resDTO.isSuccessful()) {
