@@ -2684,7 +2684,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		
-		ctBB.getManagedBean().setInCtPerformance(false); #34662
+		ctBB.getManagedBean().setInCtPerformance(false); //#34662
 		
 		reqDTO.setContractId(contractId);
 		Long contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
