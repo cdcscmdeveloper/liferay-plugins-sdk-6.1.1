@@ -8551,7 +8551,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		String taskName = this.getManagedBean().getTaskName()==null ? "": this.getManagedBean().getTaskName();
 
 		//25037 -start-
-		if(this.getManagedBean().isCommitteeAppointmentMenuTab())
+		if(this.getManagedBean().isCommitteeAppointmentMenuTab() && taskName.equals(SCProcessNameConst.REVISE_COMMITTEE))
 			return true;
 		//25037 -end-
 		
