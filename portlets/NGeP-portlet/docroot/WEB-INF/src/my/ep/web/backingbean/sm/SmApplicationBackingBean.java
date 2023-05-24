@@ -17475,9 +17475,11 @@ public class SmApplicationBackingBean extends
 							addr.setPmCity(new PmCity());
 					}
 				}
-				SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(getManagedBean(),
+				//34799
+				/*SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(getManagedBean(),
 						getManagedBean().getShareHolderResdAddr().getSmAddress(),
-						SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+						SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);*/
+				//34799
 				//#34277 - end
 				getManagedBean().setSelectedShareHolder(this.getManagedBean().getSelectedShareHolder());
 			}
