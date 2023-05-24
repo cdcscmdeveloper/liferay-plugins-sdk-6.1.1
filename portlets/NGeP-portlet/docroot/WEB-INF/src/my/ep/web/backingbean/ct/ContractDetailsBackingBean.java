@@ -105,8 +105,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
-import org.springframework.util.ObjectUtils;
-
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -826,11 +824,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if(attachments != null && attachments.size() > 0){
 				for(CtAttachment ctAttach : attachments){
 					//#13847 start
-//					for(CtAttachment waivedAttach :ctBB.getManagedBean().getContractVer().getBondWaiverAttachments()){
-//						if(waivedAttach.getFilePath().equalsIgnoreCase(ctAttach.getFilePath())){
-//							waivedAttach.setBondWaivedTrue(true);
-//						}
-//					}
 					for(CtBondWaiverDetail waiverDetail :ctBB.getManagedBean().getContractVer().getCtBondWaiverDetails()){
 						if(waiverDetail.getCtAttachment().getFilePath().equalsIgnoreCase(ctAttach.getFilePath())){
 							waiverDetail.getCtAttachment().setBondWaivedTrue(true);
@@ -840,118 +833,110 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 		}
-		
-		//LOG : 13847, by Fahmi 22032019
-				//ctBB.getManagedBean().setAttachmentList(null);
-//				ctBB.getManagedBean().setWaiverDetail(null);
-//				for(CtAttachment waivedAttach :ctBB.getManagedBean().getContractVer().getBondWaiverAttachments()){
-//					//SET DATA TO LATEST WAIVER	
-//					//13847 - shaqimi start
-//					if(!waivedAttach.isDeleted()){
-//						if(waivedAttach.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
-//							if(waivedAttach.getCtBondWaiverDetail() == null){
-//								waivedAttach.setCtBondWaiverDetail(new CtBondWaiverDetail());
-//							}
-//							//this for : if user untick bondwaiver all detail will show in history table
-//			//				if(ctBB.getManagedBean().getCtContractAmount().isBondWaived()){
-//			//					ctBB.getManagedBean().setCtAttachment(SerializationUtils.clone(waivedAttach));
-//			//					ctBB.getManagedBean().setCtAttachmentLatest(SerializationUtils.clone(waivedAttach));
-//			//				}else{
-//			//					ctBB.getManagedBean().getWaiverDetail().add(SerializationUtils.clone(waivedAttach));
-//			//				}
-//			//				ctBB.getManagedBean().setCtAttachment(SerializationUtils.clone(waivedAttach));
-//							ctBB.getManagedBean().setCtAttachmentLatest(SerializationUtils.clone(waivedAttach));
-//						}else{//SET DATA TO TABLE WAIVER
-//							waivedAttach.setBrandNew(false);
-//							ctBB.getManagedBean().getWaiverDetail().add(SerializationUtils.clone(waivedAttach));
-//						}
-//					}
-//					//13847 - shaqimi end
-//				}
-//				if(ctBB.getManagedBean().getContractVer().getBondWaiverAttachments().size() <=0){
-//					ctBB.getManagedBean().setCtAttachmentLatest(new CtAttachment());
-//					ctBB.getManagedBean().getCtAttachmentLatest().setCtBondWaiverDetail(new CtBondWaiverDetail());
-//				}
-//				ctBB.getManagedBean().getContractVer().setBondWaiverAttachments(null);
+		ctBB.getManagedBean().getContractVer().setBondWaiverDefermentLatest(null);
+		ctBB.getManagedBean().getContractVer().setBondWaiverDefermentHistory(null);
+		if (ctBB.getManagedBean().getContractVer().getCtBondWaiverDetails()!=null
+				&& !CollectionUtils.isEmpty(ctBB.getManagedBean().getContractVer().getCtBondWaiverDetails())){
+			for(CtBondWaiverDetail waiverDetail :ctBB.getManagedBean().getContractVer().getCtBondWaiverDetails()){
+				if(!waiverDetail.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+					if(waiverDetail.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+						//SET DATA TO LATEST BOND WAIVER WITH ATTACHMENT
+						if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest()==null){
+							ctBB.getManagedBean().getContractVer().setBondWaiverDefermentLatest(new CtBondWaiverDetail());
+							ctBB.getManagedBean().setBondWaiverLatestTemp(new CtBondWaiverDetail());
+						}
+						ctBB.getManagedBean().getContractVer().setBondWaiverDefermentLatest(waiverDetail);
+						ctBB.getManagedBean().setBondWaiverLatestTemp(SerializationUtils.clone(waiverDetail));
+					}else{//SET DATA TO TABLE WAIVER FOR HSTORY
+						if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory()==null){
+							ctBB.getManagedBean().getContractVer().setBondWaiverDefermentHistory(new ArrayList<CtBondWaiverDetail>());
+						}
+						waiverDetail.setBrandNew(false);
+						waiverDetail.getCtAttachment().setBrandNew(false);
+						ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory().add(waiverDetail);
+					}
+				}
+			}
 
-				if (ctBB.getManagedBean().getContractVer().getCtBondWaiverDetails()!=null
-						&& !CollectionUtils.isEmpty(ctBB.getManagedBean().getContractVer().getCtBondWaiverDetails())){
-					for(CtBondWaiverDetail waiverDetail :ctBB.getManagedBean().getContractVer().getCtBondWaiverDetails()){
-						if(!waiverDetail.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
-							if(waiverDetail.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
-								//SET DATA TO LATEST BOND WAIVER WITH ATTACHMENT
-								if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest()==null){
-									ctBB.getManagedBean().getContractVer().setBondWaiverDefermentLatest(new CtBondWaiverDetail());
-								}
-								ctBB.getManagedBean().getContractVer().setBondWaiverDefermentLatest(waiverDetail);
-							}else{//SET DATA TO TABLE WAIVER FOR HSTORY
-								if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory()==null){
-									ctBB.getManagedBean().getContractVer().setBondWaiverDefermentHistory(new ArrayList<CtBondWaiverDetail>());
-								}
-								waiverDetail.setBrandNew(false);
-								waiverDetail.getCtAttachment().setBrandNew(false);
-								ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory().add(waiverDetail);
-							}
-						}
-					}
-					ctBB.getManagedBean().getContractVer().setCtBondWaiverDetails(null);
-				}
-				
-				if(ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondWaived()){
-					if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest()==null){
-						ctBB.getManagedBean().getContractVer().setBondWaiverDefermentLatest(new CtBondWaiverDetail());
-					}
-				}
+			if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory()!=null){
+				Collections.sort(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory(), new Comparator<CtBondWaiverDetail>() {
+					  @Override
+					  public int compare(CtBondWaiverDetail u1, CtBondWaiverDetail u2) {
+					    return u2.getBondWaiverDetailId().compareTo(u1.getBondWaiverDetailId());
+					  }
+					});
 			}
-			
-			/**
-			 * Method to set all the bond waiver and its attachment (latest, history, latest delete and history delete) into full waiver to be save into database
-			 * @param outcome, status
-			 * @return bondWaiverFull
-			 */
-			private List<CtBondWaiverDetail> setBondWaiverLatestHistoryDelete(String outcome, Long status){
-				List<CtBondWaiverDetail> bondWaiverFull = new ArrayList<CtBondWaiverDetail>(); 
-				
-				//Latest
-				if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest() != null){
-					bondWaiverFull.add(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest());
-					ctBB.getManagedBean().getContractVer().setBondWaiverDefermentLatest(null);
-				}
-				//History
-				if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory()!= null
-						&& !CollectionUtils.isEmpty(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
-					for(CtBondWaiverDetail waiver : ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory()){
-						if((ctBB.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FD_PENDING_APPROVAL) ||
-								ctBB.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FD_PENDING_REVISION_APPROVAL) ||
-								ctBB.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FU_PENDING_APPROVAL) ||
-								ctBB.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FU_PENDING_REVISION_APPROVAL) ||
-								ctBB.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FW_PENDING_APPROVAL) ||
-								ctBB.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FW_PENDING_REVISION_APPROVAL)) &&
-								status.equals(BpmOutcomeConst.BPM_APPROVE)){
-						waiver.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
-						waiver.getCtAttachment().setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
-						}
-						bondWaiverFull.add(waiver);
-					}
-					ctBB.getManagedBean().getContractVer().setBondWaiverDefermentHistory(null);
-				}
-				//Latest Delete
-				if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatestDelete()!= null){
-					bondWaiverFull.add(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatestDelete());
-					ctBB.getManagedBean().getContractVer().setBondWaiverDefermentLatestDelete(null);
-				}
-				//History Delete
-				if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistoryDelete()!= null
-						&& !CollectionUtils.isEmpty(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistoryDelete())){
-					for(CtBondWaiverDetail waiverDeleted : ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistoryDelete()){
-						bondWaiverFull.add(waiverDeleted);
-					}
-					ctBB.getManagedBean().getContractVer().setBondWaiverDefermentHistoryDelete(null);
-				}
-				
-				return bondWaiverFull;
+		}
+		
+		if(ctBB.getManagedBean().getContractVer().getCtContractAmount()!=null
+				&& ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondWaived()){
+			if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest()==null){
+				ctBB.getManagedBean().getContractVer().setBondWaiverDefermentLatest(new CtBondWaiverDetail());
 			}
-			//#13847 end
+		}
+	}
+	
+	/**
+	 * Method to set all the bond waiver and its attachment (latest, history, latest delete and history delete) into full waiver to be save into database
+	 * @param outcome, status
+	 * @return bondWaiverFull
+	 */
+	private List<CtBondWaiverDetail> setBondWaiverLatestHistoryDelete(String outcome, Long status){
+		List<CtBondWaiverDetail> bondWaiverFull = new ArrayList<CtBondWaiverDetail>(); 
+		
+		//History
+		if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory()!= null
+				&& !CollectionUtils.isEmpty(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
+			for(CtBondWaiverDetail waiver : ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory()){
+				if((ctBB.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FD_PENDING_APPROVAL) ||
+						ctBB.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FD_PENDING_REVISION_APPROVAL) ||
+						ctBB.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FU_PENDING_APPROVAL) ||
+						ctBB.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FU_PENDING_REVISION_APPROVAL) ||
+						ctBB.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FW_PENDING_APPROVAL) ||
+						ctBB.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FW_PENDING_REVISION_APPROVAL)) &&
+						status.equals(BpmOutcomeConst.BPM_APPROVE)){
+					waiver.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+					waiver.getCtAttachment().setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+				}
+				bondWaiverFull.add(waiver);
+			}
+		}
+		
+		//Latest
+		if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest() != null){
+			if(ctBB.getManagedBean().getBondWaiverLatestTemp()!=null && 
+					(!ctBB.getManagedBean().getBondWaiverLatestTemp().getReferenceNo().trim()
+						.equalsIgnoreCase(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getReferenceNo().trim())
+					|| !ctBB.getManagedBean().getBondWaiverLatestTemp().getWaiverStartDate()
+						.equals(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate())
+					|| !ctBB.getManagedBean().getBondWaiverLatestTemp().getWaiverEndDate()
+						.equals(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate())
+					|| !ctBB.getManagedBean().getBondWaiverLatestTemp().getCtAttachment().getFileName().trim()
+						.equalsIgnoreCase(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment().getFileName().trim()))){
+				CtBondWaiverDetail bondWaiverTemp = new CtBondWaiverDetail();
+				bondWaiverTemp.setWaiverStartDate(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate());
+				bondWaiverTemp.setWaiverEndDate(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate());
+				bondWaiverTemp.setReferenceNo(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getReferenceNo().trim());
+				bondWaiverTemp.setCtAttachment(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment());
+				ctBB.getManagedBean().getContractVer().setBondWaiverDefermentLatest(bondWaiverTemp);
+			}
+			bondWaiverFull.add(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest());
+		}
+		
+		//Latest Delete
+		if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatestDelete()!= null){
+			bondWaiverFull.add(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatestDelete());
+		}
+		//History Delete
+		if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistoryDelete()!= null
+				&& !CollectionUtils.isEmpty(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistoryDelete())){
+			for(CtBondWaiverDetail waiverDeleted : ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistoryDelete()){
+				bondWaiverFull.add(waiverDeleted);
+			}
+		}	
+		return bondWaiverFull;
+	}
+	//#13847 end
 	
 	
 	//Start - 25890 - Minh
@@ -1111,29 +1096,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				//#29713 - removed old commented block
 			}
 		}
-		//LOG : 13847, by Fahmi 22032019
-//		ctContractVer.setWaiverAttachment(ctBB.getManagedBean().getWaiverDetail());
-//		ctContractVer.setWaiverAttachmentLatest(ctBB.getManagedBean().getCtAttachmentLatest());
-//		if(ctBB.getManagedBean().getCtAttachmentDelete() != null){
-//			ctContractVer.getWaiverAttachment().add(ctBB.getManagedBean().getCtAttachmentDelete());
-//			ctBB.getManagedBean().setCtAttachmentDelete(null);
-//		}
-//		//13847 - shaqimi start
-//		if(ctBB.getManagedBean().getWaiverDetailDelete() != null){
-//			for(CtAttachment waiverDeleted : ctBB.getManagedBean().getWaiverDetailDelete()){
-//				ctContractVer.getWaiverAttachment().add(waiverDeleted);
-//			}
-//			ctBB.getManagedBean().setWaiverDetailDelete(null);
-//		}
-//		//13847 - shaqimi end
 		
 		//#13847 start
-		
 		if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest()!=null || ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory() !=null
 				|| ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatestDelete()!=null || ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistoryDelete() !=null){
-			if(ctContractVer.getCtBondWaiverDetails()!= null){
-				ctContractVer.setCtBondWaiverDetails(new ArrayList<CtBondWaiverDetail>());
-			}
 			ctContractVer.setCtBondWaiverDetails(setBondWaiverLatestHistoryDelete(action,ctBB.getManagedBean().getContractVer().getStatus().getStatusId()));
 		}
 		//#13847 end
@@ -1830,10 +1796,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}    
 				}
 			}
-			//#13847 end
 		}
-		//LOG : 13847, by Fahmi 22032019
 		validationPerformanceBond(action);
+		//#13847 end
 		
 		// Validation for Approver
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
@@ -1894,7 +1859,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @see    Exception
 	 */
 	public void validationPerformanceBond(String action){
-		if (ctBB.getManagedBean().getCtContractAmount().isBondReq()// && !ctBB.getManagedBean().isDirectPurchase() - REMOVE THIS CZ DP ALSO CAN HUGE AMOUNT
+		if (ctBB.getManagedBean().getCtContractAmount().isBondReq()
 				&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()
 				&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
 						||  action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
@@ -1903,30 +1868,25 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {//33824 remove duplicate reject
 			
 			if(ctBB.getManagedBean().getCtContractAmount().isBondWaived()){
-//				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null) {
 				if (ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate() == null) {
 					setTabValue("PB");
-					throw new EpException(MessageConst.ERROR_750061);//#Enhancement 13847 - shaqimi
+					throw new EpException(MessageConst.ERROR_750061);
 				}
-//				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate() == null) {
 				if (ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate() == null) {
 					setTabValue("PB");
-					throw new EpException(MessageConst.ERROR_750061);//#Enhancement 13847 - shaqimi
+					throw new EpException(MessageConst.ERROR_750061);
 				}
-//				if (ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo() == null 
-//					|| "".equalsIgnoreCase(ctBB.getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo())) {
 				if (ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getReferenceNo() == null 
 						|| StringUtils.isBlank(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getReferenceNo())) {	
 					setTabValue("PB");
-					throw new EpException(MessageConst.ERROR_750061);//#Enhancement 13847 - shaqimi
+					throw new EpException(MessageConst.ERROR_750061);
 				}
-//				if (ctBB.getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(ctBB.getManagedBean().getCtAttachmentLatest().getFileName())) {
 				if (ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment()==null || 
 						(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment()!=null && 
 						(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment().getFileName() == null 
 						|| StringUtils.isBlank(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment().getFileName())))) {
 					setTabValue("PB");
-					throw new EpException(MessageConst.ERROR_750061);//#Enhancement 13847 - shaqimi
+					throw new EpException(MessageConst.ERROR_750061);
 				}
 				
 				
@@ -1936,13 +1896,17 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						.compareTo(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate()) > 0) {
 					// start date large than end date
 					setTabValue("PB");
-					throw new EpException(MessageConst.ERROR_750061);//#Enhancement 13847 - shaqimi
+					throw new EpException(MessageConst.ERROR_750061);
 				}
 
 				if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory() != null 
 						&& !CollectionUtils.isEmpty(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
 					for(CtBondWaiverDetail ctBondWaiverHistory : ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory()){
-						if(StringUtils.isBlank(ctBondWaiverHistory.getCtAttachment().getFileName()) || StringUtils.isBlank(ctBondWaiverHistory.getCtAttachment().getFilePath())){
+						if(ctBondWaiverHistory.getCtAttachment()==null 
+								|| (ctBondWaiverHistory.getCtAttachment()!=null  
+								&& (StringUtils.isBlank(ctBondWaiverHistory.getCtAttachment().getFileName()) 
+										|| StringUtils.isBlank(ctBondWaiverHistory.getCtAttachment().getFilePath())))){
+							setTabValue("PB");
 							throw new EpException(MessageConst.ERROR_750065);
 						}
 					}
@@ -1954,30 +1918,33 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						ctBB.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FU_PENDING_REVISION_APPROVAL) ||
 						ctBB.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FW_PENDING_APPROVAL) ||
 						ctBB.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FW_PENDING_REVISION_APPROVAL)){
-					
-					if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory() != null || ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory().size() > 0){
+
+					boolean attachmentExist = false;
+					if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory() != null 
+							&& !CollectionUtils.isEmpty(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
 						CtBondWaiverDetail ctBondWaiverLatest = ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest();
-						boolean attachmentExist = false;
 						
 						for(CtBondWaiverDetail ctBondWaiverHistory : ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory()){
 							if(ctBondWaiverLatest.getWaiverStartDate().equals(ctBondWaiverHistory.getWaiverStartDate()) &&
 									ctBondWaiverLatest.getWaiverEndDate().equals(ctBondWaiverHistory.getWaiverEndDate()) &&
 									ctBondWaiverLatest.getReferenceNo().equals(ctBondWaiverHistory.getReferenceNo()) &&
-									ctBondWaiverLatest.getCtAttachment().getFilePath().equals(ctBondWaiverHistory.getCtAttachment().getFilePath()) &&
+//									ctBondWaiverLatest.getCtAttachment().getFilePath().equals(ctBondWaiverHistory.getCtAttachment().getFilePath()) &&
 									ctBondWaiverLatest.getCtAttachment().getFileName().equals(ctBondWaiverHistory.getCtAttachment().getFileName())){
 								attachmentExist = true;
 							}
 						}
-						
-						if(!attachmentExist){
-							throw new EpException(MessageConst.ERROR_750071);
-						}
+					}
+
+					if(!attachmentExist){
+						setTabValue("PB");
+						throw new EpException(MessageConst.ERROR_750071);
 					}
 				}
-				//#13847 - end
 			}
 		}
 	}
+	//#13847 - end
+	
 	/**
 	 * The method used to authenticate user during submit the contract.
 	 * This method will invoke a confirmation dialog for user authentication.
@@ -1990,9 +1957,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	
 	public String gpkiSignAction(String outcome) throws Exception {
-		//LOG : 13847, by Fahmi 22032019
-		//need to validate bond
-//		validationPerformanceBond(outcome); //#13847
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 			validateCtContractVer(outcome);
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
