@@ -4445,7 +4445,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								ScQtApprovalRemark.class));
                     	}
                          }else{
-                        	 if(!isApprovalScreen()){//13344_start
+                        	 if(!isApprovalScreen() && existingApprovalTabs == null){//25037
+                        	//13344_start
                         	 qtApproval.setScQtApprovalRemarks(initializeRemarks(
      								qtApproval, scQt.getCurrentWorkFlowStatus(),
      								qtApproval.getScQtApprovalRemarks(),
@@ -8549,6 +8550,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//#11299 Start Vinod
 		String taskName = this.getManagedBean().getTaskName()==null ? "": this.getManagedBean().getTaskName();
 
+		//25037 -start-
+		if(this.getManagedBean().isCommitteeAppointmentMenuTab() && taskName.equals(SCProcessNameConst.REVISE_COMMITTEE))
+			return true;
+		//25037 -end-
+		
 		if (taskName.equals(SCProcessNameConst.REVISE_COMMITTEE)
 			&& !this.getManagedBean().isMaintanceFlow()
 			&& isDeskOfficer()

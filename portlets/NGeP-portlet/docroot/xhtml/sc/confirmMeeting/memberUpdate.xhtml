@@ -13,6 +13,8 @@
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
 		<ui:param name="meetingBB" value="#{(empty evaluationBackingBean.managedBean.meetingBB) ? (evaluationMeetingBackingBean): (evaluationBackingBean.managedBean.meetingBB)}"/>
+		<ui:param name="taskName" value="#{meetingBB.managedBean.taskName}"/>
+		<ui:param name="isCommitteeUpdatable" value="#{meetingBB.isCommitteeEditable(taskName)}"/>
 		<p:messages id="evaluationMeeting" showDetail="true"
 			autoUpdate="#{meetingBB.managedBean.autoUpdate}"
 			closable="true" severity="error,info" showSummary="false" />
@@ -23,6 +25,7 @@
 				process="@this" 
 				styleClass="BtnSpacing"
 				action="#{meetingBB.navigateToUpdateMember('back')}" />
+			<p:commandButton style="float: right;" process="@this" onclick="blockWidget.show();" oncomplete="blockWidget.hide();" value="#{lbl['lbl.btn.update']}" disabled="#{!isCommitteeUpdatable}" action="#{meetingBB.validateCommitteeChanges()}" />	
 		</div>
 		<ui:param name="filteredRoles" value="#{fn:split('S',',')}"/>
 		<div align="left" class="header-info header-spacing">
@@ -57,8 +60,6 @@
 			</table>
 		</div>
 
-		<ui:param name="taskName" value="#{meetingBB.managedBean.taskName}"/>
-		<ui:param name="isCommitteeUpdatable" value="#{meetingBB.isCommitteeEditable(taskName)}"/>
 		<p:panel id="committeeHistoryId" header="#{lbl['lbl.sc.header.committeelist']}" toggleable="true">
 			<ac:committeeHistoryPanel
 				historyPaginator="#{meetingBB.managedBean.historyPaginator}"
@@ -184,9 +185,6 @@
 			instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.approval.remarks.instruction'] : ''}" 
 			showAttachment="false" readonly="#{!isCommitteeUpdatable}"
 			/>
-		<div align="right">
-			<p:commandButton process="@this" onclick="blockWidget.show();" oncomplete="blockWidget.hide();" value="#{lbl['lbl.btn.update']}" disabled="#{!isCommitteeUpdatable}" action="#{meetingBB.validateCommitteeChanges()}" />
-		</div>
 		<ui:include src="addexistingcommittee.xhtml" />
 		<ui:param name="sendToCommitteeStr" value="#{fn:containsIgnoreCase(meetingBB.managedBean.taskName, 'COORDINATE') ? lbl['lbl.sc.popup.needcommitteeapprover']: lbl['lbl.sc.popup.needcommitteeapproverEval']}"></ui:param><ui:remove><!-- 25037 - note 510--></ui:remove>
 		<ac:confirmationPopup id="confirmChangeMemberListId"
