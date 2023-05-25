@@ -30,12 +30,20 @@
       </c:choose>
       	<ui:param name="taskName" value="#{meetingBB.managedBean.taskName}"/>
 		<ui:param name="isCommitteeUpdatable" value="#{meetingBB.isCommitteeEditable(taskName)}"/>
-		<div align="left">
-			<p:commandButton widgetVar="backUpdate" value="#{lbl['lbl.btn.back']}"
-				styleClass="BtnSpacing" process="@this" onclick="blockWidget.show()" oncomplete="blockWidget.hide()" 
-				action="#{meetingBB.navigateToUpdateMember('back')}" />
-			<p:commandButton style="float: right" process="@this" widgetVar="confirmUpdate" oncomplete="blockWidget.hide()" onclick="blockWidget.show()" value="#{lbl['lbl.btn.update']}" disabled="#{!isCommitteeUpdatable}" action="#{meetingBB.navigateToUpdateMember('confirm')}" />
-		</div>
+		<table width="100%" class="BtnSpacing">
+			<tr>
+				<td align="right"><p:commandButton widgetVar="backUpdate" 
+						value="#{lbl['lbl.btn.back']}" styleClass="BtnSpacing"
+						process="@this" onclick="blockWidget.show()"
+						oncomplete="blockWidget.hide()" style="float:left;"
+						action="#{meetingBB.navigateToUpdateMember('back')}" /> <p:commandButton
+						style="float: right" process="@this" widgetVar="confirmUpdate"
+						oncomplete="blockWidget.hide()" onclick="blockWidget.show()"
+						value="#{lbl['lbl.btn.update']}"
+						disabled="#{!isCommitteeUpdatable}"
+						action="#{meetingBB.navigateToUpdateMember('confirm')}" /></td>
+			</tr>
+		</table>
 		<div align="left" class="header-info header-spacing">
 			<ui:param name="scQt" value="#{meetingBB.managedBean.scQt}" />
 			<table style="width: 100%;">
