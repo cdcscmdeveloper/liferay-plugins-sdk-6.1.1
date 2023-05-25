@@ -2785,14 +2785,6 @@ public class TaskReassignmentBackingBean extends
 				// not allow to search
 				isSearched = true;
 			}
-
-			//Redmine Bug #32682 - START
-			if(QTStatusConst.SF_PENDING_LOI_PREPARATION.equals(task.getDocStatus().longValue()) || 
-					QTStatusConst.QT_PENDING_LOA.equals(task.getDocStatus().longValue())) {
-				getManagedBean().setCommitteeUpdate(true);
-			}
-			//Redmine Bug #32682 - END
-			
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ:
 			//4 - Include User under Ministry, Kumpulan PTJ & PTJ
@@ -3213,8 +3205,8 @@ public class TaskReassignmentBackingBean extends
 			//Bug #25021
 			committeReqDTO.setOrgProfileId(orgProfileId);
 			//end Bug #25021
-			
-			return committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();
+			//return committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();
+			return committeSO.retrieveUserListByCommTypeForTaskReassignment(committeReqDTO).getUserResultBean(); //Fix - #34699
 		} finally {
 			committeSO = null;
 		}

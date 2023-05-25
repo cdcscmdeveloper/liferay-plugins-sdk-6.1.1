@@ -4756,7 +4756,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
 				
 				//Bug #33988@Syazani -- Start 27/09/2022 
-				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && !validateDuplicateSets.add(scQtFinalizationReport.getTitle().trim())) {
+				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && !validateDuplicateSets.add(scQtFinalizationReport.getTitle().toLowerCase().trim())) { //Bug #33988@Syazani -- 01/03/2023
 					throw new EpException(MessageConst.ERROR_775190, new String[] { scQtFinalizationReport.getTitle() }); //Bug #33988@Syazani - 06/12/2022
 				}
 				//Bug #33988@Syazani -- End 27/09/2022 
@@ -4835,17 +4835,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		    reqDTO.setQtReportIdList(qtReportIds);
 		    reqDTO.setDocumentCategory(this.getManagedBean().getNewBriefingPaperReportList().get(0).getDocCategory());
 		    SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveFinalizationReport(reqDTO);
-		    if (null != resDTO && null != resDTO.getScQtFinalizationReports()
-		    		&& resDTO.getScQtFinalizationReports().size() > 0) {
-		    repLoop:	for (ScQtFinalizationReport repScQtFinalizationReport : resDTO.getScQtFinalizationReports()) {
-		    		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
-		    			if (repScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
-		    				scQtFinalizationReport.setReportContent(repScQtFinalizationReport.getReportContent());
-		    				continue repLoop;
-		    			}
-		    		}
-		    	}
-		    }
+			if (null != resDTO && null != resDTO.getScQtFinalizationReports()
+					&& resDTO.getScQtFinalizationReports().size() > 0) {
+				repLoop: for (ScQtFinalizationReport repScQtFinalizationReport : resDTO.getScQtFinalizationReports()) {
+					for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
+						//Bug #33988@Syazani -- Start 14/03/2023
+						String repParaCode = repScQtFinalizationReport.getDefinationType() != null ? repScQtFinalizationReport
+								.getDefinationType().getParameterCode() : "";
+						String scQtParaCode = scQtFinalizationReport.getDefinationType() != null ? scQtFinalizationReport
+								.getDefinationType().getParameterCode() : "";
+						if (repScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())
+								&& repParaCode.equals(scQtParaCode)) {
+							//Bug #33988@Syazani -- End 14/03/2023
+							scQtFinalizationReport.setReportContent(repScQtFinalizationReport.getReportContent());
+							continue repLoop;
+						}
+					}
+				}
+			}
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -5704,10 +5711,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					} else {
 						ctType = scQt.getContractType().getParameterId();
 					}
-
-					if (isRuleBpk && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
-						return isBpkCentralContract = true;
+					
+					//#9019 Start #note-445 User unable to open side menu for Committee Appointment and Approval when ctType is null. 
+					//      Contract type is not selected while cancel QT
+					if(ctType != null){
+						if (isRuleBpk && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
+							return isBpkCentralContract = true;
+						}
 					}
+					//9019 End #note-445
 				}
 			
 			return isBpkCentralContract;
@@ -5861,8 +5873,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		int countIndex = 0;
 		int indi = 0;
 		boolean getFirstValue = true;
-		//26130 - start
-		if (null != master.getTplSpecZone()){
+		//26130 - start 
+		if (master.getTplSpecZone() != null){
 		//26130 - end	
 		if (question.getTplSpecZoneQties().size()  > 0){
 			for (TplSpecZoneQty zone: question.getTplSpecZoneQties()){
@@ -5871,7 +5883,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					if (getFirstValue){
 						map.put(SSTConstant.clItem, question.getClItem());
 						map.put(SSTConstant.uomName, question.getClUom().getUomName());
-						map.put(SSTConstant.clPriceTypeCode, getParameterDescForReport(question.getClPriceTypeCode()));
+						map.put(SSTConstant.clPriceTypeCode, getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
 						map.put(SSTConstant.zoneName,zone.getTplSpecZoneDtl().getZoneName());
 						map.put(SSTConstant.quantity, zone.getQty().toString());
 						if (null != question.getTplSpecTierQties() && question.getTplSpecTierQties().size() > 0 ){
@@ -5945,7 +5957,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								map.put(SSTConstant.clUomPerMonth, question.getClUomPerMonth().toString());
 							}else {
 								//product
-								map.put(SSTConstant.clPriceTypeCode, getParameterDescForReport(question.getClPriceTypeCode()));
+								map.put(SSTConstant.clPriceTypeCode, getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
 								String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
 								map.put(SSTConstant.qtyBerperingkat, tierValue);
 							}
@@ -6102,31 +6114,46 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return false;
 		}//25635
 		
-		//25037 - note 677 - start
-		/**
-		 * Evaluate the corresponding Representative/Agency parameter type based on committee type.
-		 * PBA, PBB, QCA, FSW, FSB, QCB, PPB
-		 * @return String (Parameter Type Code)
-		 */ 
-		public String getRepresentativeType(String committeeType) {
-			switch (committeeType) {
-				case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B:
-					return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
-				case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A:
-					return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
-				case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD:
-					return ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
-				case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B:
-					return ParameterTypeConst.REPRESENTATIVE_TYPE_PBB;
-				case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A:
-					return ParameterTypeConst.REPRESENTATIVE_TYPE_PBA;
-				case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH:
-					return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH;
-				case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK:
-					return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK;
-				default:
-					return "";
-			} 
+	//25037 -start-
+	/**
+	 * Evaluate the corresponding Representative/Agency parameter type based on
+	 * committee type. PBA, PBB, QCA, FSW, FSB, QCB, PPB
+	 * 
+	 * @return String (Parameter Type Code)
+	 */
+	public String getRepresentativeType(String committeeType) {
+		switch (committeeType) {
+		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
+		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
+		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
+		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_PBB;
+		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_PBA;
+		case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH;
+		case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK;
+		default:
+			return "";
 		}
 		//25037 - note 677 - end
+	}
+	/**
+	 * Evaluate if taskname is endorsement and signoff
+	 * 
+	 * @return String (BPM task Name)
+	 */
+	public boolean evaluateEndorseSignoffTask(String taskName) {
+		if (StringUtils.isEmpty(taskName))
+			return false;
+		String[] actions = new String[] { "ENDORSE", "SIGNOFF" };
+		String action = StringUtils.upperCase(taskName.split(" ")[0]);
+		return Arrays.asList(actions).contains(action);
+	}	
+	//25037 -end-
+
 }
