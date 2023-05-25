@@ -90,6 +90,7 @@ import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -6140,7 +6141,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		default:
 			return "";
 		}
-		//25037 - note 677 - end
 	}
 	/**
 	 * Evaluate if taskname is endorsement and signoff
@@ -6150,10 +6150,25 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public boolean evaluateEndorseSignoffTask(String taskName) {
 		if (StringUtils.isEmpty(taskName))
 			return false;
-		String[] actions = new String[] { "ENDORSE", "SIGNOFF" };
+		String[] actions = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_SIGNOFF};
 		String action = StringUtils.upperCase(taskName.split(" ")[0]);
 		return Arrays.asList(actions).contains(action);
-	}	
+	}
+	/**
+	 * Evaluate if committee is editable by taskname for screen update committee 
+	 * during evaluation and finalization
+	 * 
+	 * @return String (BPM task Name)
+	 */
+	public boolean isCommitteeEditable(String taskName) {
+		taskName = taskName == null ? "" : taskName;
+		List<String> taskNames = new ArrayList<>();
+		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_PREPARATION_GROUP));
+		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_FINALIZE_GROUP));
+		taskNames.addAll(Arrays.asList(new String[] { SCProcessNameConst.FINALISE_FC_SELECTION,
+				SCProcessNameConst.COORDINATE_FC_MEETING, SCProcessNameConst.REVISE_EVALUATION_MEETING }));
+		return taskNames.contains(taskName);
+	}
 	//25037 -end-
 
 }
