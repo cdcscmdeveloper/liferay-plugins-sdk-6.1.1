@@ -2070,7 +2070,11 @@ public class QTCloneBackingbean extends
 		List<ScQtApproval> newApprovals=new ArrayList<ScQtApproval>();
 		//25635 & 34502 - Start
 		List<TabBean> tabBeans = new ArrayList<TabBean>();
-		List<ScQtApproval> otherapprovals=new ArrayList<>();//25635 & 34502
+		List<ScQtApproval> otherapprovals=new ArrayList<>();//25635 & 34502 
+		this.getManagedBean().setScQtApprovalReqAttachementICT(null);//34502&25635-start
+		this.getManagedBean().setScQtAppRequestRemark(StringUtils.EMPTY);
+		this. getManagedBean().setPmParam(null);
+		scQt.setCloneEnabled(Boolean.FALSE);//34502&25635-End
 		//25635 & 34502 - End
 		if(null!=requiredApproval && CollectionUtils.isNotEmpty(requiredApproval)){//25635-start
 		for(ScQtApproval approval:requiredApproval){
@@ -2083,8 +2087,10 @@ public class QTCloneBackingbean extends
 				
 			}else if(ParameterConst.APPROVAL_CATEGORY_OTHERS
 					.equalsIgnoreCase(approval.getApprovalCategory()
-							.getParameterCode())){//25635 & 34502 
+							.getParameterCode())){//25635 & 34502
+				if(CollectionUtils.isEmpty(otherapprovals)){//25635 & 34502 
 				otherapprovals.add(approval);
+				}//25635 & 34502
 				
 			}//25635 & 34502 
 		}
@@ -2230,6 +2236,8 @@ public class QTCloneBackingbean extends
 		//25635 & 34502 - Start
 		for(ScQtApproval copyOthersApproval:otherapprovals){
 			ScQtApproval newOthersApproval= null;
+			scQt.setCloneEnabled(Boolean.TRUE);//34502&25635-end
+			this.getManagedBean().setApproverTabLoaded(Boolean.TRUE);//34502&25635-end
 			 if(!scQt.isBrandNew()){
 				if(null!=scQt.getScQtApprovals() && CollectionUtils.isNotEmpty(scQt.getScQtApprovals())){
 					for(ScQtApproval approval:scQt.getScQtApprovals()){
@@ -2261,7 +2269,10 @@ public class QTCloneBackingbean extends
 							req.setBrandNew(true);
 							req.setApprovalType(approvalRequest.getApprovalType());
 							req.setApproverAction(new PmParameter());
+							if(null!=approvalRequest.getApproverAction()){//34502&25635&43-start
 							req.setApproverAction(approvalRequest.getApproverAction());//25635 & 34502
+							this. getManagedBean().setPmParam(req.getApproverAction());//34502&25635
+							}//34502&25635&43-End
 							req.setApprovalRequestAttachement(null);//25635 & 34502
 							ScQtApprovalReqAttachement approvalReqAttachement = 	req.getApprovalRequestAttachement();//25635 & 34502
 							if (null == approvalReqAttachement) {
@@ -2270,15 +2281,21 @@ public class QTCloneBackingbean extends
 							}
 							approvalReqAttachement.setDocNo(scQt.getQtNo());
 							try {
+								if(null!=approvalRequest.getApprovalRequestAttachement()){//34502&25635&43-start
 								uploadAttachment(approvalReqAttachement,approvalRequest.getApprovalRequestAttachement());
+								req.setApprovalRequestAttachement(approvalReqAttachement);//25635 & 34502
+								this.getManagedBean().setScQtApprovalReqAttachementICT(req.getApprovalRequestAttachement());//34502&25635
+								}//34502&25635&43-End
 							} catch (IOException e) {
 								SLAUtils.getInstance().logSLAError("QT", "ICTAPProvalATTAchemnt", "docNo", "ICTAPProvalATTAchemntClone", getUserIdSessionFromLoginId(), e);
 							}
-							req.setApprovalRequestAttachement(approvalReqAttachement);//25635 & 34502
 							ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
 							approvalRemark.setApprovalRequest(req);//25635 & 34502
 							req.setAppRequestRemark(approvalRemark);
+							if(null!=approvalRequest.getAppRequestRemark()){//34502&25635&43-start
 							req.getAppRequestRemark().setRemark(approvalRequest.getAppRequestRemark().getRemark());//25635 & 34502
+							this.getManagedBean().setScQtAppRequestRemark(req.getAppRequestRemark().getRemark());//34502&25635
+							}//34502&25635&43-End
 							req.setScQtApproval(newOthersApproval);
 							approverRequest.add(req);
 									
@@ -2408,13 +2425,9 @@ public class QTCloneBackingbean extends
 		//25635 & 34502 - End
 		
 		scQt.setScQtApprovals(newApprovals);
-		this.getManagedBean().setFlagFileAttahmentDeletedICT(Boolean.TRUE);//34502&25635-start
-		this.getManagedBean().setScQtApprovalReqAttachementICT(null);
-		this.getManagedBean().setScQtAppRequestRemark(StringUtils.EMPTY);
-		this. getManagedBean().setPmParam(null);
-		scQt.setCloneEnabled(Boolean.TRUE);//34502&25635-end
 		
 		
+			
 		return scQt;
 	}
 	
