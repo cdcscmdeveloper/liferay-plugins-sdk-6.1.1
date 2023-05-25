@@ -34,7 +34,11 @@
 			<p:commandButton widgetVar="backUpdate" value="#{lbl['lbl.btn.back']}"
 				styleClass="BtnSpacing" process="@this" onclick="blockWidget.show()" oncomplete="blockWidget.hide()" 
 				action="#{meetingBB.navigateToUpdateMember('back')}" />
+<<<<<<< HEAD
 			<p:commandButton style="float: right" process="@this" widgetVar="confirmUpdate" oncomplete="blockWidget.hide()" onclick="blockWidget.show()" value="#{lbl['lbl.btn.update']}" disabled="#{!isCommitteeUpdatable}" action="#{meetingBB.navigateToUpdateMember('confirm')}" />
+=======
+			<p:commandButton style="float: right" process="@this" widgetVar="confirmUpdate" oncomplete="blockWidget.hide()" onclick="blockWidget.show()" value="#{lbl['lbl.btn.update']}" action="#{meetingBB.navigateToUpdateMember('confirm')}" />
+>>>>>>> refs/remotes/origin/master
 		</div>
 		<div align="left" class="header-info header-spacing">
 			<ui:param name="scQt" value="#{meetingBB.managedBean.scQt}" />
@@ -188,7 +192,11 @@
 		</p:panel>
 		<ac:scRemarkAndAttachment
 						remarkList="#{meetingBB.managedBean.cmtAppointmentApprovalRemarks}"
+<<<<<<< HEAD
 						showAttachment="false" readonly="#{!isCommitteeUpdatable}"/>
+=======
+						showAttachment="false" />
+>>>>>>> refs/remotes/origin/master
 		<ui:include src="addExistingCommittee.xhtml" />	
 	</ui:define>
 </ui:composition>

@@ -6141,6 +6141,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		default:
 			return "";
 		}
+<<<<<<< HEAD
 	}
 	/**
 	 * Evaluate if taskname is endorsement and signoff
@@ -6169,6 +6170,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				SCProcessNameConst.COORDINATE_FC_MEETING, SCProcessNameConst.REVISE_EVALUATION_MEETING }));
 		return taskNames.contains(taskName);
 	}
+=======
+		//25037 - note 677 - end
+	}
+	/**
+	 * Evaluate if taskname is endorsement and signoff
+	 * 
+	 * @return String (BPM task Name)
+	 */
+	public boolean evaluateEndorseSignoffTask(String taskName) {
+		if (StringUtils.isEmpty(taskName))
+			return false;
+		String[] actions = new String[] { "ENDORSE", "SIGNOFF" };
+		String action = StringUtils.upperCase(taskName.split(" ")[0]);
+		return Arrays.asList(actions).contains(action);
+	}	
+>>>>>>> refs/remotes/origin/master
 	//25037 -end-
 
 }
