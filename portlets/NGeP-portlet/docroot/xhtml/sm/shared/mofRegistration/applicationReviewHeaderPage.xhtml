@@ -111,9 +111,11 @@
 			<h:commandLink action="#{backingBean.redirectToRevisionSupplierProfilePage('O')}" 
 					process="@this" partialSubmit="true" update=":form" target="_blank"
 					value="#{lbl['lbl.sm.view.original.appl']}"/>&#160;&#160;
-					
-			<h:commandLink rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" action="#{backingBean.redirectToViewSSMInfo()}" target="_blank"
+			<!-- #31269 - start -->
+			<p:commandLink rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}"
+					action="#{backingBean.redirectToViewSSMInfo(backingBean.managedBean.smAppl)}" 
 					value="#{lbl['lbl.sm.view.ssm.infomation']}"/>
+			<!-- #31269 - end -->
 		</div>
 		<br /><br />
 	</c:if>
@@ -148,5 +150,12 @@
 			</tr>
 		</p:outputPanel>
 	</table>
+	<!-- #31269 - start -->
+	<p:dialog id="viewssminfo" header="#{lbl['lbl.sm.view.ssm.infomation']}"
+		widgetVar="viewssminfoWidgetVar" modal="true"
+		height="500px" width="1000px" resizable="false" style="display: static;">
+		<ui:include src="/xhtml/sm/renewMofApplication/viewSsmInformation.xhtml"/>
+	</p:dialog>
+	<!-- #31269 - start -->
 	
 </ui:composition>
