@@ -25,9 +25,10 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-bpmBaseClient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-bpmRemoteClient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-bpm-schema"/>
-	<classpathentry kind="lib" path="D:/WorkspaceSit/Workspace-NGeP-PDS/ngep/ngep-ear/EarContent/APP-INF/lib/eclipselink.jar"/>
-	<classpathentry kind="lib" path="C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/modules/javax/enterprise/api/main/cdi-api-1.0-SP4.jar"/>
+	<classpathentry kind="lib" path="/NGeP-ear/EarContent/APP-INF/lib/eclipselink.jar"/>
 	<classpathentry kind="lib" path="C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/modules/javax/ws/rs/api/main/jboss-jaxrs-api_1.1_spec-1.0.0.Final.jar"/>
+	<classpathentry kind="lib" path="C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/modules/javax/enterprise/api/main/cdi-api-1.0-SP4.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-bizBase"/>
 	<classpathentry kind="lib" path="C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/modules/org/picketbox/main/picketbox-4.0.7.Final.jar"/>
 	<classpathentry kind="output" path="docroot/WEB-INF/classes"/>
 </classpath>

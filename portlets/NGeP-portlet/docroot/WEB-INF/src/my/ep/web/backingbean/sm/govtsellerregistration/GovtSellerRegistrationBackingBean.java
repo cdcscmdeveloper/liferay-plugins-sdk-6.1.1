@@ -20,6 +20,8 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
@@ -65,6 +67,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
+import org.apache.log4j.Logger;
+
 @ManagedBean(name = "govtSellerBackingBean")
 @RequestScoped
 public class GovtSellerRegistrationBackingBean extends
@@ -76,6 +80,8 @@ public class GovtSellerRegistrationBackingBean extends
 	private static final long serialVersionUID = -6832474515383643924L;
 	public static RegistrationBackingBean instance;
 	private static Map<Long, Object> identityType;
+	
+	public static Logger log = Logger.getLogger(GovtSellerRegistrationBackingBean.class);
 
 	/**
 	 * Pre-render G2G page
@@ -250,9 +256,15 @@ public class GovtSellerRegistrationBackingBean extends
 			if (orgProfile.getSmSupplier() != null
 					&& orgProfile.getSmSupplier().getRecordStatusFlg() != null) {
 				//#28765 - Start add OR DbValueConst.RECORD_STATUS_REJECTED
-				if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED || 
-						orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_REJECTED) {
+				if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED
+						|| orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_REJECTED
+						|| orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) { //#34319
 				//#28765 - End
+					//#34319 - Start
+					if(orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED){
+						getManagedBean().setCancelApp(true);
+					}
+					//#34319 - End
 					supplier = orgProfile.getSmSupplier();
 					getManagedBean().setDeletedNotActivatedSupplier(true);
 				} else {
@@ -1598,6 +1610,23 @@ public class GovtSellerRegistrationBackingBean extends
 		getManagedBean().getSmSupp().setSmAppls(new ArrayList<SmAppl>());
 		getManagedBean().getSmSupp().getSmAppls()
 				.add(getManagedBean().getSmAppl());
+		//#34319 - Start
+		if(getManagedBean().isCancelApp()){
+			log.info(">>>> Into cancel application that want to create new <<<<");
+			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+			supplierSearchReqDTO.setSupplierId(getManagedBean().getSmSupp().getSupplierId());
+			SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retriveSupplierSmApplById(supplierSearchReqDTO);
+			if(resDTO.getSmSupplier().getSmAppls() != null){
+				log.info("Not Null + Size >> " + resDTO.getSmSupplier().getSmAppls().size());
+				supplierSearchReqDTO.setSmSupplier(resDTO.getSmSupplier());
+				//checking if the application has a record in smPersonnelAuthLog
+				SupplierSearchResDTO resDTO1 = SmServiceLookup.getSupplierSearchSO().checkSupplierApplAuthLogRecord(supplierSearchReqDTO);
+				if(resDTO1.isRecord()){
+					getManagedBean().getSmSupp().getSmAppls().addAll(resDTO.getSmSupplier().getSmAppls());
+				}
+			}
+		}
+		//#34319 - End
 	}
 
 	private void setBranchBankBeforeSubmit() {

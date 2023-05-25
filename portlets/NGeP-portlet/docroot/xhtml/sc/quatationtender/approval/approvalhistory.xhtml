@@ -14,9 +14,7 @@
 				<h:outputText
 					value="#{approvalBackingBean.getParameterDesc(historyDtls.approvalType)}" />
 			</p:column>
-			<!-- #25077 Start -->
-			<p:column headerText="#{lbl['lbl.sc.approved.by']}">
-			<!-- #25077 End -->
+			<p:column headerText="#{lbl[qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryOthers ? 'lbl.sc.qt.approval.history.approved.by' : 'lbl.sc.approved.by']}">
 				<h:outputText value="#{historyDtls.approverId.userName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.status']}">

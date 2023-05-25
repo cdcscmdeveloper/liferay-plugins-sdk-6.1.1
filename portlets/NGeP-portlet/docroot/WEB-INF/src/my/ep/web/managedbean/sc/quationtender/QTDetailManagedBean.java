@@ -46,7 +46,6 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
-import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -63,7 +62,6 @@ import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
-import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
@@ -1606,26 +1604,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #32929 - start
 	private boolean zoneRdbButtonChecked = Boolean.FALSE;
 	// #32929 - end
-	
-	// #25077 - Start
-	private ScQtApprovalRequest historyApprovalRequests;
-	private boolean showPopUpBPKApprovalNeeded = false;
-	private boolean resetBpkCurrentArea = false;
-	private String previousApprovalTabName;
-	private ScQtApprovalReqAttachement scQtApprovalReqAttachementICT;
-	private ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI;
-	private ScQtApprovalReqAttachement scQtApprovalReqAttachementHistoryICT;
-	private ScQtApprovalReqAttachement scQtApprovalReqAttachementHistoryMITI;
-	private boolean flagFileAttahmentDeletedICT = false;
-	private boolean flagFileAttahmentDeletedMITI = false;
-	private boolean firstPagePA = false;
-	// #25077 - End
 
-	// bug #30435, Enhancement #25077 -start-
-	private PmParameter pmParam;
-	private String scQtAppRequestRemark;
-	private boolean approverTabLoaded = false;
-	// bug #30435, Enhancement #25077 -end-
+	// #1873 -start
+	private boolean technicalOtherCheckList;
+	private boolean technicalTemplateEdited;
+	private boolean fromSubmit;
+	private ScQtCheckList tempScQtChecklist; // 1873 - note 97
+	private ScQtCheckList finTempScQtChecklist; // 1873 - note 97
+	// #1873 -end
 	
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -10118,163 +10104,50 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setZoneRdbButtonChecked(boolean zoneRdbButtonChecked) {
 		this.zoneRdbButtonChecked = zoneRdbButtonChecked;
 	}
-	// #32929 - end 
+	// #32929 - end
 	
-	//#25077 - Start
-	public ScQtApprovalRequest getHistoryApprovalRequests() {
-		return historyApprovalRequests;
+	// 1873 - start
+	public boolean isTechnicalOtherCheckList() {
+		return technicalOtherCheckList;
 	}
 
-	public void setHistoryApprovalRequests(ScQtApprovalRequest historyApprovalRequests) {
-		this.historyApprovalRequests = historyApprovalRequests;
+	public void setTechnicalOtherCheckList(boolean technicalOtherCheckList) {
+		this.technicalOtherCheckList = technicalOtherCheckList;
 	}
+
+	public boolean isTechnicalTemplateEdited() {
+		return technicalTemplateEdited;
+	}
+
+	public void setTechnicalTemplateEdited(boolean technicalTemplateEdited) {
+		this.technicalTemplateEdited = technicalTemplateEdited;
+	}
+
+	public boolean isFromSubmit() {
+		return fromSubmit;
+	}
+
+	public void setFromSubmit(boolean fromSubmit) {
+		this.fromSubmit = fromSubmit;
+	}
+
+	public ScQtCheckList getTempScQtChecklist() {
+		return tempScQtChecklist;
+	}
+
+	public void setTempScQtChecklist(ScQtCheckList tempScQtChecklist) {
+		this.tempScQtChecklist = tempScQtChecklist;
+	}
+
+	public ScQtCheckList getFinTempScQtChecklist() {
+		return finTempScQtChecklist;
+	}
+
+	public void setFinTempScQtChecklist(ScQtCheckList finTempScQtChecklist) {
+		this.finTempScQtChecklist = finTempScQtChecklist;
+	}
+	// 1873 - end
 	
-	public boolean isShowPopUpBPKApprovalNeeded() {
-		return showPopUpBPKApprovalNeeded;
-	}
-
-	public void setShowPopUpBPKApprovalNeeded(boolean showPopUpBPKApprovalNeeded) {
-		this.showPopUpBPKApprovalNeeded = showPopUpBPKApprovalNeeded;
-	}
-	
-	public boolean isResetBpkCurrentArea() {
-		return resetBpkCurrentArea;
-	}
-
-	public void setResetBpkCurrentArea(boolean resetBpkCurrentArea) {
-		this.resetBpkCurrentArea = resetBpkCurrentArea;
-	}	
-	
-	/**
-	 * @return the previousApprovalTabName
-	 */
-	public String getPreviousApprovalTabName() {
-		return previousApprovalTabName;
-	}
-	
-	/**
-	 * @param previousApprovalTabName the previousApprovalTabName to set
-	 */
-	public void setPreviousApprovalTabName(String previousApprovalTabName) {
-		this.previousApprovalTabName = previousApprovalTabName;
-	}
-	
-	public ScQtApprovalReqAttachement getScQtApprovalReqAttachementHistoryICT() {
-		return scQtApprovalReqAttachementHistoryICT;
-	}
-
-	public void setScQtApprovalReqAttachementHistoryICT(ScQtApprovalReqAttachement scQtApprovalReqAttachementHistoryICT) {
-		this.scQtApprovalReqAttachementHistoryICT = scQtApprovalReqAttachementHistoryICT;
-	}
-
-	public ScQtApprovalReqAttachement getScQtApprovalReqAttachementHistoryMITI() {
-		return scQtApprovalReqAttachementHistoryMITI;
-	}
-
-	public void setScQtApprovalReqAttachementHistoryMITI(
-			ScQtApprovalReqAttachement scQtApprovalReqAttachementHistoryMITI) {
-		this.scQtApprovalReqAttachementHistoryMITI = scQtApprovalReqAttachementHistoryMITI;
-	}
-
-	public boolean isFlagFileAttahmentDeletedICT() {
-		return flagFileAttahmentDeletedICT;
-	}
-
-	public void setFlagFileAttahmentDeletedICT(boolean flagFileAttahmentDeletedICT) {
-		this.flagFileAttahmentDeletedICT = flagFileAttahmentDeletedICT;
-	}
-
-	public boolean isFlagFileAttahmentDeletedMITI() {
-		return flagFileAttahmentDeletedMITI;
-	}
-
-	public void setFlagFileAttahmentDeletedMITI(boolean flagFileAttahmentDeletedMITI) {
-		this.flagFileAttahmentDeletedMITI = flagFileAttahmentDeletedMITI;
-	}
-	
-	public boolean isFirstPagePA() {
-		return firstPagePA;
-	}
-
-	public void setFirstPagePA(boolean firstPagePA) {
-		this.firstPagePA = firstPagePA;
-	}
-	/**
-	 * @return the scQtApprovalReqAttachementICT
-	 */
-	public ScQtApprovalReqAttachement getScQtApprovalReqAttachementICT() {
-		return scQtApprovalReqAttachementICT;
-	}
-
-	/**
-	 * @param scQtApprovalReqAttachementICT the scQtApprovalReqAttachementICT to set
-	 */
-	public void setScQtApprovalReqAttachementICT(ScQtApprovalReqAttachement scQtApprovalReqAttachementICT) {
-		this.scQtApprovalReqAttachementICT = scQtApprovalReqAttachementICT;
-	}
-	
-	/**
-	 * @return the scQtApprovalReqAttachementMITI
-	 */
-	public ScQtApprovalReqAttachement getScQtApprovalReqAttachementMITI() {
-		return scQtApprovalReqAttachementMITI;
-	}
-
-	/**
-	 * @param scQtApprovalReqAttachementMITI the scQtApprovalReqAttachementMITI to set
-	 */
-	public void setScQtApprovalReqAttachementMITI(ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI) {
-		this.scQtApprovalReqAttachementMITI = scQtApprovalReqAttachementMITI;
-	}
-	// #25077 - End
-
-	// bug #30435, Enhancement #25077 - start
-	/**
-	 * @return the pmParam
-	 */
-	public PmParameter getPmParam() {
-		return pmParam;
-	}
-
-	/**
-	 * @param pmParam
-	 *            the pmParam to set
-	 */
-	public void setPmParam(PmParameter pmParam) {
-		this.pmParam = pmParam;
-	}
-
-	/**
-	 * @return the scQtAppRequestRemark
-	 */
-	public String getScQtAppRequestRemark() {
-		return scQtAppRequestRemark;
-	}
-
-	/**
-	 * @param scQtAppRequestRemark
-	 *            the scQtAppRequestRemark to set
-	 */
-	public void setScQtAppRequestRemark(String scQtAppRequestRemark) {
-		this.scQtAppRequestRemark = scQtAppRequestRemark;
-	}
-
-	/**
-	 * @return the approverTabLoaded
-	 */
-	public boolean isApproverTabLoaded() {
-		return approverTabLoaded;
-	}
-
-	/**
-	 * @param approverTabLoaded
-	 *            the approverTabLoaded to set
-	 */
-	public void setApproverTabLoaded(boolean approverTabLoaded) {
-		this.approverTabLoaded = approverTabLoaded;
-	}
-	// bug #30435, Enhancement #25077 - end
-
 	// Bug #33661@Syazani 07/10/2022 -- Start
 	public boolean isFromSpecEndorse() {
 		return isFromSpecEndorse;
