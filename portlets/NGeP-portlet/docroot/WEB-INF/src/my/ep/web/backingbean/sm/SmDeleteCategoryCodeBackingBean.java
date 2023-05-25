@@ -293,6 +293,9 @@ public class SmDeleteCategoryCodeBackingBean extends
 					selCat.setChangedBy(loginSessionUserId);
 					log.info("**** User ID for ChangedBy (Delete Category Code) After *************"+loginSessionUserId);
 					/*#28404 - End*/
+					//#34209 - START
+					updateDelCodesInAllRejApplNewerThanLatestAppl();
+					//#34209 - END
 				}
 				//this.getManagedBean().getSmAppl().setQuestionnaire(false);
 				this.getManagedBean().setSmAppl(updateSmAppl(this.getManagedBean().getSmAppl()));
@@ -536,4 +539,45 @@ public class SmDeleteCategoryCodeBackingBean extends
 			throw new EpException(MessageConst.ERROR_722542);
 		}
 	}
+	
+	//#34209 - START
+	public void updateDelCodesInAllRejApplNewerThanLatestAppl(){
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm",IMofRegistrationSO.class);
+		ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierCategorySO.class);
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+		List<SmAppl> rejectedApplsAfterLatestAppl = mofRegistrationSO.retrieveSupplierRejectedApplNewerThanLatestAppl(this.getManagedBean().getSmAppl()).getApplList();
+		Long loginSessionUserId = 1L;
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		if (pmUser == null) {
+			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+		}
+		else{
+			loginSessionUserId = pmUser.getUserId();
+		}
+		
+		
+		for(SmAppl rejectedAppl : rejectedApplsAfterLatestAppl){
+			SupplierCategoryReqDTO supplierCategoryReqDTO = new SupplierCategoryReqDTO();
+			supplierCategoryReqDTO.setApplId(rejectedAppl.getApplId());
+			rejectedAppl.setSmSupplierCategories(supplierCategorySO.retrieveCategoryByApplId(supplierCategoryReqDTO).getSupplierCategoryList());
+			for(SmSupplierCategory rejectedApplCat : rejectedAppl.getSmSupplierCategories()){
+				for(SmSupplierCategory selCat : getManagedBean().getSelectedCategories()) {
+					if(rejectedApplCat.getCategoryL1Name().equals(selCat.getCategoryL1Name()) && 
+					   rejectedApplCat.getCategoryL2Name().equals(selCat.getCategoryL2Name()) && 
+					   rejectedApplCat.getCategoryL3Name().equals(selCat.getCategoryL3Name())){
+						rejectedApplCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						rejectedApplCat.setCancelledDate(new Date());
+						rejectedApplCat.setChangedBy(loginSessionUserId);
+						//rejectedApplCat.setChangedDate(null);
+					}
+				}
+			}
+			MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
+			mofRegistrationReqDTO.setSmAppl(rejectedAppl);
+			mofRegistrationSO.updateSmAppl(mofRegistrationReqDTO);
+		}
+	}
+	//#34209 - END
 }
