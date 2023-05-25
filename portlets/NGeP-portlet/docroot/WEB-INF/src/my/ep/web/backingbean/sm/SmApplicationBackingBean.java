@@ -11411,6 +11411,15 @@ public class SmApplicationBackingBean extends
 		validSiteVisit = testSmAppl(getManagedBean().getSmAppl().getApplType(),
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC, "", true);
 		if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
+			// #28175 Reopen Start 
+			List<SmSupplierCategory> historicalSmSupplierCategories = this.getManagedBean().getSmAppl().getSmSupplierCategories();
+			for(SmSupplierCategory cat : historicalSmSupplierCategories){
+				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
+				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
+				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+			}
+			this.getManagedBean().getSmAppl().setSmSupplierCategories(historicalSmSupplierCategories);
+			// #28175 Reopen End
 		}
 		if (validSiteVisit) {
 			String successMsg = "";
@@ -16865,6 +16874,12 @@ public class SmApplicationBackingBean extends
 	
 	public void validateCompanyBranch(SmApplicationManagedBean managedBean, String process) {
 		//#32304 - start
+		List<SmSupplierCategory> historicalSmSupplierCategories = managedBean.getSmAppl().getSmSupplierCategories();
+		for(SmSupplierCategory cat : historicalSmSupplierCategories){
+			cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
+			cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
+			cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+		}
 		if(!getManagedBean().isSupplierUser() 
 				&& SmCommonUtil.checkCancelBumiApplFromNewAppl(managedBean.getSmAppl())){
 			RequestContext.getCurrentInstance().execute("smBumiCancelAlert.show()");
