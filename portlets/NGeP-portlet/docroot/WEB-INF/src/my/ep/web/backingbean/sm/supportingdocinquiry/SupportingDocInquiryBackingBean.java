@@ -33,6 +33,7 @@ import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.supportingdocinquiry.SupportingDocInquiryManagedBean;
@@ -657,5 +658,21 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		}
 	}
 	//#11641 - END
+	
+	// #34392 - Start
+	public void downloadSignatureSuppDoc(String docDefinitionKey)
+			throws Exception {
+		if (org.apache.commons.lang.StringUtils.isNotBlank(docDefinitionKey)) {
+			SmApplicationBackingBean SmApplicationBackingBean = new SmApplicationBackingBean();
+			if (docDefinitionKey.equals("SBP")) {
+				SmApplicationBackingBean.getManagedBean().setSmAppl(
+						getManagedBean().getSmApplInquiry().getSmAppl());
+				SmApplicationBackingBean.printDeclarationForm();
+			} else if (docDefinitionKey.equals("SBV")) {
+				SmApplicationBackingBean.printBankVerificationForm();
+			}
+		}
+	}
+	// #34392 - END
 }
 

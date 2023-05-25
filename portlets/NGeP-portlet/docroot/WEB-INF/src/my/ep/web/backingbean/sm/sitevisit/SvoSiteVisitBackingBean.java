@@ -462,6 +462,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public void addInterviewee(){
 		log.info("*******addInterviewee**********");
+		//34166 - Start
+		checkRepresentative();
+		//34166 - End
 		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
 		
 
@@ -2112,6 +2115,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		log.info("***********saveSiteVisitReport***********");
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		SmSvTask svTask = this.getManagedBean().getSmSvTask();
+		//#34166 - Start
+		checkRepresentative();
+		//#34166 - End
 
 		SmSvTemplate svTemplate = svTask.getSmSvTemplate();
 		//for(SmSvTemplate svTemplate : svTask.getSmSvTemplates()){
@@ -3007,6 +3013,27 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 					SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775191,
 							new String[] { fieldsName.toLowerCase() })));
+		}
+	}
+	
+	public void checkRepresentative() {
+		Locale locale = new FacesScopes().getUserLocale();
+		String Name = ResourceBundleUtils.getMessage("lbl.sm.person.composition.name",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		String Designation = ResourceBundleUtils.getMessage("lbl.sm.userprofile.designation",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		
+		if(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees() != null){
+			ResourceBundleUtils.getMessage("lbl.sm.mof.reg.reason.delete",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+			
+			for(SmSvInterviewee person : getManagedBean().getSelectedSvTemplate().getSmSvInterviewees()){
+				if(person.getName() == null || person.getName().isEmpty()){
+					String capitalizedStr = Name.substring(0, 1).toUpperCase() + Name.substring(1);
+					throw new EpException(MessageConst.ERROR_775192, new String[] { capitalizedStr });
+				}
+				if(person.getDesignation() == null || person.getDesignation().isEmpty()){
+					String capitalizedStr = Designation.substring(0, 1).toUpperCase() + Designation.substring(1);
+					throw new EpException(MessageConst.ERROR_775192, new String[] { capitalizedStr });
+				}
+			}
 		}
 	}
 	// #34166 - End

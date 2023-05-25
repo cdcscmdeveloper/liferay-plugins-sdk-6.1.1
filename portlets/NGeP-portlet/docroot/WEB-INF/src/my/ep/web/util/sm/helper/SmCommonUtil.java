@@ -4364,7 +4364,7 @@ public class SmCommonUtil {
 			//set default parameter
 			PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
 			PmParameter passportType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
-			PmParameter permanentResidenceType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.PERMANENT_RESIDENCE_TYPES); //#30064
+			PmParameter permanentResidenceType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES_SSM, ParameterConst.PERMANENT_RESIDENCE_TYPES); //#30064
 			ssmReqDTO.setPmParameter(identificationType);
 			ssmReqDTO.setPmParameterIdTypeP(passportType);
 			ssmReqDTO.setPmParameterIdTypePR(permanentResidenceType); //#30064
@@ -5294,7 +5294,13 @@ public class SmCommonUtil {
 			String applCatTyep) {
 
 		UserReqDTO userReqDTO = new UserReqDTO();
-		userReqDTO.setZoneCode(zoneZode);
+		//#12483 - START
+		if(supplierType.equals(SupplierManagementConst.STYPE_CONSULTANT)){
+			userReqDTO.setZoneCode("1");
+		}else{
+			userReqDTO.setZoneCode(zoneZode);
+		}
+		//#12483 - END
 		userReqDTO.setRoleCode(roleCode);
 		userReqDTO.setSupplierType(supplierType);
 		userReqDTO.setApplicationType(applType);
