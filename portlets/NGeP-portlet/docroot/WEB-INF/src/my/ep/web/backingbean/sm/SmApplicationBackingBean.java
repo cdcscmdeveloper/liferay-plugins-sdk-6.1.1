@@ -16874,12 +16874,6 @@ public class SmApplicationBackingBean extends
 	
 	public void validateCompanyBranch(SmApplicationManagedBean managedBean, String process) {
 		//#32304 - start
-		List<SmSupplierCategory> historicalSmSupplierCategories = managedBean.getSmAppl().getSmSupplierCategories();
-		for(SmSupplierCategory cat : historicalSmSupplierCategories){
-			cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
-			cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
-			cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
-		}
 		if(!getManagedBean().isSupplierUser() 
 				&& SmCommonUtil.checkCancelBumiApplFromNewAppl(managedBean.getSmAppl())){
 			RequestContext.getCurrentInstance().execute("smBumiCancelAlert.show()");
