@@ -264,6 +264,9 @@ public class ViewApplHistoryBackingBean extends
 	public void viewUnClaimTask(String applNo) {
 		getManagedBean().setViewApplicationHistory(true);
 		getManagedBean().setViewSupplierProfile(true);
+		// #28767 - START
+		getManagedBean().setTabActiveIndex(0);
+		// #28767 - END
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setApplNo(applNo);
 		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
