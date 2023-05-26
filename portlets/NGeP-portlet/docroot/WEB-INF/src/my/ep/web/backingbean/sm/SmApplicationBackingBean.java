@@ -993,7 +993,9 @@ public class SmApplicationBackingBean extends
 				}
 			}
 			
-			//Bug 27022 - start 			
+			//Bug 27022 - start 
+			/* 
+			//#34209 - START
 			SmAppl latestAppl = supplierProfile.getSmAppl();
 			if(latestAppl != null 
 					 && latestAppl.getSmSupplierCategories() != null
@@ -1049,10 +1051,11 @@ public class SmApplicationBackingBean extends
 								 }
 							 }
 						 }
-					 }*/
-					 //34209 END
+					 }
 				 }
 			 }
+			 */
+			//34209 END
 			//Bug 27022 - end
 			 
 			 //3460 - Start
@@ -1794,6 +1797,16 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
+		
+		//#34624 start
+		log.info("Application Type: " + applicationType);
+		log.info("Application Category Type: " + getManagedBean().getSmAppl().getApplCategoryType());
+		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
+				&& getManagedBean().getSmAppl().getApplCategoryType().equals("S")){
+			getManagedBean().getSmAppl().setApplCategoryType("N");
+		}
+		log.info("Application Category Type: " + getManagedBean().getSmAppl().getApplCategoryType());
+		//#34624 end
 		
 		// 26671 - Site Visit Grouping Enhancement -28775 - START
 		getManagedBean().setShowFacilityMachine(false);
@@ -10968,6 +10981,7 @@ public class SmApplicationBackingBean extends
 		reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 		reqSO.approveOrRejectPendingApplicationCancellation(reqDTO);
 
+		log.info("31181-applNo:"+getManagedBean().getSmAppl().getApplNo()); //#31181 add log 
 		res = res.equals("REJECT") ? SmCommonUtil.getMessage(
 				"lbl.sm.cancelpending.reject.uppercase", null) : SmCommonUtil
 				.getMessage("lbl.sm.cancelpending.approve.uppercase", null);
@@ -10980,7 +10994,10 @@ public class SmApplicationBackingBean extends
 												.getApplNo(), res },
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
+		
+		log.info("31181-message for reject before renew session:"+res); //#31181 add log
 		renewSesionObject();
+		log.info("31181-message for reject after renew session:"+res); //#31181 add log
 		return "cancelPendingAcknowledgePage";
 	}
 
@@ -17444,8 +17461,9 @@ public class SmApplicationBackingBean extends
 					}
 				}
 				//#34277 - start
+				//34799
 				//personnel has no residential address, overwrite with SSM address
-				if(!hasResAddr){
+				if(!hasResAddr && getManagedBean().getShareHolderResdAddr().getSmAddress().getPostcode() != null){
 					getManagedBean().getShareHolderResdAddr().setSmAddress(ssmAddress);
 				}
 				//to check, if district state not equal to pm state set district to null & City
@@ -17458,9 +17476,13 @@ public class SmApplicationBackingBean extends
 							addr.setPmCity(new PmCity());
 					}
 				}
-				SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(getManagedBean(),
-						getManagedBean().getShareHolderResdAddr().getSmAddress(),
-						SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+				//34799
+				if(getManagedBean().getShareHolderResdAddr().getSmAddress() != null && getManagedBean().getShareHolderResdAddr().getSmAddress().getPmState() !=null){
+					SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(getManagedBean(),
+							getManagedBean().getShareHolderResdAddr().getSmAddress(),
+							SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+				}
+				
 				//#34277 - end
 				getManagedBean().setSelectedShareHolder(this.getManagedBean().getSelectedShareHolder());
 			}

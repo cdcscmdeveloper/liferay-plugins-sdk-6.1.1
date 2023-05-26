@@ -4445,7 +4445,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								ScQtApprovalRemark.class));
                     	}
                          }else{
-                        	 if(!isApprovalScreen()){//13344_start
+                        	 if(!isApprovalScreen() && existingApprovalTabs == null){//25037
+                        	//13344_start
                         	 qtApproval.setScQtApprovalRemarks(initializeRemarks(
      								qtApproval, scQt.getCurrentWorkFlowStatus(),
      								qtApproval.getScQtApprovalRemarks(),
@@ -6695,7 +6696,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				if(this.getManagedBean().isMaintanceFlow()==false){
-					QuationTenderReqDTO reqDTO = prepareQTInfo();
+					QuationTenderReqDTO reqDTO = prepareApprovalsInfo();
 					reqDTO.getQtdetail().setOtherApproval(true);
 					// #25077 - #91 - Start
 					reqDTO.getQtdetail().setMitiApproval(true);
@@ -7328,7 +7329,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				break;
 			case 3:
 				// detailSO.validateApprovalDetails(reqDTO);
-				retrieveApprovalTabDtl();
+				if(!this.getManagedBean().getQt().isCloneEnabled()){//25635&34502-start
+					retrieveApprovalTabDtl();
+					}//25635&34502-End
 				break;
 
 			case 4:
@@ -8547,6 +8550,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//#11299 Start Vinod
 		String taskName = this.getManagedBean().getTaskName()==null ? "": this.getManagedBean().getTaskName();
 
+		//25037 -start-
+		if(this.getManagedBean().isCommitteeAppointmentMenuTab() && taskName.equals(SCProcessNameConst.REVISE_COMMITTEE))
+			return true;
+		//25037 -end-
+		
 		if (taskName.equals(SCProcessNameConst.REVISE_COMMITTEE)
 			&& !this.getManagedBean().isMaintanceFlow()
 			&& isDeskOfficer()
@@ -11533,6 +11541,64 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 */
 	public void downloadOthersApprovalFile(ScQtApprovalRequest scQtApprovalRequest) throws Exception {
 		downloadFile(scQtApprovalRequest.getApprovalRequestAttachement());
+	}
+	
+	/**
+	 * Method to prepare scqt object for Approvals.
+	 * 
+	 * @return QTDetailReq object
+	 */
+	public QuationTenderReqDTO prepareApprovalsInfo() {
+		
+		ScQt scQt = this.getManagedBean().getQt();
+  
+		// Setting the Approval details to Qtdetails
+		List<TabBean> tabList = this.getManagedBean().getTabList();
+
+		if (CollectionUtils.isNotEmpty(tabList)) {
+			List<ScQtApproval> approvalList = new ArrayList<>();
+			for (TabBean tabBean : tabList) {
+				if (tabBean.getBudgetApprovalUsers() != null) {
+					tabBean.getScQtApproval().setApproverSettings(
+							tabBean.getBudgetApprovalUsers().getTarget());
+				}
+
+				if (this.getManagedBean().getQt().isBrandNew()) {
+					tabBean.getScQtApproval().setScQt(
+							this.getManagedBean().getQt());
+				}
+				approvalList.add(tabBean.getScQtApproval());
+
+			}
+			scQt.setScQtApprovals(approvalList);
+		}
+
+		if(isQTStatusGreaterThanOrEqualsScheduleDoc(scQt.getQtStatus().getStatusId())) {
+			ScQtApproval pubApproval = this.getManagedBean()
+					.getPublicationApproval();
+			if (null != pubApproval) {
+				List<ScQtApproval> approvals = scQt.getScQtApprovals();
+				removePTJApproval(approvals);
+				if (null != this.getManagedBean().getPublicationApprovals()) {
+					List<ScQtApproverSettings> approvalSettings = this
+							.getManagedBean().getPublicationApprovals()
+							.getTarget();
+					if (CollectionUtils.isNotEmpty(approvalSettings)) {
+						for (ScQtApproverSettings approverSettings : approvalSettings) {
+							approverSettings.setScQtApproval(pubApproval);
+						}
+						pubApproval.setApproverSettings(approvalSettings);
+					}
+
+				}
+				approvals.add(pubApproval);
+				scQt.setScQtApprovals(approvals);
+			}
+		}
+	
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		reqDTO.setQtdetail(scQt);
+		return reqDTO;
 	}
 	// 25077 - End
 	
