@@ -1320,6 +1320,9 @@ public class TaskReassignmentBackingBean extends
 			BpmRequestDTO reqDTO = null;
 			BpmResponseDTO responseDTO = null;
 			String loginId = null;
+			//#7465 start - missing document number to search in bpm
+			String documentNumber = null;
+			
 			List<Integer> statusIds = getManagedBean().getStatusIds();
 			TaskAssignmentSearchBean taskSearchBean = null;
 			SearchResultBean<WorklistItemVO> resultBean = null;
@@ -1328,6 +1331,9 @@ public class TaskReassignmentBackingBean extends
 				taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
 				loginId = taskSearchBean.getUser() != null ? taskSearchBean
 						.getUser().getLoginId() : null;
+
+				//#7465 start - missing document number to search in bpm
+				documentNumber = taskSearchBean.getDocNo();
 				// #20117		
 				if (loginId == null) {
 					if (getManagedBean().getResultUser() != null) {
@@ -1342,11 +1348,15 @@ public class TaskReassignmentBackingBean extends
 						reqDTO = new BpmRequestDTO();
 						Object ctxToken = bpmSO.authenticate(loginId);
 
+						log.info("Search bean document Number****** "
+								+ documentNumber);
 						log.info("BPM pageNo******" + getPageNo());
 						log.info("BPM pageSize*****" + getPageSize());
 						log.info("BPM loginId******" + loginId);
 						log.info("BPM statusIds******" + statusIds.size());
 
+						//#7465 start - missing document number to search in bpm
+						reqDTO.setDocNumber(documentNumber);
 						reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 						reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 						reqDTO.setStatusList(statusIds);
@@ -1399,6 +1409,10 @@ public class TaskReassignmentBackingBean extends
 							
 							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
 									responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
+
+								//#7465 start - missing document number to search in bpm
+								List<WorklistItemVO> resetWorklist = new ArrayList<WorklistItemVO>();
+								getManagedBean().setAllGroupTasks(resetWorklist);
 								getManagedBean().setCheckAllGroupTasksEnabled(true);
 								getManagedBean().setEnableRemoveAllGroupTasksButton(true); //#7465 reendorse
 								for (WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()) {
@@ -1511,6 +1525,8 @@ public class TaskReassignmentBackingBean extends
 			BpmRequestDTO reqDTO = null;
 			BpmResponseDTO responseDTO = null;
 			String loginId = null;
+			//#7465 start - missing document number to search in bpm
+			String documentNumber = null;
 			List<Integer> statusIds = getManagedBean().getStatusIds();
 			TaskAssignmentSearchBean taskSearchBean = null;
 			SearchResultBean<WorklistItemVO> resultBean = null;
@@ -1519,6 +1535,8 @@ public class TaskReassignmentBackingBean extends
 				taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
 				loginId = taskSearchBean.getUser() != null ? taskSearchBean
 						.getUser().getLoginId() : null;
+				//#7465 start - missing document number to search in bpm
+				documentNumber = taskSearchBean.getDocNo();
 				// #20117		
 				if (loginId == null) {
 					if (getManagedBean().getResultUser() != null) {
@@ -1537,6 +1555,8 @@ public class TaskReassignmentBackingBean extends
 						log.info("BPM loginId******" + loginId);
 						log.info("BPM statusIds******" + statusIds.size());
 
+						//#7465 start - missing document number to search in bpm
+						reqDTO.setDocNumber(documentNumber);
 						reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 						reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 						reqDTO.setStatusList(statusIds);
@@ -1588,6 +1608,9 @@ public class TaskReassignmentBackingBean extends
 							
 							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
 									responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
+								//#7465 start - missing document number to search in bpm
+								List<WorklistItemVO> resetWorklist = new ArrayList<WorklistItemVO>();
+								getManagedBean().setAllGroupTasks(resetWorklist);
 								getManagedBean().setCheckAllOthersTasksEnabled(true);
 								getManagedBean().setEnableRemoveAllOthersTasksButton(true); //#7465 reendorse
 								for (WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()) {
@@ -3287,9 +3310,10 @@ public class TaskReassignmentBackingBean extends
 		    	}
 			}
 		}
+		//#7465 start - single checkbox not enable remove button
 		if ( (this.getManagedBean().getSelectedGroupTasks() != null && 
 				!this.getManagedBean().getSelectedGroupTasks().isEmpty()) &&
-				(this.getManagedBean().getSelectedGroupTasks().size() > 1) ) {
+				(this.getManagedBean().getSelectedGroupTasks().size() >= 1) ) {
 			this.getManagedBean().setEnableDeleteGroupTasksButton(true);
     	} else {
     		this.getManagedBean().setEnableDeleteGroupTasksButton(false);
@@ -3399,7 +3423,8 @@ public class TaskReassignmentBackingBean extends
 							.getInstance().getServiceObject(
 									ModuleCodeConst.PROFILE_MANAGEMENT,
 									ITaskAssignmentSO.class);
-					resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
+					log.info("done remove");
+					//resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
 
 				} finally {
 					taskAssignmentSO = null;
