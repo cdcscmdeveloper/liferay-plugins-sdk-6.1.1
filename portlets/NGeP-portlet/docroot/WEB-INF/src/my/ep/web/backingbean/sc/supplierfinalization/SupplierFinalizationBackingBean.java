@@ -10193,19 +10193,16 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	
 	//#25037-START
 	public void prepareUpdateCommitteeMember(){
-		String taskName = this.getManagedBean().getTaskName()==null ? "": this.getManagedBean().getTaskName();
-		if (Arrays.asList(new String[] {SCProcessNameConst.FINALISE_FC_SELECTION, SCProcessNameConst.COORDINATE_FC_MEETING }).contains(taskName)) {
-			SupplierFinalizationMeetingBackingBean meetingBB = new SupplierFinalizationMeetingBackingBean();
-			meetingBB.renewSesionObject();
-			this.getManagedBean().setMeetingBB(meetingBB);
-			Long qtId = this.getManagedBean().getScQt().getQtId();
-			meetingBB.getManagedBean().setCommitteeType(this.getManagedBean().getCommitteeType());
-			meetingBB.retriveQTDetails(qtId);
-			meetingBB.retriveMeetingDetails(this.getManagedBean().getScQt().getQtId());
-			meetingBB.prepareMemberUpdate();
-			meetingBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
-			meetingBB.getManagedBean().setFinalBB(this);
-		}	
+		SupplierFinalizationMeetingBackingBean meetingBB = new SupplierFinalizationMeetingBackingBean();
+		meetingBB.renewSesionObject();
+		this.getManagedBean().setMeetingBB(meetingBB);
+		Long qtId = this.getManagedBean().getScQt().getQtId();
+		meetingBB.getManagedBean().setCommitteeType(this.getManagedBean().getCommitteeType());
+		meetingBB.retriveQTDetails(qtId);
+		meetingBB.retriveMeetingDetails(this.getManagedBean().getScQt().getQtId());
+		meetingBB.prepareMemberUpdate();
+		meetingBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
+		meetingBB.getManagedBean().setFinalBB(this);	
 	}
 	//#25037-END
 	
