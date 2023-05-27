@@ -1769,7 +1769,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		IFulfilmentSO iFulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);//#21489
 		
 		if(!getManagedBean().getItemAddrList().isEmpty()){
-			log.info("========getManagedBean() getItemAddrList().size()==========="+getManagedBean().getItemAddrList().size());
+			log.info("========newItem getManagedBean() getItemAddrList().size()==========="+getManagedBean().getItemAddrList().size());  
 		}
 		
 		for (FlFulfilmentItemAddr newItem : getManagedBean().getItemAddrList()) {
@@ -1778,7 +1778,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				
 				if(getManagedBean().getSelectedDelAddr() != null){
 					if(getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr() != null){
-						log.info("========getFlFulfilmentItemAddr().size()==========="+getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().size());
+						log.info("========selectedItem getFlFulfilmentItemAddr().size()==========="+getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().size());
 					}
 				}
 				
@@ -1796,10 +1796,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							}
 						}
 						
-						contractItemReqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
-						
-						log.info("========selectedItem getRequestNoteItemId==========="+selectedItem.getScRequestItem().getRequestNoteItemId());
-						
+						contractItemReqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());					
 						contractItemReqDTO.setRequestItemId(selectedItem.getScRequestItem().getRequestNoteItemId());
 						ContractItemResDTO contractItemResDTO = contractItemSO.getContractItemByRequestItem(contractItemReqDTO);
 						
@@ -3068,8 +3065,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(selectedTabIndex==1){
 			//34816-start
 			log.info("========selectedTabIndex 1===========");
+			log.info("TabIndex 1 getSelectedDelAddr="+getManagedBean().getSelectedDelAddr());
+			
 			if(getManagedBean().getSelectedDelAddr()!=null) {
-				populateItemsForSelectedAddress();
+				selectAddrEvent();
 			}
 			//34816-End
 			recalculateItem();//11076
