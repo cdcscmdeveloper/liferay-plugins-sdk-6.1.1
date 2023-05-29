@@ -4731,7 +4731,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	
 			QuationTenderResDTO resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
 			List<ScQtApproval> requiredApproval = resDTO.getApproval();
-			List<TabBean> tabBeans = new ArrayList<TabBean>();
+			List<TabBean> tabBeans = new ArrayList<>();
              
 			ParameterHelper parameterHelper = ParameterHelper.getInstance();
 			if (requiredApproval != null) {
