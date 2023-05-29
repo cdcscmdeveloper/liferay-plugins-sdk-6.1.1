@@ -41,7 +41,11 @@
 				<!-- #28175 ReOpen start -->
 				<c:when test="#{(fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or 
 					fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')) and
-					(viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc eq 'Registered' or viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc eq 'Berdaftar')}">
+					(viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusBumiputera or
+					viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusRegistered or
+					viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusBumiFromHome or
+					viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusNonBumiFromHome or
+					viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusForeign)}">
 				<!-- #28175 ReOpen End -->
 					<p:column headerText="#{lbl['lbl.sm.category.description']}">
 						#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code} 

@@ -26,7 +26,11 @@
 				<!-- #28175 Reopen Start -->
 				<c:when test="#{(fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or 
 					fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')) and
-					(viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc eq 'Registered' or viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc eq 'Berdaftar')}">
+					(viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusBumiputera or
+					viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusRegistered or
+					viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusBumiFromHome or
+					viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusNonBumiFromHome or
+					viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusForeign)}">
 				<!-- #28175 Reopen End -->
 					<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}"
 						style="white-space: normal; width:30%;">
