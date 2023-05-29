@@ -116,11 +116,19 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.remark']}" />
 				</f:facet>
-				<p:inputTextarea id="remarkid" maxlength="1000" disabled="#{createQtBB.managedBean.readOnly}"
-				onkeyup="limitTextArea(this,1000);" valueChangeListener="#{createQtBB.otherAppValueChanged}" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,100);"
+				<!-- #25077 Start -->
+				<p:inputTextarea id="remarkIctId" maxlength="1000" disabled="#{createQtBB.managedBean.readOnly}"
+				onkeyup="limitTextArea(this,1000);" valueChangeListener="#{createQtBB.otherAppValueChangedICT}" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,100);"
 					value="#{otherrequestdetails.appRequestRemark.remark}" cols="30"
-					rows="3" ><f:ajax></f:ajax></p:inputTextarea><!-- bug #30435 -->
-				<p:message id="remarkidMsg" for="remarkid" display="icon" />
+					rows="3" rendered="#{otherrequestdetails.approvalType.parameterCode eq ParameterConst.approvalRequestIctProjects}"><f:ajax></f:ajax></p:inputTextarea><!-- bug #30435 -->
+				<p:message id="remarkIctIdMsg" for="remarkIctId" display="icon" />
+				
+				<p:inputTextarea id="remarkMitiId" maxlength="1000" disabled="#{createQtBB.managedBean.readOnly}"
+				onkeyup="limitTextArea(this,1000);" valueChangeListener="#{createQtBB.otherAppValueChangedMITI}" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,100);"
+					value="#{otherrequestdetails.appRequestRemark.remark}" cols="30"
+					rows="3" rendered="#{otherrequestdetails.approvalType.parameterCode eq ParameterConst.approvalRequestImportedGoods}"><f:ajax></f:ajax></p:inputTextarea><!-- bug #30435 -->
+				<p:message id="remarkMitiIdMsg" for="remarkMitiId" display="icon" />
+				<!-- #25077 End -->
 			</p:column>
 		</p:dataTable>
 	</p:panel>
