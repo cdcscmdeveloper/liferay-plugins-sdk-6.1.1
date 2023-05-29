@@ -23,9 +23,11 @@
 			</p:column>
 			<!-- #28175 start -->
 			<c:choose>
-				<c:when
-					test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or 
-					fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')}">
+				<!-- #28175 ReOpen start -->
+				<c:when test="#{(fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or 
+					fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')) and
+					(viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc eq 'Registered' or viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc eq 'Berdaftar')}">
+				<!-- #28175 ReOpen start -->
 					<p:column headerText="#{lbl['lbl.sm.category.description']}">
 						#{catApp.categoryL3Name} 
 					</p:column>
