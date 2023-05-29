@@ -306,4 +306,10 @@ public interface QTConstants {
 	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
 	// #33831 - Start
 	
+	//#29007 Start Vinod
+	public static final String LAMPIRAN_A3_LBL = "lbl.sc.doc.name.lampiran.a3";
+	public static final String LAMPIRAN_A3_UPDATE = "Update";
+	public static final String LAMPIRAN_A3_DIKEMAS_KINI = "Dikemas kini";
+	//#29007 End Vinod
+	
 }
