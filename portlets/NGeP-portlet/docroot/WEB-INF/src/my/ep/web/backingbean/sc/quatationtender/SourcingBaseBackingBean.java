@@ -6180,24 +6180,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	//25037 -end-
 	
 	//26130 - start
-	public boolean validateTplSpecQuestion(ScLoa scloa, TplSpecQuestion question){
+	public boolean validateTplSpecQuestion(ScLoa scloa, TplSpecQuestion question) {
 		boolean isExist = Boolean.FALSE;
 		Long tempSpecQuestionID = null;
-		if (scloa.getScLoiLoaItems() != null && !scloa.getScLoiLoaItems().isEmpty()){
-			for (ScLoiLoaItem item: scloa.getScLoiLoaItems()){
-				if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null){
+		if (scloa.getScLoiLoaItems() != null && !scloa.getScLoiLoaItems().isEmpty()) {
+			for (ScLoiLoaItem item : scloa.getScLoiLoaItems()) {
+				if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null
+						&& item.getScRequestItem().getTplSpecQuestion().getParentSpecQuestion() != null) {
 					TplSpecQuestion specQuestion = item.getScRequestItem().getTplSpecQuestion();
-					if (specQuestion.getParentSpecQuestion() != null){
-						if (question.getParentSpecQuestion() == null){
-							tempSpecQuestionID = question.getSpecQuestionId();
-						}else{
-							tempSpecQuestionID = question.getParentSpecQuestion().getSpecQuestionId();
-						}
-						
-						if (specQuestion.getParentSpecQuestion().getSpecQuestionId().equals(tempSpecQuestionID)){
-							isExist = Boolean.TRUE;
-							return isExist;
-						}
+					if (question.getParentSpecQuestion() == null) {
+						tempSpecQuestionID = question.getSpecQuestionId();
+					} else {
+						tempSpecQuestionID = question.getParentSpecQuestion().getSpecQuestionId();
+					}
+					if (specQuestion.getParentSpecQuestion().getSpecQuestionId().equals(tempSpecQuestionID)) {
+						isExist = Boolean.TRUE;
+						return isExist;
 					}
 				}
 			}
@@ -6207,18 +6205,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	
 	public boolean validateTplSpecMaster(ScLoa scloa, TplSpecMaster master){
 		boolean isExist = false;
-		if (scloa.getScLoiLoaItems() != null){
-			for (ScLoiLoaItem item: scloa.getScLoiLoaItems()){
-				if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null){
+		if (scloa.getScLoiLoaItems() != null) {
+			for (ScLoiLoaItem item : scloa.getScLoiLoaItems()) {
+				if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null) {
 					TplSpecQuestion specQuestion = item.getScRequestItem().getTplSpecQuestion();
-					if (specQuestion.getParentSpecQuestion() != null ){
-						if (specQuestion.getParentSpecQuestion().getTplSpecMaster() != null){
-							if (master.getSpecMasterId().equals(specQuestion.getParentSpecQuestion().getTplSpecMaster().getSpecMasterId())){
-								isExist = Boolean.TRUE;
-								return isExist;
-							}
-						}
-							
+					if (specQuestion.getParentSpecQuestion() != null
+							&& specQuestion.getParentSpecQuestion().getTplSpecMaster() != null
+							&& master.getSpecMasterId().equals(
+									specQuestion.getParentSpecQuestion().getTplSpecMaster().getSpecMasterId())) {
+						isExist = Boolean.TRUE;
+						return isExist;
 					}
 				}
 			}
