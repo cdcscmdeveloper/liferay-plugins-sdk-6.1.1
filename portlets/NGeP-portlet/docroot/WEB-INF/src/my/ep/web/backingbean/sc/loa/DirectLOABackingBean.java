@@ -4925,9 +4925,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					String reportTitle=report.getTitle();
 					String updateEN=QTConstants.LAMPIRAN_A3_UPDATE;
 					String updateBM=QTConstants.LAMPIRAN_A3_DIKEMAS_KINI;
+					String latestEN=QTConstants.LAMPIRAN_A3_LATEST;
+					String latestBM=QTConstants.LAMPIRAN_A3_TERKINI;
 					if (!SourcingConstants.MALAY_LANGUAGE_CODE.equals(new FacesScopes().getUserLocale().getLanguage()) && reportTitle.contains(updateBM)) {
+						reportTitle.replace(latestBM, latestEN);
 						report.setTitle(reportTitle.replace(updateBM, updateEN));
 					}else if(SourcingConstants.MALAY_LANGUAGE_CODE.equals(new FacesScopes().getUserLocale().getLanguage()) && reportTitle.contains(updateEN)){
+						reportTitle.replace(latestEN, latestBM);
 						report.setTitle(reportTitle.replace(updateEN, updateBM));
 					}
 					break;
