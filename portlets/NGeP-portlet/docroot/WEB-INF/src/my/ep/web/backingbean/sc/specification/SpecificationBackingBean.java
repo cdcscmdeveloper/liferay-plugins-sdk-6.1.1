@@ -20637,8 +20637,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setActiveIndex(this.getManagedBean().getCheckListYesIndex());
-				throw new EpException(MessageConst.WARN_297320,
-						new String[] { changedCatCodeList });
+				throw new EpException(MessageConst.WARN_760531,
+						new String[] { changedCatCodeList });//#29732 standardize
 			}
 		}
 	}
