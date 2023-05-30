@@ -1382,4 +1382,25 @@ public class SupplierManagementConst {
 	public String getIDENTIFICATION_TYPE_PASSPORT() {
 		return IDENTIFICATION_TYPE_PASSPORT;
 	}
+	// #28175 Reopen Start
+	public long getPmStatusRegistrationStatusBumiputera() {
+		return PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA;
+	}
+
+	public long getPmStatusRegistrationStatusRegistered() {
+		return PM_STATUS_REGISTRATION_STATUS_REGISTERED;
+	}
+
+	public long getPmStatusRegistrationStatusBumiFromHome() {
+		return PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME;
+	}
+
+	public long getPmStatusRegistrationStatusNonBumiFromHome() {
+		return PM_STATUS_REGISTRATION_STATUS_NON_BUMI_FROM_HOME;
+	} 
+
+	public long getPmStatusRegistrationStatusForeign() {
+		return PM_STATUS_REGISTRATION_STATUS_FOREIGN;
+	}
+	// #28175 Reopen End
 }
