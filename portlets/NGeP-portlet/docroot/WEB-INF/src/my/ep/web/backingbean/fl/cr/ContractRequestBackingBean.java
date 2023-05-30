@@ -2714,10 +2714,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		// add  or remove items to Selected delivery address
 		itemsToSelectedAddress(flItemAddr);
 		populateItemsForSelectedAddress();
-		
-		RequestContext context = RequestContext.getCurrentInstance();
-		context.reset("form:itemDetPanelGroup");
-		
 		log.info("========retrieveOrderAmount 34816 END===========");
 	}
 	
@@ -3119,6 +3115,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 			getManagedBean().setEmailValidate(true);
 			hideItemAddButtons();
+			
+			if(getManagedBean().getSelectedDelAddr()!=null) {
+				selectAddrEvent();
+			}
+			
 		} else if(selectedTabIndex==2){
 			if(!getManagedBean().isFlRequestLink()){
 				validatePreparedOrgAndAgencies();
