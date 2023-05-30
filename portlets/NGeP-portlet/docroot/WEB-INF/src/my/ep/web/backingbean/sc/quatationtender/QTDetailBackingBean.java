@@ -4439,7 +4439,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								ScQtApprovalRemark.class));
                     	}
                          }else{
-                        	 if(!isApprovalScreen()){//13344_start
+                        	 if(!isApprovalScreen() && existingApprovalTabs == null){//25037
+                             //13344_start
                         	 qtApproval.setScQtApprovalRemarks(initializeRemarks(
      								qtApproval, scQt.getCurrentWorkFlowStatus(),
      								qtApproval.getScQtApprovalRemarks(),
