@@ -8328,7 +8328,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				}
 			//} //17376-165
 		}
-		
+		this.evaluateDecisionList();//6906 &34812
 		return QTConstants.FC_SUPPLIER_FINALIZATION_PAGE;
 	}
 
