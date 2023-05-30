@@ -18,15 +18,20 @@
 		<p:messages id="evaluationMeeting" showDetail="true"
 			autoUpdate="#{meetingBB.managedBean.autoUpdate}"
 			closable="true" severity="error,info" showSummary="false" />
-		<div align="left">
-			<p:commandButton value="#{lbl['lbl.btn.back']}"
-				onclick="blockWidget.show();"
-				oncomplete="blockWidget.hide();" 
-				process="@this" 
-				styleClass="BtnSpacing"
-				action="#{meetingBB.navigateToUpdateMember('back')}" />
-			<p:commandButton style="float: right;" process="@this" onclick="blockWidget.show();" oncomplete="blockWidget.hide();" value="#{lbl['lbl.btn.update']}" disabled="#{!isCommitteeUpdatable}" action="#{meetingBB.validateCommitteeChanges()}" />	
-		</div>
+		<table width="100%" class="BtnSpacing">
+			<tr>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" onclick="blockWidget.show();"
+						oncomplete="blockWidget.hide();" process="@this"
+						style="float:left;"
+						action="#{meetingBB.navigateToUpdateMember('back')}" /> <p:commandButton
+						style="float: right;" process="@this"
+						onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
+						value="#{lbl['lbl.btn.update']}"
+						disabled="#{!isCommitteeUpdatable}"
+						action="#{meetingBB.validateCommitteeChanges()}" /></td>
+			</tr>
+		</table>
 		<ui:param name="filteredRoles" value="#{fn:split('S',',')}"/>
 		<div align="left" class="header-info header-spacing">
 			<table style="width: 100%">

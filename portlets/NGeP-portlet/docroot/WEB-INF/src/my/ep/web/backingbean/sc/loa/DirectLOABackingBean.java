@@ -4919,6 +4919,25 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				}
 			//}
 			//#29164 CR 26474: Static Code Analysis End
+			//#29007 Start Vinod
+			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
+				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
+					String reportTitle=report.getTitle();
+					String updateEN=QTConstants.LAMPIRAN_A3_UPDATE;
+					String updateBM=QTConstants.LAMPIRAN_A3_DIKEMAS_KINI;
+					String latestEN=QTConstants.LAMPIRAN_A3_LATEST;
+					String latestBM=QTConstants.LAMPIRAN_A3_TERKINI;
+					if (!SourcingConstants.MALAY_LANGUAGE_CODE.equals(new FacesScopes().getUserLocale().getLanguage()) && reportTitle.contains(updateBM)) {
+						reportTitle.replace(latestBM, latestEN);
+						report.setTitle(reportTitle.replace(updateBM, updateEN));
+					}else if(SourcingConstants.MALAY_LANGUAGE_CODE.equals(new FacesScopes().getUserLocale().getLanguage()) && reportTitle.contains(updateEN)){
+						reportTitle.replace(latestEN, latestBM);
+						report.setTitle(reportTitle.replace(updateEN, updateBM));
+					}
+					break;
+				}
+			}
+			//#29007 Start Vinod
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null, redirectUrl);
@@ -10446,7 +10465,10 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 	}
 	public String populateLabelLampiranA3(String dateOfUpdate, String deskOfficerName) {
 		String labelLampiranA3 = StringUtils.EMPTY;
-		labelLampiranA3 = getMessage("lbl.sc.doc.name.lampiran.a3", new String[] { dateOfUpdate, deskOfficerName });
+		FacesScopes facesScopes = new FacesScopes();
+		labelLampiranA3 = ResourceBundleUtils.getMessage(QTConstants.LAMPIRAN_A3_LBL, new String[] {
+				dateOfUpdate, deskOfficerName }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				facesScopes.getUserLocale()); 
 		return labelLampiranA3;
 	}
 	private void createLampiranA3forQT(boolean isComplete){

@@ -90,6 +90,7 @@ import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -3624,14 +3625,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								
 							}
 						}*/
+						//26130 - 26052023
 						// #26130 - Start.
-						constructSpecData(scLoa, master, question);
-						// #26130 - End.
-						constructTplSpecQuestion(dafaltValue,
-								newTplSpecQuestionsList, master, question);
-						//#26130 start
-						question.setListCombineZonal(getCOmbineZonalSPec(question,master));
-						//#26130 end
+						if (validateTplSpecMaster(scLoa, master)){
+							// #26130 - Start.
+							constructSpecData(scLoa, master, question);
+							// #26130 - End.
+							constructTplSpecQuestion(dafaltValue,
+									newTplSpecQuestionsList, master, question);
+							//#26130 start
+							if (validateTplSpecQuestion(scLoa, question)) {
+								question.setListCombineZonal(getCOmbineZonalSPec(question, master));
+								// #26130 end
+							}
+						}
+						//26130 - 26052023
+						
 					}
 					// 26130 - End.
 					master.setTplSpecQuestions(newTplSpecQuestionsList);
@@ -6140,7 +6149,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		default:
 			return "";
 		}
-		//25037 - note 677 - end
 	}
 	/**
 	 * Evaluate if taskname is endorsement and signoff
@@ -6150,10 +6158,69 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public boolean evaluateEndorseSignoffTask(String taskName) {
 		if (StringUtils.isEmpty(taskName))
 			return false;
-		String[] actions = new String[] { "ENDORSE", "SIGNOFF" };
+		String[] actions = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_SIGNOFF};
 		String action = StringUtils.upperCase(taskName.split(" ")[0]);
 		return Arrays.asList(actions).contains(action);
-	}	
+	}
+	/**
+	 * Evaluate if committee is editable by taskname for screen update committee 
+	 * during evaluation and finalization
+	 * 
+	 * @return String (BPM task Name)
+	 */
+	public boolean isCommitteeEditable(String taskName) {
+		taskName = taskName == null ? "" : taskName;
+		List<String> taskNames = new ArrayList<>();
+		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_PREPARATION_GROUP));
+		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_FINALIZE_GROUP));
+		taskNames.addAll(Arrays.asList(new String[] { SCProcessNameConst.FINALISE_FC_SELECTION,
+				SCProcessNameConst.COORDINATE_FC_MEETING, SCProcessNameConst.REVISE_EVALUATION_MEETING }));
+		return taskNames.contains(taskName);
+	}
 	//25037 -end-
+	
+	//26130 - start
+	public boolean validateTplSpecQuestion(ScLoa scloa, TplSpecQuestion question) {
+		boolean isExist = Boolean.FALSE;
+		Long tempSpecQuestionID = null;
+		if (scloa.getScLoiLoaItems() != null && !scloa.getScLoiLoaItems().isEmpty()) {
+			for (ScLoiLoaItem item : scloa.getScLoiLoaItems()) {
+				if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null
+						&& item.getScRequestItem().getTplSpecQuestion().getParentSpecQuestion() != null) {
+					TplSpecQuestion specQuestion = item.getScRequestItem().getTplSpecQuestion();
+					if (question.getParentSpecQuestion() == null) {
+						tempSpecQuestionID = question.getSpecQuestionId();
+					} else {
+						tempSpecQuestionID = question.getParentSpecQuestion().getSpecQuestionId();
+					}
+					if (specQuestion.getParentSpecQuestion().getSpecQuestionId().equals(tempSpecQuestionID)) {
+						isExist = Boolean.TRUE;
+						return isExist;
+					}
+				}
+			}
+		}
+		return isExist;
+	}
+	
+	public boolean validateTplSpecMaster(ScLoa scloa, TplSpecMaster master){
+		boolean isExist = false;
+		if (scloa.getScLoiLoaItems() != null) {
+			for (ScLoiLoaItem item : scloa.getScLoiLoaItems()) {
+				if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null) {
+					TplSpecQuestion specQuestion = item.getScRequestItem().getTplSpecQuestion();
+					if (specQuestion.getParentSpecQuestion() != null
+							&& specQuestion.getParentSpecQuestion().getTplSpecMaster() != null
+							&& master.getSpecMasterId().equals(
+									specQuestion.getParentSpecQuestion().getTplSpecMaster().getSpecMasterId())) {
+						isExist = Boolean.TRUE;
+						return isExist;
+					}
+				}
+			}
+		}
+		return isExist;
+	}
+	//26130 - end
 
 }
