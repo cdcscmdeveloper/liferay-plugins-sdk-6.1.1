@@ -3834,6 +3834,32 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								.getParameterCode());
 			}
 			//#29474 - end
+			
+
+			// #29732 Start
+			if (this.getManagedBean().getQt().getQtStatus()
+							.getStatusId()
+							.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
+							|| this.getManagedBean()
+									.getQt()
+									.getQtStatus()
+									.getStatusId()
+									.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || this
+							.getManagedBean().getQt().getQtStatus()
+							.getStatusId()
+							.equals(QTStatusConst.QT_REVISION_PUBLICATION)) {
+				String changedCatCodeList = checkCatCodeChange();
+				if (!changedCatCodeList.isEmpty()) {
+					FacesContext.getCurrentInstance().addMessage(null,  
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage("lbl.sc.category.has.changes.on.prerender.view.1", 
+									null, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+					FacesContext.getCurrentInstance().addMessage(null,  
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage("lbl.sc.category.has.changes.on.prerender.view.2", 
+									new String[] { changedCatCodeList }, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				}
+			}
+			// #29732 End
+			
 			//9019 initializing remark for cancel or subsequent save start
 			if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
 				ScQt scQt = this.getManagedBean().getQt();
@@ -7438,28 +7464,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			//#25426 - End
 			this.getManagedBean().setActiveIndex(activeIndex);
-			// #29732 Start
-// #29732 Start - reOpen Fix
-			if (this.getManagedBean().getActiveIndex() == 1
-					&& (this.getManagedBean().getQt().getQtStatus()
-							.getStatusId()
-							.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
-							|| this.getManagedBean()
-									.getQt()
-									.getQtStatus()
-									.getStatusId()
-									.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || this
-							.getManagedBean().getQt().getQtStatus()
-							.getStatusId()
-							.equals(QTStatusConst.QT_REVISION_PUBLICATION))) {
-				String changedCatCodeList = checkCatCodeChange();
-				if (!changedCatCodeList.isEmpty()) {
-					throw new EpException(MessageConst.WARN_297320,
-							new String[] { changedCatCodeList });
-				}
-// #29732 End - reOpen Fix
-			}
-			// #29732 End
 		}
 	}	
 
