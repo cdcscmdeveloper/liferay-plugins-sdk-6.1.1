@@ -14115,6 +14115,7 @@ private void retriveCommitteeRemarksList(){
 
 			if (null != uploadedList && !uploadedList.isEmpty()) {
 				//Bug #34815 start
+				System.out.println("___ Bug #3481 230531 isReadOnly = "+this.getManagedBean().isReadOnly()+" uploadedList = "+uploadedList.size());
 				if (!this.getManagedBean().isReadOnly()){
 					PmStatus Status = getPmStatusByStatusId(QTStatusConst.PR_COMPLETED);
 					for (ScQtProposalChecklist uploadedChecklist : uploadedList) {
