@@ -267,8 +267,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	/**
 	 * Instantiates a new sm application backing bean.
 	 */
-	
-	
+
 	public SmApplicationBackingBean() {
 		SmCommonUtil.setMDCUserId();
 	}
