@@ -1639,7 +1639,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private PmParameter pmParam;//bug #30435
 	private ScQtApprovalReqAttachement scQtApprovalReqAttachementICT;//#25077
 	private ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI;//#25077
-	private String scQtAppRequestRemark;//bug #30435
+	private String scQtAppRequestRemarkICT;//#25077
+	private String scQtAppRequestRemarkMITI;//#25077
 	private boolean approverTabLoaded = false;//bug #30435
 	
 	private boolean isApprovalScreen = false;
@@ -1734,6 +1735,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean flagFileAttahmentDeletedICT=false;
 	private boolean flagFileAttahmentDeletedMITI=false;
 	private boolean firstPagePA=false;
+	private List<TabBean> tabOtherApproval;
 	//#25077 - End
 
 	//#25426 - Start
@@ -10772,6 +10774,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setFirstPagePA(boolean firstPagePA) {
 			this.firstPagePA = firstPagePA;
 		}
+		
+		public List<TabBean> getTabOtherApproval() {
+			return tabOtherApproval;
+		}
+
+		public void setTabOtherApproval(List<TabBean> tabOtherApproval) {
+			this.tabOtherApproval = tabOtherApproval;
+		}
 		//#25077 - End
 		
 		//#25692 End
@@ -11062,21 +11072,35 @@ public class QTDetailManagedBean extends BaseManagedBean {
 				ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI) {
 			this.scQtApprovalReqAttachementMITI = scQtApprovalReqAttachementMITI;
 		}
-		// #25077 - End
 		
 		/**
-		 * @return the scQtAppRequestRemark
+		 * @return the scQtAppRequestRemarkICT
 		 */
-		public String getScQtAppRequestRemark() {
-			return scQtAppRequestRemark;
+		public String getScQtAppRequestRemarkICT() {
+			return scQtAppRequestRemarkICT;
 		}
 
 		/**
-		 * @param scQtAppRequestRemark the scQtAppRequestRemark to set
+		 * @param scQtAppRequestRemarkICT the scQtAppRequestRemarkICT to set
 		 */
-		public void setScQtAppRequestRemark(String scQtAppRequestRemark) {
-			this.scQtAppRequestRemark = scQtAppRequestRemark;
+		public void setScQtAppRequestRemarkICT(String scQtAppRequestRemarkICT) {
+			this.scQtAppRequestRemarkICT = scQtAppRequestRemarkICT;
 		}
+
+		/**
+		 * @return the scQtAppRequestRemarkMITI
+		 */
+		public String getScQtAppRequestRemarkMITI() {
+			return scQtAppRequestRemarkMITI;
+		}
+
+		/**
+		 * @param scQtAppRequestRemarkMITI the scQtAppRequestRemarkMITI to set
+		 */
+		public void setScQtAppRequestRemarkMITI(String scQtAppRequestRemarkMITI) {
+			this.scQtAppRequestRemarkMITI = scQtAppRequestRemarkMITI;
+		}
+		// #25077 - End
 
 		/**
 		 * @return the approverTabLoaded
