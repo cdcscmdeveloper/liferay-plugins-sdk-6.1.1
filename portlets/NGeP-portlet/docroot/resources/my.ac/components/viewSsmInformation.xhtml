@@ -13,7 +13,7 @@
 		<cc:attribute name="dialogId" required="true" />
 	</cc:interface>
 	<cc:implementation>
-	<p:dialog id="viewssminfo" header="#{lbl['lbl.sm.view.ssm.infomation']}"
+	<p:dialog id="#{cc.attrs.dialogId}" header="#{lbl['lbl.sm.view.ssm.infomation']}"
 			widgetVar="#{cc.attrs.dialogId}" modal="true"
 			height="600" width="1000" resizable="false" style="display: static;">
 		
