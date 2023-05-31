@@ -60,16 +60,16 @@
 					rendered="#{validityDaysExpiredQt and bpmAction != 'SUBMIT' and bpmAction != 'REVISEBP'}" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();" style="float:right;"
 					process="@all" partialSubmit="true" 
-					disabled="#{evaluationBackingBean.managedBean.noProposalSubmitted}"
+					disabled="#{!evaluationBackingBean.evaluateNoSupplierParticipateCanProceed()}"
 					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 					rendered="#{(!validityDaysExpiredQt and evaluationBackingBean.checkMeetingDoneLessThanValidityEndDate(evaluationBackingBean.managedBean.scQt.proposalValidityEndDate)) and bpmAction != 'SUBMIT' and bpmAction != 'REVISEBP' and bpmAction != 'REVISE'}" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();" style="float:right;"
 					process="@all" partialSubmit="true" 
-					disabled="#{evaluationBackingBean.managedBean.noProposalSubmitted}"
+					disabled="#{!evaluationBackingBean.evaluateNoSupplierParticipateCanProceed()}"
 					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
 				<ui:remove><!-- 6906 - start --></ui:remove>
-				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" disabled="#{evaluationBackingBean.managedBean.noProposalSubmitted}" rendered="#{validityDaysExpiredQt and bpmAction == 'SUBMIT'}"
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" disabled="#{!evaluationBackingBean.evaluateNoSupplierParticipateCanProceed()}" rendered="#{validityDaysExpiredQt and bpmAction == 'SUBMIT'}"
 					oncomplete="confirmUpdateAsAttendPopup.show();" style="float:right;"/>
 				<ui:remove><!-- 6906 - end --></ui:remove>
 			</ui:repeat>
@@ -96,11 +96,11 @@
 		<ui:fragment rendered="#{evaluationBackingBean.managedBean.tabActiveIndex ne 5}">
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 			onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-			disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationMeetingBackingBean.managedBean.committeeModified or evaluationBackingBean.managedBean.noProposalSubmitted}"
+			disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationMeetingBackingBean.managedBean.committeeModified or !evaluationBackingBean.evaluateNoSupplierParticipateCanProceed()}"
 			style="float:right;" process="@form" update="@form"
 			action="#{evaluationBackingBean.saveMeetingDtls(true)}" />
 		</ui:fragment>
-		<p:commandButton value="#{lbl['lbl.btn.submit']}" rendered="#{evaluationBackingBean.managedBean.tabActiveIndex == 0}" disabled="#{!evaluationMeetingBackingBean.managedBean.committeeModified or evaluationBackingBean.managedBean.noProposalSubmitted}"
+		<p:commandButton value="#{lbl['lbl.btn.submit']}" rendered="#{evaluationBackingBean.managedBean.tabActiveIndex == 0}" disabled="#{!evaluationMeetingBackingBean.managedBean.committeeModified or !evaluationBackingBean.evaluateNoSupplierParticipateCanProceed()}"
 			styleClass="ui-button" action="#{evaluationMeetingBackingBean.submitMettingDetails()}" onstart="blockWidget.show();"
 			oncomplete="blockWidget.hide();"
 			style="float:right;" process="@all" partialSubmit="true">
