@@ -1,5 +1,5 @@
 /**
- * Copyright  2013 Archisoft. All rights reserved.
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.purchaseinquiry;
 
