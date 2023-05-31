@@ -11411,6 +11411,15 @@ public class SmApplicationBackingBean extends
 		validSiteVisit = testSmAppl(getManagedBean().getSmAppl().getApplType(),
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC, "", true);
 		if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
+			// #28175 Reopen Start 
+			List<SmSupplierCategory> historicalSmSupplierCategories = this.getManagedBean().getSmAppl().getSmSupplierCategories();
+			for(SmSupplierCategory cat : historicalSmSupplierCategories){
+				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
+				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
+				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+			}
+			this.getManagedBean().getSmAppl().setSmSupplierCategories(historicalSmSupplierCategories);
+			// #28175 Reopen End
 		}
 		if (validSiteVisit) {
 			String successMsg = "";
@@ -17461,8 +17470,9 @@ public class SmApplicationBackingBean extends
 					}
 				}
 				//#34277 - start
+				//34799
 				//personnel has no residential address, overwrite with SSM address
-				if(!hasResAddr){
+				if(!hasResAddr && getManagedBean().getShareHolderResdAddr().getSmAddress().getPostcode() != null){
 					getManagedBean().getShareHolderResdAddr().setSmAddress(ssmAddress);
 				}
 				//to check, if district state not equal to pm state set district to null & City
@@ -17476,10 +17486,12 @@ public class SmApplicationBackingBean extends
 					}
 				}
 				//34799
-				/*SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(getManagedBean(),
-						getManagedBean().getShareHolderResdAddr().getSmAddress(),
-						SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);*/
-				//34799
+				if(getManagedBean().getShareHolderResdAddr().getSmAddress() != null && getManagedBean().getShareHolderResdAddr().getSmAddress().getPmState() !=null){
+					SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(getManagedBean(),
+							getManagedBean().getShareHolderResdAddr().getSmAddress(),
+							SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+				}
+				
 				//#34277 - end
 				getManagedBean().setSelectedShareHolder(this.getManagedBean().getSelectedShareHolder());
 			}
@@ -17497,6 +17509,18 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		return catList;
+	}
+	
+	public String dynamicTableColumnWidth(String supplierUser, String poUser, String approverUser){
+		if(getManagedBean().isSupplierUser()){
+			return supplierUser;
+		}else if(getManagedBean().isPoUser()){
+			return poUser;
+		}else if(getManagedBean().isApproverUser()){
+			return approverUser;
+		}else{
+			return "auto";
+		}
 	}
 	//30766 END
 	
