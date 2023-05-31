@@ -249,7 +249,11 @@ public class TemplateSpecBackingBean extends
 						
 						int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
 						
-						if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+						if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
+						// #25138 for demo -start-
+								&& !templateSpecBean.getQt().isDemoRequired()
+						// #25138 for demo -end-
+						) {
 							if (CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {
 								evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 								evalReqDTO.setFinSpecAnswerList(resDTO.getSpecAnswerList());
@@ -3220,7 +3224,7 @@ public class TemplateSpecBackingBean extends
 			while (iterator.hasNext()) {
 				TplSpecEstimation tplSpecEstimation = iterator.next();
 				
-				if(tplSpecEstimation.getEstimatedCost().compareTo(BigDecimal.ZERO) == 0){
+				if(null!=tplSpecEstimation.getEstimatedCost() && tplSpecEstimation.getEstimatedCost().compareTo(BigDecimal.ZERO) == 0){//34786
 					tplSpecEstimation.setIndicativeUnitPrice(new BigDecimal(0.00));
 				}
 				
