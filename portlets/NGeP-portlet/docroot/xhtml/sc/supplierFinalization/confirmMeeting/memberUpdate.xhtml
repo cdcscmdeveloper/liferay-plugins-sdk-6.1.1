@@ -28,11 +28,22 @@
          	<ui:param name="meetingBB" value="#{suppFinalMeetingBackingBean}"></ui:param>
          </c:otherwise>
       </c:choose>
-		<div align="left">
-			<p:commandButton widgetVar="backUpdate" value="#{lbl['lbl.btn.back']}"
-				styleClass="BtnSpacing" process="@this" onclick="blockWidget.show()" oncomplete="blockWidget.hide()" 
-				action="#{meetingBB.navigateToUpdateMember('back')}" />
-		</div>
+      	<ui:param name="taskName" value="#{meetingBB.managedBean.taskName}"/>
+		<ui:param name="isCommitteeUpdatable" value="#{meetingBB.isCommitteeEditable(taskName)}"/>
+		<table width="100%" class="BtnSpacing">
+			<tr>
+				<td align="right"><p:commandButton widgetVar="backUpdate" 
+						value="#{lbl['lbl.btn.back']}"
+						process="@this" onclick="blockWidget.show()"
+						oncomplete="blockWidget.hide()" style="float:left;"
+						action="#{meetingBB.navigateToUpdateMember('back')}" /> <p:commandButton
+						style="float: right" process="@this" widgetVar="confirmUpdate"
+						oncomplete="blockWidget.hide()" onclick="blockWidget.show()"
+						value="#{lbl['lbl.btn.update']}"
+						disabled="#{!isCommitteeUpdatable}"
+						action="#{meetingBB.navigateToUpdateMember('confirm')}" /></td>
+			</tr>
+		</table>
 		<div align="left" class="header-info header-spacing">
 			<ui:param name="scQt" value="#{meetingBB.managedBean.scQt}" />
 			<table style="width: 100%;">
@@ -78,7 +89,7 @@
 				rowKey="#{committeeMember}" update="@this" selectionMode="single"
 				rowIndexVar="index">
 				<ac:paginator for="memberListTbl" />
-				<p:column styleClass="td-check-box-spacing">
+				<p:column styleClass="td-check-box-spacing" rendered="#{isCommitteeUpdatable}">
 					<f:facet name="header">
 						<p:selectBooleanCheckbox id="selAllMemChk"
 							value="#{meetingBB.managedBean.selectAllMembers}"
@@ -135,7 +146,8 @@
 				<p:selectOneMenu id="meetingRoleId" required="true"
 						label="#{lbl['lbl.sc.role']}"
 						value="#{committeeMember.memberRoleId}"
-						style="width: 110px;margin-bottom: 5px;">
+						style="width: 110px;margin-bottom: 5px;" 
+						disabled="#{!isCommitteeUpdatable}">
 						<f:selectItems
 							value="#{meetingBB.getRoleTypeDropdownValues(committeeMember.PNP,meetingBB.managedBean.scQt,committeeMember.pmUser)}" />
 						<p:ajax event="change" update="memberListTbl" process="@this" partialSubmit="true" listener="#{meetingBB.changeMemberRole(index,meetingBB.managedBean.committeeMembersList)}"></p:ajax>
@@ -148,7 +160,8 @@
 					<p:selectOneMenu value="#{committeeMember.representativeTypeId}"
 						label="#{lbl['lbl.sc.representative.type']}"
 						style="width: 100%; margin-bottom: 5px; white-space:normal"
-						rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}">
+						rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}"
+						disabled="#{!isCommitteeUpdatable}">
 						<f:selectItems
 							value="#{meetingBB.getRepresentativeTypeDropdownValues(meetingBB.managedBean.committeeType)}" />
 						<p:ajax event="change"
@@ -157,17 +170,19 @@
 					</p:selectOneMenu>
 				</p:column>
 			</p:dataTable>
-			<div align="right" class="BtnSpacing">
-				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
-					actionListener="#{meetingBB.addPopupAction}"
-					update="@([id$=memberDialogId])"
-					oncomplete="memberWidgetVar.show();" />
-				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-					oncomplete="dlgPerformDel.show();" process="@this,memberListTbl"
-					partialSubmit="true"
-					update="@([id$=#{supplierFinalizationConfirmmeetingCommitteemembersDeleteId}])"
-					disabled="#{meetingBB.deleteselectedList(meetingBB.managedBean.committeeMembersList)}" />
-			</div>
+			<ui:fragment rendered="#{isCommitteeUpdatable}">
+				<div align="right" class="BtnSpacing">
+					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
+						actionListener="#{meetingBB.addPopupAction}"
+						update="@([id$=memberDialogId])"
+						oncomplete="memberWidgetVar.show();" />
+					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+						oncomplete="dlgPerformDel.show();" process="@this,memberListTbl"
+						partialSubmit="true"
+						update="@([id$=#{supplierFinalizationConfirmmeetingCommitteemembersDeleteId}])"
+						disabled="#{meetingBB.deleteselectedList(meetingBB.managedBean.committeeMembersList)}" />
+				</div>
+			</ui:fragment>
 			<ui:param
 				name="supplierFinalizationConfirmmeetingCommitteemembersDeleteId"
 				value="supplierFinalizationConfirmmeetingCommitteemembersDeleteId"></ui:param>
@@ -181,10 +196,7 @@
 		</p:panel>
 		<ac:scRemarkAndAttachment
 						remarkList="#{meetingBB.managedBean.cmtAppointmentApprovalRemarks}"
-						showAttachment="false" />
-		<div align="right">
-			<p:commandButton process="@this" widgetVar="confirmUpdate" oncomplete="blockWidget.hide()" onclick="blockWidget.show()" value="#{lbl['lbl.btn.update']}" action="#{meetingBB.navigateToUpdateMember('confirm')}" />
-		</div>
+						showAttachment="false" readonly="#{!isCommitteeUpdatable}"/>
 		<ui:include src="addExistingCommittee.xhtml" />	
 	</ui:define>
 </ui:composition>

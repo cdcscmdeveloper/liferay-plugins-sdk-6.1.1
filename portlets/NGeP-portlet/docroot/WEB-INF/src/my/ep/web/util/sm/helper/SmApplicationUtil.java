@@ -7790,7 +7790,7 @@ public class SmApplicationUtil {
 							|| !catTypeList.contains(fac.getFacilityType())) {
 						// #34303 - start
 						for(SmSupplierCategoryFacility SmSupplierCategoryFacility : fac.getSmSupplierCategoryFacilities()){
-							if(!SmSupplierCategoryFacility.getPmCategoryL3().isNotalloweddelete()){
+							if(SmSupplierCategoryFacility.getPmCategoryL3().isNotalloweddelete()){
 								facIt.remove();	
 							}
 						}
