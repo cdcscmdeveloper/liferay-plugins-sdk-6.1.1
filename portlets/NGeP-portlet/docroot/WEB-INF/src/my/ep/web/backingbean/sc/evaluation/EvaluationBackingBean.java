@@ -18381,5 +18381,24 @@ private void retriveCommitteeRemarksList(){
 				new FacesScopes().getUserLocale());
 
 	}
+	/**
+	 * Evaluate action button disable or not when no supplier participate on evaluation
+	 * 
+	 * @param
+	 * @return boolean
+	 */
+	public boolean evaluateNoSupplierParticipateCanProceed() {
+		String taskName = this.getManagedBean().getTaskName();
+		if(taskName==null)
+			return false;
+		boolean allow = true;
+		String[] disallowed = new String[] { SCProcessNameConst.FINALISE_EC_EVALUATION,
+				SCProcessNameConst.FINALISE_OC_EVALUATION, SCProcessNameConst.ENDORSE_EC_EVALUATION,
+				SCProcessNameConst.ENDORSE_OC_EVALUATION, SCProcessNameConst.SIGNOFF_EC_EVALUATION,
+				SCProcessNameConst.SIGNOFF_OC_EVALUATION };
+		if(Arrays.asList(disallowed).contains(taskName) && this.getManagedBean().isNoProposalSubmitted())
+			allow = false;
+		return allow;
+	}
 	//6906 - end
 }
