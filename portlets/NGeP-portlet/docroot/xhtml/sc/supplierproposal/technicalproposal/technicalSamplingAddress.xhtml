@@ -38,6 +38,16 @@
 				<p:outputLabel style="float : left"
 					value="#{supplierProposalDetailBackingBean.getFullAddress(samplesubmissiondtl.scAddress)}" />
 			</p:column>
+			<ui:remove> #11104 - start </ui:remove>
+			<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}">
+				<p:outputLabel style="float : left;white-space: normal;"
+					value="#{samplesubmissiondtl.scAddress.contactPerson}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.qt.sample.submission.coordinating.officer.contact.no']}">
+				<p:outputLabel style="float : left"
+					value="#{samplesubmissiondtl.scAddress.contactMobileNo}" />
+			</p:column>
+			<ui:remove> #11104 - end </ui:remove>
 		</p:dataTable>
 
 		<br />
@@ -52,9 +62,15 @@
 				<td><p:inputText
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo}"
 						size="30" disabled="true" readonly="true" /></td>
-				<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}"
+				<td>
+					<!-- 11104 -start- --> 
+					<p:commandButton
+						value="#{lbl['lbl.sc.sp.printlabel']}"
+						update="@([id$=supplierSampleLabelDlg])"
 						action="#{supplierProposalDetailBackingBean.printLabelAction}"
-						partialSubmit="true" process="@this" /></td>
+						partialSubmit="true" process="@this" />
+						<!-- 11104 -end- -->
+				</td>
 				<td />
 			</tr>
 		</table>
@@ -83,6 +99,27 @@
 				<td />
 				<td />
 			</tr>
+			<ui:remove> #11104 - start </ui:remove>			
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.coordinate.officer']}" /></td>
+				<td><p:inputText style="margin-top:5px;" disabled="true"
+						readonly="true"
+						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.contactPerson}"
+						size="30" /></td>
+				<td />
+				<td />
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.qt.sample.submission.coordinating.officer.contact.no']}" /></td>
+				<td><p:inputText style="margin-top:5px;" disabled="true"
+						readonly="true"
+						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.contactMobileNo}"
+						size="30" /></td>
+				<td />
+				<td />
+			</tr>
+			<ui:remove> #11104 - end </ui:remove>
 			<tr>
 				<td colspan="4"><br /> <h:outputText styleClass="instruction"
 						value="#{lbl['lbl.sc.sp.printlabel.instruction']}" escape="false" />
@@ -93,9 +130,14 @@
 				<td><p:inputText
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo}"
 						size="30" disabled="true" readonly="true" /></td>
-				<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}"
+				<td>
+					<!-- 11104 -start- --> 
+					<p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}"
+						update="@([id$=supplierSampleLabelDlg])"
 						action="#{supplierProposalDetailBackingBean.printLabelAction}"
-						partialSubmit="true" process="@this" /></td>
+						partialSubmit="true" process="@this" /> 
+					<!-- 11104 -end- -->
+				</td>
 				<td />
 			</tr>
 		</table>
@@ -106,11 +148,34 @@
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.sampleItems}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			styleClass="sampleitemdtl" rowKey="#{sampleitemdtl}">
-			<p:column headerText="#{lbl['lbl.sc.item']}">
-				<h:outputText value="#{sampleitemdtl.scRequestItem.itemName}" />
+			<ui:remove> #11104 - start </ui:remove>			
+			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space: normal;width:55%;">
+				<h:outputText
+					value="#{supplierProposalDetailBackingBean.replaceWithBR(sampleitemdtl.scRequestItem.itemName)}"
+					escape="false" style="white-space: normal;word-wrap: break-word;" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}">
+			<p:column headerText="#{lbl['lbl.sc.spec.local.goods']}"
+				style="width:15%;">
+				<h:outputText value="#{lbl['lbl.sc.qt.sample.type.of.goods.local']}"
+					rendered="#{sampleitemdtl.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.LOCAL_GOODS}"></h:outputText>
+				<h:outputText
+					value="#{lbl['lbl.sc.qt.sample.type.of.goods.import']}"
+					rendered="#{sampleitemdtl.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.IMPORTED_GOODS}"></h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}" style="width:15%;">
 					#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo} - #{sampleitemdtl.subLableNo}
+				</p:column >
+				<p:column style="width:15%;">
+					<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.qt.sample.quantity.proposal']}" />
+							&#160;
+							<p:graphicImage id="pnpImg" value="/css/images/design/ico-tooltips.png" />
+							<p:tooltip id="pnptt" for="pnpImg">
+								<p:outputLabel escape="false" value="#{lbl['lbl.sc.qt.sample.quantity.proposal.tooltip']}"  />
+							</p:tooltip>
+						</f:facet>
+				<h:outputText value="#{sampleitemdtl.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleQuantity}"></h:outputText>
+			<ui:remove> #11104 - end </ui:remove>
 				</p:column>
 		</p:dataTable>
 	</p:panel>

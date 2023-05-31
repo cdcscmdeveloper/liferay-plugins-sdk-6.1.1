@@ -52,12 +52,13 @@
 							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, specificationBackingBean.managedBean.scQtCheckSt2techProposal)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<!-- #15391 -start- -->
+				<ui:remove> #15391 #11104 (add SP) - start </ui:remove>
 				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
 					disabled="#{(specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()) and !specificationBackingBean.managedBean.isChecklist()}"
-					rendered="#{stageTwoTechnical.manditory !='true' and stageTwoTechnical.definationType.parameterCode ne 'TS'}">
-				<!-- #15391 -end- -->
-					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteTechnicalChecklist])"
+					rendered="#{stageTwoTechnical.manditory !='true' and (stageTwoTechnical.definationType.parameterCode ne 'TS' and stageTwoTechnical.definationType.parameterCode ne 'SP')}">
+					<ui:remove> #15391 #11104 - end </ui:remove>
+					<p:ajax partialSubmit="true" process="@this"
+						update="@this,@([id$=deleteTechnicalChecklist])"
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}" />
 				</p:selectBooleanCheckbox>
 
@@ -68,10 +69,13 @@
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}" />
 				</p:selectBooleanCheckbox>
 
+				<ui:remove> #11104 - rendered add SP </ui:remove>
 				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
 					disabled="true"
-					rendered="#{stageTwoTechnical.manditory !=true and stageTwoTechnical.definationType.parameterCode eq 'TS'}">
-					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteTechnicalChecklist])"
+					rendered="#{stageTwoTechnical.manditory !=true and (stageTwoTechnical.definationType.parameterCode eq 'TS' or stageTwoTechnical.definationType.parameterCode eq 'SP')}">
+					<ui:remove> #11104 -end- </ui:remove>
+					<p:ajax partialSubmit="true" process="@this"
+						update="@this,@([id$=deleteTechnicalChecklist])"
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}" />
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -112,9 +116,10 @@
 
 				<h:panelGroup id="technicalChecklisttypes">
 
-
+					<ui:remove> #11104 - rendered add SP </ui:remove>
 					<ui:fragment
-						rendered="#{((stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TG' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TN' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TL' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'NE')) or (stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode eq 'TS'))}">
+						rendered="#{((stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TG' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TN' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TL' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'NE')) or (stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode eq 'TS' or stageTwoTechnical.definationType.parameterCode eq 'SP'))}">
+						<ui:remove> #11104 -end- </ui:remove>
 
 						<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
@@ -152,30 +157,35 @@
 							</c:if>
 					</ui:fragment>
 
+					<ui:remove> #11104 - rendered add SP </ui:remove>
 					<ui:fragment
-						rendered="#{stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode ne 'TS'}">
-						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())}">
-						<p:selectOneMenu style="width:170px;" required="true"
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							id="techChecklistTitletypenotnullType"
-							label="#{lbl['lbl.sc.type']}"
-							value="#{stageTwoTechnical.definationType.parameterId}">
-							<f:selectItems
-								value="#{specificationBackingBean.getTechnicalChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
-							<p:ajax event="change" process="@this"
-								update="technicalChecklistsupplier,scoreView,uploadtech,technicalSpecificationStatus"
-								partialSubmit="true"
-								listener="#{specificationBackingBean.technicalCheckListTypeChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
-						</p:selectOneMenu>
-						<p:message id="techChecklistTitletypenotnullType1"
-							for="techChecklistTitletypenotnullType" display="icon"></p:message>
-							</c:if>
-							<c:if test="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring() and !specificationBackingBean.managedBean.specMaintenance}">
+						rendered="#{stageTwoTechnical.pmDocument eq null and (stageTwoTechnical.definationType.parameterCode ne 'TS' and stageTwoTechnical.definationType.parameterCode ne 'SP')}">
+						<ui:remove> #11104 -end- </ui:remove>
+						<c:if
+							test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())}">
+							<p:selectOneMenu style="width:170px;" required="true"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
+								id="techChecklistTitletypenotnullType"
+								label="#{lbl['lbl.sc.type']}"
+								value="#{stageTwoTechnical.definationType.parameterId}">
+								<f:selectItems
+									value="#{specificationBackingBean.getTechnicalChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
+								<p:ajax event="change" process="@this"
+									update="technicalChecklistsupplier,scoreView,uploadtech,technicalSpecificationStatus"
+									partialSubmit="true"
+									listener="#{specificationBackingBean.technicalCheckListTypeChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
+							</p:selectOneMenu>
+							<p:message id="techChecklistTitletypenotnullType1"
+								for="techChecklistTitletypenotnullType" display="icon"></p:message>
+						</c:if>
+						<c:if
+							test="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring() and !specificationBackingBean.managedBean.specMaintenance}">
 							<h:outputText
-							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
-							</c:if>
+								value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
+						</c:if>
 						<!-- #31701 START -->
-						<c:if test="#{specificationBackingBean.managedBean.specMaintenance}">
+						<c:if
+							test="#{specificationBackingBean.managedBean.specMaintenance}">
 							<p:selectOneMenu style="width:170px;" required="true"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								id="techChecklistforSpecMaintenance"
@@ -273,15 +283,18 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.scoring']}"
 				style="width:5%;white-space: normal;text-align: center;">
 				<h:panelGroup id="scoreView">
+					<ui:remove> #11104 - rendered add SP </ui:remove>
 					<p:selectBooleanCheckbox value="#{stageTwoTechnical.scoringReq}"
 						disabled="true"
-						rendered="#{((stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode  eq 'V') or(stageTwoTechnical.definationType.parameterCode eq 'TS' and stageTwoTechnical.action.parameterCode  eq 'I'))}">
-
+						rendered="#{((stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode  eq 'V') or(stageTwoTechnical.definationType.parameterCode eq 'TS' and stageTwoTechnical.action.parameterCode  eq 'I') or(stageTwoTechnical.definationType.parameterCode eq 'SP' and stageTwoTechnical.action.parameterCode  eq 'M'))}">
+						<ui:remove> #11104 -end- </ui:remove>
 					</p:selectBooleanCheckbox>
 
+					<ui:remove> #11104 - rendered add SP </ui:remove>
 					<p:selectBooleanCheckbox value="#{stageTwoTechnical.scoringReq}"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						rendered="#{(!(stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode  eq 'V') and !(stageTwoTechnical.definationType.parameterCode eq 'TS' and stageTwoTechnical.action.parameterCode  eq 'I'))}">
+						rendered="#{(!(stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode  eq 'V') and !(stageTwoTechnical.definationType.parameterCode eq 'TS' and stageTwoTechnical.action.parameterCode  eq 'I') and !(stageTwoTechnical.definationType.parameterCode eq 'SP' and stageTwoTechnical.action.parameterCode  eq 'M'))}">
+						<ui:remove> #11104 -end- </ui:remove>
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="technicalSpecificationStatus,technicalChecklistEditActionView"
 							listener="#{specificationBackingBean.technicalCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
@@ -326,11 +339,13 @@
 					<h:outputText value="#{lbl['lbl.sc.action']}" />
 				</f:facet>
               <h:panelGroup id="technicalChecklistEditActionView">
-				<p:commandLink
-					rendered="#{stageTwoTechnical.definationType.parameterCode eq 'TS' or ((stageTwoTechnical.pmDocument ne null) and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TG' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TN' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'NE' or (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TL' and stageTwoTechnical.scoringReq)))}"
-					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical,'T')}">
-					<!-- 8979 -start- -->
-					<!-- 1873 note 74 -start- -->
+					<ui:remove> #11104 - rendered add SP </ui:remove>
+					<p:commandLink
+						rendered="#{stageTwoTechnical.definationType.parameterCode eq 'TS' or stageTwoTechnical.definationType.parameterCode eq 'SP' or ((stageTwoTechnical.pmDocument ne null) and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TG' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TN' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'NE' or (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TL' and stageTwoTechnical.scoringReq)))}"
+						action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical,'T')}">
+						<ui:remove> #11104 -end- </ui:remove>
+						<!-- 8979 -start- -->
+						<!-- 1873 note 74 -start- -->
 						<ui:fragment
 							rendered="#{!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly)}">
 							<!-- 1873 note 74 -end- -->
@@ -338,7 +353,7 @@
 							<h:graphicImage value="/css/images/design/edit.png" />
 						</ui:fragment>
 						<!-- 8979 -start- -->
-					<!-- 1873 note 74 -start- -->
+						<!-- 1873 note 74 -start- -->
 						<ui:fragment
 							rendered="#{!(!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly))}">
 							<!-- 1873 note 74 -end- -->
@@ -346,8 +361,8 @@
 							<h:graphicImage value="/css/images/design/ico-view.png" />
 						</ui:fragment>
 						<f:setPropertyActionListener value="#{stageTwoTechnical}"
-						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
-				</p:commandLink>
+							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
+					</p:commandLink>
 				</h:panelGroup>
 				
 			</p:column>
