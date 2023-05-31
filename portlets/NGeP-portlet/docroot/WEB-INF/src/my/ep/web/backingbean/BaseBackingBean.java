@@ -3520,6 +3520,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		if(personnel == null || !personnel.isSsmData() 
 			|| personnel.getSmPersonnelAddresses() == null) return personnel;
 		for(int i=0; i < personnel.getSmPersonnelAddresses().size(); i++){
+			if(personnel.getSmPersonnelAddresses().get(i) == null
+				|| personnel.getSmPersonnelAddresses().get(i).getSmAddress() == null){
+				continue;
+			}
 			if(personnel.getSmPersonnelAddresses().get(i).getSmAddress().isSsmData()){
 				Collections.swap(personnel.getSmPersonnelAddresses(), 0, i);
 				break;
