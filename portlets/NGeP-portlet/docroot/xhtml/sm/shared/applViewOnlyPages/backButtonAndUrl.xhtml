@@ -99,13 +99,7 @@
 				btnOkLabel="#{lbl['lbl.btn.change']}" 
 				btnCancelLabel="#{lbl['lbl.btn.cancel']}"/>
 		<!-- END 27951 -->
-		<!-- #31269 - start -->
-		<p:dialog id="viewssminfo" header="#{lbl['lbl.sm.view.ssm.infomation']}"
-			widgetVar="viewssminfoWidgetVar" modal="true"
-			height="500px" width="1000px" resizable="false" style="display: static;">
-			<ui:param name="backingBean" value="#{viewSmApplBackingBean}" />
-			<ui:include src="/xhtml/sm/renewMofApplication/viewSsmInformation.xhtml"/>
-		</p:dialog>
-		<!-- #31269 - start -->
+		<!-- #31269 -->
+		<ac:viewSsmInformation bBean="#{viewSmApplBackingBean}" dialogId="viewssminfoDlg" />
 	
 </ui:composition>
