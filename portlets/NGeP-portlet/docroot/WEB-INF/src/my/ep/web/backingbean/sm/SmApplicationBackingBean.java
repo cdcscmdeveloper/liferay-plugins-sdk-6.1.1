@@ -243,6 +243,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	/**
 	 * 
 	 */
+	
+	testing
+	
 	private static final long serialVersionUID = -7293382095687532399L;
 
 	public static Logger log = Logger.getLogger(SmApplicationBackingBean.class);
