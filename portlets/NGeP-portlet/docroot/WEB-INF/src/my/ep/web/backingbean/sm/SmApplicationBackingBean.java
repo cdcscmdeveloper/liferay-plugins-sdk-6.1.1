@@ -179,6 +179,8 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewApplHistoryBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSmApplBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSmSuppApplBackingBean;
 import my.ep.web.backingbean.sm.outputmsg.SmOutputMsgBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
@@ -14657,6 +14659,44 @@ public class SmApplicationBackingBean extends
 				+ applNo
 				+ "&applicationType=" + applType + "&currentTab=" + currTab);
 	}
+	
+	//#34099 - start
+	public void initRevisionDialog(String linkType) {
+		////based on setRevUrl
+		String url = SmApplicationUtil.getApplicationErrorPage();
+		try {
+			if(linkType.equals("O")){
+				ViewSmSuppApplBackingBean viewSupBean = new ViewSmSuppApplBackingBean();
+				viewSupBean.initMainDialog(getManagedBean().getSmAppl().getApplNo(), "SUP", 
+						getManagedBean().getTabActiveIndex());
+				url = SmApplicationUtil.getReviewApplicationSupplierBasePage(
+						getManagedBean().getSmAppl().getApplType());
+				//viewSupBean.initMain();
+			} else {
+				String applNo = getManagedBean().getSmSupplier().getSmAppl().getApplNo();
+				String serFileType = "APP";
+				
+				SmAppl smAppl = SmCommonUtil.retrieveSmApplByApplNo(applNo);
+				if(smAppl == null) {
+					log.info("34099 initRevisionDialog-null SmAppl");
+					throw new EpException(MessageConst.INFO_721212);
+				}
+				ViewSmApplBackingBean viewAppBean = new ViewSmApplBackingBean();
+				viewAppBean.setApplication(smAppl);
+				if (!SmCommonUtil.isSerFileExist(applNo, serFileType)) {
+					SmCommonUtil.createSerFile(smAppl, serFileType);
+				}
+				url = SmApplicationUtil.getReviewApplicationBasePage(
+						getManagedBean().getSmSupplier().getSmAppl().getApplType());
+			}
+			
+		} catch (NullPointerException e){
+			throw new EpException(MessageConst.INFO_721212);
+		}		
+		getManagedBean().setRevisionUrl(url);
+		RequestContext.getCurrentInstance().execute("revisionViewDlg.show();");
+	}
+	//#34099 - end
 
 	/**
 	 * Revert po application to supplier application data

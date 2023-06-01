@@ -202,6 +202,41 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		setTabParam();
 	}
+	
+	//#34099 - start
+	public void initMainDialog(String applNo, String serFileType, int currTab){
+		if(StringUtils.isBlank(applNo) || StringUtils.isBlank(serFileType)){
+			throw new EpException(MessageConst.INFO_721212);
+		}
+		getManagedBean().setApplicationNoParam(applNo+"_"+serFileType);
+		try {
+			setRevisionApplType();
+			createSerFileIfNotExist(null);
+			if (getManagedBean().isReviewApplicationExist()) {
+				SmApplRevisionResDTO resDTO = SmCommonUtil.getSerializedApplicationByFilePathName(
+						getDeSerFileNameAndPath(getManagedBean().getApplicationNoParam()));
+				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
+				setApplication(resDTO.getSmAppl());
+			}
+		} catch (NullPointerException e) {
+			log.error("*********Error init revision appl:"+ e.getMessage());
+			getManagedBean().setReviewApplicationExist(false);			
+		}
+
+		if (!getManagedBean().isReviewApplicationExist()){
+			if(getManagedBean().isOriginal() || getManagedBean().isPreviousApproved()){
+				MofRegistrationReqDTO mofDTO = new MofRegistrationReqDTO();
+				mofDTO.setApplNo(applNo);
+				getManagedBean().setSmAppl(SmServiceLookup.getMofRegistrationSO()
+						.retrieveSmApplWithChildByApplNo(mofDTO).getSmAppl());
+			} else {
+				throw new EpException(MessageConst.INFO_721212);
+			}
+		}
+		setMaxTab();
+		setTabValue(currTab <= getManagedBean().getMaxTab() ? currTab : 0, "");
+	}
+	//#34099 - end
 
 	/**
 	 * Initialized all related smAppl from SER file
