@@ -1726,7 +1726,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 			log.info("ApprovalBackingBean.updateBpmTask(): duration in milli seconds is: " + (System.currentTimeMillis() - startTime) + " : QT No. is: " + qt.getQtNo());
-		} finally {
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "updateBpmTask", this.getManagedBean().getQt().getQtNo(), "updateBpmTask",getUserIdSessionFromLoginId(), e);
+			throw new EpException(MessageConst.ERROR_722632);
+	    } finally {
 		}
 		return tenderResDTO;
 	}
