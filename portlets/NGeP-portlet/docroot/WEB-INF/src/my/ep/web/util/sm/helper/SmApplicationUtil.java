@@ -10147,7 +10147,13 @@ public class SmApplicationUtil {
 				break;
 
 			case SupplierManagementConst.SM_BRANCH_PANEL:
-				bean.setBranchCompanyDistricts(distItems);
+				//#34135 START
+				if(addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+					bean.setBranchCompanyDistricts(new ArrayList<SelectItem>());
+				}else{
+					bean.setBranchCompanyDistricts(distItems);
+				}
+				//#34135 END
 				bean.setBranchCompanyCities(new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
