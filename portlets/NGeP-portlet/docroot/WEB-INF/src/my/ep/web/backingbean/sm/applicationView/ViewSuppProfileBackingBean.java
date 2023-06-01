@@ -48,6 +48,8 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
+//#28175 ReOpen
+import my.ep.web.constant.sm.SupplierManagementConst;
 //#28175 end
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
@@ -609,6 +611,20 @@ public class ViewSuppProfileBackingBean extends
 			reqDTO.setCategoryL3Id(catCodeID);
 			resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
 		}
+		// #28175 ReOpen - start
+		if (getFacesScopes().hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
+				|| getFacesScopes().hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)
+				|| getFacesScopes().hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
+				|| getFacesScopes().hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)
+				|| getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())
+				|| getFacesScopes().hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
+				|| getFacesScopes().hasRoleUser(SupplierManagementConst.SUPPLIER_USER)
+				|| getFacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
+			getManagedBean().setSupplierUser(true);
+		}
+		// #28175 ReOpen - End
 		getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
 		getManagedBean().setCatCode(catCode);
 		RequestContext.getCurrentInstance().execute("remarkHisCatCodePopup.show()");
