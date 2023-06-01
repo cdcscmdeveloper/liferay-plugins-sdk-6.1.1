@@ -61,9 +61,9 @@
 							action="#{qTDetailBB.qtDetailsTabChange(0)}" update="@form" 
 							process="@form" 
 							rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemDetails)}">
-							<!-- 9019 #note-378 -->
+							<ui:remove>9019 #note-378</ui:remove>
 							<f:param name="skipmenuvalidation" value="0" />
-							<!-- 9019 -end- -->
+							<ui:remove>9019 -end</ui:remove>
 							</p:menuitem>	
 					</c:if>
 					##-----------------------------------
@@ -80,9 +80,9 @@
 						action="#{qTDetailBB.qtDetailsTabChange(1)}" update="@form"  
 						process="@form" 
 						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemSuppQualificationCriteria)}">
-						<!-- 9019 #note-378 -->
+						<ui:remove>9019 #note-378</ui:remove>
 						<f:param name="skipmenuvalidation" value="0" />
-						<!-- 9019 -end- -->
+						<ui:remove>9019 -end</ui:remove>
 						</p:menuitem>	
 					</c:if>
 					##-------------------------------
@@ -91,17 +91,17 @@
 						action="#{qTDetailBB.qtDetailsTabChange(2)}" update="@form"
 						process="@form" 
 						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeAppointment)}">
-						<!-- 9019 #note-378 -->
+						<ui:remove>9019 #note-378</ui:remove>
 						<f:param name="skipmenuvalidation" value="0" />
-						<!-- 9019 -end- -->
+						<ui:remove>9019 -end</ui:remove>
 					</p:menuitem>		
 					<p:menuitem value="#{lbl['lbl.sc.approval']}"
 						action="#{qTDetailBB.qtDetailsTabChange(3)}" update="@form"
 						process="@form" 
 						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemApproval)}">
-						<!-- 9019 #note-378 -->
+						<ui:remove>9019 #note-378</ui:remove>
 						<f:param name="skipmenuvalidation" value="0" />
-						<!-- 9019 -end- -->
+						<ui:remove>9019 -end</ui:remove>
 					</p:menuitem>
 					
 					<c:choose>
@@ -158,9 +158,9 @@
 						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
 						process="@form"
 						rendered="#{(isQTStatusSCApprovalAndBefore) and qTDetailBB.displayMenuItem(qTDetailBB.menuItemActivities)}">
-						<!-- 9019 #note-378 -->
+						<ui:remove>9019 #note-378</ui:remove>
 						<f:param name="skipmenuvalidation" value="0" />
-						<!-- 9019 -end- -->
+						<ui:remove>9019 -end</ui:remove>
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.qt.briefing.sv']}"
 						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
