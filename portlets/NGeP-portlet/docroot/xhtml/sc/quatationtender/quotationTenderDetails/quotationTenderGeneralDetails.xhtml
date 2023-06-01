@@ -213,9 +213,10 @@
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<!-- 9019 Reopen #note-289 - add validation for required -->
+					<!-- 9019 skipmenuvalidation,skipsaveclonevalidation added for #note-378 -->
 				<td colspan="3"><p:inputTextarea id="title1"
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_TITLE) or isReadOnly or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"
-						label="#{lbl['lbl.sc.title']}" required="#{not empty param['skipvalidation'] and qTDetailBB.isProcurementTitleMandatory(scQt)}"
+						label="#{lbl['lbl.sc.title']}" required="#{not empty param['skipvalidation'] and qTDetailBB.isProcurementTitleMandatory(scQt) or not empty param['skipmenuvalidation'] or not empty param['skipsaveclonevalidation']}"
 						value="#{scQt.qtTitle}" cols="110" rows="3"
 						valueChangeListener="#{createQtBB.qtTitleValueChanged}"
 						onkeyup="limitTextArea(this,1000);"
@@ -255,9 +256,10 @@
 				<td style="width: 270px;"><p:outputLabel
 						value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
-				<!-- 9019 Reopen #note-289 - add validation for required -->		
+				<!-- 9019 Reopen #note-289 - add validation for required -->
+				<!-- 9019 skipmenuvalidation,skipsaveclonevalidation added for #note-378 -->		
 				<td colspan="3"><p:inputText id="fileno"
-						label="#{lbl['lbl.sc.qt.fileno']}" required="#{not empty param['skipvalidation'] and qTDetailBB.isFileNoMandatory(scQt)}"
+						label="#{lbl['lbl.sc.qt.fileno']}" required="#{not empty param['skipvalidation'] and qTDetailBB.isFileNoMandatory(scQt) or not empty param['skipmenuvalidation'] or not empty param['skipsaveclonevalidation']}"
 						value="#{scQt.fileNo}" style="width:653px;" maxlength="50"
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_FILE_NO) or isReadOnly}">
 						<p:ajax event="blur" partialSubmit="true" update="@this"

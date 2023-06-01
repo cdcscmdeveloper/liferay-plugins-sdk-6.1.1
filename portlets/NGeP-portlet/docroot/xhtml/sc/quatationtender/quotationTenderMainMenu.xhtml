@@ -60,7 +60,11 @@
 							<p:menuitem value="#{lbl['lbl.sc.qt.qtn.details']}"
 							action="#{qTDetailBB.qtDetailsTabChange(0)}" update="@form" 
 							process="@form" 
-							rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemDetails)}" />	
+							rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemDetails)}">
+							<!-- 9019 #note-378 -->
+							<f:param name="skipmenuvalidation" value="0" />
+							<!-- 9019 -end- -->
+							</p:menuitem>	
 					</c:if>
 					##-----------------------------------
 					<c:if test="#{qTDetailBB.managedBean.isScEditSupplierQualificationCriteria and (statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}">
@@ -75,18 +79,30 @@
 						<p:menuitem value="#{lbl['lbl.sc.supplier.qulification.criteria']}"
 						action="#{qTDetailBB.qtDetailsTabChange(1)}" update="@form"  
 						process="@form" 
-						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemSuppQualificationCriteria)}" />
+						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemSuppQualificationCriteria)}">
+						<!-- 9019 #note-378 -->
+						<f:param name="skipmenuvalidation" value="0" />
+						<!-- 9019 -end- -->
+						</p:menuitem>	
 					</c:if>
 					##-------------------------------
 
 					<p:menuitem value="#{lbl['lbl.sc.qt.committee.appointment']}"
 						action="#{qTDetailBB.qtDetailsTabChange(2)}" update="@form"
 						process="@form" 
-						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeAppointment)}" />	
+						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemCommitteeAppointment)}">
+						<!-- 9019 #note-378 -->
+						<f:param name="skipmenuvalidation" value="0" />
+						<!-- 9019 -end- -->
+					</p:menuitem>		
 					<p:menuitem value="#{lbl['lbl.sc.approval']}"
 						action="#{qTDetailBB.qtDetailsTabChange(3)}" update="@form"
 						process="@form" 
-						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemApproval)}" />
+						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemApproval)}">
+						<!-- 9019 #note-378 -->
+						<f:param name="skipmenuvalidation" value="0" />
+						<!-- 9019 -end- -->
+					</p:menuitem>
 					
 					<c:choose>
 					<c:when test="#{isCmtStatusCompletedAndBefore}">
@@ -141,7 +157,11 @@
 					<p:menuitem value="#{lbl['lbl.sc.activities']}"
 						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
 						process="@form"
-						rendered="#{(isQTStatusSCApprovalAndBefore) and qTDetailBB.displayMenuItem(qTDetailBB.menuItemActivities)}" />
+						rendered="#{(isQTStatusSCApprovalAndBefore) and qTDetailBB.displayMenuItem(qTDetailBB.menuItemActivities)}">
+						<!-- 9019 #note-378 -->
+						<f:param name="skipmenuvalidation" value="0" />
+						<!-- 9019 -end- -->
+					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.qt.briefing.sv']}"
 						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
 						process="@form"
