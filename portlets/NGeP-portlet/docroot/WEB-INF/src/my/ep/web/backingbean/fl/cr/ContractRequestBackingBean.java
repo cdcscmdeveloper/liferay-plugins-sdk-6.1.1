@@ -1115,17 +1115,16 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 
 		List<FlFulfilmentItemAddr> itemAddrList = null;
 		FlFulfilmentItemAddr flItemAddr = null;
-		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 		List<CtContractItem> contractedItemList = null;
 		boolean itemExisted = false;
-		boolean itemExceed = false;// 11076
+		boolean itemExceed = false;
 		String messageId = null;
 
 		ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 		ContractItemResDTO resDTO = new ContractItemResDTO();
 		reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-		//start 11076
+		
 		getManagedBean().setAddAllItem(getManagedBean().getValidateItem()+getManagedBean().getOverallTotalItem());
 		if(getManagedBean().getValidateItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT || getManagedBean().getAddAllItem() > FulfilmentConst.GFMAS_CHARGELINE_LIMIT){	
 			messageId = MessageConst.ERROR_740070;					
@@ -1140,34 +1139,34 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),
 							getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId()));
 			if (getManagedBean().getSearchItemCode() != null && getManagedBean().getSearchItemCode() != "") {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("scRequestItem.cmItem.extensionCode",
-								SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getSearchItemCode(), true));
-				log.info("ItemCode");
+					searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("scRequestItem.cmItem.extensionCode",
+					SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getSearchItemCode(), true));
+			//		log.info("ItemCode");
 			}
 			if (getManagedBean().getSearchItemName() != null && getManagedBean().getSearchItemName() != "") {
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("scRequestItem.itemName", SearchOperator.OPERATOR_LIKE.value(),
-								getManagedBean().getSearchItemName(), true));
-				log.info("ItemName");
+									getManagedBean().getSearchItemName(), true));
+					log.info("ItemName");
 			}
 			if (getManagedBean().getSearchItemType() != null) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("itemType.parameterCode", SearchOperator.OPERATOR_EQUALS.value(),
-								getManagedBean().getSearchItemType()));
-				log.info("ItemType");
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("itemType.parameterCode", SearchOperator.OPERATOR_EQUALS.value(),
+									getManagedBean().getSearchItemType()));
+					log.info("ItemType");
 			}
 			// reqDTO.setContractItemSearchBean(searchBean);
 			reqDTO.setContractItemSearchBean(searchBean);
 			contractedItemList = contractItemSO.searchContractItem(reqDTO).getContractItemResultBean().getResultList();
 			log.info("=========contractedItemList=========" + contractedItemList.size());
-			
+				
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
-		
+			
 
 		for (CtContractItem contractedItem : contractedItemList) {
 			itemExisted = false;
@@ -1196,8 +1195,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				flItemAddr.setScRequestItem(contractedItem.getScRequestItem());
 				flItemAddr.setCmItem(contractedItem.getScRequestItem().getCmItem());
 				flItemAddr.setSkuNumber(contractedItem.getSku()); // # redmine
-																	// 16344
-																	// FARID
+																		// 16344
+																		// FARID
 				if (contractedItem.getScRequestItem().getCmItem() != null) {
 					flItemAddr.setItemCode(contractedItem.getScRequestItem().getCmItem().getExtensionCode());
 				} else {
@@ -1242,38 +1241,38 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 			}
 			flItemAddr.setGst(true);// Redmine #20011
-		}
-		getManagedBean().getItemAddrList().addAll(itemAddrList);
-		getManagedBean().getShowItemAddrList().addAll(itemAddrList);
-		getManagedBean().setTotalNewItemsAdded(itemAddrList.size());
+			}
+			getManagedBean().getItemAddrList().addAll(itemAddrList);
+			getManagedBean().getShowItemAddrList().addAll(itemAddrList);
+			getManagedBean().setTotalNewItemsAdded(itemAddrList.size());
 
-		if (getManagedBean().getShowItemAddrList().size() > 0) {
-			getManagedBean().setItemDeleteButtonShow(true);
-		}
-		sortItems(getManagedBean().getShowItemAddrList());
-		if (getManagedBean().getSelectedDelAddr() != null) {
-			populateItemsForSelectedAddress();
-		}
-		getManagedBean().setSelectedContractedItemList(new ArrayList<CtContractItem>());
-		getManagedBean().setItemAutoUpdate(false);
-		getManagedBean().setAutoUpdate(true);
-	
-		int calTotalExist = getManagedBean().getOverallTotalItem()- getManagedBean().getTotalNewItemsAdded();
-		if (calTotalExist < 0) {
-			calTotalExist = 0;
+			if (getManagedBean().getShowItemAddrList().size() > 0) {
+				getManagedBean().setItemDeleteButtonShow(true);
+			}
+			sortItems(getManagedBean().getShowItemAddrList());
+			if (getManagedBean().getSelectedDelAddr() != null) {
+				populateItemsForSelectedAddress();
+			}
+			getManagedBean().setSelectedContractedItemList(new ArrayList<CtContractItem>());
+			getManagedBean().setItemAutoUpdate(false);
+			getManagedBean().setAutoUpdate(true);
+		
+			int calTotalExist = getManagedBean().getOverallTotalItem()- getManagedBean().getTotalNewItemsAdded();
+			if (calTotalExist < 0) {
+				calTotalExist = 0;
 		}
 		getManagedBean().setCalculateTotalExist(calTotalExist);
 		getManagedBean().setTotalExistingItem(getManagedBean().getCalculateTotalExist());
 	}
 	//11076 end
-	
+		
 	//11076 start
 	public void recalculateItem() {
 			getManagedBean().setTotalExistingItem(getManagedBean().getOverallTotalItem());
 			getManagedBean().setTotalNewItemsAdded(0);
 		}
 	// 11076 end
-
+	
 	/**
 	 * renew session. Retrieve fulfilment request object and set it into managedBean.
 	 * 

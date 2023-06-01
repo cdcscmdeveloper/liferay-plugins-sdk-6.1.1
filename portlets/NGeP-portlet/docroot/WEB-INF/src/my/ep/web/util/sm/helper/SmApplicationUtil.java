@@ -2433,11 +2433,7 @@ public class SmApplicationUtil {
 			s = ResourceBundleUtils.getMessage("lbl.sm.authorized.share",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		}
-		//#34277 - start
-		if(managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() == null){
-			managedBean.getSmAppl().getSmCompanyBasic().setPaidUpCapital(new BigDecimal(0));
-		}
-		//#34277 - end
+
 		if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
 			boolean validPaidUp = true;
 			// String amt = "";
@@ -5738,21 +5734,6 @@ public class SmApplicationUtil {
 		}
 		desAddr.setCityId(srcAddr.getCityId());
 	}
-	
-	//#34277 - start
-	/**
-	 * Clone SSM address details
-	 * @param desAddr target
-	 * @param srcAddr source
-	 */
-	public static void cloneAddressSSM(SmAddress desAddr, SmAddress srcAddr){
-		desAddr.setSsmData(srcAddr.isSsmData());
-		desAddr.setAddressSsmNull(srcAddr.isAddressSsmNull());
-		desAddr.setPostcodeSsmNull(srcAddr.isPostcodeSsmNull());
-		desAddr.setStateSsmNull(srcAddr.isStateSsmNull());
-		desAddr.setCountrySsmNull(srcAddr.isCountrySsmNull());
-	}
-	//#34277 - end
 
 	/**
 	 * Reset to default entity values.
