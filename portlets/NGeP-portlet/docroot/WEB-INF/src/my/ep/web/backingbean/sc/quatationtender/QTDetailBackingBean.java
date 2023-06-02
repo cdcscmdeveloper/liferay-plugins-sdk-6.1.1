@@ -4625,9 +4625,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										// Retrieve Others approval tab dtl after save data & then need to reset all of it.
 										approvalRequest.get(i).setApproverAction(new PmParameter());
 										
-										ScQtApprovalReqAttachement approvalAttchment = new ScQtApprovalReqAttachement();
-										approvalAttchment.setApprovalRequest(approvalRequest.get(i));
-										approvalRequest.get(i).setApprovalRequestAttachement(approvalAttchment);
+										approvalRequest.get(i).setApprovalRequestAttachement(null);
 										
 										ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
 										approvalRemark.setApprovalRequest(approvalRequest.get(i));
