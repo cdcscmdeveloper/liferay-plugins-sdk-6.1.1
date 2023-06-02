@@ -353,6 +353,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean flagShowButtonSubmit;
 	//#34209
 	private boolean poApprUnClaimTask;
+	private SmApplInquiry selectedInquiryResponse;	//#34099
 	
 	//14530
 		private SmApplInquiry poToSupplierInquiry;
@@ -2359,4 +2360,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		public void setPoApprUnClaimTask(boolean poApprUnClaimTask) {
 			this.poApprUnClaimTask = poApprUnClaimTask;
 		}
+		
+		//#34099 - start
+		public SmApplInquiry getSelectedInquiryResponse() {
+			return selectedInquiryResponse;
+		}
+
+		public void setSelectedInquiryResponse(SmApplInquiry selectedInquiryResponse) {
+			this.selectedInquiryResponse = selectedInquiryResponse;
+		}
+		//#34099 - end
 }

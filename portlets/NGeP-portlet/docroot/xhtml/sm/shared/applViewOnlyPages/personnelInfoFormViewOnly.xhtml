@@ -366,7 +366,7 @@
 		modal="true" id="qualifyDialog" >
 			<p:outputPanel id="academicDetailsPanel" layout="block">
 				<p:dataTable style="width: 100%;table-layout:fixed" var="staffAcademic"  
-				value="#{viewSmApplBackingBean.managedBean.smPersonnel.smStaffAcademics}">
+				value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.smStaffAcademics}">
 					<p:column headerText="#{lbl['lbl.sm.year']}" style="width : 10%">
 						<h:outputText value="#{staffAcademic.year}" /> 
 					</p:column>

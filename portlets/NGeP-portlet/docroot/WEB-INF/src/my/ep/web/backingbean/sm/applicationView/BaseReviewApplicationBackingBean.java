@@ -219,7 +219,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				setApplication(resDTO.getSmAppl());
 			}
 		} catch (NullPointerException e) {
-			log.error("*********Error init revision appl:"+ e.getMessage());
+			log.error("****Error init revision dialog:"+ e.getMessage());
 			getManagedBean().setReviewApplicationExist(false);			
 		}
 
@@ -235,6 +235,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		setMaxTab();
 		setTabValue(currTab <= getManagedBean().getMaxTab() ? currTab : 0, "");
+	}
+	
+	public void assignSelAcadQualify(SmPersonnel smPersonnel) {
+		getManagedBean().setSelectedPersonnel(smPersonnel);
+		RequestContext.getCurrentInstance().execute("qualifyDialog.show()");
 	}
 	//#34099 - end
 
