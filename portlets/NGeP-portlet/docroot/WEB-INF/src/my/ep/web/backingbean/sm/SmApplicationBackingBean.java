@@ -164,7 +164,6 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCategoryFacility;
 import my.ep.persistence.entity.sm.SmSupplierCert;
-import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvWorker;
@@ -237,15 +236,14 @@ import org.primefaces.model.StreamedContent;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PortalUtil;
 
-// TODO: Auto-generated Javadoc
 @ManagedBean(name = "backingBean")
 @RequestScoped
-public class SmApplicationBackingBean extends
-		BaseBackingBean<SmApplicationManagedBean> {
+public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManagedBean> {
 
 	/**
 	 * 
 	 */
+	
 	private static final long serialVersionUID = -7293382095687532399L;
 
 	public static Logger log = Logger.getLogger(SmApplicationBackingBean.class);
@@ -270,6 +268,7 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Instantiates a new sm application backing bean.
 	 */
+
 	public SmApplicationBackingBean() {
 		SmCommonUtil.setMDCUserId();
 	}
