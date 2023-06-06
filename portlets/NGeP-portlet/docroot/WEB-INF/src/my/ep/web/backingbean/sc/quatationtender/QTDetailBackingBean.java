@@ -11469,7 +11469,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				String approvalCategoryCode = bpkApproval.getApprovalCategory().getParameterCode();     
 				if (!bpkApproval.isDeleted() && ParameterConst.APPROVAL_CATEGORY_BPK.equals(approvalCategoryCode)) {
 						
-						if(null != statusId && this.getManagedBean().isMaintanceFlow() == false && 
+						if(null != statusId && !this.getManagedBean().isMaintanceFlow() && 
 							   (statusId.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || 
 								statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION) || 
 								statusId.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL))){	
@@ -11483,27 +11483,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							}// end looping bpk request approval 
    						   
    						}
-		       				
-						if(null != statusId && this.getManagedBean().isMaintanceFlow() == false && 
-								statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION)){
-							
-							List<ScQtApprovalRequest> bpkRequestHistorys = bpkApproval.getHistoryApprovalRequests();
-	       					for (ScQtApprovalRequest bpkRequestHistory : bpkRequestHistorys) {
-	       						PmParameter approvalAction = bpkRequestHistory.getApproverAction();
-	       						if(null!=approvalAction && approvalAction.getParameterCode().equals(ParameterConst.APPROVAL_DECISION_TYPE_APPROVED)){
-	       							
-	       							List<ScQtApprovalRequest> bpkRequests = bpkApproval.getScQtApprovalDtls();
-       								for (ScQtApprovalRequest bpkRequest : bpkRequests) {
-       									PmParameter approvalType = bpkRequest.getApprovalType();
-       									if(null!=approvalType){
-       										return Boolean.TRUE;
-       									}
-       								}// end looping bpk request approval UserSO.java
-	       						   
-	       						}
-	       					}// end looping history bpk approval
-		       			
-						}
 				
 				}
 			} // end looping bpk approval
