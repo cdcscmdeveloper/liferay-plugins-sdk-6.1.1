@@ -1219,14 +1219,10 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void deleteMoreRuleValue() {
-		log.info(".................deleteMoreRuleValue...................");
-
-		// PmConfigRuleValue ruleValue =
-		// this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(rowIndex);
-
-		// int indexOfSelectedRuleType =
-		// this.getManagedBean().getConfigRuleList().indexOf(this.getManagedBean().getSelectedRuleType());
-		// this.getManagedBean().getConfigRuleList().remove(indexOfSelectedRuleType);
+		//#30672 - Start
+		RequestContext.getCurrentInstance().reset("form:settingTabId:ruleTypeValueTableID"); // reset form UI validation error
+		//#30672 - End
+		
 		Integer rowIndex = getManagedBean().getDeleteRowIndex();
 		List<PmConfigRuleValue> removeList = new ArrayList<PmConfigRuleValue>();
 		PmConfigRule configRuleType = this.getManagedBean()
@@ -1457,8 +1453,10 @@ public class RuleCatalogueBackingBean extends
 							&& ruleTypeValue.getCategoryL3Id()
 									.getCategoryL3Id() == null) {
 						// throw required msg
+						// 29669,30672 start
 						throw new EpException(MessageConst.ERROR_770133,
-								new String[] {});
+								new String[] { ruleTypeDesc.getRuleDesc() });
+						// 29669,30672 end
 
 					} else { // fill CategoryDisplayValue for further validation
 						PmCategoryL3 categoryL3 = ruleTypeValue
@@ -1481,6 +1479,19 @@ public class RuleCatalogueBackingBean extends
 
 			}
 			// check validation
+			
+			// 29669,29641,30672 start
+			if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode().matches("A|N|M|P") 
+					&& ruleTypeDesc.getRuleType().getRangeType() != 2) {
+				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType().getConfigRuleValues()) {
+					if (ruleTypeValue.getRuleValue() == null) {
+						throw new EpException(MessageConst.ERROR_770133,
+								new String[] { ruleTypeDesc.getRuleDesc() });
+					}
+				}
+			}
+			// 29669,29641,30672 end
+			
 			for (int i = 0; i < ruleTypeDesc.getRuleType()
 					.getConfigRuleValues().size(); i++) {
 				// add new values to tracking Diary list
@@ -1503,6 +1514,21 @@ public class RuleCatalogueBackingBean extends
 							new String[] { ruleTypeDesc.getRuleDesc() });
 				}
 
+				// 30672 - start 19/07/2022
+				if (ruleTypeDesc.getRuleType().getRangeType() != 1
+						|| (ruleTypeDesc.getRuleType().getRangeType() == 1 && baseValueToCompare.isShowFlag())) {
+					if (baseValueToCompare.isErrorExpDate()) {
+						if (!this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()
+								.equals(ruleTypeDesc.getRuleType().getRuleType())) {
+							throw new EpException(MessageConst.ERROR_770111,
+									new String[] { ruleTypeDesc.getRuleDesc() });
+						} else {
+							throw new EpException(MessageConst.ERROR_770113);
+						}
+					}
+				}
+				// 30672 - end 19/07/2022
+				
 				for (int j = i + 1; j <= (ruleTypeDesc.getRuleType()
 						.getConfigRuleValues().size() - 1); j++) {
 					PmConfigRuleValue value = ruleTypeDesc.getRuleType()
@@ -3101,7 +3127,22 @@ public class RuleCatalogueBackingBean extends
 		if(!ruleValue.isBrandNew()){
 			ruleValue.setModified(true);
 		}
-
+		
+		// #30672, #29669 - start 29/01/2023
+		if (ruleValue.getEffDate() != null && ruleValue.getExpDate() != null) {
+			if (configRuleType.getRangeType() != 1 || (configRuleType.getRangeType() == 1 && ruleValue.isShowFlag())) {
+				if (ruleValue.getEffDate().after(ruleValue.getExpDate())) {
+					ruleValue.setErrorExpDate(true);
+					throw new EpException(MessageConst.ERROR_770113);
+				} else if (ruleValue.getEffDate().equals(ruleValue.getExpDate())) {
+					ruleValue.setErrorExpDate(true);
+					throw new EpException(MessageConst.ERROR_770113);
+				} else {
+					ruleValue.setErrorExpDate(false);
+				}
+			}
+		}
+		// #30672, #29669 - end 29/01/2023
 	}
 
 	/*
