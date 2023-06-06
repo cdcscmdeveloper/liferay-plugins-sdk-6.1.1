@@ -3819,6 +3819,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							.equals(QTStatusConst.QT_REVISION_PUBLICATION)) {
 				String changedCatCodeList = checkCatCodeChange();
 				if (!changedCatCodeList.isEmpty()) {
+					this.getManagedBean().setActiveIndex(1);
+					retrieveSuppQualificationTabDtl();
 					FacesContext.getCurrentInstance().addMessage(null,  
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage("lbl.sc.category.has.changes.on.prerender.view.1", 
 									null, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
