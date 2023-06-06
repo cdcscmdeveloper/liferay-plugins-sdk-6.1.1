@@ -5207,6 +5207,7 @@ return	remarksNotFound;
 				shortlistedItemSupplierList != null) {
 			//33380 - start
 			Map<MapKey, ScQtRecommendDtl> map = new HashMap<MapKey, ScQtRecommendDtl>();
+			getManagedBean().setNotReachAgreement(false);//#30008	
 			boolean multipleLOIandRefinalized = ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(getManagedBean().getFinalizationMethod()) 
 					&& this.getManagedBean().getQtRefinalized(); 
 			getManagedBean().setHaveSupplierRejection(false);
@@ -5281,6 +5282,12 @@ return	remarksNotFound;
 			getManagedBean().setHaveSupplierRejection(remarkExists);
 		}
 		// #11134 - end
+		
+//		if(this.getManagedBean().isNotReachAgreement()){
+//			boolean remarkExists = evalResultDtl.getSupplierNotReachAgreementRemark() != null
+//					&& StringUtils.isNotBlank(evalResultDtl.getSupplierNotReachAgreementRemark().getRemark());
+//			getManagedBean().setsun(remarkExists);
+//		}
 	}
 	
 	//#11134 - start
@@ -5403,6 +5410,18 @@ return	remarksNotFound;
 				}
 			}
 			//4.  get ScRemark -> set it to evalResultDtl
+			
+			//#30008 - Add remark for Not Reach Agreement
+			for(ScLoi each : loiList){	
+				if(ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(each.getNegoDecision()))){
+					ScLoiRemark notReachAgreement = new ScLoiRemark();
+					getManagedBean().setNotReachAgreement(true);					
+					notReachAgreement.setRemark(ResourceBundleUtils.getMessage("lbl.sc.not.reach.agreement", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+					evalResultDtl.setSupplierNotReachAgreementRemark(notReachAgreement);
+				}
+			}
+			
 			
 			evalResultDtl.setSupplierRejectionRemark(supplierRejectionRemark);
 		}

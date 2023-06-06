@@ -924,8 +924,54 @@ public class LOIDetailBackingBean extends
 				
 				// Breifing paper
 				retrieveBriefingPaper();
-			}
+				
+				//#30008
+				if (this.getManagedBean().isItemized()) {
+					List<ScQtRecommend> scRecomendedList = this.getManagedBean().getRecommendList();
+					for (ScLoi scLoi : scLois) {
+						if (ParameterConst.NOT_REACH_AGREEMENT.equals(scLoi.getNegoDecision().getParameterId().toString())) {
+							getManagedBean().setDecision(scLoi.getNegoDecision());
+							getManagedBean().setJustification(scLoi.getDecisionJustification());
+							getManagedBean().setReadOnly(true);
+							for (ScQtRecommend recom : scRecomendedList) {
+								List<ScQtEvaluationResultDtl> recomSuppList = recom.getAwardSupplierList();
+								for (ScQtEvaluationResultDtl evalDtl : recomSuppList) {
+									if (scLoi
+											.getScLoiLoa()
+											.getSmSupplier()
+											.getSupplierId()
+											.equals(evalDtl.getQtEvaluationResult().getScQtProposal().getScQtSupplier()
+													.getSmSupplier().getSupplierId())) {
+										recom.setNoReachAgreement(true);
+										break;
 
+									}
+								}
+							}
+						}
+					}
+				} else {
+					List<ScQtEvaluationResultDtl> recomSuppList = this.getManagedBean().getRecommendedSupplierList();
+					for (ScLoi scLoi : scLois) {
+						if (ParameterConst.NOT_REACH_AGREEMENT.equals(scLoi.getNegoDecision().getParameterId().toString())) {
+							getManagedBean().setDecision(scLoi.getNegoDecision());
+							getManagedBean().setJustification(scLoi.getDecisionJustification());
+							getManagedBean().setReadOnly(true);
+							for (ScQtEvaluationResultDtl evalDtl : recomSuppList) {
+								if (scLoi
+										.getScLoiLoa()
+										.getSmSupplier()
+										.getSupplierId()
+										.equals(evalDtl.getQtEvaluationResult().getScQtProposal().getScQtSupplier()
+												.getSmSupplier().getSupplierId())) {
+									evalDtl.setNoReachAgreement(true);
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
 		} finally {
 			// qtAwardSO = null;
 		}
@@ -1395,6 +1441,13 @@ public class LOIDetailBackingBean extends
 			scLoi.setScLoiSupportingDocs(null);
 			getManagedBean().setItemDetailsFlag(Boolean.FALSE);
 			this.getManagedBean().setProgressivePaymentList(null);
+		}
+		
+		
+		if (scLoi.getNegoDecision() != null) {
+			getManagedBean().setDecision(scLoi.getNegoDecision());
+			getManagedBean().setJustification(scLoi.getDecisionJustification());
+			getManagedBean().setReadOnly(true);			
 		}
 		
 		getManagedBean().setSelectedScQtDeduction(null);
@@ -2237,7 +2290,7 @@ public class LOIDetailBackingBean extends
 		scLoi.setFileExtnNo("001");
 		
 		//#30008 
-		getManagedBean().setDecision(String.valueOf(scLoi.getNegoDecision()));
+		getManagedBean().setDecision(scLoi.getNegoDecision());
 		getManagedBean().setJustification(scLoi.getDecisionJustification());
 		
 		/*
@@ -2420,7 +2473,7 @@ public class LOIDetailBackingBean extends
 			String outcome = BpmOutcomeConst.BPM_SAVE;
 			
 			//#30008 - Start
-			scLoi.setNegoDecision(Integer.parseInt(this.getManagedBean().getDecision()));
+			scLoi.setNegoDecision(scLoi.getNegoDecision());
 			scLoi.setDecisionJustification(this.getManagedBean().getJustification());
 			//#30008 - end
 			
@@ -2666,7 +2719,7 @@ public class LOIDetailBackingBean extends
 			List<ScLoiLoa> pendingloiloas  = getPendingLoiLoas(scLoi, getManagedBean().getRecSupplierList());
 			
 			//#30008
-			if (ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision()))) {	
+			if (ParameterConst.NOT_REACH_AGREEMENT.equals(scLoi.getNegoDecision().getParameterId().toString())) {	
 				awardDataType.setIsAgreement(false);
 			} else {
 				awardDataType.setIsAgreement(true);
@@ -2791,7 +2844,7 @@ public class LOIDetailBackingBean extends
 			// remove empty remark - end
 			
 			//#30008 - Start
-			scLoi.setNegoDecision(Integer.parseInt(this.getManagedBean().getDecision()));
+			scLoi.setNegoDecision(scLoi.getNegoDecision());
 			scLoi.setDecisionJustification(this.getManagedBean().getJustification());
 			//#30008 - end
 
@@ -6822,17 +6875,17 @@ public class LOIDetailBackingBean extends
 	 */
 	public void validateNegoDecisionAction(String bpmAction) {
 		try {
-			String decision = this.getManagedBean().getDecision();
+			PmParameter decision = this.getManagedBean().getDecision();
 			String justification = this.getManagedBean().getJustification();
 
 			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(bpmAction)) {
 				if (decision == null) {
 					throw new EpException(MessageConst.ERROR_775192);
-				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
+				} else if (decision.getParameterId().equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
 					throw new EpException(MessageConst.ERROR_775193);
-				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
+				} else if (decision.getParameterId().equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
 					RequestContext.getCurrentInstance().execute("submitNegoConfirmPopUp.show()");
-				} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
+				} else if (decision.getParameterId().equals(ParameterConst.REACHED_AGREEMENT)) {
 					updateBpmTaskAction(bpmAction);
 				}
 			} else {

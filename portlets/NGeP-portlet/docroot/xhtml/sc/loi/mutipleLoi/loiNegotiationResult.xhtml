@@ -308,4 +308,10 @@
 	<c:if test="#{isZonal}">
 		<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
 	</c:if>
+	
+	<!-- #30008 - Start -->
+<!-- 	<c:if test="#{isNotReachAgreement}"> -->
+		<ui:include src="/xhtml/sc/loi/loirequest/loiNegotiationResultDecision.xhtml" />
+<!-- 	</c:if> -->
+	<!-- #30008 - End -->
 </ui:composition>
