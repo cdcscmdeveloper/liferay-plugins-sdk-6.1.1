@@ -14053,10 +14053,14 @@ private void retriveCommitteeRemarksList(){
 					.getComplianceTechnicalProposalCheckListDM().getList();
 
 			if (null != uploadedList && !uploadedList.isEmpty()) {
-				PmStatus Status = getPmStatusByStatusId(QTStatusConst.PR_COMPLETED);
-				for (ScQtProposalChecklist uploadedChecklist : uploadedList) {
-					uploadedChecklist.setEvaluationStatus(Status);
+				//Bug #34815 start
+				if (!this.getManagedBean().isReadOnly()){
+					PmStatus Status = getPmStatusByStatusId(QTStatusConst.PR_COMPLETED);
+					for (ScQtProposalChecklist uploadedChecklist : uploadedList) {
+						uploadedChecklist.setEvaluationStatus(Status);
+					}
 				}
+				//Bug #34815 end
 
 				reqDTO.setComplianceList(uploadedList);
 
@@ -17518,14 +17522,11 @@ private void retriveCommitteeRemarksList(){
 					EvaluationReqDTO attachmentToDownload = new EvaluationReqDTO();
 					ScQtProposalChecklist scQtProposalChecklist = listFinancial.get(j);
 
-					if (downloadBy.equalsIgnoreCase("Supplier")) {
-						attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
-						attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
-					} else if (downloadBy.equalsIgnoreCase("Document")) {
-						attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
-						attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
-						attachmentToDownload.setScQtChecklistName(scQtCheckList.getTitle());
-					}
+					// 10542-#61 dayan bug fix - start
+					attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
+					attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
+					attachmentToDownload.setScQtChecklistName(scQtCheckList.getTitle());
+					// 10542-#61 dayan bug fix - end
 
 					listScAttachment.add(attachmentToDownload);
 
@@ -17579,14 +17580,11 @@ private void retriveCommitteeRemarksList(){
 					EvaluationReqDTO attachmentToDownload = new EvaluationReqDTO();
 					ScQtProposalChecklist scQtProposalChecklist = listFinancial.get(j);
 
-					if (downloadBy.equalsIgnoreCase("Supplier")) {
-						attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
-						attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
-					} else if (downloadBy.equalsIgnoreCase("Document")) {
-						attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
-						attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
-						attachmentToDownload.setScQtChecklistName(scQtCheckList.getTitle());
-					}
+					// 10542-#61 dayan bug fix - start
+					attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
+					attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
+					attachmentToDownload.setScQtChecklistName(scQtCheckList.getTitle());
+					// 10542-#61 dayan bug fix - end
 
 					listScAttachment.add(attachmentToDownload);
 
@@ -18380,6 +18378,25 @@ private void retriveCommitteeRemarksList(){
 		return MessageUtils.getMessage(MessageConst.WARN_760530, MessageUtils.BUNDLE_COMMON_MESSAGES,
 				new FacesScopes().getUserLocale());
 
+	}
+	/**
+	 * Evaluate action button disable or not when no supplier participate on evaluation
+	 * 
+	 * @param
+	 * @return boolean
+	 */
+	public boolean evaluateNoSupplierParticipateCanProceed() {
+		String taskName = this.getManagedBean().getTaskName();
+		if(taskName==null)
+			return false;
+		boolean allow = true;
+		String[] disallowed = new String[] { SCProcessNameConst.FINALISE_EC_EVALUATION,
+				SCProcessNameConst.FINALISE_OC_EVALUATION, SCProcessNameConst.ENDORSE_EC_EVALUATION,
+				SCProcessNameConst.ENDORSE_OC_EVALUATION, SCProcessNameConst.SIGNOFF_EC_EVALUATION,
+				SCProcessNameConst.SIGNOFF_OC_EVALUATION };
+		if(Arrays.asList(disallowed).contains(taskName) && this.getManagedBean().isNoProposalSubmitted())
+			allow = false;
+		return allow;
 	}
 	//6906 - end
 }

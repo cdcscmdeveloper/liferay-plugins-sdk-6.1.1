@@ -333,7 +333,6 @@ public class SupplierFinalizationBackingBean extends
 			this.evaluateDecisionList();//6906 note 117
 			setDisableSFJustification();
 			//28834 end
-			prepareUpdateCommitteeMember();//#25037
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
