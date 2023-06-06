@@ -235,12 +235,12 @@
 									partialSubmit="true" process="@this"
 									value="#{lbl['lbl.sc.request.note']} ( #{fn:length(requestNoteBackingBean.managedBean.requestNote.requestNoteDtls)} )"
 									disabled="#{fn:length(requestNoteBackingBean.managedBean.requestNote.requestNoteDtls) eq '0'}" />
-
+								<!-- #34579 - add new parameter on simpleQuoteAction-->
 								<p:commandButton
 									value="#{lbl['lbl.sc.sq']} ( #{simpleQuoteBackingBean.getNoQuestionInSQ()} )"
 									rendered="#{unspscCodeBackingBean.requisitioner}"
 									id="simpleQuoteId"
-									action="#{simpleQuoteBackingBean.simpleQuoteAction(null, false, null)}"
+									action="#{simpleQuoteBackingBean.simpleQuoteAction(null, null, false, null)}"
 									disabled="#{catalogueBackingBean.managedBean.simpleQuoteFlag}"
 									partialSubmit="true" process="@this"
 									title="#{lbl['lbl.sc.sq.tooltip']}" escape="false">
@@ -453,8 +453,9 @@
 											rendered="#{supplierItem.contractNo != null}"
 											onstart="blockWidget.show();"
 											oncomplete="blockWidget.hide();" />
+										<!-- #34579 - add new parameter on simpleQuoteAction-->	
 										<p:menuitem value="#{lbl['lbl.cm.add.to.simple.qoute']}"
-											action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId, supplierItem.circularNo != null , null)}"
+											action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.supplierId, supplierItem.docId, supplierItem.circularNo != null , null)}"
 											update="@form" icon="ui-icon-plus"
 											rendered="#{supplierItem.contractNo == null}"
 											onstart="blockWidget.show();"
@@ -553,10 +554,11 @@
 																	action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}"
 																	disabled="#{!supplierItem.pidRequired}"
 																	rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }">
+																<!-- #34579 - add new parameter on simpleQuoteAction-->
 																</p:commandButton> <p:tooltip for="pidId"
 																	value="#{lbl['lbl.sc.purchase.in.default']}" /> <p:commandButton
 																	value="#{lbl['lbl.sc.simple.quote']}" id="sqId"
-																	action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId , false)}"
+																	action="#{simpleQuoteBackingBean.simpleQuoteAction(null, supplierItem.docId , false)}"
 																	rendered="#{supplierItem.circularNo ne null}"
 																	disabled="#{supplierItem.circularNo ne null }">
 																</p:commandButton> <p:tooltip for="sqId" value="#{lbl['lbl.sc.sq']}" /> <p:commandButton
