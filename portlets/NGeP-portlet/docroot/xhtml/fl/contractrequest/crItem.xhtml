@@ -18,8 +18,8 @@
            	</tr>
            	<tr>
            		<td>
-					<p:selectBooleanCheckbox id="crGeneralRadio" required="true" value="#{contractRequestBackingBean.managedBean.flRequest.radioCheckDeliveryDate}">
-						<p:ajax event="change" listener="#{contractRequestBackingBean.upDateStartDateFromBpm}" update="delStartDate"/>                   
+				<p:selectBooleanCheckbox id="crGeneralRadio" required="true" value="#{contractRequestBackingBean.managedBean.flRequest.radioCheckDeliveryDate}">
+					<p:ajax event="change" listener="#{contractRequestBackingBean.upDateStartDateFromBpm}" update="delStartDate"/>                   
            			</p:selectBooleanCheckbox>
           		</td>
            		<td>
@@ -694,7 +694,8 @@
 						value="#{contractRequestBackingBean.managedBean.itemName}"
 						size="60" /></td>
 			</tr>
-	<!--  		<tr>
+			<!--  		
+			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.item.desc']}" /></td>
 				<td><p:inputTextarea cols="61" rows="4" id="itemDesc"
 						autoResize="false"
@@ -702,7 +703,8 @@
 						disabled="true"
 						value="#{contractRequestBackingBean.managedBean.itemDesc == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.itemDesc}" /> 
 				</td>     
-			</tr>          -->
+			</tr>          
+			-->
 			<tr>
 				<td ><p:outputLabel value="#{lbl['lbl.ct.max.order.qty']}" rendered="#{!contractRequestBackingBean.managedBean.serviceItem}"/></td>
 				<td><p:inputText disabled="true"  rendered="#{!contractRequestBackingBean.managedBean.serviceItem}"
@@ -726,7 +728,7 @@
 				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.priceType != null}"
 						value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.priceType)}" 
 						size="60" /></td>					
-			</tr>   
+			</tr>
 			<tr>			
 				<td><p:outputLabel value="#{lbl['lbl.fl.standard.price']}" rendered="#{contractRequestBackingBean.managedBean.standardPrice}"/></td>
 				<td><p:inputText disabled="true" style="text-align:right;" rendered="#{contractRequestBackingBean.managedBean.standardPrice}"
@@ -859,9 +861,8 @@
 	 	</h:panelGroup>  
 	 	<!-- 28855 End -->
 		
- 	  <h:panelGroup rendered="#{!contractRequestBackingBean.managedBean.standardPrice}">   	
-			<p:panel id="reqItemInfoPanel" header="#{lbl['lbl.fl.zone.tier.price.detail']}" toggleable="false"> 
-				
+		<h:panelGroup rendered="#{!contractRequestBackingBean.managedBean.standardPrice}">
+			<p:panel id="reqItemInfoPanel" header="#{lbl['lbl.fl.zone.tier.price.detail']}" toggleable="false" >
 				<p:dataTable id="reqItemInfoDt" var="reqItemInfoList" liveScroll="true"
 					value="#{contractRequestBackingBean.managedBean.supplierItemPriceList}"
 					rowKey="#{purchasedItem}">
@@ -912,18 +913,16 @@
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>					
-				</p:dataTable>		
+				</p:dataTable>
 			</p:panel>
- 	</h:panelGroup> 
-	
-	 	<p:spacer height="2px"></p:spacer>
+		</h:panelGroup>
+		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
 			<p:commandButton value="#{lbl['lbl.btn.close']}" process="@this"
 				oncomplete="reqItemInfo.hide()" partialSubmit="true">
 			</p:commandButton>
-		</div> 		
+		</div>
 	</p:dialog>
-	
 	<p:dialog id="addContractedItemDialog" header="#{lbl['lbl.fl.item.list']}" 
 		widgetVar="addItems" showEffect="fade" hideEffect="fade" modal="true"
 		width="600" resizable="false" height="600" style="overflow:scroll">
