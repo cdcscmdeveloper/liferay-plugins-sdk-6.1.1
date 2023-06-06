@@ -3854,6 +3854,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							.equals(QTStatusConst.QT_REVISION_PUBLICATION)) {
 				String changedCatCodeList = checkCatCodeChange();
 				if (!changedCatCodeList.isEmpty()) {
+					this.getManagedBean().setActiveIndex(1);
+					retrieveSuppQualificationTabDtl();
 					FacesContext.getCurrentInstance().addMessage(null,  
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage("lbl.sc.category.has.changes.on.prerender.view.1", 
 									null, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
@@ -11467,7 +11469,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				String approvalCategoryCode = bpkApproval.getApprovalCategory().getParameterCode();     
 				if (!bpkApproval.isDeleted() && ParameterConst.APPROVAL_CATEGORY_BPK.equals(approvalCategoryCode)) {
 						
-						if(null != statusId && this.getManagedBean().isMaintanceFlow() == false && 
+						if(null != statusId && !this.getManagedBean().isMaintanceFlow() && 
 							   (statusId.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || 
 								statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION) || 
 								statusId.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL))){	
@@ -11481,27 +11483,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							}// end looping bpk request approval 
    						   
    						}
-		       				
-						if(null != statusId && this.getManagedBean().isMaintanceFlow() == false && 
-								statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION)){
-							
-							List<ScQtApprovalRequest> bpkRequestHistorys = bpkApproval.getHistoryApprovalRequests();
-	       					for (ScQtApprovalRequest bpkRequestHistory : bpkRequestHistorys) {
-	       						PmParameter approvalAction = bpkRequestHistory.getApproverAction();
-	       						if(null!=approvalAction && approvalAction.getParameterCode().equals(ParameterConst.APPROVAL_DECISION_TYPE_APPROVED)){
-	       							
-	       							List<ScQtApprovalRequest> bpkRequests = bpkApproval.getScQtApprovalDtls();
-       								for (ScQtApprovalRequest bpkRequest : bpkRequests) {
-       									PmParameter approvalType = bpkRequest.getApprovalType();
-       									if(null!=approvalType){
-       										return Boolean.TRUE;
-       									}
-       								}// end looping bpk request approval UserSO.java
-	       						   
-	       						}
-	       					}// end looping history bpk approval
-		       			
-						}
 				
 				}
 			} // end looping bpk approval
@@ -11555,30 +11536,26 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	
 	private void checkValidationForStatusAndFileAttachment(List<ScQtApproval> approval,String approvalCategory){
-		if (CollectionUtils.isNotEmpty(approval)) {
-			for (int i = 0; i < approval.size(); i++) {
-				if (approvalCategory.equalsIgnoreCase(approval.get(i).getApprovalCategory().getParameterCode())) {
-					List<ScQtApprovalRequest> approvalRequest = approval.get(i).getScQtApprovalDtls();
-					if (CollectionUtils.isNotEmpty(approvalRequest)) {
-       					for (int j = 0; j < approvalRequest.size(); j++) {
-       						
-       						PmParameter approverAction = approvalRequest.get(j).getApproverAction();
-							if (null == approverAction || null == approverAction.getParameterId()) {
-								this.getManagedBean().setResetBpkCurrentArea(false);
-								throw new EpException(MessageConst.ERROR_760149);
-							}
-							
-       						ScQtApprovalReqAttachement approvalReqAttachement = approvalRequest.get(j).getApprovalRequestAttachement();
-      	                    if(null == approvalReqAttachement){
-      	                    	this.getManagedBean().setResetBpkCurrentArea(false);
-      	                    	throw new EpException(MessageConst.ERROR_760509);
-      	                    }
-      	                    
-       					}
+		for (int i = 0; i < approval.size(); i++) {
+			if (approvalCategory.equalsIgnoreCase(approval.get(i).getApprovalCategory().getParameterCode())) {
+				List<ScQtApprovalRequest> approvalRequest = approval.get(i).getScQtApprovalDtls();
+				for (int j = 0; j < approvalRequest.size(); j++) {
+					
+					PmParameter approverAction = approvalRequest.get(j).getApproverAction();
+					if (null == approverAction || null == approverAction.getParameterId()) {
+						this.getManagedBean().setResetBpkCurrentArea(false);
+						throw new EpException(MessageConst.ERROR_760149);
 					}
-				} 
+					
+					ScQtApprovalReqAttachement approvalReqAttachement = approvalRequest.get(j).getApprovalRequestAttachement();
+                    if(null == approvalReqAttachement){
+                    	this.getManagedBean().setResetBpkCurrentArea(false);
+                    	throw new EpException(MessageConst.ERROR_760509);
+                    }
+                    
+				}
 			} 
-		}
+		} 
 	}
 	
 	/**
