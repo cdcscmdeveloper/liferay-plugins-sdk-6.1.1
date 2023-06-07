@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<!-- 
+	<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif" />
+	</p:blockUI>
+	-->
+	<p:tabMenu activeIndex="#{viewSmApplBackingBean.managedBean.tabActiveIndex}" styleClass="sidemenu">
+
+		<p:menuitem value="#{lbl['lbl.sm.companyStepLbl']}" update=":#{p:component('smViewRevisionDlg')}"
+			actionListener="#{viewSmApplBackingBean.setTabDialog('0')}"/>
+			
+		<p:menuitem value="#{lbl['lbl.sm.branchStepLbl']}" update=":#{p:component('smViewRevisionDlg')}"
+			actionListener="#{viewSmApplBackingBean.setTabDialog('1')}"/>
+			
+		<p:menuitem value="#{lbl['lbl.sm.personStepLbl']}" update=":#{p:component('smViewRevisionDlg')}"
+			actionListener="#{viewSmApplBackingBean.setTabDialog('2')}"/>
+			
+		<p:menuitem value="#{lbl['lbl.sm.capitalStepLbl']}" update=":#{p:component('smViewRevisionDlg')}"
+			actionListener="#{viewSmApplBackingBean.setTabDialog('3')}"/>
+			
+		<p:menuitem value="#{lbl['lbl.sm.bankStepLbl']}" update=":#{p:component('smViewRevisionDlg')}"
+			rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType 
+						!= ParameterConst.newSmApplnForApplcatcodes}"
+			actionListener="#{viewSmApplBackingBean.setTabDialog('b')}"/>
+			
+		<p:menuitem value="#{lbl['lbl.sm.catCodeStepLbl']}" update=":#{p:component('smViewRevisionDlg')}"
+			actionListener="#{viewSmApplBackingBean.setTabDialog('5')}"/>
+		
+		<!-- facility, equipment -->
+		
+		<p:menuitem value="#{lbl['lbl.sm.supDocStepLbl']}" update=":#{p:component('smViewRevisionDlg')}"
+			actionListener="#{viewSmApplBackingBean.setTabDialog('6')}"/>
+					
+		<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}" update=":#{p:component('smViewRevisionDlg')}"
+			rendered="#{viewSmApplBackingBean.managedBean.previousApproved}"
+			actionListener="#{viewSmApplBackingBean.setTabDialog('7')}"/>
+			
+		<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}" update=":#{p:component('smViewRevisionDlg')}"
+			rendered="#{viewSmApplBackingBean.managedBean.previousApproved}"
+			actionListener="#{viewSmApplBackingBean.setTabDialog('8')}"/>
+	</p:tabMenu>
+</ui:composition>

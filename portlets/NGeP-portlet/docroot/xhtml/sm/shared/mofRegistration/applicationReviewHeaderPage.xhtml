@@ -115,14 +115,16 @@
 			<!-- #34099 - start -->
 			<c:if test="#{!(backingBean.managedBean.smAppl.applType eq 'N')}">
 				<p:commandLink value="NEW_#{lbl['lbl.sm.view.previous.appr.appl']}"
-						action="#{backingBean.initRevisionViewDialog('N')}" process="@this"
+						action="#{backingBean.initRevisionDialog('N')}" process="@this"
 						partialSubmit="true" update=":#{p:component('revisionViewDlg')}"
-						onclick="blockWidget.show()" oncomplete="blockWidget.hide()"/>&#160;&#160;
+						onclick="blockWidget.show()" 
+						oncomplete="blockWidget.hide();revisionViewDlg.show();"/>&#160;&#160;
 			</c:if>
 			<p:commandLink value="WEEEE_#{lbl['lbl.sm.view.original.appl']}"
 					action="#{backingBean.initRevisionDialog('O')}" process="@this"
 					partialSubmit="true" update=":#{p:component('revisionViewDlg')}" 
-					onclick="blockWidget.show()" oncomplete="blockWidget.hide()"/>&#160;&#160;
+					onclick="blockWidget.show()" 
+					oncomplete="blockWidget.hide();revisionViewDlg.show();"/>&#160;&#160;
 			<!-- #34099 - end -->
 			<!-- #31269 - start -->
 			<p:commandLink rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}"
@@ -169,7 +171,7 @@
 	<ac:viewSsmInformation bBean="#{backingBean}" dialogId="viewssminfoDlg" />
 	<!-- #34099 - start -->
 	<p:dialog id="revisionViewDlg" widgetVar="revisionViewDlg"
-		header="VVVVVView Revision Application"
+		header="__VVVView Revision Application"
 		height="600" width="1000" resizable="false" modal="true">
 		<ui:include src="#{backingBean.managedBean.revisionUrl}"/>
 	</p:dialog>

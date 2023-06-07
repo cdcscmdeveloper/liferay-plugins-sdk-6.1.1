@@ -234,7 +234,51 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 		}
 		setMaxTab();
-		setTabValue(currTab <= getManagedBean().getMaxTab() ? currTab : 0, "");
+		//setTabValue(currTab <= getManagedBean().getMaxTab() ? currTab : 0, "");
+		setTabDialog(String.valueOf(currTab));
+	}
+	
+	
+	public void setTabDialog(String outputTab){
+		if(StringUtils.isEmpty(outputTab)) return;
+		getManagedBean().setTabActiveDlg(outputTab);
+		int cat = getManagedBean().getSmAppl().getApplCategoryType().equals("S") ?
+					2 : 0;
+		int bank = getManagedBean().getSmAppl().getApplType().equals(
+				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES) ?	0 : 1;
+		log.info("34099_cat:_"+cat+"\tbnk:_"+bank);
+		bank = 0;
+		cat = 0;
+		switch(outputTab.charAt(0)){
+		case '0':
+			setTabValue(0, SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
+			break;
+		case '1':
+			setTabValue(1, SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH);
+			break;
+		case '2':
+			setTabValue(2, SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL);
+			break;
+		case '3':
+			setTabValue(3, SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
+			break;
+		case 'b':
+			setTabValue(3+bank, SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK);
+			break;
+		case '5':
+			setTabValue(4+bank, SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY);
+			break;
+		case '6':
+			setTabValue(5+cat+bank, SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS);
+			break;
+		case '7':
+			setTabValue(6+cat+bank, SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC);
+			break;
+		case '8':
+			setTabValue(7+cat+bank, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
+			break;
+		}
+		
 	}
 	
 	public void assignSelAcadQualify(SmPersonnel smPersonnel) {
