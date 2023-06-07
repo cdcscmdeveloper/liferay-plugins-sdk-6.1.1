@@ -52,10 +52,15 @@ public class DecimalConverter extends NumberConverter {
 
 			if (value.contains(".")) {
 				String[] digits = value.split("\\.");
-				if (ArrayUtils.isNotEmpty(digits)) {
+				//Bug #34780 07/06/2023 @idham - Start
+				if (ArrayUtils.isNotEmpty(digits) && digits.length != 1) {
 					integralValue = digits[0].length();
 					decimalValue = digits[1].length();
+				} else {
+					integralValue = digits[0].length();
+					value = digits[0];
 				}
+				//Bug #34780 07/06/2023 @idham - End
 			} else {
 				integralValue = value.length();
 			}
