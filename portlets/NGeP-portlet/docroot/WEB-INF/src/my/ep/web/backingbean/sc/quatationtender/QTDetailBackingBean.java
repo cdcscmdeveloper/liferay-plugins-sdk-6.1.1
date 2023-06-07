@@ -6909,10 +6909,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//       when click sidemenu
 			if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 				detailSO.validateSupplierQualificationDtls(reqDTO);
-			}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-				//validate mandatory alert mesg for CR #9019 for others sidemenu for prevent save
-				//even alert mesg doesn't fill in at QT Details tab
-				detailSO.validateQTGeneralInformation(reqDTO);
 			}
 			//9019 - End (Harun)
 			
@@ -6947,10 +6943,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//       when click sidemenu
 			if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 				committeSO.validateAppointCommitteDtls(committeReqDTO);
-			}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-				//validate mandatory alert mesg for CR #9019 for others sidemenu for prevent save
-				//even alert mesg doesn't fill in at QT Details tab
-				detailSO.validateQTGeneralInformation(reqDTO);
 			}
 			//9019 - End (Harun)
 			
@@ -6989,10 +6981,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//       when click sidemenu
 			if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 				detailSO.validateApprovalDetails(reqDTO);
-			}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-				//validate mandatory alert mesg for CR #9019 for others sidemenu for prevent save
-				//even alert mesg doesn't fill in at QT Details tab
-				detailSO.validateQTGeneralInformation(reqDTO);
 			}
 			//9019 - End (Harun)
 			
@@ -7030,11 +7018,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				//       when click sidemenu
 				if(!reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 					detailSO.validateQTDetails(reqDTO);
-				}else if(reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-					//validate mandatory alert mesg for CR #9019 for others sidemenu for prevent save
-					//even alert mesg doesn't fill in at QT Details tab
-					detailSO.validateQTGeneralInformation(reqDTO);
-				} 
+				}
 				//9019 - End (Harun)
 				
 				detailSO.removeSchedule(reqDTO);//#29474
@@ -7271,11 +7255,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				
 				switch (priviousIndex) {
 				case 0:
-					//9019 - Start (Harun) #Note-398 include in this note fixing while unit test
-					//       This changes is for #Note-360
-					//	     #Note-433 Relocate code for fix 'File Reference No is mandatory. (ERR-760455)' displayed.
-					detailSO.validateQTGeneralInformation(reqDTO);
-					//9019 - End (Harun)
 					//9019 - Start (Harun) #Note-360 Remove checking while not submit and allow to proceed 
 					//       when click sidemenu
 					if (isSubmit) {
@@ -11542,7 +11521,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				} 
 			} 
 		}
-	}
+		
 	
 	/**
 	 * Listener method to handle Others Approval file download event
