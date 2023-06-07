@@ -15443,6 +15443,18 @@ public class SmApplicationBackingBean extends
 		}
 		return catList;
 	}
+	
+	public String dynamicTableColumnWidth(String supplierUser, String poUser, String approverUser){
+		if(getManagedBean().isSupplierUser()){
+			return supplierUser;
+		}else if(getManagedBean().isPoUser()){
+			return poUser;
+		}else if(getManagedBean().isApproverUser()){
+			return approverUser;
+		}else{
+			return "auto";
+		}
+	}
 	//30766 END	
 	
 	// #34166 - Start
