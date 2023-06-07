@@ -163,10 +163,6 @@
 					<f:converter converterId="dynamicNumberConverter" />
 					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />						
 					<f:validator validatorId="quantityDoubleRangeValidator" />
-<!-- 				<ac:validateNumber -->
-<!-- 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" -->
-<!-- 					maxIntegerDigits="14" /> -->
-<!-- 				<f:validateDoubleRange minimum="0.01" maximum="99999999999.99" /> -->
 					<ui:remove>Bug #34780 07/06/2023 @idham - End</ui:remove>
 			</c:if>
 			<!-- FARID END -->
