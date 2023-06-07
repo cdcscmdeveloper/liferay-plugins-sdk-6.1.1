@@ -475,5 +475,26 @@
 			title="#{lbl['lbl.sc.confirmation']}"
 			okAction="qTDetailBB.submitQtDetailsFormMaintanace()"
 			content="#{lbl['lbl.sc.popup.confirmSpecMemberReendorse']}" />
+			
+		<!-- #10141 Start Vinod -->
+		<p:dialog id="inActiveChecklistNotificationDocId" widgetVar="inActiveChecklistNotificationDoc" 
+			showHeader="false" resizable="false" width="30%" closable="false" visible="#{qTDetailBB.managedBean.showInactiveChecklistPopup}">
+			<p:outputPanel name="inActiveChecklistNotificationDocPanel" id="inActiveChecklistNotificationDocPanel">
+				<h:outputText escape="false" value="#{qTDetailBB.managedBean.inActiveChecklistNotificationText}"  />
+			</p:outputPanel>
+			
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+					onclick="inActiveChecklistNotification.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();"
+					partialSubmit="true" process="@form" update="@form"
+					action="#{qTDetailBB.initiateInactiveChecklistProcessForDoc()}"  rendered="#{!qTDetailBB.managedBean.readOnly}"/>
+					
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+					onclick="inActiveChecklistNotificationDoc.hide();" rendered="#{qTDetailBB.managedBean.readOnly}"/>
+			</div>
+		</p:dialog>
+		<!-- #10141 End Vinod -->
 		
 </ui:composition>

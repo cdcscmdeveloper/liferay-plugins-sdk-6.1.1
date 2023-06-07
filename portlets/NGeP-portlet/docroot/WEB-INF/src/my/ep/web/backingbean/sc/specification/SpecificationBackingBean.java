@@ -11109,6 +11109,64 @@ if (null != checklist && !checklist.isEmpty()) {
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
 						QTConstants.SPECIFICICATON_COMM_PREPARATION);
+		//#10141 Start Vinod
+		if(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(statusId)
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(statusId)){
+			try{
+					StringBuffer techInactive = new StringBuffer();
+							
+					for(ScQtCheckList tech : this.getManagedBean().getScQtCheckSt2techProposal()){
+						if(null!=tech.getPmDocument()
+							&& !tech.getPmDocument().isRecordStatus()){
+							if(!techInactive.toString().equals(null) 
+								&& !techInactive.toString().equals("")){
+								techInactive.append(", ");
+							}
+							techInactive.append(tech.getTitle());
+						}
+					}
+					if(!techInactive.toString().equals(null) 
+							&& !techInactive.toString().equals("")){
+						this.getManagedBean().setDisableButtonForInactiveChecklist(true);
+						throw new EpException(MessageConst.ERROR_775196,
+								new String[] { techInactive.toString() });
+					}
+			} catch (Exception e) {
+				handleException(e);
+				fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null,
+						QTConstants.SPECIFICICATON_COMM_PREPARATION);
+				SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", this.getManagedBean().getQt().getQtNo(),
+						"preRenderView", getUserIdSessionFromLoginId(), e);
+			}
+			try{
+					StringBuffer finInactive = new StringBuffer();
+					for(ScQtCheckList fin : this.getManagedBean().getScQtCheckSt2financeProposalList()){
+						if(null!=fin.getPmDocument()
+							&& !fin.getPmDocument().isRecordStatus()){
+							if(!finInactive.toString().equals(null) 
+								&& !finInactive.toString().equals("")){
+								finInactive.append(", ");
+							}
+							finInactive.append(fin.getTitle());
+						}
+					}
+					if(!finInactive.toString().equals(null) 
+							&& !finInactive.toString().equals("")){
+						this.getManagedBean().setDisableButtonForInactiveChecklist(true);
+						throw new EpException(MessageConst.ERROR_775197,
+								new String[] { finInactive.toString() });
+					}
+			} catch (Exception e) {
+				handleException(e);
+				fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null,
+						QTConstants.SPECIFICICATON_COMM_PREPARATION);
+				SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", this.getManagedBean().getQt().getQtNo(),
+				"preRenderView", getUserIdSessionFromLoginId(), e);
+			}
+		}
+		//#10141 End Vinod
 
 	}
 
@@ -11235,6 +11293,47 @@ if (null != checklist && !checklist.isEmpty()) {
 					.getContractNo());
 		}
 		List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
+		
+		//#10141 Start Vinod
+		List<ScQtCheckList> deleteTechCheckList = new ArrayList<>();
+		List<ScQtCheckList> deletefinCheckList = new ArrayList<>();
+						
+		if(this.getManagedBean().getInActiveChecklist()!=null
+				&& !this.getManagedBean().getInActiveChecklist().isEmpty()){
+			List<ScQtCheckList> techCL =this.getManagedBean().getScQtCheckSt2techProposal();
+			for(ScQtCheckList tech : techCL){
+				for(ScQtCheckList inactive : this.getManagedBean().getInActiveChecklist()){
+					if(SourcingConstants.TECHNICAL_DOCTYPE.equals(inactive.getDocCategory())
+							&& inactive.getQtChecklistId()==tech.getQtChecklistId()){
+						tech.setSelected(true);
+						tech.setDeleted(true);
+						deleteTechCheckList.add(tech);
+					}
+				}
+			}
+			techCL.removeAll(deleteTechCheckList);
+			List<ScQtCheckList> finCL =this.getManagedBean().getScQtCheckSt2financeProposalList();
+			for(ScQtCheckList fin : finCL){
+				for(ScQtCheckList inactive : this.getManagedBean().getInActiveChecklist()){
+					if(SourcingConstants.FINANCIAL_DOCTYPE.equals(inactive.getDocCategory())
+							&& inactive.getQtChecklistId()==fin.getQtChecklistId()){
+						fin.setSelected(true);
+						fin.setDeleted(true);
+						deletefinCheckList.add(fin);
+					}
+				}
+			}
+			finCL.removeAll(deletefinCheckList);
+							
+			List<ScQtCheckList> technical = this.getManagedBean().getMarkDeletedTechChecklist();
+			if (null == technical) technical = new ArrayList<>();
+			if(!deleteTechCheckList.isEmpty()) technical.addAll(deleteTechCheckList);
+					
+			List<ScQtCheckList> financial = this.getManagedBean().getMarkDeletedFinChecklist();
+			if (null == financial) financial = new ArrayList<>();
+			if(!deletefinCheckList.isEmpty()) financial.addAll(deletefinCheckList);
+		}
+		//#10141 End Vinod
 
 		List<ScQtCheckList> techCheckList = this.getManagedBean()
 				.getScQtCheckSt2techProposal();
@@ -22867,4 +22966,57 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
 	}
 	// Bug #33661@Syazani 12/04/2023 -- End
+	//#10141 Start Vinod
+	public void initiateInactiveChecklistProcess(String action){
+		List<ScQtCheckList> inActiveChecklist= new ArrayList<>();
+		for(ScQtCheckList tech : this.getManagedBean().getScQtCheckSt2techProposal()){
+			if(null!=tech.getPmDocument() && !tech.getPmDocument().isRecordStatus()) inActiveChecklist.add(tech);
+		}
+		for(ScQtCheckList fin : this.getManagedBean().getScQtCheckSt2financeProposalList()){
+			if(null!=fin.getPmDocument() && !fin.getPmDocument().isRecordStatus()) inActiveChecklist.add(fin);
+		}
+			
+		if(!inActiveChecklist.isEmpty()
+			&& BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)){
+			StringBuffer confirmationMsg = new StringBuffer();
+			String nextline=getMessageCommon("lbl.sc.spec.confirm.nextline");
+			String techCheckList=getMessageCommon("lbl.sc.spec.confirm.inactive.tech.checklist");
+			String finCheckList=getMessageCommon("lbl.sc.spec.confirm.inactive.fin.checklist");
+			int tecCLcount=0;
+			int finCLcount=0;
+			for(ScQtCheckList inactive : inActiveChecklist){
+				if(SourcingConstants.TECHNICAL_DOCTYPE.equals(inactive.getDocCategory())){
+					tecCLcount++;
+					confirmationMsg.append(tecCLcount+". "+techCheckList+" "+inactive.getTitle()+nextline);
+				}else{
+					if(tecCLcount!=0){
+						confirmationMsg.append(nextline);
+						tecCLcount=0;
+					}
+					finCLcount++;
+					confirmationMsg.append(finCLcount+". "+finCheckList+" "+inactive.getTitle()+nextline);
+				}
+			}
+			this.getManagedBean().setInActiveChecklist(inActiveChecklist);
+			this.getManagedBean().setInActiveChecklistNotificationText(
+					getMessage("lbl.sc.spec.confirm.inactive.techfin.checklist", 
+					new String[] {confirmationMsg.toString()}));
+			
+			RequestContext.getCurrentInstance().execute("inActiveChecklistNotification.show()");
+		}else{
+			if(!this.getManagedBean().getInActiveChecklist().isEmpty()){
+				this.getManagedBean().setInActiveChecklist(null);
+			}
+			this.specCommitteBpmTask(action);
+		}
+	}
+	public boolean disableButtonForInactiveChecklist(String outcome){
+		if(this.getManagedBean().isDisableButtonForInactiveChecklist()
+			&& (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)
+			|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF))){
+			return true;
+		}
+		return false;
+	}
+	//#10141 Start Vinod
 }
