@@ -51,7 +51,7 @@
 					<h:outputText
 						value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{empty aprvdCatBean.categoryL3Name ? aprvdCatBean.pmCategoryL3.categoryName : aprvdCatBean.categoryL3Name}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal">
+				<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" width="#{backingBean.dynamicTableColumnWidth('20%', 'auto', 'auto')}" style="white-space : normal">
 					<p:outputPanel rendered="#{aprvdCatBean.recordStatusFlg ne SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}">
 						<h:outputText value="#{lbl['lbl.sm.no.available']}"
 							rendered="#{empty aprvdCatBean.otherDesc}" />
@@ -73,14 +73,14 @@
 					</p:outputPanel>
 				</p:column>
 				<!-- 32348 START - adjust width -->
-				<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 8%;white-space : normal">
+				<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" width="#{backingBean.dynamicTableColumnWidth('16%', '8%', '8%')}" style="white-space : normal">
 				<!-- 32348 END - adjust width -->
 					<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 						rendered="#{!aprvdCatBean.specialCategory}" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 						rendered="#{aprvdCatBean.specialCategory}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.status']}" style="width : 10%;white-space : normal">
+				<p:column headerText="#{lbl['lbl.sm.status']}" width="#{backingBean.dynamicTableColumnWidth('20%', '10%', '10%')}" style="white-space : normal">
 					<h:outputText value="#{lbl['lbl.sm.catCodes.pendingDec']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.pendingVer']}"
