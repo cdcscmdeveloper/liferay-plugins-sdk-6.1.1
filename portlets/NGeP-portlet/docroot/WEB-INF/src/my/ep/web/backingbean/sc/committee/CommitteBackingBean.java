@@ -976,7 +976,7 @@ public class CommitteBackingBean extends
 						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 				parameterSO = BusinessDelegate.getInstance().getServiceObject(
 			            ModuleCodeConst.SUPPLIER_SELECTION, IParameterSO.class);
-				committeSO.initializedFCLegacyCommitteeHistory(qtId);
+				committeSO.initializedFCLegacyCommitteeHistory(qtId);//25037
 				resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
 				qtCommitte = resDTO.getScQtCommittee();
 				if (null == qtCommitte) {
