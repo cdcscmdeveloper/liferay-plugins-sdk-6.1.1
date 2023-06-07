@@ -3625,14 +3625,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								
 							}
 						}*/
+						//26130 - 26052023
 						// #26130 - Start.
-						constructSpecData(scLoa, master, question);
-						// #26130 - End.
-						constructTplSpecQuestion(dafaltValue,
-								newTplSpecQuestionsList, master, question);
-						//#26130 start
-						question.setListCombineZonal(getCOmbineZonalSPec(question,master));
-						//#26130 end
+						if (validateTplSpecMaster(scLoa, master)){
+							// #26130 - Start.
+							constructSpecData(scLoa, master, question);
+							// #26130 - End.
+							constructTplSpecQuestion(dafaltValue,
+									newTplSpecQuestionsList, master, question);
+							//#26130 start
+							if (validateTplSpecQuestion(scLoa, question)) {
+								question.setListCombineZonal(getCOmbineZonalSPec(question, master));
+								// #26130 end
+							}
+						}
+						//26130 - 26052023
+						
 					}
 					// 26130 - End.
 					master.setTplSpecQuestions(newTplSpecQuestionsList);
@@ -6026,24 +6034,21 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					if (null != scAttachment
 							&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
 						File file = new File(getActualFilePath(scAttachment));
+						// 10542-#61 dayan bug fix - start
+						String checkListTitle = scAttachmentReq.getScQtChecklistName().replaceAll("/","_");
+						String extension = FilenameUtils.getExtension(scAttachment.getFileName());
+						
+						String attachmentFileName = (StringUtils.isNotBlank(scAttachment.getTempFileName()) 
+							? scAttachment.getTempFileName() + "." + extension 
+							: scAttachment.getFileName());
+						String downloadBySupplierZip = supplierNo+"/"+checkListTitle+"/"+attachmentFileName;
+						String downloadByDocumentZip = checkListTitle+"/"+supplierNo+"/"+attachmentFileName;
 						
 						if(downloadBy.equalsIgnoreCase("Supplier")){
-							if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
-								String extension = FilenameUtils.getExtension(scAttachment.getFileName());
-								zos.putNextEntry(new ZipEntry(supplierNo+"/"+scAttachment.getTempFileName() + "." + extension));
-							} else {
-								zos.putNextEntry(new ZipEntry(supplierNo+"/"+scAttachment.getFileName()));
-							}
+							zos.putNextEntry(new ZipEntry(downloadBySupplierZip));
 						}else if(downloadBy.equalsIgnoreCase("Document")){
-							String checkListTitle = scAttachmentReq.getScQtChecklistName().replaceAll("/","_");
-							
-							if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
-								String extension = FilenameUtils.getExtension(scAttachment.getFileName());
-								zos.putNextEntry(new ZipEntry(checkListTitle+"/"+supplierNo+"/"+scAttachment.getTempFileName() + "." + extension));
-							} else {
-								zos.putNextEntry(new ZipEntry(checkListTitle+"/"+supplierNo+"/"+scAttachment.getFileName()));
-							}
-						}
+							zos.putNextEntry(new ZipEntry(downloadByDocumentZip));
+						} // 10542-#61 dayan bug fix - end
 						
 						try {
 							fis = new FileInputStream(file);
@@ -6150,7 +6155,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public boolean evaluateEndorseSignoffTask(String taskName) {
 		if (StringUtils.isEmpty(taskName))
 			return false;
-		String[] actions = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_SIGNOFF};
+		String[] actions = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_SIGNOFF,
+				BpmOutcomeConst.BPM_VIEW, BpmOutcomeConst.BPM_UPDATE};
 		String action = StringUtils.upperCase(taskName.split(" ")[0]);
 		return Arrays.asList(actions).contains(action);
 	}
@@ -6170,5 +6176,49 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return taskNames.contains(taskName);
 	}
 	//25037 -end-
+	
+	//26130 - start
+	public boolean validateTplSpecQuestion(ScLoa scloa, TplSpecQuestion question) {
+		boolean isExist = Boolean.FALSE;
+		Long tempSpecQuestionID = null;
+		if (scloa.getScLoiLoaItems() != null && !scloa.getScLoiLoaItems().isEmpty()) {
+			for (ScLoiLoaItem item : scloa.getScLoiLoaItems()) {
+				if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null
+						&& item.getScRequestItem().getTplSpecQuestion().getParentSpecQuestion() != null) {
+					TplSpecQuestion specQuestion = item.getScRequestItem().getTplSpecQuestion();
+					if (question.getParentSpecQuestion() == null) {
+						tempSpecQuestionID = question.getSpecQuestionId();
+					} else {
+						tempSpecQuestionID = question.getParentSpecQuestion().getSpecQuestionId();
+					}
+					if (specQuestion.getParentSpecQuestion().getSpecQuestionId().equals(tempSpecQuestionID)) {
+						isExist = Boolean.TRUE;
+						return isExist;
+					}
+				}
+			}
+		}
+		return isExist;
+	}
+	
+	public boolean validateTplSpecMaster(ScLoa scloa, TplSpecMaster master){
+		boolean isExist = false;
+		if (scloa.getScLoiLoaItems() != null) {
+			for (ScLoiLoaItem item : scloa.getScLoiLoaItems()) {
+				if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null) {
+					TplSpecQuestion specQuestion = item.getScRequestItem().getTplSpecQuestion();
+					if (specQuestion.getParentSpecQuestion() != null
+							&& specQuestion.getParentSpecQuestion().getTplSpecMaster() != null
+							&& master.getSpecMasterId().equals(
+									specQuestion.getParentSpecQuestion().getTplSpecMaster().getSpecMasterId())) {
+						isExist = Boolean.TRUE;
+						return isExist;
+					}
+				}
+			}
+		}
+		return isExist;
+	}
+	//26130 - end
 
 }
