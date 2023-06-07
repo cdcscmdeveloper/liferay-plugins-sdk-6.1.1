@@ -917,6 +917,27 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			//#31869 - end
 			getManagedBean().setDownloadedLoaReportsTitleList(new ArrayList<String>());
 			// #29006 - end
+			//#29007 Start Vinod
+			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
+				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
+					String reportTitle=report.getTitle();
+					String updateEN=QTConstants.LAMPIRAN_A3_UPDATE;
+					String updateBM=QTConstants.LAMPIRAN_A3_DIKEMAS_KINI;
+					String latestEN=QTConstants.LAMPIRAN_A3_LATEST;
+					String latestBM=QTConstants.LAMPIRAN_A3_TERKINI;
+					if (!SourcingConstants.MALAY_LANGUAGE_CODE.equals(new FacesScopes().getUserLocale().getLanguage()) 
+						&& (reportTitle.contains(updateBM) || reportTitle.contains(latestBM))) {
+							String reportTitleChangedLatest=reportTitle.replace(latestBM, latestEN);
+							report.setTitle(reportTitleChangedLatest.replace(updateBM, updateEN));
+					}else if(SourcingConstants.MALAY_LANGUAGE_CODE.equals(new FacesScopes().getUserLocale().getLanguage()) 
+							 && (reportTitle.contains(updateEN) || reportTitle.contains(latestEN))){
+								String reportTitleChangedLatest=reportTitle.replace(latestEN, latestBM);
+								report.setTitle(reportTitleChangedLatest.replace(updateEN, updateBM));
+					}
+					break;
+				}
+			}
+			//#29007 Start Vinod
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
