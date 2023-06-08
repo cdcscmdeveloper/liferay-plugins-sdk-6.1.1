@@ -318,12 +318,22 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				}
 				//28508-end
 			}
-			//#28377 razin
-			else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)){
-				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
-				resDTO = fulfilmentOrderSO.proceedAP58(reqDTO);
+			//#34686 start
+			else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				if(getManagedBean().getAttachment().getFileName() != null){
+					FulfilmentReqDTO AttachreqDTO = new FulfilmentReqDTO();
+					AttachreqDTO.setAttachment(this.getManagedBean().getAttachment());
+					AttachreqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+					AttachreqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
+					AttachreqDTO.setFulfilmentOrder(this.getManagedBean().getFulfilmentOrder());
+					resDTO = fulfilmentOrderSO.saveAP58AL(AttachreqDTO);
+				}
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)){
+					reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+					resDTO = fulfilmentOrderSO.proceedAP58(reqDTO);
+				}
      		}
-			//#28377 razin end
+			//#34686 end
 			else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)){
 				reqDTO.setApprover(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()));
 				reqDTO.setStopIns(getManagedBean().getStopIns());
@@ -340,32 +350,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					.equalsIgnoreCase(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME.replaceAll("\\s", ""))){
 				resDTO = fulfilmentOrderSO.removeFactoringComp(reqDTO);
 				messagePrefix = ResourceBundleUtils.getMessage("lbl.fl.rfc.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
-			}
-			//28377: add new save
-			else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)){
-				if(this.getManagedBean().getAttachment().getFileName() != null){
-				FulfilmentReqDTO AttachreqDTO = new FulfilmentReqDTO();
-				AttachreqDTO.setAttachment(this.getManagedBean().getAttachment());
-				AttachreqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-				AttachreqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
-				AttachreqDTO.setFulfilmentOrder(this.getManagedBean().getFulfilmentOrder());
-				resDTO = fulfilmentOrderSO.saveAP58AL(AttachreqDTO);
-				}else{
-					log.info("29442: inside save");
-					FulfilmentReqDTO AttachreqDTO = new FulfilmentReqDTO();
-					AttachreqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-					AttachreqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
-					if(!flBB.getManagedBean().getRemarkList().isEmpty()){
-					log.info("29442: "+flBB.getManagedBean().getRemarkList().get(0));
-					AttachreqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
-					}
-					AttachreqDTO.setFulfilmentOrder(this.getManagedBean().getFulfilmentOrder());
-					AttachreqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-					AttachreqDTO.setUserRole(getUserRole());
-					resDTO = fulfilmentOrderSO.saveCloseManual(AttachreqDTO);
-				}
-			}
-			//end 28377			
+			}			
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700005;
 				String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
@@ -703,6 +688,18 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				}
 				
 			}
+			
+			//34316-Start
+			if(getManagedBean().getFulfilmentOrder().isYep()){
+				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+				flReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_ORDER);
+				flReqDTO.setFlOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
+				
+				FulfilmentResDTO resDTO = null;
+				resDTO= getFulfilmentOrderSO().validateYepPOCOCurrentStatus(flReqDTO);
+				getManagedBean().setYepButtonFlag(resDTO.getYepButtonFlag());
+			}
+			//34316-End
 		}
 
 		getEspkbCommitmentNo();
@@ -857,6 +854,18 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(false);
 			}
+			
+			//34316-Start
+			if(getManagedBean().getFulfilmentOrder().isYep()){
+				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+				flReqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
+				flReqDTO.setFlOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
+				
+				FulfilmentResDTO resDTO = null;
+				resDTO= getFulfilmentOrderSO().validateYepPOCOCurrentStatus(flReqDTO);
+				getManagedBean().setYepButtonFlag(resDTO.getYepButtonFlag());
+			}
+			//34316-End
 		}
 	}
 	
@@ -1336,7 +1345,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			} catch (Exception e) {
-				throw new EpException(MessageConst.ERROR_776107);
+				throw new EpException(MessageConst.ERROR_000001);//34349
 				
 			}
 			return messageSuffix;	
@@ -1415,6 +1424,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			validateFulfillmentOrder(outcome);
 			//28377 - uncomment function
 			setTextBeforeSign(outcome);
+			log.info("#34686: Original Data: "+getManagedBean().getTextBeforeSign()); //#34686 log for original_data
 			//28377 - end uncomment function
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -1448,12 +1458,18 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	public String preSubmitFulfillmentOrder(PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
-			if(((hasSupplierRole() && !hasGovtSellerRole())) || getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED) ) {
+			if(((hasSupplierRole() && !hasGovtSellerRole()))) { //34334 update condition
 				setTextBeforeSign(getManagedBean().getButtonAction());
 				updateSpkiDigiSignData(getManagedBean().getPmDigiSign(), getManagedBean().getFulfilmentOrder().getDocType(), 
 						getManagedBean().getFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getFulfilmentOrder().getDocNo(), 
 						getManagedBean().getTextBeforeSign());					
 			}
+			//#34686 start
+			if(getManagedBean().getPmDigiSign().getOriginalData().isEmpty()) {
+				setTextBeforeSign(getManagedBean().getButtonAction());
+				getManagedBean().getPmDigiSign().setOriginalData(getManagedBean().getTextBeforeSign());
+			}
+			//#34686 end
 		}
 		return fulfillmentOrderAction(getManagedBean().getButtonAction());
 	}
@@ -2483,6 +2499,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			reqDTOflorder.setFlOrderId(docId);
 			resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTOflorder);
 			reqDTOnonAP58.setFulfilmentOrder(resDTO.getFlOrder());
+			//reqDTOnonAP58.setToken(getFacesScopes().getBPMAuthenticationCtxToken()); //#34686 remove token
 			resDTO = fulfilmentOrderSO.hideYEPtasklist(reqDTOnonAP58);
 			log.info("29440: "+resDTO.isSuccessful());
 			if(resDTO.isSuccessful()) {

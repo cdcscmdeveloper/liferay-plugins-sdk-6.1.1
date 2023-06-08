@@ -12,7 +12,7 @@ import my.ep.web.managedbean.report.fl.FlReportManagedBean;
  * @author Syafiza
  * @since 14/11/2022
  */
-@ManagedBean(name = "ccSumTotalNumValofPoRptManagedBean")
+@ManagedBean(name = "ccCancelReasonRptManagedBean")
 @SessionScoped
 public class SumForPoCancellationReasonRptManagedBean extends FlReportManagedBean {
 

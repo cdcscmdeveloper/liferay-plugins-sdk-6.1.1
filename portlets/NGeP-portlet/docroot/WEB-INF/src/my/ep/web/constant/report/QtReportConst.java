@@ -79,6 +79,12 @@ public class QtReportConst implements Serializable {
 	public static final String STATUS_CANCELLED = "8";
 	// 29580 - End (Harun)
 	
+	// 14306 - Start (Harun) Add report status for mutiple option 
+	//Report status
+	public static final String STATUS_PENDING_PROPOSAL_SUBMISSION = "9";
+	public static final String STATUS_PROPOSAL_SUBMITTED = "10";
+	// 14306 - End (Harun)
+	
 	/**
 	 * @return the SC_QUOT_TENDER_OR_RPT_VAL
 	 */

@@ -482,6 +482,8 @@ public class TaskReassignmentBackingBean extends
 		resetAllTaskList();
 		resetCheckAllTasks();
 		//7465 - start  - reendorse
+		this.getManagedBean().setShowRemoveProcessMessageGroup(false);
+		this.getManagedBean().setShowRemoveProcessMessageOther(false);
 		this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
 		this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
 		this.getManagedBean().setEnableDeleteGroupTasksButton(false);
@@ -853,14 +855,17 @@ public class TaskReassignmentBackingBean extends
 			//7465, 29822 - end
 			log.info("[#22117] - isBpkAdminUser: " + this.getManagedBean().isBpkAdminUser());
 		} else {
-			/*if (!verifiedDocNumber(this.getManagedBean().
-					getTaskAssignmentSearchBean().getDocNo())) {
-				throw new EpException(MessageConst.ERROR_770207);
-			} else {*/
-				resetReassigneeList();
-				resetCheckAllTasks();
+			resetReassigneeList();
+			resetCheckAllTasks();
+			//7465 - start
+			if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() != null && this.getManagedBean()
+					.getTaskAssignmentSearchBean().getUser().getLoginId() != null) {
 				searchUsers();
-			//}
+				checkPendingTaskRemove();
+			} else {
+				searchUsers();
+			}
+			//7465 - end
 		}
 	}
 	
@@ -887,8 +892,6 @@ public class TaskReassignmentBackingBean extends
 			this.getManagedBean().setEnableDeleteOthersTasksButton(false);
 		}
 		//[#22117 - end]
-		
-		checkPendingTaskRemove();//7465 - endose
 		log.info("searchDocument - End");
 
 	}
@@ -961,7 +964,7 @@ public class TaskReassignmentBackingBean extends
 			this.getManagedBean().setShowReassigneeList(true);
 		}
 		reloadAllTaskList();
-		
+		checkPendingTaskRemoveByDocNo(this.getManagedBean().getSelectedReassignee().get(0)); //#7465
 		
 		this.getManagedBean().setBpkAdminUser(checkBpkAdminSameUser());
 		if(this.getManagedBean().isBpkAdminUser()) {
@@ -1317,6 +1320,8 @@ public class TaskReassignmentBackingBean extends
 			BpmRequestDTO reqDTO = null;
 			BpmResponseDTO responseDTO = null;
 			String loginId = null;
+			//#7465 start - missing document number to search in bpm
+			String documentNumber = null;
 			List<Integer> statusIds = getManagedBean().getStatusIds();
 			TaskAssignmentSearchBean taskSearchBean = null;
 			SearchResultBean<WorklistItemVO> resultBean = null;
@@ -1325,6 +1330,8 @@ public class TaskReassignmentBackingBean extends
 				taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
 				loginId = taskSearchBean.getUser() != null ? taskSearchBean
 						.getUser().getLoginId() : null;
+				//#7465 start - missing document number to search in bpm
+				documentNumber = taskSearchBean.getDocNo();
 				// #20117		
 				if (loginId == null) {
 					if (getManagedBean().getResultUser() != null) {
@@ -1344,6 +1351,8 @@ public class TaskReassignmentBackingBean extends
 						log.info("BPM loginId******" + loginId);
 						log.info("BPM statusIds******" + statusIds.size());
 
+						//#7465 start - missing document number to search in bpm
+						reqDTO.setDocNumber(documentNumber);
 						reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 						reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 						reqDTO.setStatusList(statusIds);
@@ -1396,6 +1405,9 @@ public class TaskReassignmentBackingBean extends
 							
 							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
 									responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
+								//#7465 start - missing document number to search in bpm
+								List<WorklistItemVO> resetWorklist = new ArrayList<WorklistItemVO>();
+								getManagedBean().setAllGroupTasks(resetWorklist);
 								getManagedBean().setCheckAllGroupTasksEnabled(true);
 								getManagedBean().setEnableRemoveAllGroupTasksButton(true); //#7465 reendorse
 								for (WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()) {
@@ -1508,6 +1520,8 @@ public class TaskReassignmentBackingBean extends
 			BpmRequestDTO reqDTO = null;
 			BpmResponseDTO responseDTO = null;
 			String loginId = null;
+			//#7465 start - missing document number to search in bpm
+			String documentNumber = null;
 			List<Integer> statusIds = getManagedBean().getStatusIds();
 			TaskAssignmentSearchBean taskSearchBean = null;
 			SearchResultBean<WorklistItemVO> resultBean = null;
@@ -1516,6 +1530,8 @@ public class TaskReassignmentBackingBean extends
 				taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
 				loginId = taskSearchBean.getUser() != null ? taskSearchBean
 						.getUser().getLoginId() : null;
+				//#7465 start - missing document number to search in bpm
+				documentNumber = taskSearchBean.getDocNo();
 				// #20117		
 				if (loginId == null) {
 					if (getManagedBean().getResultUser() != null) {
@@ -1534,6 +1550,8 @@ public class TaskReassignmentBackingBean extends
 						log.info("BPM loginId******" + loginId);
 						log.info("BPM statusIds******" + statusIds.size());
 
+						//#7465 start - missing document number to search in bpm
+						reqDTO.setDocNumber(documentNumber);
 						reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 						reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 						reqDTO.setStatusList(statusIds);
@@ -1585,6 +1603,9 @@ public class TaskReassignmentBackingBean extends
 							
 							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
 									responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
+								//#7465 start - missing document number to search in bpm
+								List<WorklistItemVO> resetWorklist = new ArrayList<WorklistItemVO>();
+								getManagedBean().setAllOthersTasks(resetWorklist); //7465 - wrong reset value for others
 								getManagedBean().setCheckAllOthersTasksEnabled(true);
 								getManagedBean().setEnableRemoveAllOthersTasksButton(true); //#7465 reendorse
 								for (WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()) {
@@ -2782,14 +2803,6 @@ public class TaskReassignmentBackingBean extends
 				// not allow to search
 				isSearched = true;
 			}
-
-			//Redmine Bug #32682 - START
-			if(QTStatusConst.SF_PENDING_LOI_PREPARATION.equals(task.getDocStatus().longValue()) || 
-					QTStatusConst.QT_PENDING_LOA.equals(task.getDocStatus().longValue())) {
-				getManagedBean().setCommitteeUpdate(true);
-			}
-			//Redmine Bug #32682 - END
-			
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ:
 			//4 - Include User under Ministry, Kumpulan PTJ & PTJ
@@ -3210,8 +3223,8 @@ public class TaskReassignmentBackingBean extends
 			//Bug #25021
 			committeReqDTO.setOrgProfileId(orgProfileId);
 			//end Bug #25021
-			
-			return committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();
+			//return committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();
+			return committeSO.retrieveUserListByCommTypeForTaskReassignment(committeReqDTO).getUserResultBean(); //Fix - #34699
 		} finally {
 			committeSO = null;
 		}
@@ -3284,9 +3297,10 @@ public class TaskReassignmentBackingBean extends
 		    	}
 			}
 		}
+		//#7465 start - single checkbox not enable remove button
 		if ( (this.getManagedBean().getSelectedGroupTasks() != null && 
 				!this.getManagedBean().getSelectedGroupTasks().isEmpty()) &&
-				(this.getManagedBean().getSelectedGroupTasks().size() > 1) ) {
+				(this.getManagedBean().getSelectedGroupTasks().size() >= 1) ) {
 			this.getManagedBean().setEnableDeleteGroupTasksButton(true);
     	} else {
     		this.getManagedBean().setEnableDeleteGroupTasksButton(false);
@@ -3336,9 +3350,10 @@ public class TaskReassignmentBackingBean extends
 		    	}
 			}
 		}
+		//#7465 start - single checkbox not enable remove button
 		if ( (this.getManagedBean().getSelectedOthersTasks() != null && 
 				!this.getManagedBean().getSelectedOthersTasks().isEmpty()) &&
-				(this.getManagedBean().getSelectedOthersTasks().size() > 1) ) {
+				(this.getManagedBean().getSelectedOthersTasks().size() >= 1) ) {
 			this.getManagedBean().setEnableDeleteOthersTasksButton(true);
     	} else {
     		this.getManagedBean().setEnableDeleteOthersTasksButton(false);
@@ -4164,6 +4179,37 @@ public class TaskReassignmentBackingBean extends
 		new LogKey(loginSessionUserId);
 		
 		return loginSessionUserId;
+	}
+	/**
+	 * To check task in progress remove or not based on DocNo searching only
+	 * 
+	 */
+	public void checkPendingTaskRemoveByDocNo(String loginId) {
+		ISupplierDataMaintenanceSO iSupplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+		List<PmPendingRemoveTask> hasActivePendingList = iSupplierDataMaintenanceSO.checkActivePendingTaskRemove(loginId);
+		
+		if(hasActivePendingList != null){
+			for(PmPendingRemoveTask hasActivePending : hasActivePendingList){
+				if (hasActivePending != null) {
+					if (hasActivePending.getParamTask().equalsIgnoreCase("GROUP")) {
+						this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+						this.getManagedBean().setShowRemoveProcessMessageGroup(true);
+					} else {
+						this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+						this.getManagedBean().setShowRemoveProcessMessageOther(true);
+					}
+				}
+			}
+		}
+		
+		if(hasActivePendingList == null || hasActivePendingList.size() == 0){
+			//no pending
+			this.getManagedBean().setEnableRemoveAllGroupTasksButton(true);
+			this.getManagedBean().setEnableRemoveAllOthersTasksButton(true);
+			this.getManagedBean().setShowRemoveProcessMessageGroup(false);
+			this.getManagedBean().setShowRemoveProcessMessageOther(false);
+		}
 	}
 	//7465, 29822 - end
 }

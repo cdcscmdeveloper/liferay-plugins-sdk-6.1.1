@@ -435,7 +435,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				sqbb.getManagedBean().setActiveIndex(0);
 				// #29800 - start
 				if (getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession() == null) {
-					sqbb.simpleQuoteAction(getManagedBean().getSupplierItemDocId(), true, null);
+					sqbb.simpleQuoteAction(null, getManagedBean().getSupplierItemDocId(), true, null);//#34579 - add new parameter on simpleQuoteAction
 				} else {
 					sqbb.getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(
 							getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession());
@@ -2646,8 +2646,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 		return false;
 	}
-
-	private void validatePidReason(Long resonId){
+	
+	public void validatePidReason(Long resonId){  //#16190
 
 		if(resonId == null || resonId.intValue() == 0){
 			return;

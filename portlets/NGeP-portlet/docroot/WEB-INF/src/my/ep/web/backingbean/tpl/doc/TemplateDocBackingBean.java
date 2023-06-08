@@ -45,6 +45,7 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
+import my.ep.exception.EpException;//#33346
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.tpl.TplCategory;
@@ -74,6 +75,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
+import org.primefaces.context.RequestContext;//#33346
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -273,7 +275,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 				getManagedBean().setSelectedSectionTitle(selectedSection.getSectionTitle());
 				String content=selectedSection.getSectionContent();
 				log.info("before replacing editContent content"+content);
-				if(null!=this.getManagedBean().getDocParamValues() && !this.getManagedBean().getDocParamValues().isEmpty()){
+				if(null!=this.getManagedBean().getDocParamValues() && !this.getManagedBean().getDocParamValues().isEmpty() && content != null){//#33346 - Fix NullPointer issue
 					for (Map.Entry<String, String> entry : this.getManagedBean().getDocParamValues().entrySet()) {
 						log.info("entry.getKey()"+entry.getKey());
 						log.info("entry.getValue()"+entry.getValue());
@@ -299,19 +301,31 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 	}
 
 	public void saveContent() {
+		boolean isExistSymbol = Boolean.FALSE;//#33346
 		try {
 			String sectionTitle = getManagedBean().getSelectedSectionTitle();
 			String sectionText = getManagedBean().getSelectedSectionText();
 			String sectionName = getManagedBean().getSelectedSectionName();
 			String sectionNumber = getManagedBean().getSelectedSection().getSectionNumber();
+			//START: #33346
+			if(sectionText != null){//START: #33346#52 - Handle if content is null
+				isExistSymbol = isContentExistUnicodeSymbol(sectionText);
+			}//END: #33346#52
+			
+			if(isExistSymbol){
+				throw new EpException(MessageConst.ERROR_760543,new String[] {sectionTitle});
+			}
+			//END: #33346
 			TplDocSection selectedSection = getManagedBean().getSelectedSection();
 			selectedSection.setSectionTitle(sectionTitle);
 			selectedSection.setSectionContent(sectionText);
 			selectedSection.setSectionName(sectionName);
 			selectedSection.setSectionNumber(sectionNumber);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} finally{//START: #33346
+			if(!isExistSymbol){
+				RequestContext.getCurrentInstance().execute("popupEdit.hide()");
+			}
+		}//END: #33346
 	}
 
 	public void reNumbering(TreeNode root) {
@@ -1018,6 +1032,103 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 		recordStatusList.add(ParameterConst.RECORD_STATUS_INACTIVE);
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",SearchOperator.OPERATOR_IN.value(), recordStatusList));
 		return searchBean;
+	}
+	
+	/**
+	 * Defect: #33346 - START
+	 * Method: Checking string value has unrecognized symbol/character.
+	 *         - compare with in decimal value
+	 * @param strContent , referring to selected content section
+	 * @return true/false , True if unrecognized symbol is exist.
+	 */
+	public boolean isContentExistUnicodeSymbol(String strContent){
+		log.info("Inside method of isContentExistUnrecognizeSymbol !!!!");
+		boolean isExistUnicodeSymbol = Boolean.FALSE;
+		if(strContent.contains("\1")){//SOH
+			log.info("[SOH]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\2")){//STX
+			log.info("[STX]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\3")){//ETX
+			log.info("[ETX]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\4")){//EOT
+			log.info("[EOT]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\5")){//ENQ
+			log.info("[ENQ]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\6")){//ACK
+			log.info("[ACK]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\7")){//BEL
+			log.info("[BEL]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\10")){
+			log.info("[]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\11")){//VT
+			log.info("[VT]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		/*}else if(strContent.contains("\14")){//SO
+			log.info("[SO]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\15")){//SI
+			log.info("[SI]");
+			isExistUnicodeSymbol = Boolean.TRUE;*/
+		}else if(strContent.contains("\16")){//DLE
+			log.info("[DLE]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\17")){//DC1
+			log.info("[DC1]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\18")){//DC2
+			log.info("[DC2]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\19")){//DC3
+			log.info("[DC3]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\20")){//DC4
+			log.info("[DC4]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\21")){//NAK
+			log.info("[NAK]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\22")){//SYN
+			log.info("[SYN]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\23")){//ETB
+			log.info("[ETB]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\24")){//CAN
+			log.info("[CAN]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\25")){//EM
+			log.info("[EM]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\26")){//SUB
+			log.info("[SUB]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\27")){//ESC
+			log.info("[ESC]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\28")){//FS
+			log.info("[FS]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\29")){//GS
+			log.info("[GS]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\30")){//RS
+			log.info("[RS]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\31")){//US
+			log.info("[US]");
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}
+
+		log.info("Pass value ==> "+isExistUnicodeSymbol);
+		return isExistUnicodeSymbol;
 	}
 	
 }

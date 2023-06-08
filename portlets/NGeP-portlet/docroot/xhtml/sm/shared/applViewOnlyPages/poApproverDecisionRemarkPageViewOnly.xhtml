@@ -68,6 +68,7 @@
 			</tr>
 			<!-- #29664 start -->
 			<p:column rendered="#{not empty viewSmApplBackingBean.managedBean.poRemarkAfterSiteVisit}">
+			<tr height="10"><td height="10"></td></tr> <!-- #32424 03032023 -->
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.po.approver.decision.name']}" 
 						rendered="#{not empty viewSmApplBackingBean.managedBean.secondPoUserName}" /></td>
@@ -160,11 +161,15 @@
 						value="#{lbl['lbl.sm.approver.decision.cancelMofAccount']}" /></td>
 				<td>
 					<c:choose>
-						<c:when test="#{(fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'REGISTERED')
-						or fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'BERDAFTAR'))
+						<!-- #34793 - start -->
+						<c:when test="#{(fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'MOF Account Cancelled by Contractor')
+						or fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'Akaun MOF Dibatalkan oleh Kontraktor')
+						or fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'MOF Account Cancelled by Consultant')
+						or fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'Akaun MOF Dibatalkan oleh Perunding'))
 						and viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.approved']}"/>
 						</c:when>
+						<!-- #34793 - end -->
 						<c:when test="#{(fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'REJECTED')
 						or fn:containsIgnoreCase(viewSmApplBackingBean.managedBean.currentStatus, 'DITOLAK'))
 						and viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">

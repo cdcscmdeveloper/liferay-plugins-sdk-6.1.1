@@ -14,7 +14,7 @@
 	</cc:interface>
 	<cc:implementation>
 		<ui:fragment rendered="#{cc.attrs.show}">
-			<p:commandLink onclick="widget#{cc.attrs.supplierCode}.show()">
+			<p:commandLink process="@this" onclick="widget#{cc.attrs.supplierCode}.show()"><ui:remove><!-- 6906 note 222 --></ui:remove>
 				<p:graphicImage id="imageId" value="/css/images/design/icon_error.png" />
 				<p:tooltip id="#{cc.attrs.id}" for="imageId" style="max-width:400px !important;">
 					<div style="display:inline !important;">
@@ -49,7 +49,7 @@
 					<div class="ppRightBtn">
 						<p:commandButton
 							oncomplete="widget#{cc.attrs.supplierCode}.hide()"
-							value="#{lbl['lbl.btn.ok']}" />
+							value="#{lbl['lbl.btn.ok']}" process="@this"/><ui:remove><!-- 6906 note 222 --></ui:remove>
 					</div>
 				</p:outputPanel>
 			</p:dialog>

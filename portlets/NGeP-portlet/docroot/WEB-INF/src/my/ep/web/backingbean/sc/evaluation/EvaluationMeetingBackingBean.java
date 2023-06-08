@@ -2204,18 +2204,6 @@ public class EvaluationMeetingBackingBean extends
 		this.getManagedBean().setValidFor25037(isValidFor25037);
 	}
 	
-	public boolean isCommitteeEditable(String taskName){
-		boolean allow = false;
-		if(StringUtils.isNotEmpty(taskName)){
-			if(Arrays.asList(SCProcessNameConst.EVAL_COMM_PREPARATION_GROUP).contains(taskName)
-					|| Arrays.asList(SCProcessNameConst.EVAL_COMM_FINALIZE_GROUP).contains(taskName)
-					|| taskName.equalsIgnoreCase(SCProcessNameConst.REVISE_EVALUATION_MEETING)){
-				allow = true;
-			}
-		}
-		return allow;
-	}
-	
 	public void validateCommitteeChanges(){
 		MeetingReqDTO reqDTO = new MeetingReqDTO();
 		ScQtCommittee qtCommittee= this.getManagedBean().getScQtCommittee();

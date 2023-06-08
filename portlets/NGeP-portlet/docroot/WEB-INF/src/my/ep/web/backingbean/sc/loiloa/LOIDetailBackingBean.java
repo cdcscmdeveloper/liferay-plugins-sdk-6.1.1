@@ -135,6 +135,7 @@ import my.ep.type.sc.ApprovalAction;
 import my.ep.type.sc.LoiLoaDocType;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
@@ -1756,7 +1757,7 @@ public class LOIDetailBackingBean extends
 		negoTerm.setPmTerm(null);
 		if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
 			negoTerm.setSelectedTerm(Boolean.FALSE);
-			negoTerm.setSelected(Boolean.FALSE);//#29007 Added Vinod
+			//negoTerm.setSelected(Boolean.FALSE);//#29007 Added Vinod removed 14/02/2023.
 		} else{
 			negoTerm.setSelectedTerm(Boolean.TRUE);
 			negoTerm.setSelected(true);
@@ -4161,6 +4162,18 @@ public class LOIDetailBackingBean extends
 			}
 		}
 		// #11134 -end
+		//#34725 Start Vinod
+		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) 
+				&& QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)
+				&& CollectionUtils.isNotEmpty(scLoi.getScNegoTerms())){
+			for(ScLoiTerm scLoiTerm : scLoi.getScNegoTerms()){
+				if(StringUtils.isEmpty(scLoiTerm.getNegoResult())){
+					getManagedBean().setSelectedTabIndex(3);
+					throw new EpException(MessageConst.ERROR_100022, new String[] {getMessageCommon("lbl.sc.loiloa.nego.results")});
+				}
+			}
+		}
+		//#34725 End vinod
 	}
 
 	/**
@@ -6666,21 +6679,24 @@ public class LOIDetailBackingBean extends
 	}
 	// #29007	Vinod End
 	
-	//#27927 - Start
+	//#28777 & #29729 - Start
     /**
 	* Method to return true, if branch in supplier has been deleted (LOI)
 	* @param supplier id 
 	* @return	true or false
 	**/
 	public boolean displaySupplierBranchListDeletedForLOI(Long supplierId){
-		 boolean deleted = false;
-		 ScQt scQt = this.getManagedBean().getScQt();
-		 if(localitySupplierBranchListDeleted(supplierId, scQt)){
-			 deleted = true;
-		 }else{
-			 deleted = false;
-		 }
-	  return deleted;
+		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+		
+		boolean isSupplierBranchDeleted = false;
+		ScQt scQt = this.getManagedBean().getScQt();
+		if(supplierId != null && scQt != null){
+			if(qtAwardSO.isCheckLOIorLOASupplierBranchDeleted(supplierId, scQt.getQtId())){
+				isSupplierBranchDeleted = true;
+		    }
+		}
+	    return isSupplierBranchDeleted;
 	}
 	
 	/**
@@ -6691,7 +6707,7 @@ public class LOIDetailBackingBean extends
 					MessageUtils.getMessage(MessageConst.INFO_760523, 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 	}
-	//#27927 - End
+	//#28777 & #29729 - End
 	
 	/**
 	 * 29007-start
@@ -6726,13 +6742,16 @@ public class LOIDetailBackingBean extends
 		
 		return agreeEPV;
 	}
-	
+	/**
+	 * Check If Supplier EPV Status Is Rejected
+	 * 
+	 * @return
+	 */
 	public boolean isSupplierEPVStatusRejected() {
 		boolean supplierStatus = false;
 		
-		IQTDetailSO detailSO;
 		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
+			IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			
 			List<Long> suppList = new ArrayList<>();
@@ -6745,19 +6764,23 @@ public class LOIDetailBackingBean extends
 				supplierStatus = detailSO.checkSupplierEPVStatus(getManagedBean().getScQt().getQtId(), suppList);
 			}
 			
-		} finally {
-			detailSO = null;
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QTLOA", "CheckIfSupplierEPVStatusIsRejected", getManagedBean().getRecSupplierList().get(0).getDocId().toString(), "isSupplierEPVStatusRejected",
+					getUserIdSessionFromLoginId(), e);
 		}
 		
 		boolean isValidFor21692 = this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(), QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
 		
+		List<Long> statusList = new ArrayList<>();
+		statusList.add(QTStatusConst.LOI_PENDING_SUBMISSION);
+		statusList.add(QTStatusConst.LOI_PENDING_APPROVAL);
+		statusList.add(QTStatusConst.LOI_PENDING_REVISION);
+		statusList.add(QTStatusConst.LOI_PENDING_NEGOTIATION);
+		statusList.add(QTStatusConst.LOI_PENDING_REVISION_APPROVAL);
+		
 		supplierStatus = (supplierStatus && isLoiListPortlet() && !this.getManagedBean().getScLoi().isBrandNew() && (
 				null != this.getManagedBean().getScLoi().getScWorkFlowStatus() &&
-				(this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_SUBMISSION) || 
-				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_APPROVAL) || 
-				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_REVISION) || 
-				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_NEGOTIATION) || 
-				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_REVISION_APPROVAL)))
+				(statusList.contains(this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId())))
 				&& isValidFor21692
 				) ? true : false;
 		

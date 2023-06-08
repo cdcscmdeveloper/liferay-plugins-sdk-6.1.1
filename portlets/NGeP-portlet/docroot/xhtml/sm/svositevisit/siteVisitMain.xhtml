@@ -47,10 +47,12 @@
 				<td  style="width:80%" align="left"><p:outputPanel id="pnlDisplay">
 					<div align="right">
 						<!-- 30550, 9608 - Site Visit Grouping Enhancement - 28775 -->
+						<!-- #34166 - Start -->
 						<p:commandButton value="#{lbl['lbl.btn.save']}" action="#{svoSiteVisitBackingBean.saveSiteVisitReport('')}"
 						disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}" onclick="this.disabled=true;" 
 						onstart="blockWidget.show()" oncomplete="this.disabled=false;blockWidget.hide();"
 						update="@form"/>
+						<!-- #34166 - End -->
 
 						<!-- 29430,28775 - Site Visit Grouping Enhancement - 28775, 32304 -->
 						<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit"

@@ -23,7 +23,7 @@
 					<p:commandButton id="resetAll" value="#{lbl['lbl.btn.reset.all']}"
 					disabled="#{directLOABackingBean.managedBean.supPropSpecDisable}"
 					action="#{directLOABackingBean.resetAllNewOfferedSpecification}" process="@form"
-					update="@form" onstart="blockWidget.show();"
+					onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
 					<p:tooltip id="toolResetAll" for="resetAll" value="#{lbl['lbl.btn.reset.all.mouseover']}" trackMouse="true" />
 					<p:commandButton value="#{lbl['lbl.btn.save']}" disabled="#{directLOABackingBean.managedBean.supPropSpecDisable}" action="#{directLOABackingBean.saveSupplierSpecification(false)}">
@@ -91,6 +91,7 @@
 			</tr>
 		</table>
 		<p:dataTable id="specList"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{directLOABackingBean.managedBean.tplSpecAnswerList}"
 				var="spec" rowIndexVar="rowIndex" rowKey="#{spec}" rows="10"
 				width="100%">

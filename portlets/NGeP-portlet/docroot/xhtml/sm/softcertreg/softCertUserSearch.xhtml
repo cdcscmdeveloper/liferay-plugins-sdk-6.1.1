@@ -52,8 +52,7 @@
 				</p:column>
 
 				<!-- #10729 start -->
-				<p:column headerText="#{lbl['lbl.sm.soft.cert.idno']}"  disabledSelection="#{personnel.disableRowSelection}"
-					rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.smAppl.smSupplier.recordStatusFlg eq 5}">
+				<p:column headerText="#{lbl['lbl.sm.soft.cert.idno']}"  disabledSelection="#{personnel.disableRowSelection}">
 					<h:outputText value="#{personnel.identificationNo}" />
 				</p:column>
 				<!-- #10729 end -->

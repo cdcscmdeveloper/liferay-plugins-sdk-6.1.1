@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -207,10 +208,10 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 * reset search criteria values
 	*/
 	public void resetSearchCriteriaValues() {
-		if(getManagedBean().isSupplier() || hasAuditGenUserRole() ||
-			//29550 - start	
-			hasFactoringUserRole()
-			//29550 - end
+		if(getManagedBean().isSupplier() || hasAuditGenUserRole()
+			//Enhancement 29550 - start	
+			|| hasFactoringUserRole()
+			//Enhancement 29550 - end
 			){
 			getManagedBean().setMinistry(null);
 			getManagedBean().setPtjGroup(null);
@@ -234,10 +235,10 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		 getManagedBean().setStatusDescId(null); 
 		 getManagedBean().setSelectedOrgProfile(null);//supplier name
 		 
-		 //29550 - start
+		 //Enhancement 29550 - start
 		 getManagedBean().setFromDate(DateUtils.getFirstDateOfTheYear());
 		 getManagedBean().setToDate(DateUtils.getCurrentDateWithoutTime());
-		 //29550 - end
+		 //Enhancement 29550 - end
 		
 	}
 	
@@ -451,7 +452,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return Boolean.FALSE;
 	}
 	
-	//29550 - start
+	//Enhancement 29550 - start
 	/**
 	 * Check is it login user is Factoring User
 	 * 
@@ -463,7 +464,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		else
 			return false;
 	}
-	//29550 - end
+	//Enhancement 29550 - end
 
 	
 	/**
@@ -472,10 +473,12 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 */
 	public void defaultPtjAndMinistryValues() {
 		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
-			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole()) || 
-			//29550 - start
-			hasFactoringUserRole()
-			//29550 - end 
+			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole())
+			//Enhancement 29550 - start
+			|| hasFactoringUserRole() || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()) 
+			|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
+			|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())
+			//Enhancement 29550 - end 
 			) {
 		} else {
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
@@ -490,7 +493,13 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 					|| getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
 					|| getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())
 					|| getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())
-					|| getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())) {
+					|| getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())
+					//Enhancement 29550 - start
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())
+					//Enhancement 29550 - end
+				) {
 				this.getManagedBean().setPtj(orgProfile);
 				this.getManagedBean().setMinistry(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
 				this.getManagedBean().setPtjGroup(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
@@ -524,7 +533,13 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	  *         false, if login user is not User/internal auditor
 	*/	
 	public boolean disableMinistryLov() {
-		return (hasGovernmentUserRole()	|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) );
+		return (hasGovernmentUserRole()	|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) 
+				//Enhancement 29550 - start
+				|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())
+				//Enhancement 29550 - end
+				);
 	}
 	
 	/**
@@ -537,7 +552,13 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	*/	
 	
 	public boolean disablePtjLov() {
-		return (hasGovernmentUserRole() || getManagedBean().getPtjGroup() == null );
+		return (hasGovernmentUserRole() || getManagedBean().getPtjGroup() == null 
+				//Enhancement 29550 - start
+				|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())
+				//Enhancement 29550 - end
+				);
 	}
 	
 	/**
@@ -550,7 +571,13 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	*/	
 	
 	public boolean disablePtjGroupLov() {
-		return (hasGovernmentUserRole() || getManagedBean().getMinistry() == null );
+		return (hasGovernmentUserRole() || getManagedBean().getMinistry() == null 
+				//Enhancement 29550 - start
+				|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())
+				//Enhancement 29550 - end
+				);
 	}
 	
 	/**
@@ -758,9 +785,9 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 					&& (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))) {
 				getManagedBean().setSupplier(true);
 				retrieveSupplierCompName();
-				//29550 -start
+				//Enhancement 29550 -start
 				retrieveSuppDataByUserId();
-				//29550 - end
+				//Enhancement 29550 - end
 			} 
 		}
 	}
@@ -1676,16 +1703,33 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	}
 	//#29554 end
 	
-	//29550 - start
+	//Enhancement 29550 - start
 	/**
 	 * To validate duration of contract which exceed 1 year or not
 	 */
 	public void getContractDuration(Date fromDate, Date toDate){
 		log.info("ReportBackingBean-getContractDuration");
-		int monthsRange = 0;
-		monthsRange = DateUtils.getMonths(fromDate, toDate);
+		Calendar startCal = new GregorianCalendar();
+		startCal.setTime(fromDate);
+		Calendar endCal = new GregorianCalendar();
+		endCal.setTime(toDate);
+
+		int dayFrom = startCal.get(Calendar.DAY_OF_MONTH);
+		int dayTo = endCal.get(Calendar.DAY_OF_MONTH);
+		int monthFrom = startCal.get(Calendar.MONTH) + 1;
+		int monthTo = endCal.get(Calendar.MONTH) + 1;
+		int yearFrom = startCal.get(Calendar.YEAR);
+		int yearTo = endCal.get(Calendar.YEAR);
 		
-		if(monthsRange > 12 ){
+		if(yearTo == yearFrom + 1){
+			if(monthTo == monthFrom){
+				if(dayTo > dayFrom){
+					throw new EpException(MessageConst.ERROR_REPORT_780072);
+				}
+			}else if(monthTo > monthFrom){
+				throw new EpException(MessageConst.ERROR_REPORT_780072);
+			}
+		}else if(yearTo > yearFrom + 1){
 			throw new EpException(MessageConst.ERROR_REPORT_780072);
 		}
 	}
@@ -1709,10 +1753,13 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		}
 	}
 	
-	public void retrieveSuppDataByCompName(String compName){
+	/**
+	 * To retrieve supplier data by company name
+	 */
+	public void retrieveSuppDataByCompName(String compName, String regNo){
 		log.info("ReportBackingBean-retrieveSuppDataByCompName");
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
-		SmSupplier supplier = reportSO.retrieveSuppDataByCompName(compName);
+		SmSupplier supplier = reportSO.retrieveSuppDataByCompName(compName, regNo);
 		
 		SmMofAccount supplDataLst = reportSO.retrieveSupplierData(supplier.getSupplierId());
 		getManagedBean().setBusinessRegNo(supplDataLst.getSmSupplier().getRegNo());
@@ -1720,6 +1767,6 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		getManagedBean().setMofNo(supplDataLst.getMofNo());
 	}
 	
-	//29550 - end
+	//Enhancement 29550 - end
 
 }

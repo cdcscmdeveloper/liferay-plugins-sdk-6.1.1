@@ -3432,12 +3432,21 @@ public class CreateQtBackingBean extends
 
 	}
 	
-	public void otherAppValueChanged(ValueChangeEvent event) {
+	//#25077 - Start 
+	public void otherAppValueChangedICT(ValueChangeEvent event) {
 		
 		if (null != event.getNewValue()) {
-			getManagedBean().setScQtAppRequestRemark(event.getNewValue().toString());
+			getManagedBean().setScQtAppRequestRemarkICT(event.getNewValue().toString());
 		}
 	}//bug #30435 - end
+	
+    public void otherAppValueChangedMITI(ValueChangeEvent event) {
+		
+		if (null != event.getNewValue()) {
+			getManagedBean().setScQtAppRequestRemarkMITI(event.getNewValue().toString());
+		}
+	}//bug #30435 - end
+    //#25077 - End
 	
 	/**
 	 * To remove the non bumi suppliers as open for Bumi for Restricted tender
@@ -3870,7 +3879,12 @@ public class CreateQtBackingBean extends
 							
 	   }
 		//20200210@asyrafhaziq_Bug #27381&#26694  - End
-
+		/**
+		 * Check if current QT Status is in between QT Publication and QT Closed/Awarded
+		 * 
+		 * @param currentStatusId
+		 * @return
+		 */
 	public boolean isQTStatusInProposalValidPeriodExtApproval(Long currentStatusId) {
 		List<Long> validPeriodExts = Arrays.asList(QTStatusConst.QT_PENDING_PUBLICATION,
 				QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_PROPOSAL_PREPARATION,
@@ -3920,32 +3934,27 @@ public class CreateQtBackingBean extends
 				.getScQtCheckSt2techProposal();
 
 		if (null == st2technicalproposalList) {
-			st2technicalproposalList = new ArrayList<ScQtCheckList>();
+			st2technicalproposalList = new ArrayList<>();
 
 		}
-		if(type == true){
+		if(type){
 			this.getManagedBean().getQt().setPartial(Boolean.FALSE);	
 		}else{
-			if (getManagedBean().getMarkDeletedTechChecklist() == null) {
-				getManagedBean().setMarkDeletedTechChecklist(
-						new ArrayList<ScQtCheckList>());
+			List<ScQtCheckList> deltechnicalproposalList =	getManagedBean().getMarkDeletedTechChecklist();
+			if (deltechnicalproposalList == null) {
+				deltechnicalproposalList= new ArrayList<>();
 			}
-		//	List<ScQtCheckList> qtTechncialcheckList= this.getManagedBean().getScQtCheckSt2techProposal();
-			/*if(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION
-				.equals(this.getManagedBean().getCurrentStatusId()) || QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION
-				==this.getManagedBean().getCurrentStatusId()){//11104-start
-				log.info("=========sampleRevisioncodesexecuted=========");*/
 			if(null==st2technicalproposalList || CollectionUtils.isEmpty(st2technicalproposalList)){//11104-start
 				SpecificationBackingBean spBB=new SpecificationBackingBean();
 				spBB.retriveTechnicalCheckList();
 				st2technicalproposalList= this.getManagedBean().getScQtCheckSt2techProposal();
 			}//11104-End
-			//}//11104-End
 			if(CollectionUtils.isNotEmpty(st2technicalproposalList)){
 				for(ScQtCheckList checklist:st2technicalproposalList){
 					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist
 							.getDefinationType().getParameterCode())) {
-						getManagedBean().getMarkDeletedTechChecklist().add(checklist);
+						deltechnicalproposalList.add(checklist);
+						getManagedBean().setMarkDeletedTechChecklist(deltechnicalproposalList);
 						st2technicalproposalList.remove(checklist);
 						break;
 					}
@@ -3957,16 +3966,14 @@ public class CreateQtBackingBean extends
 	 * check portlet is specpreparation or not
 	 */
 	public boolean isSpecScreen() {
-		boolean screen=QTConstants.PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
-		return screen;
+		return QTConstants.PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	/***
 	 * 11104
 	 * check portlet is specmaintennace or not
 	 */
 	public boolean isSpecEndorsmentScreen() {
-		boolean screen=QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())|| QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
-		return screen;
+		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())|| QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());	
 	}
 //#11104-end
 	
@@ -3982,23 +3989,24 @@ public class CreateQtBackingBean extends
 		RequestContext.getCurrentInstance().execute("blockWidget.show()");
 		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 			String type = (String) event.getComponent().getAttributes().get("value");
-			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-			IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTSpecSO.class);	
+//			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+//			IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+//					IQTSpecSO.class);	
 			boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
-			reqDTO.setScQt(this.getManagedBean().getQt());
-			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
-			SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
-			for (ScQtCheckList checklist : resDTO.getTechnicalCheckList()) {
+			//reqDTO.setScQt(this.getManagedBean().getQt());
+			//reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+			//SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
+			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
+			for (ScQtCheckList checklist : scQtTechChecklist) {
 				if (checklist.getDefinationType().getParameterCode()
 						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-					if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && demoRequired
-							&& checklist.getQtChecklistId() != null) {
+					if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && demoRequired){
+//							&& checklist.getQtChecklistId() != null) {
 						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
 						break;
 
-					} else if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
-							&& checklist.getQtChecklistId() != null) {
+					} else if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)){
+//							&& checklist.getQtChecklistId() != null) {
 						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
 						break;
 					}
@@ -4038,25 +4046,30 @@ public class CreateQtBackingBean extends
 
 	// #21695 Farid END 3/7/2021
 
+	/**
+	 * #28784 - check demo radio button and display popup to delete
+	 * @param event
+	 */
 	public void validateDemoTechList(AjaxBehaviorEvent event) {
-		SpecificationResDTO resDTO = null;
-		IQTSpecSO specSo = null;
+//		SpecificationResDTO resDTO = null;
+//		IQTSpecSO specSo = null;
 		Boolean type = (Boolean) event.getComponent().getAttributes().get("value");
 		this.getManagedBean().getQt().setDemoRequired(type);
 		if (type == false) {
-			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-			specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTSpecSO.class);
-			reqDTO.setScQt(this.getManagedBean().getQt());
-			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
-			resDTO = specSo.retrieveCheckLists(reqDTO);
-			if (null != resDTO.getTechnicalCheckList()) {
-				for (ScQtCheckList checklist : resDTO.getTechnicalCheckList()) {
+//			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+//			specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+//					IQTSpecSO.class);
+//			reqDTO.setScQt(this.getManagedBean().getQt());
+//			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+//			resDTO = specSo.retrieveCheckLists(reqDTO);
+			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
+			if (null != scQtTechChecklist) {
+				for (ScQtCheckList checklist : scQtTechChecklist) {
 					if (checklist.getDefinationType().getParameterCode()
 							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-						if (checklist.getQtChecklistId() != null) {
+//						if (checklist.getQtChecklistId() != null) {
 							RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");
-						}
+//						}
 					}
 				}
 			}
@@ -4097,6 +4110,13 @@ public class CreateQtBackingBean extends
 			resDTO = specSo.deleteDemoSpecChecklist(reqDTO);
 
 			if (resDTO.isSuccessful()) {
+				//#28784 note-#634 - Start
+//				if (this.getManagedBean().getQt().isZonal()) {
+//					QTDetailBackingBean qtDetail = new QTDetailBackingBean();
+//					qtDetail.retrieveZonalDetailAfterDemoDeletion(this.getManagedBean().getQt().getQtId());
+//					this.getManagedBean().setDemoScoreSetting(null);
+//				}
+				//#28784 note-#634 - End
 				specificationBackingBean.resetDemoTechSpecListAfterDelete();
 			}
 

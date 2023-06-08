@@ -93,6 +93,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvSupplierResponse;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
@@ -1642,7 +1643,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private PmParameter pmParam;//bug #30435
 	private ScQtApprovalReqAttachement scQtApprovalReqAttachementICT;//#25077
 	private ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI;//#25077
-	private String scQtAppRequestRemark;//bug #30435
+	private String scQtAppRequestRemarkICT;//#25077
+	private String scQtAppRequestRemarkMITI;//#25077
 	private boolean approverTabLoaded = false;//bug #30435
 	
 	private boolean isApprovalScreen = false;
@@ -1665,6 +1667,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
 	public boolean proposalValidityChangeValue; //#21692
+	private String epvAttachmentValue;//#21692 for EPV attachment usage only
 	
 	/**
 	 * Sets the panel suppliers.
@@ -1735,6 +1738,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean flagFileAttahmentDeletedICT=false;
 	private boolean flagFileAttahmentDeletedMITI=false;
 	private boolean firstPagePA=false;
+	private List<TabBean> tabOtherApproval;
 	//#25077 - End
 	
 	//#25426 - Start
@@ -1853,8 +1857,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCategory> backupCategoryCode;
 	private List<TplSpecZoneDtl> backupZoneList;
 	private List<Long> listCategory;
+	private ScQtEpvSupplierResponse suppResp;//#21692
 				
 	// #29521 - end
+	
+	//#34451,#34458,#34450 related to #25138 -start
+	private int wipStatusMax;
+	//#34451,#34458,#34450 related to #25138 -end
+
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10764,6 +10774,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setFirstPagePA(boolean firstPagePA) {
 			this.firstPagePA = firstPagePA;
 		}
+		
+		public List<TabBean> getTabOtherApproval() {
+			return tabOtherApproval;
+		}
+
+		public void setTabOtherApproval(List<TabBean> tabOtherApproval) {
+			this.tabOtherApproval = tabOtherApproval;
+		}
 		//#25077 - End
 		
 		//#25692 End
@@ -11054,21 +11072,35 @@ public class QTDetailManagedBean extends BaseManagedBean {
 				ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI) {
 			this.scQtApprovalReqAttachementMITI = scQtApprovalReqAttachementMITI;
 		}
-		// #25077 - End
 		
 		/**
-		 * @return the scQtAppRequestRemark
+		 * @return the scQtAppRequestRemarkICT
 		 */
-		public String getScQtAppRequestRemark() {
-			return scQtAppRequestRemark;
+		public String getScQtAppRequestRemarkICT() {
+			return scQtAppRequestRemarkICT;
 		}
 
 		/**
-		 * @param scQtAppRequestRemark the scQtAppRequestRemark to set
+		 * @param scQtAppRequestRemarkICT the scQtAppRequestRemarkICT to set
 		 */
-		public void setScQtAppRequestRemark(String scQtAppRequestRemark) {
-			this.scQtAppRequestRemark = scQtAppRequestRemark;
+		public void setScQtAppRequestRemarkICT(String scQtAppRequestRemarkICT) {
+			this.scQtAppRequestRemarkICT = scQtAppRequestRemarkICT;
 		}
+
+		/**
+		 * @return the scQtAppRequestRemarkMITI
+		 */
+		public String getScQtAppRequestRemarkMITI() {
+			return scQtAppRequestRemarkMITI;
+		}
+
+		/**
+		 * @param scQtAppRequestRemarkMITI the scQtAppRequestRemarkMITI to set
+		 */
+		public void setScQtAppRequestRemarkMITI(String scQtAppRequestRemarkMITI) {
+			this.scQtAppRequestRemarkMITI = scQtAppRequestRemarkMITI;
+		}
+		// #25077 - End
 
 		/**
 		 * @return the approverTabLoaded
@@ -11742,6 +11774,42 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isFromSpecEndorse = isFromSpecEndorse;
 	}
 	// Bug #33661@Syazani 07/10/2022 -- End
+	
+	//#34451,#34458,#34450 related to #25138 -start
+	/**
+	 * @return the max wip 3serangkai
+	 */
+	public int getWipStatusMax() {
+		return wipStatusMax;
+	}
+
+	/**
+	 * @param  max wip check 3serangkai
+	 *            the wipRequired to set
+	 */
+	public void setWipStatusMax(int wipStatusMax) {
+		this.wipStatusMax = wipStatusMax;
+	}
+	//#34451,#34458,#34450 related to #25138 -end
+
+	//#21692 - Start
+	public ScQtEpvSupplierResponse getSuppResp() {
+		return suppResp;
+	}
+
+	public void setSuppResp(ScQtEpvSupplierResponse suppResp) {
+		this.suppResp = suppResp;
+	}
+	//#21692 - End
+
+	public String getEpvAttachmentValue() {
+		return epvAttachmentValue;
+	}
+
+	public void setEpvAttachmentValue(String epvAttachmentValue) {
+		this.epvAttachmentValue = epvAttachmentValue;
+	}
+
 }
 
 // ***25201

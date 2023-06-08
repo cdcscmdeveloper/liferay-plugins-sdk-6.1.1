@@ -271,7 +271,9 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml</value>
+			<!-- Bug 34142, 15851, 33096 - shaqimi start -->
+			<value>/xhtml/ct/fulfilmentdetails/amendment/preRenderAmendmentTab.xhtml</value>
+			<!-- Bug 34142, 15851, 33096 - shaqimi end -->
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -7197,7 +7199,9 @@
 		
 		<portlet>
 			<portlet-name>ctReports</portlet-name>
-			<display-name>CT Reports</display-name>
+			<!-- #32675 - shaqimi start -->
+			<display-name>Contract Reports</display-name>
+			<!-- #32675 - shaqimi end -->
 			<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 			<init-param>
 				<name>javax.portlet.faces.defaultViewId.view</name>
@@ -7209,9 +7213,11 @@
 				<portlet-mode>view</portlet-mode>
 			</supports>
 			<portlet-info>
-				<title>CT Reports</title>
-				<short-title>CT Reports</short-title>
+			<!-- #32675 - shaqimi start -->
+				<title>Contract Reports</title>
+				<short-title>Contract Reports</short-title>
 				<keywords></keywords>
+			<!-- #32675 - shaqimi end -->
 			</portlet-info>
 			<security-role-ref>
 				<role-name>administrator</role-name>

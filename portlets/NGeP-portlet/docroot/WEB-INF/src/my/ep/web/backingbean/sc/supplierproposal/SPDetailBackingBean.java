@@ -1343,6 +1343,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				// 20220127@syazani - Enhancement #3657 - specific error message - Start
 				List<String> errorLst = null;
 				boolean isThrow = false;
+				int count=0;//#3657 Added Vinod
 				for (TplSpecAnswer answer : answers) {
 					if (isCompleted) {
 						// #21695 7/10/2021	START
@@ -1359,9 +1360,17 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 								&& answer.getTplSpecZoneQty().getTplSpecZoneDtl() != null
 								&& answer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() != null ? answer
 								.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() : "";
-						if (!duplicateErrorZoneCheck(zone, errorLst))
+						if (!duplicateErrorZoneCheck(zone, errorLst) 
+								&& answer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() != null
+								&& getManagedBean().getSelectedZone().getZoneName().equals(answer
+								.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName())){//#3657 Added zone name checking Vinod
 							errorLst.add(zone);
 							isThrow = true;
+						//#3657 Start Vinod
+						} else if (!duplicateErrorZoneCheck(zone, errorLst)){
+							count++;
+						}
+						//#3657 End Vinod
 						}
 						// bug #31733 add condition 5/11/2021
 						// farid end #21695 7/10/2021
@@ -1394,6 +1403,8 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						super.setUserDetails(answer);
 					}
 				}
+				
+				if(count!=0) scQtProposalChecklist.setSubmitted(false);//#3657 Added Vinod
 			
 				if (isThrow && errorLst != null && errorLst.size() > 0) {
 					if (getManagedBean().getQt().isZonal()) {
@@ -1696,25 +1707,21 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						//finProposalChecklist.setScQtProposalChecklistAttachment(null);
 						removeAttachment = true;
 						// #26339 - End
+	
 						finProposalChecklist.setSubmitted(true);
 						finProposalChecklist
 								.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
 
 				} else{
-					if (finProposalChecklist.isSubmitted()){
-						if (finProposalChecklist
-								.getScQtProposalChecklistAttachment() == null) {
-							finProposalChecklist.setSubmitted(false);
-							finProposalChecklist
-									.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-						} else {
-							finProposalChecklist
-									.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-						}
-					}else{
-						finProposalChecklist
-						.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-					}
+					//34493 - start
+					if (finProposalChecklist.getScQtProposalChecklistAttachment() == null) {
+						finProposalChecklist.setSubmitted(false);
+						finProposalChecklist.setCompliance(null);
+					} else{
+						finProposalChecklist.setSubmitted(true);
+						finProposalChecklist.setCompliance(null);
+					} 
+					//34493 - end
 				}
 			}
 
@@ -2236,48 +2243,24 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					// #26339 - End
 					//start Bug #28887
 					if (null != assetProposalChecklist) {
+							
 						assetProposalChecklist.setSubmitted(true);
 						//this.getManagedBean().setReadOnly(true);
 						assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+							
 					}
 					//end Bug #28887
 					// #28398 BUG - 26339 CR - End
 				}else{
-					//start Bug #28887
-					//33678 - start 
-					if (null != assetProposalChecklist && scQtPRPAssetLiability!=null) {					
-						String[] arr = new String[]{
-								"getCurrentAssets",
-								"getCurrentLiabilities",
-								"getTotalCashInHand", 
-								"getTotalAccountReceivable",
-								"getAcidRatio",
-								"getCurrentRatio"};
-						boolean attachmentRequired = false;
-						for(String method: arr){
-							Class<?>[] paramType = null;
-							Method m = scQtPRPAssetLiability.getClass().getMethod(method, paramType);
-							BigDecimal value = (BigDecimal)m.invoke(scQtPRPAssetLiability);
-							if(value!=null &&  value.compareTo(BigDecimal.ZERO)>0){
-								attachmentRequired = true;
-								break;
-							} 
-						} 
-						if (attachmentRequired){
-							if(assetProposalChecklist.getScQtProposalChecklistAttachment()!=null){
-								assetProposalChecklist.setSubmitted(true);
-								assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
-							}else{
-								assetProposalChecklist.setSubmitted(false); 
-								assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE); 
-							} 
-						} else{
-							assetProposalChecklist.setSubmitted(true);
-							assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
-						} 
-					}
-					//33678 - end 
-					//end Bug #28887
+					//34493 - start
+					if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null) {
+						assetProposalChecklist.setSubmitted(false);
+						assetProposalChecklist.setCompliance(null);
+					} else{
+						assetProposalChecklist.setSubmitted(true);
+						assetProposalChecklist.setCompliance(null);
+					} 
+					//34493 - end
 				}
 			}      	// #26339 Venkat End
 			// #26339 - End
@@ -5562,7 +5545,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			validateFinacialProposalAttachments(true);//#28792
 			//#21695 Farid start 1/4/2021
 			validateTechSuppNotOfferAll();
-			//#21695 Farid end 1/4/2021			
+			//#21695 Farid end 1/4/2021		
+			//#34204 - Start
+			checkFinancialProposalAttachmentsForStatusCompliance();
+			//#34204 - End
 			this.getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 		} finally {
 			proposalSO = null;
@@ -6495,5 +6481,52 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		return true;
 	}
 	//Bug #33141@Syazani -- End 01/07/2022
+	
+	//#34204 - Start
+	/**
+	 * To set complience status for financial checklist attachment for asset liabilities & credit facility 
+	 */
+	private void checkFinancialProposalAttachmentsForStatusCompliance(){
+		List<ScQtProposalChecklist> financialChecklist = getManagedBean().getFinanceCheckDetailsList();
+		if(null!=financialChecklist && CollectionUtils.isNotEmpty(financialChecklist)){
+			for (ScQtProposalChecklist checklist : financialChecklist) {
+
+				PmDocument document = checklist.getScQtCheckList().getPmDocument();
+				if(null!=document && null!=document.getDocGroupId() && new Integer(ParameterConst.ASSET_LIABILITIES_GROUP_ID).equals(document.getDocGroupId()) ){
+				
+					ScQtProposalChecklist finProposalChecklist = findProposalChecklistByDocDefKey(
+							getManagedBean().getFinanceCheckDetailsList(),
+							QTConstants.FINANCIAL_ASSET_LIABILITY_CODE);
+					
+						if(null!=finProposalChecklist && finProposalChecklist.isSubmitted()){
+							boolean assetLiabilityUpload=assetLiabilitiesUpload(finProposalChecklist);
+							if(assetLiabilityUpload){
+								checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+						    }else{
+						    	checklist.setCompliance(null);
+						    }
+						}
+	
+					
+			    }else if(null!=document && null!=document.getDocGroupId() && new Integer(ParameterConst.CREDIT_FACILITIES_GROUP_ID).equals(document.getDocGroupId()) ){
+		
+					 ScQtProposalChecklist finProposalChecklist = findProposalChecklistByDocDefKey(
+							getManagedBean().getFinanceCheckDetailsList(),
+							QTConstants.FINANCIAL_CREDIT_FACILITY_CODE);
+					
+					    if(null!=finProposalChecklist && finProposalChecklist.isSubmitted()){
+							boolean creditfacilityUpload=creditFacilityUpload(finProposalChecklist);
+							if(creditfacilityUpload){
+								checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+							}else{
+								checklist.setCompliance(null);
+							}
+				        }
+			    }
+	
+		    } // end loop
+	    }
+	}
+	//#34204 - End
 	
 }

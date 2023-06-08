@@ -39,7 +39,7 @@
 			 -->
 			<td class="tdContent">
 				<ac:smReportBasicSupplier bBean="#{profileOfRegCompanyRptBB}" required="true"
-				saveObj="profileOfRegCompanyRptBB.managedBean.selectedSupplier" />
+				saveObj="profileOfRegCompanyRptBB.managedBean.selectedBasicAccount" />
 			</td>
 		</p:outputPanel>
 		<!-- #30824 & #29712, #32564 - end -->
@@ -90,7 +90,7 @@
 				<ac:lov id="supplier" lovId="SM_RPT_MOF_ACCOUNT"
 					headerText="#{lbl['lbl.sm.supplov']}"
 					value="#{profileOfRegCompanyRptBB.managedBean.mofNo}" 
-					saveObject="profileOfRegCompanyRptBB.managedBean.smSupplier"
+					saveObject="profileOfRegCompanyRptBB.managedBean.smMofAccount"
 					conditionField="#{profileOfRegCompanyRptBB.constructConditionFields()}"
 					postUpdateListener="profileOfRegCompanyRptBB.populateMofNo"
 					tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >

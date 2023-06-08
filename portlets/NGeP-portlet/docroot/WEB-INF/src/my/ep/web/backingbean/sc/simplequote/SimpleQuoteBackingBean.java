@@ -43,6 +43,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO; //#25886 
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -431,6 +432,13 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
 			getManagedBean().setCreatedBy(getUserById(scQuote.getCreatedBy()).getUserName());
 			
+			//#25886 - start
+			if(getManagedBean().getScQuote().getPurchaseInDefault() != null){
+				getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault());
+				ScQuote scQt= getQuoteSO().getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
+				getManagedBean().setCreatedBy(getUserById(scQt.getCreatedBy()).getUserName());
+			}
+			//#25886 - end
 			// page navigation to simple quote
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, SIMPLE_QUOTE_PAGE_NAV);
 
@@ -478,7 +486,8 @@ public class SimpleQuoteBackingBean extends
 	/**
 	 * add panel or contract and non contract to simple quote from search
 	 * catalogue.
-	 * 
+	 * @param supplierId
+	 *            the supplier id
 	 * @param docId
 	 *            the doc id
 	 * @param panelItemFlag
@@ -487,7 +496,8 @@ public class SimpleQuoteBackingBean extends
 	 *            the compare supplier items
 	 * @return the string page navigate to simple quote page.
 	 */
-	public String simpleQuoteAction(Long docId, boolean panelItemFlag, List<CmSupplierItem> compareSupplierItems) {
+	//#34579 - add new parameter on simpleQuoteAction method
+	public String simpleQuoteAction(Long supplierId, Long docId, boolean panelItemFlag, List<CmSupplierItem> compareSupplierItems) {
 		debugLogger("simpleQuoteAction");
 		boolean isGovtSeller = Boolean.FALSE;
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
@@ -861,7 +871,16 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 		// #29800 - end
-
+		//#34579 - start
+		if(supplierId != null && supplierId != 0){
+			if(scQuote.getSupplierId() == 0)	
+				scQuote.setSupplierId(supplierId);
+		}
+		else if(supplierId == 0){
+			if(scQuote.getSupplierId() == 0 && getManagedBean().getPanelSuppliers() != null && !getManagedBean().getPanelSuppliers().isEmpty())			
+				scQuote.setSupplierId(getManagedBean().getPanelSuppliers().get(0).getSmSupplier().getSupplierId());
+		}			
+		//#34579 - end
 		return SIMPLE_QUOTE_PAGE_NAV;
 	}
 
@@ -2550,21 +2569,18 @@ public class SimpleQuoteBackingBean extends
 		
 		// when procurement type as pk7 selected 
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
-			//Temp(#34274 - Start)
+			// Temp(#34274 - Start)
 			// MaxProcurementAmt
-//			BigDecimal maxProcurementAmt = getPRThresholdAmount();
-//			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-//			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+			// BigDecimal maxProcurementAmt = getPRThresholdAmount();
+			// DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
+			// .getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-							.getMessage(
-									MessageConst.INFO_760440,
-									null,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			//Temp(#34274 - End)
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							MessageConst.INFO_760440, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+			// Temp(#34274 - End)
 		}
 		// #28536 - start
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
@@ -5059,6 +5075,13 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 		
+		//#25886 - start
+		if(getManagedBean().getScQuote().getPurchaseInDefault() != null){
+			getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault());
+			ScQuote scQt= getQuoteSO().getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
+			getManagedBean().setCreatedBy(getUserById(scQt.getCreatedBy()).getUserName());
+		}
+		//#25886 - end
 		// Populate General Information tab details saved in session
 		// after returning from Treasury Circular Page
 		if (getManagedBean().getScQuoteSession() != null) {
@@ -5701,18 +5724,23 @@ public class SimpleQuoteBackingBean extends
 			// 30552 - end
 			//#Newly add
 			///#21695 farid start
+			//Bug_34259 - Start
 			TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
 			.getTplSpecMaster();
-			specMaster.setSpecCreatedBySQ(true);			
+			specMaster.setSpecCreatedBySQ(true);	
+			//Bug_34259 - End
 			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(specMaster
 					, specAnswerList, locale);
 			///#21695 farid end
 			//#Newly add
-			//#34147 start
-			ScQuote scQuote = getManagedBean().getScQuote();
-			isZonalChecking = getTemplateSpecSO().validateSubmitSimpleQuoteResponse(specMaster, specAnswerList, scQuote);
-			//#34147 end
-
+			// #34147 #34395 start
+			if (getManagedBean().getScQuote() != null) {				
+				if (getManagedBean().getScQuote().isZonal() == true) {
+					ScQuote scQuote = getManagedBean().getScQuote();
+					getTemplateSpecSO().validateSubmitSimpleQuoteResponse(specAnswerList, scQuote);
+				}				
+			}
+			// #34147 #34395 end
 		}
 		
 		if (!isServiceContainPrice && !isProdContainPrice) {
@@ -7061,6 +7089,11 @@ public class SimpleQuoteBackingBean extends
 				getManagedBean().setNewableFlag(Boolean.FALSE);
 				getManagedBean().setAddNewSpecFlag(Boolean.TRUE);
 			}
+			//32169 - start
+			if (scQuote.getQuoteZone() != null && (scQuote.getQuoteZone().getTplSpecZoneDtls() == null || scQuote.getQuoteZone().getTplSpecZoneDtls().isEmpty())){
+				preparePanelZones(quotePanelItem,scQuote);
+			}
+			//32169 - end
 		}
 		// duration calc
 		calculateDuration(scQuote);
@@ -7332,7 +7365,17 @@ public class SimpleQuoteBackingBean extends
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 	
-	
+	//#25886 - start
+	/**
+	 * Gets the purchaseindefault so.
+	 *
+	 * @return the purchaseindefault so
+	 */
+	private IPurchaseInDefaultSO getPurchaseInDefaultSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+	}
+	//#25886 - end
 	/**
 	 * based on treenode selection button enable/disable.
 	 * 

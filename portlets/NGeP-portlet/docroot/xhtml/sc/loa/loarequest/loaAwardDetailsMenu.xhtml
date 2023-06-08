@@ -41,7 +41,8 @@
 								value="#{lbl['lbl.sc.price.inquiry.item.name']}" /></td>
 						<td width="90%"><p:inputText id="itemNameSearchInput"
 								value="#{lOADetailBackingBean.itemNameSearchCriteria}"
-								style="width:310px;">
+								style="width:310px;"
+								onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #34646 -->
 								<p:ajax partialSubmit="true" process="@this" update="@this" />
 							</p:inputText></td>
 					</tr>
@@ -51,17 +52,17 @@
 					<p:commandButton id="searchSupplierBtn" rendered="#{!isZonalWithPaOrPs}"
 						value="#{lbl['lbl.btn.search']}"
 						action="#{lOADetailBackingBean.onSearchSupplier}"
-						update="supplierUpdateInstructionPanel, itemtbl" />
+						update="supplierUpdateInstructionPanel, itemtbl" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 					<!-- #277977 Start -->
 					<p:commandButton id="searchZonalSupplierBtn" rendered="#{isZonalWithPaOrPs}"
 						value="#{lbl['lbl.btn.search']}"
 						action="#{lOADetailBackingBean.onZonalSearchSupplier}"
-						update="supplierUpdateInstructionPanel, form" />
+						update="supplierUpdateInstructionPanel, form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 					<!-- #277977 End -->
 					<p:commandButton id="resetSupplierBtn"
 						value="#{lbl['lbl.btn.reset']}"
 						action="#{lOADetailBackingBean.onResetSupplierCriteria()}"
-						update="supplierUpdateInstructionPanel" />
+						update="supplierUpdateInstructionPanel" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</div>
 			</p:panel>
 			<!-- #29007 Start Vinod -->
@@ -81,10 +82,10 @@
 				<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.search']}" partialSubmit="true" update="itemtbl"
 								 action="#{lOADetailBackingBean.searchSupplierItemByName}"
-								 styleClass="BtnSpacing" process="@this,itemNameSearchInputQT" />
+								 styleClass="BtnSpacing" process="@this,itemNameSearchInputQT" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/><ui:remove>29007 - fix issue 2 search action note 347</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 								 action="#{lOADetailBackingBean.onResetSupplierCriteria()}"
-								 update="supplierUpdateInstructionPanel" />
+								 update="supplierUpdateInstructionPanel, itemtbl" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/><ui:remove>29007 - fix issue 2 search action note 347</ui:remove>
 				</div>
 			</p:panel>
 			<!-- #29007 End Vinod -->
@@ -109,7 +110,7 @@
 		</table> 
 		<p:dataTable id="itemtbl" var="scLoiLoaItem"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoaItems}" rows="10" rendered="#{!isZonalWithPaOrPs}" first="#{lOADetailBackingBean.managedBean.retainPageNumber}"><ui:remove>#34242</ui:remove>
+			value="#{lOADetailBackingBean.managedBean.loiLoaItemsResult}" rows="10" rendered="#{!isZonalWithPaOrPs}" first="#{lOADetailBackingBean.managedBean.retainPageNumber}"><ui:remove>#34242</ui:remove><ui:remove>29007 - fix issue 2 search action note 347</ui:remove>
 			
 			<ac:paginator for="itemtbl" />
 			
@@ -172,7 +173,7 @@
 				<!-- #29007 End Vinod -->
 				<br /><br />
 				<!-- #29006 - end -->
-				<h:outputText value="#{scLoiLoaItem.scRequestItem.cmItem.extensionCode}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" />
+				<h:outputText value="#{lOADetailBackingBean.getLatestItemCode(scLoiLoaItem.scRequestItem)}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" /><ui:remove>Bug #34757</ui:remove>
 				
 			</p:column>
 			
@@ -221,7 +222,8 @@
 
 			<p:column style="width:12%; text-align:right;" headerText="#{lbl['lbl.sc.unit.price']}">
 				<f:facet name="footer">
-					<h:outputText value="#{lbl['lbl.sc.total']}" />
+					<ui:remove>29007 - fix issue 2 search action note 347</ui:remove>
+					<h:outputText value="#{lbl['lbl.sc.total']}" rendered="#{not empty lOADetailBackingBean.managedBean.loiLoaItemsResult}"/>
 				</f:facet>	
 				
 				<h:outputText value="#{scLoiLoaItem.unitPrice}">
@@ -231,7 +233,8 @@
 			
 			<p:column style="width:12%; text-align:right;" headerText="#{lbl['lbl.sc.sub.total']}">
 				<f:facet name="footer">
-					<h:outputText value="#{lOADetailBackingBean.managedBean.scLoa.loaAmt}">
+					<ui:remove>29007 - fix issue 2 search action note 347</ui:remove>
+					<h:outputText value="#{lOADetailBackingBean.calculateTotalItemPrice()}" rendered="#{not empty lOADetailBackingBean.managedBean.loiLoaItemsResult}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</f:facet>
@@ -343,8 +346,8 @@
 									value="#{lbl['lbl.sc.update.supplier.offer.tooltip']}"
 									trackMouse="true" hideEvent="mouseleave click" />
 							</c:if> <br /> <br /> <!-- #29006 - end --> <h:outputText
-								value="#{scLoiLoaItem.scRequestItem.cmItem.extensionCode}"
-								rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" /> <!-- #29007 Start Vinod -->
+								value="#{lOADetailBackingBean.getLatestItemCode(scLoiLoaItem.scRequestItem)}"
+								rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" /> <!-- #29007 Start Vinod --><ui:remove>Bug #34757</ui:remove>
 							<p:spacer width="5" /> <c:if
 								test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}">
 								<p:commandLink id="itemName#{varStatus.index}"
@@ -456,7 +459,7 @@
 				<td colspan="9"><h:outputLabel value="#{lbl['lbl.sc.total']}"
 						style="white-space:normal;color: black;font-weight:bold"></h:outputLabel></td>
 				<td style="white-space: normal; color: black; font-weight: bold;text-align: right;"><h:outputText
-						value="#{lOADetailBackingBean.managedBean.totalZonePrice}">
+						value="#{lOADetailBackingBean.calculateTotalPriceZonal()}" rendered="#{not empty lOADetailBackingBean.managedBean.nameZoneScLoiLoaItemList}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText></td>

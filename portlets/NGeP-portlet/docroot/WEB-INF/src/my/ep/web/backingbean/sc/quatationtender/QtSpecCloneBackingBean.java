@@ -415,8 +415,11 @@ public class QtSpecCloneBackingBean extends
 				&& this.getManagedBean().getScQtCheckSt2financeProposalList().size()!=0){
 					
 					for(ScQtCheckList toDelete:this.getManagedBean().getScQtCheckSt2financeProposalList()){
-						//if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
-						//		.equalsIgnoreCase(toDelete.getDefinationType().getParameterCode())) {
+						if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+								.equalsIgnoreCase(toDelete.getDefinationType().getParameterCode()) && this.getManagedBean().getQt().isZonal()) {//34701_start
+							toDelete.setCloned(Boolean.TRUE);	
+							
+						}//34701_start
 							toDelete.setSelected(true);
 							toDelete.setDeleted(true);
 							//toRemove.add(toDelete);
@@ -1106,6 +1109,7 @@ public class QtSpecCloneBackingBean extends
 		this.getManagedBean().getQt().setEstimateAmt(null);
 		this.getManagedBean().getQt().setEstimatedAmount(null);
 		//25635&34176-End
+		this.getManagedBean().getQt().setCloned(Boolean.TRUE);//34320&25635
 		specificationBackingBean.saveSpecificationCommitteeDtls();
 
 		
