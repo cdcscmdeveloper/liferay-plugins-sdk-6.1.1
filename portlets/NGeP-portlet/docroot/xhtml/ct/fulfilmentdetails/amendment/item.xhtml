@@ -5,6 +5,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<!-- Start Fix #34110 -->
 	<meta http-equiv='cache-control' content='no-cache'/>
@@ -655,7 +656,7 @@
 	
 	 <!-- #28854 start - Display item specification as defined in LOA -->
    <p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.specification']}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-   		styleClass="pop_up_top" modal="true" width="auto" height="auto" resizable="false">
+   		styleClass="pop_up_top" modal="true" width="500px" height="auto" resizable="false">
    		
    		<h:panelGroup rendered="#{ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeDirectPurchase}">
    			<h:panelGrid column="2" cellspacing="7" style="margin-bottom: 20px;margin-top: 10px;">    		
@@ -728,7 +729,7 @@
    					<p:column styleClass="column-align-center" style="white-space:normal;">    						  				
       					<f:facet name = "header">#{lbl['lbl.ct.specification']}</f:facet>      					
       					<!-- #31558 start - Aligning the content to the left -->
-      					<h:outputText value="#{item.itemSpec}" style="float:left;text-align:left;" rendered="#{item.itemSpec ne null}"></h:outputText>							
+      					<h:outputText value="#{fn:replace(item.itemSpec,'\\n','&lt;br/&gt;')}" style="float:left;text-align:left;max-width: 400px;word-wrap: break-word;" escape="false"  rendered="#{item.itemSpec ne null}"></h:outputText>							
       					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;text-align:left;" rendered="#{item.itemSpec eq null}"></h:outputText> 									
    						<!-- #31558 end -->
    					</p:column>   
@@ -737,7 +738,7 @@
      					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.qt.supplieroffer']}"/>
      					</f:facet>     					
      					<!-- #31558 start - Aligning the content to the left -->
-     					<h:outputText value="#{item.supplierOffer}" style="float:left;text-align:left;" rendered="#{item.supplierOffer ne null}"></h:outputText>	      					
+     					<h:outputText value="#{fn:replace(item.supplierOffer,'\\n','&lt;br/&gt;')}" style="float:left;text-align:left;max-width:400px;word-wrap: break-word;" escape="false"  rendered="#{item.supplierOffer ne null}"></h:outputText>	      					
       					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;text-align:left;" rendered="#{item.supplierOffer eq null}"></h:outputText>     																											
    						<!-- #31558 end -->
    					</p:column>   
@@ -746,7 +747,7 @@
       					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"/>
       					</f:facet>     					
       					<!-- #31558 start - Aligning the content to the left -->
-      					<h:outputText value="#{item.newOfferSpec}" style="float:left;text-align:left;" rendered="#{item.newOfferSpec ne null}"></h:outputText>        					
+      					<h:outputText value="#{fn:replace(item.newOfferSpec,'\\n','&lt;br/&gt;')}" style="float:left;text-align:left;max-width: 400px;word-wrap: break-word;" escape="false"  rendered="#{item.newOfferSpec ne null}"></h:outputText>        					
       					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;text-align:left;" rendered="#{item.newOfferSpec eq null}"></h:outputText>    					   										
    						<!-- #31558 end -->
    					</p:column>  			
