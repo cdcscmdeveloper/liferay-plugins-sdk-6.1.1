@@ -100,10 +100,10 @@
 								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
 									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
-									<p:outputLabel value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
+									<ui:remove> #34840 </ui:remove><br/><h:outputText value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
 								</p:commandLink>		               		
 			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
-									<p:outputLabel value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
+									<ui:remove> #34840 </ui:remove><br/><h:outputText value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
 									<!--  #29466 - START -->
 									<f:setPropertyActionListener value="#{suppFinalizationBackingBean.managedBean.scQt}"
 												   	 target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
@@ -321,10 +321,10 @@
 								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
 									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
-									<p:outputLabel value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
+									<ui:remove> #34840 </ui:remove><br/><h:outputText value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
 								</p:commandLink>		               		
 			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
-									<p:outputLabel value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
+									<ui:remove> #34840 </ui:remove><br/><h:outputText value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
 									<!--  #29466 - START -->
 									<f:setPropertyActionListener value="#{suppFinalizationBackingBean.managedBean.scQt}"
 												   	 target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
