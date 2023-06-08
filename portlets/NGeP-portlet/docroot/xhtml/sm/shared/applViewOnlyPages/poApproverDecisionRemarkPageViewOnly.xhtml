@@ -57,6 +57,7 @@
 			</tr>
 			<!-- #29664 start -->
 			<p:column rendered="#{not empty viewSmApplBackingBean.managedBean.poRemarkAfterSiteVisit}">
+			<tr height="10"><td height="10"></td></tr> <!-- #32424 03032023 -->
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.po.approver.decision.name']}" 
 						rendered="#{not empty viewSmApplBackingBean.managedBean.secondPoUserName}" /></td>
