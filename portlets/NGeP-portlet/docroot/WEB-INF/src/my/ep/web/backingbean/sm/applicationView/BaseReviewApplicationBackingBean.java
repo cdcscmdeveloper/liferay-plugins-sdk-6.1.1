@@ -233,7 +233,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				throw new EpException(MessageConst.INFO_721212);
 			}
 		}
-		setMaxTab();
+		//setMaxTab();
+		getManagedBean().setMaxTab(5);
 		//setTabValue(currTab <= getManagedBean().getMaxTab() ? currTab : 0, "");
 		setTabDialog(String.valueOf(currTab));
 	}
@@ -247,8 +248,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		int bank = getManagedBean().getSmAppl().getApplType().equals(
 				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES) ?	0 : 1;
 		log.info("34099_cat:_"+cat+"\tbnk:_"+bank);
-		bank = 0;
-		cat = 0;
+		bank = 0;cat = 0;
 		switch(outputTab.charAt(0)){
 		case '0':
 			setTabValue(0, SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
@@ -278,7 +278,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			setTabValue(7+cat+bank, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
 			break;
 		}
-		
 	}
 	
 	public void assignSelAcadQualify(SmPersonnel smPersonnel) {

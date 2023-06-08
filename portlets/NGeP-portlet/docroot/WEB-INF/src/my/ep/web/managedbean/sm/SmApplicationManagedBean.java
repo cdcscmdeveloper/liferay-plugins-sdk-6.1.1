@@ -659,7 +659,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//32968 END
 	//#32304
 	private SmAppl pendingBumiAppl;
-	private String revisionUrl = "";		//34099
 	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4622,14 +4621,4 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.pendingBumiAppl = pendingBumiAppl;
 	}
 	//#32304 - end
-
-	//#34099 - start
-	public String getRevisionUrl() {
-		return revisionUrl;
-	}
-
-	public void setRevisionUrl(String revisionUrl) {
-		this.revisionUrl = revisionUrl;
-	}
-	//#34099 - end
 }

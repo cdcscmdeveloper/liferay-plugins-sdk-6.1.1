@@ -14661,18 +14661,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	
 	//#34099 - start
 	public void initRevisionDialog(String linkType) {
-		//based on setRevUrl
-		String url = SmApplicationUtil.getApplicationErrorPage();
+		//SmApplicationUtil.getReviewApplicationSupplierBasePage(smAppl.getApplType());
 		try {
 			if(linkType.equals("O")){
 				ViewSmSuppApplBackingBean viewSupBean = new ViewSmSuppApplBackingBean();
 				viewSupBean.initMainDialog(getManagedBean().getSmAppl().getApplNo(), "SUP", 
 						getManagedBean().getTabActiveIndex());
-				/*
-				url = SmApplicationUtil.getReviewApplicationSupplierBasePage(
-						getManagedBean().getSmAppl().getApplType());
-				*/
-				url = "/xhtml/sm/revisionSmApplView/dialog/smViewDialogSideMenu_SuppBasePage.xhtml";
+
 			} else {
 				String applNo = getManagedBean().getSmSupplier().getSmAppl().getApplNo();
 				String serFileType = "APP";
@@ -14684,21 +14679,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 				ViewSmApplBackingBean viewAppBean = new ViewSmApplBackingBean();
 				viewAppBean.setApplication(smAppl);
+				viewAppBean.setTabDialog("0");
 				if (!SmCommonUtil.isSerFileExist(applNo, serFileType)) {
 					SmCommonUtil.createSerFile(smAppl, serFileType);
 				}
-				url = "/xhtml/sm/revisionSmApplView/dialog/smViewDialogSideMenu_BasePage.xhtml";
-				/*
-				url = SmApplicationUtil.getReviewApplicationBasePage(
-						getManagedBean().getSmSupplier().getSmAppl().getApplType());
-						*/
 			}
 			
 		} catch (NullPointerException e){
 			throw new EpException(MessageConst.INFO_721212);
-		}		
-		getManagedBean().setRevisionUrl(url);
-		//RequestContext.getCurrentInstance().execute("revisionViewDlg.show();");
+		}
 	}
 	//#34099 - end
 

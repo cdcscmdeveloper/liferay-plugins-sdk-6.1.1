@@ -171,9 +171,10 @@
 	<ac:viewSsmInformation bBean="#{backingBean}" dialogId="viewssminfoDlg" />
 	<!-- #34099 - start -->
 	<p:dialog id="revisionViewDlg" widgetVar="revisionViewDlg"
-		header="__VVVView Revision Application"
+		header="__VView Revision Application"
 		height="600" width="1000" resizable="false" modal="true">
-		<ui:include src="#{backingBean.managedBean.revisionUrl}"/>
+		<ui:include 
+			src="/xhtml/sm/revisionSmApplView/dialog/smViewDialogSideMenu_Page.xhtml" />
 	</p:dialog>
 	<!-- #34099 - end -->
 	

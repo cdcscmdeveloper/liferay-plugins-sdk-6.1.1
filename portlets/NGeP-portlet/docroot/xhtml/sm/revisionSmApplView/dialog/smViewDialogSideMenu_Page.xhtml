@@ -6,44 +6,97 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	
-	<!-- <ac:smPanel id="smViewRevisionDlg"> -->
-	<p:outputPanel id="smViewRevisionDlg" layout="block">
-		<style type="text/css">
-			.container-fluid{
-				display:table !important;
-				width: 100% !important;
-			}
-		</style>
-	
-		<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '0'}">
-			<ui:include src="step1ViewDialog_CompanyInfo.xhtml" />
-		</c:if>
-		<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '1'}">
-			<ui:include src="step2ViewDialog_BranchCompanyInfo.xhtml" />
-		</c:if>
-		<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '2'}">
-			<ui:include src="step3ViewDialog_PersonnelInfo.xhtml" />
-		</c:if>
-		<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '3'}">
-			<ui:include src="step4ViewDialog_CaptialAndEquityStatusInfo.xhtml" />
-		</c:if>
-		<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq 'b'}">
-			<ui:include src="step5ViewDialog_BankInfo.xhtml" />
-		</c:if>
-		<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '5'}">
-			<ui:include src="step6ViewDialog_RegisterCategoryCodesInfo.xhtml" />
-		</c:if>
-		<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '6'}">
-			<ui:include src="step7ViewDialog_SupportingDocumentsInfo.xhtml" />
-		</c:if>
-		<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '7'
+	<!-- <ac:smPanel id="tt"> -->
+	<p:outputPanel id="viewRevPnl" rendered="#{viewSmApplBackingBean.managedBean.smAppl != null}"
+		layout="block">
+		<table style="width: 100%">
+		<tr><td style="width: 20%; vertical-align: top;" class="sidemenutd">
+			<p:tabMenu activeIndex="#{viewSmApplBackingBean.managedBean.tabActiveIndex}"
+					id="viewMenuDlg" styleClass="sidemenu">
+
+				<p:menuitem value="#{lbl['lbl.sm.companyStepLbl']}" 
+					update="viewRevPnl,viewMenuDlg"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					actionListener="#{viewSmApplBackingBean.setTabDialog('0')}"/>
+				
+				<p:menuitem value="#{lbl['lbl.sm.branchStepLbl']}" 
+					update="viewRevPnl,viewMenuDlg"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					actionListener="#{viewSmApplBackingBean.setTabDialog('1')}"/>
+				
+				<p:menuitem value="#{lbl['lbl.sm.personStepLbl']}" 
+					update="viewRevPnl,viewMenuDlg"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					actionListener="#{viewSmApplBackingBean.setTabDialog('2')}"/>
+				
+				<p:menuitem value="#{lbl['lbl.sm.capitalStepLbl']}" 
+					update="viewRevPnl,viewMenuDlg"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					actionListener="#{viewSmApplBackingBean.setTabDialog('3')}"/>
+				
+				<p:menuitem value="#{lbl['lbl.sm.bankStepLbl']}" 
+					update="viewRevPnl,viewMenuDlg"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType 
+							!= ParameterConst.newSmApplnForApplcatcodes}"
+					actionListener="#{viewSmApplBackingBean.setTabDialog('b')}"/>
+			
+				<p:menuitem value="#{lbl['lbl.sm.catCodeStepLbl']}" 
+					update="viewRevPnl,viewMenuDlg"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					actionListener="#{viewSmApplBackingBean.setTabDialog('5')}"/>
+		
+				<!-- facility, equipment -->
+		
+				<p:menuitem value="#{lbl['lbl.sm.supDocStepLbl']}" 
+					update="viewRevPnl,viewMenuDlg"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					actionListener="#{viewSmApplBackingBean.setTabDialog('6')}"/>
+					
+				<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}" 
+					update="viewRevPnl,viewMenuDlg"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					rendered="#{viewSmApplBackingBean.managedBean.previousApproved}"
+					actionListener="#{viewSmApplBackingBean.setTabDialog('7')}"/>
+			
+				<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}" 
+					update="viewRevPnl,viewMenuDlg"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					rendered="#{viewSmApplBackingBean.managedBean.previousApproved}"
+					actionListener="#{viewSmApplBackingBean.setTabDialog('8')}"/>
+			</p:tabMenu>
+			
+		</td><td>
+			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '0'}">
+				<ui:include src="step1ViewDialog_CompanyInfo.xhtml" />
+			</c:if>
+			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '1'}">
+				<ui:include src="step2ViewDialog_BranchCompanyInfo.xhtml" />
+			</c:if>
+			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '2'}">
+				<ui:include src="step3ViewDialog_PersonnelInfo.xhtml" />
+			</c:if>
+			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '3'}">
+				<ui:include src="step4ViewDialog_CaptialAndEquityStatusInfo.xhtml" />
+			</c:if>
+			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq 'b'}">
+				<ui:include src="step5ViewDialog_BankInfo.xhtml" />
+			</c:if>
+			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '5'}">
+				<ui:include src="step6ViewDialog_RegisterCategoryCodesInfo.xhtml" />
+			</c:if>
+			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '6'}">
+				<ui:include src="step7ViewDialog_SupportingDocumentsInfo.xhtml" />
+			</c:if>
+			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '7'
 					and viewSmApplBackingBean.managedBean.previousApproved}">
-			<ui:include src="step8ViewDialogPoDecision.xhtml" />
-		</c:if>
-		<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '8'
+				<ui:include src="step8ViewDialogPoDecision.xhtml" />
+			</c:if>
+			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '8'
 					and viewSmApplBackingBean.managedBean.previousApproved}">
-			<ui:include src="step9ViewDialogApproverDecision.xhtml" />
-		</c:if>
+				<ui:include src="step9ViewDialogApproverDecision.xhtml" />
+			</c:if>
+		</td></tr>
+		</table>
 	</p:outputPanel>
 </ui:composition>

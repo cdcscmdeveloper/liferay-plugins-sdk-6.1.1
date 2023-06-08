@@ -2372,7 +2372,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		public void setSelectedInquiryResponse(SmApplInquiry selectedInquiryResponse) {
 			this.selectedInquiryResponse = selectedInquiryResponse;
 		}
-
+		
 		public String getTabActiveDlg() {
 			return tabActiveDlg;
 		}
