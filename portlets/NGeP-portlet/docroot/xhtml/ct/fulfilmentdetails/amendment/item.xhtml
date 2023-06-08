@@ -656,7 +656,7 @@
 	
 	 <!-- #28854 start - Display item specification as defined in LOA -->
    <p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.specification']}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-   		styleClass="pop_up_top" modal="true" width="500px" height="auto" resizable="false">
+   		styleClass="pop_up_top" modal="true" width="auto" height="auto" resizable="false">
    		
    		<h:panelGroup rendered="#{ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeDirectPurchase}">
    			<h:panelGrid column="2" cellspacing="7" style="margin-bottom: 20px;margin-top: 10px;">    		
