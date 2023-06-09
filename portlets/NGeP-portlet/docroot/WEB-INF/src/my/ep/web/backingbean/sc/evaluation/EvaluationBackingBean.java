@@ -5948,7 +5948,6 @@ public void saveComplianceSample() {
 						/*#29187 Start Vinod*/
 						if (null != this.getManagedBean().getScQt()
 								&& this.getManagedBean().getScQt().isZonal()
-								&& this.getManagedBean().getTplSpecZoneDtl()==null
 								&& null!=this.getManagedBean().getScQt().getQtStatus()) {
 							if(null!=this.getManagedBean().getScQt().getQtStatus().getStatusId() 
 								&& this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_EVALUATION_PROPOSAL
