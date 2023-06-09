@@ -96,14 +96,14 @@
 							</f:facet>
 		               	</p:column>
 		               	<p:column rowspan="2" style="width:5%; text-align:center; white-space:normal;">
-		               		<f:facet name="header" style="text-align: right;"> <ui:remove> #34840 </ui:remove>
+		               		<f:facet name="header">
 								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
 									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
-									<ui:remove> #34840 </ui:remove><br/><h:outputText value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
+									<ui:remove> #34840 </ui:remove><br/><h:outputText style="float:right" value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
 								</p:commandLink>		               		
 			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
-									<ui:remove> #34840 </ui:remove><br/><h:outputText value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
+									<ui:remove> #34840 </ui:remove><br/><h:outputText style="float:right" value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
 									<!--  #29466 - START -->
 									<f:setPropertyActionListener value="#{suppFinalizationBackingBean.managedBean.scQt}"
 												   	 target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
@@ -317,14 +317,14 @@
 							</f:facet>
 		               	</p:column>
 		               	<p:column rowspan="2" style="width:5%; text-align:center; white-space:normal;">
-		               		<f:facet name="header" style="text-align: right;"> <ui:remove> #34840 </ui:remove>
+		               		<f:facet name="header">
 								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
 									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
-									<ui:remove> #34840 </ui:remove><br/><h:outputText value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
+									<ui:remove> #34840 </ui:remove><br/><h:outputText style="float:right" value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
 								</p:commandLink>		               		
 			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
-									<ui:remove> #34840 </ui:remove><br/><h:outputText value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
+									<ui:remove> #34840 </ui:remove><br/><h:outputText style="float:right" value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
 									<!--  #29466 - START -->
 									<f:setPropertyActionListener value="#{suppFinalizationBackingBean.managedBean.scQt}"
 												   	 target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
