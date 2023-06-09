@@ -1639,6 +1639,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<String> paramTypes = null;
 	// #25692-End
 
+	/**
+	 * Sets the panel suppliers.
+	 * 
+	 * @param panelSuppliers
+	 *            the new panel suppliers
+	 */
+	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
+		this.panelSuppliers = panelSuppliers;
+	}
+
 	private ScQtApprovalRequest scQtApprovalDtls;
 
 	// #19336, #25201, #17376, #19287 -start-
@@ -3919,16 +3929,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setUploadUpdateId(String uploadUpdateId) {
 		this.uploadUpdateId = uploadUpdateId;
-	}
-	
-	/**
-	 * Sets the panel suppliers.
-	 * 
-	 * @param panelSuppliers
-	 *            the new panel suppliers
-	 */
-	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
-		this.panelSuppliers = panelSuppliers;
 	}
 
 	/**
@@ -10171,6 +10171,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
 	}
+
+	public boolean isButtonHideActive() {
+		return ButtonHideActive;
+	}
+
+	public void setButtonHideActive(boolean buttonHideActive) {
+		ButtonHideActive = buttonHideActive;
+	}
 	
 	// ahmaa-#25138 -start
 	/**
@@ -10529,151 +10537,151 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.roleCode = roleCode;
 	}
 
-		//#25037-start
-		public boolean isShowHistory() {
-			return showHistory;
-		}
+	//#25037-start
+	public boolean isShowHistory() {
+		return showHistory;
+	}
 
-		public void setShowHistory(boolean showHistory) {
-			this.showHistory = showHistory;
-		}
+	public void setShowHistory(boolean showHistory) {
+		this.showHistory = showHistory;
+	}
 
-		public Paginator getCommitteeHistories() {
-			return committeeHistories;
-		}
+	public Paginator getCommitteeHistories() {
+		return committeeHistories;
+	}
 
-		public void setCommitteeHistories(Paginator committeeHistories) {
-			this.committeeHistories = committeeHistories;
-		}
+	public void setCommitteeHistories(Paginator committeeHistories) {
+		this.committeeHistories = committeeHistories;
+	}
 
-		public String getCurrentCommitteeDesc() {
-			return currentCommitteeDesc;
-		}
+	public String getCurrentCommitteeDesc() {
+		return currentCommitteeDesc;
+	}
 
-		public void setCurrentCommitteeDesc(String currentCommitteeDesc) {
-			this.currentCommitteeDesc = currentCommitteeDesc;
-		}
+	public void setCurrentCommitteeDesc(String currentCommitteeDesc) {
+		this.currentCommitteeDesc = currentCommitteeDesc;
+	}
 
-		public ScCommitteeMemberHistory getSelectedCommitteeHistory() {
-			return selectedCommitteeHistory;
-		}
+	public ScCommitteeMemberHistory getSelectedCommitteeHistory() {
+		return selectedCommitteeHistory;
+	}
 
-		public void setSelectedCommitteeHistory(ScCommitteeMemberHistory selectedCommitteeHistory) {
-			this.selectedCommitteeHistory = selectedCommitteeHistory;
-		}
+	public void setSelectedCommitteeHistory(ScCommitteeMemberHistory selectedCommitteeHistory) {
+		this.selectedCommitteeHistory = selectedCommitteeHistory;
+	}
 
-		public Paginator getSelectedHistoryMember() {
-			return selectedHistoryMember;
-		}
+	public Paginator getSelectedHistoryMember() {
+		return selectedHistoryMember;
+	}
 
-		public void setSelectedHistoryMember(Paginator selectedHistoryMember) {
-			this.selectedHistoryMember = selectedHistoryMember;
-		}
+	public void setSelectedHistoryMember(Paginator selectedHistoryMember) {
+		this.selectedHistoryMember = selectedHistoryMember;
+	}
 
-		public boolean isCommitteeReviseFlow() {
-			return committeeReviseFlow;
-		}
+	public boolean isCommitteeReviseFlow() {
+		return committeeReviseFlow;
+	}
 
-		public void setCommitteeReviseFlow(boolean committeeReviseFlow) {
-			this.committeeReviseFlow = committeeReviseFlow;
-		}
+	public void setCommitteeReviseFlow(boolean committeeReviseFlow) {
+		this.committeeReviseFlow = committeeReviseFlow;
+	}
 
-		public List<QtCommitteeMemberBean> getMemberHistoryList() {
-			return memberHistoryList;
-		}
+	public List<QtCommitteeMemberBean> getMemberHistoryList() {
+		return memberHistoryList;
+	}
 
-		public void setMemberHistoryList(List<QtCommitteeMemberBean> memberHistoryList) {
-			this.memberHistoryList = memberHistoryList;
-		}
+	public void setMemberHistoryList(List<QtCommitteeMemberBean> memberHistoryList) {
+		this.memberHistoryList = memberHistoryList;
+	}
 
-		public ScQtApprovalRequest getScQtApprovalRequest() {
-			return scQtApprovalRequest;
-		}
+	public ScQtApprovalRequest getScQtApprovalRequest() {
+		return scQtApprovalRequest;
+	}
 
-		public void setScQtApprovalRequest(ScQtApprovalRequest scQtApprovalRequest) {
-			this.scQtApprovalRequest = scQtApprovalRequest;
-		}
+	public void setScQtApprovalRequest(ScQtApprovalRequest scQtApprovalRequest) {
+		this.scQtApprovalRequest = scQtApprovalRequest;
+	}
 
-		public ScQtApprovalRequest getDoaaRequest() {
-			return doaaRequest;
-		}
+	public ScQtApprovalRequest getDoaaRequest() {
+		return doaaRequest;
+	}
 
-		public void setDoaaRequest(ScQtApprovalRequest doaaRequest) {
-			this.doaaRequest = doaaRequest;
-		}
+	public void setDoaaRequest(ScQtApprovalRequest doaaRequest) {
+		this.doaaRequest = doaaRequest;
+	}
 
-		public boolean isDoaRequestEditable() {
-			return doaRequestEditable;
-		}
+	public boolean isDoaRequestEditable() {
+		return doaRequestEditable;
+	}
 
-		public void setDoaRequestEditable(boolean doaRequestEditable) {
-			this.doaRequestEditable = doaRequestEditable;
-		}
+	public void setDoaRequestEditable(boolean doaRequestEditable) {
+		this.doaRequestEditable = doaRequestEditable;
+	}
 
-		public List<ScQtContactPerson> getNewDoaList() {
-			return newDoaList;
-		}
+	public List<ScQtContactPerson> getNewDoaList() {
+		return newDoaList;
+	}
 
-		public void setNewDoaList(List<ScQtContactPerson> newDoaList) {
-			this.newDoaList = newDoaList;
-		}
+	public void setNewDoaList(List<ScQtContactPerson> newDoaList) {
+		this.newDoaList = newDoaList;
+	}
 
-		public List<PmUser> getDeskOfficerAssistantList() {
-			return deskOfficerAssistantList;
-		}
+	public List<PmUser> getDeskOfficerAssistantList() {
+		return deskOfficerAssistantList;
+	}
 
-		public void setDeskOfficerAssistantList(
-				List<PmUser> deskOfficerAssistantList) {
-			this.deskOfficerAssistantList = deskOfficerAssistantList;
-		}
+	public void setDeskOfficerAssistantList(
+			List<PmUser> deskOfficerAssistantList) {
+		this.deskOfficerAssistantList = deskOfficerAssistantList;
+	}
 
-		public List<ScQtContactPerson> getPrevDoaList() {
-			return prevDoaList;
-		}
+	public List<ScQtContactPerson> getPrevDoaList() {
+		return prevDoaList;
+	}
 
-		public void setPrevDoaList(List<ScQtContactPerson> prevDoaList) {
-			this.prevDoaList = prevDoaList;
-		}
+	public void setPrevDoaList(List<ScQtContactPerson> prevDoaList) {
+		this.prevDoaList = prevDoaList;
+	}
 
-		public boolean isReapproval() {
-			return reapproval;
-		}
+	public boolean isReapproval() {
+		return reapproval;
+	}
 
-		public void setReapproval(boolean reapproval) {
-			this.reapproval = reapproval;
-		}
+	public void setReapproval(boolean reapproval) {
+		this.reapproval = reapproval;
+	}
 
-		public ScQtRequestContent getRequestContent() {
-			return requestContent;
-		}
+	public ScQtRequestContent getRequestContent() {
+		return requestContent;
+	}
 
-		public void setRequestContent(ScQtRequestContent requestContent) {
-			this.requestContent = requestContent;
-		}
+	public void setRequestContent(ScQtRequestContent requestContent) {
+		this.requestContent = requestContent;
+	}
 
-		public String getPrevDOAs() {
-			return prevDOAs;
-		}
+	public String getPrevDOAs() {
+		return prevDOAs;
+	}
 
-		public void setPrevDOAs(String prevDOAs) {
-			this.prevDOAs = prevDOAs;
-		}
+	public void setPrevDOAs(String prevDOAs) {
+		this.prevDOAs = prevDOAs;
+	}
 
-		public String[] getRoleFilterList() {
-			return roleFilterList;
-		}
+	public String[] getRoleFilterList() {
+		return roleFilterList;
+	}
 
-		public void setRoleFilterList(String[] roleFilterList) {
-			this.roleFilterList = roleFilterList;
-		}
+	public void setRoleFilterList(String[] roleFilterList) {
+		this.roleFilterList = roleFilterList;
+	}
 		
-		public Long getCurrentQTStatus() {
-			return currentQTStatus;
- 		}
+	public Long getCurrentQTStatus() {
+		return currentQTStatus;
+	}
 
-		public void setCurrentQTStatus(Long currentQTStatus) {
-			this.currentQTStatus = currentQTStatus;
-		}
+	public void setCurrentQTStatus(Long currentQTStatus) {
+		this.currentQTStatus = currentQTStatus;
+	}
 
 	/**
 	 * 11104-start
@@ -10762,23 +10770,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	// #11104-End
 
-		public Long getCurrentCMTStatus() {
-			return currentCMTStatus;
-		}
+	public Long getCurrentCMTStatus() {
+		return currentCMTStatus;
+	}
 
-		public void setCurrentCMTStatus(Long currentCMTStatus) {
-			this.currentCMTStatus = currentCMTStatus;
-		}
+	public void setCurrentCMTStatus(Long currentCMTStatus) {
+		this.currentCMTStatus = currentCMTStatus;
+	}
 		
-		public boolean isCommitteeUpdateFlow() {
-			return committeeUpdateFlow;
-		}
+	public boolean isCommitteeUpdateFlow() {
+		return committeeUpdateFlow;
+	}
 
-		public void setCommitteeUpdateFlow(boolean committeeUpdateFlow) {
-			this.committeeUpdateFlow = committeeUpdateFlow;
-		}
+	public void setCommitteeUpdateFlow(boolean committeeUpdateFlow) {
+		this.committeeUpdateFlow = committeeUpdateFlow;
+	}
 
-		//#25037-end
+	//#25037-end
 	
 	//#25077 - Start
 	public ScQtApprovalRequest getHistoryApprovalRequests() {
