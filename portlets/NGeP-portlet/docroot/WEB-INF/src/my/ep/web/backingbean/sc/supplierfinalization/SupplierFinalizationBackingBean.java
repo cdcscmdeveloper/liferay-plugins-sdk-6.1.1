@@ -10960,7 +10960,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				List<ScQtFinalizationReport> localListReport=new ArrayList<ScQtFinalizationReport>();
 				Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
 				//List<String> localTitle=new ArrayList<String>();
-				List<String> titleList = new ArrayList<String>(); // Bug #34720@Syazani 07/06/2022
+				List<ScQtFinalizationReport> titleList = new ArrayList<ScQtFinalizationReport>(); // Bug #34720@Syazani 07/06/2022
 				while(iterator.hasNext()){
 					ScQtFinalizationReport finalizationReport = iterator.next();
 					// Bug #34720@Syazani 07/06/2022 -- Start
@@ -10968,7 +10968,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 						iterator.remove();
 						continue;
 					}
-					titleList.add(finalizationReport.getTitle().trim());
+					titleList.add(finalizationReport);
 					// Bug #34720@Syazani 07/06/2022 -- End
 					
 					if(null!=finalizationReport.getPmDocument()){
@@ -11469,12 +11469,15 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	* This issue occur in production Bug #34720
 	*/
 	private boolean duplicateCheckFinalizationReportList(ScQtFinalizationReport finalizationReport,
-			List<String> titleList) {
+			List<ScQtFinalizationReport> titleList) {
 		String defKey = finalizationReport.getPmDocument() != null ? finalizationReport.getPmDocument()
 				.getDocDefinitionKey() : "";
 		if (titleList != null && titleList.size() > 0) {
-			for (String title : titleList) {
-				if (finalizationReport.getTitle().trim().equalsIgnoreCase(title)
+			for (ScQtFinalizationReport sfReportTemp : titleList) {
+				String defKeyTemp = sfReportTemp.getPmDocument() != null ? sfReportTemp.getPmDocument()
+						.getDocDefinitionKey() : "";
+				if (finalizationReport.getTitle().trim().equalsIgnoreCase(sfReportTemp.getTitle().trim())
+						&& defKey.equalsIgnoreCase(defKeyTemp)
 						&& defKey.equalsIgnoreCase(SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT)) {
 					return true;
 				}
