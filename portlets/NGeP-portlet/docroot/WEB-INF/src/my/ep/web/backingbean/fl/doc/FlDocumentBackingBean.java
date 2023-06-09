@@ -1048,7 +1048,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	public static List<SelectItem> getFinancialYearOpt() {
 		int years = 0;
 		List<SelectItem>financialYearOpt = new ArrayList<SelectItem>();
-		for(Integer i = 0;i < 7;i++){
+		for(Integer i = 0;i < 6;i++){ // 34648 -Change from 7 to 6
 			years = CommonMethod.getYear(-i);
 			 financialYearOpt.add(new SelectItem(years, Integer.toString(years)));
 		}
