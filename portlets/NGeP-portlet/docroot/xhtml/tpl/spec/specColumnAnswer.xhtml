@@ -135,7 +135,7 @@
 		<f:facet name="footer">
 		<!---remove here #32952 -->
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard and !(isZonal and isSqSpec)}" />
-						<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard and isZonal and isSqSpec}" /><!-- #31789  -->
+						<!-- <h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard and isZonal and isSqSpec}" /> #31789 (Revert) -->
 		</f:facet>
 		<!-- 20220127@syazani - Enhancement #3657 - specific error message - Start -->
 <!-- Bug #32110 Related to #21695 18/11/2021 END-->
@@ -203,14 +203,14 @@
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
 			<!-- Bug #32110 Related to #21695 18/11/2021 END-->
-			<!-- #31789 START -->
+			<!-- #31789 (Revert) START 
 			<h:outputText id="totalAmountZonal" 
 				styleClass="calcAmount" 
 				value="#{templateSpecBean.specMaster.totalAmount}"
 				rendered="#{isSpecTypeFinancial and isAllPriceTypesStandard and isZonal and isSqSpec}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
-			<!-- #31789 END -->
+			 #31789 (Revert) END -->
 		</f:facet>
 <!-- #21695 Farid start 1/4/2021-->
 <!---remove here #32952 disable-->	
