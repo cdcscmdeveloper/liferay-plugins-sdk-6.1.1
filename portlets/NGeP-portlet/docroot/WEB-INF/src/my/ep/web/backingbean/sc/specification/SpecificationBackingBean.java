@@ -22636,7 +22636,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			
 			if (null != resDTO && null != resDTO.getSpecQuestionList()) {
 				for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
-						itemQuestion.setMandatorySpecForSample(question.isMandatorySpec()?true:false);
+						if(question.isMandatorySpec()) 
+							itemQuestion.setMandatorySpecForSample(true);
 				}
 			}
 		}
