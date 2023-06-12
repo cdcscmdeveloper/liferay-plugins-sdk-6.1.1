@@ -5551,8 +5551,18 @@ public class SpecificationBackingBean extends
 				TemplateSpecResDTO templateresDTO =null;
 				templateresDTO = templateSpecSO
 						.getTemplateMaster(specReqDTO);
+				//#25138(wip 4serangkai) bug -Start 8/6/2023
+				reqDTO.setScQt(checkList.getScQt());
+				if (reqDTO.getScQt() != null) {
+					specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSpecSO.class);
+					
+					this.getManagedBean().setWipStatusMax(specSo.checkWipScoreSettingMax(reqDTO));
+				}
+				//#25138(wip 4serangkai) bug -End 8/6/2023
 				TemplateSpecBean templateSpecBean = getManagedBean()
-						.getTemplateSpecBean();
+						.getTemplateSpecBean();			
+
 				if(null!=templateresDTO){
 					checkList.getScQtDoc().setTplSpecMaster(
 							templateresDTO.getSpecMaster());
