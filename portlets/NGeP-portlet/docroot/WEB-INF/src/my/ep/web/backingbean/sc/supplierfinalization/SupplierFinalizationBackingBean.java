@@ -10960,8 +10960,17 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				List<ScQtFinalizationReport> localListReport=new ArrayList<ScQtFinalizationReport>();
 				Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
 				//List<String> localTitle=new ArrayList<String>();
+				List<ScQtFinalizationReport> titleList = new ArrayList<ScQtFinalizationReport>(); // Bug #34720@Syazani 07/06/2022
 				while(iterator.hasNext()){
 					ScQtFinalizationReport finalizationReport = iterator.next();
+					// Bug #34720@Syazani 07/06/2022 -- Start
+					if (duplicateCheckFinalizationReportList(finalizationReport, titleList)) {
+						iterator.remove();
+						continue;
+					}
+					titleList.add(finalizationReport);
+					// Bug #34720@Syazani 07/06/2022 -- End
+					
 					if(null!=finalizationReport.getPmDocument()){
 						if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocCategoryCode().getParameterCode())) {
 							log.info("=======sourbasebackingBeanTitle===="+finalizationReport.getTitle());
@@ -11452,6 +11461,30 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			actorSO = null;
 		}
 	}
-	//Bug #32682 end	
+	//Bug #32682 end
+	
+	// Bug #34720@Syazani 07/06/2022 -- Start
+	/**
+	* Check for duplicate report related to UUM Definiation Key Report
+	* This issue occur in production Bug #34720
+	*/
+	private boolean duplicateCheckFinalizationReportList(ScQtFinalizationReport finalizationReport,
+			List<ScQtFinalizationReport> titleList) {
+		String defKey = finalizationReport.getPmDocument() != null ? finalizationReport.getPmDocument()
+				.getDocDefinitionKey() : "";
+		if (titleList != null && titleList.size() > 0) {
+			for (ScQtFinalizationReport sfReportTemp : titleList) {
+				String defKeyTemp = sfReportTemp.getPmDocument() != null ? sfReportTemp.getPmDocument()
+						.getDocDefinitionKey() : "";
+				if (finalizationReport.getTitle().trim().equalsIgnoreCase(sfReportTemp.getTitle().trim())
+						&& defKey.equalsIgnoreCase(defKeyTemp)
+						&& defKey.equalsIgnoreCase(SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	// Bug #34720@Syazani 07/06/2022 -- End
 }
 // ***19336
