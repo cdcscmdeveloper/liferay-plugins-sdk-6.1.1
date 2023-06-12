@@ -14663,28 +14663,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void initRevisionDialog(String linkType) {
 		//SmApplicationUtil.getReviewApplicationSupplierBasePage(smAppl.getApplType());
 		try {
+			ViewSmApplBackingBean vBean = new ViewSmApplBackingBean();
 			if(linkType.equals("O")){
-				ViewSmSuppApplBackingBean viewSupBean = new ViewSmSuppApplBackingBean();
-				viewSupBean.initMainDialog(getManagedBean().getSmAppl().getApplNo(), "SUP", 
-						getManagedBean().getTabActiveIndex());
-
+				vBean.initMainDialog(getManagedBean().getSmAppl().getApplNo(), "SUP", 
+						getManagedBean().getCurrentPageType());
 			} else {
-				String applNo = getManagedBean().getSmSupplier().getSmAppl().getApplNo();
-				String serFileType = "APP";
-				
-				SmAppl smAppl = SmCommonUtil.retrieveSmApplByApplNo(applNo);
-				if(smAppl == null) {
-					log.info("34099 initRevisionDialog-null SmAppl");
-					throw new EpException(MessageConst.INFO_721212);
-				}
-				ViewSmApplBackingBean viewAppBean = new ViewSmApplBackingBean();
-				viewAppBean.setApplication(smAppl);
-				viewAppBean.setTabDialog("0");
-				if (!SmCommonUtil.isSerFileExist(applNo, serFileType)) {
-					SmCommonUtil.createSerFile(smAppl, serFileType);
-				}
+				vBean.initMainDialog(
+						getManagedBean().getSmSupplier().getSmAppl().getApplNo(), "APP", 
+						getManagedBean().getCurrentPageType());
 			}
-			
 		} catch (NullPointerException e){
 			throw new EpException(MessageConst.INFO_721212);
 		}

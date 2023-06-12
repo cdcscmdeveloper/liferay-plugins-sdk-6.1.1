@@ -7,10 +7,16 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<!-- <ac:smPanel id="tt"> -->
+	<!--
+	<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif" />
+	</p:blockUI>
+	-->
 	<p:outputPanel id="viewRevPnl" rendered="#{viewSmApplBackingBean.managedBean.smAppl != null}"
 		layout="block">
+		<ui:param name="viewApplType" value="#{viewSmApplBackingBean.managedBean.smAppl.applType}"/>
 		<table style="width: 100%">
-		<tr><td style="width: 20%; vertical-align: top;" class="sidemenutd">
+		<tr><td style="width: 15%; vertical-align: top;" class="sidemenutd">
 			<p:tabMenu activeIndex="#{viewSmApplBackingBean.managedBean.tabActiveIndex}"
 					id="viewMenuDlg" styleClass="sidemenu">
 
@@ -22,6 +28,7 @@
 				<p:menuitem value="#{lbl['lbl.sm.branchStepLbl']}" 
 					update="viewRevPnl,viewMenuDlg"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					rendered="#{viewApplType != ParameterConst.newSmApplnForBumi}"
 					actionListener="#{viewSmApplBackingBean.setTabDialog('1')}"/>
 				
 				<p:menuitem value="#{lbl['lbl.sm.personStepLbl']}" 
@@ -37,16 +44,27 @@
 				<p:menuitem value="#{lbl['lbl.sm.bankStepLbl']}" 
 					update="viewRevPnl,viewMenuDlg"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-					rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType 
-							!= ParameterConst.newSmApplnForApplcatcodes}"
+					rendered="#{viewApplType != ParameterConst.newSmApplnForApplcatcodes}"
 					actionListener="#{viewSmApplBackingBean.setTabDialog('b')}"/>
 			
 				<p:menuitem value="#{lbl['lbl.sm.catCodeStepLbl']}" 
 					update="viewRevPnl,viewMenuDlg"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					rendered="#{viewApplType != ParameterConst.newSmApplnForUpdate
+							and viewApplType != ParameterConst.newSmApplnForBumi}"
 					actionListener="#{viewSmApplBackingBean.setTabDialog('5')}"/>
 		
-				<!-- facility, equipment -->
+				<p:menuitem value="#{lbl['lbl.sm.factoryStepLbl']}" 
+					update="viewRevPnl,viewMenuDlg"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					rendered="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType == 'S'}"
+					actionListener="#{viewSmApplBackingBean.setTabDialog('f')}"/>
+					
+				<p:menuitem value="#{lbl['lbl.sm.equipmentStepLbl']}" 
+					update="viewRevPnl,viewMenuDlg"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					rendered="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType == 'S'}"
+					actionListener="#{viewSmApplBackingBean.setTabDialog('e')}"/>
 		
 				<p:menuitem value="#{lbl['lbl.sm.supDocStepLbl']}" 
 					update="viewRevPnl,viewMenuDlg"
@@ -84,6 +102,12 @@
 			</c:if>
 			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '5'}">
 				<ui:include src="step6ViewDialog_RegisterCategoryCodesInfo.xhtml" />
+			</c:if>
+			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq 'f'}">
+				<ui:include src="step6.1ViewDialog_FactoryInfo.xhtml" />
+			</c:if>
+			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq 'e'}">
+				<ui:include src="step6.2ViewDialog_EquipmentInfo.xhtml" />
 			</c:if>
 			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveDlg eq '6'}">
 				<ui:include src="step7ViewDialog_SupportingDocumentsInfo.xhtml" />

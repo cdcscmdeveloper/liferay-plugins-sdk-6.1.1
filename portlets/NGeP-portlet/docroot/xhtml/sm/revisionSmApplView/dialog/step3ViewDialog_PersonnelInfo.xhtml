@@ -7,10 +7,11 @@
 
 
 	<c:choose>
-		<c:when test="#{viewSmApplBackingBean.managedBean.redirectToPersonPage}">
-			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/captialShareHolderInfoRedirectFormViewOnly.xhtml" />
-		</c:when><c:otherwise>
-			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/personnelInfoFormViewOnly.xhtml" />
-		</c:otherwise>
+	<c:when test="#{viewSmApplBackingBean.managedBean.redirectToPersonPage}">
+		<ui:include 
+		src="/xhtml/sm/shared/applViewOnlyPages/dlg/captialShareHolderInfoRedirectFormViewOnly.xhtml" />
+	</c:when><c:otherwise>
+		<ui:include src="/xhtml/sm/shared/applViewOnlyPages/dlg/personnelInfoFormViewOnly.xhtml" />
+	</c:otherwise>
 	</c:choose>
 </ui:composition>

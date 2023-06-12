@@ -204,78 +204,194 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 	
 	//#34099 - start
-	public void initMainDialog(String applNo, String serFileType, int currTab){
+	public void initMainDialog(String applNo, String serFileType, String pageType){
 		if(StringUtils.isBlank(applNo) || StringUtils.isBlank(serFileType)){
 			throw new EpException(MessageConst.INFO_721212);
 		}
-		getManagedBean().setApplicationNoParam(applNo+"_"+serFileType);
-		try {
-			setRevisionApplType();
-			createSerFileIfNotExist(null);
-			if (getManagedBean().isReviewApplicationExist()) {
-				SmApplRevisionResDTO resDTO = SmCommonUtil.getSerializedApplicationByFilePathName(
-						getDeSerFileNameAndPath(getManagedBean().getApplicationNoParam()));
-				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
-				setApplication(resDTO.getSmAppl());
+		if(serFileType.equals("SUP")){
+			getManagedBean().setApplicationNoParam(applNo+"_"+serFileType);
+			try {
+				setRevisionApplType();
+				createSerFileIfNotExist(null);
+				if (getManagedBean().isReviewApplicationExist()) {
+					SmApplRevisionResDTO resDTO = SmCommonUtil.getSerializedApplicationByFilePathName(
+							getDeSerFileNameAndPath(getManagedBean().getApplicationNoParam()));
+					getManagedBean().setSmSupplier(resDTO.getSmSupplier());
+					setApplication(resDTO.getSmAppl());
+				}
+			} catch (NullPointerException e) {
+				log.error("****Error init revision dialog:"+ e.getMessage());
+				getManagedBean().setReviewApplicationExist(false);			
 			}
-		} catch (NullPointerException e) {
-			log.error("****Error init revision dialog:"+ e.getMessage());
-			getManagedBean().setReviewApplicationExist(false);			
-		}
 
-		if (!getManagedBean().isReviewApplicationExist()){
-			if(getManagedBean().isOriginal() || getManagedBean().isPreviousApproved()){
-				MofRegistrationReqDTO mofDTO = new MofRegistrationReqDTO();
-				mofDTO.setApplNo(applNo);
-				getManagedBean().setSmAppl(SmServiceLookup.getMofRegistrationSO()
-						.retrieveSmApplWithChildByApplNo(mofDTO).getSmAppl());
-			} else {
+			if (!getManagedBean().isReviewApplicationExist()){
+				if(getManagedBean().isOriginal() || getManagedBean().isPreviousApproved()){
+					MofRegistrationReqDTO mofDTO = new MofRegistrationReqDTO();
+					mofDTO.setApplNo(applNo);
+					getManagedBean().setSmAppl(SmServiceLookup.getMofRegistrationSO()
+							.retrieveSmApplWithChildByApplNo(mofDTO).getSmAppl());
+				} else {
+					throw new EpException(MessageConst.INFO_721212);
+				}
+			}
+			
+		//serFileType = "APP"
+		} else {
+			SmAppl smAppl = SmCommonUtil.retrieveSmApplByApplNo(applNo);
+			if(smAppl == null) {
 				throw new EpException(MessageConst.INFO_721212);
 			}
+			setApplication(smAppl);
+			if (!SmCommonUtil.isSerFileExist(applNo, serFileType)) {
+				SmCommonUtil.createSerFile(smAppl, serFileType);
+			}
 		}
-		//setMaxTab();
-		getManagedBean().setMaxTab(5);
-		//setTabValue(currTab <= getManagedBean().getMaxTab() ? currTab : 0, "");
-		setTabDialog(String.valueOf(currTab));
+		setMaxTab();
+		setTabPageType(pageType);
 	}
 	
 	
 	public void setTabDialog(String outputTab){
 		if(StringUtils.isEmpty(outputTab)) return;
 		getManagedBean().setTabActiveDlg(outputTab);
-		int cat = getManagedBean().getSmAppl().getApplCategoryType().equals("S") ?
-					2 : 0;
-		int bank = getManagedBean().getSmAppl().getApplType().equals(
-				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES) ?	0 : 1;
-		log.info("34099_cat:_"+cat+"\tbnk:_"+bank);
-		bank = 0;cat = 0;
-		switch(outputTab.charAt(0)){
-		case '0':
-			setTabValue(0, SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
+		//KN == KR, KU xde category, KB xde branch & category, KA xde bank
+		switch(getManagedBean().getSmAppl().getApplType()){
+		case ParameterConst.NEW_SM_APPLN_FOR_MOF:
+		case ParameterConst.NEW_SM_APPLN_FOR_RENEW:
+			switch(outputTab.charAt(0)){
+			case '0':
+				setTabValue(0, SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
+				break;
+			case '1':
+				setTabValue(1, SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH);
+				break;
+			case '2':
+				setTabValue(2, SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL);
+				break;
+			case '3':
+				setTabValue(3, SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
+				break;
+			case 'b':
+				setTabValue(4, SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK);
+				break;
+			case '5':
+				setTabValue(5, SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY);
+				break;
+			case 'f':
+				setTabValue(6, SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY);
+				break;
+			case 'e':
+				setTabValue(7, SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP);
+				break;
+			case '6':
+				setTabValue(8, SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS);
+				break;
+			case '7':
+				setTabValue(9, SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC);
+				break;
+			case '8':
+				setTabValue(10, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
+				break;
+			}
 			break;
-		case '1':
-			setTabValue(1, SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH);
+		case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
+			switch(outputTab.charAt(0)){
+			case '0':
+				setTabValue(0, SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
+				break;
+			case '2':
+				setTabValue(1, SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL);
+				break;
+			case '3':
+				setTabValue(2, SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
+				break;
+			case 'b':
+				setTabValue(3, SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK);
+				break;
+			case 'f':
+				setTabValue(4, SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY);
+				break;
+			case 'e':
+				setTabValue(5, SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP);
+				break;
+			case '6':
+				setTabValue(6, SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS);
+				break;
+			case '7':
+				setTabValue(7, SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC);
+				break;
+			case '8':
+				setTabValue(8, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
+				break;
+			}
 			break;
-		case '2':
-			setTabValue(2, SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL);
+		case ParameterConst.NEW_SM_APPLN_FOR_UPDATE:
+			switch(outputTab.charAt(0)){
+			case '0':
+				setTabValue(0, SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
+				break;
+			case '1':
+				setTabValue(1, SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH);
+				break;
+			case '2':
+				setTabValue(2, SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL);
+				break;
+			case '3':
+				setTabValue(3, SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
+				break;
+			case 'b':
+				setTabValue(4, SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK);
+				break;
+			case 'f':
+				setTabValue(5, SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY);
+				break;
+			case 'e':
+				setTabValue(6, SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP);
+				break;
+			case '6':
+				setTabValue(7, SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS);
+				break;
+			case '7':
+				setTabValue(8, SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC);
+				break;
+			case '8':
+				setTabValue(9, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
+				break;
+			}
 			break;
-		case '3':
-			setTabValue(3, SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
-			break;
-		case 'b':
-			setTabValue(3+bank, SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK);
-			break;
-		case '5':
-			setTabValue(4+bank, SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY);
-			break;
-		case '6':
-			setTabValue(5+cat+bank, SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS);
-			break;
-		case '7':
-			setTabValue(6+cat+bank, SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC);
-			break;
-		case '8':
-			setTabValue(7+cat+bank, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
+		case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
+			switch(outputTab.charAt(0)){
+			case '0':
+				setTabValue(0, SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
+				break;
+			case '1':
+				setTabValue(1, SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH);
+				break;
+			case '2':
+				setTabValue(2, SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL);
+				break;
+			case '3':
+				setTabValue(3, SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
+				break;
+			case '5':
+				setTabValue(4, SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY);
+				break;
+			case 'f':
+				setTabValue(5, SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY);
+				break;
+			case 'e':
+				setTabValue(6, SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP);
+				break;
+			case '6':
+				setTabValue(7, SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS);
+				break;
+			case '7':
+				setTabValue(8, SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC);
+				break;
+			case '8':
+				setTabValue(9, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
+				break;
+			}
 			break;
 		}
 	}
@@ -283,6 +399,91 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public void assignSelAcadQualify(SmPersonnel smPersonnel) {
 		getManagedBean().setSelectedPersonnel(smPersonnel);
 		RequestContext.getCurrentInstance().execute("qualifyDialog.show()");
+	}
+	
+	/**
+	 * Redirect back to personnel section, dialog ver.
+	 */
+	public void backFromPersonnelPageDlg() {
+		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+		}
+		if (getManagedBean().getSmAppl().getSmPersonnels()
+				.contains(getManagedBean().getSelectedShareHolder())) {
+
+			SmPersonnel per = getManagedBean().getSelectedPersonnel();
+			getManagedBean().getSelectedShareHolder().setIdentificationTypeId(
+					per.getIdentificationTypeId());
+			getManagedBean().getSelectedShareHolder().setIdentificationType(
+					per.getIdentificationType());
+			getManagedBean().getSelectedShareHolder().setIdentificationNo(
+					per.getIdentificationNo());
+			getManagedBean().getSelectedShareHolder().setSmPersonnelAddresses(
+					per.getSmPersonnelAddresses());
+			if (per.getEpRole() != null) {
+				getManagedBean().getSelectedShareHolder().setEpRole(
+						per.getEpRole());
+			}
+			getManagedBean().getSelectedShareHolder().setAuthorizedFlg(
+					per.getAuthorizedFlg());
+			getManagedBean().getSelectedShareHolder().setContractSignerFlg(
+					per.getContractSignerFlg());
+			getManagedBean().getSelectedShareHolder().setSoftcertFlg(
+					per.getSoftcertFlg());
+			getManagedBean().getSelectedShareHolder().setDirector(
+					per.isDirector());
+			getManagedBean().getSelectedShareHolder().setManagement(
+					per.isManagement());
+			getManagedBean().getSelectedShareHolder().setHigherManagement(
+					per.isHigherManagement());
+			getManagedBean().getSelectedShareHolder().setProf(per.isProf());
+			getManagedBean().getSelectedShareHolder().setSemiProf(
+					per.isSemiProf());
+			getManagedBean().getSelectedShareHolder().setClerical(
+					per.isClerical());
+
+		}
+		getManagedBean().setRedirectToPersonPage(false);
+	}
+	
+	private void setTabPageType(String page){
+		switch(page){
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC:
+			setTabDialog("0");
+			break;
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH:
+			setTabDialog("1");
+			break;
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
+			setTabDialog("2");
+			break;
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
+			setTabDialog("3");
+			break;
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK:
+			setTabDialog("b");
+			break;
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY:
+			setTabDialog("5");
+			break;
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY:
+			setTabDialog("f");
+			break;
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP:
+			setTabDialog("e");
+			break;
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS:
+			setTabDialog("6");
+			break;
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC:
+			setTabDialog("7");
+			break;
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
+			setTabDialog("8");
+			break;
+		default:
+			setTabDialog("0");
+		}
 	}
 	//#34099 - end
 
