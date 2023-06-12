@@ -100,10 +100,10 @@
 								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
 									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
-									<ui:remove> #34840 </ui:remove><br/><h:outputText style="float:right" value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
+									<ui:remove> #34840 </ui:remove><br/><div align="right"><h:outputText value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" /></div>
 								</p:commandLink>		               		
 			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
-									<ui:remove> #34840 </ui:remove><br/><h:outputText style="float:right" value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
+									<ui:remove> #34840 </ui:remove><br/><div align="right"><h:outputText value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" /></div>
 									<!--  #29466 - START -->
 									<f:setPropertyActionListener value="#{suppFinalizationBackingBean.managedBean.scQt}"
 												   	 target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
@@ -321,10 +321,10 @@
 								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
 									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
-									<ui:remove> #34840 </ui:remove><br/><h:outputText style="float:right" value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
+									<ui:remove> #34840 </ui:remove><br/><div align="right"><h:outputText value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" /></div>
 								</p:commandLink>		               		
 			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
-									<ui:remove> #34840 </ui:remove><br/><h:outputText style="float:right" value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
+									<ui:remove> #34840 </ui:remove><br/><div align="right"><h:outputText value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" /></div>
 									<!--  #29466 - START -->
 									<f:setPropertyActionListener value="#{suppFinalizationBackingBean.managedBean.scQt}"
 												   	 target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
