@@ -2474,6 +2474,7 @@ public void saveComplianceSample() {
 					reqDTO.setScQt(this.getManagedBean().getScQt());
 					if (this.getManagedBean().getScQt().isPartial() || !this.getManagedBean().getScQt().isPartial()) {
 						int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+						this.getManagedBean().setWipStatusMax(wipstatus);
 						if(wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){
 							evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);						
 							} else {
@@ -2501,6 +2502,7 @@ public void saveComplianceSample() {
 						//wip status start
 						if (this.getManagedBean().getTabItemPackageIndex() == 1) {
 							int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+							this.getManagedBean().setWipStatusMax(wipstatus);
 							if(wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){
 								evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 							}else {

@@ -44,7 +44,10 @@
 						test="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq) or (evaluationBackingBean.managedBean.committeeType eq 'FEC'))}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.financial.itemized']}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
-							update="@form" />
+							update="@form" rendered="#{evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}"/>
+						<p:menuitem value="#{lbl['lbl.sc.financial']}"
+							action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
+							update="@form" rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}"/>
 					</c:if>
 					<!-- Bug #33178 adding noSupplierPackageExist-->
 					<ui:remove>
