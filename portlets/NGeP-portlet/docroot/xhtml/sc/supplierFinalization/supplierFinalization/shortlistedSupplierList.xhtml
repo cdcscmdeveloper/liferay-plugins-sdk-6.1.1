@@ -96,7 +96,7 @@
 							</f:facet>
 		               	</p:column>
 		               	<p:column rowspan="2" style="width:5%; text-align:center; white-space:normal;">
-		               		<f:facet name="header" style="text-align: right;"> <ui:remove> #34840 </ui:remove>
+		               		<f:facet name="header">
 								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
 									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
@@ -317,7 +317,7 @@
 							</f:facet>
 		               	</p:column>
 		               	<p:column rowspan="2" style="width:5%; text-align:center; white-space:normal;">
-		               		<f:facet name="header" style="text-align: right;"> <ui:remove> #34840 </ui:remove>
+		               		<f:facet name="header">
 								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
 									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
