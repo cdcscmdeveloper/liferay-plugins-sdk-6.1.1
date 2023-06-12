@@ -159,10 +159,11 @@
 				listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
 			<!-- FARID START -->
 			<c:if test="#{!isSqSpec and tplSpecAnswer.ratePerUom eq null}">
-				<ac:validateNumber
-					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
-					maxIntegerDigits="14" />
-				<f:validateDoubleRange minimum="0.01" maximum="99999999999.99" />
+				<ui:remove>Bug #34780 07/06/2023 @idham - Start</ui:remove>
+				<f:converter converterId="dynamicNumberConverter" />
+				<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />						
+				<f:validator validatorId="quantityDoubleRangeValidator" />
+				<ui:remove>Bug #34780 07/06/2023 @idham - End</ui:remove>
 			</c:if>
 			<!-- FARID END -->
 		</p:inputText>
