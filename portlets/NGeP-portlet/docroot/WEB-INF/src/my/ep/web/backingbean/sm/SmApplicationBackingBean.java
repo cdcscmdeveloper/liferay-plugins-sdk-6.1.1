@@ -1186,7 +1186,7 @@ public class SmApplicationBackingBean extends
 					}
 					
 					for(SmPersonnel smPersonnel : currSupp.getSmAppl().getSmPersonnels()){
-						if(smPersonnel.getEpRole().equals(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)){
+						if(smPersonnel.getEpRole() != null && smPersonnel.getEpRole().equals(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)){
 							throw new EpException(MessageConst.ERROR_722704);
 						}
 					}
