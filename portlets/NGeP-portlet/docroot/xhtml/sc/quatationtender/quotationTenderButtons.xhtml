@@ -181,7 +181,7 @@
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" onclick="blockWidget.show();"
 									oncomplete="blockWidget.hide();"
-									rendered="#{!isClone2 and !qTDetailBB.isCancel(bpmAction)}"
+									rendered="#{!isClone1 and !isClone2 and !qTDetailBB.isCancel(bpmAction)}"
 									action="#{qTDetailBB.updateBpmTask(bpmAction)}">
 									<ui:remove>start 9019 - Reopen #note-317</ui:remove>
 									<f:param name="skipsubmitvalidation" value="0" />
