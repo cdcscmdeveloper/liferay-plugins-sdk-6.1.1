@@ -104,6 +104,8 @@
 	<c:if test="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser and !backingBean.managedBean.redirectToPersonPage}">
 		<br />
 		<div align="left">
+			<!-- #34099 - start -->
+			<!--
 			<c:if test="#{!(backingBean.managedBean.smAppl.applType eq 'N')}">
 				<h:commandLink action="#{backingBean.redirectToRevisionSupplierProfilePage('P')}" 
 					process="@this" partialSubmit="true" update=":form" target="_blank"
@@ -112,15 +114,15 @@
 			<h:commandLink action="#{backingBean.redirectToRevisionSupplierProfilePage('O')}" 
 					process="@this" partialSubmit="true" update=":form" target="_blank"
 					value="#{lbl['lbl.sm.view.original.appl']}"/>&#160;&#160;
-			<!-- #34099 - start -->
+			-->
 			<c:if test="#{!(backingBean.managedBean.smAppl.applType eq 'N')}">
-				<p:commandLink value="NEW_#{lbl['lbl.sm.view.previous.appr.appl']}"
+				<p:commandLink value="#{lbl['lbl.sm.view.previous.appr.appl']}"
 						action="#{backingBean.initRevisionDialog('N')}" process="@this"
 						partialSubmit="true" update=":#{p:component('revisionViewDlg')}"
 						onclick="blockWidget.show()" 
 						oncomplete="blockWidget.hide();revisionViewDlg.show();"/>&#160;&#160;
 			</c:if>
-			<p:commandLink value="WEEEE_#{lbl['lbl.sm.view.original.appl']}"
+			<p:commandLink value="#{lbl['lbl.sm.view.original.appl']}"
 					action="#{backingBean.initRevisionDialog('O')}" process="@this"
 					partialSubmit="true" update=":#{p:component('revisionViewDlg')}" 
 					onclick="blockWidget.show()" 

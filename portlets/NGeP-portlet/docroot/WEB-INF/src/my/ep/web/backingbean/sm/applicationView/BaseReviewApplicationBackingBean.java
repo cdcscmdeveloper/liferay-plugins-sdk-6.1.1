@@ -254,6 +254,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public void setTabDialog(String outputTab){
 		if(StringUtils.isEmpty(outputTab)) return;
 		getManagedBean().setTabActiveDlg(outputTab);
+		int cat = getManagedBean().getSmAppl().getApplCategoryType().equalsIgnoreCase("S") ?
+				2 : 0;
 		//KN == KR, KU xde category, KB xde branch & category, KA xde bank
 		switch(getManagedBean().getSmAppl().getApplType()){
 		case ParameterConst.NEW_SM_APPLN_FOR_MOF:
@@ -284,13 +286,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				setTabValue(7, SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP);
 				break;
 			case '6':
-				setTabValue(8, SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS);
+				setTabValue(6+cat, SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS);
 				break;
 			case '7':
-				setTabValue(9, SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC);
+				setTabValue(7+cat, SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC);
 				break;
 			case '8':
-				setTabValue(10, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
+				setTabValue(8+cat, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
 				break;
 			}
 			break;
@@ -308,20 +310,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			case 'b':
 				setTabValue(3, SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK);
 				break;
-			case 'f':
-				setTabValue(4, SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY);
-				break;
-			case 'e':
-				setTabValue(5, SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP);
-				break;
 			case '6':
-				setTabValue(6, SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS);
+				setTabValue(4, SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS);
 				break;
 			case '7':
-				setTabValue(7, SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC);
+				setTabValue(5, SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC);
 				break;
 			case '8':
-				setTabValue(8, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
+				setTabValue(6, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
 				break;
 			}
 			break;
@@ -349,13 +345,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				setTabValue(6, SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP);
 				break;
 			case '6':
-				setTabValue(7, SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS);
+				setTabValue(5+cat, SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS);
 				break;
 			case '7':
-				setTabValue(8, SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC);
+				setTabValue(6+cat, SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC);
 				break;
 			case '8':
-				setTabValue(9, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
+				setTabValue(7+cat, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
 				break;
 			}
 			break;
@@ -383,13 +379,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				setTabValue(6, SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP);
 				break;
 			case '6':
-				setTabValue(7, SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS);
+				setTabValue(5+cat, SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS);
 				break;
 			case '7':
-				setTabValue(8, SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC);
+				setTabValue(6+cat, SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC);
 				break;
 			case '8':
-				setTabValue(9, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
+				setTabValue(7+cat, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
 				break;
 			}
 			break;
