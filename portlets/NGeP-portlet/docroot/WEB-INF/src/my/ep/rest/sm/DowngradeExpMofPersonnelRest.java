@@ -104,11 +104,11 @@ public class DowngradeExpMofPersonnelRest {
 					}
 					
 					// #28800 START
-					try {
+					/*try {
 						reqSO.sendEmailExpiredMOFToSupplier(schedulerReqDTO);
 					} catch (Exception ex){
 						log.info("sendEmailExpiredMOFToSupplier ERROR :: " +ex.getMessage());
-					}
+					}*/
 					// #28800 END
 				}
 			}
