@@ -150,7 +150,7 @@
                 </p:row>
 			</p:columnGroup>	
 			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;" rendered="#{table.pmDocument.mandatory}">
-				<h:outputText value="#{index+1}"
+				<h:outputText value="#{viewSmApplBackingBean.mandatoryCounter}"
 					style="float: left;white-space: normal;font-weight:bold;" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 65%;" rendered="#{table.pmDocument.mandatory}">
@@ -162,6 +162,14 @@
 					style="float: left;white-space: normal;" />
 			</p:column>
 		</p:dataTable>
+			<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyMandatory" value="" id="mandatoryEmptyTable" rendered="#{viewSmApplBackingBean.mandatoryEmpty}"
+				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				<p:column style="width : 65%;">
+					<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}"
+						style="float: left;white-space: normal;" disabled="true"/>
+				</p:column>
+			</p:dataTable>
 		
 			<p:dataTable var="table" value="#{viewSmApplBackingBean.managedBean.smAppl.smApplSupportDocs}" id="offlineNonMandatoryList" 
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
@@ -182,7 +190,7 @@
 	                </p:row>
 				</p:columnGroup>	
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;" rendered="#{!table.pmDocument.mandatory}">
-					<h:outputText value="#{index+1}"
+					<h:outputText value="#{viewSmApplBackingBean.nonMandatoryCounter}"
 						style="float: left;white-space: normal;font-weight:bold;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 65%;" rendered="#{!table.pmDocument.mandatory}">
@@ -192,6 +200,14 @@
 				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 65%;" rendered="#{!table.pmDocument.mandatory}">
 					<h:outputText value="#{table.sdoRemarks}"
 						style="float: left;white-space: normal;" />
+				</p:column>
+			</p:dataTable>
+			<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyNonMandatory" value="" id="nonMandatoryEmptyTable" rendered="#{viewSmApplBackingBean.nonMandatoryEmpty}"
+				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				<p:column style="width : 65%;">
+					<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}"
+						style="float: left;white-space: normal;" disabled="true"/>
 				</p:column>
 			</p:dataTable>
 		</p:outputPanel>
@@ -273,7 +289,7 @@
 				                </p:row>
 							</p:columnGroup>	
 						<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;" rendered="#{table.pmDocument.mandatory}">
-							<h:outputText value="#{index+1}" style="float: left;white-space: normal;font-weight:bold;" />
+							<h:outputText value="#{viewSmApplBackingBean.mandatoryCounter}" style="float: left;white-space: normal;font-weight:bold;" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 65%;" rendered="#{table.pmDocument.mandatory}">
 							<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" />
@@ -281,6 +297,13 @@
 						<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 65%;" rendered="#{table.pmDocument.mandatory}">
 							<h:inputTextarea value="#{table.sdoRemarks}" style="float: left;white-space: normal;" disabled="true"/>
 						</p:column>
+						</p:dataTable>
+						<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyMandatory" value="" id="mandatoryEmptyForApplStatusOffline" rendered="#{viewSmApplBackingBean.mandatoryEmpty}"
+							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+							<p:column style="width : 65%;">
+								<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}" style="float: left;white-space: normal;" disabled="true"/>
+							</p:column>
 						</p:dataTable>
 	
 						<p:dataTable var="table" value="#{viewSmApplBackingBean.managedBean.selectedInquiryResponse.smApplSupportDocInquiries}" id="inquiryHistoryOfflineNonMandatoryList" 
@@ -298,13 +321,20 @@
 				                </p:row>
 							</p:columnGroup>	
 							<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;" rendered="#{!table.pmDocument.mandatory}">
-								<h:outputText value="#{index+1}" style="float: left;white-space: normal;font-weight:bold;" />
+								<h:outputText value="#{viewSmApplBackingBean.nonMandatoryCounter}" style="float: left;white-space: normal;font-weight:bold;" />
 							</p:column>
 							<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 65%;" rendered="#{!table.pmDocument.mandatory}">
 								<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" />
 							</p:column>
 							<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 65%;" rendered="#{!table.pmDocument.mandatory}">
 								<h:inputTextarea value="#{table.sdoRemarks}" style="float: left;white-space: normal;" disabled="true"/>
+							</p:column>
+						</p:dataTable>
+						<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyNonMandatory" value="" id="nonMandatoryEmptyForApplHistoryOffline" rendered="#{viewSmApplBackingBean.nonMandatoryEmpty}"
+							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+							<p:column style="width : 65%;">
+								<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}" style="float: left;white-space: normal;" disabled="true"/>
 							</p:column>
 						</p:dataTable>
 					</td>
