@@ -8,11 +8,13 @@
 	<p:outputPanel id="supDocPan">
 		<ui:fragment rendered="#{viewSmApplBackingBean.managedBean.smAppl.supportingDocMode 
 								eq SupplierManagementConst.SUPPORTING_DOC_OFFLINE}">
-			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/offlineSupportingDocsFormViewOnly.xhtml" />
+			<ui:include 
+				src="/xhtml/sm/shared/applViewOnlyPages/dlg/offlineSupportingDocsFormViewOnly.xhtml" />
 		</ui:fragment>
 		<ui:fragment rendered="#{viewSmApplBackingBean.managedBean.smAppl.supportingDocMode 
 								eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
-			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/onlineSupportingDocsFormViewOnly.xhtml" />
+			<ui:include 
+				src="/xhtml/sm/shared/applViewOnlyPages/dlg/onlineSupportingDocsFormViewOnly.xhtml" />
 		</ui:fragment>
 	</p:outputPanel>
 

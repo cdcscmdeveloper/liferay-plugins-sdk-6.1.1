@@ -12,7 +12,7 @@
 				<p:commandLink
 					action="#{viewSmApplBackingBean.backFromPersonnelPageDlg}"
 					process="@this" partialSubmit="true" update=":#{p:component('viewRevPnl')}"
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					onstart="blockWgt.show()" oncomplete="blockWgt.hide()"
 					style="padding-right:5px;">
 					<p:commandButton type="button" value="#{lbl['lbl.btn.back']}" />
 				</p:commandLink>
