@@ -82,6 +82,7 @@
 			<ui:param name="isDurationYear" value="#{templateSpecBean.specMaster.durationMonth ge 12}"/>
 			<ui:param name="isSqSpec" value="#{templateSpecBean.specMaster.specCreatedBySQ}"/>
 			<ui:param name="isPackageItemSpec" value="#{templateSpecBean.evaluatioStageActiveIndex == 1}" />
+			<ui:param name="isPartialQt" value="#{templateSpecBean.specMaster.scQtDoc.scQt.partial}" />
 			
 			<c:if test="#{isItemTypeService and !isDurationByItem and !isContentTypeQuestion and !isContentTypeQuestionAndAnswer and isSpecTypeFinancial and durationMonth ne null}">
 				<table style="width:100%">
@@ -253,9 +254,9 @@
 			
 					
 			<c:if test="#{isContentTypeAnswer or isContentTypeScore or (isContentTypeUpdateSpec and isUpdateSpecByAnswers)}">
-				<h:outputText rendered="#{isContentTypeScore and isSpecTypeTechnical}" styleClass="instruction" value="#{lbl['lbl.sc.tec.rating.instruction']}" escape="false" /><br/>
-				<h:outputText rendered="#{isContentTypeScore and isSpecTypeTechnical and templateSpecBean.specMaster.scQtDoc.scQt.partial ne null and templateSpecBean.specMaster.scQtDoc.scQt.partial}" 
-				styleClass="instruction" value="#{lbl['lbl.sc.tec.partialoffer.instruction']}" escape="false" /><!-- #21695 Dayan -->
+				<h:outputText rendered="#{isContentTypeScore and isSpecTypeTechnical and !isPartialQt}" styleClass="instruction" value="#{lbl['lbl.sc.tec.rating.instruction']}" escape="false" />
+				<h:outputText rendered="#{isContentTypeScore and isSpecTypeTechnical and isPartialQt ne null and isPartialQt}" 
+				styleClass="instruction" value="#{lbl['lbl.sc.tec.partialoffer.instruction']}" escape="false" /><br/><!-- #21695 Dayan -->
 				<ui:remove> #32110 related to #21695 Farid Start 30/11/2021</ui:remove>
 				<ui:param name="filterList" value="#{!isSqSpec and isZonal and !templateSpecBackingBean.filterAllitemQtyZero(templateSpecBean.specAnswerList) and isSpecTypeFinancial and isContentTypeAnswer ? null : templateSpecBean.specAnswerList}">
 				
@@ -301,8 +302,10 @@
 					</c:if>
 				</p:dataTable>
 				<!-- SHAFFUL (END HERE)UOM -->
-			<!--  #21695 REMOVE TOTAL SCORE START	
-				<c:if test="#{isContentTypeScore and isSpecTypeFinancial}">
+				<ui:remove>
+						<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+				</ui:remove>
+				<c:if test="#{isContentTypeScore and isSpecTypeFinancial and templateSpecBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 					<p:spacer height="10" />
 					<table style="width:100%">
 					<tr>
@@ -316,10 +319,9 @@
 						</td>
 					</tr>
 					</table>
-				</c:if>-->
-				<!--#25138 total score for technical -start-->
-				<!-- 
-				<c:if test="#{isContentTypeScore and isSpecTypeTechnical}">
+				</c:if>
+				<ui:remove><!--#25138 total score for technical --></ui:remove>
+				<c:if test="#{isContentTypeScore and isSpecTypeTechnical and templateSpecBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 					<p:spacer height="10" />
 					<table style="width:100%">
 					<tr>
@@ -333,9 +335,10 @@
 						</td>
 					</tr>
 					</table>
-				</c:if> 
-				 #21695 REMOVE TOTAL SCORE START END-->
-				<!--#25138 - total score for technical - end -->
+				</c:if>
+				<ui:remove>
+					<!-- //#25138(wip 4serangkai) bug -End 8/6/2023 -->
+				</ui:remove>
 				<c:if test="#{isContentTypeUpdateSpec}">
 					<ui:include src="tierQtyPopup.xhtml" />
 				</c:if>

@@ -89,6 +89,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -272,6 +273,8 @@ public class TemplateSpecBackingBean extends
 							evalReqDTO.setQtId(templateSpecBean.getQt().getQtId());
 							evalReqDTO.setProposalChecklist(templateSpecBean.getQtProposalChecklist());
 							int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
+							//#25138(wip 4serangkai) bug -Start 8/6/2023
+							this.getManagedBean().setWipStatusMax(wipstatus);
 							//#25138 for demo
 							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
 									&& !templateSpecBean.getQt().isDemoRequired()) {
@@ -5758,10 +5761,11 @@ public class TemplateSpecBackingBean extends
 	/**
 	 * Gets the score Mandatory Spec Dropdown Values.display in dropdown.
 	 * 
+	 * @param boolean isCompliance
 	 * @return List<SelectItem>
 	 */
 	public List<SelectItem> getMandatorySpecAndComplianceDropdownValues(boolean isCompliance) {
-		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+		List<SelectItem> selectItems = new ArrayList<>();
 
 		try {
 
@@ -5770,11 +5774,11 @@ public class TemplateSpecBackingBean extends
 						   .getMessage("lbl.txt.select",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
-				selectItems.add(new SelectItem(true, ResourceBundleUtils
+				selectItems.add(new SelectItem(Boolean.TRUE, ResourceBundleUtils
 						   .getMessage("lbl.txt.yes",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
-				selectItems.add(new SelectItem(false, ResourceBundleUtils
+				selectItems.add(new SelectItem(Boolean.FALSE, ResourceBundleUtils
 						   .getMessage("lbl.txt.no",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
@@ -5791,8 +5795,9 @@ public class TemplateSpecBackingBean extends
 
 			this.getManagedBean().setMandatorySpecList(selectItems);
 			selectItems = null;
-		} finally {
-
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", this.getManagedBean().getQt().getQtNo(),
+					"getMandatorySpecDropdownValues", getUserIdSessionFromLoginId(), e);
 		}
 		return this.getManagedBean().getMandatorySpecList();
 	}
@@ -5817,6 +5822,19 @@ public class TemplateSpecBackingBean extends
 	}
 	public void zoneQuantityPopup(){
 		RequestContext.getCurrentInstance().execute("viewZoneQuantityPopup.show()");
+	}
+	public void onchangeCompliance(TplSpecAnswer ans){
+		for(TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
+			if(ans.getSpecAnswerId().equals(answer.getSpecAnswerId())
+				&& ans.getCompliance()!=null
+				&& ans.getCompliance()==Boolean.FALSE){
+				answer.setCompliance(Boolean.FALSE);
+				answer.setUserScore(new BigDecimal(0));
+			}else if(ans.getSpecAnswerId().equals(answer.getSpecAnswerId())){
+				answer.setCompliance(Boolean.TRUE);
+				answer.setUserScore(null);
+			}
+		}
 	}
 	//#29187 End Vinod
 }

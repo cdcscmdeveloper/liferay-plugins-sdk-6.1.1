@@ -91,6 +91,7 @@
 			</tr>
 		</table>
 		<p:dataTable id="specList"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{directLOABackingBean.managedBean.tplSpecAnswerList}"
 				var="spec" rowIndexVar="rowIndex" rowKey="#{spec}" rows="10"
 				width="100%">
