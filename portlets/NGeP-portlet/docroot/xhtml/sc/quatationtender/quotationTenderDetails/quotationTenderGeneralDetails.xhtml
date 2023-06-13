@@ -1033,7 +1033,7 @@
 						<td>
 							<table>
 								<tr>
-									<td>
+									<td><ui:remove>This td paired with below /td, but it will not pair and cause error in validation</ui:remove>
 							<p:inputText value="#{lbl['lbl.sc.no.available']}" style="width:200px;" disabled="true"
 							rendered="#{!approvalBackingBean.isEPVWorkflowStatusNull(scQt.qtId)}">
 							</p:inputText>
@@ -1048,7 +1048,7 @@
 							<td><p:message id="responsePeriodMsg"
 								for="responsePeriod" display="icon"
 								rendered="#{approvalBackingBean.isEPVWorkflowStatusNull(scQt.qtId)}"/></td>
-							</td><ui:remove>Intentionally exist to ensure no error happening.</ui:remove>
+							</td><ui:remove>Paired with above td with comment, won't be highlighted as pair if clicked</ui:remove>
 									<td colspan="2">
 										<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip1']}#{lbl['lbl.sc.qt.response.period.tooltip2']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.fromValue)} #{lbl['lbl.sc.qt.response.period.tooltip3']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.toValue)} #{lbl['lbl.sc.qt.response.period.tooltip4']}"/>
 									</td>
