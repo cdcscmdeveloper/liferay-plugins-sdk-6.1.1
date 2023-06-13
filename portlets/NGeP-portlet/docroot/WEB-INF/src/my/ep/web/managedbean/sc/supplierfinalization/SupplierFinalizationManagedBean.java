@@ -204,6 +204,15 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean pacDisable;
 	// #33174, #21695 End
 	
+	//6906 note 117 - start
+	private SelectItem[] decisionDropdown;
+	private boolean supplierFinalizationReadOnly = true;
+	private boolean disabledSelection;
+	private boolean noProposalSubmitted;
+	private List<String> disqualifiedStages;
+	private boolean hasSupplierQualifiedForCurrentSelection;//6906 note 202
+	//6906 note 117 - end
+	
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
 			add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
@@ -280,8 +289,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//28834 starts
 	private boolean disableBfButton;
 	private boolean ktReportGenerated;
+	private boolean disableJustifications;
 	//28834 end
 	
+	private ScQt checkCategoryCodeQt; // #29466
+
 	/**
 	 * @return the activeIndex
 	 */
@@ -2337,7 +2349,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setKtReportGenerated(boolean ktReportGenerated) {
 		this.ktReportGenerated = ktReportGenerated;
 	}	
-	//28834 end
+	
 	public boolean isDemoReq() {
 		return isDemoReq;
 	}
@@ -2345,6 +2357,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setDemoReq(boolean isDemoReq) {
 		this.isDemoReq = isDemoReq;
 	}
+	
+	/**
+	 * @return the disableJustifications
+	 */
+	public boolean isDisableJustifications() {
+		return disableJustifications;
+	}
+
+	/**
+	 * @param disableJustifications the disableJustifications to set
+	 */
+	public void setDisableJustifications(boolean disableJustifications) {
+		this.disableJustifications = disableJustifications;
+	}
+	//28834 end
 	
 	// //#33174 #21695 Farid
 	/**
@@ -2361,5 +2388,71 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.pacDisable = pacDisable;
 	}
 	// //#33174 #21695 End
+	
+	// #29466 - START
+	/**
+	 * @return the checkCategoryCodeQt
+	 */
+	public ScQt getCheckCategoryCodeQt() {
+		return checkCategoryCodeQt;
+	}
 
+	/**
+	 * @param checkCategoryCodeQt the checkCategoryCodeQt to set
+	 */
+	public void setCheckCategoryCodeQt(ScQt checkCategoryCodeQt) {
+		this.checkCategoryCodeQt = checkCategoryCodeQt;
+	}
+	// #29466 - END
+	//6906 note 117 - start
+	public SelectItem[] getDecisionDropdown() {
+		return decisionDropdown;
+	}
+
+	public void setDecisionDropdown(SelectItem[] decisionDropdown) {
+		this.decisionDropdown = decisionDropdown;
+	}
+
+	public boolean isSupplierFinalizationReadOnly() {
+		return supplierFinalizationReadOnly;
+	}
+
+	public void setSupplierFinalizationReadOnly(boolean supplierFinalizationReadOnly) {
+		this.supplierFinalizationReadOnly = supplierFinalizationReadOnly;
+	}
+
+	public boolean isDisabledSelection() {
+		return disabledSelection;
+	}
+
+	public void setDisabledSelection(boolean disabledSelection) {
+		this.disabledSelection = disabledSelection;
+	}
+
+	public boolean isNoProposalSubmitted() {
+		return noProposalSubmitted;
+	}
+
+	public void setNoProposalSubmitted(boolean noProposalSubmitted) {
+		this.noProposalSubmitted = noProposalSubmitted;
+	}
+
+	public List<String> getDisqualifiedStages() {
+		return disqualifiedStages;
+	}
+
+	public void setDisqualifiedStages(List<String> disqualifiedStages) {
+		this.disqualifiedStages = disqualifiedStages;
+	}
+	//6906 note 117 - end
+	
+	//6906 note 202 - start
+	public boolean isHasSupplierQualifiedForCurrentSelection() {
+		return hasSupplierQualifiedForCurrentSelection;
+	}
+
+	public void setHasSupplierQualifiedForCurrentSelection(boolean hasSupplierQualifiedForCurrentSelection) {
+		this.hasSupplierQualifiedForCurrentSelection = hasSupplierQualifiedForCurrentSelection;
+	}
+	//6906 note 202 - end
 }
