@@ -12635,6 +12635,17 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						}
 					}
 					// 11104-End
+					
+					//#28784 - Start
+					if(this.getManagedBean().getQt().isDemoRequired() && CollectionUtils.isNotEmpty(technicalCheckLIsts)){
+						for(ScQtCheckList checklist:technicalCheckLIsts){
+							if (checklist.getDefinationType().getParameterCode()
+									.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+								title=checklist.getTitle();
+								break;
+							}
+						}
+					}
 				
 					this.getManagedBean().setFinancialScoring(null);
 					this.getManagedBean().setOfferPricePackage(null);
@@ -12655,7 +12666,23 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						}
 					}
 					// 11104-End
-				
+					
+					addDemoTechnicalCheckList();//#28784
+					if(this.getManagedBean().getQt().isDemoRequired() && CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())){//11104-start
+						for(ScQtCheckList checklist:this.getManagedBean().getScQtCheckSt2techProposal()){
+							if (checklist.getDefinationType().getParameterCode()
+									.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+								if(null==checklist.getTitle() || StringUtils.isBlank(checklist.getTitle()) || StringUtils.isEmpty(checklist.getTitle())){
+									checklist.setTitle(title);
+								}
+								break;
+							}
+						}
+					}//#28784 - End
+					if (this.getManagedBean().getQt().isDemoRequired()) {
+						resetDemoSpecStatus();// #28784
+					}
+					
 					this.getManagedBean().setCheckListTitle("");
 					this.getManagedBean().setIndex(-1);
 					return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
@@ -12751,6 +12778,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					scQtCheckList.setPmEvalStatus(pendingStatus);
 					scQtCheckList.setSampleStatus(pendingStatus);
 					// #11140-End
+					scQtCheckList.setPmDemoStatus(pendingStatus);//#28784
 				}
 				// 1873 - end - note 52
 
@@ -13010,6 +13038,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				// 1873 - end
 
 				saveSpecMaintenanceWorkFlowStatus();
+				addDemoTechnicalCheckList();//#28784
+				if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
+					resetDemoSpecStatus();// #28784
+				}
 				successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.template.spec"), "", Boolean.FALSE);
 			}
 		// Bug #33661@Syazani 16/08/2022 -- Start
@@ -13514,7 +13546,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				scQtCheckList.getScQtDoc().getTplSpecMaster()
 						.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
 				scQtCheckList.setSampleStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION)); // #11104
-
+				//#28784 - Start
+				if (null == scQtCheckList.getPmDemoStatus()) {
+					scQtCheckList.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));//#28784
+				}
+				//#28784 - End
 				// Code to construct financial checklist..
 
 				if (scQt.isZonal()) {
@@ -13536,7 +13572,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				TplSpecMaster specMaster = TemplateSpecHelper.getInstance()
 						.cloneTplSpecMaster(
 								scQtCheckList.getScQtDoc().getTplSpecMaster(),
-								false, true, true);
+								false, true, true, false);//#28784
 				specMaster
 						.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
 
@@ -13831,6 +13867,34 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					retriveSpecdetails(this.getManagedBean().getQt().getQtId());
 				}
 				saveSpecMaintenanceWorkFlowStatus();
+				addDemoTechnicalCheckList();//#28784
+				if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
+					resetDemoSpecStatus();// #28784
+
+					boolean isModified = false;
+					boolean isSpecNotExist = false;
+					boolean isTemplateSpec = QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(scQtCheckList.getDefinationType().getParameterCode());
+					isModified = isTemplateSpec && isSpecQuestionsModified(scQtCheckList);
+					isSpecNotExist = isSpecQuestionNotExist(scQtCheckList);
+					if(isModified || !isTemplateSpec || isSpecNotExist){
+						List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
+						for (ScQtCheckList t : st2technicalproposalList) {
+							if (t.getDefinationType().getParameterCode()
+									.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)
+									&& null != t.getQtChecklistId() && t.getQtChecklistId()
+									.equals(scQtCheckList.getQtChecklistId())) {//#28784 exclude demo & add null condition
+								t.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));//#28784
+								}
+
+							if (t.getDefinationType().getParameterCode()
+									.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+								t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+								t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+								break;
+							}
+						}
+					}
+				}
 				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 			}
 			return null;
