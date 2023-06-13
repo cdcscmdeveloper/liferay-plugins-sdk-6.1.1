@@ -1639,6 +1639,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<String> paramTypes = null;
 	// #25692-End
 
+	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
+	
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -11022,6 +11024,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.finTempScQtChecklist = finTempScQtChecklist;
 	}
 	// 1873 - end
+	
+	// Bug #33661@Syazani 07/10/2022 -- Start
+	public boolean isFromSpecEndorse() {
+		return isFromSpecEndorse;
+	}
+
+	public void setFromSpecEndorse(boolean isFromSpecEndorse) {
+		this.isFromSpecEndorse = isFromSpecEndorse;
+	}
+	// Bug #33661@Syazani 07/10/2022 -- End
 	
 	//#25138 - Reendorsed - start
 	public int getSpecZoneTabIndex() {
