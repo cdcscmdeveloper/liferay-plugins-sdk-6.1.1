@@ -25,6 +25,7 @@
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.loiNegoDecisionType)}" />
 							</p:selectOneMenu>
+							#{lOIDetailBackingBean.managedBean.decision}
 							<p:message id="decisionMsg" for="decisionId" display="icon" />
 						</c:when>
 						<c:otherwise>

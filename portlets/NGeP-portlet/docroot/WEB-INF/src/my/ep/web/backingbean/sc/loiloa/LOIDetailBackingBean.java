@@ -1443,7 +1443,7 @@ public class LOIDetailBackingBean extends
 			this.getManagedBean().setProgressivePaymentList(null);
 		}
 		
-		
+		//#30008
 		if (scLoi.getNegoDecision() != null) {
 			getManagedBean().setDecision(scLoi.getNegoDecision());
 			getManagedBean().setJustification(scLoi.getDecisionJustification());
