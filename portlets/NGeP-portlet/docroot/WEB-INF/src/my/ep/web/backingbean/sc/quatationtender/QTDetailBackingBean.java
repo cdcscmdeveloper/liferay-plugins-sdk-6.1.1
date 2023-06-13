@@ -13302,6 +13302,23 @@ public void retrieveDemoQtDetails(Long qtId) {
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
 		QuationTenderReqDTO qtReqDTO=new QuationTenderReqDTO();
+		
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			CommitteResDTO resDTO = null;
+			ICommitteSO committeSO;
+			try {
+				committeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				resDTO = committeSO
+						.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
+				List<ScCommitteeMember> committeeMembersList = resDTO
+						.getCommMemberResultBean().getResultList();
+				qtReqDTO.setScCommitteeMemberList(committeeMembersList);
+			} finally {
+				committeSO = null;
+			}
+		
 		qtReqDTO.setQtdetail(this.getManagedBean().getQt());
 		qtReqDTO.setInActiveChecklist(this.getManagedBean().getInActiveChecklist());
 		qtReqDTO.setProcurementModeStr(this.getParameterDesc(this.getManagedBean().getQt().getProcurementMode()));
