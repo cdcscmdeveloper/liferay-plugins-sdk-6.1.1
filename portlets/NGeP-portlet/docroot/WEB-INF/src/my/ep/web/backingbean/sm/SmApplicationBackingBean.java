@@ -14697,6 +14697,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						getManagedBean().getSmSupplier().getSmAppl().getApplNo(), "APP", 
 						getManagedBean().getCurrentPageType());
 			}
+			RequestContext.getCurrentInstance().execute("revisionViewDlg.show()");
 		} catch (NullPointerException e){
 			throw new EpException(MessageConst.INFO_721212);
 		}
