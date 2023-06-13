@@ -120,13 +120,13 @@
 						action="#{backingBean.initRevisionDialog('N')}" process="@this"
 						partialSubmit="true" update=":#{p:component('revisionViewDlg')}"
 						onclick="blockWidget.show()" 
-						oncomplete="blockWidget.hide();revisionViewDlg.show();"/>&#160;&#160;
+						oncomplete="blockWidget.hide()"/>&#160;&#160;
 			</c:if>
 			<p:commandLink value="#{lbl['lbl.sm.view.original.appl']}"
 					action="#{backingBean.initRevisionDialog('O')}" process="@this"
 					partialSubmit="true" update=":#{p:component('revisionViewDlg')}" 
 					onclick="blockWidget.show()" 
-					oncomplete="blockWidget.hide();revisionViewDlg.show();"/>&#160;&#160;
+					oncomplete="blockWidget.hide()"/>&#160;&#160;
 			<!-- #34099 - end -->
 			<!-- #31269 - start -->
 			<p:commandLink rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}"
@@ -174,7 +174,7 @@
 	<!-- #34099 - start -->
 	<p:dialog id="revisionViewDlg" widgetVar="revisionViewDlg"
 		header="#{lbl['lbl.sm.view.revision']}"
-		height="600" width="1000" resizable="false" modal="true">
+		height="620" width="1200" resizable="false" modal="true">
 		<ui:include 
 			src="/xhtml/sm/revisionSmApplView/dialog/smViewDialogSideMenu_Page.xhtml" />
 	</p:dialog>
