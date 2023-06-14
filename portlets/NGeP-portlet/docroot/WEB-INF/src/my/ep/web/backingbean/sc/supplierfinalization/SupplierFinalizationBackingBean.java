@@ -4958,6 +4958,8 @@ public class SupplierFinalizationBackingBean extends
 				if(CollectionUtils.isEmpty(this.getManagedBean().getDisqualifiedStages())){
 					excludedDecisionList.add(
 							ParameterConst.DECISION_RE_EVALUATION);
+					excludedDecisionList.add(
+							ParameterConst.DECISION_RBP);
 				}
 				//6906 note 117 - end
 			}
@@ -8326,7 +8328,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				}
 			//} //17376-165
 		}
-		
+		this.evaluateDecisionList();//6906 &34812
 		return QTConstants.FC_SUPPLIER_FINALIZATION_PAGE;
 	}
 
@@ -8377,7 +8379,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		public ISearchResultBean<Object[]> pageChangeListener(
 				ISearchBean<Object[]> searchBean) {
 			//log.info("ShortlistedCommonSuppliersPagingDataModel.pageChangeListener");
-			SuppFinalizationResDTO resDTO = null;
+			//34746 - start
+			SuppFinalizationResDTO resDTO = new SuppFinalizationResDTO();
+			//34746 - end
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			try {
 				List<ScQtRecommend> selectedItemList = getManagedBean()
