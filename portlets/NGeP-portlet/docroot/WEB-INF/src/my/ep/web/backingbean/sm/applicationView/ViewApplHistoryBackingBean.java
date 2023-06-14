@@ -240,7 +240,6 @@ public class ViewApplHistoryBackingBean extends
 
 				getManagedBean().searchSupplier();
 			}
-			
 		}
 		//26238 - start
 		else {			
@@ -265,6 +264,9 @@ public class ViewApplHistoryBackingBean extends
 	public void viewUnClaimTask(String applNo) {
 		getManagedBean().setViewApplicationHistory(true);
 		getManagedBean().setViewSupplierProfile(true);
+		// #28767 - START
+		getManagedBean().setTabActiveIndex(0);
+		// #28767 - END
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setApplNo(applNo);
 		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
@@ -303,6 +305,10 @@ public class ViewApplHistoryBackingBean extends
 		// #14832 - To cater if resubmit link already expired and supplier still
 		// in progress (Supplier Temp), so will call alert popup that will
 		// redirect to clone new application and start fresh
+		//32627 START
+		List<String> rejectedStatus = Arrays
+				.asList(SupplierManagementConst.REJECTED_STATUSES);
+		//32627 END
 		if (getManagedBean().getSmAppl().getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
 			if (SmApplicationUtil
 					.isRejectedApplValidForResubmission(getManagedBean()
@@ -338,8 +344,29 @@ public class ViewApplHistoryBackingBean extends
 				SmCommonUtil.redirectToExternalUrl(getManagedBean()
 						.getResubmitUrl());
 			} else {
-				throw new EpException(SmCommonUtil.getMessage(
-						"lbl.sm.resubmitExpired", null));
+				//32627 START
+				SmAppl currAppl = this.getManagedBean().getSmAppl();
+				Boolean resubmit = true;
+				if(rejectedStatus.contains(currAppl.getPmStatus().getStatusId().toString())){
+					List<SmAppl> applList = this.getManagedBean().getSmSupplier().getSmAppls();
+					for(SmAppl appl : applList){
+						if(appl.getPmStatus() != null){ //32627
+							if(currAppl.getCreatedDate().before(appl.getCreatedDate()) &&
+									currAppl.getApplType().equals(appl.getApplType()) && 
+									appl.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED)){
+								resubmit = false;
+							}
+						}
+					}
+				}
+				if(!resubmit){
+					throw new EpException(SmCommonUtil.getMessage(
+							"lbl.sm.approvedApplicationCantProceed", null));
+				}else{
+					throw new EpException(SmCommonUtil.getMessage(
+							"lbl.sm.resubmitExpired", null));
+				}
+				//32627 END
 			}
 		}
 	}
@@ -1332,6 +1359,266 @@ public class ViewApplHistoryBackingBean extends
 	return uomCodeDesc;	
 	}
 	
+	public void resetInputOnChangeAccountType() {
+		
+		//log.info("OnChangeAccountType");
+		getManagedBean().setAgencyType(null);
+		getManagedBean().setAgencyName(StringUtils.EMPTY);
+		getManagedBean().setSearchEpNo(StringUtils.EMPTY);
+		super.resetSearch();
+		//#32598
+		getManagedBean().getSmSupplierDataModel().resetData();
+	}
+	// 25792 - end
+	
+	public void resubmitSSM(){
+		//#27232 - START SSM CHANGES FOR RESUBMIT
+		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType())){
+			//checking with ssm
+			SsmReqDTO ssmReqDTO = new SsmReqDTO();
+			ssmReqDTO.setRegNo(getManagedBean().getSmAppl().getSmSupplier().getRegNo());
+			ssmReqDTO.setBusinessType(getManagedBean().getSmAppl().getSmSupplier().getBusinessType());
+			//ssmReqDTO.setCheckOnly(true);
+			SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+			//27951
+			this.getManagedBean().setSsmResDTO(ssmResDTO);
+			if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
+				//check the business/company registration status in ssm
+				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
+				if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
+					//27382 - start
+					if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("L")){
+						throw new EpException(MessageConst.ERROR_721097,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+					}//27382 - Terminated 
+					if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("T")){
+						throw new EpException(MessageConst.ERROR_721098,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+					}//27382 - Dissolved Conversion to LLP
+					if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("B")){
+						if(businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType())){
+							throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.b", null) });
+						}
+						if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
+							throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.dissolved", null) });
+						}
+						}else{
+					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});}
+					} 
+					//27382 - end
+			} else{					
+				SmCommonUtil.ssmError(ssmResDTO);
+			}
+		}
+		//#27232 - END SSM CHANGES FOR RESUBMIT
+	}
+	
+	//28771 - start
+	public void onChangeSupportingDocumentMode(){
+		getManagedBean().searchSupplier();
+		
+	}
+	//28771 - end 
+	
+	//#31248 - START
+	public Boolean setResubmitButton(SmAppl smAppl){
+		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
+		SmWorkFlowStatusReqDTO smWorkFlowStatusReqDTO = new SmWorkFlowStatusReqDTO();
+		//32627 - START
+		//retrieve by latest reject appl id
+		MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+		mofReqDTO.setSupplierId(smAppl.getSmSupplier().getSupplierId());
+		mofReqDTO.setSmAppl(smAppl);
+		SmAppl latestRejectedAppl = SmServiceLookup
+				.getMofRegistrationSO()
+				.retrieveLatestRejectedApplicationBySupplierId(mofReqDTO)
+				.getSmAppl();
+		if(latestRejectedAppl != null &&
+				smAppl.getApplId().equals(latestRejectedAppl.getApplId())){
+		smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
+		}
+		List<String> rejectedStatus = Arrays
+				.asList(SupplierManagementConst.REJECTED_STATUSES);
+		
+		SmWorkFlowStatusResDTO smWorkFlowStatusResDTO = workFlowStatusSO.retrieveCurrentWorkFlowStatusByDocId(smWorkFlowStatusReqDTO);
+		Boolean button = false;
+		if(smWorkFlowStatusResDTO != null 
+				&& smWorkFlowStatusResDTO.getWorkflowStatus() != null 
+				&& smWorkFlowStatusResDTO.getWorkflowStatus().getSmAppl() != null
+				&& !smWorkFlowStatusResDTO.getWorkflowStatus().getSmAppl().isActiveAppl()){
+			button = true;
+			if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus() != null){
+				if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_DELETE_PENDING_APPL_CONTRACTOR)){
+					button = false;
+				} else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_DELETE_PENDING_APPL_CONSULTANT)){
+					button = false;
+				} else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(Long.parseLong(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PAYMENT))){
+					button = false;
+				} else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(Long.parseLong(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE))){
+					button = false;
+				}else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED)){
+					button = false;
+				}//#32002 - start
+				else if(rejectedStatus.contains(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().toString())
+						 && checkStatusMofNoBySupplierId(smAppl)== false){
+					button = false;
+				}//#32002 - end
+			}
+		}
+		return button;
+		//32627 - END
+	}
+	//#31248 - END
+	
+	//#11641 - Start
+	public int getMandatoryCounter() {
+		return mandatoryCounter++;
+	}
+
+	public int getNonMandatoryCounter() {
+		return nonMandatoryCounter++;
+	}
+	
+	public boolean isMandatoryEmpty() {
+		int mandatoryCount = 0;
+		for(SmApplSupportDoc suppDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+			if(suppDoc.getPmDocument().isMandatory()){
+				mandatoryCount++;
+			}
+		}
+		if(mandatoryCount > 0){
+			mandatoryEmpty = false;
+		}else{
+			mandatoryEmpty = true;
+		}
+		return mandatoryEmpty;
+	}
+	
+	public boolean isNonMandatoryEmpty() {
+		int nonMandatoryCount = 0;
+		for(SmApplSupportDoc suppDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+			if(!suppDoc.getPmDocument().isMandatory()){
+				nonMandatoryCount++;
+			}
+		}
+		if(nonMandatoryCount > 0){
+			this.nonMandatoryEmpty = false;
+		}else{
+			this.nonMandatoryEmpty = true;
+		}
+		return nonMandatoryEmpty;
+	}
+	
+	/**
+	 * inquiry row select
+	 */
+	public void inquiryRowSelect(String docMode){
+		if(docMode.equalsIgnoreCase("online")){
+			RequestContext.getCurrentInstance().update("resOutPanelId");
+		}
+		if(docMode.equalsIgnoreCase("offline")){
+			RequestContext.getCurrentInstance().update("resOutPanelIdOffline");
+		}
+	}
+
+	public boolean isInquiryResponse() {
+		for(SmApplInquiry smApplInquiry : this.getManagedBean().getSmAppl().getSmApplInquiries()){
+			if(smApplInquiry.getResponseDate() == null){
+				inquiryResponse = false;
+				return inquiryResponse;
+			}
+		}
+		return inquiryResponse;
+	}
+	
+	public List<SmApplSupportDocInquiry> getNoResponseInquiryForApplHistory(){
+		for(SmApplInquiry smApplInquiry : this.getManagedBean().getSmAppl().getSmApplInquiries()){
+			if(smApplInquiry.getResponseDate() == null){
+				return smApplInquiry.getSmApplSupportDocInquiries();
+			}
+		}
+		return null;
+	}
+	//11641 - END
+	
+	//#29482 - Start
+	public void assignSelAcadQualify(SmPersonnel smPersonnel) {
+		this.getManagedBean().setSmPersonnel(smPersonnel);
+		RequestContext.getCurrentInstance().execute("qualifyDialog.show()");
+	}
+	//#29482 - End
+	
+	//#29823 - START
+	public boolean isApplPORejectedAfterApprovelSV(){
+		boolean isRejected = false;
+		boolean isHasBasic = false;
+		if(this.getManagedBean().getSmAppl().getPmStatus().getStatusId() == 20112){
+			for(SmWorkflowStatus smWorkflowStatus : this.getManagedBean().getSmAppl().getSmWorkflowStatuses()){
+				if(smWorkflowStatus.getPmStatus().getStatusId() == 20116 || smWorkflowStatus.getPmStatus().getStatusId() == 20117){
+					isRejected = true;
+					break;
+				}
+			}
+		}
+		
+		for(SmAppl previousSmAppl : this.getManagedBean().getSmAppl().getSmSupplier().getSmAppls()){
+			if(previousSmAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)){
+				isHasBasic = true;
+				break;
+			}
+		}
+		
+		if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_MOF) && isRejected && !isHasBasic){
+			return false;
+		}else if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY) && isRejected){
+			return false;
+		}
+		
+		return true;
+	}
+	//#29823 - END
+	
+	//#32002 - start
+	public Boolean checkStatusMofNoBySupplierId(SmAppl smAppl){
+		
+		SmSupplier supplier = smAppl.getSmSupplier();
+		if (supplier.getSupplierId() != null
+				&& (smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_RENEW_MOF)
+				|| smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_UPDATE_MOF) //32627 START
+				|| smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_ADD_CATEGORY))) { //32627 END
+			SmMofAccount resultList = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(
+					supplier.getSupplierId());
+			if (resultList != null) {
+				if (resultList.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)
+						&& supplier.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
+					return false;
+				}
+				if (resultList.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)
+						&& supplier.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}//#32002 - end
+	
+	//14530
+	public boolean checkPoinquiry()
+	{
+		for(SmApplInquiry smapplinquiry : this.getManagedBean().getSmAppl().getSmApplInquiries()){
+			if(smapplinquiry.getInquirySubject().equalsIgnoreCase(SupplierManagementConst.INQUIRY_PO_SUPPLIER)){
+				return true;
+			}
+		}
+		return false;
+	}
+	/**
+	 * inquiry row select
+	 */
+	public void POinquiryRowSelect(SmApplInquiry applInquiry) {
+		this.getManagedBean().setPoToSupplierInquiry(applInquiry);
+		RequestContext.getCurrentInstance().update("inquiryDetails");
+	}
+	//14530
+	
 	//26238 - start
 	public void onViewDisciplinaryAction() {
 		//28237 - start
@@ -1506,247 +1793,5 @@ public class ViewApplHistoryBackingBean extends
 	}
 	//26238 - end
 	
-	public void resetInputOnChangeAccountType() {
-		
-		//log.info("OnChangeAccountType");
-		getManagedBean().setAgencyType(null);
-		getManagedBean().setAgencyName(StringUtils.EMPTY);
-		getManagedBean().setSearchEpNo(StringUtils.EMPTY);
-		super.resetSearch();
-		//#32598
-		getManagedBean().getSmSupplierDataModel().resetData();
-	}
-	// 25792 - end
 	
-	public void resubmitSSM(){
-		//#27232 - START SSM CHANGES FOR RESUBMIT
-		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType())){
-			//checking with ssm
-			SsmReqDTO ssmReqDTO = new SsmReqDTO();
-			ssmReqDTO.setRegNo(getManagedBean().getSmAppl().getSmSupplier().getRegNo());
-			ssmReqDTO.setBusinessType(getManagedBean().getSmAppl().getSmSupplier().getBusinessType());
-			//ssmReqDTO.setCheckOnly(true);
-			SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
-			//27951
-			this.getManagedBean().setSsmResDTO(ssmResDTO);
-			if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
-				//check the business/company registration status in ssm
-				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
-				if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
-					//27382 - start
-					if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("L")){
-						throw new EpException(MessageConst.ERROR_721097,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
-					}//27382 - Terminated 
-					if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("T")){
-						throw new EpException(MessageConst.ERROR_721098,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
-					}//27382 - Dissolved Conversion to LLP
-					if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("B")){
-						if(businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType())){
-							throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.b", null) });
-						}
-						if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
-							throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.dissolved", null) });
-						}
-						}else{
-					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});}
-					} 
-					//27382 - end
-			} else{					
-				SmCommonUtil.ssmError(ssmResDTO);
-			}
-		}
-		//#27232 - END SSM CHANGES FOR RESUBMIT
-	}
-	
-	//28771 - start
-	public void onChangeSupportingDocumentMode(){
-		getManagedBean().searchSupplier();
-		
-	}
-	//28771 - end 
-	
-	//#31248 - START
-	public Boolean setResubmitButton(SmAppl smAppl){
-		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
-		SmWorkFlowStatusReqDTO smWorkFlowStatusReqDTO = new SmWorkFlowStatusReqDTO();
-		smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
-		
-		SmWorkFlowStatusResDTO smWorkFlowStatusResDTO = workFlowStatusSO.retrieveCurrentWorkFlowStatusByDocId(smWorkFlowStatusReqDTO);
-		Boolean button = false;
-		if(smWorkFlowStatusResDTO != null 
-				&& smWorkFlowStatusResDTO.getWorkflowStatus() != null 
-				&& smWorkFlowStatusResDTO.getWorkflowStatus().getSmAppl() != null
-				&& !smWorkFlowStatusResDTO.getWorkflowStatus().getSmAppl().isActiveAppl()){
-			button = true;
-			if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus() != null){
-				if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_DELETE_PENDING_APPL_CONTRACTOR)){
-					button = false;
-				} else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_DELETE_PENDING_APPL_CONSULTANT)){
-					button = false;
-				} else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(Long.parseLong(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PAYMENT))){
-					button = false;
-				} else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(Long.parseLong(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE))){
-					button = false;
-				}else if(smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED)){
-					button = false;
-				}//#32002 - start
-				else if((smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION)
-						|| smWorkFlowStatusResDTO.getWorkflowStatus().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION))
-						 && checkStatusMofNoBySupplierId(smAppl)== false){
-					button = false;
-				}//#32002 - end
-				
-			}
-		}
-		return button;
-	}
-	//#31248 - END
-	
-	//#11641 - Start
-	public int getMandatoryCounter() {
-		return mandatoryCounter++;
-	}
-
-	public int getNonMandatoryCounter() {
-		return nonMandatoryCounter++;
-	}
-	
-	public boolean isMandatoryEmpty() {
-		int mandatoryCount = 0;
-		for(SmApplSupportDoc suppDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
-			if(suppDoc.getPmDocument().isMandatory()){
-				mandatoryCount++;
-			}
-		}
-		if(mandatoryCount > 0){
-			mandatoryEmpty = false;
-		}else{
-			mandatoryEmpty = true;
-		}
-		return mandatoryEmpty;
-	}
-	
-	public boolean isNonMandatoryEmpty() {
-		int nonMandatoryCount = 0;
-		for(SmApplSupportDoc suppDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
-			if(!suppDoc.getPmDocument().isMandatory()){
-				nonMandatoryCount++;
-			}
-		}
-		if(nonMandatoryCount > 0){
-			this.nonMandatoryEmpty = false;
-		}else{
-			this.nonMandatoryEmpty = true;
-		}
-		return nonMandatoryEmpty;
-	}
-	
-	/**
-	 * inquiry row select
-	 */
-	public void inquiryRowSelect(String docMode){
-		if(docMode.equalsIgnoreCase("online")){
-			RequestContext.getCurrentInstance().update("resOutPanelId");
-		}
-		if(docMode.equalsIgnoreCase("offline")){
-			RequestContext.getCurrentInstance().update("resOutPanelIdOffline");
-		}
-	}
-
-	public boolean isInquiryResponse() {
-		for(SmApplInquiry smApplInquiry : this.getManagedBean().getSmAppl().getSmApplInquiries()){
-			if(smApplInquiry.getResponseDate() == null){
-				inquiryResponse = false;
-				return inquiryResponse;
-			}
-		}
-		return inquiryResponse;
-	}
-	
-	public List<SmApplSupportDocInquiry> getNoResponseInquiryForApplHistory(){
-		for(SmApplInquiry smApplInquiry : this.getManagedBean().getSmAppl().getSmApplInquiries()){
-			if(smApplInquiry.getResponseDate() == null){
-				return smApplInquiry.getSmApplSupportDocInquiries();
-			}
-		}
-		return null;
-	}
-	//11641 - END
-	
-	//#29482 - Start
-	public void assignSelAcadQualify(SmPersonnel smPersonnel) {
-		this.getManagedBean().setSmPersonnel(smPersonnel);
-		RequestContext.getCurrentInstance().execute("qualifyDialog.show()");
-	}
-	//#29482 - End
-	
-	//#32002 - start
-	public Boolean checkStatusMofNoBySupplierId(SmAppl smAppl){
-		
-		SmSupplier supplier = smAppl.getSmSupplier();
-		if (supplier.getSupplierId() != null
-				&& smAppl.getApplType().equals(SupplierManagementConst.SM_APPLICATION_TYPE_RENEW_MOF)) {
-			SmMofAccount resultList = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(
-					supplier.getSupplierId());
-			if (resultList != null) {
-				if (resultList.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)
-						&& supplier.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
-					return false;
-				}
-				if (resultList.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)
-						&& supplier.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}//#32002 - end
-	
-	//14530
-	public boolean checkPoinquiry()
-	{
-		for(SmApplInquiry smapplinquiry : this.getManagedBean().getSmAppl().getSmApplInquiries()){
-			if(smapplinquiry.getInquirySubject().equalsIgnoreCase(SupplierManagementConst.INQUIRY_PO_SUPPLIER)){
-				return true;
-			}
-		}
-		return false;
-	}
-	/**
-	 * inquiry row select
-	 */
-	public void POinquiryRowSelect(SmApplInquiry applInquiry) {
-		this.getManagedBean().setPoToSupplierInquiry(applInquiry);
-		RequestContext.getCurrentInstance().update("inquiryDetails");
-	}
-	//14530
-	//#29823 - START
-	public boolean isApplPORejectedAfterApprovelSV(){
-		boolean isRejected = false;
-		boolean isHasBasic = false;
-		if(this.getManagedBean().getSmAppl().getPmStatus().getStatusId() == 20112){
-			for(SmWorkflowStatus smWorkflowStatus : this.getManagedBean().getSmAppl().getSmWorkflowStatuses()){
-				if(smWorkflowStatus.getPmStatus().getStatusId() == 20116 || smWorkflowStatus.getPmStatus().getStatusId() == 20117){
-					isRejected = true;
-					break;
-				}
-			}
-		}
-		
-		for(SmAppl previousSmAppl : this.getManagedBean().getSmAppl().getSmSupplier().getSmAppls()){
-			if(previousSmAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)){
-				isHasBasic = true;
-				break;
-			}
-		}
-		
-		if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_MOF) && isRejected && !isHasBasic){
-			return false;
-		}else if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY) && isRejected){
-			return false;
-		}
-		
-		return true;
-	}
-	//#29823 - END
 }
