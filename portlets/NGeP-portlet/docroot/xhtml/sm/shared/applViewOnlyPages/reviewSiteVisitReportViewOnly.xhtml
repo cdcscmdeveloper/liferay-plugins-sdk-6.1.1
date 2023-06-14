@@ -24,13 +24,16 @@
 			<!-- #28175 start -->
 			<!-- #28175 Reopen Start -->
 			<c:choose>
-				<c:when test="#{(fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or 
-					fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')) and
-					(viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusBumiputera or
-					viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusRegistered or
-					viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusBumiFromHome or
-					viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusNonBumiFromHome or
-					viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusForeign)}">
+				<!-- #28175 Reopen #94 Start -->
+				<c:when test="#{(fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or
+				    fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')) and 
+				    (viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusBumiputera or
+			        viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusRegistered or
+			        viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusBumiFromHome or
+			        viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusNonBumiFromHome or
+			        viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusForeign or 
+			        not viewSmApplBackingBean.managedBean.smAppl.activeAppl)}">
+		        <!-- #28175 Reopen #94 End -->
 					<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}"
 						style="white-space: normal; width:30%;">
 						<h:outputText rendered="#{!empty svTask.pmCategoryL3}"

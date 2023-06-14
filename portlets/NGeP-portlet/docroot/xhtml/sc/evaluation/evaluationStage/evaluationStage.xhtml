@@ -44,11 +44,19 @@
 						test="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq) or (evaluationBackingBean.managedBean.committeeType eq 'FEC'))}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.financial.itemized']}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
-							update="@form" />
+							update="@form" rendered="#{evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}"/>
+						<p:menuitem value="#{lbl['lbl.sc.financial']}"
+							action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
+							update="@form" rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}"/>
 					</c:if>
 					<!-- Bug #33178 adding noSupplierPackageExist-->
+					<ui:remove>
+					<!-- #25138(wip 4serangkai) bug -Start 8/6/2023 -->
+					</ui:remove>
 					<c:if
-						test="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq) or (evaluationBackingBean.managedBean.committeeType eq 'FEC'))}">
+						test="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq)
+						and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore
+						or (evaluationBackingBean.managedBean.committeeType eq 'FEC' and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore))}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.financial.package']}" disabled="#{evaluationBackingBean.managedBean.singleSpecQuestion or evaluationBackingBean.managedBean.noSupplierPackageExist}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStagePackage}"
 							update="@form" />
@@ -133,10 +141,14 @@
 					<ui:include
 						src="/xhtml/sc/evaluation/evaluationStage/financial/financialEvaluation.xhtml"></ui:include>
 
-				</c:if> <c:if
+				</c:if> 
+				<ui:remove>
+					<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+				</ui:remove>
+					<c:if
 					test="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq 
-					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1') 
-					or (evaluationBackingBean.managedBean.committeeType eq 'FEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'))}">
+					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1' and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore) 
+					or (evaluationBackingBean.managedBean.committeeType eq 'FEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1' and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore))}">
 
 
 					<ui:include
@@ -155,7 +167,19 @@
 
 					<ui:include src="financialEvaluationRecommendationSummary.xhtml" />
 
-				</c:if>  <c:if
+				</c:if><!-- 2tier -->
+				<ui:remove>
+						<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+				</ui:remove>
+				<c:if
+					test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1' 
+					and evaluationBackingBean.managedBean.committeeType eq 'FEC'
+					and evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
+
+
+					<ui:include src="financialEvaluationRecommendationSummary.xhtml" />
+
+				</c:if>   <c:if
 					test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq 
 					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '3'}">
 
@@ -198,6 +222,22 @@
 
 					
 					<ui:include src="presentationOrDemoTech.xhtml" />
+
+				</c:if><c:if
+					test="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2'
+					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+
+					<ui:param name="passingScore"
+								value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>
+					<ui:include src="technicalPackageSummary.xhtml"></ui:include>
+					
+
+				</c:if><c:if
+					test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true' 
+					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2'}">
+
+					
+					<ui:include src="TECSummary.xhtml" />
 
 				</c:if></td>
 		</tr>
@@ -296,7 +336,7 @@
 					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '1'}">
 
 
-
+<ui:remove> 2tier </ui:remove>
 					<p:commandButton value="#{lbl['lbl.btn.next']}"
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -370,7 +410,7 @@
 					 <p:commandButton value="#{lbl['lbl.btn.next']}"
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','4')}"
+						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
 						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 						update=":form" />
 					
@@ -408,8 +448,9 @@
 				<ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'
 					and evaluationBackingBean.managedBean.tabFinancialIndex eq '1'}">
-<!-- #34588 start cater WIP -->
-					
+			<ui:remove>
+				<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+			</ui:remove>
 						<c:if test="#{evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
 							<p:commandButton value="#{lbl['lbl.btn.next']}"
 								style="float:right;" styleClass="BtnSpacing"
