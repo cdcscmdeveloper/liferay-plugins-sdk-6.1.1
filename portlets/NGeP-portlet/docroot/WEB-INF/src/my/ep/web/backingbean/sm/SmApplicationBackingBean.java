@@ -2423,6 +2423,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							}
 						//27382 - end
 						this.getManagedBean().setCompanyValidWithSSM(true);
+						SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
 						// #24819
 						this.getManagedBean().getSmSupplier().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 						subStartTime = System.currentTimeMillis();
@@ -14696,6 +14697,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						getManagedBean().getSmSupplier().getSmAppl().getApplNo(), "APP", 
 						getManagedBean().getCurrentPageType());
 			}
+			RequestContext.getCurrentInstance().execute("revisionViewDlg.show()");
 		} catch (NullPointerException e){
 			throw new EpException(MessageConst.INFO_721212);
 		}
@@ -16039,6 +16041,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 			//27382 - end
 			this.getManagedBean().setCompanyValidWithSSM(true);
+			SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
 			//SET COMPANY NAME
 			//if rob no need to copy capital.
 			//long tempAnnualRevenue = this.getManagedBean().getSmAppl().getSmCompanyBasic().getAnnualRevenue();
