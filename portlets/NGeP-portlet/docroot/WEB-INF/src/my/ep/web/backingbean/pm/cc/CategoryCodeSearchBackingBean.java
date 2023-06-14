@@ -1067,8 +1067,6 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 					}
 				}
 		        
-		        // #33387 - Add null checking
-		        if (activeCategoryList != null) {
 		        apprvList.addAll(activeCategoryList);
 				SmApplicationUtil.sortSupplierCategory(apprvList);
 				getManagedBean().setApprovedCategoryList(apprvList); 
@@ -1102,8 +1100,6 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 						}
 					}
 				}
-				// #33387 - Add null checking
-		        }
 				
 				for(PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
 					item = new SelectItem(pmCategoryL3.getCategoryL3Id(),

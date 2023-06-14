@@ -80,7 +80,7 @@
        		 	<p:commandLink id="serviceSpec" update=":form:itemSpecDlg" action="#{suspensionBackingBean.viewItemSpecDlg(itemData)}">
        		 		<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}"/>
 			 	</p:commandLink>
-				<br/>				
+				<br/>
 			  	<h:outputText id="extensionCodeID" value="#{itemData.scRequestItem.cmItem.extensionCode}" size="50" escape="false"  style="float:left; text-align:left; display:block;width:200px"/>       		 				                        
 	      	</p:column>	       
 	         <!-- #31558 end -->
@@ -140,45 +140,41 @@
    		styleClass="pop_up_top" modal="true" width="auto" height="auto" resizable="false">   		
    		
    		<h:panelGroup rendered="#{(suspensionBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeDirectPurchase)}">
-   			<h:panelGrid column="2" cellspacing="7" style="margin-bottom: 20px;margin-top: 10px;">
+   			<h:panelGrid column="1" style="margin-bottom: 20px;margin-top: 10px;">
     			
     			<h:panelGroup>
-     		 			<h:outputText value="#{lbl['lbl.ct.item.desc']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
+     		 			<h:outputText value="#{lbl['lbl.ct.item.desc']}" escape="false" style="float:left;font-weight:bold;display:block;width:80px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
      		 		 	<h:outputText value="#{suspensionBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}" escape="false" style="float:left;font-weight:bold;display:block;width:600px"/>
      		 	</h:panelGroup>
      		 		
      			<c:if test="#{suspensionBackingBean.managedBean.supplierOffer ne null}">    		 		
      		 		<h:panelGroup>
-     		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
+     		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:80px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{fn:replace(suspensionBackingBean.managedBean.supplierOffer,'\\n','&lt;br/&gt;')}" escape="false" style="float:left;font-weight:bold;display:block;width:400px"/>
-     		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}"/>
+     		 		 	<h:outputText value="#{suspensionBackingBean.managedBean.supplierOffer}" escape="false" style="float:left;font-weight:bold;display:block;width:600px"/>
      		 		</h:panelGroup>      		 				
      			</c:if>
      			<c:if test="#{suspensionBackingBean.managedBean.supplierOffer eq null}">										
      				<h:panelGroup>
-     		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
+     		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:80px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;width:400px"/>
-     		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}"/>
+     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;width:600px"/>
      		 		</h:panelGroup> 
      			</c:if>     		   	
      		   		
      			<c:if test="#{suspensionBackingBean.managedBean.newOfferSpec ne null}">
      		 		<h:panelGroup>
-     		 			<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
+     		 			<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:80px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{fn:replace(suspensionBackingBean.managedBean.newOfferSpec,'\\n','&lt;br/&gt;')}" escape="false" style="float:left;font-weight:bold;display:block;width:400px"/>
-     		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"/>
+     		 		 	<h:outputText value="#{suspensionBackingBean.managedBean.newOfferSpec}" escape="false" style="float:left;font-weight:bold;display:block;width:600px"/>
      		 		</h:panelGroup>      		 				 			
      			</c:if>
      			<c:if test="#{suspensionBackingBean.managedBean.newOfferSpec eq null}">
      				<h:panelGroup>
-     		 			<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
+     		 			<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:80px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;width:400px"/>
-     		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"/>
+     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;width:600px"/>
      		 		</h:panelGroup> 
      			</c:if>
      			<!-- #31558 end -->     					
@@ -215,18 +211,14 @@
    						<!-- #31558 end -->
    					</p:column>   
    					<p:column styleClass="column-align-center" style="white-space:normal;">
-     					<f:facet name = "header">#{lbl['lbl.ct.supp.offer']}
-     					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.qt.supplieroffer']}"/>
-     					</f:facet>     					
+     					<f:facet name = "header">#{lbl['lbl.ct.supp.offer']}</f:facet>     					
      					<!-- #31558 start - Aligning the content to the left -->
      					<h:outputText value="#{item.supplierOffer}" style="float:left;text-align:left;" rendered="#{item.supplierOffer ne null}"></h:outputText>	      					
       					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;text-align:left;" rendered="#{item.supplierOffer eq null}"></h:outputText>     																											
    						<!-- #31558 end -->
    					</p:column>   
    					<p:column styleClass="column-align-center" style="white-space:normal;">
-      					<f:facet name = "header">#{lbl['lbl.ct.new.offer.spec']}
-      					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"/>
-      					</f:facet>     					
+      					<f:facet name = "header">#{lbl['lbl.ct.new.offer.spec']}</f:facet>     					
       					<!-- #31558 start - Aligning the content to the left -->
       					<h:outputText value="#{item.newOfferSpec}" style="float:left;text-align:left;" rendered="#{item.newOfferSpec ne null}"></h:outputText>        					
       					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;text-align:left;" rendered="#{item.newOfferSpec eq null}"></h:outputText>    					   										

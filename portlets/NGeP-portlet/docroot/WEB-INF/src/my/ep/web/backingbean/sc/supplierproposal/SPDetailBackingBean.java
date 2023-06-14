@@ -3035,13 +3035,6 @@ public class SPDetailBackingBean extends
 							sampleSubmissionDtls.get(0));
 				}
 			}
-			
-			// 33509 &33191, #11104 - start
-			if (null != resDTO.getScQtProposal()) {
-				getManagedBean().setQtProposal(resDTO.getScQtProposal());
-			}
-			// 33509 &33191, #11104 - End
-
 			getManagedBean().setScQtSampleLable(resDTO.getScQtSampleLable());
 			return NAV_TO_SAMPLING_ADDRESS_PAGE;
 		} finally {

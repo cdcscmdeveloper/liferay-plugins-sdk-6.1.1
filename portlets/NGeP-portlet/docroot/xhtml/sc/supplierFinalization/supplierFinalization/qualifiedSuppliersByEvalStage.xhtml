@@ -5,11 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
-	<!-- #29466 - START -->
-	<ui:param name="manufacturercategoryCode"
-		value="#{suppFinalizationBackingBean.checkManufacturerCategoryCodes(suppFinalizationBackingBean.managedBean.checkCategoryCodeQt)}"></ui:param>
-	<!-- #29466 - END -->
+	
 	<!-- Qualified Supplier Details By Evaluation Stage dialog -->
 	<!-- 21695 -start- -->
 	<p:dialog id="qualSuppDetailsPopupId" widgetVar="qualSuppDetailsPopup"
@@ -90,12 +86,9 @@
 				</h:outputText>
 			</p:column>
 
-			<!-- #29466 - START -->
-			<p:column
-				headerText="#{lbl[manufacturercategoryCode ?'lbl.sc.pref.margin.manufacturer' :'lbl.sc.pref.margin']}"
-				style="width:5%; text-align:right; white-space:normal;"
-				rendered="#{isFinancialEvalStageByPkg}">
-				<!-- #29466 - END -->
+			<p:column headerText="#{lbl['lbl.sc.pref.margin']}" 
+					  style="width:5%; text-align:right; white-space:normal;" 
+					  rendered="#{isFinancialEvalStageByPkg}">
 				<h:outputText
 					rendered="#{qualifiedSupp.preferenceMargin gt 0}"
 					value="#{qualifiedSupp.preferenceMargin}">

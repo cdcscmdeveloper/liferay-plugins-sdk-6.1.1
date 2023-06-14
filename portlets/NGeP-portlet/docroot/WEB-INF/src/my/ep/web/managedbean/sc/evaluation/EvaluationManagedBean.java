@@ -30,6 +30,10 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtDemo;
+import my.ep.persistence.entity.sc.quationtender.ScQtDemoByItemScore;
+import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplier;
+import my.ep.persistence.entity.sc.quationtender.ScQtDemoTechnicalCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
@@ -566,6 +570,22 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private Boolean finPackageScore;
 	private Boolean checkTecSpecNotOffer;
 	private Boolean isScoringReq;
+	
+	//#28784 - start
+	private boolean evalStatusComp;
+	private boolean afterDemoInv;;
+	private Long demoSupplierNo;
+	private BigDecimal demoTotalScore;
+	private List<ScQtCheckList> scQtCheckSt2techProposal;
+	private int technicalTableRow;
+	private List<ScQtCheckList> s2TechSelect;
+	private List<ScQtDemoByItemScore> byItemDemoList;
+	private ScQtDemo scQtDemo;
+	private ScQtDemoSupplier scQtDemoSupplier;
+	private String demoScore;
+	private BigDecimal otherScore;
+	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
+	//#28784 - end
 	/** The total technical package max score. */
 	private String totalMaxScore;
 	private Long evalStatus;
@@ -3921,6 +3941,176 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setSpeczonedtlReq(boolean speczonedtlReq) {
 		this.speczonedtlReq = speczonedtlReq;
 	}
+//#28784 - start
+	/**
+	 * @return the evalStatusComp
+	 */
+	public boolean isEvalStatusComp() {
+		return evalStatusComp;
+	}
+
+	/**
+	 * @param evalStatusComp the evalStatusComp to set
+	 */
+	public void setEvalStatusComp(boolean evalStatusComp) {
+		this.evalStatusComp = evalStatusComp;
+	}
+
+	/**
+	 * @return the afterDemoInv
+	 */
+	public boolean isAfterDemoInv() {
+		return afterDemoInv;
+	}
+
+	/**
+	 * @param afterDemoInv the afterDemoInv to set
+	 */
+	public void setAfterDemoInv(boolean afterDemoInv) {
+		this.afterDemoInv = afterDemoInv;
+	}
+
+	/**
+	 * @return the demoTotalScore
+	 */
+	public BigDecimal getDemoTotalScore() {
+		return demoTotalScore;
+	}
+
+	/**
+	 * @param demoTotalScore the demoTotalScore to set
+	 */
+	public void setDemoTotalScore(BigDecimal demoTotalScore) {
+		this.demoTotalScore = demoTotalScore;
+	}
+	
+	/**
+	 * @return the scQtCheckSt2techProposal
+	 */
+	public List<ScQtCheckList> getScQtCheckSt2techProposal() {
+		return scQtCheckSt2techProposal;
+	}
+
+	/**
+	 * @param scQtCheckSt2techProposal the scQtCheckSt2techProposal to set
+	 */
+	public void setScQtCheckSt2techProposal(
+			List<ScQtCheckList> scQtCheckSt2techProposal) {
+		this.scQtCheckSt2techProposal = scQtCheckSt2techProposal;
+	}
+	
+	/**
+	 * @return the s2TechSelect
+	 */
+	public List<ScQtCheckList> getS2TechSelect() {
+		return s2TechSelect;
+	}
+
+	/**
+	 * @param s2TechSelect the s2TechSelect to set
+	 */
+	public void setS2TechSelect(List<ScQtCheckList> s2TechSelect) {
+		this.s2TechSelect = s2TechSelect;
+	}
+	
+	/**
+	 * @return the technicalTableRow
+	 */
+	public int getTechnicalTableRow() {
+		return technicalTableRow;
+	}
+
+	/**
+	 * @param technicalTableRow the technicalTableRow to set
+	 */
+	public void setTechnicalTableRow(int technicalTableRow) {
+		this.technicalTableRow = technicalTableRow;
+	}
+	
+	/**
+	 * @return the demoSupplierNo
+	 */
+	public Long getDemoSupplierNo() {
+		return demoSupplierNo;
+	}
+
+	/**
+	 * @param demoSupplierNo the demoSupplierNo to set
+	 */
+	public void setDemoSupplierNo(Long demoSupplierNo) {
+		this.demoSupplierNo = demoSupplierNo;
+	}
+	
+	/**
+	 * @return the byItemDemoList
+	 */
+	public List<ScQtDemoByItemScore> getByItemDemoList() {
+		return byItemDemoList;
+	}
+
+	/**
+	 * @param byItemDemoList the byItemDemoList to set
+	 */
+	public void setByItemDemoList(List<ScQtDemoByItemScore> byItemDemoList) {
+		this.byItemDemoList = byItemDemoList;
+	}
+	
+	/**
+	 * @return the scQtDemo
+	 */
+	public ScQtDemo getScQtDemo() {
+		return scQtDemo;
+	}
+
+	/**
+	 * @param scQtDemo the scQtDemo to set
+	 */
+	public void setScQtDemo(ScQtDemo scQtDemo) {
+		this.scQtDemo = scQtDemo;
+	}
+	
+	/**
+	 * @return the scQtDemoSupplier
+	 */
+	public ScQtDemoSupplier getScQtDemoSupplier() {
+		return scQtDemoSupplier;
+	}
+
+	/**
+	 * @param scQtDemoSupplier the scQtDemoSupplier to set
+	 */
+	public void setScQtDemoSupplier(ScQtDemoSupplier scQtDemoSupplier) {
+		this.scQtDemoSupplier = scQtDemoSupplier;
+	}
+	
+	/**
+	 * @return the demoScore
+	 */
+	public String getDemoScore() {
+		return demoScore;
+	}
+
+	/**
+	 * @param demoScore the demoScore to set
+	 */
+	public void setDemoScore(String demoScore) {
+		this.demoScore = demoScore;
+	}
+
+	/**
+	 * @return the otherScore
+	 */
+	public BigDecimal getOtherScore() {
+		return otherScore;
+	}
+
+	/**
+	 * @param otherScore the otherScore to set
+	 */
+	public void setOtherScore(BigDecimal otherScore) {
+		this.otherScore = otherScore;
+	}
+	//#28784 - end
 
 	public List<ScQtProposalAmount> getQtProposalAmounts() {
 		return qtProposalAmounts;
@@ -4001,6 +4191,22 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.noSupplierPackageExist = noSupplierPackageExist;
 	}
 	// #25138, #21695 -end-
+	//#28784 add remarks - start
+	/**
+	 * @return the demoTechnicalCommitteeRemark
+	 */
+	public List<ScQtDemoTechnicalCommitteeRemark> getDemoTechnicalCommitteeRemark() {
+		return demoTechnicalCommitteeRemark;
+	}
+
+	/**
+	 * @param demoTechnicalCommitteeRemark the demoTechnicalCommitteeRemark to set
+	 */
+	public void setDemoTechnicalCommitteeRemark(
+			List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark) {
+		this.demoTechnicalCommitteeRemark = demoTechnicalCommitteeRemark;
+	}
+	//#28784 add remarks - end
 	
 	// #34452 related to #25138 -start
 	/**

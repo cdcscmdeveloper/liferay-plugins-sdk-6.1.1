@@ -1709,6 +1709,7 @@ u.underline {
 													</tr>
 													
 											#end
+										#end	
 												
 													##specval
 													#foreach($combine in $tplspecQuestion.listCombineSpec)
@@ -1744,7 +1745,7 @@ u.underline {
 															#end
 														</tr>
 													#end
-													#end
+													
 											
 											#end	
 									
@@ -1793,6 +1794,7 @@ u.underline {
 											
 											
 											#end
+								#end			
 									##26130 - end 11032022		
 									
 									##26130 - zaim start
@@ -1830,7 +1832,6 @@ u.underline {
 																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$serviceScope</td>
 															#end
 														#end
-												#end
 												#end
 											</tr>
 									
@@ -2280,6 +2281,7 @@ u.underline {
 													</tr>
 													
 											#end
+										#end	
 												
 													##specval
 													#foreach($combine in $tplspecQuestion.listCombineSpec)
@@ -2317,7 +2319,7 @@ u.underline {
 															##26130 - end 03032022
 														</tr>
 													#end
-													#end
+													
 											
 											#end	
 									
@@ -2375,6 +2377,7 @@ u.underline {
 												##26130 - end 03032022
 											</tr>	
 											#end
+									#end		
 									##26130 - end 11032022
 									
 									##26130 - zaim start
@@ -2412,7 +2415,6 @@ u.underline {
 															#end
 														#end
 												#end
-											 #end	
 											</tr>
 									
 									#end

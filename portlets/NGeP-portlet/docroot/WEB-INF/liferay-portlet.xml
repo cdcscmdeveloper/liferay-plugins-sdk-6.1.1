@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.1.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_1_0.dtd">
+<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.2.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_2_0.dtd">
 <liferay-portlet-app>
 	<portlet>
 		<portlet-name>auSearch</portlet-name>
@@ -3491,6 +3491,18 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>cancelLoaApproval-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>demoInvitation</portlet-name>
+		<icon>/icon.png</icon>
+		<use-default-template>true</use-default-template>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>demoInvitation-portlet</css-class-wrapper>
 	</portlet>
 	
 	<portlet>

@@ -164,6 +164,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private String previousPageUrl;	
 	
+	//#28784
+	private boolean isDemoReq;
+	
 //	private List<ScQtEvaluationResultDtl> qualifiedSuppliersByEvalStage;
 	
 	/** Qualified suppliers by evaluation stage */
@@ -2346,6 +2349,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setKtReportGenerated(boolean ktReportGenerated) {
 		this.ktReportGenerated = ktReportGenerated;
 	}	
+	
+	public boolean isDemoReq() {
+		return isDemoReq;
+	}
+
+	public void setDemoReq(boolean isDemoReq) {
+		this.isDemoReq = isDemoReq;
+	}
 	
 	/**
 	 * @return the disableJustifications

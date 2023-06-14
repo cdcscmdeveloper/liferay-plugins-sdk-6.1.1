@@ -732,7 +732,7 @@ public class QtSpecCloneBackingBean extends
 			// 33858-End
 
 			TplSpecMaster copy = TemplateSpecHelper.getInstance().cloneTplSpecMaster(resDTO.getSpecMaster(), true,
-					getManagedBean().getQt().isTechEvaluationReq(), true);
+					getManagedBean().getQt().isTechEvaluationReq(), true, false);//#28784);
 
 			copy.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
 			

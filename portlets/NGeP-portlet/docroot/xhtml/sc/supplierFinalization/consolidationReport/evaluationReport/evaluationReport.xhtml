@@ -26,11 +26,11 @@
 				<h:outputText
 					value="#{consolidationReportBackingBean.getParameterDesc(report.definationType)}" />
 			</p:column>
-
+			<!-- #28784 -->
 			<p:column headerText="#{lbl['lbl.sc.action']}"
 				style="width:15%; white-space:normal; text-align: center;">
 				<ui:fragment
-					rendered="#{report.pmDocument ne null and
+					rendered="#{consolidationReportBackingBean.managedBean.demoReq || report.pmDocument ne null and
 										 	consolidationReportBackingBean.managedBean.getDirectdownloaddocdefkeys()
 										 		.contains(report.pmDocument.docDefinitionKey)}">
 					<p:commandButton id="download" icon="ui-icon-download"

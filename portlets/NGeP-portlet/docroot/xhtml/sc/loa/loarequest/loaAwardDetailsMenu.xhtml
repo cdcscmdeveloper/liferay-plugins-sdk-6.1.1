@@ -41,8 +41,7 @@
 								value="#{lbl['lbl.sc.price.inquiry.item.name']}" /></td>
 						<td width="90%"><p:inputText id="itemNameSearchInput"
 								value="#{lOADetailBackingBean.itemNameSearchCriteria}"
-								style="width:310px;"
-								onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #34646 -->
+								style="width:310px;">
 								<p:ajax partialSubmit="true" process="@this" update="@this" />
 							</p:inputText></td>
 					</tr>

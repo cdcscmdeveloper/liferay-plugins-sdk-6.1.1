@@ -27,6 +27,16 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.bean.application.NgepApplicationBean; // #12177 Refactor
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -121,6 +131,7 @@ import my.ep.jaxb.fl.common.user.FLUserDataType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlAddress;
@@ -151,6 +162,7 @@ import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.pm.common.VPmDo;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
@@ -177,6 +189,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.converter.pm.PmUserConverter;
 import my.ep.web.managedbean.fl.pr.PurchaseRequestManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -186,16 +199,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.FLSupplierItemVO;
-
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.util.PortalUtil;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 
 /**
  * Backing Bean for Create Purchase Order.
@@ -485,15 +489,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			Calendar calendar = Calendar.getInstance();
 			if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
 				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
-				getManagedBean().getFulfilmentRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));//34555
 			}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
 				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
-				getManagedBean().getFulfilmentRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));//34555
 			}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_YEARS)) {
 				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_YEARS));
-				getManagedBean().getFulfilmentRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_YEARS));//34555
 			}
-//			getManagedBean().getFulfilmentRequest().setEndDate(calendar.getTime()); //Close for #34555
+			getManagedBean().getFulfilmentRequest().setEndDate(calendar.getTime());
 		}
 		for(FlFulfilmentItem item : getManagedBean().getFulfilmentRequest().getFlFulfilmentItems()){
 			if(item.getFlQuery() != null){
@@ -1477,15 +1478,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			//26279 - end
 		}
 		initializePRBeans();
-		log.info("end - initializePRBeans");
-		//log.info("start - updateDeliveryDate");
-		//updateDeliveryDate();
-		//log.info("end - updateDeliveryDate");
-		//34555-start
-		//log.info("start - updateMaxDeliveryDate");
-		updateMaxDeliveryDate();
-		//log.info("end - updateMaxDeliveryDate");
-		//34555-end
+		updateDeliveryDate();
 		/*#17087 Get Zonal flag*/
 		getzonalTest();
 		//Redmine #20011
@@ -4773,6 +4766,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		this.zonalTest = zonalTest;
 	}
 	
+	//24893 - start
+	/**
+	 * check role user is requisitioner
+	 */
+	public boolean isRequisitioner() {
+		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
+	}
+	//24893 - end
+	
 	/**
 	 * Add/display only cancel/reject button if SQ not valid 
 	 */
@@ -4881,15 +4883,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				"disciplinaryActionHistoryDlg.show();");
 	}
 	//26279 - end
-	
-	//24893 - start
-	/**
-	 * check role user is requisitioner
-	 */
-	public boolean isRequisitioner() {
-		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
-	}
-	//24893 - end
 	
 	//12183 - Start
 	public String getDocStatus(FlFulfilmentRequest flFulfilmentRequest){
@@ -5054,23 +5047,4 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			successMessage(MessageConst.INFO_745088, param, true);
 		}
 		//#28718 - End
-		
-		//34555-start
-		/**
-		 * Update delivery date based on delivery Term and uomCode.
-		 */
-		public void updateMaxDeliveryDate() {
-			Date startDate = getManagedBean().getFulfilmentRequest().getStartDate();
-			int deliveryTerm = 0;
-			String uomCode = "";
-			deliveryTerm = getManagedBean().getFulfilmentRequest().getDeliveryTerm();
-			uomCode = getManagedBean().getFulfilmentRequest().getPmUom().getParameterCode();
-			
-			if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
-				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
-			}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
-				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
-			}
-		}
-		//34555-End
 }
