@@ -11138,7 +11138,7 @@ if (null != checklist && !checklist.isEmpty()) {
 					if(!techInactive.toString().equals(null) 
 							&& !techInactive.toString().equals("")){
 						this.getManagedBean().setDisableButtonForInactiveChecklist(true);
-						throw new EpException(MessageConst.ERROR_775196,
+						throw new EpException(MessageConst.ERROR_775197,
 								new String[] { techInactive.toString() });
 					}
 			} catch (Exception e) {
@@ -11164,7 +11164,7 @@ if (null != checklist && !checklist.isEmpty()) {
 					if(!finInactive.toString().equals(null) 
 							&& !finInactive.toString().equals("")){
 						this.getManagedBean().setDisableButtonForInactiveChecklist(true);
-						throw new EpException(MessageConst.ERROR_775197,
+						throw new EpException(MessageConst.ERROR_775198,
 								new String[] { finInactive.toString() });
 					}
 			} catch (Exception e) {
