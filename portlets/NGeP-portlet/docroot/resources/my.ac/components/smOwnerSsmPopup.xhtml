@@ -13,7 +13,7 @@
 		<cc:attribute name="btnOkProcess" required="false" default="@this" />
 		<cc:attribute name="btnOkUpdate" required="false" default="@form" />
 		<cc:attribute name="btnCancelLabel" required="true" />
-		<cc:attribute name="height" default="170" />
+		<cc:attribute name="height" default="auto !important" />
 		<cc:attribute name="width" default="650" />
 	</cc:interface>
 
@@ -65,7 +65,7 @@
 			style="overflow-wrap: break-word;" 
 			header="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwnerChangeRole}" 
 			widgetVar="#{cc.attrs.dialogId}ChangeWidgetVar" modal="true"
-			height="100" width="800" resizable="false" >
+			height="auto !important" width="800" resizable="false" >
 			<p:outputPanel id="popupRolePanelId">
 				<p:dataTable var="person" widgetVar="personRolePopupVar"
 					value="#{cc.attrs.bBean.managedBean.personnelsRole}"

@@ -78,14 +78,27 @@
 						style="width:30%;white-space: normal;text-align:right;">
 						<h:outputText value="#{qualifiedSupplier.totalScore}"></h:outputText>
 					</p:column>
+					
+					<p:column style="width:25%;white-space: normal;text-align:center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.rating']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
+					</f:facet>
+					<h:outputText
+						value="#{empty qualifiedSupplier.totalRating? 0: qualifiedSupplier.totalRating}" />
+					</p:column>
+					
 				</p:dataTable>
 				<p:spacer height="10px" />
 				<table>
+				<ui:remove>
+						<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+				</ui:remove>
 					<tr>
 						<td style="width: 230px;"><h:outputLabel
 								value="#{lbl['lbl.sc.passing.score']}" /></td>
 						<td><p:inputText readonly="true" disabled="true"
-								style="text-align:right" value="#{passingScore}"></p:inputText></td>
+								style="text-align:right" value="#{evaluationBackingBean.managedBean.passingScore}"></p:inputText></td>
 					</tr>
 					<tr>
 						<td><h:outputLabel
@@ -123,6 +136,15 @@
 					<p:column headerText="#{lbl['lbl.sc.total.score']}"
 						style="width:50%;white-space: normal;text-align:right;">
 						<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
+					</p:column>
+					
+					<p:column style="width:25%;white-space: normal;text-align:center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.rating']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
+					</f:facet>
+					<h:outputText
+						value="#{empty disQualifiedSupplier.totalRating? 0: disQualifiedSupplier.totalRating}" />
 					</p:column>
 
 				</p:dataTable>
