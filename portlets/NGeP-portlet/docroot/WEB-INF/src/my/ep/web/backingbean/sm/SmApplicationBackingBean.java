@@ -1901,6 +1901,7 @@ public class SmApplicationBackingBean extends
 							}
 						//27382 - end
 						this.getManagedBean().setCompanyValidWithSSM(true);
+						SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
 						//SET COMPANY NAME
 						//if rob no need to copy capital.
 						//long tempAnnualRevenue = this.getManagedBean().getSmAppl().getSmCompanyBasic().getAnnualRevenue();
@@ -14768,6 +14769,7 @@ public class SmApplicationBackingBean extends
 			}
 			//27382 - end
 			this.getManagedBean().setCompanyValidWithSSM(true);
+			SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
 			//SET COMPANY NAME
 			//if rob no need to copy capital.
 			//long tempAnnualRevenue = this.getManagedBean().getSmAppl().getSmCompanyBasic().getAnnualRevenue();
