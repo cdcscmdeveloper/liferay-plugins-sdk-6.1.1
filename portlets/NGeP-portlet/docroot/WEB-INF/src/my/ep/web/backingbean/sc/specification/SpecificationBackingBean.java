@@ -11359,7 +11359,29 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
+		// Bug #33661@Syazani 24/05/2023 -- Start
+		IQTDetailSO detailSO = null;
+		PmStatus qtStatus = null;
+		Long statusId = 0L;
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class);
+			
+			qtStatus = detailSO.retrieveActiveStatusByDoctype(this.getManagedBean().getQt().getQtId(),
+					ParameterConst.DOCTYPE_QUOTATION);
+			if (qtStatus != null)
+				statusId = qtStatus.getStatusId();
+			
+			if (Arrays.asList(
+					new Long[] { QTStatusConst.SE_PENDING_ENDORSMENT, QTStatusConst.SE_PENDING_SIGNOFF,
+							QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT,
+							QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF }).contains(statusId)) {
+				commonMessageAcknowledgementErrorPage(MessageConst.ERROR_775189, new String[] { this.getManagedBean()
+						.getQt().getQtNo() });
+				return null;
+			}
 
+			// Bug #33661@Syazani 24/05/2023 -- End
 		if (null != checkList.getQtChecklistId()) {
 			List<ScQtCheckList> toBeRemoveCheckLists = new ArrayList<ScQtCheckList>();
 			List<ScQtCheckList> technicalCheckLIsts = this.getManagedBean()
@@ -11549,6 +11571,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 		specSo=null;
 		return null;
+		// Bug #33661@Syazani 24/05/2023 -- Start
+		} finally {
+			detailSO = null;
+		}
+		// Bug #33661@Syazani 24/05/2023 -- End		
 
 	}
 
@@ -11567,14 +11594,36 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTSpecSO.class);
+						
+		// Bug #33661@Syazani 07/10/2022 -- Start
+		IQTDetailSO detailSO = null;
+		PmStatus qtStatus = null;
+		Long statusId = 0L;
+		
+		//try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			// Bug #33661@Syazani 07/10/2022 -- End						
 		ScQtCheckList scQtCheckList = this.getManagedBean().getScQtChecklist();
-		scQtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster()
-				.getSpecName());
-		scQtCheckList.getScQtDoc().getTplSpecMaster()
-				.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
+		scQtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster().getSpecName());
+		scQtCheckList.getScQtDoc().getTplSpecMaster().setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		Integer index = null; //1873 - note 97
 
+			// Bug #33661@Syazani 12/04/2023 -- Start
+			qtStatus = detailSO.retrieveActiveStatusByDoctype(this.getManagedBean().getQt().getQtId(), ParameterConst.DOCTYPE_QUOTATION);
+			if (qtStatus != null)
+				statusId = qtStatus.getStatusId();
+
+			if (Arrays.asList(
+					new Long[] { QTStatusConst.SE_PENDING_ENDORSMENT, QTStatusConst.SE_PENDING_SIGNOFF,
+							QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT,
+							QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF }).contains(statusId)) {
+				commonMessageAcknowledgementErrorPage(MessageConst.ERROR_775189, new String[] { this.getManagedBean()
+						.getQt().getQtNo() });
+				return;
+			}
+			// Bug #33661@Syazani 12/04/2023 -- End
+			
 		if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
 			ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean().getQt().getScQtSupplierCriteria();
 			
