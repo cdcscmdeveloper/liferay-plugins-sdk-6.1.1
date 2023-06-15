@@ -485,12 +485,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS:
 			setTabDialog("6");
 			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC:
-			setTabDialog("7");
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
-			setTabDialog("8");
-			break;
 		default:
 			setTabDialog("0");
 		}
