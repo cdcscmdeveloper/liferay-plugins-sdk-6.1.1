@@ -10,8 +10,7 @@
 	
 	<style type="text/css">
 		   .colored {
-		       color: #0000FF !important;
-		       font-weight: bold;
+		       background-color: #d9edf7 !important;
 			}
 	</style>
 	
@@ -23,18 +22,17 @@
 	    <div class="align-center">
 			<p:dataTable var="branchList"
 				value="#{suppFinalizationBackingBean.managedBean.supplierBranchList}"
-				rowStyleClass="#{branchList.qtRelatedSupplierBranch eq true ? 'colored' : null}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rows="10" >
 					<ac:paginator for="branchList" />
 				
 				<p:column headerText="#{lbl['lbl.sc.branch.name']}"
-					style="width:30%; white-space:normal;">
+					style="width:30%; white-space:normal;" styleClass="#{branchList.qtRelatedSupplierBranch eq true ? 'colored':null}">
 						<h:outputText value="#{branchList.branchName}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.branch.address']}"
-					style="width:60%; white-space:normal;">
+					style="width:60%; white-space:normal;" styleClass="#{branchList.qtRelatedSupplierBranch eq true ? 'colored':null}">
 					    <h:outputText value="#{branchList.smAddress.address1}" /><p:spacer width="10"/>
 					    <h:outputText value="#{branchList.smAddress.address2}" /><p:spacer width="10"/>
 					    <h:outputText value="#{branchList.smAddress.address3}" /><p:spacer width="10"/>
@@ -45,7 +43,7 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sc.branch.status']}" 
-				    style="width:10%; white-space:normal; text-align:center;" >
+				    style="width:10%; white-space:normal; text-align:center;" styleClass="#{branchList.qtRelatedSupplierBranch eq true ? 'colored':null}">
 					<h:outputText value="#{lbl[branchList.recordStatusFlg eq DbValueConst.recordStatusActive ? 'lbl.txt.active' : 'lbl.txt.deleted']}" />						  	 
 				  
 				</p:column>

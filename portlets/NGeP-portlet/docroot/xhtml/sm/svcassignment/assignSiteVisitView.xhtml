@@ -114,7 +114,8 @@
 				
 				<p:column headerText="#{lbl['lbl.sm.category.description']}">
 					#{catApp.pmCategoryL3.categoryName}
-					<h:outputText value="(#{catApp.otherDesc})" rendered="#{catApp.pmCategoryL3.categoryL3Code eq SupplierMgmtConst.categoryCatManufacturingCode}"></h:outputText>
+					<!-- #28175 ReOpen -->
+					<h:outputText value="(#{catApp.otherDesc})" rendered="#{catApp.otherDesc != null}"></h:outputText>
 				</p:column>
 			</p:dataTable>
 		</p:panel>

@@ -35,13 +35,13 @@
 				
 					<p:column style="width:3px;text-align:center;" rendered="#{isEnablChkBoxes}">
 				<f:facet name="header">
-					<p:selectBooleanCheckbox disabled="#{!qTCommitteBackingBean.isCommitteeRoleEditable(qTCommitteBackingBean.getParameterByTypeAndCode('CR','S'))}" 
+					<p:selectBooleanCheckbox disabled="#{!qTCommitteBackingBean.isCommitteeRoleEditable(qTCommitteBackingBean.getParameterByTypeAndCode('CR','S')) or !isCommitteeInfoEditable}" 
 						value="#{qTCommitteBackingBean.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this" update="@form"
 							listener="#{qTCommitteBackingBean.selectAll(qTCommitteBackingBean.managedBean.templateSpecBean.selectAll, committe.scCommitteeMembers)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox disabled="#{!qTCommitteBackingBean.isCommitteeRoleEditable(specificationcommittee.memberRole)}" value="#{specificationcommittee.selected}">
+				<p:selectBooleanCheckbox disabled="#{!qTCommitteBackingBean.isCommitteeRoleEditable(specificationcommittee.memberRole) or !isCommitteeInfoEditable}" value="#{specificationcommittee.selected}">
 					<p:ajax partialSubmit="true" process="@this" update="@form" />
 				</p:selectBooleanCheckbox>
 			</p:column>

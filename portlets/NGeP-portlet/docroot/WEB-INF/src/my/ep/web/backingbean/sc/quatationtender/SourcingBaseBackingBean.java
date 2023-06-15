@@ -90,6 +90,7 @@ import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -3554,13 +3555,19 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							}
 						}*/
 						// #26130 - Start.
-						constructSpecData(scLoa, master, question);
-						// #26130 - End.
-						constructTplSpecQuestion(dafaltValue,
-								newTplSpecQuestionsList, master, question);
-						//#26130 start
-						question.setListCombineZonal(getCOmbineZonalSPec(question,master));
-						//#26130 end
+						if (validateTplSpecMaster(scLoa, master)){
+							constructSpecData(scLoa, master, question);
+							// #26130 - End.
+							constructTplSpecQuestion(dafaltValue,
+									newTplSpecQuestionsList, master, question);
+							//#26130 start
+							if(validateTplSpecQuestion(scLoa, question)){
+								question.setListCombineZonal(getCOmbineZonalSPec(question,master));
+							}
+							
+							//#26130 end
+						}
+						
 					}
 					// 26130 - End.
 					master.setTplSpecQuestions(newTplSpecQuestionsList);
@@ -4786,17 +4793,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		    reqDTO.setQtReportIdList(qtReportIds);
 		    reqDTO.setDocumentCategory(this.getManagedBean().getNewBriefingPaperReportList().get(0).getDocCategory());
 		    SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveFinalizationReport(reqDTO);
-		    if (null != resDTO && null != resDTO.getScQtFinalizationReports()
-		    		&& resDTO.getScQtFinalizationReports().size() > 0) {
-		    repLoop:	for (ScQtFinalizationReport repScQtFinalizationReport : resDTO.getScQtFinalizationReports()) {
-		    		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
-		    			if (repScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
-		    				scQtFinalizationReport.setReportContent(repScQtFinalizationReport.getReportContent());
-		    				continue repLoop;
-		    			}
-		    		}
-		    	}
-		    }
+			if (null != resDTO && null != resDTO.getScQtFinalizationReports()
+					&& resDTO.getScQtFinalizationReports().size() > 0) {
+				repLoop: for (ScQtFinalizationReport repScQtFinalizationReport : resDTO.getScQtFinalizationReports()) {
+					for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
+						// Bug #33988@Syazani -- Start 14/03/2023
+						String repParaCode = repScQtFinalizationReport.getDefinationType() != null ? repScQtFinalizationReport
+								.getDefinationType().getParameterCode() : "";
+						String scQtParaCode = scQtFinalizationReport.getDefinationType() != null ? scQtFinalizationReport
+								.getDefinationType().getParameterCode() : "";
+						if (repScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())
+								&& repParaCode.equals(scQtParaCode)) {
+							// Bug #33988@Syazani -- End 14/03/2023
+							scQtFinalizationReport.setReportContent(repScQtFinalizationReport.getReportContent());
+							continue repLoop;
+						}
+					}
+				}
+			}
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -5643,10 +5657,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					} else {
 						ctType = scQt.getContractType().getParameterId();
 					}
-
-					if (isRuleBpk && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
-						return isBpkCentralContract = true;
+					
+					//#9019 Start #note-445 User unable to open side menu for Committee Appointment and Approval when ctType is null. 
+					//      Contract type is not selected while cancel QT
+					if(ctType != null){
+						if (isRuleBpk && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
+							return isBpkCentralContract = true;
+						}
 					}
+					//9019 End #note-445
 				}
 			
 			return isBpkCentralContract;
@@ -5797,132 +5816,142 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		//#26130 - end 04072022
 		//#26130 start		
-		private List<HashMap<String, String>>getCOmbineZonalSPec(TplSpecQuestion question, TplSpecMaster master){
+	private List<HashMap<String, String>> getCOmbineZonalSPec(TplSpecQuestion question, TplSpecMaster master) {
 
-			
-			List<HashMap<String, String>> listSpec = new ArrayList<>();
-			int countIndex = 0;
-			int indi = 0;
-			String whiteSpace = "&nbsp";
-			boolean getFirstValue = true;
-			if (question.getTplSpecZoneQties().size()  > 0){
-				
-				for (TplSpecZoneQty zone: question.getTplSpecZoneQties()){
-					
+		List<HashMap<String, String>> listSpec = new ArrayList<>();
+		int countIndex = 0;
+		int indi = 0;
+		String whiteSpace = "&nbsp";
+		boolean getFirstValue = true;
+
+		// 26130 - start
+		if (master.getTplSpecZone() != null) {
+			// 26130 - end
+			if (question.getTplSpecZoneQties().size() > 0) {
+
+				for (TplSpecZoneQty zone : question.getTplSpecZoneQties()) {
+
 					HashMap<String, String> map = new HashMap<>();
-					if (countIndex == 0){
-						if (getFirstValue){
+					if (countIndex == 0) {
+						if (getFirstValue) {
 							map.put("clItem", question.getClItem());
 							map.put("uomName", question.getClUom().getUomName());
-							//#26130 - start
-							map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
-							//#26130 - end
-							map.put("zoneName",zone.getTplSpecZoneDtl().getZoneName());
+							// #26130 - start
+							map.put("clPriceTypeCode",
+									getParameterDesc(question.getClPriceTypeCode(), SourcingConstants.MY_LOCALE));
+							// #26130 - end
+							map.put("zoneName", zone.getTplSpecZoneDtl().getZoneName());
 							map.put("qty", zone.getQty().toString());
-							if (null != question.getTplSpecTierQties() && question.getTplSpecTierQties().size() > 0 ){
+							if (null != question.getTplSpecTierQties() && question.getTplSpecTierQties().size() > 0) {
 								String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
 								map.put("qtyBerperingkat", tierValue);
-							}else {
+							} else {
 								String tierValue = "T/B";
 								map.put("qtyBerperingkat", tierValue);
 							}
-							
-							if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service") || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")){
+
+							if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
+									|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase(
+											"Perkhidmatan")) {
 								map.put("clUomFrequency", question.getClUomFrequency().toString());
 								map.put("clUomPerDay", question.getClUomPerDay().toString());
 								map.put("clUomPerMonth", question.getClUomPerMonth().toString());
 							}
-							for (TplSpecAnswer answer: question.getTplSpecAnswers())
-							if (answer.getAnswerNumeric() != null){
-								map.put("answerNumeric", answer.getAnswerNumeric().toString());
-							}
+							for (TplSpecAnswer answer : question.getTplSpecAnswers())
+								if (answer.getAnswerNumeric() != null) {
+									map.put("answerNumeric", answer.getAnswerNumeric().toString());
+								}
 							getFirstValue = false;
-						}else {
+						} else {
 							map.put("clItem", whiteSpace);
 							map.put("uomName", whiteSpace);
 							map.put("clPriceTypeCode", whiteSpace);
-							map.put("zoneName",zone.getTplSpecZoneDtl().getZoneName());
+							map.put("zoneName", zone.getTplSpecZoneDtl().getZoneName());
 							map.put("qtyBerperingkat", whiteSpace);
-							if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service") || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")){
+							if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
+									|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase(
+											"Perkhidmatan")) {
 								map.put("clUomFrequency", whiteSpace);
 								map.put("clUomPerDay", whiteSpace);
 								map.put("clUomPerMonth", whiteSpace);
 							}
 							map.put("qty", zone.getQty().toString());
-							for (TplSpecAnswer answer: question.getTplSpecAnswers()) {
-								if (answer.getAnswerNumeric() != null){
+							for (TplSpecAnswer answer : question.getTplSpecAnswers()) {
+								if (answer.getAnswerNumeric() != null) {
 									map.put("answerNumeric", answer.getAnswerNumeric().toString());
 								}
 							}
-							
+
 						}
-						
-					
-						for (int i = indi; i <question.getTplSpecZoneQties().size(); i++){
-							map.put("feedback",question.getFeedbackList().get(i));
+
+						for (int i = indi; i < question.getTplSpecZoneQties().size(); i++) {
+							map.put("feedback", question.getFeedbackList().get(i));
 							break;
 						}
-						//26130 - start 04072022
-						for (int i = indi; i <question.getTplSpecZoneQties().size(); i++){
-							if (!question.getAnswerRemarkList().get(i).equalsIgnoreCase("&nbsp;") && !question.getAnswerRemarkList().get(i).equalsIgnoreCase(getDefaultValue())){
-								map.put("answerRemark",question.getAnswerRemarkList().get(i));
+						// 26130 - start 04072022
+						for (int i = indi; i < question.getTplSpecZoneQties().size(); i++) {
+							if (!question.getAnswerRemarkList().get(i).equalsIgnoreCase("&nbsp;")
+									&& !question.getAnswerRemarkList().get(i).equalsIgnoreCase(getDefaultValue())) {
+								map.put("answerRemark", question.getAnswerRemarkList().get(i));
 								break;
-							}else {
-								map.put("answerRemark",question.getAnswerRemarkList().get(i));
+							} else {
+								map.put("answerRemark", question.getAnswerRemarkList().get(i));
 							}
 						}
-						//#26130 - end 04072022
+						// #26130 - end 04072022
 						indi++;
 					}
 					listSpec.add(map);
 				}
-			}else {
-				//non-zonal
-				
-				
-					HashMap<String, String> map = new HashMap<>();
-					if (question.getQuestionType().equalsIgnoreCase("I")){
-						if (countIndex == 0){
-							if (getFirstValue){
-								map.put("clItem", question.getClItem());
-								map.put("uomName", question.getClUom().getUomName());
-								map.put("qty", question.getClQuantity().toString());
+			}
+		// 26130 - start
+		}
+		// 26130 - end
+		else {
+			// non-zonal
 
-								if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service") || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")){
-									map.put("clUomFrequency", question.getClUomFrequency().toString());
-									map.put("clUomPerDay", question.getClUomPerDay().toString());
-									map.put("clUomPerMonth", question.getClUomPerMonth().toString());
-								}else {
-									//product
-									//#26130 - start
-									map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
-									//#26130 - end
-									String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
-									map.put("qtyBerperingkat", tierValue);
-									
-								}
-								
-								for (String feedback:question.getFeedbackList()){
-									map.put("feedback", feedback);
-									break;
-								}
-								
-								for(String remark:question.getAnswerRemarkList()){
-									map.put("remark", remark);
-									break;
-								}
-							}
-							
-							listSpec.add(map);
+			HashMap<String, String> map = new HashMap<>();
+			if (question.getQuestionType().equalsIgnoreCase("I")) {
+				if (countIndex == 0) {
+					if (getFirstValue) {
+						map.put("clItem", question.getClItem());
+						map.put("uomName", question.getClUom().getUomName());
+						map.put("qty", question.getClQuantity().toString());
+
+						if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
+								|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")) {
+							map.put("clUomFrequency", question.getClUomFrequency().toString());
+							map.put("clUomPerDay", question.getClUomPerDay().toString());
+							map.put("clUomPerMonth", question.getClUomPerMonth().toString());
+						} else {
+							// product
+							// #26130 - start
+							map.put("clPriceTypeCode",
+									getParameterDesc(question.getClPriceTypeCode(), SourcingConstants.MY_LOCALE));
+							// #26130 - end
+							String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
+							map.put("qtyBerperingkat", tierValue);
+
+						}
+
+						for (String feedback : question.getFeedbackList()) {
+							map.put("feedback", feedback);
+							break;
+						}
+
+						for (String remark : question.getAnswerRemarkList()) {
+							map.put("remark", remark);
+							break;
 						}
 					}
-					
-				
-				
+
+					listSpec.add(map);
+				}
 			}
-			return listSpec;
-			//#26130 end
 		}
+		return listSpec;
+		// #26130 end
+	}
 		//#26130 - zaim end
 		
 		//#10542 - start
@@ -5971,24 +6000,21 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					if (null != scAttachment
 							&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
 						File file = new File(getActualFilePath(scAttachment));
+						// 10542-#61 dayan bug fix - start
+						String checkListTitle = scAttachmentReq.getScQtChecklistName().replaceAll("/","_");
+						String extension = FilenameUtils.getExtension(scAttachment.getFileName());
+						
+						String attachmentFileName = (StringUtils.isNotBlank(scAttachment.getTempFileName()) 
+							? scAttachment.getTempFileName() + "." + extension 
+							: scAttachment.getFileName());
+						String downloadBySupplierZip = supplierNo+"/"+checkListTitle+"/"+attachmentFileName;
+						String downloadByDocumentZip = checkListTitle+"/"+supplierNo+"/"+attachmentFileName;
 						
 						if(downloadBy.equalsIgnoreCase("Supplier")){
-							if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
-								String extension = FilenameUtils.getExtension(scAttachment.getFileName());
-								zos.putNextEntry(new ZipEntry(supplierNo+"/"+scAttachment.getTempFileName() + "." + extension));
-							} else {
-								zos.putNextEntry(new ZipEntry(supplierNo+"/"+scAttachment.getFileName()));
-							}
+							zos.putNextEntry(new ZipEntry(downloadBySupplierZip));
 						}else if(downloadBy.equalsIgnoreCase("Document")){
-							String checkListTitle = scAttachmentReq.getScQtChecklistName().replaceAll("/","_");
-							
-							if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
-								String extension = FilenameUtils.getExtension(scAttachment.getFileName());
-								zos.putNextEntry(new ZipEntry(checkListTitle+"/"+supplierNo+"/"+scAttachment.getTempFileName() + "." + extension));
-							} else {
-								zos.putNextEntry(new ZipEntry(checkListTitle+"/"+supplierNo+"/"+scAttachment.getFileName()));
-							}
-						}
+							zos.putNextEntry(new ZipEntry(downloadByDocumentZip));
+						} // 10542-#61 dayan bug fix - end
 						
 						try {
 							fis = new FileInputStream(file);
@@ -6043,31 +6069,105 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
 		}//11104_end
 
-		//25037 - note 677 - start
-		/**
-		 * Evaluate the corresponding Representative/Agency parameter type based on committee type.
-		 * PBA, PBB, QCA, FSW, FSB, QCB, PPB
-		 * @return String (Parameter Type Code)
-		 */ 
-		public String getRepresentativeType(String committeeType) {
-			switch (committeeType) {
-			case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B:
-				return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
-			case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A:
-				return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
-			case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD:
-				return ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
-			case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B:
-				return ParameterTypeConst.REPRESENTATIVE_TYPE_PBB;
-			case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A:
-				return ParameterTypeConst.REPRESENTATIVE_TYPE_PBA;
-			case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH:
-				return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH;
-			case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK:
-				return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK;
-			default:
-				return "";
-		} 
+	// 25037 -start-
+	/**
+	 * Evaluate the corresponding Representative/Agency parameter type based on
+	 * committee type. PBA, PBB, QCA, FSW, FSB, QCB, PPB
+	 * 
+	 * @return String (Parameter Type Code)
+	 */
+	public String getRepresentativeType(String committeeType) {
+		switch (committeeType) {
+		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
+		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
+		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
+		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_PBB;
+		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_PBA;
+		case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH;
+		case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK;
+		default:
+			return "";
 		}
-		//25037 - note 677 - end
+	}
+
+	/**
+	 * Evaluate if taskname is endorsement and signoff
+	 * 
+	 * @return String (BPM task Name)
+	 */
+	public boolean evaluateEndorseSignoffTask(String taskName) {
+		if (StringUtils.isEmpty(taskName))
+			return false;
+		String[] actions = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_SIGNOFF };
+		String action = StringUtils.upperCase(taskName.split(" ")[0]);
+		return Arrays.asList(actions).contains(action);
+	}
+
+	/**
+	 * Evaluate if committee is editable by taskname for screen update committee
+	 * during evaluation and finalization
+	 * 
+	 * @return String (BPM task Name)
+	 */
+	public boolean isCommitteeEditable(String taskName) {
+		taskName = taskName == null ? "" : taskName;
+		List<String> taskNames = new ArrayList<>();
+		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_PREPARATION_GROUP));
+		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_FINALIZE_GROUP));
+		taskNames.addAll(Arrays.asList(new String[] { SCProcessNameConst.FINALISE_FC_SELECTION,
+				SCProcessNameConst.COORDINATE_FC_MEETING, SCProcessNameConst.REVISE_EVALUATION_MEETING }));
+		return taskNames.contains(taskName);
+	}
+	// 25037 -end-
+		
+		//26130 - start
+		public boolean validateTplSpecQuestion(ScLoa scloa, TplSpecQuestion question) {
+			boolean isExist = Boolean.FALSE;
+			Long tempSpecQuestionID = null;
+			if (scloa.getScLoiLoaItems() != null && !scloa.getScLoiLoaItems().isEmpty()) {
+				for (ScLoiLoaItem item : scloa.getScLoiLoaItems()) {
+					if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null
+							&& item.getScRequestItem().getTplSpecQuestion().getParentSpecQuestion() != null) {
+						TplSpecQuestion specQuestion = item.getScRequestItem().getTplSpecQuestion();
+						if (question.getParentSpecQuestion() == null) {
+							tempSpecQuestionID = question.getSpecQuestionId();
+						} else {
+							tempSpecQuestionID = question.getParentSpecQuestion().getSpecQuestionId();
+						}
+						if (specQuestion.getParentSpecQuestion().getSpecQuestionId().equals(tempSpecQuestionID)) {
+							isExist = Boolean.TRUE;
+							return isExist;
+						}
+					}
+				}
+			}
+			return isExist;
+		}
+		
+		public boolean validateTplSpecMaster(ScLoa scloa, TplSpecMaster master){
+			boolean isExist = false;
+			if (scloa.getScLoiLoaItems() != null) {
+				for (ScLoiLoaItem item : scloa.getScLoiLoaItems()) {
+					if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null) {
+						TplSpecQuestion specQuestion = item.getScRequestItem().getTplSpecQuestion();
+						if (specQuestion.getParentSpecQuestion() != null
+								&& specQuestion.getParentSpecQuestion().getTplSpecMaster() != null
+								&& master.getSpecMasterId().equals(
+										specQuestion.getParentSpecQuestion().getTplSpecMaster().getSpecMasterId())) {
+							isExist = Boolean.TRUE;
+							return isExist;
+						}
+					}
+				}
+			}
+			return isExist;
+		}
+		//26130 - end
 }

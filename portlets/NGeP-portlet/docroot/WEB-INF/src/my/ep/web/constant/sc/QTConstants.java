@@ -36,6 +36,7 @@ public interface QTConstants {
 	public static final String SEARCH_PAGE = "/xhtml/sc/quatationtender/quatationtendersearch.xhtml";
 	public static final String CREATE_COMMITTE = "committeemaintanancepage";
 	public static final String QT_SEARCHING_PAGE = "/xhtml/sc/quatationtender/quatationtendersearch.xhtml?faces-redirect=true"; //#9019
+	public static final String MAINT_EPV_APPROVAL_DETAIL = "/xhtml/sc/quatationtender/Approver/maintenanceApprovalEpv.xhtml";//#21692 add new page for history
 
 	public static final String QT_DETAILS_TAB = "Quotation Details";
 	public static final String QT_SUPPLIERQULIFICATION_TAB = "Supplier Qualification Criteria";
@@ -302,5 +303,13 @@ public interface QTConstants {
 	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
 	
 	public static final String PORTLET_NAME_QT_LOI_LIST="scLoiList_WAR_NGePportlet";//#21692
+	
+	//#29007 Start Vinod
+	public static final String LAMPIRAN_A3_LBL = "lbl.sc.doc.name.lampiran.a3";
+	public static final String LAMPIRAN_A3_UPDATE = "Updated";
+	public static final String LAMPIRAN_A3_DIKEMAS_KINI = "Dikemas kini";
+	public static final String LAMPIRAN_A3_LATEST = "Latest";
+	public static final String LAMPIRAN_A3_TERKINI = "Terkini";
+	//#29007 End Vinod
 	
 }
