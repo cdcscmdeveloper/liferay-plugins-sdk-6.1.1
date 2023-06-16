@@ -850,10 +850,10 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					pmParam = getParameterByTypeAndCode(ParameterTypeConst.ALL_BY_ITEM, SourcingConstants.ALL_ITEM);
 
 					for (ScQtDemoSupplier s : demoSuppList) {
-						scQtDemoSchedule = new ScQtDemoSchedule();
+						scQtDemoSchedule = new ScQtDemoSchedule();						
 						scQtDemoSchedule.setScQtDemoSupplier(s);
 						scQtDemoSchedule.setScQtDemoByItemScore(null);
-						s.setScQtDemoSchedule(scQtDemoSchedule);
+						s.setScQtDemoSchedule(scQtDemoSchedule);						
 					}
 					
 					this.getManagedBean().setAllItemList(demoSuppList);
@@ -862,7 +862,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					 */
 				} else {
 					pmParam = getParameterByTypeAndCode(ParameterTypeConst.ALL_BY_ITEM, SourcingConstants.BY_ITEM);
-					if (demoItemList.isEmpty()) {
+					if (demoItemList.isEmpty() &&!this.getManagedBean().getTempDemoItemList().isEmpty()) {
 						demoItemList.addAll(this.getManagedBean().getTempDemoItemList());
 					}
 
@@ -1070,6 +1070,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.ALL_ITEM)) {
 					scQtDemo.setScQtDemoItemList(null);
 					reqDto.setDemoItemToBeDeleted(resDto.getScQtDemo().getScQtDemoItemList());
+					//reqDto.setSupplierScheduleToBeDeleted(resDto.getScQtDemo().getScQtDemoSupplierList());
 				} else if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.BY_ITEM)) {
 					scQtDemo.setScQtDemoSupplierList(null);
 					reqDto.setSupplierScheduleToBeDeleted(resDto.getScQtDemo().getScQtDemoSupplierList());
