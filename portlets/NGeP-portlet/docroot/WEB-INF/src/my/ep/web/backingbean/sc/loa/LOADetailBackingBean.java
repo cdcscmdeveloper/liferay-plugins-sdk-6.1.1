@@ -9707,6 +9707,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			//#29006 - note 702 - end
 		}
 		//#29006 - end -  note 607
+		
+		// start - #34898
+		for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItemCloneList) {
+			if (scLoiLoaItem.getLoaSpecJustification() != null) {
+				scLoiLoaItem.setLoaSpecJustification(scLoiLoaItem.getLoaSpecJustification().replaceAll("<", "&#60;"));
+			}
+
+			for (TplSpecAnswer tplSpecAnswer : scLoiLoaItem.getTplSpecAnswerList()) {
+				if (tplSpecAnswer.getNewSupplierOffer() != null) {
+					tplSpecAnswer.setNewSupplierOffer(tplSpecAnswer.getNewSupplierOffer().replaceAll("<", "&#60;"));
+				}
+			}
+		}
+		// end - #34898
 		context.put("itemsList", scLoiLoaItemCloneList);
 		
 		if (scQt != null
