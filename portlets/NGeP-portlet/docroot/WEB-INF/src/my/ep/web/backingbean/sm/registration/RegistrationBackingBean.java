@@ -395,6 +395,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//end check registration ic with ssm #27148
 				
 				checkExistingBusinessRegNoSSM();
+				SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
 				this.getManagedBean().setCompanyValidWithSSM(true);
 				this.getManagedBean().setValidateWithSSM(true);
 				this.getManagedBean().setCompanyValidWithSSM(true);
@@ -2836,7 +2837,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}
 					
 					// maybe here to put method to check with ssm
-					
+					SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
 					if(!this.getManagedBean().isCompanyValidWithSSM()){
 	//					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
 						throw new EpException(MessageConst.ERROR_721070);
