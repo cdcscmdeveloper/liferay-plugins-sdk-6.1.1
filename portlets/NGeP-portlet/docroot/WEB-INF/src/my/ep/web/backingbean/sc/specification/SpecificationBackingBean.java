@@ -19907,8 +19907,8 @@ if(null!=allTechnicalChecklist){
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setActiveIndex(this.getManagedBean().getCheckListYesIndex());
-				throw new EpException(MessageConst.WARN_297320,
-						new String[] { changedCatCodeList });
+				throw new EpException(MessageConst.WARN_760531,
+						new String[] { changedCatCodeList });//#29732 standardize
 			}
 		}
 	}
@@ -21895,7 +21895,8 @@ if(null!=allTechnicalChecklist){
 			
 			if (null != resDTO && null != resDTO.getSpecQuestionList()) {
 				for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
-						itemQuestion.setMandatorySpecForSample(question.isMandatorySpec()?true:false);
+					if(question.isMandatorySpec()) 
+						itemQuestion.setMandatorySpecForSample(true);
 				}
 			}
 		}
