@@ -1416,25 +1416,6 @@ public class CommitteManagedBean extends BaseManagedBean {
 			IPagingDataModel<ScQtCommittee> committeeQTDataModel) {
 		this.committeeQTDataModel = committeeQTDataModel;
 	}
-	
-	//25037 - start	
-	/**
-	 * TODO revert to previous settings once all old QT's with not one to one FC committee ends.
-	 * @return boolean isCommitteeRecordStatusActive
-	 */
-	public boolean isCommitteeRecordStatusActive() {
-		if (this.getScCommittee() == null)
-			return false;
-		String committeeType = this.getScCommittee().getCommitteeType().getParameterCode();
-		List<ScQtCommittee> committees = this.getScCommittee().getScQtCommittees();
-		if (Arrays.asList(SourcingConstants.COMMITTEES_ORDER).contains(committeeType)) {
-			if (committees != null && committees.size() > 1) {
-				return true; 
-			} 
-		} 
-		return this.getScCommittee().isRecordStatus();
-	}
-	//25037 - end	
 
 		public Paginator getHistoryPaginator() {
 			return historyPaginator;
