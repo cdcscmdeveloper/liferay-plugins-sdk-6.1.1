@@ -4421,40 +4421,6 @@ public class SmCommonUtil {
 					throw new EpException(MessageConst.ERROR_721085,new String[] {sb.toString() });
 				}
 			}//END 27329
-			//#29582- Start
-			log.info("ssm status: "+ resDTO.getStatusCode());
-			if (resDTO.getSmPersonnelAll() != null && resDTO.getSmPersonnelAll().size()>0 ) {
-				boolean errMsg = false;
-				int i = 0;
-				for (SmPersonnel per : resDTO.getSmPersonnelAll()) {
-					if (per.getIdentificationTypeSsm() != null) {
-						String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
-								ParameterConst.IDENTIFICATION_TYPES_SSM, per.getIdentificationTypeSsm());
-						if (ssmTypeDesc == null){
-							ssmTypeDesc =ParameterHelper.getInstance().getParameterDesc(
-									ParameterConst.IDENTIFICATION_TYPES_SSM, "NA");
-						}
-						sb.append("<br/>");
-						sb.append(++i + ". ");
-						sb.append(per.getName() + " ");
-						sb.append("("
-								+ ResourceBundleUtils.getMessage("lbl.sm.register.identification.no.ssm",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
-								+ " ");
-						sb.append(per.getIdentificationNo() + ", ");
-						sb.append(ResourceBundleUtils.getMessage("lbl.sm.register.identification.type.ssm",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
-						sb.append(per.getIdentificationTypeSsm() + " = ");
-						sb.append(ssmTypeDesc + ")");
-						sb.append("<br/>");
-						errMsg = true;
-					}
-				}
-				if (errMsg) {
-					throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
-				}
-			}//#29582- end
-			
 			
 			return resDTO;
 		} catch (Exception ex) {
@@ -4465,10 +4431,6 @@ public class SmCommonUtil {
 				//27329
 				if(MessageConst.ERROR_721085.equalsIgnoreCase(ex.getMessage()) && sb != null){
 					throw new EpException(MessageConst.ERROR_721085,new String[] { sb.toString() });
-				}
-				//#29582
-				if(MessageConst.ERROR_721088.equalsIgnoreCase(ex.getMessage()) && sb != null){
-					throw new EpException(MessageConst.ERROR_721088,new String[] { sb.toString() });
 				}else{
 					//27225
 					throw new EpException(message + "("
@@ -6310,4 +6272,57 @@ public class SmCommonUtil {
 			return vCode;
 		}
 		//END 34136
+	// #29582- start
+	public static void ssmIdentificationTypeError(SsmResDTO resDTO) {
+		log.info("ssm status: " + resDTO.getStatusCode());
+		if (resDTO.getSmPersonnelAll() != null
+				&& resDTO.getSmPersonnelAll().size() > 0) {
+			boolean errMsg = false;
+			StringBuilder sb = new StringBuilder();
+			int i = 0;
+			for (SmPersonnel per : resDTO.getSmPersonnelAll()) {
+				if (per.getIdentificationTypeSsm() != null) {
+					String ssmTypeDesc = ParameterHelper.getInstance()
+							.getParameterDesc(
+									ParameterConst.IDENTIFICATION_TYPES_SSM,
+									per.getIdentificationTypeSsm());
+					if (ssmTypeDesc == null) {
+						ssmTypeDesc = ParameterHelper
+								.getInstance()
+								.getParameterDesc(
+										ParameterConst.IDENTIFICATION_TYPES_SSM,
+										"NA");
+					}
+					sb.append("<br/>");
+					sb.append(++i + ". ");
+					sb.append(per.getName() + " ");
+					sb.append("("
+							+ ResourceBundleUtils.getMessage(
+									"lbl.sm.register.identification.no.ssm",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) + " ");
+					sb.append(per.getIdentificationNo() + ", ");
+					sb.append(ResourceBundleUtils.getMessage(
+							"lbl.sm.register.identification.type.ssm",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())
+							+ " ");
+					sb.append(per.getIdentificationTypeSsm() + " = ");
+					sb.append(ssmTypeDesc + ")");
+					sb.append("<br/>");
+					errMsg = true;
+				}
+			}
+			if (errMsg) {
+				if (resDTO.isBasicAcc()
+						|| SupplierManagementConst.ACC_BASIC.equals(resDTO
+								.getSmAppl().getApplType())) {
+					throw new EpException(MessageConst.ERROR_775196);
+				} else {
+					throw new EpException(MessageConst.ERROR_721088,
+							new String[] { sb.toString() });
+				}
+			}
+		}// #29582- end
+	}
 }
