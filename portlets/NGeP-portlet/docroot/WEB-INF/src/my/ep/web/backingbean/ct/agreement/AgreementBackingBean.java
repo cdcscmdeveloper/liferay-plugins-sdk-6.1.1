@@ -73,6 +73,7 @@ import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
+import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;

@@ -897,10 +897,16 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			// Intended Price
 			if (isPanel) {
 				BigDecimal panelThreshold = getPanelThresholdAmount();
-
-				if (null == amount || (amount.compareTo(panelThreshold) <= 0)) {
-					throw new EpException(MessageConst.ERROR_760380, new String[] { SourcingConstants.DF_AMOUNT.format(panelThreshold) });
+				
+				//Start 9019 #note-342
+				if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())){
+					if (null == amount || (amount.compareTo(panelThreshold) <= 0)) {
+						throw new EpException(MessageConst.ERROR_760380,
+								new String[] { SourcingConstants.DF_AMOUNT
+										.format(panelThreshold) });
+					}
 				}
+				//End 9019 
 			} else {
 				// Enhancement #25729 -start-
 				// Start Reopen 9019 #note-289
