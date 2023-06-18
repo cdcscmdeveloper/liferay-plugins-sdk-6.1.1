@@ -1774,8 +1774,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtScoreOfferPrice> offerPricePackageList;	
 	private int specZoneTabIndex;	
 	private boolean isSingleItem;
-	//#25138-end	
-	//#28784
+	//#25138-end
+
+	// #28784 -start-
 	private boolean demoType;
 	private boolean demoAction;
 	private List<ScQtCheckList> demoSpecTemplateList;
@@ -1785,7 +1786,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean demoEvalDisabled;
 	private boolean demoSpecialCase;
 	private Long demoSampleChecklistStatusId;
-	
+	// #28784 -end-
+
 	//====#31913 bug related to #25138==== start
 	private BigDecimal totalmaxscore;
 	//====#31913 bug related to #25138==== end
@@ -11156,7 +11158,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.mainCloneSearchQTDataModel = mainCloneSearchQTDataModel;
 	}
 	// 34053, #25635 -End
-	
+
 	// #28784 - start
 	/**
 	 * @return the demoSampleChecklist
@@ -11172,7 +11174,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setDemoSampleChecklistStatusId(Long demoSampleChecklistStatusId) {
 		this.demoSampleChecklistStatusId = demoSampleChecklistStatusId;
 	}
-	// #28784 - end
 
 	public boolean isDemoType() {
 		return demoType;
@@ -11237,4 +11238,5 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setDemoSpecialCase(boolean demoSpecialCase) {
 		this.demoSpecialCase = demoSpecialCase;
 	}
+	// #28784 - end
 }

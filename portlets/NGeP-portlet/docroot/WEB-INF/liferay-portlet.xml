@@ -3493,6 +3493,7 @@
 		<css-class-wrapper>cancelLoaApproval-portlet</css-class-wrapper>
 	</portlet>
 	
+	<!-- Enhancement 28784-start- -->
 	<portlet>
 		<portlet-name>demoInvitation</portlet-name>
 		<icon>/icon.png</icon>
@@ -3504,7 +3505,8 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>demoInvitation-portlet</css-class-wrapper>
 	</portlet>
-	
+	<!-- Enhancement 28784-end- -->
+
 	<portlet>
 		<portlet-name>ctContractOwnerManagement</portlet-name>
 		<icon>/icon.png</icon>

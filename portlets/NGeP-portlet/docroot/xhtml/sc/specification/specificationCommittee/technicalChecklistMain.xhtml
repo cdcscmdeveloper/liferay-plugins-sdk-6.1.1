@@ -82,13 +82,14 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
 				style="width:24%;white-space: normal;">
 
- 				<ui:remove><!-- #28784 --></ui:remove>
 				<ui:fragment rendered="#{stageTwoTechnical.pmDocument eq null and stageTwoTechnical.qtChecklistId eq null}">
 				<h:panelGroup id="technicalChecklistTitleHeader">
+					<!-- 28784 -start- -->					
 					<p:inputText required="true" id="techChecklistTitle"
 						label="#{lbl['lbl.sc.spec.checklist.title']}" rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 or 
 						stageTwoTechnical.title eq null}"
 						value="#{stageTwoTechnical.title}" size="35" maxlength="1000">
+					<!-- 28784 -end- -->						
 						<p:ajax event="change" process="@this,technicalChecklistTitleHeader" partialSubmit="true"
 							update="technicalChecklisttypes"
 							listener="#{specificationBackingBean.technicalCheckListTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
@@ -118,6 +119,7 @@
 					<ui:remove>#28784, #11104 - rendered add SP </ui:remove>
 					<ui:fragment
 						rendered="#{(stageTwoTechnical.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo or (stageTwoTechnical.pmDocument ne null and (stageTwoTechnical.pmDocument.docDefinitionKey eq ParameterConst.documentDefinitionTypeTrustGate or stageTwoTechnical.pmDocument.docDefinitionKey eq ParameterConst.documentDefinitionTypePlacehodler1 or stageTwoTechnical.pmDocument.docDefinitionKey eq ParameterConst.documentDefinitionTypePlacehodler2 or stageTwoTechnical.pmDocument.docDefinitionKey eq ParameterConst.documentDefinitionTypePlacehodler3)) or (stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode eq ParameterConst.documentDefinitionTypeTemplateSpecification or stageTwoTechnical.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample))}">
+					<!-- 28784 -end- -->
 
 						<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
@@ -158,6 +160,7 @@
 					<ui:remove> #28784, #11104 - rendered add SP </ui:remove>
 					<ui:fragment
 						rendered="#{stageTwoTechnical.definationType.parameterCode ne 'PD' and stageTwoTechnical.pmDocument eq null and (stageTwoTechnical.definationType.parameterCode ne 'TS' and stageTwoTechnical.definationType.parameterCode ne 'SP')}">
+					<!-- 28784 -end- -->
 						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())}">
 						<p:selectOneMenu style="width:170px;" required="true"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -367,7 +370,7 @@
 						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 				</p:commandLink>
 				
-				<!-- START #26784 -->
+				<!-- START #28784 -->
 				<p:commandLink
 					rendered="#{specificationBackingBean.managedBean.demoAction and stageTwoTechnical.definationType.parameterCode eq 'PD'}"
 					action="#{specificationBackingBean.demoTechnicalTemplatelist()}"
@@ -389,7 +392,7 @@
 					<f:setPropertyActionListener value="#{stageTwoTechnical}"
 						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 				</p:commandLink>
-				<!-- END #26784 -->
+				<!-- END #28784 -->
 				</h:panelGroup>
 				
 			</p:column>

@@ -726,24 +726,33 @@ public class ApprovalBackingBean extends
 			finally {
 				workFlowStatusSO = null;
 			}
-		} else if (SCProcessNameConst.DEMO_APPROVE_CANCELLATION.equalsIgnoreCase(taskName)) {// #28784
+			// #28784 -start-
+		} else if (SCProcessNameConst.DEMO_APPROVE_CANCELLATION.equalsIgnoreCase(taskName)) {
 			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
+
 			getManagedBean().setPayLoad(dataType);
+
 			qtId = Long.valueOf(dataType.getQtId());
 
 			List<String> fc = new ArrayList<String>();
 			fc.add(ParameterConst.APPROVAL_REQUEST_CANCELATITION_QT);
+
 			paramTypes = fc;
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.APPROVAL_REQUEST_CANCELATITION_QT, paramTypes, null);
+
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
+
 			docType = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
+
 			IScWorkFlowStatusSO workFlowStatusSO;
+
 			try {
 				workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IScWorkFlowStatusSO.class);
 				ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+
 				reqDTO.setDocType(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
 				reqDTO.setDocId(qtId);
 
@@ -751,6 +760,7 @@ public class ApprovalBackingBean extends
 
 				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 				qtBackingBean.retrieveQuationTenderDetails(qtId);
+
 				ScQt scQt = qtBackingBean.getManagedBean().getQt();
 				this.getManagedBean().setQt(scQt);
 
@@ -760,13 +770,16 @@ public class ApprovalBackingBean extends
 				QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 				quationTenderReqDTO.setQtId(scQt.getQtId());
 				quationTenderReqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
+
 				QuationTenderResDTO resDTO = detailSO.retrieveApprovalsByQtIdNType(quationTenderReqDTO);
 				this.getManagedBean().setQt(resDTO.getQtDetail());
+
 				ScQtApproval qtApproval = resDTO.getQtApproval();
 				this.getManagedBean().setScQtApproval(qtApproval);
 			} finally {
 				workFlowStatusSO = null;
 			}
+			// #28784 -end-
 		}
 		
 		if (currentStatus == null) {
@@ -1436,20 +1449,25 @@ public class ApprovalBackingBean extends
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 				tenderResDTO.setSuccessful(committeResDto.isSuccessful());
 				tenderResDTO.setQtDetail(qt);
-			
-			} else if(SCProcessNameConst.DEMO_APPROVE_CANCELLATION.equalsIgnoreCase(taskName)){ //#28784
+
+				// #28784 -start-
+			} else if (SCProcessNameConst.DEMO_APPROVE_CANCELLATION.equalsIgnoreCase(taskName)) {
 				DemoResDTO resDTO = new DemoResDTO();
 				DemoInvitationBackingBean demoBB = new DemoInvitationBackingBean();
+				
 				resDTO.setScQt(qt);
-				resDTO.setPmUser(new FacesScopes().getUserSessionBean());				
+				resDTO.setPmUser(new FacesScopes().getUserSessionBean());
 				resDTO.setOutcome(BpmOutcomeConst.BPM_APPROVE);
 				resDTO.setPayLoad(this.getManagedBean().getPayLoad());
 				resDTO.setTaskName(taskName);
 				resDTO.setTaskId(this.getManagedBean().getTaskId());
-				resDTO = demoBB.demoUpdateBpmTask(resDTO, outcome);
-				tenderResDTO.setSuccessful(resDTO.isSuccessful());
-				tenderResDTO.setQtDetail(qt);			
 				
+				resDTO = demoBB.demoUpdateBpmTask(resDTO, outcome);
+				
+				tenderResDTO.setSuccessful(resDTO.isSuccessful());
+				tenderResDTO.setQtDetail(qt);
+				// #28784 -end-
+
 			} else {
 				boolean isFinalApproval = false;
 				boolean bpkRevise = false;
@@ -3140,10 +3158,11 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 	}
 	// #25426 - End
 	
-	// #28784
+	// #28784 -start-
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
+	// #28784 -end-
 	
 }

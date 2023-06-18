@@ -11029,6 +11029,8 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	
+	<!-- Enhancement 28784-start- -->
 	<portlet>
 		<portlet-name>demoInvitation</portlet-name>
 		<display-name>Presentation/Demo Invitation</display-name>
@@ -11062,4 +11064,5 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	<!-- Enhancement 28784-end- -->	
 </portlet-app>

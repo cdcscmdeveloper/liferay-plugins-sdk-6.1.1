@@ -26,15 +26,17 @@
 				<h:outputText
 					value="#{suppFinalizationBackingBean.getParameterDesc(report.definationType)}" />
 			</p:column>
-			<!-- #28784 -->
+
 			<p:column headerText="#{lbl['lbl.sc.action']}"
-				style="width:15%; white-space:normal; text-align: center;">				
+				style="width:15%; white-space:normal; text-align: center;">
+				<!-- #28784 -start- -->
 				<ui:fragment
 					rendered="#{suppFinalizationBackingBean.managedBean.demoReq || report.pmDocument ne null and
 										 	suppFinalizationBackingBean.managedBean.getDirectdownloaddocdefkeys()
 										 		.contains(report.pmDocument.docDefinitionKey)}">
+					<!-- #28784 -end- -->
 					<p:commandButton id="download" icon="ui-icon-download"
-						 style="background-color:transparent !important; border:0px none;"
+						style="background-color:transparent !important; border:0px none;"
 						ajax="false" immediate="true"
 						action="#{suppFinalizationBackingBean.downloadReport(report)}" />
 				</ui:fragment>

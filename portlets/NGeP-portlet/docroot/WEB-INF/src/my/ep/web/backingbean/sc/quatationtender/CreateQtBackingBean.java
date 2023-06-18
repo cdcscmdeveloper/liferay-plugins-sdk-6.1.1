@@ -670,10 +670,8 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				PmStatus status = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 				this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
 				for (ScQtCheckList technicalchecklist : technicalSpecCheckList) {
-					if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(technicalchecklist.getDefinationType()
-							.getParameterCode())) {
-						if (null != technicalchecklist.getPmStatus()
-								&& QTStatusConst.TS_COMPLETED.equals(technicalchecklist.getPmStatus().getStatusId())) {
+					if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(technicalchecklist.getDefinationType().getParameterCode())) {
+						if (null != technicalchecklist.getPmStatus() && QTStatusConst.TS_COMPLETED.equals(technicalchecklist.getPmStatus().getStatusId())) {
 							financialSpecZonesEstimatedpriceUpdate = Boolean.TRUE;
 							this.getManagedBean().setZonesWarnMessageUpdate(Boolean.TRUE);
 							this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
@@ -681,15 +679,15 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 						}
 					}
+
 					// #28784 - Start
-					if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(technicalchecklist.getDefinationType()
-							.getParameterCode())) {
+					if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(technicalchecklist.getDefinationType().getParameterCode())) {
 						if (null != technicalchecklist.getPmStatus()
 								&& QTStatusConst.TS_COMPLETED.equals(technicalchecklist.getPmStatus().getStatusId())) {
 							technicalchecklist.setPmStatus(status);
-
 						}
-					}// #28784 - End
+					}
+					// #28784 - End
 				}
 			}
 			if (financialSpecZonesEstimatedpriceUpdate == true) {
@@ -907,10 +905,16 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			// Intended Price
 			if (isPanel) {
 				BigDecimal panelThreshold = getPanelThresholdAmount();
-
-				if (null == amount || (amount.compareTo(panelThreshold) <= 0)) {
-					throw new EpException(MessageConst.ERROR_760380, new String[] { SourcingConstants.DF_AMOUNT.format(panelThreshold) });
+				
+				//Start 9019 #note-342
+				if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())){
+					if (null == amount || (amount.compareTo(panelThreshold) <= 0)) {
+						throw new EpException(MessageConst.ERROR_760380,
+								new String[] { SourcingConstants.DF_AMOUNT
+										.format(panelThreshold) });
+					}
 				}
+				//End 9019 
 			} else {
 				// Enhancement #25729 -start-
 				// Start Reopen 9019 #note-289
@@ -2679,36 +2683,33 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				for (ScQtCheckList technicalchecklist : technicalSpecCheckList) {
 					// zonelevelChange = true;
 					// technicalchecklist.setPmStatus(status);
-					if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(technicalchecklist.getDefinationType()
-							.getParameterCode())) {
+					if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(technicalchecklist.getDefinationType().getParameterCode())) {
 						// technicalchecklist.setPmStatus(status);
-						if (null != technicalchecklist.getPmStatus()
-								&& QTStatusConst.TS_COMPLETED.equals(technicalchecklist.getPmStatus().getStatusId())) {
+						if (null != technicalchecklist.getPmStatus() && QTStatusConst.TS_COMPLETED.equals(technicalchecklist.getPmStatus().getStatusId())) {
 							financialSpecZonesEstimatedpriceUpdate = Boolean.TRUE;
 							this.getManagedBean().setZonesWarnMessageUpdate(Boolean.TRUE);
 							this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
 							technicalchecklist.setPmStatus(status);
 
 						}
-				}
-						// #28784 - Start
-						if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(technicalchecklist.getDefinationType()
-								.getParameterCode())) {
-							if (null != technicalchecklist.getPmStatus()
-									&& QTStatusConst.TS_COMPLETED
-											.equals(technicalchecklist.getPmStatus().getStatusId())) {
-								technicalchecklist.setPmStatus(status);
-
-							}
-
-						}// #28784 - End
 					}
-				}
-				if (financialSpecZonesEstimatedpriceUpdate == true) {
-					ZonesUpdateWarningMessage(this.getManagedBean().isZonesWarnMessageUpdate());
 
+					// #28784 - Start
+					if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(technicalchecklist.getDefinationType()
+							.getParameterCode())) {
+						if (null != technicalchecklist.getPmStatus()
+								&& QTStatusConst.TS_COMPLETED.equals(technicalchecklist.getPmStatus().getStatusId())) {
+							technicalchecklist.setPmStatus(status);
+						}
+					}
+					// #28784 - End
 				}
-			
+			}
+			if (financialSpecZonesEstimatedpriceUpdate == true) {
+				ZonesUpdateWarningMessage(this.getManagedBean().isZonesWarnMessageUpdate());
+
+			}
+
 		} finally {
 
 		}
@@ -3492,8 +3493,14 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		boolean screen=QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())|| QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 		return screen;
 	}
-//#11104-end
-	
+	// #11104-end
+
+	// #21695 Farid START 3/7/2021
+	public boolean hasroleSCSecretary() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
+	}
+	// #21695 Farid END 3/7/2021
 
 	/**
 	 * Render Demonstration Radio button if Evaluation Method 2 Tier Selected
@@ -3504,82 +3511,63 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public void renderDemoRadioButton(AjaxBehaviorEvent event) {
 		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
 		RequestContext.getCurrentInstance().execute("blockWidget.show()");
+
 		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 			String type = (String) event.getComponent().getAttributes().get("value");
-//			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-//			IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-//					IQTSpecSO.class);	
 			boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
-			//reqDTO.setScQt(this.getManagedBean().getQt());
-			//reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
-			//SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
 			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
+		
 			for (ScQtCheckList checklist : scQtTechChecklist) {
 				if (checklist.getDefinationType().getParameterCode()
 						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-					if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && demoRequired){
-//							&& checklist.getQtChecklistId() != null) {
+					if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && demoRequired) {
 						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
 						break;
 
-					} else if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)){
-//							&& checklist.getQtChecklistId() != null) {
+					} else if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)) {
 						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
 						break;
 					}
 				}
-			} 
-			
-			
-			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+			}
+
+			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)
+					&& !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 				this.getManagedBean().setDemoType(true);
 			} else {
 				this.getManagedBean().setDemoType(false);
 				this.getManagedBean().getQt().setDemoRequired(false);
 			}
-			//#28784 - Start
+
 			if (null != status
-					&& (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) && !this.getManagedBean().isQtSpecMaintanance() && !this
-							.getManagedBean().isMaintanceFlow()) && !demoRequired) {
+					&& (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+							&& !this.getManagedBean().isQtSpecMaintanance() && !this.getManagedBean().isMaintanceFlow())
+					&& !demoRequired) {
 				this.getManagedBean().setDemoSpecialCase(true);
 				this.getManagedBean().setDemoEvalDisabled(true);
-			}//#28784 - End
-
+			}
 		}
-		RequestContext.getCurrentInstance().execute("blockWidget.hide()");		
+		
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 	}
-
-	// #21695 Farid START 3/7/2021
-	public boolean hasroleSCSecretary() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
-	}
-	// #21695 Farid END 3/7/2021
+	// #28784 -end-
 	
 	/**
 	 * #28784 - check demo radio button and display popup to delete
 	 * @param event
 	 */
 	public void validateDemoTechList(AjaxBehaviorEvent event) {
-//		SpecificationResDTO resDTO = null;
-//		IQTSpecSO specSo = null;
 		Boolean type = (Boolean) event.getComponent().getAttributes().get("value");
 		this.getManagedBean().getQt().setDemoRequired(type);
+
 		if (type == false) {
-//			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-//			specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-//					IQTSpecSO.class);
-//			reqDTO.setScQt(this.getManagedBean().getQt());
-//			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
-//			resDTO = specSo.retrieveCheckLists(reqDTO);
 			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
+
 			if (null != scQtTechChecklist) {
 				for (ScQtCheckList checklist : scQtTechChecklist) {
 					if (checklist.getDefinationType().getParameterCode()
 							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-//						if (checklist.getQtChecklistId() != null) {
-							RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");
-//						}
+						RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");
 					}
 				}
 			}
@@ -3587,46 +3575,48 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		} else {
 			RequestContext.getCurrentInstance().execute("demoDialogConfirm.hide()");
 		}
-		
+
 		QTDetailBackingBean detailBB = new QTDetailBackingBean();
 		detailBB.checkDemoPresentationByStatus();
 	}
 
+	// #28784 -end-
+	
 	/*
 	 * #28784 - Delete Demo tech checklist if user change yes to no
 	 */
 	public void yesDeleteExistingDemoTechChecklist() {
 		SpecificationResDTO resDTO = null;
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-		SpecificationBackingBean specificationBackingBean = new SpecificationBackingBean();//#28784
+		SpecificationBackingBean specificationBackingBean = new SpecificationBackingBean();// #28784
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTSpecSO.class);
 
 		try {
 			IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSpecSO.class);
+					IQTSpecSO.class);
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 			ScQt scQt = this.getManagedBean().getQt();
+
 			scQt.setScQtStatus(null);
 			scQt.setScQtBriefings(null);
 			scQt.setScQtCommittees(null);
 			scQt.setScQtChecklists(null);
-			specReqDTO.setScQt(scQt);			
+
+			specReqDTO.setScQt(scQt);
+
 			resDTO = specSO.saveQTDtl(specReqDTO);
+
 			this.getManagedBean().setQt(resDTO.getScQt());
+
 			reqDTO.setScQt(this.getManagedBean().getQt());
 			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+
 			specificationBackingBean.getDemoScoreSetting(reqDTO);
+
 			resDTO = specSo.deleteDemoSpecChecklist(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				//#28784 note-#634 - Start
-//				if (this.getManagedBean().getQt().isZonal()) {
-//					QTDetailBackingBean qtDetail = new QTDetailBackingBean();
-//					qtDetail.retrieveZonalDetailAfterDemoDeletion(this.getManagedBean().getQt().getQtId());
-//					this.getManagedBean().setDemoScoreSetting(null);
-//				}
-				//#28784 note-#634 - End
 				specificationBackingBean.resetDemoTechSpecListAfterDelete();
 			}
 
@@ -3634,10 +3624,13 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			e.printStackTrace();
 		}
 	}
-	
+	// #28784 -end-
+
+	// #28784 -start-
 	public void noDeleteExistingDemoTechChecklist() {
 		this.getManagedBean().getQt().setEvaluationType(ParameterConst.EVALUATION_TYPES_TWO_TIER);
 		this.getManagedBean().setDemoType(true);
 		this.getManagedBean().getQt().setDemoRequired(true);
 	}
+	// #28784 -end-
 }
