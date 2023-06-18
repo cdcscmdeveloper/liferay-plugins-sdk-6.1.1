@@ -6105,7 +6105,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public boolean evaluateEndorseSignoffTask(String taskName) {
 		if (StringUtils.isEmpty(taskName))
 			return false;
-		String[] actions = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_SIGNOFF };
+		String[] actions = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_SIGNOFF,
+				BpmOutcomeConst.BPM_VIEW, BpmOutcomeConst.BPM_UPDATE};
 		String action = StringUtils.upperCase(taskName.split(" ")[0]);
 		return Arrays.asList(actions).contains(action);
 	}

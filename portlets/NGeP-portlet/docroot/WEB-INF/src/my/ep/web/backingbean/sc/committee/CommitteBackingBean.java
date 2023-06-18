@@ -692,7 +692,7 @@ public class CommitteBackingBean extends
 		committeReqDTO.setScQtCommittee(scQtCommittee);
 		committeReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		committeReqDTO.setRoleCode(getCommitteeRoleCode());
-		committeReqDTO.setMaintanceFlow(true);
+		committeReqDTO.setMaintanceFlow(StringUtils.isEmpty(this.getManagedBean().getTaskName()));//25037
 
 		ScQt scQt = getManagedBean().getQt();
 		String qtNo = scQt.getQtNo();
@@ -976,6 +976,7 @@ public class CommitteBackingBean extends
 						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 				parameterSO = BusinessDelegate.getInstance().getServiceObject(
 			            ModuleCodeConst.SUPPLIER_SELECTION, IParameterSO.class);
+				committeSO.initializedFCLegacyCommitteeHistory(qtId);//25037
 				resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
 				qtCommitte = resDTO.getScQtCommittee();
 				if (null == qtCommitte) {
@@ -2586,5 +2587,22 @@ public class CommitteBackingBean extends
 		}
 	}
 	//#31870 - END
-
+	//25037 - start	
+	/**
+	 * TODO revert to previous settings once all old QT's with not one to one FC committee ends.
+	 * @return boolean isCommitteeRecordStatusActive
+	 */
+	public boolean isCommitteeRecordStatusActive(ScCommittee committee) {
+		if (committee == null)
+			return false;
+		String committeeType = committee.getCommitteeType().getParameterCode();
+		List<ScQtCommittee> qtCommittees = committee.getScQtCommittees();
+		if (Arrays.asList(SourcingConstants.COMMITTEES_ORDER).contains(committeeType)) {
+			if (qtCommittees != null && qtCommittees.size()<=1) {
+				return true; 
+			} 
+		} 
+		return committee.isRecordStatus();
+	}
+	//25037 - end	
 }
