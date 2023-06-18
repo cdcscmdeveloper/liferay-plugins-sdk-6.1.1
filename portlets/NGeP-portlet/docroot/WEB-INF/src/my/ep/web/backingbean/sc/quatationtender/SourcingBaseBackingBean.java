@@ -6000,24 +6000,21 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					if (null != scAttachment
 							&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
 						File file = new File(getActualFilePath(scAttachment));
+						// 10542-#61 dayan bug fix - start
+						String checkListTitle = scAttachmentReq.getScQtChecklistName().replaceAll("/","_");
+						String extension = FilenameUtils.getExtension(scAttachment.getFileName());
+						
+						String attachmentFileName = (StringUtils.isNotBlank(scAttachment.getTempFileName()) 
+							? scAttachment.getTempFileName() + "." + extension 
+							: scAttachment.getFileName());
+						String downloadBySupplierZip = supplierNo+"/"+checkListTitle+"/"+attachmentFileName;
+						String downloadByDocumentZip = checkListTitle+"/"+supplierNo+"/"+attachmentFileName;
 						
 						if(downloadBy.equalsIgnoreCase("Supplier")){
-							if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
-								String extension = FilenameUtils.getExtension(scAttachment.getFileName());
-								zos.putNextEntry(new ZipEntry(supplierNo+"/"+scAttachment.getTempFileName() + "." + extension));
-							} else {
-								zos.putNextEntry(new ZipEntry(supplierNo+"/"+scAttachment.getFileName()));
-							}
+							zos.putNextEntry(new ZipEntry(downloadBySupplierZip));
 						}else if(downloadBy.equalsIgnoreCase("Document")){
-							String checkListTitle = scAttachmentReq.getScQtChecklistName().replaceAll("/","_");
-							
-							if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
-								String extension = FilenameUtils.getExtension(scAttachment.getFileName());
-								zos.putNextEntry(new ZipEntry(checkListTitle+"/"+supplierNo+"/"+scAttachment.getTempFileName() + "." + extension));
-							} else {
-								zos.putNextEntry(new ZipEntry(checkListTitle+"/"+supplierNo+"/"+scAttachment.getFileName()));
-							}
-						}
+							zos.putNextEntry(new ZipEntry(downloadByDocumentZip));
+						} // 10542-#61 dayan bug fix - end
 						
 						try {
 							fis = new FileInputStream(file);

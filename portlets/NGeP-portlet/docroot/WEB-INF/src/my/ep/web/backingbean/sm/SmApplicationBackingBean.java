@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Set;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -1169,6 +1170,30 @@ public class SmApplicationBackingBean extends
 					throw new EpException(MessageConst.ERROR_722628);
 				}
 				
+				//#31549 - START
+				if(currSupp != null && currSupp.getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)){
+					
+					IPersonnelSO personnelSO = null;
+					try {
+						personnelSO = (IPersonnelSO) BusinessDelegate
+								.getInstance().getServiceObject("sm",
+										IPersonnelSO.class);
+						PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
+						personnelReqDTO.setApplId(currSupp.getSmAppl().getApplId());
+						currSupp.getSmAppl().setSmPersonnels(personnelSO.retrievePersonnelListByApplId(personnelReqDTO).getSmPersonnelList());
+						
+					} finally {
+						personnelSO = null;
+					}
+					
+					for(SmPersonnel smPersonnel : currSupp.getSmAppl().getSmPersonnels()){
+						if(smPersonnel.getEpRole() != null && smPersonnel.getEpRole().equals(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)){
+							throw new EpException(MessageConst.ERROR_722704);
+						}
+					}
+				}
+				//#31549 - END
+				
 				subStartTime = System.currentTimeMillis();
 				// 25157
 				SmAppl rejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(
@@ -1557,6 +1582,16 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
+		
+		//#34624 start
+		log.info("Application Type: " + applicationType);
+		log.info("Application Category Type: " + getManagedBean().getSmAppl().getApplCategoryType());
+		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
+				&& getManagedBean().getSmAppl().getApplCategoryType().equals("S")){
+			getManagedBean().getSmAppl().setApplCategoryType("N");
+		}
+		log.info("Application Category Type: " + getManagedBean().getSmAppl().getApplCategoryType());
+		//#34624 end
 		
 		if (fromBpm
 				&& (getManagedBean().isPoUser() || getManagedBean()
@@ -2129,6 +2164,7 @@ public class SmApplicationBackingBean extends
 							}
 						//27382 - end
 						this.getManagedBean().setCompanyValidWithSSM(true);
+						SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
 						// #24819
 						this.getManagedBean().getSmSupplier().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 						subStartTime = System.currentTimeMillis();
@@ -10001,6 +10037,15 @@ public class SmApplicationBackingBean extends
 		boolean valid = true;
 		try {
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
+			// #28175 Reopen Start 
+			List<SmSupplierCategory> historicalSmSupplierCategories = bpmAppl.getSmSupplierCategories();
+			for(SmSupplierCategory cat : historicalSmSupplierCategories){
+				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
+				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
+				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+			}
+			bpmAppl.setSmSupplierCategories(historicalSmSupplierCategories);
+			// #28175 Reopen End
 			String outcome = "CANCEL";
 			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
 					outcome, SupplierManagementConst.SUPP_SUBMIT_DELDRFT_APPL);
@@ -11044,17 +11089,18 @@ public class SmApplicationBackingBean extends
 			//	+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
 		validSiteVisit = testSmAppl(getManagedBean().getSmAppl().getApplType(),
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC, "", true);
-		if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
-			// #28175 Reopen Start 
-			List<SmSupplierCategory> historicalSmSupplierCategories = this.getManagedBean().getSmAppl().getSmSupplierCategories();
-			for(SmSupplierCategory cat : historicalSmSupplierCategories){
-				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
-				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
-				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
-			}
-			this.getManagedBean().getSmAppl().setSmSupplierCategories(historicalSmSupplierCategories);
-			// #28175 Reopen End
+//		Comment empty IF
+//		if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
+//		}
+		// #28175 Reopen Start 
+		List<SmSupplierCategory> historicalSmSupplierCategories = this.getManagedBean().getSmAppl().getSmSupplierCategories();
+		for(SmSupplierCategory cat : historicalSmSupplierCategories){
+			cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
+			cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
+			cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
 		}
+		this.getManagedBean().getSmAppl().setSmSupplierCategories(historicalSmSupplierCategories);
+		// #28175 Reopen End
 		if (validSiteVisit) {
 			String successMsg = "";
 			SmMofAccount mofAcc = getManagedBean().getSmSupplier() != null
@@ -15599,6 +15645,7 @@ public class SmApplicationBackingBean extends
 				}
 			//27382 - end
 			this.getManagedBean().setCompanyValidWithSSM(true);
+			SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
 			//SET COMPANY NAME
 			//if rob no need to copy capital.
 			//long tempAnnualRevenue = this.getManagedBean().getSmAppl().getSmCompanyBasic().getAnnualRevenue();
@@ -17043,6 +17090,18 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		return catList;
+	}
+	
+	public String dynamicTableColumnWidth(String supplierUser, String poUser, String approverUser){
+		if(getManagedBean().isSupplierUser()){
+			return supplierUser;
+		}else if(getManagedBean().isPoUser()){
+			return poUser;
+		}else if(getManagedBean().isApproverUser()){
+			return approverUser;
+		}else{
+			return "auto";
+		}
 	}
 	//30766 END
 	
