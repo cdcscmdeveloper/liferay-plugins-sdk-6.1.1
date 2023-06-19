@@ -10032,7 +10032,7 @@ public class SmApplicationBackingBean extends
 	 * @return true, if successful
 	 */
 	private boolean deleteDraftApplciationTask() {
-		//log.info("*********  Delete draft application task ************* ");
+		log.info("28175*********  Delete draft application task ************* ");
 		IMofRegistrationSO regSo = null;
 		boolean valid = true;
 		try {
@@ -10701,6 +10701,7 @@ public class SmApplicationBackingBean extends
 	 * @return the redirect page.
 	 */
 	public String submitPOorApproverReviewToBPM(String res) {
+		log.info("28175********* PO or Approver approve or reject"+res+" ************* ");
 		//#31043 - start
 		if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
