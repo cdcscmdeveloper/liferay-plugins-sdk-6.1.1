@@ -171,6 +171,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewApplHistoryBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSmApplBackingBean;
 import my.ep.web.backingbean.sm.outputmsg.SmOutputMsgBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
@@ -10032,17 +10033,26 @@ public class SmApplicationBackingBean extends
 	 * @return true, if successful
 	 */
 	private boolean deleteDraftApplciationTask() {
-		//log.info("*********  Delete draft application task ************* ");
+		log.info("28175*********  Delete draft application task ************* ");
 		IMofRegistrationSO regSo = null;
 		boolean valid = true;
 		try {
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
 			// #28175 Reopen Start 
 			List<SmSupplierCategory> historicalSmSupplierCategories = bpmAppl.getSmSupplierCategories();
-			for(SmSupplierCategory cat : historicalSmSupplierCategories){
-				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
-				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
-				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+			if (historicalSmSupplierCategories != null){
+				log.info("28175-Category count: "+historicalSmSupplierCategories.size());
+			}
+			for(SmSupplierCategory cat : historicalSmSupplierCategories){ 
+				log.info("28175-L1.Name.Before: "+cat.getCategoryL1Name());
+				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName()); 
+				log.info("28175-L1.Name.After: "+cat.getCategoryL1Name());
+				log.info("28175-L2.Name.Before: "+cat.getCategoryL2Name());
+				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName()); 
+				log.info("28175-L2.Name.After: "+cat.getCategoryL2Name());
+				log.info("28175-L3.Name.Before: "+cat.getCategoryL3Name());
+				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName()); 
+				log.info("28175-L3.Name.After: "+cat.getCategoryL3Name());
 			}
 			bpmAppl.setSmSupplierCategories(historicalSmSupplierCategories);
 			// #28175 Reopen End
@@ -10692,6 +10702,7 @@ public class SmApplicationBackingBean extends
 	 * @return the redirect page.
 	 */
 	public String submitPOorApproverReviewToBPM(String res) {
+		log.info("28175********* PO or Approver approve or reject"+res+" ************* ");
 		//#31043 - start
 		if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
@@ -11094,10 +11105,19 @@ public class SmApplicationBackingBean extends
 //		}
 		// #28175 Reopen Start 
 		List<SmSupplierCategory> historicalSmSupplierCategories = this.getManagedBean().getSmAppl().getSmSupplierCategories();
-		for(SmSupplierCategory cat : historicalSmSupplierCategories){
-			cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
-			cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
-			cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+		if (historicalSmSupplierCategories != null){
+			log.info("28175-Category count: "+historicalSmSupplierCategories.size());
+		}
+		for(SmSupplierCategory cat : historicalSmSupplierCategories){ 
+			log.info("28175-L1.Name.Before: "+cat.getCategoryL1Name());
+			cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName()); 
+			log.info("28175-L1.Name.After: "+cat.getCategoryL1Name());
+			log.info("28175-L2.Name.Before: "+cat.getCategoryL2Name());
+			cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName()); 
+			log.info("28175-L2.Name.After: "+cat.getCategoryL2Name());
+			log.info("28175-L3.Name.Before: "+cat.getCategoryL3Name());
+			cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName()); 
+			log.info("28175-L3.Name.After: "+cat.getCategoryL3Name());
 		}
 		this.getManagedBean().getSmAppl().setSmSupplierCategories(historicalSmSupplierCategories);
 		// #28175 Reopen End
@@ -14320,6 +14340,26 @@ public class SmApplicationBackingBean extends
 				+ applNo
 				+ "&applicationType=" + applType + "&currentTab=" + currTab);
 	}
+	
+	//#34099 - start
+	public void initRevisionDialog(String linkType) {
+		//SmApplicationUtil.getReviewApplicationSupplierBasePage(smAppl.getApplType());
+		try {
+			ViewSmApplBackingBean vBean = new ViewSmApplBackingBean();
+			if(linkType.equals("O")){
+				vBean.initMainDialog(getManagedBean().getSmAppl().getApplNo(), "SUP", 
+						getManagedBean().getCurrentPageType());
+			} else {
+				vBean.initMainDialog(
+						getManagedBean().getSmSupplier().getSmAppl().getApplNo(), "APP", 
+						getManagedBean().getCurrentPageType());
+			}
+			RequestContext.getCurrentInstance().execute("revisionViewDlg.show()");
+		} catch (NullPointerException e){
+			throw new EpException(MessageConst.INFO_721212);
+		}
+	}
+	//#34099 - end
 
 	/**
 	 * Revert po application to supplier application data
