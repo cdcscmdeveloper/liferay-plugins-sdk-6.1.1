@@ -1,0 +1,131 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<script type="text/javascript">
+		$(function() {
+			$(
+					"#dataTable tbody.ui-datatable-data > tr.ui-widget-content.selectiondisabled")
+					.children(":not(.toggler)").each(function() {
+						$(this).css("pointer-events", "none");
+					});
+		});
+	</script>
+
+	<h:panelGroup id="demoRemark">
+		<p:panel header="#{lbl['lbl.txt.remarks']}" text-transform="uppercase"
+			toggleable="true">
+			<table width="100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.access.app.remarks']}" />
+					</td>
+					<td colspan="3"><p:inputTextarea id="title1"
+							label="#{lbl['lbl.pm.access.app.remarks']}"							
+							value="#{demoInvBB.managedBean.demoRemark}" cols="110" rows="3"
+							valueChangeListener="#{createQtBB.qtTitleValueChanged}"
+							onkeyup="limitTextArea(this,500);"
+							onkeydown="limitTextArea(this,500);"
+							onmouseout="limitTextArea(this,500);"
+							style=" margin-bottom:5px; width: 714px;" maxlength="500">
+							<f:ajax></f:ajax>
+						</p:inputTextarea> <p:message id="title1Msg" for="title1" display="icon" />
+						<ac:iconTooltip id="technicalChecklistMechasine#{index}Sc"
+							value="#{lbl['lbl.demo.remark.tooltips']}" />
+						</td>
+				</tr>
+			</table>
+		</p:panel>
+	</h:panelGroup>
+
+	<h:panelGroup id="demoContact">
+		<p:panel header="#{lbl['lbl.sc.contact.person.details']}"
+			id="democontactPersonPanel" text-transform="uppercase"
+			toggleable="true">
+			<p:dataTable id="contactPrsId" var="contactPerson"
+				widgetVar="openCodes"
+				value="#{demoInvBB.managedBean.scQtDemoContactList}"
+				rowIndexVar="index" rows="10"
+				selection="#{demoInvBB.managedBean.selectedContactList}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				rowKey="#{contactPerson}">
+				<ac:paginator for="contactPrsId" />
+				<p:ajax event="rowSelect"
+					update="@([id$=demoContactPersonDeleteCategoryBtnId])" />
+				<p:ajax event="rowUnselect"
+					update="@([id$=demoContactPersonDeleteCategoryBtnId])" />
+				<p:ajax event="rowSelectCheckbox"
+					update="@([id$=demoContactPersonDeleteCategoryBtnId])" />
+				<p:ajax event="rowUnselectCheckbox"
+					update="@([id$=demoContactPersonDeleteCategoryBtnId])" />
+				<p:ajax event="toggleSelect"
+					update="@([id$=demoContactPersonDeleteCategoryBtnId])" />
+
+				<p:column selectionMode="multiple" style="width:1%"
+					rendered="#{!contactReadonly}"
+					disabledSelection="#{contactPerson.disableRowSelection}" />
+
+				<p:column headerText="#{lbl['lbl.pm.contact.name']}"
+					style="white-space: normal;">
+					<h:inputText value="#{contactPerson.userName}"
+						disabled="#{contactPerson.disableRowSelection}" size="30" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.pm.contact.phone']}"
+					style="white-space: normal;">
+					<h:inputText value="#{contactPerson.telephoneNo}"
+						disabled="#{contactPerson.disableRowSelection}" size="30" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.pm.contact.fax']}"
+					style="white-space: normal;">
+					<h:inputText value="#{contactPerson.faxNo}"
+						disabled="#{contactPerson.disableRowSelection}" size="30" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.pm.contact.email']}">
+					<h:inputText value="#{contactPerson.email}"
+						disabled="#{contactPerson.disableRowSelection}" size="30" />
+				</p:column>
+
+			</p:dataTable>
+			<table width="100%">
+				<tr>
+					<td>
+						<table width="100%">
+							<tr>
+								<td>
+									<div class="ppRightBtn">
+										<p:commandButton value="#{lbl['lbl.btn.add']}"
+											styleClass="BtnSpacing" process="@this, contactPrsId"
+											partialSubmit="true"
+											action="#{demoInvBB.addNewContactPerson()}"
+											update="@([id$=democontactPersonPanel])" />
+										<p:commandButton value="#{lbl['lbl.btn.delete']}"
+											id="demoContactPersonDeleteCategoryBtnId"
+											styleClass="BtnSpacing" process="@this, contactPrsId"
+											partialSubmit="true"
+											disabled="#{empty demoInvBB.managedBean.selectedContactList}"
+											oncomplete="contactPersonDeletePopUp.show();"
+											update="@([id$=#{contactPersonDeleteId}])"
+											onclick="contactPersonDeletePopUp.show()" />
+									</div> <ac:confirmationPopup id="contactPersonDeleteId"
+										widget="contactPersonDeletePopUp" loadingWidget="blockWidget"
+										title="#{lbl['lbl.sc.confirmation']}"
+										okAction="#{demoInvBB.deleteContactPerson()}"
+										content="#{lbl['lbl.sc.dialog.confirm.contact.person.dtls']}"
+										update="@([id$=contactPrsId])" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</p:panel>
+	</h:panelGroup>
+
+</ui:composition>
