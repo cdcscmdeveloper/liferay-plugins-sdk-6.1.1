@@ -97,7 +97,9 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks;
 	
 	private boolean isSetNull ; //Bug #31364
-	
+
+	private boolean isDemoReq; // #28784
+
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		/**
 		 * 
@@ -635,4 +637,13 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	}
 	//#21695 End
 
+	// #28784 -start-
+	public boolean isDemoReq() {
+		return isDemoReq;
+	}
+
+	public void setDemoReq(boolean isDemoReq) {
+		this.isDemoReq = isDemoReq;
+	}
+	// #28784 -end-
 }

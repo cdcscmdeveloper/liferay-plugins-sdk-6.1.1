@@ -189,7 +189,8 @@
 			<!-- Enhancement 25037-start- -->
 			<portlet id="maintenanceRequestApproval"/>
 			<portlet id="maintenanceRequestRevision"/>
-			<!-- Enhancement 25037-end- -->		
+			<!-- Enhancement 25037-end- -->	
+			<portlet id="demoInvitation"/><!-- #28784 -->	
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->

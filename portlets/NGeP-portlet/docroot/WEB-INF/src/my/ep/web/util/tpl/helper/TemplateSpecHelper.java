@@ -66,7 +66,9 @@ public class TemplateSpecHelper {
 	private static Logger log = EpLogger.getLogger(TemplateSpecHelper.class);
 	
 	private static TemplateSpecHelper instance;	
-	
+
+	private boolean demoSpecClone = false; // #28784
+
 	/**
 	 * Get singleton of TemplateSpecHelper
 	 * 
@@ -94,7 +96,9 @@ public class TemplateSpecHelper {
 	 * 		clone including child entities.
 	 * @return	the new cloned TplSpecMaster instance.
 	 */
-	public TplSpecMaster cloneTplSpecMaster(TplSpecMaster specMaster, boolean includeQuestions, boolean isScoringReq, boolean isQtyByZone) {
+	// #28784 -start-
+	public TplSpecMaster cloneTplSpecMaster(TplSpecMaster specMaster, boolean includeQuestions, boolean isScoringReq, boolean isQtyByZone, boolean isDemoCloneSpec) {
+	// #28784 - end-
 		debugLogger("cloneTplSpecMaster : " + specMaster);
 		
 		TplSpecMaster newSpecMaster = null;
@@ -115,6 +119,14 @@ public class TemplateSpecHelper {
 					newSpecMaster.setScoringReq(isScoringReq);
 					newSpecMaster.setQtyByZone(isQtyByZone);
 					setUserDetails(newSpecMaster);
+
+					// #28784 -start-
+					if(isDemoCloneSpec){
+						demoSpecClone = true;
+					} else {
+						demoSpecClone = false;
+					}
+					// #28784 -end-
 
 					if (includeQuestions) {
 						// clone spec questions
@@ -179,6 +191,13 @@ public class TemplateSpecHelper {
 									newSpecQuestion.setSampleReq(Boolean.FALSE);
 									// 11104-End
 								} // 33858, #25635
+
+								// #28784 Reset clone value for demo -start-
+								if(demoSpecClone) {
+									newSpecQuestion.setItemReqDemo(false);
+									newSpecQuestion.setDemoScore(null);
+								}
+								// #28784 -end-
 								
 								if (isTechnicalSpec) {
 									if(TemplateSpecConst.QUESTION_TYPE_ITEM.equals(quesType)){
