@@ -208,8 +208,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if(StringUtils.isBlank(applNo) || StringUtils.isBlank(serFileType)){
 			throw new EpException(MessageConst.INFO_721212);
 		}
+		getManagedBean().setApplicationNoParam(applNo+"_"+serFileType);
+		getManagedBean().setPreviousApproved(false);
+		getManagedBean().setOriginal(false);
 		if(serFileType.equals("SUP")){
-			getManagedBean().setApplicationNoParam(applNo+"_"+serFileType);
 			try {
 				setRevisionApplType();
 				createSerFileIfNotExist(null);
@@ -294,6 +296,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			case '8':
 				setTabValue(8+cat, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
 				break;
+			default:
+				getManagedBean().setTabActiveDlg("0");
+				setTabValue(0, SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
 			}
 			break;
 		case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
@@ -319,6 +324,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			case '8':
 				setTabValue(6, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
 				break;
+			default:
+				getManagedBean().setTabActiveDlg("0");
+				setTabValue(0, SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
 			}
 			break;
 		case ParameterConst.NEW_SM_APPLN_FOR_UPDATE:
@@ -353,6 +361,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			case '8':
 				setTabValue(7+cat, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
 				break;
+			default:
+				getManagedBean().setTabActiveDlg("0");
+				setTabValue(0, SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
 			}
 			break;
 		case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
@@ -387,6 +398,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			case '8':
 				setTabValue(7+cat, SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC);
 				break;
+			default:
+				getManagedBean().setTabActiveDlg("0");
+				setTabValue(0, SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
 			}
 			break;
 		}
@@ -470,12 +484,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS:
 			setTabDialog("6");
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC:
-			setTabDialog("7");
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
-			setTabDialog("8");
 			break;
 		default:
 			setTabDialog("0");
