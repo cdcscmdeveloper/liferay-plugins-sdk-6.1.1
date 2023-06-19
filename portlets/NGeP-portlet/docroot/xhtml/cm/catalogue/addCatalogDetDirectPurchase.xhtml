@@ -104,11 +104,13 @@
 						
 
 							<div id="slides" style="width: 250px;">
+								<!-- #30457 - Start 5/8/2022-->
 								<ui:repeat var="cmImage"
 									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-									<p:graphicImage styleClass="catImageStyle"
+									<p:graphicImage style="max-height:100%;max-width:100%;"
 										value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" />
 								</ui:repeat>
+							  	<!-- #30457 - Start 5/8/2022-->
 							</div>
 						</h:panelGroup></td>
 					<td><p:outputLabel styleClass="outputLabel-view-label"
@@ -178,7 +180,7 @@
 
 				<tr style="height: 30px;">
 					<td><p:outputLabel styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.cm.additional.item.description']}" /></td>
+							value="#{lbl['lbl.cm.basic.item.spec']}" /></td> <!-- #30457 change label -->
 					<td colspan="3"><p:outputLabel styleClass="outputLabel-view"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}" /></td>
 
