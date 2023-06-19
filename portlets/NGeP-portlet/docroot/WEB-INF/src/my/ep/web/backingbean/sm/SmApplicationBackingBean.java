@@ -10039,10 +10039,19 @@ public class SmApplicationBackingBean extends
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
 			// #28175 Reopen Start 
 			List<SmSupplierCategory> historicalSmSupplierCategories = bpmAppl.getSmSupplierCategories();
-			for(SmSupplierCategory cat : historicalSmSupplierCategories){
-				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
-				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
-				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+			if (historicalSmSupplierCategories != null){
+				historicalSmSupplierCategories.size();
+			}
+			for(SmSupplierCategory cat : historicalSmSupplierCategories){ 
+				log.info("28175-L1.Name.Before: "+cat.getCategoryL1Name);
+				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName()); 
+				log.info("28175-L1.Name.After: "+cat.getCategoryL1Name);
+				log.info("28175-L2.Name.Before: "+cat.getCategoryL2Name);
+				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName()); 
+				log.info("28175-L2.Name.After: "+cat.getCategoryL2Name);
+				log.info("28175-L3.Name.Before: "+cat.getCategoryL3Name);
+				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName()); 
+				log.info("28175-L3.Name.After: "+cat.getCategoryL3Name);
 			}
 			bpmAppl.setSmSupplierCategories(historicalSmSupplierCategories);
 			// #28175 Reopen End
@@ -11094,10 +11103,19 @@ public class SmApplicationBackingBean extends
 //		}
 		// #28175 Reopen Start 
 		List<SmSupplierCategory> historicalSmSupplierCategories = this.getManagedBean().getSmAppl().getSmSupplierCategories();
-		for(SmSupplierCategory cat : historicalSmSupplierCategories){
-			cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
-			cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
-			cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+		if (historicalSmSupplierCategories != null){
+			historicalSmSupplierCategories.size();
+		}
+		for(SmSupplierCategory cat : historicalSmSupplierCategories){ 
+			log.info("28175-L1.Name.Before: "+cat.getCategoryL1Name);
+			cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName()); 
+			log.info("28175-L1.Name.After: "+cat.getCategoryL1Name);
+			log.info("28175-L2.Name.Before: "+cat.getCategoryL2Name);
+			cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName()); 
+			log.info("28175-L2.Name.After: "+cat.getCategoryL2Name);
+			log.info("28175-L3.Name.Before: "+cat.getCategoryL3Name);
+			cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName()); 
+			log.info("28175-L3.Name.After: "+cat.getCategoryL3Name);
 		}
 		this.getManagedBean().getSmAppl().setSmSupplierCategories(historicalSmSupplierCategories);
 		// #28175 Reopen End
