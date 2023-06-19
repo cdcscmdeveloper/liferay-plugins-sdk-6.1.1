@@ -678,8 +678,16 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							technicalchecklist.setPmStatus(status);
 
 						}
-
 					}
+
+					// #28784 - Start
+					if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(technicalchecklist.getDefinationType().getParameterCode())) {
+						if (null != technicalchecklist.getPmStatus()
+								&& QTStatusConst.TS_COMPLETED.equals(technicalchecklist.getPmStatus().getStatusId())) {
+							technicalchecklist.setPmStatus(status);
+						}
+					}
+					// #28784 - End
 				}
 			}
 			if (financialSpecZonesEstimatedpriceUpdate == true) {
@@ -2684,8 +2692,17 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							technicalchecklist.setPmStatus(status);
 
 						}
-
 					}
+
+					// #28784 - Start
+					if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(technicalchecklist.getDefinationType()
+							.getParameterCode())) {
+						if (null != technicalchecklist.getPmStatus()
+								&& QTStatusConst.TS_COMPLETED.equals(technicalchecklist.getPmStatus().getStatusId())) {
+							technicalchecklist.setPmStatus(status);
+						}
+					}
+					// #28784 - End
 				}
 			}
 			if (financialSpecZonesEstimatedpriceUpdate == true) {
@@ -3484,4 +3501,136 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
 	}
 	// #21695 Farid END 3/7/2021
+
+	/**
+	 * Render Demonstration Radio button if Evaluation Method 2 Tier Selected
+	 * #28784
+	 * @param event
+	 *
+	 */
+	public void renderDemoRadioButton(AjaxBehaviorEvent event) {
+		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
+		RequestContext.getCurrentInstance().execute("blockWidget.show()");
+
+		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+			String type = (String) event.getComponent().getAttributes().get("value");
+			boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
+			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
+		
+			for (ScQtCheckList checklist : scQtTechChecklist) {
+				if (checklist.getDefinationType().getParameterCode()
+						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+					if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && demoRequired) {
+						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
+						break;
+
+					} else if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)) {
+						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
+						break;
+					}
+				}
+			}
+
+			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)
+					&& !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+				this.getManagedBean().setDemoType(true);
+			} else {
+				this.getManagedBean().setDemoType(false);
+				this.getManagedBean().getQt().setDemoRequired(false);
+			}
+
+			if (null != status
+					&& (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+							&& !this.getManagedBean().isQtSpecMaintanance() && !this.getManagedBean().isMaintanceFlow())
+					&& !demoRequired) {
+				this.getManagedBean().setDemoSpecialCase(true);
+				this.getManagedBean().setDemoEvalDisabled(true);
+			}
+		}
+		
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+	}
+	// #28784 -end-
+	
+	/**
+	 * #28784 - check demo radio button and display popup to delete
+	 * @param event
+	 */
+	public void validateDemoTechList(AjaxBehaviorEvent event) {
+		Boolean type = (Boolean) event.getComponent().getAttributes().get("value");
+		this.getManagedBean().getQt().setDemoRequired(type);
+
+		if (type == false) {
+			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
+
+			if (null != scQtTechChecklist) {
+				for (ScQtCheckList checklist : scQtTechChecklist) {
+					if (checklist.getDefinationType().getParameterCode()
+							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+						RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");
+					}
+				}
+			}
+
+		} else {
+			RequestContext.getCurrentInstance().execute("demoDialogConfirm.hide()");
+		}
+
+		QTDetailBackingBean detailBB = new QTDetailBackingBean();
+		detailBB.checkDemoPresentationByStatus();
+	}
+
+	// #28784 -end-
+	
+	/*
+	 * #28784 - Delete Demo tech checklist if user change yes to no
+	 */
+	public void yesDeleteExistingDemoTechChecklist() {
+		SpecificationResDTO resDTO = null;
+		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+		SpecificationBackingBean specificationBackingBean = new SpecificationBackingBean();// #28784
+		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSpecSO.class);
+
+		try {
+			IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTSpecSO.class);
+			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+			ScQt scQt = this.getManagedBean().getQt();
+
+			scQt.setScQtStatus(null);
+			scQt.setScQtBriefings(null);
+			scQt.setScQtCommittees(null);
+			scQt.setScQtChecklists(null);
+
+			specReqDTO.setScQt(scQt);
+
+			resDTO = specSO.saveQTDtl(specReqDTO);
+
+			this.getManagedBean().setQt(resDTO.getScQt());
+
+			reqDTO.setScQt(this.getManagedBean().getQt());
+			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+
+			specificationBackingBean.getDemoScoreSetting(reqDTO);
+
+			resDTO = specSo.deleteDemoSpecChecklist(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				specificationBackingBean.resetDemoTechSpecListAfterDelete();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	// #28784 -end-
+
+	// #28784 -start-
+	public void noDeleteExistingDemoTechChecklist() {
+		this.getManagedBean().getQt().setEvaluationType(ParameterConst.EVALUATION_TYPES_TWO_TIER);
+		this.getManagedBean().setDemoType(true);
+		this.getManagedBean().getQt().setDemoRequired(true);
+	}
+	// #28784 -end-
 }

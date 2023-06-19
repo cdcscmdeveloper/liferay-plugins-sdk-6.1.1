@@ -163,7 +163,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScQtEvaluationResultDtl prevRecommendedSupplierByItem;
 	
 	private String previousPageUrl;	
-	
+
+	private boolean isDemoReq; // #28784
+
 //	private List<ScQtEvaluationResultDtl> qualifiedSuppliersByEvalStage;
 	
 	/** Qualified suppliers by evaluation stage */
@@ -2346,6 +2348,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setKtReportGenerated(boolean ktReportGenerated) {
 		this.ktReportGenerated = ktReportGenerated;
 	}	
+
+	// #28784 -start-
+	public boolean isDemoReq() {
+		return isDemoReq;
+	}
+
+	public void setDemoReq(boolean isDemoReq) {
+		this.isDemoReq = isDemoReq;
+	}
+	// #28784 -end-
 	
 	/**
 	 * @return the disableJustifications
