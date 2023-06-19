@@ -10040,7 +10040,7 @@ public class SmApplicationBackingBean extends
 			// #28175 Reopen Start 
 			List<SmSupplierCategory> historicalSmSupplierCategories = bpmAppl.getSmSupplierCategories();
 			if (historicalSmSupplierCategories != null){
-				historicalSmSupplierCategories.size();
+				log.info("28175-Category count: "+historicalSmSupplierCategories.size());
 			}
 			for(SmSupplierCategory cat : historicalSmSupplierCategories){ 
 				log.info("28175-L1.Name.Before: "+cat.getCategoryL1Name);
@@ -11104,7 +11104,7 @@ public class SmApplicationBackingBean extends
 		// #28175 Reopen Start 
 		List<SmSupplierCategory> historicalSmSupplierCategories = this.getManagedBean().getSmAppl().getSmSupplierCategories();
 		if (historicalSmSupplierCategories != null){
-			historicalSmSupplierCategories.size();
+			log.info("28175-Category count: "+historicalSmSupplierCategories.size());
 		}
 		for(SmSupplierCategory cat : historicalSmSupplierCategories){ 
 			log.info("28175-L1.Name.Before: "+cat.getCategoryL1Name);
