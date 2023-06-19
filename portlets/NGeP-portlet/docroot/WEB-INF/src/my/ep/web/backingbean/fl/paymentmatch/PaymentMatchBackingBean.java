@@ -1789,6 +1789,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			FacesContext fc = FacesContext.getCurrentInstance();
 			orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+			orderBackingBean.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			orderBackingBean.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
 			orderBackingBean.getManagedBean().setHyperLinkPage(true);
 			orderBackingBean.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
@@ -1802,16 +1803,17 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			reqDTOAttach.getAttachment().setSecId(FulfilmentConst.AP58_AL);
 			reqDTOAttach.getAttachment().setDocType(resDTO.getFlOrder().getDocType());
 			FulfilmentResDTO resDTOattachment = orderSO.retrieveAttachmentApprovalLetter(reqDTOAttach);
-			List<FlAttachment> newAttachmentList = new ArrayList<FlAttachment>();
 			if (resDTOattachment.getAttachmentList().size() > 0) {
 				orderBackingBean.getManagedBean().setAttachment(resDTOattachment.getAttachmentList().get(0));
+				
+				List<FlAttachment> newAttachmentList = new ArrayList<FlAttachment>();
 				for(FlAttachment flattach: resDTO.getAttachmentList()){
 					if(flattach.getSecId().equals(FulfilmentConst.AP58_AL)){
 						newAttachmentList.add(flattach);
 					}
 				}
+				resDTO.getAttachmentList().removeAll(newAttachmentList);
 			}
-			resDTO.getAttachmentList().removeAll(newAttachmentList);
 			//#28377 end
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			if(resDTO.getFlOrder().isFactored()) {
