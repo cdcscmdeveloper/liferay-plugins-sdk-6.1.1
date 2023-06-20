@@ -52,6 +52,7 @@ import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.persistence.entity.cm.catalog.CmImage; //30457
 import my.ep.persistence.entity.cm.catalog.CmItemRejectReason;
 import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
