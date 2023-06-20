@@ -36,6 +36,9 @@ public interface QTConstants {
 	public static final String SEARCH_PAGE = "/xhtml/sc/quatationtender/quatationtendersearch.xhtml";
 	public static final String CREATE_COMMITTE = "committeemaintanancepage";
 	public static final String QT_SEARCHING_PAGE = "/xhtml/sc/quatationtender/quatationtendersearch.xhtml?faces-redirect=true"; //#9019
+	public static final String MAINT_EPV_APPROVAL_DETAIL = "/xhtml/sc/quatationtender/Approver/maintenanceApprovalEpv.xhtml";//#21692 add new page for history
+	public static final String EXTEND_PROPOSAL_VALIDITY_SUPPLIER_ACCEPTANCE = "/xhtml/sc/quatationtender/Approver/supplierAccepetance.xhtml";//#21692 supplier screen
+	public static final String EXTEND_PROPOSAL_VALIDITY_PENDING_APPROVAL = "/xhtml/sc/quatationtender/Approver/applProposalValidPeriodExtension.xhtml";//#21692 approval screen
 
 	public static final String QT_DETAILS_TAB = "Quotation Details";
 	public static final String QT_SUPPLIERQULIFICATION_TAB = "Supplier Qualification Criteria";
@@ -302,5 +305,13 @@ public interface QTConstants {
 	// #33831 - Start
 	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
 	// #33831 - Start
+	
+	//#29007 Start Vinod
+	public static final String LAMPIRAN_A3_LBL = "lbl.sc.doc.name.lampiran.a3";
+	public static final String LAMPIRAN_A3_UPDATE = "Updated";
+	public static final String LAMPIRAN_A3_DIKEMAS_KINI = "Dikemas kini";
+	public static final String LAMPIRAN_A3_LATEST = "Latest";
+	public static final String LAMPIRAN_A3_TERKINI = "Terkini";
+	//#29007 End Vinod
 	
 }
