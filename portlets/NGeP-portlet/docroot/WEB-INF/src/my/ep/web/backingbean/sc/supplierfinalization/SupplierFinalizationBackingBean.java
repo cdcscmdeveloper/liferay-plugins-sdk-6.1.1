@@ -272,6 +272,7 @@ public class SupplierFinalizationBackingBean extends
 			Long qtId = Long.valueOf(dataType.getQtId());
 			log.info("currentStatusId === "+getManagedBean().getCurrentStatusId());
 			
+			getCommitteeSO().initializedFCLegacyCommitteeHistory(qtId);//25037
 			
 			Long loggedInUserId = getFacesScopes().getUserSessionBean()
 									.getUserId();
@@ -373,7 +374,6 @@ public class SupplierFinalizationBackingBean extends
 			this.evaluateDecisionList();//6906 note 117
 			setDisableSFJustification();
 			//28834 end
-			prepareUpdateCommitteeMember();//#25037
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
@@ -2934,9 +2934,6 @@ return	remarksNotFound;
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 			scQt = qtBackingBean.getManagedBean().getQt();
-			// #28834- Start.
-			this.getManagedBean().setScQt(scQt);
-			// #28834- End.
 			boolean isBpkCentralContract = false;
 			isBpkCentralContract = isBpkCentralContract(scQt);
 			boolean hidden = false;
@@ -10192,19 +10189,16 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	
 	//#25037-START
 	public void prepareUpdateCommitteeMember(){
-		String taskName = this.getManagedBean().getTaskName()==null ? "": this.getManagedBean().getTaskName();
-		if (Arrays.asList(new String[] {SCProcessNameConst.FINALISE_FC_SELECTION, SCProcessNameConst.COORDINATE_FC_MEETING }).contains(taskName)) {
-			SupplierFinalizationMeetingBackingBean meetingBB = new SupplierFinalizationMeetingBackingBean();
-			meetingBB.renewSesionObject();
-			this.getManagedBean().setMeetingBB(meetingBB);
-			Long qtId = this.getManagedBean().getScQt().getQtId();
-			meetingBB.getManagedBean().setCommitteeType(this.getManagedBean().getCommitteeType());
-			meetingBB.retriveQTDetails(qtId);
-			meetingBB.retriveMeetingDetails(this.getManagedBean().getScQt().getQtId());
-			meetingBB.prepareMemberUpdate();
-			meetingBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
-			meetingBB.getManagedBean().setFinalBB(this);
-		}	
+		SupplierFinalizationMeetingBackingBean meetingBB = new SupplierFinalizationMeetingBackingBean();
+		meetingBB.renewSesionObject();
+		this.getManagedBean().setMeetingBB(meetingBB);
+		Long qtId = this.getManagedBean().getScQt().getQtId();
+		meetingBB.getManagedBean().setCommitteeType(this.getManagedBean().getCommitteeType());
+		meetingBB.retriveQTDetails(qtId);
+		meetingBB.retriveMeetingDetails(this.getManagedBean().getScQt().getQtId());
+		meetingBB.prepareMemberUpdate();
+		meetingBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
+		meetingBB.getManagedBean().setFinalBB(this);	
 	}
 	//#25037-END
 	
@@ -10744,7 +10738,12 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				} else {
 					// need to set Keputusan report at time of Endorsement and signOff status
 					// #28834- Start.
-					if (!isBpkCentralContract(this.getManagedBean().getScQt())) {
+					// #34410 - Start
+					ScQt scQt = this.getManagedBean().getScQt();
+					QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+					qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
+					scQt = qtBackingBean.getManagedBean().getQt();
+					if (!isBpkCentralContract(scQt)) { // #34410 - End
 						this.getManagedBean().getScQtFinalization()
 						.getScQtFinalizationReports()
 						.addAll(this.getManagedBean().getEndorsementReports());
@@ -10963,8 +10962,17 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				List<ScQtFinalizationReport> localListReport=new ArrayList<ScQtFinalizationReport>();
 				Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
 				//List<String> localTitle=new ArrayList<String>();
+				List<ScQtFinalizationReport> titleList = new ArrayList<ScQtFinalizationReport>(); // Bug #34720@Syazani 07/06/2022
 				while(iterator.hasNext()){
 					ScQtFinalizationReport finalizationReport = iterator.next();
+					// Bug #34720@Syazani 07/06/2022 -- Start
+					if (duplicateCheckFinalizationReportList(finalizationReport, titleList)) {
+						iterator.remove();
+						continue;
+					}
+					titleList.add(finalizationReport);
+					// Bug #34720@Syazani 07/06/2022 -- End
+					
 					if(null!=finalizationReport.getPmDocument()){
 						if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocCategoryCode().getParameterCode())) {
 							log.info("=======sourbasebackingBeanTitle===="+finalizationReport.getTitle());
@@ -11455,6 +11463,30 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			actorSO = null;
 		}
 	}
-	//Bug #32682 end	
+	//Bug #32682 end
+	
+	// Bug #34720@Syazani 07/06/2022 -- Start
+	/**
+	* Check for duplicate report related to UUM Definiation Key Report
+	* This issue occur in production Bug #34720
+	*/
+	private boolean duplicateCheckFinalizationReportList(ScQtFinalizationReport finalizationReport,
+			List<ScQtFinalizationReport> titleList) {
+		String defKey = finalizationReport.getPmDocument() != null ? finalizationReport.getPmDocument()
+				.getDocDefinitionKey() : "";
+		if (titleList != null && titleList.size() > 0) {
+			for (ScQtFinalizationReport sfReportTemp : titleList) {
+				String defKeyTemp = sfReportTemp.getPmDocument() != null ? sfReportTemp.getPmDocument()
+						.getDocDefinitionKey() : "";
+				if (finalizationReport.getTitle().trim().equalsIgnoreCase(sfReportTemp.getTitle().trim())
+						&& defKey.equalsIgnoreCase(defKeyTemp)
+						&& defKey.equalsIgnoreCase(SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	// Bug #34720@Syazani 07/06/2022 -- End
 }
 // ***19336

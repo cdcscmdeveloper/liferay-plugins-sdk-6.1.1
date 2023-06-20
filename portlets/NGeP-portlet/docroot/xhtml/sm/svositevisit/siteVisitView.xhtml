@@ -24,10 +24,13 @@
 
 			<p:column headerText="#{lbl['lbl.sm.rptpreview.template']}">
 				<!-- 32963 -->
-				<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false"
+				<!-- #34166 - Start -->
+				<p:commandButton style="display:none;" id="buttonToClick" binding="#{button}" value="#{lbl['lbl.btn.download']}" ajax="false"
 					action="#{svoSiteVisitBackingBean.downloadSiteVisitTemplate(cTask,true)}">
 					<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
 				</p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.download']}" action="#{svoSiteVisitBackingBean.test(button.clientId, cTask)}" ajax="true" process="@this" update="buttonToClick"/>
+				<!-- #34166 - End  -->
 			</p:column>
 
 		</p:dataTable>
@@ -38,9 +41,16 @@
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<!-- #28175 start -->
 			<c:choose>
-				<c:when
-					test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or 
-					fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')}">
+				<!-- #28175 Reopen #94 Start -->
+				<c:when test="#{(fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or
+				    fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')) and 
+				    (viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusBumiputera or
+			        viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusRegistered or
+			        viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusBumiFromHome or
+			        viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusNonBumiFromHome or
+			        viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusForeign or 
+			        not viewSmApplBackingBean.managedBean.smAppl.activeAppl)}">
+		        <!-- #28175 Reopen #94 End -->
 					<p:column headerText="#{lbl['lbl.sm.category.description']}">
 						<h:outputText value="#{tmp.suppCategory.pmCategoryL1.categoryL1Code}#{tmp.suppCategory.pmCategoryL2.categoryL2Code}#{tmp.suppCategory.pmCategoryL3.categoryL3Code}
 				 			- #{tmp.suppCategory.categoryL1Name} / #{tmp.suppCategory.categoryL2Name}"/><br/>
@@ -50,9 +60,11 @@
 				</c:when>
 				<c:otherwise>
 					<p:column headerText="#{lbl['lbl.sm.category.description']}">
-						<h:outputText value="#{tmp.suppCategory.pmCategoryL1.categoryL1Code}#{tmp.suppCategory.pmCategoryL2.categoryL2Code}#{tmp.suppCategory.pmCategoryL3.categoryL3Code}
-				 			- #{tmp.suppCategory.categoryL1Name} / #{tmp.suppCategory.categoryL2Name}"/><br/>
-						<h:outputText value="/ #{tmp.suppCategory.categoryL3Name}"/>
+						<!-- #28175 ReOpen start -->
+						<h:outputText value="#{tmp.suppCategory.pmCategoryL1.categoryL1Code}#{tmp.suppCategory.pmCategoryL2.categoryL2Code}#{tmp.suppCategory.pmCategoryL3.categoryL3Code} 
+				 			- #{tmp.suppCategory.pmCategoryL1.categoryName} / #{tmp.suppCategory.pmCategoryL2.categoryName}"/><br/>
+						<h:outputText value="/ #{tmp.suppCategory.pmCategoryL3.categoryName}"/>
+						<!-- #28175 ReOpen start -->
 						<h:outputText value="  (#{tmp.suppCategory.otherDesc})" rendered="#{tmp.suppCategory.otherDesc != null}"/>
 					</p:column>
 				</c:otherwise>
