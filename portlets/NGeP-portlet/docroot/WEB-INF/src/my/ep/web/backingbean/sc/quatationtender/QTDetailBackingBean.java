@@ -4728,8 +4728,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 											if(this.getManagedBean().isFlagFileAttahmentDeletedICT()){
 												if (null != getManagedBean().getScQtApprovalReqAttachementICT()) {
 													approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementICT());
-												}else{
-													approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementICT());
 												}
 											}else{
 												if(null != getManagedBean().getScQtApprovalReqAttachementICT()){
@@ -4745,8 +4743,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										if(approvalRequest.get(i).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)){
 											if(this.getManagedBean().isFlagFileAttahmentDeletedMITI()){	
 												if (null != getManagedBean().getScQtApprovalReqAttachementMITI()) {
-													approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementMITI());
-												}else{
 													approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementMITI());
 												}
 											}else{ 
@@ -4777,9 +4773,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 											    this.getManagedBean().getQt().setCloneEnabled(Boolean.FALSE);
 											}//34502&25635-end
 											   if(this.getManagedBean().isFlagFileAttahmentDeletedICT()){
-											      if (null == getManagedBean().getScQtApprovalReqAttachementICT()) {
-												     approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementICT());
-											      }else{
+											      if (null != getManagedBean().getScQtApprovalReqAttachementICT()) {
 												     approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementICT());
 											      }
 											   }else{
@@ -4800,9 +4794,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										}
 										if(approvalRequest.get(i).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)){
 											   if(this.getManagedBean().isFlagFileAttahmentDeletedMITI()){
-											      if (null == getManagedBean().getScQtApprovalReqAttachementMITI()) {
-												     approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementMITI());
-											      }else{
+											      if (null != getManagedBean().getScQtApprovalReqAttachementMITI()) {
 												     approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementMITI());
 											      }
 											   }else{
