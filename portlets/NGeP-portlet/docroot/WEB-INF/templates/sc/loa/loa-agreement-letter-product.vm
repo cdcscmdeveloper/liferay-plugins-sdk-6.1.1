@@ -1546,6 +1546,7 @@ u.underline {
 					#if ($itemType == "Produk" || $itemType == "Product")
 					##26130 - start 03032022
 					#set($rowCount = 0)	
+					#if($tplspecMaster.tplSpecQuestions.size() > 0)
 					<table width="100%" border="1" cellpadding="0" cellspacing="0">
 						<body>
 					##26130 - end 03032022
@@ -1823,6 +1824,7 @@ u.underline {
 						##26130 - start 03032022
 						</tbody>
 						</table>
+						#end
 						#if ($rowCount > 0)
 						<div class="break-after"><br/></div>
 						#end
@@ -2111,6 +2113,7 @@ u.underline {
 				#if ($itemType == "Perkhidmatan" || $itemType == "Service")
 				
 				##26130 - start 03032022
+				#if($tplspecMaster.tplSpecQuestions.size() > 0)
 						<table width="100%" border="1" cellpadding="0" cellspacing="0">
 						<tbody>
 						#set($rowCount = 0)
@@ -2401,6 +2404,7 @@ u.underline {
 							##26130 - start 03032022
 							</tbody>
 							</table>
+							#end
 							#if ($rowCount > 0)
 							<div class="break-after"><br/></div>
 							#end

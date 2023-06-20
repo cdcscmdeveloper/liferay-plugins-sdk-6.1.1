@@ -41,6 +41,7 @@
 					<!-- #26238 - END -->
 					</tr>
 				</p:outputPanel>
+				<!-- #32792 START -->
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.sm.mofacc.expiry.date']}" />
@@ -51,7 +52,6 @@
 							display="inline" required="true" readonlyInput="true"
 							label="#{lbl['lbl.sm.mofacc.expiry.date']}" id="expDate"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							mindate="#{CommonConstants.CURRENT_DATE}"
 							value="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate}"
 							rendered="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate ge CommonConstants.CURRENT_DATE}" >
 							<p:ajax event="change" process="@this" partialSubmit="true"/>
@@ -69,6 +69,7 @@
 						<p:message id="expDateMsg" for="expDate"
 								showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
+				<!-- #32792 END -->
 			</table>
 		</p:outputPanel>
 
