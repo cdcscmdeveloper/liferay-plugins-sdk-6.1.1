@@ -20,7 +20,7 @@
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
-					action="#{committeBackingBean.updateCommitteDetails(null)}"
+					action="#{committeBackingBean.updateCommitteDetails(BpmOutcomeConstant.bpmSave)}"
 					process="@all" rendered="#{!empty committeBackingBean.managedBean.payLoad}" 
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				<ui:repeat var="bpmAction" value="#{committeBackingBean.managedBean.outComes}">
