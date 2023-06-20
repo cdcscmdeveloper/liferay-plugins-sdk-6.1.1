@@ -8518,11 +8518,15 @@ public void saveComplianceSample() {
 							 	// #25138, #21695
 							//#34588 end
 
-						}
-
+						}//#34741
+						else if(this.getManagedBean()
+								.getOneTierFinancialActiveIndex() == 2){
+							if (!this.getManagedBean().isReadOnly()) {
+								checkMeetingDetailsAndStatus(this.getManagedBean()
+										.getScQtMeetings());
+							}
+						}//#34741
 					}
-					checkMeetingDetailsAndStatus(this.getManagedBean()
-							.getScQtMeetings());
 				}
 
 				else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
@@ -16416,7 +16420,8 @@ private void retriveCommitteeRemarksList(){
 									this.getManagedBean().setEvaluatioStageActiveIndex(1);
 								}
 								retriveFinancialEvaluationStagePackage();
-								throw new EpException(MessageConst.ERROR_760241);
+								//#34741 
+								throw new EpException(MessageConst.ERROR_760547);
 							}
 						//32426 - end
 						//#32007 related to #25138 - validation for partial and non partial in proposalamount evalstatus - end
