@@ -147,7 +147,9 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	
 	/** The qt. */
 	private ScQt qt;
-	
+
+	//#25138(wip 4serangkai) bug -Start 8/6/2023
+	private int wipStatusMax;	
 	/**
 	 * @return the beans
 	 */
@@ -1016,4 +1018,20 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 		this.zoneQtyForItemHlink = zoneQtyForItemHlink;
 	}
 	//#29187 End Vinod
+	//#25138(wip 4serangkai) bug -Start 8/6/2023
+	/**
+	 * @return the max wip 3serangkai
+	 */
+	public int getWipStatusMax() {
+		return wipStatusMax;
+	}
+
+	/**
+	 * @param  max wip check 3serangkai
+	 *            the wipRequired to set
+	 */
+	public void setWipStatusMax(int wipStatusMax) {
+		this.wipStatusMax = wipStatusMax;
+	}
+	//#25138(wip 4serangkai) bug -End 8/6/2023
 }
