@@ -17699,8 +17699,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	// #34166 - Start
 	public void validateText() {
 		FacesScopes sc = new FacesScopes();
-		log.info("Enter Validation text");
-		if (!(sc.hasRoleUser(RoleCode.UPS_APPROVER.value())) || !(sc.hasRoleUser(RoleCode.UPS_APPROVER.value()))) {
+		log.info("Enter Validation text 1");
+		if (!(sc.hasRoleUser(RoleCode.UPS_PO.value())) || !(sc.hasRoleUser(RoleCode.UPS_APPROVER.value()))) {
 			log.info("Blok Baru");
 			if (getManagedBean().getSmAppl() != null) {
 				if (!(getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty())) {
