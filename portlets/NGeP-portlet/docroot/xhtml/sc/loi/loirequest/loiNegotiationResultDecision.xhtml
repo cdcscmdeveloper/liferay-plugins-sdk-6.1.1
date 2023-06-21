@@ -21,11 +21,10 @@
 								required="#{not empty param['skipsubmitvalidation']}"
 								style="margin-bottom:5px;width:210px;"
 								label="#{lbl['lbl.sc.decision']}"
-								value="#{lOIDetailBackingBean.managedBean.decision}">
+								value="#{lOIDetailBackingBean.managedBean.decision.parameterId}">
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.loiNegoDecisionType)}" />
-							</p:selectOneMenu>
-							#{lOIDetailBackingBean.managedBean.decision}
+							</p:selectOneMenu>															
 							<p:message id="decisionMsg" for="decisionId" display="icon" />
 						</c:when>
 						<c:otherwise>
