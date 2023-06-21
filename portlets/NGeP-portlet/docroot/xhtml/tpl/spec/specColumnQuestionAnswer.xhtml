@@ -199,9 +199,11 @@
 				<p:ajax event="blur" partialSubmit="true" process="@this"
 					update="@this, ansYearPG, ansPG, @(.calcAmount)"
 					listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, question.tplSpecAnswers[0], isItemTypeService)}" />
-				<ac:validateNumber
-					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
-					maxIntegerDigits="14" />
+					<ui:remove>Bug #34780 07/06/2023 @idham - Start</ui:remove>
+					<f:converter converterId="dynamicNumberConverter" />
+					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />						
+					<f:validator validatorId="quantityDoubleRangeValidator" />
+					<ui:remove>Bug #34780 07/06/2023 @idham - End</ui:remove>
 			</p:inputText>
 			<p:message id="ratePerUomMsg" for="ratePerUom" display="icon" />
 			<p:commandButton id="ratePerUomBtn" icon="ui-icon-pencil"
