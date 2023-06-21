@@ -8686,11 +8686,18 @@ public void saveComplianceSample() {
 							this.getManagedBean().setTabFinancialIndex(3);	
 							outputTab = 2;
 
+						}else if(this.getManagedBean()
+								.getEvaluatioStageActiveIndex() == 2){
+							//#34741
+								if (!this.getManagedBean().isReadOnly()) {
+									checkMeetingDetailsAndStatus(this.getManagedBean()
+											.getScQtMeetings());
+								}
+							//#34741
 						}
 
 					}
-					checkMeetingDetailsAndStatus(this.getManagedBean()
-							.getScQtMeetings());
+
 				}
 				/*
 				 * if
