@@ -455,7 +455,7 @@ public class LOIDetailBackingBean extends
 					}else{
 						this.getManagedBean().setRenderInstruction(false);
 					}
-		// #29007	Vinod End
+		// #29007	Vinod End					
 	}
 	
 	/**
@@ -2473,7 +2473,7 @@ public class LOIDetailBackingBean extends
 			String outcome = BpmOutcomeConst.BPM_SAVE;
 			
 			//#30008 - Start
-			scLoi.setNegoDecision(scLoi.getNegoDecision());
+			scLoi.setNegoDecision(this.getManagedBean().getDecision());
 			scLoi.setDecisionJustification(this.getManagedBean().getJustification());
 			//#30008 - end
 			
@@ -6896,4 +6896,5 @@ public class LOIDetailBackingBean extends
 		}
 
 	}
+
 }
