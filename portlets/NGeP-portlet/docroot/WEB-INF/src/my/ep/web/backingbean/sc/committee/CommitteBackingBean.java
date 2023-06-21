@@ -44,6 +44,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.comparator.sc.MemberRoleComparator;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -716,7 +717,7 @@ public class CommitteBackingBean extends
 					getManagedBean().setToBeDelCommitteMemebers(null);
 				}
 				//201123@asyrafhaziq_29316 - End
-				if (StringUtils.isNotBlank(outCome)) {
+				if (StringUtils.equals(BpmOutcomeConst.BPM_SUBMIT, committeReqDTO.getOutcome())) {//25037
 					FacesContext
 							.getCurrentInstance()
 							.addMessage(
