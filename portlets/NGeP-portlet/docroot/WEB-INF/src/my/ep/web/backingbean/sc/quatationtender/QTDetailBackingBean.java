@@ -11482,32 +11482,34 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		for (int i = 0; i < approval.size(); i++) {
 			if (approvalCategory.equalsIgnoreCase(approval.get(i).getApprovalCategory().getParameterCode())) {
 				List<ScQtApprovalRequest> approvalRequestHistory = approval.get(i).getHistoryApprovalRequests();
-				for (int j = 0; j < approvalRequestHistory.size(); j++) {
-					PmParameter approvalAction = approvalRequestHistory.get(j).getApproverAction();
-					if(null!=approvalAction){
-						
-						if(approvalRequestHistory.get(j).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS)){
-   							 if(this.getManagedBean().isFlagFileAttahmentDeletedICT()){
-	 	  			                 ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
-	 	      	                     if(null == approvalReqAttachement){
-	 	      	                    	  this.getManagedBean().setResetBpkCurrentArea(false);
-	 	      	                    	  throw new EpException(MessageConst.ERROR_760509);
-	 	      	                     }
-    						  }
-					    }
-						
-						if(approvalRequestHistory.get(j).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)){
-							 if(this.getManagedBean().isFlagFileAttahmentDeletedMITI()){
-	 	  			                 ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
-	 	      	                     if(null == approvalReqAttachement){
-	 	      	                    	  this.getManagedBean().setResetBpkCurrentArea(false);
-	 	      	                    	  throw new EpException(MessageConst.ERROR_760509);
-	 	      	                     }
-					         } 
-					    }
-						
+				if(CollectionUtils.isNotEmpty(approvalRequestHistory)){
+					for (int j = 0; j < approvalRequestHistory.size(); j++) {
+						PmParameter approvalAction = approvalRequestHistory.get(j).getApproverAction();
+						if(null!=approvalAction){
+							
+							if(approvalRequestHistory.get(j).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS)){
+	   							 if(this.getManagedBean().isFlagFileAttahmentDeletedICT()){
+		 	  			                 ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
+		 	      	                     if(null == approvalReqAttachement){
+		 	      	                    	  this.getManagedBean().setResetBpkCurrentArea(false);
+		 	      	                    	  throw new EpException(MessageConst.ERROR_760509);
+		 	      	                     }
+	    						  }
+						    }
+							
+							if(approvalRequestHistory.get(j).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)){
+								 if(this.getManagedBean().isFlagFileAttahmentDeletedMITI()){
+		 	  			                 ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
+		 	      	                     if(null == approvalReqAttachement){
+		 	      	                    	  this.getManagedBean().setResetBpkCurrentArea(false);
+		 	      	                    	  throw new EpException(MessageConst.ERROR_760509);
+		 	      	                     }
+						         } 
+						    }
+							
+						}
 					}
-				}
+			   }
 			}
 		}
 	}
@@ -11516,20 +11518,22 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		for (int i = 0; i < approval.size(); i++) {
 			if (approvalCategory.equalsIgnoreCase(approval.get(i).getApprovalCategory().getParameterCode())) {
 				List<ScQtApprovalRequest> approvalRequest = approval.get(i).getScQtApprovalDtls();
-				for (int j = 0; j < approvalRequest.size(); j++) {
-					
-					PmParameter approverAction = approvalRequest.get(j).getApproverAction();
-					if (null == approverAction || null == approverAction.getParameterId()) {
-						this.getManagedBean().setResetBpkCurrentArea(false);
-						throw new EpException(MessageConst.ERROR_760149);
+				if(CollectionUtils.isNotEmpty(approvalRequest)){
+					for (int j = 0; j < approvalRequest.size(); j++) {
+						
+						PmParameter approverAction = approvalRequest.get(j).getApproverAction();
+						if (null == approverAction || null == approverAction.getParameterId()) {
+							this.getManagedBean().setResetBpkCurrentArea(false);
+							throw new EpException(MessageConst.ERROR_760149);
+						}
+						
+						ScQtApprovalReqAttachement approvalReqAttachement = approvalRequest.get(j).getApprovalRequestAttachement();
+	                    if(null == approvalReqAttachement){
+	                    	this.getManagedBean().setResetBpkCurrentArea(false);
+	                    	throw new EpException(MessageConst.ERROR_760509);
+	                    }
+	                    
 					}
-					
-					ScQtApprovalReqAttachement approvalReqAttachement = approvalRequest.get(j).getApprovalRequestAttachement();
-                    if(null == approvalReqAttachement){
-                    	this.getManagedBean().setResetBpkCurrentArea(false);
-                    	throw new EpException(MessageConst.ERROR_760509);
-                    }
-                    
 				}
 			} 
 		} 
