@@ -62,17 +62,17 @@
 			<p:blockUI block=":form:tt:brnInfPan" widgetVar="buiPoBrn"
 				id="poBrnBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.branchVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.branchVerified : false)}" />
-
+			<!-- #34135 START -->
 			<p:dataTable var="branchBean" id="dt" widgetVar="suppBrnachDtWidVar"
-				value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
+				value="#{backingBean.managedBean.displayBranches}"
 				selection="#{backingBean.managedBean.selectedBranches}"
 				rowKey="#{branchBean}" rowIndexVar="index"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<ac:paginator for="dt" />
 				<p:ajax event="rowSelect" listener="#{backingBean.unSelectSsmBranch}" update=":form:tt:dt"></p:ajax>
 				<!--  SSM INTEGRATION -->
-				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smSupplierBranches}" disabledSelection="#{branchBean.ssmData}"/>
-
+				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.displayBranches}" disabledSelection="#{branchBean.ssmData}"/>
+			<!-- #34135 END -->
 				<p:column headerText="#{lbl['lbl.sm.branch.branchName']}">
 					<table style="width: 100%">
 						<tr>
@@ -116,13 +116,14 @@
 					</table>
 
 				</p:column>
-
+				<!-- #34135 START -->
 				<p:column headerText="#{lbl['lbl.sm.companyaddress']}"
 					style="width :50%;white-space : normal">
 					<h:outputText
-						value="#{backingBean.getFullAddress(branchBean.smAddress)}"
+						value="#{backingBean.getFullBranchAddress(branchBean.smAddress)}"
 						style="float : left" />
 				</p:column>
+				<!-- #34135 START -->
 				<p:column headerText="#{lbl['lbl.sm.person.composition.poc']}"
 					style="width :150px;white-space : normal">
 					<h:outputText value="#{branchBean.smPersonnel.name}" />
@@ -240,7 +241,7 @@
 			cancelLabel="#{lbl['lbl.btn.cancel']}" 
 			multiple="false" showButtons="false"/>
 	</p:dialog>
-	
+
 	<ac:confirmationPopup id="branchDeletePopUpId"
 		widget="branchDeletePopUp"
 		okAction="backingBean.deleteSelectedBranches"
