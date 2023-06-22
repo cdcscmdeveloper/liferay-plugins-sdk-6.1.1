@@ -2038,6 +2038,14 @@ public class SpecificationBackingBean extends
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 				reqDTO.setScQt(this.getManagedBean().getQt());
 				reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+				//wip 4serangkai only -start
+				if (reqDTO.getScQt() != null) {
+					specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSpecSO.class);
+					
+					this.getManagedBean().setWipStatusMax(specSo.checkWipScoreSettingMax(reqDTO));
+				}
+				//end
 				resDTO = specSo.retrieveCheckLists(reqDTO);
 				if (!isAtleastOneSeriveReq(resDTO.getTechnicalCheckList())) {
 					if (null != resDTO.getTechnicalCheckList()) {
@@ -6507,7 +6515,7 @@ public class SpecificationBackingBean extends
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getScQtCheckListValue()) {
 						//#25138 fix lazy -start (adding condition isnotempty checklistscore)
-						if(null!=checkList.getScQtCheckListValue() && CollectionUtils.isNotEmpty(checkList.getScQtCheckListScores()) && isIndirectWithInstantiated(checkList.getScQtCheckListScores())){ // Bug #34412@Syazani 02/02/2023
+						if(null!=checkList.getScQtCheckListValue() && isIndirectWithInstantiated(checkList.getScQtCheckListScores()) && CollectionUtils.isNotEmpty(checkList.getScQtCheckListScores())){ // Bug #34412@Syazani 20/06/2023
 							List<ScQtCheckListScore> bankStatement = new ArrayList<ScQtCheckListScore>();
 							for (ScQtCheckListScore checklistScore : checkList.getScQtCheckListScores()) {
 								if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT) {

@@ -29,7 +29,7 @@
 				<td style="width: 5%"><h:outputLabel
 						value="#{lbl['lbl.sc.status']}" /></td>
 				<td style="width: 12%" class="header-info-text">
-					#{committeBackingBean.managedBean.isCommitteeRecordStatusActive()?
+					#{committeBackingBean.isCommitteeRecordStatusActive(committeBackingBean.managedBean.scCommittee)?
 					lbl['lbl.txt.active'] : lbl['lbl.txt.inactive']}</td>
 			</tr>
 		</table>

@@ -2934,9 +2934,6 @@ return	remarksNotFound;
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 			scQt = qtBackingBean.getManagedBean().getQt();
-			// #28834- Start.
-			this.getManagedBean().setScQt(scQt);
-			// #28834- End.
 			boolean isBpkCentralContract = false;
 			isBpkCentralContract = isBpkCentralContract(scQt);
 			boolean hidden = false;
@@ -10741,7 +10738,12 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				} else {
 					// need to set Keputusan report at time of Endorsement and signOff status
 					// #28834- Start.
-					if (!isBpkCentralContract(this.getManagedBean().getScQt())) {
+					// #34410 - Start
+					ScQt scQt = this.getManagedBean().getScQt();
+					QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+					qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
+					scQt = qtBackingBean.getManagedBean().getQt();
+					if (!isBpkCentralContract(scQt)) { // #34410 - End
 						this.getManagedBean().getScQtFinalization()
 						.getScQtFinalizationReports()
 						.addAll(this.getManagedBean().getEndorsementReports());

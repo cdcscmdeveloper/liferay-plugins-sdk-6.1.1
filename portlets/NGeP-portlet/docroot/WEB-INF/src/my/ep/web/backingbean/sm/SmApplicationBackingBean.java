@@ -10389,6 +10389,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		boolean valid = true;
 		try {
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
+			// #28175 Reopen Start 
+			List<SmSupplierCategory> historicalSmSupplierCategories = bpmAppl.getSmSupplierCategories();
+			for(SmSupplierCategory cat : historicalSmSupplierCategories){
+				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
+				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
+				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+			}
+			bpmAppl.setSmSupplierCategories(historicalSmSupplierCategories);
+			// #28175 Reopen End
 			String outcome = "CANCEL";
 			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
 					outcome, SupplierManagementConst.SUPP_SUBMIT_DELDRFT_APPL);
@@ -11436,17 +11445,21 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
 		validSiteVisit = testSmAppl(getManagedBean().getSmAppl().getApplType(),
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC, "", true);
-		if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
-			// #28175 Reopen Start 
+//		Comment empty IF
+//		if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
+//		}
+		// #28175 Reopen Start  
+		if (!this.getManagedBean().getSmAppl().getPmStatus().getStatusId()
+				.equals(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL)) {
 			List<SmSupplierCategory> historicalSmSupplierCategories = this.getManagedBean().getSmAppl().getSmSupplierCategories();
 			for(SmSupplierCategory cat : historicalSmSupplierCategories){
 				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
 				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
 				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
 			}
-			this.getManagedBean().getSmAppl().setSmSupplierCategories(historicalSmSupplierCategories);
-			// #28175 Reopen End
-		}
+			this.getManagedBean().getSmAppl().setSmSupplierCategories(historicalSmSupplierCategories); 
+		} 
+		// #28175 Reopen End 
 		if (validSiteVisit) {
 			String successMsg = "";
 			SmMofAccount mofAcc = getManagedBean().getSmSupplier() != null
@@ -17443,7 +17456,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				//#34277 - end
 				SmPersonnelAddress res = new SmPersonnelAddress();
 				res.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
-				res.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+				//#34799 - start
+				PmCountry currCountry = null;
+				if(personnelAddress.getSmAddress() != null){
+					currCountry = personnelAddress.getSmAddress().getPmCountry();
+				}
+				res.setSmAddress(SmApplicationUtil.setDefaultAddr(currCountry));
+				//#34799 - end
 				res.setSmPersonnel(this.getManagedBean().getSelectedShareHolder());
 				getManagedBean().setShareHolderResdAddr(res);
 				
@@ -17688,18 +17707,23 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	
 	// #34166 - Start
 	public void validateText() {
-		if (getManagedBean().getSmAppl() != null) {
-			if (!(getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty())) {
-				for (SmSupplierBank banks : getManagedBean().getSmAppl().getSmSupplierBanks()) {
-					if (banks.getSignatureInstruction().contains("<") || banks.getSignatureInstruction().contains(">")) {
-						StringBuilder sb = new StringBuilder();
-						Locale locale = new FacesScopes().getUserLocale();
-						sb.append(ResourceBundleUtils.getMessage("lbl.sm.bankDtls.chequesign.tnc",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-						throw new EpException(MessageConst.ERROR_775191, new String[] { sb.toString().toLowerCase() });
-
+		if(!getManagedBean().isPoUser()){
+			if(!getManagedBean().isApproverUser()){
+				if (getManagedBean().getSmAppl() != null) {
+					if (!(getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty())) {
+						for (SmSupplierBank banks : getManagedBean().getSmAppl().getSmSupplierBanks()) {
+							if (banks.getSignatureInstruction().contains("<")
+									|| banks.getSignatureInstruction().contains(">")) {
+								StringBuilder sb = new StringBuilder();
+								Locale locale = new FacesScopes().getUserLocale();
+								sb.append(ResourceBundleUtils.getMessage("lbl.sm.bankDtls.chequesign.tnc",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+								throw new EpException(MessageConst.ERROR_775191,
+										new String[] { sb.toString().toLowerCase() });
+							}
+						}
 					}
-				}
+				}	
 			}
 		}
 	}

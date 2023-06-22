@@ -448,6 +448,9 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			orderBackingBean.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+			//#34686 start
+			orderBackingBean.getManagedBean().setAttachment(resDTO.getFlAttachment());
+			//#34686 end
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 				return NAV_PO;

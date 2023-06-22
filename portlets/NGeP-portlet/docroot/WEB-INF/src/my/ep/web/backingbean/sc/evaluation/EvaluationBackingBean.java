@@ -2497,6 +2497,9 @@ public void saveComplianceSample() {
 					// #25138 - 040621 - start
 					if (this.getManagedBean().getScQt().isPartial()) {
 						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+						//#25138 -set wip
+						int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+						this.getManagedBean().setWipStatusMax(wipstatus);
 					} else {
 						// #32453-start
 						//wip status start
@@ -8518,11 +8521,15 @@ public void saveComplianceSample() {
 							 	// #25138, #21695
 							//#34588 end
 
-						}
-
+						}//#34741
+						else if(this.getManagedBean()
+								.getOneTierFinancialActiveIndex() == 2){
+							if (!this.getManagedBean().isReadOnly()) {
+								checkMeetingDetailsAndStatus(this.getManagedBean()
+										.getScQtMeetings());
+							}
+						}//#34741
 					}
-					checkMeetingDetailsAndStatus(this.getManagedBean()
-							.getScQtMeetings());
 				}
 
 				else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
@@ -8679,11 +8686,18 @@ public void saveComplianceSample() {
 							this.getManagedBean().setTabFinancialIndex(3);	
 							outputTab = 2;
 
+						}else if(this.getManagedBean()
+								.getEvaluatioStageActiveIndex() == 2){
+							//#34741
+								if (!this.getManagedBean().isReadOnly()) {
+									checkMeetingDetailsAndStatus(this.getManagedBean()
+											.getScQtMeetings());
+								}
+							//#34741
 						}
 
 					}
-					checkMeetingDetailsAndStatus(this.getManagedBean()
-							.getScQtMeetings());
+
 				}
 				/*
 				 * if
@@ -8741,6 +8755,8 @@ public void saveComplianceSample() {
 								.getCommitteeType())) {
 					int currentEvaluationStageActiveIndex = this.getManagedBean().getEvaluatioStageActiveIndex();//32426
 					retriveFinancialEvaluationStage();
+					//#34741 - retrieve back if error msg trigger
+					retriveFinancialEvaluationStagePackage();
 					this.getManagedBean().setEvaluatioStageActiveIndex(currentEvaluationStageActiveIndex);//32426
 				}
 			}
@@ -16416,7 +16432,8 @@ private void retriveCommitteeRemarksList(){
 									this.getManagedBean().setEvaluatioStageActiveIndex(1);
 								}
 								retriveFinancialEvaluationStagePackage();
-								throw new EpException(MessageConst.ERROR_760241);
+								//#34741 
+								throw new EpException(MessageConst.ERROR_760547);
 							}
 						//32426 - end
 						//#32007 related to #25138 - validation for partial and non partial in proposalamount evalstatus - end
