@@ -64,7 +64,6 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
-import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -87,8 +86,6 @@ import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
-import my.ep.dto.sm.businessnature.SupplierBusinessNatureResDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -3394,74 +3391,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		RequestContext.getCurrentInstance().execute("viewssminfoWidgetVar.show()");
 		
 	}
-	
-	//#31269 - start
-	public void redirectToViewSSMInfo(SmAppl smAppl){
-		getManagedBean().setSmAppl(smAppl);
-		getManagedBean().setSmSupplier(smAppl.getSmSupplier());
-		getManagedBean().setBusinessTypeParamCode(
-			smAppl.getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) 
-			? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE	: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT);
-		clearPersonnelList();
-		for(SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
-			if(!personnel.isSsmData()) continue;
-			
-			validateSsmPersonnel(personnel);
-			if(personnel.isEquityOwnerSsm()){
-				getManagedBean().getPersonnelsOwnerSsm().add(personnel);
-			}
-			if(personnel.isDirectorSsm()){
-				getManagedBean().getSmPersonnelDirectorSsm().add(personnel);
-			}
-			getManagedBean().getPersonnelsSsm().add(personnel);
-		}
-		
-		getManagedBean().getSmSupplierBranchSsm().clear();
-		for(SmSupplierBranch branch : getManagedBean().getSmAppl().getSmSupplierBranches()){
-			if(!branch.isSsmData()) continue;
-			getManagedBean().getSmSupplierBranchSsm().add(branch);
-		}
-		
-		SupplierBusinessNatureReqDTO reqDTO = new SupplierBusinessNatureReqDTO();
-		reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());		
-		SupplierBusinessNatureResDTO resDTO = ((ISupplierBusinessNatureSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", ISupplierBusinessNatureSO.class))
-				.retrieveAllBusinessNatureBySupplierId(reqDTO);
-		for(SmSupplierBusiness business : resDTO.getBusinessNatureLs()){
-			if(!business.isSsmData()) continue;
-			getManagedBean().getSmSupplierBusinessSsm().add(business);
-		}
-		
-		getManagedBean().getSmEquityCompaniesSsm().clear();
-		for(SmEquityCompany company : getManagedBean().getSmAppl().getSmEquityCompanies()){
-			if(!company.isSsmData()) continue;
-			getManagedBean().getSmEquityCompaniesSsm().add(company);
-		}
-		RequestContext.getCurrentInstance().execute("viewssminfoDlg.show()");
-	}
-	
-	public boolean renderViewSSMInfo(){
-		return getManagedBean().getSmAppl().isApplValidWithSsm()
-			&& businessTypeTovalidateWithSSM(null, 
-				getManagedBean().getSmAppl().getSmSupplier().getBusinessType());
-	}
-	
-	public SmPersonnel validateSsmPersonnel(SmPersonnel personnel){
-		if(personnel == null || !personnel.isSsmData() 
-			|| personnel.getSmPersonnelAddresses() == null) return personnel;
-		for(int i=0; i < personnel.getSmPersonnelAddresses().size(); i++){
-			if(personnel.getSmPersonnelAddresses().get(i) == null
-				|| personnel.getSmPersonnelAddresses().get(i).getSmAddress() == null){
-				continue;
-			}
-			if(personnel.getSmPersonnelAddresses().get(i).getSmAddress().isSsmData()){
-				Collections.swap(personnel.getSmPersonnelAddresses(), 0, i);
-				break;
-			}
-		}
-		return personnel;
-	}
-	//#31269 - end
 	
 	public void clearPersonnelList() {
 		this.getManagedBean().getPersonnelsOwnerSsm().clear();
