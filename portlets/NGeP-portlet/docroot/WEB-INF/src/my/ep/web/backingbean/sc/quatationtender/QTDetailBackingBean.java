@@ -4790,6 +4790,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 												   ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
 												   approvalRemark.setApprovalRequest(approvalRequest.get(i));
 												   approvalRequest.get(i).setAppRequestRemark(approvalRemark);
+												   approvalRequest.get(i).getAppRequestRemark().setRemark(" ");
 											   } 
 										}
 										if(approvalRequest.get(i).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)){
@@ -4811,6 +4812,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 												   ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
 												   approvalRemark.setApprovalRequest(approvalRequest.get(i));
 												   approvalRequest.get(i).setAppRequestRemark(approvalRemark);
+												   approvalRequest.get(i).getAppRequestRemark().setRemark(" ");
 											   }
 											   
 										}
