@@ -8686,11 +8686,18 @@ public void saveComplianceSample() {
 							this.getManagedBean().setTabFinancialIndex(3);	
 							outputTab = 2;
 
+						}else if(this.getManagedBean()
+								.getEvaluatioStageActiveIndex() == 2){
+							//#34741
+								if (!this.getManagedBean().isReadOnly()) {
+									checkMeetingDetailsAndStatus(this.getManagedBean()
+											.getScQtMeetings());
+								}
+							//#34741
 						}
 
 					}
-					checkMeetingDetailsAndStatus(this.getManagedBean()
-							.getScQtMeetings());
+
 				}
 				/*
 				 * if
@@ -8748,6 +8755,8 @@ public void saveComplianceSample() {
 								.getCommitteeType())) {
 					int currentEvaluationStageActiveIndex = this.getManagedBean().getEvaluatioStageActiveIndex();//32426
 					retriveFinancialEvaluationStage();
+					//#34741 - retrieve back if error msg trigger
+					retriveFinancialEvaluationStagePackage();
 					this.getManagedBean().setEvaluatioStageActiveIndex(currentEvaluationStageActiveIndex);//32426
 				}
 			}
