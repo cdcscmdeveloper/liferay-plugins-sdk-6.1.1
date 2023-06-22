@@ -7383,4 +7383,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	//Bug #33674@Syazani -- End 14/09/2022
+	// #32648 populate lampiran 7 if LOA at supplier - start
+		public boolean isDpAuditOrQtAuditOrQtMaint() {
+			return QTConstants.PORTLET_NAME_QT_MAINTENANCE
+					.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+					|| QTConstants.PORTLET_NAME_QT_SEARCH
+							.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+						|| SourcingConstants.PORTLET_NAME_DP_SEARCH
+							.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+							|| SourcingConstants.PORTLET_NAME_DP_LOA_LIST
+							.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+							|| QTConstants.PORTLET_NAME_QT_LIST
+							.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+		}
+		// #32648 populate lampiran 7 if LOA at supplier - end
 }
