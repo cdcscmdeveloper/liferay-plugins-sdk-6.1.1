@@ -8755,6 +8755,8 @@ public void saveComplianceSample() {
 								.getCommitteeType())) {
 					int currentEvaluationStageActiveIndex = this.getManagedBean().getEvaluatioStageActiveIndex();//32426
 					retriveFinancialEvaluationStage();
+					//#34741 - retrieve back if error msg trigger
+					retriveFinancialEvaluationStagePackage();
 					this.getManagedBean().setEvaluatioStageActiveIndex(currentEvaluationStageActiveIndex);//32426
 				}
 			}
