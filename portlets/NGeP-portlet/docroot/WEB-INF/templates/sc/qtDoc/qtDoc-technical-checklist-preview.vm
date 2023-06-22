@@ -1,0 +1,170 @@
+<html>
+<head>
+	<style>
+@page {
+	size: A4 landscape;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+@page { @bottom-center { content:"Page "counter(page)" / "counter(pages);	
+}
+p {
+	text-align: justify;
+}
+
+.text_family {
+	font-family: Arial;
+	font-size: 14.5px;
+	font-weight: normal;
+	font-style: normal;
+	line-height: 20px;
+	text-decoration: none;
+	color: #333333;
+}
+
+.text_family_red {
+	font-family: Arial;
+	font-size: 14.5px;
+	font-weight: normal;
+	font-style: normal;
+	line-height: 20px;
+	text-decoration: none;
+	color: red;
+}
+
+.text_family_medium {
+	font-family: Arial;
+	font-weight: normal;
+	font-style: normal;
+	line-height: 20px;
+	text-decoration: none;
+	font-size: 14.5px;
+	color: red;
+}
+
+.text_family_small {
+	font-family: Arial;
+	font-weight: normal;
+	font-style: normal;
+	line-height: 20px;
+	text-decoration: none;
+	font-size: 9px;
+	color: red;
+}
+
+.text_family_bold {
+	font-family: Arial;
+	font-weight: bold;
+	font-size: 14.5px;
+	line-height: 20px;
+}
+
+.text_family_italic {
+	font-family: Arial;
+	font-style: italic;
+	font-size: 14.5px;
+	line-height: 20px;
+}
+
+.text_family_header {
+	font-family: Arial;
+	font-size: 14.5px;
+	font-weight: bold;
+	line-height: 20px;
+}
+
+.text_header_submenu {
+	font-family: Arial;
+	font-size: 14.5px;
+	font-weight: bold;
+	font-style: normal;
+	line-height: 20px;
+	text-decoration: underline;
+}
+
+.text_header_submenu_red {
+	font-family: Arial;
+	font-weight: bold;
+	font-style: normal;
+	font-size: 14.5px;
+	line-height: 20px;
+	text-decoration: underline;
+	color: red;
+}
+
+.text_sub_header_red {
+	font-family: Arial;
+	font-weight: bold;
+	font-style: normal;
+	font-size: 14.5px;
+	line-height: 20px;
+	text-decoration: none;
+	color: red;
+}
+
+.submenu_padding {
+	padding-left: 30px; width: 60%"
+}
+
+.text_indent {   
+	margin-left: 20px; 
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em auto;
+    padding: 0;
+}
+
+u {    
+	border-bottom: 2px dotted #000;
+	text-decoration: none;
+}
+
+.break-after {
+	page-break-after:always;
+}
+</style>
+</head>
+<body>
+#set($rowCount = 0)
+<table width="100%" border="1" cellpadding="0" cellspacing="0">
+	<tbody>
+		<tr>
+			<th bgcolor="#6d839b" width="50%" valign="top" class="title border left" style="text-align: left; border: 1px solid white; padding-left: 5px; padding-right: 5px; font-family: Arial;">Title / Document</th>
+			<th bgcolor="#6d839b" width="20%" valign="top" class="title border left" style="text-align: left; border: 1px solid white; padding-left: 5px; padding-right: 5px; font-family: Arial;">Mechanism</th>
+			<th bgcolor="#6d839b" width="20%" valign="top" class="title border left" style="text-align: left; border: 1px solid white; padding-left: 5px; padding-right: 5px; font-family: Arial;">Supplier Action</th>
+			<th bgcolor="#6d839b" width="10%" valign="top" class="title border left" style="text-align: left; border: 1px solid white; padding-left: 5px; padding-right: 5px; font-family: Arial;">Scoring</th>
+		</tr>
+		
+		#foreach( $techChecklist in $scQtCheckSt2techProposal )
+		
+		<tr>
+			<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid white;">
+			$techChecklist.title
+			</td>
+			<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid white;">
+			$bean.getParameterDesc($techChecklist.definationType)
+			</td>
+			<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid white;">
+			$bean.getParameterDesc($techChecklist.action)
+			</td>
+			<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid white;">
+			<input type="checkbox" disabled="true" value="$techChecklist.scoringReq"></input>
+			</td>
+		</tr>
+		
+		#end
+	</tbody>
+</table>
+
+#set($rowCount = $rowCount + 1)
+#if($rowCount < $scQtCheckSt2techProposal.size())
+	<div style="page-break-after:always;"><br/></div>
+#end
+</body>
+</html>

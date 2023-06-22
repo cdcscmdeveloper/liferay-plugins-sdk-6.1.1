@@ -384,7 +384,12 @@
 
 		<ui:param name="isReadOnlyOrSpecMain"
 			value="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}" />
+		<ui:include src="/xhtml/sc/specification/specificationCommittee/technicalChecklistPreview.xhtml"/><!-- #10141 Added Vinod -->
 		<div align="right">
+			<p:commandButton styleClass="BtnSpacing"
+				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"
+				value="#{lbl['lbl.sc.spec.btn.checklist.preview']}"
+				process="@this" onclick="technicalChecklistPreview.show();" /> <!-- #10141 Added Vinod -->
 			<p:commandButton styleClass="BtnSpacing"
 				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"

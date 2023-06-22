@@ -14,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -72,6 +73,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
@@ -124,6 +126,8 @@ import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -166,8 +170,11 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAddress;
+import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScFinancialUserScoringSchemaAttachment;
@@ -199,6 +206,7 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -241,6 +249,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -268,6 +277,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.velocity.VelocityContext;
 import org.eclipse.persistence.indirection.IndirectList;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
@@ -23036,6 +23046,81 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			return true;
 		}
 		return false;
+	}
+	
+	public void generateTechnicalChecklistPreviewPdfFromVelocity(List<ScQtCheckList> scQtCheckSt2techProposal) throws Exception{
+		VelocityContext context = new VelocityContext();
+		StringBuilder filename = new StringBuilder();
+		ScQtCheckListAttachment attachment = new ScQtCheckListAttachment();
+		
+		String name=getMessageCommon("lbl.sc.spec.technical.checklist.preview.printing").replaceAll("\\s","");
+		filename.append(name+".pdf");
+		attachment.setFileName(filename.toString().replaceAll("/",""));
+		attachment.setDocNo(this.getManagedBean().getQt().getQtNo());
+		attachment.setScQtCheckList(this.getManagedBean().getScQtChecklist());
+		
+		populateAttachmentDetails(attachment);
+		
+		context.put("scQtCheckSt2techProposal", scQtCheckSt2techProposal); 
+		context.put("bean", this);
+		
+		FileOutputStream fos = null;
+
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(
+					SourcingConstants.TECHNICAL_CHECKLIST_PREVIEW, context, 
+					fos);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	public void generateFinancialChecklistPreviewPdfFromVelocity(List<ScQtCheckList> scQtCheckSt2financeProposalList) throws Exception{
+		VelocityContext context = new VelocityContext();
+		StringBuilder filename = new StringBuilder();
+		ScQtCheckListAttachment attachment = new ScQtCheckListAttachment();
+		
+		String name=getMessageCommon("lbl.sc.spec.technical.checklist.preview.printing").replaceAll("\\s","");
+		filename.append(name+".pdf");
+		attachment.setFileName(filename.toString().replaceAll("/",""));
+		attachment.setDocNo(this.getManagedBean().getQt().getQtNo());
+		attachment.setScQtCheckList(this.getManagedBean().getScQtChecklist());
+		
+		populateAttachmentDetails(attachment);
+		
+		context.put("scQtCheckSt2financeProposalList", scQtCheckSt2financeProposalList); 
+		context.put("bean", this);
+		
+		FileOutputStream fos = null;
+
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(
+					SourcingConstants.FINANCIAL_CHECKLIST_PREVIEW, context, 
+					fos);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	//#10141 Start Vinod
 }

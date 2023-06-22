@@ -1674,6 +1674,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private int inActiveChecklistCount;
 	private boolean disableButtonForInactiveChecklist = false;
 	private boolean showInactiveChecklistPopup = false;
+	private List<ScQtCheckList> techChecklistSelect;
+	private List<ScQtCheckList> finChecklistSelect;
+	private int technicalPreviewTableRow;
+	private int financialPreviewTableRow;
 	// #10141 - end
 	
 	/**
@@ -11846,7 +11850,39 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	public void setShowInactiveChecklistPopup(boolean showInactiveChecklistPopup) {
 		this.showInactiveChecklistPopup = showInactiveChecklistPopup;
-	}	
+	}
+
+	public List<ScQtCheckList> getTechChecklistSelect() {
+		return techChecklistSelect;
+	}
+
+	public void setTechChecklistSelect(List<ScQtCheckList> techChecklistSelect) {
+		this.techChecklistSelect = techChecklistSelect;
+	}
+
+	public List<ScQtCheckList> getFinChecklistSelect() {
+		return finChecklistSelect;
+	}
+
+	public void setFinChecklistSelect(List<ScQtCheckList> finChecklistSelect) {
+		this.finChecklistSelect = finChecklistSelect;
+	}
+
+	public int getTechnicalPreviewTableRow() {
+		return technicalPreviewTableRow;
+	}
+
+	public void setTechnicalPreviewTableRow(int technicalPreviewTableRow) {
+		this.technicalPreviewTableRow = technicalPreviewTableRow;
+	}
+
+	public int getFinancialPreviewTableRow() {
+		return financialPreviewTableRow;
+	}
+
+	public void setFinancialPreviewTableRow(int financialPreviewTableRow) {
+		this.financialPreviewTableRow = financialPreviewTableRow;
+	}
 	// #10141 - end
 
 }
