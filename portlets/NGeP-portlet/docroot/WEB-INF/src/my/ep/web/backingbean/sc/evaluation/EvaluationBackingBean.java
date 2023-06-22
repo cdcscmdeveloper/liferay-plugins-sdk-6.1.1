@@ -8754,11 +8754,11 @@ public void saveComplianceSample() {
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())) {
 					int currentEvaluationStageActiveIndex = this.getManagedBean().getEvaluatioStageActiveIndex();//32426
-					int currentTabItemPackageIndex = this.getManagedBean().getTabItemPackageIndex(); //#34741
+					int currentTabItemPackageIndex = this.getManagedBean().getTabItemPackageIndex();//#34741
 					retriveFinancialEvaluationStage();
 					
-					this.getManagedBean().setEvaluatioStageActiveIndex(currentEvaluationStageActiveIndex);//32426
 					this.getManagedBean().setTabItemPackageIndex(currentTabItemPackageIndex);//#34741
+					this.getManagedBean().setEvaluatioStageActiveIndex(currentEvaluationStageActiveIndex);//32426
 				}
 			}
 			else if(currentTab==3){
