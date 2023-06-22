@@ -11448,8 +11448,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 //		if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
 //		}
 		// #28175 Reopen Start  
-		if (!this.getManagedBean().getSmAppl().getPmStatus().getStatusId()
-				.equals(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL)) {
+		if (this.getManagedBean().getSmAppl().isActiveAppl()){
 			List<SmSupplierCategory> historicalSmSupplierCategories = this.getManagedBean().getSmAppl().getSmSupplierCategories();
 			for(SmSupplierCategory cat : historicalSmSupplierCategories){
 				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
