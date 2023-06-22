@@ -10033,26 +10033,17 @@ public class SmApplicationBackingBean extends
 	 * @return true, if successful
 	 */
 	private boolean deleteDraftApplciationTask() {
-		log.info("28175*********  Delete draft application task ************* ");
+		//log.info("*********  Delete draft application task ************* ");
 		IMofRegistrationSO regSo = null;
 		boolean valid = true;
 		try {
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
 			// #28175 Reopen Start 
 			List<SmSupplierCategory> historicalSmSupplierCategories = bpmAppl.getSmSupplierCategories();
-			if (historicalSmSupplierCategories != null){
-				log.info("28175-Category count: "+historicalSmSupplierCategories.size());
-			}
-			for(SmSupplierCategory cat : historicalSmSupplierCategories){ 
-				log.info("28175-L1.Name.Before: "+cat.getCategoryL1Name());
-				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName()); 
-				log.info("28175-L1.Name.After: "+cat.getCategoryL1Name());
-				log.info("28175-L2.Name.Before: "+cat.getCategoryL2Name());
-				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName()); 
-				log.info("28175-L2.Name.After: "+cat.getCategoryL2Name());
-				log.info("28175-L3.Name.Before: "+cat.getCategoryL3Name());
-				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName()); 
-				log.info("28175-L3.Name.After: "+cat.getCategoryL3Name());
+			for(SmSupplierCategory cat : historicalSmSupplierCategories){
+				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
+				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
+				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
 			}
 			bpmAppl.setSmSupplierCategories(historicalSmSupplierCategories);
 			// #28175 Reopen End
@@ -10702,7 +10693,6 @@ public class SmApplicationBackingBean extends
 	 * @return the redirect page.
 	 */
 	public String submitPOorApproverReviewToBPM(String res) {
-		log.info("28175********* PO or Approver approve or reject"+res+" ************* ");
 		//#31043 - start
 		if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
@@ -11103,24 +11093,18 @@ public class SmApplicationBackingBean extends
 //		Comment empty IF
 //		if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
 //		}
-		// #28175 Reopen Start 
-		List<SmSupplierCategory> historicalSmSupplierCategories = this.getManagedBean().getSmAppl().getSmSupplierCategories();
-		if (historicalSmSupplierCategories != null){
-			log.info("28175-Category count: "+historicalSmSupplierCategories.size());
-		}
-		for(SmSupplierCategory cat : historicalSmSupplierCategories){ 
-			log.info("28175-L1.Name.Before: "+cat.getCategoryL1Name());
-			cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName()); 
-			log.info("28175-L1.Name.After: "+cat.getCategoryL1Name());
-			log.info("28175-L2.Name.Before: "+cat.getCategoryL2Name());
-			cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName()); 
-			log.info("28175-L2.Name.After: "+cat.getCategoryL2Name());
-			log.info("28175-L3.Name.Before: "+cat.getCategoryL3Name());
-			cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName()); 
-			log.info("28175-L3.Name.After: "+cat.getCategoryL3Name());
-		}
-		this.getManagedBean().getSmAppl().setSmSupplierCategories(historicalSmSupplierCategories);
-		// #28175 Reopen End
+		// #28175 Reopen Start  
+		if (!this.getManagedBean().getSmAppl().getPmStatus().getStatusId()
+				.equals(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL)) {
+			List<SmSupplierCategory> historicalSmSupplierCategories = this.getManagedBean().getSmAppl().getSmSupplierCategories();
+			for(SmSupplierCategory cat : historicalSmSupplierCategories){
+				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
+				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
+				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+			}
+			this.getManagedBean().getSmAppl().setSmSupplierCategories(historicalSmSupplierCategories); 
+		} 
+		// #28175 Reopen End 
 		if (validSiteVisit) {
 			String successMsg = "";
 			SmMofAccount mofAcc = getManagedBean().getSmSupplier() != null
