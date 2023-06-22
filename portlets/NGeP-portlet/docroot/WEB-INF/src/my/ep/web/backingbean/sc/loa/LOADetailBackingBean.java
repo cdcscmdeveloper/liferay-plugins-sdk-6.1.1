@@ -147,6 +147,7 @@ import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.loa.LOADetailManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
