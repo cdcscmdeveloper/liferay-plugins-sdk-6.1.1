@@ -19,8 +19,7 @@
 					id="renewStep6OnlySuppPan"
 					rendered="#{backingBean.managedBean.supplierUser}">
 					<div align="right" style="width: 99%" class="button-wrapper">
-						<ui:include
-							src="/xhtml/sm/shared/mofRegistration/deleteApplicationCommonPage.xhtml" />
+						<!-- 32008 - START -->
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 							onclick="this.disabled=true;"
 							onstart="blockWidget.show()" oncomplete="this.disabled=false;blockWidget.hide();"
@@ -30,11 +29,12 @@
 					</div>
 				</p:outputPanel> 
 					<c:if test="#{backingBean.managedBean.smAppl.applType ne 'R'}">
-						<ui:include src="/xhtml/sm/shared/mofRegistration/regCatCodesForm.xhtml" />
+						<ui:include src="/xhtml/sm/shared/applPoApproverView/registerCategoryCodesInfo/regCatCodesFormReview.xhtml" />
 					</c:if>
 					<c:if test="#{backingBean.managedBean.smAppl.applType eq 'R'}">
-						<ui:include src="/xhtml/sm/shared/mofRegistration/regCatcodesExistingRenewalInfoForm.xhtml" />
+						<ui:include src="/xhtml/sm/shared/applPoApproverView/registerCategoryCodesInfo/regCatcodesExistingRenewalInfoFormReview.xhtml" />
 					</c:if>
+					<!-- 32008 - END -->
 				<div class="nav-wrapper">
 					<c:choose>
 						<!-- #26671 - START -->

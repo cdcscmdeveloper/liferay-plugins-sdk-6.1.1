@@ -20,24 +20,26 @@
 					<br/> 
 				</c:if>
 				<!-- #12483 - END -->
+				<!-- 32008 - START -->
 				<ui:include
-						src="/xhtml/sm/shared/mofRegistration/AccountInfoDetail.xhtml" />
+						src="/xhtml/sm/shared/applPoApproverView/companyInfo/AccountInfoDetailReview.xhtml" />
 						<ui:include
-						src="/xhtml/sm/shared/mofRegistration/companyBasicInfoForm.xhtml" />
+						src="/xhtml/sm/shared/applPoApproverView/companyInfo/companyBasicInfoFormReview.xhtml" />
 					<ui:include
-						src="/xhtml/sm/shared/mofRegistration/staffInfoForm.xhtml" /> <ui:include
-						src="/xhtml/sm/shared/mofRegistration/officeFacilityTypeForm.xhtml" />
+						src="/xhtml/sm/shared/applPoApproverView/companyInfo/staffInfoFormReview.xhtml" /> <ui:include
+						src="/xhtml/sm/shared/applPoApproverView/companyInfo/officeFacilityTypeFormReview.xhtml" />
 					<ui:include
-						src="/xhtml/sm/shared/mofRegistration/certifacteInfoForm.xhtml" />
+						src="/xhtml/sm/shared/applPoApproverView/companyInfo/certifacteInfoFormReview.xhtml" />
 					<ui:fragment
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
 						<ui:include
-							src="/xhtml/sm/shared/mofRegistration/proffesionalBodyInfoForm.xhtml" />
+							src="/xhtml/sm/shared/applPoApproverView/companyInfo/proffesionalBodyInfoFormReview.xhtml" />
 					</ui:fragment> <ui:fragment
 						rendered="#{backingBean.managedBean.smAppl.supplierType ne 'J'}">
 						<ui:include
-							src="/xhtml/sm/shared/mofRegistration/transactionNetworksForm.xhtml" />
+							src="/xhtml/sm/shared/applPoApproverView/companyInfo/transactionNetworksFormReview.xhtml" />
 					</ui:fragment>
+					<!-- 32008 - END -->
 					<div class="nav-wrapper">
 						<table style="width: 100%">
 							<tr>
