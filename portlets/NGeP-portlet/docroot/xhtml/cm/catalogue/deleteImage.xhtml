@@ -1,5 +1,4 @@
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:p="http://primefaces.org/ui"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -9,39 +8,33 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
-	<p:dataTable id="deleteImageId" var="cmImage" rowIndexVar="rowIndex" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+	<!-- #14118, #30457 change rowKey to cmImage Back -->
+	<p:dataTable id="deleteImageId" var="cmImage" rowIndexVar="rowIndex"
+		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-
+		
 		<ac:paginator for="deleteImageId"></ac:paginator>
 
 		<p:column>
-			<f:facet name="header">
-					#{lbl['lbl.cm.image']}
-				</f:facet>
-				<div style="height:200px; width:200px">
-			<img src="/NGeP-portlet/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}"  style="max-height:100%;max-width:100%;" />
+			<f:facet name="header">#{lbl['lbl.cm.image']}</f:facet>
+			<!-- #30457 - Start -->
+			<div style="width:200px;margin-left: 80px;">
+				<img src="/NGeP-portlet/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}"  style="max-height:100%;max-width:100%;" />
 			</div>
+			<!-- #30457 - End -->
 		</p:column>
 		<p:column>
-			<f:facet name="header">
-					#{lbl['lbl.cm.action']}
-				</f:facet>
-			<p:commandLink title="#{lbl['lbl.btn.delete']}" update=":form:deleteImageId"
-				action="#{catalogueBackingBean.deleteImage(rowIndex)}">
+			<f:facet name="header">#{lbl['lbl.cm.action']}</f:facet>
+			<p:commandLink title="#{lbl['lbl.btn.delete']}" update=":form:deleteImageId" action="#{catalogueBackingBean.deleteImage(rowIndex)}">
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 			</p:commandLink>
 		</p:column>
-
-
 	</p:dataTable>
+	
 	<div class="clear"></div>
+	
 	<div style="text-align: right;">
-		<p:commandButton value="#{lbl['lbl.cm.ok']}"
-			onclick="deleteImage.hide()" update=":form"></p:commandButton>
-		<p:commandButton value="#{lbl['lbl.cm.cancel']}" update=":form"
-			onclick="deleteImage.hide()"></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.cm.ok']}" onclick="deleteImage.hide()" update=":form"></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.cm.cancel']}" update=":form" onclick="deleteImage.hide()"></p:commandButton>
 	</div>
-
-
 </ui:composition>
