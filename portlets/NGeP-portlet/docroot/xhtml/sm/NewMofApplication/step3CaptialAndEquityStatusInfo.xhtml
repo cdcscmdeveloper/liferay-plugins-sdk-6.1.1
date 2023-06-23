@@ -11,9 +11,11 @@
 			<c:when test="#{backingBean.managedBean.redirectToPersonPage}">
 				<table style="width: 100%">
 					<tr>
-						<td><ui:include
-								src="/xhtml/sm/shared/mofRegistration/captialShareHolderInfoRedirectForm.xhtml" />
-
+						<td>
+							<!-- 32008 - START -->
+							<ui:include
+								src="/xhtml/sm/shared/applPoApproverView/capitalAndEquityStatusInfo/captialShareHolderInfoRedirectFormReview.xhtml" />
+							<!-- 32008 - END -->
 						</td>
 					</tr>
 
@@ -31,16 +33,18 @@
 							<br/> 
 						</c:if>
 						<!-- #12483 - END -->
-						<ui:include src="/xhtml/sm/shared/mofRegistration/captialOrEquityStatusInfoForm.xhtml" />
+						<!-- 32008 - START -->
+						<ui:include src="/xhtml/sm/shared/applPoApproverView/capitalAndEquityStatusInfo/captialOrEquityStatusInfoFormReview.xhtml" />
 							<c:if
 								test="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT}">
 								<ui:include
-									src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHolderInfoForm.xhtml" />
+									src="/xhtml/sm/shared/applPoApproverView/capitalAndEquityStatusInfo/captialOrEquityShareHolderInfoFormReview.xhtml" />
 								<c:if
 									test="#{backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT or 
 										backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT}">
 									<ui:include
-										src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHoldingCompanyInfoForm.xhtml" />
+										src="/xhtml/sm/shared/applPoApproverView/capitalAndEquityStatusInfo/captialOrEquityShareHoldingCompanyInfoFormReview.xhtml" />
+								<!-- 32008 - END -->
 								</c:if>
 							</c:if>
 							<div class="nav-wrapper">
