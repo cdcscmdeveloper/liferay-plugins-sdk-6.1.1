@@ -6515,7 +6515,7 @@ public class SpecificationBackingBean extends
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getScQtCheckListValue()) {
 						//#25138 fix lazy -start (adding condition isnotempty checklistscore)
-						if(null!=checkList.getScQtCheckListValue() && CollectionUtils.isNotEmpty(checkList.getScQtCheckListScores()) && isIndirectWithInstantiated(checkList.getScQtCheckListScores())){ // Bug #34412@Syazani 02/02/2023
+						if(null!=checkList.getScQtCheckListValue() && isIndirectWithInstantiated(checkList.getScQtCheckListScores()) && CollectionUtils.isNotEmpty(checkList.getScQtCheckListScores())){ // Bug #34412@Syazani 20/06/2023
 							List<ScQtCheckListScore> bankStatement = new ArrayList<ScQtCheckListScore>();
 							for (ScQtCheckListScore checklistScore : checkList.getScQtCheckListScores()) {
 								if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT) {

@@ -252,13 +252,14 @@
 				<h:outputText value="#{jf.toYear}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+			 <!-- #32008 -->
 				<p:commandLink update=":#{p:component('equiJobFunctionInfo')}" onstart="blockWidget.show()"
-					action="#{viewSmApplBackingBean.assignSelShrHldrJobFunc(jf)}" oncomplete="equiJobFunctionInfo.show()" 
+					action="#{viewSmApplBackingBean.assignSelShrHldrJobFunc(jf)}" oncomplete="equiJobFunctionInfo.show(); blockWidget.hide()" 
 					partialSubmit="true" process="@this">
 					<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}"
 						style="margin-right:2px;" />
 				</p:commandLink>
-
+				<!-- #32008 -->
 			</p:column>
 
 		</p:dataTable>
@@ -325,12 +326,14 @@
 				<h:outputText value="#{relCom.mofNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+			 <!-- #32008 - START -->
 				<p:commandLink update=":#{p:component('equiRelCompInfo')}" onstart="blockWidget.show()"
-					action="#{viewSmApplBackingBean.assignSelShrHldrRelatedCompany(relCom)}" oncomplete="equiRelCompInfo.show()"
+					action="#{viewSmApplBackingBean.assignSelShrHldrRelatedCompany(relCom)}" oncomplete="equiRelCompInfo.show(); blockWidget.hide()"
 					partialSubmit="true" process="@this">
 					<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}"
 						style="margin-right:2px;" />
 				</p:commandLink>
+				 <!-- #32008 - END -->
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -384,12 +387,14 @@
 				<ac:labelDate value="#{profBean.expDate}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+			 <!-- #32008 - START -->
 				<p:commandLink update=":#{p:component('equiShrProfBeanInfo')}" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelShrHldrProfBody(profBean)}"
-					partialSubmit="true" process="@this" oncomplete="equiShrProfBeanInfo.show()">
+					partialSubmit="true" process="@this" oncomplete="equiShrProfBeanInfo.show(); blockWidget.hide()">
 					<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}"
 						style="margin-right:2px;" />
 				</p:commandLink>
+				 <!-- #32008 - END -->
 			</p:column>
 
 		</p:dataTable>
@@ -452,12 +457,14 @@
 				<h:outputText value="#{aq.fieldMajor}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+			 <!-- #32008 - START -->
 				<p:commandLink update=":#{p:component('equiAcadInfo')}" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelShrHldrAcademics(aq)}"
-					partialSubmit="true" process="@this" oncomplete="equiAcadInfo.show()">
+					partialSubmit="true" process="@this" oncomplete="equiAcadInfo.show(); blockWidget.hide()">
 					<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}"
 						style="margin-right:2px;" />
 				</p:commandLink>
+				 <!-- #32008 - END -->
 			</p:column>
 		</p:dataTable>
 	</p:panel>

@@ -72,6 +72,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -4919,27 +4920,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				}
 			//}
 			//#29164 CR 26474: Static Code Analysis End
-			//#29007 Start Vinod
-			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
-				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
-					String reportTitle=report.getTitle();
-					String updateEN=QTConstants.LAMPIRAN_A3_UPDATE;
-					String updateBM=QTConstants.LAMPIRAN_A3_DIKEMAS_KINI;
-					String latestEN=QTConstants.LAMPIRAN_A3_LATEST;
-					String latestBM=QTConstants.LAMPIRAN_A3_TERKINI;
-					if (!SourcingConstants.MALAY_LANGUAGE_CODE.equals(new FacesScopes().getUserLocale().getLanguage()) 
-						&& (reportTitle.contains(updateBM) || reportTitle.contains(latestBM))) {
-							String reportTitleChangedLatest=reportTitle.replace(latestBM, latestEN);
-							report.setTitle(reportTitleChangedLatest.replace(updateBM, updateEN));
-					}else if(SourcingConstants.MALAY_LANGUAGE_CODE.equals(new FacesScopes().getUserLocale().getLanguage()) 
-							 && (reportTitle.contains(updateEN) || reportTitle.contains(latestEN))){
-								String reportTitleChangedLatest=reportTitle.replace(latestEN, latestBM);
-								report.setTitle(reportTitleChangedLatest.replace(updateEN, updateBM));
-					}
-					break;
-				}
-			}
-			//#29007 Start Vinod
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null, redirectUrl);
@@ -10613,7 +10593,10 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					labelLampiranA3=date;//29007
 					log.info("=======labelLampiranA3======"+labelLampiranA3);
 					finalMsg.append("          "+labelLampiranA3);//29007-End
-					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMsg.toString());//29007
+					String finalMessage=finalMsg.toString();
+					finalMessage=finalMsg.toString().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+					finalMessage=finalMessage.toString().replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMessage);//29007
 				}
 				
 				/*29007-start if(scLoiLoaItem.getLoaSpecJustification() != null){
@@ -10652,6 +10635,21 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 							newOfferedSpecification=true;
 						}//29007-End
 						zoneSpecAnswerList.add(specAnswer);	
+					}
+					if(specAnswer.getNewSupplierOffer() != null && StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) && StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){
+						String newSupplierOffered=specAnswer.getNewSupplierOffer().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+						newSupplierOffered=newSupplierOffered.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+						specAnswer.setNewSupplierOffer(newSupplierOffered);
+					}
+					if(specAnswer.getTplSpecQuestion() != null && specAnswer.getTplSpecQuestion().getClItem() !=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) && StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){//29007-start
+						String itemName=specAnswer.getTplSpecQuestion().getClItem().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+						itemName=itemName.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+						specAnswer.getTplSpecQuestion().setClItem(itemName);
+					}
+					if(specAnswer.getAnswerRemark() != null && StringUtils.isNotBlank(specAnswer.getAnswerRemark()) && StringUtils.isNotEmpty(specAnswer.getAnswerRemark())){
+						String ansRemark=specAnswer.getAnswerRemark().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+						ansRemark=ansRemark.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+						specAnswer.setAnswerRemark(ansRemark);
 					}
 					
 				}
