@@ -68,6 +68,7 @@ import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SpecialCharacter; //# 29006 - note 702
@@ -10521,7 +10522,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					labelLampiranA3=date;//29007
 					log.info("=======labelLampiranA3======"+labelLampiranA3);
 					finalMsg.append("          "+labelLampiranA3);//29007-End
-					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMsg.toString());//29007
+					String finalMessage=finalMsg.toString();
+					finalMessage=finalMsg.toString().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+					finalMessage=finalMessage.toString().replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMessage);//29007
 				}
 				
 			/*29007-start	if(scLoiLoaItem.getLoaSpecJustification() != null){
@@ -10550,8 +10554,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							specAnswer.setNewSupplierOffer(null);	
 						}//29007-End
 						if(specAnswer.getNewSupplierOffer() != null && StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) && StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){//29007-start
+							String newSupplierOffered=specAnswer.getNewSupplierOffer().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+							newSupplierOffered=newSupplierOffered.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+							specAnswer.setNewSupplierOffer(newSupplierOffered);
 							newOfferedSpecification=true;
 						}//29007-End
+						if(specAnswer.getTplSpecQuestion() != null && specAnswer.getTplSpecQuestion().getClItem() !=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) && StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){//29007-start
+							String itemName=specAnswer.getTplSpecQuestion().getClItem().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+							itemName=itemName.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+							specAnswer.getTplSpecQuestion().setClItem(itemName);
+						}
+						if(specAnswer.getAnswerRemark() != null && StringUtils.isNotBlank(specAnswer.getAnswerRemark()) && StringUtils.isNotEmpty(specAnswer.getAnswerRemark())){//29007-start
+							String ansRemark=specAnswer.getAnswerRemark().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+							ansRemark=ansRemark.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+							specAnswer.setAnswerRemark(ansRemark);
+						}
 						
 					}
 					if(!newOfferedSpecification){//29007-start
