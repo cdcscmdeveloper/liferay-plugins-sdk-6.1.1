@@ -518,6 +518,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			} else {
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			}
+			//#34686 start
+			flOrderBB.getManagedBean().setAttachment(resDTO.getFlAttachment());
+			//#34686 end
 			
 			if(!isGovtSeller()){
 				flOrderBB.getManagedBean().setSupplier(hasSupplierRole());
@@ -545,7 +548,11 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else {
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
-			}	
+			}
+			//#34686 start
+			flOrderBB.getManagedBean().setAttachment(coResDTO.getFlAttachment());
+			//#34686 end
+			
 			if(!isGovtSeller()){
 				flOrderBB.getManagedBean().setSupplier(hasSupplierRole());
 			}
