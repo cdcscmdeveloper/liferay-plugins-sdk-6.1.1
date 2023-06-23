@@ -55,13 +55,15 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.price.uom']}
 				</f:facet>
+				<!-- #30457 - Start -->
 				<p:inputText id="zTierPromoPriceId" value="#{tier.price}" size="10" maxlength="18"
 					style="text-align:right">
 					<p:ajax process="@this"
 						listener="#{catalogueBackingBean.validateZonalPromotionTierPrice(rowIndex)}"
 						update="zPromoTierPriceId zTierPromoPriceId" />
-					<f:converter converterId="bigDecimalConverter" />
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
+				<!-- #30457 - End -->
 			</p:column>
 
 			<p:column>
