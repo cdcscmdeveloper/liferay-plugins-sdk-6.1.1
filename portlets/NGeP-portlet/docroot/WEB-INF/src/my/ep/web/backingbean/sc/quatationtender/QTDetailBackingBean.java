@@ -4080,6 +4080,8 @@ public class QTDetailBackingBean extends
 				// 19336#40 -start-
 			} catch (Exception e) {
 				handleException(new EpException(MessageConst.ERROR_000001));
+				System.out.println("File: QTDetailBackingBean, Method: ISearchResultBean");
+				e.printStackTrace();
 			// 19336#40 -end-
 			} finally {
 				detailSO = null;
