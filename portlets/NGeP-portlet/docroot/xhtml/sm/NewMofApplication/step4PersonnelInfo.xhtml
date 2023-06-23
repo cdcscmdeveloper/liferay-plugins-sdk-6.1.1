@@ -10,10 +10,10 @@
 			<c:when test="#{backingBean.managedBean.redirectToPersonPage}">
 				<table style="width: 100%">
 					<tr>
-
+						<!-- 32008 - START -->
 						<td><ui:include
-								src="/xhtml/sm/shared/mofRegistration/captialShareHolderInfoRedirectForm.xhtml" />
-
+								src="/xhtml/sm/shared/applPoApproverView/personnelInfo/captialShareHolderInfoRedirectFormReview.xhtml" />
+						<!-- 32008 - END -->
 						</td>
 					</tr>
 
@@ -31,7 +31,9 @@
 							<br/> 
 						</c:if>
 						<!-- #12483 - END -->
-						<ui:include src="/xhtml/sm/shared/mofRegistration/personnelInfoForm.xhtml" />
+						<!-- 32008 - START -->
+						<ui:include src="/xhtml/sm/shared/applPoApproverView/personnelInfo/personnelInfoFormReview.xhtml" />
+						<!-- 32008 - END -->
 							<div class="nav-wrapper">
 								<table style="width: 100%">
 									<tr>

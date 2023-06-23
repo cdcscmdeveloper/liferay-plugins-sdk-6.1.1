@@ -60,7 +60,8 @@
 					</p:outputLabel>
 					<!-- 30865 End -->
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal" disabledSelection="#{aprvdCatBean.cancelCategory}">
+				<!-- 30766 START - adjust width to be dynamic -->
+				<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" width="#{backingBean.dynamicTableColumnWidth('20%', 'auto', 'auto')}" style="white-space : normal" disabledSelection="#{aprvdCatBean.cancelCategory}">
 					<p:outputPanel rendered="#{aprvdCatBean.recordStatusFlg ne SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}">
 						<h:outputText value="#{lbl['lbl.sm.no.available']}"
 							rendered="#{empty aprvdCatBean.otherDesc}" />
@@ -82,14 +83,14 @@
 					</p:outputPanel>
 				</p:column>
 				<!-- 32348 START - adjust width -->
-				<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 8%;white-space : normal" disabledSelection="#{aprvdCatBean.cancelCategory}">
+				<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" width="#{backingBean.dynamicTableColumnWidth('16%', '8%', '8%')}" style="white-space : normal" disabledSelection="#{aprvdCatBean.cancelCategory}">
 				<!-- 32348 END - adjust width -->
 					<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 						rendered="#{!aprvdCatBean.specialCategory}" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 						rendered="#{aprvdCatBean.specialCategory}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.status']}" style="width : 10%;white-space : normal" disabledSelection="#{aprvdCatBean.cancelCategory}">
+				<p:column headerText="#{lbl['lbl.sm.status']}" width="#{backingBean.dynamicTableColumnWidth('20%', '10%', '10%')}" style="white-space : normal" disabledSelection="#{aprvdCatBean.cancelCategory}">
 					<h:outputText value="#{lbl['lbl.sm.catCodes.pendingDec']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.pendingVer']}"
@@ -104,6 +105,7 @@
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 						rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 				</p:column>
+				<!-- 30766 END - adjust width to be dynamic -->
 				<p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}" rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" disabledSelection="#{aprvdCatBean.cancelCategory}">
 					<p:selectOneRadio layout="pageDirection" id="catPoApprR" disabled="#{aprvdCatBean.cancelCategory}"
 						value="#{aprvdCatBean.poDecFlg}"
@@ -142,8 +144,8 @@
 								<td
 									style="border: none !important; white-space: normal; word-wrap: break-word !important;">
 									<p:scrollPanel mode="native" style="height:100px; width:auto;">
-										<h:outputText value="#{catBean.poRemarks}"
-											rendered="#{not empty catBean.poRemarks}" />
+										<h:outputText value="#{aprvdCatBean.poRemarks}"
+											rendered="#{not empty aprvdCatBean.poRemarks}" />
 									</p:scrollPanel>
 								</td>
 							</tr>
