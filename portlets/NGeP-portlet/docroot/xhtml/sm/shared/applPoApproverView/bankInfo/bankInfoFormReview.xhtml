@@ -36,6 +36,8 @@
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /> -->
 					
 				<ac:paginator for="bankDt" />
+				<p:column selectionMode="multiple" width="1%" action="#{backingBean.checkActiveAndPendingTransaction}" rendered="#{not empty backingBean.managedBean.smAppl.smSupplierBanks}"/>
+				
 				<p:column headerText="#{lbl['lbl.sm.bankDtls.acctNo']}">
 					<h:outputText value="#{bankBean.accountNo}" />
 				</p:column>
