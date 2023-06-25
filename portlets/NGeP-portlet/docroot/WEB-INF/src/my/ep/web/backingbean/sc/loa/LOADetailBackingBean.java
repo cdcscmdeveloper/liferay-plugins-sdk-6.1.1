@@ -64,6 +64,7 @@ import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SpecialCharacter;
@@ -4181,22 +4182,25 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void approveBeforeupdateBpmTaskAction(String outcome) {
 		debugLogger("approveBeforeupdateBpmTaskAction");
 		
-		//#25726 start
+		//#25726 start #34910
 		ScLoa scLoa = this.getManagedBean().getScLoa();
-		if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
-	         for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-	             if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
-	                 if (report.getScLoaReportAttachment() != null) {
-	                	 if(null == report.getIsPK42BondCalc()){
-	                		boolean newBond = validateNewBond(scLoa);
-	     					if (newBond == false){
-	     						return;
-	     					} 
-	     				}
-	                 }	                
-	            }
-	         }
-	     }
+		if (null != this.getManagedBean().getScLoa()
+				&& CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
+			if (null == scLoa.getScQuote()) {
+				for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
+					if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+						if (report.getScLoaReportAttachment() != null) {
+							if (null == report.getIsPK42BondCalc()) {
+								boolean newBond = validateNewBond(scLoa);
+								if (newBond == false) {
+									return;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 		//#25726 end
 		// #25725 start
 		boolean approvalLetter = validateApprovalLetter(scLoa);
@@ -9622,6 +9626,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			else
 				scLoiLoaItem.setComplete(false);
 			
+			// start - #34898
+			if (scLoiLoaItem.getLoaSpecJustification() != null) {
+				scLoiLoaItem.setLoaSpecJustification(scLoiLoaItem.getLoaSpecJustification().replaceAll("<", "&#60;"));
+			}
+
+			for (TplSpecAnswer tplSpecAnswer : scLoiLoaItem.getTplSpecAnswerList()) {
+				if (tplSpecAnswer.getNewSupplierOffer() != null) {
+					tplSpecAnswer.setNewSupplierOffer(tplSpecAnswer.getNewSupplierOffer().replaceAll("<", "&#60;"));
+				}
+			}
+			// end - #34898
+			
 			//#29006 - note 702 - start
 			for (ScLoiLoaItem item : items) {
 				if(item.getLoiLoaItemId().equals(scLoiLoaItem.getLoiLoaItemId())
@@ -10431,7 +10447,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					labelLampiranA3=date;//29007
 					log.info("=======labelLampiranA3======"+labelLampiranA3);
 					finalMsg.append("          "+labelLampiranA3);//29007-End
-					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMsg.toString());//29007
+					String finalMessage=finalMsg.toString();
+					finalMessage=finalMsg.toString().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+					finalMessage=finalMessage.toString().replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMessage);//29007
 				}
 				
 			/*29007-start	if(scLoiLoaItem.getLoaSpecJustification() != null){
@@ -10460,8 +10479,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							specAnswer.setNewSupplierOffer(null);	
 						}//29007-End
 						if(specAnswer.getNewSupplierOffer() != null && StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) && StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){//29007-start
+							String newSupplierOffered=specAnswer.getNewSupplierOffer().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+							newSupplierOffered=newSupplierOffered.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+							specAnswer.setNewSupplierOffer(newSupplierOffered);
 							newOfferedSpecification=true;
 						}//29007-End
+						if(specAnswer.getTplSpecQuestion() != null && specAnswer.getTplSpecQuestion().getClItem() !=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) && StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){//29007-start
+							String itemName=specAnswer.getTplSpecQuestion().getClItem().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+							itemName=itemName.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+							specAnswer.getTplSpecQuestion().setClItem(itemName);
+						}
+						if(specAnswer.getAnswerRemark() != null && StringUtils.isNotBlank(specAnswer.getAnswerRemark()) && StringUtils.isNotEmpty(specAnswer.getAnswerRemark())){//29007-start
+							String ansRemark=specAnswer.getAnswerRemark().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+							ansRemark=ansRemark.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+							specAnswer.setAnswerRemark(ansRemark);
+						}
 						
 					}
 					if(!newOfferedSpecification){//29007-start

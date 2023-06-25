@@ -71,6 +71,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -139,8 +140,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
-import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
@@ -174,7 +173,6 @@ import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -219,9 +217,9 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
-import org.primefaces.model.DefaultTreeNode;
 
 
 /**
@@ -10426,7 +10424,10 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 	}
 	public String populateLabelLampiranA3(String dateOfUpdate, String deskOfficerName) {
 		String labelLampiranA3 = StringUtils.EMPTY;
-		labelLampiranA3 = getMessage("lbl.sc.doc.name.lampiran.a3", new String[] { dateOfUpdate, deskOfficerName });
+		FacesScopes facesScopes = new FacesScopes();
+		labelLampiranA3 = ResourceBundleUtils.getMessage(QTConstants.LAMPIRAN_A3_LBL, new String[] {
+				dateOfUpdate, deskOfficerName }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				facesScopes.getUserLocale()); 
 		return labelLampiranA3;
 	}
 	private void createLampiranA3forQT(boolean isComplete){
@@ -10569,7 +10570,10 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					labelLampiranA3=date;//29007
 					log.info("=======labelLampiranA3======"+labelLampiranA3);
 					finalMsg.append("          "+labelLampiranA3);//29007-End
-					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMsg.toString());//29007
+					String finalMessage=finalMsg.toString();
+					finalMessage=finalMsg.toString().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+					finalMessage=finalMessage.toString().replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMessage);//29007
 				}
 				
 				/*29007-start if(scLoiLoaItem.getLoaSpecJustification() != null){
@@ -10587,6 +10591,11 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				boolean newOfferedSpecification=false;//29007
 				for(TplSpecAnswer specAnswer:templateSpecResDTO.getSpecAnswerList()){
 					if(TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specAnswer.getTplSpecQuestion().getQuestionType())){
+						if(specAnswer.getTplSpecQuestion() != null && specAnswer.getTplSpecQuestion().getClItem() !=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) && StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){//29007-start
+							String itemName=specAnswer.getTplSpecQuestion().getClItem().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+							itemName=itemName.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+							specAnswer.getTplSpecQuestion().setClItem(itemName);
+						}
 						
 						if(scLoiLoaItem.getTplSpecZoneDtl().getSpecZoneId().equals(specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()) || scLoiLoaItem.getTplSpecZoneDtl().getSpecZoneId()==specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){
 							
@@ -10606,7 +10615,20 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 						}//29007-End
 						if(specAnswer.getNewSupplierOffer() != null && StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) && StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){//29007-start
 							newOfferedSpecification=true;
+							String newSupplierOffered=specAnswer.getNewSupplierOffer().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+							newSupplierOffered=newSupplierOffered.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+							specAnswer.setNewSupplierOffer(newSupplierOffered);
 						}//29007-End
+						if(specAnswer.getTplSpecQuestion() != null && specAnswer.getTplSpecQuestion().getClItem() !=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) && StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){//29007-start
+							String itemName=specAnswer.getTplSpecQuestion().getClItem().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+							itemName=itemName.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+							specAnswer.getTplSpecQuestion().setClItem(itemName);
+						}
+						if(specAnswer.getAnswerRemark() != null && StringUtils.isNotBlank(specAnswer.getAnswerRemark()) && StringUtils.isNotEmpty(specAnswer.getAnswerRemark())){
+							String ansRemark=specAnswer.getAnswerRemark().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+							ansRemark=ansRemark.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+							specAnswer.setAnswerRemark(ansRemark);
+						}
 						zoneSpecAnswerList.add(specAnswer);	
 					}
 					
@@ -10621,6 +10643,11 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					for(TplSpecAnswer specAnswer:templateSpecResDTO.getSpecAnswerList()){
 						if(TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specAnswer.getTplSpecQuestion().getQuestionType())){
 							
+							if(specAnswer.getTplSpecQuestion() != null && specAnswer.getTplSpecQuestion().getClItem() !=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) && StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){//29007-start
+								String itemName=specAnswer.getTplSpecQuestion().getClItem().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+								itemName=itemName.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+								specAnswer.getTplSpecQuestion().setClItem(itemName);
+							}
 							//if(scLoiLoaItem.getTplSpecZoneDtl().getSpecZoneId().equals(specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()) || scLoiLoaItem.getTplSpecZoneDtl().getSpecZoneId()==specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){
 								
 								if(null!=scLoiLoaItem.getTplSpecTierQty()){
@@ -10639,7 +10666,20 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 							}//29007-End
 							if(specAnswer.getNewSupplierOffer() != null && StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) && StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){//29007-start
 								newOfferedSpecification=true;
+								String newSupplierOffered=specAnswer.getNewSupplierOffer().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+								newSupplierOffered=newSupplierOffered.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+								specAnswer.setNewSupplierOffer(newSupplierOffered);
 							}//29007-End
+							if(specAnswer.getTplSpecQuestion() != null && specAnswer.getTplSpecQuestion().getClItem() !=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) && StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){//29007-start
+								String itemName=specAnswer.getTplSpecQuestion().getClItem().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+								itemName=itemName.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+								specAnswer.getTplSpecQuestion().setClItem(itemName);
+							}
+							if(specAnswer.getAnswerRemark() != null && StringUtils.isNotBlank(specAnswer.getAnswerRemark()) && StringUtils.isNotEmpty(specAnswer.getAnswerRemark())){
+								String ansRemark=specAnswer.getAnswerRemark().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+								ansRemark=ansRemark.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+								specAnswer.setAnswerRemark(ansRemark);
+							}
 							zoneSpecAnswerList.add(specAnswer);	
 						}
 						
@@ -11868,7 +11908,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			String whiteSpace = "&nbsp;";
 		
 		
-			List<HashMap<String, Object>> listZonalDLSpec = new ArrayList();
+			List<HashMap<String, Object>> listZonalDLSpec = new ArrayList<HashMap<String, Object>>();
 			List<String> listSpec = new ArrayList<>();
 			if (question.getQuestionType().equalsIgnoreCase("I")) {
 			map.put("questionType", question.getQuestionType());
