@@ -63,7 +63,7 @@
 							longitude="#{doc.smAddress.mapLongitude}" 
 							address="getDocAddress2('#{doc.smAddress.address1}', '#{doc.smAddress.address2}', '#{doc.smAddress.address3}','#{doc.smAddress.pmCity.cityName}', '#{doc.smAddress.pmDistrict.districtName}', '#{doc.smAddress.pmState.stateName}', '#{doc.smAddress.pmCountry.countryName}')"
 							showButton="true"
-							disabled="false" />
+							disabled="true" />
 							
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
@@ -134,7 +134,7 @@
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.dockFacilityStates}"
 					divisionItems="#{backingBean.managedBean.dockFacilityDivisions}"
 					districtItems="#{backingBean.managedBean.dockFacilityDistricts}" cityItems="#{backingBean.managedBean.dockFacilityCities}" 
-					facilityPanel="#{SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL}" panelId="dockYardBlockPanelId"/>
+					facilityPanel="#{SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL}" panelId="dockYardBlockPanelId" disabled="true"/>
 					
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
