@@ -1424,6 +1424,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			validateFulfillmentOrder(outcome);
 			//28377 - uncomment function
 			setTextBeforeSign(outcome);
+			log.info("#34686: Original Data: "+getManagedBean().getTextBeforeSign()); //#34686 log for original_data
 			//28377 - end uncomment function
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -1463,6 +1464,12 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						getManagedBean().getFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getFulfilmentOrder().getDocNo(), 
 						getManagedBean().getTextBeforeSign());					
 			}
+			//#34686 start
+			if(getManagedBean().getPmDigiSign().getOriginalData().isEmpty()) {
+				setTextBeforeSign(getManagedBean().getButtonAction());
+				getManagedBean().getPmDigiSign().setOriginalData(getManagedBean().getTextBeforeSign());
+			}
+			//#34686 end
 		}
 		return fulfillmentOrderAction(getManagedBean().getButtonAction());
 	}

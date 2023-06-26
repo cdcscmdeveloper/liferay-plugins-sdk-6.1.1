@@ -1627,8 +1627,8 @@ public class GovtSellerRegistrationBackingBean extends
 				log.info("Not Null + Size >> " + resDTO.getSmSupplier().getSmAppls().size());
 				supplierSearchReqDTO.setSmSupplier(resDTO.getSmSupplier());
 				//checking if the application has a record in smPersonnelAuthLog
-				resDTO = SmServiceLookup.getSupplierSearchSO().checkSupplierApplAuthLogRecord(supplierSearchReqDTO);
-				if(resDTO.isRecord()){
+				SupplierSearchResDTO resDTO1 = SmServiceLookup.getSupplierSearchSO().checkSupplierApplAuthLogRecord(supplierSearchReqDTO);
+				if(resDTO1.isRecord()){
 					getManagedBean().getSmSupp().getSmAppls().addAll(resDTO.getSmSupplier().getSmAppls());
 				}
 			}
@@ -1756,8 +1756,9 @@ public class GovtSellerRegistrationBackingBean extends
 										.getSmSupplierBranch().getBranchCode(),
 										bk.getBranches(), "branchCode");
 						if (brTmp == null) {
-							SmSupplierBranch brDb = (SmSupplierBranch) SerializationUtils
-									.clone(brBnk.getSmSupplierBranch());
+							//#34771 - Start
+							SmSupplierBranch brDb = (SmSupplierBranch) brBnk.getSmSupplierBranch().cloneEntity();
+							//#34771 - End
 							brDb.setSelected(true);
 							bk.getBranches().add(brDb);
 						}
