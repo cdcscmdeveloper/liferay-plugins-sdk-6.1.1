@@ -7,12 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.profBody.panHdr']}" toggleable="true">
-		<p:outputPanel id="profInfPan" layout="block">
-			<p:blockUI block=":form:tt:profInfPan" widgetVar="buiPoProf"
-				id="poProfBlc"
-				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.assocBodyVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.assocBodyVerified : false)}" />
-
-
+		<p:outputPanel id="profInfPan">
 			<p:dataTable var="profBean" widgetVar="suppProfBodyDtWidVar"
 				value="#{backingBean.managedBean.nonPersonnelProfBodyList}"
 				selection="#{backingBean.managedBean.selectedAssocBodyList}"
@@ -94,7 +89,7 @@
 	<p:dialog width="630px"
 		header="#{lbl['lbl.sm.profBody.profBodDiaHdr']}"
 		widgetVar="profDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true" id="profPop" closable="false">
+		hideEffect="fade" modal="true" id="profPop" closable="true">
 		<!-- <p:panel header="profificate Details"> -->
 		<p:messages id="profDialogInfoMsg" showSummary="false"
 			showDetail="true" autoUpdate="true" closable="true" />
@@ -158,7 +153,7 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						mindate="#{CommonConstants.THREE_MONTHS_LATER_DATE}"
 						yearRange="0:+20" readonlyInput="true"
-						value="#{backingBean.managedBean.selectedAssocBody.expDate}" /> <p:message
+						value="#{backingBean.managedBean.selectedAssocBody.expDate}" disabled="true"/> <p:message
 						id="profBodyExpDateMsg" for="profBodyExpDate" showSummary="true"
 						showDetail="false" display="icon" disabled="true" /></td>
 			</tr>
