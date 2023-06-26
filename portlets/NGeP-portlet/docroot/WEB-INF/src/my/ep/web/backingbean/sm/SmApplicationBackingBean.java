@@ -4891,7 +4891,7 @@ public class SmApplicationBackingBean extends
 		}
 		category.setApprovedDate(new Date());
 		//#31043 start
-		saveOrUpdateAppl();
+		//saveOrUpdateAppl();
 		SmSideMenuIconUtil.getSideMenuVerificationIcon(getManagedBean(), 
 		getManagedBean().getCurrentPageType());
 		//#31043 end
