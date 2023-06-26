@@ -2345,7 +2345,7 @@ public class ConsolidationReportBackingBean extends
 		boolean isSupplierBranchDeleted = false;
 		if(supplierId != null && scQt != null){
 			if(qtSuppFinalizationSO.isCheckCRandSFCurrentSupplierBranchDeleted(supplierId, scQt)){
-				isSupplierBranchDeleted = false;
+				isSupplierBranchDeleted = true;
 		    }
 		}
 	    return isSupplierBranchDeleted;
