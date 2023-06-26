@@ -16211,6 +16211,111 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	}
 	// #25039#67#76 - end
 	
+	/***11104-start
+	 * check sample checkist required or not based on sample radio selection.
+	 * @param allTechnicalChecklist
+	 */
+	private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
+		if (CollectionUtils.isNotEmpty(allTechnicalChecklist)) {
+			boolean specChecklist = false;
+			boolean sampleChecklist = false;
+			int i = 0;// 11104
+			for (ScQtCheckList checkList : allTechnicalChecklist) {			
+				if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checkList
+						.getDefinationType().getParameterCode())
+						&& !specChecklist) {
+	                                     i++;
+					if ((QTStatusConst.TS_PENDING_SUBMISSION.equals(checkList
+							.getPmStatus().getStatusId()) || null != checkList
+							.getSampleStatus()
+							&& QTStatusConst.TS_PENDING_SUBMISSION
+									.equals(checkList.getSampleStatus()
+											.getStatusId()))) {
+						specChecklist = true;
+					} else if ((QTStatusConst.TS_COMPLETED.equals(checkList
+							.getPmStatus().getStatusId())
+							&& null != checkList.getSampleStatus() && QTStatusConst.TS_PENDING_SUBMISSION
+								.equals(checkList.getSampleStatus()
+										.getStatusId()))) {
+						specChecklist = true;
+					}
+
+				} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+						.equalsIgnoreCase(checkList.getDefinationType()
+								.getParameterCode())) {
+					if (specChecklist || i == 0) {// 11104
+						checkList
+								.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+					}
+					sampleChecklist = true;
+				}
+			}
+			if (!sampleChecklist) {
+				createsampleChecklist();
+			}
+		}
+	}
+	
+	/*11104_start
+	 * sample checklist cretaed during sample radio button select.
+	 */
+	public  void  createsampleChecklist(){
+		List<ScQtCheckList> st2technicalproposalList = getManagedBean()
+				.getScQtCheckSt2techProposal();
+
+		if (null == st2technicalproposalList ||  this.getManagedBean().getScQtCheckSt2techProposal()
+				.isEmpty()) {
+			st2technicalproposalList = new ArrayList<>();
+			
+
+		}
+		IParameterSO parameterSo = null;
+		parameterSo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		ScQtCheckList checkList = new ScQtCheckList();
+		checkList.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
+		//String checilistTitle="Test Sample for  ".concat(this.getManagedBean().getQt().getQtNo());
+		//checkList.setTitle(checilistTitle);
+		ParameterReqDTO specType = new ParameterReqDTO();
+		specType.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+		specType.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE);
+		ParameterResDTO specTyperesDTO = parameterSo
+				.retrieveParameterByTypeAndCode(specType);
+
+		ParameterReqDTO checkListActionType = new ParameterReqDTO();
+		checkListActionType
+				.setParameterType(ParameterTypeConst.SC_SUPPLIER_ACTION);
+		checkListActionType
+				.setParameterCode(ParameterConst.CHECKLIST_ACTION_MANUAL_SUBMISSION);
+		ParameterResDTO checkListactionresDTO = parameterSo
+				.retrieveParameterByTypeAndCode(checkListActionType);
+		checkList
+				.setChecklistSeq(SourcingConstants.CHECKLIST_SEQ_TEMPLATE_SPEC);
+		// PmStatus status = new PmStatus();
+		// status.setStatusId(1l);
+		// checkList.setPmStatus(status);
+		//checkList.setScQtDoc(scqtDocDest);
+		checkList.setScoringReq(Boolean.TRUE);
+		checkList.setAction(checkListactionresDTO.getPmParameter());
+		checkList.setScQt(this.getManagedBean().getQt());
+		checkList.setDefinationType(specTyperesDTO.getPmParameter());
+		checkList
+				.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+		checkList
+				.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+		Integer checkListSequence = checkTechnicalORFinancialAddChecklistSequence(st2technicalproposalList);
+		log.debug("========== technical return checklist sequence===="
+				+ checkListSequence);
+		checkList.setChecklistSeq(checkListSequence);
+
+		setUserDetails(checkList);
+		st2technicalproposalList.add(checkList);
+		this.getManagedBean().setScQtCheckSt2techProposal(
+				st2technicalproposalList);
+		checklistSorting(getManagedBean().getScQtCheckSt2techProposal());
+
+	}
+	
 	//29464 - note 90 - start
 	public boolean evaluateRepublishFromDisplay(Long status) {
 		status = status == null ? 0L : status;
