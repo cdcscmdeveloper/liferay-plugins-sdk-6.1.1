@@ -1774,8 +1774,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtScoreOfferPrice> offerPricePackageList;	
 	private int specZoneTabIndex;	
 	private boolean isSingleItem;
-	//#25138-end	
-	
+	//#25138-end
+
+	// #28784 -start-
+	private boolean demoType;
+	private boolean demoAction;
+	private List<ScQtCheckList> demoSpecTemplateList;
+	private List<TplSpecQuestion> demoOriSpecQuestionTemplateList;
+	private boolean demoDisabled;
+	private boolean qtSpecMaintanance;
+	private boolean demoEvalDisabled;
+	private boolean demoSpecialCase;
+	private Long demoSampleChecklistStatusId;
+	// #28784 -end-
+
 	//====#31913 bug related to #25138==== start
 	private BigDecimal totalmaxscore;
 	//====#31913 bug related to #25138==== end
@@ -11146,4 +11158,85 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.mainCloneSearchQTDataModel = mainCloneSearchQTDataModel;
 	}
 	// 34053, #25635 -End
+
+	// #28784 - start
+	/**
+	 * @return the demoSampleChecklist
+	 */
+	public Long getDemoSampleChecklistStatusId() {
+		return demoSampleChecklistStatusId;
+	}
+
+	/**
+	 * @param demoSampleChecklist
+	 *            the demoSampleChecklist to set
+	 */
+	public void setDemoSampleChecklistStatusId(Long demoSampleChecklistStatusId) {
+		this.demoSampleChecklistStatusId = demoSampleChecklistStatusId;
+	}
+
+	public boolean isDemoType() {
+		return demoType;
+	}
+
+	public void setDemoType(boolean demoType) {
+		this.demoType = demoType;
+	}
+
+	public boolean isDemoAction() {
+		return demoAction;
+	}
+
+	public void setDemoAction(boolean demoAction) {
+		this.demoAction = demoAction;
+	}
+
+	public List<ScQtCheckList> getDemoSpecTemplateList() {
+		return demoSpecTemplateList;
+	}
+
+	public void setDemoSpecTemplateList(List<ScQtCheckList> demoSpecTemplateList) {
+		this.demoSpecTemplateList = demoSpecTemplateList;
+	}
+
+	public List<TplSpecQuestion> getDemoOriSpecQuestionTemplateList() {
+		return demoOriSpecQuestionTemplateList;
+	}
+
+	public void setDemoOriSpecQuestionTemplateList(List<TplSpecQuestion> demoOriSpecQuestionTemplateList) {
+		this.demoOriSpecQuestionTemplateList = demoOriSpecQuestionTemplateList;
+	}
+
+	public boolean isDemoDisabled() {
+		return demoDisabled;
+	}
+
+	public void setDemoDisabled(boolean demoDisabled) {
+		this.demoDisabled = demoDisabled;
+	}
+
+	public boolean isQtSpecMaintanance() {
+		return qtSpecMaintanance;
+	}
+
+	public void setQtSpecMaintanance(boolean qtSpecMaintanance) {
+		this.qtSpecMaintanance = qtSpecMaintanance;
+	}
+
+	public boolean isDemoEvalDisabled() {
+		return demoEvalDisabled;
+	}
+
+	public void setDemoEvalDisabled(boolean demoEvalDisabled) {
+		this.demoEvalDisabled = demoEvalDisabled;
+	}
+
+	public boolean isDemoSpecialCase() {
+		return demoSpecialCase;
+	}
+
+	public void setDemoSpecialCase(boolean demoSpecialCase) {
+		this.demoSpecialCase = demoSpecialCase;
+	}
+	// #28784 - end
 }

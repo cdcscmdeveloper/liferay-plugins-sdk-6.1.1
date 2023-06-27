@@ -439,6 +439,16 @@ private class SpecMaintenanceSearchQtDataModel extends
 		String previousPageId,/*** 25692#95 ***/
 	boolean redirect/* 29464-overload arg */) {
 
+    this.getManagedBean().setAssignedState(Boolean.FALSE);
+    /* ***25692#95 - start */
+    this.getManagedBean().setPreviousPage(StringUtils.isEmpty(previousPageId)?null:previousPageId);
+    /* ***25692#95 - end */
+    //#15391 -start-
+    this.getManagedBean().setGenInfo(false);
+    this.getManagedBean().setChecklist(false);
+	//#28784		
+	this.getManagedBean().setQtSpecMaintanance(true);	
+   
 		QtnTenderSearchBean qtTnderBean = this.getManagedBean().getQtnTenderSearchBean();
 		IPagingDataModel<ScQt> qtdataModel = this.getManagedBean().getSearchQTDataModel();
 		/* ***25692#95 - start */
@@ -567,8 +577,8 @@ private class SpecMaintenanceSearchQtDataModel extends
 
 		// 29464-start
 		String renderPage = QTConstants.SPECIFICICATON_COMM_PREPARATION;
-
-		if (redirect) {
+		
+		if (redirect|| checkDemoRedirect()){//#28784
 			renderPage = renderPage.concat("?faces-redirect=true");
 		}
 
@@ -589,6 +599,21 @@ private class SpecMaintenanceSearchQtDataModel extends
 	private boolean isSpecCommitteeSecretary() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
+	}
+	
+	//#28784
+	private boolean checkDemoRedirect() {
+		Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt().getQtStatus()
+				.getStatusId() : null;
+		boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
+		if (null != status
+				&& ((status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+						|| status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) || status
+							.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)))
+				&& this.getManagedBean().isMaintanceFlow() && demoRequired) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
