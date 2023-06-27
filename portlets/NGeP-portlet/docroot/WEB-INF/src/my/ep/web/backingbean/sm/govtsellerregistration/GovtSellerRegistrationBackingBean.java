@@ -1042,6 +1042,9 @@ public class GovtSellerRegistrationBackingBean extends
 	 * Submit maintenance
 	 */
 	public void submitMaintenance() {
+		//#34771 - Start
+		log.info("#34771 - checking time");
+		//#34771 - End
 		validateHqBranchBank();
 		// validate bank
 		if (getManagedBean().getSmAppl().getSmSupplierBanks().size() < 1) {
@@ -1721,6 +1724,9 @@ public class GovtSellerRegistrationBackingBean extends
 	 * Initialized bank branches transient object
 	 */
 	private void initBankBranches() {
+		//#34771 - Start
+		log.info("#34771 - checking time");
+		//#34771 - End
 		if (getManagedBean().getBankBranches() == null) {
 			getManagedBean().setBankBranches(
 					new ArrayList<SmSupplierBranchBank>());
@@ -1749,8 +1755,9 @@ public class GovtSellerRegistrationBackingBean extends
 										.getSmSupplierBranch().getBranchCode(),
 										bk.getBranches(), "branchCode");
 						if (brTmp == null) {
-							SmSupplierBranch brDb = (SmSupplierBranch) SerializationUtils
-									.clone(brBnk.getSmSupplierBranch());
+							//#34771 - Start
+							SmSupplierBranch brDb = (SmSupplierBranch) brBnk.getSmSupplierBranch().cloneEntity();
+							//#34771 - End
 							brDb.setSelected(true);
 							bk.getBranches().add(brDb);
 						}
