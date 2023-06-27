@@ -11,7 +11,7 @@
 		
 		<p:dataTable var="person" widgetVar="suppPersonnelInfoDtWidVar"
 			editable="false"
-			value="#{backingBean.managedBean.personnelsSsm}"
+			value="#{cc.attrs.bBean.managedBean.personnelsSsm}"
 			rowKey="#{person}" rowIndexVar="index" id="personDt" rows="5" sortBy="#{person.name}">
 			<ac:paginator for="personDt" />
 			

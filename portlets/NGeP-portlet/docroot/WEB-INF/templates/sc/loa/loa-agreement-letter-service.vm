@@ -1548,6 +1548,7 @@ Should be product and service item display if exist
 					#if ($itemType == "Produk" || $itemType == "Product")
 					##26130 - start 03032022
 					#set($rowCount = 0)	
+					#if($tplspecMaster.tplSpecQuestions.size() > 0)
 					<table width="100%" border=1 cellpadding="0" cellspacing="0">
 					<tbody>
 					##26130 - end 03032022
@@ -1686,7 +1687,6 @@ Should be product and service item display if exist
 													</tr>
 													
 											#end
-										#end	
 												
 													##specval
 													#foreach($combine in $tplspecQuestion.listCombineSpec)
@@ -1722,8 +1722,7 @@ Should be product and service item display if exist
 															#end
 														</tr>
 													#end
-													
-											
+												#end	
 											#end	
 									
 							##26130 - zaim end	070220222
@@ -1770,7 +1769,6 @@ Should be product and service item display if exist
 											
 											
 											#end
-								#end			
 									##26130 - end 11032022	
 									
 									##26130 - zaim start
@@ -1807,6 +1805,7 @@ Should be product and service item display if exist
 															#end
 														#end
 												#end
+											#end	
 											</tr>
 									
 							#end
@@ -1820,6 +1819,7 @@ Should be product and service item display if exist
 						##26130 - start 03032022		
 						</tbody>
 						</table>
+						#end
 						#if ($rowCount > 0)
 							<div class="break-after"><br/></div>
 						#end
@@ -2106,7 +2106,8 @@ Should be product and service item display if exist
 			#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
 				#if ($itemType == "Perkhidmatan" || $itemType == "Service")
 				##26130 - start 03032022
-				#set($rowCount = 0)	
+				#set($rowCount = 0)
+				#if($tplspecMaster.tplSpecQuestions.size() > 0)	
 				<table width="100%" border=1 cellpadding="0" cellspacing="0">
 				<tbody>
 				##26130 - end 03032022
@@ -2251,7 +2252,6 @@ Should be product and service item display if exist
 													</tr>
 													
 											#end
-										#end	
 												
 													##specval
 													#foreach($combine in $tplspecQuestion.listCombineSpec)
@@ -2287,6 +2287,7 @@ Should be product and service item display if exist
 															#end
 														</tr>
 													#end
+												#end	
 													
 											
 											#end	
@@ -2345,7 +2346,6 @@ Should be product and service item display if exist
 												##26130 - end 03032022
 											</tr>	
 											#end
-									#end		
 									##26130 - end 11032022
 									
 									##26130 - zaim start
@@ -2386,6 +2386,7 @@ Should be product and service item display if exist
 															#end
 														#end
 												#end
+											#end	
 											</tr>
 									
 									#end
@@ -2398,6 +2399,7 @@ Should be product and service item display if exist
 							##26130 - start 03032022		
 								</tbody>
 							</table>
+							#end
 							#if ($rowCount > 0)
 							<div class="break-after"><br/></div>
 							#end
