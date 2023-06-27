@@ -2625,9 +2625,13 @@ public void saveComplianceSample() {
 						localCheckList.add(checkList);
 					} else {
 						if (checkList.isScoringReq()) {
-							localCheckList
-									.add(checkStausForUploadNoActionCheckLists(
-											checkList, evalstage.get(0)));
+							//34943 - start
+							String evalStageStr = evalstage.get(0);
+							if(evalstage.contains(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)){
+								evalStageStr = StringUtils.join(Arrays.asList(new String[]{evalStageStr, QTConstants.TECHNICAL_EVALUATION}), ",");
+							}
+							localCheckList.add(checkStausForUploadNoActionCheckLists(checkList, evalStageStr));
+							//34943 - end
 						}
 					}
 					//32426 - end
@@ -17999,9 +18003,13 @@ private void retriveCommitteeRemarksList(){
 							localCheckList.add(proposalCheckList);
 						} else {
 							if (proposalCheckList.isScoringReq()) {
-								localCheckList
-										.add(checkStausForUploadNoActionCheckLists(
-												proposalCheckList, evalstage.get(0)));
+								//34943 - start
+								String evalStageStr = evalstage.get(0);
+								if(evalstage.contains(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)){
+									evalStageStr = StringUtils.join(Arrays.asList(new String[]{evalStageStr, QTConstants.TECHNICAL_EVALUATION}), ",");
+								}
+								localCheckList.add(checkStausForUploadNoActionCheckLists(proposalCheckList, evalStageStr));
+								//34943 - end
 							}
 						}
 					}
