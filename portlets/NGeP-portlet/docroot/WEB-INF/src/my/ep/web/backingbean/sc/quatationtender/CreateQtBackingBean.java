@@ -141,6 +141,10 @@ import org.primefaces.model.TreeNode;
 public class CreateQtBackingBean extends
  SourcingBaseBackingBean<QTDetailManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/** The Constant log. */
 	private static final Logger log = EpLogger.getLogger(CreateQtBackingBean.class);
 
