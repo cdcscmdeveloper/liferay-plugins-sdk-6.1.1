@@ -116,8 +116,8 @@
 						rendered="#{!backingBean.managedBean.disAllowOwnerEdit}">
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 					</p:outputPanel>
-					<p:outputPanel rendered="#{backingBean.managedBean.upsCannotEdit}"
-						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}"
+					<p:outputPanel rendered="#{backingBean.managedBean.upsCannotEdit}">
+						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}"/>
 					</p:outputPanel>
 				</p:commandLink>
 				<ac:smFieldChangeTableAlert object="#{person}" />
