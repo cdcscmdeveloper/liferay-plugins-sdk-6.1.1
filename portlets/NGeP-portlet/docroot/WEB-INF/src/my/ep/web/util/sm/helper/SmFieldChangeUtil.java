@@ -1421,5 +1421,63 @@ public class SmFieldChangeUtil {
 			}
 		}
 	}
+	
+	public static void initPersonnelChangeField(BaseReviewApplicationManagedBean bean) {
+		bean.setLatestPersonnel(new SmPersonnel());
+		if (bean.isShowFieldChanges()) {
+			bean.setLatestPersonnel((SmPersonnel) EntityHelper
+					.getEntityByMultiplePropertiesFromList(bean
+							.getSelectedShareHolder(), bean.getLatestAppl()
+							.getSmPersonnels(),
+							new String[] { "personnelId" }, null, null));
+			if (bean.getLatestPersonnel() != null
+					&& bean.getLatestPersonnel().getPersonnelId() != null) {
+				bean.setLatestOffAddr(SmFieldChangeUtil
+						.getPersonnelAddressByTypeFromList(
+								SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE,
+								bean.getLatestPersonnel()
+										.getSmPersonnelAddresses()));
+				bean.setLatestResdAddr(SmFieldChangeUtil
+						.getPersonnelAddressByTypeFromList(
+								SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES,
+								bean.getLatestPersonnel()
+										.getSmPersonnelAddresses()));
+				bean.setLatestMailAddr(SmFieldChangeUtil
+						.getPersonnelAddressByTypeFromList(
+								SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL,
+								bean.getLatestPersonnel()
+										.getSmPersonnelAddresses()));
+				bean.setLatestPermAddr(SmFieldChangeUtil
+						.getPersonnelAddressByTypeFromList(
+								SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM,
+								bean.getLatestPersonnel()
+										.getSmPersonnelAddresses()));
+
+				setPersonnelTableListChangeStatus(bean);
+			}
+		}
+	}
+	
+	public static void setPersonnelTableListChangeStatus(
+			BaseReviewApplicationManagedBean bean) {
+		if (bean.isShowFieldChanges() && bean.getLatestPersonnel() != null
+				&& bean.getLatestPersonnel().getPersonnelId() != null) {
+			// staffExperiences
+			setCurrPersonnelStaffExperiences(bean.getSelectedShareHolder(),
+					bean.getLatestPersonnel());
+
+			// staffAcademics
+			setCurrPersonnelStaffEducations(bean.getSelectedShareHolder(),
+					bean.getLatestPersonnel());
+
+			// relatedCompanies
+			setCurrPersonnelRelatedCompanies(bean.getSelectedShareHolder(),
+					bean.getLatestPersonnel());
+
+			// professionalBodies
+			setCurrPersonnelAssociationBodies(bean.getLatestAppl(),
+					bean.getSelectedShareHolder(), bean.getLatestPersonnel());
+		}
+	}
 	//#32008 - end
 }

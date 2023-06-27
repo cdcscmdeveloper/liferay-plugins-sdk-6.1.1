@@ -2006,6 +2006,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		per.setSemiProf(shareHolderBean.isSemiProf());
 		per.setClerical(shareHolderBean.isClerical());
 		getManagedBean().setSelectedPersonnel(per);
+		//#32008
+		SmFieldChangeUtil.initPersonnelChangeField(getManagedBean());
 	}
 
 	/**
@@ -2150,6 +2152,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public void assignSelShrHldrJobFunc(SmStaffExperience exp) {
 		getManagedBean().setSelectedJobFunction(exp);
+		//#32008 - start
+		if (getManagedBean().getLatestPersonnel() != null) {
+			getManagedBean().setLatestJobFunction(
+				(SmStaffExperience) EntityHelper.getEntityByMultiplePropertiesFromList(exp, 
+				getManagedBean().getLatestPersonnel().getSmStaffExperiences(),
+				new String[] { "companyName", "toYear" }, null,	null));
+		}
+		//#32008 - end
 		closeBlockUI();
 	}
 
@@ -2161,6 +2171,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public void assignSelShrHldrRelatedCompany(SmRelatedCompany com) {
 		getManagedBean().setSelectedRelatedCompany(com);
+		//#32008 - start
+		if (getManagedBean().getLatestPersonnel() != null) {
+			getManagedBean().setLatestRelatedCompany(
+				(SmRelatedCompany) EntityHelper.getEntityByMultiplePropertiesFromList(com, 
+				getManagedBean().getLatestPersonnel().getSmRelatedCompanies(),
+				new String[] { "regNo" }, null, null));
+		}
+		//#32008 - end
 		closeBlockUI();
 	}
 
@@ -2172,6 +2190,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public void assignSelShrHldrProfBody(SmAssociationBody asb) {
 		getManagedBean().setSelectedStfPrfBdy(asb);
+		//#32008 - start
+		if (getManagedBean().getLatestAppl() != null) {
+			getManagedBean().setLatestStfPrfBdy(
+				(SmAssociationBody) EntityHelper.getEntityByMultiplePropertiesFromList(asb, 
+				getManagedBean().getLatestAppl().getSmAssociationBodies(),
+				new String[] { "regNo" }, null, null));
+		}
+		//#32008 - end
 		closeBlockUI();
 	}
 
@@ -2188,7 +2214,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (aca.getQualificationId() == null) {
 			aca.setQualificationId(new PmParameter());
 		}
+		//#32008 - start
 		getManagedBean().setSelectedStaffAcademic(aca);
+		if (getManagedBean().getLatestPersonnel() != null) {
+			getManagedBean().setLatestStaffAcademic(
+				(SmStaffAcademic) EntityHelper.getEntityByMultiplePropertiesFromList(aca, 
+				getManagedBean().getLatestPersonnel().getSmStaffAcademics(), null,
+				new String[] { "pmEduField", "pmEduLevel" }, null));
+		}
+		//#32008 - end
 		closeBlockUI();
 	}
 
