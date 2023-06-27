@@ -307,6 +307,26 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String remarks;
 	private boolean noDisciplinary;
 	private List<DisciplinaryActionCategoryVO> categoryCodeList;
+	//#32008 - start
+	private boolean showFieldChanges;
+	private SmAppl latestAppl;
+	private SmAssociateCompany latestAssocCompany;
+	private SmAssociationBody latestProfBody;
+	private SmPersonnel latestPersonnel;
+	private SmPersonnelAddress latestPermAddr;
+	private SmPersonnelAddress latestMailAddr;
+	private SmPersonnelAddress latestResdAddr;
+	private SmPersonnelAddress latestOffAddr;
+	private SmStaffExperience latestJobFunction;
+	private SmRelatedCompany latestRelatedCompany;
+	private SmAssociationBody latestStfPrfBdy;
+	private SmStaffAcademic latestStaffAcademic;
+	private SmEquityCompany latestEquityCompany;
+	private SmSupplierBranch latestBranch;
+	private SmSupplierBank latestBank;
+	private SmCompanyExperience latestCompanyExperience;
+	private SmSupplierCert latestCert;
+	//#32008 - end
 	
 	private List<DisciplinaryActionVO> disciplineVOs; 
 	private boolean disciplinaryAction;
@@ -2381,4 +2401,150 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 			this.tabActiveDlg = tabActiveDlg;
 		}
 		//#34099 - end
+	//#32008 - start
+	public SmAppl getLatestAppl() {
+		return latestAppl;
+	}
+
+	public void setLatestAppl(SmAppl latestAppl) {
+		this.latestAppl = latestAppl;
+	}
+
+	public SmAssociateCompany getLatestAssocCompany() {
+		return latestAssocCompany;
+	}
+
+	public void setLatestAssocCompany(SmAssociateCompany latestAssocCompany) {
+		this.latestAssocCompany = latestAssocCompany;
+	}
+
+	public SmAssociationBody getLatestProfBody() {
+		return latestProfBody;
+	}
+
+	public void setLatestProfBody(SmAssociationBody latestProfBody) {
+		this.latestProfBody = latestProfBody;
+	}
+
+	public SmPersonnel getLatestPersonnel() {
+		return latestPersonnel;
+	}
+
+	public void setLatestPersonnel(SmPersonnel latestPersonnel) {
+		this.latestPersonnel = latestPersonnel;
+	}
+
+	public SmPersonnelAddress getLatestPermAddr() {
+		return latestPermAddr;
+	}
+
+	public void setLatestPermAddr(SmPersonnelAddress latestPermAddr) {
+		this.latestPermAddr = latestPermAddr;
+	}
+
+	public SmPersonnelAddress getLatestMailAddr() {
+		return latestMailAddr;
+	}
+
+	public void setLatestMailAddr(SmPersonnelAddress latestMailAddr) {
+		this.latestMailAddr = latestMailAddr;
+	}
+
+	public SmPersonnelAddress getLatestOffAddr() {
+		return latestOffAddr;
+	}
+
+	public void setLatestOffAddr(SmPersonnelAddress latestOffAddr) {
+		this.latestOffAddr = latestOffAddr;
+	}
+
+	public SmPersonnelAddress getLatestResdAddr() {
+		return latestResdAddr;
+	}
+
+	public void setLatestResdAddr(SmPersonnelAddress latestResdAddr) {
+		this.latestResdAddr = latestResdAddr;
+	}
+
+	public SmRelatedCompany getLatestRelatedCompany() {
+		return latestRelatedCompany;
+	}
+
+	public void setLatestRelatedCompany(SmRelatedCompany latestRelatedCompany) {
+		this.latestRelatedCompany = latestRelatedCompany;
+	}
+
+	public SmStaffAcademic getLatestStaffAcademic() {
+		return latestStaffAcademic;
+	}
+
+	public void setLatestStaffAcademic(SmStaffAcademic latestStaffAcademic) {
+		this.latestStaffAcademic = latestStaffAcademic;
+	}
+
+	public SmStaffExperience getLatestJobFunction() {
+		return latestJobFunction;
+	}
+
+	public void setLatestJobFunction(SmStaffExperience latestJobFunction) {
+		this.latestJobFunction = latestJobFunction;
+	}
+
+	public SmAssociationBody getLatestStfPrfBdy() {
+		return latestStfPrfBdy;
+	}
+
+	public void setLatestStfPrfBdy(SmAssociationBody latestStfPrfBdy) {
+		this.latestStfPrfBdy = latestStfPrfBdy;
+	}
+
+	public SmEquityCompany getLatestEquityCompany() {
+		return latestEquityCompany;
+	}
+
+	public void setLatestEquityCompany(SmEquityCompany latestEquityCompany) {
+		this.latestEquityCompany = latestEquityCompany;
+	}
+
+	public SmSupplierBranch getLatestBranch() {
+		return latestBranch;
+	}
+
+	public void setLatestBranch(SmSupplierBranch latestBranch) {
+		this.latestBranch = latestBranch;
+	}
+
+	public SmSupplierBank getLatestBank() {
+		return latestBank;
+	}
+
+	public void setLatestBank(SmSupplierBank latestBank) {
+		this.latestBank = latestBank;
+	}
+
+	public SmCompanyExperience getLatestCompanyExperience() {
+		return latestCompanyExperience;
+	}
+
+	public void setLatestCompanyExperience(SmCompanyExperience latestCompanyExperience) {
+		this.latestCompanyExperience = latestCompanyExperience;
+	}
+
+	public boolean isShowFieldChanges() {
+		return showFieldChanges;
+	}
+
+	public void setShowFieldChanges(boolean showFieldChanges) {
+		this.showFieldChanges = showFieldChanges;
+	}
+	
+	public SmSupplierCert getLatestCert() {
+		return latestCert;
+	}
+
+	public void setLatestCert(SmSupplierCert latestCert) {
+		this.latestCert = latestCert;
+	}
+	
+	//#32008 - end
 }

@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -147,6 +149,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmFieldChangeUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.BlacklistOwnerDirectorVO;
 import my.ep.web.vo.DisciplinaryActionCategoryVO;
@@ -804,6 +807,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		initStep7SupportingDocumentsInfo();
 		initStep8_9PoApproverDefaultDecision();
 		initBumiRecommendNote();
+		//#32008
+		SmFieldChangeUtil.initLatestAppl(getManagedBean());
 	}
 
 	/**
@@ -1479,6 +1484,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public void assignSelAssoc(SmAssociateCompany assocBean) {
 		getManagedBean().setSelectedAssocCompany(assocBean);
+		//#32008 - start
+		if (getManagedBean().getLatestAppl() != null) {
+			getManagedBean().setLatestAssocCompany( 
+				(SmAssociateCompany) EntityHelper.getEntityByMultiplePropertiesFromList(
+				assocBean, getManagedBean().getLatestAppl().getSmAssociateCompanies(),
+				new String[] { "regNo" }, null, null));
+		}
+		//#32008 - end
 		closeBlockUI();
 	}
 
@@ -1490,6 +1503,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public void assignSelBranch(SmSupplierBranch branchBean) {
 		getManagedBean().setSelectedBranch(branchBean);
+		//#32008 - start
+		if (getManagedBean().getLatestAppl() != null) {
+			getManagedBean().setLatestBranch(
+				(SmSupplierBranch) EntityHelper.getEntityByMultiplePropertiesFromList(
+				branchBean, getManagedBean().getLatestAppl().getSmSupplierBranches(),
+				new String[] { "branchCode" }, null, null));
+		}
+		//#32008 - end
 		closeBlockUI();
 	}
 
@@ -1506,6 +1527,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						"CRT",
 						Long.parseLong(getManagedBean().getSelectedCert()
 								.getCertTypeId().toString())));
+		//#32008 - start
+		if (getManagedBean().getLatestAppl() != null) {
+			getManagedBean().setLatestCert(
+				(SmSupplierCert) EntityHelper.getEntityByMultiplePropertiesFromList(
+				certBean, getManagedBean().getLatestAppl().getSmSupplierCerts(),
+				new String[] { "certTypeId", "certName" }, new String[] { "pmCertBody" }, null));
+		}
+		//#32008 - end
 		closeBlockUI();
 	}
 
@@ -1570,6 +1599,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			shareBankBean.setSmAddress(setDefaultAddr());
 		}
 		setSelectedBankAccountPurpose();
+		//#32008 - end
+		if (getManagedBean().getLatestAppl() != null) {
+			getManagedBean().setLatestBank(
+				(SmSupplierBank) EntityHelper.getEntityByMultiplePropertiesFromList(
+				shareBankBean, getManagedBean().getLatestAppl().getSmSupplierBanks(),
+				new String[] { "accountNo", "accountPurpose" }, null, null));
+		}
+		//#32008 - end
 		closeBlockUI();
 	}
 
@@ -1581,6 +1618,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public void assignSelEquiCompany(SmEquityCompany equiCompBean) {
 		getManagedBean().setSelectedEquityCompany(equiCompBean);
+		//#32008 - end
+		if (getManagedBean().getLatestAppl() != null) {
+			getManagedBean().setLatestEquityCompany(
+				(SmEquityCompany) EntityHelper.getEntityByMultiplePropertiesFromList(
+				equiCompBean, getManagedBean().getLatestAppl().getSmEquityCompanies(),
+				new String[] { "regNo" }, null, null));
+		}
+		//#32008 - end
 	}
 
 	/**
@@ -1715,6 +1760,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							SmCommonUtil
 									.getParamDescriptionByLanguageAndPmParameter(procurementMode));
 		}
+		//#32008
+		SmFieldChangeUtil.initCompanyExperienceChangeField(getManagedBean());
 		closeBlockUI();
 	}
 
@@ -5097,5 +5144,61 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 		//3460 - End
-		
+	
+	//#32008
+	public String getCountryLabelById(Long countryId) {
+		return SmCommonUtil.getCountryLabelById(countryId);
+	}
+	
+	public String getStateLabelById(Long stateId) {
+		return SmCommonUtil.getStateLabelById(stateId);
+	}
+	
+	public String getDivisionLabelById(Long divisionId) {
+		return SmCommonUtil.getDivisionLabelById(divisionId);
+	}
+	
+	public String getDistrictLabelById(Long districtId) {
+		return SmCommonUtil.getDistrictLabelById(districtId);
+	}
+	
+	public String getCityLabelById(Long cityId) {
+		return SmCommonUtil.getCityLabelById(cityId);
+	}
+	
+	public String getAnnualRevById(Long annualRevenueId) {
+		String name = "";
+		if (annualRevenueId != null) {
+			for (SelectItem item : Arrays.asList(getDropdownValues("SAR"))) {
+				if (item.getValue() != null
+						&& item.getValue().toString().equals(annualRevenueId.toString())) {
+					name = item.getLabel();
+					break;
+				}
+			}
+		}
+		return name;
+	}
+	
+	public SmStaffTotal getStaffTotalByCategory(String staffCategory) {
+		return SmFieldChangeUtil.getStaffTotalByCategoryFromList(
+				getManagedBean().getLatestAppl(), staffCategory);
+	}
+	
+	public String getOwnershipTypeLabel(String ownershipType) {
+		return SmCommonUtil.getOwnershipTypeLabel(ownershipType);
+	}
+	
+	public String getFacTypeLabel(String facType) {
+		return SmCommonUtil.getFacTypeLabel(facType);
+	}
+	
+	public String getPriceAmountFormat(BigDecimal priceAmount) {
+		return SmCommonUtil.getPriceAmountFormat(priceAmount);
+	}
+	
+	public String getDateFormat(Date date) {
+		return SmCommonUtil.getDisplayDateFormat(date);
+	}
+	//#32008 - end
 }

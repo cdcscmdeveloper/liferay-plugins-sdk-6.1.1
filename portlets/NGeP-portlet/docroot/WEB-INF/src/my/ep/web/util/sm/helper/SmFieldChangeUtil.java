@@ -23,7 +23,9 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.constant.sm.SupplierManagementConst;
+import my.ep.web.managedbean.sc.bidding.BiddingListManagedBean;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
 
 import org.apache.commons.lang.StringUtils;
 // #30660
@@ -1361,5 +1363,63 @@ public class SmFieldChangeUtil {
 		retVal = objRetVal != null ? true : false;
 		return retVal;
 	}
+	
+	//#32008 - start
+	public static void initLatestAppl(BaseReviewApplicationManagedBean bean){
+		if (bean.getSmAppl() == null || bean.getSmAppl().getApplType() == null
+			|| bean.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+			bean.setShowFieldChanges(false);
+			bean.setLatestAppl(null);
+			return;
+		}
+		
+		MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+		SmAppl srcAppl = null;
+		
+		if (bean.getSmAppl().isResubmit() && bean.isSupplierUser()
+				&& bean.getSmAppl().getOriginalAppl() != null){
+			mofReqDTO.setSmAppl(bean.getSmAppl());
+			srcAppl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveLatestRejectedApplication(mofReqDTO).getSmAppl();
+			SmApplRevisionResDTO applRevDTO = SmCommonUtil
+					.getSerializedApplicationByFilePathName(srcAppl.getSupplierSerFile());
+			if (applRevDTO != null) {
+				srcAppl = applRevDTO.getSmAppl();
+			}
+		}
+		
+		if(srcAppl == null){
+			mofReqDTO.setSupplierId(bean.getSmSupplier().getSupplierId());
+			srcAppl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveLatestSmApplWithChildBySupplierId(mofReqDTO)
+					.getSmAppl();
+		}
+		bean.setLatestAppl(srcAppl);
+		bean.getLatestAppl().setHqFacility(
+				SmApplicationUtil.getHqFacilityByAppl(bean.getLatestAppl()));
+		setApplTableListChangeStatus(bean.getLatestAppl(), bean.getSmAppl(),
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
+		bean.setShowFieldChanges(true);
+	}
+	
+	public static void initCompanyExperienceChangeField(
+			BaseReviewApplicationManagedBean bean) {
+		bean.setLatestCompanyExperience(new SmCompanyExperience());
+		if (bean.isShowFieldChanges()) {
+			bean.setLatestCompanyExperience((SmCompanyExperience) EntityHelper
+					.getEntityByMultiplePropertiesFromList(bean
+							.getSelectedCompanyExperience(), bean
+							.getLatestAppl().getSmCompanyExperiences(),
+							new String[] { "clientName", "title" }, null, null));
 
+			if (bean.getLatestCompanyExperience() != null
+					&& bean.getLatestCompanyExperience()
+							.getCompanyExperienceId() != null) {
+				// smCompanyExperienceCat
+				setCurrSmCompanyExpCat(bean.getSelectedCompanyExperience(),
+						bean.getLatestCompanyExperience());
+			}
+		}
+	}
+	//#32008 - end
 }
