@@ -116,7 +116,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean disableStaxAmount;	
 	private boolean disableContractAmount = true;
 	private boolean bondWaiver;
-	private CtContractAmount ctTestBondWaiverAmount;	
+	private CtContractAmount ctTestBondWaiverAmount;
 
 	private boolean selectAll;
 	private CtPerformanceBond ctPerformanceBond;
@@ -168,14 +168,30 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean hasAmendmentLoaNo = false; //15851
 	private boolean fromViewPage = false;//15851
 	private boolean amendFromViewPage = false;//15851
-	private boolean amendFromTaskList = false;//15851
 	private boolean viewSCL = false;//15851
 
-	private boolean backFromSCL = false;//34030
-	private String docTypeFromTaskList = null;//34030
-	private Long contractIdFromTaskList = null;//34030
-	private Long contractVerIdFromTaskList = null;//34030
-	private String taskNameFromTaskList = null;//34030
+	private boolean viewSCLFromContract = false;//34142
+	private String[] outcomesFromContract = null;//34142, 15851 04/12/2022
+	
+	//Bug 34142, 15851 - shaqimi start 04/12/2022
+	private boolean amendFromTaskList = false;
+	private boolean viewContractFromAgreement = false;
+	private boolean backFromSCL = false;
+	private String docTypeFromTaskList = null;
+	private Long contractIdFromTaskList = null;
+	private Long contractVerIdFromTaskList = null;
+	private String taskNameFromTaskList = null;
+	private String taskIdFromTaskList = null;
+	private String docTypeFromAgreementTaskList = null;
+	private Long contractIdFromAgreementTaskList = null;
+	private Long docIdFromAgreementTaskList = null;
+	private Long agreementIdFromAgreementTaskList = null;
+	private String taskIdFromAgreementTaskList = null;
+	private Long contractVerIdFromAgreementTaskList = null;
+	private boolean backFromContract = false;
+	private Long statusIdFromTaskList = null;
+	private boolean inPage = false;
+	//Bug 34142, 15851 - shaqimi end 04/12/2022
 
 	//#28854 - start
 	private List<String> itemSpecification;
@@ -1299,7 +1315,18 @@ public class ContractManagedBean extends BaseManagedBean {
 	}
 	public void setMinQtyCheck(boolean minQtyCheck) {
 		this.minQtyCheck = minQtyCheck;
-	}	
+	}
+
+	//#15851 - start
+	public boolean isHasAmendmentLoaNo() {
+		return hasAmendmentLoaNo;
+	}
+
+	public void setHasAmendmentLoaNo(boolean hasAmendmentLoaNo) {
+		this.hasAmendmentLoaNo = hasAmendmentLoaNo;
+	}
+	//#15851 - end
+	
 	// End - 28479
 	
 	// Start Fix - #31740
@@ -1328,6 +1355,32 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.agencyDataDeletion = agencyDataDeletion;
 	}
 	// End Fix - #31740
+
+	//Enhancement 15851 - shaqimi start
+	public boolean isFromViewPage() {
+		return fromViewPage;
+	}
+
+	public void setFromViewPage(boolean fromViewPage) {
+		this.fromViewPage = fromViewPage;
+	}
+
+	public boolean isAmendFromViewPage() {
+		return amendFromViewPage;
+	}
+
+	public void setAmendFromViewPage(boolean amendFromViewPage) {
+		this.amendFromViewPage = amendFromViewPage;
+	}
+
+	public boolean isViewSCL() {
+		return viewSCL;
+	}
+
+	public void setViewSCL(boolean viewSCL) {
+		this.viewSCL = viewSCL;
+	}
+	//Enhancement 15851 - shaqimi end
 	
 	// Start Fix - #33674
 	public String getBankInfoDetails() {
@@ -1368,16 +1421,26 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.applID = applID;
 	}
     //End Fix - #33674
-		
-	//#15851 - start
-	public boolean isHasAmendmentLoaNo() {
-		return hasAmendmentLoaNo;
+	
+	//Bug 34142 - shaqimi start 16112022
+	public boolean isViewSCLFromContract() {
+		return viewSCLFromContract;
 	}
 
-	public void setHasAmendmentLoaNo(boolean hasAmendmentLoaNo) {
-		this.hasAmendmentLoaNo = hasAmendmentLoaNo;
+	public void setViewSCLFromContract(boolean viewSCLFromContract) {
+		this.viewSCLFromContract = viewSCLFromContract;
 	}
-	//#15851 - end
+	//Bug 34142 - shaqimi end 16112022
+	
+	//Bug 34142, 15851 - shaqimi start 04/12/2022
+	public String[] getOutcomesFromContract() {
+		return outcomesFromContract;
+	}
+
+	public void setOutcomesFromContract(String[] outcomesFromContract) {
+		this.outcomesFromContract = outcomesFromContract;
+	}
+	//Bug 34142, 15851 - shaqimi end 04/12/2022
 	
 	/* #28854 start*/
 	public String getNewOfferSpec() {
@@ -1412,23 +1475,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	}	
 	/* #28854 end*/
 	
-	//Enhancement 15851 - shaqimi start
-	public boolean isFromViewPage() {
-		return fromViewPage;
-	}
-
-	public void setFromViewPage(boolean fromViewPage) {
-		this.fromViewPage = fromViewPage;
-	}
-
-	public boolean isAmendFromViewPage() {
-		return amendFromViewPage;
-	}
-
-	public void setAmendFromViewPage(boolean amendFromViewPage) {
-		this.amendFromViewPage = amendFromViewPage;
-	}
-
+	//Bug 34142, 15851 - shaqimi start 04/12/2022
 	public boolean isAmendFromTaskList() {
 		return amendFromTaskList;
 	}
@@ -1436,17 +1483,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setAmendFromTaskList(boolean amendFromTaskList) {
 		this.amendFromTaskList = amendFromTaskList;
 	}
-
-	public boolean isViewSCL() {
-		return viewSCL;
-	}
-
-	public void setViewSCL(boolean viewSCL) {
-		this.viewSCL = viewSCL;
-	}
-	//Enhancement 15851 - shaqimi end
-
-	//Bug 34030 - shaqimi start
+	
 	public boolean isBackFromSCL() {
 		return backFromSCL;
 	}
@@ -1486,5 +1523,93 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setContractVerIdFromTaskList(Long contractVerIdFromTaskList) {
 		this.contractVerIdFromTaskList = contractVerIdFromTaskList;
 	}
-	//Bug 34030 - shaqimi end
+	
+	public boolean isViewContractFromAgreement() {
+		return viewContractFromAgreement;
+	}
+
+	public void setViewContractFromAgreement(boolean viewContractFromAgreement) {
+		this.viewContractFromAgreement = viewContractFromAgreement;
+	}
+
+	public String getTaskIdFromTaskList() {
+		return taskIdFromTaskList;
+	}
+
+	public void setTaskIdFromTaskList(String taskIdFromTaskList) {
+		this.taskIdFromTaskList = taskIdFromTaskList;
+	}
+
+	public String getDocTypeFromAgreementTaskList() {
+		return docTypeFromAgreementTaskList;
+	}
+
+	public void setDocTypeFromAgreementTaskList(String docTypeFromAgreementTaskList) {
+		this.docTypeFromAgreementTaskList = docTypeFromAgreementTaskList;
+	}
+
+	public Long getContractIdFromAgreementTaskList() {
+		return contractIdFromAgreementTaskList;
+	}
+
+	public void setContractIdFromAgreementTaskList(Long contractIdFromAgreementTaskList) {
+		this.contractIdFromAgreementTaskList = contractIdFromAgreementTaskList;
+	}
+
+	public Long getDocIdFromAgreementTaskList() {
+		return docIdFromAgreementTaskList;
+	}
+
+	public void setDocIdFromAgreementTaskList(Long docIdFromAgreementTaskList) {
+		this.docIdFromAgreementTaskList = docIdFromAgreementTaskList;
+	}
+
+	public Long getAgreementIdFromAgreementTaskList() {
+		return agreementIdFromAgreementTaskList;
+	}
+
+	public void setAgreementIdFromAgreementTaskList(Long agreementIdFromAgreementTaskList) {
+		this.agreementIdFromAgreementTaskList = agreementIdFromAgreementTaskList;
+	}
+
+	public String getTaskIdFromAgreementTaskList() {
+		return taskIdFromAgreementTaskList;
+	}
+
+	public void setTaskIdFromAgreementTaskList(String taskIdFromAgreementTaskList) {
+		this.taskIdFromAgreementTaskList = taskIdFromAgreementTaskList;
+	}
+
+	public Long getContractVerIdFromAgreementTaskList() {
+		return contractVerIdFromAgreementTaskList;
+	}
+
+	public void setContractVerIdFromAgreementTaskList(Long contractVerIdFromAgreementTaskList) {
+		this.contractVerIdFromAgreementTaskList = contractVerIdFromAgreementTaskList;
+	}
+
+	public boolean isBackFromContract() {
+		return backFromContract;
+	}
+
+	public void setBackFromContract(boolean backFromContract) {
+		this.backFromContract = backFromContract;
+	}
+
+	public Long getStatusIdFromTaskList() {
+		return statusIdFromTaskList;
+	}
+
+	public void setStatusIdFromTaskList(Long statusIdFromTaskList) {
+		this.statusIdFromTaskList = statusIdFromTaskList;
+	}
+
+	public boolean isInPage() {
+		return inPage;
+	}
+
+	public void setInPage(boolean inPage) {
+		this.inPage = inPage;
+	}
+	//Bug 34142, 15851 - shaqimi end 04/12/2022
 }
