@@ -1487,7 +1487,7 @@ public class ApprovalBackingBean extends
 				checkApprovalAndRefreshDetails (qt.getQtId(),taskName, this.getManagedBean().getScQtApproval());
 				// Bug #31759 - End
 
-				invokeRemarksWhileExecuteReviseFlow(this.getManagedBean().getScQtApproval()); // 25077
+				invokeRemarksWhileExecuteReviseFlow(outcome); // 25077
 
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
 
@@ -3017,32 +3017,27 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 	/**
 	 * insert remarks while doing revise process flow
 	 */
-	private void invokeRemarksWhileExecuteReviseFlow(ScQtApproval approval) {
+	private void invokeRemarksWhileExecuteReviseFlow(String outcome) {
 		ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean()
 				.getQt().getQtId());
 		wfStatus = wfStatus == null ? new ScWorkFlowStatus() : wfStatus;
-
-		if (wfStatus.getPmStatus() != null) {
-			Long currentStatusId = wfStatus.getPmStatus().getStatusId();
-			
-			if (currentStatusId.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) {
-				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+		
+		if (wfStatus.getPmStatus()!=null && wfStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) && 
+				BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && !this.getManagedBean().isFirstPagePA()) {
+				ScQtApproval publication = this.getManagedBean().getPublicationApproval();
+				List<ScQtApprovalRemark> qtRemarks = initializeRemarks(publication, wfStatus,
+						publication.getScQtApprovalRemarks(), ScQtApprovalRemark.class);
 				
-				if (!qtBackingBean.getManagedBean().isFirstPagePA()) {
-					ScQtApproval publication = this.getManagedBean().getPublicationApproval();
-					List<ScQtApprovalRemark> qtRemarks = initializeRemarks(publication, wfStatus,
-							publication.getScQtApprovalRemarks(), ScQtApprovalRemark.class);
-					
-					for (ScQtApprovalRemark qtRemark : qtRemarks) {
-						qtRemark.setEditable(false);
-					}
-					
-					publication.setScQtApprovalRemarks(qtRemarks);
-					
-					this.getManagedBean().setScQtApproval(publication);
+				for (ScQtApprovalRemark qtRemark : qtRemarks) {
+					qtRemark.setEditable(false);
 				}
-			}
+				
+				publication.setScQtApprovalRemarks(qtRemarks);
+				
+				this.getManagedBean().setScQtApproval(publication);
+	
 		}
+	
 	}
 	// #25077 - End
 	
