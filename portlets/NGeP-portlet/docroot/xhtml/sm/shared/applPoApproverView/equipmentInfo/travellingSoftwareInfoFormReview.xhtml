@@ -8,11 +8,11 @@
 
 	<p:panel header="#{lbl['lbl.sm.travelling.system']}" toggleable="true" rendered="#{backingBean.managedBean.showTravelSoftwarePanel}" id="travelSoftwarePanelId">
 		<p:outputPanel id="systemInfPan" layout="block">
-			<p:blockUI block=":form:tt:systemInfPan" widgetVar="buiPoSystem"
+			<p:blockUI block=":form:tt:systemInfPan2" widgetVar="buiPoSystem"
 				id="poSystemBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.supplierSystemVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.supplierSystemVerified : false)}" />
 				
-			<p:outputPanel rendered="#{backingBean.managedBean.showTravelSoftwarePanel}">
+			<p:outputPanel id="systemInfPan2" rendered="#{backingBean.managedBean.showTravelSoftwarePanel}">
 				
 				<ui:remove>
 					<p:dataTable var="systemBean" widgetVar="systemBeanDtWidVar"

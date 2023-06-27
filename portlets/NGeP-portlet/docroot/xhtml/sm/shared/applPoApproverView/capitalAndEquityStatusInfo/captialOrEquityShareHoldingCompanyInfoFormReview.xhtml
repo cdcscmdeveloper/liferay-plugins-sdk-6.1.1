@@ -203,7 +203,7 @@
 	<!-- #30660 end -->
 	<p:dialog width="500px" height="450px"
 		header="#{lbl['lbl.sm.equiComp.dialHdr']}" id="eqiCompDialog"
-		widgetVar="eqiCompDialog" resizable="false" closable="false"
+		widgetVar="eqiCompDialog" resizable="false" closable="true"
 		showEffect="fade" hideEffect="fade" modal="true">
 		
 		<p:outputPanel layout="block" id="equiCompBlockPanel">
@@ -589,11 +589,4 @@
 		</p:outputPanel>
 	</p:dialog>
 	
-	<ac:confirmationPopup id="equiCompDeletePopUpId"
-		widget="equiCompDeletePopUp"
-		okAction="backingBean.deleteSelectedEquiCompanies"
-		width="400" height="100"
-		title="#{lbl['lbl.msg.confirm.delete.header']}"
-		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":form:tt:eqiComDt, @([id$=Msg]),:#{p:component('equiCompDelBtnId')}"/>
 </ui:composition>
