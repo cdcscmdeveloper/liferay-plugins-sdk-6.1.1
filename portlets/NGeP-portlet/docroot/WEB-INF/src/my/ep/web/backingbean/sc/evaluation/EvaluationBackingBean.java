@@ -17937,7 +17937,7 @@ private void retriveCommitteeRemarksList(){
 								if(evalstage.contains(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)){
 									evalStageStr = StringUtils.join(Arrays.asList(new String[]{evalStageStr, QTConstants.TECHNICAL_EVALUATION}), ",");
 								}
-								localCheckList.add(checkStausForUploadNoActionCheckLists(checkList, evalStageStr));
+								localCheckList.add(checkStausForUploadNoActionCheckLists(proposalCheckList, evalStageStr));
 								//34943 - end
 							}
 						}
