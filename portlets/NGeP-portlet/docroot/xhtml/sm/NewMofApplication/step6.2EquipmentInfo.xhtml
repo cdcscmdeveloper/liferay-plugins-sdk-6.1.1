@@ -20,14 +20,12 @@
 				<!-- #12483 - END -->
 				<h:inputHidden value="#{backingBean.managedBean.smAppl.applCategoryType}" /> 
 					
+					<!-- 32008 - START -->
+					<ui:include src="/xhtml/sm/shared/applPoApproverView/equipmentInfo/manufacturingOrAssmblyInfoFormReview.xhtml" />
+					<ui:include src="/xhtml/sm/shared/applPoApproverView/equipmentInfo/machineryInfoFormReview.xhtml" />
+					<ui:include src="/xhtml/sm/shared/applPoApproverView/equipmentInfo/travellingSoftwareInfoFormReview.xhtml" />
+					<!-- 32008 - END -->
 					
-						<ui:include src="/xhtml/sm/shared/mofRegistration/manufacturingOrAssmblyInfoForm.xhtml" />
-					
-					
-					<ui:include src="/xhtml/sm/shared/mofRegistration/machineryInfoForm.xhtml" />
-						
-					<ui:include src="/xhtml/sm/shared/mofRegistration/travellingSoftwareInfoForm.xhtml" />
-
 					<div class="nav-wrapper">
 						<table style="width: 100%">
 							<tr>
