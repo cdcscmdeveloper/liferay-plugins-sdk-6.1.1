@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap; //Bug #34882@Syazani 26/06/2023
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -68,6 +69,7 @@ import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SpecialCharacter; //# 29006 - note 702
@@ -7922,7 +7924,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 	private List<ItemBean> convertSpecQuestionToSpecAnswer(
 			TplSpecMaster specMaster) {
-		Map<Integer, ItemBean> questionSpecMap = new HashMap<Integer, ItemBean>();
+		TreeMap<Integer, ItemBean> questionSpecMap = new TreeMap<Integer, ItemBean>(); //Bug #34882@Syazani 26/06/2023
 
 		if (specMaster != null && specMaster.getTplSpecQuestions() != null) {
 			for (TplSpecQuestion specQuestion : specMaster
@@ -10521,7 +10523,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					labelLampiranA3=date;//29007
 					log.info("=======labelLampiranA3======"+labelLampiranA3);
 					finalMsg.append("          "+labelLampiranA3);//29007-End
-					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMsg.toString());//29007
+					String finalMessage=finalMsg.toString();
+					finalMessage=finalMsg.toString().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+					finalMessage=finalMessage.toString().replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMessage);//29007
 				}
 				
 			/*29007-start	if(scLoiLoaItem.getLoaSpecJustification() != null){
@@ -10550,8 +10555,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							specAnswer.setNewSupplierOffer(null);	
 						}//29007-End
 						if(specAnswer.getNewSupplierOffer() != null && StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) && StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){//29007-start
+							String newSupplierOffered=specAnswer.getNewSupplierOffer().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+							newSupplierOffered=newSupplierOffered.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+							specAnswer.setNewSupplierOffer(newSupplierOffered);
 							newOfferedSpecification=true;
 						}//29007-End
+						if(specAnswer.getTplSpecQuestion() != null && specAnswer.getTplSpecQuestion().getClItem() !=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) && StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){//29007-start
+							String itemName=specAnswer.getTplSpecQuestion().getClItem().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+							itemName=itemName.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+							specAnswer.getTplSpecQuestion().setClItem(itemName);
+						}
+						if(specAnswer.getAnswerRemark() != null && StringUtils.isNotBlank(specAnswer.getAnswerRemark()) && StringUtils.isNotEmpty(specAnswer.getAnswerRemark())){//29007-start
+							String ansRemark=specAnswer.getAnswerRemark().replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+							ansRemark=ansRemark.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+							specAnswer.setAnswerRemark(ansRemark);
+						}
 						
 					}
 					if(!newOfferedSpecification){//29007-start
@@ -11039,7 +11057,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}else{
 			if (CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
 				for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
-					if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr) && null!=report.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD.equals(report.getDefinationType().getParameterCode())) {
+					if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
 						report.setDeleted(true);
 						oldLampiranA3List.add(report);
 						recordCount++;

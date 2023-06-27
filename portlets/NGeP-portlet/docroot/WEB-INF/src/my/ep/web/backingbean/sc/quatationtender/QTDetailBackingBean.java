@@ -4790,6 +4790,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 												   ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
 												   approvalRemark.setApprovalRequest(approvalRequest.get(i));
 												   approvalRequest.get(i).setAppRequestRemark(approvalRemark);
+												   approvalRequest.get(i).getAppRequestRemark().setRemark(" ");
 											   } 
 										}
 										if(approvalRequest.get(i).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)){
@@ -4811,6 +4812,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 												   ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
 												   approvalRemark.setApprovalRequest(approvalRequest.get(i));
 												   approvalRequest.get(i).setAppRequestRemark(approvalRemark);
+												   approvalRequest.get(i).getAppRequestRemark().setRemark(" ");
 											   }
 											   
 										}
@@ -6887,6 +6889,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}	
 		//9019 - End (Harun)
 		
+		//9019 - Start (Harun) #Note-398 and merge with #Note-487
+		if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().getQt().getSpecApprovalReq() == true) {
+			this.getManagedBean().getQt().setSpecApprovalReq(false);
+			reqDTO.getQtdetail().setSpecApprovalReq(false);
+			reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
+		}
+		//9019 - End (Harun)
+		
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
 		switch (changedIndexNumber) {
 		case 0:
@@ -6898,13 +6908,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (this.getManagedBean().isScQtRemarksEmpty()) {
 				this.getManagedBean().getQt().setScQtRemarks(null);
 			} 
-			//9019 - End (Harun)
-			//9019 - Start (Harun) #Note-398 Remove checking for (ERR-100022) error mesg while save 
-			if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().getQt().getSpecApprovalReq() == true) {
-				this.getManagedBean().getQt().setSpecApprovalReq(false);
-				reqDTO.getQtdetail().setSpecApprovalReq(false);
-				reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
-			}
 			//9019 - End (Harun)
 			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
 			//9019 - end
@@ -6928,7 +6931,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//       while save due to save empty object
 			if (this.getManagedBean().isScQtRemarksEmpty()) {
 				this.getManagedBean().getQt().setScQtRemarks(null);
-			} 
+			}
 			//9019 - End (Harun)
 			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
 			//9019 - end

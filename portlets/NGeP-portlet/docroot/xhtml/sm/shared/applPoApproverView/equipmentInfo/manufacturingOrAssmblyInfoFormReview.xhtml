@@ -1,0 +1,152 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.manufacture.panHdr']}" toggleable="true" rendered="#{backingBean.managedBean.showFactoryPanel}"  id="manufacturingMainPanelId">
+		<p:outputPanel id="manuInfPan">
+
+			<p:dataTable var="manBean" widgetVar="smManuDtWidVar"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{backingBean.managedBean.smAppl.smManufacturingDtls}"
+				rowKey="#{manBean}" rowIndexVar="index" id="manDt">
+				<ac:paginator for="manDt" />
+
+				<p:column headerText="#{lbl['lbl.sm.manufacture.prdType']}">
+					<h:outputText value="#{manBean.goodsType}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.manufacture.brand']}">
+					<h:outputText value="#{manBean.brand}" />
+				</p:column>
+				<p:column
+					headerText="#{lbl['lbl.sm.manufacture.prodCap']} / #{lbl['lbl.sm.manufacture.month']}">
+					<h:outputText value="#{manBean.productionCapacity}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.manufacture.mesUnit']}">
+					<h:outputText value="#{manBean.uom}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+					<p:commandLink update=":form:tt:manufactorDialog" process="@this"
+						partialSubmit="true"
+						action="#{backingBean.assignSelManufacturer(manBean)}"
+						style="padding-right:5px" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
+					</p:commandLink>
+				</p:column>
+
+			</p:dataTable>
+			<p:spacer height="2px;" />
+			<br />
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">
+				<table style="width: 50%">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+						<td><p:inputTextarea autoResize="false" cols="41"
+								maxlength="200" id="manufactSecPoRmrk"
+								readonly="#{backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser}"
+								validatorMessage="#{lbl['lbl.sm.manufacture.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.poSecReview.manufacturingRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="manufactSecPoRmrkMsg" for="manufactSecPoRmrk"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+				</table>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+				<table style="width: 100%">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+						<td><p:inputTextarea autoResize="false" readonly="true"
+								disabled="true" cols="41" maxlength="200"
+								value="#{backingBean.managedBean.poSecReview.manufacturingRemark}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
+						<td><p:inputTextarea autoResize="false" cols="41"
+								maxlength="200" id="manufactSecAprvrRmrk"
+								validatorMessage="#{lbl['lbl.sm.manufacture.panHdr']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.apprvrSecReview.manufacturingRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="manufactSecAprvrRmrkMsg"
+								for="manufactSecAprvrRmrk" showSummary="true" showDetail="false"
+								display="icon" /></td>
+
+					</tr>
+				</table>
+			</p:outputPanel>
+		</p:outputPanel>
+	</p:panel>
+	<p:dialog width="500px" height="200px"
+		header="#{lbl['lbl.sm.manufacture.diaHdr']}"
+		widgetVar="manufactorDialog" resizable="false" showEffect="fade"
+		closable="true" hideEffect="fade" modal="true" id="manufactorDialog">
+		
+		<p:ajax event="close" listener="#{backingBean.cancelManuSaveorUpdate}"/>
+		
+		<p:outputPanel layout="block" id="manuFacBlockPanel">
+			<p:messages id="manufactorDialogMsg" showSummary="false"
+				showDetail="true" autoUpdate="true" closable="true" />
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.prdType']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.manufacture.prdType']}" id="smManuProdType"
+							maxlength="50"
+							value="#{backingBean.managedBean.selectedManufacturer.goodsType}"
+							size="35" disabled="true"/> <p:message id="smManuProdTypeMsg"
+							for="smManuProdType" showSummary="true" showDetail="false"
+							display="icon" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.brand']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.manufacture.brand']}" id="smManuBrdType"
+							maxlength="50"
+							value="#{backingBean.managedBean.selectedManufacturer.brand}"
+							size="35" disabled="true"/> <p:message id="smManuBrdTypeMsg" for="smManuBrdType"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.prodCapMonth']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText maxlength="6"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.manufacture.prodCap']}" id="smManuProdCap"
+							value="#{backingBean.managedBean.selectedManufacturer.productionCapacity}"
+							size="35" disabled="true">
+	
+						</p:inputText> <p:message id="smManuProdCapMsg" for="smManuProdCap"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.mesUnit']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td valign="top">
+						<p:inputText maxlength="20"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.manufacture.mesUnit']}" id="smManuMesUnit"
+							value="#{backingBean.managedBean.selectedManufacturer.uom}" disabled="true"/>
+						<p:message id="smManuMesUnitMsg" for="smManuMesUnit"
+							showSummary="true" showDetail="false" display="icon" /></td>
+	
+				</tr>
+	
+			</table>
+	
+			<br />
+			<p:blockUI block="manuFacBlockPanel" widgetVar="manuFacBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</p:outputPanel>
+	</p:dialog>
+</ui:composition>

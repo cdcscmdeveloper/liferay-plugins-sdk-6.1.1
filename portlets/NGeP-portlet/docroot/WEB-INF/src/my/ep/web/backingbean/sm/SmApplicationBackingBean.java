@@ -1848,10 +1848,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 		}
 		// 26671 - Site Visit Grouping Enhancement -28775 - END
-		
+		//32008 to initialize set PO & Approver cannot edit field key in by supplier
+		getManagedBean().setUpsCannotEdit(false);
 		if (fromBpm
 				&& (getManagedBean().isPoUser() || getManagedBean()
 						.isApproverUser())) {
+			//32008 to set PO & Approver cannot edit field key in by supplier
+			getManagedBean().setUpsCannotEdit(true);
 			setRevUrl();
 			//#28778 - Start
 			//to recheck whether it is special or normal category
@@ -1909,7 +1912,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							getManagedBean().getSmAppl()));
 			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "getSmSupplierBasicInfoVO-19", 
-					subStartTime); //20211005@fadhli - #31754
+					subStartTime); //20211005@fadhli - #31754			
 		}
 		//Start 29480
 		if (getManagedBean().getSmAppl().getSupplierType()
@@ -5155,7 +5158,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		category.setApprovedDate(new Date());
 		//#31043 start
-		saveOrUpdateAppl();
 		SmSideMenuIconUtil.getSideMenuVerificationIcon(getManagedBean(), 
 				getManagedBean().getCurrentPageType());
 		//#31043 end
@@ -11199,9 +11201,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_ASSIGNMENT);
 			}
 			//28775 - Site Visit Grouping Enhancement - 28775 - start
-			getManagedBean().getSmAppl().setSiteVisitGroup(true);
-			getManagedBean().getSmAppl().setSmSvTasks(getManagedBean().getSvTaskList());
-			//reqDTO.setSvTask(getManagedBean().getSvTask());
+			//temporary revert
+			//getManagedBean().getSmAppl().setSiteVisitGroup(true);
+			//getManagedBean().getSmAppl().setSmSvTasks(getManagedBean().getSvTaskList());
+			reqDTO.setSvTask(getManagedBean().getSvTask());
 			//28775 - Site Visit Grouping Enhancement - 28775 - end
 			reqDTO.setSvTaskList(getManagedBean().getSvTaskList());
 			actionDesc = SupplierManagementConst.PO_RECOM_SITE_VISIT;
@@ -11449,8 +11452,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 //		if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
 //		}
 		// #28175 Reopen Start  
-		if (!this.getManagedBean().getSmAppl().getPmStatus().getStatusId()
-				.equals(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL)) {
+		if (this.getManagedBean().getSmAppl().isActiveAppl()){
 			List<SmSupplierCategory> historicalSmSupplierCategories = this.getManagedBean().getSmAppl().getSmSupplierCategories();
 			for(SmSupplierCategory cat : historicalSmSupplierCategories){
 				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
