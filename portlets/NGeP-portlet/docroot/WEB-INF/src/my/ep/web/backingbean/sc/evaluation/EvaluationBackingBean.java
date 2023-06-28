@@ -17686,11 +17686,14 @@ private void retriveCommitteeRemarksList(){
 					EvaluationReqDTO attachmentToDownload = new EvaluationReqDTO();
 					ScQtProposalChecklist scQtProposalChecklist = listFinancial.get(j);
 
-					// 10542-#61 dayan bug fix - start
-					attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
-					attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
-					attachmentToDownload.setScQtChecklistName(scQtCheckList.getTitle());
-					// 10542-#61 dayan bug fix - end
+					if (downloadBy.equalsIgnoreCase("Supplier")) {
+						attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
+						attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
+					} else if (downloadBy.equalsIgnoreCase("Document")) {
+						attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
+						attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
+						attachmentToDownload.setScQtChecklistName(scQtCheckList.getTitle());
+					}
 
 					listScAttachment.add(attachmentToDownload);
 
@@ -17744,11 +17747,14 @@ private void retriveCommitteeRemarksList(){
 					EvaluationReqDTO attachmentToDownload = new EvaluationReqDTO();
 					ScQtProposalChecklist scQtProposalChecklist = listFinancial.get(j);
 
-					// 10542-#61 dayan bug fix - start
-					attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
-					attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
-					attachmentToDownload.setScQtChecklistName(scQtCheckList.getTitle());
-					// 10542-#61 dayan bug fix - end
+					if (downloadBy.equalsIgnoreCase("Supplier")) {
+						attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
+						attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
+					} else if (downloadBy.equalsIgnoreCase("Document")) {
+						attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
+						attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
+						attachmentToDownload.setScQtChecklistName(scQtCheckList.getTitle());
+					}
 
 					listScAttachment.add(attachmentToDownload);
 
