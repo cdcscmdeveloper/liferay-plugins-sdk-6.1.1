@@ -10593,8 +10593,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					labelLampiranA3=date;//29007
 					log.info("=======labelLampiranA3======"+labelLampiranA3);
 					finalMsg.append("          "+labelLampiranA3);//29007-End
-					String finalMessage=finalMsg.toString();
-					finalMessage=finalMsg.toString().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
+					String finalMessage=finalMsg.toString().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
 					finalMessage=finalMessage.toString().replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
 					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMessage);//29007
 				}
