@@ -17,7 +17,7 @@
 							id="poBankVer">
 							<p:ajax update=":form:tt:bankInfPan,:form:revPanHdr"
 								event="change" process="@this,:form:tt:bankInfPan"
-								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.bankVerified)}" />							
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.bankVerified)}"						
 								disabled="#{backingBean.managedBean.upsCannotEdit}"/>							
 						</p:selectBooleanCheckbox>		
 					</td>
@@ -35,7 +35,7 @@
 							id="apprBankVer">
 							<p:ajax update=":form:tt:bankInfPan,:form:revPanHdr"
 								event="change" process="@this,:form:tt:bankInfPan"
-								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.bankVerified)}" />
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.bankVerified)}"
 								disabled="#{backingBean.managedBean.upsCannotEdit}"/>
 						</p:selectBooleanCheckbox>
 					</td>
