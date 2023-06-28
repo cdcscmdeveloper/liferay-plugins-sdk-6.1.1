@@ -5234,5 +5234,23 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public String getDateFormat(Date date) {
 		return SmCommonUtil.getDisplayDateFormat(date);
 	}
+	
+	public String getRaceLabel(Long raceId) {
+		return SmCommonUtil.getRaceByIdFromSelectItems(raceId);
+	}
+	
+	public String getBankAccPurposeLabel(String accPurpose) {
+		String retVal = "";
+		if (accPurpose.equals("R")) {
+			retVal = SmCommonUtil.getMessage("lbl.sm.bankDtls.registration",
+					null);
+		} else if (accPurpose.equals("P")) {
+			retVal = SmCommonUtil.getMessage("lbl.sm.paymentLbl", null);
+		} else {
+			retVal = SmCommonUtil.getMessage("lbl.sm.bankDtls.both.regandpay",
+					null);
+		}
+		return retVal;
+	}
 	//#32008 - end
 }

@@ -44,7 +44,7 @@
 							currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.title.salutationId}" 
 							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestPersonnel and 
 							 not empty viewSmApplBackingBean.managedBean.latestPersonnel.title) ?
-							 viewSmApplBackingBean.getLabelFromSelectItems(viewSmApplBackingBean.managedBean.latestPersonnel.title.salutationId,viewSmApplBackingBean.managedBean.salutationSelectItems) 
+							 viewSmApplBackingBean.managedBean.latestPersonnel.title.salutationName
 							 : lbl['lbl.txt.na']}"/></td>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.race']}" /></td>
 				<td><p:outputLabel styleClass="outputLabel-view" rendered="#{not empty viewSmApplBackingBean.managedBean.selectedShareHolder.pmRace}"
@@ -544,7 +544,7 @@
 										and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestRelatedCompany.shareAmt}" 
 								currValue="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.shareAmt}" 
-								alertValue="#{viewSmApplBackingBean.getPriceAmount(viewSmApplBackingBean.managedBean.latestRelatedCompany.shareAmt)}" /></td>
+								alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestRelatedCompany.shareAmt)}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.equiComp.shrPerc']}" /></td>
@@ -556,7 +556,7 @@
 										and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestRelatedCompany.sharePercentage}" 
 								currValue="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.sharePercentage}" 
-								alertValue="#{viewSmApplBackingBean.getPriceAmount(viewSmApplBackingBean.managedBean.latestRelatedCompany.sharePercentage)}" /></td>
+								alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestRelatedCompany.sharePercentage)}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mof.reg.no']}" /></td>
@@ -619,7 +619,7 @@
 								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestStfPrfBdy.pmCertBody.certBodyId}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.pmCertBody.certBodyId}" 
-							alertValue="#{viewSmApplBackingBean.getProfBodyByIdFromList(viewSmApplBackingBean.managedBean.latestStfPrfBdy.pmCertBody.certBodyId)}" /></td>
+							alertValue="#{viewSmApplBackingBean.managedBean.latestStfPrfBdy.pmCertBody.bodyName}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.profBody.regNo']}" /></td>

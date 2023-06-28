@@ -1399,6 +1399,14 @@ public class SmFieldChangeUtil {
 				SmApplicationUtil.getHqFacilityByAppl(bean.getLatestAppl()));
 		setApplTableListChangeStatus(bean.getLatestAppl(), bean.getSmAppl(),
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
+		setApplTableListChangeStatus(bean.getLatestAppl(), bean.getSmAppl(),
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH);
+		setApplTableListChangeStatus(bean.getLatestAppl(), bean.getSmAppl(),
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL);
+		setApplTableListChangeStatus(bean.getLatestAppl(), bean.getSmAppl(),
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
+		setApplTableListChangeStatus(bean.getLatestAppl(), bean.getSmAppl(),
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK);
 		bean.setShowFieldChanges(true);
 	}
 	
@@ -1426,10 +1434,9 @@ public class SmFieldChangeUtil {
 		bean.setLatestPersonnel(new SmPersonnel());
 		if (bean.isShowFieldChanges()) {
 			bean.setLatestPersonnel((SmPersonnel) EntityHelper
-					.getEntityByMultiplePropertiesFromList(bean
-							.getSelectedShareHolder(), bean.getLatestAppl()
-							.getSmPersonnels(),
-							new String[] { "personnelId" }, null, null));
+					.getEntityBySinglePropertyFromList(
+					bean.getSelectedShareHolder().getIdentificationNo(), 
+					bean.getLatestAppl().getSmPersonnels(), "identificationNo"));
 			if (bean.getLatestPersonnel() != null
 					&& bean.getLatestPersonnel().getPersonnelId() != null) {
 				bean.setLatestOffAddr(SmFieldChangeUtil
@@ -1470,7 +1477,7 @@ public class SmFieldChangeUtil {
 			setCurrPersonnelStaffEducations(bean.getSelectedShareHolder(),
 					bean.getLatestPersonnel());
 
-			// relatedCompanies
+			// relatedCompanies	
 			setCurrPersonnelRelatedCompanies(bean.getSelectedShareHolder(),
 					bean.getLatestPersonnel());
 
