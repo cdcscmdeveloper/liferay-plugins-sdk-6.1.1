@@ -11,9 +11,7 @@
 	<p:panel toggleable="true">
 		<f:facet name="header">
 			<h:outputText
-				value="#{lbl['lbl.sc.eva.qualified.supplier.list.presentation.demo.stage']}" />
-			<ac:iconTooltip
-				value="#{lbl['lbl.sc.eva.qualified.supplier.list.presentation.demo.stage.tooltip']}" />
+				value="#{lbl['lbl.demo.overall.summary']}" />
 		</f:facet>
 
 		<p:dataTable var="finEvaluationqualifiedSupplier" rows="10"
@@ -51,10 +49,34 @@
 			</p:column> 
 			<ui:remove><!-- 6906 - end note 212 --></ui:remove>
 			
-			<p:column headerText="#{lbl['lbl.sc.total.score']}"
+			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical']}"
 				style="text-align:right">
+				<h:outputText value="#{evaluationBackingBean.retriveTotalTechnicalScore(finEvaluationqualifiedSupplier)}"></h:outputText>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.presentation']}"
+				style="text-align:right">
+				<h:outputText value="#{evaluationBackingBean.retriveTotalDemolScore(finEvaluationqualifiedSupplier)}"></h:outputText>
+			</p:column>
+
+			<p:column style="width:25%;text-align:right">
+				<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.demo.overall.score']}" />
+						<ac:iconTooltip value="#{lbl['lbl.demo.overall.score.tooltips']}" />
+					</f:facet>
 				<h:outputText value="#{finEvaluationqualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
+			<ui:remove>28784 - note 122 - add column rating - start</ui:remove>
+			<p:column style="width:15%;white-space: normal;text-align:center;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.rating']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
+				</f:facet>
+				<h:outputText
+					value="#{empty finEvaluationqualifiedSupplier.totalRating? 0: finEvaluationqualifiedSupplier.totalRating}" />
+			</p:column>
+			<ui:remove>28784 - note 122 - add column rating - end</ui:remove>
+			
 
 
 		</p:dataTable>
@@ -88,9 +110,7 @@
 	<p:panel toggleable="true">
 		<f:facet name="header">
 			<h:outputText
-				value="#{lbl['lbl.sc.eva.disqualified.supplier.list.presentation.demo.stage']}" />
-			<ac:iconTooltip
-				value="#{lbl['lbl.sc.eva.disqualified.supplier.list.presentation.demo.stage.tooltip']}" />
+				value="#{lbl['lbl.demo.not.overall.summary']}" />
 		</f:facet>
 
 		<p:dataTable var="disQualifiedSupplier" rows="10"
@@ -118,13 +138,36 @@
 					</tr>
 				</table>
 			</p:column> 
-			<ui:remove><!-- 6906 - end note 233--></ui:remove>
-
-
-			<p:column headerText="#{lbl['lbl.sc.total.score']}"
+			<ui:remove><!-- 6906 - end note 233--></ui:remove>		
+			
+			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical']}"
 				style="text-align:right">
+				<h:outputText value="#{evaluationBackingBean.retriveTotalTechnicalScore(disQualifiedSupplier)}"></h:outputText>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.presentation']}"
+				style="text-align:right">
+				<h:outputText value="#{evaluationBackingBean.retriveTotalDemolScore(disQualifiedSupplier)}"></h:outputText>
+			</p:column>
+
+			<p:column style="width:25%;text-align:right">
+				<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.demo.overall.score']}" />
+						<ac:iconTooltip value="#{lbl['lbl.demo.overall.score.tooltips']}" />
+					</f:facet>
 				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
+			
+			<ui:remove>28784 - note 122 - add column rating - start</ui:remove>
+			<p:column style="width:15%;white-space: normal;text-align:center;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.rating']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
+				</f:facet>
+				<h:outputText
+					value="#{empty disQualifiedSupplier.totalRating? 0: disQualifiedSupplier.totalRating}" />
+			</p:column>
+			<ui:remove>28784 - note 122 - add column rating - end</ui:remove>
 
 
 		</p:dataTable>

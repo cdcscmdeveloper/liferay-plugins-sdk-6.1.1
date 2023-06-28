@@ -1608,7 +1608,7 @@ public class TaskReassignmentBackingBean extends
 									responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
 								//#7465 start - missing document number to search in bpm
 								List<WorklistItemVO> resetWorklist = new ArrayList<WorklistItemVO>();
-								getManagedBean().setAllGroupTasks(resetWorklist);
+								getManagedBean().setAllOthersTasks(resetWorklist); //7465 - wrong reset value for others
 								getManagedBean().setCheckAllOthersTasksEnabled(true);
 								getManagedBean().setEnableRemoveAllOthersTasksButton(true); //#7465 reendorse
 								for (WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()) {
