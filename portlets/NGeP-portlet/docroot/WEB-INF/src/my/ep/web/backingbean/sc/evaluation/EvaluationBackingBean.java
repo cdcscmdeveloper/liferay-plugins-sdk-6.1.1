@@ -17937,7 +17937,7 @@ private void retriveCommitteeRemarksList(){
 								if(evalstage.contains(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)){
 									evalStageStr = StringUtils.join(Arrays.asList(new String[]{evalStageStr, QTConstants.TECHNICAL_EVALUATION}), ",");
 								}
-								localCheckList.add(checkStausForUploadNoActionCheckLists(checkList, evalStageStr));
+								localCheckList.add(checkStausForUploadNoActionCheckLists(proposalCheckList, evalStageStr));
 								//34943 - end
 							}
 						}
@@ -18026,7 +18026,8 @@ private void retriveCommitteeRemarksList(){
 			if (isMBNull) {
 				log.info("checkModalBerbayarProposalScore===================== start");
 				EvaluationReqDTO reqDTO1 = new EvaluationReqDTO();
-				
+				//#34854 set evalstage that null
+				reqDTO1.setResultStages(evalstage);
 				reqDTO1.setQtId(this.getManagedBean().getScQt().getQtId());
 				reqDTO1.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
 				evaluationSo.generateEvaluationSheet(reqDTO1);
