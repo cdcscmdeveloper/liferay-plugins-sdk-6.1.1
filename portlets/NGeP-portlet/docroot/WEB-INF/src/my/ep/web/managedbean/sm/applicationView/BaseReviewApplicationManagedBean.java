@@ -80,6 +80,7 @@ import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.BlacklistOwnerDirectorVO;
 import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
+import my.ep.web.vo.SmSectionEditorVO;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -326,6 +327,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private SmSupplierBank latestBank;
 	private SmCompanyExperience latestCompanyExperience;
 	private SmSupplierCert latestCert;
+	private SmSectionEditorVO editVO = new SmSectionEditorVO();
 	//#32008 - end
 	
 	private List<DisciplinaryActionVO> disciplineVOs; 
@@ -2544,6 +2546,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setLatestCert(SmSupplierCert latestCert) {
 		this.latestCert = latestCert;
+	}
+
+	public SmSectionEditorVO getEditVO() {
+		return editVO;
+	}
+
+	public void setEditVO(SmSectionEditorVO editVO) {
+		this.editVO = editVO;
 	}
 	
 	//#32008 - end

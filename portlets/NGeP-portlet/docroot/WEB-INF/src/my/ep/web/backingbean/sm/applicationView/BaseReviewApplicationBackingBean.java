@@ -151,6 +151,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmFieldChangeUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.util.sm.helper.SmSideMenuIconUtil;
 import my.ep.web.vo.BlacklistOwnerDirectorVO;
 import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
@@ -807,8 +808,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		initStep7SupportingDocumentsInfo();
 		initStep8_9PoApproverDefaultDecision();
 		initBumiRecommendNote();
-		//#32008
+		//#32008 - start
 		SmFieldChangeUtil.initLatestAppl(getManagedBean());
+		SmSideMenuIconUtil.setSectionEditorVO(getManagedBean());
+		//#32008 - end
 	}
 
 	/**
