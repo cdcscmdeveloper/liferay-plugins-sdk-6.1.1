@@ -15264,7 +15264,13 @@ public class SmApplicationBackingBean extends
 				//#34277 - end
 				SmPersonnelAddress res = new SmPersonnelAddress();
 				res.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
-				res.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+				//#34799 - start
+				PmCountry currCountry = null;
+				if(personnelAddress.getSmAddress() != null){
+					currCountry = personnelAddress.getSmAddress().getPmCountry();
+				}
+				res.setSmAddress(SmApplicationUtil.setDefaultAddr(currCountry));
+				//#34799 - end
 				res.setSmPersonnel(this.getManagedBean().getSelectedShareHolder());
 				getManagedBean().setShareHolderResdAddr(res);
 				

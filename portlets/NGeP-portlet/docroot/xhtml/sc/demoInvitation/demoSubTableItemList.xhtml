@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<style>
+.divScroll {
+	overflow: scroll;
+	max-height: 500px;
+	display:block;
+}
+</style>
+	<h:panelGroup id="demoSubItemTable">
+		<div class="divScroll">
+			<ac:dataTable id="demoItemListId" var="demoSpecTempList"
+				value="#{demoInvBB.managedBean.byItemList}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				rowKey="#{demoSpecTempList}" rowIndexVar="pIndex" >
+				<p:column headerText="#{lbl['lbl.sc.by.item']}">
+					<h:outputText style="white-space: normal; font-weight:bold"
+						value="#{demoSpecTempList.itemName}"></h:outputText>
+					<p:dataTable id="byItem"
+						value="#{demoSpecTempList.scQtDemoByItemScoreList}"
+						rowIndexVar="rowIndex" var="byItemList" rowKey="#{byItemList}">
+						<p:column headerText="#{lbl['lbl.demo.no']}"
+							style="width:24%;white-space: normal;">
+							<h:outputText value="#{byItemList.scQtDemoSupplier.demoNo}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
+							style="width:24%;white-space: normal;">
+							<h:outputText value="#{byItemList.scQtDemoSupplier.supplierCode}"></h:outputText>
+						</p:column>
+
+						<p:column style="width:30%">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.txt.mandatory']}"
+									styleClass="mandatory" />
+								<h:outputText value="#{lbl['lbl.sc.location']}" />
+							</f:facet>
+							<p:inputTextarea label="#{lbl['lbl.sc.location']}" rows="2"
+								cols="30" maxlength="255" onkeyup="limitTextArea(this,255);"
+								onkeydown="limitTextArea(this,255);"
+								onmouseout="limitTextArea(this,255);"
+								value="#{byItemList.scQtDemoSchedule.demoLocation}"
+								id="demoLocation" disabled="#{disableMeeting}">
+								<p:ajax partialSubmit="true" process="@this"
+									update="@this,mtgLoc" />
+							</p:inputTextarea>
+							<p:message id="mtgLoc" for="demoLocation" display="icon"
+								showDetail="false"></p:message>
+						</p:column>
+
+						<p:column style="width:18%">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.txt.mandatory']}"
+									styleClass="mandatory" />
+								<h:outputText value="#{lbl['lbl.sc.start.date']}" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.sc.demo.meeting.date.tooltip']}" />
+							</f:facet>
+
+							<ac:dateTime id="demoStartDate"
+								label="#{lbl['lbl.sc.start.date']}" disabled="#{disableMeeting}"
+								value="#{byItemList.scQtDemoSchedule.demoStartDate}"
+								update="@([id$=demoStartDate])" rowIndex="#{rowIndex}#{pIndex}">
+							</ac:dateTime>
+							<p:message id="demoStartDateMsg" for="demoStartDate"
+								display="icon" showDetail="false"></p:message>
+						</p:column>
+
+						<p:column style="width:18%">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.txt.mandatory']}"
+									styleClass="mandatory" />
+								<h:outputText value="#{lbl['lbl.sm.end.date']}" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.sc.demo.meeting.date.tooltip']}" />
+							</f:facet>
+
+							<ac:dateTime id="demoEndDate" label="#{lbl['lbl.sm.end.date']}"
+								disabled="#{disableMeeting}"
+								value="#{byItemList.scQtDemoSchedule.demoEndDate}"
+								update="@([id$=demoEndDate])" rowIndex="#{rowIndex}#{pIndex}">
+							</ac:dateTime>
+							<p:message id="demoEndDateMsg" for="demoEndDate" display="icon"
+								showDetail="false"></p:message>
+						</p:column>
+					</p:dataTable>
+				</p:column>
+			</ac:dataTable>
+		</div>
+	</h:panelGroup>
+</ui:composition>
