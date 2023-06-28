@@ -2629,7 +2629,9 @@ public class EvaluationBackingBean extends
 						if (checkList.isScoringReq()) {
 							//34943 - start
 							String evalStageStr = evalstage.get(0);
-							if(evalstage.contains(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)){
+							if (evalstage.contains(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)
+									&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+											.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
 								evalStageStr = StringUtils.join(Arrays.asList(new String[]{evalStageStr, QTConstants.TECHNICAL_EVALUATION}), ",");
 							}
 							localCheckList.add(checkStausForUploadNoActionCheckLists(checkList, evalStageStr));
@@ -17934,7 +17936,9 @@ private void retriveCommitteeRemarksList(){
 							if (proposalCheckList.isScoringReq()) {
 								//34943 - start
 								String evalStageStr = evalstage.get(0);
-								if(evalstage.contains(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)){
+							if (evalstage.contains(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)
+									&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+											.equalsIgnoreCase(proposalCheckList.getDefinationType().getParameterCode())) {
 									evalStageStr = StringUtils.join(Arrays.asList(new String[]{evalStageStr, QTConstants.TECHNICAL_EVALUATION}), ",");
 								}
 								localCheckList.add(checkStausForUploadNoActionCheckLists(proposalCheckList, evalStageStr));
