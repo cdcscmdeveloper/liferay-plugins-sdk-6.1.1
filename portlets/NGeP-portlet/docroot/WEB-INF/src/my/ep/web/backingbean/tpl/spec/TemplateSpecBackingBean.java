@@ -248,6 +248,8 @@ public class TemplateSpecBackingBean extends
 						evalReqDTO.setProposalChecklist(templateSpecBean.getQtProposalChecklist());
 						
 						int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
+						//#25138(wip 4serangkai) bug -Start 8/6/2023
+						this.getManagedBean().setWipStatusMax(wipstatus);
 						
 						if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
 						// #25138 for demo -start-
