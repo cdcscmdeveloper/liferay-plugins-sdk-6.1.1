@@ -50,11 +50,10 @@
 
 					<td><p:outputLabel value="#{lbl['lbl.sm.companyname']}  -- test" /></td>
 					<td><p:inputText
-							disabled="#{backingBean.managedBean.disabledCompanyName || backingBean.managedBean.smAppl.applValidWithSsm}"
+							disabled="#{backingBean.managedBean.disabledCompanyName || backingBean.managedBean.smAppl.applValidWithSsm || backingBean.managedBean.upsCannotEdit}"
 							readonly="#{backingBean.managedBean.disabledCompanyName}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
-							size="50"
-							disabled="#{backingBean.managedBean.upsCannotEdit}" />
+							size="50"/>
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.companyName}" 
@@ -336,7 +335,8 @@
 								<td><p:selectOneMenu
 										style="width: 250px;margin-bottom: 5px;" id="basicCompDist"
 										required="true" label="#{lbl['lbl.sm.district']}"
-										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.districtId or backingBean.managedBean.upsCannotEdit}">
+										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.districtId }"
+										disabled="#{backingBean.managedBean.upsCannotEdit}">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
 										<f:selectItems var="dist"
