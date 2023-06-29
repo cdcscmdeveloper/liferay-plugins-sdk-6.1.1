@@ -61,7 +61,7 @@
 							longitude="#{work.smAddress.mapLongitude}" 
 							address="getWorkAddress2('#{work.smAddress.address1}', '#{work.smAddress.address2}', '#{work.smAddress.address3}', '#{work.smAddress.pmCity.cityName}', '#{work.smAddress.pmDistrict.districtName}', '#{work.smAddress.pmState.stateName}', '#{work.smAddress.pmCountry.countryName}')"
 							showButton="true"
-							disabled="false" />
+							disabled="true" />
 							
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
@@ -131,7 +131,7 @@
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.workShopFacilityStates}"
 					divisionItems="#{backingBean.managedBean.workShopFacilityDivisions}"
 					districtItems="#{backingBean.managedBean.workShopFacilityDistricts}" cityItems="#{backingBean.managedBean.workShopFacilityCities}" 
-					facilityPanel="#{SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL}" panelId="workShopBlockPanel"/>
+					facilityPanel="#{SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL}" panelId="workShopBlockPanel" disabled="true"/>
 					
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>

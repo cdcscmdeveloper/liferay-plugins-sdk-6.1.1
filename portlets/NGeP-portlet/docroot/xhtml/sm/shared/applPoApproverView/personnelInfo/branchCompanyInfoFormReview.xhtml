@@ -36,8 +36,6 @@
 				<ac:paginator for="dt" />
 				<p:ajax event="rowSelect" listener="#{backingBean.unSelectSsmBranch}" update=":form:tt:dt"></p:ajax>
 				<!--  SSM INTEGRATION -->
-				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.displayBranches}" disabledSelection="#{branchBean.ssmData}"/>
-
 				<p:column headerText="#{lbl['lbl.sm.branch.branchName']}">
 					<table style="width: 100%">
 						<tr>
@@ -146,7 +144,7 @@
 	</p:panel>
 	<p:dialog width="550px" height="500px" style="z-index:-1;"
 		header="#{lbl['lbl.sm.branch.branchDiaHdr']}" widgetVar="banchDialog"
-		id="banchDialog" resizable="false" modal="true" closable="false">
+		id="banchDialog" resizable="false" modal="true" closable="true">
 		
 		<p:outputPanel layout="block" id="branchBlockPanel">
 			<p:messages id="suppBranchMsg" showSummary="false" showDetail="true"
