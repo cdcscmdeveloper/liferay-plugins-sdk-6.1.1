@@ -32,16 +32,16 @@
 							<h:inputHidden
 								value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 							<ui:include
-								src="/xhtml/sm/shared/applPoApproverView/factoryInfo/factoryOrWorkshopInfoFormReview.xhtml" />
+								src="/xhtml/sm/shared/mofRegistration/factoryOrWorkshopInfoForm.xhtml" />
 							<ui:include
-								src="/xhtml/sm/shared/applPoApproverView/factoryInfo/dockyardInfoFormReview.xhtml" />
+								src="/xhtml/sm/shared/mofRegistration/dockyardInfoForm.xhtml" />
 							<ui:include
-								src="/xhtml/sm/shared/applPoApproverView/factoryInfo/workshopInfoFormReview.xhtml" />
+								src="/xhtml/sm/shared/mofRegistration/workshopInfoForm.xhtml" />
 
 							<ui:include
-								src="/xhtml/sm/shared/applPoApproverView/factoryInfo/storeInfoFormReview.xhtml" />
+								src="/xhtml/sm/shared/mofRegistration/storeInfoForm.xhtml" />
 								
-							<ui:include src="/xhtml/sm/shared/applPoApproverView/factoryInfo/noFacilityRequiredMsgReview.xhtml" />
+							<ui:include src="/xhtml/sm/shared/mofRegistration/noFacilityRequiredMsg.xhtml" />
 							<!-- 32008 - END -->
 							<br />
 							<p:outputPanel rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">
