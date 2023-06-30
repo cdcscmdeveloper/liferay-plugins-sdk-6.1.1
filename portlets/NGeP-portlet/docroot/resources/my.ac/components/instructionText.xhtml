@@ -15,7 +15,7 @@
 	</cc:interface>
 
 	<cc:implementation>
-		<h:outputText styleClass="instruction" value="#{cc.attrs.value}" escape="#{cc.attrs.escape}" disabled="#{cc.attrs.disabled}" />
+		<h:outputText styleClass="instruction" value="#{cc.attrs.value}" escape="#{cc.attrs.escape}" disabled="#{backingBean.managedBean.upsCannotEdit}" />
 	</cc:implementation>
 	<!-- 32008 - END -->
 </ui:component>
