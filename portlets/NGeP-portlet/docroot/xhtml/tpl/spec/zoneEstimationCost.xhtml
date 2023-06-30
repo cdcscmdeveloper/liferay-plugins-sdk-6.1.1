@@ -17,10 +17,14 @@
 	<ui:param name="isItemTypeService" value="#{templateSpecBean.specMaster.itemTypeCode.parameterCode == ParameterConst.itemTypeService}" />
 
 	<!-- #21695 farid add instruction START -->
+	<ui:remove>
+		<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+	</ui:remove>
 	<table>
 		<tr>
-			<td><h:outputText style="float: left;" styleClass="instruction"
-					escape="false" value="#{lbl['lbl.tpl.qty.estimation.instruction']}" />
+			<td><h:outputText style="float: left;" styleClass="instruction" escape="false" 
+					rendered="#{specificationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}"
+					value="#{lbl['lbl.tpl.qty.estimation.instruction']}" />
 			</td>
 		</tr>
 		<tr>
