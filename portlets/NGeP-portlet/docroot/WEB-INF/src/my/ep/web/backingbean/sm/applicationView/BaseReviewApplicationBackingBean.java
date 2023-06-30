@@ -809,8 +809,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		initStep8_9PoApproverDefaultDecision();
 		initBumiRecommendNote();
 		//#32008 - start
-		SmFieldChangeUtil.initLatestAppl(getManagedBean());
-		SmSideMenuIconUtil.setSectionEditorVO(getManagedBean());
+		if (!getManagedBean().isPoApprUnClaimTask()){
+			SmFieldChangeUtil.initLatestAppl(getManagedBean());
+			SmSideMenuIconUtil.setSectionEditorVO(getManagedBean());
+		}
 		//#32008 - end
 	}
 
