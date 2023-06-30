@@ -7063,10 +7063,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	*/
 	public void addOrUpdateWorkshopToSmAppl() {
 		// 29379 - Site Visit Grouping Enhancement -28775 - start
+		/*
 		if(getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers().size() < SupplierManagementConst.MIN_EMPLOYEE){
 			throw new EpException(
 					SmCommonUtil.getMessage("lbl.sm.insertemployee.instruction",null), null);
 		}
+		*/
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
 		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
 		SmCommonUtil.getInstance().setUserDetails(smFac);
@@ -7083,6 +7085,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		assignValReqdToFalse();
 		// 29379 - Site Visit Grouping Enhancement -28775 - start
+		/*
 		ArrayList<SmSvWorker> workers = new ArrayList<SmSvWorker>();
 		for(SmSvWorker worker : getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers()){
 			worker.setIdentificationType(ParameterHelper.getInstance()
@@ -7111,6 +7114,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers().add(work2);
 			}
 		}
+		*/
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
 		saveOrUpdateAppl();
 		getManagedBean().setWorkshopFacilitiesVOList(
@@ -14794,7 +14798,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            panelName
 	 */
 	public void onChangeFacAddrSameAs(SmFacility facility, String panelName) {
+		log.info("Enter onChangeFacAddrSameAs --"+getManagedBean().getFacAddresSameAs());
 		if (StringUtils.isNotBlank(getManagedBean().getFacAddresSameAs())) {
+			log.info("Start onChangeFacAddrSameAs --"+getManagedBean().getFacAddresSameAs());
 			facility.setOwnerName(StringUtils.EMPTY);
 			facility.setPurchasePrice(null);
 			facility.setRentalRate(null);
@@ -14821,9 +14827,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				SmApplicationUtil.getInstance().cloneAddress(
 						facility.getSmAddress(), branch.getSmAddress());
 			}
+			log.info("End Processs");
 			SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 					getManagedBean(), facility.getSmAddress(), panelName);
 		}
+		log.info("Go Out Function");
 	}
 
 	/**
