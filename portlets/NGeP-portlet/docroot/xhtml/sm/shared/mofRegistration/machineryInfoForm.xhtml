@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.machine.panHdr']}" toggleable="true" rendered="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showFacilityMachine}" id="machineMainPanelId">
 		<table style="width: 100%">
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.machineryVerified}"
@@ -23,7 +23,7 @@
 
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser or backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.machineryVerified}"
@@ -39,7 +39,7 @@
 			</p:outputPanel>
 		</table>
 		<p:outputPanel id="machInfPan" layout="block">
-			<p:blockUI block=":form:tt:machInfPan" widgetVar="buiPoMach"
+			<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:machInfPan" widgetVar="buiPoMach"
 				id="poMachBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.machineryVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.machineryVerified : false)}" />
 			
@@ -63,7 +63,7 @@
 							
 							<p:column style="width: 5% !important;" rendered="#{not empty machCatVar.smMachineDtls}">
 								<f:facet name="header">
-						          <p:selectBooleanCheckbox value="#{machCatVar.selected}" >
+						          <p:selectBooleanCheckbox value="#{machCatVar.selected}" disabled="#{backingBean.managedBean.upsCannotEdit}">
 						          	<p:ajax event="change" update=":#{p:component('machineMainPanelId')}" 
 										process="@this" partialSubmit="true" 
 										listener="#{backingBean.selectAll(machCatVar.selected,machCatVar.smMachineDtls)}"/>
@@ -89,7 +89,7 @@
 										style="float: left;white-space: normal; " /><br />
 									<ui:repeat var="categoryVar" value="#{backingBean.managedBean.smAppl.smSupplierCategories}">
 									<h:outputText value="#{lbl['lbl.sm.catCodes.othDesc']}: #{categoryVar.otherDesc}" rendered="#{backingBean.checkOtherDescMachinery(catFac,categoryVar)}"
-										style="float: left;white-space: normal;" />
+										style="float: left;white-space: normal;" disabled="#{backingBean.managedBean.upsCannotEdit}" />
 									</ui:repeat><br /><br />
 								</ui:repeat>
 							</p:column>
@@ -113,7 +113,8 @@
 									action="#{backingBean.assignSelMachinery(macBean)}"
 									update=":form:tt:equipmentDialog,macDt" style="padding-right:5px" 
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
-									<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+									<p:graphicImage rendered="#{backingBean.managedBean.upsCannotEdit}" value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
+									<p:graphicImage rendered="#{!backingBean.managedBean.upsCannotEdit}" value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 								</p:commandLink>
 							</p:column>
 			
@@ -121,10 +122,12 @@
 						<p:spacer height="2px;" />
 						<div align="right">
 							<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+								rendered="#{!backingBean.managedBean.upsCannotEdit}"
 								update=":form:tt:equipmentDialog" process="@this"
 								partialSubmit="true" action="#{backingBean.assignNewMachineryBean(machCatVar.categoryTypeCode.parameterId)}" 
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 							<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="delMachBtnId"
+								rendered="#{!backingBean.managedBean.upsCannotEdit}"
 								disabled="#{backingBean.disableDeleteBtn(machCatVar.smMachineDtls)}"
 								partialSubmit="true" process=":form:tt:machInfPan" update=":#{p:component('machineMainPanelId')}" 
 								oncomplete="machDeletePopUp.show()" />
@@ -135,7 +138,7 @@
 			
 			<ui:remove>
 				<p:outputPanel
-					rendered="#{!backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showFacilityMachine}"
+					rendered="#{!backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showFacilityMachine or backingBean.managedBean.upsCannotEdit}"
 					layout="block">
 		
 					<table style="width: 100%">
@@ -189,7 +192,7 @@
 	
 	<p:dialog width="700px" height="400px"
 		header="#{lbl['lbl.sm.machine.diaHdr']}" widgetVar="equipmentDialog"
-		resizable="false" showEffect="fade" closable="false" hideEffect="fade"
+		resizable="false" showEffect="fade" closable="true" hideEffect="fade"
 		modal="true" id="equipmentDialog">
 		
 		<p:outputPanel id="machineOutPanelId" layout="block">
@@ -230,7 +233,8 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.category']}" id="smMachCategoryId"
 							value="#{backingBean.managedBean.selectedMachineCategoryIds}"
-							style="height:100px;width: 200px;">
+							style="height:100px;width: 200px;"
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<p:ajax event="change" process="@this"
 								onstart="machineOutWidget.show()" oncomplete="machineOutWidget.hide()"
 								listener="#{backingBean.onChangeCategoryCode()}"
@@ -252,7 +256,8 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.machine.equiType']}" id="smMachineTypeId"
 							value="#{backingBean.managedBean.selectedMachine.machine.machineId}"
-							style="width: 207px;margin-bottom: 5px;">
+							style="width: 207px;margin-bottom: 5px;"
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems value="#{backingBean.managedBean.machineItems}" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.others']}" itemValue="-1" />
@@ -273,7 +278,8 @@
 								required="#{backingBean.managedBean.valueReqd}"
 								label="#{lbl['lbl.sm.profBody.others']}" id="smMachEquiType"
 								value="#{backingBean.managedBean.selectedMachine.machineType}"
-								size="35" >
+								size="35" 
+								disabled="#{backingBean.managedBean.upsCannotEdit}">
 								<p:ajax process="@this" update="@this,smMachEquiTypeMsg" partialSubmit="true" event="blur" />
 							</p:inputText> 
 							<p:message id="smMachEquiTypeMsg"
@@ -291,7 +297,8 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.machine.brand']}" id="smMachBrand"
 							value="#{backingBean.managedBean.selectedMachine.brandName}"
-							size="35">
+							size="35"
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<p:ajax process="@this" update="@this,smMachBrandMsg" partialSubmit="true" event="blur" />
 						</p:inputText> 
 						<p:message id="smMachBrandMsg" for="smMachBrand"
@@ -304,7 +311,8 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.machine.function']}" id="smMachFnc"
 							value="#{backingBean.managedBean.selectedMachine.machineFunction}"
-							size="35" >
+							size="35"
+							disabled="#{backingBean.managedBean.upsCannotEdit}" >
 							<p:ajax process="@this" update="@this,smMachFncMsg" partialSubmit="true" event="blur" />
 						</p:inputText> 
 						<p:message id="smMachFncMsg" for="smMachFnc"
@@ -318,7 +326,8 @@
 					<td><p:inputText maxlength="6"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.machine.quantity']}" id="smMachQuant"
-							value="#{backingBean.managedBean.selectedMachine.qty}" size="35">
+							value="#{backingBean.managedBean.selectedMachine.qty}" size="35"
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<p:ajax process="@this" update="@this,smMachQuantMsg" partialSubmit="true" event="blur" />
 						</p:inputText>
 						<p:message id="smMachQuantMsg" for="smMachQuant" showSummary="true"
@@ -332,7 +341,8 @@
 					<td><p:inputText maxlength="18"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.machine.value']}" id="smMachVal"
-							value="#{backingBean.managedBean.selectedMachine.value}" size="35">
+							value="#{backingBean.managedBean.selectedMachine.value}" size="35"
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:validateDoubleRange 
 								minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
 								maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
@@ -352,7 +362,8 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.machine.purMthd']}" id="smMachPurMthd"
 							value="#{backingBean.managedBean.selectedMachine.purchaseMethod}"
-							style="width: 207px;margin-bottom: 5px;">
+							style="width: 207px;margin-bottom: 5px;"
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItems value="#{backingBean.getDropdownCodeValues('BM')}" />
 							<p:ajax process="@this" update="@this,smMachPurMthdMsg" partialSubmit="true" event="change" />
 						</p:selectOneMenu> 
@@ -365,7 +376,8 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.machine.guarnName']}" /></td>
 					<td><p:inputText maxlength="250"
 							value="#{backingBean.managedBean.selectedMachine.guarantorName}"
-							size="35" >
+							size="35"
+							disabled="#{backingBean.managedBean.upsCannotEdit}" >
 							<p:ajax process="@this" update="@this" partialSubmit="true" event="blur" />
 						</p:inputText>
 					</td>
@@ -380,7 +392,8 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.machine.purchase.year']}" id="smMachPurYr"
 							value="#{backingBean.managedBean.selectedMachine.purchaseYear}"
-							style="width: 107px;margin-bottom: 5px;">
+							style="width: 107px;margin-bottom: 5px;"
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItems value="#{backingBean.getYearDropDown()}" />
 							<p:ajax process="@this" update="@this" partialSubmit="true"/>
 						</p:selectOneMenu> 
@@ -393,11 +406,13 @@
 			<br />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.addOrUpdateMachineToSmAppl}"
 					partialSubmit="true" process="equipmentDialog"
 					onclick="machineOutWidget.show();" oncomplete="machineOutWidget.hide();"
 					update=":#{p:component('machineMainPanelId')}, @([Id$=Msg]),:#{p:component('delMachBtnId')}" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this" 
 					action="#{backingBean.cancelMachineSaveorUpdate}" />
 			</div>
