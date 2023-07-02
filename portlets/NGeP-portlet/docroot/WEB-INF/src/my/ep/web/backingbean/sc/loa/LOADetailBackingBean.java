@@ -7867,7 +7867,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 	private List<ItemBean> convertSpecQuestionToSpecAnswer(
 			TplSpecMaster specMaster) {
-		Map<Integer, ItemBean> questionSpecMap = new HashMap<Integer, ItemBean>();
+		TreeMap<Integer, ItemBean> questionSpecMap = new TreeMap<Integer, ItemBean>(); //Bug #34882@Syazani 26/06/2023
 
 		if (specMaster != null && specMaster.getTplSpecQuestions() != null) {
 			for (TplSpecQuestion specQuestion : specMaster
