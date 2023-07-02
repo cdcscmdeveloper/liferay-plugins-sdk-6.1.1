@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.machine.panHdr']}" toggleable="true" rendered="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showFacilityMachine}" id="machineMainPanelId">
 		<table style="width: 100%">
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.upsCannotEdit}">
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.machineryVerified}"
@@ -23,7 +23,7 @@
 
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser or backingBean.managedBean.upsCannotEdit}">
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.machineryVerified}"
@@ -61,9 +61,9 @@
 							rowKey="#{macBean}" rowIndexVar="index" id="macDt">
 							<ac:paginator for="macDt" />
 							
-							<p:column style="width: 5% !important;" rendered="#{not empty machCatVar.smMachineDtls}">
+							<p:column style="width: 5% !important;" rendered="#{not empty machCatVar.smMachineDtls} and !backingBean.managedBean.upsCannotEdit">
 								<f:facet name="header">
-						          <p:selectBooleanCheckbox value="#{machCatVar.selected}" disabled="#{backingBean.managedBean.upsCannotEdit}">
+						          <p:selectBooleanCheckbox value="#{machCatVar.selected}">
 						          	<p:ajax event="change" update=":#{p:component('machineMainPanelId')}" 
 										process="@this" partialSubmit="true" 
 										listener="#{backingBean.selectAll(machCatVar.selected,machCatVar.smMachineDtls)}"/>
