@@ -23,7 +23,7 @@
 		</f:facet>
 		<table style="width: 350px">
 			<!-- Disable for UPS 32008 - START -->
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.upsCannotEdit}">
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.trnsNetworkVerified}"
@@ -38,7 +38,7 @@
 
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser or backingBean.managedBean.upsCannotEdit}">
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.trnsNetworkVerified}"
