@@ -206,8 +206,7 @@
 									action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- 29727 -->
 							</c:if>
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-								<p:commandButton rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton}"
-									value="#{lbl['lbl.sm.button.recommend.to.reject']}"
+								<p:commandButton value="#{lbl['lbl.sm.button.recommend.to.reject']}"
 									rendered="#{!backingBean.managedBean.upsCannotEdit}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
