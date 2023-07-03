@@ -190,8 +190,7 @@
 						<c:otherwise>
 							<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
 								rendered="#{!backingBean.managedBean.upsCannotEdit}"
-								update=":form:tt:approveDialog" partialSubmit="true"
-								process="@this" rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton}"
+								update=":form:tt:approveDialog" partialSubmit="true" process="@this" 
 								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified or !backingBean.managedBean.allowedToApprove}" 
 								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'approveDialog')}" /> <!-- #27297 -->
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
