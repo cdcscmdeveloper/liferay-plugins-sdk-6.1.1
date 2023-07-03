@@ -48,7 +48,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
@@ -136,7 +135,6 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
-import my.ep.factory.EpLogger;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -435,7 +433,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				sqbb.getManagedBean().setActiveIndex(0);
 				// #29800 - start
 				if (getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession() == null) {
-					sqbb.simpleQuoteAction(getManagedBean().getSupplierItemDocId(), true, null);
+					sqbb.simpleQuoteAction(null, getManagedBean().getSupplierItemDocId(), true, null);//#34579 - add new parameter on simpleQuoteAction
 				} else {
 					sqbb.getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(
 							getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession());
