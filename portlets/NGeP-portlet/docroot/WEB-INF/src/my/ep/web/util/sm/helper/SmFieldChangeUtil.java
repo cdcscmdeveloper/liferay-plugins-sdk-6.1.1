@@ -1365,35 +1365,59 @@ public class SmFieldChangeUtil {
 	}
 	
 	//#32008 - start
+	/**
+	 * Initialize the previous application to check for supplier edit 
+	 * & use serialized supplier appl if available
+	 * @param bean
+	 */
 	public static void initLatestAppl(BaseReviewApplicationManagedBean bean){
-		if (bean.getSmAppl() == null || bean.getSmAppl().getApplType() == null
-			|| bean.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+		SmAppl appl = bean.getSmAppl();
+		if (appl == null || appl.getApplType() == null
+			|| appl.getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 			bean.setShowFieldChanges(false);
 			bean.setLatestAppl(null);
 			return;
 		}
-		
-		MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		SmAppl srcAppl = null;
 		
-		if (bean.getSmAppl().isResubmit() && bean.isSupplierUser()
-				&& bean.getSmAppl().getOriginalAppl() != null){
-			mofReqDTO.setSmAppl(bean.getSmAppl());
+		if (appl.isResubmit() && bean.isSupplierUser() && appl.getOriginalAppl() != null){
+			reqDTO.setSmAppl(appl);
 			srcAppl = SmServiceLookup.getMofRegistrationSO()
-					.retrieveLatestRejectedApplication(mofReqDTO).getSmAppl();
-			SmApplRevisionResDTO applRevDTO = SmCommonUtil
-					.getSerializedApplicationByFilePathName(srcAppl.getSupplierSerFile());
-			if (applRevDTO != null) {
-				srcAppl = applRevDTO.getSmAppl();
+					.retrieveLatestRejectedApplication(reqDTO).getSmAppl();
+			if(srcAppl != null){
+				String file = SmCommonUtil.getSerializedFileFullDirByApplNo(srcAppl.getApplNo(), "SUP");
+				SmApplRevisionResDTO revDTO = SmCommonUtil
+						.getSerializedApplicationByFilePathName(file);
+				if (revDTO != null && revDTO.getSmAppl() != null) {
+					srcAppl = revDTO.getSmAppl();
+				}
 			}
 		}
 		
 		if(srcAppl == null){
-			mofReqDTO.setSupplierId(bean.getSmSupplier().getSupplierId());
-			srcAppl = SmServiceLookup.getMofRegistrationSO()
-					.retrieveLatestSmApplWithChildBySupplierId(mofReqDTO)
-					.getSmAppl();
+			srcAppl = SmServiceLookup.getMofRegistrationSO().retrievePreviousSmAppl(
+					bean.getSmSupplier().getSupplierId(), appl.getApplId()).getSmAppl();
+			if(srcAppl != null){
+				String file = SmCommonUtil.getSerializedFileFullDirByApplNo(srcAppl.getApplNo(), "SUP");
+				SmApplRevisionResDTO revDTO = SmCommonUtil
+						.getSerializedApplicationByFilePathName(file);
+				if (revDTO != null && revDTO.getSmAppl() != null) {
+					srcAppl = revDTO.getSmAppl();
+				} else {
+					reqDTO.setApplId(appl.getApplId());
+					srcAppl = SmServiceLookup.getMofRegistrationSO()
+						.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
+				}
+			}
 		}
+		
+		if(srcAppl == null){
+			bean.setShowFieldChanges(false);
+			bean.setLatestAppl(null);
+			return;
+		}
+		log.info("appl status compare with: "+bean.getLatestAppl().getApplNo());
 		bean.setLatestAppl(srcAppl);
 		bean.getLatestAppl().setHqFacility(
 				SmApplicationUtil.getHqFacilityByAppl(bean.getLatestAppl()));
