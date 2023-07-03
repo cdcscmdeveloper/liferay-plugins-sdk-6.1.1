@@ -646,7 +646,7 @@
 							label="#{lbl['lbl.sm.bankDtls.cheSigns']}" id="bankCheqSignId"
 							value="#{backingBean.managedBean.chequeSingPerId}"
 							style="height:200px;width: 350px;"
-							disabled="#{backingBean.managedBean.upsCannotEdit}">>
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItems
 								value="#{backingBean.managedBean.smAppl.smPersonnels}" var="per"
 								itemLabel="#{per.name}" itemValue="#{per.personnelId}" />
