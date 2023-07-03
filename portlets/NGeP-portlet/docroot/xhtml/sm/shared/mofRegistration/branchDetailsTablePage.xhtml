@@ -23,16 +23,17 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.branch.address']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
+			<td>
 			<!-- #34135 START -->	
-			<td><p:inputText required="#{backingBean.managedBean.valueReqd}"
+			<p:inputText required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.branch.address']}" id="supBrnAddr"
 					maxlength="100"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address1}"
 					disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.selectedBranch.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedBranch.smAddress.addressSsmNull)}"
 					size="35" >
+			<!-- #34135 END -->	
 					<p:ajax process="@this" partialSubmit="true"/>
 					</p:inputText> 
-			<!-- #34135 END -->	
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
 							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
@@ -87,12 +88,12 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="branchCountry"
 						value="#{backingBean.managedBean.countryItems}" />
-					<!-- 34135 START-->
+					<!-- #34135 START -->
 					<p:ajax event="change" process="@this"
 						listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
 						update="supBrnCntry,branchState,branchDivision,branchDist,branchCity,postCodeBranchPanelId,
 						divisionBranchTbleLabelPanelId,divisionBranchTbleDropdownPanelId" />
-					<!-- 34135 END-->
+					<!-- #34135 END -->
 				</p:selectOneMenu> 
 				<ac:smFieldChangeAlert 
 					isShow="#{backingBean.managedBean.showFieldChanges
@@ -153,8 +154,8 @@
 					<td>
 				<p:outputPanel id="divisionBranchTbleDropdownPanelId">
 				<ui:fragment rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmState.adoptDivision}">
-			<!-- #34135 START -->
-			<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+				<!-- #34135 START -->	
+				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 					required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.division']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.divisionId}"
@@ -170,7 +171,7 @@
 				</p:outputPanel>
 				<p:message id="branchDivisionMsg" for="branchDivision" showSummary="true"
 					showDetail="false" display="icon" />
-			<!-- #34135 END -->
+				<!-- #34135 END -->	
 				</td>
 		</tr>
 		
