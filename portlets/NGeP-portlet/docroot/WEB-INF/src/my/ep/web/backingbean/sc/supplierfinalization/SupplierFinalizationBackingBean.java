@@ -8976,7 +8976,13 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			if(method.equalsIgnoreCase("L")){
 				return act.isMultiLoiSignedOff();
 			}else if(method.equalsIgnoreCase("B")){
-				return act.isBiddingSignedOff();
+				// 33764, 34760 note-18 issue no. 2 -start-
+				if (getManagedBean().getQtRefinalized()) {
+					return act.isSignedOff();
+				} else {
+					return act.isBiddingSignedOff();
+				}
+				// 33764, 34760 note-18 issue no. 2 -end-
 			}else{
 				return act.isSignedOff();
 			}
