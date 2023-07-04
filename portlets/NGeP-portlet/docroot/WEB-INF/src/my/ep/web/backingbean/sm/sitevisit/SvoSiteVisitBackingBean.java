@@ -1477,6 +1477,41 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return generateToPdf(vmEquity, context, fileName);
 	}
 	
+	//#34166 - Start
+	public void test(String clientId, SmSvTask svTask){
+		String fieldsName = "";
+		for (SmSvBankInfo bank : svTask.getSmSvBankInfos()) {
+			if (bank.getRemark() != null){
+				if (bank.getRemark().contains("<") || bank.getRemark().contains(">")) {
+					fieldsName = ResourceBundleUtils.getMessage("lbl.sm.sv.bank.remark",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+					throw new  EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+							new String[] { fieldsName.toLowerCase() }));
+				}
+			}
+			if (bank.getSmSupplierBank().getSignatureInstruction() != null){
+				if(bank.getSmSupplierBank().getSignatureInstruction().contains("<") || bank.getSmSupplierBank().getSignatureInstruction().contains(">")){
+					fieldsName = ResourceBundleUtils.getMessage("lbl.sm.sv.bank.terms.cond",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+					throw new  EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+							new String[] { fieldsName.toLowerCase() }));
+				}
+			}
+		}
+		
+		for (SmSvFinChecklist checklist : svTask.getSmSvFinChecklists()) {
+			if(checklist.getRemark() != null){
+				if (checklist.getRemark().contains("<") || checklist.getRemark().contains(">")) {
+					fieldsName = getParameterDesc(ParameterTypeConst.SVO_FIN_CHECKLIST, checklist.getPmParameter().getParameterCode());
+					throw new  EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+							new String[] { fieldsName.toLowerCase() }));
+				}
+			}
+		}
+		
+		RequestContext.getCurrentInstance().execute("document.getElementById('" + clientId + "').click()");
+	}
+	//#34166 - End
+	
+	
 	/**
 	 * Generate Site Visit Template - Section B
 	 * @param svTask
