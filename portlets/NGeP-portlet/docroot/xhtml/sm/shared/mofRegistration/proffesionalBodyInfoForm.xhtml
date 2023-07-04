@@ -9,7 +9,7 @@
 	<p:panel header="#{lbl['lbl.sm.profBody.panHdr']}" toggleable="true">
 		<!-- Disable for UPS 32008 - START -->
 		<table style="width: 350px">
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.upsCannotEdit}">
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.assocBodyVerified}"
@@ -24,7 +24,7 @@
 
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser or backingBean.managedBean.upsCannotEdit}">
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.assocBodyVerified}"
@@ -51,7 +51,7 @@
 				selection="#{backingBean.managedBean.selectedAssocBodyList}"
 				rowKey="#{profBean}" rowIndexVar="index" id="profDt">
 				<ac:paginator for="profDt" />
-				<p:column selectionMode="multiple" width="5%" />
+				<p:column selectionMode="multiple" width="5%" rendered="#{!backingBean.managedBean.upsCannotEdit}"/>
 				<!-- START - 32053 -->
 				<p:ajax event="rowSelect"
 						update=":#{p:component('profBodyDelBtnId')}"></p:ajax>
