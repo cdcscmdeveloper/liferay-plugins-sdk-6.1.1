@@ -8487,7 +8487,7 @@ return	remarksNotFound;
 		else if(log.isInfoEnabled()){
 			log.info(msg);
 		}
-		else;
+
 	}
 
 	/**

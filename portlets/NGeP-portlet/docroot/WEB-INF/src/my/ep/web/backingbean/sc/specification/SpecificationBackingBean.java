@@ -2359,6 +2359,7 @@ public class SpecificationBackingBean extends
 						}
 					}
 					}
+					}
 //TO CATER WIP DATA IN TECH SPEC PREPARE SCORING					
 					if(this.getManagedBean().getTechnicalItemScoreSetting() == null){
 						int count = 0;
@@ -13645,7 +13646,7 @@ if (null != checklist && !checklist.isEmpty()) {
 									    }
 									}
 									//1873 - end - note 97
-								};
+								}
 								index = i;//1873 - note 97
 								//1873 - end - note 52
 								break;
@@ -20640,7 +20641,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					checkCategoryCodeChanged();
 				}
 				//1873 note 164 - end
-			};	
+			}	
 			//1873 note 149 end
 			//32204 - end
 		}

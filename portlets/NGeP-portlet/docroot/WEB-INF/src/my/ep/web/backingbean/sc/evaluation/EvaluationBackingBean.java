@@ -31,7 +31,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -4464,7 +4463,7 @@ public void saveComplianceSample() {
 
 			}
 		} finally {
-			 templateSpecSo=null;;
+			 templateSpecSo=null;
 			 zoneSpecresDTO=null;
 		}
 

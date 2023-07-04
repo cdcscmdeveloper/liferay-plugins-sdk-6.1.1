@@ -3750,7 +3750,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		boolean isZone = Boolean.FALSE;
 		if(scRequestNote.getScRNZone() != null){
-			isZone =  Boolean.TRUE;;
+			isZone =  Boolean.TRUE;
 		}
 
 		retrieveRequestNoteDetails(scRequestNote, DPStatusConstants.RN_PENDING_SUBMISSION, isZone);

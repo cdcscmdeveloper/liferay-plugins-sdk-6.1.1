@@ -3517,7 +3517,7 @@ public class OrganisationBackingBean extends
 			}
 
 			if (getManagedBean().getDivisionId() > 0) {
-				;
+				
 				SearchFilterBean districtSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_EQUALS.value());
 				districtSearchBean

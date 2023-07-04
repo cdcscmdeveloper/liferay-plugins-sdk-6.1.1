@@ -190,7 +190,6 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pp.common.PpCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationNotificationUtil;
@@ -776,7 +775,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 								.append(",")
 								.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)
 								.append(")");
-						reqDTO.setWorkflowStatus(sb.toString());;
+						reqDTO.setWorkflowStatus(sb.toString());
 						try {
 						SmMofAccount resultList = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(supplierProfile.getSupplierId());
 							if (reqDTO.getAppType().equals("R")) {

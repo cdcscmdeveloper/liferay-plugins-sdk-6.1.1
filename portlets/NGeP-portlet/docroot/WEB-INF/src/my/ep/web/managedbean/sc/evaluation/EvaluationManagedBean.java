@@ -598,7 +598,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	//#28784 - start
 	private boolean evalStatusComp;
-	private boolean afterDemoInv;;
+	private boolean afterDemoInv;
 	private Long demoSupplierNo;
 	private BigDecimal demoTotalScore;
 	private List<ScQtCheckList> scQtCheckSt2techProposal;
