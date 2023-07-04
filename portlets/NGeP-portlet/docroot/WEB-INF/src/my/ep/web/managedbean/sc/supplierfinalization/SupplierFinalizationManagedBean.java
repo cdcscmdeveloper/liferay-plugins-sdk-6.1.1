@@ -163,7 +163,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScQtEvaluationResultDtl prevRecommendedSupplierByItem;
 	
 	private String previousPageUrl;	
-	
+
+	private boolean isDemoReq; // #28784
+
 //	private List<ScQtEvaluationResultDtl> qualifiedSuppliersByEvalStage;
 	
 	/** Qualified suppliers by evaluation stage */
@@ -286,6 +288,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//28834 starts
 	private boolean disableBfButton;
 	private boolean ktReportGenerated;
+	private boolean disableJustifications;
 	//28834 end
 	
 	private ScQt checkCategoryCodeQt; // #29466
@@ -2345,6 +2348,30 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setKtReportGenerated(boolean ktReportGenerated) {
 		this.ktReportGenerated = ktReportGenerated;
 	}	
+
+	// #28784 -start-
+	public boolean isDemoReq() {
+		return isDemoReq;
+	}
+
+	public void setDemoReq(boolean isDemoReq) {
+		this.isDemoReq = isDemoReq;
+	}
+	// #28784 -end-
+	
+	/**
+	 * @return the disableJustifications
+	 */
+	public boolean isDisableJustifications() {
+		return disableJustifications;
+	}
+
+	/**
+	 * @param disableJustifications the disableJustifications to set
+	 */
+	public void setDisableJustifications(boolean disableJustifications) {
+		this.disableJustifications = disableJustifications;
+	}
 	//28834 end
 	
 	// //#33174 #21695 Farid

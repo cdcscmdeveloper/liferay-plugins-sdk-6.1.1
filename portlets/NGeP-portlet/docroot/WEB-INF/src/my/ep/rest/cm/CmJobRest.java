@@ -19,7 +19,6 @@ public class CmJobRest {
 		log.info("Before success calling delete item rest api....");
 		try {
 			SmServiceLookup.getCatalogueSO().getAllItemByDeletedSupplier(year);
-			
 			return Response.status(200).entity("success calling deleteImages!!").build();
 		} catch (Exception ex) {
 			return Response.status(406).entity(ex.getMessage()).build();

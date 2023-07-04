@@ -517,8 +517,14 @@ public class ConsolidationReportBackingBean extends
 				.getScQtFinalizationReportAttachment();
 		String definitionType = scQtFinalizationReport.getDefinationType()
 				.getParameterCode();
-		String docDefinitionKey = scQtFinalizationReport.getPmDocument()
-				.getDocDefinitionKey();
+		// #28784 -start-
+		String docDefinitionKey = null;
+
+		if (!SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(scQtFinalizationReport.getTitle())) {
+			docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
+		}
+		// #28784 -end-
+
        //codes fixed related to 25619 issue.
 		if (reportAttachment == null
 				|| (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
@@ -761,14 +767,18 @@ public class ConsolidationReportBackingBean extends
 	public void submitAction() {
 		// Validate Desk officer ranking
 		// #30874 for #28834 start
-		if (null != getManagedBean().getCurrentStatusId()
-				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER
-						.longValue())) {
-
-		} else {
-			validateConsolidationReport();
-		}
+//		if (null != getManagedBean().getCurrentStatusId()
+//				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER
+//						.longValue())) {
+//
+//		} else {
+//			validateConsolidationReport();
+//		}
 		// #30874 for #28834 end
+		
+		//#32401 - start replace comment above with this.
+		validateConsolidationReport();
+	    //#32401 - end
 
 		RequestContext.getCurrentInstance().execute("submissionPopup.show()");
 
@@ -1133,6 +1143,12 @@ public class ConsolidationReportBackingBean extends
 				}
 				//#18685 -end-
 			}
+
+			// #28784 -start-
+			if(this.getManagedBean().getScQt().isDemoRequired()) {
+				this.getManagedBean().setDemoReq(true);
+			}
+			// #28784 -end-
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
