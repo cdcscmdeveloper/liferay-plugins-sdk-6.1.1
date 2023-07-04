@@ -18030,10 +18030,10 @@ private void retriveCommitteeRemarksList(){
 				List<ScQtCheckList> qtChecklistList = resDTO
 						.getCheckListResultBean().getResultList();
 				
-				//Bug #33252 related to #33110 start
 				for (ScQtCheckList qtCheckList : qtChecklistList) {
 					if (null != qtCheckList.getPmDocument()
-							&& null != qtCheckList.getPmDocument().getDocDefinitionKey()) { //bug #34327
+							&& null != qtCheckList.getPmDocument().getDocDefinitionKey()//bug #34327
+							&& qtCheckList.getPmDocument().getDocDefinitionKey().equalsIgnoreCase(QTConstants.FINANCIAL_PAID_UP_CAPITAL_CODE)) {
 						List<ScQtProposalScore> propScoreList = evaluationSo.retrieveProposalScoreByQtIdAndCriteriaType(qtId, QTConstants.CRITERIA_TYPE_PAID_UP_CAPITAL_AMOUNT);
 						if (null == propScoreList
 								|| propScoreList.isEmpty()) {
