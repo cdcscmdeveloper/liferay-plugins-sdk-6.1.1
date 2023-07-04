@@ -107,7 +107,7 @@
 				required="false" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.user.score']}"
 				rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null and (isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification)}"
-				disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}"><ui:remove>#21692</ui:remove>
+				disabled="#{(tplSpecAnswer.compliance ne null and !tplSpecAnswer.compliance) or evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}"><ui:remove>#21692</ui:remove><!-- #29187 Vinod Added Compliance checking -->
 				<!--#29908-end -->
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" integerOnly="true" />
 				<f:attribute name="min" value="0" />
@@ -157,10 +157,11 @@
 		<h:selectOneMenu id="specCompliance" 
 						 value="#{tplSpecAnswer.compliance}" 
 						 disabled="#{evaluationBackingBean.managedBean.readOnly}" 
-						 rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and tplSpecAnswer.tplSpecQuestion.mandatorySpec}">
+						 rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification and tplSpecAnswer.tplSpecQuestion.mandatorySpec}">
 			<f:selectItems value="#{templateSpecBackingBean.getMandatorySpecAndComplianceDropdownValues(true)}" />
+			<p:ajax event="change" process="@this" partialSubmit="true" update="@([id$=questionTbl])" listener="#{templateSpecBackingBean.onchangeCompliance(tplSpecAnswer)}" />
 		</h:selectOneMenu>
-		<h:outputText value="" rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq 'S' and !tplSpecAnswer.tplSpecQuestion.mandatorySpec}"/>
+		<h:outputText value="" rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification  and !tplSpecAnswer.tplSpecQuestion.mandatorySpec}"/>
 	</p:column>
 	<!-- #29187 End Vinod -->
 <!-- #31537 related #21695 Farid START 28/8/2021 -->

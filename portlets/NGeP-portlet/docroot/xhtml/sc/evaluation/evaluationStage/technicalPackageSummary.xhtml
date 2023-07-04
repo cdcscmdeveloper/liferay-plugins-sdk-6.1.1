@@ -113,7 +113,7 @@
 			</p:column> 
 			<ui:remove><!-- 6906 - end --></ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
-				style="width:50%;white-space: normal;text-align:right;">
+				style="width:25%;white-space: normal;text-align:right;"><!-- #29187 changed width Vinod -->
 				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 
 			</p:column>
@@ -127,7 +127,7 @@
 			</p:column>
 <!-- 29021 End-->
 			<!-- 29187 Start Vinod-->	
-			<p:column style="width:25%;white-space: normal;text-align:center;" rendered="#{isDisqualified}">
+			<p:column style="width:30%;white-space: normal;text-align:center;" rendered="#{isDisqualified}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.eva.disqualified.supplier.disqualified']}" />
 				</f:facet>

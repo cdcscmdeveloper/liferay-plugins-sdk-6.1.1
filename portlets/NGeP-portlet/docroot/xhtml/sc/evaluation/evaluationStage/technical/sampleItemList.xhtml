@@ -30,8 +30,8 @@
 						update="@([id$=samplespecLists])"
 						listener="#{evaluationBackingBean.retriveSpecificationsByItem}"></p:ajax>
 					<p:column headerText="#{lbl['lbl.sc.item.name']}"
-						style="width:55%;white-space: normal;">
-						<h:outputText
+						style="width:15%;white-space: normal;">
+					<h:outputText
 				value="#{evaluationBackingBean.replaceWithBR(sampleItem.scRequestItem.tplSpecQuestion.clItem)}"
 				escape="false"
 				style="white-space: normal;word-wrap: break-word;" />
@@ -60,10 +60,10 @@
 						<p:inputText id="sampleaddressmanualScoreEvaluation"
 							rendered="#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleReq}"
 							label="#{lbl['lbl.tpl.spec.content.user.score']}" 
-							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
+							disabled="#{(sampleItem.compliance ne null and !sampleItem.compliance) or evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
 								or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}"
 							size="15" value="#{sampleItem.userScore}" maxlength="3"
-							style="text-align:right">
+							style="text-align:right"><!-- #29187 Vinod Added Compliance checking -->
 							<ac:validateNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 								maxIntegerDigits="3" integerOnly="true" />
@@ -83,9 +83,9 @@
 
 					</p:column>
 					<!-- #29187 Start Vinod -->
-					<p:column style="width:10%;white-space: normal;" rendered="#{isManSpecAndCompliance}">
+					<p:column style="width:10%;" rendered="#{isManSpecAndCompliance}">
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.sc.compliance']}"/>
+							<h:outputText value="#{lbl['lbl.sc.tec.compliance']}"/>
 							<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.compliance.sample.tooltip']}" />
 						</f:facet>
 						<h:selectOneMenu id="itemCompliance" 
@@ -94,11 +94,12 @@
 										 			or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
 													or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}"
 										 value="#{sampleItem.compliance}">
+							<p:ajax event="change" process="@this" partialSubmit="true" update="@([id$=techSampleEvaluateId])" listener="#{evaluationBackingBean.onchangeCompliance(sampleItem)}" />
 							<f:selectItems value="#{evaluationBackingBean.getComplianceDropdownValues()}" />
 						</h:selectOneMenu>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.tpl.spec.content.comment']}"
-						style="width:15%;white-space: normal;" rendered="#{isManSpecAndCompliance}">
+						style="width:15%;" rendered="#{isManSpecAndCompliance}">
 						<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly 
 													or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
 													or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}" 
