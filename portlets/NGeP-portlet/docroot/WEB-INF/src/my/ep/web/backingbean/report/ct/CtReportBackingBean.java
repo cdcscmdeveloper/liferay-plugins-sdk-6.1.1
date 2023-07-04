@@ -214,7 +214,7 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 				}
 			}
 			
-			//29416 start
+			//29416 start changes by Nordin 26/6/2023
 			if (getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_MC_VAL) 
 					|| getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_CC_VAL)){
 				
@@ -222,8 +222,6 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 				
 				if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
 						|| getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
-						|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
-						|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
 						|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
 					getManagedBean().setSelectedMinistry(
 							retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
@@ -250,11 +248,33 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 						|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
 						|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())
 						|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
-						|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())){
+						|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
+						|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+						//|| getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) nordin change 26/6/2023
+						|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
+						|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
+						|| getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())){
+					
+					log.info("called here");
+					
+					
 					//cc
 					ccContractItemMonitoringRptBB.getManagedBean().setDisableMinistryField(false);
 					//mc
 					getManagedBean().setDisableMinistryField(false);
+					
+					
+					ccContractItemMonitoringRptBB.getManagedBean().setDisableOrgField(false);
+					getManagedBean().setDisableOrgField(false);
+					
+					ccContractItemMonitoringRptBB.getManagedBean().setSelectedMinistry(null);
+					ccContractItemMonitoringRptBB.getManagedBean().setSelectedKumpulanPTJ(null);
+					ccContractItemMonitoringRptBB.getManagedBean().setSelectedPTJ(null);
+					
+					getManagedBean().setSelectedMinistry(null);
+					getManagedBean().setSelectedKumpulanPTJ(null);
+					getManagedBean().setSelectedPTJ(null);
+					
 				}
 			}//29416 - end 
 		}
