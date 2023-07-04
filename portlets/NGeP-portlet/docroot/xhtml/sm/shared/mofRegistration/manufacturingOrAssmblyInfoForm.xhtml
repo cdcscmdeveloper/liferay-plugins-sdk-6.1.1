@@ -9,7 +9,7 @@
 	<p:panel header="#{lbl['lbl.sm.manufacture.panHdr']}" toggleable="true" rendered="#{backingBean.managedBean.showFactoryPanel}"  id="manufacturingMainPanelId">
 		<table style="width: 100%">
 			<!-- Disable for UPS 32008 - START -->
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.upsCannotEdit}">
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.manufacturingVerified}"
@@ -24,7 +24,7 @@
 
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser or backingBean.managedBean.upsCannotEdit}">
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.manufacturingVerified}"
@@ -50,7 +50,7 @@
 				selection="#{backingBean.managedBean.selectedManufacturingList}"
 				rowKey="#{manBean}" rowIndexVar="index" id="manDt">
 				<ac:paginator for="manDt" />
-				<p:column selectionMode="multiple" width="1%" disabled="#{backingBean.managedBean.upsCannotEdit}" rendered="#{not empty backingBean.managedBean.smAppl.smManufacturingDtls}"/>
+				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smManufacturingDtls and !backingBean.managedBean.upsCannotEdit}"/>
 
 				<p:column headerText="#{lbl['lbl.sm.manufacture.prdType']}">
 					<h:outputText value="#{manBean.goodsType}" />

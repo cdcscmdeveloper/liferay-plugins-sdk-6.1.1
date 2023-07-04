@@ -553,7 +553,7 @@
 			</table-->
 
 			<p:outputPanel id="persInfPan" layout="block">
-				<p:blockUI block=":form:tt:persInfPan" widgetVar="buiPoPers"
+				<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:persInfPan" widgetVar="buiPoPers"
 					id="poPersBlc"
 					blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.personnelVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.personnelVerified : false)}" />
 				<ui:include src="personnelTableList.xhtml" />

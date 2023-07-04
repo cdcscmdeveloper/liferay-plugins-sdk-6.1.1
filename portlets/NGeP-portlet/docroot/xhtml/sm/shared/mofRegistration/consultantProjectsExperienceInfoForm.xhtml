@@ -50,7 +50,7 @@
 				rowKey="#{consBean}" rowIndexVar="index" id="consDt">
 				<ac:paginator for="consDt" />
 				
-				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smCompanyExperiences}"/>
+				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smCompanyExperiences and !backingBean.managedBean.upsCannotEdit}"/>
 
 				<p:column headerText="#{lbl['lbl.sm.projDtls.projTitle']}"
 					style="white-space:normal;word-break:break-all;">
