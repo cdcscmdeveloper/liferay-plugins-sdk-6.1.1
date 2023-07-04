@@ -136,6 +136,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmSupplierBranch selectedBranchPrev;
 	private int selectedBranchIndex;
 	private List<SmSupplierBranch> selectedBranches;
+	private List<SmSupplierBranch> displayBranches;  //#34135 - commit part from redmine 29727
 	private SmAssociateCompany selectedAssocCompany;
 	private List<SmAssociateCompany> selectedAssocCompanies;
 	private List<SmSupplierCert> selectedCertList;
@@ -620,7 +621,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean poApproverChgBusiness;
 	private String msgChgBusiness;
 	//#30691 - END - 26112021
-
+	
 	//#12492 - start
 	private boolean showDifferenceBankInfoAction;
 	//#12492 - end
@@ -4494,7 +4495,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	}
 	// #12483 - END
 
-	// #15629 - START
+	//#15629 - START
 	public List<PmReasonDesc> getSelectedRecommendReasonDescs() {
 		return selectedRecommendReasonDescs;
 	}
@@ -4560,6 +4561,16 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.msgEquityErr = msgEquityErr;
 	}
 	// #31461-end
+	
+	//#34135 - START - Commit part from Redmine 29727
+	public List<SmSupplierBranch> getDisplayBranches() {
+		return displayBranches;
+	}
+
+	public void setDisplayBranches(List<SmSupplierBranch> displayBranches) {
+		this.displayBranches = displayBranches;
+	}
+	//#34135 END
 	
 	//#11641 - START
 	public SmApplInquiry getSelectedInquiryResponse() {

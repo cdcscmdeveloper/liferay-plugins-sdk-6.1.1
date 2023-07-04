@@ -19,10 +19,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -74,7 +72,6 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
@@ -90,7 +87,6 @@ import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.PricingVO;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -104,6 +100,11 @@ import org.primefaces.model.TreeNode;
 @ManagedBean(name = "catalogueMB")
 @SessionScoped
 public class CatalogueManagedBean extends BaseManagedBean {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The log. */
 	private static Logger log = EpLogger.getLogger(CatalogueManagedBean.class);
@@ -249,6 +250,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private PmUom selectedLovUom;
 
 	/** The temp map. */
+	@SuppressWarnings("rawtypes")
 	private Map tempMap = new HashMap();
 
 	/** The promotion price list. */
@@ -584,7 +586,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		 */
 		public ExpiredSearchPagingDataModel() {
 			super("expiredSupplierItemID");
-			// TODO Auto-generated constructor stub
 		}
 
 		/**
@@ -648,7 +649,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new SearchResultBean();
+				return new SearchResultBean<CmSupplierItem>();
 			} finally {
 				catalogueSO = null;
 				supplierSearchSO = null;
@@ -667,7 +668,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		 */
 		public PublishSearchPagingDataModel() {
 			super("publishSupplierItemID");
-			// TODO Auto-generated constructor stub
 		}
 
 		/**
@@ -733,7 +733,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new SearchResultBean();
+				return new SearchResultBean<CmSupplierItem>();
 			} finally {
 				catalogueSO = null;
 				supplierSearchSO = null;
@@ -752,7 +752,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		 */
 		public RejectSearchPagingDataModel() {
 			super("rejectedSupplierItemID");
-			// TODO Auto-generated constructor stub
 		}
 
 		/**
@@ -838,7 +837,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		 */
 		public ApprovedSearchPagingDataModel() {
 			super("approvedSupplierItemID");
-			// TODO Auto-generated constructor stub
 		}
 
 		/**
@@ -903,7 +901,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new SearchResultBean();
+				return new SearchResultBean<CmSupplierItem>();
 			} finally {
 				catalogueSO = null;
 				supplierSearchSO = null;
@@ -922,7 +920,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		 */
 		public ApprovalSearchPagingDataModel() {
 			super("approvalSupplierItemID");
-			// TODO Auto-generated constructor stub
 		}
 
 		/**
@@ -988,7 +985,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new SearchResultBean();
+				return new SearchResultBean<CmSupplierItem>();
 			} finally {
 				catalogueSO = null;
 				supplierSearchSO = null;
@@ -1007,7 +1004,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		 */
 		public DraftSearchPagingDataModel() {
 			super("draftSupplierItemID");
-			// TODO Auto-generated constructor stub
 		}
 
 		/**
@@ -1017,6 +1013,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		 *            (ISearchBean<VCmSupplierItem> searchBean(mandatory))
 		 * @return ISearchBean<VCmSupplierItem>
 		 */
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		@Override
 		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
 				ISearchBean<CmSupplierItem> searchBean) {
@@ -1108,7 +1105,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new SearchResultBean();
+				return new SearchResultBean<CmSupplierItem>();
 			} finally {
 				catalogueSO = null;
 				supplierSearchSO = null;
@@ -1130,7 +1127,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		 */
 		public SearchPagingDataModel() {
 			super("supplierItemID", false);
-			// TODO Auto-generated constructor stub
 		}
 
 		/**
@@ -1562,6 +1558,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * 
 	 * @return the current date without time
 	 */
+	@SuppressWarnings("unused")
 	private Date getCurrentDateWithoutTime() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -2162,6 +2159,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * 
 	 * @return the temp map
 	 */
+	@SuppressWarnings("rawtypes")
 	public Map getTempMap() {
 		return tempMap;
 	}
@@ -2172,6 +2170,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @param tempMap
 	 *            the new temp map
 	 */
+	@SuppressWarnings("rawtypes")
 	public void setTempMap(Map tempMap) {
 		this.tempMap = tempMap;
 	}
@@ -4199,6 +4198,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	/**
 	 * @param scheduleNo the scheduleNo to set
 	 */
+	@SuppressWarnings("static-access")
 	public void setScheduleNo(String scheduleNo) {
 		this.scheduleNo = scheduleNo;
 	}
