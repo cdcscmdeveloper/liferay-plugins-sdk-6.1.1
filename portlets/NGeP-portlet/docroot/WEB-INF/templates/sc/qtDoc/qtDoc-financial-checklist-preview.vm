@@ -132,39 +132,42 @@ u {
 </head>
 <body>
 #set($rowCount = 0)
-<table width="100%" border="1" cellpadding="0" cellspacing="0">
+<table width="100%" cellpadding="0" cellspacing="0">
 	<tbody>
 		<tr>
-			<th bgcolor="#6d839b" width="50%" valign="top" class="title border left" style="text-align: left; border: 1px solid white; padding-left: 5px; padding-right: 5px; font-family: Arial;">Title / Document</th>
-			<th bgcolor="#6d839b" width="20%" valign="top" class="title border left" style="text-align: left; border: 1px solid white; padding-left: 5px; padding-right: 5px; font-family: Arial;">Mechanism</th>
-			<th bgcolor="#6d839b" width="20%" valign="top" class="title border left" style="text-align: left; border: 1px solid white; padding-left: 5px; padding-right: 5px; font-family: Arial;">Supplier Action</th>
-			<th bgcolor="#6d839b" width="10%" valign="top" class="title border left" style="text-align: left; border: 1px solid white; padding-left: 5px; padding-right: 5px; font-family: Arial;">Scoring</th>
+			<td bgcolor="#6d839b" valign="top" colspan="4" class="title border left" style="text-align: left; background-color: #ddd; padding-left: 5px; padding-right: 5px; font-family: Arial;"><b>FINANCIAL CHECKLIST</b></td>
+		</tr>
+		<br/><br/>
+		<tr>
+			<th bgcolor="#144b73" width="30%" valign="top" class="title border left" style="color:white; text-align: center; border: 1px solid white; padding-left: 5px; padding-right: 5px; font-family: Arial;">Title / Document</th>
+			<th bgcolor="#144b73" width="30%" valign="top" class="title border left" style="color:white; text-align: center; border: 1px solid white; padding-left: 5px; padding-right: 5px; font-family: Arial;">Mechanism</th>
+			<th bgcolor="#144b73" width="30%" valign="top" class="title border left" style="color:white; text-align: center; border: 1px solid white; padding-left: 5px; padding-right: 5px; font-family: Arial;">Supplier Action</th>
+			<th bgcolor="#144b73" width="10%" valign="top" class="title border left" style="color:white; text-align: center; border: 1px solid white; padding-left: 5px; padding-right: 5px; font-family: Arial;">Scoring</th>
 		</tr>
 		
 		#foreach( $finChecklist in $scQtCheckSt2financeProposalList )
 		
 		<tr>
-			<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid white;">
+			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid white;">
 			$finChecklist.title
 			</td>
-			<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid white;">
+			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid white;">
 			$bean.getParameterDesc($finChecklist.definationType)
 			</td>
-			<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid white;">
+			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid white;">
 			$bean.getParameterDesc($finChecklist.action)
 			</td>
-			<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid white;">
-			<input type="checkbox" disabled="true" value="$finChecklist.scoringReq">
+			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid white;">
+				#if($finChecklist.scoringReq)
+					<img src='$hostUrl/NGeP-portlet/css/images/checkbox_checked.png' width="20px" height ="20px"></img>
+				#else
+					<img src='$hostUrl/NGeP-portlet/css/images/checkbox_unchecked.png' width="20px" height ="20px"></img>
+				#end
 			</td>
 		</tr>
 		
 		#end
 	</tbody>
 </table>
-
-#set($rowCount = $rowCount + 1)
-#if($rowCount < $scQtCheckSt2financeProposalList.size())
-	<div style="page-break-after:always;"><br/></div>
-#end
 </body>
 </html>

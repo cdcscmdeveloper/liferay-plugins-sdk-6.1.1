@@ -23061,6 +23061,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		
 		populateAttachmentDetails(attachment);
 		
+		context.put("hostUrl", getLogoHeaderPath());
 		context.put("scQtCheckSt2techProposal", scQtCheckSt2techProposal); 
 		context.put("bean", this);
 		
@@ -23098,6 +23099,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		
 		populateAttachmentDetails(attachment);
 		
+		context.put("hostUrl", getLogoHeaderPath());
 		context.put("scQtCheckSt2financeProposalList", scQtCheckSt2financeProposalList); 
 		context.put("bean", this);
 		
@@ -23121,6 +23123,13 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				e.printStackTrace();
 			}
 		}
+	}
+	/**
+	 * get the template logo path 
+	 * @return String
+	 */
+	private String getLogoHeaderPath(){
+		return SmCommonUtil.getBasePortalUrl();
 	}
 	//#10141 Start Vinod
 }
