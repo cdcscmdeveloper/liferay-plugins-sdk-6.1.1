@@ -18030,7 +18030,6 @@ private void retriveCommitteeRemarksList(){
 				List<ScQtCheckList> qtChecklistList = resDTO
 						.getCheckListResultBean().getResultList();
 				
-				//Bug #33252 related to #33110 start
 				for (ScQtCheckList qtCheckList : qtChecklistList) {
 					if (null != qtCheckList.getPmDocument()
 							&& null != qtCheckList.getPmDocument().getDocDefinitionKey()//bug #34327
