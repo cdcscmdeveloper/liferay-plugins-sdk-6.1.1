@@ -302,8 +302,10 @@
 					</c:if>
 				</p:dataTable>
 				<!-- SHAFFUL (END HERE)UOM -->
-			<!--  #21695 REMOVE TOTAL SCORE START	
-				<c:if test="#{isContentTypeScore and isSpecTypeFinancial}">
+				<ui:remove>
+						<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+				</ui:remove>
+				<c:if test="#{isContentTypeScore and isSpecTypeFinancial and templateSpecBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 					<p:spacer height="10" />
 					<table style="width:100%">
 					<tr>
@@ -317,10 +319,9 @@
 						</td>
 					</tr>
 					</table>
-				</c:if>-->
-				<!--#25138 total score for technical -start-->
-				<!-- 
-				<c:if test="#{isContentTypeScore and isSpecTypeTechnical}">
+				</c:if>
+				<ui:remove><!--#25138 total score for technical --></ui:remove>
+				<c:if test="#{isContentTypeScore and isSpecTypeTechnical and templateSpecBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 					<p:spacer height="10" />
 					<table style="width:100%">
 					<tr>
@@ -334,9 +335,10 @@
 						</td>
 					</tr>
 					</table>
-				</c:if> 
-				 #21695 REMOVE TOTAL SCORE START END-->
-				<!--#25138 - total score for technical - end -->
+				</c:if>
+				<ui:remove>
+					<!-- //#25138(wip 4serangkai) bug -End 8/6/2023 -->
+				</ui:remove>
 				<c:if test="#{isContentTypeUpdateSpec}">
 					<ui:include src="tierQtyPopup.xhtml" />
 				</c:if>
