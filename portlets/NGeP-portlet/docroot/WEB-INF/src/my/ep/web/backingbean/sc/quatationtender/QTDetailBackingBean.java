@@ -1002,15 +1002,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * Method to search the quationtenders based on serach date.
 	 */
 	public void searchQTAction() {
-		if(this.getManagedSearchBeanDocumentTypeIsLOA()){
+		if (this.getManagedSearchBeanDocumentTypeIsLOA()) {
 			getManagedBean().getSearchLoaForQtDataModel().reloadData();
-		}
-		else if(this.getManagedSearchBeanDocumentTypeIsLOI()){
+		} else if (this.getManagedSearchBeanDocumentTypeIsLOI()) {
 			getManagedBean().getSearchLoiForQtDataModel().reloadData();
+		} else {
+			getManagedBean().getSearchQTDataModel().reloadData();
 		}
-		else;
-		getManagedBean().getSearchQTDataModel().reloadData();
-		
 	}
 
 	/**
@@ -1424,7 +1422,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 				}
 			}
-			else;
+
 		}
 		else if(ParameterConst.DOCTYPE_LETTER_OF_AWARD.equalsIgnoreCase(docType) 
 				|| ParameterConst.DOCTYPE_LETTER_OF_INTENT.equalsIgnoreCase(docType)){
@@ -1462,7 +1460,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				return viewOnlineBidding(scQt,previousPageUrl); //#17376-144
 			}
 		}
-		else;
 		
 		return null;
 	}
@@ -1802,7 +1799,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, reverseQtDetails(Boolean.FALSE,Boolean.TRUE,null));
 				}
 			}
-			else;
+
 		}
 		
 		return null;
@@ -5943,7 +5940,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						RoleCode[] r = {RoleCode.SC_SECRETARY};
 						if (userHasRole(r)){
 							getManagedBean().setSecretaryValidate(true);
-						};
+						}
 //						if(authoriztionList.contains(pmRoleDesc.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.SC_SECRETARY.value()))){
 //							getManagedBean().setSecretaryValidate(true);
 //						}
@@ -10421,7 +10418,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//29464-start
 		else if(taskName.equals(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)){
 			menuSet.add(getMenuItemSpecificationCommitteeAssignment());
-		};
+		}
 		//29464-end
 		// ***25692#31
 		if(isApprovalScreen() && menuSet != null){

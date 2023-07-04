@@ -13638,7 +13638,7 @@ if (null != checklist && !checklist.isEmpty()) {
 									    }
 									}
 									//1873 - end - note 97
-								};
+								}
 								index = i;//1873 - note 97
 								//1873 - end - note 52
 								break;
@@ -20633,7 +20633,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					checkCategoryCodeChanged();
 				}
 				//1873 note 164 - end
-			};	
+			}	
 			//1873 note 149 end
 			//32204 - end
 		}
