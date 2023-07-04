@@ -10713,7 +10713,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					
 					finalMsg.append("          " + labelLampiranA3);
 					
-					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMsg.toString());
+					String finalMessage=finalMsg.toString().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
+					finalMessage=finalMessage.toString().replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
+					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMessage);
 				}
 
 				specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
@@ -10754,13 +10756,53 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 								specAnswer.setNewSupplierOffer(null);
 							}
 
-							if (specAnswer.getNewSupplierOffer() != null
-									&& StringUtils.isNotBlank(specAnswer.getNewSupplierOffer())
-									&& StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())) {
-								newOfferedSpecification = true;
+							if(specAnswer.getNewSupplierOffer() != null 
+									&& StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) 
+									&& StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){
+								newOfferedSpecification=true;
+								String newSupplierOffered=specAnswer.getNewSupplierOffer().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
+								newSupplierOffered=newSupplierOffered.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
+								specAnswer.setNewSupplierOffer(newSupplierOffered);
+							}
+							if(specAnswer.getTplSpecQuestion() != null 
+									&& specAnswer.getTplSpecQuestion().getClItem() !=null 
+									&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) 
+									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){
+								String itemName=specAnswer.getTplSpecQuestion().getClItem().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
+								itemName=itemName.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
+								specAnswer.getTplSpecQuestion().setClItem(itemName);
+							}
+							if(specAnswer.getAnswerRemark() != null 
+									&& StringUtils.isNotBlank(specAnswer.getAnswerRemark()) 
+									&& StringUtils.isNotEmpty(specAnswer.getAnswerRemark())){
+								String ansRemark=specAnswer.getAnswerRemark().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
+								ansRemark=ansRemark.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
+								specAnswer.setAnswerRemark(ansRemark);
 							}
 							
 							zoneSpecAnswerList.add(specAnswer);
+						}
+						if(specAnswer.getNewSupplierOffer() != null 
+								&& StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) 
+								&& StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){
+							String newSupplierOffered=specAnswer.getNewSupplierOffer().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
+							newSupplierOffered=newSupplierOffered.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
+							specAnswer.setNewSupplierOffer(newSupplierOffered);
+						}
+						if(specAnswer.getTplSpecQuestion() != null 
+								&& specAnswer.getTplSpecQuestion().getClItem() !=null 
+								&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) 
+								&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){
+							String itemName=specAnswer.getTplSpecQuestion().getClItem().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
+							itemName=itemName.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
+							specAnswer.getTplSpecQuestion().setClItem(itemName);
+						}
+						if(specAnswer.getAnswerRemark() != null 
+								&& StringUtils.isNotBlank(specAnswer.getAnswerRemark()) 
+								&& StringUtils.isNotEmpty(specAnswer.getAnswerRemark())){
+							String ansRemark=specAnswer.getAnswerRemark().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
+							ansRemark=ansRemark.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
+							specAnswer.setAnswerRemark(ansRemark);
 						}
 					}
 					
@@ -10793,10 +10835,28 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 								specAnswer.setNewSupplierOffer(null);
 							}
 							
-							if (specAnswer.getNewSupplierOffer() != null
-									&& StringUtils.isNotBlank(specAnswer.getNewSupplierOffer())
-									&& StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())) {
-								newOfferedSpecification = true;
+							if(specAnswer.getNewSupplierOffer() != null 
+									&& StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) 
+									&& StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){
+								newOfferedSpecification=true;
+								String newSupplierOffered=specAnswer.getNewSupplierOffer().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
+								newSupplierOffered=newSupplierOffered.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
+								specAnswer.setNewSupplierOffer(newSupplierOffered);
+							}
+							if(specAnswer.getTplSpecQuestion() != null 
+									&& specAnswer.getTplSpecQuestion().getClItem() !=null 
+									&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) 
+									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){
+								String itemName=specAnswer.getTplSpecQuestion().getClItem().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
+								itemName=itemName.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
+								specAnswer.getTplSpecQuestion().setClItem(itemName);
+							}
+							if(specAnswer.getAnswerRemark() != null 
+									&& StringUtils.isNotBlank(specAnswer.getAnswerRemark()) 
+									&& StringUtils.isNotEmpty(specAnswer.getAnswerRemark())){
+								String ansRemark=specAnswer.getAnswerRemark().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
+								ansRemark=ansRemark.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
+								specAnswer.setAnswerRemark(ansRemark);
 							}
 
 							zoneSpecAnswerList.add(specAnswer);
