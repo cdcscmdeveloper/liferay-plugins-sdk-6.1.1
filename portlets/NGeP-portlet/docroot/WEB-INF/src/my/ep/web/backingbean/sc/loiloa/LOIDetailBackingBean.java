@@ -455,7 +455,12 @@ public class LOIDetailBackingBean extends
 					}else{
 						this.getManagedBean().setRenderInstruction(false);
 					}
-		// #29007	Vinod End					
+		// #29007	Vinod End	
+					
+					//#30008
+					if(this.getManagedBean().getDecision() == null){
+						this.getManagedBean().setDecision(new PmParameter());
+					}
 	}
 	
 	/**
@@ -930,6 +935,7 @@ public class LOIDetailBackingBean extends
 					List<ScQtRecommend> scRecomendedList = this.getManagedBean().getRecommendList();
 					for (ScLoi scLoi : scLois) {
 						if (ParameterConst.NOT_REACH_AGREEMENT.equals(scLoi.getNegoDecision().getParameterId().toString())) {
+							getManagedBean().setDecision(new PmParameter());
 							getManagedBean().setDecision(scLoi.getNegoDecision());
 							getManagedBean().setJustification(scLoi.getDecisionJustification());
 							getManagedBean().setReadOnly(true);
@@ -1445,6 +1451,7 @@ public class LOIDetailBackingBean extends
 		
 		//#30008
 		if (scLoi.getNegoDecision() != null) {
+			getManagedBean().setDecision(new PmParameter());
 			getManagedBean().setDecision(scLoi.getNegoDecision());
 			getManagedBean().setJustification(scLoi.getDecisionJustification());
 			getManagedBean().setReadOnly(true);			
@@ -2290,6 +2297,7 @@ public class LOIDetailBackingBean extends
 		scLoi.setFileExtnNo("001");
 		
 		//#30008 
+		getManagedBean().setDecision(new PmParameter());
 		getManagedBean().setDecision(scLoi.getNegoDecision());
 		getManagedBean().setJustification(scLoi.getDecisionJustification());
 		
