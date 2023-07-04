@@ -2264,7 +2264,9 @@ public class SpecificationBackingBean extends
 			List<Integer> settinglist = new ArrayList<Integer>();
 			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL);
 			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_DEMO);
-			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
+			if(this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE){
+				settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
+			}
 			// #21695 START FARID
 			reqDTO.setSettingTypes(settinglist);
 			specSo = BusinessDelegate.getInstance().getServiceObject(
@@ -2289,19 +2291,21 @@ public class SpecificationBackingBean extends
 
 				}
 				// #21695 START FARID
-				if (null == this.getManagedBean().getTechnicalItemScoreSetting()) {
-					ScQtScoreSetting technicalItemScoresetting = constructScoreSetting(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
-					technicalItemScoresetting
-							.setPassingScore(retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_PASSING_SCORE));
-					this.getManagedBean().setTechnicalItemScoreSetting(technicalItemScoresetting);
-					
-					//set scoring item to default to 50
-					this.getManagedBean().getTechnicalItemScoreSetting().setOverallTechnical(new BigDecimal(50));
-					this.getManagedBean().getTechnicalItemScoreSetting().setPassingScore(new BigDecimal(50));
-					//#21695 & #30557 Farid Start
-					calculateTechnicalItemScore(this
-							.getManagedBean()
-							.getFinacialItemScoreSetting());
+				if(this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE){
+					if (null == this.getManagedBean().getTechnicalItemScoreSetting()) {
+						ScQtScoreSetting technicalItemScoresetting = constructScoreSetting(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
+						technicalItemScoresetting
+								.setPassingScore(retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_PASSING_SCORE));
+						this.getManagedBean().setTechnicalItemScoreSetting(technicalItemScoresetting);
+						
+						//set scoring item to default to 50
+						this.getManagedBean().getTechnicalItemScoreSetting().setOverallTechnical(new BigDecimal(50));
+						this.getManagedBean().getTechnicalItemScoreSetting().setPassingScore(new BigDecimal(50));
+						//#21695 & #30557 Farid Start
+						calculateTechnicalItemScore(this
+								.getManagedBean()
+								.getFinacialItemScoreSetting());
+					}
 				}
 				if (this.getManagedBean().getQt().isPartial() == true){
 					this.getManagedBean().getTechnicalScoreSetting().setWeightageReq(false);
@@ -2328,10 +2332,12 @@ public class SpecificationBackingBean extends
 						}
 					}
 // #21695 START FARID
-					if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
-						if (null == this.getManagedBean().getTechnicalItemScoreSetting()) {
-							this.getManagedBean().setTechnicalItemScoreSetting(
-									recommnendationSetting);
+					if(this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE){
+						if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+							if (null == this.getManagedBean().getTechnicalItemScoreSetting()) {
+								this.getManagedBean().setTechnicalItemScoreSetting(
+										recommnendationSetting);
+							}
 						}
 					}
 //TO CATER WIP DATA IN TECH SPEC PREPARE SCORING					
