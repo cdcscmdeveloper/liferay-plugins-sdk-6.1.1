@@ -2359,7 +2359,7 @@ public class SpecificationBackingBean extends
 						}
 					}
 					}
-					}
+					
 //TO CATER WIP DATA IN TECH SPEC PREPARE SCORING					
 					if(this.getManagedBean().getTechnicalItemScoreSetting() == null){
 						int count = 0;
