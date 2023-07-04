@@ -3911,6 +3911,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().setSubStatusId(sts.getStatusId());
 			}
 			//#11299 vinod End
+			checkInactiveChecklistProcessForDoc(this.getManagedBean().getTaskName());// #10141 Added Vinod
 			//assertSpecificationUpdateInProgress(false);//25037 #568 - to tally with 15391			
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MAINTANANCE_PAGE);
@@ -12723,6 +12724,87 @@ public void retrieveDemoQtDetails(Long qtId) {
 			return false;
 	}
 	//#11299 End Vinod
+	// #10141 Start Vinod
+	public void checkInactiveChecklistProcessForDoc(String status) {
+		log.info("initiateInactiveChecklistProcessForDoc");
+		List<ScQtCheckList> inActiveChecklist = new ArrayList<>();
+		if (SCProcessNameConst.PREPARE_QT_SCHEDULE.equals(status)) {
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTSpecSO.class);
+			reqDTO.setScQt(this.getManagedBean().getQt());
+			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+			SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
+
+			for (ScQtCheckList tech : resDTO.getTechnicalCheckList()) {
+				if (null != tech.getPmDocument() && !tech.getPmDocument().isRecordStatus())
+					inActiveChecklist.add(tech);
+			}
+			for (ScQtCheckList fin : resDTO.getFinancialCheckLists()) {
+				if (null != fin.getPmDocument() && !fin.getPmDocument().isRecordStatus())
+					inActiveChecklist.add(fin);
+			}
+		}
+		if (!inActiveChecklist.isEmpty()) {
+			this.getManagedBean().setInActiveChecklist(inActiveChecklist);
+			StringBuffer confirmationMsg = new StringBuffer();
+			String nextline = getMessageCommon("lbl.sc.spec.confirm.nextline");
+			String techCheckList = getMessageCommon("lbl.sc.spec.confirm.inactive.tech.checklist");
+			String finCheckList = getMessageCommon("lbl.sc.spec.confirm.inactive.fin.checklist");
+			int tecCLcount = 0;
+			int finCLcount = 0;
+			for (ScQtCheckList inactive : inActiveChecklist) {
+				if (SourcingConstants.TECHNICAL_DOCTYPE.equals(inactive.getDocCategory())) {
+					tecCLcount++;
+					confirmationMsg.append(tecCLcount + ". " + techCheckList + " " + inactive.getTitle() + nextline);
+				} else {
+					if (tecCLcount != 0) {
+						confirmationMsg.append(nextline);
+						tecCLcount = 0;
+					}
+					finCLcount++;
+					confirmationMsg.append(finCLcount + ". " + finCheckList + " " + inactive.getTitle() + nextline);
+				}
+			}
+			this.getManagedBean().setShowInactiveChecklistPopup(true);
+			this.getManagedBean().setInActiveChecklistNotificationText(
+					getMessage("lbl.sc.spec.confirm.inactive.techfin.checklist",
+							new String[] { confirmationMsg.toString() }));
+		}
+	}
+
+	public void initiateInactiveChecklistProcessForDoc() {
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+		QuationTenderResDTO qtResDTO = new QuationTenderResDTO();
+
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		reqDTO.setQtId(getManagedBean().getQt().getQtId());
+		CommitteResDTO resDTO = null;
+		ICommitteSO committeSO;
+		try {
+			committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					ICommitteSO.class);
+			resDTO = committeSO.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
+			List<ScCommitteeMember> committeeMembersList = resDTO.getCommMemberResultBean().getResultList();
+			qtReqDTO.setScCommitteeMemberList(committeeMembersList);
+		} finally {
+			committeSO = null;
+		}
+
+		qtReqDTO.setQtdetail(this.getManagedBean().getQt());
+		qtReqDTO.setInActiveChecklist(this.getManagedBean().getInActiveChecklist());
+		qtReqDTO.setProcurementModeStr(this.getParameterDesc(this.getManagedBean().getQt().getProcurementMode()));
+		qtResDTO = detailSO.updateChecklist(qtReqDTO);
+
+		if (qtResDTO.isSuccessful()) {
+			successMessage(MessageConst.INFO_700012,
+					getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
+					this.getManagedBean().getQt().getQtNo(), Boolean.TRUE);
+		}
+	}
+	// #10141 End Vinod
 	
 	//#21692 - start
 	public int retrieveResponsePeriod(String value) {
