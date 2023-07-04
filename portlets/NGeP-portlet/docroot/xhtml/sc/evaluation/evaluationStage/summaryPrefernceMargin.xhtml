@@ -8,10 +8,24 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<p:panel toggleable="true">
-		<f:facet name="header">
-			<h:outputText value="#{qualifiedSupplierListHeader}" />
-			<ac:iconTooltip value="#{qualifiedSupplierListTooltip}" />
-		</f:facet>
+		<!-- #28784 Start -->
+		<c:choose>
+			<c:when
+				test="#{evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.demo.fc.summary.qualified']}" />
+					<ac:iconTooltip id="summDemoIteQualify"
+						value="#{qualifiedSupplierListTooltip}" />
+				</f:facet>
+			</c:when>
+			<c:otherwise>
+				<f:facet name="header">
+					<h:outputText value="#{qualifiedSupplierListHeader}" />
+					<ac:iconTooltip value="#{qualifiedSupplierListTooltip}" />
+				</f:facet>
+			</c:otherwise>
+		</c:choose>
+		<!-- #28784 End -->
 
 		<p:dataTable var="prefQualSupplier"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -52,13 +66,14 @@
 				style="width:10%;text-align:right">
 				<h:outputText value="#{prefQualSupplier.totalScore}"></h:outputText>
 			</p:column>
-<!-- #34588 - start -->
+			<ui:remove>
+				<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+			</ui:remove>
 			 <p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
 				style="width:15%"
-				rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiBefore}">
+				rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 				<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag,fn:toUpperCase(prefQualSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
 			</p:column>
-<!-- #34588 - end -->
 			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
 				style="width:15%; text-align:right;">
 				<h:outputText
@@ -68,8 +83,10 @@
 				</h:outputText>
 
 			</p:column>
-<!-- #34588 - start -->
-			 <p:column style="width:15%; text-align:right;" rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiBefore}">
+			<ui:remove>
+				<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+			</ui:remove>
+			 <p:column style="width:15%; text-align:right;" rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.difference.rm']}" />
 					<ac:iconTooltip id="summaryPrefMargin#{row}"
@@ -82,7 +99,6 @@
 
 
 			</p:column> 
-<!-- #34588 - end -->
 <!-- #34588 - start -->
 			 <p:column headerText="#{lFbl['lbl.sc.difference.perc']}"
 				style="width:15%; text-align:right;"
@@ -138,10 +154,24 @@
 	</p:panel>
 
 	<p:panel toggleable="true">
-		<f:facet name="header">
-			<h:outputText value="#{disQualifiedSupplierListHeader}" />
-			<ac:iconTooltip value="#{disQualifiedSupplierListTooltip}" />
-		</f:facet>
+		<!-- #28784 Start -->
+		<c:choose>
+			<c:when
+				test="#{evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.demo.fc.summary.not.qualified']}" />
+					<ac:iconTooltip id="summDemoIteDisQualify"
+						value="#{disQualifiedSupplierListTooltip}" />
+				</f:facet>
+			</c:when>
+			<c:otherwise>
+				<f:facet name="header">
+					<h:outputText value="#{disQualifiedSupplierListHeader}" />
+					<ac:iconTooltip value="#{disQualifiedSupplierListTooltip}" />
+				</f:facet>
+			</c:otherwise>
+		</c:choose>
+		<!-- #28784 End -->
 
 		<p:dataTable var="disQualifiedSupplier"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"

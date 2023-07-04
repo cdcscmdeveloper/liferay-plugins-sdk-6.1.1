@@ -6,15 +6,19 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 
-	<!-- START #21695 Bug #31544 farid-->
+	<ui:remove>
+		<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+	</ui:remove>
 	<table style="width: 425px;">
 		<tr>
 			<td><h:outputText style="float: left;" styleClass="instruction"
 					escape="false" value="#{lbl['lbl.tpl.qty.instruction.tooltip']}"
-					rendered="#{isSpecificationReq and isSpecTypeTechnical}" /> <h:outputText
+					rendered="#{isSpecificationReq and isSpecTypeTechnical and 
+					specificationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}" /> <h:outputText
 					style="float: left;" styleClass="instruction" escape="false"
 					value="#{lbl['lbl.tpl.qty.instruction.tooltip.financial']}"
-					rendered="#{isSpecificationReq and !isSpecTypeTechnical}" /> <h:outputText></h:outputText>
+					rendered="#{isSpecificationReq and !isSpecTypeTechnical and 
+					specificationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}" /> <h:outputText></h:outputText>
 			</td>
 		</tr>
 
@@ -48,10 +52,13 @@
 								listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, templateSpecBean.selectedSpecQuestion.tplSpecAnswers[0], isItemTypeService)}"
 								update="@this, zoneQtyMsg, @(.calcAmount)" />
 
-							<!-- START #21695  & Bug #28948 farid-->
+							<ui:remove>
+								<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+							</ui:remove>
 							<c:choose>
 								<c:when
-									test="#{!templateSpecBackingBean.managedBean.secretaryValidate}">
+									test="#{specificationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent
+									or !templateSpecBackingBean.managedBean.secretaryValidate}">
 									<ac:validateNumber
 										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, templateSpecBean.selectedSpecQuestion.clUom.uomCode)}"
 										maxIntegerDigits="10" />

@@ -3567,56 +3567,35 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		//Bug 34030 - shaqimi start
 		String docType = getManagedBean().getContractVer().getDocType();
 		Long statusId = getManagedBean().getContractVer().getStatus().getStatusId();
-		String taskNameFromTaskList = "";
-		Long contractIdFromTaskList = null;
-		Long contractVerIdFromTaskList = null;
-		String docTypeFromTaskList = "";
 		
-		if(this.getManagedBean().getTaskNameFromTaskList() != null && !this.getManagedBean().getTaskNameFromTaskList().isEmpty()){
-			taskNameFromTaskList = this.getManagedBean().getTaskNameFromTaskList();
-		}
-		if(this.getManagedBean().getContractIdFromTaskList() != null && !this.getManagedBean().getContractIdFromTaskList().equals(null)){
-			contractIdFromTaskList = this.getManagedBean().getContractIdFromTaskList();
-		}
-		if(this.getManagedBean().getContractVerIdFromTaskList() != null && !this.getManagedBean().getContractVerIdFromTaskList().equals(null)){
-			contractVerIdFromTaskList = this.getManagedBean().getContractVerIdFromTaskList();
-		}
-		if(this.getManagedBean().getDocTypeFromTaskList() != null && !this.getManagedBean().getDocTypeFromTaskList().isEmpty()){
-			docTypeFromTaskList = this.getManagedBean().getDocTypeFromTaskList();
-		}
+		getManagedBean().setInPage(false);//Bug 34142 - shaqimi 04/12/2022
 		//Bug 34030 - shaqimi end
 		
 		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
 			AmendmentBackingBean abb = new AmendmentBackingBean();
-			getManagedBean().setAmendFromTaskList(true);
+
+			//Bug 34142, 15851 - shaqimi start 04122022
+			if(getManagedBean().getTaskIdFromTaskList() != null){
+				getManagedBean().setAmendFromTaskList(true);
+			}
+			//Bug 34142, 15851 - shaqimi end 04122022
 			//follow structure but for amendment
 			FacesContext fc = FacesContext.getCurrentInstance();
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 			abb.getManagedBean().setTrackingDairyView(true);
 			getManagedBean().setViewSCL(true);
-			//Bug 33096 - start
+			//Bug 33096 - shaqimi start
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
-			//Bug 33096 - end
-			//Bug 34030 - shaqimi start
-			if(docType.equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING) 
-					|| docType.equals(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
-					|| docType.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE)){
-				abb.getManagedBean().setStatusIdFromTaskList(statusId);
-				abb.getManagedBean().setTaskNameFromTaskList(taskNameFromTaskList);
-				abb.getManagedBean().setContractIdFromTaskList(contractIdFromTaskList);
-				abb.getManagedBean().setContractVerIdFromTaskList(contractVerIdFromTaskList);
-				
-				if((docTypeFromTaskList != null && !docTypeFromTaskList.isEmpty())){
-					abb.getManagedBean().setDocTypeFromTaskList(docTypeFromTaskList);
-				} else {
-					abb.getManagedBean().setDocTypeFromTaskList(docType);
-				}
-			}else if(abb.getManagedBean().getTaskId() != null){
-				abb.getManagedBean().setTaskIdFromTaskList(abb.getManagedBean().getTaskId());
-				abb.getManagedBean().setContractIdFromTaskList(new Long(this.getManagedBean().getContractVer().getCtContract().getContractId()));
-				abb.getManagedBean().setContractVerIdFromTaskList(this.getManagedBean().getContractVer().getContractVerId());
+			//Bug 33096 - shaqimi end
+			//Bug 34142, 15851 - shaqimi end 04/12/2022
+			getManagedBean().setStatusIdFromTaskList(statusId);
+			getManagedBean().setDocTypeFromTaskList(docType);
+			//Bug 34142, 15851 - shaqimi end 04/12/2022
+			//Bug 34142 - shaqimi start 16112022
+			if(getManagedBean().isViewContractFromAgreement()){
+				getManagedBean().setViewSCLFromContract(true);
 			}
-			//Bug 34030 - shaqimi end
+			//Bug 34142 - shaqimi end 16112022
 			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
 		}
 		//Enhancement 15851 - shaqimi end
@@ -3844,17 +3823,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		List<CtAgreement> currentCtAgreementList = getManagedBean().getCtAgreementList();
 		CtAgreement tempCtAgreement = null;
 		int index = 0;
-		System.out.println("--------------- shams in filterAgreementList : currentCtAgreementList.size() = "+currentCtAgreementList.size());
+
 		if(currentCtAgreementList != null && !currentCtAgreementList.isEmpty())
 		{
 			//currentCtAgreementList is sorted by created date in descending order
 			for(index = 0; index < currentCtAgreementList.size(); index++)
 			{
 				tempCtAgreement = currentCtAgreementList.get(index);
-				System.out.println("--------------- shams in filterAgreementList : tempCtAgreement.getAgreementId() = "+tempCtAgreement.getAgreementId());
-				System.out.println("--------------- shams in filterAgreementList : getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId() = "+getManagedBean().getCtContractAmount().getCtAgreement().getAgreementId());
+				
 				if(tempCtAgreement.getAgreementId().equals(getManagedBean().getContractVer().getCtContractAmount().getCtAgreement().getAgreementId())) // Fix - #32622
-				{	System.out.println("--------------- shams in filterAgreementList : index 111 = "+index);
+				{
 					while(index >= 0)
 					{
 						//sort agreementList in ascending order starting from the selected Reference File No.
@@ -3865,20 +3843,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					break;
 				}
 			}
-			System.out.println("--------------- shams in filterAgreementList : newCtAgreementList.size() = "+newCtAgreementList.size());
+			
 			if(newCtAgreementList.isEmpty())
-			{ System.out.println("--------------- shams in filterAgreementList : IN newCtAgreementList.isEmpty() ------------------ ");
+			{
 				index = currentCtAgreementList.size() - 1;
 				while(index >= 0)
-				{System.out.println("--------------- shams in filterAgreementList :  index 222 =  "+index);
+				{
 					//sort agreementList in ascending order
 					newCtAgreementList.add(0, currentCtAgreementList.get(index));
 					index--;
 				}
 			}
-	
 		}
-		System.out.println("--------------- shams in filterAgreementList : LAST newCtAgreementList.size() = "+newCtAgreementList.size());
 		return newCtAgreementList;
 	}
 	

@@ -1419,6 +1419,35 @@ public class SupplierFinalizationBackingBean extends
 					}
 				}
 			}
+			// #28834 - Start
+			else{
+				
+				String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
+				
+				if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode)
+						|| ParameterConst.DECISION_RE_PUBLISH.equals(decisionTypeCode)
+						|| ParameterConst.DECISION_RE_EVALUATION.equals(decisionTypeCode)) {
+					this.getManagedBean().setFinalizationMethod(null);
+				}
+				
+				if (this.getManagedBean().getFinalizationMethod() != null
+						&& (this.getManagedBean().getFinalizationMethod().equals(ParameterConst.RECOMMEND_BY_AWARD) || this
+								.getManagedBean().getFinalizationMethod()
+								.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD))
+						&& !getManagedBean().isDisableJustifications()) {
+
+					if (this.getManagedBean().getJustification() != null
+							&& this.getManagedBean().getJustification().getReasonId() == null) {
+						navigateToEndorsementReportTab();
+
+						throw new EpException(MessageConst.ERROR_100061, new String[] { ResourceBundleUtils.getMessage(
+								"lbl.sc.sf.justification.selection", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()) });
+					}
+				}
+
+			}
+			// #28834 - End
 						
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				reqDTO.setDeletedMeetingsList(
@@ -2543,7 +2572,12 @@ public class SupplierFinalizationBackingBean extends
 			} else {
 				// need to set Keputusan report at time of Endorsement and signOff status
 				// #28834- Start.
-				// if (!isBpkCentralContract(this.getManagedBean().getScQt())) {
+				// #34410 - Start
+				// ScQt scQt = this.getManagedBean().getScQt();
+				// QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+				// qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
+				// scQt = qtBackingBean.getManagedBean().getQt();
+				// if (!isBpkCentralContract(scQt)) { // #34410 - End
 			    // #28834- End.
 					this.getManagedBean().getScQtFinalization()
 					.getScQtFinalizationReports()
@@ -3069,6 +3103,12 @@ public class SupplierFinalizationBackingBean extends
 				}
 				// #18685 - End.
 			}
+
+			// #28784 -start-
+			if(getManagedBean().getScQt().isDemoRequired()) {
+				this.getManagedBean().setDemoReq(true);
+			}
+			// #28784 -end-
 
 		} finally {
 			qtSuppFinalizationSO = null;
@@ -9512,9 +9552,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 		
 		scQt = qtBackingBean.getManagedBean().getQt();
-		// #28834- Start.
-		this.getManagedBean().setScQt(scQt);
-		// #28834- End.
 //		boolean isBpkCentralContract = false;
 //		isBpkCentralContract = isBpkCentralContract(scQt);
 		boolean hidden = false;
