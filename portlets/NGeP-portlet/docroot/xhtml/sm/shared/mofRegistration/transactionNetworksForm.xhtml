@@ -96,7 +96,7 @@
 					</td>
 
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withGlc}" /></td>
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withGlc}" disabled="#{backingBean.managedBean.upsCannotEdit}"/></td>
 					<td valign="middle" width="160px;"><h:outputText
 							value="#{lbl['lbl.sm.busNtw.glc']}" />
 						<ac:smCheckBoxChangeAlert 
