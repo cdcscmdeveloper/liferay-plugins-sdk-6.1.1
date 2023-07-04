@@ -10811,6 +10811,7 @@ private void retriveCommitteeRemarksList(){
 		//6906 - end
 		retriveMeetingDtls(evaluationDataType.getQtId().longValue(),
 				evaluationDataType.getCommitteeType(), 1);
+		evaluateWIP(this.getManagedBean().getScQt());//34865,34866,34867 - 29021 WIP
 		String taskName = this.getManagedBean().getTaskName();
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
