@@ -163,6 +163,11 @@ public class QTCloneBackingbean extends
 	 * test only
 	 */
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger
 			.getLogger(QTCloneBackingbean.class);
@@ -1526,7 +1531,7 @@ public class QTCloneBackingbean extends
 				}
 				this.getManagedBean().setToBeRemovalContactPersonList(listDel);
 			}
-			if (qtContactPersons != null || !qtContactPersons.isEmpty()) {
+			if (qtContactPersons != null && !qtContactPersons.isEmpty()) {
 				List<ScQtContactPerson> persons=new ArrayList<ScQtContactPerson>();
 				PmUser user = new FacesScopes().getUserSessionBean();
 //				ScQtContactPerson contactPerson = new ScQtContactPerson();
@@ -2936,7 +2941,7 @@ public class QTCloneBackingbean extends
 				if (fcSecretaries != null && fcSecretaries.length > 0) {
 					fcSecretaryCode = retrieveParameterById(Long
 							.valueOf(fcSecretaries[0].getValue().toString()));
-					;
+					
 				} else {
 					fcSecretaryCode = null;
 				}
@@ -4846,7 +4851,7 @@ public class QTCloneBackingbean extends
 				if (fcSecretaries != null && fcSecretaries.length > 0) {
 					fcSecretaryCode = retrieveParameterById(Long
 							.valueOf(fcSecretaries[0].getValue().toString()));
-					;
+					
 				} else {
 					fcSecretaryCode = null;
 				}

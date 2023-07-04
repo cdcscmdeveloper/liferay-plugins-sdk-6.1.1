@@ -83,7 +83,7 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.catType']}" /></td>
 							<td><p:selectOneRadio
-									value="#{backingBean.managedBean.smAppl.applCategoryType}">
+									value="#{backingBean.managedBean.smAppl.applCategoryType}" disabled="#{backingBean.managedBean.upsCannotEdit}">
 									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeNrm']}"
 										itemValue="N" />
 									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeSpl']}"
@@ -115,7 +115,7 @@
 										<c:choose>
 											<c:when test="#{backingBean.managedBean.supplierUser}">
 												<td><p:selectOneRadio
-													value="#{backingBean.managedBean.physicalConsulting}">
+													value="#{backingBean.managedBean.physicalConsulting}" disabled="#{backingBean.managedBean.upsCannotEdit}">
 													<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.physical.service']}"
 														itemValue="33" />
 													<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.non.physical.service']}"
@@ -203,7 +203,7 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.catCodes.mainCat']}"
 							value="#{backingBean.managedBean.selectedCategory.pmCategoryL1.categoryL1Id}"
-							style="width: 680px;margin-bottom: 5px;">
+							style="width: 680px;margin-bottom: 5px;" disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{backingBean.managedBean.supplierParentCatList}"
@@ -227,7 +227,7 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.catCodes.subCat']}"
 							value="#{backingBean.managedBean.selectedCategory.pmCategoryL2.categoryL2Id}"
-							id="child" style="width: 680px;margin-bottom: 5px;">
+							id="child" style="width: 680px;margin-bottom: 5px;" disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{backingBean.managedBean.supplierChildCatList}"
@@ -247,7 +247,7 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label=" #{lbl['lbl.sm.catCodes.subCatDiv']}"
 							value="#{backingBean.managedBean.selectedCategory.pmCategoryL3.categoryL3Id}"
-							id="subChild" style="width: 680px;margin-bottom: 5px;">
+							id="subChild" style="width: 680px;margin-bottom: 5px;" disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{backingBean.managedBean.supplierSubChildCatList}"
