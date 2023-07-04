@@ -4227,6 +4227,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//#34135 END
 	
 	//29021 - start 34865,34866,34867 - 29021 WIP
+	/**
+	 * Evaluate if QT is a wip document. ScoreSetting less than 7 indicate wip document.
+	 *
+	 * @param scQt
+	 * @return wip flag 
+	 */
 	public boolean evaluateWIP(ScQt scQt){
 		Integer maxScoreSetting = this.getManagedBean().getWipStatusMax();
 		if(maxScoreSetting == null){
