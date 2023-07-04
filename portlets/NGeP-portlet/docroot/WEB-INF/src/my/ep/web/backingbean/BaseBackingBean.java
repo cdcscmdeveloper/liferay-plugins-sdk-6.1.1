@@ -65,6 +65,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
@@ -87,6 +88,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;//#31849  #32682
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureResDTO;
@@ -4223,4 +4225,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return AddressUtils.getFullBranchAddress(smAddress);
 	}
 	//#34135 END
+	
+	//29021 - start 34865,34866,34867 - 29021 WIP
+	public boolean evaluateWIP(ScQt scQt){
+		Integer maxScoreSetting = this.getManagedBean().getWipStatusMax();
+		if(maxScoreSetting == null){
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			maxScoreSetting = evaluationSO.checkWipScoreSettingMax(reqDTO);
+			this.getManagedBean().setWipStatusMax(maxScoreSetting);
+		}
+		return maxScoreSetting < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM;
+	}
+	//29012 - end 34865,34866,34867 - 29021 WIP
+
 }
