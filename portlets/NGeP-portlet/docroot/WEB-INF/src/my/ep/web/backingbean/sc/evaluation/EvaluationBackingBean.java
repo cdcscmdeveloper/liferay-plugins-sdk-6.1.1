@@ -8475,10 +8475,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							
 
 							// #25138, #21695 -end-
-							retriveSummaryEvaluationStage();
 
-							this.getManagedBean().setTabTechnicalIndex(3); // #25138, #21695
-							
 							reqDTOwip.setScQt(this.getManagedBean().getScQt());
 							int wipstatus = evaluationSO.checkWipScoreSetting(reqDTOwip);
 							// this.getManagedBean().setComplianceActiveIndex(2);
