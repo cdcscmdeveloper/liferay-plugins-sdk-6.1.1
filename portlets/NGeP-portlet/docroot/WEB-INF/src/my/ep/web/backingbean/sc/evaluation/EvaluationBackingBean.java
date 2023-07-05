@@ -2527,7 +2527,15 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 						localCheckList.add(checkList);
 					} else {
 						if (checkList.isScoringReq()) {
-							localCheckList.add(checkStausForUploadNoActionCheckLists(checkList, evalstage.get(0)));
+							//34943 - start
+							String evalStageStr = evalstage.get(0);
+							if (evalstage.contains(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)
+									&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+											.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
+								evalStageStr = StringUtils.join(Arrays.asList(new String[]{evalStageStr, QTConstants.TECHNICAL_EVALUATION}), ",");
+							}
+							localCheckList.add(checkStausForUploadNoActionCheckLists(checkList, evalStageStr));
+							//34943 - end
 						}
 					}
 					// 32426, #25138, #21695 - end
@@ -7786,9 +7794,25 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 								retriveSummaryEvaluationStage();
 
 								this.getManagedBean().setTabTechnicalIndex(3); // #25138, #21695
-
+								IQTEvaluationSO evaluationSO = null;
+								evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+										ModuleCodeConst.SUPPLIER_SELECTION,
+										IQTEvaluationSO.class);
+								EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+								reqDTO.setScQt(this.getManagedBean().getScQt());
+								int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
 								// this.getManagedBean().setComplianceActiveIndex(2);
-								outputTab = 2;
+								
+								if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
+										&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
+												.getManagedBean().getScQt().getEvaluationType())) {
+									retrieveReportTabDtl();									
+									outputTab = 4;
+
+								} else{
+									outputTab = 2;
+								}
+								
 								
 							//#28784 - start
 							}else if( this.getManagedBean()
@@ -8449,7 +8473,22 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 
 							this.getManagedBean().setTabFinancialIndex(3);	// #25138, #21695
 							
-							outputTab = 2;
+
+							// #25138, #21695 -end-
+
+							reqDTOwip.setScQt(this.getManagedBean().getScQt());
+							int wipstatus = evaluationSO.checkWipScoreSetting(reqDTOwip);
+							// this.getManagedBean().setComplianceActiveIndex(2);
+							
+							if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
+									&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
+											.getManagedBean().getScQt().getEvaluationType())) {
+								retrieveReportTabDtl();									
+								outputTab = 4;
+
+							} else{
+								outputTab = 2;
+							}
 
 						}else if(this.getManagedBean()
 								.getEvaluatioStageActiveIndex() == 2){
@@ -16852,8 +16891,15 @@ private void retriveCommitteeRemarksList(){
 						localCheckList.add(proposalCheckList);
 					} else {
 						if (proposalCheckList.isScoringReq()) {
-							localCheckList.add(checkStausForUploadNoActionCheckLists(proposalCheckList,
-									evalstage.get(0)));
+							//34943 - start
+							String evalStageStr = evalstage.get(0);
+							if (evalstage.contains(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)
+								&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+										.equalsIgnoreCase(proposalCheckList.getDefinationType().getParameterCode())) {
+								evalStageStr = StringUtils.join(Arrays.asList(new String[]{evalStageStr, QTConstants.TECHNICAL_EVALUATION}), ",");
+							}
+							localCheckList.add(checkStausForUploadNoActionCheckLists(proposalCheckList, evalStageStr));
+							//34943 - end
 						}
 					}
 				}
