@@ -38,13 +38,17 @@
 			
 			<!-- #28175 start -->
 			<c:choose>
-				<!-- #28175 ReOpen start -->
-				<c:when
-					test="#{(fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or 
-					fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')) and
-					(viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc eq 'Registered' or viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc eq 'Berdaftar')}">
-				<!-- #28175 ReOpen start -->
-					<p:column style="width :350px;white-space : normal">
+				<!-- #28175 Reopen #94 Start -->
+				<c:when test="#{(fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or
+				    fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')) and 
+				    (viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusBumiputera or
+			        viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusRegistered or
+			        viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusBumiFromHome or
+			        viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusNonBumiFromHome or
+			        viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusForeign or 
+			        not viewSmApplBackingBean.managedBean.smAppl.activeAppl)}">
+		        <!-- #28175 Reopen #94 End -->
+			    	<p:column style="width :350px;white-space : normal">
 						<h:outputText
 							value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.categoryL1Name}" />
 						<br />
@@ -183,7 +187,9 @@
 						<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
 						<p:scrollPanel mode="native" style="height:100px;">
 							<h:outputText value="#{aprvdCatBean.approverRemarks}" rendered="#{not empty aprvdCatBean.apprvrDecFlg}"/>
-							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty aprvdCatBean.apprvrDecFlg}" />
+							<!-- #34549 Start -->
+							<!-- <h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty aprvdCatBean.apprvrDecFlg}" /> -->
+							<!-- #34549 end -->
 						</p:scrollPanel></td>
 					</tr>
 				</table>

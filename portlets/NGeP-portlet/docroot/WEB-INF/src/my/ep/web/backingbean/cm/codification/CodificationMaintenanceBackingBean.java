@@ -330,7 +330,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 			return 1;
 		}
 		return last;
-	};
+	}
 
 
 

@@ -1579,6 +1579,49 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return generateToPdf(vmEquity, context, fileName);
 	}
 	
+	//#34166 - Start
+	public void test(String clientId, SmSvTask svTask){
+		log.info("SV Task ID >>>>>>> " + svTask.getSvTaskId());
+		log.info("masuk dalam ni Mat");
+		String fieldsName = "";
+		for (SmSvBankInfo bank : svTask.getSmSvBankInfos()) {
+			if (bank.getRemark() != null){
+				if (bank.getRemark().contains("<") || bank.getRemark().contains(">")) {
+					log.info("Ini adalah bank remark" + bank.getRemark());
+					fieldsName = ResourceBundleUtils.getMessage("lbl.sm.sv.bank.remark",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+					throw new  EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+							new String[] { fieldsName.toLowerCase() }));
+				}
+			}
+			if (bank.getSmSupplierBank().getSignatureInstruction() != null){
+				log.info("Signature Information >>>>>>>> " + bank.getSmSupplierBank().getSignatureInstruction());
+				if(bank.getSmSupplierBank().getSignatureInstruction().contains("<") || bank.getSmSupplierBank().getSignatureInstruction().contains(">")){
+					log.info("Ini adalah bank remark" + bank.getRemark());
+					fieldsName = ResourceBundleUtils.getMessage("lbl.sm.sv.bank.terms.cond",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+					throw new  EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+							new String[] { fieldsName.toLowerCase() }));
+				}
+			}
+		}
+		
+		for (SmSvFinChecklist checklist : svTask.getSmSvFinChecklists()) {
+			if(checklist.getRemark() != null){
+				if (checklist.getRemark().contains("<") || checklist.getRemark().contains(">")) {
+					log.info("Ini adalah parameter code >>>>>>>> " + checklist.getPmParameter().getParameterCode());
+					log.info("Ini adalah remark untuk parameter tu >>>>>>>>> " + checklist.getRemark());
+					fieldsName = getParameterDesc(ParameterTypeConst.SVO_FIN_CHECKLIST, checklist.getPmParameter().getParameterCode());
+					log.info("Ini ada fieldsName >>>>>>>>>>>> " + fieldsName);
+					throw new  EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+							new String[] { fieldsName.toLowerCase() }));
+				}
+			}
+		}
+		
+		RequestContext.getCurrentInstance().execute("document.getElementById('" + clientId + "').click()");
+	}
+	
+	//#34166 - End
+	
 	/**
 	 * Generate Site Visit Template - Section B
 	 * @param svTask

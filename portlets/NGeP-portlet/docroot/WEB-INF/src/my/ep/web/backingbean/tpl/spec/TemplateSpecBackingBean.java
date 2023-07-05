@@ -121,7 +121,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
-import org.python.core.exceptions;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -273,6 +272,8 @@ public class TemplateSpecBackingBean extends
 							evalReqDTO.setQtId(templateSpecBean.getQt().getQtId());
 							evalReqDTO.setProposalChecklist(templateSpecBean.getQtProposalChecklist());
 							int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
+							//#25138(wip 4serangkai) bug -Start 8/6/2023
+							this.getManagedBean().setWipStatusMax(wipstatus);
 							//#25138 for demo
 							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
 									&& !templateSpecBean.getQt().isDemoRequired()) {
@@ -1270,7 +1271,7 @@ public class TemplateSpecBackingBean extends
 					RoleCode[] r = {RoleCode.SC_SECRETARY};
 					if (userHasRole(r)){
 						getManagedBean().setSecretaryValidate(true);
-					};
+					}
 //					if(authoriztionList.contains(pmRoleDesc.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.SC_SECRETARY.value()))){
 //						getManagedBean().setSecretaryValidate(true);
 //					}
@@ -1392,7 +1393,7 @@ public class TemplateSpecBackingBean extends
 					RoleCode[] r = {RoleCode.SC_SECRETARY};
 					if (userHasRole(r)){
 						getManagedBean().setSecretaryValidate(true);
-					};
+					}
 				}
 			}
 		}
@@ -3217,7 +3218,7 @@ public class TemplateSpecBackingBean extends
 								.getEstimatedCost()).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
 					} // bugs #26234 
 				}
-		};
+		}
 
 		specMaster.setTotalEstAmount(totalEstAmount);
 	}
@@ -5676,7 +5677,7 @@ public class TemplateSpecBackingBean extends
 					if (userHasRole(r)) {
 						getManagedBean().setSecretaryValidate(true);
 					}
-					;
+					
 				}
 			}
 		}

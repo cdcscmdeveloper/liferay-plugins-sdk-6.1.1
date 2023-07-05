@@ -89,7 +89,7 @@
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
-		               	<p:column rowspan="2" style="width:5%; text-align:center;">
+		               	<p:column rowspan="2" style="width:5%; text-align:center;" rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
 		               		<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.rating']}" />
 								<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
@@ -97,13 +97,13 @@
 		               	</p:column>
 		               	<p:column rowspan="2" style="width:5%; text-align:center; white-space:normal;">
 		               		<f:facet name="header">
-								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
+								<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
 									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
-									<p:outputLabel value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
-								</p:commandLink>		               		
+									<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
+								</p:commandLink><br/>		               		
 			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
-									<p:outputLabel value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
+									<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
 									<!--  #29466 - START -->
 									<f:setPropertyActionListener value="#{suppFinalizationBackingBean.managedBean.scQt}"
 												   	 target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
@@ -207,7 +207,7 @@
 													CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</h:outputText>
 				</p:column>
-				<p:column style="text-align:center;">
+				<p:column style="text-align:center;" rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
 					<h:outputText value="#{empty shortlistedSupp.totalRating? 0: shortlistedSupp.totalRating}"/>
 				</p:column>
 	
@@ -310,7 +310,7 @@
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
-		               	<p:column rowspan="2" style="width:5%; text-align:center;">
+		               	<p:column rowspan="2" style="width:5%; text-align:center;" rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
 		               		<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.rating']}" />
 								<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
@@ -318,13 +318,13 @@
 		               	</p:column>
 		               	<p:column rowspan="2" style="width:5%; text-align:center; white-space:normal;">
 		               		<f:facet name="header">
-								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
+								<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
 									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
-									<p:outputLabel value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
-								</p:commandLink>		               		
+									<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
+								</p:commandLink><br/>		               		
 			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
-									<p:outputLabel value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
+									<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
 									<!--  #29466 - START -->
 									<f:setPropertyActionListener value="#{suppFinalizationBackingBean.managedBean.scQt}"
 												   	 target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
@@ -424,7 +424,7 @@
 					</h:outputText>
 				</p:column>
 	
-				<p:column style="text-align:center;">
+				<p:column style="text-align:center;" rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
 					<h:outputText value="#{empty shortlistedSupp.totalRating? 0: shortlistedSupp.totalRating}"/>
 				</p:column>
 				<p:column style="text-align:center;">
