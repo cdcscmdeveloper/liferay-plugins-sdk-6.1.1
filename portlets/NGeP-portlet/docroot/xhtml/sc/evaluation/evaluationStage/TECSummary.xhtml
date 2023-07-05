@@ -77,15 +77,18 @@
 					<p:column headerText="#{lbl['lbl.sc.total.score']}"
 						style="width:30%;white-space: normal;text-align:right;">
 						<h:outputText value="#{qualifiedSupplier.totalScore}"></h:outputText>
-					</p:column>
+					</p:column>					
 				</p:dataTable>
 				<p:spacer height="10px" />
 				<table>
+				<ui:remove>
+						<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+				</ui:remove>
 					<tr>
 						<td style="width: 230px;"><h:outputLabel
 								value="#{lbl['lbl.sc.passing.score']}" /></td>
 						<td><p:inputText readonly="true" disabled="true"
-								style="text-align:right" value="#{passingScore}"></p:inputText></td>
+								style="text-align:right" value="#{evaluationBackingBean.managedBean.passingScore}"></p:inputText></td>
 					</tr>
 					<tr>
 						<td><h:outputLabel
@@ -124,7 +127,6 @@
 						style="width:50%;white-space: normal;text-align:right;">
 						<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 					</p:column>
-
 				</p:dataTable>
 
 				<p:spacer height="10px" />

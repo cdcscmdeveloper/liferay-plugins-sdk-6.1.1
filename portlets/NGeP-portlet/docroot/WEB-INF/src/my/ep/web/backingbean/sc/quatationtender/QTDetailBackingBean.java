@@ -1002,15 +1002,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * Method to search the quationtenders based on serach date.
 	 */
 	public void searchQTAction() {
-		if(this.getManagedSearchBeanDocumentTypeIsLOA()){
+		if (this.getManagedSearchBeanDocumentTypeIsLOA()) {
 			getManagedBean().getSearchLoaForQtDataModel().reloadData();
-		}
-		else if(this.getManagedSearchBeanDocumentTypeIsLOI()){
+		} else if (this.getManagedSearchBeanDocumentTypeIsLOI()) {
 			getManagedBean().getSearchLoiForQtDataModel().reloadData();
+		} else {
+			getManagedBean().getSearchQTDataModel().reloadData();
 		}
-		else;
-		getManagedBean().getSearchQTDataModel().reloadData();
-		
 	}
 
 	/**
@@ -1424,7 +1422,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 				}
 			}
-			else;
+
 		}
 		else if(ParameterConst.DOCTYPE_LETTER_OF_AWARD.equalsIgnoreCase(docType) 
 				|| ParameterConst.DOCTYPE_LETTER_OF_INTENT.equalsIgnoreCase(docType)){
@@ -1462,7 +1460,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				return viewOnlineBidding(scQt,previousPageUrl); //#17376-144
 			}
 		}
-		else;
 		
 		return null;
 	}
@@ -1802,7 +1799,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, reverseQtDetails(Boolean.FALSE,Boolean.TRUE,null));
 				}
 			}
-			else;
+
 		}
 		
 		return null;
@@ -4564,79 +4561,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									budgetApprovalUsers));
 						} else if (ParameterConst.APPROVAL_CATEGORY_OTHERS
 								.equals(approvalCategoryCode)) {
-							List<ScQtApprovalRequest> approvalRequest = qtApproval
-									.getScQtApprovalDtls();
-							if (null != approvalRequest
-									&& !approvalRequest.isEmpty()) {
-								for (int i = 0; i < approvalRequest.size(); i++) {
-									PmParameter parameter = approvalRequest
-											.get(i).getApproverAction();
-									if (null != parameter) {//#25077 - Start
-										
-										// Retrieve Others approval tab dtl with save data.
-										if (null != getManagedBean().getPmParam()) {
-											approvalRequest.get(i).setApproverAction(getManagedBean().getPmParam());
-										}
-										
-										if(approvalRequest.get(i).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS)){
-											if(this.getManagedBean().getQt().isCloneEnabled()){//34502&25635-start
-												approvalRequest.get(i).getAppRequestRemark().setRemark(getManagedBean().getScQtAppRequestRemarkICT());
-												approvalRequest.get(i).setApproverAction(new PmParameter());
-												approvalRequest.get(i).setApprovalRequestAttachement(null);
-											    this.getManagedBean().getQt().setCloneEnabled(Boolean.FALSE);
-											}//34502&25635-end
-											   if(this.getManagedBean().isFlagFileAttahmentDeletedICT()){
-											      if (null == getManagedBean().getScQtApprovalReqAttachementICT()) {
-												     approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementICT());
-											      }else{
-												     approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementICT());
-											      }
-											   }else{
-												  if(null != getManagedBean().getScQtApprovalReqAttachementICT()){
-											    	 approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementICT());
-											      } 
-										       }
-											   
-											   if(approvalRequest.get(i).getAppRequestRemark() != null && StringUtils.isNotEmpty(approvalRequest.get(i).getAppRequestRemark().getRemark())){
-												   getManagedBean().setScQtAppRequestRemarkICT(approvalRequest.get(i).getAppRequestRemark().getRemark());
-											   }
-											   
-										}
-										if(approvalRequest.get(i).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)){
-											   if(this.getManagedBean().isFlagFileAttahmentDeletedMITI()){
-											      if (null == getManagedBean().getScQtApprovalReqAttachementMITI()) {
-												     approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementMITI());
-											      }else{
-												     approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementMITI());
-											      }
-											   }else{
-												  if(null != getManagedBean().getScQtApprovalReqAttachementMITI()){
-											    	 approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementMITI());
-											      } 
-											   }
-											      
-											   if(approvalRequest.get(i).getAppRequestRemark() != null && StringUtils.isNotEmpty(approvalRequest.get(i).getAppRequestRemark().getRemark())){
-												   getManagedBean().setScQtAppRequestRemarkMITI(approvalRequest.get(i).getAppRequestRemark().getRemark());
-											   }
-											   
-										}
-										
-										
-									}else{
-										
-										// Retrieve Others approval tab dtl after save data & then need to reset all of it.
-										approvalRequest.get(i).setApproverAction(new PmParameter());
-										
-										approvalRequest.get(i).setApprovalRequestAttachement(null);
-										
-										ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
-										approvalRemark.setApprovalRequest(approvalRequest.get(i));
-										approvalRequest.get(i).setAppRequestRemark(approvalRemark);
-								 
-									}
-									//#25077 - End
-								}
-							}
 							// #25077 - Start
 							List<ScQtApprovalRequest> approvalRequestHistory = qtApproval.getHistoryApprovalRequests();
 							if (null != approvalRequestHistory && !approvalRequestHistory.isEmpty()){
@@ -4746,7 +4670,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	
 	//#25077 - Start
 	/**
-	 * Retrieve Others approval tab dtl without save data & go through submit process.
+	 * Retrieve Others approval tab dtl.
 	 */
 	public void retrieveOthersApprovalTabDtl() {
 		
@@ -4786,6 +4710,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 											.get(i).getApproverAction();
 	                                 if (null == parameter) {
 	                                	 
+	                                	// Retrieve ScQtApprovalRequest without save data & do submit.
 										if (null != getManagedBean().getPmParam()) {
 											approvalRequest.get(i).setApproverAction(getManagedBean().getPmParam());
 										}else{
@@ -4796,12 +4721,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										approvalRemark.setApprovalRequest(approvalRequest.get(i));
 										approvalRequest.get(i).setAppRequestRemark(approvalRemark);
 							
-									
 										if(approvalRequest.get(i).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS)){
 											if(this.getManagedBean().isFlagFileAttahmentDeletedICT()){
 												if (null != getManagedBean().getScQtApprovalReqAttachementICT()) {
-													approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementICT());
-												}else{
 													approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementICT());
 												}
 											}else{
@@ -4814,13 +4736,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 												approvalRemark.setApprovalRequest(approvalRequest.get(i));
 												approvalRequest.get(i).getAppRequestRemark().setRemark(getManagedBean().getScQtAppRequestRemarkICT());
 											}
-											
 										}
 										if(approvalRequest.get(i).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)){
 											if(this.getManagedBean().isFlagFileAttahmentDeletedMITI()){	
 												if (null != getManagedBean().getScQtApprovalReqAttachementMITI()) {
-													approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementMITI());
-												}else{
 													approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementMITI());
 												}
 											}else{ 
@@ -4834,12 +4753,68 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 											    approvalRemark.setApprovalRequest(approvalRequest.get(i));
 												approvalRequest.get(i).getAppRequestRemark().setRemark(getManagedBean().getScQtAppRequestRemarkMITI());	
 									        }
-										
-									
 										}
 									
+									}else{
 										
-									} 
+										// Retrieve ScQtApprovalRequest with save data.
+										if (null != getManagedBean().getPmParam()) {
+											approvalRequest.get(i).setApproverAction(getManagedBean().getPmParam());
+										}
+										
+										if(approvalRequest.get(i).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS)){
+											if(this.getManagedBean().getQt().isCloneEnabled()){//34502&25635-start
+												approvalRequest.get(i).getAppRequestRemark().setRemark(getManagedBean().getScQtAppRequestRemarkICT());
+												approvalRequest.get(i).setApproverAction(new PmParameter());
+												approvalRequest.get(i).setApprovalRequestAttachement(null);
+											    this.getManagedBean().getQt().setCloneEnabled(Boolean.FALSE);
+											}//34502&25635-end
+											   if(this.getManagedBean().isFlagFileAttahmentDeletedICT()){
+											      if (null != getManagedBean().getScQtApprovalReqAttachementICT()) {
+												     approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementICT());
+											      }
+											   }else{
+												  if(null != getManagedBean().getScQtApprovalReqAttachementICT()){
+											    	 approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementICT());
+											      } 
+										       }
+											   
+											   if(approvalRequest.get(i).getAppRequestRemark() != null && StringUtils.isNotEmpty(approvalRequest.get(i).getAppRequestRemark().getRemark())){
+												   getManagedBean().setScQtAppRequestRemarkICT(approvalRequest.get(i).getAppRequestRemark().getRemark());
+											   }
+											   
+											   if(null == approvalRequest.get(i).getAppRequestRemark()){
+												   ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
+												   approvalRemark.setApprovalRequest(approvalRequest.get(i));
+												   approvalRequest.get(i).setAppRequestRemark(approvalRemark);
+												   approvalRequest.get(i).getAppRequestRemark().setRemark(" ");
+											   } 
+										}
+										if(approvalRequest.get(i).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)){
+											   if(this.getManagedBean().isFlagFileAttahmentDeletedMITI()){
+											      if (null != getManagedBean().getScQtApprovalReqAttachementMITI()) {
+												     approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementMITI());
+											      }
+											   }else{
+												  if(null != getManagedBean().getScQtApprovalReqAttachementMITI()){
+											    	 approvalRequest.get(i).setApprovalRequestAttachement(getManagedBean().getScQtApprovalReqAttachementMITI());
+											      } 
+											   }
+											      
+											   if(approvalRequest.get(i).getAppRequestRemark() != null && StringUtils.isNotEmpty(approvalRequest.get(i).getAppRequestRemark().getRemark())){
+												   getManagedBean().setScQtAppRequestRemarkMITI(approvalRequest.get(i).getAppRequestRemark().getRemark());
+											   }
+											   
+											   if(null == approvalRequest.get(i).getAppRequestRemark()){
+												   ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
+												   approvalRemark.setApprovalRequest(approvalRequest.get(i));
+												   approvalRequest.get(i).setAppRequestRemark(approvalRemark);
+												   approvalRequest.get(i).getAppRequestRemark().setRemark(" ");
+											   }
+											   
+										}
+										
+									}
 								}
 							}
 							tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
@@ -5965,7 +5940,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						RoleCode[] r = {RoleCode.SC_SECRETARY};
 						if (userHasRole(r)){
 							getManagedBean().setSecretaryValidate(true);
-						};
+						}
 //						if(authoriztionList.contains(pmRoleDesc.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.SC_SECRETARY.value()))){
 //							getManagedBean().setSecretaryValidate(true);
 //						}
@@ -6911,6 +6886,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}	
 		//9019 - End (Harun)
 		
+		//9019 - Start (Harun) #Note-398 and merge with #Note-487
+		if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().getQt().getSpecApprovalReq() == true) {
+			this.getManagedBean().getQt().setSpecApprovalReq(false);
+			reqDTO.getQtdetail().setSpecApprovalReq(false);
+			reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
+		}
+		//9019 - End (Harun)
+		
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
 		switch (changedIndexNumber) {
 		case 0:
@@ -6922,13 +6905,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (this.getManagedBean().isScQtRemarksEmpty()) {
 				this.getManagedBean().getQt().setScQtRemarks(null);
 			} 
-			//9019 - End (Harun)
-			//9019 - Start (Harun) #Note-398 Remove checking for (ERR-100022) error mesg while save 
-			if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().getQt().getSpecApprovalReq() == true) {
-				this.getManagedBean().getQt().setSpecApprovalReq(false);
-				reqDTO.getQtdetail().setSpecApprovalReq(false);
-				reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
-			}
 			//9019 - End (Harun)
 			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
 			//9019 - end
@@ -6952,7 +6928,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//       while save due to save empty object
 			if (this.getManagedBean().isScQtRemarksEmpty()) {
 				this.getManagedBean().getQt().setScQtRemarks(null);
-			} 
+			}
 			//9019 - End (Harun)
 			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
 			//9019 - end
@@ -7035,6 +7011,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			this.getManagedBean().setSelectedApprovalTabIndex(selectedApprovalTabIndex);
 			setAmmendMentBean(resDTO.getAmendMentBean());
+			retrieveOthersApprovalTabDtl(); //#25077
 			retrieveApprovalTabDtl();
 			getfulfilmentDtls(resDTO.getQtDetail());//#29474
 			break;
@@ -10441,7 +10418,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//29464-start
 		else if(taskName.equals(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)){
 			menuSet.add(getMenuItemSpecificationCommitteeAssignment());
-		};
+		}
 		//29464-end
 		// ***25692#31
 		if(isApprovalScreen() && menuSet != null){
@@ -11469,7 +11446,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				String approvalCategoryCode = bpkApproval.getApprovalCategory().getParameterCode();     
 				if (!bpkApproval.isDeleted() && ParameterConst.APPROVAL_CATEGORY_BPK.equals(approvalCategoryCode)) {
 						
-						if(null != statusId && this.getManagedBean().isMaintanceFlow() == false && 
+						if(null != statusId && !this.getManagedBean().isMaintanceFlow() && 
 							   (statusId.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || 
 								statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION) || 
 								statusId.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL))){	
@@ -11483,27 +11460,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							}// end looping bpk request approval 
    						   
    						}
-		       				
-						if(null != statusId && this.getManagedBean().isMaintanceFlow() == false && 
-								statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION)){
-							
-							List<ScQtApprovalRequest> bpkRequestHistorys = bpkApproval.getHistoryApprovalRequests();
-	       					for (ScQtApprovalRequest bpkRequestHistory : bpkRequestHistorys) {
-	       						PmParameter approvalAction = bpkRequestHistory.getApproverAction();
-	       						if(null!=approvalAction && approvalAction.getParameterCode().equals(ParameterConst.APPROVAL_DECISION_TYPE_APPROVED)){
-	       							
-	       							List<ScQtApprovalRequest> bpkRequests = bpkApproval.getScQtApprovalDtls();
-       								for (ScQtApprovalRequest bpkRequest : bpkRequests) {
-       									PmParameter approvalType = bpkRequest.getApprovalType();
-       									if(null!=approvalType){
-       										return Boolean.TRUE;
-       									}
-       								}// end looping bpk request approval UserSO.java
-	       						   
-	       						}
-	       					}// end looping history bpk approval
-		       			
-						}
 				
 				}
 			} // end looping bpk approval
@@ -11526,61 +11482,61 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		for (int i = 0; i < approval.size(); i++) {
 			if (approvalCategory.equalsIgnoreCase(approval.get(i).getApprovalCategory().getParameterCode())) {
 				List<ScQtApprovalRequest> approvalRequestHistory = approval.get(i).getHistoryApprovalRequests();
-				for (int j = 0; j < approvalRequestHistory.size(); j++) {
-					PmParameter approvalAction = approvalRequestHistory.get(j).getApproverAction();
-					if(null!=approvalAction){
-						
-						if(approvalRequestHistory.get(j).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS)){
-   							 if(this.getManagedBean().isFlagFileAttahmentDeletedICT()){
-	 	  			                 ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
-	 	      	                     if(null == approvalReqAttachement){
-	 	      	                    	  this.getManagedBean().setResetBpkCurrentArea(false);
-	 	      	                    	  throw new EpException(MessageConst.ERROR_760509);
-	 	      	                     }
-    						  }
-					    }
-						
-						if(approvalRequestHistory.get(j).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)){
-							 if(this.getManagedBean().isFlagFileAttahmentDeletedMITI()){
-	 	  			                 ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
-	 	      	                     if(null == approvalReqAttachement){
-	 	      	                    	  this.getManagedBean().setResetBpkCurrentArea(false);
-	 	      	                    	  throw new EpException(MessageConst.ERROR_760509);
-	 	      	                     }
-					         } 
-					    }
-						
+				if(CollectionUtils.isNotEmpty(approvalRequestHistory)){
+					for (int j = 0; j < approvalRequestHistory.size(); j++) {
+						PmParameter approvalAction = approvalRequestHistory.get(j).getApproverAction();
+						if(null!=approvalAction){
+							
+							if(approvalRequestHistory.get(j).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS)){
+	   							 if(this.getManagedBean().isFlagFileAttahmentDeletedICT()){
+		 	  			                 ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
+		 	      	                     if(null == approvalReqAttachement){
+		 	      	                    	  this.getManagedBean().setResetBpkCurrentArea(false);
+		 	      	                    	  throw new EpException(MessageConst.ERROR_760509);
+		 	      	                     }
+	    						  }
+						    }
+							
+							if(approvalRequestHistory.get(j).getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)){
+								 if(this.getManagedBean().isFlagFileAttahmentDeletedMITI()){
+		 	  			                 ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
+		 	      	                     if(null == approvalReqAttachement){
+		 	      	                    	  this.getManagedBean().setResetBpkCurrentArea(false);
+		 	      	                    	  throw new EpException(MessageConst.ERROR_760509);
+		 	      	                     }
+						         } 
+						    }
+							
+						}
 					}
-				}
+			   }
 			}
 		}
 	}
 	
 	private void checkValidationForStatusAndFileAttachment(List<ScQtApproval> approval,String approvalCategory){
-		if (CollectionUtils.isNotEmpty(approval)) {
-			for (int i = 0; i < approval.size(); i++) {
-				if (approvalCategory.equalsIgnoreCase(approval.get(i).getApprovalCategory().getParameterCode())) {
-					List<ScQtApprovalRequest> approvalRequest = approval.get(i).getScQtApprovalDtls();
-					if (CollectionUtils.isNotEmpty(approvalRequest)) {
-       					for (int j = 0; j < approvalRequest.size(); j++) {
-       						
-       						PmParameter approverAction = approvalRequest.get(j).getApproverAction();
-							if (null == approverAction || null == approverAction.getParameterId()) {
-								this.getManagedBean().setResetBpkCurrentArea(false);
-								throw new EpException(MessageConst.ERROR_760149);
-							}
-							
-       						ScQtApprovalReqAttachement approvalReqAttachement = approvalRequest.get(j).getApprovalRequestAttachement();
-      	                    if(null == approvalReqAttachement){
-      	                    	this.getManagedBean().setResetBpkCurrentArea(false);
-      	                    	throw new EpException(MessageConst.ERROR_760509);
-      	                    }
-      	                    
-       					}
+		for (int i = 0; i < approval.size(); i++) {
+			if (approvalCategory.equalsIgnoreCase(approval.get(i).getApprovalCategory().getParameterCode())) {
+				List<ScQtApprovalRequest> approvalRequest = approval.get(i).getScQtApprovalDtls();
+				if(CollectionUtils.isNotEmpty(approvalRequest)){
+					for (int j = 0; j < approvalRequest.size(); j++) {
+						
+						PmParameter approverAction = approvalRequest.get(j).getApproverAction();
+						if (null == approverAction || null == approverAction.getParameterId()) {
+							this.getManagedBean().setResetBpkCurrentArea(false);
+							throw new EpException(MessageConst.ERROR_760149);
+						}
+						
+						ScQtApprovalReqAttachement approvalReqAttachement = approvalRequest.get(j).getApprovalRequestAttachement();
+	                    if(null == approvalReqAttachement){
+	                    	this.getManagedBean().setResetBpkCurrentArea(false);
+	                    	throw new EpException(MessageConst.ERROR_760509);
+	                    }
+	                    
 					}
-				} 
+				}
 			} 
-		}
+		} 
 	}
 	
 	/**

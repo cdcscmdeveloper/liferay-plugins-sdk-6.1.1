@@ -123,6 +123,10 @@ import org.primefaces.event.SelectEvent;
 public class SupplierFinalizationMeetingBackingBean extends 
 						SourcingBaseBackingBean<SupplierFinalizationMeetingManagedBean> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static Logger log = EpLogger.getLogger(SupplierFinalizationMeetingBackingBean.class);
 
 	private void debugLogger(Object message) {
@@ -1527,6 +1531,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 	private void renewSessionAndRetrieve() {
 		ScQt scQt = getManagedBean().getScQt();
 		String taskId = this.getManagedBean().getTaskId();
+		String taskName = this.getManagedBean().getTaskName();//25037
 		String[] outComes = this.getManagedBean().getOutComes();
 		String processName = this.getManagedBean().getProcessName();
 		String committeeType = this.getManagedBean().getCommitteeType();
@@ -1542,6 +1547,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		//25037 note 284 - end
 		this.prepareMemberUpdate();//#25027
 		this.getManagedBean().setTaskId(taskId);
+		this.getManagedBean().setTaskName(taskName);//25037
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
 		this.getManagedBean().setCurrentStatusId(currentStatusId);
@@ -1954,7 +1960,7 @@ if (CollectionUtils.isNotEmpty(
 				finalBB.saveSupplierFinalization(true);
 			}else if(finalBiddingBB!=null){
 				finalBiddingBB.saveOnlineEndorsement(true);
-			};
+			}
 
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sc/supplierFinalization/confirmMeeting/memberUpdate.xhtml");
 		}else if(action.equalsIgnoreCase("confirm")){
