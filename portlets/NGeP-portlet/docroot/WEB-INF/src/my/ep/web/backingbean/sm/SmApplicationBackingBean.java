@@ -17170,18 +17170,23 @@ public class SmApplicationBackingBean extends
 	
 	// #34166 - Start
 	public void validateText() {
-		if (getManagedBean().getSmAppl() != null) {
-			if (!(getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty())) {
-				for (SmSupplierBank banks : getManagedBean().getSmAppl().getSmSupplierBanks()) {
-					if (banks.getSignatureInstruction().contains("<") || banks.getSignatureInstruction().contains(">")) {
-						StringBuilder sb = new StringBuilder();
-						Locale locale = new FacesScopes().getUserLocale();
-						sb.append(ResourceBundleUtils.getMessage("lbl.sm.bankDtls.chequesign.tnc",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-						throw new EpException(MessageConst.ERROR_775191, new String[] { sb.toString().toLowerCase() });
-
+		if(!getManagedBean().isPoUser()){
+			if(!getManagedBean().isApproverUser()){
+				if (getManagedBean().getSmAppl() != null) {
+					if (!(getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty())) {
+						for (SmSupplierBank banks : getManagedBean().getSmAppl().getSmSupplierBanks()) {
+							if (banks.getSignatureInstruction().contains("<")
+									|| banks.getSignatureInstruction().contains(">")) {
+								StringBuilder sb = new StringBuilder();
+								Locale locale = new FacesScopes().getUserLocale();
+								sb.append(ResourceBundleUtils.getMessage("lbl.sm.bankDtls.chequesign.tnc",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+								throw new EpException(MessageConst.ERROR_775191,
+										new String[] { sb.toString().toLowerCase() });
+							}
+						}
 					}
-				}
+				}	
 			}
 		}
 	}

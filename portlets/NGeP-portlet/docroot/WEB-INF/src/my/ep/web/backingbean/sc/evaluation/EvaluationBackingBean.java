@@ -8022,11 +8022,30 @@ public class EvaluationBackingBean extends
 							}else if( this.getManagedBean()
 									.getPresentationDemoActiveIndex() < 0 ||
 									this.getManagedBean().getTabTechnicalIndex() == 2){
+								// #25138, #21695 -end-
 								retriveSummaryEvaluationStage();
-								this.getManagedBean().setTabTechnicalIndex(3);
-								// this.getManagedBean().setComplianceActiveIndex(2);
-								outputTab = 2;
 
+								this.getManagedBean().setTabTechnicalIndex(3); // #25138, #21695
+								IQTEvaluationSO evaluationSO = null;
+								evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+										ModuleCodeConst.SUPPLIER_SELECTION,
+										IQTEvaluationSO.class);
+								EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+								reqDTO.setScQt(this.getManagedBean().getScQt());
+								int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+								// this.getManagedBean().setComplianceActiveIndex(2);
+								
+								if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
+										&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
+												.getManagedBean().getScQt().getEvaluationType())) {
+									retrieveReportTabDtl();									
+									outputTab = 4;
+
+								} else{
+									outputTab = 2;
+								}
+								
+								
 							//#28784 - start
 							}else if( this.getManagedBean()
 									.getPresentationDemoActiveIndex() < 0 ||
@@ -8639,7 +8658,19 @@ public class EvaluationBackingBean extends
 							retriveSummaryEvaluationStage();
 //							retriveOneTierFinancialSupplierSummary();
 							this.getManagedBean().setTabFinancialIndex(3);	
-							outputTab = 2;
+							reqDTOwip.setScQt(this.getManagedBean().getScQt());
+							int wipstatus = evaluationSO.checkWipScoreSetting(reqDTOwip);
+							// this.getManagedBean().setComplianceActiveIndex(2);
+							
+							if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
+									&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
+											.getManagedBean().getScQt().getEvaluationType())) {
+								retrieveReportTabDtl();									
+								outputTab = 4;
+
+							} else{
+								outputTab = 2;
+							}
 
 						}else if(this.getManagedBean()
 								.getEvaluatioStageActiveIndex() == 2){
@@ -15461,6 +15492,9 @@ private void retriveCommitteeRemarksList(){
 			//#25138 - evaluate/view status - start
 			List<ScQtCheckList> amountChecklist = resDTO
 					.getCheckListResultBean().getResultList();
+			//34528-uat 4serangkai - start
+			List<ScQtProposalAmount> listamountbyzone = new ArrayList<>();
+			//34528-uat 4serangkai - end
 			for(ScQtCheckList singleChecklist : amountChecklist){
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 						.equalsIgnoreCase(singleChecklist
@@ -15482,6 +15516,14 @@ private void retriveCommitteeRemarksList(){
 							amountReqDto.setProposalId(amtbyproposal.getQtProposalId());
 							amountResDto = evaluationSO.retrieveProposalAmountbyProposal(amountReqDto); 
 							amounts.addAll(amountResDto.getProposalAmountListbyProposal());
+							//34528-uat 4serangkai - start
+							for (ScQtProposalAmount amount: amountResDto.getProposalAmountListbyProposal()) {
+								if (amount.getTplSpecZoneDtl().getSpecZoneId()
+										.equals(this.getManagedBean().getSpecZoneDtls().get(0).getSpecZoneId())) {
+									listamountbyzone.add(amount);
+								}								
+							}
+							//34528-uat 4serangkai - end
 						}
 						for(ScQtProposalAmount amountStatus: amounts){
 							this.getManagedBean().setEvalStatus(QTStatusConst.TS_COMPLETED);
@@ -15497,6 +15539,10 @@ private void retriveCommitteeRemarksList(){
 				}
 			}
 			//#25138 - evaluate/view status - end
+		    //34528-uat 4serangkai - start	
+			this.getManagedBean().setFinancialPackagePaginator(new Paginator(listamountbyzone, 10));
+		    //34528-uat 4serangkai - end
+			
 			innerCheckList=null;
 			evalstage=null;
 		
