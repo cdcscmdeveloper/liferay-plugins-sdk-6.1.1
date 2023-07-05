@@ -177,6 +177,8 @@ public abstract class BaseManagedBean implements Serializable {
 	//#32236 start
 	private String outputPage;
 	//#32236 end
+	
+	private Integer wipStatusMax;
 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1083,6 +1085,14 @@ public abstract class BaseManagedBean implements Serializable {
 		this.outputPage = outputPage;
 	}
 	//#32236 end
+
+	public Integer getWipStatusMax() {
+		return wipStatusMax;
+	}
+
+	public void setWipStatusMax(Integer wipStatusMax) {
+		this.wipStatusMax = wipStatusMax;
+	}
 }
 
 // ***25201
