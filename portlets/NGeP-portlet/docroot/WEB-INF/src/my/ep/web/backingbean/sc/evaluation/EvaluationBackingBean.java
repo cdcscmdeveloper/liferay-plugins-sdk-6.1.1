@@ -8489,10 +8489,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							} else{
 								outputTab = 2;
 							}
-							
-							
-						//#28784 - start
-						
 
 						}else if(this.getManagedBean()
 								.getEvaluatioStageActiveIndex() == 2){
