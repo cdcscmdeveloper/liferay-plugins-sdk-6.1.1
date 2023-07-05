@@ -69,6 +69,7 @@
 			<ui:param name="isUpdateSpecByAnswers" value="#{templateSpecBean.updateSpecByAnswers}" />
 			<ui:param name="isDurationYear" value="#{templateSpecBean.specMaster.durationMonth ge 12}"/>
 			<ui:param name="isSqSpec" value="#{templateSpecBean.specMaster.specCreatedBySQ}"/>
+			<ui:param name="isPartialQt" value="#{templateSpecBean.specMaster.scQtDoc.scQt.partial}" />
 		<!-- 25138 -start- -->
 		<ui:param name="isPackageItemSpec"
 			value="#{templateSpecBean.evaluatioStageActiveIndex == 1}" />
