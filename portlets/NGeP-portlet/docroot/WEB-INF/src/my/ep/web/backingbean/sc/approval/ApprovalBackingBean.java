@@ -570,7 +570,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				for (ScQtApprovalRequest approvalRequest : approvalRequests) {
 					if (approvalRequest.getQtApprovalRequestId().equals(dataType.getRequestId())) {
 						approvalRequests = new ArrayList<ScQtApprovalRequest>();
-						approvalRequests.add(approvalRequest);;
+						approvalRequests.add(approvalRequest);
 						break;
 					}
 				}
