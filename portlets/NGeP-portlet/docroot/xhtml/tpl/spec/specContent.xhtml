@@ -246,10 +246,9 @@
 					
 			<c:if test="#{isContentTypeAnswer or isContentTypeScore or (isContentTypeUpdateSpec and isUpdateSpecByAnswers)}">
 			<!-- #29021 -start- -->
-			<h:outputText
-				rendered="#{isContentTypeScore and isSpecTypeTechnical}"
-				styleClass="instruction"
-				value="#{lbl['lbl.sc.tec.rating.instruction']}" escape="false" />
+				<h:outputText rendered="#{isContentTypeScore and isSpecTypeTechnical and !isPartialQt}" styleClass="instruction" value="#{lbl['lbl.sc.tec.rating.instruction']}" escape="false" />
+				<h:outputText rendered="#{isContentTypeScore and isSpecTypeTechnical and isPartialQt ne null and isPartialQt}" 
+				styleClass="instruction" value="#{lbl['lbl.sc.tec.partialoffer.instruction']}" escape="false" /><br/>
 			<!-- #29021 -end- -->
 			<!-- #32110, #21695 -start- -->
 			<ui:param name="filterList"
