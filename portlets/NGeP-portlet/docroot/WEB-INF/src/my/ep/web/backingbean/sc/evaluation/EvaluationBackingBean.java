@@ -15537,6 +15537,9 @@ private void retriveCommitteeRemarksList(){
 			//#25138 - evaluate/view status - start
 			List<ScQtCheckList> amountChecklist = resDTO
 					.getCheckListResultBean().getResultList();
+			//34528-uat 4serangkai - start
+			List<ScQtProposalAmount> listamountbyzone = new ArrayList<>();
+			//34528-uat 4serangkai - end
 			for(ScQtCheckList singleChecklist : amountChecklist){
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 						.equalsIgnoreCase(singleChecklist
@@ -15558,6 +15561,14 @@ private void retriveCommitteeRemarksList(){
 							amountReqDto.setProposalId(amtbyproposal.getQtProposalId());
 							amountResDto = evaluationSO.retrieveProposalAmountbyProposal(amountReqDto); 
 							amounts.addAll(amountResDto.getProposalAmountListbyProposal());
+							//34528-uat 4serangkai - start
+							for (ScQtProposalAmount amount: amountResDto.getProposalAmountListbyProposal()) {
+								if (amount.getTplSpecZoneDtl().getSpecZoneId()
+										.equals(this.getManagedBean().getSpecZoneDtls().get(0).getSpecZoneId())) {
+									listamountbyzone.add(amount);
+								}								
+							}
+							//34528-uat 4serangkai - end
 						}
 						for(ScQtProposalAmount amountStatus: amounts){
 							this.getManagedBean().setEvalStatus(QTStatusConst.TS_COMPLETED);
@@ -15573,6 +15584,9 @@ private void retriveCommitteeRemarksList(){
 				}
 			}
 			//#25138 - evaluate/view status - end
+		    //34528-uat 4serangkai - start	
+			this.getManagedBean().setFinancialPackagePaginator(new Paginator(listamountbyzone, 10));
+		    //34528-uat 4serangkai - end
 			innerCheckList=null;
 			evalstage=null;
 		
