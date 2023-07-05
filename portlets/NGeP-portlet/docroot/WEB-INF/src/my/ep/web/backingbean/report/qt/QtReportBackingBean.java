@@ -746,7 +746,11 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			this.getManagedBean().setScReportSearchBean(reportFileSearchBean);
 		}
 	}
-
+	/**
+	 * Retrieve the QT Agency by Quotation/Tender Number
+	 * 
+	 * @param scQt
+	 */
 	public void retrieveAgencyByQuotationNumber(ScQt scQt) {
 		String ptjName = "";
 		String ptjCode = "";
@@ -765,23 +769,22 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			this.getManagedBean().getScReportSearchBean().setScPtjName(ptjName);
 		}
 	}
-
+	/**
+	 * Retrieve List of QT Desk Officer By Quotation/Tender Agency
+	 * 
+	 * @return
+	 */
 	public List<SelectItem> retrieveDescOfficerByAgency() {
-		List<SelectItem> scDescOfficerList = new ArrayList<SelectItem>();
+		List<SelectItem> scDescOfficerList = new ArrayList<>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			if (isDeskOfficer()) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(new FacesScopes().getUserSessionBean().getUserName());
-				selectItem.setValue(new FacesScopes().getUserSessionBean().getUserId());
+				selectItem.setValue(getUserIdSessionFromLoginId());
 				getManagedBean().getScReportSearchBean().setDoSelectItem(selectItem);
 				scDescOfficerList.add(selectItem);
 			} else {
-				ScQt scQt = findScQtByQuotationNumber();
-				
-				Long orgProfileId = null;
-				if (scQt != null) {
-					orgProfileId = scQt.getOrgProfileId();
-				}
+				Long orgProfileId = findScQtByQuotationNumber().getOrgProfileId();
 				
 				List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
 						new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);

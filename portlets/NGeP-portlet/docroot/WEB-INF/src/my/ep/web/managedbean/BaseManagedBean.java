@@ -173,6 +173,12 @@ public abstract class BaseManagedBean implements Serializable {
 	//#25726 start
 	private BigDecimal lowerLimit = new BigDecimal (200000);	
 	//#25726 end
+	
+	//#32236 start
+	private String outputPage;
+	//#32236 end
+	
+	private Integer wipStatusMax;
 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1069,6 +1075,24 @@ public abstract class BaseManagedBean implements Serializable {
 		this.lowerLimit = lowerLimit;
 	}	
 	//#25726 end
+
+	//#32236 start
+	public String getOutputPage() {
+		return outputPage;
+	}
+
+	public void setOutputPage(String outputPage) {
+		this.outputPage = outputPage;
+	}
+	//#32236 end
+
+	public Integer getWipStatusMax() {
+		return wipStatusMax;
+	}
+
+	public void setWipStatusMax(Integer wipStatusMax) {
+		this.wipStatusMax = wipStatusMax;
+	}
 }
 
 // ***25201

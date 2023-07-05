@@ -36,6 +36,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.sc.loiloa.LOIDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.sc.QTConstants;
@@ -543,15 +544,19 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 
 	
 	//#21692 - start
+	/**
+	 * Check If Supplier EPV Status Is Rejected
+	 * 
+	 * @return
+	 */
 	public boolean isSupplierEPVStatusRejected() {
 		boolean supplierStatus = false;
 		
-		IQTDetailSO detailSO;
 		
 		if (null != getManagedBean().getScLoiLoaList()) {
 			
 			try {
-				detailSO = BusinessDelegate.getInstance().getServiceObject(
+				IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				
 				List<Long> suppList = new ArrayList<>();
@@ -564,8 +569,9 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 					supplierStatus = detailSO.checkSupplierEPVStatus(getManagedBean().getQt().getQtId(), suppList);
 				}
 				
-			} finally {
-				detailSO = null;
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError("QTLOA", "CheckIfSupplierEPVStatusIsRejected", getManagedBean().getScLoiLoaList().get(0).getDocId().toString(), "isSupplierEPVStatusRejected",
+						getUserIdSessionFromLoginId(), e);
 			}
 			
 			boolean isValidFor21692 = this.validateSupportedTask(this.getManagedBean().getQt().getQtNo(), QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);

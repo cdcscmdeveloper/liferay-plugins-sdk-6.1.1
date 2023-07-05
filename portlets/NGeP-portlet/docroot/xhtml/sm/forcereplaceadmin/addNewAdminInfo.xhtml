@@ -138,12 +138,29 @@
 							value="*" styleClass="mandatory" /></td>
 
 					<td>
-						<p:inputText label="#{lbl['lbl.sm.userprofile.idno']}" id="newAdminIdNo"
-							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationNo}"
-							size="35" disabled="false" required="true" styleClass="mandatory" >
-							<p:ajax event="change" partialSubmit="true" process="@this" />
+						<p:inputText 
+							label="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.idno']}" 
+							required="true" id="newAdminIcNo" 
+							rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq SupplierManagementConst.NEW_IC}" 
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationNo}" 
+							size="35" maxlength="12" 
+							validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
+							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+							<p:ajax event="blur" process="@this" partialSubmit="true"/>
 						</p:inputText>
-						<p:message id="newAdminIdNoMsg" for="newAdminIdNo"
+						<p:message id="newAdminIcNoMsg" for="newAdminIcNo" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq SupplierManagementConst.NEW_IC}"
+							showSummary="true" showDetail="false" display="icon" />
+							
+						<p:inputText 
+							label="#{lbl['lbl.sm.userprofile.idno']}" 
+							required="true" id="newAdminPasptNo" 
+							rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq SupplierManagementConst.IDENTIFICATION_TYPE_PASSPORT}" 
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationNo}" 
+							size="35" maxlength="15">
+							<p:ajax event="blur" process="@this" partialSubmit="true"/>
+						</p:inputText>
+						<p:message id="newAdminPasptNoMsg" for="newAdminPasptNo" 
+							rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq SupplierManagementConst.IDENTIFICATION_TYPE_PASSPORT}"
 							showSummary="true" showDetail="false" display="icon" />
 					</td>
 				</tr>
