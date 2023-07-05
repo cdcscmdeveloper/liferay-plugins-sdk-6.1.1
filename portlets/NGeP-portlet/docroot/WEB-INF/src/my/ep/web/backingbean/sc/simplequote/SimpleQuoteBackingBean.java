@@ -876,7 +876,7 @@ public class SimpleQuoteBackingBean extends
 			if (scQuote.getSupplierId() == 0)
 				scQuote.setSupplierId(supplierId);
 		} else if (supplierId == 0) {
-			if (scQuote.getSupplierId() == 0 && !getManagedBean().getPanelSuppliers().isEmpty())
+			if (scQuote.getSupplierId() == 0 && getManagedBean().getPanelSuppliers() != null && !getManagedBean().getPanelSuppliers().isEmpty())
 				scQuote.setSupplierId(getManagedBean().getPanelSuppliers().get(0).getSmSupplier().getSupplierId());
 		}
 		// #34579 - end
