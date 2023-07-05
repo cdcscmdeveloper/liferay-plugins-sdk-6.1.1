@@ -974,9 +974,10 @@ public class EvaluationBackingBean extends
 		SPDetailBackingBean detailBackingBean = new SPDetailBackingBean();
 		detailBackingBean.getManagedBean().setQt(this.getManagedBean().getScQt());
 		detailBackingBean.getManagedBean().setReadOnly(true);
-		
+		//Bug #34745 start
 		if (proposalCheckList.getScQtCheckList().getTitle()
-				.equals("Pengesahan dari Institusi Kewangan untuk tiga bulan Penyata Bank")) {
+				.equals("Pengesahan dari Institusi Kewangan untuk tiga bulan Penyata Bank")
+				&& proposalCheckList.getScQtCheckList().getPmDocument() != null) {
 			retrieveAllFinancialChecklist("Penyata bank untuk tiga bulan");
 			retrieveComplianceUploadedProposalChecklist(proposalCheckList, true);
 			
@@ -985,7 +986,8 @@ public class EvaluationBackingBean extends
 		}
 		
 		if (proposalCheckList.getScQtCheckList().getTitle()
-				.equals("Kunci Kira-Kira Tahunan (Nota - Untuk syarikat ROC, ini mestilah salinan yang telah diaudit)")) {
+				.equals("Kunci Kira-Kira Tahunan (Nota - Untuk syarikat ROC, ini mestilah salinan yang telah diaudit)")
+				&& proposalCheckList.getScQtCheckList().getPmDocument() != null) {
 			retrieveAllFinancialChecklist("Aset dan Liabiliti (Dari Kunci Kira-kira)");
 			retrieveComplianceUploadedProposalChecklist(proposalCheckList, true);
 			
@@ -994,14 +996,15 @@ public class EvaluationBackingBean extends
 		}
 		
 		if (proposalCheckList.getScQtCheckList().getTitle()
-				.equals("Pengesahan dari Institusi Kewangan ke atas jumlah yang telah dibayar")) {
+				.equals("Pengesahan dari Institusi Kewangan ke atas jumlah yang telah dibayar")
+				&& proposalCheckList.getScQtCheckList().getPmDocument() != null) {
 			retrieveAllFinancialChecklist("Kemudahan Kredit (Overdraf, Pinjaman Bank)");
 			retrieveComplianceUploadedProposalChecklist(proposalCheckList, true);
 			
 			proposalPage = detailBackingBean.retrieveCreditFacilitiesDtls(this
 					.getManagedBean().getComplianceQtProposalChecklist());
 		}
-		
+		//Bug #34745 end
 		this.getManagedBean().setProposalPage(proposalPage);
 		
 		return "/xhtml/sc/evaluation/compliance/financialComplianceSupplierList.xhtml";
@@ -1477,7 +1480,7 @@ public class EvaluationBackingBean extends
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 
 			for (ScQtCheckList checklistOfTitle : resDTO.getCheckListResultBean().getResultList()) {
-				if (checklistOfTitle.getTitle().equals(title)) {
+				if (checklistOfTitle.getTitle().equals(title) && checklistOfTitle.getPmDocument() != null) {//Bug #34745
 					this.getManagedBean().setComplianceQtChecklist(checklistOfTitle);
 				}
 			}
