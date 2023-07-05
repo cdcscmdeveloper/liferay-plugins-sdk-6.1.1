@@ -1417,8 +1417,8 @@ public class SmFieldChangeUtil {
 			bean.setLatestAppl(null);
 			return;
 		}
-		log.info("appl status compare with: "+bean.getLatestAppl().getApplNo());
 		bean.setLatestAppl(srcAppl);
+		log.info("appl status compare with: "+bean.getLatestAppl().getApplNo());
 		bean.getLatestAppl().setHqFacility(
 				SmApplicationUtil.getHqFacilityByAppl(bean.getLatestAppl()));
 		setApplTableListChangeStatus(bean.getLatestAppl(), bean.getSmAppl(),

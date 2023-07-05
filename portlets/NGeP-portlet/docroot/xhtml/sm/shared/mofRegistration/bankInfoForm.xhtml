@@ -588,7 +588,7 @@
 							<table>
 								<tr>
 									<td>
-										<p:selectManyMenu disabled="#{backingBean.managedBean.upsCannotEdit}" showCheckbox="true"
+										<p:selectManyMenu rendered="#{!backingBean.managedBean.upsCannotEdit}" showCheckbox="true"
 											required="false"
 											label="#{lbl['lbl.sm.bankDtls.assocBran']}" id="banBranchVal"
 											value="#{backingBean.managedBean.selectedBankBranchIds}"
@@ -599,6 +599,9 @@
 												itemLabel="#{br.branchName}" itemValue="#{br.supplierBranchId}"/>
 											<!-- #34135 END -->
 										</p:selectManyMenu>
+										<h:outputText rendered="#{backingBean.managedBean.upsCannotEdit}"
+											value="#{backingBean.getSelectedBranchBank()}" escape="false" 
+											style="float:left;"/> 
 									</td>
 									<td style="vertical-align: baseline;">
 										&#160;
@@ -646,11 +649,15 @@
 							label="#{lbl['lbl.sm.bankDtls.cheSigns']}" id="bankCheqSignId"
 							value="#{backingBean.managedBean.chequeSingPerId}"
 							style="height:200px;width: 350px;"
-							disabled="#{backingBean.managedBean.upsCannotEdit}">
+							rendered="#{!backingBean.managedBean.upsCannotEdit}">
 							<f:selectItems
 								value="#{backingBean.managedBean.smAppl.smPersonnels}" var="per"
 								itemLabel="#{per.name}" itemValue="#{per.personnelId}" />
-						</p:selectManyMenu> <p:message id="bankCheqSignIdMsg" for="bankCheqSignId"
+						</p:selectManyMenu>
+						<h:outputText rendered="#{backingBean.managedBean.upsCannotEdit}"
+								value="#{backingBean.getSelectedSignatoryBank()}" escape="false" 
+								style="float:left;"/> 
+						<p:message id="bankCheqSignIdMsg" for="bankCheqSignId"
 							showSummary="true" showDetail="false" display="icon" /></td>
 
 				</tr>
