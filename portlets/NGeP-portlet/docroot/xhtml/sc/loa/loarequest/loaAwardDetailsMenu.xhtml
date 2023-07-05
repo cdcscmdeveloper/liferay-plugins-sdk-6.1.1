@@ -452,8 +452,8 @@
 								value="#{lbl['lbl.btn.assign']}"
 								disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 								action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}"
-								rendered="#{scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1}"
-											lOADetailBackingBean.isShowAssignButton(scLoiLoaItem) /><ui:remove>Bug #34757</ui:remove>
+								rendered="#{scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1 and
+											lOADetailBackingBean.isShowAssignButton(scLoiLoaItem)}" /><ui:remove>Bug #34757</ui:remove>
 							</td>
 						</c:if>
 					<!-- #32280 - end -->
