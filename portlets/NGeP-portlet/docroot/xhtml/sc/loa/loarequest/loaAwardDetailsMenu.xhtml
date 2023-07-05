@@ -128,7 +128,7 @@
 			
 			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space:normal;">
 				<h:outputText value="#{scLoiLoaItem.scRequestItem.itemName}"
-				rendered="#{scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1}"/> <ui:remove>Bug #34757</ui:remove>
+				rendered="#{scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1)}"/> <ui:remove>Bug #34757</ui:remove>
 				<p:spacer width="10" />
 				<!-- #29006 - start -->
 				<c:if
@@ -175,7 +175,7 @@
 				<br /><br />
 				<!-- #29006 - end -->
 				<h:outputText value="#{lOADetailBackingBean.getLatestItemCode(scLoiLoaItem.scRequestItem)}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null
-				 and (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1)}" /><ui:remove>Bug #34757</ui:remove>
+				 and (scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1))}" /><ui:remove>Bug #34757</ui:remove>
 				
 			</p:column>
 			
@@ -253,8 +253,8 @@
 				<p:commandButton value="#{lbl['lbl.btn.assign']}" 
 					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}"
-					rendered="#{scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1 and
-								lOADetailBackingBean.isShowAssignButton(scLoiLoaItem)}" /><ui:remove>Bug #34757</ui:remove>
+					rendered="#{scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1 and
+								lOADetailBackingBean.isShowAssignButton(scLoiLoaItem))}" /><ui:remove>Bug #34757</ui:remove>
 			</p:column>
 			<p:ajax event="page" listener="#{lOADetailBackingBean.retainAwardPage()}" process="@this" update="@this" /><ui:remove>#34242</ui:remove>
 		</p:dataTable>
@@ -324,7 +324,7 @@
 						<td style="border: 1px solid #e8e8e8; border-collapse: collapse;"
 							rowspan="#{lOADetailBackingBean.getScRequestRowCount(scLoiLoaItem.scRequestItem.requestNoteItemId)}"><h:outputText
 								value="#{scLoiLoaItem.scRequestItem.itemName}"
-								rendered="#{scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1}" /><ui:remove>Bug #34757</ui:remove> <p:spacer
+								rendered="#{scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1)}" /><ui:remove>Bug #34757</ui:remove> <p:spacer
 								width="10" /> <c:if
 								test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlag &amp;&amp; !isDocTypeQuotation}">
 
@@ -352,7 +352,7 @@
 									trackMouse="true" hideEvent="mouseleave click" />
 							</c:if> <br /> <br /> <!-- #29006 - end --> <h:outputText
 								value="#{lOADetailBackingBean.getLatestItemCode(scLoiLoaItem.scRequestItem)}"
-								rendered="#{scLoiLoaItem.scRequestItem.cmItem != null and (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1)}" /> <!-- #29007 Start Vinod --><ui:remove>Bug #34757</ui:remove>
+								rendered="#{scLoiLoaItem.scRequestItem.cmItem != null and (scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1))}" /> <!-- #29007 Start Vinod --><ui:remove>Bug #34757</ui:remove>
 							<p:spacer width="5" /> <c:if
 								test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}">
 								<p:commandLink id="itemName#{varStatus.index}"
@@ -452,8 +452,8 @@
 								value="#{lbl['lbl.btn.assign']}"
 								disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 								action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}"
-								rendered="#{scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1 and
-											lOADetailBackingBean.isShowAssignButton(scLoiLoaItem)}" /><ui:remove>Bug #34757</ui:remove>
+								rendered="#{scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1 and
+											lOADetailBackingBean.isShowAssignButton(scLoiLoaItem))}" /><ui:remove>Bug #34757</ui:remove>
 							</td>
 						</c:if>
 					<!-- #32280 - end -->
