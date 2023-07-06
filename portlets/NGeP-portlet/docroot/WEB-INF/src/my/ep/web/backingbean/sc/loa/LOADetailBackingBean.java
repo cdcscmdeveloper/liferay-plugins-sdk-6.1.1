@@ -2593,6 +2593,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				map.put("index", count);
 				map.put("itemName", scLoiLoaItem.getScRequestItem().getItemName());
 				map.put("itemQty", scLoiLoaItem.getQty());
+				//start - #29006 note 794
+				if(scLoiLoaItem.getScRequestItem().getTplSpecQuestion() != null)
+					map.put("specQuestionId", scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId());
+				
+				if(scLoiLoaItem.getTplSpecTierQty() != null){
+					map.put("specTierQtyId", scLoiLoaItem.getTplSpecTierQty().getSpecTierQtyId());
+					map.put("fromQty", scLoiLoaItem.getTplSpecTierQty().getFromQty());
+					map.put("toQty", scLoiLoaItem.getTplSpecTierQty().getToQty());
+				}
+				//end - #29006 note 794
 				list.add(map);
 				map = new HashMap();
 				count++;
@@ -11268,6 +11278,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		} else {
 			return reqItem.getCmItem().getExtensionCode();
 		}
+	}
+	
+	public boolean isShowAssignButton(ScLoiLoaItem loiLoaItem) {
+		boolean isShow = false;
+		
+		if (loiLoaItem.getTplSpecZoneDtl() != null) {
+			if (this.getManagedBean().getFirstZone() == null) {
+				this.getManagedBean().setFirstZone(loiLoaItem.getTplSpecZoneDtl().getZoneName());
+			}
+			
+			if (this.getManagedBean().getFirstZone().equals(loiLoaItem.getTplSpecZoneDtl().getZoneName())) {
+				isShow = true;
+			}
+		} else {
+			isShow = true;
+		}
+		
+		return isShow;
 	}
 	// Bug #34757 - End
 

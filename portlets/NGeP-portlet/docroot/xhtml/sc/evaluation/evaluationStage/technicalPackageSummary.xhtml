@@ -50,7 +50,7 @@
 				<h:outputText value="#{qualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
 <!-- 29021 Start-->				
-			<p:column style="width:25%;white-space: normal;text-align:center;">
+			<p:column style="width:25%;white-space: normal;text-align:center;" rendered="#{!evaluationBackingBean.evaluateWIP(evaluationBackingBean.managedBean.scQt)}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.rating']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
@@ -119,7 +119,7 @@
 
 			</p:column>
 <!-- 29021 Start-->			
-			<p:column style="width:25%;white-space: normal;text-align:center;">
+			<p:column style="width:25%;white-space: normal;text-align:center;" rendered="#{!evaluationBackingBean.evaluateWIP(evaluationBackingBean.managedBean.scQt)}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.rating']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />

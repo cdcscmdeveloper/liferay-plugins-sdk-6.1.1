@@ -196,13 +196,13 @@
 			<br />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-					disabled="#{backingBean.managedBean.upsCannotEdit}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.addOrUpdateManufacturerToSmAppl}"
 					partialSubmit="true" process="manufactorDialog"
 					onclick="manuFacBlockWidget.show();" oncomplete="manuFacBlockWidget.hide();"
 					update=":#{p:component('manufacturingMainPanelId')}, @([id$=Msg]),:#{p:component('delManuBtnId')}" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-					disabled="#{backingBean.managedBean.upsCannotEdit}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.cancelManuSaveorUpdate}" process="@this"
 					partialSubmit="true" />
 				<!-- Disable for UPS 32008 - END -->

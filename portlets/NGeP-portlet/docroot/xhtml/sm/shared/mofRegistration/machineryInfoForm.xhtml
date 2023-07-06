@@ -234,7 +234,7 @@
 							label="#{lbl['lbl.sm.category']}" id="smMachCategoryId"
 							value="#{backingBean.managedBean.selectedMachineCategoryIds}"
 							style="height:100px;width: 200px;"
-							disabled="#{backingBean.managedBean.upsCannotEdit}">
+							rendered="#{!backingBean.managedBean.upsCannotEdit}">
 							<p:ajax event="change" process="@this"
 								onstart="machineOutWidget.show()" oncomplete="machineOutWidget.hide()"
 								listener="#{backingBean.onChangeCategoryCode()}"
@@ -242,6 +242,14 @@
 							<f:selectItems
 								value="#{backingBean.getSelectedCategoryItemsByCategoryType(backingBean.managedBean.selectedMachine.categoryType.parameterId)}" />
 						</p:selectManyMenu>
+						<p:outputPanel rendered="#{backingBean.managedBean.upsCannotEdit}">
+							<ui:repeat var="cat" value="#{backingBean.managedBean.selectedMachine.smMachineCategories}">
+								<h:outputText value="#{cat.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
+									#{cat.pmCategoryL3.pmCategoryL2.categoryL2Code} #{cat.pmCategoryL3.categoryL3Code} 
+									(#{cat.pmCategoryL3.categoryName})" style="float:left"/><br />
+							</ui:repeat>
+						</p:outputPanel>
+							<!-- style="float: left;white-space: normal;" -->
 						<p:message id="smMachCategoryIdMsg" for="smMachCategoryId"
 							showSummary="true" showDetail="false" display="icon" />
 					</td>
