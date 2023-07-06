@@ -228,7 +228,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private String recentPriceDuration = ParameterConst.RECENT_PRICE_DURATION;
     
     /** The tier and promo tier flag. */
-    private boolean tierAndPromoTierFlag;;
+    private boolean tierAndPromoTierFlag;
     
     /** The zonal standard and promo flag. */
     private boolean zonalStandardAndPromoFlag;
