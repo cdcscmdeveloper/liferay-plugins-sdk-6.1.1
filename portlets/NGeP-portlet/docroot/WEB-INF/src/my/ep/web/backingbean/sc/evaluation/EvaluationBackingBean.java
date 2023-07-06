@@ -4144,12 +4144,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 
 						this.getManagedBean().setQtProposalAmounts(listProposalAmountByZone);
 						this.getManagedBean().setQtProposalAmountByProposal(listProposalAmountByQualifiedProposal);
-						
-						//34528 - start
-						List<ScQtProposalAmount> qtProposalAmountByZone = listProposalAmountByZone==null ? new ArrayList<ScQtProposalAmount>(): listProposalAmountByZone;
-						this.getManagedBean().setFinancialPackagePaginator(new Paginator(qtProposalAmountByZone, 10));
-						//34528 - end
-					
+					    //34528-uat 4serangkai - start
+					    listProposalAmountByZone = listProposalAmountByZone==null ? new ArrayList<ScQtProposalAmount>(): listProposalAmountByZone;
+					    this.getManagedBean().setFinancialPackagePaginator(new Paginator(listProposalAmountByZone, 10));
+						//34528-uat 4serangkai - end
 					}
 					// #31438, #25138, #21695 - end
 					
