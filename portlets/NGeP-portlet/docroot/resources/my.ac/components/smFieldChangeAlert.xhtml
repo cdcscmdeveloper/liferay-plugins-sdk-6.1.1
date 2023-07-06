@@ -10,10 +10,11 @@
 		<cc:attribute name="oriValue" required="true" />
 		<cc:attribute name="currValue" required="true" />
 		<cc:attribute name="alertValue" required="true"  />
+		<cc:attribute name="id2" default=""/>
 	</cc:interface>
 
 	<cc:implementation>
-		<ui:param name="alertId" value="#{cc.id}"></ui:param>
+		<ui:param name="alertId" value="#{cc.id}#{cc.attrs.id2}"></ui:param>
 		<p:outputPanel rendered="#{cc.attrs.isShow and 
 		((not empty cc.attrs.oriValue and empty cc.attrs.currValue) or (empty cc.attrs.oriValue and not empty cc.attrs.currValue) 
 		or (not empty cc.attrs.oriValue and not empty cc.attrs.currValue and cc.attrs.oriValue ne cc.attrs.currValue))}">
