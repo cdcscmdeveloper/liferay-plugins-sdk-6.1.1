@@ -5827,10 +5827,15 @@ public class TemplateSpecBackingBean extends
 			if(ans.getSpecAnswerId().equals(answer.getSpecAnswerId())
 				&& ans.getCompliance()!=null
 				&& ans.getCompliance()==Boolean.FALSE){
-				answer.setCompliance(Boolean.FALSE);
 				answer.setUserScore(new BigDecimal(0));
-			}else if(ans.getSpecAnswerId().equals(answer.getSpecAnswerId())){
-				answer.setCompliance(Boolean.TRUE);
+			}else if(ans.getSpecAnswerId().equals(answer.getSpecAnswerId())
+					&& ans.getCompliance()!=null
+					&& ans.getCompliance()==Boolean.TRUE
+					&& !ans.getUserScore().equals(null)
+					&& ans.getUserScore().equals(new BigDecimal(0))){
+				answer.setUserScore(null);
+			}else if(ans.getSpecAnswerId().equals(answer.getSpecAnswerId())
+					&& ans.getCompliance()==null){
 				answer.setUserScore(null);
 			}
 		}
