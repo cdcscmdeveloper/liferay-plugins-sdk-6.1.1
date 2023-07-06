@@ -5965,7 +5965,6 @@ public class EvaluationBackingBean extends
 						/*#29187 Start Vinod*/
 						if (null != this.getManagedBean().getScQt()
 								&& this.getManagedBean().getScQt().isZonal()
-								&& this.getManagedBean().getTplSpecZoneDtl()==null
 								&& null!=this.getManagedBean().getScQt().getQtStatus()) {
 							if(null!=this.getManagedBean().getScQt().getQtStatus().getStatusId() 
 								&& this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_EVALUATION_PROPOSAL
@@ -18497,12 +18496,15 @@ private void retriveCommitteeRemarksList(){
 			if(itm.getSampleItemId().equals(item.getSampleItemId())
 				&& itm.getCompliance()!=null
 				&& itm.getCompliance()==Boolean.FALSE){
-				item.setCompliance(Boolean.FALSE);
 				item.setUserScore(new BigDecimal(0));
 			}else if(itm.getSampleItemId().equals(item.getSampleItemId())
-						&& item.getUserScore()!=null
-						&& !item.getUserScore().equals(0)){
-				item.setCompliance(Boolean.TRUE);
+					&& itm.getCompliance()!=null
+					&& itm.getCompliance()==Boolean.TRUE
+					&& !itm.getUserScore().equals(null)
+					&& itm.getUserScore().equals(new BigDecimal(0))){
+				item.setUserScore(null);
+			}else if(itm.getSampleItemId().equals(item.getSampleItemId())
+					&& itm.getCompliance()==null){
 				item.setUserScore(null);
 			}
 		}
