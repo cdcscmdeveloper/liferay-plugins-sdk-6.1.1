@@ -51,7 +51,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.assocCmpny.companyName']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.companyName}"/>
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.companyName}" 
@@ -72,7 +72,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.companyaddress']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address1}"/>
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.address1}" 
@@ -84,7 +84,7 @@
 					<td></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address2}"/>
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.address2}" 
@@ -95,7 +95,7 @@
 					<td></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address3}"/>
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.address3}" 
@@ -106,7 +106,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryName}"/>
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 							and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmCountry.countryId}" 
@@ -121,7 +121,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateName}"/>
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmState.stateId}" 
@@ -141,7 +141,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmDivision.divisionName}"
 										rendered="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmState.adoptDivision}"/>
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmDivision.divisionId}" 
@@ -158,7 +158,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtName}"/>
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmDistrict.districtId}" 
@@ -172,7 +172,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityName}"/>
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmCity.cityId}" 
@@ -186,7 +186,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.postcode}"/>
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.postcode}" 
@@ -197,7 +197,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.phoneFull}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.phoneNo}" 
@@ -208,7 +208,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.faxFull}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.faxNo}" 
