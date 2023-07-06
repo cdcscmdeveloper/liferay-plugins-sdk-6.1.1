@@ -229,9 +229,9 @@
 	</bean>
 
 	<bean id="SM_RPT_BASIC_ACCOUNT" class="my.ep.web.bean.LovBean">
-		<property name="pk" value="supplierId" />
+		<property name="pk" value="rowNum" />
 
-		<property name="daoClass" value="my.ep.persistence.dao.sm.SmSupplierDAO" />
+		<property name="daoClass" value="my.ep.persistence.dao.sm.ViewBasicAccountWithMofDAO" />
 		<property name="searchMethod" value="retrieveBasicAccountList" />
 		<property name="columns">
 			<list>
@@ -248,7 +248,7 @@
 					<property name="bundleKey" value="lbl.sm.businessregno" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="supplierStatus" />
+					<property name="columnName" value="supplierRecordStatusStr" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sm.supplier.status" />

@@ -314,9 +314,10 @@
 						rendered="#{stageTwofunctional.definationType.parameterCode eq 'TS' or ((stageTwofunctional.pmDocument ne null) and (stageTwofunctional.pmDocument.docDefinitionKey eq 'FG' or stageTwofunctional.pmDocument.docDefinitionKey eq 'FN' or stageTwofunctional.pmDocument.docDefinitionKey eq 'BS' or ((stageTwofunctional.pmDocument.docDefinitionKey eq 'CH' or stageTwofunctional.pmDocument.docDefinitionKey eq 'AL' or stageTwofunctional.pmDocument.docDefinitionKey eq 'PC' or stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' or stageTwofunctional.pmDocument.docDefinitionKey eq 'CF') and stageTwofunctional.scoringReq)))}">
 
 						<!-- 8979 -start- -->
+						<!-- 1873 note 74 -start- -->
 						<ui:fragment
-							rendered="#{specificationBackingBean.isQTStatusChecklistScoring() or 
-						(specificationBackingBean.isQTStatusChecklistScoringRevision()) or(specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.specMaintenance)}">
+							rendered="#{!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly)}">
+						<!-- 1873 note 74 -end- -->
 						<!-- 8979 -end- -->
 							<h:graphicImage value="/css/images/design/edit.png" />
 						</ui:fragment>

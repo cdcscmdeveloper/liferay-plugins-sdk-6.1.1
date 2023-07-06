@@ -27,6 +27,7 @@ import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -69,6 +70,9 @@ public class ViewApplHistoryManagedBean extends
 	
 	//28771
 	private String SearchDocumentMode;
+	//#29482 - Start
+	private SmPersonnel smPersonnel;
+	//#29482 - End
 	
 	private Boolean displayResubmitButton; //#31248
 
@@ -417,6 +421,14 @@ public class ViewApplHistoryManagedBean extends
 	public void setSelectedInquiryResponse(SmApplInquiry selectedInquiryResponse) {
 		this.selectedInquiryResponse = selectedInquiryResponse;
 	}
+	//#29482 - Start
+	public SmPersonnel getSmPersonnel() {
+		return smPersonnel;
+	}
+	public void setSmPersonnel(SmPersonnel smPersonnel) {
+		this.smPersonnel = smPersonnel;
+	}
+	//#29482 - End
 	public boolean isEmptyMandatoryDocHistory() {
 		return emptyMandatoryDocHistory;
 	}
