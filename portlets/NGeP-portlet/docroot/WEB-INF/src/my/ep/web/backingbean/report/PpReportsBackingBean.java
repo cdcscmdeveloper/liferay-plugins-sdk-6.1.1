@@ -12,11 +12,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -42,7 +37,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pp.common.PpCommonUtil;
 
-// START #27472
+//START #27472
 import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
@@ -71,7 +66,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.context.RequestContext;
 import java.text.DecimalFormat;
 import my.ep.web.util.CommonUtils;
-
 //END #27472
 
 @ManagedBean(name = "ppReportsBackingBean")
@@ -393,7 +387,8 @@ public class PpReportsBackingBean extends
 			year = year + 1;
 			//[#24976],[#24974] - start
 			if(PpReportConst.PP_EXPENDITURE_PERFORMANCE_RPT_VAL.equals(this.getManagedBean().getReportCode()) 
-					|| PpReportConst.PP_BUDGET_ALLOCATION_AMENDMENT_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+					|| PpReportConst.PP_BUDGET_ALLOCATION_AMENDMENT_RPT_VAL.equals(this.getManagedBean().getReportCode())
+					|| PpReportConst.PP_TOTAL_APPROVED_PP_PE_MINISTRY_RPT_VAL.equals(this.getManagedBean().getReportCode())) { //[#29484]
 				range = 8;
 			}
 			//[#24976],[#24974] - end
@@ -402,7 +397,8 @@ public class PpReportsBackingBean extends
 			}
 		}		
 		//[#24976] - start
-		if(PpReportConst.PP_EXPENDITURE_PERFORMANCE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+		if(PpReportConst.PP_EXPENDITURE_PERFORMANCE_RPT_VAL.equals(this.getManagedBean().getReportCode())
+				|| PpReportConst.PP_TOTAL_APPROVED_PP_PE_MINISTRY_RPT_VAL.equals(this.getManagedBean().getReportCode())) {//[#29484]
 			this.getManagedBean().setSelectedYear(yearFrom);
 		}
 		//[#24976] - end
@@ -587,6 +583,12 @@ public class PpReportsBackingBean extends
 			reportName = "Budget Allocation Amendment Through (eP) Report";
 			generateExlBAAR(resDTO.getRequestId().toString(),params);			
 		}
+		//start [#29484]
+		else if(getManagedBean().getReportCode().equals(PpReportConst.PP_TOTAL_APPROVED_PP_PE_MINISTRY_RPT_VAL)){
+			reportName = "Total Approved Procurement and Expenditure Plan by Ministry Report";
+			generateExlTAM(resDTO.getRequestId().toString(),params);
+		}
+		//end [#29484]
 		getRptRequestSO().updateExcelPPReportName(resDTO.getRequestId(),reportName);
 	}
 
@@ -2021,8 +2023,90 @@ public class PpReportsBackingBean extends
 		        return AlphanumericSortUtil.processString((s1[ind]).toString(),(s2[ind]).toString());
 		    }});
 	}
-	
 	//end #27472
+	
+	//start [#29484] Total Approved Procurement and Expenditure Plan by Ministry Report
+	private void generateExlTAM(String reportName, LinkedHashMap<String, String> params){
+		Workbook wb = new XSSFWorkbook();
+		CreationHelper createHelper = wb.getCreationHelper();
+		String titleReport = "LAPORAN JUMLAH PERANCANGAN PEROLEHAN DAN PERBELANJAAN YANG DILULUSKAN MENGIKUT KEMENTERIAN.";
+		String tahun = "TAHUN "+ getManagedBean().getSelectedYear(); //second row
+		Map<Integer, Object[]> collectionList = new TreeMap<Integer, Object[]>();
+		Integer total1 = 0;
+		Integer total2 = 0;
+		Integer total3 = 0;
+		//#29484 - Start
+		//start kementerian tab
+		ArrayList<String> columnHeaderListMinistry = new ArrayList<String>(Arrays.asList(
+				"BIL.","KEMENTERIAN","BILANGAN PTJ eP ENABLE",
+				"BILANGAN PTJ PERANCANGAN PEROLEHAN DILULUSKAN","BILANGAN PTJ PERANCANGAN PERBELANJAAN DILULUSKAN"
+		)); //#29484 - End
+		Sheet sheetItemList = createSheetBase(wb, createHelper, "Senarai Kementerian", titleReport, 
+				columnHeaderListMinistry, columnHeaderListMinistry.size(),true,tahun);
+        
+		// Resize all columns to fit the content size
+        for(int i = 0; i < columnHeaderListMinistry.size(); i++) {   
+    		if(i==0)sheetItemList.setColumnWidth(i, 10*256);//Col : Bil.
+    		else if(i==1)sheetItemList.setColumnWidth(i, 65*256); //Kementerian
+        	else if(i==2)sheetItemList.setColumnWidth(i, 30*256); //Col : Bil Ptj
+        	else if(i==3)sheetItemList.setColumnWidth(i, 30*256); //Col : Bil PP
+        	else if(i==4)sheetItemList.setColumnWidth(i, 30*256); //Col : Bil PE
+        }
+        
+        try{
+			List<Object[]> resultList = getRptRequestSO().generatePPData(params,PpReportConst.PP_TOTAL_APPROVED_PP_PE_MINISTRY_RPT_VAL);
+			//[0]MINISTRY_NAME,[1]TOT_ENBL_ACTIVE_PTJ,[2]APPROVE_PP_PTJ,[3]APPROV_PE_PTJ
+			if(resultList.isEmpty())
+				createNotFoundRecord(wb,sheetItemList,columnHeaderListMinistry);
+			else{
+				for(int m=0; m<resultList.size(); m++){
+					Object[] row = resultList.get(m);
+					total1 += row[1] != null ? ((BigDecimal)row[1]).intValueExact() : 0;
+					total2 += row[2] != null ? ((BigDecimal)row[2]).intValueExact() : 0;
+					total3 += row[3] != null ? ((BigDecimal)row[3]).intValueExact() : 0;
+					
+					collectionList.put(m, new Object[]{
+						Integer.valueOf(m+1),
+						row[0] != null ? (String)row[0] : "",
+						row[1] != null ? ((BigDecimal)row[1]).intValueExact() : 0,
+						row[2] != null ? ((BigDecimal)row[2]).intValueExact() : 0,
+						row[3] != null ? ((BigDecimal)row[3]).intValueExact() : 0
+					});
+				}
+				
+				insertInCell(wb,createHelper,collectionList,sheetItemList);
+				
+				//total footer
+		        Row totalRecordRowItem = sheetItemList.createRow(sheetItemList.getLastRowNum()+1);
+		        
+		        for (int i = 0; i <= 1; ++i) {
+		            Cell cell = totalRecordRowItem.createCell(i);
+		            cell.setCellStyle(columnStyle(wb,createHelper,true,true,false,true,false,false,true,true));
+		            if (i == 0) {
+		                cell.setCellValue("Jumlah Keseluruhan");
+		            } 
+		        }
+				Cell cellTotalRecordItem2 = totalRecordRowItem.createCell(2);
+				cellTotalRecordItem2.setCellValue(total1);
+				cellTotalRecordItem2.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,true,true));
+				Cell cellTotalRecordItem3 = totalRecordRowItem.createCell(3);
+				cellTotalRecordItem3.setCellValue(total2);
+				cellTotalRecordItem3.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,true,true));
+				Cell cellTotalRecordItem4 = totalRecordRowItem.createCell(4);
+				cellTotalRecordItem4.setCellValue(total3);
+				cellTotalRecordItem4.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,true,true));
+				
+				sheetItemList.addMergedRegion(new CellRangeAddress(sheetItemList.getLastRowNum(),sheetItemList.getLastRowNum(),0,1)); 
+			}
+        }catch(EpException e){
+        	getRptRequestSO().updateFailedExcelReport(new BigDecimal(reportName));
+			throw new EpException(e.getMessage());
+		}
+		//end kementerian tab
+        	          
+        exportExcelReportPP(wb, reportName);
+	}
+	//end [#29484]
 	
 	public static SelectItem[] getActiveAndInactiveStatusOptions() {
 		return PpCommonUtil.getStatusOptionsDefault();
