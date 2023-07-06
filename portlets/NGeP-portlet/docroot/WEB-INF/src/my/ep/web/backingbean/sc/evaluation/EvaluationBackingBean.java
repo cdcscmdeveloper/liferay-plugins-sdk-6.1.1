@@ -1257,9 +1257,10 @@ public class EvaluationBackingBean extends
 				}
 
 				reqDTO.setComplianceList(technicalCompliance);
-			}
-			
+			}			
+			//#34493, #34427 - Start
 			//#28786 - start
+			/*
 			if (null != this.getManagedBean()
 					.getComplianceTechnicalProposalCheckListDM().getList()) {
 				for (ScQtProposalChecklist propCheck : this.getManagedBean()
@@ -1295,7 +1296,9 @@ public class EvaluationBackingBean extends
 				}
 			}
 			//#28786 - end
-
+			*/
+			//#34493, #34427 - END
+			
 			resDTO = evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
 			List<ScQtCheckList> qtCheckLists = getManagedBean()
 					.getComplianceTechnicalCheckList();
