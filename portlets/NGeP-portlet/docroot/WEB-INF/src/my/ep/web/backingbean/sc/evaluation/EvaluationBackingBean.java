@@ -4144,6 +4144,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 
 						this.getManagedBean().setQtProposalAmounts(listProposalAmountByZone);
 						this.getManagedBean().setQtProposalAmountByProposal(listProposalAmountByQualifiedProposal);
+					    //34528-uat 4serangkai - start
+					    listProposalAmountByZone = listProposalAmountByZone==null ? new ArrayList<ScQtProposalAmount>(): listProposalAmountByZone;
+					    this.getManagedBean().setFinancialPackagePaginator(new Paginator(listProposalAmountByZone, 10));
+						//34528-uat 4serangkai - end
 					}
 					// #31438, #25138, #21695 - end
 					
@@ -15124,9 +15128,6 @@ private void retriveCommitteeRemarksList(){
 			}
 
 			List<ScQtCheckList> amountChecklist = resDTO.getCheckListResultBean().getResultList();
-			//34528-uat 4serangkai - start
-			List<ScQtProposalAmount> listamountbyzone = new ArrayList<>();
-			//34528-uat 4serangkai - end
 			for (ScQtCheckList singleChecklist : amountChecklist) {
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(singleChecklist
 						.getDefinationType().getParameterCode())) {
@@ -15150,14 +15151,6 @@ private void retriveCommitteeRemarksList(){
 							amountResDto = evaluationSO.retrieveProposalAmountbyProposal(amountReqDto);
 							
 							amounts.addAll(amountResDto.getProposalAmountListbyProposal());
-							//34528-uat 4serangkai - start
-							for (ScQtProposalAmount amount: amountResDto.getProposalAmountListbyProposal()) {
-								if (amount.getTplSpecZoneDtl().getSpecZoneId()
-										.equals(this.getManagedBean().getSpecZoneDtls().get(0).getSpecZoneId())) {
-									listamountbyzone.add(amount);
-								}								
-							}
-							//34528-uat 4serangkai - end
 						}
 
 						for (ScQtProposalAmount amountStatus : amounts) {
@@ -15175,11 +15168,7 @@ private void retriveCommitteeRemarksList(){
 						break;
 					}
 				}
-			}
-		    //34528-uat 4serangkai - start	
-			this.getManagedBean().setFinancialPackagePaginator(new Paginator(listamountbyzone, 10));
-		    //34528-uat 4serangkai - end
-			
+			}			
 			innerCheckList = null;
 			evalstage = null;
 		} catch (Exception e) {
