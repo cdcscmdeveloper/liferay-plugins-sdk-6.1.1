@@ -53,10 +53,6 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 	//14685 - START
 	private boolean showMessage;
 	//14685 - END
-	
-	//#34319 - Start
-	private boolean cancelApp;
-	//#34319 - End
 
 	private class OrgProfilePagingDataModel extends PagingDataModel<Object[]> {
 		/**
@@ -271,12 +267,4 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 		this.showMessage = showMessage;
 	}
 	//14685 - END
-
-	public boolean isCancelApp() {
-		return cancelApp;
-	}
-
-	public void setCancelApp(boolean cancelApp) {
-		this.cancelApp = cancelApp;
-	}
 }

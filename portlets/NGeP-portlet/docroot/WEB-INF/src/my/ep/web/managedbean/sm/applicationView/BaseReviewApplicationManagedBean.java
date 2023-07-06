@@ -350,10 +350,6 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean flagShowButtonSubmit;
 	//#34209
 	private boolean poApprUnClaimTask;
-	//#34099 - start
-	private SmApplInquiry selectedInquiryResponse;
-	private String tabActiveDlg = "0";
-	//#34099 - end
 	
 	//14530
 		private SmApplInquiry poToSupplierInquiry;
@@ -2361,22 +2357,4 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		public void setPoApprUnClaimTask(boolean poApprUnClaimTask) {
 			this.poApprUnClaimTask = poApprUnClaimTask;
 		}
-		
-		//#34099 - start
-		public SmApplInquiry getSelectedInquiryResponse() {
-			return selectedInquiryResponse;
-		}
-
-		public void setSelectedInquiryResponse(SmApplInquiry selectedInquiryResponse) {
-			this.selectedInquiryResponse = selectedInquiryResponse;
-		}
-		
-		public String getTabActiveDlg() {
-			return tabActiveDlg;
-		}
-
-		public void setTabActiveDlg(String tabActiveDlg) {
-			this.tabActiveDlg = tabActiveDlg;
-		}
-		//#34099 - end
 }

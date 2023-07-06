@@ -66,10 +66,8 @@
 								style="white-space: normal;"> 
 								<h:outputText value="#{history.createdUsername}" />
 							</p:column> 
-							<!-- #29732 Fix long column content - Start -->
-							<p:column headerText="#{lbl['lbl.sc.category.history.datatable.remark']}"
-							    style="white-space: normal;">
-							<!-- #29732 End -->
+							<p:column
+								headerText="#{lbl['lbl.sc.category.history.datatable.remark']}">
 								<h:outputText value="#{history.remark}" />
 							</p:column> 
 						</p:dataTable> 

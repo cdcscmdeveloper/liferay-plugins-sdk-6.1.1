@@ -341,7 +341,6 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private ScLoiLoaItem scLoiLoaItem;
 	private List<TplSpecAnswer> tplSpecAnswerList;
 	private List<ScLoiLoaItem> loiLoaItemsResult;//29007 - fix issue 2 search action note 347
-	private boolean resetAll = false;
 	/*#29007 End Vinod*/
 	
 	//#27797 - start
@@ -1927,13 +1926,6 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	}
 	public void setUploadA3Templet(boolean uploadA3Templet) {
 		this.uploadA3Templet = uploadA3Templet;
-	}
-	public boolean isResetAll() {
-		return resetAll;
-	}
-
-	public void setResetAll(boolean resetAll) {
-		this.resetAll = resetAll;
 	}
 	/*#29007 End Vinod*/
 

@@ -1639,8 +1639,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private PmParameter pmParam;//bug #30435
 	private ScQtApprovalReqAttachement scQtApprovalReqAttachementICT;//#25077
 	private ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI;//#25077
-	private String scQtAppRequestRemarkICT;//#25077
-	private String scQtAppRequestRemarkMITI;//#25077
+	private String scQtAppRequestRemark;//bug #30435
 	private boolean approverTabLoaded = false;//bug #30435
 	
 	private boolean isApprovalScreen = false;
@@ -1735,7 +1734,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean flagFileAttahmentDeletedICT=false;
 	private boolean flagFileAttahmentDeletedMITI=false;
 	private boolean firstPagePA=false;
-	private List<TabBean> tabOtherApproval;
 	//#25077 - End
 
 	//#25426 - Start
@@ -1857,7 +1855,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtEpvSupplierResponse suppResp;//#21692
 				
 	// #29521 - end
-
+	
+	//#34451,#34458,#34450 related to #25138 -start
+	private int wipStatusMax;
+	//#34451,#34458,#34450 related to #25138 -end
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10770,14 +10772,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setFirstPagePA(boolean firstPagePA) {
 			this.firstPagePA = firstPagePA;
 		}
-		
-		public List<TabBean> getTabOtherApproval() {
-			return tabOtherApproval;
-		}
-
-		public void setTabOtherApproval(List<TabBean> tabOtherApproval) {
-			this.tabOtherApproval = tabOtherApproval;
-		}
 		//#25077 - End
 		
 		//#25692 End
@@ -11068,35 +11062,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 				ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI) {
 			this.scQtApprovalReqAttachementMITI = scQtApprovalReqAttachementMITI;
 		}
+		// #25077 - End
 		
 		/**
-		 * @return the scQtAppRequestRemarkICT
+		 * @return the scQtAppRequestRemark
 		 */
-		public String getScQtAppRequestRemarkICT() {
-			return scQtAppRequestRemarkICT;
+		public String getScQtAppRequestRemark() {
+			return scQtAppRequestRemark;
 		}
 
 		/**
-		 * @param scQtAppRequestRemarkICT the scQtAppRequestRemarkICT to set
+		 * @param scQtAppRequestRemark the scQtAppRequestRemark to set
 		 */
-		public void setScQtAppRequestRemarkICT(String scQtAppRequestRemarkICT) {
-			this.scQtAppRequestRemarkICT = scQtAppRequestRemarkICT;
+		public void setScQtAppRequestRemark(String scQtAppRequestRemark) {
+			this.scQtAppRequestRemark = scQtAppRequestRemark;
 		}
-
-		/**
-		 * @return the scQtAppRequestRemarkMITI
-		 */
-		public String getScQtAppRequestRemarkMITI() {
-			return scQtAppRequestRemarkMITI;
-		}
-
-		/**
-		 * @param scQtAppRequestRemarkMITI the scQtAppRequestRemarkMITI to set
-		 */
-		public void setScQtAppRequestRemarkMITI(String scQtAppRequestRemarkMITI) {
-			this.scQtAppRequestRemarkMITI = scQtAppRequestRemarkMITI;
-		}
-		// #25077 - End
 
 		/**
 		 * @return the approverTabLoaded
@@ -11753,6 +11733,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isFromSpecEndorse = isFromSpecEndorse;
 	}
 	// Bug #33661@Syazani 07/10/2022 -- End
+	
+	//#34451,#34458,#34450 related to #25138 -start
+	/**
+	 * @return the max wip 3serangkai
+	 */
+	public int getWipStatusMax() {
+		return wipStatusMax;
+	}
+
+	/**
+	 * @param  max wip check 3serangkai
+	 *            the wipRequired to set
+	 */
+	public void setWipStatusMax(int wipStatusMax) {
+		this.wipStatusMax = wipStatusMax;
+	}
+	//#34451,#34458,#34450 related to #25138 -end
 	
 	// #21692 - start
 	/**

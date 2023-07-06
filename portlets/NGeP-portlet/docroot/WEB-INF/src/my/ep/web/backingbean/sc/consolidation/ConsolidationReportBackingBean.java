@@ -989,7 +989,6 @@ public class ConsolidationReportBackingBean extends
 			ScQt scQt = resDTO.getScQt();
 			populateParentOrgProfile(scQt);
 			getManagedBean().setScQt(scQt);
-			evaluateWIP(scQt);//34865,34866,34867 - 29021 WIP	
 
 			boolean isMedicalProcCategory = isMultipleProposalCategory(scQt,
 					null);
@@ -2346,7 +2345,7 @@ public class ConsolidationReportBackingBean extends
 		boolean isSupplierBranchDeleted = false;
 		if(supplierId != null && scQt != null){
 			if(qtSuppFinalizationSO.isCheckCRandSFCurrentSupplierBranchDeleted(supplierId, scQt)){
-				isSupplierBranchDeleted = true;
+				isSupplierBranchDeleted = false;
 		    }
 		}
 	    return isSupplierBranchDeleted;
