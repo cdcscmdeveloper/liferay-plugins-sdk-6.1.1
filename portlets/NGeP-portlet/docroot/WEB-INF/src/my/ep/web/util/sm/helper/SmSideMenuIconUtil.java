@@ -1753,6 +1753,10 @@ public class SmSideMenuIconUtil {
 	
 	//#32008 - start
 	public static void setSectionEditorVO(BaseReviewApplicationManagedBean bean){
+		if(!bean.isShowFieldChanges() || bean.getLatestAppl() == null || bean.getSmAppl() == null){
+			return;
+		}
+		
 		bean.getEditVO().setSuppEditCompBasic(false);
 		if (step1CompanyBasicHasDifference(bean.getLatestAppl(), bean.getSmAppl())) {
 			bean.getEditVO().setSuppEditCompBasic(true);
