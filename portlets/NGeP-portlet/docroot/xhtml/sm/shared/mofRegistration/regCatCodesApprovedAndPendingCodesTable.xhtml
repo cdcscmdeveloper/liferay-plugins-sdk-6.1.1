@@ -157,8 +157,7 @@
 						itemValue="0" />
 					<p:ajax event="change" process="@this" update="poCatDecisionRmrk"
 						partialSubmit="true"
-						listener="#{backingBean.assignCategoryApproveOrRejectDate(catBean)}" 
-						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+						listener="#{backingBean.assignCategoryApproveOrRejectDate(catBean)}" />
 				</p:selectOneRadio>
 				<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS and backingBean.managedBean.poUser}" />
@@ -223,8 +222,7 @@
 						itemValue="0" />
 					<p:ajax event="change" process="@this"
 						update="apprvrCatDecisionRmrk" partialSubmit="true"
-						listener="#{backingBean.assignCategoryApproveOrRejectDate(catBean)}" 
-						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+						listener="#{backingBean.assignCategoryApproveOrRejectDate(catBean)}" />
 				</p:selectOneRadio>
 				<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />

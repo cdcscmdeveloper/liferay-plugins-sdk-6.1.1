@@ -1844,7 +1844,6 @@ public class SupplierDataMaintenanceBackingBean extends
 					} else if (delCat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS) {
 						apprCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						apprCat.setCancelledDate(new Date());
-						apprCat.setChangedBy(null); //#34209 - START_END
 						getManagedBean().getDeleteApprovedCategories().add(apprCat);
 					}
 				}

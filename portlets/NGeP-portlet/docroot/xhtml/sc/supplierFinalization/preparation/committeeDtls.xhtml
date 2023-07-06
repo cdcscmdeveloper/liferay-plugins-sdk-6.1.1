@@ -79,9 +79,7 @@
 			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<ui:param name="actionBtnLbl"
-				value="#{suppFinalizationBackingBean.evaluateEndorseSignoffTask(suppFinalizationBackingBean.managedBean.taskName) ? lbl['lbl.sc.btn.view.committee']: lbl['lbl.sc.btn.update.committee']}" />
-			<p:commandButton value="#{actionBtnLbl}" rendered="#{suppFinalMeetingBackingBean.managedBean.validFor25037}"
+			<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}" rendered="#{suppFinalMeetingBackingBean.managedBean.validFor25037}"
 				styleClass="BtnSpacing" onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{suppFinalMeetingBackingBean.navigateToUpdateMember('update')}" />
 		</div>

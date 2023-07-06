@@ -1712,16 +1712,6 @@ public class SmApplicationUtil {
 								&& (cat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS
 										|| cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS || cat
 										.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS)) {
-							
-							//31043 start
-							if(StringUtils.isNotEmpty(cat.getPoRemarks())){
-								for(int i = 0; i < cat.getPoRemarks().length(); i++) {
-									if (Character.isWhitespace(cat.getPoRemarks().charAt(i))) {
-										cat.setPoRemarks(cat.getPoRemarks().trim());
-									}
-								}
-							}//#31043 end
-							
 							if (StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == 0) {
 								validSave = false;
@@ -1741,16 +1731,6 @@ public class SmApplicationUtil {
 								&& (cat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS
 										|| cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS || cat
 										.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS)) {
-							
-							//31043 start
-							if(StringUtils.isNotEmpty(cat.getApproverRemarks())){
-								for(int i = 0; i < cat.getApproverRemarks().length(); i++) {
-									if (Character.isWhitespace(cat.getApproverRemarks().charAt(i))) {
-										cat.setApproverRemarks(cat.getApproverRemarks().trim());
-									}
-								}
-							}//#31043 end
-							
 							if (cat.getApprvrDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -1785,16 +1765,6 @@ public class SmApplicationUtil {
 					} else {
 						if (managedBean.isPoUser()
 								&& cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
-							
-							//31043 start
-							if(StringUtils.isNotEmpty(cat.getPoRemarks())){
-								for(int i = 0; i < cat.getPoRemarks().length(); i++) {
-									if (Character.isWhitespace(cat.getPoRemarks().charAt(i))) {
-										cat.setPoRemarks(cat.getPoRemarks().trim());
-									}
-								}
-							}//#31043 end
-							
 							if (StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == null) {
 								validSave = false;
@@ -1832,16 +1802,6 @@ public class SmApplicationUtil {
 							}
 						} else if (managedBean.isApproverUser()
 								&& cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
-							
-							//31043 start
-							if(StringUtils.isNotEmpty(cat.getApproverRemarks())){
-								for(int i = 0; i < cat.getApproverRemarks().length(); i++) {
-									if (Character.isWhitespace(cat.getApproverRemarks().charAt(i))) {
-										cat.setApproverRemarks(cat.getApproverRemarks().trim());
-									}
-								}
-							}//#31043 end
-							
 							if (cat.getApprvrDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -1891,16 +1851,6 @@ public class SmApplicationUtil {
 								&& (cat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS
 										|| cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS || cat
 										.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS)) {
-							
-							//31043 start
-							if(StringUtils.isNotEmpty(cat.getPoRemarks())){
-								for(int i = 0; i < cat.getPoRemarks().length(); i++) {
-									if (Character.isWhitespace(cat.getPoRemarks().charAt(i))) {
-										cat.setPoRemarks(cat.getPoRemarks().trim());
-									}
-								}
-							}//#31043 end
-							
 							if (cat.getPoDecFlg() == null) {
 								//#11765
 								/*validSave = false;
@@ -1936,16 +1886,6 @@ public class SmApplicationUtil {
 								&& (cat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS
 										|| cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS || cat
 										.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS)) {
-							
-							//31043 start
-							if(StringUtils.isNotEmpty(cat.getApproverRemarks())){
-								for(int i = 0; i < cat.getApproverRemarks().length(); i++) {
-									if (Character.isWhitespace(cat.getApproverRemarks().charAt(i))) {
-										cat.setApproverRemarks(cat.getApproverRemarks().trim());
-									}
-								}
-							}//31043 end
-							
 							if (cat.getApprvrDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -1993,16 +1933,6 @@ public class SmApplicationUtil {
 					} else {
 						if (managedBean.isPoUser()
 								&& cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
-							
-							//31043 start
-							if(StringUtils.isNotEmpty(cat.getPoRemarks())){
-								for(int i = 0; i < cat.getPoRemarks().length(); i++) {
-									if (Character.isWhitespace(cat.getPoRemarks().charAt(i))) {
-										cat.setPoRemarks(cat.getPoRemarks().trim());
-									}
-								}
-							}//#31043 end
-							
 							//if (cat.getPoDecFlg() == null) {
 								//#11765
 								/*validSave = false;
@@ -2063,17 +1993,6 @@ public class SmApplicationUtil {
 							}
 						} else if (managedBean.isApproverUser()
 								&& cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
-							
-							//#31043 start
-							if(StringUtils.isNotEmpty(cat.getApproverRemarks())){
-								for(int i = 0; i < cat.getApproverRemarks().length(); i++) {
-									if (Character.isWhitespace(cat.getApproverRemarks().charAt(i))) {
-										cat.setApproverRemarks(cat.getApproverRemarks().trim());
-									}
-								}
-							}
-							//#31043 end
-							
 							if (cat.getApprvrDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -6222,21 +6141,6 @@ public class SmApplicationUtil {
 		}
 		desAddr.setCityId(srcAddr.getCityId());
 	}
-	
-	//#34277 - start
-	/**
-	 * Clone SSM address details
-	 * @param desAddr target
-	 * @param srcAddr source
-	 */
-	public static void cloneAddressSSM(SmAddress desAddr, SmAddress srcAddr){
-		desAddr.setSsmData(srcAddr.isSsmData());
-		desAddr.setAddressSsmNull(srcAddr.isAddressSsmNull());
-		desAddr.setPostcodeSsmNull(srcAddr.isPostcodeSsmNull());
-		desAddr.setStateSsmNull(srcAddr.isStateSsmNull());
-		desAddr.setCountrySsmNull(srcAddr.isCountrySsmNull());
-	}
-	//#34277 - end
 
 	/**
 	 * Reset to default entity values.
@@ -7788,13 +7692,7 @@ public class SmApplicationUtil {
 						) {
 					if (SmCommonUtil.isCollectionEmpty(catTypeList)
 							|| !catTypeList.contains(fac.getFacilityType())) {
-						// #34303 - start
-						for(SmSupplierCategoryFacility SmSupplierCategoryFacility : fac.getSmSupplierCategoryFacilities()){
-							if(SmSupplierCategoryFacility.getPmCategoryL3().isNotalloweddelete()){
-								facIt.remove();	
-							}
-						}
-						// #34303 - end
+						facIt.remove();
 					}
 				}
 			}

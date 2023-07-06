@@ -41,8 +41,7 @@
 								value="#{lbl['lbl.sc.price.inquiry.item.name']}" /></td>
 						<td width="90%"><p:inputText id="itemNameSearchInput"
 								value="#{lOADetailBackingBean.itemNameSearchCriteria}"
-								style="width:310px;"
-								onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #34646 -->
+								style="width:310px;">
 								<p:ajax partialSubmit="true" process="@this" update="@this" />
 							</p:inputText></td>
 					</tr>
@@ -173,7 +172,7 @@
 				<!-- #29007 End Vinod -->
 				<br /><br />
 				<!-- #29006 - end -->
-				<h:outputText value="#{lOADetailBackingBean.getLatestItemCode(scLoiLoaItem.scRequestItem)}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" /><ui:remove>Bug #34757</ui:remove>
+				<h:outputText value="#{scLoiLoaItem.scRequestItem.cmItem.extensionCode}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" />
 				
 			</p:column>
 			
@@ -346,8 +345,8 @@
 									value="#{lbl['lbl.sc.update.supplier.offer.tooltip']}"
 									trackMouse="true" hideEvent="mouseleave click" />
 							</c:if> <br /> <br /> <!-- #29006 - end --> <h:outputText
-								value="#{lOADetailBackingBean.getLatestItemCode(scLoiLoaItem.scRequestItem)}"
-								rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" /> <!-- #29007 Start Vinod --><ui:remove>Bug #34757</ui:remove>
+								value="#{scLoiLoaItem.scRequestItem.cmItem.extensionCode}"
+								rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" /> <!-- #29007 Start Vinod -->
 							<p:spacer width="5" /> <c:if
 								test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}">
 								<p:commandLink id="itemName#{varStatus.index}"

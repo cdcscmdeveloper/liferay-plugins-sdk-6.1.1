@@ -275,7 +275,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 				getManagedBean().setSelectedSectionTitle(selectedSection.getSectionTitle());
 				String content=selectedSection.getSectionContent();
 				log.info("before replacing editContent content"+content);
-				if(null!=this.getManagedBean().getDocParamValues() && !this.getManagedBean().getDocParamValues().isEmpty() && content != null){//#33346 - Fix NullPointer issue
+				if(null!=this.getManagedBean().getDocParamValues() && !this.getManagedBean().getDocParamValues().isEmpty()){
 					for (Map.Entry<String, String> entry : this.getManagedBean().getDocParamValues().entrySet()) {
 						log.info("entry.getKey()"+entry.getKey());
 						log.info("entry.getValue()"+entry.getValue());
@@ -308,10 +308,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			String sectionName = getManagedBean().getSelectedSectionName();
 			String sectionNumber = getManagedBean().getSelectedSection().getSectionNumber();
 			//START: #33346
-			if(sectionText != null){//START: #33346#52 - Handle if content is null
-				isExistSymbol = isContentExistUnicodeSymbol(sectionText);
-			}//END: #33346#52
-			
+			isExistSymbol = isContentExistUnicodeSymbol(sectionText);
 			if(isExistSymbol){
 				throw new EpException(MessageConst.ERROR_760543,new String[] {sectionTitle});
 			}
