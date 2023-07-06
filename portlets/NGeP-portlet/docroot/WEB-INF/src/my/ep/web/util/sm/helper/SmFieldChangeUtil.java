@@ -1405,7 +1405,7 @@ public class SmFieldChangeUtil {
 				if (revDTO != null && revDTO.getSmAppl() != null) {
 					srcAppl = revDTO.getSmAppl();
 				} else {
-					reqDTO.setApplId(appl.getApplId());
+					reqDTO.setApplId(srcAppl.getApplId());
 					srcAppl = SmServiceLookup.getMofRegistrationSO()
 						.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
 				}
