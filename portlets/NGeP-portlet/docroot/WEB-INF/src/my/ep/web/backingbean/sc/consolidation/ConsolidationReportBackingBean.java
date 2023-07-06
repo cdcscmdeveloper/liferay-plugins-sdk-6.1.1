@@ -993,7 +993,7 @@ public class ConsolidationReportBackingBean extends
 			ScQt scQt = resDTO.getScQt();
 			populateParentOrgProfile(scQt);
 			getManagedBean().setScQt(scQt);
-
+			evaluateWIP(scQt);//34865,34866,34867 - 29021 WIP	
 			boolean isMedicalProcCategory = isMultipleProposalCategory(scQt,
 					null);
 			if (isMedicalProcCategory) {

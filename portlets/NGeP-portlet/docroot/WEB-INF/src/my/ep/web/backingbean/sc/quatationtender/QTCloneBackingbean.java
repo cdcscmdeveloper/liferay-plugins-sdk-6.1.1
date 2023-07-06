@@ -1531,7 +1531,7 @@ public class QTCloneBackingbean extends
 				}
 				this.getManagedBean().setToBeRemovalContactPersonList(listDel);
 			}
-			if (qtContactPersons != null || !qtContactPersons.isEmpty()) {
+			if (qtContactPersons != null && !qtContactPersons.isEmpty()) {
 				List<ScQtContactPerson> persons=new ArrayList<ScQtContactPerson>();
 				PmUser user = new FacesScopes().getUserSessionBean();
 //				ScQtContactPerson contactPerson = new ScQtContactPerson();
