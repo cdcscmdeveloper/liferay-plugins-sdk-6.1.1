@@ -10560,7 +10560,7 @@ private void retriveCommitteeRemarksList(){
 		//6906 - end
 		retriveMeetingDtls(evaluationDataType.getQtId().longValue(),
 				evaluationDataType.getCommitteeType(), 1);
-
+		evaluateWIP(this.getManagedBean().getScQt());//34865,34866,34867 - 29021 WIP
 		prepareUpdateCommitteeMember(); //#25037
 
 		String taskName = this.getManagedBean().getTaskName();
