@@ -59,12 +59,11 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;//#31849 #32682
+import my.ep.biz.service.pm.authorization.user.IUserSO;//#31849
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
-import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -82,13 +81,11 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;//#31849 #32682
+import my.ep.dto.pm.authorization.user.UserReqDTO;//#31849
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
-import my.ep.dto.sm.businessnature.SupplierBusinessNatureResDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -126,7 +123,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
-import my.ep.persistence.logging.LogKey;//#31849 #32682
+import my.ep.persistence.logging.LogKey;//#31849
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -3089,13 +3086,42 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						}
 						this.getManagedBean().setStatusDescFromSSM(sb.toString());
 						throw new EpException(MessageConst.ERROR_721085,new String[] {sb.toString() });
+					// #29582-start
+					}else if (ssmResDTO.getSmPersonnelAll() != null && ssmResDTO.getSmPersonnelAll().size() > 0) {
+						log.info("ssm status: " + ssmResDTO.getStatusCode());
+						boolean errMsg = false;
+						int i = 0;
+						for (SmPersonnel per : ssmResDTO.getSmPersonnelAll()) {
+							if (per.getIdentificationTypeSsm() != null) {
+								String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
+										ParameterConst.IDENTIFICATION_TYPES_SSM, per.getIdentificationTypeSsm());
+								if (ssmTypeDesc == null){
+									ssmTypeDesc =ParameterHelper.getInstance().getParameterDesc(
+											ParameterConst.IDENTIFICATION_TYPES_SSM, "NA");
+								}
+								sb.append("<br/>");
+								sb.append(++i + ". ");
+								sb.append(per.getName() + " ");
+								sb.append("("
+										+ ResourceBundleUtils.getMessage("lbl.sm.register.identification.no.ssm",
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+										+ " ");
+								sb.append(per.getIdentificationNo() + ", ");
+								sb.append(ResourceBundleUtils.getMessage("lbl.sm.register.identification.type.ssm",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
+								sb.append(per.getIdentificationTypeSsm() + " = ");
+								sb.append(ssmTypeDesc + ")");
+								sb.append("<br/>");
+								errMsg = true;
+							}
+						}
+						if (errMsg) {
+							this.getManagedBean().setStatusDescFromSSM(sb.toString());
+							throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
+						}
 						
-					}
-				// #29582-start
-				else if (ssmResDTO.getSmPersonnelAll() != null&& ssmResDTO.getSmPersonnelAll().size() > 0) {
-					SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); // #29582
 					// #29582- end
-				} else if(postRegBean.isResubmitAppl() && !this.getManagedBean().isCheckRoleSSM()){
+					}else if(postRegBean.isResubmitAppl() && !this.getManagedBean().isCheckRoleSSM()){
 						//START NEW CHANGES POPUP OWNER UPDATE ROLE		
 						SmAppl appl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(postRegBean.getSmSupplier().getSupplierId(), "N");
 						if(appl == null){
@@ -3394,74 +3420,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		RequestContext.getCurrentInstance().execute("viewssminfoWidgetVar.show()");
 		
 	}
-	
-	//#31269 - start
-	public void redirectToViewSSMInfo(SmAppl smAppl){
-		getManagedBean().setSmAppl(smAppl);
-		getManagedBean().setSmSupplier(smAppl.getSmSupplier());
-		getManagedBean().setBusinessTypeParamCode(
-			smAppl.getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) 
-			? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE	: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT);
-		clearPersonnelList();
-		for(SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
-			if(!personnel.isSsmData()) continue;
-			
-			validateSsmPersonnel(personnel);
-			if(personnel.isEquityOwnerSsm()){
-				getManagedBean().getPersonnelsOwnerSsm().add(personnel);
-			}
-			if(personnel.isDirectorSsm()){
-				getManagedBean().getSmPersonnelDirectorSsm().add(personnel);
-			}
-			getManagedBean().getPersonnelsSsm().add(personnel);
-		}
-		
-		getManagedBean().getSmSupplierBranchSsm().clear();
-		for(SmSupplierBranch branch : getManagedBean().getSmAppl().getSmSupplierBranches()){
-			if(!branch.isSsmData()) continue;
-			getManagedBean().getSmSupplierBranchSsm().add(branch);
-		}
-		
-		SupplierBusinessNatureReqDTO reqDTO = new SupplierBusinessNatureReqDTO();
-		reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());		
-		SupplierBusinessNatureResDTO resDTO = ((ISupplierBusinessNatureSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", ISupplierBusinessNatureSO.class))
-				.retrieveAllBusinessNatureBySupplierId(reqDTO);
-		for(SmSupplierBusiness business : resDTO.getBusinessNatureLs()){
-			if(!business.isSsmData()) continue;
-			getManagedBean().getSmSupplierBusinessSsm().add(business);
-		}
-		
-		getManagedBean().getSmEquityCompaniesSsm().clear();
-		for(SmEquityCompany company : getManagedBean().getSmAppl().getSmEquityCompanies()){
-			if(!company.isSsmData()) continue;
-			getManagedBean().getSmEquityCompaniesSsm().add(company);
-		}
-		RequestContext.getCurrentInstance().execute("viewssminfoDlg.show()");
-	}
-	
-	public boolean renderViewSSMInfo(){
-		return getManagedBean().getSmAppl().isApplValidWithSsm()
-			&& businessTypeTovalidateWithSSM(null, 
-				getManagedBean().getSmAppl().getSmSupplier().getBusinessType());
-	}
-	
-	public SmPersonnel validateSsmPersonnel(SmPersonnel personnel){
-		if(personnel == null || !personnel.isSsmData() 
-			|| personnel.getSmPersonnelAddresses() == null) return personnel;
-		for(int i=0; i < personnel.getSmPersonnelAddresses().size(); i++){
-			if(personnel.getSmPersonnelAddresses().get(i) == null
-				|| personnel.getSmPersonnelAddresses().get(i).getSmAddress() == null){
-				continue;
-			}
-			if(personnel.getSmPersonnelAddresses().get(i).getSmAddress().isSsmData()){
-				Collections.swap(personnel.getSmPersonnelAddresses(), 0, i);
-				break;
-			}
-		}
-		return personnel;
-	}
-	//#31269 - end
 	
 	public void clearPersonnelList() {
 		this.getManagedBean().getPersonnelsOwnerSsm().clear();
@@ -3958,7 +3916,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
   	//#29466 - END
   	
-  	//#31849, #34090, #32682 start 
+  	//#31849, #34090 start
   	/**
 	 * Method to return current session userId from user screenName(loginId)
 	 * @return userId
@@ -3981,7 +3939,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		new LogKey(userIdSession);
 		return userIdSession;
 	}
-  	//#31849, #34090, #32682 end
+  	//#31849, #34090 end
 	//#34135 START
 	/**
 	 * Gets the full address.

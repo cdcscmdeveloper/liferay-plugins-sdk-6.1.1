@@ -115,7 +115,6 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.demoInvitation.DemoInvitationBackingBean;
@@ -1557,7 +1556,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				// Bug #31759 - Start
 				checkApprovalAndRefreshDetails (qt.getQtId(),taskName, this.getManagedBean().getScQtApproval());
 				// Bug #31759 - End
-				invokeRemarksWhileExecuteReviseFlow(outcome); // 25077
+				invokeRemarksWhileExecuteReviseFlow(this.getManagedBean().getScQtApproval()); // 25077
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
 
 				String approvalCategoryCode = approval.getApprovalCategory().getParameterCode();
@@ -1715,10 +1714,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 			log.info("ApprovalBackingBean.updateBpmTask(): duration in milli seconds is: " + (System.currentTimeMillis() - startTime) + " : QT No. is: " + qt.getQtNo());
-		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "updateBpmTask", this.getManagedBean().getQt().getQtNo(), "updateBpmTask",getUserIdSessionFromLoginId(), e);
-			throw new EpException(MessageConst.ERROR_722632);
-	    }
+		} finally {
+		}
 		return tenderResDTO;
 	}
 	// Bug #31759 - Start
@@ -3038,13 +3035,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	//#25077 - Start
 		/**
 		 * Upload attachment for history others approval.
-		 * 
-		 * @param event
-		 *            the event
-		 * @throws FileNotFoundException
-		 *             the file not found exception
-		 * @throws IOException
-		 *             Signals that an I/O exception has occurred.
 		 */
 		public void handleHistoryOtherFileUpload(FileUploadEvent event)
 				throws FileNotFoundException, IOException {
@@ -3105,12 +3095,14 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		/**
 		 * insert remarks while doing revise process flow
 		 */
-		private void invokeRemarksWhileExecuteReviseFlow(String outcome){
+		private void invokeRemarksWhileExecuteReviseFlow(ScQtApproval approval){
 			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtId());
 			wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
-			if(wfStatus.getPmStatus()!=null && wfStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) && 
-					BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && !this.getManagedBean().isFirstPagePA()){
-				
+			if(wfStatus.getPmStatus()!=null){
+				Long currentStatusId = wfStatus.getPmStatus().getStatusId();
+				if(currentStatusId.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)){	
+					QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+					if(!qtBackingBean.getManagedBean().isFirstPagePA()){
 						ScQtApproval publication = this.getManagedBean().getPublicationApproval();
 						List<ScQtApprovalRemark> qtRemarks = initializeRemarks(publication, 
 								wfStatus,
@@ -3121,6 +3113,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 						publication.setScQtApprovalRemarks(qtRemarks);
 						this.getManagedBean().setScQtApproval(publication);
+					}    
+				}
 			}
 		}
 		//#25077 - End

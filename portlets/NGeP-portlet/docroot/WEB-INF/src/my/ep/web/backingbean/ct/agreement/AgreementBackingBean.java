@@ -2827,6 +2827,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		}else if(contractAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
 		
 			newAdditionAmt = ctContractAmount.getContractAmount().add(additionContract);
+		}else{
+			newAdditionAmt = ctContractAmount.getContractAmount();
 		}
 		
 		if (gstAmtChange.equals(ContractConst.ADD_AMOUNT)) {
