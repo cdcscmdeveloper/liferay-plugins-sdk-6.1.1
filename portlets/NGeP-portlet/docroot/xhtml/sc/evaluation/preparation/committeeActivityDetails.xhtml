@@ -73,8 +73,10 @@
 
 		</p:dataTable>
 		<ui:param name="meetingBB" value="#{evaluationBackingBean.managedBean.meetingBB}"></ui:param>
-		<div align="right"> 
-			<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}" rendered="#{meetingBB.managedBean.validFor25037}"
+		<div align="right">
+			<ui:param name="actionBtnLbl"
+				value="#{evaluationBackingBean.evaluateEndorseSignoffTask(evaluationBackingBean.managedBean.taskName) ? lbl['lbl.sc.btn.view.committee']: lbl['lbl.sc.btn.update.committee']}" />
+			<p:commandButton value="#{actionBtnLbl}" rendered="#{meetingBB.managedBean.validFor25037}"
 				styleClass="BtnSpacing" action="#{meetingBB.navigateToUpdateMember('update')}"/>
 		</div>
 		<ac:confirmationPopup id="navigateConfirmationId"

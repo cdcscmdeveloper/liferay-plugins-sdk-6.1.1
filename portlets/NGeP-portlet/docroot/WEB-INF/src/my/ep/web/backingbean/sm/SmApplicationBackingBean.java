@@ -3066,9 +3066,6 @@ public class SmApplicationBackingBean extends
 						}
 					}
 				}
-				//#32236 start
-				setBusinessAndHadApprovedSpecialCatcode();
-				//#32236 end
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
 				//#32236 start
@@ -11721,14 +11718,11 @@ public class SmApplicationBackingBean extends
 	 * change
 	 */
 	public void onChangeFacilityType() {
-		// #32236 - Start
-		if (getManagedBean().isAlreadyBusinessSpecialCatcode()
-				&& getManagedBean().getBusinessOfficeCatCodeMsg() != null) {
+		if (getManagedBean().isAlreadyBusinessSpecialCatcode()) {
 			getManagedBean().getBasicCompanyFacility().setFacilityType("B");
 			RequestContext.getCurrentInstance().execute(
 					"alertFacTypeChangeDlg.show();");
 		}
-		// #32236 - End
 	}
 
 	/**
@@ -11739,61 +11733,57 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setAlreadyBusinessSpecialCatcode(false);
 		StringBuilder bf = new StringBuilder();
 		int index = 1;
-		// Bug #26703
-		// if (getManagedBean().getSmAppl().getApplType()
-		// .equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-		// && SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
-		// .getSmSupplierCategories())) {
-		SmFacility hq = getHq();
-		// #32236 - Start
-		if (hq != null && hq.getFacilityType().equals("B")) {
-			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
-					.getSmSupplierCategories()) {
-				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-						&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_ACTIVE
-						// Bug #27188-start
-						|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
-						&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_ACTIVE
-						|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL
-						&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_ACTIVE) {
-					// Bug #27188-end
-					getManagedBean().setAlreadyBusinessSpecialCatcode(true);
-					// #32236 - Start
-					if (index == 1) {
-						bf.append("<br> " + index + "." + " "
-								+ cat.getPmCategoryL1().getCategoryL1Code()
-								+ cat.getPmCategoryL2().getCategoryL2Code()
-								+ cat.getPmCategoryL3().getCategoryL3Code()
-								+ "," + "<br />");
-						index++;
-					} else if (index > 1) {
-						bf.append(index + "." + " "
-								+ cat.getPmCategoryL1().getCategoryL1Code()
-								+ cat.getPmCategoryL2().getCategoryL2Code()
-								+ cat.getPmCategoryL3().getCategoryL3Code()
-								+ "," + "<br />");
-						index++;
+		//Bug #26703
+//		if (getManagedBean().getSmAppl().getApplType()
+//				.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+//				&& SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
+//						.getSmSupplierCategories())) {
+			SmFacility hq = getHq();
+			if (hq != null && hq.getFacilityType().equals("B"))
+				for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+						.getSmSupplierCategories()) {
+					if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+							&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_ACTIVE 
+							//Bug #27188-start
+							|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+							&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_ACTIVE
+							|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL
+							&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_ACTIVE) {
+							//Bug #27188-end
+						getManagedBean().setAlreadyBusinessSpecialCatcode(true);
+		//#32236 - Start
+						if(index == 1){
+							bf.append("<br> " + index + "." + " "
+									+ cat.getPmCategoryL1().getCategoryL1Code()
+									+ cat.getPmCategoryL2().getCategoryL2Code()
+									+ cat.getPmCategoryL3().getCategoryL3Code()
+									+ "," + "<br />");
+							index++;	
+						}else if(index > 1){
+							bf.append(index + "." + " "
+									+ cat.getPmCategoryL1().getCategoryL1Code()
+									+ cat.getPmCategoryL2().getCategoryL2Code()
+									+ cat.getPmCategoryL3().getCategoryL3Code()
+									+ "," + "<br />");
+							index++;
+						}
 					}
-				}
-				// }
-			}
-			Locale locale = new FacesScopes().getUserLocale();
-
-			String msg = ResourceBundleUtils.getMessage(
-					"lbl.sm.not.allowed.change.factype", new String[] { ""
-							+ "-" + bf.toString() },
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
-			// #32236 - End
-			// getManagedBean().setBusinessOfficeCatCodeMsg(
-			// SmCommonUtil.getMessage(
-			// "lbl.sm.not.allowed.change.factype.home.office", null)
-			// + "<br /> - " + bf.toString());
-			getManagedBean().setBusinessOfficeCatCodeMsg(msg);
-			getManagedBean().setBusinessOfficeCatCodeMsg(
-					StringUtils.removeEnd(getManagedBean()
-							.getBusinessOfficeCatCodeMsg(), ","));
+//				}
 		}
-		// #32236 - End
+			
+		Locale locale = new FacesScopes().getUserLocale();
+			
+		String msg = ResourceBundleUtils.getMessage("lbl.sm.not.allowed.change.factype", new String[] { ""
+				+ "-" + bf.toString()}, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		//#32236 - End
+//		getManagedBean().setBusinessOfficeCatCodeMsg(
+//				SmCommonUtil.getMessage(
+//						"lbl.sm.not.allowed.change.factype.home.office", null)
+//						+ "<br /> - " + bf.toString());
+		getManagedBean().setBusinessOfficeCatCodeMsg(msg);
+		getManagedBean().setBusinessOfficeCatCodeMsg(
+				StringUtils.removeEnd(getManagedBean()
+						.getBusinessOfficeCatCodeMsg(), ","));
 	}
 
 	/**

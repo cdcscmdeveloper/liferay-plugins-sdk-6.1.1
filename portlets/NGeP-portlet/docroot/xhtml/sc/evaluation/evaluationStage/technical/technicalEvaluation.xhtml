@@ -87,6 +87,8 @@
 
 		</p:panel>
 		<p:spacer height="15"></p:spacer>
+		<!-- #34588 start(wip doesnt need to show below)-->
+		<c:if test="#{evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
 		<p:panel id="technicalComplianceChecklistmainPageProposalIds" header="#{lbl['lbl.sc.eva.non.scoring.compliance']}"
 		toggleable="true">
 		
@@ -146,7 +148,8 @@
 
 
 	</p:panel>
-	
+</c:if>
+<!-- #34588 end-->
 	</h:panelGroup>
 
 </ui:composition>
