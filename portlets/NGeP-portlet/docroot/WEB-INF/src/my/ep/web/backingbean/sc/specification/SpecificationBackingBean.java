@@ -19821,7 +19821,7 @@ if(null!=allTechnicalChecklist){
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setActiveIndex(this.getManagedBean().getCheckListYesIndex());
-				throw new EpException(MessageConst.WARN_297320,
+				throw new EpException(MessageConst.WARN_760531,
 						new String[] { changedCatCodeList });
 			}
 		}

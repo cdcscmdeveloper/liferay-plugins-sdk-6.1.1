@@ -7420,7 +7420,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							.equals(QTStatusConst.QT_REVISION_PUBLICATION))) {
 				String changedCatCodeList = checkCatCodeChange();
 				if (!changedCatCodeList.isEmpty()) {
-					throw new EpException(MessageConst.WARN_297320,
+					throw new EpException(MessageConst.WARN_760531,
 							new String[] { changedCatCodeList });
 				}
 // #29732 End - reOpen Fix
