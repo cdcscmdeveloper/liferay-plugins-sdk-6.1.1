@@ -379,6 +379,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private SmApplInquiry selectedInquiryResponse;
 	private String tabActiveDlg = "0";
 	//#34099 - end
+	private boolean isRevisionDialog; //#32008
 	
 	//14530
 		private SmApplInquiry poToSupplierInquiry;
@@ -2554,6 +2555,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setEditVO(SmSectionEditorVO editVO) {
 		this.editVO = editVO;
+	}
+
+	public boolean isRevisionDialog() {
+		return isRevisionDialog;
+	}
+
+	public void setRevisionDialog(boolean isRevisionDialog) {
+		this.isRevisionDialog = isRevisionDialog;
 	}
 	
 	//#32008 - end
