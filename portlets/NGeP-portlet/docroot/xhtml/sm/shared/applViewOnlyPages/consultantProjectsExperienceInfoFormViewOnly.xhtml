@@ -44,7 +44,7 @@
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 					</p:commandLink>
 					<!-- #32008 -->
-					<ac:smFieldChangeTableAlert object="#{consBean}" />
+					<ac:smFieldChangeTableAlertView object="#{consBean}" />
 				</p:column>
 
 			</p:dataTable>
@@ -222,7 +222,7 @@
 									<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
 										<h:outputText value="#{consExpCat.pmCategoryL3.categoryL3Code} - #{consExpCat.pmCategoryL3.categoryName}" style="float: left;white-space: normal;" />
 										<!-- #32008 -->
-										<ac:smFieldChangeTableAlert object="#{consExpCat}" />
+										<ac:smFieldChangeTableAlertView object="#{consExpCat}" />
 									</p:column>
 								 </p:dataTable>
 								 <br />
