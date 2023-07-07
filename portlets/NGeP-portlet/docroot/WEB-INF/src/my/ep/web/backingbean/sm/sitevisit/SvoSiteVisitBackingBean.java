@@ -3059,6 +3059,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		if(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees() != null){
 			ResourceBundleUtils.getMessage("lbl.sm.mof.reg.reason.delete",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 			
+			if(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().isEmpty()){
+				String representatives = ResourceBundleUtils.getMessage("lbl.sm.companyinfo.intvw.represent",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+				throw new EpException(MessageConst.ERROR_775192, new String[] { representatives });
+			}
+			
 			for(SmSvInterviewee person : getManagedBean().getSelectedSvTemplate().getSmSvInterviewees()){
 				if(person.getName() == null || person.getName().isEmpty()){
 					String capitalizedStr = Name.substring(0, 1).toUpperCase() + Name.substring(1);
