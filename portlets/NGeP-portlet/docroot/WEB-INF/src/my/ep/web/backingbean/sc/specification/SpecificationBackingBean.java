@@ -2282,8 +2282,11 @@ public class SpecificationBackingBean extends
 			List<Integer> settinglist = new ArrayList<Integer>();
 			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL);
 			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_DEMO);
+			// #21695, #25138 -start-
+			if(this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE){
 			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
-			// #21695 START FARID
+			}
+			// #21695, #25138 -end-
 			reqDTO.setSettingTypes(settinglist);
 			specSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
@@ -2307,6 +2310,7 @@ public class SpecificationBackingBean extends
 
 				}
 				// #21695 START FARID
+			if(this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE){
 				if (null == this.getManagedBean().getTechnicalItemScoreSetting()) {
 					ScQtScoreSetting technicalItemScoresetting = constructScoreSetting(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
 					technicalItemScoresetting
@@ -2325,6 +2329,7 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().getTechnicalScoreSetting().setWeightageReq(false);
 				}
 				// #21695 END FARID
+				}
 			}
 
 			else {
@@ -2345,12 +2350,14 @@ public class SpecificationBackingBean extends
 									recommnendationSetting);
 						}
 					}
-// #21695 START FARID
+					// #21695 START FARID
+					if(this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE){
 					if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
 						if (null == this.getManagedBean().getTechnicalItemScoreSetting()) {
 							this.getManagedBean().setTechnicalItemScoreSetting(
 									recommnendationSetting);
 						}
+					}
 					}
 //TO CATER WIP DATA IN TECH SPEC PREPARE SCORING					
 					if(this.getManagedBean().getTechnicalItemScoreSetting() == null){
@@ -13638,7 +13645,7 @@ if (null != checklist && !checklist.isEmpty()) {
 									    }
 									}
 									//1873 - end - note 97
-								};
+								}
 								index = i;//1873 - note 97
 								//1873 - end - note 52
 								break;
@@ -20633,7 +20640,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					checkCategoryCodeChanged();
 				}
 				//1873 note 164 - end
-			};	
+			}	
 			//1873 note 149 end
 			//32204 - end
 		}

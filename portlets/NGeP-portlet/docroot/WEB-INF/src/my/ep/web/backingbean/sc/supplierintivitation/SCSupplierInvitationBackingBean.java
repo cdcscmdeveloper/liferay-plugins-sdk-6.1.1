@@ -275,7 +275,7 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 				.equals(statusId)) {
 			labelValue = getLabelName(SQ_LABEL_KEY);
 		} else if (QTStatusConst.QT_BRIEFING_SITE_VISIT.equals(statusId)) {
-			labelValue = getLabelName(BSV_LABEL_KEY);;
+			labelValue = getLabelName(BSV_LABEL_KEY);
 		}
 		return labelValue;
 	}
