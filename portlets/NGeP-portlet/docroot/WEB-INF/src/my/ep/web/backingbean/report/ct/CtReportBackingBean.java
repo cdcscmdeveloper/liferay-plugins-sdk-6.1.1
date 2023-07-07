@@ -220,7 +220,7 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 				
 				ContractItemMonitoringCCRptBackingBean ccContractItemMonitoringRptBB = new ContractItemMonitoringCCRptBackingBean();
 				
-				if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
+				if ((getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && !getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()))
 						|| getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
 						|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
 					getManagedBean().setSelectedMinistry(
