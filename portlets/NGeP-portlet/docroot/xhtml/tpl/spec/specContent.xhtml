@@ -69,7 +69,7 @@
 			<ui:param name="isUpdateSpecByAnswers" value="#{templateSpecBean.updateSpecByAnswers}" />
 			<ui:param name="isDurationYear" value="#{templateSpecBean.specMaster.durationMonth ge 12}"/>
 			<ui:param name="isSqSpec" value="#{templateSpecBean.specMaster.specCreatedBySQ}"/>
-			<ui:param name="isPartialQt" value="#{templateSpecBean.specMaster.scQtDoc.scQt.partial}" />
+			<ui:param name="isPartialQt" value="#{templateSpecBean.specMaster.scQtDoc.scQt.partial eq null ? 'false': templateSpecBean.specMaster.scQtDoc.scQt.partial}" />
 		<!-- 25138 -start- -->
 		<ui:param name="isPackageItemSpec"
 			value="#{templateSpecBean.evaluatioStageActiveIndex == 1}" />
@@ -246,11 +246,15 @@
 			
 					
 			<c:if test="#{isContentTypeAnswer or isContentTypeScore or (isContentTypeUpdateSpec and isUpdateSpecByAnswers)}">
-			<!-- #29021 -start- -->
-				<h:outputText rendered="#{isContentTypeScore and isSpecTypeTechnical and !isPartialQt}" styleClass="instruction" value="#{lbl['lbl.sc.tec.rating.instruction']}" escape="false" />
-				<h:outputText rendered="#{isContentTypeScore and isSpecTypeTechnical and isPartialQt ne null and isPartialQt}" 
-				styleClass="instruction" value="#{lbl['lbl.sc.tec.partialoffer.instruction']}" escape="false" /><br/>
-			<!-- #29021 -end- -->
+			<ui:fragment
+				rendered="#{isContentTypeScore and isSpecTypeTechnical and !evaluationBackingBean.evaluateWIP(evaluationBackingBean.managedBean.scQt)}">
+				<h:outputText rendered="#{!isPartialQt}" styleClass="instruction"
+					value="#{lbl['lbl.sc.tec.rating.instruction']}" escape="false" />
+				<h:outputText rendered="#{isPartialQt}" styleClass="instruction"
+					value="#{lbl['lbl.sc.tec.partialoffer.instruction']}"
+					escape="false" />
+				<br />
+			</ui:fragment>
 			<!-- #32110, #21695 -start- -->
 			<ui:param name="filterList"
 				value="#{!isSqSpec and isZonal and !templateSpecBackingBean.filterAllitemQtyZero(templateSpecBean.specAnswerList) and isSpecTypeFinancial and isContentTypeAnswer ? null : templateSpecBean.specAnswerList}">
