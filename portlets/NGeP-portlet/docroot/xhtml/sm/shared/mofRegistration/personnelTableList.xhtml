@@ -89,7 +89,8 @@
 			<p:column headerText="#{lbl['lbl.sm.person.myIdResp']}"
 				style="white-space: normal !important;width : 10% !important;" rendered="#{!backingBean.managedBean.supplierUser}"
 				disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
-				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData or backingBean.managedBean.upsCannotEdit}">
+				or person.softcertFlg eq 3 or backingBean.mana.
+				.gedBean.disAllowOwnerEdit or person.ssmData or backingBean.managedBean.upsCannotEdit}">
 				<p:commandLink onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{backingBean.viewMyIdentityResponse(person)}"
