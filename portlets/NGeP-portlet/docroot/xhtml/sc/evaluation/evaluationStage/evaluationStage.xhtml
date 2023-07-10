@@ -223,15 +223,6 @@
 					
 					<ui:include src="presentationOrDemoTech.xhtml" />
 
-				</c:if><c:if
-					test="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2'
-					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
-
-					<ui:param name="passingScore"
-								value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>
-					<ui:include src="technicalPackageSummary.xhtml"></ui:include>
-					
-
 				</c:if></td>
 		</tr>
 	</table>

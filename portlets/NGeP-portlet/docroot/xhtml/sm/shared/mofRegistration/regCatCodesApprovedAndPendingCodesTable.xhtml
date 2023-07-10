@@ -408,6 +408,7 @@
 
 				#{lbl['lbl.sm.download.categorycode']}
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.validateCategoryOtherDescription}"
 					partialSubmit="true" process="@this"
 					>
