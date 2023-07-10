@@ -3356,9 +3356,12 @@ public class CreateQtBackingBean extends
 			st2technicalproposalList = new ArrayList<ScQtCheckList>();
 		}
 
-		if (type == true) {
-			this.getManagedBean().getQt().setPartial(Boolean.FALSE);
-		} else {
+		// open comment, remove "if (type == false) {" when #21695 ready for prod -start-
+		// if (type == true) {
+		// this.getManagedBean().getQt().setPartial(Boolean.FALSE);
+		// } else {
+		if (type == false) {
+		// open comment, remove "if (type == false) {" when #21695 ready for prod -end-
 			if (getManagedBean().getMarkDeletedTechChecklist() == null) {
 				getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());
 			}
