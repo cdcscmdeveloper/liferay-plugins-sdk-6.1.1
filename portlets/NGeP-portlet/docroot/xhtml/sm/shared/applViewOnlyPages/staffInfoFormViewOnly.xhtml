@@ -25,7 +25,8 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.staff.bumi']}" styleClass="outputLabel-view" /></td>
 									<td><p:outputLabel value="(#{staff.totalBumi})" styleClass="outputLabel-view" />
-										<ac:smFieldChangeAlert 
+										<!-- #32008 -->
+										<ac:smFieldChangeAlertView 
 											isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 											oriValue="#{viewSmApplBackingBean.getStaffTotalByCategory(staff.staffCategory).totalBumi}" 
 											currValue="#{staff.totalBumi}" 
@@ -34,7 +35,8 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.staff.nonBumi']}" styleClass="outputLabel-view" /></td>
 									<td><p:outputLabel value="(#{staff.totalNonBumi})" styleClass="outputLabel-view" />
-										<ac:smFieldChangeAlert 
+										<!-- #32008 -->
+										<ac:smFieldChangeAlertView 
 											isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 											oriValue="#{viewSmApplBackingBean.getStaffTotalByCategory(staff.staffCategory).totalNonBumi}" 
 											currValue="#{staff.totalNonBumi}" 
@@ -43,7 +45,8 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.staff.frgnr']}" styleClass="outputLabel-view" /></td>
 									<td><p:outputLabel value="(#{staff.totalForeigner})" styleClass="outputLabel-view" />
-										<ac:smFieldChangeAlert 
+										<!-- #32008 -->
+										<ac:smFieldChangeAlertView 
 											isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 											oriValue="#{viewSmApplBackingBean.getStaffTotalByCategory(staff.staffCategory).totalForeigner}" 
 											currValue="#{staff.totalForeigner}" 

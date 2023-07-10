@@ -39,7 +39,7 @@
 									<td>
 										<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.authorizedCapital}" />
 										<!-- #32008 -->
-										<ac:smFieldChangeAlert 
+										<ac:smFieldChangeAlertView 
 											isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 											oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.authorizedCapital}" 
 											currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.authorizedCapital}" 
@@ -51,7 +51,7 @@
 									<td>
 										<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" />
 										<!-- #32008 -->
-										<ac:smFieldChangeAlert 
+										<ac:smFieldChangeAlertView 
 											isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 											oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.paidUpCapital}" 
 											currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" 
@@ -73,7 +73,7 @@
 									<td>
 										<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.totalShare}" />
 										<!-- #32008 -->
-										<ac:smFieldChangeAlert 
+										<ac:smFieldChangeAlertView 
 											isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 											oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.totalShare}" 
 											currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.totalShare}" 
@@ -85,7 +85,7 @@
 									<td>
 										<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" />
 										<!-- #32008 -->
-										<ac:smFieldChangeAlert 
+										<ac:smFieldChangeAlertView 
 											isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 											oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.paidUpCapital}" 
 											currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" 
@@ -104,7 +104,7 @@
 									<td>
 										<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.totalMember}" />
 										<!-- #32008 -->
-										<ac:smFieldChangeAlert 
+										<ac:smFieldChangeAlertView 
 											isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 											oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.totalMember}" 
 											currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.totalMember}" 
@@ -130,7 +130,7 @@
 						<p:column><h:outputText value="#{lbl['lbl.sm.equiStatus.bumi']}" /></p:column>
 						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.bumiEquity}" styleClass="outputLabel-view" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.bumiEquity}" 
 									currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.bumiEquity}" 
@@ -142,7 +142,7 @@
 						<p:column><h:outputText value="#{lbl['lbl.sm.equiStatus.nonBumi']}" /></p:column>
 						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.nonBumiEquity}" styleClass="outputLabel-view" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.nonBumiEquity}" 
 									currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.nonBumiEquity}" 
@@ -154,7 +154,7 @@
 						<p:column><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.nonMy']}" /></p:column>
 						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignerEquity}" styleClass="outputLabel-view" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.foreignerEquity}" 
 									currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignerEquity}" 
@@ -166,7 +166,7 @@
 						<p:column><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.utAgency']}" /></p:column>
 						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity}" styleClass="outputLabel-view" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.govtUnitrustEquity}" 
 									currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity}" 
@@ -178,7 +178,7 @@
 						<p:column><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.govtEquity']}" /></p:column>
 						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtEquity}" styleClass="outputLabel-view" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.govtEquity}" 
 									currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtEquity}" 
@@ -190,7 +190,7 @@
 						<p:column><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.frgComp']}" /></p:column>
 						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignCompanyEquity}" styleClass="outputLabel-view" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.foreignCompanyEquity}" 
 									currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignCompanyEquity}" 
@@ -202,7 +202,7 @@
 						<p:column><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.lclComp']}" /></p:column>
 						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.localCompanyEquity}" styleClass="outputLabel-view" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.localCompanyEquity}" 
 									currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.localCompanyEquity}" 
