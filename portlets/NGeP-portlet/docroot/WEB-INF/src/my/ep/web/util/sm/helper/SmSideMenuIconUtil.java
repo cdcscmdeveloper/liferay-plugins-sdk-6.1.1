@@ -34,6 +34,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.SmLicenseInfoVO;
 
@@ -1749,5 +1750,64 @@ public class SmSideMenuIconUtil {
 		}
 		return retVal;
 	}
-
+	
+	//#32008 - start
+	public static void setSectionEditorVO(BaseReviewApplicationManagedBean bean){
+		if(!bean.isShowFieldChanges() || bean.getLatestAppl() == null || bean.getSmAppl() == null){
+			return;
+		}
+		
+		bean.getEditVO().setSuppEditCompBasic(false);
+		if (step1CompanyBasicHasDifference(bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditCompBasic(true);
+		}
+		
+		bean.getEditVO().setSuppEditAssocProj(false);
+		if (step2AssocCompProjExpHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditAssocProj(true);
+		}	
+		
+		bean.getEditVO().setSuppEditPersonnel(false);
+		if (step3PersonnelHasDifference(true, bean.getLatestAppl(), bean.getSmAppl(), null)) {
+			bean.getEditVO().setSuppEditPersonnel(true);
+		}
+			
+		bean.getEditVO().setSuppEditEquity(false);
+		if (step4EquityHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditEquity(true);
+		}
+		
+		bean.getEditVO().setSuppEditBank(false);
+		if (step5BankHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditBank(true);
+		}
+		
+		bean.getEditVO().setSuppEditCategory(false);
+		boolean flagSmDisciplinaryActionIsCancelCategory = false;
+		List<SmDisciplinaryAction> activeDisc = 
+				SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
+		if (activeDisc != null){
+			for(SmDisciplinaryAction disc : activeDisc){
+				if(disc.isCancelCategory()){
+					flagSmDisciplinaryActionIsCancelCategory = true;
+					break;
+				}
+			}
+		}
+		if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSmAppl()) 
+					&& !flagSmDisciplinaryActionIsCancelCategory) {
+			bean.getEditVO().setSuppEditCategory(true);
+		}
+		
+		bean.getEditVO().setSuppEditFacility(false);
+		if (step7FacilityHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditFacility(true);
+		}
+				
+		bean.getEditVO().setSuppEditEquipment(false);
+		if (step8EquipmentHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditEquipment(true);
+		}
+	}
+	//#32008 - end
 }

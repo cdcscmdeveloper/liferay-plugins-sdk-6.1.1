@@ -121,7 +121,7 @@ public class InvoiceCancellationRptBackingBean extends FlReportBackingBean<Invoi
 	public void resetAction(){
 		getManagedBean().setInvNo(null);
 		getManagedBean().setSupplierInvNo(null);
-		resetSearchCriteriaValues();;
+		resetSearchCriteriaValues();
 	}
 	
 	//29550 - start

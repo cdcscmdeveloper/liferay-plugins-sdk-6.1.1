@@ -123,6 +123,10 @@ import org.primefaces.event.SelectEvent;
 public class SupplierFinalizationMeetingBackingBean extends 
 						SourcingBaseBackingBean<SupplierFinalizationMeetingManagedBean> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static Logger log = EpLogger.getLogger(SupplierFinalizationMeetingBackingBean.class);
 
 	private void debugLogger(Object message) {
@@ -1956,7 +1960,7 @@ if (CollectionUtils.isNotEmpty(
 				finalBB.saveSupplierFinalization(true);
 			}else if(finalBiddingBB!=null){
 				finalBiddingBB.saveOnlineEndorsement(true);
-			};
+			}
 
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sc/supplierFinalization/confirmMeeting/memberUpdate.xhtml");
 		}else if(action.equalsIgnoreCase("confirm")){
