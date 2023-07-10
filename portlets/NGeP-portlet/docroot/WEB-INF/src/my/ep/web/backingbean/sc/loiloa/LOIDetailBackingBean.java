@@ -429,7 +429,7 @@ public class LOIDetailBackingBean extends
 						new FacesScopes().getUserLocale());
 		getManagedBean().setLoiSupplierProposalspec(message);
 					ScLoi scLoi = getManagedBean().getScLoi();
-					Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();
+					Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
 						
 					List<ScLoiTerm> scNegoTerms = scLoi.getScNegoTerms();
 					if(null == scNegoTerms) {
@@ -6644,7 +6644,7 @@ public class LOIDetailBackingBean extends
 	public void addSuppliersProposalSpecificationUpdate() {
 		debugLogger("addSuppliersProposalSpecificationUpdate");
 		ScLoi scLoi = getManagedBean().getScLoi();
-		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();
+		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
 			
 		List<ScLoiTerm> scNegoTerms = scLoi.getScNegoTerms();
 		if(null == scNegoTerms) {
