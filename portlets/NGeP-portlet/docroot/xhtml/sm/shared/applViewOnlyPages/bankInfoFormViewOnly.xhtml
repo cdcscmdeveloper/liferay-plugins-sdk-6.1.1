@@ -51,7 +51,7 @@
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 					</p:commandLink>
 					<!-- #32008 -->
-					<ac:smFieldChangeTableAlert object="#{bankBean}"/>
+					<ac:smFieldChangeTableAlertView object="#{bankBean}"/>
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
@@ -83,7 +83,7 @@
 			<p:column headerText="#{lbl['lbl.sm.bankDtls.signPos']}">
 				<h:outputText value="#{auth.smPersonnel.designation}" />
 				<!-- #32008 -->
-				<ac:smFieldChangeTableAlert object="#{auth}" />
+				<ac:smFieldChangeTableAlertView object="#{auth}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -108,7 +108,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.bankName']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.pmFinancialOrg.finOrgName}" />
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestBank.pmFinancialOrg.financialOrgId}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedBank.pmFinancialOrg.financialOrgId}" 
@@ -118,7 +118,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.acctPurpose']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBankAccountPurpose}" />
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestBank.accountPurpose}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedBank.accountPurpose}" 
@@ -128,7 +128,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.bankBranch']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.bankBranch}"/>
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView 
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestBank.bankBranch}" 
 								currValue="#{viewSmApplBackingBean.managedBean.selectedBank.bankBranch}" 
@@ -138,7 +138,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.address']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.address1}" />
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView 
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestBank.smAddress.address1}" 
 								currValue="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.address1}" 
@@ -149,7 +149,7 @@
 						<td></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.address2}" />
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView 
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestBank.smAddress.address2}" 
 								currValue="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.address2}" 
@@ -159,7 +159,7 @@
 						<td></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.address3}" />
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView 
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestBank.smAddress.address3}" 
 								currValue="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.address3}" 
@@ -170,7 +170,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmCountry.countryName}" />
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView 
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestBank.smAddress.pmCountry.countryId}" 
 								currValue="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmCountry.countryId}" 
@@ -182,7 +182,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmState.stateName}" />
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView 
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestBank.smAddress.pmState.stateId}" 
 								currValue="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmState.stateId}" 
@@ -197,7 +197,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmDivision.divisionName}"
 											rendered="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmState.adoptDivision}" />
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView 
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestBank.smAddress.pmDivision.divisionId}" 
 								currValue="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmDivision.divisionId}" 
@@ -210,7 +210,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmDistrict.districtName}" />
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView 
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestBank.smAddress.pmDistrict.districtId}" 
 								currValue="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmDistrict.districtId}" 
@@ -221,7 +221,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmCity.cityName}" />
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView 
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestBank.smAddress.pmCity.cityId}" 
 								currValue="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmCity.cityId}" 
@@ -232,7 +232,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.postcode}" />
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView 
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestBank.smAddress.postcode}" 
 								currValue="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.postcode}" 
@@ -257,7 +257,7 @@
 						<td style="vertical-align: baseline;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.chequesign.tnc']}" /></td>
 						<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.signatureInstruction}" />
 								<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestBank.signatureInstruction}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedBank.signatureInstruction}" 
