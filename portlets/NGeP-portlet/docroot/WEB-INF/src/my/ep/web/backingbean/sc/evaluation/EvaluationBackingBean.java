@@ -1260,7 +1260,8 @@ public class EvaluationBackingBean extends
 			}
 			//#34493, #34427 - Start
 			//#28786 - start
-			/*if (null != this.getManagedBean()
+			/*
+			if (null != this.getManagedBean()
 					.getComplianceTechnicalProposalCheckListDM().getList()) {
 				for (ScQtProposalChecklist propCheck : this.getManagedBean()
 						.getComplianceTechnicalProposalCheckListDM().getList()) {
