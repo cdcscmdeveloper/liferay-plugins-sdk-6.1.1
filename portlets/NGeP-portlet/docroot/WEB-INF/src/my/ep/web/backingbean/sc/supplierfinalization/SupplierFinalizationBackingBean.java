@@ -1444,10 +1444,6 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setInitialDecisionFwdHighAuth(
 					getManagedBean().isInitialDecisionFwdHighAuth());
 			reqDTO.setRefinalize(isQTRefinalized());
-			
-			if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
-				scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
-			}
 		
 			// #18685 - Start
 			resetUnSavedReportContent(this.getManagedBean().getNewBriefingPaperReportList());
