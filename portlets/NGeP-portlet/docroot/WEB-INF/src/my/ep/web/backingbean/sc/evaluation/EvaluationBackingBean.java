@@ -1132,8 +1132,9 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 		detailBackingBean.getManagedBean().setQt(this.getManagedBean().getScQt());
 		detailBackingBean.getManagedBean().setReadOnly(true);
 		//#28786 fix under 28784 change hardcoded to constant - start
-		if (proposalCheckList.getScQtCheckList().getTitle()
-				.equals(SourcingConstants.PENGESAHAN_TIGA_BULAN)) {
+		//Bug #34745 start
+		if (proposalCheckList.getScQtCheckList().getTitle().equals(SourcingConstants.PENGESAHAN_TIGA_BULAN)
+					&& proposalCheckList.getScQtCheckList().getPmDocument() != null) {
 			retrieveAllFinancialChecklist(SourcingConstants.PENYATA_TIGA_BULAN);
 			retrieveAllFinancialChecklist("Penyata bank untuk tiga bulan");
 			retrieveComplianceUploadedProposalChecklist(proposalCheckList, true);
@@ -1142,23 +1143,22 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					.getManagedBean().getComplianceQtProposalChecklist());
 		}
 		
-		if (proposalCheckList.getScQtCheckList().getTitle()
-				.equals(SourcingConstants.KUNCI_KIRA_KIRA_TAHUNAN)) {
+		if (proposalCheckList.getScQtCheckList().getTitle().equals(SourcingConstants.KUNCI_KIRA_KIRA_TAHUNAN)
+					&& proposalCheckList.getScQtCheckList().getPmDocument() != null) {
 			retrieveAllFinancialChecklist(SourcingConstants.ASSET_DAN_LIABILITI);
 			retrieveComplianceUploadedProposalChecklist(proposalCheckList, true);
 			
-			proposalPage = detailBackingBean.retrieveAssetLiabilityDtls(this
-					.getManagedBean().getComplianceQtProposalChecklist());
+			proposalPage = detailBackingBean.retrieveAssetLiabilityDtls(this.getManagedBean().getComplianceQtProposalChecklist());
 		}
 		
-		if (proposalCheckList.getScQtCheckList().getTitle()
-				.equals(SourcingConstants.PENGESAHAN_DARI_INSITUSI)) {
+		if (proposalCheckList.getScQtCheckList().getTitle().equals(SourcingConstants.PENGESAHAN_DARI_INSITUSI)
+					&& proposalCheckList.getScQtCheckList().getPmDocument() != null) {
 			retrieveAllFinancialChecklist(SourcingConstants.KEMUDAHAN_KREDIT);
 			retrieveComplianceUploadedProposalChecklist(proposalCheckList, true);
 			
-			proposalPage = detailBackingBean.retrieveCreditFacilitiesDtls(this
-					.getManagedBean().getComplianceQtProposalChecklist());
+			proposalPage = detailBackingBean.retrieveCreditFacilitiesDtls(this.getManagedBean().getComplianceQtProposalChecklist());
 		}
+		//Bug #34745 end
 		//#28786 fix under 28784 change hardcoded to constant - end
 		this.getManagedBean().setProposalPage(proposalPage);
 
@@ -1441,9 +1441,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				}
 
 				reqDTO.setComplianceList(technicalCompliance);
-			}
-			
+			}			
+			//#34493, #34427 - Start
 			//#28786 - start
+			/*
 			if (null != this.getManagedBean()
 					.getComplianceTechnicalProposalCheckListDM().getList()) {
 				for (ScQtProposalChecklist propCheck : this.getManagedBean()
@@ -1478,7 +1479,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					}
 				}
 			}
-
+			//#28786 - end
+			*/
+			//#34493, #34427 - END
+			
 			resDTO = evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
 			List<ScQtCheckList> qtCheckLists = getManagedBean()
 					.getComplianceTechnicalCheckList();
@@ -1663,7 +1667,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 
 			for (ScQtCheckList checklistOfTitle : resDTO.getCheckListResultBean().getResultList()) {
-				if (checklistOfTitle.getTitle().equals(title)) {
+				if (checklistOfTitle.getTitle().equals(title) && checklistOfTitle.getPmDocument() != null) {//Bug #34745
 					this.getManagedBean().setComplianceQtChecklist(checklistOfTitle);
 				}
 			}
