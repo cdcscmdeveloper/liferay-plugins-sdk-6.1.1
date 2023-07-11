@@ -12426,8 +12426,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 					CommonConstants.DEFAULT_DATE_FORMAT);
 			// String localDate = sdf.format(currentDate);
 			// String day = localDate.substring(0, 2);
-			String localstartMonth = retriveMonthDtls(new Integer(startMonth));
-			String localemdMonth = retriveMonthDtls(new Integer(endMonth));
+			String localstartMonth = retriveMonthDtls(startMonth);//#GIT11
+			String localemdMonth = retriveMonthDtls(endMonth);//#GIT11
 			String fromDate = 01 + "/" + localstartMonth + "/" + startYear;
 			String toDate = 01 + "/" + localemdMonth + "/" + endYear;
 			Date startDate = sdf.parse(fromDate);
