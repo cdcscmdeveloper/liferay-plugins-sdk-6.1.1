@@ -24,7 +24,6 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1258,12 +1257,9 @@ public class EvaluationBackingBean extends
 
 				reqDTO.setComplianceList(technicalCompliance);
 			}
-			
+			//#34493, #34427 - Start
 			//#28786 - start
-<<<<<<< HEAD
 			/*
-=======
->>>>>>> branch 'pds_bug_34549' of http://192.168.120.16/cdc-application/ep-apps/liferay-plugins-sdk-6.1.1.git
 			if (null != this.getManagedBean()
 					.getComplianceTechnicalProposalCheckListDM().getList()) {
 				for (ScQtProposalChecklist propCheck : this.getManagedBean()
@@ -1299,7 +1295,9 @@ public class EvaluationBackingBean extends
 				}
 			}
 			//#28786 - end
-
+			*/
+			//#34493, #34427 - END
+			
 			resDTO = evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
 			List<ScQtCheckList> qtCheckLists = getManagedBean()
 					.getComplianceTechnicalCheckList();
@@ -11855,11 +11853,14 @@ private void retriveCommitteeRemarksList(){
 					.getComplianceTechnicalProposalCheckListDM().getList();
 
 			if (null != uploadedList && !uploadedList.isEmpty()) {
-				PmStatus Status = getPmStatusByStatusId(QTStatusConst.PR_COMPLETED);
-				for (ScQtProposalChecklist uploadedChecklist : uploadedList) {
-					uploadedChecklist.setEvaluationStatus(Status);
+				//Bug #34815 start
+				if (!this.getManagedBean().isReadOnly()){
+					PmStatus Status = getPmStatusByStatusId(QTStatusConst.PR_COMPLETED);
+					for (ScQtProposalChecklist uploadedChecklist : uploadedList) {
+						uploadedChecklist.setEvaluationStatus(Status);
+					}
 				}
-
+				//Bug #34815 end
 				reqDTO.setComplianceList(uploadedList);
 
 			}
