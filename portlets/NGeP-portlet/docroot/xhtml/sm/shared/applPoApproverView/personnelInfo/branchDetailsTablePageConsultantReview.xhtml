@@ -1,0 +1,167 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<table style="width: 100%">
+		<tr>
+			<td><p:outputLabel value="* #{lbl['lbl.sm.branch.branchName']}" /></td>
+			<td><p:inputText
+					value="#{backingBean.managedBean.selectedBranch.branchName}"
+					size="35" />
+			</td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="* #{lbl['lbl.sm.branch.address']}" /></td>
+			<td><p:inputText
+					value="#{backingBean.managedBean.selectedBranch.smAddress.address1}"
+					size="35" />
+			</td>
+		</tr>
+
+		<tr>
+			<td></td>
+			<td><p:inputText
+					value="#{backingBean.managedBean.selectedBranch.smAddress.address2}"
+					size="35" /></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><p:inputText
+					value="#{backingBean.managedBean.selectedBranch.smAddress.address3}"
+					size="35" /></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
+			<td><p:selectOneMenu id="branchesCountry"
+					value="#{backingBean.managedBean.selectedBranch.smAddress.countryId}"
+					style="width: 207px;margin-bottom: 5px;">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItems var="branchCountry"
+						value="#{backingBean.managedBean.countryItems}" />
+					<p:ajax event="change" process="@this"
+						listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
+						update="branchesCountry,branchesState,branchesDivision,branchesDist,branchesCity,postCodeBranchConsPanelId" />
+				</p:selectOneMenu></td>
+		</tr>
+
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					value="#{backingBean.managedBean.selectedBranch.smAddress.stateId}"
+					id="branchesState">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItems var="brnState"
+						value="#{backingBean.managedBean.branchCompanyStates}" />
+					<p:ajax event="change" process="@this"
+						listener="#{backingBean.onChangeState(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
+						update="branchesState,divisionBrachDtlsLabelPanelId,divisionBrachDtlsDropdownPanelId,branchesDist,branchesCity" />
+				</p:selectOneMenu></td>
+		</tr>
+		<!-- 13320 -->
+		
+		<tr>
+			<td  class="tdTitle">
+				<p:outputPanel id="divisionBrachDtlsLabelPanelId" >
+					<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
+					</td>
+					<td>
+				<p:outputPanel id="divisionBrachDtlsDropdownPanelId">
+				<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
+			<td>
+			<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					value="#{backingBean.managedBean.selectedBranch.smAddress.divisionId}"
+					id="branchesDivision">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItems var="brnDivision"
+						value="#{backingBean.managedBean.branchCompanyDivisions}" />
+					<p:ajax event="change" process="@this"
+						update="branchesDist,branchesCity" />
+				</p:selectOneMenu></td>
+				</ui:fragment>
+				</p:outputPanel>
+				</td>
+
+		</tr>
+
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					id="branchesDist"
+					value="#{backingBean.managedBean.selectedBranch.smAddress.districtId}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItems var="brnDist"
+						value="#{backingBean.managedBean.branchCompanyDistricts}" />
+					<p:ajax event="change" process="@this"
+						listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
+						update="branchesDist,branchesCity" />
+				</p:selectOneMenu></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					id="branchesCity"
+					value="#{backingBean.managedBean.selectedBranch.smAddress.cityId}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItems var="branchCity"
+						value="#{backingBean.managedBean.branchCompanyCities}" />
+					<p:ajax event="change" process="@this"
+						listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
+						update="branchesCity" />
+				</p:selectOneMenu></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+			<td>
+				<p:inputText validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+					value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
+					size="10">
+					<f:validator validatorId="postcodeValidator"/>
+					</p:inputText>
+				
+				<p:outputPanel id="postCodeBranchConsPanelId">
+					<p:outputPanel rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+						<p:inputText maxlength="5"
+								label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeConsMy"
+								value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}" 
+								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
+								size="35" >
+								<f:validator validatorId="postcodeValidator" />
+								</p:inputText>
+								<p:message id="branchPostCodeConsMyMsg"
+								for="branchPostCodeConsMy" showSummary="true" showDetail="false"
+								display="icon" />
+					</p:outputPanel>
+					<p:outputPanel rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+						<p:inputText maxlength="10"
+								label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeConsForeign"
+								value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}" 
+								size="35" >
+								</p:inputText>
+								<p:message id="branchPostCodeConsForeignMsg"
+								for="branchPostCodeConsForeign" showSummary="true" showDetail="false"
+								display="icon" />
+					</p:outputPanel>
+				</p:outputPanel>
+					
+			</td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
+			<td><p:inputText
+					value="#{backingBean.managedBean.selectedBranch.phoneNo}" size="35" /></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
+			<td><p:inputText
+					value="#{backingBean.managedBean.selectedBranch.faxNo}" size="35" /></td>
+		</tr>
+
+	</table>
+</ui:composition>
