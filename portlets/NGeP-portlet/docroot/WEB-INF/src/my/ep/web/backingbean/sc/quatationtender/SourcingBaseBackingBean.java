@@ -5164,17 +5164,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					TplSpecMaster master = null;
 					master = scQtCheckList.getScQtDoc().getTplSpecMaster();
 					
-					
 					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
-						// #26130 - Start.
 						if (validateTplSpecMaster(scLoa, master)) {
 							constructSpecData(scLoa, master, question);
 							constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, question);
+
 							if (validateTplSpecQuestion(scLoa, question)) {
 								question.setListCombineZonal(getCOmbineZonalSPec(question, master));
 							}
 						}
-						//#26130 - end
 					}
 					
 					master.setTplSpecQuestions(newTplSpecQuestionsList);
@@ -5449,93 +5447,91 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		String whiteSpace = "&nbsp";
 		boolean getFirstValue = true;
 		
-		// 26130 - start
 		if (master.getTplSpecZone() != null) {
-		// 26130 - end
-		if (question.getTplSpecZoneQties().size() > 0) {
+			if (question.getTplSpecZoneQties().size() > 0) {
 
-			for (TplSpecZoneQty zone : question.getTplSpecZoneQties()) {
+				for (TplSpecZoneQty zone : question.getTplSpecZoneQties()) {
 
-				HashMap<String, String> map = new HashMap<>();
-				
-				if (countIndex == 0) {
-					if (getFirstValue) {
-						map.put("clItem", question.getClItem());
-						map.put("uomName", question.getClUom().getUomName());
-						map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
-						map.put("zoneName", zone.getTplSpecZoneDtl().getZoneName());
-						map.put("qty", zone.getQty().toString());
+					HashMap<String, String> map = new HashMap<>();
 
-						if (null != question.getTplSpecTierQties() && question.getTplSpecTierQties().size() > 0) {
-							String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
-							
-							map.put("qtyBerperingkat", tierValue);
+					if (countIndex == 0) {
+						if (getFirstValue) {
+							map.put("clItem", question.getClItem());
+							map.put("uomName", question.getClUom().getUomName());
+							map.put("clPriceTypeCode",
+									getParameterDesc(question.getClPriceTypeCode(), SourcingConstants.MY_LOCALE));
+							map.put("zoneName", zone.getTplSpecZoneDtl().getZoneName());
+							map.put("qty", zone.getQty().toString());
+
+							if (null != question.getTplSpecTierQties() && question.getTplSpecTierQties().size() > 0) {
+								String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
+
+								map.put("qtyBerperingkat", tierValue);
+							} else {
+								String tierValue = "T/B";
+
+								map.put("qtyBerperingkat", tierValue);
+							}
+
+							if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
+									|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase(
+											"Perkhidmatan")) {
+								map.put("clUomFrequency", question.getClUomFrequency().toString());
+								map.put("clUomPerDay", question.getClUomPerDay().toString());
+								map.put("clUomPerMonth", question.getClUomPerMonth().toString());
+							}
+
+							for (TplSpecAnswer answer : question.getTplSpecAnswers())
+								if (answer.getAnswerNumeric() != null) {
+									map.put("answerNumeric", answer.getAnswerNumeric().toString());
+								}
+							getFirstValue = false;
 						} else {
-							String tierValue = "T/B";
-							
-							map.put("qtyBerperingkat", tierValue);
-						}
+							map.put("clItem", whiteSpace);
+							map.put("uomName", whiteSpace);
+							map.put("clPriceTypeCode", whiteSpace);
+							map.put("zoneName", zone.getTplSpecZoneDtl().getZoneName());
+							map.put("qtyBerperingkat", whiteSpace);
 
-						if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
-								|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")) {
-							map.put("clUomFrequency", question.getClUomFrequency().toString());
-							map.put("clUomPerDay", question.getClUomPerDay().toString());
-							map.put("clUomPerMonth", question.getClUomPerMonth().toString());
-						}
-
-						for (TplSpecAnswer answer : question.getTplSpecAnswers())
-							if (answer.getAnswerNumeric() != null) {
-								map.put("answerNumeric", answer.getAnswerNumeric().toString());
+							if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
+									|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase(
+											"Perkhidmatan")) {
+								map.put("clUomFrequency", whiteSpace);
+								map.put("clUomPerDay", whiteSpace);
+								map.put("clUomPerMonth", whiteSpace);
 							}
-						getFirstValue = false;
-					} else {
-						map.put("clItem", whiteSpace);
-						map.put("uomName", whiteSpace);
-						map.put("clPriceTypeCode", whiteSpace);
-						map.put("zoneName",zone.getTplSpecZoneDtl().getZoneName());
-						map.put("qtyBerperingkat", whiteSpace);
 
-						if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
-								|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")) {
-							map.put("clUomFrequency", whiteSpace);
-							map.put("clUomPerDay", whiteSpace);
-							map.put("clUomPerMonth", whiteSpace);
-						}
+							map.put("qty", zone.getQty().toString());
 
-						map.put("qty", zone.getQty().toString());
-
-						for (TplSpecAnswer answer : question.getTplSpecAnswers()) {
-							if (answer.getAnswerNumeric() != null) {
-								map.put("answerNumeric", answer.getAnswerNumeric().toString());
+							for (TplSpecAnswer answer : question.getTplSpecAnswers()) {
+								if (answer.getAnswerNumeric() != null) {
+									map.put("answerNumeric", answer.getAnswerNumeric().toString());
+								}
 							}
 						}
-					}
 
-					for (int i = indi; i < question.getTplSpecZoneQties().size(); i++) {
-						map.put("feedback", question.getFeedbackList().get(i));
-						break;
-					}
-					
-					for (int i = indi; i < question.getTplSpecZoneQties().size(); i++) {
-						if (!question.getAnswerRemarkList().get(i).equalsIgnoreCase("&nbsp;")
-								&& !question.getAnswerRemarkList().get(i).equalsIgnoreCase(getDefaultValue())) {
-							map.put("answerRemark", question.getAnswerRemarkList().get(i));
+						for (int i = indi; i < question.getTplSpecZoneQties().size(); i++) {
+							map.put("feedback", question.getFeedbackList().get(i));
 							break;
-						} else {
-							map.put("answerRemark", question.getAnswerRemarkList().get(i));
 						}
+
+						for (int i = indi; i < question.getTplSpecZoneQties().size(); i++) {
+							if (!question.getAnswerRemarkList().get(i).equalsIgnoreCase("&nbsp;")
+									&& !question.getAnswerRemarkList().get(i).equalsIgnoreCase(getDefaultValue())) {
+								map.put("answerRemark", question.getAnswerRemarkList().get(i));
+								break;
+							} else {
+								map.put("answerRemark", question.getAnswerRemarkList().get(i));
+							}
+						}
+
+						indi++;
 					}
 
-					indi++;
+					listSpec.add(map);
 				}
-				
-				listSpec.add(map);
 			}
-		}
-		// 26130 - start
-		}
-		// 26130 - end
-		else {
+		} else {
 			// non-zonal
 			HashMap<String, String> map = new HashMap<>();
 
@@ -5595,6 +5591,58 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return sb.toString();
 	}
 	// #26130 end
+	
+	// 26130 - start
+	public boolean validateTplSpecQuestion(ScLoa scloa, TplSpecQuestion question) {
+		boolean isExist = Boolean.FALSE;
+		Long tempSpecQuestionID = null;
+		
+		if (scloa.getScLoiLoaItems() != null && !scloa.getScLoiLoaItems().isEmpty()) {
+			for (ScLoiLoaItem item : scloa.getScLoiLoaItems()) {
+				if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null
+						&& item.getScRequestItem().getTplSpecQuestion().getParentSpecQuestion() != null) {
+					TplSpecQuestion specQuestion = item.getScRequestItem().getTplSpecQuestion();
+					
+					if (question.getParentSpecQuestion() == null) {
+						tempSpecQuestionID = question.getSpecQuestionId();
+					} else {
+						tempSpecQuestionID = question.getParentSpecQuestion().getSpecQuestionId();
+					}
+					if (specQuestion.getParentSpecQuestion().getSpecQuestionId().equals(tempSpecQuestionID)) {
+						isExist = Boolean.TRUE;
+						return isExist;
+					}
+				}
+			}
+		}
+		
+		return isExist;
+	}
+	// #26130 -end-
+			
+	// #26130 -start-
+	public boolean validateTplSpecMaster(ScLoa scloa, TplSpecMaster master) {
+		boolean isExist = false;
+		
+		if (scloa.getScLoiLoaItems() != null) {
+			for (ScLoiLoaItem item : scloa.getScLoiLoaItems()) {
+				if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null) {
+					TplSpecQuestion specQuestion = item.getScRequestItem().getTplSpecQuestion();
+					
+					if (specQuestion.getParentSpecQuestion() != null
+							&& specQuestion.getParentSpecQuestion().getTplSpecMaster() != null
+							&& master.getSpecMasterId().equals(
+									specQuestion.getParentSpecQuestion().getTplSpecMaster().getSpecMasterId())) {
+						isExist = Boolean.TRUE;
+						return isExist;
+					}
+				}
+			}
+		}
+		
+		return isExist;
+	}
+	// 26130 - end
 	
 	//25037 - Start
 	public boolean validateSupportedTask(String docNo, Long validityId) {
@@ -6008,47 +6056,4 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	// 25037 - note 677 - end
 	
-	//26130 - start
-			public boolean validateTplSpecQuestion(ScLoa scloa, TplSpecQuestion question) {
-				boolean isExist = Boolean.FALSE;
-				Long tempSpecQuestionID = null;
-				if (scloa.getScLoiLoaItems() != null && !scloa.getScLoiLoaItems().isEmpty()) {
-					for (ScLoiLoaItem item : scloa.getScLoiLoaItems()) {
-						if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null
-								&& item.getScRequestItem().getTplSpecQuestion().getParentSpecQuestion() != null) {
-							TplSpecQuestion specQuestion = item.getScRequestItem().getTplSpecQuestion();
-							if (question.getParentSpecQuestion() == null) {
-								tempSpecQuestionID = question.getSpecQuestionId();
-							} else {
-								tempSpecQuestionID = question.getParentSpecQuestion().getSpecQuestionId();
-							}
-							if (specQuestion.getParentSpecQuestion().getSpecQuestionId().equals(tempSpecQuestionID)) {
-								isExist = Boolean.TRUE;
-								return isExist;
-							}
-						}
-					}
-				}
-				return isExist;
-			}
-			
-			public boolean validateTplSpecMaster(ScLoa scloa, TplSpecMaster master){
-				boolean isExist = false;
-				if (scloa.getScLoiLoaItems() != null) {
-					for (ScLoiLoaItem item : scloa.getScLoiLoaItems()) {
-						if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null) {
-							TplSpecQuestion specQuestion = item.getScRequestItem().getTplSpecQuestion();
-							if (specQuestion.getParentSpecQuestion() != null
-									&& specQuestion.getParentSpecQuestion().getTplSpecMaster() != null
-									&& master.getSpecMasterId().equals(
-											specQuestion.getParentSpecQuestion().getTplSpecMaster().getSpecMasterId())) {
-								isExist = Boolean.TRUE;
-								return isExist;
-							}
-						}
-					}
-				}
-				return isExist;
-			}
-			//26130 - end
 }
