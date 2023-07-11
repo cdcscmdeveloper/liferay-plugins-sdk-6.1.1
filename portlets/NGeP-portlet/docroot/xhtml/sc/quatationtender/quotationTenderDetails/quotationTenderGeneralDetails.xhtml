@@ -885,24 +885,12 @@
 							<p:message id="fulfilType" for="fulfilId" display="icon" />
 						</c:when>
 						<c:otherwise>
-							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>
-							<p:inputText id="fulfilTypeTxt" rendered="#{!specificationBackingBean.managedBean.isGenInfo() or isReadOnly}"
+							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>														
+							<p:inputText id="fulfilTypeTxt"
 								value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}"
 								style="width:195px;" disabled="true" />
 							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>
-							<ui:remove>9019 Reopen #note-289 - change required validation</ui:remove>
-							<p:selectOneMenu required="#{not empty param['skipsubmitvalidation']}" 
-								id="fulfilId" rendered="#{specificationBackingBean.managedBean.isGenInfo() and !isReadOnly}"
-								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
-								label="#{lbl['lbl.sc.fullfillent.type']}"
-								value="#{scQt.fulfilmentType.parameterId}"
-								style="width: 205px;margin-bottom: 5px;">
-								<f:selectItems
-									value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
-								<p:ajax event="change" process="@this" partialSubmit="true"
-									update="@form" listener="#{createQtBB.fulfilmentChange}"></p:ajax>
-							</p:selectOneMenu>
-							<p:message id="fulfilType" for="fulfilId" display="icon" />
+							<ui:remove>9019 Reopen #note-289 - change required validation</ui:remove>							
 						</c:otherwise>
 					</c:choose>
 					</td>
