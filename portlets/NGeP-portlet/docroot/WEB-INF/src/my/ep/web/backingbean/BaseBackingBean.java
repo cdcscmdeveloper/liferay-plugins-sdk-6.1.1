@@ -3127,68 +3127,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					this.getManagedBean().getPersonnelsSsm().add(personnel);
 				}
 			}
-			
-				SsmReqDTO ssmReqDTO = new SsmReqDTO();
-				ssmReqDTO.setRegNo(regNo);
-				ssmReqDTO.setBusinessType(businesstype);
-				/*if(this.getManagedBean().getSmAppl() != null && SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
-					ssmReqDTO.setBasicAcc(true);
-				}else{
-					ssmReqDTO.setBasicAcc(false);
-				}*/
-				ssmReqDTO.setFromViewSSMInfo(true);
-				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
-				this.getManagedBean().setCompanyValidWithSSM(false);
-				this.getManagedBean().setValidateWithSSM(true);
-				if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
-					this.getManagedBean().setCompanyValidWithSSM(true);
-					this.getManagedBean().setSmSupplierSsm(new SmSupplier());
-					/*this.getManagedBean().setBusinessTypeParamCode(getManagedBean().getSmAppl().getSupplierType()
-							.equals("J") ? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT
-							: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);*/
-					this.getManagedBean().getSmSupplierSsm().setCompanyName(ssmResDTO.getSmCompanyBasic().getCompanyName());
-					this.getManagedBean().getSmSupplierSsm().setRegNo(regNo);
-					this.getManagedBean().getSmSupplierSsm().setBusinessType(businesstype);
-					this.getManagedBean().setSmCompanyBasicSsm(ssmResDTO.getSmCompanyBasic());
-					this.getManagedBean().setSmAddress(ssmResDTO.getSmAddress());
-					this.getManagedBean().setShowDetailSSM(true);
-					// set owner n director n personnel
-					for(SmPersonnel personnel:ssmResDTO.getSmPersonnelAll()){
-						personnel = setDesignationSSM(personnel);
-						if(personnel.isEquityOwner()){
-							this.getManagedBean().getPersonnelsOwnerSsm().add(personnel);
-						}
-						if(personnel.isDirector()){
-							this.getManagedBean().getSmPersonnelDirectorSsm().add(personnel);
-						}	
-						if(personnel.isManagement() || personnel.isDirector()){
-							this.getManagedBean().getPersonnelsSsm().add(personnel);
-						}
-					}
-					// set business nature
-					if(ssmResDTO.getSmSupplierBusinessList() != null){
-						this.getManagedBean().setSmSupplierBusinessSsm(new ArrayList<SmSupplierBusiness>());
-						for(SmSupplierBusiness business:ssmResDTO.getSmSupplierBusinessList()){
-							if(business.isSsmData())
-								this.getManagedBean().getSmSupplierBusinessSsm().add(business);
-						}
-					}
-					//Set Branch
-					if(ssmResDTO.getSmSupplierBranches() != null){
-						this.getManagedBean().setSmSupplierBranchSsm(new ArrayList<SmSupplierBranch>());
-						for(SmSupplierBranch branch:ssmResDTO.getSmSupplierBranches()){
-							if(branch.isSsmData())
-								this.getManagedBean().getSmSupplierBranchSsm().add(branch);
-						}
-					}
-					//set equity company
-					if(ssmResDTO.getSmEquityCompanys() != null){
-						this.getManagedBean().setSmEquityCompaniesSsm(new ArrayList<SmEquityCompany>());
-						for(SmEquityCompany company:ssmResDTO.getSmEquityCompanys()){
-							if(company.isSsmData())
-								this.getManagedBean().getSmEquityCompaniesSsm().add(company);
-						}
-					}
+			// set business nature
+			if(ssmResDTO.getSmSupplierBusinessList() != null){
+				this.getManagedBean().setSmSupplierBusinessSsm(new ArrayList<SmSupplierBusiness>());
+				for(SmSupplierBusiness business:ssmResDTO.getSmSupplierBusinessList()){
+					if(business.isSsmData())
+						this.getManagedBean().getSmSupplierBusinessSsm().add(business);
 				}
 			}
 			//Set Branch
@@ -3721,7 +3665,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
 	// #29466 - END
-	
 	
 	//#31849, #34090, #32682 start 
   	/**
