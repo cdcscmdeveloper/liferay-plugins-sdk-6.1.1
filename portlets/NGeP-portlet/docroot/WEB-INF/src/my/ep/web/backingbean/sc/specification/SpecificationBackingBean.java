@@ -1882,6 +1882,14 @@ public class SpecificationBackingBean extends
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 				reqDTO.setScQt(this.getManagedBean().getQt());
 				reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+				//4serangkai wip
+				if (reqDTO.getScQt() != null) {
+					specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSpecSO.class);
+					
+					this.getManagedBean().setWipStatusMax(specSo.checkWipScoreSettingMax(reqDTO));
+				}
+				//4serangkai wip
 				resDTO = specSo.retrieveCheckLists(reqDTO);
 				if (!isAtleastOneSeriveReq(resDTO.getTechnicalCheckList())) {
 					if (null != resDTO.getTechnicalCheckList()) {
@@ -2110,7 +2118,9 @@ public class SpecificationBackingBean extends
 			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL);
 			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_DEMO);
 			// #21695, #25138 -start-
+			if(this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE){
 			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
+			}
 			// #21695, #25138 -end-
 			
 			reqDTO.setSettingTypes(settinglist);
@@ -2137,18 +2147,20 @@ public class SpecificationBackingBean extends
 				}
 				
 				// #21695 START FARID
-				if (null == this.getManagedBean().getTechnicalItemScoreSetting()) {
-					ScQtScoreSetting technicalItemScoresetting = constructScoreSetting(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
-					technicalItemScoresetting
-							.setPassingScore(retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_PASSING_SCORE));
-					this.getManagedBean().setTechnicalItemScoreSetting(technicalItemScoresetting);
-					
-					//set scoring item to default to 50
-					this.getManagedBean().getTechnicalItemScoreSetting().setOverallTechnical(new BigDecimal(50));
-					this.getManagedBean().getTechnicalItemScoreSetting().setPassingScore(new BigDecimal(50));
-					
-					//#21695 & #30557
-					calculateTechnicalItemScore(this.getManagedBean().getFinacialItemScoreSetting());
+				if(this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE){
+					if (null == this.getManagedBean().getTechnicalItemScoreSetting()) {
+						ScQtScoreSetting technicalItemScoresetting = constructScoreSetting(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
+						technicalItemScoresetting
+								.setPassingScore(retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_PASSING_SCORE));
+						this.getManagedBean().setTechnicalItemScoreSetting(technicalItemScoresetting);
+						
+						//set scoring item to default to 50
+						this.getManagedBean().getTechnicalItemScoreSetting().setOverallTechnical(new BigDecimal(50));
+						this.getManagedBean().getTechnicalItemScoreSetting().setPassingScore(new BigDecimal(50));
+						
+						//#21695 & #30557
+						calculateTechnicalItemScore(this.getManagedBean().getFinacialItemScoreSetting());
+					}
 				}
 				
 				if (this.getManagedBean().getQt().isPartial() == true) {
@@ -2177,10 +2189,12 @@ public class SpecificationBackingBean extends
 					}
 					
 					// #21695 START FARID
+					if(this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE){
 					if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
 						if (null == this.getManagedBean().getTechnicalItemScoreSetting()) {
 							this.getManagedBean().setTechnicalItemScoreSetting(recommnendationSetting);
 						}
+					}
 					}
 					// TO CATER WIP DATA IN TECH SPEC PREPARE SCORING
 					if (this.getManagedBean().getTechnicalItemScoreSetting() == null) {
@@ -5263,7 +5277,16 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				TemplateSpecResDTO templateresDTO = null;
 				templateresDTO = templateSpecSO.getTemplateMaster(specReqDTO);
 				// #25635 -end-
-
+				
+				//#25138(wip 4serangkai) bug -Start 8/6/2023
+				reqDTO.setScQt(checkList.getScQt());
+				if (reqDTO.getScQt() != null) {
+					specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSpecSO.class);
+					
+					this.getManagedBean().setWipStatusMax(specSo.checkWipScoreSettingMax(reqDTO));
+				}
+				//#25138(wip 4serangkai) bug -End 8/6/2023
 				checkList.getScQtDoc().setTplSpecMaster(
 						templateresDTO.getSpecMaster());
 				TemplateSpecBean templateSpecBean = getManagedBean()
