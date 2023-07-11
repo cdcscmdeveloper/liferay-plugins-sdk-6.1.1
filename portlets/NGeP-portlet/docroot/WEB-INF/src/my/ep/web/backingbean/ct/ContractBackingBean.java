@@ -2283,7 +2283,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		else if(event.getComponent().getId().equalsIgnoreCase("uploadHistoryWaiver")){
 			attachment.setDocType(getManagedBean().getContractVer().getDocType());
 			attachment.setDocId(getManagedBean().getContractVer().getContractVerId());
-			attachment.setModified(true);
 			attachment.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
 			attachment.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
 			
@@ -2409,11 +2408,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		//gets the last list for editing
 		CtBondWaiverDetail bondWaiver =  getManagedBean().getContractVer().getBondWaiverDefermentHistory().get(getManagedBean().getContractVer().getBondWaiverDefermentHistory().size() - 1);
-		bondWaiver.setBrandNew(true);
-		bondWaiver.setRecordStatus(false);
+//		bondWaiver.setBrandNew(true);
+//		bondWaiver.setRecordStatus(false);
 		bondWaiver.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
-		bondWaiver.getCtAttachment().setBrandNew(true);
-		bondWaiver.getCtAttachment().setRecordStatus(false);
+//		bondWaiver.getCtAttachment().setBrandNew(true);
+//		bondWaiver.getCtAttachment().setRecordStatus(false);
 		bondWaiver.getCtAttachment().setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
 		bondWaiver.getCtAttachment().setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
 		

@@ -1002,15 +1002,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * Method to search the quationtenders based on serach date.
 	 */
 	public void searchQTAction() {
-		if(this.getManagedSearchBeanDocumentTypeIsLOA()){
+		if (this.getManagedSearchBeanDocumentTypeIsLOA()) {
 			getManagedBean().getSearchLoaForQtDataModel().reloadData();
-		}
-		else if(this.getManagedSearchBeanDocumentTypeIsLOI()){
+		} else if (this.getManagedSearchBeanDocumentTypeIsLOI()) {
 			getManagedBean().getSearchLoiForQtDataModel().reloadData();
+		} else {
+			getManagedBean().getSearchQTDataModel().reloadData();
 		}
-		else;
-		getManagedBean().getSearchQTDataModel().reloadData();
-		
 	}
 
 	/**
@@ -1424,7 +1422,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 				}
 			}
-			else;
+
 		}
 		else if(ParameterConst.DOCTYPE_LETTER_OF_AWARD.equalsIgnoreCase(docType) 
 				|| ParameterConst.DOCTYPE_LETTER_OF_INTENT.equalsIgnoreCase(docType)){
@@ -1462,7 +1460,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				return viewOnlineBidding(scQt,previousPageUrl); //#17376-144
 			}
 		}
-		else;
 		
 		return null;
 	}
@@ -1802,7 +1799,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, reverseQtDetails(Boolean.FALSE,Boolean.TRUE,null));
 				}
 			}
-			else;
+
 		}
 		
 		return null;
@@ -5943,7 +5940,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						RoleCode[] r = {RoleCode.SC_SECRETARY};
 						if (userHasRole(r)){
 							getManagedBean().setSecretaryValidate(true);
-						};
+						}
 //						if(authoriztionList.contains(pmRoleDesc.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.SC_SECRETARY.value()))){
 //							getManagedBean().setSecretaryValidate(true);
 //						}
@@ -6889,6 +6886,20 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}	
 		//9019 - End (Harun)
 		
+		//9019 - Start (Harun) #Note-398 and merge with #Note-487
+		if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().getQt().getSpecApprovalReq() == true) {
+			this.getManagedBean().getQt().setSpecApprovalReq(false);
+			reqDTO.getQtdetail().setSpecApprovalReq(false);
+			reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
+		}
+		//9019 - End (Harun)
+		
+		//9019 Start - (Harun) #Note-501 
+		if(QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())){
+			detailSO.validateQTGeneralInformation(reqDTO);
+		}
+		//9019 End 
+		
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
 		switch (changedIndexNumber) {
 		case 0:
@@ -6900,13 +6911,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (this.getManagedBean().isScQtRemarksEmpty()) {
 				this.getManagedBean().getQt().setScQtRemarks(null);
 			} 
-			//9019 - End (Harun)
-			//9019 - Start (Harun) #Note-398 Remove checking for (ERR-100022) error mesg while save 
-			if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().getQt().getSpecApprovalReq() == true) {
-				this.getManagedBean().getQt().setSpecApprovalReq(false);
-				reqDTO.getQtdetail().setSpecApprovalReq(false);
-				reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
-			}
 			//9019 - End (Harun)
 			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
 			//9019 - end
@@ -6930,7 +6934,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//       while save due to save empty object
 			if (this.getManagedBean().isScQtRemarksEmpty()) {
 				this.getManagedBean().getQt().setScQtRemarks(null);
-			} 
+			}
 			//9019 - End (Harun)
 			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
 			//9019 - end
@@ -10420,7 +10424,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//29464-start
 		else if(taskName.equals(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)){
 			menuSet.add(getMenuItemSpecificationCommitteeAssignment());
-		};
+		}
 		//29464-end
 		// ***25692#31
 		if(isApprovalScreen() && menuSet != null){
@@ -12422,8 +12426,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 					CommonConstants.DEFAULT_DATE_FORMAT);
 			// String localDate = sdf.format(currentDate);
 			// String day = localDate.substring(0, 2);
-			String localstartMonth = retriveMonthDtls(new Integer(startMonth));
-			String localemdMonth = retriveMonthDtls(new Integer(endMonth));
+			String localstartMonth = retriveMonthDtls(startMonth);//#GIT11
+			String localemdMonth = retriveMonthDtls(endMonth);//#GIT11
 			String fromDate = 01 + "/" + localstartMonth + "/" + startYear;
 			String toDate = 01 + "/" + localemdMonth + "/" + endYear;
 			Date startDate = sdf.parse(fromDate);
