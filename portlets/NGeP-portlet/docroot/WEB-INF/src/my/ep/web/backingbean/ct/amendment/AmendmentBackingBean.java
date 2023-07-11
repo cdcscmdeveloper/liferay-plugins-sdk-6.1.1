@@ -8482,4 +8482,156 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	// End Fix - #34539
+	
+	// #34662 start
+	public String saveToScheduler(String outcome) throws Exception {
+		IContractAmendmentSO contractAmendmentSO = null;
+		ContractReqDTO reqDTO = null;
+		CtContractVer contractVer = ctBackingBean.getManagedBean().getContractVer();
+		
+		try {
+			splittedAccNoAndBankname(); 
+			/*Validation for login user's org profile before initiate contract task*/
+			if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)
+					&& contractVer.getStatus() != null
+					&& contractVer.getStatus().getStatusId() == ContractStatusConst.FA_PENDING_SUBMISSION.longValue()) {
+				validateOwnerOrgProfile(contractVer.getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			}
+			
+			setSecretary();
+			if(!contractVer.getCtContractValue().isPid()){
+				contractVer.setCtPidReasons(null);
+			}
+			validateContractAmendment(outcome);
+
+			// Generate Supplier Acknowledgement Receipt
+			if (getManagedBean().getTaskName() != null 
+					&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
+					&& outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+
+				String filePath = getAcknowledgmentReceiptContent(true);
+				CtAttachment attachment = new CtAttachment();
+				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+				attachment.setFileName("PengakuanPenerimaanSuratBerkaitanKontrakTambahan.pdf");
+				attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				attachment.setCreatedUser(getFacesScopes().getUserSessionBean());
+				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				attachment.setSectionId(ContractConst.ATTACHMENT_LOA_LETTER_RECEIPT);
+				getManagedBean().getCtLetterOfAcceptance().get(1).setLoaAttachments(attachment);
+			}
+			for(CtLetterOfAcceptance loaLetters : getManagedBean().getCtLetterOfAcceptance()){
+				if(loaLetters.getLoaAttachments().getFilePath() != null ){
+					contractVer.getLoaFileAttachments().add(loaLetters.getLoaAttachments());
+				}
+			}
+			reqDTO = new ContractReqDTO();
+			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
+			reqDTO.setOutcome(outcome);
+			reqDTO.setTaskId(getManagedBean().getTaskId());
+
+			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().
+					getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+
+			contractVer.setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
+
+			if (contractVer.getCtAmendment().isContractExtend() && contractVer.getCtAmendment().getAmendmentEffDate() == null) {
+				contractVer.getCtAmendment().setAmendmentEffDate(contractVer.getCtAmendment().getExtendStartDate());
+			}
+
+			if(contractVer.getCtSchedules() != null){
+				for(CtSchedule schedules : ctBackingBean.getManagedBean().getContractVer().getCtSchedules()){
+					PmParameter parameter =  new PmParameter();
+					parameter.setParameterId(schedules.getFulfilmentTypeId());
+					schedules.setScheduleType(parameter);
+				}
+			}
+
+
+			// Retrieve the proper committee role during sign off process and set the sign off flag to true
+//			if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
+//					&& outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+//				String role = null;
+//				for(CtCommitteeMember committeeMember : contractVer.getCtAmendment().getCtCommitteeMembers()) {
+//					if (committeeMember.getPmUser().getUserId().equals(getFacesScopes().getUserSessionBean().getUserId())) {
+//						committeeMember.setSignedOff(true);
+//						if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+//								|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) { 
+//							role = "FPB_" + MemberRole.getDisplayName(committeeMember.getMemberRole().getParameterCode());
+//						} else {
+//							role = getManagedBean().getCommitteeType() + "_" + MemberRole.getDisplayName(committeeMember.getMemberRole().getParameterCode());
+//						}
+//						reqDTO.setUserRole(role);
+//						break;
+//					}
+//				}	     		
+//			} else {
+				reqDTO.setUserRole(getUserRole());
+//			}
+			
+			reqDTO.setTaskName(getManagedBean().getTaskName());
+			if (contractVer.getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				ctBackingBean.scheduleProgressiveDate();
+			}
+			//26753 - start
+			if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(contractVer.getStatus().getStatusId()) 
+					|| ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(contractVer.getStatus().getStatusId())) { //#26688
+				contractVer.getCtAmendment().setCtCommitteeMembers(getManagedBean().getUpdatedCommitteeMembers());
+			}
+			//26753 - end
+			reqDTO.setCtContract(contractVer.getCtContract());
+			reqDTO.setCtContractVer(contractVer);
+			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
+			reqDTO.setAttachments(getManagedBean().getAttachmentList());
+			reqDTO.setDeleteAttachments(ctBackingBean.getManagedBean().getDeleteAttachmentList());
+			reqDTO.setUserMap(getManagedBean().getUserMap());
+			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+
+			if (getManagedBean().getPmDigiSign() != null) {
+				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
+			}
+			// Start Fix - #30022
+			contractadminstatuschecking();
+			// End Fix - #30022
+			ContractResDTO resDTO = contractAmendmentSO.saveToScheduler(reqDTO);
+			
+			if (resDTO.isSuccessful()) {
+				log.debug("Record saved successfully");
+				String messageId = MessageConst.INFO_700005;
+				String[] params = new String[] { getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+						this.ctBackingBean.getManagedBean().getContractVer().getDocType()),
+						this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
+				
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					messageId = MessageConst.INFO_700025;
+				} 
+
+				successMessage(messageId, params);
+
+				if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
+						|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null)) {
+					renewSesionObject();
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				} else {
+					ContractReqDTO ctReqDTO = new ContractReqDTO();
+					ctReqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+					ctReqDTO.setDocType(resDTO.getCtContractVer().getDocType());
+					setAmendmentContractVer(ctReqDTO);
+					ConstructTabSideMenu();
+					//26753 - start
+					if(getManagedBean().getFilteredUpdatedCommitteeMembers() != null){
+						getManagedBean().getFilteredUpdatedCommitteeMembers().clear();						
+					}
+					//26753 - end
+				}
+			} else {
+				throw new EpException(MessageConst.ERROR_700020);
+			}
+		} finally {
+			contractAmendmentSO = null;
+		}
+		return null;		
 	}
+	// #34662 end
+}
