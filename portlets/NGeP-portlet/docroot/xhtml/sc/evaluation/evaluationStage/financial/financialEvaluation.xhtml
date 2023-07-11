@@ -90,7 +90,7 @@
 		<p:spacer height="15"></p:spacer>
 		<p:panel id="financialComplianceChecklistmainPageProposalspecCommitteeIds" header="#{lbl['lbl.sc.eva.non.scoring.compliance']}"
 		toggleable="true"
-		rendered="#{specificationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
+		rendered="#{evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
 		
 		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.compliance.stage.instruction']}" escape="false" />
 
