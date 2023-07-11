@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.ExternalContext;
@@ -17435,6 +17436,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	//#12483 - END
 	//#32014 - START
 	//reassign the address since the first time assigning the data is not displayed/populate
+	/*
 	public void reassignSelShareHolderResAddress(SmPersonnelAddress personnelAddress){
 		log.info("========#32014 - inside reassignSelShareHolderAddress=======");
 		log.info("#32014 - isSupplierUser : " + getManagedBean().isSupplierUser());
@@ -17570,6 +17572,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 		}
 	}
+	*/
 	//#32014 - END
 	//30766 START
 	private List<SmSupplierCategory> setPOorApprDec(List<SmSupplierCategory> catList) {
@@ -17770,4 +17773,27 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		return sb.toString();
 	}
 	//#32008 - end
+	//#34799 - start
+	public void onTickSameAsAddress(SmAddress srcAddr,
+			SmPersonnelAddress destAddr, String componentId, boolean isTick) {
+		if(isTick){
+			UIComponent comp = org.primefaces.util.ComponentUtils.findComponent(
+					FacesContext.getCurrentInstance().getViewRoot(), componentId);
+			if(comp != null){
+				resetEditableValue(comp);
+			}
+		}
+		onTickSameAsAddress(srcAddr, destAddr);
+	}
+	
+	private void resetEditableValue(UIComponent comp){
+		if(comp instanceof EditableValueHolder){
+			EditableValueHolder val = (EditableValueHolder) comp;
+			val.resetValue();
+		}
+		for(Iterator<UIComponent> it = comp.getFacetsAndChildren(); it.hasNext();){
+			resetEditableValue(it.next());
+		}
+	}
+	//#34799 - end
 }

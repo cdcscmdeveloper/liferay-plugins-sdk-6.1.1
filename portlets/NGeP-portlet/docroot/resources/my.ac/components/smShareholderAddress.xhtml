@@ -39,9 +39,9 @@
 					<p:selectBooleanCheckbox rendered="#{cc.attrs.showTick}"
 						value="#{cc.attrs.addrObj.sameAsPerm}"
 						disabled="#{cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.addressSsmNull)}"
-						>
+						><!-- #34799 -->
 						<p:ajax event="change" partialSubmit="true" process="@this"
-							listener="#{cc.attrs.bBean.onTickSameAsAddress(cc.attrs.addrSameAsObj,cc.attrs.addrObj)}"
+							listener="#{cc.attrs.bBean.onTickSameAsAddress(cc.attrs.addrSameAsObj,cc.attrs.addrObj,cc.id,cc.attrs.addrObj.sameAsPerm)}"
 							update=":#{p:component(cc.attrs.addrPanelId)}" onstart="blockWidget.show()" 
 							oncomplete="blockWidget.hide()"/>
 					</p:selectBooleanCheckbox>
@@ -138,9 +138,10 @@
 
 				<tr>
 					<!-- #32014 - START -->
+						<!-- 	#34799
 						<p:outputPanel rendered="#{cc.attrs.addrObj.smPersonnel.identificationType.parameterCode == SupplierManagementConst.IDENTIFICATION_TYPE_PASSPORT}">
 							#{cc.attrs.bBean.reassignSelShareHolderResAddress(cc.attrs.addrObj)}
-						</p:outputPanel>
+						</p:outputPanel> -->
 					  <!-- #32014 - END -->
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -202,9 +203,10 @@
 
 				<tr>
 					<!-- #32014 - START -->
+						<!-- 	#34799
 						<p:outputPanel rendered="#{cc.attrs.addrObj.smPersonnel.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
 							#{cc.attrs.bBean.reassignSelShareHolderResAddress(cc.attrs.addrObj)}
-						</p:outputPanel>
+						</p:outputPanel> -->
 					 <!-- #32014 - END -->
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>

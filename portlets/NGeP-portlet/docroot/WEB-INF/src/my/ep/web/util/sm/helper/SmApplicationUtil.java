@@ -12973,6 +12973,24 @@ public class SmApplicationUtil {
 				.getEntityBySinglePropertyFromList(
 						shareHolderBean.getIdentificationNo(),
 						bean.getPrevApprovedPersonnels(), "identificationNo"));
+		
+		//#34799 - start
+		String idType = bean.getSelectedShareHolder().getIdentificationType().getParameterCode();
+		if(idType.equalsIgnoreCase(SupplierManagementConst.IDENTIFICATION_TYPE_PASSPORT)
+				|| idType.equalsIgnoreCase(SupplierManagementConst.NEW_IC)){
+			
+			SmPersonnelAddress resAddr = reassignSelShareHolderResAddress(
+					bean.getSelectedShareHolder(), bean.getShareHolderResdAddr(),
+					bean.isSupplierUser(), bean.getSmAppl().isApplValidWithSsm());
+			if(resAddr != null){
+				bean.setShareHolderResdAddr(resAddr);
+				if(resAddr.getSmAddress() != null && resAddr.getSmAddress().getPmState() != null){
+					SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(bean, 
+						resAddr.getSmAddress(), SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+				}
+			}
+		}
+		//#34799 - end
 	}
 
 	/**
@@ -15204,4 +15222,50 @@ public class SmApplicationUtil {
 		}
 	}
 		//#31043 - END
+	//#34799
+	//reassign the address since the first time assigning the data is not displayed/populate
+	private static SmPersonnelAddress reassignSelShareHolderResAddress(SmPersonnel selectedShrHolder, 
+			SmPersonnelAddress resAddress, boolean isSupplierUser, boolean validSsm){
+		
+		log.info("========#32014 - inside reassignSelShareHolderAddress=======");
+		if(resAddress == null || resAddress.isSameAsPerm() || selectedShrHolder == null
+				|| !SmCommonUtil.getInstance().ssmActive() || !validSsm || !isSupplierUser){
+			return null;
+		}
+		boolean hasResAddr = false;
+		for(SmPersonnelAddress a : selectedShrHolder.getSmPersonnelAddresses()){
+			if(a.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
+				hasResAddr = true;
+				break;
+			}
+		}
+		SmAddress ssmAddress = new SmAddress();
+		if(!hasResAddr){
+			SmApplicationUtil.getInstance().cloneAddress(ssmAddress, resAddress.getSmAddress());
+			cloneAddressSSM(ssmAddress, resAddress.getSmAddress());
+		}
+		
+		SmPersonnelAddress returnAddr = new SmPersonnelAddress();
+		returnAddr.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
+		PmCountry currCountry = (resAddress.getSmAddress() != null) ? 
+				resAddress.getSmAddress().getPmCountry() : null;
+		returnAddr.setSmAddress(SmApplicationUtil.setDefaultAddr(currCountry));
+		returnAddr.setSmPersonnel(selectedShrHolder);
+		
+		//personnel has no residential address, overwrite with SSM address
+		if(!hasResAddr && returnAddr.getSmAddress().getPostcode() != null){
+			returnAddr.setSmAddress(ssmAddress);
+		}
+		//check if district state not equal to pmState, reset city & district
+		if(returnAddr.getSmAddress().isSsmData()){
+			SmAddress addr = returnAddr.getSmAddress();
+			PmDistrict dist = addr.getPmDistrict();
+			if(addr != null && addr.getPmState()!= null && dist != null && dist.getPmState() != null
+					&& !dist.getPmState().getStateId().equals(addr.getPmState().getStateId())){
+				addr.setPmDistrict(new PmDistrict());
+				addr.setPmCity(new PmCity());
+			}
+		}
+		return returnAddr;
+	}
 }
