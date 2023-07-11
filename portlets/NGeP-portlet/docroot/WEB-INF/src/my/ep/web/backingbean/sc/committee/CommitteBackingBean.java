@@ -1811,7 +1811,7 @@ public class CommitteBackingBean extends
 			}
 
 			private int roleValue(String memberRole) {
-				Integer value = null;
+				Integer value = 4; //20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 
 				if (memberRole == null) {
 					value = 4;
