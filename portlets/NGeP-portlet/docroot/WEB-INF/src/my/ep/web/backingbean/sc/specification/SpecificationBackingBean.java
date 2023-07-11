@@ -4546,7 +4546,10 @@ public class SpecificationBackingBean extends
 		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
 		String parameterCode = null;
 		for (PmParameterDesc paramDesc : localParamDesc) {
-			if (paramDesc.getPmParameter().getParameterId().equals(Long.valueOf(list.getDefinationType().getParameterId()))) {
+			// Sqube QT Master Bug Minor G15@Syazani 11/07/2023 - Start
+			if (paramDesc.getPmParameter() != null && list.getDefinationType() != null
+					&& paramDesc.getPmParameter().getParameterId().equals(list.getDefinationType().getParameterId())) {
+				// Sqube QT Master Bug Minor G15@Syazani 11/07/2023 - End
 				parameterCode = paramDesc.getPmParameter().getParameterCode();
 				list.setDefinationType((PmParameter) paramDesc.getPmParameter().cloneEntity()); // Bug #34065@Syazani 01/11/2022
 				break;
