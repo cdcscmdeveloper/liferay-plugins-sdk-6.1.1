@@ -69,6 +69,7 @@
 			<ui:param name="isUpdateSpecByAnswers" value="#{templateSpecBean.updateSpecByAnswers}" />
 			<ui:param name="isDurationYear" value="#{templateSpecBean.specMaster.durationMonth ge 12}"/>
 			<ui:param name="isSqSpec" value="#{templateSpecBean.specMaster.specCreatedBySQ}"/>
+			<ui:param name="isPartialQt" value="#{templateSpecBean.specMaster.scQtDoc.scQt.partial eq null ? 'false': templateSpecBean.specMaster.scQtDoc.scQt.partial}" />
 		<!-- 25138 -start- -->
 		<ui:param name="isPackageItemSpec"
 			value="#{templateSpecBean.evaluatioStageActiveIndex == 1}" />
@@ -245,12 +246,15 @@
 			
 					
 			<c:if test="#{isContentTypeAnswer or isContentTypeScore or (isContentTypeUpdateSpec and isUpdateSpecByAnswers)}">
-			<!-- #29021 -start- -->
-			<h:outputText
-				rendered="#{isContentTypeScore and isSpecTypeTechnical}"
-				styleClass="instruction"
-				value="#{lbl['lbl.sc.tec.rating.instruction']}" escape="false" />
-			<!-- #29021 -end- -->
+			<ui:fragment
+				rendered="#{isContentTypeScore and isSpecTypeTechnical and !evaluationBackingBean.evaluateWIP(evaluationBackingBean.managedBean.scQt)}">
+				<h:outputText rendered="#{!isPartialQt}" styleClass="instruction"
+					value="#{lbl['lbl.sc.tec.rating.instruction']}" escape="false" />
+				<h:outputText rendered="#{isPartialQt}" styleClass="instruction"
+					value="#{lbl['lbl.sc.tec.partialoffer.instruction']}"
+					escape="false" />
+				<br />
+			</ui:fragment>
 			<!-- #32110, #21695 -start- -->
 			<ui:param name="filterList"
 				value="#{!isSqSpec and isZonal and !templateSpecBackingBean.filterAllitemQtyZero(templateSpecBean.specAnswerList) and isSpecTypeFinancial and isContentTypeAnswer ? null : templateSpecBean.specAnswerList}">
@@ -296,7 +300,27 @@
 				</p:dataTable>
 			
 				<!--  #21695, #25138 REMOVE TOTAL SCORE -->
-				
+				<ui:remove>
+						<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+				</ui:remove>
+				<c:if test="#{isContentTypeScore and isSpecTypeFinancial and templateSpecBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
+					<p:spacer height="10" />
+					<table style="width:100%">
+					<tr>
+						<td class="TableFieldLeft" width="8%">
+							<p:outputLabel value="#{lbl['lbl.sc.total.score']}" />
+						</td>
+						<td class="TableFieldRight" width="92%">
+							<p:inputText style="text-align:right;" styleClass="calcScore" size="8" 
+								value="#{templateSpecBackingBean.calcTotalScore(templateSpecBean)}"
+								disabled="true" />
+						</td>
+					</tr>
+					</table>
+				</c:if>
+					<ui:remove>
+						<!-- //#25138(wip 4serangkai) bug -End 8/6/2023 -->
+				</ui:remove>
 				<c:if test="#{isContentTypeUpdateSpec}">
 					<ui:include src="tierQtyPopup.xhtml" />
 				</c:if>
