@@ -275,7 +275,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 				getManagedBean().setSelectedSectionTitle(selectedSection.getSectionTitle());
 				String content=selectedSection.getSectionContent();
 				log.info("before replacing editContent content"+content);
-				if(null!=this.getManagedBean().getDocParamValues() && !this.getManagedBean().getDocParamValues().isEmpty() && content != null){//#33346 - Fix NullPointer issue
+				if(null!=this.getManagedBean().getDocParamValues() && !this.getManagedBean().getDocParamValues().isEmpty() && content != null){//#33346 - Fix NullPointer issue	
 					for (Map.Entry<String, String> entry : this.getManagedBean().getDocParamValues().entrySet()) {
 						log.info("entry.getKey()"+entry.getKey());
 						log.info("entry.getValue()"+entry.getValue());
