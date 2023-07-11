@@ -135,9 +135,6 @@
 					update=":#{p:component('viewssminfoDlg')}" process="@this"
 					onclick="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 			<!-- #31269 - end -->
-					
-			<h:commandLink rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" action="#{backingBean.redirectToViewSSMInfo()}" target="_blank"
-					value="#{lbl['lbl.sm.view.ssm.infomation']}"/>
 		</div>
 		<br /><br />
 	</c:if>
