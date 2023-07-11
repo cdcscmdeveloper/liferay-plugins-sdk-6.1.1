@@ -2196,33 +2196,7 @@ public class SpecificationBackingBean extends
 						}
 					}
 					}
-					// TO CATER WIP DATA IN TECH SPEC PREPARE SCORING
-					if (this.getManagedBean().getTechnicalItemScoreSetting() == null) {
-						int count = 0;
-						for (ScQtScoreSetting checkWipTech : resDTO.getScoreSettingResultBean().getResultList()) {
-
-							if (checkWipTech != null) {
-								count++;
-							}
-
-						}
-						
-						if (count < 3) {
-								ScQtScoreSetting technicalItemScoresetting = constructScoreSetting(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
-								technicalItemScoresetting
-										.setPassingScore(retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_PASSING_SCORE));
-								this.getManagedBean().setTechnicalItemScoreSetting(technicalItemScoresetting);
-								
-								//set scoring item to default to 50
-								this.getManagedBean().getTechnicalItemScoreSetting().setOverallTechnical(new BigDecimal(50));
-								this.getManagedBean().getTechnicalItemScoreSetting().setPassingScore(new BigDecimal(50));
-								//set weightage to false
-							if (this.getManagedBean().getQt().isPartial() == true) {
-								this.getManagedBean().getTechnicalScoreSetting().setWeightageReq(false);
-							}
-						}
-					}
-					// #21695 END FARID
+					//remove
 				}
 			}
 			settinglist=null;
