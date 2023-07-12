@@ -1791,7 +1791,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		List<TplSpecZoneDtl> zoneList = new ArrayList<TplSpecZoneDtl>();
 		List<TplSpecZoneLoc> results = null;
-
+		TplSpecZoneDtl zoneDtlTmp = zoneDtl; //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 		if (null != treeNodes && !treeNodes.isEmpty()) {
 			for (TreeNode treeNode : treeNodes) {
 				TplSpecZoneDtl tplSpecZoneDtl = null;
@@ -1799,8 +1799,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				List<TreeNode> zoneNodes = treeNode.getChildren();
 				// zoneDtl=(TplSpecZoneDtl)treeNode.getData();
 				// zoneDtl = (TplSpecZoneDtl) zoneNodes.getData();
-				// TplSpecZoneDtl zoneDtl=new TplSpecZoneDtl();
-				zoneDtl = (TplSpecZoneDtl) zoneNodes.get(0).getData();
+				
+				zoneDtlTmp = (TplSpecZoneDtl) zoneNodes.get(0).getData(); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				for (TreeNode treeNode1 : zoneNodes) {
 
 					List<TreeNode> stateNodes = treeNode1.getChildren();
