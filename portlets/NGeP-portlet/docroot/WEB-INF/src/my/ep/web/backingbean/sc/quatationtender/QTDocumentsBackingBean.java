@@ -2208,9 +2208,11 @@ public class QTDocumentsBackingBean extends
 							 if ( length >= 20){
 								 StringBuilder subSb = new StringBuilder();
 								  String newWord = new String();	
-						    	  String subWord = new String();	
-						            for (int i = 0; i < length; i += 70) {
-						            	subWord = word.substring(i, Math.min(length, i + 70));
+						    	  String subWord = new String();
+						    	  // Bug #34894@Syazani 11/07/2023 -- Start
+						            for (int i = 0; i < length; i += 61) {
+						            	subWord = word.substring(i, Math.min(length, i + 61));
+						            	// Bug #34894@Syazani 11/07/2023 -- End
 						            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
 						            }
 						    		newWord = subSb.toString();	
