@@ -170,21 +170,21 @@ public class ProfileOfRegCompanyRptBackingBean extends
 			} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_MOF)) {
 				if (this.getManagedBean().getZone() != null) {
 					if (getManagedBean().getZone().toUpperCase().equalsIgnoreCase("SEMENANJUNG")) {
-						sb.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^1");
+						sb.append("smSupplier.smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^1");
 					} else if (getManagedBean().getZone().toUpperCase().equalsIgnoreCase("SABAH")) {
-						sb.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^2");
+						sb.append("smSupplier.smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^2");
 					} else if (getManagedBean().getZone().toUpperCase().equalsIgnoreCase("SARAWAK")) {
-						sb.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^3");
+						sb.append("smSupplier.smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^3");
 					}
 				}
 				//#32564 - start - ac:smReportSupplierType
 				if (getManagedBean().getSupplierType() != null && !getManagedBean().getSupplierType().equals("all")){
 					if(sb.length() != 0) sb.append("|");
-					sb.append("smMofAccounts.supplierType^" + this.getManagedBean().getSupplierType());
+					sb.append("supplierType^" + this.getManagedBean().getSupplierType());
 				} else {
 					if(sb.length() != 0) sb.append("|");
-					sb.append("smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONSULTANT
-							+ "*smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONTRACTOR);
+					sb.append("smSupplier.smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONSULTANT
+							+ "*smSupplier.smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONTRACTOR);
 				}
 				//#32564 - end
 			}
