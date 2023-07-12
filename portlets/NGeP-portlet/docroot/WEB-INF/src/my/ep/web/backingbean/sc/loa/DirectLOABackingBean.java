@@ -10962,7 +10962,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			if (contractAmt.compareTo(limit) == 0) {
 				getManagedBean().setAbove500K(false);
 				return false;			
-			} else if (contractAmt.compareTo(limit) > 1) {
+			} else if (contractAmt.compareTo(limit) > 0) {
 				getManagedBean().setAbove500K(true);
 				return true;
 			} else {
