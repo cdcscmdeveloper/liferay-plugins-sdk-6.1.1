@@ -96,7 +96,7 @@
 							update="@form" />
 					</c:if>
 					<c:if
-						test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+						test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true' and evaluationBackingBean.managedBean.demoWip eq 'false'}"><ui:remove>#28784 WIP @idham</ui:remove>
 						<p:menuitem value="#{lbl['lbl.sc.eva.technical.presentation.demo']}" process="@this" partialSubmit="true" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retrivePresentationOrDemoEvaluationStage}"
@@ -209,14 +209,25 @@
 					
 					<ui:include src="TECSummary.xhtml" />
 
-				</c:if><c:if
+				</c:if>
+				<ui:remove>#28784 WIP @idham - Start</ui:remove>
+				<c:if
 					test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2' 
-					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true' and !evaluationBackingBean.managedBean.demoWip}">
 
 					
 					<ui:include src="TECSummaryPresentationDemo.xhtml" />
 
 				</c:if><c:if
+					test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2' 
+					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true' and evaluationBackingBean.managedBean.demoWip}">
+
+					
+					<ui:include src="TECSummary.xhtml" />
+
+				</c:if>
+				<ui:remove>#28784 WIP @idham - End</ui:remove>
+				<c:if
 					test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '3'
 					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
 
