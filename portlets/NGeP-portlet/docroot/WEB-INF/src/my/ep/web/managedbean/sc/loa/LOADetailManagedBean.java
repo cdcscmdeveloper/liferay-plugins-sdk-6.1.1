@@ -370,6 +370,8 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private Long supplierBankId = null;
 	//Bug #33674@Syazani - End
 	
+	private String firstZone;//Bug #34757
+	
 	private int retainPageNumber = 0;//#34242
 	
     /**
@@ -2143,6 +2145,14 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.showApprovalLetter = showApprovalLetter;
 	}
 	// #25725 - note 146 - end
+
+	public String getFirstZone() {
+		return firstZone;
+	}
+
+	public void setFirstZone(String firstZone) {
+		this.firstZone = firstZone;
+	}
 
 }
 

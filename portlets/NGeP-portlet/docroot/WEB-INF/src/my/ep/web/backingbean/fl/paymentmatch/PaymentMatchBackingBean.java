@@ -150,7 +150,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -1446,7 +1445,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			if(getManagedBean().getPaymentAdvice().getFlPaymentDeduction() != null && !getManagedBean().getPaymentAdvice().getFlPaymentDeduction().isEmpty()){
 				ParameterReqDTO reqType = new ParameterReqDTO();
 				ParameterResDTO resType = new ParameterResDTO();
-				ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();;
+				ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 				reqType.setParameterType(ParameterTypeConst.DEDUCTION_TYPE);
 				reqType.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 				
@@ -1796,25 +1795,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			orderBackingBean.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
-			//#28377 start
-			FulfilmentReqDTO reqDTOAttach = new FulfilmentReqDTO();
-			reqDTOAttach.setAttachment(new FlAttachment());
-			reqDTOAttach.getAttachment().setDocId(resDTO.getFlOrder().getFulfilmentOrderId());
-			reqDTOAttach.getAttachment().setSecId(FulfilmentConst.AP58_AL);
-			reqDTOAttach.getAttachment().setDocType(resDTO.getFlOrder().getDocType());
-			FulfilmentResDTO resDTOattachment = orderSO.retrieveAttachmentApprovalLetter(reqDTOAttach);
-			if (resDTOattachment.getAttachmentList().size() > 0) {
-				orderBackingBean.getManagedBean().setAttachment(resDTOattachment.getAttachmentList().get(0));
-				
-				List<FlAttachment> newAttachmentList = new ArrayList<FlAttachment>();
-				for(FlAttachment flattach: resDTO.getAttachmentList()){
-					if(flattach.getSecId().equals(FulfilmentConst.AP58_AL)){
-						newAttachmentList.add(flattach);
-					}
-				}
-				resDTO.getAttachmentList().removeAll(newAttachmentList);
-			}
-			//#28377 end
+			//#34686 start
+			orderBackingBean.getManagedBean().setAttachment(resDTO.getFlAttachment());
+			//#34686 end
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			if(resDTO.getFlOrder().isFactored()) {
 				orderBackingBean.getManagedBean().setFactoringCheck("true");
