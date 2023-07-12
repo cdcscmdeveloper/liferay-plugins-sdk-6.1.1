@@ -500,9 +500,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * add interviewee to the List
 	 */
 	public void addInterviewee(){
-		//#34166 - Start
-		checkRepresentative();
-		//#34266 - End
 		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
 		
 		SmSvInterviewee interviewee = new SmSvInterviewee();
