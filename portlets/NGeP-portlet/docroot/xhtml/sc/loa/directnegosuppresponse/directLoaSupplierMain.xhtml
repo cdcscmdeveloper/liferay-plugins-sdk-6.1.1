@@ -74,8 +74,8 @@
 						<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 							update="@form"
 							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}"
-							disabled="#{(directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeScheduled) ||
-							(directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeNonPeriodicScheduled}">
+							disabled="#{(directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeScheduled) and
+							(directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeNonPeriodicScheduled)}">
 
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
