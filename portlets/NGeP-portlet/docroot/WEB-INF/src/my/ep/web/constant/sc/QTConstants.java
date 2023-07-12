@@ -314,4 +314,8 @@ public interface QTConstants {
 	public static final String LAMPIRAN_A3_TERKINI = "Terkini";
 	//#29007 End Vinod
 	
+	//#25726 - reopen note 110
+	public static final String SURAT_SETUJU_TERIMA = "Surat Setuju Terima (Termasuk Lampiran A)";
+	//#25726 end
+	
 }
