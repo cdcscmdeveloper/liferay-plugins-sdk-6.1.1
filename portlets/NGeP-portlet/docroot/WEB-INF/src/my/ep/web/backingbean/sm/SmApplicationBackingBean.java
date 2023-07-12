@@ -8388,6 +8388,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				this.getManagedBean().getSelectedShareHolder()
 						.setIdentificationTypeId(personnelSSM.getIdentificationTypeId());
 			}
+			/*//#34799
 			if (personnelSSM != null && personnelSSM.getSmPersonnelAddresses() != null // #32014
 					&& personnelSSM.getSmPersonnelAddresses().size() > 0) {
 				for (SmPersonnelAddress smpersonAddress : personnelSSM.getSmPersonnelAddresses()) {
@@ -8466,6 +8467,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					}
 				}
 			}
+			*/
 		}
 		// end - #32014
 		//end #31479
@@ -12719,6 +12721,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            panelName
 	 */
 	public void onChangeCountry(SmAddress addr, String panelName) {
+		//#34799
+		addr.setPmState(null);
 		//#34135 START
 		if(addr.getPmDivision() != null || addr.getDivisionId() != null){
 			addr.setPmDivision(null);
@@ -12746,6 +12750,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			addr.setPmState(SmCommonUtil.getInstance()
 					.getStateById(stateId));
 		}
+		//#34799 - start
+		addr.setPmDivision(null);
+		addr.setPmDistrict(null);
+		//#34799 - end
 		if(addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
 			SmApplicationUtil.getInstance().populateDivisionsByState(addr,
 					panelName, getManagedBean());
@@ -12774,6 +12782,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            panelName
 	 */
 	public void onChangeDistrict(SmAddress addr, String panelName) {
+		//#34799
+		addr.setPmCity(null);
 		SmApplicationUtil.getInstance().populateCitiesByDistrict(addr,
 				panelName, getManagedBean());
 		setRoleStaffAddrReqd();
@@ -17436,7 +17446,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	//#12483 - END
 	//#32014 - START
 	//reassign the address since the first time assigning the data is not displayed/populate
-	/*
+	/*//#34799
 	public void reassignSelShareHolderResAddress(SmPersonnelAddress personnelAddress){
 		log.info("========#32014 - inside reassignSelShareHolderAddress=======");
 		log.info("#32014 - isSupplierUser : " + getManagedBean().isSupplierUser());
