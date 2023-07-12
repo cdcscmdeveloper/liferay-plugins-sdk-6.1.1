@@ -6494,7 +6494,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		if(contractAmt.compareTo(limit) == 0){
 			return false;
-		}else if(contractAmt.compareTo(limit) == 1){
+		}else if(contractAmt.compareTo(limit) > 0){
 			return true;
 		}else{
 			return false;
