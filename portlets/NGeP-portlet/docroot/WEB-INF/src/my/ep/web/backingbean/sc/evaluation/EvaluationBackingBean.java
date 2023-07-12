@@ -18259,7 +18259,7 @@ private void retriveCommitteeRemarksList(){
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 				qtReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-				qtReqDTO.setDocType("TDR");
+				qtReqDTO.setDocType(QTConstants.TEC_PRESENTATION_DEMO_REMARK);
 				
 				resDto = qtDetailSO.retriveQtRemarks(qtReqDTO);
 				ScQt scQt = this.getManagedBean().getScQt();
@@ -18343,9 +18343,9 @@ private void retriveCommitteeRemarksList(){
 					}
 				}
 			}
-			finally {
-				qtDetailSO=null;
-				resDto=null;
+			catch (Exception e) {
+				SLAUtils.getInstance().logSLAError("QT", "RetrieveListOfPresentationDemoRemarks",
+						this.getManagedBean().getScQt().getQtNo(), "retrieveDemoRemarks", getUserIdSessionFromLoginId(), e);
 			}
 		}
 	}
