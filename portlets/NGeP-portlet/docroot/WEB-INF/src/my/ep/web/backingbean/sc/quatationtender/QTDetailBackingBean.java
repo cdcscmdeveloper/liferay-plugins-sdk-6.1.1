@@ -3721,7 +3721,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					
 				}
 				
-				retrieveQuationTenderDetails(new Long(qtId));
+				retrieveQuationTenderDetails(qtId);//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 						.equalsIgnoreCase(taskName)) {
 					retrieveCommitteeAppointmentTabDtl(FORM_OC, REFORM_NO_ACTION);
@@ -3798,7 +3798,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				SCQuotationTenderDataType quationDataType = (SCQuotationTenderDataType) payLoad;
 				qtId = quationDataType.getQtId().longValue();
 				// retrieveFinalizationSecratryDtl(qtId);
-				retrieveQuationTenderDetails(new Long(qtId));
+				retrieveQuationTenderDetails(qtId);//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				ScQt scQt = this.getManagedBean().getQt();
 				if (scQt.getObtainSpecialApproval() != null
 						&& scQt.getObtainSpecialApproval()) {
@@ -6862,9 +6862,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 		
 		//9019 - Start (Harun) set Group Item to NULL when save while left blank and panel is selected
-		//9019 Start - #Note-418 Fix able to submit without key in mandatory fields add checking parameterId=0
-		if (isPanel && (null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId() || this.getManagedBean()
-						.getQt().getItemGroup().getPanelItemGroupId() == ParameterConst.PM_PARAMETERID_ZERO)) {
+		//9019 Start - #Note-418 and merge with #Note-501 
+		if (null == this.getManagedBean().getQt().getItemGroup()) {
+			this.getManagedBean().getQt().setCircularVer(null);
+		}else if (null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId() || this.getManagedBean()
+				.getQt().getItemGroup().getPanelItemGroupId() == ParameterConst.PM_PARAMETERID_ZERO) {
 			this.getManagedBean().getQt().setItemGroup(null);
 			this.getManagedBean().getQt().setCircularVer(null);
 		}

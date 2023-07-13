@@ -1399,7 +1399,7 @@ public class CreateQtBackingBean extends
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.PROCUREMENT_CATEGORY);
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				if (paramDesc.getPmParameter().getParameterId()
-						.equals(Long.valueOf(type))) {
+						.equals(type)) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 
 					this.getManagedBean().setProcuremntCategory(
 							paramDesc.getPmParameter().getParameterCode());
@@ -1428,7 +1428,7 @@ public class CreateQtBackingBean extends
 				//Start Reopen 9019 #note-289 remove the alert message while save
 				if(null != type){
 					if (paramDesc.getPmParameter().getParameterId()
-							.equals(Long.valueOf(type))) {   
+							.equals(type)) {   //20230711@Asyrafhaziq-SQUBE Bug Minor #16
                 
 						this.getManagedBean().setFulfilmentType(
 								paramDesc.getPmParameter().getParameterCode());
