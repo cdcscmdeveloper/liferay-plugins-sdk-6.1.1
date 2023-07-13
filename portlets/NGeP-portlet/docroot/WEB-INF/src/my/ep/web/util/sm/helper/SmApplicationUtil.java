@@ -12973,8 +12973,6 @@ public class SmApplicationUtil {
 				.getEntityBySinglePropertyFromList(
 						shareHolderBean.getIdentificationNo(),
 						bean.getPrevApprovedPersonnels(), "identificationNo"));
-		//#34799
-		checkResAddress(bean);
 	}
 
 	/**
@@ -15206,23 +15204,4 @@ public class SmApplicationUtil {
 		}
 	}
 		//#31043 - END
-	//#34799 - start
-	private static void checkResAddress(SmApplicationManagedBean bean){
-		SmAddress resAddr = bean.getShareHolderResdAddr().getSmAddress();
-		PmCountry ctry = resAddr.getPmCountry();
-		if(ctry != null && ctry.getCountryCode() != null 
-				&& ctry.getCountryCode().equals(ParameterConst.COUNTRY_UNKNOWN_CODE)){
-			SmApplicationUtil.getInstance().populateStateByCountry(
-					resAddr, SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL, bean);
-		}
-		//check if district state not equal to pmState, reset city & district
-		PmState state = resAddr.getPmState();
-		PmDistrict dist = resAddr.getPmDistrict();
-		if(state != null && dist != null && dist.getPmState() != null
-				&& !dist.getPmState().getStateId().equals(state.getStateId())){
-			resAddr.setPmDistrict(new PmDistrict());
-			resAddr.setPmCity(new PmCity());
-		}
-	}
-	//#34799 - end
 }
