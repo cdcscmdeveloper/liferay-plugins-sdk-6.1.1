@@ -18296,7 +18296,7 @@ private void retriveCommitteeRemarksList(){
 
 				else {
 
-					List<ScQtDemoTechnicalCommitteeRemark> remarkList = new ArrayList<ScQtDemoTechnicalCommitteeRemark>();
+					List<ScQtDemoTechnicalCommitteeRemark> remarkList = new ArrayList<>();
 					for (ScRemark remark : resDto.getRemarks()) {
 						ScQtDemoTechnicalCommitteeRemark qtRemark = (ScQtDemoTechnicalCommitteeRemark) remark;
 						remarkList.add(qtRemark);
