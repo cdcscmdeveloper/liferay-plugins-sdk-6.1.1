@@ -430,9 +430,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * add interviewee to the List
 	 */
 	public void addInterviewee(){
-		//#34166 - Start
-		checkRepresentative();
-		//#34166 - End
 		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
 		
 		SmSvInterviewee interviewee = new SmSvInterviewee();
@@ -1476,6 +1473,41 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//CR 28774: Static Code Analysis 
 		return generateToPdf(vmEquity, context, fileName);
 	}
+	
+	//#34166 - Start
+	public void test(String clientId, SmSvTask svTask){
+		String fieldsName = "";
+		for (SmSvBankInfo bank : svTask.getSmSvBankInfos()) {
+			if (bank.getRemark() != null){
+				if (bank.getRemark().contains("<") || bank.getRemark().contains(">")) {
+					fieldsName = ResourceBundleUtils.getMessage("lbl.sm.sv.bank.remark",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+					throw new  EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+							new String[] { fieldsName.toLowerCase() }));
+				}
+			}
+			if (bank.getSmSupplierBank().getSignatureInstruction() != null){
+				if(bank.getSmSupplierBank().getSignatureInstruction().contains("<") || bank.getSmSupplierBank().getSignatureInstruction().contains(">")){
+					fieldsName = ResourceBundleUtils.getMessage("lbl.sm.sv.bank.terms.cond",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+					throw new  EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+							new String[] { fieldsName.toLowerCase() }));
+				}
+			}
+		}
+		
+		for (SmSvFinChecklist checklist : svTask.getSmSvFinChecklists()) {
+			if(checklist.getRemark() != null){
+				if (checklist.getRemark().contains("<") || checklist.getRemark().contains(">")) {
+					fieldsName = getParameterDesc(ParameterTypeConst.SVO_FIN_CHECKLIST, checklist.getPmParameter().getParameterCode());
+					throw new  EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+							new String[] { fieldsName.toLowerCase() }));
+				}
+			}
+		}
+		
+		RequestContext.getCurrentInstance().execute("document.getElementById('" + clientId + "').click()");
+	}
+	//#34166 - End
+	
 	
 	/**
 	 * Generate Site Visit Template - Section B
@@ -2810,7 +2842,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			String Designation = ResourceBundleUtils.getMessage("lbl.sm.userprofile.designation",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 			
 			if(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees() != null){
-				ResourceBundleUtils.getMessage("lbl.sm.mof.reg.reason.delete",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+				
+				if(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().isEmpty()){
+					String representatives = ResourceBundleUtils.getMessage("lbl.sm.companyinfo.intvw.represent",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+					throw new EpException(MessageConst.ERROR_775192, new String[] { representatives });
+				}
 				
 				for(SmSvInterviewee person : getManagedBean().getSelectedSvTemplate().getSmSvInterviewees()){
 					if(person.getName() == null || person.getName().isEmpty()){
