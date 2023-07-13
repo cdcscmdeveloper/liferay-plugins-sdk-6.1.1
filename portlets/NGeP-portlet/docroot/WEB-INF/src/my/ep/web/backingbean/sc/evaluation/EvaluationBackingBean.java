@@ -6993,6 +6993,7 @@ public void saveComplianceSample() {
 		IQTEvaluationSO evaluationSo = null;
 		try {
 			//#28784 - start
+			this.getManagedBean().setTechnicalSummaryView("");//#28784 always display -Select One- when go in summary
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
@@ -7031,7 +7032,7 @@ public void saveComplianceSample() {
 			List<String> resultStg = new ArrayList<String>();
 			resultStg.add(SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO);
 			// Bug #34768 remove <-- need to insert back when demo #28784 is deploying
-			//resultStg.add(QTConstants.TECHNICAL_SUMMARY_ITEM);
+			resultStg.add(QTConstants.TECHNICAL_SUMMARY_ITEM);
 			// Bug #34768, #21695, #25138 -end-
 			evalReqDTO.setResultStages(resultStg);
 			evalReqDTO.setScQt(this.getManagedBean().getScQt());
