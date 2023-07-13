@@ -10181,8 +10181,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		if(this.getManagedBean().getTplSpecAnswerList() != null || this.getManagedBean().getNewSupplierJustification() != null){
 			if(this.getManagedBean().getScQt().isZonal() && this.getManagedBean().isResetAll()){
-				for(ScLoiLoaItem ZoneLoiLoaItem:this.getManagedBean().getScLoa().getScLoiLoaItems()){
-					ZoneLoiLoaItem.setLoaSpecJustification(null);
+				for(ScLoiLoaItem zoneLoiLoaItem:this.getManagedBean().getScLoa().getScLoiLoaItems()){
+					zoneLoiLoaItem.setLoaSpecJustification(null);
+					if(this.getManagedBean().getScLoa().isBrandNew()){
+						zoneLoiLoaItem.setScLoa(null);
+					}
 				}
 				reqDTO.setScLoiLoaItemList(this.getManagedBean().getScLoa().getScLoiLoaItems());
 				AwardSupplierResDTO resDTOLatest  = getQtAwardSO().saveZoneItemListForResetAll(reqDTO);
@@ -10197,6 +10200,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						break;
 					}
 				}
+				reqDTO = new AwardSupplierReqDTO();
 			}
 			ScLoiLoaItem  scLoiLoaItem  = this.getManagedBean().getScLoiLoaItem();
 			AwardSupplierReqDTO reqDTOLatest=new AwardSupplierReqDTO();
