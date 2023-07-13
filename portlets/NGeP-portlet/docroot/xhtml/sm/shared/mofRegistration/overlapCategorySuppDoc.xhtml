@@ -60,10 +60,6 @@
 					</p:commandLink>
 					&#160;<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.to.view.details']}" escape="false"/><br />
 					
-					<!-- #31018 - START -->
-					<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.justifyLetter']}" escape="false" />
-					
-					<!-- 
 					<c:choose>
 						<c:when test="#{(backingBean.managedBean.poUser or backingBean.managedBean.approverUser )
 						and (backingBean.managedBean.smAppl.applType ne 'B' and backingBean.managedBean.smAppl.applType ne 'U')}">
@@ -72,9 +68,7 @@
 						<c:otherwise>
 							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.category.overlap.upload.doc']}" escape="false" />
 						</c:otherwise>
-					</c:choose> 
-					-->
-					<!-- #31018 - END -->
+					</c:choose>
 				</td>
 			</tr>
 		</table>	
