@@ -51,6 +51,9 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.Paginator;
 import my.ep.persistence.entity.cm.catalog.CmFavoriteSupplier;
+//#30457 - start
+import my.ep.persistence.entity.cm.catalog.CmImage;
+//#30457 - end
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
@@ -530,6 +533,19 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	//SSM integration
 	/** The current date. */
 	private Date minDate = new Date();
+	
+	//#30457 - start
+	private int itemSelectedIndex;
+	private boolean viewOnlyBasicPopup;
+	private boolean yesEnable=false; //#30457
+	//#30457 - end
+	
+	//#30457 - start 1/08/2022
+	private List<CmImage> deleteImage;
+	private String itemStatus;
+	private boolean catDPScreen = false;
+	private boolean addPromotion = false;
+	//#30457 - end 1/08/2022
 
 	private class ExpiredSearchPagingDataModel extends
 			PagingDataModel<CmSupplierItem> {
@@ -1981,7 +1997,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.delivery.term.days",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 		compareLabel.add(ResourceBundleUtils.getMessage(
-				"lbl.cm.additional.item.description",
+				"lbl.cm.basic.item.spec", //#30457 - change label
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 
 		return compareLabel;
@@ -4276,4 +4292,69 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			this.isPromoPriceExist = isPromoPriceExist;
 		}
 		//201002@akmal - Bug29265 - End
+		
+		//#30457-start
+		public int getItemSelectedIndex() {
+			return itemSelectedIndex;
+		}
+
+		public void setItemSelectedIndex(int itemSelectedIndex) {
+			this.itemSelectedIndex = itemSelectedIndex;
+		}
+		
+		public boolean isViewOnlyBasicPopup() {
+			return viewOnlyBasicPopup;
+		}
+
+		public void setViewOnlyBasicPopup(boolean viewOnlyBasicPopup) {
+			this.viewOnlyBasicPopup = viewOnlyBasicPopup;
+		}
+		
+		public boolean isYesEnable() {
+			return yesEnable;
+		}
+
+		public void setYesEnable(boolean yesEnable) {
+			this.yesEnable = yesEnable;
+		}
+		//#30457-end
+		
+		// #30457 - start
+		public List<CmImage> getDeleteImage() {
+			if (deleteImage == null) {
+				deleteImage = new ArrayList<CmImage>();
+			}
+			return deleteImage;
+		}
+
+		public void setDeleteImage(List<CmImage> deleteImage) {
+			this.deleteImage = deleteImage;
+		}
+
+		public String getItemStatus() {
+			return itemStatus;
+		}
+
+		public void setItemStatus(String itemStatus) {
+			this.itemStatus = itemStatus;
+		}
+		// #30457 - end
+
+		// #30457 - Start
+		public boolean isCatDPScreen() {
+			return catDPScreen;
+		}
+
+		public void setCatDPScreen(boolean catDPScreen) {
+			this.catDPScreen = catDPScreen;
+		}
+		
+		public boolean isAddPromotion() {
+			return addPromotion;
+		}
+
+		public void setAddPromotion(boolean addPromotion) {
+			this.addPromotion = addPromotion;
+		}
+		// #30457 - End
 }

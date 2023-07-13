@@ -390,6 +390,11 @@ public class TemplateSpecBackingBean extends
 					questionToDelete.setClPriceTypeCode(null);
 				}	
 			}
+			//34617 - start
+			if (questionToDelete.getClPriceTypeCode() != null && questionToDelete.getClPriceTypeCode().getParameterType() == null){
+				questionToDelete.setClPriceTypeCode(null);
+			}
+			//34617 - end
 			
 			techicalDeleteQuestionList.add(questionToDelete);
 		}
@@ -2951,6 +2956,20 @@ public class TemplateSpecBackingBean extends
 			}
 		}
 	}
-	// #25039 End - version zonal	
+	// #25039 End - version zonal
 	
+	// #31134 -start-
+	public boolean checkPriceTierEnableColumn(TemplateSpecBean templateSpecBean) {
+		int count = 0;
+		
+		for (TplSpecAnswer retrieveAns : templateSpecBean.getSpecAnswerList()) {
+			if (retrieveAns != null && retrieveAns.getTplSpecTierQty() != null) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	// #31134 -end-
+
 }

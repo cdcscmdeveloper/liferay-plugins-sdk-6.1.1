@@ -1395,7 +1395,8 @@ public class SmApplicationUtil {
 				.getSmSupplierBranches())) {
 			for (SmSupplierBranch brAppl : bean.getSmAppl()
 					.getSmSupplierBranches()) {
-				if (!isBranchAssignToBank(bean.getSmAppl(), brAppl)) {
+				if (!isBranchAssignToBank(bean.getSmAppl(), brAppl) 
+						&& brAppl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {	//#34135
 					validSave = false;
 					throw new EpException(MessageConst.ERROR_722622,
 							new String[] { brAppl.getBranchName() });
@@ -1419,7 +1420,8 @@ public class SmApplicationUtil {
 				.getSmSupplierBranches())) {
 			for (SmSupplierBranch brAppl : bean.getSmAppl()
 					.getSmSupplierBranches()) {
-				if (!isBranchAssignToBank(bean.getSmAppl(), brAppl)) {
+				if (!isBranchAssignToBank(bean.getSmAppl(), brAppl)
+						&& brAppl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) { //#34135
 					validSave = false;
 					throw new EpException(MessageConst.ERROR_722622,
 							new String[] { brAppl.getBranchName() });
@@ -1949,7 +1951,7 @@ public class SmApplicationUtil {
 		//32968 START
 		String notAvail = "N/A";
 		for (SmSupplierBranch suppBranch : appl.getSmSupplierBranches()) {
-			if (suppBranch.getBranchName().isEmpty()
+			if ((suppBranch.getBranchName().isEmpty()		//34135 START
 					|| suppBranch.getSmAddress() == null
 					|| (suppBranch.getSmAddress() != null && suppBranch.getSmAddress().getAddress1().isEmpty()
 							|| suppBranch.getSmAddress().getPostcode() == null
@@ -1958,7 +1960,10 @@ public class SmApplicationUtil {
 							|| suppBranch.getSmAddress().getDistrictId() == null || suppBranch.getSmAddress()
 							.getCityId() == null) || suppBranch.getSmPersonnel() == null
 							|| suppBranch.getSmAddress().getPmDistrict().getDistrictName().contains(notAvail)
-							|| suppBranch.getSmAddress().getPmCity().getCityName().contains(notAvail)) { //32968 END) 
+							|| suppBranch.getSmAddress().getPmCity().getCityName().contains(notAvail)	//32968 END)
+							|| (suppBranch.getSmAddress().getDivisionId() == null									
+							&& suppBranch.getSmAddress().getPmState().getStateCode().equalsIgnoreCase("13")))		
+							&& suppBranch.getSmAddress().getPmCountry().getCountryCode().equalsIgnoreCase("MY")) {  //34135 END
 				validateSmBranch = false;
 				sbSuppBranch.append(++x + ". ");
 				sbSuppBranch.append(suppBranch.getBranchName());
@@ -2433,11 +2438,7 @@ public class SmApplicationUtil {
 			s = ResourceBundleUtils.getMessage("lbl.sm.authorized.share",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		}
-		//#34277 - start
-		if(managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() == null){
-			managedBean.getSmAppl().getSmCompanyBasic().setPaidUpCapital(new BigDecimal(0));
-		}
-		//#34277 - end
+
 		if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
 			boolean validPaidUp = true;
 			// String amt = "";
@@ -5738,21 +5739,6 @@ public class SmApplicationUtil {
 		}
 		desAddr.setCityId(srcAddr.getCityId());
 	}
-	
-	//#34277 - start
-	/**
-	 * Clone SSM address details
-	 * @param desAddr target
-	 * @param srcAddr source
-	 */
-	public static void cloneAddressSSM(SmAddress desAddr, SmAddress srcAddr){
-		desAddr.setSsmData(srcAddr.isSsmData());
-		desAddr.setAddressSsmNull(srcAddr.isAddressSsmNull());
-		desAddr.setPostcodeSsmNull(srcAddr.isPostcodeSsmNull());
-		desAddr.setStateSsmNull(srcAddr.isStateSsmNull());
-		desAddr.setCountrySsmNull(srcAddr.isCountrySsmNull());
-	}
-	//#34277 - end
 
 	/**
 	 * Reset to default entity values.

@@ -30,7 +30,7 @@
 
 		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}"
 			disabled="#{fn:length(catalogueBackingBean.managedBean.cloneCmSupplierItemLs)&lt;1}"
-			action="#{catalogueBackingBean.submitToReviewItems}" update="@form"></p:commandButton>
+			action="#{catalogueBackingBean.submitToReviewItems(true)}" update="@form"></p:commandButton> <!-- #30457 -->
 	</div>
 
 	<ac:lovPopup />
@@ -45,7 +45,7 @@
 			<tr>
 				<td width="100%"><h:outputText styleClass="instruction"
 						style="float:left;margin-left:5px;" escape="false"
-						value="#{lbl['lbl.cm.insturction']}" /></td>
+						value="#{lbl['lbl.cm.instruction']}" /></td> <!-- #30457 -->
 			</tr>
 		</table>
 		
@@ -99,8 +99,8 @@
 			<ac:paginator for="draftSupplierItemID"></ac:paginator>
 			
 			
-	
-			<p:column style="text-align: left;width:2%;">
+	        <!-- #30457 - change width -->
+			<p:column style="text-align: left;width:1%;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selectAllCheckBoxId"
 						value="#{catalogueBackingBean.managedBean.supplierItemcheckBoxAll}">
@@ -132,20 +132,24 @@
 				<h:outputText value="#{selectedSuppCat.cmItem.itemName}" />
 	
 			</p:column>
-			<p:column width="2%">
+			<!-- #30457 - change width -->
+			<p:column width="4%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.cm.price']}" />
 				</f:facet>
+				<!-- #30457 - Start -->
 				<p:inputText id="stdPrice" value="#{selectedSuppCat.cmStandardPricing.price}"
 					maxlength="18" label="#{lbl['lbl.cm.price']}" size="10"
 					style="text-align:right">	
-					<f:converter converterId="bigDecimalConverter" />
+					<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					<p:ajax event="blur" update="stdPrice" />
 				</p:inputText>
-	
+	        <!-- #30457 - End -->
 			</p:column>
-			<p:column width="5%">
+			<!-- #30457 - change width -->
+			<p:column width="4%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.cm.uom']}" />
@@ -159,7 +163,21 @@
 								maxResults="50" dropdown="false" forceSelection="true" />
 				
 			</p:column>
-			<p:column width="2%">
+			<!-- #30457 start -->
+			<p:column  style="text-align: center;" width="2%">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.cm.suptemp.upload.image']}" escape="false"/>
+				</f:facet>
+				<p:commandLink actionListener="#{catalogueBackingBean.loadBasicImageDialog(rowIndex,false)}" 
+					update=":form:uplimg:imageAndBasicId" oncomplete="imageBasicDialog.show()" >
+					<p:graphicImage id="uploadImage" value="/css/images/design/document.png" 
+					title="#{lbl['lbl.cm.suptemp.upload.image.tooltip']}" /> 
+				</p:commandLink>
+			</p:column>
+				<!-- #30457 end -->
+			<!-- #30457 - change width -->
+			<p:column width="4%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.cm.start.date']}" />
@@ -216,21 +234,29 @@
 
 	</div>
 
-
+	<!-- #30457 start-->
+	
+	<h:form id="uplexcl" enctype="multipart/form-data">
 	<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
 		width="500px" onShow="singleUploadListener(fileUploadWidget);"
 		resizable="false" styleClass="pop_up_top">
-
-
 		<p:fileUpload fileUploadListener="#{catalogueBackingBean.uploadExcel}"
 			cancelLabel="#{lbl['lbl.btn.cancel']}" multiple="false"
 			uploadLabel="#{lbl['lbl.btn.upload']}" showButtons="false"
 			label="#{lbl['lbl.btn.choose']}" widgetVar="fileUploadWidget"
 			mode="advanced" id="upload" allowTypes="/(\.|\/)(xls|flv|xlsx)$/"
-			update="@form" invalidFileMessage="#{lbl['lbl.cm.only.xls']}">
+			update=":form" invalidFileMessage="#{lbl['lbl.cm.only.xls']}"
+			oncomplete="excelDialog.hide()">
 		</p:fileUpload>
-
 	</p:dialog>
+	</h:form>
+
+	<h:form id="uplimg" enctype="multipart/form-data">
+	<ui:param name="multipleFile" value="true"/>
+	<ui:param name="updateImg" value=":form:uplimg:imageUploadId"/>
+	<ui:include src="imageAndBasicPopup.xhtml" />
+	</h:form>
+	<!-- #30457 end-->
 	
 
 </ui:composition>

@@ -147,6 +147,7 @@ import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.loa.LOADetailManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -2346,6 +2347,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 				context.put("agency", ptjName);
 				context.put("qtNo", qtNo);
+				
+				//#32648 populate lampiran 7 if LOA at supplier - start 
+				int isLoa = 0;
+				if (null != pmUser) {
+					isLoa = 1;
+				}
+
+				context.put("isSupplierLoa", isLoa);
+				//#32648 populate lampiran 7 if LOA at supplier - end
 
 				String loaNo = "&#60;LOA No.&#62;";
 				if(scLoa.getLoaNo() != null){
@@ -7373,4 +7383,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	//Bug #33674@Syazani -- End 14/09/2022
+	// #32648 populate lampiran 7 if LOA at supplier - start
+		public boolean isDpAuditOrQtAuditOrQtMaint() {
+			return QTConstants.PORTLET_NAME_QT_MAINTENANCE
+					.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+					|| QTConstants.PORTLET_NAME_QT_SEARCH
+							.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+						|| SourcingConstants.PORTLET_NAME_DP_SEARCH
+							.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+							|| SourcingConstants.PORTLET_NAME_DP_LOA_LIST
+							.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+							|| QTConstants.PORTLET_NAME_QT_LIST
+							.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+		}
+		// #32648 populate lampiran 7 if LOA at supplier - end
 }

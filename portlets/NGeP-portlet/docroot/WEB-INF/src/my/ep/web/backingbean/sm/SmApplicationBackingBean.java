@@ -145,6 +145,7 @@ import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
+import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
@@ -2567,15 +2568,6 @@ public class SmApplicationBackingBean extends
 						currentTab, ruleHelper);
 				SmApplicationUtil.validateEquityCompanyAmount(getManagedBean(),
 						currentTab);
-			//#31446, #34277 --START
-			} else if (currentPageType
-					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
-					&& !applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
-				SmApplicationUtil.validateEquityOwnerAmount(getManagedBean(),
-						currentTab, ruleHelper);
-				SmApplicationUtil.validateEquityCompanyAmount(getManagedBean(),
-						currentTab); 
-			//#31446, #34277 --END
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)
 					|| currentPageType
@@ -2642,6 +2634,7 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.validateCoordinate(getManagedBean());
 			}
 			setSupplierChangeValues(currentPageType);
+			setBranchDisplayTable(); //29727 , #34135
 			validateUpdateSmAppl(applType, currentPageType, outputPageType,
 					false);
 			log.info("******* Current page AFTER in managed bean ********"
@@ -4404,6 +4397,13 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void addOrUpdateBranchToSmAppl() {
+		//#34135 START - set stateid from pmstate
+		if(getManagedBean().getSelectedBranch().getSmAddress().getStateId() != null &&
+				getManagedBean().getSelectedBranch().getSmAddress().getPmState() != null &&
+				!getManagedBean().getSelectedBranch().getSmAddress().getStateId().equals(getManagedBean().getSelectedBranch().getSmAddress().getPmState().getStateId())){
+			getManagedBean().getSelectedBranch().getSmAddress().setStateId(getManagedBean().getSelectedBranch().getSmAddress().getPmState().getStateId());
+		}
+		//#34135 END
 		// validate branch GST only for New Application
 		SmApplicationUtil.validateBranchGstInformation(getManagedBean()
 				.getSelectedBranch(), getManagedBean().getSelectedBranch()
@@ -4411,6 +4411,13 @@ public class SmApplicationBackingBean extends
 		
 		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
 				.getSelectedBranch());
+		//#34135 START
+		if(getManagedBean().getSelectedBranch().getSmAddress().getPmDivision() != null &&
+				!getManagedBean().getSelectedBranch().getSmAddress().getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+			getManagedBean().getSelectedBranch().getSmAddress().setPmDivision(null);
+			this.getManagedBean().setBranchCompanyDivisions(new ArrayList<SelectItem>());
+		}
+		//#34135 END
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedBranch(), getManagedBean().getSmAppl()
 				.getSmSupplierBranches());
@@ -4420,6 +4427,7 @@ public class SmApplicationBackingBean extends
 		}
 		saveOrUpdateAppl();
 		assignValReqdToFalse();
+		setBranchDisplayTable(); //29727 , #34135
 		RequestContext.getCurrentInstance().execute("banchDialog.hide()");
 		calcPersonnelListCount();
 	}
@@ -7024,6 +7032,7 @@ public class SmApplicationBackingBean extends
 			// set section editor VO after update
 			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false,
 					getManagedBean().getCurrentPageType());
+			setBranchDisplayTable(); //29727 , #34135
 
 		}
 	}
@@ -8473,6 +8482,12 @@ public class SmApplicationBackingBean extends
 		validateNoChangesBeenMadeToApplication();
 
 		// try {
+		//#28776 - start
+		if(getManagedBean().getSmAppl().getPmStatus() != null 
+				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION){
+			getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+		}
+		//#28776 - end
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
@@ -11197,6 +11212,13 @@ public class SmApplicationBackingBean extends
 	 *            panelName
 	 */
 	public void onChangeCountry(SmAddress addr, String panelName) {
+		//#34135 START
+		if(addr.getPmDivision() != null || addr.getDivisionId() != null){
+			addr.setPmDivision(null);
+			addr.setDivisionId(null);
+			this.getManagedBean().setBranchCompanyDivisions(new ArrayList<SelectItem>());
+			this.getManagedBean().getSelectedBranch().getSmAddress().getPmState().setAdoptDivision(false);
+		}//#34135 END
 		SmApplicationUtil.getInstance().populateStateByCountry(addr, panelName,
 				getManagedBean());
 		setRoleStaffAddrReqd();
@@ -11223,11 +11245,16 @@ public class SmApplicationBackingBean extends
 			setRoleStaffAddrReqd();
 			
 		}else{//13320-end
-		SmApplicationUtil.getInstance().populateDistrictsByState(addr,
-				panelName, getManagedBean());
-		setRoleStaffAddrReqd();
+			//#34135 START
+			if(addr.getPmDivision() != null || addr.getDivisionId() != null){
+				addr.setPmDivision(null);
+				addr.setDivisionId(null);
+				this.getManagedBean().setBranchCompanyDivisions(new ArrayList<SelectItem>());
+			}//#34135 END
+			SmApplicationUtil.getInstance().populateDistrictsByState(addr,
+					panelName, getManagedBean());
+			setRoleStaffAddrReqd();
 		}
-		
 	}
 
 	/**
@@ -12517,6 +12544,12 @@ public class SmApplicationBackingBean extends
 	 * list
 	 */
 	private void initNonMandatoryAndMandatoryDocs() {
+		//#28776 - start
+		if(getManagedBean().getSmAppl().getPmStatus() != null
+				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION){
+			getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+		}
+		//#28776 - end
 		if (getManagedBean().getSmAppl() != null
 				&& !EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
 						.getSmApplSupportDocs())) {
@@ -13896,7 +13929,18 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		getManagedBean().setSelectedBankBranchIds(bankBranchesIds);
-
+		//#34135 START - remove deleted branch from list at bank information
+		List<SmSupplierBranch> displayBranches = new ArrayList<SmSupplierBranch>();
+		if (getManagedBean().getSmAppl().getSmSupplierBranches().size() > 0) {
+			for (SmSupplierBranch smSupplierBranch : getManagedBean().getSmAppl().getSmSupplierBranches()) {
+				if (smSupplierBranch.getRecordStatusFlg() != SupplierManagementConst.RECORD_DELETED) {
+					continue;
+				}
+				displayBranches.add(smSupplierBranch);
+			}
+		}
+		getManagedBean().setDisplayBranches(displayBranches);
+		//#34135 END
 		if (shareBankBean.getSmAddress() != null
 				&& shareBankBean.getSmAddress().getPmCountry().getCountryId() != null
 				&& shareBankBean.getSmAddress().getPmState().getStateId() != null
@@ -14842,22 +14886,6 @@ public class SmApplicationBackingBean extends
 			log.info("#32014 - SSM Application : " + getManagedBean().getSmAppl().isApplValidWithSsm());
 			log.info("#32014 - SSM isActive : " + SmCommonUtil.getInstance().ssmActive());
 			if(!personnelAddress.isSameAsPerm() && getManagedBean().getSmAppl().isApplValidWithSsm() && SmCommonUtil.getInstance().ssmActive()){
-				//#34277 - start
-				boolean hasResAddr = false;
-				for(SmPersonnelAddress a : getManagedBean().getSelectedShareHolder().getSmPersonnelAddresses()){
-					if(a.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
-						hasResAddr = true;
-						break;
-					}
-				}
-				SmAddress ssmAddress = new SmAddress();
-				if(!hasResAddr){
-					SmApplicationUtil.getInstance().cloneAddress(
-							ssmAddress, getManagedBean().getShareHolderResdAddr().getSmAddress());
-					SmApplicationUtil.cloneAddressSSM(
-							ssmAddress, getManagedBean().getShareHolderResdAddr().getSmAddress());
-				}
-				//#34277 - end
 				SmPersonnelAddress res = new SmPersonnelAddress();
 				res.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
 				res.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
@@ -14930,6 +14958,28 @@ public class SmApplicationBackingBean extends
 						if (addr.getAddressType().equalsIgnoreCase(
 								SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
 							getManagedBean().setShareHolderResdAddr(addr);
+							SmApplicationUtil
+									.getInstance()
+									.assignStateDistAndCityForSelVal(
+											getManagedBean(),
+											getManagedBean().getShareHolderResdAddr()
+													.getSmAddress(),
+											SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+							//to check, if district state not equal to pm state set district to null & City
+							if(getManagedBean().getShareHolderResdAddr().getSmAddress().isSsmData()){
+								SmAddress address = getManagedBean().getShareHolderResdAddr().getSmAddress();
+								if(address != null){
+									if(address.getPmState()!= null && address.getPmDistrict() != null){
+										if(address.getPmDistrict().getPmState() != null){
+											if(address.getPmDistrict().getPmState().getStateId() != address.getPmState().getStateId()){
+												address.setPmDistrict(new PmDistrict());
+												address.setPmCity(new PmCity());
+											}
+											
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -14970,4 +15020,20 @@ public class SmApplicationBackingBean extends
 		return false;
 	}
 	//#12483 - END
+	
+	//#34135 START - Commit half part from Redmine 29727 into pds
+	public void setBranchDisplayTable() {
+		List<SmSupplierBranch> displayBranches = new ArrayList<SmSupplierBranch>();
+		if (getManagedBean().getSmAppl().getSmSupplierBranches().size() > 0) {
+			for (SmSupplierBranch smSupplierBranch : getManagedBean().getSmAppl().getSmSupplierBranches()) {
+				if (smSupplierBranch.getRecordStatusFlg() != SupplierManagementConst.RECORD_DELETED) {
+					continue;
+				}
+				displayBranches.add(smSupplierBranch);
+			}
+		}
+		getManagedBean().setDisplayBranches(displayBranches);
+	}
+	//#34135 END
+		
 }
