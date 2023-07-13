@@ -1370,7 +1370,8 @@ public class SmCommonUtil {
 			SmPersonnleCalcVO persCalcVo, BigDecimal bumiPercentage) {
 		persCalcVo.setBumiStatus(false);
 		if (bumiPercentage != null
-				&& bumiPercentage.compareTo(new BigDecimal(50)) == 1) {
+				//SQ change from == 1 to GT > 0
+				&& bumiPercentage.compareTo(new BigDecimal(50)) > 0) {
 			persCalcVo.setBumiStatus(true);
 		}
 		return persCalcVo;
@@ -1820,7 +1821,8 @@ public class SmCommonUtil {
 	 *            - SmAddress defaultAddr
 	 * @return SmAddress object
 	 */
-	public static SmAddress getDefaultAddress(SmAddress defaultAddr) {
+	//SQ comment this method because unused any more
+	/*public static SmAddress getDefaultAddress(SmAddress defaultAddr) {
 		defaultAddr = new SmAddress();
 		defaultAddr.setPmCity(new PmCity());
 		defaultAddr.setPmDistrict(new PmDistrict());
@@ -1832,7 +1834,7 @@ public class SmCommonUtil {
 		defaultAddr.setPmState(new PmState());
 		return defaultAddr;
 	}
-
+*/
 	/**
 	 * Gets the country id for Malaysia.
 	 * 

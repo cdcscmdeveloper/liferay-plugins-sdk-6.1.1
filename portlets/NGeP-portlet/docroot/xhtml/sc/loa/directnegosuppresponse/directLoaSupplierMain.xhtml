@@ -69,11 +69,13 @@
 								value="3" />
 							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
-
+						
+						<ui:remove>Reopen #25726 note 110 issue 8</ui:remove>
 						<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 							update="@form"
 							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}"
-							disabled="#{directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeScheduled}">
+							disabled="#{(directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeScheduled) and
+							(directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeNonPeriodicScheduled)}">
 
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"

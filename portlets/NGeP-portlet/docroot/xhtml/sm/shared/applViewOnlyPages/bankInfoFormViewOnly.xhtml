@@ -51,7 +51,7 @@
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 					</p:commandLink>
 					<!-- #32008 -->
-					<ac:smFieldChangeTableAlert object="#{bankBean}"/>
+					<ac:smFieldChangeTableAlertView object="#{bankBean}"/>
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
@@ -83,7 +83,7 @@
 			<p:column headerText="#{lbl['lbl.sm.bankDtls.signPos']}">
 				<h:outputText value="#{auth.smPersonnel.designation}" />
 				<!-- #32008 -->
-				<ac:smFieldChangeTableAlert object="#{auth}" />
+				<ac:smFieldChangeTableAlertView object="#{auth}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>

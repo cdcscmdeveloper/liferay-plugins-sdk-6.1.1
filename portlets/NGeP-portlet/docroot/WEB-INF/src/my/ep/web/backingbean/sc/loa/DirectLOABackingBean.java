@@ -495,7 +495,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						if(!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) &&
 								!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){ 
 							for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-								if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+								if (null != report && QTConstants.SURAT_SETUJU_TERIMA.equals(report.getTitle())) {
 									if (report.getScLoaReportAttachment() != null) {
 										if(null == report.getIsPK42BondCalc()){
 											boolean newBond = validateNewBond(scLoa);
@@ -1610,7 +1610,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
 		}
 
-		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
+		Long statusId = Long.valueOf(scLoa.getPmStatus().getStatusId()); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 
 		if (scLoa.isApprovalReq()
 				&& QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
@@ -4415,7 +4415,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				String docDefinitionKey = scLoaReport.getPmDocument()
 						.getDocDefinitionKey();
 				ScLoa scLoa = getManagedBean().getScLoa();
-				Long statusId = scLoa.getPmStatus().getStatusId().longValue();
+				Long statusId = Long.valueOf(scLoa.getPmStatus().getStatusId()); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				
 				if (scLoaReportAttachment == null || isGenerated) {
 					StringBuilder filename = new StringBuilder(); // replace white space due to firefox
@@ -10962,7 +10962,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			if (contractAmt.compareTo(limit) == 0) {
 				getManagedBean().setAbove500K(false);
 				return false;			
-			} else if (contractAmt.compareTo(limit) == 1) {
+			} else if (contractAmt.compareTo(limit) > 0) {
 				getManagedBean().setAbove500K(true);
 				return true;
 			} else {
@@ -12161,7 +12161,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			private boolean validateNewBond(ScLoa scLoa) {
 				if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
 			         for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-			             if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+			             if (null != report && QTConstants.SURAT_SETUJU_TERIMA.equals(report.getTitle())) {
 			                 if (report.getScLoaReportAttachment() != null) {
 			                	 RequestContext.getCurrentInstance().execute("bondChangesAlertDlg.show()");
 			                	 return false;
