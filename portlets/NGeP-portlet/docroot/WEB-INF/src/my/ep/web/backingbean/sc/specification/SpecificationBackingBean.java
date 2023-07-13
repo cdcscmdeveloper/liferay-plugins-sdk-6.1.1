@@ -18604,12 +18604,12 @@ if (null != checklist && !checklist.isEmpty()) {
 
 						if (priceType.get(i).equals("Normal Standard") || priceType.get(i).equals("Biasa Standard")) {
 
-							pmfind = retrieveParameterById(Long.valueOf(294));
+							pmfind = retrieveParameterById(294L); //@13/7/2023 SHAFFUL Sonarqube Bug Minor Retnalogan #12
 
 						} else if (priceType.get(i).equals("Tier Standard")
 								|| priceType.get(i).equals("Berperingkat Standard")) {
 
-							pmfind = retrieveParameterById(Long.valueOf(296));
+							pmfind = retrieveParameterById(296L); //@13/7/2023 SHAFFUL Sonarqube Bug Minor Retnalogan #12
 
 						}
 						tpmQuest.setClPriceTypeCode(pmfind);
