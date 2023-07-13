@@ -3721,7 +3721,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					
 				}
 				
-				retrieveQuationTenderDetails(new Long(qtId));
+				retrieveQuationTenderDetails(qtId);//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 						.equalsIgnoreCase(taskName)) {
 					retrieveCommitteeAppointmentTabDtl(FORM_OC, REFORM_NO_ACTION);
@@ -3798,7 +3798,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				SCQuotationTenderDataType quationDataType = (SCQuotationTenderDataType) payLoad;
 				qtId = quationDataType.getQtId().longValue();
 				// retrieveFinalizationSecratryDtl(qtId);
-				retrieveQuationTenderDetails(new Long(qtId));
+				retrieveQuationTenderDetails(qtId);//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				ScQt scQt = this.getManagedBean().getQt();
 				if (scQt.getObtainSpecialApproval() != null
 						&& scQt.getObtainSpecialApproval()) {

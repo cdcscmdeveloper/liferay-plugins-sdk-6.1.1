@@ -559,18 +559,20 @@ public class QTCloneBackingbean extends
 		}
 	}
 	
+	/*
+	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 START	 * 
+	 */
 	public Long[] getStatuses(Long fromStatusId,Long toStatusId){
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
-		orderedStatuses = orderedStatuses.subList(
-				orderedStatuses.indexOf(fromStatusId), 
-				orderedStatuses.indexOf(toStatusId)+1);
-		Long[] ret = new Long[orderedStatuses.size()];
-	    for (int i=0; i < ret.length; i++)
-	    {
-	        ret[i] = orderedStatuses.get(i).longValue();
-	    }
+	    int startIndex = orderedStatuses.indexOf(fromStatusId);
+	    int endIndex = orderedStatuses.indexOf(toStatusId) + 1;
+	    List<Long> subList = orderedStatuses.subList(startIndex, endIndex);
+	    Long[] ret = subList.toArray(new Long[subList.size()]);
 	    return ret;
 	}
+	/*
+	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 END	 * 
+	 */
 
 	public void cloneCommitteePopupAction() {
 		debugLogger("cloneCommitteePopupAction");
@@ -2510,8 +2512,9 @@ public class QTCloneBackingbean extends
 				 * setScQtDeductionClauses
 				 * (deductionList.get(0).getScQtDeductionClauses()); }
 				 */
-			} finally {
-				detailSO = null;
+			} catch(Exception e){ //@13/7/2023 : Shafful Sonarqube Bug Minor Danial #8 Remove finally and change to catch
+				SLAUtils.getInstance().logSLAError("QT", "QTCloneBackingBean", scQt.getQtNo(),
+						"retrieveDeductionPaymentTabDtl", getUserIdSessionFromLoginId(), e);
 			}
 		//}
 	}
