@@ -17491,6 +17491,12 @@ if (null != checklist && !checklist.isEmpty()) {
 	 */
 	public void specCommitteMaintenanceBpmTask(String action) {
 		log.debug("start specCommitteMaintenanceBpmTask");
+		
+		// #1873 #34837 -start-
+		if (assertPendingFinancialSubmission() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT))
+			return;
+		// #1873 #34837 -end-
+		
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
