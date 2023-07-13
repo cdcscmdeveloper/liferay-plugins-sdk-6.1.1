@@ -11,25 +11,9 @@
 		readonly="#{createQtBB.managedBean.readOnly}"
 		update="@([id$=documentUploadBtn])" />
 
-    <!-- #25077 Start -->
-	<ac:scSingleFileUploadPopup widgetVar="otherApprUploadDlgICT"
+	<ac:scSingleFileUploadPopup widgetVar="otherApprUploadDlg"
 		fileUploadListener="approvalBackingBean.handleOtherFileUpload"
 		readonly="#{createQtBB.managedBean.readOnly}"
-		update="@([id$=otheruploadIdICT])" />
+		update="@([id$=otheruploadId])" />
 
-	<ac:scSingleFileUploadPopup widgetVar="otherApprUploadDlgMITI"
-		fileUploadListener="approvalBackingBean.handleOtherFileUpload"
-		readonly="#{createQtBB.managedBean.readOnly}"
-		update="@([id$=otheruploadIdMITI])" />
-
-	<ac:scSingleFileUploadPopup widgetVar="otherHistoryApprUploadDlgICT"
-		fileUploadListener="approvalBackingBean.handleHistoryOtherFileUpload"
-		readonly="#{createQtBB.managedBean.readOnly}"
-		update="@([id$=historyOtheruploadIdICT])" />
-
-	<ac:scSingleFileUploadPopup widgetVar="otherHistoryApprUploadDlgMITI"
-		fileUploadListener="approvalBackingBean.handleHistoryOtherFileUpload"
-		readonly="#{createQtBB.managedBean.readOnly}"
-		update="@([id$=historyOtheruploadIdMITI])" />
-	<!-- #25077 End -->
 </ui:composition>

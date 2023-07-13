@@ -1253,12 +1253,4 @@ public class QTBriefingSiteVisitBackingBean extends
 			statusSO = null;
 		}
 	}
-	
-	// #34217 - Start
-	public void closeBriefingList() {
-		this.getManagedBean().setQtBriefing(null);
-
-		getManagedBean().setRequired(Boolean.FALSE);
-	}
-	// #34217 - End
 }

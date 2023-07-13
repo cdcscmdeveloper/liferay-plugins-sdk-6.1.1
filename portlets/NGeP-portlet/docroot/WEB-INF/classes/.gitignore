@@ -1,7 +1,11 @@
+/Language_en_US.properties
 /batch_log4j.properties
+/docx4j.properties
 /faces-config/
 /i18n.properties
+/log4j.properties
 /messageprovider-config/
+/my/
 /org/
 /quartz.properties
 /soft-certificate/
