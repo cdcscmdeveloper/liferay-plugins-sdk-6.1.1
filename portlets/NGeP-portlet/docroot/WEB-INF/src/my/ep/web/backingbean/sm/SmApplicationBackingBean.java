@@ -14935,6 +14935,7 @@ public class SmApplicationBackingBean extends
 				}
 				//#34277 - start
 				//personnel has no residential address, overwrite with SSM address
+				/*
 				if(!hasResAddr){
 					getManagedBean().getShareHolderResdAddr().setSmAddress(ssmAddress);
 				}
@@ -14951,6 +14952,7 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(getManagedBean(),
 						getManagedBean().getShareHolderResdAddr().getSmAddress(),
 						SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+				*/
 				//#34277 - end
 				getManagedBean().setSelectedShareHolder(this.getManagedBean().getSelectedShareHolder());
 			}
