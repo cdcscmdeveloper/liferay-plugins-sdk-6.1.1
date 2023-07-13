@@ -36,11 +36,10 @@
 				update=":form:tt:catCodeInfPan"></p:ajax>
 			<p:columnGroup type="header">
 				<p:row>
-					<!-- Disable for ups 32008 -->
-					<!-- p:column style="width:2%"
+					<p:column style="width:2%"
 						rendered="#{!backingBean.managedBean.approverUser}"
 						disabledSelection="#{backingBean.managedBean.supplierUser and 
-							(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or not empty catBean.approvedDate)}" /-->
+							(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or not empty catBean.approvedDate)}" />
 					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 						style="width : 2%;"
 						disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
@@ -78,14 +77,13 @@
 						disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 				</p:row>
 			</p:columnGroup>
-			<!-- Disable for ups 32008 -->
 			<!-- 26238 add catBean.cancelCategory and catBean.disciplinaryActionId!=null-->
-			<!-- p:column selectionMode="multiple" style="width:2%"
+			<p:column selectionMode="multiple" style="width:2%"
 				rendered="#{!backingBean.managedBean.approverUser}"
 				disabledSelection="#{backingBean.managedBean.supplierUser and 
 					(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or 
 					(not empty catBean.approvedDate and catBean.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS))
-					or (catBean.cancelCategory and catBean.disciplinaryActionId!=null)}" /-->
+					or (catBean.cancelCategory and catBean.disciplinaryActionId!=null)}" />
 			<p:column style="width : 2%;">
 				<p:outputLabel value="#{index + 1}"
 					style="float: left;white-space: normal;" />
@@ -110,12 +108,11 @@
 			<!-- 26238 add catBean.cancelCategory -->
 			<p:column
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
-					or catBean.cancelCategory or backingBean.managedBean.upsCannotEdit}">
+					or catBean.cancelCategory}">
 				<p:inputTextarea id="otherDesc" maxlength="100"
 					style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
 					value="#{catBean.otherDesc}" rows="5" cols="20"
-					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}"
-					disabled="#{backingBean.managedBean.upsCannotEdit}">
+					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}">
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBean)}"
 						update=":form:tt:catCodeInfPan" />
@@ -411,6 +408,7 @@
 
 				#{lbl['lbl.sm.download.categorycode']}
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.validateCategoryOtherDescription}"
 					partialSubmit="true" process="@this"
 					>

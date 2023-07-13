@@ -21,6 +21,7 @@ import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sc.bidding.BiddingListManagedBean;
@@ -910,6 +911,12 @@ public class SmFieldChangeUtil {
 															.getPmFinancialOrg()
 															.getFinancialOrgId()) != 0) {
 								currBank.setChangedFieldStatus("U");
+							//#32008 - start
+							} else if (isSupplierBranchBankHasDifference(
+									currBank.getSmSupplierBranchBanks(),
+									latestBank.getSmSupplierBranchBanks())) {
+								currBank.setChangedFieldStatus("U");
+							//#32008 - end
 							} else {
 								setCurrBankChequeSignatories(currBank,
 										latestBank);
@@ -1365,36 +1372,60 @@ public class SmFieldChangeUtil {
 	}
 	
 	//#32008 - start
+	/**
+	 * Initialize the previous application to check for supplier edit 
+	 * & use serialized supplier appl if available
+	 * @param bean
+	 */
 	public static void initLatestAppl(BaseReviewApplicationManagedBean bean){
-		if (bean.getSmAppl() == null || bean.getSmAppl().getApplType() == null
-			|| bean.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+		SmAppl appl = bean.getSmAppl();
+		if (appl == null || appl.getApplType() == null
+			|| appl.getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 			bean.setShowFieldChanges(false);
 			bean.setLatestAppl(null);
 			return;
 		}
-		
-		MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		SmAppl srcAppl = null;
 		
-		if (bean.getSmAppl().isResubmit() && bean.isSupplierUser()
-				&& bean.getSmAppl().getOriginalAppl() != null){
-			mofReqDTO.setSmAppl(bean.getSmAppl());
+		if (appl.isResubmit() && bean.isSupplierUser() && appl.getOriginalAppl() != null){
+			reqDTO.setSmAppl(appl);
 			srcAppl = SmServiceLookup.getMofRegistrationSO()
-					.retrieveLatestRejectedApplication(mofReqDTO).getSmAppl();
-			SmApplRevisionResDTO applRevDTO = SmCommonUtil
-					.getSerializedApplicationByFilePathName(srcAppl.getSupplierSerFile());
-			if (applRevDTO != null) {
-				srcAppl = applRevDTO.getSmAppl();
+					.retrieveLatestRejectedApplication(reqDTO).getSmAppl();
+			if(srcAppl != null){
+				String file = SmCommonUtil.getSerializedFileFullDirByApplNo(srcAppl.getApplNo(), "SUP");
+				SmApplRevisionResDTO revDTO = SmCommonUtil
+						.getSerializedApplicationByFilePathName(file);
+				if (revDTO != null && revDTO.getSmAppl() != null) {
+					srcAppl = revDTO.getSmAppl();
+				}
 			}
 		}
 		
 		if(srcAppl == null){
-			mofReqDTO.setSupplierId(bean.getSmSupplier().getSupplierId());
-			srcAppl = SmServiceLookup.getMofRegistrationSO()
-					.retrieveLatestSmApplWithChildBySupplierId(mofReqDTO)
-					.getSmAppl();
+			srcAppl = SmServiceLookup.getMofRegistrationSO().retrievePreviousSmAppl(
+					bean.getSmSupplier().getSupplierId(), appl.getApplId()).getSmAppl();
+			if(srcAppl != null){
+				String file = SmCommonUtil.getSerializedFileFullDirByApplNo(srcAppl.getApplNo(), "SUP");
+				SmApplRevisionResDTO revDTO = SmCommonUtil
+						.getSerializedApplicationByFilePathName(file);
+				if (revDTO != null && revDTO.getSmAppl() != null) {
+					srcAppl = revDTO.getSmAppl();
+				} else {
+					reqDTO.setApplId(srcAppl.getApplId());
+					srcAppl = SmServiceLookup.getMofRegistrationSO()
+						.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
+				}
+			}
+		}
+		
+		if(srcAppl == null){
+			bean.setShowFieldChanges(false);
+			bean.setLatestAppl(null);
+			return;
 		}
 		bean.setLatestAppl(srcAppl);
+		log.info("appl status compare with: "+bean.getLatestAppl().getApplNo());
 		bean.getLatestAppl().setHqFacility(
 				SmApplicationUtil.getHqFacilityByAppl(bean.getLatestAppl()));
 		setApplTableListChangeStatus(bean.getLatestAppl(), bean.getSmAppl(),
@@ -1485,6 +1516,55 @@ public class SmFieldChangeUtil {
 			setCurrPersonnelAssociationBodies(bean.getLatestAppl(),
 					bean.getSelectedShareHolder(), bean.getLatestPersonnel());
 		}
+	}
+	
+	private static boolean isSupplierBranchBankHasDifference(
+			List<SmSupplierBranchBank> prevBranchBanks,
+			List<SmSupplierBranchBank> currBranchBanks) {
+		boolean retVal = false;
+
+		if (EntityHelper.isCollectionEmpty(prevBranchBanks)
+				&& !EntityHelper.isCollectionEmpty(currBranchBanks)) {
+			retVal = true;
+		} else if (!retVal && !EntityHelper.isCollectionEmpty(prevBranchBanks)
+				&& EntityHelper.isCollectionEmpty(currBranchBanks)) {
+			retVal = true;
+		} else if (!retVal && !EntityHelper.isCollectionEmpty(prevBranchBanks)
+				&& !EntityHelper.isCollectionEmpty(currBranchBanks)) {
+
+			// check if current exist in previous
+			for (SmSupplierBranchBank currBrBank : currBranchBanks) {
+				if (getSmSupplierBranchBank(prevBranchBanks,
+						currBrBank.getSmSupplierBranch()) == null) {
+					retVal = true;
+					break;
+				}
+			}
+			// check if previous exist in current
+			for (SmSupplierBranchBank prevBrBank : prevBranchBanks) {
+				if (getSmSupplierBranchBank(currBranchBanks,
+						prevBrBank.getSmSupplierBranch()) == null) {
+					retVal = true;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+	
+	private static SmSupplierBranchBank getSmSupplierBranchBank(
+			List<SmSupplierBranchBank> branchBanks, SmSupplierBranch branch) {
+		SmSupplierBranchBank retVal = null;
+		for (SmSupplierBranchBank brBankTmp : branchBanks) {
+			if (brBankTmp.getSmSupplierBranch() != null
+					&& branch != null
+					&& brBankTmp.getSmSupplierBranch().getBranchCode()
+							.equals(branch.getBranchCode())) {
+				retVal = brBankTmp;
+				break;
+			}
+		}
+		return retVal;
 	}
 	//#32008 - end
 }

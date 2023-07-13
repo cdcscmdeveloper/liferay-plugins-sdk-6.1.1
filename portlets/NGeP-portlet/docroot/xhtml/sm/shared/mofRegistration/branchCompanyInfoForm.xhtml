@@ -60,7 +60,7 @@
 			</p:outputPanel>
 		</table -->
 		<p:outputPanel id="brnInfPan" layout="block">
-			<p:blockUI block=":form:tt:brnInfPan" widgetVar="buiPoBrn"
+			<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:brnInfPan" widgetVar="buiPoBrn"
 				id="poBrnBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.branchVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.branchVerified : false)}" />
 			<!-- #34135 START -->
@@ -72,7 +72,7 @@
 				<ac:paginator for="dt" />
 				<p:ajax event="rowSelect" listener="#{backingBean.unSelectSsmBranch}" update=":form:tt:dt"></p:ajax>
 				<!--  SSM INTEGRATION -->
-				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.displayBranches}" disabledSelection="#{branchBean.ssmData}"/>
+				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.displayBranches and !backingBean.managedBean.upsCannotEdit}" disabledSelection="#{branchBean.ssmData}"/>
 			<!-- #34135 END -->
 				<p:column headerText="#{lbl['lbl.sm.branch.branchName']}">
 					<table style="width: 100%">

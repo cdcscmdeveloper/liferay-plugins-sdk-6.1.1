@@ -84,7 +84,7 @@
 							update=":form:tt:storeDialog" style="padding-right:5px"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
 							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"/>
-							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"/>
+							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" rendered="#{backingBean.managedBean.upsCannotEdit}"/>
 						</p:commandLink>
 					</p:column>
 				</p:dataTable><br />
@@ -141,11 +141,18 @@
 							label="#{lbl['lbl.sm.category']}" id="storeCategoryId"
 							value="#{backingBean.managedBean.selectedSuppCategoryFacilityIds}"
 							style="height:100px;width: 200px;"
-							disabled="#{backingBean.managedBean.upsCannotEdit}">
+							rendered="#{!backingBean.managedBean.upsCannotEdit}">
 							<f:selectItems
 								value="#{backingBean.getSelectedCategoryItemsByFacilityType(backingBean.managedBean.selectedStoreFacility.facilityType)}" />
 							<p:ajax event="change" update="@this" process="@this" partialSubmit="true" />
 						</p:selectManyMenu>
+						<p:outputPanel rendered="#{backingBean.managedBean.upsCannotEdit}">
+							<ui:repeat var="cat" value="#{backingBean.managedBean.selectedStoreFacility.smSupplierCategoryFacilities}">
+								<h:outputText value="#{cat.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
+									#{cat.pmCategoryL3.pmCategoryL2.categoryL2Code} #{cat.pmCategoryL3.categoryL3Code}
+									(#{cat.pmCategoryL3.categoryName})" style="float:left"/><br/>
+							</ui:repeat>
+						</p:outputPanel>
 						<p:message id="storeCategoryIdMsg" for="storeCategoryId"
 							showSummary="true" showDetail="false" display="icon" />
 					</td>

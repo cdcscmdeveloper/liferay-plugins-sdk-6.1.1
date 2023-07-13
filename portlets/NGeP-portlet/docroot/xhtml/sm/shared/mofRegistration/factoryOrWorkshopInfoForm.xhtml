@@ -18,11 +18,11 @@
 			<br />
 			<ui:repeat var="factoryCatVar" value="#{backingBean.managedBean.factoryFacilitiesVOList}" varStatus="factoryCatVarStatus">
 				<table style="width: 100%;">
-				<tr>
-					<td style="white-space: nowrap; float: left;">
-					    <p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} (#{factoryCatVar.categoryName})" />
-					</td>
-				</tr>
+					<tr>
+						<td style="white-space: nowrap; float: left;">
+						    <p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} (#{factoryCatVar.categoryName})" />
+						</td>
+					</tr>
 				</table>
 				<br />
 				
@@ -89,8 +89,8 @@
 							partialSubmit="true" process="@this"
 							update=":form:tt:factoryDialog" style="padding-right:5px" 
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
-							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"/>
-							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" rendered="#{backingBean.managedBean.upsCannotEdit}"/>
+							<p:graphicImage rendered="#{!backingBean.managedBean.upsCannotEdit}" value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+							<p:graphicImage rendered="#{backingBean.managedBean.upsCannotEdit}" value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 						</p:commandLink>
 					</p:column>
 	
@@ -100,12 +100,14 @@
 			
 			<p:spacer height="2px;" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sm.button.add']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.assignNewFactoryBean}"
 					update=":form:tt:factoryDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="factoryPan"
 					id="delFactoryBtnId" disabled="#{backingBean.disableDeleteBtn(factoryCatVar.facilityList)}"
 					update=":#{p:component('smFacilityFactoryDtPanel')},@this" 
@@ -120,9 +122,7 @@
 		widgetVar="factoryDialog" resizable="false" showEffect="fade"
 		closable="true" hideEffect="fade" modal="true" id="factoryDialog">
 		
-		<p:ajax event="close" listener="#{backingBean.cancelFactorySaveorUpdate}"/>
-		
-		<p:outputPanel>
+		<p:outputPanel layout="block" id="factoryBlockPanel">
 			<p:messages id="factoryDialogMsg" showSummary="false"
 				showDetail="true" autoUpdate="false" closable="true" />
 			<table style="width: 100%">
@@ -131,8 +131,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText size="35" maxlength="50" id="smFacFactorName"
 							required="#{backingBean.managedBean.valueReqd}" label="Name"
-							value="#{backingBean.managedBean.selectedFactoryFacility.facilityName}" 
-							disabled="#{backingBean.managedBean.upsCannotEdit}">
+							value="#{backingBean.managedBean.selectedFactoryFacility.facilityName}" disabled="#{backingBean.managedBean.upsCannotEdit}" >
 							<p:ajax process="@this" update="@this"/>
 						</p:inputText>
 						<p:message id="smFacFactorNameMsg" for="smFacFactorName"
@@ -150,11 +149,18 @@
 							label="#{lbl['lbl.sm.category']}" id="factoryCategoryId"
 							value="#{backingBean.managedBean.selectedSuppCategoryFacilityIds}"
 							style="height:100px;width: 200px;"
-							disabled="#{backingBean.managedBean.upsCannotEdit}">
+							rendered="#{!backingBean.managedBean.upsCannotEdit}">
 							<f:selectItems
 								value="#{backingBean.getSelectedCategoryItemsByFacilityType(backingBean.managedBean.selectedFactoryFacility.facilityType)}" />
 							<p:ajax event="change" update="@this" process="@this" partialSubmit="true" />
 						</p:selectManyMenu>
+						<p:outputPanel rendered="#{backingBean.managedBean.upsCannotEdit}">
+							<ui:repeat var="cat" value="#{backingBean.managedBean.selectedFactoryFacility.smSupplierCategoryFacilities}">
+								<h:outputText value="#{cat.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
+									#{cat.pmCategoryL3.pmCategoryL2.categoryL2Code} #{cat.pmCategoryL3.categoryL3Code}
+									(#{cat.pmCategoryL3.categoryName})" style="float:left"/><br/>
+							</ui:repeat>
+						</p:outputPanel>
 						<p:message id="factoryCategoryIdMsg" for="factoryCategoryId"
 							showSummary="true" showDetail="false" display="icon" />
 					</td>
@@ -164,8 +170,7 @@
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.factoryFacilityStates}"
 					divisionItems="#{backingBean.managedBean.factoryFacilityDivisions}"
 					districtItems="#{backingBean.managedBean.factoryFacilityDistricts}" cityItems="#{backingBean.managedBean.factoryFacilityCities}" 
-					facilityPanel="#{SupplierManagementConst.SM_FACTORY_FACILITY_PANEL}" 
-					disabled="#{backingBean.managedBean.upsCannotEdit}"/> <!-- panelId="factoryBlockPanel" remove by 32008 -->
+					facilityPanel="#{SupplierManagementConst.SM_FACTORY_FACILITY_PANEL}" panelId="factoryBlockPanel"/>
 				
 				
 				<tr>
@@ -186,8 +191,8 @@
 						countryCode="#{backingBean.managedBean.selectedFactoryFacility.faxCountry}" 
 						areaCode="#{backingBean.managedBean.selectedFactoryFacility.faxArea}" 
 						number="#{backingBean.managedBean.selectedFactoryFacility.faxNo}"  
-						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" 
-						disabled="#{backingBean.managedBean.upsCannotEdit}"/>
+						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}"
+						disabled="#{backingBean.managedBean.upsCannotEdit}" />
 					</td>
 				</tr>
 				<tr>
@@ -195,7 +200,8 @@
 					<td><p:inputText id="smFacFactoryArea"
 							label="#{lbl['lbl.sc.spec.area.feat']}"
 							value="#{backingBean.managedBean.selectedFactoryFacility.areaSquareFeet}"
-							size="35" disabled="#{backingBean.managedBean.upsCannotEdit}">
+							size="35"
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText> <p:message id="smFacFactoryAreaMsg" for="smFacFactoryArea"
@@ -256,7 +262,7 @@
 							<ui:fragment
 								rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">
 								<p:inputText id="smFacFactoryRent"
-									disabled="#{!backingBean.managedBean.valueReqd or backingBean.managedBean.upsCannotEdit}"
+									disabled="#{!backingBean.managedBean.valueReqd}"
 									label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
 									validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
 									value="#{backingBean.managedBean.selectedFactoryFacility.rentalRate}"
@@ -283,7 +289,8 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.ownername']}"
 							value="#{backingBean.managedBean.selectedFactoryFacility.ownerName}"
-							size="35" disabled="#{backingBean.managedBean.upsCannotEdit}"/> <p:message id="smFacFactoryOwnNameMsg"
+							size="35"
+							disabled="#{backingBean.managedBean.upsCannotEdit}" /> <p:message id="smFacFactoryOwnNameMsg"
 							for="smFacFactoryOwnName" showSummary="true" showDetail="false"
 							display="icon" /></td>
 				</tr>
@@ -291,19 +298,21 @@
 			</table>
 			<br />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sm.button.save']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.addOrUpdateFactoryToSmAppl}"
 					partialSubmit="true" process="factoryDialog"
 					onclick="factoryBlockWidget.show();" oncomplete="factoryBlockWidget.hide();"
 					update=":#{p:component('smFacilityFactoryDtPanel')}, @([id$=Msg])" />
-				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.cancelFactorySaveorUpdate}"
 					update=":form:tt:factoryDialog, @([id$=Msg])" />
 			</div>
-			<!-- p:blockUI block="factoryBlockPanel" widgetVar="factoryBlockWidget">
+			<p:blockUI block="factoryBlockPanel" widgetVar="factoryBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-			</p:blockUI-->
+			</p:blockUI>
 		</p:outputPanel>
 	</p:dialog>
 	

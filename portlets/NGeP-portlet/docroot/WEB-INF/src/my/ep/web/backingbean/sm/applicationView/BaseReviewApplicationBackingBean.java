@@ -215,6 +215,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setApplicationNoParam(applNo+"_"+serFileType);
 		getManagedBean().setPreviousApproved(false);
 		getManagedBean().setOriginal(false);
+		getManagedBean().setRevisionDialog(true); 	//#32008
 		if(serFileType.equals("SUP")){
 			try {
 				setRevisionApplType();
@@ -809,8 +810,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		initStep8_9PoApproverDefaultDecision();
 		initBumiRecommendNote();
 		//#32008 - start
-		SmFieldChangeUtil.initLatestAppl(getManagedBean());
-		SmSideMenuIconUtil.setSectionEditorVO(getManagedBean());
+		if (!getManagedBean().isPoApprUnClaimTask() && !getManagedBean().isRevisionDialog()
+				&& getManagedBean().isViewApplicationHistory()){
+			SmFieldChangeUtil.initLatestAppl(getManagedBean());
+			SmSideMenuIconUtil.setSectionEditorVO(getManagedBean());
+		}
 		//#32008 - end
 	}
 

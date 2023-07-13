@@ -18,7 +18,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.address']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address1}" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.address1}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address1}" 
@@ -29,7 +29,7 @@
 							<td></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address2}" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.address2}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address2}" 
@@ -39,7 +39,7 @@
 							<td></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address3}" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.address3}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address3}" 
@@ -49,7 +49,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryName}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.pmCountry.countryId}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId}" 
@@ -60,7 +60,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateName}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.pmState.stateId}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateId}" 
@@ -74,7 +74,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmDivision.divisionName}"
 												rendered="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmState.adoptDivision}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 										and viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmState.adoptDivision}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.pmDivision.divisionId}" 
@@ -87,7 +87,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtName}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.pmDistrict.districtId}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtId}" 
@@ -97,7 +97,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityName}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.pmCity.cityId}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityId}" 
@@ -107,7 +107,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.postcode}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.postcode}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.postcode}" 
@@ -124,7 +124,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.address']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address1}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.address1}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address1}" 
@@ -135,7 +135,7 @@
 							<td></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address2}" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.address2}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address2}" 
@@ -145,7 +145,7 @@
 							<td></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address3}" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.address3}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address3}" 
@@ -155,7 +155,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryName}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.pmCountry.countryId}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId}" 
@@ -166,7 +166,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateName}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.pmState.stateId}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateId}" 
@@ -180,7 +180,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmDivision.divisionName}"
 												rendered="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmState.adoptDivision}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 										and viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.pmState.adoptDivision}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.pmDivision.divisionId}" 
@@ -193,7 +193,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtName}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.pmDistrict.districtId}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtId}" 
@@ -203,7 +203,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityName}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.pmCity.cityId}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityId}" 
@@ -213,7 +213,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.postcode}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.postcode}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.postcode}" 
@@ -235,7 +235,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.address']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address1}" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.address1}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address1}" 
@@ -246,7 +246,7 @@
 							<td></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address2}" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.address2}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address2}" 
@@ -256,7 +256,7 @@
 							<td></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address3}" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.address3}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address3}" 
@@ -266,7 +266,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryName}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.pmCountry.countryId}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId}" 
@@ -277,7 +277,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmState.stateName}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.pmState.stateId}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmState.stateId}" 
@@ -291,7 +291,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmDivision.divisionName}"
 												rendered="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmState.adoptDivision}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 										and viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.pmState.adoptDivision}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.pmDivision.divisionId}" 
@@ -305,7 +305,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict.districtName}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.pmDistrict.districtId}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict.districtId}" 
@@ -315,7 +315,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmCity.cityName}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.pmCity.cityId}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmCity.cityId}" 
@@ -325,7 +325,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.postcode}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.postcode}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.postcode}" 
@@ -342,7 +342,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.address']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address1}" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.address1}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address1}" 
@@ -353,7 +353,7 @@
 							<td></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address2}" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.address2}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address2}" 
@@ -363,7 +363,7 @@
 							<td></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address3}" />
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.address3}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address3}" 
@@ -373,7 +373,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryName}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.pmCountry.countryId}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId}" 
@@ -384,7 +384,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmState.stateName}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.pmState.stateId}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmState.stateId}" 
@@ -398,7 +398,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmDivision.divisionName}"
 												rendered="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmState.adoptDivision}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 										and viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmState.adoptDivision}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.pmDivision.divisionId}" 
@@ -411,7 +411,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict.districtName}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.pmDistrict.districtId}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict.districtId}" 
@@ -421,7 +421,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmCity.cityName}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.pmCity.cityId}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmCity.cityId}" 
@@ -431,7 +431,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.postcode}"/>
 								<!-- #32008 -->
-								<ac:smFieldChangeAlert 
+								<ac:smFieldChangeAlertView 
 									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 									oriValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.postcode}" 
 									currValue="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.postcode}" 
