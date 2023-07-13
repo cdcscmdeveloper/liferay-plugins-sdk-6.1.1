@@ -4569,7 +4569,10 @@ public class SpecificationBackingBean extends
 		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
 		String parameterCode = null;
 		for (PmParameterDesc paramDesc : localParamDesc) {
-			if (paramDesc.getPmParameter().getParameterId().equals(Long.valueOf(list.getDefinationType().getParameterId()))) {
+			// Sqube QT Master Bug Minor G15@Syazani 11/07/2023 - Start
+			if (paramDesc.getPmParameter() != null && list.getDefinationType() != null
+					&& paramDesc.getPmParameter().getParameterId().equals(list.getDefinationType().getParameterId())) {
+				// Sqube QT Master Bug Minor G15@Syazani 11/07/2023 - End
 				parameterCode = paramDesc.getPmParameter().getParameterCode();
 				list.setDefinationType((PmParameter) paramDesc.getPmParameter().cloneEntity()); // Bug #34065@Syazani 01/11/2022
 				break;
@@ -4817,7 +4820,7 @@ public class SpecificationBackingBean extends
 		for (PmParameterDesc paramDesc : localParamDesc) {
 
 			if (paramDesc.getPmParameter().getParameterId()
-					.equals(Long.valueOf(list.getAction().getParameterId()))) {
+					.equals(list.getAction().getParameterId())) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				parameterCode = paramDesc.getPmParameter().getParameterCode();
 				if (ParameterConst.CHECKLIST_ACTION_VIEW
 						.equalsIgnoreCase(parameterCode)) {
@@ -4864,7 +4867,7 @@ public class SpecificationBackingBean extends
 		for (PmParameterDesc paramDesc : localParamDesc) {
 
 			if (paramDesc.getPmParameter().getParameterId()
-					.equals(Long.valueOf(list.getAction().getParameterId()))) {
+					.equals(list.getAction().getParameterId())) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				parameterCode = paramDesc.getPmParameter().getParameterCode();
 				if (ParameterConst.CHECKLIST_ACTION_VIEW
 						.equalsIgnoreCase(parameterCode)) {
@@ -4938,7 +4941,7 @@ public class SpecificationBackingBean extends
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.FULFILMENT_TYPE);
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				if (paramDesc.getPmParameter().getParameterId()
-						.equals(Long.valueOf(type))) {
+						.equals(type)) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 
 					this.getManagedBean().setFulfilmentType(
 							paramDesc.getPmParameter().getParameterCode());
@@ -5017,7 +5020,7 @@ public class SpecificationBackingBean extends
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.PROCUREMENT_CATEGORY);
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				if (paramDesc.getPmParameter().getParameterId()
-						.equals(Long.valueOf(type))) {
+						.equals(type)) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 
 					this.getManagedBean().setProcuremntCategory(
 							paramDesc.getPmParameter().getParameterCode());
@@ -8442,8 +8445,8 @@ public class SpecificationBackingBean extends
 					CommonConstants.DEFAULT_DATE_FORMAT);
 			// String localDate = sdf.format(currentDate);
 			// String day = localDate.substring(0, 2);
-			String localstartMonth = retriveMonthDtls(new Integer(startMonth));
-			String localemdMonth = retriveMonthDtls(new Integer(endMonth));
+			String localstartMonth = retriveMonthDtls(startMonth);//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+			String localemdMonth = retriveMonthDtls(endMonth);//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 			String fromDate = 01 + "/" + localstartMonth + "/" + startYear;
 			String toDate = 01 + "/" + localemdMonth + "/" + endYear;
 			Date startDate = sdf.parse(fromDate);
@@ -17538,6 +17541,12 @@ if (null != checklist && !checklist.isEmpty()) {
 	 */
 	public void specCommitteMaintenanceBpmTask(String action) {
 		log.debug("start specCommitteMaintenanceBpmTask");
+		
+		// #1873 #34837 -start-
+		if (assertPendingFinancialSubmission() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT))
+			return;
+		// #1873 #34837 -end-
+		
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
@@ -18595,12 +18604,12 @@ if (null != checklist && !checklist.isEmpty()) {
 
 						if (priceType.get(i).equals("Normal Standard") || priceType.get(i).equals("Biasa Standard")) {
 
-							pmfind = retrieveParameterById(Long.valueOf(294));
+							pmfind = retrieveParameterById(294L); //@13/7/2023 SHAFFUL Sonarqube Bug Minor Retnalogan #12
 
 						} else if (priceType.get(i).equals("Tier Standard")
 								|| priceType.get(i).equals("Berperingkat Standard")) {
 
-							pmfind = retrieveParameterById(Long.valueOf(296));
+							pmfind = retrieveParameterById(296L); //@13/7/2023 SHAFFUL Sonarqube Bug Minor Retnalogan #12
 
 						}
 						tpmQuest.setClPriceTypeCode(pmfind);
