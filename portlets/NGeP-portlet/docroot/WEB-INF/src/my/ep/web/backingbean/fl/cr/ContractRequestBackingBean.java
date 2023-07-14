@@ -240,7 +240,7 @@ import com.liferay.portal.util.PortalUtil;
 public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<ContractRequestManagedBean> {
 	private static final long serialVersionUID = 1L;
 	private static Logger log =  Logger.getLogger(ContractRequestBackingBean.class);
-	private final long MILLIS_PER_DAY = 24 * 3600 * 1000;
+	private final long MILLIS_PER_DAY = 24 * 3600 * 1000L;
 	public static final String NAV_TO_CREATE_CONTRACT_REQUEST = "/xhtml/fl/contractrequest/crBasePage.xhtml";
 	private static final BaseEntity entity = null;
 	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
@@ -1072,7 +1072,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				if(flItemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
 					if(getManagedBean().getFlRequest().getStartDate()!=null && getManagedBean().getFlRequest().getEndDate()!=null) {
 						long day = (getManagedBean().getFlRequest().getEndDate().getTime() - getManagedBean().getFlRequest().getStartDate().getTime()) / MILLIS_PER_DAY;
-						reqDTO.setDeliveryTerm(Long.valueOf(day).intValue());
+						reqDTO.setDeliveryTerm((int)day);
 					}
 					reqDTO.setItemId(contractedItem.getScRequestItem().getRequestNoteItemId());
 					reqDTO.setOrderedQty(BigDecimal.ZERO);
@@ -1230,7 +1230,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							long day = (getManagedBean().getFlRequest().getEndDate().getTime() - getManagedBean()
 									.getFlRequest().getStartDate().getTime())
 									/ MILLIS_PER_DAY;
-							reqDTO.setDeliveryTerm(Long.valueOf(day).intValue());
+							reqDTO.setDeliveryTerm((int)day);
 						}
 						reqDTO.setItemId(contractedItem.getScRequestItem().getRequestNoteItemId());
 						reqDTO.setOrderedQty(BigDecimal.ZERO);
@@ -1929,7 +1929,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					//#21489
 					if(getManagedBean().getSelectedDelAddr()!=null && getManagedBean().getSelectedDelAddr().getStartDate()!=null && getManagedBean().getSelectedDelAddr().getEndDate()!=null) {
 						long day = (getManagedBean().getSelectedDelAddr().getEndDate().getTime() - getManagedBean().getSelectedDelAddr().getStartDate().getTime()) / MILLIS_PER_DAY;
-						reqDTO.setDeliveryTerm(Long.valueOf(day).intValue());
+						reqDTO.setDeliveryTerm((int)day);
 					}
 					reqDTO.setItemId(newItem.getScRequestItem().getRequestNoteItemId());
 					reqDTO.setOrderedQty(BigDecimal.ZERO);
@@ -1947,7 +1947,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				} else if(newItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)) {
 					if(getManagedBean().getSelectedDelAddr()!=null && getManagedBean().getSelectedDelAddr().getStartDate()!=null && getManagedBean().getSelectedDelAddr().getEndDate()!=null) {
 						long day = (getManagedBean().getSelectedDelAddr().getEndDate().getTime() - getManagedBean().getSelectedDelAddr().getStartDate().getTime()) / MILLIS_PER_DAY;
-						reqDTO.setDeliveryTerm(Long.valueOf(day).intValue());
+						reqDTO.setDeliveryTerm((int)day);
 					}
 					reqDTO.setItemId(newItem.getScRequestItem().getRequestNoteItemId());
 					reqDTO.setOrderedQty(BigDecimal.ZERO);
@@ -2337,7 +2337,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		
 		if(getManagedBean().getFlRequest().getStartDate()!=null && getManagedBean().getFlRequest().getEndDate()!=null) {
 			long day = (getManagedBean().getFlRequest().getEndDate().getTime() - getManagedBean().getFlRequest().getStartDate().getTime()) / MILLIS_PER_DAY;
-			ctReqDTO.setDeliveryTerm(Long.valueOf(day).intValue());
+			ctReqDTO.setDeliveryTerm((int)day);
 		}
 		
 		for(FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
@@ -2773,7 +2773,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					if(flItemAddr.getPriceType() != null && flItemAddr.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
 						if(getManagedBean().getSelectedDelAddr()!=null && getManagedBean().getSelectedDelAddr().getStartDate()!=null && getManagedBean().getSelectedDelAddr().getEndDate()!=null) {
 							long day = (getManagedBean().getSelectedDelAddr().getEndDate().getTime() - getManagedBean().getSelectedDelAddr().getStartDate().getTime()) / MILLIS_PER_DAY;
-							reqDTO.setDeliveryTerm(Long.valueOf(day).intValue());
+							reqDTO.setDeliveryTerm((int)day);
 						}
 						reqDTO.setOrderedQty(flItemAddr.getOrderedQty());
 						ContractItemResDTO itemResDTO = contractItemSO.getItemPrice(reqDTO);//get zoneId
@@ -4831,7 +4831,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				if(flItemAddr.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
 					if(getManagedBean().getFlRequest().getStartDate()!=null && getManagedBean().getFlRequest().getEndDate()!=null) {
 						long day = (getManagedBean().getFlRequest().getEndDate().getTime() - getManagedBean().getFlRequest().getStartDate().getTime()) / MILLIS_PER_DAY;
-						reqDTO.setDeliveryTerm(Long.valueOf(day).intValue());
+						reqDTO.setDeliveryTerm((int)day);
 					}
 					reqDTO.setItemId(flTempItem.getScRequestItem().getRequestNoteItemId());
 					reqDTO.setOrderedQty(BigDecimal.ZERO);
