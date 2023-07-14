@@ -3504,13 +3504,27 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		 * @param other the other
 		 * @return true, if successful
 		 */
-		public boolean equals(SupplierBankFK other) {
-			return getPK(this).equals(getPK(other));
-		}
+		//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+		@Override
+		public boolean equals(Object obj) {
+		 
+	      if (this == obj) {
+	            return true;
+	            }
+	      if (!(obj instanceof SupplierBankFK)) {
+	            return false;
+	        }
+
+	      SupplierBankFK other = (SupplierBankFK) obj;
+	      return getPK(this).equals(getPK(other));
+			
+	    
+
 
 		/* (non-Javadoc)
 		 * @see java.lang.Object#hashCode()
 		 */
+		@Override //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 		public int hashCode() {
 			int result = 3;
 
@@ -10243,6 +10257,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						break;
 					}
 				}
+				reqDTO = new AwardSupplierReqDTO();
 			}
 			ScLoiLoaItem  scLoiLoaItem  = this.getManagedBean().getScLoiLoaItem();
 			AwardSupplierReqDTO reqDTOLatest=new AwardSupplierReqDTO();
@@ -11153,7 +11168,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	private boolean validateNewBond(ScLoa scLoa) {
 		if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
 	         for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-	             if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+	             if (null != report && QTConstants.SURAT_SETUJU_TERIMA.equals(report.getTitle())) {
 	                 if (report.getScLoaReportAttachment() != null) {
 	                	 RequestContext.getCurrentInstance().execute("bondChangesAlertDlg.show()");
 	                	 return false;
