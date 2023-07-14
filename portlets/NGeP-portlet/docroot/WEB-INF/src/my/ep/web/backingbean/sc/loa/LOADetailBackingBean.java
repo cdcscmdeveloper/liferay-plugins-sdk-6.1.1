@@ -3519,7 +3519,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	      return getPK(this).equals(getPK(other));
 			
 	    
-
+		}
 
 		/* (non-Javadoc)
 		 * @see java.lang.Object#hashCode()
@@ -3806,7 +3806,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 												.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 									for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
 										if (null != report
-												&& "Surat Setuju Terima (Termasuk Lampiran A)"
+												&& QTConstants.SURAT_SETUJU_TERIMA
 														.equals(report.getTitle())) {
 											if (report.getScLoaReportAttachment() != null) {
 												if (null == report.getIsPK42BondCalc()) {
@@ -4249,14 +4249,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 		if (null != this.getManagedBean().getScLoa()
 				&& CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
-			if (null == scLoa.getScQuote()) {
-				for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-					if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
-						if (report.getScLoaReportAttachment() != null) {
-							if (null == report.getIsPK42BondCalc()) {
-								boolean newBond = validateNewBond(scLoa);
-								if (newBond == false) {
-									return;
+			if (!scLoa.isBrandNew()) {
+				if (null == scLoa.getScQuote()) {
+					for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
+						if (null != report && QTConstants.SURAT_SETUJU_TERIMA.equals(report.getTitle())) {
+							if (report.getScLoaReportAttachment() != null) {
+								if (null == report.getIsPK42BondCalc()) {
+									boolean newBond = validateNewBond(scLoa);
+									if (newBond == false) {
+										return;
+									}
 								}
 							}
 						}
@@ -4826,7 +4828,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
 		}
 
-		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
+		Long statusId = Long.valueOf(scLoa.getPmStatus().getStatusId()); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 		if (scLoa.isApprovalReq()
 				&& QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
 			PmUser approverUser = getManagedBean().getApproverUser();
@@ -6099,7 +6101,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							ScQtProgressivePayment payment = new ScQtProgressivePayment();
 							payment.setStartYear(String.valueOf(year));
 							payment.setEndYear(String.valueOf(year));
-							payment.setPhaseNo(BigDecimal.valueOf(i + 1));
+							payment.setPhaseNo(BigDecimal.valueOf(i + 1L)); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 							payment.setScLoa(scLoa);
 							setUserDetails(payment);
 							progressivePayList.add(payment);
@@ -6492,7 +6494,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		if(contractAmt.compareTo(limit) == 0){
 			return false;
-		}else if(contractAmt.compareTo(limit) == 1){
+		}else if(contractAmt.compareTo(limit) > 0){
 			return true;
 		}else{
 			return false;
