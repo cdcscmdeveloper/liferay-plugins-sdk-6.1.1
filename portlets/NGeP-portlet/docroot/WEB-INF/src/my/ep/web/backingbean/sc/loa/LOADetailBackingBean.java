@@ -3504,27 +3504,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		 * @param other the other
 		 * @return true, if successful
 		 */
-		//20230711@Asyrafhaziq-SQUBE Bug Minor #16
-		@Override
-		public boolean equals(Object obj) {
-		 
-	      if (this == obj) {
-	            return true;
-	            }
-	      if (!(obj instanceof SupplierBankFK)) {
-	            return false;
-	        }
-
-	      SupplierBankFK other = (SupplierBankFK) obj;
-	      return getPK(this).equals(getPK(other));
-			
-	    
+		public boolean equals(SupplierBankFK other) {
+			return getPK(this).equals(getPK(other));
 		}
 
 		/* (non-Javadoc)
 		 * @see java.lang.Object#hashCode()
 		 */
-		@Override //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 		public int hashCode() {
 			int result = 3;
 
@@ -3806,7 +3792,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 												.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 									for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
 										if (null != report
-												&& QTConstants.SURAT_SETUJU_TERIMA
+												&& "Surat Setuju Terima (Termasuk Lampiran A)"
 														.equals(report.getTitle())) {
 											if (report.getScLoaReportAttachment() != null) {
 												if (null == report.getIsPK42BondCalc()) {
@@ -4249,16 +4235,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 		if (null != this.getManagedBean().getScLoa()
 				&& CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
-			if (!scLoa.isBrandNew()) {
-				if (null == scLoa.getScQuote()) {
-					for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-						if (null != report && QTConstants.SURAT_SETUJU_TERIMA.equals(report.getTitle())) {
-							if (report.getScLoaReportAttachment() != null) {
-								if (null == report.getIsPK42BondCalc()) {
-									boolean newBond = validateNewBond(scLoa);
-									if (newBond == false) {
-										return;
-									}
+			if (null == scLoa.getScQuote()) {
+				for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
+					if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+						if (report.getScLoaReportAttachment() != null) {
+							if (null == report.getIsPK42BondCalc()) {
+								boolean newBond = validateNewBond(scLoa);
+								if (newBond == false) {
+									return;
 								}
 							}
 						}
@@ -4828,7 +4812,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
 		}
 
-		Long statusId = Long.valueOf(scLoa.getPmStatus().getStatusId()); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
+		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 		if (scLoa.isApprovalReq()
 				&& QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
 			PmUser approverUser = getManagedBean().getApproverUser();
@@ -6101,7 +6085,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							ScQtProgressivePayment payment = new ScQtProgressivePayment();
 							payment.setStartYear(String.valueOf(year));
 							payment.setEndYear(String.valueOf(year));
-							payment.setPhaseNo(BigDecimal.valueOf(i + 1L)); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
+							payment.setPhaseNo(BigDecimal.valueOf(i + 1));
 							payment.setScLoa(scLoa);
 							setUserDetails(payment);
 							progressivePayList.add(payment);
@@ -6494,7 +6478,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		if(contractAmt.compareTo(limit) == 0){
 			return false;
-		}else if(contractAmt.compareTo(limit) > 0){
+		}else if(contractAmt.compareTo(limit) == 1){
 			return true;
 		}else{
 			return false;
@@ -8766,7 +8750,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				//#34766 - start
 				AwardSupplierReqDTO reqDTO=new AwardSupplierReqDTO();
 				reqDTO.setScLoiLoaItem(scLoiLoaItem);
-				AwardSupplierResDTO resDTO  = getQtAwardSO().retriveLatestLoiLoaItemDetails(reqDTO);
+				
+				//start - #29006 note 819
+				AwardSupplierResDTO resDTO  = new AwardSupplierResDTO();
+				
+				if(reqDTO.getScLoiLoaItem().getLoiLoaItemId() != null)
+					resDTO = getQtAwardSO().retriveLatestLoiLoaItemDetails(reqDTO);
+				//end - #29006 note 819
+				
 				//#34766 - end
 				
 				List<String> nsoJustList = new ArrayList<String>();
@@ -9654,7 +9645,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					
 					if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark())) {						
 						if(tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().equals(currentSupplier)){							
-							scLoiLoaItem.getSupplierOfferDetailList().add(tplSpecAnswer.getAnswerRemark());
+							scLoiLoaItem.getSupplierOfferDetailList().add(tplSpecAnswer.getAnswerRemark().replaceAll("<", "&#60;")); //#29006 note 819
 							break;
 						}
 					}
@@ -10236,11 +10227,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		if(this.getManagedBean().getTplSpecAnswerList() != null || this.getManagedBean().getNewSupplierJustification() != null){
 			if(this.getManagedBean().getScQt().isZonal() && this.getManagedBean().isResetAll()){
-				for(ScLoiLoaItem zoneLoiLoaItem:this.getManagedBean().getScLoa().getScLoiLoaItems()){
-					zoneLoiLoaItem.setLoaSpecJustification(null);
-					if(this.getManagedBean().getScLoa().isBrandNew()){
-						zoneLoiLoaItem.setScLoa(null);
-					}
+				for(ScLoiLoaItem ZoneLoiLoaItem:this.getManagedBean().getScLoa().getScLoiLoaItems()){
+					ZoneLoiLoaItem.setLoaSpecJustification(null);
 				}
 				reqDTO.setScLoiLoaItemList(this.getManagedBean().getScLoa().getScLoiLoaItems());
 				AwardSupplierResDTO resDTOLatest  = getQtAwardSO().saveZoneItemListForResetAll(reqDTO);
@@ -10255,7 +10243,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						break;
 					}
 				}
-				reqDTO = new AwardSupplierReqDTO();
 			}
 			ScLoiLoaItem  scLoiLoaItem  = this.getManagedBean().getScLoiLoaItem();
 			AwardSupplierReqDTO reqDTOLatest=new AwardSupplierReqDTO();
@@ -11166,7 +11153,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	private boolean validateNewBond(ScLoa scLoa) {
 		if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
 	         for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-	             if (null != report && QTConstants.SURAT_SETUJU_TERIMA.equals(report.getTitle())) {
+	             if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
 	                 if (report.getScLoaReportAttachment() != null) {
 	                	 RequestContext.getCurrentInstance().execute("bondChangesAlertDlg.show()");
 	                	 return false;
