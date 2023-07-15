@@ -9,39 +9,38 @@
 		<table border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.supplier.code']}" /></td>
-				<c:if test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 0}">
-					<td style="font-size: 12px;">:
-					#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}</td>
-				</c:if>
-				<c:if test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 1}">
-					<c:if test="#{evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification}">
+				<!-- 25138,34876 -start- -->
+				<c:choose>
+					<c:when
+						test="evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 1
+					and evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification">
 						<td style="font-size: 12px;">:
-						#{evaluationBackingBean.managedBean.supplierNo}</td>
-					</c:if>
-					<c:if test="#{evaluationBackingBean.managedBean.evaluationCheckListType != ParameterConst.documentDefinitionTypeTemplateSpecification}">
+							#{evaluationBackingBean.managedBean.supplierNo}</td>
+					</c:when>
+					<c:otherwise>
 						<td style="font-size: 12px;">:
-						#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}</td>
-					</c:if>
-				</c:if>		
-				
+							#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}</td>
+					</c:otherwise>
+				</c:choose>
+				<!-- 25138,34876 -end- -->
 			</tr>
 			<tr>
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.spec.checklist.title']}" /></td>
-				<c:if test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 0}">
-					<td style="font-size: 12px;">:
-					#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}</td>
-				</c:if>
-				<c:if test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 1}">
-					<c:if test="#{evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification}">
+				<!-- 25138,34876 -start- -->
+				<c:choose>
+					<c:when
+						test="evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 1
+					and evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification">
 						<td style="font-size: 12px;">:
-						#{lbl['lbl.sc.eva.all.template']}</td>
-					</c:if>
-					<c:if test="#{evaluationBackingBean.managedBean.evaluationCheckListType != ParameterConst.documentDefinitionTypeTemplateSpecification}">
+							#{lbl['lbl.sc.eva.all.template']}</td>
+					</c:when>
+					<c:otherwise>
 						<td style="font-size: 12px;">:
-						#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}</td>
-					</c:if>
-				</c:if>				
+							#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}</td>
+					</c:otherwise>
+				</c:choose>
+				<!-- 25138,34876 -end- -->
 			</tr>
 		</table>
 	</div>
