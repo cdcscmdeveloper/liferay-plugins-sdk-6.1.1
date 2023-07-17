@@ -299,4 +299,6 @@ public interface QTConstants {
 	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
 	// #33831, #21695, #25138 - End
 	
+	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR"; // #28784
+
 }
