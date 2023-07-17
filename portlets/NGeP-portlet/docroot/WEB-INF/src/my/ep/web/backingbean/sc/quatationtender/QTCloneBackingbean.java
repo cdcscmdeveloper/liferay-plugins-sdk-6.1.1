@@ -163,6 +163,11 @@ public class QTCloneBackingbean extends
 	 * test only
 	 */
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger
 			.getLogger(QTCloneBackingbean.class);
@@ -554,18 +559,20 @@ public class QTCloneBackingbean extends
 		}
 	}
 	
+	/*
+	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 START	 * 
+	 */
 	public Long[] getStatuses(Long fromStatusId,Long toStatusId){
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
-		orderedStatuses = orderedStatuses.subList(
-				orderedStatuses.indexOf(fromStatusId), 
-				orderedStatuses.indexOf(toStatusId)+1);
-		Long[] ret = new Long[orderedStatuses.size()];
-	    for (int i=0; i < ret.length; i++)
-	    {
-	        ret[i] = orderedStatuses.get(i).longValue();
-	    }
+	    int startIndex = orderedStatuses.indexOf(fromStatusId);
+	    int endIndex = orderedStatuses.indexOf(toStatusId) + 1;
+	    List<Long> subList = orderedStatuses.subList(startIndex, endIndex);
+	    Long[] ret = subList.toArray(new Long[subList.size()]);
 	    return ret;
 	}
+	/*
+	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 END	 * 
+	 */
 
 	public void cloneCommitteePopupAction() {
 		debugLogger("cloneCommitteePopupAction");
@@ -893,7 +900,7 @@ public class QTCloneBackingbean extends
 					}//31350-End
 					retrieveBrief(copyScqt);
 					retrievePublishing(copyScqt);
-					retrieveDeductionPaymentTabDtl(scQt,copyScqt,QtDetailsSO);
+					retrieveDeductionPaymentTabDtl(scQt,copyScqt);// 17/7/2023 Shafful -  Sonarqube QT Bug Minor Danial
 					retrieveDocs(copyScqt);
 					retrievePublicationApprovalTabDtl(copyScqt);
 					retriveFulfilmentDtls(copyScqt);//33916
@@ -1526,7 +1533,7 @@ public class QTCloneBackingbean extends
 				}
 				this.getManagedBean().setToBeRemovalContactPersonList(listDel);
 			}
-			if (qtContactPersons != null || !qtContactPersons.isEmpty()) {
+			if (qtContactPersons != null && !qtContactPersons.isEmpty()) {
 				List<ScQtContactPerson> persons=new ArrayList<ScQtContactPerson>();
 				PmUser user = new FacesScopes().getUserSessionBean();
 //				ScQtContactPerson contactPerson = new ScQtContactPerson();
@@ -2074,6 +2081,10 @@ public class QTCloneBackingbean extends
 		//25635 & 34502 - Start
 		List<TabBean> tabBeans = new ArrayList<TabBean>();
 		List<ScQtApproval> otherapprovals=new ArrayList<>();//25635 & 34502 
+		this.getManagedBean().setScQtApprovalReqAttachementICT(null);//34502&25635-start
+		this.getManagedBean().setScQtAppRequestRemarkICT(StringUtils.EMPTY);// #25077
+		this. getManagedBean().setPmParam(null);
+		scQt.setCloneEnabled(Boolean.FALSE);//34502&25635-End
 		//25635 & 34502 - End
 		if(null!=requiredApproval && CollectionUtils.isNotEmpty(requiredApproval)){//25635-start
 		for(ScQtApproval approval:requiredApproval){
@@ -2086,8 +2097,10 @@ public class QTCloneBackingbean extends
 				
 			}else if(ParameterConst.APPROVAL_CATEGORY_OTHERS
 					.equalsIgnoreCase(approval.getApprovalCategory()
-							.getParameterCode())){//25635 & 34502 
+							.getParameterCode())){//25635 & 34502
+				if(CollectionUtils.isEmpty(otherapprovals)){//25635 & 34502 
 				otherapprovals.add(approval);
+				}//25635 & 34502
 				
 			}//25635 & 34502 
 		}
@@ -2235,6 +2248,8 @@ public class QTCloneBackingbean extends
 		//25635 & 34502 - Start
 		for(ScQtApproval copyOthersApproval:otherapprovals){
 			ScQtApproval newOthersApproval= null;
+			scQt.setCloneEnabled(Boolean.TRUE);//34502&25635-end
+			this.getManagedBean().setApproverTabLoaded(Boolean.TRUE);//34502&25635-end
 			 if(!scQt.isBrandNew()){
 				if(null!=scQt.getScQtApprovals() && CollectionUtils.isNotEmpty(scQt.getScQtApprovals())){
 					for(ScQtApproval approval:scQt.getScQtApprovals()){
@@ -2268,6 +2283,7 @@ public class QTCloneBackingbean extends
 							req.setApproverAction(new PmParameter());
 							if(null!=approvalRequest.getApproverAction()){//34502&25635&43-start
 							req.setApproverAction(approvalRequest.getApproverAction());//25635 & 34502
+							this. getManagedBean().setPmParam(req.getApproverAction());//34502&25635
 							}//34502&25635&43-End
 							req.setApprovalRequestAttachement(null);//25635 & 34502
 							ScQtApprovalReqAttachement approvalReqAttachement = 	req.getApprovalRequestAttachement();//25635 & 34502
@@ -2280,6 +2296,7 @@ public class QTCloneBackingbean extends
 								if(null!=approvalRequest.getApprovalRequestAttachement()){//34502&25635&43-start
 								uploadAttachment(approvalReqAttachement,approvalRequest.getApprovalRequestAttachement());
 								req.setApprovalRequestAttachement(approvalReqAttachement);//25635 & 34502
+								this.getManagedBean().setScQtApprovalReqAttachementICT(req.getApprovalRequestAttachement());//34502&25635
 								}//34502&25635&43-End
 							} catch (IOException e) {
 								SLAUtils.getInstance().logSLAError("QT", "ICTAPProvalATTAchemnt", "docNo", "ICTAPProvalATTAchemntClone", getUserIdSessionFromLoginId(), e);
@@ -2289,6 +2306,7 @@ public class QTCloneBackingbean extends
 							req.setAppRequestRemark(approvalRemark);
 							if(null!=approvalRequest.getAppRequestRemark()){//34502&25635&43-start
 							req.getAppRequestRemark().setRemark(approvalRequest.getAppRequestRemark().getRemark());//25635 & 34502
+							this.getManagedBean().setScQtAppRequestRemarkICT(req.getAppRequestRemark().getRemark());//34502&25635 & //#25077
 							}//34502&25635&43-End
 							req.setScQtApproval(newOthersApproval);
 							approverRequest.add(req);
@@ -2416,29 +2434,24 @@ public class QTCloneBackingbean extends
 		//25635 & 34502 - End
 		
 		scQt.setScQtApprovals(newApprovals);
-		this.getManagedBean().setFlagFileAttahmentDeletedICT(Boolean.TRUE);//34502&25635-start
-		this.getManagedBean().setScQtApprovalReqAttachementICT(null);
-		this.getManagedBean().setScQtAppRequestRemark(StringUtils.EMPTY);
-		this. getManagedBean().setPmParam(null);
-		scQt.setCloneEnabled(Boolean.TRUE);//34502&25635-end
 		
 		
-		
+			
 		return scQt;
 	}
 	
-	public void retrieveDeductionPaymentTabDtl(ScQt scQt,ScQt copyScqt,IQTDetailSO detailSO) {
+	public void retrieveDeductionPaymentTabDtl(ScQt scQt,ScQt copyScqt) {
 		
 		
 		debugLogger("retrieveDeductionPaymentTabDtl");
 	//	if (this.getManagedBean().getScQtDeductionList() == null || this.getManagedBean().getScQtDeductionList().isEmpty()) {
 			
 			try {
-				detailSO = BusinessDelegate.getInstance().getServiceObject(
+				IQTDetailSO detailSO2 = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(copyScqt.getQtId());
-				QuationTenderResDTO resDTO = detailSO
+				QuationTenderResDTO resDTO = detailSO2
 						.retriveQTDeductionPaymentDetails(reqDTO);
 				List<ScQtDeduction> copyList = resDTO
 						.getDeductionResultBean().getResultList();
@@ -2472,7 +2485,7 @@ public class QTCloneBackingbean extends
 				
 				
 				reqDTO.setQtId(scQt.getQtId());
-				resDTO = detailSO
+				resDTO = detailSO2
 						.retriveQTDeductionPaymentDetails(reqDTO);
 				List<ScQtDeduction> toDelete =resDTO
 				.getDeductionResultBean().getResultList();
@@ -2494,8 +2507,9 @@ public class QTCloneBackingbean extends
 				 * setScQtDeductionClauses
 				 * (deductionList.get(0).getScQtDeductionClauses()); }
 				 */
-			} finally {
-				detailSO = null;
+			} catch(Exception e){ //@13/7/2023 : Shafful Sonarqube Bug Minor Danial #8 Remove finally and change to catch
+				SLAUtils.getInstance().logSLAError("QT", "QTCloneBackingBean", scQt.getQtNo(),
+						"retrieveDeductionPaymentTabDtl", getUserIdSessionFromLoginId(), e);
 			}
 		//}
 	}
@@ -2930,7 +2944,7 @@ public class QTCloneBackingbean extends
 				if (fcSecretaries != null && fcSecretaries.length > 0) {
 					fcSecretaryCode = retrieveParameterById(Long
 							.valueOf(fcSecretaries[0].getValue().toString()));
-					;
+					
 				} else {
 					fcSecretaryCode = null;
 				}
@@ -4840,7 +4854,7 @@ public class QTCloneBackingbean extends
 				if (fcSecretaries != null && fcSecretaries.length > 0) {
 					fcSecretaryCode = retrieveParameterById(Long
 							.valueOf(fcSecretaries[0].getValue().toString()));
-					;
+					
 				} else {
 					fcSecretaryCode = null;
 				}

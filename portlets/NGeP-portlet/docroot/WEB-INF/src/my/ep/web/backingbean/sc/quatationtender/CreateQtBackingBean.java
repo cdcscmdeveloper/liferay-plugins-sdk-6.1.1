@@ -280,6 +280,38 @@ public class CreateQtBackingBean extends
 			scQt.setPanel(true);
 			this.getManagedBean().setPanel(true);
 		}
+		
+		//9019 Start - (Harun) #Note-501
+		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
+
+			for (ScQtRemark qtRemark : qtRemarks) {
+				qtRemark.setEditable(true);
+			}
+			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+
+		} else{
+			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+		}
+		
+		if (null == this.getManagedBean().getQt().getProcurementTypeCatId()) {
+			this.getManagedBean().getQt().setProcurementTypeCatId(new PmParameter());
+			this.getManagedBean().getQt().getProcurementTypeCatId().setParameterId((long) 0);
+		}
+		if (null == this.getManagedBean().getQt().getFulfilmentType()) {
+			this.getManagedBean().getQt().setFulfilmentType(new PmParameter());
+			this.getManagedBean().getQt().getFulfilmentType().setParameterId((long) 0);
+		}
+		if (null == this.getManagedBean().getQt().getPmProcurementCategory()) {
+			this.getManagedBean().getQt().setPmProcurementCategory(new PmParameter());
+			this.getManagedBean().getQt().getPmProcurementCategory().setParameterId((long) 0);
+		}
+		if (null == this.getManagedBean().getQt().getContractType()) {
+			this.getManagedBean().getQt().setContractType(new PmParameter());
+			this.getManagedBean().getQt().getContractType().setParameterId((long) 0);
+		}
+		//9019 End
 
 	}
 	
@@ -463,14 +495,17 @@ public class CreateQtBackingBean extends
 		return ministrySpecApprovers;
 	}
 	
-	//20210615@asyrafahaziq - Bug #30891 - Start
+	//20210615@asyrafahaziq - Bug #30891 - Start //Reopen #25726 - note 110 issue 3
 	public void ContractPeriodChange() {
 		try {			
 		if (null != this.getManagedBean().getLoginRoleType()
 					&& !"".equals(this.getManagedBean().getLoginRoleType())
 					&& "SC".equalsIgnoreCase(this.getManagedBean()
 							.getLoginRoleType())) {
-		 if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())){	
+		 if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) ||
+				 ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) ||
+				 ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) ||
+				 ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())){	
 			
 			 Long currentStatus = this.getManagedBean().getQt().getQtStatus()
 					.getStatusId();
@@ -1364,7 +1399,7 @@ public class CreateQtBackingBean extends
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.PROCUREMENT_CATEGORY);
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				if (paramDesc.getPmParameter().getParameterId()
-						.equals(Long.valueOf(type))) {
+						.equals(type)) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 
 					this.getManagedBean().setProcuremntCategory(
 							paramDesc.getPmParameter().getParameterCode());
@@ -1393,7 +1428,7 @@ public class CreateQtBackingBean extends
 				//Start Reopen 9019 #note-289 remove the alert message while save
 				if(null != type){
 					if (paramDesc.getPmParameter().getParameterId()
-							.equals(Long.valueOf(type))) {   
+							.equals(type)) {   //20230711@Asyrafhaziq-SQUBE Bug Minor #16
                 
 						this.getManagedBean().setFulfilmentType(
 								paramDesc.getPmParameter().getParameterCode());
@@ -2756,6 +2791,7 @@ public class CreateQtBackingBean extends
 	 * @return navigate to busineess owner menu pages.
 	 */
 	public void panelConformationDelete() {
+		Locale locale = new FacesScopes().getUserLocale();//9019 #Note-501
 		setDataNull();
 		ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean().getQt()
 				.getScQtSupplierCriteria();
@@ -2770,6 +2806,31 @@ public class CreateQtBackingBean extends
 		deleteDeliveryAdreesZoneDetails(getManagedBean().getQt());
 			}
 		}
+		
+		//9019 Start - (Harun) #Note-501
+		if (StringUtils.isBlank(getManagedBean().getQt().getQtTitle())) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.title", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
+		}
+		
+		boolean emptyRemarksExist = false;
+		if (null != this.getManagedBean().getQt().getScQtRemarks()
+				&& CollectionUtils.isNotEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			for (int i = 0; i < this.getManagedBean().getQt().getScQtRemarks().size(); i++) {
+				String userRemark = this.getManagedBean().getQt().getScQtRemarks().get(i).getRemark();
+				if (null == userRemark || "".equals(userRemark)) {
+					emptyRemarksExist = true;
+				} else {
+					emptyRemarksExist = false;
+				}
+			}
+
+			if (emptyRemarksExist) {
+				this.getManagedBean().getQt().setScQtRemarks(null);
+			}
+		}
+		//9019 End  
+		
 		removespecDtls();
 		
 		ScQt scQt = this.getManagedBean().getQt();
@@ -2791,6 +2852,38 @@ public class CreateQtBackingBean extends
 				scQt.setItemGroup(new CtPanelItemGroup());
 			}
 		}
+		//9019 Start - (Harun) #Note-501
+		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
+
+			for (ScQtRemark qtRemark : qtRemarks) {
+				qtRemark.setEditable(true);
+			}
+			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+
+		} else{
+			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+		}
+	
+		if (null == this.getManagedBean().getQt().getProcurementTypeCatId()) {
+			this.getManagedBean().getQt().setProcurementTypeCatId(new PmParameter());
+			this.getManagedBean().getQt().getProcurementTypeCatId().setParameterId((long) 0);
+		}
+		if (null == this.getManagedBean().getQt().getFulfilmentType()) {
+			this.getManagedBean().getQt().setFulfilmentType(new PmParameter());
+			this.getManagedBean().getQt().getFulfilmentType().setParameterId((long) 0);
+		}
+		if (null == this.getManagedBean().getQt().getPmProcurementCategory()) {
+			this.getManagedBean().getQt().setPmProcurementCategory(new PmParameter());
+			this.getManagedBean().getQt().getPmProcurementCategory().setParameterId((long) 0);
+		}
+		if (null == this.getManagedBean().getQt().getContractType()) {
+			this.getManagedBean().getQt().setContractType(new PmParameter());
+			this.getManagedBean().getQt().getContractType().setParameterId((long) 0);
+		}
+		//9019 - End (Harun)
+		
 		RequestContext.getCurrentInstance().execute("panelApprovalDlgs.hide()");
 	}
 	
@@ -3432,12 +3525,21 @@ public class CreateQtBackingBean extends
 
 	}
 	
-	public void otherAppValueChanged(ValueChangeEvent event) {
+	//#25077 - Start 
+	public void otherAppValueChangedICT(ValueChangeEvent event) {
 		
 		if (null != event.getNewValue()) {
-			getManagedBean().setScQtAppRequestRemark(event.getNewValue().toString());
+			getManagedBean().setScQtAppRequestRemarkICT(event.getNewValue().toString());
 		}
 	}//bug #30435 - end
+	
+    public void otherAppValueChangedMITI(ValueChangeEvent event) {
+		
+		if (null != event.getNewValue()) {
+			getManagedBean().setScQtAppRequestRemarkMITI(event.getNewValue().toString());
+		}
+	}//bug #30435 - end
+    //#25077 - End
 	
 	/**
 	 * To remove the non bumi suppliers as open for Bumi for Restricted tender
@@ -3925,32 +4027,27 @@ public class CreateQtBackingBean extends
 				.getScQtCheckSt2techProposal();
 
 		if (null == st2technicalproposalList) {
-			st2technicalproposalList = new ArrayList<ScQtCheckList>();
+			st2technicalproposalList = new ArrayList<>();
 
 		}
-		if(type == true){
+		if(type){
 			this.getManagedBean().getQt().setPartial(Boolean.FALSE);	
 		}else{
-			if (getManagedBean().getMarkDeletedTechChecklist() == null) {
-				getManagedBean().setMarkDeletedTechChecklist(
-						new ArrayList<ScQtCheckList>());
+			List<ScQtCheckList> deltechnicalproposalList =	getManagedBean().getMarkDeletedTechChecklist();
+			if (deltechnicalproposalList == null) {
+				deltechnicalproposalList= new ArrayList<>();
 			}
-		//	List<ScQtCheckList> qtTechncialcheckList= this.getManagedBean().getScQtCheckSt2techProposal();
-			/*if(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION
-				.equals(this.getManagedBean().getCurrentStatusId()) || QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION
-				==this.getManagedBean().getCurrentStatusId()){//11104-start
-				log.info("=========sampleRevisioncodesexecuted=========");*/
 			if(null==st2technicalproposalList || CollectionUtils.isEmpty(st2technicalproposalList)){//11104-start
 				SpecificationBackingBean spBB=new SpecificationBackingBean();
 				spBB.retriveTechnicalCheckList();
 				st2technicalproposalList= this.getManagedBean().getScQtCheckSt2techProposal();
 			}//11104-End
-			//}//11104-End
 			if(CollectionUtils.isNotEmpty(st2technicalproposalList)){
 				for(ScQtCheckList checklist:st2technicalproposalList){
 					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist
 							.getDefinationType().getParameterCode())) {
-						getManagedBean().getMarkDeletedTechChecklist().add(checklist);
+						deltechnicalproposalList.add(checklist);
+						getManagedBean().setMarkDeletedTechChecklist(deltechnicalproposalList);
 						st2technicalproposalList.remove(checklist);
 						break;
 					}
@@ -3962,16 +4059,14 @@ public class CreateQtBackingBean extends
 	 * check portlet is specpreparation or not
 	 */
 	public boolean isSpecScreen() {
-		boolean screen=QTConstants.PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
-		return screen;
+		return QTConstants.PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	/***
 	 * 11104
 	 * check portlet is specmaintennace or not
 	 */
 	public boolean isSpecEndorsmentScreen() {
-		boolean screen=QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())|| QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
-		return screen;
+		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())|| QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());	
 	}
 //#11104-end
 	
@@ -4142,6 +4237,13 @@ public class CreateQtBackingBean extends
 			
 		}
 		//#29521 - end
+		
+	//9019 Start - (Harun) #Note-501	
+	public void updateRemarks(ScQt scQt) {
+		this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+		
+	}
+	//9019 End	
 }
 
 

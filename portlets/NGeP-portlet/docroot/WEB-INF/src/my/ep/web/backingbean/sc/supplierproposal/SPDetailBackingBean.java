@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.DecimalFormat;
@@ -42,7 +41,6 @@ import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
@@ -64,8 +62,6 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
@@ -97,7 +93,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
-import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPAssetLiability;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
@@ -121,7 +116,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
-import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecSuppAnswer;
@@ -690,7 +684,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		// initialized proposalSO outside of try to prevent nullpointerexception in catch clause
 		// removed finally clause as it is not needed
 		IQTProposalSO proposalSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);;
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 		ProposalReqDTO reqDTO = null;
 		try {
 //			proposalSO = BusinessDelegate.getInstance().getServiceObject(

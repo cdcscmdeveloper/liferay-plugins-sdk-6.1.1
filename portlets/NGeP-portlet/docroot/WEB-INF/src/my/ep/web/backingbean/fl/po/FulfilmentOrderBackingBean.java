@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import javax.faces.application.FacesMessage;
@@ -32,17 +31,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
@@ -82,7 +70,6 @@ import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
-import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.jaxb.fl.fc.FLFactoringRemoveReqType;
@@ -98,16 +85,12 @@ import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.entity.fl.yep.FlYepTasklist;
-import my.ep.persistence.entity.fl.yep.FlYepTasklist_;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
-import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.AddressType;
@@ -132,6 +115,17 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.vo.DisciplinaryActionVO;
+
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean for Fulfillment Order.
@@ -1424,6 +1418,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			validateFulfillmentOrder(outcome);
 			//28377 - uncomment function
 			setTextBeforeSign(outcome);
+			log.info("#34686: Original Data: "+getManagedBean().getTextBeforeSign()); //#34686 log for original_data
 			//28377 - end uncomment function
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -1463,6 +1458,12 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						getManagedBean().getFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getFulfilmentOrder().getDocNo(), 
 						getManagedBean().getTextBeforeSign());					
 			}
+			//#34686 start
+			if(getManagedBean().getPmDigiSign().getOriginalData().isEmpty()) {
+				setTextBeforeSign(getManagedBean().getButtonAction());
+				getManagedBean().getPmDigiSign().setOriginalData(getManagedBean().getTextBeforeSign());
+			}
+			//#34686 end
 		}
 		return fulfillmentOrderAction(getManagedBean().getButtonAction());
 	}
@@ -1843,7 +1844,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 								e.getMessage()));
 			}
 
-			getManagedBean().setDocStatusList(items); ;
+			getManagedBean().setDocStatusList(items);
 		}
 
 		/**

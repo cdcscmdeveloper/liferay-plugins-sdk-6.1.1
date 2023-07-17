@@ -89,8 +89,10 @@ public class SupplierManagementConst {
 	public static final String DEFAULT_ACK_PAGE = "/xhtml/shared/acknowledge.xhtml";
 	public static final int NEW_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
 	public static final int NEW_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
-	public static final int BUMI_APPL_NORMCAT_REVIEW_MAXCOUNT = 7;
-	public static final int BUMI_APPL_SPLCAT_REVIEW_MAXCOUNT = 12;
+	//#31043 start
+	public static final int BUMI_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
+	public static final int BUMI_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
+	//#31043 end
 	public static final int UPDATE_MOF_APPL_REVIEW_MAXCOUNT = 13;
 	public static final int RENEW_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
 	public static final int RENEW_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
@@ -1420,4 +1422,25 @@ public class SupplierManagementConst {
 	public String getIDENTIFICATION_TYPE_PASSPORT() {
 		return IDENTIFICATION_TYPE_PASSPORT;
 	}
+	// #28175 Reopen Start
+	public long getPmStatusRegistrationStatusBumiputera() {
+		return PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA;
+	}
+
+	public long getPmStatusRegistrationStatusRegistered() {
+		return PM_STATUS_REGISTRATION_STATUS_REGISTERED;
+	}
+
+	public long getPmStatusRegistrationStatusBumiFromHome() {
+		return PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME;
+	}
+
+	public long getPmStatusRegistrationStatusNonBumiFromHome() {
+		return PM_STATUS_REGISTRATION_STATUS_NON_BUMI_FROM_HOME;
+	} 
+
+	public long getPmStatusRegistrationStatusForeign() {
+		return PM_STATUS_REGISTRATION_STATUS_FOREIGN;
+	}
+	// #28175 Reopen End
 }
