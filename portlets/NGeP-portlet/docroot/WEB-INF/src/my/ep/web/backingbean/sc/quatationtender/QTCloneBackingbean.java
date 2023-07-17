@@ -900,7 +900,7 @@ public class QTCloneBackingbean extends
 					}//31350-End
 					retrieveBrief(copyScqt);
 					retrievePublishing(copyScqt);
-					retrieveDeductionPaymentTabDtl(scQt,copyScqt,QtDetailsSO);
+					retrieveDeductionPaymentTabDtl(scQt,copyScqt);// 17/7/2023 Shafful -  Sonarqube QT Bug Minor Danial
 					retrieveDocs(copyScqt);
 					retrievePublicationApprovalTabDtl(copyScqt);
 					retriveFulfilmentDtls(copyScqt);//33916
@@ -2440,18 +2440,18 @@ public class QTCloneBackingbean extends
 		return scQt;
 	}
 	
-	public void retrieveDeductionPaymentTabDtl(ScQt scQt,ScQt copyScqt,IQTDetailSO detailSO) {
+	public void retrieveDeductionPaymentTabDtl(ScQt scQt,ScQt copyScqt) {
 		
 		
 		debugLogger("retrieveDeductionPaymentTabDtl");
 	//	if (this.getManagedBean().getScQtDeductionList() == null || this.getManagedBean().getScQtDeductionList().isEmpty()) {
 			
 			try {
-				detailSO = BusinessDelegate.getInstance().getServiceObject(
+				IQTDetailSO detailSO2 = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(copyScqt.getQtId());
-				QuationTenderResDTO resDTO = detailSO
+				QuationTenderResDTO resDTO = detailSO2
 						.retriveQTDeductionPaymentDetails(reqDTO);
 				List<ScQtDeduction> copyList = resDTO
 						.getDeductionResultBean().getResultList();
@@ -2485,7 +2485,7 @@ public class QTCloneBackingbean extends
 				
 				
 				reqDTO.setQtId(scQt.getQtId());
-				resDTO = detailSO
+				resDTO = detailSO2
 						.retriveQTDeductionPaymentDetails(reqDTO);
 				List<ScQtDeduction> toDelete =resDTO
 				.getDeductionResultBean().getResultList();
