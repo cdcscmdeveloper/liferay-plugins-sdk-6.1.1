@@ -585,7 +585,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String demoScore;
 	private BigDecimal otherScore;
 	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
-	private boolean demoWip;//#28784 WIP @idham
+	private boolean demoWip; // WIP @idham
 	// #28784 - end
 
 	/** The total technical package max score. */
@@ -4245,7 +4245,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setOtherScore(BigDecimal otherScore) {
 		this.otherScore = otherScore;
 	}
-	// #28784 - end
 
 	public boolean isDemoWip() {
 		return demoWip;
@@ -4254,4 +4253,5 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setDemoWip(boolean demoWip) {
 		this.demoWip = demoWip;
 	}
+	// #28784 - end
 }

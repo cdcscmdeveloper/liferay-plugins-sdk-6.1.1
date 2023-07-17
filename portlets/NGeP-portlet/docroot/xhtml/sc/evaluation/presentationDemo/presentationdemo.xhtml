@@ -10,10 +10,15 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<!-- #28784 - start -->
-	<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.technical.presentation.demo.presentation.demo.instruction']}" escape="false"
-		rendered="#{!evaluationBackingBean.managedBean.demoWip}" /><ui:remove>#28784 WIP @idham</ui:remove>
+	<ui:remove>#28784 WIP @idham -start-</ui:remove>
+	<h:outputText styleClass="instruction"
+		value="#{lbl['lbl.sc.eva.technical.presentation.demo.presentation.demo.instruction']}"
+		escape="false"
+		rendered="#{!evaluationBackingBean.managedBean.demoWip}" />
+	<ui:remove>#28784 WIP @idham -end-</ui:remove>
 	<p:spacer height="15px" />
-	
+	<!-- #28784 - end -->
+
 	<p:panel
 		id="evaluationPresentationDemoTechnicalQualifiedSupplierListDatatableIds"
 		header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
@@ -27,7 +32,7 @@
 
 			<p:ajax event="page"
 				listener="#{evaluationBackingBean.savePresentationDemoDtls}"
-				update="demoSupplierId" /><ui:remove>#28784 uncommented, used for WIP</ui:remove>
+				update="demoSupplierId" />
 			<ui:remove> <!-- 6906 - start --> </ui:remove>
 			<ui:param name="isRejected" value="#{not empty demoSupplier.scQtProposal.supplierRejectionRemark}" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="width:20%; text-align:center;">
@@ -43,16 +48,22 @@
 								supplierCode="#{demoSupplier.scQtProposal.supplierNo}" /></td>
 					</tr>
 				</table>
-				<h:outputText value="#{evaluationBackingBean.retrieveDemoSupplierNo(demoSupplier.scQtProposal.supplierNo)}"
-					rendered="#{!evaluationBackingBean.managedBean.demoWip}"></h:outputText><ui:remove>#28784 WIP @idham</ui:remove>
+				<ui:remove>#28784 WIP @idham -start-</ui:remove>
+				<h:outputText
+					value="#{evaluationBackingBean.retrieveDemoSupplierNo(demoSupplier.scQtProposal.supplierNo)}"
+					rendered="#{!evaluationBackingBean.managedBean.demoWip}"></h:outputText>
+				<ui:remove>#28784 WIP @idham -end-</ui:remove>
 			</p:column> 
 			<ui:remove> <!-- 6906 - end --> </ui:remove>
+			<!-- 28784 -start- -->
+			<ui:remove>#28784 WIP @idham -start-</ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
 				style="width:30%; text-align:center;"
-				rendered="#{!evaluationBackingBean.managedBean.demoWip}"><ui:remove>#28784 WIP @idham</ui:remove>
+				rendered="#{!evaluationBackingBean.managedBean.demoWip}">
+				<ui:remove>#28784 WIP @idham -end-</ui:remove>
 				<p:inputText value="#{demoSupplier.totalUserScore}"
-					style="text-align:right" maxlength="18"
-					disabled="true">
+					style="text-align:right" maxlength="18" disabled="true">
+					<!-- 28784 -end- -->
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 						maxIntegerDigits="14" integerOnly="true" />
@@ -84,18 +95,26 @@
 					value="/#{evaluationBackingBean.managedBean.userScores}" />
 			</p:column>
 
+			<ui:remove>#28784 WIP @idham -start-</ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:30%"
-			rendered="#{evaluationBackingBean.managedBean.demoWip}"><ui:remove>#28784 WIP @idham</ui:remove>
-				<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" onmouseout="limitTextArea(this,200);" value="#{demoSupplier.remark}">
+				rendered="#{evaluationBackingBean.managedBean.demoWip}">
+				<ui:remove>#28784 WIP @idham -end-</ui:remove>
+				<p:inputTextarea rows="2" cols="40" maxlength="200"
+					onkeyup="limitTextArea(this,200);"
+					onkeydown="limitTextArea(this,200);"
+					onmouseout="limitTextArea(this,200);"
+					value="#{demoSupplier.remark}">
 					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 				</p:inputTextarea>
 			</p:column>
-			<ui:remove>#28784 WIP @idham - End</ui:remove>
 
+			<!-- #28784 -start- -->
+			<ui:remove>#28784 WIP @idham -start-</ui:remove>
 			<p:column
 				headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.file.attachment']}"
 				style="width:35%; text-align:center;"
-				rendered="#{!evaluationBackingBean.managedBean.demoWip}"><ui:remove>#28784 WIP @idham</ui:remove>
+				rendered="#{!evaluationBackingBean.managedBean.demoWip}">
+				<ui:remove>#28784 WIP @idham -end-</ui:remove>
 				<h:panelGroup id="demoSupplierAttach">
 					<ac:scSingleFileUploadButton id="attachedIdsDemoDtl"
 						popupWidgetVar="demoSupplierAttachDlg"
@@ -103,24 +122,32 @@
 						deleteFileUploadListener="evaluationBackingBean.deleteProposalDemoUploadFile"
 						readonly="#{evaluationBackingBean.managedBean.readOnly}">
 						<f:setPropertyActionListener for="actionEvent"
-								value="#{evaluationBackingBean.retrieveDemoSupplier(demoSupplier.scQtProposal.supplierNo)}"
-								target="#{evaluationBackingBean.managedBean.scQtDemoSupplier}" />
-						</ac:scSingleFileUploadButton>
+							value="#{evaluationBackingBean.retrieveDemoSupplier(demoSupplier.scQtProposal.supplierNo)}"
+							target="#{evaluationBackingBean.managedBean.scQtDemoSupplier}" />
+					</ac:scSingleFileUploadButton>
 				</h:panelGroup>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.txt.action']}" style="width:25%; text-align:center;"
-			rendered="#{!evaluationBackingBean.managedBean.demoWip}"><ui:remove>#28784 WIP @idham</ui:remove>
+			<ui:remove>#28784 WIP @idham -start-</ui:remove>
+			<p:column headerText="#{lbl['lbl.txt.action']}"
+				style="width:25%; text-align:center;"
+				rendered="#{!evaluationBackingBean.managedBean.demoWip}">
+				<ui:remove>#28784 WIP @idham -end-</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 					rendered="#{demoSupplier.totalUserScore == null and !evaluationBackingBean.managedBean.readOnly}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.presentationDemoScoring(demoSupplier.scQtProposal.supplierNo, demoSupplier)}" disabled="#{isRejected}"/><ui:remove>6906, add disabled</ui:remove>
-					
-						<p:commandButton value="#{lbl['lbl.btn.view']}"
+					action="#{evaluationBackingBean.presentationDemoScoring(demoSupplier.scQtProposal.supplierNo, demoSupplier)}"
+					disabled="#{isRejected}" />
+				<ui:remove>6906, add disabled</ui:remove>
+
+				<p:commandButton value="#{lbl['lbl.btn.view']}"
 					rendered="#{demoSupplier.totalUserScore != null or evaluationBackingBean.managedBean.readOnly}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.presentationDemoScoring(demoSupplier.scQtProposal.supplierNo, demoSupplier)}" disabled="#{isRejected}"/><ui:remove>6906, add disabled</ui:remove>
+					action="#{evaluationBackingBean.presentationDemoScoring(demoSupplier.scQtProposal.supplierNo, demoSupplier)}"
+					disabled="#{isRejected}" />
+				<ui:remove>6906, add disabled</ui:remove>
 			</p:column>
+			<!-- #28784 -end- -->
 		</p:dataTable>
 	</p:panel>
 
@@ -135,9 +162,13 @@
 
 
 				<td class="TableFieldLeft">
-				<h:outputText value="* " styleClass="mandatory" /><p:outputLabel
-						value="#{lbl['lbl.sc.eva.technical.presentation.demo.attached.file']}" /></td>
-				<td class="TableFieldRight"><!-- #28784 - end -->
+					<!-- #28784 -start- --> 
+					<h:outputText value="* "
+						styleClass="mandatory" /> <p:outputLabel
+						value="#{lbl['lbl.sc.eva.technical.presentation.demo.attached.file']}" /> 
+					<!-- #28784 - end -->
+				</td>
+				<td class="TableFieldRight">
 				<ac:scSingleFileUploadButton
 						id="attachedIdsDemo"
 						popupWidgetVar="demoChecklistAttachDlg"
