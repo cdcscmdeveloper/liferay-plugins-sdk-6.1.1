@@ -500,9 +500,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * add interviewee to the List
 	 */
 	public void addInterviewee(){
-		//#34166 - Start
-		checkRepresentative();
-		//#34266 - End
 		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
 		
 		SmSvInterviewee interviewee = new SmSvInterviewee();
@@ -3383,7 +3380,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		String Designation = ResourceBundleUtils.getMessage("lbl.sm.userprofile.designation",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		
 		if(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees() != null){
-			ResourceBundleUtils.getMessage("lbl.sm.mof.reg.reason.delete",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+			
+			if(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().isEmpty()){
+				String representatives = ResourceBundleUtils.getMessage("lbl.sm.companyinfo.intvw.represent",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+				throw new EpException(MessageConst.ERROR_775192, new String[] { representatives });
+			}
 			
 			for(SmSvInterviewee person : getManagedBean().getSelectedSvTemplate().getSmSvInterviewees()){
 				if(person.getName() == null || person.getName().isEmpty()){

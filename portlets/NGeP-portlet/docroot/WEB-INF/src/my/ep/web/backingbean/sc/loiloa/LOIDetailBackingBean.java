@@ -429,7 +429,7 @@ public class LOIDetailBackingBean extends
 						new FacesScopes().getUserLocale());
 		getManagedBean().setLoiSupplierProposalspec(message);
 					ScLoi scLoi = getManagedBean().getScLoi();
-					Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
+					Long statusId =Long.valueOf(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId());//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 						
 					List<ScLoiTerm> scNegoTerms = scLoi.getScNegoTerms();
 					if(null == scNegoTerms) {
@@ -1805,8 +1805,7 @@ public class LOIDetailBackingBean extends
 		debugLogger("addNegotiationTerm");
 		ScLoi scLoi = getManagedBean().getScLoi();
 		
-		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()
-				.longValue();
+		Long statusId = Long.valueOf(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId());//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 		
 		List<ScLoiTerm> scNegoTerms = scLoi
 				.getScNegoTerms();
@@ -2077,9 +2076,7 @@ public class LOIDetailBackingBean extends
 		// #26247 - #33073 - End.
 		getManagedBean().setScLoi(scLoi);
 		ScWorkFlowStatus currentStatus = scLoi.getScWorkFlowStatus();
-		Long statusId = currentStatus.getPmStatus().getStatusId()
-				.longValue();
-
+		Long statusId = Long.valueOf(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId());//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 		// online bidding
 		if (scLoi.getRecommendBy() != null) {
 			PmParameter recommendedBy = scLoi.getRecommendBy();
@@ -2833,9 +2830,7 @@ public class LOIDetailBackingBean extends
 					.getPayLoad();
 
 			ScLoi scLoi = this.getManagedBean().getScLoi();
-			Long statusId = scLoi.getScWorkFlowStatus().getPmStatus()
-					.getStatusId().longValue();
-
+			Long statusId = Long.valueOf(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId());//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 			parseLOIDetails(scLoi, outcome);
 			
 			// remove empty remark - start
@@ -4042,8 +4037,7 @@ public class LOIDetailBackingBean extends
 		// validate
 		validateLOIDetails(scLoi, outcome);
 		
-		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()
-				.longValue();
+		Long statusId = Long.valueOf(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 
 		if (scLoi.isApprovalReq()
 				&& QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId)) {
@@ -4118,8 +4112,8 @@ public class LOIDetailBackingBean extends
 	 * @param outcome the outcome
 	 */
 	private void validateLOIDetails(ScLoi scLoi, String outcome) {
-		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
-
+		Long statusId = Long.valueOf(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
+		
 		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && (QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId)
 				|| QTStatusConst.LOI_PENDING_REVISION.equals(statusId))) {
 
@@ -6547,8 +6541,7 @@ public class LOIDetailBackingBean extends
 		if(CollectionUtils.isNotEmpty(scLoiLoa.getScLois())){
 			ScLoi scLoi =  scLoiLoa.getScLois().get(0);
 			if(scLoi.getScWorkFlowStatus() != null){
-				Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()
-						.longValue();
+				Long statusId = Long.valueOf(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId());//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				
 				if(QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) ||
 						QTStatusConst.LOI_PENDING_APPROVAL.equals(statusId)){
@@ -6727,8 +6720,8 @@ public class LOIDetailBackingBean extends
 	public void addSuppliersProposalSpecificationUpdate() {
 		debugLogger("addSuppliersProposalSpecificationUpdate");
 		ScLoi scLoi = getManagedBean().getScLoi();
-		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
-			
+		Long statusId = Long.valueOf(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId());//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+		
 		List<ScLoiTerm> scNegoTerms = scLoi.getScNegoTerms();
 		if(null == scNegoTerms) {
 			scNegoTerms = new ArrayList<ScLoiTerm>();

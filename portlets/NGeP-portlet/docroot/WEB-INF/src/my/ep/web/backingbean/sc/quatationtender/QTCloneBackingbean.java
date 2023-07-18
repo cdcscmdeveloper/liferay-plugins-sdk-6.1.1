@@ -559,18 +559,20 @@ public class QTCloneBackingbean extends
 		}
 	}
 	
+	/*
+	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 START	 * 
+	 */
 	public Long[] getStatuses(Long fromStatusId,Long toStatusId){
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
-		orderedStatuses = orderedStatuses.subList(
-				orderedStatuses.indexOf(fromStatusId), 
-				orderedStatuses.indexOf(toStatusId)+1);
-		Long[] ret = new Long[orderedStatuses.size()];
-	    for (int i=0; i < ret.length; i++)
-	    {
-	        ret[i] = orderedStatuses.get(i).longValue();
-	    }
+	    int startIndex = orderedStatuses.indexOf(fromStatusId);
+	    int endIndex = orderedStatuses.indexOf(toStatusId) + 1;
+	    List<Long> subList = orderedStatuses.subList(startIndex, endIndex);
+	    Long[] ret = subList.toArray(new Long[subList.size()]);
 	    return ret;
 	}
+	/*
+	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 END	 * 
+	 */
 
 	public void cloneCommitteePopupAction() {
 		debugLogger("cloneCommitteePopupAction");
@@ -898,7 +900,7 @@ public class QTCloneBackingbean extends
 					}//31350-End
 					retrieveBrief(copyScqt);
 					retrievePublishing(copyScqt);
-					retrieveDeductionPaymentTabDtl(scQt,copyScqt,QtDetailsSO);
+					retrieveDeductionPaymentTabDtl(scQt,copyScqt);// 17/7/2023 Shafful -  Sonarqube QT Bug Minor Danial
 					retrieveDocs(copyScqt);
 					retrievePublicationApprovalTabDtl(copyScqt);
 					retriveFulfilmentDtls(copyScqt);//33916
@@ -2438,18 +2440,18 @@ public class QTCloneBackingbean extends
 		return scQt;
 	}
 	
-	public void retrieveDeductionPaymentTabDtl(ScQt scQt,ScQt copyScqt,IQTDetailSO detailSO) {
+	public void retrieveDeductionPaymentTabDtl(ScQt scQt,ScQt copyScqt) {
 		
 		
 		debugLogger("retrieveDeductionPaymentTabDtl");
 	//	if (this.getManagedBean().getScQtDeductionList() == null || this.getManagedBean().getScQtDeductionList().isEmpty()) {
 			
 			try {
-				detailSO = BusinessDelegate.getInstance().getServiceObject(
+				IQTDetailSO detailSO2 = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(copyScqt.getQtId());
-				QuationTenderResDTO resDTO = detailSO
+				QuationTenderResDTO resDTO = detailSO2
 						.retriveQTDeductionPaymentDetails(reqDTO);
 				List<ScQtDeduction> copyList = resDTO
 						.getDeductionResultBean().getResultList();
@@ -2483,7 +2485,7 @@ public class QTCloneBackingbean extends
 				
 				
 				reqDTO.setQtId(scQt.getQtId());
-				resDTO = detailSO
+				resDTO = detailSO2
 						.retriveQTDeductionPaymentDetails(reqDTO);
 				List<ScQtDeduction> toDelete =resDTO
 				.getDeductionResultBean().getResultList();
@@ -2505,8 +2507,9 @@ public class QTCloneBackingbean extends
 				 * setScQtDeductionClauses
 				 * (deductionList.get(0).getScQtDeductionClauses()); }
 				 */
-			} finally {
-				detailSO = null;
+			} catch(Exception e){ //@13/7/2023 : Shafful Sonarqube Bug Minor Danial #8 Remove finally and change to catch
+				SLAUtils.getInstance().logSLAError("QT", "QTCloneBackingBean", scQt.getQtNo(),
+						"retrieveDeductionPaymentTabDtl", getUserIdSessionFromLoginId(), e);
 			}
 		//}
 	}

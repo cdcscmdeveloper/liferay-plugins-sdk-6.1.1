@@ -2114,7 +2114,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 							ScQtProgressivePayment payment = new ScQtProgressivePayment();
 							payment.setStartYear(String.valueOf(year));
 							payment.setEndYear(String.valueOf(year));
-							payment.setPhaseNo(BigDecimal.valueOf(i + 1));
+							payment.setPhaseNo(BigDecimal.valueOf((long)i + 1));
 							payment.setScLoa(scLoa);
 							setUserDetails(payment);
 							progressivePayList.add(payment);
