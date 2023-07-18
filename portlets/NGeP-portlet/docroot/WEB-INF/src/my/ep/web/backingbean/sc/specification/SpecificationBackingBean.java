@@ -907,7 +907,7 @@ public class SpecificationBackingBean extends
 		
 		List<ScQtCheckList> financialCheckList = this.getManagedBean()
 				.getScQtCheckSt2financeProposalList();
-		HashMap<Integer, Integer> totalGroupId = new HashMap<Integer, Integer>() ; // 31658
+		HashMap<Integer, Integer> totalGroupId = new HashMap<>() ; // 31658//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 		if (null == financialCheckList || financialCheckList.isEmpty()) {
 			retriveFinancialCheckList();
 		}

@@ -1736,7 +1736,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	// Bug #31759 - Start
 	public void checkApprovalAndRefreshDetails (Long qtId, String taskName, ScQtApproval approval){
 
-    	List<String> paramTypes = new ArrayList<String>();
+    	List<String> paramTypes = new ArrayList<>();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
     	List<ScQtApprovalRequest> approvalRequests = this
 				.getManagedBean().getScQtApprovalRequestList();
 		
