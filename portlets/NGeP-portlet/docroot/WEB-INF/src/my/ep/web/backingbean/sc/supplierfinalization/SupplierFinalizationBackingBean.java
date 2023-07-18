@@ -429,6 +429,7 @@ public class SupplierFinalizationBackingBean extends
 			ScQt scQt = resDTO.getScQt();
 			populateParentOrgProfile(scQt);
 			getManagedBean().setScQt(scQt);
+			evaluateWIP(scQt);//34865,34866,34867 - 29021 WIP
 			getManagedBean().setOriginalFinalizationSecretaryUserId(
 						scQt.getFinalizationSecratery().getUserId());
 
@@ -1368,23 +1369,6 @@ public class SupplierFinalizationBackingBean extends
 				}
 				reqDTO = validateInfo(2);
 			}
-			
-			if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
-				scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
-			}
-		
-				// #18685 - Start
-				resetUnSavedReportContent(this.getManagedBean().getNewBriefingPaperReportList());
-				if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
-					scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
-				}
-				if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
-						&& CollectionUtils.isNotEmpty(getManagedBean().getConsolidationBriefingPaperReportList())) {
-					getManagedBean().getNewBriefingPaperReportList().addAll(
-							getManagedBean().getConsolidationBriefingPaperReportList());
-				}
-				reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
-				// #18685-End
 
 			validateFinalizationReports(reqDTO, skipValidation);//25037 note31
 			//saveEvaluationReportsDetaills();
@@ -1419,6 +1403,35 @@ public class SupplierFinalizationBackingBean extends
 					}
 				}
 			}
+			// #28834 - Start
+			else{
+				
+				String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
+				
+				if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode)
+						|| ParameterConst.DECISION_RE_PUBLISH.equals(decisionTypeCode)
+						|| ParameterConst.DECISION_RE_EVALUATION.equals(decisionTypeCode)) {
+					this.getManagedBean().setFinalizationMethod(null);
+				}
+				
+				if (this.getManagedBean().getFinalizationMethod() != null
+						&& (this.getManagedBean().getFinalizationMethod().equals(ParameterConst.RECOMMEND_BY_AWARD) || this
+								.getManagedBean().getFinalizationMethod()
+								.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD))
+						&& !getManagedBean().isDisableJustifications()) {
+
+					if (this.getManagedBean().getJustification() != null
+							&& this.getManagedBean().getJustification().getReasonId() == null) {
+						navigateToEndorsementReportTab();
+
+						throw new EpException(MessageConst.ERROR_100061, new String[] { ResourceBundleUtils.getMessage(
+								"lbl.sc.sf.justification.selection", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()) });
+					}
+				}
+
+			}
+			// #28834 - End
 						
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				reqDTO.setDeletedMeetingsList(
@@ -1431,6 +1444,19 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setInitialDecisionFwdHighAuth(
 					getManagedBean().isInitialDecisionFwdHighAuth());
 			reqDTO.setRefinalize(isQTRefinalized());
+		
+			// #18685 - Start
+			resetUnSavedReportContent(this.getManagedBean().getNewBriefingPaperReportList());
+			if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
+				scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
+			}
+			if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
+					&& CollectionUtils.isNotEmpty(getManagedBean().getConsolidationBriefingPaperReportList())) {
+				getManagedBean().getNewBriefingPaperReportList().addAll(
+						getManagedBean().getConsolidationBriefingPaperReportList());
+			}
+			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
+			// #18685-End
 	
 			saveAndReloadFinalizationDetails(qtSuppFinalizationSO, reqDTO);
 			prepareUpdateCommitteeMember(); // #25037
@@ -8947,7 +8973,13 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			if(method.equalsIgnoreCase("L")){
 				return act.isMultiLoiSignedOff();
 			}else if(method.equalsIgnoreCase("B")){
-				return act.isBiddingSignedOff();
+				// 33764, 34760 note-18 issue no. 2 -start-
+				if (getManagedBean().getQtRefinalized()) {
+					return act.isSignedOff();
+				} else {
+					return act.isBiddingSignedOff();
+				}
+				// 33764, 34760 note-18 issue no. 2 -end-
 			}else{
 				return act.isSignedOff();
 			}
