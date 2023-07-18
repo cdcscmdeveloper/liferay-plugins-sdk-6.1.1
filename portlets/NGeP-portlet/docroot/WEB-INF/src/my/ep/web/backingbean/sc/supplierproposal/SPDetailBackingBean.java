@@ -1435,7 +1435,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					BigDecimal totalPrice = tplHelper.calculateTotalAmount(
 							answer.getTplSpecQuestion(),
 							answer.getRatePerUom(), quantity);	
-					if (totalPrice != null && totalPrice.compareTo(compareTotalAmount) == 1) {
+					if (totalPrice != null && totalPrice.compareTo(compareTotalAmount) > 0) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 						throw new EpException(MessageConst.ERROR_760437);
 					}
 					//20200701@asyrafhaziq - Bug #28464 - End
