@@ -6883,17 +6883,17 @@ public class LOIDetailBackingBean extends
 	 */
 	public void validateNegoDecisionAction(String bpmAction) {
 		try {
-			PmParameter decision = this.getManagedBean().getDecision();
+			String decision = String.valueOf(this.getManagedBean().getDecision().getParameterId());
 			String justification = this.getManagedBean().getJustification();
 
 			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(bpmAction)) {
 				if (decision == null) {
 					throw new EpException(MessageConst.ERROR_775192);
-				} else if (decision.getParameterId().equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
+				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
 					throw new EpException(MessageConst.ERROR_775193);
-				} else if (decision.getParameterId().equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
+				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
 					RequestContext.getCurrentInstance().execute("submitNegoConfirmPopUp.show()");
-				} else if (decision.getParameterId().equals(ParameterConst.REACHED_AGREEMENT)) {
+				} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
 					updateBpmTaskAction(bpmAction);
 				}
 			} else {
