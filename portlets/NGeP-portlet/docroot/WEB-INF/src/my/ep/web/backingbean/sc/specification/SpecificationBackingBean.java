@@ -20545,7 +20545,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			sb.append(quantityTierCompareSb.toString());
 			sb.append(zoneQuantityTierCompareSb.toString());
 			sb.append(priceType);
-			sb.append(StringUtils.deleteWhitespace(question.getClItem().toUpperCase()));
+			sb.append(question.getClItem()); // Bug #34926@Syazani 17/07/2023
 			sb.append(question.getClUom().getUomCode());
 			sb.append(uomFrequency.doubleValue());
 			sb.append(uomPerDay.doubleValue());
@@ -20618,7 +20618,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 						String currentQuestionStr = buildQuestionCompareString(question);
 						String localQuestionStr = buildQuestionCompareString(q);					
 						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM) && !changesFlag.get("itemUpdated")){
-							changesFlag.put("itemUpdated", !currentQuestionStr.equalsIgnoreCase(localQuestionStr));
+							changesFlag.put("itemUpdated", !currentQuestionStr.equals(localQuestionStr)); // Bug #34926@Syazani 17/07/2023
 							//1873 - start - note 52
 							boolean isEdited = checklist.isEdited()==null ? false: checklist.isEdited();//1873 note 149
 							if(changesFlag.get("itemUpdated") && !isEdited){//1873 note 149
@@ -20627,7 +20627,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 							//1873 - end - note 52
 						}
 						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC) && !changesFlag.get("specificationUpdated")){
-							changesFlag.put("specificationUpdated", !currentQuestionStr.equalsIgnoreCase(localQuestionStr));
+							changesFlag.put("specificationUpdated", !currentQuestionStr.equals(localQuestionStr)); // Bug #34926@Syazani 17/07/2023
 						}
 					}
 				}
