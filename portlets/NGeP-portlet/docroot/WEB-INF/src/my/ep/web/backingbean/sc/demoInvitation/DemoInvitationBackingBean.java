@@ -164,7 +164,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 			String committeeType = ((SCEvaluationDataType) evaluationDataType).getCommitteeType();
 			Long qtId = evaluationDataType.getQtId().longValue();
-			retrieveQuotationTenderDetails(new Long(qtId), committeeType);
+			retrieveQuotationTenderDetails(qtId, committeeType);
 			//retrieveDemoDetailsData();
 
 			this.getManagedBean().setReadOnly(false);
