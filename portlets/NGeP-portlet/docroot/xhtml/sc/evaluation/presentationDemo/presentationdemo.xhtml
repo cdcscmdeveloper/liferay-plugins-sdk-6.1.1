@@ -103,7 +103,8 @@
 					onkeyup="limitTextArea(this,200);"
 					onkeydown="limitTextArea(this,200);"
 					onmouseout="limitTextArea(this,200);"
-					value="#{demoSupplier.remark}">
+					value="#{demoSupplier.remark}"
+					disabled="#{evaluationBackingBean.managedBean.readOnly}">
 					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 				</p:inputTextarea>
 			</p:column>
