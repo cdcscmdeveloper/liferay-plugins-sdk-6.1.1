@@ -18824,7 +18824,9 @@ if (null != checklist && !checklist.isEmpty()) {
 			} catch (IOException e) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-				e.printStackTrace();
+				//e.printStackTrace();
+					SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", "docNo", "handleFileUploadExport", getUserIdSessionFromLoginId(), e);
+			
 			}
 
 		} else {
@@ -18900,7 +18902,9 @@ if (null != checklist && !checklist.isEmpty()) {
 			} catch (IOException e) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-				e.printStackTrace();
+				//e.printStackTrace();
+				SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", "docNo", "handleFileUploadExport", getUserIdSessionFromLoginId(), e);
+				
 			}
 
 		}
@@ -19814,7 +19818,9 @@ if (null != checklist && !checklist.isEmpty()) {
 			}catch(Exception e){
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-				e.printStackTrace();
+				//e.printStackTrace();
+				SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", "docNo", "reloadFileImport", getUserIdSessionFromLoginId(), e);
+				
 			}
 		}
 		//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
@@ -19822,7 +19828,9 @@ if (null != checklist && !checklist.isEmpty()) {
 		} catch (IOException e) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-			e.printStackTrace();
+			//e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", "docNo", "reloadFileImport", getUserIdSessionFromLoginId(), e);
+			
 		}
 		log.info("handleFileUploadExport - END");
 		return "/xhtml/sc/boSctemplatespec/technicalCommitteeTemplate.xhtml?faces-redirect=true";
