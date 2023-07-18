@@ -3941,7 +3941,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			MathContext mc = new MathContext(4);
 
 			//Start Bug #26498
-			if (totalCredit != null && totalCredit.compareTo(BigDecimal.ZERO) == 1){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			if (totalCredit != null && totalCredit.compareTo(BigDecimal.ZERO) > 0){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 //20230718@shafful - SQUBE BUG MINOR G17
 				percentagePaid = totalPaid.divide(totalCredit, mc).multiply(
 						BigDecimal.valueOf(100));
 			}
