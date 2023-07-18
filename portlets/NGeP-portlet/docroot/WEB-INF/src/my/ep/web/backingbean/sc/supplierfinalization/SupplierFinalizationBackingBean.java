@@ -8845,6 +8845,7 @@ public class SupplierFinalizationBackingBean extends
 											    	.getScQtRecommendsByZone().get(zoneId);									
 									}
 									calculateBidPrice(items, recommendationBean);
+									qualSupplier.setBidPrice(recommendationBean.getBidPrice());//34760
 								}
 							}
 						}						
