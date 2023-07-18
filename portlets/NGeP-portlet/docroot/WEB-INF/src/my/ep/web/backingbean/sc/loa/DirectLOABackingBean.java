@@ -9451,17 +9451,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		StringBuilder sb = new StringBuilder();
 		ScLoa scLoa = getManagedBean().getScLoa();
 		//Bug #30698
-		Long MinistryOrgProfileId = retrieveMinistryOrgProfile(scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId()).getOrgProfileId();
+		//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+		Long ministryOrgProfileId = retrieveMinistryOrgProfile(scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId()).getOrgProfileId();
 		sb.append("pmUserOrgs.pmUserRoles.pmRole.roleCode^");
 		sb.append(RoleCode.CONTRACT_SIGNER.value());
 		sb.append("^9");
 		//Bug #30698
-		 if (null != MinistryOrgProfileId) {
+		 if (null != ministryOrgProfileId) {
 			 sb.append(SourcingConstants.LOV_FIELD_SEPARATOR);
 			 sb.append("pmUserOrgs.pmOrgProfile.");
 			 sb.append(OrgProfileUtil
 					.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
-					+ SourcingConstants.LOV_CONDITION_SEPARATOR + MinistryOrgProfileId);
+					+ SourcingConstants.LOV_CONDITION_SEPARATOR + ministryOrgProfileId);
 		} 
 		if (scLoa.getLoaAmt() != null) {
 			sb.append("|pmUserOrgs.pmUserRoles.pmRole.isLimitRequired^");

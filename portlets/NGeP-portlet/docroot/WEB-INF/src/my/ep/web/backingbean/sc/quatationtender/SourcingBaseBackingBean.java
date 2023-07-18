@@ -2490,7 +2490,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	
 	// add rule #27502 START
 	public List<PmParameterDesc> getContractTypesForQt(String procurementMode,ScQt scqt) {
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<>();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 		// check logged in user allow central contract for qt.
 		boolean isAllowCentralContract =  isAllowCentralContract();
 		boolean isRuleBpk = false;
@@ -3134,7 +3134,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 				List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
 				
-				if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
+				if (pmOrgProfiles != null && !pmOrgProfiles.isEmpty()) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 					pmOrgProfile = pmOrgProfiles.get(0);
 				}
 

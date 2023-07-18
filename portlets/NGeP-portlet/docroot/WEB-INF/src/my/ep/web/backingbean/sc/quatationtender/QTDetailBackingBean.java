@@ -2060,15 +2060,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//20191127@asyrafhaziq - Bug #26289 - Start
 			else
 			{				
-			Long currentStatus = scQt.getQtStatus().getStatusId();
-			if (isQTStatusGreaterThanOrEqualsScheduleDoc(currentStatus)) {
-
-				if ((null == this.getManagedBean().getZoneTrees() || this.getManagedBean().getZoneTrees().isEmpty()) && scQt.getScQtSupplierCriteria().getScQtLocCriteria() != null) {
+			Long currentStatus = scQt.getQtStatus().getStatusId();	
+				//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+				if (isQTStatusGreaterThanOrEqualsScheduleDoc(currentStatus) && ((null == this.getManagedBean().getZoneTrees() || this.getManagedBean().getZoneTrees().isEmpty()) && scQt.getScQtSupplierCriteria().getScQtLocCriteria() != null)) {
 
 					scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
 
 				}
-			}
 			}
 			//20191127@asyrafhaziq - Bug #26289 - End
 		}
@@ -2457,21 +2455,21 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				.getToBeDelCommitteMemebers());
 		//20210325@asyrafhaziq_30518 - Start
 	    List <ScQtCommittee> scQtCommittees = getQtCommiteDtlsByQtId(scQt.getQtId());
-	    List<ScQtCommittee> toBeRemovedScQtCommittees = new ArrayList<ScQtCommittee>() ;
+	    List<ScQtCommittee> toBeRemovedScQtCommittees = new ArrayList<>() ;//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 		if ( scQtCommittees != null){
 			String evaluationType = this.getManagedBean().getQt()
 					.getEvaluationType();
 			for ( ScQtCommittee scQtCommittee : scQtCommittees){
 				
-					String CommitteeType = scQtCommittee.getScCommittee().getCommitteeType().getParameterCode();
+					String committeeType = scQtCommittee.getScCommittee().getCommitteeType().getParameterCode();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 	
-					if ( ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(CommitteeType) &&  ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(evaluationType)  ){
+					if ( ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(committeeType) &&  ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(evaluationType)  ){
 						toBeRemovedScQtCommittees.add(scQtCommittee);
 						break;
 					}
-					else if ( (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(CommitteeType)|| 
-							ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE .equals(CommitteeType)||
-							ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE .equals(CommitteeType)) && 
+					else if ( (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(committeeType)|| 
+							ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE .equals(committeeType)||
+							ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE .equals(committeeType)) && 
 							ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(evaluationType)){
 						toBeRemovedScQtCommittees.add(scQtCommittee);
 					}	
@@ -3305,15 +3303,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			for ( TabBean committeTab : committeTabs){
 				
 				if ( committeTab.getScQtCommittee() != null ){
-					String CommitteeType = committeTab.getScQtCommittee().getScCommittee().getCommitteeType().getParameterCode();
-					if ( ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(CommitteeType) &&  ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(evaluationType)  ){
+					String committeeType = committeTab.getScQtCommittee().getScCommittee().getCommitteeType().getParameterCode();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+					if ( (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(committeeType) &&  ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(evaluationType)) ||
+						 (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(committeeType) && ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(evaluationType)) ){
 						 committeTabs = null;
 						 break;
 					}
-					else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(CommitteeType) && ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(evaluationType) ){
+					/*else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(committeeType) && ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(evaluationType) ){
 						 committeTabs = null;
 						 break;
-					}	
+					}*/	
 				}
 			}	
 		}  

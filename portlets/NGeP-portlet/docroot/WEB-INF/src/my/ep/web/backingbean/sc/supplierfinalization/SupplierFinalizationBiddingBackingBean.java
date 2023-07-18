@@ -2803,10 +2803,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 			int endorsementReportCount = 0;
 			ScQtFinalizationReport coverReport = null;
 			List<ScQtFinalizationReport> endorsementReports = 
-								new ArrayList<ScQtFinalizationReport>();
+								new ArrayList<>();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 			//#29702					
-			List<ScQtFinalizationReport> inputReport = new ArrayList<ScQtFinalizationReport>();
-					new ArrayList<ScQtFinalizationReport>();
+			List<ScQtFinalizationReport> inputReport = new ArrayList<>();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+					//new ArrayList<ScQtFinalizationReport>();
 			for (ScQtFinalizationReport report : finalizationReports) {
 				String docCategory = report.getDocCategory();
 			   //#29702
@@ -2893,7 +2893,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 											}
 										});
 					
-					if (endorsementReports.size() > 0) {
+					if (!endorsementReports.isEmpty()) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 						endorsementReports.get(endorsementReports.size() - 1)
 										  .setSelected(true);
 					}

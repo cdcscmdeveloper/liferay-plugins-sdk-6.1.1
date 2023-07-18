@@ -1857,7 +1857,7 @@ public class CreateQtBackingBean extends
 				specZoneDtls = convertTreeNodesToZoneCriteria(rootTrees, zoneDtl);
 			}
 			else{
-				specZoneDtls = new  ArrayList<TplSpecZoneDtl>();
+				specZoneDtls = new  ArrayList<>();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 			}
 			 retrieveZoneGeneralTreesPanel(scQt, specZoneDtls);
 			}
@@ -1865,7 +1865,7 @@ public class CreateQtBackingBean extends
 		ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean().getQt()
 				.getScQtSupplierCriteria();
 		if (null != zoneSupplierCriteria
-				&& zoneSupplierCriteria.isBrandNew() == false&& null!=zoneSupplierCriteria.getQtZoneCriterias() && zoneSupplierCriteria.getQtZoneCriterias().isBrandNew()==false) {
+				&& !zoneSupplierCriteria.isBrandNew() && null!=zoneSupplierCriteria.getQtZoneCriterias() && !zoneSupplierCriteria.getQtZoneCriterias().isBrandNew()) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 			if (null != this.getManagedBean().getLoginRoleType()
 					&& !"".equals(this.getManagedBean().getLoginRoleType())
 					&& "SC".equalsIgnoreCase(this.getManagedBean()
@@ -1892,7 +1892,7 @@ public class CreateQtBackingBean extends
 	private List<TreeNode> deleteZonesTreeNodes(List<TreeNode> rootTrees) {
 		
 		TplSpecZoneDtl tplSpecZoneDtl = null;
-		List<TreeNode> removedList = new ArrayList<TreeNode>();
+		List<TreeNode> removedList = new ArrayList<>();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 		if (rootTrees != null) {
 			if (null != this.getManagedBean().getQt()
 					.getScQtSupplierCriteria()
@@ -1930,7 +1930,7 @@ public class CreateQtBackingBean extends
 							}
 						}
 
-						if (zoneTree.getChildren().size() == 0) {
+						if (zoneTree.getChildren().isEmpty()) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 							rootTrees.remove(row--);
 						}
 					}
@@ -2699,7 +2699,7 @@ public class CreateQtBackingBean extends
 					//20200210@asyrafhaziq_Bug #27381&#26694  - Start
 					getManagedBean().setCtPanelZones(resPanelDTO.getCtPanelZones());
 					//20200210@asyrafhaziq_Bug #27381&#26694  - End
-					if (null != getManagedBean().getZoneGeneralTrees() && getManagedBean().getZoneGeneralTrees().size() == 0) {
+					if (null != getManagedBean().getZoneGeneralTrees() && getManagedBean().getZoneGeneralTrees().isEmpty()) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 
 						for (CtPanelZone panelZones : resPanelDTO.getCtPanelZones()) {
 
@@ -2796,7 +2796,8 @@ public class CreateQtBackingBean extends
 		ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean().getQt()
 				.getScQtSupplierCriteria();
 		if (null != zoneSupplierCriteria
-				&& zoneSupplierCriteria.isBrandNew() == false && null!=zoneSupplierCriteria.getQtZoneCriterias() && zoneSupplierCriteria.getQtZoneCriterias().isBrandNew()==false) {
+				//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+				&& !zoneSupplierCriteria.isBrandNew() && null!=zoneSupplierCriteria.getQtZoneCriterias() && !zoneSupplierCriteria.getQtZoneCriterias().isBrandNew()) {
 			if (null != this.getManagedBean().getLoginRoleType()
 					&& !"".equals(this.getManagedBean().getLoginRoleType())
 					&& "SC".equalsIgnoreCase(this.getManagedBean()
@@ -3736,7 +3737,7 @@ public class CreateQtBackingBean extends
 	 public boolean zoneLocationAddBtnDisable(){
 			List<TreeNode> list = getManagedBean().getZoneGeneralTreesPanel();
 			
-			if (CollectionUtils.isEmpty(list) || list == null || list.size() == 0 ) 
+			if (list == null || CollectionUtils.isEmpty(list)) //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 			{
 				return true;
 			}else {
@@ -3793,7 +3794,7 @@ public class CreateQtBackingBean extends
 										break;
 									}
 								}
-								if (isInsert == true ){
+								if (isInsert ){//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 									break;
 								}
 							}
@@ -3802,7 +3803,8 @@ public class CreateQtBackingBean extends
 								break;
 							}	
 						}
-						if (isInsert == true && rootTrees != null){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+
+						if (isInsert && rootTrees != null){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 							if (getManagedBean().getIndex() == -1) {
 								rootTrees.add(node);		
 							}
@@ -3840,7 +3842,7 @@ public class CreateQtBackingBean extends
 								convertTreeNodesToZoneCriteria(rootTrees, zoneDtl));
 				// setting into zones bean to validate zones while adding 
 				if (CollectionUtils.isNotEmpty(zonCriteria.getTplSpecZoneDtls())) {
-					List<ZonesBean> zonBeansList = new ArrayList<ZonesBean>();
+					List<ZonesBean> zonBeansList = new ArrayList<>();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 					for (TplSpecZoneDtl tplSpecZoneDtl : zonCriteria
 							.getTplSpecZoneDtls()) {
 						ZonesBean bean = new ZonesBean();
@@ -3859,7 +3861,7 @@ public class CreateQtBackingBean extends
 					specZoneDtls = convertTreeNodesToZoneCriteria(rootTrees, zoneDtl);
 				}
 				else{
-					specZoneDtls = new  ArrayList<TplSpecZoneDtl>();
+					specZoneDtls = new  ArrayList<>();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				}
 				 retrieveZoneGeneralTreesPanel(scQt, specZoneDtls);
 				}
@@ -3868,7 +3870,7 @@ public class CreateQtBackingBean extends
 			ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean().getQt()
 					.getScQtSupplierCriteria();
 			if (null != zoneSupplierCriteria
-					&& zoneSupplierCriteria.isBrandNew() == false&& null!=zoneSupplierCriteria.getQtZoneCriterias() && zoneSupplierCriteria.getQtZoneCriterias().isBrandNew()==false) {
+					&& !zoneSupplierCriteria.isBrandNew() && null!=zoneSupplierCriteria.getQtZoneCriterias() && !zoneSupplierCriteria.getQtZoneCriterias().isBrandNew()) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				if (null != this.getManagedBean().getLoginRoleType()
 						&& !"".equals(this.getManagedBean().getLoginRoleType())
 						&& "SC".equalsIgnoreCase(this.getManagedBean()
@@ -3894,7 +3896,7 @@ public class CreateQtBackingBean extends
 			ICircularDetailSO circularDetailSO;
 			
 			
-				List<CtPanelZone> ctPanelZones = new ArrayList<CtPanelZone>();
+				List<CtPanelZone> ctPanelZones = new ArrayList<>();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				List<TreeNode> zoneGeneralTreesPanel = getManagedBean().getZoneGeneralTreesPanel();
 				
 				if ( null != getManagedBean().getCtPanelZones()
@@ -3940,7 +3942,7 @@ public class CreateQtBackingBean extends
 				 /*set tree zonal information for panel*/
 				if (isNotNullOREmpty(ctPanelZones)) {
 					if (zoneGeneralTreesPanel == null) {
-						zoneGeneralTreesPanel = new ArrayList<TreeNode>();
+						zoneGeneralTreesPanel = new ArrayList<>();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 						getManagedBean().setZoneGeneralTreesPanel(zoneGeneralTreesPanel);
 					} else {
 						zoneGeneralTreesPanel.clear();	
@@ -3955,7 +3957,7 @@ public class CreateQtBackingBean extends
 									}
 								  }
 								}
-								if (setData == true ){
+								if (setData ){//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 									TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
 									tplSpecZoneDtl.setZoneName(panelZones.getName());
 									tplSpecZoneDtl.setPanelZone(panelZones);
