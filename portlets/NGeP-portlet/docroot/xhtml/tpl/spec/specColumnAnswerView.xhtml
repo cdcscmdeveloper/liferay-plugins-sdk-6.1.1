@@ -178,6 +178,7 @@
 	<!-- Bug #32378 Farid End related to #21695 -->
 	<p:column style="width:100px;white-space:pre-line;"> <!-- 20220920@syazani - Bug #33859 -->
 		<ui:param name="answerRemark" value="#{fn:replace(tplSpecAnswer.answerRemark,',',',  ')}"></ui:param>
-		#{answerRemark}
+		<!-- #{answerRemark} -->
+		<h:outputText style="word-wrap: break-word; " value="#{answerRemark}" /><!-- Bug #34976 Added Vinod -->
 	</p:column>
 </ui:composition>
