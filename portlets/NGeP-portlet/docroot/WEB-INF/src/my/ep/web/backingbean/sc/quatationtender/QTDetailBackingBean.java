@@ -6072,13 +6072,15 @@ public class QTDetailBackingBean extends
 		reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 
 		// - Start (Harun) set Group Item to NULL when save while left blank and panel is selected
-		//9019 - #Note-418
-		if (isPanel && (null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId() || this.getManagedBean()
-				.getQt().getItemGroup().getPanelItemGroupId() == ParameterConst.PM_PARAMETERID_ZERO)) {
+		//9019 Start - #Note-418 and merge with #Note-501 
+		if (null == this.getManagedBean().getQt().getItemGroup()) {
+			this.getManagedBean().getQt().setCircularVer(null);
+		}else if (null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId() || this.getManagedBean()
+				.getQt().getItemGroup().getPanelItemGroupId() == ParameterConst.PM_PARAMETERID_ZERO) {
 			this.getManagedBean().getQt().setItemGroup(null);
 			this.getManagedBean().getQt().setCircularVer(null);
 		}
-		// - End (Harun)
+		//9019 - End (Harun)
 
 		if (activeIndex == 0 || activeIndex == 1 || activeIndex == 2 || activeIndex == 3) {
 			if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
@@ -6102,6 +6104,12 @@ public class QTDetailBackingBean extends
 			reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
 		}
 		//9019 - End (Harun)
+		
+		//9019 Start - (Harun) #Note-501 
+		if(QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())){
+			detailSO.validateQTGeneralInformation(reqDTO);
+		}
+		//9019 End 
 
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
 		switch (changedIndexNumber) {
