@@ -1118,7 +1118,8 @@ public class SupplierFinalizationBackingBean extends
 				}
 
 				// Meeting Attendance Details
-				if (CollectionUtils.isNotEmpty(scQtCommittee
+				//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+				if (scQtCommittee != null && CollectionUtils.isNotEmpty(scQtCommittee
 						.getMeetingAttendances())) {
 					this.getManagedBean().setMeetingAttendanceList(
 							scQtCommittee.getMeetingAttendances());
@@ -1641,7 +1642,9 @@ public class SupplierFinalizationBackingBean extends
 				reqDTO.setDeletedMeetingsList(this.getManagedBean().getDeletedMeetingList());
 				//#27502- Adding condition only
 				if (reqDTO.getScQtCommittee() != null) {
-					scQtCommittee.setQtCommitteRemarks(reqDTO.getScQtCommittee().getQtCommitteRemarks());
+					if (scQtCommittee == null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+						scQtCommittee = new ScQtCommittee();
+					 scQtCommittee.setQtCommitteRemarks(reqDTO.getScQtCommittee().getQtCommitteRemarks());
 					reqDTO.setScQtCommittee(scQtCommittee);
 				}
 			}
@@ -4329,7 +4332,7 @@ return	remarksNotFound;
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
 		ScQtFinalizationReport scQtReport = null;
 		ScQtFinalizationReportAttachment attachment = null;
-		if (CollectionUtils.isNotEmpty(briefingPaperList)
+		if (briefingPaperList != null && CollectionUtils.isNotEmpty(briefingPaperList) //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 				&& briefingPaperList.size() > 0) {
 			for (int i = 0; i < briefingPaperList.size(); i++) {
 				scQtReport = briefingPaperList.get(i);
@@ -4360,7 +4363,7 @@ return	remarksNotFound;
 			}
 		}
 		
-		if (CollectionUtils.isNotEmpty(decisionPaperList)
+		if (decisionPaperList != null && CollectionUtils.isNotEmpty(decisionPaperList)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 				&& decisionPaperList.size() > 0) {
 			for (ScQtFinalizationReport finalizationReport : decisionPaperList) {
 				attachment = finalizationReport.getScQtFinalizationReportAttachment();
@@ -4405,7 +4408,7 @@ return	remarksNotFound;
 				  briefingPaperList.add(report);
 			  }
 		}
-		if (CollectionUtils.isNotEmpty(briefingPaperList) && briefingPaperList.size() > 0) {
+		if (briefingPaperList != null && CollectionUtils.isNotEmpty(briefingPaperList)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
           ScQtFinalizationReport latestScQtFinalizationReport = briefingPaperList.get(briefingPaperList.size() -1);
           if (null != latestScQtFinalizationReport && latestScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
             latestBriefingPaper = true;
@@ -4909,6 +4912,10 @@ return	remarksNotFound;
 			}	
 			
 			if (isZonal) {
+				//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+				if (zoneDetailsMap == null) {
+					zoneDetailsMap = new HashMap<TplSpecZoneDtl,FinalizationEndorsementReportDTO>();
+				}
 				for (TplSpecZoneDtl specZone
 							: getManagedBean().getZoneMap().values()) {
 					if (!zoneDetailsMap.containsKey(specZone)) {
@@ -5349,7 +5356,7 @@ return	remarksNotFound;
 			qtSuppFinalizationSO = null;
 		}
 
-		if(CollectionUtils.isNotEmpty(loiLoaItems)){
+		if(loiLoaItems != null && CollectionUtils.isNotEmpty(loiLoaItems)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			
 			Comparator<BaseEntity> compByDateDesc =  new Comparator<BaseEntity>(){
 				@Override
@@ -5644,7 +5651,7 @@ return	remarksNotFound;
 				}
 			}
 		}
-		if(!CollectionUtils.isEmpty(rejectedRecommendDtlIds)){
+		if(rejectedRecommendDtlIds != null && !CollectionUtils.isEmpty(rejectedRecommendDtlIds)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			log.info("getRejectedRecommendDtlIds size is : "+ rejectedRecommendDtlIds.size());
 		}
 		return rejectedRecommendDtlIds;
@@ -6083,7 +6090,7 @@ return	remarksNotFound;
 		Comment for CR:#26169 , BUG:#28682 END  */
 		//#25729#142 End
 		
-		if (CollectionUtils.isNotEmpty(
+		if (excludedDecisionList != null && CollectionUtils.isNotEmpty( //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					excludedDecisionList)) {
 			searchBean = new SearchBean<PmParameterDesc>();
 			searchBean.getDataFilterBeans().add(
@@ -6094,6 +6101,10 @@ return	remarksNotFound;
 		
 		//6906 note 117 - start
 		if(this.getManagedBean().isNoProposalSubmitted()){
+			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			if (excludedDecisionList == null) 
+				excludedDecisionList = new ArrayList<String>();
+			
 			excludedDecisionList.add(
 					ParameterConst.DECISION_RE_EVALUATION);	
 		}
@@ -6294,7 +6305,7 @@ return	remarksNotFound;
 				//Include checking/control for #26169 #38 based on SF Decision, Forward To Higher Authority
 				//#26169 - 25082020 Fix START
 				if(reasonDesc.getPmReason().getReasonCode().equalsIgnoreCase(ParameterConst.FINALIZATION_REASON_CODE_EXCEED_COMMITTEE_AUTHORITY)){
-					if(actualIndicativePrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50MILL)) == 1){
+					if(actualIndicativePrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50MILL)) > 0 ){//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 						//For actualIndicativePrice > RM 50,000,000.00
 						//Enable & Auto Checked radio button option reason 'Awarded Price Exceeded Committee Authority'
 						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",false);
@@ -6319,7 +6330,7 @@ return	remarksNotFound;
 						}						
 					}
 				}else if(reasonDesc.getPmReason().getReasonCode().equalsIgnoreCase(ParameterConst.FINALIZATION_REASON_CODE_UNANIMOUS)){
-					if(actualIndicativePrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50MILL)) == 1){
+					if(actualIndicativePrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50MILL)) > 0){
 						//For actualIndicativePrice > RM 50,000,000.00
 						//Disable option reason for 'The Decision is Unanimous'
 						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",true);
@@ -7524,7 +7535,7 @@ return	remarksNotFound;
 			scQtRecommends = zonalItems.get(currentZoneId);
 		}		
 		
-		if (CollectionUtils.isNotEmpty(scQtRecommends)) {
+		if (scQtRecommends != null && CollectionUtils.isNotEmpty(scQtRecommends)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			if (zonalPackageItemsCancelled) {
 				MapKey mapKey = new MapKey(currentZoneId, DEFAULT_ITEM);
 				List<QtEvaluationResultDtlBean> cachedSuppliers = 
@@ -8831,6 +8842,9 @@ return	remarksNotFound;
 				meetingList.add(scqtMeeting);
 			}
 		} else {
+			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			if (meetingList == null)
+				meetingList =  new ArrayList<ScQtMeeting>();
 			meetingList.add(scqtMeeting);
 		}
 
@@ -9012,6 +9026,7 @@ return	remarksNotFound;
 											    	.getScQtRecommendsByZone().get(zoneId);									
 									}
 									calculateBidPrice(items, recommendationBean);
+									qualSupplier.setBidPrice(recommendationBean.getBidPrice());//34760
 								}
 							}
 						}						
@@ -9129,12 +9144,12 @@ return	remarksNotFound;
 			specZoneId = zoneDtl.getSpecZoneId();
 			items = scQtFinalization.getScQtRecommendsByZone()
 									.get(specZoneId);
-		} else {
+		} else if (scQtFinalization != null && scQtFinalization.getScQtRecommends() != null ){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			specZoneId = DEFAULT_ZONE;
 			items = scQtFinalization.getScQtRecommends();
 		}
 		
-		if (CollectionUtils.isNotEmpty(items)) {			
+		if (items != null && CollectionUtils.isNotEmpty(items)) {	//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 		
 			// to set the recommend details for each item
 			for (ScQtRecommend scQtRecommend : items) {
 				Long itemId = scQtRecommend.getRequestItem().getRequestNoteItemId();
@@ -9798,9 +9813,16 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					}
 				}
 			}
-			ScQtFinalizationReportAttachment reportAttachment 
-					= scQtFinalizationReport.getScQtFinalizationReportAttachment();
-			if(reportAttachment == null){
+			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			ScQtFinalizationReportAttachment reportAttachment  = null;			
+			if (scQtFinalizationReport != null && scQtFinalizationReport.getScQtFinalizationReportAttachment() != null )
+				reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
+			
+			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			if (scQtFinalizationReport == null )
+				scQtFinalizationReport = new ScQtFinalizationReport();
+			
+			if(reportAttachment == null ){
 				reportAttachment = new ScQtFinalizationReportAttachment();
 				reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
 				reportAttachment.setDocNo(getManagedBean().getScQt().getQtNo());
@@ -10320,7 +10342,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 																proposalItem.getFinalPrice(),
 																qtRecommendRequestItem.getOrderQty());
 												log.info("<<== BIDDING PRICE ==>> " + bidPrice);
-												if (bidPrice.compareTo(committeeAuthorityAmount) == 1) {// bidPrice
+												if (bidPrice.compareTo(committeeAuthorityAmount) > 0) {// bidPrice //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 																										// >
 																										// committeeAuthorityAmount
 													countSuppOfferPriceExceedCommitteAuthority++;
@@ -10331,7 +10353,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 																proposalItem.getOfferPrice(),
 																qtRecommendRequestItem.getOrderQty());
 												log.info("<<== OFFER PRICE ==>> " + offeredPrice);
-												if (offeredPrice.compareTo(committeeAuthorityAmount) == 1) {// offerPrice
+												if (offeredPrice.compareTo(committeeAuthorityAmount) > 0) {// offerPrice //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 																											// >
 																											// committeeAuthorityAmount
 													countSuppOfferPriceExceedCommitteAuthority++;
@@ -10374,7 +10396,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 								if (actualTotalIntendedPrice
 										.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50MILL)) < 1) {
 									if (!getManagedBean().isRefinalizedAndBiddingAward()) {
-										if (suppOfferPrice.compareTo(committeeAuthorityAmount) == 1) {
+										if (suppOfferPrice.compareTo(committeeAuthorityAmount) > 0) { //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 											countSuppOfferPriceExceedCommitteAuthority++;
 										}
 									}
@@ -10403,13 +10425,13 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			committeeAuthorityAmount = new BigDecimal(SourcingConstants.QT_BELOW_50K);
 		}
 		//#26169 #38 - Start update condition
-		else if(actualTotalIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50K)) == 1 
+		else if(actualTotalIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50K)) > 0 //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				&& actualTotalIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_500K)) < 1){
 			committeeAuthorityAmount = new BigDecimal(SourcingConstants.QT_BELOW_500K);
-		}else if(actualTotalIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_500K)) == 1 
+		}else if(actualTotalIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_500K)) > 0  //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				&& actualTotalIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_30MILL)) < 1){
 			committeeAuthorityAmount = new BigDecimal(SourcingConstants.QT_BELOW_30MILL);
-		}else if(actualTotalIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_30MILL)) == 1 
+		}else if(actualTotalIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_30MILL)) > 0 //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				&& actualTotalIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50MILL)) < 1){
 			committeeAuthorityAmount = new BigDecimal(SourcingConstants.QT_BELOW_50MILL);
 		}
@@ -10450,7 +10472,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 						scQtFinalization.setDecision(recommendSupplier);
 					}
 				}
-			}else if(actualIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50K)) == 1 &&
+			}else if(actualIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50K)) > 0 &&//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 					actualIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_500K)) < 1){
 				//actualIntendedPrice > 50,000.00 && actualIntendedPrice < 500,000.00
 				if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD) || 
@@ -10458,7 +10480,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)){
 					getManagedBean().setDisableFwdToHighAuthorityOption(true);
 				}
-			}else if(actualIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_500K)) == 1){
+			}else if(actualIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_500K)) > 0){//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				//actualIntendedPrice > 500,000.00
 				if(getManagedBean().isInitialDecisionFwdToBPK()){//If current initialize is BPK_APPROVER
 					getManagedBean().setDisableFwdToHighAuthorityOption(true);
@@ -10522,7 +10544,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 									}
 									
 									if (intendedPrice != null) {
-										if(intendedPrice.compareTo(committeeAuthority) == 1){
+										if(intendedPrice.compareTo(committeeAuthority) > 0){//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 											suppOfferPriceIsExceed = Boolean.TRUE;
 										}
 									}									
@@ -10557,7 +10579,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 											intendedPrice = evalResultDtlBean.getScQtProposalAmount().getProposalAmt();
 										}
 										
-										if(intendedPrice.compareTo(committeeAuthority) == 1){
+										if(intendedPrice.compareTo(committeeAuthority) > 0){
 											suppOfferPriceIsExceed = Boolean.TRUE;
 										}
 										break;
