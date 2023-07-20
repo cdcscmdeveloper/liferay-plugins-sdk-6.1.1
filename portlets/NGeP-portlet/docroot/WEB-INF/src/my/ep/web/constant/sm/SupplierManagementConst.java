@@ -1269,6 +1269,11 @@ public class SupplierManagementConst {
 		return STATUS_REVISE_BM;
 	}
 	// #12483 - END
+
+	public String getSM_APPL_PAGE_TYPE_ANNUALINFO() {
+		return SM_APPL_PAGE_TYPE_ANNUALINFO;
+	}
+	
 	//14530 - START
 	public String getPORTAL_URL() {
 		return PORTAL_URL;
