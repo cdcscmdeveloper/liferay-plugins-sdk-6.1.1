@@ -17855,7 +17855,7 @@ private void retriveCommitteeRemarksList(){
 			evaluationSO = null;
 		}
 	}
-
+	
 	public void downloadAllTechnicallDocumentCompliance() throws Exception {
 		List<ScQtCheckList> list = this.getManagedBean().getComplianceTechnicalCheckList();
 		Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
