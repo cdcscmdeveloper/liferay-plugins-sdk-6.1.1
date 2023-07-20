@@ -88,7 +88,7 @@
 			<ui:remove>
 				<!-- #32334,#29021 -start-->
 			</ui:remove>
-			<ac:toggleRate update="@([id$=questionTbl])" show="#{isSpecTypeTechnical} and !evaluationBackingBean.evaluateWIP(evaluationBackingBean.managedBean.scQt)"
+			<ac:toggleRate update="@([id$=questionTbl])" show="#{isSpecTypeTechnical and !evaluationBackingBean.evaluateWIP(evaluationBackingBean.managedBean.scQt)}"
 				disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.notOfferAll}"
 				value="#{tplSpecAnswer.rating}"
 				tooltip="#{lbl['lbl.sc.tec.rating.tooltip']}" />
@@ -180,7 +180,7 @@
 			</c:if>
 			<p:message id="userScoreMsg" for="userScore" display="icon" />
 				<ui:remove><!--#29021-start--></ui:remove>
-				<ac:toggleRate update="@([id$=questionTbl])" show="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.maxScore ne null  and !evaluationBackingBean.evaluateWIP(evaluationBackingBean.managedBean.scQt)}"
+				<ac:toggleRate update="@([id$=questionTbl])" show="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.maxScore ne null and !evaluationBackingBean.evaluateWIP(evaluationBackingBean.managedBean.scQt)}"
 					disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll}"
 					value="#{tplSpecAnswer.rating}"
 					tooltip="#{lbl['lbl.sc.tec.rating.tooltip']}" />
