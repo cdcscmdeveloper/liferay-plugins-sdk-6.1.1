@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17857,6 +17858,9 @@ private void retriveCommitteeRemarksList(){
 	
 	public void downloadAllTechnicallDocumentCompliance() throws Exception {
 		List<ScQtCheckList> list = this.getManagedBean().getComplianceTechnicalCheckList();
+		Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
+		Long downloadAllDocsTimer = System.currentTimeMillis();
+		log.info("Starting downloadAllTechnicallDocumentCompliance :: " + currentTimeStamp);
 
 		IQTEvaluationSO evaluationSO = null;
 
@@ -17905,6 +17909,8 @@ private void retriveCommitteeRemarksList(){
 			}
 
 			downloadAllFilesWithSpecificFolder("NGEP-Technical-By" + mainFolderTitle, listScAttachment, downloadBy, getEncryptionKey());
+			Long endTimer = System.currentTimeMillis();
+			log.info("Ending downloadAllTechnicallDocumentCompliance :: " + convertMilliToSeconds(endTimer - downloadAllDocsTimer) + " Second(s)");
 		} catch (Exception e) {
 			e.printStackTrace();
 
