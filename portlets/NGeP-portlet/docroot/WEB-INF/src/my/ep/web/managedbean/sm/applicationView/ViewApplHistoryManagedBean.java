@@ -73,6 +73,8 @@ public class ViewApplHistoryManagedBean extends
 	//#29482 - Start
 	private SmPersonnel smPersonnel;
 	//#29482 - End
+	//14530
+	private SmApplInquiry poToSupplierInquiry;
 	
 	private Boolean displayResubmitButton; //#31248
 
@@ -429,6 +431,14 @@ public class ViewApplHistoryManagedBean extends
 		this.smPersonnel = smPersonnel;
 	}
 	//#29482 - End
+		//14530 - START
+	public SmApplInquiry getPoToSupplierInquiry() {
+		return poToSupplierInquiry;
+	}
+	public void setPoToSupplierInquiry(SmApplInquiry poToSupplierInquiry) {
+		this.poToSupplierInquiry = poToSupplierInquiry;
+	}
+	//14530 - END
 	public boolean isEmptyMandatoryDocHistory() {
 		return emptyMandatoryDocHistory;
 	}
