@@ -7574,11 +7574,11 @@ public void saveComplianceSample() {
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale());
 					String addColon = ": ";
-					//34833 - end
 					this.getManagedBean().setEvaluatioStageActiveIndex(0);
 					throw new EpException(MessageConst.ERROR_760266,
 							new String[] { checklist.getTitle()+addColon,
 							checkListValue });
+					//34833 - end
 				}
 			}
 		} finally {
