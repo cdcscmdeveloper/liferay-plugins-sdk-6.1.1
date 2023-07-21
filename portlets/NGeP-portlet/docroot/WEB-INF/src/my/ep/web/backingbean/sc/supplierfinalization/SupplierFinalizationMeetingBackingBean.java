@@ -421,8 +421,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 					}
 				}
 			} else {
-				List<ScCommitteeMember> commMembers = scCommittee.getScCommitteeMembers();
-				if (CollectionUtils.isNotEmpty(commMembers)) {
+				List<ScCommitteeMember> commMembers = scCommittee != null ? scCommittee.getScCommitteeMembers():null;//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+				if (commMembers != null && CollectionUtils.isNotEmpty(commMembers)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					for (ScCommitteeMember member : commMembers) {
 						PmParameter memberRole = member.getMemberRole();
 						if (member.getRepresentativeType() == null && 
@@ -459,7 +459,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			List<ScQtMeeting> meetingList = getManagedBean().getScQtMeetings();
 			if (null == meetingList) {
 				getManagedBean().setScQtMeetings(new ArrayList<ScQtMeeting>());
-			}
+			}else{//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			
 			ScQtMeeting meeting = new ScQtMeeting();
 			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
@@ -469,6 +469,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			meeting.setRecordStatusFlg(1);
 			meetingList.add(meeting);
 			this.getManagedBean().setScQtMeetings(meetingList);
+			}//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			
 		} finally{
 			
@@ -2008,6 +2009,9 @@ if (CollectionUtils.isNotEmpty(
 				meetingList.add(scqtMeeting);
 			}
 		} else {
+			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			if (meetingList == null)
+				meetingList = new ArrayList<ScQtMeeting>();
 			meetingList.add(scqtMeeting);
 		}
 
