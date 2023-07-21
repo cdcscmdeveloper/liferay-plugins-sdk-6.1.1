@@ -112,6 +112,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
+//#12471
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 /**
  * The Class EvaluationMeetingBackingBean.
@@ -420,16 +422,20 @@ public class EvaluationMeetingBackingBean extends
 						ParameterTypeConst.SC_COMMITTEE_TYPE,
 						this.getManagedBean().getCommitteeType()));
 
-		getManagedBean().setName(null);
-		getManagedBean().setIdentificationType(null);
-		getManagedBean().setIdentificationNo(null);
+		// #12471 Start
+		getManagedBean().setOrgCatPTJ(QTConstants.ORG_CATEGORY_PTJ);
+		getManagedBean().setOrgCatOther(QTConstants.ORG_CATEGORY_OTHERS);
+		getManagedBean().setOrgCat(getManagedBean().getOrgCatPTJ());
+		reset();
+		// #12471 End
 		getManagedBean().setSelectedPmUser(null);
 		this.getManagedBean().setCommitteMember(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
 		committeeMember.setUserSelection("E");
 		this.getManagedBean().setCommitteMember(committeeMember);
-		this.getManagedBean().setNameRequired(true);
+		// #12471
+		this.getManagedBean().setNameRequired(false);
 		this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 		getSelectionTypes();
 		searchExistingUser.resetData();
@@ -955,6 +961,11 @@ public class EvaluationMeetingBackingBean extends
 	 * committee members list.
 	 */
 	public void existingCommitteeSearchAction() {
+		// #12471 Start
+		if (this.getManagedBean().getName().isEmpty() && this.getManagedBean().getIdentificationNo().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_775300);
+		}
+		// #12471 End
 		searchExistingUser.reloadData();
 
 	}
@@ -1037,6 +1048,30 @@ public class EvaluationMeetingBackingBean extends
 	 * Reset.Event handle to reset the values in add popup.
 	 */
 	public void reset() {
+		// #12471 Start
+		if (this.getManagedBean().getOrgCat().equalsIgnoreCase(this.getManagedBean().getOrgCatPTJ())) {
+			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setOrgProfileId(this.getManagedBean().getQt().getOrgProfileId());
+			OrgProfileResDTO resDTO = null;
+			resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+			this.getManagedBean().setMinistry(resDTO.getPmOrgProfile().getOrgProfileId().toString());
+			buildMinistryDD();
+			resDTO = orgProfileSO.retrieveJabatanByOrgProfileId(reqDTO);
+			this.getManagedBean().setPtjGroup(resDTO.getPmOrgProfile().getOrgProfileId().toString());
+			buildPtjGroupDD();
+			this.getManagedBean().setPtj(this.getManagedBean().getQt().getOrgProfileId().toString());
+			buildPtjDD();
+			this.getManagedBean().setOrgType(null);
+			this.getManagedBean().setOrgName(null);
+		} else if (this.getManagedBean().getOrgCat().equalsIgnoreCase(this.getManagedBean().getOrgCatOther())) {
+			this.getManagedBean().setOrgType(QTConstants.ORG_CAT_TYPE_OTHER_ID.toString());
+			buildOrgTypeDD();
+			this.getManagedBean().setOrgName(QTConstants.ORG_CAT_NAME_EXTERNAL_PARTIES_ID.toString());
+			buildOrgNameDD();
+		}
+		// #12471 End
 		this.getManagedBean().setName(null);
 		this.getManagedBean().setIdentificationType(null);
 		this.getManagedBean().setIdentificationNo(null);
@@ -1582,6 +1617,49 @@ public class EvaluationMeetingBackingBean extends
 									getManagedBean().getIdentificationType(),
 									true));
 				}
+				// #12471 Start
+				if (getManagedBean().getOrgCat().equalsIgnoreCase(getManagedBean().getOrgCatPTJ())) {
+					String ministry = getManagedBean().getMinistry();
+					log.info("ministry: " + ministry);
+					if (!StringUtils.isBlank(ministry)) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("pmUserOrgs.pmOrgProfile."
+										+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+										SearchOperator.OPERATOR_EQUALS.value(), ministry, true));
+					}
+					String ptjGroup = getManagedBean().getPtjGroup();
+					if (!StringUtils.isBlank(ptjGroup)) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(
+										"pmUserOrgs.pmOrgProfile."
+												+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT
+														.value()), SearchOperator.OPERATOR_EQUALS.value(), ptjGroup,
+										true));
+					}
+					String ptj = getManagedBean().getPtj();
+					if (!StringUtils.isBlank(ptj)) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("pmUserOrgs.pmOrgProfile."
+										+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DIVISION.value()),
+										SearchOperator.OPERATOR_EQUALS.value(), ptj, true));
+					}
+				} else if (getManagedBean().getOrgCat().equalsIgnoreCase(getManagedBean().getOrgCatOther())) {
+					String orgType = getManagedBean().getOrgType();
+					if (!StringUtils.isBlank(orgType)) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgTypeCode.parameterId"
+										+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.OTHERS.value()),
+										SearchOperator.OPERATOR_EQUALS.value(), orgType, true));
+					}
+					String orgName = getManagedBean().getOrgName();
+					if (!StringUtils.isBlank(orgName)) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId"
+										+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.SUPPORT.value()),
+										SearchOperator.OPERATOR_EQUALS.value(), orgName, true));
+					}
+				}
+				// #12471 End
 				
 				committeReqDTO.setUserSearchBean(searchBean);
 				committeReqDTO.setPtjMinistryAdmin(Boolean.TRUE);
@@ -2301,5 +2379,212 @@ public class EvaluationMeetingBackingBean extends
 		return !StringUtils.join(previousListArr, ",").equalsIgnoreCase(StringUtils.join(currentListArr, ","));
 	}
 	//#25037-END
+	// #12471 Start
+	/**
+	 * Initialize member info for popup
+	 */
+	public void onClickMemberInfo(PmUser memberInfo) {
+		this.getManagedBean().setMemberName(memberInfo.getUserName());
+		for (PmUserOrg org : memberInfo.getPmUserOrgs()) {
+			if (org.getRecordStatusFlg() == 1) {
+				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgProfileId(org.getPmOrgProfile().getOrgProfileId());
+				reqDTO.setOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
+				OrgProfileResDTO resDTO = new OrgProfileResDTO();
+				if (org.getPmOrgProfile().getEpPtj()) {
+					resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+					this.getManagedBean().setMemberMinOrg(resDTO.getPmOrgProfile().getPmOrgValidity().getOrgName());
+					this.getManagedBean().setMemberPtjOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
+					this.getManagedBean().setMemberPtjOrgName(org.getPmOrgProfile().getPmOrgValidity().getOrgName());
+				} else {
+					IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+					ParameterReqDTO reqDTO2 = new ParameterReqDTO();
+					reqDTO2.setParameterId(org.getPmOrgProfile().getOrgTypeCode().getParameterId());
+					ParameterResDTO resDTO2 = new ParameterResDTO();
+					resDTO2 = parameterSO.retrieveParameterById(reqDTO2);
+					String orgType = "";
+					for (PmParameterDesc desc : resDTO2.getPmParameter().getPmParameterDescsSpecCallOnly()) {
+						if (desc.getLanguageCode().equalsIgnoreCase(new FacesScopes().getUserLocale().getLanguage())) {
+							orgType = desc.getCodeName();
+							break;
+						}
+					}
+					this.getManagedBean().setMemberMinOrg(orgType);
+					this.getManagedBean().setMemberPtjOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
+					this.getManagedBean().setMemberPtjOrgName(org.getPmOrgProfile().getPmOrgValidity().getOrgName());
+				}
+				break;
+			}
+		}
+		RequestContext.getCurrentInstance().execute("memberInfoPopUp.show()");
+	}
+
+	/**
+	 * Generate ministry dropdown
+	 */
+	public void buildMinistryDD() {
+		this.getManagedBean().setMinistryDDList(PmCommonUtil.getMinistryDropdown());
+	}
+
+	/**
+	 * Generate ptj group dropdown
+	 */
+	public void buildPtjGroupDD() {
+		SelectItem[] items = null;
+		if (this.getManagedBean().getMinistry() != null) {
+			items = PmCommonUtil.getJabatanDropdown(Long.parseLong(this.getManagedBean().getMinistry()));
+		} else {
+			items = new SelectItem[1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		}
+		this.getManagedBean().setPtjGroupDDList(items);
+	}
+
+	/**
+	 * Generate ptj dropdown
+	 */
+	public void buildPtjDD() {
+		SelectItem[] items = null;
+		IOrgProfileSO orgProfileSO = null;
+		Long PTJGroupId = null;
+		try {
+			int i = 1;
+			List<Object[]> list = new ArrayList<Object[]>();
+			if (this.getManagedBean().getPtjGroup() != null) {
+				PTJGroupId = Long.parseLong(this.getManagedBean().getPtjGroup());
+				orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setParentOrgProfileId(PTJGroupId);
+				reqDTO.setOrgCode(OrganizationType.DIVISION.value());
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+				list = resDTO.getOrgProfileDDList();
+				items = new SelectItem[list.size() + 1];
+			} else {
+				items = new SelectItem[1];
+			}
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			for (Object[] object : list) {
+				items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		} finally {
+			orgProfileSO = null;
+		}
+		this.getManagedBean().setPtjDDList(items);
+	}
+
+	/**
+	 * Generate organization type dropdown
+	 */
+	public void buildOrgTypeDD() {
+		SelectItem[] items = null;
+		ISearchBean<Object[]> searchBean = super.createSearchBean(Object[].class, "somOtherOrgType");
+		// Limit to only OTHERS
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("parameterDescId", SearchOperator.OPERATOR_EQUALS.value(),
+						QTConstants.ORG_CAT_TYPE_OTHER_ID));
+		items = getDropdownObjectValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+		this.getManagedBean().setOrgTypeDDList(items);
+	}
+
+	/**
+	 * Generate organization name dropdown
+	 */
+	public void buildOrgNameDD() {
+		SelectItem[] items = null;
+		IOrgProfileSO orgProfileSO = null;
+		Long OrgTypeID = null;
+		try {
+			int i = 1;
+			List<PmOrgProfile> list = new ArrayList<PmOrgProfile>();
+			if (this.getManagedBean().getOrgType() != null) {
+				OrgTypeID = Long.parseLong(this.getManagedBean().getOrgType());
+				ISearchBean<PmOrgProfile> searchBean = new SearchBean<PmOrgProfile>();
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("orgTypeCode.parameterId", SearchOperator.OPERATOR_EQUALS.value(),
+								OrgTypeID));
+				orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgProfileSearchBean(searchBean);
+				OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
+				list = resDTO.getOrgProfileResultBean().getResultList();
+				items = new SelectItem[list.size() + 1];
+			} else {
+				items = new SelectItem[1];
+			}
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			for (PmOrgProfile object : list) {
+				items[i++] = new SelectItem(object.getOrgProfileId(), object.getOrgName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		} finally {
+			orgProfileSO = null;
+		}
+		this.getManagedBean().setOrgNameDDList(items);
+	}
+
+	/**
+	 * Generate dropdown on parent change
+	 */
+	public void onChangeDD(String dropdown) {
+		if (this.getManagedBean().getOrgCat().equalsIgnoreCase(this.getManagedBean().getOrgCatPTJ())) {
+			if (dropdown.equalsIgnoreCase(ParameterConst.ORG_TYPE_MINISTRY)) {
+				this.getManagedBean().setPtjGroup(null);
+				buildPtjGroupDD();
+				this.getManagedBean().setPtj(null);
+				buildPtjDD();
+			} else if (dropdown.equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ_GROUP)) {
+				this.getManagedBean().setPtj(null);
+				buildPtjDD();
+			}
+		} else if (this.getManagedBean().getOrgCat().equalsIgnoreCase(this.getManagedBean().getOrgCatOther())) {
+			if (dropdown.equalsIgnoreCase(ParameterTypeConst.ORGANISATION_TYPES)) {
+				this.getManagedBean().setOrgName(null);
+				buildOrgNameDD();
+			}
+		}
+	}
+
+	/**
+	 * Get user organization description
+	 */
+	public String getOrgDesc(List<PmUserOrg> pmUserOrgs, String orgType) {
+		String desc = "";
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		for (PmUserOrg org : pmUserOrgs) {
+			if (org.getRecordStatusFlg() == 1) {
+				reqDTO.setOrgProfileId(org.getPmOrgProfile().getOrgProfileId());
+				OrgProfileResDTO resDTO = null;
+				if (orgType.equalsIgnoreCase(ParameterConst.ORG_TYPE_MINISTRY)) {
+					resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+					desc = resDTO.getPmOrgProfile().getOrgName();
+				} else if (orgType.equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ_GROUP)) {
+					resDTO = orgProfileSO.retrieveJabatanByOrgProfileId(reqDTO);
+					desc = resDTO.getPmOrgProfile().getOrgName();
+				} else if (orgType.equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)) {
+					desc = org.getPmOrgProfile().getOrgName();
+				}
+				break;
+			}
+		}
+		return desc;
+	}
+	// #12471 End
 
 }

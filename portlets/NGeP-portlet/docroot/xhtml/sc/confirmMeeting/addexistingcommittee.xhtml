@@ -23,11 +23,100 @@
 					style="width:100%;margin-top:10px;">
 					<c:if
 						test="#{evaluationMeetingBackingBean.managedBean.committeMember.userSelection eq 'E' }">
-						<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true">
+						<!-- #12471 Start -->
+						<p:panel id="usersearchpnlid" header="#{lbl['lbl.sc.search']}"
+							toggleable="true">
+							<ac:instructionText
+								value="#{lbl['lbl.sc.committee.add.member.search.instruction.one']}" />
+							<br />
+							<br />
+							<ac:instructionText
+								value="#{lbl['lbl.sc.committee.add.member.search.instruction.two']}" />
+							<!-- #12471 End -->
 							<table>
+								<!-- #12471 Start -->
+								<tr> 
+									<td><p:outputLabel
+											value="#{lbl['lbl.sc.committee.add.member.search.org.cat']}" /></td>
+									<td colspan="3"><p:selectOneRadio id="orgCatRad"
+											value="#{evaluationMeetingBackingBean.managedBean.orgCat}">
+											<p:ajax onstart="blockWidget.show()"
+												oncomplete="blockWidget.hide()"
+												update="usersearchpnlid existingcommitteesearch"
+												listener="#{evaluationMeetingBackingBean.reset}" />
+											<f:selectItem
+												itemLabel="#{lbl['lbl.sc.committee.add.member.search.ptj.full']}"
+												itemValue="#{evaluationMeetingBackingBean.managedBean.orgCatPTJ}" />
+											<f:selectItem
+												itemLabel="#{lbl['lbl.sc.committee.add.member.search.other']}"
+												itemValue="#{evaluationMeetingBackingBean.managedBean.orgCatOther}" />
+										</p:selectOneRadio></td>
+								</tr>
+								<c:if
+									test="#{evaluationMeetingBackingBean.managedBean.orgCat eq evaluationMeetingBackingBean.managedBean.orgCatPTJ}">
+									<tr>
+										<td><p:outputLabel
+												value="#{lbl['lbl.sc.committee.add.member.search.ministry']}" /></td>
+										<td><p:selectOneMenu id="ministryDD"
+												value="#{evaluationMeetingBackingBean.managedBean.ministry}">
+												<p:ajax onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()" update="PtjGroupDD PtjDD"
+													listener="#{evaluationMeetingBackingBean.onChangeDD(ParameterConst.getOrgTypeMinistry())}" />
+												<f:selectItems
+													value="#{evaluationMeetingBackingBean.managedBean.ministryDDList}" />
+											</p:selectOneMenu></td>
+									</tr>
+									<tr>
+										<td><p:outputLabel
+												value="#{lbl['lbl.sc.committee.add.member.search.ptj.group']}" /></td>
+										<td><p:selectOneMenu id="PtjGroupDD"
+												value="#{evaluationMeetingBackingBean.managedBean.ptjGroup}">
+												<p:ajax onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()" update="PtjDD"
+													listener="#{evaluationMeetingBackingBean.onChangeDD(ParameterConst.getOrgTypePtjGroup())}" />
+												<f:selectItems
+													value="#{evaluationMeetingBackingBean.managedBean.ptjGroupDDList}" />
+											</p:selectOneMenu></td>
+									</tr>
+									<tr>
+										<td><p:outputLabel
+												value="#{lbl['lbl.sc.committee.add.member.search.ptj']}" /></td>
+										<td><p:selectOneMenu id="PtjDD"
+												value="#{evaluationMeetingBackingBean.managedBean.ptj}">
+												<f:selectItems
+													value="#{evaluationMeetingBackingBean.managedBean.ptjDDList}" />
+											</p:selectOneMenu></td>
+									</tr>
+								</c:if>
+								<c:if
+									test="#{evaluationMeetingBackingBean.managedBean.orgCat eq evaluationMeetingBackingBean.managedBean.orgCatOther}">
+									<tr>
+										<td><p:outputLabel
+												value="#{lbl['lbl.sc.committee.add.member.search.org.type']}" /></td>
+										<td><p:selectOneMenu id="orgTypeDD"
+												value="#{evaluationMeetingBackingBean.managedBean.orgType}">
+												<p:ajax onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()" update="orgNameDD"
+													listener="#{evaluationMeetingBackingBean.onChangeDD(ParameterTypeConst.getOrganisationTypes())}" />
+												<f:selectItems
+													value="#{evaluationMeetingBackingBean.managedBean.orgTypeDDList}" />
+											</p:selectOneMenu></td>
+									</tr>
+									<tr>
+										<td><p:outputLabel
+												value="#{lbl['lbl.sc.committee.add.member.search.org.name']}" /></td>
+										<td><p:selectOneMenu id="orgNameDD"
+												value="#{evaluationMeetingBackingBean.managedBean.orgName}">
+												<f:selectItems
+													value="#{evaluationMeetingBackingBean.managedBean.orgNameDDList}" />
+											</p:selectOneMenu></td>
+									</tr>
+								</c:if>
+								<!-- #12471 End -->
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sc.name']}" />
-									    <p:outputLabel value="*" styleClass="mandatory" /></td>
+									    <!-- #12471 -->
+									    </td>
 									<td colspan="3"><p:inputText maxlength="50" onkeypress="if (event.keyCode == 13) { coordinateMeetingaddSearch.jq.click(); return false; }"
 											style="margin-bottom: 5px;"
 											value="#{evaluationMeetingBackingBean.managedBean.name}"
@@ -97,6 +186,26 @@
 									<h:outputText value="#{existcommitteeuser.userName}" />
 								</p:column>
 
+								<!-- #12471 Start -->
+								<c:if
+									test="#{evaluationMeetingBackingBean.managedBean.orgCat eq evaluationMeetingBackingBean.managedBean.orgCatPTJ}">
+									<p:column
+										headerText="#{lbl['lbl.sc.committee.add.member.search.ministry']}">
+										<h:outputText style="white-space: normal;"
+											value="#{evaluationMeetingBackingBean.getOrgDesc(existcommitteeuser.pmUserOrgs,ParameterConst.getOrgTypeMinistry())}" />
+									</p:column>
+									<p:column
+										headerText="#{lbl['lbl.sc.committee.add.member.search.ptj.group']}">
+										<h:outputText style="white-space: normal;"
+											value="#{evaluationMeetingBackingBean.getOrgDesc(existcommitteeuser.pmUserOrgs,ParameterConst.getOrgTypePtjGroup())}" />
+									</p:column>
+									<p:column
+										headerText="#{lbl['lbl.sc.committee.add.member.search.ptj']}">
+										<h:outputText style="white-space: normal;"
+											value="#{evaluationMeetingBackingBean.getOrgDesc(existcommitteeuser.pmUserOrgs,ParameterConst.getOrgTypePtj())}" />
+									</p:column>
+								</c:if>
+								<!-- #12471 End -->
 								<p:column style="width:15%;white-space: normal;"
 									headerText="#{lbl['lbl.sc.identification.no']}">
 									<h:outputText value="#{existcommitteeuser.identificationNo}" />

@@ -319,5 +319,11 @@ public interface QTConstants {
 	//#25726 end
 	
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR";
+	// #12471 Start
+	public static final String ORG_CATEGORY_PTJ = "PTJ";
+	public static final String ORG_CATEGORY_OTHERS = "OTH";
+	public static final Long ORG_CAT_TYPE_OTHER_ID = 209L;
+	public static final Long ORG_CAT_NAME_EXTERNAL_PARTIES_ID = 1001332L;
+	// #12471 End
 	
 }
