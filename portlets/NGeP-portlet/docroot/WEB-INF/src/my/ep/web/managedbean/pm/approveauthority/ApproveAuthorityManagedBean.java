@@ -41,6 +41,12 @@ public class ApproveAuthorityManagedBean extends BaseManagedBean {
 	private boolean autoUpdate = Boolean.TRUE;
 	
 	private String remark;
+	
+	private int selectedTabIndex;
+	
+	private String authIdInString;
+	
+	private String comName;
 					
 	public ApproveAuthorityManagedBean() {
 		//ApproveAuthorityManagedBean constructor
@@ -134,5 +140,29 @@ public class ApproveAuthorityManagedBean extends BaseManagedBean {
 
 	public void setUpdateAuthCommittee(PmAuthorityCommittee updateAuthCommittee) {
 		this.updateAuthCommittee = updateAuthCommittee;
+	}
+
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
+	}
+
+	public String getAuthIdInString() {
+		return authIdInString;
+	}
+
+	public void setAuthIdInString(String authIdInString) {
+		this.authIdInString = authIdInString;
+	}
+
+	public String getComName() {
+		return comName;
+	}
+
+	public void setComName(String comName) {
+		this.comName = comName;
 	}
 }
