@@ -45,6 +45,8 @@ public class ApproveAuthorityManagedBean extends BaseManagedBean {
 	private int selectedTabIndex;
 	
 	private String authIdInString;
+	
+	private String comName;
 					
 	public ApproveAuthorityManagedBean() {
 		//ApproveAuthorityManagedBean constructor
@@ -154,5 +156,13 @@ public class ApproveAuthorityManagedBean extends BaseManagedBean {
 
 	public void setAuthIdInString(String authIdInString) {
 		this.authIdInString = authIdInString;
+	}
+
+	public String getComName() {
+		return comName;
+	}
+
+	public void setComName(String comName) {
+		this.comName = comName;
 	}
 }

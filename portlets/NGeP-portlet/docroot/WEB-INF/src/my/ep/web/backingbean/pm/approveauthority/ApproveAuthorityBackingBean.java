@@ -347,8 +347,9 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 		for(PmAuthority pmAuth : getManagedBean().getListAuthCode()){
 			this.getManagedBean().setAuthIdInString(Long.toString(pmAuth.getAuthId()));
 			this.getManagedBean().setAuthCodeDesc(pmAuth.getAuthCodeDesc());
-			if(pmAuth.getAuthId().compareTo(new Long(newtabId)) == 0){			
+			if(pmAuth.getAuthId().compareTo(new Long(newtabId)) == 0){
 				this.getManagedBean().setAuthority(pmAuth);
+				this.getManagedBean().setComName(pmAuth.getAuthCodeDesc());
 				
 				List<PmAuthorityCommittee> authComList = checkNullObj(pmAuth.getPmAuthorityCommittee());
 				
