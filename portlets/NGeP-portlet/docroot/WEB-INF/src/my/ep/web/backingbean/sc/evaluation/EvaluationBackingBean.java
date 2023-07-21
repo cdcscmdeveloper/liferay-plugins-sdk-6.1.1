@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -7567,10 +7568,17 @@ public void saveComplianceSample() {
 							"lbl.sc.checklist.scoring.completed", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale());
+					//34833 - start
+					String checkListValue =  ResourceBundleUtils.getMessage(
+							"lbl.sc.checklist.checklist.value.completed", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
+					String addColon = ": ";
 					this.getManagedBean().setEvaluatioStageActiveIndex(0);
 					throw new EpException(MessageConst.ERROR_760266,
-							new String[] { checklist.getTitle(),
-									checklistScoring });
+							new String[] { checklist.getTitle()+addColon,
+							checkListValue });
+					//34833 - end
 				}
 			}
 		} finally {
@@ -17857,6 +17865,9 @@ private void retriveCommitteeRemarksList(){
 	
 	public void downloadAllTechnicallDocumentCompliance() throws Exception {
 		List<ScQtCheckList> list = this.getManagedBean().getComplianceTechnicalCheckList();
+		Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
+		Long downloadAllDocsTimer = System.currentTimeMillis();
+		log.info("Starting downloadAllTechnicallDocumentCompliance :: " + currentTimeStamp);
 
 		IQTEvaluationSO evaluationSO = null;
 
@@ -17905,6 +17916,8 @@ private void retriveCommitteeRemarksList(){
 			}
 
 			downloadAllFilesWithSpecificFolder("NGEP-Technical-By" + mainFolderTitle, listScAttachment, downloadBy, getEncryptionKey());
+			Long endTimer = System.currentTimeMillis();
+			log.info("Ending downloadAllTechnicallDocumentCompliance :: " + convertMilliToSeconds(endTimer - downloadAllDocsTimer) + " Second(s)");
 		} catch (Exception e) {
 			e.printStackTrace();
 
