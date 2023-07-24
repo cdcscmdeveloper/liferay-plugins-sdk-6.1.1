@@ -27,6 +27,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -39,6 +41,7 @@ import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -3313,10 +3316,9 @@ public class SmPersonnelBackingBean extends
 		epRole = personnelResDTO.getDeletedRole();
 		return epRole;
 	}
-	
-	public void saveUserMOFUpdate() {
-		SmPersonnel personnel = getManagedBean().getBasicSmPersonnel();
-		
+		//start - #34810
+	public void saveUserMOFUpdate(SmPersonnel personnel) {
+		//end - #34810
 		//#9569 - Start
 		//to validate if user that admin want to delete or change role doesn't have any pending task - Start
 		//Cannot delete eP Role for {0} as there are pending tasks that belongs to this user.
@@ -3347,7 +3349,6 @@ public class SmPersonnelBackingBean extends
 		//#9569 - End
 		
 		try {
-			
 			// to check if selected role is deleted or not
 			boolean ePDeleted = false;
 			// to check for the ep status
@@ -3550,39 +3551,77 @@ public class SmPersonnelBackingBean extends
 					throw new EpException(MessageConst.ERROR_722632);
 				}
 			}
-			// 9569
-			// Make sure table is updated
 			PersonnelReqDTO reqDTO3 = new PersonnelReqDTO();
 			reqDTO3.setApplId(getManagedBean().getSmAppl().getApplId());
-			List<SmPersonnel> smPersonnelList2 = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(reqDTO3).getSmPersonnelList();
-			//to get role for deleted personnel
+			List<SmPersonnel> smPersonnelList2 = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(reqDTO3)
+					.getSmPersonnelList();
+			// to get role for deleted personnel
 			if (smPersonnelList2 != null && !smPersonnelList2.isEmpty()) {
 				for (SmPersonnel smPersonnel : smPersonnelList2) {
-					if(smPersonnel.getEpRole() == ""){
+					if (smPersonnel.getEpRole() == "") {
 						smPersonnel.setEpRole(null);
 					}
-					
-					if((smPersonnel.getEpRole() == null ||smPersonnel.getEpRole() == "") && smPersonnel.getPmUser() != null){			
+
+					if ((smPersonnel.getEpRole() == null || smPersonnel.getEpRole() == "")
+							&& smPersonnel.getPmUser() != null) {
 						Long userId = smPersonnel.getPmUser().getUserId();
 						log.info("This is the user id == " + userId);
 						String epRole = setPrevEpRoleSuppMain(userId);
 						smPersonnel.setPrevEpRole(epRole);
-					}else {
+					} else {
 						smPersonnel.setPrevEpRole(smPersonnel.getEpRole());
 					}
 				}
 			}
+			
 			sortPersonnelByEpRole(smPersonnelList2);
 			getManagedBean().setSmPersonnelList(smPersonnelList2);
 			countAuthUserWithRole(smPersonnelList2);
 			countContractSigner(smPersonnelList2);
-			epRoleList(null,2);
-		    SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
-
+			epRoleList(null, 2);
+			//start - #34810
+//			SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
+			//end - #34810
 		  }catch (Exception ex){
 		      throw new EpException(MessageConst.ERROR_722632);
 		  }
 		}
+	
+	//start - #34810
+	public void checkingBeforeSave() {
+		SmPersonnel personnel = getManagedBean().getBasicSmPersonnel();
+		
+		saveUserMOFUpdate(personnel);
+
+		Long supplierId = getManagedBean().getSmSupplier().getSupplierId();
+		String identificationNo = personnel.getIdentificationNo();
+
+		IPersonnelSO personnelSO = SmServiceLookup.getPersonnelSO();
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(supplierId);
+		reqDTO.setIdentificationNo(identificationNo);
+		PersonnelResDTO resDTO = personnelSO.retrievePersonnelByIdentificationNoAndSuppIdForUserMaintenance(reqDTO);
+
+		if (resDTO.getSmPersonnelList().size() > 1) {
+			for (SmPersonnel SmPersonnel : resDTO.getSmPersonnelList()) {
+				MofRegistrationResDTO latestRejectedAppl = SmServiceLookup.getMofRegistrationSO()
+						.retrieveSupplierRejectedApplNewerThanLatestAppl(SmPersonnel.getSmAppl());
+
+				if (latestRejectedAppl != null && !SmPersonnel.getPersonnelId().equals(personnel.getPersonnelId())) {
+					getManagedBean().setSmAppl(SmPersonnel.getSmAppl());
+					resetAll();
+					getPersonnelInfoById(SmPersonnel.getPersonnelId().toString());
+					saveUserMOFUpdate(SmPersonnel);
+					System.out.println("masuk sini" + SmPersonnel.getPersonnelId());
+				}
+			}
+		} 
+
+//		 9569
+//		 Make sure table is updated
+		SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
+	}
+	//end - #34810
 	
 	public int checkSoftCert(){
 		int value = 4;

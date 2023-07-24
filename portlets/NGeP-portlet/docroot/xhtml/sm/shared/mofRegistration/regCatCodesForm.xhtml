@@ -26,14 +26,14 @@
 					style="float: left;white-space: normal;" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width :350px;white-space : normal">
-				<h:outputText
-					value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{empty aprvdCatBean.categoryL1Name ? aprvdCatBean.pmCategoryL1.categoryName : aprvdCatBean.categoryL1Name}" />
-				<br />
-				<h:outputText
-					value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{empty aprvdCatBean.categoryL2Name ? aprvdCatBean.pmCategoryL2.categoryName : aprvdCatBean.categoryL2Name}" />
-				<br />
-				<h:outputText
-					value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{empty aprvdCatBean.categoryL3Name ? aprvdCatBean.pmCategoryL3.categoryName : aprvdCatBean.categoryL3Name}" />
+				<!-- #28175 Reopen Start -->
+				<h:outputText value="#{aprvdCatBean.pmCategoryL1.categoryL1Code}
+				 - #{aprvdCatBean.pmCategoryL1.categoryName}" /><br />
+				<h:outputText value="#{aprvdCatBean.pmCategoryL2.categoryL2Code}
+				 - #{aprvdCatBean.pmCategoryL2.categoryName}" /><br />
+				<h:outputText value="#{aprvdCatBean.pmCategoryL3.categoryL3Code}
+				 - #{aprvdCatBean.pmCategoryL3.categoryName}" />
+				<!-- #28175 Reopen End -->
 				<!-- 30865,32298 Start -->
 				<p:outputLabel rendered="#{aprvdCatBean.cancelCategory and aprvdCatBean.typeDisciplinaryAction eq 'C'}" styleClass="warning" style="color:red !important; text-align:left;">
 					<h:outputText value="#{lbl['lbl.sm.cancellation.of.category.code.by.disciplinary.action']}"/>
@@ -83,7 +83,7 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.catType']}" /></td>
 							<td><p:selectOneRadio
-									value="#{backingBean.managedBean.smAppl.applCategoryType}">
+									value="#{backingBean.managedBean.smAppl.applCategoryType}" disabled="#{backingBean.managedBean.upsCannotEdit}">
 									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeNrm']}"
 										itemValue="N" />
 									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeSpl']}"
@@ -115,7 +115,7 @@
 										<c:choose>
 											<c:when test="#{backingBean.managedBean.supplierUser}">
 												<td><p:selectOneRadio
-													value="#{backingBean.managedBean.physicalConsulting}">
+													value="#{backingBean.managedBean.physicalConsulting}" disabled="#{backingBean.managedBean.upsCannotEdit}">
 													<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.physical.service']}"
 														itemValue="33" />
 													<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.non.physical.service']}"
@@ -203,7 +203,7 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.catCodes.mainCat']}"
 							value="#{backingBean.managedBean.selectedCategory.pmCategoryL1.categoryL1Id}"
-							style="width: 680px;margin-bottom: 5px;">
+							style="width: 680px;margin-bottom: 5px;" disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{backingBean.managedBean.supplierParentCatList}"
@@ -227,7 +227,7 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.catCodes.subCat']}"
 							value="#{backingBean.managedBean.selectedCategory.pmCategoryL2.categoryL2Id}"
-							id="child" style="width: 680px;margin-bottom: 5px;">
+							id="child" style="width: 680px;margin-bottom: 5px;" disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{backingBean.managedBean.supplierChildCatList}"
@@ -247,7 +247,7 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label=" #{lbl['lbl.sm.catCodes.subCatDiv']}"
 							value="#{backingBean.managedBean.selectedCategory.pmCategoryL3.categoryL3Id}"
-							id="subChild" style="width: 680px;margin-bottom: 5px;">
+							id="subChild" style="width: 680px;margin-bottom: 5px;" disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{backingBean.managedBean.supplierSubChildCatList}"

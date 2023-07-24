@@ -326,6 +326,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public boolean AgreementReqChange = false;
 	public String docStatus;
 	public String procurementType;
+	private boolean showApprovalLetter = false;//# note 146
 	//#25725 end
 	
 	//#19336
@@ -344,6 +345,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private ScLoiLoaItem scLoiLoaItem;
 	private List<TplSpecAnswer> tplSpecAnswerList;
 	private List<ScLoiLoaItem> loiLoaItemsResult;//29007 - fix issue 2 search action note 347
+	private boolean resetAll = false;
 	/*#29007 End Vinod*/
 	
 	//#27797 - start
@@ -367,6 +369,8 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	//Bug #33674@Syazani - Start
 	private Long supplierBankId = null;
 	//Bug #33674@Syazani - End
+	
+	private String firstZone;//Bug #34757
 	
 	private int retainPageNumber = 0;//#34242
 	
@@ -1930,6 +1934,13 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setUploadA3Templet(boolean uploadA3Templet) {
 		this.uploadA3Templet = uploadA3Templet;
 	}
+	public boolean isResetAll() {
+		return resetAll;
+	}
+
+	public void setResetAll(boolean resetAll) {
+		this.resetAll = resetAll;
+	}
 	/*#29007 End Vinod*/
 
 	//#25725 start
@@ -2118,6 +2129,31 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.loiLoaItemsResult = loiLoaItemsResult;
 	}
 	//29007 - fix issue 2 search action note 347 - end
+
+	// #25725 - note 146 - start
+	/**
+	 * @return the showApprovalLetter
+	 */
+	public boolean isShowApprovalLetter() {
+		return showApprovalLetter;
+	}
+
+	/**
+	 * @param showApprovalLetter the showApprovalLetter to set
+	 */
+	public void setShowApprovalLetter(boolean showApprovalLetter) {
+		this.showApprovalLetter = showApprovalLetter;
+	}
+	// #25725 - note 146 - end
+
+	public String getFirstZone() {
+		return firstZone;
+	}
+
+	public void setFirstZone(String firstZone) {
+		this.firstZone = firstZone;
+	}
+
 }
 
 
