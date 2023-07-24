@@ -18,7 +18,7 @@
 			<p:dataTable id="listAuthTbl" rows="10"
 				widgetVar="apprAuthorityTblWidVar"
 				value="#{ApproveAuthorityBackingBean.managedBean.listAuthCommittee}"
-				var="athList" rowKey="#{athList}" rowIndexVar="rowIndex">
+				var="athList" rowKey="#{athList}" rowIndexVar="index">
 				<ac:paginator for="listAuthTbl"/>
 					<p:column style="width:60%;text-align:left;white-space:normal;word-wrap:break-word;">
 						<f:facet name="header">
