@@ -6749,7 +6749,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 		
 		IQTEvaluationSO evaluationSo = null;
 		try {
-			this.getManagedBean().setTechnicalSummaryView("");//#28784 always display -Select One- when go in summary
 			
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
