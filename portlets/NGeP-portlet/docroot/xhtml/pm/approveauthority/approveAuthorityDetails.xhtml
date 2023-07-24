@@ -86,7 +86,7 @@
 		 			</td>
 		 			<td>
 		 				<p:inputText id="comName" styleClass="ppDisplayTextL" label="#{lbl['lbl.pm.approveAuthority.name']}"
-		 				maxLength="150" value="#{ApproveAuthorityBackingBean.managedBean.updateAuthCommittee.committeeName}" size="50" required="true"></p:inputText>
+		 				maxLength="150" value="#{ApproveAuthorityBackingBean.managedBean.updateAuthCommittee.committeeName}" size="50"></p:inputText>
 		 				<ac:iconTooltip value="#{lbl['lbl.pm.approveAuthority.tooltip']}" />
 		 			</td>
 		 		</tr>
@@ -125,7 +125,7 @@
 								update="listAuthTbl"
 								process="updateCommitteePanel"
 								onclick="updateCommitteePopupBlockWidget.show()" oncomplete="updateCommitteePopupBlockWidget.hide()">
-									<f:param name="disableValidation" value="true" />
+								<f:param name="disableValidation" value="true" />
 							</p:commandButton>
 							<p:commandButton id="comCancel"
 								value="#{lbl['lbl.btn.cancel']}" process="@this"
