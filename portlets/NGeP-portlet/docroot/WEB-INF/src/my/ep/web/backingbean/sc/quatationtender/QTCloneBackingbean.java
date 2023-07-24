@@ -900,7 +900,7 @@ public class QTCloneBackingbean extends
 					}//31350-End
 					retrieveBrief(copyScqt);
 					retrievePublishing(copyScqt);
-					retrieveDeductionPaymentTabDtl(scQt,copyScqt,QtDetailsSO);
+					retrieveDeductionPaymentTabDtl(scQt,copyScqt);// 17/7/2023 Shafful -  Sonarqube QT Bug Minor Danial
 					retrieveDocs(copyScqt);
 					retrievePublicationApprovalTabDtl(copyScqt);
 					retriveFulfilmentDtls(copyScqt);//33916
@@ -1004,11 +1004,12 @@ public class QTCloneBackingbean extends
 			}
 			this.getManagedBean().setRemoveDocReports(listDel);
 		}
+		if(null!=reportList)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 		reportList.removeAll(listDel);
 		
 		List<String> existedDocumets=new ArrayList<String>(); //additional docs;
 		ScQtDocReport templetDoc=null;
-		if(CollectionUtils.isNotEmpty(reportList)){
+		if(reportList != null && CollectionUtils.isNotEmpty(reportList)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			for(ScQtDocReport docReport:reportList){
 				if(null==docReport.getPmDocument()){
 				existedDocumets.add(docReport.getTitle());
@@ -1077,6 +1078,10 @@ public class QTCloneBackingbean extends
 						docDefinitionKey=docReport.getPmDocument().getDocDefinitionKey();
 					}
 					boolean templateDoc=Boolean.FALSE;//33954
+					//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+					if (reportList == null)
+						reportList = new ArrayList<ScQtDocReport>();
+					
 					if(null!=docDefinitionKey && SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
 							.equals(docDefinitionKey)){
 						IQTTemplateSO qtTemplateSO = null;
@@ -2440,18 +2445,18 @@ public class QTCloneBackingbean extends
 		return scQt;
 	}
 	
-	public void retrieveDeductionPaymentTabDtl(ScQt scQt,ScQt copyScqt,IQTDetailSO detailSO) {
+	public void retrieveDeductionPaymentTabDtl(ScQt scQt,ScQt copyScqt) {
 		
 		
 		debugLogger("retrieveDeductionPaymentTabDtl");
 	//	if (this.getManagedBean().getScQtDeductionList() == null || this.getManagedBean().getScQtDeductionList().isEmpty()) {
 			
 			try {
-				detailSO = BusinessDelegate.getInstance().getServiceObject(
+				IQTDetailSO detailSO2 = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(copyScqt.getQtId());
-				QuationTenderResDTO resDTO = detailSO
+				QuationTenderResDTO resDTO = detailSO2
 						.retriveQTDeductionPaymentDetails(reqDTO);
 				List<ScQtDeduction> copyList = resDTO
 						.getDeductionResultBean().getResultList();
@@ -2485,7 +2490,7 @@ public class QTCloneBackingbean extends
 				
 				
 				reqDTO.setQtId(scQt.getQtId());
-				resDTO = detailSO
+				resDTO = detailSO2
 						.retriveQTDeductionPaymentDetails(reqDTO);
 				List<ScQtDeduction> toDelete =resDTO
 				.getDeductionResultBean().getResultList();
@@ -3025,7 +3030,7 @@ public class QTCloneBackingbean extends
 				//this.getManagedBean().setToBeDelCommitteMemebers(toDeleteMember);
 				this.getManagedBean().getToBeDelCommitteMemebers().addAll(toDeleteMember);
 			}
-		}
+		//}//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 		
 		committee.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
 		committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
@@ -3066,7 +3071,7 @@ public class QTCloneBackingbean extends
 				
 			}
 		}
-		
+		}//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 		clonedScQtCommittee.setScCommittee(committee);
 		
 		
@@ -3457,7 +3462,8 @@ public class QTCloneBackingbean extends
 			}//34466&25635-end
 			//to Delete
 			List<ScQtCategory> tobeRemoveCategoryCodes=new ArrayList<ScQtCategory>();
-			if(CollectionUtils.isNotEmpty(currentExistingCategory)){//34466&25635-start
+			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			if(currentExistingCategory != null && CollectionUtils.isNotEmpty(currentExistingCategory)){//34466&25635-start
 				for(ScQtCategory toDel:currentExistingCategory){//34466&25635-end
 					toDel.setDeleted(true);
 					tobeRemoveCategoryCodes.add(toDel);

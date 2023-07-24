@@ -2475,31 +2475,31 @@ u.underline {
 									bgcolor="#6d839b"
 									class="title border left"
 									rowspan="2"
-									style="text-align: left; padding-left: 5px; padding-right: 5px;">Item</th>
+									style="text-align: left; padding-left: 2px; padding-right: 2px;white-space: normal;">Item</th>
 								<th
 									valign="top"
 									bgcolor="#6d839b"
 									class="title border left"
-									style="text-align: left; padding-left: 5px; padding-right: 5px;">UOM</th>
+									style="text-align: left; padding-left: 2px; padding-right: 2px;white-space: normal;">UOM</th>
 									
 								#if ($itemType == "Perkhidmatan" || $itemType == "Service")
 									<th
 										valign="top"
 										bgcolor="#6d839b"
 										class="title border left"
-										style="text-align: left; padding-left: 5px; padding-right: 5px;">Kekerapan /
+										style="text-align: left; padding-left: 2px; padding-right: 2px;white-space: normal;">Kekerapan /
 										<br/>Unit Ukuran</th>
 									<th
 										valign="top"
 										bgcolor="#6d839b"
 										class="title border left"
-										style="text-align: left; padding-left: 5px; padding-right: 5px;">Bil. Unit
+										style="text-align: left; padding-left: 2px; padding-right: 2px;white-space: normal;">Bil. Unit
 										<br/>Ukuran Sehari</th>
 									<th
 										valign="top"
 										bgcolor="#6d839b"
 										class="title border left"
-										style="text-align: left; padding-left: 5px; padding-right: 5px;">Bil. Unit
+										style="text-align: left; padding-left: 2px; padding-right: 2px;white-space: normal;">Bil. Unit
 										<br/>Ukuran Sebulan</th>
 								#end
 								#if ($itemType == "Produk" || $itemType == "Product")
@@ -2507,7 +2507,7 @@ u.underline {
 										valign="top"
 										bgcolor="#6d839b"
 										class="title border left"
-										style="text-align: left; padding-left: 5px; padding-right: 5px;">Jenis Harga</th>
+										style="text-align: left; padding-left: 2px; padding-right: 2px;white-space: normal;">Jenis Harga</th>
 								#end
 								#if ($isZonal)
 									<th
@@ -2516,7 +2516,7 @@ u.underline {
 										bgcolor="#6d839b"
 										class="title border left"
 										rowspan="2"
-										style="text-align: left; padding-left: 5px; padding-right: 5px;">Zon</th>
+										style="text-align: left; padding-left: 2px; padding-right: 2px;white-space: normal;">Zon</th>
 								#end
 
 								<th
@@ -2524,32 +2524,32 @@ u.underline {
 									bgcolor="#6d839b"
 									class="title border left"
 									rowspan="2"
-									style="text-align: left; padding-left: 5px; padding-right: 5px;">Kuantiti</th>
+									style="text-align: left; padding-left: 2px; padding-right: 2px;">Kuantiti</th>
 								#if ($itemType == "Produk" || $itemType == "Product")
 									<th
 										valign="top"
 										bgcolor="#6d839b"
 										class="title border left"
-										style="text-align: left; padding-left: 5px; padding-right: 5px;">Kuantiti Berperingkat</th>
+										style="text-align: left; padding-left: 2px; padding-right: 2px;white-space: normal;">Kuantiti Berperingkat</th>
 								#end
 								<th
 									valign="top"
 									bgcolor="#6d839b"
 									class="title border left"
 									rowspan="2"
-									style="text-align: left; padding-left: 5px; padding-right: 5px;">Maklum Balas</th>
+									style="text-align: left; padding-left: 2px; padding-right: 2px;white-space: normal;">Maklum Balas</th>
 								<th
 									valign="top"
 									bgcolor="#6d839b"
 									class="title border left"
 									rowspan="2"
-									style="text-align: left; padding-left: 5px; padding-right: 5px;">Catatan</th>
+									style="text-align: left; padding-left: 2px; padding-right: 2px;">Catatan</th>
 								<th
 									valign="top"
 									bgcolor="#6d839b"
 									class="title border left"
 									rowspan="2"
-									style="text-align: left; padding-left: 5px; padding-right: 5px;">Skop Perkhidmatan / SLA</th>
+									style="text-align: left; padding-left: 2px; padding-right: 2px;white-space: normal;">Skop Perkhidmatan / SLA</th>
 							</tr>
 							<tr>
 								#if ($isZonal)
@@ -2585,7 +2585,7 @@ u.underline {
 										#set($rowCount = 0)
 											<tr>
 
-												<td valign="top" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clItem</td>
+												<td valign="top" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 2px;">$tplspecQuestion.clItem</td>
 												<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
 													#if($tplspecQuestion.clUom)
 														$tplspecQuestion.clUom.uomName
@@ -2753,7 +2753,11 @@ u.underline {
 															#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
 															#if($rowCount == 0)											
 																#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
-																	<span>$tplSpecAnswer.answerRemark</span>
+																	#set($suppRespon = $tplSpecAnswer.answerRemark)
+																	#set($suppRespon = $suppRespon.replace("<", "&#60;"))
+																	#set($suppRespon = $suppRespon.replace(">", "&#62;"))
+
+																	<span> $suppRespon </span>
 																#else
 																	<span>$serviceScope</span>
 																#end
