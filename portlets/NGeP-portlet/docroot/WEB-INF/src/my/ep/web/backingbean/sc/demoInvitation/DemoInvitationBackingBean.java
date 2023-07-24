@@ -862,7 +862,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					 */
 				} else {
 					pmParam = getParameterByTypeAndCode(ParameterTypeConst.ALL_BY_ITEM, SourcingConstants.BY_ITEM);
-					if (demoItemList.isEmpty()) {
+					if (demoItemList.isEmpty() && !this.getManagedBean().getTempDemoItemList().isEmpty()) {
 						demoItemList.addAll(this.getManagedBean().getTempDemoItemList());
 					}
 
