@@ -6794,17 +6794,15 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			
 			List<String> resultStg = new ArrayList<String>();
 			resultStg.add(SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO);
-			// #28784 WIP start
-			if (!this.getManagedBean().isDemoWip()) {
-				resultStg.add(QTConstants.TECHNICAL_SUMMARY_ITEM);
-				evalReqDTO.setDemo(true); // #28784
-			}
-			// #28784 WIP end
+			// #21695, #25138 start
+			resultStg.add(QTConstants.TECHNICAL_SUMMARY_ITEM);
+			// #21695, #25138 end
 			
 			evalReqDTO.setResultStages(resultStg);
 			// #21695, #25138 -start-
 			evalReqDTO.setScQt(this.getManagedBean().getScQt());
 			// #21695, #25138 -end-
+			evalReqDTO.setDemo(true); // #28784
 
 			// #28784 -start-
 			if ((this.getManagedBean().getCurrentStatusId()
