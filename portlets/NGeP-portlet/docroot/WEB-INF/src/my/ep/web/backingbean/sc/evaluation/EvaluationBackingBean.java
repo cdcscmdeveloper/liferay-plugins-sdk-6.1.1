@@ -2496,41 +2496,41 @@ public class EvaluationBackingBean extends
 				}
 			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-				if (this.getManagedBean().getScQt().isDemoRequired()) {
-					// #28784 - FEC by item eval = TI, package = P	
-					if(this.getManagedBean().getTabItemPackageIndex() == 1){
-						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-					} else {
-						evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
-					}
+				// #25138 - 040621 - start
+				if (this.getManagedBean().getScQt().isPartial()) {
+					evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+					//#25138 -set wip
+					int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+					this.getManagedBean().setWipStatusMax(wipstatus);
 				} else {
-					// #25138 - 040621 - start
-					if (this.getManagedBean().getScQt().isPartial()) {
-						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-						//#25138 -set wip
+					// #32453-start
+					//wip status start
+					//#28784 add demo for wip status - Start
+					if (this.getManagedBean().getTabItemPackageIndex() == 1) {
 						int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
 						this.getManagedBean().setWipStatusMax(wipstatus);
-					} else {
-						// #32453-start
-						//wip status start
-						if (this.getManagedBean().getTabItemPackageIndex() == 1) {
-							int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
-							this.getManagedBean().setWipStatusMax(wipstatus);
-							if(wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){
-								evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-							}else {
+						if(wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){
+							evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+						}else {
+							if (this.getManagedBean().getScQt().isDemoRequired()) {
+								evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
+							} else {
 								evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 							}
-							
+						}
+						
+					} else {
+						if (this.getManagedBean().getScQt().isDemoRequired()) {
+							evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
 						} else {
 							evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 						}
-						// #32453-end
-						//wip status end
 					}
-					// #25138 - 040621 - end
+					//#28784 add demo for wip status - End
+					// #32453-end
+					//wip status end
 				}
-
+				// #25138 - 040621 - end
 			}
 			
 			//bug #33582 idham - generate proposal score if proposal score for Modal Berbayar = null - start
@@ -6969,7 +6969,6 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSo = null;
 		try {
 			//#28784 - start
-			this.getManagedBean().setTechnicalSummaryView("");//#28784 always display -Select One- when go in summary
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
@@ -7544,9 +7543,17 @@ public class EvaluationBackingBean extends
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale());
 					this.getManagedBean().setEvaluatioStageActiveIndex(0);
+					//34833 - start
+					String checkListValue =  ResourceBundleUtils.getMessage(
+							"lbl.sc.checklist.checklist.value.completed", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
+					String addColon = ": ";
+					this.getManagedBean().setEvaluatioStageActiveIndex(0);
 					throw new EpException(MessageConst.ERROR_760266,
-							new String[] { checklist.getTitle(),
-									checklistScoring });
+							new String[] { checklist.getTitle()+addColon,
+							checkListValue });
+					//34833 - end
 				}
 			}
 		} finally {
@@ -10849,7 +10856,8 @@ private void retriveCommitteeRemarksList(){
 			ScQtCommittee qt = resDTO.getQtCommittee();
 			
 			// #28784 - start
-			if (qt.getScQt().isDemoRequired() && this.getManagedBean().getTaskName().equals(SCProcessNameConst.SIGNOFF_TEC_EVALUATION)) {//#28784
+			if (qt.getScQt().isDemoRequired() && this.getManagedBean().getTaskName().equals(SCProcessNameConst.SIGNOFF_TEC_EVALUATION)
+					&& !this.getManagedBean().isDemoWip()) {//#28784
 				successMessage(MessageConst.INFO_700101, getMessageCommon("lbl.sc.eva.technical.presentation.demo.signoff"), qt
 						.getScQt().getQtNo(), Boolean.TRUE);
 			} else {
