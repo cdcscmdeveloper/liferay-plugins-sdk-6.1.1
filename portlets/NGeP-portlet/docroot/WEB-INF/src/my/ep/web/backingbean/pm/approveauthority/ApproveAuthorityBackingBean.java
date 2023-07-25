@@ -127,14 +127,19 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 	 */
 	public void addNewCommittee() {
 
-		if (this.getManagedBean().getListAuthCommittee() == null) {
+		int index = 0;
+		if (this.getManagedBean().getListAuthCommittee() == null) { 
 			this.getManagedBean().setListAuthCommittee(new ArrayList<PmAuthorityCommittee>());
+		} else {
+			index = this.getManagedBean().getListAuthCommittee().size();
 		}
 		
 		//create new row
 		PmAuthorityCommittee authorityComm = new PmAuthorityCommittee();
-		authorityComm.setPmAuthority(this.getManagedBean().getAuthority());	
-		this.getManagedBean().getListAuthCommittee().add(authorityComm);
+		authorityComm.setPmAuthority(this.getManagedBean().getAuthority());
+		this.getManagedBean().getListAuthCommittee().add(index,authorityComm);
+		RequestContext.getCurrentInstance().execute(
+				"apprAuthorityTblWidVar.paginator.endLink.click()");
 	}
 
 	public SelectItem[] getResultStatusList() {
@@ -261,7 +266,7 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 			//update pm_authority_committee
 			PmAuthorityCommittee authCommittee = this.getManagedBean().getUpdateAuthCommittee();
 			
-			if(authCommittee != null && authCommittee.getAuthCommitteeId() != null){				
+			if(authCommittee != null && authCommittee.getAuthCommitteeId() != null){                
 				validateMessage(authCommittee);				
 				authCommittee.setChangedBy(getUserIdSessionFromLoginId());
 												
