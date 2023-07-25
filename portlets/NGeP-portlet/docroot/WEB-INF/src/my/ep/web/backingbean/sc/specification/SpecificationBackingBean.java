@@ -1486,9 +1486,6 @@ public class SpecificationBackingBean extends
 			break;
 
 		}
-// #29732 Start - reOpen Fix
-		if (activeIndex == 1 && this.getManagedBean().isTechnicalOtherCheckList()) checkCategoryCodeChanged(); //1873 note 164
-// #29732 End - reOpen Fix
 		if (getManagedBean().getTempIndex() < activeIndex) {
 			getManagedBean().setTempIndex(activeIndex);
 		}
@@ -11143,6 +11140,31 @@ if (null != checklist && !checklist.isEmpty()) {
 			this.getManagedBean().getQt().setSampleReq(isSample);
 }
 	}//11104-End
+		
+		// #29732 @idham 25/07/2023 - Start
+		if (Arrays.asList(
+				new Long[] { QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION }).contains(statusId)
+				|| (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
+						.equals(statusId))) {
+			String changedCatCodeList = checkCatCodeChange();
+			if (!changedCatCodeList.isEmpty()) {
+				this.getManagedBean().setActiveIndex(1);
+				retriveSupplierQualificationCriteria("SC");
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+								"lbl.sc.category.has.changes.on.prerender.view.1", null,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+								"lbl.sc.category.has.changes.on.prerender.view.2", new String[] { changedCatCodeList },
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			}
+		}
+		// #29732 @idham 25/07/2023 - End
+		
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
 		fc.getApplication()
@@ -16098,11 +16120,6 @@ if (null != checklist && !checklist.isEmpty()) {
 			checktemplateSpecStatus(this.getManagedBean().getQt());
 			checkFinancialSpecStatus(this.getManagedBean().getQt());
 		}
-		//1873 note 164 - start
-		else if(this.getManagedBean().getActiveIndex() == 1){
-			checkCategoryCodeChanged();
-		}
-		//1873 note 164 - end
 		this.getManagedBean().setActiveIndex(
 				this.getManagedBean().getCheckListYesIndex());
 	}
@@ -20692,39 +20709,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					checktemplateSpecStatus(this.getManagedBean().getQt());
 					checkFinancialSpecStatus(this.getManagedBean().getQt());
 				}
-				//1873 note 164 - start
-				else if(this.getManagedBean().getActiveIndex() == 1){
-					checkCategoryCodeChanged();
-				}
-				//1873 note 164 - end
 			}	
 			//1873 note 149 end
 			//32204 - end
 		}
 	}
 	//1873 - end - note 52
-
-	//1873 note 164 - start
-	private void checkCategoryCodeChanged(){
-		PmStatus status = this.getManagedBean().getQt().getQtStatus();
-		Long statusId = status==null? 0L: status.getStatusId();
-		if (Arrays.asList(new Long[] {
-						QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
-						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION })
-				.contains(statusId)
-				|| (this.getManagedBean()
-						.getSpecMaintenanceScreen()
-						.equals(QTConstants.SPEC_MAINTENANCE) && QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
-						.equals(statusId))) {
-			String changedCatCodeList = checkCatCodeChange();
-			if (!changedCatCodeList.isEmpty()) {
-				this.getManagedBean().setActiveIndex(this.getManagedBean().getCheckListYesIndex());
-				throw new EpException(MessageConst.WARN_760531,
-						new String[] { changedCatCodeList });//#29732 standardize
-			}
-		}
-	}
-	//1873 note 164 - end
 	
 	//#25138 Reendorsed - start
 	/**

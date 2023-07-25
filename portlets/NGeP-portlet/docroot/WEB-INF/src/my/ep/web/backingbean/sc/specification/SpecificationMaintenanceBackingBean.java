@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -42,6 +43,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.CreateQtBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
@@ -599,6 +601,27 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		}
 		//#33795 - end
 		//#15391 - end		
+		
+		// #29732 @idham 25/07/2023 - Start
+		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
+				.equals(scQt.getQtStatus().getStatusId())) {
+			String changedCatCodeList = specBB.checkCatCodeChange();
+			if (!changedCatCodeList.isEmpty()) {
+				this.getManagedBean().setActiveIndex(1);
+				specBB.retriveSupplierQualificationCriteria("SC");
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+								"lbl.sc.category.has.changes.on.prerender.view.1", null,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+								"lbl.sc.category.has.changes.on.prerender.view.2", new String[] { changedCatCodeList },
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			}
+		}
+		// #29732 @idham 25/07/2023 - End
 		
 		//29464-start
 		String renderPage = QTConstants.SPECIFICICATON_COMM_PREPARATION;
