@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.pm.result.location']}" toggleable="true">
+		<p:dataTable id="searchLocations" var="location" rows="10"
+			value="#{locationAuditBackingBean.searchLocation}"
+			rowIndexVar="index" lazy="true">
+			<ac:paginator for="searchLocations"></ac:paginator>
+			<p:column headerText="Action Date" style="width :15%">
+				<h:outputText value="#{location.createdDate}" />
+			</p:column>
+			<p:column headerText="Action Type" style="width :10%">
+				<h:outputText value="#{location.actionType}" />
+			</p:column>
+			<p:column headerText="Action By" style="width :10%">
+				<h:outputText value="#{location.actionBy}" />
+			</p:column>
+			<p:column headerText="Document Type" style="width :5%">
+				<h:outputText value="#{lbl['lbl.pm.state']}"
+					rendered="#{location.locationType == 'STATE'}" />
+				<h:outputText value="#{lbl['lbl.pm.division']}"
+					rendered="#{location.locationType == 'ADOPT DIVISION'}" />
+				<h:outputText value="#{lbl['lbl.pm.district']}"
+					rendered="#{location.locationType == 'DISTRICT'}" />
+				<h:outputText value="#{lbl['lbl.pm.city']}"
+					rendered="#{location.locationType == 'CITY'}" />
+			</p:column>
+			<p:column headerText="Document No." style="width :10%">
+				<h:outputText value="#{location.docNo}" />
+			</p:column>
+			<p:column headerText="Field Name" style="width :10%">
+				<h:outputText value="#{location.labelName}" />
+			</p:column>
+			<p:column headerText="Old Value" style="width :35%">
+				<h:outputText value="#{location.oldValue}" />
+			</p:column>
+			<p:column headerText="New Value" style="width :15%">
+				<h:outputText value="#{location.newValue}" />
+			</p:column>			
+		</p:dataTable>
+	</p:panel>
+</ui:composition>
+
+

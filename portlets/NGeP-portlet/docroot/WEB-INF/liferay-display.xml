@@ -90,7 +90,8 @@
            	<portlet id="poRoleTaskWeightage"></portlet>
 			<portlet id="softCertProvider"></portlet>
 			<portlet id="pmSystemConfiguration"></portlet>
-			<portlet id="pmSpecialService"></portlet><!-- #29644 -->	
+			<portlet id="pmSpecialService"></portlet>
+			<portlet id="pmAuLocationSearch"></portlet><!-- #29644 -->	
 		</category>
 		<!-- Profile Management - END -->		
 
