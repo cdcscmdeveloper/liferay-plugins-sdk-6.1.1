@@ -11150,7 +11150,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setActiveIndex(1);
-				retriveSupplierQualificationCriteria("SC");
+				retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(

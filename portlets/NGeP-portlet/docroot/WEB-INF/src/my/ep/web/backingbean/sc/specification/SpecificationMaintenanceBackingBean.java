@@ -608,7 +608,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 			String changedCatCodeList = specBB.checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setActiveIndex(1);
-				specBB.retriveSupplierQualificationCriteria("SC");
+				specBB.retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
