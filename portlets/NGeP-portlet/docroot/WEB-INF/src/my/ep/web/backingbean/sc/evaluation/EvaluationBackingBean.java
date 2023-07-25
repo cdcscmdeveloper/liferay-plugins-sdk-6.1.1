@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -2493,41 +2494,41 @@ public void saveComplianceSample() {
 				}
 			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-				if (this.getManagedBean().getScQt().isDemoRequired()) {
-					// #28784 - FEC by item eval = TI, package = P	
-					if(this.getManagedBean().getTabItemPackageIndex() == 1){
-						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-					} else {
-						evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
-					}
+				// #25138 - 040621 - start
+				if (this.getManagedBean().getScQt().isPartial()) {
+					evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+					//#25138 -set wip
+					int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+					this.getManagedBean().setWipStatusMax(wipstatus);
 				} else {
-					// #25138 - 040621 - start
-					if (this.getManagedBean().getScQt().isPartial()) {
-						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-						//#25138 -set wip
+					// #32453-start
+					//wip status start
+					//#28784 add demo for wip status - Start
+					if (this.getManagedBean().getTabItemPackageIndex() == 1) {
 						int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
 						this.getManagedBean().setWipStatusMax(wipstatus);
-					} else {
-						// #32453-start
-						//wip status start
-						if (this.getManagedBean().getTabItemPackageIndex() == 1) {
-							int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
-							this.getManagedBean().setWipStatusMax(wipstatus);
-							if(wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){
-								evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-							}else {
+						if(wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){
+							evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+						}else {
+							if (this.getManagedBean().getScQt().isDemoRequired()) {
+								evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
+							} else {
 								evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 							}
-							
+						}
+						
+					} else {
+						if (this.getManagedBean().getScQt().isDemoRequired()) {
+							evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
 						} else {
 							evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 						}
-						// #32453-end
-						//wip status end
 					}
-					// #25138 - 040621 - end
+					//#28784 add demo for wip status - End
+					// #32453-end
+					//wip status end
 				}
-
+				// #25138 - 040621 - end
 			}
 			
 			//bug #33582 idham - generate proposal score if proposal score for Modal Berbayar = null - start
@@ -7031,7 +7032,7 @@ public void saveComplianceSample() {
 			List<String> resultStg = new ArrayList<String>();
 			resultStg.add(SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO);
 			// Bug #34768 remove <-- need to insert back when demo #28784 is deploying
-			//resultStg.add(QTConstants.TECHNICAL_SUMMARY_ITEM);
+			resultStg.add(QTConstants.TECHNICAL_SUMMARY_ITEM);
 			// Bug #34768, #21695, #25138 -end-
 			evalReqDTO.setResultStages(resultStg);
 			evalReqDTO.setScQt(this.getManagedBean().getScQt());
@@ -7566,10 +7567,17 @@ public void saveComplianceSample() {
 							"lbl.sc.checklist.scoring.completed", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale());
+					//34833 - start
+					String checkListValue =  ResourceBundleUtils.getMessage(
+							"lbl.sc.checklist.checklist.value.completed", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
+					String addColon = ": ";
 					this.getManagedBean().setEvaluatioStageActiveIndex(0);
 					throw new EpException(MessageConst.ERROR_760266,
-							new String[] { checklist.getTitle(),
-									checklistScoring });
+							new String[] { checklist.getTitle()+addColon,
+							checkListValue });
+					//34833 - end
 				}
 			}
 		} finally {
@@ -10900,7 +10908,8 @@ private void retriveCommitteeRemarksList(){
 			ScQtCommittee qt = resDTO.getQtCommittee();
 			
 			// #28784 - start
-			if (qt.getScQt().isDemoRequired() && this.getManagedBean().getTaskName().equals(SCProcessNameConst.SIGNOFF_TEC_EVALUATION)) {//#28784
+			if (qt.getScQt().isDemoRequired() && this.getManagedBean().getTaskName().equals(SCProcessNameConst.SIGNOFF_TEC_EVALUATION)
+					&& !this.getManagedBean().isDemoWip()) {//#28784
 				successMessage(MessageConst.INFO_700101, getMessageCommon("lbl.sc.eva.technical.presentation.demo.signoff"), qt
 						.getScQt().getQtNo(), Boolean.TRUE);
 			} else {
@@ -17856,6 +17865,9 @@ private void retriveCommitteeRemarksList(){
 	
 	public void downloadAllTechnicallDocumentCompliance() throws Exception {
 		List<ScQtCheckList> list = this.getManagedBean().getComplianceTechnicalCheckList();
+		Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
+		Long downloadAllDocsTimer = System.currentTimeMillis();
+		log.info("Starting downloadAllTechnicallDocumentCompliance :: " + currentTimeStamp);
 
 		IQTEvaluationSO evaluationSO = null;
 
@@ -17904,6 +17916,8 @@ private void retriveCommitteeRemarksList(){
 			}
 
 			downloadAllFilesWithSpecificFolder("NGEP-Technical-By" + mainFolderTitle, listScAttachment, downloadBy, getEncryptionKey());
+			Long endTimer = System.currentTimeMillis();
+			log.info("Ending downloadAllTechnicallDocumentCompliance :: " + convertMilliToSeconds(endTimer - downloadAllDocsTimer) + " Second(s)");
 		} catch (Exception e) {
 			e.printStackTrace();
 
