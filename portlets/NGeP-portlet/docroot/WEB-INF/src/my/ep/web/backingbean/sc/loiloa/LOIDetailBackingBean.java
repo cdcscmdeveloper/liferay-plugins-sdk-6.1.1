@@ -429,7 +429,7 @@ public class LOIDetailBackingBean extends
 						new FacesScopes().getUserLocale());
 		getManagedBean().setLoiSupplierProposalspec(message);
 					ScLoi scLoi = getManagedBean().getScLoi();
-					Long statusId =Long.valueOf(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId());//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+					Long statusId =scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 						
 					List<ScLoiTerm> scNegoTerms = scLoi.getScNegoTerms();
 					if(null == scNegoTerms) {
@@ -1747,7 +1747,7 @@ public class LOIDetailBackingBean extends
 		debugLogger("addNegotiationTerm");
 		ScLoi scLoi = getManagedBean().getScLoi();
 		
-		Long statusId = Long.valueOf(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId());//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 		
 		List<ScLoiTerm> scNegoTerms = scLoi
 				.getScNegoTerms();
@@ -2020,7 +2020,7 @@ public class LOIDetailBackingBean extends
 
 		//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 		ScWorkFlowStatus currentStatus = scLoi != null ?scLoi.getScWorkFlowStatus():null;
-		Long statusId = currentStatus != null ? Long.valueOf( currentStatus.getPmStatus().getStatusId()):null;//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+		Long statusId = currentStatus != null ? currentStatus.getPmStatus().getStatusId():null;//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 
 		// online bidding
 		if (scLoi != null && scLoi.getRecommendBy() != null) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
@@ -2757,7 +2757,7 @@ public class LOIDetailBackingBean extends
 					.getPayLoad();
 
 			ScLoi scLoi = this.getManagedBean().getScLoi();
-			Long statusId = Long.valueOf(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId());//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+			Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 			parseLOIDetails(scLoi, outcome);
 			
 			// remove empty remark - start
@@ -3959,7 +3959,7 @@ public class LOIDetailBackingBean extends
 		// validate
 		validateLOIDetails(scLoi, outcome);
 		
-		Long statusId = Long.valueOf(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
+		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId(); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 
 		if (scLoi.isApprovalReq()
 				&& QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId)) {
@@ -4034,7 +4034,7 @@ public class LOIDetailBackingBean extends
 	 * @param outcome the outcome
 	 */
 	private void validateLOIDetails(ScLoi scLoi, String outcome) {
-		Long statusId = Long.valueOf(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
+		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId(); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 		
 		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && (QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId)
 				|| QTStatusConst.LOI_PENDING_REVISION.equals(statusId))) {
@@ -6463,7 +6463,7 @@ public class LOIDetailBackingBean extends
 		if(CollectionUtils.isNotEmpty(scLoiLoa.getScLois())){
 			ScLoi scLoi =  scLoiLoa.getScLois().get(0);
 			if(scLoi.getScWorkFlowStatus() != null){
-				Long statusId = Long.valueOf(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId());//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+				Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				
 				if(QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) ||
 						QTStatusConst.LOI_PENDING_APPROVAL.equals(statusId)){
@@ -6642,7 +6642,7 @@ public class LOIDetailBackingBean extends
 	public void addSuppliersProposalSpecificationUpdate() {
 		debugLogger("addSuppliersProposalSpecificationUpdate");
 		ScLoi scLoi = getManagedBean().getScLoi();
-		Long statusId = Long.valueOf(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId());//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 		
 		List<ScLoiTerm> scNegoTerms = scLoi.getScNegoTerms();
 		if(null == scNegoTerms) {
