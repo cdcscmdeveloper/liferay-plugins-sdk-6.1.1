@@ -102,16 +102,19 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	
 	//#28784
 	private boolean isDemoReq;
-
-	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
-		{
-			add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
-			add(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT);
-			add(SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT);
-			add(SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT);
-			add(SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT);
-		}
-	};
+	//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+	private final static List<String> directDownloadDocDefKeys = setDirectDownloadDocDefKeys(); 
+	private static List<String> setDirectDownloadDocDefKeys(){
+		List<String> list = new ArrayList<String>();
+		
+		list.add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
+		list.add(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT);
+		list.add(SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT);
+		list.add(SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT);
+		list.add(SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT);
+		
+		return list;
+	}
 
 	public ConsolidationReportManagedBean() {
 	}

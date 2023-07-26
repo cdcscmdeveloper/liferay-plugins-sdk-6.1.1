@@ -91,7 +91,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			getManagedBean().setBackToPreviousPage(prevPageUrl); 
 			
 			boolean fromBpmTaskList = false;
-			Long sourceId = Long.valueOf(scQt.getQtId());
+			Long sourceId = scQt.getQtId(); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 
 			//Long sourceId = 146L;//LOA record Existed
 			//Long sourceId = 3762L; // no LOA record
