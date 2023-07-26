@@ -10284,6 +10284,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 				}
 			}//29007-End
+			for(ScLoiLoaItem loiLoaItem:this.getManagedBean().getScLoa().getScLoiLoaItems()){
+				if(null!=this.getManagedBean().getScLoa() && this.getManagedBean().getScLoa().isBrandNew()){
+					loiLoaItem.setScLoa(this.getManagedBean().getScLoa());
+				}
+			}
 			}//29007-End
 			if(resDTO.isSuccessful()){
 				if(!getManagedBean().getScLoa().getPmStatus().getStatusId().
