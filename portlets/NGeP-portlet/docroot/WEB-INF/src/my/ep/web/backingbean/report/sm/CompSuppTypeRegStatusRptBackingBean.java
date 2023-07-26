@@ -60,7 +60,7 @@ public class CompSuppTypeRegStatusRptBackingBean extends
 			params.put(SmReportConst.PARAM_DISTRICT, getManagedBean().getDistrict());
 		}
 		if(getManagedBean().getIsCLBG() != null){
-			params.put(SmReportConst.PARAM_IS_CLBG, getManagedBean().getIsCLBG().toString());
+			params.put(SmReportConst.PARAM_IS_CLBG, getManagedBean().getIsCLBG() ? "1" : "0");
 		}
 		/*
 		if (!StringUtils.isBlank(getManagedBean().getMofRegNoFrom())) {
