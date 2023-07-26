@@ -613,9 +613,7 @@ public class SmServiceLookup {
 	 * @return IDiMyidentitySO
 	 */
 	public static IDiMyidentitySO getDiMyidentitySO() {
-		return (IDiMyidentitySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IDiMyidentitySO.class);
+		return (IDiMyidentitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDiMyidentitySO.class);
 	}
 
 	/**
@@ -624,8 +622,7 @@ public class SmServiceLookup {
 	 * @return IPmKpiSO
 	 */
 	public static IPmKpiSO getPmKpiSO() {
-		return (IPmKpiSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IPmKpiSO.class);
+		return (IPmKpiSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IPmKpiSO.class);
 	}
 
 	/**
@@ -634,8 +631,7 @@ public class SmServiceLookup {
 	 * @return IPoRoleTaskSO
 	 */
 	public static IPoRoleTaskSO getPoRoleTaskSO() {
-		return (IPoRoleTaskSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IPoRoleTaskSO.class);
+		return (IPoRoleTaskSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IPoRoleTaskSO.class);
 	}
 	
 	//START LOG 12491
@@ -645,11 +641,16 @@ public class SmServiceLookup {
 	 * @return IUpgradeRoleSO
 	 */
 	public static IUpgradeRoleSO getUpgradeRoleSO() {
-		return (IUpgradeRoleSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IUpgradeRoleSO.class);
+		return (IUpgradeRoleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IUpgradeRoleSO.class);
 	}
 	//END LOG 12491
+	
+	//#30457-start
+	public static ICatalogueSO getCatalogueSO() {
+		return (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
+	}
+	//#30457-end
+	
 	// #29617 start
 	/**
 	 * Get ISupplierSmeSO
@@ -657,16 +658,7 @@ public class SmServiceLookup {
 	 * @return ISupplierSmeSO
 	 */
 	public static ISupplierSmeSO getSupplierSmeSO() {
-		return (ISupplierSmeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-				ISupplierSmeSO.class);
+		return (ISupplierSmeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSmeSO.class);
 	}
 	// #29617 end
-	
-	//#30457-start
-	public static ICatalogueSO getCatalogueSO() {
-		return (ICatalogueSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
-						ICatalogueSO.class);
-	}
-	//#30457-end
 }

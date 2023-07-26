@@ -1487,7 +1487,7 @@ public class ApprovalBackingBean extends
 				checkApprovalAndRefreshDetails (qt.getQtId(),taskName, this.getManagedBean().getScQtApproval());
 				// Bug #31759 - End
 
-				invokeRemarksWhileExecuteReviseFlow(this.getManagedBean().getScQtApproval()); // 25077
+				invokeRemarksWhileExecuteReviseFlow(outcome); // 25077, #34698
 
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
 
@@ -3017,18 +3017,18 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 	/**
 	 * insert remarks while doing revise process flow
 	 */
-	private void invokeRemarksWhileExecuteReviseFlow(ScQtApproval approval) {
+	// #34698 -start-
+	private void invokeRemarksWhileExecuteReviseFlow(String outcome) {
+		// #34698 -end-
 		ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean()
 				.getQt().getQtId());
 		wfStatus = wfStatus == null ? new ScWorkFlowStatus() : wfStatus;
 
-		if (wfStatus.getPmStatus() != null) {
-			Long currentStatusId = wfStatus.getPmStatus().getStatusId();
-			
-			if (currentStatusId.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) {
-				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-				
-				if (!qtBackingBean.getManagedBean().isFirstPagePA()) {
+		// #34698 -start-
+		if (wfStatus.getPmStatus() != null
+				&& wfStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)
+				&& BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && !this.getManagedBean().isFirstPagePA()) {
+			// #34698 -end-
 					ScQtApproval publication = this.getManagedBean().getPublicationApproval();
 					List<ScQtApprovalRemark> qtRemarks = initializeRemarks(publication, wfStatus,
 							publication.getScQtApprovalRemarks(), ScQtApprovalRemark.class);
@@ -3040,9 +3040,8 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 					publication.setScQtApprovalRemarks(qtRemarks);
 					
 					this.getManagedBean().setScQtApproval(publication);
-				}
-			}
 		}
+
 	}
 	// #25077 - End
 	

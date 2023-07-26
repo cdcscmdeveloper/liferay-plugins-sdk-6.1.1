@@ -154,6 +154,7 @@ import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
@@ -562,7 +563,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			otherArgs = new HashMap<>();
 			otherArgs.put(MapKeyEnum.enableDownloadAllDocuments, Boolean.TRUE);
 		}
-		
 		// #19336, #25201, #17376, #19287 -start-
 		return retrieveSupplierLOADtlPriv(sourceId, loaId, previousPageUrl, isReadonly, otherArgs);
 		// #19336, #25201, #17376, #19287 -end-
@@ -2441,7 +2441,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode()))){
 			
 			constructPRSupplierSpecificationAndRemarks(context, scLoa);
-			//log.info(".....CR Enhancement 26226 generateAgreementLetterDocFromVelocity method.....");
 		}
 		// #26226 - End
 		
@@ -2493,9 +2492,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		//26226 Start 
 		String itemType = null;
 		
-		String dafaltValue = "T/B";
-		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-			dafaltValue = "N/A";//#29006
+		String dafaltValue = SSTConstant.TB;
+		if (SSTConstant.LANGUAGE_CODE_EN.equals(new FacesScopes().getUserLocale().getLanguage())) {
+			dafaltValue = SSTConstant.NA;//#29006
 		}
 		//End
 
@@ -2524,8 +2523,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		jadualHargaItemBean.setServiceItemBeans(serviceItemBeans);
 		context.put("jadualHargaItemBean", jadualHargaItemBean);
 		//26226 Start
-		context.put("serviceScope", dafaltValue);
-		context.put("itemType", itemType);
+		context.put(SSTConstant.serviceScope, dafaltValue);
+		context.put(SSTConstant.itemType, itemType);
 		// End
 	}
 
@@ -5288,7 +5287,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
         //26226 Start
 		TplSpecQuestion tplSpecQuestion=item.getScRequestItem().getTplSpecQuestion();
 		itemBean.setItem(item.getScRequestItem().getItemName());
-		itemBean.setZoneName(item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : "");
+		itemBean.setZoneName(item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : SSTConstant.EMPTY_STRING);
 		
 		if (null != tplSpecQuestion.getClDeliveryTerm()) {
 			itemBean.setClDeliveryTerm(tplSpecQuestion.getClDeliveryTerm().toString());
@@ -9233,6 +9232,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			else
 				scLoiLoaItem.setComplete(false);
 			
+			// start - #34898
+			if (scLoiLoaItem.getLoaSpecJustification() != null) {
+				scLoiLoaItem.setLoaSpecJustification(scLoiLoaItem.getLoaSpecJustification().replaceAll("<", "&#60;"));
+			}
+
+			for (TplSpecAnswer tplSpecAnswer : scLoiLoaItem.getTplSpecAnswerList()) {
+				if (tplSpecAnswer.getNewSupplierOffer() != null) {
+					tplSpecAnswer.setNewSupplierOffer(tplSpecAnswer.getNewSupplierOffer().replaceAll("<", "&#60;"));
+				}
+			}
+			// end - #34898
+			
 			//#29006 - note 702 - start
 			for (ScLoiLoaItem item : items) {
 				if(item.getLoiLoaItemId().equals(scLoiLoaItem.getLoiLoaItemId())
@@ -10135,7 +10146,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					
 					finalMsg.append("          " + labelLampiranA3);
 					
-					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMsg.toString());
+					String finalMessage=finalMsg.toString().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
+					finalMessage=finalMessage.toString().replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
+					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMessage);
 				}
 
 				specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
@@ -10166,10 +10179,28 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							specAnswer.setNewSupplierOffer(null);
 						}
 
-						if (specAnswer.getNewSupplierOffer() != null
-								&& StringUtils.isNotBlank(specAnswer.getNewSupplierOffer())
-								&& StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())) {
-							newOfferedSpecification = true;
+						if(specAnswer.getNewSupplierOffer() != null 
+								&& StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) 
+								&& StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){
+							String newSupplierOffered=specAnswer.getNewSupplierOffer().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
+							newSupplierOffered=newSupplierOffered.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
+							specAnswer.setNewSupplierOffer(newSupplierOffered);
+							newOfferedSpecification=true;
+						}
+						if(specAnswer.getTplSpecQuestion() != null 
+								&& specAnswer.getTplSpecQuestion().getClItem() !=null 
+								&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) 
+								&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){
+							String itemName=specAnswer.getTplSpecQuestion().getClItem().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
+							itemName=itemName.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
+							specAnswer.getTplSpecQuestion().setClItem(itemName);
+						}
+						if(specAnswer.getAnswerRemark() != null 
+								&& StringUtils.isNotBlank(specAnswer.getAnswerRemark()) 
+								&& StringUtils.isNotEmpty(specAnswer.getAnswerRemark())){
+							String ansRemark=specAnswer.getAnswerRemark().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
+							ansRemark=ansRemark.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
+							specAnswer.setAnswerRemark(ansRemark);
 						}
 					}
 					
