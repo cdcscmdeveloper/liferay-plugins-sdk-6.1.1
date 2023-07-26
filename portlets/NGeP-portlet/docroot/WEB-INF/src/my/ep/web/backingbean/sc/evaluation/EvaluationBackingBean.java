@@ -2413,40 +2413,40 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				}
 			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-				if (this.getManagedBean().getScQt().isDemoRequired()) {
-					// #28784 - FEC by item eval = TI, package = P	
-					if(this.getManagedBean().getTabItemPackageIndex() == 1){
-						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-					} else {
-					evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
-					}
+				// #25138 - 040621 - start
+				if (this.getManagedBean().getScQt().isPartial()) {
+					evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+					//#25138 -set wip
+					int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+					this.getManagedBean().setWipStatusMax(wipstatus);
 				} else {
-					// #25138 - 040621 - start
-					if (this.getManagedBean().getScQt().isPartial()) {
-						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-						//#25138 -set wip
+					// #32453-start
+					// wip status start
+					//#28784 add demo for wip status - Start
+					if (this.getManagedBean().getTabItemPackageIndex() == 1) {
 						int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
 						this.getManagedBean().setWipStatusMax(wipstatus);
-					} else {
-						// #32453-start
-						// wip status start
-						if (this.getManagedBean().getTabItemPackageIndex() == 1) {
-							int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
-							this.getManagedBean().setWipStatusMax(wipstatus);
-							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
-								evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+						if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+							evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+						} else {
+							if(this.getManagedBean().getScQt().isDemoRequired()){
+								evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
 							} else {
 								evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 							}
+						}
+					} else {
+						if(this.getManagedBean().getScQt().isDemoRequired()){
+							evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
 						} else {
 							evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 						}
-						// wip status end
-						// #32453-end
 					}
-					// #25138 - 040621 - end
+					//#28784 add demo for wip status - End
+					// wip status end
+					// #32453-end
 				}
-
+				// #25138 - 040621 - end
 			}
 			
 			//bug #33582 idham - generate proposal score if proposal score for Modal Berbayar = null - start
