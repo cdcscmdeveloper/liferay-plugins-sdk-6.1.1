@@ -4140,30 +4140,32 @@ public class CreateQtBackingBean extends
 	}
 
 	// #21695 Farid END 3/7/2021
+	
 	/**
 	 * #28784 - check demo radio button and display popup to delete
 	 * @param event
 	 */
 	public void validateDemoTechList(AjaxBehaviorEvent event) {
-//		SpecificationResDTO resDTO = null;
-//		IQTSpecSO specSo = null;
 		Boolean type = (Boolean) event.getComponent().getAttributes().get("value");
 		this.getManagedBean().getQt().setDemoRequired(type);
 		if (type == false) {
-//			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-//			specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-//					IQTSpecSO.class);
-//			reqDTO.setScQt(this.getManagedBean().getQt());
-//			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
-//			resDTO = specSo.retrieveCheckLists(reqDTO);
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
+
+			if (null == scQtTechChecklist) {
+				IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
+				reqDTO.setScQt(this.getManagedBean().getQt());
+				reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+				scQtTechChecklist = specSo.retrieveCheckLists(reqDTO).getTechnicalCheckList();
+			}
+
 			if (null != scQtTechChecklist) {
 				for (ScQtCheckList checklist : scQtTechChecklist) {
 					if (checklist.getDefinationType().getParameterCode()
 							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-//						if (checklist.getQtChecklistId() != null) {
-							RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");
-//						}
+						RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");
+
 					}
 				}
 			}
@@ -4171,7 +4173,7 @@ public class CreateQtBackingBean extends
 		} else {
 			RequestContext.getCurrentInstance().execute("demoDialogConfirm.hide()");
 		}
-		
+
 		QTDetailBackingBean detailBB = new QTDetailBackingBean();
 		detailBB.checkDemoPresentationByStatus();
 	}
