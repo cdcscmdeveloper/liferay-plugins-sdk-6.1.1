@@ -52,7 +52,6 @@
 							display="inline" required="true" readonlyInput="true"
 							label="#{lbl['lbl.sm.mofacc.expiry.date']}" id="expDate"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							mindate="#{CommonConstants.CURRENT_DATE}"
 							value="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate}"
 							rendered="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate ge CommonConstants.CURRENT_DATE}" >
 							<p:ajax event="change" process="@this" partialSubmit="true"/>

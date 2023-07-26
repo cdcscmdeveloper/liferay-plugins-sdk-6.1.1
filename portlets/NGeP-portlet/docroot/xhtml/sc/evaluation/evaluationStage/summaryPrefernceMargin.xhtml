@@ -66,12 +66,13 @@
 				style="width:10%;text-align:right">
 				<h:outputText value="#{prefQualSupplier.totalScore}"></h:outputText>
 			</p:column>
-
-<!-- #34588 - start -->
+			<ui:remove>
+				<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+			</ui:remove>
 			 <p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
 				style="width:15%"
 				rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
-				<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 																	  		fn:toUpperCase(prefQualSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
+				<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag,fn:toUpperCase(prefQualSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
 			</p:column>
 <!-- #34588 - end -->
 			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
@@ -83,8 +84,9 @@
 				</h:outputText>
 
 			</p:column>
-
-<!-- #34588 - start -->
+			<ui:remove>
+				<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+			</ui:remove>
 			 <p:column style="width:15%; text-align:right;" rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.difference.rm']}" />

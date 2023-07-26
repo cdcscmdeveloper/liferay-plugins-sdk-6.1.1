@@ -65,6 +65,8 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
+import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -86,7 +88,10 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;//#31849  #32682
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
+import my.ep.dto.sm.businessnature.SupplierBusinessNatureResDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -3474,12 +3479,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			if(!personnel.isSsmData()) continue;
 			
 			validateSsmPersonnel(personnel);
-			if(personnel.isEquityOwnerSsm())
-				getManagedBean().getPersonnelsOwner().add(personnel);
-			
-			if(personnel.isDirectorSsm())
-				getManagedBean().getPersonnelsDirector().add(personnel);
-			
+			if(personnel.isEquityOwnerSsm()){
+				getManagedBean().getPersonnelsOwnerSsm().add(personnel);
+			}
+			if(personnel.isDirectorSsm()){
+				getManagedBean().getSmPersonnelDirectorSsm().add(personnel);
+			}
 			getManagedBean().getPersonnelsSsm().add(personnel);
 		}
 		
@@ -3489,8 +3494,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			getManagedBean().getSmSupplierBranchSsm().add(branch);
 		}
 		
-		getManagedBean().getSmSupplierBranchSsm().clear();
-		for(SmSupplierBusiness business : getManagedBean().getSmAppl().getSmSupplier().getSmSupplierBusinesses()){
+		SupplierBusinessNatureReqDTO reqDTO = new SupplierBusinessNatureReqDTO();
+		reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());		
+		SupplierBusinessNatureResDTO resDTO = ((ISupplierBusinessNatureSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", ISupplierBusinessNatureSO.class))
+				.retrieveAllBusinessNatureBySupplierId(reqDTO);
+		for(SmSupplierBusiness business : resDTO.getBusinessNatureLs()){
 			if(!business.isSsmData()) continue;
 			getManagedBean().getSmSupplierBusinessSsm().add(business);
 		}
@@ -3500,8 +3509,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			if(!company.isSsmData()) continue;
 			getManagedBean().getSmEquityCompaniesSsm().add(company);
 		}
-		//#31269
-		RequestContext.getCurrentInstance().execute("viewssminfoWidgetVar.show()");
+		RequestContext.getCurrentInstance().execute("viewssminfoDlg.show()");
 	}
 	
 	public boolean renderViewSSMInfo(){
@@ -3511,13 +3519,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	public SmPersonnel validateSsmPersonnel(SmPersonnel personnel){
-		if(personnel == null || !personnel.isSsmData()) return personnel;
-		if(personnel.getSmPersonnelAddresses() != null){
-			for(int i=0; i < personnel.getSmPersonnelAddresses().size(); i++){
-				if(personnel.getSmPersonnelAddresses().get(i).getSmAddress().isSsmData()){
-					Collections.swap(personnel.getSmPersonnelAddresses(), 0, i);
-					break;
-				}
+		if(personnel == null || !personnel.isSsmData() 
+			|| personnel.getSmPersonnelAddresses() == null) return personnel;
+		for(int i=0; i < personnel.getSmPersonnelAddresses().size(); i++){
+			if(personnel.getSmPersonnelAddresses().get(i) == null
+				|| personnel.getSmPersonnelAddresses().get(i).getSmAddress() == null){
+				continue;
+			}
+			if(personnel.getSmPersonnelAddresses().get(i).getSmAddress().isSsmData()){
+				Collections.swap(personnel.getSmPersonnelAddresses(), 0, i);
+				break;
 			}
 		}
 		return personnel;
@@ -4214,4 +4225,26 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return AddressUtils.getFullBranchAddress(smAddress);
 	}
 	//#34135 END
+	
+	//29021 - start 34865,34866,34867 - 29021 WIP
+	/**
+	 * Evaluate if QT is a wip document. ScoreSetting less than 7 indicate wip document.
+	 *
+	 * @param scQt
+	 * @return wip flag 
+	 */
+	public boolean evaluateWIP(ScQt scQt){
+		Integer maxScoreSetting = this.getManagedBean().getWipStatusMax();
+		if(maxScoreSetting == null){
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			maxScoreSetting = evaluationSO.checkWipScoreSettingMax(reqDTO);
+			this.getManagedBean().setWipStatusMax(maxScoreSetting);
+		}
+		return maxScoreSetting < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM;
+	}
+	//29012 - end 34865,34866,34867 - 29021 WIP
+
 }
