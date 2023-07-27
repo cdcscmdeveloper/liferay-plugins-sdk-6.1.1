@@ -8,8 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.projDtls.panHdr']}" toggleable="true">
 		<table style="width: 350px">
-			<!-- Disable for UPS 32008 - START -->
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.experienceVerified}"
@@ -24,7 +23,7 @@
 
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.experienceVerified}"
@@ -40,7 +39,7 @@
 			</p:outputPanel>
 		</table>
 		<p:outputPanel id="consInfPan" layout="block">
-			<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:consInfPan" widgetVar="buiPoCons"
+			<p:blockUI block=":form:tt:consInfPan" widgetVar="buiPoCons"
 				id="poConsBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.experienceVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.experienceVerified : false)}" />
 			<p:dataTable var="consBean" widgetVar="suppCnstlExpDtWidVar"
@@ -50,7 +49,7 @@
 				rowKey="#{consBean}" rowIndexVar="index" id="consDt">
 				<ac:paginator for="consDt" />
 				
-				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smCompanyExperiences and !backingBean.managedBean.upsCannotEdit}"/>
+				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smCompanyExperiences}"/>
 
 				<p:column headerText="#{lbl['lbl.sm.projDtls.projTitle']}"
 					style="white-space:normal;word-break:break-all;">
@@ -87,8 +86,7 @@
 					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 						action="#{backingBean.assignSelCompanyExperience(consBean)}"
 						update=":form:tt:consDialog" partialSubmit="true" process="@this">
-						<p:graphicImage rendered="#{backingBean.managedBean.upsCannotEdit}" value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
-						<p:graphicImage rendered="#{!backingBean.managedBean.upsCannotEdit}" value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 					</p:commandLink>
 					<ac:smFieldChangeTableAlert object="#{consBean}" />
 				</p:column>
@@ -97,12 +95,10 @@
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.assignNewCompanyExperience}"
 					update=":form:tt:consDialog" partialSubmit="true" process="@this" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']} "
-					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					id="delConsExpBtnId" disabled="#{empty backingBean.managedBean.smAppl.smCompanyExperiences}"
 					update=":form:tt:consDt,@this" partialSubmit="true" process="consInfPan" 
 					oncomplete="consProjExpDeletePopUp.show()" />
@@ -147,7 +143,7 @@
 	</p:panel>
 	<p:dialog header="#{lbl['lbl.sm.projDtls.projDiaHdr']}"
 		widgetVar="consDialog" id="consDialog" resizable="false"
-		closable="true" showEffect="fade" hideEffect="fade" modal="true"
+		closable="false" showEffect="fade" hideEffect="fade" modal="true"
 		width="850px" height="500px">
 		
 		<p:outputPanel layout="block" id="consExpBlockPanel">
@@ -163,8 +159,7 @@
 								<td><p:outputLabel
 										value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
 								<td><p:selectOneRadio
-										value="#{backingBean.managedBean.selectedCompanyExperience.clientType}"
-										disabled="#{backingBean.managedBean.upsCannotEdit}">
+										value="#{backingBean.managedBean.selectedCompanyExperience.clientType}">
 										<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.fdrGov']}"
 											itemValue="F" />
 										<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.nonfdrGov']}"
@@ -189,8 +184,7 @@
 										label="#{lbl['lbl.sm.projDtls.projTitle']}"
 										id="supConsExpPrjTtl"
 										value="#{backingBean.managedBean.selectedCompanyExperience.title}"
-										size="35"
-										disabled="#{backingBean.managedBean.upsCannotEdit}" /> 
+										size="35" /> 
 										<ac:smFieldChangeAlert 
 											isShow="#{backingBean.managedBean.showFieldChanges
 												and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
@@ -210,8 +204,7 @@
 										label="#{lbl['lbl.sm.projDtls.clientName']}"
 										id="supConsExpClntName"
 										value="#{backingBean.managedBean.selectedCompanyExperience.clientName}"
-										size="35"
-										disabled="#{backingBean.managedBean.upsCannotEdit}" /> 
+										size="35" /> 
 										<ac:smFieldChangeAlert 
 											isShow="#{backingBean.managedBean.showFieldChanges
 												and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
@@ -228,7 +221,7 @@
 										value="*" styleClass="mandatory" /></td>
 								<td><p:inputText label="#{lbl['lbl.sm.projDtls.projCost']}"
 										id="consultantProjCost" maxlength="17"
-										disabled="#{!backingBean.managedBean.valueReqd or backingBean.managedBean.upsCannotEdit}"
+										disabled="#{!backingBean.managedBean.valueReqd}"
 										required="#{backingBean.managedBean.valueReqd}"
 										validatorMessage="#{lbl['lbl.sm.projDtls.projCost']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 										value="#{backingBean.managedBean.selectedCompanyExperience.contractValue}"
@@ -256,7 +249,7 @@
 								<td><p:selectOneMenu
 										label="#{lbl['lbl.sm.projDtls.payMthd']}" id="supCnstntPayMthd"
 										value="#{backingBean.managedBean.selectedCompanyExperience.paymentMethodId}"
-										style="width: 207px;margin-bottom: 5px;" disabled="#{backingBean.managedBean.upsCannotEdit}">
+										style="width: 207px;margin-bottom: 5px;">
 										<f:selectItems value="#{backingBean.getDropdownValues('PYM')}" />
 									</p:selectOneMenu> 
 									<ac:smFieldChangeAlert 
@@ -272,7 +265,7 @@
 								<td><p:outputLabel value=" #{lbl['lbl.sm.projDtls.refNo']}" /></td>
 								<td><p:inputText
 										value="#{backingBean.managedBean.selectedCompanyExperience.refNo}"
-										size="35" maxlength="50" disabled="#{backingBean.managedBean.upsCannotEdit}" />
+										size="35" maxlength="50" />
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges
 											and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
@@ -286,7 +279,7 @@
 										value=" #{lbl['lbl.sm.projDtls.projLoc']}" /></td>
 								<td><p:inputText
 										value="#{backingBean.managedBean.selectedCompanyExperience.projectLocation}"
-										size="35" maxlength="30" disabled="#{backingBean.managedBean.upsCannotEdit}" />
+										size="35" maxlength="30" />
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges
 											and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
@@ -300,7 +293,7 @@
 										value=" #{lbl['lbl.sm.projDtls.serviceProvide']} " /></td>
 								<td><p:inputTextarea maxlength="500"
 										value="#{backingBean.managedBean.selectedCompanyExperience.workServiceDesc}"
-										cols="36" style="margin-bottom:5px;" disabled="#{backingBean.managedBean.upsCannotEdit}">
+										cols="36" style="margin-bottom:5px;">
 										<f:validateLength maximum="500" />
 									</p:inputTextarea>
 									<ac:smFieldChangeAlert 
@@ -318,8 +311,7 @@
 								<td><p:selectOneRadio
 										required="#{backingBean.managedBean.valueReqd}"
 										label="#{lbl['lbl.sm.projDtls.workProgress']}"
-										id="supConsExpPrgSt" 
-										disabled="#{backingBean.managedBean.upsCannotEdit}"
+										id="supConsExpPrgSt"
 										value="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}">
 										<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.inProgress']}"
 											itemValue="P" />
@@ -350,7 +342,7 @@
 										value=" #{lbl['lbl.sm.projDtls.consultFee']}" /><p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td><p:inputText id="consultantProjConsultFee" required="#{backingBean.managedBean.valueReqd}"
-										disabled="#{!backingBean.managedBean.valueReqd or backingBean.managedBean.upsCannotEdit}"
+										disabled="#{!backingBean.managedBean.valueReqd}"
 										label=" #{lbl['lbl.sm.projDtls.consultFee']}" maxlength="17"
 										validatorMessage="#{lbl['lbl.sm.projDtls.consultFee']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 										value="#{backingBean.managedBean.selectedCompanyExperience.consultantFee}"
@@ -378,7 +370,6 @@
 										value="#{lbl['lbl.sm.projDtls.apptDate']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td><p:calendar showOn="button" id="consultProjAppDate"
-										disabled="#{backingBean.managedBean.upsCannotEdit}"
 										required="#{backingBean.managedBean.valueReqd}"
 										label="#{lbl['lbl.sm.projDtls.apptDate']}" navigator="true"
 										display="inline" readonlyInput="true"
@@ -403,7 +394,6 @@
 	
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					id="consultProjPopUpSaveBtn"
 					actionListener="#{backingBean.addOrUpdateCompanyExperienceToSmAppl}"
 					onclick="consExpBlockWidget.show();" oncomplete="consExpBlockWidget.hide();"
@@ -411,11 +401,9 @@
 					process="consDialog" />
 	
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.cancelCompExpFunctions}">
 				</p:commandButton>
-				<!-- Disable for UPS 32008 - END -->
 			</div>
 			<p:blockUI block="consExpBlockPanel" widgetVar="consExpBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
