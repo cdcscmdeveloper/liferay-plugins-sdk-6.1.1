@@ -17201,40 +17201,63 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	// #34166 - End
+	//#34799 - start
+	public void onTickSameAsAddress(SmAddress srcAddr,
+			SmPersonnelAddress destAddr, String componentId, boolean isTick) {
+		if(isTick){
+			UIComponent comp = org.primefaces.util.ComponentUtils.findComponent(
+					FacesContext.getCurrentInstance().getViewRoot(), componentId);
+			if(comp != null){
+				resetEditableValue(comp);
+			}
+		}
+		onTickSameAsAddress(srcAddr, destAddr);
+	}
 	
-	//#32008 - START
-		public String getSelectedBranchBank(){
-			SmSupplierBank bank = getManagedBean().getSelectedBank();
-			if (SmCommonUtil.isCollectionEmpty(bank.getSmSupplierBranchBanks())) {
-				return null;
-			}
-			if (bank.getSmSupplierBranchBanks().size() == 1) {
-				return bank.getSmSupplierBranchBanks().get(0)
-							.getSmSupplierBranch().getBranchName();
-			}
-			StringBuilder sb = new StringBuilder();
-			int i=0;
-			for (SmSupplierBranchBank brTmp : bank.getSmSupplierBranchBanks()) {
-				sb.append(++i + ") " + brTmp.getSmSupplierBranch().getBranchName() + "<br/>");
-			}
-			return sb.toString();
+	private void resetEditableValue(UIComponent comp){
+		if(comp instanceof EditableValueHolder){
+			EditableValueHolder val = (EditableValueHolder) comp;
+			val.resetValue();
 		}
+		for(Iterator<UIComponent> it = comp.getFacetsAndChildren(); it.hasNext();){
+			resetEditableValue(it.next());
+		}
+	}
+	//#34799 - end	
 		
-		public String getSelectedSignatoryBank(){
-			SmSupplierBank bank = getManagedBean().getSelectedBank();
-			if (SmCommonUtil.isCollectionEmpty(bank.getSmChequeSignatories())){
-				return null;
-			}
-			if (bank.getSmChequeSignatories().size() == 1) {
-				return bank.getSmChequeSignatories().get(0)
-							.getSmPersonnel().getName();
-			}
-			StringBuilder sb = new StringBuilder();
-			int i=0;
-			for (SmChequeSignatory sign : bank.getSmChequeSignatories()) {
-				sb.append(++i + ") " + sign.getSmPersonnel().getName() + "<br/>");
-			}
-			return sb.toString();
+	//#32008 - START
+	public String getSelectedBranchBank(){
+		SmSupplierBank bank = getManagedBean().getSelectedBank();
+		if (SmCommonUtil.isCollectionEmpty(bank.getSmSupplierBranchBanks())) {
+			return null;
 		}
-		//#32008 - END
+		if (bank.getSmSupplierBranchBanks().size() == 1) {
+			return bank.getSmSupplierBranchBanks().get(0)
+						.getSmSupplierBranch().getBranchName();
+		}
+		StringBuilder sb = new StringBuilder();
+		int i=0;
+		for (SmSupplierBranchBank brTmp : bank.getSmSupplierBranchBanks()) {
+			sb.append(++i + ") " + brTmp.getSmSupplierBranch().getBranchName() + "<br/>");
+		}
+		return sb.toString();
+	}
+	
+	public String getSelectedSignatoryBank(){
+		SmSupplierBank bank = getManagedBean().getSelectedBank();
+		if (SmCommonUtil.isCollectionEmpty(bank.getSmChequeSignatories())){
+			return null;
+		}
+		if (bank.getSmChequeSignatories().size() == 1) {
+			return bank.getSmChequeSignatories().get(0)
+						.getSmPersonnel().getName();
+		}
+		StringBuilder sb = new StringBuilder();
+		int i=0;
+		for (SmChequeSignatory sign : bank.getSmChequeSignatories()) {
+			sb.append(++i + ") " + sign.getSmPersonnel().getName() + "<br/>");
+		}
+		return sb.toString();
+	}
+	//#32008 - END
 }
