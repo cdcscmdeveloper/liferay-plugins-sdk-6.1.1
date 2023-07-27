@@ -60,6 +60,10 @@
 					</p:commandLink>
 					&#160;<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.to.view.details']}" escape="false"/><br />
 					
+					<!-- #31018 - START -->
+					<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.justifyLetter']}" escape="false" />
+					
+					<!-- 
 					<c:choose>
 						<c:when test="#{(backingBean.managedBean.poUser or backingBean.managedBean.approverUser )
 						and (backingBean.managedBean.smAppl.applType ne 'B' and backingBean.managedBean.smAppl.applType ne 'U')}">
@@ -68,7 +72,9 @@
 						<c:otherwise>
 							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.category.overlap.upload.doc']}" escape="false" />
 						</c:otherwise>
-					</c:choose>
+					</c:choose> 
+					-->
+					<!-- #31018 - END -->
 				</td>
 			</tr>
 		</table>	
@@ -88,12 +94,9 @@
 					<h:outputText rendered="#{backingBean.managedBean.supplierUser}" value="*" styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sm.justification']}" />
 				</f:facet>
-				<!-- Disable for UPS 32008 - START -->
 				<p:inputTextarea value="#{overlap.overlapReason}" maxlength="200" 
 					style="width : auto;" rows="3" cols="80"
-					label="#{lbl['lbl.sm.justification']}" id="overlapCaReasonId"
-					disabled="#{backingBean.managedBean.upsCannotEdit}">
-				<!-- Disable for UPS 32008 - END -->
+					label="#{lbl['lbl.sm.justification']}" id="overlapCaReasonId">
 					<p:ajax process="@this" update="overlapCatSuppDocDtId,@this" event="blur"/>
 					<f:validateLength maximum="200" />
 				</p:inputTextarea>

@@ -26,8 +26,7 @@
 					rowKey="#{work}" rowIndexVar="index" id="workDt">
 					<ac:paginator for="workDt" />
 					
-					<!-- Disable for UPS 32008 - START -->
-					<p:column style="width: 5% !important;" rendered="#{not empty workshopCatVar.facilityList and !backingBean.managedBean.upsCannotEdit}" >
+					<p:column style="width: 5% !important;" rendered="#{not empty workshopCatVar.facilityList}">
 						<f:facet name="header">
 				          <p:selectBooleanCheckbox value="#{workshopCatVar.selected}" >
 				          	<p:ajax event="change" update=":#{p:component('smWorkShopDtPanel')}" 
@@ -76,7 +75,7 @@
 							longitude="#{work.smAddress.mapLongitude}" 
 							address="getWorkAddress2('#{work.smAddress.address1}', '#{work.smAddress.address2}', '#{work.smAddress.address3}', '#{work.smAddress.pmCity.cityName}', '#{work.smAddress.pmDistrict.districtName}', '#{work.smAddress.pmState.stateName}', '#{work.smAddress.pmCountry.countryName}')"
 							showButton="true"
-							disabled="#{backingBean.managedBean.upsCannotEdit}" />
+							disabled="false" />
 							
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
@@ -85,9 +84,7 @@
 							update=":form:tt:workShopDialog" style="padding-right:5px"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 							<p:graphicImage value="/css/images/design/edit.png"
-								title="#{lbl['lbl.sm.edit']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"/>
-							<p:graphicImage value="/css/images/design/ico-view.png"
-								title="#{lbl['lbl.sm.view']}" rendered="#{backingBean.managedBean.upsCannotEdit}" />
+								title="#{lbl['lbl.sm.edit']}" />
 						</p:commandLink>
 					</p:column>
 	
@@ -95,12 +92,12 @@
 			</ui:repeat>
 			<p:spacer height="2px;" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sm.button.add']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.assignNewWorkshopBean}"
 					update=":form:tt:workShopDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					partialSubmit="true" process="workShopPan"
 					id="delWorkshopBtnId" disabled="#{backingBean.disableDeleteBtn(workshopCatVar.facilityList)}"
 					update=":#{p:component('smWorkShopDtPanel')},@this" oncomplete="workshopDeletePopUp.show()" />
@@ -112,9 +109,7 @@
 	<p:dialog width="700px" height="500px"
 		header="#{lbl['lbl.sm.workshop.information']}"
 		widgetVar="workShopDialog" resizable="false" showEffect="fade"
-		closable="true" hideEffect="fade" modal="true" id="workShopDialog">
-		
-		<p:ajax event="close" listener="#{backingBean.cancelWorkShopSaveorUpdate}"/>
+		closable="false" hideEffect="fade" modal="true" id="workShopDialog">
 		
 		<p:outputPanel layout="block" id="workShopBlockPanel">
 			<p:messages id="workShopDialogMsg" showSummary="false"
@@ -127,8 +122,7 @@
 					<td><p:inputText size="35" maxlength="50"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.facility.name']}" id="smWrkShpName"
-							value="#{backingBean.managedBean.selectedWorkShopFacility.facilityName}"
-							disabled="#{backingBean.managedBean.upsCannotEdit}" >
+							value="#{backingBean.managedBean.selectedWorkShopFacility.facilityName}" >
 							<p:ajax process="@this" update="@this"/>
 						</p:inputText>
 						<p:message id="smWrkShpNameMsg" for="smWrkShpName"
@@ -145,19 +139,11 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.category']}" id="workshopCategoryId"
 							value="#{backingBean.managedBean.selectedSuppCategoryFacilityIds}"
-							style="height:100px;width: 200px;"
-							rendered="#{!backingBean.managedBean.upsCannotEdit}">
+							style="height:100px;width: 200px;">
 							<f:selectItems
 								value="#{backingBean.getSelectedCategoryItemsByFacilityType(backingBean.managedBean.selectedWorkShopFacility.facilityType)}" />
 							<p:ajax event="change" update="@this" process="@this" partialSubmit="true" />
 						</p:selectManyMenu>
-						<p:outputPanel rendered="#{backingBean.managedBean.upsCannotEdit}">
-							<ui:repeat var="cat" value="#{backingBean.managedBean.selectedWorkShopFacility.smSupplierCategoryFacilities}">
-								<h:outputText value="#{cat.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
-									#{cat.pmCategoryL3.pmCategoryL2.categoryL2Code} #{cat.pmCategoryL3.categoryL3Code}
-									(#{cat.pmCategoryL3.categoryName})" style="float:left"/><br/>
-							</ui:repeat>
-						</p:outputPanel>
 						<p:message id="workshopCategoryIdMsg" for="workshopCategoryId"
 							showSummary="true" showDetail="false" display="icon" />
 					</td>
@@ -167,7 +153,7 @@
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.workShopFacilityStates}"
 					divisionItems="#{backingBean.managedBean.workShopFacilityDivisions}"
 					districtItems="#{backingBean.managedBean.workShopFacilityDistricts}" cityItems="#{backingBean.managedBean.workShopFacilityCities}" 
-					facilityPanel="#{SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL}" panelId="workShopBlockPanel" disabled="#{backingBean.managedBean.upsCannotEdit}"/>
+					facilityPanel="#{SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL}" panelId="workShopBlockPanel"/>
 					
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
@@ -176,8 +162,7 @@
 						countryCode="#{backingBean.managedBean.selectedWorkShopFacility.phoneCountry}" 
 						areaCode="#{backingBean.managedBean.selectedWorkShopFacility.phoneArea}" 
 						number="#{backingBean.managedBean.selectedWorkShopFacility.phoneNo}"  
-						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" 
-						disabled="#{backingBean.managedBean.upsCannotEdit}"/>
+						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" />
 					</td>
 				</tr>
 				<tr>
@@ -187,8 +172,7 @@
 						countryCode="#{backingBean.managedBean.selectedWorkShopFacility.faxCountry}" 
 						areaCode="#{backingBean.managedBean.selectedWorkShopFacility.faxArea}" 
 						number="#{backingBean.managedBean.selectedWorkShopFacility.faxNo}"  
-						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}"
-						disabled="#{backingBean.managedBean.upsCannotEdit}" />
+						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" />
 					</td>
 				</tr>
 				<tr>
@@ -196,8 +180,7 @@
 					<td><p:inputText id="smWrkShpArea"
 							label="#{lbl['lbl.sc.spec.area.feat']}"
 							value="#{backingBean.managedBean.selectedWorkShopFacility.areaSquareFeet}"
-							size="35"
-							disabled="#{backingBean.managedBean.upsCannotEdit}">
+							size="35">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText> <p:message id="smWrkShpAreaMsg" for="smWrkShpArea"
@@ -211,8 +194,7 @@
 					<td><p:selectOneRadio
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.facility.ownerType']}" id="smWrkShpOwnType"
-							value="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType}"
-							disabled="#{backingBean.managedBean.upsCannotEdit}">
+							value="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType}">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']} "
 								itemValue="R" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}"
@@ -234,7 +216,7 @@
 					<td><ui:fragment
 							rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}">
 							<p:inputText id="smWrkShpPrice"
-								disabled="#{!backingBean.managedBean.valueReqd or backingBean.managedBean.upsCannotEdit}"
+								disabled="#{!backingBean.managedBean.valueReqd}"
 								label="#{lbl['lbl.cm.price']}" maxlength="17"
 								validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
 								value="#{backingBean.managedBean.selectedWorkShopFacility.purchasePrice}"
@@ -254,7 +236,7 @@
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}">
 							<p:inputText id="smWrkShpRent"
-								disabled="#{!backingBean.managedBean.valueReqd or backingBean.managedBean.upsCannotEdit}"
+								disabled="#{!backingBean.managedBean.valueReqd}"
 								label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
 								validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
 								value="#{backingBean.managedBean.selectedWorkShopFacility.rentalRate}"
@@ -280,7 +262,7 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.facility.ownerName']}"
 							value="#{backingBean.managedBean.selectedWorkShopFacility.ownerName}"
-							size="35" disabled="#{backingBean.managedBean.upsCannotEdit}"/> <p:message id="smWrkShpOwnNameMsg"
+							size="35" /> <p:message id="smWrkShpOwnNameMsg"
 							for="smWrkShpOwnName" showSummary="true" showDetail="false"
 							display="icon" /></td>
 				</tr>
@@ -289,16 +271,15 @@
 			
 			<br />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sm.button.save']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 					action="#{backingBean.addOrUpdateWorkshopToSmAppl}"
 					partialSubmit="true" process="workShopDialog"
 					onclick="workShopBlockWidget.show();" oncomplete="workShopBlockWidget.hide();" 
 					update=":#{p:component('smWorkShopDtPanel')}, @([id$=Msg])" />
-				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					process="@this" partialSubmit="true"
 					action="#{backingBean.cancelWorkShopSaveorUpdate}"
 					update=":form:tt:workShopDialog, @([id$=Msg])" />
-				<!-- Disable for UPS 32008 - END -->
 			</div>
 			<p:blockUI block="workShopBlockPanel" widgetVar="workShopBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
