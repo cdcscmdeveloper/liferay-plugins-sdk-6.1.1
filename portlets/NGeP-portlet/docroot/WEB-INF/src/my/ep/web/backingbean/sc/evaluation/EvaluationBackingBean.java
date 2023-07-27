@@ -18637,7 +18637,8 @@ private void retriveCommitteeRemarksList(){
 			
 			if (null != resDTO && null != resDTO.getSpecQuestionList()) {
 				for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
-						item.getScRequestItem().getTplSpecQuestion().setMandatorySpecForSample(question.isMandatorySpec()?true:false);
+					if(question.isMandatorySpec())	
+						item.getScRequestItem().getTplSpecQuestion().setMandatorySpecForSample(true);
 				}
 			}
 			if(item.getUserScore()!=null && !item.getUserScore().equals(0) && item.getCompliance()!=null && item.getCompliance()==Boolean.FALSE){
@@ -18653,19 +18654,19 @@ private void retriveCommitteeRemarksList(){
 	 */
 	public void onchangeCompliance(ScQtSampleItem itm){
 		for(ScQtSampleItem item : this.getManagedBean().getSampleItemList()){
-			if(itm.getSampleItemId().equals(item.getSampleItemId())
+			if(itm.getSampleItemId()==item.getSampleItemId()
 				&& itm.getCompliance()!=null
 				&& itm.getCompliance()==Boolean.FALSE){
-				item.setUserScore(new BigDecimal(0));
-			}else if(itm.getSampleItemId().equals(item.getSampleItemId())
+					item.setUserScore(BigDecimal.ZERO);
+			}else if(itm.getSampleItemId()==item.getSampleItemId()
 					&& itm.getCompliance()!=null
 					&& itm.getCompliance()==Boolean.TRUE
-					&& !itm.getUserScore().equals(null)
-					&& itm.getUserScore().equals(new BigDecimal(0))){
-				item.setUserScore(null);
-			}else if(itm.getSampleItemId().equals(item.getSampleItemId())
+					&& itm.getUserScore()!=null
+					&& itm.getUserScore().compareTo(BigDecimal.ZERO) == 0){
+						item.setUserScore(null);
+			}else if(itm.getSampleItemId()==item.getSampleItemId()
 					&& itm.getCompliance()==null){
-				item.setUserScore(null);
+						item.setUserScore(null);
 			}
 		}
 	}
