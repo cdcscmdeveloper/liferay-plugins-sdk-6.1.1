@@ -8451,9 +8451,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							smAddressRes.setCountryId(smpersonAddress.getSmAddress().getPmCountry().getCountryId());
 						}
 						//#34799 - start
-						PmState curState = smpersonAddress.getSmAddress().getPmState();
+						PmState curState = smAddressRes.getPmState();
 						onChangeCountry(smAddressRes, SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
-						smpersonAddress.getSmAddress().setPmState(curState);
+						smAddressRes.setPmState(curState);
 						//#34799 - end
 						if(smpersonAddress.getSmAddress().getPmState() != null){
 							smAddressRes.setPmState(smpersonAddress.getSmAddress().getPmState());
