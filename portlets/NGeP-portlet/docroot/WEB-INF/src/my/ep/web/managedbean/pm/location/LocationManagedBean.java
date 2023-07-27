@@ -368,5 +368,4 @@ public class LocationManagedBean extends BaseManagedBean {
 	public void setCityOldVal(CityResDTO cityOldVal) {
 		this.cityOldVal = cityOldVal;
 	}
-
 }

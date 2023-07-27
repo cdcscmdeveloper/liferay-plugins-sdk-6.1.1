@@ -28,12 +28,12 @@ import org.apache.log4j.Logger;
 
 @ManagedBean(name = "locationAuditBackingBean")
 @ViewScoped
-public class LocationAuditBackingBean extends BaseBackingBean<AuditLocationManagedBean> {
+public class SearchPMAuditBackingBean extends BaseBackingBean<AuditLocationManagedBean> {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static Logger log = Logger.getLogger(LocationAuditBackingBean.class);
+	private static Logger log = Logger.getLogger(SearchPMAuditBackingBean.class);
 	private IPagingDataModel<VPmAuditLocation> searchLocation = new SearchLocatonPagingDataModel();
 
 	// Navigation Details
@@ -41,7 +41,7 @@ public class LocationAuditBackingBean extends BaseBackingBean<AuditLocationManag
 	// Default value
 	public static final boolean SEARCH_DEFAULT = false;
 
-	public LocationAuditBackingBean() {
+	public SearchPMAuditBackingBean() {
 
 	}
 	// #32753 - START

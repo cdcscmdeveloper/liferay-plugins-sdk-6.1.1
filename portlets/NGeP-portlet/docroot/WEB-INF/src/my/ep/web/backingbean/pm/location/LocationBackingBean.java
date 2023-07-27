@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -26,13 +25,9 @@ import my.ep.biz.service.pm.common.location.ILocationSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.audit.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.common.audittrail.AUPMDetailSPDTO;
-import my.ep.dto.pm.common.audittrail.AUPMMasterSPDTO;
-import my.ep.dto.pm.common.audittrail.AuPMLocationDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
@@ -55,11 +50,11 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.VPmLocation;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.pm.location.audit.AuditLocationMapInsertVal;
+import my.ep.web.backingbean.pm.location.audit.AuditLocationMap;
+import my.ep.web.backingbean.pm.location.audit.AuditSaveBackingBeanTemplate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.LocationSearchBean;
@@ -70,7 +65,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
-import org.apache.commons.collections4.map.HashedMap;
 import org.apache.log4j.Logger;
 //Enhancement29642 - Start
 //Enhancement29642 - End
@@ -258,7 +252,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
 		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
-
+		
+		AuditSaveBackingBeanTemplate auTemplate = new AuditLocationMap();
+		
 		if (pmUser == null) {
 			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
 		} else {
@@ -267,7 +263,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 		IAudittrailSO pmauditSO = (IAudittrailSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IAudittrailSO.class);
-
+		
 		new LogKey(loginSessionUserId);
 		log.info("32753 UserId: " + loginSessionUserId);
 		// #32753 - END
@@ -293,10 +289,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 			// #32753 - END
 			reqDTO.setPmState(state);
-			reqDTO.setStateId(getManagedBean().getState().getStateId());
 
 			/************ AUDIT *************/
-			if (pmauditSO.getAuditConfig() == 1) {
+			reqDTO.setStateId(getManagedBean().getState().getStateId());
+			if(auTemplate.isAuditConfig()){
 				if (getManagedBean().getState().getStateId() != null) {
 					getManagedBean().setStateOldVal(stateSO.retriveStateDetailsByID(reqDTO));
 				}
@@ -312,9 +308,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								new FacesScopes().getUserLocale()), this.getManagedBean().getState().getStateName() };
 				locationId = getManagedBean().getState().getStateId();
 				/************ AUDIT *************/
-				if (pmauditSO.getAuditConfig() == 1) {
+				
+				if(auTemplate.isAuditConfig()){
 					getManagedBean().setResState(resDTO.getPmState());
-					auditSaveLocation(getManagedBean(), pmauditSO, loginSessionUserId);
+					auTemplate.auditSaveData(getManagedBean(), loginSessionUserId);
 				}
 				/************ AUDIT *************/
 			}
@@ -341,7 +338,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 			reqDTO.setDivisionId(getManagedBean().getDivision().getDivisionId());
 			/************ AUDIT *************/
-			if (pmauditSO.getAuditConfig() == 1) {
+			if(auTemplate.isAuditConfig()){
 				if (getManagedBean().getDivision().getDivisionId() != null) {
 					getManagedBean().setDivisionOldVal(divisionSO.retrieveDivisionById(reqDTO));
 				}
@@ -359,9 +356,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 						this.getManagedBean().getDivision().getDivisionName() };
 				locationId = getManagedBean().getDivision().getDivisionId();
 				/************ AUDIT *************/
-				if (pmauditSO.getAuditConfig() == 1) {
+				if(auTemplate.isAuditConfig()){
 					getManagedBean().setResDivision(resDTO.getPmDivision());
-					auditSaveLocation(getManagedBean(), pmauditSO, loginSessionUserId);
+					auTemplate.auditSaveData(getManagedBean(), loginSessionUserId);
 				}
 				/************ AUDIT *************/
 			}
@@ -397,7 +394,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 			reqDTO.setDistrictId(getManagedBean().getDistrict().getDistrictId());
 			/************ AUDIT *************/
-			if (pmauditSO.getAuditConfig() == 1) {
+			if(auTemplate.isAuditConfig()){
 				if (getManagedBean().getDistrict().getDistrictId() != null) {
 					getManagedBean().setDistrictOldVal(districtSO.retriveDistrictByID(reqDTO));
 				}
@@ -416,9 +413,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				locationId = getManagedBean().getDistrict().getDistrictId();
 
 				/************ AUDIT *************/
-				if (pmauditSO.getAuditConfig() == 1) {
+				if(auTemplate.isAuditConfig()){
 					getManagedBean().setResDistrict(resDTO.getPmDistrict());
-					auditSaveLocation(getManagedBean(), pmauditSO, loginSessionUserId);
+					auTemplate.auditSaveData(getManagedBean(), loginSessionUserId);
 				}
 				/************ AUDIT *************/
 			}
@@ -462,9 +459,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				locationId = getManagedBean().getCity().getCityId();
 
 				/************ AUDIT *************/
-				if (pmauditSO.getAuditConfig() == 1) {
+				if(auTemplate.isAuditConfig()){
 					getManagedBean().setResCity(resDTO.getPmCity());
-					auditSaveLocation(getManagedBean(), pmauditSO, loginSessionUserId);
+					auTemplate.auditSaveData(getManagedBean(), loginSessionUserId);
 				}
 				/************ AUDIT *************/
 			}
@@ -487,51 +484,52 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		}
 	}
 
-	private String roleCode() {
-		String roleCode = getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) ? RoleCode.EP_ADMIN.value()
-				: getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_1.value()) ? RoleCode.EP_ADMIN_1.value()
-						: getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value(): null;
-		return roleCode;
-	}
-
-	/** *** PM AUDIT MASTER OBj** */
-	private ArrayList<AUPMMasterSPDTO> masterObjlist(AuPMLocationDTO auPMDTOObj, Long userId) {
-		ArrayList<AUPMMasterSPDTO> masterObjlist = new ArrayList<AUPMMasterSPDTO>();
-		AUPMMasterSPDTO msterObj = new AUPMMasterSPDTO();
-		
-		msterObj.setRoleCode(roleCode());
-
-		msterObj.setDoctype(auPMDTOObj.getST() == true ? AuditConst.PM_AUD_ST_DOC_TYPE
-				: auPMDTOObj.getDV() == true ? AuditConst.PM_AUD_DIV_DOC_TYPE
-						: auPMDTOObj.getDS() == true ? AuditConst.PM_AUD_DS_DOC_TYPE
-								: auPMDTOObj.getCT() == true ? AuditConst.PM_AUD_CT_DOC_TYPE : null);
-		msterObj.setPmParameterLvlId(auPMDTOObj.getST() == true ? AuditConst.PM_AUD_ST_PMPARAMETERLVLID : auPMDTOObj
-				.getDV() == true ? AuditConst.PM_AUD_DIV_PMPARAMETERLVLID
-				: auPMDTOObj.getDS() == true ? AuditConst.PM_AUD_DS_PMPARAMETERLVLID
-						: auPMDTOObj.getCT() == true ? AuditConst.PM_AUD_CT_PMPARAMETERLVLID : null);
-		msterObj.setDocNo(auPMDTOObj.getST() == true ? getManagedBean().getState().getStateCode()
-				: auPMDTOObj.getDV() == true ? getManagedBean().getDivision().getDivisionCode()
-						: auPMDTOObj.getDS() == true ? getManagedBean().getDistrict().getDistrictCode() : auPMDTOObj
-								.getCT() == true ? getManagedBean().getCity().getCityCode() : null);
-		masterObjlist.add(msterObj);
-
-		return masterObjlist;
-	}
-
-	public void auditSaveLocation(LocationManagedBean locationManagedBean, IAudittrailSO pmauditSO, Long userId) {
-		ArrayList<AUPMMasterSPDTO> masterObjlist = new ArrayList<AUPMMasterSPDTO>();
-		ArrayList<AUPMDetailSPDTO> detailObjlist = new ArrayList<AUPMDetailSPDTO>();
-		AuPMLocationDTO auPMDTOObj = new AuPMLocationDTO();
-		AuditLocationMapInsertVal auditLocationMapInsertVal = new AuditLocationMapInsertVal();
-
-		auPMDTOObj = auditLocationMapInsertVal.auLocationMapInsertVal(locationManagedBean, userId);
-
-		masterObjlist = masterObjlist(auPMDTOObj, userId);
-		
-		detailObjlist.addAll(auPMDTOObj.getDetailObjlist());
-		
-		pmauditSO.insertAUDITPMSP(masterObjlist, detailObjlist);
-	}
+//	private String roleCode() {
+//		Auditbase auditbase = new AuditBase();
+//		String roleCode = getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) ? RoleCode.EP_ADMIN.value()
+//				: getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_1.value()) ? RoleCode.EP_ADMIN_1.value()
+//						: getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value(): null;
+//		return roleCode;
+//	}
+//
+//	/** *** PM AUDIT MASTER OBj** */
+//	private ArrayList<AUPMMasterSPDTO> masterObjlist(AuPMLocationDTO auPMDTOObj, Long userId) {
+//		ArrayList<AUPMMasterSPDTO> masterObjlist = new ArrayList<AUPMMasterSPDTO>();
+//		AUPMMasterSPDTO msterObj = new AUPMMasterSPDTO();
+//		
+//		msterObj.setRoleCode(roleCode());
+//
+//		msterObj.setDoctype(auPMDTOObj.getST() == true ? AuditConst.PM_AUD_ST_DOC_TYPE
+//				: auPMDTOObj.getDV() == true ? AuditConst.PM_AUD_DIV_DOC_TYPE
+//						: auPMDTOObj.getDS() == true ? AuditConst.PM_AUD_DS_DOC_TYPE
+//								: auPMDTOObj.getCT() == true ? AuditConst.PM_AUD_CT_DOC_TYPE : null);
+//		msterObj.setPmParameterLvlId(auPMDTOObj.getST() == true ? AuditConst.PM_AUD_ST_PMPARAMETERLVLID : auPMDTOObj
+//				.getDV() == true ? AuditConst.PM_AUD_DIV_PMPARAMETERLVLID
+//				: auPMDTOObj.getDS() == true ? AuditConst.PM_AUD_DS_PMPARAMETERLVLID
+//						: auPMDTOObj.getCT() == true ? AuditConst.PM_AUD_CT_PMPARAMETERLVLID : null);
+//		msterObj.setDocNo(auPMDTOObj.getST() == true ? getManagedBean().getState().getStateCode()
+//				: auPMDTOObj.getDV() == true ? getManagedBean().getDivision().getDivisionCode()
+//						: auPMDTOObj.getDS() == true ? getManagedBean().getDistrict().getDistrictCode() : auPMDTOObj
+//								.getCT() == true ? getManagedBean().getCity().getCityCode() : null);
+//		masterObjlist.add(msterObj);
+//
+//		return masterObjlist;
+//	}
+//
+//	public void auditSaveLocation(LocationManagedBean locationManagedBean, IAudittrailSO pmauditSO, Long userId) {
+//		ArrayList<AUPMMasterSPDTO> masterObjlist = new ArrayList<AUPMMasterSPDTO>();
+//		ArrayList<AUPMDetailSPDTO> detailObjlist = new ArrayList<AUPMDetailSPDTO>();
+//		AuPMLocationDTO auPMDTOObj = new AuPMLocationDTO();
+//		AuditLocationMapInsertVal auditLocationMapInsertVal = new AuditLocationMapInsertVal();
+//
+//		auPMDTOObj = auditLocationMapInsertVal.auLocationMapInsertVal(locationManagedBean, userId);
+//
+//		masterObjlist = masterObjlist(auPMDTOObj, userId);
+//		
+//		detailObjlist.addAll(auPMDTOObj.getDetailObjlist());
+//		
+//		pmauditSO.insertAUDITPMSP(masterObjlist, detailObjlist);
+//	}
 
 	/**
 	 * Maintain Location details
