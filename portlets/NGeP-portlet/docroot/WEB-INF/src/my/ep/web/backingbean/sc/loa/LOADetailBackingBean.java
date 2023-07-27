@@ -517,6 +517,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		// #27797 - end
+		//#34815 idham @26/07/2023 - Start
+		//sort by scLoiLoaItem..getLoiLoaItemId()
+		Collections.sort(this.getManagedBean().getScLoa().getScLoiLoaItems(), new Comparator<ScLoiLoaItem>() {
+			@Override
+			public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
+				return Long.compare(s1.getLoiLoaItemId(), s2.getLoiLoaItemId());
+			}
+		});
+		//#34815 idham @26/07/2023 - End
 		removeUnwantedLampiranA3Report(1); //#29006 - note 650
 		//Bug 34404 - related to 29007 - start
 		if(this.getManagedBean().getScLoa()!=null){
@@ -10347,6 +10356,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 				}
 			}//29007-End
+			for(ScLoiLoaItem loiLoaItem:this.getManagedBean().getScLoa().getScLoiLoaItems()){
+				if(null!=this.getManagedBean().getScLoa() && this.getManagedBean().getScLoa().isBrandNew()){
+					loiLoaItem.setScLoa(this.getManagedBean().getScLoa());
+				}
+			}
 			}//29007-End
 			if(resDTO.isSuccessful()){
 				if(!getManagedBean().getScLoa().getPmStatus().getStatusId().
