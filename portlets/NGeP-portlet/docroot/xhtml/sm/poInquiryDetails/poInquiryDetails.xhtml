@@ -6,48 +6,48 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-	<p:panel header="#{lbl['lbl.sm.enquiry.supporting.documents.list']}"
+	<!-- 14530 START -->
+	<p:outputPanel id="inquiryDetails">
+	<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDtls" modal="true" height="300">
+	<p:panel header="#{lbl['lbl.sm.enquiry.supporting.document.list']}"
 		id="inqDetailsSuppDocPanel" >
 
-		<p:dataTable var="table" id="onSdList" value="#{backingBean.managedBean.missinDocs}" 
+		<p:dataTable var="table" id="onSdList" value="#{backingBean.managedBean.poToSupplierInquiry.smApplSupportDocInquiries}" 
 			rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq 'S'}">
 			<ac:paginator for="onSdList" />
 
-			<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
+			<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" 
 				style="width : 60%;">
 				<h:outputText value="#{table.pmDocument.docName}" 
-					style="float: left;white-space: normal;" 
-					rendered="#{table.verifiedFlg != 1}" />
+					style="float: left;white-space: normal;" /> 
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.sectionPoRmrk']}"
 				style="width : 20%;">
 				<h:outputText value="#{table.poRemarks}" 
-					style="float: left;white-space: normal;" 
-					rendered="#{table.verifiedFlg != 1}" />
+					style="float: left;white-space: normal;" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.suppDoc.added.document.name']}"
 				style="width : 10%;">
-				<h:outputText value="#{table.smApplDocFiles[0].fileName}"
-					rendered="#{table.verifiedFlg != 1}"
+				<h:outputText value="#{table.smApplInquiryDocFiles[0].fileName}"
 					style="float: left;white-space: normal;" />
 			</p:column>
 		</p:dataTable>
 		
-		<p:dataTable var="table" id="offSdList" value="#{backingBean.managedBean.missinDocs}" 
+		<p:dataTable var="table" id="offSdList" value="#{backingBean.managedBean.poToSupplierInquiry.smApplSupportDocInquiries}" 
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
 			rendered="#{backingBean.managedBean.smAppl.supportingDocMode ne 'S'}">
 			<ac:paginator for="offSdList" />
 
 			<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 70%;">
 				<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" 
-					rendered="#{table.verifiedFlg != 1}" />
+					/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.sectionPoRmrk']}" style="width : 30%;">
 				<h:outputText value="#{table.poRemarks}" style="float: left;white-space: normal;" 
-					rendered="#{table.verifiedFlg != 1}" />
+					 />
 			</p:column>
 
 		</p:dataTable>
@@ -55,7 +55,8 @@
 	</p:panel>
 	
 	<p:panel header="#{lbl['lbl.sm.other.application.inquiry']}" id="otherInquiryDetailsPanelId" 
-		rendered="#{backingBean.managedBean.poUser and backingBean.managedBean.poToSupplierInquiry ne null}">
+		rendered="#{backingBean.managedBean.poToSupplierInquiry ne null 
+		and not empty backingBean.managedBean.poToSupplierInquiry.inquiryText}">
 		<table style="width: 100%;table-layout:fixed">
 			<tr>
 				<td style="white-space : normal;word-break:break-all" >
@@ -64,10 +65,9 @@
 			</tr>
 		</table>
 	</p:panel>
-	
+	<!--  
 	<p:panel header="#{lbl['lbl.sm.supplier.respond']}" id="responseInquiryDetailsPanelId" 
-			rendered="#{backingBean.managedBean.poUser 
-			and backingBean.managedBean.poToSupplierInquiry ne null 
+			rendered="#{backingBean.managedBean.poToSupplierInquiry ne null 
 			and not empty backingBean.managedBean.poToSupplierInquiry.responseText}">
 		<table style="width: 50%;table-layout:fixed">
 			<tr>
@@ -82,10 +82,15 @@
 			</tr>
 		</table>
 	</p:panel>
+	-->
+	</p:dialog> 
+	</p:outputPanel>
+	<!-- 14530 END -->
 	
-	<p:panel header="#{lbl['lbl.sm.other.application.inquiry']}" id="inquiryHistoryDetailsPanelId" 
+	<p:panel header="#{lbl['lbl.sm.inquiry.list']}" id="inquiryHistoryDetailsPanelId" 
 		rendered="#{not empty backingBean.managedBean.poSupplierInquiryHistory}">
-			<p:dataTable var="inqHistVar" id="inqHistDetailsTableId" value="#{backingBean.managedBean.poSupplierInquiryHistory}">
+			<p:dataTable  id="inqHistDetailsTableId" selection="#{backingBean.managedBean.poToSupplierInquiry}" rowKey="#{inqHistVar}" 
+			value="#{backingBean.managedBean.poSupplierInquiryHistory}" var="inqHistVar">
 				
 				<ac:paginator for="inqHistDetailsTableId" />
 
@@ -107,6 +112,17 @@
 				
 				<p:column headerText="#{lbl['lbl.sm.enquiry.supplier.respond']}" style="width : 35%;white-space : normal">
 					<h:outputText value="#{inqHistVar.responseText}" />
+				</p:column>
+				
+				<!-- #14530 - add action column -->
+				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+					<p:commandLink 
+					action="#{backingBean.POinquiryRowSelect(inqHistVar)}"
+					process="@this"
+					update=":#{p:component('inquiryDetails')}"
+					oncomplete="inquiryDtls.show();">
+					<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
+					</p:commandLink>
 				</p:column>
 				
 			</p:dataTable>
