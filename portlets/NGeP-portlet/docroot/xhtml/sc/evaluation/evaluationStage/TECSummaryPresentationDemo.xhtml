@@ -189,7 +189,7 @@
 	<ac:scRemarkAndAttachment
 		remarkList="#{evaluationBackingBean.managedBean.scQt.scQtDemoTechnicalCommitteeRemarks}"
 		showAttachment="false" 
-		rendered="#{evaluationBackingBean.beforeDemo}"/>
+		rendered="#{evaluationBackingBean.beforeDemo and !evaluationBackingBean.managedBean.demoWip}"/>
 		
 	<ui:remove>#28748 - add remarks for demo - end</ui:remove>
 </ui:composition>

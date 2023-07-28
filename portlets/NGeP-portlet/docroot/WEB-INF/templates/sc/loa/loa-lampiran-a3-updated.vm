@@ -241,7 +241,11 @@ u {
 						$tplSpecAnswer.newSupplierOffer
 					#else
 						#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
-							$tplSpecAnswer.answerRemark
+						#set($suppRespon = $tplSpecAnswer.answerRemark)
+						#set($suppRespon = $suppRespon.replace("<", "&#60;"))
+						#set($suppRespon = $suppRespon.replace(">", "&#62;"))
+
+							$suppRespon
 						#else
 							$defaultValue
 						#end
@@ -283,7 +287,11 @@ u {
 						$tplSpecAnswer.newSupplierOffer
 					#else
 						#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
-							$tplSpecAnswer.answerRemark
+							#set($suppRespon = $tplSpecAnswer.answerRemark)
+							#set($suppRespon = $suppRespon.replace("<", "&#60;"))
+							#set($suppRespon = $suppRespon.replace(">", "&#62;"))
+
+							$suppRespon
 						#else
 							$defaultValue
 						#end
@@ -602,7 +610,11 @@ u {
 											<span>$tplSpecAnswer.newSupplierOffer</span>
 										#else
 											#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
-												$tplSpecAnswer.answerRemark
+												#set($suppRespon = $tplSpecAnswer.answerRemark)
+												#set($suppRespon = $suppRespon.replace("<", "&#60;"))
+												#set($suppRespon = $suppRespon.replace(">", "&#62;"))
+						
+												$suppRespon
 											#else
 												$defaultValue
 											#end
@@ -617,7 +629,11 @@ u {
 									<span>$tplSpecAnswer.newSupplierOffer</span>
 								#else
 									#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
-										$tplSpecAnswer.answerRemark
+										#set($suppRespon = $tplSpecAnswer.answerRemark)
+										#set($suppRespon = $suppRespon.replace("<", "&#60;"))
+										#set($suppRespon = $suppRespon.replace(">", "&#62;"))
+
+										$suppRespon
 									#else
 										$defaultValue
 									#end

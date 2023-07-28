@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.ExternalContext;
@@ -2437,19 +2438,20 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 						}else{
 							// 28466 - add paid up capital, 28767 add registerAdressSSM
-							// #30660, #34138 start
+							// #30660, #34138, #33783  start
 							if (businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType()) && getManagedBean().isDisAllowOwnerEdit()) {
 								String[] copyProp = { "companyName", "robExpiryDate", "annualRevenue", "businessDesc", "revenueSsmNull", "robExpirySsmNull",
-										"authorizedCapitalSsmNull", "companySsmStatus", "annualRevenueSSM", "paidUpCapitalSSM", "registerAdressSSM", "ssmCompanyCountry"};
+										"authorizedCapitalSsmNull", "companySsmStatus", "annualRevenueSSM", "paidUpCapitalSSM", "registerAdressSSM", "ssmCompanyCountry",
+										"companyTypeSSM"};
 								EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(), this.getManagedBean().getSmAppl().getSmCompanyBasic(), copyProp);
 							} else { 
 								String[] copyProp = { "companyName", "robExpiryDate", "authorizedCapital", "nonBumiEquity", "annualRevenue", "bumiEquity",
 										"localCompanyEquity", "foreignCompanyEquity", "foreignerEquity", "govtEquity", "govtUnitrustEquity", "businessDesc",
 										"revenueSsmNull", "robExpirySsmNull", "authorizedCapitalSsmNull", "companySsmStatus", "annualRevenueSSM", "paidUpCapitalSSM",
-										"paidUpCapital", "registerAdressSSM", "ssmCompanyCountry" };
+										"paidUpCapital", "registerAdressSSM", "ssmCompanyCountry", "companyTypeSSM" };
 								EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(), this.getManagedBean().getSmAppl().getSmCompanyBasic(), copyProp);
 							} 
-							// #30660, #34138 end 
+							// #30660, #34138, #33783 end 
 							//START 28767	- ni set untuk save ke dalam DB		- perlu buat dalam ni sebab data tu firsttime je dr SSM			
 							if(ssmResDTO.getSmApplIndebtedness() != null){
 								ssmResDTO.getSmApplIndebtedness().setSmAppl(this.getManagedBean().getSmAppl());
@@ -3328,6 +3330,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						}
 					}
 				}
+				//#32236 start
+				setBusinessAndHadApprovedSpecialCatcode();
+				//#32236 end
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
 				getManagedBean().setOutputPage(outputPageType);
@@ -3443,7 +3448,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					
 					//#27356
 					SmApplicationUtil.validateCoordinate(getManagedBean());
+			//#32236 - start
+			} else if(outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)){
+				setBusinessAndHadApprovedSpecialCatcode();
 			}
+			//#32236- end
 			setSupplierChangeValues(currentPageType);
 			setBranchDisplayTable(); //29727 , //#34135
 			validateUpdateSmAppl(applType, currentPageType, outputPageType,
@@ -8414,8 +8423,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							smpersonAddress.getSmAddress().setCountryId(
 									smpersonAddress.getSmAddress().getPmCountry().getCountryId());
 						}
+						//#34799 - start
+						PmState curState = smpersonAddress.getSmAddress().getPmState();
 						onChangeCountry(smpersonAddress.getSmAddress(),
 								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+						smpersonAddress.getSmAddress().setPmState(curState);
+						//#34799 - end
 						if (smpersonAddress.getSmAddress().getPmState() != null) {
 							smpersonAddress.getSmAddress().setStateId(
 									smpersonAddress.getSmAddress().getPmState().getStateId());
@@ -8437,7 +8450,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							smAddressRes.setPmCountry(smpersonAddress.getSmAddress().getPmCountry());
 							smAddressRes.setCountryId(smpersonAddress.getSmAddress().getPmCountry().getCountryId());
 						}
+						//#34799 - start
+						PmState curState = smAddressRes.getPmState();
 						onChangeCountry(smAddressRes, SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+						smAddressRes.setPmState(curState);
+						//#34799 - end
 						if(smpersonAddress.getSmAddress().getPmState() != null){
 							smAddressRes.setPmState(smpersonAddress.getSmAddress().getPmState());
 							smAddressRes.setStateId(smpersonAddress.getSmAddress().getPmState().getStateId());
@@ -11505,12 +11522,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							}
 						}
 						//#31386 - START
-						List<SmAppl> allAppl = reqSO.getApplWithPendingSiteVisit(getManagedBean().getSmAppl());
+						List<SmAppl> allAppl = reqSO.getApplWithActiveBumiAppl(getManagedBean().getSmAppl());
 						if(!EntityHelper.isCollectionEmpty(allAppl)){
-							for(SmAppl pendingSite: allAppl){
-								log.info("Appl No: "+pendingSite.getApplNo());
+							for(SmAppl pendingKb: allAppl){
+								log.info("Appl No: "+pendingKb.getApplNo());
 //								reqSO.removeKBAppl(pendingSite);
-								reqDTO.setPendingKBAppl(pendingSite);
+								reqDTO.setPendingKBAppl(pendingKb);
 							}
 						}
 						//#31386 - END
@@ -12092,6 +12109,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void onChangeFacilityType() {
 		// #32236 - Start
 		if (getManagedBean().isAlreadyBusinessSpecialCatcode() && getManagedBean().getBusinessOfficeCatCodeMsg() != null) {
+			log.info("<<< business office cat code msg ::::: " + getManagedBean().getBusinessOfficeCatCodeMsg() + " >>>");
 			getManagedBean().getBasicCompanyFacility().setFacilityType("B");
 			RequestContext.getCurrentInstance().execute(
 					"alertFacTypeChangeDlg.show();");
@@ -12105,6 +12123,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 */
 	private void setBusinessAndHadApprovedSpecialCatcode() {
 		getManagedBean().setAlreadyBusinessSpecialCatcode(false);
+		// #32236 - Start
+		getManagedBean().setBusinessOfficeCatCodeMsg(null);
 		StringBuilder bf = new StringBuilder();
 		int index = 1;
 		//Bug #26703
@@ -12113,7 +12133,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 //				&& SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
 //						.getSmSupplierCategories())) {
 		SmFacility hq = getHq();
-		// #32236 - Start
 		if (hq != null && hq.getFacilityType().equals("B")) {
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
 				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
@@ -12718,6 +12737,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            panelName
 	 */
 	public void onChangeCountry(SmAddress addr, String panelName) {
+		//#34799
+		addr.setPmState(null);
 		//#34135 START
 		if(addr.getPmDivision() != null || addr.getDivisionId() != null){
 			addr.setPmDivision(null);
@@ -12745,7 +12766,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			addr.setPmState(SmCommonUtil.getInstance()
 					.getStateById(stateId));
 		}
-		if(addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+		//#34799 - start
+		addr.setPmDivision(null);
+		addr.setPmDistrict(null);
+		if(addr.getPmState() != null && addr.getPmState().getStateCode()
+				.equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+			//#34799 - end
 			SmApplicationUtil.getInstance().populateDivisionsByState(addr,
 					panelName, getManagedBean());
 			setRoleStaffAddrReqd();
@@ -12773,6 +12799,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            panelName
 	 */
 	public void onChangeDistrict(SmAddress addr, String panelName) {
+		//#34799
+		addr.setPmCity(null);
 		SmApplicationUtil.getInstance().populateCitiesByDistrict(addr,
 				panelName, getManagedBean());
 		setRoleStaffAddrReqd();
@@ -17445,31 +17473,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			log.info("#32014 - SSM Application : " + getManagedBean().getSmAppl().isApplValidWithSsm());
 			log.info("#32014 - SSM isActive : " + SmCommonUtil.getInstance().ssmActive());
 			if(!personnelAddress.isSameAsPerm() && getManagedBean().getSmAppl().isApplValidWithSsm() && SmCommonUtil.getInstance().ssmActive()){
-				//#34277 - start
-				boolean hasResAddr = false;
-				for(SmPersonnelAddress a : getManagedBean().getSelectedShareHolder().getSmPersonnelAddresses()){
-					if(a.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
-						hasResAddr = true;
-						break;
-					}
-				}
-				SmAddress ssmAddress = new SmAddress();
-				if(!hasResAddr){
-					SmApplicationUtil.getInstance().cloneAddress(
-							ssmAddress, getManagedBean().getShareHolderResdAddr().getSmAddress());
-					SmApplicationUtil.cloneAddressSSM(
-							ssmAddress, getManagedBean().getShareHolderResdAddr().getSmAddress());
-				}
-				//#34277 - end
 				SmPersonnelAddress res = new SmPersonnelAddress();
 				res.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
-				//#34799 - start
-				PmCountry currCountry = null;
-				if(personnelAddress.getSmAddress() != null){
-					currCountry = personnelAddress.getSmAddress().getPmCountry();
-				}
-				res.setSmAddress(SmApplicationUtil.setDefaultAddr(currCountry));
-				//#34799 - end
+				res.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 				res.setSmPersonnel(this.getManagedBean().getSelectedShareHolder());
 				getManagedBean().setShareHolderResdAddr(res);
 				
@@ -17504,8 +17510,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						if(personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT)) {
 							if(smAddress.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
 								state.setStateId(addr.getSmAddress().getPmState().getStateId());
-							}
-							else{
+							//#34799
+							} else if(addr.getSmAddress().getPmDistrict() != null && addr.getSmAddress().getPmDistrict().getPmState() != null){
 								state.setStateId(addr.getSmAddress().getPmDistrict().getPmState().getStateId());
 							}
 						}
@@ -17539,33 +17545,31 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						if (addr.getAddressType().equalsIgnoreCase(
 								SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
 							getManagedBean().setShareHolderResdAddr(addr);
+							SmApplicationUtil
+									.getInstance()
+									.assignStateDistAndCityForSelVal(
+											getManagedBean(),
+											getManagedBean().getShareHolderResdAddr()
+													.getSmAddress(),
+											SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+							//to check, if district state not equal to pm state set district to null & City
+							if(getManagedBean().getShareHolderResdAddr().getSmAddress().isSsmData()){
+								SmAddress address = getManagedBean().getShareHolderResdAddr().getSmAddress();
+								if(address != null){
+									if(address.getPmState()!= null && address.getPmDistrict() != null){
+										if(address.getPmDistrict().getPmState() != null){
+											if(address.getPmDistrict().getPmState().getStateId() != address.getPmState().getStateId()){
+												address.setPmDistrict(new PmDistrict());
+												address.setPmCity(new PmCity());
+											}
+											
+										}
+									}
+								}
+							}
 						}
 					}
 				}
-				//#34277 - start
-				//34799
-				//personnel has no residential address, overwrite with SSM address
-				if(!hasResAddr && getManagedBean().getShareHolderResdAddr().getSmAddress().getPostcode() != null){
-					getManagedBean().getShareHolderResdAddr().setSmAddress(ssmAddress);
-				}
-				//to check, if district state not equal to pm state set district to null & City
-				if(getManagedBean().getShareHolderResdAddr().getSmAddress().isSsmData()){
-					SmAddress addr = getManagedBean().getShareHolderResdAddr().getSmAddress();
-					if(addr != null && addr.getPmState()!= null && addr.getPmDistrict() != null
-						&& addr.getPmDistrict().getPmState() != null
-						&& addr.getPmDistrict().getPmState().getStateId() != addr.getPmState().getStateId()){
-							addr.setPmDistrict(new PmDistrict());
-							addr.setPmCity(new PmCity());
-					}
-				}
-				//34799
-				if(getManagedBean().getShareHolderResdAddr().getSmAddress() != null && getManagedBean().getShareHolderResdAddr().getSmAddress().getPmState() !=null){
-					SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(getManagedBean(),
-							getManagedBean().getShareHolderResdAddr().getSmAddress(),
-							SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
-				}
-				
-				//#34277 - end
 				getManagedBean().setSelectedShareHolder(this.getManagedBean().getSelectedShareHolder());
 			}
 		}
@@ -17770,4 +17774,27 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		return sb.toString();
 	}
 	//#32008 - end
+	//#34799 - start
+	public void onTickSameAsAddress(SmAddress srcAddr,
+			SmPersonnelAddress destAddr, String componentId, boolean isTick) {
+		if(isTick){
+			UIComponent comp = org.primefaces.util.ComponentUtils.findComponent(
+					FacesContext.getCurrentInstance().getViewRoot(), componentId);
+			if(comp != null){
+				resetEditableValue(comp);
+			}
+		}
+		onTickSameAsAddress(srcAddr, destAddr);
+	}
+	
+	private void resetEditableValue(UIComponent comp){
+		if(comp instanceof EditableValueHolder){
+			EditableValueHolder val = (EditableValueHolder) comp;
+			val.resetValue();
+		}
+		for(Iterator<UIComponent> it = comp.getFacetsAndChildren(); it.hasNext();){
+			resetEditableValue(it.next());
+		}
+	}
+	//#34799 - end
 }
