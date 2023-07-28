@@ -28,25 +28,26 @@
 			<p:ajax event="rowDblselect"
 				listener="#{backingBean.unSelectAdmin}"
 				update=":#{p:component('persInfPan')},:#{p:component('deletePersonnelBtnId')}"></p:ajax>
-			<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smPersonnels}"
+			<!-- Disable for UPS 32008 - START -->
+			<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smPersonnels and !backingBean.managedBean.upsCannotEdit}"
 				disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
-				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData }" />
+				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData or  backingBean.managedBean.upsCannotEdit}" />
 
 			<p:column headerText="#{lbl['lbl.sm.person.composition.name']}"
 				disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
-				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData }"
+				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData or backingBean.managedBean.upsCannotEdit }"
 				>
 				<h:outputText value="#{person.name}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.person.composition.idenNum']}"
 				disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
-				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData }">
+				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData or backingBean.managedBean.upsCannotEdit}">
 				<h:outputText value="#{person.identificationNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}" style="white-space: normal !important;width : 10% !important;"
 				disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
-				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData }">
+				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData or backingBean.managedBean.upsCannotEdit}">
 				<h:outputText value="#{lbl['lbl.txt.yes']}"
 					rendered="#{person.authorizedFlg eq '1'}" />
 				<h:outputText value="#{lbl['lbl.txt.no']}"
@@ -55,19 +56,19 @@
 			<p:column rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR}"
 				headerText="#{lbl['lbl.sm.person.composition.certStatus']}" style="white-space: normal !important;width : 10% !important;"
 				disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
-				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData }">
+				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData  or backingBean.managedBean.upsCannotEdit}">
 				<ac:smSoftcertStatus personnel="#{person}"  />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.person.composition.role']}"
 				style="white-space: normal !important;width : 10% !important;"
 				disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
-				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData }">
+				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData or backingBean.managedBean.upsCannotEdit}">
 				<h:outputText value="#{person.roleName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}"
 				style="white-space: normal !important;width : 10% !important;"
 				disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
-				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData }">
+				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData or backingBean.managedBean.upsCannotEdit}">
 				<ac:smRoleDesc backingBean="#{backingBean}" roleCode="#{person.epRole}" />
 				<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
 					rendered="#{person.contractSignerFlg eq 1 and (backingBean.managedBean.newSupplierType ne 'J' and backingBean.managedBean.smAppl.supplierType ne 'J')}" />
@@ -75,7 +76,7 @@
 			<p:column headerText="#{lbl['lbl.sm.academic.qualification']}"
 				style="white-space: normal !important;width : 10% !important;"
 				disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
-				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData }">
+				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData or backingBean.managedBean.upsCannotEdit}">
 				<p:commandLink onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{backingBean.invokePersonnelDialog(person,'acadInfoDlg')}"
@@ -88,7 +89,7 @@
 			<p:column headerText="#{lbl['lbl.sm.person.myIdResp']}"
 				style="white-space: normal !important;width : 10% !important;" rendered="#{!backingBean.managedBean.supplierUser}"
 				disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
-				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData }">
+				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData or backingBean.managedBean.upsCannotEdit}">
 				<p:commandLink onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{backingBean.viewMyIdentityResponse(person)}"
@@ -100,18 +101,18 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;"
 				disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
-				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData }">
+				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData or backingBean.managedBean.upsCannotEdit}">
 				<p:commandLink onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{backingBean.assignSelShareHolder(person)}"
 					process="@this,@([id$=prsnlInfoSecPoRmrk]),:#{p:component('prsnlSecApprvrRmrk')}"
 					partialSubmit="true" update=":form" style="padding-right:5px;">
 					<p:outputPanel
-						rendered="#{backingBean.managedBean.disAllowOwnerEdit}">
+						rendered="#{backingBean.managedBean.upsCannotEdit or backingBean.managedBean.disAllowOwnerEdit}">
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 					</p:outputPanel>
 					<p:outputPanel
-						rendered="#{!backingBean.managedBean.disAllowOwnerEdit}">
+						rendered="#{!backingBean.managedBean.upsCannotEdit and !backingBean.managedBean.disAllowOwnerEdit}">
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 					</p:outputPanel>
 				</p:commandLink>
@@ -122,17 +123,18 @@
 
 		<p:spacer height="2px;" />
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 				process="@this" partialSubmit="true" onstart="blockWidget.show()"
 				oncomplete="blockWidget.hide()" disabled="#{backingBean.managedBean.disAllowOwnerEdit}"
 				action="#{backingBean.assignNewShareHolder()}"
 				update=":form" />
-			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 				process="persInfoDtPanel" partialSubmit="true" id="deletePersonnelBtnId"
 				disabled="#{backingBean.managedBean.disAllowOwnerEdit or empty backingBean.managedBean.selectedShareHolders}"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{backingBean.deleteSelectedShareHolders(SupplierManagementConst.PERSONNEL_TYPE_STAFF,false)}"
 				update="smPersonnelParentPan , :#{p:component('stfSummaryPan')} " />
+			<!-- Disable for UPS 32008 - END -->
 		</div>
 	</p:outputPanel>
 	

@@ -610,6 +610,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String demoScore;
 	private BigDecimal otherScore;
 	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
+	private boolean demoWip;//#28784 WIP @idham
 	//#28784 - end
 
 	/** The total technical package max score. */
@@ -4321,4 +4322,12 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.financialPackagePaginator = financialPackagePaginator;
 	}
 	//34528-uat 4serangkai - end
+
+	public boolean isDemoWip() {
+		return demoWip;
+	}
+
+	public void setDemoWip(boolean demoWip) {
+		this.demoWip = demoWip;
+	}
 }

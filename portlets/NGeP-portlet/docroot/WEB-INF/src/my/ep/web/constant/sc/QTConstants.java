@@ -312,4 +312,7 @@ public interface QTConstants {
 	public static final String LAMPIRAN_A3_TERKINI = "Terkini";
 	//#29007 End Vinod
 	
+	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR";
+	
+	public static final String SUPPLIER_CRITERIA = "SC";//#29732 change hard code to constant
 }
