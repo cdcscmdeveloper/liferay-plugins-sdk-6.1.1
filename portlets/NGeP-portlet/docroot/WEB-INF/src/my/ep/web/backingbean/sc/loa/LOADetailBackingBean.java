@@ -9212,6 +9212,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 			if (outcome.equalsIgnoreCase("COMPLETE")) {
 				createLampiranA3(null);
+				//#29006 - start - note 837
+				for (ScLoaReport scLoaReport : this.getManagedBean().getScLoa().getScLoaReports()) {
+				if (scLoaReport.getTitle().contains(lampiranA3SubStr)
+							&& !ParameterConst.DOCTYPE_QUOTATION.equals(this.getManagedBean().getScLoa().getScLoiLoa()
+									.getDocType())) {
+						try {
+							loadScLoaReport(scLoaReport);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+				//#29006 - end - note 837
 				onBackToZoneItemDetailsTab();
 			}
 		}
@@ -10002,6 +10015,44 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		return itemClone;
 	}
+	
+	// #29006 - note 837 - start
+	/**
+	 * Load ScLoaReport data.
+	 * 
+	 * @param scLoaReport
+	 *            the sc loa report
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void loadScLoaReport(ScLoaReport scLoaReport) throws IOException {
+		
+		try {
+			if (scLoaReport.getScLoaReportAttachment().getDocNo() == null) {
+				scLoaReport.getScLoaReportAttachment().setDocNo(getManagedBean().getScLoa().getLoaNo());
+			}
+
+			generateUpdatedLampiranA3FromVelocity((ScAttachment) scLoaReport.getScLoaReportAttachment(),
+					getManagedBean().getScLoa(), this.getManagedBean().getScQt());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		ScLoaReportAttachment scLoaReportAttachment = scLoaReport.getScLoaReportAttachment();
+
+		ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport);
+		if (scLoaReport.getDefinationType().getParameterCode()
+				.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD)
+				|| scLoaReport.getDefinationType().getParameterCode()
+						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD)) {
+			scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+		}
+		if (scLoaReportAttachmentGenerated != null) {
+			String prefixName = scLoaReport.getTitle().contains(lampiranA3SubStr) ? scLoaReport.getTitle().replaceAll(
+					"/", "-") : scLoaReport.getTitle().replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "");
+			scLoaReportAttachmentGenerated.setTempFileName(setValueLowercase(prefixName, 18));
+		}
+	}
+	// #29006 - note 837 - end
 	
 	// #29006 - note 746 - start
 	/**
