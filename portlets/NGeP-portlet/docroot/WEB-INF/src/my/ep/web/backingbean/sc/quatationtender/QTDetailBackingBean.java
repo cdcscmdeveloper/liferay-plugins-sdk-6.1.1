@@ -6773,6 +6773,25 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}			
 				
 			}
+			// #34694 - Start.
+			if((getUserTaskIsCommitteeAppointmentApproval() || getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec()) && isApprovalScreen()){
+				ScQtApproval qtApproval = approvalTabBean.getScQtApproval();
+				List<ScQtApprovalRemark> remarks = initializeRemarks(
+						qtApproval, qtApproval.getScQt().getCurrentWorkFlowStatus(),
+					this.getManagedBean().getScQtApproval().getScQtApprovalRemarks(),
+					ScQtApprovalRemark.class); 
+				
+				for(int i=0;i<remarks.size();i++) {
+					if(remarks.get(i).isBrandNew() && remarks.get(i).getRemark()==null && remarks.get(i).getRemarkId()==null){
+						remarks.remove(i);
+					}
+					remarks.get(i).setEditable(false);
+				}
+				
+				qtApproval.setScQtApprovalRemarks(remarks);
+				approvalTabBean.setScQtApproval(qtApproval);
+			}
+			// #34694 - End.
 		}
 		// #25077 - #80 - End.
 		this.getManagedBean().setSelectedApprovalTabIndex(
