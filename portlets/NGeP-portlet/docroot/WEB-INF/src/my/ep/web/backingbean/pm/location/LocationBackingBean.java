@@ -54,7 +54,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.location.audit.AuditLocationMap;
-import my.ep.web.backingbean.pm.location.audit.AuditSaveBackingBeanTemplate;
+import my.ep.web.backingbean.pm.location.audit.AuditPMSaveBackingBeanTemplate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.LocationSearchBean;
@@ -253,7 +253,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
 		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
 		
-		AuditSaveBackingBeanTemplate auTemplate = new AuditLocationMap();
+		AuditPMSaveBackingBeanTemplate auTemplate = new AuditLocationMap();
 		
 		if (pmUser == null) {
 			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();

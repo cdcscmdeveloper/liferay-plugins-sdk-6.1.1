@@ -12,10 +12,10 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-public abstract class AuditSaveBackingBeanTemplate implements Serializable {
+public abstract class AuditPMSaveBackingBeanTemplate implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public AuditSaveBackingBeanTemplate() {
+	public AuditPMSaveBackingBeanTemplate() {
 	}
 
 	private FacesScopes getFacesScopes() {
