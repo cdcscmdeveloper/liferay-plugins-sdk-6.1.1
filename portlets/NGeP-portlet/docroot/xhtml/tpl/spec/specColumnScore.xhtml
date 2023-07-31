@@ -154,7 +154,9 @@
 <!-- Farid end -->
 	<!-- #29187 Start Vinod -->
 	<p:column style="width:5%;" rendered="#{isManSpecAndCompliance}">
-		<h:selectOneMenu id="specCompliance" 
+		<h:selectOneMenu id="specCompliance"
+						 required="true"
+						 label="#{lbl['lbl.sc.tec.compliance']}" 
 						 value="#{tplSpecAnswer.compliance}" 
 						 disabled="#{evaluationBackingBean.managedBean.readOnly}" 
 						 rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification and tplSpecAnswer.tplSpecQuestion.mandatorySpec}">
