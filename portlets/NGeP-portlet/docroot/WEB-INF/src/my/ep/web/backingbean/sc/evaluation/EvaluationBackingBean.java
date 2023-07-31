@@ -2413,41 +2413,46 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				}
 			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-				if (this.getManagedBean().getScQt().isDemoRequired()) {
-					// #28784 - FEC by item eval = TI, package = P	
-					if(this.getManagedBean().getTabItemPackageIndex() == 1){
-						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-					} else {
-					evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
-					}
+				// #25138 - 040621 - start
+				if (this.getManagedBean().getScQt().isPartial()) {
+					evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+					//#25138 -set wip
+					int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+					this.getManagedBean().setWipStatusMax(wipstatus);
 				} else {
-					// #25138 - 040621 - start
-					if (this.getManagedBean().getScQt().isPartial()) {
-						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-						//#25138 -set wip
+					// #32453-start
+					// wip status start
+					//#28784 add demo for wip status - Start
+					if (this.getManagedBean().getTabItemPackageIndex() == 1) {
 						int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
 						this.getManagedBean().setWipStatusMax(wipstatus);
-					} else {
-						// #32453-start
-						// wip status start
-						if (this.getManagedBean().getTabItemPackageIndex() == 1) {
-							int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
-							this.getManagedBean().setWipStatusMax(wipstatus);
-							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
-								evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+						if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+							evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+						} else {
+							if(this.getManagedBean().getScQt().isDemoRequired()){
+								evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
 							} else {
 								evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 							}
+						}
+					} else {
+						if(this.getManagedBean().getScQt().isDemoRequired()){
+							evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
 						} else {
 							evalstage.add(QTConstants.TECHNICAL_EVALUATION);
 						}
-						// wip status end
-						// #32453-end
 					}
-					// #25138 - 040621 - end
+					//#28784 add demo for wip status - End
+					// wip status end
+					// #32453-end
 				}
-
+				// #25138 - 040621 - end
 			}
+			
+			//bug #33582 idham - generate proposal score if proposal score for Modal Berbayar = null - start
+			checkModalBerbayarProposalScore(this.getManagedBean().getScQt().getQtId(), evalstage);
+			//bug #33582 idham - generate proposal score if proposal score for Modal Berbayar = null - end
+			
 			reqDTO.setResultStages(evalstage);
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
@@ -6744,7 +6749,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 		
 		IQTEvaluationSO evaluationSo = null;
 		try {
-			this.getManagedBean().setTechnicalSummaryView("");//#28784 always display -Select One- when go in summary
 			
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
@@ -7337,9 +7341,17 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale());
 					this.getManagedBean().setEvaluatioStageActiveIndex(0);
+					//34833 - start
+					String checkListValue =  ResourceBundleUtils.getMessage(
+							"lbl.sc.checklist.checklist.value.completed", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
+					String addColon = ": ";
+					this.getManagedBean().setEvaluatioStageActiveIndex(0);
 					throw new EpException(MessageConst.ERROR_760266,
-							new String[] { checklist.getTitle(),
-									checklistScoring });
+							new String[] { checklist.getTitle()+addColon,
+							checkListValue });
+					//34833 - end
 				}
 			}
 		} finally {
@@ -8152,9 +8164,9 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
 					
 					if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-						
-						technicalsummaryChange(null);
-
+						//#35011 start
+						retriveSummaryEvaluationStage();
+						//#35011 end
 					} 
 					//#34588 end
 					// #25138, #21695 -end-
@@ -8346,7 +8358,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 										if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE){
 											this.getManagedBean().setTabFinancialIndex(3); 	// #25138, #2169
 											//#25138(wip 4serangkai) bug -Start 8/6/2023
-											retriveFinancialEvaluationStagePackage();
+											//remove BUG #35010 and #35013
 											retriveOneTierFinancialSupplierSummary();
 											//#25138(wip 4serangkai) bug -End 8/6/2023
 
@@ -8562,7 +8574,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 											
 											outputTab = 2;
 										}else{
-											retriveFinancialEvaluationStagePackage();
+											//remove Bug #34855 remove
 											retriveSummaryEvaluationStage();
 											this.getManagedBean().setTabFinancialIndex(3);
 											outputTab = 2;
@@ -10669,7 +10681,8 @@ private void retriveCommitteeRemarksList(){
 			
 			// #28784 - start
 			if (qt.getScQt().isDemoRequired()
-					&& this.getManagedBean().getTaskName().equals(SCProcessNameConst.SIGNOFF_TEC_EVALUATION)) {
+					&& this.getManagedBean().getTaskName().equals(SCProcessNameConst.SIGNOFF_TEC_EVALUATION)
+					&& !this.getManagedBean().isDemoWip()) {//#28784 sign off WIP
 				successMessage(MessageConst.INFO_700101,
 						getMessageCommon("lbl.sc.eva.technical.presentation.demo.signoff"), qt.getScQt().getQtNo(),
 						Boolean.TRUE);
@@ -17822,4 +17835,55 @@ private void retriveCommitteeRemarksList(){
 				new FacesScopes().getUserLocale());
 	}
 	//6906 - end
+	
+	//bug #33582 - check proposal score for Modal Berbayar - start
+	private void checkModalBerbayarProposalScore(Long qtId, List<String> evalstage) {
+		boolean isMBNull = false;
+		//proposalCheckList.getPmDocument().getDocDefinitionKey().equalsIgnoreCase(QTConstants.FINANCIAL_PAID_UP_CAPITAL_CODE)
+		IQTEvaluationSO evaluationSo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+		
+		try {
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			EvaluationResDTO resDTO = new EvaluationResDTO();
+			reqDTO.setResultStages(evalstage);
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+			reqDTO.setCompliance(null);
+			resDTO = evaluationSo.retrieveCheckListsByCategory(reqDTO);
+			
+			if (null != resDTO
+					&& null != resDTO.getCheckListResultBean().getResultList()
+					&& !resDTO.getCheckListResultBean().getResultList()
+							.isEmpty()) {
+
+				List<ScQtCheckList> qtChecklistList = resDTO
+						.getCheckListResultBean().getResultList();
+				
+				for (ScQtCheckList qtCheckList : qtChecklistList) {
+					if (null != qtCheckList.getPmDocument()
+							&& null != qtCheckList.getPmDocument().getDocDefinitionKey()//bug #34327
+							&& qtCheckList.getPmDocument().getDocDefinitionKey().equalsIgnoreCase(QTConstants.FINANCIAL_PAID_UP_CAPITAL_CODE)) {
+						List<ScQtProposalScore> propScoreList = evaluationSo.retrieveProposalScoreByQtIdAndCriteriaType(qtId, QTConstants.CRITERIA_TYPE_PAID_UP_CAPITAL_AMOUNT);
+						if (null == propScoreList
+								|| propScoreList.isEmpty()) {
+							isMBNull = true;
+						}
+					}
+				}
+			}
+			if (isMBNull) {
+				EvaluationReqDTO reqDTO1 = new EvaluationReqDTO();
+				//#34854 set evalstage that null
+				reqDTO1.setResultStages(evalstage);
+				reqDTO1.setQtId(this.getManagedBean().getScQt().getQtId());
+				reqDTO1.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+				evaluationSo.generateEvaluationSheet(reqDTO1);
+			}
+		}
+		finally {
+			evaluationSo = null;
+		}
+	}
+	//bug #33582 - check proposal score for Modal Berbayar - end
 }
