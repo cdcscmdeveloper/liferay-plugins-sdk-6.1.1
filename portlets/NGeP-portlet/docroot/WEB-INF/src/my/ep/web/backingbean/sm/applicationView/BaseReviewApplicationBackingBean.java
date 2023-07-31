@@ -5259,5 +5259,19 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		return retVal;
 	}
+	
+	public String getLabelFromSelectItems(Object objId, String paramType) {
+		String retVal = "";
+		List<SelectItem> items = Arrays.asList(getDropdownValues(paramType));
+		if (!SmCommonUtil.isCollectionEmpty(items) && objId != null) {
+			for (SelectItem item : items) {
+				if (item.getValue() != null
+						&& item.getValue().toString().equals(objId.toString())) {
+					retVal = item.getLabel();
+				}
+			}
+		}
+		return retVal;
+	}
 	//#32008 - end
 }
