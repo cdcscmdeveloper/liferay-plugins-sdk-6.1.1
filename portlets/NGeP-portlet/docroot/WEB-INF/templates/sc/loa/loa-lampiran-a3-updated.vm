@@ -504,17 +504,21 @@ u {
 							#if ($scLoiLoaItem.itemSpecificationList)
 								#set($rowCount = 0)
 								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
+								
+								#set($specification = $tpqSpec.replace("<", "&#60;"))
+								#set($specification = $specification.replace(">", "&#62;"))
+								
 									#set($rowCount = $rowCount + 1)
 									<table width="100%">
 										<tbody>
 											<tr>
 											#if ($scLoiLoaItem.itemSpecificationList.size() == $rowCount)
 												<td valign="top"  class="standard border-bottom left" colspan="7" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">
-													<span>$tpqSpec</span>
+													<span>$specification</span>
 												</td>
 											#else
 												<td valign="top"  class="standard border-bottom left" colspan="7" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
-													<span>$tpqSpec</span>
+													<span>$specification</span>
 												</td>
 											#end
 											</tr>
@@ -531,17 +535,21 @@ u {
 							#if ($scLoiLoaItem.itemSpecificationList)
 								#set($rowCount = 0)	
 								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
+								
+								#set($specification = $tpqSpec.replace("<", "&#60;"))
+								#set($specification = $specification.replace(">", "&#62;"))
+								
 									#set($rowCount = $rowCount + 1)
 									<table width="100%">
 										<tbody>
 											<tr>
 											#if ($scLoiLoaItem.itemSpecificationList.size() == $rowCount)
 												<td valign="top"  class="standard border-bottom left" colspan="7" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">
-													<span>$tpqSpec</span>
+													<span>$specification</span>
 												</td>
 											#else
 												<td valign="top"  class="standard border-bottom left" colspan="7" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
-													<span>$tpqSpec</span>
+													<span>$specification</span>
 												</td>
 											#end
 											</tr>
