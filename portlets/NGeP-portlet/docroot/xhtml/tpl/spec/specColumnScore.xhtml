@@ -104,7 +104,7 @@
 			<ui:remove><!-- #28784 - start --></ui:remove>
 			<p:inputText id="userScore" style="min-width:0px !important;width:30px; text-align:right;"
 				value="#{tplSpecAnswer.userScore}"
-				required="false" maxlength="14"
+				required="true" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.user.score']}"
 				rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null and (isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification)}"
 				disabled="#{(tplSpecAnswer.compliance ne null and !tplSpecAnswer.compliance) or evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}"><ui:remove>#21692</ui:remove><!-- #29187 Vinod Added Compliance checking -->
@@ -155,6 +155,8 @@
 	<!-- #29187 Start Vinod -->
 	<p:column style="width:5%;" rendered="#{isManSpecAndCompliance}">
 		<h:selectOneMenu id="specCompliance" 
+						 required="true"
+						 label="#{lbl['lbl.sc.tec.compliance']}"
 						 value="#{tplSpecAnswer.compliance}" 
 						 disabled="#{evaluationBackingBean.managedBean.readOnly}" 
 						 rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification and tplSpecAnswer.tplSpecQuestion.mandatorySpec}">
@@ -162,6 +164,7 @@
 			<p:ajax event="change" process="@this" partialSubmit="true" update="@([id$=questionTbl])" listener="#{templateSpecBackingBean.onchangeCompliance(tplSpecAnswer)}" />
 		</h:selectOneMenu>
 		<h:outputText value="" rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification  and !tplSpecAnswer.tplSpecQuestion.mandatorySpec}"/>
+		<p:message id="specComplianceMsg" for="specCompliance" display="icon" />
 	</p:column>
 	<!-- #29187 End Vinod -->
 <!-- #31537 related #21695 Farid START 28/8/2021 -->
