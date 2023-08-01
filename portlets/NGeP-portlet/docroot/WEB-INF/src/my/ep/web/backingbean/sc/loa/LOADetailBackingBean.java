@@ -500,6 +500,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// #34915 idham @01/08/2023 - Start
 		// sort by scLoiLoaItem.getTplSpecZoneDtl() and scLoiLoaItem..getTplSpecTierQty()
 		if (null != this.getManagedBean().getScLoa()
+				&& !this.getManagedBean().getScLoa().getScLoiLoa().getDocType()
+				.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)
 				&& CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoiLoaItems())) {
 			Collections.sort(this.getManagedBean().getScLoa().getScLoiLoaItems(), new Comparator<ScLoiLoaItem>() {
 				@Override
