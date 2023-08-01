@@ -494,7 +494,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						if(!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) &&
 								!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){ 
 							for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-								if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+								if (null != report && QTConstants.SURAT_SETUJU_TERIMA.equals(report.getTitle())) {
 									if (report.getScLoaReportAttachment() != null) {
 										if(null == report.getIsPK42BondCalc()){
 											boolean newBond = validateNewBond(scLoa);
@@ -2047,8 +2047,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			// int year = Calendar.getInstance().get(Calendar.YEAR);
 			ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
 			docDefTypeReqDTO.setParameterType(ParameterTypeConst.SCHEDULE_TYPE);
-			docDefTypeReqDTO
+			//Reopen #25726 note 110
+			if(null != this.getManagedBean().getScLoa().getScQt().getFulfilmentType()){
+				if(this.getManagedBean().getScLoa().getScQt().getFulfilmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
+					docDefTypeReqDTO
 					.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
+				}else{
+					docDefTypeReqDTO
+					.setParameterCode(ParameterConst.SCHEDULE_TYPE_NON_PERIODIC);
+				}
+			}
+			//#25726 end
 			ParameterResDTO docDefTypeResDTO = parameterSo
 					.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
 
@@ -12155,7 +12164,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			private boolean validateNewBond(ScLoa scLoa) {
 				if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
 			         for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-			             if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+			             if (null != report && QTConstants.SURAT_SETUJU_TERIMA.equals(report.getTitle())) {
 			                 if (report.getScLoaReportAttachment() != null) {
 			                	 RequestContext.getCurrentInstance().execute("bondChangesAlertDlg.show()");
 			                	 return false;

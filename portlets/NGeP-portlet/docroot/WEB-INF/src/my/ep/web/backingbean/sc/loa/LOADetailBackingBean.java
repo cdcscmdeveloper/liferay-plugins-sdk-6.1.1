@@ -497,15 +497,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		// #27797 - end
-		//#34815 idham @26/07/2023 - Start
-		//sort by scLoiLoaItem..getLoiLoaItemId()
-		Collections.sort(this.getManagedBean().getScLoa().getScLoiLoaItems(), new Comparator<ScLoiLoaItem>() {
-			@Override
-			public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
-				return Long.compare(s1.getLoiLoaItemId(), s2.getLoiLoaItemId());
-			}
-		});
-		//#34815 idham @26/07/2023 - End
+		// #34915 idham @26/07/2023 - Start
+		// sort by scLoiLoaItem..getLoiLoaItemId()
+		if (null != this.getManagedBean().getScLoa()
+				&& !this.getManagedBean().getScLoa().getScLoiLoa().getDocType()
+						.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)
+				&& CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoiLoaItems())) {
+			Collections.sort(this.getManagedBean().getScLoa().getScLoiLoaItems(), new Comparator<ScLoiLoaItem>() {
+				@Override
+				public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
+					return Long.compare(s1.getLoiLoaItemId(), s2.getLoiLoaItemId());
+				}
+			});
+		}
+		// #34915 idham @26/07/2023 - End
 		removeUnwantedLampiranA3Report(1); //#29006 - note 650
 		//Bug 34404 - related to 29007 - start
 		if(this.getManagedBean().getScLoa()!=null){
@@ -3760,26 +3765,32 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				
 				//#25726 start
 				if (null != scLoa && CollectionUtils.isNotEmpty(scLoa.getScLoaReports())) {
-					if(!scLoa.isBrandNew()){
-						if(null != scLoa.getScLoiLoa()){
-							if(!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) &&
-									!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){ 
-								for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-									if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
-										if (report.getScLoaReportAttachment() != null) {
-											if(null == report.getIsPK42BondCalc()){
-												boolean newBond = validateNewBond(scLoa);
-												if (newBond == false){
-													return;
-												} 
+					if (null == scLoa.getScQuote()) {
+						if (!scLoa.isBrandNew()) {
+							if (null != scLoa.getScLoiLoa()) {
+								if (!scLoa.getScLoiLoa().getFulfilmentTypeCode()
+										.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
+										&& !scLoa.getScLoiLoa().getFulfilmentTypeCode()
+												.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+									for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
+										if (null != report
+												&& QTConstants.SURAT_SETUJU_TERIMA
+														.equals(report.getTitle())) {
+											if (report.getScLoaReportAttachment() != null) {
+												if (null == report.getIsPK42BondCalc()) {
+													boolean newBond = validateNewBond(scLoa);
+													if (newBond == false) {
+														return;
+													}
+												}
 											}
-										}	                
+										}
 									}
 								}
-			        		}
-			        	}
+							}
+						}
 					}
-			     }
+				}
 				//#25726 end
 				
 				scLoa.setScLoaWorkFlowStatuses(null);
@@ -4206,14 +4217,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 		if (null != this.getManagedBean().getScLoa()
 				&& CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
-			if (null == scLoa.getScQuote()) {
-				for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-					if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
-						if (report.getScLoaReportAttachment() != null) {
-							if (null == report.getIsPK42BondCalc()) {
-								boolean newBond = validateNewBond(scLoa);
-								if (newBond == false) {
-									return;
+			if (!scLoa.isBrandNew()) {
+				if (null == scLoa.getScQuote()) {
+					for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
+						if (null != report && QTConstants.SURAT_SETUJU_TERIMA.equals(report.getTitle())) {
+							if (report.getScLoaReportAttachment() != null) {
+								if (null == report.getIsPK42BondCalc()) {
+									boolean newBond = validateNewBond(scLoa);
+									if (newBond == false) {
+										return;
+									}
 								}
 							}
 						}
@@ -5161,8 +5174,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// int year = Calendar.getInstance().get(Calendar.YEAR);
 			ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
 			docDefTypeReqDTO.setParameterType(ParameterTypeConst.SCHEDULE_TYPE);
-			docDefTypeReqDTO
+			//Reopen #25726 note 110
+			if(null != this.getManagedBean().getScLoa().getScQt().getFulfilmentType()){
+				if(this.getManagedBean().getScLoa().getScQt().getFulfilmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
+					docDefTypeReqDTO
 					.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
+				}else{
+					docDefTypeReqDTO
+					.setParameterCode(ParameterConst.SCHEDULE_TYPE_NON_PERIODIC);
+				}
+			}
+			//#25726 end
 			ParameterResDTO docDefTypeResDTO = parameterSo
 					.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
 
@@ -11184,7 +11206,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	private boolean validateNewBond(ScLoa scLoa) {
 		if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
 	         for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-	             if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+	             if (null != report && QTConstants.SURAT_SETUJU_TERIMA.equals(report.getTitle())) {
 	                 if (report.getScLoaReportAttachment() != null) {
 	                	 RequestContext.getCurrentInstance().execute("bondChangesAlertDlg.show()");
 	                	 return false;
