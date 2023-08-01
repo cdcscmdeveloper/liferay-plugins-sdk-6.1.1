@@ -11,8 +11,8 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.supplier.code']}" /></td>
 				<c:choose>
-					<c:when test="evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 1
-					and evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification">
+					<c:when test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 1
+					and evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification}">
 						<td style="font-size: 12px;">:
 						#{evaluationBackingBean.managedBean.supplierNo}</td>
 					</c:when>
@@ -26,8 +26,8 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.spec.checklist.title']}" /></td>		
 				<c:choose>
-					<c:when test="evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 1
-					and evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification">
+					<c:when test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 1
+					and evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification}">
 						<td style="font-size: 12px;">:
 						#{lbl['lbl.sc.eva.all.template']}</td>
 					</c:when>
