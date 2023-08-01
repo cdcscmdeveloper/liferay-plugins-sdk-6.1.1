@@ -214,6 +214,11 @@ import com.liferay.portal.util.PortalUtil;
 public class EvaluationBackingBean extends
 		SourcingBaseBackingBean<EvaluationManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The skip. */
 	private boolean skip;
 
