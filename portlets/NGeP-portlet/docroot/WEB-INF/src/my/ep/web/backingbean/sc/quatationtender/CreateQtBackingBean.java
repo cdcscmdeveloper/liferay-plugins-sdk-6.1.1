@@ -3650,15 +3650,24 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public void validateDemoTechList(AjaxBehaviorEvent event) {
 		Boolean type = (Boolean) event.getComponent().getAttributes().get("value");
 		this.getManagedBean().getQt().setDemoRequired(type);
-
 		if (type == false) {
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
+
+			if (null == scQtTechChecklist) {
+				IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
+				reqDTO.setScQt(this.getManagedBean().getQt());
+				reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+				scQtTechChecklist = specSo.retrieveCheckLists(reqDTO).getTechnicalCheckList();
+			}
 
 			if (null != scQtTechChecklist) {
 				for (ScQtCheckList checklist : scQtTechChecklist) {
 					if (checklist.getDefinationType().getParameterCode()
 							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
 						RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");
+
 					}
 				}
 			}
