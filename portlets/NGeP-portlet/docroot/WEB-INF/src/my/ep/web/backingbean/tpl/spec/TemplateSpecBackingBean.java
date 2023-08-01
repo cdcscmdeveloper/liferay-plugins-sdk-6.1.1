@@ -3990,19 +3990,19 @@ public class TemplateSpecBackingBean extends
 		}
 		public void onchangeCompliance(TplSpecAnswer ans){
 			for(TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-				if(ans.getSpecAnswerId().equals(answer.getSpecAnswerId())
+				if(ans.getSpecAnswerId()==answer.getSpecAnswerId()
 					&& ans.getCompliance()!=null
 					&& ans.getCompliance()==Boolean.FALSE){
-					answer.setUserScore(new BigDecimal(0));
-				}else if(ans.getSpecAnswerId().equals(answer.getSpecAnswerId())
+						answer.setUserScore(BigDecimal.ZERO);
+				}else if(ans.getSpecAnswerId()==answer.getSpecAnswerId()
 						&& ans.getCompliance()!=null
 						&& ans.getCompliance()==Boolean.TRUE
-						&& !ans.getUserScore().equals(null)
-						&& ans.getUserScore().equals(new BigDecimal(0))){
-					answer.setUserScore(null);
-				}else if(ans.getSpecAnswerId().equals(answer.getSpecAnswerId())
+						&& ans.getUserScore()!=null
+						&& ans.getUserScore().compareTo(BigDecimal.ZERO) == 0){
+							answer.setUserScore(null);
+				}else if(ans.getSpecAnswerId()==answer.getSpecAnswerId()
 						&& ans.getCompliance()==null){
-					answer.setUserScore(null);
+							answer.setUserScore(null);
 				}
 			}
 		}
