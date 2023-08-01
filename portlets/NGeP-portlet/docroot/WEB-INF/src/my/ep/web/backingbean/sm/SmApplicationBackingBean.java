@@ -17012,18 +17012,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					 * check if QT notice been closed and supplier submitted
 					 * proposal.
 					 */
-					if (pendingQT == true) {
-						msg.append(SmCommonUtil.getMessage("lbl.msg.confirmation.deletebranch.qt.pending", null));
-						msg.append("<br />");
-					}
+					//#28777 - START
 					closedQTSubmitProposal = mofRegistrationSO
 							.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
-					if (closedQTSubmitProposal == true) {
-						msg.append("<br />");
-						msg.append(SmCommonUtil.getMessage(
-								"lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal", null));
-					}
-					getManagedBean().setDeleteBranchMsg(msg.toString());
+					
 					/**
 					 * #29727 FL Module had selected the branch information,
 					 * then supplier wanted to delete the selected branch
@@ -17034,8 +17026,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 					if (deletedBranchName.length() > 0) {
 						throw new EpException(MessageConst.ERROR_721120, new String[] { deletedBranchName.toString() });
-					} else if (pendingQT == true || closedQTSubmitProposal == true) {
+					} else if (pendingQT == true) {
 						RequestContext.getCurrentInstance().execute("pendingQTPopUp.show()");
+					}else if (pendingQT == true && closedQTSubmitProposal == true) {
+						RequestContext.getCurrentInstance().execute("pendingQTPopUpIdAndClosedQTSubmitProposal.show()"); 
+						//#28777 - END
 					} else {
 						RequestContext.getCurrentInstance().execute("branchDeletePopUp.show()");
 					}
