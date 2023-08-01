@@ -12,8 +12,8 @@
 				<!-- 25138,34876 -start- -->
 				<c:choose>
 					<c:when
-						test="evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 1
-					and evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification">
+						test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq 1
+					and evaluationBackingBean.managedBean.evaluationCheckListType eq ParameterConst.documentDefinitionTypeTemplateSpecification}">
 						<td style="font-size: 12px;">:
 							#{evaluationBackingBean.managedBean.supplierNo}</td>
 					</c:when>
@@ -30,8 +30,8 @@
 				<!-- 25138,34876 -start- -->
 				<c:choose>
 					<c:when
-						test="evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 1
-					and evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification">
+						test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq 1
+					and evaluationBackingBean.managedBean.evaluationCheckListType eq ParameterConst.documentDefinitionTypeTemplateSpecification}">
 						<td style="font-size: 12px;">:
 							#{lbl['lbl.sc.eva.all.template']}</td>
 					</c:when>
