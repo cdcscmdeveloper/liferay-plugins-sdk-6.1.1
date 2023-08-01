@@ -1,5 +1,8 @@
 package my.ep.web.util.sm.helper;
 
+//#30457 - Start
+import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+//#30457 - Start
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -648,6 +651,14 @@ public class SmServiceLookup {
 	}
 	//END LOG 12491
 	
+	//#30457-start
+	public static ICatalogueSO getCatalogueSO() {
+		return (ICatalogueSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
+						ICatalogueSO.class);
+	}
+	//#30457-end
+	
 	//#34209 - START
 	/**
 	 * Get ISupplierCategorySO
@@ -660,4 +671,5 @@ public class SmServiceLookup {
 						ISupplierCategorySO.class);
 	}
 	//#34209 - END
+	
 }

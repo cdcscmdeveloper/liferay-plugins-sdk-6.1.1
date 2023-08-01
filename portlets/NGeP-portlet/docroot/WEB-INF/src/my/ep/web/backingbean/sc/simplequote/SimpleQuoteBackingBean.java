@@ -128,7 +128,6 @@ import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.sm.SmSupplierBusiness; // #29832
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
@@ -178,8 +177,8 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+// #29832
 
-// TODO: Auto-generated Javadoc
 
 /**
  * The Class SimpleQuoteBackingBean.
@@ -460,6 +459,8 @@ public class SimpleQuoteBackingBean extends
 	 * add panel or contract and non contract to simple quote from search
 	 * catalogue.
 	 * 
+	 * @param supplierId
+	 *            the supplier id
 	 * @param docId
 	 *            the doc id
 	 * @param panelItemFlag
@@ -468,7 +469,8 @@ public class SimpleQuoteBackingBean extends
 	 *            the compare supplier items
 	 * @return the string page navigate to simple quote page.
 	 */
-	public String simpleQuoteAction(Long docId, boolean panelItemFlag,
+	// #34579 - add new parameter on simpleQuoteAction method
+	public String simpleQuoteAction(Long supplierId, Long docId, boolean panelItemFlag,
 			List<CmSupplierItem> compareSupplierItems) {
 		debugLogger("simpleQuoteAction");
 		boolean isGovtSeller = Boolean.FALSE;
@@ -876,6 +878,15 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 		// #29800 - end
+		// #34579 - start
+		if (supplierId != null && supplierId != 0) {
+			if (scQuote.getSupplierId() == 0)
+				scQuote.setSupplierId(supplierId);
+		} else if (supplierId == 0) {
+			if (scQuote.getSupplierId() == 0 && getManagedBean().getPanelSuppliers() != null && !getManagedBean().getPanelSuppliers().isEmpty())
+				scQuote.setSupplierId(getManagedBean().getPanelSuppliers().get(0).getSmSupplier().getSupplierId());
+		}
+		// #34579 - end
 
 		return SIMPLE_QUOTE_PAGE_NAV;
 	}
