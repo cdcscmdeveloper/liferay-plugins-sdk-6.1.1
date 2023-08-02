@@ -2072,7 +2072,7 @@ public class QTCloneBackingbean extends
 		List<TabBean> tabBeans = new ArrayList<TabBean>();
 		List<ScQtApproval> otherapprovals=new ArrayList<>();//25635 & 34502 
 		this.getManagedBean().setScQtApprovalReqAttachementICT(null);//34502&25635-start
-		this.getManagedBean().setScQtAppRequestRemark(StringUtils.EMPTY);
+		this.getManagedBean().setScQtAppRequestRemarkICT(StringUtils.EMPTY); //#25077
 		this. getManagedBean().setPmParam(null);
 		scQt.setCloneEnabled(Boolean.FALSE);//34502&25635-End
 		//25635 & 34502 - End
@@ -2294,7 +2294,7 @@ public class QTCloneBackingbean extends
 							req.setAppRequestRemark(approvalRemark);
 							if(null!=approvalRequest.getAppRequestRemark()){//34502&25635&43-start
 							req.getAppRequestRemark().setRemark(approvalRequest.getAppRequestRemark().getRemark());//25635 & 34502
-							this.getManagedBean().setScQtAppRequestRemark(req.getAppRequestRemark().getRemark());//34502&25635
+							this.getManagedBean().setScQtAppRequestRemarkICT(req.getAppRequestRemark().getRemark());//34502&25635 & //#25077
 							}//34502&25635&43-End
 							req.setScQtApproval(newOthersApproval);
 							approverRequest.add(req);
