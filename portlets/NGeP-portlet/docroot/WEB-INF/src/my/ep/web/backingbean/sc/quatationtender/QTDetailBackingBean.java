@@ -11131,29 +11131,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	//#29425 - start
 	public void validateNewValueForValidityDays(int newValue) {
-		PmParameter procureMentMode = this.getManagedBean().getQt().getProcurementMode();
-		if (newValue == 0) {
-			this.getManagedBean().setNewValidityDays(newValue);
-			this.getManagedBean().setNewValueValidity(true);
-		}
-		if (ParameterConst.PROCUREMENT_MODE_QUOTATION
-				.equalsIgnoreCase(procureMentMode.getParameterCode())
-					&& newValue > 90) {
-			this.getManagedBean().setNewValueValidity(true);
-		}
 		validateValidityDays(newValue);
-		if (ParameterConst.PROCUREMENT_MODE_TENDER
-				.equalsIgnoreCase(procureMentMode.getParameterCode())
-					&& newValue != 0
-						&& newValue < 90) {
-			this.getManagedBean().setNewValueValidity(true);
-		}
-		if (ParameterConst.PROCUREMENT_MODE_TENDER
-				.equalsIgnoreCase(procureMentMode.getParameterCode())
-						&& newValue >= 90) {
-			this.getManagedBean().setNewValueValidity(false);
-		}
-		this.getManagedBean().setNewValidityDays(newValue);
 	}
 	
 	public void validateValidityDays(int validityDays) {
@@ -11202,14 +11180,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 		}
 		return 0;
-	}
-	
-	private void disableNewValueValidity() {
-		PmParameter procureMentMode = this.getManagedBean().getQt().getProcurementMode();
-		if (ParameterConst.PROCUREMENT_MODE_QUOTATION
-				.equalsIgnoreCase(procureMentMode.getParameterCode())) {
-			this.getManagedBean().setNewValueValidity(false);
-		}
 	}
 	//#29425 - end
 	public String getDoaaRequestStatus() {
