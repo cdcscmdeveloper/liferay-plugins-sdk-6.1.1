@@ -536,6 +536,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			} else {
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			}
+			//#34686 start
+			flOrderBB.getManagedBean().setAttachment(resDTO.getFlAttachment());
+			//#34686 end
 			
 			if(!isGovtSeller()){
 				flOrderBB.getManagedBean().setSupplier(hasSupplierRole());
@@ -563,7 +566,11 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else {
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
-			}	
+			}
+			//#34686 start
+			flOrderBB.getManagedBean().setAttachment(coResDTO.getFlAttachment());
+			//#34686 end
+			
 			if(!isGovtSeller()){
 				flOrderBB.getManagedBean().setSupplier(hasSupplierRole());
 			}
@@ -987,7 +994,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 * @return true, if is factoring user.
 	 */
 	//29550-start
-	public boolean isFactoringUser() {
+	public static boolean isFactoringUser() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.FACTORING_USER.value());
 	}
@@ -1091,11 +1098,19 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 */
 	public static List<SelectItem> getFinancialYearOpt() {
 		int years = 0;
+		//29550 - Start(add yearLength variable to display year from 2016)
+		int yearLength = 7;
 		List<SelectItem>financialYearOpt = new ArrayList<SelectItem>();
-		for(Integer i = 0;i < 7;i++){
+		
+		if(isFactoringUser()){
+			yearLength = 8;
+		}
+		
+		for(Integer i = 0;i < yearLength;i++){
 			years = CommonMethod.getYear(-i);
 			 financialYearOpt.add(new SelectItem(years, Integer.toString(years)));
 		}
+		//29550 - End
 		return financialYearOpt;
 	}
 

@@ -66,7 +66,8 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.person.nationality.origin']}" />
 				</f:facet>
-				<p:selectOneMenu id="origin#{varDirector.personnelId}" value="#{varDirector.pmCountry.countryId}" disabled="#{varDirector.identificationType.parameterCode eq ParameterConst.identificationTypesIc}">
+				<!-- #30064 varDirector.disableNationality -->
+				<p:selectOneMenu id="origin#{varDirector.personnelId}" value="#{varDirector.pmCountry.countryId}" disabled="#{varDirector.identificationType.parameterCode eq ParameterConst.identificationTypesIc and !varDirector.disableNationality}">
 					<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 					<f:selectItems var="counLs"
 						value="#{registrationBackingBean.managedBean.countryLs}" 

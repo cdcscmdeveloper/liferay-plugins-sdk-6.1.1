@@ -52,7 +52,7 @@ public class TravellingTicketBackingBean extends BaseBackingBean<TravellingTicke
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(TravellingTicketBackingBean.class);
 	private static final String TRAVELLING_TICKET_MAIN = "/xhtml/sm/travellingTicketing/travellingTicketMain.xhtml";
-	private static final String VIEW_MAINTENANCE_RESULT_PAGE = "/xhtml/sm/travellingTicketing/travellingTicketMaintenanceMain.xhtml";;
+	private static final String VIEW_MAINTENANCE_RESULT_PAGE = "/xhtml/sm/travellingTicketing/travellingTicketMaintenanceMain.xhtml";
 	
 	private IPagingDataModel<PmMachineSection> searchMachine = new TravellingTicketPagingDataModel();
 
