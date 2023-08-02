@@ -455,7 +455,12 @@ public class LOIDetailBackingBean extends
 					}else{
 						this.getManagedBean().setRenderInstruction(false);
 					}
-		// #29007	Vinod End
+		// #29007	Vinod End	
+					
+					//#30008
+					if(this.getManagedBean().getDecision() == null){
+						this.getManagedBean().setDecision(new PmParameter());
+					}
 	}
 	
 	/**
@@ -942,8 +947,55 @@ public class LOIDetailBackingBean extends
 					}
 					
 				}//34905-End
-			}
+				
+				//#30008
+				if (this.getManagedBean().isItemized()) {
+					List<ScQtRecommend> scRecomendedList = this.getManagedBean().getRecommendList();
+					for (ScLoi scLoi : scLois) {
+						if (ParameterConst.NOT_REACH_AGREEMENT.equals(scLoi.getNegoDecision().getParameterId().toString())) {
+							getManagedBean().setDecision(new PmParameter());
+							getManagedBean().setDecision(scLoi.getNegoDecision());
+							getManagedBean().setJustification(scLoi.getDecisionJustification());
+							getManagedBean().setReadOnly(true);
+							for (ScQtRecommend recom : scRecomendedList) {
+								List<ScQtEvaluationResultDtl> recomSuppList = recom.getAwardSupplierList();
+								for (ScQtEvaluationResultDtl evalDtl : recomSuppList) {
+									if (scLoi
+											.getScLoiLoa()
+											.getSmSupplier()
+											.getSupplierId()
+											.equals(evalDtl.getQtEvaluationResult().getScQtProposal().getScQtSupplier()
+													.getSmSupplier().getSupplierId())) {
+										recom.setNoReachAgreement(true);
+										break;
 
+									}
+								}
+							}
+						}
+					}
+				} else {
+					List<ScQtEvaluationResultDtl> recomSuppList = this.getManagedBean().getRecommendedSupplierList();
+					for (ScLoi scLoi : scLois) {
+						if (ParameterConst.NOT_REACH_AGREEMENT.equals(scLoi.getNegoDecision().getParameterId().toString())) {
+							getManagedBean().setDecision(scLoi.getNegoDecision());
+							getManagedBean().setJustification(scLoi.getDecisionJustification());
+							getManagedBean().setReadOnly(true);
+							for (ScQtEvaluationResultDtl evalDtl : recomSuppList) {
+								if (scLoi
+										.getScLoiLoa()
+										.getSmSupplier()
+										.getSupplierId()
+										.equals(evalDtl.getQtEvaluationResult().getScQtProposal().getScQtSupplier()
+												.getSmSupplier().getSupplierId())) {
+									evalDtl.setNoReachAgreement(true);
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
 		} finally {
 			// qtAwardSO = null;
 		}
@@ -1417,6 +1469,14 @@ public class LOIDetailBackingBean extends
 			scLoi.setScLoiSupportingDocs(null);
 			getManagedBean().setItemDetailsFlag(Boolean.FALSE);
 			this.getManagedBean().setProgressivePaymentList(null);
+		}
+		
+		//#30008
+		if (scLoi.getNegoDecision() != null) {
+			getManagedBean().setDecision(new PmParameter());
+			getManagedBean().setDecision(scLoi.getNegoDecision());
+			getManagedBean().setJustification(scLoi.getDecisionJustification());
+			getManagedBean().setReadOnly(true);			
 		}
 		
 		getManagedBean().setSelectedScQtDeduction(null);
@@ -2258,6 +2318,11 @@ public class LOIDetailBackingBean extends
 		// TODO
 		scLoi.setFileExtnNo("001");
 		
+		//#30008 
+		getManagedBean().setDecision(new PmParameter());
+		getManagedBean().setDecision(scLoi.getNegoDecision());
+		getManagedBean().setJustification(scLoi.getDecisionJustification());
+		
 		/*
 		 * if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi
 		 * .getScWorkFlowStatus().getPmStatus().getStatusId())) {
@@ -2436,6 +2501,11 @@ public class LOIDetailBackingBean extends
 			ScLoi scLoi = this.getManagedBean().getScLoi();
 			ScQt scQt=this.getManagedBean().getScQt();
 			String outcome = BpmOutcomeConst.BPM_SAVE;
+			
+			//#30008 - Start
+			scLoi.setNegoDecision(this.getManagedBean().getDecision());
+			scLoi.setDecisionJustification(this.getManagedBean().getJustification());
+			//#30008 - end
 			
 			parseLOIDetails(scLoi, outcome);
 			
@@ -2677,6 +2747,13 @@ public class LOIDetailBackingBean extends
 			
 			//pending loiloas
 			List<ScLoiLoa> pendingloiloas  = getPendingLoiLoas(scLoi, getManagedBean().getRecSupplierList());
+			
+			//#30008
+			if (ParameterConst.NOT_REACH_AGREEMENT.equals(scLoi.getNegoDecision().getParameterId().toString())) {	
+				awardDataType.setIsAgreement(false);
+			} else {
+				awardDataType.setIsAgreement(true);
+			}
 
 			scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 			//Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
@@ -2691,9 +2768,10 @@ public class LOIDetailBackingBean extends
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setPendingloiloas(pendingloiloas);
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			
+			
 
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOIDtl(reqDTO);
-
 			if (resDTO.isSuccessful()) {
 				scLoi = resDTO.getScLoi();
 				renewSesionObject();
@@ -2792,6 +2870,11 @@ public class LOIDetailBackingBean extends
 			}
 			scLoi.setScLoiRemarks(finalScLoiRemarks);
 			// remove empty remark - end
+			
+			//#30008 - Start
+			scLoi.setNegoDecision(scLoi.getNegoDecision());
+			scLoi.setDecisionJustification(this.getManagedBean().getJustification());
+			//#30008 - end
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
@@ -6810,4 +6893,34 @@ public class LOIDetailBackingBean extends
 				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	//#21692 - end
+	
+	/**
+	 * #30008 - Validate LOI Negotiation result before submit
+	 * @param bpmAction
+	 * @return void
+	 */
+	public void validateNegoDecisionAction(String bpmAction) {
+		try {
+			String decision = String.valueOf(this.getManagedBean().getDecision().getParameterId());
+			String justification = this.getManagedBean().getJustification();
+
+			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(bpmAction)) {
+				if (decision == null) {
+					throw new EpException(MessageConst.ERROR_775192);
+				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
+					throw new EpException(MessageConst.ERROR_775193);
+				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
+					RequestContext.getCurrentInstance().execute("submitNegoConfirmPopUp.show()");
+				} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
+					updateBpmTaskAction(bpmAction);
+				}
+			} else {
+				updateBpmTaskAction(bpmAction);
+			}
+
+		} finally {
+		}
+
+	}
+
 }

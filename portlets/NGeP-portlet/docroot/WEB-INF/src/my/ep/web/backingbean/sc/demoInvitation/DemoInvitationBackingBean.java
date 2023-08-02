@@ -164,7 +164,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 			String committeeType = ((SCEvaluationDataType) evaluationDataType).getCommitteeType();
 			Long qtId = evaluationDataType.getQtId().longValue();
-			retrieveQuotationTenderDetails(qtId, committeeType);//remove long sqube G9
+			retrieveQuotationTenderDetails(new Long(qtId), committeeType);
 			//retrieveDemoDetailsData();
 
 			this.getManagedBean().setReadOnly(false);
@@ -862,7 +862,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					 */
 				} else {
 					pmParam = getParameterByTypeAndCode(ParameterTypeConst.ALL_BY_ITEM, SourcingConstants.BY_ITEM);
-					if (demoItemList.isEmpty() && !this.getManagedBean().getTempDemoItemList().isEmpty()) {
+					if (demoItemList.isEmpty()) {
 						demoItemList.addAll(this.getManagedBean().getTempDemoItemList());
 					}
 

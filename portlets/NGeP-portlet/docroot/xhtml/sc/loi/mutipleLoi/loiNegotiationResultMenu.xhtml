@@ -28,7 +28,10 @@
 		<ui:param name="validityDaysExpiredQt"
 			value="#{lOIDetailBackingBean.checkProposalValidityDateReach(
 		     				lOIDetailBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
-
+		     				
+<!-- 		<ui:remove>#30008</ui:remove>     				 -->
+<!-- 		<ui:param name="isNotReachAgreement" value="#{lOIDetailBackingBean.managedBean.notReachAgreement eq ParameterConst.notReachAgreement}" /> -->
+		
 		<p:messages id="suppFinalMsg" showDetail="true" autoUpdate="#{lOIDetailBackingBean.managedBean.autoUpdate}"
 			closable="true" showSummary="false" severity="error, info" />
 

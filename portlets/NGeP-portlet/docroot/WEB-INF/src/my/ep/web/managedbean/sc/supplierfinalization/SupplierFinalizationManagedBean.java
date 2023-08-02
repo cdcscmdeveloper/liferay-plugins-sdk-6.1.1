@@ -321,6 +321,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private ScQt checkCategoryCodeQt;//#29466
 	
+	//#30008
+	private boolean notReachAgreement;
+	
 	/**
 	 * @return the activeIndex
 	 */
@@ -2573,6 +2576,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.hasSupplierQualifiedForCurrentSelection = hasSupplierQualifiedForCurrentSelection;
 	}
 	//6906 note 202 - end
+
+	public boolean isNotReachAgreement() {
+		return notReachAgreement;
+	}
+
+	public void setNotReachAgreement(boolean notReachAgreement) {
+		this.notReachAgreement = notReachAgreement;
+	}
 
 }
 // ***25201

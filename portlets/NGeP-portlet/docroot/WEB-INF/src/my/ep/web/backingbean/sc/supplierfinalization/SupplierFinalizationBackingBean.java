@@ -1118,8 +1118,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 
 				// Meeting Attendance Details
-				//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-				if (scQtCommittee != null && CollectionUtils.isNotEmpty(scQtCommittee
+				if (CollectionUtils.isNotEmpty(scQtCommittee
 						.getMeetingAttendances())) {
 					this.getManagedBean().setMeetingAttendanceList(
 							scQtCommittee.getMeetingAttendances());
@@ -1642,9 +1641,7 @@ public class SupplierFinalizationBackingBean extends
 				reqDTO.setDeletedMeetingsList(this.getManagedBean().getDeletedMeetingList());
 				//#27502- Adding condition only
 				if (reqDTO.getScQtCommittee() != null) {
-					if (scQtCommittee == null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
-						scQtCommittee = new ScQtCommittee();
-					 scQtCommittee.setQtCommitteRemarks(reqDTO.getScQtCommittee().getQtCommitteRemarks());
+					scQtCommittee.setQtCommitteRemarks(reqDTO.getScQtCommittee().getQtCommitteRemarks());
 					reqDTO.setScQtCommittee(scQtCommittee);
 				}
 			}
@@ -4332,7 +4329,7 @@ return	remarksNotFound;
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
 		ScQtFinalizationReport scQtReport = null;
 		ScQtFinalizationReportAttachment attachment = null;
-		if (briefingPaperList != null && CollectionUtils.isNotEmpty(briefingPaperList) //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+		if (CollectionUtils.isNotEmpty(briefingPaperList)
 				&& briefingPaperList.size() > 0) {
 			for (int i = 0; i < briefingPaperList.size(); i++) {
 				scQtReport = briefingPaperList.get(i);
@@ -4363,7 +4360,7 @@ return	remarksNotFound;
 			}
 		}
 		
-		if (decisionPaperList != null && CollectionUtils.isNotEmpty(decisionPaperList)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+		if (CollectionUtils.isNotEmpty(decisionPaperList)
 				&& decisionPaperList.size() > 0) {
 			for (ScQtFinalizationReport finalizationReport : decisionPaperList) {
 				attachment = finalizationReport.getScQtFinalizationReportAttachment();
@@ -4408,7 +4405,7 @@ return	remarksNotFound;
 				  briefingPaperList.add(report);
 			  }
 		}
-		if (briefingPaperList != null && CollectionUtils.isNotEmpty(briefingPaperList)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+		if (CollectionUtils.isNotEmpty(briefingPaperList) && briefingPaperList.size() > 0) {
           ScQtFinalizationReport latestScQtFinalizationReport = briefingPaperList.get(briefingPaperList.size() -1);
           if (null != latestScQtFinalizationReport && latestScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
             latestBriefingPaper = true;
@@ -4912,10 +4909,6 @@ return	remarksNotFound;
 			}	
 			
 			if (isZonal) {
-				//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-				if (zoneDetailsMap == null) {
-					zoneDetailsMap = new HashMap<TplSpecZoneDtl,FinalizationEndorsementReportDTO>();
-				}
 				for (TplSpecZoneDtl specZone
 							: getManagedBean().getZoneMap().values()) {
 					if (!zoneDetailsMap.containsKey(specZone)) {
@@ -5252,6 +5245,7 @@ return	remarksNotFound;
 				shortlistedItemSupplierList != null) {
 			//33380 - start
 			Map<MapKey, ScQtRecommendDtl> map = new HashMap<MapKey, ScQtRecommendDtl>();
+			getManagedBean().setNotReachAgreement(false);//#30008	
 			boolean multipleLOIandRefinalized = ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(getManagedBean().getFinalizationMethod()) 
 					&& this.getManagedBean().getQtRefinalized(); 
 			getManagedBean().setHaveSupplierRejection(false);
@@ -5326,6 +5320,12 @@ return	remarksNotFound;
 			getManagedBean().setHaveSupplierRejection(remarkExists);
 		}
 		// #11134 - end
+		
+//		if(this.getManagedBean().isNotReachAgreement()){
+//			boolean remarkExists = evalResultDtl.getSupplierNotReachAgreementRemark() != null
+//					&& StringUtils.isNotBlank(evalResultDtl.getSupplierNotReachAgreementRemark().getRemark());
+//			getManagedBean().setsun(remarkExists);
+//		}
 	}
 	
 	//#11134 - start
@@ -5356,7 +5356,7 @@ return	remarksNotFound;
 			qtSuppFinalizationSO = null;
 		}
 
-		if(loiLoaItems != null && CollectionUtils.isNotEmpty(loiLoaItems)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+		if(CollectionUtils.isNotEmpty(loiLoaItems)){
 			
 			Comparator<BaseEntity> compByDateDesc =  new Comparator<BaseEntity>(){
 				@Override
@@ -5448,6 +5448,18 @@ return	remarksNotFound;
 				}
 			}
 			//4.  get ScRemark -> set it to evalResultDtl
+			
+			//#30008 - Add remark for Not Reach Agreement
+			for(ScLoi each : loiList){	
+				if(ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(each.getNegoDecision()))){
+					ScLoiRemark notReachAgreement = new ScLoiRemark();
+					getManagedBean().setNotReachAgreement(true);					
+					notReachAgreement.setRemark(ResourceBundleUtils.getMessage("lbl.sc.not.reach.agreement", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+					evalResultDtl.setSupplierNotReachAgreementRemark(notReachAgreement);
+				}
+			}
+			
 			
 			evalResultDtl.setSupplierRejectionRemark(supplierRejectionRemark);
 		}
@@ -5651,7 +5663,7 @@ return	remarksNotFound;
 				}
 			}
 		}
-		if(rejectedRecommendDtlIds != null && !CollectionUtils.isEmpty(rejectedRecommendDtlIds)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+		if(!CollectionUtils.isEmpty(rejectedRecommendDtlIds)){
 			log.info("getRejectedRecommendDtlIds size is : "+ rejectedRecommendDtlIds.size());
 		}
 		return rejectedRecommendDtlIds;
@@ -6090,7 +6102,7 @@ return	remarksNotFound;
 		Comment for CR:#26169 , BUG:#28682 END  */
 		//#25729#142 End
 		
-		if (excludedDecisionList != null && CollectionUtils.isNotEmpty( //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+		if (CollectionUtils.isNotEmpty(
 					excludedDecisionList)) {
 			searchBean = new SearchBean<PmParameterDesc>();
 			searchBean.getDataFilterBeans().add(
@@ -6101,10 +6113,6 @@ return	remarksNotFound;
 		
 		//6906 note 117 - start
 		if(this.getManagedBean().isNoProposalSubmitted()){
-			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-			if (excludedDecisionList == null) 
-				excludedDecisionList = new ArrayList<String>();
-			
 			excludedDecisionList.add(
 					ParameterConst.DECISION_RE_EVALUATION);	
 		}
@@ -7535,7 +7543,7 @@ return	remarksNotFound;
 			scQtRecommends = zonalItems.get(currentZoneId);
 		}		
 		
-		if (scQtRecommends != null && CollectionUtils.isNotEmpty(scQtRecommends)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+		if (CollectionUtils.isNotEmpty(scQtRecommends)) {
 			if (zonalPackageItemsCancelled) {
 				MapKey mapKey = new MapKey(currentZoneId, DEFAULT_ITEM);
 				List<QtEvaluationResultDtlBean> cachedSuppliers = 
@@ -8842,9 +8850,6 @@ return	remarksNotFound;
 				meetingList.add(scqtMeeting);
 			}
 		} else {
-			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-			if (meetingList == null)
-				meetingList =  new ArrayList<ScQtMeeting>();
 			meetingList.add(scqtMeeting);
 		}
 
@@ -9026,7 +9031,6 @@ return	remarksNotFound;
 											    	.getScQtRecommendsByZone().get(zoneId);									
 									}
 									calculateBidPrice(items, recommendationBean);
-									qualSupplier.setBidPrice(recommendationBean.getBidPrice());//34760
 								}
 							}
 						}						
@@ -9144,12 +9148,12 @@ return	remarksNotFound;
 			specZoneId = zoneDtl.getSpecZoneId();
 			items = scQtFinalization.getScQtRecommendsByZone()
 									.get(specZoneId);
-		} else if (scQtFinalization != null && scQtFinalization.getScQtRecommends() != null ){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+		} else {
 			specZoneId = DEFAULT_ZONE;
 			items = scQtFinalization.getScQtRecommends();
 		}
 		
-		if (items != null && CollectionUtils.isNotEmpty(items)) {	//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 		
+		if (CollectionUtils.isNotEmpty(items)) {			
 			// to set the recommend details for each item
 			for (ScQtRecommend scQtRecommend : items) {
 				Long itemId = scQtRecommend.getRequestItem().getRequestNoteItemId();
@@ -9813,16 +9817,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					}
 				}
 			}
-			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-			ScQtFinalizationReportAttachment reportAttachment  = null;			
-			if (scQtFinalizationReport != null && scQtFinalizationReport.getScQtFinalizationReportAttachment() != null )
-				reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
-			
-			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-			if (scQtFinalizationReport == null )
-				scQtFinalizationReport = new ScQtFinalizationReport();
-			
-			if(reportAttachment == null ){
+			ScQtFinalizationReportAttachment reportAttachment 
+					= scQtFinalizationReport.getScQtFinalizationReportAttachment();
+			if(reportAttachment == null){
 				reportAttachment = new ScQtFinalizationReportAttachment();
 				reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
 				reportAttachment.setDocNo(getManagedBean().getScQt().getQtNo());

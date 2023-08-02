@@ -1,24 +1,8 @@
 <html>
 <head>
 	<style>
-		
-		@page { 
-	    	size: A4 portrait;
-			margin-top: 2cm;
-			
-		    @top-right {
-	        	content: element(header);
-	        	padding-bottom: 100px;
-				margin-bottom:20px;
-				
-	    	}
-    	
-			@bottom-center {
-				font-family:Arial;
-				font-size:13px;
-				content: "Page " counter(page) " / " counter(pages); 
-			}
-	    } 
+	    @page { size: A4 portrait;}
+		@page { @bottom-center { content: "Page " counter(page) " / " counter(pages); }}
 		 
 		#bottom {
 			clear:both;
@@ -28,11 +12,11 @@
 			font-family: "Helvetica";
 			font-size: 8pt;
 		}
-		.header {
-			display: block;
-			text-align: left;
-			margin-top: 30px;			
-			position: running(header);
+		.header-cont {
+			width:100%;
+			position:fixed;
+			margin-left: 10px;
+			top:0px;
 		}
 		.table2 {
 			border-collapse: collapse;
@@ -44,29 +28,20 @@
 		th{
 			background-color: #BCE18A;
 		}
-		.standard{
-			font-family:Arial;
-			font-size:13px;
-			font-weight:normal;
-			font-style:normal;
-			text-decoration:none;
-			color:#333333;
-		}
-		
-		.underline {
-			text-decoration: underline;
-		}
 	</style>
 </head>
 <body>
-##35001 - start
-<div class="header">
-	<span class="standard">
-		No. Surat Niat : <span class="underline">$loiNo</span>
-	</span>
+<div class="header-cont">
+	<table width="100%">
+		<tr>
+			<td>
+				<span style="font-family:Arial;font-size:10px;font-weight:normal;font-style:normal;text-decoration:none;color:#808080;">No. Surat Niat : </span>
+				<span style="font-family:Arial;font-size:10px;font-weight:normal;font-style:normal;text-decoration:none;color:#808080;border-bottom:1px dotted #808080">$loiNo</span>
+			</td>
+		</tr>
+	</table>
 </div>
-##35001 - end
-<br/><br/><br/><br/><br/><br/>
+<br/><br/><br/><br/><br/><br/><br/>
 <table width="100%">
 	<tr>
 		<td align='center' valign="top">
@@ -120,9 +95,9 @@
                   #foreach($scNegoTerm in $scNegoTerms)
                   <tr>
 					#if ($scNegoTerm.termDesc == 'Price')
-                    <td style="font-family: Arial; font-size: 11px; font-style: normal; text-decoration: none; color: #333333;">2.$count	Harga $method</td>
+                    <td>2.$count	Harga $method</td>
 					#else
-					<td style="font-family: Arial; font-size: 11px; font-style: normal; text-decoration: none; color: #333333;">2.$count	$scNegoTerm.termDesc</td>
+					<td>2.$count	$scNegoTerm.termDesc</td>
 					#end
                   </tr>
                   #set ($count = $count + 1)
@@ -136,37 +111,37 @@
 				#if ($scNegoLocations != 'null')
 					#foreach( $scNegoLocation in $scNegoLocations )
 					<tr>
-						<td style="width: 15%; font-family: Arial; font-size: 11px; font-style: normal; text-decoration: none; color: #333333;">Tarikh</td>
-						<td style="width: 5%; font-family: Arial; font-size: 11px; font-style: normal; text-decoration: none; color: #333333;">:</td>
+						<td style="width: 15%;">Tarikh</td>
+						<td style="width: 5%;">:</td>
 						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$dateSDF.format($scNegoLocation.negoDate)</span></td>
                   	</tr>
                     <tr>
-						<td style="width: 15%; font-family: Arial; font-size: 11px; font-style: normal; text-decoration: none; color: #333333;">Masa</td>
-						<td style="width: 5%; font-family: Arial; font-size: 11px; font-style: normal; text-decoration: none; color: #333333;">:</td>
+						<td style="width: 15%;">Masa</td>
+						<td style="width: 5%;">:</td>
 						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$timeSDF.format($scNegoLocation.negoDate)</span></td>
                   	</tr>
                   	<tr>
-						<td style="width: 15%; font-family: Arial; font-size: 11px; font-style: normal; text-decoration: none; color: #333333;">Tempat</td>
-						<td style="width: 5%; font-family: Arial; font-size: 11px; font-style: normal; text-decoration: none; color: #333333;">:</td>
+						<td style="width: 15%;">Tempat</td>
+						<td style="width: 5%;">:</td>
 						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scNegoLocation.negoLocation</span></td>
 					</tr>
 					#end
 				#else
 					<tr>
-						<td style="width: 15%; font-family: Arial; font-size: 11px; font-style: normal; text-decoration: none; color: #333333;">Tarikh</td>
-						<td style="width: 5%; font-family: Arial; font-size: 11px; font-style: normal; text-decoration: none; color: #333333;">:</td>
+						<td style="width: 15%;">Tarikh</td>
+						<td style="width: 5%;">:</td>
 						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
 							Tidak Berkenaan</span></td>
                   	</tr>
                     <tr>
-						<td style="width: 15%; font-family: Arial; font-size: 11px; font-style: normal; text-decoration: none; color: #333333;">Masa</td>
-						<td style="width: 5%; font-family: Arial; font-size: 11px; font-style: normal; text-decoration: none; color: #333333;">:</td>
+						<td style="width: 15%;">Masa</td>
+						<td style="width: 5%;">:</td>
 						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
 							Tidak Berkenaan</span></td>
                   	</tr>
                   	<tr>
-						<td style="width: 15%; font-family: Arial; font-size: 11px; font-style: normal; text-decoration: none; color: #333333;">Tempat</td>
-						<td style="width: 5%; font-family: Arial; font-size: 11px; font-style: normal; text-decoration: none; color: #333333;">:</td>
+						<td style="width: 15%;">Tempat</td>
+						<td style="width: 5%;">:</td>
 						<td style="width: auto;"><span style="font-family:Arial;font-size:11px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
 							Tidak Berkenaan</span></td>
 					</tr>

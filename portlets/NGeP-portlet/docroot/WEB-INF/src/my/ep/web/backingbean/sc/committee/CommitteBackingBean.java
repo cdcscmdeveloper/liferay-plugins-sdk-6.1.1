@@ -1811,20 +1811,20 @@ public class CommitteBackingBean extends
 			}
 
 			private int roleValue(String memberRole) {
-				Integer value = ParameterConst.COMMITTEE_ROLE_OTHER_VALUE; //20230706@asyrafhaziq- SQUBE Bug NullPointer#3
+				Integer value = null;
 
 				if (memberRole == null) {
-					value = ParameterConst.COMMITTEE_ROLE_OTHER_VALUE;
+					value = 4;
 				} else {
 					if (memberRole
 							.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-						value = ParameterConst.COMMITTEE_ROLE_CHAIRPERSON_VALUE;
+						value = 1;
 					} else if (memberRole
 							.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
-						value = ParameterConst.COMMITTEE_ROLE_SECRETARY_VALUE;
+						value = 2;
 					} else if (memberRole
 							.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
-						value = ParameterConst.COMMITTEE_ROLE_MEMBER_VALUE;
+						value = 3;
 					}
 				}
 				return value;

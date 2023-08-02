@@ -398,6 +398,10 @@
 			<ui:param name="haveSupplierRejection"
 				value="#{suppFinalizationBackingBean.managedBean.haveSupplierRejection}" />
 				
+			<ui:remove> #30008 </ui:remove>
+			<ui:param name="notReachAgreement"
+				value="#{suppFinalizationBackingBean.managedBean.notReachAgreement}" />
+				
 				<td class="tdWidth" valign="top">
 					<!-- 6906 note 117 -->
 					<h:panelGroup id="itemPanel" rendered="#{decisionSupplFinalOrFwdHighAuth and

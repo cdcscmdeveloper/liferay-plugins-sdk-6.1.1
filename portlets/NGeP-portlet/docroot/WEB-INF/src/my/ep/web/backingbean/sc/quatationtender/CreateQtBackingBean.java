@@ -1399,7 +1399,7 @@ public class CreateQtBackingBean extends
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.PROCUREMENT_CATEGORY);
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				if (paramDesc.getPmParameter().getParameterId()
-						.equals(Long.valueOf(type))) {
+						.equals(type)) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 
 					this.getManagedBean().setProcuremntCategory(
 							paramDesc.getPmParameter().getParameterCode());
@@ -1428,7 +1428,7 @@ public class CreateQtBackingBean extends
 				//Start Reopen 9019 #note-289 remove the alert message while save
 				if(null != type){
 					if (paramDesc.getPmParameter().getParameterId()
-							.equals(Long.valueOf(type))) {   
+							.equals(type)) {   //20230711@Asyrafhaziq-SQUBE Bug Minor #16
                 
 						this.getManagedBean().setFulfilmentType(
 								paramDesc.getPmParameter().getParameterCode());
@@ -3511,9 +3511,8 @@ public class CreateQtBackingBean extends
 	 * @param approvalDetails
 	 */
 	public void otherApprovalStatus(ScQtApprovalRequest approvalDetails) {
-		//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-	 if (approvalDetails != null){
-		 Long parameterId = (approvalDetails
+		
+		Long parameterId = (approvalDetails != null && approvalDetails
 				.getApproverAction() != null) ? approvalDetails
 				.getApproverAction().getParameterId() : null;
 		if (parameterId != null) {
@@ -3523,7 +3522,7 @@ public class CreateQtBackingBean extends
 		} else {
 			approvalDetails.setApproverAction(new PmParameter());
 		}
-	  }
+
 	}
 	
 	//#25077 - Start 
@@ -3802,7 +3801,7 @@ public class CreateQtBackingBean extends
 								break;
 							}	
 						}
-						if (isInsert == true && rootTrees != null){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+						if (isInsert == true){
 							if (getManagedBean().getIndex() == -1) {
 								rootTrees.add(node);		
 							}
@@ -3833,7 +3832,7 @@ public class CreateQtBackingBean extends
 			
 			TplSpecZoneDtl zoneDtl = null;
 			
-			if (rootTrees != null && !rootTrees.isEmpty()) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			if (!rootTrees.isEmpty()) {
 				ScQtZoneCriteria zonCriteria =getManagedBean().getQt()
 						.getScQtSupplierCriteria().getQtZoneCriterias();
 				zonCriteria.setTplSpecZoneDtls(
@@ -3855,7 +3854,7 @@ public class CreateQtBackingBean extends
 			ScQt scQt = getManagedBean().getQt();
 			if (scQt.isZonal() &&  scQt.isPanel() ){
 				List<TplSpecZoneDtl> specZoneDtls = null;
-				if (rootTrees != null && !rootTrees.isEmpty()){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+				if (!rootTrees.isEmpty()){
 					specZoneDtls = convertTreeNodesToZoneCriteria(rootTrees, zoneDtl);
 				}
 				else{
@@ -4144,28 +4143,26 @@ public class CreateQtBackingBean extends
 	 * #28784 - check demo radio button and display popup to delete
 	 * @param event
 	 */
-	public void validateDemoTechList(AjaxBehaviorEvent event) {		
+	public void validateDemoTechList(AjaxBehaviorEvent event) {
+//		SpecificationResDTO resDTO = null;
+//		IQTSpecSO specSo = null;
 		Boolean type = (Boolean) event.getComponent().getAttributes().get("value");
 		this.getManagedBean().getQt().setDemoRequired(type);
 		if (type == false) {
-			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+//			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+//			specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+//					IQTSpecSO.class);
+//			reqDTO.setScQt(this.getManagedBean().getQt());
+//			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+//			resDTO = specSo.retrieveCheckLists(reqDTO);
 			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
-
-			if (null == scQtTechChecklist) {
-				IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTSpecSO.class);
-				reqDTO.setScQt(this.getManagedBean().getQt());
-				reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
-				scQtTechChecklist = specSo.retrieveCheckLists(reqDTO).getTechnicalCheckList();
-			}
-
 			if (null != scQtTechChecklist) {
 				for (ScQtCheckList checklist : scQtTechChecklist) {
 					if (checklist.getDefinationType().getParameterCode()
 							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-						// if (checklist.getQtChecklistId() != null) {
-						RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");
-						// }
+//						if (checklist.getQtChecklistId() != null) {
+							RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");
+//						}
 					}
 				}
 			}
@@ -4173,7 +4170,7 @@ public class CreateQtBackingBean extends
 		} else {
 			RequestContext.getCurrentInstance().execute("demoDialogConfirm.hide()");
 		}
-
+		
 		QTDetailBackingBean detailBB = new QTDetailBackingBean();
 		detailBB.checkDemoPresentationByStatus();
 	}

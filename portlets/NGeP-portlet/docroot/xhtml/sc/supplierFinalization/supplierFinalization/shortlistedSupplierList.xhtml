@@ -127,7 +127,12 @@
 						</ui:remove>
 		               	<p:column colspan="2" headerText="#{lbl['lbl.sc.recommendation.desk.officer']}" style="width:15%; text-align:center;" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.rejection.remarks']}" style="width:15%; text-align:center;" 
-		               		rendered="#{haveSupplierRejection}"/>	               	
+		               		rendered="#{haveSupplierRejection}"/>
+		               		
+		               	<!-- #30008 -->	
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.loi.loa.remark']}" style="width:15%; text-align:center;" 
+		               		rendered="#{notReachAgreement}"/>	 
+		               			               	
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
 		               			  rendered="#{showSelectionColumn}" />
 		           	</p:row>
@@ -284,7 +289,12 @@
 				
 				<p:column style="text-align:left;white-space: normal;" rendered="#{haveSupplierRejection}">
 					<h:outputText value="#{shortlistedSupp.supplierRejectionRemark.remark}"/>
-				</p:column>			
+				</p:column>	
+				
+				<ui:remove>Enhancement #30008</ui:remove>
+				<p:column style="text-align:left;" rendered="#{notReachAgreement}">
+					<h:outputText value="#{shortlistedSupp.supplierNotReachAgreementRemark.remark}"/>
+				</p:column>		
 								
 				<p:column selectionMode="single" rendered="#{showSelectionColumn}" 
 						  disabledSelection="#{!(isSecretaryUser or isBPKTaskAndClaimed) or 
@@ -345,7 +355,13 @@
      		            </ui:remove>
 		               	<p:column colspan="2" headerText="#{lbl['lbl.sc.recommendation.desk.officer']}" style="width:15%; text-align:center;" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.rejection.remarks']}" 
-		               			  style="width:10%; white-space:normal;" rendered="#{haveSupplierRejection}"/>		               	
+		               			  style="width:10%; white-space:normal;" rendered="#{haveSupplierRejection}"/>
+		               			  
+		               	<ui:remove>Enhancement #30008</ui:remove>
+						<p:column style="text-align:left;" rendered="#{notReachAgreement}">
+						<h:outputText value="#{shortlistedSupp.supplierNotReachAgreementRemark.remark}"/>
+						</p:column>
+						               	
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
 		               			  rendered="#{showSelectionColumn}" />
 		           	</p:row>
@@ -501,6 +517,11 @@
 				
 				<p:column style="text-align:left;" rendered="#{haveSupplierRejection}">
 					<h:outputText value="#{shortlistedSupp.supplierRejectionRemark.remark}"/>
+				</p:column>	
+				
+				<ui:remove>Enhancement #30008</ui:remove>
+				<p:column style="text-align:left;" rendered="#{notReachAgreement}">
+					<h:outputText value="#{shortlistedSupp.supplierNotReachAgreementRemark.remark}"/>
 				</p:column>	
 								
 				<ui:remove>
