@@ -16,8 +16,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -68,7 +66,9 @@ public class TemplateSpecHelper {
 	private static Logger log = EpLogger.getLogger(TemplateSpecHelper.class);
 	
 	private static TemplateSpecHelper instance;	
-	
+
+	private boolean demoSpecClone = false; // #28784
+
 	/**
 	 * Get singleton of TemplateSpecHelper
 	 * 
@@ -96,7 +96,9 @@ public class TemplateSpecHelper {
 	 * 		clone including child entities.
 	 * @return	the new cloned TplSpecMaster instance.
 	 */
-	public TplSpecMaster cloneTplSpecMaster(TplSpecMaster specMaster, boolean includeQuestions, boolean isScoringReq, boolean isQtyByZone) {
+	// #28784 -start-
+	public TplSpecMaster cloneTplSpecMaster(TplSpecMaster specMaster, boolean includeQuestions, boolean isScoringReq, boolean isQtyByZone, boolean isDemoCloneSpec) {
+	// #28784 - end-
 		debugLogger("cloneTplSpecMaster : " + specMaster);
 		
 		TplSpecMaster newSpecMaster = null;
@@ -117,6 +119,14 @@ public class TemplateSpecHelper {
 					newSpecMaster.setScoringReq(isScoringReq);
 					newSpecMaster.setQtyByZone(isQtyByZone);
 					setUserDetails(newSpecMaster);
+
+					// #28784 -start-
+					if(isDemoCloneSpec){
+						demoSpecClone = true;
+					} else {
+						demoSpecClone = false;
+					}
+					// #28784 -end-
 
 					if (includeQuestions) {
 						// clone spec questions
@@ -181,6 +191,13 @@ public class TemplateSpecHelper {
 									newSpecQuestion.setSampleReq(Boolean.FALSE);
 									// 11104-End
 								} // 33858, #25635
+
+								// #28784 Reset clone value for demo -start-
+								if(demoSpecClone) {
+									newSpecQuestion.setItemReqDemo(false);
+									newSpecQuestion.setDemoScore(null);
+								}
+								// #28784 -end-
 								
 								if (isTechnicalSpec) {
 									if(TemplateSpecConst.QUESTION_TYPE_ITEM.equals(quesType)){
@@ -589,11 +606,16 @@ public class TemplateSpecHelper {
 	public void updateZoneDtl(TplSpecMaster specMaster, TplSpecZone specZone) {
 		specMaster.setTplSpecZone(specZone);
 		if(CollectionUtils.isNotEmpty(specMaster.getTplSpecQuestions())){
-		for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
-			if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType())) {
-				resetPriceType(specMaster, specQuestion);
+			for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
+				if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType())) {
+					resetPriceType(specMaster, specQuestion);
+				}
+				//Bug #34223@Syazani 30/11/2022 - Start
+				if (specZone == null) {
+					specQuestion.setTplSpecZoneQties(null);
+				}
+				//Bug #34223@Syazani 30/11/2022 - Start
 			}
-		}
 		}
 	}
 	
@@ -745,14 +767,14 @@ public class TemplateSpecHelper {
 					totalPrice = totalPrice.multiply(uomPerMonth);
 				}
 			
-				// ***25201
+				// ***25201 -start-
 				TemplateSpecReqDTO templateSpecReqDTO;
 				ITemplateSpecSO	templateSpecSo;
 				TemplateSpecResDTO resDTO;
+				
 				try{
 					if(null == specQuestion.getClFulfilmentTypeCode()){}
-				}
-				catch(ValidationException ex){
+				} catch (ValidationException ex) {
 					templateSpecReqDTO = new TemplateSpecReqDTO();
 					templateSpecReqDTO.setSpecQuestionId(specQuestion.getSpecQuestionId());
 					
@@ -760,10 +782,13 @@ public class TemplateSpecHelper {
 							ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 					
 					resDTO = templateSpecSo.fetchSpecQuestion(templateSpecReqDTO);
+					
 					if(resDTO.isSuccessful()){
 						specQuestion = resDTO.getSpecQuestionList().get(0);
 					}
 				}
+				// ***25201 -end-
+				
 				if (!specQuestion.getClFulfilmentTypeCode().getParameterCode()
 						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
 					if (itemDurationMonth != null) {

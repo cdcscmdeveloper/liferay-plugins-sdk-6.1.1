@@ -29,10 +29,21 @@
 
 					<ui:include src="presentationdemo.xhtml"></ui:include>
 
-				</c:if> <c:if
-					test="#{evaluationBackingBean.managedBean.presentationDemoActiveIndex eq '1'}">
+				</c:if>
+				<ui:remove>#28784 WIP @idham - Start</ui:remove> 
+				<c:if
+					test="#{evaluationBackingBean.managedBean.presentationDemoActiveIndex eq '1' and evaluationBackingBean.managedBean.demoWip}">
 
 					<ui:include src="presentationDemoSummary.xhtml"></ui:include>
+				</c:if>
+				<c:if
+					test="#{evaluationBackingBean.managedBean.presentationDemoActiveIndex eq '1' and !evaluationBackingBean.managedBean.demoWip}">
+					<ui:remove>#28784 WIP @idham - End</ui:remove>
+
+					<!-- 28784 -start- -->
+					<ui:include src="presentationDemoPackageSummary.xhtml">
+						<!-- 28784 -end- -->
+					</ui:include>
 				</c:if></td>
 		</tr>
 	</table>

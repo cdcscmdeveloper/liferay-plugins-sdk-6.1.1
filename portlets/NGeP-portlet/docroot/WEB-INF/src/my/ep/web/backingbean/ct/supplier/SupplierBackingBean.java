@@ -105,7 +105,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	private ContractBackingBean ctBB = null;
 	SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);	
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
-
+	
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -125,7 +125,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		if(ctBB == null){
 			ctBB = new ContractBackingBean();
 		}
-
+		
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);	          
 		if (originalServletRequest.getParameter(ContractConst.PARAMETER_ID) != null) {
@@ -276,7 +276,9 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		getManagedBean().setAutoUpdate(true);		    
 
 		// Change Bank Account
-		if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)) {
+		//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
+		if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME) || getManagedBean().getProcessName()
+				.equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME.replaceAll("\\s", ""))) {
 
 			CTBankAccountDataType bankAccDataType= (CTBankAccountDataType) payLoad;
 			UserReqDTO userReqDTO = new UserReqDTO();
@@ -290,7 +292,9 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			ctReqDTO.setDocType(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
 			setChangeBankDetails(ctReqDTO);       
 
-		} else if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)) {	// Factoring Request		            
+		} else if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)
+				|| getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME.replaceAll("\\s", ""))) {			            
+			// Factoring Request
 			CTFactoringDataType dataType = (CTFactoringDataType) payLoad;
 			reqDTO = new ContractSupplierReqDTO();
 			reqDTO.setFactoringId(new Long(dataType.getDocId()));

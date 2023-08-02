@@ -2655,14 +2655,19 @@ public class OrganisationBackingBean extends
 		Date current = new Date();
 
 		if (StringUtils.isNotBlank(this.getManagedBean().getSalestaxregno())) {
-
+			//#34618 - start
+			if (getManagedBean().getSalestaxregDate() == null) {
+				throw new EpException(MessageConst.ERROR_775140);
+			}
 			if (!(this.getManagedBean().getSalestaxregno().equals(sstSupplier
 					.getSalestaxregno()))
+					|| sstSupplier.getSalestaxregDate() == null
 					|| !(this.getManagedBean().getSalestaxregDate()
 							.compareTo(sstSupplier.getSalestaxregDate()) == 0)
 			// ||
 			// !(this.getManagedBean().getSalestaxregEndDate().compareTo(sstSupplier.getSalestaxregEndDate())==0)
 			) {
+				//#34618 - end
 				sstSupplier.setSalestaxregdecDate(current);
 				sstSupplier.setSalestaxregno(this.getManagedBean()
 						.getSalestaxregno());
@@ -2717,14 +2722,19 @@ public class OrganisationBackingBean extends
 		}
 
 		if (StringUtils.isNotBlank(this.getManagedBean().getServtaxregno())) {
-
+			//#34618 - start
+			if (getManagedBean().getServtaxregDate() == null) {
+				throw new EpException(MessageConst.ERROR_775141);
+			}
 			if (!(this.getManagedBean().getServtaxregno()
 					.equalsIgnoreCase(sstSupplier.getServtaxregno()))
+					|| sstSupplier.getServtaxregDate() == null
 					|| !(this.getManagedBean().getServtaxregDate()
 							.compareTo(sstSupplier.getServtaxregDate()) == 0)
 			// ||
 			// !(this.getManagedBean().getServtaxregEndDate().compareTo(sstSupplier.getServtaxregEndDate())==0)
 			) {
+				//#34618 - end
 				sstSupplier.setServtaxdecDate(current);
 				sstSupplier.setServtaxregno(this.getManagedBean()
 						.getServtaxregno());

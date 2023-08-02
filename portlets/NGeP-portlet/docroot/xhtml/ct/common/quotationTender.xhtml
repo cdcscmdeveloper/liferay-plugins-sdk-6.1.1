@@ -21,7 +21,7 @@
 					<tr>
 						<td class="columnWidth150"><p:outputLabel
 								value="#{lbl['lbl.ct.proc.type.category']}" /></td>
-						<td><p:inputText style="width:170px;" disabled="true"
+						<td><p:inputText style="width:210px;" disabled="true"
 								value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContractValue.procurementTypeCategory)}" />
 						</td>
 						<td><p:outputLabel value="#{lbl['lbl.ct.loa.no']}" /></td>
@@ -35,7 +35,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.ct.fulfilment.type']}" />
 						</td>
-						<td><p:inputTextarea style="width:170px;" disabled="true"
+						<td><p:inputTextarea style="width:210px;" disabled="true"
 								maxlength="50" rows="2" autoResize="false"
 								value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.fulfillmentType)}" />
 						</td>
@@ -53,7 +53,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.ct.contract.Type']}" />
 						</td>
-						<td><p:inputText style="width:170px;" disabled="true"
+						<td><p:inputText style="width:210px;" disabled="true"
 								maxlength="50"
 								value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.contractType)}" />
 						</td>
@@ -69,7 +69,7 @@
 						<h:panelGroup rendered="#{!ctBackingBean.managedBean.commonView or 
 				              ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral}">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.method']}" /></td>
-							<td><p:inputText style="width:170px;" disabled="true"
+							<td><p:inputText style="width:210px;" disabled="true"
 									value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode)}" />
 							</td>
 						</h:panelGroup>
@@ -93,7 +93,7 @@
 						              ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral)}">
 							<td><p:outputLabel value="#{lbl['lbl.ct.qt.tender.type']}" />
 							</td>
-							<td><p:inputText style="width:170px;" disabled="true"
+							<td><p:inputText style="width:210px;" disabled="true"
 									value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.loa.qtType)}" />
 							</td>
 						</h:panelGroup>					

@@ -328,9 +328,10 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					reqDTO.setContractRequest(true);
 				}
 				resDTO = fulfilmentOrderSO.cancelFulfillmentOrder(reqDTO);
-			}else if(action.equalsIgnoreCase(FulfilmentConst.REMOVE_FACTORING) 
-					|| getManagedBean().getProcessName() != null 
-					&& getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME)){
+			} else if (action.equalsIgnoreCase(FulfilmentConst.REMOVE_FACTORING)
+					|| getManagedBean().getProcessName() != null
+					&& (getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME) || getManagedBean().getProcessName()
+					.equalsIgnoreCase(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME.replaceAll("\\s", "")))) {
 				resDTO = fulfilmentOrderSO.removeFactoringComp(reqDTO);
 				messagePrefix = ResourceBundleUtils.getMessage("lbl.fl.rfc.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 			}
@@ -545,9 +546,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		
+		//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
 		if(taskId != null){
 			Object obj = super.getBpmTaskDetails(Object.class, null);
-			if (this.getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME)){
+			if (this.getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME) || this.getManagedBean().getProcessName()
+							.equalsIgnoreCase(FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME.replaceAll("\\s", ""))) {
 				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 				FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
@@ -561,7 +564,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
 				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
-				if(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.equalsIgnoreCase(this.getManagedBean().getProcessName())){
+				if(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.equalsIgnoreCase(this.getManagedBean().getProcessName()) || getManagedBean().getProcessName()
+						.equalsIgnoreCase(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.replaceAll("\\s", ""))){
 					FLCOCancelReqType coCancelDataType = (FLCOCancelReqType)obj;
 					flReqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 					flReqDTO.setFlOrderId(coCancelDataType.getOrderCancelDetails().getOrderDetails().getOrderId());
@@ -573,6 +577,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						if(coCancelDataType.getOrderCancelDetails().getErrorIds().contains(",")) {
 							errorId = coCancelDataType.getOrderCancelDetails().getErrorIds().split(",")[0];
 						}
+						//33177-start
+						if(coCancelDataType.getOrderCancelDetails().getErrorIds().contains(";")) {
+							errorId = coCancelDataType.getOrderCancelDetails().getErrorIds().split(";")[0];
+						}
+						//33177-End
 						errReq.setErrorId(new Long(errorId));
 						FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 						getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
@@ -688,9 +697,12 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 
 		if(taskId != null){
 			Object obj = super.getBpmTaskDetails(Object.class, null);
+			
+			//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
 			if(null==this.getManagedBean().getProcessName() || this.getManagedBean().getProcessName().equalsIgnoreCase("")){
 				log.info("Process name is NUll");
-			} else if (FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME.equalsIgnoreCase(this.getManagedBean().getProcessName())) {
+			} else if (FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME.equalsIgnoreCase(this.getManagedBean().getProcessName()) || getManagedBean().getProcessName()
+					.equalsIgnoreCase(FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME.replaceAll("\\s", ""))) {
 				FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				flReqDTO.setFlOrderId(stopFlData.getOrderId());
@@ -700,7 +712,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				getManagedBean().setContractRequest(Boolean.TRUE);
-			} else if(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME.equalsIgnoreCase(this.getManagedBean().getProcessName())){
+			} else if(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME.equalsIgnoreCase(this.getManagedBean().getProcessName()) || getManagedBean().getProcessName()
+					.equalsIgnoreCase(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME.replaceAll("\\s", ""))){
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
 				FLFactoringRemoveReqType removeReqType = (FLFactoringRemoveReqType)obj;
@@ -717,7 +730,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
 				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
-				if(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.equalsIgnoreCase(this.getManagedBean().getProcessName())){
+				if(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.equalsIgnoreCase(this.getManagedBean().getProcessName()) || getManagedBean().getProcessName()
+						.equalsIgnoreCase(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.replaceAll("\\s", ""))){
 					FLPOCancelReqType poCancelReqType = (FLPOCancelReqType)obj;
 					flReqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 					flReqDTO.setFlOrderId(poCancelReqType.getOrderCancelDetails().getOrderDetails().getOrderId());
@@ -729,6 +743,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						if(poCancelReqType.getOrderCancelDetails().getErrorIds().contains(",")) {
 							errorId = poCancelReqType.getOrderCancelDetails().getErrorIds().split(",")[0];
 						}
+						//33177-start
+						if(poCancelReqType.getOrderCancelDetails().getErrorIds().contains(";")) {
+							errorId = poCancelReqType.getOrderCancelDetails().getErrorIds().split(";")[0];
+						}
+						//33177-end
 						errReq.setErrorId(new Long(errorId));
 						FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 						getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
@@ -2182,15 +2201,15 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		
 	}
 	
-    //26279 - start
+    	//26279 - start
 	public void viewDisciplinaryAction() {
 		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
 		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
 		RequestContext.getCurrentInstance().execute(
 				"disciplinaryActionHistoryDlg.show();");
 	}
-
-	//26279 - end
+	//26279 - end      
+	
 	//#28374	Vinod Start
 	public String cancelCarryForwardAction(String action) throws IOException {
 		log.debug("FulfilmentOrderBackingBean.cancelCarryForwardAction()");

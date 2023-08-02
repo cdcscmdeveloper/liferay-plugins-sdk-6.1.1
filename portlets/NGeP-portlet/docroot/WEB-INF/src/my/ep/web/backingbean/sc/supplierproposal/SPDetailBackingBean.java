@@ -71,6 +71,7 @@ import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -123,7 +124,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.pm.AddressType;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
@@ -584,20 +584,36 @@ public class SPDetailBackingBean extends
 	public void retrieveGeneralInfo() {
 		debugLogger("retrieveGeneralInfo supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		this.getManagedBean().setPrepareActiveIndex(5);
-
+		//Bug #34152@Syazani 09/11/2022 -- Start 
+		Long userid = new FacesScopes().getUserSessionBean().getUserId();
+		boolean currUserIsContact = false;
+		//Bug #34152@Syazani 09/11/2022 -- End
 		if (getManagedBean().getSmAppl() == null
 				|| getManagedBean().getSmCompanyBasic() == null) {
 			retrievePaidUpCapitalNdDeclarationDtls();
 			if (getManagedBean().getSmAppl().getSmPersonnels() != null
 					&& !getManagedBean().getSmAppl().getSmPersonnels()
 							.isEmpty()) {
-				for (SmPersonnel smContactperson : getManagedBean().getSmAppl()
-						.getSmPersonnels()) {
-					if (smContactperson.isContactPerson()) {
+				//Bug #34152@Syazani 09/11/2022 -- Start
+				for (SmPersonnel smContactperson : getManagedBean().getSmAppl().getSmPersonnels()) {
+					if (smContactperson.getPmUser() != null && smContactperson.getPmUser().getUserId() != null
+							&& smContactperson.getPmUser().getUserId().equals(userid) && smContactperson.isContactPerson()
+							&& smContactperson.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
 						this.getManagedBean().setContactPerson(smContactperson);
+						currUserIsContact = true;
 						break;
 					}
 				}
+
+				if (!currUserIsContact) {
+					for (SmPersonnel smContactperson : getManagedBean().getSmAppl().getSmPersonnels()) {
+						if (smContactperson.isContactPerson() && smContactperson.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+							this.getManagedBean().setContactPerson(smContactperson);
+							break;
+						}
+					}
+				}
+		//Bug #34152@Syazani 09/11/2022 -- End
 			}
 		}
 	}
@@ -1310,10 +1326,11 @@ public class SPDetailBackingBean extends
 										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
 									answers.add(specAnswer);
 									// #21695 farid IN MONITORING START
-								} else if (specAnswer.getRatePerUom() != null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
+								}
+								//Bug_34259 - Start
+								else if (specAnswer.getRatePerUom() != null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
-
+								
 								} else if (specAnswer.getRatePerUom() == null
 										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
@@ -1332,7 +1349,9 @@ public class SPDetailBackingBean extends
 										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
 									// #21695 farid IN MONITORING END
-								}else{
+								} 
+								//Bug_34259 - End
+								else{
 									specAnswer.setDeleted(true);
 									toDeleteZoneAnswers.add(specAnswer);
 								}
@@ -1694,7 +1713,8 @@ public class SPDetailBackingBean extends
 								.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
 
 				} else{
-					if (finProposalChecklist.isSubmitted()){
+					//#34493,#34427 - start
+					/*if (finProposalChecklist.isSubmitted()){
 						if (finProposalChecklist
 								.getScQtProposalChecklistAttachment() == null) {
 							finProposalChecklist.setSubmitted(false);
@@ -1707,7 +1727,15 @@ public class SPDetailBackingBean extends
 					}else{
 						finProposalChecklist
 						.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-					}
+					}*/
+					if (finProposalChecklist.getScQtProposalChecklistAttachment() == null) {
+						finProposalChecklist.setSubmitted(false);
+						finProposalChecklist.setCompliance(null);
+					} else{
+						finProposalChecklist.setSubmitted(true);
+						finProposalChecklist.setCompliance(null);
+					} 
+					//34493,#34427 - end
 				}
 			}
 
@@ -2247,8 +2275,9 @@ public class SPDetailBackingBean extends
 					//end Bug #28887
 
 				} else {
+						//#34493,#34427 - start
 						//start Bug #28887
-						if (null != assetProposalChecklist) {
+						/*if (null != assetProposalChecklist) {
 							if (assetProposalChecklist.isSubmitted()) {
 								if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null 
 										|| (scQtPRPAssetLiability.getCurrentAssets() != null)
@@ -2268,8 +2297,16 @@ public class SPDetailBackingBean extends
 								assetProposalChecklist.setSubmitted(false);
 								assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 							}
-						}
+						}*/
 						//end Bug #28887
+						if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null) {
+							assetProposalChecklist.setSubmitted(false);
+							assetProposalChecklist.setCompliance(null);
+						} else{
+							assetProposalChecklist.setSubmitted(true);
+							assetProposalChecklist.setCompliance(null);
+						} 
+						//#34493,#34427 - end
 				}
 			}
 			
@@ -3015,6 +3052,13 @@ public class SPDetailBackingBean extends
 							sampleSubmissionDtls.get(0));
 				}
 			}
+			
+			// 33509 &33191, #11104 - start
+			if (null != resDTO.getScQtProposal()) {
+				getManagedBean().setQtProposal(resDTO.getScQtProposal());
+			}
+			// 33509 &33191, #11104 - End
+
 			getManagedBean().setScQtSampleLable(resDTO.getScQtSampleLable());
 			return NAV_TO_SAMPLING_ADDRESS_PAGE;
 		} finally {
@@ -4029,10 +4073,9 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			}
 		}
 
-		//#31746 - start
-		if (bankStmtList.size() > 0 && totalAmount != null
-				&& totalAmount.longValue() > 0) {
-		//#31746 - end
+		//#31746 - start Bug #34052 start
+		if (bankStmtList.size() > 0 && totalAmount != null) {
+		//#31746 - end Bug #34052 end	
 			MathContext mc = new MathContext(14);
 
 			avgAmount = totalAmount.divide(
@@ -5921,13 +5964,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			proposalSO = null;
 		}
 	}
-	
-	/* 27368 - start */
-	public boolean enableQtNoHyperlink() {
-		return userHasRole(new RoleCode[] { RoleCode.DESK_OFFICER, RoleCode.BPK_AUDITOR });
-	}
-	/* 27368 - end */
-	
+
 	//#25089@hatta - start
 	public void onTabChange(TabChangeEvent event){
 		if(event.getTab().getId().equals("tab1")){

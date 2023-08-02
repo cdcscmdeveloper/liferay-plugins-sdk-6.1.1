@@ -67,7 +67,7 @@
 				memberHistoryPaginator="#{meetingBB.managedBean.memberHistoryPaginator}"
 				onSelectHistory="onSelectHistory"
 				committeeName="#{meetingBB.managedBean.currentCommitteeType}"
-				backingBean="#{meetingBB}"/>
+				backingBean="#{meetingBB}" isSFCommittee="true"/><ui:remove>25037 note 670, isSFCommittee true</ui:remove>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.sc.header.update.committee']}"
 			styleClass="header-spacing" id="memberListPanel" toggleable="true">

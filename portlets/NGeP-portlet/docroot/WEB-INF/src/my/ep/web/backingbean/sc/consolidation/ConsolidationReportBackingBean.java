@@ -517,8 +517,14 @@ public class ConsolidationReportBackingBean extends
 				.getScQtFinalizationReportAttachment();
 		String definitionType = scQtFinalizationReport.getDefinationType()
 				.getParameterCode();
-		String docDefinitionKey = scQtFinalizationReport.getPmDocument()
-				.getDocDefinitionKey();
+		// #28784 -start-
+		String docDefinitionKey = null;
+
+		if (!SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(scQtFinalizationReport.getTitle())) {
+			docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
+		}
+		// #28784 -end-
+
        //codes fixed related to 25619 issue.
 		if (reportAttachment == null
 				|| (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
@@ -761,14 +767,18 @@ public class ConsolidationReportBackingBean extends
 	public void submitAction() {
 		// Validate Desk officer ranking
 		// #30874 for #28834 start
-		if (null != getManagedBean().getCurrentStatusId()
-				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER
-						.longValue())) {
-
-		} else {
-			validateConsolidationReport();
-		}
+//		if (null != getManagedBean().getCurrentStatusId()
+//				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER
+//						.longValue())) {
+//
+//		} else {
+//			validateConsolidationReport();
+//		}
 		// #30874 for #28834 end
+		
+		//#32401 - start replace comment above with this.
+		validateConsolidationReport();
+	    //#32401 - end
 
 		RequestContext.getCurrentInstance().execute("submissionPopup.show()");
 
@@ -979,6 +989,7 @@ public class ConsolidationReportBackingBean extends
 			ScQt scQt = resDTO.getScQt();
 			populateParentOrgProfile(scQt);
 			getManagedBean().setScQt(scQt);
+			evaluateWIP(scQt);//34865,34866,34867 - 29021 WIP	
 
 			boolean isMedicalProcCategory = isMultipleProposalCategory(scQt,
 					null);
@@ -1133,6 +1144,12 @@ public class ConsolidationReportBackingBean extends
 				}
 				//#18685 -end-
 			}
+
+			// #28784 -start-
+			if(this.getManagedBean().getScQt().isDemoRequired()) {
+				this.getManagedBean().setDemoReq(true);
+			}
+			// #28784 -end-
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -1254,9 +1271,38 @@ public class ConsolidationReportBackingBean extends
 		ScQtFinalization scQtFinalization = getManagedBean()
 				.getScQtFinalization();
 		TplSpecZoneDtl selectedZone = getManagedBean().getSelectedZone();
+		Boolean isScQtRecommendByZoneNull = false;// #29466
+
 		if (scQtFinalization != null) {
 			Map<Long, List<ScQtRecommend>> scQtRecommendsByZone = scQtFinalization
 					.getScQtRecommendsByZone();
+			
+			// #29466 - START
+			/*Checking if each QtRecommendId() from scQtRecommendsByZone
+			  for that selected zone is null
+			*/
+			for (ScQtRecommend scQtRecommendByZone : scQtRecommendsByZone.get(selectedZone.getSpecZoneId())) {
+				if (scQtRecommendByZone.getQtRecommendId() == null) {
+					isScQtRecommendByZoneNull = true;
+					break;
+				}
+			}	
+			
+			/*If at least one QtRecommendId() from scQtRecommendsByZone is null, 
+			  will be replaced and added from each scQtFinalization.getScQtRecommends() 
+			  for that same selected zone
+			*/
+			if (isScQtRecommendByZoneNull) {
+				// log.info("Replacing null recommendId for zone: " + selectedZone.getSpecZoneId());
+				scQtRecommendsByZone.get(selectedZone.getSpecZoneId()).clear();
+				
+				for (ScQtRecommend qtRecommend : scQtFinalization.getScQtRecommends()) {
+					if (selectedZone.getSpecZoneId().equals(qtRecommend.getTplSpecZoneDtl().getSpecZoneId())) {
+						scQtRecommendsByZone.get(selectedZone.getSpecZoneId()).add(qtRecommend);
+					}
+				}
+			}
+			// #29466 - END
 			
 			//#32009, #32092 - related to #21695 - start
 			if (scQtRecommendsByZone.size() > 0) {
@@ -2121,7 +2167,9 @@ public class ConsolidationReportBackingBean extends
 		} else if (this.getManagedBean().getActiveIndex() == ITEMIZED_TYPE_TAB_INDEX) {
 			log.info("ITEMIZED_TYPE_TAB_INDEX"
 					+ this.getManagedBean().getActiveIndex());
-			if (evaluationStageId == 2) {
+			//#21695 tec by itemize result pop up farid - start
+			if (evaluationStageId == 2 || evaluationStageId == 1) {
+			//#21695 tec by itemize result pop up farid - end
 				supplierFinalizationBB.getManagedBean()
 						.setItemize(Boolean.TRUE);
 				if (null != this.getManagedBean().getSelectedItem()) {
@@ -2146,7 +2194,8 @@ public class ConsolidationReportBackingBean extends
 			supplierFinalizationBB.getManagedBean().setCurrentZone(specZoneDtl);
 		} 
 		//#26440 End
-		
+
+		supplierFinalizationBB.getManagedBean().setCheckCategoryCodeQt(this.getManagedBean().getScQt()); // #29466
 		supplierFinalizationBB.retrieveQualifiedSuppliersInfoByEvalStage();
 
 	}
