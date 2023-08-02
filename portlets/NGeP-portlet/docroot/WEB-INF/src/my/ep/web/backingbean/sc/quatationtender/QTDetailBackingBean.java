@@ -665,7 +665,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		                }
 		            }
 		        }
-		        if (StringUtils.isNotEmpty(parameterCodeType)
+		        if (parameterCodeType != null && StringUtils.isNotEmpty(parameterCodeType)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
                     && (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))) {
 		          reqDTO.setSupplierUser(true);
 		        }
@@ -2391,7 +2391,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		// save.
  				
 		//9019 for prevent null insert for remark
-		if (null != scQt.getScQtRemarks() && CollectionUtils.isNotEmpty(scQt.getScQtRemarks())) {
+		/**if (null != scQt.getScQtRemarks() && CollectionUtils.isNotEmpty(scQt.getScQtRemarks())) {
 			for (int i = 0; i < scQt.getScQtRemarks().size(); i++) {
 				String userRemark = scQt.getScQtRemarks().get(i).getRemark();
 				if (null == userRemark || "".equals(userRemark)) {
@@ -2401,7 +2401,44 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					scQt.getScQtRemarks().remove(i);
 				}
 			}
-		}// 9019 end		
+		}**/
+		// 9019 end
+		
+		//9019 for prevent null insert for remark and merge note-522
+		if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getQt().getQtStatus().getStatusId())){
+			QuationTenderResDTO resDto = null;
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			
+			if(null != scQt.getScQtRemarks() && CollectionUtils.isNotEmpty(scQt.getScQtRemarks())) {
+				for (int i = 0; i < scQt.getScQtRemarks().size(); i++) {
+					String userRemark = scQt.getScQtRemarks().get(i).getRemark();
+			
+					if (null == userRemark || "".equals(userRemark)) {
+						if (null != scQt.getScQtRemarks().get(i).getRemarkId()) {
+							this.getManagedBean().setQtRemarksIdRemove(scQt.getScQtRemarks().get(i).getRemarkId());
+						}else{
+							resDto = getQTDetailSO().retriveQtRemarks(reqDTO );
+							if (CollectionUtils.isNotEmpty(resDto.getRemarks())) {
+								for (ScRemark remark : resDto.getRemarks()) {
+									this.getManagedBean().setQtRemarksIdRemove(remark.getRemarkId());
+								}
+							}
+						}
+						scQt.getScQtRemarks().remove(i);
+					}else{
+						resDto = getQTDetailSO().retriveQtRemarks(reqDTO );
+						if (CollectionUtils.isNotEmpty(resDto.getRemarks())) {
+							for (ScRemark remark : resDto.getRemarks()) {
+								this.getManagedBean().setQtRemarksIdRemove(remark.getRemarkId());
+							}
+						}
+					}
+				}
+			}	
+		}
+		// 9019 end
 		
 		//#21692 - start
 		if (null == scQt.getResponsePeriod()) {
@@ -5153,6 +5190,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				List<ScQtContactPerson> qtContactPerson = contactPersons
 						.getResultList();
 				if (qtContactPerson == null || qtContactPerson.isEmpty()) {
+					qtContactPerson = new ArrayList<ScQtContactPerson>();//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					ScQtContactPerson contactPerson = new ScQtContactPerson();
 					PmUser user = new FacesScopes().getUserSessionBean();
 					contactPerson.setPhoneNo(user.getPhoneNo());
@@ -6829,7 +6867,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().setSelectedApprovalTabIndex(
 				selectedApprovalTabIndex);
 		this.getManagedBean().setSelectedApprovalTabBean(approvalTabBean);
-		this.getManagedBean()
+		if (null != approvalTabBean)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+		 this.getManagedBean()
 				.setScQtApproval(approvalTabBean.getScQtApproval());
 		// #25077 - #80 - Start.
 		if (null != approvalTabBean && StringUtils.isNotEmpty(approvalTabBean.getTabType())) {
@@ -7069,6 +7108,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				setAmmendMentBean(resDTO.getAmendMentBean());
 			}
 			this.getManagedBean().setCurrentStatusId(currentStatus);
+			if (resDTO != null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
 			getfulfilmentDtls(resDTO.getQtDetail());//#29474
 			break;
 		case 5:
@@ -7093,6 +7133,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				setAmmendMentBean(resDTO.getAmendMentBean());
 			}
 			this.getManagedBean().setCurrentStatusId(currentStatus);//#13344-End
+			if (resDTO != null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
 			getfulfilmentDtls(resDTO.getQtDetail());//#29474
 			break;
 		case 6:
@@ -7106,6 +7147,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveDeductionPaymentTabDtl();
 			}
+			if (resDTO != null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
 			getfulfilmentDtls(resDTO.getQtDetail());//#29474
 			break;
 		case 7://#29474 - start
@@ -7146,6 +7188,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrievePublicationApprovalTabDtl();
 			}
+			if (resDTO != null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
 			getfulfilmentDtls(resDTO.getQtDetail());//#29474 - end
 			break;
 		}
@@ -7923,18 +7966,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			PmUser finalizationSecretary= detailSO.retrieveFinalizationSecretaryByQtId(quationTenderReqDTO).getFinalizationSecretary();
 			quationTenderReqDTO.setUserId(finalizationSecretary.getUserId());
 			pmUserOrgs = detailSO.retrievePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
-			if(isReverseLOI){
+			if(isReverseLOI!=null && isReverseLOI.equals(Boolean.TRUE)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 				quationTenderReqDTO.setScLoiForQt(this.getManagedBean().getScLoiForQt());
 			}
 				
-			if(isReverseLOA){
+			if(isReverseLOA != null && isReverseLOA.equals(Boolean.TRUE)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 				quationTenderReqDTO.setScLoaForQt(this.getManagedBean().getScLoaForQt());
 			}
 				
 			resDTO = detailSO.retrieveReversalByQtId(quationTenderReqDTO);
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			scQt = resDTO.getQtDetail();
-			if(isReverseLOI){
+			if(isReverseLOI!=null && isReverseLOI.equals(Boolean.TRUE)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 				/*
 				 * SETTING FINALIZATION SECRETARY LOI
 				 */
@@ -7967,7 +8010,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				 * SETTING FINALIZATION SECRETARY LOI (END)
 				 */
 			}
-			if(isReverseLOA){
+			if(isReverseLOA != null && isReverseLOA.equals(Boolean.TRUE)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 				/*
 				 * SETTING FINALIZATION SECRETARY LOA
 				 */
@@ -8051,11 +8094,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					scQtReverse.setRecordStatusFlg(0);
 					scQtReverse.setChangedBy(1L);
 					scQtReverse.setCreatedBy(1L);
-					if(isReverseLOI){
+					if(isReverseLOI!=null && isReverseLOI.equals(Boolean.TRUE)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 						scQtReverse.setDocType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 						reqDTO.setParameterCode(ParameterConst.APPROVAL_REQUEST_REVERSE_LOI_QT);
 						scQtReverse.setDocId(this.getManagedBean().getScLoiForQt().getLoiId());
-					}else if(isReverseLOA){
+					}else if(isReverseLOA != null && isReverseLOA.equals(Boolean.TRUE)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 						scQtReverse.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 						reqDTO.setParameterCode(ParameterConst.APPROVAL_REQUEST_REVERSE_LOA_QT);
 						scQtReverse.setDocId(this.getManagedBean().getScLoaForQt().getLoaId());
@@ -12546,8 +12589,17 @@ public void retrieveDemoQtDetails(Long qtId) {
 					ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
 					docDefTypeReqDTO
 							.setParameterType(ParameterTypeConst.SCHEDULE_TYPE);
-					docDefTypeReqDTO
+					//Reopen #25726 note 110
+					if(null != this.getManagedBean().getFulfilmentType()){
+						if(this.getManagedBean().getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
+							docDefTypeReqDTO
 							.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
+						}else{
+							docDefTypeReqDTO
+							.setParameterCode(ParameterConst.SCHEDULE_TYPE_NON_PERIODIC);
+						}
+					}
+					//#25726 end
 					ParameterResDTO docDefTypeResDTO = parameterSo
 							.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
 					
