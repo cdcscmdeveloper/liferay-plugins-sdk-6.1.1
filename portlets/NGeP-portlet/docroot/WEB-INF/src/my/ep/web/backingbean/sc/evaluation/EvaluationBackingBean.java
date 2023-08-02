@@ -11702,7 +11702,7 @@ private void retriveCommitteeRemarksList(){
 				reportName = ReportConst.SC_EC_RPT_WIP_JSP;
 			} else {
 				log.info("================================");
-				reportName = ReportConst.SC_EC_RPT_WIP_JSP;
+				reportName = ReportConst.SC_EC_RPT_JSP;
 			}
 		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
 			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
