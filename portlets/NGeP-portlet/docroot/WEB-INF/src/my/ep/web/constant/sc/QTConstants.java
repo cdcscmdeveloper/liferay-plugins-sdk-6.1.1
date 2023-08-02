@@ -326,4 +326,6 @@ public interface QTConstants {
 	public static final Long ORG_CAT_NAME_EXTERNAL_PARTIES_ID = 1001332L;
 	// #12471 End
 	
+	public static final String SUPPLIER_CRITERIA = "SC";//#29732 change hard code to constant
+	
 }

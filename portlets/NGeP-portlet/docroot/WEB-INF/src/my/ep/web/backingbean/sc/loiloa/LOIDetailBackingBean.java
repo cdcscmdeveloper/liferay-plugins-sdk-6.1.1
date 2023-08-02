@@ -928,6 +928,26 @@ public class LOIDetailBackingBean extends
 				
 				// Breifing paper
 				retrieveBriefingPaper();
+				Long statusId  = getManagedBean().getCurrentStatusId();//34905-start
+				if (QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION
+						.equals(statusId) && ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(recommendType) && !getManagedBean().isZonal()) {
+					List<Long> qualifiedSuppliers=new ArrayList<>();
+					Long awardedSupplierId=null;
+					ScQtRecommend scQtRecommend=scQtRecommendList.get(0);
+					for (ScQtRecommendDtl recommendDtl 
+							: scQtRecommend.getRecommendDtls()) {
+						awardedSupplierId = recommendDtl.getSupplier().getSupplierId();
+						if (recommendDtl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE && !qualifiedSuppliers.contains(awardedSupplierId)) {
+							qualifiedSuppliers.add(awardedSupplierId);
+							if(qualifiedSuppliers.size()>=2){
+								getManagedBean().setSelectedSupplier(null);
+								break;
+							}
+							
+						}
+					}
+					
+				}//34905-End
 			}
 
 		} finally {
