@@ -12193,29 +12193,23 @@ public class SmApplicationUtil {
 		return SmCommonUtil.getStatusDescByStatusId(statusId);
 	}
 
-	public static void initPoInquiry(SmApplicationManagedBean bean,
-			boolean isNewInquiry) {
-		bean.setPoToSupplierInquiry(null);
+	public static void initPoInquiry(SmApplicationManagedBean bean, boolean isNewInquiry) {
+		// START 14530
+		if (bean.getPoToSupplierInquiry() == null) {
+			bean.setPoToSupplierInquiry(new SmApplInquiry());
+		}
+		// END 14530
 
-		if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
-				.getSmApplInquiries())) {
+		if (!EntityHelper.isCollectionEmpty(bean.getSmAppl().getSmApplInquiries())) {
 
 			// sort created date descendent
-			Collections.sort(bean.getSmAppl().getSmApplInquiries(),
-					new Comparator<SmApplInquiry>() {
-						public int compare(SmApplInquiry o1, SmApplInquiry o2) {
-							if (o1.getCreatedDate() == null
-									|| o2.getCreatedDate() == null)
-								return 0;
-							return o2.getCreatedDate().compareTo(
-									o1.getCreatedDate());
-						}
-					});
-
-			// set for latest inquiry
-			SmApplInquiry currentInquiry = bean.getSmAppl()
-					.getSmApplInquiries().get(0);
-			bean.setPoToSupplierInquiry(currentInquiry);
+			Collections.sort(bean.getSmAppl().getSmApplInquiries(), new Comparator<SmApplInquiry>() {
+				public int compare(SmApplInquiry o1, SmApplInquiry o2) {
+					if (o1.getCreatedDate() == null || o2.getCreatedDate() == null)
+						return 0;
+					return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+				}
+			});
 
 			// if PO (Inquiry Section)
 			if (bean.isPoUser()) {
@@ -12225,12 +12219,8 @@ public class SmApplicationUtil {
 				} else {
 					// set for inquiry histories
 					bean.setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
-					for (SmApplInquiry inquiry : bean.getSmAppl()
-							.getSmApplInquiries()) {
-						if (!StringUtils.isBlank(inquiry.getInquirySubject())
-								&& inquiry
-										.getInquirySubject()
-										.equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
+					for (SmApplInquiry inquiry : bean.getSmAppl().getSmApplInquiries()) {
+						if (!StringUtils.isBlank(inquiry.getInquirySubject()) && inquiry.getInquirySubject().equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
 							bean.getPoSupplierInquiryHistory().add(inquiry);
 						}
 					}
@@ -12238,9 +12228,28 @@ public class SmApplicationUtil {
 
 			}
 			// if Supplier (Respond to PO inquiry)
+			// START 14530
 			else if (bean.isSupplierUser()) {
-				bean.getPoToSupplierInquiry()
-						.setResponseText(StringUtils.EMPTY);
+
+				if (bean.getPoToSupplierInquiry().getResponseDate() == null) {
+					SmApplInquiry currentInquiry = bean.getSmAppl().getSmApplInquiries().get(0);
+					bean.setPoToSupplierInquiry(currentInquiry);
+
+					log.info("*** VALUE POTOSUPPLIERINQUIRY *** " + bean.getPoToSupplierInquiry().getInquiryText());
+
+					bean.getPoToSupplierInquiry().setResponseText(StringUtils.EMPTY);
+				}
+			}
+
+			// 14530
+			else if (bean.isApproverUser()) {
+				// set for inquiry histories
+				bean.setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
+				for (SmApplInquiry inquiry : bean.getSmAppl().getSmApplInquiries()) {
+					if (!StringUtils.isBlank(inquiry.getInquirySubject()) && inquiry.getInquirySubject().equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
+						bean.getPoSupplierInquiryHistory().add(inquiry);
+					}
+				}
 			}
 		} else {
 			// initialize po inquiry

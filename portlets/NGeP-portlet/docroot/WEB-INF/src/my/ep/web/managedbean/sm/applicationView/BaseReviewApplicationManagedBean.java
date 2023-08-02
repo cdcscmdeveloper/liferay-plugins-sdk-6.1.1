@@ -36,7 +36,9 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
+import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
@@ -292,6 +294,10 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	//#34209
 	private boolean poApprUnClaimTask;
 		
+	//14530
+		private SmApplInquiry poToSupplierInquiry;
+		private List<SmApplInquiry> poSupplierInquiryHistory;
+		private List<SmApplSupportDoc> missinDocs;
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
 		selectedCert.setPmCertBody(new PmCertBody());
@@ -1976,6 +1982,29 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.viewSupplierMaintenancePage = viewSupplierMaintenancePage;
 	}
 	// #26639 - end
+	public List<SmApplInquiry> getPoSupplierInquiryHistory() {
+		return poSupplierInquiryHistory;
+	}
+
+	public void setPoSupplierInquiryHistory(List<SmApplInquiry> poSupplierInquiryHistory) {
+		this.poSupplierInquiryHistory = poSupplierInquiryHistory;
+	}
+
+	public SmApplInquiry getPoToSupplierInquiry() {
+		return poToSupplierInquiry;
+	}
+
+	public void setPoToSupplierInquiry(SmApplInquiry poToSupplierInquiry) {
+		this.poToSupplierInquiry = poToSupplierInquiry;
+	}
+
+	public List<SmApplSupportDoc> getMissinDocs() {
+		return missinDocs;
+	}
+
+	public void setMissinDocs(List<SmApplSupportDoc> missinDocs) {
+		this.missinDocs = missinDocs;
+	}
 	
 	//START 31111
 		public List<SmBulkApplOverlapCatVO> getOverlapCategoryVOList() {
