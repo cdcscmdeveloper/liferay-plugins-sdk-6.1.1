@@ -99,6 +99,7 @@
 						</p:selectOneMenu>
 						<p:commandLink onclick="smeDefinitionDlg.show();">
 							<p:graphicImage id="smeDefinitionNoti" value="/css/images/design/tooltips.png" />
+							<p:tooltip for="smeDefinitionNoti" value="#{lbl['lbl.txt.clickhere']}"/>
 						</p:commandLink>&#160;</td>
 					<!-- #29617 ReOpen note #82 - End -->
 				</tr>
@@ -310,7 +311,9 @@
 		<!-- #29617 -->
 		<p:dialog id="smeDefinitionDlg" widgetVar="smeDefinitionDlg" 
 			modal="true" height="550" style="position: fixed !important;">
-			<img src="/NGeP-portlet/images/smeDefinition.png" style="height: 100%"/>
+			<p:scrollPanel>
+				<img src="/NGeP-portlet/images/smeDefinition.png" style="width: 100%"/>
+			</p:scrollPanel>
 		</p:dialog>
 	</ui:define>
 </ui:composition>
