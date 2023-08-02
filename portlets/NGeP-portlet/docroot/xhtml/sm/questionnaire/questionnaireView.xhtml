@@ -62,8 +62,9 @@
 						value="#{questionnaireBackingBean.managedBean.smSuppAnswerLs}"
 						var="ques">
 						<tr>
-							<td>#{status.index+1}. </td>
-							<td>#{ques.smQuestion.questionValue}</td>
+							<!--START #34920 -->
+							<td><h:outputText rendered="#{ques.smQuestion.smAnswerCategory.answerCategoryId != 2}" value="#{status.index == 0 ? status.index+1 : status.index}. "/></td>
+							<td><h:outputText value="#{ques.smQuestion.questionValue}"/></td>
 						</tr>
 						<tr>
 							<td></td>
@@ -76,8 +77,9 @@
 											
 								<p:selectOneRadio id="answerId" value="#{ques.smAnswer.answerId}" 
 								disabled="#{ques.smQuestion.smAnswerCategory.answerCategoryId == 5 or ques.smQuestion.smAnswerCategory.answerCategoryId == 4}"
-								required="true" label="#{lbl['lbl.sm.questionnaire.question']} #{status.index+1}"
+								required="true" label="#{lbl['lbl.sm.questionnaire.question']} #{status.index == 0 ? status.index+1 : status.index}"
 								rendered="#{ques.smQuestion.smAnswerCategory.answerCategoryId != 2}">
+								<!--END #34920 -->
 									<f:selectItems
 										value="#{ques.smQuestion.smAnswerCategory.smAnswers}"
 										var="ans" itemLabel="#{ans.answerDesc}"
