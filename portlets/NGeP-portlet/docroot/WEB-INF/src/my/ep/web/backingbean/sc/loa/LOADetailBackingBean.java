@@ -517,20 +517,26 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		// #27797 - end
-		// #34915 idham @31/07/2023 - Start
-		// sort by scLoiLoaItem..getLoiLoaItemId()
+		// #34915 idham @01/08/2023 - Start
+		// sort by scLoiLoaItem.getTplSpecZoneDtl() and scLoiLoaItem..getTplSpecTierQty()
 		if (null != this.getManagedBean().getScLoa()
 				&& !this.getManagedBean().getScLoa().getScLoiLoa().getDocType()
-						.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)
+				.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)
 				&& CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoiLoaItems())) {
 			Collections.sort(this.getManagedBean().getScLoa().getScLoiLoaItems(), new Comparator<ScLoiLoaItem>() {
 				@Override
 				public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
-					return Long.compare(s1.getLoiLoaItemId(), s2.getLoiLoaItemId());
+					if (null != s1.getTplSpecTierQty() && null != s2.getTplSpecTierQty()
+							&& null != s1.getTplSpecZoneDtl() && null != s2.getTplSpecZoneDtl()) {
+						return new CompareToBuilder().append(s1.getTplSpecZoneDtl().getSpecZoneId(), s2.getTplSpecZoneDtl().getSpecZoneId())
+								.append(s1.getTplSpecTierQty().getSpecTierQtyId(), s2.getTplSpecTierQty().getSpecTierQtyId()).toComparison();
+					} else {
+						return 0;
+					}
 				}
 			});
 		}
-		// #34915 idham @31/07/2023 - End
+		// #34915 idham @01/08/2023 - End
 		removeUnwantedLampiranA3Report(1); //#29006 - note 650
 		//Bug 34404 - related to 29007 - start
 		if(this.getManagedBean().getScLoa()!=null){
