@@ -6799,6 +6799,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	// End Fix - #33674
+	
 	// Start Fix - #34539
 	public void changeShowItem() {
 		try {
