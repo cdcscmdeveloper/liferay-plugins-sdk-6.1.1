@@ -58,6 +58,7 @@
 							<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"></h:outputText>
 						</f:facet>
 						<p:inputText id="sampleaddressmanualScoreEvaluation"
+							required="true"
 							rendered="#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleReq}"
 							label="#{lbl['lbl.tpl.spec.content.user.score']}" 
 							disabled="#{(sampleItem.compliance ne null and !sampleItem.compliance) or evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
@@ -85,10 +86,13 @@
 					<!-- #29187 Start Vinod -->
 					<p:column style="width:10%;" rendered="#{isManSpecAndCompliance}">
 						<f:facet name="header">
+							<h:outputText value="*" styleClass="mandatory"></h:outputText>
 							<h:outputText value="#{lbl['lbl.sc.tec.compliance']}"/>
 							<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.compliance.sample.tooltip']}" />
 						</f:facet>
-						<h:selectOneMenu id="itemCompliance" 
+						<h:selectOneMenu id="itemCompliance"
+										 required="true"
+										 label="#{lbl['lbl.sc.tec.compliance']}"
 										 rendered="#{sampleItem.scRequestItem.tplSpecQuestion.mandatorySpecForSample}"
 										 disabled="#{evaluationBackingBean.managedBean.readOnly 
 										 			or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
@@ -97,6 +101,7 @@
 							<p:ajax event="change" process="@this" partialSubmit="true" update="@([id$=techSampleEvaluateId])" listener="#{evaluationBackingBean.onchangeCompliance(sampleItem)}" />
 							<f:selectItems value="#{evaluationBackingBean.getComplianceDropdownValues()}" />
 						</h:selectOneMenu>
+						<p:message id="itemComplianceMsg" for="itemCompliance" display="icon" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.tpl.spec.content.comment']}"
 						style="width:15%;" rendered="#{isManSpecAndCompliance}">
