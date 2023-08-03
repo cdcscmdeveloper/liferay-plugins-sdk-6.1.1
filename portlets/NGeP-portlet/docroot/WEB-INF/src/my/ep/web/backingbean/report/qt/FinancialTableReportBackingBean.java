@@ -97,8 +97,7 @@ QtReportBackingBean<FinancialTableReportManagedBean> implements Serializable{
 	public LinkedHashMap<String, String> getparams() {
 		LinkedHashMap<String, String> params=new LinkedHashMap<String,String>();
 		ScReportFieldsSearchBean reportFieldBean=this.getManagedBean().getScReportSearchBean();
-		//Disable #29580
-		/*SimpleDateFormat outputDateFormat = new SimpleDateFormat(
+		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
 				QtReportConst.URL_RPT_DATE_ANOTHER_FORMAT);
 		if (StringUtils.isNotEmpty(reportFieldBean.getScCreatedToMonth())
 				&& StringUtils.isNotEmpty(reportFieldBean
@@ -125,8 +124,8 @@ QtReportBackingBean<FinancialTableReportManagedBean> implements Serializable{
 		}
        if(null!=reportFieldBean.getScPublishToDate() && reportFieldBean.getScPublishToDate().toString() != QtReportConst.EMPTY_VAL){
     	   params.put(QtReportConst.PARAM_PUB_TO_DT_EQ, outputDateFormat.format(reportFieldBean.getScPublishToDate()));	
-		}*/
-        StringBuilder procureMethod = new StringBuilder();
+		}
+       StringBuilder procureMethod = new StringBuilder();
 		if ( null!=reportFieldBean.getAllCheckboxValue() && reportFieldBean.getAllCheckboxValue().length > 0) {
 			 params.put(QtReportConst.PARAM_PROCURE_METHOD_EQ, returnProcurementValue(reportFieldBean.getAllCheckboxValue()));
 		} else {
@@ -147,21 +146,15 @@ QtReportBackingBean<FinancialTableReportManagedBean> implements Serializable{
 			//quotationNumberValidation();
 			params.put(QtReportConst.QUOTATION_TENDER_ID, this.getManagedBean().getQuotationId());
 		}
-		//Disable #29580
-		/*if (StringUtils.isNotEmpty(reportFieldBean.getScStatus())) {
+		if (StringUtils.isNotEmpty(reportFieldBean.getScStatus())) {
 			params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ, reportFieldBean.getScStatus());
-		}*/
+		}
 		if(StringUtils.isNotEmpty(reportFieldBean.getScDeskOfficer())){
 			params.put(QtReportConst.PARAM_DESK_OFFCR_EQ, reportFieldBean.getScDeskOfficer());	
 		}
 		if(StringUtils.isNotEmpty(reportFieldBean.getScPtj())){
 			params.put(QtReportConst.PARAM_PROCURE_PTJ_EQ, reportFieldBean.getScPtj());	
 		}
-		//#29580 -start
-		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationTitle())) { 
-			params.put(QtReportConst.QUOTATION_TENDER_TITLE, this.getManagedBean().getQuotationTitle());
-		}
-		//#29580 -end
 		return params;
 	}
 
