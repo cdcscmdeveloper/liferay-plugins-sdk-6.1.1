@@ -12496,7 +12496,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 				getManagedBean().setScheduleList(resDTO.getToBeRemoveSchedulesList());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "DeleteSelectedScheduleDetailsInDocPrepOrDocRev", this.getManagedBean().getQt().getQtNo(),
+					"deleteFreqScheduleDetails", getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -12528,7 +12529,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 				getManagedBean().setProgressivePaymentList(resDTO.getToBeRemoveProgressivePayments());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "DeleteSelectedPaymentDetails", this.getManagedBean().getQt().getQtNo(),
+					"deleteProgPaymentDetails", getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),

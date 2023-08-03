@@ -3178,7 +3178,8 @@ public void saveComplianceSample() {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "RetrieveListofSpecificationsDetailForPresentationDemonstration", this.getManagedBean().getScQt().getQtNo(),
+					"retrivePresentationOrDemoEvaluationStage", getUserIdSessionFromLoginId(), e);
 		}
 
 	}
@@ -17656,7 +17657,8 @@ private void retriveCommitteeRemarksList(){
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "RetrieveListofTechnicalSpecificationForPresentationDemonstration", this.getManagedBean().getScQt().getQtNo(),
+					"demoSpectechnicalChecklist", getUserIdSessionFromLoginId(), e);
 		}
 		
 		return "/xhtml/sc/evaluation/evaluationStage/demoInvitationItemList.xhtml";

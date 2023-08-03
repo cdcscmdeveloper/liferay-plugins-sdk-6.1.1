@@ -1470,7 +1470,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "CheckWhetherDemoHasDifferentSupplierFromFirstEvaluation", this.getManagedBean().getQt().getQtNo(),
+					"checkExistingDemoSupplier", getUserIdSessionFromLoginId(), e);
 		}
 		
 		return demoInvalid;
