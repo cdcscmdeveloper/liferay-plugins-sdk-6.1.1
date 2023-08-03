@@ -12497,7 +12497,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("QT", "DeleteSelectedScheduleDetailsInDocPrepOrDocRev", this.getManagedBean().getQt().getQtNo(),
-					"deleteFreqScheduleDetails", getUserIdSessionFromLoginId(), e);
+					"deleteFreqScheduleDetails", getUserIdSessionFromLoginId(), e);//#sqube qt vulnerability minor idham @03 aug 2023
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -12530,7 +12530,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("QT", "DeleteSelectedPaymentDetails", this.getManagedBean().getQt().getQtNo(),
-					"deleteProgPaymentDetails", getUserIdSessionFromLoginId(), e);
+					"deleteProgPaymentDetails", getUserIdSessionFromLoginId(), e);//#sqube qt vulnerability minor idham @03 aug 2023
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),

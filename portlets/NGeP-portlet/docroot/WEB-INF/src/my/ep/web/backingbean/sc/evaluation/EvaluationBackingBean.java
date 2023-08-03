@@ -3179,7 +3179,7 @@ public void saveComplianceSample() {
 
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("QT", "RetrieveListofSpecificationsDetailForPresentationDemonstration", this.getManagedBean().getScQt().getQtNo(),
-					"retrivePresentationOrDemoEvaluationStage", getUserIdSessionFromLoginId(), e);
+					"retrivePresentationOrDemoEvaluationStage", getUserIdSessionFromLoginId(), e);//#sqube qt vulnerability minor idham @03 aug 2023
 		}
 
 	}
@@ -17658,7 +17658,7 @@ private void retriveCommitteeRemarksList(){
 			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("QT", "RetrieveListofTechnicalSpecificationForPresentationDemonstration", this.getManagedBean().getScQt().getQtNo(),
-					"demoSpectechnicalChecklist", getUserIdSessionFromLoginId(), e);
+					"demoSpectechnicalChecklist", getUserIdSessionFromLoginId(), e);//#sqube qt vulnerability minor idham @03 aug 2023
 		}
 		
 		return "/xhtml/sc/evaluation/evaluationStage/demoInvitationItemList.xhtml";

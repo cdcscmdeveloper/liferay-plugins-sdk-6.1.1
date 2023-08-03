@@ -1471,7 +1471,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("QT", "CheckWhetherDemoHasDifferentSupplierFromFirstEvaluation", this.getManagedBean().getQt().getQtNo(),
-					"checkExistingDemoSupplier", getUserIdSessionFromLoginId(), e);
+					"checkExistingDemoSupplier", getUserIdSessionFromLoginId(), e);//#sqube qt vulnerability minor idham @03 aug 2023
 		}
 		
 		return demoInvalid;
