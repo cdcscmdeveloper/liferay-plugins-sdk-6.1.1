@@ -16451,6 +16451,9 @@ public class ReportBackingBean extends
 						.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)
 						|| this.getManagedBean()
 								.getReportValue()
+								.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL_WIP)
+						|| this.getManagedBean()
+								.getReportValue()
 								.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL)
 						|| this.getManagedBean()
 								.getReportValue()
@@ -16585,6 +16588,11 @@ public class ReportBackingBean extends
 			//#35015
 			if (this.getManagedBean().getReportValue().trim()
 					.equalsIgnoreCase(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)
+					|| this.getManagedBean()
+							.getReportValue()
+							.trim()
+							.equalsIgnoreCase(
+									ReportConst.SC_BRIEFING_PAPER_RPT_VAL_WIP)
 					|| this.getManagedBean()
 							.getReportValue()
 							.trim()
@@ -16992,6 +17000,8 @@ public class ReportBackingBean extends
 			
 			//#35015
 			if (reportCode.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)
+					|| reportCode
+							.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL_WIP)
 					|| reportCode
 							.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL)
 					|| reportCode
