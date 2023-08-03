@@ -394,11 +394,21 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 		        	rptGenBean.setScCommitteQuotationNoView(true);
 			        rptGenBean.setExtraTwoColumnView(true);
 			break;	
-			
+		   
+		    case ReportConst.SC_BRIEFING_PAPER_RPT_VAL_WIP:
+	        	rptGenBean.setScCommitteQuotationNoView(true);
+		        rptGenBean.setExtraTwoColumnView(true);
+		    break;
+		    
 		    case ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL:
 	        	rptGenBean.setScCommitteQuotationNoView(true);
 		        rptGenBean.setExtraTwoColumnView(true);
 		     break;	
+		     
+		    case ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL_WIP:
+	        	rptGenBean.setScCommitteQuotationNoView(true);
+		        rptGenBean.setExtraTwoColumnView(true);
+		     break;
 			
 	        case ReportConst.SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL:
 	        	rptGenBean.setGenerateButton(false);
@@ -657,15 +667,30 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 		        rptGenBean.setExtraTwoColumnView(true);
 		     break;	
 		     
+		   case ReportConst.SC_OPENING_COMMITTEE_RPT_VAL_WIP:
+	        	rptGenBean.setScCommitteQuotationNoView(true);
+		        rptGenBean.setExtraTwoColumnView(true);
+		     break;	
+		     
 		   case ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL:
 	        	rptGenBean.setScCommitteQuotationNoView(true);
 		        rptGenBean.setExtraTwoColumnView(true);
 		     break;	
 		     
+		   case ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP:
+	        	rptGenBean.setScCommitteQuotationNoView(true);
+		        rptGenBean.setExtraTwoColumnView(true);
+		     break;
+		     
 		   case ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL:
 	        	rptGenBean.setScCommitteQuotationNoView(true);
 		        rptGenBean.setExtraTwoColumnView(true);
 		     break;	
+		     
+		   case ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP:
+	        	rptGenBean.setScCommitteQuotationNoView(true);
+		        rptGenBean.setExtraTwoColumnView(true);
+		     break;
 			
 	        default:
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));	            
