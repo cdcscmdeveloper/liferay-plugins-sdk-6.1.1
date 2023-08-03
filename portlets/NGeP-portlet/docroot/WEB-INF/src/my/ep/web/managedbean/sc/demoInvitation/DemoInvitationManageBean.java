@@ -71,7 +71,7 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 	
 	private QtAmendMentBean amendMentBean;
 	
-	public List<ScQtBudget> gosodos;
+	private List<ScQtBudget> gosodos;
 	
 	private String stateCodes;
 	
@@ -123,7 +123,7 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 	
 	private boolean qualifiedSupplier = true;
 	
-	public TabBean selectedApprovalTabBean;
+	private TabBean selectedApprovalTabBean;
 	
 	private SelectItem[] finalizationSecratary;
 	
