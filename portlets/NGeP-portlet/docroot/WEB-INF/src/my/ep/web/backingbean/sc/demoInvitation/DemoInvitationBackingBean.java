@@ -236,6 +236,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				this.getManagedBean().setActiveIndex(activeIndex);
 			}
 		} catch (Exception e) {
+			//Sonarqube QT Vulnerability Minor #44
 			SLAUtils.getInstance().logSLAError("QT", "DemoTabChange",
 					this.getManagedBean().getQt().getQtId().toString(), "demoTabChange", getUserIdSessionFromLoginId(),
 					e);
@@ -322,6 +323,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				}
 			}
 		} catch (Exception e) {
+			//Sonarqube QT Vulnerability Minor #44
 			SLAUtils.getInstance().logSLAError("QT", "RetrieveDemoDetails",
 					this.getManagedBean().getQt().getQtId().toString(), "retrieveDemoDetailsData",
 					getUserIdSessionFromLoginId(), e);
@@ -365,6 +367,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			}
 
 		} catch (Exception e) {
+			//Sonarqube QT Vulnerability Minor #44
 			SLAUtils.getInstance().logSLAError("QT", "RetrieveSpecItemList",
 					this.getManagedBean().getQt().getQtId().toString(), "retrieveSpecItemList",
 					getUserIdSessionFromLoginId(), e);
@@ -521,6 +524,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					}
 				}
 			} catch (Exception e) {
+				//Sonarqube QT Vulnerability Minor #44
 				SLAUtils.getInstance().logSLAError("QT", "RetrieveQuotationTenderDetails",
 						this.getManagedBean().getQt().getQtId().toString(), "retrieveQuotationTenderDetails",
 						getUserIdSessionFromLoginId(), e);
@@ -911,6 +915,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			this.getManagedBean().setScQtDemo(qtDemo);
 
 		} catch (Exception e) {
+			//Sonarqube QT Vulnerability Minor #44
 			SLAUtils.getInstance().logSLAError("QT", "OnChangeInvByButton",
 					this.getManagedBean().getQt().getQtId().toString(), "onchangeInvBy",
 					getUserIdSessionFromLoginId(), e);
@@ -959,6 +964,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 
 			}
 		} catch (Exception e) {
+			//Sonarqube QT Vulnerability Minor #44
 			SLAUtils.getInstance().logSLAError("QT", "GetDemoSpectechnicalChecklist",
 					this.getManagedBean().getQt().getQtId().toString(), "demoSpectechnicalChecklist",
 					getUserIdSessionFromLoginId(), e);
@@ -1262,6 +1268,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			}
 
 		} catch (Exception e) {
+			//Sonarqube QT Vulnerability Minor #44
 			SLAUtils.getInstance().logSLAError("QT", "DemoUpdateBpmTask",
 					this.getManagedBean().getQt().getQtId().toString(), "demoUpdateBpmTask",
 					getUserIdSessionFromLoginId(), e);
@@ -1278,6 +1285,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			qualifiedSupp = evaluationSO.getQualifiedSuppliersBasedOnStage(this.getManagedBean().getQt().getQtId(),
 					SourcingConstants.EVAL_STAGE_TECHNICAL, true);
 		} catch (Exception e) {
+			//Sonarqube QT Vulnerability Minor #44
 			SLAUtils.getInstance().logSLAError("QT", "CheckQualifiedSupplier",
 					this.getManagedBean().getQt().getQtId().toString(), "checkQualifiedSupplier",
 					getUserIdSessionFromLoginId(), e);
@@ -1498,6 +1506,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			}
 
 		} catch (Exception e) {
+			//Sonarqube QT Vulnerability Minor #44
 			SLAUtils.getInstance().logSLAError("QT", "CheckExistingDemoSupplier",
 					this.getManagedBean().getQt().getQtId().toString(), "checkExistingDemoSupplier",
 					getUserIdSessionFromLoginId(), e);

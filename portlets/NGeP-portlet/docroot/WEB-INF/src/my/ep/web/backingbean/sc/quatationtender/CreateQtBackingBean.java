@@ -4215,6 +4215,7 @@ public class CreateQtBackingBean extends
 			}
 
 		} catch (Exception e) {
+			//Sonarqube QT Vulnerability Minor #44
 			SLAUtils.getInstance().logSLAError("QT", "PickYesToDeleteExistingDemoTechChecklist",
 					this.getManagedBean().getQt().getQtId().toString(), "yesDeleteExistingDemoTechChecklist",
 					getUserIdSessionFromLoginId(), e);

@@ -71,6 +71,7 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 	
 	private QtAmendMentBean amendMentBean;
 	
+	//Sonarqube QT Vulnerability Minor #44
 	private List<ScQtBudget> gosodos;
 	
 	private String stateCodes;
@@ -123,6 +124,7 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 	
 	private boolean qualifiedSupplier = true;
 	
+	//Sonarqube QT Vulnerability Minor #44
 	private TabBean selectedApprovalTabBean;
 	
 	private SelectItem[] finalizationSecratary;
