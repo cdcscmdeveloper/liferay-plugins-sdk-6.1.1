@@ -336,5 +336,9 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 		getManagedBean().getSmeSupplier().setSmeValidEndDate(null);
 	}
 	// #29617 - End
+	public void setDefault(){
+		getManagedBean().setDefaultHeight("550");
+		getManagedBean().setDefaultWidth("100%");
+	}
 
 }
