@@ -95,8 +95,9 @@ public class ReportConst implements Serializable{
 	public static final String SC_PROPOSAL_DTLS_PRODUCT_RPT_VAL = "SC_046";
 	public static final String SC_PROPOSAL_DTLS_SERVICE_RPT_VAL = "SC_047";
 	public static final String SC_BRIEFING_PAPER_RPT_VAL = "SC_048";
+	public static final String SC_BRIEFING_PAPER_RPT_VAL_WIP = "SC_081";
 	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL = "SC_049";
-	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_080";
+	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_082";
 
 	public static final String SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL = "SC_050";
 	public static final String SC_PURCHASE_SUMMURY_ITEM_INQUIRY_S1_RPT_VAL = "SC_051";
@@ -120,11 +121,11 @@ public class ReportConst implements Serializable{
 	public static final String SC_S1_LOA_RPT_VAL = "SC_069";
 	public static final String SC_S1_LOA_CONTENT_RPT_VAL = "SC_070";
 	public static final String SC_OPENING_COMMITTEE_RPT_VAL = "SC_071";
-	public static final String SC_OPENING_COMMITTEE_RPT_VAL_WIP = "SC_082";
+	public static final String SC_OPENING_COMMITTEE_RPT_VAL_WIP = "SC_084";
 	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_072";
-	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_083";
+	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_085";
 	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_073";
-	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_081";
+	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_083";
 	public static final String SC_SUPP_QT_PROPOSAL_OFFER_SUBM_RPT_VAL = "SC_074"; //14306
 	public static final String SC_QUOT_TENDER_PROPOSAL_OFFER_SUBM_RPT_BY_SUPPLIER_VAL = "SC_079"; //29580_14306
 	public static final String PYMT_RCPT_RPT_NAME = "lbl.rpt.sc.PYMT_RCPT_RPT_NAME";
