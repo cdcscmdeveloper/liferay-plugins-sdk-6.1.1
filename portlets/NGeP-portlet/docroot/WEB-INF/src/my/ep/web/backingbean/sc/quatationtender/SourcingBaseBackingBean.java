@@ -4219,6 +4219,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			context.put(SSTConstant.bean, this);
 			context.put(SSTConstant.isZonal, scLoa.getScLoiLoa().isZonal());
 			context.put("isWipData", isWipData); // #29006
+			context.put("supplierId", scLoa.getScLoiLoa().getSmSupplier().getSupplierId()); // #29006
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "GenerateSST", scLoa.getLoaNo(),
 					"constructPRSupplierSpecificationAndRemarks", getUserIdSessionFromLoginId(), e);
@@ -6169,6 +6170,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		protected <ATTACHMENT extends ScAttachment> void downloadAllFilesWithSpecificFolder(
 				String zipFileName, List<EvaluationReqDTO> listScAttachment, String downloadBy, String encryptionKey)
 				throws IOException {
+			Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
+			long startDownloadAllFilesWithSpecificFolderTimer = System.currentTimeMillis();
+			log.info("Starting downloadAllFilesWithSpecificFolder :: " + currentTimeStamp);
 			PortletResponse portalresponse = (PortletResponse) FacesContext
 					.getCurrentInstance().getExternalContext().getResponse();
 			HttpServletResponse response = PortalUtil
@@ -6188,10 +6192,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				zos.close();
 				response.flushBuffer();
 				FacesContext.getCurrentInstance().responseComplete();
+				long endDownloadAllFilesWithSpecificFolderTimer = System.currentTimeMillis();
+				log.info("Ending downloadAllFilesWithSpecificFolder :: " + convertMilliToSeconds(endDownloadAllFilesWithSpecificFolderTimer - startDownloadAllFilesWithSpecificFolderTimer) + " Second(s)");
 			}
 		}
 		
 		protected <ATTACHMENT extends ScAttachment> void downloadAllFilesAsZipFileWithSpecificFolder(ZipOutputStream zos,List<EvaluationReqDTO> listScAttachment, String downloadBy,String encryptionKey) throws IOException{
+			Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
+			long startDownloadAllFilesAsZipFileWithSpecificFolder = System.currentTimeMillis();
+			log.info("Starting downloadAllFilesAsZipFileWithSpecificFolder... " + currentTimeStamp);
 			for (EvaluationReqDTO scAttachmentReq : listScAttachment) {
 				// Get the file
 				FileInputStream fis = null;
@@ -6247,6 +6256,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					zos.closeEntry();
 				}
 			}
+			
+			long endDownloadAllFilesAsZipFileWithSpecificFolder = System.currentTimeMillis();
+			log.info("Ending downloadAllFilesAsZipFileWithSpecificFolder... " + convertMilliToSeconds(endDownloadAllFilesAsZipFileWithSpecificFolder - startDownloadAllFilesAsZipFileWithSpecificFolder) + " Second(S)");
 		}
 		//#10542 - end
 		
@@ -6391,4 +6403,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	//26130 - end
 
+	//10542 - Function for testing (Will be removed)
+	protected long convertMilliToSeconds(long milli){
+		return (milli/1000) % 60;
+	}
 }
