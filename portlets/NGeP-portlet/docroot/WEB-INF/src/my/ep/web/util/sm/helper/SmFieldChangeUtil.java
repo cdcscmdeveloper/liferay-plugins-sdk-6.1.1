@@ -24,7 +24,6 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.constant.sm.SupplierManagementConst;
-import my.ep.web.managedbean.sc.bidding.BiddingListManagedBean;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
 

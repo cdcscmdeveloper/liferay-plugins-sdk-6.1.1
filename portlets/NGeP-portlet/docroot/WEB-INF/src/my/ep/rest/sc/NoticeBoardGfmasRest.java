@@ -2,9 +2,9 @@ package my.ep.rest.sc;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -14,12 +14,6 @@ import javax.faces.context.FacesContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.model.TreeNode;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.QtAmendMentValueBean;
@@ -28,8 +22,6 @@ import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTFieldConst;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
@@ -40,13 +32,15 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.util.DateUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.sc.noticeboard.NoticeBoardBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.managedbean.sc.noticeboard.NoticeBoardManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sc.helper.LocationSingleton;
-import my.ep.web.util.sm.helper.SmServiceLookup;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.BooleanUtils;
+import org.primefaces.model.TreeNode;
 
 /**
  * 
