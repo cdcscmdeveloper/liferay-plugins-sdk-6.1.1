@@ -29,8 +29,6 @@ public class SmUpdateSmeInfoManagedBean extends BaseManagedBean {
 	private List<SmSmeSupplier> supplierSmeList;
 	// #29617 ReOpen note #177 - Start
 	private Date maxValidStartDate;
-	private String defaultHeight;
-	private String defaultWidth;
 
 	public boolean isAgreeTC() {
 		return agreeTC;
@@ -110,40 +108,4 @@ public class SmUpdateSmeInfoManagedBean extends BaseManagedBean {
 		this.maxValidStartDate = maxValidStartDate;
 	}
 	// #29617 - End
-
-	/**
-	* Gets the defaultHeight.
-	*
-	* @return the defaultHeight.
-	*/
-	public String getDefaultHeight() {
-		return defaultHeight;
-	}
-
-	/**
-	* Sets the defaultHeight.
-	*
-	* @param defaultHeight the new .
-	*/
-	public void setDefaultHeight(String defaultHeight) {
-		this.defaultHeight = defaultHeight;
-	}
-
-	/**
-	* Gets the defaultWidth.
-	*
-	* @return the defaultWidth.
-	*/
-	public String getDefaultWidth() {
-		return defaultWidth;
-	}
-
-	/**
-	* Sets the defaultWidth.
-	*
-	* @param defaultWidth the new .
-	*/
-	public void setDefaultWidth(String defaultWidth) {
-		this.defaultWidth = defaultWidth;
-	}
 }
