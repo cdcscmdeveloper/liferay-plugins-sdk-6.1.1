@@ -190,8 +190,10 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		log.info("generate reportCode" + getManagedBean().getReportCode());
 		log.info("generate reportName" + getManagedBean().getReportName());
 		//#35015 Wip 4ser - Start
-		long qtId = Long.parseLong(this.getManagedBean().getQuotationId());
-		
+		long qtId = 0;
+		if(this.getManagedBean().getQuotationId() != null){
+			qtId = Long.parseLong(this.getManagedBean().getQuotationId());
+		}
 		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 
