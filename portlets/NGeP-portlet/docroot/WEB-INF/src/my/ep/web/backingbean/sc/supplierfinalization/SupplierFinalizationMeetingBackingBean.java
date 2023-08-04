@@ -123,6 +123,10 @@ import org.primefaces.event.SelectEvent;
 public class SupplierFinalizationMeetingBackingBean extends 
 						SourcingBaseBackingBean<SupplierFinalizationMeetingManagedBean> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static Logger log = EpLogger.getLogger(SupplierFinalizationMeetingBackingBean.class);
 
 	private void debugLogger(Object message) {
@@ -415,8 +419,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 					}
 				}
 			} else {
-				List<ScCommitteeMember> commMembers = scCommittee.getScCommitteeMembers();
-				if (CollectionUtils.isNotEmpty(commMembers)) {
+				List<ScCommitteeMember> commMembers = scCommittee != null ? scCommittee.getScCommitteeMembers():null;//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+				if (commMembers != null && CollectionUtils.isNotEmpty(commMembers)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					for (ScCommitteeMember member : commMembers) {
 						PmParameter memberRole = member.getMemberRole();
 						if (member.getRepresentativeType() == null && 
@@ -453,7 +457,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			List<ScQtMeeting> meetingList = getManagedBean().getScQtMeetings();
 			if (null == meetingList) {
 				getManagedBean().setScQtMeetings(new ArrayList<ScQtMeeting>());
-			}
+			}else{//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			
 			ScQtMeeting meeting = new ScQtMeeting();
 			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
@@ -463,6 +467,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			meeting.setRecordStatusFlg(1);
 			meetingList.add(meeting);
 			this.getManagedBean().setScQtMeetings(meetingList);
+			}//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			
 		} finally{
 			
@@ -1527,6 +1532,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 	private void renewSessionAndRetrieve() {
 		ScQt scQt = getManagedBean().getScQt();
 		String taskId = this.getManagedBean().getTaskId();
+		String taskName = this.getManagedBean().getTaskName();//25037
 		String[] outComes = this.getManagedBean().getOutComes();
 		String processName = this.getManagedBean().getProcessName();
 		String committeeType = this.getManagedBean().getCommitteeType();
@@ -1542,6 +1548,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		//25037 note 284 - end
 		this.prepareMemberUpdate();//#25027
 		this.getManagedBean().setTaskId(taskId);
+		this.getManagedBean().setTaskName(taskName);//25037
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
 		this.getManagedBean().setCurrentStatusId(currentStatusId);
@@ -1919,6 +1926,9 @@ if (CollectionUtils.isNotEmpty(
 				meetingList.add(scqtMeeting);
 			}
 		} else {
+			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			if (meetingList == null)
+				meetingList = new ArrayList<ScQtMeeting>();
 			meetingList.add(scqtMeeting);
 		}
 
@@ -1954,7 +1964,7 @@ if (CollectionUtils.isNotEmpty(
 				finalBB.saveSupplierFinalization(true);
 			}else if(finalBiddingBB!=null){
 				finalBiddingBB.saveOnlineEndorsement(true);
-			};
+			}
 
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sc/supplierFinalization/confirmMeeting/memberUpdate.xhtml");
 		}else if(action.equalsIgnoreCase("confirm")){

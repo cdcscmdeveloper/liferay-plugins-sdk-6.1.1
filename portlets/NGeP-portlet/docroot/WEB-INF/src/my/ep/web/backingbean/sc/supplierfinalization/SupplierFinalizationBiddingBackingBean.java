@@ -2725,6 +2725,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 					meetingList.add(scqtMeeting);
 				}
 			} else {
+				//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+				if (meetingList == null)
+					meetingList = new ArrayList<ScQtMeeting>();
 				meetingList.add(scqtMeeting);
 			}
 
@@ -3032,19 +3035,16 @@ public class SupplierFinalizationBiddingBackingBean extends
 	
 	//#25037-START
 	public void prepareUpdateCommitteeMember(){
-		String taskName = this.getManagedBean().getTaskName()==null ? "": this.getManagedBean().getTaskName();
-		if (Arrays.asList(new String[] {SCProcessNameConst.FINALISE_FC_SELECTION, SCProcessNameConst.COORDINATE_FC_MEETING }).contains(taskName)) {
-			SupplierFinalizationMeetingBackingBean meetingBB = new SupplierFinalizationMeetingBackingBean();
-			meetingBB.renewSesionObject();
-			this.getManagedBean().setMeetingBB(meetingBB);
-			Long qtId = this.getManagedBean().getScQt().getQtId();
-			meetingBB.getManagedBean().setCommitteeType(this.getManagedBean().getCommitteeType());
-			meetingBB.retriveQTDetails(qtId);
-			meetingBB.retriveMeetingDetails(this.getManagedBean().getScQt().getQtId());
-			meetingBB.prepareMemberUpdate();
-			meetingBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
-			meetingBB.getManagedBean().setFinalBiddingBB(this);
-		}	
+		SupplierFinalizationMeetingBackingBean meetingBB = new SupplierFinalizationMeetingBackingBean();
+		meetingBB.renewSesionObject();
+		this.getManagedBean().setMeetingBB(meetingBB);
+		Long qtId = this.getManagedBean().getScQt().getQtId();
+		meetingBB.getManagedBean().setCommitteeType(this.getManagedBean().getCommitteeType());
+		meetingBB.retriveQTDetails(qtId);
+		meetingBB.retriveMeetingDetails(this.getManagedBean().getScQt().getQtId());
+		meetingBB.prepareMemberUpdate();
+		meetingBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
+		meetingBB.getManagedBean().setFinalBiddingBB(this);
 	}
 	public void submitAction(String action) {
 		this.checkIfLoggedinUserIsSecretary();
