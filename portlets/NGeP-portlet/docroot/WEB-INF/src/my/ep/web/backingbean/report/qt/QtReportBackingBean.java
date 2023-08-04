@@ -190,15 +190,15 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		log.info("generate reportCode" + getManagedBean().getReportCode());
 		log.info("generate reportName" + getManagedBean().getReportName());
 		//#35015 Wip 4ser - Start
-		long qtId = 0;
+		long qtId4ser = 0;
 		if(this.getManagedBean().getQuotationId() != null){
-			qtId = Long.parseLong(this.getManagedBean().getQuotationId());
+			qtId4ser = Long.parseLong(this.getManagedBean().getQuotationId());
 		}
 		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 
 		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
-		req4SerDTO.setQtId(qtId);
+		req4SerDTO.setQtId(qtId4ser);
 		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
 		
 		String reportCode = StringUtils.EMPTY;
