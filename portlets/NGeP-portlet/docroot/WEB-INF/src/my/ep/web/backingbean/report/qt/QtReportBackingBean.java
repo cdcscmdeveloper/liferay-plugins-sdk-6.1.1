@@ -190,13 +190,18 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		log.info("generate reportCode" + getManagedBean().getReportCode());
 		log.info("generate reportName" + getManagedBean().getReportName());
 		//#35015 Wip 4ser - Start
-		long qtId = Long.parseLong(this.getManagedBean().getQuotationId());
+		if (QtReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())
+				|| QtReportConst.SC_OPENING_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())
+				|| QtReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())
+				|| QtReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+		
+		long qtId4ser = Long.parseLong(this.getManagedBean().getQuotationId());
 		
 		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 
 		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
-		req4SerDTO.setQtId(qtId);
+		req4SerDTO.setQtId(qtId4ser);
 		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
 		
 		String reportCode = StringUtils.EMPTY;
@@ -236,6 +241,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		}
 		this.getManagedBean().setReportName(reportName);
 		this.getManagedBean().setReportCode(reportCode);
+		}
 		//#35015 Wip 4ser - End
 		params.put(QtReportConst.PARAM_KEY_REPORT, getManagedBean()
 				.getReportName());
