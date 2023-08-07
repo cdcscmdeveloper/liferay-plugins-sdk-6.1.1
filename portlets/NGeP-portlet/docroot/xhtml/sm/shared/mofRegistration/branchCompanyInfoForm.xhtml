@@ -149,12 +149,14 @@
 					process="@this" update=":form:tt:banchDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 					<!-- #27297 START -->
+					<!-- #28777 START -->
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.validateCompanyBranch(backingBean.managedBean)}"
-					partialSubmit="true" process="brnInfPan, pendingQTPopUpId"
+					partialSubmit="true" process="brnInfPan, pendingQTPopUpId, pendingQTPopUpIdAndClosedQTSubmitProposalId"
 					id="delBranchBtnId" disabled="#{empty backingBean.managedBean.smAppl.smSupplierBranches}"
-					update=":form:tt:dt, pendingQTPopUpId" />
+					update=":form:tt:dt, pendingQTPopUpId, pendingQTPopUpIdAndClosedQTSubmitProposalId" />
 					<!-- #27297 END -->
+					<!-- #28777 END -->
 
 			</div>
 			<br />
@@ -257,13 +259,23 @@
 		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')}"/>
 		
 	<!-- #29727 -->
+	<!-- #28777 START -->
 	<ac:confirmationPopup id="pendingQTPopUpId"
 		widget="pendingQTPopUp"
 		okAction="backingBean.deleteSelectedBranches"
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
-		content="#{backingBean.managedBean.deleteBranchMsg}" 
-		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')} @this"/>
-		
+		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}" 
+		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')}"/>
 	<!-- #29727 END -->
+	
+	<ac:confirmationPopup id="pendingQTPopUpIdAndClosedQTSubmitProposalId"
+		widget="pendingQTPopUpIdAndClosedQTSubmitProposal"
+		okAction="backingBean.deleteSelectedBranches"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']} &lt;br&gt;&lt;br&gt; #{lbl['lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal']}" 
+		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')}"/>
+	<!-- #28777 END -->
+	
 </ui:composition>
