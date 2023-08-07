@@ -13,7 +13,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.location.LocationManagedBean;
 
 //@MappedSuperclass
-public class AuditZoneBackingBean extends AuditPMSaveBackingBeanTemplate implements Serializable {
+public class AuditZoneBackingBean extends AuditPMBackingBeanTemplate implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public AuditZoneBackingBean() {

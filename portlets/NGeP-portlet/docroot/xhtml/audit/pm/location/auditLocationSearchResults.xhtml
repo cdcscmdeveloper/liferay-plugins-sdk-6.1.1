@@ -11,16 +11,16 @@
 			value="#{locationAuditBackingBean.searchLocation}"
 			rowIndexVar="index" lazy="true">
 			<ac:paginator for="searchLocations"></ac:paginator>
-			<p:column headerText="Action Date" style="width :15%">
+			<p:column headerText="#{lbl['lbl.pm.audit.actionDate']}" style="width :15%">
 				<h:outputText value="#{location.createdDate}" />
 			</p:column>
-			<p:column headerText="Action Type" style="width :10%">
+			<p:column headerText="#{lbl['lbl.pm.audit.actionType']}" style="width :10%">
 				<h:outputText value="#{location.actionType}" />
 			</p:column>
-			<p:column headerText="Action By" style="width :10%">
+			<p:column headerText="#{lbl['lbl.pm.audit.actionBy']}" style="width :10%"> 
 				<h:outputText value="#{location.actionBy}" />
 			</p:column>
-			<p:column headerText="Document Type" style="width :5%">
+			<p:column headerText="#{lbl['lbl.pm.audit.docType']}" style="width :5%">
 				<h:outputText value="#{lbl['lbl.pm.state']}"
 					rendered="#{location.locationType == 'STATE'}" />
 				<h:outputText value="Adopt Division"
@@ -30,16 +30,16 @@
 				<h:outputText value="#{lbl['lbl.pm.city']}"
 					rendered="#{location.locationType == 'CITY'}" />
 			</p:column>
-			<p:column headerText="Document No." style="width :10%">
+			<p:column headerText="#{lbl['lbl.pm.audit.docNo']}" style="width :10%">
 				<h:outputText value="#{location.docNo}" />
 			</p:column>
-			<p:column headerText="Field Name" style="width :10%">
+			<p:column headerText="#{lbl['lbl.pm.audit.fieldName']}" style="width :10%">
 				<h:outputText value="#{location.labelName}" />
 			</p:column>
-			<p:column headerText="Old Value" style="width :35%">
+			<p:column headerText="#{lbl['lbl.pm.audit.oldValue']}" style="width :35%">
 				<h:outputText value="#{location.oldValue}" />
 			</p:column>
-			<p:column headerText="New Value" style="width :15%">
+			<p:column headerText="#{lbl['lbl.pm.audit.newValue']}" style="width :15%">
 				<h:outputText value="#{location.newValue}" />
 			</p:column>			
 		</p:dataTable>

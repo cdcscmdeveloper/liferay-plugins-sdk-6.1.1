@@ -12,10 +12,10 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-public abstract class AuditPMSaveBackingBeanTemplate implements Serializable {
+public abstract class AuditPMBackingBeanTemplate implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public AuditPMSaveBackingBeanTemplate() {
+	public AuditPMBackingBeanTemplate() {
 	}
 
 	private FacesScopes getFacesScopes() {
@@ -28,8 +28,6 @@ public abstract class AuditPMSaveBackingBeanTemplate implements Serializable {
 
 	public final void auditSaveData(BaseManagedBean managebean, Long userId) {
 
-		isAuditConfig();
-
 		String roleCode = getRoleCode();
 
 		AuditPMBaseDTO auPMObj = detailsInsert(managebean, userId);
@@ -37,12 +35,6 @@ public abstract class AuditPMSaveBackingBeanTemplate implements Serializable {
 		ArrayList<AUPMMasterSPDTO> masterObjlist = masterInsert(auPMObj, userId, managebean, roleCode);
 
 		pmauditSO(masterObjlist, auPMObj);
-	}
-
-	public boolean isAuditConfig() {
-		int auditConfigint = pmauditSO.getAuditConfig();
-		boolean auditConfig = auditConfigint > 0 ? auditConfig = true : false;
-		return auditConfig;
 	}
 
 	private String getRoleCode() {

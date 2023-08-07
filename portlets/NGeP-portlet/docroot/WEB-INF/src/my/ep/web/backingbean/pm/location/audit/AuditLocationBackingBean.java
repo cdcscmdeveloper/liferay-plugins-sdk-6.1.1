@@ -11,7 +11,7 @@ import my.ep.dto.pm.common.audittrail.AuditPMBaseDTO;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.location.LocationManagedBean;
 
-public class AuditLocationMap extends AuditPMSaveBackingBeanTemplate {
+public class AuditLocationBackingBean extends AuditPMBackingBeanTemplate {
 
 	private static final long serialVersionUID = 1L;
 	AUPMDetailSPDTO dtlObjName = new AUPMDetailSPDTO();
