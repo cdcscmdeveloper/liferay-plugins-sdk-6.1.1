@@ -33,6 +33,8 @@ public abstract class QtReportManagedBean extends ReportBaseManagedBean {
 	private boolean isDeskOfficerEnable=Boolean.FALSE;
 	private ScQt scQt;
 	private PmParameter decisionType;//#21692
+	private String quotationTitle;//#29580
+	
 	/**
 	 * @return the quotationNumner
 	 */
@@ -120,6 +122,21 @@ public abstract class QtReportManagedBean extends ReportBaseManagedBean {
 		this.decisionType = decisionType;
 	}
 	//#21692 - end
+	
+	//#29580 - Start
+	/**
+	 * @return the quotationTitle
+	 */
+	public String getQuotationTitle() {
+		return quotationTitle;
+	}
+	/**
+	 * @param quotationTitle the quotationTitle to set
+	 */
+	public void setQuotationTitle(String quotationTitle) {
+		this.quotationTitle = quotationTitle;
+	}
+	//#29580 - End
 	
 
 }
