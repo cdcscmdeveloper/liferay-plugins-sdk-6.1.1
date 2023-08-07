@@ -3513,6 +3513,7 @@ public class NoticeBoardBackingBean extends
 	// #29732 Start - fix ReOpen
 	
 	/**
+	 * Development #35054 START
 	 * TO ALLOW NOTICE BOARD FROM EXTERNAL SOURCE
 	 * @param loginId
 	 * @return
@@ -3638,4 +3639,7 @@ public class NoticeBoardBackingBean extends
 			context.getApplication().getNavigationHandler()
 					.handleNavigation(context, null, pageUrl);
 		}
+		/*
+		 * Development #35054 END
+		 */
 }
