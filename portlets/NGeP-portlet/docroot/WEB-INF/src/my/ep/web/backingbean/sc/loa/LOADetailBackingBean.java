@@ -497,6 +497,26 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		// #27797 - end
+		// #34915 idham @01/08/2023 - Start
+		// sort by scLoiLoaItem.getTplSpecZoneDtl() and scLoiLoaItem..getTplSpecTierQty()
+		if (null != this.getManagedBean().getScLoa()
+				&& !this.getManagedBean().getScLoa().getScLoiLoa().getDocType()
+				.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)
+				&& CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoiLoaItems())) {
+			Collections.sort(this.getManagedBean().getScLoa().getScLoiLoaItems(), new Comparator<ScLoiLoaItem>() {
+				@Override
+				public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
+					if (null != s1.getTplSpecTierQty() && null != s2.getTplSpecTierQty()
+							&& null != s1.getTplSpecZoneDtl() && null != s2.getTplSpecZoneDtl()) {
+						return new CompareToBuilder().append(s1.getTplSpecZoneDtl().getSpecZoneId(), s2.getTplSpecZoneDtl().getSpecZoneId())
+								.append(s1.getTplSpecTierQty().getSpecTierQtyId(), s2.getTplSpecTierQty().getSpecTierQtyId()).toComparison();
+					} else {
+						return 0;
+					}
+				}
+			});
+		}
+		// #34915 idham @01/08/2023 - End
 		removeUnwantedLampiranA3Report(1); //#29006 - note 650
 		//Bug 34404 - related to 29007 - start
 		if(this.getManagedBean().getScLoa()!=null){
@@ -3751,26 +3771,32 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				
 				//#25726 start
 				if (null != scLoa && CollectionUtils.isNotEmpty(scLoa.getScLoaReports())) {
-					if(!scLoa.isBrandNew()){
-						if(null != scLoa.getScLoiLoa()){
-							if(!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) &&
-									!scLoa.getScLoiLoa().getFulfilmentTypeCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){ 
-								for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-									if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
-										if (report.getScLoaReportAttachment() != null) {
-											if(null == report.getIsPK42BondCalc()){
-												boolean newBond = validateNewBond(scLoa);
-												if (newBond == false){
-													return;
-												} 
+					if (null == scLoa.getScQuote()) {
+						if (!scLoa.isBrandNew()) {
+							if (null != scLoa.getScLoiLoa()) {
+								if (!scLoa.getScLoiLoa().getFulfilmentTypeCode()
+										.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
+										&& !scLoa.getScLoiLoa().getFulfilmentTypeCode()
+												.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+									for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
+										if (null != report
+												&& QTConstants.SURAT_SETUJU_TERIMA
+														.equals(report.getTitle())) {
+											if (report.getScLoaReportAttachment() != null) {
+												if (null == report.getIsPK42BondCalc()) {
+													boolean newBond = validateNewBond(scLoa);
+													if (newBond == false) {
+														return;
+													}
+												}
 											}
-										}	                
+										}
 									}
 								}
-			        		}
-			        	}
+							}
+						}
 					}
-			     }
+				}
 				//#25726 end
 				
 				scLoa.setScLoaWorkFlowStatuses(null);
@@ -4197,14 +4223,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 		if (null != this.getManagedBean().getScLoa()
 				&& CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
-			if (null == scLoa.getScQuote()) {
-				for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-					if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
-						if (report.getScLoaReportAttachment() != null) {
-							if (null == report.getIsPK42BondCalc()) {
-								boolean newBond = validateNewBond(scLoa);
-								if (newBond == false) {
-									return;
+			if (!scLoa.isBrandNew()) {
+				if (null == scLoa.getScQuote()) {
+					for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
+						if (null != report && QTConstants.SURAT_SETUJU_TERIMA.equals(report.getTitle())) {
+							if (report.getScLoaReportAttachment() != null) {
+								if (null == report.getIsPK42BondCalc()) {
+									boolean newBond = validateNewBond(scLoa);
+									if (newBond == false) {
+										return;
+									}
 								}
 							}
 						}
@@ -5152,8 +5180,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// int year = Calendar.getInstance().get(Calendar.YEAR);
 			ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
 			docDefTypeReqDTO.setParameterType(ParameterTypeConst.SCHEDULE_TYPE);
-			docDefTypeReqDTO
-					.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
+			//Reopen #25726 note 110
+			//#35046 - start
+			if ((null != this.getManagedBean().getScLoa()) && (null != this.getManagedBean().getScLoa().getScLoiLoa())) {
+				if (null != this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode()) {
+					if (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+						docDefTypeReqDTO.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
+					} else {
+						docDefTypeReqDTO.setParameterCode(ParameterConst.SCHEDULE_TYPE_NON_PERIODIC);
+					}
+				}
+			}
+			//#35046 end
+			//#25726 end
 			ParameterResDTO docDefTypeResDTO = parameterSo
 					.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
 
@@ -9203,6 +9243,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 			if (outcome.equalsIgnoreCase("COMPLETE")) {
 				createLampiranA3(null);
+				//#29006 - start - note 837
+				for (ScLoaReport scLoaReport : this.getManagedBean().getScLoa().getScLoaReports()) {
+				if (scLoaReport.getTitle().contains(lampiranA3SubStr)
+							&& !ParameterConst.DOCTYPE_QUOTATION.equals(this.getManagedBean().getScLoa().getScLoiLoa()
+									.getDocType())) {
+						try {
+							loadScLoaReport(scLoaReport);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+				//#29006 - end - note 837
 				onBackToZoneItemDetailsTab();
 			}
 		}
@@ -9994,6 +10047,44 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return itemClone;
 	}
 	
+	// #29006 - note 837 - start
+	/**
+	 * Load ScLoaReport data.
+	 * 
+	 * @param scLoaReport
+	 *            the sc loa report
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void loadScLoaReport(ScLoaReport scLoaReport) throws IOException {
+		
+		try {
+			if (scLoaReport.getScLoaReportAttachment().getDocNo() == null) {
+				scLoaReport.getScLoaReportAttachment().setDocNo(getManagedBean().getScLoa().getLoaNo());
+			}
+
+			generateUpdatedLampiranA3FromVelocity((ScAttachment) scLoaReport.getScLoaReportAttachment(),
+					getManagedBean().getScLoa(), this.getManagedBean().getScQt());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		ScLoaReportAttachment scLoaReportAttachment = scLoaReport.getScLoaReportAttachment();
+
+		ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport);
+		if (scLoaReport.getDefinationType().getParameterCode()
+				.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD)
+				|| scLoaReport.getDefinationType().getParameterCode()
+						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD)) {
+			scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+		}
+		if (scLoaReportAttachmentGenerated != null) {
+			String prefixName = scLoaReport.getTitle().contains(lampiranA3SubStr) ? scLoaReport.getTitle().replaceAll(
+					"/", "-") : scLoaReport.getTitle().replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "");
+			scLoaReportAttachmentGenerated.setTempFileName(setValueLowercase(prefixName, 18));
+		}
+	}
+	// #29006 - note 837 - end
+	
 	// #29006 - note 746 - start
 	/**
 	 * To calculate total zonal price based on item search result
@@ -10275,6 +10366,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 				index++;
 			}
+			//29007 note 503 start
+			for (ScLoiLoaItem item : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
+				if (!scLoiLoaItem.getLoiLoaItemId().equals(item.getLoiLoaItemId())
+						&& scLoiLoaItem.getScRequestItem().getRequestNoteItemId()
+								.equals(item.getScRequestItem().getRequestNoteItemId())) {
+					reqDTOLatest.setScLoiLoaItem(item);
+					item = getQtAwardSO().retriveLatestLoiLoaItemDetails(reqDTOLatest).getScLoiLoaItem();
+					reqDTO.setTplSpecAnswerList(null);
+					item.setLoaSpecJustification(this.getManagedBean().getNewSupplierJustification());
+					reqDTO.setScLoiLoaItem(item);
+					getQtAwardSO().saveSupplierSpecification(reqDTO);					
+				}
+			}
+			//29007 note 503 end 
 			if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				log.info("===========duringSaveSpecificationTimescodesexecuted=====");	
 				for(ScLoiLoaItem loacalloiLoaItem:this.getManagedBean().getScLoa().getScLoiLoaItems()){
@@ -10284,6 +10389,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 				}
 			}//29007-End
+			for(ScLoiLoaItem loiLoaItem:this.getManagedBean().getScLoa().getScLoiLoaItems()){
+				if(null!=this.getManagedBean().getScLoa() && this.getManagedBean().getScLoa().isBrandNew()){
+					loiLoaItem.setScLoa(this.getManagedBean().getScLoa());
+				}
+			}
 			}//29007-End
 			if(resDTO.isSuccessful()){
 				if(!getManagedBean().getScLoa().getPmStatus().getStatusId().
@@ -10427,6 +10537,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				getQtAwardSO().deleteLampiranA3Report(awardReqDTO);
 				}//29007-End
 			}
+			//29007 note 503 start
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getTplSpecAnswerList())){
+				boolean updateLampiranA3 = false;
+				for (TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()) {
+					if (StringUtils.isNotBlank(tplSpecAnswer.getNewSupplierOffer())
+							&& StringUtils.isNotBlank(this.getManagedBean().getNewSupplierJustification())) {
+						updateLampiranA3 = true;
+						break;
+					}
+				}
+				if (updateLampiranA3) {
+					createLampiranA3forQT(true);
+				}
+			}
+			//29007 note 503 end
 		}
 	}
 	private void generateLampiranA3PdfFromVelocity(ScAttachment attachment, ScLoa scLoa) throws Exception{
@@ -11046,6 +11171,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				getQtAwardSO().deleteLampiranA3Report(awardReqDTO);
 				}//29007-End
 			}
+			//29007 note 503 start
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getTplSpecAnswerList())){
+				boolean updateLampiranA3 = false;
+				for (TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()) {
+					if (StringUtils.isNotBlank(tplSpecAnswer.getNewSupplierOffer())
+							&& StringUtils.isNotBlank(this.getManagedBean().getNewSupplierJustification())) {
+						updateLampiranA3 = true;
+						break;
+					}
+				}
+				if (updateLampiranA3) {
+					createLampiranA3forQTVerification(true);
+				}
+			}
+			//29007 note 503 end
+
 		}
 		log.info("==============endcreateLampiranA3forQTVerification=============");
 	}//29007-End
@@ -11119,7 +11260,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	private boolean validateNewBond(ScLoa scLoa) {
 		if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
 	         for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-	             if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+	             if (null != report && QTConstants.SURAT_SETUJU_TERIMA.equals(report.getTitle())) {
 	                 if (report.getScLoaReportAttachment() != null) {
 	                	 RequestContext.getCurrentInstance().execute("bondChangesAlertDlg.show()");
 	                	 return false;
