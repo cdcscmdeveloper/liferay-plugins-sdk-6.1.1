@@ -2383,15 +2383,24 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		//gets the last list for editing
 		CtBondWaiverDetail bondWaiver =  getManagedBean().getContractVer().getBondWaiverDefermentHistory().get(getManagedBean().getContractVer().getBondWaiverDefermentHistory().size() - 1);
-//		bondWaiver.setBrandNew(true);
-//		bondWaiver.setRecordStatus(false);
 		bondWaiver.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
-//		bondWaiver.getCtAttachment().setBrandNew(true);
-//		bondWaiver.getCtAttachment().setRecordStatus(false);
 		bondWaiver.getCtAttachment().setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
 		bondWaiver.getCtAttachment().setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
 		
 		Collections.reverse(getManagedBean().getContractVer().getBondWaiverDefermentHistory());
+		
+		//renewing latest deferment after clone to make sure id is not dupicate in database
+		if(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getBondWaiverDetailId()!=null){
+			CtBondWaiverDetail bondWaiverLatest = new CtBondWaiverDetail();
+			bondWaiverLatest.setWaiverStartDate(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate());
+			bondWaiverLatest.setWaiverEndDate(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate());
+			bondWaiverLatest.setReferenceNo(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getReferenceNo().trim());
+			bondWaiverLatest.setCtAttachment(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment());
+			bondWaiverLatest.getCtAttachment().setAttachmentId(null);
+			bondWaiverLatest.getCtAttachment().setBrandNew(true);
+			
+			getManagedBean().getContractVer().setBondWaiverDefermentLatest(bondWaiverLatest);
+		}
 		
 		for(CtBondWaiverDetail bondWaiverHistory : getManagedBean().getContractVer().getBondWaiverDefermentHistory()){
 			noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(), bondWaiverHistory.getWaiverEndDate());
@@ -2414,7 +2423,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public long findDifference(Date start_date, Date end_date){
 		long difference_In_Days = TimeUnit.DAYS.convert((end_date.getTime() - start_date.getTime()), TimeUnit.MILLISECONDS);
-		log.info("Difference between two dates is: " + difference_In_Days); 
 		return difference_In_Days;
 	}
 		
@@ -2722,8 +2730,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 			
-			if(getManagedBean().getContractVer().getBondWaiverDefermentHistory()!=null
-					&& !CollectionUtils.isEmpty(getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
+			if(CollectionUtils.isNotEmpty(getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
 				for (CtBondWaiverDetail bondWaiverHistory : getManagedBean().getContractVer().getBondWaiverDefermentHistory()) {
 					noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(), bondWaiverHistory.getWaiverEndDate());
 				}
