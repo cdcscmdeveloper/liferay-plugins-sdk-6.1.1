@@ -1372,8 +1372,7 @@ public class SmFieldChangeUtil {
 	
 	//#32008 - start
 	/**
-	 * Initialize the previous application to check for supplier edit 
-	 * & use serialized supplier appl if available
+	 * Initialize the previous application to check for supplier edit
 	 * @param bean
 	 */
 	public static void initLatestAppl(BaseReviewApplicationManagedBean bean){
@@ -1385,40 +1384,21 @@ public class SmFieldChangeUtil {
 			return;
 		}
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		SmAppl srcAppl = null;
-		
-		if (appl.isResubmit() && bean.isSupplierUser() && appl.getOriginalAppl() != null){
+		SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO().retrievePreviousSmAppl(
+				bean.getSmSupplier().getSupplierId(), appl.getApplId()).getSmAppl();
+		if (appl.getOriginalAppl() != null){
 			reqDTO.setSmAppl(appl);
-			srcAppl = SmServiceLookup.getMofRegistrationSO()
+			SmAppl temp = SmServiceLookup.getMofRegistrationSO()
 					.retrieveLatestRejectedApplication(reqDTO).getSmAppl();
-			if(srcAppl != null){
-				String file = SmCommonUtil.getSerializedFileFullDirByApplNo(srcAppl.getApplNo(), "SUP");
-				SmApplRevisionResDTO revDTO = SmCommonUtil
-						.getSerializedApplicationByFilePathName(file);
-				if (revDTO != null && revDTO.getSmAppl() != null) {
-					srcAppl = revDTO.getSmAppl();
-				}
+			if(temp != null && srcAppl != null && temp.getChangedDate().after(srcAppl.getChangedDate())){
+				srcAppl = temp;
 			}
 		}
-		
-		if(srcAppl == null){
-			srcAppl = SmServiceLookup.getMofRegistrationSO().retrievePreviousSmAppl(
-					bean.getSmSupplier().getSupplierId(), appl.getApplId()).getSmAppl();
-			if(srcAppl != null){
-				String file = SmCommonUtil.getSerializedFileFullDirByApplNo(srcAppl.getApplNo(), "SUP");
-				SmApplRevisionResDTO revDTO = SmCommonUtil
-						.getSerializedApplicationByFilePathName(file);
-				if (revDTO != null && revDTO.getSmAppl() != null) {
-					srcAppl = revDTO.getSmAppl();
-				} else {
-					reqDTO.setApplId(srcAppl.getApplId());
-					srcAppl = SmServiceLookup.getMofRegistrationSO()
-						.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
-				}
-			}
-		}
-		
-		if(srcAppl == null){
+		if(srcAppl != null){
+			reqDTO.setApplId(srcAppl.getApplId());
+			srcAppl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
+		} else {
 			bean.setShowFieldChanges(false);
 			bean.setLatestAppl(null);
 			return;
