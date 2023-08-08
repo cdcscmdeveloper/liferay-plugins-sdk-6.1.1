@@ -5313,8 +5313,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				backingBean.getDeskOfficerAdminAssistant();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				ScQt scQt = this.getManagedBean().getQt();
+				String qtNo = scQt == null ? "" : scQt.getQtNo();
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
+						qtNo, "qtDetailBackingBean.retrieveScheduleTabDtl", getUserIdSessionFromLoginId(), e);
 			} finally {
 				detailSO = null;
 			}
@@ -11266,7 +11268,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				modified = true;
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			ScQt scQt = this.getManagedBean().getQt();
+			String qtNo = scQt == null ? "" : scQt.getQtNo();
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
+					qtNo, "qtDetailBackingBean.isDOAListModified", getUserIdSessionFromLoginId(), e);
 		}
 		
 		return modified;
