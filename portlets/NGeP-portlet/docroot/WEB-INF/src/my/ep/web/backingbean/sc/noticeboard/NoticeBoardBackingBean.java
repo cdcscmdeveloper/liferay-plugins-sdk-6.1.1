@@ -3533,7 +3533,7 @@ public class NoticeBoardBackingBean extends
 			try {
 				qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
-				reqDTO.setQtId(!qtId.isEmpty()?Long.valueOf(qtId):null);
+				reqDTO.setQtId(qtId!=null?Long.valueOf(qtId):null);
 				reqDTO.setQtNo(qtNo);
 				NoticeBoardResDTO resDTO = qtNoticeBoardSO
 						.retrieveQtNoticeDtl(reqDTO);
