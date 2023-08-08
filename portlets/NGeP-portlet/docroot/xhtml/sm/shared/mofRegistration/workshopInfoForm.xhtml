@@ -144,11 +144,18 @@
 							label="#{lbl['lbl.sm.category']}" id="workshopCategoryId"
 							value="#{backingBean.managedBean.selectedSuppCategoryFacilityIds}"
 							style="height:100px;width: 200px;"
-							disabled="#{backingBean.managedBean.upsCannotEdit}">
+							rendered="#{!backingBean.managedBean.upsCannotEdit}">
 							<f:selectItems
 								value="#{backingBean.getSelectedCategoryItemsByFacilityType(backingBean.managedBean.selectedWorkShopFacility.facilityType)}" />
 							<p:ajax event="change" update="@this" process="@this" partialSubmit="true" />
 						</p:selectManyMenu>
+						<p:outputPanel rendered="#{backingBean.managedBean.upsCannotEdit}">
+							<ui:repeat var="cat" value="#{backingBean.managedBean.selectedWorkShopFacility.smSupplierCategoryFacilities}">
+								<h:outputText value="#{cat.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
+									#{cat.pmCategoryL3.pmCategoryL2.categoryL2Code} #{cat.pmCategoryL3.categoryL3Code}
+									(#{cat.pmCategoryL3.categoryName})" style="float:left"/><br/>
+							</ui:repeat>
+						</p:outputPanel>
 						<p:message id="workshopCategoryIdMsg" for="workshopCategoryId"
 							showSummary="true" showDetail="false" display="icon" />
 					</td>

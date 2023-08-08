@@ -21,9 +21,9 @@ import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.constant.sm.SupplierManagementConst;
-import my.ep.web.managedbean.sc.bidding.BiddingListManagedBean;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
 
@@ -910,6 +910,12 @@ public class SmFieldChangeUtil {
 															.getPmFinancialOrg()
 															.getFinancialOrgId()) != 0) {
 								currBank.setChangedFieldStatus("U");
+							//#32008 - start
+							} else if (isSupplierBranchBankHasDifference(
+									currBank.getSmSupplierBranchBanks(),
+									latestBank.getSmSupplierBranchBanks())) {
+								currBank.setChangedFieldStatus("U");
+							//#32008 - end
 							} else {
 								setCurrBankChequeSignatories(currBank,
 										latestBank);
@@ -1405,7 +1411,7 @@ public class SmFieldChangeUtil {
 				if (revDTO != null && revDTO.getSmAppl() != null) {
 					srcAppl = revDTO.getSmAppl();
 				} else {
-					reqDTO.setApplId(appl.getApplId());
+					reqDTO.setApplId(srcAppl.getApplId());
 					srcAppl = SmServiceLookup.getMofRegistrationSO()
 						.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
 				}
@@ -1417,8 +1423,8 @@ public class SmFieldChangeUtil {
 			bean.setLatestAppl(null);
 			return;
 		}
-		log.info("appl status compare with: "+bean.getLatestAppl().getApplNo());
 		bean.setLatestAppl(srcAppl);
+		log.info("appl status compare with: "+bean.getLatestAppl().getApplNo());
 		bean.getLatestAppl().setHqFacility(
 				SmApplicationUtil.getHqFacilityByAppl(bean.getLatestAppl()));
 		setApplTableListChangeStatus(bean.getLatestAppl(), bean.getSmAppl(),
@@ -1509,6 +1515,55 @@ public class SmFieldChangeUtil {
 			setCurrPersonnelAssociationBodies(bean.getLatestAppl(),
 					bean.getSelectedShareHolder(), bean.getLatestPersonnel());
 		}
+	}
+	
+	private static boolean isSupplierBranchBankHasDifference(
+			List<SmSupplierBranchBank> prevBranchBanks,
+			List<SmSupplierBranchBank> currBranchBanks) {
+		boolean retVal = false;
+
+		if (EntityHelper.isCollectionEmpty(prevBranchBanks)
+				&& !EntityHelper.isCollectionEmpty(currBranchBanks)) {
+			retVal = true;
+		} else if (!retVal && !EntityHelper.isCollectionEmpty(prevBranchBanks)
+				&& EntityHelper.isCollectionEmpty(currBranchBanks)) {
+			retVal = true;
+		} else if (!retVal && !EntityHelper.isCollectionEmpty(prevBranchBanks)
+				&& !EntityHelper.isCollectionEmpty(currBranchBanks)) {
+
+			// check if current exist in previous
+			for (SmSupplierBranchBank currBrBank : currBranchBanks) {
+				if (getSmSupplierBranchBank(prevBranchBanks,
+						currBrBank.getSmSupplierBranch()) == null) {
+					retVal = true;
+					break;
+				}
+			}
+			// check if previous exist in current
+			for (SmSupplierBranchBank prevBrBank : prevBranchBanks) {
+				if (getSmSupplierBranchBank(currBranchBanks,
+						prevBrBank.getSmSupplierBranch()) == null) {
+					retVal = true;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+	
+	private static SmSupplierBranchBank getSmSupplierBranchBank(
+			List<SmSupplierBranchBank> branchBanks, SmSupplierBranch branch) {
+		SmSupplierBranchBank retVal = null;
+		for (SmSupplierBranchBank brBankTmp : branchBanks) {
+			if (brBankTmp.getSmSupplierBranch() != null
+					&& branch != null
+					&& brBankTmp.getSmSupplierBranch().getBranchCode()
+							.equals(branch.getBranchCode())) {
+				retVal = brBankTmp;
+				break;
+			}
+		}
+		return retVal;
 	}
 	//#32008 - end
 }

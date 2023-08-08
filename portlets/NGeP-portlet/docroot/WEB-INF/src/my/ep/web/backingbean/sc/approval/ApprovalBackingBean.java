@@ -570,7 +570,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				for (ScQtApprovalRequest approvalRequest : approvalRequests) {
 					if (approvalRequest.getQtApprovalRequestId().equals(dataType.getRequestId())) {
 						approvalRequests = new ArrayList<ScQtApprovalRequest>();
-						approvalRequests.add(approvalRequest);;
+						approvalRequests.add(approvalRequest);
 						break;
 					}
 				}
@@ -1293,7 +1293,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 				showDialog = "reviceApprovalDlg.show()";
 				// #32376 - Start
-				if(SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)){
+				if(SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName) || 
+						SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)){//#34694
 					showDialog = "reviceApprovalDlgTemp.show()";
 				}
 				// #32376 - End

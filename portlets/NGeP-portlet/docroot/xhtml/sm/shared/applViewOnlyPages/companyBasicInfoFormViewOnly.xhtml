@@ -60,7 +60,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.companyname']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.companyName}" 
 							currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" 
@@ -79,7 +79,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.taxRefNo']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.incomeTaxNo}" 
 							currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}" 
@@ -99,7 +99,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.estdate']}" /></td>
 						<td><ac:labelDate value="#{viewSmApplBackingBean.managedBean.smSupplier.establishDate}" styleClass="outputLabel-view"/>
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smSupplier.establishDate}" 
 								currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.establishDate}" 
@@ -114,8 +114,23 @@
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.smAppl.bumi}"  />
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{!viewSmApplBackingBean.managedBean.smAppl.bumi}"  />
 					</td>
-					<td></td>
-					<td></td>
+					<!-- #33783 - start -->
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType == 'I'
+								or viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType == 'J'}">
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.clbg']}"/></td>
+						<ui:param name="isCLBG" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.companyTypeSSM 
+											== SupplierManagementConst.COMPANY_TYPE_CLBG}"/>
+						<c:choose><c:when test="#{!isSuppDataMaintenance}">
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{isCLBG ? lbl['lbl.btn.yes'] : lbl['lbl.btn.no']}"/></td>
+						</c:when>
+						<c:otherwise>
+							<td><p:selectOneRadio value="#{isCLBG}" disabled="true">
+									<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
+									<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
+								</p:selectOneRadio></td>
+						</c:otherwise></c:choose>	
+					</c:if>
+					<!-- #33783 - end -->
 	
 					</tr>
 				</p:outputPanel>
@@ -194,7 +209,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.companyaddress']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" />
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" 
 								currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" 
@@ -202,7 +217,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryName}"/>
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId}" 
 								currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId}" 
@@ -214,7 +229,7 @@
 						<td></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" />
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" 
 								currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" 
@@ -222,7 +237,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateName}"/>
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateId}" 
 								currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateId}" 
@@ -234,7 +249,7 @@
 						<td></td><!-- #13320 - added division -->
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" />
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" 
 								currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" 
@@ -244,7 +259,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision.divisionName}"
 											rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}"/>
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 										and viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision.divisionId}" 
@@ -259,7 +274,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtName}"/>
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtId}" 
 								currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtId}" 
@@ -273,7 +288,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityName}"/>
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityId}" 
 								currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityId}" 
@@ -290,7 +305,7 @@
 					<td>
 						<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}" /> 
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}" 
 							currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}" 
@@ -303,7 +318,7 @@
 						<p:outputLabel styleClass="outputLabel-view" 
 							value="#{viewSmApplBackingBean.getParamDescByParameterId(viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.annualRevenue)}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.annualRevenue}" 
 							currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.annualRevenue}" 
@@ -314,7 +329,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.phoneFull}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.phoneNo}" 
 							currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.phoneNo}" 
@@ -324,7 +339,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.website']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.website}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.website}" 
 							currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.website}" 
@@ -344,7 +359,7 @@
 				<p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
 				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxFull}" />
 					<!-- #32008 -->
-					<ac:smFieldChangeAlert 
+					<ac:smFieldChangeAlertView
 						isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 						oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.faxNo}" 
 						currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxNo}" 

@@ -9,7 +9,7 @@
 	<p:panel header="#{lbl['lbl.sm.travelling.system']}" toggleable="true" rendered="#{backingBean.managedBean.showTravelSoftwarePanel}" id="travelSoftwarePanelId">
 		<table style="width: 100%">
 			<!-- Disable for UPS 32008 - START -->
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.upsCannotEdit}">
+			<!-- p:outputPanel rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.supplierSystemVerified}"
@@ -37,7 +37,7 @@
 							value="#{lbl['lbl.sm.sectionApprVerf']}"
 							title="For Approver to highlight the verified section " /></td>
 				</tr>
-			</p:outputPanel>
+			</p:outputPanel-->
 		</table>
 		<p:outputPanel id="systemInfPan" layout="block">
 			<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:systemInfPan" widgetVar="buiPoSystem"

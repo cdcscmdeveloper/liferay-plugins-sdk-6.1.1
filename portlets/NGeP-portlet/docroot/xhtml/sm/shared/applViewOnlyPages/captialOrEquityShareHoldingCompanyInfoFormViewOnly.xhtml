@@ -6,7 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sm.equiComp.panHdr']}" toggleable="true">
+	<!-- #33783 -->
+	<p:panel header="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.companyTypeSSM 
+		== SupplierManagementConst.COMPANY_TYPE_CLBG ? 
+		lbl['lbl.sm.equiComp.panHdr.clbg'] : lbl['lbl.sm.equiComp.panHdr']}" toggleable="true">
 		
 		<p:outputPanel id="equiInfPan" layout="block">
 			
@@ -39,7 +42,7 @@
 						style="margin-right:2px;" />
 					</p:commandLink>
 					<!-- #32008 -->
-					<ac:smFieldChangeTableAlert object="#{equiBean}" />
+					<ac:smFieldChangeTableAlertView object="#{equiBean}" />
 				</p:column>
 			</p:dataTable>
 		</p:outputPanel>
@@ -60,7 +63,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.equiComp.compName']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.companyName}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.companyName}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.companyName}" 
@@ -75,7 +78,7 @@
 					<td>
 						<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.shareAmt}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
 								and not empty viewSmApplBackingBean.managedBean.selectedEquityCompany.equityCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.shareAmt}" 
@@ -88,7 +91,7 @@
 					<td>
 						<ac:labelEquityAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.sharePercentage}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.sharePercentage}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.sharePercentage}" 
@@ -99,7 +102,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.equiComp.addr']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address1}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.address1}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address1}" 
@@ -110,7 +113,7 @@
 					<td></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address2}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.address2}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address2}" 
@@ -120,7 +123,7 @@
 					<td></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address3}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.address3}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address3}" 
@@ -130,7 +133,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryName}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
 								and not empty viewSmApplBackingBean.managedBean.selectedEquityCompany.equityCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.pmCountry.countryId}" 
@@ -145,7 +148,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateName}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.pmState.stateId}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateId}" 
@@ -162,7 +165,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmDivision.divisionName}" 
 											rendered="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}" />
 							<!-- #32008 -->
-							<ac:smFieldChangeAlert 
+							<ac:smFieldChangeAlertView 
 								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 								oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.pmDivision.divisionId}" 
 								currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmDivision.divisionId}" 
@@ -177,7 +180,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict.districtName}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.pmDistrict.districtId}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict.districtId}" 
@@ -190,7 +193,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmCity.cityName}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.pmCity.cityId}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmCity.cityId}" 
@@ -203,7 +206,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.postcode}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.postcode}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.postcode}" 
@@ -213,7 +216,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.phoneFull}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.phoneNo}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.phoneNo}" 
@@ -223,7 +226,7 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.faxFull}" />
 						<!-- #32008 -->
-						<ac:smFieldChangeAlert 
+						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.faxNo}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.faxNo}" 
