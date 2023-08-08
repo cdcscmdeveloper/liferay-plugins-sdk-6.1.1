@@ -2928,8 +2928,54 @@ public class QTCloneBackingbean extends
 			String fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel.toString(),
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 			tabType = SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE;
-			ScQtCommittee mofCommitte = cloneComitteee(scQt,copyScqt,tabType);			
+			ScQtCommittee mofCommitte = cloneComitteee(scQt,copyScqt,tabType);
+			if(null!=mofCommitte && null!=mofCommitte.getScCommittee() && null!=mofCommitte.getScCommittee().getCommitteeType()){//35041&25635-start
 			committeTabs.add(new TabBean(fcTitleName, tabType, mofCommitte));
+	        }else{//35041&25635-start
+	        	//FC Tabs
+				PmParameter fcSecretaryCode = scQt.getFinalizationCommitte();
+				tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
+				StringBuilder fcTitleLabel1 = new StringBuilder(
+						"lbl.sc.finalization.committee.secretary.");
+				String fcTitleName1 = ResourceBundleUtils
+						.getMessage(fcTitleLabel1.toString()
+									+ SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE.toLowerCase(),
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale());
+				if (fcSecretaryCode == null
+						|| fcSecretaryCode.getParameterId() == null) {
+					SelectItem[] fcSecretaries = retrieveFinalizationCommitteeType();
+					if (fcSecretaries != null && fcSecretaries.length > 0) {
+						fcSecretaryCode = retrieveParameterById(Long
+								.valueOf(fcSecretaries[0].getValue().toString()));
+						;
+					} else {
+						fcSecretaryCode = null;
+					}
+				}
+				
+				// Displaying the Secretary Details
+				if (fcSecretaryCode != null) {
+					
+					String fcSecretary = fcSecretaryCode.getParameterCode();
+
+					if (fcSecretary != null) {
+						if (fcSecretary
+								.indexOf(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE) >= 0) {
+							fcTitleLabel1
+									.append(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE);
+						} else {
+							fcTitleLabel1
+									.append(SourcingConstants.FC_COMMITTEE_TYPE_PROCUREMENT_BOARD);
+						}
+						fcTitleName1 = ResourceBundleUtils.getMessage(
+								fcTitleLabel1.toString().toLowerCase(),
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale());
+					}
+				}
+				committeTabs.add(new TabBean(fcTitleName1, tabType, null));
+	        }//35041&25635-End
 
 		}else{
 			//FC Tabs
