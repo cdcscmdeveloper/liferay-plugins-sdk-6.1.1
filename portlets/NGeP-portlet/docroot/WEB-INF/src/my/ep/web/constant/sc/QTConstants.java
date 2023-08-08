@@ -315,4 +315,8 @@ public interface QTConstants {
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR";
 	
 	public static final String SUPPLIER_CRITERIA = "SC";//#29732 change hard code to constant
+	
+	// #25726 - reopen note 110
+	public static final String SURAT_SETUJU_TERIMA = "Surat Setuju Terima (Termasuk Lampiran A)";
+	// #25726 end
 }
