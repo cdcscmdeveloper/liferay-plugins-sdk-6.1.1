@@ -137,5 +137,6 @@ public abstract class QtReportManagedBean extends ReportBaseManagedBean {
 		this.quotationTitle = quotationTitle;
 	}
 	//#29580 - End
+	
 
 }
