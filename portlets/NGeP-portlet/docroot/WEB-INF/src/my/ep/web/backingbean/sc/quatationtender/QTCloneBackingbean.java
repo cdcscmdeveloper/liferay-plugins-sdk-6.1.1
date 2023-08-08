@@ -2948,7 +2948,6 @@ public class QTCloneBackingbean extends
 					if (fcSecretaries != null && fcSecretaries.length > 0) {
 						fcSecretaryCode = retrieveParameterById(Long
 								.valueOf(fcSecretaries[0].getValue().toString()));
-						;
 					} else {
 						fcSecretaryCode = null;
 					}
