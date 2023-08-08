@@ -10085,44 +10085,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	// #29006 - note 837 - end
 	
-	// #29006 - note 837 - start
-	/**
-	 * Load ScLoaReport data.
-	 * 
-	 * @param scLoaReport
-	 *            the sc loa report
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public void loadScLoaReport(ScLoaReport scLoaReport) throws IOException {
-		
-		try {
-			if (scLoaReport.getScLoaReportAttachment().getDocNo() == null) {
-				scLoaReport.getScLoaReportAttachment().setDocNo(getManagedBean().getScLoa().getLoaNo());
-			}
-
-			generateUpdatedLampiranA3FromVelocity((ScAttachment) scLoaReport.getScLoaReportAttachment(),
-					getManagedBean().getScLoa(), this.getManagedBean().getScQt());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		ScLoaReportAttachment scLoaReportAttachment = scLoaReport.getScLoaReportAttachment();
-
-		ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport);
-		if (scLoaReport.getDefinationType().getParameterCode()
-				.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD)
-				|| scLoaReport.getDefinationType().getParameterCode()
-						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD)) {
-			scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
-		}
-		if (scLoaReportAttachmentGenerated != null) {
-			String prefixName = scLoaReport.getTitle().contains(lampiranA3SubStr) ? scLoaReport.getTitle().replaceAll(
-					"/", "-") : scLoaReport.getTitle().replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "");
-			scLoaReportAttachmentGenerated.setTempFileName(setValueLowercase(prefixName, 18));
-		}
-	}
-	// #29006 - note 837 - end
-	
 	// #29006 - note 746 - start
 	/**
 	 * To calculate total zonal price based on item search result
