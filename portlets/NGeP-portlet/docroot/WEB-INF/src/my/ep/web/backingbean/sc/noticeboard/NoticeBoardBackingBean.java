@@ -3539,6 +3539,7 @@ public class NoticeBoardBackingBean extends
 						.retrieveQtNoticeDtl(reqDTO);
 				ScQt scQt = resDTO.getScQt();
 				log.info("QTID-->>"+scQt.getQtId());
+
 				this.getManagedBean().setQtId(scQt.getQtId());
 				
 				this.getManagedBean().setScQt(resDTO.getScQt());
