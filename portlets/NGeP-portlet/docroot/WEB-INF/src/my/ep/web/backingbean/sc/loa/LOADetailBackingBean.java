@@ -5181,15 +5181,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
 			docDefTypeReqDTO.setParameterType(ParameterTypeConst.SCHEDULE_TYPE);
 			//Reopen #25726 note 110
-			if(null != this.getManagedBean().getScLoa().getScQt().getFulfilmentType()){
-				if(this.getManagedBean().getScLoa().getScQt().getFulfilmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
-					docDefTypeReqDTO
-					.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
-				}else{
-					docDefTypeReqDTO
-					.setParameterCode(ParameterConst.SCHEDULE_TYPE_NON_PERIODIC);
+			//#35046 - start
+			if ((null != this.getManagedBean().getScLoa()) && (null != this.getManagedBean().getScLoa().getScLoiLoa())) {
+				if (null != this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode()) {
+					if (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+						docDefTypeReqDTO.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
+					} else {
+						docDefTypeReqDTO.setParameterCode(ParameterConst.SCHEDULE_TYPE_NON_PERIODIC);
+					}
 				}
 			}
+			//#35046 end
 			//#25726 end
 			ParameterResDTO docDefTypeResDTO = parameterSo
 					.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
@@ -10363,6 +10366,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 				index++;
 			}
+			//29007 note 503 start
+			for (ScLoiLoaItem item : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
+				if (!scLoiLoaItem.getLoiLoaItemId().equals(item.getLoiLoaItemId())
+						&& scLoiLoaItem.getScRequestItem().getRequestNoteItemId()
+								.equals(item.getScRequestItem().getRequestNoteItemId())) {
+					reqDTOLatest.setScLoiLoaItem(item);
+					item = getQtAwardSO().retriveLatestLoiLoaItemDetails(reqDTOLatest).getScLoiLoaItem();
+					reqDTO.setTplSpecAnswerList(null);
+					item.setLoaSpecJustification(this.getManagedBean().getNewSupplierJustification());
+					reqDTO.setScLoiLoaItem(item);
+					getQtAwardSO().saveSupplierSpecification(reqDTO);					
+				}
+			}
+			//29007 note 503 end 
 			if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				log.info("===========duringSaveSpecificationTimescodesexecuted=====");	
 				for(ScLoiLoaItem loacalloiLoaItem:this.getManagedBean().getScLoa().getScLoiLoaItems()){
@@ -10520,6 +10537,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				getQtAwardSO().deleteLampiranA3Report(awardReqDTO);
 				}//29007-End
 			}
+			//29007 note 503 start
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getTplSpecAnswerList())){
+				boolean updateLampiranA3 = false;
+				for (TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()) {
+					if (StringUtils.isNotBlank(tplSpecAnswer.getNewSupplierOffer())
+							&& StringUtils.isNotBlank(this.getManagedBean().getNewSupplierJustification())) {
+						updateLampiranA3 = true;
+						break;
+					}
+				}
+				if (updateLampiranA3) {
+					createLampiranA3forQT(true);
+				}
+			}
+			//29007 note 503 end
 		}
 	}
 	private void generateLampiranA3PdfFromVelocity(ScAttachment attachment, ScLoa scLoa) throws Exception{
@@ -11139,6 +11171,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				getQtAwardSO().deleteLampiranA3Report(awardReqDTO);
 				}//29007-End
 			}
+			//29007 note 503 start
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getTplSpecAnswerList())){
+				boolean updateLampiranA3 = false;
+				for (TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()) {
+					if (StringUtils.isNotBlank(tplSpecAnswer.getNewSupplierOffer())
+							&& StringUtils.isNotBlank(this.getManagedBean().getNewSupplierJustification())) {
+						updateLampiranA3 = true;
+						break;
+					}
+				}
+				if (updateLampiranA3) {
+					createLampiranA3forQTVerification(true);
+				}
+			}
+			//29007 note 503 end
+
 		}
 		log.info("==============endcreateLampiranA3forQTVerification=============");
 	}//29007-End
