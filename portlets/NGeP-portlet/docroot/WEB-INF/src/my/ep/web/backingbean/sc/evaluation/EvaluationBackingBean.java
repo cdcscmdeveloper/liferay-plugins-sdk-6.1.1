@@ -2717,7 +2717,7 @@ public void saveComplianceSample() {
 							technicalsummaryChange(null);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+							SLAUtils.getInstance().logSLAError("QT", "Evaluationbackingbean", "docNo", "retriveSummaryEvaluationStage", getUserIdSessionFromLoginId(), e);
 						} //for wip we dont need dropdown
 
 					} else{
@@ -2759,7 +2759,7 @@ public void saveComplianceSample() {
 								technicalsummaryChange(null);
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
-								e.printStackTrace();
+								SLAUtils.getInstance().logSLAError("QT", "Evaluationbackingbean", "docNo", "retriveSummaryEvaluationStage", getUserIdSessionFromLoginId(), e);
 							} //for wip we dont need dropdown
 							this.getManagedBean().setEvaluatioStageActiveIndex(1);
 							this.getManagedBean().setTabTechnicalIndex(2);
@@ -3178,7 +3178,8 @@ public void saveComplianceSample() {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "RetrieveListofSpecificationsDetailForPresentationDemonstration", this.getManagedBean().getScQt().getQtNo(),
+					"retrivePresentationOrDemoEvaluationStage", getUserIdSessionFromLoginId(), e);//#sqube qt vulnerability minor idham @03 aug 2023
 		}
 
 	}
@@ -17656,7 +17657,8 @@ private void retriveCommitteeRemarksList(){
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "RetrieveListofTechnicalSpecificationForPresentationDemonstration", this.getManagedBean().getScQt().getQtNo(),
+					"demoSpectechnicalChecklist", getUserIdSessionFromLoginId(), e);//#sqube qt vulnerability minor idham @03 aug 2023
 		}
 		
 		return "/xhtml/sc/evaluation/evaluationStage/demoInvitationItemList.xhtml";
