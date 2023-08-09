@@ -47,7 +47,7 @@ import org.primefaces.model.TreeNode;
  * @author shafful TO ALLOW CALLING NOTICE BOARD FROM EXTERNAL SOURCE
  */
 
-@ManagedBean(name = "noticeBoardBackingBean")
+@ManagedBean(name = "noticeBoardGfmasRest")
 @ViewScoped
 @Path("/noticeboard")
 public class NoticeBoardGfmasRest extends SourcingBaseBackingBean<NoticeBoardManagedBean> implements Serializable {

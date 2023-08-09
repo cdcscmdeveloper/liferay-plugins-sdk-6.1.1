@@ -117,6 +117,7 @@
 			<portlet id="scSpecificationBusinessOwner" />
 			<portlet id="scSpecificationCommittee" />
 			<portlet id="scNoticeBoard" />
+			<portlet id="scNoticeBoardDetail" />
 			<portlet id="scLoiList" />
 			<portlet id="scLoiReview" />
 			<portlet id="scLoiSupplierResponse" />
