@@ -8033,13 +8033,7 @@ public class SmApplicationUtil {
 						) {
 					if (SmCommonUtil.isCollectionEmpty(catTypeList)
 							|| !catTypeList.contains(fac.getFacilityType())) {
-						// #34303 - start
-						for(SmSupplierCategoryFacility SmSupplierCategoryFacility : fac.getSmSupplierCategoryFacilities()){
-							if(SmSupplierCategoryFacility.getPmCategoryL3().isNotalloweddelete()){
-								facIt.remove();	
-							}
-						}
-						// #34303 - end
+						facIt.remove();	
 					}
 				}
 			}
