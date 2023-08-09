@@ -832,7 +832,7 @@ public class SmSideMenuIconUtil {
 						retVal = ICON_TICK;
 				}
 				else{
-					if(bean.isApproverUser()){
+					if(bean.isApproverUser() || bean.isReviewSiteVisit()){
 						retVal = ICON_UNTICK;
 					}
 					bean.setDocumentVerified(false);
