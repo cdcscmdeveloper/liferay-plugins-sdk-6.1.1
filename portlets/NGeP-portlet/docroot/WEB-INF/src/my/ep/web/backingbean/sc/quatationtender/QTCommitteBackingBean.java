@@ -115,6 +115,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
+import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 //#12471 End
 
 /**
@@ -2701,6 +2703,19 @@ public class QTCommitteBackingBean extends
 			List<PmUser> user=new ArrayList<PmUser>();
 			for (PmUser entity : modelList) {
 			if (entity.isSelected()) {
+				// #12471 Start
+				List<ScQtApproval> approvals = this.getManagedBean().getQt().getScQtApprovals();
+				if(approvals != null){
+					for (ScQtApproval approval : approvals) {
+						for (ScQtApproverSettings approvalUser : approval.getApproverSettings()) {
+							if (approvalUser.getPmUser().getUserId().equals(entity.getUserId())) {
+								throw new EpException(MessageConst.ERROR_775301,
+										new String[] { entity.getUserName() });
+							}
+						}
+					}
+				}
+				// #12471 End
 				user.add(entity);
 			}
 		}
