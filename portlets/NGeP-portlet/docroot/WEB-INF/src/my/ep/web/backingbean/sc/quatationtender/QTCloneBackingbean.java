@@ -13,12 +13,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 import javax.el.ELContext;
 import javax.faces.bean.ManagedBean;
@@ -31,7 +28,6 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
@@ -49,8 +45,6 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
@@ -76,12 +70,8 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmCity;
-import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -104,10 +94,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
-import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
-import my.ep.persistence.entity.sc.quationtender.ScQtRequestContent;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
@@ -117,7 +105,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplierZone;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
-import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
@@ -127,7 +114,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
@@ -140,14 +126,12 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.ApproverSettings;
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.QTFieldMapper;
-import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.persistence.indirection.IndirectList;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -339,7 +323,7 @@ public class QTCloneBackingbean extends
 				searchFilterBean.add(bean);
 			}
 			
-			Long statId=this.getManagedBean().getQt().getQtStatus().getStatusId();
+			//Long statId=this.getManagedBean().getQt().getQtStatus().getStatusId();
 			if (null != this.getManagedBean().getQt() 
 					&& null != this.getManagedBean().getPanel() 
 					//&& QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statId)
@@ -670,8 +654,8 @@ public class QTCloneBackingbean extends
 		debugLogger("onRowCloneAction");
 		this.getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());
 		ScQt scQt = (ScQt) event.getObject();
-		Long qtId = scQt.getQtId();
-		String evaluationType = scQt.getEvaluationType();
+		//Long qtId = scQt.getQtId();
+		//String evaluationType = scQt.getEvaluationType();
 		if(QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getQt().getQtStatus().getStatusId())){//25635-start
 		this.getManagedBean().setCloneCommitteeSelectQt(scQt);
 		}//25635-End
@@ -822,6 +806,7 @@ public class QTCloneBackingbean extends
 	}
 	
 	// public void addToClone(Long prevQtId,TreeNode[] selectedNodes){
+	@SuppressWarnings("deprecation")
 	public void addToClone() {
 		IQTDetailSO QtDetailsSO;
 		Long statusId=this.getManagedBean().getQt().getQtStatus().getStatusId();
@@ -1061,7 +1046,6 @@ public class QTCloneBackingbean extends
 								try {
 									uploadAttachment(qtDocReportAttachment,docReport.getScQtDocReportAttachment());
 								} catch (IOException e) {
-									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}//33954
 								qtDocReport.setScQtDocReportAttachment(qtDocReportAttachment);
@@ -1084,10 +1068,9 @@ public class QTCloneBackingbean extends
 					
 					if(null!=docDefinitionKey && SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
 							.equals(docDefinitionKey)){
-						IQTTemplateSO qtTemplateSO = null;
+						//IQTTemplateSO qtTemplateSO = null;
 						try{
-							qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(
-									ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
+							//qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
 							QTTemplateDocReqDTO reqDTO = new QTTemplateDocReqDTO();
 							if (docReport.getTplDocMaster() != null) {
 								templateDoc=Boolean.TRUE;//33954
@@ -1124,7 +1107,7 @@ public class QTCloneBackingbean extends
 							
 							
 						}finally{
-							qtTemplateSO = null;
+							//qtTemplateSO = null;
 						}
 					}
 					
@@ -1143,6 +1126,7 @@ public class QTCloneBackingbean extends
 		existedDocumets=null;
 	}
 	
+	/*
 	private void retrieveDocs2(ScQt copyQt){
 		debugLogger("addDocumentCloneAction");
 		ScQt scQt = this.getManagedBean().getQt();
@@ -1264,6 +1248,7 @@ public class QTCloneBackingbean extends
 		}
 		existedDocumets=null;
 	}
+	*/
 	
 	
 	private TplDocMaster cloneDocMasterDocSectionDetails(TplDocMaster templateDocMaster,ScQtDocReport scQtDocReport){
@@ -1540,7 +1525,7 @@ public class QTCloneBackingbean extends
 			}
 			if (qtContactPersons != null && !qtContactPersons.isEmpty()) {
 				List<ScQtContactPerson> persons=new ArrayList<ScQtContactPerson>();
-				PmUser user = new FacesScopes().getUserSessionBean();
+				//PmUser user = new FacesScopes().getUserSessionBean();
 //				ScQtContactPerson contactPerson = new ScQtContactPerson();
 //				contactPerson.setPhoneNo(user.getPhoneNo());
 //				contactPerson.setUser(user);
@@ -1660,7 +1645,7 @@ public class QTCloneBackingbean extends
 		}
 	}
 	
-	
+	/*
 	private List<ScQtContactPerson> generateDOAFromRequestContent(ScQtRequestContent requestContent, ScQt qt) throws IOException{
 		List<ScQtContactPerson> doaList = new ArrayList<ScQtContactPerson>();
 		Object content = requestContent.getRequestContent() == null ? new HashMap<Long, String>(): requestContent.getRequestContent();
@@ -1690,6 +1675,7 @@ public class QTCloneBackingbean extends
 		}
 		return doaList;
 	}
+	*/
 	
 	private ScQtContactPerson populateContact(ScQtContactPerson origin,String type){
 		ScQtContactPerson contactPerson = new ScQtContactPerson();
@@ -2031,7 +2017,6 @@ public class QTCloneBackingbean extends
 						try {
 							uploadAttachment(att,attachment);
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						approverAttachments.add(att);
@@ -2165,7 +2150,6 @@ public class QTCloneBackingbean extends
 					try {
 						uploadAttachment(att,attachment);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					approverAttachments.add(att);
@@ -2540,6 +2524,8 @@ public class QTCloneBackingbean extends
 			}
 		}
 	}
+	
+	/*
 	private void retrieveApproval(List<ScQtApproval> requiredApproval,ScQt copyScqt){
 		if (requiredApproval != null) {
 			List<TabBean> tabBeans = new ArrayList<TabBean>();
@@ -2581,6 +2567,7 @@ public class QTCloneBackingbean extends
 				}
 			}
 	}
+	*/
 	
 	/**
 	 * Approver setting dtls.
@@ -2591,6 +2578,7 @@ public class QTCloneBackingbean extends
 	 *            the approval
 	 * @return the dual list model
 	 */
+	/*
 	private DualListModel<ScQtApproverSettings> approverSettingDtls(
 			RoleCode code, Long orgProfileId, ScQtApproval approval) {
 		List<ScQtApproverSettings> availableApprovers = new ArrayList<ScQtApproverSettings>();
@@ -2643,12 +2631,14 @@ public class QTCloneBackingbean extends
 		return new DualListModel<ScQtApproverSettings>(availableApprovers,
 				selectedApprovers);
 	}
+	*/
 	
 	/**
 	 * Remove pmUser if contains loggined in Desk Officer
 	 * 
 	 * @param approvers
 	 */
+	/*
 	private void removeDeskOfficer(List<PmUser> approvers) {
       log.debug("removeDeskOfficer");
 		if (CollectionUtils.isNotEmpty(approvers)) {
@@ -2664,12 +2654,11 @@ public class QTCloneBackingbean extends
 					break;
 				}
 			}
-			/*if (isDO) {
-				approvers.remove(index);
-			}*/
+
 		}
 		log.debug("endremoveDeskOfficer");
 	}
+	*/
 	
 	/**
 	 * Update qt dtls.
@@ -2948,7 +2937,6 @@ public class QTCloneBackingbean extends
 					if (fcSecretaries != null && fcSecretaries.length > 0) {
 						fcSecretaryCode = retrieveParameterById(Long
 								.valueOf(fcSecretaries[0].getValue().toString()));
-						;
 					} else {
 						fcSecretaryCode = null;
 					}
@@ -3284,8 +3272,7 @@ public class QTCloneBackingbean extends
 		return qtCommitte;
 	}
 	
-	
-	
+	/*	
 	private boolean isIndirectWithInstantiated(Object o){
 		
 		if(o instanceof IndirectList) {
@@ -3295,7 +3282,9 @@ public class QTCloneBackingbean extends
 		
 		return true;
 	}
+	*/	
 	
+	/*
 	private void retrieveCommitteeMembers2(ScQt copyScqt){
 		String commType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;
 		ICommitteSO committeSO;
@@ -3388,6 +3377,7 @@ public class QTCloneBackingbean extends
 			committeSO=null;
 		}
 	}
+	*/
 	
 	
 	private ScQt retrieveSupplierCriteria(ScQt scQt,ScQt copyScqt,IQTDetailSO QtDetailsSO){
@@ -3629,6 +3619,7 @@ public class QTCloneBackingbean extends
 		return scQt;
 	}
 	
+	/*
 	private void retrieveSupplierCriteria2(ScQt scQt,ScQt copyScqt,IQTDetailSO QtDetailsSO){
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		tenderReqDTO.setQtdetail(copyScqt);
@@ -3682,6 +3673,7 @@ public class QTCloneBackingbean extends
 			}
 		}
 	}
+	*/
 	
 	private void retriveZonesByCircularNo() {
 		debugLogger("retriveZonesByCircularNo");
@@ -3772,6 +3764,7 @@ public class QTCloneBackingbean extends
 		}
 	}
 	
+	/*
 	private void retrieveNonZonalDtls() {
 		log.debug("retrieveNonZonalDtls - START");
 		ScQt scQt = this.getManagedBean().getQt();
@@ -3810,15 +3803,15 @@ public class QTCloneBackingbean extends
 		}
 		log.debug("retrieveNonZonalDtls - END");
 	}
+	*/
  
- /**
+	/**
 	 * Retriev location dtls.
 	 * 
 	 * @param scQtLocCriteriaList
 	 *            the sc qt loc criteria list
-	 */
- 
- 
+	 */ 
+	/*
 	private void retrievLocationDtls(List<ScQtLocCriteria> scQtLocCriteriaList) {
 		log.debug("retrievLocationDtls - START");
 		List<PmState> states = SourcingLocationHelper
@@ -3942,7 +3935,9 @@ public class QTCloneBackingbean extends
 		}
 		log.debug("retrievLocationDtls - END");
 	}
+	*/
 	
+	/*
 	private List<ScQtLocCriteria> getLocationsList(TreeNode zoneLocation) {
 		List<ScQtLocCriteria> results = new ArrayList<ScQtLocCriteria>();
 		for (TreeNode zoneNode : zoneLocation.getChildren()) {
@@ -3980,15 +3975,10 @@ public class QTCloneBackingbean extends
 				}
 			}
 		}
-		/*
-		 * if (zoneLocation.isLeaf()) {
-		 * 
-		 * } else { for (TreeNode childrendLocationNode :
-		 * zoneLocation.getChildren()) {
-		 * results.addAll(getLocationsList(childrendLocationNode)); } }
-		 */
+
 		return results;
 	}
+	*/
 	
 	private void retrieveQtnDetails(ScQt scQt,ScQt copyScqt,IQTDetailSO QtDetailsSO){
 		//ScQt scQt=new ScQt();
@@ -4231,6 +4221,8 @@ public class QTCloneBackingbean extends
 		}
 	
 	}
+	
+	/*
 	private void retrieveQtnDetails2(ScQt scQt,ScQt copyScqt,IQTDetailSO QtDetailsSO){
 		scQt.setFileNo(null);
 		
@@ -4312,6 +4304,7 @@ public class QTCloneBackingbean extends
 		this.getManagedBean().setQt(scQt);
 		
 	}
+	*/
 	
 	private void populateZoneDetailIntoTreeNode(ScQt scQt, List<TplSpecZoneDtl> specZoneDtls) {
 		
@@ -5176,8 +5169,10 @@ public class QTCloneBackingbean extends
 		return startMonth;
 	}//33916
 	
+	/*
 	private void foo() {
 		// This is a dummy method
 	}
+	*/
 	
 }
