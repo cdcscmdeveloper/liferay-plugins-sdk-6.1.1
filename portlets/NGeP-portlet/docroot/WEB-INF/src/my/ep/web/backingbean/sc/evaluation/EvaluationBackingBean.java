@@ -31,7 +31,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -2620,7 +2619,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 						try {
 							technicalsummaryChange(null);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} //for wip we dont need dropdown
 
@@ -2662,7 +2660,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							try {
 								technicalsummaryChange(null);
 							} catch (Exception e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							} //for wip we dont need dropdown
 							this.getManagedBean().setEvaluatioStageActiveIndex(1);
@@ -4659,8 +4656,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 	public void specTabChange() {
 		// #25138, #21695 -start-
 		IQTEvaluationSO evaluationSO = null;
-		EvaluationReqDTO evalReqDTO = new EvaluationReqDTO();
-		EvaluationResDTO evalResDTO = new EvaluationResDTO();
+		//EvaluationReqDTO evalReqDTO = new EvaluationReqDTO();
+		//EvaluationResDTO evalResDTO = new EvaluationResDTO();
 		// #25138, #21695 -end-
 		
 		try {
@@ -7336,16 +7333,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				 */
 				resDTO = evaluationSo.checkDemoAndUploadChecklistStatus(reqDTO);
 				if (resDTO.getPendingCount() > 0) {
-					String checklistScoring = ResourceBundleUtils.getMessage(
-							"lbl.sc.checklist.scoring.completed", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale());
+					//String checklistScoring = ResourceBundleUtils.getMessage("lbl.sc.checklist.scoring.completed", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 					this.getManagedBean().setEvaluatioStageActiveIndex(0);
 					//34833 - start
-					String checkListValue =  ResourceBundleUtils.getMessage(
-							"lbl.sc.checklist.checklist.value.completed", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale());
+					String checkListValue =  ResourceBundleUtils.getMessage("lbl.sc.checklist.checklist.value.completed", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 					String addColon = ": ";
 					this.getManagedBean().setEvaluatioStageActiveIndex(0);
 					throw new EpException(MessageConst.ERROR_760266,
@@ -8939,12 +8930,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				// #28784 -start-
 				if (getManagedBean().getScQt().isDemoRequired()) {
 					this.getManagedBean().setScQtEvaluationReportList(resDTO.getReports());
-					for (ScQtEvaluationReport evalReport : resDTO.getReports()) {
-					}
+					//for (ScQtEvaluationReport evalReport : resDTO.getReports()) { }
 				} else {
 					for (ScQtEvaluationReport evalReport : resDTO.getReports()) {
-						if (!evalReport.getTitle().equalsIgnoreCase("Ulasan pembentangan demonstrasi")
-								&& !evalReport.getTitle().equalsIgnoreCase("Ulasan pembentangan/demonstrasi")) {
+						if (!evalReport.getTitle().equalsIgnoreCase("Ulasan pembentangan demonstrasi") && !evalReport.getTitle().equalsIgnoreCase("Ulasan pembentangan/demonstrasi")) {
 							evaluationReports.add(evalReport);
 						}
 					}
@@ -13588,7 +13577,7 @@ private void retriveCommitteeRemarksList(){
 		private Long checkListId;
 		private Boolean compliance;
 		private String evalStage;
-		private Boolean scoringReq; //32426, #25138, #21695
+		//private Boolean scoringReq; //32426, #25138, #21695
 
 		/**
 		 * Constructor for Compliance Supplier Paging Data Model
@@ -13609,7 +13598,7 @@ private void retriveCommitteeRemarksList(){
 		public ComplianceSupplierPagingDataModel(String componentId, Long checkListId, Boolean compliance, Long qtId,
 				String evalStage, Boolean scoringReq) {
 			this(componentId, checkListId, compliance, qtId, evalStage);
-			this.scoringReq = scoringReq;
+			//this.scoringReq = scoringReq;
 		}
 		// 32426, #25138, #21695 -end
 
@@ -14165,11 +14154,14 @@ private void retriveCommitteeRemarksList(){
 					.getComplianceTechnicalProposalCheckListDM().getList();
 
 			if (null != uploadedList && !uploadedList.isEmpty()) {
-				PmStatus Status = getPmStatusByStatusId(QTStatusConst.PR_COMPLETED);
-				for (ScQtProposalChecklist uploadedChecklist : uploadedList) {
-					uploadedChecklist.setEvaluationStatus(Status);
+				//Bug #34815 start
+				if (!this.getManagedBean().isReadOnly()){
+					PmStatus Status = getPmStatusByStatusId(QTStatusConst.PR_COMPLETED);
+					for (ScQtProposalChecklist uploadedChecklist : uploadedList) {
+						uploadedChecklist.setEvaluationStatus(Status);
+					}
 				}
-
+				//Bug #34815 end
 				reqDTO.setComplianceList(uploadedList);
 
 			}
@@ -14840,35 +14832,32 @@ private void retriveCommitteeRemarksList(){
 	}
 	
 	
-	private void saveEvaluationReportsDtls(){
+	private void saveEvaluationReportsDtls() {
 		IQTEvaluationSO evaluationSO = null;
-		try{
-			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-		List<ScQtEvaluationReport> evaluationReportList=this.getManagedBean().getScQtEvaluationReportList();
-		EvaluationReqDTO reqDTO=new EvaluationReqDTO();
-		reqDTO.setEvaluationReportList(evaluationReportList);
-		reqDTO.setReportType(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
-		if(CollectionUtils.isNotEmpty(getManagedBean()
-				.getReportsToBeRemovedList())){
-			List<ScQtEvaluationReport> localReports=new ArrayList<ScQtEvaluationReport>();
-		for(ScQtEvaluationReport evaluationReport:getManagedBean()
-				.getReportsToBeRemovedList()){
-			if(null!=evaluationReport.getQtReportId() && !evaluationReport.isBrandNew()){
-				evaluationReport.setDeleted(true);
-				localReports.add(evaluationReport);
+		try {
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			List<ScQtEvaluationReport> evaluationReportList = this.getManagedBean().getScQtEvaluationReportList();
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setEvaluationReportList(evaluationReportList);
+			reqDTO.setReportType(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+			if (CollectionUtils.isNotEmpty(getManagedBean().getReportsToBeRemovedList())) {
+				List<ScQtEvaluationReport> localReports = new ArrayList<ScQtEvaluationReport>();
+				for (ScQtEvaluationReport evaluationReport : getManagedBean().getReportsToBeRemovedList()) {
+					if (null != evaluationReport.getQtReportId() && !evaluationReport.isBrandNew()) {
+						evaluationReport.setDeleted(true);
+						localReports.add(evaluationReport);
+					}
+
+				}
+				reqDTO.setToBeRemovedReportList(localReports);
 			}
-			
-		}
-		reqDTO.setToBeRemovedReportList(localReports);
-		}
-		EvaluationResDTO resDto=evaluationSO.saveReportsDtls(reqDTO);
-		getManagedBean()
-		.setReportsToBeRemovedList(null);
-		}finally{
+			//EvaluationResDTO resDto = evaluationSO.saveReportsDtls(reqDTO);
+			evaluationSO.saveReportsDtls(reqDTO);
+			getManagedBean().setReportsToBeRemovedList(null);
+		} finally {
 			evaluationSO = null;
 		}
-		
+
 	}
 	
 	//Enhancement #26339 -start-
@@ -15464,8 +15453,7 @@ private void retriveCommitteeRemarksList(){
 		int total = 0;
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = new EvaluationResDTO();
-		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+		//ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 
 		try {
 
@@ -15519,8 +15507,8 @@ private void retriveCommitteeRemarksList(){
 	 * @return navigate to supplier information page.
 	 */
 	public String technicalSupplierEvaluatePackage(Long proposalId, Integer supplierNo, String checkListType) {
-		IQTEvaluationSO evaluationSO = null;
-		EvaluationResDTO resDTO = new EvaluationResDTO();
+		//IQTEvaluationSO evaluationSO = null;
+		//EvaluationResDTO resDTO = new EvaluationResDTO();
 		
 		this.getManagedBean().setCheckListType(checkListType);
 		this.getManagedBean().setSupplierNo(supplierNo);
@@ -15538,7 +15526,7 @@ private void retriveCommitteeRemarksList(){
 			return "/xhtml/sc/evaluation/evaluationStage/technical/technicalTemplateSpecScoring.xhtml";
 
 		} finally {
-			evaluationSO = null;
+			//evaluationSO = null;
 		}
 	}
 	// #25138-Ahmaa-End
@@ -15555,7 +15543,7 @@ private void retriveCommitteeRemarksList(){
 		private static final long serialVersionUID = 1L;
 		private Long qtId;
 		private List<ScQtCheckList> checkList;
-		private Boolean compliance;
+		//private Boolean compliance;
 		private String evalStage;
 		private String docType;
 		private String pmCode;
@@ -15570,7 +15558,7 @@ private void retriveCommitteeRemarksList(){
 
 			super(componentId);
 			this.checkList = checkList;
-			this.compliance = compliance;
+			//this.compliance = compliance;
 			this.qtId = qtId;
 			this.evalStage = evalStage;
 			this.docType = docType;
@@ -15722,11 +15710,11 @@ private void retriveCommitteeRemarksList(){
 	public int calculateItemScores(ScQtProposalChecklist qtProposalChecklist) {
 		if (null != qtProposalChecklist) {
 			ITemplateSpecSO templateSpecSO = null;
-			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
+			//TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 			templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance().getServiceObject("cc",
 					ITemplateSpecSO.class);
 			TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-			TemplateSpecBean templateSpecBean = getManagedBean().getTemplateSpecBean();
+			//TemplateSpecBean templateSpecBean = getManagedBean().getTemplateSpecBean();
 
 			specReqDTO.setSupplier(qtProposalChecklist.getScQtProposal().getScQtSupplier().getSmSupplier());
 			specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_SCORE);
@@ -17257,10 +17245,10 @@ private void retriveCommitteeRemarksList(){
 	// #28784 -start-	
 	public String retrieveTotalTechnicalItemScore(ScQtEvaluationResultDtl propId) {
 		String totalTechScore = null;
-		String strDemoScore = null;
+		//String strDemoScore = null;
 		BigDecimal technicalScore = new BigDecimal(0);
 		BigDecimal totalNum = new BigDecimal(0);
-		BigDecimal demoScore = new BigDecimal(0);
+		//BigDecimal demoScore = new BigDecimal(0);
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = new EvaluationResDTO();
 
