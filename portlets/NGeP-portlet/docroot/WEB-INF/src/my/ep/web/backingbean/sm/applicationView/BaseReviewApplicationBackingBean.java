@@ -805,6 +805,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		initStep8_9PoApproverDefaultDecision();
 		initBumiRecommendNote();
 		//#32008 - start
+		getManagedBean().setShowFieldChanges(false);
 		getManagedBean().setLatestAppl(null);
 		if (!getManagedBean().isPoApprUnClaimTask() && !getManagedBean().isRevisionDialog() 
 				&& getManagedBean().isViewApplicationHistory() 
