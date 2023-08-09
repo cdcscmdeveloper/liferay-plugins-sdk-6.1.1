@@ -188,55 +188,72 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		log.info("generate reportCode" + getManagedBean().getReportCode());
 		log.info("generate reportName" + getManagedBean().getReportName());
 		
-		//#35015 Wip 4ser - Start
-		long qtId = Long.parseLong(this.getManagedBean().getQuotationId());
+		// #35015 Wip 4ser - Start
+		if (QtReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())
+				|| QtReportConst.SC_OPENING_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())
+				|| QtReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean()
+						.getReportCode())
+				|| QtReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL
+						.equals(this.getManagedBean().getReportCode())
+				|| QtReportConst.SC_BRIEFING_PAPER_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
 
-		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			long qtId4ser = Long.parseLong(this.getManagedBean().getQuotationId());
 
-		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
-		req4SerDTO.setQtId(qtId);
-		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 
-		String reportCode = StringUtils.EMPTY;
-		String reportName = StringUtils.EMPTY;
-		if (QtReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
-			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-				reportCode = ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL_WIP;
-				reportName = ReportConst.SC_EC_RPT_WIP_JSP;
-			} else {
-				reportCode = ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL;
-				reportName = ReportConst.SC_EC_RPT_JSP;
+			EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+			req4SerDTO.setQtId(qtId4ser);
+			int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+
+			String reportCode = StringUtils.EMPTY;
+			String reportName = StringUtils.EMPTY;
+			if (QtReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+				if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+					reportCode = ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+					reportName = ReportConst.SC_EC_RPT_WIP_JSP;
+				} else {
+					reportCode = ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL;
+					reportName = ReportConst.SC_EC_RPT_JSP;
+				}
+			} else if (QtReportConst.SC_OPENING_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+				if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+					reportCode = ReportConst.SC_OPENING_COMMITTEE_RPT_VAL_WIP;
+					reportName = ReportConst.SC_OC_RPT_WIP_JSP;
+				} else {
+					reportCode = ReportConst.SC_OPENING_COMMITTEE_RPT_VAL;
+					reportName = ReportConst.SC_OC_RPT_JSP;
+				}
+			} else if (QtReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean()
+					.getReportCode())) {
+				if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+					reportCode = ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+					reportName = ReportConst.SC_TEC_RPT_WIP_JSP;
+				} else {
+					reportCode = ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL;
+					reportName = ReportConst.SC_TEC_RPT_JSP;
+				}
+			} else if (QtReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean()
+					.getReportCode())) {
+				if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+					reportCode = ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+					reportName = ReportConst.SC_FEC_RPT_WIP_JSP;
+				} else {
+					reportCode = ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL;
+					reportName = ReportConst.SC_FEC_RPT_JSP;
+				}
+			} else if (QtReportConst.SC_BRIEFING_PAPER_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+				if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+					reportCode = ReportConst.SC_BRIEFING_PAPER_RPT_VAL_WIP;
+					reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_WIP_JSP;
+				} else {
+					reportCode = ReportConst.SC_BRIEFING_PAPER_RPT_VAL;
+					reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
+				}
 			}
-		} else if (QtReportConst.SC_OPENING_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
-			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-				reportCode = ReportConst.SC_OPENING_COMMITTEE_RPT_VAL_WIP;
-				reportName = ReportConst.SC_OC_RPT_WIP_JSP;
-			} else {
-				reportCode = ReportConst.SC_OPENING_COMMITTEE_RPT_VAL;
-				reportName = ReportConst.SC_OC_RPT_JSP;
-			}
-		} else if (QtReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean()
-				.getReportCode())) {
-			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-				reportCode = ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
-				reportName = ReportConst.SC_TEC_RPT_WIP_JSP;
-			} else {
-				reportCode = ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL;
-				reportName = ReportConst.SC_TEC_RPT_JSP;
-			}
-		} else if (QtReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL
-				.equals(this.getManagedBean().getReportCode())) {
-			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-				reportCode = ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
-				reportName = ReportConst.SC_FEC_RPT_WIP_JSP;
-			} else {
-				reportCode = ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL;
-				reportName = ReportConst.SC_FEC_RPT_JSP;
-			}
+			this.getManagedBean().setReportName(reportName);
+			this.getManagedBean().setReportCode(reportCode);
 		}
-		this.getManagedBean().setReportName(reportName);
-		this.getManagedBean().setReportCode(reportCode);
 		// #35015 Wip 4ser - End
 
 		params.put(QtReportConst.PARAM_KEY_REPORT, getManagedBean()
