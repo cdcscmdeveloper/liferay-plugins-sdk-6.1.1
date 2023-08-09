@@ -2136,7 +2136,7 @@ public class ContractManagedBean extends BaseManagedBean {
 				IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 
-				resDTO = contractItemSO.searchProductServiceItemDtls(reqDTO);
+				resDTO = contractItemSO.searchProductServiceItemDtls(reqDTO,false);
 				// contractBb.getManagedBean().setProdcollapse(true);
 				// log.info("*****ContractListingPagingDataModel getContractItemResultBean().getResultList().size()******"+resDTO.getContractItemResultBean().getResultList().size());
 				if (resDTO.getContractItemResultBean().getResultList().size() > 0) {
@@ -2317,7 +2317,7 @@ public class ContractManagedBean extends BaseManagedBean {
 					IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 
-					resDTO = contractItemSO.searchProductServiceItemDtls(reqDTO);
+					resDTO = contractItemSO.searchProductServiceItemDtls(reqDTO,false);
 					resDTO.getContractItemResultBean();
 					// contractBb.getManagedBean().setServicecollapse(true);
 					// log.info("*****ServiceListingPagingDataModel getContractItemResultBean().getResultList().size()******"+resDTO.getContractItemResultBean().getResultList().size());

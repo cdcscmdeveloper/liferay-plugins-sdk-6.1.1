@@ -359,7 +359,7 @@ private class ServiceListingPagingDataModel extends PagingDataModel<CtContractIt
 					
 					if(isServicecollapse()){
 				
-						resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
+						resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO,false);
 					    resDTO.getContractItemResultBean();
 
 					    if(resDTO.getContractItemResultBean().getResultList().size()>0){
@@ -505,7 +505,7 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
             	
             	if(isProdcollapse()){
 				
-				resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
+				resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO,false);
 				if(resDTO.getContractItemResultBean().getResultList().size()>0) {
 //			    	 readOnly=false;
 			    	 return resDTO.getContractItemResultBean();
