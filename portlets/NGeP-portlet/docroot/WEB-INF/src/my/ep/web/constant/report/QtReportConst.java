@@ -37,11 +37,16 @@ public class QtReportConst implements Serializable {
 	public static final String SC_PROPOSAL_DTLS_PRODUCT_RPT_VAL = "SC_046";
 	public static final String SC_PROPOSAL_DTLS_SERVICE_RPT_VAL = "SC_047";
 	public static final String SC_BRIEFING_PAPER_RPT_VAL = "SC_048";
+	public static final String SC_BRIEFING_PAPER_RPT_VAL_WIP = "SC_081";
 	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL = "SC_049";
+	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_082";
 	public static final String SC_LETTER_OF_ACCPT_CONTENT_RPT_VAL = "SC_075";
 	public static final String SC_OPENING_COMMITTEE_RPT_VAL = "SC_071";
+	public static final String SC_OPENING_COMMITTEE_RPT_VAL_WIP = "SC_084";
 	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_072";
+	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_085";
 	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_073";
+	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_083";
 	
 	
 	//Report parameterKey
@@ -157,6 +162,33 @@ public class QtReportConst implements Serializable {
 	public  String getSC_LETTER_OF_ACCPT_CONTENT_RPT_VAL() {
 		return SC_LETTER_OF_ACCPT_CONTENT_RPT_VAL;
 	}
-
-
+	//#35015-start
+	/**
+	 * @return the SC_EVALUATION_COMMITTEE_RPT_VAL_WIP
+	 */
+	public String getSC_EVALUATION_COMMITTEE_RPT_VAL_WIP() {
+		return SC_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+	}
+	/**
+	 * @return the SC_OPENING_COMMITTEE_RPT_VAL_WIP
+	 */
+	public String getSC_OPENING_COMMITTEE_RPT_VAL_WIP() {
+		return SC_OPENING_COMMITTEE_RPT_VAL_WIP;
+	}
+	/**
+	 * @return the SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP
+	 */
+	public String getSC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP() {
+		return SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+	}
+	/**
+	 * @return the SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP
+	 */
+	public String getSC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP() {
+		return SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+	}
+	//#35015 -end
+	public String getSC_BRIEFING_PAPER_RPT_VAL_WIP() {
+		return SC_BRIEFING_PAPER_RPT_VAL_WIP;
+	}
 }
