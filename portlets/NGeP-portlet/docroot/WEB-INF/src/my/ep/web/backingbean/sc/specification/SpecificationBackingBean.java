@@ -10661,8 +10661,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	public void specCommitteBpmTask(String action) {
 		// #25638 -end-
 		// #1873 -start-
-		if (assertPendingFinancialSubmission())
+		// #34837 - start
+		if (assertPendingFinancialSubmission() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT))
 			return;
+		// #34837 - end
 		// #1873 -end-
 
 		FacesScopes facesScopes = new FacesScopes();
@@ -15325,8 +15327,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	public void specCommitteMaintenanceBpmTask(String action) {
 		// #25638 -end-
 		// #1873 -start-
-		if (assertPendingFinancialSubmission())
+		// #34837 - start
+		if (assertPendingFinancialSubmission() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT))
 			return;
+		// ##34837 - end
 		// #1873 -end-
 
 		FacesScopes facesScopes = new FacesScopes();
