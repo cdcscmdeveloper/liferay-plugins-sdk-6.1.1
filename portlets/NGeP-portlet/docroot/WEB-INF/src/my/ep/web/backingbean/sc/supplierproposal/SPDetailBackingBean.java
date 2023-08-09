@@ -124,7 +124,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.pm.AddressType;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
@@ -1714,7 +1713,8 @@ public class SPDetailBackingBean extends
 								.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
 
 				} else{
-					if (finProposalChecklist.isSubmitted()){
+					//#34493,#34427 - start
+					/*if (finProposalChecklist.isSubmitted()){
 						if (finProposalChecklist
 								.getScQtProposalChecklistAttachment() == null) {
 							finProposalChecklist.setSubmitted(false);
@@ -1727,7 +1727,15 @@ public class SPDetailBackingBean extends
 					}else{
 						finProposalChecklist
 						.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-					}
+					}*/
+					if (finProposalChecklist.getScQtProposalChecklistAttachment() == null) {
+						finProposalChecklist.setSubmitted(false);
+						finProposalChecklist.setCompliance(null);
+					} else{
+						finProposalChecklist.setSubmitted(true);
+						finProposalChecklist.setCompliance(null);
+					} 
+					//34493,#34427 - end
 				}
 			}
 
@@ -2267,8 +2275,9 @@ public class SPDetailBackingBean extends
 					//end Bug #28887
 
 				} else {
+						//#34493,#34427 - start
 						//start Bug #28887
-						if (null != assetProposalChecklist) {
+						/*if (null != assetProposalChecklist) {
 							if (assetProposalChecklist.isSubmitted()) {
 								if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null 
 										|| (scQtPRPAssetLiability.getCurrentAssets() != null)
@@ -2288,8 +2297,16 @@ public class SPDetailBackingBean extends
 								assetProposalChecklist.setSubmitted(false);
 								assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 							}
-						}
+						}*/
 						//end Bug #28887
+						if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null) {
+							assetProposalChecklist.setSubmitted(false);
+							assetProposalChecklist.setCompliance(null);
+						} else{
+							assetProposalChecklist.setSubmitted(true);
+							assetProposalChecklist.setCompliance(null);
+						} 
+						//#34493,#34427 - end
 				}
 			}
 			
@@ -5947,13 +5964,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			proposalSO = null;
 		}
 	}
-	
-	/* 27368 - start */
-	public boolean enableQtNoHyperlink() {
-		return userHasRole(new RoleCode[] { RoleCode.DESK_OFFICER, RoleCode.BPK_AUDITOR });
-	}
-	/* 27368 - end */
-	
+
 	//#25089@hatta - start
 	public void onTabChange(TabChangeEvent event){
 		if(event.getTab().getId().equals("tab1")){

@@ -1169,7 +1169,7 @@ public class QtSpecCloneBackingBean extends
 		this.getManagedBean().getQt().setEstimateAmt(null);
 		this.getManagedBean().getQt().setEstimatedAmount(null);
 		// 25635&34176-End
-		
+		this.getManagedBean().getQt().setCloned(Boolean.TRUE);//34320&25635
 		specificationBackingBean.saveSpecificationCommitteeDtls();
 	}	
 	
