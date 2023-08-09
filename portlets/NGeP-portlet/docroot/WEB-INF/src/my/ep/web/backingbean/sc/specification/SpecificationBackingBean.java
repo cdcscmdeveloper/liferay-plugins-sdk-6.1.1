@@ -16590,8 +16590,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 		}
 		//#15391 - end
-		
-		retriveTechnicalCheckList(); // 1873 - note 52
 
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
