@@ -107,6 +107,7 @@ import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.specification.SpecificationBackingBean;
@@ -4217,7 +4218,10 @@ public class CreateQtBackingBean extends
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			//Sonarqube QT Vulnerability Minor #44
+			SLAUtils.getInstance().logSLAError("QT", "PickYesToDeleteExistingDemoTechChecklist",
+					this.getManagedBean().getQt().getQtId().toString(), "yesDeleteExistingDemoTechChecklist",
+					getUserIdSessionFromLoginId(), e);
 		}
 	}
 
