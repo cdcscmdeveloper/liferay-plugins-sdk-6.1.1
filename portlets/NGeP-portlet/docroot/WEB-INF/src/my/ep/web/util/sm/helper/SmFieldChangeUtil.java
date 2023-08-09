@@ -1371,8 +1371,7 @@ public class SmFieldChangeUtil {
 	}
 	//#32008 - start
 	/**
-	 * Initialize the previous application to check for supplier edit 
-	 * & use serialized supplier appl if available
+	 * Initialize the previous application to check for supplier edit
 	 * @param bean
 	 */
 	public static void initLatestAppl(BaseReviewApplicationManagedBean bean){
