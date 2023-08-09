@@ -23147,6 +23147,19 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				e.printStackTrace();
 			}
 		}
+		
+		try{
+			downloadFile(attachment);			
+		}
+		catch(IOException ex){
+			if(ex instanceof FileNotFoundException){
+				handleException(new EpException(MessageConst.ERROR_760411, new String[]{this.getManagedBean().getQt().getQtNo()}));
+			}
+			
+		}
+		catch(EpException ex){
+			handleException(ex);
+		}
 	}
 	public void generateFinancialChecklistPreviewPdfFromVelocity(List<ScQtCheckList> scQtCheckSt2financeProposalList) throws Exception{
 		VelocityContext context = new VelocityContext();

@@ -12835,8 +12835,14 @@ public void retrieveDemoQtDetails(Long qtId) {
 			resDTO = committeSO.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
 			List<ScCommitteeMember> committeeMembersList = resDTO.getCommMemberResultBean().getResultList();
 			qtReqDTO.setScCommitteeMemberList(committeeMembersList);
-		} finally {
-			committeSO = null;
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", 
+					"QTDetailBackingBean", this.getManagedBean().getQt().getQtNo(),
+					"initiateInactiveChecklistProcessForDoc", getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
 		}
 
 		qtReqDTO.setQtdetail(this.getManagedBean().getQt());
