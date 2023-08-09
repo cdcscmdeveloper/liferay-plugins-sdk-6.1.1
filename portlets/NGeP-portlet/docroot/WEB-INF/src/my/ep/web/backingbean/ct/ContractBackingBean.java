@@ -133,6 +133,7 @@ import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.util.pm.OrgProfileUtil;
 //import my.ep.util.shared.PerformanceBondUtil; // Fix - #33491
@@ -4755,7 +4756,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			loaDetailBackingBean.downloadFile(scAttachment);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//Sonarqube #G29 - start
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "downloadScAttachmentFile", scAttachment.getDocNo(), "scAttachment", getUserIdSessionFromLoginId(), e);
+			//Sonarqube #G29 - end
 		}
 	}
 	
