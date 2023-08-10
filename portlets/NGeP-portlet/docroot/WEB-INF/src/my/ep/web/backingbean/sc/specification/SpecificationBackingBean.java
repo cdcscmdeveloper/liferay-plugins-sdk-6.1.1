@@ -11822,11 +11822,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 * @return navigate to acknowledgement page.
 	 */
 	public void specCommitteBpmTask(String action) {
-		// #1873 -start-
-		if (assertPendingFinancialSubmission())
-			return;
-		// #1873 -end-
-
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
@@ -16595,8 +16590,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 		}
 		//#15391 - end
-		
-		retriveTechnicalCheckList(); // 1873 - note 52
 
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
@@ -16618,10 +16611,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	// #25638 -start-
 	public void specCommitteMaintenanceBpmTask(String action) {
 		// #25638 -end-
-		// #1873 -start-
-		if (assertPendingFinancialSubmission())
+		// #1873 #34837 -start-
+		if (assertPendingFinancialSubmission() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT))
 			return;
-		// #1873 -end-
+		// #1873 #34837 -end-
 
 		FacesScopes facesScopes = new FacesScopes();
 
