@@ -231,7 +231,7 @@
 	<bean id="SM_RPT_BASIC_ACCOUNT" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="rowNum" />
 
-		<property name="daoClass" value="my.ep.persistence.dao.sm.ViewBasicAccountWithMofDAO" />
+		<property name="daoClass" value="my.ep.persistence.dao.sm.VBasicAccountWithMofDAO" />
 		<property name="searchMethod" value="retrieveBasicAccountList" />
 		<property name="columns">
 			<list>
