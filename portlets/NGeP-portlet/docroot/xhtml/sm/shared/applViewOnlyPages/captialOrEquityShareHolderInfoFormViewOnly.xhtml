@@ -7,8 +7,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:panelGroup id="shrHolderPanGroup">
-		<p:panel header="#{lbl['lbl.sm.shrHldrInfo.panHdr']}"
-			toggleable="true">
+		<!-- #33783 -->
+		<p:panel header="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.companyTypeSSM 
+			== SupplierManagementConst.COMPANY_TYPE_CLBG ? 
+			lbl['lbl.sm.shrHldrInfo.panHdr.clbg'] : lbl['lbl.sm.shrHldrInfo.panHdr']}" toggleable="true">
 			
 			<p:outputPanel id="shrInfPan" layout="block">
 				
