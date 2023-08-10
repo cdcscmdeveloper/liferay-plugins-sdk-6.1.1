@@ -132,6 +132,7 @@ import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -2026,8 +2027,10 @@ public class QTCloneBackingbean extends
 						try {
 							uploadAttachment(att,attachment);
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							//Sonarqub QT Vulnerability Minor Danial [3/8/2023] START			 
+							SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_CLONE_BACKINGBEAN, scQt.getQtNo(),
+									SLALogConstant.QT_RETRIEVE_PUBLICATION_APPROVAL_TAB_DTL, getUserIdSessionFromLoginId(), e);
+							//Sonarqube QT Vulnerability Minor Danial [3/8/2023] END
 						}
 						approverAttachments.add(att);
 					}
@@ -2160,8 +2163,10 @@ public class QTCloneBackingbean extends
 					try {
 						uploadAttachment(att,attachment);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//Sonarqube QT Vulnerability Minor Danial [3/8/2023] START			 
+						SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_CLONE_BACKINGBEAN, scQt.getQtNo(),
+								SLALogConstant.QT_RETRIEVE_APPROVAL, getUserIdSessionFromLoginId(), e);
+						//Sonarqube QT Vulnerability Minor Danial [3/8/2023] END
 					}
 					approverAttachments.add(att);
 				}
@@ -2800,7 +2805,10 @@ public class QTCloneBackingbean extends
 										.cloneBean(source);
 							} catch (IllegalAccessException | InstantiationException
 									| InvocationTargetException | NoSuchMethodException e) {
-								e.printStackTrace();
+								//Sonarqube QT Vulnerability Minor Danial [3/8/2023] START			 
+								SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_CLONE_BACKINGBEAN,scQt.getQtNo(),
+										SLALogConstant.QT_RETRIEVE_COMMITTEE_MEMBERS, getUserIdSessionFromLoginId(), e);
+								//Sonarqube QT Vulnerability Minor Danial [3/8/2023] END
 							}
 							if(null!=cloned){
 								cloned.setBrandNew(true);
@@ -3044,7 +3052,10 @@ public class QTCloneBackingbean extends
 								.cloneBean(source);
 					} catch (IllegalAccessException | InstantiationException
 							| InvocationTargetException | NoSuchMethodException e) {
-						e.printStackTrace();
+						//Sonarqub QT Vulnerability Minor Danial [3/8/2023] START			 
+						SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_CLONE_BACKINGBEAN, scQt.getQtNo(),
+								SLALogConstant.QT_CLONE_COMMITTEE, getUserIdSessionFromLoginId(), e);
+						//Sonarqube QT Vulnerability Minor Danial [3/8/2023] END
 					}
 					if(null!=cloned){
 						cloned.setBrandNew(true);
