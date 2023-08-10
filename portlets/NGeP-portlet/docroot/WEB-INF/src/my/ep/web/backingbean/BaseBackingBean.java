@@ -1300,7 +1300,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "Basebackingbean", "docNo", "getRadioButtonCodeValuesBySearchBeanForPartial", getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
