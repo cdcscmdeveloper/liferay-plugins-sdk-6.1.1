@@ -2407,6 +2407,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//9019 for prevent null insert for remark and merge note-522
 		QuationTenderResDTO resDto = null;
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		List<ScRemark> qtRemarksIdRemoveList = new ArrayList<ScRemark>() ;
 		reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 		
@@ -2421,7 +2422,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						resDto = getQTDetailSO().retriveQtRemarks(reqDTO);
 						if (CollectionUtils.isNotEmpty(resDto.getRemarks())) {
 							for (ScRemark remark : resDto.getRemarks()) {
-								this.getManagedBean().setQtRemarksIdRemove(remark.getRemarkId());
+								//this.getManagedBean().setQtRemarksIdRemove(remark.getRemarkId());
+								qtRemarksIdRemoveList.add(remark);
 							}
 						}
 					}
@@ -2430,11 +2432,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					resDto = getQTDetailSO().retriveQtRemarks(reqDTO);
 					if (CollectionUtils.isNotEmpty(resDto.getRemarks())) {
 						for (ScRemark remark : resDto.getRemarks()) {
-							this.getManagedBean().setQtRemarksIdRemove(remark.getRemarkId());
+							//this.getManagedBean().setQtRemarksIdRemove(remark.getRemarkId());
+							qtRemarksIdRemoveList.add(remark);
 						}
 					}
 				}
 			}
+			this.getManagedBean().setQtRemarksIdRemoveList(qtRemarksIdRemoveList);
 		}	
 		// 9019 end
 		
@@ -2539,6 +2543,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		quationTenderReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		quationTenderReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		quationTenderReqDTO.setQtRemarksIdRemove(this.getManagedBean().getQtRemarksIdRemove()); //#9019 (Harun)
+		quationTenderReqDTO.setQtRemarksIdRemoveList(this.getManagedBean().getQtRemarksIdRemoveList()); //#9019 note-522(Harun)
 		
 		return quationTenderReqDTO;
 	}
