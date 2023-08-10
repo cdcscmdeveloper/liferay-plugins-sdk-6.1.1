@@ -10633,8 +10633,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				getQtAwardSO().deleteLampiranA3Report(awardReqDTO);
 				}//29007-End
 			}
-			//29007 note 503 start
-			if(CollectionUtils.isNotEmpty(this.getManagedBean().getTplSpecAnswerList())){
+			//29007 note 503 start commented by Vinod as this changes are not required at this stage
+			/*if(CollectionUtils.isNotEmpty(this.getManagedBean().getTplSpecAnswerList())){
 				boolean updateLampiranA3 = false;
 				for (TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()) {
 					if (StringUtils.isNotBlank(tplSpecAnswer.getNewSupplierOffer())
@@ -10646,7 +10646,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				if (updateLampiranA3) {
 					createLampiranA3forQT(true);
 				}
-			}
+			}*/
 			//29007 note 503 end
 		}
 	}
@@ -11275,8 +11275,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				getQtAwardSO().deleteLampiranA3Report(awardReqDTO);
 				}//29007-End
 			}
-			//29007 note 503 start
-			if(CollectionUtils.isNotEmpty(this.getManagedBean().getTplSpecAnswerList())){
+			//29007 note 503 start commented by Vinod as this changes are not required at this stage
+			/*if(CollectionUtils.isNotEmpty(this.getManagedBean().getTplSpecAnswerList())){
 				boolean updateLampiranA3 = false;
 				for (TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()) {
 					if (StringUtils.isNotBlank(tplSpecAnswer.getNewSupplierOffer())
@@ -11288,7 +11288,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				if (updateLampiranA3) {
 					createLampiranA3forQTVerification(true);
 				}
-			}
+			}*/
 			//29007 note 503 end
 		}
 		log.info("==============endcreateLampiranA3forQTVerification=============");
