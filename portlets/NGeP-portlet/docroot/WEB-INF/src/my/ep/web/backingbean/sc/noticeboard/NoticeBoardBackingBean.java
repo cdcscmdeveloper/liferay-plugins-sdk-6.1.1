@@ -3519,23 +3519,27 @@ public class NoticeBoardBackingBean extends
 	 * @return
 	 */
 		public void noticeBoardGfmas() {
-			log.debug("** Qtn / TenderDetsils **");
+			log.info("** Qtn / TenderDetsils **");
 			HttpServletRequest servletRequest = PortalUtil
 					.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil
 					.getOriginalServletRequest(servletRequest);
 			String qtNo = originalServletRequest.getParameter("qtNo");
-			
+			String qtId = originalServletRequest.getParameter("qtId");
+			log.info("QTNO-->>>"+qtNo);
 			IQTNoticeBoardSO qtNoticeBoardSO = null;
 			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 			this.getManagedBean().setPreviousPage(MAIN_PAGE);
 			try {
 				qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+				reqDTO.setQtId(qtId!=null?Long.valueOf(qtId):null);
 				reqDTO.setQtNo(qtNo);
 				NoticeBoardResDTO resDTO = qtNoticeBoardSO
 						.retrieveQtNoticeDtl(reqDTO);
 				ScQt scQt = resDTO.getScQt();
+				log.info("QTID-->>"+scQt.getQtId());
+
 				this.getManagedBean().setQtId(scQt.getQtId());
 				
 				this.getManagedBean().setScQt(resDTO.getScQt());
