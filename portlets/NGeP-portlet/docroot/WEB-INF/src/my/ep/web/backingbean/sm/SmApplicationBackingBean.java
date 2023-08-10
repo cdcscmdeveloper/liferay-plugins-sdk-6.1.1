@@ -2923,13 +2923,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				this.getManagedBean().getPersonnelDirectorManager().add(personnel);	
 				}
 				//28767
-				/*//#35037
 				for (SmPersonnelAddress address : personnel.getSmPersonnelAddresses()){
 					if (address.getAddressType().equals("R")){
 						personnel.setSmPersonnelAdd(address);
 					}
 				}
-				*/
 				if (personnel.isSsmData()!= true){
 					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
 				}
