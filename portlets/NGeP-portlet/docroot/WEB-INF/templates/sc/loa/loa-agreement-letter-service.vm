@@ -2679,6 +2679,10 @@ Should be product and service item display if exist
 																								
 											#set($countSpecList = 1)
 											#foreach( $specVal in $specList )
+												#set($specVal = $specVal.replace("#60;", "&#60;"))
+												#set($specVal = $specVal.replace("#62;", "&#62;"))
+												#set($specVal = $specVal.replace("#and;", "&"))
+											
 												
 												<table width="100%">
 													<tbody>
@@ -2794,6 +2798,10 @@ Should be product and service item display if exist
 										#if ($tplspecQuestion.specList)
 											#set($countSpecList = 1)
 											#foreach( $specVal in $tplspecQuestion.specList )
+												#set($specVal = $specVal.replace("#60;", "&#60;"))
+												#set($specVal = $specVal.replace("#62;", "&#62;"))
+												#set($specVal = $specVal.replace("#and;", "&"))
+											
 												
 												<table width="100%">
 													<tbody>
