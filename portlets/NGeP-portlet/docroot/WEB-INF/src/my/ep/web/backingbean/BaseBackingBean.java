@@ -50,7 +50,6 @@ import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.imageio.ImageIO;
 import javax.portlet.PortletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -139,6 +138,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -763,7 +763,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						.getParameterId(), parameterDesc.getCodeName());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "Basebackingbean", "docNo", "getDropdownValuesBySearchBeanForPartial", getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -1266,7 +1266,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				//33849-End
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "Basebackingbean", "docNo", "getRadioButtonCodeValuesBySearchBean", getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -1300,7 +1300,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "Basebackingbean", "docNo", "getRadioButtonCodeValuesBySearchBeanForPartial", getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),

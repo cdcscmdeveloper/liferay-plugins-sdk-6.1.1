@@ -1610,7 +1610,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
 		}
 
-		Long statusId = Long.valueOf(scLoa.getPmStatus().getStatusId()); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
+		Long statusId = scLoa.getPmStatus().getStatusId(); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 
 		if (scLoa.isApprovalReq()
 				&& QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
@@ -2049,8 +2049,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			// int year = Calendar.getInstance().get(Calendar.YEAR);
 			ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
 			docDefTypeReqDTO.setParameterType(ParameterTypeConst.SCHEDULE_TYPE);
-			docDefTypeReqDTO
-					.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
+			//Reopen #25726 note 110
+			if ((null != this.getManagedBean().getScLoa()) && (null != this.getManagedBean().getScLoa().getScQt())) {
+				if (null != this.getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
+					if (this.getManagedBean().getScLoa().getScQt().getFulfilmentType().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+						docDefTypeReqDTO.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
+					} else {
+						docDefTypeReqDTO.setParameterCode(ParameterConst.SCHEDULE_TYPE_NON_PERIODIC);
+					}
+				}
+			}
+			//#25726 end
 			ParameterResDTO docDefTypeResDTO = parameterSo
 					.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
 
@@ -4415,7 +4425,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				String docDefinitionKey = scLoaReport.getPmDocument()
 						.getDocDefinitionKey();
 				ScLoa scLoa = getManagedBean().getScLoa();
-				Long statusId = Long.valueOf(scLoa.getPmStatus().getStatusId()); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
+				Long statusId = scLoa.getPmStatus().getStatusId(); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 				
 				if (scLoaReportAttachment == null || isGenerated) {
 					StringBuilder filename = new StringBuilder(); // replace white space due to firefox
@@ -4722,7 +4732,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				    String tempFilePath = filePath.replace(SSTConstant.fileTypePdf, SSTConstant.fileTypeTempPdf);
 				    File file = new File(filePath);
 				    mergePdf(file, filePath, tempFilePath, context);
-				    file.renameTo(new File(filePath.replace(SSTConstant.fileTypePdf, SSTConstant.fileTypeMergedPdf)));
+				   boolean isRename = file.renameTo(new File(filePath.replace(SSTConstant.fileTypePdf, SSTConstant.fileTypeMergedPdf)));
+				   //Sonarqube #G29 - start
+				   if (isRename){
+					   log.info("rename successful");
+				   }
+				   else{
+					   log.info("rename failed");
+				   }
+				 //Sonarqube #G29 - end
 				    scLoaReportAttachment.setFilePath(scLoaReportAttachment.getFilePath().replace(SSTConstant.fileTypePdf, SSTConstant.fileTypeMergedPdf));
 				  }
 				  // #26130 - End.
@@ -6529,7 +6547,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			overallctAmt = amountDF.format(loaAmount.add(sstAmt));
 			log.info(":::setSstInfoForAgreementLetter(). loaId: "+ scLoa.getLoaId() +". overallctAmt inc. sstAmt: "+ overallctAmt);
 			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.add(sstAmt).toString()));						
-		} else {
+		} else if (loaAmount != null){//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 			overallctAmt = amountDF.format(loaAmount);
 			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.toString()));
 		}
@@ -8176,7 +8194,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		ScLoa loa = getManagedBean().getScLoa();
 		BigDecimal overallContractAmtOrLoaAmt = getManagedBean().getOverallContractAmt();
-		boolean change = getManagedBean().AgreementReqChange;
+		boolean change = getManagedBean().isAgreementReqChange(); //#Sqube Vulnerability Minor G47
 
 		if (null != loa.getScLoiLoa().getFulfilmentTypeCode() && null != overallContractAmtOrLoaAmt && !isPk7Periodic()) {
 			String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
@@ -9138,14 +9156,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		context.put("gstRegFlag", gstRegFlag);
 		//26770 - start
-		if(supplier.getRegNo() != null && !supplier.getRegNo().equalsIgnoreCase("")){
+		if(supplier != null && supplier.getRegNo() != null && !supplier.getRegNo().equalsIgnoreCase("")){ //20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 			context.put("regNo", supplier.getRegNo());
 		}else{
 			context.put("regNo","______________"); 
 		}
 		
 		
-		if (null != supplier.getSmAppl()){
+		if (supplier != null && null != supplier.getSmAppl()){//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 			if (null != supplier.getSmAppl().getSmCompanyBasic()){
 				if (null != supplier.getSmAppl().getSmCompanyBasic().getRobExpiryDate()){
 					context.put("ssmExpired",new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(supplier.getSmAppl().getSmCompanyBasic().getRobExpiryDate()));
