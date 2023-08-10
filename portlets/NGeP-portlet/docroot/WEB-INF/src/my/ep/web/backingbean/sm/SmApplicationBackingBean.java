@@ -2666,7 +2666,7 @@ public class SmApplicationBackingBean extends
 							personnel.setSmPersonnelAdd(address);
 						}
 					}
-				)
+				}
 				if (personnel.isSsmData()!= true){
 					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
 				}
