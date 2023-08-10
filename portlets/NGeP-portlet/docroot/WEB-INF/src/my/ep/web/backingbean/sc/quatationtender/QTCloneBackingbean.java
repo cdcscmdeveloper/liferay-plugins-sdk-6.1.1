@@ -1046,7 +1046,8 @@ public class QTCloneBackingbean extends
 								try {
 									uploadAttachment(qtDocReportAttachment,docReport.getScQtDocReportAttachment());
 								} catch (IOException e) {
-									e.printStackTrace();
+									SLAUtils.getInstance().logSLAError("QT", "QTCloneBackingBean", scQt.getQtNo(),
+											"retrieveDocs", getUserIdSessionFromLoginId(), e);//sqube_vulnerability_56
 								}//33954
 								qtDocReport.setScQtDocReportAttachment(qtDocReportAttachment);
 							}
