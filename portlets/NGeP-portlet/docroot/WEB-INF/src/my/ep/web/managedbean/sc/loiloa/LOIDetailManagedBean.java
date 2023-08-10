@@ -22,6 +22,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
@@ -413,6 +414,12 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 * Enhancement #21694
 	 */
 	private String loiTaskId;
+	
+	//#30008
+	private PmParameter decision;
+	private String justification;
+	private String notReachAgreement;
+	
 	
     /**
      * Gets the spki backing bean.
@@ -2364,5 +2371,30 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.renderInstruction = renderInstruction;
 	}
 	//#29007 End Vinod
+	
+	//#30008
+	public String getJustification() {
+		return justification;
+	}
+
+	public void setJustification(String justification) {
+		this.justification = justification;
+	}
+
+	public PmParameter getDecision() {
+		return decision;
+	}
+
+	public void setDecision(PmParameter decision) {
+		this.decision = decision;
+	}
+
+	public String getNotReachAgreement() {
+		return notReachAgreement;
+	}
+
+	public void setNotReachAgreement(String notReachAgreement) {
+		this.notReachAgreement = notReachAgreement;
+	}
 	
 }
