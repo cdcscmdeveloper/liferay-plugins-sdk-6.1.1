@@ -4128,6 +4128,7 @@ public class SmApplicationUtil {
 
 		// no category at all approved
 		if (isPendingApprovedCatExist && !isAtLeastOneCatApproved) {
+			assignValReqdToFalse(managedBean);	//#35059
 			throw new EpException(MessageConst.ERROR_722655);
 		}
 	}
