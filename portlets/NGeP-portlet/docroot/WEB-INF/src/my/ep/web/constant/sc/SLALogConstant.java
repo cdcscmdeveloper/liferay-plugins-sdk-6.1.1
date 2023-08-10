@@ -16,6 +16,7 @@ public class SLALogConstant {
 	 */
 	public static final String QT_CLONE_BACKINGBEAN = "QTCloneBackingBean";
 	public static final String QT_MULTIPLE_CLONE_BACKINGBEAN = "QTMultipleCloneBackingBean";
+	public static final String QT_SUPPLIER_FINALIZATION_BACKINGBEAN = "SupplierFinalizationBackingBean";
 	public static final String COMMON_BASE_BACKINGBEAN = "BaseBackingBean";
 	/*
 	 * METHOD_NAME
@@ -26,6 +27,7 @@ public class SLALogConstant {
 	public static final String QT_CLONE_COMMITTEE = "cloneComitteee";
 	public static final String QT_POPULATE_APPROVALS = "populateApprovals";
 	public static final String QT_POPULATE_COMMITTEE = "populateCommittee";
+	public static final String QT_UPDATE_BPM_TASKBRIEF = "updateBPMTaskBrief";
 	public static final String COMMON_GET_STATUSDROPDOWNVALUES_SEARCHBEAN = "getStatusDropdownValuesBySearchBean";
 	
 	private SLALogConstant(){
