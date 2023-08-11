@@ -10376,6 +10376,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					item = getQtAwardSO().retriveLatestLoiLoaItemDetails(reqDTOLatest).getScLoiLoaItem();
 					reqDTONew.setTplSpecAnswerList(null);
 					item.setLoaSpecJustification(this.getManagedBean().getNewSupplierJustification());
+					item.setComplete(resDTO.getScLoiLoaItem().isComplete());
 					reqDTONew.setScLoiLoaItem(item);
 					getQtAwardSO().saveSupplierSpecification(reqDTONew);	
 					items.add(item);
