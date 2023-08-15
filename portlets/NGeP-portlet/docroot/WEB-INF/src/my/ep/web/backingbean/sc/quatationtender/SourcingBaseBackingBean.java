@@ -42,8 +42,10 @@ import java.util.HashSet; //Bug #33988@Syazani - 27/09/2022
 import java.util.Set; //Bug #33988@Syazani - 27/09/2022
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
@@ -6426,5 +6428,84 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	//10542 - Function for testing (Will be removed)
 	protected long convertMilliToSeconds(long milli){
 		return (milli/1000) % 60;
+	}
+	
+	/**
+	 * Defect: #34924
+	 * Method: Checking and validate using validator: string value has unrecognized symbol/character.
+	 * @param context the context
+	 * @param component the component
+	 * @param value the value
+	 */
+	public void isContentExistUnicode(FacesContext context, UIComponent component,
+			Object value) {
+		
+		String strContent = (String) value;
+		String labelNameVal = (String) component.getAttributes().get("label");
+		
+		boolean isExistUnicodeSymbol = Boolean.FALSE;
+		if(strContent.contains("\1")){//SOH
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\2")){//STX
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\3")){//ETX
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\4")){//EOT
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\5")){//ENQ
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\6")){//ACK
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\7")){//BEL
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\10")){
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\11")){//VT
+			isExistUnicodeSymbol = Boolean.TRUE;
+		/*}else if(strContent.contains("\14")){//SO
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\15")){//SI
+			isExistUnicodeSymbol = Boolean.TRUE;*/
+		}else if(strContent.contains("\16")){//DLE
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\17")){//DC1
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\18")){//DC2
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\19")){//DC3
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\20")){//DC4
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\21")){//NAK
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\22")){//SYN
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\23")){//ETB
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\24")){//CAN
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\25")){//EM
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\26")){//SUB
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\27")){//ESC
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\28")){//FS
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\29")){//GS
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\30")){//RS
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}else if(strContent.contains("\31")){//US
+			isExistUnicodeSymbol = Boolean.TRUE;
+		}
+		
+		if(isExistUnicodeSymbol){
+			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+					.getMessage(MessageConst.ERROR_760543,
+							new String[] {labelNameVal },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+		}
 	}
 }
