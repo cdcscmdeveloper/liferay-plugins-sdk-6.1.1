@@ -107,6 +107,7 @@ import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.specification.SpecificationBackingBean;
@@ -1398,8 +1399,7 @@ public class CreateQtBackingBean extends
 
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.PROCUREMENT_CATEGORY);
 			for (PmParameterDesc paramDesc : localParamDesc) {
-				if (paramDesc.getPmParameter().getParameterId()
-						.equals(Long.valueOf(type))) {
+				  if (paramDesc.getPmParameter().getParameterId() == type) {
 
 					this.getManagedBean().setProcuremntCategory(
 							paramDesc.getPmParameter().getParameterCode());
@@ -1427,8 +1427,7 @@ public class CreateQtBackingBean extends
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				//Start Reopen 9019 #note-289 remove the alert message while save
 				if(null != type){
-					if (paramDesc.getPmParameter().getParameterId()
-							.equals(Long.valueOf(type))) {   
+					  if (paramDesc.getPmParameter().getParameterId() == type) {   
                 
 						this.getManagedBean().setFulfilmentType(
 								paramDesc.getPmParameter().getParameterCode());
@@ -4217,7 +4216,10 @@ public class CreateQtBackingBean extends
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			//Sonarqube QT Vulnerability Minor #44
+			SLAUtils.getInstance().logSLAError("QT", "PickYesToDeleteExistingDemoTechChecklist",
+					this.getManagedBean().getQt().getQtId().toString(), "yesDeleteExistingDemoTechChecklist",
+					getUserIdSessionFromLoginId(), e);
 		}
 	}
 
