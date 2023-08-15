@@ -129,7 +129,7 @@ public class StopInstructionByPtjRptBackingBean extends FlReportBackingBean<Stop
 			getManagedBean().setPtj(null);
 		}
 		getManagedBean().setSiNo(null);
-		resetSearchCriteriaValues();;
+		resetSearchCriteriaValues();
 	}
 	
 }
