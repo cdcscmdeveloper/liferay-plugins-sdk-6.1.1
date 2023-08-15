@@ -2926,7 +2926,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				//#35037 - start
 				if(personnel.getSmPersonnelAddresses() != null){
 					for (SmPersonnelAddress address : personnel.getSmPersonnelAddresses()){
-						if (address.getAddressType().equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
+						if (address.getAddressType() != null && address.getAddressType()
+								.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
 							personnel.setSmPersonnelAdd(address);
 						}
 					}
