@@ -21809,7 +21809,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			}
 					
 		}catch (Exception e){
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", "docNo", "checkSpecZoneQtyMaxScore", getUserIdSessionFromLoginId(), e);
 		}
 		finally {
 			templateSpecSo = null;

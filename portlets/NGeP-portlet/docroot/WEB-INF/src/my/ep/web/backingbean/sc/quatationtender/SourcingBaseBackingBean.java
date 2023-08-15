@@ -1,5 +1,5 @@
 /**
- *  Copyright © 2013 Archisoft. All rights reserved.
+ *  Copyright  2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.quatationtender;
 
@@ -3931,7 +3931,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 										if (specList == null) {
 											specList = new ArrayList<>();
 										}
-										specList.add(tplSpecAns.getTplSpecQuestion().getClSpecDetail());
+										//start #29006 - note 850,852,856
+										String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
+									
+										specValue = specValue.replace("<", "#60;");
+										specValue = specValue.replace(">", "#62;");
+										specValue = specValue.replace("&", "#and;");
+										
+										specList.add(specValue);
+										tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
+										//end #29006 - note 850,852,856
 									} else {
 										break;
 									}
@@ -4095,7 +4104,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 										if (specList == null) {
 											specList = new ArrayList<>();
 										}
-										specList.add(tplSpecAns.getTplSpecQuestion().getClSpecDetail());
+										//start #29006 - note 850,852,856
+										String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
+										
+										specValue = specValue.replace("<", "#60;");
+										specValue = specValue.replace(">", "#62;");
+										specValue = specValue.replace("&", "#and;");
+										
+										specList.add(specValue);
+										tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
+										//end #29006 - note 850,852,856
 									} else {
 										break;
 									}
