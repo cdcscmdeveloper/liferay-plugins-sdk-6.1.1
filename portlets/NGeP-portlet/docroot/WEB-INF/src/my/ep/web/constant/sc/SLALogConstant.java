@@ -18,6 +18,8 @@ public class SLALogConstant {
 	public static final String QT_MULTIPLE_CLONE_BACKINGBEAN = "QTMultipleCloneBackingBean";
 	public static final String QT_SUPPLIER_FINALIZATION_BACKINGBEAN = "SupplierFinalizationBackingBean";
 	public static final String COMMON_BASE_BACKINGBEAN = "BaseBackingBean";
+	public static final String QT_LOA_DETAIL_BACKINGBEAN = "LOADetailBackingBean";
+	public static final String QT_DIRECT_LOA_DETAIL_BACKINGBEAN = "DirectLOABackingBean";
 	/*
 	 * METHOD_NAME
 	 */
@@ -29,6 +31,7 @@ public class SLALogConstant {
 	public static final String QT_POPULATE_COMMITTEE = "populateCommittee";
 	public static final String QT_UPDATE_BPM_TASKBRIEF = "updateBPMTaskBrief";
 	public static final String COMMON_GET_STATUSDROPDOWNVALUES_SEARCHBEAN = "getStatusDropdownValuesBySearchBean";
+	public static final String QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY = "generateLampiranA3PdfFromVelocity";
 	
 	private SLALogConstant(){
 		
