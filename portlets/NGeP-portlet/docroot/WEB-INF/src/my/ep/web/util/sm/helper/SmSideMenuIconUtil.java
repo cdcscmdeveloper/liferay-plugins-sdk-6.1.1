@@ -657,8 +657,7 @@ public class SmSideMenuIconUtil {
 					//#31043
 					bean.setCategoryCodeVerified(true);
 				} else {
-					if(bean.isApproverUser() || bean.isReviewSiteVisit()
-							|| bean.isReviseMandatory()){
+					if(bean.isReviewSiteVisit()){
 						retVal = ICON_TICK;
 					}
 					
@@ -702,9 +701,6 @@ public class SmSideMenuIconUtil {
 							bean.setCategoryCodeVerified(true);
 						}
 						else{
-							if(bean.isApproverUser() || bean.isReviewSiteVisit()
-							|| bean.isReviseMandatory())
-								retVal = ICON_UNTICK;
 							//#31043
 							bean.setCategoryCodeVerified(false);
 						}
