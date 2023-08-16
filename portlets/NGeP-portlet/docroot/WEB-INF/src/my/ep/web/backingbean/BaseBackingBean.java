@@ -143,6 +143,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
 import my.ep.web.format.AttachmentDateFormat;
@@ -1102,7 +1103,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}	
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//Sonarqube QT Vulnerability Minor Danial [3/8/2023] START			 
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN, "",
+					SLALogConstant.COMMON_GET_STATUSDROPDOWNVALUES_SEARCHBEAN, getUserIdSessionFromLoginId(), e);
+			//Sonarqube QT Vulnerability Minor Danial [3/8/2023] END
+			
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
