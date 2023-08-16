@@ -911,12 +911,16 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				if(personnel.isDirector() || personnel.isManagement()){
 				this.getManagedBean().getPersonnelDirectorManager().add(personnel);	
 				}
-				//28767
-				for (SmPersonnelAddress address : personnel.getSmPersonnelAddresses()){
-					if (address.getAddressType().equals("R")){
-						personnel.setSmPersonnelAdd(address);
-					}	
+				//#35037 - start
+				if(personnel.getSmPersonnelAddresses() != null){
+					for (SmPersonnelAddress address : personnel.getSmPersonnelAddresses()){
+						if (address.getAddressType() != null && address.getAddressType()
+								.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
+							personnel.setSmPersonnelAdd(address);
+						}
+					}
 				}
+				//#35037 - end
 				if (personnel.isSsmData()!= true){
 					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
 				}
