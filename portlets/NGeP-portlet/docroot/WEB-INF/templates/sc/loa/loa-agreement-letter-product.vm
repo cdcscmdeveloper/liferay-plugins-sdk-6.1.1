@@ -2446,7 +2446,7 @@ u.underline {
 							
 							#else
 									<tr>
-									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10x;">Item</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10px;">Item</th>
 									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Jenis Pemenuhan</th>
 									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">UOM</th>
 									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Kekerapan / <br/>Unit Ukuran</th>
@@ -2627,7 +2627,7 @@ u.underline {
 											#set($flagShowed = 0)										
 											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
 												#if($supplierId  == $tplSpecAnswer.tplSpecSuppAnswer.smSupplier.supplierId)
-														#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
+														#if ($flagShowed != 1 && $tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
 															#set($suppRespon = $tplSpecAnswer.answerRemark)
 															#set($suppRespon = $suppRespon.replace("<", "&#60;"))
 															#set($suppRespon = $suppRespon.replace(">", "&#62;"))
