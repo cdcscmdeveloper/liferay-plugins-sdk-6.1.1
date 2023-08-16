@@ -2244,7 +2244,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						 */
 						if (list.isScoringReq()) {
 							localChecklist.add(list);
+							// Bug #34809@Syazani 20/06/2023 -- Start
+						} else {
+							list.getQtScoreWeightage().setScore(
+									new BigDecimal(0));
 						}
+						// Bug #34809@Syazani 20/06/2023 -- End
 					}
 
 					int local = (int) addScore;
@@ -10656,8 +10661,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	public void specCommitteBpmTask(String action) {
 		// #25638 -end-
 		// #1873 -start-
-		if (assertPendingFinancialSubmission())
+		// #34837 - start
+		if (assertPendingFinancialSubmission() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT))
 			return;
+		// #34837 - end
 		// #1873 -end-
 
 		FacesScopes facesScopes = new FacesScopes();
@@ -15320,8 +15327,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	public void specCommitteMaintenanceBpmTask(String action) {
 		// #25638 -end-
 		// #1873 -start-
-		if (assertPendingFinancialSubmission())
+		// #34837 - start
+		if (assertPendingFinancialSubmission() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT))
 			return;
+		// ##34837 - end
 		// #1873 -end-
 
 		FacesScopes facesScopes = new FacesScopes();

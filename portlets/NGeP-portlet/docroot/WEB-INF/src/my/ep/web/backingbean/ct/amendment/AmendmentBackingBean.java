@@ -15,18 +15,15 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -120,7 +117,6 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
-import my.ep.type.pm.LanguageCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.MemberRole;
 import my.ep.util.EpPropertiesUtils;
@@ -6015,7 +6011,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if(getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
 				for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {
 					if(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
-
+						// Start Fix - #34539  
+						if (item.isBrandNew()) {
+							if (item.getCtItemCeilingQties().size() != getManagedBean().getSelectedItem().getCtItemCeilingQties().size()) {
+								getManagedBean().getSelectedItem().getCtItemCeilingQties().remove(item.getCtItemCeilingQties());
+								getManagedBean().getSelectedItem().setCtItemCeilingQties(item.getCtItemCeilingQties());
+							} 
+						} else {
+							if (item.getCtItemCeilingQties().size() != getManagedBean().getSelectedItem().getCtItemCeilingQties().size()) {
+								item.getCtItemCeilingQties().clear();
+								item.getCtItemCeilingQties().addAll(getManagedBean().getSelectedItem().getCtItemCeilingQties());
+							} 
+						}
+						// End Fix - #34539
 						if (!item.getCtItemCeilingQties().isEmpty()) {						
 							for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {
 								if(ceilingQty.getCtAgency().getCommitmentNo().equalsIgnoreCase(ctItemCeilingQty.getCtAgency().getCommitmentNo())){
@@ -6697,5 +6705,59 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	// End Fix - #33674
+	
+	// Start Fix - #34539
+	public void changeShowItem() {
+		try {
+			if (ctBackingBean.getManagedBean().getShowItem() != null) {
+				if (ctBackingBean.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_QTY)) {
+					refreshAgencyCeilingQuantityList();
+				} else if (ctBackingBean.getManagedBean().getShowItem()
+						.equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
+					refreshAgencyCeilingQuantityList();
+				} else if (ctBackingBean.getManagedBean().getShowItem()
+						.equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
+					refreshAgencyCeilingQuantityList();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
+	/**
+	 * The method used to refresh the ceiling quantity information of Product
+	 * details listing in UI.
+	 */
+	private void refreshAgencyCeilingQuantityList() {
+
+		Map<Long, CtItemCeilingQty> itemCeilingQtyMap = new HashMap<Long, CtItemCeilingQty>();
+		for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
+			itemCeilingQtyMap.put(ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId(), ctItemCeilingQty);
+		}
+
+		getManagedBean().getSelectedItem().getCtItemCeilingQties().clear();
+		// getManagedBean().getServiceselectedItem().getCtItemCeilingQties().clear();
+		for (CtAgency ctAgency : ctBackingBean.getManagedBean().getContractVer().getCtAgencies()) {
+			if (!itemCeilingQtyMap.containsKey(ctAgency.getOrgProfile().getOrgProfileId())) {
+
+				CtItemCeilingQty ctItemCeilingQty = new CtItemCeilingQty();
+				ctItemCeilingQty.setCtAgency(ctAgency);
+				ctItemCeilingQty.setCtContractItem(getManagedBean().getSelectedItem());
+
+				ctItemCeilingQty.setCeilingQuantity(new BigDecimal(0));
+				ctItemCeilingQty.setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue()
+						.getEffDate());
+				ctItemCeilingQty.setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue()
+						.getExpDate());
+				getManagedBean().getSelectedItem().getCtItemCeilingQties().add(ctItemCeilingQty);
+
+			} else {
+				getManagedBean().getSelectedItem().getCtItemCeilingQties()
+						.add(itemCeilingQtyMap.get(ctAgency.getOrgProfile().getOrgProfileId()));
+
+			}
+		}
+	}
+	// End Fix - #34539
 }
