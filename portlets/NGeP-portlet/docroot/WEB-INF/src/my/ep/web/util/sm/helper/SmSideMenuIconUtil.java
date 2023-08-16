@@ -742,8 +742,7 @@ public class SmSideMenuIconUtil {
 				boolean licenseMandatoryDocVerified = false; 
 				
 				//#31043 start
-				if(bean.isApproverUser() || bean.isReviewSiteVisit()
-						|| bean.isReviseMandatory()){
+				if(bean.isApproverUser() || bean.isReviewSiteVisit()){
 					retVal = ICON_TICK;
 					bean.setDocumentVerified(true);
 					mandatoryDocVerified = true; 
@@ -833,8 +832,7 @@ public class SmSideMenuIconUtil {
 						retVal = ICON_TICK;
 				}
 				else{
-					if(bean.isApproverUser() || bean.isReviewSiteVisit() 
-							|| bean.isReviseMandatory()){
+					if(bean.isApproverUser() || bean.isReviewSiteVisit()){
 						retVal = ICON_UNTICK;
 					}
 					bean.setDocumentVerified(false);
