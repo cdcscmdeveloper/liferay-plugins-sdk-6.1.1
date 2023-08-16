@@ -1462,12 +1462,16 @@ public class SmSideMenuIconUtil {
 			if(applPrev.getApplId() == applCurr.getApplId()){
 				return false;
 			}
+			//#32008
 			String[] arrExcludeProps = new String[] { "prevApprDecFlg",
 					"apprvrDecFlg", "poDecFlg", "approvedByPo",
 					"prevApprovedByPo", "prevPoDecFlg", "poRemarks",
 					"approverRemarks", "prevPoRemarks", "prevApproverRemarks",
 					"approvedDate", "approvedByAp", "prevApprovedByAp",
-					"recordStatusFlg" };
+					"recordStatusFlg", "overLapCategory", "suspendCategory",
+					"cancelCategory", "isActiveDA", "disciplinaryActionId",
+					"supplierType", "applRefId", "prevOtherDesc", 
+					"cancelledDate", "categoryEffDate"};
 
 			// smSupplierCategory
 			if (isSupplier) {
