@@ -1066,13 +1066,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	protected void updateSpkiDigiSignData(PmDigiSign pmDigiSign,
 			String docType, Long docId, String docNumber, String textBeforeSign) {
-		FacesScopes facesScope = new FacesScopes();
-		Long userId = facesScope.getUserSessionBean().getUserId();
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		pmDigiSign.setDocId(new BigDecimal(docId));
 		pmDigiSign.setDocNo(docNumber);
 		pmDigiSign.setDocType(docType);
-		pmDigiSign.setCreatedBy(userId);
+		pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		pmDigiSign.setCreatedDate(date);
 		pmDigiSign.setOriginalData(textBeforeSign);
 	}
@@ -4498,8 +4496,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			
 			List<ScQtFinalizationReport> briefingPaperReportList = new ArrayList<>();
 
-			finalizationReport.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
-			finalizationReport.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+			finalizationReport.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+			finalizationReport.setChangedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			
 			briefingPaperReportList.add(finalizationReport);
 			
