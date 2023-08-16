@@ -1383,8 +1383,8 @@ public class SmFieldChangeUtil {
 			return;
 		}
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO().retrievePreviousSmAppl(
-				bean.getSmSupplier().getSupplierId(), appl.getApplId()).getSmAppl();
+		SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO()
+				.retrievePreviousSmAppl(appl).getSmAppl();
 		if (appl.getOriginalAppl() != null){
 			reqDTO.setSmAppl(appl);
 			SmAppl temp = SmServiceLookup.getMofRegistrationSO()
