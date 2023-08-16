@@ -12398,6 +12398,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		spReqDTO.setRoleCode(getUserRoleCode());
 		spReqDTO.setPrepareSpecStatus(this.getManagedBean().getCurrentStatusId());
 		spReqDTO.setUserLocale(facesScopes.getUserLocale());
+		SpecificationReqDTO specReqDto=new SpecificationReqDTO();//35071_start
+		specReqDto.setScQt(this.getManagedBean().getQt());
+		this.getManagedBean().setWipStatusMax(getSpecSO().checkWipScoreSettingMax(specReqDto));
+		if(this.getManagedBean().getWipStatusMax()<SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){	
+			this.getManagedBean().setOfferScoreType(ParameterConst.FINANCE_SCORE_TYPE_AUTO);
+			scoreTypeN=ParameterConst.FINANCE_SCORE_TYPE_AUTO;
+		}//35071_End
 		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType()); //25138
 		// #25638 - Start.
 		spReqDTO.setSpecMaintenance(getManagedBean().isSpecMaintenance());
