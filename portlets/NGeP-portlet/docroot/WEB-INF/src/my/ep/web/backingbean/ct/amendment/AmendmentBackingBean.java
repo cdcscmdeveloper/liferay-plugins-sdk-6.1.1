@@ -1264,7 +1264,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				
 						//Bug #29323
 //						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-						//Start Fix - #34110
+						//Start Fix - #34110 , #34950
 						if (item.getCtItemPrices() != null) {
 							if (item.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
 								sortItemPriceForZonalTier(item.getCtItemPrices());
@@ -1289,12 +1289,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							}
 							
 						}
-						//End Fix - #34110
+						//End Fix - #34110 , #34950
 						ctBackingBean.getManagedBean().getCtItemList().add(item);
 					} else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 						getManagedBean().setItemServiceExist(true);
 						//Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-						//Start Fix - #34110
+						//Start Fix - #34110 , #34950
 						if (item.getCtItemPrices() != null
 								&& item.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
 							   sortItemPriceForZonalTier(item.getCtItemPrices());
@@ -1307,7 +1307,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								sortItemPrice(item.getCtItemPrices());
 							}
 						}
-						//End Fix - #34110
+						//End Fix - #34110 , #34950
 						ctBackingBean.getManagedBean().getCtItemServiceList().add(item);
 					}					
 				}
@@ -1652,7 +1652,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				CtAttachment attachment = new CtAttachment();
 				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 				attachment.setFileName("PengakuanPenerimaanSuratBerkaitanKontrakTambahan.pdf");
-				attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 				attachment.setCreatedUser(getFacesScopes().getUserSessionBean());
 				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				attachment.setSectionId(ContractConst.ATTACHMENT_LOA_LETTER_RECEIPT);
@@ -3046,8 +3046,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public String preSubmitContractAmendment(PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null && isSupplierRole() && !hasGovtSellerRole()) {
-			FacesScopes facesScope = new FacesScopes();
-			pmDigiSign.setCreatedBy(facesScope.getUserSessionBean().getUserId());
+			pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			pmDigiSign.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			pmDigiSign.setOriginalData(prepareSupplierOriginalText());
 			pmDigiSign.setSpkiSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(pmDigiSign.getOriginalData()));
@@ -4083,7 +4082,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //		for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices()){
 //			log.info("totalsize itemprices "+itemPrice.getItemPriceId());
 //		}
-		//Start Fix - #34110
+		//Start Fix - #34110 , #34950
 		if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
 			   sortItemPriceForZonalTier(ctItemPriceList);
 		}else if(getManagedBean().getSelectedItem().getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)){
@@ -4095,7 +4094,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				sortItemPrice(ctItemPriceList);
 			}
 		}
-		//End Fix - #34110
+		//End Fix - #34110 , #34950
 		newItemPrice(getManagedBean().getSelectedItem());
 		ctItemPriceList.clear();
 
@@ -4154,10 +4153,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		this.getManagedBean().getSelectedServiceItem().getCtItemPrices().clear();
 		this.getManagedBean().getSelectedServiceItem().getCtItemPrices().addAll(ctItemPriceList);
-		// Start Fix - #34110
-		if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
+		// Start Fix - #34110 , #34950
+		if (getManagedBean().getSelectedServiceItem().getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
 			sortItemPriceForZonalTier(ctItemPriceList);
-		} else if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)) {
+		} else if (getManagedBean().getSelectedServiceItem().getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)) {
 			sortItemPriceForTier(ctItemPriceList);
 		} else {
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
@@ -4166,7 +4165,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				sortItemPrice(ctItemPriceList);
 			}
 		}
-		// End Fix - #34110
+		// End Fix - #34110 , #34950
 		newItemPrice(getManagedBean().getSelectedServiceItem());
 		ctItemPriceList.clear();
 
@@ -4318,13 +4317,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		getManagedBean().getSelectedItem().getCtItemMaxQties().clear();
 		getManagedBean().getSelectedItem().getCtItemMaxQties().addAll(ctItemMaxQtyList);
-		//Start Fix - #34110
+		//Start Fix - #34110 , #34950
 		if(ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
 			sortItemMaxQtyForZonal(ctItemMaxQtyList);
 		}else{
 			sortItemMaxQty(ctItemMaxQtyList);
 		}
-		//End Fix - #34110
+		//End Fix - #34110 , #34950
 		newItemMaxQty(getManagedBean().getSelectedItem());
 		ctItemMaxQtyList.clear();
 
@@ -5966,7 +5965,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		if (remarks.size() == 0 || !ctWorkflowStatusMatch) {
 			CtRemark remark = new CtRemark();
-			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
@@ -6045,7 +6044,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 		attachment.setFileName(item.getFileName());
 		
-		attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+		attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		if(getManagedBean().getTaskName() != null
@@ -6098,7 +6097,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		CtAttachment attachment = new CtAttachment();
 		attachment.setFileName(item.getFileName());
 		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		ctBackingBean.getManagedBean().getContractVer().getCommitteDecisionAttachements().add(attachment);
@@ -8166,7 +8165,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	// End Fix - #33674
-	// Start Fix - #34110
+	// Start Fix - #34110 , #34950
 	public void sortItemPriceForTier(List<CtItemPrice> list){
 		Collections.sort(list, new Comparator<CtItemPrice>() {
 			public int compare(CtItemPrice o1, CtItemPrice o2) {
@@ -8257,7 +8256,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		});
 	}
-	// End Fix - #34110
+	// End Fix - #34110 , #34950
 	// Start Fix - #34539
 	public void changeShowItem() {
 		try {

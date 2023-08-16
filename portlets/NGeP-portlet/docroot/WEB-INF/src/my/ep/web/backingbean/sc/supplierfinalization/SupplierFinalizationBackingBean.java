@@ -46,6 +46,7 @@ import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
@@ -81,6 +82,7 @@ import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.actor.ScActorResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
@@ -471,7 +473,8 @@ public class SupplierFinalizationBackingBean extends
 			ScQt scQt = resDTO.getScQt();
 			populateParentOrgProfile(scQt);
 			getManagedBean().setScQt(scQt);
-			
+			evaluateWIP(scQt);//34865,34866,34867 - 29021 WIP
+
 			// #27502 -- Adding condition only
 			if (scQt.getFinalizationSecratery() != null) {
 				getManagedBean().setOriginalFinalizationSecretaryUserId(scQt.getFinalizationSecratery().getUserId());
@@ -1482,6 +1485,38 @@ public class SupplierFinalizationBackingBean extends
 					}
 				}
 			}
+			// #28834 - Start
+			else{
+				
+				String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
+				if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode) || 
+					ParameterConst.DECISION_RE_PUBLISH.equals(decisionTypeCode) || 
+					ParameterConst.DECISION_RE_EVALUATION.equals(decisionTypeCode)){
+					this.getManagedBean().setFinalizationMethod(null);
+				}
+				
+				if (this.getManagedBean().getFinalizationMethod() != null
+						&& (this.getManagedBean().getFinalizationMethod()
+								.equals(ParameterConst.RECOMMEND_BY_AWARD) || this
+								.getManagedBean().getFinalizationMethod()
+								.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD))
+								&& !getManagedBean().isDisableJustifications()
+								) {
+					
+					if (this.getManagedBean().getJustification() != null
+							&& this.getManagedBean().getJustification()
+									.getReasonId() == null) {
+						navigateToEndorsementReportTab();
+						throw new EpException(MessageConst.ERROR_100061,
+								new String[] { ResourceBundleUtils.getMessage(
+										"lbl.sc.sf.justification.selection",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()) });
+					}
+				}
+				
+			}
+			// #28834 - End
 						
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				reqDTO.setDeletedMeetingsList(this.getManagedBean().getDeletedMeetingList());
@@ -2386,6 +2421,17 @@ public class SupplierFinalizationBackingBean extends
 			}
 			// Bug #32682 end
 		}
+		
+		// #27502 & #34921 - Start
+		if(QTStatusConst.SF_MOF_COMMITTEE .equals(currentStatusId) && 
+				scQtFinalization.getLoiLoaBy() != null && 
+				scQtFinalization.getLoiLoaBy().equalsIgnoreCase(
+						SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER)) {
+				scQtFinalization.setLoiLoaById(getActorUserIdByQtIdAndRoleCode(
+			    scQtFinalization.getScQt().getQtId()));
+		}
+		// #27502 & #34921 - End
+
 
 		SuppFinalizationReqDTO reqDTO = preSubmitValidation();
 		// #18685-Start.
@@ -4368,10 +4414,20 @@ public class SupplierFinalizationBackingBean extends
 			   throws Exception {
 		log.info("generateSupplierFinalizationPdf");
 		populateAttachmentDetails(attachment);
-		
+		//#35015 4ser -Start
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 		long qtId = qt.getQtId();
-		String reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
-		
+		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+		req4SerDTO.setQtId(qtId);
+		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+		String reportName = "";
+		if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+			reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_WIP_JSP;
+		} else {
+			reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
+		}
+		//#35015 4ser -End
 		String estimatedAmountStr = null;
 		IQTDetailSO qtDetailSO = null;
 		try {
@@ -5735,8 +5791,7 @@ public class SupplierFinalizationBackingBean extends
 							IQTSuppFinalizationSO.class);
 
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId()
-					.toString());
+			reqDTO.setUserId(getUserIdSessionFromLoginId().toString()); // #31849 add log key
 			reqDTO.setCommitteMembers(getManagedBean()
 					.getCommitteeList());
 			reqDTO.setSubject(subject);
@@ -8801,6 +8856,7 @@ public class SupplierFinalizationBackingBean extends
 											    	.getScQtRecommendsByZone().get(zoneId);									
 									}
 									calculateBidPrice(items, recommendationBean);
+									qualSupplier.setBidPrice(recommendationBean.getBidPrice());//34760
 								}
 							}
 						}						
@@ -9965,10 +10021,21 @@ public class SupplierFinalizationBackingBean extends
 		debugLogger("generateKertasTaklimatPdf");
 		populateAttachmentDetails(attachment);
 
+		//#35015 4ser -Start
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 		FacesScopes facesScopes = new FacesScopes();
+		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
 		long qtId = qt.getQtId();
-		String reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
-
+		req4SerDTO.setQtId(qtId);
+		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+		String reportName ="";
+		if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+			 reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_WIP_JSP;
+		} else {
+			 reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
+		}
+		//#35015 4ser -End
 		String estimatedAmountStr = null;
 
 		if (qt.getEstimatedAmount() != null) {

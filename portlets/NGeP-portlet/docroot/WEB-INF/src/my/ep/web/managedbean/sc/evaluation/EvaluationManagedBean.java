@@ -610,6 +610,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String demoScore;
 	private BigDecimal otherScore;
 	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
+	private boolean demoWip;//#28784 WIP @idham
 	//#28784 - end
 
 	/** The total technical package max score. */
@@ -664,10 +665,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	/*#29187 Start Vinod*/
 	private TplSpecZoneDtl tplSpecZoneDtl;
 	/*#29187 End Vinod*/
-	
-	//#34452 related to #25138 -start
-	private int wipStatusMax;
-	//#34452 related to #25138 -end
 	
 	//34528-uat 4serangkai 
 	private Paginator financialPackagePaginator;
@@ -4316,23 +4313,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 	/*#29187 End Vinod*/
 	
-	//#34452 related to #25138 -start
-	/**
-	 * @return the max wip 3serangkai
-	 */
-	public int getWipStatusMax() {
-		return wipStatusMax;
-	}
-
-	/**
-	 * @param  max wip check 3serangkai
-	 *            the wipRequired to set
-	 */
-	public void setWipStatusMax(int wipStatusMax) {
-		this.wipStatusMax = wipStatusMax;
-	}
-	//#34452 related to #25138 -end
-
 	//34528-uat 4serangkai - start
 	public Paginator getFinancialPackagePaginator() {
 		return financialPackagePaginator;
@@ -4342,4 +4322,12 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.financialPackagePaginator = financialPackagePaginator;
 	}
 	//34528-uat 4serangkai - end
+
+	public boolean isDemoWip() {
+		return demoWip;
+	}
+
+	public void setDemoWip(boolean demoWip) {
+		this.demoWip = demoWip;
+	}
 }
