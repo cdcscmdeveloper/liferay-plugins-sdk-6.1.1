@@ -37,6 +37,7 @@ import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.SmLicenseInfoVO;
+import my.ep.web.vo.SmSectionEditorVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -832,7 +833,7 @@ public class SmSideMenuIconUtil {
 						retVal = ICON_TICK;
 				}
 				else{
-					if(bean.isApproverUser()){
+					if(bean.isApproverUser() || bean.isReviewSiteVisit()){
 						retVal = ICON_UNTICK;
 					}
 					bean.setDocumentVerified(false);
@@ -1461,12 +1462,16 @@ public class SmSideMenuIconUtil {
 			if(applPrev.getApplId() == applCurr.getApplId()){
 				return false;
 			}
+			//#32008
 			String[] arrExcludeProps = new String[] { "prevApprDecFlg",
 					"apprvrDecFlg", "poDecFlg", "approvedByPo",
 					"prevApprovedByPo", "prevPoDecFlg", "poRemarks",
 					"approverRemarks", "prevPoRemarks", "prevApproverRemarks",
 					"approvedDate", "approvedByAp", "prevApprovedByAp",
-					"recordStatusFlg" };
+					"recordStatusFlg", "overLapCategory", "suspendCategory",
+					"cancelCategory", "isActiveDA", "disciplinaryActionId",
+					"supplierType", "applRefId", "prevOtherDesc", 
+					"cancelledDate", "categoryEffDate"};
 
 			// smSupplierCategory
 			if (isSupplier) {
@@ -1498,6 +1503,13 @@ public class SmSideMenuIconUtil {
 							currCatList.add(curr);
 						}
 					}
+				}
+				log.info("33783__currCat:"+currCatList.size()+"\tprevCat:"+prevCatList.size());
+				for(SmSupplierCategory c : currCatList){
+					log.info("catcode_curr_id:"+c.getPmCategoryL3().getCategoryL3Id());
+				}
+				for(SmSupplierCategory c : prevCatList){
+					log.info("catcode_prev_id:"+c.getPmCategoryL3().getCategoryL3Id());
 				}
 
 				retVal = EntityHelper.hasDiffBetweenList(prevCatList,
@@ -1788,6 +1800,7 @@ public class SmSideMenuIconUtil {
 	//#32008 - start
 	public static void setSectionEditorVO(BaseReviewApplicationManagedBean bean){
 		if(!bean.isShowFieldChanges() || bean.getLatestAppl() == null || bean.getSmAppl() == null){
+			bean.setEditVO(new SmSectionEditorVO());
 			return;
 		}
 		
