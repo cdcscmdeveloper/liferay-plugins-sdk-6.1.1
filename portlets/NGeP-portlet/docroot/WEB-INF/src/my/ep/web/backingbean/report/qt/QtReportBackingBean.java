@@ -318,10 +318,14 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		
 		if (approverNayakTarafList.size() > 0) {
 			userRoleLogin = ReportConst.APPROVERNT;
+			//Bug #34996@Syazani 16/08/2023 -- Start
 		} else if (authoriztionList.contains(ReportConst.BUDGET_APPROVER)
 				|| authoriztionList.contains(ReportConst.BPK_APPROVER)
 				|| authoriztionList.contains(ReportConst.COMMITTEE_APPROVER) 
-				|| authoriztionList .contains(ReportConst.PUBLICATION_APPROVER)) {
+				|| authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)
+				|| authoriztionList.contains(ReportConst.AUDITOR_GENERAL)
+				|| authoriztionList.contains(ReportConst.AUDITOR_INTERNAL)) {
+			//Bug #34996@Syazani 16/08/2023 -- End
 			userRoleLogin = ReportConst.APPROVER;
 		} else if (authoriztionList.contains(ReportConst.DESK_OFFICER)) {
 			userRoleLogin = ReportConst.DESKOFFR;
