@@ -23129,8 +23129,22 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 		return false;
 	}
-	
-	public void generateTechnicalChecklistPreviewPdfFromVelocity(List<ScQtCheckList> scQtCheckSt2techProposal) throws Exception{
+	public void downloadTechnicalChecklistPreview(List<ScQtCheckList> scQtCheckSt2techProposal) throws Exception{
+		ScQtCheckListAttachment attachment=generateTechnicalChecklistPreviewPdfFromVelocity(scQtCheckSt2techProposal);
+		try{
+			downloadFile(attachment);			
+		}
+		catch(IOException ex){
+			if(ex instanceof FileNotFoundException){
+				handleException(new EpException(MessageConst.ERROR_760411, new String[]{this.getManagedBean().getQt().getQtNo()}));
+			}
+			
+		}
+		catch(EpException ex){
+			handleException(ex);
+		}
+	}
+	private ScQtCheckListAttachment generateTechnicalChecklistPreviewPdfFromVelocity(List<ScQtCheckList> scQtCheckSt2techProposal) throws Exception{
 		VelocityContext context = new VelocityContext();
 		StringBuilder filename = new StringBuilder();
 		ScQtCheckListAttachment attachment = new ScQtCheckListAttachment();
@@ -23168,6 +23182,10 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			}
 		}
 		
+		return attachment;
+	}
+	public void downloadFinancialChecklistPreview(List<ScQtCheckList> scQtCheckSt2financeProposalList) throws Exception{
+		ScQtCheckListAttachment attachment=generateFinancialChecklistPreviewPdfFromVelocity(scQtCheckSt2financeProposalList);
 		try{
 			downloadFile(attachment);			
 		}
@@ -23181,12 +23199,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			handleException(ex);
 		}
 	}
-	public void generateFinancialChecklistPreviewPdfFromVelocity(List<ScQtCheckList> scQtCheckSt2financeProposalList) throws Exception{
+	public ScQtCheckListAttachment generateFinancialChecklistPreviewPdfFromVelocity(List<ScQtCheckList> scQtCheckSt2financeProposalList) throws Exception{
 		VelocityContext context = new VelocityContext();
 		StringBuilder filename = new StringBuilder();
 		ScQtCheckListAttachment attachment = new ScQtCheckListAttachment();
 		
-		String name=getMessageCommon("lbl.sc.spec.technical.checklist.preview.printing").replaceAll("\\s","");
+		String name=getMessageCommon("lbl.sc.spec.financial.checklist.preview.printing").replaceAll("\\s","");
 		filename.append(name+".pdf");
 		attachment.setFileName(filename.toString().replaceAll("/",""));
 		attachment.setDocNo(this.getManagedBean().getQt().getQtNo());
@@ -23218,6 +23236,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				e.printStackTrace();
 			}
 		}
+		
+		return attachment;
 	}
 	/**
 	 * get the template logo path 

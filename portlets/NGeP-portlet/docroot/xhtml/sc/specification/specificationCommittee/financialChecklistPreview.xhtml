@@ -20,8 +20,8 @@
 			value="#{lbl['lbl.sc.spec.financial.checklist.preview.printing.instruction4']}" />
 			
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.download']}" partialSubmit="true"
-				action="#{specificationBackingBean.generateFinancialChecklistPreviewPdfFromVelocity(specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"
+			<p:commandButton value="#{lbl['lbl.btn.download']}" partialSubmit="true" ajax="false"
+				action="#{specificationBackingBean.downloadFinancialChecklistPreview(specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"
 				styleClass="BtnSpacing" process="@this"  />
 		</div>
 	</p:panel>
@@ -64,8 +64,8 @@
 				
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.download']}" partialSubmit="true"
-				action="#"
+			<p:commandButton value="#{lbl['lbl.btn.download']}" partialSubmit="true" ajax="false"
+				action="#{specificationBackingBean.downloadFinancialChecklistPreview(specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"
 				styleClass="BtnSpacing" process="@this"  />
 		</div>
 	</p:panel>

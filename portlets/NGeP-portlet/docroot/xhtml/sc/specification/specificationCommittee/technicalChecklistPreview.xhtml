@@ -20,8 +20,8 @@
 			value="#{lbl['lbl.sc.spec.technical.checklist.preview.printing.instruction4']}" />
 			
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.download']}" partialSubmit="true"
-				action="#{specificationBackingBean.generateTechnicalChecklistPreviewPdfFromVelocity(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"
+			<p:commandButton value="#{lbl['lbl.btn.download']}" partialSubmit="true" ajax="false"
+				action="#{specificationBackingBean.downloadTechnicalChecklistPreview(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"
 				styleClass="BtnSpacing" process="@this"  />
 		</div>
 	</p:panel>
@@ -50,10 +50,14 @@
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
 						value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this" disabled="true"
+							update="@([id$=technicalChecklistTitleListId])"
+							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, specificationBackingBean.managedBean.scQtCheckSt2techProposal)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{techChecklist.selected}">		
-											
+					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=technicalChecklistTitleListId])"
+						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}" />				
 				</p:selectBooleanCheckbox>
 
 			</p:column>
@@ -67,13 +71,13 @@
 				
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.download']}" partialSubmit="true"
-				action="#"
+			<p:commandButton value="#{lbl['lbl.btn.download']}" partialSubmit="true" ajax="false"
+				action="#{specificationBackingBean.downloadTechnicalChecklistPreview(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"
 				styleClass="BtnSpacing" process="@this"  />
 		</div>
 	</p:panel>
 	<div align="right">
-		<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true"
+		<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true" 
 			onclick="technicalChecklistPreview.hide();"
 			styleClass="BtnSpacing" process="@this"  />
 	</div>

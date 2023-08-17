@@ -148,16 +148,16 @@ u {
 		#foreach( $finChecklist in $scQtCheckSt2financeProposalList )
 		
 		<tr>
-			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid white;">
+			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid #ddd;">
 			$finChecklist.title
 			</td>
-			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid white;">
+			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid #ddd;">
 			$bean.getParameterDesc($finChecklist.definationType)
 			</td>
-			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid white;">
+			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid #ddd;">
 			$bean.getParameterDesc($finChecklist.action)
 			</td>
-			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid white;">
+			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-family: Arial; font-size:16.5px; border: 1px solid #ddd;">
 				#if($finChecklist.scoringReq)
 					<img src='$hostUrl/NGeP-portlet/css/images/checkbox_checked.png' width="20px" height ="20px"></img>
 				#else
