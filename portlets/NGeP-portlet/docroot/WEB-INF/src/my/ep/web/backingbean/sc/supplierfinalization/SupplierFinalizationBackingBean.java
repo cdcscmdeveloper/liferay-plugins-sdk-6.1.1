@@ -10281,6 +10281,8 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	
 	//#25037-START
 	public void prepareUpdateCommitteeMember(){
+		if (StringUtils.isEmpty(this.getManagedBean().getCommitteeType()))
+			return;
 		SupplierFinalizationMeetingBackingBean meetingBB = new SupplierFinalizationMeetingBackingBean();
 		meetingBB.renewSesionObject();
 		this.getManagedBean().setMeetingBB(meetingBB);
