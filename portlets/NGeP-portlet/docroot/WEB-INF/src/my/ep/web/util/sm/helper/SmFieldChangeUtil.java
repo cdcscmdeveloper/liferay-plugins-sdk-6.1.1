@@ -1386,14 +1386,6 @@ public class SmFieldChangeUtil {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO()
 				.retrievePreviousSmAppl(appl).getSmAppl();
-		if (appl.getOriginalAppl() != null){
-			reqDTO.setSmAppl(appl);
-			SmAppl temp = SmServiceLookup.getMofRegistrationSO()
-					.retrieveLatestRejectedApplication(reqDTO).getSmAppl();
-			if(temp != null && srcAppl != null && temp.getChangedDate().after(srcAppl.getChangedDate())){
-				srcAppl = temp;
-			}
-		}
 		if(srcAppl != null){
 			reqDTO.setApplId(srcAppl.getApplId());
 			srcAppl = SmServiceLookup.getMofRegistrationSO()
