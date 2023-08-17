@@ -2447,7 +2447,7 @@ u.underline {
 							
 							#else
 									<tr>
-									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10x;">Item</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10px;">Item</th>
 									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Jenis Pemenuhan</th>
 									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">UOM</th>
 									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Kekerapan / <br/>Unit Ukuran</th>
@@ -2625,21 +2625,21 @@ u.underline {
 												#end	
 											#end
 										#else				
+											#set($flagShowed = 0)										
 											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
 												#if($supplierId  == $tplSpecAnswer.tplSpecSuppAnswer.smSupplier.supplierId)
-													#if($rowCount == 0)
-														#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
+														#if ($flagShowed != 1 && $tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
 															#set($suppRespon = $tplSpecAnswer.answerRemark)
 															#set($suppRespon = $suppRespon.replace("<", "&#60;"))
 															#set($suppRespon = $suppRespon.replace(">", "&#62;"))
-
+															#set($rowCount = $rowCount + 1)
+															#set($flagShowed = 1)
 															<span> $suppRespon </span>
-														#else
-															<span>$serviceScope</span>
 														#end
-													#end
-													#set($rowCount = $rowCount + 1)
 												#end
+											#end
+											#if($flagShowed == 0)
+												<span>$serviceScope</span>
 											#end
 										#end
 									
@@ -2686,6 +2686,9 @@ u.underline {
 										
 											#set($countSpecList = 1)
 											#foreach( $specVal in $specList )
+												#set($specVal = $specVal.replace("#60;", "&#60;"))
+												#set($specVal = $specVal.replace("#62;", "&#62;"))
+												#set($specVal = $specVal.replace("#and;", "&"))
 												
 												<table width="100%">
 													<tbody>
@@ -2785,7 +2788,11 @@ u.underline {
 										#if(($tplspecQuestion.answerRemarks == "" ))
 										 $serviceScope 
 										#else
-											 $tplspecQuestion.answerRemarks							
+											#set($tplspecQuestion.answerRemarks = $tplspecQuestion.answerRemarks)
+											#set($tplspecQuestion.answerRemarks = $tplspecQuestion.answerRemarks.replace("<", "&#60;"))
+											#set($tplspecQuestion.answerRemarks = $tplspecQuestion.answerRemarks.replace(">", "&#62;"))
+											 
+											$tplspecQuestion.answerRemarks
 										#end
 									</td>
 									<td valign="top" class="title border left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
@@ -2800,6 +2807,9 @@ u.underline {
 										#if ($tplspecQuestion.specList)
 											#set($countSpecList = 1)
 											#foreach( $specVal in $tplspecQuestion.specList )
+												#set($specVal = $specVal.replace("#60;", "&#60;"))
+												#set($specVal = $specVal.replace("#62;", "&#62;"))
+												#set($specVal = $specVal.replace("#and;", "&"))
 							
 												<table width="100%">
 													<tbody>
