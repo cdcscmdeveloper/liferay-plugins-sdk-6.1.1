@@ -24,7 +24,6 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.constant.sm.SupplierManagementConst;
-import my.ep.web.managedbean.sc.bidding.BiddingListManagedBean;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
 
@@ -1373,8 +1372,7 @@ public class SmFieldChangeUtil {
 	
 	//#32008 - start
 	/**
-	 * Initialize the previous application to check for supplier edit 
-	 * & use serialized supplier appl if available
+	 * Initialize the previous application to check for supplier edit
 	 * @param bean
 	 */
 	public static void initLatestAppl(BaseReviewApplicationManagedBean bean){
@@ -1386,40 +1384,13 @@ public class SmFieldChangeUtil {
 			return;
 		}
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		SmAppl srcAppl = null;
-		
-		if (appl.isResubmit() && bean.isSupplierUser() && appl.getOriginalAppl() != null){
-			reqDTO.setSmAppl(appl);
+		SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO()
+				.retrievePreviousSmAppl(appl).getSmAppl();
+		if(srcAppl != null){
+			reqDTO.setApplId(srcAppl.getApplId());
 			srcAppl = SmServiceLookup.getMofRegistrationSO()
-					.retrieveLatestRejectedApplication(reqDTO).getSmAppl();
-			if(srcAppl != null){
-				String file = SmCommonUtil.getSerializedFileFullDirByApplNo(srcAppl.getApplNo(), "SUP");
-				SmApplRevisionResDTO revDTO = SmCommonUtil
-						.getSerializedApplicationByFilePathName(file);
-				if (revDTO != null && revDTO.getSmAppl() != null) {
-					srcAppl = revDTO.getSmAppl();
-				}
-			}
-		}
-		
-		if(srcAppl == null){
-			srcAppl = SmServiceLookup.getMofRegistrationSO().retrievePreviousSmAppl(
-					bean.getSmSupplier().getSupplierId(), appl.getApplId()).getSmAppl();
-			if(srcAppl != null){
-				String file = SmCommonUtil.getSerializedFileFullDirByApplNo(srcAppl.getApplNo(), "SUP");
-				SmApplRevisionResDTO revDTO = SmCommonUtil
-						.getSerializedApplicationByFilePathName(file);
-				if (revDTO != null && revDTO.getSmAppl() != null) {
-					srcAppl = revDTO.getSmAppl();
-				} else {
-					reqDTO.setApplId(srcAppl.getApplId());
-					srcAppl = SmServiceLookup.getMofRegistrationSO()
-						.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
-				}
-			}
-		}
-		
-		if(srcAppl == null){
+					.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
+		} else {
 			bean.setShowFieldChanges(false);
 			bean.setLatestAppl(null);
 			return;
