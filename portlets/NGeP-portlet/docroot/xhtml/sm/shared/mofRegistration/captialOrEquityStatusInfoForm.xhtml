@@ -114,7 +114,7 @@
 								readonly="#{backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT
 											or backingBean.managedBean.disAllowOwnerEdit}" 
 								disabled="#{backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT
-											or backingBean.managedBean.disAllowOwnerEdit or backingBean.managedBean.upsCannotEdit}">
+											or backingBean.managedBean.disAllowOwnerEdit}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 								<p:ajax event="blur"
