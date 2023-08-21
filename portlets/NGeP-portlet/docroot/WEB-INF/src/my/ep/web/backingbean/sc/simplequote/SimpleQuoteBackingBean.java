@@ -339,7 +339,7 @@ public class SimpleQuoteBackingBean extends
 					getManagedBean().setByLocality(Boolean.FALSE);
 				}
 
-				if(scQuote.getRequestNotes() != null && scQuote.getRequestNotes().size()>0){
+				if(scQuote.getRequestNotes() != null && !scQuote.getRequestNotes().isEmpty() && scRequestNote != null ){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					getManagedBean().getRequestNote().setPmOrgProfile(scRequestNote.getPmOrgProfile());
 				}
 				
@@ -430,7 +430,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setAddNewSpecFlag(Boolean.FALSE);
 			getManagedBean().setEditableFlag(Boolean.FALSE);
 			getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
-			getManagedBean().setCreatedBy(getUserById(scQuote.getCreatedBy()).getUserName());
+			getManagedBean().setCreatedBy(getUserById(scQuote != null ? scQuote.getCreatedBy():null).getUserName());//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			
 			//#25886 - start
 			if(getManagedBean().getScQuote().getPurchaseInDefault() != null){
@@ -876,7 +876,7 @@ public class SimpleQuoteBackingBean extends
 			if(scQuote.getSupplierId() == 0)	
 				scQuote.setSupplierId(supplierId);
 		}
-		else if(supplierId == 0){
+		else if(supplierId != null && supplierId == 0){ //#34994
 			if(scQuote.getSupplierId() == 0 && getManagedBean().getPanelSuppliers() != null && !getManagedBean().getPanelSuppliers().isEmpty())			
 				scQuote.setSupplierId(getManagedBean().getPanelSuppliers().get(0).getSmSupplier().getSupplierId());
 		}			
@@ -1215,6 +1215,7 @@ public class SimpleQuoteBackingBean extends
 		}
 
 		// set user info
+		if (quoteDocs != null && CollectionUtils.isNotEmpty(quoteDocs)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 		for (ScQuoteDoc quoteDoc : quoteDocs) {
 			if (ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(quoteDoc
 					.getSpecMaster().getItemTypeCode().getParameterCode())) {
@@ -1302,6 +1303,7 @@ public class SimpleQuoteBackingBean extends
 						productTemplateSpecBean);
 			}
 		}
+	  }
 	}
 
 	/**
@@ -4350,7 +4352,7 @@ public class SimpleQuoteBackingBean extends
 								}
 							} else if(question != null && question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)){
 								if(question.getParentSpecQuestion().getSpecQuestionId().equals(itemSpecQuestionId)) {
-									if(isProduct) {
+									if(isProduct != null && isProduct.equals(true)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 										prodItemQuestions.add(question);
 									} else {
 										serviceItemQuestions.add(question);
@@ -4380,7 +4382,7 @@ public class SimpleQuoteBackingBean extends
 							&& productTplSpecBean.getSpecMaster()
 									.getTplSpecQuestions() != null) {
 						getManagedBean().setProdQuestions(
-								prodSpecMaster.getTplSpecQuestions());
+							productTplSpecBean.getSpecMaster().getTplSpecQuestions());//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					}
 
 					if (getManagedBean().getProdQuestions() != null
@@ -4407,7 +4409,7 @@ public class SimpleQuoteBackingBean extends
 							questions.add(cloneQuestion);
 						}
 					}
-
+				  if (prodSpecMaster != null ){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					prodSpecMaster.setTplSpecQuestions(questions);
 
 					if (getManagedBean().getScQuote().getMultipleQuote()) { // for
@@ -4417,7 +4419,7 @@ public class SimpleQuoteBackingBean extends
 					} else {
 						prodSpecMaster.setEstCostReq(Boolean.FALSE);
 					}
-
+				   }
 					productTplSpecBean.setSpecMaster(prodSpecMaster);
 					getManagedBean().setProductTemplateSpecBean(
 							productTplSpecBean);
@@ -4432,7 +4434,8 @@ public class SimpleQuoteBackingBean extends
 					// non clone spec master - already selected list
 					if (serviceTplSpecBean.getSpecMaster() != null
 							&& serviceTplSpecBean.getSpecMaster()
-									.getTplSpecQuestions() != null) {
+									.getTplSpecQuestions() != null 
+							&& serviceSpecMaster != null ) {
 						getManagedBean().setServiceQuestions(
 								serviceSpecMaster.getTplSpecQuestions());
 					}
@@ -4462,6 +4465,7 @@ public class SimpleQuoteBackingBean extends
 							questions.add(cloneQuestion);
 						}
 					}
+				  if (serviceSpecMaster != null){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					serviceSpecMaster.setTplSpecQuestions(questions);
 
 					if (getManagedBean().getScQuote().getMultipleQuote()) { // for
@@ -4471,7 +4475,7 @@ public class SimpleQuoteBackingBean extends
 					} else {
 						serviceSpecMaster.setEstCostReq(Boolean.FALSE);
 					}
-
+				  }
 					serviceTplSpecBean.setSpecMaster(serviceSpecMaster);
 					getManagedBean().setServiceTemplateSpecBean(
 							serviceTplSpecBean);
@@ -5850,6 +5854,7 @@ public class SimpleQuoteBackingBean extends
 				
 				byte[] signedData = getManagedBean().getSpkiBackingBean()
 						.spkiSignTransaction(originalText);
+			   if (pmDigiSign != null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 				pmDigiSign.setSpkiSignedData(signedData);
 			}
 
@@ -8060,8 +8065,8 @@ public class SimpleQuoteBackingBean extends
 			}
 			
 			if(scPID != null){			
-			    if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)
-			       || currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+			    if(currentStatusId != null && (currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)
+			       || currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION))){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 		
 					Date today  = DateUtils.getCurrentDate();
 					Date ExpDate = DateUtils.addDays(scPID.getChangedDate(), scPID.getPidValidDays());
@@ -8226,7 +8231,7 @@ public class SimpleQuoteBackingBean extends
 					minMinutes = ruleValue.getFromValue();
 					maxMinutes = ruleValue.getToValue();
 					minHours = minMinutes.divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
-					maxDays = maxMinutes.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
+					maxDays = maxMinutes.divide(BigDecimal.valueOf(60L*24), 2, RoundingMode.HALF_UP);
 				}
 				if(maxMinutes.compareTo(BigDecimal.valueOf(0.25)) >= 0) {
 					maxiDays = maxiDays + maxDays.intValue();
@@ -8239,7 +8244,7 @@ public class SimpleQuoteBackingBean extends
 					}
 
 					BigDecimal diff = BigDecimal.valueOf(endDate.getTime() - startDate.getTime());
-					diff = diff.divide(BigDecimal.valueOf(60*1000), 2, RoundingMode.HALF_UP);
+					diff = diff.divide(BigDecimal.valueOf(60L*1000), 2, RoundingMode.HALF_UP);
 					/*
 					
 					BigDecimal twentyFour = BigDecimal.valueOf(24);
@@ -8280,7 +8285,7 @@ public class SimpleQuoteBackingBean extends
 				Date startDate = quote.getStartDate();
 				
 				maxMinutes = new BigDecimal(4320); // equals to 3 days
-				maxDays = maxMinutes.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
+				maxDays = maxMinutes.divide(BigDecimal.valueOf(60L*24), 2, RoundingMode.HALF_UP);
 				quote.setEndDate(DateUtils.addDays(startDate, maxDays.intValue()));
 			}			
 		}
