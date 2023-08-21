@@ -170,14 +170,14 @@ QtReportBackingBean<ProposalProductReportManagedBean> implements Serializable{
 	public String getConversionParam(String status) {
 		
 		HashMap<String, String> status_map = new HashMap<String, String>();
-		status_map.put(getStatusDesc("lbl.rpt.all"), QtReportConst.STATUS_ALL);
-		status_map.put(getStatusDesc("lbl.rpt.preparation"), QtReportConst.STATUS_PREPARATION);
-		status_map.put(getStatusDesc("lbl.rpt.publishing"), QtReportConst.STATUS_PUBLISHING);
-		status_map.put(getStatusDesc("lbl.rpt.pendingEvaluation"), QtReportConst.STATUS_PENDING_EVALUATION);
-		status_map.put(getStatusDesc("lbl.rpt.pendingSupplierFinalization"), QtReportConst.STATUS_PENDING_SUPPLIER_FINALIZATION);
-		status_map.put(getStatusDesc("lbl.rpt.pendingLOInLOA"), QtReportConst.STATUS_PENDING_LOILOA);
-		status_map.put(getStatusDesc("lbl.rpt.loaCompleted"), QtReportConst.STATUS_LOA_COMPLETED);
-		status_map.put(getStatusDesc("lbl.rpt.drpdown.cancelledLabel"), QtReportConst.STATUS_CANCELLED);
+		status_map.put(getStatusDesc(QtReportConst.LABEL_ALL), QtReportConst.STATUS_ALL);
+		status_map.put(getStatusDesc(QtReportConst.LABEL_PREPARATION), QtReportConst.STATUS_PREPARATION);
+		status_map.put(getStatusDesc(QtReportConst.LABEL_PUBLISHING), QtReportConst.STATUS_PUBLISHING);
+		status_map.put(getStatusDesc(QtReportConst.LABEL_PENDING_EVALUATION), QtReportConst.STATUS_PENDING_EVALUATION);
+		status_map.put(getStatusDesc(QtReportConst.LABEL_PENDING_SUPPLIER_FINALIZATION), QtReportConst.STATUS_PENDING_SUPPLIER_FINALIZATION);
+		status_map.put(getStatusDesc(QtReportConst.LABEL_PENDING_LOILOA), QtReportConst.STATUS_PENDING_LOILOA);
+		status_map.put(getStatusDesc(QtReportConst.LABEL_LOA_COMPLETED), QtReportConst.STATUS_LOA_COMPLETED);
+		status_map.put(getStatusDesc(QtReportConst.LABEL_CANCELLED), QtReportConst.STATUS_CANCELLED);
 		
 		return status_map.get(status);
 				
