@@ -149,7 +149,7 @@ QtReportBackingBean< LetterOfAcceptanceReportManagedBean> implements Serializabl
 			params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ, reportFieldBean.getScStatus());
 		}*/
 		if(CollectionUtils.isNotEmpty(reportFieldBean.getScStatusManyMenu())){
-			List<String> conversionList = new ArrayList<String>();
+			List<String> conversionList = new ArrayList<>();
 			
 			for (String strManyMenu: reportFieldBean.getScStatusManyMenu()){
 				conversionList.add(getConversionParam(strManyMenu));
