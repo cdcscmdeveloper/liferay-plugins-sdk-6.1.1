@@ -12,8 +12,10 @@ package my.ep.web.backingbean.report.qt;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
@@ -28,6 +30,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.qt.ProposalProductReportManagedBean;
 import my.ep.web.util.FacesScopes;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -141,16 +144,17 @@ QtReportBackingBean<ProposalProductReportManagedBean> implements Serializable{
 		}
 		
 		// 29580 - Start (Harun) Change option from single status to multiple 
-//		if (StringUtils.isNotEmpty(reportFieldBean.getScStatus())) {
-//			params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ, reportFieldBean.getScStatus());
-//			log.info("harun params.get(QtReportConst.PARAM_PROCURE_STATUS_EQ))====="+params.get(QtReportConst.PARAM_PROCURE_STATUS_EQ));
-//		}
-		if(reportFieldBean.getScStatusManyMenu().size() > 0){
-			int count=0;
+		/*if (StringUtils.isNotEmpty(reportFieldBean.getScStatus())) {
+			params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ, reportFieldBean.getScStatus());
+		}*/
+		if(CollectionUtils.isNotEmpty(reportFieldBean.getScStatusManyMenu())){
+			List<String> conversionList = new ArrayList<String>();
+			
 			for (String strManyMenu: reportFieldBean.getScStatusManyMenu()){
-				count++;
-				params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ+count, getConversionParam(strManyMenu));
+				conversionList.add(getConversionParam(strManyMenu));
 			}
+			String status = StringUtils.join(conversionList,",");
+			params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ, status.replaceAll(",$",""));
 		}
 		// 29580 - End (Harun)
 		if(StringUtils.isNotEmpty(reportFieldBean.getScDeskOfficer())){
