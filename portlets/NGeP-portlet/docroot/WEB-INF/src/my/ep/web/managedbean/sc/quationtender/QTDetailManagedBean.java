@@ -1824,6 +1824,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The qt remark missing issues. */
 	private boolean scQtRemarksEmpty = false; //#9019 08082022 (Harun)
 	
+	private List<ScRemark> qtRemarksIdRemoveList;//#9019 (Harun)
+	
 	// #32929 - start
 	private boolean zoneRdbButtonChecked = Boolean.FALSE;
 	// #32929 - end
@@ -12000,6 +12002,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	// #12471 End
 
+	//#9019 - Start
+	/**
+	 * @return the qtRemarksIdRemoveList
+	 */
+	public List<ScRemark> getQtRemarksIdRemoveList() {
+		return qtRemarksIdRemoveList;
+	}
+
+	/**
+	 * @param qtRemarksIdRemoveList the qtRemarksIdRemoveList to set
+	 */
+	public void setQtRemarksIdRemoveList(List<ScRemark> qtRemarksIdRemoveList) {
+		this.qtRemarksIdRemoveList = qtRemarksIdRemoveList;
+	}
+	//#9019 - End
+	
 }
 
 // ***25201

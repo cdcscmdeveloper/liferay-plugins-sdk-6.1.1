@@ -2923,11 +2923,16 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				this.getManagedBean().getPersonnelDirectorManager().add(personnel);	
 				}
 				//28767
-				for (SmPersonnelAddress address : personnel.getSmPersonnelAddresses()){
-					if (address.getAddressType().equals("R")){
-						personnel.setSmPersonnelAdd(address);
+				//#35037 - start
+				if(personnel.getSmPersonnelAddresses() != null){
+					for (SmPersonnelAddress address : personnel.getSmPersonnelAddresses()){
+						if (address.getAddressType() != null && address.getAddressType()
+								.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
+							personnel.setSmPersonnelAdd(address);
+						}
 					}
 				}
+				//#35037 - end
 				if (personnel.isSsmData()!= true){
 					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
 				}
@@ -3273,6 +3278,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 				//#27356
 				SmApplicationUtil.validateCoordinate(getManagedBean());
+				// #34303 - start
+				setValueForFacilityHeadquarters();
+				// #34303 - end
 				RequestContext.getCurrentInstance().execute(
 						"saveDraftConfirmDialog.show();");
 			} else if(getManagedBean().getEditVO().isDisciplinary()) {
@@ -3452,7 +3460,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					if(getManagedBean().getSmAppl().getSmApplAuditors()!=null){
 						getManagedBean().getSmAppl().getSmApplAuditors().size();
 					}
-					
+					// #34303 - start
+					setValueForFacilityHeadquarters();
+					// #34303 - end
 					//#27356
 					SmApplicationUtil.validateCoordinate(getManagedBean());
 			//#32236 - start
@@ -3498,6 +3508,30 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		updateSmAppl(applType, currentPageType, outputPageType);
 	}
+	
+	// #34303 - start
+	public void setValueForFacilityHeadquarters() {
+		// TODO Auto-generated method stub
+		boolean isHq = false;
+		SmAppl appl = getManagedBean().getSmAppl();
+		
+		for (int i = 0; i < appl.getSmFacilities().size(); i++) {
+			if (appl.getSmFacilities().get(i).getFacilityType()
+					.equalsIgnoreCase("B") && appl.getSmFacilities().get(i).isHeadquarters()){
+				isHq = true;
+			}
+		}
+		
+		if(!isHq){
+			for (int i = 0; i < appl.getSmFacilities().size(); i++) {
+				if (appl.getSmFacilities().get(i).getFacilityType()
+						.equalsIgnoreCase("B")){
+					appl.getSmFacilities().get(i).setHeadquarters(true);
+				}
+			}	
+		}
+	}
+	// #34303 - end
 
 	/**
 	 * Get cert type name
@@ -10227,7 +10261,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false,
 					getManagedBean().getCurrentPageType());
 			//29383 end
-			
 			setTabValue(0, 1);
 			getManagedBean().setTabActiveIndex(outputTab);
 			if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {
