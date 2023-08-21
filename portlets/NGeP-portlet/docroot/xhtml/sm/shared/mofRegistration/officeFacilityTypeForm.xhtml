@@ -349,6 +349,12 @@
 								listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 								update="basicOffFacDist,basicOffFacCity" />
+						<!-- #35086 -->
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmDivision.divisionId}" 
+							currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmDivision.divisionId}" 
+							alertValue="#{backingBean.getDivisionLabelById(backingBean.managedBean.latestAppl.hqFacility.smAddress.pmDivision.divisionId)}"/>
 					</p:selectOneMenu>
 					</h:panelGroup>
 				</td>
