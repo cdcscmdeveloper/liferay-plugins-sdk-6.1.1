@@ -1203,6 +1203,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctBackingBean.getManagedBean().setHasAmendmentLoaNo(true);
 				}
 			}
+			if (ctBackingBean.getManagedBean().isViewSCL()) { //33096					
+				getManagedBean().setLetterOfAcceptance(true);
+				getManagedBean().setPrepareLOA(true);
+				getManagedBean().setPbQcApproved(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbQcApproved() ? "A" : "R");
+				getManagedBean().setMofApproved(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofApproved() ? "A" : "R");
+			}
 			//Enhancement 15851 - end
 
 			// Retrieve agencies
@@ -3141,7 +3147,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
 					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
 				}
-				if (getManagedBean().isDecisionPbQcLOA()) {
+				if (getManagedBean().isDecisionPbQcLOA() || ctBackingBean.getManagedBean().isViewSCL()) { //33096
 					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);	    
 				}
 			}
@@ -3280,7 +3286,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							getManagedBean().setSelectedTabIndex(index + 3);
 					}
 					//#24333
-					if (getManagedBean().isDecisionPbQcLOA() && outputValue.equalsIgnoreCase("DCN")) {
+					if ((getManagedBean().isDecisionPbQcLOA() || ctBackingBean.getManagedBean().isViewSCL()) && outputValue.equalsIgnoreCase("DCN")) {//33096
 						if ((ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
 								&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 								&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
