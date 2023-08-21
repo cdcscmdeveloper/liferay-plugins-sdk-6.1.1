@@ -1226,7 +1226,7 @@ public class SmApplicationUtil {
 						|| appl.getSmFacilities().get(i).getFacilityType()
 								.equalsIgnoreCase("H")) {
 					// #34303 - start
-					if (appl.getSmFacilities().get(i).getPurchaseDate() != null) {
+					if (appl.getSmFacilities().get(i).isHeadquarters()) {
 						appl.getSmFacilities().set(i, managedBean.getBasicCompanyFacility());
 						break;
 					}
