@@ -8383,23 +8383,28 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	// End Fix - #33674
 	// Start Fix - #34110 , #34950
-	public void sortItemPriceForTier(List<CtItemPrice> list){
+	public void sortItemPriceForTier(List<CtItemPrice> list) {
 		Collections.sort(list, new Comparator<CtItemPrice>() {
 			public int compare(CtItemPrice o1, CtItemPrice o2) {
 
-					BigDecimal z1 = o1.getFromQty();
-					BigDecimal z2 = o2.getFromQty();
+				BigDecimal z1 = o1.getFromQty();
+				BigDecimal z2 = o2.getFromQty();
+				if (z1 != null && z2 != null) {
 					int fromQtyComp = z1.compareTo(z2);
 					if (fromQtyComp != 0) {
 						return fromQtyComp;
-					}				
-		
-					BigDecimal y1 = o1.getToQty();
-					BigDecimal y2 = o2.getToQty();
+					}
+				}
+
+				BigDecimal y1 = o1.getToQty();
+				BigDecimal y2 = o2.getToQty();
+				if (y1 != null && y2 != null) {
 					int toQtyComp = y1.compareTo(y2);
 					if (toQtyComp != 0) {
 						return toQtyComp;
 					}
+
+				}
 
 				Date d1 = o1.getExpDate();
 				Date d2 = o2.getExpDate();
@@ -8408,29 +8413,33 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		});
 	}
 	
-	public void sortItemPriceForZonalTier(List<CtItemPrice> list){
+	public void sortItemPriceForZonalTier(List<CtItemPrice> list) {
 		Collections.sort(list, new Comparator<CtItemPrice>() {
 			public int compare(CtItemPrice o1, CtItemPrice o2) {
-					String x1 = o1.getCtContractZone().getZoneName();
-					String x2 = o2.getCtContractZone().getZoneName();
-					int zoneComp = x1.compareTo(x2);
-					if (zoneComp != 0) {
-						return zoneComp;
-					}
-				
-					BigDecimal z1 = o1.getFromQty();
-					BigDecimal z2 = o2.getFromQty();
+				String x1 = o1.getCtContractZone().getZoneName();
+				String x2 = o2.getCtContractZone().getZoneName();
+				int zoneComp = x1.compareTo(x2);
+				if (zoneComp != 0) {
+					return zoneComp;
+				}
+
+				BigDecimal z1 = o1.getFromQty();
+				BigDecimal z2 = o2.getFromQty();
+				if (z1 != null && z2 != null) {
 					int fromQtyComp = z1.compareTo(z2);
 					if (fromQtyComp != 0) {
 						return fromQtyComp;
-					}				
-		
-					BigDecimal y1 = o1.getToQty();
-					BigDecimal y2 = o2.getToQty();
+					}
+				}
+
+				BigDecimal y1 = o1.getToQty();
+				BigDecimal y2 = o2.getToQty();
+				if (y1 != null && y2 != null) {
 					int toQtyComp = y1.compareTo(y2);
 					if (toQtyComp != 0) {
 						return toQtyComp;
 					}
+				}
 
 				Date d1 = o1.getExpDate();
 				Date d2 = o2.getExpDate();
