@@ -8980,7 +8980,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							// END
 							clonedAnswerList.add(tpaClone);
 						} catch (Exception e) {
-							e.printStackTrace();
+							log.error(e);
 						}
 					}
 					// Put into scLoiLoaItemAnswerMap for use in generating
@@ -8996,7 +8996,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						// Save and update new supplier offer into each related TplSpecAnswer in DB
 						getTemplateSpecSO().updateNewSupplierOffer(null, tpaIdList);
 					} catch (Exception e) {
-						e.printStackTrace();
+						log.error(e);
 					}
 					try {
 						// Save and update new supplier offer into related ScLoiLoaItem in DB
@@ -9014,7 +9014,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						}
 						
 					} catch (Exception e) {
-						e.printStackTrace();
+						log.error(e);
 					}
 					List<String> nsoJustList = new ArrayList<String>();
 					nsoJustList.add("NSO_" + null);
@@ -9065,7 +9065,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							// END
 							clonedAnswerList.add(tpaClone);
 						} catch (Exception e) {
-							e.printStackTrace();
+							log.error(e);
 						}
 					}
 					// Put into scLoiLoaItemAnswerMap for use in generating
@@ -9306,7 +9306,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						try {
 							loadScLoaReport(scLoaReport);
 						} catch (Exception e) {
-							e.printStackTrace();
+							log.error(e);
 						}
 					}
 				}
@@ -9349,7 +9349,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								// END
 								clonedAnswerList.add(tpaClone);
 							} catch (Exception e) {
-								e.printStackTrace();
+								log.error(e);
 							}
 						}
 						// Put into scLoiLoaItemAnswerMap for use in generating
@@ -9368,7 +9368,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								getTemplateSpecSO().updateNewSupplierOffer(getManagedBean().getNewSupplierOffered(),
 										tpaIdList);
 						} catch (Exception e) {
-							e.printStackTrace();
+							log.error(e);
 						}
 						try {
 							// Save and update new supplier offer into related
@@ -9389,7 +9389,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							}
 
 						} catch (Exception e) {
-							e.printStackTrace();
+							log.error(e);
 						}
 						List<String> nsoJustList = new ArrayList<String>();
 						nsoJustList.add("NSO_" + getManagedBean().getNewSupplierOffered());
@@ -9438,7 +9438,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								// END
 								clonedAnswerList.add(tpaClone);
 							} catch (Exception e) {
-								e.printStackTrace();
+								log.error(e);
 							}
 						}
 						// Put into scLoiLoaItemAnswerMap for use in generating
@@ -9472,7 +9472,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					try {
 						loadScLoaReport(scLoaReport);
 					} catch (Exception e) {
-						e.printStackTrace();
+						log.error(e);
 					}
 				}
 			}
@@ -10145,7 +10145,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			generateUpdatedLampiranA3FromVelocity((ScAttachment) scLoaReport.getScLoaReportAttachment(),
 					getManagedBean().getScLoa(), this.getManagedBean().getScQt());
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport.getScLoaReportAttachment();
 
