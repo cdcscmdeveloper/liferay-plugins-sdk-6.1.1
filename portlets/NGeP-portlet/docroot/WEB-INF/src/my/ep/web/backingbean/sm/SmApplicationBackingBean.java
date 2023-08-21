@@ -4223,7 +4223,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 				// init business premise whether show or hide home office
 				initBusinessPremise();
-
+				//#35086 - start
+				SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean().getLatestAppl(), 
+						getManagedBean().getSmAppl(), getManagedBean().getCurrentPageType());
+				//#35086 - end
 			}
 			assignValReqdToFalse();
 		}
@@ -8303,7 +8306,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			// set section editor VO after update
 			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false,
 					getManagedBean().getCurrentPageType());
-			
 			setBranchDisplayTable(); //29727 , #34135
 		}
 	}
@@ -17812,9 +17814,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 	}
 	// #34166 - End
-	//#32008 - start
-	public String getSelectedBranchBank(){
-		SmSupplierBank bank = getManagedBean().getSelectedBank();
+	//#32008, #35086 - start
+	public String getSelectedBranchBank(SmSupplierBank bank){
+		//#35086 - end
 		if (SmCommonUtil.isCollectionEmpty(bank.getSmSupplierBranchBanks())) {
 			return null;
 		}
@@ -17830,8 +17832,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		return sb.toString();
 	}
 	
-	public String getSelectedSignatoryBank(){
-		SmSupplierBank bank = getManagedBean().getSelectedBank();
+	//#35086 - start
+	public String getSelectedSignatoryBank(SmSupplierBank bank){
+		//#35086 - end
 		if (SmCommonUtil.isCollectionEmpty(bank.getSmChequeSignatories())){
 			return null;
 		}
