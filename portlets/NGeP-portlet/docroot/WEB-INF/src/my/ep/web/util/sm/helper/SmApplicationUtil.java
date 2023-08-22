@@ -9988,16 +9988,18 @@ public class SmApplicationUtil {
 	}
 
 	public static SmFacility getHqFacilityByAppl(SmAppl appl) {
+		// #34303 - start
 		for (SmFacility smFac : appl.getSmFacilities()) {
 			if ((smFac.getFacilityType().equalsIgnoreCase(
 					SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE) || smFac
 					.getFacilityType()
 					.equalsIgnoreCase(
 							SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE))
-					&& smFac.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+					&& smFac.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED && smFac.isHeadquarters()) {
 				return smFac;
 			}
 		}
+		// #34303 - start
 		return null;
 	}
 
