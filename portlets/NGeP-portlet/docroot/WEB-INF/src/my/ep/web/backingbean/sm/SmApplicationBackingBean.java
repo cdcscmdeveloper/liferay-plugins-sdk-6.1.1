@@ -3516,16 +3516,21 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SmAppl appl = getManagedBean().getSmAppl();
 		
 		for (int i = 0; i < appl.getSmFacilities().size(); i++) {
-			if (appl.getSmFacilities().get(i).getFacilityType()
-					.equalsIgnoreCase("B") && appl.getSmFacilities().get(i).isHeadquarters()){
+			if ((appl.getSmFacilities().get(i).getFacilityType()
+					.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) || appl
+					.getSmFacilities().get(i).getFacilityType()
+					.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE))
+					&& appl.getSmFacilities().get(i).isHeadquarters()) {
 				isHq = true;
 			}
 		}
 		
 		if(!isHq){
 			for (int i = 0; i < appl.getSmFacilities().size(); i++) {
-				if (appl.getSmFacilities().get(i).getFacilityType()
-						.equalsIgnoreCase("B")){
+				if ((appl.getSmFacilities().get(i).getFacilityType()
+						.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) || appl
+						.getSmFacilities().get(i).getFacilityType()
+						.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE))) {
 					appl.getSmFacilities().get(i).setHeadquarters(true);
 				}
 			}	
