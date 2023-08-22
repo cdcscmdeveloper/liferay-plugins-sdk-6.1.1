@@ -810,6 +810,14 @@
 						<f:selectItems value="#{backingBean.getYearDropDown()}" />
 						<p:ajax process="@this" update="equiJbFnInfYrTo" partialSubmit="true"/>
 					</p:selectOneMenu> 
+					<!-- #35086 -->
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId 
+							and not empty backingBean.managedBean.latestPersonnel}"
+						oriValue="#{backingBean.managedBean.latestJobFunction.fromYear}" 
+						currValue="#{backingBean.managedBean.selectedJobFunction.fromYear}" 
+						alertValue="#{backingBean.managedBean.latestJobFunction.fromYear}"/>
 					<p:message id="equiJbFnInfYrFrmMsg"
 						for=":#{p:component('equiJbFnInfYrFrm')}" showSummary="true"
 						showDetail="false" display="icon" /></td>
@@ -826,6 +834,14 @@
 						<f:selectItems value="#{backingBean.getYearsWorkExp()}" />
 						<p:ajax process="@this" update="@this" partialSubmit="true"/>
 					</p:selectOneMenu>
+					<!-- #35086 -->
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId 
+							and not empty backingBean.managedBean.latestPersonnel}"
+						oriValue="#{backingBean.managedBean.latestJobFunction.toYear}" 
+						currValue="#{backingBean.managedBean.selectedJobFunction.toYear}" 
+						alertValue="#{backingBean.managedBean.latestJobFunction.toYear}"/>
 					<p:message id="equiJbFnInfYrToMsg" for=":#{p:component('equiJbFnInfYrTo')}"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
