@@ -45,8 +45,8 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
 					<p:commandLink partialSubmit="true" process="@this" onstart="blockWidget.show()"
-						action="#{viewSmApplBackingBean.assignSelWorkshop(work)}" oncomplete="workShopDialog.show()"
-						update=":#{p:component('workShopDialog')}" style="padding-right:5px">
+						action="#{viewSmApplBackingBean.assignSelWorkshop(work)}" oncomplete="viewWorkShopDialog.show()"
+						update=":#{p:component('viewWorkShopDialog')}" style="padding-right:5px">
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 					</p:commandLink>
 				</p:column>
@@ -57,9 +57,8 @@
 	</p:panel>
 	
 	<p:dialog style="max-height:450px;width:500px" header="#{lbl['lbl.sm.workshop.information']}"
-		widgetVar="workShopDialog" resizable="false" showEffect="fade"
-		closable="true" hideEffect="fade" modal="true" id="workShopDialog">
-		
+		widgetVar="viewWorkShopDialog" resizable="false" showEffect="fade"
+		closable="true" hideEffect="fade" id="viewWorkShopDialog">		
 		<p:scrollPanel mode="native" style="max-height:400px;width:450px;border:none">
 			<table style="width: 100%;table-layout:fixed">
 				<tr>

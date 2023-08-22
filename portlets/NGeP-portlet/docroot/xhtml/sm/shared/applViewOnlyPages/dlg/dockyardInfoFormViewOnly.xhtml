@@ -44,9 +44,9 @@
 						
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
-					<p:commandLink action="#{viewSmApplBackingBean.assignSelDockyard(doc)}" oncomplete="dockYardDialog.show()"
+					<p:commandLink action="#{viewSmApplBackingBean.assignSelDockyard(doc)}" oncomplete="viewDockYardDialog.show()"
 						process="@this" partialSubmit="true" onstart="blockWidget.show()"
-						update=":#{p:component('dockYardDialog')}" style="padding-right:5px">
+						update=":#{p:component('viewDockYardDialog')}" style="padding-right:5px">
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 					</p:commandLink>
 				</p:column>
@@ -56,8 +56,8 @@
 	</p:panel>
 	
 	<p:dialog style="max-height:450px;width:500px" header="#{lbl['lbl.sm.dockyard.information']}"
-		widgetVar="dockYardDialog" resizable="false" showEffect="fade"
-		closable="true" hideEffect="fade" modal="true" id="dockYardDialog">
+		widgetVar="viewDockYardDialog" resizable="false" showEffect="fade"
+		closable="true" hideEffect="fade" id="viewDockYardDialog">
 		
 		<p:scrollPanel mode="native" style="max-height:400px;width:450px;border:none">
 			<table style="width: 100%;table-layout:fixed">
