@@ -129,6 +129,8 @@
 					partialSubmit="true" update=":#{p:component('revisionViewDlg')}" 
 					onclick="blockWidget.show()" 
 					oncomplete="blockWidget.hide()"/>&#160;&#160;
+			<h:commandLink rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" action="#{backingBean.redirectToViewSSMInfo()}" target="_blank"
+			value="#{lbl['lbl.sm.view.ssm.infomation']}"/>
 			<!-- #34099 - end -->
 		</div>
 		<br /><br />
