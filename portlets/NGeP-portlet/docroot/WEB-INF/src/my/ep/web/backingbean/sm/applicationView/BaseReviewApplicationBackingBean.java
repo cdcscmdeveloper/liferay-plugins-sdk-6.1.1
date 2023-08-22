@@ -1599,6 +1599,19 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 
 		getManagedBean().setBankBranchName(sb.toString());
+		getManagedBean().setSelectedBank(shareBankBean);
+		if (shareBankBean.getSmAddress() == null) {
+			shareBankBean.setSmAddress(setDefaultAddr());
+		}
+		setSelectedBankAccountPurpose();
+		//#32008 - end
+		if (getManagedBean().getLatestAppl() != null) {
+			getManagedBean().setLatestBank(
+				(SmSupplierBank) EntityHelper.getEntityByMultiplePropertiesFromList(
+				shareBankBean, getManagedBean().getLatestAppl().getSmSupplierBanks(),
+				new String[] { "accountNo", "accountPurpose" }, null, null));
+		}
+		//#32008 - end
 		//#35086 - start
 		SmSupplierBank latestbank = getManagedBean().getLatestBank();
 		sb = new StringBuilder();
@@ -1631,26 +1644,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		getManagedBean().setLatestBankBranchName(sb.toString());
 		//#35086 - end
-
-		// if (shareBankBean.getSmSupplierBranch() != null
-		// && shareBankBean.getSmSupplierBranch().getSupplierBranchId() != null)
-		// {
-		// getManagedBean().setSelBankBranchName(
-		// shareBankBean.getSmSupplierBranch().getBranchName());
-		// }
-		getManagedBean().setSelectedBank(shareBankBean);
-		if (shareBankBean.getSmAddress() == null) {
-			shareBankBean.setSmAddress(setDefaultAddr());
-		}
-		setSelectedBankAccountPurpose();
-		//#32008 - end
-		if (getManagedBean().getLatestAppl() != null) {
-			getManagedBean().setLatestBank(
-				(SmSupplierBank) EntityHelper.getEntityByMultiplePropertiesFromList(
-				shareBankBean, getManagedBean().getLatestAppl().getSmSupplierBanks(),
-				new String[] { "accountNo", "accountPurpose" }, null, null));
-		}
-		//#32008 - end
 		closeBlockUI();
 	}
 
