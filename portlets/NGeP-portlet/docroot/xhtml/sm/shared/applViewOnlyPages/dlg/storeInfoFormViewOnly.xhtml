@@ -15,23 +15,10 @@
 		<ui:repeat var="storeCatVar" value="#{viewSmApplBackingBean.managedBean.storeFacilitiesVOList}" varStatus="storeCatVarStatus">
 			<table style="width: 100%;">
 				<tr>
-					<td style="float: left;">
-					<!-- 29380  - Site Visit Grouping Enhancement -28775 -Start -->
-					    <p:outputLabel value="#{storeCatVarStatus.index + 1}. #{storeCatVar.fullCatcode} (#{storeCatVar.pmCategoryL2.pmCategoryL1.categoryName}/#{storeCatVar.pmCategoryL2.categoryName}/#{storeCatVar.categoryName})" 
-					    style="text-align:left;"/>
+					<td style="white-space: nowrap; float: left;">
+					    <p:outputLabel value="#{storeCatVarStatus.index + 1}. #{storeCatVar.fullCatcode} (#{storeCatVar.categoryName})" />
 					</td>
 				</tr>
-					<ui:repeat var="categoryVar" value="#{viewSmApplBackingBean.managedBean.suppProfileOrHistoryCategoryList}" >
-					<tr>
-						<td style="white-space: nowrap; float: left;">
-						    <p:outputLabel style="text-indent: 10px;" value="#{lbl['lbl.sm.catCodes.othDesc']}: #{categoryVar.otherDesc}" 
-						    rendered="#{categoryVar.pmCategoryL3.categoryL3Code eq SupplierManagementConst.CATEGORY_CODE_L3_99 and storeCatVar.categoryL3Code eq SupplierManagementConst.CATEGORY_CODE_L3_99
-						    and categoryVar.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS
-						    and categoryVar.pmCategoryL3.categoryL3Id eq storeCatVar.categoryL3Id}"/>
-						</td>
-					</tr>
-					</ui:repeat>
-					<!-- 29380  - Site Visit Grouping Enhancement -28775 -End -->
 			</table>
 			<br />
 			
@@ -56,8 +43,8 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
 					<p:commandLink process="@this" partialSubmit="true" onstart="blockWidget.show()"
-						action="#{viewSmApplBackingBean.assignSelStore(stor)}" oncomplete="viewStoreDialog.show()"
-						update=":#{p:component('viewStoreDialog')}" style="padding-right:5px">
+						action="#{viewSmApplBackingBean.assignSelStore(stor)}" oncomplete="storeDialog.show()"
+						update=":#{p:component('storeDialog')}" style="padding-right:5px">
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 					</p:commandLink>
 				</p:column>
@@ -67,8 +54,8 @@
 	</p:panel>
 	
 	<p:dialog style="max-height:450px;width:500px" header="#{lbl['lbl.sm.store.information']}"
-		widgetVar="viewStoreDialog" resizable="false" showEffect="fade"
-		closable="true" hideEffect="fade" id="viewStoreDialog">
+		widgetVar="storeDialog" resizable="false" showEffect="fade"
+		closable="true" hideEffect="fade" modal="true" id="storeDialog">
 		
 		<p:scrollPanel mode="native" style="max-height:400px;width:450px;border:none">
 			<table style="width: 100%;table-layout:fixed">
@@ -83,8 +70,7 @@
 				<tr>
 					<td style="vertical-align: baseline;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.category']}" /></td>
 					<td>
-						<!-- 28775 - Site Visit Grouping Enhancement -28775 -->
-						<ui:repeat var="catFac" value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.smSupplierCategoryFacilities}">
+						<ui:repeat var="catFac" value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smSupplierCategoryFacilities}">
 							<p:outputLabel value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 										#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
 										#{catFac.pmCategoryL3.categoryL3Code}
