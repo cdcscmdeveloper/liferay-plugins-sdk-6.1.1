@@ -1547,14 +1547,14 @@ u.underline {
 					##26130 - start 03032022
 					#set($rowCount = 0)	
 					#if($tplspecMaster.tplSpecQuestions.size() > 0)
-					<table width="100%" border="1" cellpadding="0" cellspacing="0">
+					<table width="100%" border="1" cellpadding="0" cellspacing="0" style="border-top: 1px solid black;>
 						<body>
 					##26130 - end 03032022
 					
 					  #if ($rowCount == 0)
 							<tr>
-								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Tajuk Templat</nobr></td>
-								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px;">$tplspecMaster.specName</td>
+								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold; border-top: none !important;"><nobr>Tajuk Templat</nobr></td>
+								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; border-top: none !important;">$tplspecMaster.specName</td>
 							</tr>
 							<tr>
 								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Jenis Item</nobr></td>
@@ -2114,15 +2114,15 @@ u.underline {
 				
 				##26130 - start 03032022
 				#if($tplspecMaster.tplSpecQuestions.size() > 0)
-						<table width="100%" border="1" cellpadding="0" cellspacing="0">
+						<table width="100%" border="1" cellpadding="0" cellspacing="0" style="border-top: 1px solid black;>
 						<tbody>
 						#set($rowCount = 0)
 						
 						##26130- end 03032022	
 						 #if ($rowCount == 0)
 							<tr>
-								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Tajuk Templat</nobr></td>
-								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px;">$tplspecMaster.specName</td>
+								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold; border-top: none !important;"><nobr>Tajuk Templat</nobr></td>
+								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; border-top: none !important;">$tplspecMaster.specName</td>
 							</tr>
 							<tr>
 								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Jenis Item</nobr></td>
@@ -2414,48 +2414,49 @@ u.underline {
 				
 		#end
 #else	
+	##start - 29006 note 794	
 	#if ($scLoa.scLoiLoa.docType == "PR")
 	  #set($rowCount = 0)
 	  #foreach( $tplspecMaster in $masters )
 
 				#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
-					#if ($itemType == "Perkhidmatan" || $itemType == "Service")
+					#if ($itemType == "Perkhidmatan" || $itemType == "Service" || $itemType == "Produk" || $itemType == "Product")
 			      
 			       
 						<table width="100%" border="1" cellpadding="0" cellspacing="0">
 							<tbody>
 					        #if ($isZonal)
 							   <tr>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Item</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Jenis Pemenuhan</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">UOM</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Kekerapan / <br/>Unit Ukuran</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sehari</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sebulan</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Tempoh (Bulan)</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Zon</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Kuantiti</th>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Tawaran Pembekal</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10px;">Item</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Jenis Pemenuhan</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">UOM</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Kekerapan / <br/>Unit Ukuran</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sehari</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sebulan</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Tempoh (Bulan)</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Zon</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Kuantiti</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10px;">Tawaran Pembekal</th>
 									#* -- comment out for 31552 <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Catatan</th> *#
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Skop Perkhidmatan / SLA</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10px;">Skop Perkhidmatan / SLA</th>
 								</tr>
 								
 								<tr>	
-									<td  bgcolor="#6d839b" class="title border left" colspan="8" style="text-align: center; padding-left: 5px; font-size:10px;">Spesifikasi</td>
+									<td valign="top"  bgcolor="#6d839b" class="title border left" colspan="8" style="text-align: center; padding-left: 5px; font-size:10px;">Spesifikasi</td>
 								</tr>
 							
 							#else
 									<tr>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10x;">Item</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Jenis Pemenuhan</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">UOM</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Kekerapan / <br/>Unit Ukuran</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sehari</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sebulan</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Tempoh (Bulan)</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Kuantiti</th>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Tawaran Pembekal</th>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Skop Perkhidmatan / SLA</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10px;">Item</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Jenis Pemenuhan</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">UOM</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Kekerapan / <br/>Unit Ukuran</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sehari</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sebulan</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Tempoh (Bulan)</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Kuantiti</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10px;">Tawaran Pembekal</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10px;">Skop Perkhidmatan / SLA</th>
 								</tr>
 								
 								<tr>	
@@ -2484,7 +2485,7 @@ u.underline {
 										$tplspecQuestion.clItem
 									
 								</td>
-								<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;" >
+								<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;" >
 								
 									#if($tplspecQuestion.clFulfilmentTypeCode)
 										$bean.getParameterDescForVelocityReport($tplspecQuestion.clFulfilmentTypeCode)
@@ -2493,33 +2494,33 @@ u.underline {
 								</td>
 							
 									
-								<td valign="top"  class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;">
+								<td valign="top"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
 								
 								#if($tplspecQuestion.clUom)
 								$tplspecQuestion.clUom.uomName
 								#end
 								
 								</td>
-								<td valign="top"  class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;">
+								<td valign="top"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
 									#if ($tplspecQuestion.clUomFrequency)
 										$tplspecQuestion.clUomFrequency
 									#end
 								</td>
-								<td valign="top"  class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;">
+								<td valign="top"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
 									#if (($tplspecQuestion.clUomPerDay == "") || ($tplspecQuestion.clUomPerDay == 0))
 									$serviceScope 
 									#else
 									 $tplspecQuestion.clUomPerDay
 									#end
 								</td>
-								<td valign="top"  class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;">
+								<td valign="top"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
 									#if(($tplspecQuestion.clUomPerMonth =="") || ($tplspecQuestion.clUomPerMonth == 0))
 									$serviceScope 
 									#else	
 									$tplspecQuestion.clUomPerMonth 
 									#end
 								</td>
-								<td valign="top"  class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;">
+								<td valign="top"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
 									#if($tplspecQuestion.clDurationMonth)
 										$tplspecQuestion.clDurationMonth
 									#else	
@@ -2530,26 +2531,35 @@ u.underline {
 								<td>
 									#set($countZoneList = 1)
 									#foreach( $tplSpecZoneDtls in $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls )
-									<table width="100%">
-										<tbody>
-										<tr >
-											#if ($tplSpecZoneDtls.zoneName)
-												#if ($countZoneList == $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls.size())
-													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; height: 80px; font-size:12px;">$tplSpecZoneDtls.zoneName</td>
-												#else
-													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplSpecZoneDtls.zoneName</td>
-												#end
-											#else
-												<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$serviceScope</td>
-											#end
-										</tr>
-										</tbody>
+										<table width="100%" border="0" cellspacing="0" cellpadding="0">
+											<tbody>
+												<tr >
+													#if ($tplSpecZoneDtls.zoneName)
+														#if ($countZoneList == $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls.size())
+															<td
+																valign="top" rowspan="$tplSpecZoneDtls.specCount"
+																class="standard border-bottom left-right"
+																style="text-align: left; padding-left: 5px; font-size:12px;">$tplSpecZoneDtls.zoneName</td>
+														#else
+															<td
+																valign="top" rowspan="$tplSpecZoneDtls.specCount"
+																class="standard border-bottom left-right"
+																style="text-align: left; padding-left: 5px; font-size:12px;border-bottom:1px ridge #FAFAFA;">$tplSpecZoneDtls.zoneName</td>
+														#end
+													#else
+															<td
+																valign="top" rowspan="$tplSpecZoneDtls.specCount"
+																class="standard border-bottom left-right"
+																style="text-align: left; padding-left: 5px; font-size:12px;border-bottom:1px ridge #FAFAFA;">$serviceScope</td>
+													#end
+												</tr>
+											</tbody>
 										</table>
 									#set($countZoneList = $countZoneList + 1)
 									#end
 								</td>
 								
-								<td valign="top"  class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;">
+								<td valign="top"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
 									#set($maxQty = 0)
 									#set($minQty = 0)
 									#set($currentValue = 0)								
@@ -2600,29 +2610,36 @@ u.underline {
 										#set($rowCount = 0)							
 										#if ($isWipData)											
 											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-											<table width="100%" border="0" cellspacing="0" cellpadding="0">
-											<tbody>
-											<tr>
-												#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
-													<td valign="top" class="standard border-bottom left" style="text-align: left; border-bottom: 1px solid black; height: 80px; font-size:12px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $tplSpecAnswer.answerRemark</td>
-												#else
-													<td valign="top" class="standard border-bottom left" style="text-align: left; border-bottom: 1px solid black; height: 80px; font-size:12px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $serviceScope</td>
-												#end
-											</tr>
-											</tbody>
-											</table>
-													
+												#if($supplierId  == $tplSpecAnswer.tplSpecSuppAnswer.smSupplier.supplierId)
+													<table width="100%" border="0" cellspacing="0" cellpadding="0">
+													<tbody>
+													<tr>
+														#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
+															<td valign="top" class="standard border-bottom left" style="text-align: left; border-bottom: 1px solid black; height: 80px; font-size:12px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $tplSpecAnswer.answerRemark</td>
+														#else
+															<td valign="top" class="standard border-bottom left" style="text-align: left; border-bottom: 1px solid black; height: 80px; font-size:12px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $serviceScope</td>
+														#end
+													</tr>
+													</tbody>
+													</table>
+												#end	
 											#end
 										#else				
+											#set($flagShowed = 0)										
 											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-											#if($rowCount == 0)
-												#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
-													<span>$tplSpecAnswer.answerRemark</span>
-												#else
-													<span>$serviceScope</span>
+												#if($supplierId  == $tplSpecAnswer.tplSpecSuppAnswer.smSupplier.supplierId)
+														#if ($flagShowed != 1 && $tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
+															#set($suppRespon = $tplSpecAnswer.answerRemark)
+															#set($suppRespon = $suppRespon.replace("<", "&#60;"))
+															#set($suppRespon = $suppRespon.replace(">", "&#62;"))
+															#set($rowCount = $rowCount + 1)
+															#set($flagShowed = 1)
+															<span> $suppRespon </span>
+														#end
 												#end
 											#end
-											#set($rowCount = $rowCount + 1)
+											#if($flagShowed == 0)
+												<span>$serviceScope</span>
 											#end
 										#end
 									
@@ -2669,6 +2686,9 @@ u.underline {
 										
 											#set($countSpecList = 1)
 											#foreach( $specVal in $specList )
+												#set($specVal = $specVal.replace("#60;", "&#60;"))
+												#set($specVal = $specVal.replace("#62;", "&#62;"))
+												#set($specVal = $specVal.replace("#and;", "&"))
 												
 												<table width="100%">
 													<tbody>
@@ -2701,7 +2721,7 @@ u.underline {
 								<td valign="top" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
 										$tplspecQuestion.clItem
 								</td>
-								 <td valign="top" class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;" >
+								 <td valign="top" class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;" >
 									
 										#if($tplspecQuestion.clFulfilmentTypeCode)
 											$bean.getParameterDescForVelocityReport($tplspecQuestion.clFulfilmentTypeCode)
@@ -2710,40 +2730,40 @@ u.underline {
 									</td>
 							
 									
-									<td valign="top"  class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;">
+									<td valign="top"  class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;">
 									
 									#if($tplspecQuestion.clUom)
 									$tplspecQuestion.clUom.uomName
 									#end
 									
 									</td>
-									<td valign="top"  class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;">
+									<td valign="top"  class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;">
 										#if ($tplspecQuestion.clUomFrequency)
 											$tplspecQuestion.clUomFrequency
 										#end
 									</td>
-									<td valign="top"  class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;">
+									<td valign="top"  class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;">
 										#if (($tplspecQuestion.clUomPerDay == "") || ($tplspecQuestion.clUomPerDay == 0))
 										$serviceScope 
 										#else
 										 $tplspecQuestion.clUomPerDay
 										#end
 									</td>
-									<td valign="top"  class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;">
+									<td valign="top"  class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;">
 										#if(($tplspecQuestion.clUomPerMonth =="") || ($tplspecQuestion.clUomPerMonth == 0))
 										$serviceScope 
 										#else	
 										$tplspecQuestion.clUomPerMonth 
 										#end
 									</td>
-									<td valign="top"  class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;">
+									<td valign="top"  class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;">
 										#if($tplspecQuestion.clDurationMonth)
 											$tplspecQuestion.clDurationMonth
 										#else	
 											$serviceScope 
 										#end
 									</td>
-									<td valign="top" class="title border left"  style="text-align: center; padding-left: 5px; font-size:12px;">
+									<td valign="top" class="title border left"  style="text-align: left; padding-left: 5px; font-size:12px;">
 										#set($currentValue = 0)										
 										#foreach( $scLoiLoaItem in $scLoiLoaItemList )												
 												#if($scLoiLoaItem.itemName.trim() == $tplspecQuestion.clItem.trim())
@@ -2768,7 +2788,11 @@ u.underline {
 										#if(($tplspecQuestion.answerRemarks == "" ))
 										 $serviceScope 
 										#else
-											 $tplspecQuestion.answerRemarks							
+											#set($tplspecQuestion.answerRemarks = $tplspecQuestion.answerRemarks)
+											#set($tplspecQuestion.answerRemarks = $tplspecQuestion.answerRemarks.replace("<", "&#60;"))
+											#set($tplspecQuestion.answerRemarks = $tplspecQuestion.answerRemarks.replace(">", "&#62;"))
+											 
+											$tplspecQuestion.answerRemarks
 										#end
 									</td>
 									<td valign="top" class="title border left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
@@ -2783,6 +2807,9 @@ u.underline {
 										#if ($tplspecQuestion.specList)
 											#set($countSpecList = 1)
 											#foreach( $specVal in $tplspecQuestion.specList )
+												#set($specVal = $specVal.replace("#60;", "&#60;"))
+												#set($specVal = $specVal.replace("#62;", "&#62;"))
+												#set($specVal = $specVal.replace("#and;", "&"))
 							
 												<table width="100%">
 													<tbody>
@@ -2849,6 +2876,7 @@ u.underline {
 			</span></td>
 		</tr>
 	#end
+	##end - 29006 note 794
 #end
 
 
