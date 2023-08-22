@@ -50,8 +50,8 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
 					<p:commandLink action="#{viewSmApplBackingBean.assignSelFactory(fac)}" onstart="blockWidget.show()"
-						partialSubmit="true" process="@this" oncomplete="viewFactoryDialog.show()"
-						update=":#{p:component('viewFactoryDialog')}" style="padding-right:5px">
+						partialSubmit="true" process="@this" oncomplete="factoryDialog.show()"
+						update=":#{p:component('factoryDialog')}" style="padding-right:5px">
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 					</p:commandLink>
 				</p:column>
@@ -62,8 +62,8 @@
 						
 	</p:panel>
 	<p:dialog style="max-height:450px;width:500px" header="#{lbl['lbl.sm.factory.information']}"
-		widgetVar="viewFactoryDialog" resizable="false" showEffect="fade"
-		closable="true" hideEffect="fade" id="viewFactoryDialog">
+		widgetVar="factoryDialog" resizable="false" showEffect="fade"
+		closable="true" hideEffect="fade" modal="true" id="factoryDialog">
 		
 		<p:scrollPanel mode="native" style="max-height:400px;width:450px;border:none">
 			<table style="width: 100%;table-layout:fixed">
