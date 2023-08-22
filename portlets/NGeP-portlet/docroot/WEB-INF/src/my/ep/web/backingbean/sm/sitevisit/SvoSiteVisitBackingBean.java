@@ -2215,7 +2215,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 
 			reqDTO.setSmSvTask(svTask);
-			reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 			ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
 			SiteVisitResDTO resDTO = reqSO.saveOrSubmitSiteVisitReport(reqDTO);
 			
@@ -2610,7 +2610,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		try{
 			SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 			reqDTO.setSmSvTask(svTask);
-			reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 			((ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class))
 					.saveOrSubmitSiteVisitReport(reqDTO);
 		}catch(Exception ex){

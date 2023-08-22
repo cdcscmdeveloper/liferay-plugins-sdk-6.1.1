@@ -343,7 +343,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		CtAttachment attachment = new CtAttachment();
 		attachment.setFileName(item.getFileName());
 		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
@@ -2200,7 +2200,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			CtAttachment attachment = new CtAttachment();
 			attachment.setFileName(item.getFileName());
 			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-			attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			attachment.setCreatedUser(facesScopes.getUserSessionBean());
 			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			attachment.setSectionId(ContractConst.ATTACHMENT_AGENCY_CONTRACT_SHARING);
