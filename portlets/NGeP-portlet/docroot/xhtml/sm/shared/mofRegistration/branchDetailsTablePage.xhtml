@@ -160,6 +160,7 @@
 					required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.division']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.divisionId}"
+					disabled="#{backingBean.managedBean.upsCannotEdit}"
 					id="branchDivision">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="brnDivision"
