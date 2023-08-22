@@ -3060,10 +3060,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		
 		getManagedBean().getSmSupplierBranchSsm().clear();
-		for(SmSupplierBranch branch : getManagedBean().getSmAppl().getSmSupplierBranches()){
-			if(!branch.isSsmData()) continue;
-			getManagedBean().getSmSupplierBranchSsm().add(branch);
+		if(getManagedBean().getSmAppl().getSmSupplierBranches() != null){
+			for(SmSupplierBranch branch : getManagedBean().getSmAppl().getSmSupplierBranches()){
+				if(!branch.isSsmData()) continue;
+				getManagedBean().getSmSupplierBranchSsm().add(branch);
+			}
 		}
+		
 		
 		SupplierBusinessNatureReqDTO reqDTO = new SupplierBusinessNatureReqDTO();
 		reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());		
@@ -3076,10 +3079,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		
 		getManagedBean().getSmEquityCompaniesSsm().clear();
-		for(SmEquityCompany company : getManagedBean().getSmAppl().getSmEquityCompanies()){
-			if(!company.isSsmData()) continue;
-			getManagedBean().getSmEquityCompaniesSsm().add(company);
+		if(getManagedBean().getSmAppl().getSmEquityCompanies() != null){
+			for(SmEquityCompany company : getManagedBean().getSmAppl().getSmEquityCompanies()){
+				if(!company.isSsmData()) continue;
+				getManagedBean().getSmEquityCompaniesSsm().add(company);
+			}
 		}
+		
 		RequestContext.getCurrentInstance().execute("viewssminfoDlg.show()");
 	}
 	
