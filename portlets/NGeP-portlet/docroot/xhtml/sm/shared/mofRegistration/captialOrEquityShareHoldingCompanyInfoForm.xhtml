@@ -74,7 +74,7 @@
 					update=":form:tt:eqiComDt"></p:ajax>
 
 				<p:column selectionMode="multiple" width="1%" rendered="#{(not empty backingBean.managedBean.smAppl.smEquityCompanies) and (!backingBean.managedBean.upsCannotEdit)}" disabledSelection="#{equiBean.ssmData}" />
-				<p:column headerText="#{lbl['lbl.sm.equiComp.compName']}" style="white-spaces;">
+				<p:column headerText="#{lbl['lbl.sm.equiComp.compName']}" style="white-spaces: break-spaces;">
 					<h:outputText value="#{equiBean.companyName}" />
 				</p:column>
 
