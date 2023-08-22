@@ -1969,6 +1969,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					subStartTime); //20211005@fadhli - #31754
 		} else {
 			subStartTime = System.currentTimeMillis();
+			// #34303 - start
+			setValueForFacilityHeadquarters();
+			// #34303 - end
 			setApplicationFailities(smAppl.getSmFacilities());
 			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "assignStateDistAndCityForSelVal-22", 
@@ -3516,16 +3519,21 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SmAppl appl = getManagedBean().getSmAppl();
 		
 		for (int i = 0; i < appl.getSmFacilities().size(); i++) {
-			if (appl.getSmFacilities().get(i).getFacilityType()
-					.equalsIgnoreCase("B") && appl.getSmFacilities().get(i).isHeadquarters()){
+			if ((appl.getSmFacilities().get(i).getFacilityType()
+					.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) || appl
+					.getSmFacilities().get(i).getFacilityType()
+					.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE))
+					&& appl.getSmFacilities().get(i).isHeadquarters()) {
 				isHq = true;
 			}
 		}
 		
 		if(!isHq){
 			for (int i = 0; i < appl.getSmFacilities().size(); i++) {
-				if (appl.getSmFacilities().get(i).getFacilityType()
-						.equalsIgnoreCase("B")){
+				if ((appl.getSmFacilities().get(i).getFacilityType()
+						.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) || appl
+						.getSmFacilities().get(i).getFacilityType()
+						.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE))) {
 					appl.getSmFacilities().get(i).setHeadquarters(true);
 				}
 			}	
@@ -4294,6 +4302,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			getManagedBean().setSmSupplier(
 					getManagedBean().getSmAppl().getSmSupplier());
+			// #34303 - start
+			setValueForFacilityHeadquarters();
+			// #34303 - end
 			setApplicationFailities(getManagedBean().getSmAppl()
 					.getSmFacilities());
 
@@ -13095,33 +13106,27 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
 					|| smFac.getFacilityType()
 							.equalsIgnoreCase(
-									SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
-				if (smFac.getSmAddress() == null
-						|| smFac.getSmAddress().getAddressId() == null) {
-					smFac.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
-					SmApplicationUtil.getInstance().cloneAddress(
-							smFac.getSmAddress(), getHqAddress());
+							SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+				// #34303 - start
+				if (smFac.isHeadquarters()) {
+					if (smFac.getSmAddress() == null || smFac.getSmAddress().getAddressId() == null) {
+						smFac.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+						SmApplicationUtil.getInstance().cloneAddress(smFac.getSmAddress(), getHqAddress());
+					}
+					if (!smFac.getOwnershipType().equalsIgnoreCase("O")) {
+						getManagedBean().setBasicOffFacStates(
+								SmCommonUtil.getStateList(smFac.getSmAddress().getPmCountry().getCountryId()));
+					}
+					log.info("*********Setting Basic company value **********");
+					smFac.setFacilityName(getManagedBean().getSmAppl().getSmCompanyBasic().getCompanyName());
+					this.getManagedBean().setBasicCompanyFacility(smFac);
+					if (smFac.getSmAddress() != null && smFac.getSmAddress().getPmCountry() != null
+							&& smFac.getSmAddress().getPmState() != null && smFac.getSmAddress().getPmCity() != null) {
+						SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(getManagedBean(),
+								smFac.getSmAddress(), SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+					}
 				}
-				if (!smFac.getOwnershipType().equalsIgnoreCase("O")) {
-					getManagedBean().setBasicOffFacStates(
-							SmCommonUtil.getStateList(smFac.getSmAddress()
-									.getPmCountry().getCountryId()));
-				}
-				log.info("*********Setting Basic company value **********");
-				smFac.setFacilityName(getManagedBean().getSmAppl()
-						.getSmCompanyBasic().getCompanyName());
-				this.getManagedBean().setBasicCompanyFacility(smFac);
-				if (smFac.getSmAddress() != null
-						&& smFac.getSmAddress().getPmCountry() != null
-						&& smFac.getSmAddress().getPmState() != null
-						&& smFac.getSmAddress().getPmCity() != null) {
-					SmApplicationUtil
-							.getInstance()
-							.assignStateDistAndCityForSelVal(
-									getManagedBean(),
-									smFac.getSmAddress(),
-									SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
-				}
+				// #34303 - end
 			}
 			if (smFac.getFacilityType().equalsIgnoreCase(
 					SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {

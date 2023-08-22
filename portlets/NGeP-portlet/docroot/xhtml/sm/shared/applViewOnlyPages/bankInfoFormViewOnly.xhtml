@@ -253,11 +253,11 @@
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.bankBranchName}" escape="false"/>
 							<!-- #35086 -->
 							<c:if test="not empty viewSmApplBackingBean.managedBean.selectedBank.supplierBankId}">
-							<ac:smFieldChangeAlertView 
-								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
-								oriValue="#{viewSmApplBackingBean.managedBean.latestBankBranchName}" 
-								currValue="#{viewSmApplBackingBean.managedBean.bankBranchName}" 
-								alertValue="#{viewSmApplBackingBean.managedBean.latestBankBranchName}"/>
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestBankBranchName}" 
+									currValue="#{viewSmApplBackingBean.managedBean.bankBranchName}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestBankBranchName}"/>
 							</c:if></td>
 						</tr>
 					</c:if>
@@ -276,11 +276,11 @@
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.chequeSignPersonnelName}" escape="false" />
 						<!-- #35086 -->
 						<c:if test="not empty viewSmApplBackingBean.managedBean.selectedBank.supplierBankId}">
-						<ac:smFieldChangeAlertView 
-							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
-							oriValue="#{viewSmApplBackingBean.managedBean.latestChequeSignPersonnelName}" 
-							currValue="#{viewSmApplBackingBean.managedBean.chequeSignPersonnelName}" 
-							alertValue="#{viewSmApplBackingBean.managedBean.latestChequeSignPersonnelName}"/>
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestChequeSignPersonnelName}" 
+								currValue="#{viewSmApplBackingBean.managedBean.chequeSignPersonnelName}" 
+								alertValue="#{viewSmApplBackingBean.managedBean.latestChequeSignPersonnelName}"/>
 						</c:if></td>
 					</tr>
 				</table>
