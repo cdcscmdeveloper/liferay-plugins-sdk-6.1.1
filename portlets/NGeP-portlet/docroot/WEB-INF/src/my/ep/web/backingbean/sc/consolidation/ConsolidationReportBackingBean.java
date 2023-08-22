@@ -989,6 +989,7 @@ public class ConsolidationReportBackingBean extends
 			ScQt scQt = resDTO.getScQt();
 			populateParentOrgProfile(scQt);
 			getManagedBean().setScQt(scQt);
+			evaluateWIP(scQt);//34865,34866,34867 - 29021 WIP	
 
 			boolean isMedicalProcCategory = isMultipleProposalCategory(scQt,
 					null);
@@ -1721,8 +1722,21 @@ public class ConsolidationReportBackingBean extends
 		populateAttachmentDetails(attachment);
 
 		FacesScopes facesScopes = new FacesScopes();
-		long qtId = qt.getQtId();
-		String reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
+		// #35015 4ser -Start
+				IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+
+				long qtId = qt.getQtId();
+				EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+				req4SerDTO.setQtId(qtId);
+				int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+				String reportName = "";
+				if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+					reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_WIP_JSP;
+				} else {
+					reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
+				}
+				// #35015 4ser -End
 
 		String estimatedAmountStr = null;
 
@@ -2345,7 +2359,7 @@ public class ConsolidationReportBackingBean extends
 		boolean isSupplierBranchDeleted = false;
 		if(supplierId != null && scQt != null){
 			if(qtSuppFinalizationSO.isCheckCRandSFCurrentSupplierBranchDeleted(supplierId, scQt)){
-				isSupplierBranchDeleted = false;
+				isSupplierBranchDeleted = true;
 		    }
 		}
 	    return isSupplierBranchDeleted;

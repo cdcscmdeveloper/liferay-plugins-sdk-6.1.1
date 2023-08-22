@@ -1943,13 +1943,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 */
 	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
 				Long docId, String docNumber , String textBeforeSign) {
-			FacesScopes facesScope = new FacesScopes();
-			Long userId = facesScope.getUserSessionBean().getUserId();
 			Timestamp date = new Timestamp(System.currentTimeMillis());
 			pmDigiSign.setDocId(new BigDecimal(docId));
 			pmDigiSign.setDocNo(docNumber);
 			pmDigiSign.setDocType(docType);
-			pmDigiSign.setCreatedBy(userId);
+			pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			pmDigiSign.setCreatedDate(date);
 			pmDigiSign.setOriginalData(textBeforeSign);
 			// spki 
@@ -1998,6 +1996,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				orderBackingBean.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 				flBB.getManagedBean().setHideRemarks(true);
 				flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+				//#34686 start
+				orderBackingBean.getManagedBean().setAttachment(resDTO.getFlAttachment());
+				//#34686 end
 				flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 				if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 					return NAV_PO;
