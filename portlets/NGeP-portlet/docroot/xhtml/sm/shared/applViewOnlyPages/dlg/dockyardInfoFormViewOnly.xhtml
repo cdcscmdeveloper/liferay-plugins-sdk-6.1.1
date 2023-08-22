@@ -15,22 +15,10 @@
 		<ui:repeat var="dockyardCatVar" value="#{viewSmApplBackingBean.managedBean.dockYardFacilitiesVOList}" varStatus="dockyardCatVarStatus">
 			<table style="width: 100%;">
 				<tr>
-				<!-- 29380  - Site Visit Grouping Enhancement -28775 - Start -->
-					<td style="float: left;">
-					    <p:outputLabel value="#{dockyardCatVarStatus.index + 1}. #{dockyardCatVar.fullCatcode} 
-						(#{dockyardCatVar.pmCategoryL2.pmCategoryL1.categoryName}/#{dockyardCatVar.pmCategoryL2.categoryName}/#{dockyardCatVar.categoryName})" 
-						style="text-align:left;"/>
+					<td style="white-space: nowrap; float: left;">
+					    <p:outputLabel value="#{dockyardCatVarStatus.index + 1}. #{dockyardCatVar.fullCatcode} (#{dockyardCatVar.categoryName})" />
 					</td>
 				</tr>
-					<ui:repeat var="categoryVar" value="#{viewSmApplBackingBean.managedBean.suppProfileOrHistoryCategoryList}" >
-					<tr>
-						<td style="white-space: nowrap; float: left;">
-							<p:outputLabel style="text-indent: 10px;" value="#{lbl['lbl.sm.catCodes.othDesc']}: #{categoryVar.otherDesc}" 
-							rendered="#{viewSmApplBackingBean.checkOtherDescDockyard(dockyardCatVar,categoryVar)}" />
-						</td>
-					</tr>
-					</ui:repeat>
-				<!-- 29380  - Site Visit Grouping Enhancement -28775 -End -->
 			</table>
 			<br />
 			
@@ -56,9 +44,9 @@
 						
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
-					<p:commandLink action="#{viewSmApplBackingBean.assignSelDockyard(doc)}" oncomplete="viewDockYardDialog.show()"
+					<p:commandLink action="#{viewSmApplBackingBean.assignSelDockyard(doc)}" oncomplete="dockYardDialog.show()"
 						process="@this" partialSubmit="true" onstart="blockWidget.show()"
-						update=":#{p:component('viewDockYardDialog')}" style="padding-right:5px">
+						update=":#{p:component('dockYardDialog')}" style="padding-right:5px">
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 					</p:commandLink>
 				</p:column>
@@ -68,8 +56,8 @@
 	</p:panel>
 	
 	<p:dialog style="max-height:450px;width:500px" header="#{lbl['lbl.sm.dockyard.information']}"
-		widgetVar="viewDockYardDialog" resizable="false" showEffect="fade"
-		closable="true" hideEffect="fade" id="viewDockYardDialog">
+		widgetVar="dockYardDialog" resizable="false" showEffect="fade"
+		closable="true" hideEffect="fade" modal="true" id="dockYardDialog">
 		
 		<p:scrollPanel mode="native" style="max-height:400px;width:450px;border:none">
 			<table style="width: 100%;table-layout:fixed">
