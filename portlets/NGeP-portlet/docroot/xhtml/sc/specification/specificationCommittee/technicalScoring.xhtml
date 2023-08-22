@@ -210,7 +210,17 @@
 
 		</c:when>
 		<c:otherwise>
-			<p:panel header="#{lbl['lbl.sc.spec.tech.score.setting']}"
+			<table width="100%" class="BtnSpacing">
+			<tr>
+				<td align="right">
+					<p:commandButton value="#{lbl['lbl.btn.print']}" process="@all" type="button">
+						<p:printer target="technicalScoringID" />
+					</p:commandButton> 
+				</td>
+			</tr>
+			</table>
+			<h:panelGroup id="technicalScoringID">
+			<p:panel header="#{lbl['lbl.sc.spec.tech.score.setting']}" 
 		toggleable="true">
 
 		<table>
@@ -502,6 +512,7 @@
 			</tr>
 		</table>
 	</p:panel>
+	</h:panelGroup>
 		</c:otherwise>
 	</c:choose>
 <ui:remove>

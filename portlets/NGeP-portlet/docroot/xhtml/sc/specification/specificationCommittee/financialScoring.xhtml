@@ -7,7 +7,12 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
-	<p:panel header="#{lbl['lbl.sc.spec.financial.scoring']}"
+	<div align="right">
+		<p:commandButton value="#{lbl['lbl.btn.print']}" process="@all" type="button">
+			<p:printer target="financialScore" />
+		</p:commandButton>
+	</div>
+	<p:panel id="financialScore" header="#{lbl['lbl.sc.spec.financial.scoring']}"
 		toggleable="true">
 		<table>
 			<tr>

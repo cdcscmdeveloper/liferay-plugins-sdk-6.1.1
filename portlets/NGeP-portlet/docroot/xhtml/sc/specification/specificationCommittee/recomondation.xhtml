@@ -9,6 +9,11 @@
 
 
 	<h:panelGroup id="recommendationid">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.print']}" process="@all" type="button">
+					<p:printer target="recommendationid" />
+				</p:commandButton>
+			</div>
 			<p:panel id="package" toggleable="true">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.by.package']}" />
