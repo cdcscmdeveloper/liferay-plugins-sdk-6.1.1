@@ -43,8 +43,8 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
 					<p:commandLink process="@this" partialSubmit="true" onstart="blockWidget.show()"
-						action="#{viewSmApplBackingBean.assignSelStore(stor)}" oncomplete="storeDialog.show()"
-						update=":#{p:component('storeDialog')}" style="padding-right:5px">
+						action="#{viewSmApplBackingBean.assignSelStore(stor)}" oncomplete="viewStoreDialog.show()"
+						update=":#{p:component('viewStoreDialog')}" style="padding-right:5px">
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 					</p:commandLink>
 				</p:column>
@@ -54,8 +54,8 @@
 	</p:panel>
 	
 	<p:dialog style="max-height:450px;width:500px" header="#{lbl['lbl.sm.store.information']}"
-		widgetVar="storeDialog" resizable="false" showEffect="fade"
-		closable="true" hideEffect="fade" modal="true" id="storeDialog">
+		widgetVar="viewStoreDialog" resizable="false" showEffect="fade"
+		closable="true" hideEffect="fade" id="viewStoreDialog">
 		
 		<p:scrollPanel mode="native" style="max-height:400px;width:450px;border:none">
 			<table style="width: 100%;table-layout:fixed">
