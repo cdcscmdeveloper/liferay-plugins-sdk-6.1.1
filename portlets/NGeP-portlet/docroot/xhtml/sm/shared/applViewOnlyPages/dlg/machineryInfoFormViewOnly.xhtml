@@ -48,8 +48,8 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink partialSubmit="true" process="@this" onstart="blockWidget.show()"
-						action="#{viewSmApplBackingBean.assignSelMachinery(macBean)}" oncomplete="equipmentDialog.show()" 
-						update=":#{p:component('equipmentDialog')}" style="padding-right:5px">
+						action="#{viewSmApplBackingBean.assignSelMachinery(macBean)}" oncomplete="viewEquipmentDialog.show()" 
+						update=":#{p:component('viewEquipmentDialog')}" style="padding-right:5px">
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 					</p:commandLink>
 				</p:column>
@@ -62,9 +62,8 @@
 						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.machineryRemark}" />
 	</p:panel>
 	<p:dialog style="max-height:350px;width:500px"
-		header="#{lbl['lbl.sm.machine.diaHdr']}" widgetVar="equipmentDialog"
-		resizable="false" showEffect="fade" closable="true" hideEffect="fade"
-		modal="true" id="equipmentDialog">
+		header="#{lbl['lbl.sm.machine.diaHdr']}" widgetVar="viewEquipmentDialog"
+		resizable="false" showEffect="fade" closable="true" hideEffect="fade" id="viewEquipmentDialog">
 		
 		<p:scrollPanel mode="native" style="max-height:300px;width:450px;border:none">
 			<table style="width: 100%;table-layout:fixed">
