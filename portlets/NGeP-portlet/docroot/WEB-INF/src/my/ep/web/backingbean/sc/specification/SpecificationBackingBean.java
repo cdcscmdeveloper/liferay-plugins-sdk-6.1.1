@@ -23246,5 +23246,18 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	private String getLogoHeaderPath(){
 		return SmCommonUtil.getBasePortalUrl();
 	}
+	/**
+	 * This method is to check to render print button 
+	 * @return boolean
+	 */
+	public boolean renderPtintButtonForSpecConnittee(){
+		if(this.getManagedBean().getActiveIndex()==4
+				|| this.getManagedBean().getActiveIndex()==5
+				|| this.getManagedBean().getActiveIndex()==6){
+			return true;
+		}
+		
+		return false;
+	}
 	//#10141 Start Vinod
 }
