@@ -1721,7 +1721,11 @@ public class SmApplicationUtil {
 									}
 								}
 							}//#31043 end
-							
+							//#35086 - start
+							if(cat.getPoDecFlg() == null){
+								cat.setPoDecFlg(0);
+							}
+							//#35086 - end
 							if (StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == 0) {
 								validSave = false;
@@ -4128,6 +4132,7 @@ public class SmApplicationUtil {
 
 		// no category at all approved
 		if (isPendingApprovedCatExist && !isAtLeastOneCatApproved) {
+			assignValReqdToFalse(managedBean);	//#35059
 			throw new EpException(MessageConst.ERROR_722655);
 		}
 	}
@@ -5038,6 +5043,29 @@ public class SmApplicationUtil {
 				.checkActiveCancelApplicationBySupplierId(reqDTO);
 		return resDTO.isHasActiveTransaction();
 	}
+	
+	// #34441-start
+	/**
+	 * Check if there is any active Appl Type MOF appl for supplier.
+	 * 
+	 * @param smSupplier
+	 *            - SmSupplier object
+	 * @return
+	 * @return true, if successful
+	 */
+	public static String checkActiveSmApplTypeForSupp(SmSupplier smSupplier) {
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		resDTO = mofRegistrationSO.checkActiveApplTypeBySupplierId(reqDTO);
+		if (resDTO != null && resDTO.getApplType() != null) {
+			return resDTO.getApplType();
+		} else {
+			return null;
+		}
+	}// #34441-end
 
 	/**
 	 * Retrieve pm country list.
@@ -14049,8 +14077,17 @@ public class SmApplicationUtil {
 		SmApplSectionReview apprApplSecRev = new SmApplSectionReview();
 		for (SmApplSectionReview applSecRev : managedBean.getSmAppl()
 				.getSmApplSectionReviews()) {
-			EntityHelper.copyEntityProperties(applSecRev, apprApplSecRev,
-					new String[] { "applSectionReviewId" });
+			//#35086 - start
+			String[] exclude = new String[] {"applSectionReviewId", "associateRemark",
+					"bankRemark", "basicRemark", "branchRemark", "capitalRemark",
+					"categoryRemark", "certRemark", "equityCompRemark",
+					"experienceRemark", "factoryRemark", "assocBodyRemark",
+					"machineryRemark", "supplierSystemRemark", "manufacturingRemark",
+					"officeFacilityRemark", "personnelRemark", "licenseRemarks",
+					"shareholderRemark", "sitevisitRemark", "siteVisitVerifiedRemark",
+					"staffRemark", "trnsNetworkRemark"};
+			EntityHelper.copyEntityProperties(applSecRev, apprApplSecRev, exclude);
+			//#35086 - end
 			apprApplSecRev.setSmAppl(managedBean.getSmAppl());
 			apprApplSecRev
 					.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
