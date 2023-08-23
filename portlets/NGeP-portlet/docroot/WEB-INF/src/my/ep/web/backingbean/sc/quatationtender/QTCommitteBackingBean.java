@@ -2704,14 +2704,12 @@ public class QTCommitteBackingBean extends
 			for (PmUser entity : modelList) {
 			if (entity.isSelected()) {
 				// #12471 Start
-				List<ScQtApproval> approvals = this.getManagedBean().getQt().getScQtApprovals();
-				if(approvals != null){
-					for (ScQtApproval approval : approvals) {
-						for (ScQtApproverSettings approvalUser : approval.getApproverSettings()) {
-							if (approvalUser.getPmUser().getUserId().equals(entity.getUserId())) {
-								throw new EpException(MessageConst.ERROR_775301,
-										new String[] { entity.getUserName() });
-							}
+				ScQtApproval approval = this.getManagedBean().getScQtApproval();
+				if (approval != null) {
+					for (ScQtApproverSettings approvalUser : approval.getApproverSettings()) {
+						if (approvalUser.getPmUser().getUserId().equals(entity.getUserId())) {
+							throw new EpException(MessageConst.ERROR_775301,
+									new String[] { entity.getUserName() });
 						}
 					}
 				}
