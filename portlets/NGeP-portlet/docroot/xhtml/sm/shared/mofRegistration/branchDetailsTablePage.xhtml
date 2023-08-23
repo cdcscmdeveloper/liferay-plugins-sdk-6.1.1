@@ -169,6 +169,16 @@
 					listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
 						update="branchDist,branchCity" />
 				</p:selectOneMenu>
+				<!-- #35086 -->
+				<ac:smFieldChangeAlert 
+					isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
+					oriValue="#{backingBean.managedBean.latestBranch.smAddress.pmDivision.divisionId}" 
+					currValue="#{backingBean.managedBean.selectedBranch.smAddress.pmDivision.divisionId}" 
+					alertValue="#{(not empty backingBean.managedBean.latestBranch and 
+					 	not empty backingBean.managedBean.latestBranch.smAddress) ?
+						backingBean.getDivisionLabelById(backingBean.managedBean.latestBranch.smAddress.pmDivision.divisionId)
+						: lbl['lbl.txt.na']}"/>
 				</ui:fragment>
 				</p:outputPanel>
 				<p:message id="branchDivisionMsg" for="branchDivision" showSummary="true"
