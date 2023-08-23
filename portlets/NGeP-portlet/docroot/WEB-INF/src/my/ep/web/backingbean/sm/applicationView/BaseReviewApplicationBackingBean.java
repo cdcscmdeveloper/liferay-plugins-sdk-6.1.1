@@ -1605,6 +1605,38 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				new String[] { "accountNo", "accountPurpose" }, null, null));
 		}
 		//#32008 - end
+		//#35086 - start
+		SmSupplierBank latestbank = getManagedBean().getLatestBank();
+		sb = new StringBuilder();
+		i = 0;
+		if(latestbank != null && latestbank.getSmChequeSignatories() != null){
+			if (latestbank.getSmChequeSignatories().size() == 1) {
+				sb.append(latestbank.getSmChequeSignatories().get(0)
+						.getSmPersonnel().getName());
+			} else {
+				for (SmChequeSignatory tmp : latestbank.getSmChequeSignatories()) {
+					i++;
+					sb.append(i + ") "+tmp.getSmPersonnel().getName()+"<br />");
+				}
+			}
+		}
+		getManagedBean().setLatestChequeSignPersonnelName(sb.toString());
+		
+		sb = new StringBuilder();
+		i = 0;
+		if(latestbank != null && latestbank.getSmSupplierBranchBanks() != null){
+			if (latestbank.getSmSupplierBranchBanks().size() == 1) {
+				sb.append(latestbank.getSmSupplierBranchBanks().get(0)
+						.getSmSupplierBranch().getBranchName());
+			} else {
+				for (SmSupplierBranchBank brTmp : latestbank.getSmSupplierBranchBanks()) {
+					i++;
+					sb.append(i + ") "+brTmp.getSmSupplierBranch().getBranchName()+"<br />");
+				}
+			}
+		}
+		getManagedBean().setLatestBankBranchName(sb.toString());
+		//#35086 - end		
 		closeBlockUI();
 	}
 
