@@ -14431,6 +14431,9 @@ if (null != checklist && !checklist.isEmpty()) {
 	
 				buildFinancialTemplate = isSpecQuestionsModified(scQtCheckList);//1873 note 86
 				isItemDeleted = isSpecItemNotExist(scQtCheckList);
+				if(isItemDeleted){//#28784
+					scQtCheckList.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+				}
 				
 				if(buildFinancialTemplate){//1873 - note 97
 				IParameterSO parameterSO = EpEjbBusinessDelegate.getInstance()
@@ -15051,7 +15054,8 @@ if (null != checklist && !checklist.isEmpty()) {
 		for (ScQtCheckList t : st2technicalproposalList) {
 			if (t.getDefinationType().getParameterCode()
 					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)
-					&& QTStatusConst.TS_PENDING_SUBMISSION.equals(t.getPmStatus().getStatusId())) {
+					&& (QTStatusConst.TS_PENDING_SUBMISSION.equals(t.getPmStatus().getStatusId()) || 
+							QTStatusConst.TS_PENDING_SUBMISSION.equals(t.getPmDemoStatus().getStatusId()))) {
 				isTechSpecPending = true;
 				t.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));//#28784
 				}
