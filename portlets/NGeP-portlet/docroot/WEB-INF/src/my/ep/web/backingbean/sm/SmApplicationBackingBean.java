@@ -15156,11 +15156,11 @@ public class SmApplicationBackingBean extends
 						
 						PmState state = new PmState();
 						//#34799 - start
-						if(personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC)
+						if(personnelAddress.getSmPersonnel().getIdentificationType() != null && personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC)
 								&& addr.getSmAddress().getPmState() != null){
 							state.setStateId(addr.getSmAddress().getPmState().getStateId());
 						}
-						if(personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT)) {
+						if(personnelAddress.getSmPersonnel().getIdentificationType() != null && personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT)) {
 							if(smAddress.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)
 									&& addr.getSmAddress().getPmState() != null){
 								state.setStateId(addr.getSmAddress().getPmState().getStateId());
