@@ -3963,7 +3963,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
 							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
 						if (ctContractItem.getCtItemPrices().get(temp).getFromQty().equals(itemPrice1.getFromQty())
-								&& ctContractItem.getCtItemPrices().get(temp).getToQty().equals(itemPrice1.getToQty())
+								//&& ctContractItem.getCtItemPrices().get(temp).getToQty().equals(itemPrice1.getToQty()) Fix - #34950
 								&& ctContractItem.getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
 							counter++;
 							if (counter >= 2) {
