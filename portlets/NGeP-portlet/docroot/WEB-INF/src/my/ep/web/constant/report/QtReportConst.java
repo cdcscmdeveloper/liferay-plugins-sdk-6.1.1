@@ -71,6 +71,7 @@ public class QtReportConst implements Serializable {
 	public static final String PARAM_LOGIN = "LOGIN";
 	public static final String PARAM_DECISION_TYPE = "PSTATUSID";//#21692
 	public static final String QUOTATION_TENDER_TITLE ="PQTTITLE";//#29580
+	public static final String PARAM_PROPOSAL_NO ="PPROPOSALNO";//#14306
 	
 	// 29580 - Start (Harun) Add report status for mutiple option 
 	//Report status
@@ -100,6 +101,11 @@ public class QtReportConst implements Serializable {
 	public static final String LABEL_LOA_COMPLETED = "lbl.rpt.loaCompleted";
 	public static final String LABEL_CANCELLED = "lbl.rpt.drpdown.cancelledLabel"; 
 	// 29580 - End (Harun)
+	
+	// 14306 - Report status label constant
+	public static final String LABEL_PENDING_PROPOSAL_SUBMISSION = "lbl.rpt.pending.proposal.submission";
+	public static final String LABEL_PROPOSAL_SUBMITTED  = "lbl.rpt.proposal.submitted";
+	// 14306 - End (Harun)
 	
 	
 	/**

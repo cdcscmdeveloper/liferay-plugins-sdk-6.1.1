@@ -14431,7 +14431,10 @@ if (null != checklist && !checklist.isEmpty()) {
 	
 				buildFinancialTemplate = isSpecQuestionsModified(scQtCheckList);//1873 note 86
 				isItemDeleted = isSpecItemNotExist(scQtCheckList);
-				if(isItemDeleted){//#28784
+				boolean isTemplateSpec = QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(scQtCheckList
+						.getDefinationType().getParameterCode());
+				boolean isModified = isTemplateSpec && isSpecQuestionsModified(scQtCheckList);
+				if(isItemDeleted || isModified){//#28784
 					scQtCheckList.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 				}
 				
@@ -22951,10 +22954,14 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	
 	//#28784 - Start
 	public boolean isSpecItemNotExist(ScQtCheckList qtCheckList) {
+		if (qtCheckList.getQtChecklistId() == null) {
+			return true;
+		}
 		TplSpecMaster spec = qtCheckList.getScQtDoc().getTplSpecMaster();
 		List<TplSpecQuestion> questionList = spec.getTplSpecQuestions();
-		if(CollectionUtils.isNotEmpty(questionList)){
-			boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(spec.getSpecTypeCode().getParameterCode());
+		if (CollectionUtils.isNotEmpty(questionList)) {
+			boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(spec.getSpecTypeCode()
+					.getParameterCode());
 
 			ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ITemplateSpecSO.class);
@@ -22967,7 +22974,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			for (TplSpecQuestion q : questionList) {
 				questionListId.add(q.getSpecQuestionId());
 			}
-			
+
 			if (!isFinancialSpec) {
 				for (TplSpecQuestion ques : currentQuestions) {
 					boolean isQuestionTypeItem = TemplateSpecConst.QUESTION_TYPE_ITEM.equals(ques.getQuestionType());
@@ -22978,7 +22985,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				}
 			}
 		}
-		
+
 		return false;
 	}
 	//#28784 - End
