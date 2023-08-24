@@ -1203,6 +1203,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctBackingBean.getManagedBean().setHasAmendmentLoaNo(true);
 				}
 			}
+			if (ctBackingBean.getManagedBean().isViewSCL()) { //33096					
+				getManagedBean().setLetterOfAcceptance(true);
+				getManagedBean().setPrepareLOA(true);
+				getManagedBean().setPbQcApproved(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbQcApproved() ? "A" : "R");
+				getManagedBean().setMofApproved(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofApproved() ? "A" : "R");
+			}
 			//Enhancement 15851 - end
 
 			// Retrieve agencies
@@ -3167,7 +3173,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
 					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
 				}
-				if (getManagedBean().isDecisionPbQcLOA()) {
+				if (getManagedBean().isDecisionPbQcLOA() || ctBackingBean.getManagedBean().isViewSCL()) { //33096
 					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);	    
 				}
 			}
@@ -3317,7 +3323,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							getManagedBean().setSelectedTabIndex(index + 3);
 					}
 					//#24333
-					if (getManagedBean().isDecisionPbQcLOA() && outputValue.equalsIgnoreCase("DCN")) {
+					if ((getManagedBean().isDecisionPbQcLOA() || ctBackingBean.getManagedBean().isViewSCL()) && outputValue.equalsIgnoreCase("DCN")) {//33096
 						if ((ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
 								&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
 								&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
@@ -3981,94 +3987,113 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @param ctContractItem	the object of contract item
 	 */
 	private void newItemPrice(CtContractItem ctContractItem) {
-		if (ctContractItem != null && !ctContractItem.getCtItemPrices().isEmpty()
-				&& (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
-						ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
-						|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
-								ParameterConst.PRICE_TYPE_ZONAL_TIER)
-								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
-										ParameterConst.PRICE_TYPE_ZONAL_TARIFF))) {
-			for (CtItemPrice zonelOfItem : ctContractItem.getCtItemPrices()) {
-				zonelOfItem.setChangeZoneLabel(false);
-			}
-			for (int temp = 0; temp<ctContractItem.getCtItemPrices().size(); temp++) {
-				Date date = ctContractItem.getCtItemPrices().get(temp).getEffDate();
-				int counter = 0;
-				int index = 0;
-				int countRow = 0;
-				for (CtItemPrice itemPrice1 : ctContractItem.getCtItemPrices()) {
-					countRow++;
-					if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
-							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
-							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
-						if (ctContractItem.getCtItemPrices().get(temp).getFromQty().equals(itemPrice1.getFromQty())
-								&& ctContractItem.getCtItemPrices().get(temp).getToQty().equals(itemPrice1.getToQty())
-								&& ctContractItem.getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
-							counter++;
-							if (counter >= 2) {
-								if (date.before(itemPrice1.getEffDate())) {
-									index = countRow;
-									date = itemPrice1.getEffDate();
-								}
-							}
-						}
-					} else if (ctContractItem.getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
-						counter++;
-						if (counter >= 2) {
-							if (date.before(itemPrice1.getEffDate())) {
-								index = countRow;
-								date = itemPrice1.getEffDate();
-							}
-						}
-					}
-				}
-				if (index > 0) {
-					CtItemPrice priceOfItem = ctContractItem.getCtItemPrices().get(index - 1);
-					priceOfItem.setChangeZoneLabel(true);
-					ctContractItem.getCtItemPrices().remove(index - 1);
-					ctContractItem.getCtItemPrices().add(index - 1, priceOfItem);
-				}
-			}
-		}
+		//Bug 34961 - shaqimi start 12/07/2023 - removed unnecessary code
+//		if (ctContractItem != null && !ctContractItem.getCtItemPrices().isEmpty()
+//				&& (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
+//						ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
+//						|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
+//								ParameterConst.PRICE_TYPE_ZONAL_TIER)
+//								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
+//										ParameterConst.PRICE_TYPE_ZONAL_TARIFF))) {
+//			
+//			for (CtItemPrice zonelOfItem : ctContractItem.getCtItemPrices()) {
+//				zonelOfItem.setChangeZoneLabel(false);
+//			}
+//			for (int temp = 0; temp<ctContractItem.getCtItemPrices().size(); temp++) {
+//				Date date = ctContractItem.getCtItemPrices().get(temp).getEffDate();
+//				int counter = 0;
+//				int index = 0;
+//				int countRow = 0;
+//				for (CtItemPrice itemPrice1 : ctContractItem.getCtItemPrices()) {
+//					countRow++;
+//					if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
+//							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+//							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
+//							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+//						if (ctContractItem.getCtItemPrices().get(temp).getFromQty().equals(itemPrice1.getFromQty())
+//								&& ctContractItem.getCtItemPrices().get(temp).getToQty().equals(itemPrice1.getToQty())
+//								&& ctContractItem.getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
+//							counter++;
+//							if (counter >= 2) {
+//								if (date.before(itemPrice1.getEffDate())) {
+//									index = countRow;
+//									date = itemPrice1.getEffDate();
+//								}
+//							}
+//						}
+//					} else if (ctContractItem.getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
+//						counter++;
+//						if (counter >= 2) {
+//							if (date.before(itemPrice1.getEffDate())) {
+//								index = countRow;
+//								date = itemPrice1.getEffDate();
+//							}
+//						}
+//					}
+//				}
+//				if (index > 0) {
+//					CtItemPrice priceOfItem = ctContractItem.getCtItemPrices().get(index - 1);
+//					priceOfItem.setChangeZoneLabel(true);
+//					ctContractItem.getCtItemPrices().remove(index - 1);
+//					ctContractItem.getCtItemPrices().add(index - 1, priceOfItem);
+//				}
+//			}
+//		}
+		//Bug 34961 - shaqimi end 12/07/2023 - removed unnecessary code
 		//#20997--Start
 		//Bug #29323 - Start 
+		//Bug 34961 - shaqimi start 12/07/2023 - insert code fix, and reformat code for readability
 		if(getManagedBean().getSelectedItem() != null){	
-
-						for(CtContractItem itemPrice : ctBackingBean.getManagedBean().getCtItemList()){
-							if(itemPrice.getScRequestItem().getRequestNoteItemId().equals(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId())){
-								//#30879,#31065 for Max QTY & price -Start
-								getManagedBean().getSelectedItem().getCtItemPrices().remove(itemPrice.getCtItemPrices());
-								getManagedBean().getSelectedItem().setCtItemPrices(itemPrice.getCtItemPrices());
-								//#30879,#31065 for Max QTY & price - End
-								for(CtItemPrice ctItemPrice : itemPrice.getCtItemPrices()){
-									if(itemPrice.isBrandNew()){
-										ctItemPrice.setItemPriceId(null);
-									}
-								}
-								break;
-							}							
-						}	
+			for(CtContractItem itemPrice : ctBackingBean.getManagedBean().getCtItemList()){
+				if(itemPrice.getScRequestItem().getRequestNoteItemId().equals(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId())){
+					//#30879,#31065 for Max QTY & price -Start
+					getManagedBean().getSelectedItem().getCtItemPrices().remove(itemPrice.getCtItemPrices());
+					getManagedBean().getSelectedItem().setCtItemPrices(itemPrice.getCtItemPrices());
+					//#30879,#31065 for Max QTY & price - End
+					for(CtItemPrice ctItemPrice : itemPrice.getCtItemPrices()){
+						if(itemPrice.isBrandNew()){
+							ctItemPrice.setItemPriceId(null);
+						}
+						if (ctContractItem != null && !ctContractItem.getCtItemPrices().isEmpty() 
+								&& (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) 
+										|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER) 
+										|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF))) {
+							if(ctItemPrice.isChangePrice()){
+								ctItemPrice.setChangeZoneLabel(true);
+							}
+						}
 					}
+					break;
+				}							
+			}	
+		}
 		
 		if(getManagedBean().getSelectedServiceItem() != null){	
-
-					for(CtContractItem itemPrice : ctBackingBean.getManagedBean().getCtItemServiceList()){
-						if(itemPrice.getScRequestItem().getRequestNoteItemId().equals(getManagedBean().getSelectedServiceItem().getScRequestItem().getRequestNoteItemId())){
-							//#30879,#31065 for Max QTY & price -Start
-							getManagedBean().getSelectedServiceItem().getCtItemPrices().remove(itemPrice.getCtItemPrices());
-							getManagedBean().getSelectedServiceItem().setCtItemPrices(itemPrice.getCtItemPrices());
-							//#30879,#31065 for Max QTY & price - End
-							for(CtItemPrice ctItemPrice : itemPrice.getCtItemPrices()){
-								if(itemPrice.isBrandNew()){
-									ctItemPrice.setItemPriceId(null);
-								}
+			for(CtContractItem itemPrice : ctBackingBean.getManagedBean().getCtItemServiceList()){
+				if(itemPrice.getScRequestItem().getRequestNoteItemId().equals(getManagedBean().getSelectedServiceItem().getScRequestItem().getRequestNoteItemId())){
+					//#30879,#31065 for Max QTY & price -Start
+					getManagedBean().getSelectedServiceItem().getCtItemPrices().remove(itemPrice.getCtItemPrices());
+					getManagedBean().getSelectedServiceItem().setCtItemPrices(itemPrice.getCtItemPrices());
+					//#30879,#31065 for Max QTY & price - End
+					for(CtItemPrice ctItemPrice : itemPrice.getCtItemPrices()){
+						if(itemPrice.isBrandNew()){
+							ctItemPrice.setItemPriceId(null);
+						}
+						if (ctContractItem != null && !ctContractItem.getCtItemPrices().isEmpty() 
+								&& (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) 
+										|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER) 
+										|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF))) {
+							if(ctItemPrice.isChangePrice()){
+								ctItemPrice.setChangeZoneLabel(true);
 							}
-							break;
-						}							
-					}	
-				}
-			}
+						}
+					}
+					break;
+				}							
+			}	
+		}
+	}
+	//Bug 34961 - shaqimi end 12/07/2023
 	//Bug #29323 - End
 			//Bug #28339 for Fixing #20997--End
 	//#20997 -- End
@@ -4404,43 +4429,45 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * flag for new max order quantity of product item.
 	 */
 	private void newItemMaxQty(CtContractItem ctContractItem) {
-		if (ctContractItem != null && !ctContractItem.getCtItemMaxQties().isEmpty()
-				&& (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
-						ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
-						|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
-								ParameterConst.PRICE_TYPE_ZONAL_TIER)
-								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
-										ParameterConst.PRICE_TYPE_ZONAL_TARIFF))) {
-			for (CtItemMaxQty zonelOfItem : ctContractItem.getCtItemMaxQties()) {
-				zonelOfItem.setChangeZoneLabel(false);
-			}
-			for (int temp = 0; temp < ctContractItem.getCtItemMaxQties().size(); temp++) {
-				Date date = ctContractItem.getCtItemMaxQties().get(temp).getEffDate();
-				int counter =0;
-				int index = 0;
-				int countRow =0;
-				for (CtItemMaxQty itemMaxQty1 : ctContractItem.getCtItemMaxQties()) {
-					countRow++;
-					if (ctContractItem.getCtItemMaxQties().get(temp).getCtContractZone() != null
-							&& ctContractItem.getCtItemMaxQties().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(
-									itemMaxQty1.getCtContractZone().getZoneName())) {
-						counter++;
-						if (counter >= 2) {
-							if (date.before(itemMaxQty1.getEffDate())) {
-								index = countRow;
-								date = itemMaxQty1.getEffDate();
-							}
-						}
-					}
-				}
-				if (index > 0) {
-					CtItemMaxQty maxQtyOfItem = ctContractItem.getCtItemMaxQties().get(index-1);
-					maxQtyOfItem.setChangeZoneLabel(true);
-					ctContractItem.getCtItemMaxQties().remove(index-1);
-					ctContractItem.getCtItemMaxQties().add(index-1, maxQtyOfItem);
-				}
-			}
-		}
+		//Bug 34961 - shaqimi end 12/07/2023 - removed unnecessary code
+//		if (ctContractItem != null && !ctContractItem.getCtItemMaxQties().isEmpty()
+//				&& (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
+//						ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
+//						|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
+//								ParameterConst.PRICE_TYPE_ZONAL_TIER)
+//								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
+//										ParameterConst.PRICE_TYPE_ZONAL_TARIFF))) {
+//			for (CtItemMaxQty zonelOfItem : ctContractItem.getCtItemMaxQties()) {
+//				zonelOfItem.setChangeZoneLabel(false);
+//			}
+//			for (int temp = 0; temp < ctContractItem.getCtItemMaxQties().size(); temp++) {
+//				Date date = ctContractItem.getCtItemMaxQties().get(temp).getEffDate();
+//				int counter =0;
+//				int index = 0;
+//				int countRow =0;
+//				for (CtItemMaxQty itemMaxQty1 : ctContractItem.getCtItemMaxQties()) {
+//					countRow++;
+//					if (ctContractItem.getCtItemMaxQties().get(temp).getCtContractZone() != null
+//							&& ctContractItem.getCtItemMaxQties().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(
+//									itemMaxQty1.getCtContractZone().getZoneName())) {
+//						counter++;
+//						if (counter >= 2) {
+//							if (date.before(itemMaxQty1.getEffDate())) {
+//								index = countRow;
+//								date = itemMaxQty1.getEffDate();
+//							}
+//						}
+//					}
+//				}
+//				if (index > 0) {
+//					CtItemMaxQty maxQtyOfItem = ctContractItem.getCtItemMaxQties().get(index-1);
+//					maxQtyOfItem.setChangeZoneLabel(true);
+//					ctContractItem.getCtItemMaxQties().remove(index-1);
+//					ctContractItem.getCtItemMaxQties().add(index-1, maxQtyOfItem);
+//				}
+//			}
+//		}
+		//Bug 34961 - shaqimi end 12/07/2023 - removed unnecessary code
 		//#20997--Start
 		//Bug #29323 - Start
 //		if(getManagedBean().getSelectedItem() != null){	
@@ -4467,6 +4494,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						if(itemPrice.isBrandNew()){
 							ctItemMaxQty.setItemMaxQtyId(null);
 						}
+						//Bug 34961 - shaqimi start 12/07/2023
+						if (ctContractItem != null && !ctContractItem.getCtItemPrices().isEmpty() 
+								&& (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) 
+										|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER) 
+										|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF))) {
+							if(ctItemMaxQty.isChangeQuantity()){
+								ctItemMaxQty.setChangeZoneLabel(true);
+							}
+						}
+						//
 					}
 					break;
 				}							
@@ -4485,6 +4522,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						if(itemPrice.isBrandNew()){
 							ctItemMaxQty.setItemMaxQtyId(null);
 						}
+						//Bug 34961 - shaqimi start 12/07/2023
+						if (ctContractItem != null && !ctContractItem.getCtItemPrices().isEmpty() 
+								&& (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) 
+										|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER) 
+										|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF))) {
+							if(ctItemMaxQty.isChangeQuantity()){
+								ctItemMaxQty.setChangeZoneLabel(true);
+							}
+						}
+						//
 					}
 					break;
 				}							
@@ -8336,23 +8383,28 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	// End Fix - #33674
 	// Start Fix - #34110 , #34950
-	public void sortItemPriceForTier(List<CtItemPrice> list){
+	public void sortItemPriceForTier(List<CtItemPrice> list) {
 		Collections.sort(list, new Comparator<CtItemPrice>() {
 			public int compare(CtItemPrice o1, CtItemPrice o2) {
 
-					BigDecimal z1 = o1.getFromQty();
-					BigDecimal z2 = o2.getFromQty();
+				BigDecimal z1 = o1.getFromQty();
+				BigDecimal z2 = o2.getFromQty();
+				if (z1 != null && z2 != null) {
 					int fromQtyComp = z1.compareTo(z2);
 					if (fromQtyComp != 0) {
 						return fromQtyComp;
-					}				
-		
-					BigDecimal y1 = o1.getToQty();
-					BigDecimal y2 = o2.getToQty();
+					}
+				}
+
+				BigDecimal y1 = o1.getToQty();
+				BigDecimal y2 = o2.getToQty();
+				if (y1 != null && y2 != null) {
 					int toQtyComp = y1.compareTo(y2);
 					if (toQtyComp != 0) {
 						return toQtyComp;
 					}
+
+				}
 
 				Date d1 = o1.getExpDate();
 				Date d2 = o2.getExpDate();
@@ -8361,29 +8413,33 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		});
 	}
 	
-	public void sortItemPriceForZonalTier(List<CtItemPrice> list){
+	public void sortItemPriceForZonalTier(List<CtItemPrice> list) {
 		Collections.sort(list, new Comparator<CtItemPrice>() {
 			public int compare(CtItemPrice o1, CtItemPrice o2) {
-					String x1 = o1.getCtContractZone().getZoneName();
-					String x2 = o2.getCtContractZone().getZoneName();
-					int zoneComp = x1.compareTo(x2);
-					if (zoneComp != 0) {
-						return zoneComp;
-					}
-				
-					BigDecimal z1 = o1.getFromQty();
-					BigDecimal z2 = o2.getFromQty();
+				String x1 = o1.getCtContractZone().getZoneName();
+				String x2 = o2.getCtContractZone().getZoneName();
+				int zoneComp = x1.compareTo(x2);
+				if (zoneComp != 0) {
+					return zoneComp;
+				}
+
+				BigDecimal z1 = o1.getFromQty();
+				BigDecimal z2 = o2.getFromQty();
+				if (z1 != null && z2 != null) {
 					int fromQtyComp = z1.compareTo(z2);
 					if (fromQtyComp != 0) {
 						return fromQtyComp;
-					}				
-		
-					BigDecimal y1 = o1.getToQty();
-					BigDecimal y2 = o2.getToQty();
+					}
+				}
+
+				BigDecimal y1 = o1.getToQty();
+				BigDecimal y2 = o2.getToQty();
+				if (y1 != null && y2 != null) {
 					int toQtyComp = y1.compareTo(y2);
 					if (toQtyComp != 0) {
 						return toQtyComp;
 					}
+				}
 
 				Date d1 = o1.getExpDate();
 				Date d2 = o2.getExpDate();
