@@ -112,8 +112,10 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
-//#12471
+//#12471 Start
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
+//#12471 End
 
 /**
  * Implementation for scheduling meeting for supplier finalization
@@ -973,6 +975,20 @@ public class SupplierFinalizationMeetingBackingBean extends
 				&& CollectionUtils.isNotEmpty(committeeMemberList)) {
 			List<String> duplicateUsersList = new ArrayList<String>();
 			for (PmUser user : selectedPmUserList) {
+				// #12471 Start
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+				reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
+				ScQtApproval approval = this.getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO).getQtApproval();
+				if (approval != null) {
+					for (ScQtApproverSettings approvalUser : approval.getApproverSettings()) {
+						if (approvalUser.getPmUser().getUserId().equals(user.getUserId())) {
+							throw new EpException(MessageConst.ERROR_775301,
+									new String[] { user.getUserName() });
+						}
+					}
+				}
+				// #12471 End
 				for (ScCommitteeMember member : committeeMemberList) {
 					if (StringUtils.equalsIgnoreCase(
 							user.getIdentificationNo(), member.getIcPassport())) {
