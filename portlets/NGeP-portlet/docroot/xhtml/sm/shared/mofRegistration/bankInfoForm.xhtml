@@ -599,9 +599,17 @@
 												itemLabel="#{br.branchName}" itemValue="#{br.supplierBranchId}" />
 											<!-- #34135 END -->
 										</p:selectManyMenu>
+										<!-- #35086 - start -->
 										<h:outputText rendered="#{backingBean.managedBean.upsCannotEdit}"
-											value="#{backingBean.getSelectedBranchBank()}" escape="false" 
+											value="#{backingBean.getSelectedBranchBank(backingBean.managedBean.selectedBank)}" escape="false" 
 											style="float:left;"/> 
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+											oriValue="#{backingBean.getSelectedBranchBank(backingBean.managedBean.latestBank)}" 
+											currValue="#{backingBean.getSelectedBranchBank(backingBean.managedBean.selectedBank)}" 
+											alertValue="#{backingBean.getSelectedBranchBank(backingBean.managedBean.latestBank)}"/>
+										<!-- #35086 - end -->
 									</td>
 									<td style="vertical-align: baseline;">
 										&#160;
@@ -654,9 +662,17 @@
 								value="#{backingBean.managedBean.smAppl.smPersonnels}" var="per"
 								itemLabel="#{per.name}" itemValue="#{per.personnelId}" />
 						</p:selectManyMenu>
+						<!-- #35086 - start -->
 						<h:outputText rendered="#{backingBean.managedBean.upsCannotEdit}"
-								value="#{backingBean.getSelectedSignatoryBank()}" escape="false" 
-								style="float:left;"/> 
+								value="#{backingBean.getSelectedSignatoryBank(backingBean.managedBean.selectedBank)}" 
+								escape="false" style="float:left;"/>
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+									and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+							oriValue="#{backingBean.getSelectedSignatoryBank(backingBean.managedBean.latestBank)}" 
+							currValue="#{backingBean.getSelectedSignatoryBank(backingBean.managedBean.selectedBank)}" 
+							alertValue="#{backingBean.getSelectedSignatoryBank(backingBean.managedBean.latestBank)}"/>
+						<!-- #35086 - end --> 
 						<p:message id="bankCheqSignIdMsg" for="bankCheqSignId"
 							showSummary="true" showDetail="false" display="icon" /></td>
 
