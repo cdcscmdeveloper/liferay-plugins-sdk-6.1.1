@@ -6354,7 +6354,6 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 				if(this.getManagedBean().getZones().size() == 1){
 					
 					for (TplSpecAnswer specAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
-						log.info("======1"+specAns.isDisableRow());
 						if (specAns != null && specAns.getTplSpecQuestion().getParentSpecQuestion() != null
 								&& specAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId()
 								.equals(specQties.getTplSpecQuestion().getSpecQuestionId())
