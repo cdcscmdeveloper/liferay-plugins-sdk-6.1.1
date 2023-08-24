@@ -113,8 +113,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
-//#12471
+//#12471 Start
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
+//#12471 End
 
 /**
  * The Class EvaluationMeetingBackingBean.
@@ -713,6 +715,20 @@ public class EvaluationMeetingBackingBean extends
 							if (itemIds.contains(user.getIdentificationNo())) {
 								throw new EpException(MessageConst.ERROR_760194);
 							} else {
+								// #12471 Start
+								QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+								reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+								reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
+								ScQtApproval approval = this.getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO).getQtApproval();
+								if (approval != null) {
+									for (ScQtApproverSettings approvalUser : approval.getApproverSettings()) {
+										if (approvalUser.getPmUser().getUserId().equals(committeeMember.getPmUser().getUserId())) {
+											throw new EpException(MessageConst.ERROR_775301,
+													new String[] { committeeMember.getMemberName() });
+										}
+									}
+								}
+								// #12471 End
 								// ScQtCommitteeActivity activity = new
 								// ScQtCommitteeActivity();
 								// setUserDetails(activity);
