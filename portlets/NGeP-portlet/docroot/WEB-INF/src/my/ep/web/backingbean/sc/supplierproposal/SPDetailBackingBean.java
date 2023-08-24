@@ -6354,10 +6354,11 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 				if(this.getManagedBean().getZones().size() == 1){
 					
 					for (TplSpecAnswer specAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+						log.info("======1"+specAns.isDisableRow());
 						if (specAns != null && specAns.getTplSpecQuestion().getParentSpecQuestion() != null
 								&& specAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId()
 								.equals(specQties.getTplSpecQuestion().getSpecQuestionId())
-								&& specAns.getOffer().equals(false)) {
+								&& !specAns.isDisableRow() && specAns.getOffer() != null && specAns.getOffer().equals(false)) {
 							specQties.getTplSpecZoneOffer().setOffer(true);
 							specAns.setAnswerText("");
 							specAns.setAnswerNumeric(null);
