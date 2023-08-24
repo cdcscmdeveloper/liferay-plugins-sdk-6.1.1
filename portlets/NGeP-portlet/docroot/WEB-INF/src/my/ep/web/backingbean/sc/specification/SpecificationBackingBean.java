@@ -14431,7 +14431,10 @@ if (null != checklist && !checklist.isEmpty()) {
 	
 				buildFinancialTemplate = isSpecQuestionsModified(scQtCheckList);//1873 note 86
 				isItemDeleted = isSpecItemNotExist(scQtCheckList);
-				if(isItemDeleted){//#28784
+				boolean isTemplateSpec = QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(scQtCheckList
+						.getDefinationType().getParameterCode());
+				boolean isModified = isTemplateSpec && isSpecQuestionsModified(scQtCheckList);
+				if(isItemDeleted || isModified){//#28784
 					scQtCheckList.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 				}
 				
