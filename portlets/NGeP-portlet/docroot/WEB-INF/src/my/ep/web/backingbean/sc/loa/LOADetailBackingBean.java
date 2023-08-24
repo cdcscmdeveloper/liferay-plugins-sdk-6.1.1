@@ -9089,6 +9089,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}if (justificationIsChanged) {
 			createLampiranA3(null);
+			//note 870,872 - start
+			for (ScLoaReport scLoaReport : this.getManagedBean().getScLoa().getScLoaReports()) {
+				if (scLoaReport.getTitle().contains(lampiranA3SubStr)
+						&& !ParameterConst.DOCTYPE_QUOTATION.equals(this.getManagedBean().getScLoa().getScLoiLoa()
+								.getDocType())) {
+					try {
+						loadScLoaReport(scLoaReport);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			//note 870,872 - end
 			//onBackToZoneItemDetailsTab(); #29006 - note 633
 		}
 		//#29006 - end - note 619
@@ -9789,15 +9802,33 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// end - #34898/#29006 - start - note 850,852,856
 			
 			//#29006 - note 702,850,852,856 - start
+			//note 870,872 - start
 			for (ScLoiLoaItem item : items) {
+				scLoiLoaItem.setDateGeneratedA3(null);				
 				if(item.getLoiLoaItemId().equals(scLoiLoaItem.getLoiLoaItemId())
 						&& ((item.getScLoa().getLoaId().equals(scLoiLoaItem.getScLoa().getLoaId())) && (item
 								.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem()
 								.getRequestNoteItemId())))) {
 					scLoiLoaItem.setDateGeneratedA3(DateUtils.getLocalizeDate(item.getChangedDate(), myLocale));
 					scLoiLoaItem.setTimeGeneratedA3(new SimpleDateFormat(CommonConstants.DEFAULT_TIME_FORMAT).format(item.getChangedDate()));
+					break;
 				}					
 			}
+			
+			if(scLoiLoaItem.getDateGeneratedA3() == null)
+			{
+				for (ScLoiLoaItem item : items) {
+					if(item.getLoiLoaItemId().equals(scLoiLoaItem.getLoiLoaItemId())
+							|| ((item.getScLoa().getLoaId().equals(scLoiLoaItem.getScLoa().getLoaId())) && (item
+									.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem()
+									.getRequestNoteItemId())))) {
+						scLoiLoaItem.setDateGeneratedA3(DateUtils.getLocalizeDate(item.getChangedDate(), myLocale));
+						scLoiLoaItem.setTimeGeneratedA3(new SimpleDateFormat(CommonConstants.DEFAULT_TIME_FORMAT).format(item.getChangedDate()));
+						break;
+					}
+				}
+			}
+			//note 870,872 - end
 			//#29006 - note 702,850,852,856 - end
 		}
 		//#29006 - end -  note 607
