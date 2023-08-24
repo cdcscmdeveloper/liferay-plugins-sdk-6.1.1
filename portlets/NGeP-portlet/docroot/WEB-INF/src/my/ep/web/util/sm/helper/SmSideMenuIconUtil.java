@@ -658,7 +658,8 @@ public class SmSideMenuIconUtil {
 					//#31043
 					bean.setCategoryCodeVerified(true);
 				} else {
-					if(bean.isReviewSiteVisit()){
+					if(bean.isApproverUser() || bean.isReviewSiteVisit()
+							|| bean.isReviseMandatory()){
 						retVal = ICON_TICK;
 					}
 					
@@ -703,6 +704,10 @@ public class SmSideMenuIconUtil {
 						}
 						else{
 							//#31043
+							if(bean.isApproverUser() || bean.isReviewSiteVisit()
+									|| bean.isReviseMandatory()){
+								retVal = ICON_UNTICK;
+							}
 							bean.setCategoryCodeVerified(false);
 						}
 					}
@@ -743,7 +748,8 @@ public class SmSideMenuIconUtil {
 				boolean licenseMandatoryDocVerified = false; 
 				
 				//#31043 start
-				if(bean.isApproverUser() || bean.isReviewSiteVisit()){
+				if(bean.isApproverUser() || bean.isReviewSiteVisit()
+						|| bean.isReviseMandatory()){
 					retVal = ICON_TICK;
 					bean.setDocumentVerified(true);
 					mandatoryDocVerified = true; 
@@ -833,7 +839,8 @@ public class SmSideMenuIconUtil {
 						retVal = ICON_TICK;
 				}
 				else{
-					if(bean.isApproverUser() || bean.isReviewSiteVisit()){
+					if(bean.isApproverUser() || bean.isReviewSiteVisit()
+							|| bean.isReviseMandatory()){
 						retVal = ICON_UNTICK;
 					}
 					bean.setDocumentVerified(false);
