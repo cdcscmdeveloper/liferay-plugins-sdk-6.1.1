@@ -15,15 +15,17 @@
 				rowKey="#{equiBean}" rowIndexVar="index" id="eqiComDt">
 				<ac:paginator for="eqiComDt" />
 
-				<p:column headerText="#{lbl['lbl.sm.equiComp.compName']}">
+				<!-- #34600 start -->
+				<p:column headerText="#{lbl['lbl.sm.equiComp.compName']}" style="white-space: break-spaces;">
 					<h:outputText value="#{equiBean.companyName}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sm.equiComp.addr']}">
+				<p:column headerText="#{lbl['lbl.sm.equiComp.addr']}" style="white-space:normal;word-break:break-word;">
 					<h:outputText
 						value="#{viewSmApplBackingBean.getFullAddress(equiBean.smAddress)}"
 						style="float : left" />
 				</p:column>
+				<!-- #34600 end -->
 
 				<p:column headerText="#{lbl['lbl.sm.equiComp.shrAmt']}">
 					<ac:labelAmount value="#{equiBean.shareAmt}" styleClass="outputLabel-view"/>

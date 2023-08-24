@@ -1147,9 +1147,16 @@ public class SmApplicationBackingBean extends
 
 				cannotProceedAlertMsg = SmApplicationUtil
 						.checkActiveSmApplForSupp(currSupp);
+				//#34441-start
+				String activeApplType = SmApplicationUtil.checkActiveSmApplTypeForSupp(currSupp);
 				if (cannotProceedAlertMsg) {
-					throw new EpException(MessageConst.ERROR_722542);
-				}
+					if (applicationType.equalsIgnoreCase(activeApplType)) {
+						throw new EpException(MessageConst.ERROR_722542);
+					} else {
+						throw new EpException(MessageConst.ERROR_722705);
+
+					}
+				}//#34441-end
 			}
 
 			if (applicationType
@@ -1704,6 +1711,9 @@ public class SmApplicationBackingBean extends
 					subStartTime); //20211005@fadhli - #31754
 		} else {
 			subStartTime = System.currentTimeMillis();
+			// #34303 - start
+			setValueForFacilityHeadquarters();
+			// #34303 - end
 			setApplicationFailities(smAppl.getSmFacilities());
 			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "assignStateDistAndCityForSelVal-22", 
@@ -2658,9 +2668,13 @@ public class SmApplicationBackingBean extends
 				this.getManagedBean().getPersonnelDirectorManager().add(personnel);	
 				}
 				//28767
-				for (SmPersonnelAddress address : personnel.getSmPersonnelAddresses()){
-					if (address.getAddressType().equals("R")){
-						personnel.setSmPersonnelAdd(address);
+				//#35037 - start
+				if(personnel.getSmPersonnelAddresses() != null){
+					for (SmPersonnelAddress address : personnel.getSmPersonnelAddresses()){
+						if (address.getAddressType() != null && address.getAddressType()
+								.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
+							personnel.setSmPersonnelAdd(address);
+						}
 					}
 				}
 				if (personnel.isSsmData()!= true){
@@ -3008,6 +3022,9 @@ public class SmApplicationBackingBean extends
 				}
 				//#27356
 				SmApplicationUtil.validateCoordinate(getManagedBean());
+				// #34303 - start
+				setValueForFacilityHeadquarters();
+				// #34303 - end
 				RequestContext.getCurrentInstance().execute(
 						"saveDraftConfirmDialog.show();");
 			} else if(getManagedBean().getEditVO().isDisciplinary()) {
@@ -3187,7 +3204,9 @@ public class SmApplicationBackingBean extends
 					if(getManagedBean().getSmAppl().getSmApplAuditors()!=null){
 						getManagedBean().getSmAppl().getSmApplAuditors().size();
 					}
-					
+					// #34303 - start
+					setValueForFacilityHeadquarters();
+					// #34303 - end
 					//#27356
 					SmApplicationUtil.validateCoordinate(getManagedBean());
 			//#32236 - start
@@ -3232,6 +3251,35 @@ public class SmApplicationBackingBean extends
 		}
 		updateSmAppl(applType, currentPageType, outputPageType);
 	}
+	
+	// #34303 - start
+	public void setValueForFacilityHeadquarters() {
+			// TODO Auto-generated method stub
+			boolean isHq = false;
+			SmAppl appl = getManagedBean().getSmAppl();
+			
+			for (int i = 0; i < appl.getSmFacilities().size(); i++) {
+				if ((appl.getSmFacilities().get(i).getFacilityType()
+						.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) || appl
+						.getSmFacilities().get(i).getFacilityType()
+						.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE))
+						&& appl.getSmFacilities().get(i).isHeadquarters()) {
+					isHq = true;
+				}
+			}
+			
+			if(!isHq){
+				for (int i = 0; i < appl.getSmFacilities().size(); i++) {
+					if ((appl.getSmFacilities().get(i).getFacilityType()
+							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) || appl
+							.getSmFacilities().get(i).getFacilityType()
+							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE))) {
+						appl.getSmFacilities().get(i).setHeadquarters(true);
+					}
+				}	
+			}
+	}
+	// #34303 - end
 
 	/**
 	 * Get cert type name
@@ -3575,13 +3623,11 @@ public class SmApplicationBackingBean extends
 	 */
 	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
 			Long docId, String docNumber, String textBeforeSign) {
-		FacesScopes facesScope = new FacesScopes();
-		Long userId = facesScope.getUserSessionBean().getUserId();
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		pmDigiSign.setDocId(new BigDecimal(docId));
 		pmDigiSign.setDocNo(docNumber);
 		pmDigiSign.setDocType(docType);
-		pmDigiSign.setCreatedBy(userId);
+		pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 		pmDigiSign.setCreatedDate(date);
 		pmDigiSign.setOriginalData(textBeforeSign);
 	}
@@ -3952,7 +3998,10 @@ public class SmApplicationBackingBean extends
 
 				// init business premise whether show or hide home office
 				initBusinessPremise();
-
+				//#35086 - start
+				SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean().getLatestAppl(), 
+						getManagedBean().getSmAppl(), getManagedBean().getCurrentPageType());
+				//#35086 - end
 			}
 			assignValReqdToFalse();
 		}
@@ -3991,6 +4040,9 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			getManagedBean().setSmSupplier(
 					getManagedBean().getSmAppl().getSmSupplier());
+			// #34303 - start
+			setValueForFacilityHeadquarters();
+			// #34303 - end
 			setApplicationFailities(getManagedBean().getSmAppl()
 					.getSmFacilities());
 
@@ -6903,11 +6955,77 @@ public class SmApplicationBackingBean extends
 
 	// Workshop end
 	// Store start
+	// #34303 - start
+	public void addOrUpdateStoreToSmApplNew() {
+
+		List<SmSupplierCategory> categoryTypeB = new ArrayList<SmSupplierCategory>();
+		List<SmSupplierCategory> categoryTypeS = new ArrayList<SmSupplierCategory>();
+
+		Long[] cloneFacilityIds = getManagedBean()
+				.getSelectedSuppCategoryFacilityIds().clone();
+
+		for (Long catId : getManagedBean().getSelectedSuppCategoryFacilityIds()) {
+			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+					.getSmSupplierCategories()) {
+
+				// insert new selected category
+				if (cat.getPmCategoryL3().getCategoryL3Id().equals(catId)) {
+					if (cat.getPmCategoryL3().getFacilityType()
+							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+						categoryTypeB.add(cat);
+					} else {
+						categoryTypeS.add(cat);
+					}
+				}
+			}
+		}
+
+		if (categoryTypeB.size() > 0) {
+
+			List<Long> facilityIdList = new ArrayList<Long>();
+			for (SmSupplierCategory SmSupplierCategory : categoryTypeB) {
+				for (Long catId : cloneFacilityIds) {
+					if (SmSupplierCategory.getPmCategoryL3().getCategoryL3Id()
+							.equals(catId)) {
+						facilityIdList.add(catId);
+					}
+				}
+			}
+			getManagedBean().setSelectedSuppCategoryFacilityIds(
+					facilityIdList.toArray(new Long[facilityIdList.size()]));
+			SmFacility smFac = getManagedBean().getSelectedStoreFacility();
+			smFac.setFacilityType(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE);
+			addOrUpdateStoreToSmAppl(smFac);
+		}
+
+		if (categoryTypeS.size() > 0) {
+
+			List<Long> facilityIdList = new ArrayList<Long>();
+			for (SmSupplierCategory SmSupplierCategory : categoryTypeS) {
+				for (Long catId : cloneFacilityIds) {
+					if (SmSupplierCategory.getPmCategoryL3().getCategoryL3Id()
+							.equals(catId)) {
+						facilityIdList.add(catId);
+					}
+				}
+			}
+			getManagedBean().setSelectedSuppCategoryFacilityIds(
+					facilityIdList.toArray(new Long[facilityIdList.size()]));
+			SmFacility smFac = getManagedBean().getSelectedStoreFacility();
+			smFac.setFacilityType("S");
+			addOrUpdateStoreToSmAppl(smFac);
+		}
+
+		RequestContext.getCurrentInstance().execute("storeDialog.hide()");
+	}
+	// #34303 - end
+	
 	/**
 	 * Add or update selected store info to SmFacility list of the application.
+	 * @param smFac 
 	 */
-	public void addOrUpdateStoreToSmAppl() {
-		SmFacility smFac = getManagedBean().getSelectedStoreFacility();
+	public void addOrUpdateStoreToSmAppl(SmFacility smFac) {
+//		SmFacility smFac = getManagedBean().getSelectedStoreFacility();
 		SmCommonUtil.getInstance().setUserDetails(smFac);
 		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
@@ -9286,7 +9404,7 @@ public class SmApplicationBackingBean extends
 		//log.info("supplier declare submit bpmTask for applNo:"
 			//	+ getManagedBean().getSmAppl().getApplNo() + " taskId:"
 			//	+ getManagedBean().getTaskId());
-		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+		reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 		resDTO = regSo.initiateSmApplicationTask(reqDTO);
 		regSo = null;
 		retriveLatestApplAfterUpdate("", "");
@@ -10680,7 +10798,7 @@ public class SmApplicationBackingBean extends
 		reqDTO.setSmAppl(getManagedBean().getSmAppl());
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 		reqDTO.setBpmPojo(getManagedBean().getPayLoad());
-		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+		reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 		reqSO.approveOrRejectPendingApplicationCancellation(reqDTO);
 
 		log.info("31181-applNo:"+getManagedBean().getSmAppl().getApplNo()); //#31181 add log
@@ -12631,32 +12749,36 @@ public class SmApplicationBackingBean extends
 					|| smFac.getFacilityType()
 							.equalsIgnoreCase(
 									SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
-				if (smFac.getSmAddress() == null
-						|| smFac.getSmAddress().getAddressId() == null) {
-					smFac.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
-					SmApplicationUtil.getInstance().cloneAddress(
-							smFac.getSmAddress(), getHqAddress());
+				// #34303 - start
+				if (smFac.isHeadquarters()) {
+					if (smFac.getSmAddress() == null
+							|| smFac.getSmAddress().getAddressId() == null) {
+						smFac.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+						SmApplicationUtil.getInstance().cloneAddress(
+								smFac.getSmAddress(), getHqAddress());
+					}
+					if (!smFac.getOwnershipType().equalsIgnoreCase("O")) {
+						getManagedBean().setBasicOffFacStates(
+								SmCommonUtil.getStateList(smFac.getSmAddress()
+										.getPmCountry().getCountryId()));
+					}
+					//log.info("*********Setting Basic company value **********");
+					smFac.setFacilityName(getManagedBean().getSmAppl()
+							.getSmCompanyBasic().getCompanyName());
+					this.getManagedBean().setBasicCompanyFacility(smFac);
+					if (smFac.getSmAddress() != null
+							&& smFac.getSmAddress().getPmCountry() != null
+							&& smFac.getSmAddress().getPmState() != null
+							&& smFac.getSmAddress().getPmCity() != null) {
+						SmApplicationUtil
+								.getInstance()
+								.assignStateDistAndCityForSelVal(
+										getManagedBean(),
+										smFac.getSmAddress(),
+										SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+					}
 				}
-				if (!smFac.getOwnershipType().equalsIgnoreCase("O")) {
-					getManagedBean().setBasicOffFacStates(
-							SmCommonUtil.getStateList(smFac.getSmAddress()
-									.getPmCountry().getCountryId()));
-				}
-				//log.info("*********Setting Basic company value **********");
-				smFac.setFacilityName(getManagedBean().getSmAppl()
-						.getSmCompanyBasic().getCompanyName());
-				this.getManagedBean().setBasicCompanyFacility(smFac);
-				if (smFac.getSmAddress() != null
-						&& smFac.getSmAddress().getPmCountry() != null
-						&& smFac.getSmAddress().getPmState() != null
-						&& smFac.getSmAddress().getPmCity() != null) {
-					SmApplicationUtil
-							.getInstance()
-							.assignStateDistAndCityForSelVal(
-									getManagedBean(),
-									smFac.getSmAddress(),
-									SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
-				}
+				// #34303 - start
 			}
 			if (smFac.getFacilityType().equalsIgnoreCase(
 					SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {
@@ -17227,9 +17349,9 @@ public class SmApplicationBackingBean extends
 	}
 	//#34799 - end	
 		
-	//#32008 - START
-	public String getSelectedBranchBank(){
-		SmSupplierBank bank = getManagedBean().getSelectedBank();
+	//#32008, #35086 - start
+	public String getSelectedBranchBank(SmSupplierBank bank){
+		//#35086 - end
 		if (SmCommonUtil.isCollectionEmpty(bank.getSmSupplierBranchBanks())) {
 			return null;
 		}
@@ -17245,8 +17367,9 @@ public class SmApplicationBackingBean extends
 		return sb.toString();
 	}
 	
-	public String getSelectedSignatoryBank(){
-		SmSupplierBank bank = getManagedBean().getSelectedBank();
+	//#35086 - start
+	public String getSelectedSignatoryBank(SmSupplierBank bank){
+		//#35086 - end
 		if (SmCommonUtil.isCollectionEmpty(bank.getSmChequeSignatories())){
 			return null;
 		}
