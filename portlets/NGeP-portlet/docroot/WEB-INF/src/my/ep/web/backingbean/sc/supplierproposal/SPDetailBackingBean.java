@@ -6346,34 +6346,36 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		
 
 
-	// Bug #33947 5/9/2022 start
+	// Bug #33947 5/9/2022 && #35090 start
 	public boolean evaluateZonelistSupp(TplSpecZoneQty specQties) {
-		if (specQties != null) {
-
-			// remove log
-			// #21695 Farid Start - fix proposal checking 18/2/2022
-			System.out.println("---> 1dasdassdasa "
-					+ this.getManagedBean().getZones().size());
-			System.out.println("---> 2 "
-					+ specQties.getTplSpecZoneOffer().getTplSpecQuestion()
-							.getTplSpecZoneQties().size());
-			if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
-				for (TplSpecZoneDtl specZones : this.getManagedBean()
-						.getZones()) {
-					if (specQties.getTplSpecZoneDtl() != null) {
-						if (specZones.getSpecZoneId().equals(
-								specQties.getTplSpecZoneDtl().getSpecZoneId())) {
-							return true;
+		if (specQties != null &&
+				CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
+			
+				if(this.getManagedBean().getZones().size() == 1){
+					
+					for (TplSpecAnswer specAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+						if (specAns != null && specAns.getTplSpecQuestion().getParentSpecQuestion() != null
+								&& specAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId()
+								.equals(specQties.getTplSpecQuestion().getSpecQuestionId())
+								&& specAns.getOffer().equals(false)) {
+							specQties.getTplSpecZoneOffer().setOffer(true);
+							specAns.setAnswerText("");
+							specAns.setAnswerNumeric(null);
+							specAns.setAnswerRemark(null);
+							specAns.setAnswerCompliance(null);
 						}
-
 					}
+				}
+				for (TplSpecZoneDtl specZones : this.getManagedBean().getZones()) {
+					if (specQties.getTplSpecZoneDtl() != null && 
+							specZones.getSpecZoneId().equals(specQties.getTplSpecZoneDtl().getSpecZoneId())) {
+							return true;
+					}
+					
 				}
 				specQties.getTplSpecZoneOffer().setOffer(true);
 				specQties.getTplSpecZoneOffer().setNotApplicable(true);
-			}
-
 		}
-
 		return false;
 	}
 
@@ -6399,6 +6401,9 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	public void disableDefaultSelected() {		
 		for (TplSpecAnswer retrieveAns : this.getManagedBean()
 				.getTemplateSpecBean().getSpecAnswerList()) {
+			if(ParameterConst.TPL_SPEC_QUESTION_TYPE_SPECIFICATION.equals(retrieveAns.getTplSpecQuestion().getQuestionType())){
+				continue;
+			}//#35090
 			if (retrieveAns != null
 					&& this.getManagedBean().getZones().size() > 0) {
 				// adjust position flag here
