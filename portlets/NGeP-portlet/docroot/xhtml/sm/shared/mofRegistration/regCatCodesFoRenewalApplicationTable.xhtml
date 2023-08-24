@@ -130,10 +130,12 @@
 					<tr>
 						<td
 							style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+							<!-- 34549 Start -->
 							<p:scrollPanel mode="native" style="height:100px; width:auto;">
-								<h:outputText value="#{catBean.poRemarks}"
-									rendered="#{not empty catBean.poRemarks}" />
+								<h:outputText value="#{catBeanR.poRemarks}"
+									rendered="#{not empty catBeanR.poRemarks}" />
 							</p:scrollPanel>
+							<!-- 34549 End -->
 						</td>
 					</tr>
 				</table>

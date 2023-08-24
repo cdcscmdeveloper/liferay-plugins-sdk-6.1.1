@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -7469,13 +7470,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 
-	private List<ItemBean> convertSpecQuestionToSpecAnswer(
-			TplSpecMaster specMaster) {
-		Map<Integer, ItemBean> questionSpecMap = new HashMap<Integer, ItemBean>();
+	private List<ItemBean> convertSpecQuestionToSpecAnswer(TplSpecMaster specMaster) {
+		TreeMap<Integer, ItemBean> questionSpecMap = new TreeMap<Integer, ItemBean>(); //Bug #34882@Syazani 26/06/2023
 
 		if (specMaster != null && specMaster.getTplSpecQuestions() != null) {
-			for (TplSpecQuestion specQuestion : specMaster
-					.getTplSpecQuestions()) {
+			for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
 				if(specQuestion.getParentSpecQuestion() == null) {
 					int order = specQuestion.getQuestionOrder();
 					if (!questionSpecMap.containsKey(order)) {

@@ -75,6 +75,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 	private boolean itemProductNotExist;
 	private boolean itemServiceNotExist;
 	private PmUom selectedSearchItem;
+	private boolean isFromViewPage = false; // Fix- #34110
 	
 	public void reassignValue(boolean value){
 		readOnly = value;	
@@ -118,7 +119,8 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 				Long contractVerId=null;
-				contractVerId = contractBb.getManagedBean().getContractVer().getContractVerId();				
+				contractVerId = contractBb.getManagedBean().getContractVer().getContractVerId();
+				isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
 				
 				if(contractVerId==null){
 					ctReqDTO.setContractId(contId);
@@ -213,7 +215,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 					if(isServicecollapse()){
 						IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
 						
-						resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
+						resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO, isFromViewPage); //Fix - #34110
 					    resDTO.getContractItemResultBean();
 					    if(resDTO.getContractItemResultBean().getResultList().size()>0){
 							readOnly=false;
@@ -252,6 +254,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 				Long contractVerId=null;
 				contractVerId = contractBb.getManagedBean().getContractVer().getContractVerId();				
+				isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
 				
 				if(contractVerId==null){
 					ctReqDTO.setContractId(contId);
@@ -347,7 +350,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 					
 					IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
 					
-					resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
+					resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO, isFromViewPage); //Fix - #34110
 					if(resDTO.getContractItemResultBean().getResultList().size()>0){
 				    	 readOnly=false;
 				    }
