@@ -6401,7 +6401,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	public void disableDefaultSelected() {		
 		for (TplSpecAnswer retrieveAns : this.getManagedBean()
 				.getTemplateSpecBean().getSpecAnswerList()) {
-			if(retrieveAns.getTplSpecQuestion().getQuestionType().equals(ParameterConst.TPL_SPEC_QUESTION_TYPE_SPECIFICATION)){
+			if(ParameterConst.TPL_SPEC_QUESTION_TYPE_SPECIFICATION.equals(retrieveAns.getTplSpecQuestion().getQuestionType())){
 				continue;
 			}//#35090
 			if (retrieveAns != null
