@@ -19484,14 +19484,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				} else if (t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE)) {
 					//#28784 sample become completed after demo save - end
 					if (null != this.getManagedBean().getDemoSampleChecklistStatusId()) {
-						log.info("adsmnlkqwemlwqe: " + this.getManagedBean().getDemoSampleChecklistStatusId());
 						if (this.getManagedBean().getDemoSampleChecklistStatusId().equals(QTStatusConst.TS_COMPLETED)) {
 							t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 						} else {
 							t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));						
 						}
 					}
-					log.info("null brooooooooooooooooooooooo");
 					//#28784 sample become completed after demo save - end
 				}else if(t.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)){
 					updatedCheckListsOtherDemo.add(t);
