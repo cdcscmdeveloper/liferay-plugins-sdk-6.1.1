@@ -36,6 +36,11 @@
 				<h:outputText value="#{cc.attrs.bBean.managedBean.smSupplier.regNo}"></h:outputText>
 				
 				<h:outputLabel style="font-weight:bold"
+					value="#{lbl['lbl.sm.new.business.regNo']} :"></h:outputLabel>
+				<h:outputText value="#{cc.attrs.bBean.managedBean.smSupplier.ssmNewRegNo}" rendered="#{!empty cc.attrs.bBean.managedBean.smSupplier.ssmNewRegNo}"></h:outputText>
+				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty cc.attrs.bBean.managedBean.smSupplier.ssmNewRegNo}"></h:outputText>
+				
+				<h:outputLabel style="font-weight:bold"
 					value="#{lbl['lbl.sm.estdate']} :"></h:outputLabel>
 				<h:outputText
 					value="#{cc.attrs.bBean.managedBean.smAppl.smCompanyBasic.establishDate}">
@@ -43,7 +48,7 @@
 				</h:outputText>
 
 				<c:if
-					test="#{cc.attrs.bBean.managedBean.smSupplier.businessType == 'C' or cc.attrs.bBean.managedBean.smSupplier.businessType == 'F'}">
+					test="#{cc.attrs.bBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG or cc.attrs.bBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG}"> <!-- #31403 -->
 					<h:outputLabel style="font-weight:bold"
 						value="#{lbl['lbl.sm.account.rob.expire']} :"></h:outputLabel>
 					<h:outputText 
@@ -74,6 +79,7 @@
 				<h:outputText
 					value="#{cc.attrs.bBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"></h:outputText>
 	
+				<c:if test="#{cc.attrs.bBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD or cc.attrs.bBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD}">
 				<h:outputLabel style="font-weight:bold" 
 					value="#{lbl['lbl.sm.annualRev']} :"></h:outputLabel>
 					<h:panelGrid columns="3" layout="grid"> 
@@ -89,13 +95,23 @@
 							<f:selectItems value="#{cc.attrs.bBean.getDropdownValues('SAR')}" />
 						</p:selectOneMenu>
 					</h:panelGrid>
+
+					<h:outputLabel style="font-weight:bold"
+						value="#{lbl['lbl.sm.totalIssued']} :"></h:outputLabel>
+					<h:outputText
+						value="#{cc.attrs.bBean.managedBean.smAppl.smCompanyBasic.paidUpCapitalSSM}">
+						<f:convertNumber groupingUsed="true" maxFractionDigits="3"
+							minFractionDigits="3" />
+					</h:outputText>
+
+				</c:if>
 				<!-- <h:outputText
 					value="#{cc.attrs.bBean.getParameterDesc('SAR',cc.attrs.bBean.managedBean.smAppl.smCompanyBasic.annualRevenue)}"></h:outputText> -->
 			</h:panelGrid>
 		</p:panel>
 
 		<c:if
-			test="#{cc.attrs.bBean.managedBean.smSupplier.businessType == 'C' or cc.attrs.bBean.managedBean.smSupplier.businessType == 'F'}">
+			test="#{cc.attrs.bBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG or cc.attrs.bBean.managedBean.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG}"> <!-- #31403 -->
 			<ui:include
 				src="/xhtml/sm/renewMofApplication/viewSsmInformationBranch.xhtml" />
 		</c:if>
@@ -103,8 +119,10 @@
 		<ui:include
 			src="/xhtml/sm/renewMofApplication/viewSsmInformationOwnerDirector.xhtml" />
 		
-		<ui:include
-			src="/xhtml/sm/renewMofApplication/viewSsmInformationCompanyEquity.xhtml" />
+		<c:if test="#{cc.attrs.bBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD or cc.attrs.bBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD}"><!-- #31403 -->
+			<ui:include
+				src="/xhtml/sm/renewMofApplication/viewSsmInformationCompanyEquity.xhtml" />
+		</c:if><!-- #31403 -->
 
 		<ui:include
 			src="/xhtml/sm/renewMofApplication/viewSsmInformationPersonnel.xhtml" />
