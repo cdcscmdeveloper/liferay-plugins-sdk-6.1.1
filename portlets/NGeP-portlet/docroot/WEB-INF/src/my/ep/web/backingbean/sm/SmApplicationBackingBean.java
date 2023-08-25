@@ -14436,9 +14436,8 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		//#27165
-		//34099
-		RequestContext.getCurrentInstance().execute("viewssminfoDlg.show()");
-		//SmCommonUtil.redirectToExternalUrl(SupplierManagementConst.VIEW_SSM_INFOMATION);
+		
+		SmCommonUtil.redirectToExternalUrl(SupplierManagementConst.VIEW_SSM_INFOMATION);
 	}
 	
 	public void clearPersonnelList() {
