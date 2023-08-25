@@ -21,7 +21,7 @@
 			
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.download']}" partialSubmit="true" ajax="false"
-				action="#{specificationBackingBean.downloadTechnicalChecklistPreview(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"
+				action="#{specificationBackingBean.downloadTechnicalChecklistPreview(specificationBackingBean.managedBean.techChecklistPreview)}"
 				styleClass="BtnSpacing" process="@this"  />
 		</div>
 	</p:panel>
@@ -42,7 +42,7 @@
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{specificationBackingBean.managedBean.techChecklistSelect}"
 			first="#{specificationBackingBean.managedBean.technicalPreviewTableRow}"
-			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
+			value="#{specificationBackingBean.managedBean.techChecklistPreview}"
 			var="techChecklist" rowIndexVar="index" rowKey="#{techChecklist}"
 			width="100%">
 				

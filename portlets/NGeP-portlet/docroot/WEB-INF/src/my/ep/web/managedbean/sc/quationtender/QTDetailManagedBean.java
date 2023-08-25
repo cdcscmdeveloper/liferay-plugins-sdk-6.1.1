@@ -1670,6 +1670,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private int inActiveChecklistCount;
 	private boolean disableButtonForInactiveChecklist = false;
 	private boolean showInactiveChecklistPopup = false;
+	private List<ScQtCheckList> techChecklistPreview;
+	private List<ScQtCheckList> finChecklistPreview;
 	private List<ScQtCheckList> techChecklistSelect;
 	private List<ScQtCheckList> finChecklistSelect;
 	private int technicalPreviewTableRow;
@@ -11829,6 +11831,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setFinancialPreviewTableRow(int financialPreviewTableRow) {
 		this.financialPreviewTableRow = financialPreviewTableRow;
+	}
+	
+	public List<ScQtCheckList> getTechChecklistPreview() {
+		return techChecklistPreview;
+	}
+
+	public void setTechChecklistPreview(List<ScQtCheckList> techChecklistPreview) {
+		this.techChecklistPreview = techChecklistPreview;
+	}
+
+	public List<ScQtCheckList> getFinChecklistPreview() {
+		return finChecklistPreview;
+	}
+
+	public void setFinChecklistPreview(List<ScQtCheckList> finChecklistPreview) {
+		this.finChecklistPreview = finChecklistPreview;
 	}
 	// #10141 - end
 

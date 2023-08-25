@@ -338,7 +338,8 @@
 			<p:commandButton styleClass="BtnSpacing"
 				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"
 				value="#{lbl['lbl.sc.spec.btn.checklist.preview']}"
-				process="@this" onclick="financialChecklistPreview.show();" /> <!-- #10141 Added Vinod -->
+				action="#{specificationBackingBean.financialCheckListPreview}"
+				process="@this" onclick="" /> <!-- #10141 Added Vinod -->
 			<p:commandButton styleClass="BtnSpacing"
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
 				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"

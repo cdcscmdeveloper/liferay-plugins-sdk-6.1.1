@@ -23129,6 +23129,30 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 		return false;
 	}
+	public void technicalCheckListPreview(){
+		List<ScQtCheckList> techCheckListforPreview= new ArrayList<>();
+		if(!this.getManagedBean().getScQtCheckSt2techProposal().isEmpty()){
+			for(ScQtCheckList techChecklist : this.getManagedBean().getScQtCheckSt2techProposal()){
+				if(techChecklist.isScoringReq()){
+					techCheckListforPreview.add(techChecklist);
+				}
+			}
+			this.getManagedBean().setTechChecklistPreview(techCheckListforPreview);
+		}
+		RequestContext.getCurrentInstance().execute("technicalChecklistPreview.show()");
+	}
+	public void financialCheckListPreview(){
+		List<ScQtCheckList> finCheckListforPreview= new ArrayList<>();
+		if(!this.getManagedBean().getScQtCheckSt2financeProposalList().isEmpty()){
+			for(ScQtCheckList finChecklist : this.getManagedBean().getScQtCheckSt2financeProposalList()){
+				if(finChecklist.isScoringReq()){
+					finCheckListforPreview.add(finChecklist);
+				}
+			}
+			this.getManagedBean().setFinChecklistPreview(finCheckListforPreview);
+		}
+		RequestContext.getCurrentInstance().execute("financialChecklistPreview.show()");
+	}
 	public void downloadTechnicalChecklistPreview(List<ScQtCheckList> scQtCheckSt2techProposal) throws Exception{
 		ScQtCheckListAttachment attachment=generateTechnicalChecklistPreviewPdfFromVelocity(scQtCheckSt2techProposal);
 		try{
