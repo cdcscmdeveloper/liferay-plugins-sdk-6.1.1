@@ -926,7 +926,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// generate lampiran a3 and reload the page through task list
 			if (resDTO.getScLoa() != null
 					&& ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(getManagedBean().getScLoa().getScLoiLoa()
-							.getDocType()) && getManagedBean().getScLoa().getScLoaReports().size() == '5') {
+							.getDocType()) && getManagedBean().getScLoa().getScLoaReports().size() == 5) {
 				AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 				awardSupplierReqDTO.setDocId(getManagedBean().getScLoa().getLoaId());
 				
