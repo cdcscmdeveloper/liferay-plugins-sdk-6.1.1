@@ -214,6 +214,11 @@ import com.liferay.portal.util.PortalUtil;
 public class EvaluationBackingBean extends
 		SourcingBaseBackingBean<EvaluationManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The skip. */
 	private boolean skip;
 
@@ -2712,7 +2717,7 @@ public void saveComplianceSample() {
 							technicalsummaryChange(null);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+							SLAUtils.getInstance().logSLAError("QT", "Evaluationbackingbean", "docNo", "retriveSummaryEvaluationStage", getUserIdSessionFromLoginId(), e);
 						} //for wip we dont need dropdown
 
 					} else{
@@ -2754,7 +2759,7 @@ public void saveComplianceSample() {
 								technicalsummaryChange(null);
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
-								e.printStackTrace();
+								SLAUtils.getInstance().logSLAError("QT", "Evaluationbackingbean", "docNo", "retriveSummaryEvaluationStage", getUserIdSessionFromLoginId(), e);
 							} //for wip we dont need dropdown
 							this.getManagedBean().setEvaluatioStageActiveIndex(1);
 							this.getManagedBean().setTabTechnicalIndex(2);
@@ -3173,7 +3178,8 @@ public void saveComplianceSample() {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "RetrieveListofSpecificationsDetailForPresentationDemonstration", this.getManagedBean().getScQt().getQtNo(),
+					"retrivePresentationOrDemoEvaluationStage", getUserIdSessionFromLoginId(), e);//#sqube qt vulnerability minor idham @03 aug 2023
 		}
 
 	}
@@ -11681,21 +11687,46 @@ private void retriveCommitteeRemarksList(){
 		
 		FacesScopes facesScopes = new FacesScopes();
 		long qtId = qt.getQtId();
-		String reportName = StringUtils.EMPTY;
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-				.equals(this.getManagedBean().getCommitteeType())) {
-			reportName = ReportConst.SC_EC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-				.equals(this.getManagedBean().getCommitteeType())) {
-			reportName = ReportConst.SC_OC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-				.equals(this.getManagedBean().getCommitteeType())) {
-			reportName = ReportConst.SC_TEC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-				.equals(this.getManagedBean().getCommitteeType())) {
-			reportName = ReportConst.SC_FEC_RPT_JSP;
-		}
+		//#35015 wip 4ser -Start
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTEvaluationSO.class);
 		
+		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+		req4SerDTO.setQtId(qtId);
+		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+		
+		String reportName = StringUtils.EMPTY;
+		
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportName = ReportConst.SC_EC_RPT_WIP_JSP;
+			} else {
+				log.info("================================");
+				reportName = ReportConst.SC_EC_RPT_JSP;
+			}
+		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportName = ReportConst.SC_OC_RPT_WIP_JSP;
+			} else {
+				reportName = ReportConst.SC_OC_RPT_JSP;
+			}
+		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equals(this.getManagedBean()
+				.getCommitteeType())) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportName = ReportConst.SC_TEC_RPT_WIP_JSP;
+			} else {
+				reportName = ReportConst.SC_TEC_RPT_JSP;
+			}
+		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equals(this.getManagedBean()
+				.getCommitteeType())) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportName = ReportConst.SC_FEC_RPT_WIP_JSP;
+			} else {
+				reportName = ReportConst.SC_FEC_RPT_JSP;
+			}
+		}
+		//#35015 wip 4ser -End		
 		String estimatedAmountStr = null;
 		IQTDetailSO qtDetailSO = null;
 		try {
@@ -17626,7 +17657,8 @@ private void retriveCommitteeRemarksList(){
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "RetrieveListofTechnicalSpecificationForPresentationDemonstration", this.getManagedBean().getScQt().getQtNo(),
+					"demoSpectechnicalChecklist", getUserIdSessionFromLoginId(), e);//#sqube qt vulnerability minor idham @03 aug 2023
 		}
 		
 		return "/xhtml/sc/evaluation/evaluationStage/demoInvitationItemList.xhtml";
@@ -18637,7 +18669,8 @@ private void retriveCommitteeRemarksList(){
 			
 			if (null != resDTO && null != resDTO.getSpecQuestionList()) {
 				for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
-						item.getScRequestItem().getTplSpecQuestion().setMandatorySpecForSample(question.isMandatorySpec()?true:false);
+					if(question.isMandatorySpec())	
+						item.getScRequestItem().getTplSpecQuestion().setMandatorySpecForSample(true);
 				}
 			}
 			if(item.getUserScore()!=null && !item.getUserScore().equals(0) && item.getCompliance()!=null && item.getCompliance()==Boolean.FALSE){
@@ -18653,19 +18686,19 @@ private void retriveCommitteeRemarksList(){
 	 */
 	public void onchangeCompliance(ScQtSampleItem itm){
 		for(ScQtSampleItem item : this.getManagedBean().getSampleItemList()){
-			if(itm.getSampleItemId().equals(item.getSampleItemId())
+			if(itm.getSampleItemId()==item.getSampleItemId()
 				&& itm.getCompliance()!=null
 				&& itm.getCompliance()==Boolean.FALSE){
-				item.setUserScore(new BigDecimal(0));
-			}else if(itm.getSampleItemId().equals(item.getSampleItemId())
+					item.setUserScore(BigDecimal.ZERO);
+			}else if(itm.getSampleItemId()==item.getSampleItemId()
 					&& itm.getCompliance()!=null
 					&& itm.getCompliance()==Boolean.TRUE
-					&& !itm.getUserScore().equals(null)
-					&& itm.getUserScore().equals(new BigDecimal(0))){
-				item.setUserScore(null);
-			}else if(itm.getSampleItemId().equals(item.getSampleItemId())
+					&& itm.getUserScore()!=null
+					&& itm.getUserScore().compareTo(BigDecimal.ZERO) == 0){
+						item.setUserScore(null);
+			}else if(itm.getSampleItemId()==item.getSampleItemId()
 					&& itm.getCompliance()==null){
-				item.setUserScore(null);
+						item.setUserScore(null);
 			}
 		}
 	}
