@@ -921,6 +921,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			removeUnwantedLampiranA3Report(1); //#29006 - note 650
 			//#31869 - end
 			getManagedBean().setDownloadedLoaReportsTitleList(new ArrayList<String>());
+			//note 870,872 - start
+			// bug fixing on report list especially lampiran A3 naming if user
+			// generate lampiran a3 and reload the page through task list
+			if (resDTO.getScLoa() != null
+					&& ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(getManagedBean().getScLoa().getScLoiLoa()
+							.getDocType()) && getManagedBean().getScLoa().getScLoaReports().size() == 5) {
+				AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
+				awardSupplierReqDTO.setDocId(getManagedBean().getScLoa().getLoaId());
+				
+				AwardSupplierResDTO awardSupplierResDTO =  getQtAwardSO().retrieveLOAReportList(awardSupplierReqDTO);
+				List<ScLoaReport> scLoaReports = awardSupplierResDTO.getLoaReports();
+				
+				ScLoa scLoa = getManagedBean().getScLoa();
+				scLoa.setScLoaReports(scLoaReports);
+				getManagedBean().setScLoa(scLoa);
+				
+			}
+			//note 870,872 - end
 			// #29006 - end
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -10389,7 +10407,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if(this.getManagedBean().getTplSpecAnswerList() != null || this.getManagedBean().getNewSupplierJustification() != null){
 			if(this.getManagedBean().getScQt().isZonal() && this.getManagedBean().isResetAll()){
 				for(ScLoiLoaItem zoneLoiLoaItem:this.getManagedBean().getScLoa().getScLoiLoaItems()){
-					zoneLoiLoaItem.setLoaSpecJustification(null);
+					if(null!=this.getManagedBean().getScLoiLoaItem()
+						&& zoneLoiLoaItem.getLoiLoaItemId()==this.getManagedBean().getScLoiLoaItem().getLoiLoaItemId()){
+						zoneLoiLoaItem.setLoaSpecJustification(null);
+					}
 					if(this.getManagedBean().getScLoa().isBrandNew()){
 						zoneLoiLoaItem.setScLoa(null);
 					}
@@ -11291,8 +11312,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}else if (StringUtils.isNotBlank(report.getTitle()) 
 							&& report.getTitle().contains(lampiranA3SubStr) 
 							&& null!=report.getDefinationType() 
-							&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD.equals(report.getDefinationType().getParameterCode())
-							&& this.getManagedBean().isResetAll()) {
+							&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD.equals(report.getDefinationType().getParameterCode())) {
 						report.setDeleted(true);
 						oldLampiranA3List.add(report);
 						recordCount++;
