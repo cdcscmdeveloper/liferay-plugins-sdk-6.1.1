@@ -545,8 +545,6 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 				}
 		
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
 			ntfSO = null;
 		}
