@@ -2705,7 +2705,7 @@ public class QTCommitteBackingBean extends
 			if (entity.isSelected()) {
 				// #12471 Start
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
-				if (approval != null) {
+				if (approval != null && approval.getApproverSettings() != null) {
 					for (ScQtApproverSettings approvalUser : approval.getApproverSettings()) {
 						if (approvalUser.getPmUser().getUserId().equals(entity.getUserId())) {
 							throw new EpException(MessageConst.ERROR_775301,

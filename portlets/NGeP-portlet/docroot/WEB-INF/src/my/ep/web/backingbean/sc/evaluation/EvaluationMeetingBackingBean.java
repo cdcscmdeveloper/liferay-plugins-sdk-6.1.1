@@ -720,7 +720,7 @@ public class EvaluationMeetingBackingBean extends
 								reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 								reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
 								ScQtApproval approval = this.getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO).getQtApproval();
-								if (approval != null) {
+								if (approval != null && approval.getApproverSettings() != null) {
 									for (ScQtApproverSettings approvalUser : approval.getApproverSettings()) {
 										if (approvalUser.getPmUser().getUserId().equals(committeeMember.getPmUser().getUserId())) {
 											throw new EpException(MessageConst.ERROR_775301,

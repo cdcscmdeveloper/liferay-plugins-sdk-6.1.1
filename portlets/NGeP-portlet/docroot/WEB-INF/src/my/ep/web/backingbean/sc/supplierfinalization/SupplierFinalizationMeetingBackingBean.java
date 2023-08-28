@@ -980,7 +980,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 				reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
 				ScQtApproval approval = this.getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO).getQtApproval();
-				if (approval != null) {
+				if (approval != null && approval.getApproverSettings() != null) {
 					for (ScQtApproverSettings approvalUser : approval.getApproverSettings()) {
 						if (approvalUser.getPmUser().getUserId().equals(user.getUserId())) {
 							throw new EpException(MessageConst.ERROR_775301,
