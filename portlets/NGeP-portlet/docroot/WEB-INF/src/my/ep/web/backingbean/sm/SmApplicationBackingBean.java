@@ -13486,7 +13486,7 @@ public class SmApplicationBackingBean extends
 	 * @throws Exception
 	 */
 	public void printDeclarationForm() throws Exception {
-		String language = new FacesScopes().getUserLocale().getLanguage();
+		String language = setFixedLanguageDisplay(true, "ms");
 		if (language.equals("en")) {
 			Map<String, String> paramMap = new HashMap<String, String>();
 			paramMap.put("PAPPNO", getManagedBean().getSmAppl().getApplNo());
