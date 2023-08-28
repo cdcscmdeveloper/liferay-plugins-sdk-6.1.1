@@ -160,6 +160,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -920,6 +921,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			removeUnwantedLampiranA3Report(1); //#29006 - note 650
 			//#31869 - end
 			getManagedBean().setDownloadedLoaReportsTitleList(new ArrayList<String>());
+			//note 870,872 - start
+			// bug fixing on report list especially lampiran A3 naming if user
+			// generate lampiran a3 and reload the page through task list
+			if (resDTO.getScLoa() != null
+					&& ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(getManagedBean().getScLoa().getScLoiLoa()
+							.getDocType()) && getManagedBean().getScLoa().getScLoaReports().size() == 5) {
+				AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
+				awardSupplierReqDTO.setDocId(getManagedBean().getScLoa().getLoaId());
+				
+				AwardSupplierResDTO awardSupplierResDTO =  getQtAwardSO().retrieveLOAReportList(awardSupplierReqDTO);
+				List<ScLoaReport> scLoaReports = awardSupplierResDTO.getLoaReports();
+				
+				ScLoa scLoa = getManagedBean().getScLoa();
+				scLoa.setScLoaReports(scLoaReports);
+				getManagedBean().setScLoa(scLoa);
+				
+			}
+			//note 870,872 - end
 			// #29006 - end
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -8979,7 +8998,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							// END
 							clonedAnswerList.add(tpaClone);
 						} catch (Exception e) {
-							e.printStackTrace();
+							log.error(e);
 						}
 					}
 					// Put into scLoiLoaItemAnswerMap for use in generating
@@ -8995,7 +9014,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						// Save and update new supplier offer into each related TplSpecAnswer in DB
 						getTemplateSpecSO().updateNewSupplierOffer(null, tpaIdList);
 					} catch (Exception e) {
-						e.printStackTrace();
+						log.error(e);
 					}
 					try {
 						// Save and update new supplier offer into related ScLoiLoaItem in DB
@@ -9013,7 +9032,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						}
 						
 					} catch (Exception e) {
-						e.printStackTrace();
+						log.error(e);
 					}
 					List<String> nsoJustList = new ArrayList<String>();
 					nsoJustList.add("NSO_" + null);
@@ -9064,7 +9083,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							// END
 							clonedAnswerList.add(tpaClone);
 						} catch (Exception e) {
-							e.printStackTrace();
+							log.error(e);
 						}
 					}
 					// Put into scLoiLoaItemAnswerMap for use in generating
@@ -9088,6 +9107,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}if (justificationIsChanged) {
 			createLampiranA3(null);
+			//note 870,872 - start
+			for (ScLoaReport scLoaReport : this.getManagedBean().getScLoa().getScLoaReports()) {
+				if (scLoaReport.getTitle().contains(lampiranA3SubStr)
+						&& !ParameterConst.DOCTYPE_QUOTATION.equals(this.getManagedBean().getScLoa().getScLoiLoa()
+								.getDocType())) {
+					try {
+						loadScLoaReport(scLoaReport);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			//note 870,872 - end
 			//onBackToZoneItemDetailsTab(); #29006 - note 633
 		}
 		//#29006 - end - note 619
@@ -9305,7 +9337,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						try {
 							loadScLoaReport(scLoaReport);
 						} catch (Exception e) {
-							e.printStackTrace();
+							log.error(e);
 						}
 					}
 				}
@@ -9348,7 +9380,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								// END
 								clonedAnswerList.add(tpaClone);
 							} catch (Exception e) {
-								e.printStackTrace();
+								log.error(e);
 							}
 						}
 						// Put into scLoiLoaItemAnswerMap for use in generating
@@ -9367,7 +9399,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								getTemplateSpecSO().updateNewSupplierOffer(getManagedBean().getNewSupplierOffered(),
 										tpaIdList);
 						} catch (Exception e) {
-							e.printStackTrace();
+							log.error(e);
 						}
 						try {
 							// Save and update new supplier offer into related
@@ -9388,7 +9420,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							}
 
 						} catch (Exception e) {
-							e.printStackTrace();
+							log.error(e);
 						}
 						List<String> nsoJustList = new ArrayList<String>();
 						nsoJustList.add("NSO_" + getManagedBean().getNewSupplierOffered());
@@ -9437,7 +9469,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								// END
 								clonedAnswerList.add(tpaClone);
 							} catch (Exception e) {
-								e.printStackTrace();
+								log.error(e);
 							}
 						}
 						// Put into scLoiLoaItemAnswerMap for use in generating
@@ -9471,7 +9503,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					try {
 						loadScLoaReport(scLoaReport);
 					} catch (Exception e) {
-						e.printStackTrace();
+						log.error(e);
 					}
 				}
 			}
@@ -9788,15 +9820,33 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// end - #34898/#29006 - start - note 850,852,856
 			
 			//#29006 - note 702,850,852,856 - start
+			//note 870,872 - start
 			for (ScLoiLoaItem item : items) {
+				scLoiLoaItem.setDateGeneratedA3(null);				
 				if(item.getLoiLoaItemId().equals(scLoiLoaItem.getLoiLoaItemId())
 						&& ((item.getScLoa().getLoaId().equals(scLoiLoaItem.getScLoa().getLoaId())) && (item
 								.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem()
 								.getRequestNoteItemId())))) {
 					scLoiLoaItem.setDateGeneratedA3(DateUtils.getLocalizeDate(item.getChangedDate(), myLocale));
 					scLoiLoaItem.setTimeGeneratedA3(new SimpleDateFormat(CommonConstants.DEFAULT_TIME_FORMAT).format(item.getChangedDate()));
+					break;
 				}					
 			}
+			
+			if(scLoiLoaItem.getDateGeneratedA3() == null)
+			{
+				for (ScLoiLoaItem item : items) {
+					if(item.getLoiLoaItemId().equals(scLoiLoaItem.getLoiLoaItemId())
+							|| ((item.getScLoa().getLoaId().equals(scLoiLoaItem.getScLoa().getLoaId())) && (item
+									.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem()
+									.getRequestNoteItemId())))) {
+						scLoiLoaItem.setDateGeneratedA3(DateUtils.getLocalizeDate(item.getChangedDate(), myLocale));
+						scLoiLoaItem.setTimeGeneratedA3(new SimpleDateFormat(CommonConstants.DEFAULT_TIME_FORMAT).format(item.getChangedDate()));
+						break;
+					}
+				}
+			}
+			//note 870,872 - end
 			//#29006 - note 702,850,852,856 - end
 		}
 		//#29006 - end -  note 607
@@ -10144,7 +10194,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			generateUpdatedLampiranA3FromVelocity((ScAttachment) scLoaReport.getScLoaReportAttachment(),
 					getManagedBean().getScLoa(), this.getManagedBean().getScQt());
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport.getScLoaReportAttachment();
 
@@ -10783,16 +10833,25 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					SourcingConstants.LOA_LAMPIRAN_A3, context, 
 					fos);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] START			 
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_LOA_DETAIL_BACKINGBEAN, this.getManagedBean().getScQt().getQtNo(),
+					SLALogConstant.QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), e);
+			//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] END
 		} catch (Exception e) {
-			e.printStackTrace();
+			//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] START			 
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_LOA_DETAIL_BACKINGBEAN, this.getManagedBean().getScQt().getQtNo(),
+					SLALogConstant.QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), e);
+			//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] END
 		} finally {
 			try {
 				if (fos != null) {
 					fos.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] START			 
+				SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_LOA_DETAIL_BACKINGBEAN, this.getManagedBean().getScQt().getQtNo(),
+						SLALogConstant.QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), e);
+				//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] END
 			}
 		}
 	}

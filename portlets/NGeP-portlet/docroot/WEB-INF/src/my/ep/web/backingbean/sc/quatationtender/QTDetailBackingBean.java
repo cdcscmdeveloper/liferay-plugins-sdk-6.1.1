@@ -2962,7 +2962,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									true,
 									JoinType.LEFT));
 					statusBean = statusFilterBean;
-					if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
+					//harun disabled for 34702 related for 9019
+					/*if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
 						statusBean = new SearchMultiFilterBean(
 								statusFilterBean, 
 								new SearchFilterBean(
@@ -2971,7 +2972,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										null,
 										SearchCondition.CONDITION_OR.value(),
 										JoinType.LEFT));
+					}*/
+					//#34702 - Start
+					if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
+						statusBean = new SearchMultiFilterBean(
+								statusFilterBean, 
+								new SearchFilterBean(
+										"scQtStatus.pmStatus.statusId",
+										SearchOperator.OPERATOR_EQUALS.value(),
+										QTStatusConst.QT_PENDING_QT_SUBMISSION_WIP.toString(),
+										SearchCondition.CONDITION_OR.value(),
+										JoinType.LEFT));
 					}
+					//#34702 - End
 					qtSearchBean.getDataFilterBeans().add(statusBean);
 				}
 				else{
@@ -4855,6 +4868,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										
 									}
 								}
+								
+								// To remove ScQtApprovalRequest if not approval request type SC
+								if(CollectionUtils.isNotEmpty(approvalRequest)){
+									for(int i=0;i<approvalRequest.size();i++ ){
+										if(approvalRequest.get(i).getApprovalType().getParameterCode().equals(SourcingConstants.SUPPLIER_SELECTION)){
+											approvalRequest.remove(i);
+										}
+									}
+								}
+								
 							}
 							tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
 					
@@ -4865,8 +4888,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 
 			this.getManagedBean().setTabOtherApproval(tabBeans);
-			//Bug # 34694/25077 - fix showing empty
-			//this.getManagedBean().setApproverTabLoaded(true);
+			this.getManagedBean().setApproverTabLoaded(true);
 			
 		} finally {
 			detailSO = null;
@@ -7470,10 +7492,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				// detailSO.validateApprovalDetails(reqDTO);
 				if(!this.getManagedBean().getQt().isCloneEnabled()){//25635&34502-start
 					//#25077 - Start
-					//Bug # 34694/25077 - fix showing empty
-					//if (!getManagedBean().isApproverTabLoaded()) {
+					if (!getManagedBean().isApproverTabLoaded()) {
 					    retrieveOthersApprovalTabDtl();
-					//}
+					}
 					//#25077 - End
 					retrieveApprovalTabDtl();
 					}//25635&34502-End
