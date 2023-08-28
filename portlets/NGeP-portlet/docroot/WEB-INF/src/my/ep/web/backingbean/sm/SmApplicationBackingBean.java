@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.ExternalContext;
@@ -165,6 +166,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewApplHistoryBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSmApplBackingBean;
 import my.ep.web.backingbean.sm.outputmsg.SmOutputMsgBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
@@ -2829,6 +2831,15 @@ public class SmApplicationBackingBean extends
 						currentTab, ruleHelper);
 				SmApplicationUtil.validateEquityCompanyAmount(getManagedBean(),
 						currentTab);
+			//#34277 --START
+			} else if (currentPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
+					&& !applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+				SmApplicationUtil.validateEquityOwnerAmount(getManagedBean(),
+						currentTab, ruleHelper);
+				SmApplicationUtil.validateEquityCompanyAmount(getManagedBean(),
+						currentTab); 
+			//#34277 --END
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)
 					|| currentPageType
@@ -7624,8 +7635,12 @@ public class SmApplicationBackingBean extends
 							smpersonAddress.getSmAddress().setCountryId(
 									smpersonAddress.getSmAddress().getPmCountry().getCountryId());
 						}
+						//#34799 - start
+						PmState curState = smpersonAddress.getSmAddress().getPmState();
 						onChangeCountry(smpersonAddress.getSmAddress(),
 								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+						smpersonAddress.getSmAddress().setPmState(curState);
+						//#34799 - end
 						if (smpersonAddress.getSmAddress().getPmState() != null) {
 							smpersonAddress.getSmAddress().setStateId(
 									smpersonAddress.getSmAddress().getPmState().getStateId());
@@ -7647,7 +7662,11 @@ public class SmApplicationBackingBean extends
 							smAddressRes.setPmCountry(smpersonAddress.getSmAddress().getPmCountry());
 							smAddressRes.setCountryId(smpersonAddress.getSmAddress().getPmCountry().getCountryId());
 						}
+						//#34799 - start
+						PmState curState = smAddressRes.getPmState();
 						onChangeCountry(smAddressRes, SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL);
+						smAddressRes.setPmState(curState);
+						//#34799 - end
 						if(smpersonAddress.getSmAddress().getPmState() != null){
 							smAddressRes.setPmState(smpersonAddress.getSmAddress().getPmState());
 							smAddressRes.setStateId(smpersonAddress.getSmAddress().getPmState().getStateId());
@@ -11759,12 +11778,18 @@ public class SmApplicationBackingBean extends
 	 *            panelName
 	 */
 	public void onChangeCountry(SmAddress addr, String panelName) {
+		//#34799
+		addr.setPmState(null);
 		//#34135 START
 		if(addr.getPmDivision() != null || addr.getDivisionId() != null){
 			addr.setPmDivision(null);
 			addr.setDivisionId(null);
 			this.getManagedBean().setBranchCompanyDivisions(new ArrayList<SelectItem>());
-			this.getManagedBean().getSelectedBranch().getSmAddress().getPmState().setAdoptDivision(false);
+			//#34799 - start
+			if(getManagedBean().getSelectedBranch().getSmAddress().getPmState() != null){
+				getManagedBean().getSelectedBranch().getSmAddress().getPmState().setAdoptDivision(false);
+			}
+			//#34799 - end
 		}//#34135 END
 		SmApplicationUtil.getInstance().populateStateByCountry(addr, panelName,
 				getManagedBean());
@@ -11786,7 +11811,12 @@ public class SmApplicationBackingBean extends
 			addr.setPmState(SmCommonUtil.getInstance()
 					.getStateById(stateId));
 		}
-		if(addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+		//#34799 - start
+		addr.setPmDivision(null);
+		addr.setPmDistrict(null);
+		if(addr.getPmState() != null && addr.getPmState().getStateCode()
+				.equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+			//#34799 - end
 			SmApplicationUtil.getInstance().populateDivisionsByState(addr,
 					panelName, getManagedBean());
 			setRoleStaffAddrReqd();
@@ -11824,6 +11854,10 @@ public class SmApplicationBackingBean extends
 		}else{
 			log.info("--- district name before===" + addr.getPmDistrict().getDistrictName());
 		}
+		
+		//#34799
+		addr.setPmCity(null);
+		
 		SmApplicationUtil.getInstance().populateCitiesByDistrict(addr,
 				panelName, getManagedBean());
 		setRoleStaffAddrReqd();
@@ -13694,6 +13728,26 @@ public class SmApplicationBackingBean extends
 				+ applNo
 				+ "&applicationType=" + applType + "&currentTab=" + currTab);
 	}
+	
+	//#34099 - start
+	public void initRevisionDialog(String linkType) {
+		//SmApplicationUtil.getReviewApplicationSupplierBasePage(smAppl.getApplType());
+		try {
+			ViewSmApplBackingBean vBean = new ViewSmApplBackingBean();
+			if(linkType.equals("O")){
+				vBean.initMainDialog(getManagedBean().getSmAppl().getApplNo(), "SUP", 
+						getManagedBean().getCurrentPageType());
+			} else {
+				vBean.initMainDialog(
+						getManagedBean().getSmSupplier().getSmAppl().getApplNo(), "APP", 
+						getManagedBean().getCurrentPageType());
+			}
+			RequestContext.getCurrentInstance().execute("revisionViewDlg.show()");
+		} catch (NullPointerException e){
+			throw new EpException(MessageConst.INFO_721212);
+		}
+	}
+	//#34099 - end
 
 	/**
 	 * Revert po application to supplier application data
@@ -14677,8 +14731,9 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		//#27165
-		
-		SmCommonUtil.redirectToExternalUrl(SupplierManagementConst.VIEW_SSM_INFOMATION);
+		//34099
+		RequestContext.getCurrentInstance().execute("viewssminfoDlg.show()");
+		//SmCommonUtil.redirectToExternalUrl(SupplierManagementConst.VIEW_SSM_INFOMATION);
 	}
 	
 	public void clearPersonnelList() {
@@ -15607,16 +15662,19 @@ public class SmApplicationBackingBean extends
 						}
 						
 						PmState state = new PmState();
-						if(personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC) ){
+						//#34799 - start
+						if(personnelAddress.getSmPersonnel().getIdentificationType() != null && personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC)
+								&& addr.getSmAddress().getPmState() != null){
 							state.setStateId(addr.getSmAddress().getPmState().getStateId());
 						}
-						if(personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT)) {
-							if(smAddress.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
+						if(personnelAddress.getSmPersonnel().getIdentificationType() != null && personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT)) {
+							if(smAddress.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)
+									&& addr.getSmAddress().getPmState() != null){
 								state.setStateId(addr.getSmAddress().getPmState().getStateId());
-							}
-							else{
+							} else if(addr.getSmAddress().getPmDistrict() != null && addr.getSmAddress().getPmDistrict().getPmState() != null){
 								state.setStateId(addr.getSmAddress().getPmDistrict().getPmState().getStateId());
 							}
+							//#34799 - end
 						}
 						
 						smAddress.setPmState(state);
@@ -15754,5 +15812,27 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setDisplayBranches(displayBranches);
 	}
 	//#34135 END
-		
+	//#34799 - start
+	public void onTickSameAsAddress(SmAddress srcAddr,
+			SmPersonnelAddress destAddr, String componentId, boolean isTick) {
+		if(isTick){
+			UIComponent comp = org.primefaces.util.ComponentUtils.findComponent(
+					FacesContext.getCurrentInstance().getViewRoot(), componentId);
+			if(comp != null){
+				resetEditableValue(comp);
+			}
+		}
+		onTickSameAsAddress(srcAddr, destAddr);
+	}
+	
+	private void resetEditableValue(UIComponent comp){
+		if(comp instanceof EditableValueHolder){
+			EditableValueHolder val = (EditableValueHolder) comp;
+			val.resetValue();
+		}
+		for(Iterator<UIComponent> it = comp.getFacetsAndChildren(); it.hasNext();){
+			resetEditableValue(it.next());
+		}
+	}
+	//#34799 - end
 }
