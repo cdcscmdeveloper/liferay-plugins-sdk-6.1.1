@@ -1194,7 +1194,7 @@ public class CreateQtBackingBean extends
 				if ((!isPanel && enable.length > 0) && (amount.compareTo(indPriceThreshold) <=0)) {
 					//BugBug #35061 - asyrafhaziq 
 					//set message
-					String msg = getMessage("lbl.sc.spec.alert.proceed.below.quotation.value", new String[] { String. valueOf(indPriceThreshold).trim() });
+					String msg = getMessage(SourcingConstants.ALERT_MESSAGE_BELOW_QUATATION_VALUE, new String[] { String. valueOf(indPriceThreshold).trim() });
 					this.getManagedBean().setMsgConfirmBelowIndi(msg.toString().trim());
 					
 					RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
