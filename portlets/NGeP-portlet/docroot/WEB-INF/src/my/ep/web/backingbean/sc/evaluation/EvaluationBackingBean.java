@@ -2793,9 +2793,19 @@ public void saveComplianceSample() {
 				evalReqDTO.setEvalStage(QTConstants.COMPLIANCE_CHECK);
 				// evalReqDTO.setRecomandationType(1);
 				if (this.getManagedBean().getScQt().isDemoRequired()) {
-
+					//Bug #35109
+					IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTEvaluationSO.class);
+					EvaluationReqDTO reqDTOwip = new EvaluationReqDTO();
+					reqDTOwip.setScQt(this.getManagedBean().getScQt());
+					int wipstatus = evaluationSO.checkWipScoreSetting(reqDTOwip);
 					evalReqDTO
 							.setRecomandationType(SourcingConstants.SCORE_SETTING_TYPE_DEMO);
+					//Bug #35109
+					if (wipstatus < ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_CURRENT) {
+						this.getManagedBean().setEvaluatioStageActiveIndex(1);
+					}
 				} else {
 
 					evalReqDTO
@@ -8653,10 +8663,17 @@ public void saveComplianceSample() {
 
 						}
 					}else if(this.getManagedBean().getScQt().isDemoRequired()){	
+						//Bug #35109
+						IQTEvaluationSO evaluationSO = null;
+						evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTEvaluationSO.class);
+						EvaluationReqDTO reqDTOwip = new EvaluationReqDTO();
 						if (currentTab == 2) {
-
-							if (this.getManagedBean()
-									.getEvaluatioStageActiveIndex() == 1) {
+							//Bug #35109
+							reqDTOwip.setScQt(this.getManagedBean().getScQt());
+							int wipstatus = evaluationSO.checkWipScoreSetting(reqDTOwip);
+							if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && 
+									this.getManagedBean().getEvaluatioStageActiveIndex() == 1) {
 								retriveSummaryEvaluationStage();
 								this.getManagedBean().setTabTechnicalIndex(3);
 								outputTab = 2;
