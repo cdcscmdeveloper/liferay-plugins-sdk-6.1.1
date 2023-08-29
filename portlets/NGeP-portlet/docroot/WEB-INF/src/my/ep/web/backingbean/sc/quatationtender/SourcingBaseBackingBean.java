@@ -42,8 +42,10 @@ import java.util.HashSet; //Bug #33988@Syazani - 27/09/2022
 import java.util.Set; //Bug #33988@Syazani - 27/09/2022
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
@@ -1074,13 +1076,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	protected void updateSpkiDigiSignData(PmDigiSign pmDigiSign,
 			String docType, Long docId, String docNumber, String textBeforeSign) {
-		FacesScopes facesScope = new FacesScopes();
-		Long userId = facesScope.getUserSessionBean().getUserId();
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		pmDigiSign.setDocId(new BigDecimal(docId));
 		pmDigiSign.setDocNo(docNumber);
 		pmDigiSign.setDocType(docType);
-		pmDigiSign.setCreatedBy(userId);
+		pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		pmDigiSign.setCreatedDate(date);
 		pmDigiSign.setOriginalData(textBeforeSign);
 	}
@@ -3879,7 +3879,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 										if (specList == null) {
 											specList = new ArrayList<>();
 										}
-										specList.add(tplSpecAns.getTplSpecQuestion().getClSpecDetail());
+										//start #29006 - note 850,852,856
+										String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
+									
+										specValue = specValue.replace("<", "#60;");
+										specValue = specValue.replace(">", "#62;");
+										specValue = specValue.replace("&", "#and;");
+										
+										specList.add(specValue);
+										tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
+										//end #29006 - note 850,852,856
 									} else {
 										break;
 									}
@@ -3993,6 +4002,181 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						}
 					}
 				}
+				//start - #29006 note 794
+				if (CollectionUtils.isNotEmpty(quoteResDTO.getProductAnswersTpl())) {
+
+					TplSpecMaster master = null;
+					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+
+					for (TplSpecAnswer answer : quoteResDTO.getProductAnswersTpl()) {
+						if (answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone() != null) {
+							zoneId = answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone().getSpecZoneId();
+						} else {
+							zoneId = 0l; // Long Object initialization
+						}
+
+						if (answer.getTplSpecQuestion().getClFulfilmentTypeCode() == null) {
+							answer.getTplSpecQuestion().setClFulfilmentTypeCode(
+									scLoa.getScLoiLoa().getFulfilmentTypeCode());
+						}
+						if (days == null) {
+							days = answer.getTplSpecQuestion().getClDeliveryTerm();
+						} else {
+							if (!days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())
+									&& (answer.getTplSpecQuestion().getClDeliveryTerm() != null)) {
+								days = answer.getTplSpecQuestion().getClDeliveryTerm();
+							}
+						}
+						
+						if (answer.getAnswerRemark() != null) {
+							answer.getTplSpecQuestion().setAnswerRemarks(answer.getAnswerRemark());
+						} else {
+							answer.getTplSpecQuestion().setAnswerRemarks(dafaltValue);
+						}
+
+						isWipData = answer.getIsWip();// #29006
+
+						if ((days.equals(answer.getTplSpecQuestion().getClDeliveryTerm()))
+								&& (answer.getTplSpecQuestion().getClItem() != null)) {
+							// #25025 - Start.
+							List<String> specList = null;
+							boolean addSpecList = false;
+							for (TplSpecAnswer tplSpecAns : quoteResDTO.getProductAnswersTpl()) {
+								if (tplSpecAns.getTplSpecQuestion().getSpecQuestionId() == answer.getTplSpecQuestion()
+										.getSpecQuestionId()) {
+									addSpecList = true;
+									continue;
+								}
+								if (addSpecList) {
+									if (tplSpecAns.getTplSpecQuestion().getQuestionType().equals(SSTConstant.specification)) {
+										if (specList == null) {
+											specList = new ArrayList<>();
+										}
+										//start #29006 - note 850,852,856
+										String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
+									
+										specValue = specValue.replace("<", "#60;");
+										specValue = specValue.replace(">", "#62;");
+										specValue = specValue.replace("&", "#and;");
+										
+										specList.add(specValue);
+										tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
+										//end #29006 - note 850,852,856
+									} else {
+										break;
+									}
+								}
+							}
+							answer.getTplSpecQuestion().setSpecList(specList);
+							// #25025 - End.
+
+							/** This code is for LOA with Single Item Details **/
+
+							if (items.size() == 1) {
+								if (itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId())
+										|| (answer.getTplSpecQuestion().getParentSpecQuestion() != null && itemId
+												.equals(answer.getTplSpecQuestion().getParentSpecQuestion()
+														.getSpecQuestionId()))) {
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									if (master.getTplSpecZone() != null) {
+										for (int i = 0; i < master.getTplSpecZone().getTplSpecZoneDtls().size(); i++) {
+											TplSpecZoneDtl tplspecZoneDtls = master.getTplSpecZone()
+													.getTplSpecZoneDtls().get(i);
+											tplspecZoneDtls.getZoneName();
+										}
+									}
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									isSpecificationEnable = true;
+								}
+							} else {
+								/**
+								 * This code is for LOA with multiple Items
+								 * Details
+								 **/
+								if (days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())) {
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									if (master.getTplSpecZone() != null) {
+										for (int i = 0; i < master.getTplSpecZone().getTplSpecZoneDtls().size(); i++) {
+											TplSpecZoneDtl tplspecZoneDtls = master.getTplSpecZone()
+													.getTplSpecZoneDtls().get(i);
+											tplspecZoneDtls.getZoneName();
+										}
+									}
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									isSpecificationEnable = true;
+								}
+							}
+						} else if (isSpecificationEnable && answer.getTplSpecQuestion().getClSpecDetail() != null) {
+							/**
+							 * This code is for LOA with Single Item
+							 * specification
+							 **/
+							if (items.size() == 1) {
+								if (itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId())
+										|| (answer.getTplSpecQuestion().getParentSpecQuestion() != null && itemId
+												.equals(answer.getTplSpecQuestion().getParentSpecQuestion()
+														.getSpecQuestionId()))) {
+
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									// #25025 - Start.
+									isSpecificationEnable = true;
+									// #25025 - End.
+								}
+							} else {
+								/**
+								 * This code is for LOA with multiple Items
+								 * specification
+								 **/
+								if (answer.getTplSpecQuestion().getClDeliveryTerm() == null) {
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									// #25025 - Start.
+									isSpecificationEnable = true;
+									// #25025 - End.
+								}
+							}
+						}
+					}
+					if (master != null) {
+						if (masters.size() == 0) {
+							masters.add(master);
+						} else {
+							boolean itemFound = false;
+							for (TplSpecMaster tplSpecMaster : masters) {
+								if (tplSpecMaster.getSpecMasterId() == master.getSpecMasterId()) {
+									itemFound = true;
+									break;
+								}
+							}
+							if (!itemFound) {
+								masters.add(master);
+							}
+						}
+					}
+				
+				}
+				//end - #29006 note 794
 			}
 			context.put(SSTConstant.serviceScope, dafaltValue);
 			context.put(SSTConstant.SUPPLIER_NAME, supplierName);
@@ -4001,6 +4185,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			context.put(SSTConstant.bean, this);
 			context.put(SSTConstant.isZonal, scLoa.getScLoiLoa().isZonal());
 			context.put("isWipData", isWipData); // #29006
+			context.put("supplierId", scLoa.getScLoiLoa().getSmSupplier().getSupplierId()); // #29006
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "GenerateSST", scLoa.getLoaNo(),
 					"constructPRSupplierSpecificationAndRemarks", getUserIdSessionFromLoginId(), e);
@@ -5148,8 +5333,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
 				log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: "+ actualIntendedPrice +" :::");
 
-				// #25729 #174			 
-				if ((actualIntendedPrice.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <=0))
+				// #25729 #174
+				//BugBug #35061 - asyrafhaziq
+				// get total indicative price threshold validation value
+				BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+				
+				if ((actualIntendedPrice.compareTo(indPriceThreshold) <=0))
 				{
 					return Boolean.TRUE;
 				}
@@ -5172,8 +5361,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 				List<ScQtFinalizationReport> briefingPaperReportList = new ArrayList<>();
 				// #18685 - Start. 
-				finalizationReport.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
-				finalizationReport.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+				finalizationReport.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+				finalizationReport.setChangedBy(getUserIdSessionFromLoginId()); //#31849 add log key
                 // #18685 - End. 
 				briefingPaperReportList.add(finalizationReport);
 				reqDTO.setAddNewBriefingPaperReportList(briefingPaperReportList );
@@ -6171,4 +6360,88 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return isExist;
 		}
 		//26130 - end
+		
+		/**
+		 * Defect: #34924
+		 * Method: Checking and validate using validator: string value has unrecognized symbol/character.
+		 * @param context the context
+		 * @param component the component
+		 * @param value the value
+		 */
+		public void isContentExistUnicode(FacesContext context, UIComponent component,
+				Object value) {
+			
+			String strContent = (String) value;
+			String labelNameVal = (String) component.getAttributes().get("label");
+			
+			boolean isExistUnicodeSymbol = Boolean.FALSE;
+			
+			if(strContent != null && !strContent.isEmpty()){
+				if(strContent.contains("\1")){//SOH
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\2")){//STX
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\3")){//ETX
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\4")){//EOT
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\5")){//ENQ
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\6")){//ACK
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\7")){//BEL
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\10")){
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\11")){//VT
+					isExistUnicodeSymbol = Boolean.TRUE;
+				/*}else if(strContent.contains("\14")){//SO
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\15")){//SI
+					isExistUnicodeSymbol = Boolean.TRUE;*/
+				}else if(strContent.contains("\16")){//DLE
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\17")){//DC1
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\18")){//DC2
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\19")){//DC3
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\20")){//DC4
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\21")){//NAK
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\22")){//SYN
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\23")){//ETB
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\24")){//CAN
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\25")){//EM
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\26")){//SUB
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\27")){//ESC
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\28")){//FS
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\29")){//GS
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\30")){//RS
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\31")){//US
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}
+			}
+			
+			if(isExistUnicodeSymbol){
+				if(labelNameVal != null && !labelNameVal.isEmpty()){
+					throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
+							.getMessage(MessageConst.ERROR_760543,
+									new String[] {labelNameVal },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+				}
+			}
+		}
 }

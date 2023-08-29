@@ -430,9 +430,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * add interviewee to the List
 	 */
 	public void addInterviewee(){
-		//#34166 - Start
-		checkRepresentative();
-		//#34166 - End
 		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
 		
 		SmSvInterviewee interviewee = new SmSvInterviewee();
@@ -2115,7 +2112,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 
 			reqDTO.setSmSvTask(svTask);
-			reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 			ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
 			SiteVisitResDTO resDTO = reqSO.saveOrSubmitSiteVisitReport(reqDTO);
 			
@@ -2477,7 +2474,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		try{
 			SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 			reqDTO.setSmSvTask(svTask);
-			reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 			((ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class))
 					.saveOrSubmitSiteVisitReport(reqDTO);
 		}catch(Exception ex){
@@ -2845,7 +2842,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			String Designation = ResourceBundleUtils.getMessage("lbl.sm.userprofile.designation",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 			
 			if(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees() != null){
-				ResourceBundleUtils.getMessage("lbl.sm.mof.reg.reason.delete",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+				
+				if(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().isEmpty()){
+					String representatives = ResourceBundleUtils.getMessage("lbl.sm.companyinfo.intvw.represent",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+					throw new EpException(MessageConst.ERROR_775192, new String[] { representatives });
+				}
 				
 				for(SmSvInterviewee person : getManagedBean().getSelectedSvTemplate().getSmSvInterviewees()){
 					if(person.getName() == null || person.getName().isEmpty()){

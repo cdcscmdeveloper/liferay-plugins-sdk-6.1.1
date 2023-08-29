@@ -2362,19 +2362,40 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 		//20190910@asyrafhaziq - 26404 -End
 		// save.
-       
-       //9019 for prevent null insert for remark
-		if (null != scQt.getScQtRemarks() && CollectionUtils.isNotEmpty(scQt.getScQtRemarks())) {
+ 				
+		//9019 for prevent null insert for remark and merge note-522
+		QuationTenderResDTO resDto = null;
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		
+		if(null != scQt.getScQtRemarks() && CollectionUtils.isNotEmpty(scQt.getScQtRemarks())) {
 			for (int i = 0; i < scQt.getScQtRemarks().size(); i++) {
 				String userRemark = scQt.getScQtRemarks().get(i).getRemark();
+		
 				if (null == userRemark || "".equals(userRemark)) {
 					if (null != scQt.getScQtRemarks().get(i).getRemarkId()) {
 						this.getManagedBean().setQtRemarksIdRemove(scQt.getScQtRemarks().get(i).getRemarkId());
+					} else {
+						resDto = getQTDetailSO().retriveQtRemarks(reqDTO);
+						if (CollectionUtils.isNotEmpty(resDto.getRemarks())) {
+							for (ScRemark remark : resDto.getRemarks()) {
+								this.getManagedBean().setQtRemarksIdRemove(remark.getRemarkId());
+							}
+						}
 					}
 					scQt.getScQtRemarks().remove(i);
+				} else {
+					resDto = getQTDetailSO().retriveQtRemarks(reqDTO);
+					if (CollectionUtils.isNotEmpty(resDto.getRemarks())) {
+						for (ScRemark remark : resDto.getRemarks()) {
+							this.getManagedBean().setQtRemarksIdRemove(remark.getRemarkId());
+						}
+					}
 				}
 			}
-		}// 9019 end
+		}	
+		// 9019 end	
 		
 		// #21692 - start
 		if (null == scQt.getResponsePeriod()) {
@@ -2897,7 +2918,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									true,
 									JoinType.LEFT));
 					statusBean = statusFilterBean;
-					if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
+					//harun disabled for 34702 related for 9019
+					/*if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
 						statusBean = new SearchMultiFilterBean(
 								statusFilterBean, 
 								new SearchFilterBean(
@@ -2906,7 +2928,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										null,
 										SearchCondition.CONDITION_OR.value(),
 										JoinType.LEFT));
+					}*/
+					//#34702 - Start
+					if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
+						statusBean = new SearchMultiFilterBean(
+								statusFilterBean, 
+								new SearchFilterBean(
+										"scQtStatus.pmStatus.statusId",
+										SearchOperator.OPERATOR_EQUALS.value(),
+										QTStatusConst.QT_PENDING_QT_SUBMISSION_WIP.toString(),
+										SearchCondition.CONDITION_OR.value(),
+										JoinType.LEFT));
 					}
+					//#34702 - End
 					qtSearchBean.getDataFilterBeans().add(statusBean);
 				}
 				else{
@@ -4261,6 +4295,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 				committeReqDTO.setToBeDeletedMembers(this.getManagedBean()
 						.getToBeDelCommitteMemebers());
+				committeReqDTO.setTaskName(taskName); // Bug #34972@Syazani 09/08/2023
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 				
 			} else if (SCProcessNameConst.ASSIGN_FC_SECRETARY
@@ -4796,7 +4831,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 
 			this.getManagedBean().setTabOtherApproval(tabBeans);
-			this.getManagedBean().setApproverTabLoaded(true);
+			//Bug #34694,25077
+			//this.getManagedBean().setApproverTabLoaded(true);
 			
 		} finally {
 			detailSO = null;
@@ -6773,6 +6809,25 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}			
 				
 			}
+			// #34694 - Start.
+			if((getUserTaskIsCommitteeAppointmentApproval() || getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec()) && isApprovalScreen()){
+				ScQtApproval qtApproval = approvalTabBean.getScQtApproval();
+				List<ScQtApprovalRemark> remarks = initializeRemarks(
+						qtApproval, qtApproval.getScQt().getCurrentWorkFlowStatus(),
+					this.getManagedBean().getScQtApproval().getScQtApprovalRemarks(),
+					ScQtApprovalRemark.class); 
+				
+				for(int i=0;i<remarks.size();i++) {
+					if(remarks.get(i).isBrandNew() && remarks.get(i).getRemark()==null && remarks.get(i).getRemarkId()==null){
+						remarks.remove(i);
+					}
+					remarks.get(i).setEditable(false);
+				}
+				
+				qtApproval.setScQtApprovalRemarks(remarks);
+				approvalTabBean.setScQtApproval(qtApproval);
+			}
+			// #34694 - End.
 		}
 		// #25077 - #80 - End.
 		this.getManagedBean().setSelectedApprovalTabIndex(
@@ -6830,9 +6885,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 		
 		//9019 - Start (Harun) set Group Item to NULL when save while left blank and panel is selected
-		//9019 Start - #Note-418 Fix able to submit without key in mandatory fields add checking parameterId=0
-		if (isPanel && (null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId() || this.getManagedBean()
-				.getQt().getItemGroup().getPanelItemGroupId() == ParameterConst.PM_PARAMETERID_ZERO)) {
+		//9019 Start - #Note-418 and merge with #Note-501 
+		if (null == this.getManagedBean().getQt().getItemGroup()) {
+			this.getManagedBean().getQt().setCircularVer(null);
+		}else if (null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId() || this.getManagedBean()
+				.getQt().getItemGroup().getPanelItemGroupId() == ParameterConst.PM_PARAMETERID_ZERO) {
 			this.getManagedBean().getQt().setItemGroup(null);
 			this.getManagedBean().getQt().setCircularVer(null);
 		}
@@ -6861,6 +6918,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
 		}
 		//9019 - End (Harun)
+		
+		//9019 Start - (Harun) #Note-501 
+		if(QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())){
+			detailSO.validateQTGeneralInformation(reqDTO);
+		}
+		//9019 End 
 		
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
 		switch (changedIndexNumber) {
@@ -7364,9 +7427,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				// detailSO.validateApprovalDetails(reqDTO);
 				if(!this.getManagedBean().getQt().isCloneEnabled()){//25635&34502-start
 					//#25077 - Start
-					if (!getManagedBean().isApproverTabLoaded()) {
+					//Bug #34694,25077
+					//if (!getManagedBean().isApproverTabLoaded()) {
 					    retrieveOthersApprovalTabDtl();
-					}
+					//}
 					//#25077 - End
 					retrieveApprovalTabDtl();
 					}//25635&34502-End
@@ -11031,29 +11095,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	
 	//#29425 - start
 	public void validateNewValueForValidityDays(int newValue) {
-		PmParameter procureMentMode = this.getManagedBean().getQt().getProcurementMode();
-		if (newValue == 0) {
-			this.getManagedBean().setNewValidityDays(newValue);
-			this.getManagedBean().setNewValueValidity(true);
-		}
-		if (ParameterConst.PROCUREMENT_MODE_QUOTATION
-				.equalsIgnoreCase(procureMentMode.getParameterCode())
-					&& newValue > 90) {
-			this.getManagedBean().setNewValueValidity(true);
-		}
 		validateValidityDays(newValue);
-		if (ParameterConst.PROCUREMENT_MODE_TENDER
-				.equalsIgnoreCase(procureMentMode.getParameterCode())
-					&& newValue != 0
-						&& newValue < 90) {
-			this.getManagedBean().setNewValueValidity(true);
-		}
-		if (ParameterConst.PROCUREMENT_MODE_TENDER
-				.equalsIgnoreCase(procureMentMode.getParameterCode())
-						&& newValue >= 90) {
-			this.getManagedBean().setNewValueValidity(false);
-		}
-		this.getManagedBean().setNewValidityDays(newValue);
 	}
 	
 	public void validateValidityDays(int validityDays) {
@@ -11102,13 +11144,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 		}
 		return 0;
-	}
-	
-	private void disableNewValueValidity() {
-		PmParameter procureMentMode = this.getManagedBean().getQt().getProcurementMode();
-		if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equalsIgnoreCase(procureMentMode.getParameterCode())) {
-			this.getManagedBean().setNewValueValidity(false);
-		}
 	}
 	//#29425 - end
 	
@@ -12484,8 +12519,17 @@ public void retrieveDemoQtDetails(Long qtId) {
 					ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
 					docDefTypeReqDTO
 							.setParameterType(ParameterTypeConst.SCHEDULE_TYPE);
-					docDefTypeReqDTO
+					//Reopen #25726 note 110
+					if(null != this.getManagedBean().getFulfilmentType()){
+						if(this.getManagedBean().getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
+							docDefTypeReqDTO
 							.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
+						}else{
+							docDefTypeReqDTO
+							.setParameterCode(ParameterConst.SCHEDULE_TYPE_NON_PERIODIC);
+						}
+					}
+					//#25726 end
 					ParameterResDTO docDefTypeResDTO = parameterSo
 							.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
 					
