@@ -162,7 +162,6 @@ public class InvoiceManagedBean extends BaseManagedBean {
     //30911 end
 
     private boolean isSupplementContractComplete = true; //28719
-    private boolean bondComplete = true; //35024
 
 	public Map<String, PmFinancialOrg> getFactoringAccountMap() {
 		if(factoringAccountMap==null) {
@@ -1299,13 +1298,4 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.isSupplementContractComplete = isSupplementContractComplete;
 	}
 	//28719-end	
-	//35024-Start
-	public boolean isBondComplete() {
-		return bondComplete;
-	}
-
-	public void setBondComplete(boolean bondComplete) {
-		this.bondComplete = bondComplete;
-	}
-	//35024-Start
 }

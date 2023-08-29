@@ -411,12 +411,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && resDTO.getInvoice()!=null && resDTO.getInvoice().getAp59Status()!=null && 
 						resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
 					isPendingAP59Decision = true;
-					
-					//35024-Start
-					if(!getManagedBean().isBondComplete()){
-						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(MessageConst.INFO_745029, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					}else //35024-Start
 					//28719-Start
 					if(!getManagedBean().isSupplementContractComplete()){
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -1922,7 +1916,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			FulfilmentReqDTO reqDTO2 = invoiceSO.validationCheck(reqDTO);
 			getManagedBean().setInvoice(reqDTO2.getInvoice());
 			getManagedBean().setSupplementContractComplete(reqDTO2.isSupplementContractComplete());//28719
-			getManagedBean().setBondComplete(reqDTO2.isBondComplete());//35024
 			
 			if(hasGovtSellerRole()){
 				setTextBeforeSign(outcome);
