@@ -4869,6 +4869,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										
 									}
 								}
+								
 							}
 							tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
 					
@@ -4879,8 +4880,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 
 			this.getManagedBean().setTabOtherApproval(tabBeans);
-			//Bug # 34694/25077 - fix showing empty
-			//this.getManagedBean().setApproverTabLoaded(true);
+			this.getManagedBean().setApproverTabLoaded(true);
 			
 		} finally {
 			detailSO = null;
@@ -7484,10 +7484,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				// detailSO.validateApprovalDetails(reqDTO);
 				if(!this.getManagedBean().getQt().isCloneEnabled()){//25635&34502-start
 					//#25077 - Start
-					//Bug # 34694/25077 - fix showing empty
-					//if (!getManagedBean().isApproverTabLoaded()) {
+					if (!getManagedBean().isApproverTabLoaded()) {
 					    retrieveOthersApprovalTabDtl();
-					//}
+					}
 					//#25077 - End
 					retrieveApprovalTabDtl();
 					}//25635&34502-End
