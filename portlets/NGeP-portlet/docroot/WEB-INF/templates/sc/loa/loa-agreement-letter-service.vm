@@ -1549,13 +1549,13 @@ Should be product and service item display if exist
 					##26130 - start 03032022
 					#set($rowCount = 0)	
 					#if($tplspecMaster.tplSpecQuestions.size() > 0)
-					<table width="100%" border=1 cellpadding="0" cellspacing="0">
+					<table width="100%" border=1 cellpadding="0" cellspacing="0" style="border-top: 1px solid black;">
 					<tbody>
 					##26130 - end 03032022
 					  #if ($rowCount == 0)
 							<tr>
-								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Tajuk Templat</nobr></td>
-								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px;">$tplspecMaster.specName</td>
+								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold; border-top: none !important;"><nobr>Tajuk Templat</nobr></td>
+								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; border-top: none !important;">$tplspecMaster.specName</td>
 							</tr>
 							<tr>
 								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Jenis Item</nobr></td>
@@ -2108,13 +2108,13 @@ Should be product and service item display if exist
 				##26130 - start 03032022
 				#set($rowCount = 0)
 				#if($tplspecMaster.tplSpecQuestions.size() > 0)	
-				<table width="100%" border=1 cellpadding="0" cellspacing="0">
+				<table width="100%" border=1 cellpadding="0" cellspacing="0" style="border-top: 1px solid black;">
 				<tbody>
 				##26130 - end 03032022
 						 #if ($rowCount == 0)
 							<tr>
-								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Tajuk Templat</nobr></td>
-								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px;">$tplspecMaster.specName</td>
+								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold; border-top: none !important;"><nobr>Tajuk Templat</nobr></td>
+								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; border-top: none !important;">$tplspecMaster.specName</td>
 							</tr>
 							<tr>
 								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Jenis Item</nobr></td>
@@ -2442,7 +2442,7 @@ Should be product and service item display if exist
 							
 							#else
 									<tr>
-									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10x;">Item</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10px;">Item</th>
 									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Jenis Pemenuhan</th>
 									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">UOM</th>
 									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Kekerapan / <br/>Unit Ukuran</th>
@@ -2619,21 +2619,21 @@ Should be product and service item display if exist
 												#end	
 											#end
 										#else				
+											#set($flagShowed = 0)										
 											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
 												#if($supplierId  == $tplSpecAnswer.tplSpecSuppAnswer.smSupplier.supplierId)
-													#if($rowCount == 0)
-														#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
+														#if ($flagShowed != 1 && $tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
 															#set($suppRespon = $tplSpecAnswer.answerRemark)
 															#set($suppRespon = $suppRespon.replace("<", "&#60;"))
 															#set($suppRespon = $suppRespon.replace(">", "&#62;"))
-
+															#set($rowCount = $rowCount + 1)
+															#set($flagShowed = 1)
 															<span> $suppRespon </span>
-														#else
-															<span>$serviceScope</span>
 														#end
-													#end
-													#set($rowCount = $rowCount + 1)
 												#end
+											#end
+											#if($flagShowed == 0)
+												<span>$serviceScope</span>
 											#end
 										#end
 									
@@ -2679,6 +2679,10 @@ Should be product and service item display if exist
 																								
 											#set($countSpecList = 1)
 											#foreach( $specVal in $specList )
+												#set($specVal = $specVal.replace("#60;", "&#60;"))
+												#set($specVal = $specVal.replace("#62;", "&#62;"))
+												#set($specVal = $specVal.replace("#and;", "&"))
+											
 												
 												<table width="100%">
 													<tbody>
@@ -2779,7 +2783,11 @@ Should be product and service item display if exist
 										#if(($tplspecQuestion.answerRemarks == "" ))
 										 $serviceScope 
 										#else
-											 $tplspecQuestion.answerRemarks							
+											#set($tplspecQuestion.answerRemarks = $tplspecQuestion.answerRemarks)
+											#set($tplspecQuestion.answerRemarks = $tplspecQuestion.answerRemarks.replace("<", "&#60;"))
+											#set($tplspecQuestion.answerRemarks = $tplspecQuestion.answerRemarks.replace(">", "&#62;"))
+											 
+											$tplspecQuestion.answerRemarks
 										#end
 									</td>
 									<td valign="top" class="title border left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
@@ -2794,6 +2802,10 @@ Should be product and service item display if exist
 										#if ($tplspecQuestion.specList)
 											#set($countSpecList = 1)
 											#foreach( $specVal in $tplspecQuestion.specList )
+												#set($specVal = $specVal.replace("#60;", "&#60;"))
+												#set($specVal = $specVal.replace("#62;", "&#62;"))
+												#set($specVal = $specVal.replace("#and;", "&"))
+											
 												
 												<table width="100%">
 													<tbody>

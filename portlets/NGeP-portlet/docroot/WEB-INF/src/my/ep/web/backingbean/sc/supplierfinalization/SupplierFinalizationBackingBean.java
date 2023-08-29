@@ -171,6 +171,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -1411,6 +1412,13 @@ public class SupplierFinalizationBackingBean extends
 		String evalStageId = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap().get("evaluationStageId");
 		int evaluationStageId = 0;
+		//35087 start
+		IQTEvaluationSO evaluationSO=null;
+		evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTEvaluationSO.class);
+		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+		//35087 end
 		if (evalStageId != null) {
 			evaluationStageId = Integer.parseInt(evalStageId);
 		}
@@ -1421,7 +1429,9 @@ public class SupplierFinalizationBackingBean extends
 		Long selectedItemId = null;
 		String evaluationStage = null;
 		String evaluationHeader = null;
-		
+		//35087
+		req4SerDTO.setQtId(qtId);
+		//35087
 		switch (evaluationStageId) {
 			case 1 : if (getManagedBean().getScQt().isDemoRequired()) {
 						 evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
@@ -1429,18 +1439,25 @@ public class SupplierFinalizationBackingBean extends
 					 } else {
 						//#21695 tec by itemize result pop up farid - start
 						 if (getManagedBean().isItemize()) {
-							 evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
-							 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
-							 if (getManagedBean().isItemRowSelect() && 
-									 getManagedBean().getSelectedItem() != null) {
-								selectedItemId = getManagedBean().getSelectedItem()
-											.getRequestItem().getRequestNoteItemId();
-							 } else {
-								 getManagedBean().setQualifiedSuppliersByEvalStage(null);
-								 log.debug("None of the item(s) has been row selected");
-								 return;
-							 }
-						 }else{
+								//35087
+								int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+
+								if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+									evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
+									evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+								} else {
+									evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
+									evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+									if (getManagedBean().isItemRowSelect() && getManagedBean().getSelectedItem() != null) {
+										selectedItemId = getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
+									} else {
+										getManagedBean().setQualifiedSuppliersByEvalStage(null);
+										log.debug("None of the item(s) has been row selected");
+										return;
+									}
+								}
+								//35087
+							}else{
 							 evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
 							 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
 						 }
@@ -3373,7 +3390,10 @@ return	remarksNotFound;
 						debugLogger("Generating all reports...");
 						downloadAllReports();	
 					} catch(Exception e) {
-						e.printStackTrace();
+						//Sonarqube QT Vulnerability Minor Suresh [9/8/2023] START			 
+						SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SUPPLIER_FINALIZATION_BACKINGBEAN, reqDTO.getScQt().getQtNo(),
+								SLALogConstant.QT_UPDATE_BPM_TASKBRIEF, getUserIdSessionFromLoginId(), e);
+						//Sonarqube QT Vulnerability Minor Suresh [9/8/2023] END
 					}
 				}
 				
@@ -7172,7 +7192,7 @@ return	remarksNotFound;
 		this.getManagedBean().setDisableSupplierSelection(false);
 		this.getManagedBean().setRecommendedSupplier(null);
 		this.getManagedBean().setShortlistedSuppliersByRecommendType(null);
-		this.getManagedBean().setZoneActiveIndex(0);
+//		this.getManagedBean().setZoneActiveIndex(0);//#35064 let active zone stay at current zone instead of reset
 		populateRecommendTypeEventDetails(true);
 	}
 
@@ -10277,6 +10297,8 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	
 	//#25037-START
 	public void prepareUpdateCommitteeMember(){
+		if (StringUtils.isEmpty(this.getManagedBean().getCommitteeType()))
+			return;
 		SupplierFinalizationMeetingBackingBean meetingBB = new SupplierFinalizationMeetingBackingBean();
 		meetingBB.renewSesionObject();
 		this.getManagedBean().setMeetingBB(meetingBB);
