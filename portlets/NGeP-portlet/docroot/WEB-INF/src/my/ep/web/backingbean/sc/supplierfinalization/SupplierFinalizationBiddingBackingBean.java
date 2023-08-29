@@ -2725,6 +2725,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 					meetingList.add(scqtMeeting);
 				}
 			} else {
+				//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+				if (meetingList == null)
+					meetingList = new ArrayList<ScQtMeeting>();
 				meetingList.add(scqtMeeting);
 			}
 
