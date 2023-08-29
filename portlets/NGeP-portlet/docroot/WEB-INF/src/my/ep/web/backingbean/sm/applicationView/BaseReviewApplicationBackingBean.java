@@ -200,6 +200,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setApplicationNoParam(applNo+"_"+serFileType);
 		getManagedBean().setPreviousApproved(false);
 		getManagedBean().setOriginal(false);
+		getManagedBean().setRevisionDialog(true); 	//#32008
 		if(serFileType.equals("SUP")){
 			try {
 				setRevisionApplType();
