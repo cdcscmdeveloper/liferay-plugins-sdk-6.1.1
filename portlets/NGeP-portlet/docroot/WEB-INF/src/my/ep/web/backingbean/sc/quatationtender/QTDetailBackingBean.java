@@ -2313,16 +2313,20 @@ public class QTDetailBackingBean extends
 									true,
 									JoinType.LEFT));
 					statusBean = statusFilterBean;
+
 					if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
+						// #9019 #34702 - Start
 						statusBean = new SearchMultiFilterBean(
 								statusFilterBean, 
 								new SearchFilterBean(
-										"scQtStatus.pmStatus",
-										SearchOperator.OPERATOR_IS_NULL.value(),
-										null,
+										"scQtStatus.pmStatus.statusId",
+										SearchOperator.OPERATOR_EQUALS.value(),
+										QTStatusConst.QT_PENDING_QT_SUBMISSION_WIP.toString(),
 										SearchCondition.CONDITION_OR.value(),
 										JoinType.LEFT));
+						// #9019 #34702  - End
 					}
+
 					qtSearchBean.getDataFilterBeans().add(statusBean);
 				}
 				else{
