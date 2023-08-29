@@ -2619,8 +2619,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 						try {
 							technicalsummaryChange(null);
 						} catch (Exception e) {
-							SLAUtils.getInstance().logSLAError("QT", "retriveSummaryEvaluationStage",
-									this.getManagedBean().getScQt().getQtNo(), "retriveSummaryEvaluationStage", getUserIdSessionFromLoginId(), e);
+							e.printStackTrace();
 						} //for wip we dont need dropdown
 
 					} else{
