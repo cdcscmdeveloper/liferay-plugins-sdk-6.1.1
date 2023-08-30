@@ -369,6 +369,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	
 	// #28278
 	private boolean flagShowButtonSubmit;
+	//#34209, #32008
+	private boolean poApprUnClaimTask;
 	//#34099 - start
 	private SmApplInquiry selectedInquiryResponse;
 	private String tabActiveDlg = "0";
@@ -2351,6 +2353,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setSdoRemark(String sdoRemark) {
 		this.sdoRemark = sdoRemark;
+	}
+	
+	public boolean isPoApprUnClaimTask() {
+		return poApprUnClaimTask;
+	}
+
+	public void setPoApprUnClaimTask(boolean poApprUnClaimTask) {
+		this.poApprUnClaimTask = poApprUnClaimTask;
 	}
 
 	//#34099 - start
