@@ -599,6 +599,9 @@
 												itemLabel="#{br.branchName}" itemValue="#{br.supplierBranchId}" />
 											<!-- #34135 END -->
 										</p:selectManyMenu>
+										<h:outputText rendered="#{backingBean.managedBean.upsCannotEdit}"
+											value="#{backingBean.getSelectedBranchBank()}" escape="false" 
+											style="float:left;"/> 
 									</td>
 									<td style="vertical-align: baseline;">
 										&#160;
@@ -650,7 +653,11 @@
 							<f:selectItems
 								value="#{backingBean.managedBean.smAppl.smPersonnels}" var="per"
 								itemLabel="#{per.name}" itemValue="#{per.personnelId}" />
-						</p:selectManyMenu> <p:message id="bankCheqSignIdMsg" for="bankCheqSignId"
+						</p:selectManyMenu> 
+						<h:outputText rendered="#{backingBean.managedBean.upsCannotEdit}"
+								value="#{backingBean.getSelectedSignatoryBank()}" escape="false" 
+								style="float:left;"/>
+						<p:message id="bankCheqSignIdMsg" for="bankCheqSignId"
 							showSummary="true" showDetail="false" display="icon" /></td>
 
 				</tr>
