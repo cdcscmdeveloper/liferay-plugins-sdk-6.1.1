@@ -16054,12 +16054,11 @@ private void retriveCommitteeRemarksList(){
 				}else{
 					this.getManagedBean().setQtProposalAmounts(null);
 					this.getManagedBean().setQtProposalAmounts(evalResDTO.getProposalAmountListbyProposal());
-				    //34528-uat 4serangkai - start
-					List<ScQtProposalAmount> proposalAmounts = evalResDTO.getProposalAmountListbyProposal()==null ? new ArrayList<ScQtProposalAmount>(): evalResDTO.getProposalAmountListbyProposal();				
-					this.getManagedBean().setFinancialPackagePaginator(new Paginator(proposalAmounts, 10));
-				    //34528-uat 4serangkai - end
 				}
-				
+			    //34528-uat 4serangkai - start #34835 adjust position code
+				List<ScQtProposalAmount> proposalAmounts = evalResDTO.getProposalAmountListbyProposal()==null ? new ArrayList<ScQtProposalAmount>(): evalResDTO.getProposalAmountListbyProposal();				
+				this.getManagedBean().setFinancialPackagePaginator(new Paginator(proposalAmounts, 10));
+			    //34528-uat 4serangkai - end
 				//#25138 - user score bug - end
 				if (evalResDTO.isSuccessful()){
 				successMessage(MessageConst.INFO_700004,
