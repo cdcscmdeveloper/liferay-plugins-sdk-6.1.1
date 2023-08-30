@@ -70,7 +70,7 @@
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								id="techScoreWeight" required="true" maxlength="14"
 								label="#{lbl['lbl.sc.score']}" style="text-align:right"
-								rendered="#{((tech.definationType.parameterCode eq 'UP' or tech.definationType.parameterCode eq 'PD' or tech.definationType.parameterCode eq 'NA') and tech.scoringReq)}">
+								rendered="#{((tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeNoAction) and tech.scoringReq)}">
 								<ac:validateNumber integerOnly="
 					true"
 									maxIntegerDigits="14">
