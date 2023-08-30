@@ -659,6 +659,7 @@ public class SmSideMenuIconUtil {
 					//#31043
 					bean.setCategoryCodeVerified(true);
 				} else {
+					//#31043
 					if(bean.isApproverUser() || bean.isReviewSiteVisit()
 							|| (applStatus.equals(SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION))){
 						retVal = ICON_TICK;
@@ -847,6 +848,7 @@ public class SmSideMenuIconUtil {
 						retVal = ICON_TICK;
 				}
 				else{
+					//#31043
 					if(bean.isApproverUser() || bean.isReviewSiteVisit()
 							|| (applStatus.equals(SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION))){
 						retVal = ICON_UNTICK;
