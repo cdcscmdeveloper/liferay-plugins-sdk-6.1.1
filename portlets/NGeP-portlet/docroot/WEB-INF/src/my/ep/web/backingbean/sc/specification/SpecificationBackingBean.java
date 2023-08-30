@@ -20329,57 +20329,5 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			this.getManagedBean().setScQtCheckSt2techProposal(newScQtChecklist);
 		}
 	}
-	
-	public void addingwipmaxscore() {
-		
-		ITemplateSpecSO templateSpecSo = null;
-		try {
-
-
-
-			
-			templateSpecSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					ITemplateSpecSO.class);
-
-			BigDecimal totalMaxScore = new BigDecimal(0);
-			
-			for (TplSpecQuestion specQuestion : this.getManagedBean().getSpecQuestionList()) {
-				TemplateSpecReqDTO reqScoreDto = new TemplateSpecReqDTO();
-				TemplateSpecResDTO resScoreDto = new TemplateSpecResDTO();
-				
-				reqScoreDto.setSpecQuestionId(specQuestion.getSpecQuestionId());
-				
-				resScoreDto = templateSpecSo.retrieveMaxScoreByQuestionIdNZoneId(reqScoreDto);
-
-				totalMaxScore = totalMaxScore.add(resScoreDto.getMaxScore() == null ? new BigDecimal(0) : resScoreDto
-						.getMaxScore()); // 1873 - note 86
-			}
-	
-			for (ScQtCheckList maxScoreList : this.getManagedBean().getScQtCheckSt2financeProposalList()) {
-				if (maxScoreList.getDefinationType().getParameterCode()
-						.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)
-						&& maxScoreList.getDocCategory().equalsIgnoreCase(QTConstants.FINANCIAL_DOC_TYPE)) {
-					
-					if (null != maxScoreList.getQtScoreWeightage()) {
-						ScQtScoreWeightage scoreWeightage = maxScoreList.getQtScoreWeightage();
-						scoreWeightage.setScore(totalMaxScore);
-					}
-				}
-				break;
-			}
-			
-			finScoreSum();
-			int finalScorePoint = this.getManagedBean().getFinPoints();
-
-			BigDecimal totalPoints = totalMaxScore;
-
-			if (null != totalPoints) {
-				finalScorePoint = finalScorePoint + totalPoints.intValue();
-			}
-
-			this.getManagedBean().setFinPoints(finalScorePoint);
-		} finally {
-		}
-	}
 	//#25138 - end
 }
