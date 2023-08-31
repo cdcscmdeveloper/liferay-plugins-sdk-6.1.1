@@ -23229,7 +23229,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		
 		String name=getMessageCommon("lbl.sc.spec.technical.checklist.preview.printing").replaceAll("\\s","");
 		filename.append(name+".pdf");
-		attachment.setFileName(filename.toString().replaceAll("/",""));
+		attachment.setFileName(filename.toString());
 		attachment.setDocNo(this.getManagedBean().getQt().getQtNo());
 		attachment.setScQtCheckList(this.getManagedBean().getScQtChecklist());
 		
@@ -23284,7 +23284,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		
 		String name=getMessageCommon("lbl.sc.spec.financial.checklist.preview.printing").replaceAll("\\s","");
 		filename.append(name+".pdf");
-		attachment.setFileName(filename.toString().replaceAll("/",""));
+		attachment.setFileName(filename.toString());
 		attachment.setDocNo(this.getManagedBean().getQt().getQtNo());
 		attachment.setScQtCheckList(this.getManagedBean().getScQtChecklist());
 		
