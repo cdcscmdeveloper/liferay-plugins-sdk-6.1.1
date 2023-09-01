@@ -4869,15 +4869,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									}
 								}
 								
-								// To remove ScQtApprovalRequest if not approval request type SC
-								if(CollectionUtils.isNotEmpty(approvalRequest)){
-									for(int i=0;i<approvalRequest.size();i++ ){
-										if(approvalRequest.get(i).getApprovalType().getParameterCode().equals(SourcingConstants.SUPPLIER_SELECTION)){
-											approvalRequest.remove(i);
-										}
-									}
-								}
-								
 							}
 							tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
 					

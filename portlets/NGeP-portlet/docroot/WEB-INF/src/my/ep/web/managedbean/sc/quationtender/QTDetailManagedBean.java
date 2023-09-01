@@ -1894,6 +1894,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	// #12471 End
 	
+	//Bug #35061 - asyrafhaziq 
+	private String msgConfirmBelowIndi;
+
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12017,6 +12021,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.qtRemarksIdRemoveList = qtRemarksIdRemoveList;
 	}
 	//#9019 - End
+	
+	public String getMsgConfirmBelowIndi() {
+		return msgConfirmBelowIndi;
+	}
+
+	public void setMsgConfirmBelowIndi(String msgConfirmBelowIndi) {
+		this.msgConfirmBelowIndi = msgConfirmBelowIndi;
+	}
+
 	
 }
 
