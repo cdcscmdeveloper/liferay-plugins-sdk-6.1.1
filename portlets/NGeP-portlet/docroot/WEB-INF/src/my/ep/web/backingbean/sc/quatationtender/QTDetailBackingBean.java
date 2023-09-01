@@ -4870,7 +4870,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								}
 								
 							}
-							tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+							
+							if(CollectionUtils.isNotEmpty(approvalRequest)){
+							   tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+							}
 					
 						}
 					} 
@@ -11669,6 +11672,22 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		reqDTO.setQtdetail(scQt);
 		return reqDTO;
+	}
+	
+	/**
+	 * Method to filter value if not approval request are ICT or IMP.
+	 * 
+	 * @return list of ScQtApprovalRequest
+	 */
+	public List<ScQtApprovalRequest> getFilteredApprovalRequest() {
+	  List<ScQtApprovalRequest> filteredApprovalRequest = new ArrayList<>();
+		for(ScQtApprovalRequest approvalRequest: this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().getScQtApprovalDtls()) {
+			if(!approvalRequest.getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS) || 
+					!approvalRequest.getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)) {
+				filteredApprovalRequest.remove(approvalRequest);
+			}
+		}
+	  return filteredApprovalRequest;
 	}
 	// 25077 - End
 	
