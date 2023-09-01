@@ -4,7 +4,7 @@
  * 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright  2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -1449,9 +1449,6 @@ public class CreateQtBackingBean extends
 				//End Reopen 9019 #note-289 remove the alert message while save
 			}
 			
-			//Reopen #25726 note 131 start
-			//if()
-			//Reopen #25726 end
 			// #25726 START
 			if (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(this
 					.getManagedBean().getFulfilmentType())) {
