@@ -2918,7 +2918,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									true,
 									JoinType.LEFT));
 					statusBean = statusFilterBean;
-					if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
+					//harun disabled for 34702 related for 9019
+					/*if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
 						statusBean = new SearchMultiFilterBean(
 								statusFilterBean, 
 								new SearchFilterBean(
@@ -2927,7 +2928,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										null,
 										SearchCondition.CONDITION_OR.value(),
 										JoinType.LEFT));
+					}*/
+					//#34702 - Start
+					if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
+						statusBean = new SearchMultiFilterBean(
+								statusFilterBean, 
+								new SearchFilterBean(
+										"scQtStatus.pmStatus.statusId",
+										SearchOperator.OPERATOR_EQUALS.value(),
+										QTStatusConst.QT_PENDING_QT_SUBMISSION_WIP.toString(),
+										SearchCondition.CONDITION_OR.value(),
+										JoinType.LEFT));
 					}
+					//#34702 - End
 					qtSearchBean.getDataFilterBeans().add(statusBean);
 				}
 				else{
@@ -4282,6 +4295,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 				committeReqDTO.setToBeDeletedMembers(this.getManagedBean()
 						.getToBeDelCommitteMemebers());
+				committeReqDTO.setTaskName(taskName); // Bug #34972@Syazani 09/08/2023
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 				
 			} else if (SCProcessNameConst.ASSIGN_FC_SECRETARY
