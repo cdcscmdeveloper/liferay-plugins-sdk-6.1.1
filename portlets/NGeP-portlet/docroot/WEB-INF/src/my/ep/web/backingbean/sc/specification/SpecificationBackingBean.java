@@ -2835,6 +2835,8 @@ public class SpecificationBackingBean extends
 						//====#31913 bug related to #25138==== start
 						retriveSpecQuestion();
 						populateFinancialSpecDetailsByZone();
+						//Bug #35111 insert max score if null, wip did not insert max score while 25138 already divert the max score into tplspeczoneqty
+						checkSpecZoneQtyMaxScore(tmpCheckList);
 						saveTotalMaxScoreItemZonal(newOfferList);
 						this.getManagedBean().setOfferPricePackageList(newOfferList);
 
