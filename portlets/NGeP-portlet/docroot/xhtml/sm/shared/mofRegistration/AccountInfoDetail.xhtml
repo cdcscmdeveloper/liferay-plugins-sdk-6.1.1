@@ -44,6 +44,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<!-- 16052019 - SSM INTEGRATION CR - Fahmi-->
+				<!-- Disable for UPS 32008 - START -->
 				<td style="word-wrap: break-word">
 					<p:outputLabel
 							rendered="#{empty backingBean.managedBean.businessTypeLs}"
@@ -53,7 +54,8 @@
 							label="#{lbl['lbl.sm.regtype']}"
 							rendered="#{not empty backingBean.managedBean.businessTypeLs}"
 							value="#{backingBean.managedBean.smSupplier.businessType}"
-							style="width:310px">
+							style="width:310px"
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItems value="#{backingBean.managedBean.businessTypeLs}" />
 							<p:ajax event="change" process="@this" update="@this" partialSubmit="true" listener="#{backingBean.onChangeBussType}"/>
 						</p:selectOneMenu> <p:message id="smBusTypeIdMsg" for="smBusTypeId"

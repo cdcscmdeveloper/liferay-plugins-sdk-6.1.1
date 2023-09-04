@@ -198,7 +198,10 @@
 				</p:outputPanel>
 				
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/supplierInfoMaintenance.xhtml" />
-				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/companyBasicInfoFormViewOnly.xhtml" />
+				<!-- #32008 -->
+				<c:if test="#{!supplierDataMaintenanceBackingBean.managedBean.displaySearchPage}">
+					<ui:include src="/xhtml/sm/shared/applViewOnlyPages/companyBasicInfoFormViewOnly.xhtml" />
+				</c:if>
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/regOwnerAndDirectorMaintenance.xhtml" /> <!-- 26238 -->
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/regCatCodesMaintenance.xhtml" />
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/approverRemarkMaintenance.xhtml" />
