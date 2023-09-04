@@ -20,7 +20,7 @@
 			value="#{othersApprovalDtlsList.scQtApprovalDtls}"
 			var="otherrequestdetails" rowIndexVar="index" editable="true"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			rowKey="#{otherrequestdetails}">
+			rowKey="#{otherrequestdetails}" filteredValue="#{qTDetailBB.getFilteredApprovalRequest()}">
 
 			<p:column headerText="#{lbl['lbl.sc.qt.appcategory']}">
 				<h:outputText
