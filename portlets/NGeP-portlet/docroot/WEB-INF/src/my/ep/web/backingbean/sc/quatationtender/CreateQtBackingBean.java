@@ -4,7 +4,7 @@
  * 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright  2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -506,7 +506,8 @@ public class CreateQtBackingBean extends
 		 if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) ||
 				 ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) ||
 				 ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) ||
-				 ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())){	
+				 ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) ||
+				 ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())){	//Reopen #25726 note 131
 			
 			 Long currentStatus = this.getManagedBean().getQt().getQtStatus()
 					.getStatusId();
@@ -1436,7 +1437,7 @@ public class CreateQtBackingBean extends
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				//Start Reopen 9019 #note-289 remove the alert message while save
 				if(null != type){
-					  if (paramDesc.getPmParameter().getParameterId() == type) {   
+					  if (paramDesc.getPmParameter().getParameterId().compareTo(type) == 0) {  //Reopen #25726 note 131 
                 
 						this.getManagedBean().setFulfilmentType(
 								paramDesc.getPmParameter().getParameterCode());
@@ -1447,6 +1448,7 @@ public class CreateQtBackingBean extends
 				}
 				//End Reopen 9019 #note-289 remove the alert message while save
 			}
+			
 			// #25726 START
 			if (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(this
 					.getManagedBean().getFulfilmentType())) {
