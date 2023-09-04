@@ -1290,7 +1290,7 @@ public class SpecificationBackingBean extends
 			// #34656 validate - start
 			specSo.validateSpecZoneQtyZero(specReqDTO);
 			// #34656 validate - end
-
+			
 			if (!this.getManagedBean().isReadOnly()
 			// 1873 note 149 -start-
 					&& this.getManagedBean().isTechnicalOtherCheckList()
@@ -2630,6 +2630,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						// ====#31913 bug related to #25138==== start
 						retriveSpecQuestion();
 						populateFinancialSpecDetailsByZone();
+						//Bug #35111 insert max score if null, wip did not insert max score while 25138 already divert the max score into tplspeczoneqty
+						checkSpecZoneQtyMaxScore(tmpCheckList);
 						saveTotalMaxScoreItemZonal(newOfferList);
 						this.getManagedBean().setOfferPricePackageList(newOfferList);
 
@@ -20327,5 +20329,5 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			this.getManagedBean().setScQtCheckSt2techProposal(newScQtChecklist);
 		}
 	}
-
+	//#25138 - end
 }
