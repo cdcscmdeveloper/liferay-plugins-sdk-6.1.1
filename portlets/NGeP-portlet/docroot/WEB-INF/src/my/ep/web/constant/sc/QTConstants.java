@@ -260,8 +260,16 @@ public interface QTConstants {
 	public static final long PM_STATUS_INACTIVE_CODE = 0L;
 	// 19287#91, 17376#104 -end-
 
-	// #15391 -start-
+	// #15391 #11104 -start-
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE = "scSpecCommitteeMaintenance_WAR_NGePportlet";
-	// #15391 -end-
+	// #15391 #11104 -end-
+
+	// #11104 -start-
+	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE = "scQTPrepareSpec_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT = "scSpecificationCommitteeEndorsement_WAR_NGePportlet";
+	// #11104 -end-
+
+	public static final String PORTLET_NAME_DL_CREATE = "scCreateManualSourcing_WAR_NGePportlet";//#32648
+	public static final String PORTLET_NAME_QT_LIST = "scQtLoaList_WAR_NGePportlet";//#32648
 
 }

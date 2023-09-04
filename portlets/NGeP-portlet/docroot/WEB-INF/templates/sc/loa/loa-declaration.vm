@@ -117,11 +117,21 @@
     		<tr>
 				<td>
 					<p>
+						##32648 - start
+					#if ($isSupplierLoa == 1)
+						<span class="standard">Saya, <span class="underline"><b>$userName</b></span> No. Kad Pengenalan 
+						<span class="underline"><b>$icNo</b></span> yang mewakili <span class="underline"><b>$supplierName</b></span> 
+						nombor Pendaftaran <span class="underline"><b>$mofNo</b></span> dengan ini mengisytiharkan bahawa saya atau mana-mana orang 
+						yang mewakili syarikat ini:
+						</span>
+					#else
 						<span class="standard">Saya, ............................................................................................ No. Kad Pengenalan 
 						.......................................... yang mewakili .................................................................... 
 						nombor Pendaftaran ............................................................ dengan ini mengisytiharkan bahawa saya atau mana-mana orang 
 						yang mewakili syarikat ini:
 						</span>
+					#end
+					##32648 - end
 					</p>
 					<div class="text_indent">
 						<table>
@@ -144,11 +154,21 @@
 					</p>
 					
 					<p>
+						##32648 - start
+					#if ($isSupplierLoa == 1)
+						<span class="standard">2. <span style="margin-left: 20px;">Sekiranya</span> saya, atau mana-mana individu yang mewakili syarikat ini didapati terlibat dalam membuat pakatan harga 
+						dengan syarikat lain atau apa-apa pakatan sepanjang proses perolehan atau menawarkan, menjanjikan atau memberikan apa-apa suapan kepada mana-mana 
+						orang dalam <span class="underline"><b>$agency</b></span> atau mana-mana orang lain sebagai dorongan untuk dipilih 
+						dalam perolehan seperti di atas, maka saya sebagai wakil syarikat bersetuju tindakan-tindakan berikut boleh diambil:
+						</span>
+					#else
 						<span class="standard">2. <span style="margin-left: 20px;">Sekiranya</span> saya, atau mana-mana individu yang mewakili syarikat ini didapati terlibat dalam membuat pakatan harga 
 						dengan syarikat lain atau apa-apa pakatan sepanjang proses perolehan atau menawarkan, menjanjikan atau memberikan apa-apa suapan kepada mana-mana 
 						orang dalam ................................................................................ atau mana-mana orang lain sebagai dorongan untuk dipilih 
 						dalam perolehan seperti di atas, maka saya sebagai wakil syarikat bersetuju tindakan-tindakan berikut boleh diambil:
 						</span>
+					#end
+					##32648 - end
 					</p>
 					<div class="text_indent">
 						<table>
@@ -215,7 +235,9 @@
 						</span>
 					</p>
 					
-					<div style="margin-top: 5em;">
+					##32647 - start
+					<div style="margin-top: 4.5em;">
+					##32647 - end
 						<table>
 							<tr class="standard">
 								<td>Yang benar,</td>

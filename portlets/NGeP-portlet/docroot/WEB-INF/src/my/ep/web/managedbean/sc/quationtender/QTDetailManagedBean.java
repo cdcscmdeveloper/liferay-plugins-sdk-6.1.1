@@ -99,6 +99,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
@@ -1559,6 +1560,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<String> paramTypes = null;
 	// #25692-End
 
+	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
+	
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -1602,6 +1605,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #32929 - start
 	private boolean zoneRdbButtonChecked = Boolean.FALSE;
 	// #32929 - end
+
+	// #11104-start
+	private ScQtCheckList sampleCheckList;
+	private TplSpecQuestion sampleSpecQuestion;
+	private String sampleItemName;
+	private int sampleTotalScore;
+	private List<ScQtCheckList> sampleSpecCheckList;
+	private List<BriefingZoneBean> sampleAddressBean;
+	// #11104-End
 
 	// #1873 -start
 	private boolean technicalOtherCheckList;
@@ -10101,6 +10113,93 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setZoneRdbButtonChecked(boolean zoneRdbButtonChecked) {
 		this.zoneRdbButtonChecked = zoneRdbButtonChecked;
 	}
+
+	/**
+	 * 11104-start
+	 * 
+	 * @return the sampleCheckList
+	 */
+	public ScQtCheckList getSampleCheckList() {
+		return sampleCheckList;
+	}
+
+	/**
+	 * @param sampleCheckList the sampleCheckList to set
+	 */
+	public void setSampleCheckList(ScQtCheckList sampleCheckList) {
+		this.sampleCheckList = sampleCheckList;
+	}
+
+	/**
+	 * @return the sampleSpecQuestion
+	 */
+	public TplSpecQuestion getSampleSpecQuestion() {
+		return sampleSpecQuestion;
+	}
+
+	/**
+	 * @param sampleSpecQuestion the sampleSpecQuestion to set
+	 */
+	public void setSampleSpecQuestion(TplSpecQuestion sampleSpecQuestion) {
+		this.sampleSpecQuestion = sampleSpecQuestion;
+	}
+
+	/**
+	 * @return the sampleItemName
+	 */
+	public String getSampleItemName() {
+		return sampleItemName;
+	}
+
+	/**
+	 * @param sampleItemName the sampleItemName to set
+	 */
+	public void setSampleItemName(String sampleItemName) {
+		this.sampleItemName = sampleItemName;
+	}
+
+	/**
+	 * @return the sampleTotalScore
+	 */
+	public int getSampleTotalScore() {
+		return sampleTotalScore;
+	}
+
+	/**
+	 * @param sampleTotalScore the sampleTotalScore to set
+	 */
+	public void setSampleTotalScore(int sampleTotalScore) {
+		this.sampleTotalScore = sampleTotalScore;
+	}
+
+	/**
+	 * @return the sampleSpecCheckList
+	 */
+	public List<ScQtCheckList> getSampleSpecCheckList() {
+		return sampleSpecCheckList;
+	}
+
+	/**
+	 * @param sampleSpecCheckList the sampleSpecCheckList to set
+	*/
+	public void setSampleSpecCheckList(List<ScQtCheckList> sampleSpecCheckList) {
+		this.sampleSpecCheckList = sampleSpecCheckList;
+	}
+
+	/**
+	 * @return the sampleAddressBean
+	 */
+	public List<BriefingZoneBean> getSampleAddressBean() {
+		return sampleAddressBean;
+	}
+
+	/**
+	 * @param sampleAddressBean the sampleAddressBean to set
+	 */
+	public void setSampleAddressBean(List<BriefingZoneBean> sampleAddressBean) {
+		this.sampleAddressBean = sampleAddressBean;
+	}
+	// #11104-End
 	
 	// 1873 - start
 	public boolean isTechnicalOtherCheckList() {
@@ -10144,4 +10243,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	// 1873 - end
 
+	// Bug #33661@Syazani 07/10/2022 -- Start
+	public boolean isFromSpecEndorse() {
+		return isFromSpecEndorse;
+	}
+
+	public void setFromSpecEndorse(boolean isFromSpecEndorse) {
+		this.isFromSpecEndorse = isFromSpecEndorse;
+	}
+	// Bug #33661@Syazani 07/10/2022 -- End
 }

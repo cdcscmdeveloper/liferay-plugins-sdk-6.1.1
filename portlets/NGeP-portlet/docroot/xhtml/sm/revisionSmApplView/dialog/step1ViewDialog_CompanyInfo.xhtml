@@ -1,0 +1,17 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<ui:include src="/xhtml/sm/shared/applViewOnlyPages/companyBasicInfoFormViewOnly.xhtml" />
+	<ui:include src="/xhtml/sm/shared/applViewOnlyPages/staffInfoFormViewOnly.xhtml" />
+	<ui:include src="/xhtml/sm/shared/applViewOnlyPages/officeFacilityTypeFormViewOnly.xhtml" />
+	<ui:include src="/xhtml/sm/shared/applViewOnlyPages/dlg/certificateInfoFormViewOnly.xhtml" />
+	<ui:fragment rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType == 'J'}">
+		<ui:include src="/xhtml/sm/shared/applViewOnlyPages/dlg/proffesionalBodyInfoFormViewOnly.xhtml" />
+	</ui:fragment> 
+	<ui:include src="/xhtml/sm/shared/applViewOnlyPages/transactionNetworksFormViewOnly.xhtml" />
+</ui:composition>

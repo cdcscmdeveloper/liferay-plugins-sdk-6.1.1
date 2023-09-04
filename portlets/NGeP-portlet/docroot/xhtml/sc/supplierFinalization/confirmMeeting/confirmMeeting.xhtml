@@ -15,7 +15,6 @@
 
 		<table style="border: 0px; width: 100%; align: center">
 			<tr>
-				<td>
 				<td width="100%" align="left" valign="top"><p:messages
 						id="confirmMeeting" showDetail="true" showSummary="false"
 						autoUpdate="true" closable="true" severity="error, info" />
@@ -141,8 +140,7 @@
 							update="@([id$=meetingDetailPanel])" />
 
 
-					</p:panel> <h:panelGroup
-						id="supplierFinalizationMeetingCommitteememberspanelGroup">
+						</p:panel> <h:panelGroup id="supplierFinalizationMeetingCommitteememberspanelGroup">
 						<p:panel header="#{lbl['lbl.sc.committee.member.list']}"
 							styleClass="header-spacing" id="memberListPanel"
 							toggleable="true">
@@ -264,12 +262,12 @@
 
 
 
-						</p:panel>
-					</h:panelGroup> <ac:scRemarkAndAttachment
-						remarkList="#{suppFinalMeetingBackingBean.managedBean.qtCommitteeRemarks}"
-						showAttachment="false" /> <ui:include
-						src="addExistingCommittee.xhtml" /> <ui:include
-						src="cloneCommittee.xhtml" /></td>
+							</p:panel>
+							</h:panelGroup> <ac:scRemarkAndAttachment
+								remarkList="#{suppFinalMeetingBackingBean.managedBean.qtCommitteeRemarks}"
+								showAttachment="false" /> <ui:include
+								src="addExistingCommittee.xhtml" /> 
+							<ui:include src="cloneCommittee.xhtml" />
 				</td>
 			</tr>
 		</table>

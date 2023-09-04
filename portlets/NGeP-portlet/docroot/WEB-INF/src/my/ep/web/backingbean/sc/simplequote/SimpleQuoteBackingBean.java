@@ -460,6 +460,8 @@ public class SimpleQuoteBackingBean extends
 	 * add panel or contract and non contract to simple quote from search
 	 * catalogue.
 	 * 
+	 * @param supplierId
+	 *            the supplier id
 	 * @param docId
 	 *            the doc id
 	 * @param panelItemFlag
@@ -468,7 +470,8 @@ public class SimpleQuoteBackingBean extends
 	 *            the compare supplier items
 	 * @return the string page navigate to simple quote page.
 	 */
-	public String simpleQuoteAction(Long docId, boolean panelItemFlag,
+	// #34579 - add new parameter on simpleQuoteAction method
+	public String simpleQuoteAction(Long supplierId, Long docId, boolean panelItemFlag,
 			List<CmSupplierItem> compareSupplierItems) {
 		debugLogger("simpleQuoteAction");
 		boolean isGovtSeller = Boolean.FALSE;
@@ -876,6 +879,15 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 		// #29800 - end
+		// #34579 - start
+		if (supplierId != null && supplierId != 0) {
+			if (scQuote.getSupplierId() == 0)
+				scQuote.setSupplierId(supplierId);
+		} else if (supplierId == 0) {
+			if (scQuote.getSupplierId() == 0 && getManagedBean().getPanelSuppliers() != null && !getManagedBean().getPanelSuppliers().isEmpty())
+				scQuote.setSupplierId(getManagedBean().getPanelSuppliers().get(0).getSmSupplier().getSupplierId());
+		}
+		// #34579 - end
 
 		return SIMPLE_QUOTE_PAGE_NAV;
 	}
@@ -2586,19 +2598,21 @@ public class SimpleQuoteBackingBean extends
 		
 		// when procurement type as pk7 selected 
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
+			//Temp(#34274 - Start)
 			// MaxProcurementAmt
-			BigDecimal maxProcurementAmt = getPRThresholdAmount();
-			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+//			BigDecimal maxProcurementAmt = getPRThresholdAmount();
+//			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
+//			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
 							.getMessage(
 									MessageConst.INFO_760440,
-									new String[] {amountDF.format(maxProcurementAmt)},
+									null,
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
+			//Temp(#34274 - End)
 
 		}
 		// #28536 - start
