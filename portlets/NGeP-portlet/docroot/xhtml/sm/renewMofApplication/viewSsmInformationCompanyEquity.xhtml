@@ -9,7 +9,7 @@
 <p:panel header="#{lbl['lbl.sm.equiComp.panHdr']}" toggleable="true">
 			<p:dataTable var="equiBean" widgetVar="suppEquiCompDtWidVar"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{backingBean.managedBean.smEquityCompaniesSsm}"
+				value="#{cc.attrs.bBean.managedBean.smEquityCompaniesSsm}"
 				rowKey="#{equiBean}" rowIndexVar="index" id="eqiComDt">
 				<ac:paginator for="eqiComDt" />
 
@@ -19,7 +19,7 @@
 
 				<p:column headerText="#{lbl['lbl.sm.equiComp.addr']}">
 					<h:outputText
-						value="#{backingBean.getFullAddress(equiBean.smAddress)}"
+						value="#{cc.attrs.bBean.getFullAddress(equiBean.smAddress)}"
 						style="float : left" />
 				</p:column>
 

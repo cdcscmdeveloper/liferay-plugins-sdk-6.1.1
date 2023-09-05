@@ -2083,6 +2083,10 @@ public class QTCommitteBackingBean extends
 		if (scQt != null && Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(currentStatusId)
 				&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(commType)) { 
 			//specification maintenance cannot be concurrent to spec committee maintenance
+			String taskName = this.getManagedBean().getTaskName();//31954-start
+			if (null!=taskName && SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName) ) {
+				return Boolean.FALSE;	
+			}//31954-end
 			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, scQt.getQtId());
 			wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
 			Long specStatusId = wfStatus.getPmStatus()==null ? 0L:wfStatus.getPmStatus().getStatusId();

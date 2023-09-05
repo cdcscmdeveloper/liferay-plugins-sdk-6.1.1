@@ -298,17 +298,17 @@ public class AddressUtils {
 		if(smAddress!=null) {
 			if (smAddress.getAddress1() != null && smAddress.getAddress1().length() > 0) {
 				address.append(smAddress.getAddress1());
-				address.append(separator).append(htmlLineSeparator);;
+				address.append(separator).append(htmlLineSeparator);
 			}
 			if (smAddress.getAddress2() != null && smAddress.getAddress2().length() > 0) {
 				address.append(System.getProperty("line.separator"));
 				address.append(smAddress.getAddress2());
-				address.append(separator).append(htmlLineSeparator);;
+				address.append(separator).append(htmlLineSeparator);
 			}
 			if (smAddress.getAddress3() != null && smAddress.getAddress3().length() > 0) {
 				address.append(System.getProperty("line.separator"));
 				address.append(smAddress.getAddress3());
-				address.append(separator).append(htmlLineSeparator);;
+				address.append(separator).append(htmlLineSeparator);
 			}
 		}
 		return address.toString();
@@ -435,7 +435,8 @@ public class AddressUtils {
 				address.append(separator);
 			}
 			//#34135 START
-			if (smAddress.getPmDivision() != null && smAddress.getPmDivision().getDivisionName() !=null && smAddress.getPmDivision().getDivisionName().length() > 0) {
+			if (smAddress.getPmDivision() != null && smAddress.getPmDivision().getDivisionName() !=null && smAddress.getPmDivision().getDivisionName().length() > 0
+					&& smAddress.getPmState() != null && smAddress.getPmState().getStateCode().equalsIgnoreCase("13")) {
 				address.append(smAddress.getPmDivision().getDivisionName());
 				address.append(separator);
 			}

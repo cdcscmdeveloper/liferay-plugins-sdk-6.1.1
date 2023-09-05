@@ -89,8 +89,8 @@
 					</ui:remove>
 					<ui:remove><!-- 6906 - add disabled if isRejected --></ui:remove>
 			        <p:inputText partialSubmit="true" disabled="#{evaluationBackingBean.managedBean.readOnly or isRejected or finSpec.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}" rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '2'}" 
-			        	id="userScore" label="#{lbl['lbl.tpl.spec.content.user.score']}" style="text-align:right;" maxlength="16" size="2" required="true"
-			        	value="#{finSpec.totalScore}">
+			        	id="userScore" label="#{lbl['lbl.tpl.spec.content.user.score']}" style="text-align:right;" maxlength="16" size="2"
+			        	value="#{finSpec.totalScore}"><ui:remove> #34835 remove required true</ui:remove>
 						<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" integerOnly="true" /><!-- -#32458 - start -->
 						<f:attribute name="min" value="0" />
 						<f:attribute name="max" value="#{(evaluationBackingBean.managedBean.withInVarieance*1).toString()}" /><!-- -#32458 - start -->

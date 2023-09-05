@@ -51,7 +51,6 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
-import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst;
@@ -1019,7 +1018,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ){
 			getManagedBean().setButtonProcess(outcome);
 			Date signDate = getManagedBean().getAgreementContractVer().getSignedDate();
-			Date expDate = getManagedBean().getContractVer().getCtContractValue().getExpDate();
+//			Date expDate = getManagedBean().getContractVer().getCtContractValue().getExpDate();
+			Date expDate = getManagedBean().getCtAgreement().getExpDate();
 			
 			if(signDate != null && expDate != null && signDate.after(expDate)){	
 				RequestContext.getCurrentInstance().execute("dateValidationExp.show()");				
@@ -2418,7 +2418,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		String portletTitle = StringUtils.EMPTY;
 		if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUPPLEMENTAL_AGREEMENT)) {
 			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.contract.supp.agreement.creation",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());;
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		} else {
 			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.contract.agreement.creation",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
@@ -2897,8 +2897,6 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			newAdditionAmt = additionContract;
 		}else if(contractAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
 			newAdditionAmt = ctContractAmount.getContractAmount().add(additionContract);
-		}else{
-			newAdditionAmt = ctContractAmount.getContractAmount();
 		}
 		
 		if (gstAmtChange.equals(ContractConst.ADD_AMOUNT)) {
