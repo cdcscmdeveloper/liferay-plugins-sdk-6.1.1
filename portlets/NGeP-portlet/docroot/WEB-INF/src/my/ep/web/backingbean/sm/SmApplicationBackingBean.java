@@ -3188,6 +3188,10 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
 				getManagedBean().setCurrentPageType(currentPageType);
 			}
+			//#35086 - start
+			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean().getLatestAppl(), 
+					getManagedBean().getSmAppl(), getManagedBean().getCurrentPageType());
+			//#35086 - end
 		}
 
 		finally {
@@ -3438,10 +3442,7 @@ public class SmApplicationBackingBean extends
 
 				// init business premise whether show or hide home office
 				initBusinessPremise();
-				//#35086 - start
-				SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean().getLatestAppl(), 
-						getManagedBean().getSmAppl(), getManagedBean().getCurrentPageType());
-				//#35086 - end
+
 			}
 			assignValReqdToFalse();
 		}
