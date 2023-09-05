@@ -175,8 +175,13 @@
 	<p:dialog id="revisionViewDlg" widgetVar="revisionViewDlg"
 		header="#{lbl['lbl.sm.view.revision']}"
 		height="600" width="1200" resizable="false" modal="true">
-		<ui:include 
+		<!-- #32008 -->
+		<f:subview id="revViewDlg">
+		<c:if test="#{viewSmApplBackingBean.managedBean.smAppl != null}">
+			<ui:include 
 				src="/xhtml/sm/revisionSmApplView/dialog/smViewDialogSideMenu_Page.xhtml" />
+		</c:if>
+		</f:subview>
 	</p:dialog>
 	<!-- #34099 - end -->
 </ui:composition>
