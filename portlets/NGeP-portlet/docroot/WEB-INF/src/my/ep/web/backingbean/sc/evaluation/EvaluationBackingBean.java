@@ -16100,6 +16100,7 @@ private void retriveCommitteeRemarksList(){
 				if (this.getManagedBean().getScQt().isZonal()) {
 					this.getManagedBean().setQtProposalAmountByProposal(null);
 					this.getManagedBean().setQtProposalAmountByProposal(evalResDTO.getProposalAmountListbyProposal());
+					this.getManagedBean().setQtProposalAmounts(evalResDTO.getProposalAmountListbyProposal());
 					List<ScQtProposalAmount> proposalAmounts = new ArrayList<>();
 					for (ScQtProposalAmount newList : evalResDTO.getProposalAmountListbyProposal()) {
 						if(newList.getTplSpecZoneDtl()!=null && newList.getTplSpecZoneDtl().getSpecZoneId().equals(getManagedBean().getSelectedZone().getSpecZoneId())){
