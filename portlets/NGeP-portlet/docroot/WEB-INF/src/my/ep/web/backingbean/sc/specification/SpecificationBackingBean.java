@@ -6202,8 +6202,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					if (null == resDTO.getScQtCheckListValue()) {
 						// #21695, #25138 -start-
 						// fix lazy -start (adding condition isnotempty checklistscore) -start-
+						// Bug #34412@Syazani 20/06/2023 -start-						
 						if (null != checkList.getScQtCheckListValue()
-								&& CollectionUtils.isNotEmpty(checkList.getScQtCheckListScores())) {
+								&& isIndirectWithInstantiated(checkList.getScQtCheckListScores())
+								&& CollectionUtils.isNotEmpty(checkList.getScQtCheckListScores()))
+							// Bug #34412@Syazani 20/06/2023 -end-
+						{
 							// fix lazy -start (adding condition isnotempty checklistscore) -end-
 							List<ScQtCheckListScore> bankStatement = new ArrayList<ScQtCheckListScore>();
 							
