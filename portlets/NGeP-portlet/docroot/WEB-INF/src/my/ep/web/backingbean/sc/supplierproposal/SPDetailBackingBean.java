@@ -1406,7 +1406,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				if(count!=0 
 					&& null!=this.getManagedBean().getQt()
 					&& null!=this.getManagedBean().getQt().getProcurementMode()
-					&& this.getManagedBean().getQt().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)){
+					&& ParameterConst.PROCUREMENT_MODE_QUOTATION.equalsIgnoreCase(this.getManagedBean().getQt().getProcurementMode().getParameterCode())){
 					scQtProposalChecklist.setSubmitted(false);
 				}
 				//#3657 End Vinod
