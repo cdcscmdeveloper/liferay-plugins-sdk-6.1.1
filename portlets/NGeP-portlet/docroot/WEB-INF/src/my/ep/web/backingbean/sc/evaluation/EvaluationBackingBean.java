@@ -16096,22 +16096,31 @@ private void retriveCommitteeRemarksList(){
 						}
 					}
 				}
-				if(this.getManagedBean().getScQt().isZonal()){
+				//34528-uat 4serangkai - start #34835 fix
+				if (this.getManagedBean().getScQt().isZonal()) {
 					this.getManagedBean().setQtProposalAmountByProposal(null);
 					this.getManagedBean().setQtProposalAmountByProposal(evalResDTO.getProposalAmountListbyProposal());
-				
-				}else{
+					this.getManagedBean().setQtProposalAmounts(evalResDTO.getProposalAmountListbyProposal());
+					List<ScQtProposalAmount> proposalAmounts = new ArrayList<>();
+					for (ScQtProposalAmount newList : evalResDTO.getProposalAmountListbyProposal()) {
+						if(newList.getTplSpecZoneDtl()!=null && newList.getTplSpecZoneDtl().getSpecZoneId().equals(getManagedBean().getSelectedZone().getSpecZoneId())){
+							proposalAmounts.add(newList);
+						}
+					}
+					this.getManagedBean().setFinancialPackagePaginator(new Paginator(proposalAmounts, 10));
+
+				} else {
 					this.getManagedBean().setQtProposalAmounts(null);
 					this.getManagedBean().setQtProposalAmounts(evalResDTO.getProposalAmountListbyProposal());
+					List<ScQtProposalAmount> proposalAmounts = evalResDTO.getProposalAmountListbyProposal()==null ? new ArrayList<ScQtProposalAmount>(): evalResDTO.getProposalAmountListbyProposal();				
+					this.getManagedBean().setFinancialPackagePaginator(new Paginator(proposalAmounts, 10));
 				}
-			    //34528-uat 4serangkai - start #34835 adjust position code
-				List<ScQtProposalAmount> proposalAmounts = evalResDTO.getProposalAmountListbyProposal()==null ? new ArrayList<ScQtProposalAmount>(): evalResDTO.getProposalAmountListbyProposal();				
-				this.getManagedBean().setFinancialPackagePaginator(new Paginator(proposalAmounts, 10));
-			    //34528-uat 4serangkai - end
-				//#25138 - user score bug - end
-				if (evalResDTO.isSuccessful()){
-				successMessage(MessageConst.INFO_700004,
-						getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);}
+				
+				if (evalResDTO.isSuccessful()) {
+					successMessage(MessageConst.INFO_700004,
+							getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
+				}
+				//34528-uat 4serangkai - start #34835 fix
 			}
 			
 			
