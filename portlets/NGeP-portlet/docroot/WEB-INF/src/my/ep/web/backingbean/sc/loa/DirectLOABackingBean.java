@@ -187,6 +187,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.loa.DirectLOAManagedBean;
@@ -2049,8 +2050,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			// int year = Calendar.getInstance().get(Calendar.YEAR);
 			ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
 			docDefTypeReqDTO.setParameterType(ParameterTypeConst.SCHEDULE_TYPE);
-			docDefTypeReqDTO
-					.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
+			//Reopen #25726 note 110
+			if ((null != this.getManagedBean().getScLoa()) && (null != this.getManagedBean().getScLoa().getScQt())) {
+				if (null != this.getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
+					if (this.getManagedBean().getScLoa().getScQt().getFulfilmentType().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+						docDefTypeReqDTO.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
+					} else {
+						docDefTypeReqDTO.setParameterCode(ParameterConst.SCHEDULE_TYPE_NON_PERIODIC);
+					}
+				}
+			}
+			//#25726 end
 			ParameterResDTO docDefTypeResDTO = parameterSo
 					.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
 
@@ -4722,7 +4733,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				    String tempFilePath = filePath.replace(SSTConstant.fileTypePdf, SSTConstant.fileTypeTempPdf);
 				    File file = new File(filePath);
 				    mergePdf(file, filePath, tempFilePath, context);
-				    file.renameTo(new File(filePath.replace(SSTConstant.fileTypePdf, SSTConstant.fileTypeMergedPdf)));
+				   boolean isRename = file.renameTo(new File(filePath.replace(SSTConstant.fileTypePdf, SSTConstant.fileTypeMergedPdf)));
+				   //Sonarqube #G29 - start
+				   if (isRename){
+					   log.info("rename successful");
+				   }
+				   else{
+					   log.info("rename failed");
+				   }
+				 //Sonarqube #G29 - end
 				    scLoaReportAttachment.setFilePath(scLoaReportAttachment.getFilePath().replace(SSTConstant.fileTypePdf, SSTConstant.fileTypeMergedPdf));
 				  }
 				  // #26130 - End.
@@ -8176,7 +8195,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		ScLoa loa = getManagedBean().getScLoa();
 		BigDecimal overallContractAmtOrLoaAmt = getManagedBean().getOverallContractAmt();
-		boolean change = getManagedBean().AgreementReqChange;
+		boolean change = getManagedBean().isAgreementReqChange(); //#Sqube Vulnerability Minor G47
 
 		if (null != loa.getScLoiLoa().getFulfilmentTypeCode() && null != overallContractAmtOrLoaAmt && !isPk7Periodic()) {
 			String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
@@ -10739,16 +10758,26 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					SourcingConstants.LOA_LAMPIRAN_A3, context, 
 					fos);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] START			 
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DIRECT_LOA_DETAIL_BACKINGBEAN, this.getManagedBean().getScQt().getQtNo(),
+					SLALogConstant.QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), e);
+			//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] END
+
 		} catch (Exception e) {
-			e.printStackTrace();
+			//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] START			 
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DIRECT_LOA_DETAIL_BACKINGBEAN, this.getManagedBean().getScQt().getQtNo(),
+					SLALogConstant.QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), e);
+			//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] END
 		} finally {
 			try {
 				if (fos != null) {
 					fos.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] START			 
+				SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DIRECT_LOA_DETAIL_BACKINGBEAN, this.getManagedBean().getScQt().getQtNo(),
+						SLALogConstant.QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), e);
+				//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] END
 			}
 		}
 	}
