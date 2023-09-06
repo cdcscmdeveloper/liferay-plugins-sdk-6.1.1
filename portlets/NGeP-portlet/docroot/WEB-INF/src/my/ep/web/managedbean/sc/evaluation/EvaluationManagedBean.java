@@ -503,6 +503,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean isFP_Compliance = false;
 	//Enhancement #26339 -end-	
 
+	private boolean itemSampleReq; //#11104
+
 	private boolean hasPreviousMeeting; //#29473, #31675
 	
 	/**
@@ -3445,6 +3447,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.complianceFinancialProposalCheckList = complianceFinancialProposalCheckList;
 	}
 	//#28786 - end
+	
+	/**11104-start
+	 * @return the itemSampleReq
+	 */
+	public boolean isItemSampleReq() {
+		return itemSampleReq;
+	}
+
+	/**
+	 * @param itemSampleReq the itemSampleReq to set
+	 */
+	public void setItemSampleReq(boolean itemSampleReq) {
+		this.itemSampleReq = itemSampleReq;
+	}
+	//#11104-End
 
 	// #29473, #31675_start
 	/**

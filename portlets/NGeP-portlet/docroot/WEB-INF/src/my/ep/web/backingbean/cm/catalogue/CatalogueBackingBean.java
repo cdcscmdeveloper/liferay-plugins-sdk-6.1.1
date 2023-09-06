@@ -22,6 +22,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+//#30457 import
+import java.text.DateFormat; //30457
+import java.text.DecimalFormat; //30457
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,7 +62,6 @@ import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
-import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -103,8 +107,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
-import my.ep.dto.pm.common.state.StateReqDTO;
-import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
@@ -148,11 +150,8 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
-import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
-import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -179,13 +178,14 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.web.util.cm.helper.CmSupplierZoneSingleton;
-import my.ep.web.util.cm.helper.CmSupplierZoneStateDistrictDTO;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.ExtensionCodeVO;
 import my.ep.web.vo.PricingVO;
 
+//#30457 import
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
@@ -199,6 +199,7 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFDataFormat;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.primefaces.context.RequestContext; //30457
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
@@ -211,12 +212,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
-
-//#30457 import
-import org.apache.commons.collections.CollectionUtils;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-//#30457 import
 
 /**
  * 
@@ -11215,12 +11210,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					catalogueSO = null;
 				}
 			}
-
+			
 			if(listToSave!=null && listToSave.size()>0){
-				CatalogueReqDTO reqDTO = new CatalogueReqDTO();	
+				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 				CatalogueResDTO resDTO = new CatalogueResDTO();
 				ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 				reqDTO.setSaveSupplierItems(listToSave);
+				
 				try {
 					resDTO = catalogueSO.updateSupplierItem(reqDTO);
 					
@@ -11261,7 +11257,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											new FacesScopes().getUserLocale())));
 					this.getManagedBean().setCloneCmSupplierItemLs(new ArrayList<CmSupplierItem>());
 					this.getManagedBean().setSupplierItemcheckBoxAll(false);
-					cloneAllSupplierItemSelection();				
+					cloneAllSupplierItemSelection();
 				} catch (Exception e) {
 					throw new EpException("Something happen.");
 				}finally{
@@ -11334,7 +11330,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				CatalogueResDTO resDTO = new CatalogueResDTO();
 				ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 				reqDTO.setSaveSupplierItems(listToSave);
-				
 				try {
 					resDTO = catalogueSO.updateSupplierItem(reqDTO);
 					

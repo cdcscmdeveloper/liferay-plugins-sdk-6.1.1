@@ -58,21 +58,30 @@
 				rowKey="#{complianceSample}">
 				<ac:paginator for="complianceSample" />
 
-
+				<ui:remove> #11104 - change width -start- </ui:remove>
 				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-					style="width:60%">
+					style="width:30%">
+					<ui:remove> #11104 - change width -end- </ui:remove>
 
 					<h:outputText value="#{complianceSample.scQtProposal.supplierNo}"></h:outputText>
 
-
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.label.no']}" style="width:30%">
-
+				<ui:remove> #11104 - change width -start- </ui:remove>
+				<p:column headerText="#{lbl['lbl.sc.label.no']}" style="width:40%">
+					<ui:remove> #11104 - change width -end- </ui:remove>
 
 					<h:outputText value="#{complianceSample.lableNo}"></h:outputText>
 
 				</p:column>
+				<ui:remove> #11104 - start </ui:remove>
+				<p:column headerText="#{lbl['lbl.sc.evalvation.status']}"
+					style="width:20%;white-space: normal;">
 
+					<h:outputText
+						value="#{evaluationBackingBean.getStatusDescById(complianceSample.sampleLableStatus.statusId)}"></h:outputText>
+
+				</p:column>
+				<ui:remove> #11104 - end </ui:remove>
 				<p:column headerText="#{lbl['lbl.sc.action']}"
 					style="width:10%;text-align: center;">
 

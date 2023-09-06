@@ -1540,7 +1540,8 @@ public class SPDetailBackingBean extends
 								.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
 
 				} else{
-					if (finProposalChecklist.isSubmitted()){
+					//#34493,#34427 - start
+					/*if (finProposalChecklist.isSubmitted()){
 						if (finProposalChecklist
 								.getScQtProposalChecklistAttachment() == null) {
 							finProposalChecklist.setSubmitted(false);
@@ -1553,7 +1554,15 @@ public class SPDetailBackingBean extends
 					}else{
 						finProposalChecklist
 						.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-					}
+					}*/
+					if (finProposalChecklist.getScQtProposalChecklistAttachment() == null) {
+						finProposalChecklist.setSubmitted(false);
+						finProposalChecklist.setCompliance(null);
+					} else{
+						finProposalChecklist.setSubmitted(true);
+						finProposalChecklist.setCompliance(null);
+					} 
+					//34493,#34427 - end
 				}
 			}
 
@@ -2094,8 +2103,9 @@ public class SPDetailBackingBean extends
 					//end Bug #28887
 
 				} else {
+						//#34493,#34427 - start
 						//start Bug #28887
-						if (null != assetProposalChecklist) {
+						/*if (null != assetProposalChecklist) {
 							if (assetProposalChecklist.isSubmitted()) {
 								if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null 
 										|| (scQtPRPAssetLiability.getCurrentAssets() != null)
@@ -2115,8 +2125,16 @@ public class SPDetailBackingBean extends
 								assetProposalChecklist.setSubmitted(false);
 								assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 							}
-						}
+						}*/
 						//end Bug #28887
+						if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null) {
+							assetProposalChecklist.setSubmitted(false);
+							assetProposalChecklist.setCompliance(null);
+						} else{
+							assetProposalChecklist.setSubmitted(true);
+							assetProposalChecklist.setCompliance(null);
+						} 
+						//#34493,#34427 - end
 				}
 			}
 			
@@ -2829,6 +2847,13 @@ public class SPDetailBackingBean extends
 							sampleSubmissionDtls.get(0));
 				}
 			}
+			
+			// 33509 &33191, #11104 - start
+			if (null != resDTO.getScQtProposal()) {
+				getManagedBean().setQtProposal(resDTO.getScQtProposal());
+			}
+			// 33509 &33191, #11104 - End
+
 			getManagedBean().setScQtSampleLable(resDTO.getScQtSampleLable());
 			return NAV_TO_SAMPLING_ADDRESS_PAGE;
 		} finally {
@@ -5192,7 +5217,9 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		title = title.replaceAll("<", "&#60;");
 		title = title.replaceAll(">", "&#62;");
 		title = title.replaceAll("\r\n", "<br />");
+
 		context.put("QTTitle", title);
+		context.put("bean", this); //11104
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.SUPPLIER_PROPOSAL_PRINT_LABEL, context,

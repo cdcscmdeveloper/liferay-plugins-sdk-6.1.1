@@ -65,6 +65,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
+import org.apache.log4j.Logger;
+
 @ManagedBean(name = "govtSellerBackingBean")
 @RequestScoped
 public class GovtSellerRegistrationBackingBean extends
@@ -76,6 +78,8 @@ public class GovtSellerRegistrationBackingBean extends
 	private static final long serialVersionUID = -6832474515383643924L;
 	public static RegistrationBackingBean instance;
 	private static Map<Long, Object> identityType;
+	
+	public static Logger log = Logger.getLogger(GovtSellerRegistrationBackingBean.class);
 
 	/**
 	 * Pre-render G2G page
@@ -1030,6 +1034,9 @@ public class GovtSellerRegistrationBackingBean extends
 	 * Submit maintenance
 	 */
 	public void submitMaintenance() {
+		//#34771 - Start
+		log.info("#34771 - checking time");
+		//#34771 - End
 		validateHqBranchBank();
 		// validate bank
 		if (getManagedBean().getSmAppl().getSmSupplierBanks().size() < 1) {
@@ -1692,6 +1699,9 @@ public class GovtSellerRegistrationBackingBean extends
 	 * Initialized bank branches transient object
 	 */
 	private void initBankBranches() {
+		//#34771 - Start
+		log.info("#34771 - checking time");
+		//#34771 - End
 		if (getManagedBean().getBankBranches() == null) {
 			getManagedBean().setBankBranches(
 					new ArrayList<SmSupplierBranchBank>());
@@ -1720,8 +1730,9 @@ public class GovtSellerRegistrationBackingBean extends
 										.getSmSupplierBranch().getBranchCode(),
 										bk.getBranches(), "branchCode");
 						if (brTmp == null) {
-							SmSupplierBranch brDb = (SmSupplierBranch) SerializationUtils
-									.clone(brBnk.getSmSupplierBranch());
+							//#34771 - Start
+							SmSupplierBranch brDb = (SmSupplierBranch) brBnk.getSmSupplierBranch().cloneEntity();
+							//#34771 - End
 							brDb.setSelected(true);
 							bk.getBranches().add(brDb);
 						}

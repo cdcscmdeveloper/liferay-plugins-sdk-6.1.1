@@ -139,6 +139,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmSupplierBranch selectedBranchPrev;
 	private int selectedBranchIndex;
 	private List<SmSupplierBranch> selectedBranches;
+	private List<SmSupplierBranch> displayBranches;  //#34135 - commit part from redmine 29727
 	private SmAssociateCompany selectedAssocCompany;
 	private List<SmAssociateCompany> selectedAssocCompanies;
 	private List<SmSupplierCert> selectedCertList;
@@ -4547,6 +4548,16 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.msgEquityErr = msgEquityErr;
 	}
 	// #31461-end
+	
+	//#34135 - START - Commit part from Redmine 29727
+	public List<SmSupplierBranch> getDisplayBranches() {
+		return displayBranches;
+	}
+
+	public void setDisplayBranches(List<SmSupplierBranch> displayBranches) {
+		this.displayBranches = displayBranches;
+	}
+	//#34135 END
 	
 	//#11641 - START
 	public SmApplInquiry getSelectedInquiryResponse() {
