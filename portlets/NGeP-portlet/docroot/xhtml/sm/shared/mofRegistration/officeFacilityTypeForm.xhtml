@@ -349,13 +349,13 @@
 								listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 								update="basicOffFacDist,basicOffFacCity" />
-						<!-- #35086 -->
-						<ac:smFieldChangeAlert 
-							isShow="#{backingBean.managedBean.showFieldChanges}"
-							oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmDivision.divisionId}" 
-							currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmDivision.divisionId}" 
-							alertValue="#{backingBean.getDivisionLabelById(backingBean.managedBean.latestAppl.hqFacility.smAddress.pmDivision.divisionId)}"/>
 					</p:selectOneMenu>
+					<!-- #35086 -->
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges}"
+						oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmDivision.divisionId}" 
+						currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmDivision.divisionId}" 
+						alertValue="#{backingBean.getDivisionLabelById(backingBean.managedBean.latestAppl.hqFacility.smAddress.pmDivision.divisionId)}"/>
 					</h:panelGroup>
 				</td>
             </tr>
@@ -549,7 +549,16 @@
 		<p:confirmDialog id="alertFacTypeChangeDlg" closable="true"
 			header="#{lbl['lbl.sm.facility.facilityType.change.alertheader']}" severity="alert"
 			widgetVar="alertFacTypeChangeDlg">
+			<!-- 32236 - Start -->
+			<script>
+      
+				const collection = document.getElementsByClassName("ui-confirm-dialog-severity");
+       			for (let i = 0; i &lt; collection.length; i++) {
+          			collection[i].remove();
+        		}
 			
+	      	</script>
+			<!-- 32236 - End -->
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="alertFacTypeChangeDlg.hide();" />
 			</div>
