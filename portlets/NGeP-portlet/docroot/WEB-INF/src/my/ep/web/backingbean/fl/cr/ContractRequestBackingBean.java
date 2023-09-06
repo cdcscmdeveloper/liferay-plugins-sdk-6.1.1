@@ -1462,9 +1462,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				schInfo = new ArrayList<ScheduleInfo>();
 			}
 			//13984-end
-			//#14650 - Logan - Beginning
-			checkAP59();
-			//#14650 Ending	
+			//35024-start
+			validateBondComplete(getManagedBean().getFlRequest());
+			if(!getManagedBean().isBondIncomplete()){
+				//#14650 - Logan - Beginning
+				checkAP59();
+				//#14650 Ending
+			}
+			//35024-end
 		}else if(contractId != null){
 			/*Start- 13984 - CrList - Back Button*/
 			if(getManagedBean().getBackFlag()!= 1){
@@ -1659,9 +1664,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getVotFundList(jabatanOrgProfileId);
 			//End#14650
 			
-			//#14650 - Alert message if contract incomplete - Start
-			checkAP59();
-			//#14650 - End
+			//35024-start
+			validateBondComplete(getManagedBean().getFlRequest());
+			if(!getManagedBean().isBondIncomplete()){
+				//#14650 - Alert message if contract incomplete - Start
+				checkAP59();
+				//#14650 - End
+			}
+			//35024-end
 		}
 			
 		//Default procurement type category to Supply of Goods in case of null
@@ -6963,6 +6973,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO.setAmount(sumOrderedAmt);
 			resDTO=fulfilmentRequestSO.validateAP59(reqDTO);
 		
+			//35024-Start - for performance bond checking
+			if(!resDTO.isBondComplete() && !resDTO.isCrComplete()) {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_745091, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+				
+			}
+			else //35024-End
 			if(!resDTO.isCrComplete()) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
@@ -6994,5 +7011,29 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 	}
 	//29401-end
+	
+	//35024-Start
+	private void validateBondComplete(FlFulfilmentRequest flRequest){
+		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		ContractReqDTO contractReqDTO = new ContractReqDTO();
+		contractReqDTO.setContractId(flRequest.getCtContract().getContractId());
+		contractReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
+		contractReqDTO.setAsAtDate(new Date());
+		CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
+		
+		if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
+				&& ctContractAmount!=null && ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()){
+				ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
+
+				if(!contractResp.isBondComplete()){
+					if(!ctContractAmount.isBondWaived()){
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(MessageConst.ERROR_740051, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+						getManagedBean().setBondIncomplete(true);
+					}
+				}
+		}			
+	}
+	//35024-End
 	
 }
