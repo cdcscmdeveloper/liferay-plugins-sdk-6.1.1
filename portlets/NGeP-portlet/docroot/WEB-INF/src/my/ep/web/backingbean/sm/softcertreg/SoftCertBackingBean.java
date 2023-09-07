@@ -1577,6 +1577,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						}
 						count++;
 					}
+					//35033-start
+					if(personnelAddress.getSmAddress().getPostcode() == null || personnelAddress.getSmAddress().getPostcode().isEmpty()){
+						throw new EpException(MessageConst.ERROR_722682,
+								new String[] { personnel.getName() });
+					}//35033-end
 				}
 				if (personnel.getSmAppl().getSupplierType().equals(SupplierManagementConst.ACC_BASIC)){
 					if (count != 2){

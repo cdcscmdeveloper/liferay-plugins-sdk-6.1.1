@@ -697,6 +697,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			scQtProposal
 					.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(
 							scQtProposalChecklists));
+			if(null!=this.getManagedBean().getScQtSampleLable()){//35117-start
+				scQtProposal
+				.setScQtSampleLable(this.getManagedBean().getScQtSampleLable());
+			}//35117-End
 			this.getManagedBean().setScQtPRPExperiences(null);
 			String originalText = prepareOriginalText(getManagedBean()
 					.getSmSupplier());
@@ -1398,7 +1402,14 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					}
 				}
 				
-				if(count!=0) scQtProposalChecklist.setSubmitted(false);//#3657 Added Vinod
+				//#3657 Start Vinod
+				if(count!=0 
+					&& null!=this.getManagedBean().getQt()
+					&& null!=this.getManagedBean().getQt().getProcurementMode()
+					&& ParameterConst.PROCUREMENT_MODE_QUOTATION.equalsIgnoreCase(this.getManagedBean().getQt().getProcurementMode().getParameterCode())){
+					scQtProposalChecklist.setSubmitted(false);
+				}
+				//#3657 End Vinod
 			
 				if (isThrow && errorLst != null && errorLst.size() > 0) {
 					if (getManagedBean().getQt().isZonal()) {
@@ -1435,7 +1446,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					BigDecimal totalPrice = tplHelper.calculateTotalAmount(
 							answer.getTplSpecQuestion(),
 							answer.getRatePerUom(), quantity);	
-					if (totalPrice != null && totalPrice.compareTo(compareTotalAmount) == 1) {
+					if (totalPrice != null && totalPrice.compareTo(compareTotalAmount) > 0) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 						throw new EpException(MessageConst.ERROR_760437);
 					}
 					//20200701@asyrafhaziq - Bug #28464 - End
@@ -2247,13 +2258,15 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					// #28398 BUG - 26339 CR - End
 				}else{
 					//34493 - start
-					if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null) {
+				   if (null != assetProposalChecklist) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+					if ( assetProposalChecklist.getScQtProposalChecklistAttachment() == null) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 						assetProposalChecklist.setSubmitted(false);
 						assetProposalChecklist.setCompliance(null);
 					} else{
 						assetProposalChecklist.setSubmitted(true);
 						assetProposalChecklist.setCompliance(null);
 					} 
+				   }
 					//34493 - end
 				}
 			}      	// #26339 Venkat End
@@ -3939,7 +3952,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			MathContext mc = new MathContext(4);
 
 			//Start Bug #26498
-			if (totalCredit.compareTo(BigDecimal.ZERO) == 1){
+			if (totalCredit != null && totalCredit.compareTo(BigDecimal.ZERO) > 0){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 //20230718@shafful - SQUBE BUG MINOR G17
 				percentagePaid = totalPaid.divide(totalCredit, mc).multiply(
 						BigDecimal.valueOf(100));
 			}
@@ -4161,7 +4174,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				scQtPRPExperience.setBrandNew(false);
 			}
 
-			prpExperience.setScQtProposal(proposalChecklist.getScQtProposal());
+			prpExperience.setScQtProposal(proposalChecklist != null ?proposalChecklist.getScQtProposal():null);//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			prpExperience.setContractAmt(new BigDecimal(0));
 			experienceList.add(prpExperience);
 			this.getManagedBean().setScQtPRPExperiences(experienceList);
@@ -5923,7 +5936,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							}
 						}
 						
-						if (CollectionUtils.isNotEmpty(catCodeList)) {
+						if (catCodeList != null && CollectionUtils.isNotEmpty(catCodeList)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 							IQTDetailSO QtDetailsSO;
 							QuationTenderResDTO tenderResDTO;
 							
@@ -6030,7 +6043,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					zoneGeneralTrees.clear();	
 				}
 				
-				if (CollectionUtils.isNotEmpty(specZoneDtls)) {
+				if (specZoneDtls != null && CollectionUtils.isNotEmpty(specZoneDtls)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					for (TplSpecZoneDtl zone : specZoneDtls) {
 					
 						if (CollectionUtils.isNotEmpty(zone.getTplSpecZoneLocs())) {
@@ -6357,34 +6370,36 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		
 
 
-	// Bug #33947 5/9/2022 start
+	// Bug #33947 5/9/2022 && #35090 start
 	public boolean evaluateZonelistSupp(TplSpecZoneQty specQties) {
-		if (specQties != null) {
-
-			// remove log
-			// #21695 Farid Start - fix proposal checking 18/2/2022
-			System.out.println("---> 1dasdassdasa "
-					+ this.getManagedBean().getZones().size());
-			System.out.println("---> 2 "
-					+ specQties.getTplSpecZoneOffer().getTplSpecQuestion()
-							.getTplSpecZoneQties().size());
-			if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
-				for (TplSpecZoneDtl specZones : this.getManagedBean()
-						.getZones()) {
-					if (specQties.getTplSpecZoneDtl() != null) {
-						if (specZones.getSpecZoneId().equals(
-								specQties.getTplSpecZoneDtl().getSpecZoneId())) {
-							return true;
+		if (specQties != null &&
+				CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
+			
+				if(this.getManagedBean().getZones().size() == 1){
+					
+					for (TplSpecAnswer specAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+						if (specAns != null && specAns.getTplSpecQuestion().getParentSpecQuestion() != null
+								&& specAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId()
+								.equals(specQties.getTplSpecQuestion().getSpecQuestionId())
+								&& !specAns.isDisableRow() && specAns.getOffer() != null && specAns.getOffer().equals(false)) {
+							specQties.getTplSpecZoneOffer().setOffer(true);
+							specAns.setAnswerText("");
+							specAns.setAnswerNumeric(null);
+							specAns.setAnswerRemark(null);
+							specAns.setAnswerCompliance(null);
 						}
-
 					}
+				}
+				for (TplSpecZoneDtl specZones : this.getManagedBean().getZones()) {
+					if (specQties.getTplSpecZoneDtl() != null && 
+							specZones.getSpecZoneId().equals(specQties.getTplSpecZoneDtl().getSpecZoneId())) {
+							return true;
+					}
+					
 				}
 				specQties.getTplSpecZoneOffer().setOffer(true);
 				specQties.getTplSpecZoneOffer().setNotApplicable(true);
-			}
-
 		}
-
 		return false;
 	}
 
@@ -6410,6 +6425,9 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	public void disableDefaultSelected() {		
 		for (TplSpecAnswer retrieveAns : this.getManagedBean()
 				.getTemplateSpecBean().getSpecAnswerList()) {
+			if(ParameterConst.TPL_SPEC_QUESTION_TYPE_SPECIFICATION.equals(retrieveAns.getTplSpecQuestion().getQuestionType())){
+				continue;
+			}//#35090
 			if (retrieveAns != null
 					&& this.getManagedBean().getZones().size() > 0) {
 				// adjust position flag here
@@ -6443,7 +6461,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 					}
 				}
 			}
-			if (retrieveAns.isDisableRow()) {
+			if (retrieveAns != null && retrieveAns.isDisableRow()) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 				retrieveAns.setOffer(false);
 			}
 		}
