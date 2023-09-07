@@ -55,15 +55,24 @@
 				</table>
 			</p:panel>
 
-			<h:panelGroup id="downloadButtonComplianceTechnincal" style="display: inline-block; width: 16.5%;">
+			<h:panelGroup id="downloadButtonComplianceTechnincal" style="display: inline-block;">
 				<table width="100%" class="BtnSpacing">
 					<c:if
 						test="#{evaluationBackingBean.managedBean.downloadBy ne null}">
-						<tr>
-							<p:commandButton value="#{lbl['lbl.btn.download']}"
-								style="float:right;" ajax="false"
-								action="#{evaluationBackingBean.downloadAllTechnicallDocumentCompliance}"
+						<tr style="display: flex; justify-content: flex-start;">
+							<p:commandButton value="Prepare Zip"
+								style="float:left;" ajax="true" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								process="@this" update="@form @([id$=downloadButtonComplianceTechnincal])"
+								actionListener="#{evaluationBackingBean.downloadAllTechnicallDocumentCompliance}"
 								rendered="#{evaluationBackingBean.managedBean.downloadBy ne null}" />
+							<c:if test="#{not empty evaluationBackingBean.managedBean.zipFileContent}">
+							    <p:commandButton value="#{lbl['lbl.btn.download']}"
+							    	id="downloadzip"
+							    	style="float:right;"
+							    	ajax="false" 
+							    	rendered="#{not empty evaluationBackingBean.managedBean.zipFileContent}"
+							    	action="#{evaluationBackingBean.downloadAllFilesWithSpecificFolderTest}" />
+							</c:if>
 						</tr>
 					</c:if>
 				</table>

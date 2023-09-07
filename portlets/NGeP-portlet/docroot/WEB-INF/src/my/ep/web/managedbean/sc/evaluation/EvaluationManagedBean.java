@@ -648,6 +648,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	//#10542 - start
 	private String downloadBy;
+	private byte[] zipFileContent;
+	private String mainDocumentTitle;
 	//#10542 - end
 	
 	//#6906 start
@@ -4214,6 +4216,22 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	public String getDownloadBy(){
 		return downloadBy;
+	}
+	
+	public byte[] getZipFileContent() {
+		return zipFileContent;
+	}
+	
+	public void setZipFileContent(byte[] zipFileContent){
+		this.zipFileContent = zipFileContent;
+	}
+	
+	public void setMainDocumentTitle(String mainDocumentTitle){
+		this.mainDocumentTitle = mainDocumentTitle;
+	}
+	
+	public String getMainDocumentTitle(){
+		return mainDocumentTitle;
 	}
 	//#10542 - end
 
