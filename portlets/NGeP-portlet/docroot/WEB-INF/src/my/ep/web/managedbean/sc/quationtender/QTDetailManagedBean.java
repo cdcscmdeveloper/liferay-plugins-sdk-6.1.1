@@ -1824,6 +1824,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The qt remark missing issues. */
 	private boolean scQtRemarksEmpty = false; //#9019 08082022 (Harun)
 	
+	private List<ScRemark> qtRemarksIdRemoveList;//#9019 (Harun)
+	
 	// #32929 - start
 	private boolean zoneRdbButtonChecked = Boolean.FALSE;
 	// #32929 - end
@@ -1856,6 +1858,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtEpvSupplierResponse suppResp;//#21692
 				
 	// #29521 - end
+	
+	//Bug #35061 - asyrafhaziq 
+	private String msgConfirmBelowIndi;
+
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11755,6 +11761,31 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.epvAttachmentValue = epvAttachmentValue;
 	}
 
+	//#9019 - Start
+	/**
+	 * @return the qtRemarksIdRemoveList
+	 */
+	public List<ScRemark> getQtRemarksIdRemoveList() {
+		return qtRemarksIdRemoveList;
+	}
+
+	/**
+	 * @param qtRemarksIdRemoveList the qtRemarksIdRemoveList to set
+	 */
+	public void setQtRemarksIdRemoveList(List<ScRemark> qtRemarksIdRemoveList) {
+		this.qtRemarksIdRemoveList = qtRemarksIdRemoveList;
+	}
+	//#9019 - End
+	
+	public String getMsgConfirmBelowIndi() {
+		return msgConfirmBelowIndi;
+	}
+
+	public void setMsgConfirmBelowIndi(String msgConfirmBelowIndi) {
+		this.msgConfirmBelowIndi = msgConfirmBelowIndi;
+	}
+
+	
 }
 
 // ***25201
