@@ -17971,10 +17971,10 @@ private void retriveCommitteeRemarksList(){
 				}
 			}
 			
-			if (downloadBy.equalsIgnoreCase("Supplier")) {
-				this.getManagedBean().setMainDocumentTitle("NGEP-Technical-BySupplier");
-			} else if (downloadBy.equalsIgnoreCase("Document")) {
-				this.getManagedBean().setMainDocumentTitle("NGEP-Technical-ByTitleDocument");
+			if (downloadBy.equalsIgnoreCase(QTConstants.DOWNLOADBY_SUPPLIER)) {
+				this.getManagedBean().setMainDocumentTitle(QTConstants.TECHNICAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE);
+			} else if (downloadBy.equalsIgnoreCase(QTConstants.DOWNLOADBY_DOCUMENT)) {
+				this.getManagedBean().setMainDocumentTitle(QTConstants.TECHNICAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE);
 			}
 
 			downloadAllFilesAsZipFileWithSpecificFolderTest(listScAttachment);
@@ -17996,8 +17996,6 @@ private void retriveCommitteeRemarksList(){
 		String zipFileName = this.getManagedBean().getMainDocumentTitle();
 
 		try {
-			log.info("Simulating zip download...");
-			
 			PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 			log.info(portalresponse);
 			HttpServletResponse response = PortalUtil.getHttpServletResponse(portalresponse);
@@ -18048,7 +18046,7 @@ private void retriveCommitteeRemarksList(){
 				BufferedInputStream fif = null;
 				ScAttachment scAttachment = scAttachmentReq.getScAttachment();
 				
-				String supplierNo = "Supplier "+ scAttachmentReq.getSupplierNo();
+				String supplierNo = QTConstants.COMPLIANCE_DOCUMENT_SUPPLIER_NO + scAttachmentReq.getSupplierNo();
 				
 				try{
 					if (null != scAttachment
@@ -18063,9 +18061,9 @@ private void retriveCommitteeRemarksList(){
 							: scAttachment.getFileName());
 						
 						String downloadByZipStructure = "";
-						if(downloadBy.equalsIgnoreCase("Supplier")){
+						if(downloadBy.equalsIgnoreCase(QTConstants.DOWNLOADBY_SUPPLIER)){
 							downloadByZipStructure = supplierNo+"/"+checkListTitle+"/"+attachmentFileName;
-						}else if(downloadBy.equalsIgnoreCase("Document")){
+						}else if(downloadBy.equalsIgnoreCase(QTConstants.DOWNLOADBY_DOCUMENT)){
 							downloadByZipStructure = checkListTitle+"/"+supplierNo+"/"+attachmentFileName;
 						}
 						
@@ -18074,8 +18072,7 @@ private void retriveCommitteeRemarksList(){
 						try {
 							fis = new FileInputStream(file);
 						} catch (FileNotFoundException fnfe) {
-							zos.write(("ERROR: Could not find file " + file
-									.getName()).getBytes());
+							zos.write((MessageConst.ERR_761001 + file.getName()).getBytes());
 							continue;
 						}
 						fif = new BufferedInputStream(fis);
