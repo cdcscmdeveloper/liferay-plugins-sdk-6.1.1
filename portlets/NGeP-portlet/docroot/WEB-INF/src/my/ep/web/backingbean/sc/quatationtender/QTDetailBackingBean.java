@@ -363,11 +363,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	
 	public static final String TEMP_MB_KEY = "___823452381_76";
 	
-	//#29521 - start
-			public static Long tempProcurementTypeCategory = 0L;
-			public static String tempOpenFor = "";
-			public static String tempEvalType = "";
-			//#29521 - end
+	// #29521 - start
+	// Sonarqube #G29 - start
+	Long tempProcurementTypeCategory = 0L;
+	String tempOpenFor = "";
+	String tempEvalType = "";
+	// Sonarqube #G29 - end
+	// #29521 - end
 	
 	public String getMenuItemDetails() {
 		return menuItemDetails;
@@ -2405,6 +2407,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//9019 for prevent null insert for remark and merge note-522
 		QuationTenderResDTO resDto = null;
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		List<ScRemark> qtRemarksIdRemoveList = new ArrayList<ScRemark>() ;
 		reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 		
@@ -2419,7 +2422,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						resDto = getQTDetailSO().retriveQtRemarks(reqDTO);
 						if (CollectionUtils.isNotEmpty(resDto.getRemarks())) {
 							for (ScRemark remark : resDto.getRemarks()) {
-								this.getManagedBean().setQtRemarksIdRemove(remark.getRemarkId());
+								//this.getManagedBean().setQtRemarksIdRemove(remark.getRemarkId());
+								qtRemarksIdRemoveList.add(remark);
 							}
 						}
 					}
@@ -2428,11 +2432,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					resDto = getQTDetailSO().retriveQtRemarks(reqDTO);
 					if (CollectionUtils.isNotEmpty(resDto.getRemarks())) {
 						for (ScRemark remark : resDto.getRemarks()) {
-							this.getManagedBean().setQtRemarksIdRemove(remark.getRemarkId());
+							//this.getManagedBean().setQtRemarksIdRemove(remark.getRemarkId());
+							qtRemarksIdRemoveList.add(remark);
 						}
 					}
 				}
 			}
+			this.getManagedBean().setQtRemarksIdRemoveList(qtRemarksIdRemoveList);
 		}	
 		// 9019 end
 		
@@ -2537,6 +2543,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		quationTenderReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		quationTenderReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		quationTenderReqDTO.setQtRemarksIdRemove(this.getManagedBean().getQtRemarksIdRemove()); //#9019 (Harun)
+		quationTenderReqDTO.setQtRemarksIdRemoveList(this.getManagedBean().getQtRemarksIdRemoveList()); //#9019 note-522(Harun)
 		
 		return quationTenderReqDTO;
 	}
@@ -2955,7 +2962,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									true,
 									JoinType.LEFT));
 					statusBean = statusFilterBean;
-					if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
+					//harun disabled for 34702 related for 9019
+					/*if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
 						statusBean = new SearchMultiFilterBean(
 								statusFilterBean, 
 								new SearchFilterBean(
@@ -2964,7 +2972,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										null,
 										SearchCondition.CONDITION_OR.value(),
 										JoinType.LEFT));
+					}*/
+					//#34702 - Start
+					if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
+						statusBean = new SearchMultiFilterBean(
+								statusFilterBean, 
+								new SearchFilterBean(
+										"scQtStatus.pmStatus.statusId",
+										SearchOperator.OPERATOR_EQUALS.value(),
+										QTStatusConst.QT_PENDING_QT_SUBMISSION_WIP.toString(),
+										SearchCondition.CONDITION_OR.value(),
+										JoinType.LEFT));
 					}
+					//#34702 - End
 					qtSearchBean.getDataFilterBeans().add(statusBean);
 				}
 				else{
@@ -4848,8 +4868,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										
 									}
 								}
+								
 							}
-							tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+							
+							if(CollectionUtils.isNotEmpty(approvalRequest)){
+							   tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+							}
 					
 						}
 					} 
@@ -4858,8 +4882,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 
 			this.getManagedBean().setTabOtherApproval(tabBeans);
-			//Bug # 34694/25077 - fix showing empty
-			//this.getManagedBean().setApproverTabLoaded(true);
+			this.getManagedBean().setApproverTabLoaded(true);
 			
 		} finally {
 			detailSO = null;
@@ -7463,10 +7486,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				// detailSO.validateApprovalDetails(reqDTO);
 				if(!this.getManagedBean().getQt().isCloneEnabled()){//25635&34502-start
 					//#25077 - Start
-					//Bug # 34694/25077 - fix showing empty
-					//if (!getManagedBean().isApproverTabLoaded()) {
+					if (!getManagedBean().isApproverTabLoaded()) {
 					    retrieveOthersApprovalTabDtl();
-					//}
+					}
 					//#25077 - End
 					retrieveApprovalTabDtl();
 					}//25635&34502-End
@@ -11650,6 +11672,27 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		reqDTO.setQtdetail(scQt);
 		return reqDTO;
+	}
+	
+	/**
+	  * Method to filter value if approval request to add if ICT or IMP, other is remove.
+	 * 
+	 * @return list of ScQtApprovalRequest
+	 */
+	public List<ScQtApprovalRequest> getFilteredApprovalRequest() {
+	  List<ScQtApprovalRequest> filteredAprovalRequest = new ArrayList<>();
+	  List<ScQtApprovalRequest> approvalRequest = this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().getScQtApprovalDtls();
+		if(CollectionUtils.isNotEmpty(approvalRequest)){
+			for(ScQtApprovalRequest request: approvalRequest) {
+				if(request.getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS) || 
+						request.getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)) {
+			        filteredAprovalRequest.add(request);
+		        }else{
+		        	filteredAprovalRequest.remove(request);
+		        }
+			}
+		}
+	  return filteredAprovalRequest;  
 	}
 	// 25077 - End
 	
