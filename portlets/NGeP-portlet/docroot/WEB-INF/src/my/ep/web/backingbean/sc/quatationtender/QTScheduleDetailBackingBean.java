@@ -304,8 +304,9 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 				orgProfileIds.add(pmOrgProfile.getOrgProfileId());
 			}
 			
-			PmOrgProfile OwnerPmOrgProfile = getManagedBean().getQt().getOwnerOrgProfile();			
-			if (OwnerPmOrgProfile != null && pmOrgProfile.getOrgProfileId() != OwnerPmOrgProfile.getOrgProfileId()) {
+			PmOrgProfile OwnerPmOrgProfile = getManagedBean().getQt().getOwnerOrgProfile();	
+			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			if (OwnerPmOrgProfile != null && pmOrgProfile != null &&pmOrgProfile.getOrgProfileId() != OwnerPmOrgProfile.getOrgProfileId()) {
 				orgProfileIds.add(OwnerPmOrgProfile.getOrgProfileId());	
 			}
 			
