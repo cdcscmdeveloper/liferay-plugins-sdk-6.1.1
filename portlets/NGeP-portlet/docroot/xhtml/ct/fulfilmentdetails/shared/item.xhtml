@@ -294,8 +294,10 @@
 			              <c:if  test="#{ctBackingBean.managedBean.selectedItem.priceType.parameterCode  eq ParameterConst.priceTypeZonalStandard}">
 			                
 			                   <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;" styleClass="column-align-center">
-			                       <h:outputText value="#{itemPrice1.ctContractZone.zoneName}"  rendered="#{!itemPrice.changeZoneLabel}"  style="float:left;"/>
-			                       <h:outputText value="#{itemPrice1.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})"  rendered="#{itemPrice.changeZoneLabel}" style="float:left;" />
+			                   <!-- #34961 start -->
+			                       <h:outputText value="#{itemPrice1.ctContractZone.zoneName}"  rendered="#{!itemPrice1.changeZoneLabel}"  style="float:left;"/>
+			                       <h:outputText value="#{itemPrice1.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})"  rendered="#{itemPrice1.changeZoneLabel}" style="float:left;" />
+			                   <!-- #34961 end -->
 			                   </p:column>    
 			            
 			                   <p:column headerText="#{lbl['lbl.ct.price']}" styleClass="column-align-center">
