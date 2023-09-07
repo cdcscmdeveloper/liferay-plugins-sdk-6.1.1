@@ -61,6 +61,7 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;//#31849 #32682
 import my.ep.biz.service.pm.common.country.ICountrySO;
+import my.ep.biz.service.pm.common.language.ILanguageSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -85,6 +86,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;//#31849 #32682
 import my.ep.dto.pm.common.country.CountryReqDTO;
+import my.ep.dto.pm.common.language.LanguageReqDTO;
+import my.ep.dto.pm.common.language.LanguageResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
@@ -3948,5 +3951,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return maxScoreSetting < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM;
 	}
 	//29012 - end 34865,34866,34867 - 29021 WIP
-
+	
+	// 33410 - START
+	public String setFixedLanguageDisplay(Boolean isFixedDisplay, String languageCode){
+		LanguageReqDTO reqDTO = new LanguageReqDTO();
+		reqDTO.setLanguageCode(languageCode);
+		ILanguageSO languageSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ILanguageSO.class);
+		LanguageResDTO resDTO = languageSO.retrieveLanguageByLanguageCode(reqDTO);
+		if(isFixedDisplay){
+			return resDTO.getLanguage().getLanguageCode();
+		} else {
+			return new FacesScopes().getUserLocale().getLanguage();
+		}
+	}
+	// 33410 - END
 }
