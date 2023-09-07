@@ -1636,6 +1636,13 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 			
+			//#28834 - Start 
+			if(CollectionUtils.isNotEmpty(toBeRemovedReports)){
+				navigateToEndorsementReportTab();
+			    throw new EpException(MessageConst.ERROR_770271);
+			}
+			//#28834 - End
+			
 			if (toBeRemovedReports.size() > 0) {
 				finalizationReports.removeAll(
 							toBeRemovedReports);
