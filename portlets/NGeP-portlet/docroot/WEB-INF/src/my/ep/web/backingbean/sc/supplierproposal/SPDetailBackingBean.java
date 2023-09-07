@@ -743,7 +743,11 @@ public class SPDetailBackingBean extends
 			scQtProposal
 					.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(
 							scQtProposalChecklists));
-			this.getManagedBean().setScQtPRPExperiences(null);
+			if(null!=this.getManagedBean().getScQtSampleLable()){//35117-start
+				scQtProposal
+				.setScQtSampleLable(this.getManagedBean().getScQtSampleLable());
+			}//35117-End
+		this.getManagedBean().setScQtPRPExperiences(null);
 			String originalText = prepareOriginalText(getManagedBean()
 					.getSmSupplier());
 			byte[] signedData = getManagedBean().getSpkiBackingBean()
