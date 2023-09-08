@@ -16,16 +16,19 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.notify.INotifySO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.NotificationTextConst;
 import my.ep.dto.pm.common.notify.NotifyReqDTO;
 import my.ep.dto.pm.common.notify.NotifyResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmNotifyUser;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -546,7 +549,8 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("PM", "checkNotifyRemoveSupplierBranchDeleted", null, "checkNotifyRemoveSupplierBranchDeleted",getUserIdSessionFromLoginId(), e);
+			throw new EpException(MessageConst.ERROR_722632);
 		} finally {
 			ntfSO = null;
 		}

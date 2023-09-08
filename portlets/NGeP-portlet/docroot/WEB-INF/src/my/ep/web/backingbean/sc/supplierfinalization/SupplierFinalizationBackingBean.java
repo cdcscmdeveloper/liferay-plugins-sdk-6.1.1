@@ -1761,6 +1761,13 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 			
+			//#28834 - Start 
+			if(CollectionUtils.isNotEmpty(toBeRemovedReports)){
+				navigateToEndorsementReportTab();
+			    throw new EpException(MessageConst.ERROR_770271);
+			}
+			//#28834 - End
+			
 			if (toBeRemovedReports.size() > 0) {
 				finalizationReports.removeAll(
 							toBeRemovedReports);
@@ -7192,7 +7199,7 @@ return	remarksNotFound;
 		this.getManagedBean().setDisableSupplierSelection(false);
 		this.getManagedBean().setRecommendedSupplier(null);
 		this.getManagedBean().setShortlistedSuppliersByRecommendType(null);
-		this.getManagedBean().setZoneActiveIndex(0);
+//		this.getManagedBean().setZoneActiveIndex(0);//#35064 let active zone stay at current zone instead of reset
 		populateRecommendTypeEventDetails(true);
 	}
 
