@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -15,11 +14,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.StreamedContent;
 
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
@@ -45,7 +39,6 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplInquiryDocFile;
-import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -64,6 +57,11 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.StreamedContent;
 
 @ManagedBean(name = "sdoReviewBackingBean")
 @RequestScoped
@@ -314,7 +312,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			//29810 - end
 			
 			//29810 - to check receive date value is there
-			log.info("29810 ====== SdoReviewBackingBean ========= getReceivedDate " + ((SMMOFRegDataType) reqDTO.getBpmPojo()).getReceivedDate());
+			//log.info("29810 ====== SdoReviewBackingBean ========= getReceivedDate " + ((SMMOFRegDataType) reqDTO.getBpmPojo()).getReceivedDate());
 			
 			updateMandatoryAndNonMandatorySuppDocToApplDoc();
 			
@@ -542,7 +540,6 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		try {
 			file = commonDownload(finalFilePath, fileName);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finalFilePath = null;
