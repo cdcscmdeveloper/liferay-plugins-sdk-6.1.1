@@ -2918,7 +2918,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									true,
 									JoinType.LEFT));
 					statusBean = statusFilterBean;
-					if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
+					//harun disabled for 34702 related for 9019
+					/*if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
 						statusBean = new SearchMultiFilterBean(
 								statusFilterBean, 
 								new SearchFilterBean(
@@ -2927,7 +2928,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										null,
 										SearchCondition.CONDITION_OR.value(),
 										JoinType.LEFT));
+					}*/
+					//#34702 - Start
+					if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
+						statusBean = new SearchMultiFilterBean(
+								statusFilterBean, 
+								new SearchFilterBean(
+										"scQtStatus.pmStatus.statusId",
+										SearchOperator.OPERATOR_EQUALS.value(),
+										QTStatusConst.QT_PENDING_QT_SUBMISSION_WIP.toString(),
+										SearchCondition.CONDITION_OR.value(),
+										JoinType.LEFT));
 					}
+					//#34702 - End
 					qtSearchBean.getDataFilterBeans().add(statusBean);
 				}
 				else{
@@ -4809,7 +4822,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									}
 								}
 							}
-							tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+							
+							if(CollectionUtils.isNotEmpty(approvalRequest)){
+							   tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+							}
 					
 						}
 					} 
@@ -4818,8 +4834,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 
 			this.getManagedBean().setTabOtherApproval(tabBeans);
-			//Bug #34694,25077
-			//this.getManagedBean().setApproverTabLoaded(true);
+			this.getManagedBean().setApproverTabLoaded(true);
 			
 		} finally {
 			detailSO = null;
@@ -7414,10 +7429,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				// detailSO.validateApprovalDetails(reqDTO);
 				if(!this.getManagedBean().getQt().isCloneEnabled()){//25635&34502-start
 					//#25077 - Start
-					//Bug #34694,25077
-					//if (!getManagedBean().isApproverTabLoaded()) {
+					if (!getManagedBean().isApproverTabLoaded()) {
 					    retrieveOthersApprovalTabDtl();
-					//}
+					}
 					//#25077 - End
 					retrieveApprovalTabDtl();
 					}//25635&34502-End
@@ -11591,6 +11605,27 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		reqDTO.setQtdetail(scQt);
 		return reqDTO;
+	}
+	
+	/**
+	  * Method to filter value if approval request to add if ICT or IMP, other is remove.
+	 * 
+	 * @return list of ScQtApprovalRequest
+	 */
+	public List<ScQtApprovalRequest> getFilteredApprovalRequest() {
+	  List<ScQtApprovalRequest> filteredAprovalRequest = new ArrayList<>();
+	  List<ScQtApprovalRequest> approvalRequest = this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().getScQtApprovalDtls();
+		if(CollectionUtils.isNotEmpty(approvalRequest)){
+			for(ScQtApprovalRequest request: approvalRequest) {
+				if(request.getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS) || 
+						request.getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)) {
+			        filteredAprovalRequest.add(request);
+		        }else{
+		        	filteredAprovalRequest.remove(request);
+		        }
+			}
+		}
+	  return filteredAprovalRequest;  
 	}
 	// 25077 - End
 	

@@ -2787,9 +2787,19 @@ public class EvaluationBackingBean extends
 				evalReqDTO.setEvalStage(QTConstants.COMPLIANCE_CHECK);
 				// evalReqDTO.setRecomandationType(1);
 				if (this.getManagedBean().getScQt().isDemoRequired()) {
-
+					//Bug #35109
+					IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTEvaluationSO.class);
+					EvaluationReqDTO reqDTOwip = new EvaluationReqDTO();
+					reqDTOwip.setScQt(this.getManagedBean().getScQt());
+					int wipstatus = evaluationSO.checkWipScoreSetting(reqDTOwip);
 					evalReqDTO
 							.setRecomandationType(SourcingConstants.SCORE_SETTING_TYPE_DEMO);
+					//Bug #35109
+					if (wipstatus < ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_CURRENT) {
+						this.getManagedBean().setEvaluatioStageActiveIndex(1);
+					}
 				} else {
 
 					evalReqDTO
@@ -8574,6 +8584,7 @@ public class EvaluationBackingBean extends
 								.getCommitteeType())) {
 
 					if (!this.getManagedBean().getScQt().isDemoRequired()) {
+						
 						if (currentTab == 2) {
 
 							if (this.getManagedBean()
@@ -8588,9 +8599,16 @@ public class EvaluationBackingBean extends
 						}
 					}else if(this.getManagedBean().getScQt().isDemoRequired()){	
 						if (currentTab == 2) {
-
-							if (this.getManagedBean()
-									.getEvaluatioStageActiveIndex() == 1) {
+							//Bug #35109
+							IQTEvaluationSO evaluationSO = null;
+							evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+									IQTEvaluationSO.class);
+							EvaluationReqDTO reqDTOwip = new EvaluationReqDTO();
+							//Bug #35109
+							reqDTOwip.setScQt(this.getManagedBean().getScQt());
+							int wipstatus = evaluationSO.checkWipScoreSetting(reqDTOwip);
+							if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && 
+									this.getManagedBean().getEvaluatioStageActiveIndex() == 1) {
 								retriveSummaryEvaluationStage();
 								this.getManagedBean().setTabTechnicalIndex(3);
 								outputTab = 2;
@@ -16029,23 +16047,32 @@ private void retriveCommitteeRemarksList(){
 						}
 					}
 				}
-				if(this.getManagedBean().getScQt().isZonal()){
+				//34528-uat 4serangkai - start #34835 fix
+				if (this.getManagedBean().getScQt().isZonal()) {
 					this.getManagedBean().setQtProposalAmountByProposal(null);
 					this.getManagedBean().setQtProposalAmountByProposal(evalResDTO.getProposalAmountListbyProposal());
-				
-				}else{
+					this.getManagedBean().setQtProposalAmounts(evalResDTO.getProposalAmountListbyProposal());
+
+					List<ScQtProposalAmount> proposalAmounts = new ArrayList<>();
+					for (ScQtProposalAmount newList : evalResDTO.getProposalAmountListbyProposal()) {
+						if(newList.getTplSpecZoneDtl()!=null && newList.getTplSpecZoneDtl().getSpecZoneId().equals(getManagedBean().getSelectedZone().getSpecZoneId())){
+							proposalAmounts.add(newList);
+						}
+					}
+					this.getManagedBean().setFinancialPackagePaginator(new Paginator(proposalAmounts, ParameterConst.PAGINATOR_ROW_TEN));
+
+				} else {
 					this.getManagedBean().setQtProposalAmounts(null);
 					this.getManagedBean().setQtProposalAmounts(evalResDTO.getProposalAmountListbyProposal());
-				    //34528-uat 4serangkai - start
 					List<ScQtProposalAmount> proposalAmounts = evalResDTO.getProposalAmountListbyProposal()==null ? new ArrayList<ScQtProposalAmount>(): evalResDTO.getProposalAmountListbyProposal();				
-					this.getManagedBean().setFinancialPackagePaginator(new Paginator(proposalAmounts, 10));
-				    //34528-uat 4serangkai - end
+					this.getManagedBean().setFinancialPackagePaginator(new Paginator(proposalAmounts, ParameterConst.PAGINATOR_ROW_TEN));
 				}
 				
-				//#25138 - user score bug - end
-				if (evalResDTO.isSuccessful()){
-				successMessage(MessageConst.INFO_700004,
-						getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);}
+				if (evalResDTO.isSuccessful()) {
+					successMessage(MessageConst.INFO_700004,
+							getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
+				}
+				//34528-uat 4serangkai - start #34835 fix
 			}
 			
 			
