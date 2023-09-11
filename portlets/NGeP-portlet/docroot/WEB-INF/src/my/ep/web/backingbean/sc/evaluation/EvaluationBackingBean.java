@@ -18807,7 +18807,7 @@ private void retriveCommitteeRemarksList(){
 		if(null!=this.getManagedBean().getDisqualifiedSuppliersDM()
 			&& null!=this.getManagedBean().getDisqualifiedSuppliersDM().getList()){
 			for(ScQtEvaluationResultDtl disQualDtl : this.getManagedBean().getDisqualifiedSuppliersDM().getList()){
-				if(null != disQualDtl && !disQualDtl.isCompliance()){
+				if(null != disQualDtl.isCompliance() && !disQualDtl.isCompliance()){
 					renderDisqialifiedColumn=true;
 					break;
 				}
