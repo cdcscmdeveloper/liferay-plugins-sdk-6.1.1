@@ -3357,7 +3357,7 @@ public class CreateQtBackingBean extends
 		}
 
 		if (type == true) {
-			this.getManagedBean().getQt().setPartial(Boolean.FALSE);
+			//this.getManagedBean().getQt().setPartial(Boolean.FALSE);
 		} else {
 			if (getManagedBean().getMarkDeletedTechChecklist() == null) {
 				getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());
