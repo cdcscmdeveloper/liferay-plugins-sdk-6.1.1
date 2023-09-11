@@ -1218,8 +1218,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						getManagedBean().setItemProductExist(true);
 						// Collections.sort(item.getCtItemPrices(), new CtItemPrice());
 						// Start Fix - #33256
-						//sortItemPrice(item.getCtItemPrices());
-						//sortItemMaxQty(item.getCtItemMaxQties());
+						//sortItemPrice(item.getCtItemPrices()); //#34950
+						//sortItemMaxQty(item.getCtItemMaxQties());  //#34950
 						// End Fix - #33256
 
 						// Bug #29323
@@ -3658,7 +3658,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
 							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
 						if (ctContractItem.getCtItemPrices().get(temp).getFromQty().equals(itemPrice1.getFromQty())
-								//&& ctContractItem.getCtItemPrices().get(temp).getToQty().equals(itemPrice1.getToQty())
+								//&& ctContractItem.getCtItemPrices().get(temp).getToQty().equals(itemPrice1.getToQty()) Fix - #34950
 								&& ctContractItem.getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
 							counter++;
 							if (counter >= 2) {
@@ -7949,5 +7949,4 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		});
 	}
 	// End Fix - #34110 , #34950
-
 }
