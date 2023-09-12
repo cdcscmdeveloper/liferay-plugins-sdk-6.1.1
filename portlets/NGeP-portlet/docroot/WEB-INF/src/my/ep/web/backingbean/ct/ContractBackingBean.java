@@ -343,7 +343,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		CtAttachment attachment = new CtAttachment();
 		attachment.setFileName(item.getFileName());
 		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
@@ -2200,7 +2200,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			CtAttachment attachment = new CtAttachment();
 			attachment.setFileName(item.getFileName());
 			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-			attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			attachment.setCreatedUser(facesScopes.getUserSessionBean());
 			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			attachment.setSectionId(ContractConst.ATTACHMENT_AGENCY_CONTRACT_SHARING);
@@ -3098,7 +3098,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				refreshAgencyCeilingQuantityList();
 			}else if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
 				refreshAgencyCeilingQuantityList();
-			}	
+			}// Start Fix - #34539
+			else if(getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)){
+				refreshAgencyCeilingQuantityList();
+			}// End Fix - #34539	
 		} catch (Exception e) {
 			log.error(e);
 		}
@@ -4197,7 +4200,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			if(getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
 				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
 					if(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
-
+						// Start Fix - #34539  
+						if (item.isBrandNew()) {
+							if (item.getCtItemCeilingQties().size() != getManagedBean().getSelectedItem().getCtItemCeilingQties().size()) {
+								getManagedBean().getSelectedItem().getCtItemCeilingQties().remove(item.getCtItemCeilingQties());
+								getManagedBean().getSelectedItem().setCtItemCeilingQties(item.getCtItemCeilingQties());
+							} 
+						} else {
+							if (item.getCtItemCeilingQties().size() != getManagedBean().getSelectedItem().getCtItemCeilingQties().size()) {
+								item.getCtItemCeilingQties().clear();
+								item.getCtItemCeilingQties().addAll(getManagedBean().getSelectedItem().getCtItemCeilingQties());
+							} 
+						}
+						// End Fix - #34539
 						if (!item.getCtItemCeilingQties().isEmpty()) {						
 							for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {
 								if(ceilingQty.getCtAgency().getCommitmentNo().equalsIgnoreCase(ctItemCeilingQty.getCtAgency().getCommitmentNo())){
@@ -4211,7 +4226,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 	//#30428 - End
-	
 	
 	// Start Fix - #33491
 	public boolean isQtCategoryExemptedCheck(ScLoa scLoa) {

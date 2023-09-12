@@ -124,7 +124,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.pm.AddressType;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
@@ -744,7 +743,11 @@ public class SPDetailBackingBean extends
 			scQtProposal
 					.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(
 							scQtProposalChecklists));
-			this.getManagedBean().setScQtPRPExperiences(null);
+			if(null!=this.getManagedBean().getScQtSampleLable()){//35117-start
+				scQtProposal
+				.setScQtSampleLable(this.getManagedBean().getScQtSampleLable());
+			}//35117-End
+		this.getManagedBean().setScQtPRPExperiences(null);
 			String originalText = prepareOriginalText(getManagedBean()
 					.getSmSupplier());
 			byte[] signedData = getManagedBean().getSpkiBackingBean()
@@ -1714,7 +1717,8 @@ public class SPDetailBackingBean extends
 								.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
 
 				} else{
-					if (finProposalChecklist.isSubmitted()){
+					//#34493,#34427 - start
+					/*if (finProposalChecklist.isSubmitted()){
 						if (finProposalChecklist
 								.getScQtProposalChecklistAttachment() == null) {
 							finProposalChecklist.setSubmitted(false);
@@ -1727,7 +1731,15 @@ public class SPDetailBackingBean extends
 					}else{
 						finProposalChecklist
 						.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-					}
+					}*/
+					if (finProposalChecklist.getScQtProposalChecklistAttachment() == null) {
+						finProposalChecklist.setSubmitted(false);
+						finProposalChecklist.setCompliance(null);
+					} else{
+						finProposalChecklist.setSubmitted(true);
+						finProposalChecklist.setCompliance(null);
+					} 
+					//34493,#34427 - end
 				}
 			}
 
@@ -2267,8 +2279,9 @@ public class SPDetailBackingBean extends
 					//end Bug #28887
 
 				} else {
+						//#34493,#34427 - start
 						//start Bug #28887
-						if (null != assetProposalChecklist) {
+						/*if (null != assetProposalChecklist) {
 							if (assetProposalChecklist.isSubmitted()) {
 								if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null 
 										|| (scQtPRPAssetLiability.getCurrentAssets() != null)
@@ -2288,8 +2301,16 @@ public class SPDetailBackingBean extends
 								assetProposalChecklist.setSubmitted(false);
 								assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 							}
-						}
+						}*/
 						//end Bug #28887
+						if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null) {
+							assetProposalChecklist.setSubmitted(false);
+							assetProposalChecklist.setCompliance(null);
+						} else{
+							assetProposalChecklist.setSubmitted(true);
+							assetProposalChecklist.setCompliance(null);
+						} 
+						//#34493,#34427 - end
 				}
 			}
 			
@@ -5947,13 +5968,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			proposalSO = null;
 		}
 	}
-	
-	/* 27368 - start */
-	public boolean enableQtNoHyperlink() {
-		return userHasRole(new RoleCode[] { RoleCode.DESK_OFFICER, RoleCode.BPK_AUDITOR });
-	}
-	/* 27368 - end */
-	
+
 	//#25089@hatta - start
 	public void onTabChange(TabChangeEvent event){
 		if(event.getTab().getId().equals("tab1")){
@@ -6383,25 +6398,36 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	}
 	// #21695 Farid end 27/8/2021
 		
-	// Bug #33947, #21695 start
+	// Bug #33947, #21695 && #35090 start
 	public boolean evaluateZonelistSupp(TplSpecZoneQty specQties) {
-		if (specQties != null) {
-
-			if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
-				for (TplSpecZoneDtl specZones : this.getManagedBean().getZones()) {
-					if (specQties.getTplSpecZoneDtl() != null) {
-						if (specZones.getSpecZoneId().equals(specQties.getTplSpecZoneDtl().getSpecZoneId())) {
-							return true;
+		if (specQties != null &&
+				CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
+			
+				if(this.getManagedBean().getZones().size() == 1){
+					
+					for (TplSpecAnswer specAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+						if (specAns != null && specAns.getTplSpecQuestion().getParentSpecQuestion() != null
+								&& specAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId()
+								.equals(specQties.getTplSpecQuestion().getSpecQuestionId())
+								&& !specAns.isDisableRow() && specAns.getOffer() != null && specAns.getOffer().equals(false)) {
+							specQties.getTplSpecZoneOffer().setOffer(true);
+							specAns.setAnswerText("");
+							specAns.setAnswerNumeric(null);
+							specAns.setAnswerRemark(null);
+							specAns.setAnswerCompliance(null);
 						}
-
 					}
+				}
+				for (TplSpecZoneDtl specZones : this.getManagedBean().getZones()) {
+					if (specQties.getTplSpecZoneDtl() != null && 
+							specZones.getSpecZoneId().equals(specQties.getTplSpecZoneDtl().getSpecZoneId())) {
+							return true;
+					}
+					
 				}
 				specQties.getTplSpecZoneOffer().setOffer(true);
 				specQties.getTplSpecZoneOffer().setNotApplicable(true);
-			}
-
 		}
-
 		return false;
 	}
 	// Bug #33947, #21695 end
@@ -6409,6 +6435,9 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	// Bug #33947, #32952, #21695 -start-
 	public void disableDefaultSelected() {
 		for (TplSpecAnswer retrieveAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+			if(ParameterConst.TPL_SPEC_QUESTION_TYPE_SPECIFICATION.equals(retrieveAns.getTplSpecQuestion().getQuestionType())){
+				continue;
+			}//#35090
 			if (retrieveAns != null && this.getManagedBean().getZones().size() > 0) {
 	
 				retrieveAns.setDisableRow(true);

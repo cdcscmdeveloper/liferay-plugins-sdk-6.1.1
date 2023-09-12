@@ -182,6 +182,9 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	//Enhancement 15851 - shaqimi end
 	private String supplementalLoaNo = null;//Bug 33096 - shaqimi
 	
+	private boolean isFromViewPage = false; // Fix - #34110
+
+	
 	public void reassignValue(boolean value) 
 	{
 		readOnly = value;	
@@ -245,6 +248,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
 					//log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
 				}
+				isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
 
 				if(getTaskId()!= null){
 					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
@@ -335,7 +339,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 					
 					if(isServicecollapse()){
 				
-						resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
+						resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO, isFromViewPage); // Fix - #34110
 					    resDTO.getContractItemResultBean();
 
 					    if(resDTO.getContractItemResultBean().getResultList().size()>0){
@@ -393,6 +397,8 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 				//log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
 			}
 			// End - #29507 Fixing
+			isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
+
 			  if(contractVerId!=null ){					
 					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),contractVerId);
 					searchBean.getDataFilterBeans().add(filterBean);
@@ -474,7 +480,7 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
             	
             	if(isProdcollapse()){
 				
-				resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
+				resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO, isFromViewPage); // Fix - #34110
 				if(resDTO.getContractItemResultBean().getResultList().size()>0) {
 //			    	 readOnly=false;
 			    	 return resDTO.getContractItemResultBean();
