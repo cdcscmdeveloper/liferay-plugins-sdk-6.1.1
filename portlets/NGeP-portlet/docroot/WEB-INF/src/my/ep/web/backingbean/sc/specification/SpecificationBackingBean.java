@@ -19873,7 +19873,7 @@ if(null!=allTechnicalChecklist){
 			sb.append(quantityTierCompareSb.toString());
 			sb.append(zoneQuantityTierCompareSb.toString());
 			sb.append(priceType);
-			sb.append(StringUtils.deleteWhitespace(question.getClItem().toUpperCase()));
+			sb.append(question.getClItem()); // Bug #34926@Syazani 17/07/2023
 			sb.append(question.getClUom().getUomCode());
 			sb.append(uomFrequency.doubleValue());
 			sb.append(uomPerDay.doubleValue());
@@ -19946,7 +19946,7 @@ if(null!=allTechnicalChecklist){
 						String currentQuestionStr = buildQuestionCompareString(question);
 						String localQuestionStr = buildQuestionCompareString(q);					
 						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM) && !changesFlag.get("itemUpdated")){
-							changesFlag.put("itemUpdated", !currentQuestionStr.equalsIgnoreCase(localQuestionStr));
+							changesFlag.put("itemUpdated", !currentQuestionStr.equals(localQuestionStr)); // Bug #34926@Syazani 17/07/2023
 							//1873 - start - note 52
 							boolean isEdited = checklist.isEdited()==null ? false: checklist.isEdited();//1873 note 149
 							if(changesFlag.get("itemUpdated") && !isEdited){//1873 note 149
@@ -19955,7 +19955,7 @@ if(null!=allTechnicalChecklist){
 							//1873 - end - note 52
 						}
 						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC) && !changesFlag.get("specificationUpdated")){
-							changesFlag.put("specificationUpdated", !currentQuestionStr.equalsIgnoreCase(localQuestionStr));
+							changesFlag.put("specificationUpdated", !currentQuestionStr.equals(localQuestionStr)); // Bug #34926@Syazani 17/07/2023
 						}
 					}
 				}
@@ -21930,12 +21930,17 @@ if(null!=allTechnicalChecklist){
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", this.getManagedBean().getQt().getQtNo(),
-					"getMandatorySpecDropdownValues", getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, this.getManagedBean().getQt().getQtNo(),
+					SLALogConstant.QT_GET_MANDATORY_SPEC_DROPDOWN_VALUES, getUserIdSessionFromLoginId(), e);
 		}
 		
 		return selectItems;
 	}
+	/**
+	 * This method is to render mandatory spec.
+	 * @param tplSpecQuestions
+	 * @return boolean
+	 */
 	public boolean renderManSpec(List<TplSpecQuestion> tplSpecQuestions) {
 		boolean render = false;
 
@@ -21952,7 +21957,7 @@ if(null!=allTechnicalChecklist){
 	/**
 	* retrives the specification details to check mandatory specification.
 	* 
-	* @param ScQtCheckList templateChecklist.
+	* @param templateChecklist.
 	* @return 
 	*/
 	public void retriveSampleSpecmasterForMandatorySpecChecking(ScQtCheckList templateChecklist){
@@ -21969,8 +21974,9 @@ if(null!=allTechnicalChecklist){
 			
 			if (null != resDTO && null != resDTO.getSpecQuestionList()) {
 				for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
-					if(question.isMandatorySpec()) 
-						itemQuestion.setMandatorySpecForSample(true);
+						if(question.isMandatorySpec()){
+							itemQuestion.setMandatorySpecForSample(true);
+						}
 				}
 			}
 		}

@@ -251,8 +251,7 @@ public class TemplateSpecBackingBean extends
 							//#25138(wip 4serangkai) bug -Start 8/6/2023
 							this.getManagedBean().setWipStatusMax(wipstatus);
 							//#25138 for demo
-							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
-									&& !templateSpecBean.getQt().isDemoRequired()) {
+							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
 								if (CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {
 							evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 							evalReqDTO.setFinSpecAnswerList(resDTO.getSpecAnswerList());
