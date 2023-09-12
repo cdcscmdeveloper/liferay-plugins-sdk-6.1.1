@@ -549,8 +549,9 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		
 			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("PM", "checkNotifyRemoveSupplierBranchDeleted", null, "checkNotifyRemoveSupplierBranchDeleted",getUserIdSessionFromLoginId(), e);
-			throw new EpException(MessageConst.ERROR_722632);
+			//SLAUtils.getInstance().logSLAError("PM", "checkNotifyRemoveSupplierBranchDeleted", null, "checkNotifyRemoveSupplierBranchDeleted",getUserIdSessionFromLoginId(), e);
+			//throw new EpException(MessageConst.ERROR_722632);
+			e.printStackTrace();
 		} finally {
 			ntfSO = null;
 		}
