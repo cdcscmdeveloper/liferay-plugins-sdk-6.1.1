@@ -250,6 +250,7 @@
 			<portlet id="cdTrackingDiary"></portlet>
 			<portlet id="supplierDashboard"></portlet>
 			<portlet id="publicCatalogueMobile"></portlet>
+			<portlet id="CatalogueMaintenanceTemp"></portlet>
 		</category>
 		
 		<category name="CatalogueMobile">
