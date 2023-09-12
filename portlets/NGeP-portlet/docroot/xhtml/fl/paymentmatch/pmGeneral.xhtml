@@ -165,11 +165,24 @@
 					</p:inputText></td>
 				<td style="width: 137px;"><p:outputLabel
 						value="#{lbl['lbl.fl.payment.match.payment.date']}" /></td>
-				<td><p:inputText size="17" disabled="true"
+				<td>
+				<!-- 29398 start -->
+				<c:choose>
+                <c:when test="#{paymentMatchBackingBean.managedBean.paymentAdvice.cancellationDate != null }">
+                <p:inputText size="17" disabled="true"
+						value="#{lbl['lbl.fl.empty']}">
+					</p:inputText>
+                </c:when>
+                <c:otherwise>
+                <p:inputText size="17" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pm.payment.date']}"/></td>
+					</p:inputText>
+                </c:otherwise>
+                </c:choose>
+				<!-- 29398 end -->
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pm.payment.date']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.payment.desc']}" />
@@ -189,11 +202,49 @@
 					</p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.desc']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.payment.ref']}" /></td>
-				<td><p:inputText size="17" disabled="true"
+				<td>
+				<!-- 29398 start -->
+				<c:choose>
+                <c:when test="#{paymentMatchBackingBean.managedBean.paymentAdvice.cancellationDate != null }">
+                <p:inputText size="17" disabled="true"
+						value="#{lbl['lbl.fl.empty']}">
+					</p:inputText>
+                </c:when>
+                <c:otherwise>
+                <p:inputText size="17" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentRefNo}" >
 						<p:ajax update="@this"/>
-						</p:inputText> <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pm.payment.reference']}"/></td>
+						</p:inputText>
+                </c:otherwise>
+                </c:choose>
+				<!-- 29398 end -->
+			    <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pm.payment.reference']}"/></td>
 			</tr>
+			<!-- 29398 start -->
+			<tr>
+				<td></td>
+				<td></td>
+				<td style="width: 137px;"><p:outputLabel
+						value="#{lbl['lbl.fl.payment.match.cancel.date']}" /></td>
+				<td>
+				<c:choose>
+                <c:when test="#{paymentMatchBackingBean.managedBean.paymentAdvice.cancellationDate == null 
+                and paymentMatchBackingBean.managedBean.paymentAdvice.paymentDate != null}">
+                <p:inputText size="17" disabled="true"
+						value="#{lbl['lbl.fl.empty']}">
+					</p:inputText>
+                </c:when>
+                <c:otherwise>
+                <p:inputText size="17" disabled="true"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.cancellationDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText>
+                </c:otherwise>
+                </c:choose>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pm.cancel.date']}"/></td>
+			</tr>
+			<!-- 29398 end -->
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.supp.details']}" toggleable="true">

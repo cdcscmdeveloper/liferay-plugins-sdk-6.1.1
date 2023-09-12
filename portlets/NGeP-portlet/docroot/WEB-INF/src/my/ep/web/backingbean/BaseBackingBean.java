@@ -57,11 +57,12 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;//#31849 #32682
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -79,10 +80,11 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;//#31849 #32682
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
@@ -120,7 +122,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
-import my.ep.persistence.logging.LogKey;
+import my.ep.persistence.logging.LogKey;//#31849 #32682
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -3664,7 +3666,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	// #29466 - END
 	
-	//#31849, #34090, #32682 start 
+	//#31849, #34090, #32682 start
   	/**
 	 * Method to return current session userId from user screenName(loginId)
 	 * @return userId
@@ -3687,4 +3689,26 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		new LogKey(userIdSession);
 		return userIdSession;
 	}
+  	//#31849, #34090, #32682 end
+	
+	//29021 - start 34865,34866,34867 - 29021 WIP
+	/**
+	 * Evaluate if QT is a wip document. ScoreSetting less than 7 indicate wip document.
+	 *
+	 * @param scQt
+	 * @return wip flag 
+	 */
+	public boolean evaluateWIP(ScQt scQt){
+		Integer maxScoreSetting = this.getManagedBean().getWipStatusMax();
+		if(maxScoreSetting == null){
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			maxScoreSetting = evaluationSO.checkWipScoreSettingMax(reqDTO);
+			this.getManagedBean().setWipStatusMax(maxScoreSetting);
+		}
+		return maxScoreSetting < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM;
+	}
+	//29012 - end 34865,34866,34867 - 29021 WIP
 }

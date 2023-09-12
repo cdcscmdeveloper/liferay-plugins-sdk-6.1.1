@@ -154,6 +154,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private String inactiveSCMemberStr; //25037 - note 510
 	//#25037-end
 	
+	private Integer wipStatusMax;//34865,34866,34867 - 29021 WIP
+
 	//27346-start 
 	// 27346
 	private StreamedContent downloadfile;
@@ -1062,5 +1064,13 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setDownloadfile(StreamedContent downloadfile) {
 		this.downloadfile = downloadfile;
+	}
+
+	public Integer getWipStatusMax() {
+		return wipStatusMax;
+	}
+
+	public void setWipStatusMax(Integer wipStatusMax) {
+		this.wipStatusMax = wipStatusMax;
 	}	
 }
