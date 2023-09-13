@@ -309,7 +309,11 @@ u.underline {
 									<td align="center" style="vertical-align: top;">*(a)</td>
 									##25025 - start
 									<td style="text-align:justify;">suatu bon pelaksanaan yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia</td>
-									<span class="text_family_red"><span class="underlineRed">$bondAmtText</span> (RM <span class="underlineRed">$bondAmt)</span></span><br/>
+									#if ($bondReq)
+									<span class="text_family_red"><span class="underlineRed">$bondAmtText</span> (RM <span class="underlineRed">$bondAmt</span>);</span><br/>
+									#else
+									<span class="text_family_red">______________ (RM______________);</span><br/>
+									#end
 									##25025 - end
 									<span class="text_family_small">Bon Pelaksanaan hanya dikenakan kepada perolehan yang bernilai RM200,000 dan ke atas sahaja.</span>
 									</td>
@@ -711,7 +715,7 @@ u.underline {
 					<td valign="top" align="left" class="submenu_padding"><span
 						class="text_family">2.3 Kod Bidang </span></td>
 					<td valign="top" class="text_family">:</td>
-					<td valign="top" class="text_family"width="50%">$!kodBidang</td>
+					<td valign="top" class="text_family" width="50%">$!kodBidang</td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
@@ -771,7 +775,7 @@ u.underline {
 					</td>
 					<td class="text_family" valign="top">:</td>
 					<td class="text_family" valign="top">RM $offerPrice <br/>
-					<span class="text_family_medium_black"> Lampiran A1 adalah merupakan borang dalam dokumen sebut harga/tender dengan harga yang ditandatangani oleh syarikat </span>
+					<span class="text_family_medium_black"> Lampiran A1 adalah merupakan borang dalam dokumen $docType.toLowerCase() dengan harga yang ditandatangani oleh syarikat </span>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding">
@@ -1000,7 +1004,7 @@ u.underline {
 					<td class="text_family_red">
 					    <table border="0" cellpadding="0" cellspacing="0" width="100%">
 					      <tr style="margin-bottom:1px;" align="bottom"> 
-						       		<td align="bottom" class="dottedBorderRed"><span class="text_family_medium" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara upfront kepada syarikat dalam dokumen pelawaan</span></td>
+						       		<td align="bottom" class="dottedBorderRed"><span class="text_family_medium" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan.</span></td>
 					      </tr>
 					    </table>
 					</td>
@@ -1920,7 +1924,7 @@ u.underline {
 				<td align="right"> <span class="text_family"> <b><i>Lampiran A3</i></b></span></td>
 		  </tr>
 			<tr>
-				<td><span class="text_header_submenu"><u style="text-decoration:underline;">*Spesifikasi/Skop
+				<td><span class="text_header_submenu"><u style="text-decoration:underline;">*Skop
 						Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</u></span> <br />
 					<br /></td>
 			</tr>
