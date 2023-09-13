@@ -324,8 +324,6 @@ public interface QTConstants {
 	
 	//#10542 Start Dayan
 	public static final String COMPLIANCE_DOCUMENT_SUPPLIER_NO = "Supplier ";
-	public static final String DOWNLOADBY_SUPPLIER = "Supplier";
-	public static final String DOWNLOADBY_DOCUMENT = "Document";
 	public static final String FINANCIAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE = "NGEP-Financial-BySupplier";
 	public static final String FINANCIAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE = "NGEP-Financial-ByTitleDocument";
 	public static final String TECHNICAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE = "NGEP-Technical-BySupplier";
