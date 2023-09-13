@@ -868,8 +868,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						getManagedBean().setItemProductExist(true);
 						//Collections.sort(item.getCtItemPrices(), new CtItemPrice());
 						//Start Fix - #33256
-						//sortItemPrice(item.getCtItemPrices());
-						//sortItemMaxQty(item.getCtItemMaxQties());
+						//sortItemPrice(item.getCtItemPrices()); //#34950
+						//sortItemMaxQty(item.getCtItemMaxQties());  //#34950
 						//End Fix - #33256
 				
 						//Bug #29323
@@ -4717,6 +4717,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return populateBankAccountList;
 	}
 	//End Fix - #33674 
+	
 	/**
 	 * The method used for generating a list of available display type
 	 * of product or service item as selection.
