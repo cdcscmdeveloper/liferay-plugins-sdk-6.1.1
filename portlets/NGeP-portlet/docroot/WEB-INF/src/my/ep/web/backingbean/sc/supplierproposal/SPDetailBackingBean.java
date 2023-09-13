@@ -1397,7 +1397,14 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					}
 				}
 			
-				if(count!=0) scQtProposalChecklist.setSubmitted(false);//#3657 Added Vinod
+				//#3657 Start Vinod
+				if(count!=0 
+					&& null!=this.getManagedBean().getQt()
+					&& null!=this.getManagedBean().getQt().getProcurementMode()
+					&& ParameterConst.PROCUREMENT_MODE_QUOTATION.equalsIgnoreCase(this.getManagedBean().getQt().getProcurementMode().getParameterCode())){
+					scQtProposalChecklist.setSubmitted(false);
+				}
+				//#3657 End Vinod
 
 				if (isThrow && errorLst != null && errorLst.size() > 0) {
 					if (getManagedBean().getQt().isZonal()) {
