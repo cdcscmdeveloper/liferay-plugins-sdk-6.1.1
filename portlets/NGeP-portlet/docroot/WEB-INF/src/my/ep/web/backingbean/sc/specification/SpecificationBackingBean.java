@@ -232,6 +232,7 @@ import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.EpPortletUtil;
@@ -22715,12 +22716,17 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", this.getManagedBean().getQt().getQtNo(),
-					"getMandatorySpecDropdownValues", getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, this.getManagedBean().getQt().getQtNo(),
+					SLALogConstant.QT_GET_MANDATORY_SPEC_DROPDOWN_VALUES, getUserIdSessionFromLoginId(), e);
 		}
 		
 		return selectItems;
 	}
+	/**
+	 * This method is to render mandatory spec.
+	 * @param tplSpecQuestions
+	 * @return boolean
+	 */
 	public boolean renderManSpec(List<TplSpecQuestion> tplSpecQuestions) {
 		boolean render = false;
 
@@ -22737,7 +22743,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	/**
 	* retrives the specification details to check mandatory specification.
 	* 
-	* @param ScQtCheckList templateChecklist.
+	* @param templateChecklist.
 	* @return 
 	*/
 	public void retriveSampleSpecmasterForMandatorySpecChecking(ScQtCheckList templateChecklist){
@@ -22754,8 +22760,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			
 			if (null != resDTO && null != resDTO.getSpecQuestionList()) {
 				for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
-						if(question.isMandatorySpec()) 
+						if(question.isMandatorySpec()){
 							itemQuestion.setMandatorySpecForSample(true);
+						}
 				}
 			}
 		}

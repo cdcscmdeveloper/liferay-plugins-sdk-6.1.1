@@ -322,7 +322,11 @@ u.underline {
 								<tr class="text_family_red">
 									<td align="center" style="vertical-align: top;">*(a)</td>
 									<td style="text-align:justify;">suatu bon pelaksanaan yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia</td>
+									#if ($bondReq)
 									<span class="text_family_red"><span class="underlineRed">$bondAmtText</span> (RM <span class="underlineRed">$bondAmt</span>);</span><br/>
+									#else
+									<span class="text_family_red">______________ (RM______________);</span><br/>
+									#end
 									<span class="text_family_small">Bon Pelaksanaan hanya dikenakan kepada perolehan yang bernilai RM200,000 dan ke atas sahaja.</span>
 									
 								</tr>
@@ -449,7 +453,7 @@ u.underline {
 						</p>
 						## #25025 & #26770 -end
 						<p>
-							<span class="text_family_small">*(Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program PROT&Eacute;G&Eacute;-RTW berdasarkan PP/PK1.12. Bagi Harga Kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
+							<span class="text_family_small">(Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program PROT&Eacute;G&Eacute;-RTW berdasarkan PP/PK1.12. Bagi Harga Kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
 						</p>
 					#end		
 					<p>
@@ -476,7 +480,7 @@ u.underline {
 						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah mengemukakan kepada Kerajaan, suatu Bon Pelaksanaan yang tidak boleh dibatalkan dalam bentuk Jaminan Bank bagi pelaksanaan ICP yang bersamaan dengan lima peratus (5%) daripada Nilai Kontrak Perolehan Utama dalam tempoh empat belas (14) hari dari tarikh Perjanjian ICP Utama ditandatangani. Tempoh sah laku Bon Pelaksanaan tersebut hendaklah bermula dari tarikh ianya dikeluarkan sehingga dua belas (12) bulan selepas pelaksanaan penuh Program ICP</span>								
 					</p>
 					<span class="text_family_red">dan penyempumaan sepenuhnya jumlah Nilai Kredit ICP Mandatori.</span>
-					<br/><span class="text_family_small">*(Perenggan 9 hingga perenggan 12  terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program ICP berdasarkan PP/PK1.7. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>	
+					<br/><span class="text_family_small">(Perenggan #if ($isSL1M == "true")9 #else 8 #end hingga perenggan #if ($isSL1M == "true")12 #else 11 #end  terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program ICP berdasarkan PP/PK1.7. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
 								
 					<p>
 					#set($numberCount = $numberCount+1)		
@@ -790,7 +794,7 @@ u.underline {
 					</td>
 					<td class="text_family" valign="top">:</td>
 					<td class="text_family" valign="top">RM $offerPrice <br/>
-					<span class="text_family_medium_black"> Lampiran A1 adalah merupakan borang dalam dokumen sebut harga/tender dengan harga yang ditandatangani oleh syarikat </span>
+					<span class="text_family_medium_black"> Lampiran A1 adalah merupakan borang dalam dokumen $docType.toLowerCase() dengan harga yang ditandatangani oleh syarikat </span>
 					</td>
 				</tr>
 				<tr>
@@ -1025,7 +1029,7 @@ u.underline {
 					<td class="text_family_red">
 					    <table>
 					      <tr style="margin-bottom:1px;" align="bottom"> 
-					       		<td align="bottom" class="dottedBorderRed"><span class="text_family_small" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara #if ($isSL1M == "true")<i>upfront</i>#{else}upfront#end kepada syarikat dalam dokumen pelawaan.</span></td>	
+					       		<td align="bottom" class="dottedBorderRed"><span class="text_family_small" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan.</span></td>	
 					      </tr>
 					    </table>
 					</td>
