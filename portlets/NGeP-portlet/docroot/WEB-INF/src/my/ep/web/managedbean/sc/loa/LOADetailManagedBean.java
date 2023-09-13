@@ -341,6 +341,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private List<TplSpecAnswer> tplSpecAnswerList;
 	private List<ScLoiLoaItem> loiLoaItemsResult; // fix issue 2 search action note 347
 	private int retainPageNumber = 0; // #34242
+	private boolean resetAll = false;
 	/* #29007 End Vinod */
 	
 	//#27797 - start
@@ -1965,6 +1966,14 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	public void setUploadA3Templet(boolean uploadA3Templet) {
 		this.uploadA3Templet = uploadA3Templet;
+	}
+	
+	public boolean isResetAll() {
+		return resetAll;
+	}
+
+	public void setResetAll(boolean resetAll) {
+		this.resetAll = resetAll;
 	}
 	/* #29007 End Vinod */
 	
