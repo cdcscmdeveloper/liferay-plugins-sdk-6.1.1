@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -133,6 +134,7 @@ import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.util.pm.OrgProfileUtil;
 //import my.ep.util.shared.PerformanceBondUtil; // Fix - #33491
@@ -157,6 +159,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.log4j.Logger;
@@ -2273,9 +2276,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		//#13847 start
 		else if(event.getComponent().getId().equalsIgnoreCase("uploadWaiver")){
-			if(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtContractVer()==null){
-				getManagedBean().getContractVer().getBondWaiverDefermentLatest().setCtContractVer(getManagedBean().getContractVer());
-			}
 			attachment.setDocType(getManagedBean().getContractVer().getDocType());
 			attachment.setDocId(getManagedBean().getContractVer().getContractVerId());
 			attachment.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
@@ -2286,7 +2286,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		else if(event.getComponent().getId().equalsIgnoreCase("uploadHistoryWaiver")){
 			attachment.setDocType(getManagedBean().getContractVer().getDocType());
 			attachment.setDocId(getManagedBean().getContractVer().getContractVerId());
-			attachment.setModified(true);
 			attachment.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
 			attachment.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
 			
@@ -2399,7 +2398,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @throws EpException
 	 */
 	public void saveBondWaiverToTable() throws EpException {
-		FacesScopes facesScopes = new FacesScopes();
 		long noOfDays = 0;
 		if(getManagedBean().getContractVer().getBondWaiverDefermentHistory()==null
 				|| CollectionUtils.isEmpty(getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
@@ -2408,28 +2406,29 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		//add to tracking list first
 		//reverse list to insert new data at first row
-		Collections.reverse(getManagedBean().getContractVer().getBondWaiverDefermentHistory());
-		
-		getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment().setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
-		getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment().setCreatedUser(facesScopes.getUserSessionBean());
-		getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment().setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		getManagedBean().getContractVer().getBondWaiverDefermentLatest().setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
-		getManagedBean().getContractVer().getBondWaiverDefermentLatest().setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		
-		
+		Collections.reverse(getManagedBean().getContractVer().getBondWaiverDefermentHistory());		
 		getManagedBean().getContractVer().getBondWaiverDefermentHistory().add(SerializationUtils.clone(getManagedBean().getContractVer().getBondWaiverDefermentLatest()));
 		
 		//gets the last list for editing
 		CtBondWaiverDetail bondWaiver =  getManagedBean().getContractVer().getBondWaiverDefermentHistory().get(getManagedBean().getContractVer().getBondWaiverDefermentHistory().size() - 1);
-		bondWaiver.setBrandNew(true);
-		bondWaiver.setRecordStatus(false);
 		bondWaiver.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
-		bondWaiver.getCtAttachment().setBrandNew(true);
-		bondWaiver.getCtAttachment().setRecordStatus(false);
 		bondWaiver.getCtAttachment().setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
 		bondWaiver.getCtAttachment().setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
 		
 		Collections.reverse(getManagedBean().getContractVer().getBondWaiverDefermentHistory());
+		
+		//renewing latest deferment after clone to make sure id is not dupicate in database
+		if(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getBondWaiverDetailId()!=null){
+			CtBondWaiverDetail bondWaiverLatest = new CtBondWaiverDetail();
+			bondWaiverLatest.setWaiverStartDate(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate());
+			bondWaiverLatest.setWaiverEndDate(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate());
+			bondWaiverLatest.setReferenceNo(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getReferenceNo().trim());
+			bondWaiverLatest.setCtAttachment(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment());
+			bondWaiverLatest.getCtAttachment().setAttachmentId(null);
+			bondWaiverLatest.getCtAttachment().setBrandNew(true);
+			
+			getManagedBean().getContractVer().setBondWaiverDefermentLatest(bondWaiverLatest);
+		}
 		
 		for(CtBondWaiverDetail bondWaiverHistory : getManagedBean().getContractVer().getBondWaiverDefermentHistory()){
 			noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(), bondWaiverHistory.getWaiverEndDate());
@@ -2452,7 +2451,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public long findDifference(Date start_date, Date end_date){
 		long difference_In_Days = TimeUnit.DAYS.convert((end_date.getTime() - start_date.getTime()), TimeUnit.MILLISECONDS);
-		log.info("Difference between two dates is: " + difference_In_Days); 
 		return difference_In_Days;
 	}
 		
@@ -2463,9 +2461,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @throws EpException
 	 */
 	public void checkPerformanceBondExceedDate() throws EpException {
-		if(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtContractVer()==null){
-			getManagedBean().getContractVer().getBondWaiverDefermentLatest().setCtContractVer(getManagedBean().getContractVer());
-		}
 		if(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate()!=null && getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate()!=null){
 			if(findDifference(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate(),
 					getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate()) > 60){
@@ -2698,9 +2693,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setDisableDeferment(false);
 			if(getManagedBean().getContractVer().getBondWaiverDefermentLatest()==null){
 				getManagedBean().getContractVer().setBondWaiverDefermentLatest(new CtBondWaiverDetail());
-				if(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtContractVer()==null){
-					getManagedBean().getContractVer().getBondWaiverDefermentLatest().setCtContractVer(getManagedBean().getContractVer());
-				}
 			}
 			
 			if (!getManagedBean().getCtContractAmount().isBondWaived()) {
@@ -2766,8 +2758,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 			
-			if(getManagedBean().getContractVer().getBondWaiverDefermentHistory()!=null
-					&& !CollectionUtils.isEmpty(getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
+			if(CollectionUtils.isNotEmpty(getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
 				for (CtBondWaiverDetail bondWaiverHistory : getManagedBean().getContractVer().getBondWaiverDefermentHistory()) {
 					noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(), bondWaiverHistory.getWaiverEndDate());
 				}
@@ -2793,7 +2784,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		List<CtAttachment> attach= contractSO.retrieveAttachmentBySectionId(reqDTO).getCtAttachments();
 		if(attach != null && attach.size() > 0){
 			for(CtAttachment waivedAttach : attach){
-				if(waivedAttach.getFilePath().equalsIgnoreCase(attachments.getFilePath())){
+				if(waivedAttach.getFilePath().equalsIgnoreCase(attachments.getFilePath())
+						&& waivedAttach.getFileName().trim().equalsIgnoreCase(attachments.getFileName().trim())){
 					return true;
 				}
 			}
@@ -3393,12 +3385,89 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 	}
 	
-	
+	//#34961 start
 	/**
 	 * The method used to indicate the label flag for new price of contract item.  
 	 */
+	@SuppressWarnings("unchecked")
 	private void itemPriceZoneLabelList(CtContractItem ctContractItem) {
-		if (!ctContractItem.getCtItemPrices().isEmpty()) {
+		
+		try{
+			//set zoneName, fromQty and toQty into hashmap
+			Map<String, Map<BigDecimal, BigDecimal>> itemPriceZone = new HashMap<>();
+			
+			if (!ctContractItem.getCtItemPrices().isEmpty()) {
+				for(final CtItemPrice itemPrice : ctContractItem.getCtItemPrices()){
+
+					Map<BigDecimal, BigDecimal> fromToQuantity = new HashMap<>();
+					Predicate conditionPredicate = null;
+					List<CtItemPrice> itemPriceSelect = null;
+					
+					//Checking whether the zone has been selected
+					if(!itemPriceZone.containsKey(itemPrice.getCtContractZone().getZoneName())){
+						if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
+								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
+								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+							
+							//checking whether zone and quantity same
+							if(itemPriceZone.get(itemPrice.getCtContractZone().getZoneName())!=null)
+							fromToQuantity = itemPriceZone.get(itemPrice.getCtContractZone().getZoneName());
+							
+							if(!fromToQuantity.containsKey(itemPrice.getFromQty()) &&
+									!fromToQuantity.containsValue(itemPrice.getToQty())){
+								
+								//selecting the same zone and quantity
+								conditionPredicate = new Predicate() {
+									@Override
+									   public boolean evaluate(final Object object) {
+										CtItemPrice itemPricePredicate = (CtItemPrice) object;
+										   return itemPricePredicate.getFromQty().equals(itemPrice.getFromQty()) &&
+												   itemPricePredicate.getToQty().equals(itemPrice.getToQty()) &&
+												   itemPricePredicate.getCtContractZone().getZoneName() != null &&
+												   itemPricePredicate.getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice.getCtContractZone().getZoneName());
+									   }
+								};
+							}
+							fromToQuantity.put(itemPrice.getFromQty(), itemPrice.getFromQty());
+							
+						}else{
+							//selecting the same zone
+							conditionPredicate = new Predicate() {
+								@Override
+								public boolean evaluate(final Object object) {
+									CtItemPrice itemPricePredicate = (CtItemPrice) object;
+									return  itemPricePredicate.getCtContractZone().getZoneName() != null &&
+											itemPricePredicate.getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice.getCtContractZone().getZoneName());
+								}
+							};
+
+							fromToQuantity.put(null, null);
+						}
+						itemPriceSelect = (List<CtItemPrice>) CollectionUtils.select(ctContractItem.getCtItemPrices(), conditionPredicate);
+						itemPriceZone.put(itemPrice.getCtContractZone().getZoneName(), fromToQuantity);
+					}
+					
+					//sorting the selection by date to get max date and set change label (only record more than 1) 
+					if(CollectionUtils.isNotEmpty(itemPriceSelect) && itemPriceSelect.size()>1){
+						Comparator<CtItemPrice> cip = new Comparator<CtItemPrice>() {
+						    @Override
+						    public int compare(CtItemPrice cip1, CtItemPrice cip2) {
+						    	return cip1.getExpDate().compareTo(cip2.getExpDate());
+						    }
+						};
+						Collections.max(itemPriceSelect, cip);
+						CtItemPrice priceOfItem = itemPriceSelect.get(itemPriceSelect.size()-1);
+						priceOfItem.setChangeZoneLabel(true);
+					}
+				}
+			}
+		}catch (Exception e) {
+			log.info(e.getCause());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+		
+		/*if (!ctContractItem.getCtItemPrices().isEmpty()) {
 			for (int temp = 0;temp<ctContractItem.getCtItemPrices().size(); temp++) {
 				Date date = ctContractItem.getCtItemPrices().get(temp).getEffDate();
 				int counter =0;
@@ -3441,8 +3510,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					ctContractItem.getCtItemPrices().add(index-1, priceOfItem);
 				}
 			}
-		}
+		}*/
 	}
+	//#34961 end
 
 	/**
 	 * The method used to indicate the label flag for new max qty of contract item.
@@ -4766,7 +4836,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			loaDetailBackingBean.downloadFile(scAttachment);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//Sonarqube #G29 - start
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "downloadScAttachmentFile", scAttachment.getDocNo(), "scAttachment", getUserIdSessionFromLoginId(), e);
+			//Sonarqube #G29 - end
 		}
 	}
 	

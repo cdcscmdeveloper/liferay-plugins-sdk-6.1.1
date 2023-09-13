@@ -321,11 +321,11 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	
 	//#25725 start
 	private boolean disabledButton = true;
-	public BigDecimal limit = new BigDecimal(500000);
-	public boolean above500K = true;
-	public boolean AgreementReqChange = false;
-	public String docStatus;
-	public String procurementType;
+	private BigDecimal limit = new BigDecimal(500000); //#Sqube Vulnerability Minor G47 start
+	private boolean above500K = true;
+	private boolean AgreementReqChange = false;
+	private String docStatus;
+	private String procurementType; //#Sqube Vulnerability Minor G47 end
 	private boolean showApprovalLetter = false;//# note 146
 	//#25725 end
 	
@@ -345,12 +345,13 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private ScLoiLoaItem scLoiLoaItem;
 	private List<TplSpecAnswer> tplSpecAnswerList;
 	private List<ScLoiLoaItem> loiLoaItemsResult;//29007 - fix issue 2 search action note 347
+	private boolean resetAll = false;
 	/*#29007 End Vinod*/
 	
 	//#27797 - start
 	private ScLoiLoaItem highestZoneScLoiLoaItem;
 	private List<ScLoiLoaItem> highestZoneScLoiLoaItemList;
-	public BigDecimal highestZonePrice = new BigDecimal(0);
+	private BigDecimal highestZonePrice = new BigDecimal(0);
 	private List<ScLoiLoaItem> nameZoneScLoiLoaItemList;
 	private List<ScLoiLoaItem> subTotalZoneScLoiLoaItemList;
 	private List<ScLoiLoaItem> dtlScLoiLoaItemList;
@@ -358,7 +359,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private Map<Long, BigDecimal> reqItemMaxSubTotalMap;
 	private Long reqItemSession = 0L;
 	private Long reqItemSubTotalSession = 0L;
-	public BigDecimal totalZonePrice = new BigDecimal(0);
+	private BigDecimal totalZonePrice = new BigDecimal(0);
 	//#27797 - end
 	
 	//#32280 - start
@@ -368,6 +369,8 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	//Bug #33674@Syazani - Start
 	private Long supplierBankId = null;
 	//Bug #33674@Syazani - End
+	
+	private String firstZone;//Bug #34757
 	
 	private int retainPageNumber = 0;//#34242
 	
@@ -1931,6 +1934,13 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setUploadA3Templet(boolean uploadA3Templet) {
 		this.uploadA3Templet = uploadA3Templet;
 	}
+	public boolean isResetAll() {
+		return resetAll;
+	}
+
+	public void setResetAll(boolean resetAll) {
+		this.resetAll = resetAll;
+	}
 	/*#29007 End Vinod*/
 
 	//#25725 start
@@ -2135,6 +2145,15 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.showApprovalLetter = showApprovalLetter;
 	}
 	// #25725 - note 146 - end
+
+	public String getFirstZone() {
+		return firstZone;
+	}
+
+	public void setFirstZone(String firstZone) {
+		this.firstZone = firstZone;
+	}
+
 }
 
 
