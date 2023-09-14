@@ -3393,46 +3393,41 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private void itemPriceZoneLabelList(CtContractItem ctContractItem) {
 		
 		try{
-			//set zoneName, fromQty and toQty into hashmap
-			Map<String, Map<BigDecimal, BigDecimal>> itemPriceZone = new HashMap<>();
+			//set zoneName, fromQty, toQty and unitPrice into hashmap
+			Map<String, BigDecimal> itemPriceZone = new HashMap<>();
 			
 			if (!ctContractItem.getCtItemPrices().isEmpty()) {
 				for(final CtItemPrice itemPrice : ctContractItem.getCtItemPrices()){
-
-					Map<BigDecimal, BigDecimal> fromToQuantity = new HashMap<>();
+					
 					Predicate conditionPredicate = null;
 					List<CtItemPrice> itemPriceSelect = null;
+					String zoneQty = itemPrice.getCtContractZone().getZoneName().trim() + itemPrice.getFromQty().toString() +
+							itemPrice.getFromQty().toString();
 					
-					//Checking whether the zone has been selected
-					if(!itemPriceZone.containsKey(itemPrice.getCtContractZone().getZoneName())){
-						if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
-								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
-								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+					if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
+							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
+							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+											
+						//checking whether zone and quantity has been select
+						if(!itemPriceZone.containsKey(zoneQty)){
 							
-							//checking whether zone and quantity same
-							if(itemPriceZone.get(itemPrice.getCtContractZone().getZoneName())!=null)
-							fromToQuantity = itemPriceZone.get(itemPrice.getCtContractZone().getZoneName());
-							
-							if(!fromToQuantity.containsKey(itemPrice.getFromQty()) &&
-									!fromToQuantity.containsValue(itemPrice.getToQty())){
-								
-								//selecting the same zone and quantity
-								conditionPredicate = new Predicate() {
-									@Override
-									   public boolean evaluate(final Object object) {
-										CtItemPrice itemPricePredicate = (CtItemPrice) object;
-										   return itemPricePredicate.getFromQty().equals(itemPrice.getFromQty()) &&
-												   itemPricePredicate.getToQty().equals(itemPrice.getToQty()) &&
-												   itemPricePredicate.getCtContractZone().getZoneName() != null &&
-												   itemPricePredicate.getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice.getCtContractZone().getZoneName());
-									   }
-								};
-							}
-							fromToQuantity.put(itemPrice.getFromQty(), itemPrice.getFromQty());
-							
-						}else{
-							//selecting the same zone
+							//selecting the same zone and quantity
+							conditionPredicate = new Predicate() {
+								@Override
+								   public boolean evaluate(final Object object) {
+									CtItemPrice itemPricePredicate = (CtItemPrice) object;
+									   return itemPricePredicate.getFromQty().equals(itemPrice.getFromQty()) &&
+											   itemPricePredicate.getToQty().equals(itemPrice.getToQty()) &&
+											   itemPricePredicate.getCtContractZone().getZoneName() != null &&
+											   itemPricePredicate.getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice.getCtContractZone().getZoneName());
+								   }
+							};
+							itemPriceZone.put(zoneQty, itemPrice.getUnitPrice());
+						}
+					}else{
+						//checking whether zone has been select
+						if(!itemPriceZone.containsKey(itemPrice.getCtContractZone().getZoneName())){
 							conditionPredicate = new Predicate() {
 								@Override
 								public boolean evaluate(final Object object) {
@@ -3441,13 +3436,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 											itemPricePredicate.getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice.getCtContractZone().getZoneName());
 								}
 							};
-
-							fromToQuantity.put(null, null);
+							
+							itemPriceZone.put(itemPrice.getCtContractZone().getZoneName(), itemPrice.getUnitPrice());
 						}
-						itemPriceSelect = (List<CtItemPrice>) CollectionUtils.select(ctContractItem.getCtItemPrices(), conditionPredicate);
-						itemPriceZone.put(itemPrice.getCtContractZone().getZoneName(), fromToQuantity);
 					}
 					
+					if(conditionPredicate!=null){
+						itemPriceSelect = (List<CtItemPrice>) CollectionUtils.select(ctContractItem.getCtItemPrices(), conditionPredicate);
+					}
+				
 					//sorting the selection by date to get max date and set change label (only record more than 1) 
 					if(CollectionUtils.isNotEmpty(itemPriceSelect) && itemPriceSelect.size()>1){
 						Comparator<CtItemPrice> cip = new Comparator<CtItemPrice>() {
@@ -3456,61 +3453,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						    	return cip1.getExpDate().compareTo(cip2.getExpDate());
 						    }
 						};
-						Collections.max(itemPriceSelect, cip);
+						Collections.sort(itemPriceSelect, cip);
 						CtItemPrice priceOfItem = itemPriceSelect.get(itemPriceSelect.size()-1);
 						priceOfItem.setChangeZoneLabel(true);
 					}
 				}
 			}
 		}catch (Exception e) {
-			log.info(e.getCause());
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
-		
-		/*if (!ctContractItem.getCtItemPrices().isEmpty()) {
-			for (int temp = 0;temp<ctContractItem.getCtItemPrices().size(); temp++) {
-				Date date = ctContractItem.getCtItemPrices().get(temp).getEffDate();
-				int counter =0;
-				int index=0;
-				int countRow =0;
-				for (CtItemPrice itemPrice1 : ctContractItem.getCtItemPrices()) {
-					if(itemPrice1.getCtContractZone() != null){
-						countRow++;
-						if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
-								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
-								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
-							if (ctContractItem.getCtItemPrices().get(temp).getFromQty().equals(itemPrice1.getFromQty()) 
-									&& ctContractItem.getCtItemPrices().get(temp).getToQty().equals( itemPrice1.getToQty()) 
-									&& ctContractItem.getCtItemPrices().get(temp).getCtContractZone().getZoneName() != null
-									&& ctContractItem.getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
-								counter++;
-								if (counter >= 2) {
-									if (date.before(itemPrice1.getEffDate())) {
-										index = countRow;
-										date = itemPrice1.getEffDate();
-									}	
-								}
-							}
-						} else if (ctContractItem.getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
-							counter++;
-							if (counter >= 2) {
-								if (date.before(itemPrice1.getEffDate())) {
-									index = countRow;
-									date = itemPrice1.getEffDate();
-								}
-							}
-						}
-					}
-				}
-				if (index > 0) {
-					CtItemPrice priceOfItem = ctContractItem.getCtItemPrices().get(index-1);
-					priceOfItem.setChangeZoneLabel(true);
-					ctContractItem.getCtItemPrices().remove(index-1);
-					ctContractItem.getCtItemPrices().add(index-1, priceOfItem);
-				}
-			}
-		}*/
 	}
 	//#34961 end
 
