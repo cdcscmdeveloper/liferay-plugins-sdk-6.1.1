@@ -428,39 +428,30 @@ public class SmFieldChangeUtil {
 				currBody.setChangedFieldStatus("N");
 			}
 		} else {
-			for (SmAssociationBody currBody : currPersonnel
-					.getSmAssociationBodies()) {
-				if (isCurrExistInLatest(currBody,
-						latestPersonnel.getSmAssociationBodies(),
-						new String[] { "regNo" }, null)) {
+			//#35086 - start
+			for (SmAssociationBody currBody : currPersonnel.getSmAssociationBodies()) {
+				SmAssociationBody latestBody = (SmAssociationBody) EntityHelper
+						.getEntityByMultiplePropertiesFromList(currBody,
+								latestAppl.getSmAssociationBodies(),
+								new String[] { "regNo" }, null, null);
+				if (latestBody != null
+						&& latestBody.getAssociationBodyId() != null) {
+					if (SmCommonUtil.isHasDifferences(latestBody, currBody,
+							new String[] { "associationBodyId",
+									"smPersonnel", "pmCertBody" })) {
+						if (StringUtils.isBlank(currPersonnel
+								.getChangedFieldStatus())) {
+							currPersonnel.setChangedFieldStatus("U");
+						}
+						currBody.setChangedFieldStatus("U");
+					}
+				} else {
 					if (StringUtils.isBlank(currPersonnel
 							.getChangedFieldStatus())) {
 						currPersonnel.setChangedFieldStatus("U");
 					}
 					currBody.setChangedFieldStatus("N");
-				} else {
-					SmAssociationBody latestBody = (SmAssociationBody) EntityHelper
-							.getEntityByMultiplePropertiesFromList(currBody,
-									latestAppl.getSmAssociationBodies(),
-									new String[] { "regNo" }, null, null);
-					if (latestBody != null
-							&& latestBody.getAssociationBodyId() != null) {
-						if (SmCommonUtil.isHasDifferences(latestBody, currBody,
-								new String[] { "associationBodyId",
-										"smPersonnel", "pmCertBody" })) {
-							if (StringUtils.isBlank(currPersonnel
-									.getChangedFieldStatus())) {
-								currPersonnel.setChangedFieldStatus("U");
-							}
-							currBody.setChangedFieldStatus("U");
-						}
-					} else {
-						if (StringUtils.isBlank(currPersonnel
-								.getChangedFieldStatus())) {
-							currPersonnel.setChangedFieldStatus("U");
-						}
-						currBody.setChangedFieldStatus("N");
-					}
+					//#35086 - end
 				}
 			}
 		}
@@ -1384,16 +1375,8 @@ public class SmFieldChangeUtil {
 			return;
 		}
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO().retrievePreviousSmAppl(
-				bean.getSmSupplier().getSupplierId(), appl.getApplId()).getSmAppl();
-		if (appl.getOriginalAppl() != null){
-			reqDTO.setSmAppl(appl);
-			SmAppl temp = SmServiceLookup.getMofRegistrationSO()
-					.retrieveLatestRejectedApplication(reqDTO).getSmAppl();
-			if(temp != null && srcAppl != null && temp.getChangedDate().after(srcAppl.getChangedDate())){
-				srcAppl = temp;
-			}
-		}
+		SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO()
+				.retrievePreviousSmAppl(appl).getSmAppl();
 		if(srcAppl != null){
 			reqDTO.setApplId(srcAppl.getApplId());
 			srcAppl = SmServiceLookup.getMofRegistrationSO()

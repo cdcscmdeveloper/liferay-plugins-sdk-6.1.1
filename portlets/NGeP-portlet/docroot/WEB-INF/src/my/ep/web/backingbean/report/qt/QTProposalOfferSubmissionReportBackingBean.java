@@ -42,6 +42,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -131,17 +132,20 @@ QtReportBackingBean<QTProposalOfferSubmissionReportManagedBean> implements Seria
 												
 																								
 		if (StringUtils.isNotEmpty(this.getManagedBean().getAutoScQtProposal().getProposalNo())) {
-			params.put(QtReportConst.QUOTATION_TENDER_TITLE, this.getManagedBean().getAutoScQt().getQtTitle());
+			params.put(QtReportConst.PARAM_PROPOSAL_NO, this.getManagedBean().getAutoScQtProposal().getProposalNo());
 		}
 
-		if(!reportFieldBean.getScStatusManyMenu().isEmpty()){
-			int count=0;
-			for (String strManyMenu: reportFieldBean.getScStatusManyMenu()){
-				count++;
-				params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ+count, getConversionParam(strManyMenu));
+		//14306 - Start (Harun) Change new method for STATUS parameter
+		if (CollectionUtils.isNotEmpty(reportFieldBean.getScStatusManyMenu())) {
+			List<String> conversionList = new ArrayList<>();
+
+			for (String strManyMenu : reportFieldBean.getScStatusManyMenu()) {
+				conversionList.add(getConversionParam(strManyMenu));
 			}
-			
+			String status = StringUtils.join(conversionList, ",");
+			params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ, status.replaceAll(",$", ""));
 		}
+		//14306 - End (Harun)
 
 		return params;
 	}
@@ -307,8 +311,8 @@ QtReportBackingBean<QTProposalOfferSubmissionReportManagedBean> implements Seria
 	
 	public String getConversionParam(String status) {
 		HashMap<String, String> statusmap = new HashMap<>();
-		statusmap.put(getStatusDesc("lbl.rpt.pending.proposal.submission"), QtReportConst.STATUS_PENDING_PROPOSAL_SUBMISSION);
-		statusmap.put(getStatusDesc("lbl.rpt.proposal.submitted"), QtReportConst.STATUS_PROPOSAL_SUBMITTED);
+		statusmap.put(getStatusDesc(QtReportConst.LABEL_PENDING_PROPOSAL_SUBMISSION), QtReportConst.STATUS_PENDING_PROPOSAL_SUBMISSION);
+		statusmap.put(getStatusDesc(QtReportConst.LABEL_PROPOSAL_SUBMITTED), QtReportConst.STATUS_PROPOSAL_SUBMITTED);
 		
 		return statusmap.get(status);
 	}

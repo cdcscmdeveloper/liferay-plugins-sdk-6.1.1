@@ -1859,6 +1859,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 				
 	// #29521 - end
 	
+	//Bug #35061 - asyrafhaziq 
+	private String msgConfirmBelowIndi;
+
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11756,22 +11760,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setEpvAttachmentValue(String epvAttachmentValue) {
 		this.epvAttachmentValue = epvAttachmentValue;
 	}
-
-	//#9019 - Start
-	/**
-	 * @return the qtRemarksIdRemoveList
-	 */
-	public List<ScRemark> getQtRemarksIdRemoveList() {
-		return qtRemarksIdRemoveList;
+	
+	public String getMsgConfirmBelowIndi() {
+		return msgConfirmBelowIndi;
 	}
 
-	/**
-	 * @param qtRemarksIdRemoveList the qtRemarksIdRemoveList to set
-	 */
-	public void setQtRemarksIdRemoveList(List<ScRemark> qtRemarksIdRemoveList) {
-		this.qtRemarksIdRemoveList = qtRemarksIdRemoveList;
+	public void setMsgConfirmBelowIndi(String msgConfirmBelowIndi) {
+		this.msgConfirmBelowIndi = msgConfirmBelowIndi;
 	}
-	//#9019 - End
+
 	
 }
 

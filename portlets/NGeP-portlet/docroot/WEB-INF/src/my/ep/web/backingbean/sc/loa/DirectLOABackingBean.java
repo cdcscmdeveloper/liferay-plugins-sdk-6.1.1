@@ -155,6 +155,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
@@ -187,6 +188,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.loa.DirectLOAManagedBean;
@@ -5823,7 +5825,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 //		} else {
 //			procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
 //		}
-		String title = scQt.getQtTitle().toUpperCase();
+		String title = scQt.getQtTitle();//#32648 remove uppercase
 		//#32738 & #32739 - end
 		if (title == null) {
 			title = "";
@@ -6134,10 +6136,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
         }
         context.put("supplierAddressTable", supplierAddressTable);
     
-        String headerTitle = "";
+        String headerTitle = SSTConstant.EMPTY_STRING;
         if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
                 .getDocType())) {
-            headerTitle = "Pembelian Terus (Bermasa)";
+            headerTitle = SSTConstant.HEADER_PEMBELIAN_TERUS;
         } else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType()) || 
                 ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType())) {
             if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
@@ -6146,8 +6148,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
                 headerTitle = "Sebut Harga";
             }
         }
-        context.put("headerTitle", headerTitle); 
-        context.put("subTitle", headerTitle.toLowerCase()); 
+        context.put(SSTConstant.HEADER_TITLE, headerTitle); 
+        context.put(SSTConstant.SUBJECT_TITLE, headerTitle.toLowerCase()); 
         
         context.put("supplierName", scLoiLoa.getSupplierName());
         String supplierEmail = "";
@@ -6622,10 +6624,31 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			
 			if(smSupplier.isBumi()) {
-				isBumi = "Bumiputera";
+				isBumi = SSTConstant.BUMIPUTERA;
 			} else {
-				isBumi = "Bukan Bumiputera";
+				isBumi = SSTConstant.BUKAN_BUMIPUTERA;
 			}
+			
+			// #26770 new kod bidang
+			if ((smSupplier.getSmAppl() != null && smSupplier.getSmAppl().getSmSupplierCategories() != null)
+					&& !smSupplier.getSmAppl().getSmSupplierCategories().isEmpty()) {
+				int counter = 0;
+				StringBuilder categoryCode = new StringBuilder();
+				for (SmSupplierCategory category : smSupplier.getSmAppl().getSmSupplierCategories()) {
+					String l1Code = category.getPmCategoryL1().getCategoryL1Code();
+					String l2Code = category.getPmCategoryL2().getCategoryL2Code();
+					String l3Code = category.getPmCategoryL3().getCategoryL3Code();
+					String catcode = l1Code + l2Code + l3Code + SSTConstant.SEPARATOR;
+
+					counter++;
+					if (counter % 4 == 0 && counter < smSupplier.getSmAppl().getSmSupplierCategories().size()) {
+						catcode = catcode + SSTConstant.LINE_BREAK;
+					}
+					categoryCode.append(catcode);
+				}
+				kodBidang = StringUtils.removeEnd(categoryCode.toString(), SSTConstant.SEPARATOR);
+			}
+			// 26770 - end
 		}
 		context.put("mofValidityDuration", mofValidityDuration);
 		context.put("mofCertValidityDuration", mofCertValidityDuration);
@@ -9088,7 +9111,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			bondPercentageText  = NumberWordUtil.convert(scLoa.getBondPercentage().toString());
 		}
 		context.put("bondPercentageText", bondPercentageText); 
-		context.put("bondPercentage", bondPercentage);
+		context.put("bondPercentage", bondPercentage+SSTConstant.SIGN_PERCENTAGE);
 		
 		String bondExpDate = "______________";
 		//bond exp date should be one year after the end of the contract period
@@ -10757,16 +10780,26 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					SourcingConstants.LOA_LAMPIRAN_A3, context, 
 					fos);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] START			 
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DIRECT_LOA_DETAIL_BACKINGBEAN, this.getManagedBean().getScQt().getQtNo(),
+					SLALogConstant.QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), e);
+			//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] END
+
 		} catch (Exception e) {
-			e.printStackTrace();
+			//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] START			 
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DIRECT_LOA_DETAIL_BACKINGBEAN, this.getManagedBean().getScQt().getQtNo(),
+					SLALogConstant.QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), e);
+			//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] END
 		} finally {
 			try {
 				if (fos != null) {
 					fos.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] START			 
+				SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DIRECT_LOA_DETAIL_BACKINGBEAN, this.getManagedBean().getScQt().getQtNo(),
+						SLALogConstant.QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), e);
+				//Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] END
 			}
 		}
 	}
