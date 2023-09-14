@@ -822,5 +822,4 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 		this.selectedSearchItem = selectedSearchItem;
 	}
 	//#20997 - End
-	
 }
