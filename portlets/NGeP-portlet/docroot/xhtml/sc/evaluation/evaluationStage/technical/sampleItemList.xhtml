@@ -58,11 +58,10 @@
 							<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"></h:outputText>
 						</f:facet>
 						<p:inputText id="sampleaddressmanualScoreEvaluation"
-							required="true"
 							rendered="#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleReq}"
 							label="#{lbl['lbl.tpl.spec.content.user.score']}" 
 							disabled="#{(sampleItem.compliance ne null and !sampleItem.compliance) or evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
-								or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}"
+								or evaluationBackingBean.managedBean.tabTechnicalIndex eq SourcingConstants.TECHNICAL_TAB_ACTIVE_INDEX}"
 							size="15" value="#{sampleItem.userScore}" maxlength="3"
 							style="text-align:right"><!-- #29187 Vinod Added Compliance checking -->
 							<ac:validateNumber

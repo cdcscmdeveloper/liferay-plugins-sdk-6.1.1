@@ -329,4 +329,7 @@ public interface QTConstants {
 	public static final String TECHNICAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE = "NGEP-Technical-BySupplier";
 	public static final String TECHNICAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE = "NGEP-Technical-ByTitleDocument";
 	//#10542 End Dayan
+	public static final int COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX=1;//35148
+	public static final int COMPLIANCE_FINANCIAL_ACTIVE_INDEX=2;
+	public static final int EVALUATION_MAIN_ACTIVE_INDEX=7;//35148
 }
