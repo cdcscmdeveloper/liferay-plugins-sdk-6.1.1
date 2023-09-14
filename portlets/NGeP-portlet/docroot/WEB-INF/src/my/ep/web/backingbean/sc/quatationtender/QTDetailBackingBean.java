@@ -9112,7 +9112,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * Added MOF Desk Officer
 	 * @return
 	 */
-	private boolean isDeskOfficer() {
+	public boolean isDeskOfficer() {//35142
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
 			   || facesScopes.hasRoleUser(RoleCode.MOF_DESK_OFFICER.value());
