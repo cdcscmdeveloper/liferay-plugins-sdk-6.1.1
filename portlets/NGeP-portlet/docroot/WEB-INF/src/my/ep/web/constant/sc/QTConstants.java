@@ -308,5 +308,8 @@ public interface QTConstants {
 	// #29007 End Vinod	
 
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR"; // #28784
+	public static final int COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX=1;//35148
+	public static final int COMPLIANCE_FINANCIAL_ACTIVE_INDEX=2;
+	public static final int EVALUATION_MAIN_ACTIVE_INDEX=7;//35148
 
 }
