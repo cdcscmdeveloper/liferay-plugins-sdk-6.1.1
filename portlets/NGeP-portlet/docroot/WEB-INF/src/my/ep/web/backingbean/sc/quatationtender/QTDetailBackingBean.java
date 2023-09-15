@@ -6121,11 +6121,14 @@ public class QTDetailBackingBean extends
 		}
 		// 9019 - End (Harun)
 		
-		//9019 - Start (Harun) #Note-398 #Note-487
-		if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().getQt().getSpecApprovalReq() == true) {
-			this.getManagedBean().getQt().setSpecApprovalReq(false);
-			reqDTO.getQtdetail().setSpecApprovalReq(false);
-			reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
+		//9019 - Start (Harun) #Note-398 and merge with #Note-487 and #35067
+		if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
+				&& this.getManagedBean().getQt().getMinistrySpecSecrataryId() != null) {
+			if (this.getManagedBean().getQt().getMinistrySpecSecrataryId().getUserId() == null) {
+				this.getManagedBean().getQt().setSpecApprovalReq(false);
+				reqDTO.getQtdetail().setSpecApprovalReq(false);
+				reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
+			}
 		}
 		//9019 - End (Harun)
 		
