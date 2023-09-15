@@ -26,7 +26,7 @@
 				<td><p:inputText value="#{noOfContracts.userScore}"
 						id="financialSupplierInfoUserScoreId"
 						label="#{lbl['lbl.tpl.spec.content.user.score']}" required="true"
-						maxlength="18" disabled="#{pageDisable}" style="text-align:right"
+						maxlength="18" disabled="#{pageDisable or rejectedSupplier}" style="text-align:right"
 						rendered="#{ checklistScoreType eq '2'}">
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"

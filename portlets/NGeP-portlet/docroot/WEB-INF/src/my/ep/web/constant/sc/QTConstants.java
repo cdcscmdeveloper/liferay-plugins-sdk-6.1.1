@@ -95,6 +95,9 @@ public interface QTConstants {
 	public static final String PENDING_RESPONSE_DP_QT = "/xhtml/sc/pendingresponsefordpandqt/prerenderresponsedpqtmain.xhtml";
 	public static final String ONLINE_BIDDING_STATUS_COUNT = "/xhtml/sc/bidding/onlinebiddingstatus/onlinebiddingstatusmain.xhtml";
 	public static final String VIEW_QTDETAILS_GENERAL_INFO = "/xhtml/sc/viewqtdetailsgeneralinfo/viewQtDetailsGeneralInfoMain.xhtml";
+	// bug #33090,#19287 -start-
+	public static final String SUPPLIER_VIEW_QTDETAILS_GENERAL_INFO = "/xhtml/sc/viewqtdetailsgeneralinfo/supplierViewQtDetailsGeneralInfoMain.xhtml";
+	// bug #33090,#19287 -end-
 	public static final String NAV_TO_PROPOSAL_MAIN_PAGE = "/xhtml/sc/supplierproposal/proposalcommon/supplierProposalMain.xhtml";  // ***25201
 
 	public static final String SC_LOI_TAB = "LOI";
@@ -296,4 +299,14 @@ public interface QTConstants {
 	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
 	// #33831, #21695, #25138 - End
 	
+	// #29007 Start Vinod
+	public static final String LAMPIRAN_A3_LBL = "lbl.sc.doc.name.lampiran.a3";
+	public static final String LAMPIRAN_A3_UPDATE = "Updated";
+	public static final String LAMPIRAN_A3_DIKEMAS_KINI = "Dikemas kini";
+	public static final String LAMPIRAN_A3_LATEST = "Latest";
+	public static final String LAMPIRAN_A3_TERKINI = "Terkini";
+	// #29007 End Vinod	
+
+	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR"; // #28784
+
 }

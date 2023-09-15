@@ -1440,6 +1440,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		this.retriveQTDetails(scQt.getQtId());
 		this.retriveMeetingDetails(scQt.getQtId());
 		//25037 note 284 - end
+		this.prepareMemberUpdate();//#25037
 
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setOutComes(outComes);

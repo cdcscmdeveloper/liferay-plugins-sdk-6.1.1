@@ -48,7 +48,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
@@ -136,7 +135,6 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
-import my.ep.factory.EpLogger;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -435,7 +433,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				sqbb.getManagedBean().setActiveIndex(0);
 				// #29800 - start
 				if (getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession() == null) {
-					sqbb.simpleQuoteAction(getManagedBean().getSupplierItemDocId(), true, null);
+					sqbb.simpleQuoteAction(null, getManagedBean().getSupplierItemDocId(), true, null);//#34579 - add new parameter on simpleQuoteAction
 				} else {
 					sqbb.getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(
 							getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession());
@@ -1018,7 +1016,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		if(!getManagedBean().isViewContract()){
 			if(remarks.isEmpty() || !ctWorkflowStatusMatch) {
 				CtRemark remark = new CtRemark();
-				remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				remark.setChangedBy(remark.getCreatedBy());
 				remark.setChangedDate(remark.getCreatedDate());
@@ -1850,7 +1848,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				
 				attachment.setFileName(item.getFileName());
 				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-				attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+				attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 				attachment.setCreatedUser(facesScopes.getUserSessionBean());
 				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				getManagedBean().getCircularVer().getItemAttachments().add(attachment);
@@ -1858,7 +1856,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				
 				attachment.setFileName(item.getFileName());
 				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-				attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+				attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 				attachment.setCreatedUser(facesScopes.getUserSessionBean());
 				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				getManagedBean().getCircularVer().getCircularAttachments().add(attachment);

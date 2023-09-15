@@ -341,6 +341,12 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						}
 					}
 				}
+				//33654-Start
+				if(reqDTO.isInvoiceRevise() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+					reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+				}
+				//33654-End
+				
 				resDTO = invoiceSO.invoiceModification(reqDTO);
 			}else{
 				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
@@ -1920,13 +1926,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 */
 	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
 				Long docId, String docNumber , String textBeforeSign) {
-			FacesScopes facesScope = new FacesScopes();
-			Long userId = facesScope.getUserSessionBean().getUserId();
 			Timestamp date = new Timestamp(System.currentTimeMillis());
 			pmDigiSign.setDocId(new BigDecimal(docId));
 			pmDigiSign.setDocNo(docNumber);
 			pmDigiSign.setDocType(docType);
-			pmDigiSign.setCreatedBy(userId);
+			pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			pmDigiSign.setCreatedDate(date);
 			pmDigiSign.setOriginalData(textBeforeSign);
 			// spki 
@@ -2533,6 +2537,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	}
 	
 	//End  #21229
+	
 	//26279 - start
 	public void viewDisciplinaryAction() {
 		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());

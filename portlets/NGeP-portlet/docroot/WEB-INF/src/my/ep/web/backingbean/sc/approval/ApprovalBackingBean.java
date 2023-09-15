@@ -63,6 +63,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.DemoResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -108,6 +109,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.demoInvitation.DemoInvitationBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTScheduleDetailBackingBean;
@@ -724,6 +726,60 @@ public class ApprovalBackingBean extends
 			finally {
 				workFlowStatusSO = null;
 			}
+			// #28784 -start-
+		} else if (SCProcessNameConst.DEMO_APPROVE_CANCELLATION.equalsIgnoreCase(taskName)) {
+			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
+
+			getManagedBean().setPayLoad(dataType);
+
+			qtId = Long.valueOf(dataType.getQtId());
+
+			List<String> fc = new ArrayList<String>();
+			fc.add(ParameterConst.APPROVAL_REQUEST_CANCELATITION_QT);
+
+			paramTypes = fc;
+			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
+			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
+					ParameterConst.APPROVAL_REQUEST_CANCELATITION_QT, paramTypes, null);
+
+			this.getManagedBean().setApprovalType(approvalCategoryCode);
+
+			docType = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
+
+			IScWorkFlowStatusSO workFlowStatusSO;
+
+			try {
+				workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IScWorkFlowStatusSO.class);
+				ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+
+				reqDTO.setDocType(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
+				reqDTO.setDocId(qtId);
+
+				currentStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+
+				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+				qtBackingBean.retrieveQuationTenderDetails(qtId);
+
+				ScQt scQt = qtBackingBean.getManagedBean().getQt();
+				this.getManagedBean().setQt(scQt);
+
+				IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+
+				QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+				quationTenderReqDTO.setQtId(scQt.getQtId());
+				quationTenderReqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
+
+				QuationTenderResDTO resDTO = detailSO.retrieveApprovalsByQtIdNType(quationTenderReqDTO);
+				this.getManagedBean().setQt(resDTO.getQtDetail());
+
+				ScQtApproval qtApproval = resDTO.getQtApproval();
+				this.getManagedBean().setScQtApproval(qtApproval);
+			} finally {
+				workFlowStatusSO = null;
+			}
+			// #28784 -end-
 		}
 		
 		if (currentStatus == null) {
@@ -1393,6 +1449,25 @@ public class ApprovalBackingBean extends
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 				tenderResDTO.setSuccessful(committeResDto.isSuccessful());
 				tenderResDTO.setQtDetail(qt);
+
+				// #28784 -start-
+			} else if (SCProcessNameConst.DEMO_APPROVE_CANCELLATION.equalsIgnoreCase(taskName)) {
+				DemoResDTO resDTO = new DemoResDTO();
+				DemoInvitationBackingBean demoBB = new DemoInvitationBackingBean();
+				
+				resDTO.setScQt(qt);
+				resDTO.setPmUser(new FacesScopes().getUserSessionBean());
+				resDTO.setOutcome(BpmOutcomeConst.BPM_APPROVE);
+				resDTO.setPayLoad(this.getManagedBean().getPayLoad());
+				resDTO.setTaskName(taskName);
+				resDTO.setTaskId(this.getManagedBean().getTaskId());
+				
+				resDTO = demoBB.demoUpdateBpmTask(resDTO, outcome);
+				
+				tenderResDTO.setSuccessful(resDTO.isSuccessful());
+				tenderResDTO.setQtDetail(qt);
+				// #28784 -end-
+
 			} else {
 				boolean isFinalApproval = false;
 				boolean bpkRevise = false;
@@ -1412,7 +1487,7 @@ public class ApprovalBackingBean extends
 				checkApprovalAndRefreshDetails (qt.getQtId(),taskName, this.getManagedBean().getScQtApproval());
 				// Bug #31759 - End
 
-				invokeRemarksWhileExecuteReviseFlow(this.getManagedBean().getScQtApproval()); // 25077
+				invokeRemarksWhileExecuteReviseFlow(outcome); // 25077, #34698
 
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
 
@@ -2942,18 +3017,18 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 	/**
 	 * insert remarks while doing revise process flow
 	 */
-	private void invokeRemarksWhileExecuteReviseFlow(ScQtApproval approval) {
+	// #34698 -start-
+	private void invokeRemarksWhileExecuteReviseFlow(String outcome) {
+		// #34698 -end-
 		ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean()
 				.getQt().getQtId());
 		wfStatus = wfStatus == null ? new ScWorkFlowStatus() : wfStatus;
 
-		if (wfStatus.getPmStatus() != null) {
-			Long currentStatusId = wfStatus.getPmStatus().getStatusId();
-			
-			if (currentStatusId.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) {
-				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-				
-				if (!qtBackingBean.getManagedBean().isFirstPagePA()) {
+		// #34698 -start-
+		if (wfStatus.getPmStatus() != null
+				&& wfStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)
+				&& BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && !this.getManagedBean().isFirstPagePA()) {
+			// #34698 -end-
 					ScQtApproval publication = this.getManagedBean().getPublicationApproval();
 					List<ScQtApprovalRemark> qtRemarks = initializeRemarks(publication, wfStatus,
 							publication.getScQtApprovalRemarks(), ScQtApprovalRemark.class);
@@ -2965,9 +3040,8 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 					publication.setScQtApprovalRemarks(qtRemarks);
 					
 					this.getManagedBean().setScQtApproval(publication);
-				}
-			}
 		}
+
 	}
 	// #25077 - End
 	
@@ -3082,5 +3156,12 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 		}
 	}
 	// #25426 - End
+	
+	// #28784 -start-
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	// #28784 -end-
 	
 }
