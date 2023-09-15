@@ -7848,7 +7848,7 @@ public class QTDetailBackingBean extends
 	}
 	// Bug #32425, #19336 - End
 	
-	private boolean isDeskOfficer() {
+	public boolean isDeskOfficer() {//35142
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
 	}
