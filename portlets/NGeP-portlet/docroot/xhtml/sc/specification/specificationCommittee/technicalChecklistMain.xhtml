@@ -85,7 +85,8 @@
 				<h:panelGroup id="technicalChecklistTitleHeader">
 					<p:inputText required="true" id="techChecklistTitle"
 						label="#{lbl['lbl.sc.spec.checklist.title']}" rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1}"
-						value="#{stageTwoTechnical.title}" size="35" maxlength="1000">
+						value="#{stageTwoTechnical.title}" size="35" maxlength="1000"
+						validator="#{specificationBackingBean.isContentExistUnicode}">
 						<p:ajax event="change" process="@this,technicalChecklistTitleHeader" partialSubmit="true"
 							update="technicalChecklisttypes"
 							listener="#{specificationBackingBean.technicalCheckListTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
