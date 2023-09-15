@@ -2918,7 +2918,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									true,
 									JoinType.LEFT));
 					statusBean = statusFilterBean;
-					if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
+					//harun disabled for 34702 related for 9019
+					/*if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
 						statusBean = new SearchMultiFilterBean(
 								statusFilterBean, 
 								new SearchFilterBean(
@@ -2927,7 +2928,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										null,
 										SearchCondition.CONDITION_OR.value(),
 										JoinType.LEFT));
+					}*/
+					//#34702 - Start
+					if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
+						statusBean = new SearchMultiFilterBean(
+								statusFilterBean, 
+								new SearchFilterBean(
+										"scQtStatus.pmStatus.statusId",
+										SearchOperator.OPERATOR_EQUALS.value(),
+										QTStatusConst.QT_PENDING_QT_SUBMISSION_WIP.toString(),
+										SearchCondition.CONDITION_OR.value(),
+										JoinType.LEFT));
 					}
+					//#34702 - End
 					qtSearchBean.getDataFilterBeans().add(statusBean);
 				}
 				else{
@@ -4282,6 +4295,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 				committeReqDTO.setToBeDeletedMembers(this.getManagedBean()
 						.getToBeDelCommitteMemebers());
+				committeReqDTO.setTaskName(taskName); // Bug #34972@Syazani 09/08/2023
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 				
 			} else if (SCProcessNameConst.ASSIGN_FC_SECRETARY
@@ -4808,7 +4822,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									}
 								}
 							}
-							tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+							
+							if(CollectionUtils.isNotEmpty(approvalRequest)){
+							   tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+							}
 					
 						}
 					} 
@@ -9039,7 +9056,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * Added MOF Desk Officer
 	 * @return
 	 */
-	private boolean isDeskOfficer() {
+  public boolean isDeskOfficer() {//35142
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
 			   || facesScopes.hasRoleUser(RoleCode.MOF_DESK_OFFICER.value());
@@ -11079,29 +11096,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	
 	//#29425 - start
 	public void validateNewValueForValidityDays(int newValue) {
-		PmParameter procureMentMode = this.getManagedBean().getQt().getProcurementMode();
-		if (newValue == 0) {
-			this.getManagedBean().setNewValidityDays(newValue);
-			this.getManagedBean().setNewValueValidity(true);
-		}
-		if (ParameterConst.PROCUREMENT_MODE_QUOTATION
-				.equalsIgnoreCase(procureMentMode.getParameterCode())
-					&& newValue > 90) {
-			this.getManagedBean().setNewValueValidity(true);
-		}
 		validateValidityDays(newValue);
-		if (ParameterConst.PROCUREMENT_MODE_TENDER
-				.equalsIgnoreCase(procureMentMode.getParameterCode())
-					&& newValue != 0
-						&& newValue < 90) {
-			this.getManagedBean().setNewValueValidity(true);
-		}
-		if (ParameterConst.PROCUREMENT_MODE_TENDER
-				.equalsIgnoreCase(procureMentMode.getParameterCode())
-						&& newValue >= 90) {
-			this.getManagedBean().setNewValueValidity(false);
-		}
-		this.getManagedBean().setNewValidityDays(newValue);
 	}
 	
 	public void validateValidityDays(int validityDays) {
@@ -11150,13 +11145,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 		}
 		return 0;
-	}
-	
-	private void disableNewValueValidity() {
-		PmParameter procureMentMode = this.getManagedBean().getQt().getProcurementMode();
-		if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equalsIgnoreCase(procureMentMode.getParameterCode())) {
-			this.getManagedBean().setNewValueValidity(false);
-		}
 	}
 	//#29425 - end
 	
@@ -11617,6 +11605,27 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		reqDTO.setQtdetail(scQt);
 		return reqDTO;
+	}
+	
+	/**
+	  * Method to filter value if approval request to add if ICT or IMP, other is remove.
+	 * 
+	 * @return list of ScQtApprovalRequest
+	 */
+	public List<ScQtApprovalRequest> getFilteredApprovalRequest() {
+	  List<ScQtApprovalRequest> filteredAprovalRequest = new ArrayList<>();
+	  List<ScQtApprovalRequest> approvalRequest = this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().getScQtApprovalDtls();
+		if(CollectionUtils.isNotEmpty(approvalRequest)){
+			for(ScQtApprovalRequest request: approvalRequest) {
+				if(request.getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS) || 
+						request.getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)) {
+			        filteredAprovalRequest.add(request);
+		        }else{
+		        	filteredAprovalRequest.remove(request);
+		        }
+			}
+		}
+	  return filteredAprovalRequest;  
 	}
 	// 25077 - End
 	

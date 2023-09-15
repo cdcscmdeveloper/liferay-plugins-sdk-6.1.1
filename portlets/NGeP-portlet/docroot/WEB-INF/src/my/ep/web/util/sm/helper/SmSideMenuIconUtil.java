@@ -29,6 +29,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
 import my.ep.web.vo.SmLicenseInfoVO;
+import my.ep.web.vo.SmSectionEditorVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -1455,12 +1456,16 @@ public class SmSideMenuIconUtil {
 			if(applPrev.getApplId() == applCurr.getApplId()){
 				return false;
 			}
+			//#32008
 			String[] arrExcludeProps = new String[] { "prevApprDecFlg",
 					"apprvrDecFlg", "poDecFlg", "approvedByPo",
 					"prevApprovedByPo", "prevPoDecFlg", "poRemarks",
 					"approverRemarks", "prevPoRemarks", "prevApproverRemarks",
 					"approvedDate", "approvedByAp", "prevApprovedByAp",
-					"recordStatusFlg" };
+					"recordStatusFlg", "overLapCategory", "suspendCategory",
+					"cancelCategory", "isActiveDA", "disciplinaryActionId",
+					"supplierType", "applRefId", "prevOtherDesc", 
+					"cancelledDate", "categoryEffDate"};
 
 			// smSupplierCategory
 			if (isSupplier) {
@@ -1782,6 +1787,7 @@ public class SmSideMenuIconUtil {
 	//#32008 - start
 	public static void setSectionEditorVO(BaseReviewApplicationManagedBean bean){
 		if(!bean.isShowFieldChanges() || bean.getLatestAppl() == null || bean.getSmAppl() == null){
+			bean.setEditVO(new SmSectionEditorVO());
 			return;
 		}
 		
