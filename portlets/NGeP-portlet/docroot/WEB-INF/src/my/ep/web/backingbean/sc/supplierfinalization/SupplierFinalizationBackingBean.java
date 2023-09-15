@@ -1528,10 +1528,20 @@ public class SupplierFinalizationBackingBean extends
 						finalizationReports.removeAll(this.getManagedBean().getEndorsementReports());
 						if(skipValidation) return;//25037 note31
 						navigateToEndorsementReportTab();
-						throw new EpException(MessageConst.ERROR_760386);
+						// #31934 - Start.
+						//throw new EpException(MessageConst.ERROR_760386);
+						throw new EpException(MessageConst.ERROR_770271);
+						// #31934 - Start.
 					}
 				}
 			}
+			
+			//#28834 - Start 
+			if(CollectionUtils.isNotEmpty(toBeRemovedReports)){
+				navigateToEndorsementReportTab();
+			    throw new EpException(MessageConst.ERROR_770271);
+			}
+			//#28834 - End
 			
 			if (toBeRemovedReports.size() > 0) {
 				finalizationReports.removeAll(

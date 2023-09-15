@@ -86,9 +86,9 @@
 				<h:panelGroup id="technicalChecklistTitleHeader">
 					<!-- 28784 -start- -->					
 					<p:inputText required="true" id="techChecklistTitle"
-						label="#{lbl['lbl.sc.spec.checklist.title']}" rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 or 
-						stageTwoTechnical.title eq null}"
-						value="#{stageTwoTechnical.title}" size="35" maxlength="1000">
+						label="#{lbl['lbl.sc.spec.checklist.title']}" rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 or stageTwoTechnical.title eq null}"
+						value="#{stageTwoTechnical.title}" size="35" maxlength="1000"
+						validator="#{specificationBackingBean.isContentExistUnicode}">
 					<!-- 28784 -end- -->						
 						<p:ajax event="change" process="@this,technicalChecklistTitleHeader" partialSubmit="true"
 							update="technicalChecklisttypes"
