@@ -64,7 +64,7 @@
 
 			<p:column style="text-align: center;"
 				headerText="#{lbl['lbl.sc.action']}">
-				<!-- Bug #35078@Syazani - 14/09/2023 -- Start -->
+				<!-- Bug #35078@Syazani - 14/09/2023 Start -->
 				<p:commandButton id="download" icon="ui-icon-download"
 					disabled="#{not lOADetailBackingBean.managedBean.enableDownloadAllDocuments and !isQtAudit}" 
 					style="background-color:transparent !important; border:0px none;"
@@ -87,7 +87,7 @@
 						target="#{lOADetailBackingBean.managedBean.attachmentDocType}"
 						value="LAR" />
 				</ac:scSingleFileUploadButton><!-- #29007 vinod Added uploadlampiranA3 -->
-				<!-- Bug #35078@Syazani - 14/09/2023 -- End -->
+				<!-- Bug #35078@Syazani - 14/09/2023 End -->
 			</p:column>
 		</p:dataTable>
 
