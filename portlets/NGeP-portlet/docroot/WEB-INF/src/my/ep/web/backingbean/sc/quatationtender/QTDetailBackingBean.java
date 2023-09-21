@@ -4869,17 +4869,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									}
 								}
 								
-								// To remove ScQtApprovalRequest if not approval request type SC
-								if(CollectionUtils.isNotEmpty(approvalRequest)){
-									for(int i=0;i<approvalRequest.size();i++ ){
-										if(approvalRequest.get(i).getApprovalType().getParameterCode().equals(SourcingConstants.SUPPLIER_SELECTION)){
-											approvalRequest.remove(i);
-										}
-									}
-								}
-								
 							}
-							tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+							
+							if(CollectionUtils.isNotEmpty(approvalRequest)){
+							   tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+							}
 					
 						}
 					} 
@@ -11678,6 +11672,27 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		reqDTO.setQtdetail(scQt);
 		return reqDTO;
+	}
+	
+	/**
+	  * Method to filter value if approval request to add if ICT or IMP, other is remove.
+	 * 
+	 * @return list of ScQtApprovalRequest
+	 */
+	public List<ScQtApprovalRequest> getFilteredApprovalRequest() {
+	  List<ScQtApprovalRequest> filteredAprovalRequest = new ArrayList<>();
+	  List<ScQtApprovalRequest> approvalRequest = this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().getScQtApprovalDtls();
+		if(CollectionUtils.isNotEmpty(approvalRequest)){
+			for(ScQtApprovalRequest request: approvalRequest) {
+				if(request.getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS) || 
+						request.getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)) {
+			        filteredAprovalRequest.add(request);
+		        }else{
+		        	filteredAprovalRequest.remove(request);
+		        }
+			}
+		}
+	  return filteredAprovalRequest;  
 	}
 	// 25077 - End
 	

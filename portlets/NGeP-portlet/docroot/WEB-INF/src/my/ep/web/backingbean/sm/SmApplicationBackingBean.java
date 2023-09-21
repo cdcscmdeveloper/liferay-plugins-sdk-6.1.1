@@ -3975,6 +3975,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
 				getManagedBean().setCurrentPageType(currentPageType);
 			}
+			//#35086 - start
+			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean().getLatestAppl(), 
+					getManagedBean().getSmAppl(), getManagedBean().getCurrentPageType());
+			//#35086 - end
 		}
 
 		finally {
@@ -4260,10 +4264,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 				// init business premise whether show or hide home office
 				initBusinessPremise();
-				//#35086 - start
-				SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean().getLatestAppl(), 
-						getManagedBean().getSmAppl(), getManagedBean().getCurrentPageType());
-				//#35086 - end
+
 			}
 			assignValReqdToFalse();
 		}
@@ -13834,7 +13835,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @throws Exception
 	 */
 	public void printDeclarationForm() throws Exception {
-		String language = new FacesScopes().getUserLocale().getLanguage();
+		String language = setFixedLanguageDisplay(true,"ms"); // 33410 set only malay language
 		if (language.equals("en")) {
 			Map<String, String> paramMap = new HashMap<String, String>();
 			paramMap.put("PAPPNO", getManagedBean().getSmAppl().getApplNo());
