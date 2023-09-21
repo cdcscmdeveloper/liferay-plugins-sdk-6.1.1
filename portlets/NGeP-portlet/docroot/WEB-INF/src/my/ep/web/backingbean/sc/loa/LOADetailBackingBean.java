@@ -3009,7 +3009,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		String title = procurementMode != "" ? procurementMode + "\r\n" + 
-				scLoiLoa.getTitle().toUpperCase() : scLoiLoa.getTitle().toUpperCase();//#32739 & #32738
+				scLoiLoa.getTitle() : scLoiLoa.getTitle();//#32739 & #32738//#32647 & #32648 remove uppercase
 				if (title == null) {
 					title = "";
 				}
@@ -11604,6 +11604,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return isShow;
 	}
 	// Bug #34757 - End
+	
+	// Bug #35078@Syazani -- Start 14/09/2023
+	public boolean isQtAudit() {
+		return QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	// Bug #35078@Syazani -- End 14/09/2023
 
 }
 

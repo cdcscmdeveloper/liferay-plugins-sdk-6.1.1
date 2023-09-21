@@ -7771,7 +7771,15 @@ public void saveComplianceSample() {
 						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION)
 						// #25638 - End.
 						) {
-				int lcaloutputTab=retriveFinancialChecklistStatusCheck();
+					int complianceIndex=this.getManagedBean().getComplianceActiveIndex();//35148-start
+					int lcaloutputTab=Integer.MIN_VALUE;
+					if(this.getManagedBean().getScQt().isSampleReq() && QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX>complianceIndex){
+						retriveComplianceSample();
+						outputTab=QTConstants.EVALUATION_MAIN_ACTIVE_INDEX;
+					}
+					else{
+				 lcaloutputTab=retriveFinancialChecklistStatusCheck();
+					}//35148-End
 				if(lcaloutputTab>0){
 					outputTab=lcaloutputTab;
 					if(outputTab==7){
@@ -7780,8 +7788,12 @@ public void saveComplianceSample() {
 									1);
 							//return outputTab=7;
 						} else {
-							this.getManagedBean().setComplianceActiveIndex(
-									2);
+							if(this.getManagedBean().getScQt().isSampleReq() && QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX>complianceIndex){//35148-start
+								this.getManagedBean().setComplianceActiveIndex(QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX);
+							}
+							else{
+							this.getManagedBean().setComplianceActiveIndex(QTConstants.COMPLIANCE_FINANCIAL_ACTIVE_INDEX);
+							}//35148-End
 							//return outputTab=7;
 						}
 					}
@@ -7804,7 +7816,7 @@ public void saveComplianceSample() {
 					if (currentTab == 0) {
 						saveMeetingDtls(false);
 					}
-				}
+							}
 				retriveComplianceTechnical();
 				// retrives1Details();
 			} else if (outputTab == 2) {
@@ -10033,15 +10045,6 @@ private void retriveCommitteeRemarksList(){
 				log.info("============displayitemsamplerequired===");
 			List<ScQtSampleItem> sampleItemlist=this.getManagedBean().getSampleItemList();
 			for(ScQtSampleItem item:sampleItemlist){
-				if(null==item.getUserScore()){
-				//throw new EpException("SampleItemScoremandatory");	
-				throw new EpException(MessageConst.ERROR_760517, new String[] {
-						ResourceBundleUtils
-						.getMessage("lbl.tpl.spec.content.user.score",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()),
-								item.getScRequestItem().getItemName() });
-				}
 				/*#29187 Start Vinod*/
 				if(item.getCompliance()!=null  
 					&& item.getCompliance().equals(Boolean.FALSE)){
@@ -17868,73 +17871,41 @@ private void retriveCommitteeRemarksList(){
 		return selectItems;
 	}
 	
-	public void downloadAllFinancialDocumentCompliance() throws Exception {
-		List<ScQtCheckList> list = this.getManagedBean().getCompliancefinancialCheckList();
-
-		IQTEvaluationSO evaluationSO = null;
-
-		EvaluationResDTO resDTO = new EvaluationResDTO();
-		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-
-		List<EvaluationReqDTO> listScAttachment = new ArrayList<EvaluationReqDTO>();
-
+	public void onSelectDownloadByValue() throws NullPointerException {
+		String downloadBy = this.getManagedBean().getDownloadBy();
 		try {
-			evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTEvaluationSO.class);
-
-			String downloadBy = this.getManagedBean().getDownloadBy();
-			String mainFolderTitle = "";
-
-			for (int i = 0; i < list.size(); i++) {
-				ScQtCheckList scQtCheckList = list.get(i);
-
-				reqDTO.setCheckListId(scQtCheckList.getQtChecklistId());
-				reqDTO.setCompliance(null);
-				reqDTO.setQtId(scQtCheckList.getScQt().getQtId());
-				reqDTO.setEvalStage(null);
-				reqDTO.setProposalChecklistSearchBean(null);
-
-				resDTO = evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO);
-				List<ScQtProposalChecklist> listFinancial = resDTO.getComplianceResultBean().getResultList();
-				for (int j = 0; j < listFinancial.size(); j++) {
-					EvaluationReqDTO attachmentToDownload = new EvaluationReqDTO();
-					ScQtProposalChecklist scQtProposalChecklist = listFinancial.get(j);
-
-					// 10542-#61 dayan bug fix - start
-					attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
-					attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
-					attachmentToDownload.setScQtChecklistName(scQtCheckList.getTitle());
-					// 10542-#61 dayan bug fix - end
-
-					listScAttachment.add(attachmentToDownload);
-
+			if (this.getManagedBean().getComplianceActiveIndex() < 1) {
+				if (downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_SUPPLIER)) {
+					this.getManagedBean().setMainDocumentTitle(QTConstants.TECHNICAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE);
+				} else if (downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_DOCUMENT)) {
+					this.getManagedBean().setMainDocumentTitle(QTConstants.TECHNICAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE);
+				}
+			} else if (this.getManagedBean().getComplianceActiveIndex() >= 1) {
+				if (downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_SUPPLIER)) {
+					this.getManagedBean().setMainDocumentTitle(QTConstants.FINANCIAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE);
+				} else if (downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_DOCUMENT)) {
+					this.getManagedBean().setMainDocumentTitle(QTConstants.FINANCIAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE);
 				}
 			}
-			
-			if (downloadBy.equalsIgnoreCase("Supplier")) {
-				mainFolderTitle = "Supplier";
-			} else if (downloadBy.equalsIgnoreCase("Document")) {
-				mainFolderTitle = "TitleDocument";
-			}
-
-			downloadAllFilesWithSpecificFolder("NGEP-Financial-By" + mainFolderTitle, listScAttachment, downloadBy, getEncryptionKey());
-		} catch (Exception e) {
-			e.printStackTrace();
-
-		} finally {
-			evaluationSO = null;
+		} catch (NullPointerException e) {
+			this.getManagedBean().setMainDocumentTitle(null);
 		}
 	}
 	
-	public void downloadAllTechnicallDocumentCompliance(ActionEvent event) throws Exception {
-		List<ScQtCheckList> list = this.getManagedBean().getComplianceTechnicalCheckList();
+	public void generateAllDocumentComplianceZip() throws Exception {
+		List<ScQtCheckList> list = null;
+		if (this.getManagedBean().getComplianceActiveIndex() < 1) {
+			list = this.getManagedBean().getComplianceTechnicalCheckList();
+		} else if (this.getManagedBean().getComplianceActiveIndex() >= 1) {
+			list = this.getManagedBean().getCompliancefinancialCheckList();
+		}
+	
+		IQTEvaluationSO evaluationSO = null;
 		
-		Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
-		Long downloadAllDocsTimer = System.currentTimeMillis();
-		log.info("Starting downloadAllTechnicallDocumentCompliance :: " + currentTimeStamp);
-
-		IQTEvaluationSO evaluationSO = null;
-
+		prepareDocumentComplianceAttachments(evaluationSO, list);
+	}
+	
+	private void prepareDocumentComplianceAttachments(IQTEvaluationSO evaluationSO, List<ScQtCheckList> list) throws Exception {
 		EvaluationResDTO resDTO = new EvaluationResDTO();
 		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 
@@ -17944,8 +17915,6 @@ private void retriveCommitteeRemarksList(){
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTEvaluationSO.class);
 
-			String downloadBy = this.getManagedBean().getDownloadBy();
-			
 			for (int i = 0; i < list.size(); i++) {
 				ScQtCheckList scQtCheckList = list.get(i);
 
@@ -17954,7 +17923,7 @@ private void retriveCommitteeRemarksList(){
 				reqDTO.setQtId(scQtCheckList.getScQt().getQtId());
 				reqDTO.setEvalStage(null);
 				reqDTO.setProposalChecklistSearchBean(null);
-				
+
 				resDTO = evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO);
 				List<ScQtProposalChecklist> listFinancial = resDTO.getComplianceResultBean().getResultList();
 				for (int j = 0; j < listFinancial.size(); j++) {
@@ -17971,25 +17940,37 @@ private void retriveCommitteeRemarksList(){
 
 				}
 			}
-			
-			if (downloadBy.equalsIgnoreCase(QTConstants.DOWNLOADBY_SUPPLIER)) {
-				this.getManagedBean().setMainDocumentTitle(QTConstants.TECHNICAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE);
-			} else if (downloadBy.equalsIgnoreCase(QTConstants.DOWNLOADBY_DOCUMENT)) {
-				this.getManagedBean().setMainDocumentTitle(QTConstants.TECHNICAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE);
-			}
 
-			downloadAllFilesAsZipFileWithSpecificFolderTest(listScAttachment);
+			downloadAllFilesAsZipFileWithSpecificFolder(listScAttachment);
 		} catch (Exception e) {
 			e.printStackTrace();
 
 		} finally {
 			evaluationSO = null;
-			Long endTimer = System.currentTimeMillis();
-			log.info("Ending downloadAllTechnicallDocumentCompliance :: " + convertMilliToSeconds(endTimer - downloadAllDocsTimer) + " Second(s)");
-		}
+		}	
 	}
 	
-	public void downloadAllFilesWithSpecificFolderTest() throws IOException {
+	public void downloadZippedFile() throws IOException {
+		String downloadBy = this.getManagedBean().getDownloadBy();
+		byte[] zipFileContent = null;
+		if (this.getManagedBean().getComplianceActiveIndex() < 1) {
+			if(downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_DOCUMENT)){
+				zipFileContent = this.getManagedBean().getTechnicalZipFileDownloadByDocument();
+			} else if (downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_SUPPLIER)){
+				zipFileContent = this.getManagedBean().getTechnicalZipFileDownloadBySupplier();
+			}
+		} else if (this.getManagedBean().getComplianceActiveIndex() >= 1) {
+			if(downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_DOCUMENT)){
+				zipFileContent = this.getManagedBean().getFinancialZipFileDownloadByDocument();
+			} else if (downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_SUPPLIER)){
+				zipFileContent = this.getManagedBean().getFinancialZipFileDownloadBySupplier();
+			}
+		}
+		
+		downloadAllFilesWithSpecificFolder(zipFileContent);
+	}
+	
+	private void downloadAllFilesWithSpecificFolder(byte[] zipFileContent) throws IOException {
 		Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
 		long startDownloadAllFilesWithSpecificFolderTimer = System.currentTimeMillis();
 		log.info("Starting downloadAllFilesWithSpecificFolderTest :: " + currentTimeStamp);
@@ -18005,7 +17986,7 @@ private void retriveCommitteeRemarksList(){
 			response.setHeader("Content-Disposition", "attachment; filename="+ zipFileName + ".zip");
 			
             OutputStream out = response.getOutputStream();
-            ByteArrayInputStream bis = new ByteArrayInputStream(this.getManagedBean().getZipFileContent());
+            ByteArrayInputStream bis = new ByteArrayInputStream(zipFileContent);
 
             byte[] buffer = new byte[1024];
             int bytesRead;
@@ -18027,7 +18008,7 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 	
-	private <ATTACHMENT extends ScAttachment> void downloadAllFilesAsZipFileWithSpecificFolderTest(List<EvaluationReqDTO> listScAttachment) throws IOException{
+	private void downloadAllFilesAsZipFileWithSpecificFolder(List<EvaluationReqDTO> listScAttachment) throws IOException{
 		Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
 		long startDownloadAllFilesAsZipFileWithSpecificFolder = System.currentTimeMillis();
 		log.info("Starting downloadAllFilesAsZipFileWithSpecificFolderTest... " + currentTimeStamp);
@@ -18062,9 +18043,9 @@ private void retriveCommitteeRemarksList(){
 							: scAttachment.getFileName());
 						
 						String downloadByZipStructure = "";
-						if(downloadBy.equalsIgnoreCase(QTConstants.DOWNLOADBY_SUPPLIER)){
+						if(downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_SUPPLIER)){
 							downloadByZipStructure = supplierNo+"/"+checkListTitle+"/"+attachmentFileName;
-						}else if(downloadBy.equalsIgnoreCase(QTConstants.DOWNLOADBY_DOCUMENT)){
+						}else if(downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_DOCUMENT)){
 							downloadByZipStructure = checkListTitle+"/"+supplierNo+"/"+attachmentFileName;
 						}
 						
@@ -18092,7 +18073,6 @@ private void retriveCommitteeRemarksList(){
 		                    zos.write(buffer, 0, length);
 		                }
 
-					// zos.write(data);
 					}
 				}
 				finally{
@@ -18110,11 +18090,8 @@ private void retriveCommitteeRemarksList(){
 			if(zos != null){
 				zos.close();
 			}
-			if(baos != null){
-				baos.close();
-		        // Assign the Byte array to variable
-		        this.getManagedBean().setZipFileContent(baos.toByteArray());
-			}
+			
+			assignZipFileByteArray(downloadBy, baos.toByteArray());
 		}
 
 		
@@ -18122,7 +18099,23 @@ private void retriveCommitteeRemarksList(){
 		log.info("Ending downloadAllFilesAsZipFileWithSpecificFolderTest :: " + convertMilliToSeconds(endDownloadAllFilesAsZipFileWithSpecificFolder - startDownloadAllFilesAsZipFileWithSpecificFolder) + " Second(S)");
 	}
 	
-	private int readFileContent(String entryName, byte[] buffer) {
+	private void assignZipFileByteArray(String downloadBy, byte[] baos){
+		if (this.getManagedBean().getComplianceActiveIndex() < 1) {
+			if(downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_DOCUMENT)){
+				this.getManagedBean().setTechnicalZipFileDownloadByDocument(baos);
+			}else if(downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_SUPPLIER)){
+				this.getManagedBean().setTechnicalZipFileDownloadBySupplier(baos);
+			}
+		} else if (this.getManagedBean().getComplianceActiveIndex() >= 1) {
+			if(downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_DOCUMENT)){
+				this.getManagedBean().setFinancialZipFileDownloadByDocument(baos);
+			}else if(downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_SUPPLIER)){
+				this.getManagedBean().setFinancialZipFileDownloadBySupplier(baos);
+			}
+		}
+	}
+	
+	private int readFileContent(String entryName, byte[] buffer) throws IOException {
 	    FileInputStream fis = null;
 	    try {
 
@@ -18807,7 +18800,7 @@ private void retriveCommitteeRemarksList(){
 		if(null!=this.getManagedBean().getDisqualifiedSuppliersDM()
 			&& null!=this.getManagedBean().getDisqualifiedSuppliersDM().getList()){
 			for(ScQtEvaluationResultDtl disQualDtl : this.getManagedBean().getDisqualifiedSuppliersDM().getList()){
-				if(null != disQualDtl && !disQualDtl.isCompliance()){
+				if(null != disQualDtl.isCompliance() && !disQualDtl.isCompliance()){
 					renderDisqialifiedColumn=true;
 					break;
 				}
