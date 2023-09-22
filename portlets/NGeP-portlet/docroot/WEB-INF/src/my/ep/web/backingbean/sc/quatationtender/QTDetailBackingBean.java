@@ -4651,6 +4651,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				            //#25077 - End
 				            	
 				            	tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+				            	this.getManagedBean().setApprovalRequestHistoryDtls(approvalRequestHistory);//#25077
 				            
 				            //#25077 - Start
 				            }
@@ -4748,11 +4749,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						List<PmParameter> settings = null;
 						if (ParameterConst.APPROVAL_CATEGORY_OTHERS
 								.equals(approvalCategoryCode)) {
+							boolean isApprovalOthers = false;
 							List<ScQtApprovalRequest> approvalRequest = qtApproval
 									.getScQtApprovalDtls();
 							if (null != approvalRequest
 									&& !approvalRequest.isEmpty()) {
 								for (int i = 0; i < approvalRequest.size(); i++) {
+									
+									isApprovalOthers = approvalRequest.get(i).isOthersApprovalOnly();
 									PmParameter parameter = approvalRequest
 											.get(i).getApproverAction();
 	                                 if (null == parameter) {
@@ -4867,7 +4871,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							}
 							
 							if(CollectionUtils.isNotEmpty(approvalRequest)){
-							   tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+							   if(isApprovalOthers){
+								   tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+								   this.getManagedBean().setApprovalRequestDtls(approvalRequest);
+							   }else{
+								   this.getManagedBean().setApprovalRequestDtls(null);
+							   }
 							}
 					
 						}
@@ -11670,27 +11679,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		reqDTO.setQtdetail(scQt);
 		return reqDTO;
-	}
-	
-	/**
-	  * Method to filter value if approval request to add if ICT or IMP, other is remove.
-	 * 
-	 * @return list of ScQtApprovalRequest
-	 */
-	public List<ScQtApprovalRequest> getFilteredApprovalRequest() {
-	  List<ScQtApprovalRequest> filteredAprovalRequest = new ArrayList<>();
-	  List<ScQtApprovalRequest> approvalRequest = this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().getScQtApprovalDtls();
-		if(CollectionUtils.isNotEmpty(approvalRequest)){
-			for(ScQtApprovalRequest request: approvalRequest) {
-				if(request.getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS) || 
-						request.getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)) {
-			        filteredAprovalRequest.add(request);
-		        }else{
-		        	filteredAprovalRequest.remove(request);
-		        }
-			}
-		}
-	  return filteredAprovalRequest;  
 	}
 	// 25077 - End
 	
