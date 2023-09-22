@@ -3242,6 +3242,7 @@ public class SmPersonnelBackingBean extends
 	 * @return
 	 */
 	public String navigateToUpdateMOFUserPage(String personnelId) {
+		log.info("personnelId test 34810 == " + personnelId);
 		FacesScopes sc = new FacesScopes();
 		getManagedBean().setEditMode(true);
 		CountryReqDTO reqDTO = new CountryReqDTO();

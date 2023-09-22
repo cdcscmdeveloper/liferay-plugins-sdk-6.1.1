@@ -11760,22 +11760,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setEpvAttachmentValue(String epvAttachmentValue) {
 		this.epvAttachmentValue = epvAttachmentValue;
 	}
-
-	//#9019 - Start
-	/**
-	 * @return the qtRemarksIdRemoveList
-	 */
-	public List<ScRemark> getQtRemarksIdRemoveList() {
-		return qtRemarksIdRemoveList;
-	}
-
-	/**
-	 * @param qtRemarksIdRemoveList the qtRemarksIdRemoveList to set
-	 */
-	public void setQtRemarksIdRemoveList(List<ScRemark> qtRemarksIdRemoveList) {
-		this.qtRemarksIdRemoveList = qtRemarksIdRemoveList;
-	}
-	//#9019 - End
 	
 	public String getMsgConfirmBelowIndi() {
 		return msgConfirmBelowIndi;
