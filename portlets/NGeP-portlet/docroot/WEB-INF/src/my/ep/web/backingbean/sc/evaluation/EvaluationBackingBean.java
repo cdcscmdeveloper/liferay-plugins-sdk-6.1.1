@@ -7741,7 +7741,15 @@ public class EvaluationBackingBean extends
 						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION)
 						// #25638 - End.
 						) {
-				int lcaloutputTab=retriveFinancialChecklistStatusCheck();
+					int complianceIndex=this.getManagedBean().getComplianceActiveIndex();//35148-start
+					int lcaloutputTab=Integer.MIN_VALUE;
+					if(this.getManagedBean().getScQt().isSampleReq() && QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX>complianceIndex){
+						retriveComplianceSample();
+						outputTab=QTConstants.EVALUATION_MAIN_ACTIVE_INDEX;
+					}
+					else{
+				 lcaloutputTab=retriveFinancialChecklistStatusCheck();
+					}//35148-End
 				if(lcaloutputTab>0){
 					outputTab=lcaloutputTab;
 					if(outputTab==7){
@@ -7750,8 +7758,12 @@ public class EvaluationBackingBean extends
 									1);
 							//return outputTab=7;
 						} else {
-							this.getManagedBean().setComplianceActiveIndex(
-									2);
+							if(this.getManagedBean().getScQt().isSampleReq() && QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX>complianceIndex){//35148-start
+								this.getManagedBean().setComplianceActiveIndex(QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX);
+							}
+							else{
+							this.getManagedBean().setComplianceActiveIndex(QTConstants.COMPLIANCE_FINANCIAL_ACTIVE_INDEX);
+							}//35148-End
 							//return outputTab=7;
 						}
 					}
@@ -9975,15 +9987,6 @@ private void retriveCommitteeRemarksList(){
 				log.info("============displayitemsamplerequired===");
 			List<ScQtSampleItem> sampleItemlist=this.getManagedBean().getSampleItemList();
 			for(ScQtSampleItem item:sampleItemlist){
-				if(null==item.getUserScore()){
-				//throw new EpException("SampleItemScoremandatory");	
-				throw new EpException(MessageConst.ERROR_760517, new String[] {
-						ResourceBundleUtils
-						.getMessage("lbl.tpl.spec.content.user.score",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()),
-								item.getScRequestItem().getItemName() });
-				}
 				/*#29187 Start Vinod*/
 				if(item.getCompliance()!=null  
 					&& item.getCompliance().equals(Boolean.FALSE)){
