@@ -3371,14 +3371,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					
 					Predicate conditionPredicate = null;
 					List<CtItemPrice> itemPriceSelect = null;
-					String zoneQty = itemPrice.getCtContractZone().getZoneName().trim() + itemPrice.getFromQty().toString() +
-							itemPrice.getFromQty().toString();
 					
 					if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
 							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
 							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
 							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
-											
+
+						String fromQty = itemPrice.getFromQty()!=null ? itemPrice.getFromQty().toString() : null;
+						String toQty = itemPrice.getToQty()!=null ? itemPrice.getToQty().toString() : null;
+						String zoneQty = itemPrice.getCtContractZone().getZoneName().trim() + fromQty + toQty;
+						
 						//checking whether zone and quantity has been select
 						if(!itemPriceZone.containsKey(zoneQty)){
 							
