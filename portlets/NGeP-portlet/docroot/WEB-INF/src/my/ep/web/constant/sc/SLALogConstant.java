@@ -36,6 +36,7 @@ public class SLALogConstant {
 	public static final String QT_UPDATE_BPM_TASKBRIEF = "updateBPMTaskBrief";
 	public static final String COMMON_GET_STATUSDROPDOWNVALUES_SEARCHBEAN = "getStatusDropdownValuesBySearchBean";
 	public static final String QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY = "generateLampiranA3PdfFromVelocity";
+	public static final String QT_CREATE_LAMPIRANA3FORQT = "createLampiranA3forQT";
 	//#29187 Start Vinod
 	public static final String QT_GET_COMPLIANCE_DROPDOWN_VALUES = "getComplianceDropdownValues";
 	public static final String QT_CHECK_SAMPLE_COMPLIANCE = "checkSampleCompliance";
