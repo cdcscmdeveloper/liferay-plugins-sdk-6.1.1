@@ -2680,8 +2680,8 @@ public class SmApplicationBackingBean extends
 				if (personnel.isSsmData()!= true){
 					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
 				}
-				
-				if(personnel.isEquityOwner()){
+				//#35130
+				if(personnel.isEquityOwnerSsm() && personnel.isSsmData()){
 					if(shareAmtSsm != null && !(personnel.getShareAmtSsm() == null)){
 						log.info("THIS IS THE VALUE OF THE TOTAL SUM ////////////////////// " + sum);
 						log.info("THIS IS THE VALUE OF THE TOTAL SHARE ////////////////////// " + shareAmtSsm);
@@ -3715,6 +3715,10 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
 				getManagedBean().setCurrentPageType(currentPageType);
 			}
+			//#35086 - start
+			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean().getLatestAppl(), 
+					getManagedBean().getSmAppl(), getManagedBean().getCurrentPageType());
+			//#35086 - end
 		}
 
 		finally {
@@ -3998,10 +4002,7 @@ public class SmApplicationBackingBean extends
 
 				// init business premise whether show or hide home office
 				initBusinessPremise();
-				//#35086 - start
-				SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean().getLatestAppl(), 
-						getManagedBean().getSmAppl(), getManagedBean().getCurrentPageType());
-				//#35086 - end
+
 			}
 			assignValReqdToFalse();
 		}
@@ -13486,7 +13487,7 @@ public class SmApplicationBackingBean extends
 	 * @throws Exception
 	 */
 	public void printDeclarationForm() throws Exception {
-		String language = new FacesScopes().getUserLocale().getLanguage();
+		String language = setFixedLanguageDisplay(true, "ms");
 		if (language.equals("en")) {
 			Map<String, String> paramMap = new HashMap<String, String>();
 			paramMap.put("PAPPNO", getManagedBean().getSmAppl().getApplNo());
@@ -15583,8 +15584,9 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		//#27165
-		
-		SmCommonUtil.redirectToExternalUrl(SupplierManagementConst.VIEW_SSM_INFOMATION);
+		//34099
+		RequestContext.getCurrentInstance().execute("viewssminfoDlg.show()");
+		//SmCommonUtil.redirectToExternalUrl(SupplierManagementConst.VIEW_SSM_INFOMATION);
 	}
 	
 	public void clearPersonnelList() {
@@ -17169,11 +17171,11 @@ public class SmApplicationBackingBean extends
 						
 						PmState state = new PmState();
 						//#34799 - start
-						if(personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC)
+						if(personnelAddress.getSmPersonnel().getIdentificationType() != null && personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC)
 								&& addr.getSmAddress().getPmState() != null){
 							state.setStateId(addr.getSmAddress().getPmState().getStateId());
 						}
-						if(personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT)) {
+						if(personnelAddress.getSmPersonnel().getIdentificationType() != null && personnelAddress.getSmPersonnel().getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT)) {
 							if(smAddress.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)
 									&& addr.getSmAddress().getPmState() != null){
 								state.setStateId(addr.getSmAddress().getPmState().getStateId());
@@ -17352,7 +17354,7 @@ public class SmApplicationBackingBean extends
 	//#32008, #35086 - start
 	public String getSelectedBranchBank(SmSupplierBank bank){
 		//#35086 - end
-		if (SmCommonUtil.isCollectionEmpty(bank.getSmSupplierBranchBanks())) {
+		if (bank == null || SmCommonUtil.isCollectionEmpty(bank.getSmSupplierBranchBanks())) {
 			return null;
 		}
 		if (bank.getSmSupplierBranchBanks().size() == 1) {
@@ -17370,7 +17372,7 @@ public class SmApplicationBackingBean extends
 	//#35086 - start
 	public String getSelectedSignatoryBank(SmSupplierBank bank){
 		//#35086 - end
-		if (SmCommonUtil.isCollectionEmpty(bank.getSmChequeSignatories())){
+		if (bank == null || SmCommonUtil.isCollectionEmpty(bank.getSmChequeSignatories())){
 			return null;
 		}
 		if (bank.getSmChequeSignatories().size() == 1) {

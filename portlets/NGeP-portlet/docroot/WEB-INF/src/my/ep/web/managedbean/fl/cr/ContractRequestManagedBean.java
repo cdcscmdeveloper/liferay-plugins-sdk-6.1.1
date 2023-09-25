@@ -355,6 +355,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     private int deleteItem;
     private int deleteOverallItem;
   //11076 - end
+    private boolean bondIncomplete = false;//35024
     
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
@@ -3387,4 +3388,15 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 			this.deleteOverallItem = deleteOverallItem;
 		}
 		//11076 - end
+		
+		//35024-Start
+		public boolean isBondIncomplete() {
+			return bondIncomplete;
+		}
+
+		public void setBondIncomplete(boolean bondIncomplete) {
+			this.bondIncomplete = bondIncomplete;
+		}
+		
+		//35024-End	
 }
