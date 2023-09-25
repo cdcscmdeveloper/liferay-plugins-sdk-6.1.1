@@ -52,9 +52,18 @@
 		<tr>
 			##Loop Question 
 			<td> <br/><br/>
+			##START #34920
+			#set($i = 0)
 			#foreach($ques in $question)
 				<tr>
-					<td >$velocityCount.</td>
+					<td >
+						#if ($ques.smQuestion.smAnswerCategory.answerCategoryId != 2)
+							#set($i = $i+1)
+							$i.
+						#else
+					 	#end
+					</td>
+					##END #34920
 					<td >$!ques.smQuestion.questionValue</td>
 					
 				</tr>
