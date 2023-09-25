@@ -143,6 +143,7 @@
 						<!-- #32008 -->
 						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmState.adoptDivision
 								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmDivision.divisionId}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmDivision.divisionId}" 
