@@ -3,10 +3,12 @@ package my.ep.web.managedbean.ct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -26,9 +28,8 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import org.apache.log4j.Logger;
 
-import sun.util.logging.resources.logging;
+import org.apache.log4j.Logger;
 
 
 
@@ -75,7 +76,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 	private boolean itemProductNotExist;
 	private boolean itemServiceNotExist;
 	private PmUom selectedSearchItem;
-    private boolean isFromViewPage = false; // Fix- #34110
+//    private boolean isFromViewPage = false; // Fix- #34110
 	
 	
 	public void reassignValue(boolean value){
@@ -128,7 +129,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 				Long contractVerId=null;
 				contractVerId = contractBb.getManagedBean().getContractVer().getContractVerId();
-				isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
+//				isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
 
 				log.info("**SuspensionProductListingPagingDataModel******ContractID **--> : "+contId);
 				log.info("**SuspensionProductListingPagingDataModel******ContractVerID **--> : "+contractVerId);
@@ -242,7 +243,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 						IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
 						
 						
-						resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO , isFromViewPage); //Fix - #34110)
+						resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
 					    resDTO.getContractItemResultBean();
 					    //contractBb.getManagedBean().setServicecollapse(true);
 					    //log.info("*****ServiceListingPagingDataModel getContractItemResultBean().getResultList().size()******"+resDTO.getContractItemResultBean().getResultList().size());
@@ -291,7 +292,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 				Long contractVerId=null;
 				contractVerId = contractBb.getManagedBean().getContractVer().getContractVerId();				
-				isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
+//				isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
 				if(contractVerId==null){
 					ctReqDTO.setContractId(contId);
 					 contractVerId = contractSO.getLatestContractVer(ctReqDTO).getCtContractVer().getContractVerId();					
@@ -400,7 +401,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
     					
     					IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
     					
-					resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO, isFromViewPage); //Fix - #34110
+					resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
 					//contractBb.getManagedBean().setProdcollapse(true);
 					//log.info("*****ContractListingPagingDataModel getContractItemResultBean().getResultList().size()******"+resDTO.getContractItemResultBean().getResultList().size());
 					if(resDTO.getContractItemResultBean().getResultList().size()>0){
@@ -821,5 +822,4 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 		this.selectedSearchItem = selectedSearchItem;
 	}
 	//#20997 - End
-	
 }
