@@ -15496,7 +15496,7 @@ public class SmApplicationBackingBean extends
 	//#32008, #35086 - start
 	public String getSelectedBranchBank(SmSupplierBank bank){
 		//#35086 - end
-		if (SmCommonUtil.isCollectionEmpty(bank.getSmSupplierBranchBanks())) {
+		if (bank == null || SmCommonUtil.isCollectionEmpty(bank.getSmSupplierBranchBanks())) {
 			return null;
 		}
 		if (bank.getSmSupplierBranchBanks().size() == 1) {
@@ -15514,7 +15514,7 @@ public class SmApplicationBackingBean extends
 	//#35086 - start
 	public String getSelectedSignatoryBank(SmSupplierBank bank){
 		//#35086 - end
-		if (SmCommonUtil.isCollectionEmpty(bank.getSmChequeSignatories())){
+		if (bank == null || SmCommonUtil.isCollectionEmpty(bank.getSmChequeSignatories())){
 			return null;
 		}
 		if (bank.getSmChequeSignatories().size() == 1) {
