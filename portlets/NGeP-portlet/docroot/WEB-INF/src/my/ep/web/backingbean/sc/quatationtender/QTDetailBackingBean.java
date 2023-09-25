@@ -2313,16 +2313,20 @@ public class QTDetailBackingBean extends
 									true,
 									JoinType.LEFT));
 					statusBean = statusFilterBean;
+
 					if(status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION.toString())) {
+						// #9019 #34702 - Start
 						statusBean = new SearchMultiFilterBean(
 								statusFilterBean, 
 								new SearchFilterBean(
-										"scQtStatus.pmStatus",
-										SearchOperator.OPERATOR_IS_NULL.value(),
-										null,
+										"scQtStatus.pmStatus.statusId",
+										SearchOperator.OPERATOR_EQUALS.value(),
+										QTStatusConst.QT_PENDING_QT_SUBMISSION_WIP.toString(),
 										SearchCondition.CONDITION_OR.value(),
 										JoinType.LEFT));
+						// #9019 #34702  - End
 					}
+
 					qtSearchBean.getDataFilterBeans().add(statusBean);
 				}
 				else{
@@ -3498,6 +3502,7 @@ public class QTDetailBackingBean extends
 				committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 				committeReqDTO.setToBeDeletedMembers(this.getManagedBean()
 						.getToBeDelCommitteMemebers());
+				committeReqDTO.setTaskName(taskName); // Bug #34972@Syazani 09/08/2023
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 				
 			} else if (SCProcessNameConst.ASSIGN_FC_SECRETARY
@@ -6117,11 +6122,14 @@ public class QTDetailBackingBean extends
 		}
 		// 9019 - End (Harun)
 		
-		//9019 - Start (Harun) #Note-398 #Note-487
-		if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().getQt().getSpecApprovalReq() == true) {
-			this.getManagedBean().getQt().setSpecApprovalReq(false);
-			reqDTO.getQtdetail().setSpecApprovalReq(false);
-			reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
+		//9019 - Start (Harun) #Note-398 and merge with #Note-487 and #35067
+		if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
+				&& this.getManagedBean().getQt().getMinistrySpecSecrataryId() != null) {
+			if (this.getManagedBean().getQt().getMinistrySpecSecrataryId().getUserId() == null) {
+				this.getManagedBean().getQt().setSpecApprovalReq(false);
+				reqDTO.getQtdetail().setSpecApprovalReq(false);
+				reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
+			}
 		}
 		//9019 - End (Harun)
 		
@@ -7844,7 +7852,7 @@ public class QTDetailBackingBean extends
 	}
 	// Bug #32425, #19336 - End
 	
-	private boolean isDeskOfficer() {
+	public boolean isDeskOfficer() {//35142
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
 	}
