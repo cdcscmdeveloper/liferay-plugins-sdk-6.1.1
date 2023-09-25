@@ -76,7 +76,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 	private boolean itemProductNotExist;
 	private boolean itemServiceNotExist;
 	private PmUom selectedSearchItem;
-    private boolean isFromViewPage = false; // Fix- #34110
+//    private boolean isFromViewPage = false; // Fix- #34110
 	
 	
 	public void reassignValue(boolean value){
@@ -129,7 +129,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 				Long contractVerId=null;
 				contractVerId = contractBb.getManagedBean().getContractVer().getContractVerId();
-				isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
+//				isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
 
 				log.info("**SuspensionProductListingPagingDataModel******ContractID **--> : "+contId);
 				log.info("**SuspensionProductListingPagingDataModel******ContractVerID **--> : "+contractVerId);
@@ -243,7 +243,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 						IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
 						
 						
-						resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO , isFromViewPage); //Fix - #34110)
+						resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
 					    resDTO.getContractItemResultBean();
 					    //contractBb.getManagedBean().setServicecollapse(true);
 					    //log.info("*****ServiceListingPagingDataModel getContractItemResultBean().getResultList().size()******"+resDTO.getContractItemResultBean().getResultList().size());
@@ -292,7 +292,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 				Long contractVerId=null;
 				contractVerId = contractBb.getManagedBean().getContractVer().getContractVerId();				
-				isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
+//				isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
 				if(contractVerId==null){
 					ctReqDTO.setContractId(contId);
 					 contractVerId = contractSO.getLatestContractVer(ctReqDTO).getCtContractVer().getContractVerId();					
@@ -401,7 +401,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
     					
     					IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
     					
-					resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO, isFromViewPage); //Fix - #34110
+					resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
 					//contractBb.getManagedBean().setProdcollapse(true);
 					//log.info("*****ContractListingPagingDataModel getContractItemResultBean().getResultList().size()******"+resDTO.getContractItemResultBean().getResultList().size());
 					if(resDTO.getContractItemResultBean().getResultList().size()>0){
