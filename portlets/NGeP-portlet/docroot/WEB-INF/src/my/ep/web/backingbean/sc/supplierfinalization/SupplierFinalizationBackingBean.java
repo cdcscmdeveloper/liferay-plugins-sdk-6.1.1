@@ -1593,7 +1593,7 @@ public class SupplierFinalizationBackingBean extends
 			
 			//validateEvaluationReports(SourcingConstants.SUPPLIER_FINALIZATION_TASK);
 			//saveEvaluationReportsDetaills();
-			if (this.getManagedBean().getEndorsementReportActiveIndex() == activeIndex) {
+ 			if (!skipValidation) {//25037 - merge same condition by 28834, add skipValidation flag
 				//#27364 Start
 				String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
 				if (ParameterConst.DECISION_CANCEL
@@ -1624,38 +1624,6 @@ public class SupplierFinalizationBackingBean extends
 					}
 				}
 			}
-			// #28834 - Start
-			else{
-				
-				String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
-				if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode) || 
-					ParameterConst.DECISION_RE_PUBLISH.equals(decisionTypeCode) || 
-					ParameterConst.DECISION_RE_EVALUATION.equals(decisionTypeCode)){
-					this.getManagedBean().setFinalizationMethod(null);
-				}
-				
-				if (this.getManagedBean().getFinalizationMethod() != null
-						&& (this.getManagedBean().getFinalizationMethod()
-								.equals(ParameterConst.RECOMMEND_BY_AWARD) || this
-								.getManagedBean().getFinalizationMethod()
-								.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD))
-								&& !getManagedBean().isDisableJustifications()
-								) {
-					
-					if (this.getManagedBean().getJustification() != null
-							&& this.getManagedBean().getJustification()
-									.getReasonId() == null) {
-						navigateToEndorsementReportTab();
-						throw new EpException(MessageConst.ERROR_100061,
-								new String[] { ResourceBundleUtils.getMessage(
-										"lbl.sc.sf.justification.selection",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										new FacesScopes().getUserLocale()) });
-					}
-				}
-				
-			}
-			// #28834 - End
 						
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				reqDTO.setDeletedMeetingsList(this.getManagedBean().getDeletedMeetingList());
@@ -1763,6 +1731,7 @@ public class SupplierFinalizationBackingBean extends
 			
 			//#28834 - Start 
 			if(CollectionUtils.isNotEmpty(toBeRemovedReports)){
+				if(skipValidation) return;//25037
 				navigateToEndorsementReportTab();
 			    throw new EpException(MessageConst.ERROR_770271);
 			}
