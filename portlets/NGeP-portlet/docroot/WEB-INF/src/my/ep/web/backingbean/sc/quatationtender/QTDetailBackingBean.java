@@ -2407,7 +2407,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//9019 for prevent null insert for remark and merge note-522
 		QuationTenderResDTO resDto = null;
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-		List<ScRemark> qtRemarksIdRemoveList = new ArrayList<ScRemark>() ;
 		reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 		
@@ -2422,8 +2421,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						resDto = getQTDetailSO().retriveQtRemarks(reqDTO);
 						if (CollectionUtils.isNotEmpty(resDto.getRemarks())) {
 							for (ScRemark remark : resDto.getRemarks()) {
-								//this.getManagedBean().setQtRemarksIdRemove(remark.getRemarkId());
-								qtRemarksIdRemoveList.add(remark);
+								this.getManagedBean().setQtRemarksIdRemove(remark.getRemarkId());
 							}
 						}
 					}
@@ -2432,13 +2430,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					resDto = getQTDetailSO().retriveQtRemarks(reqDTO);
 					if (CollectionUtils.isNotEmpty(resDto.getRemarks())) {
 						for (ScRemark remark : resDto.getRemarks()) {
-							//this.getManagedBean().setQtRemarksIdRemove(remark.getRemarkId());
-							qtRemarksIdRemoveList.add(remark);
+							this.getManagedBean().setQtRemarksIdRemove(remark.getRemarkId());
 						}
 					}
 				}
 			}
-			this.getManagedBean().setQtRemarksIdRemoveList(qtRemarksIdRemoveList);
 		}	
 		// 9019 end
 		
@@ -2543,7 +2539,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		quationTenderReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		quationTenderReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		quationTenderReqDTO.setQtRemarksIdRemove(this.getManagedBean().getQtRemarksIdRemove()); //#9019 (Harun)
-		quationTenderReqDTO.setQtRemarksIdRemoveList(this.getManagedBean().getQtRemarksIdRemoveList()); //#9019 note-522(Harun)
 		
 		return quationTenderReqDTO;
 	}
@@ -4656,6 +4651,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				            //#25077 - End
 				            	
 				            	tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+				            	this.getManagedBean().setApprovalRequestHistoryDtls(approvalRequestHistory);//#25077
 				            
 				            //#25077 - Start
 				            }
@@ -4753,11 +4749,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						List<PmParameter> settings = null;
 						if (ParameterConst.APPROVAL_CATEGORY_OTHERS
 								.equals(approvalCategoryCode)) {
+							boolean isApprovalOthers = false;
 							List<ScQtApprovalRequest> approvalRequest = qtApproval
 									.getScQtApprovalDtls();
 							if (null != approvalRequest
 									&& !approvalRequest.isEmpty()) {
 								for (int i = 0; i < approvalRequest.size(); i++) {
+									
+									isApprovalOthers = approvalRequest.get(i).isOthersApprovalOnly();
 									PmParameter parameter = approvalRequest
 											.get(i).getApproverAction();
 	                                 if (null == parameter) {
@@ -4872,7 +4871,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							}
 							
 							if(CollectionUtils.isNotEmpty(approvalRequest)){
-							   tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+							   if(isApprovalOthers){
+								   tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+								   this.getManagedBean().setApprovalRequestDtls(approvalRequest);
+							   }else{
+								   this.getManagedBean().setApprovalRequestDtls(null);
+							   }
 							}
 					
 						}
@@ -6967,11 +6971,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}	
 		//9019 - End (Harun)
 		
-		//9019 - Start (Harun) #Note-398 and merge with #Note-487
-		if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().getQt().getSpecApprovalReq() == true) {
-			this.getManagedBean().getQt().setSpecApprovalReq(false);
-			reqDTO.getQtdetail().setSpecApprovalReq(false);
-			reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
+		//9019 - Start (Harun) #Note-398 and merge with #Note-487 and #35067
+		if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
+				&& this.getManagedBean().getQt().getMinistrySpecSecrataryId() != null) {
+			if (this.getManagedBean().getQt().getMinistrySpecSecrataryId().getUserId() == null) {
+				this.getManagedBean().getQt().setSpecApprovalReq(false);
+				reqDTO.getQtdetail().setSpecApprovalReq(false);
+				reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
+			}
 		}
 		//9019 - End (Harun)
 		
@@ -9112,7 +9119,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * Added MOF Desk Officer
 	 * @return
 	 */
-	private boolean isDeskOfficer() {
+	public boolean isDeskOfficer() {//35142
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
 			   || facesScopes.hasRoleUser(RoleCode.MOF_DESK_OFFICER.value());
@@ -11672,27 +11679,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		reqDTO.setQtdetail(scQt);
 		return reqDTO;
-	}
-	
-	/**
-	  * Method to filter value if approval request to add if ICT or IMP, other is remove.
-	 * 
-	 * @return list of ScQtApprovalRequest
-	 */
-	public List<ScQtApprovalRequest> getFilteredApprovalRequest() {
-	  List<ScQtApprovalRequest> filteredAprovalRequest = new ArrayList<>();
-	  List<ScQtApprovalRequest> approvalRequest = this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().getScQtApprovalDtls();
-		if(CollectionUtils.isNotEmpty(approvalRequest)){
-			for(ScQtApprovalRequest request: approvalRequest) {
-				if(request.getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS) || 
-						request.getApprovalType().getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_IMPORTED_GOODS)) {
-			        filteredAprovalRequest.add(request);
-		        }else{
-		        	filteredAprovalRequest.remove(request);
-		        }
-			}
-		}
-	  return filteredAprovalRequest;  
 	}
 	// 25077 - End
 	
