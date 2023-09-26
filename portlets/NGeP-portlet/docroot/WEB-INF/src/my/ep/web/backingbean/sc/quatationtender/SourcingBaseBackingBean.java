@@ -5386,9 +5386,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			if (!scQt.isPanel() && actualIntendedPrice != null) {
 				log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
 				log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: "+ actualIntendedPrice +" :::");
+		 
+				// #25729 #174
+				//BugBug #35061 - asyrafhaziq
+				// get total indicative price threshold validation value
+				BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+				
+				if ((actualIntendedPrice.compareTo(indPriceThreshold) <=0))
 
-				// #25729 #174			 
-				if ((actualIntendedPrice.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <=0))
 				{
 					return Boolean.TRUE;
 				}
@@ -6179,111 +6184,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return listSpec;
 		//#26130 end
 	}
-		//#26130 - zaim end
-		
-		//#10542 - start
-		/**
-		 * To download multiple files with specific path.
-		 * 
-		 * @param zipFileName
-		 * @param scAttachments
-		 * @throws IOException
-		 */
-		protected <ATTACHMENT extends ScAttachment> void downloadAllFilesWithSpecificFolder(
-				String zipFileName, List<EvaluationReqDTO> listScAttachment, String downloadBy, String encryptionKey)
-				throws IOException {
-			Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
-			long startDownloadAllFilesWithSpecificFolderTimer = System.currentTimeMillis();
-			log.info("Starting downloadAllFilesWithSpecificFolder :: " + currentTimeStamp);
-			PortletResponse portalresponse = (PortletResponse) FacesContext
-					.getCurrentInstance().getExternalContext().getResponse();
-			HttpServletResponse response = PortalUtil
-					.getHttpServletResponse(portalresponse);
-			response.setContentType("application/zip");
-			response.setHeader("Content-Disposition", "attachment; filename="
-					+ zipFileName + ".zip");
-			ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
-					response.getOutputStream()));
-			
-			try {
-				downloadAllFilesAsZipFileWithSpecificFolder(zos,listScAttachment, downloadBy, encryptionKey);
-				
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			} finally {
-				zos.close();
-				response.flushBuffer();
-				FacesContext.getCurrentInstance().responseComplete();
-				long endDownloadAllFilesWithSpecificFolderTimer = System.currentTimeMillis();
-				log.info("Ending downloadAllFilesWithSpecificFolder :: " + convertMilliToSeconds(endDownloadAllFilesWithSpecificFolderTimer - startDownloadAllFilesWithSpecificFolderTimer) + " Second(s)");
-			}
-		}
-		
-		protected <ATTACHMENT extends ScAttachment> void downloadAllFilesAsZipFileWithSpecificFolder(ZipOutputStream zos,List<EvaluationReqDTO> listScAttachment, String downloadBy,String encryptionKey) throws IOException{
-			Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
-			long startDownloadAllFilesAsZipFileWithSpecificFolder = System.currentTimeMillis();
-			log.info("Starting downloadAllFilesAsZipFileWithSpecificFolder... " + currentTimeStamp);
-			for (EvaluationReqDTO scAttachmentReq : listScAttachment) {
-				// Get the file
-				FileInputStream fis = null;
-				BufferedInputStream fif = null;
-				ScAttachment scAttachment = scAttachmentReq.getScAttachment();
-				
-				String supplierNo = "Supplier "+ scAttachmentReq.getSupplierNo();
-				
-				try{
-					if (null != scAttachment
-							&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
-						File file = new File(getActualFilePath(scAttachment));
-						// 10542-#61 dayan bug fix - start
-						String checkListTitle = scAttachmentReq.getScQtChecklistName().replaceAll("/","_");
-						String extension = FilenameUtils.getExtension(scAttachment.getFileName());
-						
-						String attachmentFileName = (StringUtils.isNotBlank(scAttachment.getTempFileName()) 
-							? scAttachment.getTempFileName() + "." + extension 
-							: scAttachment.getFileName());
-						String downloadBySupplierZip = supplierNo+"/"+checkListTitle+"/"+attachmentFileName;
-						String downloadByDocumentZip = checkListTitle+"/"+supplierNo+"/"+attachmentFileName;
-						
-						if(downloadBy.equalsIgnoreCase("Supplier")){
-							zos.putNextEntry(new ZipEntry(downloadBySupplierZip));
-						}else if(downloadBy.equalsIgnoreCase("Document")){
-							zos.putNextEntry(new ZipEntry(downloadByDocumentZip));
-						} // 10542-#61 dayan bug fix - end
-						
-						try {
-							fis = new FileInputStream(file);
-						} catch (FileNotFoundException fnfe) {
-							zos.write(("ERROR: Could not find file " + file
-									.getName()).getBytes());
-							continue;
-						}
-						 fif = new BufferedInputStream(fis);
-						
-						// Write the contents of the file
-						BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC(encryptionKey);
-						bc.InitDecryptCipher();
-						bc.CBCDecryptFileZip(fif, zos);
-
-					// zos.write(data);
-					}
-				}
-				finally{
-					if(fis != null){
-						fis.close();
-					}
-					if(fif != null){
-						fif.close();
-					}
-					zos.closeEntry();
-				}
-			}
-			
-			long endDownloadAllFilesAsZipFileWithSpecificFolder = System.currentTimeMillis();
-			log.info("Ending downloadAllFilesAsZipFileWithSpecificFolder... " + convertMilliToSeconds(endDownloadAllFilesAsZipFileWithSpecificFolder - startDownloadAllFilesAsZipFileWithSpecificFolder) + " Second(S)");
-		}
-		//#10542 - end
-		
+		//#26130 - zaim end				
 		
 		//#26130 start
 		public String retrieveTierQuantity(List<TplSpecTierQty> listTplSpecTierQties) {
