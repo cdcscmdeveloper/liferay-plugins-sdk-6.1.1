@@ -326,7 +326,8 @@
 				</td>
 				<td class="tdContent">
 					<h:panelGroup id="divisionUserInfoDropdownPanelId" rendered="#{bb.managedBean.smPermenantAdd.pmState.adoptDivision}">
-						<p:selectOneMenu id="cmbPermDivision"
+						<!-- #34159 - START -->
+						<p:selectOneMenu id="cmbPermDivision" required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{bb.managedBean.smPermenantAdd.pmDivision.divisionId}"
 						style="width:80%">
@@ -339,6 +340,8 @@
 							listener="#{bb.onChangeDivision(bb.managedBean.smPermenantAdd.pmDivision,'USER_PERMANENT_ADDRESS')}"
 								update="cmbPermDistrict,cmbPermCity" />
 					</p:selectOneMenu>
+					<p:message id="cmbPermDivisionMsg" for="cmbPermDivision" display="icon" />
+					<!-- #34159 - END -->
 					</h:panelGroup>
 				</td>
             </tr>
