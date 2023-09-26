@@ -11,7 +11,7 @@
 	
 	<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
 		<p:dataTable
-		    value="#{approvalDtlsList.historyApprovalRequests}" 
+		    value="#{qTDetailBB.managedBean.approvalRequestHistoryDtls}" 
 		    var="historyOthersDtls" style="width:100%" rowIndexVar="indexHistory" editable="true"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{historyOthersDtls}">
