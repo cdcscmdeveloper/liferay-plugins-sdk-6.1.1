@@ -342,6 +342,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private List<TplSpecAnswer> tplSpecAnswerList;
 	private List<ScLoiLoaItem> loiLoaItemsResult;//29007 - fix issue 2 search action note 347
 	private boolean resetAll = false;
+	private boolean resetAllforNoReport = false;
 	/*#29007 End Vinod*/
 	
 	//#27797 - start
@@ -1934,6 +1935,12 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	public void setResetAll(boolean resetAll) {
 		this.resetAll = resetAll;
+	}
+	public boolean isResetAllforNoReport() {
+		return resetAllforNoReport;
+	}
+	public void setResetAllforNoReport(boolean resetAllforNoReport) {
+		this.resetAllforNoReport = resetAllforNoReport;
 	}
 	/*#29007 End Vinod*/
 
