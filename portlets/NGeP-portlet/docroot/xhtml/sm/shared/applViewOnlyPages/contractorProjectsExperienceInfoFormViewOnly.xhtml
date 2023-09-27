@@ -44,7 +44,7 @@
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 					</p:commandLink>
 					<!-- #32008 -->
-					<ac:smFieldChangeTableAlert object="#{contrBean}" />
+					<ac:smFieldChangeTableAlertView object="#{contrBean}" />
 				</p:column>
 			</p:dataTable>
 		</p:outputPanel>
@@ -68,9 +68,9 @@
 								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.projTitle']}" /></td>
 								<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.title}"/>
 									<!-- #32008 -->
-									<ac:smFieldChangeAlert 
+									<ac:smFieldChangeAlertView 
 										isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
-											and not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+											and not empty viewSmApplBackingBean.managedBean.latestCompanyExperience.companyExperienceId}"
 										oriValue="#{viewSmApplBackingBean.managedBean.latestCompanyExperience.title}" 
 										currValue="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.title}" 
 										alertValue="#{viewSmApplBackingBean.managedBean.latestCompanyExperience.title}"/></td>
@@ -80,9 +80,9 @@
 								<td>
 									<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.contractValue}" />
 									<!-- #32008 -->
-									<ac:smFieldChangeAlert 
+									<ac:smFieldChangeAlertView 
 										isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
-											and not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+											and not empty viewSmApplBackingBean.managedBean.latestCompanyExperience.companyExperienceId}"
 										oriValue="#{viewSmApplBackingBean.managedBean.latestCompanyExperience.contractValue}" 
 										currValue="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.contractValue}" 
 										alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestCompanyExperience.contractValue)}"/>
@@ -92,9 +92,9 @@
 								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.procMode']}" /></td>
 								<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperienceProcurementMode}"/>
 									<!-- #32008 -->
-									<ac:smFieldChangeAlert 
+									<ac:smFieldChangeAlertView 
 										isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
-											and not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+											and not empty viewSmApplBackingBean.managedBean.latestCompanyExperience.companyExperienceId}"
 										oriValue="#{viewSmApplBackingBean.managedBean.latestCompanyExperience.procurementModeId}" 
 										currValue="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementModeId}" 
 										alertValue="#{viewSmApplBackingBean.getLabelFromSelectItems(viewSmApplBackingBean.managedBean.latestCompanyExperience.procurementModeId,'PM')}"/></td>
@@ -105,9 +105,9 @@
 									<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.busNtw.fdrGov']}" rendered="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientType eq 'F'}"/>
 									<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.busNtw.others']}" rendered="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientType eq 'O'}"/>
 									<!-- #32008 -->
-									<ac:smFieldChangeAlert 
+									<ac:smFieldChangeAlertView 
 										isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
-											and not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+											and not empty viewSmApplBackingBean.managedBean.latestCompanyExperience.companyExperienceId}"
 										oriValue="#{viewSmApplBackingBean.managedBean.latestCompanyExperience.clientType}" 
 										currValue="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientType}" 
 										alertValue="#{empty viewSmApplBackingBean.managedBean.latestCompanyExperience.clientType ?  lbl['lbl.sm.no.available'] :
@@ -119,9 +119,9 @@
 								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.statBody']}" /></td>
 								<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientName}"/>
 									<!-- #32008 -->
-									<ac:smFieldChangeAlert 
+									<ac:smFieldChangeAlertView 
 										isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
-											and not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+											and not empty viewSmApplBackingBean.managedBean.latestCompanyExperience.companyExperienceId}"
 										oriValue="#{viewSmApplBackingBean.managedBean.latestCompanyExperience.clientName}" 
 										currValue="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientName}" 
 										alertValue="#{viewSmApplBackingBean.managedBean.latestCompanyExperience.clientName}"/></td>
@@ -135,9 +135,9 @@
 									<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.projDtls.kiv']}" rendered="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.progressStatus eq 'K'}"/>
 									<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.projDtls.repeal']}" rendered="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.progressStatus eq 'R'}"/>
 									<!-- #32008 -->
-									<ac:smFieldChangeAlert 
+									<ac:smFieldChangeAlertView 
 										isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
-											and not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+											and not empty viewSmApplBackingBean.managedBean.latestCompanyExperience.companyExperienceId}"
 										oriValue="#{viewSmApplBackingBean.managedBean.latestCompanyExperience.progressStatus}" 
 										currValue="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.progressStatus}" 
 										alertValue="#{empty viewSmApplBackingBean.managedBean.latestCompanyExperience.progressStatus ? lbl['lbl.sm.no.available'] :
@@ -153,9 +153,9 @@
 								<td>
 									<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementDate}" />
 									<!-- #32008 -->
-									<ac:smFieldChangeAlert 
+									<ac:smFieldChangeAlertView 
 										isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
-											and not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+											and not empty viewSmApplBackingBean.managedBean.latestCompanyExperience.companyExperienceId}"
 										oriValue="#{viewSmApplBackingBean.managedBean.latestCompanyExperience.procurementDate}" 
 										currValue="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementDate}" 
 										alertValue="#{viewSmApplBackingBean.getDateFormat(viewSmApplBackingBean.managedBean.latestCompanyExperience.procurementDate)}"/>
@@ -187,7 +187,7 @@
 									<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
 										<h:outputText value="#{contExpCat.pmCategoryL3.categoryL3Code} - #{contExpCat.pmCategoryL3.categoryName}" style="float: left;white-space: normal;" />
 										<!-- #32008 -->
-										<ac:smFieldChangeTableAlert object="#{contExpCat}" />
+										<ac:smFieldChangeTableAlertView object="#{contExpCat}" />
 									</p:column>
 								 </p:dataTable>
 								 <br />

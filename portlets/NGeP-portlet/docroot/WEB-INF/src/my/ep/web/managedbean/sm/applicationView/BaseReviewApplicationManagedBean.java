@@ -329,6 +329,10 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private SmSupplierCert latestCert;
 	private SmSectionEditorVO editVO = new SmSectionEditorVO();
 	//#32008 - end
+	//#35086 - start
+	private String latestBankBranchName;
+	private String latestChequeSignPersonnelName;	
+	//#35086 - end
 	
 	private List<DisciplinaryActionVO> disciplineVOs; 
 	private boolean disciplinaryAction;
@@ -379,6 +383,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private SmApplInquiry selectedInquiryResponse;
 	private String tabActiveDlg = "0";
 	//#34099 - end
+	private boolean isRevisionDialog; //#32008
 	
 	//14530
 		private SmApplInquiry poToSupplierInquiry;
@@ -2555,6 +2560,30 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setEditVO(SmSectionEditorVO editVO) {
 		this.editVO = editVO;
 	}
-	
+
+	public boolean isRevisionDialog() {
+		return isRevisionDialog;
+	}
+
+	public void setRevisionDialog(boolean isRevisionDialog) {
+		this.isRevisionDialog = isRevisionDialog;
+	}	
 	//#32008 - end
+	//#35086 - start
+	public String getLatestBankBranchName() {
+		return latestBankBranchName;
+	}
+
+	public void setLatestBankBranchName(String latestBankBranchName) {
+		this.latestBankBranchName = latestBankBranchName;
+	}
+
+	public String getLatestChequeSignPersonnelName() {
+		return latestChequeSignPersonnelName;
+	}
+
+	public void setLatestChequeSignPersonnelName(String latestChequeSignPersonnelName) {
+		this.latestChequeSignPersonnelName = latestChequeSignPersonnelName;
+	}
+	//#35086 - end
 }
