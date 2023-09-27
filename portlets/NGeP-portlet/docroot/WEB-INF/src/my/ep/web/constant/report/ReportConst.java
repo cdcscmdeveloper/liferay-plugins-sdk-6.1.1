@@ -1164,6 +1164,11 @@ public class ReportConst implements Serializable{
 	public static final String CT_AMENDMENT_UPDATE_RPT_SCHEDULE = "CT_AMENDMENT_UPDATE_RPT_SCHEDULE.jsp";
 	//Enhancement 29418 - shaqimi
 	
+	// Bug #34996@Syazani 16/08/2023 -- Start
+	public static final String AUDITOR_INTERNAL = "AUDITOR_INTERNAL";
+	public static final String AUDITOR_GENERAL = "AUDITOR_GENERAL";
+	// Bug #34996@Syazani 16/08/2023 -- End
+	
 	public ReportConst(){}
 	
 	/**
