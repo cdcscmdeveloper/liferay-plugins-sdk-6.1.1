@@ -22,6 +22,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constants.BpmConstants;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.constants.PPProcessNameConst;
@@ -65,6 +66,9 @@ BaseBackingBean<BPMTaskListManagedBean> {
 	private String language = new FacesScopes().getUserLocale().getLanguage();
 
 	private ISearchBean<PmParameterDesc> docTypeSearchBean;
+	
+	private static boolean sortAscending = true;
+	private static boolean fromSearchBttn = false;
 
 	public BPMTaskListBackingBean() {
 
@@ -1343,19 +1347,20 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 	public void refreshAdvanceTaskList() {
 		//29810 - start
-				if (this.getManagedBean().getGroupTaskCreatedDateFrom() != null
-						&& this.getManagedBean().getGroupTaskCreatedDateTo() == null) {
-					throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-							"lbl.bpm.createdDateTo", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()) });
-				} else if (this.getManagedBean().getGroupTaskCreatedDateFrom() == null
-						&& this.getManagedBean().getGroupTaskCreatedDateTo() != null) {
-					throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-							"lbl.bpm.createdDateFrom", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()) });
-				}
-				compareDate("advance", "fromDate");
-				//29810 - end
+		if (this.getManagedBean().getGroupTaskCreatedDateFrom() != null
+				&& this.getManagedBean().getGroupTaskCreatedDateTo() == null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.bpm.createdDateTo", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		} else if (this.getManagedBean().getGroupTaskCreatedDateFrom() == null
+				&& this.getManagedBean().getGroupTaskCreatedDateTo() != null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.bpm.createdDateFrom", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
+		compareDate("advance", "fromDate");
+		//29810 - end
+		this.getManagedBean().setFromSearchBttn(true);
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
 
 	}
@@ -1453,13 +1458,13 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		this.getManagedBean().setDocTypeGroup("");
 		//this.getManagedBean().setAssignment("ALL");
 		// 29810 - start
-		this.getManagedBean().setSort_by("CREATEDATE");
+		this.getManagedBean().setSort_by(BpmConstants.SORT_BY_CREATEDATE);
 		this.getManagedBean().setAscending(false);
-		this.getManagedBean().setSort_byGroup("CREATEDATE");
+		this.getManagedBean().setSort_byGroup(BpmConstants.SORT_BY_CREATEDATE);
 		this.getManagedBean().setAscendingGroup(false);
 		this.getManagedBean().setFromSearchBttn(true);
 		this.getManagedBean().setMyTaskCreatedDateFrom(null);
-		this.getManagedBean().setMyTaskCreatedDateTo(null);
+		this.getManagedBean().setMyTaskCreatedDateTo(null);	
 		this.getManagedBean().setGroupTaskCreatedDateFrom(null);
 		this.getManagedBean().setGroupTaskCreatedDateTo(null);
 		// 29810 - end
@@ -1764,7 +1769,39 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		return retVal;
 
 	}
+	
+	public void orderByMyTaskList() {
+		
+		this.getManagedBean().setFromSearchBttn(false);
+		this.getManagedBean().setAscending(sortAscending);
+		
+		if (sortAscending) {
+			sortAscending =  false;
+		} else {
+			sortAscending = true;
+		}		
+		
+//		this.getManagedBean().getTaskListGroupDataModel().reloadData();
+		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+	}
+	
+	public void orderByGroupTaskList() {
 
+		this.getManagedBean().setFromSearchBttn(false);
+		this.getManagedBean().setAscendingGroup(sortAscending);
+		
+		if (sortAscending) {
+			sortAscending =  false;
+		} else {
+			sortAscending = true;
+		}		
+		
+		this.getManagedBean().getTaskListGroupDataModel().reloadData();
+//		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		
+
+	}
+	
 	// 25627 - Start.
 	public boolean isCommitteeApproverWithQT(StatusReqDTO reqDTO) {
 		if (ParameterConst.DOCTYPE_QUOTATION.equals(reqDTO.getDocType())) {
@@ -1779,88 +1816,79 @@ BaseBackingBean<BPMTaskListManagedBean> {
 	}
 	// 25627 -End.
 	
-	//29810 - start
-		public void compareDate(String taskType, String dateType){
-			
-			if(taskType.equalsIgnoreCase("normal")){			
-				if (this.getManagedBean().getMyTaskCreatedDateFrom() != null
-						&& this.getManagedBean().getMyTaskCreatedDateTo() != null) {
-					if (this.getManagedBean().getMyTaskCreatedDateFrom().after(this.getManagedBean().getMyTaskCreatedDateTo())) {
-							if(dateType.equalsIgnoreCase("fromDate")){
-								throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.date.to",
-										null));
-							}else if(dateType.equalsIgnoreCase("toDate")){
-								throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.date.from",
-										null));
-							}						
-					} else {
-						Long date = DateUtils.getDaysDifference(this.getManagedBean().getMyTaskCreatedDateFrom(), this
-								.getManagedBean().getMyTaskCreatedDateTo());
-						if (date > 31) {
-							throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.maximumDate",
-									null));
-						}
+	// 29810 - start
+	public void compareDate(String taskType, String dateType) {
+
+		if (taskType.equalsIgnoreCase(BpmConstants.TASK_LIST_TYPE_NORMAL)) {
+			if (this.getManagedBean().getMyTaskCreatedDateFrom() != null && this.getManagedBean().getMyTaskCreatedDateTo() != null) {
+				if (this.getManagedBean().getMyTaskCreatedDateFrom().after(this.getManagedBean().getMyTaskCreatedDateTo())) {
+					if (dateType.equalsIgnoreCase(BpmConstants.FROM_DATE)) {
+						throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.date.to", null));
+					} else if (dateType.equalsIgnoreCase(BpmConstants.TO_DATE)) {
+						throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.date.from", null));
 					}
-				}
-			}else if(taskType.equalsIgnoreCase("advance")){
-				if (this.getManagedBean().getGroupTaskCreatedDateFrom() != null
-						&& this.getManagedBean().getGroupTaskCreatedDateTo() != null) {
-					if (this.getManagedBean().getGroupTaskCreatedDateFrom().after(this.getManagedBean().getGroupTaskCreatedDateTo())) {
-						if(dateType.equalsIgnoreCase("fromDate")){
-							throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.date.to",
-									null));
-						}else if(dateType.equalsIgnoreCase("toDate")){
-							throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.date.from",
-									null));
-						}	
-					} else {
-						Long date = DateUtils.getDaysDifference(this.getManagedBean().getGroupTaskCreatedDateFrom(), this
-								.getManagedBean().getGroupTaskCreatedDateTo());
-						if (date > 31) {
-							throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.maximumDate",
-									null));
-						}
-					}
-				}
-			}		
-		} 
-		
-		public void resetDate(String type){
-			this.getManagedBean().setSelectedStatusDesc(new PmStatusDesc());
-			this.getManagedBean().setSelectedStatusDescAdvance(new PmStatusDesc());	
-			if(type.equalsIgnoreCase("normal")){
-				this.getManagedBean().setMyTaskCreatedDateFrom(null);
-				this.getManagedBean().setMyTaskCreatedDateTo(null);	
-				this.getManagedBean().setDocStatusList(null);
-				this.getManagedBean().setDocStatus(0);
-				this.getManagedBean().setViewBy("");
-				this.getManagedBean().setDocNo("");
-				this.getManagedBean().setTaskDesc("");
-				this.getManagedBean().setSort_by("CREATEDATE");
-				this.getManagedBean().setAscending(false);
-				
-				HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-				HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-				String docTypeId = originalServletRequest.getParameter("docTypeId");
-				
-				if (docTypeId != null && !docTypeId.isEmpty()) {
-					this.getManagedBean().setDocType(docTypeId);
-					originalServletRequest.getParameterMap().remove("docTypeId");
 				} else {
-					this.getManagedBean().setDocType("");
+					Long date = DateUtils.getDaysDifference(this.getManagedBean().getMyTaskCreatedDateFrom(), this.getManagedBean().getMyTaskCreatedDateTo());
+					if (date > 30) {
+						throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.maximumDate", null));
+					}
 				}
-			}else if(type.equalsIgnoreCase("advance")){
-				this.getManagedBean().setGroupTaskCreatedDateFrom(null);
-				this.getManagedBean().setGroupTaskCreatedDateTo(null);
-				this.getManagedBean().setDocStatusListGroup(null);
-				this.getManagedBean().setDocStatusGroup(0);
-				this.getManagedBean().setDocTypeGroup("");
-				this.getManagedBean().setDocNoGroup("");
-				this.getManagedBean().setTaskDescGroup("");
-				this.getManagedBean().setViewByGroup("");
-				this.getManagedBean().setSort_byGroup("CREATEDATE");
-				this.getManagedBean().setAscendingGroup(false);
+			}
+		} else if (taskType.equalsIgnoreCase(BpmConstants.TASK_LIST_TYPE_ADVANCE)) {
+			if (this.getManagedBean().getGroupTaskCreatedDateFrom() != null && this.getManagedBean().getGroupTaskCreatedDateTo() != null) {
+				if (this.getManagedBean().getGroupTaskCreatedDateFrom().after(this.getManagedBean().getGroupTaskCreatedDateTo())) {
+					if (dateType.equalsIgnoreCase(BpmConstants.FROM_DATE)) {
+						throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.date.to", null));
+					} else if (dateType.equalsIgnoreCase(BpmConstants.TO_DATE)) {
+						throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.date.from", null));
+					}
+				} else {
+					Long date = DateUtils.getDaysDifference(this.getManagedBean().getGroupTaskCreatedDateFrom(), this.getManagedBean().getGroupTaskCreatedDateTo());
+					if (date > 30) {
+						throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.maximumDate", null));
+					}
+				}
 			}
 		}
-		//29810 - end
+	}
+
+	public void resetDate(String type) {
+		this.getManagedBean().setSelectedStatusDesc(new PmStatusDesc());
+		this.getManagedBean().setSelectedStatusDescAdvance(new PmStatusDesc());
+		if (type.equalsIgnoreCase(BpmConstants.TASK_LIST_TYPE_NORMAL)) {
+			this.getManagedBean().setMyTaskCreatedDateFrom(null);
+			this.getManagedBean().setMyTaskCreatedDateTo(null);
+			this.getManagedBean().setDocStatusList(null);
+			this.getManagedBean().setDocStatus(0);
+			this.getManagedBean().setViewBy("");
+			this.getManagedBean().setDocNo("");
+			this.getManagedBean().setTaskDesc("");
+			this.getManagedBean().setSort_by(BpmConstants.SORT_BY_CREATEDATE);
+			this.getManagedBean().setAscending(false);
+
+			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+			String docTypeId = originalServletRequest.getParameter("docTypeId");
+
+			if (docTypeId != null && !docTypeId.isEmpty()) {
+				this.getManagedBean().setDocType(docTypeId);
+				originalServletRequest.getParameterMap().remove("docTypeId");
+			} else {
+				this.getManagedBean().setDocType("");
+			}
+		} else if (type.equalsIgnoreCase(BpmConstants.TASK_LIST_TYPE_ADVANCE)) {
+			this.getManagedBean().setGroupTaskCreatedDateFrom(null);
+			this.getManagedBean().setGroupTaskCreatedDateTo(null);
+			this.getManagedBean().setDocStatusListGroup(null);
+			this.getManagedBean().setDocStatusGroup(0);
+			this.getManagedBean().setDocTypeGroup("");
+			this.getManagedBean().setDocNoGroup("");
+			this.getManagedBean().setTaskDescGroup("");
+			this.getManagedBean().setViewByGroup("");
+			this.getManagedBean().setSort_byGroup(BpmConstants.SORT_BY_CREATEDATE);
+			this.getManagedBean().setAscendingGroup(false);
+		}
+	}
+
+	// 29810 - end
 }

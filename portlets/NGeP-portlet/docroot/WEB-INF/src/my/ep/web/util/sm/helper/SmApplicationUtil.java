@@ -2803,7 +2803,11 @@ public class SmApplicationUtil {
 			s = ResourceBundleUtils.getMessage("lbl.sm.authorized.share",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		}
-
+		//#34277 - start
+		if(managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() == null){
+			managedBean.getSmAppl().getSmCompanyBasic().setPaidUpCapital(new BigDecimal(0));
+		}
+		//#34277 - end
 		if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
 			boolean validPaidUp = true;
 			// String amt = "";
@@ -4943,6 +4947,29 @@ public class SmApplicationUtil {
 				.checkActiveCancelApplicationBySupplierId(reqDTO);
 		return resDTO.isHasActiveTransaction();
 	}
+	
+	// #34441-start
+	/**
+	 * Check if there is any active Appl Type MOF appl for supplier.
+	 * 
+	 * @param smSupplier
+	 *            - SmSupplier object
+	 * @return
+	 * @return true, if successful
+	 */
+	public static String checkActiveSmApplTypeForSupp(SmSupplier smSupplier) {
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		resDTO = mofRegistrationSO.checkActiveApplTypeBySupplierId(reqDTO);
+		if (resDTO != null && resDTO.getApplType() != null) {
+			return resDTO.getApplType();
+		} else {
+			return null;
+		}
+	}// #34441-end
 
 	/**
 	 * Retrieve pm country list.
@@ -6128,6 +6155,21 @@ public class SmApplicationUtil {
 		}
 		desAddr.setCityId(srcAddr.getCityId());
 	}
+	
+	//#34277 - start
+	/**
+	 * Clone SSM address details
+	 * @param desAddr target
+	 * @param srcAddr source
+	 */
+	public static void cloneAddressSSM(SmAddress desAddr, SmAddress srcAddr){
+		desAddr.setSsmData(srcAddr.isSsmData());
+		desAddr.setAddressSsmNull(srcAddr.isAddressSsmNull());
+		desAddr.setPostcodeSsmNull(srcAddr.isPostcodeSsmNull());
+		desAddr.setStateSsmNull(srcAddr.isStateSsmNull());
+		desAddr.setCountrySsmNull(srcAddr.isCountrySsmNull());
+	}
+	//#34277 - end
 
 	/**
 	 * Reset to default entity values.
@@ -12193,29 +12235,23 @@ public class SmApplicationUtil {
 		return SmCommonUtil.getStatusDescByStatusId(statusId);
 	}
 
-	public static void initPoInquiry(SmApplicationManagedBean bean,
-			boolean isNewInquiry) {
-		bean.setPoToSupplierInquiry(null);
+	public static void initPoInquiry(SmApplicationManagedBean bean, boolean isNewInquiry) {
+		// START 14530
+		if (bean.getPoToSupplierInquiry() == null) {
+			bean.setPoToSupplierInquiry(new SmApplInquiry());
+		}
+		// END 14530
 
-		if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
-				.getSmApplInquiries())) {
+		if (!EntityHelper.isCollectionEmpty(bean.getSmAppl().getSmApplInquiries())) {
 
 			// sort created date descendent
-			Collections.sort(bean.getSmAppl().getSmApplInquiries(),
-					new Comparator<SmApplInquiry>() {
-						public int compare(SmApplInquiry o1, SmApplInquiry o2) {
-							if (o1.getCreatedDate() == null
-									|| o2.getCreatedDate() == null)
-								return 0;
-							return o2.getCreatedDate().compareTo(
-									o1.getCreatedDate());
-						}
-					});
-
-			// set for latest inquiry
-			SmApplInquiry currentInquiry = bean.getSmAppl()
-					.getSmApplInquiries().get(0);
-			bean.setPoToSupplierInquiry(currentInquiry);
+			Collections.sort(bean.getSmAppl().getSmApplInquiries(), new Comparator<SmApplInquiry>() {
+				public int compare(SmApplInquiry o1, SmApplInquiry o2) {
+					if (o1.getCreatedDate() == null || o2.getCreatedDate() == null)
+						return 0;
+					return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+				}
+			});
 
 			// if PO (Inquiry Section)
 			if (bean.isPoUser()) {
@@ -12225,12 +12261,8 @@ public class SmApplicationUtil {
 				} else {
 					// set for inquiry histories
 					bean.setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
-					for (SmApplInquiry inquiry : bean.getSmAppl()
-							.getSmApplInquiries()) {
-						if (!StringUtils.isBlank(inquiry.getInquirySubject())
-								&& inquiry
-										.getInquirySubject()
-										.equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
+					for (SmApplInquiry inquiry : bean.getSmAppl().getSmApplInquiries()) {
+						if (!StringUtils.isBlank(inquiry.getInquirySubject()) && inquiry.getInquirySubject().equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
 							bean.getPoSupplierInquiryHistory().add(inquiry);
 						}
 					}
@@ -12238,9 +12270,28 @@ public class SmApplicationUtil {
 
 			}
 			// if Supplier (Respond to PO inquiry)
+			// START 14530
 			else if (bean.isSupplierUser()) {
-				bean.getPoToSupplierInquiry()
-						.setResponseText(StringUtils.EMPTY);
+
+				if (bean.getPoToSupplierInquiry().getResponseDate() == null) {
+					SmApplInquiry currentInquiry = bean.getSmAppl().getSmApplInquiries().get(0);
+					bean.setPoToSupplierInquiry(currentInquiry);
+
+					log.info("*** VALUE POTOSUPPLIERINQUIRY *** " + bean.getPoToSupplierInquiry().getInquiryText());
+
+					bean.getPoToSupplierInquiry().setResponseText(StringUtils.EMPTY);
+				}
+			}
+
+			// 14530
+			else if (bean.isApproverUser()) {
+				// set for inquiry histories
+				bean.setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
+				for (SmApplInquiry inquiry : bean.getSmAppl().getSmApplInquiries()) {
+					if (!StringUtils.isBlank(inquiry.getInquirySubject()) && inquiry.getInquirySubject().equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
+						bean.getPoSupplierInquiryHistory().add(inquiry);
+					}
+				}
 			}
 		} else {
 			// initialize po inquiry

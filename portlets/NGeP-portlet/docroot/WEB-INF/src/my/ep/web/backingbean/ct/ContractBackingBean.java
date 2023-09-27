@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import my.ep.factory.EpLogger;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -28,18 +28,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.event.ToggleSelectEvent;
-import org.primefaces.event.UnselectEvent;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-import org.primefaces.model.UploadedFile;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -56,7 +44,6 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO; // Fix - #33491
-import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
@@ -92,6 +79,7 @@ import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtAttachment;
@@ -154,7 +142,18 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleSelectEvent;
+import org.primefaces.event.UnselectEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+import org.primefaces.model.UploadedFile;
 
 /**
  * Backing Bean For Contract
@@ -2340,48 +2339,32 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		String proc_type = getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode();
 
 		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
-				if(proc_type != null){
-					if(proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
-						//pk7 contract with bond from LOA
+			if (proc_type != null) {
+				if (proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
+					// pk7 contract with bond from LOA
+					calculateNewBondAmount();
+					// Start Fix - #33491
+				} else if (!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+					if (isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa())&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
+						// To carry over whatever setting regarding is_bond_req
+						// from LOA to set in CT
+						getManagedBean().getContractVer().getCtContractAmount().setBondReq(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq());
+						if (getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
+							// recalculate the bond and set into
+							// CtcontractAmount
+							getManagedBean().getCtContractAmount().setTotalBondAmt(PerformanceBondUtil.calculatePerformanceBondAmt(getManagedBean().getGstTotalAmount(),new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod())));
+						}
+					} else {
 						calculateNewBondAmount();
-					  } else if(!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-						// except pk7 and DP
-						calculateNewBondAmount();
-					  }
+					}
+				}
 			}
-		// Start Fix - #33491 
-		} 
-				else if (!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-			   		if(isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa()) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
-			   		   //To carry over whatever setting regarding is_bond_req from LOA to set in CT	
-			   		   getManagedBean().getContractVer().getCtContractAmount().setBondReq(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq());
-			   		        if(getManagedBean().getContractVer().getCtContractAmount().isBondReq()){
-			   		        	//recalculate the bond and set into CtcontractAmount 
-			   		        	getManagedBean().getCtContractAmount().setTotalBondAmt(PerformanceBondUtil.calculatePerformanceBondAmt(getManagedBean().getGstTotalAmount(), new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod())));
-			   		        }
-			   		  }else{
-							calculateNewBondAmount(); 
-			   		  }	
-				} 
-		//	}
-		// Start Fix - #33491 
-		//} commented off 
-			else if (!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-		   		if(isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa()) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
-		   		   //To carry over whatever setting regarding is_bond_req from LOA to set in CT	
-		   		   getManagedBean().getContractVer().getCtContractAmount().setBondReq(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq());
-		   		        if(getManagedBean().getContractVer().getCtContractAmount().isBondReq()){
-		   		        	//recalculate the bond and set into CtcontractAmount 
-		   		        	getManagedBean().getCtContractAmount().setTotalBondAmt(PerformanceBondUtil.calculatePerformanceBondAmt(getManagedBean().getGstTotalAmount(), new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod())));
-		   		        }
-		   		  }else{
-						calculateNewBondAmount(); 
-		   		  }
 		}
-			
-		// End Fix - #33491
-		// End - Fix - #32663
+
 	}
+
+	// End Fix - #33491
+	// End - Fix - #32663
 
 	/**
 	 * The method used to calculate the new performance bond amount.
