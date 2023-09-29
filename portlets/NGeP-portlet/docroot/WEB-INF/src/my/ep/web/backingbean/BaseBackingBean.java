@@ -4284,7 +4284,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 */
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public BpmResponseDTO claimBpmTaskGroupByDoc(BpmRequestDTO reqDTO) {
+	public BpmResponseDTO claimBpmTaskGroupByDocNo(BpmRequestDTO reqDTO) {
 		BpmResponseDTO resDTO = new BpmResponseDTO();
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);

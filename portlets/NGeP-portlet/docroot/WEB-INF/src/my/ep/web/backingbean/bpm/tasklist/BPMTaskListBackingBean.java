@@ -1489,7 +1489,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			//#21387 - Start
 			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
 			bpmReqDTO.setDocNumber(docNumber);
-			BpmResponseDTO resDTO = claimBpmTaskGroupByDoc(bpmReqDTO);
+			BpmResponseDTO resDTO = claimBpmTaskGroupByDocNo(bpmReqDTO);
 			if(!resDTO.getWorklistVO().getWorklistItem().isEmpty() && resDTO.getWorklistVO().getWorklistItem() != null){
 				for(WorklistItemVO getDocNumber: resDTO.getWorklistVO().getWorklistItem()){
 					 if(getDocNumber.getDocNumber().equalsIgnoreCase(docNumber) && getDocNumber.getAcquiredBy() == null){
@@ -1582,7 +1582,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			
 			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
 			bpmReqDTO.setDocNumber(getManagedBean().getDocNo());
-			BpmResponseDTO resDTO = claimBpmTaskGroupByDoc(bpmReqDTO);
+			BpmResponseDTO resDTO = claimBpmTaskGroupByDocNo(bpmReqDTO);
 			if(!resDTO.getWorklistVO().getWorklistItem().isEmpty() && resDTO.getWorklistVO().getWorklistItem() != null){
 				for(WorklistItemVO getDocNumber: resDTO.getWorklistVO().getWorklistItem()){
 					 if(getDocNumber.getDocNumber().equalsIgnoreCase(this.getManagedBean().getDocNo()) && getDocNumber.getAcquiredBy() == null){
