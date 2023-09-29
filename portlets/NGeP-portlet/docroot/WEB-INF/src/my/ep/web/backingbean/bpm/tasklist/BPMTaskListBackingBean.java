@@ -19,6 +19,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
@@ -1211,7 +1212,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			log.info("commonUrl" + commonUrl);
 			
 			
-			/*#31422-basri 190821*/
+			/*#31422-basri 190821 (remove Code)
 			
 			StringBuilder strbuildtask = new StringBuilder();
 			if(docType.equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || docType.equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
@@ -1232,14 +1233,14 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 				}else{
 					strbuildtask = null; //#31681 - basri 22/10/21
 				}
-			/*#31422-basri 190821*/
+			#31422-basri 190821*/
 			
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
 			//26238 -  Disciplinary Action - 28111
 			// externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
 			externalContext.redirect(commonUrl + "/" + url + "?taskId="
-					+ taskId + "&taskIdPair="+strbuildtask+"&claim=" + claim+"&docNo="+docNo);/*#31422-basri 190821*/
+					+ taskId +"&claim=" + claim+"&docNo="+docNo);/*#31422-basri 190821*/
 			// externalContext.redirect("http://localhost:8080/web/guest/" +url
 			// +"?taskId="+taskId);
 		} catch (IOException e) {
@@ -1480,38 +1481,28 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 		log.info("**********claimTask");
 		
-		/*21387 - basri*/
-		String taskId = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("taskId");
-		
-		String docNumber = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("docNumber");
-		
-		String docType = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("docType");
-	
-		
+		/*21387 - basri*/	
+		String docNumber = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docNumber");		 
+		String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
+			 
 		if(docType.equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || docType.equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
-		    List<WorklistItemVO>  list = this.getManagedBean().getTaskListGroupDataModel().getList();
-		    
-		    
-		    for(WorklistItemVO a : list){
-		    	String var = a.getDocNumber();
-		    	String taski = a.getTaskId();
-		    	if(var.equalsIgnoreCase(docNumber)){
-		    		claimBpmTaskGroup(taski);
-		    		
-		    	}
-	    	
-		    	
-		    	
-		    }
+			//#21387 - Start
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			bpmReqDTO.setDocNumber(docNumber);
+			BpmResponseDTO resDTO = claimBpmTaskGroupByDoc(bpmReqDTO);
+			if(!resDTO.getWorklistVO().getWorklistItem().isEmpty() && resDTO.getWorklistVO().getWorklistItem() != null){
+				for(WorklistItemVO getDocNumber: resDTO.getWorklistVO().getWorklistItem()){
+					 if(getDocNumber.getDocNumber().equalsIgnoreCase(docNumber) && getDocNumber.getAcquiredBy() == null){
+						 claimTaskByTaskId(getDocNumber.getTaskId());
+		
+					 } 	   
+				 } 
+			}//#21387 - End			
 		}else{
 			claimBpmTask();
 		}
 		    /*21387 - basri*/
-		    
-			
+		    		
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 
@@ -1572,23 +1563,38 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		log.info("taskId:"+this.getManagedBean().getTaskId());
 		log.info("token:"+token);
 		
+		/* Remove Code for fixing #21387
 		//#31681 - basri 22/10/21
 		if(null == this.getManagedBean().getTaskIdPair()){
 			this.getManagedBean().setTaskIdPair("null");
 		}
 		
-		/*#31422-basri 190821*///(null == this.getManagedBean().getTaskIdPair())
+		//(null == this.getManagedBean().getTaskIdPair())
 		if(!(this.getManagedBean().getTaskIdPair().equals("null"))){//#31681 - basri 22/10/21
 			reqDTO.setTaskId(this.getManagedBean().getTaskIdPair());
 	    	reqDTO.setCtxToken(token);
 	    	bpmSO.claimTask(reqDTO);
 		}
-		
-		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-    	reqDTO.setCtxToken(token);
-    	bpmSO.claimTask(reqDTO);
-		
-		/*#31422-basri 190821*/
+		*/
+
+		//#21387 - Start
+		if(this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
+			
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			bpmReqDTO.setDocNumber(getManagedBean().getDocNo());
+			BpmResponseDTO resDTO = claimBpmTaskGroupByDoc(bpmReqDTO);
+			if(!resDTO.getWorklistVO().getWorklistItem().isEmpty() && resDTO.getWorklistVO().getWorklistItem() != null){
+				for(WorklistItemVO getDocNumber: resDTO.getWorklistVO().getWorklistItem()){
+					 if(getDocNumber.getDocNumber().equalsIgnoreCase(this.getManagedBean().getDocNo()) && getDocNumber.getAcquiredBy() == null){
+						 claimTaskByTaskId(getDocNumber.getTaskId());
+					 } 
+				 } 
+			}//#21387 - End			
+		}else{
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+	    	reqDTO.setCtxToken(token);
+	    	bpmSO.claimTask(reqDTO);
+		}
 
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
