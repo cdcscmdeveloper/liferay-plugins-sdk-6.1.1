@@ -138,7 +138,7 @@ public class SupplierUserActivationBackingBean extends
 			if(hashSupplierId.equals(SmCommonUtil.hashString(String.valueOf(supplierProfile.getSupplierId())))) {
 				
 				long applDateInMilis = personnel.getCreatedDate().getTime();
-				long dayInMilis = 1000 * 60 * 60 * 24;
+				long dayInMilis = 1000L * 60 * 60 * 24; //Sonarqube #G19
 
 				Date expiryDate = new Date(applDateInMilis + (SmRuleHelper.getInstance().getEmailActivationDays() * dayInMilis));
 				log.info("----Activation Personnel ID----" + personnel.getPersonnelId());

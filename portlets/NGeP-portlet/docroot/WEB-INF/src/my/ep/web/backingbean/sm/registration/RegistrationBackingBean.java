@@ -3258,7 +3258,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			SmPersonnel personnel = resDTO.getSmPersonnelList().get(0);
 			if(personnel.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS){
 				long applDateInMilis = personnel.getCreatedDate().getTime();
-				long dayInMilis = 1000 * 60 * 60 * 24;
+				long dayInMilis = 1000L * 60 * 60 * 24; //Sonarqube #G19
 				Date expiryDate = new Date(applDateInMilis + (7 * dayInMilis));
 
 				if(new Date().before(expiryDate)){
