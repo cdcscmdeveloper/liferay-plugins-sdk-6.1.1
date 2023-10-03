@@ -4412,7 +4412,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public SmPersonnel getPersonnelInfoById(Long personnelId) {
 		try {
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setPersonnelId(personnelId); //Sonarqube #G19
+			reqDTO.setPersonnelId(Long.valueOf(personnelId));
 			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
 					.retrievePersonnelById(reqDTO);
 			return resDTO.getSmPersonnel();
@@ -4637,7 +4637,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			if ((getManagedBean().isPoUser() || getManagedBean()
 					.isApproverUser()) && currentTab < outputTab) {
 				validSave = SmApplicationUtil.checkSupportDocsValidity(
-						getManagedBean(), currentTab); //Sonarqube #G19
+						validSave, getManagedBean(), currentTab);
 				copyPoVerifiedDocsToApprover();
 			}
 
@@ -17133,9 +17133,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 					if (deletedBranchName.length() > 0) {
 						throw new EpException(MessageConst.ERROR_721120, new String[] { deletedBranchName.toString() });
-					} else if (pendingQT) { //Sonarqube #G19
+					} else if (pendingQT == true) {
 						RequestContext.getCurrentInstance().execute("pendingQTPopUp.show()");
-					}else if (pendingQT && closedQTSubmitProposal) { //Sonarqube #G19
+					}else if (pendingQT == true && closedQTSubmitProposal == true) {
 						RequestContext.getCurrentInstance().execute("pendingQTPopUpIdAndClosedQTSubmitProposal.show()"); 
 						//#28777 - END
 					} else {

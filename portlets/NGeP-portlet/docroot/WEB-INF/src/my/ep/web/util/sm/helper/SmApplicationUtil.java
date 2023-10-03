@@ -1405,6 +1405,7 @@ public class SmApplicationUtil {
 					.getSmSupplierBranches()) {
 				if (!isBranchAssignToBank(bean.getSmAppl(), brAppl)
 						&& brAppl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) { //#34135
+					validSave = false;
 					throw new EpException(MessageConst.ERROR_722622,
 							new String[] { brAppl.getBranchName() });
 				}
@@ -1429,7 +1430,7 @@ public class SmApplicationUtil {
 					.getSmSupplierBranches()) {
 				if (!isBranchAssignToBank(bean.getSmAppl(), brAppl)
 						&& brAppl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) { //#34135
-					//validSave = false;
+					validSave = false;
 					throw new EpException(MessageConst.ERROR_722622,
 							new String[] { brAppl.getBranchName() });
 				}
@@ -4315,25 +4316,25 @@ public class SmApplicationUtil {
 	 *            - int the current tab
 	 * @return true, if successful
 	 */
-	public static boolean checkSupportDocsValidity(
+	public static boolean checkSupportDocsValidity(boolean validSave,
 			SmApplicationManagedBean managedBean, int currentTab) {
-		//Sonarqube #G19
-		boolean validateSave = true;
+		validSave = true;
 		int i = 0;
 		StringBuilder sb = new StringBuilder();
 		for (SmApplSupportDoc doc : managedBean.getMandatoryDocs()) {
 			if ((managedBean.isPoUser() && doc.getVerifiedFlg() == null)) {
-				validateSave = false;
+				validSave = false;
 				sb.append("<br/>").append(++i).append(".)")
 						.append(doc.getPmDocument().getDocName());
 			}
 		}
-		if (!validateSave) {
+		if (!validSave) {
+			validSave = false;
 			setNavigationBackToCurrentPage(currentTab, managedBean);
 			throw new EpException(MessageConst.ERROR_722562,
 					new String[] { sb.toString() });
 		}
-		return validateSave;
+		return validSave;
 	}
 
 	/**
@@ -4383,9 +4384,7 @@ public class SmApplicationUtil {
 								if(arr[2].toString()
 										.equalsIgnoreCase(cat.getPmCategoryL3().getCategoryL3Id().toString())){
 									//29952 - Start 
-									//Sonarqube #G19
-									boolean checked = currentDate.after(cat.getSmAppl().getSmSupplier().getSmDisciplinaryActions().get(0).getEndDate());
-									if(checked){
+									if(currentDate.after(cat.getSmAppl().getSmSupplier().getSmDisciplinaryActions().get(0).getEndDate())){
 										cat.setCancelCategory(false);
 									} else {
 										cat.setCancelCategory(true);
@@ -7232,6 +7231,7 @@ public class SmApplicationUtil {
 									bean,
 									bumiType,
 									facVO,
+									svTask,
 									basic.getSmAddress(),
 									basic.getCompanyAddressId(),
 									my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_HQ);
@@ -7249,6 +7249,7 @@ public class SmApplicationUtil {
 									bean,
 									bumiType,
 									facVO,
+									svTask,
 									assoc.getSmAddress(),
 									assoc.getAssociateCompanyId(),
 									my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_ASSOCIATE_COMPANY);
@@ -7266,6 +7267,7 @@ public class SmApplicationUtil {
 									bean,
 									bumiType,
 									facVO,
+									svTask,
 									br.getSmAddress(),
 									br.getSupplierBranchId(),
 									my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_BRANCH);
@@ -7283,6 +7285,7 @@ public class SmApplicationUtil {
 									bean,
 									bumiType,
 									facVO,
+									svTask,
 									fac.getSmAddress(),
 									fac.getFacilityId(),
 									my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_FACILITY);
@@ -7294,7 +7297,7 @@ public class SmApplicationUtil {
 	}
 
 	private static void setSmSvTask(SmApplicationManagedBean bean,
-			PmParameter bumiType, SmSiteVisitFacilityVO facVO,
+			PmParameter bumiType, SmSiteVisitFacilityVO facVO, SmSvTask svTask,
 			SmAddress addr, Long siteRefId, String siteType) {
 		
 		//28775 - Site Visit Grouping Enhancement - 28775 - start
@@ -7317,8 +7320,7 @@ public class SmApplicationUtil {
 		//28775 - Site Visit Grouping Enhancement - 28775 - end
 		
 		// SmSvTask
-		//Sonarqube #G19
-		SmSvTask svTask = new SmSvTask();
+		svTask = new SmSvTask();
 		svTask.setSmAppl(bean.getSmAppl());
 		if (!bean.getSmAppl().getApplType()
 				.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
@@ -8182,7 +8184,7 @@ public class SmApplicationUtil {
 					total = total.add(staffTotal.getTotalForeigner());
 					total = total.add(staffTotal.getTotalNonBumi());
 				}
-				if (total.compareTo(new BigDecimal(200)) <= 0) { //Sonarqube #G19
+				if (total.compareTo(new BigDecimal(200)) != 1) {
 					smeStatus = SupplierManagementConst.SME_STATUS_MANUFACTURING;
 				}
 			}
@@ -8200,7 +8202,7 @@ public class SmApplicationUtil {
 					total = total.add(staffTotal.getTotalForeigner());
 					total = total.add(staffTotal.getTotalNonBumi());
 				}
-				if (total.compareTo(new BigDecimal(75)) <= 0) { //Sonarqube #G19
+				if (total.compareTo(new BigDecimal(75)) != 1) {
 					smeStatus = smeStatus
 							.equals(SupplierManagementConst.SME_STATUS_MANUFACTURING) ? SupplierManagementConst.SME_STATUS_BOTH
 							: SupplierManagementConst.SME_STATUS_SERVICES;
@@ -10552,7 +10554,7 @@ public class SmApplicationUtil {
 			}
 			Integer bumiPerc = new Integer(0);
 			if (bumiPercentage != null) {
-				bumiPerc = bumiPercentage; //Sonarqube #G19
+				bumiPerc = bumiPercentage.intValue();
 				if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
 					bumiPerc = 99;
 				}

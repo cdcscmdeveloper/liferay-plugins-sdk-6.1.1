@@ -2490,7 +2490,7 @@ public class SupplierApplicationBackingBean extends
 	public SmPersonnel getPersonnelInfoById(Long personnelId) {
 		try {
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setPersonnelId(personnelId); //Sonarqube #G19
+			reqDTO.setPersonnelId(Long.valueOf(personnelId));
 			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
 					.retrievePersonnelById(reqDTO);
 			return resDTO.getSmPersonnel();
@@ -2673,7 +2673,7 @@ public class SupplierApplicationBackingBean extends
 			if ((getManagedBean().isPoUser() || getManagedBean()
 					.isApproverUser()) && currentTab < outputTab) {
 				validSave = SmApplicationUtil.checkSupportDocsValidity(
-						getManagedBean(), currentTab); //Sonarqube #G19
+						validSave, getManagedBean(), currentTab);
 				copyPoVerifiedDocsToApprover();
 			}
 
