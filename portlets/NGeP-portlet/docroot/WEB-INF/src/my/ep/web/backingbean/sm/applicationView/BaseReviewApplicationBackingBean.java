@@ -54,8 +54,6 @@ import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureResDTO;
-import my.ep.dto.sm.common.ssm.SsmReqDTO;
-import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
@@ -77,7 +75,6 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.pm.authorization.PmDigiCert;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
@@ -92,7 +89,6 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmApplAuditors;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplRevise;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
@@ -115,11 +111,9 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
-import my.ep.persistence.entity.sm.SmPersonnelSecretaries;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSapVendorCode;
-import my.ep.persistence.entity.sm.SmWorkflowStatus;
 // #29617
 import my.ep.persistence.entity.sm.SmSmeSupplier;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
@@ -135,6 +129,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCategoryFacility;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -156,6 +151,7 @@ import my.ep.web.vo.BlacklistOwnerDirectorVO;
 import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmOverlapCategoryVO;
+import my.ep.web.vo.SmSectionEditorVO;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -502,6 +498,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * @param SmAppl
 	 *            smAppl
 	 */
+	@SuppressWarnings("deprecation")
 	public void initApplication(SmAppl smAppl) {
 
 		try {
@@ -594,7 +591,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		try {
 			commonDownload(finalFilePath, fileName);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finalFilePath = null;
@@ -810,8 +806,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		initStep8_9PoApproverDefaultDecision();
 		initBumiRecommendNote();
 		//#32008 - start
-		if (!getManagedBean().isPoApprUnClaimTask() && !getManagedBean().isRevisionDialog()
-				&& getManagedBean().isViewApplicationHistory()){
+		getManagedBean().setShowFieldChanges(false);
+		getManagedBean().setLatestAppl(null);
+		getManagedBean().setEditVO(new SmSectionEditorVO());
+		if (!getManagedBean().isPoApprUnClaimTask() && !getManagedBean().isRevisionDialog() 
+				&& getManagedBean().isViewApplicationHistory() 
+				&& !getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 			SmFieldChangeUtil.initLatestAppl(getManagedBean());
 			SmSideMenuIconUtil.setSectionEditorVO(getManagedBean());
 		}
@@ -920,15 +920,21 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				this.getManagedBean().getPersonnelDirectorManager().add(personnel);	
 				}
 				//28767
-				for (SmPersonnelAddress address : personnel.getSmPersonnelAddresses()){
-					if (address.getAddressType().equals("R")){
-						personnel.setSmPersonnelAdd(address);
-					}	
+				//#35037 - start
+				if(personnel.getSmPersonnelAddresses() != null){
+					for (SmPersonnelAddress address : personnel.getSmPersonnelAddresses()){
+						if (address.getAddressType() != null && address.getAddressType()
+								.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
+							personnel.setSmPersonnelAdd(address);
+						}
+					}
 				}
+				//#35037 - end
 				if (personnel.isSsmData()!= true){
 					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
 				}
-				if(personnel.isEquityOwner()){
+				//#35130
+				if(personnel.isEquityOwnerSsm() && personnel.isSsmData()){
 					if(shareAmtSsm != null && !(personnel.getShareAmtSsm() == null)){
 						sum =  sum.add(shareAmtSsm);
 						getManagedBean().setTotalShare(sum);
@@ -1594,13 +1600,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 
 		getManagedBean().setBankBranchName(sb.toString());
-
-		// if (shareBankBean.getSmSupplierBranch() != null
-		// && shareBankBean.getSmSupplierBranch().getSupplierBranchId() != null)
-		// {
-		// getManagedBean().setSelBankBranchName(
-		// shareBankBean.getSmSupplierBranch().getBranchName());
-		// }
 		getManagedBean().setSelectedBank(shareBankBean);
 		if (shareBankBean.getSmAddress() == null) {
 			shareBankBean.setSmAddress(setDefaultAddr());
@@ -1614,6 +1613,38 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				new String[] { "accountNo", "accountPurpose" }, null, null));
 		}
 		//#32008 - end
+		//#35086 - start
+		SmSupplierBank latestbank = getManagedBean().getLatestBank();
+		sb = new StringBuilder();
+		i = 0;
+		if(latestbank != null && latestbank.getSmChequeSignatories() != null){
+			if (latestbank.getSmChequeSignatories().size() == 1) {
+				sb.append(latestbank.getSmChequeSignatories().get(0)
+						.getSmPersonnel().getName());
+			} else {
+				for (SmChequeSignatory tmp : latestbank.getSmChequeSignatories()) {
+					i++;
+					sb.append(i + ") "+tmp.getSmPersonnel().getName()+"<br />");
+				}
+			}
+		}
+		getManagedBean().setLatestChequeSignPersonnelName(sb.toString());
+		
+		sb = new StringBuilder();
+		i = 0;
+		if(latestbank != null && latestbank.getSmSupplierBranchBanks() != null){
+			if (latestbank.getSmSupplierBranchBanks().size() == 1) {
+				sb.append(latestbank.getSmSupplierBranchBanks().get(0)
+						.getSmSupplierBranch().getBranchName());
+			} else {
+				for (SmSupplierBranchBank brTmp : latestbank.getSmSupplierBranchBanks()) {
+					i++;
+					sb.append(i + ") "+brTmp.getSmSupplierBranch().getBranchName()+"<br />");
+				}
+			}
+		}
+		getManagedBean().setLatestBankBranchName(sb.toString());
+		//#35086 - end
 		closeBlockUI();
 	}
 
@@ -1792,7 +1823,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (getManagedBean().getSmAppl().getSmPersonnels()
 				.contains(getManagedBean().getSelectedShareHolder())) {
 
-			// TODO reset few values that could have been already submit by
 			// partial submit on ajax functions
 			SmPersonnel per = getManagedBean().getSelectedPersonnel();
 			getManagedBean().getSelectedShareHolder().setIdentificationTypeId(
@@ -1994,7 +2024,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					new PmParameter());
 		}
 		getManagedBean().setRedirectToPersonPage(true);
-		// TODO use this object to reset some values on back button click
 		SmPersonnel per = new SmPersonnel();
 		per.setIdentificationTypeId(shareHolderBean.getIdentificationTypeId());
 		per.setIdentificationType(shareHolderBean.getIdentificationType());
@@ -2794,6 +2823,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * View Supplier Profile from Application List
 	 */
+	@SuppressWarnings("deprecation")
 	public void viewApplication(SmAppl selectedSmAppl) {
 		String baseUrl = "";
 		String baseUrlLabel = "";
@@ -3075,7 +3105,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						for(SmApplRejectReason reason : this.getManagedBean().getSmAppl().getSmApplRejectReasons()){
 							removedDuplicateID.put(reason.getPmReason().getReasonId().toString(), reason);
 						}
-						Iterator itr = removedDuplicateID.keySet().iterator();
+						Iterator<String> itr = removedDuplicateID.keySet().iterator();
 						while (itr.hasNext()){
 							String id = itr.next().toString();
 							newListOfRejectID.add((SmApplRejectReason)removedDuplicateID.get(id));
@@ -3090,7 +3120,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						for(SmApplRejectReason reason : this.getManagedBean().getSmApplRejectReasonsByPO()){
 							removedDuplicateID.put(reason.getPmReason().getReasonId().toString(), reason);
 						}
-						Iterator itr = removedDuplicateID.keySet().iterator();
+						Iterator<String> itr = removedDuplicateID.keySet().iterator();
 						while (itr.hasNext()){
 							String id = itr.next().toString();
 							newListOfRejectID.add((SmApplRejectReason)removedDuplicateID.get(id));
@@ -5256,6 +5286,20 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		} else {
 			retVal = SmCommonUtil.getMessage("lbl.sm.bankDtls.both.regandpay",
 					null);
+		}
+		return retVal;
+	}
+	
+	public String getLabelFromSelectItems(Object objId, String paramType) {
+		String retVal = "";
+		List<SelectItem> items = Arrays.asList(getDropdownValues(paramType));
+		if (!SmCommonUtil.isCollectionEmpty(items) && objId != null) {
+			for (SelectItem item : items) {
+				if (item.getValue() != null
+						&& item.getValue().toString().equals(objId.toString())) {
+					retVal = item.getLabel();
+				}
+			}
 		}
 		return retVal;
 	}

@@ -1576,10 +1576,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private BigDecimal technicalItemScore;
 /** #21695 FARID END*/	
 	private BigDecimal totalScore = new BigDecimal(0);
-	//#29425 - start
-	private boolean newValueValidity;
-	private int newValidityDays;
-	//#29425 - end
 
 	private String locationLevel;
 
@@ -1666,7 +1662,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #29468 Vinod End
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
-	public boolean proposalValidityChangeValue; //#21692
+	private boolean proposalValidityChangeValue; //#21692//#sqube qt vulnerability minor idham @03 aug 2023
 	private String epvAttachmentValue;//#21692 for EPV attachment usage only
 	
 	/**
@@ -1739,6 +1735,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean flagFileAttahmentDeletedMITI=false;
 	private boolean firstPagePA=false;
 	private List<TabBean> tabOtherApproval;
+	private List<ScQtApprovalRequest> approvalRequestDtls;
+	private List<ScQtApprovalRequest> approvalRequestHistoryDtls;
 	//#25077 - End
 	
 	//#25426 - Start
@@ -1828,6 +1826,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The qt remark missing issues. */
 	private boolean scQtRemarksEmpty = false; //#9019 08082022 (Harun)
 	
+	private List<ScRemark> qtRemarksIdRemoveList;//#9019 (Harun)
+	
 	// #32929 - start
 	private boolean zoneRdbButtonChecked = Boolean.FALSE;
 	// #32929 - end
@@ -1860,6 +1860,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtEpvSupplierResponse suppResp;//#21692
 				
 	// #29521 - end
+	
+	//Bug #35061 - asyrafhaziq 
+	private String msgConfirmBelowIndi;
+
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10777,6 +10781,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setTabOtherApproval(List<TabBean> tabOtherApproval) {
 			this.tabOtherApproval = tabOtherApproval;
 		}
+		
+		public List<ScQtApprovalRequest> getApprovalRequestDtls() {
+			return approvalRequestDtls;
+		}
+
+		public void setApprovalRequestDtls(List<ScQtApprovalRequest> approvalRequestDtls) {
+			this.approvalRequestDtls = approvalRequestDtls;
+		}
+
+		public List<ScQtApprovalRequest> getApprovalRequestHistoryDtls() {
+			return approvalRequestHistoryDtls;
+		}
+
+		public void setApprovalRequestHistoryDtls(List<ScQtApprovalRequest> approvalRequestHistoryDtls) {
+			this.approvalRequestHistoryDtls = approvalRequestHistoryDtls;
+		}
 		//#25077 - End
 		
 		//#25692 End
@@ -10869,35 +10889,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setCommitteeUpdateFlow(boolean committeeUpdateFlow) {
 			this.committeeUpdateFlow = committeeUpdateFlow;
 		}
-		//#29425 - start
-		/**
-		 * @return the newValueValidity
-		 */
-		public boolean isNewValueValidity() {
-			return newValueValidity;
-		}
-
-		/**
-		 * @param newValueValidity the newValueValidity to set
-		 */
-		public void setNewValueValidity(boolean newValueValidity) {
-			this.newValueValidity = newValueValidity;
-		}
-		
-		/**
-		 * @return the newValidityDays
-		 */
-		public int getNewValidityDays() {
-			return newValidityDays;
-		}
-
-		/**
-		 * @param newValidityDays the newValidityDays to set
-		 */
-		public void setNewValidityDays(int newValidityDays) {
-			this.newValidityDays = newValidityDays;
-		}
-		//#29425 - end
 
 		public boolean isTechnicalOtherCheckList() {
 			return technicalOtherCheckList;
@@ -11787,7 +11778,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setEpvAttachmentValue(String epvAttachmentValue) {
 		this.epvAttachmentValue = epvAttachmentValue;
 	}
+	
+	public String getMsgConfirmBelowIndi() {
+		return msgConfirmBelowIndi;
+	}
 
+	public void setMsgConfirmBelowIndi(String msgConfirmBelowIndi) {
+		this.msgConfirmBelowIndi = msgConfirmBelowIndi;
+	}
+
+	
 }
 
 // ***25201

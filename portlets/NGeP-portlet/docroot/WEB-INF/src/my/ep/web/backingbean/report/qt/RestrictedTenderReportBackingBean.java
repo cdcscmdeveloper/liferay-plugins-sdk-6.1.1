@@ -12,7 +12,10 @@ package my.ep.web.backingbean.report.qt;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
@@ -20,10 +23,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import my.ep.factory.EpLogger;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.bean.report.ScReportFieldsSearchBean;
 import my.ep.web.constant.report.QtReportConst;
 import my.ep.web.managedbean.report.qt.RestrictedTenderReportManagedBean;
+import my.ep.web.util.FacesScopes;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -134,9 +140,20 @@ public RestrictedTenderReportBackingBean(){
 			//quotationNumberValidation();
 			params.put(QtReportConst.QUOTATION_TENDER_ID, this.getManagedBean().getQuotationId());
 		}*/
-		if (StringUtils.isNotEmpty(reportFieldBean.getScStatus())) {
+		// 29580 - Start (Harun) Change option from single status to multiple 
+		/*if (StringUtils.isNotEmpty(reportFieldBean.getScStatus())) {
 			params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ, reportFieldBean.getScStatus());
+		}*/
+		if(CollectionUtils.isNotEmpty(reportFieldBean.getScStatusManyMenu())){
+			List<String> conversionList = new ArrayList<>();
+			
+			for (String strManyMenu: reportFieldBean.getScStatusManyMenu()){
+				conversionList.add(getConversionParam(strManyMenu));
+			}
+			String status = StringUtils.join(conversionList,",");
+			params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ, status.replaceAll(",$",""));
 		}
+		// 29580 - End (Harun)
 		if(StringUtils.isNotEmpty(reportFieldBean.getScDeskOfficer())){
 			params.put(QtReportConst.PARAM_DESK_OFFCR_EQ, reportFieldBean.getScDeskOfficer());	
 		}
@@ -145,5 +162,29 @@ public RestrictedTenderReportBackingBean(){
 		}
 		return params;
 	}
+	
+	// 29580 - Start (Harun) Change option from single status to multiple 
+	public String getConversionParam(String status) {
+		
+		HashMap<String, String> status_map = new HashMap<String, String>();
+		status_map.put(getStatusDesc(QtReportConst.LABEL_ALL), QtReportConst.STATUS_ALL);
+		status_map.put(getStatusDesc(QtReportConst.LABEL_PREPARATION), QtReportConst.STATUS_PREPARATION);
+		status_map.put(getStatusDesc(QtReportConst.LABEL_PUBLISHING), QtReportConst.STATUS_PUBLISHING);
+		status_map.put(getStatusDesc(QtReportConst.LABEL_PENDING_EVALUATION), QtReportConst.STATUS_PENDING_EVALUATION);
+		status_map.put(getStatusDesc(QtReportConst.LABEL_PENDING_SUPPLIER_FINALIZATION), QtReportConst.STATUS_PENDING_SUPPLIER_FINALIZATION);
+		status_map.put(getStatusDesc(QtReportConst.LABEL_PENDING_LOILOA), QtReportConst.STATUS_PENDING_LOILOA);
+		status_map.put(getStatusDesc(QtReportConst.LABEL_LOA_COMPLETED), QtReportConst.STATUS_LOA_COMPLETED);
+		status_map.put(getStatusDesc(QtReportConst.LABEL_CANCELLED), QtReportConst.STATUS_CANCELLED);
+		
+		return status_map.get(status);
+				
+	}
+	
+	public String getStatusDesc(String label) {
+		return ResourceBundleUtils.getMessage(label,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale());
+	}
+	// 29580 - End (Harun)
 
 }

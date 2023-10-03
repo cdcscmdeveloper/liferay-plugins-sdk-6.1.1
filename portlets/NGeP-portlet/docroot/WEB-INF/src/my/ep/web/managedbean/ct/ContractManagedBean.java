@@ -201,7 +201,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	
 	//#13847 - start
 	private boolean disableDeferment = false;
-	private CtBondWaiverDetail bondWaiverLatestTemp;
 	//13847 end
 	
 	//#29983 start
@@ -1440,14 +1439,6 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setDisableDeferment(boolean disableDeferment) {
 		this.disableDeferment = disableDeferment;
-	}
-
-	public CtBondWaiverDetail getBondWaiverLatestTemp() {
-		return bondWaiverLatestTemp;
-	}
-
-	public void setBondWaiverLatestTemp(CtBondWaiverDetail bondWaiverLatestTemp) {
-		this.bondWaiverLatestTemp = bondWaiverLatestTemp;
 	}
 	//#13847 end
 
