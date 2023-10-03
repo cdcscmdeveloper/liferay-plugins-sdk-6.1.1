@@ -100,7 +100,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private String processName;
 	private String[] action;
 	private String taskId;
-	private String taskIdPair;/*#31422-basri 190821*/
+//	private String taskIdPair;/*#31422-basri 190821*/
 	private Integer tabActiveIndex = 0;
 	private String taskName;
 	private String tempLoginId; 
@@ -2070,7 +2070,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		this.roleType = roleType;
 	}
 
-	/*#31422-basri 190821*/
+	/*#31422-basri 190821 (remove Un-used code Parameter)
 	public void setTaskIdPair(String taskIdPair) {
 		this.taskIdPair = taskIdPair;
 		
@@ -2079,7 +2079,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public String getTaskIdPair() {
 		return taskIdPair;
 	}
-	/*#31422-basri 190821*/
+	#31422-basri 190821*/
 
 	//#32304 - start
 	public List<SmAppl> getCancelledBumiApplLs() {
