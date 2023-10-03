@@ -3445,6 +3445,7 @@ public class SmApplicationUtil {
 		addr.setPmCity(new PmCity());
 		addr.setPmCountry(cntry);
 		addr.setPmState(new PmState());
+		addr.setPmDivision(new PmDivision()); //#34159
 		addr.setPmDistrict(new PmDistrict());
 		SmCommonUtil.getInstance().setUserDetails(addr);
 		return addr;
