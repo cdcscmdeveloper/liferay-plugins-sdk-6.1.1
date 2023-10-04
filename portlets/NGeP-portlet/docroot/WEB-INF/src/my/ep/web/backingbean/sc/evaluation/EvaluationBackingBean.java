@@ -18827,7 +18827,11 @@ private void retriveCommitteeRemarksList(){
 	 */
 	public boolean isDisqialifiedByCompliance(ScQtEvaluationResultDtl evalResultDtl){
 		boolean renderDisqialifiedColumn = false;
-			if(null!=evalResultDtl && !evalResultDtl.isCompliance()){
+			if(null!=evalResultDtl 
+				&& null!=evalResultDtl.isCompliance() 
+				&& !evalResultDtl.isCompliance()
+				&& null!=evalResultDtl.getTotalScore()
+				&& evalResultDtl.getTotalScore().intValue() < this.getManagedBean().getPassingScore()){
 				renderDisqialifiedColumn=true;
 			}
 		return renderDisqialifiedColumn;
@@ -18859,24 +18863,33 @@ private void retriveCommitteeRemarksList(){
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
 						ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-		
+			
 		for(ScQtSampleItem item : templateChecklist){
 			specReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			specReqDTO.setItemName(item.getScRequestItem().getTplSpecQuestion().getClItem());
 			TemplateSpecResDTO resDTO = templateSpecSO
 					.retrieveTechSpecByItemNames(specReqDTO);
-			
-			if (null != resDTO && null != resDTO.getSpecQuestionList()) {
-				for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
-					if(question.isMandatorySpec()){
-						item.getScRequestItem().getTplSpecQuestion().setMandatorySpecForSample(true);
-					}
-				}
-			}
-			if(item.getUserScore()!=null && !item.getUserScore().equals(new BigDecimal(0)) && item.getCompliance()!=null && item.getCompliance()==Boolean.FALSE){
-				item.setUserScore(new BigDecimal(0));
-			}
+				
+			checkMandatorySpecForSample(item, resDTO);
+			adjustUserScoreBasedOnCompliance(item);
 		}
+	}
+	private void checkMandatorySpecForSample(ScQtSampleItem item, TemplateSpecResDTO resDTO) {
+	    if (resDTO != null && resDTO.getSpecQuestionList() != null) {
+		    for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
+		        if (question.isMandatorySpec()) {
+	                item.getScRequestItem().getTplSpecQuestion().setMandatorySpecForSample(true);
+	            }
+	        }
+	    }
+	}
+	private void adjustUserScoreBasedOnCompliance(ScQtSampleItem item) {
+	    BigDecimal userScore = item.getUserScore();
+	    Boolean compliance = item.getCompliance();
+
+	    if (userScore != null && userScore.equals(BigDecimal.ZERO) && compliance != null && !compliance) {
+	        item.setUserScore(BigDecimal.ZERO);
+	    }
 	}
 	/**
 	 * This method is to disable and enable the UserScore in screen and also 
