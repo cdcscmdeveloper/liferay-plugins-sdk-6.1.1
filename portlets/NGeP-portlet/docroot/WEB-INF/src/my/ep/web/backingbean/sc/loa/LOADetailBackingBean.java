@@ -3760,6 +3760,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						isNewLoa = true;
 					}
 					//Bug #33188 end
+					
+					//Bug #35196 - haziq
+					if(!scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION) && scLoa.isBondReq() ) {	
+						scLoa.setBondReq(false);
+					 }	
 		
 					AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 					reqDTO.setPayLoad(getManagedBean().getPayLoad());
@@ -3894,6 +3899,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						}
 					}	
 				}
+				
+				//Bug #35196 - haziq
+				if(!scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION) && scLoa.isBondReq() ) {	
+					scLoa.setBondReq(false);
+				 }
 				
 				//#25725 start
 				boolean approvalLetter = validateApprovalLetter(scLoa);
@@ -6491,7 +6501,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(loa.getScLoiLoa().getDocId());
 			qtCategories = getQtDetailSO().getQtCategoryByQtId(reqDTO).getCategories();
-		}
+		//} Bug #35196 - haziq
 
 		boolean isBondReq = isPerformanceBondRequired(overallContractAmtOrLoaAmt, qtCategories);
 		
@@ -6504,6 +6514,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		//Bug #29885 end
 		getManagedBean().setPerformanceBondMandatory(isBondReq);
+	  }//Bug #35196 - haziq
 	}
 
 	/**
