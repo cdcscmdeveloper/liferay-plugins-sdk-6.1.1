@@ -962,14 +962,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO);
 		String billType = StringUtils.EMPTY;
 		billType = resDTO.getPyPayment().getPyBill().getBillType(); //billtype = R/P/S
-		//START 35182
-		String receiptFileName = StringUtils.EMPTY;
-		if(resDTO.getPyPayment().getReceiptFileName() != null) {
-			 receiptFileName = ReportConst.SM_TAX_INVOICE_SST;
-		} else {
-			receiptFileName = ReportConst.SM_TAX_INVOICE_JSP;
-		}
-		log.info(":::printReceipt() paymentId: "+ this.getManagedBean().getPaymentId() +". billType: "+ billType +". receiptFileName: " +receiptFileName);
+		log.info(":::printReceipt() paymentId: "+ this.getManagedBean().getPaymentId() +". billType: "+ billType);
 		
 		if (billType.equalsIgnoreCase(
 						my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE) || 
@@ -978,8 +971,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			generateReport(ReportConst.SM_PAYMENT_RECEIPT_JSP, paramMap);
 		} else if (billType.equalsIgnoreCase(
 						my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) { //S
-			generateReport(receiptFileName, paramMap);
-	      //END 35182
+			//START 35182
+			generateReport(ReportConst.SM_TAX_INVOICE_SST, paramMap);
+			//END 35182
 		}		
 		//end of Enhancement #19056
 	}

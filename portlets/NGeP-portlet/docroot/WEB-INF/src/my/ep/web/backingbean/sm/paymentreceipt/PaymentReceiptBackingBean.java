@@ -62,11 +62,9 @@ public class PaymentReceiptBackingBean extends BaseBackingBean<PaymentReceiptMan
 		String billType = StringUtils.EMPTY;
 		billType = resDTO.getPyPayment().getPyBill().getBillType(); //billtype = R/P/S
 		//START 35182
-		String receiptFileName = StringUtils.EMPTY;
+		String receiptFileName = ReportConst.SM_TAX_INVOICE_JSP;
 		if(resDTO.getPyPayment().getReceiptFileName() != null) {
 			 receiptFileName = ReportConst.SM_TAX_INVOICE_SST;
-		} else {
-			receiptFileName = ReportConst.SM_TAX_INVOICE_JSP;
 		}
 		log.info(":::printReceipt() paymentId: "+ paymentId +". billType: "+ billType +". receiptFileName: " +receiptFileName);
 		
