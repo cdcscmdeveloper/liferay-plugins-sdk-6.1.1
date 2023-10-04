@@ -14798,7 +14798,19 @@ private void retriveCommitteeRemarksList(){
 					}
 				}
 			}
-		}
+		}else{//35148-start
+			for (ScQtCheckList techCheckList : this.getManagedBean()
+					.getCompliancefinancialCheckList()) {
+				if (null != techCheckList.getPmEvalStatus() && QTStatusConst.TS_PENDING_SUBMISSION
+						.equals(techCheckList
+								.getPmEvalStatus().getStatusId())) {
+					int count = checkProposalSubmittedForCompliance(techCheckList);
+					if (count > 0) {
+							return outputTab=QTConstants.EVALUATION_MAIN_ACTIVE_INDEX;
+						}
+					}
+				}
+			}//35148-End
 		}finally{
 			evaluationSO=null;
 		}
