@@ -47,6 +47,9 @@ public class CommonUtils {
 			case CommonConstants.DATE_FORMAT_TYPE_DATETIME : 
 				dateFormat = CommonConstants.DEFAULT_DATETIME_FORMAT;
 				break;
+			case CommonConstants.DATE_FORMAT_TYPE_DATETIME_12HR : 
+				dateFormat = CommonConstants.DEFAULT_12HR_DATETIME_FORMAT;
+				break;
 			case CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS : 
 				dateFormat = CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT;
 				break;

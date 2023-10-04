@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="Audit Trail Details" toggleable="true">
+		<p:dataTable id="searchDetailLocations" var="location" rows="10"
+			value="#{locationAuditBackingBean.searchLocationDetail}"
+			rowIndexVar="index" lazy="true">
+			<ac:paginator for="searchDetailLocations"></ac:paginator>
+			<p:column headerText="#{lbl['lbl.pm.audit.actionDate']}" style="width :15%">
+				<h:outputText value="#{location.createdDate}" >
+				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.audit.actionType']}" style="width :10%">
+				<h:outputText value="#{location.actionType}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.audit.actionBy']}" style="width :10%"> 
+				<h:outputText value="#{location.actionBy}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.audit.Organization']}" style="width :10%"> 
+				<h:outputText value="#{location.orgName}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.audit.Role']}" style="width :10%"> 
+				<h:outputText value="#{location.roleName}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.audit.docType']}" style="width :5%">
+				<h:outputText value="#{lbl['lbl.pm.state']}"
+					rendered="#{location.locationType == 'STATE'}" />
+				<h:outputText value="Adopt Division"
+					rendered="#{location.locationType == 'DIVISION'}" />
+				<h:outputText value="#{lbl['lbl.pm.district']}"
+					rendered="#{location.locationType == 'DISTRICT'}" />
+				<h:outputText value="#{lbl['lbl.pm.city']}"
+					rendered="#{location.locationType == 'CITY'}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.audit.docNo']}" style="width :10%">
+				<h:outputText value="#{location.docNo}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.audit.fieldName']}" style="width :10%">
+				<h:outputText value="#{location.fieldLabelName}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.audit.oldValue']}" style="width :35%">
+				<h:outputText value="#{location.oldValue}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.audit.newValue']}" style="width :15%">
+				<h:outputText value="#{location.newValue}" />
+			</p:column>	
+		</p:dataTable>
+	</p:panel>
+</ui:composition>
+
+

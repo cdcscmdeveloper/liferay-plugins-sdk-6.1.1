@@ -8,6 +8,10 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.dto.pm.common.city.CityResDTO;
+import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.pm.common.division.DivisionResDTO;
+import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -45,6 +49,14 @@ public class LocationManagedBean extends BaseManagedBean {
 
 	private PmCountry country;
 
+	private PmState resState;
+
+	private PmDivision resDivision;
+
+	private PmDistrict resDistrict;
+
+	private PmCity resCity;
+
 	private PmCountry pmCountry;
 
 	private List<PmCountry> countries;
@@ -59,6 +71,14 @@ public class LocationManagedBean extends BaseManagedBean {
 
 	private List<VPmLocation> vPmLocation;
 
+	private StateResDTO stateOldVal;
+
+	private DivisionResDTO divisionOldVal;
+
+	private DistrictResDTO districtOldVal;
+
+	private CityResDTO cityOldVal;
+
 	private boolean disabledVal = false;
 
 	private VPmLocation location;
@@ -67,6 +87,8 @@ public class LocationManagedBean extends BaseManagedBean {
 	private boolean divisionBox = false;
 
 	private boolean isLazy = false;
+	
+	private long pmMasterLocationSreialId;
 
 	public LocationManagedBean() {
 		state = new PmState();
@@ -285,4 +307,75 @@ public class LocationManagedBean extends BaseManagedBean {
 		this.isLazy = isLazy;
 	}
 
+	public StateResDTO getStateOldVal() {
+		return stateOldVal;
+	}
+
+	public void setStateOldVal(StateResDTO stateOldVal) {
+		this.stateOldVal = stateOldVal;
+	}
+
+	public DivisionResDTO getDivisionOldVal() {
+		return divisionOldVal;
+	}
+
+	public void setDivisionOldVal(DivisionResDTO divisionOldVal) {
+		this.divisionOldVal = divisionOldVal;
+	}
+
+	public DistrictResDTO getDistrictOldVal() {
+		return districtOldVal;
+	}
+
+	public void setDistrictOldVal(DistrictResDTO districtOldVal) {
+		this.districtOldVal = districtOldVal;
+	}
+
+	public CityResDTO getCityOldVal() {
+		return cityOldVal;
+	}
+
+	public void setCityOldVal(CityResDTO cityOldVal) {
+		this.cityOldVal = cityOldVal;
+	}
+
+	public PmState getResState() {
+		return resState;
+	}
+
+	public void setResState(PmState resState) {
+		this.resState = resState;
+	}
+
+	public PmDivision getResDivision() {
+		return resDivision;
+	}
+
+	public void setResDivision(PmDivision resDivision) {
+		this.resDivision = resDivision;
+	}
+
+	public PmDistrict getResDistrict() {
+		return resDistrict;
+	}
+
+	public void setResDistrict(PmDistrict resDistrict) {
+		this.resDistrict = resDistrict;
+	}
+
+	public PmCity getResCity() {
+		return resCity;
+	}
+
+	public void setResCity(PmCity resCity) {
+		this.resCity = resCity;
+	}
+
+	public long getPmMasterLocationSreialId() {
+		return pmMasterLocationSreialId;
+	}
+
+	public void setPmMasterLocationSreialId(long pmMasterLocationSreialId) {
+		this.pmMasterLocationSreialId = pmMasterLocationSreialId;
+	}
 }

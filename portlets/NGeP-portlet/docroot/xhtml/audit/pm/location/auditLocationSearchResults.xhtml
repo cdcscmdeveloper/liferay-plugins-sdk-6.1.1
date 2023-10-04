@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.pm.result.location']}" toggleable="true">
+		<p:dataTable id="searchLocations" var="location" rows="10"
+			value="#{locationAuditBackingBean.searchLocation}"
+			rowIndexVar="index" lazy="true">
+			<ac:paginator for="searchLocations"></ac:paginator>
+			<p:column headerText="#{lbl['lbl.pm.audit.actionBy']}" style="width :15%">
+				<h:outputText value="#{location.actionBy}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.audit.PM']}" style="width :10%">
+				<h:outputText value="#{location.paramLevel1}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.audit.configCategory']}" style="width :10%"> 
+				<h:outputText value="#{location.paramLevel2}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.audit.configItem']}" style="width :10%"> 
+				<h:outputText value="#{location.paramLevel3}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.audit.Role']}" style="width :10%"> 
+				<h:outputText value="#{location.roleCode}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.action']}" style="width:5%;text-align:center;">
+				<p:commandLink
+					action="#{locationAuditBackingBean.redirectToLocation(location.paramLevel3,location.pmParameterLvlId,location.createBy,location.roleCode)}">
+					<p:graphicImage library="ep/images/design" 
+						title="#{lbl['lbl.pm.update.location']}"
+						value="/css/images/design/edit.png" />
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+</ui:composition>
+
+
