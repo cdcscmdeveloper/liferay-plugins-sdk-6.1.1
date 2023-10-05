@@ -11544,6 +11544,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			return reqItem.getCmItem().getExtensionCode();
 		}
 	}
+	
+	public boolean isShowAssignButton(ScLoiLoaItem loiLoaItem) {
+		boolean isShow = false;
+		
+		if (loiLoaItem.getTplSpecZoneDtl() != null) {
+			if (this.getManagedBean().getFirstZone() == null) {
+				this.getManagedBean().setFirstZone(loiLoaItem.getTplSpecZoneDtl().getZoneName());
+			}
+			
+			if (this.getManagedBean().getFirstZone().equals(loiLoaItem.getTplSpecZoneDtl().getZoneName())) {
+				isShow = true;
+			}
+		} else {
+			isShow = true;
+		}
+		
+		return isShow;
+	}
 	//Bug #34757 - End
 	
 	// Bug #35078@Syazani -- Start 14/09/2023
