@@ -1,5 +1,5 @@
 /**
- *  Copyright © 2013 Archisoft. All rights reserved.
+ *  Copyright  2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.quatationtender;
 
@@ -42,8 +42,10 @@ import java.util.HashSet; //Bug #33988@Syazani - 27/09/2022
 import java.util.Set; //Bug #33988@Syazani - 27/09/2022
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
@@ -3931,7 +3933,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 										if (specList == null) {
 											specList = new ArrayList<>();
 										}
-										specList.add(tplSpecAns.getTplSpecQuestion().getClSpecDetail());
+										//start #29006 - note 850,852,856
+										String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
+									
+										specValue = specValue.replace("<", "#60;");
+										specValue = specValue.replace(">", "#62;");
+										specValue = specValue.replace("&", "#and;");
+										
+										specList.add(specValue);
+										tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
+										//end #29006 - note 850,852,856
 									} else {
 										break;
 									}
@@ -4095,7 +4106,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 										if (specList == null) {
 											specList = new ArrayList<>();
 										}
-										specList.add(tplSpecAns.getTplSpecQuestion().getClSpecDetail());
+										//start #29006 - note 850,852,856
+										String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
+										
+										specValue = specValue.replace("<", "#60;");
+										specValue = specValue.replace(">", "#62;");
+										specValue = specValue.replace("&", "#and;");
+										
+										specList.add(specValue);
+										tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
+										//end #29006 - note 850,852,856
 									} else {
 										break;
 									}
@@ -5366,9 +5386,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			if (!scQt.isPanel() && actualIntendedPrice != null) {
 				log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
 				log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: "+ actualIntendedPrice +" :::");
+		 
+				// #25729 #174
+				//BugBug #35061 - asyrafhaziq
+				// get total indicative price threshold validation value
+				BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+				
+				if ((actualIntendedPrice.compareTo(indPriceThreshold) <=0))
 
-				// #25729 #174			 
-				if ((actualIntendedPrice.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <=0))
 				{
 					return Boolean.TRUE;
 				}
@@ -5797,7 +5822,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								});
 							}
 						} catch (IOException e) {
-							e.printStackTrace();
+							String qtNo = qt == null ? "" : qt.getQtNo();
+							SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
+									qtNo, "sourcingbaseBackingBean.assertSpecCommitteeMaintenanceInProgress", getUserIdSessionFromLoginId(), e);						
 						} 
 					}else{
 						Collections.sort(members, new Comparator<ScCommitteeMember>() {
@@ -6157,111 +6184,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return listSpec;
 		//#26130 end
 	}
-		//#26130 - zaim end
-		
-		//#10542 - start
-		/**
-		 * To download multiple files with specific path.
-		 * 
-		 * @param zipFileName
-		 * @param scAttachments
-		 * @throws IOException
-		 */
-		protected <ATTACHMENT extends ScAttachment> void downloadAllFilesWithSpecificFolder(
-				String zipFileName, List<EvaluationReqDTO> listScAttachment, String downloadBy, String encryptionKey)
-				throws IOException {
-			Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
-			long startDownloadAllFilesWithSpecificFolderTimer = System.currentTimeMillis();
-			log.info("Starting downloadAllFilesWithSpecificFolder :: " + currentTimeStamp);
-			PortletResponse portalresponse = (PortletResponse) FacesContext
-					.getCurrentInstance().getExternalContext().getResponse();
-			HttpServletResponse response = PortalUtil
-					.getHttpServletResponse(portalresponse);
-			response.setContentType("application/zip");
-			response.setHeader("Content-Disposition", "attachment; filename="
-					+ zipFileName + ".zip");
-			ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
-					response.getOutputStream()));
-			
-			try {
-				downloadAllFilesAsZipFileWithSpecificFolder(zos,listScAttachment, downloadBy, encryptionKey);
-				
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			} finally {
-				zos.close();
-				response.flushBuffer();
-				FacesContext.getCurrentInstance().responseComplete();
-				long endDownloadAllFilesWithSpecificFolderTimer = System.currentTimeMillis();
-				log.info("Ending downloadAllFilesWithSpecificFolder :: " + convertMilliToSeconds(endDownloadAllFilesWithSpecificFolderTimer - startDownloadAllFilesWithSpecificFolderTimer) + " Second(s)");
-			}
-		}
-		
-		protected <ATTACHMENT extends ScAttachment> void downloadAllFilesAsZipFileWithSpecificFolder(ZipOutputStream zos,List<EvaluationReqDTO> listScAttachment, String downloadBy,String encryptionKey) throws IOException{
-			Timestamp currentTimeStamp = new Timestamp(System.currentTimeMillis());
-			long startDownloadAllFilesAsZipFileWithSpecificFolder = System.currentTimeMillis();
-			log.info("Starting downloadAllFilesAsZipFileWithSpecificFolder... " + currentTimeStamp);
-			for (EvaluationReqDTO scAttachmentReq : listScAttachment) {
-				// Get the file
-				FileInputStream fis = null;
-				BufferedInputStream fif = null;
-				ScAttachment scAttachment = scAttachmentReq.getScAttachment();
-				
-				String supplierNo = "Supplier "+ scAttachmentReq.getSupplierNo();
-				
-				try{
-					if (null != scAttachment
-							&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
-						File file = new File(getActualFilePath(scAttachment));
-						// 10542-#61 dayan bug fix - start
-						String checkListTitle = scAttachmentReq.getScQtChecklistName().replaceAll("/","_");
-						String extension = FilenameUtils.getExtension(scAttachment.getFileName());
-						
-						String attachmentFileName = (StringUtils.isNotBlank(scAttachment.getTempFileName()) 
-							? scAttachment.getTempFileName() + "." + extension 
-							: scAttachment.getFileName());
-						String downloadBySupplierZip = supplierNo+"/"+checkListTitle+"/"+attachmentFileName;
-						String downloadByDocumentZip = checkListTitle+"/"+supplierNo+"/"+attachmentFileName;
-						
-						if(downloadBy.equalsIgnoreCase("Supplier")){
-							zos.putNextEntry(new ZipEntry(downloadBySupplierZip));
-						}else if(downloadBy.equalsIgnoreCase("Document")){
-							zos.putNextEntry(new ZipEntry(downloadByDocumentZip));
-						} // 10542-#61 dayan bug fix - end
-						
-						try {
-							fis = new FileInputStream(file);
-						} catch (FileNotFoundException fnfe) {
-							zos.write(("ERROR: Could not find file " + file
-									.getName()).getBytes());
-							continue;
-						}
-						 fif = new BufferedInputStream(fis);
-						
-						// Write the contents of the file
-						BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC(encryptionKey);
-						bc.InitDecryptCipher();
-						bc.CBCDecryptFileZip(fif, zos);
-
-					// zos.write(data);
-					}
-				}
-				finally{
-					if(fis != null){
-						fis.close();
-					}
-					if(fif != null){
-						fif.close();
-					}
-					zos.closeEntry();
-				}
-			}
-			
-			long endDownloadAllFilesAsZipFileWithSpecificFolder = System.currentTimeMillis();
-			log.info("Ending downloadAllFilesAsZipFileWithSpecificFolder... " + convertMilliToSeconds(endDownloadAllFilesAsZipFileWithSpecificFolder - startDownloadAllFilesAsZipFileWithSpecificFolder) + " Second(S)");
-		}
-		//#10542 - end
-		
+		//#26130 - zaim end				
 		
 		//#26130 start
 		public String retrieveTierQuantity(List<TplSpecTierQty> listTplSpecTierQties) {
@@ -6406,5 +6329,89 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	//10542 - Function for testing (Will be removed)
 	protected long convertMilliToSeconds(long milli){
 		return (milli/1000) % 60;
+	}
+	
+	/**
+	 * Defect: #34924
+	 * Method: Checking and validate using validator: string value has unrecognized symbol/character.
+	 * @param context the context
+	 * @param component the component
+	 * @param value the value
+	 */
+	public void isContentExistUnicode(FacesContext context, UIComponent component,
+			Object value) {
+		
+		String strContent = (String) value;
+		String labelNameVal = (String) component.getAttributes().get("label");
+		
+		boolean isExistUnicodeSymbol = Boolean.FALSE;
+		
+		if(strContent != null && !strContent.isEmpty()){
+			if(strContent.contains("\1")){//SOH
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\2")){//STX
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\3")){//ETX
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\4")){//EOT
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\5")){//ENQ
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\6")){//ACK
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\7")){//BEL
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\10")){
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\11")){//VT
+				isExistUnicodeSymbol = Boolean.TRUE;
+			/*}else if(strContent.contains("\14")){//SO
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\15")){//SI
+				isExistUnicodeSymbol = Boolean.TRUE;*/
+			}else if(strContent.contains("\16")){//DLE
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\17")){//DC1
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\18")){//DC2
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\19")){//DC3
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\20")){//DC4
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\21")){//NAK
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\22")){//SYN
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\23")){//ETB
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\24")){//CAN
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\25")){//EM
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\26")){//SUB
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\27")){//ESC
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\28")){//FS
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\29")){//GS
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\30")){//RS
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\31")){//US
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}
+		}
+		
+		if(isExistUnicodeSymbol){
+			if(labelNameVal != null && !labelNameVal.isEmpty()){
+				throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
+						.getMessage(MessageConst.ERROR_760543,
+								new String[] {labelNameVal },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+		}
 	}
 }
