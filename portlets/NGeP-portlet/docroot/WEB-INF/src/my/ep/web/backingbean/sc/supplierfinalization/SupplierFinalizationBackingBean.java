@@ -2650,7 +2650,9 @@ public class SupplierFinalizationBackingBean extends
 			scQtCommittee = preparationDtlsInfo();
 			
 		}
-		
+
+		loadRecommededSuppliersItemize(); //Bug #35129 load
+
 		// Save Preparation and Supplier finalization tab(s) data 
 		// before throwing exception
 		validateReEvaluation();
@@ -10791,4 +10793,26 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			return disabled;
 		}
 		//6906 note 117 - end
+
+	// #35129 Start
+	private void loadRecommededSuppliersItemize() {
+
+		boolean itemized = false;
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		String recommendType = scQtFinalization.getRecommendedTypeId().getParameterCode();
+		String finalizationMethod = getManagedBean().getFinalizationMethod();
+
+		for (ScQtRecommend checkrecmddtls : scQtFinalization.getScQtRecommends()) {
+			if (CollectionUtils.isEmpty(checkrecmddtls.getRecommendDtls())) {
+				itemized = ParameterConst.RECOMMEND_TYPE_ITEM.equals(recommendType) ? true : false;
+				this.getManagedBean().setItemize(itemized);
+
+				setSelectionMode(finalizationMethod);
+				loadRecommededSuppliersIntoCachedData(itemized);
+				break;
+			}
+			break;
+		}
+	}
+	// #35129 End
 }
