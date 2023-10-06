@@ -34,8 +34,10 @@ import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.SmLicenseInfoVO;
+import my.ep.web.vo.SmSectionEditorVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -89,36 +91,34 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCompBasic(true);
 				}
-				log.info("31230 Check if PO edit application");
+				/*//#32008
 				if (step1CompanyBasicHasDifference(bean.getSupplierAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setPoEditCompBasic(true);
 				}
+				*/
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditCompBasic(false);
 				bean.getEditVO().setPoEditCompBasic(false);
 				bean.getEditVO().setAppEditCompBasic(false);
-				log.info("31230 Check if Supplier edit company basic");
 				if (step1CompanyBasicHasDifference(bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCompBasic(true);
 				}
-				log.info("31230 Check if PO edit company basic");
+				/*//#32008
 				if (step1CompanyBasicHasDifference(bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditCompBasic(true);
 				}
-				log.info("31230 Check if Approver edit company basic");
 				if (step1CompanyBasicHasDifference(bean.getPoAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditCompBasic(true);
 				}
+				*/
 			}
-			log.info("31230 check Company Basic has difference - end");
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)) {
-			log.info("31230 Check Company Project/Branch has difference - start");
 			if (bean.isSupplierUser()) {
 				//27641, 27736 : Disciplinary Action - #26238 - start 
 				if(bean.getSmSupplier() != null){
@@ -156,31 +156,31 @@ public class SmSideMenuIconUtil {
 						bean.getLatestAppl(), bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditAssocProj(true);
 				}
-				log.info("31230 Check if PO edit Project/Branch");
+				/*//#32008
 				if (step2AssocCompProjExpHasDifference(false,
 						bean.getSupplierAppl(), bean.getSmAppl())) {
 					bean.getEditVO().setPoEditAssocProj(true);
 				}
+				*/
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditAssocProj(false);
 				bean.getEditVO().setPoEditAssocProj(false);
 				bean.getEditVO().setAppEditAssocProj(false);
-				log.info("31230 Check if Supplier edit Project/Branch");
 				if (step2AssocCompProjExpHasDifference(true,
 						bean.getLatestAppl(), bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditAssocProj(true);
 				}
-				log.info("31230 Check if PO edit Project/Branch");
+				/*//#32008
 				if (step2AssocCompProjExpHasDifference(false,
 						bean.getSupplierAppl(), bean.getPoAppl())) {
 					bean.getEditVO().setPoEditAssocProj(true);
 				}
-				log.info("31230 Check if Approver edit Project/Branch");
 				if (step2AssocCompProjExpHasDifference(false, bean.getPoAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditAssocProj(true);
 				}
+				*/
 			}
 			log.info("31230 Check Company Project/Branch has difference - end");
 		} else if (sectionType
@@ -227,36 +227,39 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
-				log.info("31230 Check if PO edit personnel");
+				//to check server side value ser file
+				if(bean.getSupplierAppl().getSmPersonnels().size()>0){
+					log.info("--------------------------------------------------------------SM PERSONNEL IDENTITY RESIDENT STATUS--");
+					log.info("-----"+bean.getSupplierAppl().getSmPersonnels().get(0).getIdentityResidentStatus()+"-----");
+				}
+				/*//#32008
 				if (step3PersonnelHasDifference(false, bean.getSupplierAppl(),
 						bean.getSmAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setPoEditPersonnel(true);
 				}
+				*/
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditPersonnel(false);
 				bean.getEditVO().setPoEditPersonnel(false);
 				bean.getEditVO().setAppEditPersonnel(false);
-				log.info("31230 Check if Supplier edit personnel");
 				if (step3PersonnelHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
-				log.info("31230 Check if PO edit personnel");
+				/*//#32008
 				if (step3PersonnelHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setPoEditPersonnel(true);
 				}
-				log.info("31230 Check if Approver edit personnel");
 				if (step3PersonnelHasDifference(false, bean.getPoAppl(),
 						bean.getSmAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setAppEditPersonnel(true);
 				}
+				*/
 			}
-			log.info("31230 Check Personnel has difference - end");
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
-			log.info("31230 Check Equity has difference - start");
 			if (bean.isSupplierUser()) {
 				//27641, 27736 : Disciplinary Action - #26238 - start 
 				if(bean.getSmSupplier() != null){
@@ -289,41 +292,38 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditEquity(false);
 				bean.getEditVO().setPoEditEquity(false);
-				log.info("31230 Check if Supplier edit equity");
 				if (step4EquityHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquity(true);
 				}
-				log.info("31230 Check if PO edit equity");
+				/*//#32008
 				if (step4EquityHasDifference(false, bean.getSupplierAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setPoEditEquity(true);
 				}
+				*/
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditEquity(false);
 				bean.getEditVO().setPoEditEquity(false);
 				bean.getEditVO().setAppEditEquity(false);
-				log.info("31230 Check if Supplier edit equity");
 				if (step4EquityHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquity(true);
 				}
-				log.info("31230 Check if PO edit equity");
+				/*//#32008
 				if (step4EquityHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditEquity(true);
 				}
-				log.info("31230 Check if Approver edit equity");
 				if (step4EquityHasDifference(false, bean.getPoAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditEquity(true);
 				}
+				*/
 			}
-			log.info("31230 Check Equity has difference - end");
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
-			log.info("31230 Check Bank has difference - start");
 			if (bean.isSupplierUser()) {
 				//27641, 27736 : Disciplinary Action - #26238 - start 
 				if(bean.getSmSupplier() != null){
@@ -341,13 +341,11 @@ public class SmSideMenuIconUtil {
 				}				
 				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditBank(false);
-				log.info("31230 Check if Supplier edit bank");
 				if (step5BankHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}
 				// used to check got changes to display supporting doc
-				log.info("31230 Check if Supplier edit bank (To update support docs)");
 				if (step5BankHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSmAppl())) {
 					bean.getSupplierEditVO().setSuppEditBank(true);
@@ -355,40 +353,37 @@ public class SmSideMenuIconUtil {
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
-				log.info("31230 Check if Supplier edit bank");
 				if (step5BankHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}
-				log.info("31230 Check if PO edit bank");
+				/*//#32008
 				if (step5BankHasDifference(false, bean.getSupplierAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setPoEditBank(true);
 				}
+				*/
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
 				bean.getEditVO().setAppEditBank(false);
-				log.info("31230 Check if Supplier edit bank");
 				if (step5BankHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}
-				log.info("31230 Check if PO edit bank");
+				/*//#32008
 				if (step5BankHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditBank(true);
 				}
-				log.info("31230 Check if Approver edit bank");
 				if (step5BankHasDifference(false, bean.getPoAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditBank(true);
 				}
+				*/
 			}
-			log.info("31230 Check Bank has difference - end");
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
-			log.info("31230 Check Category Code has difference/overlap - start");
 			if (bean.isSupplierUser()) {
 				
                 // #27883 - Define param
@@ -431,34 +426,33 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditCategory(false);
 				bean.getEditVO().setPoEditCategory(false);
-				log.info("31230 Check if Supplier edit category");
 				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
-				log.info("31230 Check if PO edit category");
+				/*//#32008
 				if (step6CatCodeHasDifference(false, bean.getSupplierAppl(),bean.getSmAppl())) {
 					bean.getEditVO().setPoEditCategory(true);
 				}
+				*/
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditCategory(false);
 				bean.getEditVO().setPoEditCategory(false);
 				bean.getEditVO().setAppEditCategory(false);
-				log.info("31230 Check if Supplier edit category");
 				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
-				log.info("31230 Check if PO edit category");
+				/*//#32008
 				if (step6CatCodeHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditCategory(true);
 				}
-				log.info("31230 Check if Approver edit category");
 				if (step6CatCodeHasDifference(false, bean.getPoAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditCategory(true);
 				}
+				*/
 			}
 			//#31230 START
 			log.info("31230 Check if application category is overlap");
@@ -488,36 +482,35 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditFacility(false);
 				bean.getEditVO().setPoEditFacility(false);
-				log.info("31230 Check if Supplier edit facility");
 				if (step7FacilityHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditFacility(true);
 				}
-				log.info("31230 Check if PO edit facility");
+				/*//#32008
 				if (step7FacilityHasDifference(false, bean.getSupplierAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setPoEditFacility(true);
 				}
+				*/
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditFacility(false);
 				bean.getEditVO().setPoEditFacility(false);
 				bean.getEditVO().setAppEditFacility(false);
-				log.info("31230 Check if Supplier edit facility");
 				if (step7FacilityHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditFacility(true);
 				}
-				log.info("31230 Check if PO edit facility");
+				/*//#32008
 				if (step7FacilityHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditFacility(true);
 				}
-				log.info("31230 Check if Approver edit facility");
 				if (step7FacilityHasDifference(false, bean.getPoAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditFacility(true);
 				}
+				*/
 			}
 			log.info("31230 Check Facility has difference - end");
 		} else if (sectionType
@@ -541,39 +534,39 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditEquipment(false);
 				bean.getEditVO().setPoEditEquipment(false);
-				log.info("31230 Check if Supplier edit equipment");
 				if (step8EquipmentHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquipment(true);
 				}
-				log.info("31230 Check if PO edit equipment");
+				/*//#32008
 				if (step8EquipmentHasDifference(false, bean.getSupplierAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setPoEditEquipment(true);
 				}
+				*/
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditEquipment(false);
 				bean.getEditVO().setPoEditEquipment(false);
 				bean.getEditVO().setAppEditEquipment(false);
-				log.info("31230 Check if Supplier edit equipment");
 				if (step8EquipmentHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquipment(true);
 				}
-				log.info("31230 Check if PO edit equipment");
+				/*//#32008
 				if (step8EquipmentHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditEquipment(true);
 				}
-				log.info("31230 Check if Approver edit equipment");
 				if (step8EquipmentHasDifference(false, bean.getPoAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditEquipment(true);
 				}
+				*/
 			}
-			log.info("31230 Check Equipment has difference - end");
-		} else if (sectionType
+		} 
+		/*//#32008
+		else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
 			if (bean.isPoUser()) {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
@@ -597,7 +590,7 @@ public class SmSideMenuIconUtil {
 					bean.getEditVO().setAppEditSuppDoc(true);
 				}
 			}
-		} 
+		} */
 	}
 
 	public static void setAllSectionEditorVO(SmApplicationManagedBean bean,
@@ -1410,12 +1403,16 @@ public class SmSideMenuIconUtil {
 			if(applPrev.getApplId() == applCurr.getApplId()){
 				return false;
 			}
+			//#32008
 			String[] arrExcludeProps = new String[] { "prevApprDecFlg",
 					"apprvrDecFlg", "poDecFlg", "approvedByPo",
 					"prevApprovedByPo", "prevPoDecFlg", "poRemarks",
 					"approverRemarks", "prevPoRemarks", "prevApproverRemarks",
 					"approvedDate", "approvedByAp", "prevApprovedByAp",
-					"recordStatusFlg" };
+					"recordStatusFlg", "overLapCategory", "suspendCategory",
+					"cancelCategory", "isActiveDA", "disciplinaryActionId",
+					"supplierType", "applRefId", "prevOtherDesc", 
+					"cancelledDate", "categoryEffDate"};
 
 			// smSupplierCategory
 			if (isSupplier) {
@@ -1743,5 +1740,65 @@ public class SmSideMenuIconUtil {
 		}
 		return retVal;
 	}
-
+	
+	//#32008 - start
+	public static void setSectionEditorVO(BaseReviewApplicationManagedBean bean){
+		if(!bean.isShowFieldChanges() || bean.getLatestAppl() == null || bean.getSmAppl() == null){
+			bean.setEditVO(new SmSectionEditorVO());
+			return;
+		}
+		
+		bean.getEditVO().setSuppEditCompBasic(false);
+		if (step1CompanyBasicHasDifference(bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditCompBasic(true);
+		}
+		
+		bean.getEditVO().setSuppEditAssocProj(false);
+		if (step2AssocCompProjExpHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditAssocProj(true);
+		}	
+		
+		bean.getEditVO().setSuppEditPersonnel(false);
+		if (step3PersonnelHasDifference(true, bean.getLatestAppl(), bean.getSmAppl(), null)) {
+			bean.getEditVO().setSuppEditPersonnel(true);
+		}
+			
+		bean.getEditVO().setSuppEditEquity(false);
+		if (step4EquityHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditEquity(true);
+		}
+		
+		bean.getEditVO().setSuppEditBank(false);
+		if (step5BankHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditBank(true);
+		}
+		
+		bean.getEditVO().setSuppEditCategory(false);
+		boolean flagSmDisciplinaryActionIsCancelCategory = false;
+		List<SmDisciplinaryAction> activeDisc = 
+				SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
+		if (activeDisc != null){
+			for(SmDisciplinaryAction disc : activeDisc){
+				if(disc.isCancelCategory()){
+					flagSmDisciplinaryActionIsCancelCategory = true;
+					break;
+				}
+			}
+		}
+		if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSmAppl()) 
+					&& !flagSmDisciplinaryActionIsCancelCategory) {
+			bean.getEditVO().setSuppEditCategory(true);
+		}
+		
+		bean.getEditVO().setSuppEditFacility(false);
+		if (step7FacilityHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditFacility(true);
+		}
+				
+		bean.getEditVO().setSuppEditEquipment(false);
+		if (step8EquipmentHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditEquipment(true);
+		}
+	}
+	//#32008 - end
 }
