@@ -15265,7 +15265,7 @@ public class SmApplicationUtil {
 			}
 		}
 		if (!validPersonnels) {
-			throw new EpException(MessageConst.ERROR_722706, new String[] { sb.toString() });
+			throw new EpException(MessageConst.ERROR_722707, new String[] { sb.toString() });
 		}
 		return validPersonnels;
 	}// 29616-end
