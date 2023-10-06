@@ -25,7 +25,7 @@
 				<ac:lov id="lovCtKumpulanPTJ"
 					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 					headerText="#{lbl['lbl.ct.jabatan']}" readonly="true"
-					disabled="#{ccContractItemMonitoringRptBB.managedBean.selectedMinistry==null or ccContractItemMonitoringRptBB.managedBean.disableOrgField}"
+					disabled="#{ccContractItemMonitoringRptBB.managedBean.disableOrgField}"
 					value="#{ccContractItemMonitoringRptBB.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
 					saveObject="ccContractItemMonitoringRptBB.managedBean.selectedKumpulanPTJ"
 					conditionField="#{ccContractItemMonitoringRptBB.constructKumpulanPTJConditionFields()}"
@@ -37,7 +37,7 @@
 				<ac:lov id="lovCtPTJ"
 					lovId="PM_ORG_PROFILE_REPORT" readonly="true" size="100"
 					headerText="#{lbl['lbl.ct.ptj']}" update="@form"
-					disabled="#{ccContractItemMonitoringRptBB.managedBean.selectedKumpulanPTJ==null or ccContractItemMonitoringRptBB.managedBean.disableOrgField}"
+					disabled="#{ccContractItemMonitoringRptBB.managedBean.disableOrgField}"
 					value="#{ccContractItemMonitoringRptBB.managedBean.selectedPTJ.pmOrgValidity.orgName}"
 					saveObject="ccContractItemMonitoringRptBB.managedBean.selectedPTJ"
 					conditionField="#{ccContractItemMonitoringRptBB.constructPTJConditionFields()}" /></td>
@@ -102,7 +102,7 @@
 					<p:ajax event="change" partialSubmit="true" />
 				</p:selectOneMenu>		
 			</td>
-			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.contract.eff.date.from']}" /></td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.contract.eff.date.from.2']}" /></td>
 			<td>
 				<table><tr>
 					<td class="columnDateFromClass">
@@ -139,7 +139,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.circular.eff.date.from']}" /></td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.circular.eff.date.from.2']}" /></td>
 			<td>
 				<table><tr>
 					<td class="columnDateFromClass">
