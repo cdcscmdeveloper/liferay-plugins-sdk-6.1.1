@@ -2760,12 +2760,15 @@ public class LOIDetailBackingBean extends
 			//pending loiloas
 			List<ScLoiLoa> pendingloiloas  = getPendingLoiLoas(scLoi, getManagedBean().getRecSupplierList());
 			
-			//#30008
+			//#30008 - Start
+			scLoi.setNegoDecision(this.getManagedBean().getDecision());
+			scLoi.setDecisionJustification(this.getManagedBean().getJustification());
+			
 			if (ParameterConst.NOT_REACH_AGREEMENT.equals(scLoi.getNegoDecision().getParameterId().toString())) {	
 				awardDataType.setIsAgreement(false);
 			} else {
 				awardDataType.setIsAgreement(true);
-			}
+			}//#30008 - end
 
 			scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 			//Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
