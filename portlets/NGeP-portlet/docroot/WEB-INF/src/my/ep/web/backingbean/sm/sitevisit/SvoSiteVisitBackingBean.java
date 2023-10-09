@@ -1307,33 +1307,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("siteVisitNo", getManagedBean().getSiteVisitNo());
 		
 		//#29781 - Start
-		//String accptDate = "";
-		/*
-		StringBuilder SvO = new StringBuilder();
-		if(svTask.getSmSvOfficers() != null && !svTask.getSmSvOfficers().isEmpty()){
-			for(SmSvOfficer smSvOfficer : svTask.getSmSvOfficers()){
-				SvO.append(smSvOfficer.getPmUser().getUserName());
-			}
-		}else{
-			SvO.append(" ");
-		}
-
-		StringBuilder SvOA = new StringBuilder();
-		int SmSvAssistantOfficersCounter = 0;
-		if(svTask.getSmSvAssistantOfficers() != null && !svTask.getSmSvAssistantOfficers().isEmpty()){
-			for(SmSvAssistantOfficer smSvAssistantOfficer : svTask.getSmSvAssistantOfficers()){
-				if(SmSvAssistantOfficersCounter < 1 ){
-					SvOA.append(smSvAssistantOfficer.getName());
-				}
-				SmSvAssistantOfficersCounter++;
-			}
-		}else{
-			SvO.append(" ");
-		}
-		context.put("svOfficers", SvO.toString());
-		context.put("svAOfficer", SvOA.toString());
-		*/
-		List<String> svOfficers = new ArrayList<String>();
+		//Sonarqube #G22
+		List<String> svOfficers = new ArrayList<>();
 		for(SmSvOfficer officer : svTask.getSmSvOfficers()){
 			svOfficers.add(officer.getPmUser().getUserName());
 		}
