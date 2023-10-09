@@ -85,6 +85,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -11002,7 +11003,7 @@ public class SpecificationBackingBean extends
 		ICompositeValiditySO compositeSO = (ICompositeValiditySO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
 		CompositeValidityReqDTO compositeReqDTO = new CompositeValidityReqDTO();
-		compositeReqDTO.setCompositeValidityId(new Long(25627L));
+		compositeReqDTO.setCompositeValidityId(new Long(CompositeValidityConst.getPmCompositeValidity()));
 		PmCompositeValidity composite = compositeSO.getCompositeByValidityId(compositeReqDTO).getPmCompositeValidity();
 		String qtMinVersion = composite.getMinCompositeVersion();
 
