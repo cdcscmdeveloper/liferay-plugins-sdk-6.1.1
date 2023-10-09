@@ -4939,4 +4939,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	// End Fix - #33491
 	
+	/*
+	 * To identify user role based on user logged in
+	 * return true if user has role as supplier
+	 * else return false
+	 */
+	//Start Fix - #35202
+	public boolean isSupplier() {
+		FacesScopes facesScopes = new FacesScopes();
+		if (facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				|| facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		}
+
+		return Boolean.FALSE;
+	}
+	//End Fix - #35202
 }  
