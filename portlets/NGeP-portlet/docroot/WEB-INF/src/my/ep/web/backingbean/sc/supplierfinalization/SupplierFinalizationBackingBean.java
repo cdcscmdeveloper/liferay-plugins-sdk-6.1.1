@@ -1574,6 +1574,7 @@ public class SupplierFinalizationBackingBean extends
 	private void validateFinalizationReports(SuppFinalizationReqDTO reqDTO, boolean skipValidation) {//25037 note31
 		log.info("validateFinalizationReports");
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		boolean isSubmit = this.getManagedBean().isSubmit();//#35205
 		List<ScQtFinalizationReport> finalizationReports = 
 					scQtFinalization.getScQtFinalizationReports();
 		//Bug #29707
@@ -1606,7 +1607,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 			
 			//#28834 - Start 
-			if(CollectionUtils.isNotEmpty(toBeRemovedReports)){
+			if(CollectionUtils.isNotEmpty(toBeRemovedReports) && isSubmit){//#35205 add isSubmit
 				if(skipValidation) return;//25037
 				navigateToEndorsementReportTab();
 			    throw new EpException(MessageConst.ERROR_770271);
