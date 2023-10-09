@@ -1405,7 +1405,6 @@ public class SmApplicationUtil {
 					.getSmSupplierBranches()) {
 				if (!isBranchAssignToBank(bean.getSmAppl(), brAppl)
 						&& brAppl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) { //#34135
-					validSave = false;
 					throw new EpException(MessageConst.ERROR_722622,
 							new String[] { brAppl.getBranchName() });
 				}
@@ -1430,7 +1429,6 @@ public class SmApplicationUtil {
 					.getSmSupplierBranches()) {
 				if (!isBranchAssignToBank(bean.getSmAppl(), brAppl)
 						&& brAppl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) { //#34135
-					validSave = false;
 					throw new EpException(MessageConst.ERROR_722622,
 							new String[] { brAppl.getBranchName() });
 				}
@@ -3445,7 +3443,6 @@ public class SmApplicationUtil {
 		addr.setPmCity(new PmCity());
 		addr.setPmCountry(cntry);
 		addr.setPmState(new PmState());
-		addr.setPmDivision(new PmDivision()); //#34159
 		addr.setPmDistrict(new PmDistrict());
 		SmCommonUtil.getInstance().setUserDetails(addr);
 		return addr;
@@ -8184,7 +8181,7 @@ public class SmApplicationUtil {
 					total = total.add(staffTotal.getTotalForeigner());
 					total = total.add(staffTotal.getTotalNonBumi());
 				}
-				if (total.compareTo(new BigDecimal(200)) != 1) {
+				if (total.compareTo(new BigDecimal(200)) <= 0) { //Sonarqube #G19
 					smeStatus = SupplierManagementConst.SME_STATUS_MANUFACTURING;
 				}
 			}
@@ -8202,7 +8199,7 @@ public class SmApplicationUtil {
 					total = total.add(staffTotal.getTotalForeigner());
 					total = total.add(staffTotal.getTotalNonBumi());
 				}
-				if (total.compareTo(new BigDecimal(75)) != 1) {
+				if (total.compareTo(new BigDecimal(75)) <= 0) { //Sonarqube #G19
 					smeStatus = smeStatus
 							.equals(SupplierManagementConst.SME_STATUS_MANUFACTURING) ? SupplierManagementConst.SME_STATUS_BOTH
 							: SupplierManagementConst.SME_STATUS_SERVICES;
@@ -10554,7 +10551,7 @@ public class SmApplicationUtil {
 			}
 			Integer bumiPerc = new Integer(0);
 			if (bumiPercentage != null) {
-				bumiPerc = bumiPercentage.intValue();
+				bumiPerc = bumiPercentage; //Sonarqube #G19
 				if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
 					bumiPerc = 99;
 				}
@@ -15246,4 +15243,30 @@ public class SmApplicationUtil {
 		}
 	}
 		//#31043 - END
+	// 29616-start
+	public static boolean validatePersonnelSoftcert(SmSupplier supplier) {
+		log.info("******* Validate active softcert For cancel mof account******** ");
+		boolean validPersonnels = true;
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(supplier.getSupplierId());
+		List<SmPersonnel> latestActivePersonnels = SmServiceLookup.getPersonnelSO()
+				.retrieveLatestPersonnelBySupplierId(reqDTO).getSmPersonnelList();
+
+		if (!SmCommonUtil.isCollectionEmpty(latestActivePersonnels)) {
+			for (SmPersonnel per : latestActivePersonnels) {
+				if (per.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					sb.append(++i + ". ");
+					sb.append(per.getName());
+					sb.append(" ");
+					validPersonnels = false;
+				}
+			}
+		}
+		if (!validPersonnels) {
+			throw new EpException(MessageConst.ERROR_722707, new String[] { sb.toString() });
+		}
+		return validPersonnels;
+	}// 29616-end
 }

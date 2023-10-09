@@ -4651,7 +4651,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				            //#25077 - End
 				            	
 				            	tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
-				            	this.getManagedBean().setApprovalRequestHistoryDtls(approvalRequestHistory);//#25077
 				            
 				            //#25077 - Start
 				            }
@@ -4870,12 +4869,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								
 							}
 							
-							if(CollectionUtils.isNotEmpty(approvalRequest)){
+							if(CollectionUtils.isNotEmpty(qtApproval.getScQtApprovalDtls())){
 							   if(isApprovalOthers){
 								   tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
-								   this.getManagedBean().setApprovalRequestDtls(approvalRequest);
 							   }else{
-								   this.getManagedBean().setApprovalRequestDtls(null);
+								   if(this.isQTStatusLessThanOrEquals(scQt.getQtStatus().getStatusId(), QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
+									   qtApproval.setScQtApprovalDtls(getListOthersApprovalRequest());
+									   tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+								   }else{
+								       qtApproval.setScQtApprovalDtls(new ArrayList<ScQtApprovalRequest>());
+								       tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+								   }
 							   }
 							}
 					
@@ -11679,6 +11683,32 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		reqDTO.setQtdetail(scQt);
 		return reqDTO;
+	}
+	
+    public List<ScQtApprovalRequest> getListOthersApprovalRequest(){
+		List<ScQtApprovalRequest> approvalDtls = new ArrayList<>();
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		ScQt scQt = this.getManagedBean().getQt();
+		reqDTO.setQtId(scQt.getQtId());
+		reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_OTHERS);
+		ScQtApproval approval = this.getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO).getQtApproval();
+		if(approval!=null && approval.getScQtApprovalDtls() != null){
+		   approvalDtls = approval.getScQtApprovalDtls();
+		   for(ScQtApprovalRequest oth : approvalDtls){
+			   
+			   if(oth.getApproverAction() == null){
+				   oth.setApproverAction(new PmParameter());
+			   }  
+			   
+			   if(oth.getAppRequestRemark() == null){
+				   ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
+		           oth.setAppRequestRemark(approvalRemark);
+				   oth.getAppRequestRemark().setRemark(" ");
+			   }
+		   }
+		  
+		}
+		return approvalDtls;
 	}
 	// 25077 - End
 	
