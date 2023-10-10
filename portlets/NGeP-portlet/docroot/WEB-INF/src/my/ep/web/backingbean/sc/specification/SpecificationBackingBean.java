@@ -11000,16 +11000,15 @@ public class SpecificationBackingBean extends
 		}
 		
 		//#28784 - Demo WIP - Get Qt version and set to manageBean
-		ICompositeValiditySO compositeSO = (ICompositeValiditySO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
-		CompositeValidityReqDTO compositeReqDTO = new CompositeValidityReqDTO();
-		compositeReqDTO.setCompositeValidityId(new Long(CompositeValidityConst.getPmCompositeValidity()));
-		PmCompositeValidity composite = compositeSO.getCompositeByValidityId(compositeReqDTO).getPmCompositeValidity();
-		String qtMinVersion = composite.getMinCompositeVersion();
+//		ICompositeValiditySO compositeSO = (ICompositeValiditySO) BusinessDelegate.getInstance().getServiceObject(
+//				ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
+//		CompositeValidityReqDTO compositeReqDTO = new CompositeValidityReqDTO();
+//		compositeReqDTO.setCompositeValidityId(new Long(CompositeValidityConst.getPmCompositeValidity()));
+//		PmCompositeValidity composite = compositeSO.getCompositeByValidityId(compositeReqDTO).getPmCompositeValidity();
+//		String qtMinVersion = composite.getMinCompositeVersion();
 
-		boolean isQtOldVersion = CustomUtils.compositeVersionComparator(this.getManagedBean().getBpmVersionNo(),
-				qtMinVersion) < 0;
-		this.getManagedBean().setOldVersion(isQtOldVersion);
+//		boolean isQtOldVersion = validateSupportedTask();
+//		this.getManagedBean().setOldVersion(isQtOldVersion);
 				
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
 		//35056 - 4serangkai - start
@@ -11044,6 +11043,10 @@ public class SpecificationBackingBean extends
 		}
 		retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
 		ScQt scQt = this.getManagedBean().getQt();
+		
+		//#28784 - Demo WIP
+		boolean isQtOldVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+		this.getManagedBean().setOldVersion(isQtOldVersion);
 		
 		// #25638 - Start
 		if (null != this.getManagedBean().getCurrentStatusId()
