@@ -5217,7 +5217,7 @@ public void saveComplianceSample() {
 				specBB.retrieveTemplateSpecMaster(templateSpecBean);
 				//#29187 Start Vinod
 				for(TplSpecAnswer answer : specBB.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-					if(answer.getUserScore()!=null && answer.getCompliance()!=null && !answer.getUserScore().equals(0) && answer.getCompliance().equals(Boolean.FALSE)){
+					if(answer.getUserScore()!=null && answer.getCompliance()!=null && answer.getUserScore().intValue()!=0 && answer.getCompliance().equals(Boolean.FALSE)){
 						answer.setUserScore(new BigDecimal(0));
 					}
 				}
@@ -18831,7 +18831,7 @@ private void retriveCommitteeRemarksList(){
 				&& null!=evalResultDtl.isCompliance() 
 				&& !evalResultDtl.isCompliance()
 				&& null!=evalResultDtl.getTotalScore()
-				&& evalResultDtl.getTotalScore().intValue() < this.getManagedBean().getPassingScore()){
+				&& this.getManagedBean().getPassingScore() < evalResultDtl.getTotalScore().intValue()){
 				renderDisqialifiedColumn=true;
 			}
 		return renderDisqialifiedColumn;
