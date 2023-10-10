@@ -142,9 +142,11 @@ public class TaskReassignmentBackingBean extends
 	private ISearchBean<PmParameterDesc> orgTypeSearchBean;
 
 	// List for Paging
-	private PagingDataModel<WorklistItemVO> userTaskListDataModel = new userTaskListDataModel();	
-	private PagingDataModel<WorklistItemVO> groupTaskListDataModel = new groupTaskListDataModel();
-	private PagingDataModel<WorklistItemVO> othersTaskListDataModel = new othersTaskListDataModel();
+	// 20231010 #7465 - Start
+	private PagingDataModel<WorklistItemVO> userTaskListDataModel = new UserTaskListDataModel();	
+	private PagingDataModel<WorklistItemVO> groupTaskListDataModel = new GroupTaskListDataModel();
+	private PagingDataModel<WorklistItemVO> othersTaskListDataModel = new OthersTaskListDataModel();
+	// 20231010 #7465 - End
 	private PagingDataModel<PmUser> userListDataModel = new userPagingDataModel();
 	
 	//[#25018] - start	
@@ -257,6 +259,12 @@ public class TaskReassignmentBackingBean extends
 		this.getManagedBean().setEnableDeleteOthersTasksButton(false);
 		this.getManagedBean().setSelectedTasksToBulkReassign(null);
 		//7465 - end reendorse
+		
+		// 20231010 #7465 - Start
+		if (this.getManagedBean().isFromUserMaintenanceDetails()) {
+			reinitRedirectedTaskReassignmentSearchBean();
+		}
+		// 20231010 #7465 - End
 	}
 	
 	/**
@@ -1125,11 +1133,11 @@ public class TaskReassignmentBackingBean extends
 	 * @author Ken
 	 *
 	 */
-	private class userTaskListDataModel extends PagingDataModel<WorklistItemVO> {
+	private class UserTaskListDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
 
-		public userTaskListDataModel() {
+		public UserTaskListDataModel() {
 			super("dtTaskAssignResult",getManagedBean().isTaskLazy());
 		}
 
@@ -1305,11 +1313,11 @@ public class TaskReassignmentBackingBean extends
 	 * @author Ken
 	 *
 	 */
-	private class groupTaskListDataModel extends PagingDataModel<WorklistItemVO> {
+	private class GroupTaskListDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
 
-		public groupTaskListDataModel() {
+		public GroupTaskListDataModel() {
 			super("dtGroupTaskAssignResult",getManagedBean().isTaskLazy());
 		}
 
@@ -1509,11 +1517,11 @@ public class TaskReassignmentBackingBean extends
 	 * @author Ken
 	 *
 	 */
-	private class othersTaskListDataModel extends PagingDataModel<WorklistItemVO> {
+	private class OthersTaskListDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
 
-		public othersTaskListDataModel() {
+		public OthersTaskListDataModel() {
 			super("dtOthersTaskAssignResult",getManagedBean().isTaskLazy());
 		}
 
@@ -3174,6 +3182,10 @@ public class TaskReassignmentBackingBean extends
 	
 	public void redirectToTaskReassignment(PmOrgProfile orgProfile, PmUser user) {		
 		log.info("redirectToTaskReassignment");
+		// 20231010 #7465 - Start
+		this.getManagedBean().setPmOrgProfile(orgProfile);
+		this.getManagedBean().setPmUser(user);
+		// 20231010 #7465 - End
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setBackURL(fc.getViewRoot().getViewId());		
 		resetTaskAssignSearchBean();
@@ -3189,19 +3201,23 @@ public class TaskReassignmentBackingBean extends
 		}
 		//[#25018] - end
 		
-		this.getManagedBean().getTaskAssignmentSearchBean()
-			.setOrgProfile(orgProfile);
-		this.getManagedBean().getTaskAssignmentSearchBean()
-			.setOrgType(orgProfile.getOrgTypeCode());
-		this.getManagedBean().getTaskAssignmentSearchBean()
-			.setUser(user);
-		this.getManagedBean().setOrgProfileRequired(false);
-		this.getManagedBean().setDisableForTaskAssignment(true);
+		// 20231010 #7465 - Start
+		this.getManagedBean().setFromUserMaintenanceDetails(true);
+		reinitRedirectedTaskReassignmentSearchBean();
+		// 20231010 #7465 - End
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "/xhtml/pm/taskReassignment/taskReassignment.xhtml");
-
-		
 	}
+	
+	// 20231010 #7465 - Start
+	private void reinitRedirectedTaskReassignmentSearchBean() {
+		this.getManagedBean().getTaskAssignmentSearchBean().setOrgProfile(this.getManagedBean().getPmOrgProfile());
+		this.getManagedBean().getTaskAssignmentSearchBean().setOrgType(this.getManagedBean().getPmOrgProfile().getOrgTypeCode());
+		this.getManagedBean().getTaskAssignmentSearchBean().setUser(this.getManagedBean().getPmUser());
+		this.getManagedBean().setOrgProfileRequired(false);
+		this.getManagedBean().setDisableForTaskAssignment(true);
+	}
+	// 20231010 #7465 - End
 	
 	public void redirectToPmUserPage(){
 		log.info("this.getManagedBean().getBackURL()"+this.getManagedBean().getBackURL());
@@ -3513,6 +3529,8 @@ public class TaskReassignmentBackingBean extends
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
 			FacesMessage.SEVERITY_INFO, MessageConst.INFO_780071, null);
 			
+			// 20231010 #7465
+			this.getManagedBean().setEnableDeleteGroupTasksButton(false);
 			//#7465, #29822 - START - reendorse
 			this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
 			this.getManagedBean().setCheckAllGroupTasksEnabled(false);
@@ -3604,6 +3622,8 @@ public class TaskReassignmentBackingBean extends
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO,
 					MessageConst.INFO_780071, null);
 			
+			// 20231010 #7465
+			this.getManagedBean().setEnableDeleteOthersTasksButton(false);
 			//#7465, #29822  - START - reendorse
 			this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
 			this.getManagedBean().setCheckAllOthersTasksEnabled(false); 
