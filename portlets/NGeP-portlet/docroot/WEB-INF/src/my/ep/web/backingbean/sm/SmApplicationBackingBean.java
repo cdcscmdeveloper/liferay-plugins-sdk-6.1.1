@@ -1367,6 +1367,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				if (hasActiveTransactions || hasOtherActiveTransactions) {
 					throw new EpException(MessageConst.ERROR_722565);
 				}
+				SmApplicationUtil.validatePersonnelSoftcert(currSupp);//29616
 			}
 
 			// Disabled blocking if has active transaction for cancel MOF
@@ -15676,7 +15677,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void checkActiveAndPendingTransaction(){
 		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 		//#17906 - start
-		boolean hasActiveTransactionContractManagement = false, hasActiveTransactionFulfilment = false;
+		//Sonarqube #G22
+		boolean hasActiveTransactionContractManagement = false;
+		boolean hasActiveTransactionFulfilment = false;
 		
 		if (getManagedBean().getSelectedBanks().size() > 0) {
 			for (int i = 0; i < getManagedBean().getSelectedBanks().size(); i++) {
