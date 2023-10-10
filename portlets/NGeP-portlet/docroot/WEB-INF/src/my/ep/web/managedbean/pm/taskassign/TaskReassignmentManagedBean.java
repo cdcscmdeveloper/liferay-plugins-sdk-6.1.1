@@ -12,7 +12,6 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -92,6 +91,11 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private boolean showRemoveProcessMessageOther;
 	// #7465, #29822 - end
 	
+	// 20231009 #7465
+	private boolean fromUserMaintenanceDetails;
+	private PmOrgProfile pmOrgProfile;
+	private PmUser pmUser;
+
 	public TaskReassignmentManagedBean(){}
 
 	/**
@@ -680,4 +684,28 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 		this.showRemoveProcessMessageOther = showRemoveProcessMessageOther;
 	}
 	// #7465, #29822 - end
+
+	public boolean isFromUserMaintenanceDetails() {
+		return fromUserMaintenanceDetails;
+	}
+
+	public void setFromUserMaintenanceDetails(boolean fromUserMaintenanceDetails) {
+		this.fromUserMaintenanceDetails = fromUserMaintenanceDetails;
+	}
+
+	public PmOrgProfile getPmOrgProfile() {
+		return pmOrgProfile;
+	}
+
+	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
+		this.pmOrgProfile = pmOrgProfile;
+	}
+
+	public PmUser getPmUser() {
+		return pmUser;
+	}
+
+	public void setPmUser(PmUser pmUser) {
+		this.pmUser = pmUser;
+	}
 }

@@ -1225,9 +1225,12 @@ public class SmApplicationUtil {
 						.equalsIgnoreCase("B")
 						|| appl.getSmFacilities().get(i).getFacilityType()
 								.equalsIgnoreCase("H")) {
-					appl.getSmFacilities().set(i,
-							managedBean.getBasicCompanyFacility());
-					break;
+					// #34303 - start
+					if (appl.getSmFacilities().get(i).isHeadquarters()) {
+						appl.getSmFacilities().set(i, managedBean.getBasicCompanyFacility());
+						break;
+					}
+					// #34303 - end
 				}
 			}
 		}
@@ -1402,7 +1405,6 @@ public class SmApplicationUtil {
 					.getSmSupplierBranches()) {
 				if (!isBranchAssignToBank(bean.getSmAppl(), brAppl)
 						&& brAppl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) { //#34135
-					validSave = false;
 					throw new EpException(MessageConst.ERROR_722622,
 							new String[] { brAppl.getBranchName() });
 				}
@@ -1427,7 +1429,6 @@ public class SmApplicationUtil {
 					.getSmSupplierBranches()) {
 				if (!isBranchAssignToBank(bean.getSmAppl(), brAppl)
 						&& brAppl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) { //#34135
-					validSave = false;
 					throw new EpException(MessageConst.ERROR_722622,
 							new String[] { brAppl.getBranchName() });
 				}
@@ -1701,7 +1702,9 @@ public class SmApplicationUtil {
 		validateSpecialAndNormalCategory(validSave, managedBean, currentTab);//#30508
 		//#32236 - start
 		if(managedBean.isSupplierUser()){
-			validateSpecialAndNormalCategoryCapital(managedBean);	
+			if(currentTab == 5 && !managedBean.getOutputPage().equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)){
+				validateSpecialAndNormalCategoryCapital(managedBean);	
+			}	
 		}
 		//#32236 - end
 		if (!managedBean.isSiteVisitAfterApproval()) {
@@ -1727,6 +1730,20 @@ public class SmApplicationUtil {
 								&& (cat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS
 										|| cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS || cat
 										.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS)) {
+							
+							//31043 start
+							if(StringUtils.isNotEmpty(cat.getPoRemarks())){
+								for(int i = 0; i < cat.getPoRemarks().length(); i++) {
+									if (Character.isWhitespace(cat.getPoRemarks().charAt(i))) {
+										cat.setPoRemarks(cat.getPoRemarks().trim());
+									}
+								}
+							}//#31043 end
+							//#35086 - start
+							if(cat.getPoDecFlg() == null){
+								cat.setPoDecFlg(0);
+							}
+							//#35086 - end
 							if (StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == 0) {
 								validSave = false;
@@ -1746,6 +1763,16 @@ public class SmApplicationUtil {
 								&& (cat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS
 										|| cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS || cat
 										.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS)) {
+							
+							//31043 start
+							if(StringUtils.isNotEmpty(cat.getApproverRemarks())){
+								for(int i = 0; i < cat.getApproverRemarks().length(); i++) {
+									if (Character.isWhitespace(cat.getApproverRemarks().charAt(i))) {
+										cat.setApproverRemarks(cat.getApproverRemarks().trim());
+									}
+								}
+							}//#31043 end
+							
 							if (cat.getApprvrDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -1780,6 +1807,16 @@ public class SmApplicationUtil {
 					} else {
 						if (managedBean.isPoUser()
 								&& cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
+							
+							//31043 start
+							if(StringUtils.isNotEmpty(cat.getPoRemarks())){
+								for(int i = 0; i < cat.getPoRemarks().length(); i++) {
+									if (Character.isWhitespace(cat.getPoRemarks().charAt(i))) {
+										cat.setPoRemarks(cat.getPoRemarks().trim());
+									}
+								}
+							}//#31043 end
+							
 							if (StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == null) {
 								validSave = false;
@@ -1817,6 +1854,16 @@ public class SmApplicationUtil {
 							}
 						} else if (managedBean.isApproverUser()
 								&& cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
+							
+							//31043 start
+							if(StringUtils.isNotEmpty(cat.getApproverRemarks())){
+								for(int i = 0; i < cat.getApproverRemarks().length(); i++) {
+									if (Character.isWhitespace(cat.getApproverRemarks().charAt(i))) {
+										cat.setApproverRemarks(cat.getApproverRemarks().trim());
+									}
+								}
+							}//#31043 end
+							
 							if (cat.getApprvrDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -1866,6 +1913,16 @@ public class SmApplicationUtil {
 								&& (cat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS
 										|| cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS || cat
 										.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS)) {
+							
+							//31043 start
+							if(StringUtils.isNotEmpty(cat.getPoRemarks())){
+								for(int i = 0; i < cat.getPoRemarks().length(); i++) {
+									if (Character.isWhitespace(cat.getPoRemarks().charAt(i))) {
+										cat.setPoRemarks(cat.getPoRemarks().trim());
+									}
+								}
+							}//#31043 end
+							
 							if (cat.getPoDecFlg() == null) {
 								//#11765
 								/*validSave = false;
@@ -1901,6 +1958,16 @@ public class SmApplicationUtil {
 								&& (cat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS
 										|| cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS || cat
 										.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS)) {
+							
+							//31043 start
+							if(StringUtils.isNotEmpty(cat.getApproverRemarks())){
+								for(int i = 0; i < cat.getApproverRemarks().length(); i++) {
+									if (Character.isWhitespace(cat.getApproverRemarks().charAt(i))) {
+										cat.setApproverRemarks(cat.getApproverRemarks().trim());
+									}
+								}
+							}//31043 end
+							
 							if (cat.getApprvrDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -1948,6 +2015,16 @@ public class SmApplicationUtil {
 					} else {
 						if (managedBean.isPoUser()
 								&& cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
+							
+							//31043 start
+							if(StringUtils.isNotEmpty(cat.getPoRemarks())){
+								for(int i = 0; i < cat.getPoRemarks().length(); i++) {
+									if (Character.isWhitespace(cat.getPoRemarks().charAt(i))) {
+										cat.setPoRemarks(cat.getPoRemarks().trim());
+									}
+								}
+							}//#31043 end
+							
 							//if (cat.getPoDecFlg() == null) {
 								//#11765
 								/*validSave = false;
@@ -2008,6 +2085,17 @@ public class SmApplicationUtil {
 							}
 						} else if (managedBean.isApproverUser()
 								&& cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
+							
+							//#31043 start
+							if(StringUtils.isNotEmpty(cat.getApproverRemarks())){
+								for(int i = 0; i < cat.getApproverRemarks().length(); i++) {
+									if (Character.isWhitespace(cat.getApproverRemarks().charAt(i))) {
+										cat.setApproverRemarks(cat.getApproverRemarks().trim());
+									}
+								}
+							}
+							//#31043 end
+							
 							if (cat.getApprvrDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -2737,7 +2825,11 @@ public class SmApplicationUtil {
 			s = ResourceBundleUtils.getMessage("lbl.sm.authorized.share",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		}
-
+		//#34277 - start
+		if(managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() == null){
+			managedBean.getSmAppl().getSmCompanyBasic().setPaidUpCapital(new BigDecimal(0));
+		}
+		//#34277 - end
 		if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
 			boolean validPaidUp = true;
 			// String amt = "";
@@ -4205,6 +4297,7 @@ public class SmApplicationUtil {
 
 		// no category at all approved
 		if (isPendingApprovedCatExist && !isAtLeastOneCatApproved) {
+			assignValReqdToFalse(managedBean);	//#35059
 			throw new EpException(MessageConst.ERROR_722655);
 		}
 	}
@@ -5123,6 +5216,29 @@ public class SmApplicationUtil {
 				.checkActiveCancelApplicationBySupplierId(reqDTO);
 		return resDTO.isHasActiveTransaction();
 	}
+	
+	// #34441-start
+	/**
+	 * Check if there is any active Appl Type MOF appl for supplier.
+	 * 
+	 * @param smSupplier
+	 *            - SmSupplier object
+	 * @return
+	 * @return true, if successful
+	 */
+	public static String checkActiveSmApplTypeForSupp(SmSupplier smSupplier) {
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.
+				getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		resDTO = mofRegistrationSO.checkActiveApplTypeBySupplierId(reqDTO);
+		if (resDTO != null && resDTO.getApplType() != null) {
+			return resDTO.getApplType();
+		} else {
+			return null;
+		}
+	}// #34441-end
 
 	/**
 	 * Retrieve pm country list.
@@ -6329,6 +6445,21 @@ public class SmApplicationUtil {
 		}
 		desAddr.setCityId(srcAddr.getCityId());
 	}
+	
+	//#34277 - start
+	/**
+	 * Clone SSM address details
+	 * @param desAddr target
+	 * @param srcAddr source
+	 */
+	public static void cloneAddressSSM(SmAddress desAddr, SmAddress srcAddr){
+		desAddr.setSsmData(srcAddr.isSsmData());
+		desAddr.setAddressSsmNull(srcAddr.isAddressSsmNull());
+		desAddr.setPostcodeSsmNull(srcAddr.isPostcodeSsmNull());
+		desAddr.setStateSsmNull(srcAddr.isStateSsmNull());
+		desAddr.setCountrySsmNull(srcAddr.isCountrySsmNull());
+	}
+	//#34277 - end
 
 	/**
 	 * Reset to default entity values.
@@ -7931,7 +8062,7 @@ public class SmApplicationUtil {
 						) {
 					if (SmCommonUtil.isCollectionEmpty(catTypeList)
 							|| !catTypeList.contains(fac.getFacilityType())) {
-						facIt.remove();
+						facIt.remove();	
 					}
 				}
 			}
@@ -8050,7 +8181,7 @@ public class SmApplicationUtil {
 					total = total.add(staffTotal.getTotalForeigner());
 					total = total.add(staffTotal.getTotalNonBumi());
 				}
-				if (total.compareTo(new BigDecimal(200)) != 1) {
+				if (total.compareTo(new BigDecimal(200)) <= 0) { //Sonarqube #G19
 					smeStatus = SupplierManagementConst.SME_STATUS_MANUFACTURING;
 				}
 			}
@@ -8068,7 +8199,7 @@ public class SmApplicationUtil {
 					total = total.add(staffTotal.getTotalForeigner());
 					total = total.add(staffTotal.getTotalNonBumi());
 				}
-				if (total.compareTo(new BigDecimal(75)) != 1) {
+				if (total.compareTo(new BigDecimal(75)) <= 0) { //Sonarqube #G19
 					smeStatus = smeStatus
 							.equals(SupplierManagementConst.SME_STATUS_MANUFACTURING) ? SupplierManagementConst.SME_STATUS_BOTH
 							: SupplierManagementConst.SME_STATUS_SERVICES;
@@ -9243,9 +9374,14 @@ public class SmApplicationUtil {
 					// if dont have prev approved directly set softcert to
 					// pending request and contract to 0
 					if (prevPersonnel == null) {
-						currPersonnel
-								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-						currPersonnel.setContractSignerFlg(0);
+						//#33129 - START
+						//maintain softcert 1 if the personnel was an admin previously
+						if(currPersonnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_ISSUED){
+							currPersonnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+							currPersonnel.setContractSignerFlg(0);
+						}
+						//#33129 - END
+					
 					}
 					// if have prev approved
 					else {
@@ -9850,16 +9986,23 @@ public class SmApplicationUtil {
 	}
 
 	public static SmFacility getHqFacilityByAppl(SmAppl appl) {
+		// #34303 - start
 		for (SmFacility smFac : appl.getSmFacilities()) {
-			if ((smFac.getFacilityType().equalsIgnoreCase(
-					SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE) || smFac
-					.getFacilityType()
-					.equalsIgnoreCase(
-							SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE))
+			if ((smFac.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE) || smFac
+					.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE))
+					&& smFac.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED && smFac.isHeadquarters()) {
+				return smFac;
+			}
+		}
+
+		for (SmFacility smFac : appl.getSmFacilities()) {
+			if ((smFac.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE) || smFac
+					.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE))
 					&& smFac.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
 				return smFac;
 			}
 		}
+		// #34303 - start
 		return null;
 	}
 
@@ -10408,7 +10551,7 @@ public class SmApplicationUtil {
 			}
 			Integer bumiPerc = new Integer(0);
 			if (bumiPercentage != null) {
-				bumiPerc = bumiPercentage.intValue();
+				bumiPerc = bumiPercentage; //Sonarqube #G19
 				if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
 					bumiPerc = 99;
 				}
@@ -14196,8 +14339,17 @@ public class SmApplicationUtil {
 		SmApplSectionReview apprApplSecRev = new SmApplSectionReview();
 		for (SmApplSectionReview applSecRev : managedBean.getSmAppl()
 				.getSmApplSectionReviews()) {
-			EntityHelper.copyEntityProperties(applSecRev, apprApplSecRev,
-					new String[] { "applSectionReviewId" });
+			//#35086 - start
+			String[] exclude = new String[] {"applSectionReviewId", "associateRemark",
+					"bankRemark", "basicRemark", "branchRemark", "capitalRemark",
+					"categoryRemark", "certRemark", "equityCompRemark",
+					"experienceRemark", "factoryRemark", "assocBodyRemark",
+					"machineryRemark", "supplierSystemRemark", "manufacturingRemark",
+					"officeFacilityRemark", "personnelRemark", "licenseRemarks",
+					"shareholderRemark", "sitevisitRemark", "siteVisitVerifiedRemark",
+					"staffRemark", "trnsNetworkRemark"};
+			EntityHelper.copyEntityProperties(applSecRev, apprApplSecRev, exclude);
+			//#35086 - end
 			apprApplSecRev.setSmAppl(managedBean.getSmAppl());
 			apprApplSecRev
 					.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
@@ -15091,4 +15243,30 @@ public class SmApplicationUtil {
 		}
 	}
 		//#31043 - END
+	// 29616-start
+	public static boolean validatePersonnelSoftcert(SmSupplier supplier) {
+		log.info("******* Validate active softcert For cancel mof account******** ");
+		boolean validPersonnels = true;
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(supplier.getSupplierId());
+		List<SmPersonnel> latestActivePersonnels = SmServiceLookup.getPersonnelSO()
+				.retrieveLatestPersonnelBySupplierId(reqDTO).getSmPersonnelList();
+
+		if (!SmCommonUtil.isCollectionEmpty(latestActivePersonnels)) {
+			for (SmPersonnel per : latestActivePersonnels) {
+				if (per.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					sb.append(++i + ". ");
+					sb.append(per.getName());
+					sb.append(" ");
+					validPersonnels = false;
+				}
+			}
+		}
+		if (!validPersonnels) {
+			throw new EpException(MessageConst.ERROR_722707, new String[] { sb.toString() });
+		}
+		return validPersonnels;
+	}// 29616-end
 }

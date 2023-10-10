@@ -4,8 +4,7 @@
 	xmlns:h="http://java.sun.com/jsf/html" 
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:p="http://primefaces.org/ui" 
-	xmlns:c="http://java.sun.com/jsp/jstl/core" 
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <!-- #28175 end -->
 
 	<p:panel header="#{lbl['lbl.sm.sitevisit.section.d']}" id="pnlCategoryApplicable" toggleable="true">
@@ -23,9 +22,9 @@
 			</p:column>
 			<!-- #28175 start -->
 			<c:choose>
-				<c:when
-					test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or 
-					fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')}">
+				<!-- #28175 Reopen #94, #141 Start -->
+				<c:when test="#{not svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.activeAppl}">
+		        <!-- #28175 Reopen #94 End -->
 					<p:column headerText="#{lbl['lbl.sm.category.description']}">
 						#{catApp.categoryL3Name} 
 					</p:column>

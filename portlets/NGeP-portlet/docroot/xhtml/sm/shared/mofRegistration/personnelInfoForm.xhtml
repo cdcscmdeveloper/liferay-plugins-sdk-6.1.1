@@ -519,8 +519,8 @@
 			<h:outputText styleClass="instruction" value="#{lbl[lblPersonnelInstruction]}" escape="false" /><br />
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.authorized.personnel.reach.limit.msg']}" id="reachAuthLimitMsgId"
 				escape="false" rendered="#{backingBean.managedBean.validSmUserLimit}"/>
-			
-			<table style="width: 100%">
+			<!-- Disable for ups 32008 -->
+			<!-- table style="width: 100%">
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 					<tr>
 						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
@@ -550,10 +550,10 @@
 								title="For Approver to highlight the verified section " /></td>
 					</tr>
 				</p:outputPanel>
-			</table>
+			</table-->
 
 			<p:outputPanel id="persInfPan" layout="block">
-				<p:blockUI block=":form:tt:persInfPan" widgetVar="buiPoPers"
+				<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:persInfPan" widgetVar="buiPoPers"
 					id="poPersBlc"
 					blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.personnelVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.personnelVerified : false)}" />
 				<ui:include src="personnelTableList.xhtml" />

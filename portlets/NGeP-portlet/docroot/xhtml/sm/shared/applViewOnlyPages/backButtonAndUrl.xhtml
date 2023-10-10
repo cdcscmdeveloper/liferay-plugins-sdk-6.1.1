@@ -25,25 +25,26 @@
 					<!-- START - 31270 -->
 					<p:commandLink onclick="blockWidget.show()" rendered="#{viewSmApplBackingBean.isApplPORejectedAfterApprovelSV()}"
 							action="#{viewSmApplBackingBean.reminderToResubmit()}"
-							process="@this" partialSubmit="true" update=":form"
+							process="@this" update=":form"
 							value="#{lbl['lbl.sm.resubmit']}" />&#160;&#160;
 				</p:outputPanel>
 				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType ne 'N'}">
 					<p:commandLink onclick="blockWidget.show()" rendered="#{viewSmApplBackingBean.isApplPORejectedAfterApprovelSV()}"
 							action="#{viewSmApplBackingBean.reminderToResubmit()}"
-							process="@this" partialSubmit="true" update=":form"
+							process="@this" update=":form"
 							value="#{lbl['lbl.sm.resubmit']}" />&#160;&#160;
 				</p:outputPanel>
 				<!-- END - 31270 -->			
 				<!-- END 29823 -->
 					</p:outputPanel> 
 				<!-- 31269 - start -->
-				<h:commandLink value="#{lbl['lbl.sm.view.ssm.infomation']}"
+				<p:commandLink value="#{lbl['lbl.sm.view.ssm.infomation']}"
 					rendered="#{!viewSmApplBackingBean.managedBean.supplierUser
 							and viewSmApplBackingBean.managedBean.viewApplicationHistory
 							and viewSmApplBackingBean.renderViewSSMInfo()}"
 					action="#{backingBean.redirectToViewSSMInfo(viewSmApplBackingBean.managedBean.smAppl)}"	
-					target="_blank"/>&#160;&#160;
+					update=":form" process="@this"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />&#160;&#160;
 				<!-- 31269 - end -->
 				<p:commandLink onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
@@ -99,5 +100,7 @@
 				btnOkLabel="#{lbl['lbl.btn.change']}" 
 				btnCancelLabel="#{lbl['lbl.btn.cancel']}"/>
 		<!-- END 27951 -->
+		<!-- #31269 -->
+		<ac:viewSsmInformation bBean="#{backingBean}" dialogId="viewssminfoDlg" />
 	
 </ui:composition>
