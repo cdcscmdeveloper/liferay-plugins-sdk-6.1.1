@@ -17956,7 +17956,7 @@ private void retriveCommitteeRemarksList(){
 			downloadAllFilesAsZipFileWithSpecificFolder(listScAttachment);
 		} catch (Exception e) {
 			e.printStackTrace();
-
+			throw new EpException(MessageConst.ERR_761002);
 		} finally {
 			evaluationSO = null;
 		}	
