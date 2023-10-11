@@ -7375,6 +7375,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	//29728 - End
 	
 	//35024-Start
+	/**
+	 * validate Bond for Fulfilment type One-Off whether Bond is Complete or Not
+	 * @param flRequest
+	 */
 	private void validateBondComplete(FlFulfilmentRequest flRequest){
 		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		ContractReqDTO contractReqDTO = new ContractReqDTO();
