@@ -197,6 +197,12 @@ public class ForceReplaceSuppAdminBackingBean extends
 				}
 				//#33129 - END
 			}
+			
+		} else if (getManagedBean().getSmSupplier() != null
+				&& getManagedBean().getSmSupplier().getBusinessType()
+						.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)) {
+			throw new EpException(MessageConst.ERROR_722706);
+			
 		} else {
 			//#28765 - Start
 			if (getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER) && 

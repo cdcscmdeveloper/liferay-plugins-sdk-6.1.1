@@ -27,6 +27,7 @@ import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.sme.ISupplierSmeSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.constant.EpPropertiesConst;
@@ -59,6 +60,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.dto.sm.sme.SupplierSmeReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
@@ -105,7 +107,7 @@ import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSapVendorCode;
-import my.ep.persistence.entity.sm.SmWorkflowStatus;
+import my.ep.persistence.entity.sm.SmSmeSupplier;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
@@ -119,6 +121,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCategoryFacility;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -978,6 +981,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		// init company basic gst
 		getManagedBean().setHqGst(getSupplierGst(null));
+		// #29617 start
+		if(getManagedBean().getSmSupplier().getSmeRegisteredFlag() == 1){
+			setSmeSupplierInfo(getManagedBean().getSmSupplier());
+		}
+		// #29617 end
 
 	}
 
@@ -4234,6 +4242,17 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 	//END 31111
 	
+	// #29617 start
+	public void setSmeSupplierInfo(SmSupplier supplier) {
+		SupplierSmeReqDTO reqDTO = new SupplierSmeReqDTO();
+		SmSmeSupplier smeSupplier = new SmSmeSupplier();
+		reqDTO.setSmSupplier(supplier);
+		ISupplierSmeSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+				ISupplierSmeSO.class);
+		smeSupplier = reqSO.retrieveCurrentSmeInfo(reqDTO);
+		getManagedBean().setSmeSupplier(smeSupplier);
+	}
+	// #29617 end
 	//#12483 - START
 	public void sortApplicationRevises(){
 		Collections.sort(this.getManagedBean().getSmAppl().getSmApplRevises(), new Comparator<SmApplRevise>(){
