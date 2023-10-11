@@ -1350,6 +1350,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty() != null
 								&& answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
 								|| answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null) {
+							answer.setComponentEmpty(true); //Enhancement #3657@Syazani 04/10/2023
 						if (errorLst == null) {
 							errorLst = new ArrayList<String>();
 						}
@@ -1369,7 +1370,11 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							count++;
 						}
 						//#3657 End Vinod
+						//Enhancement #3657@Syazani 04/10/2023 -- Start
+						} else {
+							answer.setComponentEmpty(false);
 						}
+						//Enhancement #3657@Syazani 04/10/2023 -- End
 						// bug #31733 add condition 5/11/2021
 						// farid end #21695 7/10/2021
 					}

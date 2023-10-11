@@ -302,6 +302,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 */
 	
 	public String submitAction(String action) throws Exception {
+		log.info("######## SLA submitAction() START action::"+action); //35159
 		IFulfilmentRequestSO iFulfilmentRequestSO = null;
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -324,6 +325,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 								itemAddr.setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
 							}
 							//end-28659
+							
+							//35159-Start
+							if(itemAddr.getScRequestItem() != null){
+								log.info("*****submitAction NoteItemId= ["+ itemAddr.getScRequestItem().getRequestNoteItemId()+"] OrderQty: ["+itemAddr.getOrderedQty() +"] unitPrice: ["+itemAddr.getUnitPrice()+ "]");
+							}
+							//35159-End
 						}
 					//}
 					//#29171, CR 14650: Static Code Analysis Start
@@ -413,6 +420,18 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//24893 - start
 
 			//24893 - end
+			
+			//35159-start
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				log.info("######## SLA SubmitAction before saveFulfillmentRequest- Doc No. : "+reqDTO.getFlFulfilmentRequest().getDocNo());
+				for(FlDeliveryAddress flDeliveryAddress : flRequest.getFlDeliveryAddresses()){
+					for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
+						log.info("*****submitAction NoteItemId= ["+ itemAddr.getScRequestItem().getRequestNoteItemId()+"] OrderQty: ["+itemAddr.getOrderedQty() +"] unitPrice: ["+itemAddr.getUnitPrice()+ "]");
+					}
+				}
+			}
+			//35159-end
+				
 
 			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			//26646-start
