@@ -91,6 +91,11 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private boolean showRemoveProcessMessageOther;
 	// #29822 - end
 	
+	// 20231009 #7465
+	private boolean fromUserMaintenanceDetails;
+	private PmOrgProfile pmOrgProfile;
+	private PmUser pmUser;
+
 	public TaskReassignmentManagedBean(){}
 
 	/**
@@ -680,4 +685,29 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	}
 
 	// #29822 - end
+
+	public boolean isFromUserMaintenanceDetails() {
+		return fromUserMaintenanceDetails;
+	}
+
+	public void setFromUserMaintenanceDetails(boolean fromUserMaintenanceDetails) {
+		this.fromUserMaintenanceDetails = fromUserMaintenanceDetails;
+	}
+
+	public PmOrgProfile getPmOrgProfile() {
+		return pmOrgProfile;
+	}
+
+	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
+		this.pmOrgProfile = pmOrgProfile;
+	}
+
+	public PmUser getPmUser() {
+		return pmUser;
+	}
+
+	public void setPmUser(PmUser pmUser) {
+		this.pmUser = pmUser;
+	}
+
 }

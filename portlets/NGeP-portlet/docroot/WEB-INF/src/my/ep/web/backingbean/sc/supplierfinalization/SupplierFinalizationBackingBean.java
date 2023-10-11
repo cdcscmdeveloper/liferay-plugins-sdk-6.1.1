@@ -1574,6 +1574,7 @@ public class SupplierFinalizationBackingBean extends
 	private void validateFinalizationReports(SuppFinalizationReqDTO reqDTO, boolean skipValidation) {//25037 note31
 		log.info("validateFinalizationReports");
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		boolean isSubmit = this.getManagedBean().isSubmit();//#35205
 		List<ScQtFinalizationReport> finalizationReports = 
 					scQtFinalization.getScQtFinalizationReports();
 		//Bug #29707
@@ -1606,7 +1607,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 			
 			//#28834 - Start 
-			if(CollectionUtils.isNotEmpty(toBeRemovedReports)){
+			if(CollectionUtils.isNotEmpty(toBeRemovedReports) && isSubmit){//#35205 add isSubmit
 				if(skipValidation) return;//25037
 				navigateToEndorsementReportTab();
 			    throw new EpException(MessageConst.ERROR_770271);
@@ -3476,7 +3477,8 @@ public class SupplierFinalizationBackingBean extends
 			scQtCommittee = preparationDtlsInfo();
 			
 		}
-		
+		//Bug #35129 load
+		loadRecommededSuppliersItemize();
 		// Save Preparation and Supplier finalization tab(s) data 
 		// before throwing exception
 		validateReEvaluation();
@@ -11401,5 +11403,25 @@ public class SupplierFinalizationBackingBean extends
 		return false;
 	}
 	// Bug #34720@Syazani 07/06/2022 -- End
+	//#35129 Start
+	private void loadRecommededSuppliersItemize() {
+
+		boolean itemized = false;
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		String recommendType = scQtFinalization.getRecommendedTypeId().getParameterCode();
+		String finalizationMethod = getManagedBean().getFinalizationMethod();
+
+		for (ScQtRecommend checkrecmddtls : scQtFinalization.getScQtRecommends()) {
+			if (CollectionUtils.isEmpty(checkrecmddtls.getRecommendDtls())) {
+				itemized = ParameterConst.RECOMMEND_TYPE_ITEM.equals(recommendType) ? true : false;
+				this.getManagedBean().setItemize(itemized);
+
+				setSelectionMode(finalizationMethod);
+				loadRecommededSuppliersIntoCachedData(itemized);
+				break;
+			}
+			break;
+		}
+	}// #35129 End
 }
 // ***19336

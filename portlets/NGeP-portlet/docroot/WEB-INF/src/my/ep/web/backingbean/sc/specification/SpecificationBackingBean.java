@@ -15020,10 +15020,11 @@ if (null != checklist && !checklist.isEmpty()) {
 		boolean isTechSpecPending = false;
 		List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
 		for (ScQtCheckList t : st2technicalproposalList) {
+			boolean isDemoStatusSubmit = t.getPmDemoStatus() != null && QTStatusConst.TS_PENDING_SUBMISSION.equals(t.getPmDemoStatus().getStatusId());
 			if (t.getDefinationType().getParameterCode()
 					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)
 					&& (QTStatusConst.TS_PENDING_SUBMISSION.equals(t.getPmStatus().getStatusId()) || 
-							QTStatusConst.TS_PENDING_SUBMISSION.equals(t.getPmDemoStatus().getStatusId()))) {
+							isDemoStatusSubmit)) {
 				isTechSpecPending = true;
 				t.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));//#28784
 				}
@@ -21890,7 +21891,7 @@ if(null!=allTechnicalChecklist){
 				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	// #28784
-	
+
 	/*#29187 Start Vinod*/
 	/**
 	 * This method is to get dropdown values for mandatory spec.
@@ -21945,21 +21946,24 @@ if(null!=allTechnicalChecklist){
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
 						ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-		
+			
 		for(TplSpecQuestion itemQuestion : templateChecklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()){
 			specReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 			specReqDTO.setItemName(itemQuestion.getClItem());
 			TemplateSpecResDTO resDTO = templateSpecSO
 					.retrieveTechSpecByItemNames(specReqDTO);
-			
-			if (null != resDTO && null != resDTO.getSpecQuestionList()) {
-				for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
-						if(question.isMandatorySpec()){
-							itemQuestion.setMandatorySpecForSample(true);
-						}
-				}
-			}
+				
+			checkMandatorySpecForSample(itemQuestion, resDTO);
 		}
+	}
+	private void checkMandatorySpecForSample(TplSpecQuestion itemQuestion, TemplateSpecResDTO resDTO) {
+	    if (resDTO != null && resDTO.getSpecQuestionList() != null) {
+	        for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
+	            if (question.isMandatorySpec()) {
+	                itemQuestion.setMandatorySpecForSample(true);
+	            }
+	        }
+	    }
 	}
 	/*#29187 End Vinod*/
 

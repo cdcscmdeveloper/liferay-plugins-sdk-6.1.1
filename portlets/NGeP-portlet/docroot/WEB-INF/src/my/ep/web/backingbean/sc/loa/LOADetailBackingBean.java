@@ -3707,6 +3707,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						isNewLoa = true;
 					}
 					//Bug #33188 end
+
+					//Bug #35196 - haziq
+					if(!scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION) && scLoa.isBondReq() ) {	
+						scLoa.setBondReq(false);
+					 }	
 		
 					AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 					reqDTO.setPayLoad(getManagedBean().getPayLoad());
@@ -3839,6 +3844,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						}
 					}	
 				}
+				
+				//Bug #35196 - haziq
+				if(!scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION) && scLoa.isBondReq() ) {	
+					scLoa.setBondReq(false);
+				 }	
 				
 				//#25725 start
 				boolean approvalLetter = validateApprovalLetter(scLoa);
@@ -6436,7 +6446,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(loa.getScLoiLoa().getDocId());
 			qtCategories = getQtDetailSO().getQtCategoryByQtId(reqDTO).getCategories();
-		}
+		//} Bug #35196 - haziq
 
 		boolean isBondReq = isPerformanceBondRequired(overallContractAmtOrLoaAmt, qtCategories);
 		
@@ -6449,6 +6459,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		//Bug #29885 end
 		getManagedBean().setPerformanceBondMandatory(isBondReq);
+	  }//Bug #35196 - haziq
 	}
 
 	/**
@@ -11518,13 +11529,38 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	//29007 - fix issue 2 search action note 347 - end
 	
 	//Bug #34757 - Start
+	/**
+	 * retrieve latest item code from LOA detail
+	 * 
+	 * @param reqItem
+	 * @return
+	 */
 	public String getLatestItemCode(ScRequestItem reqItem) {
 		
-		if (reqItem.getTplSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)) {
+		if (reqItem.getTplSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)
+				|| reqItem.getTplSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
 			return getQtAwardSO().getCmItemExtensionCode(reqItem);
 		} else {
 			return reqItem.getCmItem().getExtensionCode();
 		}
+	}
+	
+	public boolean isShowAssignButton(ScLoiLoaItem loiLoaItem) {
+		boolean isShow = false;
+		
+		if (loiLoaItem.getTplSpecZoneDtl() != null) {
+			if (this.getManagedBean().getFirstZone() == null) {
+				this.getManagedBean().setFirstZone(loiLoaItem.getTplSpecZoneDtl().getZoneName());
+			}
+			
+			if (this.getManagedBean().getFirstZone().equals(loiLoaItem.getTplSpecZoneDtl().getZoneName())) {
+				isShow = true;
+			}
+		} else {
+			isShow = true;
+		}
+		
+		return isShow;
 	}
 	//Bug #34757 - End
 	
